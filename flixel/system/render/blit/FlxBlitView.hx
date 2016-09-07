@@ -156,7 +156,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false):Void 
+		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
 		trianglesSprite.graphics.clear();
 		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
@@ -174,6 +174,12 @@ class FlxBlitView extends FlxCameraView
 			buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
 		}
 		#end
+	}
+	
+	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		// TODO: implement it...
 	}
 	
 	override public function updatePosition():Void 

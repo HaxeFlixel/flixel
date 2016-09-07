@@ -42,13 +42,11 @@ class ColorShader extends Shader
 			
 			"varying vec4 vColor;
 			
-			uniform float uAlpha;
+			uniform vec4 uColor;
 			
 			void main(void) 
 			{
-				vec4 color = vColor;
-				color.a = color.a * uAlpha;
-				gl_FragColor = color;
+				gl_FragColor = vColor * uColor;
 			}";
 		
 		// And call init again.

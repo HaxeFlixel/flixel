@@ -3,6 +3,7 @@ package flixel.system.render.hardware.gl;
 import flixel.graphics.FlxGraphic;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.geom.ColorTransform;
 
 #if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
@@ -158,15 +159,13 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
 		var uAlpha = this.__worldAlpha;
+		var uColor:ColorTransform = this.__worldColorTransform;
 		var uMatrix = renderer.getMatrix(this.__worldTransform);
 		
 		var shader:Shader = null;
 		var nextShader:Shader = null;
 		var blend:BlendMode = null;
 		var texture:FlxGraphic = null;
-		
-		// TODO: use this var...
-		var nextTexture:FlxGraphic = null;
 		
 		var i:Int = 0;
 		
@@ -181,7 +180,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				shader = nextShader;
 				
 				renderSession.shaderManager.setShader(shader);
-				gl.uniform1f(shader.data.uAlpha.index, uAlpha);
+				gl.uniform4f(shader.data.uColor.index, uColor.redMultiplier, uColor.greenMultiplier, uColor.blueMultiplier, uAlpha);
 				gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix);
 			}
 			
@@ -199,24 +198,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				{
 					gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
 				}
-			}
-			
-			if (texture != null)
-			{
-				if (state.antialiasing) 
-				{
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
-				} 
-				else 
-				{
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-				}
-				
-				// TODO: Texture repeat support... (use it later)
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 			}
 			
 			if (state.glBuffer == null)
@@ -245,6 +226,22 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			if (texture != null)
 			{
+				// texture smoothing
+				if (state.antialiasing) 
+				{
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
+				} 
+				else 
+				{
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+				}
+				
+				// texture repeat
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+				
 				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
 				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
 			}

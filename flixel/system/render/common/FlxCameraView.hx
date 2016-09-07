@@ -144,7 +144,13 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false):Void 
+		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
+	{
+		
+	}
+	
+	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		
 	}

@@ -13,6 +13,7 @@ import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
@@ -27,6 +28,8 @@ using flixel.util.FlxColorTransformUtil;
  * ...
  * @author Zaphod
  */
+
+// TODO: try to clean up this code a bit...
 class FlxDrawStack implements IFlxDestroyable
 {
 	/**
@@ -121,14 +124,15 @@ class FlxDrawStack implements IFlxDestroyable
 		return itemToReturn;
 	}
 	
-	// TODO: add shader support for openfl 4.0.0 and later...
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smooth:Bool = false,
 		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader, numVertices:Int, numIndices:Int):FlxDrawTrianglesItem
 	{
-		var itemToReturn:FlxDrawTrianglesItem = null;
-		
-		if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
+		if (HardwareRenderer.BATCH_TRIANGLES == false)
+		{
+			return getNewDrawTrianglesItem(graphic, smooth, colored, blend, shader);
+		}
+		else if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
 			&& _currentDrawItem.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader)
 			&& _currentDrawItem.canAddTriangles(numVertices, numIndices))
 		{	
@@ -177,7 +181,6 @@ class FlxDrawStack implements IFlxDestroyable
 	}
 	
 	#if ((openfl >= "4.0.0") && !flash)
-	// TODO: implement fill quad with color...
 	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		_helperMatrix.identity();
@@ -251,14 +254,24 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
-	// TODO: add support for repeat (it's true by default, i guess. need to check it)
+	// TODO: add support for repeat (it's true by default)
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false):Void
+		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, null, Std.int(vertices.length / 2), vertices.length);
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), vertices.length);
 		
 		drawItem.addTriangles(vertices, indices, uvtData, matrix, transform);
+	}
+	
+	// TODO: add method for drawing rectangles with repeating textures...
+	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		var drawItem:FlxDrawQuadsItem = startQuadBatch(graphic, isColored, hasColorOffsets, blend, smoothing, shader);
+		drawItem.addUVQuad(rect, uv, matrix, transform);
 	}
 }

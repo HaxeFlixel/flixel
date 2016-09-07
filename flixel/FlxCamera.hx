@@ -148,9 +148,9 @@ class FlxCamera extends FlxBasic
 	 */
 	public var useBgAlphaBlending:Bool = false;
 	
-	// TODO: use this and document this...
 	/**
-	 * 
+	 * Render view for this camera. 
+	 * All rendering related commands (like draw rectangle or fill camera view with specified color) are handled by this object.
 	 */
 	public var view:FlxCameraView;
 
@@ -309,10 +309,17 @@ class FlxCamera extends FlxBasic
 	
 	public inline function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false):Void 
+		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
 		if (view != null)
-			view.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing);
+			view.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing, shader);
+	}
+	
+	public inline function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		if (view != null)
+			view.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
 	}
 	
 	/**

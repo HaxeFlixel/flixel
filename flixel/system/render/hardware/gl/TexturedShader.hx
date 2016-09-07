@@ -47,7 +47,7 @@ class TexturedShader extends Shader
 			varying vec4 vColor;
 			
 			uniform sampler2D uImage0;
-			uniform float uAlpha;
+			uniform vec4 uColor;
 			
 			void main(void) 
 			{
@@ -59,7 +59,7 @@ class TexturedShader extends Shader
 				} 
 				else 
 				{
-					gl_FragColor = vec4(color.rgb / color.a, color.a * uAlpha) * vColor;
+					gl_FragColor = vec4(color.rgb / color.a, color.a) * vColor * uColor;
 				}
 			}";
 		

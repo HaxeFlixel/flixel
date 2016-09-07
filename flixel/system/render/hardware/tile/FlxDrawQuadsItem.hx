@@ -77,6 +77,11 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		#end
 	}
 	
+	public function drawUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
+		// TODO: implement it...
+	}
+	
 	private inline function setNext(f:Float):Void
 	{
 		drawData[position++] = f;
@@ -131,4 +136,5 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	}
 	
 	// TODO: add check if it's possible to add new quad to this item...
+	
 }

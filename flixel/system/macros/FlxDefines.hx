@@ -20,8 +20,6 @@ private enum UserDefines
 	FLX_NO_DEBUG;
 	FLX_RECORD;
 	FLX_UNIT_TEST;
-	/* additional rendering define */
-	FLX_RENDER_TRIANGLE;
 }
 
 /**

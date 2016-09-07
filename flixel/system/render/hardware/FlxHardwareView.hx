@@ -72,6 +72,10 @@ class FlxHardwareView extends FlxCameraView
 	
 	public var drawStack:FlxDrawStack;
 	
+	#if ((openfl >= "4.0.0") && !flash)
+	private var _fillRect:FlxRect = FlxRect.get();
+	#end
+	
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
@@ -109,6 +113,7 @@ class FlxHardwareView extends FlxCameraView
 		
 		#if ((openfl >= "4.0.0") && !flash)
 		canvas = FlxDestroyUtil.destroy(canvas);
+		_fillRect = FlxDestroyUtil.put(_fillRect);
 		#else
 		if (canvas != null)
 		{
@@ -145,9 +150,15 @@ class FlxHardwareView extends FlxCameraView
 	
 	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false):Void 
+		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
-		drawStack.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing);
+		drawStack.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing, shader);
+	}
+	
+	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		drawStack.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
 	}
 	
 	override public function updatePosition():Void 
@@ -210,9 +221,8 @@ class FlxHardwareView extends FlxCameraView
 		}
 		
 		#if ((openfl >= "4.0.0") && !flash)
-		// TODO: implement it...
-		// TODO: don't create new rect every time...
-		drawStack.fillRect(new FlxRect( -1, -1, camera.width + 2, camera.height + 2), Color, FxAlpha);
+		_fillRect.set( -1, -1, camera.width + 2, camera.height + 2);
+		drawStack.fillRect(_fillRect, Color, FxAlpha);
 		#else
 		var targetGraphics:Graphics = canvas.graphics;
 		targetGraphics.beginFill(Color, FxAlpha);
@@ -256,16 +266,11 @@ class FlxHardwareView extends FlxCameraView
 	
 	override private function set_color(Color:FlxColor):FlxColor 
 	{
-		#if (openfl < "4.0.0")
 		var colorTransform:ColorTransform = canvas.transform.colorTransform;
 		colorTransform.redMultiplier = Color.redFloat;
 		colorTransform.greenMultiplier = Color.greenFloat;
 		colorTransform.blueMultiplier = Color.blueFloat;
 		canvas.transform.colorTransform = colorTransform;
-		#else
-		// TODO: implement this method...
-		
-		#end
 		return Color;
 	}
 	
