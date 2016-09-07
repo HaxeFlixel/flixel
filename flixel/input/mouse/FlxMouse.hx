@@ -11,6 +11,7 @@ import flash.Lib;
 import flash.ui.Mouse;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
@@ -130,6 +131,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private var _lastX:Int = 0;
 	private var _lastY:Int = 0;
 	private var _lastWheel:Int = 0;
+	private var _lastLeftButtonState:FlxInputState;
 	
 	//Helper variable for cleaning up memory
 	private var _stage:Stage;
@@ -572,18 +574,18 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		return visible = Value;
 	}
 	
-	// Replay functions
-	
 	@:allow(flixel.system.replay.FlxReplay)
 	private function record():MouseRecord
 	{
 		if ((_lastX == _globalScreenX) && (_lastY == _globalScreenY) 
-			&& (_leftButton.released) && (_lastWheel == wheel))
+			&& (_lastLeftButtonState == _leftButton.current) && (_lastWheel == wheel))
 		{
 			return null;
 		}
+		
 		_lastX = _globalScreenX;
 		_lastY = _globalScreenY;
+		_lastLeftButtonState = _leftButton.current;
 		_lastWheel = wheel;
 		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
 	}
@@ -591,7 +593,15 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	@:allow(flixel.system.replay.FlxReplay)
 	private function playback(Record:MouseRecord):Void
 	{
-		_leftButton.current = Record.button;
+		// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
+		// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
+		// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
+		if ((_lastLeftButtonState == PRESSED || _lastLeftButtonState == JUST_PRESSED)
+			&& (Record.button == RELEASED || Record.button == JUST_RELEASED))
+		{
+			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, Record.x, Record.y));
+		}
+		_lastLeftButtonState = _leftButton.current = Record.button;
 		wheel = Record.wheel;
 		_globalScreenX = Record.x;
 		_globalScreenY = Record.y;
