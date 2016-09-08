@@ -9,6 +9,7 @@ class FlxCollisionTest extends FlxTest
 	var sprite:FlxSprite;
 	var sourceSprite:FlxSprite;
 	var animatedSprite:FlxSprite;
+	
 	@Before
 	function before():Void 
 	{
@@ -36,7 +37,7 @@ b/0
   xy: 90, 90
   size: 20, 20
   orig: 50, 50
-  offset: 40, 0
+  offset: 30, 0
   index: -1
 ');
 		// add animations
@@ -47,7 +48,7 @@ b/0
 	}
 	
 	@Test
-	function pPCOnAnim()
+	function pixelPerfectCheckWithAnim()
 	{
 		// play smaller-framed anim
 		animatedSprite.animation.play("a");
@@ -55,17 +56,11 @@ b/0
 	}
 
 	@Test
-	function pPCOnAnimAfterPlayingBiggerWithOffset()
+	function pixelPerfectCheckWithAnimAfterPlayingBiggerWithOffset()
 	{
 		// play larger-framed anim
 		animatedSprite.animation.play("b");
 		// run PPC
 		Assert.isTrue(FlxCollision.pixelPerfectCheck(sprite, animatedSprite));
-	}
-
-	@After
-	public function testTeardown():Void
-	{
-		animatedSprite.destroy();
 	}
 }
