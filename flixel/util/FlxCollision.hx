@@ -100,8 +100,8 @@ class FlxCollision
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
 	#if flash
-		if (Contact._frame.sourceSize.width != Contact.frameWidth || Contact._frame.sourceSize.height != Contact.frameHeight
-		|| Target._frame.sourceSize.width != Target.frameWidth || Target._frame.sourceSize.height != Target.frameHeight)
+		if (Contact._frame.sourceSize.x != Contact.framePixels.width || Contact._frame.sourceSize.y != Contact.framePixels.height
+		|| Target._frame.sourceSize.x != Target.framePixels.width || Target._frame.sourceSize.y != Target.framePixels.height)
 	#else
 		if (FlxG.renderTile)
 	#end
