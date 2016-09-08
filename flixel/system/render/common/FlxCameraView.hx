@@ -27,12 +27,10 @@ import openfl.geom.Rectangle;
  */
 
 // TODO: add pure opengl version of camera view, so it will work on nme...
+// TODO: add stage3d version of camera view...
 class FlxCameraView implements IFlxDestroyable
 {
-	/**
-	 * Batching related static variables and constants:
-	 */
-	// TODO: document these vars...
+	// Batching related static variables and constants:
 	public static inline var MAX_INDICES_PER_BUFFER:Int = 98298;
 	public static inline var MAX_VERTEX_PER_BUFFER:Int = 65532;		// (MAX_INDICES_PER_BUFFER * 4 / 6)
 	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
@@ -49,15 +47,42 @@ class FlxCameraView implements IFlxDestroyable
 	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
 	public static inline var BYTES_PER_ELEMENT:Int = 4;
 	
-	// TODO: add batch size limit...
-	// and use this var...
-	public static var TILES_PER_BATCH:Int = 2000;
+	/**
+	 * Max size of the batch. Used for quad render items. If you'll try to add one more tile to the full batch, then new batch will be started.
+	 */
+	public static var TILES_PER_BATCH(default, set):Int = 2000;
 	
-	public static var VERTICES_PER_BATCH:Int = 7500;
-	public static var INDICES_PER_BATCH:Int = 7500;
+	private static function set_TILES_PER_BATCH(value:Int):Int
+	{
+		TILES_PER_BATCH = (value > MAX_QUADS_PER_BUFFER) ? MAX_QUADS_PER_BUFFER : value;
+		return TILES_PER_BATCH;
+	}
 	
 	/**
-	 * 
+	 * Max number of vertices per batch. Used for triangles render items.
+	 */
+	public static var VERTICES_PER_BATCH(default, set):Int = 7500;
+	
+	private static function set_VERTICES_PER_BATCH(value:Int):Int
+	{
+		VERTICES_PER_BATCH = (value > MAX_VERTEX_PER_BUFFER) ? MAX_VERTEX_PER_BUFFER : value;
+		return VERTICES_PER_BATCH;
+	}
+	
+	/**
+	 * Max number of indices per batch. Used for triangles render items.
+	 */
+	public static var INDICES_PER_BATCH(default, set):Int = 7500;
+	
+	private static function set_INDICES_PER_BATCH(value:Int):Int
+	{
+		INDICES_PER_BATCH = (value > MAX_INDICES_PER_BUFFER) ? INDICES_PER_BATCH : value;
+		return INDICES_PER_BATCH;
+	}
+	
+	/**
+	 * Whether to batch drawTriangles() calls or not.
+	 * Default value is true.
 	 */
 	public static var BATCH_TRIANGLES:Bool = true;
 	
@@ -66,12 +91,22 @@ class FlxCameraView implements IFlxDestroyable
 	 */
 	public static var _DRAWCALLS:Int = 0;
 	
+	/**
+	 * Display object which is used as a container for all the camera's graphic.
+	 * This object is added to display tree.
+	 */
 	public var display(get, null):DisplayObject;
-	
+	/**
+	 * Parent camera for this view.
+	 */
 	public var camera(default, null):FlxCamera;
-	
+	/**
+	 * Camera's smoothing.
+	 */
 	public var antialiasing(get, set):Bool;
-	
+	/**
+	 * Camera's tint factor
+	 */
 	public var color(get, set):FlxColor;
 	
 	public var alpha(get, set):Float;

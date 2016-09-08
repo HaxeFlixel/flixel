@@ -43,7 +43,7 @@ class FlxBlitView extends FlxCameraView
 	 * The actual bitmap data of the camera display itself. 
 	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
 	 */
-	public var buffer:BitmapData;
+	public var buffer:BitmapData; // TODO: move this var to base class?
 	
 	/**
 	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer. 
@@ -54,7 +54,7 @@ class FlxBlitView extends FlxCameraView
 	 * FlxBloom demo shows how you can use this variable in blit render mode:
 	 * @see http://haxeflixel.com/demos/FlxBloom/
 	 */
-	public var screen:FlxSprite;
+	public var screen:FlxSprite; // TODO: move this var to base class?
 	
 	/**
 	 * Internal, used in blit render mode in camera's fill() method for less garbage creation.

@@ -115,7 +115,11 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	
 	private function get_numTiles():Int
 	{
-		// TODO: convert 'elementsPerTile' to property...
+		return Std.int(position / elementsPerTile);
+	}
+	
+	override function get_elementsPerTile():Int 
+	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
 			elementsPerTile += 3; // r, g, b
@@ -123,13 +127,13 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (hasColorOffsets)
 			elementsPerTile += 4; // r, g, b, a
 		#end
-
-		return Std.int(position / elementsPerTile);
+		
+		return elementsPerTile;
 	}
 	
 	override private function get_numVertices():Int
 	{
-		return 4 * numTiles;
+		return FlxCameraView.VERTICES_PER_TILE * numTiles; 
 	}
 	
 	override private function get_numTriangles():Int

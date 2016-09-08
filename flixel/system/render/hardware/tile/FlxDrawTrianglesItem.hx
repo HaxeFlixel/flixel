@@ -241,12 +241,17 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override private function get_numVertices():Int
 	{
-		return Std.int(vertices.length / 2);
+		return Std.int(vertexPos/ elementsPerVertex);
 	}
 	
 	override private function get_numTriangles():Int
 	{
-		return Std.int(indices.length / 3);
+		return Std.int(indexPos / 3);
+	}
+	
+	override function get_elementsPerVertex():Int 
+	{
+		return 2;
 	}
 	
 	// TODO: add methods for adding non-textured quads and triangles...

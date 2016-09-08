@@ -68,8 +68,7 @@ class FlxDrawBaseItem<T>
 	
 	public static function canAddQuadToTrianglesItem(item:FlxDrawTrianglesItem):Bool
 	{
-		// TODO: don't use magic numbers...
-		return canAddTrianglesToTrianglesItem(item, 4, 6);
+		return canAddTrianglesToTrianglesItem(item, FlxCameraView.VERTICES_PER_TILE, FlxCameraView.INDICES_PER_TILE);
 	}
 	
 	public static function canAddTrianglesToTrianglesItem(item:FlxDrawTrianglesItem, numVertices:Int, numIndices:Int):Bool

@@ -119,6 +119,7 @@ class FlxG
 	
 	public static var renderMethod(default, null):FlxRenderMethod;
 	
+	// TODO: make this properties easily switchable at runtime...
 	public static var renderBlit(default, null):Bool;
 	public static var renderTile(default, null):Bool;
 	
