@@ -1,25 +1,23 @@
 package flixel.util;
 
+import flixel.FlxSprite;
+import flixel.graphics.frames.FlxAtlasFrames;
 import massive.munit.Assert;
 
 class FlxCollisionTest extends FlxTest
 {
-        var sprite:FlxSprite = cast add(new FlxSprite(30, 0));
-		var sourceSprite = new FlxSprite();
-		var animatedSprite:FlxSprite = cast add(new FlxSprite());
-		// play smaller-framed anim
-		animatedSprite.animation.play("a");
-		trace(FlxCollision.pixelPerfectCheck(sprite, animatedSprite));
-		// play larger-framed anim
-		animatedSprite.animation.play("b");
-		// run PPC
-		trace(FlxCollision.pixelPerfectCheck(sprite, animatedSprite));
+	var sprite:FlxSprite;
+	var sourceSprite:FlxSprite;
+	var animatedSprite:FlxSprite;
 	@Before
 	function before():Void 
 	{
+        sprite = new FlxSprite(30, 0);
 		sprite.makeGraphic(100, 100, FlxColor.WHITE, true);
+		sourceSprite = new FlxSprite();
  		sourceSprite.makeGraphic(100, 100, FlxColor.RED, true);
-		// load animations with varying frame sizes
+		animatedSprite = new FlxSprite();
+		// load animations with varying frame sizes, such that the second has a bigger original size and offsets such that it will overlap with the white sprite
 		animatedSprite.frames = FlxAtlasFrames.fromLibGdx(sourceSprite.pixels, '
 test.png
 size: 100,100
