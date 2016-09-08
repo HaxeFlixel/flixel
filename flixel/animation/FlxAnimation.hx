@@ -131,7 +131,7 @@ class FlxAnimation extends FlxBaseAnimation
 			Frame = reversed ? (lastFrameIndex - Frame) : Frame;
 		}
 		
-		if ((delay == 0) 									// non-positive fps
+		if (delay == 0) 									// non-positive fps
 		{
 			finished = true;
 		}
