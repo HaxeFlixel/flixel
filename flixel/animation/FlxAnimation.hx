@@ -131,9 +131,7 @@ class FlxAnimation extends FlxBaseAnimation
 			Frame = reversed ? (lastFrameIndex - Frame) : Frame;
 		}
 		
-		if ((delay <= 0) 									// non-positive fps
-			|| (Frame > lastFrameIndex && !reversed) 	// normal animation
-			|| (Frame < 0 && reversed))						// reversed animation
+		if (delay == 0) 									// non-positive fps
 		{
 			finished = true;
 		}
@@ -197,7 +195,7 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (delay <= 0 || finished || paused)
+		if (delay == 0 || finished || paused)
 			return;
 
 		_frameTimer += elapsed;
