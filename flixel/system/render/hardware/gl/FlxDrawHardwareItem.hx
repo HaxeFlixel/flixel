@@ -3,6 +3,7 @@ package flixel.system.render.hardware.gl;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseItem;
+import openfl.gl.GL;
 
 #if (openfl >= "4.0.0")
 import lime.graphics.opengl.GLBuffer;
@@ -39,8 +40,14 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		buffer = null;
 		indexes = null;
 		
-		// TODO: delete buffers via gl.deleteBuffer();
+		if (glBuffer != null)
+			GL.deleteBuffer(glBuffer);
+		
 		glBuffer = null;
+		
+		if (glIndexes != null)
+			GL.deleteBuffer(glIndexes);
+		
 		glIndexes = null;
 	}
 	
