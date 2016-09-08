@@ -40,7 +40,7 @@ b/0
   index: -1
 ');
 		// add animations
-		for (name in ["a","b"])
+		for (name in ["a", "b"])
 			animatedSprite.animation.addByPrefix(name, name);
 		
 		destroyable = sprite;
