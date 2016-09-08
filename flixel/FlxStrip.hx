@@ -33,7 +33,9 @@ class FlxStrip extends FlxSprite
 	 */
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	
-	public var repeat:Bool = false;
+	public var repeat:Bool = true;
+	
+	// TODO: maybe add option to draw triangles on the sprite buffer (for less drawTriangles calls)...
 	
 	private var bounds:FlxRect = FlxRect.get();
 	

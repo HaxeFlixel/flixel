@@ -7,6 +7,8 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
+import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -58,6 +60,23 @@ class FlxDrawBaseItem<T>
 		}
 	}
 	#end
+	
+	public static function canAddQuadToQuadsItem(item:FlxDrawQuadsItem):Bool
+	{
+		return ((item.numTiles + 1) <= FlxCameraView.TILES_PER_BATCH);
+	}
+	
+	public static function canAddQuadToTrianglesItem(item:FlxDrawTrianglesItem):Bool
+	{
+		// TODO: don't use magic numbers...
+		return canAddTrianglesToTrianglesItem(item, 4, 6);
+	}
+	
+	public static function canAddTrianglesToTrianglesItem(item:FlxDrawTrianglesItem, numVertices:Int, numIndices:Int):Bool
+	{
+		return 	((item.numVertices + numVertices) <= FlxCameraView.VERTICES_PER_BATCH) &&
+				((item.indexPos + numIndices) <= FlxCameraView.INDICES_PER_BATCH);
+	}
 	
 	public var nextTyped:T;
 	
@@ -131,16 +150,6 @@ class FlxDrawBaseItem<T>
 		this.blending = blend;
 		this.antialiasing = smooth;
 		this.shader = shader;
-	}
-	
-	public function canAddQuad():Bool
-	{
-		return true;
-	}
-	
-	public function canAddTriangles(numVertices:Int, numIndices:Int):Bool
-	{
-		return true;
 	}
 	
 	private function get_numVertices():Int

@@ -87,7 +87,7 @@ class FlxDrawStack implements IFlxDestroyable
 		
 		if (_currentDrawItem != null /* && _currentDrawItem.type == FlxDrawItemType.TILES*/ 
 			&& _currentDrawItem.equals(FlxDrawItemType.TILES, graphic, colored, hasColorOffsets, blend, smooth, shader)
-			&& _currentDrawItem.canAddQuad())
+			&& FlxDrawBaseItem.canAddQuadToQuadsItem(_headTiles))
 		{	
 			return _headTiles;
 		}
@@ -128,13 +128,13 @@ class FlxDrawStack implements IFlxDestroyable
 	public function startTrianglesBatch(graphic:FlxGraphic, smooth:Bool = false,
 		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader, numVertices:Int, numIndices:Int):FlxDrawTrianglesItem
 	{
-		if (HardwareRenderer.BATCH_TRIANGLES == false)
+		if (FlxCameraView.BATCH_TRIANGLES == false)
 		{
 			return getNewDrawTrianglesItem(graphic, smooth, colored, blend, shader);
 		}
 		else if (_currentDrawItem != null /*&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES*/ 
 			&& _currentDrawItem.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, shader)
-			&& _currentDrawItem.canAddTriangles(numVertices, numIndices))
+			&& FlxDrawBaseItem.canAddTrianglesToTrianglesItem(_headTriangles, numVertices, numIndices))
 		{	
 			return _headTriangles;
 		}

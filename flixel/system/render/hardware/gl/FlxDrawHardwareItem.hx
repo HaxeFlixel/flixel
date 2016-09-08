@@ -1,5 +1,6 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseItem;
 
@@ -93,12 +94,12 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 	
 	override function get_elementsPerVertex():Int 
 	{
-		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_VERTEX : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_VERTEX;
+		return (graphics != null) ? FlxCameraView.ELEMENTS_PER_TEXTURED_VERTEX : FlxCameraView.ELEMENTS_PER_NONTEXTURED_VERTEX;
 	}
 	
 	override function get_elementsPerTile():Int 
 	{
-		return (graphics != null) ? HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE : HardwareRenderer.ELEMENTS_PER_NONTEXTURED_TILE;
+		return (graphics != null) ? FlxCameraView.ELEMENTS_PER_TEXTURED_TILE : FlxCameraView.ELEMENTS_PER_NONTEXTURED_TILE;
 	}
 	
 }

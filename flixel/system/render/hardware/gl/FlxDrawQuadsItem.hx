@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -33,6 +34,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		type = FlxDrawItemType.TILES;
 	}
 	
+	// TODO: implement this method for other renderers (i.e. tile renderer)...
 	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		if (graphics != null)
@@ -64,11 +66,9 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		// Triangle 2, bottom-right
 		addNonTexturedVertexData(x4, y4, r, g, b, a);
 		
-		indexPos += HardwareRenderer.INDICES_PER_TILE;
+		indexPos += FlxCameraView.INDICES_PER_TILE;
 		vertexBufferDirty = true;
 	}
-	
-	// TODO: implement this methods for other renderers...
 	
 	override public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
@@ -116,7 +116,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		// Triangle 2, bottom-right
 		addTexturedVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
 		
-		indexPos += HardwareRenderer.INDICES_PER_TILE;
+		indexPos += FlxCameraView.INDICES_PER_TILE;
 		vertexBufferDirty = true;
 	}
 	
@@ -129,14 +129,14 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	{
 		if (buffer == null)
 		{
-			buffer = new Float32Array(HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerTile);
+			buffer = new Float32Array(FlxCameraView.MINIMUM_TILE_COUNT_PER_BUFFER * elementsPerTile);
 			
 			fillIndexBuffer();
 		}
 		else if (vertexPos >= buffer.length)
 		{
 			var oldBuffer:Float32Array = buffer;
-			var newNumberOfTiles = currentTilesCapacity + HardwareRenderer.MINIMUM_TILE_COUNT_PER_BUFFER;
+			var newNumberOfTiles = currentTilesCapacity + FlxCameraView.MINIMUM_TILE_COUNT_PER_BUFFER;
 			
 			buffer = new Float32Array(newNumberOfTiles * elementsPerTile);
 			buffer.set(oldBuffer);
@@ -150,7 +150,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		var oldIndexes:UInt32Array = indexes;
 		var oldLength:Int = (oldIndexes != null) ? oldIndexes.length : 0;
 		
-		indexes = new UInt32Array(currentTilesCapacity * HardwareRenderer.INDICES_PER_TILE);
+		indexes = new UInt32Array(currentTilesCapacity * FlxCameraView.INDICES_PER_TILE);
 		
 		if (oldLength > 0)
 		{
@@ -158,11 +158,8 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		}
 		
 		var i:Int = oldLength;
-		var vertexOffset:Int = Std.int(HardwareRenderer.VERTICES_PER_TILE * oldLength / HardwareRenderer.INDICES_PER_TILE);
+		var vertexOffset:Int = Std.int(FlxCameraView.VERTICES_PER_TILE * oldLength / FlxCameraView.INDICES_PER_TILE);
 		
-	//	var i:Int = 0;
-	//	var vertexOffset:Int = 0;
-	
 		while (i < indexes.length)
 		{
 			indexes[i    ] = vertexOffset;//0;
@@ -171,8 +168,8 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 			indexes[i + 3] = vertexOffset + 2;
 			indexes[i + 4] = vertexOffset + 1;
 			indexes[i + 5] = vertexOffset + 3;
-			vertexOffset += HardwareRenderer.VERTICES_PER_TILE;
-			i += HardwareRenderer.INDICES_PER_TILE;
+			vertexOffset += FlxCameraView.VERTICES_PER_TILE;
+			i += FlxCameraView.INDICES_PER_TILE;
 		}
 		
 		indexBufferDirty = true;
@@ -190,12 +187,9 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		return (buffer != null) ? Std.int(buffer.length / elementsPerTile) : 0;
 	}
 	
-	override public function canAddQuad():Bool
-	{
-		return ((this.numTiles + 1) <= HardwareRenderer.TILES_PER_BATCH);
-	}
+	#else
 	
-	// TODO: add check if it's possible to add new quad to this item...
+	public var numTiles:Int = 1;
 	
 	#end
 }

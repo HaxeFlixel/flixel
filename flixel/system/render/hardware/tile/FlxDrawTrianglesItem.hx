@@ -12,6 +12,7 @@ import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
@@ -33,9 +34,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	public var colors:DrawData<Int> = new DrawData<Int>();
 	
-	public var verticesPosition:Int = 0;
-	public var indicesPosition:Int = 0;
-	public var colorsPosition:Int = 0;
+	public var vertexPos:Int = 0;
+	public var indexPos:Int = 0;
+	public var colorPos:Int = 0;
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
@@ -80,9 +81,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData.splice(0, uvtData.length);
 		colors.splice(0, colors.length);
 		
-		verticesPosition = 0;
-		indicesPosition = 0;
-		colorsPosition = 0;
+		vertexPos = 0;
+		indexPos = 0;
+		colorPos = 0;
 	}
 	
 	override public function dispose():Void 
@@ -125,7 +126,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			drawVertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
 			drawVertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
 			
-			verticesPosition += 2;
+			vertexPos += 2;
 			i += 2;
 		}
 		
@@ -138,7 +139,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var indicesLength:Int = indices.length;
 		for (i in 0...indicesLength)
 		{
-			this.indices[indicesPosition++] = indices[i] + prevNumberOfVertices;
+			this.indices[indexPos++] = indices[i] + prevNumberOfVertices;
 		}
 		
 		if (colored)
@@ -149,16 +150,16 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			
 			for (i in 0...numberOfVertices)
 			{
-				this.colors[colorsPosition++] = color;
+				this.colors[colorPos++] = color;
 			}
 		}
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		var prevVerticesPos:Int = verticesPosition;
-		var prevIndicesPos:Int = indicesPosition;
-		var prevColorsPos:Int = colorsPosition;
+		var prevVerticesPos:Int = vertexPos;
+		var prevIndicesPos:Int = indexPos;
+		var prevColorsPos:Int = colorPos;
 		var prevNumberOfVertices:Int = numVertices;
 		
 		var point = FlxPoint.get();
@@ -231,11 +232,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			colors[prevColorsPos + 2] = color;
 			colors[prevColorsPos + 3] = color;
 			
-			colorsPosition += 4;
+			colorPos += 4;
 		}
 		
-		verticesPosition += 8;
-		indicesPosition += 6;
+		vertexPos += 8;
+		indexPos += 6;
 	}
 	
 	override private function get_numVertices():Int
@@ -250,6 +251,4 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	// TODO: add methods for adding non-textured quads and triangles...
 	
-	// TODO: add check if it's possible to add new quad to this item...
-	// TODO: add check if it's possible to add new triangles to this item...
 }

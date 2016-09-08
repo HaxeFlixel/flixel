@@ -10,6 +10,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.system.render.hardware.gl.HardwareRenderer;
 import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
@@ -114,6 +115,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	
 	private function get_numTiles():Int
 	{
+		// TODO: convert 'elementsPerTile' to property...
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
 			elementsPerTile += 3; // r, g, b
@@ -134,7 +136,4 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		return 2 * numTiles;
 	}
-	
-	// TODO: add check if it's possible to add new quad to this item...
-	
 }

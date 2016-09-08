@@ -97,6 +97,13 @@ class FlxBlitView extends FlxCameraView
 	private static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
+	 * Helper variables for drawing UV quads.
+	 */
+	private static var rectVertices:Vector<Float> = [];
+	private static var rectUVs:Vector<Float> = [];
+	private static var rectIndices:Vector<Int> = [];
+	
+	/**
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
 	 */
 	private var regen:Bool = false;
@@ -181,9 +188,48 @@ class FlxBlitView extends FlxCameraView
 	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		// TODO: implement it...
+		trianglesSprite.graphics.clear();
+		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, true, smoothing);
 		
+		rectVertices[0] = 0;
+		rectVertices[1] = 0;
+		rectVertices[2] = rect.width;
+		rectVertices[3] = 0;
+		rectVertices[4] = rect.width;
+		rectVertices[5] = rect.height;
+		rectVertices[6] = 0;
+		rectVertices[7] = rect.height;
 		
+		rectUVs[0] = uv.x;
+		rectUVs[1] = uv.y;
+		rectUVs[2] = uv.width;
+		rectUVs[3] = uv.y;
+		rectUVs[4] = uv.width;
+		rectUVs[5] = uv.height;
+		rectUVs[6] = uv.x;
+		rectUVs[7] = uv.height;
+		
+		rectIndices[0] = 0;
+		rectIndices[1] = 1;
+		rectIndices[2] = 2;
+		rectIndices[3] = 2;
+		rectIndices[4] = 3;
+		rectIndices[5] = 0;
+		
+		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices, rectUVs);
+		trianglesSprite.graphics.endFill();
+		buffer.draw(trianglesSprite, matrix, transform, blend);
+		
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug)
+		{
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+			gfx.drawTriangles(rectVertices, rectIndices);
+			buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
+		}
+		#end
 	}
 	
 	override public function updatePosition():Void 

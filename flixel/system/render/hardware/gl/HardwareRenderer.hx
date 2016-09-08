@@ -9,6 +9,12 @@ import openfl.geom.ColorTransform;
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
+
+	#if (!display && !flash)
+	import openfl._internal.renderer.RenderSession;
+	import openfl._internal.renderer.opengl.GLRenderer;
+	#end
+
 #end
 
 import openfl.display.BitmapData;
@@ -18,10 +24,7 @@ import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
-#if (!display && !flash)
-import openfl._internal.renderer.RenderSession;
-import openfl._internal.renderer.opengl.GLRenderer;
-#end
+
 
 /**
  * ...
@@ -29,33 +32,7 @@ import openfl._internal.renderer.opengl.GLRenderer;
  */
 class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
-	public static inline var MAX_INDICES_PER_BUFFER:Int = 98298;
-	public static inline var MAX_VERTEX_PER_BUFFER:Int = 65532;		// (MAX_INDICES_PER_BUFFER * 4 / 6)
-	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
-	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
-	
-	public static inline var ELEMENTS_PER_TEXTURED_VERTEX:Int = 8;
-	public static inline var ELEMENTS_PER_TEXTURED_TILE:Int = 8 * 4;
-	
-	public static inline var ELEMENTS_PER_NONTEXTURED_VERTEX:Int = 6;
-	public static inline var ELEMENTS_PER_NONTEXTURED_TILE:Int = 6 * 4;
-	
-	public static inline var INDICES_PER_TILE:Int = 6;
-	public static inline var VERTICES_PER_TILE:Int = 4;
-	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
-	public static inline var BYTES_PER_ELEMENT:Int = 4;
-	
-	// TODO: add batch size limit...
-	// and use this var...
-	public static var TILES_PER_BATCH:Int = 2000;
-	
-	public static var VERTICES_PER_BATCH:Int = 7500;
-	public static var INDICES_PER_BATCH:Int = 7500;
-	
-	// TODO: make batching for triangle rendering switchable ON/OFF???
-	public static var BATCH_TRIANGLES:Bool = true;
-	
-	#if !flash
+	#if ((openfl >= "4.0.0") && !flash)
 	private static var texturedTileShader:TexturedShader;
 	private static var coloredTileShader:ColorShader;
 

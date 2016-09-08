@@ -1,5 +1,6 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
@@ -25,16 +26,12 @@ import lime.utils.UInt32Array;
 class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 {
 	#if !flash
-	public function new() 
-	{
-		super();
-	}
 	
 	// TODO: add methods for adding non-textured quads and triangles...
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		ensureElement(HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE, HardwareRenderer.INDICES_PER_TILE);
+		ensureElement(FlxCameraView.ELEMENTS_PER_TEXTURED_TILE, FlxCameraView.INDICES_PER_TILE);
 		var prevVerticesNumber:Int = numVertices;
 		
 		var rect:FlxRect = frame.frame;
@@ -93,14 +90,13 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		indexBufferDirty = true;
 	}
 	
-	// TODO: check this method...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var numVerticesToAdd:Int = Std.int(vertices.length / 2);
 		var numIndexesToAdd:Int = indices.length;
 		var prevVerticesNumber:Int = numVertices;
 		
-		ensureElement(numVerticesToAdd * HardwareRenderer.ELEMENTS_PER_TEXTURED_TILE, numIndexesToAdd);
+		ensureElement(numVerticesToAdd * FlxCameraView.ELEMENTS_PER_TEXTURED_TILE, numIndexesToAdd);
 		
 		var r:Float = 1.0;
 		var g:Float = 1.0;
@@ -170,20 +166,6 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 			}
 		}
 	}
-	
-	override public function canAddQuad():Bool
-	{
-		return canAddTriangles(4, 6);
-	}
-	
-	override public function canAddTriangles(numVertices:Int, numIndices:Int):Bool
-	{
-		return 	((this.numVertices + numVertices) <= HardwareRenderer.VERTICES_PER_BATCH) &&
-				((this.indexPos + numIndices) <= HardwareRenderer.INDICES_PER_BATCH);
-	}
-	
-	// TODO: add check if it's possible to add new quad to this item...
-	// TODO: add check if it's possible to add new triangles to this item...
 	
 	#else
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
