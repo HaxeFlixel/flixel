@@ -121,33 +121,19 @@ class FlxAnimation extends FlxBaseAnimation
 		paused = false;
 		_frameTimer = 0;
 		
-		var lastFrameIndex:Int = numFrames - 1;
-		
-		if (Frame >= 0)
-		{
-			// bound frame value
-			Frame = (Frame > lastFrameIndex) ? lastFrameIndex : Frame;
-			// "reverse" frame value
-			Frame = reversed ? (lastFrameIndex - Frame) : Frame;
-		}
-		
-		if (delay == 0) 									// non-positive fps
-		{
-			finished = true;
-		}
-		else
-		{
-			finished = false;
-		}
-		
+		var maxFrameIndex:Int = numFrames - 1;
 		if (Frame < 0)
-		{
-			curFrame = FlxG.random.int(0, lastFrameIndex);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		else
 		{
+			if (Frame > maxFrameIndex)
+				Frame = maxFrameIndex;
+			if (reversed)
+				Frame = (maxFrameIndex - Frame);
 			curFrame = Frame;
 		}
+		
+		finished = delay == 0; // non-positive fps?
 		
 		if (finished)
 			parent.fireFinishCallback(name);
@@ -229,24 +215,22 @@ class FlxAnimation extends FlxBaseAnimation
 		delay = 0;
 		frameRate = value;
 		if (value > 0)
-		{
 			delay = 1.0 / value;
-		}
 		return value;
 	}
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		var lastFrameIndex:Int = numFrames - 1;
+		var maxFrameIndex:Int = numFrames - 1;
 		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = reversed ? (lastFrameIndex - Frame) : Frame;
+		var tempFrame:Int = reversed ? (maxFrameIndex - Frame) : Frame;
 		
 		if (tempFrame >= 0)
 		{
-			if (!looped && tempFrame > lastFrameIndex)
+			if (!looped && tempFrame > maxFrameIndex)
 			{
 				finished = true;
-				curFrame = reversed ? 0 : lastFrameIndex;
+				curFrame = reversed ? 0 : maxFrameIndex;
 			}
 			else
 			{
@@ -254,9 +238,7 @@ class FlxAnimation extends FlxBaseAnimation
 			}
 		}
 		else
-		{
-			curFrame = FlxG.random.int(0, lastFrameIndex);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		
 		curIndex = _frames[curFrame];
 		
