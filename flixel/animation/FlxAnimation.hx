@@ -251,4 +251,20 @@ class FlxAnimation extends FlxBaseAnimation
 	{
 		return _frames.length;
 	}
+	
+	/**
+	 * Appends the reverse of the animation to its frames, without duplicating the original last frame.
+	 * 
+	 * If looped is true, the original first frame is also not duplicated.
+	 * 
+	 * E.g. [0,1,2,3] becomes [0,1,2,3,2,1]   (looped)     -- Frame 0 is not played twice in a row when the loop returns to the beginning.
+	 * but  [0,1,2,3] becomes [0,1,2,3,2,1,0] (non-looped) -- Animation ends looking how it started.
+	 */
+	public function pingPongifyFrames()
+	{
+		var originalNumFrames = numFrames;
+		var numFramesToAdd = originalNumFrames - (looped?2:1);
+		for (i in 0...numFramesToAdd)
+			_frames.push(_frames[originalNumFrames - 2 - i]);
+	}
 }
