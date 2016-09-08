@@ -37,7 +37,7 @@ class FlxTimerTest extends FlxTest
 		var loopsCompleted = 0;
 		timer.start(1, function(_) loopsCompleted++, 2);
 		Assert.areEqual(2, timer.loopsLeft);
-		FlxTimer.manager.completeAll();
+		FlxTimer.globalManager.completeAll();
 		Assert.areEqual(0, timer.loopsLeft);
 		Assert.areEqual(2, loopsCompleted);
 		step();
