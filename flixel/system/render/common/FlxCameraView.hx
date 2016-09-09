@@ -28,6 +28,7 @@ import openfl.geom.Rectangle;
 
 // TODO: add pure opengl version of camera view, so it will work on nme...
 // TODO: add stage3d version of camera view...
+// TODO: add methods for adding non-textured quads and triangles...
 class FlxCameraView implements IFlxDestroyable
 {
 	// Batching related static variables and constants:
@@ -217,6 +218,11 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		
+	}
+	
+	public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		
 	}

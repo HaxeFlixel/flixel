@@ -325,6 +325,12 @@ class FlxCamera extends FlxBasic
 			view.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
 	}
 	
+	public inline function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		if (view != null)
+			view.drawColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
+	}
+	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * 

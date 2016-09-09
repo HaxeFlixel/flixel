@@ -25,6 +25,8 @@ import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
+// TODO: add method for drawing color triangles...
+
 /**
  * ...
  * @author Zaphod
@@ -273,18 +275,32 @@ class FlxDrawStack implements IFlxDestroyable
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), vertices.length);
+		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), indices.length);
 		
 		drawItem.addTriangles(vertices, indices, uvtData, matrix, transform);
 	}
 	
-	// TODO: add method for drawing rectangles with repeating textures...
 	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(graphic, isColored, hasColorOffsets, blend, smoothing, shader);
+		#if (openfl >= "4.0.0")
+		var drawItem = startQuadBatch(graphic, isColored, hasColorOffsets, blend, smoothing, shader);
+		#else
+		var drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, FlxCameraView.VERTICES_PER_TILE, FlxCameraView.INDICES_PER_TILE);
+		#end
 		drawItem.addUVQuad(rect, uv, matrix, transform);
+	}
+	
+	public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		#if (openfl >= "4.0.0")
+		var drawItem = startQuadBatch(null, true, false, blend, smoothing, shader);
+		#else
+		var drawItem = getNewDrawTrianglesItem(null, smoothing, true, blend, shader);
+		#end
+		drawItem.addColorQuad(rect, matrix, color, alpha);
+		
 	}
 }

@@ -23,7 +23,6 @@ import openfl.geom.ColorTransform;
  * ...
  * @author Zaphod
  */
-// TODO: clean up this class...
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	private static var point:FlxPoint = FlxPoint.get();
@@ -33,6 +32,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indices:DrawData<Int> = new DrawData<Int>();
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	public var colors:DrawData<Int> = new DrawData<Int>();
+	
+	// variables for drawing non-textured triangles:
+	public var color:FlxColor;
+	public var alpha:Float;
 	
 	public var vertexPos:Int = 0;
 	public var indexPos:Int = 0;
@@ -54,13 +57,23 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 		
-		view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (view.antialiasing || antialiasing));
-		#if !openfl_legacy
-		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
-		#else
-		view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, FlxDrawBaseItem.blendToInt(blending));
-		#end
+		if (graphics == null)
+		{
+			view.canvas.graphics.beginFill(color, alpha);
+			view.canvas.graphics.drawTriangles(vertices, indices, null, TriangleCulling.NONE);
+		}
+		else
+		{
+			view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (view.antialiasing || antialiasing));
+			#if !openfl_legacy
+			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
+			#else
+			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, FlxDrawBaseItem.blendToInt(blending));
+			#end
+		}
+		
 		view.canvas.graphics.endFill();
+		
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
@@ -157,6 +170,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
+		addUVQuad(frame.frame, frame.uv, matrix, transform);
+	}
+	
+	override public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
 		var prevVerticesPos:Int = vertexPos;
 		var prevIndicesPos:Int = indexPos;
 		var prevColorsPos:Int = colorPos;
@@ -168,28 +186,28 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices[prevVerticesPos] = point.x;
 		vertices[prevVerticesPos + 1] = point.y;
 		
-		uvtData[prevVerticesPos] = frame.uv.x;
-		uvtData[prevVerticesPos + 1] = frame.uv.y;
+		uvtData[prevVerticesPos] = uv.x;
+		uvtData[prevVerticesPos + 1] = uv.y;
 		
-		point.set(frame.frame.width, 0);
+		point.set(rect.width, 0);
 		point.transform(matrix);
 		
 		vertices[prevVerticesPos + 2] = point.x;
 		vertices[prevVerticesPos + 3] = point.y;
 		
-		uvtData[prevVerticesPos + 2] = frame.uv.width;
-		uvtData[prevVerticesPos + 3] = frame.uv.y;
+		uvtData[prevVerticesPos + 2] = uv.width;
+		uvtData[prevVerticesPos + 3] = uv.y;
 		
-		point.set(frame.frame.width, frame.frame.height);
+		point.set(rect.width, rect.height);
 		point.transform(matrix);
 		
 		vertices[prevVerticesPos + 4] = point.x;
 		vertices[prevVerticesPos + 5] = point.y;
 		
-		uvtData[prevVerticesPos + 4] = frame.uv.width;
-		uvtData[prevVerticesPos + 5] = frame.uv.height;
+		uvtData[prevVerticesPos + 4] = uv.width;
+		uvtData[prevVerticesPos + 5] = uv.height;
 		
-		point.set(0, frame.frame.height);
+		point.set(0, rect.height);
 		point.transform(matrix);
 		
 		vertices[prevVerticesPos + 6] = point.x;
@@ -197,8 +215,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		point.put();
 		
-		uvtData[prevVerticesPos + 6] = frame.uv.x;
-		uvtData[prevVerticesPos + 7] = frame.uv.height;
+		uvtData[prevVerticesPos + 6] = uv.x;
+		uvtData[prevVerticesPos + 7] = uv.height;
 		
 		indices[prevIndicesPos] = prevNumberOfVertices;
 		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1;
@@ -254,6 +272,49 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		return 2;
 	}
 	
-	// TODO: add methods for adding non-textured quads and triangles...
-	
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
+	{
+		var prevVerticesPos:Int = vertexPos;
+		var prevIndicesPos:Int = indexPos;
+		var prevNumberOfVertices:Int = numVertices;
+		
+		var point = FlxPoint.get();
+		point.transform(matrix);
+		
+		vertices[prevVerticesPos] = point.x;
+		vertices[prevVerticesPos + 1] = point.y;
+		
+		point.set(rect.width, 0);
+		point.transform(matrix);
+		
+		vertices[prevVerticesPos + 2] = point.x;
+		vertices[prevVerticesPos + 3] = point.y;
+		
+		point.set(rect.width, rect.height);
+		point.transform(matrix);
+		
+		vertices[prevVerticesPos + 4] = point.x;
+		vertices[prevVerticesPos + 5] = point.y;
+		
+		point.set(0, rect.height);
+		point.transform(matrix);
+		
+		vertices[prevVerticesPos + 6] = point.x;
+		vertices[prevVerticesPos + 7] = point.y;
+		
+		point.put();
+		
+		indices[prevIndicesPos] = prevNumberOfVertices;
+		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1;
+		indices[prevIndicesPos + 2] = prevNumberOfVertices + 2;
+		indices[prevIndicesPos + 3] = prevNumberOfVertices + 2;
+		indices[prevIndicesPos + 4] = prevNumberOfVertices + 3;
+		indices[prevIndicesPos + 5] = prevNumberOfVertices;
+		
+		this.color = color;
+		this.alpha = alpha;
+		
+		vertexPos += 8;
+		indexPos += 6;
+	}
 }

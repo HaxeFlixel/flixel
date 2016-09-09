@@ -161,6 +161,11 @@ class FlxHardwareView extends FlxCameraView
 		drawStack.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
 	}
 	
+	override public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		drawStack.drawColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
+	}
+	
 	override public function updatePosition():Void 
 	{
 		if (flashSprite != null)

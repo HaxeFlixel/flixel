@@ -34,7 +34,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		type = FlxDrawItemType.TILES;
 	}
 	
-	// TODO: implement this method for other renderers (i.e. tile renderer)...
 	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		if (graphics != null)
@@ -175,8 +174,6 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 		indexBufferDirty = true;
 	}
 	
-	// TODO: add methods for adding non-textured quads and triangles...
-	
 	private function get_numTiles():Int
 	{
 		return Std.int(vertexPos / elementsPerTile);
@@ -190,6 +187,11 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	#else
 	
 	public var numTiles:Int = 1;
+	
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
+	{
+		
+	}
 	
 	#end
 }

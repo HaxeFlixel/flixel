@@ -173,16 +173,7 @@ class FlxBlitView extends FlxCameraView
 		trianglesSprite.graphics.endFill();
 		buffer.draw(trianglesSprite, matrix, transform, blend);
 		
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			var gfx:Graphics = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(vertices, indices);
-			buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
-		}
-		#end
+		drawDebugTriangles(vertices, indices, matrix);
 	}
 	
 	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -220,6 +211,39 @@ class FlxBlitView extends FlxCameraView
 		trianglesSprite.graphics.endFill();
 		buffer.draw(trianglesSprite, matrix, transform, blend);
 		
+		drawDebugTriangles(rectVertices, rectIndices, matrix);
+	}
+	
+	override public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	{
+		trianglesSprite.graphics.clear();
+		trianglesSprite.graphics.beginFill(color, alpha);
+		
+		rectVertices[0] = 0;
+		rectVertices[1] = 0;
+		rectVertices[2] = rect.width;
+		rectVertices[3] = 0;
+		rectVertices[4] = rect.width;
+		rectVertices[5] = rect.height;
+		rectVertices[6] = 0;
+		rectVertices[7] = rect.height;
+		
+		rectIndices[0] = 0;
+		rectIndices[1] = 1;
+		rectIndices[2] = 2;
+		rectIndices[3] = 2;
+		rectIndices[4] = 3;
+		rectIndices[5] = 0;
+		
+		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices);
+		trianglesSprite.graphics.endFill();
+		buffer.draw(trianglesSprite, matrix, null, blend);
+		
+		drawDebugTriangles(rectVertices, rectIndices, matrix);
+	}
+	
+	private function drawDebugTriangles(rectVertices:Vector<Float>, rectIndices:Vector<Int>, matrix:FlxMatrix):Void
+	{
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{

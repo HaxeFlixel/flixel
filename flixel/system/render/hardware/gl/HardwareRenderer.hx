@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.geom.ColorTransform;
+import openfl.gl.GL;
 
 #if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
