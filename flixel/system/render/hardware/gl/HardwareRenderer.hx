@@ -62,12 +62,11 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		// TODO: implement it...
+		states = null;
 	}
-
+	
 	public function clear():Void
 	{
-		// TODO: clear states...
 		stateNum = 0;
 	}
 
