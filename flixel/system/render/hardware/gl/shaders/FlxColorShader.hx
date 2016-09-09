@@ -35,7 +35,7 @@ class FlxColorShader extends FlxShader
 	public function new(vertexSource:String = null, fragmentSource:String = null) 
 	{
 		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
-		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : vertexSource;
+		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;
 		
 		super(vertexSource, fragmentSource);
 	}
