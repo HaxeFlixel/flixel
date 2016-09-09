@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
+import flixel.system.render.common.FlxCameraView;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
@@ -338,7 +339,7 @@ class FlxBitmapText extends FlxSprite
 				bgAlpha *= backgroundColor.alphaFloat;
 			}
 			
-			var drawItem;
+			var view:FlxCameraView;
 			var currFrame:FlxFrame = null;
 			var currTileX:Float = 0;
 			var currTileY:Float = 0;
@@ -372,6 +373,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				
 				updateTrig();
+				view = camera.view;
 				
 				if (background)
 				{
@@ -389,12 +391,8 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
-					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
-				
-				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-				
-				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				
 				for (j in 0...borderLength)
 				{
@@ -415,7 +413,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
 				}
 				
 				for (j in 0...textLength)
@@ -436,9 +434,8 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
 				}
 				
 				#if FLX_DEBUG

@@ -117,6 +117,23 @@ class FlxCameraView implements IFlxDestroyable
 	public var angle(get, set):Float;
 	
 	/**
+	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer. 
+	 * This sprite reference will allow you to do exactly that.
+	 * Basically this sprite's `pixels` property is camera's BitmapData buffer.
+	 * NOTE: This varible is used only in blit render mode.
+	 * 
+	 * FlxBloom demo shows how you can use this variable in blit render mode:
+	 * @see http://haxeflixel.com/demos/FlxBloom/
+	 */
+	public var screen:FlxSprite;
+	
+	/**
+	 * The actual bitmap data of the camera display itself. 
+	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
+	 */
+	public var buffer:BitmapData;
+	
+	/**
 	 * Internal, used for positioning camera's flashSprite on screen.
 	 * Basically it represents position of camera's center point in game sprite.
 	 * It's recalculated every time you resize game or camera.
@@ -141,14 +158,17 @@ class FlxCameraView implements IFlxDestroyable
 	public function new(camera:FlxCamera) 
 	{
 		this.camera = camera;
+		
+		screen = new FlxSprite();
 	}
 	
 	public function destroy():Void
 	{
-		display = null;
 		_filters = null;
 		_bounds = null;
 		camera = null;
+		buffer = FlxDestroyUtil.dispose(buffer);
+		screen = FlxDestroyUtil.destroy(screen);
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	

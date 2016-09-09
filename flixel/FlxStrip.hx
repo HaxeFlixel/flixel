@@ -37,6 +37,9 @@ class FlxStrip extends FlxSprite
 	
 	// TODO: maybe add option to draw triangles on the sprite buffer (for less drawTriangles calls)...
 	
+	// TODO: maybe optimize FlxStrip, so it will have its own sprite and buffer
+	// which will be used for rendering (which means less drawTriangles calls)...
+	
 	private var bounds:FlxRect = FlxRect.get();
 	
 	override public function destroy():Void 

@@ -20,6 +20,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -49,13 +50,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * We are only using its member functions that's why it is an empty instance
 	 */
 	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
-	
-	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
-	/**
-	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
-	 * so the tile will look one pixel wider than it is.
-	 */
-	public var useScaleHack:Bool = true;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -804,9 +798,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		//only used for renderTile
 		var drawX:Float = 0;
 		var drawY:Float = 0;
-		var scaledWidth:Float = 0;
-		var scaledHeight:Float = 0;
-		var drawItem = null;
+		var view:FlxCameraView = Camera.view;
 		
 		if (FlxG.renderBlit)
 		{
@@ -818,14 +810,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
-			
-			scaledWidth  = _scaledTileWidth;
-			scaledHeight = _scaledTileHeight;
-			
-			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			// TODO: avoid this casting operation somehow...
-			// TODO: fix this for openfl 4.0.0 and above...
-			drawItem = cast(Camera.view, FlxHardwareView).drawStack.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer
@@ -895,8 +879,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					else
 					{
-						drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
-						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
+						drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
+						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 						
 						_matrix.identity();
 						
@@ -908,16 +892,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						var scaleX:Float = scale.x;
 						var scaleY:Float = scale.y;
 						
-						if (useScaleHack)
-						{
-							scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
-							scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
-						}
-						
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						
-						drawItem.addQuad(frame, _matrix, colorTransform);
+						view.drawPixels(frame, null, _matrix, colorTransform, blend, antialiasing, shader);
 					}
 				}
 				

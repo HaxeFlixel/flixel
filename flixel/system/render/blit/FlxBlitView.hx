@@ -40,23 +40,6 @@ class FlxBlitView extends FlxCameraView
 	public var flashSprite:Sprite = new Sprite();
 	
 	/**
-	 * The actual bitmap data of the camera display itself. 
-	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
-	 */
-	public var buffer:BitmapData; // TODO: move this var to base class?
-	
-	/**
-	 * Sometimes it's easier to just work with a FlxSprite than it is to work directly with the BitmapData buffer. 
-	 * This sprite reference will allow you to do exactly that.
-	 * Basically this sprite's `pixels` property is camera's BitmapData buffer.
-	 * NOTE: This varible is used only in blit render mode.
-	 * 
-	 * FlxBloom demo shows how you can use this variable in blit render mode:
-	 * @see http://haxeflixel.com/demos/FlxBloom/
-	 */
-	public var screen:FlxSprite; // TODO: move this var to base class?
-	
-	/**
 	 * Internal, used in blit render mode in camera's fill() method for less garbage creation.
 	 * It represents the size of buffer BitmapData (the area of camera's buffer which should be filled with bgColor).
 	 * Do not modify it unless you know what are you doing.
@@ -115,7 +98,6 @@ class FlxBlitView extends FlxCameraView
 		flashSprite.addChild(_scrollRect);
 		_scrollRect.scrollRect = new Rectangle();
 		
-		screen = new FlxSprite();
 		buffer = new BitmapData(camera.width, camera.height, true, 0);
 		_flashRect = new Rectangle(0, 0, camera.width, camera.height);
 		screen.pixels = buffer;
@@ -131,8 +113,7 @@ class FlxBlitView extends FlxCameraView
 		
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
-		screen = FlxDestroyUtil.destroy(screen);
-		buffer = null;
+		
 		_flashBitmap = null;
 		_fill = FlxDestroyUtil.dispose(_fill);
 		
@@ -145,7 +126,14 @@ class FlxBlitView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
 		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+		if (pixels != null)
+		{
+			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+		}
+		else
+		{
+			// TODO: handle the case when pixels == null...
+		}
 	}
 	
 	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
@@ -165,8 +153,6 @@ class FlxBlitView extends FlxCameraView
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
-		// TODO: maybe optimize FlxStrip, so it will have its own sprite and buffer
-		// which will be used for rendering (which means less drawTriangles calls)...
 		trianglesSprite.graphics.clear();
 		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
 		trianglesSprite.graphics.drawTriangles(vertices, indices, uvtData);
