@@ -2,6 +2,9 @@ package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxGraphic;
 import flixel.system.render.common.FlxDrawBaseItem;
+import flixel.system.render.hardware.gl.shaders.FlxColorShader;
+import flixel.system.render.hardware.gl.shaders.FlxShader;
+import flixel.system.render.hardware.gl.shaders.FlxTexturedShader;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
@@ -32,8 +35,8 @@ import openfl.geom.Rectangle;
 class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
 	#if ((openfl >= "4.0.0") && !flash)
-	private static var texturedTileShader:TexturedShader;
-	private static var coloredTileShader:ColorShader;
+	private static var texturedTileShader:FlxTexturedShader;
+	private static var coloredTileShader:FlxColorShader;
 	
 	private static var uColor:Array<Float> = [];
 	private static var uMatrix:Array<Float32Array> = [];
@@ -52,10 +55,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		__height = height;
 		
 		if (texturedTileShader == null) 
-			texturedTileShader = new TexturedShader();
+			texturedTileShader = new FlxTexturedShader();
 		
 		if (coloredTileShader == null) 
-			coloredTileShader = new ColorShader();
+			coloredTileShader = new FlxColorShader();
 			
 		states = [];
 		stateNum = 0;
@@ -157,6 +160,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			var state:FlxDrawHardwareItem<Dynamic> = states[i];
 			
 			nextShader = (state.graphics != null) ? texturedTileShader : coloredTileShader;
+			nextShader = (state.shader != null) ? state.shader : nextShader;
 			
 			if (shader != nextShader || shader == null)
 			{

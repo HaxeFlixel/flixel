@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.hardware.gl.shaders;
 
 import lime.utils.GLUtils;
 import openfl.display.Shader;
@@ -14,6 +14,7 @@ import openfl.gl.GL;
  */
 class FlxShader extends Shader
 {
+	#if !flash
 	public function new(vertexSource:String, fragmentSource:String)
 	{
 		super();
@@ -197,5 +198,11 @@ class FlxShader extends Shader
 			lastMatch = position.pos + position.len;
 		}
 	}
+	#else
+	public function new(vertexSource:String, fragmentSource:String)
+	{
+		super();
+	}
+	#end
 	
 }
