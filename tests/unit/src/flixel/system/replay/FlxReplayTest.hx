@@ -2,8 +2,6 @@ package flixel.system.replay;
 
 import flixel.input.keyboard.FlxKey;
 import flixel.ui.FlxButton;
-import flixel.system.replay.MouseRecord;
-import flixel.system.replay.FrameRecord;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.FlxState;
 import massive.munit.Assert;
