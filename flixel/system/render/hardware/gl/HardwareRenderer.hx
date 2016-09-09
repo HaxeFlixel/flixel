@@ -25,8 +25,6 @@ import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
-
-
 /**
  * ...
  * @author Yanrishatum
@@ -36,6 +34,9 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	#if ((openfl >= "4.0.0") && !flash)
 	private static var texturedTileShader:TexturedShader;
 	private static var coloredTileShader:ColorShader;
+	
+	private static var uColor:Array<Float> = [];
+	private static var uMatrix:Array<Float32Array> = [];
 
 	private var states:Array<FlxDrawHardwareItem<Dynamic>>;
 	private var stateNum:Int;
@@ -135,9 +136,14 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		var uAlpha = this.__worldAlpha;
-		var uColor:ColorTransform = this.__worldColorTransform;
-		var uMatrix = renderer.getMatrix(this.__worldTransform);
+		var worldColor:ColorTransform = this.__worldColorTransform;
+		
+		uColor[0] = worldColor.redMultiplier;
+		uColor[1] = worldColor.greenMultiplier;
+		uColor[2] = worldColor.blueMultiplier;
+		uColor[3] = this.__worldAlpha;
+		
+		uMatrix[0] = renderer.getMatrix(this.__worldTransform);
 		
 		var shader:FlxShader = null;
 		var nextShader:FlxShader = null;
@@ -156,12 +162,13 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			{
 				shader = nextShader;
 				
-			//	shader.data.uColor.value = [1, 0, 0, uAlpha];
+				shader.data.uMatrix.value = uMatrix;
+				shader.data.uColor.value = uColor;
 				
 				renderSession.shaderManager.setShader(shader);
 				
-				gl.uniform4f(shader.data.uColor.index, uColor.redMultiplier, uColor.greenMultiplier, uColor.blueMultiplier, uAlpha);
-				gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix);
+			//	gl.uniform4f(shader.data.uColor.index, uColor.redMultiplier, uColor.greenMultiplier, uColor.blueMultiplier, uAlpha);
+			//	gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix[0]);
 			}
 			
 			if (blend != state.blending)

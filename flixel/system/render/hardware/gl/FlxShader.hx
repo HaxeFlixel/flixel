@@ -38,12 +38,28 @@ class FlxShader extends Shader
 					
 					switch (param.type) 
 					{
+						case ShaderParameterType.FLOAT:
+							gl.uniform1f(param.index, paramValue[0]);
+						case ShaderParameterType.FLOAT2:
+							gl.uniform2f(param.index, paramValue[0], paramValue[1]);
+						case ShaderParameterType.FLOAT3:
+							gl.uniform3f(param.index, paramValue[0], paramValue[1], paramValue[2]);
 						case ShaderParameterType.FLOAT4:
 							gl.uniform4f(param.index, paramValue[0], paramValue[1], paramValue[2], paramValue[3]);
-						/*
-						case BOOL2, BOOL3, BOOL4, INT2, INT3, INT4, FLOAT2, FLOAT3, FLOAT4:
-							
-						*/
+						case ShaderParameterType.INT:
+							gl.uniform1i(param.index, paramValue[0]);
+						case ShaderParameterType.INT2:
+							gl.uniform2i(param.index, paramValue[0], paramValue[1]);
+						case ShaderParameterType.INT3:
+							gl.uniform3i(param.index, paramValue[0], paramValue[1], paramValue[2]);
+						case ShaderParameterType.INT4:
+							gl.uniform4i(param.index, paramValue[0], paramValue[1], paramValue[2], paramValue[3]);
+						case ShaderParameterType.MATRIX2X2:
+							gl.uniformMatrix2fv(param.index, false, paramValue[0]);
+						case ShaderParameterType.MATRIX3X3:
+							gl.uniformMatrix3fv(param.index, false, paramValue[0]);
+						case ShaderParameterType.MATRIX4X4:
+							gl.uniformMatrix4fv(param.index, false, paramValue[0]);
 						default:
 							// nothing to do here. just continue the loop.
 					}
@@ -88,7 +104,7 @@ class FlxShader extends Shader
 				
 				if (input == null)
 				{
-					input = new ShaderInput();					
+					input = new ShaderInput();
 					Reflect.setField(data, name, input);
 				}
 				
@@ -98,7 +114,7 @@ class FlxShader extends Shader
 					{
 						input.index = gl.getUniformLocation(glProgram, name);
 					} 
-					else 
+					else
 					{
 						input.index = gl.getAttribLocation(glProgram, name);
 					}
