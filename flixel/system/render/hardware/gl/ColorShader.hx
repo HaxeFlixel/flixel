@@ -1,29 +1,12 @@
 package flixel.system.render.hardware.gl;
 
-import openfl.display.Shader;
-import openfl.gl.GL;
-
 /**
  * ...
  * @author Yanrishatum
  */
 class ColorShader extends FlxShader
 {
-
-	public function new() 
-	{
-		super();
-		
-		if (glProgram != null)
-		{
-			GL.deleteProgram(this.glProgram); // Delete what super created
-			this.glProgram = null;
-		}
-		
-		this.data = null;
-		
-		// Then reinit all the data.
-		glVertexSource =
+	public static inline var defaultVertexSource:String = 
 			
 			"attribute vec4 aPosition;
 			attribute vec4 aColor;
@@ -38,7 +21,7 @@ class ColorShader extends FlxShader
 				gl_Position = uMatrix * aPosition;
 			}";
 			
-		glFragmentSource = 
+	public static inline var defaultFragmentSource:String = 
 			
 			"varying vec4 vColor;
 			
@@ -48,10 +31,12 @@ class ColorShader extends FlxShader
 			{
 				gl_FragColor = vColor * uColor;
 			}";
+	
+	public function new(vertexSource:String = null, fragmentSource:String = null) 
+	{
+		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
+		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : vertexSource;
 		
-		// And call init again.
-		__init();
-		initShaderData();
+		super(vertexSource, fragmentSource);
 	}
-
 }

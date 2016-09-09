@@ -6,6 +6,7 @@ import openfl.display.ShaderData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
+import openfl.gl.GL;
 
 /**
  * ...
@@ -13,6 +14,27 @@ import openfl.display.ShaderParameterType;
  */
 class FlxShader extends Shader
 {
+	public function new(vertexSource:String, fragmentSource:String)
+	{
+		super();
+		
+		if (glProgram != null)
+		{
+			GL.deleteProgram(this.glProgram); // Delete what super created
+			this.glProgram = null;
+		}
+		
+		this.data = null;
+		
+		// Then reinit all the data.
+		glVertexSource = vertexSource;
+		glFragmentSource = fragmentSource;
+		
+		// And call init again.
+		__init();
+		initShaderData();
+	}
+	
 	override function __enable():Void 
 	{
 		super.__enable();

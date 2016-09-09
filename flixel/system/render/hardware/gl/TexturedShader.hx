@@ -1,29 +1,12 @@
 package flixel.system.render.hardware.gl;
 
-import openfl.display.Shader;
-import openfl.gl.GL;
-
 /**
  * ...
  * @author Yanrishatum
  */
-// TODO: try to init shader constants and attributes, so i won't need to do it in Hardware renderer (extend base Shader class with such functionality)...
 class TexturedShader extends FlxShader
 {
-	public function new() 
-	{
-		super();
-		
-		if (glProgram != null)
-		{
-			GL.deleteProgram(this.glProgram); // Delete what super created
-			this.glProgram = null;
-		}
-		
-		this.data = null;
-		
-		// Then reinit all the data.
-		glVertexSource =
+	public static inline var defaultVertexSource:String = 
 			
 			"attribute vec4 aPosition;
 			attribute vec2 aTexCoord;
@@ -41,7 +24,7 @@ class TexturedShader extends FlxShader
 				gl_Position = uMatrix * aPosition;
 			}";
 			
-		glFragmentSource = 
+	public static inline var defaultFragmentSource:String = 
 			
 			"varying vec2 vTexCoord;
 			varying vec4 vColor;
@@ -62,10 +45,13 @@ class TexturedShader extends FlxShader
 					gl_FragColor = vec4(color.rgb / color.a, color.a) * vColor * uColor;
 				}
 			}";
+	
+	public function new(vertexSource:String = null, fragmentSource:String = null) 
+	{
+		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
+		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : vertexSource;
 		
-		// And call init again.
-		__init();
-		initShaderData();
+		super(vertexSource, fragmentSource);
 	}
 
 }
