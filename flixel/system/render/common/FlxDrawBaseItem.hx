@@ -10,6 +10,7 @@ import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
@@ -21,7 +22,7 @@ import openfl.display.Tilesheet;
  * ...
  * @author Zaphod
  */
-class FlxDrawBaseItem<T>
+class FlxDrawBaseItem<T> implements IFlxDestroyable
 {
 	#if (openfl < "4.0.0")
 	public static function blendToInt(blend:BlendMode):Int
@@ -112,7 +113,7 @@ class FlxDrawBaseItem<T>
 		next = null;
 	}
 	
-	public function dispose():Void
+	public function destroy():Void
 	{
 		graphics = null;
 		blending = null;

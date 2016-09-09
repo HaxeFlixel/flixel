@@ -86,9 +86,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		colorPos = 0;
 	}
 	
-	override public function dispose():Void 
+	override public function destroy():Void 
 	{
-		super.dispose();
+		super.destroy();
 		
 		vertices = null;
 		indices = null;

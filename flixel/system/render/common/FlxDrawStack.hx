@@ -15,6 +15,7 @@ import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
@@ -68,15 +69,27 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		// TODO: destroy all the draw items in the storage and in the queue via gl.deleteBuffer()...
-		
-		if (_headOfDrawStack != null)
-		{
-			clearDrawStack();
-		}
-		
+		destroyDrawStackItems();
 		_helperMatrix = null;
 		view = null;
+	}
+	
+	private function destroyDrawStackItems():Void
+	{
+		destroyDrawItemsChain(_headOfDrawStack);
+		destroyDrawItemsChain(_storageTilesHead);
+		destroyDrawItemsChain(_storageTrianglesHead);
+	}
+	
+	private function destroyDrawItemsChain(item:FlxDrawBaseItem<Dynamic>):Void
+	{
+		var next:FlxDrawBaseItem<Dynamic>;
+		while (item != null)
+		{
+			next = item.next;
+			item = FlxDestroyUtil.destroy(item);
+			item = next;
+		}
 	}
 	
 	@:noCompletion

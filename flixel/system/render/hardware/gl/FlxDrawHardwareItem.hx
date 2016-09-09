@@ -33,9 +33,9 @@ class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 		super();
 	}
 	
-	override public function dispose():Void 
+	override public function destroy():Void 
 	{
-		super.dispose();
+		super.destroy();
 		
 		buffer = null;
 		indexes = null;

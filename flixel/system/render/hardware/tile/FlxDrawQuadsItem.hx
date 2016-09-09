@@ -33,9 +33,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		position = 0;
 	}
 	
-	override public function dispose():Void
+	override public function destroy():Void
 	{
-		super.dispose();
+		super.destroy();
 		drawData = null;
 	}
 	
