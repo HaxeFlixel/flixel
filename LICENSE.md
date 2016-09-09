@@ -1,3 +1,5 @@
+### The MIT License (MIT)
+
 Copyright (c) 2009 Adam 'Atomic' Saltsman <br>
 Copyright (c) 2012 Matt Tuttle <br>
 Copyright (c) 2013 [HaxeFlixel Team](https://github.com/HaxeFlixel?tab=members)
