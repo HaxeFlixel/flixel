@@ -8,9 +8,8 @@ import openfl.gl.GL;
  * @author Yanrishatum
  */
 // TODO: try to init shader constants and attributes, so i won't need to do it in Hardware renderer (extend base Shader class with such functionality)...
-class TexturedShader extends Shader
+class TexturedShader extends FlxShader
 {
-
 	public function new() 
 	{
 		super();
@@ -66,6 +65,7 @@ class TexturedShader extends Shader
 		
 		// And call init again.
 		__init();
+		initShaderData();
 	}
 
 }

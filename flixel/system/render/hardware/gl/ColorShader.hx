@@ -7,7 +7,7 @@ import openfl.gl.GL;
  * ...
  * @author Yanrishatum
  */
-class ColorShader extends Shader
+class ColorShader extends FlxShader
 {
 
 	public function new() 
@@ -51,6 +51,7 @@ class ColorShader extends Shader
 		
 		// And call init again.
 		__init();
+		initShaderData();
 	}
 
 }
