@@ -82,9 +82,9 @@ class FlxBlitView extends FlxCameraView
 	/**
 	 * Helper variables for drawing UV quads.
 	 */
-	private static var rectVertices:Vector<Float> = [];
-	private static var rectUVs:Vector<Float> = [];
-	private static var rectIndices:Vector<Int> = [];
+	private static var rectVertices:Vector<Float> = new Vector<Float>();
+	private static var rectUVs:Vector<Float> = new Vector<Float>();
+	private static var rectIndices:Vector<Int> = new Vector<Int>();
 	
 	/**
 	 * Whether checkResize checks if the camera dimensions have changed to update the buffer dimensions.
