@@ -104,7 +104,15 @@ class FlxSound extends FlxBasic
 	/**
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
 	 */
-	public var loopTime:Float;
+	public var loopTime(default, set):Float;
+	/**
+	 * In case of looping, the point (in milliseconds) from where to restart the sound when it reaches this time.
+	 */
+	public var loopEndTime(default, set):Float;
+	/**
+	 * In case of non-looping, at which point to stop playing the sound, in milliseconds
+	 */
+	public var endTime(default, set):Float;
 	/**
 	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
 	 */
@@ -189,6 +197,8 @@ class FlxSound extends FlxBasic
 		_volumeAdjust = 1.0;
 		looped = false;
 		loopTime = 0.0;
+		loopEndTime = 0.0;
+		endTime = 0.0;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -272,6 +282,15 @@ class FlxSound extends FlxBasic
 			amplitudeRight = 0;
 			amplitude = 0;			
 		}
+		
+		if (looped && _time >= loopEndTime)
+		{
+			stopped(null);
+		}
+		else if (!looped && _time >= endTime)
+		{
+			stopped(null);
+		}
 	}
 	
 	override public function kill():Void
@@ -314,7 +333,8 @@ class FlxSound extends FlxBasic
 		}
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
-		looped = Looped; 
+		looped = Looped;
+		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -340,6 +360,7 @@ class FlxSound extends FlxBasic
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
 		looped = Looped;
+		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -366,6 +387,7 @@ class FlxSound extends FlxBasic
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
 		looped = Looped;
+		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
@@ -404,8 +426,9 @@ class FlxSound extends FlxBasic
 	 *                         paused when you call play(), it will continue playing from its current
 	 *                         position, NOT start again from the beginning.
 	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
+	 * @param	EndTime			At which point to stop playing the sound, in milliseconds
 	 */
-	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0):FlxSound
+	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, EndTime:Float = 0.0):FlxSound
 	{
 		if (!exists)
 			return this;
@@ -419,7 +442,8 @@ class FlxSound extends FlxBasic
 			resume();
 		else
 			startSound(StartTime);
-
+		
+		endTime = EndTime;
 		return this;
 	}
 	
@@ -712,6 +736,36 @@ class FlxSound extends FlxBasic
 			startSound(time);
 		}
 		return _time = time;
+	}
+	
+	private function set_loopTime(value:Float):Float
+	{
+		loopTime = value;
+		if (_sound != null)
+		{
+			loopTime = FlxMath.bound(value, 0, _sound.length);
+		}
+		return value;
+	}
+	
+	private function set_loopEndTime(value:Float):Float
+	{
+		loopEndTime = value;
+		if (_sound != null)
+		{
+			loopEndTime = (value <= loopTime) ? _sound.length : value;
+		}
+		return value;
+	}
+	
+	private function set_endTime(value:Float):Float
+	{
+		endTime = value;
+		if (_sound != null)
+		{
+			endTime = (value <= 0) ? _sound.length : value;
+		}
+		return value;
 	}
 
 	private inline function get_length():Float
