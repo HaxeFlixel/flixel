@@ -334,12 +334,12 @@ class FlxSound extends FlxBasic
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
 		looped = Looped;
-		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		loopEndTime = _length;
 		return this;
 	}
 	
@@ -360,12 +360,12 @@ class FlxSound extends FlxBasic
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
 		looped = Looped;
-		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		loopEndTime = _length;
 		return this;
 	}
 	
@@ -387,12 +387,12 @@ class FlxSound extends FlxBasic
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
 		looped = Looped;
-		loopEndTime = _sound.length;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		loopEndTime = _length;
 		return this;
 	}
 	#end
@@ -743,7 +743,7 @@ class FlxSound extends FlxBasic
 		loopTime = value;
 		if (_sound != null)
 		{
-			loopTime = FlxMath.bound(value, 0, _sound.length);
+			loopTime = FlxMath.bound(value, 0, length);
 		}
 		return value;
 	}
@@ -753,7 +753,7 @@ class FlxSound extends FlxBasic
 		loopEndTime = value;
 		if (_sound != null)
 		{
-			loopEndTime = (value <= loopTime) ? _sound.length : value;
+			loopEndTime = (value <= loopTime) ? length : value;
 		}
 		return value;
 	}
@@ -763,7 +763,7 @@ class FlxSound extends FlxBasic
 		endTime = value;
 		if (_sound != null)
 		{
-			endTime = (value <= 0) ? _sound.length : value;
+			endTime = (value <= 0) ? length : value;
 		}
 		return value;
 	}
