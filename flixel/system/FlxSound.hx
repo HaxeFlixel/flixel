@@ -740,20 +740,17 @@ class FlxSound extends FlxBasic
 	
 	private function set_loopTime(value:Float):Float
 	{
-		loopTime = FlxMath.bound(value, 0, length);
-		return value;
+		return loopTime = FlxMath.bound(value, 0, length);
 	}
 	
 	private function set_loopEndTime(value:Float):Float
 	{
-		loopEndTime = (value <= loopTime) ? length : value;
-		return value;
+		return loopEndTime = (value <= loopTime) ? length : value;
 	}
 	
 	private function set_endTime(value:Float):Float
 	{
-		endTime = (value <= 0) ? length : value;
-		return value;
+		return endTime = (value <= 0) ? length : value;
 	}
 
 	private inline function get_length():Float
