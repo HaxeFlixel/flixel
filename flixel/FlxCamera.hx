@@ -859,11 +859,11 @@ class FlxCamera extends FlxBasic
 		updateScroll();	
 		updateFlash(elapsed);
 		updateFade(elapsed);
-		updateShake(elapsed);
 		
 		flashSprite.filters = filtersEnabled ? _filters : null;
 		
 		updateFlashSpritePosition();
+		updateShake(elapsed);
 	}
 	
 	/**
@@ -1035,6 +1035,8 @@ class FlxCamera extends FlxBasic
 				{
 					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 				}
+				flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
+				flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
 			}
 		}
 	}
@@ -1399,12 +1401,6 @@ class FlxCamera extends FlxBasic
 			{
 				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
 			}
-		}
-		
-		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
-		{
-			flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-			flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
 		}
 	}
 	
