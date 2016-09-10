@@ -1,8 +1,8 @@
 package flixel.system.render.hardware.gl.shaders;
 
-import lime.utils.GLUtils;
 import openfl.display.Shader;
-import openfl.display.ShaderData;
+
+#if ((openfl >= "4.0.0") && !flash)
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
@@ -14,7 +14,6 @@ import openfl.gl.GL;
  */
 class FlxShader extends Shader
 {
-	#if !flash
 	public function new(vertexSource:String, fragmentSource:String)
 	{
 		super();
@@ -198,11 +197,16 @@ class FlxShader extends Shader
 			lastMatch = position.pos + position.len;
 		}
 	}
-	#else
+}
+
+#else
+
+class FlxShader implements Dynamic
+{
 	public function new(vertexSource:String, fragmentSource:String)
 	{
-		super();
+		
 	}
-	#end
-	
 }
+
+#end
