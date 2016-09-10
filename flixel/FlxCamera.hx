@@ -322,11 +322,6 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fxShakeComplete:Void->Void;
 	/**
-	 * Internal, used to store current value of camera's shake offset (for current frame),
-	 * which affects flashSprite positioning.
-	 */
-	private var _fxShakeOffset:FlxPoint = FlxPoint.get();
-	/**
 	 * Internal, defines on what axes to shake. Default value is XY / both.
 	 */
 	private var _fxShakeAxes:FlxAxes = XY;
@@ -840,8 +835,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashComplete = null;
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
-		_fxShakeOffset = null;
-		
+
 		super.destroy();
 	}
 	
@@ -1019,7 +1013,6 @@ class FlxCamera extends FlxBasic
 			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
-				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
 				{
 					_fxShakeComplete();
@@ -1029,14 +1022,12 @@ class FlxCamera extends FlxBasic
 			{
 				if (_fxShakeAxes != FlxAxes.Y)
 				{
-					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
+					flashSprite.x += FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
 				if (_fxShakeAxes != FlxAxes.X)
 				{
-					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
+					flashSprite.y += FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
-				flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-				flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
 			}
 		}
 	}
@@ -1268,7 +1259,7 @@ class FlxCamera extends FlxBasic
 		if (Axes == null)
 			Axes = XY;
 		
-		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
+		if (!Force && _fxShakeDuration > 0)
 		{
 			return;
 		}
@@ -1276,7 +1267,6 @@ class FlxCamera extends FlxBasic
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
 		_fxShakeAxes = Axes;
-		_fxShakeOffset.set();
 	}
 	
 	/**
