@@ -79,7 +79,17 @@ class FlxGitSHA
 	{
 		try
 		{
-			return new Process(cmd, args).stdout.readAll().toString();
+			var proc = new Process(cmd, args);
+			var out = "";
+
+			try
+			{
+				out = proc.stdout.readAll().toString();
+			}
+			catch (_:Dynamic) {}
+
+			proc.close();
+			return out;
 		}
 		catch (_:Dynamic)
 		{
