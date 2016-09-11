@@ -716,7 +716,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Tweens numeric public properties of an Object. Shorthand for creating a VarTween, starting it and adding it to the TweenManager.
-	 * Example: tweens.tween(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.tween(Object, { x: 500, y: 350 }, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object		The object containing the properties to tween.
 	 * @param	Values		An object containing key/value pairs of properties and target values.
@@ -742,9 +745,13 @@ class FlxTweenManager extends FlxBasic
 	 * Tweens some numeric value. Shorthand for creating a NumTween, starting it and adding it to the TweenManager. Using it in 
 	 * conjunction with a TweenFunction requires more setup, but is faster than VarTween because it doesn't use Reflection.
 	 * 
-	 * Example: 
-	 *    private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
-	 *    tweens.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
+	 * ```haxe
+	 * private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
+	 * FlxTween.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
+	 * ```
+	 * 
+	 * Trivia: For historical reasons, you can use either onUpdate or TweenFunction to accomplish the same thing, but TweenFunction
+	 * gives you the updated Float as a direct argument.
 	 * 
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
@@ -770,7 +777,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Tweens numeric value which represents angle. Shorthand for creating a AngleTween object, starting it and adding it to the TweenManager.
-	 * Example: tweens.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.angle(Sprite, -90, 90, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Sprite		Optional Sprite whose angle should be tweened.
 	 * @param	FromAngle	Start angle.
@@ -795,7 +805,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Tweens numeric value which represents color. Shorthand for creating a ColorTween object, starting it and adding it to a TweenPlugin.
-	 * Example: tweens.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.color(Sprite, 2.0, 0x000000, 0xffffff, 0.0, 1.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Sprite		Optional Sprite whose color should be tweened.
 	 * @param	Duration	Duration of the tween in seconds.
@@ -820,7 +833,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new LinearMotion tween.
-	 * Example: tweens.linearMotion(Object, 0, 0, 500, 20, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.linearMotion(Object, 0, 0, 500, 20, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX			X start.
@@ -849,7 +865,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new QuadMotion tween.
-	 * Example: tweens.quadMotion(Object, 0, 100, 300, 500, 100, 2, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.quadMotion(Object, 0, 100, 300, 500, 100, 2, 5, false, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX			X start.
@@ -880,7 +899,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new CubicMotion tween.
-	 * Example: tweens.cubicMotion(_sprite, 0, 0, 500, 100, 400, 200, 100, 100, 2, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.cubicMotion(_sprite, 0, 0, 500, 100, 400, 200, 100, 100, 2, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object 		The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	FromX		X start.
@@ -912,7 +934,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new CircularMotion tween.
-	 * Example: tweens.circularMotion(Object, 250, 250, 50, 0, true, 2, true { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.circularMotion(Object, 250, 250, 50, 0, true, 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	CenterX			X position of the circle's center.
@@ -942,7 +967,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new LinearPath tween.
-	 * Example: tweens.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.linearPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(100, 100)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object 			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
@@ -976,7 +1004,10 @@ class FlxTweenManager extends FlxBasic
 	
 	/**
 	 * Create a new QuadPath tween.
-	 * Example: tweens.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * 
+	 * ```haxe
+	 * FlxTween.quadPath(Object, [FlxPoint.get(0, 0), FlxPoint.get(200, 200), FlxPoint.get(400, 0)], 2, true, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT });
+	 * ```
 	 * 
 	 * @param	Object			The object to move (FlxObject or FlxSpriteGroup)
 	 * @param	Points			An array of at least 3 FlxPoints defining the path
