@@ -306,7 +306,7 @@ class Interaction extends Window
 			return;
 	
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.setSimpleNativeCursorData(name, icon);
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon);
 		#else
 		var sprite = new Sprite();
 		sprite.visible = false;
