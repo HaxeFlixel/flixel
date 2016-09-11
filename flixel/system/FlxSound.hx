@@ -322,14 +322,7 @@ class FlxSound extends FlxBasic
 		}
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
-		looped = Looped;
-		autoDestroy = AutoDestroy;
-		updateTransform();
-		exists = true;
-		onComplete = OnComplete;
-		_length = (_sound == null) ? 0 : _sound.length;
-		endTime = _length;
-		return this;
+		return init(Looped, AutoDestroy, OnComplete);
 	}
 	
 	/**
@@ -348,14 +341,8 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.load(new URLRequest(SoundURL));
-		looped = Looped;
-		autoDestroy = AutoDestroy;
-		updateTransform();
-		exists = true;
-		onComplete = OnComplete;
-		_length = (_sound == null) ? 0 : _sound.length;
-		endTime = _length;
-		return this;
+
+		return init(Looped, AutoDestroy, OnComplete);
 	}
 	
 	#if flash11
@@ -375,6 +362,13 @@ class FlxSound extends FlxBasic
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
 		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
+		
+		return init(Looped, AutoDestroy, OnComplete);
+	}
+	#end
+
+	private function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
+	{
 		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
@@ -384,7 +378,6 @@ class FlxSound extends FlxBasic
 		endTime = _length;
 		return this;
 	}
-	#end
 	
 	/**
 	 * Call this function if you want this sound's volume to change
