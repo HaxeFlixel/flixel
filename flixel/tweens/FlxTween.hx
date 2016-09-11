@@ -329,6 +329,9 @@ class FlxTween implements IFlxDestroyable
 		return globalManager.quadPath(Object, Points, DurationOrSpeed, UseDuration, Options);
 	}
 	
+	/**
+	 * The manager to which this tween belongs
+	 */
 	public var manager:FlxTweenManager;
 	public var active(default, set):Bool = false;
 	public var duration:Float = 0;
@@ -516,10 +519,9 @@ class FlxTween implements IFlxDestroyable
 			onEnd();
 			_secondsSinceStart = duration + startDelay;
 			
-			if (type == FlxTween.ONESHOT)
+			if (type == FlxTween.ONESHOT && manager != null)
 			{
-				if (manager != null)
-					manager.remove(this);
+				manager.remove(this);
 			}
 		}
 		
@@ -1119,7 +1121,7 @@ class FlxTweenManager extends FlxBasic
 	 */
 	public function forEach(Function:FlxTween->Void)
 	{
-		for (tween in _tweens)		
+		for (tween in _tweens)
 			Function(tween);
 	}
 }
