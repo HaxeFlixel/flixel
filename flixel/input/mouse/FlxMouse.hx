@@ -261,7 +261,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Shortcut to register a native cursor for in flash
+	 * Shortcut to register a native cursor in flash
 	 * 
 	 * @param   Name         The ID name used for the cursor
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
@@ -273,6 +273,29 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
+	 * Shortcut to register a simple MouseCursorData
+	 * 
+	 * @param   Name         The ID name used for the cursor
+	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
+	 */
+	public function registerSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
+	{
+		var cursorVector = new Vector<BitmapData>();
+		cursorVector[0] = CursorBitmap;
+		
+		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
+			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
+		
+		var cursorData = new MouseCursorData();
+		cursorData.hotSpot = new Point(0, 0);
+		cursorData.data = cursorVector;
+		
+		registerNativeCursor(Name, cursorData);
+		
+		return cursorData;
+	}
+
+	/**
 	 * Shortcut to create and set a simple MouseCursorData
 	 * 
 	 * @param   Name         The ID name used for the cursor
@@ -280,24 +303,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public function setSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
 	{
-		var cursorVector = new Vector<BitmapData>();
-		cursorVector[0] = CursorBitmap;
-		
-		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
-		{
-			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
-		}
-		
-		var cursorData = new MouseCursorData();
-		cursorData.hotSpot = new Point(0, 0);
-		cursorData.data = cursorVector;
-		
-		registerNativeCursor(Name, cursorData);
+		var data = registerSimpleNativeCursorData(Name, CursorBitmap);
 		setNativeCursor(Name);
-		
 		Mouse.show();
-		
-		return cursorData;
+		return data;
 	}
 	#end
 	
