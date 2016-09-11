@@ -417,7 +417,7 @@ class FlxSound extends FlxBasic
 	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
 	 * @param	EndTime			At which point to stop playing the sound, in milliseconds
 	 */
-	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, EndTime:Float = 0.0):FlxSound
+	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, ?EndTime:Float):FlxSound
 	{
 		if (!exists)
 			return this;
@@ -432,7 +432,7 @@ class FlxSound extends FlxBasic
 		else
 			startSound(StartTime);
 		
-		endTime = EndTime;
+		endTime = (EndTime == null) ? length : EndTime;
 		return this;
 	}
 	
