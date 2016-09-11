@@ -104,7 +104,11 @@ class FlxSound extends FlxBasic
 	/**
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
 	 */
-	public var loopTime:Float;
+	public var loopTime(default, set):Float;
+	/**
+	 * At which point to stop playing the sound, in milliseconds
+	 */
+	public var endTime(default, set):Float;
 	/**
 	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
 	 */
@@ -189,6 +193,7 @@ class FlxSound extends FlxBasic
 		_volumeAdjust = 1.0;
 		looped = false;
 		loopTime = 0.0;
+		endTime = 0.0;
 		_target = null;
 		_radius = 0;
 		_proximityPan = false;
@@ -270,8 +275,11 @@ class FlxSound extends FlxBasic
 		{
 			amplitudeLeft = 0;
 			amplitudeRight = 0;
-			amplitude = 0;			
+			amplitude = 0;
 		}
+		
+		if (_time >= endTime) 
+			stopped();
 	}
 	
 	override public function kill():Void
@@ -314,12 +322,13 @@ class FlxSound extends FlxBasic
 		}
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
-		looped = Looped; 
+		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		endTime = _length;
 		return this;
 	}
 	
@@ -345,6 +354,7 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		endTime = _length;
 		return this;
 	}
 	
@@ -371,6 +381,7 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
+		endTime = _length;
 		return this;
 	}
 	#end
@@ -404,8 +415,9 @@ class FlxSound extends FlxBasic
 	 *                         paused when you call play(), it will continue playing from its current
 	 *                         position, NOT start again from the beginning.
 	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
+	 * @param	EndTime        At which point to stop playing the sound, in milliseconds (set to `length` if `null`)
 	 */
-	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0):FlxSound
+	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, ?EndTime:Float):FlxSound
 	{
 		if (!exists)
 			return this;
@@ -419,7 +431,8 @@ class FlxSound extends FlxBasic
 			resume();
 		else
 			startSound(StartTime);
-
+		
+		endTime = (EndTime == null) ? length : EndTime;
 		return this;
 	}
 	
@@ -565,7 +578,7 @@ class FlxSound extends FlxBasic
 	 * An internal helper function used to help Flash
 	 * clean up finished sounds or restart looped sounds.
 	 */
-	private function stopped(_):Void
+	private function stopped(?_):Void
 	{
 		if (onComplete != null)
 			onComplete();
@@ -573,7 +586,7 @@ class FlxSound extends FlxBasic
 		if (looped)
 		{
 			cleanup(false);
-			play(false, loopTime);
+			play(false, loopTime, endTime);
 		}
 		else
 			cleanup(autoDestroy);
@@ -712,6 +725,16 @@ class FlxSound extends FlxBasic
 			startSound(time);
 		}
 		return _time = time;
+	}
+	
+	private function set_loopTime(value:Float):Float
+	{
+		return loopTime = FlxMath.bound(value, 0, length);
+	}
+	
+	private function set_endTime(value:Float):Float
+	{
+		return endTime = FlxMath.bound(value, 0, length);
 	}
 
 	private inline function get_length():Float
