@@ -6,37 +6,46 @@
 * `FlxText`: added support for multi-character markers in `applyMarkup()` (#1908)
 * `FlxG`: added `onMobile` (#1904)
 * `FlxPreloader`: added HTML5 support (#1846)
-* `FlxTweenManager`:
+* `FlxTweenManager` and `FlxTimerManager`:
 	* added `forEach()` (#1782)
-	* added `completeAll()` (#1782)
-* `FlxTimerManager`: added `forEach()` (#1782)
+	* added `completeAll()` (#1782, #1933)
+	* added `manager`, renamed static `manager` to `globalManager` (#1934)
 * `FlxPath`:
 	* added `setProperties()` (#1875)
 	* added a `this` return to some methods (#1875)
-* `FlxCameras`: added `cameraAdded`, `cameraRemoved` and `cameraResized` signals
+* `FlxG.cameras`: added `cameraAdded`, `cameraRemoved` and `cameraResized` signals (edf93b5)
 * `FlxDebugger`: added a tools panel to interact with objects (#1862)
 * `ConsoleCommands`: added a `step()` command (#1910)
 * `FlxG.console`: added `stepAfterCommand` (#1910)
-* `FlxSound`: added `length` (#1915)
+* `FlxSound`:
+	* added `length` (#1915)
+	* added `endTime` (#1943)
+	* added an `EndTime` argument to `play()` (#1943)
 * Added an HTML5 template to center games horizontally (#1918)
 
 #### Bugfixes:
 
 * `FlxBitmapText`: fixed `alpha` not working (#1877)
 * `FlxEmitter`: fixed properties not being ignored if their `.active` is set to `false` (#1903)
-* `FlxCamera`: fixed scroll bounds not taking zoom into account (#1889)
+* `FlxCamera`:
+	* fixed scroll bounds not taking `zoom` into account (#1889)
+	* fixed rendering issues with `bgColor == 0x0` on Next (#1793)
 * `FlxTilemap`: fixed buffers not being resized on camera changes (#1801)
 * `FlxSpriteGroup`:
 	* fixed `drawDebug()` not being called (#1905)
 	* fixed `revive()` not setting children's `alive` (#1891)
 * `flixel.input.gamepad.mappings`: fixed some mappings for digitized stick movements (c04ce96)
 * `FlxAtlasFrames`: fixed offset parsing for whitespace-stripped atlases in `fromLibGdx` (#1923)
+* `FlxKeyboard`: fixed some `FlxG.debugger.toggleKeys` and `FlxG.vcr.cancelKeys` not working on native (470c8e8)
+* `FlxMouse`: fixed `FlxButton` presses during VCR playback (#1729)
+* `FlxSprite`: fixed a position discrepancy between simple and complex render (#1939)
 
 #### Changes and improvements:
 
-* `flixel.util.helpers`: changed the default value of `active` to `true`
-* `FlxGitSHA`: optimized for compiler completion
-* `FlxRect`: added an optional `result` argument to `intersection()`
+* `flixel.util.helpers`: changed the default value of `active` to `true` (d863892)
+* `FlxGitSHA`: optimized for compiler completion (f5dca1d)
+* `FlxRect`: added an optional `result` argument to `intersection()` (c52b534)
+* `FlxG.debugger`: added `F2` to `toggleKeys` (f3f029c)
 
 4.1.1
 ------------------------------
