@@ -104,11 +104,12 @@ class FlxSound extends FlxBasic
 	/**
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
 	 */
-	public var loopTime(default, set):Float;
+	public var loopTime:Float = 0;
 	/**
-	 * At which point to stop playing the sound, in milliseconds
+	 * At which point to stop playing the sound, in milliseconds.
+	 * If not set / `null`, the sound completes normally.
 	 */
-	public var endTime(default, set):Float;
+	public var endTime:Null<Float>;
 	/**
 	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
 	 */
@@ -278,7 +279,7 @@ class FlxSound extends FlxBasic
 			amplitude = 0;
 		}
 		
-		if (_time >= endTime) 
+		if (endTime != null && _time >= endTime) 
 			stopped();
 	}
 	
@@ -407,8 +408,9 @@ class FlxSound extends FlxBasic
 	 *                         Default value is false, meaning if the sound is already playing or was
 	 *                         paused when you call play(), it will continue playing from its current
 	 *                         position, NOT start again from the beginning.
-	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
-	 * @param	EndTime        At which point to stop playing the sound, in milliseconds (set to `length` if `null`)
+	 * @param   StartTime      At which point to start plaing the sound, in milliseconds.
+	 * @param   EndTime        At which point to stop playing the sound, in milliseconds.
+	 *                         If not set / `null`, the sound completes normally.
 	 */
 	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, ?EndTime:Float):FlxSound
 	{
@@ -425,7 +427,7 @@ class FlxSound extends FlxBasic
 		else
 			startSound(StartTime);
 		
-		endTime = (EndTime == null) ? length : EndTime;
+		endTime = EndTime;
 		return this;
 	}
 	
@@ -718,16 +720,6 @@ class FlxSound extends FlxBasic
 			startSound(time);
 		}
 		return _time = time;
-	}
-	
-	private function set_loopTime(value:Float):Float
-	{
-		return loopTime = FlxMath.bound(value, 0, length);
-	}
-	
-	private function set_endTime(value:Float):Float
-	{
-		return endTime = FlxMath.bound(value, 0, length);
 	}
 
 	private inline function get_length():Float
