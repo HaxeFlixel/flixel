@@ -280,17 +280,11 @@ class FlxSound extends FlxBasic
 		{
 			amplitudeLeft = 0;
 			amplitudeRight = 0;
-			amplitude = 0;			
+			amplitude = 0;
 		}
 		
-		if (looped && _time >= loopEndTime)
-		{
-			stopped(null);
-		}
-		else if (!looped && _time >= endTime)
-		{
-			stopped(null);
-		}
+		if ((looped && _time >= loopEndTime) || (!looped && _time >= endTime)) 
+			stopped();
 	}
 	
 	override public function kill():Void
@@ -589,7 +583,7 @@ class FlxSound extends FlxBasic
 	 * An internal helper function used to help Flash
 	 * clean up finished sounds or restart looped sounds.
 	 */
-	private function stopped(_):Void
+	private function stopped(?_):Void
 	{
 		if (onComplete != null)
 			onComplete();
