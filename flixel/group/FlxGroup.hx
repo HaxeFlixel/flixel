@@ -18,6 +18,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Helper function for overlap functions in FlxObject and FlxTilemap.
 	 */
+	@:noCompletion
 	private static function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
@@ -42,6 +43,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return result;
 	}
 	
+	@:noCompletion
 	private static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
@@ -76,6 +78,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Internal helper variable for recycling objects a la FlxEmitter.
 	 */
+	@:noCompletion
 	private var _marker:Int = 0;
 	
 	/**
@@ -321,6 +324,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 	}
 	
+	@:noCompletion
 	private inline function recycleCreateObject(?ObjectClass:Class<T>, ?ObjectFactory:Void->T):T
 	{
 		var object:T = null;
@@ -819,6 +823,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 	}
 	
+	@:noCompletion
 	private function set_maxSize(Size:Int):Int
 	{
 		maxSize = Std.int(Math.abs(Size));

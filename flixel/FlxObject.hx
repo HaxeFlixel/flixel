@@ -66,7 +66,9 @@ class FlxObject extends FlxBasic
 	 */
 	public static inline var ANY:Int = LEFT | RIGHT | UP | DOWN;
 	
+	@:noCompletion
 	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
+	@:noCompletion
 	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
 	
 	/**
@@ -103,6 +105,7 @@ class FlxObject extends FlxBasic
 	 * "checkMaxOverlap" is used to determine whether we want to exclude (therefore check) overlaps which are
 	 * greater than a certain maximum (linked to SEPARATE_BIAS). Default is true, handy for "separateX" code.
 	 */
+	@:noCompletion
 	private static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
@@ -250,6 +253,7 @@ class FlxObject extends FlxBasic
 	 * "checkMaxOverlap" is used to determine whether we want to exclude (therefore check) overlaps which are
 	 * greater than a certain maximum (linked to SEPARATE_BIAS). Default is true, handy for "separateY" code.
 	 */
+	@:noCompletion
 	private static function computeOverlapY(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
@@ -548,7 +552,9 @@ class FlxObject extends FlxBasic
 	 */
 	public var path(default, set):FlxPath;
 	
+	@:noCompletion
 	private var _point:FlxPoint = FlxPoint.get();
+	@:noCompletion
 	private var _rect:FlxRect = FlxRect.get();
 	
 	/**
@@ -572,6 +578,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some object's variables
 	 */
+	@:noCompletion
 	private function initVars():Void
 	{
 		flixelType = OBJECT;
@@ -585,6 +592,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for initialization of some variables that are used in updateMotion()
 	 */
+	@:noCompletion
 	private inline function initMotionVars():Void
 	{
 		velocity = FlxPoint.get();
@@ -639,6 +647,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for updating the position and speed of this object. Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
+	@:noCompletion
 	private function updateMotion(elapsed:Float):Void
 	{
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
@@ -714,6 +723,7 @@ class FlxObject extends FlxBasic
 				(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
+	@:noCompletion
 	private inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		return overlaps(ObjectOrGroup, InScreenSpace, Camera);
@@ -766,6 +776,7 @@ class FlxObject extends FlxBasic
 			(objectScreenPos.y + object.height > _point.y) && (objectScreenPos.y < _point.y + height);
 	}
 	
+	@:noCompletion
 	private inline function overlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		return overlapsAt(X, Y, ObjectOrGroup, InScreenSpace, Camera);
@@ -1094,16 +1105,19 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("velocity", velocity)]);
 	}
 	
+	@:noCompletion
 	private function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
+	@:noCompletion
 	private function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
 	
+	@:noCompletion
 	private function set_width(Width:Float):Float
 	{
 		#if FLX_DEBUG
@@ -1117,6 +1131,7 @@ class FlxObject extends FlxBasic
 		return width = Width;
 	}
 	
+	@:noCompletion
 	private function set_height(Height:Float):Float
 	{
 		#if FLX_DEBUG
@@ -1130,52 +1145,62 @@ class FlxObject extends FlxBasic
 		return height = Height;
 	}
 	
+	@:noCompletion
 	private function get_width():Float
 	{
 		return width;
 	}
 	
+	@:noCompletion
 	private function get_height():Float
 	{
 		return height;
 	}
 	
+	@:noCompletion
 	private inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
 	
+	@:noCompletion
 	private function set_solid(Solid:Bool):Bool
 	{
 		allowCollisions = Solid ? ANY : NONE;
 		return Solid;
 	}
 	
+	@:noCompletion
 	private function set_angle(Value:Float):Float
 	{
 		return angle = Value;
 	}
 	
+	@:noCompletion
 	private function set_moves(Value:Bool):Bool
 	{
 		return moves = Value;
 	}
 	
+	@:noCompletion
 	private function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
 	}
 	
+	@:noCompletion
 	private function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
 	}
 	
+	@:noCompletion
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
 	}
 	
+	@:noCompletion
 	private function set_path(path:FlxPath):FlxPath
 	{
 		if (this.path == path)
