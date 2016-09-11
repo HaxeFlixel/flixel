@@ -106,11 +106,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var loopTime(default, set):Float;
 	/**
-	 * In case of looping, the point (in milliseconds) from where to restart the sound when it reaches this time.
-	 */
-	public var loopEndTime(default, set):Float;
-	/**
-	 * In case of non-looping, at which point to stop playing the sound, in milliseconds
+	 * At which point to stop playing the sound, in milliseconds
 	 */
 	public var endTime(default, set):Float;
 	/**
@@ -197,7 +193,6 @@ class FlxSound extends FlxBasic
 		_volumeAdjust = 1.0;
 		looped = false;
 		loopTime = 0.0;
-		loopEndTime = 0.0;
 		endTime = 0.0;
 		_target = null;
 		_radius = 0;
@@ -283,7 +278,7 @@ class FlxSound extends FlxBasic
 			amplitude = 0;
 		}
 		
-		if ((looped && _time >= loopEndTime) || (!looped && _time >= endTime)) 
+		if (_time >= endTime) 
 			stopped();
 	}
 	
@@ -333,7 +328,7 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
-		loopEndTime = _length;
+		endTime = _length;
 		return this;
 	}
 	
@@ -359,7 +354,7 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
-		loopEndTime = _length;
+		endTime = _length;
 		return this;
 	}
 	
@@ -386,7 +381,7 @@ class FlxSound extends FlxBasic
 		exists = true;
 		onComplete = OnComplete;
 		_length = (_sound == null) ? 0 : _sound.length;
-		loopEndTime = _length;
+		endTime = _length;
 		return this;
 	}
 	#end
@@ -591,7 +586,7 @@ class FlxSound extends FlxBasic
 		if (looped)
 		{
 			cleanup(false);
-			play(false, loopTime);
+			play(false, loopTime, endTime);
 		}
 		else
 			cleanup(autoDestroy);
@@ -734,17 +729,14 @@ class FlxSound extends FlxBasic
 	
 	private function set_loopTime(value:Float):Float
 	{
-		return loopTime = FlxMath.bound(value, 0, length);
-	}
-	
-	private function set_loopEndTime(value:Float):Float
-	{
-		return loopEndTime = (value <= loopTime) ? length : value;
+		loopTime = FlxMath.bound(value, 0, length);
+		set_endTime(endTime);
+		return loopTime;
 	}
 	
 	private function set_endTime(value:Float):Float
 	{
-		return endTime = (value <= 0) ? length : value;
+		return endTime = (value <= loopTime) ? length : value;
 	}
 
 	private inline function get_length():Float
