@@ -105,8 +105,8 @@ class PluginFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		add(FlxTimer.manager = new FlxTimerManager());
-		add(FlxTween.manager = new FlxTweenManager());
+		add(FlxTimer.globalManager = new FlxTimerManager());
+		add(FlxTween.globalManager = new FlxTweenManager());
 	}
 	
 	/**

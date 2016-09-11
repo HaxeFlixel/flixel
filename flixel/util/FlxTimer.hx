@@ -11,8 +11,12 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxTimer implements IFlxDestroyable
 {
-	public static var manager:FlxTimerManager;
+	public static var globalManager:FlxTimerManager;
 	
+	/**
+	 * The manager to which this timer belongs
+	 */
+	public var manager:FlxTimerManager;
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -69,7 +73,10 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Creates a new timer.
 	 */
-	public function new() {}
+	public function new(?manager:FlxTimerManager)
+	{
+		this.manager = manager != null ? manager : globalManager;
+	}
 	
 	/**
 	 * Clean up memory.
