@@ -19,6 +19,7 @@ import flixel.tile.FlxTileblock;
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
 */
+@:access(flixel.FlxSprite)
 class FlxCollision 
 {
 	// Optimization: Local static vars to reduce allocations
@@ -103,12 +104,17 @@ class FlxCollision
 		matrixB.identity();
 		matrixB.translate(-(intersect.x - boundsB.x), -(intersect.y - boundsB.y));
 		
+	#if flash
+		if (Contact._frame.sourceSize.x != Contact.framePixels.width || Contact._frame.sourceSize.y != Contact.framePixels.height
+		|| Target._frame.sourceSize.x != Target.framePixels.width || Target._frame.sourceSize.y != Target.framePixels.height)
+	#else
 		if (FlxG.renderTile)
+	#end
 		{
 			Contact.drawFrame();
 			Target.drawFrame();
 		}
-		
+
 		var testA:BitmapData = Contact.framePixels;
 		var testB:BitmapData = Target.framePixels;
 		
