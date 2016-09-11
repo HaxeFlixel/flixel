@@ -415,7 +415,7 @@ class FlxSound extends FlxBasic
 	 *                         paused when you call play(), it will continue playing from its current
 	 *                         position, NOT start again from the beginning.
 	 * @param   StartTime      At which point to start plaing the sound, in milliseconds
-	 * @param	EndTime			At which point to stop playing the sound, in milliseconds
+	 * @param	EndTime        At which point to stop playing the sound, in milliseconds (set to `length` if `null`)
 	 */
 	public function play(ForceRestart:Bool = false, StartTime:Float = 0.0, ?EndTime:Float):FlxSound
 	{
