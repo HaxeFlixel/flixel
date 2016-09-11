@@ -8,6 +8,8 @@ import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
 import openfl.gl.GL;
 
+// TODO: move this class out of system package...
+
 /**
  * ...
  * @author Zaphod

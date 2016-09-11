@@ -1,5 +1,6 @@
 package flixel.system.render.common;
 
+import flash.display.Graphics;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
@@ -195,14 +196,20 @@ class FlxDrawStack implements IFlxDestroyable
 		return itemToReturn;
 	}
 	
-	#if ((openfl >= "4.0.0") && !flash)
 	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
 	{
+		#if ((openfl >= "4.0.0") && !flash)
 		_helperMatrix.identity();
 		var drawItem:FlxDrawQuadsItem = startQuadBatch(null, true, false);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
+		#else
+		var graphic:Graphics = view.canvas.graphics;
+		var camera:FlxCamera = view.camera;
+		graphic.beginFill(color, alpha);
+		graphic.drawRect(rect.x, rect.y, rect.width, rect.height);
+		graphic.endFill();
+		#end
 	}
-	#end
 	
 	@:noCompletion
 	public function clearDrawStack():Void

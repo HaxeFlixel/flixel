@@ -72,9 +72,7 @@ class FlxHardwareView extends FlxCameraView
 	
 	public var drawStack:FlxDrawStack;
 	
-	#if ((openfl >= "4.0.0") && !flash)
-	private var _fillRect:FlxRect = FlxRect.get();
-	#end
+	private static var _fillRect:FlxRect = FlxRect.get();
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -113,7 +111,6 @@ class FlxHardwareView extends FlxCameraView
 		
 		#if ((openfl >= "4.0.0") && !flash)
 		canvas = FlxDestroyUtil.destroy(canvas);
-		_fillRect = FlxDestroyUtil.put(_fillRect);
 		#else
 		if (canvas != null)
 		{
@@ -225,17 +222,10 @@ class FlxHardwareView extends FlxCameraView
 			return;
 		}
 		
-		#if ((openfl >= "4.0.0") && !flash)
-		_fillRect.set( -1, -1, camera.width + 2, camera.height + 2);
-		drawStack.fillRect(_fillRect, Color, FxAlpha);
-		#else
-		var targetGraphics:Graphics = canvas.graphics;
-		targetGraphics.beginFill(Color, FxAlpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		targetGraphics.drawRect(-1, -1, camera.width + 2, camera.height + 2);
-		targetGraphics.endFill();
-		#end
+		_fillRect.set( -1, -1, camera.width + 2, camera.height + 2);
+		drawStack.fillRect(_fillRect, Color, FxAlpha);
 	}
 	
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
@@ -313,7 +303,6 @@ class FlxHardwareView extends FlxCameraView
 	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
 	{
 		canvas.drawItem(item);
-		
 	}
 	#end
 	
