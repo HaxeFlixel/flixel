@@ -241,6 +241,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
 			}
 			
+			// TODO: try to use gl.drawArrays()...
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
 			
 			i++;

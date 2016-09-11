@@ -31,6 +31,7 @@ typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 
+// TODO: move this typedef...
 typedef FlxShader =	#if (!openfl_legacy && openfl < "4.0.0") 
 						openfl.display.Shader; 
 					#elseif (openfl >= "4.0.0")
