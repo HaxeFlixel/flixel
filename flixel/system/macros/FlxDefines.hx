@@ -77,14 +77,18 @@ class FlxDefines
 		#end
 		
 		#if (openfl >= "4.0.0")
-		abort('Flixel is currently incompatible with OpenFL 4.0.0 or above. ' +
-			'Please use version 3.6.1 or older.', FlxMacroUtil.here());
+		abortIncompatible("OpenFL", "4.0.0", "3.6.1", FlxMacroUtil.here());
 		#end
 		
 		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
-		abort('Flixel is currently incompatible with Lime 3.0.0 or above. ' +
-			'Please use version 2.9.1 or older.', FlxMacroUtil.here());
+		abortIncompatible("Lime", "3.0.0", "2.9.1", FlxMacroUtil.here());
 		#end
+	}
+
+	private static function abortIncompatible(lib:String, firstIncompatible:String, lastCompatible:String, pos:Position)
+	{
+		abort('Please run \'haxelib set ${lib.toLowerCase()} $lastCompatible\'' +
+			' (Flixel is currently incompatible with $lib $firstIncompatible or newer).' , pos);
 	}
 	
 	private static function checkDefines()
