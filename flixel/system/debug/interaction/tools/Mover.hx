@@ -15,7 +15,7 @@ class GraphicMoverTool extends BitmapData {}
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Mover extends Tool
-{		
+{
 	private var _dragging:Bool = false;
 	private var _lastCursorPosition:FlxPoint;
 	
