@@ -40,11 +40,13 @@ class FlxState extends FlxGroup
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
+	@:noCompletion
 	private var _requestedSubState:FlxSubState;
 
 	/**
 	 * Whether to reset the substate (when it changes, or when it's closed).
 	 */
+	@:noCompletion
 	private var _requestSubStateReset:Bool = false;
 
 	/**
@@ -179,11 +181,13 @@ class FlxState extends FlxGroup
 		}
 	}
 
+	@:noCompletion
 	private function get_bgColor():FlxColor
 	{
 		return FlxG.cameras.bgColor;
 	}
 
+	@:noCompletion
 	private function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
