@@ -19,6 +19,9 @@
 	"exclude": {
 		"all": [
 			"TestSuite"
+		],
+		"AvoidStarImport": [
+			"flixel.math.FlxRandomTest"
 		]
 	},
 	"checks": [
