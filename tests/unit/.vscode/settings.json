@@ -7,5 +7,6 @@
     "haxe.displayConfigurations": [
         ["bin/flash/haxe/debug.hxml"] // if a hxml file is safe to use, we can just pass it as argument
         // you can add more than one configuration and switch between them
-    ]
+    ],
+    "haxecheckstyle.configurationFile": "../../checkstyle.json"
 }

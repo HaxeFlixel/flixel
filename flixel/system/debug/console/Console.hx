@@ -10,7 +10,6 @@ import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
 import flixel.util.FlxStringUtil;
 
-
 #if (!next && sys)
 import openfl.events.MouseEvent;
 #end
