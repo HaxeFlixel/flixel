@@ -55,8 +55,10 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
+	@:noCompletion
 	private var flixelType(default, null):FlxType = NONE;
 	
+	@:noCompletion
 	private var _cameras:Array<FlxCamera>;
 	
 	public function new() {}
@@ -122,31 +124,37 @@ class FlxBasic implements IFlxDestroyable
 			LabelValuePair.weak("exists", exists)]);
 	}
 	
+	@:noCompletion
 	private function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
 	
+	@:noCompletion
 	private function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
 	
+	@:noCompletion
 	private function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}
 	
+	@:noCompletion
 	private function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
 	}
 	
+	@:noCompletion
 	private function get_camera():FlxCamera
 	{
 		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
 	}
 	
+	@:noCompletion
 	private function set_camera(Value:FlxCamera):FlxCamera
 	{
 		if (_cameras == null)
@@ -156,11 +164,13 @@ class FlxBasic implements IFlxDestroyable
 		return Value;
 	}
 	
+	@:noCompletion
 	private function get_cameras():Array<FlxCamera>
 	{
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
 	}
 	
+	@:noCompletion
 	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;

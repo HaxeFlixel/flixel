@@ -14,4 +14,5 @@
 	<haxelib name="hamcrest" />
 	
 	<haxedef name="FLX_UNIT_TEST" />
+	<haxedef name="FLX_RECORD" />
 </project>

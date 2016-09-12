@@ -8,7 +8,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup.FlxTypedGroupIterator;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -50,14 +49,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
 	private var _skipTransformChildren:Bool = false;
-	
-	#if FLX_DEBUG
-	/**
-	 * Just a helper variable to check if this group has already been drawn on debug layer
-	 */
-	private var _isDrawnDebug:Bool = false;
-	#end
-	
+
 	/**
 	 * Array of all the FlxSprites that exist in this group for 
 	 * optimization purposes / static typing on cpp targets.
@@ -208,8 +200,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function draw():Void 
 	{
 		group.draw();
+		
 		#if FLX_DEBUG
-		_isDrawnDebug = false;
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
 		#end
 	}
 	
@@ -630,7 +624,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override private function set_alive(Value:Bool):Bool
 	{
-		if (exists && alive != Value)
+		if (alive != Value)
 			transformChildren(aliveTransform, Value);
 		return super.set_alive(Value);
 	}

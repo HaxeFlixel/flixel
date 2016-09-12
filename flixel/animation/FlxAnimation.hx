@@ -120,34 +120,17 @@ class FlxAnimation extends FlxBaseAnimation
 		reversed = Reversed;
 		paused = false;
 		_frameTimer = 0;
-		
-		var numFramesMinusOne:Int = numFrames - 1;
-		
-		if (Frame >= 0)
-		{
-			// bound frame value
-			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
-			// "reverse" frame value
-			Frame = reversed ? (numFramesMinusOne - Frame) : Frame;
-		}
-		
-		if ((delay <= 0) 									// non-positive fps
-			|| (Frame > numFramesMinusOne && !reversed) 	// normal animation
-			|| (Frame < 0 && reversed))						// reversed animation
-		{
-			finished = true;
-		}
-		else
-		{
-			finished = false;
-		}
-		
+		finished = delay == 0;
+
+		var maxFrameIndex:Int = numFrames - 1;
 		if (Frame < 0)
-		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		else
 		{
+			if (Frame > maxFrameIndex)
+				Frame = maxFrameIndex;
+			if (reversed)
+				Frame = (maxFrameIndex - Frame);
 			curFrame = Frame;
 		}
 		
@@ -197,31 +180,26 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (delay <= 0 || finished || paused)
+		if (delay == 0 || finished || paused)
 			return;
 
 		_frameTimer += elapsed;
 		while (_frameTimer > delay && !finished)
 		{
 			_frameTimer -= delay;
-			
-			if (looped)
+			if (reversed)
 			{
-				var numFramesMinusOne:Int = numFrames - 1;
-				var tempFrame:Int = reversed ? (numFramesMinusOne - curFrame) : curFrame;
-				
-				if (tempFrame == numFramesMinusOne)
-				{
-					curFrame = reversed ? numFramesMinusOne : 0;
-				}
+				if (looped && curFrame == 0)
+					curFrame = numFrames - 1;
 				else
-				{
-					curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
-				}
+					curFrame--;
 			}
 			else
 			{
-				curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
+				if (looped && curFrame == numFrames - 1)
+					curFrame = 0;
+				else
+					curFrame++;
 			}
 		}
 	}
@@ -236,24 +214,22 @@ class FlxAnimation extends FlxBaseAnimation
 		delay = 0;
 		frameRate = value;
 		if (value > 0)
-		{
 			delay = 1.0 / value;
-		}
 		return value;
 	}
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		var numFramesMinusOne:Int = numFrames - 1;
-		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = reversed ? (numFramesMinusOne - Frame) : Frame;
-		
-		if (tempFrame >= 0)
+		var maxFrameIndex:Int = numFrames - 1;
+		if (reversed)
+			Frame = (maxFrameIndex - Frame);
+
+		if (Frame >= 0)
 		{
-			if (!looped && tempFrame > numFramesMinusOne)
+			if (!looped && Frame > maxFrameIndex)
 			{
 				finished = true;
-				curFrame = reversed ? 0 : numFramesMinusOne;
+				curFrame = reversed ? 0 : maxFrameIndex;
 			}
 			else
 			{
@@ -261,9 +237,7 @@ class FlxAnimation extends FlxBaseAnimation
 			}
 		}
 		else
-		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		
 		curIndex = _frames[curFrame];
 		

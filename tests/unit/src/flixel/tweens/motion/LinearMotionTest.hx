@@ -25,7 +25,7 @@ class LinearMotionTest extends FlxTest
 		Assert.isFalse(object.immovable);
 		
 		startTween();
-		finishTween();
+		finishTween(tween);
 		
 		Assert.isFalse(object.immovable);
 	}
@@ -44,13 +44,5 @@ class LinearMotionTest extends FlxTest
 	function startTween()
 	{
 		tween = FlxTween.linearMotion(object, 0, 0, 1, 1, 0.01);
-	}
-	
-	function finishTween()
-	{
-		while (!tween.finished)
-		{
-			step();
-		}
 	}
 }

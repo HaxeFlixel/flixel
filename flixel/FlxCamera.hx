@@ -39,7 +39,6 @@ using flixel.util.FlxColorTransformUtil;
  * 				|->	canvas:Sprite		(its graphics is used for rendering objects in tile render mode)
  * 				|-> debugLayer:Sprite	(this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
-@:allow(flixel.FlxGame)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -323,11 +322,6 @@ class FlxCamera extends FlxBasic
 	 */
 	private var _fxShakeComplete:Void->Void;
 	/**
-	 * Internal, used to store current value of camera's shake offset (for current frame),
-	 * which affects flashSprite positioning.
-	 */
-	private var _fxShakeOffset:FlxPoint = FlxPoint.get();
-	/**
 	 * Internal, defines on what axes to shake. Default value is XY / both.
 	 */
 	private var _fxShakeAxes:FlxAxes = XY;
@@ -498,7 +492,6 @@ class FlxCamera extends FlxBasic
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false,
 		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
 	{
-		var itemToReturn:FlxDrawTrianglesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
@@ -841,8 +834,7 @@ class FlxCamera extends FlxBasic
 		_fxFlashComplete = null;
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
-		_fxShakeOffset = null;
-		
+
 		super.destroy();
 	}
 	
@@ -860,11 +852,11 @@ class FlxCamera extends FlxBasic
 		updateScroll();	
 		updateFlash(elapsed);
 		updateFade(elapsed);
-		updateShake(elapsed);
 		
 		flashSprite.filters = filtersEnabled ? _filters : null;
 		
 		updateFlashSpritePosition();
+		updateShake(elapsed);
 	}
 	
 	/**
@@ -873,9 +865,15 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		//Make sure we didn't go outside the camera's bounds
-		scroll.x = FlxMath.bound(scroll.x, minScrollX, (maxScrollX != null) ? maxScrollX - width : null);
-		scroll.y = FlxMath.bound(scroll.y, minScrollY, (maxScrollY != null) ? maxScrollY - height : null);
+		// Adjust bounds to account for zoom
+		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
+		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
+		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);
+		var maxY:Null<Float> = maxScrollY == null ? null : maxScrollY + (zoom - 1) * height / (2 * zoom);
+		
+		// Make sure we didn't go outside the camera's bounds
+		scroll.x = FlxMath.bound(scroll.x, minX, (maxX != null) ? maxX - width : null);
+		scroll.y = FlxMath.bound(scroll.y, minY, (maxY != null) ? maxY - height : null);
 	}
 	
 	/**
@@ -1020,7 +1018,6 @@ class FlxCamera extends FlxBasic
 			_fxShakeDuration -= elapsed;
 			if (_fxShakeDuration <= 0)
 			{
-				_fxShakeOffset.set();
 				if (_fxShakeComplete != null)
 				{
 					_fxShakeComplete();
@@ -1030,11 +1027,11 @@ class FlxCamera extends FlxBasic
 			{
 				if (_fxShakeAxes != FlxAxes.Y)
 				{
-					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
+					flashSprite.x += FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
 				if (_fxShakeAxes != FlxAxes.X)
 				{
-					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
+					flashSprite.y += FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
 			}
 		}
@@ -1267,7 +1264,7 @@ class FlxCamera extends FlxBasic
 		if (Axes == null)
 			Axes = XY;
 		
-		if (!Force && ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0)))
+		if (!Force && _fxShakeDuration > 0)
 		{
 			return;
 		}
@@ -1275,7 +1272,6 @@ class FlxCamera extends FlxBasic
 		_fxShakeDuration = Duration;
 		_fxShakeComplete = OnComplete;
 		_fxShakeAxes = Axes;
-		_fxShakeOffset.set();
 	}
 	
 	/**
@@ -1349,11 +1345,11 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
+			#if openfl_legacy // can't skip this on next, see #1793
 			if (FxAlpha == 0)
-			{
 				return;
-			}
-			
+			#end
+
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
 			
 			targetGraphics.beginFill(Color, FxAlpha);
@@ -1400,12 +1396,6 @@ class FlxCamera extends FlxBasic
 			{
 				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
 			}
-		}
-		
-		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
-		{
-			flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-			flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
 		}
 	}
 	
@@ -1542,26 +1532,30 @@ class FlxCamera extends FlxBasic
 	
 	private function set_width(Value:Int):Int
 	{
-		if (Value > 0)
+		if (width != Value && Value > 0)
 		{
 			width = Value; 
 			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
+			
+			FlxG.cameras.cameraResized.dispatch(this);
 		}
 		return Value;
 	}
 	
 	private function set_height(Value:Int):Int
 	{
-		if (Value > 0)
+		if (height != Value && Value > 0)
 		{
 			height = Value;
 			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
+			
+			FlxG.cameras.cameraResized.dispatch(this);
 		}
 		return Value;
 	}

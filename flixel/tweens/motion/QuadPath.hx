@@ -1,6 +1,7 @@
 package flixel.tweens.motion;
 
 import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween.FlxTweenManager;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxDestroyUtil;
 
@@ -27,9 +28,9 @@ class QuadPath extends Motion
 	private var _b:FlxPoint;
 	private var _c:FlxPoint;
 	
-	private function new(Options:TweenOptions)
+	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super(Options);
+		super(Options, manager);
 		
 		_points = [];
 		_curveT = [];

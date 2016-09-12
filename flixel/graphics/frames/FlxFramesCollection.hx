@@ -92,10 +92,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function getIndexByName(name:String):Int
 	{
-		var numFrames:Int = frames.length;
-		var frame:FlxFrame;
-		
-		for (i in 0...numFrames)
+		for (i in 0...frames.length)
 		{
 			if (frames[i].name == name)
 			{

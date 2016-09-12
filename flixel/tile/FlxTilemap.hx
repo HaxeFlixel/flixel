@@ -154,6 +154,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	private var _matrix:FlxMatrix;
 	
+	/**
+	 * Whether buffers need to be checked again next draw().
+	 */
+	private var _checkBufferChanges:Bool = false;
+	
 	public function new()
 	{
 		super();
@@ -167,7 +172,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
 		scale.set(1, 1);
 		
-		FlxG.signals.gameResized.add(onGameResize);
+		FlxG.signals.gameResized.add(onGameResized);
+		FlxG.cameras.cameraAdded.add(onCameraChanged);
+		FlxG.cameras.cameraRemoved.add(onCameraChanged);
+		FlxG.cameras.cameraResized.add(onCameraChanged);
+		
 		#if FLX_DEBUG
 		debugColorScheme = { solid: FlxColor.GREEN, highlighted: FlxColor.PINK, notSolid: FlxColor.TRANSPARENT };
 
@@ -211,7 +220,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		colorTransform = null;
 		
-		FlxG.signals.gameResized.remove(onGameResize);
+		FlxG.signals.gameResized.remove(onGameResized);
+		FlxG.cameras.cameraAdded.remove(onCameraChanged);
+		FlxG.cameras.cameraRemoved.remove(onCameraChanged);
+		FlxG.cameras.cameraResized.remove(onCameraChanged);
+		
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
@@ -236,6 +249,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		return value;
+	}
+	
+	private function onGameResized(_, _):Void
+	{
+		_checkBufferChanges = true;
+	}
+	
+	private function onCameraChanged(_):Void
+	{
+		_checkBufferChanges = true;
 	}
 	
 	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
@@ -383,7 +406,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
 		var columnIndex:Int;
 		var tile:FlxTile;
-		var debugTile:BitmapData;
 		
 		var gfx:Graphics = Camera.debugLayer.graphics;
 		
@@ -422,6 +444,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (graphic == null)
 			return;
 		
+		if (_checkBufferChanges)
+		{
+			refreshBuffers();
+			_checkBufferChanges = false;
+		}
+		
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
 		var l:Int = cameras.length;
@@ -444,9 +472,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 				
 				if (buffer.dirty)
-				{
 					drawTilemap(buffer, camera);
-				}
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
 				buffer.draw(camera, _flashPoint, scale.x, scale.y);
@@ -465,6 +491,28 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end
+	}
+	
+	private function refreshBuffers():Void
+	{
+		for (i in 0...cameras.length)
+		{
+			var camera = cameras[i];
+			var buffer = _buffers[i];
+			
+			// Calculate the required number of columns and rows
+			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
+			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
+			
+			// Create a new buffer if the number of columns and rows differs
+			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
+			{
+				if (buffer != null)
+					buffer.destroy();
+				
+				_buffers[i] = createBuffer(camera);
+			}
+		}
 	}
 	
 	/**
@@ -806,11 +854,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	/**
-	 * Use this method so the tilemap buffers are updated, eg when resizing your game
+	 * Use this method so the tilemap buffers are updated, e.g. when resizing your game
 	 */
 	public function updateBuffers():Void
 	{
-		_buffers = FlxDestroyUtil.destroyArray(_buffers);
+		FlxDestroyUtil.destroyArray(_buffers);
 		_buffers = [];
 	}
 	
@@ -1020,34 +1068,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		buffer.pixelPerfectRender = pixelPerfectRender;
 		buffer.antialiasing = antialiasing;
 		return buffer;
-	}
-	
-	/**
-	 * Signal listener for gameResize 
-	 */
-	private function onGameResize(_, _):Void
-	{
-		if (graphic == null)
-			return;
-		
-		for (i in 0...cameras.length)
-		{
-			var camera = cameras[i];
-			var buffer = _buffers[i];
-			
-			// Calculate the required number of columns and rows
-			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
-			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
-			
-			// Create a new buffer if the number of columns and rows differs
-			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
-			{
-				if (buffer != null)
-					buffer.destroy();
-				
-				_buffers[i] = createBuffer(camera);
-			}
-		}
 	}
 	
 	#if FLX_DEBUG

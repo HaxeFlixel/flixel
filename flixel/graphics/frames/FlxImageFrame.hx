@@ -168,9 +168,6 @@ class FlxImageFrame extends FlxFramesCollection
 			result = FlxG.bitmap.add(bitmap, false, key);
 		}
 		
-		var borderX:Int = Std.int(border.x);
-		var borderY:Int = Std.int(border.y);
-		
 		var imageFrame:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		return imageFrame.addBorder(border);
 	}
@@ -202,7 +199,6 @@ class FlxImageFrame extends FlxFramesCollection
 			frameBorder = FlxPoint.weak();
 		
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-		var imageFrame:FlxImageFrame;
 		for (imageFrame in imageFrames)
 		{
 			if (imageFrame.equals(frameRect, frameBorder) && imageFrame.frame.type != FlxFrameType.EMPTY)
@@ -232,12 +228,10 @@ class FlxImageFrame extends FlxFramesCollection
 	public static function findEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-		var imageFrame:FlxImageFrame;
-		var frame:FlxFrame;
-		
+
 		for (imageFrame in imageFrames)
 		{
-			frame = imageFrame.frame;
+			var frame = imageFrame.frame;
 			
 			if (frame.sourceSize.x == frameRect.width && frame.sourceSize.y == frameRect.height && frame.type == FlxFrameType.EMPTY)
 			{

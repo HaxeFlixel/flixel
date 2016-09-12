@@ -467,7 +467,7 @@ class FlxBitmapText extends FlxSprite
 	
 	override private function set_alpha(value:Float):Float
 	{
-		alpha = value;
+		super.set_alpha(value);
 		if (FlxG.renderBlit)
 		{
 			pendingTextBitmapChange = true;
@@ -549,7 +549,6 @@ class FlxBitmapText extends FlxSprite
 			_lines = [_lines[0]];
 		}
 		
-		var line:String;
 		var numLines:Int = _lines.length;
 		for (i in 0...numLines)
 		{

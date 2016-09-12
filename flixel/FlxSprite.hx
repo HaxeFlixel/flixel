@@ -169,52 +169,66 @@ class FlxSprite extends FlxObject
 	/**
 	 * The actual frame used for sprite rendering
 	 */
+	@:noCompletion
 	private var _frame:FlxFrame;
 	
 	/**
 	 * Graphic of _frame. Used in tile render mode, when useFramePixels is true.
 	 */
+	@:noCompletion
 	private var _frameGraphic:FlxGraphic;
 	
+	@:noCompletion
 	private var _facingHorizontalMult:Int = 1;
+	@:noCompletion
 	private var _facingVerticalMult:Int = 1;
 	
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:noCompletion
 	private var _flashPoint:Point;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:noCompletion
 	private var _flashRect:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating.
 	 */
+	@:noCompletion
 	private var _flashRect2:Rectangle;
 	/**
 	 * Internal, reused frequently during drawing and animating. Always contains (0,0).
 	 */
+	@:noCompletion
 	private var _flashPointZero:Point;
 	/**
 	 * Internal, helps with animation, caching and drawing.
 	 */
+	@:noCompletion
 	private var _matrix:FlxMatrix;
 	
 	/**
 	 * Rendering helper variable
 	 */
+	@:noCompletion
 	private var _halfSize:FlxPoint;
 	
 	/**
 	 * These vars are being used for rendering in some of FlxSprite subclasses (FlxTileblock, FlxBar, 
 	 * and FlxBitmapText) and for checks if the sprite is in camera's view.
 	 */
+	@:noCompletion
 	private var _sinAngle:Float = 0;
+	@:noCompletion
 	private var _cosAngle:Float = 1;
+	@:noCompletion
 	private var _angleChanged:Bool = true;
 	/**
 	 * Maps FlxObject direction constants to axis flips
 	 */
+	@:noCompletion
 	private var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
 	
 	/**
@@ -234,6 +248,7 @@ class FlxSprite extends FlxObject
 			loadGraphic(SimpleGraphic);
 	}
 	
+	@:noCompletion
 	override private function initVars():Void 
 	{
 		super.initVars();
@@ -569,6 +584,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Resets some important variables for sprite optimization and rendering.
 	 */
+	@:noCompletion
 	private function resetHelpers():Void
 	{
 		resetFrameSize();
@@ -642,6 +658,7 @@ class FlxSprite extends FlxObject
 		#end
 	}
 	
+	@:noCompletion
 	private function drawSimple(camera:FlxCamera):Void
 	{
 		if (isPixelPerfectRender(camera))
@@ -652,6 +669,7 @@ class FlxSprite extends FlxObject
 			_flashPoint, colorTransform, blend, antialiasing);
 	}
 	
+	@:noCompletion
 	private function drawComplex(camera:FlxCamera):Void
 	{
 		_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
@@ -666,11 +684,15 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 		
-		_point.add(origin.x, origin.y);
-		if (isPixelPerfectRender(camera))
-			_point.floor();
-		
+		_point.add(origin.x, origin.y);		
 		_matrix.translate(_point.x, _point.y);
+		
+		if (isPixelPerfectRender(camera))
+		{
+			_matrix.tx = Math.floor(_matrix.tx);
+			_matrix.ty = Math.floor(_matrix.ty);
+		}
+		
 		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
 	
@@ -866,6 +888,7 @@ class FlxSprite extends FlxObject
 	 * 
 	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
 	 */
+	@:noCompletion
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
 		if (frame == null)	
@@ -1053,6 +1076,7 @@ class FlxSprite extends FlxObject
 	 * @param	saveAnimations		Whether to save animations in animation controller or not
 	 * @return	This sprite with loaded frames
 	 */
+	@:access(flixel.animation.FlxAnimationController)
 	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxSprite
 	{
 		if (saveAnimations)
@@ -1088,11 +1112,13 @@ class FlxSprite extends FlxObject
 		return this;
 	}
 	
+	@:noCompletion
 	private function get_pixels():BitmapData
 	{
 		return (graphic == null) ? null : graphic.bitmap;
 	}
 	
+	@:noCompletion
 	private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		var key:String = FlxG.bitmap.findKeyForBitmap(Pixels);
@@ -1111,6 +1137,7 @@ class FlxSprite extends FlxObject
 		return Pixels;
 	}
 	
+	@:noCompletion
 	private function set_frame(Value:FlxFrame):FlxFrame
 	{
 		frame = Value;
@@ -1146,6 +1173,7 @@ class FlxSprite extends FlxObject
 		return frame;
 	}
 	
+	@:noCompletion
 	private function set_facing(Direction:Int):Int
 	{		
 		var flip = _facingFlip.get(Direction);
@@ -1158,6 +1186,7 @@ class FlxSprite extends FlxObject
 		return facing = Direction;
 	}
 	
+	@:noCompletion
 	private function set_alpha(Alpha:Float):Float
 	{
 		if (alpha == Alpha)
@@ -1169,6 +1198,7 @@ class FlxSprite extends FlxObject
 		return alpha;
 	}
 	
+	@:noCompletion
 	private function set_color(Color:FlxColor):Int
 	{
 		if (color == Color)
@@ -1180,6 +1210,7 @@ class FlxSprite extends FlxObject
 		return color;
 	}
 	
+	@:noCompletion
 	override private function set_angle(Value:Float):Float
 	{
 		var newAngle = (angle != Value);
@@ -1192,6 +1223,7 @@ class FlxSprite extends FlxObject
 		return ret;
 	}
 	
+	@:noCompletion
 	private inline function updateTrig():Void
 	{
 		if (_angleChanged)
@@ -1203,6 +1235,7 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
+	@:noCompletion
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
 		return blend = Value;
@@ -1212,6 +1245,7 @@ class FlxSprite extends FlxObject
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphics' useCount also for better memory tracking.
 	 */
+	@:noCompletion
 	private function set_graphic(Value:FlxGraphic):FlxGraphic
 	{
 		var oldGraphic:FlxGraphic = graphic;
@@ -1229,6 +1263,7 @@ class FlxSprite extends FlxObject
 		return graphic = Value;
 	}
 	
+	@:noCompletion
 	private function set_clipRect(rect:FlxRect):FlxRect
 	{
 		if (rect != null)
@@ -1255,6 +1290,7 @@ class FlxSprite extends FlxObject
 	 * @param	Frames	frames to load into this sprite.
 	 * @return	loaded frames.
 	 */
+	@:noCompletion
 	private function set_frames(Frames:FlxFramesCollection):FlxFramesCollection
 	{
 		if (animation != null)
@@ -1284,6 +1320,7 @@ class FlxSprite extends FlxObject
 		return Frames;
 	}
 	
+	@:noCompletion
 	private function set_flipX(Value:Bool):Bool
 	{
 		if (FlxG.renderTile)
@@ -1294,6 +1331,7 @@ class FlxSprite extends FlxObject
 		return flipX = Value;
 	}
 	
+	@:noCompletion
 	private function set_flipY(Value:Bool):Bool
 	{
 		if (FlxG.renderTile)
@@ -1304,11 +1342,13 @@ class FlxSprite extends FlxObject
 		return flipY = Value;
 	}
 	
+	@:noCompletion
 	private function set_antialiasing(value:Bool):Bool
 	{
 		return antialiasing = value;
 	}
 	
+	@:noCompletion
 	private function set_useFramePixels(value:Bool):Bool
 	{
 		if (FlxG.renderTile)
@@ -1333,6 +1373,7 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
+	@:noCompletion
 	private inline function checkFlipX():Bool
 	{
 		var doFlipX = (flipX != _frame.flipX);
@@ -1343,6 +1384,7 @@ class FlxSprite extends FlxObject
 		return doFlipX;
 	}
 	
+	@:noCompletion
 	private inline function checkFlipY():Bool
 	{
 		var doFlipY = (flipY != _frame.flipY);

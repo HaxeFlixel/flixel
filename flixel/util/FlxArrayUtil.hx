@@ -58,12 +58,14 @@ class FlxArrayUtil
 	 * IMPORTANT: always count down from length to zero if removing elements from whithin a loop
 	 * 
 	 * ```haxe
+	 * using flixel.util.FlxArrayUtil;
+	 *
 	 * var i = array.length;
 	 * while (i-- > 0)
 	 * {
 	 *      if (array[i].shouldRemove)
 	 *      {
-	 *           FlxArrayUtil.swapAndPop(array, i);
+	 *           array.swapAndPop(i);
 	 *      }
 	 * }
 	 * ```

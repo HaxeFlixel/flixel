@@ -1,3 +1,5 @@
+### The MIT License (MIT)
+
 Copyright (c) 2009 Adam 'Atomic' Saltsman <br>
 Copyright (c) 2012 Matt Tuttle <br>
 Copyright (c) 2013 [HaxeFlixel Team](https://github.com/HaxeFlixel?tab=members)
@@ -22,8 +24,3 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
-NOTE FROM THE AUTHOR: As far as I know, you only have to include
-this license if you are redistributing source code that includes
-the Flixel library.  There is no need (or way, afaik) to include
-it in your compiled flash games and apps!

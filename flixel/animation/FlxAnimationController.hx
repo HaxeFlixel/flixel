@@ -70,7 +70,6 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
-	@:allow(flixel.FlxSprite)
 	private var _animations(default, null):Map<String, FlxAnimation>;
 	
 	private var _prerotated:FlxPrerotatedAnimation;

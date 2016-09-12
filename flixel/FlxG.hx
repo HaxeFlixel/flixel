@@ -16,7 +16,6 @@ import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
-import flixel.system.frontEnds.HTML5FrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
@@ -27,9 +26,7 @@ import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSave;
-using flixel.util.FlxArrayUtil;
 
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
@@ -54,12 +51,16 @@ import flixel.input.FlxSwipe;
 #end
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
+import flixel.util.FlxDestroyUtil;
+using flixel.util.FlxArrayUtil;
+#end
+#if html5
+import flixel.system.frontEnds.HTML5FrontEnd;
 #end
 
 /**
  * Global helper class for audio, input, the camera system, the debugger and other global properties.
  */
-@:allow(flixel.FlxGame)
 class FlxG 
 {
 	/**
@@ -91,7 +92,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
 	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
 	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 1, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 2, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -118,6 +119,13 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
+	/**
+	 * Whether the game is running on a mobile device.
+	 * If on HTML5, it returns `FlxG.html5.onMobile`.
+	 * Otherwise, it checks whether the `mobile` haxedef is defined.
+	 */
+	public static var onMobile(get, never):Bool;
+	
 	public static var renderMethod(default, null):FlxRenderMethod;
 	
 	public static var renderBlit(default, null):Bool;
@@ -126,6 +134,7 @@ class FlxG
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
+	@:allow(flixel.FlxGame.updateElapsed)
 	public static var elapsed(default, null):Float = 0;
 	/**
 	 * Useful when the timestep is NOT fixed (i.e. variable), to prevent jerky movement or erratic behavior at very low fps.
@@ -512,6 +521,7 @@ class FlxG
 	/**
 	 * Called by FlxGame to set up FlxG during FlxGame's constructor.
 	 */
+	@:allow(flixel.FlxGame.new)
 	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
 		game = Game;
@@ -595,6 +605,7 @@ class FlxG
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
+	@:allow(flixel.FlxGame)
 	private static function reset():Void
 	{
 		random.resetInitialSeed();
@@ -704,6 +715,18 @@ class FlxG
 	private static inline function get_state():FlxState
 	{
 		return game._state;
+	}
+	
+	private static inline function get_onMobile():Bool
+	{
+		return
+			#if js
+				html5.onMobile
+			#elseif mobile
+				true
+			#else
+				false
+			#end;
 	}
 }
 

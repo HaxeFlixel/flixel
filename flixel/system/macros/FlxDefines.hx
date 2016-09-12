@@ -53,9 +53,19 @@ class FlxDefines
 {
 	public static function run()
 	{
+		checkDependencyCompatibility();
+		checkDefines();
+		defineInversions();
+		defineHelperDefines();
+		
+		if (defined("flash"))
+			checkSwfVersion();
+	}
+	
+	private static function checkDependencyCompatibility()
+	{
 		#if (haxe_ver < "3.2")
-		abort('The minimum required Haxe version for HaxeFlixel is 3.2.0. '
-			+ 'Please install a newer version.', FlxMacroUtil.here());
+		abortMinVersion("Haxe", "3.2.0", FlxMacroUtil.here());
 		#end
 		
 		#if ((haxe_ver == "3.201") && flixel_ui)
@@ -65,12 +75,33 @@ class FlxDefines
 				FlxMacroUtil.here());
 		#end
 		
-		checkDefines();
-		defineInversions();
-		defineHelperDefines();
+		#if (openfl < "3.5.0")
+		abortMinVersion("OpenFL", "3.5.0", FlxMacroUtil.here());
+		#end
+
+		#if (lime < "2.8.1")
+		abortMinVersion("Lime", "2.8.1", FlxMacroUtil.here());
+		#end
+
+		#if (openfl >= "4.0.0")
+		abortMaxVersion("OpenFL", "4.0.0", "3.6.1", FlxMacroUtil.here());
+		#end
 		
-		if (defined("flash"))
-			checkSwfVersion();
+		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
+		abortMaxVersion("Lime", "3.0.0", "2.9.1", FlxMacroUtil.here());
+		#end
+	}
+
+	private static function abortMinVersion(dependency:String, minimumRequired:String, pos:Position)
+	{
+		abort('The minimum required $dependency version for HaxeFlixel is $minimumRequired. '
+			+ 'Please install a newer version.', pos);
+	}
+
+	private static function abortMaxVersion(lib:String, firstIncompatible:String, lastCompatible:String, pos:Position)
+	{
+		abort('Please run \'haxelib set ${lib.toLowerCase()} $lastCompatible\'' +
+			' (Flixel is currently incompatible with $lib $firstIncompatible or newer).' , pos);
 	}
 	
 	private static function checkDefines()

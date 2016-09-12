@@ -22,7 +22,7 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {}
+class VirtualInputData extends #if lime_legacy ByteArray #else ByteArrayData #end {}
 
 typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;

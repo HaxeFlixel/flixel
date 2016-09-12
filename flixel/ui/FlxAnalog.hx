@@ -201,9 +201,6 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	override public function update(elapsed:Float):Void 
 	{
-		#if FLX_TOUCH
-		var touch:FlxTouch = null;
-		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog

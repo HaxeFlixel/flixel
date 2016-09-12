@@ -3,7 +3,6 @@ package flixel.system.debug.watch;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
-import flixel.system.debug.console.ConsoleUtil;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -13,6 +12,10 @@ import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
 using flixel.util.FlxStringUtil;
+
+#if hscript
+import flixel.system.debug.console.ConsoleUtil;
+#end
 
 class WatchEntry extends Sprite implements IFlxDestroyable
 {

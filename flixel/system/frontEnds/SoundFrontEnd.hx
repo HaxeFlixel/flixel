@@ -11,7 +11,6 @@ import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 
-@:allow(flixel.FlxGame)
 @:allow(flixel.FlxG)
 class SoundFrontEnd
 {
@@ -316,6 +315,7 @@ class SoundFrontEnd
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
+	@:allow(flixel.FlxGame)
 	private function update(elapsed:Float):Void
 	{
 		if (music != null && music.active)
@@ -334,6 +334,7 @@ class SoundFrontEnd
 		#end
 	}
 	
+	@:allow(flixel.FlxGame)
 	private function onFocusLost():Void
 	{
 		if (music != null)
@@ -350,6 +351,7 @@ class SoundFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private function onFocus():Void
 	{
 		if (music != null)

@@ -11,8 +11,12 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxTimer implements IFlxDestroyable
 {
-	public static var manager:FlxTimerManager;
+	public static var globalManager:FlxTimerManager;
 	
+	/**
+	 * The manager to which this timer belongs
+	 */
+	public var manager:FlxTimerManager;
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -69,7 +73,10 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Creates a new timer.
 	 */
-	public function new() {}
+	public function new(?manager:FlxTimerManager)
+	{
+		this.manager = manager != null ? manager : globalManager;
+	}
 	
 	/**
 	 * Clean up memory.
@@ -196,7 +203,8 @@ class FlxTimer implements IFlxDestroyable
 }
 
 /**
- * A simple manager for tracking and updating game timer objects.
+ * A simple manager for tracking and updating game timer objects. 
+ * Normally accessed via the static `FlxTimer.manager` rather than being created separately.
  */
 class FlxTimerManager extends FlxBasic
 {
@@ -267,10 +275,36 @@ class FlxTimerManager extends FlxBasic
 	}
 	
 	/**
+	 * Immediately updates all non-infinite timers to their end points, repeatedly,
+	 * until all their loops are finished, resulting in `loopsLeft` callbacks being run.
+	 */
+	public function completeAll():Void
+	{
+		var timersToFinish:Array<FlxTimer> = [];
+		for (timer in _timers)
+            if (timer.loops > 0)
+				timersToFinish.push(timer);
+		for (timer in timersToFinish)
+			while (!timer.finished)
+				timer.update(timer.timeLeft);
+	}
+	
+	/**
 	 * Removes all the timers from the timer manager.
 	 */
 	public inline function clear():Void
 	{
 		FlxArrayUtil.clearArray(_timers);
+	}
+
+	/**
+	 * Applies a function to all timers
+	 * 
+	 * @param   Function   A function that modifies one timer at a time
+	 */
+	public function forEach(Function:FlxTimer->Void)
+	{
+		for (timer in _timers)		
+			Function(timer);
 	}
 }

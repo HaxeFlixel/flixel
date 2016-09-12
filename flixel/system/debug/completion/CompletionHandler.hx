@@ -1,12 +1,15 @@
 package flixel.system.debug.completion;
 
-import flixel.system.debug.console.ConsoleUtil;
 import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
 using flixel.util.FlxArrayUtil;
-using flixel.util.FlxStringUtil;
 using StringTools;
+
+#if hscript
+import flixel.system.debug.console.ConsoleUtil;
+using flixel.util.FlxStringUtil;
+#end
 
 class CompletionHandler
 {

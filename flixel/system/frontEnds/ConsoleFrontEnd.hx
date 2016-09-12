@@ -5,9 +5,16 @@ import flixel.FlxG;
 class ConsoleFrontEnd
 {
 	/**
-	 * Whether the console should auto-pause or not when it's focused. Only works for flash atm.
+	 * Whether the console should auto-pause or not when it's focused.
 	 */
 	public var autoPause:Bool = true;
+	
+	/**
+	 * Whether the console should `step()` the game after a command is entered.
+	 * Setting this to `false` allows inputting multiple console commands within the same frame.
+	 * Use the `step()` command to step the game from the console.
+	 */
+	public var stepAfterCommand:Bool = true;
 	
 	/**
 	 * Register a new function to use in any command.
@@ -38,7 +45,7 @@ class ConsoleFrontEnd
 	/**
 	 * Register a new class to use in any command.
 	 * 
-	 * @param 	cl			The class to register.
+	 * @param 	cl	The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>):Void
 	{

@@ -5,17 +5,18 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flash.events.FocusEvent;
-import flixel.effects.postprocess.PostProcess;
 import flixel.graphics.tile.FlxTilesheet;
-import flixel.math.FlxRandom;
 import flixel.system.FlxSplash;
-import flixel.system.replay.FlxReplay;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
+#if desktop
+import flash.events.FocusEvent;
+#end
+
 #if FLX_POST_PROCESS
+import flixel.effects.postprocess.PostProcess;
 import openfl.display.OpenGLView;
 #end
 
@@ -31,13 +32,18 @@ import flixel.system.ui.FlxSoundTray;
 import flixel.system.ui.FlxFocusLostScreen;
 #end
 
+#if FLX_RECORD
+import flixel.math.FlxRandom;
+import flixel.system.replay.FlxReplay;
+#end
+
 /**
  * FlxGame is the heart of all flixel games, and contains a bunch of basic game loops and things.
  * It is a long and sloppy file that you shouldn't have to worry about too much!
  * It is basically only used to create your game object in the first place,
  * after that FlxG and FlxState have all the useful stuff you actually need.
  */
-@:allow(flixel)
+@:allow(flixel.FlxG)
 class FlxGame extends Sprite
 {
 	/**
@@ -49,10 +55,12 @@ class FlxGame extends Sprite
 	/**
 	 * Flag for whether a replay is currently playing.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	public var replaying(default, null):Bool = false;
 	/**
 	 * Flag for whether a new recording is being made.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	public var recording(default, null):Bool = false;
 	#end
 	
@@ -97,6 +105,11 @@ class FlxGame extends Sprite
 	 * Total number of milliseconds elapsed since game start.
 	 */
 	private var _total:Int = 0;
+	/**
+	 * Time stamp of game startup. Needed on JS where Lib.getTimer()
+	 * returns time stamp of current date, not the time passed since app start.
+	 */
+	private var _startTime:Int = 0;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
@@ -191,14 +204,17 @@ class FlxGame extends Sprite
 	/**
 	 * Container for a game replay object.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _replay:FlxReplay;
 	/**
 	 * Flag for whether a playback of a recording was requested.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _replayRequested:Bool = false;
 	/**
 	 * Flag for whether a new recording was requested.
 	 */
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private var _recordingRequested:Bool = false;
 	#end
 	
@@ -281,7 +297,8 @@ class FlxGame extends Sprite
 		}
 		removeEventListener(Event.ADDED_TO_STAGE, create);
 		
-		_total = getTimer();
+		_startTime = getTimer();
+		_total = getTicks();
 		
 		#if desktop
 		FlxG.fullscreen = _startFullscreen;
@@ -492,7 +509,7 @@ class FlxGame extends Sprite
 	 */
 	private function onEnterFrame(_):Void
 	{
-		ticks = getTimer();
+		ticks = getTicks();
 		_elapsedMS = ticks - _total;
 		_total = ticks;
 		
@@ -515,6 +532,13 @@ class FlxGame extends Sprite
 				{
 					#if FLX_DEBUG
 					debugger.update();
+					// If the interactive debug is active, the screen must
+					// be rendered because the user might be doing changes
+					// to game objects (e.g. moving things around).
+					if (debugger.interaction.isActive())
+					{
+						draw();
+					}
 					#end
 					return;
 				}
@@ -715,9 +739,7 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			ticks = getTimer(); // Lib.getTimer() is expensive, only do it if necessary
-		}
+			ticks = getTicks();
 		#end
 		
 		updateElapsed();
@@ -744,7 +766,7 @@ class FlxGame extends Sprite
 		FlxG.signals.postUpdate.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelUpdate(getTimer() - ticks);
+		debugger.stats.flixelUpdate(getTicks() - ticks);
 		#end
 		
 		#if FLX_POINTER_INPUT
@@ -842,10 +864,7 @@ class FlxGame extends Sprite
 		
 		#if FLX_DEBUG
 		if (FlxG.debugger.visible)
-		{
-			// getTimer() is expensive, only do it if necessary
-			ticks = getTimer(); 
-		}
+			ticks = getTicks();
 		#end
 		
 		FlxG.signals.preDraw.dispatch();
@@ -882,12 +901,18 @@ class FlxGame extends Sprite
 		FlxG.signals.postDraw.dispatch();
 		
 		#if FLX_DEBUG
-		debugger.stats.flixelDraw(getTimer() - ticks);
+		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+	}
+	
+	private inline function getTicks()
+	{
+		return getTimer() - _startTime;
 	}
 	
 	private dynamic function getTimer():Int
 	{
+		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
 }
