@@ -304,9 +304,7 @@ class FlxRandom
 	 * @return  The newly shuffled array.
 	 */
 	@:generic
-	@:deprecated(
-		"Unless you rely on reproducing the exact output of shuffleArray, you should use shuffle instead," +
-		"which is both faster and higher quality.")
+	@:deprecated("Unless you rely on reproducing the exact output of shuffleArray(), you should use shuffle() instead, which is both faster and higher quality.")
 	public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
