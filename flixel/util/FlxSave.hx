@@ -4,10 +4,7 @@ import flash.errors.Error;
 import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-
-#if (flash && openfl <= "3.4.0")
 import flash.events.NetStatusEvent;
-#end
 
 /**
  * A class to help automate and simplify save game functionality.
@@ -97,7 +94,7 @@ class FlxSave implements IFlxDestroyable
 	 * 
 	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
-	 * @return	Whether or not the data was written immediately.  False could be an error OR a storage request popup.
+	 * @return	Whether or not the data was written immediately. False could be an error OR a storage request popup.
 	 */
 	public function flush(MinFileSize:Int = 0, ?OnComplete:Bool->Void):Bool
 	{
@@ -106,39 +103,17 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		_onComplete = OnComplete;
-		#if (flash && openfl <= "3.4.0")
-		var result:String = null;
-		#else
 		var result:SharedObjectFlushStatus;
-		#end
 		try 
 		{ 
-			#if (!js && openfl <= "3.4.0")
-			result = _sharedObject.flush(MinFileSize); 
-			#else
-			result = _sharedObject.flush(); 
-			#end
+			result = _sharedObject.flush();
 		}
-		catch (e:Error)
+		catch (_:Error)
 		{
 			return onDone(ERROR);
 		}
 
-		#if (flash && openfl <= "3.4.0")
-		if (result == "pending")
-		#else
-		if (result == SharedObjectFlushStatus.PENDING)
-		#end
-		{
-			#if (flash && openfl <= "3.4.0")
-			_sharedObject.addEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
-			#end
-		}
-		#if (flash && openfl <= "3.4.0")
-		return onDone((result == "flushed") ? SUCCESS : PENDING);
-		#else
-		return onDone((result == SharedObjectFlushStatus.FLUSHED) ? SUCCESS : PENDING);
-		#end
+		return onDone(result == SharedObjectFlushStatus.FLUSHED ? SUCCESS : PENDING);
 	}
 	
 	/**
@@ -158,17 +133,6 @@ class FlxSave implements IFlxDestroyable
 		data = {};
 		return true;
 	}
-	
-	/**
-	 * Event handler for special case storage requests.
-	 */
-	#if (flash && openfl <= "3.4.0")
-	private function onFlushStatus(E:NetStatusEvent):Void
-	{
-		_sharedObject.removeEventListener(NetStatusEvent.NET_STATUS, onFlushStatus);
-		onDone((E.info.code == "SharedObject.Flush.Success") ? SUCCESS : ERROR);
-	}
-	#end
 	
 	/**
 	 * Event handler for special case storage requests.
