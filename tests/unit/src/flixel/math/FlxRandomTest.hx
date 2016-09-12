@@ -60,7 +60,8 @@ class FlxRandomTest extends FlxTest
 		// The probability of this failing is (5/6)^20 = 2.6%. But because we use
 		// a fixed seed, once it passes, it will always pass, so there is no need
 		// for more iterations.
-		for (i in 0...20) {
+		for (i in 0...20)
+		{
 			var array = [1, 2, 3];
 			random.shuffle(array);
 			seen[array.join(",")] = true;
