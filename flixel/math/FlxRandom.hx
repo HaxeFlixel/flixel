@@ -304,6 +304,7 @@ class FlxRandom
 	 * @return  The newly shuffled array.
 	 */
 	@:generic
+	@:deprecated("Unless you rely on reproducing the exact output of shuffleArray(), you should use shuffle() instead, which is both faster and higher quality.")
 	public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
@@ -321,6 +322,25 @@ class FlxRandom
 		}
 		
 		return Objects;
+	}
+
+	/**
+	 * Shuffles the entries in an array in-place into a new pseudorandom order,
+	 * using the standard Fisher-Yates shuffle algorithm.
+	 *
+	 * @param  array  The array to shuffle.
+	 */
+	@:generic
+	public function shuffle<T>(array:Array<T>):Void
+	{
+		var maxValidIndex = array.length - 1;
+		for (i in 0...array.length)
+		{
+			var j = int(i, maxValidIndex);
+			var tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
+		}
 	}
 	
 	/**
