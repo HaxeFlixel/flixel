@@ -12,9 +12,9 @@ class FlxPreloaderTest
 class OverridenPreloader extends FlxPreloader
 {
 	public function new(minDisplayTime:Float = 0, ?allowedUrls:Array<String>)
-    {
-        super(minDisplayTime, allowedUrls);
-    }
+	{
+		super(minDisplayTime, allowedUrls);
+	}
 	
 	override private function create()
 	{

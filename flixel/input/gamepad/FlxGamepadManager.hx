@@ -1,6 +1,5 @@
 package flixel.input.gamepad;
 
-
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.util.FlxDestroyUtil;
