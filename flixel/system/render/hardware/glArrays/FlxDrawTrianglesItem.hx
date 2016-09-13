@@ -82,7 +82,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		
 		if (indices != null)	// indexed triangles
 		{
-			var numVerticesToAdd:Int = indices.length;
+			numVerticesToAdd = indices.length;
 			indexed = true;
 		}
 		
