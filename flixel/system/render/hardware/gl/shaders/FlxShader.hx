@@ -1,5 +1,6 @@
 package flixel.system.render.hardware.gl.shaders;
 
+import openfl.Assets;
 import openfl.display.Shader;
 
 #if ((openfl >= "4.0.0") && !flash)
@@ -27,6 +28,16 @@ class FlxShader extends Shader
 		}
 		
 		this.data = null;
+		
+		if (Assets.exists(vertexSource))
+		{
+			vertexSource = Assets.getText(vertexSource);
+		}
+		
+		if (Assets.exists(fragmentSource))
+		{
+			fragmentSource = Assets.getText(fragmentSource);
+		}
 		
 		// Then reinit all the data.
 		glVertexSource = vertexSource;

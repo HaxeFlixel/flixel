@@ -1,23 +1,15 @@
-package flixel.system.render.hardware.gl;
-
-import flixel.system.render.common.FlxCameraView;
-import flixel.util.FlxColor;
-import openfl.geom.ColorTransform;
-import flixel.math.FlxMatrix;
+package flixel.system.render.hardware.glArrays;
 
 import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxPoint;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
-import flixel.system.render.common.FlxDrawBaseItem;
-
-import lime.graphics.opengl.GLBuffer;
+import flixel.system.render.common.FlxCameraView;
+import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
+import flixel.util.FlxColor;
 import lime.utils.Float32Array;
 import lime.utils.UInt32Array;
-
-// TODO: add culling support???
-// gl.enable(gl.CULL_FACE);
-// gl.cullFace(gl.FRONT);
+import openfl.geom.ColorTransform;
 
 /**
  * ...
@@ -25,21 +17,19 @@ import lime.utils.UInt32Array;
  */
 class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 {
+	public var numTiles:Int = 0;
+	
 	#if !flash
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		ensureElement(FlxCameraView.ELEMENTS_PER_TEXTURED_TILE, FlxCameraView.INDICES_PER_TILE);
+		addUVQuad(frame.frame, frame.uv, matrix, transform);
+	}
+	
+	override public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	{
+		ensureElement(FlxCameraView.ELEMENTS_PER_TEXTURED_TILE * FlxCameraView.MINIMUM_TILE_COUNT_PER_BUFFER);
 		var prevVerticesNumber:Int = numVertices;
-		
-		var rect:FlxRect = frame.frame;
-		var uv:FlxRect = frame.uv;
-		
-		// UV
-		var uvx:Float = uv.x;
-		var uvy:Float = uv.y;
-		var uvx2:Float = uv.width;
-		var uvy2:Float = uv.height;
 		
 		// Position
 		var x :Float = matrix.__transformX(0, 0); // Top-left
@@ -69,27 +59,24 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		}
 		
 		// Triangle 1, top-left
-		addTexturedVertexData(x, y, uvx, uvy, r, g, b, a);
+		addTexturedVertexData(x, y, uv.x, uv.y, r, g, b, a);
 		// Triangle 1, top-right
-		addTexturedVertexData(x2, y2, uvx2, uvy, r, g, b, a);
+		addTexturedVertexData(x2, y2, uv.width, uv.y, r, g, b, a);
 		// Triangle 1, bottom-left
-		addTexturedVertexData(x3, y3, uvx, uvy2, r, g, b, a);
+		addTexturedVertexData(x3, y3, uv.x, uv.height, r, g, b, a);
+		// Triangle 2, bottom-left
+		addTexturedVertexData(x3, y3, uv.x, uv.height, r, g, b, a);
+		// Triangle 2, top-right
+		addTexturedVertexData(x2, y2, uv.width, uv.y, r, g, b, a);
 		// Triangle 2, bottom-right
-		addTexturedVertexData(x4, y4, uvx2, uvy2, r, g, b, a);
-		
-		indexes[indexPos++] = prevVerticesNumber + 0;
-		indexes[indexPos++] = prevVerticesNumber + 1;
-		indexes[indexPos++] = prevVerticesNumber + 2;
-		indexes[indexPos++] = prevVerticesNumber + 2;
-		indexes[indexPos++] = prevVerticesNumber + 1;
-		indexes[indexPos++] = prevVerticesNumber + 3;
+		addTexturedVertexData(x4, y4, uv.width, uv.height, r, g, b, a);
 		
 		vertexBufferDirty = true;
-		indexBufferDirty = true;
 	}
 	
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
+		/*
 		var numVerticesToAdd:Int = Std.int(vertices.length / 2);
 		var numIndexesToAdd:Int = indices.length;
 		var prevVerticesNumber:Int = numVertices;
@@ -126,26 +113,19 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 									r, g, b, a);
 		}
 		
-		for (i in 0...numIndexesToAdd)
-		{
-			indexes[indexPos++] = prevVerticesNumber + indices[i];
-		}
-		
 		vertexBufferDirty = true;
-		indexBufferDirty = true;
+	*/
 	}
 	
 	// TODO: addNonIndexedTriangles()???
 	
-	private function ensureElement(vertexPosToAdd:Int, indexPosToAdd:Int):Void
+	private function ensureElement(vertexPosToAdd:Int):Void
 	{
 		var newBufferLength:Int = vertexPos + vertexPosToAdd;
-		var newIndexesLength:Int = indexPos + indexPosToAdd;
 		
 		if (buffer == null)
 		{
 			buffer = new Float32Array(newBufferLength);
-			indexes = new UInt32Array(newIndexesLength);
 		}
 		else
 		{
@@ -156,15 +136,45 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 				buffer = new Float32Array(newBufferLength);
 				buffer.set(oldBuffer);
 			}
-			
-			var oldIndexes:UInt32Array = indexes;
-			var oldIndexesLength:Int = oldIndexes.length;
-			if (newIndexesLength >= oldIndexesLength)
-			{
-				indexes = new UInt32Array(newIndexesLength);
-				indexes.set(oldIndexes);
-			}
 		}
+	}
+	
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
+	{
+		if (graphics != null)
+			return;
+			
+		ensureElement(FlxCameraView.ELEMENTS_PER_NONTEXTURED_TILE * FlxCameraView.MINIMUM_TILE_COUNT_PER_BUFFER);
+		
+		// Position
+		var x :Float = matrix.__transformX(0, 0); // Top-left
+		var y :Float = matrix.__transformY(0, 0);
+		var x2:Float = matrix.__transformX(rect.width, 0); // Top-right
+		var y2:Float = matrix.__transformY(rect.width, 0);
+		var x3:Float = matrix.__transformX(0, rect.height); // Bottom-left
+		var y3:Float = matrix.__transformY(0, rect.height);
+		var x4:Float = matrix.__transformX(rect.width, rect.height); // Bottom-right
+		var y4:Float = matrix.__transformY(rect.width, rect.height);
+		
+		var r:Float = color.redFloat;
+		var g:Float = color.greenFloat;
+		var b:Float = color.blueFloat;
+		var a:Float = alpha;
+		
+		// Triangle 1, top-left
+		addNonTexturedVertexData(x, y, r, g, b, a);
+		// Triangle 1, top-right
+		addNonTexturedVertexData(x2, y2, r, g, b, a);
+		// Triangle 1, bottom-left
+		addNonTexturedVertexData(x3, y3, r, g, b, a);
+		// Triangle 2, bottom-left
+		addNonTexturedVertexData(x3, y3, r, g, b, a);
+		// Triangle 2, top-right
+		addNonTexturedVertexData(x2, y2, r, g, b, a);
+		// Triangle 2, bottom-right
+		addNonTexturedVertexData(x4, y4, r, g, b, a);
+		
+		vertexBufferDirty = true;
 	}
 	
 	#else
@@ -173,4 +183,5 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		
 	}
 	#end
+	
 }

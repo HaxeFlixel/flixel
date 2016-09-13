@@ -59,7 +59,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		if (coloredTileShader == null) 
 			coloredTileShader = new FlxColorShader();
-			
+		
 		states = [];
 		stateNum = 0;
 	}
@@ -171,7 +171,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				
 				renderSession.shaderManager.setShader(shader);
 				
-			//	gl.uniform4f(shader.data.uColor.index, uColor.redMultiplier, uColor.greenMultiplier, uColor.blueMultiplier, uAlpha);
+			//	gl.uniform4f(shader.data.uColor.index, uColor[0], uColor[1], uColor[2], uColor[3]);
 			//	gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix[0]);
 			}
 			
@@ -194,16 +194,22 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			if (state.glBuffer == null)
 			{
 				state.glBuffer = gl.createBuffer();
+				#if !FLX_RENDER_GL_ARRAYS
 				state.glIndexes = gl.createBuffer();
+				#end
 			}
 			
+			#if !FLX_RENDER_GL_ARRAYS
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, state.glIndexes);
+			#end
 			
+			#if !FLX_RENDER_GL_ARRAYS
 			if (state.indexBufferDirty)
 			{
 				state.indexBufferDirty = false;
 				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, state.indexes, gl.DYNAMIC_DRAW);
 			}
+			#end
 			
 			gl.bindBuffer(gl.ARRAY_BUFFER, state.glBuffer);
 			
@@ -217,6 +223,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			if (texture != null)
 			{
+				#if !FLX_RENDER_GL_ARRAYS
 				// texture smoothing
 				if (state.antialiasing) 
 				{
@@ -232,6 +239,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				// texture repeat
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+				#end
 				
 				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
 				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
@@ -242,12 +250,23 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			}
 			
 			// TODO: try to use gl.drawArrays()...
+			#if FLX_RENDER_GL_ARRAYS
+			gl.drawArrays(gl.TRIANGLES, 0 * 6, state.numVertices); 
+			#else
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
+			#end
+			
+			#if !FLX_RENDER_GL_ARRAYS
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+			#end
+			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 			
 			i++;
 		}
 	}
+	
 	#else
+	
 	public function destroy():Void
 	{
 		
