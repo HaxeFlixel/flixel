@@ -35,7 +35,7 @@ typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, 
 typedef FlxShader =	#if (!openfl_legacy && openfl < "4.0.0") 
 						openfl.display.Shader; 
 					#elseif (openfl >= "4.0.0")
-						flixel.system.render.hardware.gl.shaders.FlxShader;
+						flixel.graphics.shaders.FlxShader;
 					#else 
 						Dynamic; 
 					#end

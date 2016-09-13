@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl.shaders;
+package flixel.graphics.shaders;
 
 import openfl.Assets;
 import openfl.display.Shader;
@@ -8,8 +8,6 @@ import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
 import openfl.gl.GL;
-
-// TODO: move this class out of system package...
 
 /**
  * ...

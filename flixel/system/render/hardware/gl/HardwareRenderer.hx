@@ -1,10 +1,10 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.shaders.FlxColorShader;
+import flixel.graphics.shaders.FlxShader;
+import flixel.graphics.shaders.FlxTexturedShader;
 import flixel.system.render.common.FlxDrawBaseItem;
-import flixel.system.render.hardware.gl.shaders.FlxColorShader;
-import flixel.system.render.hardware.gl.shaders.FlxShader;
-import flixel.system.render.hardware.gl.shaders.FlxTexturedShader;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
