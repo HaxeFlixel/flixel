@@ -29,7 +29,6 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	override public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		ensureElement(FlxCameraView.ELEMENTS_PER_TEXTURED_TILE * FlxCameraView.MINIMUM_TILE_COUNT_PER_BUFFER);
-		var prevVerticesNumber:Int = numVertices;
 		
 		// Position
 		var x :Float = matrix.__transformX(0, 0); // Top-left
@@ -74,14 +73,20 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		vertexBufferDirty = true;
 	}
 	
+	// TODO: addNonIndexedTriangles()???
+	// TODO: modify this method for other backends (indices might be null)...
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		/*
 		var numVerticesToAdd:Int = Std.int(vertices.length / 2);
-		var numIndexesToAdd:Int = indices.length;
-		var prevVerticesNumber:Int = numVertices;
+		var indexed:Bool = false;
 		
-		ensureElement(numVerticesToAdd * FlxCameraView.ELEMENTS_PER_TEXTURED_TILE, numIndexesToAdd);
+		if (indices != null)	// indexed triangles
+		{
+			var numVerticesToAdd:Int = indices.length;
+			indexed = true;
+		}
+		
+		ensureElement(numVerticesToAdd * FlxCameraView.ELEMENTS_PER_TEXTURED_VERTEX);
 		
 		var r:Float = 1.0;
 		var g:Float = 1.0;
@@ -103,21 +108,25 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		var numUVCoordsPerVertex:Int = (Std.int(uvData.length / 3) == Std.int(vertices.length / 2)) ? 3 : 2;
 		
 		var x:Float, y:Float;
+		var index:Int;
+		
 		for (i in 0...numVerticesToAdd)
 		{
-			x = vertices[i * 2];
-			y = vertices[i * 2 + 1];
+			if (indexed)
+				index = indices[i];	
+			else
+				index = i;
+			
+			x = vertices[index * 2];
+			y = vertices[index * 2 + 1];
 			
 			addTexturedVertexData(	matrix.__transformX(x, y), matrix.__transformY(x, y),
-									uvData[i * numUVCoordsPerVertex], uvData[i * numUVCoordsPerVertex + 1],
+									uvData[index * numUVCoordsPerVertex], uvData[index * numUVCoordsPerVertex + 1],
 									r, g, b, a);
 		}
 		
 		vertexBufferDirty = true;
-	*/
 	}
-	
-	// TODO: addNonIndexedTriangles()???
 	
 	private function ensureElement(vertexPosToAdd:Int):Void
 	{

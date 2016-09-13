@@ -28,6 +28,9 @@ import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
+// TODO: support for render targets...
+// TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
+
 /**
  * ...
  * @author Yanrishatum
@@ -249,16 +252,14 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
 			}
 			
-			// TODO: try to use gl.drawArrays()...
 			#if FLX_RENDER_GL_ARRAYS
-			gl.drawArrays(gl.TRIANGLES, 0 * 6, state.numVertices); 
+			gl.drawArrays(gl.TRIANGLES, 0 * 6, state.numVertices);
 			#else
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
-			#end
 			
-			#if !FLX_RENDER_GL_ARRAYS
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 			#end
+			
 			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 			
 			i++;

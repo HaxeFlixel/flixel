@@ -204,7 +204,7 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		#if ((openfl >= "4.0.0") && !flash)
 		_helperMatrix.identity();
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(null, true, false);
+		var drawItem = startQuadBatch(null, true, false);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
 		#else
 		var graphic:Graphics = view.canvas.graphics;
@@ -263,7 +263,7 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
@@ -276,7 +276,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
-		var drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
@@ -286,7 +286,7 @@ class FlxDrawStack implements IFlxDestroyable
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), indices.length);
+		var drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), indices.length);
 		
 		drawItem.addTriangles(vertices, indices, uvtData, matrix, transform);
 	}

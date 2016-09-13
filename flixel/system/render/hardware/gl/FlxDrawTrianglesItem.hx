@@ -94,7 +94,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		var numIndexesToAdd:Int = indices.length;
 		var prevVerticesNumber:Int = numVertices;
 		
-		ensureElement(numVerticesToAdd * FlxCameraView.ELEMENTS_PER_TEXTURED_TILE, numIndexesToAdd);
+		ensureElement(numVerticesToAdd * FlxCameraView.ELEMENTS_PER_TEXTURED_VERTEX, numIndexesToAdd);
 		
 		var r:Float = 1.0;
 		var g:Float = 1.0;
