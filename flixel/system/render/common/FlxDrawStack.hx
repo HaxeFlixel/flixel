@@ -286,7 +286,10 @@ class FlxDrawStack implements IFlxDestroyable
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
-		var drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, Std.int(vertices.length / 2), indices.length);
+		
+		var drawItem = startTrianglesBatch(	graphic, smoothing, isColored, blend, shader, 
+											Std.int(vertices.length / 2), 
+											(indices != null) ? indices.length : Std.int(vertices.length / 2));
 		
 		drawItem.addTriangles(vertices, indices, uvtData, matrix, transform);
 	}

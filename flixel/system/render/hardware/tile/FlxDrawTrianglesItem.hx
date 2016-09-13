@@ -149,10 +149,21 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			this.uvtData[prevUVTDataLength + i] = uvtData[i];
 		}
 		
-		var indicesLength:Int = indices.length;
-		for (i in 0...indicesLength)
+		var indicesLength:Int = numberOfVertices;
+		if (indices != null)
 		{
-			this.indices[indexPos++] = indices[i] + prevNumberOfVertices;
+			indicesLength = indices.length;
+			for (i in 0...indicesLength)
+			{
+				this.indices[indexPos++] = prevNumberOfVertices + indices[i];
+			}
+		}
+		else
+		{
+			for (i in 0...indicesLength)
+			{
+				this.indices[indexPos++] = prevNumberOfVertices + i;
+			}
 		}
 		
 		if (colored)

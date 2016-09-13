@@ -14,7 +14,7 @@ typedef DrawData<T> =	#if ((openfl >= "4.0.0") || flash)
 
 typedef FlxDrawQuadsItem =		#if (openfl >= "4.0.0")
 									#if FLX_RENDER_GL_ARRAYS
-										flixel.system.render.hardware.glArrays.FlxDrawTrianglesItem
+										flixel.system.render.hardware.gl.FlxDrawTrianglesItem 
 									#else
 										flixel.system.render.hardware.gl.FlxDrawQuadsItem 
 									#end
@@ -23,11 +23,7 @@ typedef FlxDrawQuadsItem =		#if (openfl >= "4.0.0")
 								#end;
 
 typedef FlxDrawTrianglesItem =	#if (openfl >= "4.0.0") 
-									#if FLX_RENDER_GL_ARRAYS
-										flixel.system.render.hardware.glArrays.FlxDrawTrianglesItem
-									#else
-										flixel.system.render.hardware.gl.FlxDrawTrianglesItem 
-									#end
+									flixel.system.render.hardware.gl.FlxDrawTrianglesItem 
 								#else 
 									flixel.system.render.hardware.tile.FlxDrawTrianglesItem 
 								#end;
