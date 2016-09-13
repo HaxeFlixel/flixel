@@ -223,7 +223,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			if (texture != null)
 			{
-				#if !FLX_RENDER_GL_ARRAYS
 				// texture smoothing
 				if (state.antialiasing) 
 				{
@@ -236,6 +235,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 				}
 				
+				#if !FLX_RENDER_GL_ARRAYS
 				// texture repeat
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
