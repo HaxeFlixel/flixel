@@ -125,9 +125,6 @@ class FlxDefines
 		#if (openfl >= "4.0.0")
 		if (defined("flash11_8") || (defined("cpp") || defined("neko")) || defined("js"))
 			define(FLX_GAMEINPUT_API);
-		
-		if (defined("js")) // for some reason gl.drawElements doesn't work on html5, so we need to use gl.drawArrays
-			define(FLX_RENDER_GL_ARRAYS);
 		#else
 		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);

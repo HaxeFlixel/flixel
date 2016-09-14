@@ -14,7 +14,7 @@ import flixel.system.render.common.FlxDrawBaseItem;
 
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
-import lime.utils.UInt32Array;
+import lime.utils.Int16Array;
 
 // TODO: add culling support???
 // gl.enable(gl.CULL_FACE);
@@ -173,7 +173,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 		if (buffer == null)
 		{
 			buffer = new Float32Array(newBufferLength);
-			indexes = new UInt32Array(newIndexesLength);
+			indexes = new Int16Array(newIndexesLength);
 		}
 		else
 		{
@@ -185,11 +185,11 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 				buffer.set(oldBuffer);
 			}
 			
-			var oldIndexes:UInt32Array = indexes;
+			var oldIndexes:Int16Array = indexes;
 			var oldIndexesLength:Int = oldIndexes.length;
 			if (newIndexesLength >= oldIndexesLength)
 			{
-				indexes = new UInt32Array(newIndexesLength);
+				indexes = new Int16Array(newIndexesLength);
 				indexes.set(oldIndexes);
 			}
 		}

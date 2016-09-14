@@ -8,7 +8,7 @@ import openfl.gl.GL;
 #if (openfl >= "4.0.0")
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
-import lime.utils.UInt32Array;
+import lime.utils.Int16Array; // UInt32Array;
 
 /**
  * ...
@@ -17,7 +17,7 @@ import lime.utils.UInt32Array;
 class FlxDrawHardwareItem<T> extends FlxDrawBaseItem<T>
 {
 	public var buffer:Float32Array;
-	public var indexes:UInt32Array;
+	public var indexes:Int16Array;
 	
 	public var glBuffer:GLBuffer;
 	public var glIndexes:GLBuffer;

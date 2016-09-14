@@ -14,7 +14,7 @@ import flixel.system.render.common.FlxDrawBaseItem;
 
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
-import lime.utils.UInt32Array;
+import lime.utils.Int16Array;
 
 /**
  * ...
@@ -146,10 +146,10 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	
 	private inline function fillIndexBuffer():Void
 	{
-		var oldIndexes:UInt32Array = indexes;
+		var oldIndexes:Int16Array = indexes;
 		var oldLength:Int = (oldIndexes != null) ? oldIndexes.length : 0;
 		
-		indexes = new UInt32Array(currentTilesCapacity * FlxCameraView.INDICES_PER_TILE);
+		indexes = new Int16Array(currentTilesCapacity * FlxCameraView.INDICES_PER_TILE);
 		
 		if (oldLength > 0)
 		{

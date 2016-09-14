@@ -12,7 +12,6 @@ import openfl.gl.GL;
 #if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
-import lime.utils.UInt32Array;
 
 	#if (!display && !flash)
 	import openfl._internal.renderer.RenderSession;
@@ -31,6 +30,7 @@ import openfl.geom.Rectangle;
 // TODO: support for render targets...
 // TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
 // TODO: multitexture batching...
+// TODO: camera and game filters (post processes)...
 
 /**
  * ...
@@ -239,7 +239,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 				}
 				
-				#if !FLX_RENDER_GL_ARRAYS
+				#if !js
 				// texture repeat
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
@@ -256,7 +256,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			#if FLX_RENDER_GL_ARRAYS
 			gl.drawArrays(gl.TRIANGLES, 0 * 6, state.numVertices);
 			#else
-			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_INT, 0);
+			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_SHORT, 0);
 			
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 			#end
