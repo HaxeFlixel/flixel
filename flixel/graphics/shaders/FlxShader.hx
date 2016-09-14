@@ -17,9 +17,9 @@ import openfl.gl.GL;
 class FlxShader extends Shader
 {
 	// TODO: implement this property...
-	public var stride(default, null);
+	public var stride(default, null):Int;
 	// TODO: implement this property...
-	public var attributes:Array<ShaderAttribute> = [];
+	private var attributes:Array<ShaderAttribute> = [];
 	
 	public function new(vertexSource:String, fragmentSource:String)
 	{
