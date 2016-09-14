@@ -223,7 +223,11 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				gl.bufferData(gl.ARRAY_BUFFER, state.buffer, gl.DYNAMIC_DRAW);
 			}
 			
-			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 0);
+			var stride:Int = state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT;
+			var offset:Int = 0;
+			
+			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
+			offset += 2;
 			
 			if (texture != null)
 			{
@@ -245,19 +249,16 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 				#end
 				
-				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
-				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 4 * Float32Array.BYTES_PER_ELEMENT);
+				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
+				offset += 2;
 			}
-			else
-			{
-				gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
-			}
+			
+			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
 			
 			#if FLX_RENDER_GL_ARRAYS
-			gl.drawArrays(gl.TRIANGLES, 0 * 6, state.numVertices);
+			gl.drawArrays(gl.TRIANGLES, 0, state.numVertices);
 			#else
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_SHORT, 0);
-			
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 			#end
 			

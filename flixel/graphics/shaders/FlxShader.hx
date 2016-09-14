@@ -1,6 +1,5 @@
 package flixel.graphics.shaders;
 
-import flixel.system.render.hardware.gl.ShaderAttribute;
 import openfl.Assets;
 import openfl.display.Shader;
 
@@ -16,11 +15,6 @@ import openfl.gl.GL;
  */
 class FlxShader extends Shader
 {
-	// TODO: implement this property...
-	public var stride(default, null):Int;
-	// TODO: implement this property...
-	private var attributes:Array<ShaderAttribute> = [];
-	
 	public function new(vertexSource:String, fragmentSource:String)
 	{
 		super();
