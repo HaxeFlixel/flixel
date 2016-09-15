@@ -212,7 +212,11 @@ class FlxHardwareView extends FlxCameraView
 	
 	override public function updateFilters():Void 
 	{
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas.filters = camera.filtersEnabled ? _filters : null;
+		#else
 		flashSprite.filters = camera.filtersEnabled ? _filters : null;
+		#end
 	}
 	
 	override public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0):Void 

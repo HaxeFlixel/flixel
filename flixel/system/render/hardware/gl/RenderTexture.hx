@@ -7,6 +7,7 @@ import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
 import openfl.gl.GL;
 
+// TODO: add smoothing...
 class RenderTexture implements IFlxDestroyable
 {
 	public static var defaultFramebuffer:GLFramebuffer = null;
@@ -18,15 +19,17 @@ class RenderTexture implements IFlxDestroyable
 	public var width(default, null):Int = 0;
 	public var height(default, null):Int = 0;
 	public var powerOfTwo(default, null):Bool = false;
+	public var smoothing:Bool;
 	
 	public var actualWidth(default, null):Int = 0;
 	public var actualHeight(default, null):Int = 0;
 	
 	public var uvData(default, null):FlxRect;
 	
-	public function new(width:Int, height:Int, powerOfTwo:Bool = false) 
+	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
 	{
 		this.powerOfTwo = powerOfTwo;
+		this.smoothing = smoothing;
 		
 		frameBuffer = GL.createFramebuffer();
 		resize(width, height);

@@ -31,6 +31,8 @@ private class GraphicDefault extends BitmapData {}
 
 // TODO: add option to "center origin" or create special subclass for it
 
+// TODO: render target...
+
 /**
  * The main "game object" class, the sprite is a FlxObject
  * with a bunch of graphics options and abilities, like animation and stamping.

@@ -2,6 +2,7 @@ package flixel.system.render.hardware.gl;
 
 import flixel.graphics.shaders.FlxFilterShader;
 import flixel.graphics.shaders.FlxShader;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
@@ -16,35 +17,53 @@ import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 import openfl.utils.Float32Array;
 
-// TODO: add default filter shader...
+// TODO: handle camera resize here...
 
-class RenderHelper implements IFlxDestroyable
+class GLRenderHelper implements IFlxDestroyable
 {
-	public var renderTexture(get, set):RenderTexture;
-	public var oldRenderTexture(get, set):RenderTexture;
-	public var framebuffer(get, never):GLFramebuffer;
-	public var texture(get, never):GLTexture;
+	public static function getObjectNumPasses(object:DisplayObject):Int
+	{
+		if (object == null || object.filters == null)
+			return 0;
+		
+		var passes:Int = 0;
+		var shaderFilter:ShaderFilter;
+		
+		for (filter in object.filters)
+		{
+			if (Std.is(filter, ShaderFilter))
+			{
+				shaderFilter = cast filter;
+				
+				if (Std.is(shaderFilter.shader, FlxFilterShader))
+				{
+					passes++;
+				}
+			}
+		}
+		
+		return passes;
+	}
+	
 	public var width(default, null):Int;
 	public var height(default, null):Int;
-	public var powerOfTwo(default, null):Bool = true;
 	
 	public var object(default, set):DisplayObject;
 	public var numPasses(get, null):Int;
 	
 	private var _objMatrix:Matrix = new Matrix();
-	private var _swapped:Bool = false;
-	private var _texture0:RenderTexture;
-	private var _texture1:RenderTexture;
+	private var _renderMatrix:Matrix = new Matrix(); // TODO: use this var...
 	
 	private var _buffer:GLBuffer;
 	
-	public function new(width:Int, height:Int, powerOfTwo:Bool = false)
+	private var _texture:PingPongTexture;
+	
+	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
 		this.width = width;
 		this.height = height;
-		this.powerOfTwo = powerOfTwo;
 		
-		renderTexture = new RenderTexture(width, height, powerOfTwo);
+		_texture = new PingPongTexture(width, height, smoothing, powerOfTwo);
 		
 		createBuffer();
 	}
@@ -69,86 +88,21 @@ class RenderHelper implements IFlxDestroyable
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 	}
 	
-	public function swap():Void
-	{
-		_swapped = !_swapped;
-		
-		if (renderTexture == null) 
-		{
-			renderTexture = new RenderTexture(width, height, powerOfTwo);
-		}
-	}
-	
-	public inline function clear(?r:Float = 0, ?g:Float = 0, ?b:Float = 0, ?a:Float = 0, ?mask:Null<Int>):Void 
-	{
-		renderTexture.clear(r, g, b, a, mask);	
-	}
-	
 	public function resize(width:Int, height:Int):Void
 	{
 		this.width = width;
 		this.height = height;
 		createBuffer();
-		renderTexture.resize(width, height);
+		_texture.resize(width, height);
 	}
 	
 	public function destroy():Void
 	{
-		if (_texture0 != null) 
-		{
-			_texture0.destroy();
-			_texture0 = null;
-		}
-		
-		if (_texture1 != null) 
-		{
-			_texture1.destroy();
-			_texture1 = null;
-		}
+		_texture = FlxDestroyUtil.destroy(_texture);
 		
 		object = null;
-		_swapped = false;
 		_objMatrix = null;
-	}
-	
-	private inline function get_renderTexture():RenderTexture
-	{
-		return _swapped ? _texture1 : _texture0;
-	}
-	
-	private inline function set_renderTexture(v:RenderTexture):RenderTexture
-	{
-		return {
-			if (_swapped) 
-				_texture1 = v;
-			else 
-				_texture0 = v;
-		};
-	}
-	
-	private inline function get_oldRenderTexture():RenderTexture
-	{
-		return _swapped ? _texture0 : _texture1;
-	}
-	
-	private inline function set_oldRenderTexture(v:RenderTexture):RenderTexture
-	{
-		return {
-			if (_swapped) 
-				_texture0 = v;
-			else 
-				_texture1 = v;
-		};
-	}
-	
-	private inline function get_framebuffer():GLFramebuffer 
-	{
-		return renderTexture.frameBuffer;
-	}
-	
-	private inline function get_texture():GLTexture
-	{
-		return renderTexture.texture;
+		_renderMatrix = null;
 	}
 	
 	private function set_object(v:DisplayObject):DisplayObject
@@ -158,26 +112,7 @@ class RenderHelper implements IFlxDestroyable
 	
 	private function get_numPasses():Int
 	{
-		if (object == null || object.filters == null)
-			return 0;
-		
-		var passes:Int = 0;
-		var shaderFilter:ShaderFilter;
-		
-		for (filter in object.filters)
-		{
-			if (Std.is(filter, ShaderFilter))
-			{
-				shaderFilter = cast filter;
-				
-				if (Std.is(shaderFilter.shader, FlxFilterShader))
-				{
-					passes++;
-				}
-			}
-		}
-		
-		return passes;
+		return getObjectNumPasses(object);
 	}
 	
 	public function capture(object:DisplayObject, modifyObjectMatrix:Bool = false):Void
@@ -187,15 +122,15 @@ class RenderHelper implements IFlxDestroyable
 		if (numPasses <= 0)
 			return;
 		
+		// TODO: what to do with object's matrix???
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrix.copyFrom(objectTransfrom);
 		
 		if (modifyObjectMatrix)
 			objectTransfrom.identity();
 		
-		FrameBufferManager.push(renderTexture.frameBuffer);
-		
-		clear(0, 0, 0, 0, GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
+		FrameBufferManager.push(_texture.renderTexture.frameBuffer);
+		_texture.clear(0, 0, 0, 0, GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 	
 	public function render(renderSession:RenderSession):Void
@@ -241,9 +176,9 @@ class RenderHelper implements IFlxDestroyable
 			
 			if (i == passes)
 			{
-				textureToUse = texture;
+				textureToUse = _texture.texture;
 				
-				if ((passes % 2) != 0) // opengl flips texture on y axis
+				if ((passes % 2) != 0) // opengl flips texture on y axis, so last render should be flipped as well
 				{
 					objectTransfrom.scale(1, -1);
 					objectTransfrom.translate(0, height);
@@ -251,28 +186,33 @@ class RenderHelper implements IFlxDestroyable
 			}
 			else
 			{
-				swap();
-				FrameBufferManager.push(framebuffer);
-				clear();
-				textureToUse = oldRenderTexture.texture;
+				_texture.swap();
+				FrameBufferManager.push(_texture.framebuffer);
+				_texture.clear();
+				textureToUse = _texture.oldRenderTexture.texture;
 			}
 			
-			GL.viewport(0, 0, width, height);
+			gl.viewport(0, 0, width, height);
 			
 			shader.data.uMatrix.value = [renderer.getMatrix(objectTransfrom)];
 			
 			renderSession.shaderManager.setShader(shader);
-			GL.bindTexture(GL.TEXTURE_2D, textureToUse);
+			gl.bindTexture(GL.TEXTURE_2D, textureToUse);
 			
-			GL.bindBuffer(GL.ARRAY_BUFFER, _buffer);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+			
+			gl.bindBuffer(GL.ARRAY_BUFFER, _buffer);
 			
 			gl.vertexAttribPointer(shader.data.aVertex.index, 2, gl.FLOAT, false, 16, 0);
 			gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 16, 8);
 			
-			GL.drawArrays(GL.TRIANGLES, 0, 6);
+			gl.drawArrays(GL.TRIANGLES, 0, 6);
 			
 			// check gl error
-			if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)
+			if (gl.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)
 			{
 				trace("INVALID_FRAMEBUFFER_OPERATION!!");
 			}

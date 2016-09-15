@@ -5,11 +5,11 @@ import flixel.graphics.shaders.FlxColorShader;
 import flixel.graphics.shaders.FlxShader;
 import flixel.graphics.shaders.FlxTexturedShader;
 import flixel.system.render.common.FlxDrawBaseItem;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
-import openfl.filters.ShaderFilter;
 
 #if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
@@ -55,7 +55,9 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private var __width:Int;
 	
 	// TODO: don't create this helper in constructor...
-	private var renderHelper:RenderHelper;
+	private var renderHelper(get, null):GLRenderHelper;
+	
+	private var _renderHelper:GLRenderHelper;
 	
 	public function new(width:Int, height:Int)
 	{
@@ -73,16 +75,13 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		states = [];
 		stateNum = 0;
 		
-		// TODO: remove this code later...
-	//	var testFilters:Array<BitmapFilter> = [new ShaderFilter(new InvertCamera())/*, new ShaderFilter(new InvertCamera2()), new ShaderFilter(new InvertCamera())*/];
-	//	this.filters = testFilters;
-		
-		renderHelper = new RenderHelper(width, height);
+		renderHelper = new GLRenderHelper(width, height);
 	}
 	
 	public function destroy():Void
 	{
 		states = null;
+		_renderHelper = FlxDestroyUtil.destroy(_renderHelper);
 	}
 	
 	public function clear():Void
@@ -152,7 +151,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		renderHelper.capture(this, true);
+		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
+		
+		if (needRenderHelper)
+			renderHelper.capture(this, true);
 		
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
@@ -280,7 +282,16 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		renderSession.shaderManager.setShader(null);
 		
-		renderHelper.render(renderSession);
+		if (needRenderHelper)
+			renderHelper.render(renderSession);
+	}
+	
+	private function get_renderHelper():GLRenderHelper
+	{
+		if (_renderHelper == null)
+			_renderHelper = new GLRenderHelper(__width, __height);
+			
+		return _renderHelper;
 	}
 	
 	#else
