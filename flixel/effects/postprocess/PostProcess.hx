@@ -127,10 +127,10 @@ class PostProcess extends OpenGLView
 	public function rebuild()
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
-
+		
 		if (texture != null) GL.deleteTexture(texture);
 		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
-
+		
 		this.screenWidth = FlxG.stage.stageWidth;
 		this.screenHeight = FlxG.stage.stageHeight;
 		createTexture(screenWidth, screenHeight);
@@ -156,7 +156,7 @@ class PostProcess extends OpenGLView
 		texture = GL.createTexture();
 		
 		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, null);
 
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);

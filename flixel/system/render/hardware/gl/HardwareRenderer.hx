@@ -8,6 +8,7 @@ import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
+import openfl.filters.ShaderFilter;
 
 #if (openfl >= "4.0.0")
 import lime.graphics.GLRenderContext;
@@ -31,6 +32,7 @@ import openfl.geom.Rectangle;
 // TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
 // TODO: multitexture batching...
 // TODO: camera and game filters (post processes)...
+// TODO: framebuffer manager...
 
 /**
  * ...
@@ -109,7 +111,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		{
 			if (stack != null && !interactiveOnly) 
 			{
-				stack.push (hitObject);	
+				stack.push(hitObject);	
 			}
 			
 			return true;
@@ -143,6 +145,17 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
+		/*
+		if (tilemap.__filters != null && Std.is (tilemap.__filters[0], ShaderFilter)) 
+		{
+			shader = cast(tilemap.__filters[0], ShaderFilter).shader;	
+		}
+		else
+		{	
+			shader = renderSession.shaderManager.defaultShader;	
+		}
+		*/
+		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
 		uColor[0] = worldColor.redMultiplier;
@@ -174,9 +187,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				shader.data.uColor.value = uColor;
 				
 				renderSession.shaderManager.setShader(shader);
-				
-			//	gl.uniform4f(shader.data.uColor.index, uColor[0], uColor[1], uColor[2], uColor[3]);
-			//	gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uMatrix[0]);
 			}
 			
 			if (blend != state.blending)
