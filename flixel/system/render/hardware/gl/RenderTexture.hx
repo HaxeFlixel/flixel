@@ -29,7 +29,7 @@ class RenderTexture implements IFlxDestroyable
 		this.powerOfTwo = powerOfTwo;
 		
 		frameBuffer = GL.createFramebuffer();
-		rebuild(width, height);
+		resize(width, height);
 		
 	#if (ios || tvos)
 		if (defaultFramebuffer == null)
@@ -50,7 +50,7 @@ class RenderTexture implements IFlxDestroyable
 	#end
 	}
 	
-	public function rebuild(width:Int, height:Int) 
+	public function resize(width:Int, height:Int) 
 	{
 		if (this.width == width && this.height == height) return;
 		
@@ -79,7 +79,7 @@ class RenderTexture implements IFlxDestroyable
 		GL.bindFramebuffer(GL.FRAMEBUFFER, frameBuffer);
 		
 		if (texture != null) GL.deleteTexture(texture);
-		if (renderbuffer != null) GL.deleteRenderbuffer(renderBuffer);
+		if (renderBuffer != null) GL.deleteRenderbuffer(renderBuffer);
 		
 		createTexture(width, height);
 		createRenderbuffer(width, height);

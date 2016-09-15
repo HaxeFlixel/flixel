@@ -6,6 +6,7 @@ import flixel.graphics.shaders.FlxShader;
 import flixel.graphics.shaders.FlxTexturedShader;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
 import openfl.filters.ShaderFilter;
@@ -53,6 +54,9 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private var __height:Int;
 	private var __width:Int;
 	
+	// TODO: don't create this helper in constructor...
+	private var renderHelper:RenderHelper;
+	
 	public function new(width:Int, height:Int)
 	{
 		super();
@@ -68,6 +72,12 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		states = [];
 		stateNum = 0;
+		
+		// TODO: remove this code later...
+	//	var testFilters:Array<BitmapFilter> = [new ShaderFilter(new InvertCamera())/*, new ShaderFilter(new InvertCamera2()), new ShaderFilter(new InvertCamera())*/];
+	//	this.filters = testFilters;
+		
+		renderHelper = new RenderHelper(width, height);
 	}
 	
 	public function destroy():Void
@@ -142,19 +152,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
+		renderHelper.capture(this, true);
+		
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
-		
-		/*
-		if (tilemap.__filters != null && Std.is (tilemap.__filters[0], ShaderFilter)) 
-		{
-			shader = cast(tilemap.__filters[0], ShaderFilter).shader;	
-		}
-		else
-		{	
-			shader = renderSession.shaderManager.defaultShader;	
-		}
-		*/
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
@@ -276,6 +277,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			i++;
 		}
+		
+		renderSession.shaderManager.setShader(null);
+		
+		renderHelper.render(renderSession);
 	}
 	
 	#else

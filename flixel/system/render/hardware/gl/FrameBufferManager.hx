@@ -17,21 +17,23 @@ class FrameBufferManager
 	{
 		frameBuffers[numBuffers++] = frameBuffer;
 		GL.bindFramebuffer(GL.FRAMEBUFFER, frameBuffer);
-		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 	
 	public static function pop():Void
 	{
-		if (numBuffers > 1)
+		if (numBuffers > 0)
 		{
 			frameBuffers.pop();
 			numBuffers--;
-			GL.bindFramebuffer(GL.FRAMEBUFFER, frameBuffers[numBuffers - 1]);
 		}
 		
 		if (numBuffers == 0)
 		{
 			GL.bindFramebuffer(GL.FRAMEBUFFER, null);
+		}
+		else
+		{
+			GL.bindFramebuffer(GL.FRAMEBUFFER, frameBuffers[numBuffers - 1]);
 		}
 	}
 	

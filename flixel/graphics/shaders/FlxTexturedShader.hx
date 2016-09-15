@@ -8,7 +8,11 @@ class FlxTexturedShader extends FlxShader
 {
 	public static inline var defaultVertexSource:String = 
 			
-			"attribute vec4 aPosition;
+			"
+		#ifdef GL_ES
+			precision mediump float;
+		#endif
+			attribute vec4 aPosition;
 			attribute vec2 aTexCoord;
 			attribute vec4 aColor;
 			
