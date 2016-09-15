@@ -84,6 +84,15 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		_renderHelper = FlxDestroyUtil.destroy(_renderHelper);
 	}
 	
+	public function resize(witdh:Int, height:Int):Void
+	{
+		this.width = width;
+		this.height = height;
+		
+		if (_renderHelper != null)
+			_renderHelper.resize(__width, __height);
+	}
+	
 	public function clear():Void
 	{
 		stateNum = 0;

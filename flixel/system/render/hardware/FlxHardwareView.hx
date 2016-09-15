@@ -163,6 +163,15 @@ class FlxHardwareView extends FlxCameraView
 		drawStack.drawColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
 	}
 	
+	override public function updateOffset():Void 
+	{
+		super.updateOffset();
+		
+		#if ((openfl >= "4.0.0") && !flash)
+		canvas.resize(camera.width, camera.height);
+		#end
+	}
+	
 	override public function updatePosition():Void 
 	{
 		if (flashSprite != null)

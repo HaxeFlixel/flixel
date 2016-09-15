@@ -67,6 +67,9 @@ class PingPongTexture implements IFlxDestroyable
 		this.width = width;
 		this.height = height;
 		renderTexture.resize(width, height);
+		
+		if (oldRenderTexture != null)
+			oldRenderTexture.resize(width, height);
 	}
 	
 	private inline function get_renderTexture():RenderTexture

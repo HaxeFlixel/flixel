@@ -21,6 +21,8 @@ import openfl.utils.Float32Array;
 
 class GLRenderHelper implements IFlxDestroyable
 {
+	private static var uMatrix:Array<Float32Array> = [];
+	
 	public static function getObjectNumPasses(object:DisplayObject):Int
 	{
 		if (object == null || object.filters == null)
@@ -51,7 +53,7 @@ class GLRenderHelper implements IFlxDestroyable
 	public var object(default, set):DisplayObject;
 	public var numPasses(get, null):Int;
 	
-	private var _objMatrix:Matrix = new Matrix();
+	private var _objMatrixCopy:Matrix = new Matrix();
 	private var _renderMatrix:Matrix = new Matrix(); // TODO: use this var...
 	
 	private var _buffer:GLBuffer;
@@ -101,7 +103,7 @@ class GLRenderHelper implements IFlxDestroyable
 		_texture = FlxDestroyUtil.destroy(_texture);
 		
 		object = null;
-		_objMatrix = null;
+		_objMatrixCopy = null;
 		_renderMatrix = null;
 	}
 	
@@ -124,7 +126,7 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		// TODO: what to do with object's matrix???
 		var objectTransfrom:Matrix = object.__worldTransform;
-		_objMatrix.copyFrom(objectTransfrom);
+		_objMatrixCopy.copyFrom(objectTransfrom);
 		
 		if (modifyObjectMatrix)
 			objectTransfrom.identity();
@@ -143,6 +145,7 @@ class GLRenderHelper implements IFlxDestroyable
 		var textureToUse:GLTexture;
 		
 		var objectTransfrom:Matrix = object.__worldTransform;
+		_renderMatrix.identity();
 		
 		var filters:Array<BitmapFilter> = object.filters;
 		var numFilters:Int = filters.length;
@@ -180,8 +183,9 @@ class GLRenderHelper implements IFlxDestroyable
 				
 				if ((passes % 2) != 0) // opengl flips texture on y axis, so last render should be flipped as well
 				{
-					objectTransfrom.scale(1, -1);
-					objectTransfrom.translate(0, height);
+					_renderMatrix.scale(1, -1);
+					_renderMatrix.translate(0, height);
+					_renderMatrix.concat(_objMatrixCopy);
 				}
 			}
 			else
@@ -194,15 +198,16 @@ class GLRenderHelper implements IFlxDestroyable
 			
 			gl.viewport(0, 0, width, height);
 			
-			shader.data.uMatrix.value = [renderer.getMatrix(objectTransfrom)];
+			uMatrix[0] = renderer.getMatrix(_renderMatrix);
+			shader.data.uMatrix.value = uMatrix;
 			
 			renderSession.shaderManager.setShader(shader);
 			gl.bindTexture(GL.TEXTURE_2D, textureToUse);
 			
-			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
-			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
-			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-			gl.texParameteri (gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, _texture.smoothing ? gl.LINEAR : gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 			
 			gl.bindBuffer(GL.ARRAY_BUFFER, _buffer);
 			
@@ -220,7 +225,7 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		renderSession.shaderManager.setShader(null);
 		
-		objectTransfrom.copyFrom(_objMatrix);
+		object.__worldTransform.copyFrom(objectTransfrom);
 		object = null;
 	}
 	
