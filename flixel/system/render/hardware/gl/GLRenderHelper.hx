@@ -19,9 +19,18 @@ import openfl.utils.Float32Array;
 
 class GLRenderHelper implements IFlxDestroyable
 {
+	/**
+	 * Helper variables for less array instantiation and less getter calls
+	 */
 	private static var uMatrix:Array<Float32Array> = [];
 	private static var stageHeight:Float = 0;
 	
+	/**
+	 * Checks how many render passes specified object has.
+	 * 
+	 * @param	object	display object to check
+	 * @return	Number of render passes for specified object
+	 */
 	public static function getObjectNumPasses(object:DisplayObject):Int
 	{
 		if (object == null || object.filters == null)
@@ -51,25 +60,48 @@ class GLRenderHelper implements IFlxDestroyable
 	public var smoothing(default, null):Bool;
 	public var powerOfTwo(default, null):Bool;
 	
-	public var object(default, set):DisplayObject;
+	/**
+	 * Object which this render helper belongs to.
+	 */
+	public var object(default, null):DisplayObject;
+	
+	/**
+	 * Number of render passes for object which uses this helper.
+	 */
 	public var numPasses(get, null):Int;
 	
+	/**
+	 * Temp copy of object's transform matrix. Stored while passes are being rendered.
+	 */
 	private var _objMatrixCopy:Matrix = new Matrix();
-	private var _objectMatrixModified:Bool;
+	/**
+	 * Whether we need to capture whole screen or only specified area
+	 */
+	private var _fullscreen:Bool;
 	
+	/**
+	 * Helper variable for applying transformations while rendering passes
+	 */
 	private var _renderMatrix:Matrix = new Matrix();
 	
 	private var _buffer:GLBuffer;
 	
 	private var _texture:PingPongTexture;
 	
+	/**
+	 * Temp copy of scissor rectangle. We store it here to restore it after rendering passes.
+	 */
 	private var _scissor:Array<Int>;
-	private var _scissorEnabled:Bool;
+	/**
+	 * Do we need to restore scissor rectangle after rendering (actually before last render pass).
+	 */
+	private var _scissorDisabled:Bool;
 	
-	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
+	public function new(object:DisplayObject, width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
 		this.smoothing = smoothing;
 		this.powerOfTwo = powerOfTwo;
+		this.object = object;
 		
 		resize(width, height);
 	}
@@ -122,26 +154,25 @@ class GLRenderHelper implements IFlxDestroyable
 			GL.deleteBuffer(_buffer);
 	}
 	
-	private function set_object(v:DisplayObject):DisplayObject
-	{
-		return object = v;
-	}
-	
 	private function get_numPasses():Int
 	{
 		return getObjectNumPasses(object);
 	}
 	
-	public function capture(object:DisplayObject, modifyObjectMatrix:Bool = false, disableScissor:Bool = true):Void
+	/**
+	 * Start capturing graphics to internal buffer
+	 * 
+	 * @param	fullscreen			Do we need to grab whole screen area?
+	 * @param	disableScissor		Do we need to disable scissor rectangle before capturing?
+	 */
+	public function capture(fullscreen:Bool = false, disableScissor:Bool = true):Void
 	{
-		this.object = object;
-		
 		if (numPasses <= 0)
 			return;
 		
-		_scissorEnabled = (GL.getParameter(GL.SCISSOR_TEST) == 1) && disableScissor;
+		_scissorDisabled = (GL.getParameter(GL.SCISSOR_TEST) == 1) && disableScissor;
 		
-		if (_scissorEnabled)
+		if (_scissorDisabled)
 		{
 			_scissor = GL.getParameter(GL.SCISSOR_BOX);
 			
@@ -152,9 +183,9 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrixCopy.copyFrom(objectTransfrom);
-		_objectMatrixModified = modifyObjectMatrix;
+		_fullscreen = fullscreen;
 		
-		if (modifyObjectMatrix)
+		if (fullscreen)
 		{
 			objectTransfrom.identity();
 			objectTransfrom.translate(0, (stageHeight - height));
@@ -164,6 +195,11 @@ class GLRenderHelper implements IFlxDestroyable
 		_texture.clear(0, 0, 0, 1.0, GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 	
+	/**
+	 * Actual rendering of effects added to display object through FlxShaderFilters
+	 * 
+	 * @param	renderSession	current render session (see openfl internals for details)
+	 */
 	public function render(renderSession:RenderSession):Void
 	{
 		var passes:Int = numPasses;
@@ -218,13 +254,13 @@ class GLRenderHelper implements IFlxDestroyable
 					_renderMatrix.translate(0, height);
 				}
 				
-				if (_objectMatrixModified)
+				if (_fullscreen)
 				{
 					_renderMatrix.concat(_objMatrixCopy);
 				}
 				
 				// enable scissor testing before last render pass.
-				if (_scissorEnabled)
+				if (_scissorDisabled)
 				{
 					gl.enable(gl.SCISSOR_TEST);	
 					gl.scissor(_scissor[0], _scissor[1], _scissor[2], _scissor[3]);
@@ -268,7 +304,6 @@ class GLRenderHelper implements IFlxDestroyable
 		renderSession.shaderManager.setShader(null);
 		
 		object.__worldTransform.copyFrom(_objMatrixCopy);
-		object = null;
 	}
 	
 }

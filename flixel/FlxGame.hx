@@ -15,11 +15,6 @@ import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
-#if ((openfl >= "4.0.0") && !flash)
-import openfl._internal.renderer.RenderSession;
-import flixel.system.render.hardware.gl.GLRenderHelper;
-#end
-
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
 #end
@@ -34,6 +29,11 @@ import flixel.system.ui.FlxSoundTray;
 
 #if FLX_FOCUS_LOST_SCREEN
 import flixel.system.ui.FlxFocusLostScreen;
+#end
+
+#if ((openfl >= "4.0.0") && !flash)
+import openfl._internal.renderer.RenderSession;
+import flixel.system.render.hardware.gl.GLRenderHelper;
 #end
 
 /**
@@ -912,7 +912,7 @@ class FlxGame extends Sprite
 	{
 		if (_renderHelper == null)
 		{
-			_renderHelper = new GLRenderHelper(Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
+			_renderHelper = new GLRenderHelper(this, Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
 		}
 		
 		return _renderHelper;
@@ -924,7 +924,7 @@ class FlxGame extends Sprite
 		
 		if (needRenderHelper)
 		{
-			renderHelper.capture(this, false, false);
+			renderHelper.capture(false, false);
 		}
 		
 		super.__renderGL(renderSession);

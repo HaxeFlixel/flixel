@@ -19,7 +19,7 @@ import lime.utils.Float32Array;
 	import openfl._internal.renderer.RenderSession;
 	import openfl._internal.renderer.opengl.GLRenderer;
 	#end
-
+	
 #end
 
 import openfl.display.BitmapData;
@@ -160,7 +160,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
 		
 		if (needRenderHelper)
-			renderHelper.capture(this, true);
+			renderHelper.capture(true);
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
@@ -292,7 +292,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private function get_renderHelper():GLRenderHelper
 	{
 		if (_renderHelper == null)
-			_renderHelper = new GLRenderHelper(__width, __height, true, false);
+			_renderHelper = new GLRenderHelper(this, __width, __height, true, false);
 		
 		return _renderHelper;
 	}
