@@ -29,11 +29,9 @@ import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
-// TODO: support for render targets...
 // TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
 // TODO: multitexture batching...
-// TODO: camera and game filters (post processes)...
-// TODO: framebuffer manager...
+// TODO: game filters (post processes)...
 
 /**
  * ...
@@ -54,7 +52,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private var __height:Int;
 	private var __width:Int;
 	
-	// TODO: don't create this helper in constructor...
 	private var renderHelper(get, null):GLRenderHelper;
 	
 	private var _renderHelper:GLRenderHelper;
@@ -90,7 +87,9 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		this.height = height;
 		
 		if (_renderHelper != null)
+		{
 			_renderHelper.resize(__width, __height);
+		}
 	}
 	
 	public function clear():Void
@@ -160,13 +159,17 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
-		
-		if (needRenderHelper)
-			renderHelper.capture(this, true);
-		
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
+		
+		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
+		
+		trace(gl.getParameter(gl.SCISSOR_BOX));
+		
+		if (needRenderHelper)
+		{
+			renderHelper.capture(this, true);
+		}
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
@@ -298,7 +301,9 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private function get_renderHelper():GLRenderHelper
 	{
 		if (_renderHelper == null)
-			_renderHelper = new GLRenderHelper(__width, __height);
+		{
+			_renderHelper = new GLRenderHelper(__width, __height, true, false);
+		}
 			
 		return _renderHelper;
 	}

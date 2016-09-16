@@ -17,11 +17,10 @@ import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 import openfl.utils.Float32Array;
 
-// TODO: handle camera resize here...
-
 class GLRenderHelper implements IFlxDestroyable
 {
 	private static var uMatrix:Array<Float32Array> = [];
+	private static var stageHeight:Float = 0; // TODO: use this var...
 	
 	public static function getObjectNumPasses(object:DisplayObject):Int
 	{
@@ -49,22 +48,38 @@ class GLRenderHelper implements IFlxDestroyable
 	
 	public var width(default, null):Int;
 	public var height(default, null):Int;
+	public var smoothing(default, null):Bool;
+	public var powerOfTwo(default, null):Bool;
 	
 	public var object(default, set):DisplayObject;
 	public var numPasses(get, null):Int;
 	
 	private var _objMatrixCopy:Matrix = new Matrix();
-	private var _renderMatrix:Matrix = new Matrix(); // TODO: use this var...
+	private var _renderMatrix:Matrix = new Matrix();
 	
 	private var _buffer:GLBuffer;
 	
 	private var _texture:PingPongTexture;
 	
+	private var _scissor:Array<Int>;
+	private var _scissorEnabled:Bool;
+	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
+		this.smoothing = smoothing;
+		this.powerOfTwo = powerOfTwo;
+		
+		resize(width, height);
+	}
+	
+	public function resize(width:Int, height:Int):Void
+	{
+		stageHeight = FlxG.stage.stageHeight;
+		
 		this.width = width;
 		this.height = height;
 		
+		_texture = FlxDestroyUtil.destroy(_texture);
 		_texture = new PingPongTexture(width, height, smoothing, powerOfTwo);
 		
 		createBuffer();
@@ -74,28 +89,22 @@ class GLRenderHelper implements IFlxDestroyable
 	{
 		if (_buffer != null)
 			GL.deleteBuffer(_buffer);
-			
+		
+		var uv = _texture.renderTexture.uvData;
+		
 		var vertices:Float32Array = new Float32Array([
-			0.0, 0.0, 0, 0,
-			width, 0.0, 1, 0,
-			0.0,  height, 0, 1,
-			width, 0.0, 1, 0,
-			width,  height, 1, 1,
-			0.0,  height, 0, 1
+			0.0, 	0.0, 	uv.x, 		uv.y,
+			1.0, 	0.0, 	uv.width, 	uv.y,
+			0.0, 	1.0, 	uv.x, 		uv.height,
+			1.0, 	0.0, 	uv.width, 	uv.y,
+			1.0, 	1.0, 	uv.width, 	uv.height,
+			0.0, 	1.0, 	uv.x, 		uv.height
 		]);	
 		
 		_buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, _buffer);
 		GL.bufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
-	}
-	
-	public function resize(width:Int, height:Int):Void
-	{
-		this.width = width;
-		this.height = height;
-		createBuffer();
-		_texture.resize(width, height);
 	}
 	
 	public function destroy():Void
@@ -105,6 +114,10 @@ class GLRenderHelper implements IFlxDestroyable
 		object = null;
 		_objMatrixCopy = null;
 		_renderMatrix = null;
+		_scissor = null;
+		
+		if (_buffer != null)
+			GL.deleteBuffer(_buffer);
 	}
 	
 	private function set_object(v:DisplayObject):DisplayObject
@@ -117,22 +130,35 @@ class GLRenderHelper implements IFlxDestroyable
 		return getObjectNumPasses(object);
 	}
 	
-	public function capture(object:DisplayObject, modifyObjectMatrix:Bool = false):Void
+	public function capture(object:DisplayObject, modifyObjectMatrix:Bool = false, disableScissor:Bool = true):Void
 	{
 		this.object = object;
 		
 		if (numPasses <= 0)
 			return;
 		
-		// TODO: what to do with object's matrix???
+		_scissorEnabled = (GL.getParameter(GL.SCISSOR_TEST) == 1) && disableScissor;
+		
+		if (_scissorEnabled)
+		{
+			_scissor = GL.getParameter(GL.SCISSOR_BOX);
+			
+			// we need to disable scissor testing while we are drawing effects
+			GL.disable(GL.SCISSOR_TEST);
+			GL.scissor(0, 0, 0, 0);
+		}
+		
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrixCopy.copyFrom(objectTransfrom);
 		
 		if (modifyObjectMatrix)
+		{
 			objectTransfrom.identity();
+			objectTransfrom.translate(0, (stageHeight - height));
+		}
 		
 		FrameBufferManager.push(_texture.renderTexture.frameBuffer);
-		_texture.clear(0, 0, 0, 0, GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
+		_texture.clear(0, 0, 0, 1.0, GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
 	
 	public function render(renderSession:RenderSession):Void
@@ -145,7 +171,6 @@ class GLRenderHelper implements IFlxDestroyable
 		var textureToUse:GLTexture;
 		
 		var objectTransfrom:Matrix = object.__worldTransform;
-		_renderMatrix.identity();
 		
 		var filters:Array<BitmapFilter> = object.filters;
 		var numFilters:Int = filters.length;
@@ -177,7 +202,10 @@ class GLRenderHelper implements IFlxDestroyable
 			
 			FrameBufferManager.pop();
 			
-			if (i == passes)
+			_renderMatrix.identity();
+			_renderMatrix.scale(width, height);
+			
+			if (i == passes) // last rendering pass
 			{
 				textureToUse = _texture.texture;
 				
@@ -185,7 +213,15 @@ class GLRenderHelper implements IFlxDestroyable
 				{
 					_renderMatrix.scale(1, -1);
 					_renderMatrix.translate(0, height);
-					_renderMatrix.concat(_objMatrixCopy);
+				}
+				
+				_renderMatrix.concat(_objMatrixCopy);
+				
+				// enable scissor testing before last render pass.
+				if (_scissorEnabled)
+				{
+					gl.enable(gl.SCISSOR_TEST);	
+					gl.scissor(_scissor[0], _scissor[1], _scissor[2], _scissor[3]);
 				}
 			}
 			else
@@ -194,9 +230,9 @@ class GLRenderHelper implements IFlxDestroyable
 				FrameBufferManager.push(_texture.framebuffer);
 				_texture.clear();
 				textureToUse = _texture.oldRenderTexture.texture;
+				
+				_renderMatrix.translate(0, (stageHeight - height));
 			}
-			
-			gl.viewport(0, 0, width, height);
 			
 			uMatrix[0] = renderer.getMatrix(_renderMatrix);
 			shader.data.uMatrix.value = uMatrix;
@@ -225,7 +261,7 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		renderSession.shaderManager.setShader(null);
 		
-		object.__worldTransform.copyFrom(objectTransfrom);
+		object.__worldTransform.copyFrom(_objMatrixCopy);
 		object = null;
 	}
 	

@@ -4,7 +4,6 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 
-// TODO: add smoothing...
 class PingPongTexture implements IFlxDestroyable
 {
 	public var renderTexture(get, set):RenderTexture;

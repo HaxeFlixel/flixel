@@ -7,7 +7,6 @@ import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
 import openfl.gl.GL;
 
-// TODO: add smoothing...
 class RenderTexture implements IFlxDestroyable
 {
 	public static var defaultFramebuffer:GLFramebuffer = null;
@@ -87,6 +86,8 @@ class RenderTexture implements IFlxDestroyable
 		createTexture(width, height);
 		createRenderbuffer(width, height);
 		
+		GL.bindTexture(GL.TEXTURE_2D, null);
+		GL.bindRenderbuffer(GL.RENDERBUFFER, null);
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 	
@@ -95,7 +96,7 @@ class RenderTexture implements IFlxDestroyable
 		texture = GL.createTexture();
 		
 		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, actualWidth, actualHeight, 0, GL.RGB, GL.UNSIGNED_BYTE, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, actualWidth, actualHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, null);
 		
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
