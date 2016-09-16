@@ -20,7 +20,7 @@ import openfl.utils.Float32Array;
 class GLRenderHelper implements IFlxDestroyable
 {
 	private static var uMatrix:Array<Float32Array> = [];
-	private static var stageHeight:Float = 0; // TODO: use this var...
+	private static var stageHeight:Float = 0;
 	
 	public static function getObjectNumPasses(object:DisplayObject):Int
 	{
@@ -55,6 +55,8 @@ class GLRenderHelper implements IFlxDestroyable
 	public var numPasses(get, null):Int;
 	
 	private var _objMatrixCopy:Matrix = new Matrix();
+	private var _objectMatrixModified:Bool;
+	
 	private var _renderMatrix:Matrix = new Matrix();
 	
 	private var _buffer:GLBuffer;
@@ -150,6 +152,7 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrixCopy.copyFrom(objectTransfrom);
+		_objectMatrixModified = modifyObjectMatrix;
 		
 		if (modifyObjectMatrix)
 		{
@@ -215,7 +218,10 @@ class GLRenderHelper implements IFlxDestroyable
 					_renderMatrix.translate(0, height);
 				}
 				
-				_renderMatrix.concat(_objMatrixCopy);
+				if (_objectMatrixModified)
+				{
+					_renderMatrix.concat(_objMatrixCopy);
+				}
 				
 				// enable scissor testing before last render pass.
 				if (_scissorEnabled)
