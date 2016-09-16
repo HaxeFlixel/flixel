@@ -52,17 +52,4 @@ class FlxMacroUtil
 		
 		return macro $a{finalExpr};
 	}
-	
-	/**
-	 * Returns the position of the caller.
-	 * Copy of haxe.macro.PositionTools.here() (only available in haxe 3.2+)
-	 */
-	public static macro function here():ExprOf<Position>
-	{
-		var positionExpr = Context.makeExpr(Context.getPosInfos(Context.currentPos()), Context.currentPos());
-		if (Context.defined("macro"))
-			return macro Context.makePosition($positionExpr);
-		else
-			return positionExpr;
-	}
 }
