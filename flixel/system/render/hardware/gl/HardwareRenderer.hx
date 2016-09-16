@@ -71,8 +71,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		states = [];
 		stateNum = 0;
-		
-		renderHelper = new GLRenderHelper(width, height);
 	}
 	
 	public function destroy():Void
@@ -87,9 +85,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		this.height = height;
 		
 		if (_renderHelper != null)
-		{
 			_renderHelper.resize(__width, __height);
-		}
 	}
 	
 	public function clear():Void
@@ -164,12 +160,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
 		
-		trace(gl.getParameter(gl.SCISSOR_BOX));
-		
 		if (needRenderHelper)
-		{
 			renderHelper.capture(this, true);
-		}
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
@@ -301,10 +293,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private function get_renderHelper():GLRenderHelper
 	{
 		if (_renderHelper == null)
-		{
 			_renderHelper = new GLRenderHelper(__width, __height, true, false);
-		}
-			
+		
 		return _renderHelper;
 	}
 	

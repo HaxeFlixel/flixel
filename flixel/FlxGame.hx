@@ -15,6 +15,11 @@ import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 
+#if ((openfl >= "4.0.0") && !flash)
+import openfl._internal.renderer.RenderSession;
+import flixel.system.render.hardware.gl.GLRenderHelper;
+#end
+
 #if FLX_POST_PROCESS
 import openfl.display.OpenGLView;
 #end
@@ -496,6 +501,13 @@ class FlxGame extends Sprite
 			postProcess.rebuild();
 		}
 		#end
+		
+		#if ((openfl >= "4.0.0") && !flash)
+		if (_renderHelper != null)
+		{
+			_renderHelper.resize(width, height);
+		}
+		#end
 	}
 	
 	/**
@@ -891,6 +903,38 @@ class FlxGame extends Sprite
 		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
 	}
+	
+	#if ((openfl >= "4.0.0") && !flash)
+	private var renderHelper(get, null):GLRenderHelper;
+	private var _renderHelper:GLRenderHelper;
+	
+	private function get_renderHelper():GLRenderHelper
+	{
+		if (_renderHelper == null)
+		{
+			_renderHelper = new GLRenderHelper(Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
+		}
+		
+		return _renderHelper;
+	}
+	
+	override public function __renderGL(renderSession:RenderSession):Void
+	{
+		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
+		
+		if (needRenderHelper)
+		{
+			renderHelper.capture(this, false, false);
+		}
+		
+		super.__renderGL(renderSession);
+		
+		if (needRenderHelper)
+		{
+			renderHelper.render(renderSession);
+		}
+	}
+	#end
 	
 	private inline function getTicks()
 	{
