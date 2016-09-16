@@ -17,6 +17,8 @@ import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 import openfl.utils.Float32Array;
 
+// TODO: get rid of `_fullscreen` or `_scissorDisabled` variable...
+
 class GLRenderHelper implements IFlxDestroyable
 {
 	/**
