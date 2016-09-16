@@ -179,17 +179,11 @@ class FlxDefines
 	
 	private static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
-		var errorMessage = '[feature] only supported in Flash Player version [version] or higher. '
-			+ 'Define [define] to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
+		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
+			+ 'Define ${define.getName()} to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
 		
 		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
-		{
-			abort(errorMessage
-				.replace("[feature]", feature)
-				.replace("[version]", version)
-				.replace("[define]", define.getName()),
-				(macro null).pos);
-		}
+			abort(errorMessage, (macro null).pos);
 	}
 	
 	private static inline function defined(define:Dynamic)

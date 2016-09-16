@@ -4,7 +4,6 @@ import flash.errors.Error;
 import flash.net.SharedObject;
 import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flash.events.NetStatusEvent;
 
 /**
  * A class to help automate and simplify save game functionality.
