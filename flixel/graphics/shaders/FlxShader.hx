@@ -3,7 +3,7 @@ package flixel.graphics.shaders;
 import openfl.Assets;
 import openfl.display.Shader;
 
-#if ((openfl >= "4.0.0") && !flash)
+#if FLX_RENDER_GL
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;

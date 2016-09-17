@@ -20,7 +20,8 @@ private enum UserDefines
 	FLX_NO_DEBUG;
 	FLX_RECORD;
 	FLX_UNIT_TEST;
-	/* additional rendering define */
+	/* additional rendering defines */
+	FLX_RENDER_GL;
 	FLX_RENDER_GL_ARRAYS;
 }
 
@@ -125,6 +126,9 @@ class FlxDefines
 		#if (openfl >= "4.0.0")
 		if (defined("flash11_8") || (defined("cpp") || defined("neko")) || defined("js"))
 			define(FLX_GAMEINPUT_API);
+		
+		if (!defined("flash"))
+			define(FLX_RENDER_GL);
 		#else
 		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);

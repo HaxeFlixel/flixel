@@ -11,15 +11,11 @@ import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
 
-#if (openfl >= "4.0.0")
+#if FLX_RENDER_GL
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
-
-	#if (!display && !flash)
-	import openfl._internal.renderer.RenderSession;
-	import openfl._internal.renderer.opengl.GLRenderer;
-	#end
-	
+import openfl._internal.renderer.RenderSession;
+import openfl._internal.renderer.opengl.GLRenderer;
 #end
 
 import openfl.display.BitmapData;
@@ -31,6 +27,7 @@ import openfl.geom.Rectangle;
 
 // TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
 // TODO: multitexture batching...
+// TODO: sprite materials with multiple textures...
 
 /**
  * ...
@@ -38,7 +35,7 @@ import openfl.geom.Rectangle;
  */
 class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
-	#if ((openfl >= "4.0.0") && !flash)
+	#if FLX_RENDER_GL
 	private static var texturedTileShader:FlxTexturedShader;
 	private static var coloredTileShader:FlxColorShader;
 	

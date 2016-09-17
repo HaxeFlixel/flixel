@@ -31,7 +31,7 @@ import flixel.system.ui.FlxSoundTray;
 import flixel.system.ui.FlxFocusLostScreen;
 #end
 
-#if ((openfl >= "4.0.0") && !flash)
+#if FLX_RENDER_GL
 import openfl._internal.renderer.RenderSession;
 import flixel.system.render.hardware.gl.GLRenderHelper;
 #end
@@ -502,7 +502,7 @@ class FlxGame extends Sprite
 		}
 		#end
 		
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		if (_renderHelper != null)
 		{
 			_renderHelper.resize(width, height);
@@ -904,7 +904,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	#if ((openfl >= "4.0.0") && !flash)
+	#if FLX_RENDER_GL
 	private var renderHelper(get, null):GLRenderHelper;
 	private var _renderHelper:GLRenderHelper;
 	

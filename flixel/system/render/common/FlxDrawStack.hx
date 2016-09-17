@@ -202,7 +202,7 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		_helperMatrix.identity();
 		var drawItem = startQuadBatch(null, true, false);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);

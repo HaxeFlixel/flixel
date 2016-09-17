@@ -20,7 +20,7 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-#if ((openfl >= "4.0.0") && !flash)
+#if FLX_RENDER_GL
 import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
 import flixel.system.render.hardware.gl.HardwareRenderer;
 #end
@@ -53,7 +53,7 @@ class FlxHardwareView extends FlxCameraView
 	 * It is a child of _scrollRect Sprite (which trims graphics that should be unvisible).
 	 * Its position is modified by updateInternalSpritePositions() method, which is called on camera's resize and scale events.
 	 */
-	#if ((openfl >= "4.0.0") && !flash)
+	#if FLX_RENDER_GL
 	// TODO: implement canvas version of this class for js target...
 	public var canvas:HardwareRenderer;
 	#else
@@ -81,7 +81,7 @@ class FlxHardwareView extends FlxCameraView
 		flashSprite.addChild(_scrollRect);
 		_scrollRect.scrollRect = new Rectangle();
 		
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		canvas = new HardwareRenderer(camera.width, camera.height);
 		#else
 		canvas = new Sprite();
@@ -109,7 +109,7 @@ class FlxHardwareView extends FlxCameraView
 		
 		FlxDestroyUtil.removeChild(_scrollRect, canvas);
 		
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		canvas = FlxDestroyUtil.destroy(canvas);
 		#else
 		if (canvas != null)
@@ -167,7 +167,7 @@ class FlxHardwareView extends FlxCameraView
 	{
 		super.updateOffset();
 		
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		canvas.resize(camera.width, camera.height);
 		#end
 	}
@@ -221,7 +221,7 @@ class FlxHardwareView extends FlxCameraView
 	
 	override public function updateFilters():Void 
 	{
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		canvas.filters = camera.filtersEnabled ? _filters : null;
 		#else
 		flashSprite.filters = camera.filtersEnabled ? _filters : null;
@@ -250,7 +250,7 @@ class FlxHardwareView extends FlxCameraView
 	override public function lock(useBufferLocking:Bool):Void 
 	{
 		drawStack.clearDrawStack();
-		#if ((openfl >= "4.0.0") && !flash)
+		#if FLX_RENDER_GL
 		canvas.clear();
 		#else
 		canvas.graphics.clear();
@@ -312,7 +312,7 @@ class FlxHardwareView extends FlxCameraView
 		return flashSprite;
 	}
 	
-	#if ((openfl >= "4.0.0") && !flash)
+	#if FLX_RENDER_GL
 	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
 	{
 		canvas.drawItem(item);
