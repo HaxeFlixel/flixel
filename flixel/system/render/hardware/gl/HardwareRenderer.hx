@@ -155,10 +155,19 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
+		var numPasses:Int = GLRenderHelper.getObjectNumPasses(this);
+		var needRenderHelper:Bool = (numPasses > 0);
+		var transform:Matrix = this.__worldTransform;
 		
 		if (needRenderHelper)
-			renderHelper.capture(true);
+		{
+			renderHelper.capture(false);
+			uMatrix[0] = renderHelper.getMatrix(transform, renderer, numPasses);
+		}
+		else
+		{
+			uMatrix[0] = renderer.getMatrix(transform);
+		}
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;
 		
@@ -166,8 +175,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		uColor[1] = worldColor.greenMultiplier;
 		uColor[2] = worldColor.blueMultiplier;
 		uColor[3] = this.__worldAlpha;
-		
-		uMatrix[0] = renderer.getMatrix(this.__worldTransform);
 		
 		var shader:FlxShader = null;
 		var nextShader:FlxShader = null;

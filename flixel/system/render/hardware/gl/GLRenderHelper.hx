@@ -5,6 +5,7 @@ import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
+import lime.math.Matrix4;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 import openfl.display.DisplayObject;
@@ -17,15 +18,13 @@ import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 import openfl.utils.Float32Array;
 
-// TODO: get rid of `_fullscreen` or `_scissorDisabled` variable...
-
 class GLRenderHelper implements IFlxDestroyable
 {
 	/**
-	 * Helper variables for less array instantiation and less getter calls
+	 * Helper variables for less object instantiation
 	 */
 	private static var uMatrix:Array<Float32Array> = [];
-	private static var stageHeight:Float = 0;
+	private static var _helperMatrix:Matrix4 = new Matrix4();
 	
 	/**
 	 * Checks how many render passes specified object has.
@@ -95,9 +94,18 @@ class GLRenderHelper implements IFlxDestroyable
 	 */
 	private var _scissor:Array<Int>;
 	/**
+	 * Temp copy of viewport. We store it here to restore it after rendering passes.
+	 */
+	private var _viewport:Array<Int>;
+	/**
 	 * Do we need to restore scissor rectangle after rendering (actually before last render pass).
 	 */
 	private var _scissorDisabled:Bool;
+	
+	/**
+	 * Projection matrix used for render passes (excluding last render pass, which uses global projection matrix from GLRenderer)
+	 */
+	private var _projection:Matrix4; // todo: don't make this matrix static var
 	
 	public function new(object:DisplayObject, width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
@@ -110,13 +118,13 @@ class GLRenderHelper implements IFlxDestroyable
 	
 	public function resize(width:Int, height:Int):Void
 	{
-		stageHeight = FlxG.stage.stageHeight;
-		
 		this.width = width;
 		this.height = height;
 		
 		_texture = FlxDestroyUtil.destroy(_texture);
 		_texture = new PingPongTexture(width, height, smoothing, powerOfTwo);
+		
+		_projection = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 		
 		createBuffer();
 	}
@@ -129,13 +137,13 @@ class GLRenderHelper implements IFlxDestroyable
 		var uv = _texture.renderTexture.uvData;
 		
 		var vertices:Float32Array = new Float32Array([
-			0.0, 	0.0, 	uv.x, 		uv.y,
-			1.0, 	0.0, 	uv.width, 	uv.y,
-			0.0, 	1.0, 	uv.x, 		uv.height,
-			1.0, 	0.0, 	uv.width, 	uv.y,
+			-1.0, 	-1.0, 	uv.x, 		uv.y,
+			1.0, 	-1.0, 	uv.width, 	uv.y,
+			-1.0, 	1.0, 	uv.x, 		uv.height,
+			1.0, 	-1.0, 	uv.width, 	uv.y,
 			1.0, 	1.0, 	uv.width, 	uv.height,
-			0.0, 	1.0, 	uv.x, 		uv.height
-		]);	
+			-1.0, 	1.0, 	uv.x, 		uv.height
+		]);
 		
 		_buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, _buffer);
@@ -151,6 +159,7 @@ class GLRenderHelper implements IFlxDestroyable
 		_objMatrixCopy = null;
 		_renderMatrix = null;
 		_scissor = null;
+		_viewport = null;
 		
 		if (_buffer != null)
 			GL.deleteBuffer(_buffer);
@@ -165,14 +174,13 @@ class GLRenderHelper implements IFlxDestroyable
 	 * Start capturing graphics to internal buffer
 	 * 
 	 * @param	fullscreen			Do we need to grab whole screen area?
-	 * @param	disableScissor		Do we need to disable scissor rectangle before capturing?
 	 */
-	public function capture(fullscreen:Bool = false, disableScissor:Bool = true):Void
+	public function capture(fullscreen:Bool = false):Void
 	{
 		if (numPasses <= 0)
 			return;
 		
-		_scissorDisabled = (GL.getParameter(GL.SCISSOR_TEST) == 1) && disableScissor;
+		_scissorDisabled = (GL.getParameter(GL.SCISSOR_TEST) == 1) && !fullscreen;
 		
 		if (_scissorDisabled)
 		{
@@ -183,14 +191,20 @@ class GLRenderHelper implements IFlxDestroyable
 			GL.scissor(0, 0, 0, 0);
 		}
 		
+		if (!fullscreen)
+		{
+			// we need to resize viewport and store its value
+			_viewport = GL.getParameter(GL.VIEWPORT);
+			GL.viewport(0, 0, width, height);
+		}
+		
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrixCopy.copyFrom(objectTransfrom);
 		_fullscreen = fullscreen;
 		
-		if (fullscreen)
+		if (!fullscreen)
 		{
 			objectTransfrom.identity();
-			objectTransfrom.translate(0, (stageHeight - height));
 		}
 		
 		FrameBufferManager.push(_texture.renderTexture.frameBuffer);
@@ -244,7 +258,7 @@ class GLRenderHelper implements IFlxDestroyable
 			FrameBufferManager.pop();
 			
 			_renderMatrix.identity();
-			_renderMatrix.scale(width, height);
+			_renderMatrix.scale(0.5 * width, 0.5 * height);
 			
 			if (i == passes) // last rendering pass
 			{
@@ -253,12 +267,6 @@ class GLRenderHelper implements IFlxDestroyable
 				if ((passes % 2) != 0) // opengl flips texture on y axis, so last render should be flipped as well
 				{
 					_renderMatrix.scale(1, -1);
-					_renderMatrix.translate(0, height);
-				}
-				
-				if (_fullscreen)
-				{
-					_renderMatrix.concat(_objMatrixCopy);
 				}
 				
 				// enable scissor testing before last render pass.
@@ -274,11 +282,19 @@ class GLRenderHelper implements IFlxDestroyable
 				FrameBufferManager.push(_texture.framebuffer);
 				_texture.clear();
 				textureToUse = _texture.oldRenderTexture.texture;
-				
-				_renderMatrix.translate(0, (stageHeight - height));
 			}
 			
-			uMatrix[0] = renderer.getMatrix(_renderMatrix);
+			_renderMatrix.translate(0.5 * width, 0.5 * height);
+			
+			if (i == passes && !_fullscreen)
+			{
+				// restore object matrix before last render pass
+				_renderMatrix.concat(_objMatrixCopy);
+				// restore viewport before last render pass.
+				GL.viewport(_viewport[0], _viewport[1], _viewport[2], _viewport[3]);
+			}
+			
+			uMatrix[0] = getMatrix(_renderMatrix, renderer, passes - i);
 			shader.data.uMatrix.value = uMatrix;
 			
 			renderSession.shaderManager.setShader(shader);
@@ -306,6 +322,36 @@ class GLRenderHelper implements IFlxDestroyable
 		renderSession.shaderManager.setShader(null);
 		
 		object.__worldTransform.copyFrom(_objMatrixCopy);
+	}
+	
+	/**
+	 * Gets matrix combined from specified transform matrix and projection matrix for current viewport
+	 * 
+	 * @param	transform		matrix to combine with projection matrix
+	 * @param	renderer		gl renderer to get matrix from (used when passesLeft is 0).	
+	 * @param	passesLeft		number of render passes left. If 0 then will be used global projection matrix, if greater than 0 then will be used projection matrix from this helper object
+	 * @return	Combined matrix which can be used for rendering as shader uniform.
+	 */
+	public function getMatrix(transform:Matrix, renderer:GLRenderer, passesLeft:Int = 0):Matrix4 
+	{
+		if (passesLeft == 0)
+		{
+			return renderer.getMatrix(transform);
+		}
+		else if (passesLeft < 0)
+		{
+			return null;
+		}
+		
+		_helperMatrix.identity();
+		_helperMatrix[0] = transform.a;
+		_helperMatrix[1] = transform.b;
+		_helperMatrix[4] = transform.c;
+		_helperMatrix[5] = transform.d;
+		_helperMatrix[12] = transform.tx;
+		_helperMatrix[13] = transform.ty;
+		_helperMatrix.append(_projection);
+		return _helperMatrix;
 	}
 	
 }

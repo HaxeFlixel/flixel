@@ -924,7 +924,7 @@ class FlxGame extends Sprite
 		
 		if (needRenderHelper)
 		{
-			renderHelper.capture(false, false);
+			renderHelper.capture(true);
 		}
 		
 		super.__renderGL(renderSession);

@@ -18,7 +18,6 @@ import openfl.gl.GL;
  * uTime
  * uDeltaTime
  * 
- * 
  * Possible shader constants list from ShaderToy:
  * vec3			iResolution	image	The viewport resolution (z is pixel aspect ratio, usually 1.0)
  * float		iGlobalTime	image/sound	Current time in seconds
