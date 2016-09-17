@@ -852,6 +852,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var drawY:Float = 0;
 		var scaledWidth:Float = 0;
 		var scaledHeight:Float = 0;
+		var nextX:Float, nextY:Float, scaleX:Float, scaleY:Float;
 		var drawItem = null;
 		
 		if (FlxG.renderBlit)
@@ -862,8 +863,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 			
-			_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
-			_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
+			if (isPixelPerfectRender(Camera))
+			{
+				_helperPoint.x = Camera.floorX(_helperPoint.x);
+				_helperPoint.y = Camera.floorY(_helperPoint.y);
+			}
 			
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
@@ -939,8 +943,26 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					else
 					{
-						drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
-						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
+						if (isPixelPerfectRender(camera))
+						{
+							drawX = Camera.floorX((columnIndex % widthInTiles) * scaledWidth);
+							drawY = Camera.floorY(Math.floor(columnIndex / widthInTiles) * scaledHeight);
+							nextX = Camera.floorX(((columnIndex % widthInTiles) + 1) * scaledWidth);
+							nextY = Camera.floorY((Math.floor(columnIndex / widthInTiles) + 1) * scaledHeight);
+							// adjust scale to exactly fill the space between this tile and the next
+							scaleX = (nextX - drawX) / _tileWidth;
+							scaleY = (nextY - drawY) / _tileHeight;
+							// add this last so the tilemap doesn't jitter when it or the camera moves
+							drawX += _helperPoint.x;
+							drawY += _helperPoint.y;
+						}
+						else
+						{
+							drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
+							drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
+							scaleX = scale.x;
+							scaleY = scale.y;
+						}
 						
 						_matrix.identity();
 						
@@ -948,9 +970,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						{
 							frame.prepareMatrix(_matrix);
 						}
-						
-						var scaleX:Float = scale.x;
-						var scaleY:Float = scale.y;
 						
 						if (useScaleHack)
 						{

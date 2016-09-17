@@ -1525,6 +1525,27 @@ class FlxCamera extends FlxBasic
 		setScale(scaleX, scaleY);
 	}
 	
+	/**
+	 * Helper function to make sure a point will use integer coordinates after
+	 * applying scale.
+	 */
+	public inline function floorPoint(point:FlxPoint):FlxPoint
+	{
+		point.x = floorX(point.x);
+		point.y = floorY(point.y);
+		return point;
+	}
+	
+	public inline function floorX(x:Float):Float
+	{
+		return Math.floor(x * totalScaleX) / totalScaleX;
+	}
+	
+	public inline function floorY(y:Float):Float
+	{
+		return Math.floor(y * totalScaleY) / totalScaleY;
+	}
+	
 	private function set_followLerp(Value:Float):Float
 	{
 		return followLerp = FlxMath.bound(Value, 0, 60 / FlxG.updateFramerate);
