@@ -5,6 +5,8 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxVerticalAlign;
 
+// TODO: shader based scale mode (see https://github.com/HaxeFlixel/flixel/pull/1826)
+
 class BaseScaleMode
 {
 	public var deviceSize(default, null):FlxPoint;

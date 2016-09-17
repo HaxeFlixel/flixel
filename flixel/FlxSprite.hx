@@ -656,6 +656,7 @@ class FlxSprite extends FlxObject
 	
 	private function drawComplex(camera:FlxCamera):Void
 	{
+		// TODO: move _frame.prepareMatrix to camera view???
 		_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 		_matrix.translate(-origin.x, -origin.y);
 		_matrix.scale(scale.x, scale.y);
