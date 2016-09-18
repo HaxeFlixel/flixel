@@ -644,6 +644,8 @@ class FlxSprite extends FlxObject
 	
 	private function drawSimple(camera:FlxCamera):Void
 	{
+		if (isPixelPerfectRender(camera))
+			camera.floorPoint(_point);
 		_point.copyToFlash(_flashPoint);
 		camera.copyPixels(_frame, framePixels, _flashRect,
 			_flashPoint, colorTransform, blend, antialiasing);

@@ -1538,12 +1538,12 @@ class FlxCamera extends FlxBasic
 	
 	public inline function floorX(x:Float):Float
 	{
-		return Math.floor(x * totalScaleX) / totalScaleX;
+		return FlxG.renderBlit ? Math.floor(x) : (Math.floor(x * totalScaleX) / totalScaleX);
 	}
 	
 	public inline function floorY(y:Float):Float
 	{
-		return Math.floor(y * totalScaleY) / totalScaleY;
+		return FlxG.renderBlit ? Math.floor(y) : (Math.floor(y * totalScaleY) / totalScaleY);
 	}
 	
 	private function set_followLerp(Value:Float):Float
