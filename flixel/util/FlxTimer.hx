@@ -163,16 +163,21 @@ class FlxTimer implements IFlxDestroyable
 		{
 			_timeCounter -= time;
 			_loopsCounter++;
-			
-			if (onComplete != null)
-			{
-				onComplete(this);
-			}
-			
-			if (loops > 0 && (_loopsCounter >= loops))
-			{
-				cancel();
-			}
+		}
+	}
+	
+	@:allow(flixel.util.FlxTimerManager)
+	private function onLoopFinished():Void
+	{
+		if (onComplete != null)
+		{
+			onComplete(this);
+		}
+		
+		if (loops > 0 && (_loopsCounter >= loops))
+		{
+			finished = true;
+			cancel();
 		}
 	}
 	
@@ -240,11 +245,30 @@ class FlxTimerManager extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
+		var loopedTimers:Array<FlxTimer> = null;
+		
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
+				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
+				
+				if (timerLoops != timer.elapsedLoops)
+				{
+					if (loopedTimers == null)
+						loopedTimers = [];
+					
+					loopedTimers.push(timer);
+				}
+			}
+		}
+		
+		if (loopedTimers != null)
+		{
+			while (loopedTimers.length > 0)
+			{
+				loopedTimers.shift().onLoopFinished();
 			}
 		}
 	}
@@ -281,12 +305,35 @@ class FlxTimerManager extends FlxBasic
 	public function completeAll():Void
 	{
 		var timersToFinish:Array<FlxTimer> = [];
+		
 		for (timer in _timers)
-            if (timer.loops > 0)
+            if (timer.loops > 0 && timer.active) // or should we activate timer and force it to finish?
 				timersToFinish.push(timer);
-		for (timer in timersToFinish)
-			while (!timer.finished)
+		
+		if (timersToFinish.length == 0)
+			return;
+		
+		var loopedTimers:Array<FlxTimer> = [];
+		
+		while (timersToFinish.length > 0)
+		{
+			for (timer in timersToFinish)
+			{
 				timer.update(timer.timeLeft);
+				loopedTimers.push(timer);
+			}
+			
+			while (loopedTimers.length > 0)
+			{
+				var loopedTimer:FlxTimer = loopedTimers.shift();
+				loopedTimer.onLoopFinished();
+				
+				if (loopedTimer.finished)
+				{
+					timersToFinish.remove(loopedTimer);
+				}
+			}
+		}
 	}
 	
 	/**
