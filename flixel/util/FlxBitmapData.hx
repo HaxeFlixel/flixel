@@ -1,13 +1,14 @@
 package flixel.util;
 
-#if flash
-import flash.Vector;
+#if !flash
+typedef FlxBitmapData = flash.display.BitmapData;
 #else
 import openfl.Vector;
-#end
-
+import flash.Vector;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
+import openfl.display3D.Context3D;
+import openfl.display3D.Context3DTextureFormat;
 import openfl.geom.Matrix;
 import openfl.utils.ByteArray;
 import openfl.display.BitmapData;
@@ -18,7 +19,6 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-// TODO: implement it...
 // TODO: hack in openfl and lime asset management system to create FlxBitmapData objects (not just BitmapData)...
 
 /**
@@ -27,7 +27,7 @@ import openfl.geom.Rectangle;
  */
 class FlxBitmapData extends BitmapData
 {
-	public var texture(get, null):Texture;
+	private var _texture:Texture;
 	
 	private var _dirty:Bool = true;
 	
@@ -38,10 +38,10 @@ class FlxBitmapData extends BitmapData
 	
 	override public function dispose():Void 
 	{
-		if (texture != null)
+		if (_texture != null)
 		{
-			texture.dispose();
-			texture = null;
+			_texture.dispose();
+			_texture = null;
 		}
 		
 		super.dispose();
@@ -113,13 +113,11 @@ class FlxBitmapData extends BitmapData
 		_dirty = true;
 	}
 	
-	#if flash
 	override public function pixelDissolve(sourceBitmapData:BitmapData, sourceRect:Rectangle, destPoint:Point, randomSeed:Int = 0, numPixels:Int = 0, fillColor:UInt = 0):Int
 	{
 		_dirty = true;
 		return super.pixelDissolve(sourceBitmapData, sourceRect, destPoint, randomSeed, numPixels, fillColor);
 	}
-	#end
 	
 	override public function scroll(x:Int, y:Int):Void 
 	{
@@ -153,42 +151,81 @@ class FlxBitmapData extends BitmapData
 	
 	override public function clone():FlxBitmapData 
 	{
-		#if flash
 		var result:FlxBitmapData = new FlxBitmapData(width, height, transparent);
-		result.copyPixels(this, this.rect, new Point(0, 0));
+		result.copyPixels(this, this.rect, new Point(), null, null, true);
 		return result;
-		#else
-		if (!__isValid) 
-		{
-			return new FlxBitmapData(width, height, transparent);	
-		}
-		
-		if (image == null || image.buffer == null) 
-		{
-			return null;
-		}
-		
-		var bitmapData:FlxBitmapData = new FlxBitmapData(0, 0, transparent);
-		bitmapData.__fromImage(image);
-		bitmapData.image.transparent = transparent;
-		return bitmapData;
-		#end
 	}
 	
-	// TODO: implement it...
-	private function get_texture():Texture
+	public function getTexture(context:Context3D, generateMipmaps:Bool = true):Texture
 	{
 		if (_dirty)
 		{
+			if (_texture != null)
+			{
+				_texture.dispose();
+			}
 			
+			var textureBD:BitmapData = fixTextureSize(this);
+			
+			var textureWidth:Int = textureBD.width;
+			var textureHeight:Int = textureBD.height;
+			
+			_texture = context.createTexture(textureWidth, textureHeight, Context3DTextureFormat.BGRA, false);
+			_texture.uploadFromBitmapData(this);
+			
+			if (generateMipmaps) // generate mipmaps
+			{
+				var level:Int = 1;
+				var canvas:BitmapData = new BitmapData(textureWidth >> 1, textureHeight >> 1, true, 0);
+				var transform:Matrix = new Matrix(0.5, 0, 0, 0.5);
+				
+				while (textureWidth >= 2 && textureHeight >= 2) //should that be an OR?
+				{
+					textureWidth = textureWidth >> 1;
+					textureHeight = textureHeight >> 1;
+					canvas.fillRect(canvas.rect, 0);
+					canvas.draw(textureBD, transform, null, null, null, true);
+					_texture.uploadFromBitmapData(canvas, level++);
+					transform.scale(0.5, 0.5); 
+				}
+				
+				canvas.dispose();
+			}
+			
+			if (textureBD != this)
+			{
+				textureBD.dispose();
+			}
 		}
 		
-		#if FLX_RENDER_GL
-	//	this.getTexture()
-		#end
-		
 		_dirty = false;
-		return null;
+		return _texture;
+	}
+	
+	private static function fixTextureSize(texture:BitmapData):BitmapData
+	{
+		return if (powOfTwo(texture.width) == texture.width && powOfTwo(texture.height) == texture.height && texture.width == texture.height)
+		{
+			texture;
+		}
+		else
+		{
+			var newWidth = powOfTwo(texture.width);
+			var newHeight = powOfTwo(texture.height);
+			var newSize = (newWidth > newHeight) ? newWidth : newHeight;
+			var newTexture:BitmapData = new BitmapData(newSize, newSize, true, 0);
+			newTexture.copyPixels(texture, texture.rect, new Point(), null, null, true);
+			newTexture;
+		}
+	}
+	
+	// TODO: move it to FlxMath (since i use it in GLRenderHelper as well)...
+	private static inline function powOfTwo(value:Int):Int
+	{
+		var n = 1;
+		while (n < value) n <<= 1;
+		return n;
 	}
 	
 }
+#end
