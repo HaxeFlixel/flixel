@@ -311,7 +311,7 @@ class FlxTimerManager extends FlxBasic
 		var timersToFinish:Array<FlxTimer> = [];
 		
 		for (timer in _timers)
-            if (timer.loops > 0 && timer.active) // or should we activate timer and force it to finish?
+            if (timer.loops > 0 && timer.active)
 				timersToFinish.push(timer);
 		
 		if (timersToFinish.length == 0)
