@@ -1,18 +1,14 @@
 package flixel.system.render.hardware.gl;
 
+import openfl.geom.ColorTransform;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
+import flixel.math.FlxRect;
+import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
-import openfl.geom.ColorTransform;
-import flixel.math.FlxMatrix;
 
-import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.render.common.DrawItem.DrawData;
-import flixel.system.render.common.FlxDrawBaseItem;
-
-import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.Int16Array;
 
@@ -362,10 +358,7 @@ class FlxDrawTrianglesItem extends FlxDrawHardwareItem<FlxDrawTrianglesItem>
 	
 	#else
 	
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
-	{
-		
-	}
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
 	#end
 }

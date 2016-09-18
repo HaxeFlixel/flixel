@@ -1,17 +1,12 @@
 package flixel.system.render.hardware.tile;
 
-import flixel.FlxCamera;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.hardware.FlxHardwareView;
-import flixel.system.render.hardware.gl.HardwareRenderer;
-import openfl.display.BlendMode;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 

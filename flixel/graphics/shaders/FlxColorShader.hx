@@ -7,7 +7,6 @@ package flixel.graphics.shaders;
 class FlxColorShader extends FlxShader
 {
 	public static inline var defaultVertexSource:String = 
-			
 			"
 		#ifdef GL_ES
 			precision mediump float;
@@ -26,8 +25,8 @@ class FlxColorShader extends FlxShader
 			}";
 			
 	public static inline var defaultFragmentSource:String = 
-			
-			"varying vec4 vColor;
+			"
+			varying vec4 vColor;
 			
 			uniform vec4 uColor;
 			
@@ -36,7 +35,7 @@ class FlxColorShader extends FlxShader
 				gl_FragColor = vColor * uColor;
 			}";
 	
-	public function new(vertexSource:String = null, fragmentSource:String = null) 
+	public function new(?vertexSource:String, ?fragmentSource:String) 
 	{
 		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
 		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;

@@ -10,25 +10,23 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.display.Graphics;
-import openfl.display.Sprite;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+// TODO: add pure opengl version of camera view, so it will work on nme...
+// TODO: add stage3d version of camera view...
+// TODO: add methods for adding non-textured triangles???
+
 /**
  * ...
  * @author Zaphod
  */
-
-// TODO: add pure opengl version of camera view, so it will work on nme...
-// TODO: add stage3d version of camera view...
-// TODO: add methods for adding non-textured triangles???
 class FlxCameraView implements IFlxDestroyable
 {
 	// Batching related static variables and constants:
@@ -186,29 +184,29 @@ class FlxCameraView implements IFlxDestroyable
 		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
 	}
 	
-	public function updatePosition():Void { }
+	public function updatePosition():Void {}
 	
-	public function updateScrollRect():Void { }
+	public function updateScrollRect():Void {}
 	
-	public function updateInternals():Void { }
+	public function updateInternals():Void {}
 	
-	public function updateFilters():Void { }
+	public function updateFilters():Void {}
 	
-	public function updateScale():Void { }
+	public function updateScale():Void {}
 	
-	public function checkResize():Void { }
+	public function checkResize():Void {}
 	
-	public function fill(Color:FlxColor, BlendAlpha:Bool = true, Alpha:Float = 1.0):Void { }
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, Alpha:Float = 1.0):Void {}
 	
-	public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void { }
+	public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void {}
 	
-	public function lock(useBufferLocking:Bool):Void { }
+	public function lock(useBufferLocking:Bool):Void {}
 	
-	public function unlock(useBufferLocking:Bool):Void { }
+	public function unlock(useBufferLocking:Bool):Void {}
 	
-	public function clear():Void { }
+	public function clear():Void {}
 	
-	public function offsetView(X:Float, Y:Float):Void { }
+	public function offsetView(X:Float, Y:Float):Void {}
 	
 	public function setFilters(filters:Array<BitmapFilter>):Void 
 	{ 
@@ -216,44 +214,29 @@ class FlxCameraView implements IFlxDestroyable
 	}
 	
 	@:allow(flixel.FlxCamera)
-	private function render():Void { }
+	private function render():Void {}
 	
 	public function beginDrawDebug():Graphics
 	{
 		return null;
 	}
 	
-	public function endDrawDebug():Void { }
+	public function endDrawDebug():Void {}
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
-	{
-		
-	}
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
-	{
-		
-	}
+		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
-	{
-		
-	}
+		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
 	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
-	{
-		
-	}
+		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
-	public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
-	{
-		
-	}
+	public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
 	private function get_color():FlxColor
 	{

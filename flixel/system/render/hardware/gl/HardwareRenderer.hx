@@ -4,12 +4,9 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.shaders.FlxColorShader;
 import flixel.graphics.shaders.FlxShader;
 import flixel.graphics.shaders.FlxTexturedShader;
-import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
-import openfl.gl.GL;
 
 #if FLX_RENDER_GL
 import lime.graphics.GLRenderContext;
@@ -18,10 +15,8 @@ import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 #end
 
-import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
-import openfl.display.Shader;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
@@ -304,10 +299,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	#else
 	
-	public function destroy():Void
-	{
-		
-	}
+	public function destroy():Void {}
+	
 	#end
 	
 }

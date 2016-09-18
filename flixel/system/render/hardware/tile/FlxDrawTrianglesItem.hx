@@ -1,6 +1,5 @@
 package flixel.system.render.hardware.tile;
 
-import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.FlxAssets.FlxShader;
@@ -12,7 +11,6 @@ import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.hardware.FlxHardwareView;
-import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
@@ -270,7 +268,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override private function get_numVertices():Int
 	{
-		return Std.int(vertexPos/ elementsPerVertex);
+		return Std.int(vertexPos / elementsPerVertex);
 	}
 	
 	override private function get_numTriangles():Int

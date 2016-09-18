@@ -10,7 +10,6 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPath;
-import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 /**

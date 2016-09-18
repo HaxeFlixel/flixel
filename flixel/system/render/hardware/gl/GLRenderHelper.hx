@@ -1,7 +1,6 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.graphics.shaders.FlxFilterShader;
-import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
@@ -14,7 +13,6 @@ import openfl.filters.ShaderFilter;
 import openfl.geom.Matrix;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
-import openfl.gl.GLFramebuffer;
 import openfl.gl.GLTexture;
 import openfl.utils.Float32Array;
 
@@ -105,7 +103,7 @@ class GLRenderHelper implements IFlxDestroyable
 	/**
 	 * Projection matrix used for render passes (excluding last render pass, which uses global projection matrix from GLRenderer)
 	 */
-	private var _projection:Matrix4; // todo: don't make this matrix static var
+	private var _projection:Matrix4;
 	
 	public function new(object:DisplayObject, width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
@@ -191,19 +189,17 @@ class GLRenderHelper implements IFlxDestroyable
 			GL.scissor(0, 0, 0, 0);
 		}
 		
-		if (!fullscreen)
-		{
-			// we need to resize viewport and store its value
-			_viewport = GL.getParameter(GL.VIEWPORT);
-			GL.viewport(0, 0, width, height);
-		}
-		
 		var objectTransfrom:Matrix = object.__worldTransform;
 		_objMatrixCopy.copyFrom(objectTransfrom);
 		_fullscreen = fullscreen;
 		
 		if (!fullscreen)
 		{
+			// we need to resize viewport and store its value
+			_viewport = GL.getParameter(GL.VIEWPORT);
+			GL.viewport(0, 0, width, height);
+			
+			// and let's reset object matrix
 			objectTransfrom.identity();
 		}
 		
@@ -320,7 +316,7 @@ class GLRenderHelper implements IFlxDestroyable
 		}
 		
 		renderSession.shaderManager.setShader(null);
-		
+		// restore object matrix
 		object.__worldTransform.copyFrom(_objMatrixCopy);
 	}
 	

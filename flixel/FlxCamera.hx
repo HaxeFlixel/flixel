@@ -18,11 +18,9 @@ import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
-import openfl.geom.Matrix;
 
 // TODO: proper camera scaling...
 // with suport for different camera following styles...

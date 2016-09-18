@@ -1,18 +1,13 @@
 package flixel.system.render.hardware.gl;
 
-import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
-import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.common.FlxDrawBaseItem;
 
-import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
 import lime.utils.Int16Array;
 
@@ -188,10 +183,7 @@ class FlxDrawQuadsItem extends FlxDrawHardwareItem<FlxDrawQuadsItem>
 	
 	public var numTiles:Int = 1;
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
-	{
-		
-	}
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void {}
 	
 	#end
 }

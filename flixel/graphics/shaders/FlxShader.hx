@@ -237,10 +237,7 @@ class FlxShader extends Shader
 
 class FlxShader implements Dynamic
 {
-	public function new(vertexSource:String, fragmentSource:String)
-	{
-		
-	}
+	public function new(vertexSource:String, fragmentSource:String) {}
 }
 
 #end

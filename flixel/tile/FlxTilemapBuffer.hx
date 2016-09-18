@@ -1,7 +1,6 @@
 package flixel.tile;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
@@ -140,7 +139,6 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
 			Camera.drawPixels(pixels, _matrix, null, blend, antialiasing);
-		//	Camera.buffer.draw(pixels, _matrix, null, blend, null, antialiasing);
 		}
 	}
 	

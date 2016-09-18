@@ -7,7 +7,6 @@ package flixel.graphics.shaders;
 class FlxTexturedShader extends FlxShader
 {
 	public static inline var defaultVertexSource:String = 
-			
 			"
 		#ifdef GL_ES
 			precision mediump float;
@@ -29,8 +28,8 @@ class FlxTexturedShader extends FlxShader
 			}";
 			
 	public static inline var defaultFragmentSource:String = 
-			
-			"varying vec2 vTexCoord;
+			"
+			varying vec2 vTexCoord;
 			varying vec4 vColor;
 			
 			uniform sampler2D uImage0;
@@ -50,7 +49,7 @@ class FlxTexturedShader extends FlxShader
 				}
 			}";
 	
-	public function new(vertexSource:String = null, fragmentSource:String = null) 
+	public function new(?vertexSource:String, ?fragmentSource:String) 
 	{
 		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
 		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;

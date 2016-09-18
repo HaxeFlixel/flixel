@@ -5,16 +5,13 @@ import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.render.common.FlxDrawBaseItem;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
 import flixel.system.render.hardware.FlxHardwareView;
-import flixel.system.render.hardware.gl.HardwareRenderer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -148,7 +145,7 @@ class FlxDrawStack implements IFlxDestroyable
 	public function startTrianglesBatch(graphic:FlxGraphic, smooth:Bool = false,
 		colored:Bool = false, ?blend:BlendMode, ?shader:FlxShader, numVertices:Int, numIndices:Int):FlxDrawTrianglesItem
 	{
-		if (FlxCameraView.BATCH_TRIANGLES == false)
+		if (!FlxCameraView.BATCH_TRIANGLES)
 		{
 			return getNewDrawTrianglesItem(graphic, smooth, colored, blend, shader);
 		}
