@@ -163,6 +163,11 @@ class FlxTimer implements IFlxDestroyable
 		{
 			_timeCounter -= time;
 			_loopsCounter++;
+			
+			if (loops > 0 && (_loopsCounter >= loops))
+			{
+				finished = true;
+			}
 		}
 	}
 	
@@ -174,9 +179,8 @@ class FlxTimer implements IFlxDestroyable
 			onComplete(this);
 		}
 		
-		if (loops > 0 && (_loopsCounter >= loops))
+		if (finished)
 		{
-			finished = true;
 			cancel();
 		}
 	}
