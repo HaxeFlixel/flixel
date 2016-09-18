@@ -863,12 +863,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			getScreenPosition(_point, Camera).subtractPoint(offset).copyToFlash(_helperPoint);
 			
-			if (isPixelPerfectRender(Camera))
-			{
-				_helperPoint.x = Camera.floorX(_helperPoint.x);
-				_helperPoint.y = Camera.floorY(_helperPoint.y);
-			}
-			
 			scaledWidth  = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
 			
@@ -943,7 +937,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					else
 					{
-						if (isPixelPerfectRender(camera))
+						if (isPixelPerfectRender(Camera))
 						{
 							drawX = Camera.floorX((columnIndex % widthInTiles) * scaledWidth);
 							drawY = Camera.floorY(Math.floor(columnIndex / widthInTiles) * scaledHeight);
@@ -976,7 +970,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 							scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
 							scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
 						}
-						
+
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						

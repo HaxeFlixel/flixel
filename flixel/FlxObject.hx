@@ -810,28 +810,33 @@ class FlxObject extends FlxBasic
 	/**
 	 * Call this function to figure out the on-screen position of the object.
 	 * 
-	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
-	 * @param	Camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @param	point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
+	 * @param	camera		Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	public function getScreenPosition(?point:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
 		if (point == null)
 		{
 			point = FlxPoint.get();
 		}
-		if (Camera == null)
+		if (camera == null)
 		{
-			Camera = FlxG.camera;
+			camera = FlxG.camera;
 		}
 		
 		point.set(x, y);
 		if (pixelPerfectPosition)
 		{
-			point.floor();
+			camera.floorPoint(point);
+		}
+		point.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
+		if (pixelPerfectPosition)
+		{
+			camera.floorPoint(point);
 		}
 		
-		return point.subtract(Camera.scroll.x * scrollFactor.x, Camera.scroll.y * scrollFactor.y);
+		return point;
 	}
 	
 	public function getPosition(?point:FlxPoint):FlxPoint
