@@ -151,6 +151,25 @@ class FlxTweenTest extends FlxTest
 		};
 	}
 
+	@Test
+	function testCompleteAll()
+	{
+		var tween = makeTween(0.1, function(_) {});
+		FlxTween.globalManager.completeAll();
+
+		Assert.isTrue(tween.finished);
+	}
+
+	@Test // #1955
+	function testCompleteAllInactive()
+	{
+		var tween = makeTween(0.1, function(_) {});
+		tween.active = false;
+		FlxTween.globalManager.completeAll();
+
+		Assert.isFalse(tween.finished);
+	}
+
 	function makeTween(duration:Float, onComplete:TweenCallback):FlxTween
 	{
 		var foo = { f: 0 };
