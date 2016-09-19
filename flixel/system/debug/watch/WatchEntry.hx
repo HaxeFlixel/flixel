@@ -40,8 +40,9 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 
 		defaultFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, getTextColor());
 		nameText = initTextField(DebuggerUtil.createTextField());
+		var expectedType = Type.typeof(getValue());
 		valueText = initTextField(DebuggerUtil.initTextField(
-			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue)));
+			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue, expectedType)));
 
 		updateName();
 		
@@ -105,9 +106,9 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		nameText.width = Math.min(currentWidth, MAX_NAME_WIDTH);
 	}
 	
-	private function getValue():String
+	private function getValue():Dynamic
 	{
-		var value:Dynamic = switch (data)
+		return switch (data)
 		{
 			case FIELD(object, field):
 				Reflect.getProperty(object, field);
@@ -119,14 +120,18 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 				#end
 			case QUICK(value):
 				value;
-		};
-		
+		}
+	}
+
+	private function getFormattedValue():String
+	{
+		var value = getValue();
 		if (Std.is(value, Float))
 			value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
 		return Std.string(value);
 	}
 	
-	private function submitValue(value:String):Void
+	private function submitValue(value:Dynamic):Void
 	{
 		switch (data)
 		{
@@ -139,7 +144,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	public function updateValue()
 	{
 		if (!valueText.isEditing)
-			valueText.text = getValue();
+			valueText.text = getFormattedValue();
 	}
 	
 	public function getNameWidth():Float
