@@ -111,6 +111,8 @@ class ReplayState extends FlxState
 	override public function create()
 	{
 		var button = new FlxButton();
+		button.width = FlxG.width;
+		button.height = FlxG.height;
 		button.onUp.callback = function() called = true;
 		add(button);
 	}
