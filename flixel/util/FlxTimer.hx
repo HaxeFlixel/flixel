@@ -309,36 +309,14 @@ class FlxTimerManager extends FlxBasic
 	public function completeAll():Void
 	{
 		var timersToFinish:Array<FlxTimer> = [];
-		
 		for (timer in _timers)
-            if (timer.loops > 0 && timer.active)
+			if (timer.loops > 0)
 				timersToFinish.push(timer);
-		
-		if (timersToFinish.length == 0)
-			return;
-		
-		var loopedTimers:Array<FlxTimer> = [];
-		
-		while (timersToFinish.length > 0)
-		{
-			for (timer in timersToFinish)
-			{
+		for (timer in timersToFinish)
+			while (!timer.finished)
 				timer.update(timer.timeLeft);
-				loopedTimers.push(timer);
-			}
-			
-			while (loopedTimers.length > 0)
-			{
-				var loopedTimer:FlxTimer = loopedTimers.shift();
-				loopedTimer.onLoopFinished();
-				
-				if (loopedTimer.finished)
-				{
-					timersToFinish.remove(loopedTimer);
-				}
-			}
-		}
 	}
+
 	
 	/**
 	 * Removes all the timers from the timer manager.
@@ -355,7 +333,7 @@ class FlxTimerManager extends FlxBasic
 	 */
 	public function forEach(Function:FlxTimer->Void)
 	{
-		for (timer in _timers)		
+		for (timer in _timers)
 			Function(timer);
 	}
 }

@@ -43,7 +43,7 @@ class FlxTimerTest extends FlxTest
 		step();
 	}
 
-	@Test
+	@Test // #679
 	@:access(flixel.util.FlxTimerManager.remove)
 	function testManipuleListInCallback()
 	{
