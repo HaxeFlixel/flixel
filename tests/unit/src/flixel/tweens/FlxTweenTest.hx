@@ -177,7 +177,7 @@ class FlxTweenTest extends FlxTest
 		var tween2Updated = false;
 		var tween3Updated = false;
 
-		var tween2:FlxTween;
+		var tween2:FlxTween = null;
 		// short duration, so finished after one step()
 		var tween1 = makeTween(0.0001, function(_)
 			FlxTween.globalManager.remove(tween2)
