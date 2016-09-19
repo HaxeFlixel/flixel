@@ -1129,7 +1129,7 @@ class FlxTweenManager extends FlxBasic
 
 	/**
 	 * Immediately updates all tweens that are not looping (type `FlxTween.LOOPING` or `FlxTween.PINGPONG`)
-	 * through their endings, triggering their `onComplete` callbacks.
+	 * and `active` through their endings, triggering their `onComplete` callbacks.
 	 * 
 	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
 	 * 

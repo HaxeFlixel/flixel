@@ -299,14 +299,14 @@ class FlxTimerManager extends FlxBasic
 	}
 	
 	/**
-	 * Immediately updates all non-infinite timers to their end points, repeatedly,
+	 * Immediately updates all `active`, non-infinite timers to their end points, repeatedly,
 	 * until all their loops are finished, resulting in `loopsLeft` callbacks being run.
 	 */
 	public function completeAll():Void
 	{
 		var timersToFinish:Array<FlxTimer> = [];
 		for (timer in _timers)
-			if (timer.loops > 0)
+			if (timer.loops > 0 && timer.active)
 				timersToFinish.push(timer);
 
 		for (timer in timersToFinish)
