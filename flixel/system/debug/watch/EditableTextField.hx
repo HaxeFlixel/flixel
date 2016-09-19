@@ -93,6 +93,9 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			case TBool:
 				text = if (text == "true") "false" else "true";
 				selectEnd();
+			case TEnum(e):
+				cycleEnumValue(e, FlxMath.signOf(modifier));
+				selectEnd();
 			case _:
 				setSelection(selection, selection);
 		}
@@ -114,6 +117,21 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		text = Std.string(value);
 	}
 
+	private function cycleEnumValue(e:Enum<Dynamic>, modifier:Int):Void
+	{
+		var values = e.getConstructors();
+		var index = values.indexOf(text);
+		if (index == -1)
+			index = 0;
+		else
+		{
+			index += modifier;
+			if (index > values.length)
+				index = 0;
+		}
+		text = Std.string(values[index]);
+	}
+
 	private function onFocusLost(_)
 	{
 		setIsEditing(false);
@@ -129,6 +147,9 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			#end
 			case TBool if (text == "true"): true;
 			case TBool if (text == "false"): false;
+			case TEnum(e):
+				try Type.createEnum(e, text)
+				catch (_:Dynamic) null;
 			case _: text;
 		}
 
