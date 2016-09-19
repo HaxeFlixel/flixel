@@ -9,23 +9,26 @@ import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
+import Type.ValueType;
 
 class EditableTextField extends TextField implements IFlxDestroyable
 {
 	public var isEditing(default, null):Bool;
 
 	private var allowEditing:Bool;
-	private var submitValue:String->Void;
-	
+	private var submitValue:Dynamic->Void;
+	private var expectedType:ValueType;
+
 	private var defaultFormat:TextFormat;
 	private var editFormat:TextFormat;
 	
-	public function new(allowEditing:Bool, defaultFormat:TextFormat, submitValue:Dynamic->Void) 
+	public function new(allowEditing:Bool, defaultFormat:TextFormat, submitValue:Dynamic->Void, expectedType:ValueType)
 	{
 		super();
 		this.allowEditing = allowEditing;
 		this.submitValue = submitValue;
 		this.defaultFormat = defaultFormat;
+		this.expectedType = expectedType;
 		
 		if (allowEditing)
 		{
@@ -101,11 +104,20 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		setIsEditing(false);
 	}
 
-	private function submit():Void
+	public function submit():Void
 	{
+		var value:Dynamic = switch (expectedType)
+		{
+			case TInt: Std.parseInt(text);
+			case TFloat: Std.parseFloat(text);
+			case TBool if (text == "true"): true;
+			case TBool if (text == "false"): false;
+			case _: text;
+		}
+
 		try
 		{
-			submitValue(text);
+			submitValue(value);
 		}
 		catch (e:Dynamic) {}
 		
