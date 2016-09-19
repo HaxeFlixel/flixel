@@ -1141,7 +1141,7 @@ class FlxTweenManager extends FlxBasic
 	public function completeAll():Void
 	{
 		for (tween in _tweens)
-			if ((tween.type & FlxTween.LOOPING) == 0 && (tween.type & FlxTween.PINGPONG) == 0)
+			if ((tween.type & FlxTween.LOOPING) == 0 && (tween.type & FlxTween.PINGPONG) == 0 && tween.active)
 				tween.update(FlxMath.MAX_VALUE_FLOAT);
 	}
 
