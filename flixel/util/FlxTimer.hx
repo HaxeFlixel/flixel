@@ -287,10 +287,9 @@ class FlxTimerManager extends FlxBasic
 	
 	/**
 	 * Remove a timer from the timer manager.
-	 * Called automatically by FlxTimer's stop() function.
+	 * Called automatically by FlxTimer's cancel() function.
 	 * 
 	 * @param	Timer	The FlxTimer you want to remove from the manager.
-	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
 	 */
 	@:allow(flixel.util.FlxTimer)
 	private function remove(Timer:FlxTimer):Void
