@@ -79,7 +79,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		switch (e.keyCode)
 		{
 			case Keyboard.UP: cycleValue(modifier, 0);
-			case Keyboard.DOWN: cycleValue(modifier, text.length);
+			case Keyboard.DOWN: cycleValue(-modifier, text.length);
 		}
 	}
 
@@ -87,11 +87,20 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	{
 		switch (expectedType)
 		{
-			case TInt | TFloat: cycleNumericValue(modifier);
-			case TBool if (text == "true"): text = "false";
-			case TBool: text = "true"; 
-			case _: setSelection(selection, selection);
+			case TInt | TFloat:
+				cycleNumericValue(modifier);
+				selectEnd();
+			case TBool:
+				text = if (text == "true") "false" else "true";
+				selectEnd();
+			case _:
+				setSelection(selection, selection);
 		}
+	}
+
+	private function selectEnd():Void
+	{
+		setSelection(text.length, text.length);
 	}
 	
 	private function cycleNumericValue(modifier:Float):Void
