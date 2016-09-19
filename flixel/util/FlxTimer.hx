@@ -164,16 +164,21 @@ class FlxTimer implements IFlxDestroyable
 			_timeCounter -= time;
 			_loopsCounter++;
 			
-			if (onComplete != null)
-			{
-				onComplete(this);
-			}
-			
 			if (loops > 0 && (_loopsCounter >= loops))
 			{
-				cancel();
+				finished = true;
 			}
 		}
+	}
+	
+	@:allow(flixel.util.FlxTimerManager)
+	private function onLoopFinished():Void
+	{
+		if (onComplete != null)
+			onComplete(this);
+		
+		if (finished)
+			cancel();
 	}
 	
 	private inline function get_timeLeft():Float
@@ -240,11 +245,30 @@ class FlxTimerManager extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
+		var loopedTimers:Array<FlxTimer> = null;
+		
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
+				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
+				
+				if (timerLoops != timer.elapsedLoops)
+				{
+					if (loopedTimers == null)
+						loopedTimers = [];
+					
+					loopedTimers.push(timer);
+				}
+			}
+		}
+		
+		if (loopedTimers != null)
+		{
+			while (loopedTimers.length > 0)
+			{
+				loopedTimers.shift().onLoopFinished();
 			}
 		}
 	}
@@ -282,12 +306,19 @@ class FlxTimerManager extends FlxBasic
 	{
 		var timersToFinish:Array<FlxTimer> = [];
 		for (timer in _timers)
-            if (timer.loops > 0)
+			if (timer.loops > 0)
 				timersToFinish.push(timer);
+
 		for (timer in timersToFinish)
+		{
 			while (!timer.finished)
+			{
 				timer.update(timer.timeLeft);
+				timer.onLoopFinished();
+			}
+		}
 	}
+
 	
 	/**
 	 * Removes all the timers from the timer manager.
@@ -304,7 +335,7 @@ class FlxTimerManager extends FlxBasic
 	 */
 	public function forEach(Function:FlxTimer->Void)
 	{
-		for (timer in _timers)		
+		for (timer in _timers)
 			Function(timer);
 	}
 }

@@ -40,6 +40,23 @@ class FlxTimerTest extends FlxTest
 		FlxTimer.globalManager.completeAll();
 		Assert.areEqual(0, timer.loopsLeft);
 		Assert.areEqual(2, loopsCompleted);
+	}
+
+	@Test // #679
+	@:access(flixel.util.FlxTimerManager.remove)
+	function testManipuleListInCallback()
+	{
+		var timer2 = new FlxTimer();
+		var timer1 = new FlxTimer().start(0.0001, function(_)
+			FlxTimer.globalManager.remove(timer2)
+		);
+		timer2.start(0.2);
+		var timer3 = new FlxTimer().start(0.2);
+
 		step();
+		Assert.isTrue(timer1.finished);
+		// make sure these timers were updated
+		Assert.isTrue(timer2.progress > 0);
+		Assert.isTrue(timer3.progress > 0);
 	}
 }
