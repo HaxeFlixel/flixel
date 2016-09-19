@@ -170,9 +170,30 @@ class FlxTweenTest extends FlxTest
 		Assert.isFalse(tween.finished);
 	}
 
-	function makeTween(duration:Float, onComplete:TweenCallback):FlxTween
+	@Test // #665
+	@:access(flixel.tweens.FlxTweenManager.remove)
+	function testManipulateListInCallback()
+	{
+		var tween2Updated = false;
+		var tween3Updated = false;
+
+		var tween2:FlxTween;
+		// short duration, so finished after one step()
+		var tween1 = makeTween(0.0001, function(_)
+			FlxTween.globalManager.remove(tween2)
+		);
+		tween2 = makeTween(0.2, null, function(_) tween2Updated = true);
+		makeTween(0.2, null, function(_) tween3Updated = true);
+
+		step();
+		Assert.isTrue(tween1.finished);
+		Assert.isTrue(tween2Updated);
+		Assert.isTrue(tween3Updated);
+	}
+
+	function makeTween(duration:Float, onComplete:TweenCallback, ?onUpdate:TweenCallback):FlxTween
 	{
 		var foo = { f: 0 };
-		return FlxTween.tween(foo, { f: 1 }, duration, { onComplete: onComplete });
+		return FlxTween.tween(foo, { f: 1 }, duration, { onComplete: onComplete, onUpdate: onUpdate });
 	}
 }
