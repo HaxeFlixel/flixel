@@ -75,28 +75,32 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			modifier = 0.1;
 		if (e.shiftKey)
 			modifier = 10.0;
-		
+
 		switch (e.keyCode)
 		{
-			case Keyboard.UP:
-				if (!modifyNumericValue(modifier))
-					setSelection(0, 0);
-			case Keyboard.DOWN:
-				if (!modifyNumericValue(-modifier))
-					setSelection(text.length, text.length);
+			case Keyboard.UP: cycleValue(modifier, 0);
+			case Keyboard.DOWN: cycleValue(modifier, text.length);
+		}
+	}
+
+	private function cycleValue(modifier:Float, selection:Int):Void
+	{
+		switch (expectedType)
+		{
+			case TInt | TFloat: cycleNumericValue(modifier);
+			case _: setSelection(selection, selection);
 		}
 	}
 	
-	private function modifyNumericValue(modifier:Float):Bool
+	private function cycleNumericValue(modifier:Float):Void
 	{
 		var value:Float = Std.parseFloat(text);
 		if (Math.isNaN(value))
-			return false;
+			return;
 
 		value += modifier;
 		value = FlxMath.roundDecimal(value, FlxG.debugger.precision);
 		text = Std.string(value);
-		return true;
 	}
 
 	private function onFocusLost(_)
