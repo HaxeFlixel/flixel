@@ -88,6 +88,8 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		switch (expectedType)
 		{
 			case TInt | TFloat: cycleNumericValue(modifier);
+			case TBool if (text == "true"): text = "false";
+			case TBool: text = "true"; 
 			case _: setSelection(selection, selection);
 		}
 	}
@@ -115,9 +117,9 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			#if neko
 			case TInt: Std.parseInt(text);
 			case TFloat: Std.parseFloat(text);
+			#end
 			case TBool if (text == "true"): true;
 			case TBool if (text == "false"): false;
-			#end
 			case _: text;
 		}
 
