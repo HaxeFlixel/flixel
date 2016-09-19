@@ -40,7 +40,6 @@ class FlxTimerTest extends FlxTest
 		FlxTimer.globalManager.completeAll();
 		Assert.areEqual(0, timer.loopsLeft);
 		Assert.areEqual(2, loopsCompleted);
-		step();
 	}
 
 	@Test // #679

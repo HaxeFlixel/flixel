@@ -175,14 +175,10 @@ class FlxTimer implements IFlxDestroyable
 	private function onLoopFinished():Void
 	{
 		if (onComplete != null)
-		{
 			onComplete(this);
-		}
 		
 		if (finished)
-		{
 			cancel();
-		}
 	}
 	
 	private inline function get_timeLeft():Float
@@ -312,9 +308,15 @@ class FlxTimerManager extends FlxBasic
 		for (timer in _timers)
 			if (timer.loops > 0)
 				timersToFinish.push(timer);
+
 		for (timer in timersToFinish)
+		{
 			while (!timer.finished)
+			{
 				timer.update(timer.timeLeft);
+				timer.onLoopFinished();
+			}
+		}
 	}
 
 	
