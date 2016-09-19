@@ -126,8 +126,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		else
 		{
 			index += modifier;
-			if (index > values.length)
-				index = 0;
+			index = Std.int(FlxMath.wrap(index, 0, values.length - 1));
 		}
 		text = Std.string(values[index]);
 	}
