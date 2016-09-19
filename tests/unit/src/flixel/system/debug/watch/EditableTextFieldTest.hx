@@ -6,6 +6,7 @@ import Type.ValueType;
 
 class EditableTextFieldTest extends FlxTest
 {
+	#if neko
 	@Test // #1911
 	function testKeepType()
 	{
@@ -23,4 +24,5 @@ class EditableTextFieldTest extends FlxTest
 		textfield.submit();
 		Assert.areEqual(Type.typeof(value), type);
 	}
+	#end
 }
