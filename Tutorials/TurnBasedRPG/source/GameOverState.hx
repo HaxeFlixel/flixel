@@ -90,16 +90,14 @@ class GameOverState extends FlxState
 		var _save:FlxSave = new FlxSave();
 		if (_save.bind("flixel-tutorial"))
 		{
-			if (_save.data.hiscore != null)
+			if (_save.data.hiscore != null && _save.data.hiscore > _hi)
 			{
-				if (_save.data.hiscore > _hi)
-				{
-					_hi = _save.data.hiscore;
-				}
-				else
-				{
-					_save.data.hiscore = _hi;
-				}
+				_hi = _save.data.hiscore;
+			}
+			else
+			{
+				// data is less or there is no data; save current score
+				_save.data.hiscore = _hi;
 			}
 		}
 		_save.close();
