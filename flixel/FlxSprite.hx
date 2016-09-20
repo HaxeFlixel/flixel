@@ -23,9 +23,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 using flixel.util.FlxColorTransformUtil;
 
-@:keep @:bitmap("assets/images/logo/default.png")
-private class GraphicDefault extends BitmapData {}
-
 // TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
@@ -621,13 +618,19 @@ class FlxSprite extends FlxObject
 		animation.update(elapsed);
 	}
 	
+	@:noCompletion
+	private function checkEmptyFrame()
+	{
+		if (_frame == null)
+			loadGraphic("flixel/images/logo/default.png");
+	}
+
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
 	override public function draw():Void
 	{
-		if (_frame == null)
-			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+		checkEmptyFrame();
 		
 		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
 			return;
@@ -891,8 +894,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	private function calcFrame(RunOnCpp:Bool = false):Void
 	{
-		if (frame == null)	
-			loadGraphic(FlxGraphic.fromClass(GraphicDefault));
+		checkEmptyFrame();
 		
 		if (FlxG.renderTile && !RunOnCpp)
 			return;
