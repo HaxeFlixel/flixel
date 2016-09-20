@@ -163,7 +163,7 @@ class FlxAssets
 		{
 			return cast Graphic;
 		}
-		else if (Std.is(Graphic, Class))
+		else if (Std.is(Graphic, Class)) // TODO: maybe remove ability to get BitmapData from class???
 		{
 			return FlxAssets.getBitmapFromClass(cast Graphic);
 		}

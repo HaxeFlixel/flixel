@@ -284,6 +284,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		}
 		
 		renderSession.shaderManager.setShader(null);
+		renderSession.blendModeManager.setBlendMode(null);
 		
 		if (needRenderHelper)
 			renderHelper.render(renderSession);
