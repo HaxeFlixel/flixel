@@ -1,5 +1,6 @@
 package flixel.graphics.shaders;
 
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.Assets;
 import openfl.display.Shader;
 
@@ -36,37 +37,41 @@ import openfl.gl.GL;
  * ...
  * @author Zaphod
  */
-class FlxShader extends Shader
+class FlxShader extends Shader implements IFlxDestroyable
 {
 	public function new(vertexSource:String, fragmentSource:String)
 	{
-		super();
-		
-		if (glProgram != null)
-		{
-			GL.deleteProgram(this.glProgram); // Delete what super created
-			this.glProgram = null;
-		}
-		
-		this.data = null;
-		
-		if (Assets.exists(vertexSource))
+		if (vertexSource != null && Assets.exists(vertexSource))
 		{
 			vertexSource = Assets.getText(vertexSource);
 		}
 		
-		if (Assets.exists(fragmentSource))
+		if (fragmentSource != null && Assets.exists(fragmentSource))
 		{
 			fragmentSource = Assets.getText(fragmentSource);
 		}
 		
-		// Then reinit all the data.
 		glVertexSource = vertexSource;
 		glFragmentSource = fragmentSource;
 		
-		// And call init again.
-		__init();
+		super();
 		initShaderData();
+	}
+	
+	// TODO: use this method...
+	public function destroy():Void
+	{
+		if (glProgram != null)
+		{
+			GL.deleteProgram(this.glProgram);
+			this.glProgram = null;
+		}
+		
+		data = null;
+		byteCode = null;
+		glVertexSource = null;
+		glFragmentSource = null;
+		gl = null;
 	}
 	
 	override function __enable():Void 
