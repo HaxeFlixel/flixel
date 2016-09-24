@@ -36,7 +36,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private static var coloredTileShader:FlxColorShader;
 	
 	private static var uColor:Array<Float> = [];
-	private static var uMatrix:Array<Float32Array> = [];
 
 	private var states:Array<FlxDrawHardwareItem<Dynamic>>;
 	private var stateNum:Int;
@@ -153,15 +152,17 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		var numPasses:Int = GLRenderHelper.getObjectNumPasses(this);
 		var needRenderHelper:Bool = (numPasses > 0);
 		var transform:Matrix = this.__worldTransform;
+		var uMatrix:Array<Float> = null;
 		
 		if (needRenderHelper)
 		{
 			renderHelper.capture(false);
-			uMatrix[0] = renderHelper.getMatrix(transform, renderer, numPasses);
+			uMatrix = renderHelper.getMatrix(transform, renderer, numPasses);
 		}
 		else
 		{
-			uMatrix[0] = renderer.getMatrix(transform);
+			var matrix = renderer.getMatrix(transform);
+			uMatrix = GLRenderHelper.matrixToArray(matrix);
 		}
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;

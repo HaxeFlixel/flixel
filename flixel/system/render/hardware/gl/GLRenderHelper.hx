@@ -21,8 +21,18 @@ class GLRenderHelper implements IFlxDestroyable
 	/**
 	 * Helper variables for less object instantiation
 	 */
-	private static var uMatrix:Array<Float32Array> = [];
+	private static var _uMatrix:Array<Float> = [];
 	private static var _helperMatrix:Matrix4 = new Matrix4();
+	
+	public static inline function matrixToArray(matrix:Matrix4):Array<Float>
+	{
+		for (i in 0...16)	
+		{
+			_uMatrix[i] = matrix[i];
+		}
+		
+		return _uMatrix;
+	}
 	
 	/**
 	 * Checks how many render passes specified object has.
@@ -290,8 +300,7 @@ class GLRenderHelper implements IFlxDestroyable
 				GL.viewport(_viewport[0], _viewport[1], _viewport[2], _viewport[3]);
 			}
 			
-			uMatrix[0] = getMatrix(_renderMatrix, renderer, passes - i);
-			shader.data.uMatrix.value = uMatrix;
+			shader.data.uMatrix.value = getMatrix(_renderMatrix, renderer, passes - i);
 			
 			renderSession.shaderManager.setShader(shader);
 			gl.bindTexture(GL.TEXTURE_2D, textureToUse);
@@ -328,11 +337,12 @@ class GLRenderHelper implements IFlxDestroyable
 	 * @param	passesLeft		number of render passes left. If 0 then will be used global projection matrix, if greater than 0 then will be used projection matrix from this helper object
 	 * @return	Combined matrix which can be used for rendering as shader uniform.
 	 */
-	public function getMatrix(transform:Matrix, renderer:GLRenderer, passesLeft:Int = 0):Matrix4 
+	public function getMatrix(transform:Matrix, renderer:GLRenderer, passesLeft:Int = 0):Array<Float> 
 	{
 		if (passesLeft == 0)
 		{
-			return renderer.getMatrix(transform);
+			var matrix = renderer.getMatrix(transform);
+			return matrixToArray(matrix);
 		}
 		else if (passesLeft < 0)
 		{
@@ -347,7 +357,8 @@ class GLRenderHelper implements IFlxDestroyable
 		_helperMatrix[12] = transform.tx;
 		_helperMatrix[13] = transform.ty;
 		_helperMatrix.append(_projection);
-		return _helperMatrix;
+		
+		return matrixToArray(_helperMatrix);
 	}
 	
 }
