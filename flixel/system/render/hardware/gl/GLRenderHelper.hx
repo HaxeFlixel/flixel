@@ -1,6 +1,6 @@
 package flixel.system.render.hardware.gl;
 
-import flixel.graphics.shaders.FlxFilterShader;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
@@ -46,18 +46,12 @@ class GLRenderHelper implements IFlxDestroyable
 			return 0;
 		
 		var passes:Int = 0;
-		var shaderFilter:ShaderFilter;
 		
 		for (filter in object.filters)
 		{
 			if (Std.is(filter, ShaderFilter))
 			{
-				shaderFilter = cast filter;
-				
-				if (Std.is(shaderFilter.shader, FlxFilterShader))
-				{
-					passes++;
-				}
+				passes++;
 			}
 		}
 		
@@ -235,8 +229,7 @@ class GLRenderHelper implements IFlxDestroyable
 		
 		var filters:Array<BitmapFilter> = object.filters;
 		var numFilters:Int = filters.length;
-		var filter:ShaderFilter;
-		var shader:FlxFilterShader = null;
+		var shader:FlxShader = null;
 		
 		var filterIndex:Int = 0;
 		var i:Int = 0;
@@ -247,13 +240,8 @@ class GLRenderHelper implements IFlxDestroyable
 			
 			if (Std.is(filters[filterIndex], ShaderFilter))
 			{
-				filter = cast(filters[filterIndex], ShaderFilter);
-				
-				if (Std.is(filter.shader, FlxFilterShader))
-				{
-					shader = cast(filter.shader, FlxFilterShader);
-					i++;
-				}
+				shader = cast(filters[filterIndex], ShaderFilter).shader;
+				i++;
 			}
 			
 			filterIndex++;
@@ -312,7 +300,7 @@ class GLRenderHelper implements IFlxDestroyable
 			
 			gl.bindBuffer(GL.ARRAY_BUFFER, _buffer);
 			
-			gl.vertexAttribPointer(shader.data.aVertex.index, 2, gl.FLOAT, false, 16, 0);
+			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, 16, 0);
 			gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 16, 8);
 			
 			gl.drawArrays(GL.TRIANGLES, 0, 6);

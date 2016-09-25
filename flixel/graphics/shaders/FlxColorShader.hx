@@ -1,5 +1,7 @@
 package flixel.graphics.shaders;
 
+import flixel.system.FlxAssets.FlxShader;
+
 /**
  * ...
  * @author Yanrishatum
@@ -37,9 +39,9 @@ class FlxColorShader extends FlxShader
 	
 	public function new(?vertexSource:String, ?fragmentSource:String) 
 	{
-		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
-		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;
+		glVertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
+		glFragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;
 		
-		super(vertexSource, fragmentSource);
+		super();
 	}
 }
