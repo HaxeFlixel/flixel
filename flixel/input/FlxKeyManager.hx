@@ -18,15 +18,15 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	public var preventDefaultKeys:Array<Key> = [];
 	
 	/**
-	 * Helper class to check if a keys is pressed.
+	 * Helper class to check if a key is pressed.
 	 */
 	public var pressed(default, null):KeyList;
 	/**
-	 * Helper class to check if a keys was just pressed.
+	 * Helper class to check if a key was just pressed.
 	 */
 	public var justPressed(default, null):KeyList;
 	/**
-	 * Helper class to check if a keys was just released.
+	 * Helper class to check if a key was just released.
 	 */
 	public var justReleased(default, null):KeyList;
 	/**
