@@ -34,10 +34,7 @@ import flixel.util.FlxDestroyUtil;
  */
 class FlxMouseEventManager extends FlxBasic
 {
-	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
-	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
-
-	private static var _point:FlxPoint = FlxPoint.get();
+	public static var globalManager:FlxMouseEventManager;
 	
 	/**
 	 * As alternative you can call FlxMouseEventManager.init().
@@ -45,7 +42,7 @@ class FlxMouseEventManager extends FlxBasic
 	public static inline function init():Void
 	{
 		if (FlxG.plugins.get(FlxMouseEventManager) == null)
-			FlxG.plugins.add(new FlxMouseEventManager());
+			FlxG.plugins.add(globalManager = new FlxMouseEventManager());
 	}
 	
 	/**
@@ -64,11 +61,9 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
 	 */
-	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void,
+	public function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void,
 		?OnMouseOut:T->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true, ?MouseButtons:Array<FlxMouseButtonID>):T
 	{
-		init(); // MEManager is initialized and added to plugins if it was not there already.
-		
 		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver,
 			OnMouseOut, MouseChildren, MouseEnabled, PixelPerfect, MouseButtons);
 		
@@ -84,7 +79,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Removes a registerd object from the registry.
 	 */
-	public static function remove<T:FlxObject>(Object:T):T
+	public function remove<T:FlxObject>(Object:T):T
 	{
 		for (reg in _registeredObjects)
 		{
@@ -105,7 +100,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Removes all registerd objects from the registry.
 	 */
-	public static function removeAll():Void
+	public function removeAll():Void
 	{
 		if (_registeredObjects != null)
 		{
@@ -125,7 +120,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * It may also be called if the objects are not registered by the same order they are
 	 * added to FlxGroup.
 	 */
-	public static function reorder():Void
+	public function reorder():Void
 	{
 		var orderedObjects = new Array<ObjectMouseData<FlxObject>>();
 
@@ -140,7 +135,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *
 	 * @param 	OnMouseDown 	Callback when mouse is pressed down over this object. Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 */
-	public static function setMouseDownCallback<T:FlxObject>(Object:T, OnMouseDown:T->Void):Void
+	public function setMouseDownCallback<T:FlxObject>(Object:T, OnMouseDown:T->Void):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -156,7 +151,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   OnMouseUp   Callback when mouse is released over this object.
 	 *                      Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 */
-	public static function setMouseUpCallback<T:FlxObject>(Object:T, OnMouseUp:T->Void):Void
+	public function setMouseUpCallback<T:FlxObject>(Object:T, OnMouseUp:T->Void):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -172,7 +167,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   OnMouseOver   Callback when mouse is over this object.
 	 *                        Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 */
-	public static function setMouseOverCallback<T:FlxObject>(Object:T, OnMouseOver:T->Void):Void
+	public function setMouseOverCallback<T:FlxObject>(Object:T, OnMouseOver:T->Void):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -188,7 +183,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   OnMouseOver   Callback when mouse is moves out of this object.
 	 *                        Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 */
-	public static function setMouseOutCallback<T:FlxObject>(Object:T, OnMouseOut:T->Void):Void
+	public function setMouseOutCallback<T:FlxObject>(Object:T, OnMouseOut:T->Void):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -203,7 +198,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * 
 	 * @param   MouseEnabled   Whether this object will be tested for mouse events.
 	 */
-	public static function setObjectMouseEnabled<T:FlxObject>(Object:T, MouseEnabled:Bool):Void
+	public function setObjectMouseEnabled<T:FlxObject>(Object:T, MouseEnabled:Bool):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -216,7 +211,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Checks if a registered object is mouseEnabled.
 	 */
-	public static function isObjectMouseEnabled<T:FlxObject>(Object:T):Bool
+	public function isObjectMouseEnabled<T:FlxObject>(Object:T):Bool
 	{
 		var reg = getRegister(Object);
 		
@@ -235,7 +230,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *
 	 * @param   MouseChildren   Whether this object will allow other overlapping object to receive mouse events.
 	 */
-	public static function setObjectMouseChildren<T:FlxObject>(Object:T, MouseChildren:Bool):Void
+	public function setObjectMouseChildren<T:FlxObject>(Object:T, MouseChildren:Bool):Void
 	{
 		var reg = getRegister(Object);
 		
@@ -248,7 +243,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Checks if an object allows mouseChildren.
 	 */
-	public static function isObjectMouseChildren<T:FlxObject>(Object:T):Bool
+	public function isObjectMouseChildren<T:FlxObject>(Object:T):Bool
 	{
 		var reg = getRegister(Object);
 		
@@ -265,7 +260,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
 	 */
-	public static function setObjectMouseButtons<T:FlxObject>(object:T, mouseButtons:Array<FlxMouseButtonID>):Void
+	public function setObjectMouseButtons<T:FlxObject>(object:T, mouseButtons:Array<FlxMouseButtonID>):Void
 	{
 		var reg = getRegister(object);
 		
@@ -276,7 +271,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 	
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
+	private function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
 		{
@@ -297,7 +292,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 
-	private static function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<FlxObject>>):ObjectMouseData<T>
+	private function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<FlxObject>>):ObjectMouseData<T>
 	{
 		if (Register == null)
 		{
@@ -314,6 +309,11 @@ class FlxMouseEventManager extends FlxBasic
 		
 		return null;
 	}
+	
+	private var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
+	private var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
+	
+	private var _point:FlxPoint = FlxPoint.get();
 	
 	public function new()
 	{
