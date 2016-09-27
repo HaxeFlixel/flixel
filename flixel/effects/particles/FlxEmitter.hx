@@ -393,7 +393,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * This function can be used both internally and externally to emit the next particle.
 	 */
-	public function emitParticle():Void
+	public function emitParticle():T
 	{
 		var particle:T = cast recycle(cast particleClass);
 		
@@ -557,6 +557,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.animation.curAnim.restart();
 		
 		particle.onEmit();
+		
+		return particle;
 	}
 	
 	/**
