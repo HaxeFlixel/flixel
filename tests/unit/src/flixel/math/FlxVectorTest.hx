@@ -71,4 +71,12 @@ class FlxVectorTest extends FlxTest
 		Assert.isTrue(vector.subtractNew(vector2).equals(new FlxVector(-2, -3)));
 		Assert.isTrue(vector.equals(new FlxVector(1, 2)));
 	}
+
+	@Test // #1959
+	function testNormalizeZero():Void
+	{
+		vector.set(0, 0);
+		var normalized = vector.normalize();
+		Assert.isTrue(normalized.equals(new FlxVector(0, 0)));
+	}
 }

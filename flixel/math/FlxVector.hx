@@ -227,7 +227,6 @@ class FlxVector extends FlxPoint
 	{
 		if (isZero()) 
 		{
-			x = 1;
 			return this;
 		}
 		return scale(1 / length);
