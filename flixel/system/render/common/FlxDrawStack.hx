@@ -261,6 +261,10 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		
+		if (hasColorOffsets)
+			drawItem.setOffsets(transform);
+		
 		drawItem.addQuad(frame, matrix, transform);
 	}
 	
@@ -274,10 +278,15 @@ class FlxDrawStack implements IFlxDestroyable
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
 		var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		
+		if (hasColorOffsets)
+			drawItem.setOffsets(transform);
+		
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 	
 	// TODO: add support for repeat (it's true by default)
+	// TODO: support color offsets for this method also
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
 		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
@@ -301,6 +310,10 @@ class FlxDrawStack implements IFlxDestroyable
 		#else
 		var drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, shader, FlxCameraView.VERTICES_PER_TILE, FlxCameraView.INDICES_PER_TILE);
 		#end
+		
+		if (hasColorOffsets)
+			drawItem.setOffsets(transform);
+		
 		drawItem.addUVQuad(rect, uv, matrix, transform);
 	}
 	

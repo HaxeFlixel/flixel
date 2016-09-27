@@ -31,10 +31,13 @@ class FlxColorShader extends FlxShader
 			varying vec4 vColor;
 			
 			uniform vec4 uColor;
+			uniform vec4 uColorOffset;
 			
 			void main(void) 
 			{
-				gl_FragColor = vColor * uColor;
+				vec4 result = vColor * uColor + uColorOffset;
+				result = clamp(result, 0.0, 1.0);
+				gl_FragColor = result;
 			}";
 	
 	public function new(?vertexSource:String, ?fragmentSource:String) 

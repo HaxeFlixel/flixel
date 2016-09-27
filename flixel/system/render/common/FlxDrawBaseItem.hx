@@ -88,6 +88,11 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 	public var blending:BlendMode = null;
 	public var shader:FlxShader;
 	
+	public var redOffset:Float = 0.0;
+	public var greenOffset:Float = 0.0;
+	public var blueOffset:Float = 0.0;
+	public var alphaOffset:Float = 0.0;
+	
 	public var type:FlxDrawItemType;
 	
 	public var numVertices(get, never):Int;
@@ -110,6 +115,11 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 		shader = null;
 		nextTyped = null;
 		next = null;
+		
+		redOffset = 0.0;
+		greenOffset = 0.0;
+		blueOffset = 0.0;
+		alphaOffset = 0.0;
 	}
 	
 	public function destroy():Void
@@ -131,6 +141,8 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
 	{
+		if (hasColorOffsets)	return false;
+		
 		return (this.type == type 
 			&& this.graphics == graphic 
 			&& this.colored == colored
@@ -149,6 +161,14 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 		this.blending = blend;
 		this.antialiasing = smooth;
 		this.shader = shader;
+	}
+	
+	public inline function setOffsets(transform:ColorTransform):Void
+	{
+		redOffset = transform.redOffset / 255;
+		greenOffset = transform.greenOffset / 255;
+		blueOffset = transform.blueOffset / 255;
+		alphaOffset = transform.alphaOffset / 255;
 	}
 	
 	private function get_numVertices():Int

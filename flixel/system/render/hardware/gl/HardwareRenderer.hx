@@ -146,6 +146,18 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
+		// TODO: call FlxGame's draw() method from here
+		// TODO: every camera will have its own render texture where i will draw everthing onto and only then draw this texture on the screen
+		// TODO: sprites might have renderTarget property
+		// 
+		
+		// TODO: remove this code...
+		/*
+		var graphics:openfl.display.Graphics = cast(FlxG.camera.view, FlxHardwareView).debugLayer.graphics;
+		graphics.lineStyle(5, 0xff0000);
+		graphics.moveTo(10, 10);
+		graphics.lineTo(200, 200);
+		*/
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
@@ -195,6 +207,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 				
 				renderSession.shaderManager.setShader(shader);
 			}
+			
+			gl.uniform4f(shader.data.uColorOffset.index, state.redOffset, state.greenOffset, state.blueOffset, state.alphaOffset);
 			
 			if (blend != state.blending)
 			{
