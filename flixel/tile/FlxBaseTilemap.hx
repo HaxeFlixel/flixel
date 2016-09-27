@@ -784,7 +784,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	EndIndex		The ending tile's map index.
 	 * @param	DiagonalPolicy	How to treat diagonal movement.
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
-	 * @return	A Flash Array of FlxPoint nodes.  If the end tile could not be found, then a null Array is returned instead.
+	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
 	public function computePathDistance(StartIndex:Int, EndIndex:Int, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
 	{
@@ -977,9 +977,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Pathfinding helper function, recursively walks the grid and finds a shortest path back to the start.
 	 * 
-	 * @param	Data	A Flash Array of distance information.
+	 * @param	Data	An array of distance information.
 	 * @param	Start	The tile we're on in our walk backward.
-	 * @param	Points	A Flash Array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
+	 * @param	Points	An array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
 	 */
 	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
