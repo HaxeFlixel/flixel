@@ -102,8 +102,8 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		_onComplete = OnComplete;
-		var result:SharedObjectFlushStatus;
-		try 
+		var result = null;
+		try
 		{ 
 			result = _sharedObject.flush();
 		}
