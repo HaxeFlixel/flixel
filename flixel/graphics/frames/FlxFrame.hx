@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 import haxe.ds.Vector;
+import haxe.ds.ArraySort;
 
 /**
  * Base class for all frame types
@@ -23,17 +24,26 @@ class FlxFrame implements IFlxDestroyable
 	private var matrix:FlxMatrix = new FlxMatrix();
 	
 	/**
-	 * Sorting function for Array<FlxFrame>#sort(),
-	 * e.g. "tiles-001.png", "tiles-003.png", "tiles-002.png".
+	 * Sorts an array of `FlxFrame` objects by their name, e.g.
+	 * `["tiles-001.png", "tiles-003.png", "tiles-002.png"]`
+	 * with `"tiles-".length == prefixLength` and `".png".length == postfixLength`.
 	 */
+	public static function sort(frames:Array<FlxFrame>, prefixLength:Int, postfixLength:Int):Void
+	{
+		ArraySort.sort(frames, sortByName.bind(_, _, prefixLength, postfixLength));
+	}
+
 	public static function sortByName(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
 	{
 		var name1:String = frame1.name;
 		var name2:String = frame2.name;
-		
-		var num1:Int = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
-		var num2:Int = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
-		
+		var num1:Null<Int> = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
+		var num2:Null<Int> = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
+		if (num1 == null)
+			num1 = 0;
+		if (num2 == null)
+			num2 = 0;
+
 		return num1 - num2;
 	}
 	
