@@ -238,7 +238,7 @@ class FlxTileFrames extends FlxFramesCollection
 			var postIndex:Int = name.indexOf(".", Prefix.length);
 			var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 			
-			framesToAdd.sort(FlxFrame.sortByName.bind(_, _, Prefix.length, postFix.length));
+			FlxFrame.sort(framesToAdd, Prefix.length, postFix.length);
 			return FlxTileFrames.fromFrames(framesToAdd);
 		}
 		
