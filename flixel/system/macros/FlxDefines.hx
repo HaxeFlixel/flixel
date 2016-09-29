@@ -75,6 +75,13 @@ class FlxDefines
 				(macro null).pos);
 		#end
 		
+		#if !nme
+		checkOpenFLVersions();
+		#end
+	}
+
+	private static function checkOpenFLVersions()
+	{
 		#if (openfl < "3.5.0")
 		abortMinVersion("OpenFL", "3.5.0", (macro null).pos);
 		#end
