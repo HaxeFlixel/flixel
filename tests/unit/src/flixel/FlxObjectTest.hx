@@ -200,17 +200,44 @@ class FlxObjectTest extends FlxTest
 		var topRight = FlxPoint.get(rect.right - 1, rect.top);
 		var bottomRight = FlxPoint.get(rect.right - 1, rect.bottom - 1);
 		
-		var assertTrue = function(p) Assert.isTrue(overlapsPoint(p));
+		function assertTrue(p) Assert.isTrue(overlapsPoint(p));
 		assertTrue(topLeft);
 		assertTrue(bottomLeft);
 		assertTrue(topRight);
 		assertTrue(bottomRight);
 
-		var assertFalse = function(p) Assert.isFalse(overlapsPoint(p));
+		function assertFalse(p) Assert.isFalse(overlapsPoint(p));
 		assertFalse(topLeft.add(-1, -1));
 		assertFalse(bottomLeft.add(-1, 1));
 		assertFalse(topRight.add(1, -1));
 		assertFalse(bottomRight.add(1, 1));
+	}
+
+	@Test
+	function testIsOnScreen()
+	{
+		var object = new FlxObject(0, 0, 1, 1);
+
+		function assertOnScreen(x, y)
+		{
+			object.setPosition(x, y);
+			Assert.isTrue(object.isOnScreen());
+		}
+		function assertNotOnScreen(x, y)
+		{
+			object.setPosition(x, y);
+			Assert.isFalse(object.isOnScreen());
+		}
+
+		assertOnScreen(0, 0);
+		assertNotOnScreen(-1, 0);
+		assertNotOnScreen(0, -1);
+
+		assertOnScreen(FlxG.width - 1, 0);
+		assertNotOnScreen(FlxG.width, 0);
+
+		assertOnScreen(0, FlxG.height - 1);
+		assertNotOnScreen(0, FlxG.height);
 	}
 }
 
