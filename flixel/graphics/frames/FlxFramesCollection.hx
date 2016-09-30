@@ -1,8 +1,10 @@
 package flixel.graphics.frames;
 
+import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFrame.FlxFrameType;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
@@ -149,7 +151,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
 	{
 		var frame:FlxFrame = new FlxFrame(parent);
-		frame.frame = region;
+		frame.frame = checkFrame(region);
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
 		return pushFrame(frame);
@@ -177,12 +179,34 @@ class FlxFramesCollection implements IFlxDestroyable
 		texFrame.name = name;
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
-		texFrame.frame = frame;
+		texFrame.frame = checkFrame(frame, name);
 		
 		sourceSize = FlxDestroyUtil.put(sourceSize);
 		offset = FlxDestroyUtil.put(offset);
 		
 		return pushFrame(texFrame);
+	}
+	
+	/**
+	 * Checks if frame's area fits into atlas image, and trims if it's out of atlas image bounds
+	 * @param	frame	frame area to check.
+	 * @param	name	optional frame name for debugging info.
+	 * @return	checked and trimmed frame rectangle.
+	 */
+	private function checkFrame(frame:FlxRect, ?name:String):FlxRect
+	{
+		var x:Float = FlxMath.bound(frame.x, 0, parent.width);
+		var y:Float = FlxMath.bound(frame.y, 0, parent.height);
+		
+		var r:Float = FlxMath.bound(frame.right, 0, parent.width);
+		var b:Float = FlxMath.bound(frame.bottom, 0, parent.height);
+		
+		frame.set(x, y, r - x, b - y);
+		
+		if (frame.width <= 0 || frame.height <= 0)
+			FlxG.log.warn("The frame " + name + " has incorrect data and results in an image with the size of (0, 0)");
+		
+		return frame;
 	}
 	
 	/**
