@@ -193,7 +193,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param	name	optional frame name for debugging info.
 	 * @return	checked and trimmed frame rectangle.
 	 */
-	private inline function checkFrame(frame:FlxRect, ?name:String):FlxRect
+	private function checkFrame(frame:FlxRect, ?name:String):FlxRect
 	{
 		var x:Float = FlxMath.bound(frame.x, 0, parent.width);
 		var y:Float = FlxMath.bound(frame.y, 0, parent.height);
