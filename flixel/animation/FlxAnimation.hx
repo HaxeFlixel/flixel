@@ -59,7 +59,7 @@ class FlxAnimation extends FlxBaseAnimation
 	public var flipY:Bool = false;
 	
 	/**
-	 * A list of frames stored as int objects
+	 * A list of frames stored as int indices
 	 */
 	public var frames:Array<Int>;
 	
