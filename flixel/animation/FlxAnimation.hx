@@ -61,7 +61,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * A list of frames stored as int objects
 	 */
-	public var frames(default, null):Array<Int>;
+	public var frames:Array<Int>;
 	
 	/**
 	 * Internal, used to time each frame of animation.
