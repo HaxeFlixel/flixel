@@ -61,8 +61,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * A list of frames stored as int objects
 	 */
-	@:allow(flixel.animation)
-	private var _frames:Array<Int>;
+	public var frames(default, null):Array<Int>;
 	
 	/**
 	 * Internal, used to time each frame of animation.
@@ -82,7 +81,7 @@ class FlxAnimation extends FlxBaseAnimation
 		super(Parent, Name);
 		
 		frameRate = FrameRate;
-		_frames = Frames;
+		frames = Frames;
 		looped = Looped;
 		flipX = FlipX;
 		flipY = FlipY;
@@ -93,7 +92,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	override public function destroy():Void
 	{
-		_frames = null;
+		frames = null;
 		name = null;
 		super.destroy();
 	}
@@ -206,7 +205,7 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	override public function clone(Parent:FlxAnimationController):FlxAnimation
 	{
-		return new FlxAnimation(Parent, name, _frames, frameRate, looped, flipX, flipY);
+		return new FlxAnimation(Parent, name, frames, frameRate, looped, flipX, flipY);
 	}
 	
 	private function set_frameRate(value:Int):Int
@@ -239,7 +238,7 @@ class FlxAnimation extends FlxBaseAnimation
 		else
 			curFrame = FlxG.random.int(0, maxFrameIndex);
 		
-		curIndex = _frames[curFrame];
+		curIndex = frames[curFrame];
 		
 		if (finished && parent != null)
 			parent.fireFinishCallback(name);
@@ -249,6 +248,6 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private inline function get_numFrames():Int
 	{
-		return _frames.length;
+		return frames.length;
 	}
 }
