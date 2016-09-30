@@ -98,7 +98,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		for (anim in controller._animations)
 		{
-			add(anim.name, anim._frames, anim.frameRate, anim.looped);
+			add(anim.name, anim.frames, anim.frameRate, anim.looped);
 		}
 		
 		if (controller._prerotated != null)
@@ -246,7 +246,7 @@ class FlxAnimationController implements IFlxDestroyable
 			if (Frames[numFrames - i] < frames)
 			{
 				// add to existing animation, forward to backward
-				anim._frames.push(Frames[numFrames - i]);
+				anim.frames.push(Frames[numFrames - i]);
 			}
 			i--;
 		}	
@@ -297,7 +297,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.frames != null)
 		{
-			byNamesHelper(anim._frames, FrameNames); // finds frames and appends them to the existing array
+			byNamesHelper(anim.frames, FrameNames); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -350,7 +350,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.frames != null)
 		{
-			byStringIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
+			byStringIndicesHelper(anim.frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -403,7 +403,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		if (_sprite.frames != null)
 		{
-			byIndicesHelper(anim._frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
+			byIndicesHelper(anim.frames, Prefix, Indices, Postfix); // finds frames and appends them to the existing array
 		}
 	}
 	
@@ -489,7 +489,7 @@ class FlxAnimationController implements IFlxDestroyable
 			
 			if (animFrames.length > 0)
 			{
-				byPrefixHelper(anim._frames, animFrames, Prefix); // finds frames and appends them to the existing array
+				byPrefixHelper(anim.frames, animFrames, Prefix); // finds frames and appends them to the existing array
 			}
 		}
 	}
