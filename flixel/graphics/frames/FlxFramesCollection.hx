@@ -204,9 +204,7 @@ class FlxFramesCollection implements IFlxDestroyable
 		frame.set(x, y, r - x, b - y);
 		
 		if (frame.width <= 0 || frame.height <= 0)
-		{
-			FlxG.log.warn("The frame " + name + " have incorrect data and results in image with the size of (0; 0)");
-		}
+			FlxG.log.warn("The frame " + name + " has incorrect data and results in an image with the size of (0, 0)");
 		
 		return frame;
 	}
