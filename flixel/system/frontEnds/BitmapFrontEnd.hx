@@ -319,7 +319,25 @@ class BitmapFrontEnd
 	{
 		if (_cache == null)
 			_cache = new Map();
-
+		
+		for (key in _cache.keys())
+		{
+			var obj = _cache.get(key);
+			if (obj != null && !obj.persist && obj.useCount <= 0)
+			{
+				removeByKey(key);
+			}
+		}
+	}
+	
+	/**
+	 * Completely resets bitmap cache, which means destroying ALL of the cached FlxGraphic objects.
+	 */
+	public function reset():Void
+	{
+		if (_cache == null)
+			_cache = new Map();
+		
 		for (key in _cache.keys())
 		{
 			var obj = _cache.get(key);
