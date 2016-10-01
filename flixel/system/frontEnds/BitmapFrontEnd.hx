@@ -40,7 +40,7 @@ class BitmapFrontEnd
 
 	public function new()
 	{
-		clearCache();
+		reset();
 	}
 	
 	public function onAssetsReload(_):Void 
@@ -313,7 +313,7 @@ class BitmapFrontEnd
 	
 	/**
 	 * Clears image cache (and destroys those images).
-	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache
+	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache and its useCount is 0.
 	 */
 	public function clearCache():Void
 	{
@@ -341,7 +341,7 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			var obj = _cache.get(key);
-			if (obj != null && !obj.persist)
+			if (obj != null)
 			{
 				removeByKey(key);
 			}
