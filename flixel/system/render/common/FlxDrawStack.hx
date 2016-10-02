@@ -96,9 +96,6 @@ class FlxDrawStack implements IFlxDestroyable
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
 	{
-		#if FLX_RENDER_GL_ARRAYS
-		return startTrianglesBatch(graphic, smooth, colored, blend, shader, FlxCameraView.VERTICES_PER_TILE, 0);
-		#else
 		var itemToReturn:FlxDrawQuadsItem = null;
 		
 		if (_currentDrawItem != null /* && _currentDrawItem.type == FlxDrawItemType.TILES*/ 
@@ -138,7 +135,6 @@ class FlxDrawStack implements IFlxDestroyable
 		_currentDrawItem = itemToReturn;
 		
 		return itemToReturn;
-		#end
 	}
 	
 	@:noCompletion

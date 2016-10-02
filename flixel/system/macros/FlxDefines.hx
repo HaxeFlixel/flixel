@@ -22,7 +22,6 @@ private enum UserDefines
 	FLX_UNIT_TEST;
 	/* additional rendering defines */
 	FLX_RENDER_GL;
-	FLX_RENDER_GL_ARRAYS;
 }
 
 /**

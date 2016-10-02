@@ -240,7 +240,7 @@ class GLRenderHelper implements IFlxDestroyable
 			
 			if (Std.is(filters[filterIndex], ShaderFilter))
 			{
-				shader = cast(filters[filterIndex], ShaderFilter).shader;
+				shader = (cast filters[filterIndex]).shader;
 				i++;
 			}
 			

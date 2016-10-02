@@ -26,8 +26,11 @@ import openfl.geom.Rectangle;
 // TODO: support for colorOffsets???
 
 /**
- * ...
- * @author Yanrishatum
+ * Display object for actual rendering for openfl 4 in tile render mode.
+ * Huge part of it is taken from HaxePunk fork by @Yanrishatum. 
+ * Original class can be found here https://github.com/Yanrishatum/HaxePunk/blob/ofl4/com/haxepunk/graphics/atlas/HardwareRenderer.hx
+ * @author Pavel Alexandrov aka Yanrishatum https://github.com/Yanrishatum
+ * @author Zaphod
  */
 class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
@@ -149,15 +152,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		// TODO: call FlxGame's draw() method from here
 		// TODO: every camera will have its own render texture where i will draw everthing onto and only then draw this texture on the screen
 		// TODO: sprites might have renderTarget property
-		// 
 		
-		// TODO: remove this code...
-		/*
-		var graphics:openfl.display.Graphics = cast(FlxG.camera.view, FlxHardwareView).debugLayer.graphics;
-		graphics.lineStyle(5, 0xff0000);
-		graphics.moveTo(10, 10);
-		graphics.lineTo(200, 200);
-		*/
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
@@ -229,22 +224,16 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			if (state.glBuffer == null)
 			{
 				state.glBuffer = gl.createBuffer();
-				#if !FLX_RENDER_GL_ARRAYS
 				state.glIndexes = gl.createBuffer();
-				#end
 			}
 			
-			#if !FLX_RENDER_GL_ARRAYS
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, state.glIndexes);
-			#end
 			
-			#if !FLX_RENDER_GL_ARRAYS
 			if (state.indexBufferDirty)
 			{
 				state.indexBufferDirty = false;
 				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, state.indexes, gl.DYNAMIC_DRAW);
 			}
-			#end
 			
 			gl.bindBuffer(gl.ARRAY_BUFFER, state.glBuffer);
 			
@@ -286,13 +275,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			
 			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
 			
-			#if FLX_RENDER_GL_ARRAYS
-			gl.drawArrays(gl.TRIANGLES, 0, state.numVertices);
-			#else
 			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_SHORT, 0);
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-			#end
-			
 			gl.bindBuffer(gl.ARRAY_BUFFER, null);
 			
 			i++;
