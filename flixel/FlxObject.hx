@@ -18,7 +18,7 @@ typedef DebugColorScheme =
 {
 	@:optional var notSolid:FlxColor;
 	var solid:FlxColor;
-	@:optional var highlighted:FlxColor;
+	@:optional var partial:FlxColor;
 }
 #end
 
@@ -592,7 +592,7 @@ class FlxObject extends FlxBasic
 		width = Width;
 		height = Height;
 #if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.RED, highlighted: FlxColor.GREEN, notSolid: FlxColor.BLUE };
+		debugColorScheme = { solid: FlxColor.RED, partial: FlxColor.GREEN, notSolid: FlxColor.BLUE };
 #end
 		
 		initVars();
@@ -1070,7 +1070,7 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != FlxObject.NONE)
 			{
-				color = highlight ? debugColorScheme.highlighted : debugColorScheme.solid;
+				color = highlight ? debugColorScheme.partial : debugColorScheme.solid;
 			}
 			else
 			{

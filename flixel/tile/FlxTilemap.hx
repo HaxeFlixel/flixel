@@ -177,7 +177,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		FlxG.cameras.cameraResized.add(onCameraChanged);
 		
 		#if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.GREEN, highlighted: FlxColor.PINK, notSolid: FlxColor.TRANSPARENT };
+		debugColorScheme = { solid: FlxColor.GREEN, partial: FlxColor.PINK, notSolid: FlxColor.TRANSPARENT };
 
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -320,11 +320,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			}
 			
 			if (_debugTilePartial == null)
-				_debugTilePartial = makeDebugTile(debugColorScheme.highlighted);
+				_debugTilePartial = makeDebugTile(debugColorScheme.partial);
 			else
 			{
 				_debugTilePartial.fillRect(_debugTilePartial.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTilePartial, debugColorScheme.highlighted);
+				drawDebugTile(_debugTilePartial, debugColorScheme.partial);
 			}
 			
 			if (_debugTileNotSolid == null)
