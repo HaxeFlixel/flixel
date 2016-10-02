@@ -130,12 +130,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if FLX_DEBUG
 	private var updateDebugTileBoundingBoxesInit = false;
 	
-	override public function set_debugColorScheme(debugColorScheme)
+	override public function setDebugColorScheme(debugColorScheme:DebugColorScheme)
 	{
 		this.debugColorScheme = debugColorScheme;
 		if (updateDebugTileBoundingBoxesInit)
 			updateDebugTileBoundingBoxes();
-		return this.debugColorScheme;
 	}
 	
 	private var _debugTileNotSolid:BitmapData = null;

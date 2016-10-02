@@ -13,12 +13,14 @@ import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
+#if FLX_DEBUG
 typedef DebugColorScheme =
 {
-	var notSolid:FlxColor;
+	@:optional var notSolid:FlxColor;
 	var solid:FlxColor;
-	var highlighted:FlxColor;
+	@:optional var highlighted:FlxColor;
 }
+#end
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
@@ -548,14 +550,14 @@ class FlxObject extends FlxBasic
 	 */
 	public var debugBoundingBoxColor:Null<Int> = null;
 	
-	public var debugColorScheme(default, set):DebugColorScheme;
+	public var debugColorScheme(default, null):DebugColorScheme;
 	
 	/**
 	 * Can be overriden for RenderBlit mode to re-render stuff with new colors
 	 */
-	public function set_debugColorScheme(debugColorScheme)
+	public function setDebugColorScheme(debugColorScheme:DebugColorScheme)
 	{
-		return this.debugColorScheme = debugColorScheme;
+		this.debugColorScheme = debugColorScheme;
 	}
 
 	/**
