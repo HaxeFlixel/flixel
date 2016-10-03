@@ -591,11 +591,15 @@ class ActionSetRegister implements IFlxDestroyable
 				{
 					case FlxInputDeviceID.ALL:          steamControllerAllSet = ActionSet;
 					                                    clearSetFromArray( -1, steamControllerSets);
+					                                    for (i in 0...FlxSteamController.MAX_CONTROLLERS)
+					                                    {
+					                                        steamControllerSets[i] = ActionSet;
+					                                    }
 					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, steamControllerSets);
 					case FlxInputDeviceID.FIRST_ACTIVE: steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
 					default:                            steamControllerSets[DeviceID] = ActionSet;
 				}
-			
+				
 			case FlxInputDevice.ALL:
 				activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID);
 				activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID);
