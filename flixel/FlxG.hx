@@ -610,7 +610,7 @@ class FlxG
 	{
 		random.resetInitialSeed();
 		
-		bitmap.clearCache();
+		bitmap.reset();
 		inputs.reset();
 		#if FLX_SOUND_SYSTEM
 		sound.destroy(true);
