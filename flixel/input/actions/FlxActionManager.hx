@@ -847,7 +847,7 @@ class ActionSetRegister implements IFlxDestroyable
 		#if (cpp && steamwrap && haxe_ver > "3.2")
 		if (steamControllerAllSet != -1)
 		{
-			for (i in 0...Steam.controllers.MAX_CONTROLLERS)
+			for (i in 0...steamControllerSets.length)
 			{
 				changeSteamControllerActionSet(i, steamControllerAllSet, sets);
 			}
