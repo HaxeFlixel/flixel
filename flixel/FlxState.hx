@@ -112,10 +112,11 @@ class FlxState extends FlxGroup
 				FlxG.inputs.onStateSwitch();
 			}
 			
+			subState._parentState = this;
+			
 			if (!subState._created)
 			{
 				subState._created = true;
-				subState._parentState = this;
 				subState.create();
 			}
 		}
