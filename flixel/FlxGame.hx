@@ -620,7 +620,6 @@ class FlxGame extends Sprite
 	private function switchState():Void
 	{ 
 		// Basic reset stuff
-		FlxG.bitmap.clearCache();
 		FlxG.cameras.reset();
 		FlxG.inputs.onStateSwitch();
 		#if FLX_SOUND_SYSTEM
@@ -638,6 +637,9 @@ class FlxGame extends Sprite
 		{
 			_state.destroy();
 		}
+		
+		// we need to clear bitmap cache only after previous state is destroyed, which will reset useCount for FlxGraphic objects
+		FlxG.bitmap.clearCache();
 		
 		// Finally assign and create the new state
 		_state = _requestedState;
