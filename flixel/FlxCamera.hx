@@ -387,6 +387,13 @@ class FlxCamera extends FlxBasic
 	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
+	#if flash
+	/**
+	 * Internal helper for drawing pixels on the camera. Using this fixes some weird bugs with flash software renderer.
+	 */
+	private var _bitmap:Bitmap;
+	#end
+	
 	/**
 	 * Currently used draw stack item
 	 */
@@ -597,7 +604,12 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
+			#if flash
+			_bitmap.bitmapData = pixels;
+			buffer.draw(_bitmap, matrix, null, blend, null, (smoothing || antialiasing));
+			#else
 			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+			#end
 		}
 		else
 		{
@@ -754,6 +766,10 @@ class FlxCamera extends FlxBasic
 			_flashBitmap = new Bitmap(buffer);
 			_scrollRect.addChild(_flashBitmap);
 			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			
+			#if flash
+			_bitmap = new Bitmap();
+			#end
 		}
 		else
 		{
@@ -794,6 +810,10 @@ class FlxCamera extends FlxBasic
 			buffer = null;
 			_flashBitmap = null;
 			_fill = FlxDestroyUtil.dispose(_fill);
+			
+			#if flash
+			_bitmap = null;
+			#end
 		}
 		else
 		{
