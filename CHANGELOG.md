@@ -1,3 +1,14 @@
+2.3.0
+------------------------------
+* Compatibility with flixel 4.2.0
+* FlxTextFormat: added an example of multi-character markers for `applyMarkup()`
+* FlxCamera: removed some unnecessary zooming logic
+* MinimalistTD: fixed a crash when touching the goal (#238)
+* Replaced FlxNapeTilemap with an improved demo (#242)
+* FlxPexParser: added support for changing `scale` (#246)
+* TurnBasedRPG: fixed highscore not being saved (#248)
+* TiledEdtior: added animated tiles (#251)
+
 2.2.0
 ------------------------------
 * Compatibility with flixel 4.1.0
