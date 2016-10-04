@@ -129,12 +129,35 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	#if FLX_DEBUG
 	private var updateDebugTileBoundingBoxesInit = false;
-	
-	override public function setDebugColorScheme(debugColorScheme:DebugColorScheme)
+
+	override private function set_debugBoundingBoxColor(color:Null<Int>)
 	{
-		this.debugColorScheme = debugColorScheme;
+		debugBoundingBoxColor = color;
+		
 		if (updateDebugTileBoundingBoxesInit)
-			updateDebugTileBoundingBoxes();
+			updateDebugTileBoundingBoxSolid();
+		
+		return debugBoundingBoxColor;
+	}
+	
+	override private function set_debugBoundingBoxColorNotSolid(color:Null<Int>)
+	{
+		debugBoundingBoxColorNotSolid = color;
+		
+		if (updateDebugTileBoundingBoxesInit)
+			updateDebugTileBoundingBoxNotSolid();
+		
+		return debugBoundingBoxColorNotSolid;
+	}
+	
+	override private function set_debugBoundingBoxColorPartial(color:Null<Int>)
+	{
+		debugBoundingBoxColorPartial = color;
+		
+		if (updateDebugTileBoundingBoxesInit)
+			updateDebugTileBoundingBoxPartial();
+		
+		return debugBoundingBoxColorPartial;
 	}
 	
 	private var _debugTileNotSolid:BitmapData = null;
@@ -177,7 +200,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		FlxG.cameras.cameraResized.add(onCameraChanged);
 		
 		#if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.GREEN, partial: FlxColor.PINK, notSolid: FlxColor.TRANSPARENT };
+		debugBoundingBoxColor = FlxColor.GREEN;
+		debugBoundingBoxColorPartial = FlxColor.PINK;
+		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
 
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
@@ -301,38 +326,53 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
-		updateDebugTileBoundingBoxes();
+		updateDebugTileBoundingBoxSolid();
+		updateDebugTileBoundingBoxNotSolid();
+		updateDebugTileBoundingBoxPartial();
 		updateDebugTileBoundingBoxesInit = true;
 		#end
 	}
 	
 	#if FLX_DEBUG
-	private function updateDebugTileBoundingBoxes():Void 
+
+	private function updateDebugTileBoundingBoxSolid():Void 
 	{
 		if (FlxG.renderBlit)
 		{
 			if (_debugTileSolid == null)
-				_debugTileSolid = makeDebugTile(debugColorScheme.solid);
+				_debugTileSolid = makeDebugTile(debugBoundingBoxColor);
 			else
 			{
 				_debugTileSolid.fillRect(_debugTileSolid.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTileSolid, debugColorScheme.solid);
+				drawDebugTile(_debugTileSolid, debugBoundingBoxColor);
 			}
-			
-			if (_debugTilePartial == null)
-				_debugTilePartial = makeDebugTile(debugColorScheme.partial);
-			else
-			{
-				_debugTilePartial.fillRect(_debugTilePartial.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTilePartial, debugColorScheme.partial);
-			}
-			
+		}
+	}
+	
+	private function updateDebugTileBoundingBoxNotSolid():Void 
+	{
+		if (FlxG.renderBlit)
+		{
 			if (_debugTileNotSolid == null)
-				_debugTileNotSolid = makeDebugTile(debugColorScheme.notSolid);
+				_debugTileNotSolid = makeDebugTile(debugBoundingBoxColorNotSolid);
 			else
 			{
 				_debugTileNotSolid.fillRect(_debugTileNotSolid.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTileNotSolid, debugColorScheme.notSolid);
+				drawDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
+			}
+		}
+	}
+	
+	private function updateDebugTileBoundingBoxPartial():Void 
+	{
+		if (FlxG.renderBlit)
+		{
+			if (_debugTilePartial == null)
+				_debugTilePartial = makeDebugTile(debugBoundingBoxColorPartial);
+			else
+			{
+				_debugTilePartial.fillRect(_debugTilePartial.rect, FlxColor.TRANSPARENT);
+				drawDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
 			}
 		}
 	}

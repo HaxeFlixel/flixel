@@ -13,15 +13,6 @@ import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
-#if FLX_DEBUG
-typedef DebugColorScheme =
-{
-	@:optional var notSolid:FlxColor;
-	var solid:FlxColor;
-	@:optional var partial:FlxColor;
-}
-#end
-
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
  * It includes some basic attributes about game objects, basic state information, sizes, scrolling, and basic physics and motion.
@@ -548,16 +539,26 @@ class FlxObject extends FlxBasic
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	public var debugBoundingBoxColor:Null<Int> = null;
-	
-	public var debugColorScheme(default, null):DebugColorScheme;
+	public var debugBoundingBoxColor(default, set):Null<Int> = null;
+	public var debugBoundingBoxColorNotSolid(default, set):Null<Int> = null;
+	public var debugBoundingBoxColorPartial(default, set):Null<Int> = null;	
 	
 	/**
 	 * Can be overriden for RenderBlit mode to re-render stuff with new colors
 	 */
-	public function setDebugColorScheme(debugColorScheme:DebugColorScheme)
+	private function set_debugBoundingBoxColor(color:Null<Int>)
 	{
-		this.debugColorScheme = debugColorScheme;
+		return debugBoundingBoxColor = color;
+	}
+	
+	private function set_debugBoundingBoxColorNotSolid(color:Null<Int>)
+	{
+		return debugBoundingBoxColorNotSolid = color;
+	}
+	
+	private function set_debugBoundingBoxColorPartial(color:Null<Int>)
+	{
+		return debugBoundingBoxColorPartial = color;
 	}
 
 	/**
@@ -592,7 +593,9 @@ class FlxObject extends FlxBasic
 		width = Width;
 		height = Height;
 #if FLX_DEBUG
-		debugColorScheme = { solid: FlxColor.RED, partial: FlxColor.GREEN, notSolid: FlxColor.BLUE };
+		debugBoundingBoxColor = FlxColor.RED;
+		debugBoundingBoxColorPartial = FlxColor.GREEN;
+		debugBoundingBoxColorNotSolid = FlxColor.BLUE;
 #end
 		
 		initVars();
@@ -1062,7 +1065,7 @@ class FlxObject extends FlxBasic
 		endDrawDebug(camera);
 	}
 	
-	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, highlight:Bool)
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
 	{
 		// Find the color to use
 		var color:Null<Int> = debugBoundingBoxColor;
@@ -1070,11 +1073,11 @@ class FlxObject extends FlxBasic
 		{
 			if (allowCollisions != FlxObject.NONE)
 			{
-				color = highlight ? debugColorScheme.partial : debugColorScheme.solid;
+				color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColor;
 			}
 			else
 			{
-				color = debugColorScheme.notSolid;
+				color = debugBoundingBoxColorNotSolid;
 			}
 		}
 		
