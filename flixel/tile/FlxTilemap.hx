@@ -222,9 +222,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			#if FLX_DEBUG
 			_debugRect = null;
-			_debugTileNotSolid = null;
-			_debugTilePartial = null;
-			_debugTileSolid = null;
+			_debugTileNotSolid = FlxDestroyUtil.dispose(_debugTileNotSolid);
+			_debugTilePartial = FlxDestroyUtil.dispose(_debugTilePartial);
+			_debugTileSolid = FlxDestroyUtil.dispose(_debugTileSolid);
 			#end
 		}
 		else
