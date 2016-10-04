@@ -336,13 +336,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (FlxG.renderBlit)
 		{
-			if (_debugTileSolid == null)
-				_debugTileSolid = makeDebugTile(debugBoundingBoxColor);
-			else
-			{
-				_debugTileSolid.fillRect(_debugTileSolid.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTileSolid, debugBoundingBoxColor);
-			}
+			_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColor);
 		}
 	}
 	
@@ -350,13 +344,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (FlxG.renderBlit)
 		{
-			if (_debugTileNotSolid == null)
-				_debugTileNotSolid = makeDebugTile(debugBoundingBoxColorNotSolid);
-			else
-			{
-				_debugTileNotSolid.fillRect(_debugTileNotSolid.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
-			}
+			_debugTileNotSolid = updateDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
 		}
 	}
 	
@@ -364,15 +352,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (FlxG.renderBlit)
 		{
-			if (_debugTilePartial == null)
-				_debugTilePartial = makeDebugTile(debugBoundingBoxColorPartial);
-			else
-			{
-				_debugTilePartial.fillRect(_debugTilePartial.rect, FlxColor.TRANSPARENT);
-				drawDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
-			}
+			_debugTilePartial = updateDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
 		}
 	}
+	
+	private function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
+    {
+        if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
+            tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
+
+        if (tileBitmap == null)
+            tileBitmap = makeDebugTile(color);
+        else
+        {
+            tileBitmap.fillRect(tileBitmap.rect, FlxColor.TRANSPARENT);
+            drawDebugTile(tileBitmap, color);
+        }
+
+        return tileBitmap;
+    }
 	#end
 	
 	override private function computeDimensions():Void 
