@@ -2,6 +2,7 @@ package flixel;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.IBitmapDrawable;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.geom.ColorTransform;
@@ -604,12 +605,13 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
+			var drawable:IBitmapDrawable = pixels;
 			#if flash
 			_bitmap.bitmapData = pixels;
-			buffer.draw(_bitmap, matrix, null, blend, null, (smoothing || antialiasing));
-			#else
-			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+			drawable = _bitmap;
 			#end
+			
+			buffer.draw(drawable, matrix, null, blend, null, (smoothing || antialiasing));
 		}
 		else
 		{
