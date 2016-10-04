@@ -128,17 +128,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	override private function set_debugBoundingBoxColor(color:Null<Int>)
+	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
-		debugBoundingBoxColor = color;
+		debugBoundingBoxColorSolid = color;
 		
 		if (_tileWidth > 0 && _tileHeight > 0)
 			updateDebugTileBoundingBoxSolid();
 		
-		return debugBoundingBoxColor;
+		return debugBoundingBoxColorSolid;
 	}
 	
-	override private function set_debugBoundingBoxColorNotSolid(color:Null<Int>)
+	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		debugBoundingBoxColorNotSolid = color;
 		
@@ -148,7 +148,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return debugBoundingBoxColorNotSolid;
 	}
 	
-	override private function set_debugBoundingBoxColorPartial(color:Null<Int>)
+	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		debugBoundingBoxColorPartial = color;
 		
@@ -198,7 +198,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		FlxG.cameras.cameraResized.add(onCameraChanged);
 		
 		#if FLX_DEBUG
-		debugBoundingBoxColor = FlxColor.GREEN;
+		debugBoundingBoxColorSolid = FlxColor.GREEN;
 		debugBoundingBoxColorPartial = FlxColor.PINK;
 		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
 
@@ -336,7 +336,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (FlxG.renderBlit)
 		{
-			_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColor);
+			_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
 		}
 	}
 	

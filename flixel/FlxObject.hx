@@ -539,24 +539,29 @@ class FlxObject extends FlxBasic
 	/**
 	 * Overriding this will force a specific color to be used for debug rect.
 	 */
-	public var debugBoundingBoxColor(default, set):Null<Int> = null;
-	public var debugBoundingBoxColorNotSolid(default, set):Null<Int> = null;
-	public var debugBoundingBoxColorPartial(default, set):Null<Int> = null;	
+	public var debugBoundingBoxColor:Null<Int> = null;
+	
+	/**
+	 * Debug colors per common allowCollisions flags
+	 */
+	public var debugBoundingBoxColorSolid(default, set):FlxColor = FlxColor.RED;
+	public var debugBoundingBoxColorNotSolid(default, set):FlxColor = FlxColor.BLUE;
+	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;	
 	
 	/**
 	 * Can be overriden for RenderBlit mode to re-render stuff with new colors
 	 */
-	private function set_debugBoundingBoxColor(color:Null<Int>)
+	private function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
-		return debugBoundingBoxColor = color;
+		return debugBoundingBoxColorSolid = color;
 	}
-	
-	private function set_debugBoundingBoxColorNotSolid(color:Null<Int>)
+
+	private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorNotSolid = color;
 	}
 	
-	private function set_debugBoundingBoxColorPartial(color:Null<Int>)
+	private function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		return debugBoundingBoxColorPartial = color;
 	}
@@ -592,11 +597,6 @@ class FlxObject extends FlxBasic
 		y = Y;
 		width = Width;
 		height = Height;
-#if FLX_DEBUG
-		debugBoundingBoxColor = FlxColor.RED;
-		debugBoundingBoxColorPartial = FlxColor.GREEN;
-		debugBoundingBoxColorNotSolid = FlxColor.BLUE;
-#end
 		
 		initVars();
 	}
@@ -1068,14 +1068,17 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
 	{
 		// Find the color to use
-		var color:Null<Int>;
-		if (allowCollisions != FlxObject.NONE)
+		var color:Null<Int> = debugBoundingBoxColor;
+		if (color == null)
 		{
-			color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColor;
-		}
-		else
-		{
-			color = debugBoundingBoxColorNotSolid;
+			if (allowCollisions != FlxObject.NONE)
+			{
+				color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColorSolid;
+			}
+			else
+			{
+				color = debugBoundingBoxColorNotSolid;
+			}
 		}
 		
 		if (color != null)
