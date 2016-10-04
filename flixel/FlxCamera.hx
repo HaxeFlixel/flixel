@@ -391,7 +391,7 @@ class FlxCamera extends FlxBasic
 	#if flash
 	/**
 	 * Internal helper for drawing pixels on the camera.
-	 Using this fixes some weird bugs with flash software renderer (see #1838).
+	 * Using this fixes some weird bugs with flash software renderer (see #1838).
 	 */
 	private var _bitmap:Bitmap;
 	#end
