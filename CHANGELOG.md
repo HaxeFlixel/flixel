@@ -26,7 +26,9 @@
 * `WatchEntry`:
 	* added support for cycling through `true` / `false` with up / down (39f7dca)
 	* added support for cycling through enum values with up / down (5702c92)
+* `FlxAnimation`: added support for changing `frames` (#1967)
 * Added an HTML5 template to center games horizontally (#1918)
+* Added support for `haxelib run flixel` as an alias for `haxelib run flixel-tools` (#1950)
 
 #### Bugfixes:
 
@@ -35,6 +37,7 @@
 * `FlxCamera`:
 	* fixed scroll bounds not taking `zoom` into account (#1889)
 	* fixed rendering issues with `bgColor == 0x0` on Next (#1793)
+	* fixed a rendering edge case with rotated sprites on Flash (#1974)
 * `FlxTilemap`: fixed buffers not being resized on camera changes (#1801)
 * `FlxSpriteGroup`:
 	* fixed `drawDebug()` not being called (#1905)
@@ -43,10 +46,15 @@
 * `FlxAtlasFrames`: fixed offset parsing for whitespace-stripped atlases in `fromLibGdx` (#1923)
 * `FlxKeyboard`: fixed some `FlxG.debugger.toggleKeys` and `FlxG.vcr.cancelKeys` not working on native (470c8e8)
 * `FlxMouse`: fixed `FlxButton` presses during VCR playback (#1729)
-* `FlxSprite`: fixed a position discrepancy between simple and complex render (#1939)
+* `FlxSprite`:
+	* fixed a position discrepancy between simple and complex render (#1939)
+	* fixed default graphic not showing on HTML5 (2da3523)
 * `FlxCollision`: fixed an animation-related crash with `FlxG.renderBlit` (#1928)
 * `FlxTimerManager`: fixed issues related to adding / removing timers in `onComplete` (#1954)
 * `WatchEntry`: fixed variables being turned into `String` on Neko (#1911)
+* `FlxVector`: fixed `normalize()` returning `(1,0)` for `(0,0)` (#1959)
+* `FlxFrame`: fixed inconsistent sorting across platforms (#1926)
+* `FlxSubState`: fixed `close()` if same instance is used in two different states (#1971)
 
 #### Changes and improvements:
 
@@ -55,6 +63,11 @@
 * `FlxRect`: added an optional `result` argument to `intersection()` (c52b534)
 * `FlxG.debugger`: added `F2` to `toggleKeys` (f3f029c)
 * `FlxRandom`: deprecated `shuffleArray()` in favor of `shuffle()` (#1947)
+* `FlxEmitter`: `emitParticle()` now returns the particle (#1957)
+* `FlxG.bitmap`:
+	* optimized `getUniqueKey()` (#1965)
+	* clearing the cache now only affects unused graphics (#1968)
+* `FlxFramesCollection`: frame sizes are now checked and trimmed (#1966)
 
 4.1.1
 ------------------------------
