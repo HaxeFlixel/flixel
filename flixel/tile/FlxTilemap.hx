@@ -128,13 +128,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	private var updateDebugTileBoundingBoxesInit = false;
-
 	override private function set_debugBoundingBoxColor(color:Null<Int>)
 	{
 		debugBoundingBoxColor = color;
 		
-		if (updateDebugTileBoundingBoxesInit)
+		if (_tileWidth > 0 && _tileHeight > 0)
 			updateDebugTileBoundingBoxSolid();
 		
 		return debugBoundingBoxColor;
@@ -144,7 +142,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		debugBoundingBoxColorNotSolid = color;
 		
-		if (updateDebugTileBoundingBoxesInit)
+		if (_tileWidth > 0 && _tileHeight > 0)
 			updateDebugTileBoundingBoxNotSolid();
 		
 		return debugBoundingBoxColorNotSolid;
@@ -154,7 +152,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		debugBoundingBoxColorPartial = color;
 		
-		if (updateDebugTileBoundingBoxesInit)
+		if (_tileWidth > 0 && _tileHeight > 0)
 			updateDebugTileBoundingBoxPartial();
 		
 		return debugBoundingBoxColorPartial;
@@ -329,7 +327,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		updateDebugTileBoundingBoxSolid();
 		updateDebugTileBoundingBoxNotSolid();
 		updateDebugTileBoundingBoxPartial();
-		updateDebugTileBoundingBoxesInit = true;
 		#end
 	}
 	
