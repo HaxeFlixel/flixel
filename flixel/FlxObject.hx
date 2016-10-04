@@ -548,9 +548,12 @@ class FlxObject extends FlxBasic
 	#end
 	
 	/**
-	 * The path this object follows.
+	 * The path this object follows. Not initialized by default.
+	 * Assign a `new FlxPath()` object and `start()` it if you want to this object to follow a path.
+	 * Set `path` to `null` again to stop following the path.
+	 * See `flixel.util.FlxPath` for more info and usage examples.
 	 */
-	public var path(default, set):FlxPath;
+	public var path(default, set):FlxPath = null;
 	
 	@:noCompletion
 	private var _point:FlxPoint = FlxPoint.get();
