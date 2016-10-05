@@ -4,7 +4,7 @@ import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import massive.munit.Assert;
 
-class BitmapDataFrontEndTest
+class BitmapFrontEndTest
 {
 	@Test
 	function testGetUniqueKey()
