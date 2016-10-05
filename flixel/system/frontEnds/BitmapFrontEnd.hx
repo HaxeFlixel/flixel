@@ -238,6 +238,9 @@ class BitmapFrontEnd
 		if (baseKey == null)
 			baseKey = "pixels";
 		
+		if (!checkCache(baseKey))
+			return baseKey;
+		
 		var i:Int = _lastUniqueKeyIndex;
 		var uniqueKey:String;
 		do
