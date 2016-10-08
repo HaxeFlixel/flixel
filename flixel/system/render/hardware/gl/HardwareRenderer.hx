@@ -168,8 +168,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		}
 		else
 		{
-			var matrix = renderer.getMatrix(transform);
-			uMatrix = GLRenderHelper.matrixToArray(matrix);
+			uMatrix = renderer.getMatrix(transform);
 		}
 		
 		var worldColor:ColorTransform = this.__worldColorTransform;

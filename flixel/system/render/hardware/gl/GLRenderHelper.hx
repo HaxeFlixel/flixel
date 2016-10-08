@@ -34,6 +34,16 @@ class GLRenderHelper implements IFlxDestroyable
 		return _uMatrix;
 	}
 	
+	public static inline function arrayToMatrix(array:Array<Float>):Matrix4
+	{
+		for (i in 0...16)	
+		{
+			_helperMatrix[i] = array[i];
+		}
+		
+		return _helperMatrix;
+	}
+	
 	/**
 	 * Checks how many render passes specified object has.
 	 * 
@@ -329,8 +339,7 @@ class GLRenderHelper implements IFlxDestroyable
 	{
 		if (passesLeft == 0)
 		{
-			var matrix = renderer.getMatrix(transform);
-			return matrixToArray(matrix);
+			return renderer.getMatrix(transform);
 		}
 		else if (passesLeft < 0)
 		{
