@@ -52,7 +52,18 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * BitmapData of this atlas, combines all images in big one
 	 */
-	public var bitmapData(get, set):BitmapData;
+	public var bitmapData(default, set):BitmapData;
+	
+	/**
+	 * Graphic for this atlas.
+	 */
+	public var graphic(get, null):FlxGraphic;
+	
+	/**
+	 * Whether this atlas should stay in memory after state switch.
+	 * Default value if false.
+	 */
+	public var persist(default, set):Bool = false;
 	
 	/**
 	 * Offsets between nodes
@@ -99,7 +110,7 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public var powerOfTwo(default, set):Bool = false;
 	
-	private var _bitmapData:BitmapData;
+	private var _graphic:FlxGraphic;
 	
 	/**
 	 * Internal storage for building atlas from queue
@@ -132,6 +143,8 @@ class FlxAtlas implements IFlxDestroyable
 		this.allowRotation = rotate;
 		
 		initRoot();
+		
+		FlxG.signals.preStateCreate.add(onClear);
 	}
 	
 	private function initRoot():Void
@@ -309,12 +322,12 @@ class FlxAtlas implements IFlxDestroyable
 					matrix.identity();
 					matrix.rotate(Math.PI / 2);
 					matrix.translate(firstGrandChildData.height + firstGrandChild.x, firstGrandChild.y);
-					_bitmapData.draw(firstGrandChildData, matrix);
+					bitmapData.draw(firstGrandChildData, matrix);
 				}
 				else
 				{
 					point.setTo(firstGrandChild.x, firstGrandChild.y);
-					_bitmapData.copyPixels(firstGrandChildData, firstGrandChildData.rect, point);
+					bitmapData.copyPixels(firstGrandChildData, firstGrandChildData.rect, point);
 				}
 				
 				addNodeToAtlasFrames(firstGrandChild);
@@ -536,19 +549,19 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function expandBitmapData():Void
 	{
-		if (_bitmapData != null && _bitmapData.width == root.width && _bitmapData.height == root.height)
+		if (bitmapData != null && bitmapData.width == root.width && bitmapData.height == root.height)
 		{
 			return;
 		}
 		
 		var newBitmapData:BitmapData = new BitmapData(root.width, root.height, true, FlxColor.TRANSPARENT);
-		if (_bitmapData != null)
+		if (bitmapData != null)
 		{
 			point.setTo(0, 0);
-			newBitmapData.copyPixels(_bitmapData, _bitmapData.rect, point);
+			newBitmapData.copyPixels(bitmapData, bitmapData.rect, point);
 		}
 		
-		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
+		bitmapData = FlxDestroyUtil.dispose(bitmapData);
 		bitmapData = newBitmapData;
 	}
 	
@@ -630,12 +643,12 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public function getAtlasFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(this.bitmapData, false, name);
+		var graph:FlxGraphic = this.graphic;
 		
-		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
-		if (graphic.atlasFrames == null)
+		var atlasFrames:FlxAtlasFrames = graph.atlasFrames;
+		if (graph.atlasFrames == null)
 		{
-			atlasFrames = new FlxAtlasFrames(graphic);
+			atlasFrames = new FlxAtlasFrames(graph);
 		}
 		
 		for (node in nodes)
@@ -646,11 +659,10 @@ class FlxAtlas implements IFlxDestroyable
 	
 	private function addNodeToAtlasFrames(node:FlxNode):Void
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.get(name);
-		if (graphic == null || graphic.atlasFrames == null || node == null)
+		if (_graphic == null || _graphic.atlasFrames == null || node == null)
 			return;
 		
-		var atlasFrames:FlxAtlasFrames = graphic.atlasFrames;
+		var atlasFrames:FlxAtlasFrames = _graphic.atlasFrames;
 		
 		if (node.filled && !atlasFrames.framesHash.exists(node.key))
 		{
@@ -787,18 +799,29 @@ class FlxAtlas implements IFlxDestroyable
 		return this;
 	}
 	
+	private function onClear(_):Void
+	{
+		if (!persist)
+		{
+			destroy();
+		}
+	}
+	
 	/**
 	 * Destroys atlas. Use only if you want to clear memory and don't need this atlas anymore, 
 	 * since it disposes atlasBitmapData and removes it from cache
 	 */
 	public function destroy():Void
 	{
-		FlxG.bitmap.removeIfNoUse(FlxG.bitmap.get(name));
 		_tempStorage = null;
 		deleteSubtree(root);
 		root = null;
-		_bitmapData = FlxDestroyUtil.dispose(_bitmapData);
+		FlxG.bitmap.removeByKey(name);
+		bitmapData = null;
 		nodes = null;
+		_graphic = null;
+		
+		FlxG.signals.preStateCreate.remove(onClear);
 	}
 	
 	/**
@@ -810,8 +833,9 @@ class FlxAtlas implements IFlxDestroyable
 		deleteSubtree(root);
 		initRoot();
 		FlxG.bitmap.removeByKey(name);
-		_bitmapData = null;
+		bitmapData = null;
 		nodes = new Map<String, FlxNode>();
+		_graphic = null;
 	}
 	
 	/**
@@ -866,6 +890,8 @@ class FlxAtlas implements IFlxDestroyable
 		var stack:Array<FlxNode> = new Array<FlxNode>();
 		// Current node
 		var current:FlxNode = root;
+		
+		var emptyNodes:Array<FlxNode> = new Array<FlxNode>();
 		
 		var canPlaceRight:Bool = false;
 		var canPlaceLeft:Bool = false;
@@ -924,24 +950,37 @@ class FlxAtlas implements IFlxDestroyable
 		return result;
 	}
 	
-	private function get_bitmapData():BitmapData
-	{
-		return _bitmapData;
-	}
-	
 	private function set_bitmapData(value:BitmapData):BitmapData
 	{
 		if (value != null)
 		{
 			// update graphic bitmapData
-			var graphic:FlxGraphic = FlxG.bitmap.get(name);
-			if (graphic != null)
+			if (_graphic != null)
 			{
-				graphic.bitmap = value;
+				_graphic.bitmap = value;
 			}
 		}
 		
-		return _bitmapData = value;
+		return bitmapData = value;
+	}
+	
+	private function get_graphic():FlxGraphic
+	{
+		if (_graphic != null)
+			return _graphic;
+			
+		_graphic = FlxG.bitmap.add(bitmapData, false, name);
+		_graphic.persist = persist;
+		
+		return _graphic;
+	}
+	
+	private function set_persist(value:Bool):Bool
+	{
+		if (_graphic != null)
+			_graphic.persist = value;
+			
+		return persist = value;
 	}
 	
 	private function set_minWidth(value:Int):Int
