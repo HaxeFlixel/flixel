@@ -13,6 +13,7 @@ class ConsoleFrontEnd
 	 * Whether the console should `step()` the game after a command is entered.
 	 * Setting this to `false` allows inputting multiple console commands within the same frame.
 	 * Use the `step()` command to step the game from the console.
+	 * @since 4.2.0
 	 */
 	public var stepAfterCommand:Bool = true;
 	

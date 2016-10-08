@@ -402,8 +402,8 @@ class FlxBitmapDataUtil
 	 * @param	borderY				how many times to copy border of tiles on vertical axis.
 	 * @param	horizontalFrames	how many columns of tiles on provided image.
 	 * @param	verticalFrames		how many rows of tiles on provided image.
-	 * 
 	 * @return	Modified spritesheet with copied pixels around tile images.
+	 * @since   4.1.0
 	 */
 	public static function copyBorderPixels(bitmapData:BitmapData, frameWidth:Int, frameHeight:Int, spaceX:Int, spaceY:Int, borderX:Int, borderY:Int, horizontalFrames:Int, verticalFrames:Int):BitmapData
 	{

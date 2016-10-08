@@ -73,6 +73,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * Number of frames FlxBar will have. Default value is 100.
 	 * The bigger value you set then visual will change smoother.
+	 * @since 4.1.0
 	 */
 	public var numDivisions(default, set):Int = 100;
 	/**
