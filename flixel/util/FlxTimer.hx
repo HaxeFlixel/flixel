@@ -11,10 +11,15 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxTimer implements IFlxDestroyable
 {
+	/**
+	 * The global timer manager that handles global timers
+	 * @since 4.2.0
+	 */
 	public static var globalManager:FlxTimerManager;
 	
 	/**
 	 * The manager to which this timer belongs
+	 * @since 4.2.0
 	 */
 	public var manager:FlxTimerManager;
 	/**
@@ -300,6 +305,7 @@ class FlxTimerManager extends FlxBasic
 	/**
 	 * Immediately updates all `active`, non-infinite timers to their end points, repeatedly,
 	 * until all their loops are finished, resulting in `loopsLeft` callbacks being run.
+	 * @since 4.2.0
 	 */
 	public function completeAll():Void
 	{
@@ -331,6 +337,7 @@ class FlxTimerManager extends FlxBasic
 	 * Applies a function to all timers
 	 * 
 	 * @param   Function   A function that modifies one timer at a time
+	 * @since   4.2.0
 	 */
 	public function forEach(Function:FlxTimer->Void)
 	{

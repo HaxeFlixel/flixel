@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween.FlxTweenManager;
 import flixel.tweens.misc.AngleTween;
 import flixel.tweens.misc.ColorTween;
 import flixel.tweens.misc.NumTween;
@@ -45,6 +44,7 @@ class FlxTween implements IFlxDestroyable
 	public static inline var BACKWARD:Int = 16;
 	/**
 	 * The global tweening manager that handles global tweens
+	 * @since 4.2.0
 	 */
 	public static var globalManager:FlxTweenManager;
 	
@@ -331,6 +331,7 @@ class FlxTween implements IFlxDestroyable
 	
 	/**
 	 * The manager to which this tween belongs
+	 * @since 4.2.0
 	 */
 	public var manager:FlxTweenManager;
 	public var active(default, set):Bool = false;
@@ -733,6 +734,7 @@ class FlxTweenManager extends FlxBasic
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added VarTween object.
+	 * @since   4.2.0
 	 */
 	public function tween(Object:Dynamic, Values:Dynamic, Duration:Float = 1, ?Options:TweenOptions):VarTween
 	{
@@ -767,6 +769,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
+	 * @since   4.2.0
 	 */
 	public function num(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
@@ -795,6 +798,7 @@ class FlxTweenManager extends FlxBasic
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added AngleTween object.
+	 * @since   4.2.0
 	 */
 	public function angle(?Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
 	{
@@ -823,6 +827,7 @@ class FlxTweenManager extends FlxBasic
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The added ColorTween object.
+	 * @since   4.2.0
 	 */
 	public function color(?Sprite:FlxSprite, Duration:Float = 1, FromColor:FlxColor, ToColor:FlxColor, ?Options:TweenOptions):ColorTween
 	{
@@ -854,6 +859,7 @@ class FlxTweenManager extends FlxBasic
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return The LinearMotion object.
+	 * @since  4.2.0
 	 */
 	public function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
 	{
@@ -888,6 +894,7 @@ class FlxTweenManager extends FlxBasic
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return The QuadMotion object.
+	 * @since  4.2.0
 	 */
 	public function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
 	{
@@ -923,6 +930,7 @@ class FlxTweenManager extends FlxBasic
 	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return The CubicMotion object.
+	 * @since  4.2.0
 	 */
 	public function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float = 1, ?Options:TweenOptions):CubicMotion
 	{
@@ -956,6 +964,7 @@ class FlxTweenManager extends FlxBasic
 	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return The CircularMotion object.
+	 * @since  4.2.0
 	 */
 	public function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
 	{
@@ -984,6 +993,7 @@ class FlxTweenManager extends FlxBasic
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The LinearPath object.
+	 * @since   4.2.0
 	 */
 	public function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
 	{
@@ -1021,6 +1031,7 @@ class FlxTweenManager extends FlxBasic
 	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 * @return	The QuadPath object.
+	 * @since   4.2.0
 	 */
 	public function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
 	{
@@ -1137,6 +1148,8 @@ class FlxTweenManager extends FlxBasic
 	 * To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
 	 * 
 	 * In no case should it trigger an `onUpdate` callback.
+	 * 
+	 * @since 4.2.0
 	 */
 	public function completeAll():Void
 	{
@@ -1149,6 +1162,7 @@ class FlxTweenManager extends FlxBasic
 	 * Applies a function to all tweens
 	 * 
 	 * @param   Function   A function that modifies one tween at a time
+	 * @since   4.2.0
 	 */
 	public function forEach(Function:FlxTween->Void)
 	{

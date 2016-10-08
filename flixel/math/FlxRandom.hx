@@ -329,6 +329,7 @@ class FlxRandom
 	 * using the standard Fisher-Yates shuffle algorithm.
 	 *
 	 * @param  array  The array to shuffle.
+	 * @since  4.2.0
 	 */
 	@:generic
 	public function shuffle<T>(array:Array<T>):Void

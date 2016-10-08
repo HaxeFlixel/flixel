@@ -60,6 +60,7 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	/**
 	 * A list of frames stored as int indices
+	 * @since 4.2.0
 	 */
 	public var frames:Array<Int>;
 	

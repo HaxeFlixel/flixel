@@ -37,6 +37,7 @@ class DebuggerFrontEnd
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
 	/**
 	 * Dispatched when `visible` is changed.
+	 * @since 4.1.0
 	 */
 	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	

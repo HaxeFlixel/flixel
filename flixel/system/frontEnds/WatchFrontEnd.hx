@@ -65,8 +65,9 @@ class WatchFrontEnd
 	 * Add an expression to the watch list in the debugger.
 	 * The expression gets evaluated with hscript, and you can see its current value all the time.
 	 * 
-	 * @param	expression		A Haxe expression written as a string that will be evaluated and watched.
-	 * @param	displayName		Optional, display your own string instead of the expression string: e.g. "enemy count".
+	 * @param   expression    A Haxe expression written as a string that will be evaluated and watched.
+	 * @param   displayName   Optional, display your own string instead of the expression string: e.g. "enemy count".
+	 * @since   4.1.0
 	 */
 	public function addExpression(expression:String, ?displayName:String):Void
 	{
@@ -78,7 +79,8 @@ class WatchFrontEnd
 	/**
 	 * Remove an expression from the watch list in the debugger.
 	 * 
-	 * @param	expression	The Haxe expression that you want to remove.
+	 * @param   expression   The Haxe expression that you want to remove.
+	 * @since   4.1.0
 	 */
 	public function removeExpression(expression:String):Void
 	{

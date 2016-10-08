@@ -63,6 +63,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * @since 4.1.0
 	 */
 	public var antialiasing(default, set):Bool = false;
 	
@@ -99,6 +100,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * GLSL shader for this tilemap. Only works with OpenFL Next or WebGL.
 	 * Avoid changing it frequently as this is a costly operation.
+	 * @since 4.1.0
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader:FlxShader;

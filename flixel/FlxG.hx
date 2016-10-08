@@ -123,6 +123,7 @@ class FlxG
 	 * Whether the game is running on a mobile device.
 	 * If on HTML5, it returns `FlxG.html5.onMobile`.
 	 * Otherwise, it checks whether the `mobile` haxedef is defined.
+	 * @since 4.2.0
 	 */
 	public static var onMobile(get, never):Bool;
 	
