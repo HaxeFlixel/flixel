@@ -540,7 +540,7 @@ class FlxObject extends FlxBasic
 	 * Overriding this will force a specific color to be used for debug rect
 	 * (ignoring any of the other debug bounding box colors specified).
 	 */
-	public var debugBoundingBoxColor:Null<Int> = null;
+	public var debugBoundingBoxColor:Null<FlxColor> = null;
 	
 	/**
 	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`.
