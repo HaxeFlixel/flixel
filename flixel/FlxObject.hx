@@ -543,7 +543,7 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColor:Null<Int> = null;
 	
 	/**
-	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`
+	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`.
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorSolid(default, set):FlxColor = FlxColor.RED;
