@@ -128,9 +128,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	private var _debugTileNotSolid:BitmapData = null;
-	private var _debugTilePartial:BitmapData = null;
-	private var _debugTileSolid:BitmapData = null;
+	private var _debugTileNotSolid:BitmapData;
+	private var _debugTilePartial:BitmapData;
+	private var _debugTileSolid:BitmapData;
 	private var _debugRect:Rectangle;
 	#end
 	
@@ -301,7 +301,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	#if FLX_DEBUG
-
 	private function updateDebugTileBoundingBoxSolid():Void 
 	{
 		_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
@@ -405,8 +404,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var columnIndex:Int;
 		var tile:FlxTile;
 		
-		var gfx:Graphics = Camera.debugLayer.graphics;
-		
 		for (row in 0...screenRows)
 		{
 			columnIndex = rowIndex;
@@ -419,8 +416,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-
-					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
+					drawDebugBoundingBox(Camera.debugLayer.graphics, rect,
+						tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
 				columnIndex++;
@@ -940,17 +937,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
-								// Blue
 								debugTile = _debugTileNotSolid; 
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
-								// Pink
 								debugTile = _debugTilePartial; 
 							}
 							else
 							{
-								// Green
 								debugTile = _debugTileSolid; 
 							}
 							
