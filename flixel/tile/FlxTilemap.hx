@@ -357,20 +357,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	private function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
-    {
-        if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
-            tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
+	{
+		if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
+			tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
 
-        if (tileBitmap == null)
-            tileBitmap = makeDebugTile(color);
-        else
-        {
-            tileBitmap.fillRect(tileBitmap.rect, FlxColor.TRANSPARENT);
-            drawDebugTile(tileBitmap, color);
-        }
+		if (tileBitmap == null)
+			tileBitmap = makeDebugTile(color);
+		else
+		{
+			tileBitmap.fillRect(tileBitmap.rect, FlxColor.TRANSPARENT);
+			drawDebugTile(tileBitmap, color);
+		}
 
-        return tileBitmap;
-    }
+		return tileBitmap;
+	}
 	#end
 	
 	override private function computeDimensions():Void 
