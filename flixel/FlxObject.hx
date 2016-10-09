@@ -537,12 +537,34 @@ class FlxObject extends FlxBasic
 	
 	#if FLX_DEBUG
 	/**
-	 * Overriding this will force a specific color to be used for debug rect.
+	 * Overriding this will force a specific color to be used for debug rect
+	 * (ignoring any of the other debug bounding box colors specified).
 	 */
 	public var debugBoundingBoxColor:Null<Int> = null;
+	
 	/**
-	 * Setting this to true will prevent the object from appearing
-	 * when FlxG.debugger.drawDebug is true.
+	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`.
+	 * @since 4.2.0
+	 */
+	public var debugBoundingBoxColorSolid(default, set):FlxColor = FlxColor.RED;
+
+	/**
+	 * Color used for the debug rect if `allowCollisions == FlxObject.NONE`.
+	 * @since 4.2.0
+	 */
+	public var debugBoundingBoxColorNotSolid(default, set):FlxColor = FlxColor.BLUE;
+
+	/**
+	 * Color used for the debug rect if this object collides partially
+	 * (`immovable` in the case of `FlxObject`, or `allowCollisions` not equal to
+	 * `FlxObject.ANY` or `FlxObject.NONE` in the case of tiles in `FlxTilemap`).
+	 * @since 4.2.0
+	 */
+	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;
+
+	/**
+	 * Setting this to `true` will prevent the object from appearing
+	 * when `FlxG.debugger.drawDebug` is `true`.
 	 */
 	public var ignoreDrawDebug:Bool = false;
 	#end
@@ -1037,26 +1059,30 @@ class FlxObject extends FlxBasic
 		}
 		
 		var rect = getBoundingBox(camera);
-		
+		var gfx:Graphics = beginDrawDebug(camera);
+		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+		endDrawDebug(camera);
+	}
+	
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
+	{
 		// Find the color to use
 		var color:Null<Int> = debugBoundingBoxColor;
 		if (color == null)
 		{
 			if (allowCollisions != FlxObject.NONE)
 			{
-				color = immovable ? FlxColor.GREEN : FlxColor.RED;
+				color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColorSolid;
 			}
 			else
 			{
-				color = FlxColor.BLUE;
+				color = debugBoundingBoxColorNotSolid;
 			}
 		}
 		
-		//fill static graphics object with square shape
-		var gfx:Graphics = beginDrawDebug(camera);
+		// fill static graphics object with square shape
 		gfx.lineStyle(1, color, 0.5);
 		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
-		endDrawDebug(camera);
 	}
 
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics
@@ -1201,6 +1227,21 @@ class FlxObject extends FlxBasic
 	private function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
+	}
+
+	private function set_debugBoundingBoxColorSolid(color:FlxColor)
+	{
+		return debugBoundingBoxColorSolid = color;
+	}
+
+	private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
+	{
+		return debugBoundingBoxColorNotSolid = color;
+	}
+	
+	private function set_debugBoundingBoxColorPartial(color:FlxColor)
+	{
+		return debugBoundingBoxColorPartial = color;
 	}
 	
 	@:noCompletion
