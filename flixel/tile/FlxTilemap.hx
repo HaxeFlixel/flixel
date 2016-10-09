@@ -524,8 +524,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	override public function setDirty(Dirty:Bool = true):Void
 	{
+		if (FlxG.renderTile)
+			return;
+
 		for (buffer in _buffers)
-			buffer.dirty = true;
+			if (buffer != null)
+				buffer.dirty = Dirty;
 	}
 
 	/**
@@ -1042,6 +1046,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			debugTile.draw(FlxSpriteUtil.flashGfxSprite);
 		}
 	}
+
+	private function onDrawDebugChanged():Void
+	{
+		setDirty();
+	}
 	#end
 
 	/**
@@ -1065,18 +1074,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		buffer.antialiasing = antialiasing;
 		return buffer;
 	}
-	
-	#if FLX_DEBUG
-	private function onDrawDebugChanged():Void
-	{
-		if (FlxG.renderTile)
-			return;
-
-		for (buffer in _buffers)
-			if (buffer != null)
-				buffer.dirty = true;
-	}
-	#end
 	
 	private function set_antialiasing(value:Bool):Bool
 	{
@@ -1142,14 +1139,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		else
 			colorTransform.setMultipliers(1, 1, 1, 1);
 		
-		if (FlxG.renderBlit)
-			setDirty();
+		setDirty();
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		if (FlxG.renderBlit)
-			setDirty();
+		setDirty();
 		return blend = Value;
 	}
 	
