@@ -128,36 +128,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
-	{
-		debugBoundingBoxColorSolid = color;
-		
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxSolid();
-		
-		return debugBoundingBoxColorSolid;
-	}
-	
-	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
-	{
-		debugBoundingBoxColorNotSolid = color;
-		
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxNotSolid();
-		
-		return debugBoundingBoxColorNotSolid;
-	}
-	
-	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
-	{
-		debugBoundingBoxColorPartial = color;
-		
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxPartial();
-		
-		return debugBoundingBoxColorPartial;
-	}
-	
 	private var _debugTileNotSolid:BitmapData = null;
 	private var _debugTilePartial:BitmapData = null;
 	private var _debugTileSolid:BitmapData = null;
@@ -334,30 +304,24 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	private function updateDebugTileBoundingBoxSolid():Void 
 	{
-		if (FlxG.renderBlit)
-		{
-			_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
-		}
+		_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
 	}
 	
 	private function updateDebugTileBoundingBoxNotSolid():Void 
 	{
-		if (FlxG.renderBlit)
-		{
-			_debugTileNotSolid = updateDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
-		}
+		_debugTileNotSolid = updateDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
 	}
 	
 	private function updateDebugTileBoundingBoxPartial():Void 
 	{
-		if (FlxG.renderBlit)
-		{
-			_debugTilePartial = updateDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
-		}
+		_debugTilePartial = updateDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
 	}
 	
 	private function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
 	{
+		if (FlxG.renderTile)
+			return null;
+
 		if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
 			tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
 
@@ -1248,6 +1212,38 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		return super.set_allowCollisions(Value);
 	}
+
+	#if FLX_DEBUG
+	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorSolid(color);
+		
+		if (_tileWidth > 0 && _tileHeight > 0)
+			updateDebugTileBoundingBoxSolid();
+		
+		return debugBoundingBoxColorSolid;
+	}
+	
+	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorNotSolid(color);
+		
+		if (_tileWidth > 0 && _tileHeight > 0)
+			updateDebugTileBoundingBoxNotSolid();
+		
+		return debugBoundingBoxColorNotSolid;
+	}
+	
+	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorPartial(color);
+
+		if (_tileWidth > 0 && _tileHeight > 0)
+			updateDebugTileBoundingBoxPartial();
+		
+		return debugBoundingBoxColorPartial;
+	}
+	#end
 }
 
 typedef FlxTileProperties =
