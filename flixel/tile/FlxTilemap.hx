@@ -335,6 +335,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			drawDebugTile(tileBitmap, color);
 		}
 
+		setDirty();
 		return tileBitmap;
 	}
 	#end
