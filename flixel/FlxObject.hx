@@ -543,7 +543,7 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColor:Null<Int> = null;
 	
 	/**
-	 * Color used for the debug rect if `solid == true`.
+	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorSolid(default, set):FlxColor = FlxColor.RED;
@@ -555,7 +555,9 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColorNotSolid(default, set):FlxColor = FlxColor.BLUE;
 
 	/**
-	 * Color used for the debug rect if `allowCollisions != FlxObject.NONE` and `immovable == true`.
+	 * Color used for the debug rect if this object collides partially
+	 * (`immovable` in the case of `FlxObject`, or `allowCollisions` not equal to
+	 * `FlxObject.ANY` or `FlxObject.NONE` in the case of tiles in `FlxTilemap`).
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;
