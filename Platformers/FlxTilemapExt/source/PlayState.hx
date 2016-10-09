@@ -10,42 +10,24 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import openfl.Assets;
 
 class PlayState extends FlxState
 {
-	/**
-	 * Reference to the player
-	 */
 	private var _player:FlxSprite;
-	/**
-	 * Major game object storage
-	 */
 	private var _blocks:FlxGroup;
 	private var _hud:FlxGroup;
-	/**
-	 * Meta groups, to help speed up collisions
-	 */
 	private var _objects:FlxGroup;
-	/**
-	 * HUD / User Interface stuff
-	 */
 	private var _levelText:FlxText;
-	/**
-	 * Tilemap Stuff
-	 */
 	private var level:FlxTilemapExt;
 	
 	override public function create():Void
 	{
-		level = new FlxTilemapExt();
-		
 		FlxG.mouse.visible = false;
-		
-		_hud = new FlxGroup();
-		
 		FlxG.cameras.bgColor = 0xff050509;
-		
+
+		level = new FlxTilemapExt();
+		_hud = new FlxGroup();
+			
 		// Create player (a red box)
 		_player = new FlxSprite(70, 20);
 		_player.makeGraphic(8, 14, FlxColor.RED);
@@ -64,7 +46,8 @@ class PlayState extends FlxState
 		add(level.loadMapFromCSV("assets/slopemap.txt", "assets/colortiles.png", 10, 10));
 		
 		// tile tearing problem fix
-		var levelTiles:FlxTileFrames = FlxTileFrames.fromBitmapAddSpacesAndBorders("assets/colortiles.png", new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));
+		var levelTiles = FlxTileFrames.fromBitmapAddSpacesAndBorders("assets/colortiles.png",
+			new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));
 		level.frames = levelTiles;
 		level.useScaleHack = false;
 		
@@ -127,15 +110,6 @@ class PlayState extends FlxState
 		{
 			_player.velocity.x = _player.maxVelocity.x;
 		}
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
-		
-		_blocks = null;
-		_hud = null;
-		_objects = null;
 	}
 	
 	override public function update(elapsed:Float):Void
