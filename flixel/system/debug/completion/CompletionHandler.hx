@@ -31,7 +31,17 @@ class CompletionHandler
 	
 	private function getTextUntilCaret():String
 	{
-		return input.text.substring(0, input.caretIndex);
+		return input.text.substring(0, getCaretIndex());
+	}
+
+	private function getCaretIndex():Int
+	{
+		#if openfl_legacy
+		// caretIndex is not a thing on legacy...
+		return input.text.length;
+		#else
+		return input.caretIndex;
+		#end
 	}
 
 	private function onKeyUp(e:KeyboardEvent)
@@ -105,7 +115,7 @@ class CompletionHandler
 	private function getCharXPosition():Float
 	{
 		var pos = 0.0;
-		for (i in 0...input.caretIndex)
+		for (i in 0...getCaretIndex())
 			pos += #if flash input.getCharBoundaries(i).width #else 6 #end;
 		return pos;
 	}
@@ -120,7 +130,7 @@ class CompletionHandler
 	{
 		var textUntilCaret = getTextUntilCaret();
 		var insert = getCompletedText(textUntilCaret, selectedItem);
-		input.text = insert + input.text.substr(input.caretIndex);
+		input.text = insert + input.text.substr(getCaretIndex());
 		input.setSelection(insert.length, insert.length);
 	}
 	
