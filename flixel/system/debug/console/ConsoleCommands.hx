@@ -7,6 +7,7 @@ import flixel.FlxCamera;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 using StringTools;
 
 class ConsoleCommands
@@ -61,6 +62,8 @@ class ConsoleCommands
 		console.registerClass(FlxMath);
 		console.registerClass(FlxTween);
 		console.registerClass(FlxCamera);
+		
+		console.registerObject("FlxDebuggerLayout", FlxDebuggerLayout);
 	}
 	
 	private function help(?Alias:String):String
