@@ -552,11 +552,10 @@ class FlxObject extends FlxBasic
 	 * Color used for the debug rect if `allowCollisions == FlxObject.NONE`.
 	 * @since 4.2.0
 	 */
-
 	public var debugBoundingBoxColorNotSolid(default, set):FlxColor = FlxColor.BLUE;
 
 	/**
-	 * Color used for the debug rect if `allowCollisions != FlxObject.NONE` and  `immovable == true`.
+	 * Color used for the debug rect if `allowCollisions != FlxObject.NONE` and `immovable == true`.
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;

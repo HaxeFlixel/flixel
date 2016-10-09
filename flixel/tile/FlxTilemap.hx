@@ -321,6 +321,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (FlxG.renderTile)
 			return null;
 
+		if (_tileWidth <= 0 || _tileHeight <= 0)
+			return tileBitmap;
+
 		if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
 			tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
 
@@ -1211,30 +1214,21 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorSolid(color);
-		
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxSolid();
-		
+		updateDebugTileBoundingBoxSolid();
 		return debugBoundingBoxColorSolid;
 	}
 	
 	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorNotSolid(color);
-		
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxNotSolid();
-		
+		updateDebugTileBoundingBoxNotSolid();
 		return debugBoundingBoxColorNotSolid;
 	}
 	
 	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorPartial(color);
-
-		if (_tileWidth > 0 && _tileHeight > 0)
-			updateDebugTileBoundingBoxPartial();
-		
+		updateDebugTileBoundingBoxPartial();
 		return debugBoundingBoxColorPartial;
 	}
 	#end
