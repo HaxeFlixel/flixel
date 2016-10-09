@@ -1229,6 +1229,7 @@ class FlxObject extends FlxBasic
 		return allowCollisions = Value;
 	}
 
+	#if FLX_DEBUG
 	private function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorSolid = color;
@@ -1243,6 +1244,7 @@ class FlxObject extends FlxBasic
 	{
 		return debugBoundingBoxColorPartial = color;
 	}
+	#end
 	
 	@:noCompletion
 	private function set_path(path:FlxPath):FlxPath
