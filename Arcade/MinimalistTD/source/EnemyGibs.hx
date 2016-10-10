@@ -4,6 +4,9 @@ import flash.display.BlendMode;
 import flixel.util.FlxColor;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
+#if flash
+import flixel.FlxG;
+#end
 
 class EnemyGibs extends FlxEmitter
 {
@@ -17,29 +20,24 @@ class EnemyGibs extends FlxEmitter
 	{
 		super(0, 0, SIZE);
 		
-		velocity.set( -SPEED, -SPEED, SPEED, SPEED);
+		velocity.set(-SPEED, -SPEED, SPEED, SPEED);
 		lifespan.set(1, 1);
 		
-		#if !(cpp || neko || js)
+		#if flash
 		blend = BlendMode.INVERT;
 		#end
 		
 		for (i in 0...SIZE)
 		{
-			var p:FlxParticle = new FlxParticle();
+			var p = new FlxParticle();
 			
-			#if !(cpp || neko || js)
-			p.makeGraphic(2, 2, FlxColor.BLACK);
-			#else
+			var color = FlxColor.BLACK;
+			#if flash
 			if (FlxG.random.bool())
-			{
-				p.makeGraphic(2, 2, FlxColor.BLACK);
-			}
-			else
-			{
-				p.makeGraphic(2, 2, FlxColor.WHITE);
-			}
+				color = FlxColor.WHITE;
 			#end
+
+			p.makeGraphic(2, 2, FlxColor.BLACK);
 			add(p);
 		}
 		
@@ -48,7 +46,7 @@ class EnemyGibs extends FlxEmitter
 	
 	/**
 	 * Explode this emitter at a given X and Y.
-	 */ 
+	 */
 	public function startAtPosition(X:Float, Y:Float):Void
 	{
 		x = X;
