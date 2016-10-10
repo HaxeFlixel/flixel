@@ -1,12 +1,10 @@
 package;
 
-import flash.display.BitmapData;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
 import flixel.addons.transition.TransitionData;
-import flixel.addons.transition.TransitionFade;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUIRadioGroup;
@@ -18,27 +16,20 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 
-/**
- * A FlxState which can be used for the game's menu.
- */
 class MenuState extends FlxUIState
 {
 	static var initialized:Bool = false;
 	
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
 	override public function create():Void
 	{
 		_xml_id = "ui";
 		super.create();
-		
 		init();
 	}
 	
 	private function init():Void
 	{
-		if (initialized == false)
+		if (!initialized)
 		{
 			initialized = true;
 			
@@ -53,8 +44,8 @@ class MenuState extends FlxUIState
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 			
-			FlxTransitionableState.defaultTransIn.tileData = { asset:diamond, width:32, height:32 };
-			FlxTransitionableState.defaultTransOut.tileData = { asset:diamond, width:32, height:32 };
+			FlxTransitionableState.defaultTransIn.tileData = { asset: diamond, width: 32, height: 32 };
+			FlxTransitionableState.defaultTransOut.tileData = { asset: diamond, width: 32, height: 32 };
 			
 			//Of course, this state has already been constructed, so we need to set a transOut value for it right now:
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -70,14 +61,12 @@ class MenuState extends FlxUIState
 		var in_duration:FlxUINumericStepper = cast _ui.getAsset("in_duration");
 		var in_type:FlxUIRadioGroup = cast _ui.getAsset("in_type");
 		var in_tile:FlxUIRadioGroup = cast _ui.getAsset("in_tile");
-		var in_tile_text:FlxUIText = cast _ui.getAsset("in_tile_text");
 		var in_color:FlxUIRadioGroup = cast _ui.getAsset("in_color");
 		var in_dir:FlxUIRadioGroup = cast _ui.getAsset("in_dir");
 		
 		var out_duration:FlxUINumericStepper = cast _ui.getAsset("out_duration");
 		var out_type:FlxUIRadioGroup = cast _ui.getAsset("out_type");
 		var out_tile:FlxUIRadioGroup = cast _ui.getAsset("out_tile");
-		var out_tile_text:FlxUIText = cast _ui.getAsset("out_tile_text");
 		var out_color:FlxUIRadioGroup = cast _ui.getAsset("out_color");
 		var out_dir:FlxUIRadioGroup = cast _ui.getAsset("out_dir");
 		
@@ -186,7 +175,7 @@ class MenuState extends FlxUIState
 			case "diamond", _: GraphicTransTileDiamond;
 		}
 		
-		var graphic:FlxGraphic = FlxGraphic.fromClass(cast graphicClass);
+		var graphic = FlxGraphic.fromClass(cast graphicClass);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
 		return graphic;
@@ -214,12 +203,11 @@ class MenuState extends FlxUIState
 		return "center";
 	}
 	
-	private function setDirectionFromStr(str:String,p:FlxPoint=null):FlxPoint
+	private function setDirectionFromStr(str:String, ?p:FlxPoint):FlxPoint
 	{
 		if (p == null)
-		{
 			p = new FlxPoint();
-		}
+
 		switch (str)
 		{
 			case "n": p.set(0, -1);
@@ -228,8 +216,8 @@ class MenuState extends FlxUIState
 			case "e": p.set(1, 0);
 			case "nw": p.set( -1, -1);
 			case "ne": p.set(1, -1);
-			case "sw":p.set( -1, 1);
-			case "se":p.set(1, 1);
+			case "sw": p.set( -1, 1);
+			case "se": p.set(1, 1);
 			default: p.set(0, 0);
 		}
 		return p;
@@ -253,7 +241,8 @@ class MenuState extends FlxUIState
 				}
 			case FlxUIRadioGroup.CLICK_EVENT:
 				var radio:FlxUIRadioGroup = cast sender;
-				if (!radio.visible) return;
+				if (!radio.visible)
+					return;
 				matchUI();
 			case FlxUINumericStepper.CHANGE_EVENT:
 				matchUI();
