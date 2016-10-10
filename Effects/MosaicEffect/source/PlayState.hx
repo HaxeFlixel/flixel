@@ -1,17 +1,18 @@
 package;
 
-import flash.filters.BitmapFilter;
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+#if !web
+import openfl.filters.BitmapFilter;
 import openfl.filters.ShaderFilter;
-
+import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
+#end
 class PlayState extends FlxState
 {
-	#if (flash || html5)
+	#if web
 	override public function create():Void
 	{
 		var infoText = new FlxText(10, 10, FlxG.width, "This demo does not work on this target", 16);
@@ -48,10 +49,7 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.SPACE) 
-		{
-			trace("pressed");
 			effectTween.active = !effectTween.active;
-		}
 		
 		super.update(elapsed);
 	}

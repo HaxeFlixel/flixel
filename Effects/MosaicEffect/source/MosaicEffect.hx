@@ -51,19 +51,19 @@ class MosaicEffect
  */
 class MosaicShader extends Shader
 {
-    @fragment var code = '
-    
-    uniform vec2 uBlocksize;
+	@fragment var code = '
+	
+	uniform vec2 uBlocksize;
 
-    void main()
+	void main()
 	{
-        vec2 blocks = ${Shader.uTextureSize} / uBlocksize;
+		vec2 blocks = ${Shader.uTextureSize} / uBlocksize;
 		gl_FragColor = texture2D(${Shader.uSampler}, floor(${Shader.vTexCoord} * blocks) / blocks);
-    }
-    ';
-    
-    public function new()
-    {
-        super();
-    }
+	}
+	';
+	
+	public function new()
+	{
+		super();
+	}
 }
