@@ -181,7 +181,7 @@ class PlayState extends FlxState
 		// Start the tween
 		startTween();
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.watch.add(this, "_currentEaseIndex");
 		FlxG.watch.add(this, "_currentEaseType");
 		FlxG.watch.add(this, "_currentEaseDirection");

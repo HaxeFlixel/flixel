@@ -34,7 +34,7 @@ class PlayState extends FlxState
 		Reg.PS = this;
 		FlxG.cameras.bgColor = Reg.lite;
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
 		
@@ -93,7 +93,7 @@ class PlayState extends FlxState
 	
 	override public function update(elapsed:Float):Void
 	{
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.justPressed.P)
 		{
 			_paused = !_paused;

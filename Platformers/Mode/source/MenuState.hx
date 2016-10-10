@@ -79,7 +79,7 @@ class MenuState extends FlxState
 		_timer = 0;
 		_demoMode = false;
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.load(AssetPaths.cursor__png, 2);
 		FlxG.mouse.visible = true;
 		#end
@@ -165,7 +165,7 @@ class MenuState extends FlxState
 		if (_timer >= 10) //go into demo mode if no buttons are pressed for 10 seconds
 			_demoMode = true;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (!_fading)
 		{
 			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _demoMode)
@@ -182,7 +182,7 @@ class MenuState extends FlxState
 		}
 		#end
 		
-		#if (!FLX_NO_GAMEPAD)
+		#if (FLX_GAMEPAD)
 		if (FlxG.gamepads.anyButton())
 		{
 			if (FlxG.gamepads.lastActive.justPressed.A)

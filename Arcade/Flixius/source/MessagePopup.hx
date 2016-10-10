@@ -122,7 +122,7 @@ class MessagePopup extends FlxSubState
 		
 		if (!_fadingIn && !_fadingOut)
 		{
-			#if !FLX_NO_KEYBOARD
+			#if FLX_KEYBOARD
 			if (FlxG.keys.anyJustReleased([X]))
 			{
 				_fadingOut = true;
@@ -132,7 +132,7 @@ class MessagePopup extends FlxSubState
 				}}, updateAlpha);
 			}
 			#end
-			#if !FLX_NO_TOUCH
+			#if FLX_TOUCH
 			var t:FlxTouch = FlxG.touches.getFirst();
 			if (t != null && t.justReleased)
 			{

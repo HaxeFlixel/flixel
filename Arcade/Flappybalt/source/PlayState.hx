@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		
 		// Hide the mouse.
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
 		
@@ -153,7 +153,7 @@ class PlayState extends FlxState
 			_paddleLeft.randomize();
 		}
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.justPressed.E && (FlxG.keys.pressed.CONTROL || FlxG.keys.pressed.SHIFT || FlxG.keys.pressed.ALT))
 		{
 			clearSave();

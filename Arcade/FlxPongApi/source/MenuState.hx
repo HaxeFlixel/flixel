@@ -55,7 +55,7 @@ class MenuState extends FlxState
 		FlxG.cameras.bgColor = Reg.lite;
 		Reg.level = 1;
 		
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		var mouseSprite:Sprite = new Sprite();
 		mouseSprite.graphics.beginFill(Reg.dark, 1);
 		mouseSprite.graphics.moveTo(0, 0);
@@ -317,7 +317,7 @@ class MenuState extends FlxState
 	{
 		_mainMenuTime += elapsed;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.justPressed.ENTER && _loginGroup.visible)
 		{
 			loginCallback("Login");

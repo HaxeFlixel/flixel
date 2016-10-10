@@ -104,7 +104,7 @@ class Player extends FlxSprite
 	
 	private function updateKeyboardInput():Void
 	{
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.anyPressed([A, LEFT]))
 			moveLeft();
 		else if (FlxG.keys.anyPressed([D, RIGHT]))
@@ -144,7 +144,7 @@ class Player extends FlxSprite
 	
 	private function updateGamepadInput():Void
 	{
-		#if !FLX_NO_GAMEPAD
+		#if FLX_GAMEPAD
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 		if (gamepad == null)
 			return;

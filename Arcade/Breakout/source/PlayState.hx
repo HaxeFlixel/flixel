@@ -101,7 +101,7 @@ class PlayState extends FlxState
 		
 		_bat.velocity.x = 0;
 		
-		#if !FLX_NO_TOUCH
+		#if FLX_TOUCH
 		// Simple routine to move bat to x position of touch
 		for (touch in FlxG.touches.list)
 		{

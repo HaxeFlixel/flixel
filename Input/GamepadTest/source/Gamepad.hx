@@ -142,7 +142,7 @@ class Gamepad extends FlxTypedGroup<FlxSprite>
 		if (gamepad == null)
 			return;
 		
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.watch.addQuick("pressed ID", gamepad.firstJustPressedID());
 		FlxG.watch.addQuick("released ID", gamepad.firstJustReleasedID());
 		FlxG.watch.addQuick("justPressed ID", gamepad.firstJustPressedID());

@@ -243,7 +243,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		{
 			// if we're waiting, don't do any of this.
 			
-			#if !FLX_NO_KEYBOARD
+			#if FLX_KEYBOARD
 			// setup some simple flags to see which keys are pressed.
 			var _up:Bool = false;
 			var _down:Bool = false;
@@ -290,7 +290,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				movePointer();
 			}
 			#end
-			#if !FLX_NO_TOUCH
+			#if FLX_TOUCH
 			var didSelect:Bool = false;
 			for (touch in FlxG.touches.justReleased())
 			{

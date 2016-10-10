@@ -158,7 +158,7 @@ class Level extends TiledMap
 				
 			case "collision":
 				var coll:FlxObject = new FlxObject(x, y, o.width, o.height);
-				#if !FLX_NO_DEBUG
+				#if FLX_DEBUG
 				coll.debugBoundingBoxColor = 0xFFFF00FF;
 				#end
 				coll.immovable = true;

@@ -21,7 +21,7 @@ class PlayState extends FlxState
 		_inactiveSprites = new Array<TouchSprite>();
 	}
 
-	#if !FLX_NO_TOUCH
+	#if FLX_TOUCH
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);

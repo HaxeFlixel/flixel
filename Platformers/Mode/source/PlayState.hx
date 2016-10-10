@@ -57,7 +57,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
 		
@@ -252,7 +252,7 @@ class PlayState extends FlxState
 		// Check to see if the player scored any points this frame
 		var scoreChanged:Bool = oldScore != Reg.score;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		// Jammed message
 		if (FlxG.keys.justPressed.C && _player.flickering)
 		{
@@ -339,7 +339,7 @@ class PlayState extends FlxState
 		}
 		
 		// Escape to the main menu
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.pressed.ESCAPE)
 			FlxG.switchState(new MenuState());
 		#end

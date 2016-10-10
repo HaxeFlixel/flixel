@@ -35,7 +35,7 @@ class Player extends FlxSprite
 		var _left:Bool = false;
 		var _right:Bool = false;
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		_up = FlxG.keys.anyPressed([UP, W]);
 		_down = FlxG.keys.anyPressed([DOWN, S]);
 		_left = FlxG.keys.anyPressed([LEFT, A]);

@@ -34,7 +34,7 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-		#if !FLX_NO_MOUSE
+		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
 		

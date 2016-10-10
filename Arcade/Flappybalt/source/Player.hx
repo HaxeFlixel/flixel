@@ -16,9 +16,9 @@ class Player extends FlxSprite
 	
 	override public function update(elapsed:Float)
 	{
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.justPressed.SPACE)
-		#elseif !FLX_NO_TOUCH
+		#elseif FLX_TOUCH
 		if (FlxG.touches.justStarted().length > 0)
 		#end
 		{

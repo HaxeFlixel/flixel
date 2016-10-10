@@ -419,7 +419,7 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.anyPressed([UP, W]))
 			v -= 120;
 		if (FlxG.keys.anyPressed([DOWN, S]))
@@ -445,7 +445,7 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.anyPressed([LEFT, A]))
 			v -= 90;
 		if (FlxG.keys.anyPressed([RIGHT, D]))
@@ -462,7 +462,7 @@ class PlayState extends FlxState
 		}
 		#end
 		
-		#if !FLX_NO_KEYBOARD
+		#if FLX_KEYBOARD
 		if (FlxG.keys.anyPressed([SPACE, X]))
 		{
 			shootPBullet();
