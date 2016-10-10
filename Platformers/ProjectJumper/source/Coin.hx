@@ -2,15 +2,14 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import openfl.Assets;
 
 /**
  * ...
  * @author David Bell
  */
-class Coin extends FlxSprite 
+class Coin extends FlxSprite
 {
-	public function new(X:Float = 0, Y:Float = 0) 
+	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
 		
@@ -19,7 +18,7 @@ class Coin extends FlxSprite
 		animation.play("spinning");
 	}
 	
-	override public function kill():Void 
+	override public function kill():Void
 	{
 		super.kill();
 		

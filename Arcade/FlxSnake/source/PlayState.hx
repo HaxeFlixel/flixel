@@ -1,6 +1,5 @@
 package;
 
-import flash.Lib;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -10,7 +9,6 @@ import flixel.system.FlxAssets;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 

@@ -8,8 +8,6 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
-import flixel.util.FlxSpriteUtil;
 
 class MenuState extends FlxState
 {
@@ -92,7 +90,7 @@ class MenuState extends FlxState
 				
 				//clean up our loop
 				_loopOne.kill();
-				_loopOne.destroy(); 
+				_loopOne.destroy();
 			}
 		}
 		

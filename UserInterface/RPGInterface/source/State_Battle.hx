@@ -1,8 +1,4 @@
-import flash.events.Event;
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton.FlxUITypedButton;
-import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUI;

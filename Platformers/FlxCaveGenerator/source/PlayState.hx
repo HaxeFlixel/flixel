@@ -11,7 +11,6 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 import haxe.Timer;
 

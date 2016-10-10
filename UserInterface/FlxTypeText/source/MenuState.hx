@@ -6,13 +6,9 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxAssets;
-import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
 import flixel.addons.text.FlxTypeText;
-import haxe.macro.TypeTools;
 
 /**
  * A FlxState which can be used for the game's menu.

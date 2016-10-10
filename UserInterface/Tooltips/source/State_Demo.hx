@@ -1,8 +1,4 @@
-import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUITypedButton;
-import flixel.FlxState;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 /**
@@ -11,12 +7,6 @@ import flixel.addons.ui.FlxUIState;
 
 class State_Demo extends FlxUIState
 {
-
-	public function new()
-	{
-		super();
-	}
-	
 	override public function create() 
 	{
 		_xml_id = "state_menu";

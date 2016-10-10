@@ -1,9 +1,5 @@
 package;
 
-import flash.Lib;
-import flash.events.MouseEvent;
-import flixel.FlxG;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.ui.FlxButton;
 

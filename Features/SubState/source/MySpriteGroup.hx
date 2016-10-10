@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.math.FlxRandom;
 
 /**
  * ...
@@ -11,14 +10,13 @@ import flixel.math.FlxRandom;
  */
 class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 {
-	public function new(numSprites:Int = 50) 
+	public function new(numSprites:Int = 50)
 	{
 		super();
 		
-		var sprite:FlxSprite;
 		for (i in 0...numSprites)
 		{
-			sprite = new FlxSprite(FlxG.random.float(0, FlxG.width), FlxG.random.float(0, FlxG.height));
+			var sprite = new FlxSprite(FlxG.random.float(0, FlxG.width), FlxG.random.float(0, FlxG.height));
 			sprite.velocity.set(FlxG.random.float(-50, 50), FlxG.random.float(-50, 50));
 			add(sprite);
 		}
@@ -28,10 +26,8 @@ class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 	{
 		super.update(elapsed);
 		
-		var sprite:FlxSprite;
-		for (i in 0...length)
+		for (sprite in members)
 		{
-			sprite = members[i];
 			if (sprite.x < 0)
 			{
 				sprite.x = 0;

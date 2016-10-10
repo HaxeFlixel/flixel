@@ -7,9 +7,11 @@ import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 using flixel.util.FlxSpriteUtil;
+#if mobile
+import flixel.ui.FlxVirtualPad;
+#end
 
 class PlayState extends FlxState
 {

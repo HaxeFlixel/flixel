@@ -13,7 +13,6 @@ import nape.callbacks.PreCallback;
 import nape.callbacks.PreFlag;
 import nape.callbacks.PreListener;
 import nape.constraint.PivotJoint;
-import nape.constraint.WeldJoint;
 import nape.geom.Vec2;
 
 /**
@@ -217,7 +216,6 @@ class Ragdoll extends FlxGroup
 		var group7:CbType = new CbType();
 		var group8:CbType = new CbType();
 		var group9:CbType = new CbType();
-		var group10:CbType = new CbType();
 		
 		lLLeg.body.cbTypes.add(group1);
 		rLLeg.body.cbTypes.add(group2);
@@ -287,9 +285,8 @@ class Ragdoll extends FlxGroup
 	
 	function createJoints() 
 	{
-		var constrain: PivotJoint;
-		var weldJoint: WeldJoint;
-		
+		var constrain:PivotJoint;
+
 		// lower legs with upper legs.
 		constrain = new PivotJoint(lLLeg.body, lULeg.body, new Vec2(0, -llegSize.y / 2 + 3), new Vec2(0, ulegSize.y / 2 - 3));
 		constrain.space = FlxNapeSpace.space;

@@ -4,10 +4,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {
@@ -62,21 +60,21 @@ class PlayState extends FlxState
 		// We'll need a group to place everything in - this helps a lot with collisions
 		_crateStormGroup = new FlxTypedGroup<FlxSprite>();
 		
-		for (i in 0..._numCrates) 
+		for (i in 0..._numCrates)
 		{
 			_crate = new FlxSprite((FlxG.random.float() * 200) + 100, 20);
 			// This loads in a graphic, and 'bakes' some rotations in so we don't waste resources computing real rotations later
-			_crate.loadRotatedGraphic("assets/crate.png", 16, 0); 
+			_crate.loadRotatedGraphic("assets/crate.png", 16, 0);
 			// Make it spin a tad
-			_crate.angularVelocity = FlxG.random.float() * 50 - 150; 
+			_crate.angularVelocity = FlxG.random.float() * 50 - 150;
 			// Gravity
-			_crate.acceleration.y = 300; 
+			_crate.acceleration.y = 300;
 			// Some wind for good measure
-			_crate.acceleration.x = -50; 
+			_crate.acceleration.x = -50;
 			// Don't fall at 235986mph
-			_crate.maxVelocity.y = 500; 
+			_crate.maxVelocity.y = 500;
 			// "      fly  "  "
-			_crate.maxVelocity.x = 200; 
+			_crate.maxVelocity.x = 200;
 			// Let's make them all bounce a little bit differently
 			_crate.elasticity = FlxG.random.float(); 
 			
@@ -157,17 +155,17 @@ class PlayState extends FlxState
 		{
 			_elevator.velocity.y += 10;
 		}
-		if (_elevator.velocity.y == - 300) 
+		if (_elevator.velocity.y == - 300)
 		{
 			_rising = false;
 		}
-		else if (_elevator.velocity.y == 300) 
+		else if (_elevator.velocity.y == 300)
 		{
 			_rising = true;
 		}
 		
 		// Run through the groups, and if a crate is off screen, get it back!
-		for (crate in _crateStormGroup) 
+		for (crate in _crateStormGroup)
 		{
 			if (crate.x < -10)
 			{
@@ -183,7 +181,7 @@ class PlayState extends FlxState
 			}
 		}
 		
-		for (crate in _crateStormGroup2) 
+		for (crate in _crateStormGroup2)
 		{
 			if (crate.x > 400)
 			{
@@ -224,26 +222,26 @@ class PlayState extends FlxState
 	/**
 	 * This calls our friend the Flixel Rider into play
 	 */ 
-	private function onFlixelRider():Void 
+	private function onFlixelRider():Void
 	{
 		if (!_isFlxRiderOn)
 		{
 			// Make the state aware that Flixel Rider is here
-			_isFlxRiderOn = true; 
+			_isFlxRiderOn = true;
 			// Tell the state that the crates are off as of right now
-			_isCrateStormOn = false; 
+			_isCrateStormOn = false;
 			// Turn off the Blue crates
-			_crateStormGroup.visible = _crateStormGroup.exists = false; 
+			_crateStormGroup.visible = _crateStormGroup.exists = false;
 			// Turn off the Red crates
-			_crateStormGroup2.visible = _crateStormGroup2.exists = false; 
+			_crateStormGroup2.visible = _crateStormGroup2.exists = false;
 			// Turn on the Flixel Rider
-			_flixelRider.solid = _flixelRider.visible = _flixelRider.exists = true; 
+			_flixelRider.solid = _flixelRider.visible = _flixelRider.exists = true;
 			// Reset him at the top of the screen(Dont be like me and have him appear under the elevator :P)
-			_flixelRider.y = _flixelRider.velocity.y = 0; 
+			_flixelRider.y = _flixelRider.velocity.y = 0;
 			// Turn off the button for toggling the Blue group
-			_crateStormG1.visible = false; 
+			_crateStormG1.visible = false;
 			// Turn ooff the button for toggling the Red group
-			_crateStormG2.visible = false; 
+			_crateStormG2.visible = false;
 			// Turn off the button for toggling group collision
 			_groupCollision.visible = false;
 			_topText.text = "Flixel Elevator Rider!";
@@ -253,8 +251,8 @@ class PlayState extends FlxState
 	
 	/**
 	 * Enable the CRATE STOOOOOORM!
-	 */ 
-	private function onCrateStorm():Void 
+	 */
+	private function onCrateStorm():Void
 	{
 		_isCrateStormOn = true;
 		_isFlxRiderOn = false;
@@ -284,17 +282,17 @@ class PlayState extends FlxState
 	/**
 	 * Toggle the Blue group
 	 */ 
-	private function onBlue():Void 
+	private function onBlue():Void
 	{
 		_blueGroup = !_blueGroup;
 		_crateStormGroup.visible = _crateStormGroup.exists = !_crateStormGroup.exists;
 		
-		for (crate in _crateStormGroup) 
+		for (crate in _crateStormGroup)
 		{
 			// Run through and make them not collide - I'm not sure if this is neccesary
 			crate.solid = !crate.solid;
 		}
-		if (_blueGroup && _redGroup) 
+		if (_blueGroup && _redGroup)
 		{
 			_groupCollision.visible = true;
 		}
@@ -322,12 +320,12 @@ class PlayState extends FlxState
 		_redGroup = !_redGroup;
 		_crateStormGroup2.visible = _crateStormGroup2.exists = !_crateStormGroup2.exists;
 		
-		for (crate in _crateStormGroup2) 
+		for (crate in _crateStormGroup2)
 		{
 			crate.solid = !crate.solid;
 		}
 		
-		if (_blueGroup && _redGroup) 
+		if (_blueGroup && _redGroup)
 		{
 			_groupCollision.visible = true;
 		}
@@ -351,7 +349,7 @@ class PlayState extends FlxState
 	/**
 	 * Toggle the group collision
 	 */
-	private function onCollideGroups():Void 
+	private function onCollideGroups():Void
 	{
 		_collideGroups = !_collideGroups;
 		

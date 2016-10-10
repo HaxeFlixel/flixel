@@ -1,17 +1,15 @@
 package;
 
 import flixel.util.FlxSpriteUtil;
-import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 
 /**
  * ...
  * @author David Bell
  */
-class Enemy extends EnemyTemplate 
+class Enemy extends EnemyTemplate
 {
 	public static inline var RUN_SPEED:Int = 60;
 	public static inline var GRAVITY:Int = 0;
@@ -22,7 +20,7 @@ class Enemy extends EnemyTemplate
 	private var _gibs:FlxEmitter;
 	private var _spawntimer:Float;
 	
-	public function new(X:Float, Y:Float, ThePlayer:Player, Gibs:FlxEmitter) 
+	public function new(X:Float, Y:Float, ThePlayer:Player, Gibs:FlxEmitter)
 	{
 		super(X, Y, ThePlayer);
 		
@@ -43,7 +41,6 @@ class Enemy extends EnemyTemplate
 		health = HEALTH;
 		
 		_gibs = Gibs;
-		
 	}
 	
 	public override function update(elapsed:Float):Void
@@ -71,12 +68,12 @@ class Enemy extends EnemyTemplate
 		var distancesquared:Float = xdistance * xdistance + ydistance * ydistance; 
 		
 		// that's somewhere around 16 tiles
-		if (distancesquared < 65000) 
+		if (distancesquared < 65000)
 		{
 			if (_player.x < x)
 			{
 				// The sprite is facing the opposite direction than flixel is expecting, so hack it into the right direction
-				facing = FlxObject.RIGHT; 
+				facing = FlxObject.RIGHT;
 				acceleration.x = - drag.x;
 			}
 			else if (_player.x > x)
@@ -85,20 +82,20 @@ class Enemy extends EnemyTemplate
 				acceleration.x = drag.x;
 			}
 			
-			if (_player.y < y) 
+			if (_player.y < y)
 			{ 
-				acceleration.y = - drag.y; 
+				acceleration.y = - drag.y;
 			}
-			else if (_player.y > y) 
+			else if (_player.y > y)
 			{ 
 				acceleration.y = drag.y;
 			}
 		}
 		
 		// Animation
-		if ((velocity.x == 0) && (velocity.y == 0)) 
+		if ((velocity.x == 0) && (velocity.y == 0))
 		{ 
-			animation.play("idle"); 
+			animation.play("idle");
 		}
 		else 
 		{
@@ -119,13 +116,13 @@ class Enemy extends EnemyTemplate
 	override public function hurt(Damage:Float):Void 
 	{
 		// remember, right means facing left
-		if (facing == FlxObject.RIGHT) 
+		if (facing == FlxObject.RIGHT)
 		{
 			// Knock him to the right
-			velocity.x = drag.x * 4; 
+			velocity.x = drag.x * 4;
 		}
 		// Don't really need the if part, but hey.
-		else if (facing == FlxObject.LEFT) 
+		else if (facing == FlxObject.LEFT)
 		{
 			velocity.x = -drag.x * 4;
 		}
@@ -136,11 +133,11 @@ class Enemy extends EnemyTemplate
 		super.hurt(Damage);
 	}
 	
-	override public function kill():Void 
+	override public function kill():Void
 	{
-		if (!alive) 
+		if (!alive)
 		{ 
-			return; 
+			return;
 		}
 		
 		if (_gibs != null)

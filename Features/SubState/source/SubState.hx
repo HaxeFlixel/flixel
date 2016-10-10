@@ -11,7 +11,7 @@ import flixel.FlxSubState;
  */
 class SubState extends FlxSubState
 {
-	// Some test sprite, showing that if the state is persistant (not destroyed after closing) 
+	// Some test sprite, showing that if the state is persistent (not destroyed after closing)
 	// then it will save it's position (and all other properties)
 	private var testSprite:FlxSprite;
 	
@@ -19,8 +19,8 @@ class SubState extends FlxSubState
 	private var switchParentDrawingBtn:FlxButton;
 	private var switchParentUpdatingBtn:FlxButton;
 	
-	// just a helper flag, showing if this substate is persistant or not
-	public var isPersistant:Bool = false;
+	// just a helper flag, showing if this substate is persistent or not
+	public var isPersistent:Bool = false;
 	
 	override public function create():Void 
 	{

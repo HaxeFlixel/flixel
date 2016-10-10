@@ -1,6 +1,3 @@
-import flixel.addons.ui.FlxUIButton;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 /**

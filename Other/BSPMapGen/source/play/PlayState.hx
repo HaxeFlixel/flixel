@@ -3,7 +3,6 @@ package play;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxStringUtil;

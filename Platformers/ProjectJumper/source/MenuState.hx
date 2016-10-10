@@ -19,14 +19,14 @@ class MenuState extends FlxState
 	private var _text2:FlxText;
 	private var _text3:FlxText;
 	private var _text4:FlxText;
-	private var _text5:FlxText;  
+	private var _text5:FlxText;
 	
 	private var _pointer:FlxSprite;
 	
 	// This will indicate what the pointer is pointing at
-	private var _option:Option = PLAY;     
+	private var _option:Option = PLAY;
 	
-	override public function create():Void 
+	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
 		FlxG.state.bgColor = 0xFF101414;
@@ -68,7 +68,7 @@ class MenuState extends FlxState
 		super.create();
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -76,18 +76,18 @@ class MenuState extends FlxState
 		}
 		
 		// Stop the texts when they reach their designated position
-		if (_text1.x > FlxG.width / 5)	
+		if (_text1.x > FlxG.width / 5)
 		{
 			_text1.velocity.x = 0;
 		}
 		
-		if (_text2.x < FlxG.width / 2.5) 
+		if (_text2.x < FlxG.width / 2.5)
 		{
 			_text2.velocity.x = 0;
 		}
 		
 		// this is the goofus way to do it. An array would be way better
-		_pointer.y = switch (_option)    
+		_pointer.y = switch (_option)
 		{
 			case PLAY: _text3.y;
 			case BLOG: _text4.y;

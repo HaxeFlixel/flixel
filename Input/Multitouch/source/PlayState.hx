@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState

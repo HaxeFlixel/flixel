@@ -1,11 +1,6 @@
 package;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.Loader;
-import flash.net.URLLoader;
-import flash.net.URLRequest;
-import flash.events.Event;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;

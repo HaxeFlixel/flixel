@@ -7,18 +7,14 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
-import flixel.math.FlxVector;
 import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 import flixel.util.FlxCollision;
 import flixel.group.FlxGroup;
 import openfl.display.FPS;
-
-using StringTools;	// so we can use String.replace() easily, yay!
 using flixel.util.FlxSpriteUtil;
+using StringTools;
 
 /**
  * @author azrafe7
@@ -71,7 +67,8 @@ class PlayState extends FlxState
 		add(player = new Player());
 		
 		// add objects for more interstellar fun!
-		for (i in 1...NUM_ALIENS) addAlien();
+		for (i in 1...NUM_ALIENS)
+			addAlien();
 		
 		// add in some text so we know what's happening
 		infoText = new FlxText(2, 0, 400, INFO);
@@ -80,7 +77,7 @@ class PlayState extends FlxState
 		add(infoText);
 		
 		// just need this to get the fps, so we display it outside view range
-		FlxG.addChildBelowMouse(fps = new FPS( -100));
+		FlxG.addChildBelowMouse(fps = new FPS(-100));
 		
 		// makes low fps less noticable
 		FlxG.fixedTimestep = false;
@@ -129,7 +126,7 @@ class PlayState extends FlxState
 	 * Here's where the fun happens! \o/.
 	 */
 	override public function update(elapsed:Float):Void
-	{			
+	{
 		super.update(elapsed);
 		
 		handleInput();
@@ -139,7 +136,7 @@ class PlayState extends FlxState
 		player.screenWrap(); // make sure the player can't go offscreen
 	}	
 	
-	function handleInput():Void 
+	function handleInput():Void
 	{
 		// Reset velocity to (0,0)
 		player.velocity.set();

@@ -9,7 +9,7 @@ import flixel.util.FlxSpriteUtil;
  * ...
  * @author David Bell
  */
-class Lurker extends EnemyTemplate 
+class Lurker extends EnemyTemplate
 {
 	public static inline var RUN_SPEED:Int = 30;
 	public static inline var GRAVITY:Int = 300;
@@ -23,10 +23,10 @@ class Lurker extends EnemyTemplate
 	private var _spawntimer:Float;
 	private var _burntimer:Float;
 	private var _playdeathsound:Bool;
-	private var _bullets:FlxGroup;
+	private var _bullets:FlxTypedGroup<Bullet>;
 	private var _cooldown:Float;
 	
-	public function new(X:Float, Y:Float, ThePlayer:Player, Bullets:FlxGroup) 
+	public function new(X:Float, Y:Float, ThePlayer:Player, Bullets:FlxTypedGroup<Bullet>)
 	{
 		super(X, Y, ThePlayer);
 		
@@ -52,7 +52,7 @@ class Lurker extends EnemyTemplate
 		width = 10;
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		if (touching == FlxObject.DOWN)
 		{
@@ -64,13 +64,13 @@ class Lurker extends EnemyTemplate
 		}
 		
 		// Animation
-		if ((velocity.x == 0) && (velocity.y == 0)) 
+		if ((velocity.x == 0) && (velocity.y == 0))
 		{ 
-			animation.play("idle"); 
+			animation.play("idle");
 		}
-		else if (health < HEALTH) 
+		else if (health < HEALTH)
 		{ 
-			if (velocity.y == 0) 
+			if (velocity.y == 0)
 			{ 
 				animation.play("wrecked");
 			}
@@ -86,7 +86,7 @@ class Lurker extends EnemyTemplate
 		
 		if (health > 0)
 		{
-			if (velocity.y == 0) 
+			if (velocity.y == 0)
 			{
 				acceleration.y = -acceleration.y;
 			}
@@ -125,7 +125,7 @@ class Lurker extends EnemyTemplate
 			
 			if (_spawntimer >= SPAWNTIME)
 			{
-				reset(_startx,_starty);
+				reset(_startx, _starty);
 			}
 		}
 		
@@ -169,8 +169,7 @@ class Lurker extends EnemyTemplate
 		
 		if (_cooldown > GUN_DELAY)
 		{
-			var bullet:Dynamic = _bullets.getFirstAvailable();
-			
+			var bullet = _bullets.getFirstAvailable();
 			if (bullet == null)
 			{
 				bullet = new Bullet();
@@ -179,7 +178,7 @@ class Lurker extends EnemyTemplate
 			
 			if (P.x < x)
 			{
-				 // nudge it a little to the side so it doesn't emerge from the middle of helmutguy
+				// nudge it a little to the side so it doesn't emerge from the middle of helmutguy
 				bulletX -= Math.floor(bullet.width - 8);
 			}
 			else
@@ -190,15 +189,15 @@ class Lurker extends EnemyTemplate
 			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, FlxPoint.get(P.x, P.y));
 			FlxG.sound.play("assets/sounds/badshoot" + Reg.SoundExtension, 1, false);
 			// reset the shot clock
-			_cooldown = 0; 
+			_cooldown = 0;
 		}
 	}
 	
 	override public function kill():Void 
 	{
-		if (!alive) 
+		if (!alive)
 		{ 
-			return; 
+			return;
 		}
 		
 		exists = true;

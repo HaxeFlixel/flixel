@@ -11,7 +11,7 @@ import flixel.util.FlxColor;
 /**
  * The class declaration for the main game state
  */
-class PlayState extends FlxState		
+class PlayState extends FlxState
 {
 	/**
 	 * The satus message to show. Static so that it carries over to a new PlayState.
@@ -66,15 +66,15 @@ class PlayState extends FlxState
 		var sprite:FlxSprite;
 		
 		// Create 8 bullets for the player to recycle
-		for (i in 0...numPlayerBullets)			
+		for (i in 0...numPlayerBullets)
 		{
 			// Instantiate a new sprite offscreen
-			sprite = new FlxSprite( -100, -100);	
+			sprite = new FlxSprite( -100, -100);
 			// Create a 2x8 white box
-			sprite.makeGraphic(2, 8);			
+			sprite.makeGraphic(2, 8);
 			sprite.exists = false;
 			// Add it to the group of player bullets
-			playerBullets.add(sprite);			
+			playerBullets.add(sprite);
 		}
 		
 		add(playerBullets);
@@ -87,7 +87,7 @@ class PlayState extends FlxState
 		// Now that we have a list of bullets, we can initialize the player (and give them the bullets)
 		_player = new PlayerShip();
 		// Adds the player to the state
-		add(_player);	
+		add(_player);
 		
 		// Then we kind of do the same thing for the enemy invaders; first we make their bullets.
 		var numAlienBullets:Int = 32;
@@ -175,13 +175,13 @@ class PlayState extends FlxState
 		if (!_player.exists)
 		{
 			// Player died, so set our label to YOU LOST
-			statusMessage = "YOU LOST";	
+			statusMessage = "YOU LOST";
 			FlxG.resetState();
 		}
 		else if (_aliens.getFirstExisting() == null)
 		{
 			// No aliens left; you win!
-			statusMessage = "YOU WON";		
+			statusMessage = "YOU WON";
 			FlxG.resetState();
 		}
 	}

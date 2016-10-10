@@ -6,7 +6,6 @@ import flixel.addons.nape.FlxNapeSpace;
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.text.FlxText;

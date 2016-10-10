@@ -1,12 +1,14 @@
 package;
 
-import flash.system.System;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
+#if desktop
+import flash.system.System;
+#end
 
 class MenuState extends FlxState
 {

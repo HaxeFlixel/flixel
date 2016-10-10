@@ -5,14 +5,9 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.group.FlxGroup;
-import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -66,11 +61,11 @@ class PlayState extends FlxState
 		updateSeekers();
 	}
 	
-	private function updateSeekers():Void 
+	private function updateSeekers():Void
 	{
 		FlxG.collide(tilemap, seekers);
 		
-		for (seeker in seekers) 
+		for (seeker in seekers)
 		{
 			if (!seeker.moving)
 			{
@@ -81,9 +76,9 @@ class PlayState extends FlxState
 				var bestY:Int = 0;
 				var bestDist:Float = Math.POSITIVE_INFINITY;
 				var neighbors:Array<Array<Float>> = [[999, 999, 999], [999, 999, 999], [999, 999, 999]];
-				for (yy in -1...2) 
+				for (yy in -1...2)
 				{
-					for (xx in -1...2) 
+					for (xx in -1...2)
 					{
 						var theX:Int = tx + xx;
 						var theY:Int = ty + yy;
@@ -119,7 +114,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function placeSeeker():Void 
+	private function placeSeeker():Void
 	{
 		var x:Float = FlxG.mouse.x - (FlxG.mouse.x % 16);
 		var y:Float = FlxG.mouse.y - (FlxG.mouse.y % 16);
@@ -128,7 +123,7 @@ class PlayState extends FlxState
 		seeker.reset(x, y);
 	}
 	
-	private function placeMcguffin(X:Float, Y:Float):Void 
+	private function placeMcguffin(X:Float, Y:Float):Void
 	{
 		mcguffin.x = Std.int(X / 16);
 		mcguffin.y = Std.int(Y / 16);
@@ -139,7 +134,7 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function updateDistance():Void 
+	private function updateDistance():Void
 	{
 		var startX:Int = Std.int((mcguffin.y * tilemap.widthInTiles) + mcguffin.x);
 		var endX:Int = 0;
@@ -172,7 +167,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function clickTile(value:Int):Void 
+	private function clickTile(value:Int):Void
 	{
 		var tx:Int = Std.int(FlxG.mouse.x / 16);
 		var ty:Int = Std.int(FlxG.mouse.y / 16);
@@ -184,7 +179,7 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function makeTiles():Void 
+	private function makeTiles():Void
 	{
 		tilemap = new FlxTilemap();
 		distmap = new FlxTilemap();

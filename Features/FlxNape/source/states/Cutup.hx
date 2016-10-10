@@ -7,16 +7,12 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxAngle;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRandom;
 import nape.geom.GeomPoly;
 import nape.geom.GeomPolyList;
 import nape.geom.Ray;
@@ -26,7 +22,6 @@ import nape.phys.Body;
 import nape.phys.BodyType;
 import nape.phys.Material;
 import nape.shape.Polygon;
-import openfl.display.FPS;
 
 /**
  * ...

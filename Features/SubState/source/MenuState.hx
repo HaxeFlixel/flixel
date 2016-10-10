@@ -1,18 +1,15 @@
 package;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 
 class MenuState extends FlxState
 {
-	// Link to the persistant substate (which will exist after closing)
-	private var persistantSubState:SubState;
+	// Link to the persistent substate (which will exist after closing)
+	private var persistentSubState:SubState;
 	
-	private var openPersistantBtn:FlxButton;
+	private var openpersistentBtn:FlxButton;
 	private var openTempBtn:FlxButton;
 	private var sprites:MySpriteGroup;
 	
@@ -30,12 +27,12 @@ class MenuState extends FlxState
 		
 		subStateColor = 0x99808080;
 		
-		// We can create persistant substate and use it as many times as we want
-		persistantSubState = new SubState(subStateColor);
-		persistantSubState.isPersistant = true;
+		// We can create persistent substate and use it as many times as we want
+		persistentSubState = new SubState(subStateColor);
+		persistentSubState.isPersistent = true;
 	
-		openPersistantBtn = new FlxButton(20, 20, "OpenPersistant", onPersistantClick);
-		add(openPersistantBtn);
+		openpersistentBtn = new FlxButton(20, 20, "OpenPersistent", onpersistentClick);
+		add(openpersistentBtn);
 		
 		openTempBtn = new FlxButton(20, 60, "OpenTemp", onTempClick);
 		add(openTempBtn);
@@ -45,14 +42,13 @@ class MenuState extends FlxState
 	{
 		// This is temp substate, it will be destroyed after closing
 		var tempState:SubState = new SubState(subStateColor);
-		tempState.isPersistant = false;
+		tempState.isPersistent = false;
 		openSubState(tempState);
 	}
 	
-	private function onPersistantClick():Void
+	private function onpersistentClick():Void
 	{
-		//FlxG.play("Beep");
-		openSubState(persistantSubState);
+		openSubState(persistentSubState);
 	}
 	
 	override public function destroy():Void
@@ -61,17 +57,17 @@ class MenuState extends FlxState
 		
 		sprites = null;
 		
-		// don't forget to destroy persistant substate
-		persistantSubState.destroy();
-		persistantSubState = null;
+		// don't forget to destroy persistent substate
+		persistentSubState.destroy();
+		persistentSubState = null;
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		// We need to deactivate these buttons if there is _substate and this state is keeps updating
-		//openPersistantBtn.active = (_subState == null);
+		//openpersistentBtn.active = (_subState == null);
 		//openTempBtn.active = (_subState == null);
 		
 		super.update(elapsed);
-	}	
+	}
 }

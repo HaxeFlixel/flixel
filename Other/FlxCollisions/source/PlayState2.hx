@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-import flixel.math.FlxRandom;
 
 class PlayState2 extends FlxState
 {	

@@ -4,31 +4,27 @@ import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
-import openfl.display.FPS;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
  * @link https://github.com/ProG4mr
  */
 class Pyramid extends BaseState
-{	
+{
 	private var shooter:Shooter;
 	private static var levels = 10;
 	var bricks:Array<FlxNapeSprite>;
 	
 	override public function create():Void 
-	{	
+	{
 		super.create();
 		FlxNapeSpace.init();
 		
 		add(new FlxSprite(0, 0, "assets/pyramid/bg.jpg"));
 	
 		shooter = new Shooter();
-		add(shooter);	
+		add(shooter);
 		
 		FlxNapeSpace.createWalls( -2000, -2000, 1640, 480);
 		createBricks();
@@ -73,7 +69,7 @@ class Pyramid extends BaseState
 	}
 
 	override public function update(elapsed:Float):Void 
-	{	
+	{
 		super.update(elapsed);
 		
 		if (FlxG.mouse.justPressed && FlxNapeSpace.space.gravity.y == 0)

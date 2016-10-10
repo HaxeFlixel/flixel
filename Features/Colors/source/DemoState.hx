@@ -10,8 +10,6 @@ import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
-import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

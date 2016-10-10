@@ -1,5 +1,4 @@
 import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 using flixel.util.FlxStringUtil;

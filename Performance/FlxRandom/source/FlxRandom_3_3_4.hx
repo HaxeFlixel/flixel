@@ -1,9 +1,6 @@
 package;
 
-import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.util.FlxColor;
-import flixel.system.frontEnds.VCRFrontEnd;
 
 /**
  * A class containing a set of functions for random generation.

@@ -1,14 +1,11 @@
 package;
 
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -106,7 +103,7 @@ class PlayState extends FlxState
 	 * We override the update funtion to update the player position, do collision checks and check input to move
 	 * the player around each frame.
 	 */
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		// Checks collision with player and the map
 		FlxG.collide(_player, _map);
@@ -116,7 +113,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_player, _exit, onOverlap);
 		
 		// If the player is on the floor and not walking and the last animation has not finished then be idle
-		if (_player.isTouching(FlxObject.FLOOR)) 
+		if (_player.isTouching(FlxObject.FLOOR))
 		{
 			if (!_flagWalking)
 			{
@@ -135,7 +132,7 @@ class PlayState extends FlxState
 			_player.flipX = true;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
-			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 
+			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL))
 			{
 				_flagWalking = true;
 				_player.animation.play("walk");
@@ -148,7 +145,7 @@ class PlayState extends FlxState
 			_player.flipX = false;
 			
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
-			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL)) 
+			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL))
 			{
 				_flagWalking = true;
 				_player.animation.play("walk");
@@ -172,7 +169,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void 
+	private function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void
 	{
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}

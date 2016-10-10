@@ -9,7 +9,6 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import openfl.Assets;
 
 /**
  * ...

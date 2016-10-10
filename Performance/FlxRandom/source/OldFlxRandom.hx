@@ -1,7 +1,6 @@
 package;
 
 import flixel.math.FlxMath;
-import flixel.util.FlxArrayUtil;
 
 /**
  * This is the old, bad FlxG.random. Boo! Sporadic determinism! Boo!

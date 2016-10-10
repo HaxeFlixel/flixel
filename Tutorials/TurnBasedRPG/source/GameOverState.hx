@@ -8,7 +8,6 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSave;
-using flixel.util.FlxSpriteUtil;
 
 class GameOverState extends FlxState
 {

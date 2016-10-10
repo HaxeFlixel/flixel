@@ -1,18 +1,6 @@
-import flash.text.Font;
-import flixel.addons.ui.FlxUI.NamedBool;
-import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUIPopup;
-import flixel.addons.ui.FlxUIText;
-import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.addons.ui.U;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIRadioGroup;
-import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxInputText;
-import flixel.text.FlxText;
-import firetongue.FireTongue;
-import openfl.Assets;
 
 /**
  * @author Lars Doucet
@@ -22,7 +10,6 @@ class State_Title extends FlxUIState
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		FlxG.log.redirectTraces = false; 
 		
 		if (Main.tongue == null)
 		{
@@ -38,8 +25,6 @@ class State_Title extends FlxUIState
 	
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		var str:String = "";
-		
 		switch (name)
 		{
 			case "finish_load":

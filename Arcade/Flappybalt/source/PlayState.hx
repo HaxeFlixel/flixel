@@ -5,10 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSave;
 
 class PlayState extends FlxState

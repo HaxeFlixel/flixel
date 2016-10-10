@@ -7,14 +7,8 @@ import flixel.addons.ui.FlxUIRadioGroup;
 import flixel.addons.ui.FlxUISprite;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIText;
-import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.text.FlxText;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
-import flixel.addons.ui.FlxInputText;
-import openfl.Assets;
 /**
  * @author Lars Doucet
  */

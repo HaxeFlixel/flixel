@@ -44,7 +44,6 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		background.alpha = 1;
 		FlxG.state.insert(0, background);
 		FlxMouseEventManager.add(background, launchProjectile);
-		var color = 0x333333;
 		
 		for (i in 0...maxSize)
 		{
@@ -76,7 +75,6 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			return;
 		
 		var spr = recycle(FlxNapeSprite);
-		var trail = new Trail(spr);
 		
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);

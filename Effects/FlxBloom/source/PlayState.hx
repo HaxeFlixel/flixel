@@ -8,7 +8,6 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 
 class PlayState extends FlxState
 {

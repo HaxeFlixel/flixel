@@ -3,21 +3,13 @@ import flixel.addons.ui.BorderDef;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUISprite;
 import flixel.addons.ui.FlxUIText;
-import flixel.addons.ui.FlxUITooltip;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.FontDef;
-import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
-import openfl.Assets;
 import openfl.text.TextFormat;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import openfl.text.TextFormatAlign;
@@ -27,11 +19,6 @@ import openfl.text.TextFormatAlign;
 
 class State_DemoCode extends FlxUIState
 {
-	public function new()
-	{
-		super();
-	}
-	
 	override public function create() 
 	{
 		super.create();
@@ -67,11 +54,9 @@ class State_DemoCode extends FlxUIState
 		_ui.addAsset(cast new FlxUISprite().makeGraphic(FlxG.width, FlxG.height, 0xFF404040), "bkg");
 		
 		var border  = new BorderDef(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);
-		var sans8   = makeFontDef("vera", 8);
 		var sans10  = makeFontDef("vera", 10);
 		var sans10c = makeFontDef("vera", 10, TextFormatAlign.CENTER);
 		var sans12  = makeFontDef("vera", 12);
-		var sans16  = makeFontDef("vera", 16);
 		var sans16c = makeFontDef("vera", 16, TextFormatAlign.CENTER);
 		
 		var t = null;

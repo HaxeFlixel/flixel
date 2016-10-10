@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 /**
  * Class declaration for the player's little ship
  */
-class PlayerShip extends FlxSprite		
+class PlayerShip extends FlxSprite
 {
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
@@ -26,17 +26,17 @@ class PlayerShip extends FlxSprite
 		// Controls!
 		
 		// Default velocity to zero
-		velocity.x = 0;	
+		velocity.x = 0;
 		
 		// If the player is pressing left, set velocity to left 100
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			velocity.x -= 100;		
+			velocity.x -= 100;
 		}
 		// If the player is pressing right, then right 100
 		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			velocity.x += 100;		
+			velocity.x += 100;
 		}
 		
 		// Just like in PlayState, this is easy to forget but very important!
@@ -49,13 +49,13 @@ class PlayerShip extends FlxSprite
 		// Checking and setting the right side boundary
 		if (x > FlxG.width - width - 4)
 		{
-			x = FlxG.width - width - 4; 
+			x = FlxG.width - width - 4;
 		}
 		
 		// Checking and setting the left side boundary
 		if (x < 4)
 		{
-			x = 4;					
+			x = 4;
 		}
 		
 		// Finally, we gotta shoot some bullets amirite? First we check to see if the

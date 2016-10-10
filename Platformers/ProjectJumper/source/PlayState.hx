@@ -8,7 +8,6 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class PlayState extends FlxState
@@ -21,7 +20,7 @@ class PlayState extends FlxState
 	private var _gibs:FlxEmitter;
 	private var _mongibs:FlxEmitter;
 	private var _bullets:FlxGroup;
-	private var _badbullets:FlxGroup;
+	private var _badbullets:FlxTypedGroup<Bullet>;
 	private var _restart:Bool;
 	private var _text1:FlxText;
 	private var _enemies:FlxGroup;
@@ -48,19 +47,19 @@ class PlayState extends FlxState
 		
 		// Set up the gibs
 		_gibs = new FlxEmitter();
-		_gibs.velocity.set( -150, -200, 150, 0);
+		_gibs.velocity.set(-150, -200, 150, 0);
 		_gibs.angularVelocity.set( -720, 720);
 		_gibs.loadParticles("assets/art/lizgibs.png", 25, 16, true);
 		
 		_mongibs = new FlxEmitter();
-		_mongibs.velocity.set( -150, -200, 150, 0);
+		_mongibs.velocity.set(-150, -200, 150, 0);
 		_mongibs.angularVelocity.set( -720, 720);
 		_mongibs.loadParticles("assets/art/spikegibs.png", 25, 16, true);
 		
 		// Create the actual group of bullets here
 		_bullets = new FlxGroup();
 		_bullets.maxSize = 4;
-		_badbullets = new FlxGroup();
+		_badbullets = new FlxTypedGroup<Bullet>();
 		
 		add(player = new Player(112, 92, this, _gibs, _bullets));
 		
@@ -84,7 +83,7 @@ class PlayState extends FlxState
 		
 		// Set up the individual bullets
 		// Allow 4 bullets at a time
-		for (i in 0...4)    
+		for (i in 0...4)
 		{
 			_bullets.add(new Bullet());
 		}
@@ -107,7 +106,7 @@ class PlayState extends FlxState
 		_text1.antialiasing = true;
 		_text1.scrollFactor.set(0, 0);
 		// Add last so it goes on top, you know the drill.
-		add(_text1); 
+		add(_text1);
 		
 		#if flash
 		FlxG.sound.playMusic("assets/music/ScrollingSpace.mp3", 0.5);
@@ -143,7 +142,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player, _coins, collectCoin);
 		FlxG.overlap(player, _badbullets, hitPlayer);
 		
-		if (_restart) 
+		if (_restart)
 		{
 			FlxG.switchState(new PlayState());
 		}
@@ -164,17 +163,17 @@ class PlayState extends FlxState
 		if (Monster.health > 0)
 		{
 			// This should still be more interesting
-			P.hurt(1); 
+			P.hurt(1);
 		}
 	}
 	
 	private function hitmonster(Blt:FlxObject, Monster:FlxObject):Void 
 	{
 		if (!Monster.alive) 
-		{ 
+		{
 			// Just in case
-			return; 
-		}  
+			return;
+		}
 		
 		if (Monster.health > 0) 
 		{
@@ -187,19 +186,19 @@ class PlayState extends FlxState
 	{
 		var coords:Array<String>;
 		// Each line becomes an entry in the array of strings
-		var entities:Array<String> = MonsterData.split("\n");   
+		var entities:Array<String> = MonsterData.split("\n");
 		
 		for (j in 0...entities.length)
 		{
 			// Split each line into two coordinates
-			coords = entities[j].split(","); 
+			coords = entities[j].split(",");
 			
 			if (Monster == Enemy)
 			{
-				_enemies.add(new Enemy(Std.parseInt(coords[0]), Std.parseInt(coords[1]), player, _mongibs)); 
+				_enemies.add(new Enemy(Std.parseInt(coords[0]), Std.parseInt(coords[1]), player, _mongibs));
 			}
 			else if (Monster == Lurker)
-			{ 
+			{
 				_enemies.add(new Lurker(Std.parseInt(coords[0]), Std.parseInt(coords[1]), player, _badbullets));
 			}
 		}
@@ -209,16 +208,16 @@ class PlayState extends FlxState
 	{
 		var coords:Array<String>;
 		// Each line becomes an entry in the array of strings
-		var entities:Array<String> = CoinData.split("\n");   
+		var entities:Array<String> = CoinData.split("\n");
 		
-		for (j in 0...entities.length) 
+		for (j in 0...entities.length)
 		{
 			//Split each line into two coordinates
-			coords = entities[j].split(",");  
+			coords = entities[j].split(",");
 			
 			if (Sparkle == Coin)
 			{
-				_coins.add(new Coin(Std.parseInt(coords[0]), Std.parseInt(coords[1]))); 
+				_coins.add(new Coin(Std.parseInt(coords[0]), Std.parseInt(coords[1])));
 			}
 		}
 	}

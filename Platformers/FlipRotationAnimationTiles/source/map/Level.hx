@@ -49,14 +49,14 @@ class Level extends TiledMap
 		
 		var tileset:TiledTileSet;
 		var tilemap:FlxTilemapExt;
-		var layer:TiledLayer;
 		
 		// Prepare the tile animations
 		var animations = TileAnims.getAnimations(animFile);
 		
 		for (tiledLayer in layers)
 		{
-			if (tiledLayer.type != TiledLayerType.TILE) continue;
+			if (tiledLayer.type != TiledLayerType.TILE)
+				continue;
 			var layer:TiledTileLayer = cast tiledLayer;
 			
 			if (layer.properties.contains("tileset"))
@@ -127,7 +127,8 @@ class Level extends TiledMap
 	{
 		for (layer in layers)
 		{
-			if (layer.type != TiledLayerType.OBJECT) continue;
+			if (layer.type != TiledLayerType.OBJECT)
+				continue;
 			var group:TiledObjectLayer = cast layer;
 			
 			for (obj in group.objects)
@@ -185,6 +186,6 @@ class Level extends TiledMap
 	
 	private inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool
 	{
-		return (tile.isFlipHorizontally || tile.isFlipVertically || tile.rotate != FlxTileSpecial.ROTATE_0 || animations.exists(tile.tilesetID));
+		return tile.isFlipHorizontally || tile.isFlipVertically || tile.rotate != FlxTileSpecial.ROTATE_0 || animations.exists(tile.tilesetID);
 	}
 }

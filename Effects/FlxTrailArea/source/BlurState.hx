@@ -6,7 +6,6 @@ import flixel.effects.particles.FlxParticle;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-import flixel.math.FlxRandom;
 
 /**
  * The state showing a remake of the FlxBlur demo

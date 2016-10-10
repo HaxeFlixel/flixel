@@ -2,9 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
-import flixel.util.FlxPool;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -15,7 +13,7 @@ class PlayerShip extends FlxSprite
 {
 	private var _thrust:Float = 0;
 	
-	public function new() 
+	public function new()
 	{
 		super(Math.floor(FlxG.width / 2 - 8), Math.floor(FlxG.height / 2 - 8));
 		
@@ -30,7 +28,7 @@ class PlayerShip extends FlxSprite
 		centerOffsets();
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		angularVelocity = 0;
 		

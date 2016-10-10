@@ -3,7 +3,6 @@ package;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.text.TextFieldType;
-import flash.utils.ByteArray;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -20,7 +19,7 @@ using StringTools;
  * The content of the .privatekey file should be just your private key.
  * To see how this file is read and used, look at the bottom of the create() function below.
  */
-@:file("assets/example.privatekey") class MyPrivateKey extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {} 
+@:file("assets/example.privatekey") class MyPrivateKey extends ByteArrayData {}
 
 class MenuState extends FlxState
 {

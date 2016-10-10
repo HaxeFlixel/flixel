@@ -1,7 +1,6 @@
 package;
 
 import flash.display.BlendMode;
-import openfl.Assets;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
@@ -37,14 +36,14 @@ class MenuState extends FlxState
 		_map.loadMapFromCSV("tilemaps/menu_tilemap.csv", Reg.tileImage);
 		
 		// Game title
-		var headline:FlxText = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
+		var headline = new FlxText(0, 40, FlxG.width, "Minimalist TD", 16);
 		headline.alignment = CENTER;
 		
 		// Credits
-		var credits:FlxText = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26 by Gama11");
+		var credits = new FlxText(2, FlxG.height - 12, FlxG.width, "Made in 48h for Ludum Dare 26 by Gama11");
 		
 		// Play button
-		var playButton:Button = new Button(0, 0, "[P]lay", startGame);
+		var playButton = new Button(0, 0, "[P]lay", startGame);
 		playButton.screenCenter();
 		
 		// The enemy that repeatedly traverses the screen.

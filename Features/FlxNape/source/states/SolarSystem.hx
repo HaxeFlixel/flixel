@@ -1,18 +1,11 @@
 package states;
+
 import flixel.addons.nape.FlxNapeSprite;
 import flixel.addons.nape.FlxNapeSpace;
-import nape.callbacks.CbEvent;
-import nape.callbacks.CbType;
-import nape.callbacks.InteractionCallback;
-import nape.callbacks.InteractionListener;
-import nape.callbacks.InteractionType;
 import nape.geom.Vec2;
 import nape.phys.BodyType;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
-import flixel.math.FlxMath;
-import flixel.math.FlxAngle;
-import flixel.FlxState;
 
 /**
  * @author TiagoLr ( ~~~ProG4mr~~~ )
@@ -95,7 +88,6 @@ class SolarSystem extends BaseState
 			
 		for (planet in planets)
 		{
-			var angle = planet.getPosition().angleBetween(FlxPoint.get(halfWidth, halfHeight)) - 90;
 			var distance = planet.getPosition().distanceTo(FlxPoint.get(halfWidth, halfHeight));
 			
 			var impulse = gravity * planet.body.mass / (distance * distance);

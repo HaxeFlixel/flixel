@@ -1,8 +1,6 @@
 package;
 
 import flash.display.Sprite;
-import flash.geom.ColorTransform;
-import openfl.Assets;
 import flash.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -120,7 +118,7 @@ class PlayState extends FlxState
 		
 		// Set up bottom default GUI
 		
-		var guiUnderlay:FlxSprite = new FlxSprite(0, FlxG.height - 16);
+		var guiUnderlay = new FlxSprite(0, FlxG.height - 16);
 		guiUnderlay.makeGraphic(FlxG.width, 16, FlxColor.WHITE);
 		
 		_guiGroup = new FlxGroup();
@@ -250,7 +248,7 @@ class PlayState extends FlxState
 		add(_upgradeMenu);
 		add(_sellMenu);
 		add(_sellConfirm);
-		add(_topGui);	
+		add(_topGui);
 		add(_centerText);
 		
 		// Call this to set up for first wave

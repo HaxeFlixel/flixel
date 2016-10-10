@@ -5,9 +5,10 @@ import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.math.FlxMath;
-import flixel.math.FlxRandom;
 import nape.geom.Vec2;
+#if mobile
+import flixel.math.FlxMath;
+#end
 
 class PlayState extends FlxState
 {
@@ -24,7 +25,7 @@ class PlayState extends FlxState
 		FlxNapeSpace.createWalls();
 		FlxNapeSpace.space.gravity = Vec2.get(0, GRAVITY_FACTOR);
 		
-		for (i in 0...50) 
+		for (i in 0...50)
 		{
 			var box = new Box(FlxG.random.int(0, FlxG.width - 30), FlxG.random.int(0, FlxG.height - 30));
 			box.body.space = FlxNapeSpace.space;
@@ -53,7 +54,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		#if mobile
-		if (FlxG.accelerometer.isSupported) 
+		if (FlxG.accelerometer.isSupported)
 		{
 			//Display the accelerometer values rounded to the first decimal number
 			xText.text = "x: " + FlxMath.roundDecimal(FlxG.accelerometer.x, 1);
@@ -67,9 +68,9 @@ class PlayState extends FlxState
 	}	
 }
 
-class Box extends FlxNapeSprite 
+class Box extends FlxNapeSprite
 {
-	public function new(X:Float, Y:Float) 
+	public function new(X:Float, Y:Float)
 	{
 		super(X, Y);
 		makeGraphic(30, 30, FlxG.random.color());

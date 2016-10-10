@@ -2,9 +2,6 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.math.FlxVelocity;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 
 class Tower extends FlxSprite

@@ -1,6 +1,5 @@
 package;
 
-import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 
 /**

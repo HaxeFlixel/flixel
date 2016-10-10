@@ -21,15 +21,15 @@ class PlayState extends FlxState
 		FlxG.camera.bgColor = FlxColor.WHITE;
 		
 		var letters:String = " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\";
-		var fontXNA:FlxBitmapFont = FlxBitmapFont.fromXNA("assets/fontData10pt.png", letters);
+		var fontXNA = FlxBitmapFont.fromXNA("assets/fontData10pt.png", letters);
 		
 		var textBytes = Assets.getText("assets/NavTitle.fnt");
 		var XMLData = Xml.parse(textBytes);
-		var fontAngelCode:FlxBitmapFont = FlxBitmapFont.fromAngelCode("assets/NavTitle.png", XMLData);
+		var fontAngelCode = FlxBitmapFont.fromAngelCode("assets/NavTitle.png", XMLData);
 		
 		var monospaceLetters:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!().,";
-		var charSize:FlxPoint = FlxPoint.get(48, 50);
-		var fontMonospace:FlxBitmapFont = FlxBitmapFont.fromMonospace("assets/260.png", monospaceLetters, charSize);
+		var charSize = FlxPoint.get(48, 50);
+		var fontMonospace = FlxBitmapFont.fromMonospace("assets/260.png", monospaceLetters, charSize);
 		
 		tf = new FlxBitmapText(fontXNA);
 		tf.text = "Hello World!\nand this is\nmultiline!!!";
@@ -60,7 +60,7 @@ class PlayState extends FlxState
 		tf2.wordWrap = false;
 		add(tf2);
 		
-		var tf3:FlxBitmapText = new FlxBitmapText(fontMonospace);
+		var tf3 = new FlxBitmapText(fontMonospace);
 		tf3.y = 300;
 		tf3.autoUpperCase = true;
 		tf3.text = "Robocop rules!!!";
@@ -70,7 +70,6 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		tf.text = "mouseX = " + Math.floor(FlxG.mouse.x) + "\n" + "mouseY = " + Math.floor(FlxG.mouse.y);
-		
-		super.update(elapsed);	
+		super.update(elapsed);
 	}	
 }

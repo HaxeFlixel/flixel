@@ -22,7 +22,7 @@ class Seeker extends FlxSprite
 		setPosition(2, 2);
 	}
 	
-	public function moveTo(X:Float, Y:Float, Speed:Float):Void 
+	public function moveTo(X:Float, Y:Float, Speed:Float):Void
 	{
 		moving = true;
 		dest.set(X, Y);
@@ -36,14 +36,14 @@ class Seeker extends FlxSprite
 		velocity.y = (vec.y) * Speed;
 	}
 	
-	private function finishMoveTo():Void 
+	private function finishMoveTo():Void
 	{
 		setPosition(dest.x, dest.y);
 		velocity.set();
 		moving = false;
 	}
 	
-	public override function update(elapsed:Float):Void 
+	public override function update(elapsed:Float):Void
 	{
 		var oldx:Float = vec.x;
 		var oldy:Float = vec.y;
@@ -55,7 +55,7 @@ class Seeker extends FlxSprite
 			finishMoveTo();
 	}
 	
-	private function signOf(f:Float):Int 
+	private function signOf(f:Float):Int
 	{
 		if (f < 0)
 			return -1;

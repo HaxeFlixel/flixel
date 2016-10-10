@@ -1,7 +1,6 @@
 package;
 
 import flixel.input.keyboard.FlxKey;
-import openfl.Assets;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.group.FlxGroup;

@@ -5,7 +5,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.math.FlxRandom;
 import nape.constraint.DistanceJoint;
 import nape.geom.Vec2;
 import flixel.input.mouse.FlxMouseEventManager;
@@ -21,7 +20,7 @@ class PlayState extends FlxState
 	private var _cardGroup:FlxTypedGroup<Card>;
 	private var _fan:FlxSprite;
 	
-	override public function create():Void 
+	override public function create():Void
 	{
 		FlxNapeSpace.init();
 		
@@ -46,7 +45,7 @@ class PlayState extends FlxState
 		add(_fan);
 	}
 	
-	private function createCards() 
+	private function createCards()
 	{
 		// Creating the 10 cards in the middle
 		for (i in 0...10)
@@ -72,7 +71,7 @@ class PlayState extends FlxState
 		_fan = null;
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		

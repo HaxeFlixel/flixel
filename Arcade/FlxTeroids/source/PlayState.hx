@@ -26,7 +26,7 @@ class PlayState extends FlxState
 	
 	private var _score:Int = 0;
 	
-	override public function create():Void 
+	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
 		
@@ -79,12 +79,12 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		
-		_playerShip = null; 
+		_playerShip = null;
 		bullets = null;
 		asteroids = null;
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function update(elapsed:Float):Void
 	{
 		// Escape to the menu
 		if (FlxG.keys.pressed.ESCAPE)

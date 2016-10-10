@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -9,7 +8,7 @@ import flixel.util.FlxAxes;
 
 class InstructionState extends FlxSubState
 {
-	override public function create():Void 
+	override public function create():Void
 	{
 		bgColor = 0xAA000000;
 		
@@ -17,7 +16,7 @@ class InstructionState extends FlxSubState
 		t.alignment = CENTER;
 		add(t);
 		
-		var t2 = new FlxText(0, 170, FlxG.width, 
+		var t2 = new FlxText(0, 170, FlxG.width,
 			"Left Click: Place Wall\nRight Click: Erase Wall\nMiddle Click: Move McGuffin\nSpace: Add Seeker", 16);
 		t2.alignment = CENTER;
 		add(t2);

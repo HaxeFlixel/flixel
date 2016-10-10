@@ -13,7 +13,7 @@ import flixel.util.FlxStringUtil;
 class PlayState extends FlxState
 {
 	override public function create():Void
-	{			
+	{
 		FlxG.mouse.visible = false;
 		
 		// Background
@@ -25,7 +25,6 @@ class PlayState extends FlxState
 		add(new FlxText(32, 36, 96, "collision").setFormat(null, 16, 0x778ea1, CENTER));
 		add(new FlxText(32, 60, 96, "DEMO").setFormat(null, 24, 0x778ea1, CENTER));
 		
-		var path:FlxPath;
 		var sprite:FlxSprite;
 		var destination:FlxPoint;
 		

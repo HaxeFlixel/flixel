@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.math.FlxRandom;
 import flixel.util.FlxSpriteUtil;
 
 /**
@@ -12,14 +11,14 @@ import flixel.util.FlxSpriteUtil;
  */
 class Asteroid extends FlxSprite
 {
-	public function new() 
+	public function new()
 	{
 		super();
 		
 		// Bouncy!
-		elasticity = 1; 
+		elasticity = 1;
 		// Smooth rotations
-		antialiasing = true; 
+		antialiasing = true;
 	}
 	
 	public function init(X:Int = 0, Y:Int = 0, VelocityX:Float = 0, VelocityY:Float = 0, ?Size:String):Asteroid
@@ -30,9 +29,9 @@ class Asteroid extends FlxSprite
 		solid = true;
 		
 		#if flash
-		loadRotatedGraphic((Size == null) ? "assets/large.png" : Size, 100, -1, false, true);
+		loadRotatedGraphic(Size == null ? "assets/large.png" : Size, 100, -1, false, true);
 		#else
-		loadGraphic((Size == null) ? "assets/large.png" : Size);
+		loadGraphic(Size == null ? "assets/large.png" : Size);
 		#end
 		
 		width *= 0.75;
@@ -54,7 +53,7 @@ class Asteroid extends FlxSprite
 		
 		angle = FlxG.random.float() * 360;
 		
-		if ((X != 0) || (Y != 0))
+		if (X != 0 || Y != 0)
 		{
 			x = X;
 			y = Y;
@@ -70,7 +69,7 @@ class Asteroid extends FlxSprite
 		if (FlxG.random.float() < 0.5)
 		{
 			// Appears on the left
-			if (FlxG.random.float() < 0.5)	
+			if (FlxG.random.float() < 0.5)
 			{
 				x = - 64 + offset.x;
 				velocity.x = initial_velocity / 2 + FlxG.random.float() * initial_velocity;
@@ -81,7 +80,7 @@ class Asteroid extends FlxSprite
 				velocity.x = -initial_velocity / 2 - FlxG.random.float() * initial_velocity;
 			}
 			
-			y = FlxG.random.float()*(FlxG.height-height);
+			y = FlxG.random.float() * (FlxG.height - height);
 			velocity.y = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 		}
 		else
@@ -97,7 +96,7 @@ class Asteroid extends FlxSprite
 				velocity.y = - initial_velocity / 2 + FlxG.random.float() * initial_velocity;
 			}
 			
-			x = FlxG.random.float()*(FlxG.width-width);
+			x = FlxG.random.float() * (FlxG.width - width);
 			velocity.x = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 		}
 		
@@ -118,7 +117,7 @@ class Asteroid extends FlxSprite
 		super.update(elapsed);
 	}
 	
-	override public function kill():Void 
+	override public function kill():Void
 	{
 		super.kill();
 		
@@ -128,7 +127,6 @@ class Asteroid extends FlxSprite
 		}
 		
 		var initial_velocity:Int = 25;
-		var slot:Int;
 		var size:String;
 		
 		if (frameWidth >= 64)

@@ -1,9 +1,6 @@
 import flixel.addons.ui.FlxUIPopup;
-import haxe.xml.Fast;
-import flash.Lib;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
-import flixel.addons.ui.FlxInputText;
 /**
  * @author Lars Doucet
  */

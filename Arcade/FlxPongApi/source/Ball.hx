@@ -2,11 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.math.FlxAngle;
-import flixel.util.FlxCollision;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxVelocity;
 
 class Ball extends PongSprite
 {

@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.math.FlxRandom;
 
 /**
  * Class declaration for the squid monster class
@@ -17,7 +16,7 @@ class Alien extends FlxSprite
 	/**
 	 * Saves the starting horizontal position (for movement logic)
 	 */
-	private var _originalX:Int;				
+	private var _originalX:Int;
 	
 	/**
 	 * This is the constructor for the squid monster.
@@ -26,11 +25,11 @@ class Alien extends FlxSprite
 	public function new(X:Int, Y:Int, Color:Int, Bullets:FlxGroup)
 	{
 		// Initialize sprite object
-		super(X, Y);		
+		super(X, Y);
 		// Load this animated graphic file
-		loadGraphic("assets/alien.png", true);	
+		loadGraphic("assets/alien.png", true);
 		// Setting the color tints the plain white alien graphic
-		color = Color;		
+		color = Color;
 		_originalX = X;
 		resetShotClock();
 		

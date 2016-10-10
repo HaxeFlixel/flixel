@@ -29,7 +29,7 @@ import flixel.util.FlxColor;
  * 3. This notice may not be removed or altered from any source
  * distribution.
  */
-class MenuState extends FlxState 
+class MenuState extends FlxState
 {
 	private var _gameTitle:FlxText;
 	private var _bg:FlxSprite;

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 
 class Player extends FlxSprite
@@ -52,7 +51,7 @@ class Player extends FlxSprite
 			acceleration.x += drag.x;
 		}
 		
-		if ((FlxG.keys.anyJustPressed([UP, W, SPACE]) && _isReadyToJump) && velocity.y == 0)
+		if (FlxG.keys.anyJustPressed([UP, W, SPACE]) && _isReadyToJump && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
 		}

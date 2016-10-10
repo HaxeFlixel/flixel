@@ -28,7 +28,7 @@ import flixel.util.FlxColor;
  * 3. This notice may not be removed or altered from any source
  * distribution.
  */
-class EndState extends FlxState 
+class EndState extends FlxState
 {
 	private var _gameTitle:FlxText;
 	private var _startButton:FlxButton;
@@ -48,7 +48,7 @@ class EndState extends FlxState
 		
 		// Add a button which will take us back to the main menu state
 		_startButton = new FlxButton(137, 195, "", onStart);
-		// Load sprites for different button states	
+		// Load sprites for different button states
 		_startButton.loadGraphic("assets/ok0.png");
 		_startButton.onOver.callback = onStartOver;
 		_startButton.onOut.callback = onStartOut;
