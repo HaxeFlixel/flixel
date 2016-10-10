@@ -89,6 +89,11 @@ class Interaction extends Window
 	
 	private function updateMouse(event:MouseEvent):Void
 	{
+		#if (neko || js) // openfl/openfl#1305
+		if (event.stageX == null || event.stageY == null)
+			return;
+		#end
+
 		var offsetX = 0.0;
 		var offsetY = 0.0;
 		
