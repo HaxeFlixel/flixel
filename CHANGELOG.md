@@ -27,6 +27,10 @@
 	* added support for cycling through `true` / `false` with up / down (39f7dca)
 	* added support for cycling through enum values with up / down (5702c92)
 * `FlxAnimation`: added support for changing `frames` (#1967)
+* `FlxObject`: added `debugBoundingBoxColorSolid`, -`NotSolid` and -`Partial` (#1847)
+* `FlxTilemap`:
+	* `drawDebug` now colors partially collidable tiles differently (#1847)
+	* non-colliding tiles are now transparent by default in `drawDebug` (#1847)
 * Added an HTML5 template to center games horizontally (#1918)
 * Added support for `haxelib run flixel` as an alias for `haxelib run flixel-tools` (#1950)
 
@@ -37,7 +41,6 @@
 * `FlxCamera`:
 	* fixed scroll bounds not taking `zoom` into account (#1889)
 	* fixed rendering issues with `bgColor == 0x0` on Next (#1793)
-	* fixed a rendering edge case with rotated sprites on Flash (#1974)
 * `FlxTilemap`: fixed buffers not being resized on camera changes (#1801)
 * `FlxSpriteGroup`:
 	* fixed `drawDebug()` not being called (#1905)
@@ -55,6 +58,7 @@
 * `FlxVector`: fixed `normalize()` returning `(1,0)` for `(0,0)` (#1959)
 * `FlxFrame`: fixed inconsistent sorting across platforms (#1926)
 * `FlxSubState`: fixed `close()` if same instance is used in two different states (#1971)
+* `CompletionHandler`: fixed completion mid-text (#1798)
 
 #### Changes and improvements:
 
