@@ -2,7 +2,6 @@ package flixel;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
-import flash.display.IBitmapDrawable;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.geom.ColorTransform;
@@ -388,14 +387,6 @@ class FlxCamera extends FlxBasic
 	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
-	#if flash
-	/**
-	 * Internal helper for drawing pixels on the camera.
-	 * Using this fixes some weird bugs with flash software renderer (see #1838).
-	 */
-	private var _bitmap:Bitmap;
-	#end
-	
 	/**
 	 * Currently used draw stack item
 	 */
@@ -606,13 +597,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
-			var drawable:IBitmapDrawable = pixels;
-			#if flash
-			_bitmap.bitmapData = pixels;
-			drawable = _bitmap;
-			#end
-			
-			buffer.draw(drawable, matrix, null, blend, null, (smoothing || antialiasing));
+			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
 		}
 		else
 		{
@@ -769,10 +754,6 @@ class FlxCamera extends FlxBasic
 			_flashBitmap = new Bitmap(buffer);
 			_scrollRect.addChild(_flashBitmap);
 			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-			
-			#if flash
-			_bitmap = new Bitmap();
-			#end
 		}
 		else
 		{
@@ -813,10 +794,6 @@ class FlxCamera extends FlxBasic
 			buffer = null;
 			_flashBitmap = null;
 			_fill = FlxDestroyUtil.dispose(_fill);
-			
-			#if flash
-			_bitmap = null;
-			#end
 		}
 		else
 		{
