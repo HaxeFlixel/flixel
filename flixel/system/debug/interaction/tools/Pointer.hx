@@ -79,8 +79,9 @@ class Pointer extends Tool
 			if (member == null || !member.visible || !member.exists)
 				continue;
 
-			if (Std.is(member, FlxTypedGroup))
-				target = pinpointItemInGroup((cast member).members, cursor);
+			@:privateAccess var group = FlxTypedGroup.resolveGroup(member);
+			if (group != null)
+				target = pinpointItemInGroup(group.members, cursor);
 			else if (Std.is(member, FlxSprite) &&
 				(cast(member, FlxSprite).overlapsPoint(cursor, true)))
 				target = cast member;
