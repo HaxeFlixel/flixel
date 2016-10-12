@@ -66,6 +66,7 @@ class Pointer extends Tool
 		}
 	}
 	
+	@:access(flixel.group.FlxTypedGroup)
 	private function pinpointItemInGroup(members:Array<FlxBasic>, cursor:FlxPoint):FlxObject
 	{
 		var target:FlxObject = null;
@@ -79,7 +80,7 @@ class Pointer extends Tool
 			if (member == null || !member.visible || !member.exists)
 				continue;
 
-			@:privateAccess var group = FlxTypedGroup.resolveGroup(member);
+			var group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
 				target = pinpointItemInGroup(group.members, cursor);
 			else if (Std.is(member, FlxSprite) &&
