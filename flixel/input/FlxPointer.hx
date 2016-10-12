@@ -75,7 +75,7 @@ class FlxPointer
 	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return 	The touch point's location relative to camera's viewport.
 	 */
-	public function getCameraViewPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
+	public function getPositionInCameraView(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
 			Camera = FlxG.camera;
