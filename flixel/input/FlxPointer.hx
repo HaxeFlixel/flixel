@@ -69,6 +69,27 @@ class FlxPointer
 	}
 	
 	/**
+	 * Fetch the screen position of the pointer relative to given camera's viewport.
+	 * 
+	 * @param 	Camera		If unspecified, first/main global camera is used instead.
+	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 
+	 * @return 	The touch point's location relative to camera's viewport.
+	 */
+	public function getCameraViewPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+		
+		if (point == null)
+			point = FlxPoint.get();
+		
+		point.x = (_globalScreenX - Camera.x) / Camera.zoom;
+		point.y = (_globalScreenY - Camera.y) / Camera.zoom;
+		
+		return point;
+	}
+	
+	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
 	public function getPosition(?point:FlxPoint):FlxPoint
