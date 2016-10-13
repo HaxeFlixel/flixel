@@ -9,35 +9,35 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * Atlas node holds information about image on Atlas.
- * Plus it have few methods for easy frame data generation, 
- * which can be loaded in sprites and tilemap
+ * Plus it have few methods for easy frame data generation,
+ * which can be loaded in sprites and in tilemaps.
  */
 class FlxNode implements IFlxDestroyable
 {
 	/**
-	 * Left child of this node
+	 * Left child of this node.
 	 */
 	public var left:FlxNode;
 	/**
-	 * Right child of this node
+	 * Right child of this node.
 	 */
 	public var right:FlxNode;
 	
 	/**
-	 * Region of atlas which this node holds, includes spacings between nodes
+	 * Region of the atlas which this node holds, includes spacings between nodes.
 	 */
 	public var rect:FlxRect;
 	/**
 	 * The "name" of this node. You can get access to this node with it:
-	 * atlas.getNode(key);
+	 * `atlas.getNode(key);`
 	 */
 	public var key:String;
 	/**
-	 * Logical flag showing whether this node have image in it or not
+	 * Logical flag showing whether this node has an image in it or not.
 	 */
 	public var filled(default, null):Bool;
 	/**
-	 * Atlas object, which contains this node
+	 * Atlas object which contains this node.
 	 */
 	public var atlas:FlxAtlas;
 	
@@ -58,20 +58,21 @@ class FlxNode implements IFlxDestroyable
 	 */
 	public var height(get, set):Int;
 	/**
-	 * Logical flag, showing whether this node have any child nodes or image in it
+	 * Logical flag, showing whether this node have any child nodes or image in it.
 	 */
 	public var isEmpty(get, null):Bool;
 	
 	public var rotated(default, null):Bool;
 	
 	/**
-	 * Node constructot
-	 * @param	rect	region of atlas this node holds
-	 * @param	atlas	atlas this node belongs to
-	 * @param	filled	whether this node contains image or not
-	 * @param	key		the name of image in this node, and the name of this node
+	 * Node constructor
+	 *
+	 * @param   rect     Region of atlas this node holds.
+	 * @param   atlas    Atlas this node belongs to.
+	 * @param   filled   Whether this node contains image or not.
+	 * @param   key      The name of image in this node, and the name of this node.
 	 */
-	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "", rotated:Bool = false) 
+	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "", rotated:Bool = false)
 	{
 		this.filled = filled;
 		this.left = null;
@@ -92,19 +93,20 @@ class FlxNode implements IFlxDestroyable
 	}
 	
 	/**
-	 * Can we place node with specified width and height in this node
+	 * Whether we place node with specified width and height in this node.
 	 */
 	public inline function canPlace(width:Int, height:Int):Bool
 	{
-		return ((rect.width >= width) && (rect.height >= height));
+		return rect.width >= width && rect.height >= height;
 	}
 	
 	/**
 	 * Generates TileFrames object for this node
-	 * @param	tileSize		The size of tile in spritesheet
-	 * @param	tileSpacing		Offsets between tiles in spritesheet
-	 * @param	tileBorder		Border to add around tiles (helps to avoid "tearing" problem)
-	 * @return	Created TileFrames object for this node
+	 *
+	 * @param   tileSize      The size of tile in spritesheet.
+	 * @param   tileSpacing   Offsets between tiles in spritesheet.
+	 * @param   tileBorder    Border to add around tiles (helps to avoid "tearing" problem).
+	 * @return  Created TileFrames object for this node.
 	 */
 	public function getTileFrames(tileSize:FlxPoint, ?tileSpacing:FlxPoint, ?tileBorder:FlxPoint):FlxTileFrames
 	{
@@ -115,9 +117,7 @@ class FlxNode implements IFlxDestroyable
 		{
 			var tileFrames:FlxTileFrames = FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
 			if (tileBorder != null)
-			{
 				tileFrames = tileFrames.addBorder(tileBorder);
-			}
 			return tileFrames;
 		}
 		
@@ -125,8 +125,9 @@ class FlxNode implements IFlxDestroyable
 	}
 	
 	/**
-	 * Generates ImageFrame object for this node.
-	 * @return	ImageFrame for whole node
+	 * Generates a `FlxImageFrame` object for this node.
+	 *
+	 * @return  `FlxImageFrame` for the whole node
 	 */
 	public function getImageFrame():FlxImageFrame
 	{
@@ -134,16 +135,14 @@ class FlxNode implements IFlxDestroyable
 		var frame = atlas.getAtlasFrames().getByName(key);
 		
 		if (frame != null)
-		{
 			return FlxImageFrame.fromFrame(frame);
-		}
 		
 		return null;
 	}
 	
 	private inline function get_isEmpty():Bool
 	{
-		return (!filled && (left == null) && (right == null));
+		return !filled && left == null && right == null;
 	}
 	
 	private inline function get_x():Int

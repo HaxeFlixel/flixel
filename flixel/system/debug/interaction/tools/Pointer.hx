@@ -49,7 +49,7 @@ class Pointer extends Tool
 	}
 	
 	private function handleItemClick(item:FlxObject):Void
-	{			
+	{
 		// Is it the first thing selected or are we adding things using Ctrl?
 		var selectedItems = _brain.selectedItems;
 		if (selectedItems.length == 0 || _brain.keyPressed(Keyboard.CONTROL))
