@@ -1033,7 +1033,8 @@ class FlxAtlas implements IFlxDestroyable
 		if (value > get_width())
 		{
 			if (powerOfTwo)
-			
+				value = getNextPowerOfTwo(value);
+
 			if (value <= maxWidth)
 			{
 				if (root != null && root.width < value)
