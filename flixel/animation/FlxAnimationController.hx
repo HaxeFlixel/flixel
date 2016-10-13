@@ -259,7 +259,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FrameRate    The speed in frames per second that the animation should play at (e.g. `40` fps).
 	 * @param   Looped       Whether or not the animation is looped or just plays once.
 	 * @param   FlipX        Whether the frames should be flipped horizontally.
-	 * @param   Flip         Whether the frames should be flipped vertically.
+	 * @param   FlipY        Whether the frames should be flipped vertically.
 	 */
 	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true,
 		FlipX:Bool = false, FlipY:Bool = false):Void
