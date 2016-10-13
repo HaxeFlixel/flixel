@@ -4,24 +4,25 @@ import flixel.system.FlxBGSprite;
 import flixel.util.FlxColor;
 
 /**
- * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
- * It is for all intents and purpose a fancy FlxGroup. And really, it's not even that fancy.
+ * A `FlxSubState` can be opened inside of a `FlxState`.
+ * By default, it also stops the parent state from updating,
+ * making it convenient for pause screens or menus.
  */
 class FlxSubState extends FlxState
 {
 	/**
-	 * Callback method for state close event
+	 * Callback method for state close event.
 	 */
 	public var closeCallback:Void->Void;
 	
 	/**
-	 * Helper sprite object for non-flash targets. Draws background
+	 * Helper sprite object for non-flash targets. Draws the background.
 	 */
 	@:noCompletion
 	private var _bgSprite:FlxBGSprite;
 	
 	/**
-	 * Helper var for close() so closeSubState() can be called on the parent.
+	 * Helper var for `close()` so `closeSubState()` can be called on the parent.
 	 */
 	@:noCompletion
 	@:allow(flixel.FlxState.resetSubState)
@@ -35,7 +36,7 @@ class FlxSubState extends FlxState
 	private var _created:Bool = false;
 	
 	/**
-	 * @param	BGColor		background color for this substate
+	 * @param   BGColor   background color for this substate
 	 */
 	public function new(BGColor:FlxColor = FlxColor.TRANSPARENT)
 	{
@@ -43,9 +44,7 @@ class FlxSubState extends FlxState
 		closeCallback = null;
 		
 		if (FlxG.renderTile)
-		{
 			_bgSprite = new FlxBGSprite();
-		}
 		bgColor = BGColor;
 	}
 	
@@ -78,13 +77,11 @@ class FlxSubState extends FlxState
 	
 	/**
 	 * Closes this substate.
-	 */ 
+	 */
 	public function close():Void
 	{
-		if (_parentState != null && _parentState.subState == this) 
-		{ 
-			_parentState.closeSubState(); 
-		}
+		if (_parentState != null && _parentState.subState == this)
+			_parentState.closeSubState();
 	}
 	
 	@:noCompletion

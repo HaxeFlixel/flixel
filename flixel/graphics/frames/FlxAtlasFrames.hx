@@ -12,7 +12,7 @@ import haxe.xml.Fast;
 import openfl.Assets;
 
 /**
- * Atlas frames collection. It makes possible to use texture atlases in flixel. 
+ * Atlas frames collection. It makes possible to use texture atlases in Flixel.
  * Plus it contains few packer parser methods for most commonly used atlas formats.
  */
 class FlxAtlasFrames extends FlxFramesCollection
@@ -23,11 +23,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for TexturePacker atlases in json format.
-	 * @param	Source			the image source (can be FlxGraphic, String, or BitmapData).
-	 * @param	Description		contents of json file with atlas description. You can get it with Assets.getText(path/to/description.json).
-	 * 							Or you can just pass path to json file in assets directory.
-	 * @return	Newly created AtlasFrames collection
+	 * Parsing method for TexturePacker atlases in JSON format.
+	 *
+	 * @param   Source        The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param   Description   Contents of JSON file with atlas description.
+	 *                        You can get it with `Assets.getText(path/to/description.json)`.
+	 *                        Or you can just a pass path to the JSON file in the assets directory.
+	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
@@ -40,15 +42,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 		
-		if ((graphic == null) || (Description == null))
+		if (graphic == null || Description == null)
 			return null;
 		
 		frames = new FlxAtlasFrames(graphic);
 		
 		if (Assets.exists(Description))
-		{
 			Description = Assets.getText(Description);
-		}
 		
 		var data:Dynamic = Json.parse(Description);
 		
@@ -74,9 +74,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	
 	/**
 	 * Internal method for TexturePacker parsing. Parses the actual frame data.
-	 * @param	FrameName		Name of the frame (filename of the original source image).
-	 * @param	FrameData		The TexturePacker data excluding "filename".
-	 * @param	Frames			The FlxAtlasFrames to add this frame to.
+	 *
+	 * @param   FrameName   Name of the frame (file name of the original source image).
+	 * @param   FrameData   The TexturePacker data excluding "filename".
+	 * @param   Frames      The `FlxAtlasFrames` to add this frame to.
 	 */
 	private static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
 	{
@@ -103,10 +104,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for LibGDX atlases.
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
-	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
-	 * 							Or you can just pass path to description file in assets directory.
-	 * @return	Newly created AtlasFrames collection
+	 * @param   Sourc         The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   Description   Contents of the file with atlas description.
+	 *                        You can get it with `Assets.getText(path/to/description/file)`.
+	 *                        Or you can just pass path to the description file in the assets directory.
+	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromLibGdx(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
@@ -177,8 +179,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString, size);
 			
-			//var offset = FlxPoint.get(size[0], size[1]); // this should be how it is, but libgdx's texture packer tool currently outputs the offset from the bottom left, instead:
-			var offset = FlxPoint.get(size[0], sourceSize.y - size[1] - imageHeight); // workaround for https://github.com/libgdx/libgdx/issues/4288
+			// this should be how it is, but libgdx's texture packer tool
+			// currently outputs the offset from the bottom left, instead:
+			//var offset = FlxPoint.get(size[0], size[1]);
+			// workaround for https://github.com/libgdx/libgdx/issues/4288
+			var offset = FlxPoint.get(size[0], sourceSize.y - size[1] - imageHeight);
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 		
@@ -188,9 +193,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Internal method for LibGDX atlas parsing. It tries to extract dimensions info from specified string.
 	 * 
-	 * @param	line	String to extract info from.
-	 * @param	size	Array to store extracted info to.
-	 * @return	Array filled with dimensions info.
+	 * @param   line   `String` to extract info from.
+	 * @param   size   `Array` to store extracted info to.
+	 * @return  `Array` filled with dimensions info.
 	 */
 	private static function getDimensions(line:String, size:Array<Int>):Array<Int>
 	{
@@ -204,12 +209,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for Sparrow texture atlases (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
+	 * Parsing method for Sparrow texture atlases
+	 * (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
-	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
-	 * 							Or you can just pass path to xml file in assets directory.
-	 * @return	Newly created AtlasFrames collection.
+	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   Description   Contents of the XML file with atlas description.
+	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
+	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromSparrow(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
@@ -222,7 +229,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 		
-		if ((graphic == null) || (Description == null))
+		if (graphic == null || Description == null)
 			return null;
 		
 		frames = new FlxAtlasFrames(graphic);
@@ -240,11 +247,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var flipX = (texture.has.flipX && texture.att.flipX == "true");
 			var flipY = (texture.has.flipY && texture.att.flipY == "true");
 			
-			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
+			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y),
+				Std.parseFloat(texture.att.width), Std.parseFloat(texture.att.height));
 			
 			var size = if (trimmed)
 			{
-				new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth), Std.parseInt(texture.att.frameHeight));
+				new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY),
+					Std.parseInt(texture.att.frameWidth), Std.parseInt(texture.att.frameHeight));
 			}
 			else
 			{
@@ -266,24 +275,26 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Parsing method for TexturePacker atlases in generic xml format
+	 * Parsing method for TexturePacker atlases in generic XML format.
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
-	 * @param	Description		contents of xml file with atlas description. You can get it with Assets.getText(path/to/description.xml)
-	 * 							Or you can just pass path to xml file in assets directory.
-	 * @return	Newly created AtlasFrames collection.
+	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   Description   Contents of the XML file with atlas description.
+	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
+	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
-		if (graphic == null)	return null;
+		if (graphic == null)
+			return null;
 		
 		// No need to parse data again
 		var frames = FlxAtlasFrames.findFrame(graphic);
 		if (frames != null)
 			return frames;
 		
-		if ((graphic == null) || (Description == null))
+		if (graphic == null || Description == null)
 			return null;
 		
 		frames = new FlxAtlasFrames(graphic);
@@ -300,7 +311,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var angle = (rotated) ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 			var name = sprite.get("n");
 			var offset = FlxPoint.get(0, 0);
-			var rect = FlxRect.get(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")), Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
+			var rect = FlxRect.get(Std.parseInt(sprite.get("x")), Std.parseInt(sprite.get("y")),
+				Std.parseInt(sprite.get("w")), Std.parseInt(sprite.get("h")));
 			var sourceSize = FlxPoint.get(rect.width, rect.height);
 			
 			if (trimmed)
@@ -318,10 +330,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for Sprite Sheet Packer atlases (http://spritesheetpacker.codeplex.com/).
 	 * 
-	 * @param	Source			the image source (can be FlxGraphic, String or BitmapData).
-	 * @param	Description		contents of the file with atlas description. You can get it with Assets.getText(path/to/description/file).
-	 * 							Or you can just pass path to description file in assets directory.
-	 * @return	Newly created AtlasFrames collection
+	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   Description   Contents of the file with atlas description.
+	 *                        You can get it with `Assets.getText(path/to/description/file)`.
+	 *                        Or you can just pass a path to the description file in the assets directory.
+	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
@@ -334,7 +347,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 		
-		if ((graphic == null) || (Description == null))
+		if (graphic == null || Description == null)
 			return null;
 		
 		frames = new FlxAtlasFrames(graphic);
@@ -351,7 +364,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var name = StringTools.trim(currImageData[0]);
 			var currImageRegion = StringTools.trim(currImageData[1]).split(" ");
 			
-			var rect = FlxRect.get(Std.parseInt(currImageRegion[0]), Std.parseInt(currImageRegion[1]), Std.parseInt(currImageRegion[2]), Std.parseInt(currImageRegion[3]));
+			var rect = FlxRect.get(Std.parseInt(currImageRegion[0]), Std.parseInt(currImageRegion[1]),
+				Std.parseInt(currImageRegion[2]), Std.parseInt(currImageRegion[3]));
 			var sourceSize = FlxPoint.get(rect.width, rect.height);
 			var offset = FlxPoint.get();
 			
@@ -362,10 +376,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Return AtlasFrame of the specified FlxGraphic object.
+	 * Returns the `FlxAtlasFrame` of the specified `FlxGraphic` object.
 	 * 
-	 * @param	graphic	FlxGraphic object to find AtlasFrames collection for.
-	 * @return	AtlasFrames Collection for specified FlxGraphic object. Could be null, if FlxGraphic doesn't have it yet.
+	 * @param   graphic   `FlxGraphic` object to find the `FlxAtlasFrames` collection for.
+	 * @return  `FlxAtlasFrames` collection for the specified `FlxGraphic` object
+	 *          Could be `null` if `FlxGraphic` doesn't have it yet.
 	 */
 	public static function findFrame(graphic:FlxGraphic, ?border:FlxPoint):FlxAtlasFrames
 	{

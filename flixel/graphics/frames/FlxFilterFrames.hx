@@ -8,10 +8,10 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.util.FlxColor;
 import openfl.filters.BitmapFilter;
-	
+
 /**
  * Frames collection which you can apply bitmap filters to.
- * WARNING: this frame collection doesn't use caching, so be carefull or you will "leak" out memory very fast.
+ * WARNING: this frame collection doesn't use caching, so be careful or you will "leak" out memory very fast.
  * You should destroy frames collections of this type manually.
  */
 class FlxFilterFrames extends FlxFramesCollection
@@ -22,13 +22,14 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Generates new frames collection from specified frames.
 	 * 
-	 * @param	frames		frames collection to generate filters for.
-	 * @param	widthInc	how much frames should expand horizontally.
-	 * @param	heightInc	how much frames should expend vertically.
-	 * @param	filters		optional filters array to apply
-	 * @return	New frames collection which you can apply filters to.
+	 * @param   frames      Frames collection to generate filters for.
+	 * @param   widthInc    How much frames should expand horizontally.
+	 * @param   heightInc   How much frames should expend vertically.
+	 * @param   filters     Optional filters array to apply.
+	 * @return  New frames collection which you can apply filters to.
 	 */
-	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>):FlxFilterFrames
+	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0,
+		?filters:Array<BitmapFilter>):FlxFilterFrames
 	{
 		return new FlxFilterFrames(frames, widthInc, heightInc, filters);
 	}
@@ -53,7 +54,8 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 	
-	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>)
+	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0,
+		?filters:Array<BitmapFilter>)
 	{
 		super(null, FlxFrameCollectionType.FILTER);
 		
@@ -77,16 +79,14 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Just helper method which "centers" sprite offsets
 	 * 
-	 * @param	spr					sprite to apply this frame collection.
-	 * @param	saveAnimations		whether to save sprite's animations or not.
-	 * @param	updateFrames		whether to regenerate frame bitmapdatas or not.
+	 * @param   spr              Sprite to apply this frame collection.
+	 * @param   saveAnimations   Whether to save sprite's animations or not.
+	 * @param   updateFrames     Whether to regenerate frame `BitmapData`s or not.
 	 */
 	public function applyToSprite(spr:FlxSprite, saveAnimations:Bool = false, updateFrames:Bool = false):Void
 	{
 		if (updateFrames)
-		{
 			set_filters(filters);
-		}
 		
 		var w:Float = spr.width;
 		var h:Float = spr.height;
@@ -103,7 +103,8 @@ class FlxFilterFrames extends FlxFramesCollection
 		
 		for (frame in sourceFrames.frames)
 		{
-			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc), Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
+			canvas = new BitmapData(Std.int(frame.sourceSize.x + widthInc),
+				Std.int(frame.sourceSize.y + heightInc), true, FlxColor.TRANSPARENT);
 			graph = FlxGraphic.fromBitmapData(canvas, false, null, false);
 			
 			filterFrame = graph.imageFrame.frame;
@@ -122,7 +123,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Adds a filter to this frames collection.
 	 * 
-	 * @param	filter		The filter to be added.
+	 * @param   filter   The filter to be added.
 	 */
 	public inline function addFilter(filter:BitmapFilter):Void
 	{
@@ -136,19 +137,15 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Removes a filter from this frames collection.
 	 * 
-	 * @param	filter	The filter to be removed.
+	 * @param   filter   The filter to be removed.
 	 */
 	public function removeFilter(filter:BitmapFilter):Void
 	{
 		if (filters.length == 0 || filter == null)
-		{
 			return;
-		}
 		
 		if (filters.remove(filter))
-		{
 			regenAndApplyFilters();
-		}
 	}
 	
 	/**
@@ -156,15 +153,11 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public function clearFilters():Void
 	{
-		if (filters.length == 0) 
-		{
+		if (filters.length == 0)
 			return;
-		}
 		
-		while (filters.length != 0) 
-		{
+		while (filters.length != 0)
 			filters.pop();
-		}
 		
 		regenBitmaps();
 	}
@@ -196,7 +189,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		}
 	}
 	
-	function applyFilter(filter:BitmapFilter) 
+	function applyFilter(filter:BitmapFilter)
 	{
 		var bitmap:BitmapData;
 		
@@ -212,20 +205,16 @@ class FlxFilterFrames extends FlxFramesCollection
 	private function applyFilters():Void
 	{
 		for (filter in filters)
-		{
 			applyFilter(filter);
-		}
 	}
 	
-	override public function destroy():Void 
+	override public function destroy():Void
 	{
 		sourceFrames = null;
 		filters = null;
 		
 		for (frame in frames)
-		{
 			frame.parent.destroy();
-		}
 		
 		super.destroy();
 	}
