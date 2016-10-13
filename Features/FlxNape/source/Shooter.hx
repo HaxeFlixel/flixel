@@ -75,7 +75,8 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			return;
 		
 		var spr = recycle(FlxNapeSprite);
-		
+		new Trail(spr);
+
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
 		var angle = FlxG.mouse.getPosition()
