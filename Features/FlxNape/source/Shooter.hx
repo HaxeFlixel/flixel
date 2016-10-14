@@ -75,7 +75,8 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			return;
 		
 		var spr = recycle(FlxNapeSprite);
-		new Trail(spr);
+		var trail = new Trail(spr).start(false, FlxG.elapsed);
+		FlxG.state.add(trail);
 
 		spr.body.position.y = 30;
 		spr.body.position.x = 30 + Std.random(640 - 30);
@@ -149,13 +150,9 @@ class Trail extends FlxEmitter
 		loadParticles("assets/shooter.png", 20, 0);
 		attach = Attach;
 		
-		FlxG.state.add(this);
-		
 		velocity.set(0, 0);
 		scale.set(1, 1, 1, 1, 0, 0, 0, 0);
 		lifespan.set(0.25);
-		
-		start(false, FlxG.elapsed);
 	}
 	
 	override public function update(elapsed:Float):Void
