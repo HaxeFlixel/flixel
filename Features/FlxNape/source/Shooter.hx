@@ -101,12 +101,10 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 		FlxMouseEventManager.add(spr, createMouseJoint);
 	}
 	
-	function createMouseJoint(spr:FlxSprite) 
+	function createMouseJoint(spr:FlxNapeSprite) 
 	{
-		var body:Body = cast(spr, FlxNapeSprite).body;
-		
-		mouseJoint = new DistanceJoint(FlxNapeSpace.space.world, body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
-			body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
+		mouseJoint = new DistanceJoint(FlxNapeSpace.space.world, spr.body, new Vec2(FlxG.mouse.x, FlxG.mouse.y),
+			spr.body.worldPointToLocal(new Vec2(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
 		
 		mouseJoint.space = FlxNapeSpace.space;
 	}	
@@ -133,10 +131,9 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 	
 	public function setDensity(density:Float) 
 	{
-		for (spr in members)
+		for (sprite in members)
 		{
-			var fps:FlxNapeSprite = cast(spr, FlxNapeSprite);
-			fps.body.shapes.at(0).material.density = density;
+			sprite.body.shapes.at(0).material.density = density;
 		}
 	}
 }
