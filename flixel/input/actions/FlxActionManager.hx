@@ -4,12 +4,18 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceObject;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionManager.ActionSetRegister;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.input.FlxInput;
+import flixel.input.IFlxInput;
+import flixel.input.actions.FlxAction;
+import flixel.input.mouse.FlxMouseButton;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.Json;
 
@@ -787,9 +793,8 @@ class ActionSetRegister implements IFlxDestroyable
 		if (Steam.controllers == null) return;
 		var checksum = action._steamOriginsChecksum;
 		if (deviceID == FlxInputDeviceID.ALL) deviceID = 0;
-		Steam.controllers.getDigitalActionOrigins(deviceID, setHandle, action.steamHandle, action._steamOrigins);
+		Steam.controllers.getDigitalActionOrigins(deviceID, setHandle, action.steamHandle, cast action._steamOrigins);
 		var newChecksum = cheapChecksum(cast action._steamOrigins);
-		
 		if (checksum != newChecksum)
 		{
 			action.steamOriginsChanged = true;

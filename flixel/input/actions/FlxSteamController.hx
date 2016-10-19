@@ -1,7 +1,10 @@
 package flixel.input.actions;
 
+import flixel.input.FlxInput;
 import flixel.input.IFlxInputManager;
+import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
 #if (cpp && steamwrap && haxe_ver > "3.2")
 import steamwrap.api.Steam;
