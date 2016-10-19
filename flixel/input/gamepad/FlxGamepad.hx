@@ -877,7 +877,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	private function get_deadZone():Float
 	{
-		return (manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
+		return (manager == null || manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
 	}
 	
 	private inline function set_deadZone(deadZone:Float):Float
