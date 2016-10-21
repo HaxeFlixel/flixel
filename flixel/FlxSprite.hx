@@ -983,13 +983,15 @@ class FlxSprite extends FlxObject
 		
 		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		var zoomOffsetX:Float = Camera.zoomOffsetX;
+		var zoomOffsetY:Float = Camera.zoomOffsetY;
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			if (minX > Camera.width || minX + frameWidth < 0)
+			if (minX > Camera.width + zoomOffsetX || minX + frameWidth < -zoomOffsetX)
 				return false;
 			
-			if (minY > Camera.height || minY + frameHeight < 0)
+			if (minY > Camera.height + zoomOffsetY || minY + frameHeight < -zoomOffsetY)
 				return false;
 		}
 		else
@@ -1022,14 +1024,14 @@ class FlxSprite extends FlxObject
 			var maxX:Float = minX + radius;
 			minX -= radius;
 			
-			if (maxX < 0 || minX > Camera.width)
+			if (maxX < -zoomOffsetX || minX > Camera.width + zoomOffsetX)
 				return false;
 			
 			minY += oy;
 			var maxY:Float = minY + radius;
 			minY -= radius;
 			
-			if (maxY < 0 || minY > Camera.height)
+			if (maxY < -zoomOffsetY || minY > Camera.height + zoomOffsetY)
 				return false;
 		}
 		
