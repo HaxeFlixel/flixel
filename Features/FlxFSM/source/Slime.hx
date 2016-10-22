@@ -66,7 +66,7 @@ class Conditions
 		return Owner.isTouching(FlxObject.DOWN);
 	}
 	
-	public static function groundSlam(Owner:FlxSprite)
+	public static function groundSlam(Owner:FlxSprite):Bool
 	{
 		return FlxG.keys.justPressed.DOWN && !Owner.isTouching(FlxObject.DOWN);
 	}
