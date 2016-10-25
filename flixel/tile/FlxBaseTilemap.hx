@@ -712,15 +712,18 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
 	 * 
-	 * @param	Start		The start point in world coordinates.
-	 * @param	End			The end point in world coordinates.
-	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
-	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
+	 * @param	Start			The start point in world coordinates.
+	 * @param	End				The end point in world coordinates.
+	 * @param	Simplify		Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
+	 * @param	RaySimplify		Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
+	 * @param	PathingMethod	Use BASIC for usual maps or BASIC_SCALED_HORIZON(scale,min) (e.g. use scale=3.0 and min=5) for large maps, to limit pathing into a zone around start-end rectangle (scale increases the size of this zone and min sets a minimum zone size).
 	 * @param	DiagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
+	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, PathingMethod:FlxTilemapPathingMethod = null):Array<FlxPoint>
 	{
+		if (PathingMethod == null) PathingMethod = FlxTilemapPathingMethod.BASIC;
+
 		// Figure out what tile we are starting and ending on.
 		var startIndex:Int = getTileIndexByCoords(Start);
 		var endIndex:Int = getTileIndexByCoords(End);
@@ -730,10 +733,52 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		{
 			return null;
 		}
-		
+
+		var zone:FlxTilemapZone;
+		switch (PathingMethod)
+		{
+			// Basic pathing method where distances from starting point is calculated for all tiles
+			// until reaching the end point, and then path is found by backtracking from end point to starting point
+			case FlxTilemapPathingMethod.BASIC:
+				zone = {x0:0, y0:0, sizeX:widthInTiles, sizeY:heightInTiles, indexStart:startIndex, indexEnd:endIndex};
+
+			// Scaled horizon method should be used with large maps:
+			// the basic pathing method is used over a small zone
+			case FlxTilemapPathingMethod.BASIC_SCALED_HORIZON(scale, minHorizonSize):
+				if (scale < 1.0) scale = 1.0;
+				var startX = (startIndex % widthInTiles);
+				var startY = Math.floor(startIndex / widthInTiles);
+				var endX = (endIndex % widthInTiles);
+				var endY = Math.floor(endIndex / widthInTiles);
+
+				var leftX = if (startX < endX) startX else endX;
+				var rightX = if (startX < endX) endX else startX;
+				var highY = if (startY < endY) startY else endY;
+				var lowY = if (startY < endY) endY else startY;
+
+				var deltaX = rightX - leftX;
+				if (deltaX < minHorizonSize) deltaX = minHorizonSize;
+				var deltaY = lowY - highY;
+				if (deltaY < minHorizonSize) deltaY = minHorizonSize;
+
+				var x0 = Math.floor(leftX - scale * 0.5 * deltaX);
+				if (x0 < 0) x0 = 0;
+				var x1 = Math.ceil(rightX + scale * 0.5 * deltaX);
+				if (x1 > widthInTiles) x1 = widthInTiles;
+				var y0 = Math.floor(highY - scale * 0.5 * deltaY);
+				if (y0 < 0) y0 = 0;
+				var y1 = Math.ceil(lowY + scale * 0.5 * deltaY);
+				if (y1 > heightInTiles) y1 = heightInTiles;
+
+				var zoneSizeX = x1 - x0;
+				var zoneSizeY = y1 - y0;
+				var startIndexInZone = (startX - x0) + (startY - y0) * zoneSizeX;
+				var endIndexInZone = (endX - x0) + (endY - y0) * zoneSizeX;
+				zone = {x0:x0, y0:y0, sizeX:zoneSizeX, sizeY:zoneSizeY, indexStart:startIndexInZone, indexEnd:endIndexInZone};
+		}
+
 		// Figure out how far each of the tiles is from the starting tile
-		var distances:Array<Int> = computePathDistance(startIndex, endIndex, DiagonalPolicy);
-		
+		var distances = computePathDistance(zone, DiagonalPolicy);
 		if (distances == null)
 		{
 			return null;
@@ -741,8 +786,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		// Then count backward to find the shortest path.
 		var points:Array<FlxPoint> = new Array<FlxPoint>();
-		walkPath(distances, endIndex, points);
-		
+		var pathIndexes:Array<Int> = new Array<Int>();
+		walkPath(distances, zone.indexEnd, pathIndexes, zone.sizeX, zone.sizeY);
+
+		// Translate back points from index within the zone array into original map coordinates
+		for (index in pathIndexes) {
+			var x = index % zone.sizeX;
+			var y = Math.floor(index / zone.sizeX);
+			var indexInMap = x + zone.x0 + (y + zone.y0) * widthInTiles;
+			points.push(getTileCoordsByIndex(indexInMap));
+		}
+
 		// Reset the start and end points to be exact
 		var node:FlxPoint;
 		node = points[points.length - 1];
@@ -759,11 +813,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		{
 			raySimplifyPath(points);
 		}
-		
+
 		// Finally load the remaining points into a new path object and return it
 		var path:Array<FlxPoint> = [];
 		var i:Int = points.length - 1;
-		
+
 		while (i >= 0)
 		{
 			node = points[i--];
@@ -781,37 +835,39 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 * 
-	 * @param	StartIndex		The starting tile's map index.
-	 * @param	EndIndex		The ending tile's map index.
+	 * @param	zone			Descriptor of a rectangular zone over the map, including starting and ending tile's map index within the zone.
 	 * @param	DiagonalPolicy	How to treat diagonal movement.
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
-	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
+	 * @return	An array of distances over the input zone. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(StartIndex:Int, EndIndex:Int, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
+	public function computePathDistance(zone:FlxTilemapZone, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
-		var mapSize:Int = widthInTiles * heightInTiles;
-		var distances:Array<Int> = new Array<Int>(/*mapSize*/);
-		FlxArrayUtil.setLength(distances, mapSize);
+
+		var distances= new Array<Int>(/*zone.sizeX * zone.sizeY*/);
+		FlxArrayUtil.setLength(distances, zone.sizeX * zone.sizeY);
+
 		var i:Int = 0;
-		
-		while (i < mapSize)
+		for (yy in zone.y0...zone.y0+zone.sizeY)
 		{
-			if (_tileObjects[_data[i]].allowCollisions != FlxObject.NONE)
+			for (xx in zone.x0...zone.x0+zone.sizeX)
 			{
-				distances[i] = -2;
+				if (_tileObjects[_data[xx + yy * widthInTiles]].allowCollisions != FlxObject.NONE)
+				{
+					distances[i] = -2;
+				}
+				else
+				{
+					distances[i] = -1;
+				}
+				i++;
 			}
-			else
-			{
-				distances[i] = -1;
-			}
-			i++;
 		}
-		
-		distances[StartIndex] = 0;
+
+		distances[zone.indexStart] = 0;
 		var distance:Int = 1;
-		var neighbors:Array<Int> = [StartIndex];
+		var neighbors:Array<Int> = [zone.indexStart];
 		var current:Array<Int>;
 		var currentIndex:Int;
 		var left:Bool;
@@ -831,8 +887,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			while (i < currentLength)
 			{
 				currentIndex = current[i++];
-				
-				if (currentIndex == Std.int(EndIndex))
+
+				if (currentIndex == Std.int(zone.indexEnd))
 				{
 					foundEnd = true;
 					if (StopOnEnd)
@@ -843,17 +899,17 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				}
 				
 				// Basic map bounds
-				left = currentIndex % widthInTiles > 0;
-				right = currentIndex % widthInTiles < widthInTiles - 1;
-				up = currentIndex / widthInTiles > 0;
-				down = currentIndex / widthInTiles < heightInTiles - 1;
-				
+				left = currentIndex % zone.sizeX > 0;
+				right = currentIndex % zone.sizeX < zone.sizeX - 1;
+				up = currentIndex / zone.sizeX > 0;
+				down = currentIndex / zone.sizeX < zone.sizeY - 1;
+
 				var index:Int;
 				
 				if (up)
 				{
-					index = currentIndex - widthInTiles;
-					
+					index = currentIndex - zone.sizeX;
+
 					if (distances[index] == -1)
 					{
 						distances[index] = distance;
@@ -872,8 +928,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				}
 				if (down)
 				{
-					index = currentIndex + widthInTiles;
-					
+					index = currentIndex + zone.sizeX;
+
 					if (distances[index] == -1)
 					{
 						distances[index] = distance;
@@ -896,11 +952,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					var wideDiagonal = DiagonalPolicy == WIDE;
 					if (up && right)
 					{
-						index = currentIndex - widthInTiles + 1;
-						
+						index = currentIndex - zone.sizeX + 1;
+
 						if (wideDiagonal && (distances[index] == -1) &&
-							(distances[currentIndex - widthInTiles] >= -1) &&
-							(distances[currentIndex + 1] >= -1))
+						(distances[currentIndex - zone.sizeX] >= -1) &&
+						(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -913,11 +969,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					}
 					if (right && down)
 					{
-						index = currentIndex + widthInTiles + 1;
-						
+						index = currentIndex + zone.sizeX + 1;
+
 						if (wideDiagonal && (distances[index] == -1) &&
-							(distances[currentIndex + widthInTiles] >= -1) &&
-							(distances[currentIndex + 1] >= -1))
+						(distances[currentIndex + zone.sizeX] >= -1) &&
+						(distances[currentIndex + 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -930,11 +986,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					}
 					if (left && down)
 					{
-						index = currentIndex + widthInTiles - 1;
-						
+						index = currentIndex + zone.sizeX - 1;
+
 						if (wideDiagonal && (distances[index] == -1) &&
-							(distances[currentIndex + widthInTiles] >= -1) &&
-							(distances[currentIndex - 1] >= -1))
+						(distances[currentIndex + zone.sizeX] >= -1) &&
+						(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -947,11 +1003,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					}
 					if (up && left)
 					{
-						index = currentIndex - widthInTiles - 1;
-						
+						index = currentIndex - zone.sizeX - 1;
+
 						if (wideDiagonal && (distances[index] == -1) &&
-							(distances[currentIndex - widthInTiles] >= -1) &&
-							(distances[currentIndex - 1] >= -1))
+						(distances[currentIndex - zone.sizeX] >= -1) &&
+						(distances[currentIndex - 1] >= -1))
 						{
 							distances[index] = distance;
 							neighbors.push(index);
@@ -967,6 +1023,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			
 			distance++;
 		}
+
 		if (!foundEnd)
 		{
 			distances = null;
@@ -980,33 +1037,35 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Data	An array of distance information.
 	 * @param	Start	The tile we're on in our walk backward.
-	 * @param	Points	An array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
+	 * @param	Points	An array of indexes of nodes composing the path from the start to the end, compiled in reverse order.
+	 * @param	WidthInTiles	Width, in tiles, of the zone described by Data.
+	 * @param	HeightInTiles	Height, in tiles, of the zone described by Data.
 	 */
-	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<Int>, WidthInTiles:Int, HeightInTiles:Int):Void
 	{
-		Points.push(getTileCoordsByIndex(Start));
-		
+		Points.push(Start);
+
 		if (Data[Start] == 0)
 		{
 			return;
 		}
 		
 		// Basic map bounds
-		var left:Bool = (Start % widthInTiles) > 0;
-		var right:Bool = (Start % widthInTiles) < (widthInTiles - 1);
-		var up:Bool = (Start / widthInTiles) > 0;
-		var down:Bool = (Start / widthInTiles) < (heightInTiles - 1);
-		
+		var left:Bool = (Start % WidthInTiles) > 0;
+		var right:Bool = (Start % WidthInTiles) < (WidthInTiles - 1);
+		var up:Bool = (Start / WidthInTiles) > 0;
+		var down:Bool = (Start / WidthInTiles) < (HeightInTiles - 1);
+
 		var current:Int = Data[Start];
 		var i:Int;
 		
 		if (up)
 		{
-			i = Start - widthInTiles;
-			
+			i = Start - WidthInTiles;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (right)
@@ -1015,16 +1074,16 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (down)
 		{
-			i = Start + widthInTiles;
-			
+			i = Start + WidthInTiles;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (left)
@@ -1033,43 +1092,43 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (up && right)
 		{
-			i = Start - widthInTiles + 1;
-			
+			i = Start - WidthInTiles + 1;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (right && down)
 		{
-			i = Start + widthInTiles + 1;
-			
+			i = Start + WidthInTiles + 1;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (left && down)
 		{
-			i = Start + widthInTiles - 1;
-			
+			i = Start + WidthInTiles - 1;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		if (up && left)
 		{
-			i = Start - widthInTiles - 1;
-			
+			i = Start - WidthInTiles - 1;
+
 			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
 			{
-				return walkPath(Data, i, Points);
+				return walkPath(Data, i, Points, WidthInTiles, HeightInTiles);
 			}
 		}
 		
@@ -1296,4 +1355,26 @@ abstract FlxTilemapDiagonalPolicy(Int)
 	 * Diagonal movement costs one more than orthogonal movement
 	 */
 	var WIDE = 2;
+}
+
+enum FlxTilemapPathingMethod {
+	/**
+	 * Basic method is calculating distances using an array covering the whole map (was original solution)
+	*/
+	BASIC;
+	/**
+	 * Optimization of basic method where distances are only calculated in a zone around start/end tiles
+	 * - scale > 1.0 determines how this rectangular zone is grown around the rectangle formed by start-end points
+	 * - minHorizonSize is used if any the scaled zone dimension is too small
+	*/
+	BASIC_SCALED_HORIZON(scale:Float, minHorizonSize:Int);
+}
+
+typedef FlxTilemapZone = {
+	var x0:Int;
+	var y0:Int;
+	var sizeX:Int;
+	var sizeY:Int;
+	var indexStart:Int;
+	var indexEnd:Int;
 }
