@@ -720,7 +720,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	DiagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found, then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, PathingMethod:FlxTilemapPathingMethod = null):Array<FlxPoint>
+	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false, DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, ?PathingMethod:FlxTilemapPathingMethod):Array<FlxPoint>
 	{
 		if (PathingMethod == null) PathingMethod = FlxTilemapPathingMethod.BASIC;
 
@@ -790,7 +790,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		walkPath(distances, zone.indexEnd, pathIndexes, zone.sizeX, zone.sizeY);
 
 		// Translate back points from index within the zone array into original map coordinates
-		for (index in pathIndexes) {
+		for (index in pathIndexes)
+		{
 			var x = index % zone.sizeX;
 			var y = Math.floor(index / zone.sizeX);
 			var indexInMap = x + zone.x0 + (y + zone.y0) * widthInTiles;
@@ -845,13 +846,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
 
-		var distances= new Array<Int>(/*zone.sizeX * zone.sizeY*/);
+		var distances = new Array<Int>(/*zone.sizeX * zone.sizeY*/);
 		FlxArrayUtil.setLength(distances, zone.sizeX * zone.sizeY);
 
 		var i:Int = 0;
-		for (yy in zone.y0...zone.y0+zone.sizeY)
+		for (yy in zone.y0...zone.y0 + zone.sizeY)
 		{
-			for (xx in zone.x0...zone.x0+zone.sizeX)
+			for (xx in zone.x0...zone.x0 + zone.sizeX)
 			{
 				if (_tileObjects[_data[xx + yy * widthInTiles]].allowCollisions != FlxObject.NONE)
 				{
@@ -1357,7 +1358,8 @@ abstract FlxTilemapDiagonalPolicy(Int)
 	var WIDE = 2;
 }
 
-enum FlxTilemapPathingMethod {
+enum FlxTilemapPathingMethod
+{
 	/**
 	 * Basic method is calculating distances using an array covering the whole map (was original solution)
 	*/
@@ -1370,7 +1372,8 @@ enum FlxTilemapPathingMethod {
 	BASIC_SCALED_HORIZON(scale:Float, minHorizonSize:Int);
 }
 
-typedef FlxTilemapZone = {
+typedef FlxTilemapZone =
+{
 	var x0:Int;
 	var y0:Int;
 	var sizeX:Int;
