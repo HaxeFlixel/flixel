@@ -1517,6 +1517,8 @@ class FlxCamera extends FlxBasic
 		updateFlashSpritePosition();
 		updateScrollRect();
 		updateInternalSpritePositions();
+		
+		FlxG.cameras.cameraResized.dispatch(this);
 	}
 	
 	/**
