@@ -734,7 +734,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return null;
 		}
 
-		var zone:FlxTilemapZone;
+		var zone:FlxTilemapZone = null;
 		switch (PathingMethod)
 		{
 			// Basic pathing method where distances from starting point is calculated for all tiles
