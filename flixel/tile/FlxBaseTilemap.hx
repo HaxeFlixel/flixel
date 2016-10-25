@@ -734,13 +734,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return null;
 		}
 
-		var zone:FlxTilemapZone = null;
-		switch (PathingMethod)
+		var zone:FlxTilemapZone = switch (PathingMethod)
 		{
 			// Basic pathing method where distances from starting point is calculated for all tiles
 			// until reaching the end point, and then path is found by backtracking from end point to starting point
 			case FlxTilemapPathingMethod.BASIC:
-				zone = {x0:0, y0:0, sizeX:widthInTiles, sizeY:heightInTiles, indexStart:startIndex, indexEnd:endIndex};
+				{x0:0, y0:0, sizeX:widthInTiles, sizeY:heightInTiles, indexStart:startIndex, indexEnd:endIndex};
 
 			// Scaled horizon method should be used with large maps:
 			// the basic pathing method is used over a small zone
@@ -774,7 +773,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				var zoneSizeY = y1 - y0;
 				var startIndexInZone = (startX - x0) + (startY - y0) * zoneSizeX;
 				var endIndexInZone = (endX - x0) + (endY - y0) * zoneSizeX;
-				zone = {x0:x0, y0:y0, sizeX:zoneSizeX, sizeY:zoneSizeY, indexStart:startIndexInZone, indexEnd:endIndexInZone};
+				{x0:x0, y0:y0, sizeX:zoneSizeX, sizeY:zoneSizeY, indexStart:startIndexInZone, indexEnd:endIndexInZone};
 		}
 
 		// Figure out how far each of the tiles is from the starting tile
