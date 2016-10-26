@@ -777,7 +777,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 
 		// Figure out how far each of the tiles is from the starting tile
-		var distances = computePathDistance(zone, DiagonalPolicy);
+		var distances = computePathDistanceZone(zone, DiagonalPolicy);
 		if (distances == null)
 		{
 			return null;
@@ -830,7 +830,23 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		
 		return path;
 	}
-	
+
+	/**
+	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
+	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 *
+	 * @param	StartIndex		The starting tile's map index.
+	 * @param	EndIndex		The ending tile's map index.
+	 * @param	DiagonalPolicy	How to treat diagonal movement.
+	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
+	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
+	 */
+	public function computePathDistance(StartIndex:Int, EndIndex:Int, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
+	{
+		var zone:FlxTilemapZone = {x0:0, y0:0, sizeX:widthInTiles, sizeY:heightInTiles, indexStart:StartIndex, indexEnd:EndIndex};
+		return computePathDistanceZone(zone, DiagonalPolicy, StopOnEnd);
+	}
+
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
@@ -840,7 +856,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	An array of distances over the input zone. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(zone:FlxTilemapZone, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
+	public function computePathDistanceZone(zone:FlxTilemapZone, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
 	{
 		// Create a distance-based representation of the tilemap.
 		// All walls are flagged as -2, all open areas as -1.
