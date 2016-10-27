@@ -793,8 +793,9 @@ class ActionSetRegister implements IFlxDestroyable
 		if (Steam.controllers == null) return;
 		var checksum = action._steamOriginsChecksum;
 		if (deviceID == FlxInputDeviceID.ALL) deviceID = 0;
-		Steam.controllers.getDigitalActionOrigins(deviceID, setHandle, action.steamHandle, cast action._steamOrigins);
+		Steam.controllers.getDigitalActionOrigins(deviceID, setHandle, action.steamHandle, action._steamOrigins);
 		var newChecksum = cheapChecksum(cast action._steamOrigins);
+		
 		if (checksum != newChecksum)
 		{
 			action.steamOriginsChanged = true;
