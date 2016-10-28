@@ -83,6 +83,45 @@ class FlxTweenTest extends FlxTest
 	}
 
 	@Test
+	function testCancelChainFirstTweenUnfinished()
+	{
+		var tweenCount = 4;
+		var tweenUpdated = [for (i in 0 ... tweenCount) false];
+		var tweenCompleted = [for (i in 0 ... tweenCount) false];
+		var tween = [for (i in 0 ... tweenCount) makeTween(0.1, function (_) tweenCompleted[i] = true, function (_) tweenUpdated[i] = true)];
+
+		for (i in 1 ... tweenCount) { tween[0].wait(0.1).then(tween[i]); }
+
+		while (!tweenUpdated[0]) step();
+		Assert.isFalse(tweenCompleted[0]);
+
+		tween[0].cancelChain();
+
+		for (i in 0 ... tweenCount) { finishTween(tween[i]); }
+		for (i in 1 ... tweenCount) { Assert.isFalse(tweenUpdated[i] || tweenCompleted[i]); }
+	}
+
+	@Test
+	function testCancelChainFirstTweenFinished()
+	{
+		var tweenCount = 4;
+		var tweenUpdated = [for (i in 0 ... tweenCount) false];
+		var tweenCompleted = [for (i in 0 ... tweenCount) false];
+		var tween = [for (i in 0 ... tweenCount) makeTween(0.1, function (_) tweenCompleted[i] = true, function (_) tweenUpdated[i] = true)];
+		
+		for (i in 1 ... tweenCount) { tween[0].wait(0.1).then(tween[i]); }
+		
+		while (!tweenUpdated[1]) step();
+		Assert.isTrue(tweenUpdated[0] && tweenCompleted[0]);
+		Assert.isFalse(tweenCompleted[1]);
+		
+		tween[0].cancelChain();
+		
+		for (i in 1 ... tweenCount) { finishTween(tween[i]); }
+		for (i in 2 ... tweenCount) { Assert.isFalse(tweenUpdated[i] || tweenCompleted[i]); }
+	}
+
+	@Test
 	function testLinearChain()
 	{
 		testChain(4, function(tweens)
