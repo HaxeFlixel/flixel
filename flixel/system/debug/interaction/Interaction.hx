@@ -44,7 +44,7 @@ class Interaction extends Window
 	private var _customCursor:Sprite;
 	private var _tools:Array<Tool> = [];
 	private var _turn:Int = 2;
-	private var _keysDown:Map<Int, Int> = new Map();
+	private var _keysDown:Map<Int, Bool> = new Map();
 	private var _keysUp:Map<Int, Int> = new Map();
 	private var _wasMouseVisible:Bool;
 	private var _wasUsingSystemCursor:Bool;
@@ -152,9 +152,12 @@ class Interaction extends Window
 	private function handleKeyEvent(event:KeyboardEvent):Void
 	{
 		if (event.type == KeyboardEvent.KEY_DOWN)
-			_keysDown.set(event.keyCode, _turn);
+			_keysDown.set(event.keyCode, true);
 		else if (event.type == KeyboardEvent.KEY_UP)
+		{
+			_keysDown.set(event.keyCode, false);
 			_keysUp.set(event.keyCode, _turn);
+		}
 	}
 	
 	private function addTool(tool:Tool):Void
@@ -437,8 +440,7 @@ class Interaction extends Window
 	
 	public function keyPressed(key:Int):Bool
 	{
-		var value:Int = _keysDown.get(key) == null ? 0 : _keysDown.get(key);
-		return _turn <= value;
+		return _keysDown.get(key);
 	}
 	
 	public function keyJustPressed(key:Int):Bool
