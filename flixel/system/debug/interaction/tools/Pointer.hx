@@ -37,13 +37,13 @@ class Pointer extends Tool
 			return;
 		
 		// Check clicks on the screen
-		if (!_brain.pointerJustPressed && !_brain.pointerJustReleased)
+		if (!_brain.pointerJustReleased)
 			return;
 
 		var item = pinpointItemInGroup(FlxG.state.members, _brain.flixelPointer);
 		if (item != null)
 			handleItemClick(item);
-		else if (_brain.pointerJustPressed && !_brain.keyPressed(Keyboard.CONTROL))
+		else if (!_brain.keyPressed(Keyboard.CONTROL))
 			// User clicked an empty space without holding the "add more items" key,
 			// so it's time to unselect everything.
 			_brain.clearSelection();
@@ -55,8 +55,13 @@ class Pointer extends Tool
 		var selectedItems = _brain.selectedItems;
 		if (selectedItems.length == 0 || _brain.keyPressed(Keyboard.CONTROL))
 		{
-			// Yeah, that's the case. Just add the new thing to the selection.
-			selectedItems.add(item);
+			// Yeah, that's the case. Is the item already in the selection?
+			if (selectedItems.members.contains(item))
+				// Yep, it's already there. Let's remove it then.
+				selectedItems.remove(item);
+			else
+				// No, so let's add it to the selection.
+				selectedItems.add(item);
 		}
 		else
 		{
