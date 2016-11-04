@@ -39,12 +39,13 @@ class Pointer extends Tool
 		// Check clicks on the screen
 		if (!_brain.pointerJustPressed && !_brain.pointerJustReleased)
 			return;
-		
+
 		var item = pinpointItemInGroup(FlxG.state.members, _brain.flixelPointer);
 		if (item != null)
 			handleItemClick(item);
-		else if (_brain.pointerJustPressed)
-			// User clicked an empty space, so it's time to unselect everything.
+		else if (_brain.pointerJustPressed && !_brain.keyPressed(Keyboard.CONTROL))
+			// User clicked an empty space without holding the "add more items" key,
+			// so it's time to unselect everything.
 			_brain.clearSelection();
 	}
 	
