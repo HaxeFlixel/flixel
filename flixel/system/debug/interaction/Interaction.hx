@@ -272,7 +272,7 @@ class Interaction extends Window
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
 				// Render a red rectangle centered at the selected item
-				gfx.lineStyle(1.5, 0xff0000);
+				gfx.lineStyle(0.9, 0xff0000);
 				gfx.drawRect(member.x - FlxG.camera.scroll.x,
 					member.y - FlxG.camera.scroll.y,
 					member.width * 1.0, member.height * 1.0);
