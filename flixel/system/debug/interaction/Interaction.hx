@@ -9,6 +9,7 @@ import flash.events.MouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Eraser;
@@ -447,5 +448,24 @@ class Interaction extends Window
 	{
 		var value:Int = _keysUp.get(key) == null ? 0 : _keysUp.get(key);
 		return (_turn - value) == 1;
+	}
+	
+	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	{
+		// we iterate backwards to get the sprites on top first
+		var i = members.length;
+		while (i-- > 0)
+		{
+			var member = members[i];
+			// Ignore invisible or non-existent entities
+			if (member == null || !member.visible || !member.exists)
+				continue;
+
+			if (Std.is(member, FlxTypedGroup))
+				findItemsWithinArea(items, (cast member).members, area);
+			else if (Std.is(member, FlxSprite) &&
+				area.overlaps(cast(member, FlxSprite).getHitbox()))
+				items.push(cast member);
+		}
 	}
 }

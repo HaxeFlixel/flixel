@@ -26,6 +26,7 @@ class Pointer extends Tool
 	private var _selectionEndPoint:FlxPoint = new FlxPoint();
 	private var _selectionHappening:Bool = false;
 	private var _selectionArea:FlxRect = new FlxRect();
+	private var _itemsInSelectionArea:Array<FlxBasic> = [];
 	
 	override public function init(brain:Interaction):Tool 
 	{
@@ -48,7 +49,10 @@ class Pointer extends Tool
 			startSelection();
 
 		if (_selectionHappening)
+		{
 			_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
+			calculateSelectionArea();
+		}
 			
 		// Check clicks on the screen
 		if (!_brain.pointerJustReleased)
@@ -58,44 +62,80 @@ class Pointer extends Tool
 		// If we had a selection happening, it's time to end it.
 		if (_selectionHappening)
 			stopSelection();
-			
-		var item = pinpointItemInGroup(FlxG.state.members, _brain.flixelPointer);
-		if (item != null)
-			handleItemClick(item);
+
+		// If we have items in the selection area, handle them
+		if (_itemsInSelectionArea.length > 0)
+		{
+			for (item in _itemsInSelectionArea)
+				handleItemAddition(cast item);
+		}
 		else if (!_brain.keyPressed(Keyboard.CONTROL))
 			// User clicked an empty space without holding the "add more items" key,
 			// so it's time to unselect everything.
 			_brain.clearSelection();
+			
+	}
+	
+	private function calculateSelectionArea():Void
+	{
+		_selectionArea.x = _selectionStartPoint.x;
+		_selectionArea.y = _selectionStartPoint.y;
+		_selectionArea.width = _selectionEndPoint.x - _selectionArea.x;
+		_selectionArea.height = _selectionEndPoint.y - _selectionArea.y;
+		
+		if (_selectionArea.width < 0)
+		{
+			_selectionArea.width *= -1;
+			_selectionArea.x = _selectionArea.x - _selectionArea.width;
+		}
+		
+		if (_selectionArea.height < 0)
+		{
+			_selectionArea.height *= -1;
+			_selectionArea.y = _selectionArea.y - _selectionArea.height;
+		}
 	}
 	
 	private function startSelection():Void
 	{
-		var item = pinpointItemInGroup(FlxG.state.members, _brain.flixelPointer);
-		
-		// Start a selection only if the user clicked within an empty space, not an item
-		if (item == null)
-		{
-			_selectionHappening = true;
-			_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
-		}
+		_selectionHappening = true;
+		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
+		_itemsInSelectionArea.clearArray();
 	}
 	
 	private function stopSelection():Void
 	{
-		_selectionHappening = false;
 		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
+		
+		calculateSelectionArea();
+
+		// Find all items within the selection area
+		_brain.findItemsWithinArea(_itemsInSelectionArea, FlxG.state.members, _selectionArea);
+		
+		// Clear everything
+		_selectionHappening = false;
+		_selectionArea.set(0, 0, 0, 0);
 	}
 	
-	private function handleItemClick(item:FlxObject):Void
+	private function handleItemAddition(item:FlxObject):Void
 	{			
-		// Is it the first thing selected or are we adding things using Ctrl?
+		// We add things to the selection list if the user is pressing the "add-new-item" key
+		// or if the user used a selection area (e.g. clicked and dragged to create a rectangle)
+		var adding = _brain.keyPressed(Keyboard.CONTROL) || _itemsInSelectionArea.length > 1;
 		var selectedItems = _brain.selectedItems;
-		if (selectedItems.length == 0 || _brain.keyPressed(Keyboard.CONTROL))
+		
+		if (selectedItems.length == 0 || adding)
 		{
 			// Yeah, that's the case. Is the item already in the selection?
 			if (selectedItems.members.contains(item))
-				// Yep, it's already there. Let's remove it then.
-				selectedItems.remove(item);
+			{
+				// Yep, it's already there. Let's remove it, but only if
+				// it was the only selected item, otherwise the user is
+				// batch selecting things. In that case, everything should
+				// be included, no questions asked.
+				if(_itemsInSelectionArea.length == 1)
+					selectedItems.remove(item);
+			}
 			else
 				// No, so let's add it to the selection.
 				selectedItems.add(item);
@@ -142,26 +182,9 @@ class Pointer extends Tool
 		
 		if (_selectionHappening)
 		{
-			var x:Float = _selectionStartPoint.x - FlxG.camera.scroll.x;
-			var y:Float = _selectionStartPoint.y - FlxG.camera.scroll.y;
-			var width:Float = _selectionEndPoint.x - FlxG.camera.scroll.x - x;
-			var height:Float = _selectionEndPoint.y - FlxG.camera.scroll.y - y;
-			
-			if (width < 0)
-			{
-				width *= -1;
-				x -= width;
-			}
-			
-			if (height < 0)
-			{
-				height *= -1;
-				y -= height;
-			}
-			
 			// Render the selection rectangle
 			gfx.lineStyle(0.9, 0xbb0000);
-			gfx.drawRect(x, y, width, height);
+			gfx.drawRect(_selectionArea.x - FlxG.camera.scroll.x, _selectionArea.y - FlxG.camera.scroll.y, _selectionArea.width, _selectionArea.height);
 		}
 
 		// Render everything into the camera buffer
