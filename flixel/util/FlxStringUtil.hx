@@ -262,14 +262,8 @@ class FlxStringUtil
 	 */
 	public static function getDomain(url:String):String
 	{
-		var urlStart:Int = url.indexOf("://") + 3;
-		var urlEnd:Int = url.indexOf("/", urlStart);
-		var home:String = url.substring(urlStart, urlEnd);
-		var lastDot:Int = home.lastIndexOf(".") - 1;
-		var domEnd:Int = home.lastIndexOf(".", lastDot) + 1;
-		home = home.substring(domEnd, home.length);
-		home = home.split(":")[0];
-		return (home == "") ? "local" : home;
+		var regex:EReg = ~/(?<=:\/\/)(?:[a-z0-9-]+\.)*([a-z0-9-]+\.[a-z0-9-]+)/i;
+		return regex.match(url) ? regex.matched(1).toLowerCase() : "local";
 	}
 	
 	/**
