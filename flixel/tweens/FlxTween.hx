@@ -58,14 +58,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Object		The object containing the properties to tween.
 	 * @param	Values		An object containing key/value pairs of properties and target values.
 	 * @param	Duration	Duration of the tween in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added VarTween object.
 	 */
 	public static function tween(Object:Dynamic, Values:Dynamic, Duration:Float = 1, ?Options:TweenOptions):VarTween
@@ -88,14 +81,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
@@ -116,14 +102,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	FromAngle	Start angle.
 	 * @param	ToAngle		End angle.
 	 * @param	Duration	Duration of the tween.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added AngleTween object.
 	 */
 	public static function angle(?Sprite:FlxSprite, FromAngle:Float, ToAngle:Float, Duration:Float = 1, ?Options:TweenOptions):AngleTween
@@ -142,14 +121,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	FromColor	Start color.
 	 * @param	ToColor		End color.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added ColorTween object.
 	 */
 	public static function color(?Sprite:FlxSprite, Duration:Float = 1, FromColor:FlxColor, ToColor:FlxColor, ?Options:TweenOptions):ColorTween
@@ -171,14 +143,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 * 							onStart		Optional start callback function.
-	 * 							onUpdate	Optional update callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The LinearMotion object.
 	 */
 	public static function linearMotion(Object:FlxObject, FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearMotion
@@ -202,14 +167,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 * 							onStart		Optional start callback function.
-	 * 							onUpdate	Optional update callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The QuadMotion object.
 	 */
 	public static function quadMotion(Object:FlxObject, FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadMotion
@@ -234,14 +192,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	ToX			X finish.
 	 * @param	ToY			Y finish.
 	 * @param	Duration	Duration of the movement in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return The CubicMotion object.
 	 */
 	public static function cubicMotion(Object:FlxObject, FromX:Float, FromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, ToX:Float, ToY:Float, Duration:Float = 1, ?Options:TweenOptions):CubicMotion
@@ -265,13 +216,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	DurationOrSpeed	Duration of the movement in seconds.
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Eease			Optional easer function.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The CircularMotion object.
 	 */
 	public static function circularMotion(Object:FlxObject, CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):CircularMotion
@@ -290,13 +235,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return	The LinearPath object.
 	 */
 	public static function linearPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):LinearPath
@@ -315,13 +254,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Points			An array of at least 3 FlxPoints defining the path
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return	The QuadPath object.
 	 */
 	public static function quadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):QuadPath
@@ -517,6 +450,8 @@ class FlxTween implements IFlxDestroyable
 	 *
 	 * If control has already been passed on, forwards the cancellation
 	 * request along the chain to the currently active Tween.
+	 *
+	 * @since 4.3.0
 	 */
 	public function cancelChain():Void
 	{
@@ -715,13 +650,34 @@ typedef TweenCallback = FlxTween->Void;
 
 typedef TweenOptions =
 {
-	?type:Null<Int>,
-	?ease:EaseFunction,
-	?onStart:TweenCallback,
-	?onUpdate:TweenCallback,
-	?onComplete:TweenCallback,
-	?startDelay:Null<Float>,
-	?loopDelay:Null<Float>
+	/**
+	 * Tween type - bit field of `FlxTween`'s static type constants.
+	 */
+	@:optional var type:Null<Int>;
+	/**
+	 * Optional easer function (see `FlxEase`).
+	 */
+	@:optional var ease:EaseFunction;
+	/**
+	 * Optional start callback function.
+	 */
+	@:optional var onStart:TweenCallback;
+	/**
+	 * Optional update callback function.
+	 */
+	@:optional var onUpdate:TweenCallback;
+	/**
+	 * Optional complete callback function.
+	 */
+	@:optional var onComplete:TweenCallback;
+	/**
+	 * Seconds to wait until starting this tween, `0` by default.
+	 */
+	@:optional var startDelay:Null<Float>;
+	/**
+	 * Seconds to wait between loops of this tween, `0` by default.
+	 */
+	@:optional var loopDelay:Null<Float>;
 }
 
 /**
@@ -753,14 +709,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	Object		The object containing the properties to tween.
 	 * @param	Values		An object containing key/value pairs of properties and target values.
 	 * @param	Duration	Duration of the tween in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added VarTween object.
 	 * @since   4.2.0
 	 */
@@ -786,14 +735,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	FromValue	Start value.
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
@@ -817,14 +759,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	FromAngle	Start angle.
 	 * @param	ToAngle		End angle.
 	 * @param	Duration	Duration of the tween.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added AngleTween object.
 	 * @since   4.2.0
 	 */
@@ -846,14 +781,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	Duration	Duration of the tween in seconds.
 	 * @param	FromColor	Start color.
 	 * @param	ToColor		End color.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return	The added ColorTween object.
 	 * @since   4.2.0
 	 */
@@ -878,14 +806,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 * 							onStart		Optional start callback function.
-	 * 							onUpdate	Optional update callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The LinearMotion object.
 	 * @since  4.2.0
 	 */
@@ -913,14 +834,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	ToY				Y finish.
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 * 							onStart		Optional start callback function.
-	 * 							onUpdate	Optional update callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The QuadMotion object.
 	 * @since  4.2.0
 	 */
@@ -949,14 +863,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	ToX			X finish.
 	 * @param	ToY			Y finish.
 	 * @param	Duration	Duration of the movement in seconds.
-	 * @param	Options		An object containing key/value pairs of the following optional parameters:
-	 * 						type		Tween type.
-	 * 						onStart		Optional start callback function.
-	 * 						onUpdate	Optional update callback function.
-	 * 						onComplete	Optional completion callback function.
-	 * 						ease		Optional easer function.
-	 *  					startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 						loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options		A structure with tween options.
 	 * @return The CubicMotion object.
 	 * @since  4.2.0
 	 */
@@ -984,13 +891,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	DurationOrSpeed	Duration of the movement in seconds.
 	 * @param	UseDuration		Duration of the movement.
 	 * @param	Eease			Optional easer function.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 *  						startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return The CircularMotion object.
 	 * @since  4.2.0
 	 */
@@ -1013,13 +914,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	Points			An array of at least 2 FlxPoints defining the path
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return	The LinearPath object.
 	 * @since   4.2.0
 	 */
@@ -1051,13 +946,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	Points			An array of at least 3 FlxPoints defining the path
 	 * @param	DurationOrSpeed	Duration (in seconds) or speed of the movement.
 	 * @param	UseDuration		Whether to use the previous param as duration or speed.
-	 * @param	Options			An object containing key/value pairs of the following optional parameters:
-	 * 							type		Tween type.
-	 *	 						onStart		Optional start callback function.
-	 * 							onComplete	Optional completion callback function.
-	 * 							ease		Optional easer function.
-	 * 							startDelay	Seconds to wait until starting this tween, 0 by default.
-	 * 							loopDelay	Seconds to wait between loops of this tween, 0 by default.
+	 * @param	Options			A structure with tween options.
 	 * @return	The QuadPath object.
 	 * @since   4.2.0
 	 */

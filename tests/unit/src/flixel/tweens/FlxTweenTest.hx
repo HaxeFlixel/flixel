@@ -18,7 +18,7 @@ class FlxTweenTest extends FlxTest
 	function testIssue1104()
 	{
 		FlxTween.tween(this, { value:  1000 }, 1);
-		FlxTween.tween(this, { value: -1000 }, 1,  { startDelay: 1 } );
+		FlxTween.tween(this, { value: -1000 }, 1, { startDelay: 1 });
 		
 		// check that there is actually some tweening going on
 		step(10);
