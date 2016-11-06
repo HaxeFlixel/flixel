@@ -497,8 +497,10 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Immediately stops the Tween and removes it from the 
-	 * TweenManager without calling the complete callback.
+	 * Immediately stops the Tween and removes it from its 
+	 * `manager` without calling the `onComplete` callback.
+	 *
+	 * Yields control to the next chained Tween if one exists.
 	 */
 	public function cancel():Void
 	{
@@ -509,13 +511,16 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
-	 * Immediately stops this Tween and removes it from the TweenManager without calling the onComplete callback
+	 * Immediately stops the Tween and removes it from its
+	 * `manager` without calling the `onComplete` callback
 	 * or yielding control to the next chained Tween if one exists.
-	 * If control has already been passed on, forwards the cancellation request along the chain to the currently active Tween.   
+	 *
+	 * If control has already been passed on, forwards the cancellation
+	 * request along the chain to the currently active Tween.
 	 */
 	public function cancelChain():Void
 	{
-		// Pass along the cancellation request. 
+		// Pass along the cancellation request.
 		if (_nextTweenInChain != null)
 			_nextTweenInChain.cancelChain();
 
