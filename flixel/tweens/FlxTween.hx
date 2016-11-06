@@ -373,6 +373,7 @@ class FlxTween implements IFlxDestroyable
 	private var _running:Bool = false;
 	private var _waitingForRestart:Bool = false;
 	private var _chainedTweens:Array<FlxTween>;
+	private var _nextTweenInChain:FlxTween;
 	
 	/**
 	 * This function is called when tween is created, or recycled.
@@ -409,6 +410,7 @@ class FlxTween implements IFlxDestroyable
 		ease = null;
 		manager = null;
 		_chainedTweens = null;
+		_nextTweenInChain = null;
 	}
 	
 	/**
@@ -495,8 +497,10 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Immediately stops the Tween and removes it from the 
-	 * TweenManager without calling the complete callback.
+	 * Immediately stops the Tween and removes it from its 
+	 * `manager` without calling the `onComplete` callback.
+	 *
+	 * Yields control to the next chained Tween if one exists.
 	 */
 	public function cancel():Void
 	{
@@ -504,6 +508,27 @@ class FlxTween implements IFlxDestroyable
 		
 		if (manager != null)
 			manager.remove(this);
+	}
+
+	/**
+	 * Immediately stops the Tween and removes it from its
+	 * `manager` without calling the `onComplete` callback
+	 * or yielding control to the next chained Tween if one exists.
+	 *
+	 * If control has already been passed on, forwards the cancellation
+	 * request along the chain to the currently active Tween.
+	 */
+	public function cancelChain():Void
+	{
+		// Pass along the cancellation request.
+		if (_nextTweenInChain != null)
+			_nextTweenInChain.cancelChain();
+
+		// Prevent yielding control to any chained tweens.
+		if (_chainedTweens != null)
+			_chainedTweens = null;
+			
+		cancel();
 	}
 	
 	private function finish():Void
@@ -570,7 +595,10 @@ class FlxTween implements IFlxDestroyable
 		if (_chainedTweens == null || _chainedTweens.length <= 0)
 			return;
 		
-		doNextTween(_chainedTweens.shift());
+		// Remember next tween to enable cancellation of the chain.
+		_nextTweenInChain = _chainedTweens.shift();
+
+		doNextTween(_nextTweenInChain);
 		_chainedTweens = null;
 	}
 	
