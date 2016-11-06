@@ -459,12 +459,13 @@ class Interaction extends Window
 	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
 	 * the method has no return, you must pass an array where items will be placed. The method decides
 	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
-	 * <code>getHitbox()</code>) overlaps the area parameter.
+	 * `getHitbox()`) overlaps the area parameter.
 	 * 
 	 * @param	items		array where the method will place all found items. Any previous content in the array will be preserved.
 	 * @param	members		array where the method will recursively search for items.
 	 * @param	area		a rectangle that describes the area where the method should search within.
 	 */
+	@:access(flixel.group.FlxTypedGroup)
 	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		// we iterate backwards to get the sprites on top first
@@ -476,8 +477,9 @@ class Interaction extends Window
 			if (member == null || !member.visible || !member.exists)
 				continue;
 
-			if (Std.is(member, FlxTypedGroup))
-				findItemsWithinArea(items, (cast member).members, area);
+			var group = FlxTypedGroup.resolveGroup(member);
+			if (group != null)
+				findItemsWithinArea(items, group.members, area);
 			else if (Std.is(member, FlxSprite) &&
 				area.overlaps(cast(member, FlxSprite).getHitbox()))
 				items.push(cast member);

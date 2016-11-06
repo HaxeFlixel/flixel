@@ -110,7 +110,7 @@ class Pointer extends Tool
 	/**
 	 * Stop any selection activity that is happening. 
 	 * 
-	 * @param	findItems	If <code>true</code> (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
+	 * @param	findItems	If `true` (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
 	 */
 	public function stopSelection(findItems:Bool = true):Void
 	{	
@@ -159,34 +159,7 @@ class Pointer extends Tool
 			selectedItems.add(item);
 		}
 	}
-	
-	@:access(flixel.group.FlxTypedGroup)
-	private function pinpointItemInGroup(members:Array<FlxBasic>, cursor:FlxPoint):FlxObject
-	{
-		var target:FlxObject = null;
-
-		// we iterate backwards to get the sprites on top first
-		var i = members.length;
-		while (i-- > 0)
-		{
-			var member = members[i];
-			// Ignore invisible or non-existent entities
-			if (member == null || !member.visible || !member.exists)
-				continue;
-
-			var group = FlxTypedGroup.resolveGroup(member);
-			if (group != null)
-				target = pinpointItemInGroup(group.members, cursor);
-			else if (Std.is(member, FlxSprite) &&
-				(cast(member, FlxSprite).overlapsPoint(cursor, true)))
-				target = cast member;
-			
-			if (target != null)
-				break;
-		}
-		return target;
-	}
-	
+		
 	override public function draw():Void 
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
