@@ -96,21 +96,32 @@ class Pointer extends Tool
 		}
 	}
 	
-	private function startSelection():Void
+	/**
+	 * Start a selection area. A selection area is a rectangular shaped area
+	 * whose boundaries will be used to select game elements.
+	 */
+	public function startSelection():Void
 	{
 		_selectionHappening = true;
 		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		_itemsInSelectionArea.clearArray();
 	}
 	
-	private function stopSelection():Void
-	{
-		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
+	/**
+	 * Stop any selection activity that is happening. 
+	 * 
+	 * @param	findItems	If <code>true</code> (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
+	 */
+	public function stopSelection(findItems:Bool = true):Void
+	{	
+		if (!_selectionHappening)
+			return;
 		
+		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);	
 		calculateSelectionArea();
 
-		// Find all items within the selection area
-		_brain.findItemsWithinArea(_itemsInSelectionArea, FlxG.state.members, _selectionArea);
+		if(findItems)
+			_brain.findItemsWithinArea(_itemsInSelectionArea, FlxG.state.members, _selectionArea);
 		
 		// Clear everything
 		_selectionHappening = false;
@@ -149,6 +160,7 @@ class Pointer extends Tool
 		}
 	}
 	
+	// TODO: move this method to brain
 	private function pinpointItemInGroup(members:Array<FlxBasic>, cursor:FlxPoint):FlxObject
 	{
 		var target:FlxObject = null;
