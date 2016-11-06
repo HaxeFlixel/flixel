@@ -83,6 +83,66 @@ class FlxTweenTest extends FlxTest
 	}
 
 	@Test
+	function testCancelChainFirstTweenUnfinished()
+	{
+		var chain = createChain(4);
+
+		while (!chain.updated[0])
+			step();
+		
+		Assert.isFalse(chain.completed[0]);
+
+		chain.tweens[0].cancelChain();
+
+		for (i in 0...chain.count)
+			finishTween(chain.tweens[i]);
+
+		for (i in 1...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
+	}
+
+	@Test
+	function testCancelChainFirstTweenFinished()
+	{
+		var chain = createChain(4);
+		
+		while (!chain.updated[1])
+			step();
+		
+		Assert.isTrue(chain.updated[0] && chain.completed[0]);
+		Assert.isFalse(chain.completed[1]);
+		
+		chain.tweens[0].cancelChain();
+		
+		for (i in 1...chain.count)
+			finishTween(chain.tweens[i]);
+		
+		for (i in 2...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
+	}
+
+	function createChain(count:Int)
+	{
+		var updated = [for (i in 0...count) false];
+		var completed = [for (i in 0...count) false];
+		var tweens = [for (i in 0...count)
+			makeTween(0.1,
+				function (_) completed[i] = true,
+				function (_) updated[i] = true
+		)];
+
+		for (i in 1...count)
+			tweens[0].wait(0.1).then(tweens[i]);
+
+		return {
+			count: count,
+			updated: updated,
+			completed: completed,
+			tweens: tweens
+		}
+	}
+
+	@Test
 	function testLinearChain()
 	{
 		testChain(4, function(tweens)
