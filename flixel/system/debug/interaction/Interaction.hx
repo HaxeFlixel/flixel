@@ -450,6 +450,16 @@ class Interaction extends Window
 		return (_turn - value) == 1;
 	}
 	
+	/**
+	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
+	 * the method has no return, you must pass an array where items will be placed. The method decides
+	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
+	 * <code>getHitbox()</code>) overlaps the area parameter.
+	 * 
+	 * @param	items		array where the method will place all found items. Any previous content in the array will be preserved.
+	 * @param	members		array where the method will recursively search for items.
+	 * @param	area		a rectangle that describes the area where the method should search within.
+	 */
 	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		// we iterate backwards to get the sprites on top first
