@@ -143,6 +143,23 @@ class FlxTweenTest extends FlxTest
 	}
 
 	@Test
+	function testCancelYieldToChain()
+	{
+		var completed1 = false;
+		var tween1 = makeTween(0.1, function(_) completed1 = true);
+
+		var completed2 = false;
+		var tween2 = makeTween(0.1, function(_) completed2 = true);
+
+		tween1.then(tween2);
+		tween1.cancel();
+		finishTween(tween2);
+
+		Assert.isFalse(completed1);
+		Assert.isTrue(completed2);
+	}
+
+	@Test
 	function testLinearChain()
 	{
 		testChain(4, function(tweens)
