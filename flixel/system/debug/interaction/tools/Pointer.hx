@@ -120,7 +120,7 @@ class Pointer extends Tool
 		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);	
 		calculateSelectionArea();
 
-		if(findItems)
+		if (findItems)
 			_brain.findItemsWithinArea(_itemsInSelectionArea, FlxG.state.members, _selectionArea);
 		
 		// Clear everything
@@ -144,7 +144,7 @@ class Pointer extends Tool
 				// it was the only selected item, otherwise the user is
 				// batch selecting things. In that case, everything should
 				// be included, no questions asked.
-				if(_itemsInSelectionArea.length == 1)
+				if (_itemsInSelectionArea.length == 1)
 					selectedItems.remove(item);
 			}
 			else
