@@ -5,7 +5,6 @@ import flash.display.Graphics;
 import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.interaction.Interaction;
