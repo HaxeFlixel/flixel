@@ -105,10 +105,10 @@ class FlxStringUtilTest
 	{
 		var domain = "xn--eckwd4c7c.test";
 
-		// Examples of valid URI components. 
-		var schemes = [ "http", "https", "fake.but-valid+scheme" ];
-		var hosts = [ '$domain', 'www.$domain', 'aaa.bbb.ccc.$domain', ];
-		var paths = [ "", "/", "/index.html", "/path/to/file.extension?query=42" ];
+		// Examples of valid URI components.
+		var schemes = ["http", "https", "fake.but-valid+scheme"];
+		var hosts = ['$domain', 'www.$domain', 'aaa.bbb.ccc.$domain'];
+		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
 		for (scheme in schemes) for (host in hosts) for (path in paths)
 		{
@@ -118,15 +118,15 @@ class FlxStringUtilTest
 	}
 
 	/**
-	 * Returns a string with a mixture of upper and lower case characters.  
+	 * Returns a string with a mixture of upper and lower case characters.
 	 */
 	function mixedCase(string:String):String
 	{
 		var result = "", upper = false;
-		for (index in 0...string.length)
+		for (i in 0...string.length)
 		{
-			var char = string.charAt(index);
-			result += ((upper = !upper) ? char.toUpperCase() : char.toLowerCase());
+			var char = string.charAt(i);
+			result += (upper = !upper) ? char.toUpperCase() : char.toLowerCase();
 		}
 		return result;
 	}
@@ -143,9 +143,10 @@ class FlxStringUtilTest
 			"D:\\folder\\file.extension:alternate_stream_name",
 			"D:file.extension",
 			"\\\\server\\folder\\file.extension",
-			"\\\\?\\D:\\folder\\file.extension",
+			"\\\\?\\D:\\folder\\file.extension"
 		];
 		
-		for (path in paths) Assert.areEqual("local", FlxStringUtil.getDomain(path));
+		for (path in paths)
+			Assert.areEqual("local", FlxStringUtil.getDomain(path));
 	}
 }
