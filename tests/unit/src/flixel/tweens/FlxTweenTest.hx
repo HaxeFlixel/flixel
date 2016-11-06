@@ -85,40 +85,61 @@ class FlxTweenTest extends FlxTest
 	@Test
 	function testCancelChainFirstTweenUnfinished()
 	{
-		var tweenCount = 4;
-		var tweenUpdated = [for (i in 0 ... tweenCount) false];
-		var tweenCompleted = [for (i in 0 ... tweenCount) false];
-		var tween = [for (i in 0 ... tweenCount) makeTween(0.1, function (_) tweenCompleted[i] = true, function (_) tweenUpdated[i] = true)];
+		var chain = createChain(4);
 
-		for (i in 1 ... tweenCount) tween[0].wait(0.1).then(tween[i]);
+		while (!chain.updated[0])
+			step();
+		
+		Assert.isFalse(chain.completed[0]);
 
-		while (!tweenUpdated[0]) step();
-		Assert.isFalse(tweenCompleted[0]);
+		chain.tweens[0].cancelChain();
 
-		tween[0].cancelChain();
+		for (i in 0...chain.count)
+			finishTween(chain.tweens[i]);
 
-		for (i in 0 ... tweenCount) finishTween(tween[i]);
-		for (i in 1 ... tweenCount) Assert.isFalse(tweenUpdated[i] || tweenCompleted[i]);
+		for (i in 1...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
 	}
 
 	@Test
 	function testCancelChainFirstTweenFinished()
 	{
-		var tweenCount = 4;
-		var tweenUpdated = [for (i in 0 ... tweenCount) false];
-		var tweenCompleted = [for (i in 0 ... tweenCount) false];
-		var tween = [for (i in 0 ... tweenCount) makeTween(0.1, function (_) tweenCompleted[i] = true, function (_) tweenUpdated[i] = true)];
+		var chain = createChain(4);
 		
-		for (i in 1 ... tweenCount) tween[0].wait(0.1).then(tween[i]);
+		while (!chain.updated[1])
+			step();
 		
-		while (!tweenUpdated[1]) step();
-		Assert.isTrue(tweenUpdated[0] && tweenCompleted[0]);
-		Assert.isFalse(tweenCompleted[1]);
+		Assert.isTrue(chain.updated[0] && chain.completed[0]);
+		Assert.isFalse(chain.completed[1]);
 		
-		tween[0].cancelChain();
+		chain.tweens[0].cancelChain();
 		
-		for (i in 1 ... tweenCount) finishTween(tween[i]);
-		for (i in 2 ... tweenCount) Assert.isFalse(tweenUpdated[i] || tweenCompleted[i]);
+		for (i in 1...chain.count)
+			finishTween(chain.tweens[i]);
+		
+		for (i in 2...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
+	}
+
+	function createChain(count:Int)
+	{
+		var updated = [for (i in 0...count) false];
+		var completed = [for (i in 0...count) false];
+		var tweens = [for (i in 0...count)
+			makeTween(0.1,
+				function (_) completed[i] = true,
+				function (_) updated[i] = true
+		)];
+
+		for (i in 1...count)
+			tweens[0].wait(0.1).then(tweens[i]);
+
+		return {
+			count: count,
+			updated: updated,
+			completed: completed,
+			tweens: tweens
+		}
 	}
 
 	@Test
