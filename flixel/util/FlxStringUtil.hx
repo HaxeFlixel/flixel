@@ -591,6 +591,7 @@ class FlxStringUtil
 	
 	/**
 	 * Returns true if `s` equals `null` or is empty.
+	 * @since 4.1.0
 	 */
 	public static inline function isNullOrEmpty(s:String):Bool
 	{

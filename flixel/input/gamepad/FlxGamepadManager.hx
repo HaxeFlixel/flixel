@@ -18,11 +18,11 @@ using flixel.util.FlxStringUtil;
 class FlxGamepadManager implements IFlxInputManager
 {
 	/**
-	 * The first accessed gamepad - can be null!
+	 * The first accessed gamepad - can be `null`!
 	 */
 	public var firstActive:FlxGamepad;
 	/**
-	 * The last accessed gamepad - can be null!
+	 * The last accessed gamepad - can be `null`!
 	 */
 	public var lastActive:FlxGamepad;
 	

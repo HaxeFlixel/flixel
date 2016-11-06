@@ -1564,7 +1564,7 @@ class FlxBitmapText extends FlxSprite
 	{
 		if (lineSpacing != value)
 		{
-			lineSpacing = (value >= 0) ? value : -value;
+			lineSpacing = value;
 			pendingTextBitmapChange = true;
 		}
 		

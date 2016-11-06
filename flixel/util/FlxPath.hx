@@ -182,8 +182,8 @@ class FlxPath implements IFlxDestroyable
 	 * @param	Speed			The speed at which the object is moving on the path.
 	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
 	 * @param	AutoRotate		Whether the object's angle should be adjusted to the path angle during path follow behavior.
-	 * 
 	 * @return	This path object.
+	 * @since   4.2.0
 	 */
 	public function setProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
  	{
@@ -201,7 +201,6 @@ class FlxPath implements IFlxDestroyable
 	 * @param	Mode				Path following behavior (like looping, horizontal only, etc).
 	 * @param	AutoRotate			Whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 * @param   NodesAsReference 	Whether to pass the input array as reference (true) or to copy the points (false). Default is false.
-	 * 
 	 * @return	This path object.
 	 */
 	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false, NodesAsReference:Bool = false) : FlxPath

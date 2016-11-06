@@ -5,7 +5,7 @@ import flixel.text.FlxText.FlxTextAlign;
 import flixel.ui.FlxButton.FlxTypedButton;
 
 /**
- * A button with a bitmap text field for the label
+ * A button with `FlxBitmapText` field as a `label`.
  */
 class FlxBitmapTextButton extends FlxTypedButton<FlxBitmapText>
 {

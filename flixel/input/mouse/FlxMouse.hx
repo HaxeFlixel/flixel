@@ -35,6 +35,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
 	 * Whether or not mouse input is currently enabled.
+	 * @since 4.1.0
 	 */
 	public var enabled:Bool = true;
 	/**
@@ -277,6 +278,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * 
 	 * @param   Name         The ID name used for the cursor
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @since   4.2.0
 	 */
 	public function registerSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
 	{

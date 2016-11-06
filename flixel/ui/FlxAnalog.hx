@@ -63,7 +63,7 @@ class FlxAnalog extends FlxSpriteGroup
 	#if FLX_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
-	 */ 
+	 */
 	private var _currentTouch:FlxTouch;
 	/**
 	 * Helper array for checking touches
@@ -81,7 +81,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	private var _radius:Float = 0;
 	private var _direction:Float = 0;
-	private var _amount:Float = 0;		
+	private var _amount:Float = 0;
 	/**
 	 * The speed of easing when the thumb is released.
 	 */ 
@@ -89,11 +89,12 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
-	 *  
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
-	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
+	 *
+	 * @param   X        The X-coordinate of the point in space.
+	 * @param   Y        The Y-coordinate of the point in space.
+	 * @param   radius   The radius where the thumb can move.
+	 *                   If `0`, half the background's width will be used as radius.
+	 * @param   ease     The duration of the easing. The value must be between `0` and `1`.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{
@@ -159,16 +160,14 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 	
 	/**
-	 * Creates the touch zone. It's based on the size of the background. 
+	 * Creates the touch zone. It's based on the size of the background.
 	 * The thumb will react when the mouse is in the zone.
 	 * Override this to customize the zone.
 	 */
 	private function createZone():Void
 	{
-		if (base != null)			
-		{
+		if (base != null)
 			_radius = base.width / 2;
-		}
 		
 		_zone.set(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
 	}
@@ -197,7 +196,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 	
 	/**
-	 * Update the behavior. 
+	 * Update the behavior.
 	 */
 	override public function update(elapsed:Float):Void 
 	{
@@ -306,13 +305,13 @@ class FlxAnalog extends FlxSpriteGroup
 					{
 						onDown();
 					}
-				}						
+				}
 				
 				if (status == PRESSED)
 				{
 					if (onPressed != null)
 					{
-						onPressed();						
+						onPressed();
 					}
 					
 					var dx:Float = TouchPoint.x - x;
@@ -329,11 +328,11 @@ class FlxAnalog extends FlxSpriteGroup
 					_amount = Math.min(_radius, dist) / _radius;
 					
 					acceleration.x = Math.cos(_direction) * _amount * _radius;
-					acceleration.y = Math.sin(_direction) * _amount * _radius;			
-				}					
+					acceleration.y = Math.sin(_direction) * _amount * _radius;
+				}
 			}
 			else if (JustReleased && status == PRESSED)
-			{				
+			{
 				#if FLX_TOUCH
 				_currentTouch = null;
 				#end
@@ -346,7 +345,7 @@ class FlxAnalog extends FlxSpriteGroup
 				}
 				
 				acceleration.set();
-			}					
+			}
 			
 			if (status == NORMAL)
 			{

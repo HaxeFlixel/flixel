@@ -91,6 +91,7 @@ class FlxSound extends FlxBasic
 	public var time(get, set):Float;
 	/**
 	 * The length of the sound in milliseconds.
+	 * @since 4.2.0
 	 */
 	public var length(get, never):Float;
 	/**
@@ -103,15 +104,18 @@ class FlxSound extends FlxBasic
 	public var looped:Bool;
 	/**
 	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
+	 * @since 4.1.0
 	 */
 	public var loopTime:Float = 0;
 	/**
 	 * At which point to stop playing the sound, in milliseconds.
 	 * If not set / `null`, the sound completes normally.
+	 * @since 4.2.0
 	 */
 	public var endTime:Null<Float>;
 	/**
 	 * The tween used to fade this sound's volume in and out (set via `fadeIn()` and `fadeOut()`)
+	 * @since 4.1.0
 	 */
 	public var fadeTween:FlxTween;
 	/**

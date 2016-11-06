@@ -14,7 +14,7 @@ import flixel.util.FlxDestroyUtil;
  * @author Ka Wing Chin
  */
 class FlxVirtualPad extends FlxSpriteGroup
-{	
+{
 	public var buttonA:FlxButton;
 	public var buttonB:FlxButton;
 	public var buttonC:FlxButton;
@@ -36,8 +36,8 @@ class FlxVirtualPad extends FlxSpriteGroup
 	/**
 	 * Create a gamepad which contains 4 directional buttons and 4 action buttons.
 	 * 
-	 * @param 	DPadMode	The D-Pad mode. FULL for example.
-	 * @param 	ActionMode	The action buttons mode. A_B_C for example.
+	 * @param   DPadMode     The D-Pad mode. `FULL` for example.
+	 * @param   ActionMode   The action buttons mode. `A_B_C` for example.
 	 */
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{	
@@ -45,13 +45,9 @@ class FlxVirtualPad extends FlxSpriteGroup
 		scrollFactor.set();
 		
 		if (DPad == null)
-		{
 			DPad = FULL;
-		}
 		if (Action == null)
-		{
 			Action = A_B_C;
-		}
 		
 		dPad = new FlxSpriteGroup();
 		dPad.scrollFactor.set();
@@ -120,13 +116,13 @@ class FlxVirtualPad extends FlxSpriteGroup
 	}
 	
 	/**
-	 * @param 	X			The x-position of the button.
-	 * @param 	Y			The y-position of the button.
-	 * @param 	Width		The width of the button.
-	 * @param 	Height		The height of the button.
-	 * @param 	Graphic		The image of the button. It must contains 3 frames (NORMAL, HIGHLIGHT, PRESSED).
-	 * @param 	Callback	The callback for the button.
-	 * @return	The button
+	 * @param   X          The x-position of the button.
+	 * @param   Y          The y-position of the button.
+	 * @param   Width      The width of the button.
+	 * @param   Height     The height of the button.
+	 * @param   Graphic    The image of the button. It must contains 3 frames (`NORMAL`, `HIGHLIGHT`, `PRESSED`).
+	 * @param   Callback   The callback for the button.
+	 * @return  The button
 	 */
 	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Graphic:String, ?OnClick:Void->Void):FlxButton
 	{
@@ -143,9 +139,7 @@ class FlxVirtualPad extends FlxSpriteGroup
 		#end
 		
 		if (OnClick != null)
-		{
 			button.onDown.callback = OnClick;
-		}
 		
 		return button;
 	}

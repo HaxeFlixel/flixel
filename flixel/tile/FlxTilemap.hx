@@ -63,6 +63,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * @since 4.1.0
 	 */
 	public var antialiasing(default, set):Bool = false;
 	
@@ -99,6 +100,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * GLSL shader for this tilemap. Only works with OpenFL Next or WebGL.
 	 * Avoid changing it frequently as this is a costly operation.
+	 * @since 4.1.0
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader:FlxShader;
@@ -168,6 +170,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		FlxG.cameras.cameraResized.add(onCameraChanged);
 		
 		#if FLX_DEBUG
+		debugBoundingBoxColorSolid = FlxColor.GREEN;
+		debugBoundingBoxColorPartial = FlxColor.PINK;
+		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
+
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
 		#end
@@ -188,9 +194,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			#if FLX_DEBUG
 			_debugRect = null;
-			_debugTileNotSolid = null;
-			_debugTilePartial = null;
-			_debugTileSolid = null;
+			_debugTileNotSolid = FlxDestroyUtil.dispose(_debugTileNotSolid);
+			_debugTilePartial = FlxDestroyUtil.dispose(_debugTilePartial);
+			_debugTileSolid = FlxDestroyUtil.dispose(_debugTileSolid);
 			#end
 		}
 		else
@@ -290,14 +296,51 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
-		{
-			_debugTileNotSolid = makeDebugTile(FlxColor.BLUE);
-			_debugTilePartial = makeDebugTile(FlxColor.PINK);
-			_debugTileSolid = makeDebugTile(FlxColor.GREEN);
-		}
+		updateDebugTileBoundingBoxSolid();
+		updateDebugTileBoundingBoxNotSolid();
+		updateDebugTileBoundingBoxPartial();
 		#end
 	}
+	
+	#if FLX_DEBUG
+	private function updateDebugTileBoundingBoxSolid():Void 
+	{
+		_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
+	}
+	
+	private function updateDebugTileBoundingBoxNotSolid():Void 
+	{
+		_debugTileNotSolid = updateDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
+	}
+	
+	private function updateDebugTileBoundingBoxPartial():Void 
+	{
+		_debugTilePartial = updateDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
+	}
+	
+	private function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
+	{
+		if (FlxG.renderTile)
+			return null;
+
+		if (_tileWidth <= 0 || _tileHeight <= 0)
+			return tileBitmap;
+
+		if (tileBitmap != null && (tileBitmap.width != _tileWidth || tileBitmap.height != _tileHeight))
+			tileBitmap = FlxDestroyUtil.dispose(tileBitmap);
+
+		if (tileBitmap == null)
+			tileBitmap = makeDebugTile(color);
+		else
+		{
+			tileBitmap.fillRect(tileBitmap.rect, FlxColor.TRANSPARENT);
+			drawDebugTile(tileBitmap, color);
+		}
+
+		setDirty();
+		return tileBitmap;
+	}
+	#end
 	
 	override private function computeDimensions():Void 
 	{
@@ -346,12 +389,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_helperPoint.x = x - Camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - Camera.scroll.y * scrollFactor.y;
 		
-		var debugColor:FlxColor;
-		var drawX:Float;
-		var drawY:Float;
-		
 		var rectWidth:Float = _scaledTileWidth;
 		var rectHeight:Float = _scaledTileHeight;
+		var rect = FlxRect.get(0, 0, rectWidth, rectHeight);
 		
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
@@ -380,26 +420,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				
 				if (tile != null && tile.visible)
 				{
-					drawX = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					
-					if (tile.allowCollisions <= FlxObject.NONE)
-					{
-						debugColor = FlxColor.BLUE;
-					}
-					else if (tile.allowCollisions != FlxObject.ANY)
-					{
-						debugColor = FlxColor.PINK;
-					}
-					else
-					{
-						debugColor = FlxColor.GREEN;
-					}
-					
-					// Copied from makeDebugTile
-					var gfx:Graphics = Camera.debugLayer.graphics;
-					gfx.lineStyle(1, debugColor, 0.5);
-					gfx.drawRect(drawX, drawY, rectWidth, rectHeight);
+					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
+					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
+					drawDebugBoundingBox(Camera.debugLayer.graphics, rect,
+						tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
 				columnIndex++;
@@ -407,6 +431,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			rowIndex += widthInTiles;
 		}
+		
+		rect.put();
 	}
 	#end
 	
@@ -498,8 +524,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	override public function setDirty(Dirty:Bool = true):Void
 	{
+		if (FlxG.renderTile)
+			return;
+
 		for (buffer in _buffers)
-			buffer.dirty = true;
+			if (buffer != null)
+				buffer.dirty = Dirty;
 	}
 
 	/**
@@ -917,17 +947,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						{
 							if (tile.allowCollisions <= FlxObject.NONE)
 							{
-								// Blue
 								debugTile = _debugTileNotSolid; 
 							}
 							else if (tile.allowCollisions != FlxObject.ANY)
 							{
-								// Pink
 								debugTile = _debugTilePartial; 
 							}
 							else
 							{
-								// Green
 								debugTile = _debugTileSolid; 
 							}
 							
@@ -993,25 +1020,36 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if FLX_DEBUG
-	private function makeDebugTile(Color:FlxColor):BitmapData
+	private function makeDebugTile(color:FlxColor):BitmapData
 	{
 		if (FlxG.renderTile)
 			return null;
 
-		var debugTile:BitmapData;
-		debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
-		
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		gfx.moveTo(0, 0);
-		gfx.lineStyle(1, Color, 0.5);
-		gfx.lineTo(_tileWidth - 1, 0);
-		gfx.lineTo(_tileWidth - 1, _tileHeight - 1);
-		gfx.lineTo(0, _tileHeight - 1);
-		gfx.lineTo(0, 0);
-		
-		debugTile.draw(FlxSpriteUtil.flashGfxSprite);
+		var debugTile = new BitmapData(_tileWidth, _tileHeight, true, 0);
+		drawDebugTile(debugTile, color);
 		return debugTile;
+	}
+	
+	private function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void
+	{
+		if (color != FlxColor.TRANSPARENT)
+		{
+			var gfx:Graphics = FlxSpriteUtil.flashGfx;
+			gfx.clear();
+			gfx.moveTo(0, 0);
+			gfx.lineStyle(1, color, 0.5);
+			gfx.lineTo(_tileWidth - 1, 0);
+			gfx.lineTo(_tileWidth - 1, _tileHeight - 1);
+			gfx.lineTo(0, _tileHeight - 1);
+			gfx.lineTo(0, 0);
+			
+			debugTile.draw(FlxSpriteUtil.flashGfxSprite);
+		}
+	}
+
+	private function onDrawDebugChanged():Void
+	{
+		setDirty();
 	}
 	#end
 
@@ -1036,18 +1074,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		buffer.antialiasing = antialiasing;
 		return buffer;
 	}
-	
-	#if FLX_DEBUG
-	private function onDrawDebugChanged():Void
-	{
-		if (FlxG.renderTile)
-			return;
-
-		for (buffer in _buffers)
-			if (buffer != null)
-				buffer.dirty = true;
-	}
-	#end
 	
 	private function set_antialiasing(value:Bool):Bool
 	{
@@ -1113,14 +1139,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		else
 			colorTransform.setMultipliers(1, 1, 1, 1);
 		
-		if (FlxG.renderBlit)
-			setDirty();
+		setDirty();
 	}
 	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		if (FlxG.renderBlit)
-			setDirty();
+		setDirty();
 		return blend = Value;
 	}
 	
@@ -1181,6 +1205,29 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 		return super.set_allowCollisions(Value);
 	}
+
+	#if FLX_DEBUG
+	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorSolid(color);
+		updateDebugTileBoundingBoxSolid();
+		return color;
+	}
+	
+	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorNotSolid(color);
+		updateDebugTileBoundingBoxNotSolid();
+		return color;
+	}
+	
+	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
+	{
+		super.set_debugBoundingBoxColorPartial(color);
+		updateDebugTileBoundingBoxPartial();
+		return color;
+	}
+	#end
 }
 
 typedef FlxTileProperties =

@@ -40,7 +40,7 @@ class BitmapFrontEnd
 
 	public function new()
 	{
-		clearCache();
+		reset();
 	}
 	
 	public function onAssetsReload(_):Void 
@@ -238,6 +238,9 @@ class BitmapFrontEnd
 		if (baseKey == null)
 			baseKey = "pixels";
 		
+		if (!checkCache(baseKey))
+			return baseKey;
+		
 		var i:Int = _lastUniqueKeyIndex;
 		var uniqueKey:String;
 		do
@@ -313,17 +316,35 @@ class BitmapFrontEnd
 	
 	/**
 	 * Clears image cache (and destroys those images).
-	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache
+	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache and its useCount is 0.
 	 */
 	public function clearCache():Void
 	{
 		if (_cache == null)
 			_cache = new Map();
-
+		
 		for (key in _cache.keys())
 		{
 			var obj = _cache.get(key);
-			if (obj != null && !obj.persist)
+			if (obj != null && !obj.persist && obj.useCount <= 0)
+			{
+				removeByKey(key);
+			}
+		}
+	}
+	
+	/**
+	 * Completely resets bitmap cache, which means destroying ALL of the cached FlxGraphic objects.
+	 */
+	public function reset():Void
+	{
+		if (_cache == null)
+			_cache = new Map();
+		
+		for (key in _cache.keys())
+		{
+			var obj = _cache.get(key);
+			if (obj != null)
 			{
 				removeByKey(key);
 			}

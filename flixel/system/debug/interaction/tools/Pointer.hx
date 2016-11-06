@@ -129,7 +129,7 @@ class Pointer extends Tool
 	}
 	
 	private function handleItemAddition(item:FlxObject):Void
-	{			
+	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		// or if the user used a selection area (e.g. clicked and dragged to create a rectangle)
 		var adding = _brain.keyPressed(Keyboard.CONTROL) || _itemsInSelectionArea.length > 1;
@@ -160,7 +160,7 @@ class Pointer extends Tool
 		}
 	}
 	
-	// TODO: move this method to brain
+	@:access(flixel.group.FlxTypedGroup)
 	private function pinpointItemInGroup(members:Array<FlxBasic>, cursor:FlxPoint):FlxObject
 	{
 		var target:FlxObject = null;
@@ -174,8 +174,9 @@ class Pointer extends Tool
 			if (member == null || !member.visible || !member.exists)
 				continue;
 
-			if (Std.is(member, FlxTypedGroup))
-				target = pinpointItemInGroup((cast member).members, cursor);
+			var group = FlxTypedGroup.resolveGroup(member);
+			if (group != null)
+				target = pinpointItemInGroup(group.members, cursor);
 			else if (Std.is(member, FlxSprite) &&
 				(cast(member, FlxSprite).overlapsPoint(cursor, true)))
 				target = cast member;

@@ -14,13 +14,12 @@ class FlxBaseAnimation implements IFlxDestroyable
 	public var parent:FlxAnimationController;
 	
 	/**
-	 * String name of the animation (e.g. "walk")
+	 * String name of the animation (e.g. `"walk"`)
 	 */
 	public var name:String;
 	
 	/**
 	 * Keeps track of the current index into the tile sheet based on animation or rotation.
-	 * Allow access to private var from FlxAnimationController.
 	 */
 	public var curIndex(default, set):Int = 0;
 	

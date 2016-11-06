@@ -19,18 +19,15 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 
 /**
  * FlxTypedEmitter is a lightweight particle emitter.
- * It can be used for one-time explosions or for
- * continuous fx like rain and fire.  FlxEmitter
- * is not optimized or anything; all it does is launch
- * FlxParticle objects out at set intervals
- * by setting their positions and velocities accordingly.
- * It is easy to use and relatively efficient,
- * relying on FlxGroup's RECYCLE POWERS.
+ * It can be used for one-time explosions or for continuous fx like rain and fire.
+ * `FlxEmitter` is not optimized or anything; all it does is launch `FlxParticle` objects out
+ * at set intervals by setting their positions and velocities accordingly.
+ * It is easy to use and relatively efficient, relying on `FlxGroup`'s RECYCLE POWERS.
  */
 class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 {
 	/**
-	 * Set your own particle class type here. The custom class must extend FlxParticle. Default is FlxParticle.
+	 * Set your own particle class type here. The custom class must extend `FlxParticle`. Default is `FlxParticle`.
 	 */
 	public var particleClass:Class<T> = cast FlxParticle;
 	/**
@@ -38,11 +35,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var emitting:Bool = false;
 	/**
-	 * How often a particle is emitted (if emitter is started with Explode == false).
+	 * How often a particle is emitted (if emitter is started with `Explode == false`).
 	 */
 	public var frequency:Float = 0.1;
 	/**
-	 * Sets particle's blend mode. null by default. Warning: Expensive on flash target.
+	 * Sets particle's blend mode. `null` by default. Warning: Expensive on Flash.
 	 */
 	public var blend:BlendMode;
 	/**
@@ -58,23 +55,24 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var width:Float = 0;
 	/**
-	 * The height of this emitter.  Particles can be randomly generated from anywhere within this box.
+	 * The height of this emitter. Particles can be randomly generated from anywhere within this box.
 	 */
 	public var height:Float = 0;
 	/**
-	 * How particles should be launched. If CIRCLE, particles will use launchAngle and speed. Otherwise, particles will just use velocity.x and velocity.y.
+	 * How particles should be launched. If `CIRCLE`, particles will use `launchAngle` and `speed`.
+	 * Otherwise, particles will just use `velocity.x` and `velocity.y`.
 	 */
 	public var launchMode:FlxEmitterMode = FlxEmitterMode.CIRCLE;
 	/**
-	 * Keep the scale ratio of the particle. Uses the x values of the scale.
+	 * Keep the scale ratio of the particle. Uses the `x` values of `scale`.
 	 */
 	public var keepScaleRatio:Bool = false;
 	/**
-	 * Sets the velocity range of particles launched from this emitter. Only used with FlxEmitterMode.SQUARE.
+	 * Sets the velocity range of particles launched from this emitter. Only used with `FlxEmitterMode.SQUARE`.
 	 */
 	public var velocity(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(-100, -100, 100, 100);
 	/**
-	 * Set the speed range of particles launched from this emitter. Only used with FlxEmitterMode.CIRCLE.
+	 * Set the speed range of particles launched from this emitter. Only used with `FlxEmitterMode.CIRCLE`.
 	 */
 	public var speed(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 100);
 	/**
@@ -90,15 +88,18 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var angularVelocity(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0, 0);
 	/**
-	 * The angle range of particles launched from this emitter. angle.end is ignored unless ignoreAngularVelocity is set to true.
+	 * The angle range of particles launched from this emitter.
+	 * `angle.end` is ignored unless `ignoreAngularVelocity` is set to `true`.
 	 */
 	public var angle(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0);
 	/**
-	 * Set this if you want to specify the beginning and ending value of angle, instead of using angularVelocity(or angularAcceleration).
+	 * Set this if you want to specify the beginning and ending value of angle,
+	 * instead of using `angularVelocity` (or `angularAcceleration`).
 	 */
 	public var ignoreAngularVelocity:Bool = false;
 	/**
-	 * The angle range at which particles will be launched from this emitter. Ignored unless launchMode is set to FlxEmitterMode.CIRCLE
+	 * The angle range at which particles will be launched from this emitter.
+	 * Ignored unless `launchMode` is set to `FlxEmitterMode.CIRCLE`.
 	 */
 	public var launchAngle(default, null):FlxBounds<Float> = new FlxBounds<Float>(-180, 180);
 	/**
@@ -106,15 +107,15 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var lifespan(default, null):FlxBounds<Float> = new FlxBounds<Float>(3);
 	/**
-	 * Sets scale range of particles launched from this emitter.
+	 * Sets `scale` range of particles launched from this emitter.
 	 */
 	public var scale(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(1, 1);
 	/**
-	 * Sets alpha range of particles launched from this emitter.
+	 * Sets `alpha` range of particles launched from this emitter.
 	 */
 	public var alpha(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(1);
 	/**
-	 * Sets color range of particles launched from this emitter.
+	 * Sets `color` range of particles launched from this emitter.
 	 */
 	public var color(default, null):FlxRangeBounds<FlxColor> = new FlxRangeBounds(FlxColor.WHITE, FlxColor.WHITE);
 	/**
@@ -122,27 +123,31 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	public var drag(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(0, 0);
 	/**
-	 * Sets the acceleration range of particles launched from this emitter. Set acceleration y-values to give particles gravity.
+	 * Sets the `acceleration` range of particles launched from this emitter.
+	 * Set acceleration y-values to give particles gravity.
 	 */
 	public var acceleration(default, null):FlxPointRangeBounds = new FlxPointRangeBounds(0, 0);
 	/**
-	 * Sets the elasticity, or bounce, range of particles launched from this emitter.
+	 * Sets the `elasticity`, or bounce, range of particles launched from this emitter.
 	 */
 	public var elasticity(default, null):FlxRangeBounds<Float> = new FlxRangeBounds<Float>(0);
 	/**
-	 * Sets the immovable flag for particles launched from this emitter.
+	 * Sets the `immovable` flag for particles launched from this emitter.
 	 */
 	public var immovable:Bool = false;
 	/**
-	 * Sets the autoUpdateHitbox flag for particles launched from this emitter. If true, the particles' hitbox will be updated to match scale.
+	 * Sets the `autoUpdateHitbox` flag for particles launched from this emitter.
+	 * If true, the particles' hitbox will be updated to match scale.
 	 */
 	public var autoUpdateHitbox:Bool = false;
 	/**
-	 * Sets the allowCollisions value for particles launched from this emitter. Set to NONE by default. Don't forget to call FlxG.collide() in your update loop!
+	 * Sets the `allowCollisions` value for particles launched from this emitter.
+	 * Set to `NONE` by default. Don't forget to call `FlxG.collide()` in your update loop!
 	 */
 	public var allowCollisions:Int = FlxObject.NONE;
 	/**
-	 * Shorthand for toggling allowCollisions between ANY (if true) and NONE (if false). Don't forget to call FlxG.collide() in your update loop!
+	 * Shorthand for toggling `allowCollisions` between `ANY` (if `true`) and `NONE` (if `false`).
+	 * Don't forget to call `FlxG.collide()` in your update loop!
 	 */
 	public var solid(get, set):Bool;
 	/**
@@ -166,17 +171,17 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 */
 	private var _point:FlxPoint = FlxPoint.get();
 	/**
-	 * Internal helper for automatically calling the kill() method
+	 * Internal helper for automatically calling the `kill()` method
 	 */
 	private var _waitForKill:Bool = false;
 	
 	/**
-	 * Creates a new FlxTypedEmitter object at a specific position.
+	 * Creates a new `FlxTypedEmitter` object at a specific position.
 	 * Does NOT automatically generate or attach particles!
 	 * 
-	 * @param	X		The X position of the emitter.
-	 * @param	Y		The Y position of the emitter.
-	 * @param	Size	Optional, specifies a maximum capacity for this emitter.
+	 * @param   X      The X position of the emitter.
+	 * @param   Y      The Y position of the emitter.
+	 * @param   Size   Optional, specifies a maximum capacity for this emitter.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
 	{
@@ -215,12 +220,17 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * This function generates a new array of particle sprites to attach to the emitter.
 	 * 
-	 * @param	Graphics		If you opted to not pre-configure an array of FlxParticle objects, you can simply pass in a particle image or sprite sheet.
-	 * @param	Quantity		The number of particles to generate when using the "create from image" option.
-	 * @param	BakedRotations	How many frames of baked rotation to use (boosts performance).  Set to zero to not use baked rotations.
-	 * @param	Multiple		Whether the image in the Graphics param is a single particle or a bunch of particles (if it's a bunch, they need to be square!).
-	 * @param	AutoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @return	This FlxEmitter instance (nice for chaining stuff together).
+	 * @param   Graphics         If you opted to not pre-configure an array of `FlxParticle` objects,
+	 *                           you can simply pass in a particle image or sprite sheet.
+	 * @param   Quantity         The number of particles to generate when using the "create from image" option.
+	 * @param   BakedRotations   How many frames of baked rotation to use (boosts performance).
+	 *                           Set to zero to not use baked rotations.
+	 * @param   Multiple         Whether the image in the `Graphics` param is a single particle or a bunch of particles
+	 *                           (if it's a bunch, they need to be square!).
+	 * @param   AutoBuffer       Whether to automatically increase the image size to accomodate rotated corners.
+	 *                           Default is `false`. Will create frames that are 150% larger on each axis than the
+	 *                           original frame or graphic.
+	 * @return  This `FlxEmitter` instance (nice for chaining stuff together).
 	 */
 	public function loadParticles(Graphics:FlxGraphicAsset, Quantity:Int = 50, bakedRotationAngles:Int = 16,
 		Multiple:Bool = false, AutoBuffer:Bool = false):FlxTypedEmitter<T>
@@ -242,8 +252,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		return this;
 	}
 	
-	private function loadParticle(Graphics:FlxGraphicAsset, Quantity:Int, bakedRotationAngles:Int, Multiple:Bool = false,
-		AutoBuffer:Bool = false, totalFrames:Int):T
+	private function loadParticle(Graphics:FlxGraphicAsset, Quantity:Int, bakedRotationAngles:Int,
+		Multiple:Bool = false, AutoBuffer:Bool = false, totalFrames:Int):T
 	{
 		var particle:T = Type.createInstance(particleClass, []);
 		var frame = Multiple ? FlxG.random.int(0, totalFrames - 1) : -1;
@@ -260,15 +270,16 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	}
 	
 	/**
-	 * Similar to FlxSprite's makeGraphic, this function allows you to quickly make single-color particles.
+	 * Similar to `FlxSprite#makeGraphic()`, this function allows you to quickly make single-color particles.
 	 * 
-	 * @param	Width           The width of the generated particles. Default is 2 pixels.
-	 * @param	Height          The height of the generated particles. Default is 2 pixels.
-	 * @param	Color           The color of the generated particles. Default is white.
-	 * @param	Quantity        How many particles to generate. Default is 50.
-	 * @return  This FlxEmitter instance (nice for chaining stuff together).
+	 * @param   Width      The width of the generated particles. Default is `2` pixels.
+	 * @param   Height     The height of the generated particles. Default is `2` pixels.
+	 * @param   Color      The color of the generated particles. Default is white.
+	 * @param   Quantity   How many particles to generate. Default is `50`.
+	 * @return  This `FlxEmitter` instance (nice for chaining stuff together).
 	 */
-	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
+	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE,
+		Quantity:Int = 50):FlxTypedEmitter<T>
 	{
 		for (i in 0...Quantity)
 		{
@@ -367,10 +378,11 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Call this function to start emitting particles.
 	 * 
-	 * @param	Explode			Whether the particles should all burst out at once.
-	 * @param	Frequency		Ignored if Explode is set to true. Frequency is how often to emit a particle. 0 = never emit, 0.1 = 1 particle every 0.1 seconds, 5 = 1 particle every 5 seconds.
-	 * @param	Quantity		How many particles to launch. 0 = "all of the particles".
-	 * @return	This FlxEmitter instance (nice for chaining stuff together).
+	 * @param   Explode     Whether the particles should all burst out at once.
+	 * @param   Frequency   Ignored if `Explode` is set to `true`. `Frequency` is how often to emit a particle.
+	 *                      `0` = never emit, `0.1` = 1 particle every 0.1 seconds, `5` = 1 particle every 5 seconds.
+	 * @param   Quantity    How many particles to launch. `0` = "all of the particles".
+	 * @return  This `FlxEmitter` instance (nice for chaining stuff together).
 	 */
 	public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0):FlxTypedEmitter<T>
 	{
@@ -562,9 +574,9 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	}
 	
 	/**
-	 * Change the emitter's midpoint to match the midpoint of a FlxObject.
+	 * Change the emitter's midpoint to match the midpoint of a `FlxObject`.
 	 * 
-	 * @param	Object		The FlxObject that you want to sync up with.
+	 * @param   Object   The `FlxObject` that you want to sync up with.
 	 */
 	public function focusOn(Object:FlxObject):Void
 	{

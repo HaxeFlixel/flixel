@@ -37,4 +37,31 @@ class FlxSubStateTest extends FlxTest
 		
 		Assert.areEqual(subState2, FlxG.state.subState);
 	}
+	
+	@Test // #1971
+	function testOpenPersistentSubStateFromNewParent()
+	{
+		var state1 = new FlxState();
+		var state2 = new FlxState();
+		state1.destroySubStates = false;
+		FlxG.switchState(state1);
+		step();
+		FlxG.state.openSubState(subState1);
+		step();
+
+		Assert.areEqual(state1.subState, subState1);
+		subState1.close();
+		step();
+		Assert.isNull(state1.subState);
+
+		FlxG.switchState(state2);
+		step();
+		FlxG.state.openSubState(subState1);
+		step();
+
+		Assert.areEqual(state2.subState, subState1);
+		subState1.close();
+		step();
+		Assert.isNull(state2.subState);
+	}
 }
