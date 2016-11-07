@@ -100,21 +100,22 @@ class FlxStringUtilTest
 		Assert.isFalse(FlxStringUtil.isNullOrEmpty("Hello World"));
 	}
 
-	@Test
-	function testGetDomainNonLocal()
+	/**
+	 * Returns an array of valid URLs for testing.
+	 *
+	 * @param	host	The host to insert into the generated URLs.
+	 */
+	function generateTestURLs(host:String):Array<String>
 	{
-		var domain = "xn--eckwd4c7c.test";
+		var urls = new Array<String>();
 
-		// Examples of valid URI components.
-		var schemes = ["http", "https", "fake.but-valid+scheme"];
-		var hosts = ['$domain', 'www.$domain', 'aaa.bbb.ccc.$domain'];
+		var authorities = ['$host', 'user@$host', '$host:1234'];
 		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
-		for (scheme in schemes) for (host in hosts) for (path in paths)
-		{
-			var uri = mixedCase('$scheme://$host$path');
-			Assert.areEqual(domain, FlxStringUtil.getDomain(uri));
-		}
+		for (authority in authorities) for (path in paths)
+			urls.push(mixedCase('fake.but-valid+scheme://$authority$path'));
+		
+		return urls;
 	}
 
 	/**
@@ -122,7 +123,7 @@ class FlxStringUtilTest
 	 */
 	function mixedCase(string:String):String
 	{
-		var result = "", upper = false;
+		var result = "", upper = (string.length % 2 == 0);
 		for (i in 0...string.length)
 		{
 			var char = string.charAt(i);
@@ -131,11 +132,13 @@ class FlxStringUtilTest
 		return result;
 	}
 
-	@Test
-	function testGetDomainLocal()
+	/**
+	 * Returns an array of local file paths for testing.
+	 * Includes Unix-style and Windows-style paths as well as a file:// URL.
+	 */
+	function generateLocalPaths():Array<String>
 	{
-		// Examples of some Unix-style and Windows-style local file paths.
-		var paths = [
+		return [
 			"/root/folder/file.extension",
 			"./folder/file.extension",
 			"~/.extension",
@@ -143,10 +146,44 @@ class FlxStringUtilTest
 			"D:\\folder\\file.extension:alternate_stream_name",
 			"D:file.extension",
 			"\\\\server\\folder\\file.extension",
-			"\\\\?\\D:\\folder\\file.extension"
+			"\\\\?\\D:\\folder\\file.extension",
+			"file:///D:/folder/file.extension"
 		];
+	}
+
+	@Test
+	function testGetHostValidURLs()
+	{
+		var hosts = ["123.45.67.89", "[1234:5678:9abc:def0::1]", "asdf.xn--eckwd4c7c.test"];
+		for (host in hosts) for (url in generateTestURLs(host))
+			Assert.areEqual(host, FlxStringUtil.getHost(url));
+
+		Assert.areEqual("abc.test", FlxStringUtil.getHost("http://%41%42%43.test")); 
+	}
+
+	@Test
+	function testGetHostInvalidURLs()
+	{
+		for (path in generateLocalPaths())
+			Assert.areEqual("", FlxStringUtil.getHost(path));
+	}
+
+	@Test
+	function testGetDomainNonLocal()
+	{
+		var domain = "xn--eckwd4c7c.test";
+		for (url in generateTestURLs('extra.data.$domain'))
+			Assert.areEqual(domain, FlxStringUtil.getDomain(url));
+	}
+
+	@Test
+	function testGetDomainLocal()
+	{
+		var hosts = ["localhost", "123.45.67.89", "[1234:5678:9abc:def0::1]"];
+		for (host in hosts) for (url in generateTestURLs(host))
+			Assert.areEqual("", FlxStringUtil.getDomain(url));
 		
-		for (path in paths)
-			Assert.areEqual("local", FlxStringUtil.getDomain(path));
+		for (path in generateLocalPaths())
+			Assert.areEqual("", FlxStringUtil.getDomain(path));
 	}
 }
