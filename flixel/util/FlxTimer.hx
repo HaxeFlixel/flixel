@@ -324,7 +324,6 @@ class FlxTimerManager extends FlxBasic
 		}
 	}
 
-	
 	/**
 	 * Removes all the timers from the timer manager.
 	 */
