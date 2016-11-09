@@ -6,6 +6,7 @@ import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flixel.graphics.tile.FlxTilesheet;
+import flixel.input.FlxSwipe;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
@@ -737,7 +738,7 @@ class FlxGame extends Sprite
 		#end
 		
 		#if FLX_POINTER_INPUT
-		FlxArrayUtil.clearArray(FlxG.swipes);
+		FlxSwipe.filterSwipes(FlxG.swipes);
 		#end
 		
 		filters = filtersEnabled ? _filters : null;
