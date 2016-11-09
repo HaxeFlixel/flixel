@@ -78,7 +78,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 			justPressedPosition.set(screenX, screenY);
 			justPressedTimeInTicks = FlxG.game.ticks;
 			#if FLX_POINTER_INPUT 
-			FlxG.swipes.push(_currentSwipe = new FlxSwipe(ID, justPressedPosition, justPressedTimeInTicks)); 
+			FlxG.swipes.push(_currentSwipe = new FlxSwipe(touchPointID, justPressedPosition, justPressedTimeInTicks)); 
 			#end
 		}
 		#if FLX_POINTER_INPUT
