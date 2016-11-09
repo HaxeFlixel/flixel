@@ -8,7 +8,6 @@ import flash.events.Event;
 import flixel.graphics.tile.FlxTilesheet;
 import flixel.input.FlxSwipe;
 import flixel.system.FlxSplash;
-import flixel.util.FlxArrayUtil;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 

@@ -99,17 +99,20 @@ class FlxSwipe
 			LabelValuePair.weak("qualified", qualified)]);
 	}
 	
-	private function get_start():FlxPoint {
+	private function get_start():FlxPoint
+	{
 		return path.head();
 	}
 	
-	private function get_end():FlxPoint {
+	private function get_end():FlxPoint
+	{
 		return path.tail();
 	}
 	
 	private function get_velocity():FlxPoint
 	{
-		if (!released) {
+		if (!released)
+		{
 			velocity.set(end.x - start.x, end.y - start.y);
 			velocity.scale(1 / duration);
 		}
