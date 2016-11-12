@@ -223,10 +223,9 @@ class FlxAnimation extends FlxBaseAnimation
 	private function set_curFrame(Frame:Int):Int
 	{
 		var maxFrameIndex:Int = numFrames - 1;
-		if (reversed)
-			Frame = (maxFrameIndex - Frame);
-
-		if (Frame >= 0)
+		var tempFrame:Int = (reversed) ? (maxFrameIndex - Frame) : Frame;
+		
+		if (tempFrame >= 0)
 		{
 			if (!looped && Frame > maxFrameIndex)
 			{
