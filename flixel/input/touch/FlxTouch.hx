@@ -88,8 +88,8 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		}
 		else if (justReleased)
 		{
-			_currentSwipe.release();
-			_currentSwipe = null;
+			if (_currentSwipe != null)
+				_currentSwipe.release();
 		}
 		#end
 	}
