@@ -652,6 +652,9 @@ class FlxSprite extends FlxObject
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
+			if (FlxG.renderBlit)
+				_point.subtract(camera.blitOffsetX, camera.blitOffsetY); // TODO: move method for calculating this point into separate inlined method...
+				
 			if (isSimpleRender(camera))
 				drawSimple(camera);
 			else
@@ -986,10 +989,10 @@ class FlxSprite extends FlxObject
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{
-			if (minX > Camera.width || minX + frameWidth < 0)
+			if (minX > Camera.viewOffsetWidth || minX + frameWidth < Camera.viewOffsetX)
 				return false;
 			
-			if (minY > Camera.height || minY + frameHeight < 0)
+			if (minY > Camera.viewOffsetHeight || minY + frameHeight < Camera.viewOffsetY)
 				return false;
 		}
 		else
@@ -1022,14 +1025,14 @@ class FlxSprite extends FlxObject
 			var maxX:Float = minX + radius;
 			minX -= radius;
 			
-			if (maxX < 0 || minX > Camera.width)
+			if (maxX < Camera.viewOffsetX || minX > Camera.viewOffsetWidth)
 				return false;
 			
 			minY += oy;
 			var maxY:Float = minY + radius;
 			minY -= radius;
 			
-			if (maxY < 0 || minY > Camera.height)
+			if (maxY < Camera.viewOffsetY || minY > Camera.viewOffsetHeight)
 				return false;
 		}
 		

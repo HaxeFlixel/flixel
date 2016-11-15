@@ -159,7 +159,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			Camera = FlxG.camera;
 		}
 
-		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
+		columns = Math.ceil(Camera.viewWidth / (TileWidth * ScaleX)) + 1;
 		
 		if (columns > WidthInTiles)
 		{
@@ -183,7 +183,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			Camera = FlxG.camera;
 		}
 		
-		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
+		rows = Math.ceil(Camera.viewHeight / (TileHeight * ScaleY)) + 1;
 		
 		if (rows > HeightInTiles)
 		{
