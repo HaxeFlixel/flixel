@@ -467,21 +467,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			buffer = _buffers[i];
 			
+			// TODO: add check for tilemap visibility...
+			
 			if (FlxG.renderBlit)
 			{
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
-				buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
+				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).subtract(camera.viewOffsetX, camera.viewOffsetY);
+			//	getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
+				buffer.dirty = buffer.dirty || _point.x > camera.viewOffsetX || (_point.y > camera.viewOffsetY) || (_point.x + buffer.width * scale.x < camera.viewOffsetWidth) || (_point.y + buffer.height * scale.y < camera.viewOffsetHeight);
+			//	buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 				
 				if (buffer.dirty)
 					drawTilemap(buffer, camera);
 				
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
-				
-				if (FlxG.renderBlit)
-					_point.subtract(camera.blitOffsetX, camera.blitOffsetY);
-				
-				_point.copyToFlash(_flashPoint);
-				
+				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).subtract(camera.blitOffsetX, camera.blitOffsetY).copyToFlash(_flashPoint);
 				buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			}
 			else
@@ -882,6 +880,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
+		
+		trace("drawTilemap " + openfl.Lib.getTimer());
 		
 		//only used for renderTile
 		var drawX:Float = 0;

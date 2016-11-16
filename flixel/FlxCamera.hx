@@ -235,7 +235,7 @@ class FlxCamera extends FlxBasic
 	private var _bufferWidth:Int = 0;
 	private var _bufferHeight:Int = 0;
 	
-	public var viewGrowStep:Float = 0.2;
+	public var viewGrowStep:Float = 0.1;
 	
 	private var _bufferOffsetX:Float = 0;
 	private var _bufferOffsetY:Float = 0;
@@ -1448,6 +1448,11 @@ class FlxCamera extends FlxBasic
 				
 				var tempZoom:Float = Math.floor(zoom / viewGrowStep) * viewGrowStep;
 				
+				if (tempZoom <= 0)
+				{
+					tempZoom = 0.01;
+				}
+				
 				if (tempZoom != _zoomForBufferDimensions)
 				{
 					_zoomForBufferDimensions = tempZoom;
@@ -1457,6 +1462,19 @@ class FlxCamera extends FlxBasic
 					
 					_bufferWidth = (_bufferWidth % 2 == 0) ? _bufferWidth : _bufferWidth + 1;
 					_bufferHeight = (_bufferHeight % 2 == 0) ? _bufferHeight : _bufferHeight + 1;
+					
+					var bufferArea:UInt = _bufferWidth * _bufferHeight;
+					var maxArea:UInt = 4096 * 4095;
+					
+					if (bufferArea > maxArea)
+					{
+						// TODO: limit the size of bitmap
+						
+						var ratio:Float = width / height;
+						var h:Int = Math.floor(maxArea / ratio);
+						var w:Int = Math.floor(h * ratio);
+						
+					}
 				}
 			}
 			
