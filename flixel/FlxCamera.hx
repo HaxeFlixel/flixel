@@ -221,16 +221,8 @@ class FlxCamera extends FlxBasic
 	public var viewWidth(default, null):Float = 0;
 	public var viewHeight(default, null):Float = 0;
 	
-	private var _lastZoomCalculated:Float = 0;
-	private var _lastWidthCalculated:Float = 0;
-	private var _lastHeightCalculated:Float = 0;
-	
-	private var _zoomForBufferDimensions:Float = 0;
-	
 	private var _bufferWidth:Int = 0;
 	private var _bufferHeight:Int = 0;
-	
-	public var viewGrowStep:Float = 0.1;
 	
 	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
@@ -795,7 +787,6 @@ class FlxCamera extends FlxBasic
 		
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		initialZoom = zoom;
-		_lastZoomCalculated = initialZoom;
 		
 		updateScrollRect();
 		updateFlashOffset();
@@ -1433,51 +1424,24 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
-			if (zoom != _lastZoomCalculated || width != _lastWidthCalculated || height != _lastHeightCalculated)
-			{
-				_lastZoomCalculated = zoom;
-				_lastWidthCalculated = width;
-				_lastHeightCalculated = height;
-				
-				//////////////////////////////////////////////////////////////
-				_bufferWidth = Math.ceil(width / _lastZoomCalculated);
-				_bufferHeight = Math.ceil(height / _lastZoomCalculated);
-				//////////////////////////////////////////////////////////////
-				/*
-				var tempZoom:Float = Math.floor(zoom / viewGrowStep) * viewGrowStep;
-				
-				if (tempZoom <= 0)
-				{
-					tempZoom = 0.01;
-				}
-				
-				if (tempZoom != _zoomForBufferDimensions)
-				{
-					_zoomForBufferDimensions = tempZoom;
-					
-					_bufferWidth = Math.ceil(width / _zoomForBufferDimensions);
-					_bufferHeight = Math.ceil(height / _zoomForBufferDimensions);
-					
-					var bufferArea:UInt = _bufferWidth * _bufferHeight;
-					var maxArea:UInt = 4096 * 4095;
-					
-					if (bufferArea > maxArea)
-					{
-						// TODO: limit the size of bitmap
-						
-						var ratio:Float = width / height;
-						var h:Int = Math.floor(maxArea / ratio);
-						var w:Int = Math.floor(h * ratio);
-						
-					}
-				}
-				*/
-			}
+			_bufferWidth = Math.ceil(width / zoom);
+			_bufferHeight = Math.ceil(height / zoom);
 			
+			var bufferArea:UInt = _bufferWidth * _bufferHeight;
+			var maxArea:UInt = 4096 * 4095;
+			/*
+			if (bufferArea > maxArea)
+			{
+				// TODO: limit the size of bitmap
+				
+				var ratio:Float = width / height;
+				var h:Int = Math.floor(maxArea / ratio);
+				var w:Int = Math.floor(h * ratio);
+				
+			}
+			*/
 			if (zoom >= initialZoom)
 			{
-				_lastZoomCalculated = zoom;
-				
 				_bufferWidth = width;
 				_bufferHeight = height;
 			}
