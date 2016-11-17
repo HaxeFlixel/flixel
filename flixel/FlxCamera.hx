@@ -221,24 +221,16 @@ class FlxCamera extends FlxBasic
 	public var viewWidth(default, null):Float = 0;
 	public var viewHeight(default, null):Float = 0;
 	
-	public var blitOffsetX(default, null):Float = 0;
-	public var blitOffsetY(default, null):Float = 0;
-	
 	private var _lastZoomCalculated:Float = 0;
 	private var _lastWidthCalculated:Float = 0;
 	private var _lastHeightCalculated:Float = 0;
 	
 	private var _zoomForBufferDimensions:Float = 0;
 	
-	public var zoomMarginForBufferDimensions:Float = 0; // TODO: use this var later and convert it to property
-	
 	private var _bufferWidth:Int = 0;
 	private var _bufferHeight:Int = 0;
 	
 	public var viewGrowStep:Float = 0.1;
-	
-	private var _bufferOffsetX:Float = 0;
-	private var _bufferOffsetY:Float = 0;
 	
 	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
@@ -774,15 +766,18 @@ class FlxCamera extends FlxBasic
 		
 		pixelPerfectRender = FlxG.renderBlit;
 		
+		_bufferWidth = width;
+		_bufferHeight = height;
+		
 		if (FlxG.renderBlit)
 		{
 			screen = new FlxSprite();
-			buffer = new BitmapData(width, height, true, 0);
+			buffer = new BitmapData(_bufferWidth, _bufferHeight, true, 0);
 			screen.pixels = buffer;
 			screen.origin.set();
 			_flashBitmap = new Bitmap(buffer);
 			_scrollRect.addChild(_flashBitmap);
-			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+			_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
 		}
 		else
 		{
@@ -801,8 +796,6 @@ class FlxCamera extends FlxBasic
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
 		initialZoom = zoom;
 		_lastZoomCalculated = initialZoom;
-		_bufferWidth = width;
-		_bufferHeight = height;
 		
 		updateScrollRect();
 		updateFlashOffset();
@@ -1131,8 +1124,8 @@ class FlxCamera extends FlxBasic
 		{
 			if (_flashBitmap != null)
 			{
-				_flashBitmap.x = -_bufferOffsetX * scaleX * FlxG.scaleMode.scale.x;
-				_flashBitmap.y = -_bufferOffsetY * scaleY * FlxG.scaleMode.scale.y;
+				_flashBitmap.x = 0;
+				_flashBitmap.y = 0;
 			}
 		}
 		else
@@ -1446,6 +1439,11 @@ class FlxCamera extends FlxBasic
 				_lastWidthCalculated = width;
 				_lastHeightCalculated = height;
 				
+				//////////////////////////////////////////////////////////////
+				_bufferWidth = Math.ceil(width / _lastZoomCalculated);
+				_bufferHeight = Math.ceil(height / _lastZoomCalculated);
+				//////////////////////////////////////////////////////////////
+				/*
 				var tempZoom:Float = Math.floor(zoom / viewGrowStep) * viewGrowStep;
 				
 				if (tempZoom <= 0)
@@ -1460,9 +1458,6 @@ class FlxCamera extends FlxBasic
 					_bufferWidth = Math.ceil(width / _zoomForBufferDimensions);
 					_bufferHeight = Math.ceil(height / _zoomForBufferDimensions);
 					
-					_bufferWidth = (_bufferWidth % 2 == 0) ? _bufferWidth : _bufferWidth + 1;
-					_bufferHeight = (_bufferHeight % 2 == 0) ? _bufferHeight : _bufferHeight + 1;
-					
 					var bufferArea:UInt = _bufferWidth * _bufferHeight;
 					var maxArea:UInt = 4096 * 4095;
 					
@@ -1476,10 +1471,8 @@ class FlxCamera extends FlxBasic
 						
 					}
 				}
+				*/
 			}
-			
-			_bufferOffsetX = 0.5 * (_bufferWidth * scaleX - width);
-			_bufferOffsetY = 0.5 * (_bufferHeight * scaleY - height);
 			
 			if (zoom >= initialZoom)
 			{
@@ -1487,13 +1480,7 @@ class FlxCamera extends FlxBasic
 				
 				_bufferWidth = width;
 				_bufferHeight = height;
-				
-				_bufferOffsetX = 0;
-				_bufferOffsetY = 0;
 			}
-			
-			blitOffsetX = viewOffsetX - _bufferOffsetX;
-			blitOffsetY = viewOffsetY - _bufferOffsetY;
 			
 			regen = true;
 		}
@@ -1513,8 +1500,6 @@ class FlxCamera extends FlxBasic
 			_fill = FlxDestroyUtil.dispose(_fill);
 			_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
 			FlxG.bitmap.removeIfNoUse(oldBuffer);
-			
-			updateInternalSpritePositions();
 		}
 		
 		regen = false;

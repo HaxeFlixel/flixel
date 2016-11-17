@@ -653,7 +653,7 @@ class FlxSprite extends FlxObject
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
 			if (FlxG.renderBlit)
-				_point.subtract(camera.blitOffsetX, camera.blitOffsetY); // TODO: move method for calculating this point into separate inlined method...
+				_point.subtract(camera.viewOffsetX, camera.viewOffsetY); // TODO: move method for calculating this point into separate inlined method...
 				
 			if (isSimpleRender(camera))
 				drawSimple(camera);
