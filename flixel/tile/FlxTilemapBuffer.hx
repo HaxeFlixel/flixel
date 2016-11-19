@@ -201,9 +201,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
+		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
 	}
 }

@@ -437,6 +437,30 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#end
 	
 	/**
+	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
+	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * 
+	 * @param   Camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
+	 * @return  Whether the object is on screen or not.
+	 */
+	override public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+			
+		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
+		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		
+		if (minX > Camera.viewOffsetWidth || minX + _scaledTileWidth * widthInTiles < Camera.viewOffsetX)
+			return false;
+		
+		if (minY > Camera.viewOffsetHeight || minY + _scaledTileHeight * heightInTiles < Camera.viewOffsetY)
+			return false;
+		
+		return true;
+	}
+	
+	/**
 	 * Draws the tilemap buffers to the cameras.
 	 */
 	override public function draw():Void
@@ -459,7 +483,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			camera = cameras[i];
 			
-			if (!camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
 			
 			if (_buffers[i] == null)
@@ -467,14 +491,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			buffer = _buffers[i];
 			
-			// TODO: add check for tilemap visibility...
-			
 			if (FlxG.renderBlit)
 			{
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).subtract(camera.viewOffsetX, camera.viewOffsetY);
-			//	getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
 				buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width * scale.x < camera.viewWidth) || (_point.y + buffer.height * scale.y < camera.viewHeight);
-			//	buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
 				
 				if (buffer.dirty)
 					drawTilemap(buffer, camera);
