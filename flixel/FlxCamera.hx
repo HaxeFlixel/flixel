@@ -140,10 +140,6 @@ class FlxCamera extends FlxBasic
 	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
 	 */
 	public var buffer:BitmapData;
-	/**
-	 * Whether `checkResize()` checks if the camera dimensions have changed to update the buffer dimensions.
-	 */
-	public var regen:Bool = false;
 	
 	/**
 	 * The natural background color of the camera, in `AARRGGBB` format. Defaults to `FlxG.cameras.bgColor`.
@@ -1429,44 +1425,34 @@ class FlxCamera extends FlxBasic
 			
 			var bufferArea:UInt = _bufferWidth * _bufferHeight;
 			var maxArea:UInt = 4096 * 4095;
-			/*
+			
 			if (bufferArea > maxArea)
 			{
-				// TODO: limit the size of bitmap
-				
 				var ratio:Float = width / height;
-				var h:Int = Math.floor(maxArea / ratio);
-				var w:Int = Math.floor(h * ratio);
-				
+				_bufferHeight = Math.floor(maxArea / ratio);
+				_bufferWidth = Math.floor(_bufferHeight * ratio);
 			}
-			*/
+			
 			if (zoom >= initialZoom)
 			{
 				_bufferWidth = width;
 				_bufferHeight = height;
 			}
 			
-			regen = true;
+			if (_bufferWidth != buffer.width || _bufferHeight != buffer.height)
+			{
+				var oldBuffer:FlxGraphic = screen.graphic;
+				buffer = new BitmapData(_bufferWidth, _bufferHeight, true, 0);
+				screen.pixels = buffer;
+				screen.origin.set();
+				_flashBitmap.bitmapData = buffer;
+				_flashRect.width = _bufferWidth;
+				_flashRect.height = _bufferHeight;
+				_fill = FlxDestroyUtil.dispose(_fill);
+				_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
+				FlxG.bitmap.removeIfNoUse(oldBuffer);
+			}
 		}
-		
-		if (!FlxG.renderBlit && !regen)
-			return;
-		
-		if (_bufferWidth != buffer.width || _bufferHeight != buffer.height)
-		{
-			var oldBuffer:FlxGraphic = screen.graphic;
-			buffer = new BitmapData(_bufferWidth, _bufferHeight, true, 0);
-			screen.pixels = buffer;
-			screen.origin.set();
-			_flashBitmap.bitmapData = buffer;
-			_flashRect.width = _bufferWidth;
-			_flashRect.height = _bufferHeight;
-			_fill = FlxDestroyUtil.dispose(_fill);
-			_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
-			FlxG.bitmap.removeIfNoUse(oldBuffer);
-		}
-		
-		regen = false;
 	}
 	
 	/**
@@ -1588,12 +1574,7 @@ class FlxCamera extends FlxBasic
 		if (width != Value && Value > 0)
 		{
 			width = Value;
-			
-			if (buffer != null)
-				regen = regen || (width != buffer.width);
-			
 			calcOffsetX();
-			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
@@ -1608,12 +1589,7 @@ class FlxCamera extends FlxBasic
 		if (height != Value && Value > 0)
 		{
 			height = Value;
-			
-			if (buffer != null)
-				regen = regen || (height != buffer.height);
-			
 			calcOffsetY();
-			
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
