@@ -364,7 +364,7 @@ class FlxBitmapText extends FlxSprite
 					continue;
 				}
 				
-				getScreenPosition(_point, camera).subtractPoint(offset);
+				getDrawPosition(_point, camera);
 				
 				if (isPixelPerfectRender(camera))
 				{
