@@ -1118,6 +1118,10 @@ class FlxObject extends FlxBasic
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);
+		
+		if (FlxG.renderBlit)
+			_point.subtract(camera.viewOffsetX, camera.viewOffsetY);
+		
 		_rect.set(_point.x, _point.y, width, height);
 		
 		if (isPixelPerfectRender(camera))
