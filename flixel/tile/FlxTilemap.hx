@@ -946,7 +946,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		#if FLX_DEBUG
 		var debugTile:BitmapData;
-		#end 
+		#end
 		
 		for (row in 0...screenRows)
 		{
@@ -1017,6 +1017,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				
 				if (FlxG.renderBlit)
 					_flashPoint.x += _tileWidth;
+				
 				columnIndex++;
 			}
 			

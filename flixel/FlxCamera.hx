@@ -1429,7 +1429,7 @@ class FlxCamera extends FlxBasic
 			if (bufferArea > maxArea)
 			{
 				var ratio:Float = width / height;
-				_bufferHeight = Math.floor(maxArea / ratio);
+				_bufferHeight = Math.floor(Math.sqrt(maxArea / ratio));
 				_bufferWidth = Math.floor(_bufferHeight * ratio);
 			}
 			
