@@ -231,20 +231,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function checkDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
 	{
-		var delta:Float = Math.abs(Tilemap.x - _prevTilemapX);
-		delta += Math.abs(Tilemap.y - _prevTilemapY);
-		delta += Math.abs(Tilemap.scale.x - _prevTilemapScaleX);
-		delta += Math.abs(Tilemap.scale.y - _prevTilemapScaleY);
-		delta += Math.abs(Tilemap.scrollFactor.x - _prevTilemapScrollX);
-		delta += Math.abs(Tilemap.scrollFactor.y - _prevTilemapScrollY);
-		delta += Math.abs(Camera.scroll.x - _prevCameraScrollX);
-		delta += Math.abs(Camera.scroll.y - _prevCameraScrollY);
-		delta += Math.abs(Camera.scaleX - _prevCameraScaleX);
-		delta += Math.abs(Camera.scaleY - _prevCameraScaleY);
-		delta += Math.abs(Camera.width - _prevCameraWidth);
-		delta += Math.abs(Camera.height - _prevCameraHeight);
+		dirty = dirty || (Tilemap.x != _prevTilemapX) || (Tilemap.y != _prevTilemapY) 
+				|| (Tilemap.scale.x != _prevTilemapScaleX) || (Tilemap.scale.y != _prevTilemapScaleY) 
+				|| (Tilemap.scrollFactor.x != _prevTilemapScrollX) || (Tilemap.scrollFactor.y != _prevTilemapScrollY) 
+				|| (Camera.scroll.x != _prevCameraScrollX) || (Camera.scroll.y != _prevCameraScrollY) 
+				|| (Camera.scaleX != _prevCameraScaleX) || (Camera.scaleY != _prevCameraScaleY)
+				|| (Camera.width != _prevCameraWidth) || (Camera.height != _prevCameraHeight);
 		
-		if (delta != 0)
+		if (dirty)
 		{
 			_prevTilemapX = Tilemap.x;
 			_prevTilemapY = Tilemap.y;
