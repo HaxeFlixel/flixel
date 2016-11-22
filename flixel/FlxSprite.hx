@@ -821,7 +821,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Sets the sprite's color transformation with control over color offsets.
-	 * With `FlxG.renderTile`, offset are only supported on OpenFL Next version 3.6.0 or higher.
+	 * With `FlxG.renderTile`, offsets are only supported on OpenFL Next version 3.6.0 or higher.
 	 * 
 	 * @param   redMultiplier     The value for the red multiplier, in the range from `0` to `1`.
 	 * @param   greenMultiplier   The value for the green multiplier, in the range from `0` to `1`.
