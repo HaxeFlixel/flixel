@@ -252,8 +252,6 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			_prevCameraScaleY = Camera.scaleY;
 			_prevCameraWidth = Camera.width;
 			_prevCameraHeight = Camera.height;
-			
-			dirty = true;
 		}
 		
 		return dirty;
