@@ -64,6 +64,22 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	private var _matrix:Matrix;
 	
 	/**
+	 * Variables related to calculation of dirty value
+	 */
+	private var _prevTilemapX:Float;
+	private var _prevTilemapY:Float;
+	private var _prevTilemapScaleX:Float;
+	private var _prevTilemapScaleY:Float;
+	private var _prevTilemapScrollX:Float;
+	private var _prevTilemapScrollY:Float;
+	private var _prevCameraScrollX:Float;
+	private var _prevCameraScrollY:Float;
+	private var _prevCameraScaleX:Float;
+	private var _prevCameraScaleY:Float;
+	private var _prevCameraWidth:Int;
+	private var _prevCameraHeight:Int;
+	
+	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 * 
 	 * @param   TileWidth       The width of the tiles in this tilemap.
@@ -204,5 +220,48 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			Camera = FlxG.camera;
 		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	/**
+	 * Check if tilemap or camera has changed (scrolled, moved, resized or scaled) since the previous frame.
+	 * If so, then it means that we need to redraw this buffer.
+	 * @param	Tilemap	Tilemap to check againist. It's a tilemap this buffer belongs to.
+	 * @param	Camera	Camera to check againist. It's a camera this buffer is used for drawing on.
+	 * @return	The value of dirty flag.
+	 */
+	public function checkDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
+	{
+		var delta:Float = Math.abs(Tilemap.x - _prevTilemapX);
+		delta += Math.abs(Tilemap.y - _prevTilemapY);
+		delta += Math.abs(Tilemap.scale.x - _prevTilemapScaleX);
+		delta += Math.abs(Tilemap.scale.y - _prevTilemapScaleY);
+		delta += Math.abs(Tilemap.scrollFactor.x - _prevTilemapScrollX);
+		delta += Math.abs(Tilemap.scrollFactor.y - _prevTilemapScrollY);
+		delta += Math.abs(Camera.scroll.x - _prevCameraScrollX);
+		delta += Math.abs(Camera.scroll.y - _prevCameraScrollY);
+		delta += Math.abs(Camera.scaleX - _prevCameraScaleX);
+		delta += Math.abs(Camera.scaleY - _prevCameraScaleY);
+		delta += Math.abs(Camera.width - _prevCameraWidth);
+		delta += Math.abs(Camera.height - _prevCameraHeight);
+		
+		if (delta != 0)
+		{
+			_prevTilemapX = Tilemap.x;
+			_prevTilemapY = Tilemap.y;
+			_prevTilemapScaleX = Tilemap.scale.x;
+			_prevTilemapScaleY = Tilemap.scale.y;
+			_prevTilemapScrollX = Tilemap.scrollFactor.x;
+			_prevTilemapScrollY = Tilemap.scrollFactor.y;
+			_prevCameraScrollX = Camera.scroll.x;
+			_prevCameraScrollY = Camera.scroll.y;
+			_prevCameraScaleX = Camera.scaleX;
+			_prevCameraScaleY = Camera.scaleY;
+			_prevCameraWidth = Camera.width;
+			_prevCameraHeight = Camera.height;
+			
+			dirty = true;
+		}
+		
+		return dirty;
 	}
 }
