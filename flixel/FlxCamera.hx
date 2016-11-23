@@ -763,6 +763,30 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
+	// TODO: document this method...
+	/**
+	 * 
+	 * @param	rect
+	 * @return
+	 */
+	public function transformDebugRect(rect:FlxRect):FlxRect
+	{
+		if (FlxG.renderBlit)
+		{
+			rect.offset(-viewOffsetX, -viewOffsetY);
+			
+			if (_useBlitMatrix)
+			{
+				rect.x *= zoom;
+				rect.y *= zoom;
+				rect.width *= zoom;
+				rect.height *= zoom;
+			}
+		}
+		
+		return rect;
+	}
+	
 	/**
 	 * Instantiates a new camera at the specified location, with the specified size and zoom level.
 	 * 

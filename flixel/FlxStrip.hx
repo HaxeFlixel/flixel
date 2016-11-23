@@ -42,7 +42,7 @@ class FlxStrip extends FlxSprite
 		super.destroy();
 	}
 	
-	// TODO: check this for cases when zoom is less than 1...
+	// TODO: check this for cases when zoom is less than initial zoom...
 	override public function draw():Void 
 	{
 		if (alpha == 0 || graphic == null || vertices == null)

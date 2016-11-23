@@ -1050,9 +1050,6 @@ class FlxObject extends FlxBasic
 		
 		for (camera in cameras)
 		{
-			// TODO: fix debug drawing for cases when camera zoom is less than 1...
-			// not only for this class, but for all other classes with debug rendering...
-			
 			drawDebugOnCamera(camera);
 			
 			if (path != null && !path.ignoreDrawDebug)
@@ -1122,10 +1119,8 @@ class FlxObject extends FlxBasic
 	{
 		getScreenPosition(_point, camera);
 		
-		if (FlxG.renderBlit)
-			_point.subtract(camera.viewOffsetX, camera.viewOffsetY);
-		
 		_rect.set(_point.x, _point.y, width, height);
+		_rect = camera.transformDebugRect(_rect);
 		
 		if (isPixelPerfectRender(camera))
 		{
