@@ -203,23 +203,35 @@ class FlxCamera extends FlxBasic
 	 */
 	public var zoom(default, set):Float;
 	
-	// TODO: document these vars...
-	
 	/**
 	 * Difference between native size of camera and zoomed size, divided in half
-	 * Needed to do occlusion of objects when zoom != 1
+	 * Needed to do occlusion of objects when zoom != initialZoom
 	 */
 	public var viewOffsetX(default, null):Float = 0;
 	public var viewOffsetY(default, null):Float = 0;
 	
+	/**
+	 * The size of the camera plus view offset.
+	 * These variables are used for object visibility checks.
+	 */
 	public var viewOffsetWidth(default, null):Float = 0;
 	public var viewOffsetHeight(default, null):Float = 0;
 	
+	/**
+	 * Dimensions of area visible at current camera zoom.
+	 */
 	public var viewWidth(default, null):Float = 0;
 	public var viewHeight(default, null):Float = 0;
 	
+	/**
+	 * Helper matrix object. Used in blit render mode when camera's zoom is less than initialZoom
+	 * (it is applied to all objects rendered on the camera at such circumstances).
+	 */
 	private var _blitMatrix:FlxMatrix = new FlxMatrix();
 	
+	/**
+	 * Logical flag for tracking whether to apply _blitMatrix transformation to objects or not.
+	 */
 	private var _useBlitMatrix:Bool = false;
 	
 	/**
@@ -656,7 +668,7 @@ class FlxCamera extends FlxBasic
 			}
 			else if (frame != null)
 			{
-				// TODO: fix this case for zoom < 1...
+				// TODO: fix this case for zoom less than initial zoom...
 				frame.paint(buffer, destPoint, true);
 			}
 		}
@@ -763,12 +775,12 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	// TODO: document this method...
 	/**
-	 * 
-	 * @param	rect
-	 * @return
+	 * Helper method preparing debug rectangle for rendering in blit render mode
+	 * @param	rect	rectangle to prepare for rendering
+	 * @return	trasformed rectangle with respect to camera's zoom factor
 	 */
+	@:noCompletion
 	public function transformDebugRect(rect:FlxRect):FlxRect
 	{
 		if (FlxG.renderBlit)
@@ -785,6 +797,25 @@ class FlxCamera extends FlxBasic
 		}
 		
 		return rect;
+	}
+	
+	/**
+	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
+	 * @param	point	point to prepare for rendering
+	 * @return	trasformed point with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public function transformDebugPoint(point:FlxPoint):FlxPoint
+	{
+		if (FlxG.renderBlit)
+		{
+			point.subtract(viewOffsetX, viewOffsetY);
+			
+			if (_useBlitMatrix)
+				point.scale(zoom);
+		}
+		
+		return point;
 	}
 	
 	/**
