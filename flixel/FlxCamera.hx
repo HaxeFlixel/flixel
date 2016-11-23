@@ -218,15 +218,9 @@ class FlxCamera extends FlxBasic
 	public var viewWidth(default, null):Float = 0;
 	public var viewHeight(default, null):Float = 0;
 	
-	private var _bufferWidth:Int = 0;
-	private var _bufferHeight:Int = 0;
-	
 	private var _blitMatrix:FlxMatrix = new FlxMatrix();
 	
 	private var _useBlitMatrix:Bool = false;
-	
-	// TODO: use this var and get a better name for it...
-	public var useBlitMatrixForValuesLessThan:Float = 1.0;
 	
 	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
@@ -736,11 +730,13 @@ class FlxCamera extends FlxBasic
 				trianglesSprite.graphics.endFill();
 				
 				// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
-				_helperMatrix.identity();
 				if (_useBlitMatrix)
 					_helperMatrix.copyFrom(_blitMatrix);
 				else
+				{
+					_helperMatrix.identity();
 					_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
+				}
 				
 				buffer.draw(trianglesSprite, _helperMatrix);
 				#if FLX_DEBUG
@@ -794,18 +790,15 @@ class FlxCamera extends FlxBasic
 		
 		pixelPerfectRender = FlxG.renderBlit;
 		
-		_bufferWidth = width;
-		_bufferHeight = height;
-		
 		if (FlxG.renderBlit)
 		{
 			screen = new FlxSprite();
-			buffer = new BitmapData(_bufferWidth, _bufferHeight, true, 0);
+			buffer = new BitmapData(width, height, true, 0);
 			screen.pixels = buffer;
 			screen.origin.set();
 			_flashBitmap = new Bitmap(buffer);
 			_scrollRect.addChild(_flashBitmap);
-			_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
+			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 		}
 		else
 		{
@@ -1460,41 +1453,17 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
-			/*
-			_bufferWidth = Math.ceil(width / zoom);
-			_bufferHeight = Math.ceil(height / zoom);
-			
-			var bufferArea:UInt = _bufferWidth * _bufferHeight;
-			var maxArea:UInt = 4096 * 4095;
-			
-			if (bufferArea > maxArea)
-			{
-				var ratio:Float = width / height;
-				_bufferHeight = Math.floor(Math.sqrt(maxArea / ratio));
-				_bufferWidth = Math.floor(_bufferHeight * ratio);
-			}
-			*/
-			
-			_bufferWidth = width;
-			_bufferHeight = height;
-			
-			if (zoom >= initialZoom)
-			{
-				_bufferWidth = width;
-				_bufferHeight = height;
-			}
-			
-			if (_bufferWidth != buffer.width || _bufferHeight != buffer.height)
+			if (width != buffer.width || height != buffer.height)
 			{
 				var oldBuffer:FlxGraphic = screen.graphic;
-				buffer = new BitmapData(_bufferWidth, _bufferHeight, true, 0);
+				buffer = new BitmapData(width, height, true, 0);
 				screen.pixels = buffer;
 				screen.origin.set();
 				_flashBitmap.bitmapData = buffer;
-				_flashRect.width = _bufferWidth;
-				_flashRect.height = _bufferHeight;
+				_flashRect.width = width;
+				_flashRect.height = height;
 				_fill = FlxDestroyUtil.dispose(_fill);
-				_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
+				_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
 				FlxG.bitmap.removeIfNoUse(oldBuffer);
 			}
 			
@@ -1502,7 +1471,7 @@ class FlxCamera extends FlxBasic
 			_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
 			_blitMatrix.scale(scaleX, scaleY);
 			
-			_useBlitMatrix = (scaleX < 1) || (scaleY < 1);
+			_useBlitMatrix = (scaleX < initialZoom) || (scaleY < initialZoom);
 		}
 	}
 	
@@ -1588,8 +1557,8 @@ class FlxCamera extends FlxBasic
 		{
 			if (_useBlitMatrix)
 			{
-				_flashBitmap.scaleX = 1;
-				_flashBitmap.scaleY = 1;
+				_flashBitmap.scaleX = initialZoom * FlxG.scaleMode.scale.x;
+				_flashBitmap.scaleY = initialZoom * FlxG.scaleMode.scale.y;
 			}
 			else
 			{
