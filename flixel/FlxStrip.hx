@@ -42,6 +42,7 @@ class FlxStrip extends FlxSprite
 		super.destroy();
 	}
 	
+	// TODO: check this for cases when zoom is less than 1...
 	override public function draw():Void 
 	{
 		if (alpha == 0 || graphic == null || vertices == null)
@@ -52,7 +53,7 @@ class FlxStrip extends FlxSprite
 			if (!camera.visible || !camera.exists)
 				continue;
 			
-			getDrawPosition(camera);
+			getScreenPosition(_point, camera).subtractPoint(offset);
 			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
 		}
 	}

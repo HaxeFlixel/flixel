@@ -650,7 +650,7 @@ class FlxSprite extends FlxObject
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
 			
-			getDrawPosition(camera);
+			getScreenPosition(_point, camera).subtractPoint(offset);
 			
 			if (isSimpleRender(camera))
 				drawSimple(camera);
@@ -704,17 +704,6 @@ class FlxSprite extends FlxObject
 		}
 		
 		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
-	}
-	
-	@:noCompletion
-	private inline function getDrawPosition(Camera:FlxCamera):FlxPoint
-	{
-		getScreenPosition(_point, Camera).subtractPoint(offset);
-		
-		if (FlxG.renderBlit)
-			_point.subtract(Camera.viewOffsetX, Camera.viewOffsetY);
-		
-		return _point;	
 	}
 	
 	/**

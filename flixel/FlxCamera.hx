@@ -21,6 +21,7 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import haxe.crypto.Hmac;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
@@ -220,6 +221,13 @@ class FlxCamera extends FlxBasic
 	private var _bufferWidth:Int = 0;
 	private var _bufferHeight:Int = 0;
 	
+	private var _blitMatrix:FlxMatrix = new FlxMatrix();
+	
+	private var _useBlitMatrix:Bool = false;
+	
+	// TODO: use this var and get a better name for it...
+	public var useBlitMatrixForValuesLessThan:Float = 1.0;
+	
 	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
 	 */
@@ -390,10 +398,9 @@ class FlxCamera extends FlxBasic
 	public var debugLayer:Sprite;
 	#end
 	
-	// TODO: use this transform matrix later in hardware accelerated mode...
-	private var _transform:Matrix;
-	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
+	
+	private var _helperPoint:Point = new Point();
 	
 	/**
 	 * Currently used draw stack item
@@ -605,7 +612,18 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
-			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+			_helperMatrix.copyFrom(matrix);
+			
+			if (_useBlitMatrix)
+			{
+				_helperMatrix.concat(_blitMatrix);	
+				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
+			}
+			else
+			{
+				_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
+				buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || antialiasing));
+			}
 		}
 		else
 		{
@@ -628,10 +646,23 @@ class FlxCamera extends FlxBasic
 		{
 			if (pixels != null)
 			{
-				buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+				if (_useBlitMatrix)
+				{
+					_helperMatrix.identity();
+					_helperMatrix.translate(destPoint.x, destPoint.y);
+					_helperMatrix.concat(_blitMatrix);
+					buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
+				}
+				else
+				{
+					_helperPoint.x = destPoint.x - viewOffsetX;
+					_helperPoint.y = destPoint.y - viewOffsetY;
+					buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
+				}
 			}
 			else if (frame != null)
 			{
+				// TODO: fix this case for zoom < 1...
 				frame.paint(buffer, destPoint, true);
 			}
 		}
@@ -657,7 +688,7 @@ class FlxCamera extends FlxBasic
 		repeat:Bool = false, smoothing:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
-		{
+		{	
 			if (position == null)
 				position = renderPoint.set();
 			
@@ -703,7 +734,15 @@ class FlxCamera extends FlxBasic
 				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
 				trianglesSprite.graphics.drawTriangles(drawVertices, indices, uvtData);
 				trianglesSprite.graphics.endFill();
-				buffer.draw(trianglesSprite);
+				
+				// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
+				_helperMatrix.identity();
+				if (_useBlitMatrix)
+					_helperMatrix.copyFrom(_blitMatrix);
+				else
+					_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
+				
+				buffer.draw(trianglesSprite, _helperMatrix);
 				#if FLX_DEBUG
 				if (FlxG.debugger.drawDebug)
 				{
@@ -711,9 +750,10 @@ class FlxCamera extends FlxBasic
 					gfx.clear();
 					gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 					gfx.drawTriangles(drawVertices, indices);
-					camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+					camera.buffer.draw(FlxSpriteUtil.flashGfxSprite,_helperMatrix);
 				}
 				#end
+				// End of TODO...
 			}
 			
 			bounds.put();
@@ -771,7 +811,6 @@ class FlxCamera extends FlxBasic
 		{
 			canvas = new Sprite();
 			_scrollRect.addChild(canvas);
-			_transform = new Matrix();
 			
 			#if FLX_DEBUG
 			debugLayer = new Sprite();
@@ -829,8 +868,9 @@ class FlxCamera extends FlxBasic
 				clearDrawStack();
 			}
 			
-			_transform = null;
+			_blitMatrix = null;
 			_helperMatrix = null;
+			_helperPoint = null;
 		}
 		
 		_bounds = null;
@@ -1420,6 +1460,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 		{
+			/*
 			_bufferWidth = Math.ceil(width / zoom);
 			_bufferHeight = Math.ceil(height / zoom);
 			
@@ -1432,6 +1473,10 @@ class FlxCamera extends FlxBasic
 				_bufferHeight = Math.floor(Math.sqrt(maxArea / ratio));
 				_bufferWidth = Math.floor(_bufferHeight * ratio);
 			}
+			*/
+			
+			_bufferWidth = width;
+			_bufferHeight = height;
 			
 			if (zoom >= initialZoom)
 			{
@@ -1452,6 +1497,12 @@ class FlxCamera extends FlxBasic
 				_fill = new BitmapData(_bufferWidth, _bufferHeight, true, FlxColor.TRANSPARENT);
 				FlxG.bitmap.removeIfNoUse(oldBuffer);
 			}
+			
+			_blitMatrix.identity();
+			_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
+			_blitMatrix.scale(scaleX, scaleY);
+			
+			_useBlitMatrix = (scaleX < 1) || (scaleY < 1);
 		}
 	}
 	
@@ -1535,13 +1586,16 @@ class FlxCamera extends FlxBasic
 		
 		if (FlxG.renderBlit)
 		{
-			_flashBitmap.scaleX = totalScaleX;
-			_flashBitmap.scaleY = totalScaleY;
-		}
-		else
-		{
-			_transform.identity();
-			_transform.scale(totalScaleX, totalScaleY);
+			if (_useBlitMatrix)
+			{
+				_flashBitmap.scaleX = 1;
+				_flashBitmap.scaleY = 1;
+			}
+			else
+			{
+				_flashBitmap.scaleX = totalScaleX;
+				_flashBitmap.scaleY = totalScaleY;
+			}
 		}
 		
 		calcOffsetX();

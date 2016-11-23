@@ -838,7 +838,7 @@ class FlxBar extends FlxSprite
 					continue;
 				}
 				
-				getDrawPosition(camera);
+				getScreenPosition(_point, camera).subtractPoint(offset);
 				
 				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
 				_matrix.translate( -origin.x, -origin.y);
