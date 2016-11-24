@@ -1775,6 +1775,10 @@ class FlxCamera extends FlxBasic
 	private inline function calcOffsetX():Void
 	{
 		viewOffsetX = 0.5 * width * (scaleX - initialZoom) / scaleX;
+		
+		if (FlxG.renderBlit)
+			viewOffsetX = Math.round(viewOffsetX);
+		
 		viewOffsetWidth = width - viewOffsetX;
 		viewWidth = width - 2 * viewOffsetX;
 	}
@@ -1782,6 +1786,10 @@ class FlxCamera extends FlxBasic
 	private inline function calcOffsetY():Void
 	{
 		viewOffsetY = 0.5 * height * (scaleY - initialZoom) / scaleY;
+		
+		if (FlxG.renderBlit)
+			viewOffsetY = Math.round(viewOffsetY);
+		
 		viewOffsetHeight = height - viewOffsetY;
 		viewHeight = height - 2 * viewOffsetY;
 	}
