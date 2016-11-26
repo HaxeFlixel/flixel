@@ -782,7 +782,7 @@ class FlxCamera extends FlxBasic
 	 * @return	trasformed rectangle with respect to camera's zoom factor
 	 */
 	@:noCompletion
-	public function transformDebugRect(rect:FlxRect):FlxRect
+	public function transformRect(rect:FlxRect):FlxRect
 	{
 		if (FlxG.renderBlit)
 		{
@@ -802,11 +802,11 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
-	 * @param	point	point to prepare for rendering
+	 * @param	point		point to prepare for rendering
 	 * @return	trasformed point with respect to camera's zoom factor
 	 */
 	@:noCompletion
-	public function transformDebugPoint(point:FlxPoint):FlxPoint
+	public inline function transformPoint(point:FlxPoint):FlxPoint
 	{
 		if (FlxG.renderBlit)
 		{
@@ -819,7 +819,20 @@ class FlxCamera extends FlxBasic
 		return point;
 	}
 	
-	// TODO: check it...
+	/**
+	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
+	 * @param	vector	relative position to prepare for rendering
+	 * @return	trasformed vector with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public inline function transformVector(vector:FlxPoint):FlxPoint
+	{
+		if (FlxG.renderBlit && _useBlitMatrix)
+			vector.scale(zoom);
+		
+		return vector;
+	}
+	
 	/**
 	 * Helper method for applying transformations (scaling and offsets) 
 	 * to specified display objects which has been added to the camera display list.

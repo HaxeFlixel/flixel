@@ -730,7 +730,7 @@ class FlxPath implements IFlxDestroyable
 			_point.x = node.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
 			_point.y = node.y - (Camera.scroll.y * object.scrollFactor.y);
 			
-			_point = Camera.transformDebugPoint(_point);
+			_point = Camera.transformPoint(_point);
 			
 			//decide what color this node should be
 			var nodeSize:Int = 2;

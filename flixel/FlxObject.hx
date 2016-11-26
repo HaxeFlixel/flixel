@@ -1120,7 +1120,7 @@ class FlxObject extends FlxBasic
 		getScreenPosition(_point, camera);
 		
 		_rect.set(_point.x, _point.y, width, height);
-		_rect = camera.transformDebugRect(_rect);
+		_rect = camera.transformRect(_rect);
 		
 		if (isPixelPerfectRender(camera))
 		{
