@@ -60,8 +60,8 @@ class Watch extends Window
 				object == null || field == null;
 			case QUICK(value):
 				displayName.isNullOrEmpty();
-			case EXPRESSION(expression):
-				expression.isNullOrEmpty();
+			case EXPRESSION(command, _):
+				command.isNullOrEmpty();
 		}
 	}
 	
@@ -69,7 +69,7 @@ class Watch extends Window
 	{
 		for (entry in entries)
 		{
-			if (data.match(QUICK(_)))
+			if (data == null || data.match(QUICK(_)))
 			{
 				if (entry.displayName == displayName)
 					return entry;
