@@ -22,7 +22,6 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import haxe.crypto.Hmac;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
