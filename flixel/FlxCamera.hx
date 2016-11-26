@@ -2,6 +2,7 @@ package flixel;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.geom.ColorTransform;
@@ -816,6 +817,29 @@ class FlxCamera extends FlxBasic
 		}
 		
 		return point;
+	}
+	
+	// TODO: check it...
+	/**
+	 * Helper method for applying transformations (scaling and offsets) 
+	 * to specified display objects which has been added to the camera display list.
+	 * For example, debug sprite for nape debug rendering.
+	 * @param	object	display object to apply transformations to.
+	 * @return	transformed object.
+	 */
+	@:noCompletion
+	public function transformObject(object:DisplayObject):DisplayObject
+	{
+		object.scaleX *= totalScaleX;
+		object.scaleY *= totalScaleY;
+		
+		object.x -= scroll.x * totalScaleX;
+		object.y -= scroll.y * totalScaleY;
+		
+		object.x -= 0.5 * width * (scaleX - initialZoom) * FlxG.scaleMode.scale.x;
+		object.y -= 0.5 * height * (scaleY - initialZoom) * FlxG.scaleMode.scale.y;
+		
+		return object;
 	}
 	
 	/**
