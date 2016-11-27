@@ -16,22 +16,48 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 /**
- * A generic, Flash-based tooltip class, created for use in FlxDebugger.
+ * Manages tooltips to be used within the debugger.
  */
-class Tooltip extends Sprite
+class Tooltip
 {
-	private static var _tooltips:Array<Tooltip> = [];
+	private static var _tooltips:Array<TooltipOverlay> = [];
 	private static var _container:Sprite;
-	private static var _activeElement:Sprite;
 	
 	/**
-	 * The background color of the window.
+	 * The background color of all tooltips.
 	 */
 	public static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
-	public static inline var HEADER_ALPHA:Float = 0.8;
 	
-	public var maxSize:Point;
+	/**
+	 * Alpha applied to the tooltips text.
+	 */
+	public static inline var TEXT_ALPHA:Float = 0.8;
 	
+	
+	public static function init(container:Sprite):Void
+	{
+		_container = container;
+	}
+	
+	public static function add(element:Sprite, text:String):Void
+	{		
+		var tooltip = new TooltipOverlay(element, text);
+		
+		_container.addChild(tooltip);
+		_tooltips.push(tooltip);
+	}
+	
+	public static function remove(element:Sprite):Void
+	{
+		// TODO: implement this
+	}
+}
+
+/**
+ * A generic, Flash-based tooltip class, created for use in FlxDebugger.
+ */
+class TooltipOverlay extends Sprite
+{
 	/**
 	 * Width of the window. Using Sprite.width is super unreliable for some reason!
 	 */
@@ -49,25 +75,20 @@ class Tooltip extends Sprite
 	private var _text:TextField;
 	private var _owner:Sprite;
 	
+	/**
+	 * Maximum size allowed for the tooltip. A negative value (or zero) makes
+	 * the tooltip auto-adjust its size to properly house its text.
+	 */
+	public var maxSize:Point;
 	
-	public static function init(container:Sprite):Void
-	{
-		_container = container;
-	}
-	
-	public static function add(element:Sprite, text:String):Void
-	{		
-		var tooltip = new Tooltip(element, text);
-		
-		_container.addChild(tooltip);
-		_tooltips.push(tooltip);
-	}
-	
-	public static function remove(element:Sprite):Void
-	{
-		// TODO: implement this
-	}
-	
+	/**
+	 * Creates a new tooltip.
+	 * 
+	 * @param	owner	Element where the tooltip will be attached to.
+	 * @param	text	Text displayed with this tooltip.
+	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accomodate the text.
+	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accomodate the text.
+	 */
 	public function new(owner:Sprite, text:String, width:Float = 0, height:Float = 0)
 	{
 		super();
@@ -77,10 +98,10 @@ class Tooltip extends Sprite
 		maxSize = new Point(width, height);
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
-		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
+		_background = new Bitmap(new BitmapData(1, 1, true, Tooltip.BG_COLOR));
 		
 		_text = DebuggerUtil.createTextField(2, 1);
-		_text.alpha = HEADER_ALPHA;
+		_text.alpha = Tooltip.TEXT_ALPHA;
 		_text.text = text;
 		_text.wordWrap = true;
 		
@@ -89,7 +110,7 @@ class Tooltip extends Sprite
 		addChild(_text);
 		
 		updateSize();
-		visible = false;
+		setVisible(false);
 		
 		_owner.addEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
 		_owner.addEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
@@ -100,8 +121,6 @@ class Tooltip extends Sprite
 	 */
 	public function destroy():Void
 	{
-		maxSize = null;
-
 		if (_shadow != null)
 		{
 			removeChild(_shadow);
@@ -117,13 +136,15 @@ class Tooltip extends Sprite
 			removeChild(_text);
 		}
 		_text = null;
+		_owner = null;
+		maxSize = null;
 	}
 	
 	/**
-	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 * Resize the tooltip.  Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
-	 * @param 	Width	How wide to make the window.
-	 * @param 	Height	How tall to make the window.
+	 * @param 	Width	How wide to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
+	 * @param 	Height	How tall to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
@@ -133,15 +154,16 @@ class Tooltip extends Sprite
 	}
 	
 	/**
-	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
+	 * Change the position of the tooltip.
 	 * 
-	 * @param 	X	Desired X position of top left corner of the window.
-	 * @param 	Y	Desired Y position of top left corner of the window.
+	 * @param 	X	Desired X position of top left corner of the tooltip.
+	 * @param 	Y	Desired Y position of top left corner of the tooltip.
 	 */
 	public function reposition(X:Float, Y:Float):Void
 	{
 		x = X;
 		y = Y;
+		ensureOnScreen();
 	}
 	
 	public function setVisible(Value:Bool):Void
@@ -150,18 +172,7 @@ class Tooltip extends Sprite
 	
 		if (visible) {
 			putOnTop();
-			
-			// Move the tooltip back to the screen if top-left corner
-			// is out of the screen.
-			x = x < 0 ? 0 : x;
-			y = y < 0 ? 0 : y;
-			
-			// Calculate any adjustments to ensure that part of the
-			// tooltip is not outside of the screen.
-			var offsetX = x + width >= FlxG.stage.stageWidth ? FlxG.stage.stageWidth - (x + width) : 0;
-			var offsetY = y + height >= FlxG.stage.stageHeight ? FlxG.stage.stageHeight - (y + height) : 0;
-			x += offsetX;
-			y += offsetY;
+			ensureOnScreen();
 		}
 	}
 	
@@ -182,13 +193,29 @@ class Tooltip extends Sprite
 	 */
 	private function updateSize():Void
 	{
-		_width = Std.int(maxSize.x == 0 ? _text.textWidth : Math.abs(maxSize.x)) + 8;
-		_height = Std.int(maxSize.y == 0 ? _text.textHeight : Math.abs(maxSize.y)) + 8;
+		_width = Std.int(maxSize.x <= 0 ? _text.textWidth : Math.abs(maxSize.x)) + 8;
+		_height = Std.int(maxSize.y <= 0 ? _text.textHeight : Math.abs(maxSize.y)) + 8;
 		_background.scaleX = _width;
 		_background.scaleY = _height;
 		_shadow.scaleX = _width;
 		_shadow.y = _height;
 		_text.width = _width;
+	}
+	
+	private function ensureOnScreen():Void
+	{
+		// Move the tooltip back to the screen if top-left corner
+		// is out of the screen.
+		x = x < 0 ? 0 : x;
+		y = y < 0 ? 0 : y;
+		
+		// Calculate any adjustments to ensure that part of the
+		// tooltip is not outside of the screen.
+		var offsetX = x + width >= FlxG.stage.stageWidth ? FlxG.stage.stageWidth - (x + width) : 0;
+		var offsetY = y + height >= FlxG.stage.stageHeight ? FlxG.stage.stageHeight - (y + height) : 0;
+		
+		x += offsetX;
+		y += offsetY;
 	}
 	
 	private function handleMouseEvents(event:MouseEvent):Void
