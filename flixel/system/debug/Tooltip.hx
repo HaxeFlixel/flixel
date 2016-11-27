@@ -78,11 +78,11 @@ class TooltipOverlay extends Sprite
 	private static inline var MARGIN_Y:Float = 10;
 	
 	/**
-	 * Width of the window. Using Sprite.width is super unreliable for some reason!
+	 * Width of the tooltip. Using Sprite.width is super unreliable for some reason!
 	 */
 	private var _width:Int;
 	/**
-	 * Height of the window. Using Sprite.height is super unreliable for some reason!
+	 * Height of the tooltip. Using Sprite.height is super unreliable for some reason!
 	 */
 	private var _height:Int;
 	
