@@ -23,27 +23,6 @@ class Tooltip
 	private static var _tooltips:Array<TooltipOverlay> = [];
 	private static var _container:Sprite;
 	
-	/**
-	 * The background color of all tooltips.
-	 */
-	public static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
-	
-	/**
-	 * Alpha applied to the tooltips text.
-	 */
-	public static inline var TEXT_ALPHA:Float = 0.8;
-	
-	/**
-	 * How many pixels the tooltip should be away from the target in the x axis.
-	 */
-	public static inline var MARGIN_X:Int = 10;
-	
-	/**
-	 * How many pixels the tooltip should be away from the target in the y axis.
-	 */
-	public static inline var MARGIN_Y:Float = 10;
-	
-	
 	public static function init(container:Sprite):Void
 	{
 		_container = container;
@@ -68,6 +47,26 @@ class Tooltip
  */
 class TooltipOverlay extends Sprite
 {
+	/**
+	 * The background color of all tooltips.
+	 */
+	private static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
+	
+	/**
+	 * Alpha applied to the tooltips text.
+	 */
+	private static inline var TEXT_ALPHA:Float = 0.8;
+	
+	/**
+	 * How many pixels the tooltip should be away from the target in the x axis.
+	 */
+	private static inline var MARGIN_X:Int = 10;
+	
+	/**
+	 * How many pixels the tooltip should be away from the target in the y axis.
+	 */
+	private static inline var MARGIN_Y:Float = 10;
+	
 	/**
 	 * Width of the window. Using Sprite.width is super unreliable for some reason!
 	 */
@@ -108,10 +107,10 @@ class TooltipOverlay extends Sprite
 		maxSize = new Point(width, height);
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
-		_background = new Bitmap(new BitmapData(1, 1, true, Tooltip.BG_COLOR));
+		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		
 		_text = DebuggerUtil.createTextField(2, 1);
-		_text.alpha = Tooltip.TEXT_ALPHA;
+		_text.alpha = TEXT_ALPHA;
 		_text.text = text;
 		_text.wordWrap = true;
 		
@@ -232,8 +231,8 @@ class TooltipOverlay extends Sprite
 	{
 		if (event.type == MouseEvent.MOUSE_OVER && !visible)
 		{
-			x = event.stageX + Tooltip.MARGIN_X;
-			y = event.stageY + Tooltip.MARGIN_Y;
+			x = event.stageX + MARGIN_X;
+			y = event.stageY + MARGIN_Y;
 			
 			setVisible(true);
 		}
