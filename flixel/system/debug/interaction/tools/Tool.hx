@@ -44,6 +44,8 @@ class Tool extends Sprite implements IFlxDestroyable
 	{
 		button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 		button.toggled = true;
+		
+		Tooltip.add(button, _name);
 	}
 	
 	private function setCursor(Icon:BitmapData):Void
