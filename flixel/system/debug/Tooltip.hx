@@ -3,13 +3,10 @@ package flixel.system.debug;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
-import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
-import flash.geom.Rectangle;
 import flash.text.TextField;
 import flixel.FlxG;
-import flixel.math.FlxMath;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
@@ -199,7 +196,8 @@ class TooltipOverlay extends Sprite
 	{
 		visible = Value;
 	
-		if (visible) {
+		if (visible)
+		{
 			putOnTop();
 			ensureOnScreen();
 		}
