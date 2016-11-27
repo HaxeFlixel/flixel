@@ -36,9 +36,22 @@ class Tooltip
 		_tooltips.push(tooltip);
 	}
 	
-	public static function remove(element:Sprite):Void
+	public static function remove(element:Sprite):Bool
 	{
-		// TODO: implement this
+		var removed:Bool = false;
+		
+		for (i in 0..._tooltips.length)
+		{
+			if (_tooltips[i] != null && _tooltips[i].owner == element)
+			{
+				var tooltip :TooltipOverlay = _tooltips.splice(i, 1)[0];
+				tooltip.destroy();
+				removed = true;
+				break;
+			}	
+		}
+		
+		return removed;
 	}
 }
 
@@ -82,7 +95,11 @@ class TooltipOverlay extends Sprite
 	private var _background:Bitmap;
 	private var _shadow:Bitmap;
 	private var _text:TextField;
-	private var _owner:Sprite;
+	
+	/**
+	 * The element the tooltip is attached to.
+	 */
+	public var owner(default, null):Sprite;
 	
 	/**
 	 * Maximum size allowed for the tooltip. A negative value (or zero) makes
@@ -93,16 +110,16 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Creates a new tooltip.
 	 * 
-	 * @param	owner	Element where the tooltip will be attached to.
+	 * @param	target	Element where the tooltip will be attached to.
 	 * @param	text	Text displayed with this tooltip.
 	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accomodate the text.
 	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accomodate the text.
 	 */
-	public function new(owner:Sprite, text:String, width:Float = 0, height:Float = 0)
+	public function new(target:Sprite, text:String, width:Float = 0, height:Float = 0)
 	{
 		super();
 		
-		_owner = owner;
+		owner = target;
 		
 		maxSize = new Point(width, height);
 		
@@ -121,8 +138,8 @@ class TooltipOverlay extends Sprite
 		updateSize();
 		setVisible(false);
 		
-		_owner.addEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
-		_owner.addEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		owner.addEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
+		owner.addEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
 	}
 	
 	/**
@@ -145,8 +162,11 @@ class TooltipOverlay extends Sprite
 			removeChild(_text);
 		}
 		_text = null;
-		_owner = null;
 		maxSize = null;
+		
+		owner.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
+		owner.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		owner = null;
 	}
 	
 	/**
