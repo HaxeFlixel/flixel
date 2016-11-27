@@ -449,14 +449,17 @@ class FlxGraphic implements IFlxDestroyable
 	public function destroy():Void
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
+		
 		if (FlxG.renderTile)
-		{
 			_tilesheet = null;
-		}
+		
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
+		
+		if (frameCollections == null) // no need to destroy frame collections if it's already null
+			return;
 		
 		var collections:Array<FlxFramesCollection>;
 		for (collectionType in frameCollectionTypes)

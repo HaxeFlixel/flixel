@@ -156,9 +156,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		if (filters.length == 0)
 			return;
 		
-		while (filters.length != 0)
-			filters.pop();
-		
+		filters = filters.splice(0, filters.length);
 		regenBitmaps();
 	}
 	

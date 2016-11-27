@@ -159,9 +159,10 @@ class FlxAnimationController implements IFlxDestroyable
 				{
 					anim.destroy();
 				}
-				_animations.remove(key);
 			}
 		}
+		
+		_animations = new Map<String, FlxAnimation>();
 		_curAnim = null;
 	}
 	
