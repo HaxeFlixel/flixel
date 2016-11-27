@@ -33,6 +33,16 @@ class Tooltip
 	 */
 	public static inline var TEXT_ALPHA:Float = 0.8;
 	
+	/**
+	 * How many pixels the tooltip should be away from the target in the x axis.
+	 */
+	public static inline var MARGIN_X:Int = 10;
+	
+	/**
+	 * How many pixels the tooltip should be away from the target in the y axis.
+	 */
+	public static inline var MARGIN_Y:Float = 10;
+	
 	
 	public static function init(container:Sprite):Void
 	{
@@ -222,8 +232,8 @@ class TooltipOverlay extends Sprite
 	{
 		if (event.type == MouseEvent.MOUSE_OVER && !visible)
 		{
-			x = event.stageX + event.target.width + 10;
-			y = event.stageY;
+			x = event.stageX + Tooltip.MARGIN_X;
+			y = event.stageY + Tooltip.MARGIN_Y;
 			
 			setVisible(true);
 		}
