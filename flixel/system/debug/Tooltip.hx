@@ -56,7 +56,7 @@ class Tooltip extends Sprite
 	}
 	
 	public static function add(element:Sprite, text:String):Void
-	{
+	{		
 		var tooltip = new Tooltip(element, text);
 		
 		_container.addChild(tooltip);
@@ -148,8 +148,21 @@ class Tooltip extends Sprite
 	{
 		visible = Value;
 	
-		if (visible)
+		if (visible) {
 			putOnTop();
+			
+			// Move the tooltip back to the screen if top-left corner
+			// is out of the screen.
+			x = x < 0 ? 0 : x;
+			y = y < 0 ? 0 : y;
+			
+			// Calculate any adjustments to ensure that part of the
+			// tooltip is not outside of the screen.
+			var offsetX = x + width >= FlxG.stage.stageWidth ? FlxG.stage.stageWidth - (x + width) : 0;
+			var offsetY = y + height >= FlxG.stage.stageHeight ? FlxG.stage.stageHeight - (y + height) : 0;
+			x += offsetX;
+			y += offsetY;
+		}
 	}
 	
 	public function toggleVisible():Void
@@ -182,15 +195,12 @@ class Tooltip extends Sprite
 	{
 		if (event.type == MouseEvent.MOUSE_OVER && !visible)
 		{
-			putOnTop();
 			x = event.stageX + event.target.width + 10;
 			y = event.stageY;
-			visible = true;
-			//FlxG.log.add("over " + event.target);
+			
+			setVisible(true);
 		}
 		else if (event.type == MouseEvent.MOUSE_OUT)
-		{
-			visible = false;
-		}
+			setVisible(false);
 	}
 }
