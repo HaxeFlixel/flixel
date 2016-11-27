@@ -7,10 +7,7 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.text.TextField;
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger.GraphicCloseButton;
-import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 
 /**
  * Manages tooltips to be used within the debugger.
