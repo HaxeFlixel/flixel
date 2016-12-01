@@ -42,12 +42,6 @@ class GraphicAutoAlt extends BitmapData {}
  */
 class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
-	/** 
-	 * A helper buffer for calculating number of columns and rows when the game size changed
-	 * We are only using its member functions that's why it is an empty instance
-	 */
-	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
-	
 	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
 	/**
 	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
@@ -522,18 +516,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			var camera = cameras[i];
 			var buffer = _buffers[i];
 			
-			// Calculate the required number of columns and rows
-			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
-			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
-			
 			// Create a new buffer if the number of columns and rows differs
-			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
-			{
-				if (buffer != null)
-					buffer.destroy();
-				
+			if (buffer == null)
 				_buffers[i] = createBuffer(camera);
-			}
+			else
+				buffer.resize(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		}
 	}
 	

@@ -7,6 +7,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -91,17 +92,35 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
 		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
+		resize(TileWidth, TileHeight, WidthInTiles, HeightInTiles, Camera, ScaleX, ScaleY);
+	}
+	
+	public function resize(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
+		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
+	{
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
 		if (FlxG.renderBlit)
 		{
-			pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
-			_flashRect = new Rectangle(0, 0, pixels.width, pixels.height);
-			_matrix = new FlxMatrix();
+			var newWidth:Int = Std.int(columns * TileWidth);
+			var newHeight:Int = Std.int(rows * TileHeight);
+			
+			if (pixels == null)
+			{
+				pixels = new BitmapData(newWidth, newHeight, true, 0);
+				_flashRect = new Rectangle(0, 0, newWidth, newHeight);
+				_matrix = new FlxMatrix();
+				dirty = true;
+			}
+			else if (pixels.width != newWidth || pixels.height != newHeight)
+			{
+				FlxDestroyUtil.dispose(pixels);
+				pixels = new BitmapData(newWidth, newHeight, true, 0);
+				_flashRect.setTo(0, 0, newWidth, newHeight);
+				dirty = true;
+			}
 		}
-		
-		dirty = true;
 	}
 	
 	/**
@@ -111,9 +130,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		if (FlxG.renderBlit)
 		{
-			pixels = null;
+			pixels = FlxDestroyUtil.dispose(pixels);
 			blend = null;
 			_matrix = null;
+			_flashRect = null;
 		}
 	}
 	
@@ -166,21 +186,15 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (WidthInTiles < 0) 
-		{
 			WidthInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
-
+		
 		columns = Math.ceil(Camera.viewWidth / (TileWidth * ScaleX)) + 1;
 		
 		if (columns > WidthInTiles)
-		{
 			columns = WidthInTiles;
-		}
 		
 		width = Std.int(columns * TileWidth * ScaleX);
 		
@@ -190,21 +204,15 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (HeightInTiles < 0) 
-		{
 			HeightInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
 		rows = Math.ceil(Camera.viewHeight / (TileHeight * ScaleY)) + 1;
 		
 		if (rows > HeightInTiles)
-		{
 			rows = HeightInTiles;
-		}
 		
 		height = Std.int(rows * TileHeight * ScaleY);	
 		
