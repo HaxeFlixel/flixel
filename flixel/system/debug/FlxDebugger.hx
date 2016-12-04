@@ -121,6 +121,8 @@ class FlxDebugger extends Sprite
 		
 		visible = false;
 		
+		Tooltip.init(this);
+		
 		_topBar = new Sprite();
 		_topBar.graphics.beginFill(0x000000, 0xAA / 255);
 		_topBar.graphics.drawRect(0, 0, FlxG.stage.stageWidth, TOP_HEIGHT);
