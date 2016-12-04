@@ -17,6 +17,7 @@ class Tool extends Sprite implements IFlxDestroyable
 	public var cursor(default, null):BitmapData;
 	
 	private var _name:String = "(Unknown tool)";
+	private var _shortcut:String;
 	private var _brain:Interaction;
 	
 	public function init(brain:Interaction):Tool
@@ -45,7 +46,10 @@ class Tool extends Sprite implements IFlxDestroyable
 		button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 		button.toggled = true;
 		
-		Tooltip.add(button, _name);
+		var tooltip = _name;
+		if (_shortcut != null)
+			tooltip += ' ($_shortcut)';
+		Tooltip.add(button, tooltip);
 	}
 	
 	private function setCursor(Icon:BitmapData):Void
