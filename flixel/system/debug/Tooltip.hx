@@ -8,6 +8,7 @@ import flash.geom.Point;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * Manages tooltips to be used within the debugger.
@@ -23,7 +24,7 @@ class Tooltip
 	}
 	
 	public static function add(element:Sprite, text:String):Void
-	{		
+	{
 		var tooltip = new TooltipOverlay(element, text);
 		
 		_container.addChild(tooltip);
@@ -38,11 +39,11 @@ class Tooltip
 		{
 			if (_tooltips[i] != null && _tooltips[i].owner == element)
 			{
-				var tooltip :TooltipOverlay = _tooltips.splice(i, 1)[0];
+				var tooltip:TooltipOverlay = _tooltips.splice(i, 1)[0];
 				tooltip.destroy();
 				removed = true;
 				break;
-			}	
+			}
 		}
 		
 		return removed;
@@ -141,21 +142,9 @@ class TooltipOverlay extends Sprite
 	 */
 	public function destroy():Void
 	{
-		if (_shadow != null)
-		{
-			removeChild(_shadow);
-		}
-		_shadow = null;
-		if (_background != null)
-		{
-			removeChild(_background);
-		}
-		_background = null;
-		if (_text != null)
-		{
-			removeChild(_text);
-		}
-		_text = null;
+		_shadow = FlxDestroyUtil.removeChild(this, _shadow);
+		_background = FlxDestroyUtil.removeChild(this, _background);
+		_text = FlxDestroyUtil.removeChild(this, _text);
 		maxSize = null;
 		
 		owner.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
@@ -164,7 +153,7 @@ class TooltipOverlay extends Sprite
 	}
 	
 	/**
-	 * Resize the tooltip.  Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 * Resize the tooltip. Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
 	 * @param 	Width	How wide to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
 	 * @param 	Height	How tall to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
