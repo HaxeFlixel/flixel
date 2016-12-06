@@ -152,4 +152,26 @@ class FlxGroupTest extends FlxTest
 		Assert.areEqual(group.length, group.countLiving());
 		Assert.areEqual(0, group.countDead());
 	}
+
+	@Test // #2010
+	function testRemoveSplice()
+	{
+		var group = new FlxGroup();
+		group.add(new FlxBasic());
+		Assert.areEqual(1, group.length);
+
+		group.remove(group.members[0], true);
+		Assert.areEqual(0, group.length);
+	}
+
+	function testRemoveNoSplice()
+	{
+		var group = new FlxGroup();
+		group.add(new FlxBasic());
+		Assert.areEqual(1, group.length);
+
+		group.remove(group.members[0], false);
+		Assert.areEqual(1, group.length);
+		Assert.isNull(group.members[0]);
+	}
 }
