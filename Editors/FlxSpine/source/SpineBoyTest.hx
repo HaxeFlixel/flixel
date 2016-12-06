@@ -25,21 +25,22 @@ class SpineBoyTest extends FlxSpine
 	{
 		var anim = state.getCurrent(0);
 		
-		if (anim.toString() == "walk") 
+		if (anim.animation.name == "walk")
 		{
 			// After one second, change the current animation. Mixing is done by AnimationState for you.
-			if (anim.time > 2) 
+			if (anim.getAnimationTime() > 2) 
 				state.setAnimationByName(0, "jump", false);
 		} 
 		else 
 		{
-			if (anim.time > 1) 
+			if (anim.getAnimationTime() > 1) 
 				state.setAnimationByName(0, "walk", true);
 		}
 		
 		if (FlxG.mouse.justPressed)
 		{
 			state.setAnimationByName(0, "jump", false);
+			state.addAnimationByName(0, "walk", true, 0.5);
 		}
 		
 		super.update(elapsed);

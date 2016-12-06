@@ -13,7 +13,7 @@ class MenuState extends FlxState
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
 		
-		spineSprite = new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "spineboy", "assets", 0.6), 300, 440);
+		spineSprite = new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "spineboy", "assets", 0.6), 0.5 * FlxG.width, FlxG.height);
 		spineSprite.antialiasing = true;
 		add(spineSprite);
 		
