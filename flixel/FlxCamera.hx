@@ -1566,7 +1566,7 @@ class FlxCamera extends FlxBasic
 	{
 		_blitMatrix.identity();
 		_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
-		_blitMatrix.scale(scaleX * FlxG.scaleMode.scale.x, scaleY * FlxG.scaleMode.scale.y);
+		_blitMatrix.scale(scaleX, scaleY);
 		
 		_useBlitMatrix = (scaleX < initialZoom) || (scaleY < initialZoom);
 	}
