@@ -1002,6 +1002,7 @@ class FlxCamera extends FlxBasic
 	{
 		// Adjust bounds to account for zoom
 		var zoom = this.zoom / FlxG.initialZoom;
+		
 		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
 		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
 		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);
@@ -1557,12 +1558,17 @@ class FlxCamera extends FlxBasic
 				FlxG.bitmap.removeIfNoUse(oldBuffer);
 			}
 			
-			_blitMatrix.identity();
-			_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
-			_blitMatrix.scale(scaleX, scaleY);
-			
-			_useBlitMatrix = (scaleX < initialZoom) || (scaleY < initialZoom);
+			updateBlitMatrix();
 		}
+	}
+	
+	private inline function updateBlitMatrix():Void
+	{
+		_blitMatrix.identity();
+		_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
+		_blitMatrix.scale(scaleX * FlxG.scaleMode.scale.x, scaleY * FlxG.scaleMode.scale.y);
+		
+		_useBlitMatrix = (scaleX < initialZoom) || (scaleY < initialZoom);
 	}
 	
 	/**
@@ -1645,6 +1651,8 @@ class FlxCamera extends FlxBasic
 		
 		if (FlxG.renderBlit)
 		{
+			updateBlitMatrix();
+			
 			if (_useBlitMatrix)
 			{
 				_flashBitmap.scaleX = initialZoom * FlxG.scaleMode.scale.x;
@@ -1660,7 +1668,6 @@ class FlxCamera extends FlxBasic
 		calcOffsetX();
 		calcOffsetY();
 		
-		updateFlashSpritePosition();
 		updateScrollRect();
 		updateInternalSpritePositions();
 		

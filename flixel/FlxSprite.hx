@@ -985,7 +985,7 @@ class FlxSprite extends FlxObject
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
-		{
+		{	
 			if (minX > Camera.viewOffsetWidth || minX + frameWidth < Camera.viewOffsetX)
 				return false;
 			
