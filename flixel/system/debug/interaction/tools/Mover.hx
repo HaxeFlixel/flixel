@@ -39,14 +39,33 @@ class Mover extends Tool
 			return;
 		
 		if (_brain.pointerPressed && !_dragging)
-			_dragging = true;	
+			startDragging();	
 		else if (_brain.pointerPressed && _dragging)
 			doDragging();
 		else if (_brain.pointerJustReleased)
-			_dragging = false;
+			stopDragging();
 		
 		_lastCursorPosition.x = _brain.flixelPointer.x;
 		_lastCursorPosition.y = _brain.flixelPointer.y;
+	}
+	
+	private function stopDragging():Void
+	{
+		_dragging = false;
+	}
+	
+	private function startDragging():Void
+	{
+		if (_dragging)
+			return;
+			
+		_dragging = true;
+		
+		// If we are not active, it means things are being moved around using
+		// the mover's shortcut key. If the pointer is the active tool, it should
+		// not do any selection of items while things are being moved/dragged.
+		if (!isActive() && Std.is(_brain.activeTool, Pointer))
+			cast(_brain.activeTool, Pointer).stopSelection(false);
 	}
 	
 	private function doDragging():Void
