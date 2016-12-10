@@ -4,7 +4,6 @@ import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.ui.Keyboard;
 import flixel.FlxBasic;
-import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.interaction.Interaction;
