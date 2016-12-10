@@ -289,7 +289,7 @@ class FlxRandom
 			}
 			
 			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
-			selected = Objects[weightedPick(_arrayFloatHelper)];
+			selected = Objects[StartIndex + weightedPick(_arrayFloatHelper)];
 		}
 		
 		return selected;

@@ -186,12 +186,12 @@ class FlxPath implements IFlxDestroyable
 	 * @since   4.2.0
 	 */
 	public function setProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
- 	{
- 		speed = Math.abs(Speed);
- 		_mode = Mode;
- 		_autoRotate = AutoRotate;
- 		return this;
- 	}
+	{
+		speed = Math.abs(Speed);
+		_mode = Mode;
+		_autoRotate = AutoRotate;
+		return this;
+	}
 	
 	/**
 	 * Starts movement along specified path.

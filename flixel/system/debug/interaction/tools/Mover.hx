@@ -25,6 +25,7 @@ class Mover extends Tool
 		_lastCursorPosition = new FlxPoint(brain.flixelPointer.x, brain.flixelPointer.x);
 
 		_name = "Mover";
+		_shortcut = "Shift";
 		setButton(GraphicMoverTool);
 		setCursor(new GraphicMoverTool(0, 0));
 

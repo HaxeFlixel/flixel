@@ -345,7 +345,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		
 		if (Splice)
+		{
 			members.splice(index, 1);
+			length--;
+		}
 		else
 			members[index] = null;
 		

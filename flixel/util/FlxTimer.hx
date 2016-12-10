@@ -114,14 +114,13 @@ class FlxTimer implements IFlxDestroyable
 		time = Math.abs(Time);
 		
 		if (Loops < 0) 
-		{
 			Loops *= -1;
-		}
 		
 		loops = Loops;
 		onComplete = OnComplete;
 		_timeCounter = 0;
 		_loopsCounter = 0;
+		
 		return this;
 	}
 	
@@ -132,9 +131,8 @@ class FlxTimer implements IFlxDestroyable
 	public function reset(NewTime:Float = -1):FlxTimer
 	{
 		if (NewTime < 0)
-		{
 			NewTime = time;
-		}
+		
 		start(NewTime, onComplete, loops);
 		return this;
 	}
@@ -179,11 +177,11 @@ class FlxTimer implements IFlxDestroyable
 	@:allow(flixel.util.FlxTimerManager)
 	private function onLoopFinished():Void
 	{
-		if (onComplete != null)
-			onComplete(this);
-		
 		if (finished)
 			cancel();
+		
+		if (onComplete != null)
+			onComplete(this);
 	}
 	
 	private inline function get_timeLeft():Float
@@ -324,7 +322,6 @@ class FlxTimerManager extends FlxBasic
 		}
 	}
 
-	
 	/**
 	 * Removes all the timers from the timer manager.
 	 */

@@ -18,7 +18,7 @@ class FlxTweenTest extends FlxTest
 	function testIssue1104()
 	{
 		FlxTween.tween(this, { value:  1000 }, 1);
-		FlxTween.tween(this, { value: -1000 }, 1,  { startDelay: 1 } );
+		FlxTween.tween(this, { value: -1000 }, 1, { startDelay: 1 });
 		
 		// check that there is actually some tweening going on
 		step(10);
@@ -80,6 +80,83 @@ class FlxTweenTest extends FlxTest
 		});
 		tween.cancel();
 		step();
+	}
+
+	@Test
+	function testCancelChainFirstTweenUnfinished()
+	{
+		var chain = createChain(4);
+
+		while (!chain.updated[0])
+			step();
+		
+		Assert.isFalse(chain.completed[0]);
+
+		chain.tweens[0].cancelChain();
+
+		for (i in 0...chain.count)
+			finishTween(chain.tweens[i]);
+
+		for (i in 1...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
+	}
+
+	@Test
+	function testCancelChainFirstTweenFinished()
+	{
+		var chain = createChain(4);
+		
+		while (!chain.updated[1])
+			step();
+		
+		Assert.isTrue(chain.updated[0] && chain.completed[0]);
+		Assert.isFalse(chain.completed[1]);
+		
+		chain.tweens[0].cancelChain();
+		
+		for (i in 1...chain.count)
+			finishTween(chain.tweens[i]);
+		
+		for (i in 2...chain.count)
+			Assert.isFalse(chain.updated[i] || chain.completed[i]);
+	}
+
+	function createChain(count:Int)
+	{
+		var updated = [for (i in 0...count) false];
+		var completed = [for (i in 0...count) false];
+		var tweens = [for (i in 0...count)
+			makeTween(0.1,
+				function (_) completed[i] = true,
+				function (_) updated[i] = true
+		)];
+
+		for (i in 1...count)
+			tweens[0].wait(0.1).then(tweens[i]);
+
+		return {
+			count: count,
+			updated: updated,
+			completed: completed,
+			tweens: tweens
+		}
+	}
+
+	@Test
+	function testCancelYieldToChain()
+	{
+		var completed1 = false;
+		var tween1 = makeTween(0.1, function(_) completed1 = true);
+
+		var completed2 = false;
+		var tween2 = makeTween(0.1, function(_) completed2 = true);
+
+		tween1.then(tween2);
+		tween1.cancel();
+		finishTween(tween2);
+
+		Assert.isFalse(completed1);
+		Assert.isTrue(completed2);
 	}
 
 	@Test
