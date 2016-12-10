@@ -24,6 +24,7 @@ class Pointer extends Tool
 	private var _selectionStartPoint:FlxPoint = new FlxPoint();
 	private var _selectionEndPoint:FlxPoint = new FlxPoint();
 	private var _selectionHappening:Bool = false;
+	private var _selectionCancelled:Bool = false;
 	private var _selectionArea:FlxRect = new FlxRect();
 	private var _itemsInSelectionArea:Array<FlxBasic> = [];
 	
@@ -65,10 +66,9 @@ class Pointer extends Tool
 		// If we have items in the selection area, handle them
 		if (_itemsInSelectionArea.length > 0)
 		{
-			for (item in _itemsInSelectionArea)
-				handleItemAddition(cast item);
+			handleItemAddition(_itemsInSelectionArea);
 		}
-		else if (!_brain.keyPressed(Keyboard.CONTROL))
+		else if (!_brain.keyPressed(Keyboard.CONTROL) && !_selectionCancelled)
 			// User clicked an empty space without holding the "add more items" key,
 			// so it's time to unselect everything.
 			_brain.clearSelection();
@@ -102,8 +102,23 @@ class Pointer extends Tool
 	public function startSelection():Void
 	{
 		_selectionHappening = true;
+		_selectionCancelled = false;
 		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		_itemsInSelectionArea.clearArray();
+	}
+	
+	/**
+	 * Cancel any selection activity that is happening, removing the selection rectangle from the screen.
+	 * Any item within the (canceled) selection area will be ignored. If you want to stop the selection
+	 * and actually process the action/items, use `stopSelection()`.
+	 */
+	public function cancelSelection():Void
+	{	
+		if (!_selectionHappening)
+			return;
+		
+		_selectionCancelled = true;
+		stopSelection(false);
 	}
 	
 	/**
@@ -127,35 +142,26 @@ class Pointer extends Tool
 		_selectionArea.set(0, 0, 0, 0);
 	}
 	
-	private function handleItemAddition(item:FlxObject):Void
+	private function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
-		// or if the user used a selection area (e.g. clicked and dragged to create a rectangle)
-		var adding = _brain.keyPressed(Keyboard.CONTROL) || _itemsInSelectionArea.length > 1;
+		var adding = _brain.keyPressed(Keyboard.CONTROL);
 		var selectedItems = _brain.selectedItems;
 		
-		if (selectedItems.length == 0 || adding)
+		if (itemsInSelectionArea.length == 0)
+			return;
+			
+		// If we are not selectively adding items, just clear
+		// the brain's list of selected items.
+		if (!adding)
+			_brain.clearSelection();
+		
+		for (item in itemsInSelectionArea)
 		{
-			// Yeah, that's the case. Is the item already in the selection?
-			if (selectedItems.members.contains(item))
-			{
-				// Yep, it's already there. Let's remove it, but only if
-				// it was the only selected item, otherwise the user is
-				// batch selecting things. In that case, everything should
-				// be included, no questions asked.
-				if (_itemsInSelectionArea.length == 1)
-					selectedItems.remove(item);
-			}
+			if (selectedItems.members.contains(cast item) && adding)
+				selectedItems.remove(cast item);
 			else
-				// No, so let's add it to the selection.
-				selectedItems.add(item);
-		}
-		else
-		{
-			// There is something already selected
-			if (!selectedItems.members.contains(item))
-				_brain.clearSelection();
-			selectedItems.add(item);
+				selectedItems.add(cast item);
 		}
 	}
 		
