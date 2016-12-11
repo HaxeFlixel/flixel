@@ -150,6 +150,7 @@ class DebuggerFrontEnd
 		return drawDebug;
 	}
 	
+	@:access(flixel.FlxGame.onFocus)
 	private function set_visible(Value:Bool):Bool
 	{
 		if (visible == Value)
@@ -164,8 +165,9 @@ class DebuggerFrontEnd
 		// so the game still will be able to capture key presses
 		if (!Value)
 		{
-			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
-			FlxG.stage.focus = FlxG.game;
+			FlxG.stage.focus = null;
+			// setting focus to null will trigger a focus lost event, let's undo that
+			FlxG.game.onFocus(null);
 		}
 		
 		visibilityChanged.dispatch();
