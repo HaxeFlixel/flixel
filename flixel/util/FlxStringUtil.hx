@@ -144,9 +144,10 @@ class FlxStringUtil
 		if (ShowDecimal)
 		{
 			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
-			string += (EnglishStyle ? "." : ",") + amount;
+			string += (EnglishStyle ? "." : ",");
 			if (amount < 10)
 				string += "0";
+			string += amount;
 		}
 		
 		if (isNegative)
