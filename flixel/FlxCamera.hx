@@ -206,6 +206,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public var zoom(default, set):Float;
 	/**
+	 * Difference between native size of camera and zoomed size, divided in half
+	 * Needed to do occlusion of objects when zoom != 1
+	 */
+	public var zoomOffsetX(get, never):Float;
+	public var zoomOffsetY(get, never):Float;
+	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
 	 */
 	public var alpha(default, set):Float = 1;
@@ -1352,7 +1358,7 @@ class FlxCamera extends FlxBasic
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading
-			targetGraphics.drawRect(-1, -1, width + 2, height + 2);
+			targetGraphics.drawRect(-1 - zoomOffsetX, -1 - zoomOffsetY, width + zoomOffsetX * 2 + 2, height + zoomOffsetY * 2 + 2);
 			targetGraphics.endFill();
 		}
 	}
@@ -1511,6 +1517,8 @@ class FlxCamera extends FlxBasic
 		updateFlashSpritePosition();
 		updateScrollRect();
 		updateInternalSpritePositions();
+		
+		FlxG.cameras.cameraResized.dispatch(this);
 	}
 	
 	/**
@@ -1651,6 +1659,15 @@ class FlxCamera extends FlxBasic
 			flashSprite.visible = visible;
 		}
 		return this.visible = visible;
+	}
+	
+	private function get_zoomOffsetX():Float
+	{
+		return width * (1 - zoom) * 0.5 / zoom;
+	}
+	private function get_zoomOffsetY():Float
+	{
+		return height * (1 - zoom) * 0.5 / zoom;
 	}
 }
 

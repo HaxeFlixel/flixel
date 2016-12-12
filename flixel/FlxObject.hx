@@ -947,7 +947,10 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		getScreenPosition(_point, Camera);
-		return (_point.x + width > 0) && (_point.x < Camera.width) && (_point.y + height > 0) && (_point.y < Camera.height);
+		
+		var zoomOffsetX:Float = Camera.zoomOffsetX;
+		var zoomOffsetY:Float = Camera.zoomOffsetY;
+		return (_point.x + width > -zoomOffsetX) && (_point.x < Camera.width + zoomOffsetX) && (_point.y + height > -zoomOffsetY) && (_point.y < Camera.height + zoomOffsetY);
 	}
 	
 	/**
