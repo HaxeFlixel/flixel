@@ -414,6 +414,11 @@ class FlxGame extends Sprite
 	
 	private function onFocusLost(_):Void
 	{
+		#if next
+		if (_ != null && _.target != FlxG.stage)
+			return;
+		#end
+		
 		#if flash
 		if (_lostFocus) 
 			return; // Don't run this function twice (bug in standalone flash player)
