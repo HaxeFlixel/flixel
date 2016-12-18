@@ -719,7 +719,7 @@ class FlxAnimationController implements IFlxDestroyable
 	
 	private function set_frameIndex(Frame:Int):Int
 	{
-		if (_sprite.frames != null)
+		if (_sprite.frames != null && frames > 0)
 		{
 			Frame = Frame % frames;
 			_sprite.frame = _sprite.frames.frames[Frame];
