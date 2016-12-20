@@ -947,8 +947,12 @@ class FlxObject extends FlxBasic
 			Camera = FlxG.camera;
 		}
 		getScreenPosition(_point, Camera);
+<<<<<<< HEAD
 		
 		return (_point.x + width > Camera.viewOffsetX) && (_point.x < Camera.viewOffsetWidth) && (_point.y + height > Camera.viewOffsetY) && (_point.y < Camera.viewOffsetHeight);
+=======
+		return Camera.containsPoint(_point, width, height);
+>>>>>>> refs/remotes/origin/dev
 	}
 	
 	/**

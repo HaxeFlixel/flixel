@@ -414,6 +414,11 @@ class FlxGame extends Sprite
 	
 	private function onFocusLost(_):Void
 	{
+		#if next
+		if (_ != null && _.target != FlxG.stage)
+			return;
+		#end
+		
 		#if flash
 		if (_lostFocus) 
 			return; // Don't run this function twice (bug in standalone flash player)
@@ -461,9 +466,9 @@ class FlxGame extends Sprite
 		FlxG.resizeGame(width, height);
 		
 		_state.onResize(width, height);
-		FlxG.signals.gameResized.dispatch(width, height);
 		
 		FlxG.cameras.resize();
+		FlxG.signals.gameResized.dispatch(width, height);
 		
 		#if FLX_DEBUG
 		debugger.onResize(width, height);
