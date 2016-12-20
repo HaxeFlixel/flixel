@@ -986,54 +986,41 @@ class FlxSprite extends FlxObject
 		
 		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
 		{	
-			if (minX > Camera.viewOffsetWidth || minX + frameWidth < Camera.viewOffsetX)
-				return false;
-			
-			if (minY > Camera.viewOffsetHeight || minY + frameHeight < Camera.viewOffsetY)
-				return false;
-		}
-		else
-		{
-			var radiusX:Float = _halfSize.x;
-			var radiusY:Float = _halfSize.y;
-			
-			var ox:Float = origin.x;
-			if (ox != radiusX)
-			{
-				var x1:Float = Math.abs(ox);
-				var x2:Float = Math.abs(frameWidth - ox);
-				radiusX = Math.max(x2, x1);
-			}
-			
-			var oy:Float = origin.y;
-			if (oy != radiusY)
-			{
-				var y1:Float = Math.abs(oy);
-				var y2:Float = Math.abs(frameHeight - oy);
-				radiusY = Math.max(y2, y1);
-			}
-			
-			radiusX *= Math.abs(scale.x);
-			radiusY *= Math.abs(scale.y);
-			var radius:Float = Math.max(radiusX, radiusY);
-			radius *= FlxMath.SQUARE_ROOT_OF_TWO;
-			
-			minX += ox;
-			var maxX:Float = minX + radius;
-			minX -= radius;
-			
-			if (maxX < Camera.viewOffsetX || minX > Camera.viewOffsetWidth)
-				return false;
-			
-			minY += oy;
-			var maxY:Float = minY + radius;
-			minY -= radius;
-			
-			if (maxY < Camera.viewOffsetY || minY > Camera.viewOffsetHeight)
-				return false;
+			_point.set(minX, minY);
+			return Camera.containsPoint(_point, frameWidth, frameHeight);
 		}
 		
-		return true;
+		var radiusX:Float = _halfSize.x;
+		var radiusY:Float = _halfSize.y;
+		
+		var ox:Float = origin.x;
+		if (ox != radiusX)
+		{
+			var x1:Float = Math.abs(ox);
+			var x2:Float = Math.abs(frameWidth - ox);
+			radiusX = Math.max(x2, x1);
+		}
+		
+		var oy:Float = origin.y;
+		if (oy != radiusY)
+		{
+			var y1:Float = Math.abs(oy);
+			var y2:Float = Math.abs(frameHeight - oy);
+			radiusY = Math.max(y2, y1);
+		}
+		
+		radiusX *= Math.abs(scale.x);
+		radiusY *= Math.abs(scale.y);
+		var radius:Float = Math.max(radiusX, radiusY);
+		radius *= FlxMath.SQUARE_ROOT_OF_TWO;
+		
+		minX += ox - radius;
+		minY += oy - radius;
+		
+		var doubleRadius:Float = 2 * radius;
+		
+		_point.set(minX, minY);
+		return Camera.containsPoint(_point, doubleRadius, doubleRadius);
 	}
 	
 	/**

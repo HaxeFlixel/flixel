@@ -1696,7 +1696,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
-		return (point.x + width > 0) && (point.x < this.width) && (point.y + height > 0) && (point.y < this.height);
+		return (point.x + width > viewOffsetX) && (point.x < viewOffsetWidth) && (point.y + height > viewOffsetY) && (point.y < viewOffsetHeight);
 	}
 	
 	private function set_followLerp(Value:Float):Float
