@@ -445,13 +445,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
 		
-		if (minX > Camera.viewOffsetWidth || minX + _scaledTileWidth * widthInTiles < Camera.viewOffsetX)
-			return false;
-		
-		if (minY > Camera.viewOffsetHeight || minY + _scaledTileHeight * heightInTiles < Camera.viewOffsetY)
-			return false;
-		
-		return true;
+		_point.set(minX, minY);
+		return Camera.containsPoint(_point, _scaledTileWidth * widthInTiles, _scaledTileHeight * heightInTiles);
 	}
 	
 	/**
