@@ -412,15 +412,15 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocus();
 	}
 	
-	private function onFocusLost(_):Void
+	private function onFocusLost(event:Event):Void
 	{
 		#if next
-		if (_ != null && _.target != FlxG.stage)
+		if (event != null && event.target != FlxG.stage)
 			return;
 		#end
 		
 		#if flash
-		if (_lostFocus) 
+		if (_lostFocus)
 			return; // Don't run this function twice (bug in standalone flash player)
 		#end
 		
