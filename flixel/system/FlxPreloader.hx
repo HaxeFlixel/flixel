@@ -9,10 +9,10 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
 
-@:bitmap("assets/images/preloader/light.png")
+@:keep @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
 
-@:bitmap("assets/images/preloader/corners.png")
+@:keep @:bitmap("assets/images/preloader/corners.png")
 private class GraphicLogoCorners extends BitmapData {}
 
 /**
