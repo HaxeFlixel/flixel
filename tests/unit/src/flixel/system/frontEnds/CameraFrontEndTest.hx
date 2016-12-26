@@ -51,15 +51,19 @@ class CameraFrontEndTest extends FlxTest
 		FlxG.cameras.cameraResized.removeAll();
 	}
 
-	@Test
-	function testResetCameras()
+	@Test // #2016
+	function testResetRemoveAllCameras()
 	{
 		Assert.areEqual(1, FlxG.cameras.list.length);
 
 		FlxG.cameras.add(new FlxCamera());
 		Assert.areEqual(2, FlxG.cameras.list.length);
 
+		var calls = 0;
+		FlxG.cameras.cameraRemoved.add(function(_) calls++);
 		FlxG.cameras.reset();
-		Assert.areEqual(1, FlxG.cameras.list.length);
+		Assert.areEqual(2, calls);
+
+		FlxG.cameras.cameraRemoved.removeAll();
 	}
 }
