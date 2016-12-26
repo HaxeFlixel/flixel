@@ -17,9 +17,9 @@ class FlxTest
 	
 	public function new() {}
 	
+	@After
 	@:access(flixel)
-	@AfterClass
-	function afterClass()
+	function after()
 	{
 		FlxG.game.getTimer = function()
 		{
