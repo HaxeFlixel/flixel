@@ -9,6 +9,7 @@ import flash.events.MouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Eraser;
@@ -44,7 +45,7 @@ class Interaction extends Window
 	private var _customCursor:Sprite;
 	private var _tools:Array<Tool> = [];
 	private var _turn:Int = 2;
-	private var _keysDown:Map<Int, Int> = new Map();
+	private var _keysDown:Map<Int, Bool> = new Map();
 	private var _keysUp:Map<Int, Int> = new Map();
 	private var _wasMouseVisible:Bool;
 	private var _wasUsingSystemCursor:Bool;
@@ -157,9 +158,12 @@ class Interaction extends Window
 	private function handleKeyEvent(event:KeyboardEvent):Void
 	{
 		if (event.type == KeyboardEvent.KEY_DOWN)
-			_keysDown.set(event.keyCode, _turn);
+			_keysDown.set(event.keyCode, true);
 		else if (event.type == KeyboardEvent.KEY_UP)
+		{
+			_keysDown.set(event.keyCode, false);
 			_keysUp.set(event.keyCode, _turn);
+		}
 	}
 	
 	private function addTool(tool:Tool):Void
@@ -247,7 +251,7 @@ class Interaction extends Window
 		drawItemsSelection();
 	}
 	
-	private function getDebugGraphics():Graphics
+	public function getDebugGraphics():Graphics
 	{
 		if (FlxG.renderBlit)
 		{
@@ -273,7 +277,7 @@ class Interaction extends Window
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
 				// Render a red rectangle centered at the selected item
-				gfx.lineStyle(1.5, 0xff0000);
+				gfx.lineStyle(0.9, 0xff0000);
 				gfx.drawRect(member.x - FlxG.camera.scroll.x,
 					member.y - FlxG.camera.scroll.y,
 					member.width * 1.0, member.height * 1.0);
@@ -442,13 +446,43 @@ class Interaction extends Window
 	
 	public function keyPressed(key:Int):Bool
 	{
-		var value:Int = _keysDown.get(key) == null ? 0 : _keysDown.get(key);
-		return _turn <= value;
+		return _keysDown.get(key);
 	}
 	
 	public function keyJustPressed(key:Int):Bool
 	{
 		var value:Int = _keysUp.get(key) == null ? 0 : _keysUp.get(key);
 		return (_turn - value) == 1;
+	}
+	
+	/**
+	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
+	 * the method has no return, you must pass an array where items will be placed. The method decides
+	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
+	 * `getHitbox()`) overlaps the area parameter.
+	 * 
+	 * @param	items		array where the method will place all found items. Any previous content in the array will be preserved.
+	 * @param	members		array where the method will recursively search for items.
+	 * @param	area		a rectangle that describes the area where the method should search within.
+	 */
+	@:access(flixel.group.FlxTypedGroup)
+	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	{
+		// we iterate backwards to get the sprites on top first
+		var i = members.length;
+		while (i-- > 0)
+		{
+			var member = members[i];
+			// Ignore invisible or non-existent entities
+			if (member == null || !member.visible || !member.exists)
+				continue;
+
+			var group = FlxTypedGroup.resolveGroup(member);
+			if (group != null)
+				findItemsWithinArea(items, group.members, area);
+			else if (Std.is(member, FlxSprite) &&
+				area.overlaps(cast(member, FlxSprite).getHitbox()))
+				items.push(cast member);
+		}
 	}
 }
