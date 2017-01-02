@@ -50,8 +50,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		var data:Dynamic;
 		
-		if (Std.is(Description, String)) {
-			
+		if (Std.is(Description, String))
+		{
 			var json:String = Description;
 			
 			if (Assets.exists(json))
@@ -60,7 +60,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 			data = Json.parse(json);
 		}
 		
-		else {
+		else
+		{
 			data = Description;
 		}
 		
