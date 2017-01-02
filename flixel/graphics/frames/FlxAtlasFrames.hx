@@ -2,11 +2,13 @@ package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxAtlasFrames.TexturePackerObject;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxTexturePackerSource;
 import haxe.Json;
 import haxe.xml.Fast;
 import openfl.Assets;
@@ -32,7 +34,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:Dynamic):FlxAtlasFrames
+	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:FlxTexturePackerSource):FlxAtlasFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
 		if (graphic == null)
@@ -48,7 +50,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		frames = new FlxAtlasFrames(graphic);
 		
-		var data:Dynamic;
+		var data:TexturePackerObject;
 		
 		if (Std.is(Description, String))
 		{
@@ -423,4 +425,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		return atlasFrames;
 	}
+}
+
+typedef TexturePackerObject = 
+{
+	frames : Dynamic
 }
