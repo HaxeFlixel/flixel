@@ -257,6 +257,24 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
+	 * Inserts a new `FlxSprite` subclass to the group at the specified position.
+	 * 
+	 * @param   Position The position that the new sprite or sprite group should be inserted at.
+	 * @param   Sprite   The sprite or sprite group you want to insert into the group.
+	 * @return  The same object that was passed in.
+	 */
+	public function insert(Position:Int, Sprite:T):T
+	{
+		var sprite:FlxSprite = cast Sprite;
+		sprite.x += x;
+		sprite.y += y;
+		sprite.alpha *= alpha;
+		sprite.scrollFactor.copyFrom(scrollFactor);
+		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
+		return group.insert(Position, Sprite);
+	}
+	
+	/**
 	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
 	 * It behaves differently depending on whether `maxSize` equals `0` or is bigger than `0`.
 	 * 
