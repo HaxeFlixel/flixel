@@ -16,6 +16,11 @@ class FlxSubState extends FlxState
 	public var closeCallback:Void->Void;
 	
 	/**
+	 * Callback method for state open/resume event.
+	 */
+	public var openCallback:Void->Void;
+	
+	/**
 	 * Helper sprite object for non-flash targets. Draws the background.
 	 */
 	@:noCompletion
@@ -42,6 +47,7 @@ class FlxSubState extends FlxState
 	{
 		super();
 		closeCallback = null;
+		openCallback = null;
 		
 		if (FlxG.renderTile)
 			_bgSprite = new FlxBGSprite();
@@ -71,6 +77,7 @@ class FlxSubState extends FlxState
 	{
 		super.destroy();
 		closeCallback = null;
+		openCallback = null;
 		_parentState = null;
 		_bgSprite = null;
 	}

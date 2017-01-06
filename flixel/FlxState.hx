@@ -119,6 +119,7 @@ class FlxState extends FlxGroup
 				subState._created = true;
 				subState.create();
 			}
+			subState.openCallback();
 		}
 	}
 
