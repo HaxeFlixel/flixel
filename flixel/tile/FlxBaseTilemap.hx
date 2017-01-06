@@ -724,6 +724,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// Figure out what tile we are starting and ending on.
 		var startIndex:Int = getTileIndexByCoords(Start);
 		var endIndex:Int = getTileIndexByCoords(End);
+		
+		// Check if any point given is outside the tilemap
+		if ((startIndex < 0) || (endIndex < 0))
+			return null;
 
 		// Check that the start and end are clear.
 		if ((_tileObjects[_data[startIndex]].allowCollisions > 0) || (_tileObjects[_data[endIndex]].allowCollisions > 0))
@@ -1234,14 +1238,15 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	override public function overlapsPoint(WorldPoint:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
-		if (!InScreenSpace)
-			return tileAtPointAllowsCollisions(WorldPoint);
+		if (InScreenSpace)
+		{
+			if (Camera == null)
+				Camera = FlxG.camera;
+			
+			WorldPoint.subtractPoint(Camera.scroll);
+			WorldPoint.putWeak();
+		}
 		
-		if (Camera == null)
-			Camera = FlxG.camera;
-		
-		WorldPoint.subtractPoint(Camera.scroll);
-		WorldPoint.putWeak();
 		return tileAtPointAllowsCollisions(WorldPoint);
 	}
 	

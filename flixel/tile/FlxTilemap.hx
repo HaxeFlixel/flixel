@@ -646,9 +646,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	override public function getTileIndexByCoords(Coord:FlxPoint):Int
 	{
-		var result = Std.int((Coord.y - y) / _scaledTileHeight) * widthInTiles + Std.int((Coord.x - x) / _scaledTileWidth);
+		var localX = Coord.x - x;
+		var localY = Coord.y - y;
 		Coord.putWeak();
-		return result;
+		
+		if ((localX < 0) || (localY < 0) || (localX >= width) || (localY >= height))
+			return -1;
+		
+		return Std.int(localY / _scaledTileHeight) * widthInTiles + Std.int(localX / _scaledTileWidth);
 	}
 	
 	override public function getTileCoordsByIndex(Index:Int, Midpoint:Bool = true):FlxPoint
