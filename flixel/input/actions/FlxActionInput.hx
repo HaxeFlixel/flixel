@@ -110,3 +110,25 @@ class FlxInputDeviceID
 	 */
 	public static inline var NONE:Int         = -3;
 }
+
+/**
+ * Just a bucket for being able to refer to a specific device by type & slot number
+ */
+class FlxInputDeviceObject
+{
+	public var device:FlxInputDevice;
+	public var id:Int;
+	public var model:String;
+	
+	public function new(Device:FlxInputDevice, ID:Int, Model:String="")
+	{
+		device = Device;
+		id = ID;
+		model = Model;
+	}
+	
+	public function toString()
+	{
+		return ("{device:" + device+",id:" + id + ",model:" + model + "}");
+	}
+}
