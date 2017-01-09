@@ -37,7 +37,7 @@ using flixel.util.FlxArrayUtil;
  * 
  * The PLAYER cares about ACTIONS:
  * Mario JUMPS, Samus SHOOTS, Captain Falcon TURNS, BRAKES, and ACCELERATES.
- 
+ *
  * The COMPUTER cares about INPUTS:
  * The W key is PRESSED. The Left Mouse button was JUST_RELEASED. Gamepad #2's
  * analog stick is MOVED with values (x=0.4,y=-0.5).
