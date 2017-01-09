@@ -4,10 +4,9 @@ import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if (cpp && steamwrap && haxe_ver > "3.2")
+import steamwrap.api.Controller;
 import steamwrap.api.Controller.EControllerActionOrigin;
 #end
-
-using flixel.util.FlxArrayUtil;
 
 using flixel.util.FlxArrayUtil;
 
@@ -239,18 +238,6 @@ class FlxAction implements IFlxDestroyable
 		}
 		#end
 		return origins;
-	}
-	
-	public function removeAllInputs(Destroy:Bool = true):Void
-	{
-		var len = inputs.length;
-		for (i in 0...len)
-		{
-			var j = len - i - 1;
-			var input = inputs[j];
-			removeInput(input, Destroy);
-			inputs.splice(j, 1);
-		}
 	}
 	
 	public function removeAllInputs(Destroy:Bool = true):Void

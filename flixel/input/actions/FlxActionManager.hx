@@ -814,15 +814,6 @@ class ActionSetRegister implements IFlxDestroyable
 		}
 	}
 	/**********PRIVATE*********/
-	/**
-	 * The current action set for the mouse
-	 */
-	private var mouseSet:Int = 0;
-	
-	/**
-	 * The current action set for the keyboard
-	 */
-	private var keyboardSet:Int = 0;
 	
 	private function updateSteamOrigins(sets:Array<FlxActionSet>):Array<FlxAction>
 	{
