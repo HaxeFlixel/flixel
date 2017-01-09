@@ -15,6 +15,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if (cpp && steamwrap && haxe_ver > "3.2")
 import steamwrap.api.Steam;
 import flixel.input.FlxInput.FlxInputType;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.Json;
 import steamwrap.data.ControllerConfig;
 #end
