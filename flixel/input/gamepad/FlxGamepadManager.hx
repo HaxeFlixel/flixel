@@ -1,9 +1,9 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
 
 #if FLX_JOYSTICK_API
 import flixel.FlxG;
