@@ -22,9 +22,79 @@ import steamwrap.data.ControllerConfig;
 using flixel.util.FlxArrayUtil;
 
 /**
- * High level input manager for `FlxAction`s. This lets you manage multiple input
- * devices and action sets, and is the only supported method for natively using 
- * the Steam Controller API.
+ * High level input manager for FlxActions. This lets you manage multiple input
+ * devices and action sets, and is the only supported method for natively
+ * handling Steam Controllers.
+ * 
+ * If you are only using Mouse/Keyboard/Gamepad controls for a fairly simple
+ * game, this might be overkill, but if you have more complex needs, are
+ * supporting the Steam Controller natively, or need robust and flexibile
+ * user-customizable inputs, this is the class for you.
+ * 
+ * OVERVIEW
+ * =============
+ * 
+ * There are four items to consider:
+ * 
+ * - FlxAction
+ * - FlxActionInput
+ * - FlxActionSet
+ * - FlxActionManager
+ * 
+ * The PLAYER cares about ACTIONS:
+ * Mario JUMPS, Samus SHOOTS, Captain Falcon TURNS, BRAKES, and ACCELERATES.
+ *
+ * The COMPUTER cares about INPUTS:
+ * The W key is PRESSED. The Left Mouse button was JUST_RELEASED. Gamepad #2's
+ * analog stick is MOVED with values (x=0.4,y=-0.5).
+ *
+ * The DESIGNER cares about ACTION SETS:
+ * Different parts of the game might need different controls. You (usually)
+ * can't JUMP or SHOOT in a store menu, but you CAN perform actions like
+ * MENU_UP, MENU_DOWN, MENU_LEFT, MENU_RIGHT, BACK, and SELECT.
+ * 
+ * 1. FlxActions
+ * =============
+ * 
+ * FlxActions come in two varieties: Digital and Analog. You can only create
+ * FlxActionDigital and FlxActionAnalog. Digital is for on/off actions like
+ * JUMP and SHOOT. Analog is for things that need a range of values, like
+ * jumping with more or less force, or moving a player or camera around.
+ * 
+ * This lets you just check for: if(SHOOT.check()) in your update loop 
+ * rather than some hand-rolled custom input code.
+ * 
+ * FlxActions don't do anything until you attach FlxActionInputs do them.
+ * 
+ * 2. FlxInputs
+ * =============
+ * 
+ * FlxActionInputs are divided into digital and analog types, as well as by
+ * the kind of input device they use:
+ * 
+ * - FlxActionInputDigitalKeyboard
+ * - FlxActionInputDigitalMouse
+ * - FlxActionInputDigitalGamepad
+ * - FlxActionInputAnalogMouse
+ * - FlxActionInputAnalogGamepad
+ * 
+ * Create a FlxActionInput subclass with the input values you want, then call
+ * myAction.addInput(myInput) to attach it to an action. You can only add
+ * digital inputs to digital actions and analog inputs to analog actions.
+ * 
+ * For digital actions that only have mouse, keyboard, and gamepad input,
+ * you're done. You can now call myAction.check() in your update loop to 
+ * see if it has fired and then act upon it.
+ * 
+ * It's best to call update() on all of your actions in your update loop
+ * before checking them, but this is strictly speaking only necessary for:
+ *
+ * - analog actions (to get proper JUST_MOVED / JUST_STOPPED values)
+ * - if you want the .fire property to update every frame
+ * - actions (digital or analog) with steam controller input
+ *
+ * 3. FlxActionSet
+ * ===============
  * 
  * Once you've set up `FlxActionManager`, you can let flixel handle it globally
  * with: `FlxG.inputs.add(myFlxActionManager)`;
