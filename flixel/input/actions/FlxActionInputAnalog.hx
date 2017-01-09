@@ -8,6 +8,10 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 
+#if steamwrap
+import steamwrap.api.Controller.ControllerAnalogActionData;
+#end
+
 @:enum
 abstract FlxAnalogState(Int) from Int
 {
@@ -165,7 +169,7 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	/**
 	 * Gamepad action input for analog (trigger, joystick, touchpad, etc) events
 	 * @param	InputID "universal" gamepad input ID (LEFT_TRIGGER, RIGHT_ANALOG_STICK, TILT_PITCH, etc)
-	 * @param	Trigger What state triggers this action (MOVING, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
 	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
 	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.FIRST_ACTIVE / ALL
 	 */
@@ -211,6 +215,13 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 						
 					case FlxGamepadInputID.POINTER_Y:
 						updateVals(gamepad.analog.value.POINTER_Y, 0);
+						
+					case FlxGamepadInputID.DPAD:
+						updateVals(
+							gamepad.pressed.DPAD_LEFT ? -1.0 : gamepad.pressed.DPAD_RIGHT ? 1.0 : 0.0, 
+							gamepad.pressed.DPAD_UP ? -1.0 : gamepad.pressed.DPAD_DOWN ? 1.0 : 0.0
+						);
+					
 				}
 			}
 			else

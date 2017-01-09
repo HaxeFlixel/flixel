@@ -3,6 +3,10 @@ package flixel.input.actions;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+#if steamwrap
+import steamwrap.api.Controller;
+import steamwrap.api.Controller.EControllerActionOrigin;
+#end
 
 using flixel.util.FlxArrayUtil;
 
@@ -179,15 +183,78 @@ class FlxAction implements IFlxDestroyable
 	private var _timestamp:Int = 0;
 	private var _check:Bool = false;
 	
+	/**
+	 * Whether the steam controller inputs for this action have changed since the last time origins were polled. Always false if steam isn't active
+	 */
+	public var steamOriginsChanged(default, null):Bool = false;
+	
+	#if steamwrap
+	private var _steamOriginsChecksum:Int = 0;
+	private var _steamOrigins:Array<EControllerActionOrigin>;
+	#end
+	
 	private function new(InputType:FlxInputType, Name:String)
 	{
 		type = InputType;
 		name = Name;
 		inputs = [];
+		#if steamwrap
+		_steamOrigins = [];
+		for (i in 0...FlxSteamController.MAX_ORIGINS)
+		{
+			_steamOrigins.push(cast 0);
+		}
+		#end
+	}
+	
+	public function getFirstSteamOrigin():Int
+	{
+		#if steamwrap
+		if (_steamOrigins == null) return 0;
+		for (i in 0..._steamOrigins.length)
+		{
+			if (_steamOrigins[i] != EControllerActionOrigin.NONE)
+			{
+				return cast _steamOrigins[i];
+			}
+		}
+		#end
+		return 0;
+	}
+	
+	public function getSteamOrigins(?origins:Array<Int>):Array<Int>
+	{
+		#if steamwrap
+		if (origins == null)
+		{
+			origins = [];
+		}
+		if (_steamOrigins != null)
+		{
+			for (i in 0..._steamOrigins.length)
+			{
+				origins[i] = cast _steamOrigins[i];
+			}
+		}
+		#end
+		return origins;
+	}
+	
+	public function removeAllInputs(Destroy:Bool = true):Void
+	{
+		var len = inputs.length;
+		for (i in 0...len)
+		{
+			var j = len - i - 1;
+			var input = inputs[j];
+			removeInput(input, Destroy);
+			inputs.splice(j, 1);
+		}
 	}
 	
 	public function removeInput(Input:FlxActionInput, Destroy:Bool = false):Void
 	{
+		if (Input == null) return;
 		inputs.remove(Input);
 		if (Destroy)
 		{
@@ -219,10 +286,10 @@ class FlxAction implements IFlxDestroyable
 		_timestamp = @:privateAccess FlxG.game._total;
 		_check = false;
 		
-		var len = inputs.length;
-		for (i in -(len - 1)...0)
+		var len = inputs != null ? inputs.length : 0;
+		for (i in 0...len)
 		{
-			var j = -i;
+			var j = len - i - 1;
 			var input = inputs[j];
 			
 			if (input.destroyed)
@@ -255,6 +322,10 @@ class FlxAction implements IFlxDestroyable
 	{
 		FlxDestroyUtil.destroyArray(inputs);
 		inputs = null;
+		#if steamwrap
+		FlxArrayUtil.clearArray(_steamOrigins);
+		_steamOrigins = null;
+		#end
 	}
 	
 	public function match(other:FlxAction):Bool
@@ -264,13 +335,20 @@ class FlxAction implements IFlxDestroyable
 	
 	private function addGenericInput(input:FlxActionInput):FlxAction
 	{
-		if (!checkExists(input)) inputs.push(input);
-		
+		if (inputs == null)
+		{
+			inputs = [];
+		}
+		if (false == checkExists(input))
+		{
+			inputs.push(input);
+		}
 		return this;
 	}
 	
 	private function checkExists(input:FlxActionInput):Bool
 	{
+		if (inputs == null) return false;
 		return inputs.contains(input);
 	}
 }

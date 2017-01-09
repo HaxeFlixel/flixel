@@ -1,5 +1,14 @@
 package flixel.input.actions;
 
+import flixel.input.FlxInput.FlxInputState;
+import flixel.input.actions.FlxAction.FlxActionAnalog;
+import flixel.input.actions.FlxAction.FlxActionDigital;
+import flixel.input.actions.FlxActionInput.FlxInputType;
+import flixel.input.actions.FlxActionInput.FlxInputDevice;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogSteam;
+import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
+import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Json;
@@ -59,25 +68,36 @@ class FlxActionSet implements IFlxDestroyable
 	@:access(flixel.input.actions.FlxActionManager)
 	private static function fromSteam(SteamSet:ControllerActionSet, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
+		if (SteamSet == null) return null;
+		
 		var digitalActions:Array<FlxActionDigital> = [];
 		var analogActions:Array<FlxActionAnalog> = [];
 		
-		for (b in SteamSet.button)
+		if (SteamSet.button != null)
 		{
-			var action = new FlxActionDigital(b.name, CallbackDigital);
-			var aHandle = FlxSteamController.getDigitalActionHandle(b.name);
-			action.steamHandle = aHandle;
-			digitalActions.push(action);
+			for (b in SteamSet.button)
+			{
+				if (b == null) continue;
+				var action = new FlxActionDigital(b.name, CallbackDigital);
+				var aHandle = FlxSteamController.getDigitalActionHandle(b.name);
+				action.steamHandle = aHandle;
+				digitalActions.push(action);
+			}
 		}
-		for (a in SteamSet.analogTrigger)
+		if (SteamSet.analogTrigger != null)
 		{
-			var action = new FlxActionAnalog(a.name, CallbackAnalog);
-			var aHandle = FlxSteamController.getAnalogActionHandle(a.name);
-			action.steamHandle = aHandle;
-			analogActions.push(action);
+			for (a in SteamSet.analogTrigger)
+			{
+				if (a == null) continue;
+				var action = new FlxActionAnalog(a.name, CallbackAnalog);
+				var aHandle = FlxSteamController.getAnalogActionHandle(a.name);
+				action.steamHandle = aHandle;
+				analogActions.push(action);
+			}
 		}
 		for (s in SteamSet.stickPadGyro)
 		{
+			if (s == null) continue;
 			var action = new FlxActionAnalog(s.name, CallbackAnalog);
 			var aHandle = FlxSteamController.getAnalogActionHandle(s.name);
 			action.steamHandle = aHandle;
@@ -268,12 +288,15 @@ class FlxActionSet implements IFlxDestroyable
 				var theInput:FlxActionInput = null;
 				
 				//check if any of the steam controller inputs match this handle
-				for (input in action.inputs)
+				if (action.inputs != null)
 				{
-					if (input.device == FlxInputDevice.STEAM_CONTROLLER && input.deviceID == Handle)
+					for (input in action.inputs)
 					{
-						inputExists = true;
-						theInput = input;
+						if (input.device == FlxInputDevice.STEAM_CONTROLLER && input.deviceID == Handle)
+						{
+							inputExists = true;
+							theInput = input;
+						}
 					}
 				}
 				
