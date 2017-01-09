@@ -173,8 +173,10 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		deviceConnected = new FlxTypedSignal<FlxInputDevice->Int->String->Void>();
 		deviceDisconnected = new FlxTypedSignal<FlxInputDevice->Int->String->Void>();
 		inputsChanged = new FlxTypedSignal<Array<FlxAction>->Void>();
+		#if FLX_GAMEPAD
 		FlxG.gamepads.deviceConnected.add(onDeviceConnected);
 		FlxG.gamepads.deviceDisconnected.add(onDeviceDisconnected);
+		#end
 		FlxSteamController.onControllerConnect = updateSteamControllers;
 		FlxSteamController.onOriginUpdate = updateSteamOrigins;
 	}
