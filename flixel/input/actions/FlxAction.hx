@@ -300,9 +300,9 @@ class FlxAction implements IFlxDestroyable
 		_check = false;
 		
 		var len = inputs != null ? inputs.length : 0;
-		for (i in -(len - 1)...0)
+		for (i in 0...len)
 		{
-			var j = -i;
+			var j = len - i - 1;
 			var input = inputs[j];
 			
 			if (input.destroyed)
