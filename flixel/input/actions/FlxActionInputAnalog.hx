@@ -326,10 +326,28 @@ class FlxActionInputAnalog extends FlxActionInput
 	{
 		var returnVal = switch (axis)
 		{
-			case X:      compareState(trigger, xMoved.current);
-			case Y:      compareState(trigger, yMoved.current);
-			case BOTH:   compareState(trigger, xMoved.current) && compareState(trigger, yMoved.current);
-			case EITHER: compareState(trigger, xMoved.current) || compareState(trigger, yMoved.current);
+			case X:      compareState(xMoved.current, trigger);
+			case Y:      compareState(yMoved.current, trigger);
+			case BOTH:   compareState(xMoved.current, trigger) && compareState(yMoved.current, trigger);
+			//in practice, "both pressed" and "both released" could be useful, whereas 
+			//"both just pressed" and "both just released" seem like very unlikely real-world events
+			case EITHER: 
+				switch (trigger)
+				{
+					case PRESSED:
+						checkAxis(A_X, PRESSED)       || checkAxis(A_Y, PRESSED);         //either one pressed
+					case RELEASED:
+						checkAxis(A_X, RELEASED)      || checkAxis(A_Y, RELEASED);        //either one NOT pressed
+					
+					case JUST_PRESSED:
+						(checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, JUST_PRESSED)) || //both just pressed == whole stick just pressed
+						(checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, RELEASED))     || //one just pressed & other NOT pressed == whole stick just pressed
+						(checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_PRESSED));
+					
+					case JUST_RELEASED:
+						(checkAxis(A_X, JUST_RELEASED) && checkAxis(A_Y, RELEASED)) ||
+						(checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_RELEASED));  //one just released & other NOT pressed = whole stick just released
+				}
 		}
 		
 		if (returnVal)

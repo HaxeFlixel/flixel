@@ -23,7 +23,7 @@ class FlxActionDigital extends FlxAction
 	/**
 	 * Function to call when this action occurs
 	 */
-	public var callback:FlxActionDigital->Void;
+	public var callback(default, null):FlxActionDigital->Void;
 	
 	/**
 	 * Create a new digital action
