@@ -5,6 +5,7 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 using flixel.util.FlxStringUtil;
 
 #if FLX_JOYSTICK_API
@@ -38,6 +39,16 @@ class FlxGamepadManager implements IFlxInputManager
 	public var globalDeadZone:Null<Float>;
 	
 	/**
+	 * Signal for when a device is connected; returns the connected gamepad object to the attached listener
+	 */
+	public var deviceConnected:FlxTypedSignal<FlxGamepad->Void>;
+	
+	/**
+	 * Signal for when a device is disconnected; returns the id of the disconnected gamepad to the attached listener
+	 */
+	public var deviceDisconnected:FlxTypedSignal<FlxGamepad->Void>;
+	
+	/**
 	 * Stores all gamepads - can have null entries, but index matches event.device
 	 */
 	private var _gamepads:Array<FlxGamepad> = [];
@@ -65,14 +76,19 @@ class FlxGamepadManager implements IFlxInputManager
 	private function removeByID(GamepadID:Int):Void
 	{
 		var gamepad:FlxGamepad = _gamepads[GamepadID];
+		
 		if (gamepad != null)
 		{
-			FlxDestroyUtil.destroy(gamepad);
 			_gamepads[GamepadID] = null;
 			
 			var i = _activeGamepads.indexOf(gamepad);
 			if (i != -1)
+			{
 				_activeGamepads[i] = null;
+				deviceDisconnected.dispatch(gamepad);
+			}
+			
+			FlxDestroyUtil.destroy(gamepad);
 		}
 		
 		if (lastActive == gamepad)
@@ -303,6 +319,8 @@ class FlxGamepadManager implements IFlxInputManager
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
+		deviceConnected = new FlxTypedSignal<FlxGamepad->Void>();
+		deviceDisconnected = new FlxTypedSignal<FlxGamepad->Void>();
 		#if FLX_JOYSTICK_API
 		FlxG.stage.addEventListener(JoystickEvent.AXIS_MOVE, handleAxisMove);
 		FlxG.stage.addEventListener(JoystickEvent.BALL_MOVE, handleBallMove);
@@ -350,11 +368,14 @@ class FlxGamepadManager implements IFlxInputManager
 		
 		Device.enabled = true;
 		var id:Int = findGamepadIndex(Device);
+		
 		if (id < 0)
 			return;
 		
 		var gamepad:FlxGamepad = createByID(id, getModelFromDeviceName(Device.name));
 		gamepad._device = Device;
+		
+		deviceConnected.dispatch(gamepad);
 	}
 	
 	private function getModelFromDeviceName(name:String):FlxGamepadModel
@@ -390,12 +411,14 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		if (Device == null)
 			return;
-
+		
 		for (i in 0..._gamepads.length)
 		{
 			var gamepad:FlxGamepad = _gamepads[i];
 			if (gamepad != null && gamepad._device == Device)
+			{
 				removeByID(i);
+			}
 		}
 	}
 	#end
@@ -519,7 +542,8 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	private function handleDeviceAdded(event:JoystickEvent):Void
 	{
-		createByID(event.device, getModelFromJoystick(event.x));
+		var gamepad = createByID(event.device, getModelFromJoystick(event.x));
+		deviceConnected.dispatch(gamepad);
 	}
 	
 	private function handleDeviceRemoved(event:JoystickEvent):Void
