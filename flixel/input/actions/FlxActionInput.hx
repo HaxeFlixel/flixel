@@ -120,15 +120,15 @@ class FlxInputDeviceObject
 	public var id:Int;
 	public var model:String;
 	
-	public function new(Device:FlxInputDevice, ID:Int, Model:String="")
+	public function new(Device:FlxInputDevice, ID:Int, Model:String = "")
 	{
 		device = Device;
 		id = ID;
 		model = Model;
 	}
 	
-	public function toString()
+	public function toString():String
 	{
-		return ("{device:" + device+",id:" + id + ",model:" + model + "}");
+		return "{device:" + device + ",id:" + id + ",model:" + model + "}";
 	}
 }
