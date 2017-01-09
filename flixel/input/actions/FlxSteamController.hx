@@ -1,7 +1,7 @@
 package flixel.input.actions;
+
 import flixel.input.IFlxInputManager;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.util.FlxSignal.FlxTypedSignal;
 
 #if steamwrap
 import steamwrap.api.Steam;

@@ -4,7 +4,6 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceObject;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionManager.ActionSetRegister;
 import flixel.input.gamepad.FlxGamepad;
@@ -844,7 +843,6 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 	
 	/**********PRIVATE*********/
-	
 	/**
 	 * Helper function to properly update the action sets with proper steam inputs
 	 */
