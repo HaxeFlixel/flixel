@@ -6,16 +6,10 @@ import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionManager.ActionSetRegister;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.input.FlxInput;
-import flixel.input.IFlxInput;
-import flixel.input.actions.FlxAction;
-import flixel.input.mouse.FlxMouseButton;
-import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.FlxInput.FlxInputType;
 import haxe.Json;
 
 #if steamwrap
-import steamwrap.api.Controller;
-import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig;
 #end
 
@@ -142,7 +136,6 @@ using flixel.util.FlxArrayUtil;
  * alternative is to directly call the steamwrap functions directly.
  * 
  */
- 
 class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 {
 	private var sets:Array<FlxActionSet>;
@@ -254,7 +247,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		return null;
 	}
 	
-	
 	/**
 	 * Returns the action set that has been activated for this specific device
 	 * @param	device
@@ -267,12 +259,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		var id = -1;
 		var index = -1;
 		
-		switch(device)
+		switch (device)
 		{
 			case FlxInputDevice.KEYBOARD: index = register.keyboardSet;
 			case FlxInputDevice.MOUSE: index = register.mouseSet;
 			case FlxInputDevice.GAMEPAD:
-				switch(deviceID)
+				switch (deviceID)
 				{
 					case FlxInputDeviceID.ALL: index = register.gamepadAllSet;
 					case FlxInputDeviceID.FIRST_ACTIVE: 
@@ -287,7 +279,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 					index = register.gamepadSets[id];
 				}
 			case FlxInputDevice.STEAM_CONTROLLER:
-				switch(deviceID)
+				switch (deviceID)
 				{
 					case FlxInputDeviceID.ALL: index = register.steamControllerAllSet;
 					case FlxInputDeviceID.NONE: index = -1;
@@ -298,7 +290,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 					index = register.steamControllerSets[id];
 				}
 			case FlxInputDevice.ALL:
-				switch(deviceID)
+				switch (deviceID)
 				{
 					case FlxInputDeviceID.ALL: index = register.gamepadAllSet;
 				}
@@ -370,26 +362,28 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	public function exportToJSON():String
 	{
 		var space:String = "\t";
-		return Json.stringify({"actionSets":sets}, function(key:Dynamic, value:Dynamic):Dynamic{
-			
-			if (Std.is(value, FlxAction))
+		return Json.stringify({"actionSets":sets}, 
+			function(key:Dynamic, value:Dynamic):Dynamic
 			{
-				var fa:FlxAction = cast value;
-				return fa.name;
-			}
-			if (Std.is(value, FlxActionSet))
-			{
-				var fas:FlxActionSet = cast value;
-				return {
-					"name": fas.name,
-					"digitalActions": fas.digitalActions,
-					"analogActions": fas.analogActions
+				if (Std.is(value, FlxAction))
+				{
+					var fa:FlxAction = cast value;
+					return fa.name;
 				}
-			}
-			
-			return value;
-			
-		}, space);
+				if (Std.is(value, FlxActionSet))
+				{
+					var fas:FlxActionSet = cast value;
+					return {
+						"name": fas.name,
+						"digitalActions": fas.digitalActions,
+						"analogActions": fas.analogActions
+					}
+				}
+				
+				return value;
+				
+			},
+		space);
 	}
 	
 	/**
@@ -485,25 +479,37 @@ class ActionSetRegister implements IFlxDestroyable
 			case FlxInputDevice.GAMEPAD: 
 				switch (DeviceID)
 				{
-					case FlxInputDeviceID.ALL:          gamepadAllSet = ActionSet;
-					                                    clearSetFromArray(-1, gamepadSets);
-					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, gamepadSets);
-					
+					case FlxInputDeviceID.ALL:
+						gamepadAllSet = ActionSet;
+						clearSetFromArray( -1, gamepadSets);
+						
+					case FlxInputDeviceID.NONE:
+						clearSetFromArray(ActionSet, gamepadSets);
+						
 					#if FLX_GAMEPAD
-					case FlxInputDeviceID.FIRST_ACTIVE: gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
+					case FlxInputDeviceID.FIRST_ACTIVE:
+						gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
 					#end
 					
-					default:                            gamepadSets[DeviceID] = ActionSet;
+					default:
+						gamepadSets[DeviceID] = ActionSet;
 				}
 			
 			case FlxInputDevice.STEAM_CONTROLLER:
 				switch (DeviceID)
 				{
-					case FlxInputDeviceID.ALL:          steamControllerAllSet = ActionSet;
-					                                    clearSetFromArray( -1, steamControllerSets);
-					case FlxInputDeviceID.NONE:         clearSetFromArray(ActionSet, steamControllerSets);
-					case FlxInputDeviceID.FIRST_ACTIVE: steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
-					default:                            steamControllerSets[DeviceID] = ActionSet;
+					case FlxInputDeviceID.ALL:
+						steamControllerAllSet = ActionSet;
+						clearSetFromArray( -1, steamControllerSets);
+						
+					case FlxInputDeviceID.NONE:
+						clearSetFromArray(ActionSet, steamControllerSets);
+						
+					case FlxInputDeviceID.FIRST_ACTIVE:
+						steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
+						
+					default:
+						steamControllerSets[DeviceID] = ActionSet;
 				}
 			
 			case FlxInputDevice.ALL:
@@ -570,7 +576,6 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 	
 	/**********PRIVATE*********/
-	
 	/**
 	 * The current action set for the mouse
 	 */
@@ -717,5 +722,3 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 	
 }
-
-

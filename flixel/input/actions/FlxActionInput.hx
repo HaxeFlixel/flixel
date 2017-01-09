@@ -1,7 +1,6 @@
 package flixel.input.actions;
 
-import flixel.input.FlxInput;
-import flixel.input.actions.FlxAction;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 @:allow(flixel.input.actions.FlxActionInputDigital, flixel.input.actions.FlxActionInputAnalog)

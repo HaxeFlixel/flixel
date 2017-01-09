@@ -1,8 +1,6 @@
 package flixel.input.actions;
-import flixel.util.FlxArrayUtil;
-import flixel.input.actions.FlxActionInput;
-import flixel.input.actions.FlxActionInputAnalog;
-import flixel.input.actions.FlxActionInputDigital;
+
+import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
@@ -20,7 +18,7 @@ class FlxActionDigital extends FlxAction
 	/**
 	 * Function to call when this action occurs
 	 */
-	 public var callback(default, null):FlxActionDigital->Void;
+	public var callback(default, null):FlxActionDigital->Void;
 	
 	/**
 	 * Create a new digital action
@@ -80,7 +78,7 @@ class FlxActionAnalog extends FlxAction
 	 * X axis value, or the value of a single-axis analog input.
 	 */
 	public var x(get, null):Float;
-	 
+	
 	/**
 	 * Y axis value. (If action only has single-axis input this is always == 0)
 	 */
