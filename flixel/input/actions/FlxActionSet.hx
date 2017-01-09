@@ -1,16 +1,10 @@
 package flixel.input.actions;
 
-import flixel.input.FlxInput;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.input.actions.FlxAction;
-import flixel.input.actions.FlxActionInput;
-import flixel.input.actions.FlxActionInputAnalog;
-import flixel.input.actions.FlxActionInputDigital;
 import haxe.Json;
 
 #if steamwrap
-import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig.ControllerActionSet;
 #end
 
@@ -299,7 +293,7 @@ class FlxActionSet implements IFlxDestroyable
 						}
 					}
 				}
-				else if(inputExists)
+				else if (inputExists)
 				{
 					//detaching: remove inputs for this controller if they exist
 					action.removeInput(theInput);

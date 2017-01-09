@@ -1,16 +1,12 @@
 package flixel.input.actions;
 
 import flixel.input.FlxInput;
-import flixel.input.actions.FlxAction;
-import flixel.input.actions.FlxActionInput;
+import flixel.input.actions.FlxActionInput.FlxInputType;
+import flixel.input.actions.FlxActionInput.FlxInputDevice;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.mouse.FlxMouseButton;
-
-#if steamwrap
-import steamwrap.api.Steam;
-import steamwrap.api.Controller;
-#end
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 
 @:enum
 abstract FlxAnalogState(Int) from Int
@@ -295,20 +291,24 @@ class FlxActionInputAnalog extends FlxActionInput
 			case X:      compareState(xMoved.current, trigger);
 			case Y:      compareState(yMoved.current, trigger);
 			case BOTH:   compareState(xMoved.current, trigger) && compareState(yMoved.current, trigger);
-			             //in practice, "both pressed" and "both released" could be useful, whereas 
-			             //"both just pressed" and "both just released" seem like very unlikely real-world events
+			//in practice, "both pressed" and "both released" could be useful, whereas 
+			//"both just pressed" and "both just released" seem like very unlikely real-world events
 			case EITHER: 
 				switch (trigger)
 				{
-					case PRESSED:        checkAxis(A_X, PRESSED)       || checkAxis(A_Y, PRESSED);         //either one pressed
-					case RELEASED:       checkAxis(A_X, RELEASED)      || checkAxis(A_Y, RELEASED);        //either one NOT pressed
+					case PRESSED:
+						checkAxis(A_X, PRESSED)       || checkAxis(A_Y, PRESSED);         //either one pressed
+					case RELEASED:
+						checkAxis(A_X, RELEASED)      || checkAxis(A_Y, RELEASED);        //either one NOT pressed
 					
-					case JUST_PRESSED:  (checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, JUST_PRESSED)) || //both just pressed == whole stick just pressed
-					                    (checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, RELEASED))     || //one just pressed & other NOT pressed == whole stick just pressed
-					                    (checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_PRESSED));
-					                    
-					case JUST_RELEASED: (checkAxis(A_X, JUST_RELEASED) && checkAxis(A_Y, RELEASED)) ||
-					                    (checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_RELEASED));  //one just released & other NOT pressed = whole stick just released
+					case JUST_PRESSED:
+						(checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, JUST_PRESSED)) || //both just pressed == whole stick just pressed
+						(checkAxis(A_X, JUST_PRESSED)  && checkAxis(A_Y, RELEASED))     || //one just pressed & other NOT pressed == whole stick just pressed
+						(checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_PRESSED));
+					
+					case JUST_RELEASED:
+						(checkAxis(A_X, JUST_RELEASED) && checkAxis(A_Y, RELEASED)) ||
+						(checkAxis(A_X, RELEASED)      && checkAxis(A_Y, JUST_RELEASED));  //one just released & other NOT pressed = whole stick just released
 				}
 		}
 		
