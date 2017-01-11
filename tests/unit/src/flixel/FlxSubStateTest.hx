@@ -64,4 +64,26 @@ class FlxSubStateTest extends FlxTest
 		step();
 		Assert.isNull(state2.subState);
 	}
+
+	@Test // #2023
+	function testCallbacks()
+	{
+		var opened = false;
+		var closed = false;
+
+		subState1.openCallback = function() opened = true;
+		subState1.closeCallback = function() closed = true;
+
+		FlxG.state.openSubState(subState1);
+		step();
+
+		Assert.isTrue(opened);
+		Assert.isFalse(closed);
+
+		FlxG.state.closeSubState();
+		step();
+
+		Assert.isTrue(opened);
+		Assert.isTrue(closed);
+	}
 }
