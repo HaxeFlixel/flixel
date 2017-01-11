@@ -96,7 +96,23 @@ class FlxAnimationControllerTest extends FlxTest
 		
 		Assert.isNull(sprite.animation.getByName("Test"));
 	}
-	
+
+	@Test // #2027
+	function testCopyFrom()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim", [0, 1, 0], 15, true, true, false);
+		
+		var copy = sprite.clone();
+		var anim = copy.animation.getByName("anim");
+
+		FlxAssert.arraysEqual([0, 1, 0], anim.frames);
+		Assert.areEqual(15, anim.frameRate);
+		Assert.isTrue(anim.looped);
+		Assert.isTrue(anim.flipX);
+		Assert.isFalse(anim.flipY);
+	}
+
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);
