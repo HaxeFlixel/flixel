@@ -1526,6 +1526,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Checks whether this camera contains a given point or rectangle, in
 	 * screen coordinates.
+	 * @since 4.3.0
 	 */
 	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
