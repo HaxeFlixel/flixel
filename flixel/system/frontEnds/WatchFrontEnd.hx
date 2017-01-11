@@ -73,14 +73,14 @@ class WatchFrontEnd
 	 * @param   displayName   Optional, display your own string instead of the expression string: e.g. "enemy count".
 	 * @since   4.1.0
 	 */
-	public function addExpression(command:String, ?displayName:String):Void
+	public function addExpression(expression:String, ?displayName:String):Void
 	{
 		#if FLX_DEBUG
-		var expression = null;
+		var parsedExpr = null;
 		#if hscript
-		expression = ConsoleUtil.parseCommand(command);
+		parsedExpr = ConsoleUtil.parseCommand(expression);
 		#end
-		FlxG.game.debugger.watch.add(displayName == null ? command : displayName, EXPRESSION(command, expression));
+		FlxG.game.debugger.watch.add(displayName == null ? expression : displayName, EXPRESSION(expression, parsedExpr));
 		#end
 	}
 	

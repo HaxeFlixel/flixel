@@ -17,5 +17,5 @@ enum WatchEntryData
 	/**
 	 * Haxe expression evaluated with hscript.
 	 */
-	EXPRESSION(command:String, expression: #if hscript Expr #else String #end);
+	EXPRESSION(expression:String, parsedExpr: #if hscript Expr #else String #end);
 }
