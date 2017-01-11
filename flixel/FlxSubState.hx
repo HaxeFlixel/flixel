@@ -11,14 +11,15 @@ import flixel.util.FlxColor;
 class FlxSubState extends FlxState
 {
 	/**
+	 * Callback method for state open/resume event.
+	 * @since 4.3.0
+	 */
+	public var openCallback:Void->Void;
+
+	/**
 	 * Callback method for state close event.
 	 */
 	public var closeCallback:Void->Void;
-	
-	/**
-	 * Callback method for state open/resume event.
-	 */
-	public var openCallback:Void->Void;
 	
 	/**
 	 * Helper sprite object for non-flash targets. Draws the background.

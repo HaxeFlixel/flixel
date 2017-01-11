@@ -257,6 +257,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @param   Position The position that the new sprite or sprite group should be inserted at.
 	 * @param   Sprite   The sprite or sprite group you want to insert into the group.
 	 * @return  The same object that was passed in.
+	 *
+	 * @since 4.3.0
 	 */
 	public function insert(Position:Int, Sprite:T):T
 	{
