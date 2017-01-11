@@ -76,11 +76,11 @@ class WatchFrontEnd
 	public function addExpression(command:String, ?displayName:String):Void
 	{
 		#if FLX_DEBUG
+		var expression = null;
 		#if hscript
-		FlxG.game.debugger.watch.add(displayName == null ? command : displayName, EXPRESSION(command, ConsoleUtil.parseCommand(command)));
-		#else
-		FlxG.game.debugger.watch.add(displayName == null ? command : displayName, EXPRESSION(command, null));
+		expression = ConsoleUtil.parseCommand(command);
 		#end
+		FlxG.game.debugger.watch.add(displayName == null ? command : displayName, EXPRESSION(command, expression));
 		#end
 	}
 	
