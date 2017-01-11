@@ -67,9 +67,9 @@ class ConsoleUtil
 	 * @param	Parsed	The parsed form of the user's input command.
 	 * @return	Whatever the input code evaluates to.
 	 */
-	public static function runExpr(ParsedInput:Expr):Dynamic
+	public static function runExpr(expr:Expr):Dynamic
 	{
-		return interp.expr(ParsedInput);
+		return interp.expr(expr);
 	}
 	
 	/**

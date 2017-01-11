@@ -93,8 +93,8 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		{
 			case FIELD(object, field):
 				setNameText(object.getClassName(true) + "." + field);
-			case EXPRESSION(command, _):
-				setNameText(command);
+			case EXPRESSION(expression, _):
+				setNameText(expression);
 			case QUICK(_):
 		}
 	}
@@ -112,9 +112,9 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		{
 			case FIELD(object, field):
 				Reflect.getProperty(object, field);
-			case EXPRESSION(_, expression):
+			case EXPRESSION(_, parsedExpr):
 				#if hscript
-				ConsoleUtil.runExpr(expression);
+				ConsoleUtil.runExpr(parsedExpr);
 				#else
 				"hscript is not installed";
 				#end
