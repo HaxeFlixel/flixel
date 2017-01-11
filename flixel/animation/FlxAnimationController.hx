@@ -98,7 +98,7 @@ class FlxAnimationController implements IFlxDestroyable
 		
 		for (anim in controller._animations)
 		{
-			add(anim.name, anim.frames, anim.frameRate, anim.looped);
+			add(anim.name, anim.frames, anim.frameRate, anim.looped, anim.flipX, anim.flipY);
 		}
 		
 		if (controller._prerotated != null)
