@@ -63,6 +63,16 @@ class ConsoleUtil
 	}
 	
 	/**
+	 * Runs the input expression.
+	 * @param	Parsed	The parsed form of the user's input command.
+	 * @return	Whatever the input code evaluates to.
+	 */
+	public static function runExpr(expr:Expr):Dynamic
+	{
+		return interp.expr(expr);
+	}
+	
+	/**
 	 * Register a new object to use in any command.
 	 * 
 	 * @param	ObjectAlias	The name with which you want to access the object.
