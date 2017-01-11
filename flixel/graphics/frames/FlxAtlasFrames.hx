@@ -2,11 +2,13 @@ package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxAtlasFrames.TexturePackerObject;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets.FlxTexturePackerSource;
 import haxe.Json;
 import haxe.xml.Fast;
 import openfl.Assets;
@@ -29,9 +31,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   Description   Contents of JSON file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description.json)`.
 	 *                        Or you can just a pass path to the JSON file in the assets directory.
+	 *                        You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:FlxTexturePackerSource):FlxAtlasFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
 		if (graphic == null)
@@ -47,10 +50,22 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		frames = new FlxAtlasFrames(graphic);
 		
-		if (Assets.exists(Description))
-			Description = Assets.getText(Description);
+		var data:TexturePackerObject;
 		
-		var data:Dynamic = Json.parse(Description);
+		if (Std.is(Description, String))
+		{
+			var json:String = Description;
+			
+			if (Assets.exists(json))
+				json = Assets.getText(json);
+			
+			data = Json.parse(json);
+		}
+		
+		else
+		{
+			data = Description;
+		}
 		
 		// JSON-Array
 		if (Std.is(data.frames, Array))
@@ -410,4 +425,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 		
 		return atlasFrames;
 	}
+}
+
+typedef TexturePackerObject = 
+{
+	frames : Dynamic
 }
