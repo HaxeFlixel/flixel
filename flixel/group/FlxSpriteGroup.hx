@@ -247,13 +247,37 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function add(Sprite:T):T
 	{
+		preAdd(Sprite);
+		return group.add(Sprite);
+	}
+	
+	/**
+	 * Inserts a new `FlxSprite` subclass to the group at the specified position.
+	 * 
+	 * @param   Position The position that the new sprite or sprite group should be inserted at.
+	 * @param   Sprite   The sprite or sprite group you want to insert into the group.
+	 * @return  The same object that was passed in.
+	 */
+	public function insert(Position:Int, Sprite:T):T
+	{
+		preAdd(Sprite);
+		return group.insert(Position, Sprite);
+	}
+	
+	/**
+	 * Adjusts the position and other properties of the soon-to-be child of this sprite group.
+	 * Private helper to avoid duplicate code in `add()` and `insert()`.
+	 * 
+	 * @param	Sprite	The sprite or sprite group that is about to be added or inserted into the group.
+	 */
+	private function preAdd(Sprite:T):Void
+	{
 		var sprite:FlxSprite = cast Sprite;
 		sprite.x += x;
 		sprite.y += y;
 		sprite.alpha *= alpha;
 		sprite.scrollFactor.copyFrom(scrollFactor);
 		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
-		return group.add(Sprite);
 	}
 	
 	/**
