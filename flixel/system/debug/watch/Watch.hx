@@ -60,8 +60,8 @@ class Watch extends Window
 				object == null || field == null;
 			case QUICK(value):
 				displayName.isNullOrEmpty();
-			case EXPRESSION(command, _):
-				command.isNullOrEmpty();
+			case EXPRESSION(expression, _):
+				expression.isNullOrEmpty();
 		}
 	}
 	
