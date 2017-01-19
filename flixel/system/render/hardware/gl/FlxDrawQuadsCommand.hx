@@ -2,7 +2,6 @@ package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
@@ -11,9 +10,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
 import openfl.geom.ColorTransform;
-import openfl.geom.Matrix;
 import flixel.graphics.shaders.FlxShader;
 
 #if FLX_RENDER_GL
@@ -24,11 +21,9 @@ import lime.math.Matrix4;
 import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
 import openfl._internal.renderer.RenderSession;
-import openfl.display.Shader;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import lime.utils.ArrayBuffer;
-import openfl.utils.ArrayBufferView;
 import openfl.utils.Float32Array;
 
 /**
@@ -258,15 +253,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
 	{
-		/*
-		// check texture..
-		if (numQuads > size)
-		{
-			flush();
-			currentTexture = texture;
-		}
-		*/
-		
 		// get the uvs for the texture
 		var uvx:Float = uv.x;
 		var uvy:Float = uv.y;
@@ -625,7 +611,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		super();
 	}
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void { }
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void {}
 	
 }
 #end

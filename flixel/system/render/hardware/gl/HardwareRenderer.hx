@@ -1,23 +1,15 @@
 package flixel.system.render.hardware.gl;
 
-import flixel.FlxSprite;
-import flixel.graphics.FlxGraphic;
-import flixel.math.FlxMatrix;
-import flixel.graphics.shaders.FlxShader;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import openfl.geom.ColorTransform;
 
 #if FLX_RENDER_GL
 import lime.math.Matrix4;
 import lime.graphics.GLRenderContext;
-import lime.utils.Float32Array;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 #end
 
-import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;

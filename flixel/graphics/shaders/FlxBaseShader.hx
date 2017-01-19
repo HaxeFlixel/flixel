@@ -1,7 +1,5 @@
 package flixel.graphics.shaders;
 
-import flixel.graphics.shaders.FlxShader;
-
 class FlxBaseShader extends FlxShader
 {
 	public function new(vertexSource:String, fragmentSource:String) 

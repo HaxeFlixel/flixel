@@ -6,19 +6,13 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
-import flixel.system.render.common.DrawItem.FlxDrawQuadsCommand;
-import flixel.system.render.common.DrawItem.FlxDrawTrianglesCommand;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
-import openfl.geom.Matrix;
 
 #if (openfl < "4.0.0")
 import openfl.display.Tilesheet;
-#else
-import openfl._internal.renderer.RenderSession;
-import lime.math.Matrix4;
 #end
 
 /**
@@ -112,11 +106,11 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 		type = null;
 	}
 	
-	public function render(view:FlxHardwareView):Void { }
+	public function render(view:FlxHardwareView):Void {}
 	
-	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void { }
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void {}
 	
-	public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void { }
+	public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void {}
 	
 	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Bool

@@ -13,7 +13,6 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
-import openfl.display.Sprite;
 
 #if (openfl >= "4.5.0")
 import openfl.display.Preloader.DefaultPreloader;

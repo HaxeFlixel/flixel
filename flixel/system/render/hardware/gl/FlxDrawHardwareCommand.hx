@@ -23,7 +23,7 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		view.drawItem(this);
 	}
 	
-	public function renderGL(uniformMatrix:Matrix4, renderSession:RenderSession):Void { }
+	public function renderGL(uniformMatrix:Matrix4, renderSession:RenderSession):Void {}
 }
 #else
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
@@ -33,6 +33,6 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		super();
 	}
 	
-	public function renderGL(uniformMatrix:Dynamic, renderSession:Dynamic):Void { }
+	public function renderGL(uniformMatrix:Dynamic, renderSession:Dynamic):Void {}
 }
 #end

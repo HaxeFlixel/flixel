@@ -1,14 +1,11 @@
 package flixel.system.render.hardware.gl;
 
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.TrianglesData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
@@ -23,7 +20,6 @@ import lime.math.Matrix4;
 import openfl.gl.GL;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
-import openfl._internal.renderer.opengl.GLRenderer;
 
 class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCommand>
 {
@@ -230,9 +226,9 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		return true;
 	}
 	
-	public function addTriangles(data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void { }
+	public function addTriangles(data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void { }
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void {}
 	
 }
 #end

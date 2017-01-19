@@ -7,7 +7,7 @@ import flixel.graphics.shaders.FlxBaseShader;
  */
 class FlxTextured extends FlxBaseShader
 {
-	public static inline var defaultVertexSource:String = 
+	public static inline var DEFAULT_VERTEX_SOURCE:String = 
 			"
 			attribute vec4 aPosition;
 			attribute vec2 aTexCoord;
@@ -24,7 +24,7 @@ class FlxTextured extends FlxBaseShader
 				gl_Position = uMatrix * uModel * aPosition;
 			}";
 			
-	public static inline var defaultFragmentSource:String = 
+	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"
 			varying vec2 vTexCoord;
 			
@@ -46,8 +46,8 @@ class FlxTextured extends FlxBaseShader
 	
 	public function new(?vertexSource:String, ?fragmentSource:String) 
 	{
-		vertexSource = (vertexSource == null) ? defaultVertexSource : vertexSource;
-		fragmentSource = (fragmentSource == null) ? defaultFragmentSource : fragmentSource;
+		vertexSource = (vertexSource == null) ? DEFAULT_VERTEX_SOURCE : vertexSource;
+		fragmentSource = (fragmentSource == null) ? DEFAULT_FRAGMENT_SOURCE : fragmentSource;
 		
 		super(vertexSource, fragmentSource);
 	}

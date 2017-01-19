@@ -7,7 +7,6 @@ import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.TrianglesData;
 import flixel.graphics.frames.FlxFrame;
-import flixel.system.render.common.DrawItem.DrawData;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;

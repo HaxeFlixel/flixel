@@ -1,7 +1,8 @@
 package flixel.graphics;
+
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 #if FLX_RENDER_GL
 import lime.graphics.GLRenderContext;
@@ -84,7 +85,7 @@ class TrianglesData implements IFlxDestroyable
 	private var gl:GLRenderContext;
 	#end
 	
-	public function new() { }
+	public function new() {}
 	
 	public function destroy():Void
 	{

@@ -11,8 +11,5 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class FlxRenderTexture implements IFlxDestroyable
 {
 	
-	public function destroy():Void
-	{
-		
-	}
+	public function destroy():Void {}
 }
