@@ -103,7 +103,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 
 	/**
-	 * Removes all registerd objects from the registry.
+	 * Removes all registered objects from the registry.
 	 */
 	public static function removeAll():Void
 	{
@@ -444,22 +444,28 @@ class FlxMouseEventManager extends FlxBasic
 		for (camera in Register.object.cameras)
 		{
 			#if FLX_MOUSE
-			_point = FlxG.mouse.getWorldPosition(camera, _point);
+			_point = FlxG.mouse.getCameraViewPosition(camera, _point);
 			
-			if (checkOverlapWithPoint(Register, _point, camera))
+			if (camera.containsPoint(_point))
 			{
-				return true;
+				_point = FlxG.mouse.getWorldPosition(camera, _point);
+				
+				if (checkOverlapWithPoint(Register, _point, camera))
+					return true;
 			}
 			#end
 			
 			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
-				_point = touch.getWorldPosition(camera, _point);
+				_point = touch.getScreenPosition(camera, _point);
 				
-				if (checkOverlapWithPoint(Register, _point, camera))
+				if (camera.containsPoint(_point))
 				{
-					return true;
+					_point = touch.getWorldPosition(camera, _point);
+					
+					if (checkOverlapWithPoint(Register, _point, camera))
+						return true;
 				}
 			}
 			#end

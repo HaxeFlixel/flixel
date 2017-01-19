@@ -1,14 +1,16 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.shaders.FlxColorShader;
-import flixel.graphics.shaders.FlxTexturedShader;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.math.FlxMatrix;
+import flixel.graphics.shaders.FlxShader;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.geom.ColorTransform;
 
 #if FLX_RENDER_GL
+import lime.math.Matrix4;
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
 import openfl._internal.renderer.RenderSession;
@@ -20,10 +22,10 @@ import openfl.display.DisplayObject;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
-// TODO: try to add general vertex and index arrays to minimize data upload operations (gl.bufferData() calls). Like it's done in GL implementation of Tilemap renderer...
+using flixel.util.FlxColorTransformUtil;
+
 // TODO: multitexture batching...
 // TODO: sprite materials with multiple textures...
-// TODO: support for colorOffsets???
 
 /**
  * Display object for actual rendering for openfl 4 in tile render mode.
@@ -35,12 +37,7 @@ import openfl.geom.Rectangle;
 class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 {
 	#if FLX_RENDER_GL
-	private static var texturedTileShader:FlxTexturedShader;
-	private static var coloredTileShader:FlxColorShader;
-	
-	private static var uColor:Array<Float> = [];
-
-	private var states:Array<FlxDrawHardwareItem<Dynamic>>;
+	private var states:Array<FlxDrawHardwareCommand<Dynamic>>;
 	private var stateNum:Int;
 	
 	private var __height:Int;
@@ -56,12 +53,6 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		__width = width;
 		__height = height;
-		
-		if (texturedTileShader == null) 
-			texturedTileShader = new FlxTexturedShader();
-		
-		if (coloredTileShader == null) 
-			coloredTileShader = new FlxColorShader();
 		
 		states = [];
 		stateNum = 0;
@@ -87,7 +78,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		stateNum = 0;
 	}
 
-	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
+	public function drawItem(item:FlxDrawHardwareCommand<Dynamic>):Void
 	{
 		states[stateNum++] = item;
 	}
@@ -153,17 +144,20 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		// TODO: every camera will have its own render texture where i will draw everthing onto and only then draw this texture on the screen
 		// TODO: sprites might have renderTarget property
 		
+	//	FlxG.game.draw();
+	
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		var numPasses:Int = GLRenderHelper.getObjectNumPasses(this);
+		var numPasses:Int = GLUtils.getObjectNumPasses(this);
+		
 		var needRenderHelper:Bool = (numPasses > 0);
 		var transform:Matrix = this.__worldTransform;
 		var uMatrix:Array<Float> = null;
 		
 		if (needRenderHelper)
 		{
-			renderHelper.capture(false);
+			renderHelper.capture();
 			uMatrix = renderHelper.getMatrix(transform, renderer, numPasses);
 		}
 		else
@@ -171,118 +165,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 			uMatrix = renderer.getMatrix(transform);
 		}
 		
-		var worldColor:ColorTransform = this.__worldColorTransform;
+		var uniformMatrix:Matrix4 = GLUtils.arrayToMatrix(uMatrix);
 		
-		uColor[0] = worldColor.redMultiplier;
-		uColor[1] = worldColor.greenMultiplier;
-		uColor[2] = worldColor.blueMultiplier;
-		uColor[3] = this.__worldAlpha;
-		
-		var shader:FlxShader = null;
-		var nextShader:FlxShader = null;
-		var blend:BlendMode = null;
-		var texture:FlxGraphic = null;
-		
-		var i:Int = 0;
-		
-		while (i < stateNum)
-		{
-			var state:FlxDrawHardwareItem<Dynamic> = states[i];
-			
-			nextShader = (state.graphics != null) ? texturedTileShader : coloredTileShader;
-			nextShader = (state.shader != null) ? state.shader : nextShader;
-			
-			if (shader != nextShader || shader == null)
-			{
-				shader = nextShader;
-				
-				shader.data.uMatrix.value = uMatrix;
-				shader.data.uColor.value = uColor;
-				
-				renderSession.shaderManager.setShader(shader);
-			}
-			
-			gl.uniform4f(shader.data.uColorOffset.index, state.redOffset, state.greenOffset, state.blueOffset, state.alphaOffset);
-			
-			if (blend != state.blending)
-			{
-				renderSession.blendModeManager.setBlendMode(state.blending);
-				blend = state.blending;
-			}
-			
-			if (texture != state.graphics)
-			{
-				texture = state.graphics;
-				
-				if (texture != null)
-				{
-					gl.bindTexture(gl.TEXTURE_2D, texture.bitmap.getTexture(gl));
-				}
-			}
-			
-			if (state.glBuffer == null)
-			{
-				state.glBuffer = gl.createBuffer();
-				state.glIndexes = gl.createBuffer();
-			}
-			
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, state.glIndexes);
-			
-			if (state.indexBufferDirty)
-			{
-				state.indexBufferDirty = false;
-				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, state.indexes, gl.DYNAMIC_DRAW);
-			}
-			
-			gl.bindBuffer(gl.ARRAY_BUFFER, state.glBuffer);
-			
-			if (state.vertexBufferDirty)
-			{
-				state.vertexBufferDirty = false;
-				gl.bufferData(gl.ARRAY_BUFFER, state.buffer, gl.DYNAMIC_DRAW);
-			}
-			
-			var stride:Int = state.elementsPerVertex * Float32Array.BYTES_PER_ELEMENT;
-			var offset:Int = 0;
-			
-			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
-			offset += 2;
-			
-			if (texture != null)
-			{
-				// texture smoothing
-				if (state.antialiasing) 
-				{
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
-				} 
-				else 
-				{
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-				}
-				
-				#if !js
-				// texture repeat
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-				#end
-				
-				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
-				offset += 2;
-			}
-			
-			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.FLOAT, false, stride, offset * Float32Array.BYTES_PER_ELEMENT);
-			
-			gl.drawElements(gl.TRIANGLES, state.indexPos, gl.UNSIGNED_SHORT, 0);
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-			gl.bindBuffer(gl.ARRAY_BUFFER, null);
-			
-			i++;
-		}
-		
-	//	renderSession.shaderManager.setShader(null);
-		renderSession.blendModeManager.setBlendMode(null);
+		for (i in 0...stateNum)
+			states[i].renderGL(uniformMatrix, renderSession);
 		
 		if (needRenderHelper)
 			renderHelper.render(renderSession);
@@ -291,7 +177,10 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private function get_renderHelper():GLRenderHelper
 	{
 		if (_renderHelper == null)
-			_renderHelper = new GLRenderHelper(this, __width, __height, true, false);
+		{
+			_renderHelper = new GLRenderHelper(this, __width, __height, false, false);
+			_renderHelper.fullscreen = false;
+		}
 		
 		return _renderHelper;
 	}

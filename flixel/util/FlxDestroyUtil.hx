@@ -4,11 +4,6 @@ import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flixel.util.FlxPool.IFlxPooled;
-import openfl.display.Shader;
-
-#if FLX_RENDER_GL
-import openfl.gl.GL;
-#end
 
 class FlxDestroyUtil
 {
@@ -77,7 +72,7 @@ class FlxDestroyUtil
 		return null;
 	}
 	
-	#if !macro
+#if !macro
 	/**
 	 * Checks if a BitmapData object is not null before calling dispose() on it, always returns null.
 	 * 
@@ -118,30 +113,8 @@ class FlxDestroyUtil
 			parent.removeChild(child);
 		}
 		return null;
-	}
-	
-	public static function destroyShader(shader:Shader):Shader
-	{
-		#if FLX_RENDER_GL
-		if (shader != null)
-		{
-			if (shader.glProgram != null)
-			{
-				GL.deleteProgram(shader.glProgram);
-				shader.glProgram = null;
-			}
-			
-			shader.data = null;
-			shader.byteCode = null;
-			shader.glVertexSource = null;
-			shader.glFragmentSource = null;
-		//	gl = null;
-		}
-		#end
-		
-		return null;
-	}
-	#end
+	}	
+#end
 }
 
 interface IFlxDestroyable

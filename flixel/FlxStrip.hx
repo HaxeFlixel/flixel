@@ -1,7 +1,12 @@
 package flixel;
 
+import flixel.graphics.TrianglesData;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.render.common.DrawItem.DrawData;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A very basic rendering component which uses drawTriangles.
@@ -20,18 +25,23 @@ import flixel.system.render.common.DrawItem.DrawData;
  */
 class FlxStrip extends FlxSprite
 {
+	private static var tempBounds:FlxRect = new FlxRect();
+	private static var tempPoint:FlxPoint = new FlxPoint();
+	
 	/**
 	 * A Vector of Floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:DrawData<Float> = new DrawData<Float>();
+	public var vertices(get, set):DrawData<Float>;
 	/**
 	 * A Vector of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:DrawData<Int> = new DrawData<Int>();
+	public var indices(get, set):DrawData<Int>;
 	/**
 	 * A Vector of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	public var uvtData(get, set):DrawData<Float>;
+	
+	public var colors(get, set):DrawData<FlxColor>;
 	
 	public var repeat:Bool = true;
 	
@@ -42,24 +52,31 @@ class FlxStrip extends FlxSprite
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
+	private var data:TrianglesData;
+	
+	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
+	{
+		super(X, Y, SimpleGraphic);
+		
+		data = new TrianglesData();
+	}
+	
 	override public function destroy():Void 
 	{
-		vertices = null;
-		indices = null;
-		uvtData = null;
+		data = FlxDestroyUtil.destroy(data);
+		bounds = FlxDestroyUtil.put(bounds);
 		
 		super.destroy();
 	}
 	
 	override public function draw():Void 
 	{
-		if (alpha == 0 || graphic == null || vertices == null)
-		{
+		if (alpha == 0 || /*graphic == null ||*/ vertices == null)
 			return;
-		}
 		
-		if (dirty && vertices.length >= 6)
+		if ((dirty || data.verticesDirty) && vertices.length >= 6)
 		{
+			dirty = false;
 			// calculate bounds in local coordinates
 			bounds.set(vertices[0], vertices[1], 0, 0);
 			var numVertices:Int = vertices.length;
@@ -72,36 +89,94 @@ class FlxStrip extends FlxSprite
 			}
 		}
 		
+		// update matrix
+		_matrix.identity();
+		_matrix.translate(-origin.x, -origin.y);
+		_matrix.scale(scale.x, scale.y);
+		
+		updateTrig();
+		
+		if (angle != 0)
+			_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+		
+		_matrix.translate(origin.x, origin.y);
+		
+		// now calculate transformed bounds of sprite
+		var tx:Float = _matrix.transformX(bounds.x, bounds.y);
+		var ty:Float = _matrix.transformY(bounds.x, bounds.y);
+		tempBounds.set(tx, ty, 0, 0);
+		
+		tx = _matrix.transformX(bounds.right, bounds.y);
+		ty = _matrix.transformY(bounds.right, bounds.y);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
+		tx = _matrix.transformX(bounds.right, bounds.bottom);
+		ty = _matrix.transformY(bounds.right, bounds.bottom);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
+		tx = _matrix.transformX(bounds.x, bounds.bottom);
+		ty = _matrix.transformY(bounds.x, bounds.bottom);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)
-			{
 				continue;
-			}
 			
 			getScreenPosition(_point, camera);
+			tempBounds.offset(_point.x, _point.y);
 			
-			bounds.offset(_point.x, _point.y);
-			
-			if (camera.view.bounds.overlaps(bounds))
+			if (camera.view.bounds.overlaps(tempBounds))
 			{
-				_matrix.identity();
-				
-				_matrix.translate(-origin.x, -origin.y);
-				_matrix.scale(scale.x, scale.y);
-				
-				updateTrig();
-				
-				if (angle != 0)
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-				
-				_matrix.translate(origin.x, origin.y);
 				_matrix.translate(_point.x, _point.y);
-				
-				camera.drawTriangles(graphic, vertices, indices, uvtData, _matrix, colorTransform, blend, repeat, antialiasing);
+				camera.drawTriangles(graphic, data, _matrix, colorTransform, blend, repeat, antialiasing);
+				_matrix.translate( -_point.x, -_point.y);
 			}
 			
-			bounds.offset( -_point.x, -_point.y);
+			tempBounds.offset( -_point.x, -_point.y);
 		}
+	}
+	
+	private function get_vertices():DrawData<Float>
+	{
+		return data.vertices;
+	}
+	
+	private function set_vertices(value:DrawData<Float>):DrawData<Float>
+	{
+		return data.vertices = value;
+	}
+	
+	private function get_indices():DrawData<Int>
+	{
+		return data.indices;
+	}
+	
+	private function set_indices(value:DrawData<Int>):DrawData<Int>
+	{
+		return data.indices = value;
+	}
+	
+	private function get_uvtData():DrawData<Float>
+	{
+		return data.uvs;
+	}
+	
+	private function set_uvtData(value:DrawData<Float>):DrawData<Float>
+	{
+		return data.uvs = value;
+	}
+	
+	private function get_colors():DrawData<FlxColor>
+	{
+		return data.colors;
+	}
+	
+	private function set_colors(value:DrawData<FlxColor>):DrawData<FlxColor>
+	{
+		return data.colors = value;
 	}
 }

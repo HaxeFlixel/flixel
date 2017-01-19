@@ -2,11 +2,12 @@ package flixel.system.render.blit;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.TrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -89,6 +90,11 @@ class FlxBlitView extends FlxCameraView
 	 */
 	private var regen:Bool = false;
 	
+	/**
+	 * Internal helper for drawing pixels on the camera. Using this fixes some weird bugs with flash software renderer.
+	 */
+	private var _bitmap:Bitmap;
+	
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
@@ -103,6 +109,8 @@ class FlxBlitView extends FlxCameraView
 		_flashBitmap = new Bitmap(buffer);
 		_scrollRect.addChild(_flashBitmap);
 		_fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
+		
+		_bitmap = new Bitmap();
 	}
 	
 	override public function destroy():Void 
@@ -119,6 +127,7 @@ class FlxBlitView extends FlxCameraView
 		_scrollRect = null;
 		_flashRect = null;
 		_flashPoint = null;
+		_bitmap = null;
 	}
 	
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
@@ -126,7 +135,7 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (pixels != null)
 		{
-			buffer.draw(pixels, matrix, null, blend, null, (smoothing || antialiasing));
+			buffer.draw(pixels, matrix, null, blend, null, (smoothing || smoothing));
 		}
 		else
 		{
@@ -147,17 +156,30 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	override public function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
+		if (graphic == null && transform == null)
+			return;
+		
 		trianglesSprite.graphics.clear();
-		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
-		trianglesSprite.graphics.drawTriangles(vertices, indices, uvtData);
+		
+		if (graphic != null)
+		{
+			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+			trianglesSprite.graphics.drawTriangles(data.vertices, data.indices, data.uvs);
+		}
+		else
+		{
+			trianglesSprite.graphics.beginFill(0xffffff, 1.0);
+			trianglesSprite.graphics.drawTriangles(data.vertices, data.indices);
+		}
+		
 		trianglesSprite.graphics.endFill();
 		buffer.draw(trianglesSprite, matrix, transform, blend);
 		
-		drawDebugTriangles(vertices, indices, matrix);
+		drawDebugTriangles(data.vertices, data.indices, matrix);
+		data.dirty = false;
 	}
 	
 	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -400,9 +422,9 @@ class FlxBlitView extends FlxCameraView
 		return Angle;
 	}
 	
-	override public function set_antialiasing(Antialiasing:Bool):Bool 
+	override public function set_smoothing(Smoothing:Bool):Bool 
 	{
-		return _flashBitmap.smoothing = Antialiasing;
+		return _flashBitmap.smoothing = Smoothing;
 	}
 	
 	override private function set_visible(visible:Bool):Bool 

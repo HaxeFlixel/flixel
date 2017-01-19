@@ -5,13 +5,14 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.TrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.blit.FlxBlitView;
 import flixel.system.render.hardware.FlxHardwareView;
@@ -194,7 +195,7 @@ class FlxCamera extends FlxBasic
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
 	 */
-	public var antialiasing(default, set):Bool = false;
+	public var smoothing(default, set):Bool = false;
 	/**
 	 * Used to force the camera to look ahead of the target.
 	 */
@@ -308,12 +309,11 @@ class FlxCamera extends FlxBasic
 			view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
-	public inline function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	public inline function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
 		if (view != null)
-			view.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing, shader);
+			view.drawTriangles(graphic, data, matrix, transform, blend, repeat, smoothing, shader);
 	}
 	
 	public inline function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -909,6 +909,15 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
+	/**
+	 * Checks whether this camera contains a given point or rectangle, in
+	 * screen coordinates.
+	 */
+	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
+	{
+		return (point.x + width > 0) && (point.x < this.width) && (point.y + height > 0) && (point.y < this.height);
+	}
+	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function checkResize():Void
 	{
@@ -1078,14 +1087,14 @@ class FlxCamera extends FlxBasic
 		return Color;
 	}
 	
-	private function set_antialiasing(Antialiasing:Bool):Bool
+	private function set_smoothing(Smoothing:Bool):Bool
 	{
-		antialiasing = Antialiasing;
+		smoothing = Smoothing;
 		
 		if (view != null)
-			view.antialiasing = antialiasing;
+			view.smoothing = smoothing;
 		
-		return Antialiasing;
+		return Smoothing;
 	}
 	
 	private function set_x(x:Float):Float

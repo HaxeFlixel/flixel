@@ -34,6 +34,7 @@ import flixel.system.ui.FlxFocusLostScreen;
 #if FLX_RENDER_GL
 import openfl._internal.renderer.RenderSession;
 import flixel.system.render.hardware.gl.GLRenderHelper;
+import flixel.system.render.hardware.gl.GLUtils;
 #end
 
 /**
@@ -854,6 +855,7 @@ class FlxGame extends Sprite
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
+	@:allow(flixel.system.render.hardware)
 	private function draw():Void
 	{
 		if (!_state.visible || !_state.exists)
@@ -913,6 +915,7 @@ class FlxGame extends Sprite
 		if (_renderHelper == null)
 		{
 			_renderHelper = new GLRenderHelper(this, Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
+			_renderHelper.fullscreen = true;
 		}
 		
 		return _renderHelper;
@@ -920,19 +923,15 @@ class FlxGame extends Sprite
 	
 	override public function __renderGL(renderSession:RenderSession):Void
 	{
-		var needRenderHelper:Bool = (GLRenderHelper.getObjectNumPasses(this) > 0);
+		var needRenderHelper:Bool = (GLUtils.getObjectNumPasses(this) > 0);
 		
 		if (needRenderHelper)
-		{
-			renderHelper.capture(true);
-		}
+			renderHelper.capture();
 		
 		super.__renderGL(renderSession);
 		
 		if (needRenderHelper)
-		{
 			renderHelper.render(renderSession);
-		}
 	}
 	#end
 	

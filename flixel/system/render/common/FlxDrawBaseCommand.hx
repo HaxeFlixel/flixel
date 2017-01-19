@@ -4,24 +4,28 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
-import flixel.system.render.common.DrawItem.FlxDrawQuadsItem;
-import flixel.system.render.common.DrawItem.FlxDrawTrianglesItem;
+import flixel.system.render.common.DrawItem.FlxDrawQuadsCommand;
+import flixel.system.render.common.DrawItem.FlxDrawTrianglesCommand;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
 
 #if (openfl < "4.0.0")
 import openfl.display.Tilesheet;
+#else
+import openfl._internal.renderer.RenderSession;
+import lime.math.Matrix4;
 #end
 
 /**
  * ...
  * @author Zaphod
  */
-class FlxDrawBaseItem<T> implements IFlxDestroyable
+class FlxDrawBaseCommand<T> implements IFlxDestroyable
 {
 	#if (openfl < "4.0.0")
 	public static function blendToInt(blend:BlendMode):Int
@@ -61,37 +65,17 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 	}
 	#end
 	
-	public static function canAddQuadToQuadsItem(item:FlxDrawQuadsItem):Bool
-	{
-		return ((item.numTiles + 1) <= FlxCameraView.TILES_PER_BATCH);
-	}
-	
-	public static function canAddQuadToTrianglesItem(item:FlxDrawTrianglesItem):Bool
-	{
-		return canAddTrianglesToTrianglesItem(item, FlxCameraView.VERTICES_PER_TILE, FlxCameraView.INDICES_PER_TILE);
-	}
-	
-	public static function canAddTrianglesToTrianglesItem(item:FlxDrawTrianglesItem, numVertices:Int, numIndices:Int):Bool
-	{
-		return 	((item.numVertices + numVertices) <= FlxCameraView.VERTICES_PER_BATCH) &&
-				((item.indexPos + numIndices) <= FlxCameraView.INDICES_PER_BATCH);
-	}
-	
 	public var nextTyped:T;
 	
-	public var next:FlxDrawBaseItem<T>;
+	public var next:FlxDrawBaseCommand<T>;
 	
 	public var graphics:FlxGraphic;
-	public var antialiasing:Bool = false;
+	public var smoothing:Bool = false;
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
 	public var blending:BlendMode = null;
 	public var shader:FlxShader;
-	
-	public var redOffset:Float = 0.0;
-	public var greenOffset:Float = 0.0;
-	public var blueOffset:Float = 0.0;
-	public var alphaOffset:Float = 0.0;
+	public var repeat:Bool = true;
 	
 	public var type:FlxDrawItemType;
 	
@@ -101,25 +85,21 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 	
 	public var elementsPerVertex(get, null):Int;
 	
-	public var elementsPerTile(get, null):Int;
+	public var textured(get, null):Bool;
 	
 	public function new() {}
 	
 	public function reset():Void
 	{
 		graphics = null;
-		antialiasing = false;
+		smoothing = false;
 		hasColorOffsets = false;
 		colored = false;
+		repeat = true;
 		blending = null;
 		shader = null;
 		nextTyped = null;
 		next = null;
-		
-		redOffset = 0.0;
-		greenOffset = 0.0;
-		blueOffset = 0.0;
-		alphaOffset = 0.0;
 	}
 	
 	public function destroy():Void
@@ -128,18 +108,18 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 		blending = null;
 		shader = null;
 		next = null;
-		type = null;
 		nextTyped = null;
+		type = null;
 	}
 	
-	public function render(view:FlxHardwareView):Void {}
+	public function render(view:FlxHardwareView):Void { }
 	
-	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
+	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void { }
 	
-	public function addUVQuad(rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
+	public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void { }
 	
 	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Bool
 	{
 		if (hasColorOffsets)	return false;
 		
@@ -148,27 +128,21 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 			&& this.colored == colored
 			&& this.hasColorOffsets == hasColorOffsets
 			&& this.blending == blend
-			&& this.antialiasing == smooth
+			&& this.smoothing == smooth
+			&& this.repeat == repeat
 			&& this.shader == shader);
 	}
 	
-	public inline function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Void
+	public /*inline*/ function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Void
 	{
 		this.graphics = graphic;
 		this.colored = colored;
 		this.hasColorOffsets = hasColorOffsets;
 		this.blending = blend;
-		this.antialiasing = smooth;
+		this.smoothing = smooth;
+		this.repeat = repeat;
 		this.shader = shader;
-	}
-	
-	public inline function setOffsets(transform:ColorTransform):Void
-	{
-		redOffset = transform.redOffset / 255;
-		greenOffset = transform.greenOffset / 255;
-		blueOffset = transform.blueOffset / 255;
-		alphaOffset = transform.alphaOffset / 255;
 	}
 	
 	private function get_numVertices():Int
@@ -186,8 +160,8 @@ class FlxDrawBaseItem<T> implements IFlxDestroyable
 		return 0;
 	}
 	
-	private function get_elementsPerTile():Int
+	private inline function get_textured():Bool
 	{
-		return 0;
+		return (graphics != null);
 	}
 }

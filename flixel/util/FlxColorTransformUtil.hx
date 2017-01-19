@@ -57,4 +57,13 @@ class FlxColorTransformUtil
 	{
 		return hasRGBOffsets(transform) || transform.alphaOffset != 0;
 	}
+	
+	/**
+	 * Returns whether red, green, blue, or alpha offsets are set to anything other than 0,
+	 * or whether red, greeen, blue, or alpha multipliers are set to anything other than 1.
+	 */
+	public static function hasAnyTransformation(transform:ColorTransform):Bool
+	{
+		return hasRGBAOffsets(transform) || hasRGBAMultipliers(transform);
+	}
 }

@@ -1,10 +1,11 @@
 package flixel.system.render.hardware;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.TrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawStack;
@@ -20,7 +21,7 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
 #if FLX_RENDER_GL
-import flixel.system.render.hardware.gl.FlxDrawHardwareItem;
+import flixel.system.render.hardware.gl.FlxDrawHardwareCommand;
 import flixel.system.render.hardware.gl.HardwareRenderer;
 #end
 
@@ -144,11 +145,10 @@ class FlxHardwareView extends FlxCameraView
 		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	override public function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
-		drawStack.drawTriangles(graphic, vertices, indices, uvtData, matrix, transform, blend, repeat, smoothing, shader);
+		drawStack.drawTriangles(graphic, data, matrix, transform, blend, repeat, smoothing, shader);
 	}
 	
 	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -312,7 +312,7 @@ class FlxHardwareView extends FlxCameraView
 	}
 	
 	#if FLX_RENDER_GL
-	public function drawItem(item:FlxDrawHardwareItem<Dynamic>):Void
+	public function drawItem(item:FlxDrawHardwareCommand<Dynamic>):Void
 	{
 		canvas.drawItem(item);
 	}

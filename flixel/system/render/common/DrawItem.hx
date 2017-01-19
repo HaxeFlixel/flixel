@@ -12,20 +12,20 @@ typedef DrawData<T> =	#if ((openfl >= "4.0.0") || flash)
 							Array<T>
 						#end;
 
-typedef FlxDrawQuadsItem =		#if (openfl >= "4.0.0")
-									flixel.system.render.hardware.gl.FlxDrawQuadsItem
-								#else 
-									flixel.system.render.hardware.tile.FlxDrawQuadsItem
-								#end;
+typedef FlxDrawQuadsCommand =		#if (openfl >= "4.0.0")
+										flixel.system.render.hardware.gl.FlxDrawQuadsCommand
+									#else 
+										flixel.system.render.hardware.tile.FlxDrawQuadsCommand
+									#end;
 
-typedef FlxDrawTrianglesItem =	#if (openfl >= "4.0.0") 
-									flixel.system.render.hardware.gl.FlxDrawTrianglesItem 
-								#else 
-									flixel.system.render.hardware.tile.FlxDrawTrianglesItem 
-								#end;
+typedef FlxDrawTrianglesCommand =	#if (openfl >= "4.0.0") 
+										flixel.system.render.hardware.gl.FlxDrawTrianglesCommand  
+									#else 
+										flixel.system.render.hardware.tile.FlxDrawTrianglesCommand 
+									#end;
 
 enum FlxDrawItemType 
 {
-	TILES;
+	QUADS;
 	TRIANGLES;
 }

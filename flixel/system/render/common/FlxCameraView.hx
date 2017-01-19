@@ -2,12 +2,13 @@ package flixel.system.render.common;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.TrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
@@ -21,7 +22,6 @@ import openfl.geom.Rectangle;
 
 // TODO: add pure opengl version of camera view, so it will work on nme...
 // TODO: add stage3d version of camera view...
-// TODO: add methods for adding non-textured triangles???
 
 /**
  * ...
@@ -35,56 +35,38 @@ class FlxCameraView implements IFlxDestroyable
 	public static inline var MAX_QUADS_PER_BUFFER:Int = 16383;		// (MAX_VERTEX_PER_BUFFER / 4)
 	public static inline var MAX_TRIANGLES_PER_BUFFER:Int = 21844;	// (MAX_VERTEX_PER_BUFFER / 3)
 	
-	public static inline var ELEMENTS_PER_TEXTURED_VERTEX:Int = 8;
-	public static inline var ELEMENTS_PER_NONTEXTURED_VERTEX:Int = 6;
+	public static inline var VERTICES_PER_QUAD:Int = 4;
 	
-	public static inline var ELEMENTS_PER_TEXTURED_TILE:Int = 8 * 4;
-	public static inline var ELEMENTS_PER_NONTEXTURED_TILE:Int = 6 * 4;
+	public static inline var TRIANGLES_PER_QUAD:Int = 2;
 	
-	public static inline var VERTICES_PER_TILE:Int = 4;
+	public static inline var INDICES_PER_TRIANGLE:Int = 3;
 	
-	public static inline var INDICES_PER_TILE:Int = 6;
-	public static inline var MINIMUM_TILE_COUNT_PER_BUFFER:Int = 10;
-	public static inline var BYTES_PER_ELEMENT:Int = 4;
+	public static inline var INDICES_PER_QUAD:Int = 6;
 	
 	/**
 	 * Max size of the batch. Used for quad render items. If you'll try to add one more tile to the full batch, then new batch will be started.
 	 */
-	public static var TILES_PER_BATCH(default, set):Int = 2000;
+	public static var QUADS_PER_BATCH(default, set):Int = 2000;
 	
-	private static function set_TILES_PER_BATCH(value:Int):Int
+	private static function set_QUADS_PER_BATCH(value:Int):Int
 	{
-		TILES_PER_BATCH = (value > MAX_QUADS_PER_BUFFER) ? MAX_QUADS_PER_BUFFER : value;
-		return TILES_PER_BATCH;
+		QUADS_PER_BATCH = (value > MAX_QUADS_PER_BUFFER) ? MAX_QUADS_PER_BUFFER : value;
+		return QUADS_PER_BATCH;
 	}
 	
-	/**
-	 * Max number of vertices per batch. Used for triangles render items.
-	 */
-	public static var VERTICES_PER_BATCH(default, set):Int = 7500;
+	public static var TRIANGLES_PER_BATCH(default, set):Int = 2600;
 	
-	private static function set_VERTICES_PER_BATCH(value:Int):Int
+	private static function set_TRIANGLES_PER_BATCH(value:Int):Int
 	{
-		VERTICES_PER_BATCH = (value > MAX_VERTEX_PER_BUFFER) ? MAX_VERTEX_PER_BUFFER : value;
-		return VERTICES_PER_BATCH;
-	}
-	
-	/**
-	 * Max number of indices per batch. Used for triangles render items.
-	 */
-	public static var INDICES_PER_BATCH(default, set):Int = 7500;
-	
-	private static function set_INDICES_PER_BATCH(value:Int):Int
-	{
-		INDICES_PER_BATCH = (value > MAX_INDICES_PER_BUFFER) ? INDICES_PER_BATCH : value;
-		return INDICES_PER_BATCH;
+		TRIANGLES_PER_BATCH = (value > MAX_TRIANGLES_PER_BUFFER) ? MAX_TRIANGLES_PER_BUFFER : value;
+		return TRIANGLES_PER_BATCH;
 	}
 	
 	/**
 	 * Whether to batch drawTriangles() calls or not.
 	 * Default value is true.
 	 */
-	public static var BATCH_TRIANGLES:Bool = true;
+	public static var BATCH_TRIANGLES:Bool = #if FLX_RENDER_GL false #else true #end;
 	
 	/**
 	 * Tracks total number of drawTiles() calls made each frame.
@@ -103,7 +85,7 @@ class FlxCameraView implements IFlxDestroyable
 	/**
 	 * Camera's smoothing.
 	 */
-	public var antialiasing(get, set):Bool;
+	public var smoothing(get, set):Bool;
 	/**
 	 * Camera's tint factor
 	 */
@@ -222,8 +204,7 @@ class FlxCameraView implements IFlxDestroyable
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>,
-		uvtData:DrawData<Float>, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	public function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void {}
 	
 	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -251,14 +232,14 @@ class FlxCameraView implements IFlxDestroyable
 		return Alpha;
 	}
 	
-	private function set_antialiasing(Antialiasing:Bool):Bool
+	private function set_smoothing(Smoothing:Bool):Bool
 	{
-		return Antialiasing;
+		return Smoothing;
 	}
 	
-	private function get_antialiasing():Bool
+	private function get_smoothing():Bool
 	{
-		return camera.antialiasing;
+		return camera.smoothing;
 	}
 	
 	private function get_visible():Bool

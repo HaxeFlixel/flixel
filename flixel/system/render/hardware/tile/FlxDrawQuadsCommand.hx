@@ -5,21 +5,29 @@ import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
-import flixel.system.render.common.FlxDrawBaseItem;
+import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.FlxHardwareView;
+import flash.display.BlendMode;
 import openfl.display.Tilesheet;
-import openfl.geom.ColorTransform;
+import flash.geom.ColorTransform;
 
-class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
+class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 {
+	public var size(default, null):Int = 2000;
+	
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
-	public var numTiles(get, never):Int;
+	public var numQuads(get, never):Int;
+	public var elementsPerQuad(get, null):Int;
 	
-	public function new() 
+	public var canAddQuad(get, null):Bool;
+	
+	public function new(size:Int = 2000, textured:Bool = true) 
 	{
 		super();
-		type = FlxDrawItemType.TILES;
+		
+		this.size = size;
+		type = FlxDrawItemType.QUADS;
 	}
 	
 	override public function reset():Void
@@ -34,7 +42,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		drawData = null;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
 	{
 		setNext(matrix.tx);
 		setNext(matrix.ty);
@@ -91,41 +99,46 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			flags |= Tilesheet.TILE_TRANS_COLOR;
 		#end
 		
-		flags |= FlxDrawBaseItem.blendToInt(blending);
+		flags |= FlxDrawBaseCommand.blendToInt(blending);
 		
 		view.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
-			(view.antialiasing || antialiasing), flags,
+			(view.smoothing || smoothing), flags,
 			#if (!openfl_legacy && openfl >= "3.3.9") shader, #end
 			position);
 		
 		FlxCameraView._DRAWCALLS++;
 	}
 	
-	private function get_numTiles():Int
+	private function get_canAddQuad():Bool
 	{
-		return Std.int(position / elementsPerTile);
+		return ((numQuads + 1) <= FlxCameraView.QUADS_PER_BATCH);
 	}
 	
-	override function get_elementsPerTile():Int 
+	private function get_numQuads():Int
 	{
-		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
+		return Std.int(position / elementsPerQuad);
+	}
+	
+	private function get_elementsPerQuad():Int 
+	{
+		var elementsPerQuad:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
-			elementsPerTile += 3; // r, g, b
+			elementsPerQuad += 3; // r, g, b
 		#if (!openfl_legacy && openfl >= "3.6.0")
 		if (hasColorOffsets)
-			elementsPerTile += 4; // r, g, b, a
+			elementsPerQuad += 4; // r, g, b, a
 		#end
 		
-		return elementsPerTile;
+		return elementsPerQuad;
 	}
 	
 	override private function get_numVertices():Int
 	{
-		return FlxCameraView.VERTICES_PER_TILE * numTiles; 
+		return FlxCameraView.VERTICES_PER_QUAD * numQuads; 
 	}
 	
 	override private function get_numTriangles():Int
 	{
-		return 2 * numTiles;
+		return numQuads * FlxCameraView.TRIANGLES_PER_QUAD;
 	}
 }

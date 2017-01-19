@@ -62,4 +62,34 @@ class FlxMatrix extends Matrix
 		this.setTo(b, -a, d, -c, ty, -tx);
 		return this;
 	}
+	
+	/**
+	 * Transforms x coordinate of the point.
+	 * Took original code from openfl.geom.Matrix (which isn't available on flash target).
+	 * 
+	 * @param	px	x coordinate of the point
+	 * @param	py	y coordinate of the point
+	 * @return	transformed x coordinate of the point
+	 *
+	 * @since 4.3.0
+	 */
+	public inline function transformX(px:Float, py:Float):Float 
+	{
+		return px * a + py * c + tx;
+	}
+	
+	/**
+	 * Transforms y coordinate of the point.
+	 * Took original code from openfl.geom.Matrix (which isn't available on flash target).
+	 * 
+	 * @param	px	x coordinate of the point
+	 * @param	py	y coordinate of the point
+	 * @return	transformed y coordinate of the point
+	 *
+	 * @since 4.3.0
+	 */
+	public inline function transformY(px:Float, py:Float):Float
+	{	
+		return px * b + py * d + ty;
+	}
 }
