@@ -6,7 +6,7 @@ import flixel.graphics.shaders.FlxBaseShader;
  * Default shader used for rendering textured triangles with specified color multipliers for each of the vertices, 
  * plus applied color transform of the FlxStrip.
  */
-class FlxTexturedColored extends FlxBaseShader
+class FlxTexturedColoredShader extends FlxBaseShader
 {
 	public static inline var DEFAULT_VERTEX_SOURCE:String = 
 			"

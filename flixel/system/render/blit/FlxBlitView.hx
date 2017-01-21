@@ -414,7 +414,7 @@ class FlxBlitView extends FlxCameraView
 		return Angle;
 	}
 	
-	override public function set_smoothing(Smoothing:Bool):Bool 
+	override private function set_smoothing(Smoothing:Bool):Bool 
 	{
 		return _flashBitmap.smoothing = Smoothing;
 	}

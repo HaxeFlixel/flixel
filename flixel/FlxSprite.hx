@@ -631,9 +631,6 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null)
 			loadGraphic("flixel/images/logo/default.png");
-		
-	//	if (_frame == null)
-	//		loadGraphic(FlxGraphic.fromClass(GraphicDefault));
 	}
 
 	/**

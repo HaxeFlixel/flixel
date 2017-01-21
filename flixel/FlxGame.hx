@@ -895,7 +895,7 @@ class FlxGame extends Sprite
 	}
 	
 	#if FLX_RENDER_GL
-	private var renderHelper(get, null):GLRenderHelper;
+	private var renderHelper(get, never):GLRenderHelper;
 	private var _renderHelper:GLRenderHelper;
 	
 	private function get_renderHelper():GLRenderHelper

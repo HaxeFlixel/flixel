@@ -5,7 +5,7 @@ import flixel.graphics.shaders.FlxBaseShader;
 /**
  * Default shader used for rendering triangles with colored vertices (each vertice could have inidividual color)
  */
-class FlxColored extends FlxBaseShader
+class FlxColoredShader extends FlxBaseShader
 {
 	public static inline var DEFAULT_VERTEX_SOURCE:String = 
 			"

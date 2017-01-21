@@ -14,8 +14,8 @@ import openfl.geom.ColorTransform;
 import flixel.graphics.shaders.FlxShader;
 
 #if FLX_RENDER_GL
-import flixel.graphics.shaders.tiles.FlxColored;
-import flixel.graphics.shaders.tiles.FlxTextured;
+import flixel.graphics.shaders.tiles.FlxColoredShader;
+import flixel.graphics.shaders.tiles.FlxTexturedShader;
 import lime.graphics.GLRenderContext;
 import lime.math.Matrix4;
 import lime.utils.UInt16Array;
@@ -41,9 +41,9 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	/**
 	 * Default tile shader.
 	 */
-	private static var defaultTexturedShader:FlxTextured = new FlxTextured();
+	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
 	
-	private static var defaultColoredShader:FlxColored = new FlxColored();
+	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	
 	public var roundPixels:Bool = false;
 	

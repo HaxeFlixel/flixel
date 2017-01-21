@@ -12,10 +12,10 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 
 #if FLX_RENDER_GL
-import flixel.graphics.shaders.triangles.FlxColored;
-import flixel.graphics.shaders.triangles.FlxSingleColored;
-import flixel.graphics.shaders.triangles.FlxTextured;
-import flixel.graphics.shaders.triangles.FlxTexturedColored;
+import flixel.graphics.shaders.triangles.FlxColoredShader;
+import flixel.graphics.shaders.triangles.FlxSingleColoredShader;
+import flixel.graphics.shaders.triangles.FlxTexturedShader;
+import flixel.graphics.shaders.triangles.FlxTexturedColoredShader;
 
 import lime.math.Matrix4;
 import openfl.gl.GL;
@@ -27,10 +27,10 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	/**
 	 * Default tile shader.
 	 */
-	private static var defaultTextureColoredShader:FlxTexturedColored = new FlxTexturedColored();
-	private static var defaultTexturedShader:FlxTextured = new FlxTextured();
-	private static var defaultColoredShader:FlxColored = new FlxColored();
-	private static var defaultSingleColoredShader:FlxSingleColored = new FlxSingleColored();
+	private static var defaultTextureColoredShader:FlxTexturedColoredShader = new FlxTexturedColoredShader();
+	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
+	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
+	private static var defaultSingleColoredShader:FlxSingleColoredShader = new FlxSingleColoredShader();
 	
 	public var blendMode:BlendMode;
 	
