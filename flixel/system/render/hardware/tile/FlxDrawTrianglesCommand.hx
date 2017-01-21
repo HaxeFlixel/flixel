@@ -80,7 +80,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		}
 		#end
 		
-		FlxCameraView._DRAWCALLS++;
+		FlxCameraView.drawCalls++;
 	}
 	
 	override public function reset():Void 

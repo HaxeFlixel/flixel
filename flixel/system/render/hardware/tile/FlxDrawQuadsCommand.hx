@@ -108,7 +108,7 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 			position);
 		#end
 		
-		FlxCameraView._DRAWCALLS++;
+		FlxCameraView.drawCalls++;
 	}
 	
 	private function get_canAddQuad():Bool

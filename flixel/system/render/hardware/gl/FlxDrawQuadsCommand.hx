@@ -505,7 +505,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		// now draw those suckas!
 		GL.drawElements(GL.TRIANGLES, size * FlxCameraView.INDICES_PER_QUAD, GL.UNSIGNED_SHORT, startIndex * FlxCameraView.INDICES_PER_QUAD * BYTES_PER_INDEX);
 		
-		FlxCameraView._DRAWCALLS++;
+		FlxCameraView.drawCalls++;
 	}
 	
 	public function start():Void

@@ -70,7 +70,7 @@ class FlxCameraView implements IFlxDestroyable
 	/**
 	 * Tracks total number of `drawTiles()` calls made each frame.
 	 */
-	public static var _DRAWCALLS:Int = 0;
+	public static var drawCalls:Int = 0;
 	
 	/**
 	 * Display object which is used as a container for all the camera's graphic.

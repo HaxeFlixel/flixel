@@ -127,7 +127,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 			&& this.shader == shader);
 	}
 	
-	public /*inline*/ function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Void
 	{
 		this.graphics = graphic;

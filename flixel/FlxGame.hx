@@ -852,7 +852,7 @@ class FlxGame extends Sprite
 		FlxG.signals.preDraw.dispatch();
 		
 		if (FlxG.renderTile)
-			FlxCameraView._DRAWCALLS = 0;
+			FlxCameraView.drawCalls = 0;
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -870,7 +870,7 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxCameraView._DRAWCALLS);
+			debugger.stats.drawCalls(FlxCameraView.drawCalls);
 			#end
 		}
 	
