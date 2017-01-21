@@ -89,14 +89,6 @@ class FlxDefines
 		#if (lime < "2.8.1")
 		abortMinVersion("Lime", "2.8.1", (macro null).pos);
 		#end
-
-		#if (openfl > "4.5.0")
-		abortMaxVersion("OpenFL", "4.5.1", "4.5.0", (macro null).pos);
-		#end
-		
-		#if ((lime > "3.5.0") || (tools > "3.5.0"))
-		abortMaxVersion("Lime", "3.5.1", "3.5.0", (macro null).pos);
-		#end
 	}
 
 	private static function abortMinVersion(dependency:String, minimumRequired:String, pos:Position)

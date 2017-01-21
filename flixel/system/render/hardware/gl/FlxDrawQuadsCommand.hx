@@ -181,7 +181,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	//		flush();
 	//		currentTexture = texture;
 	//	}
-		
+	
 		var i = numQuads * Float32Array.BYTES_PER_ELEMENT * FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 		
 		var w:Float = rect.width;

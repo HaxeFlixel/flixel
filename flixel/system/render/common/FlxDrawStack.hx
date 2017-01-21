@@ -77,17 +77,9 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		destroyDrawStackItems();
+		clearDrawStack();
 		_helperMatrix = null;
 		view = null;
-	}
-	
-	private function destroyDrawStackItems():Void
-	{
-		destroyDrawItemsChain(_firstCommand);
-		destroyDrawItemsChain(_texturedTilesStorage);
-		destroyDrawItemsChain(_coloredTilesStorage);
-		destroyDrawItemsChain(_trianglesStorage);
 	}
 	
 	private function destroyDrawItemsChain(item:FlxDrawBaseCommand<Dynamic>):Void
