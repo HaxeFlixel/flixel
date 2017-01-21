@@ -253,17 +253,7 @@ class Interaction extends Window
 	
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderBlit)
-		{
-			FlxSpriteUtil.flashGfx.clear();
-			return FlxSpriteUtil.flashGfx;
-		}
-		
-		#if FLX_DEBUG
-		return FlxG.camera.debugLayer.graphics;
-		#end
-		
-		return null;
+		return FlxG.camera.beginDrawDebug();
 	}
 	
 	private function drawItemsSelection():Void 
@@ -285,8 +275,7 @@ class Interaction extends Window
 		}
 		
 		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
 	
 	private function getTool(className:Class<Tool>):Tool

@@ -5,7 +5,7 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flixel.graphics.tile.FlxTilesheet;
+import flixel.system.render.common.FlxCameraView;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
@@ -35,6 +35,12 @@ import flixel.system.ui.FlxFocusLostScreen;
 #if FLX_RECORD
 import flixel.math.FlxRandom;
 import flixel.system.replay.FlxReplay;
+#end
+
+#if FLX_RENDER_GL
+import openfl._internal.renderer.RenderSession;
+import flixel.system.render.hardware.gl.GLRenderHelper;
+import flixel.system.render.hardware.gl.GLUtils;
 #end
 
 /**
@@ -488,6 +494,11 @@ class FlxGame extends Sprite
 		for (postProcess in postProcesses)
 			postProcess.rebuild();
 		#end
+		
+		#if FLX_RENDER_GL
+		if (_renderHelper != null)
+			_renderHelper.resize(width, height);
+		#end
 	}
 	
 	/**
@@ -827,6 +838,7 @@ class FlxGame extends Sprite
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
+	@:allow(flixel.system.render.hardware)
 	private function draw():Void
 	{
 		if (!_state.visible || !_state.exists)
@@ -840,7 +852,7 @@ class FlxGame extends Sprite
 		FlxG.signals.preDraw.dispatch();
 		
 		if (FlxG.renderTile)
-			FlxTilesheet._DRAWCALLS = 0;
+			FlxCameraView._DRAWCALLS = 0;
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -858,7 +870,7 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			debugger.stats.drawCalls(FlxCameraView._DRAWCALLS);
 			#end
 		}
 	
@@ -881,4 +893,33 @@ class FlxGame extends Sprite
 		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
+	
+	#if FLX_RENDER_GL
+	private var renderHelper(get, null):GLRenderHelper;
+	private var _renderHelper:GLRenderHelper;
+	
+	private function get_renderHelper():GLRenderHelper
+	{
+		if (_renderHelper == null)
+		{
+			_renderHelper = new GLRenderHelper(this, Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
+			_renderHelper.fullscreen = true;
+		}
+		
+		return _renderHelper;
+	}
+	
+	override public function __renderGL(renderSession:RenderSession):Void
+	{
+		var needRenderHelper:Bool = (GLUtils.getObjectNumPasses(this) > 0);
+		
+		if (needRenderHelper)
+			renderHelper.capture();
+		
+		super.__renderGL(renderSession);
+		
+		if (needRenderHelper)
+			renderHelper.render(renderSession);
+	}
+	#end
 }

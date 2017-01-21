@@ -9,10 +9,10 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 import flixel.FlxG;
 
-@:keep @:bitmap("assets/images/preloader/light.png")
+@:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
 
-@:keep @:bitmap("assets/images/preloader/corners.png")
+@:bitmap("assets/images/preloader/corners.png")
 private class GraphicLogoCorners extends BitmapData {}
 
 /**
@@ -36,7 +36,7 @@ class FlxPreloader extends FlxBasePreloader
 	 * super(10); // example of long delay (10 seconds)
 	 * ```
 	 */
-	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
+	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
 		super(MinDisplayTime, AllowedURLs);
 	}
@@ -48,20 +48,18 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function create():Void
 	{
+		#if !js
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		
-		var logoLight = createBitmap(GraphicLogoLight, function(logoLight:Bitmap)
-		{
-			logoLight.width = logoLight.height = _height;
-			logoLight.x = (_width - logoLight.width) / 2;
-		});
-		logoLight.smoothing = true;
-		_buffer.addChild(logoLight);
+		var bitmap = new Bitmap(new GraphicLogoLight(0, 0));
+		bitmap.smoothing = true;
+		bitmap.width = bitmap.height = _height;
+		bitmap.x = (_width - bitmap.width) / 2;
+		_buffer.addChild(bitmap);
 		_bmpBar = new Bitmap(new BitmapData(1, 7, false, 0x5f6aff));
 		_bmpBar.x = 4;
 		_bmpBar.y = _height - 11;
@@ -90,15 +88,12 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow.x = (_width - _logoGlow.width) / 2;
 		_logoGlow.y = (_height - _logoGlow.height) / 2;
 		_buffer.addChild(_logoGlow);
-		var corners = createBitmap(GraphicLogoCorners, function(corners)
-		{
-			corners.width = _width;
-			corners.height = height;
-		});
-		corners.smoothing = true;
-		_buffer.addChild(corners);
-		
-		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
+		bitmap = new Bitmap(new GraphicLogoCorners(0, 0));
+		bitmap.smoothing = true;
+		bitmap.width = _width;
+		bitmap.height = _height;
+		_buffer.addChild(bitmap);
+		bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
 		var i:Int = 0;
 		var j:Int = 0;
 		while (i < _height)
@@ -113,6 +108,7 @@ class FlxPreloader extends FlxBasePreloader
 		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
+		#end
 		
 		super.create();
 	}
@@ -123,6 +119,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override private function destroy():Void
 	{
+		#if !js
 		if (_buffer != null)	
 		{
 			removeChild(_buffer);
@@ -133,6 +130,7 @@ class FlxPreloader extends FlxBasePreloader
 		_logo = null;
 		_logoGlow = null;
 		super.destroy();
+		#end
 	}
 	
 	/**
@@ -141,6 +139,7 @@ class FlxPreloader extends FlxBasePreloader
 	 */
 	override public function update(Percent:Float):Void
 	{
+		#if !js
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
 		
@@ -178,5 +177,6 @@ class FlxPreloader extends FlxBasePreloader
 		{
 			_buffer.alpha = 1 - (Percent - 0.9) / 0.1;
 		}
+		#end
 	}
 }

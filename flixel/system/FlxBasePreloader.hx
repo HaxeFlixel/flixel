@@ -14,7 +14,11 @@ import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-class FlxBasePreloader extends NMEPreloader
+#if (openfl >= "4.5.0")
+import openfl.display.Preloader.DefaultPreloader;
+#end
+
+class FlxBasePreloader extends #if (openfl < "4.5.0") NMEPreloader #else DefaultPreloader #end
 {
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
@@ -64,7 +68,7 @@ class FlxBasePreloader extends NMEPreloader
 			allowedURLs = AllowedURLs;
 		else
 			allowedURLs = [];
-			
+		
 		_startTime = Date.now().getTime();
 	}
 	
@@ -137,7 +141,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * 
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void {}
+	function update(Percent:Float):Void {}
 	
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded. 

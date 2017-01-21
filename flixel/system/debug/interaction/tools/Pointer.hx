@@ -178,7 +178,6 @@ class Pointer extends Tool
 		}
 
 		// Render everything into the camera buffer
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
 }

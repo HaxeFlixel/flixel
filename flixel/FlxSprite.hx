@@ -17,7 +17,7 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -27,6 +27,7 @@ using flixel.util.FlxColorTransformUtil;
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
 // TODO: add option to "center origin" or create special subclass for it
+// TODO: render target...
 
 /**
  * The main "game object" class, the sprite is a `FlxObject`
@@ -630,6 +631,9 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null)
 			loadGraphic("flixel/images/logo/default.png");
+		
+	//	if (_frame == null)
+	//		loadGraphic(FlxGraphic.fromClass(GraphicDefault));
 	}
 
 	/**
@@ -682,6 +686,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	private function drawComplex(camera:FlxCamera):Void
 	{
+		// TODO: move _frame.prepareMatrix to camera view???
 		_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 		_matrix.translate(-origin.x, -origin.y);
 		_matrix.scale(scale.x, scale.y);

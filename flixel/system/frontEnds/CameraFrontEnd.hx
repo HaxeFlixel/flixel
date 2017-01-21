@@ -48,7 +48,7 @@ class CameraFrontEnd
 	 */
 	public function add<T:FlxCamera>(NewCamera:T):T
 	{
-		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
+		FlxG.game.addChildAt(NewCamera.view.display, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
 		cameraAdded.dispatch(NewCamera);
@@ -66,7 +66,7 @@ class CameraFrontEnd
 		var index:Int = list.indexOf(Camera);
 		if (Camera != null && index != -1)
 		{
-			FlxG.game.removeChild(Camera.flashSprite);
+			FlxG.game.removeChild(Camera.view.display);
 			list.splice(index, 1);
 		}
 		else
@@ -174,53 +174,20 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if (camera == null || !camera.exists || !camera.visible)
-			{
 				continue;
-			}
 			
-			if (FlxG.renderBlit)
-			{
-				camera.checkResize();
-				
-				if (useBufferLocking)
-				{
-					camera.buffer.lock();
-				}
-			}
-			
-			if (FlxG.renderTile)
-			{
-				camera.clearDrawStack();
-				camera.canvas.graphics.clear();
-				// Clearing camera's debug sprite
-				#if FLX_DEBUG
-				camera.debugLayer.graphics.clear();
-				#end
-			}
-			
-			if (FlxG.renderBlit)
-			{
-				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
-				camera.screen.dirty = true;
-			}
-			else
-			{
-				camera.fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
-			}
+			camera.lock(useBufferLocking);
 		}
 	}
 	
 	@:allow(flixel.FlxGame)
 	private inline function render():Void
 	{
-		if (FlxG.renderTile)
+		for (camera in list)
 		{
-			for (camera in list)
+			if ((camera != null) && camera.exists && camera.visible)
 			{
-				if ((camera != null) && camera.exists && camera.visible)
-				{
-					camera.render();
-				}
+				camera.render();
 			}
 		}
 	}
@@ -234,21 +201,10 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera == null) || !camera.exists || !camera.visible)
-			{
 				continue;
-			}
 			
 			camera.drawFX();
-			
-			if (FlxG.renderBlit)
-			{
-				if (useBufferLocking)
-				{
-					camera.buffer.unlock();
-				}
-				
-				camera.screen.dirty = true;
-			}
+			camera.unlock(useBufferLocking);
 		}
 	}
 	
@@ -274,9 +230,7 @@ class CameraFrontEnd
 	private function resize():Void
 	{
 		for (camera in list)
-		{
 			camera.onResize();
-		}
 	}
 	
 	private function get_bgColor():FlxColor

@@ -392,6 +392,33 @@ class FlxRect implements IFlxPooled
 		return result.set(x0, y0, x1 - x0, y1 - y0);
 	}
 	
+	public function inflate(x:Float, y:Float):FlxRect
+	{
+		if (x < this.x) 
+		{
+			this.width += this.x - x;
+			this.x = x;
+		}
+		
+		if (y < this.y) 
+		{
+			this.height += this.y - y;
+			this.y = y;
+		}
+		
+		if (x > this.x + this.width) 
+		{
+			this.width = x - this.x;
+		}
+		
+		if (y > this.y + this.height) 
+		{
+			this.height = y - this.y;
+		}
+		
+		return this;
+	}
+	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
