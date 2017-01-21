@@ -345,18 +345,22 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var isColored:Bool = data.colored;
 		
-		#if FLX_RENDER_GL
+	#if FLX_RENDER_GL
 		var drawItem = getNewTrianglesCommand(graphic, smoothing, isColored, repeat, blend, shader);
 		drawItem.data = data;
 		drawItem.matrix = matrix;
 		drawItem.color = transform;
-		#else
+		
+		#if FLX_DEBUG
+		drawItem.drawDebug(view.camera);
+		#end
+	#else
 		isColored = isColored || (transform != null && transform.hasRGBMultipliers());
 		
 		var drawItem = getTrianglesCommand(graphic, smoothing, isColored, repeat, blend, shader, data.numTriangles);
 		drawItem.addTriangles(data, matrix, transform);
 		data.dirty = false;
-		#end
+	#end
 	}
 	
 	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,

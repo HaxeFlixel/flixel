@@ -1,13 +1,17 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.FlxCamera;
 import flixel.graphics.TrianglesData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
+import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxColor;
+import openfl.Vector;
 import openfl.display.BlendMode;
+import openfl.display.Graphics;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 
@@ -32,6 +36,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	private static var defaultSingleColoredShader:FlxSingleColoredShader = new FlxSingleColoredShader();
 	
+	private var _vertices:Vector<Float> = new Vector<Float>();
+	
 	public var blendMode:BlendMode;
 	
 	private var uniformMatrix:Matrix4;
@@ -41,7 +47,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	/**
 	 * Transformation matrix for this item on camera.
 	 */
-	public var matrix(null, set):Matrix;
+	public var matrix(default, set):Matrix;
 	
 	private var matrix4:Matrix4 = new Matrix4();
 	
@@ -65,6 +71,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		
 		data = null;
 		matrix4 = null;
+		matrix = null;
 		color = null;
 	}
 	
@@ -185,6 +192,35 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			data.setContext(gl);
 	}
 	
+	public function drawDebug(camera:FlxCamera):Void
+	{
+		#if FLX_DEBUG
+		if (!FlxG.debugger.drawDebug)
+			return;
+		
+		var verticesLength:Int = data.vertices.length;
+		_vertices.splice(0, _vertices.length);
+		var px:Float, py:Float;
+		var i:Int = 0;
+		
+		while (i < verticesLength)
+		{
+			px = data.vertices[i]; 
+			py = data.vertices[i + 1];
+			
+			_vertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
+			_vertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
+			
+			i += 2;
+		}
+		
+		var gfx:Graphics = camera.beginDrawDebug();
+		gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+		gfx.drawTriangles(_vertices, data.indices);
+		camera.endDrawDebug();
+		#end
+	}
+	
 	public function canAddTriangles(numTriangles:Int):Bool
 	{
 		return true;
@@ -213,7 +249,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			matrix4[13] = value.ty;
 		}
 		
-		return value;
+		return matrix = value;
 	}
 }
 
