@@ -18,7 +18,6 @@ import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSpriteUtil;
 
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
 import flash.display.Bitmap;

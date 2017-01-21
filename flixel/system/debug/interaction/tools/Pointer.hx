@@ -7,7 +7,6 @@ import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.interaction.Interaction;
-import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
 
 @:bitmap("assets/images/debugger/cursorCross.png") 
