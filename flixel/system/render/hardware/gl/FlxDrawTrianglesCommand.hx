@@ -7,7 +7,6 @@ import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
-import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxColor;
 import openfl.Vector;
 import openfl.display.BlendMode;
