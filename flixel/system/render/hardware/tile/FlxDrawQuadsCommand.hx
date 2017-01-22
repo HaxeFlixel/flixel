@@ -22,11 +22,11 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 	
 	public var canAddQuad(get, null):Bool;
 	
-	public function new(size:Int = 2000, textured:Bool = true) 
+	public function new(textured:Bool = true) 
 	{
 		super();
 		
-		this.size = size;
+		this.size = FlxCameraView.QUADS_PER_BATCH;
 		type = FlxDrawItemType.QUADS;
 	}
 	

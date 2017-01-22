@@ -262,6 +262,12 @@ class FlxHardwareView extends FlxCameraView
 		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 	}
 	
+	override public function offsetView(X:Float, Y:Float):Void 
+	{
+		flashSprite.x += X;
+		flashSprite.y += Y;
+	}
+	
 	override public function beginDrawDebug():Graphics 
 	{
 		#if FLX_DEBUG

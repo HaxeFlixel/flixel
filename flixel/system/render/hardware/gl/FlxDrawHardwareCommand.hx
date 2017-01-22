@@ -1,5 +1,7 @@
 package flixel.system.render.hardware.gl;
 
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 
@@ -13,6 +15,16 @@ import lime.math.Matrix4;
  */
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
+	public static var currentTexture:FlxGraphic = null;
+	public static var currentShader:FlxShader = null;
+	
+	// TODO: use this method...
+	public static function setCurrentValues(?texture:FlxGraphic, ?shader:FlxShader):Void
+	{
+		currentTexture = texture;
+		currentShader = shader;
+	}
+	
 	public function new() 
 	{
 		super();
@@ -28,6 +40,8 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 #else
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
+	public static function setCurrentValues(?texture:FlxGraphic, ?shader:FlxShader):Void {}
+	
 	public function new() 
 	{
 		super();

@@ -174,6 +174,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		
 		GL.drawElements(GL.TRIANGLES, data.numIndices, GL.UNSIGNED_SHORT, 0);
 		
+		FlxDrawHardwareCommand.setCurrentValues(graphics, shader);
+		
 		FlxCameraView.drawCalls++;
 	}
 	

@@ -12,6 +12,7 @@ import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.DrawItem.FlxDrawQuadsCommand;
 import flixel.system.render.common.DrawItem.FlxDrawTrianglesCommand;
 import flixel.system.render.hardware.FlxHardwareView;
+import flixel.system.render.hardware.gl.FlxDrawHardwareCommand;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -115,7 +116,7 @@ class FlxDrawStack implements IFlxDestroyable
 		}
 		else
 		{
-			itemToReturn = new FlxDrawQuadsCommand(FlxCameraView.QUADS_PER_BATCH, true);
+			itemToReturn = new FlxDrawQuadsCommand(true);
 		}
 		
 		itemToReturn.set(graphic, colored, hasColorOffsets, blend, smooth, true, shader);
@@ -159,7 +160,7 @@ class FlxDrawStack implements IFlxDestroyable
 		}
 		else
 		{
-			itemToReturn = new FlxDrawQuadsCommand(FlxCameraView.QUADS_PER_BATCH, false);
+			itemToReturn = new FlxDrawQuadsCommand(false);
 		}
 		
 		itemToReturn.set(null, true, false, blend, false, false, shader);
@@ -301,6 +302,8 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function render():Void
 	{
+		FlxDrawHardwareCommand.setCurrentValues();
+		
 		var currItem:FlxDrawBaseCommand<Dynamic> = _firstCommand;
 		while (currItem != null)
 		{
