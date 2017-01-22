@@ -78,9 +78,7 @@ class CameraFrontEnd
 		if (FlxG.renderTile)
 		{
 			for (i in 0...list.length)
-			{
 				list[i].ID = i;
-			}
 		}
 		
 		if (Destroy)
@@ -120,9 +118,7 @@ class CameraFrontEnd
 	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
-		{
 			camera.flash(Color, Duration, OnComplete, Force);
-		}
 	}
 	
 	/**
@@ -137,9 +133,7 @@ class CameraFrontEnd
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
-		{
 			camera.fade(Color, Duration, FadeIn, OnComplete, Force);
-		}
 	}
 	
 	/**
@@ -154,9 +148,7 @@ class CameraFrontEnd
 	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
 	{
 		for (camera in list)
-		{
 			camera.shake(Intensity, Duration, OnComplete, Force, Axes);
-		}
 	}
 	
 	@:allow(flixel.FlxG)
@@ -186,9 +178,7 @@ class CameraFrontEnd
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
-			{
 				camera.render();
-			}
 		}
 	}
 	

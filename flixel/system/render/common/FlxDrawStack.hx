@@ -125,14 +125,10 @@ class FlxDrawStack implements IFlxDestroyable
 		_lastTexturedQuads = itemToReturn;
 		
 		if (_firstCommand == null)
-		{
 			_firstCommand = itemToReturn;
-		}
 		
 		if (_currentCommand != null)
-		{
 			_currentCommand.next = itemToReturn;
-		}
 		
 		_currentCommand = itemToReturn;
 		
@@ -169,14 +165,10 @@ class FlxDrawStack implements IFlxDestroyable
 		_lastColoredQuads = itemToReturn;
 		
 		if (_firstCommand == null)
-		{
 			_firstCommand = itemToReturn;
-		}
 		
 		if (_currentCommand != null)
-		{
 			_currentCommand.next = itemToReturn;
-		}
 		
 		_currentCommand = itemToReturn;
 		
@@ -207,14 +199,10 @@ class FlxDrawStack implements IFlxDestroyable
 		_lastTriangles = itemToReturn;
 		
 		if (_firstCommand == null)
-		{
 			_firstCommand = itemToReturn;
-		}
 		
 		if (_currentCommand != null)
-		{
 			_currentCommand.next = itemToReturn;
-		}
 		
 		_currentCommand = itemToReturn;
 		
@@ -243,7 +231,6 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		#if FLX_RENDER_GL
 		_helperMatrix.identity();
-		
 		var drawItem = getColoredTilesCommand(null, null);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
 		#else

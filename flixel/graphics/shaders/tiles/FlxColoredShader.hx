@@ -18,7 +18,7 @@ class FlxColoredShader extends FlxBaseShader
 			
 			void main(void) 
 			{
-				vColor = aColor.bgra;
+				vColor = vec4(aColor.bgr * aColor.a, aColor.a);
 				gl_Position = uMatrix * aPosition;
 			}";
 			

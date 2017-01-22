@@ -77,7 +77,7 @@ class FlxHardwareView extends FlxCameraView
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
-	
+		
 		flashSprite.addChild(_scrollRect);
 		_scrollRect.scrollRect = new Rectangle();
 		
@@ -115,9 +115,8 @@ class FlxHardwareView extends FlxCameraView
 		if (canvas != null)
 		{
 			for (i in 0...canvas.numChildren)
-			{
 				canvas.removeChildAt(0);
-			}
+			
 			canvas = null;
 		}
 		#end
@@ -126,11 +125,6 @@ class FlxHardwareView extends FlxCameraView
 		
 		flashSprite = null;
 		_scrollRect = null;
-	}
-	
-	override private function render():Void
-	{
-		drawStack.render();
 	}
 	
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
@@ -243,7 +237,7 @@ class FlxHardwareView extends FlxCameraView
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
 	{
 		var alphaComponent:Float = FxColor.alpha;
-		fill((FxColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * FxAlpha / 255);
+		fill(FxColor.to24Bit(), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * FxAlpha / 255);
 	}
 	
 	override public function lock(useBufferLocking:Bool):Void 
@@ -260,6 +254,11 @@ class FlxHardwareView extends FlxCameraView
 		debugLayer.graphics.clear();
 		#end
 		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+	}
+	
+	override public function unlock(useBufferLocking:Bool):Void 
+	{
+		drawStack.render();
 	}
 	
 	override public function offsetView(X:Float, Y:Float):Void 
@@ -295,9 +294,7 @@ class FlxHardwareView extends FlxCameraView
 	override private function set_angle(Angle:Float):Float 
 	{
 		if (flashSprite != null)
-		{
 			flashSprite.rotation = Angle;
-		}
 		
 		return Angle;
 	}
@@ -305,9 +302,7 @@ class FlxHardwareView extends FlxCameraView
 	override private function set_visible(visible:Bool):Bool 
 	{
 		if (flashSprite != null)
-		{
 			flashSprite.visible = visible;
-		}
 		
 		return visible;
 	}
