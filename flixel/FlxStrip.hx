@@ -48,7 +48,7 @@ class FlxStrip extends FlxSprite
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
-	private var data:TrianglesData;
+	public var data:TrianglesData;
 	
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{

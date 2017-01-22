@@ -16,43 +16,6 @@ import flixel.system.render.hardware.gl.GLUtils;
 
 class TrianglesData implements IFlxDestroyable
 {
-	public static function getQuadData(width:Float = 100, height:Float = 100, color:FlxColor = FlxColor.WHITE):TrianglesData
-	{
-		var data:TrianglesData = new TrianglesData();
-		
-		data.vertices[0] = 0.0;
-		data.vertices[1] = 0.0;
-		data.vertices[2] = width;
-		data.vertices[3] = 0.0;
-		data.vertices[4] = width;
-		data.vertices[5] = height;
-		data.vertices[6] = 0;
-		data.vertices[7] = height;
-		
-		data.uvs[0] = 0.0;
-		data.uvs[1] = 0.0;
-		data.uvs[2] = 1.0;
-		data.uvs[3] = 0.0;
-		data.uvs[4] = 1.0;
-		data.uvs[5] = 1.0;
-		data.uvs[6] = 0;
-		data.uvs[7] = 1.0;
-		
-		data.colors[0] = color;
-		data.colors[1] = color;
-		data.colors[2] = color;
-		data.colors[3] = color;
-		
-		data.indices[0] = 0;
-		data.indices[1] = 1;
-		data.indices[2] = 2;
-		data.indices[3] = 2;
-		data.indices[4] = 3;
-		data.indices[5] = 0;
-		
-		return data;
-	}
-	
 	public var numIndices(get, null):Int;
 	
 	public var numTriangles(get, null):Int;
@@ -106,6 +69,41 @@ class TrianglesData implements IFlxDestroyable
 		colorsBuffer = GLUtils.destroyBuffer(colorsBuffer);
 		indicesBuffer = GLUtils.destroyBuffer(indicesBuffer);
 		#end
+	}
+	
+	public function generateQuadData(width:Float = 100, height:Float = 100, color:FlxColor = FlxColor.WHITE):TrianglesData
+	{
+		vertices[0] = 0.0;
+		vertices[1] = 0.0;
+		vertices[2] = width;
+		vertices[3] = 0.0;
+		vertices[4] = width;
+		vertices[5] = height;
+		vertices[6] = 0;
+		vertices[7] = height;
+		
+		uvs[0] = 0.0;
+		uvs[1] = 0.0;
+		uvs[2] = 1.0;
+		uvs[3] = 0.0;
+		uvs[4] = 1.0;
+		uvs[5] = 1.0;
+		uvs[6] = 0;
+		uvs[7] = 1.0;
+		
+		colors[0] = color;
+		colors[1] = color;
+		colors[2] = color;
+		colors[3] = color;
+		
+		indices[0] = 0;
+		indices[1] = 1;
+		indices[2] = 2;
+		indices[3] = 2;
+		indices[4] = 3;
+		indices[5] = 0;
+		
+		return this;
 	}
 	
 	private function set_vertices(value:DrawData<Float>):DrawData<Float>
