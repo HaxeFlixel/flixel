@@ -109,20 +109,17 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	private function renderStrip():Void
 	{
-		if (textured)
+		var glTexture = (graphics != null) ? graphics.bitmap.getTexture(renderSession.gl) : null;
+		
+		GL.activeTexture(GL.TEXTURE0);
+		GL.bindTexture(GL.TEXTURE_2D, glTexture);
+		
+		if (graphics != null)
 		{
-			GL.activeTexture(GL.TEXTURE0);
-			GL.bindTexture(GL.TEXTURE_2D, graphics.bitmap.getTexture(renderSession.gl));
-			
 			GLUtils.setTextureSmoothing(smoothing);
 			GLUtils.setTextureWrapping(repeat);
 			
 			GL.uniform2f(shader.data.uTextureSize.index, graphics.width, graphics.height);
-		}
-		else
-		{
-			GL.activeTexture(GL.TEXTURE0);
-			GL.bindTexture(GL.TEXTURE_2D, null);
 		}
 		
 		var red:Float = 1.0;

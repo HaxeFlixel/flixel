@@ -505,20 +505,17 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (size == 0)
 			return;
 		
+		var glTexture = (texture != null) ? texture.bitmap.getTexture(gl) : null;
+		
+		GL.activeTexture(GL.TEXTURE0);
+		GL.bindTexture(GL.TEXTURE_2D, glTexture);
+		
 		if (texture != null)
 		{
-			GL.activeTexture(GL.TEXTURE0);
-			GL.bindTexture(GL.TEXTURE_2D, texture.bitmap.getTexture(gl));
-			
 			GLUtils.setTextureSmoothing(smoothing);
 			GLUtils.setTextureWrapping(repeat);
 			
 			GL.uniform2f(shader.data.uTextureSize.index, texture.width, texture.height);
-		}
-		else
-		{
-			GL.activeTexture(GL.TEXTURE0);
-			GL.bindTexture(GL.TEXTURE_2D, null);
 		}
 		
 		// now draw those suckas!

@@ -81,6 +81,7 @@ class GLUtils
 	
 	public static function setTextureWrapping(repeat:Bool = true):Void
 	{
+		#if !js
 		if (repeat) 
 		{		
 			GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.REPEAT);
@@ -91,6 +92,7 @@ class GLUtils
 			GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 			GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
 		}
+		#end
 	}
 	
 	public static function destroyBuffer(buffer:GLBuffer):GLBuffer
