@@ -851,9 +851,6 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.preDraw.dispatch();
 		
-		if (FlxG.renderTile)
-			FlxCameraView.drawCalls = 0;
-		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
 			postProcesses[0].capture();
@@ -873,7 +870,7 @@ class FlxGame extends Sprite
 			debugger.stats.drawCalls(FlxCameraView.drawCalls);
 			#end
 		}
-	
+		
 		FlxG.cameras.unlock();
 		
 		FlxG.signals.postDraw.dispatch();
@@ -881,6 +878,9 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+		
+		if (FlxG.renderTile)
+			FlxCameraView.drawCalls = 0;
 	}
 	
 	private inline function getTicks()
