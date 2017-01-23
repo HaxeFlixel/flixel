@@ -162,6 +162,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		for (i in 0...stateNum)
 			states[i].renderGL(uniformMatrix, renderSession);
 		
+		FlxDrawHardwareCommand.currentShader = null;
+		
 		if (needRenderHelper)
 			renderHelper.render(renderSession);
 	}

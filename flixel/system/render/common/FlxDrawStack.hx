@@ -289,7 +289,7 @@ class FlxDrawStack implements IFlxDestroyable
 	
 	public function render():Void
 	{
-		FlxDrawHardwareCommand.setCurrentValues();
+		FlxDrawHardwareCommand.currentShader = null;
 		
 		var currItem:FlxDrawBaseCommand<Dynamic> = _firstCommand;
 		while (currItem != null)

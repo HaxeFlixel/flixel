@@ -15,15 +15,7 @@ import lime.math.Matrix4;
  */
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
-	public static var currentTexture:FlxGraphic = null;
 	public static var currentShader:FlxShader = null;
-	
-	// TODO: use this method...
-	public static function setCurrentValues(?texture:FlxGraphic, ?shader:FlxShader):Void
-	{
-		currentTexture = texture;
-		currentShader = shader;
-	}
 	
 	public function new() 
 	{
@@ -40,7 +32,7 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 #else
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
-	public static function setCurrentValues(?texture:FlxGraphic, ?shader:FlxShader):Void {}
+	public static var currentShader:FlxShader = null;
 	
 	public function new() 
 	{

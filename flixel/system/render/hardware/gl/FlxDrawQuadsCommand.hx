@@ -381,9 +381,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var state:RenderState = states[0];
 		
-		shader = getShader();
-		renderSession.shaderManager.setShader(shader);
-		onShaderSwitch();
+		setShader();
+		uploadData();
 		
 		var currentTexture:FlxGraphic;
 		var nextTexture:FlxGraphic;
@@ -439,22 +438,28 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		numQuads = 0;
 	}
 	
-	private inline function getShader():FlxShader
+	private inline function setShader():FlxShader
 	{
 		if (shader == null)
 			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
+			
+		if (shader != FlxDrawHardwareCommand.currentShader)
+		{
+			renderSession.shaderManager.setShader(shader);
+			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, FlxDrawQuadsCommand.indexBuffer);
+			FlxDrawHardwareCommand.currentShader = shader;
+		}
 		
 		return shader;
 	}
 	
-	private function onShaderSwitch():Void
+	private function uploadData():Void
 	{
 		if (dirty)
 		{
 			dirty = false;
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
-			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, FlxDrawQuadsCommand.indexBuffer);
 			
 			// this is the same for each shader?
 			var stride:Int = Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
@@ -491,6 +496,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			var view = positions.subarray(0, numQuads * Float32Array.BYTES_PER_ELEMENT * elementsPerVertex);
 			GL.bufferSubData(GL.ARRAY_BUFFER, 0, view);
 		}
+		
+		GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
 	}
 	
 	private function renderBatch(texture:FlxGraphic, size:Int, startIndex:Int, smoothing:Bool = false):Void
@@ -514,12 +521,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			GL.bindTexture(GL.TEXTURE_2D, null);
 		}
 		
-		GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
-		
 		// now draw those suckas!
 		GL.drawElements(GL.TRIANGLES, size * FlxCameraView.INDICES_PER_QUAD, GL.UNSIGNED_SHORT, startIndex * FlxCameraView.INDICES_PER_QUAD * BYTES_PER_INDEX);
-		
-		FlxDrawHardwareCommand.setCurrentValues(graphics, shader);
 		
 		FlxCameraView.drawCalls++;
 	}

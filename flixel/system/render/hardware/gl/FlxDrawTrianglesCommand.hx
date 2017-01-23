@@ -50,6 +50,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	private var matrix4:Matrix4 = new Matrix4();
 	
+	private var renderSession:RenderSession;
+	
 	/**
 	 * Color transform for this item.
 	 */
@@ -67,6 +69,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		
 		shader = null;
 		blendMode = null;
+		renderSession = null;
 		
 		data = null;
 		matrix4 = null;
@@ -77,30 +80,34 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	override public function renderGL(uniformMatrix:Matrix4, renderSession:RenderSession):Void
 	{
 		this.uniformMatrix = uniformMatrix;
+		this.renderSession = renderSession;
 		
 		// init! init!
 		setContext(renderSession.gl);
-		
-		shader = getShader();
-		renderSession.shaderManager.setShader(shader);
-		
-		renderStrip(renderSession);
+		setShader();
+		renderStrip();
 	}
 	
-	private function getShader():FlxShader
+	private function setShader():FlxShader
 	{
-		if (shader != null)
-			return shader;
-			
-		if (textured)
-			shader = (colored) ? defaultTextureColoredShader : defaultTexturedShader;
-		else
-			shader = (colored) ? defaultColoredShader : defaultSingleColoredShader;
+		if (shader == null)
+		{
+			if (textured)
+				shader = (colored) ? defaultTextureColoredShader : defaultTexturedShader;
+			else
+				shader = (colored) ? defaultColoredShader : defaultSingleColoredShader;
+		}
+		
+		if (shader != FlxDrawHardwareCommand.currentShader)
+		{
+			renderSession.shaderManager.setShader(shader);
+			FlxDrawHardwareCommand.currentShader = shader;
+		}
 		
 		return shader;
 	}
 	
-	private function renderStrip(renderSession:RenderSession):Void
+	private function renderStrip():Void
 	{
 		if (textured)
 		{
@@ -173,8 +180,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		data.dirty = false;
 		
 		GL.drawElements(GL.TRIANGLES, data.numIndices, GL.UNSIGNED_SHORT, 0);
-		
-		FlxDrawHardwareCommand.setCurrentValues(graphics, shader);
 		
 		FlxCameraView.drawCalls++;
 	}
