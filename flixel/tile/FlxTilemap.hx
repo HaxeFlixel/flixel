@@ -53,7 +53,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
 	 * so the tile will look one pixel wider than it is.
 	 */
-	public var useScaleHack:Bool = true;
+	public var scaleHack:Int = 1;
 	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
@@ -979,10 +979,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						var scaleX:Float = scale.x;
 						var scaleY:Float = scale.y;
 						
-						if (useScaleHack)
+						if (scaleHack > 0)
 						{
-							scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
-							scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
+							scaleX += scaleHack / (frame.sourceSize.x * Camera.totalScaleX);
+							scaleY += scaleHack / (frame.sourceSize.y * Camera.totalScaleY);
 						}
 						
 						_matrix.scale(scaleX, scaleY);
