@@ -1,6 +1,5 @@
 package flixel.system.render.hardware.gl;
 
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseCommand;
