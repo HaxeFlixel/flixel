@@ -57,6 +57,7 @@ class FlxSprite extends FlxObject
 	 */
 	public var useFramePixels(default, set):Bool = true;
 	
+	// TODO: rename this to smoothing...
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
