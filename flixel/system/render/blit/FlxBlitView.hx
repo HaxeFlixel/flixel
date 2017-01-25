@@ -15,7 +15,7 @@ import openfl.Vector;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
@@ -427,7 +427,7 @@ class FlxBlitView extends FlxCameraView
 		return visible;
 	}
 	
-	override function get_display():DisplayObject 
+	override function get_display():DisplayObjectContainer 
 	{
 		return flashSprite;
 	}

@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
@@ -76,7 +76,7 @@ class FlxCameraView implements IFlxDestroyable
 	 * Display object which is used as a container for all the camera's graphic.
 	 * This object is added to display tree.
 	 */
-	public var display(get, never):DisplayObject;
+	public var display(get, never):DisplayObjectContainer;
 	/**
 	 * Parent camera for this view.
 	 */
@@ -261,7 +261,7 @@ class FlxCameraView implements IFlxDestroyable
 		return Angle;
 	}
 	
-	private function get_display():DisplayObject
+	private function get_display():DisplayObjectContainer
 	{
 		return null;
 	}
