@@ -14,6 +14,7 @@ import openfl.utils.Float32Array;
 import flixel.system.render.hardware.gl.GLUtils;
 #end
 
+// TODO: rename to FlxTrianglesData...
 class TrianglesData implements IFlxDestroyable
 {
 	public var numIndices(get, null):Int;
@@ -69,6 +70,16 @@ class TrianglesData implements IFlxDestroyable
 		colorsBuffer = GLUtils.destroyBuffer(colorsBuffer);
 		indicesBuffer = GLUtils.destroyBuffer(indicesBuffer);
 		#end
+	}
+	
+	public function clear():Void
+	{
+		vertices.splice(0, vertices.length);
+		uvs.splice(0, uvs.length);
+		colors.splice(0, colors.length);
+		indices.splice(0, indices.length);
+		
+		dirty = true;
 	}
 	
 	public function generateQuadData(width:Float = 100, height:Float = 100, color:FlxColor = FlxColor.WHITE):TrianglesData
