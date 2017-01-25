@@ -57,11 +57,17 @@ class FlxSprite extends FlxObject
 	 */
 	public var useFramePixels(default, set):Bool = true;
 	
-	// TODO: rename this to smoothing...
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
-	public var antialiasing(default, set):Bool = false;
+	public var smoothing(default, set):Bool = false;
+	
+	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
+	 */
+	@:deprecated
+	public var antialiasing(get, set):Bool;
+	
 	/**
 	 * Set this flag to true to force the sprite to update during the `draw()` call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
@@ -327,7 +333,7 @@ class FlxSprite extends FlxObject
 			height = Sprite.height;
 			centerOffsets();
 		}
-		antialiasing = Sprite.antialiasing;
+		smoothing = Sprite.smoothing;
 		animation.copyFrom(Sprite.animation);
 		graphicLoaded();
 		clipRect = Sprite.clipRect;
@@ -391,14 +397,14 @@ class FlxSprite extends FlxObject
 	 * @param   Frame          If the `Graphic` has a single row of square animation frames on it,
 	 *                         you can specify which of the frames you want to use here.
 	 *                         Default is `-1`, or "use whole graphic."
-	 * @param   AntiAliasing   Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param   Smoothing	   Whether to use high quality rotations when creating the graphic. Default is `false`.
 	 * @param   AutoBuffer     Whether to automatically increase the image size to accomodate rotated corners.
 	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @param   Key            Optional, set this parameter if you're loading `BitmapData`.
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1,
-		AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
+		Smoothing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite
 	{
 		var brushGraphic:FlxGraphic = FlxG.bitmap.add(Graphic, false, Key);
 		if (brushGraphic == null)
@@ -427,7 +433,7 @@ class FlxSprite extends FlxObject
 		var tempGraph:FlxGraphic = FlxG.bitmap.get(key);
 		if (tempGraph == null)
 		{
-			var bitmap:BitmapData = FlxBitmapDataUtil.generateRotations(brush, Rotations, AntiAliasing, AutoBuffer);
+			var bitmap:BitmapData = FlxBitmapDataUtil.generateRotations(brush, Rotations, Smoothing, AutoBuffer);
 			tempGraph = FlxGraphic.fromBitmapData(bitmap, false, key);
 		}
 		
@@ -451,15 +457,15 @@ class FlxSprite extends FlxObject
 	/**
 	 * Helper method which allows using `FlxFrame` as graphic source for sprite's `loadRotatedGraphic()` method.
 	 * 
-	 * @param   frame          Frame to load into this sprite.
-	 * @param   rotations      The number of rotation frames the final sprite should have.
+	 * @param   Frame          Frame to load into this sprite.
+	 * @param   Rotations      The number of rotation frames the final sprite should have.
 	 *                         For small sprites this can be quite a large number (`360` even) without any problems.
-	 * @param   antiAliasing   Whether to use high quality rotations when creating the graphic. Default is `false`.
-	 * @param   autoBuffer     Whether to automatically increase the image size to accomodate rotated corners.
+	 * @param   Smoothing	   Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param   AutoBuffer     Whether to automatically increase the image size to accomodate rotated corners.
 	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return  this FlxSprite with loaded rotated graphic in it.
 	 */
-	public function loadRotatedFrame(Frame:FlxFrame, Rotations:Int = 16, AntiAliasing:Bool = false,
+	public function loadRotatedFrame(Frame:FlxFrame, Rotations:Int = 16, Smoothing:Bool = false,
 		AutoBuffer:Bool = false):FlxSprite
 	{
 		var key:String = Frame.parent.key;
@@ -472,7 +478,7 @@ class FlxSprite extends FlxObject
 		if (graphic == null)
 			graphic = FlxGraphic.fromBitmapData(Frame.paint(), false, key);
 		
-		return loadRotatedGraphic(graphic, Rotations, -1, AntiAliasing, AutoBuffer);
+		return loadRotatedGraphic(graphic, Rotations, -1, Smoothing, AutoBuffer);
 	}
 	
 	/**
@@ -678,7 +684,7 @@ class FlxSprite extends FlxObject
 		
 		_point.copyToFlash(_flashPoint);
 		camera.copyPixels(_frame, framePixels, _flashRect,
-			_flashPoint, colorTransform, blend, antialiasing);
+			_flashPoint, colorTransform, blend, smoothing);
 	}
 	
 	@:noCompletion
@@ -706,7 +712,7 @@ class FlxSprite extends FlxObject
 			_matrix.ty = Math.floor(_matrix.ty);
 		}
 		
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, smoothing, shader);
 	}
 	
 	/**
@@ -747,7 +753,7 @@ class FlxSprite extends FlxObject
 			}
 			_matrix.translate(X + frame.frame.x + Brush.origin.x, Y + frame.frame.y + Brush.origin.y);
 			var brushBlend:BlendMode = Brush.blend;
-			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
+			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.smoothing);
 		}
 		
 		if (FlxG.renderBlit)
@@ -1350,9 +1356,21 @@ class FlxSprite extends FlxObject
 	}
 	
 	@:noCompletion
+	private function get_antialiasing():Bool
+	{
+		return smoothing;
+	}
+	
+	@:noCompletion
 	private function set_antialiasing(value:Bool):Bool
 	{
-		return antialiasing = value;
+		return smoothing = value;
+	}
+	
+	@:noCompletion
+	private function set_smoothing(value:Bool):Bool
+	{
+		return smoothing = value;
 	}
 	
 	@:noCompletion

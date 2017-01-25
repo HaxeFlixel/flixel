@@ -67,7 +67,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @since 4.1.0
 	 */
-	public var antialiasing(default, set):Bool = false;
+	public var smoothing(default, set):Bool = false;
+	
+	@:deprecated
+	public var antialiasing(get, set):Bool;
 	
 	/**
 	 * Use to offset the drawing position of the tilemap,
@@ -982,7 +985,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						
-						view.drawPixels(frame, null, _matrix, colorTransform, blend, antialiasing, shader);
+						view.drawPixels(frame, null, _matrix, colorTransform, blend, smoothing, shader);
 					}
 				}
 				
@@ -1065,15 +1068,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
-		buffer.antialiasing = antialiasing;
+		buffer.smoothing = smoothing;
 		return buffer;
+	}
+	
+	private function set_smoothing(value:Bool):Bool
+	{
+		for (buffer in _buffers)
+			buffer.smoothing = value;
+		return smoothing = value;
+	}
+	
+	private function get_antialiasing():Bool
+	{
+		return smoothing;
 	}
 	
 	private function set_antialiasing(value:Bool):Bool
 	{
-		for (buffer in _buffers)
-			buffer.antialiasing = value;
-		return antialiasing = value;
+		return smoothing = value;
 	}
 	
 	/**

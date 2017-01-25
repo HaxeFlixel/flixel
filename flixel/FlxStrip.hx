@@ -128,7 +128,7 @@ class FlxStrip extends FlxSprite
 			if (camera.view.bounds.overlaps(tempBounds))
 			{
 				_matrix.translate(_point.x, _point.y);
-				camera.drawTriangles(graphic, data, _matrix, colorTransform, blend, repeat, antialiasing);
+				camera.drawTriangles(graphic, data, _matrix, colorTransform, blend, repeat, smoothing);
 				_matrix.translate( -_point.x, -_point.y);
 			}
 			

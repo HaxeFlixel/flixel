@@ -916,7 +916,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @return this sprite group
 	 */
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1,
-		AntiAliasing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
+		Smoothing:Bool = false, AutoBuffer:Bool = false, ?Key:String):FlxSprite 
 	{
 		#if FLX_DEBUG
 		throw "This function is not supported in FlxSpriteGroup";

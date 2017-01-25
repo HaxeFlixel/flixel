@@ -391,7 +391,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing);
 				}
 				
 				for (j in 0...borderLength)
@@ -413,7 +413,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
 				}
 				
 				for (j in 0...textLength)
@@ -435,7 +435,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
 				}
 				
 				#if FLX_DEBUG
