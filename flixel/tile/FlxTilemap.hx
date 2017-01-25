@@ -65,10 +65,15 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
-	 * @since 4.1.0
+	 * @since 4.3.0
 	 */
 	public var smoothing(default, set):Bool = false;
 	
+	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * It's better to use `smoothing` property instead, since `antialiasing` is deprecated.
+	 * @since 4.1.0
+	 */
 	@:deprecated
 	public var antialiasing(get, set):Bool;
 	
