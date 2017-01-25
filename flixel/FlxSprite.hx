@@ -66,7 +66,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
-	@:deprecated("It's better to use `smoothing` property instead.")
+	@:deprecated("Use `smoothing` property instead.")
 	public var antialiasing(get, set):Bool;
 	
 	/**
