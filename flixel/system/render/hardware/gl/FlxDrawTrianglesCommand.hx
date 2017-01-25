@@ -1,7 +1,7 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.FlxCamera;
-import flixel.graphics.TrianglesData;
+import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
@@ -41,7 +41,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	private var uniformMatrix:Matrix4;
 	
-	public var data:TrianglesData;
+	public var data:FlxTrianglesData;
 	
 	/**
 	 * Transformation matrix for this item on camera.
@@ -259,7 +259,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 #else
 class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCommand>
 {
-	public var data:TrianglesData;
+	public var data:FlxTrianglesData;
 	public var matrix:Matrix;
 	public var color:ColorTransform;
 	
@@ -268,7 +268,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		return true;
 	}
 	
-	public function addTriangles(data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
+	public function addTriangles(data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
 	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void {}
 	

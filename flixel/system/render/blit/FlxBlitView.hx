@@ -2,7 +2,7 @@ package flixel.system.render.blit;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.TrianglesData;
+import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
@@ -152,7 +152,7 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	override public function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
 	{
 		if (graphic == null && transform == null)

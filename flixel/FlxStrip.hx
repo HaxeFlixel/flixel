@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.graphics.TrianglesData;
+import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -48,13 +48,13 @@ class FlxStrip extends FlxSprite
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
-	public var data:TrianglesData;
+	public var data:FlxTrianglesData;
 	
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
 		
-		data = new TrianglesData();
+		data = new FlxTrianglesData();
 	}
 	
 	override public function destroy():Void 

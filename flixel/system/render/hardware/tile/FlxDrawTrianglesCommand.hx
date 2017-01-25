@@ -1,7 +1,7 @@
 package flixel.system.render.hardware.tile;
 
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.TrianglesData;
+import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
@@ -116,7 +116,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 			&& this.smoothing == smooth);
 	}
 	
-	public function addTriangles(data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
+	public function addTriangles(data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var drawVertices = this.vertices;
 		var verticesLength:Int = data.vertices.length;

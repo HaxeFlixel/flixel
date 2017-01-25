@@ -3,7 +3,7 @@ package flixel.system.render.common;
 import flash.display.Graphics;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.TrianglesData;
+import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
@@ -322,7 +322,7 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addQuad(frame, _helperMatrix, transform, blend, smoothing);
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, data:TrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
+	public function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
 		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
 	{
 		var isColored:Bool = data.colored;
