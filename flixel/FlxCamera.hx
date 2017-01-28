@@ -193,8 +193,17 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
 	 * Default behavior is chunky-style.
+	 * @since 4.3.0
 	 */
 	public var smoothing(default, set):Bool = false;
+	
+	/**
+	 * Whether the camera display is smooth and filtered, or chunky and pixelated.
+	 * Default behavior is chunky-style.
+	 */
+	@:deprecated("Use `smoothing` property instead.")
+	public var antialiasing(get, set):Bool;
+	
 	/**
 	 * Used to force the camera to look ahead of the target.
 	 */
@@ -1083,6 +1092,16 @@ class FlxCamera extends FlxBasic
 			view.smoothing = smoothing;
 		
 		return Smoothing;
+	}
+	
+	private function get_antialiasing():Bool
+	{
+		return smoothing;
+	}
+	
+	private function set_antialiasing(value:Bool):Bool
+	{
+		return smoothing = value;
 	}
 	
 	private function set_x(x:Float):Float
