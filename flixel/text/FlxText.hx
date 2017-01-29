@@ -440,17 +440,17 @@ class FlxText extends FlxSprite
 	 * @param	Size			The size of the font (in pixels essentially).
 	 * @param	Color			The color of the text in `0xRRGGBB` format.
 	 * @param	Alignment		The desired alignment
-	 * @param	BorderStyle		Which border style ot use
+	 * @param	BorderStyle		Which border style to use
 	 * @param	BorderColor 	Color for the border, `0xAARRGGBB` format
 	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
 	 * @return	This `FlxText` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function setFormat(?Font:String, Size:Int = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, 
-		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = FlxColor.TRANSPARENT, Embedded:Bool = true):FlxText
+		?BorderStyle:FlxTextBorderStyle, BorderColor:FlxColor = FlxColor.TRANSPARENT, EmbeddedFont:Bool = true):FlxText
 	{
 		BorderStyle = (BorderStyle == null) ? NONE : BorderStyle;
 		
-		if (Embedded)
+		if (EmbeddedFont)
 		{
 			font = Font;
 		}
@@ -1090,7 +1090,8 @@ enum FlxTextBorderStyle
 {
 	NONE;
 	/**
-	 * A simple shadow to the lower-right
+	 * A simple shadow to the lower-right.
+	 * Use `FlxText.shadowOffset` for custom placement.
 	 */
 	SHADOW;
 	/**
