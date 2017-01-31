@@ -103,7 +103,7 @@ class FlxBlitView extends FlxCameraView
 		_buffer = new BitmapData(camera.width, camera.height, true, 0);
 		_flashRect = new Rectangle(0, 0, camera.width, camera.height);
 		
-		screen.graphic = FlxGraphic.fromBitmapData(_buffer, false, null, false);
+		screen.loadGraphic(FlxGraphic.fromBitmapData(_buffer, false, null, false));
 		screen.origin.set();
 		_flashBitmap = new Bitmap(_buffer);
 		_scrollRect.addChild(_flashBitmap);
@@ -310,7 +310,7 @@ class FlxBlitView extends FlxCameraView
 			var oldBuffer:FlxGraphic = screen.graphic;
 			_buffer = new BitmapData(camera.width, camera.height, true, 0);
 			
-			screen.graphic = FlxGraphic.fromBitmapData(_buffer, false, null, false);
+			screen.loadGraphic(FlxGraphic.fromBitmapData(_buffer, false, null, false));
 			oldBuffer.destroy();
 			screen.origin.set();
 			_flashBitmap.bitmapData = _buffer;
