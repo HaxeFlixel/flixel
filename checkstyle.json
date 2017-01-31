@@ -190,6 +190,9 @@
 					"haxe.macro.Expr"
 				]
 			}
+		},
+		{
+			"type": "PublicAccessor"
 		}
 	]
 }
