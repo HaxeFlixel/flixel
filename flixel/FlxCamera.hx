@@ -19,6 +19,7 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 
@@ -212,6 +213,21 @@ class FlxCamera extends FlxBasic
 	 * Enables or disables the filters set via `setFilters()`.
 	 */
 	public var filtersEnabled:Bool = true;
+	
+	/**
+	 * Reference to camera's `view.buffer`. Usable only in blit render mode.
+	 */
+	public var buffer(get, never):BitmapData;
+	
+	/**
+	 * Reference to camera's `view.canvas`. Usable only in tile render mode.
+	 */
+	public var canvas(get, never):DisplayObject;
+	
+	/**
+	 * Reference to camera's `view.screen`.
+	 */
+	public var screen(get, never):FlxSprite;
 	
 	/**
 	 * Internal, represents the color of `flash()` special effect.
@@ -1126,6 +1142,21 @@ class FlxCamera extends FlxBasic
 			view.visible = visible;
 		
 		return visible;
+	}
+	
+	private function get_buffer():BitmapData
+	{
+		return (view != null) ? view.buffer : null; 
+	}
+	
+	private function get_canvas():DisplayObject
+	{
+		return (view != null) ? view.canvas : null; 
+	}
+	
+	private function get_screen():FlxSprite
+	{
+		return (view != null) ? view.screen : null; 
 	}
 }
 

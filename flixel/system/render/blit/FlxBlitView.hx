@@ -74,6 +74,8 @@ class FlxBlitView extends FlxCameraView
 	 */
 	private var _scrollRect:Sprite = new Sprite();
 	
+	private var _buffer:BitmapData;
+	
 	/**
 	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
@@ -98,12 +100,12 @@ class FlxBlitView extends FlxCameraView
 		flashSprite.addChild(_scrollRect);
 		_scrollRect.scrollRect = new Rectangle();
 		
-		buffer = new BitmapData(camera.width, camera.height, true, 0);
+		_buffer = new BitmapData(camera.width, camera.height, true, 0);
 		_flashRect = new Rectangle(0, 0, camera.width, camera.height);
 		
-		screen.graphic = FlxGraphic.fromBitmapData(buffer, false, null, false);
+		screen.graphic = FlxGraphic.fromBitmapData(_buffer, false, null, false);
 		screen.origin.set();
-		_flashBitmap = new Bitmap(buffer);
+		_flashBitmap = new Bitmap(_buffer);
 		_scrollRect.addChild(_flashBitmap);
 		_fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
 	}
@@ -115,7 +117,7 @@ class FlxBlitView extends FlxCameraView
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
 		
-		buffer = FlxDestroyUtil.dispose(buffer);
+		_buffer = FlxDestroyUtil.dispose(_buffer);
 		
 		_flashBitmap = null;
 		_fill = FlxDestroyUtil.dispose(_fill);
@@ -131,7 +133,7 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (pixels != null)
 		{
-			buffer.draw(pixels, matrix, null, blend, null, (smoothing || smoothing));
+			_buffer.draw(pixels, matrix, null, blend, null, (smoothing || smoothing));
 		}
 		else
 		{
@@ -144,11 +146,11 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (pixels != null)
 		{
-			buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
+			_buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
 		}
 		else if (frame != null)
 		{
-			frame.paint(buffer, destPoint, true);
+			frame.paint(_buffer, destPoint, true);
 		}
 	}
 	
@@ -172,7 +174,7 @@ class FlxBlitView extends FlxCameraView
 		}
 		
 		trianglesSprite.graphics.endFill();
-		buffer.draw(trianglesSprite, matrix, transform, blend);
+		_buffer.draw(trianglesSprite, matrix, transform, blend);
 		
 		drawDebugTriangles(data.vertices, data.indices, matrix);
 		data.dirty = false;
@@ -211,7 +213,7 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices, rectUVs);
 		trianglesSprite.graphics.endFill();
-		buffer.draw(trianglesSprite, matrix, transform, blend);
+		_buffer.draw(trianglesSprite, matrix, transform, blend);
 		
 		drawDebugTriangles(rectVertices, rectIndices, matrix);
 	}
@@ -239,7 +241,7 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices);
 		trianglesSprite.graphics.endFill();
-		buffer.draw(trianglesSprite, matrix, null, blend);
+		_buffer.draw(trianglesSprite, matrix, null, blend);
 		
 		drawDebugTriangles(rectVertices, rectIndices, matrix);
 	}
@@ -253,7 +255,7 @@ class FlxBlitView extends FlxCameraView
 			gfx.clear();
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 			gfx.drawTriangles(rectVertices, rectIndices);
-			buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
+			_buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
 		}
 		#end
 	}
@@ -284,9 +286,9 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function updateInternals():Void 
 	{
-		if (_flashBitmap != null && buffer != null)
+		if (_flashBitmap != null && _buffer != null)
 		{
-			regen = regen || (camera.width != buffer.width) || (camera.height != buffer.height);
+			regen = regen || (camera.width != _buffer.width) || (camera.height != _buffer.height);
 			
 			_flashBitmap.x = -0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
 			_flashBitmap.y = -0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
@@ -303,15 +305,15 @@ class FlxBlitView extends FlxCameraView
 		if (!regen)
 			return;
 		
-		if (camera.width != buffer.width || camera.height != buffer.height)
+		if (camera.width != _buffer.width || camera.height != _buffer.height)
 		{
 			var oldBuffer:FlxGraphic = screen.graphic;
-			buffer = new BitmapData(camera.width, camera.height, true, 0);
+			_buffer = new BitmapData(camera.width, camera.height, true, 0);
 			
-			screen.graphic = FlxGraphic.fromBitmapData(buffer, false, null, false);
+			screen.graphic = FlxGraphic.fromBitmapData(_buffer, false, null, false);
 			oldBuffer.destroy();
 			screen.origin.set();
-			_flashBitmap.bitmapData = buffer;
+			_flashBitmap.bitmapData = _buffer;
 			_flashRect.width = camera.width;
 			_flashRect.height = camera.height;
 			_fill = FlxDestroyUtil.dispose(_fill);
@@ -333,11 +335,11 @@ class FlxBlitView extends FlxCameraView
 		if (BlendAlpha)
 		{
 			_fill.fillRect(_flashRect, Color);
-			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+			_buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
 		}
 		else
 		{
-			buffer.fillRect(_flashRect, Color);
+			_buffer.fillRect(_flashRect, Color);
 		}
 	}
 	
@@ -351,7 +353,7 @@ class FlxBlitView extends FlxCameraView
 	{
 		checkResize();
 		if (useBufferLocking)
-			buffer.lock();
+			_buffer.lock();
 		
 		fill(camera.bgColor, camera.useBgAlphaBlending);
 		screen.dirty = true;
@@ -390,7 +392,7 @@ class FlxBlitView extends FlxCameraView
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
 		if (useBufferLocking)
-			buffer.unlock();
+			_buffer.unlock();
 		
 		screen.dirty = true;
 	}
@@ -403,7 +405,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function endDrawDebug():Void 
 	{
-		buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		_buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	
 	override private function set_angle(Angle:Float):Float 
@@ -432,4 +434,8 @@ class FlxBlitView extends FlxCameraView
 		return flashSprite;
 	}
 	
+	override function get_buffer():BitmapData 
+	{
+		return _buffer;
+	}
 }

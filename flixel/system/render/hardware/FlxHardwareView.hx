@@ -12,6 +12,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
@@ -55,9 +56,9 @@ class FlxHardwareView extends FlxCameraView
 	 */
 	#if FLX_RENDER_GL
 	// TODO: implement canvas version of this class for js target...
-	public var canvas:HardwareRenderer;
+	private var _canvas:HardwareRenderer;
 	#else
-	public var canvas:Sprite;
+	private var _canvas:Sprite;
 	#end
 	
 	#if FLX_DEBUG
@@ -82,11 +83,11 @@ class FlxHardwareView extends FlxCameraView
 		_scrollRect.scrollRect = new Rectangle();
 		
 		#if FLX_RENDER_GL
-		canvas = new HardwareRenderer(camera.width, camera.height);
+		_canvas = new HardwareRenderer(camera.width, camera.height);
 		#else
-		canvas = new Sprite();
+		_canvas = new Sprite();
 		#end
-		_scrollRect.addChild(canvas);
+		_scrollRect.addChild(_canvas);
 		
 		#if FLX_DEBUG
 		debugLayer = new Sprite();
@@ -107,17 +108,17 @@ class FlxHardwareView extends FlxCameraView
 		debugLayer = null;
 		#end
 		
-		FlxDestroyUtil.removeChild(_scrollRect, canvas);
+		FlxDestroyUtil.removeChild(_scrollRect, _canvas);
 		
 		#if FLX_RENDER_GL
-		canvas = FlxDestroyUtil.destroy(canvas);
+		_canvas = FlxDestroyUtil.destroy(_canvas);
 		#else
-		if (canvas != null)
+		if (_canvas != null)
 		{
-			for (i in 0...canvas.numChildren)
-				canvas.removeChildAt(0);
+			for (i in 0..._canvas.numChildren)
+				_canvas.removeChildAt(0);
 			
-			canvas = null;
+			_canvas = null;
 		}
 		#end
 		
@@ -161,7 +162,7 @@ class FlxHardwareView extends FlxCameraView
 		super.updateOffset();
 		
 		#if FLX_RENDER_GL
-		canvas.resize(camera.width, camera.height);
+		_canvas.resize(camera.width, camera.height);
 		#end
 	}
 	
@@ -191,22 +192,22 @@ class FlxHardwareView extends FlxCameraView
 	
 	override public function updateInternals():Void 
 	{
-		if (canvas != null)
+		if (_canvas != null)
 		{
-			canvas.x = -0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
-			canvas.y = -0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
+			_canvas.x = -0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
+			_canvas.y = -0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
 			
-			canvas.scaleX = camera.totalScaleX;
-			canvas.scaleY = camera.totalScaleY;
+			_canvas.scaleX = camera.totalScaleX;
+			_canvas.scaleY = camera.totalScaleY;
 			
 			#if FLX_DEBUG
 			if (debugLayer != null)
 			{
-				debugLayer.x = canvas.x;
-				debugLayer.y = canvas.y;
+				debugLayer.x = _canvas.x;
+				debugLayer.y = _canvas.y;
 				
-				debugLayer.scaleX = canvas.scaleX;
-				debugLayer.scaleY = canvas.scaleY;
+				debugLayer.scaleX = _canvas.scaleX;
+				debugLayer.scaleY = _canvas.scaleY;
 			}
 			#end
 		}
@@ -215,7 +216,7 @@ class FlxHardwareView extends FlxCameraView
 	override public function updateFilters():Void 
 	{
 		#if FLX_RENDER_GL
-		canvas.filters = camera.filtersEnabled ? _filters : null;
+		_canvas.filters = camera.filtersEnabled ? _filters : null;
 		#else
 		flashSprite.filters = camera.filtersEnabled ? _filters : null;
 		#end
@@ -244,9 +245,9 @@ class FlxHardwareView extends FlxCameraView
 	{
 		drawStack.clearDrawStack();
 		#if FLX_RENDER_GL
-		canvas.clear();
+		_canvas.clear();
 		#else
-		canvas.graphics.clear();
+		_canvas.graphics.clear();
 		#end
 		
 		// Clearing camera's debug sprite
@@ -278,17 +279,17 @@ class FlxHardwareView extends FlxCameraView
 	
 	override private function set_color(Color:FlxColor):FlxColor 
 	{
-		var colorTransform:ColorTransform = canvas.transform.colorTransform;
+		var colorTransform:ColorTransform = _canvas.transform.colorTransform;
 		colorTransform.redMultiplier = Color.redFloat;
 		colorTransform.greenMultiplier = Color.greenFloat;
 		colorTransform.blueMultiplier = Color.blueFloat;
-		canvas.transform.colorTransform = colorTransform;
+		_canvas.transform.colorTransform = colorTransform;
 		return Color;
 	}
 	
 	override private function set_alpha(Alpha:Float):Float 
 	{
-		return canvas.alpha = Alpha;
+		return _canvas.alpha = Alpha;
 	}
 	
 	override private function set_angle(Angle:Float):Float 
@@ -315,8 +316,13 @@ class FlxHardwareView extends FlxCameraView
 	#if FLX_RENDER_GL
 	public function drawItem(item:FlxDrawHardwareCommand<Dynamic>):Void
 	{
-		canvas.drawItem(item);
+		_canvas.drawItem(item);
 	}
 	#end
+	
+	override function get_canvas():DisplayObject 
+	{
+		return _canvas;
+	}
 	
 }

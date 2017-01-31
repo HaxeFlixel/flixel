@@ -12,6 +12,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
@@ -111,7 +112,15 @@ class FlxCameraView implements IFlxDestroyable
 	 * The actual `BitmapData` of the camera display itself.
 	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
 	 */
-	public var buffer:BitmapData;
+	public var buffer(get, null):BitmapData;
+	
+	/**
+	 * Sprite used for actual rendering in tile render mode (instead of `_flashBitmap` for blitting).
+	 * Its graphics is used as a drawing surface for `drawTriangles()` and `drawTiles()` methods.
+	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
+	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
+	 */
+	public var canvas(get, null):DisplayObject;
 	
 	/**
 	 * Internal, used for positioning camera's `flashSprite` on screen.
@@ -147,7 +156,6 @@ class FlxCameraView implements IFlxDestroyable
 		_filters = null;
 		_bounds = null;
 		camera = null;
-		buffer = FlxDestroyUtil.dispose(buffer);
 		screen = FlxDestroyUtil.destroy(screen);
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
@@ -270,6 +278,16 @@ class FlxCameraView implements IFlxDestroyable
 	{
 		_bounds.set(0, 0, camera.width, camera.height);
 		return _bounds;
+	}
+	
+	private function get_buffer():BitmapData
+	{
+		return null;
+	}
+	
+	private function get_canvas():DisplayObject
+	{
+		return null;
 	}
 	
 }

@@ -28,6 +28,7 @@ using flixel.util.FlxColorTransformUtil;
  * ...
  * @author Zaphod
  */
+@:access(flixel.system.render.hardware.FlxHardwareView._canvas)
 class FlxDrawStack implements IFlxDestroyable
 {
 	/**
@@ -234,7 +235,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var drawItem = getColoredTilesCommand(null, null);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
 		#else
-		var graphic:Graphics = view.canvas.graphics;
+		var graphic:Graphics = view._canvas.graphics;
 		var camera:FlxCamera = view.camera;
 		graphic.beginFill(color, alpha);
 		graphic.drawRect(rect.x, rect.y, rect.width, rect.height);
