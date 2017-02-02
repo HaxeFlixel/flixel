@@ -227,7 +227,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 *                           Set to zero to not use baked rotations.
 	 * @param   Multiple         Whether the image in the `Graphics` param is a single particle or a bunch of particles
 	 *                           (if it's a bunch, they need to be square!).
-	 * @param   AutoBuffer       Whether to automatically increase the image size to accomodate rotated corners.
+	 * @param   AutoBuffer       Whether to automatically increase the image size to accommodate rotated corners.
 	 *                           Default is `false`. Will create frames that are 150% larger on each axis than the
 	 *                           original frame or graphic.
 	 * @return  This `FlxEmitter` instance (nice for chaining stuff together).

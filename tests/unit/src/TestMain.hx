@@ -44,7 +44,7 @@ class TestMain
 
 	/**
 	 * updates the background color and closes the current browser
-	 * for flash and html targets (useful for continous integration servers)
+	 * for flash and html targets (useful for continuos integration servers)
 	 */
 	function completionHandler(successful:Bool):Void
 	{

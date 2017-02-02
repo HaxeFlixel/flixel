@@ -120,7 +120,7 @@ class FlxTileFrames extends FlxFramesCollection
 	 * It can generate spritesheets from rotated and cropped frames also,
 	 * which is important for devices with limited memory.
 	 * 
-	 * @param   frame         Frame, containg spritesheet image
+	 * @param   frame         Frame, containing spritesheet image
 	 * @param   tileSize      The size of tiles in spritesheet
 	 * @param   tileSpacing   Offsets between frames in spritesheet.
 	 *                        Default value is `null`, which means no offsets between tiles.

@@ -54,7 +54,7 @@ class FlxMatrix extends Matrix
 	}
 	
 	/**
-	 * Substract 90 degrees from rotation of this matrix
+	 * Subtract 90 degrees from rotation of this matrix
 	 * @return	rotated matrix
 	 */
 	public inline function rotateByNegative90():FlxMatrix

@@ -62,7 +62,7 @@ class FlxTileblock extends FlxSprite
 		var spriteHeight:Int = Std.int(tileSprite.height);
 		var total:Int = tileSprite.numFrames + empties;
 		
-		// Then prep the "canvas" as it were (just doublechecking that the size is on tile boundaries)
+		// Then prep the "canvas" as it were (just double checking that the size is on tile boundaries)
 		var regen:Bool = false;
 		
 		if (width % tileSprite.width != 0)

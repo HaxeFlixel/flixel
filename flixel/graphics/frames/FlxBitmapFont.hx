@@ -55,7 +55,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	/**
 	 * Minimum x offset in this font.
-	 * This is a helper varible for rendering purposes.
+	 * This is a helper variable for rendering purposes.
 	 */
 	public var minOffsetX:Int = 0;
 	
@@ -466,7 +466,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * 
 	 * @param   source    Source image for this font.
 	 * @param   letters   The characters used in the font set, in display order.
-	 *                    You can use the `TEXT_SET` consts for common font set arrangements.
+	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
 	 * @param   charSiz   The size of each character in the font set.
 	 * @param   region    The region of image to use for the font.
 	 *                    Default is null which means that the whole image will be used.

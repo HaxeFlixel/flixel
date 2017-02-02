@@ -364,7 +364,7 @@ class FlxRect implements IFlxPooled
 	 * Returns the area of intersection with specified rectangle. 
 	 * If the rectangles do not intersect, this method returns an empty rectangle.
 	 * 
-	 * @param	rect	Rectangle to check intersection againist.
+	 * @param	rect	Rectangle to check intersection against.
 	 * @return	The area of intersection of two rectangles.
 	 */
 	public function intersection(rect:FlxRect, ?result:FlxRect):FlxRect

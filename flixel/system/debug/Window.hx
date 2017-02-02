@@ -331,7 +331,7 @@ class Window extends Sprite
 	 */
 	private function onMouseMove(?E:MouseEvent):Void
 	{
-		// mouseX / Y can be negative, which messes with the resizing if draggin in the opposite direction
+		// mouseX / Y can be negative, which messes with the resizing if dragging in the opposite direction
 		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
 		var mouseY:Float = (this.mouseY < 0) ? 0 : this.mouseY;
 		
@@ -394,9 +394,7 @@ class Window extends Sprite
 		_dragging = false;
 		_resizing = false;
 	}
-	
-	//***MISC GUI MGMT STUFF***//
-	
+		
 	/**
 	 * Keep the window within the pre-specified bounding rectangle. 
 	 */

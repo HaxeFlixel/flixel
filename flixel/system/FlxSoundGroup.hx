@@ -17,7 +17,7 @@ class FlxSoundGroup
 	
 	/**
 	 * Create a new sound group
-	 * @param	volume  The intial volume of this group
+	 * @param	volume  The initial volume of this group
 	 */
 	public function new(volume:Float = 1)
 	{

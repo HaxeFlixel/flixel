@@ -331,7 +331,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Atlas frames for this graphic.
 	 * You should fill it yourself with one of `FlxAtlasFrames`'s static methods
-	 * (like `fromtexturePackerJson()`, `fromTexturePackerXml()`, etc).
+	 * (like `fromTexturePackerJson()`, `fromTexturePackerXml()`, etc).
 	 */
 	public var atlasFrames(get, null):FlxAtlasFrames;
 	
@@ -375,7 +375,7 @@ class FlxGraphic implements IFlxDestroyable
 	 *
 	 * @param   Key       Key string for this graphic object, with which you can get it from bitmap cache.
 	 * @param   Bitmap    `BitmapData` for this graphic object.
-	 * @param   Persist   Whether or not this graphic stay in the cache after reseting it.
+	 * @param   Persist   Whether or not this graphic stay in the cache after resetting it.
 	 *                    Default value is `false`, which means that this graphic will be destroyed at the cache reset.
 	 */
 	private function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
@@ -424,7 +424,7 @@ class FlxGraphic implements IFlxDestroyable
 		if (isDumped)
 		{
 			undump(); // restore everything
-			dump(); // and dump bitmapdata again
+			dump(); // and dump BitmapData again
 		}
 	}
 	

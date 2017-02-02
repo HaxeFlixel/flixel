@@ -154,7 +154,7 @@ class FlxRandom
 	
 	/**
 	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
-	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
+	 * (This uses the Box-Muller transform algorithm for gaussian pseudorandom numbers)
 	 * 
 	 * Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
 	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png

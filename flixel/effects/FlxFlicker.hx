@@ -27,7 +27,7 @@ class FlxFlicker implements IFlxDestroyable
 	 * @param   Interval             In what interval to toggle visibility. Set to `FlxG.elapsed` if `<= 0`!
 	 * @param   EndVisibility        Force the visible value when the flicker completes,
 	 *                               useful with fast repetitive use.
-	 * @param   ForceRestart         Force the flicker to restart from beginnig,
+	 * @param   ForceRestart         Force the flicker to restart from beginning,
 	 *                               discarding the flickering effect already in progress if there is one.
 	 * @param   CompletionCallback   An optional callback that will be triggered when a flickering has finished.
 	 * @param   ProgressCallback     An optional callback that will be triggered when visibility is toggled.

@@ -181,10 +181,10 @@ class BitmapFrontEnd
 	}
 	
 	/**
-	 * Gets key from bitmap cache for specified bitmapdata
+	 * Gets key from bitmap cache for specified BitmapData
 	 * 
-	 * @param	bmd	bitmapdata to find in cache
-	 * @return	bitmapdata's key or null if there isn't such bitmapdata in cache
+	 * @param	bmd	BitmapData to find in cache
+	 * @return	BitmapData's key or null if there isn't such BitmapData in cache
 	 */
 	public function findKeyForBitmap(bmd:BitmapData):String
 	{

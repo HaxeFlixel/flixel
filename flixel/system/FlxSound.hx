@@ -62,7 +62,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var autoDestroy:Bool;
 	/**
-	 * Tracker for sound complete callback. If assigend, will be called 
+	 * Tracker for sound complete callback. If assigned, will be called 
 	 * each time when sound reaches its end. Works only on flash and desktop targets.
 	 */
 	public var onComplete:Void->Void;
@@ -412,7 +412,7 @@ class FlxSound extends FlxBasic
 	 *                         Default value is false, meaning if the sound is already playing or was
 	 *                         paused when you call play(), it will continue playing from its current
 	 *                         position, NOT start again from the beginning.
-	 * @param   StartTime      At which point to start plaing the sound, in milliseconds.
+	 * @param   StartTime      At which point to start playing the sound, in milliseconds.
 	 * @param   EndTime        At which point to stop playing the sound, in milliseconds.
 	 *                         If not set / `null`, the sound completes normally.
 	 */

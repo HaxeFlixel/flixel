@@ -150,27 +150,27 @@ class FlxPathTest extends FlxTest
 	@Test
 	function testStartNodesAsReference()
 	{
-		var mypoints : Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(1, 1), new FlxPoint(2, 2), new FlxPoint(3, 3)];
-		object.path = path.start(mypoints, 100, FlxPath.FORWARD, false, true);
-		Assert.areEqual(object.path.nodes.length, mypoints.length);
-		for (i in 0...mypoints.length)
+		var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(1, 1), new FlxPoint(2, 2), new FlxPoint(3, 3)];
+		object.path = path.start(points, 100, FlxPath.FORWARD, false, true);
+		Assert.areEqual(object.path.nodes.length, points.length);
+		for (i in 0...points.length)
 		{
 			Assert.areEqual(i, path.nodes[i].x);
 			Assert.areEqual(i, path.nodes[i].y);
 		}
 		
 		object.path.removeAt(0);
-		Assert.areEqual(object.path.nodes.length, mypoints.length);
-		for (i in 0...mypoints.length)
+		Assert.areEqual(object.path.nodes.length, points.length);
+		for (i in 0...points.length)
 		{
 			Assert.areEqual(i + 1, path.nodes[i].x);
 			Assert.areEqual(i + 1, path.nodes[i].y);
 		}
 		
-		object.path = path.start(mypoints, 100, FlxPath.FORWARD, false, false);
-		Assert.areEqual(object.path.nodes.length, mypoints.length);
+		object.path = path.start(points, 100, FlxPath.FORWARD, false, false);
+		Assert.areEqual(object.path.nodes.length, points.length);
 		object.path.removeAt(0);
-		Assert.areEqual(object.path.nodes.length + 1, mypoints.length);
+		Assert.areEqual(object.path.nodes.length + 1, points.length);
 	}
 	
 	@Test

@@ -165,7 +165,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   name         Name for this frame (name of packed image file).
 	 * @param   angle        Rotation of packed image (can be `0`, `90` or `-90`).
 	 * @param   flipX        If packed image should be horizontally flipped.
-	 * @param   flipY        If packed iamge should be vertically flipped.
+	 * @param   flipY        If packed image should be vertically flipped.
 	 * @return  Newly created and added frame object.
 	 */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String,

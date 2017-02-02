@@ -42,7 +42,7 @@ class FlxPreloader extends FlxBasePreloader
 	}
 	
 	/**
-	 * This class is called as soon as the FlxPreloaderBase has finished Initalizing.
+	 * This class is called as soon as the FlxPreloaderBase has finished initializing.
 	 * Override it to draw all your graphics and things - make sure you also override update
 	 * Make sure you call super.create()
 	 */

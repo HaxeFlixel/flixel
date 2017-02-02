@@ -67,7 +67,7 @@ class FlxObjectTest extends FlxTest
 		
 		Assert.isTrue(FlxG.overlap(object1, object2));
 		
-		//Move the objects away from eachother
+		//Move the objects away from each other
 		object1.velocity.x = 2000;
 		object2.velocity.x = -2000;
 		
@@ -140,17 +140,17 @@ class FlxObjectTest extends FlxTest
 	function testVelocityCollidingWithObject():Void
 	{
 		object2.setSize(100, 10);
-		velocityColldingWith(object2);
+		velocityCollidingWith(object2);
 	}
 	
 	@Test
 	function testVelocityCollidingWithTilemap():Void
 	{
 		tilemap.loadMapFromCSV("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
-		velocityColldingWith(tilemap);
+		velocityCollidingWith(tilemap);
 	}
 	
-	function velocityColldingWith(ground:FlxObject)
+	function velocityCollidingWith(ground:FlxObject)
 	{
 		switchState(new CollisionState());
 		
@@ -174,7 +174,7 @@ class FlxObjectTest extends FlxTest
 	@Test // #1313
 	function testSetVariablesInReviveOverride()
 	{
-		object1 = new OverridenReviveObject();
+		object1 = new OverriddenReviveObject();
 		object1.reset(0, 0);
 		
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.getPosition()));
@@ -250,7 +250,7 @@ class CollisionState extends FlxState
 	}
 }
 
-class OverridenReviveObject extends FlxObject
+class OverriddenReviveObject extends FlxObject
 {
 	override public function revive()
 	{
