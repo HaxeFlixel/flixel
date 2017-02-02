@@ -7,7 +7,7 @@ import flixel.util.FlxDestroyUtil;
 
 /**
  * A series of points which will determine a path from the
- * beginning point to the end poing using quadratic curves.
+ * beginning point to the end point using quadratic curves.
  */
 class QuadPath extends Motion
 {

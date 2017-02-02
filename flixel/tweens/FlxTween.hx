@@ -82,7 +82,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
 	 * @param	Options		A structure with tween options.
-	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
+	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
 	 */
@@ -215,7 +215,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param	Clockwise		If the motion is clockwise.
 	 * @param	DurationOrSpeed	Duration of the movement in seconds.
 	 * @param	UseDuration		Duration of the movement.
-	 * @param	Eease			Optional easer function.
+	 * @param	Ease			Optional easer function.
 	 * @param	Options			A structure with tween options.
 	 * @return The CircularMotion object.
 	 */
@@ -347,7 +347,7 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
-	 * Specify a tween to be excuted when this one has finished
+	 * Specify a tween to be executed when this one has finished
 	 * (useful for creating "tween chains").
 	 */
 	public function then(tween:FlxTween):FlxTween
@@ -736,7 +736,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	ToValue		End value.
 	 * @param	Duration	Duration of the tween.
 	 * @param	Options		A structure with tween options.
-	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonoymous 
+	 * @param	TweenFunction	A function to be called when the tweened value updates.  It is recommended not to use an anonymous 
 	 *							function if you are maximizing performance, as those will be compiled to Dynamics on cpp.
 	 * @return	The added NumTween object.
 	 * @since   4.2.0
@@ -890,7 +890,7 @@ class FlxTweenManager extends FlxBasic
 	 * @param	Clockwise		If the motion is clockwise.
 	 * @param	DurationOrSpeed	Duration of the movement in seconds.
 	 * @param	UseDuration		Duration of the movement.
-	 * @param	Eease			Optional easer function.
+	 * @param	Ease			Optional easer function.
 	 * @param	Options			A structure with tween options.
 	 * @return The CircularMotion object.
 	 * @since  4.2.0

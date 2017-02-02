@@ -119,7 +119,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for LibGDX atlases.
 	 * 
-	 * @param   Sourc         The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
 	 * @param   Description   Contents of the file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description/file)`.
 	 *                        Or you can just pass path to the description file in the assets directory.

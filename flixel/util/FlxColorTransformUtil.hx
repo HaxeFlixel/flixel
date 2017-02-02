@@ -35,7 +35,7 @@ class FlxColorTransformUtil
 	}
 	
 	/**
-	 * Returns whether red, greeen, blue, or alpha multipliers are set to anything other than 1.
+	 * Returns whether red, green, blue, or alpha multipliers are set to anything other than 1.
 	 */
 	public static function hasRGBAMultipliers(transform:ColorTransform):Bool
 	{

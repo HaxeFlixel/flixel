@@ -66,7 +66,7 @@ class VarTween extends FlxTween
 		{
 			if (_propertyInfos.length == 0)
 			{
-				// We don't initalize() in tween() because otherwise the start values 
+				// We don't initialize() in tween() because otherwise the start values 
 				// will be inaccurate with delays
 				initializeVars();
 			}

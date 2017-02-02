@@ -99,7 +99,7 @@ class FlxBar extends FlxSprite
 	/**
 	 * BarFrames which will be used for filled bar rendering.
 	 * It is recommended to use this property in tile render mode
-	 * (altrough it will work in blit render mode also).
+	 * (although it will work in blit render mode also).
 	 */
 	@:isVar
 	public var frontFrames(get, set):FlxImageFrame;
@@ -315,7 +315,7 @@ class FlxBar extends FlxSprite
 	 * @param	fill		The color of the bar when full in 0xAARRGGBB format (the foreground colour)
 	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return	This FlxBar object with generated images for front and backround.
+	 * @return	This FlxBar object with generated images for front and background.
 	 */
 	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -330,7 +330,7 @@ class FlxBar extends FlxSprite
 	 * @param	empty			The color of the bar when empty in 0xAARRGGBB format (the background colour)
 	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
 	 * @param	border			The border colour in 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for rendering health bar backround.
+	 * @return	This FlxBar object with generated image for rendering health bar background.
 	 */
 	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -440,7 +440,7 @@ class FlxBar extends FlxSprite
 	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
 	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return 	This FlxBar object with generated images for front and backround.
+	 * @return 	This FlxBar object with generated images for front and background.
 	 */
 	public function createGradientBar(empty:Array<FlxColor>, fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -457,7 +457,7 @@ class FlxBar extends FlxSprite
 	 * @param	rotation		Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
 	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
 	 * @param	border			The border colour in 0xAARRGGBB format
-	 * @return 	This FlxBar object with generated image for backround rendering.
+	 * @return 	This FlxBar object with generated image for background rendering.
 	 */
 	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -587,7 +587,7 @@ class FlxBar extends FlxSprite
 	 * @param	fill				Bitmap image used as the foreground (filled part) of the health bar, if null the fillBackground colour is used
 	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
 	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @return	This FlxBar object with generated images for front and backround.
+	 * @return	This FlxBar object with generated images for front and background.
 	 */
 	public function createImageBar(?empty:FlxGraphicAsset, ?fill:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK, fillBackground:FlxColor = FlxColor.LIME):FlxBar
 	{
@@ -601,7 +601,7 @@ class FlxBar extends FlxSprite
 	 * 
 	 * @param	empty				Bitmap image used as the background (empty part) of the health bar, if null the emptyBackground colour is used
 	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for backround rendering.
+	 * @return	This FlxBar object with generated image for background rendering.
 	 */
 	public function createImageEmptyBar(?empty:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK):FlxBar
 	{
@@ -784,9 +784,8 @@ class FlxBar extends FlxSprite
 			{
 				if (frontFrames != null)
 				{
-					var prct:Int = Std.int(percent);
 					_filledFlxRect.copyFromFlash(_filledBarRect).round();
-					if (prct > 0)
+					if (Std.int(percent) > 0)
 					{
 						_frontFrame = frontFrames.frame.clipTo(_filledFlxRect, _frontFrame);
 					}

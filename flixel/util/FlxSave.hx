@@ -7,7 +7,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * A class to help automate and simplify save game functionality.
- * Basicaly a wrapper for the Flash SharedObject thing, but
+ * Basically a wrapper for the Flash SharedObject thing, but
  * handles some annoying storage request stuff too.
  */
 class FlxSave implements IFlxDestroyable

@@ -221,7 +221,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   rotation   Rotation to apply to specified matrix.
 	 * @param   flipX      Do we need to flip frame horizontally.
 	 * @param   flipY      Do we need to flip frame vertically.
-	 * @return  Tranformed matrix which can be used for frame painting.
+	 * @return  Transformed matrix which can be used for frame painting.
 	 */
 	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0,
 		flipX:Bool = false, flipY:Bool = false):FlxMatrix
@@ -237,7 +237,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   rotation   Rotation to apply to specified matrix.
 	 * @param   flipX      Do we need to flip frame horizontally
 	 * @param   flipY      Do we need to flip frame vertically
-	 * @return  Tranformed matrix which can be used for frame drawing.
+	 * @return  Transformed matrix which can be used for frame drawing.
 	 */
 	public function prepareMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false,
 		flipY:Bool = false):FlxMatrix
@@ -365,7 +365,7 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Internal method which runs few checks on specified `BitmapData` object.
 	 * 
-	 * @param   bmd                 `BitmapData` object to check againist.
+	 * @param   bmd                 `BitmapData` object to check against.
 	 * @param   point               Optional point for mergeAlpha checks
 	 * @param   rotation            How much we will rotate the frame when we will be
 	 *                              drawing it on specified `BitmapData`.

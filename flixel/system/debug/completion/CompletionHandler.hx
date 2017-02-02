@@ -122,7 +122,7 @@ class CompletionHandler
 	
 	private function getCompletedText(text:String, selectedItem:String):String
 	{
-		// replace the last occurence with the selected item
+		// replace the last occurrence with the selected item
 		return new EReg(getWordAfterDot(text) + "$", "g").replace(text, selectedItem);
 	}
 	

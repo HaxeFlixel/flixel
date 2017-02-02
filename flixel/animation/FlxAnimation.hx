@@ -19,7 +19,7 @@ class FlxAnimation extends FlxBaseAnimation
 	public var curFrame(default, set):Int = 0;
 	
 	/**
-	 * Accesor for `frames.length`
+	 * Accessor for `frames.length`
 	 */
 	public var numFrames(get, null):Int;
 	

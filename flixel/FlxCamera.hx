@@ -76,11 +76,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public var scaleY(default, null):Float;
 	/**
-	 * Product of camera's `scaleX` and game's scalemode `scale.x` multiplication.
+	 * Product of camera's `scaleX` and game's scale mode `scale.x` multiplication.
 	 */
 	public var totalScaleX(default, null):Float;
 	/**
-	 * Product of camera's scaleY and game's scalemode scale.y multiplication.
+	 * Product of camera's scaleY and game's scale mode scale.y multiplication.
 	 */
 	public var totalScaleY(default, null):Float;
 	
@@ -142,7 +142,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not.
-	 * If `true` then previosly drawn graphics won't be erased,
+	 * If `true` then previously drawn graphics won't be erased,
 	 * and if camera's `bgColor` is transparent/semitransparent then you
 	 * will be able to see graphics of the previous frame.
 	 * Useful for blit render mode (and works only in this mode). Default value is `false`.
@@ -373,7 +373,7 @@ class FlxCamera extends FlxBasic
 		
 		set_color(FlxColor.WHITE);
 		
-		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashOffset values
 		initialZoom = zoom;
 		
 		updateScrollRect();
@@ -453,7 +453,7 @@ class FlxCamera extends FlxBasic
 	public function updateFollow():Void
 	{
 		//Either follow the object closely, 
-		//or doublecheck our deadzone and update accordingly.
+		//or double check our deadzone and update accordingly.
 		if (deadzone == null)
 		{
 			target.getMidpoint(_point);

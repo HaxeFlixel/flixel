@@ -111,7 +111,7 @@ class FlxBasePreloader extends #if (openfl < "4.5.0") NMEPreloader #else Default
 	
 	/**
 	 * This function is triggered on each 'frame'.
-	 * It is highly reccommended that you do NOT override this.
+	 * It is highly recommended that you do NOT override this.
 	 */
 	private function onEnterFrame(E:Event):Void
 	{

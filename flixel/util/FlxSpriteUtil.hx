@@ -44,7 +44,7 @@ class FlxSpriteUtil
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll
 	 * get a circular image to appear.
-	 * May lead to unexecpted results if `source` does not have an alpha channel.
+	 * May lead to unexpected results if `source` does not have an alpha channel.
 	 * 
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @param	source		The source image. Typically the one with the image / picture / texture in it.
@@ -73,7 +73,7 @@ class FlxSpriteUtil
 	 * It works by copying the source image (your picture) into the output sprite. Then it removes all areas of it that do not
 	 * have an alpha color value in the mask image. So if you draw a big black circle in your mask with a transparent edge, you'll
 	 * get a circular image appear.
-	 * May lead to unexecpted results if `sprite`'s graphic does not have an alpha channel.
+	 * May lead to unexpected results if `sprite`'s graphic does not have an alpha channel.
 	 * 
 	 * @param	sprite		The source FlxSprite. Typically the one with the image / picture / texture in it.
 	 * @param	mask		The FlxSprite containing the mask to apply. Remember the non-alpha zero areas are the parts that will display.
@@ -196,7 +196,7 @@ class FlxSpriteUtil
 	 * @param	EndX		X coordinate of the line's end point.
 	 * @param	EndY		Y coordinate of the line's end point.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawLine(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, 
@@ -223,7 +223,7 @@ class FlxSpriteUtil
 	 * @param	ControlY	Y coordinate of the curve's control point.
 	 * @param	FillColor		The ARGB color to fill this curve with. FlxColor.TRANSPARENT (0x0) means no fill. Filling a curve draws a line from End to Start to complete the figure.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCurve(sprite:FlxSprite, StartX:Float, StartY:Float, EndX:Float, EndY:Float, ControlX:Float, ControlY:Float, 
@@ -247,7 +247,7 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the rectangle
 	 * @param	FillColor		The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float,
@@ -271,7 +271,7 @@ class FlxSpriteUtil
 	 * @param	EllipseHeight	The height of the ellipse used to draw the rounded corners
 	 * @param	FillColor			The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle		A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle		A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle		A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRect(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, EllipseWidth:Float,
@@ -299,7 +299,7 @@ class FlxSpriteUtil
 	 * @param	BottomRightRadius	The radius of the bottom right corner of the rectangle
 	 * @param	FillColor				The ARGB color to fill this rectangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle			A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle			A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle			A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawRoundRectComplex(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
@@ -322,7 +322,7 @@ class FlxSpriteUtil
 	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
 	 * @param	FillColor 		The ARGB color to fill this circle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawCircle(sprite:FlxSprite, X:Float = - 1, Y:Float = - 1, Radius:Float = -1, 
@@ -362,7 +362,7 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the ellipse
 	 * @param	FillColor		The ARGB color to fill this ellipse with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawEllipse(sprite:FlxSprite, X:Float, Y:Float, Width:Float, Height:Float, 
@@ -383,7 +383,7 @@ class FlxSpriteUtil
 	 * @param	Height		Height of the triangle
 	 * @param	FillColor		The ARGB color to fill this triangle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawTriangle(sprite:FlxSprite, X:Float, Y:Float, Height:Float, 
@@ -405,7 +405,7 @@ class FlxSpriteUtil
 	 * @param	Vertices	Array of Vertices to use for drawing the polygon
 	 * @param	FillColor		The ARGB color to fill this polygon with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function drawPolygon(sprite:FlxSprite, Vertices:Array<FlxPoint>, 
@@ -445,7 +445,7 @@ class FlxSpriteUtil
 	 * Helper function that the drawing functions use at the end.
 	 * 
 	 * @param	sprite		The FlxSprite to draw to
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static inline function endDraw(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
@@ -460,7 +460,7 @@ class FlxSpriteUtil
 	 * to handle a few things related to updating a sprite's graphic.
 	 * 
 	 * @param	Sprite		The FlxSprite to manipulate
-	 * @param	drawStyle	A DrawStyle typdef containing the params of BitmapData.draw()
+	 * @param	drawStyle	A DrawStyle typedef containing the params of BitmapData.draw()
 	 * @return 	The FlxSprite for chaining
 	 */
 	public static function updateSpriteGraphic(sprite:FlxSprite, ?drawStyle:DrawStyle):FlxSprite
@@ -555,7 +555,7 @@ class FlxSpriteUtil
 	 * @param	Duration			How long to flicker for. 0 means "forever".
 	 * @param	Interval			In what interval to toggle visibility. Set to FlxG.elapsed if <= 0!
 	 * @param	EndVisibility		Force the visible value when the flicker completes, useful with fast repetitive use.
-	 * @param	ForceRestart		Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
+	 * @param	ForceRestart		Force the flicker to restart from beginning, discarding the flickering effect already in progress if there is one.
 	 * @param	CompletionCallback	An optional callback that will be triggered when a flickering has finished.
 	 * @param	ProgressCallback	An optional callback that will be triggered when visibility is toggled.
 	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.

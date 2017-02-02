@@ -398,8 +398,8 @@ class FlxSprite extends FlxObject
 	 * @param   Frame          If the `Graphic` has a single row of square animation frames on it,
 	 *                         you can specify which of the frames you want to use here.
 	 *                         Default is `-1`, or "use whole graphic."
-	 * @param   Smoothing	   Whether to use high quality rotations when creating the graphic. Default is `false`.
-	 * @param   AutoBuffer     Whether to automatically increase the image size to accomodate rotated corners.
+	 * @param   Smoothing      Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param   AutoBuffer     Whether to automatically increase the image size to accommodate rotated corners.
 	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @param   Key            Optional, set this parameter if you're loading `BitmapData`.
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
@@ -461,8 +461,8 @@ class FlxSprite extends FlxObject
 	 * @param   Frame          Frame to load into this sprite.
 	 * @param   Rotations      The number of rotation frames the final sprite should have.
 	 *                         For small sprites this can be quite a large number (`360` even) without any problems.
-	 * @param   Smoothing	   Whether to use high quality rotations when creating the graphic. Default is `false`.
-	 * @param   AutoBuffer     Whether to automatically increase the image size to accomodate rotated corners.
+	 * @param   Smoothing      Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param   autoBuffer     Whether to automatically increase the image size to accommodate rotated corners.
 	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return  this FlxSprite with loaded rotated graphic in it.
 	 */
@@ -550,7 +550,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Helper method just for convinience, so you don't need to type
+	 * Helper method just for convenience, so you don't need to type
 	 * `sprite.frame = sprite.frame;`
 	 * You may need this method in tile render mode,
 	 * when you want sprite to use its original graphic, not the graphic generated from its `framePixels`.
@@ -627,7 +627,7 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * This is separated out so it can be easily overriden.
+	 * This is separated out so it can be easily overridden.
 	 */
 	private function updateAnimation(elapsed:Float):Void
 	{

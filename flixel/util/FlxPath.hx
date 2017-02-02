@@ -35,7 +35,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  * object.path = new FlxPath().add(0, 0).add(100, 0).start(50, FlxPath.FORWARD);
  * ```
  * 
- * If you are fine with the default values of start (speed, mode, autorate) you can also do:
+ * If you are fine with the default values of start (speed, mode, auto-rotate) you can also do:
  * 
  * ```haxe
  * object.path = new FlxPath([new FlxPoint(0, 0), new FlxPoint(100, 0)]).start();
@@ -203,7 +203,7 @@ class FlxPath implements IFlxDestroyable
 	 * @param   NodesAsReference 	Whether to pass the input array as reference (true) or to copy the points (false). Default is false.
 	 * @return	This path object.
 	 */
-	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false, NodesAsReference:Bool = false) : FlxPath
+	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false, NodesAsReference:Bool = false):FlxPath
 	{
 		if (Nodes != null)
 		{
@@ -747,7 +747,7 @@ class FlxPath implements IFlxDestroyable
 			gfx.endFill();
 			
 			//then find the next node in the path
-			var linealpha:Float = 0.3;
+			var lineAlpha:Float = 0.3;
 			if (i < l - 1)
 			{
 				nextNode = _nodes[i + 1];
@@ -759,7 +759,7 @@ class FlxPath implements IFlxDestroyable
 			
 			//then draw a line to the next node
 			gfx.moveTo(_point.x, _point.y);
-			gfx.lineStyle(1, debugColor, linealpha);
+			gfx.lineStyle(1, debugColor, lineAlpha);
 			_point.x = nextNode.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
 			_point.y = nextNode.y - (Camera.scroll.y * object.scrollFactor.y);
 			gfx.lineTo(_point.x, _point.y);

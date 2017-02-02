@@ -138,7 +138,7 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Gets source bitmapdata, generates new bitmapdata (if there is no such bitmapdata in the cache already) 
+	 * Gets source BitmapData, generates new BitmapData (if there is no such BitmapData in the cache already) 
 	 * and creates FlxImageFrame collection.
 	 * 
 	 * @param   source   The source of graphic for frame collection.
@@ -167,7 +167,7 @@ class FlxImageFrame extends FlxFramesCollection
 	
 	/**
 	 * Gets `FlxFrame` object, generates new `BitmapData` with border pixels around
-	 * (if there is no such bitmapdata in the cache already) and creates image frame collection.
+	 * (if there is no such BitmapData in the cache already) and creates image frame collection.
 	 * 
 	 * @param   frame    Frame to generate tiles from.
 	 * @param   border   Border to add around frame image (helps to avoid "tearing" problem).

@@ -9,12 +9,12 @@ class CameraFrontEndTest extends FlxTest
 	public function testCameraAdded()
 	{
 		var success = false;
-		var newCamara = new FlxCamera();
+		var newCamera = new FlxCamera();
 		FlxG.cameras.cameraAdded.add(function(camera)
 		{
-			success = camera == newCamara;
+			success = camera == newCamera;
 		});
-		FlxG.cameras.add(newCamara);
+		FlxG.cameras.add(newCamera);
 		Assert.isTrue(success);
 		
 		FlxG.cameras.cameraAdded.removeAll();
