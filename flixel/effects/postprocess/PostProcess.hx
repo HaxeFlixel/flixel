@@ -149,7 +149,7 @@ class PostProcess extends OpenGLView
 		GL.bindRenderbuffer(GL.RENDERBUFFER, renderbuffer);
 		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, width, height);
 
-		// Specify renderbuffer as depth attachement
+		// Specify renderbuffer as depth attachment
 		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderbuffer);
 	}
 

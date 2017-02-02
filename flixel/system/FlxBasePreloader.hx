@@ -107,7 +107,7 @@ class FlxBasePreloader extends NMEPreloader
 	
 	/**
 	 * This function is triggered on each 'frame'.
-	 * It is highly reccommended that you do NOT override this.
+	 * It is highly recommended that you do NOT override this.
 	 */
 	private function onEnterFrame(E:Event):Void
 	{

@@ -177,7 +177,7 @@ class FlxText extends FlxSprite
 		if (Text == null || Text == "")
 		{
 			// empty texts have a textHeight of 0, need to
-			// prevent initialiazing with "" before the first calcFrame() call
+			// prevent initializing with "" before the first calcFrame() call
 			text = "";
 			Text = " ";
 		}
@@ -1051,8 +1051,8 @@ class FlxTextFormat
 	
 	/**
 	 * @param   FontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
-	 * @param   Bold          Whether the text should be bold (must be suppported by the font). `false` by default.
-	 * @param   Italic        Whether the text should be in italics (must be suppported by the font). Only works on Flash. `false` by default.  
+	 * @param   Bold          Whether the text should be bold (must be supported by the font). `false` by default.
+	 * @param   Italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.  
 	 * @param   BorderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
 	 */
 	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)

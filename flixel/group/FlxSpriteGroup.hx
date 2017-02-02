@@ -887,7 +887,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function scrollFactorCallback(ScrollFactor:FlxPoint) transformChildren(scrollFactorTransform, ScrollFactor);
 	
 	// NON-SUPPORTED FUNCTIONALITY
-	// THESE METHODS ARE OVERRIDEN FOR SAFETY PURPOSES
+	// THESE METHODS ARE OVERRIDDEN FOR SAFETY PURPOSES
 	
 	/**
 	 * This functionality isn't supported in SpriteGroup

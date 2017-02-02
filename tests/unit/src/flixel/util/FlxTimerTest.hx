@@ -54,7 +54,7 @@ class FlxTimerTest extends FlxTest
 
 	@Test // #679
 	@:access(flixel.util.FlxTimerManager.remove)
-	function testManipuleListInCallback()
+	function testManipulateListInCallback()
 	{
 		var timer2 = new FlxTimer();
 		var timer1 = new FlxTimer().start(0.0001, function(_)

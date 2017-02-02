@@ -336,7 +336,7 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Time since perfomance monitoring started.
+	 * Time since performance monitoring started.
 	 */
 	public inline function intervalTime():Float
 	{
@@ -344,7 +344,7 @@ class Stats extends Window
 	}
 	
 	/**
-	 * Current RAM consumtion.
+	 * Current RAM consumption.
 	 */
 	public inline function currentMem():Float
 	{

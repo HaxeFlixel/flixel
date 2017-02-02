@@ -77,11 +77,11 @@ class FlxCamera extends FlxBasic
 	 */
 	public var scaleY(default, null):Float;
 	/**
-	 * Product of camera's `scaleX` and game's scalemode `scale.x` multiplication.
+	 * Product of camera's `scaleX` and game's scale mode `scale.x` multiplication.
 	 */
 	public var totalScaleX(default, null):Float;
 	/**
-	 * Product of camera's scaleY and game's scalemode scale.y multiplication.
+	 * Product of camera's scaleY and game's scale mode scale.y multiplication.
 	 */
 	public var totalScaleY(default, null):Float;
 	
@@ -155,7 +155,7 @@ class FlxCamera extends FlxBasic
 	 * Sometimes it's easier to just work with a `FlxSprite` than it is to work directly with the `BitmapData` buffer.
 	 * This sprite reference will allow you to do exactly that.
 	 * Basically this sprite's `pixels` property is camera's `BitmapData` buffer.
-	 * NOTE: This varible is used only in blit render mode.
+	 * NOTE: This variable is used only in blit render mode.
 	 * 
 	 * The FlxBloom demo shows how you can use this variable in blit render mode.
 	 * @see http://haxeflixel.com/demos/FlxBloom/
@@ -164,7 +164,7 @@ class FlxCamera extends FlxBasic
 	
 	/**
 	 * Whether to use alpha blending for camera's background fill or not.
-	 * If `true` then previosly drawn graphics won't be erased,
+	 * If `true` then previously drawn graphics won't be erased,
 	 * and if camera's `bgColor` is transparent/semitransparent then you
 	 * will be able to see graphics of the previous frame.
 	 * Useful for blit render mode (and works only in this mode). Default value is `false`.
@@ -248,7 +248,7 @@ class FlxCamera extends FlxBasic
 	 * Internal, used for positioning camera's `flashSprite` on screen.
 	 * Basically it represents position of camera's center point in game sprite.
 	 * It's recalculated every time you resize game or camera.
-	 * Its value dependes on camera's size (`width` and `height`), game's `scale` and camera's initial zoom factor.
+	 * Its value depends on camera's size (`width` and `height`), game's `scale` and camera's initial zoom factor.
 	 * Do not modify it unless you know what are you doing.
 	 */
 	private var _flashOffset:FlxPoint = FlxPoint.get();
@@ -763,7 +763,7 @@ class FlxCamera extends FlxBasic
 		
 		set_color(FlxColor.WHITE);
 		
-		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashoffset values
+		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashOffset values
 		initialZoom = zoom;
 		
 		updateScrollRect();
@@ -878,7 +878,7 @@ class FlxCamera extends FlxBasic
 	public function updateFollow():Void
 	{
 		//Either follow the object closely, 
-		//or doublecheck our deadzone and update accordingly.
+		//or double check our deadzone and update accordingly.
 		if (deadzone == null)
 		{
 			target.getMidpoint(_point);

@@ -142,7 +142,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	private var _helperPoint:Point;
 	
 	/**
-	 * Rendering helper, used for tile's frame transoformations (only in tile rendering mode).
+	 * Rendering helper, used for tile's frame transformations (only in tile rendering mode).
 	 */
 	private var _matrix:FlxMatrix;
 	
@@ -518,7 +518,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	
 	/**
 	 * Set the dirty flag on all the tilemap buffers.
-	 * Basically forces a reset of the drawn tilemaps, even if it wasn'tile necessary.
+	 * Basically forces a reset of the drawn tilemaps, even if it wasn't necessary.
 	 * 
 	 * @param	Dirty		Whether to flag the tilemap buffers as dirty or not.
 	 */
@@ -540,7 +540,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Object				The FlxObject you are checking for overlaps against.
 	 * @param	Callback			An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
 	 * @param	FlipCallbackParams	Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
-	 * @param	Position			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type funcitonality).
+	 * @param	Position			Optional, specify a custom position for the tilemap (useful for overlapsAt()-type functionality).
 	 * @return	Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
 	override public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool
@@ -825,12 +825,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	/**
-	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to mapdata itself.
+	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
 	 * 
 	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
 	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
 	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
-	 * @param	NewTile			New tile to the mapdata. Use -1 if you dont want any changes. Default = 0 (empty)
+	 * @param	NewTile			New tile for the map data. Use -1 if you dont want any changes. Default = 0 (empty)
 	 * @param	SpriteFactory	Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return	FlxSprite.
 	 */

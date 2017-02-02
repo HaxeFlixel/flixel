@@ -320,12 +320,12 @@ class FlxMath
 	
 	/**
 	 * Check if the distance between two FlxSprites is within a specified number. 
-	 * A faster algoritm than distanceBetween because the Math.sqrt() is avoided.
+	 * A faster algorithm than distanceBetween because the Math.sqrt() is avoided.
 	 *
 	 * @param	SpriteA		The first FlxSprite
 	 * @param	SpriteB		The second FlxSprite
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @param	IncludeEqual	If set to true, the function will return true if the calculated distance is equal to the given Distance
 	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceWithin(SpriteA:FlxSprite, SpriteB:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
@@ -358,12 +358,12 @@ class FlxMath
 	/**
 	 * Check if the distance from an FlxSprite to the given
 	 * FlxPoint is within a specified number. 
-	 * A faster algoritm than distanceToPoint because the Math.sqrt() is avoided.
+	 * A faster algorithm than distanceToPoint because the Math.sqrt() is avoided.
 	 * 
 	 * @param	Sprite	The FlxSprite
 	 * @param	Target	The FlxPoint
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @param	IncludeEqual	If set to true, the function will return true if the calculated distance is equal to the given Distance
 	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToPointWithin(Sprite:FlxSprite, Target:FlxPoint, Distance:Float, IncludeEqual:Bool = false):Bool
@@ -395,11 +395,11 @@ class FlxMath
 	
 	/**
 	 * Check if the distance from the object x/y and the mouse x/y is within a specified number. 
-	 * A faster algoritm than distanceToMouse because the Math.sqrt() is avoided.
+	 * A faster algorithm than distanceToMouse because the Math.sqrt() is avoided.
 	 *
 	 * @param	Sprite		The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @param	IncludeEqual	If set to true, the function will return true if the calculated distance is equal to the given Distance
 	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
@@ -431,11 +431,11 @@ class FlxMath
 	
 	/**
 	 * Check if the distance from the object x/y and the FlxPoint screen x/y is within a specified number. 
-	 * A faster algoritm than distanceToTouch because the Math.sqrt() is avoided.
+	 * A faster algorithm than distanceToTouch because the Math.sqrt() is avoided.
 	 *
 	 * @param	Sprite	The FlxSprite to test against
 	 * @param	Distance	The distance to check
-	 * @param	IncludeEqual	If set to true, the function will return true if the calcualted distance is equal to the given Distance
+	 * @param	IncludeEqual	If set to true, the function will return true if the calculated distance is equal to the given Distance
 	 * @return	True if the distance between the sprites is less than the given Distance 
 	 */
 	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool

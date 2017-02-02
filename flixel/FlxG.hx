@@ -265,7 +265,7 @@ class FlxG
 	 */
 	public static var watch(default, null):WatchFrontEnd = new WatchFrontEnd();
 	/**
-	 * Used it to show / hide the debguger, change its layout,
+	 * Used it to show / hide the debugger, change its layout,
 	 * activate debug drawing or change the key used to toggle it.
 	 */
 	public static var debugger(default, null):DebuggerFrontEnd = new DebuggerFrontEnd();
@@ -276,7 +276,7 @@ class FlxG
 	public static var vcr(default, null):VCRFrontEnd;
 	
 	/**
-	 * Contains things related to bimtaps, for example regarding the `BitmapData` cache and the cache itself.
+	 * Contains things related to bitmaps, for example regarding the `BitmapData` cache and the cache itself.
 	 */
 	public static var bitmap(default, null):BitmapFrontEnd = new BitmapFrontEnd();
 	/**
@@ -421,7 +421,7 @@ class FlxG
 	 *
 	 * This function just calls `FlxG.overlap` and presets the `ProcessCallback` parameter to `FlxObject.separate`.
 	 * To create your own collision logic, write your own `ProcessCallback` and use `FlxG.overlap` to set it up.
-	 * NOTE: does NOT take objects' `scrollfactor` into account, all overlaps are checked in world space.
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 * 
 	 * @param   ObjectOrGroup1   The first object or group you want to check.
 	 * @param   ObjectOrGroup2   The second object or group you want to check. If it is the same as the first,

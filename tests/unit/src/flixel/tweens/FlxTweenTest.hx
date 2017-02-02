@@ -48,16 +48,16 @@ class FlxTweenTest extends FlxTest
 		step(10);
 		Assert.isFalse(tweenActive);
 		
-		var resumeSuccesful:Bool = false;
+		var resumeSuccessful:Bool = false;
 		
 		tween.active = true;
 		tween.onComplete = function (_)
 		{
-			resumeSuccesful = true;
+			resumeSuccessful = true;
 		};
 		
 		step(10);
-		Assert.isTrue(resumeSuccesful);
+		Assert.isTrue(resumeSuccessful);
 	}
 	
 	@Test

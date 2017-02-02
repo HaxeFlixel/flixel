@@ -25,7 +25,7 @@ import flash.display.Bitmap;
 #end
 
 /**
- * Adds a new funcionality to Flixel debugger that allows any object
+ * Adds a new functionality to Flixel debugger that allows any object
  * on the screen to be dragged, moved or deleted while the game is
  * still running.
  * 

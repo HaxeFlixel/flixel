@@ -487,7 +487,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * WARNING: Using this will cause your maps to take longer to load. Be careful using this in very large tilemaps.
 	 * 
 	 * @param	mappings		Array of ints for remapping tiles. Ex: [7,4,12] means "0-->7, 1-->4, 2-->12"
-	 * @param	randomIndices	Array of ints indicating which tile indices should be randmoized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
+	 * @param	randomIndices	Array of ints indicating which tile indices should be randomized. Ex: [7,4,12] means "replace tile index of 7, 4, or 12 with a randomized value"
 	 * @param	randomChoices	A list of int-arrays that serve as the corresponding choices to randomly choose from. Ex: indices = [7,4], choices = [[1,2],[3,4,5]], 7 will be replaced by either 1 or 2, 4 will be replaced by 3, 4, or 5.
 	 * @param	randomLambda	A custom randomizer function, should return value between 0.0 and 1.0. Initialize your random seed before passing this in! If not defined, will default to unseeded Math.random() calls.
 	 */
@@ -501,7 +501,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// make sure users provide all that data required if they wish to randomize tile mappings.
 		if (_randomIndices != null && (_randomChoices == null || _randomChoices.length == 0))
 		{
-			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indicies, please read documentation of 'setCustomTileMappings' function.";
+			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indices, please read documentation of 'setCustomTileMappings' function.";
 		}
 	}
 	
@@ -617,7 +617,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return ok;
 		}
 		
-		// If this map is autotiled and it changes, locally update the arrangement
+		// If this map is auto-tiled and it changes, locally update the arrangement
 		var i:Int;
 		var row:Int = Std.int(Index / widthInTiles) - 1;
 		var rowLength:Int = row + 3;
@@ -668,7 +668,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var maxIndex = _tileObjects.length;
 		if (l > maxIndex) 
 		{
-			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verfiy the Tile ($Tile) and Range ($Range) parameters.';
+			throw 'Index $l exceeds the maximum tile index of $maxIndex. Please verify the Tile ($Tile) and Range ($Range) parameters.';
 		}
 		
 		while (i < l)

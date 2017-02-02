@@ -141,7 +141,7 @@ class SoundFrontEnd
 	
 	/**
 	 * Method for sound caching (especially useful on mobile targets). The game may freeze
-	 * for some time the first time yout try to play a sound if you don't use this method.
+	 * for some time the first time you try to play a sound if you don't use this method.
 	 * 
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object

@@ -337,7 +337,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The animation must already exist in order to append frames to it. FrameRate and Looped are unchanged.
 	 * 
 	 * @param   Name      What the existing animation is called (e.g. `"run"`).
-	 * @param   Prefi     Common beginning of image names in the atlas (e.g. `"tiles-"`).
+	 * @param   Prefix    Common beginning of image names in the atlas (e.g. `"tiles-"`).
 	 * @param   Indices   An array of strings indicating what frames to append (e.g. `["01", "02", "03"]`).
 	 * @param   Postfix   Common ending of image names in atlas (e.g. `".png"`).
 	 */
@@ -415,8 +415,8 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 	
 	/**
-	 * Find a sprite frame so that for `Prefix = "file"; Indice = 5; Postfix = ".png"`
-	 * It will find frame with name `"file5.png"`. If it desn't exist it will try
+	 * Find a sprite frame so that for `Prefix = "file"; Index = 5; Postfix = ".png"`
+	 * It will find frame with name `"file5.png"`. If it doesn't exist it will try
 	 * to find `"file05.png"`, allowing 99 frames per animation.
 	 * Returns the found frame or `-1` on failure.
 	 */

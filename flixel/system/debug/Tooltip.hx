@@ -107,8 +107,8 @@ class TooltipOverlay extends Sprite
 	 * 
 	 * @param	target	Element where the tooltip will be attached to.
 	 * @param	text	Text displayed with this tooltip.
-	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accomodate the text.
-	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accomodate the text.
+	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accommodate the text.
+	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accommodate the text.
 	 */
 	public function new(target:Sprite, text:String, width:Float = 0, height:Float = 0)
 	{
@@ -155,8 +155,8 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Resize the tooltip. Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
-	 * @param 	Width	How wide to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
-	 * @param 	Height	How tall to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accomodate the text.
+	 * @param 	Width	How wide to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accommodate the text.
+	 * @param 	Height	How tall to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accommodate the text.
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{

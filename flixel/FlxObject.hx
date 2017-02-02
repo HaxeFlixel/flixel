@@ -28,7 +28,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * This value dictates the maximum number of pixels two objects have to intersect
 	 * before collision stops trying to separate them.
-	 * Don't modify this unless your objects are passing through eachother.
+	 * Don't modify this unless your objects are passing through each other.
 	 */
 	public static var SEPARATE_BIAS:Float = 4;
 	/**
@@ -656,7 +656,7 @@ class FlxObject extends FlxBasic
 	override public function update(elapsed:Float):Void 
 	{
 		#if FLX_DEBUG
-		// this just increments FlxBasic._ACTIVECOUNT, no need to waste a function call on release
+		// this just increments FlxBasic.activeCount, no need to waste a function call on release
 		super.update(elapsed);
 		#end
 		
@@ -675,7 +675,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Internal function for updating the position and speed of this object.
 	 * Useful for cases when you need to update this but are buried down in too many supers.
-	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
+	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independent motion.
 	 */
 	@:noCompletion
 	private function updateMotion(elapsed:Float):Void

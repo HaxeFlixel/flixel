@@ -276,7 +276,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var basic:FlxBasic = null;
 		
-		// roatated recycling
+		// rotated recycling
 		if (maxSize > 0)
 		{
 			// create new instance

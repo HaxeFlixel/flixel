@@ -359,7 +359,7 @@ class FlxGame extends Sprite
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
 		// We need to listen for resize event which means new context
-		// it means that we need to recreate bitmapdatas of dumped tilesheets
+		// it means that we need to recreate BitmapDatas of dumped tilesheets
 		stage.addEventListener(Event.RESIZE, onResize);
 		
 		// make sure the cursor etc are properly scaled from the start

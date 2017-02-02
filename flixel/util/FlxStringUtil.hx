@@ -84,7 +84,7 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Generate a comma-seperated string representation of the keys of a StringMap.
+	 * Generate a comma-separated string representation of the keys of a StringMap.
 	 * 
 	 * @param  AnyMap    A StringMap object.
 	 * @return  A String formatted like this: key1, key2, ..., keyX
@@ -556,7 +556,7 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Removes occurences of a substring by calling `StringTools.replace(s, sub, "")`.
+	 * Removes occurrences of a substring by calling `StringTools.replace(s, sub, "")`.
 	 */
 	public static inline function remove(s:String, sub:String):String
 	{
