@@ -13,6 +13,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import openfl.events.ProgressEvent;
 
 #if (openfl >= "4.5.0")
 import openfl.display.Preloader.DefaultPreloader;
@@ -271,6 +272,16 @@ class FlxBasePreloader extends #if (openfl < "4.5.0") NMEPreloader #else Default
 			}
 		}
 		return false;
+	}
+	#end
+	
+	#if (openfl >= "4.5.0")
+	override private function this_onComplete(event:Event):Void
+	{
+		event.preventDefault();
+		removeEventListener(ProgressEvent.PROGRESS, this_onProgress);
+		removeEventListener(Event.COMPLETE, this_onComplete);
+		onLoaded();
 	}
 	#end
 }
