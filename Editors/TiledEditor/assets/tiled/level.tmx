@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="220" height="18" tilewidth="32" tileheight="32" nextobjectid="28">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="220" height="18" tilewidth="32" tileheight="32" nextobjectid="29">
  <tileset firstgid="1" name="level" tilewidth="32" tileheight="32" tilecount="228" columns="12">
   <image source="level.png" width="384" height="608"/>
   <tile id="145">
@@ -12,12 +12,15 @@
  <tileset firstgid="229" name="coin" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="coin.png" width="32" height="32"/>
  </tileset>
- <tileset firstgid="230" name="imageCollection" tilewidth="490" tileheight="360" tilecount="2" columns="0">
+ <tileset firstgid="230" name="imageCollection" tilewidth="490" tileheight="360" tilecount="3" columns="0">
   <tile id="0">
    <image width="385" height="360" source="decorations/capa01_A.png"/>
   </tile>
   <tile id="1">
    <image width="490" height="360" source="decorations/capa01_B.png"/>
+  </tile>
+  <tile id="2">
+   <image width="359" height="42" source="decorations/Flipped.png"/>
   </tile>
  </tileset>
  <imagelayer name="Logo" x="832" y="320" offsetx="832" offsety="320">
@@ -39,6 +42,7 @@
     <property name="depth" value="0.9"/>
    </properties>
   </object>
+  <object id="28" gid="3221225704" x="64" y="448" width="359" height="42"/>
  </objectgroup>
  <layer name="Background" width="220" height="18">
   <properties>

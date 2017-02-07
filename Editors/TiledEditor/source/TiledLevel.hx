@@ -173,6 +173,14 @@ class TiledLevel extends TiledMap
 			decoSprite.antialiasing = true;
 			decoSprite.setGraphicSize(object.width, object.height);
 		}
+		if (object.flippedHorizontally)
+		{
+			decoSprite.flipX = true;
+		}
+		if (object.flippedVertically)
+		{
+			decoSprite.flipY = true;
+		}
 		decoSprite.setPosition(object.x, object.y - decoSprite.height);
 		decoSprite.origin.set(0, decoSprite.height);
 		if (object.angle != 0)
