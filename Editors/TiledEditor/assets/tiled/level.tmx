@@ -42,7 +42,7 @@
     <property name="depth" value="0.9"/>
    </properties>
   </object>
-  <object id="28" gid="3221225704" x="64" y="448" width="359" height="42"/>
+  <object id="28" gid="3221225704" x="163.107" y="420" width="115.393" height="13.5"/>
  </objectgroup>
  <layer name="Background" width="220" height="18">
   <properties>
