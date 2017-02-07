@@ -124,7 +124,7 @@ class TiledLevel extends TiledMap
 		var n:Int = props.animationFrames.length;
 		var offset = Std.random(n);
 		special.addAnimation(
-			[for (i in 0 ... n) props.animationFrames[(i + offset) % n].tileID + tileset.firstGID],
+			[for (i in 0...n) props.animationFrames[(i + offset) % n].tileID + tileset.firstGID],
 			(1000 / props.animationFrames[0].duration)
 		);
 		return special;
@@ -132,7 +132,6 @@ class TiledLevel extends TiledMap
 	
 	public function loadObjects(state:PlayState)
 	{
-		var layer:TiledObjectLayer;
 		for (layer in layers)
 		{
 			if (layer.type != TiledLayerType.OBJECT)
@@ -253,8 +252,8 @@ class TiledLevel extends TiledMap
 
 		for (map in collidableTileLayers)
 		{
-			// IMPORTANT: Always collide the map with objects, not the other way around. 
-			//			  This prevents odd collision errors (collision separation code off by 1 px).
+			// IMPORTANT: Always collide the map with objects, not the other way around.
+			//            This prevents odd collision errors (collision separation code off by 1 px).
 			if (FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate))
 			{
 				return true;
