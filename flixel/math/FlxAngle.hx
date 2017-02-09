@@ -180,9 +180,9 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	public static inline function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
+	public static function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
 	{
-		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+		// In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = Object.getScreenPosition();
 		
 		var dx:Float = Touch.screenX - p.x;
