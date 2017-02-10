@@ -3,5 +3,5 @@ engines:
     enabled: true
 ratings:
   paths:
-    - "flixel/**.hx"
-    - "tests/unit/src/**.hx"
+    - "flixel"
+    - "tests/unit/src"
