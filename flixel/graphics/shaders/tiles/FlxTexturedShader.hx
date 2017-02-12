@@ -21,14 +21,14 @@ class FlxTexturedShader extends FlxBaseShader
 			varying vec4 vColor;
 			varying vec4 vColorOffset;
 			
-			void main(void) 
+			void main(void)
 			{
 				vTexCoord = aTexCoord;
 				// OpenFl uses textures in bgra format, so we should convert colors...
 				vColor = aColor.bgra;
 				vColorOffset = aColorOffset.bgra;
 				gl_Position = uMatrix * aPosition;
-			}";
+			}";		
 			
 	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"

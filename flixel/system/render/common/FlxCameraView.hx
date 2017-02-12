@@ -12,7 +12,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
@@ -120,7 +119,7 @@ class FlxCameraView implements IFlxDestroyable
 	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
-	public var canvas(get, null):DisplayObject;
+	public var canvas(get, null):DisplayObjectContainer;
 	
 	/**
 	 * Internal, used for positioning camera's `flashSprite` on screen.
@@ -285,7 +284,7 @@ class FlxCameraView implements IFlxDestroyable
 		return null;
 	}
 	
-	private function get_canvas():DisplayObject
+	private function get_canvas():DisplayObjectContainer
 	{
 		return null;
 	}

@@ -39,8 +39,7 @@ import flixel.system.replay.FlxReplay;
 
 #if FLX_RENDER_GL
 import openfl._internal.renderer.RenderSession;
-import flixel.system.render.hardware.gl.GLRenderHelper;
-import flixel.system.render.hardware.gl.GLUtils;
+import flixel.system.render.hardware.gl.GLFilterManager;
 #end
 
 /**
@@ -494,11 +493,6 @@ class FlxGame extends Sprite
 		for (postProcess in postProcesses)
 			postProcess.rebuild();
 		#end
-		
-		#if FLX_RENDER_GL
-		if (_renderHelper != null)
-			_renderHelper.resize(width, height);
-		#end
 	}
 	
 	/**
@@ -895,31 +889,17 @@ class FlxGame extends Sprite
 	}
 	
 	#if FLX_RENDER_GL
-	private var renderHelper(get, never):GLRenderHelper;
-	private var _renderHelper:GLRenderHelper;
+	private var _filterManager:GLFilterManager;
 	
-	private function get_renderHelper():GLRenderHelper
+	private override function __renderGL(renderSession:RenderSession):Void 
 	{
-		if (_renderHelper == null)
+		if (_filterManager == null)
 		{
-			_renderHelper = new GLRenderHelper(this, Std.int(FlxG.stage.stageWidth), Std.int(FlxG.stage.stageHeight), true, false);
-			_renderHelper.fullscreen = true;
+			_filterManager = new GLFilterManager(cast renderSession.renderer, renderSession);
+			renderSession.filterManager = _filterManager;
 		}
 		
-		return _renderHelper;
-	}
-	
-	override public function __renderGL(renderSession:RenderSession):Void
-	{
-		var needRenderHelper:Bool = (GLUtils.getObjectNumPasses(this) > 0);
-		
-		if (needRenderHelper)
-			renderHelper.capture();
-		
 		super.__renderGL(renderSession);
-		
-		if (needRenderHelper)
-			renderHelper.render(renderSession);
 	}
 	#end
 }

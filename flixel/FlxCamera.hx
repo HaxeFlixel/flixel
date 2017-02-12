@@ -19,7 +19,7 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 
@@ -222,7 +222,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Reference to camera's `view.canvas`. Usable only in tile render mode.
 	 */
-	public var canvas(get, never):DisplayObject;
+	public var canvas(get, never):DisplayObjectContainer;
 	
 	/**
 	 * Reference to camera's `view.screen`.
@@ -1149,7 +1149,7 @@ class FlxCamera extends FlxBasic
 		return (view != null) ? view.buffer : null; 
 	}
 	
-	private function get_canvas():DisplayObject
+	private function get_canvas():DisplayObjectContainer
 	{
 		return (view != null) ? view.canvas : null; 
 	}

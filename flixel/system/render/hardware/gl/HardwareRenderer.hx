@@ -2,15 +2,19 @@ package flixel.system.render.hardware.gl;
 
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.filters.BitmapFilter;
+import openfl.geom.ColorTransform;
 
 #if FLX_RENDER_GL
 import lime.math.Matrix4;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
+import flixel.graphics.shaders.FlxCameraColorTransform.ColorTransformFilter;
 #end
 
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 
@@ -26,7 +30,7 @@ using flixel.util.FlxColorTransformUtil;
  * @author Pavel Alexandrov aka Yanrishatum https://github.com/Yanrishatum
  * @author Zaphod
  */
-class HardwareRenderer extends DisplayObject implements IFlxDestroyable
+class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
 {
 	#if FLX_RENDER_GL
 	private var states:Array<FlxDrawHardwareCommand<Dynamic>>;
@@ -35,9 +39,8 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	private var __height:Int;
 	private var __width:Int;
 	
-	private var renderHelper(get, null):GLRenderHelper;
-	
-	private var _renderHelper:GLRenderHelper;
+	private var colorFilter:ColorTransformFilter;
+	private var filtersArray:Array<BitmapFilter>;
 	
 	public function new(width:Int, height:Int)
 	{
@@ -48,21 +51,23 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		states = [];
 		stateNum = 0;
+		
+		colorFilter = new ColorTransformFilter();
+		filtersArray = [];
+		filtersArray[0] = colorFilter;
 	}
 	
 	public function destroy():Void
 	{
 		states = null;
-		_renderHelper = FlxDestroyUtil.destroy(_renderHelper);
+		colorFilter = null;
+		filtersArray = null;
 	}
 	
 	public function resize(witdh:Int, height:Int):Void
 	{
 		this.width = width;
 		this.height = height;
-		
-		if (_renderHelper != null)
-			_renderHelper.resize(__width, __height);
 	}
 	
 	public function clear():Void
@@ -100,9 +105,7 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		if (px > 0 && py > 0 && px <= __width && py <= __height) 
 		{
 			if (stack != null && !interactiveOnly) 
-			{
-				stack.push(hitObject);	
-			}
+				stack.push(hitObject);
 			
 			return true;
 		}
@@ -132,31 +135,33 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		// TODO: call FlxGame's draw() method from here
 		// TODO: every camera will have its own render texture where i will draw everthing onto and only then draw this texture on the screen
 		// TODO: sprites might have renderTarget property
 		
-	//	FlxG.game.draw();
-	
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		var numPasses:Int = GLUtils.getObjectNumPasses(this);
+		var useColorTransform:Bool = false;
+		var hasNoFilters:Bool = (__filters == null);
+		var color:ColorTransform = __worldColorTransform;
 		
-		var needRenderHelper:Bool = (numPasses > 0);
+		if (color != null)
+			useColorTransform = color.hasAnyTransformation();
+		
+		if (useColorTransform)
+		{
+			colorFilter.transform = color;
+			
+			if (hasNoFilters)
+				__filters = filtersArray;
+			else
+				__filters.unshift(colorFilter);
+		}
+		
+		renderSession.filterManager.pushObject(this);
+		
 		var transform:Matrix = this.__worldTransform;
-		var uMatrix:Array<Float> = null;
-		
-		if (needRenderHelper)
-		{
-			renderHelper.capture();
-			uMatrix = renderHelper.getMatrix(transform, renderer, numPasses);
-		}
-		else
-		{
-			uMatrix = renderer.getMatrix(transform);
-		}
-		
+		var uMatrix:Array<Float> = renderer.getMatrix(transform);
 		var uniformMatrix:Matrix4 = GLUtils.arrayToMatrix(uMatrix);
 		
 		for (i in 0...stateNum)
@@ -164,19 +169,26 @@ class HardwareRenderer extends DisplayObject implements IFlxDestroyable
 		
 		FlxDrawHardwareCommand.currentShader = null;
 		
-		if (needRenderHelper)
-			renderHelper.render(renderSession);
-	}
-	
-	private function get_renderHelper():GLRenderHelper
-	{
-		if (_renderHelper == null)
-		{
-			_renderHelper = new GLRenderHelper(this, __width, __height, false, false);
-			_renderHelper.fullscreen = false;
+		for (child in __children) 
+			child.__renderGL(renderSession);
+		
+		for (orphan in __removedChildren) 
+		{	
+			if (orphan.stage == null)
+				orphan.__cleanup();
 		}
 		
-		return _renderHelper;
+		__removedChildren.length = 0;
+		
+		renderSession.filterManager.popObject(this);
+		
+		if (useColorTransform)
+		{
+			if (hasNoFilters)
+				__filters = null;
+			else
+				__filters.shift();
+		}
 	}
 	
 	#else

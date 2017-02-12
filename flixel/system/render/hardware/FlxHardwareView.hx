@@ -12,7 +12,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
@@ -320,7 +319,7 @@ class FlxHardwareView extends FlxCameraView
 	}
 	#end
 	
-	override function get_canvas():DisplayObject 
+	override function get_canvas():DisplayObjectContainer 
 	{
 		return _canvas;
 	}
