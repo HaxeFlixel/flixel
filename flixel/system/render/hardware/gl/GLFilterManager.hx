@@ -41,17 +41,28 @@ class GLFilterManager extends AbstractFilterManager
 		matrix = new Matrix();
 	}
 	
+	private function getNumPasses(object:DisplayObject):Int
+	{
+		var numPasses:Int = 0;
+		
+		if (object.__filters != null && object.__filters.length > 0)
+		{
+			numPasses = object.__filters.length;
+			
+			for (filter in object.__filters)
+				numPasses += (filter.__numPasses > 0) ? (filter.__numPasses - 1) : 0;
+		}
+		
+		return numPasses;
+	}
+	
 	public override function pushObject(object:DisplayObject):Shader 
 	{	
 		// TODO: Support one-pass filters?
 		
 		if (object.__filters != null && object.__filters.length > 0)
 		{
-			if (object.__filters.length == 1 && object.__filters[0].__numPasses == 0)
-				return object.__filters[0].__initShader(renderSession, 0);
-			else
-				renderer.getRenderTarget(true);
-			
+			renderer.getRenderTarget(true);
 			filterDepth++;
 		}
 		
@@ -62,15 +73,7 @@ class GLFilterManager extends AbstractFilterManager
 	{
 		if (object.__filters != null && object.__filters.length > 0)
 		{
-			var numPasses:Int = 0;
-			
-			if (object.__filters.length > 1 || object.__filters[0].__numPasses > 0)
-			{
-				numPasses = object.__filters.length;
-				
-				for (filter in object.__filters)
-					numPasses += (filter.__numPasses > 0) ? (filter.__numPasses - 1) : 0;
-			}
+			var numPasses:Int = getNumPasses(object);
 			
 			if (numPasses > 0)
 			{
