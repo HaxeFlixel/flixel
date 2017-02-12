@@ -53,8 +53,7 @@ class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
 		stateNum = 0;
 		
 		colorFilter = new ColorTransformFilter();
-		filtersArray = [];
-		filtersArray[0] = colorFilter;
+		filtersArray = [colorFilter];
 	}
 	
 	public function destroy():Void

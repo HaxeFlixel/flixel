@@ -14,10 +14,7 @@ import openfl.geom.ColorTransform;
 	public function new()
 	{
 		super();
-		
 		__numPasses = 1;
-		
-		trace("ColorTransformFilter constructor");
 	}
 	
 	override public function clone():BitmapFilter 
@@ -27,8 +24,6 @@ import openfl.geom.ColorTransform;
 	
 	override private function __initShader(renderSession:RenderSession, pass:Int):Shader 
 	{
-		trace("__initShader");
-		
 		_colorTransformShader.init(transform);
 		return _colorTransformShader;
 	}
@@ -71,14 +66,10 @@ class FlxCameraColorTransform extends Shader
 		data.uColor.value = [1.0, 1.0, 1.0, 1.0];
 		data.uColorOffset.value = [0.0, 0.0, 0.0, 0.0];
 		#end
-		
-		trace("FlxCameraColorTransform constructor");
 	}
 	
 	public function init(transform:ColorTransform):Void
 	{
-		trace("init shader");
-		
 		var multipliers = data.uColor.value;
 		var offsets = data.uColorOffset.value;
 		
@@ -108,8 +99,5 @@ class FlxCameraColorTransform extends Shader
 			offsets[2] = 0.0;
 			offsets[3] = 0.0;
 		}
-		
-		trace("multipliers: " + multipliers);
-		trace("offsets: " + offsets);
 	}
 }
