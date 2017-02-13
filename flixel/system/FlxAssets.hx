@@ -37,7 +37,7 @@ typedef FlxShader = #if (openfl_legacy || nme) Dynamic #else  openfl.display.Sha
 
 class FlxAssets
 {
-#if macro
+#if (macro || doc_gen)
 	/**
 	 * Reads files from a directory relative to this project and generates `public static inline`
 	 * variables containing the string paths to the files in it. 
@@ -57,11 +57,16 @@ class FlxAssets
 	 * @param   subDirectories     Whether to include subdirectories
 	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
 	 */
-	public static macro function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
+	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
 	{
+		#if doc_gen
+		return [];
+		#else
 		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions);
+		#end
 	}
-#else
+#end
+#if (!macro || doc_gen)
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Monsterrat";
