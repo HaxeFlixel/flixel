@@ -21,7 +21,7 @@ class Player extends FlxSprite
 	public static inline var GUN_DELAY:Float = 0.4;
 	
 	private var _gibs:FlxEmitter;
-	private var _bullets:FlxGroup;
+	private var _bullets:FlxTypedGroup<Bullet>;
 	private var _blt:Bullet;
 	private var _cooldown:Float;
 	private var _parent:PlayState;
@@ -37,7 +37,7 @@ class Player extends FlxSprite
 	public var climbing:Bool = false;
 	private var _onLadder:Bool = false;
 	
-	public function new(X:Int, Y:Int, Parent:PlayState, Gibs:FlxEmitter, Bullets:FlxGroup) 
+	public function new(X:Int, Y:Int, Parent:PlayState, Gibs:FlxEmitter, Bullets:FlxTypedGroup<Bullet>) 
 	{
 		// X,Y: Starting coordinates
 		super(X, Y);
@@ -67,12 +67,12 @@ class Player extends FlxSprite
 	public override function update(elapsed:Float):Void
 	{
 		// Reset to 0 when no button is pushed
-		acceleration.x = 0; 
+		acceleration.x = 0;
 		
-		if (climbing) 
+		if (climbing)
 		{
 			// Stop falling if you're climbing a ladder
-			acceleration.y = 0;  
+			acceleration.y = 0;
 		}
 		else 
 		{
@@ -87,7 +87,7 @@ class Player extends FlxSprite
 		else if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
 			flipX = false;
-			acceleration.x = drag.x;				
+			acceleration.x = drag.x;
 		}
 		
 		jump(elapsed);
@@ -102,7 +102,7 @@ class Player extends FlxSprite
 		if (FlxG.keys.anyPressed([X, J]))
 		{
 			//Let's put the shooting code in its own function to keep things organized
-			shoot();  
+			shoot();
 		}
 		
 		// Animations
@@ -230,7 +230,7 @@ class Player extends FlxSprite
 		
 		if (_cooldown >= GUN_DELAY)
 		{
-			_blt = cast(_bullets.recycle(), Bullet);
+			_blt = _bullets.recycle(Bullet.new);
 			
 			if (_blt != null)
 			{

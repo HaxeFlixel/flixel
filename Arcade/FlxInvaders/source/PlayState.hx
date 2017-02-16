@@ -14,18 +14,18 @@ import flixel.util.FlxColor;
 class PlayState extends FlxState
 {
 	/**
-	 * The satus message to show. Static so that it carries over to a new PlayState.
+	 * The status message to show. Static so that it carries over to a new PlayState.
 	 */
 	public static var statusMessage:String = "WELCOME TO FLX INVADERS";
 	
 	/**
 	 * Refers to all the bullets the enemies shoot at you
 	 */
-	public var alienBullets:FlxGroup;
+	public var alienBullets:FlxTypedGroup<FlxSprite>;
 	/**
 	 * Refers to the bullets you shoot
 	 */
-	public var playerBullets:FlxGroup;
+	public var playerBullets:FlxTypedGroup<FlxSprite>;
 	
 	/**
 	 * Refers to the little player ship at the bottom
@@ -34,11 +34,11 @@ class PlayState extends FlxState
 	/**
 	 * Refers to all the squid monsters
 	 */
-	private var _aliens:FlxGroup;
+	private var _aliens:FlxTypedGroup<Alien>;
 	/**
 	 * Refers to the box shields along the bottom of the game
 	 */
-	private var _shields:FlxGroup;
+	private var _shields:FlxTypedGroup<FlxSprite>;
 	
 	//Some meta-groups for speeding up overlap checks later
 	
@@ -62,7 +62,7 @@ class PlayState extends FlxState
 		// First we will instantiate the bullets you fire at your enemies.
 		var numPlayerBullets:Int = 8;
 		// Initializing the array is very important and easy to forget!
-		playerBullets = new FlxGroup(numPlayerBullets);
+		playerBullets = new FlxTypedGroup(numPlayerBullets);
 		var sprite:FlxSprite;
 		
 		// Create 8 bullets for the player to recycle
@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		
 		// Then we kind of do the same thing for the enemy invaders; first we make their bullets.
 		var numAlienBullets:Int = 32;
-		alienBullets = new FlxGroup(numAlienBullets);
+		alienBullets = new FlxTypedGroup(numAlienBullets);
 		
 		for (i in 0...numAlienBullets)
 		{
@@ -106,7 +106,7 @@ class PlayState extends FlxState
 		// ...then we go through and make the invaders. This looks all mathy but it's not that bad!
 		// We're basically making 5 rows of 10 invaders, and each row is a different color.
 		var numAliens:Int = 50;
-		_aliens = new FlxGroup(numAliens);
+		_aliens = new FlxTypedGroup(numAliens);
 		var a:Alien;
 		var colors:Array<Int>;
 		
@@ -125,7 +125,7 @@ class PlayState extends FlxState
 		// That way they look like they're getting chipped apart as they get shot.
 		// This also looks kind of crazy and mathy (it sort of is), but we're just
 		// telling the game where to put all the individual bits that make up each box.
-		_shields = new FlxGroup();
+		_shields = new FlxTypedGroup();
 		
 		for (i in 0...64)
 		{
@@ -148,7 +148,7 @@ class PlayState extends FlxState
 		_vsAlienBullets.add(_player);
 		
 		// Then we're going to add a text field to display the label we're storing in the scores array.
-		var t:FlxText = new FlxText(4, 4, FlxG.width - 8, statusMessage);
+		var t = new FlxText(4, 4, FlxG.width - 8, statusMessage);
 		t.alignment = CENTER;
 		add(t);
 	}

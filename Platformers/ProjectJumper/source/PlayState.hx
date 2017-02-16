@@ -19,12 +19,12 @@ class PlayState extends FlxState
 
 	private var _gibs:FlxEmitter;
 	private var _mongibs:FlxEmitter;
-	private var _bullets:FlxGroup;
+	private var _bullets:FlxTypedGroup<Bullet>;
 	private var _badbullets:FlxTypedGroup<Bullet>;
 	private var _restart:Bool;
 	private var _text1:FlxText;
-	private var _enemies:FlxGroup;
-	private var _coins:FlxGroup;
+	private var _enemies:FlxTypedGroup<EnemyTemplate>;
+	private var _coins:FlxTypedGroup<Coin>;
 	private var _score:FlxText;
 	
 	override public function create():Void
@@ -57,7 +57,7 @@ class PlayState extends FlxState
 		_mongibs.loadParticles("assets/art/spikegibs.png", 25, 16, true);
 		
 		// Create the actual group of bullets here
-		_bullets = new FlxGroup();
+		_bullets = new FlxTypedGroup<Bullet>();
 		_bullets.maxSize = 4;
 		_badbullets = new FlxTypedGroup<Bullet>();
 		
@@ -67,11 +67,11 @@ class PlayState extends FlxState
 		FlxG.camera.follow(player, LOCKON, 1); 
 		
 		// Set up the enemies here
-		_enemies = new FlxGroup();
+		_enemies = new FlxTypedGroup<EnemyTemplate>();
 		placeMonsters(Assets.getText("assets/data/monstacoords.csv"), Enemy);
 		placeMonsters(Assets.getText("assets/data/lurkcoords.csv"), Lurker);
 		
-		_coins = new FlxGroup();
+		_coins = new FlxTypedGroup<Coin>();
 		placeCoins(Assets.getText("assets/data/coins.csv"), Coin);
 		
 		add(_coins);

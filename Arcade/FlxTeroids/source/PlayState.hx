@@ -149,7 +149,7 @@ class PlayState extends FlxState
 	
 	private function spawnAsteroid():Void
 	{
-		var asteroid:Asteroid = asteroids.recycle(Asteroid);
+		var asteroid = asteroids.recycle(Asteroid.new);
 		asteroid.init();
 	}
 }

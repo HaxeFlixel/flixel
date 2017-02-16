@@ -146,7 +146,6 @@ class PlayState extends FlxState
 		});
 		obs.velocity.x = FlxG.random.float( -100, -1);
 		obs.velocity.y = FlxG.random.float( -10, 10);
-		//obs.moves = false;
 		obs.immovable = true;
 	}
 	

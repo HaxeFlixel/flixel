@@ -149,7 +149,7 @@ class Asteroid extends FlxSprite
 			var avx:Float = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 			var avy:Float = FlxG.random.float() * initial_velocity * 2 - initial_velocity;
 			
-			var asteroid:Asteroid = PlayState.asteroids.recycle(Asteroid);
+			var asteroid = PlayState.asteroids.recycle(Asteroid.new);
 			asteroid.init(Math.floor(ax), Math.floor(ay), avx, avy, size);
 		}
 	}

@@ -22,7 +22,7 @@ class Alien extends FlxSprite
 	 * This is the constructor for the squid monster.
 	 * We are going to set up the basic values and then create a simple animation.
 	 */
-	public function new(X:Int, Y:Int, Color:Int, Bullets:FlxGroup)
+	public function new(X:Int, Y:Int, Color:Int, Bullets:FlxTypedGroup<FlxSprite>)
 	{
 		// Initialize sprite object
 		super(X, Y);
@@ -70,14 +70,15 @@ class Alien extends FlxSprite
 		if (y > FlxG.height * 0.35)
 		{
 			// Only count down if on the bottom two-thirds of the screen
-			_shotClock -= elapsed; 
+			_shotClock -= elapsed;
 		}
 		
 		if (_shotClock <= 0)
 		{
 			// We counted down to zero, so it's time to shoot a bullet!
 			resetShotClock();
-			var bullet:FlxSprite = cast(cast(FlxG.state, PlayState).alienBullets.recycle(), FlxSprite);
+			var playState:PlayState = cast FlxG.state;
+			var bullet = playState.alienBullets.recycle();
 			bullet.reset(x + width / 2 - bullet.width / 2, y);
 			bullet.velocity.y = 65;
 		}

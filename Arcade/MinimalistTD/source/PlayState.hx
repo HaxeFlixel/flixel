@@ -801,7 +801,7 @@ class PlayState extends FlxState
 	{
 		enemiesToSpawn--;
 		
-		var enemy:Enemy = enemyGroup.recycle(Enemy);
+		var enemy = enemyGroup.recycle(Enemy.new.bind(0, 0));
 		enemy.init(_enemySpawnPosition.x, _enemySpawnPosition.y);
 		enemy.followPath(_map.findPath(_enemySpawnPosition, _goalPosition.copyTo().add(5, 5)), 20 + Reg.PS.wave);
 		_spawnCounter = 0;

@@ -351,13 +351,9 @@ class PlayState extends FlxState
 	
 	private function spawnHit():Void
 	{
-		var h:Hit = _hits.recycle();
-		if (h == null)
-		{
-			h = new Hit(_sprPlayer);
-		}
-		h.hit();
-		_hits.add(h);
+		var hit = _hits.recycle(Hit.new.bind(_sprPlayer));
+		hit.hit();
+		_hits.add(hit);
 	}
 	
 	private function playerHitEnemy(P:FlxSprite, E:FlxSprite):Void
@@ -390,16 +386,11 @@ class PlayState extends FlxState
 	
 	private function addExplosions(Target:FlxSprite):Void
 	{
-		var e:Explosion;
 		for (i in 0...3)
 		{
-			e = _explosions.recycle();
-			if (e == null)
-			{
-				e = new Explosion();
-			}
-			e.explode(Target, i);
-			_explosions.add(e);
+			var explosion = _explosions.recycle(Explosion.new);
+			explosion.explode(Target, i);
+			_explosions.add(explosion);
 		}
 	}
 	
@@ -472,24 +463,18 @@ class PlayState extends FlxState
 	
 	public function shootEBullet(E:Enemy):Void
 	{
-		var eB:EBullet = _grpEBullets.recycle();
-		if (eB == null)
-			eB = new EBullet();
+		var eB = _grpEBullets.recycle(EBullet.new);
 		eB.reset(E.x - eB.width, E.y + E.height - 1);
 		_grpEBullets.add(eB);
 		FlxG.sound.play(AssetPaths.eshoot__wav, .66);
-		var s:Spark = _sparks.recycle();
-		if (s == null)
-			s = new Spark();
+		var s:Spark = _sparks.recycle(Spark.new);
 		s.spark(-1, E.height-2, E,1);
 		_sparks.add(s);
 	}
 	
 	public function shootEBulletBubble(E:EnemySpinner):Void
 	{
-		var eB:EBulletBubble = _grpEBulletBubbles.recycle();
-		if (eB == null)
-			eB = new EBulletBubble();
+		var eB:EBulletBubble = _grpEBulletBubbles.recycle(EBulletBubble.new);
 		eB.reset(E.x +(eB.width / 2) - (eB.width / 2) , E.y + (E.height / 2) - (eB.height / 2));
 		eB.velocity.set(100, 0);
 		eB.velocity.rotate(FlxPoint.weak(), FlxG.random.int(0, 360));
@@ -501,16 +486,12 @@ class PlayState extends FlxState
 	{
 		if (_shootDelay <= 0 && _grpPBullets.countLiving() < 12)
 		{
-			var pB:PBullet = _grpPBullets.recycle();
-			if (pB == null)
-				pB = new PBullet();
+			var pB = _grpPBullets.recycle(PBullet.new);
 			pB.reset(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + _sprPlayer.height -1);
 			_grpPBullets.add(pB);
 			_shootDelay = .5;
 			FlxG.sound.play(AssetPaths.shoot__wav, .33);
-			var s:Spark = _sparks.recycle();
-			if (s == null)
-				s = new Spark();
+			var s = _sparks.recycle(Spark.new);
 			s.spark(_sprPlayer.width-1, _sprPlayer.height -2, _sprPlayer, 0);
 			_sparks.add(s);
 		}

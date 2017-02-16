@@ -53,7 +53,6 @@ class Enemy extends FlxSprite
 	 * This is the constructor for the enemy class. Because we are recycling 
 	 * enemies, we don't want our constructor to have any required parameters.
 	 */
-	@:keep
 	public function new()
 	{
 		super();
@@ -179,7 +178,7 @@ class Enemy extends FlxSprite
 			{
 				// First, recycle a bullet from the bullet pile.
 				// If there are none, recycle will automatically create one for us.
-				var b:EnemyBullet = _bullets.recycle(EnemyBullet);
+				var b:EnemyBullet = _bullets.recycle(EnemyBullet.new);
 				// Then, shoot it from our midpoint out along our angle.
 				b.shoot(getMidpoint(_point), angle);
 			}

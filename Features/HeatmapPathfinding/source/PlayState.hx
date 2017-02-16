@@ -119,7 +119,7 @@ class PlayState extends FlxState
 		var x:Float = FlxG.mouse.x - (FlxG.mouse.x % 16);
 		var y:Float = FlxG.mouse.y - (FlxG.mouse.y % 16);
 		
-		var seeker = seekers.recycle(Seeker);
+		var seeker = seekers.recycle(Seeker.new);
 		seeker.reset(x, y);
 	}
 	

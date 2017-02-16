@@ -63,7 +63,8 @@ class PlayerShip extends FlxSprite
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			// Space bar was pressed! FIRE A BULLET
-			var bullet:FlxSprite = cast(cast(FlxG.state, PlayState).playerBullets.recycle(), FlxSprite);
+			var playState:PlayState = cast FlxG.state;
+			var bullet:FlxSprite = playState.playerBullets.recycle();
 			bullet.reset(x + width/2 - bullet.width/2, y);
 			bullet.velocity.y = -140;
 		}

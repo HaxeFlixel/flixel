@@ -9,7 +9,6 @@ class Bullet extends FlxSprite
 {
 	private var _speed:Float;
 	
-	@:keep
 	public function new()
 	{
 		super();

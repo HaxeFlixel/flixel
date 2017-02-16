@@ -114,7 +114,7 @@ class Spawner extends FlxSprite
 	
 	private function makeBot():Void
 	{
-		_bots.recycle(Enemy).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
+		_bots.recycle(Enemy.new).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
 	}
 	
 	private function turnOffSlowMo():Void

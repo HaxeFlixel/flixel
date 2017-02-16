@@ -12,9 +12,9 @@ class Seeker extends FlxSprite
 	private var dest:FlxPoint;
 	private var vec:FlxVector;
 	
-	public function new(X:Float, Y:Float)
+	public function new()
 	{
-		super(X, Y, "assets/images/seeker.png");
+		super(0, 0, "assets/images/seeker.png");
 		dest = FlxPoint.get();
 		vec = FlxVector.get();
 		setSize(12, 12);
@@ -32,8 +32,8 @@ class Seeker extends FlxSprite
 		
 		vec.normalize();
 		
-		velocity.x = (vec.x) * Speed;
-		velocity.y = (vec.y) * Speed;
+		velocity.x = vec.x * Speed;
+		velocity.y = vec.y * Speed;
 	}
 	
 	private function finishMoveTo():Void

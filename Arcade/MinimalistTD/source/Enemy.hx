@@ -34,7 +34,7 @@ class Enemy extends FlxSprite
 	}
 	
 	/**
-	 * The alpha of the enmy is dependent on health.
+	 * The alpha of the enemy is dependent on health.
 	 */
 	override public function update(elapsed:Float):Void
 	{
@@ -66,7 +66,7 @@ class Enemy extends FlxSprite
 	{
 		FlxG.sound.play("enemykill");
 		
-		var emitter:EnemyGibs = Reg.PS.emitterGroup.recycle(EnemyGibs);
+		var emitter = Reg.PS.emitterGroup.recycle(EnemyGibs.new);
 		emitter.startAtPosition(x, y);
 		
 		Reg.PS.enemiesToKill--;

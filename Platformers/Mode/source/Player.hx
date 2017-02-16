@@ -296,7 +296,7 @@ class Player extends FlxSprite
 		else
 		{
 			getMidpoint(_point);
-			_bullets.recycle(Bullet).shoot(_point, _aim);
+			_bullets.recycle(Bullet.new).shoot(_point, _aim);
 			
 			if (_aim == FlxObject.DOWN)
 			{
