@@ -19,7 +19,7 @@ If you're a developer and like what we're doing, [read the docs](#for-developers
 In case you're looking for resources, help, or just want to interact with the community:
 
 - [HaxeFlixel.com](http://www.haxeflixel.com/)
-  - [Forums](http://www.haxeflixel.com/forum)
+  - [Forums](http://forum.haxeflixel.com/)
   - [Docs](http://www.haxeflixel.com/documentation)
   - [API](http://api.haxeflixel.com/)
 - [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
