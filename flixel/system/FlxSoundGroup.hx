@@ -64,4 +64,20 @@ class FlxSoundGroup
 		}
 		return volume;
 	}
+	
+	public function pause():Void
+	{
+		for (sound in sounds)
+		{
+			sound.pause();
+		}
+	}
+	
+	public function resume():Void
+	{
+		for (sound in sounds)
+		{
+			sound.resume();
+		}
+	}
 }
