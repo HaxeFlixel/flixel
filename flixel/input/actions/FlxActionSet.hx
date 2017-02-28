@@ -9,6 +9,7 @@ import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogSteam;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
+import flixel.input.actions.FlxActionManager.ActionSetJSON;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Json;
@@ -120,16 +121,16 @@ class FlxActionSet implements IFlxDestroyable
 	 * @return	An action set
 	 */
 	@:access(flixel.input.actions.FlxActionManager)
-	private static function fromJSON(Data:Dynamic, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
+	private static function fromJSON(Data:ActionSetJSON, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
 		var digitalActions:Array<FlxActionDigital> = [];
 		var analogActions:Array<FlxActionAnalog> = [];
 		
 		if (Data == null) return null;
 		
-		if (Reflect.hasField(Data, "digitalActions"))
+		if (Data.digitalActions != null)
 		{
-			var arrD:Array<Dynamic> = Reflect.field(Data, "digitalActions");
+			var arrD:Array<Dynamic> = Data.digitalActions;
 			for (d in arrD)
 			{
 				var dName:String = cast d;
@@ -138,9 +139,9 @@ class FlxActionSet implements IFlxDestroyable
 			}
 		}
 		
-		if (Reflect.hasField(Data, "analogActions"))
+		if (Data.analogActions != null)
 		{
-			var arrA:Array<Dynamic> = Reflect.field(Data, "analogActions");
+			var arrA:Array<Dynamic> = Data.analogActions;
 			for (a in arrA)
 			{
 				var aName:String = cast a;
@@ -149,9 +150,9 @@ class FlxActionSet implements IFlxDestroyable
 			}
 		}
 		
-		if (Reflect.hasField(Data, "name"))
+		if (Data.name != null)
 		{
-			var name:String = cast Reflect.field(Data, "name");
+			var name:String = Data.name;
 			var set = new FlxActionSet(name, digitalActions, analogActions);
 			return set;
 		}
