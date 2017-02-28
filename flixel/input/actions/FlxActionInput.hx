@@ -87,6 +87,7 @@ enum FlxInputDevice
 	GAMEPAD;
 	STEAM_CONTROLLER;
 	IFLXINPUT_OBJECT;
+	OTHER;
 	ALL;
 }
 
