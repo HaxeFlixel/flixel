@@ -860,7 +860,8 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 }
 
-typedef ActionSetJSON = {
+typedef ActionSetJSON =
+{
 	@:optional var name:String;
 	@:optional var analogActions:Array<String>;
 	@:optional var digitalActions:Array<String>;
