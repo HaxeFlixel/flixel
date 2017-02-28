@@ -134,7 +134,7 @@ class Pointer extends Tool
 		calculateSelectionArea();
 
 		if (findItems)
-			_brain.findItemsWithinArea(_itemsInSelectionArea, FlxG.state.members, _selectionArea);
+			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
 		
 		// Clear everything
 		_selectionHappening = false;

@@ -378,7 +378,7 @@ class Interaction extends Window
 	private function restoreSystemCursor():Void
 	{
 		#if FLX_MOUSE
-		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;		
+		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
 		FlxG.mouse.visible = _wasMouseVisible;
 		_customCursor.visible = false;
 		#end
@@ -455,6 +455,13 @@ class Interaction extends Window
 		return (_turn - value) == 1;
 	}
 	
+	public function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
+	{
+		findItemsWithinArea(items, state.members, area);
+		if (state.subState != null)
+			findItemsWithinState(items, state.subState, area);
+	}
+
 	/**
 	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
 	 * the method has no return, you must pass an array where items will be placed. The method decides
