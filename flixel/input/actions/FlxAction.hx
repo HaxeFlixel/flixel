@@ -270,19 +270,18 @@ class FlxAction implements IFlxDestroyable
 	 * See if this action has just been triggered
 	 * @return
 	 */
-	@:access(FlxG.game)
 	public function check():Bool
 	{
 		_x = null;
 		_y = null;
 		
-		if (_timestamp == @:privateAccess FlxG.game._total)
+		if (_timestamp == FlxG.game.ticks)
 		{
 			fire = _check;
 			return _check;	//run no more than once per frame
 		}
 		
-		_timestamp = @:privateAccess FlxG.game._total;
+		_timestamp = FlxG.game.ticks;
 		_check = false;
 		
 		var len = inputs != null ? inputs.length : 0;
