@@ -291,7 +291,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		if (data == null) return 0;
 		
 		var i:Int = 0;
-		var actionSets:Array<ActionSetJSON> = data.actionSets;
+		var actionSets:Array<ActionSetJSON> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
 		if (actionSets == null) return 0;
 		
 		for (set in actionSets)
