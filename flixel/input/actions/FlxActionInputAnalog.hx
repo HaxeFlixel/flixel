@@ -182,49 +182,24 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	{
 		if (deviceID == FlxInputDeviceID.ALL)
 		{
-			#if !FLX_NO_GAMEPAD
-			var gamepad:FlxGamepad = null;
-			
-			if (deviceID == FlxInputDeviceID.FIRST_ACTIVE)
-			{
-				gamepad = FlxG.gamepads.getFirstActiveGamepad();
-			}
-			else if (deviceID >= 0)
-			{
-				gamepad = FlxG.gamepads.getByID(deviceID);
-			}
-			
-			if (gamepad != null)
-			{
-				switch (inputID)
-				{
-					case FlxGamepadInputID.LEFT_ANALOG_STICK: 
-						updateVals(gamepad.analog.value.LEFT_STICK_X, gamepad.analog.value.LEFT_STICK_Y);
-						
-					case FlxGamepadInputID.RIGHT_ANALOG_STICK:
-						updateVals(gamepad.analog.value.RIGHT_STICK_X, gamepad.analog.value.RIGHT_STICK_Y);
-						
-					case FlxGamepadInputID.LEFT_TRIGGER:
-						updateVals(gamepad.analog.value.LEFT_TRIGGER, 0);
-						
-					case FlxGamepadInputID.RIGHT_TRIGGER:
-						updateVals(gamepad.analog.value.RIGHT_TRIGGER, 0);
-						
-					case FlxGamepadInputID.POINTER_X:
-						updateVals(gamepad.analog.value.POINTER_X, 0);
-						
-					case FlxGamepadInputID.POINTER_Y:
-						updateVals(gamepad.analog.value.POINTER_Y, 0);
-						
-					case FlxGamepadInputID.DPAD:
-						updateVals(
-							gamepad.pressed.DPAD_LEFT ? -1.0 : gamepad.pressed.DPAD_RIGHT ? 1.0 : 0.0, 
-							gamepad.pressed.DPAD_UP ? -1.0 : gamepad.pressed.DPAD_DOWN ? 1.0 : 0.0
-						);
-					
-				}
-			}
-			else
+			return; //analog data is only meaningful on an individual device
+		}
+		
+		#if !FLX_NO_GAMEPAD
+		var gamepad:FlxGamepad = null;
+		
+		if (deviceID == FlxInputDeviceID.FIRST_ACTIVE)
+		{
+			gamepad = FlxG.gamepads.getFirstActiveGamepad();
+		}
+		else if (deviceID >= 0)
+		{
+			gamepad = FlxG.gamepads.getByID(deviceID);
+		}
+		
+		if (gamepad != null)
+		{
+			switch (inputID)
 			{
 				case FlxGamepadInputID.LEFT_ANALOG_STICK: 
 					updateVals(gamepad.analog.value.LEFT_STICK_X, gamepad.analog.value.LEFT_STICK_Y);
