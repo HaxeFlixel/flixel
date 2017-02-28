@@ -274,12 +274,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	CallbackAnalog	Callback function for analog actions
 	 * @return	The number of new FlxActionSets created and added. 0 means nothing happened.
 	 */
-	public function initFromJSON(data:Dynamic, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
+	public function initFromJSON(data:ActionSetJSONArray, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
 	{
 		if (data == null) return 0;
 		
 		var i:Int = 0;
-		var actionSets:Array<ActionSetJSON> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
+		var actionSets:Array<ActionSetJSON> = data.actionSets;
 		if (actionSets == null) return 0;
 		
 		for (set in actionSets)
@@ -858,6 +858,11 @@ class ActionSetRegister implements IFlxDestroyable
 			}
 		}
 	}
+}
+
+typedef ActionSetJSONArray = 
+{
+	@:optional var actionSets:Array<ActionSetJSON>;
 }
 
 typedef ActionSetJSON =
