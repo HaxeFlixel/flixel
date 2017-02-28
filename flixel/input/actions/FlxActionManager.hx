@@ -279,7 +279,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		if (data == null) return 0;
 		
 		var i:Int = 0;
-		var actionSets:Array<Dynamic> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
+		var actionSets:Array<ActionSetJSON> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
 		if (actionSets == null) return 0;
 		
 		for (set in actionSets)
@@ -858,4 +858,10 @@ class ActionSetRegister implements IFlxDestroyable
 			}
 		}
 	}
+}
+
+typedef ActionSetJSON = {
+	@:optional name:String,
+	@:optional analogActions:Array<String>,
+	@:optional digitalActions:Array<String>
 }
