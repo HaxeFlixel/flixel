@@ -5,7 +5,6 @@ import flixel.input.FlxInput;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.actions.FlxActionInputAnalog.ObjectXY;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
@@ -38,7 +37,7 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 	 * @param	InvertY	Invert the Y axis
 	 * @param	InvertX	Invert the X axis
 	 */
-	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
+	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = FlxAnalogAxis.EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
 	{
 		super(Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX);
 		button = ButtonID;
@@ -62,57 +61,6 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 		}
 		super.updateVals(X, Y);
 		
-	}
-}
-
-class FlxActionInputAnalogObjectXY extends FlxActionInputAnalog
-{
-	private var object:ObjectXY;
-	
-	/**
-	 * Generic object input -- track the x,y float values of any object and respond
-	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
-	 */
-	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, Object:ObjectXY)
-	{
-		object = ObjectXY;
-		super(FlxInputDevice.OTHER, -1, cast Trigger, Axis);
-	}
-	
-	override public function destroy():Void 
-	{
-		object = null;
-		super.destroy();
-	}
-	
-	override public function update():Void
-	{
-		updateVals(object.x, object.y);
-	}
-	
-	override private function updateVals(X:Float, Y:Float):Void
-	{
-		if (X != x)
-		{
-			xMoved.press();
-		}
-		else
-		{
-			xMoved.release();
-		}
-		
-		if (Y != y)
-		{
-			yMoved.press();
-		}
-		else
-		{
-			yMoved.release();
-		}
-		
-		x = X;
-		y = Y;
 	}
 }
 
@@ -425,10 +373,4 @@ abstract FlxAnalogAxis(Int) from Int
 	var Y = 1;
 	var BOTH = 2;
 	var EITHER = 3;
-}
-
-typedef ObjectXY
-{
-	var x:Float;
-	var y:Float;
 }

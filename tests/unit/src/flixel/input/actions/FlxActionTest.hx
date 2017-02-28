@@ -1,4 +1,5 @@
-package tests.unit.src.flixel.input.actions;
+package flixel.input.actions;
+
 import flixel.FlxObject;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
@@ -28,7 +29,6 @@ class FlxActionTest extends FlxTest
 	var dState:FlxInput<Int>;
 	var dInput:FlxActionInputDigital;
 	
-	var aState:FlxObject;
 	var aInput:FlxActionInputAnalog;
 	
 	@Before
@@ -38,10 +38,9 @@ class FlxActionTest extends FlxTest
 		analog = new FlxActionAnalog("analog", null);
 		
 		dState = new FlxInput<Int>(0);
-		dInput = new FlxActionInputDigitalIFlxInput(clicker, FlxInputState.JUST_PRESSED);
+		dInput = new FlxActionInputDigitalIFlxInput(dState, FlxInputState.JUST_PRESSED);
 		
-		aState = new FlxObject();
-		aInput = new FlxActionInputAnalogObjectXY(aState, FlxAnalogAxis.EITHER, aState);
+		aInput = new FlxActionInputAnalogMousePosition(FlxAnalogState.MOVED, FlxAnalogAxis.EITHER);
 		
 		digital.addInput(dInput);
 		analog.addInput(aInput);
@@ -64,7 +63,7 @@ class FlxActionTest extends FlxTest
 		
 		digital.removeInput(input1, false);
 		
-		Assert.isTrue(digital.inputs.length == 1);
+		Assert.isTrue(digital.inputs.length == 2);
 		Assert.isFalse(input1.destroyed);
 		
 		input1.destroy();
@@ -84,49 +83,69 @@ class FlxActionTest extends FlxTest
 	@Test
 	function testCallbacks(){
 		
-		//digital
+		//digital w/ callback
 		
 		var value = 0;
 		
-		digital.callback = function (a:FlxActionDigital)
-		{
-			value++;
-		}
-		
+		var d:FlxActionDigital = new FlxActionDigital("dCallback", function (a:FlxActionDigital)
+			{
+				value++;
+			}
+		);
+		d.addInput(dInput);
 		pulseDigital();
-		digital.check();
+		d.check();
 		
 		Assert.isTrue(value == 1);
 		
-		value = 0;
-		digital.callback = null;
+		d.removeAllInputs(false);
+		d.destroy();
 		
+		//digital w/o callback
+		
+		value = 0;
+		
+		var d2:FlxActionDigital = new FlxActionDigital("dNoCallback", null);
+		d2.addInput(dInput);
 		pulseDigital();
 		digital.check();
 		
 		Assert.isTrue(value == 0);
 		
-		//analog
+		d2.removeAllInputs(false);
+		d2.destroy();
+		
+		//analog w/ callback
 		
 		value = 0;
 		
-		analog.callback = function (a:FlxActionAnalog)
-		{
-			value++;
-		}
-		
-		pulseAnalog(10, 0);
-		analog.check();
+		var a:FlxActionAnalog = new FlxActionAnalog("aCallback", function (a:FlxActionAnalog)
+			{
+				value++;
+			}
+		);
+		a.addInput(aInput);
+		pulseAnalog(a);
+		var result = analog.check();
 		
 		Assert.isTrue(value == 1);
 		
-		value = 0;
-		analog.callback = null;
+		a.removeAllInputs(false);
+		a.destroy();
 		
-		pulseAnalog();
+		//analog w/o callback
+		
+		value = 0;
+		
+		var a2:FlxActionAnalog = new FlxActionAnalog("aNoCallback", null);
+		a2.addInput(aInput);
+		pulseAnalog(a2);
 		analog.check();
 		
 		Assert.isTrue(value == 0);
+		
+		a2.removeAllInputs(false);
+		a2.destroy();
 	}
 	
 	@Test
@@ -151,16 +170,16 @@ class FlxActionTest extends FlxTest
 		Assert.isFalse(analog.check());
 		Assert.isFalse(analog.fire);
 		
-		pulseAnalog();
+		pulseAnalog(analog);
 		
 		Assert.isTrue(analog.check());
 		Assert.isTrue(analog.fire);
 	}
 	
 	@Test
-	function testDestroy()
+	function testDestroyAction()
 	{
-		var d:FlxActionDigital = new FlxActionDigital("test", function()
+		var d:FlxActionDigital = new FlxActionDigital("test", function(_d:FlxActionDigital)
 			{
 				var blah = true;
 			}
@@ -191,7 +210,7 @@ class FlxActionTest extends FlxTest
 		
 		Assert.isFalse(digital.check());
 		
-		pulseAnalog();
+		pulseAnalog(analog);
 		
 		Assert.isFalse(analog.check());
 		
@@ -210,36 +229,37 @@ class FlxActionTest extends FlxTest
 	
 	private function pulseDigital()
 	{
+		step();
 		dState.release();
 		dState.update();
+		step();
 		dState.press();
 		dState.update();
 	}
 	
-	private function clearAnalog(X:Float, Y:Float)
+	private function clearAnalog()
 	{
-		aState.x = 0;
-		aState.y = 0;
-		aState.update(0);
-		aState.x = 0;
-		aState.y = 0;
-		aState.update(0);
+		step();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
+		step();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
 	}
 	
-	private function pulseAnalog(X:Float, Y:Float)
+	@:access(flixel.input.mouse.FlxMouse)
+	private function pulseAnalog(a:FlxActionAnalog, X:Float=10.0, Y:Float=10.0)
 	{
-		aState.x = 0;
-		aState.y = 0;
-		aState.update(0);
-		aState.x = X;
-		aState.y = Y;
-		aState.update(0);
+		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
+		step();
+		a.update();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		step();
+		a.update();
 	}
 	
-	private function moveAnalog(X:Float, Y:Float)
+	private function moveAnalog(a:FlxActionAnalog, X:Float, Y:Float)
 	{
-		aState.x = X;
-		aState.y = Y;
-		aState.update(0);
+		step();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		a.update();
 	}
 }

@@ -1,4 +1,4 @@
-package tests.unit.src.flixel.input.actions;
+package flixel.input.actions;
 
 /**
  * ...
