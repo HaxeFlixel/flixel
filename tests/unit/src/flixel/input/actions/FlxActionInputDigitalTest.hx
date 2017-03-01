@@ -212,7 +212,8 @@ class FlxActionInputDigitalTest extends FlxTest
 		var arr2 = [];
 		for (key in arr)
 		{
-			if (problems.indexOf(key) != -1){
+			if (problems.indexOf(key) != -1)
+			{
 				arr2.push(key);
 			}
 		}
@@ -271,7 +272,7 @@ class FlxActionInputDigitalTest extends FlxTest
 			t.assertTrue (key+".release1.callbacks.just");
 			t.assertTrue (key+".release1.callbacks.value");
 			t.assertFalse(key+".release2.callbacks.just");
-			t.assertTrue (key + ".release2.callbacks.value");
+			t.assertTrue (key+".release2.callbacks.value");
 			
 			//Test "ANY" key input as well:
 			t.assertTrue (key+"any.press1.callbacks.just");
@@ -289,7 +290,7 @@ class FlxActionInputDigitalTest extends FlxTest
 				t.assertTrue(key+".press1.callbacks.callback"+i);
 				t.assertTrue(key+".press2.callbacks.callback"+i);
 				t.assertTrue(key+".release1.callbacks.callback"+i);
-				t.assertTrue(key + ".release2.callbacks.callback" + i);
+				t.assertTrue(key+".release2.callbacks.callback"+i);
 				
 				t.assertTrue(key+".any.press1.callbacks.callback"+i);
 				t.assertTrue(key+".any.press2.callbacks.callback"+i);
