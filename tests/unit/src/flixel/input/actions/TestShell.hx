@@ -39,12 +39,12 @@ class TestShell implements IFlxDestroyable
 	
 	public function testIsTrue(b:Bool, id:String)
 	{
-		test(id, b == true);
+		test(id, b == true, false, false, false, Std.string(b));
 	}
 	
 	public function testIsFalse(b:Bool, id:String)
 	{
-		test(id, false, b == false);
+		test(id, false, b == false, false, false, Std.string(b));
 	}
 	
 	public function testIsNull(d:Dynamic, id:String)
@@ -75,16 +75,18 @@ class TestShell implements IFlxDestroyable
 	public function assertTrue (id:String, ?info:PosInfos)
 	{
 		var value = get(id).testedTrue;
+		var strValue = get(id).strValue;
 		Assert.assertionCount++;
-		if (!value) Assert.fail("Expected TRUE but (" + id + ") was [" + value + "]", info);
-	};
+		if (!value) Assert.fail("Expected TRUE but (" + id + ") was [" + strValue + "]", info);
+	}
 	
 	public function assertFalse (id:String, ?info:PosInfos)
 	{
 		var value = get(id).testedFalse;
+		var strValue = get(id).strValue;
 		Assert.assertionCount++;
-		if (!value) Assert.fail("Expected FALSE but (" + id + ") was [" + value + "]", info);
-	};
+		if (!value) Assert.fail("Expected FALSE but (" + id + ") was [" + strValue + "]", info);
+	}
 	
 	public function assertNull (id:String, ?info:PosInfos)
 	{
@@ -92,7 +94,7 @@ class TestShell implements IFlxDestroyable
 		var strValue = get(id).strValue;
 		Assert.assertionCount++;
 		if (!value) Assert.fail("Expected NULL but (" + id + ") was [" + strValue + "]", info);
-	};
+	}
 	
 	public function assertNotNull (id:String, ?info:PosInfos)
 	{
@@ -100,7 +102,7 @@ class TestShell implements IFlxDestroyable
 		var strValue = get(id).strValue;
 		Assert.assertionCount++;
 		if (!value) Assert.fail("Expected NOT NULL but (" + id + ") was [" + strValue + "]", info);
-	};
+	}
 }
 
 typedef TestShellResult = {
