@@ -11,8 +11,6 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.FlxInput;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
-import flixel.input.actions.FlxActionInputDigitalTest.TestShell;
-import flixel.input.actions.FlxActionInputDigitalTest.TestShellResult;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
@@ -54,70 +52,46 @@ class FlxActionInputDigitalTest extends FlxTest
 	@Test
 	function testIFlxInput()
 	{
-		var test = new TestShell("");
+		var t = new TestShell("iflxinput.");
 		
-		_testIFlxInput(test, true);
-		_testIFlxInput(test, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
+		_testIFlxInput(t, false);
 		
 		//Press & release w/o callbacks
-		assertTrue ("press1.just");
-		assertTrue ("press1.value");
-		assertFalse("press2.just");
-		assertTrue ("press2.value");
-		assertTrue ("release1.just");
-		assertTrue ("release1.value");
-		assertFalse("release2.just");
-		assertTrue ("release2.value");
-		
-		test.destroy();
+		t.assertTrue ("iflxinput.press1.just");
+		t.assertTrue ("iflxinput.press1.value");
+		t.assertFalse("iflxinput.press2.just");
+		t.assertTrue ("iflxinput.press2.value");
+		t.assertTrue ("iflxinput.release1.just");
+		t.assertTrue ("iflxinput.release1.value");
+		t.assertFalse("iflxinput.release2.just");
+		t.assertTrue ("iflxinput.release2.value");
 	}
 	
 	@Test
 	function testIFlxInputCallbacks()
 	{
-		var test = new TestShell("");
+		var t = new TestShell("iflxinput.");
 		
-		_testIFlxInput(test, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
+		_testIFlxInput(t, true);
 		
 		//Press & release w/ callbacks
-		assertTrue ("press1.callbacks.just");
-		assertTrue ("press1.callbacks.value");
-		assertFalse("press2.callbacks.just");
-		assertTrue ("press2.callbacks.value");
-		assertTrue ("release1.callbacks.just");
-		assertTrue ("release1.callbacks.value");
-		assertFalse("release2.callbacks.just");
-		assertTrue ("release2.callbacks.value");
+		t.assertTrue ("iflxinput.press1.callbacks.just");
+		t.assertTrue ("iflxinput.press1.callbacks.value");
+		t.assertFalse("iflxinput.press2.callbacks.just");
+		t.assertTrue ("iflxinput.press2.callbacks.value");
+		t.assertTrue ("iflxinput.release1.callbacks.just");
+		t.assertTrue ("iflxinput.release1.callbacks.value");
+		t.assertFalse("iflxinput.release2.callbacks.just");
+		t.assertTrue ("iflxinput.release2.callbacks.value");
 		
-		//Callbacks themselves
-		assertTrue("press1.callbacks.callback1");
-		assertTrue("press1.callbacks.callback2");
-		assertTrue("press1.callbacks.callback3");
-		assertTrue("press1.callbacks.callback4");
-		assertTrue("press2.callbacks.callback1");
-		assertTrue("press2.callbacks.callback2");
-		assertTrue("press2.callbacks.callback3");
-		assertTrue("press2.callbacks.callback4");
-		assertTrue("release1.callbacks.callback1");
-		assertTrue("release1.callbacks.callback2");
-		assertTrue("release1.callbacks.callback3");
-		assertTrue("release1.callbacks.callback4");
-		assertTrue("release2.callbacks.callback1");
-		assertTrue("release2.callbacks.callback2");
-		assertTrue("release2.callbacks.callback3");
-		assertTrue("release2.callbacks.callback4");
-		
-		test.destroy();
+		//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+		for (i in 1...5)
+		{
+			t.assertTrue("iflxinput.press1.callbacks.callback"+i);
+			t.assertTrue("iflxinput.press2.callbacks.callback"+i);
+			t.assertTrue("iflxinput.release1.callbacks.callback"+i);
+			t.assertTrue("iflxinput.release2.callbacks.callback"+i);
+		}
 	}
 	
 	function _testIFlxInput(test:TestShell, callbacks:Bool)
@@ -136,225 +110,73 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@Test
-	function testFlxMouseButtonLeft()
+	function testFlxMouseButton()
 	{
-		var test = new TestShell("");
+		var buttons = 
+		[
+			{name:"left", value:FlxMouseButtonID.LEFT}, 
+			{name:"right", value:FlxMouseButtonID.RIGHT}, 
+			{name:"middle", value:FlxMouseButtonID.MIDDLE}
+		];
 		
-		test.name = "left.";
-		_testFlxMouseButton(test, FlxMouseButtonID.LEFT, false);
+		for (button in buttons)
+		{
+			var name = button.name;
+			var value = button.value;
+			
+			var t = new TestShell(name+".");
+			_testFlxMouseButton(t, value, false);
+			
+			//Press & release w/o callbacks
+			t.assertTrue (name+".press1.just");
+			t.assertTrue (name+".press1.value");
+			t.assertFalse(name+".press2.just");
+			t.assertTrue (name+".press2.value");
+			t.assertTrue (name+".release1.just");
+			t.assertTrue (name+".release1.value");
+			t.assertFalse(name+".release2.just");
+			t.assertTrue (name+".release2.value");
+		}
 		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//LEFT mouse button
-		
-		//Press & release w/o callbacks
-		assertTrue ("left.press1.just");
-		assertTrue ("left.press1.value");
-		assertFalse("left.press2.just");
-		assertTrue ("left.press2.value");
-		assertTrue ("left.release1.just");
-		assertTrue ("left.release1.value");
-		assertFalse("left.release2.just");
-		assertTrue ("left.release2.value");
-		
-		test.destroy();
 	}
 	
 	@Test
-	function testFlxMouseButtonCallbacksLeft()
+	function testFlxMouseButtonCallbacks()
 	{
-		var test = new TestShell("");
+		var buttons = 
+		[
+			{name:"left", value:FlxMouseButtonID.LEFT},
+			{name:"right", value:FlxMouseButtonID.RIGHT},
+			{name:"middle", value:FlxMouseButtonID.MIDDLE}
+		];
 		
-		test.name = "left.";
-		_testFlxMouseButton(test, FlxMouseButtonID.LEFT, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//LEFT mouse button
-		
-		//Press & release w/ callbacks
-		assertTrue ("left.press1.callbacks.just");
-		assertTrue ("left.press1.callbacks.value");
-		assertFalse("left.press2.callbacks.just");
-		assertTrue ("left.press2.callbacks.value");
-		assertTrue ("left.release1.callbacks.just");
-		assertTrue ("left.release1.callbacks.value");
-		assertFalse("left.release2.callbacks.just");
-		assertTrue ("left.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("left.press1.callbacks.callback1");
-		assertTrue("left.press1.callbacks.callback2");
-		assertTrue("left.press1.callbacks.callback3");
-		assertTrue("left.press1.callbacks.callback4");
-		assertTrue("left.press2.callbacks.callback1");
-		assertTrue("left.press2.callbacks.callback2");
-		assertTrue("left.press2.callbacks.callback3");
-		assertTrue("left.press2.callbacks.callback4");
-		assertTrue("left.release1.callbacks.callback1");
-		assertTrue("left.release1.callbacks.callback2");
-		assertTrue("left.release1.callbacks.callback3");
-		assertTrue("left.release1.callbacks.callback4");
-		assertTrue("left.release2.callbacks.callback1");
-		assertTrue("left.release2.callbacks.callback2");
-		assertTrue("left.release2.callbacks.callback3");
-		assertTrue("left.release2.callbacks.callback4");
-		
-		test.destroy();
-	}
-	
-	@Test
-	function testFlxMouseButtonMiddle()
-	{
-		var test = new TestShell("");
-		
-		test.name = "middle.";
-		_testFlxMouseButton(test, FlxMouseButtonID.MIDDLE, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//MIDDLE mouse button
-		
-		//Press & release w/o callbacks
-		assertTrue ("middle.press1.just");
-		assertTrue ("middle.press1.value");
-		assertFalse("middle.press2.just");
-		assertTrue ("middle.press2.value");
-		assertTrue ("middle.release1.just");
-		assertTrue ("middle.release1.value");
-		assertFalse("middle.release2.just");
-		assertTrue ("middle.release2.value");
-		
-		test.destroy();
-	}
-	
-	@Test
-	function testFlxMouseButtonCallbacksMiddle()
-	{
-		var test = new TestShell("");
-		
-		test.name = "middle.";
-		_testFlxMouseButton(test, FlxMouseButtonID.MIDDLE, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//MIDDLE mouse button
-		
-		//Press & release w/ callbacks
-		assertTrue ("middle.press1.callbacks.just");
-		assertTrue ("middle.press1.callbacks.value");
-		assertFalse("middle.press2.callbacks.just");
-		assertTrue ("middle.press2.callbacks.value");
-		assertTrue ("middle.release1.callbacks.just");
-		assertTrue ("middle.release1.callbacks.value");
-		assertFalse("middle.release2.callbacks.just");
-		assertTrue ("middle.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("middle.press1.callbacks.callback1");
-		assertTrue("middle.press1.callbacks.callback2");
-		assertTrue("middle.press1.callbacks.callback3");
-		assertTrue("middle.press1.callbacks.callback4");
-		assertTrue("middle.press2.callbacks.callback1");
-		assertTrue("middle.press2.callbacks.callback2");
-		assertTrue("middle.press2.callbacks.callback3");
-		assertTrue("middle.press2.callbacks.callback4");
-		assertTrue("middle.release1.callbacks.callback1");
-		assertTrue("middle.release1.callbacks.callback2");
-		assertTrue("middle.release1.callbacks.callback3");
-		assertTrue("middle.release1.callbacks.callback4");
-		assertTrue("middle.release2.callbacks.callback1");
-		assertTrue("middle.release2.callbacks.callback2");
-		assertTrue("middle.release2.callbacks.callback3");
-		assertTrue("middle.release2.callbacks.callback4");
-		
-		test.destroy();
-	}
-	
-	@Test
-	function testFlxMouseButtonRight()
-	{
-		var test = new TestShell("");
-		
-		test.name = "right.";
-		_testFlxMouseButton(test, FlxMouseButtonID.RIGHT, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//RIGHT mouse button
-		
-		//Press & release w/o callbacks
-		assertTrue ("right.press1.just");
-		assertTrue ("right.press1.value");
-		assertFalse("right.press2.just");
-		assertTrue ("right.press2.value");
-		assertTrue ("right.release1.just");
-		assertTrue ("right.release1.value");
-		assertFalse("right.release2.just");
-		assertTrue ("right.release2.value");
-		
-		test.destroy();
-	}
-	
-	@Test
-	function testFlxMouseButtonCallbacksRight()
-	{
-		var test = new TestShell("");
-		
-		test.name = "right.";
-		_testFlxMouseButton(test, FlxMouseButtonID.RIGHT, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//RIGHT mouse button
-		
-		//Press & release w/ callbacks
-		assertTrue ("right.press1.callbacks.just");
-		assertTrue ("right.press1.callbacks.value");
-		assertFalse("right.press2.callbacks.just");
-		assertTrue ("right.press2.callbacks.value");
-		assertTrue ("right.release1.callbacks.just");
-		assertTrue ("right.release1.callbacks.value");
-		assertFalse("right.release2.callbacks.just");
-		assertTrue ("right.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("right.press1.callbacks.callback1");
-		assertTrue("right.press1.callbacks.callback2");
-		assertTrue("right.press1.callbacks.callback3");
-		assertTrue("right.press1.callbacks.callback4");
-		assertTrue("right.press2.callbacks.callback1");
-		assertTrue("right.press2.callbacks.callback2");
-		assertTrue("right.press2.callbacks.callback3");
-		assertTrue("right.press2.callbacks.callback4");
-		assertTrue("right.release1.callbacks.callback1");
-		assertTrue("right.release1.callbacks.callback2");
-		assertTrue("right.release1.callbacks.callback3");
-		assertTrue("right.release1.callbacks.callback4");
-		assertTrue("right.release2.callbacks.callback1");
-		assertTrue("right.release2.callbacks.callback2");
-		assertTrue("right.release2.callbacks.callback3");
-		assertTrue("right.release2.callbacks.callback4");
-		
-		test.destroy();
+		for (button in buttons)
+		{
+			var name = button.name;
+			var value = button.value;
+			
+			var t = new TestShell(name+".");
+			_testFlxMouseButton(t, value, true);
+			
+			//Press & release w/ callbacks
+			t.assertTrue (name+".press1.callbacks.just");
+			t.assertTrue (name+".press1.callbacks.value");
+			t.assertFalse(name+".press2.callbacks.just");
+			t.assertTrue (name+".press2.callbacks.value");
+			t.assertTrue (name+".release1.callbacks.just");
+			t.assertTrue (name+".release1.callbacks.value");
+			t.assertFalse(name+".release2.callbacks.just");
+			t.assertTrue (name+".release2.callbacks.value");
+			
+			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+			for (i in 1...5)
+			{
+				t.assertTrue(name+".press1.callbacks.callback"+i);
+				t.assertTrue(name+".press2.callbacks.callback"+i);
+				t.assertTrue(name+".release1.callbacks.callback"+i);
+				t.assertTrue(name+".release2.callbacks.callback"+i);
+			}
+		}
 	}
 	
 	function _testFlxMouseButton(test:TestShell, buttonID:FlxMouseButtonID, callbacks:Bool)
@@ -378,214 +200,103 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
 	}
 	
-	@Test
-	function testFlxKeyboardA()
+	private function getFlxKeys():Array<String>
 	{
-		var test = new TestShell("");
+		//Trying to get these values directly from FlxG.keys.fromStringMap will cause the thing to hard crash whenever I try to do *ANY* logical test to exclude "ANY" from the returned array.
+		//It's really creepy and weird!
+		var arr = ["NUMPADSEVEN", "PERIOD", "ESCAPE", "A", "NUMPADEIGHT", "SIX", "B", "C", "D", "E", "ONE", "F", "LEFT", "G", "H", "ALT", "I", "J", "K", "CAPSLOCK", "L", "M", "N", "O", "P", "NUMPADTHREE", "SEMICOLON", "Q", "R", "S", "T", "NUMPADSIX", "U", "BACKSLASH", "V", "W", "X", "NUMPADONE", "Y", "Z", "UP", "QUOTE", "SLASH", "BACKSPACE", "HOME", "SHIFT", "DOWN", "F10", "F11", "FOUR", "SPACE", "F12", "ZERO", "PAGEUP", "F1", "DELETE", "F2", "TWO", "F3", "SEVEN", "F4", "F5", "EIGHT", "GRAVEACCENT", "F6", "NUMPADMULTIPLY", "F7", "PAGEDOWN", "F8", "FIVE", "NINE", "NUMPADFOUR", "F9", "TAB", "COMMA", "RBRACKET", "ENTER", "PRINTSCREEN", "INSERT", "END", "RIGHT", "LBRACKET", "CONTROL", "THREE", "NUMPADNINE", "NUMPADFIVE", "NUMPADTWO"];
 		
-		test.name = "A.";
-		_testFlxKeyboard(test, FlxKey.A, false);
+		//these values will hard crash the test and I don't know why
+		var problems = ["PLUS", "MINUS", "NUMPADPLUS", "NUMPADMINUS", "NUMPADPERIOD", "NUMPADZERO"];
 		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
+		var arr2 = [];
+		for (key in arr)
+		{
+			if (problems.indexOf(key) != -1){
+				arr2.push(key);
+			}
+		}
 		
-		//A Key
-		
-		//Press & release w/o callbacks
-		assertTrue ("A.press1.just");
-		assertTrue ("A.press1.value");
-		assertFalse("A.press2.just");
-		assertTrue ("A.press2.value");
-		assertTrue ("A.release1.just");
-		assertTrue ("A.release1.value");
-		assertFalse("A.release2.just");
-		assertTrue ("A.release2.value");
+		return arr2;
 	}
 	
 	@Test
-	function testFlxKeyboardCallbacksA()
+	function testFlxKeyboard()
 	{
-		var test = new TestShell("");
+		var keys = getFlxKeys();
 		
-		test.name = "A.";
-		_testFlxKeyboard(test, FlxKey.A, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//A Key
-		
-		//Press & release w/ callbacks
-		assertTrue ("A.press1.callbacks.just");
-		assertTrue ("A.press1.callbacks.value");
-		assertFalse("A.press2.callbacks.just");
-		assertTrue ("A.press2.callbacks.value");
-		assertTrue ("A.release1.callbacks.just");
-		assertTrue ("A.release1.callbacks.value");
-		assertFalse("A.release2.callbacks.just");
-		assertTrue ("A.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("A.press1.callbacks.callback1");
-		assertTrue("A.press1.callbacks.callback2");
-		assertTrue("A.press1.callbacks.callback3");
-		assertTrue("A.press1.callbacks.callback4");
-		assertTrue("A.press2.callbacks.callback1");
-		assertTrue("A.press2.callbacks.callback2");
-		assertTrue("A.press2.callbacks.callback3");
-		assertTrue("A.press2.callbacks.callback4");
-		assertTrue("A.release1.callbacks.callback1");
-		assertTrue("A.release1.callbacks.callback2");
-		assertTrue("A.release1.callbacks.callback3");
-		assertTrue("A.release1.callbacks.callback4");
-		assertTrue("A.release2.callbacks.callback1");
-		assertTrue("A.release2.callbacks.callback2");
-		assertTrue("A.release2.callbacks.callback3");
-		assertTrue("A.release2.callbacks.callback4");
+		for (key in keys)
+		{
+			var t = new TestShell(key + ".");
+			_testFlxKeyboard(t, key, false);
+			
+			//Press & release w/o callbacks
+			t.assertTrue (key+".press1.just");
+			t.assertTrue (key+".press1.value");
+			t.assertFalse(key+".press2.just");
+			t.assertTrue (key+".press2.value");
+			t.assertTrue (key+".release1.just");
+			t.assertTrue (key+".release1.value");
+			t.assertFalse(key+".release2.just");
+			t.assertTrue (key+".release2.value");
+			
+			//Test "ANY" key input as well:
+			t.assertTrue (key+"any.press1.just");
+			t.assertTrue (key+"any.press1.value");
+			t.assertFalse(key+"any.press2.just");
+			t.assertTrue (key+"any.press2.value");
+			t.assertTrue (key+"any.release1.just");
+			t.assertTrue (key+"any.release1.value");
+			t.assertFalse(key+"any.release2.just");
+			t.assertTrue (key+"any.release2.value");
+		}
 	}
 	
 	@Test
-	function testFlxKeyboardCONTROL()
+	function testFlxKeyboardCallbacks()
 	{
-		var test = new TestShell("");
+		var keys = getFlxKeys();
 		
-		test.name = "CONTROL.";
-		_testFlxKeyboard(test, FlxKey.CONTROL, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//CONTROL Key
-		
-		//Press & release w/o callbacks
-		assertTrue ("CONTROL.press1.just");
-		assertTrue ("CONTROL.press1.value");
-		assertFalse("CONTROL.press2.just");
-		assertTrue ("CONTROL.press2.value");
-		assertTrue ("CONTROL.release1.just");
-		assertTrue ("CONTROL.release1.value");
-		assertFalse("CONTROL.release2.just");
-		assertTrue ("CONTROL.release2.value");
-	}
-	
-	@Test
-	function testFlxKeyboardCallbacksCONTROL()
-	{
-		var test = new TestShell("");
-		
-		test.name = "CONTROL.";
-		_testFlxKeyboard(test, FlxKey.CONTROL, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//CONTROL Key
-		
-		//Press & release w/ callbacks
-		assertTrue ("CONTROL.press1.callbacks.just");
-		assertTrue ("CONTROL.press1.callbacks.value");
-		assertFalse("CONTROL.press2.callbacks.just");
-		assertTrue ("CONTROL.press2.callbacks.value");
-		assertTrue ("CONTROL.release1.callbacks.just");
-		assertTrue ("CONTROL.release1.callbacks.value");
-		assertFalse("CONTROL.release2.callbacks.just");
-		assertTrue ("CONTROL.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("CONTROL.press1.callbacks.callback1");
-		assertTrue("CONTROL.press1.callbacks.callback2");
-		assertTrue("CONTROL.press1.callbacks.callback3");
-		assertTrue("CONTROL.press1.callbacks.callback4");
-		assertTrue("CONTROL.press2.callbacks.callback1");
-		assertTrue("CONTROL.press2.callbacks.callback2");
-		assertTrue("CONTROL.press2.callbacks.callback3");
-		assertTrue("CONTROL.press2.callbacks.callback4");
-		assertTrue("CONTROL.release1.callbacks.callback1");
-		assertTrue("CONTROL.release1.callbacks.callback2");
-		assertTrue("CONTROL.release1.callbacks.callback3");
-		assertTrue("CONTROL.release1.callbacks.callback4");
-		assertTrue("CONTROL.release2.callbacks.callback1");
-		assertTrue("CONTROL.release2.callbacks.callback2");
-		assertTrue("CONTROL.release2.callbacks.callback3");
-		assertTrue("CONTROL.release2.callbacks.callback4");
-	}
-	
-	@Test
-	function testFlxKeyboardF1()
-	{
-		var test = new TestShell("");
-		
-		test.name = "F1.";
-		_testFlxKeyboard(test, FlxKey.F1, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//F1 Key
-		
-		//Press & release w/o callbacks
-		assertTrue ("F1.press1.just");
-		assertTrue ("F1.press1.value");
-		assertFalse("F1.press2.just");
-		assertTrue ("F1.press2.value");
-		assertTrue ("F1.release1.just");
-		assertTrue ("F1.release1.value");
-		assertFalse("F1.release2.just");
-		assertTrue ("F1.release2.value");
-	}
-	
-	@Test
-	function testFlxKeyboardCallbacksF1()
-	{
-		var test = new TestShell("");
-		
-		test.name = "F1.";
-		_testFlxKeyboard(test, FlxKey.F1, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//F1 Key
-		
-		//Press & release w/ callbacks
-		assertTrue ("F1.press1.callbacks.just");
-		assertTrue ("F1.press1.callbacks.value");
-		assertFalse("F1.press2.callbacks.just");
-		assertTrue ("F1.press2.callbacks.value");
-		assertTrue ("F1.release1.callbacks.just");
-		assertTrue ("F1.release1.callbacks.value");
-		assertFalse("F1.release2.callbacks.just");
-		assertTrue ("F1.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("F1.press1.callbacks.callback1");
-		assertTrue("F1.press1.callbacks.callback2");
-		assertTrue("F1.press1.callbacks.callback3");
-		assertTrue("F1.press1.callbacks.callback4");
-		assertTrue("F1.press2.callbacks.callback1");
-		assertTrue("F1.press2.callbacks.callback2");
-		assertTrue("F1.press2.callbacks.callback3");
-		assertTrue("F1.press2.callbacks.callback4");
-		assertTrue("F1.release1.callbacks.callback1");
-		assertTrue("F1.release1.callbacks.callback2");
-		assertTrue("F1.release1.callbacks.callback3");
-		assertTrue("F1.release1.callbacks.callback4");
-		assertTrue("F1.release2.callbacks.callback1");
-		assertTrue("F1.release2.callbacks.callback2");
-		assertTrue("F1.release2.callbacks.callback3");
-		assertTrue("F1.release2.callbacks.callback4");
+		for (key in keys)
+		{
+			var t = new TestShell(key + ".");
+			
+			_testFlxKeyboard(t, key, true);
+			
+			//Press & release w/ callbacks
+			t.assertTrue (key+".press1.callbacks.just");
+			t.assertTrue (key+".press1.callbacks.value");
+			t.assertFalse(key+".press2.callbacks.just");
+			t.assertTrue (key+".press2.callbacks.value");
+			t.assertTrue (key+".release1.callbacks.just");
+			t.assertTrue (key+".release1.callbacks.value");
+			t.assertFalse(key+".release2.callbacks.just");
+			t.assertTrue (key + ".release2.callbacks.value");
+			
+			//Test "ANY" key input as well:
+			t.assertTrue (key+"any.press1.callbacks.just");
+			t.assertTrue (key+"any.press1.callbacks.value");
+			t.assertFalse(key+"any.press2.callbacks.just");
+			t.assertTrue (key+"any.press2.callbacks.value");
+			t.assertTrue (key+"any.release1.callbacks.just");
+			t.assertTrue (key+"any.release1.callbacks.value");
+			t.assertFalse(key+"any.release2.callbacks.just");
+			t.assertTrue (key+"any.release2.callbacks.value");
+			
+			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+			for (i in 1...5)
+			{
+				t.assertTrue(key+".press1.callbacks.callback"+i);
+				t.assertTrue(key+".press2.callbacks.callback"+i);
+				t.assertTrue(key+".release1.callbacks.callback"+i);
+				t.assertTrue(key + ".release2.callbacks.callback" + i);
+				
+				t.assertTrue(key+".any.press1.callbacks.callback"+i);
+				t.assertTrue(key+".any.press2.callbacks.callback"+i);
+				t.assertTrue(key+".any.release1.callbacks.callback"+i);
+				t.assertTrue(key+".any.release2.callbacks.callback"+i);
+			}
+		}
 	}
 	
 	function _testFlxKeyboard(test:TestShell, key:FlxKey, callbacks:Bool)
@@ -595,150 +306,84 @@ class FlxActionInputDigitalTest extends FlxTest
 		var c = new FlxActionInputDigitalKeyboard(key, FlxInputState.RELEASED);
 		var d = new FlxActionInputDigitalKeyboard(key, FlxInputState.JUST_RELEASED);
 		
+		var aAny = new FlxActionInputDigitalKeyboard("ANY", FlxInputState.PRESSED);
+		var bAny = new FlxActionInputDigitalKeyboard("ANY", FlxInputState.JUST_PRESSED);
+		var cAny = new FlxActionInputDigitalKeyboard("ANY", FlxInputState.RELEASED);
+		var dAny = new FlxActionInputDigitalKeyboard("ANY", FlxInputState.JUST_RELEASED);
+		
 		var clear = clearFlxKey.bind(key);
 		var click = clickFlxKey.bind(key);
 		
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
+		test.name = test.name + ".any.";
+		testInputStates(test, clear, click, a, b, c, d, callbacks);
 	}
 	
 	@Test
-	function testFlxMouseWheelPositive()
+	function testFlxMouseWheel()
 	{
-		var test = new TestShell("");
+		var polarities =
+		[
+			{name:"positive", value:true},
+			{name:"negative", value:false}
+		];
 		
-		test.name = "positive.";
-		_testFlxMouseWheel(test, true, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//POSITIVE
-		
-		//Press & release w/o callbacks
-		assertTrue ("positive.press1.just");
-		assertTrue ("positive.press1.value");
-		assertFalse("positive.press2.just");
-		assertTrue ("positive.press2.value");
-		assertTrue ("positive.release1.just");
-		assertTrue ("positive.release1.value");
-		assertFalse("positive.release2.just");
-		assertTrue ("positive.release2.value");
+		for (polarity in polarities)
+		{
+			var name = polarity.name;
+			var value = polarity.value;
+			
+			var t = new TestShell(name+".");
+			_testFlxMouseWheel(t, value, false);
+			
+			//Press & release w/o callbacks
+			t.assertTrue (name+".press1.just");
+			t.assertTrue (name+".press1.value");
+			t.assertFalse(name+".press2.just");
+			t.assertTrue (name+".press2.value");
+			t.assertTrue (name+".release1.just");
+			t.assertTrue (name+".release1.value");
+			t.assertFalse(name+".release2.just");
+			t.assertTrue (name+".release2.value");
+		}
 	}
 	
 	@Test
-	function testFlxMouseWheelCallbacksPositive()
+	function testFlxMouseWheelCallbacks()
 	{
-		var test = new TestShell("");
+		var polarities = 
+		[
+			{name:"positive", value:true},
+			{name:"negative", value:false}
+		];
 		
-		test.name = "positive.";
-		_testFlxMouseWheel(test, true, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//POSITIVE
-		
-		//Press & release w/ callbacks
-		assertTrue ("positive.press1.callbacks.just");
-		assertTrue ("positive.press1.callbacks.value");
-		assertFalse("positive.press2.callbacks.just");
-		assertTrue ("positive.press2.callbacks.value");
-		assertTrue ("positive.release1.callbacks.just");
-		assertTrue ("positive.release1.callbacks.value");
-		assertFalse("positive.release2.callbacks.just");
-		assertTrue ("positive.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("positive.press1.callbacks.callback1");
-		assertTrue("positive.press1.callbacks.callback2");
-		assertTrue("positive.press1.callbacks.callback3");
-		assertTrue("positive.press1.callbacks.callback4");
-		assertTrue("positive.press2.callbacks.callback1");
-		assertTrue("positive.press2.callbacks.callback2");
-		assertTrue("positive.press2.callbacks.callback3");
-		assertTrue("positive.press2.callbacks.callback4");
-		assertTrue("positive.release1.callbacks.callback1");
-		assertTrue("positive.release1.callbacks.callback2");
-		assertTrue("positive.release1.callbacks.callback3");
-		assertTrue("positive.release1.callbacks.callback4");
-		assertTrue("positive.release2.callbacks.callback1");
-		assertTrue("positive.release2.callbacks.callback2");
-		assertTrue("positive.release2.callbacks.callback3");
-		assertTrue("positive.release2.callbacks.callback4");
-	}
-	
-	@Test
-	function testFlxMouseWheelNegative()
-	{
-		var test = new TestShell("");
-		
-		test.name = "negative.";
-		_testFlxMouseWheel(test, true, false);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//NEGATIVE
-		
-		//Press & release w/o callbacks
-		assertTrue ("negative.press1.just");
-		assertTrue ("negative.press1.value");
-		assertFalse("negative.press2.just");
-		assertTrue ("negative.press2.value");
-		assertTrue ("negative.release1.just");
-		assertTrue ("negative.release1.value");
-		assertFalse("negative.release2.just");
-		assertTrue ("negative.release2.value");
-	}
-	
-	@Test
-	function testFlxMouseWheelCallbacksNegative()
-	{
-		var test = new TestShell("");
-		
-		test.name = "negative.";
-		_testFlxMouseWheel(test, true, true);
-		
-		inline function assertTrue    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedTrue   , info); };
-		inline function assertFalse   (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedFalse  , info); };
-		inline function assertNull    (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNull   , info); };
-		inline function assertNotNull (id:String, ?info:PosInfos) { Assert.isTrue(test.get(id).testedNotNull, info); };
-		
-		//NEGATIVE
-		
-		//Press & release w/ callbacks
-		assertTrue ("negative.press1.callbacks.just");
-		assertTrue ("negative.press1.callbacks.value");
-		assertFalse("negative.press2.callbacks.just");
-		assertTrue ("negative.press2.callbacks.value");
-		assertTrue ("negative.release1.callbacks.just");
-		assertTrue ("negative.release1.callbacks.value");
-		assertFalse("negative.release2.callbacks.just");
-		assertTrue ("negative.release2.callbacks.value");
-		
-		//Callbacks themselves
-		assertTrue("negative.press1.callbacks.callback1");
-		assertTrue("negative.press1.callbacks.callback2");
-		assertTrue("negative.press1.callbacks.callback3");
-		assertTrue("negative.press1.callbacks.callback4");
-		assertTrue("negative.press2.callbacks.callback1");
-		assertTrue("negative.press2.callbacks.callback2");
-		assertTrue("negative.press2.callbacks.callback3");
-		assertTrue("negative.press2.callbacks.callback4");
-		assertTrue("negative.release1.callbacks.callback1");
-		assertTrue("negative.release1.callbacks.callback2");
-		assertTrue("negative.release1.callbacks.callback3");
-		assertTrue("negative.release1.callbacks.callback4");
-		assertTrue("negative.release2.callbacks.callback1");
-		assertTrue("negative.release2.callbacks.callback2");
-		assertTrue("negative.release2.callbacks.callback3");
-		assertTrue("negative.release2.callbacks.callback4");
+		for (polarity in polarities)
+		{
+			var name = polarity.name;
+			var value = polarity.value;
+			
+			var t = new TestShell(name+".");
+			_testFlxMouseWheel(t, value, true);
+			
+			//Press & release w/ callbacks
+			t.assertTrue (name+".press1.callbacks.just");
+			t.assertTrue (name+".press1.callbacks.value");
+			t.assertFalse(name+".press2.callbacks.just");
+			t.assertTrue (name+".press2.callbacks.value");
+			t.assertTrue (name+".release1.callbacks.just");
+			t.assertTrue (name+".release1.callbacks.value");
+			t.assertFalse(name+".release2.callbacks.just");
+			t.assertTrue (name+".release2.callbacks.value");
+			
+			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+			for (i in 1...5)
+			{
+				t.assertTrue(name+".press1.callbacks.callback"+i);
+				t.assertTrue(name+".press2.callbacks.callback"+i);
+				t.assertTrue(name+".release1.callbacks.callback"+i);
+				t.assertTrue(name+".release2.callbacks.callback"+i);
+			}
+		}
 	}
 	
 	function _testFlxMouseWheel(test:TestShell, positive:Bool, callbacks:Bool)
@@ -858,56 +503,56 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//JUST PRESSED
 		click(true, arr);
-		test.assertIsTrue(ajPressed.triggered, "just");
-		test.assertIsTrue(aPressed.triggered, "value");
+		test.testIsTrue(ajPressed.triggered, "just");
+		test.testIsTrue(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.assertIsTrue(value0 == 1, "callback1");
-			test.assertIsTrue(value1 == 1, "callback2");
-			test.assertIsTrue(value2 == 0, "callback3");
-			test.assertIsTrue(value3 == 0, "callback4");
+			test.testIsTrue(value0 == 1, "callback1");
+			test.testIsTrue(value1 == 1, "callback2");
+			test.testIsTrue(value2 == 0, "callback3");
+			test.testIsTrue(value3 == 0, "callback4");
 		}
 		
 		test.prefix = "press2." + callbackStr;
 		
 		//STILL PRESSED
 		click(true, arr);
-		test.assertIsFalse(ajPressed.triggered, "just");
-		test.assertIsTrue(aPressed.triggered, "value");
+		test.testIsFalse(ajPressed.triggered, "just");
+		test.testIsTrue(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.assertIsTrue(value0 == 1, "callback1");
-			test.assertIsTrue(value1 == 2, "callback2");
-			test.assertIsTrue(value2 == 0, "callback3");
-			test.assertIsTrue(value3 == 0, "callback4");
+			test.testIsTrue(value0 == 1, "callback1");
+			test.testIsTrue(value1 == 2, "callback2");
+			test.testIsTrue(value2 == 0, "callback3");
+			test.testIsTrue(value3 == 0, "callback4");
 		}
 		
 		test.prefix = "release1." + callbackStr;
 		
 		//JUST RELEASED
 		click(false, arr);
-		test.assertIsTrue(ajReleased.triggered, "just");
-		test.assertIsTrue(aReleased.triggered, "value");
+		test.testIsTrue(ajReleased.triggered, "just");
+		test.testIsTrue(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.assertIsTrue(value0 == 1, "callback1");
-			test.assertIsTrue(value1 == 2, "callback2");
-			test.assertIsTrue(value2 == 1, "callback3");
-			test.assertIsTrue(value3 == 1, "callback4");
+			test.testIsTrue(value0 == 1, "callback1");
+			test.testIsTrue(value1 == 2, "callback2");
+			test.testIsTrue(value2 == 1, "callback3");
+			test.testIsTrue(value3 == 1, "callback4");
 		}
 		
 		test.prefix = "release2." + callbackStr;
 		
 		//STILL RELEASED
 		click(false, arr);
-		test.assertIsFalse(ajReleased.triggered, "just");
-		test.assertIsTrue(aReleased.triggered, "value");
+		test.testIsFalse(ajReleased.triggered, "just");
+		test.testIsTrue(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.assertIsTrue(value0 == 1, "callback1");
-			test.assertIsTrue(value1 == 2, "callback2");
-			test.assertIsTrue(value2 == 1, "callback3");
-			test.assertIsTrue(value3 == 2, "callback4");
+			test.testIsTrue(value0 == 1, "callback1");
+			test.testIsTrue(value1 == 2, "callback2");
+			test.testIsTrue(value2 == 1, "callback3");
+			test.testIsTrue(value3 == 2, "callback4");
 		}
 		
 		clear();
@@ -933,6 +578,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	@:access(flixel.input.mouse.FlxMouse)
 	private function clearFlxMouseWheel()
 	{
+		if (FlxG.mouse == null) return;
 		FlxG.mouse.wheel = 0;
 		step();
 		step();
@@ -942,6 +588,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	private function clearFlxKey(key:FlxKey)
 	{
 		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
 		input.release();
 		step();
 		input.update();
@@ -951,6 +598,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	private function clearMouseButton(button:FlxMouseButton)
 	{
+		if (button == null) return;
 		button.release();
 		step();
 		button.update();
@@ -960,6 +608,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	private function clearFlxInput(thing:FlxInput<Int>)
 	{
+		if (thing == null) return;
 		thing.release();
 		step();
 		thing.update();
@@ -971,14 +620,16 @@ class FlxActionInputDigitalTest extends FlxTest
 	private function clickFlxGamepad(gamepad:FlxGamepad, ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		var input:FlxInput<Int> = gamepad.buttons[gamepad.mapping.getRawID(ID)];
+		if (input == null) return;
 		if (pressed) input.press();
 		else input.release();
-		for (a in arr) { a.update(); }
+		updateActions(arr);
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
 	private function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
+		if (FlxG.mouse == null) return;
 		if (pressed)
 		{
 			if (positive)
@@ -994,37 +645,62 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			FlxG.mouse.wheel = 0;
 		}
-		for (a in arr) { a.update(); }
+		updateActions(arr);
 		step();
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
 	private function clickFlxKey(key:FlxKey, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
+		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
+		
 		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
+		
 		step();
+		
 		input.update();
-		if (pressed) input.press();
-		else input.release();
-		for (a in arr) {a.update(); }
+		
+		if (pressed)
+		{
+			input.press();
+		}
+		else
+		{
+			input.release();
+		}
+		
+		updateActions(arr);
+		
 	}
 	
 	private function clickMouseButton(button:FlxMouseButton, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
+		if (button == null) return;
 		step();
 		button.update();
 		if (pressed) button.press();
 		else button.release();
-		for (a in arr) { a.update(); }
+		updateActions(arr);
 	}
 	
 	private function clickFlxInput(thing:FlxInput<Int>, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
+		if (thing == null) return;
 		step();
 		thing.update();
 		if (pressed) thing.press();
 		else thing.release();
-		for (a in arr){ a.update(); }
+		updateActions(arr);
+	}
+	
+	private function updateActions(arr:Array<FlxActionDigital>)
+	{
+		for (a in arr)
+		{
+			if (a == null) continue;
+			a.update();
+		}
 	}
 	
 	private function onCallback(i:Int)
@@ -1042,79 +718,3 @@ class FlxActionInputDigitalTest extends FlxTest
 		value0 = value1 = value2 = value3 = 0;
 	}
 }
-
-class TestShell implements IFlxDestroyable
-{
-	public var name:String;
-	public var results:Array<TestShellResult>;
-	public var prefix:String = "";
-	
-	public function new(Name:String)
-	{
-		name = Name;
-		results = [];
-	}
-	
-	public function destroy()
-	{
-		FlxArrayUtil.clearArray(results);
-	}
-	
-	public function get(id:String):TestShellResult
-	{
-		for (result in results){
-			if (result.id == id) return result;
-		}
-		return {
-			id:"unknown id(" + id + ")",
-			testedTrue:false,
-			testedFalse:false,
-			testedNull:false,
-			testedNotNull:false
-		};
-	}
-	
-	public function assertIsTrue(b:Bool, id:String)
-	{
-		assert(id, b == true);
-	}
-	
-	public function assertIsFalse(b:Bool, id:String)
-	{
-		assert(id, false, b == false);
-	}
-	
-	public function assertIsNull(d:Dynamic, id:String)
-	{
-		assert(id, false, false, d == null);
-	}
-	
-	public function assertIsNotNull(d:Dynamic, id:String)
-	{
-		assert(id, false, false, false, d != null);
-	}
-	
-	private function assert(id:String, tTrue:Bool=false, tFalse:Bool=false, tNull:Bool=false, tNNull:Bool=false)
-	{
-		results.push
-		(
-			{
-				id:name + prefix + id,
-				testedTrue:tTrue,
-				testedFalse:tFalse,
-				testedNull:tNull,
-				testedNotNull:tNNull
-			}
-		);
-	}
-}
-
-typedef TestShellResult = {
-	id:String,
-	testedTrue:Bool,
-	testedFalse:Bool,
-	testedNull:Bool,
-	testedNotNull:Bool
-}
-
-typedef MyInput = FlxInput<Int>;
