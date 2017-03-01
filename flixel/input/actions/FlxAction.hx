@@ -169,7 +169,7 @@ class FlxAction implements IFlxDestroyable
 	/**
 	 * If true, this action has just been triggered
 	 */
-	public var fire(default, null):Bool = false;
+	public var triggered(default, null):Bool = false;
 	
 	/**
 	 * The inputs attached to this action
@@ -277,7 +277,7 @@ class FlxAction implements IFlxDestroyable
 		
 		if (_timestamp == FlxG.game.ticks)
 		{
-			fire = _check;
+			triggered = _check;
 			return _check;	//run no more than once per frame
 		}
 		
@@ -304,7 +304,7 @@ class FlxAction implements IFlxDestroyable
 			}
 		}
 		
-		fire = _check;
+		triggered = _check;
 		return _check;
 	}
 	
