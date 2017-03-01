@@ -19,7 +19,7 @@ class FlxActionInputDigital extends FlxActionInput
 	}
 }
 
-class FlxActionDigitalMouseWheel extends FlxActionInputDigital
+class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 {
 	private var input:FlxInput<Int>;
 	private var sign:Int = 0;
