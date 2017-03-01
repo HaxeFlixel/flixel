@@ -149,31 +149,31 @@ class FlxActionTest extends FlxTest
 	}
 	
 	@Test
-	function testCheckAndFireDigital()
+	function testCheckAndTriggeredDigital()
 	{
 		clearDigital();
 		
 		Assert.isFalse(digital.check());
-		Assert.isFalse(digital.fire);
+		Assert.isFalse(digital.triggered);
 		
 		pulseDigital();
 		
 		Assert.isTrue(digital.check());
-		Assert.isTrue(digital.fire);
+		Assert.isTrue(digital.triggered);
 	}
 	
 	@Test
-	function testCheckAndFireAnalog()
+	function testCheckAndTriggeredAnalog()
 	{
 		clearAnalog();
 		
 		Assert.isFalse(analog.check());
-		Assert.isFalse(analog.fire);
+		Assert.isFalse(analog.triggered);
 		
 		pulseAnalog(analog);
 		
 		Assert.isTrue(analog.check());
-		Assert.isTrue(analog.fire);
+		Assert.isTrue(analog.triggered);
 	}
 	
 	@Test
