@@ -420,6 +420,113 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
 	}
 	
+	@Test
+	function testFlxMouseWheel()
+	{
+		var test = new TestShell("");
+		
+		test.name = "positive.";
+		_testFlxMouseWheel(test, true, false);
+		_testFlxMouseWheel(test, true, true);
+		
+		test.name = "negative.";
+		_testFlxMouseWheel(test, true, false);
+		_testFlxMouseWheel(test, true, true);
+		
+		//POSITIVE
+		
+		//Press & release w/o callbacks
+		Assert.isTrue(test.get("positive.press1.just").pass);
+		Assert.isTrue(test.get("positive.press1.value").pass);
+		Assert.isTrue(test.get("positive.press2.just").pass);
+		Assert.isTrue(test.get("positive.press2.value").pass);
+		Assert.isTrue(test.get("positive.release1.just").pass);
+		Assert.isTrue(test.get("positive.release1.value").pass);
+		Assert.isTrue(test.get("positive.release2.just").pass);
+		Assert.isTrue(test.get("positive.release2.value").pass);
+		
+		//Press & release w/ callbacks
+		Assert.isTrue(test.get("positive.press1.callbacks.just").pass);
+		Assert.isTrue(test.get("positive.press1.callbacks.value").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.just").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.value").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.just").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.value").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.just").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.value").pass);
+		
+		//Callbacks themselves
+		Assert.isTrue(test.get("positive.press1.callbacks.callback1").pass);
+		Assert.isTrue(test.get("positive.press1.callbacks.callback2").pass);
+		Assert.isTrue(test.get("positive.press1.callbacks.callback3").pass);
+		Assert.isTrue(test.get("positive.press1.callbacks.callback4").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.callback1").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.callback2").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.callback3").pass);
+		Assert.isTrue(test.get("positive.press2.callbacks.callback4").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.callback1").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.callback2").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.callback3").pass);
+		Assert.isTrue(test.get("positive.release1.callbacks.callback4").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.callback1").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.callback2").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.callback3").pass);
+		Assert.isTrue(test.get("positive.release2.callbacks.callback4").pass);
+		
+		//NEGATIVE
+		
+		//Press & release w/o callbacks
+		Assert.isTrue(test.get("negative.press1.just").pass);
+		Assert.isTrue(test.get("negative.press1.value").pass);
+		Assert.isTrue(test.get("negative.press2.just").pass);
+		Assert.isTrue(test.get("negative.press2.value").pass);
+		Assert.isTrue(test.get("negative.release1.just").pass);
+		Assert.isTrue(test.get("negative.release1.value").pass);
+		Assert.isTrue(test.get("negative.release2.just").pass);
+		Assert.isTrue(test.get("negative.release2.value").pass);
+		
+		//Press & release w/ callbacks
+		Assert.isTrue(test.get("negative.press1.callbacks.just").pass);
+		Assert.isTrue(test.get("negative.press1.callbacks.value").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.just").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.value").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.just").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.value").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.just").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.value").pass);
+		
+		//Callbacks themselves
+		Assert.isTrue(test.get("negative.press1.callbacks.callback1").pass);
+		Assert.isTrue(test.get("negative.press1.callbacks.callback2").pass);
+		Assert.isTrue(test.get("negative.press1.callbacks.callback3").pass);
+		Assert.isTrue(test.get("negative.press1.callbacks.callback4").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.callback1").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.callback2").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.callback3").pass);
+		Assert.isTrue(test.get("negative.press2.callbacks.callback4").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.callback1").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.callback2").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.callback3").pass);
+		Assert.isTrue(test.get("negative.release1.callbacks.callback4").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.callback1").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.callback2").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.callback3").pass);
+		Assert.isTrue(test.get("negative.release2.callbacks.callback4").pass);
+	}
+	
+	function _testFlxMouseWheel(test:TestShell, positive:Bool, callbacks:Bool)
+	{
+		var a = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.PRESSED);
+		var b = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.JUST_PRESSED);
+		var c = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.RELEASED);
+		var d = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.JUST_RELEASED);
+		
+		var clear = clearFlxMouseWheel;
+		var move = moveFlxMouseWheel.bind(positive);
+		
+		testInputStates(test, clear, move, a, b, c, d, callbacks);
+	}
+	
 	/*********/
 	
 	function getCallback(i:Int){
@@ -526,6 +633,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		ajReleased.destroy();
 	}
 	
+	@:access(flixel.input.mouse.FlxMouse)
+	private function clearFlxMouseWheel()
+	{
+		FlxG.mouse.wheel = 0;
+		step();
+		step();
+	}
+	
 	@:access(flixel.input.FlxKeyManager)
 	private function clearFlxKey(key:FlxKey)
 	{
@@ -553,6 +668,29 @@ class FlxActionInputDigitalTest extends FlxTest
 		thing.update();
 		step();
 		thing.update();
+	}
+	
+	@:access(flixel.input.mouse.FlxMouse)
+	private function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
+	{
+		trace("moveFlxMouseWheel(" + positive+"," + pressed + ")");
+		if (pressed)
+		{
+			if (positive)
+			{
+				FlxG.mouse.wheel = 1;
+			}
+			else
+			{
+				FlxG.mouse.wheel = -1;
+			}
+		}
+		else
+		{
+			FlxG.mouse.wheel = 0;
+		}
+		for (a in arr) { a.update(); }
+		step();
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
