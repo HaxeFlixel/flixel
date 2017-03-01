@@ -38,7 +38,7 @@ class FlxActionTest extends FlxTest
 		analog = new FlxActionAnalog("analog", null);
 		
 		dState = new FlxInput<Int>(0);
-		dInput = new FlxActionInputDigitalIFlxInput(dState, FlxInputState.JUST_PRESSED);
+		dInput = new FlxActionInputDigitalIFlxInput(dState, FlxInputState.PRESSED);
 		
 		aInput = new FlxActionInputAnalogMousePosition(FlxAnalogState.MOVED, FlxAnalogAxis.EITHER);
 		
@@ -52,9 +52,9 @@ class FlxActionTest extends FlxTest
 		var oldInputs = digital.inputs.copy();
 		digital.removeAllInputs(false);
 		
-		var input1 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.JUST_PRESSED);
-		var input2 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.JUST_PRESSED);
-		var input3 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.JUST_PRESSED);
+		var input1 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
+		var input2 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
+		var input3 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
 		digital.addInput(input1);
 		digital.addInput(input2);
 		digital.addInput(input3);
