@@ -673,7 +673,6 @@ class FlxActionInputDigitalTest extends FlxTest
 	@:access(flixel.input.mouse.FlxMouse)
 	private function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
-		trace("moveFlxMouseWheel(" + positive+"," + pressed + ")");
 		if (pressed)
 		{
 			if (positive)
