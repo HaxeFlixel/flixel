@@ -107,12 +107,25 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 			
 			if (gamepad != null)
 			{
-				switch (trigger)
+				if (inputID == FlxGamepadInputID.ANY)
 				{
-					case PRESSED:       return  gamepad.checkStatus(inputID, PRESSED) || gamepad.checkStatus(inputID, JUST_PRESSED);
-					case RELEASED:      return !gamepad.checkStatus(inputID, PRESSED) || gamepad.checkStatus(inputID, JUST_RELEASED);
-					case JUST_PRESSED:  return  gamepad.checkStatus(inputID, JUST_PRESSED);
-					case JUST_RELEASED: return  gamepad.checkStatus(inputID, JUST_RELEASED);
+					switch(trigger)
+					{
+						case PRESSED:       return  gamepad.pressed.ANY || gamepad.justPressed.ANY;
+						case RELEASED:      return !gamepad.pressed.ALL && !gamepad.justPressed.ALL;
+						case JUST_PRESSED:  return  gamepad.justPressed.ANY;
+						case JUST_RELEASED: return  gamepad.justReleased.ANY;
+					}
+				}
+				else
+				{
+					switch (trigger)
+					{
+						case PRESSED:       return  gamepad.checkStatus(inputID, PRESSED)  || gamepad.checkStatus(inputID, JUST_PRESSED);
+						case RELEASED:      return  gamepad.checkStatus(inputID, RELEASED) || gamepad.checkStatus(inputID, JUST_RELEASED);
+						case JUST_PRESSED:  return  gamepad.checkStatus(inputID, JUST_PRESSED);
+						case JUST_RELEASED: return  gamepad.checkStatus(inputID, JUST_RELEASED);
+					}
 				}
 			}
 		}
