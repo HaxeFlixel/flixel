@@ -33,7 +33,7 @@ class TestShell implements IFlxDestroyable
 			testedFalse:false,
 			testedNull:false,
 			testedNotNull:false,
-			strValue:""
+			strValue:"unknown id, not tested!"
 		};
 	}
 	
@@ -57,7 +57,7 @@ class TestShell implements IFlxDestroyable
 		test(id, false, false, false, d != null, d == null ? "null" : Std.string(d));
 	}
 	
-	private function test(id:String, tTrue:Bool=false, tFalse:Bool=false, tNull:Bool=false, tNNull:Bool=false, strValue:String="")
+	private function test(id:String, tTrue:Bool=false, tFalse:Bool=false, tNull:Bool=false, tNNull:Bool=false, strValue:String="untested")
 	{
 		results.push
 		(
