@@ -20,6 +20,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.PosInfos;
 import lime.ui.Gamepad;
+import openfl.events.JoystickEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputDevice;
 
@@ -200,6 +201,32 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
 	}
 	
+	private function getGamepadButtons():Array<FlxGamepadInputID>
+	{
+		return 
+		[
+			FlxGamepadInputID.A,
+			FlxGamepadInputID.B,
+			FlxGamepadInputID.X,
+			FlxGamepadInputID.Y,
+			FlxGamepadInputID.LEFT_SHOULDER,
+			FlxGamepadInputID.RIGHT_SHOULDER,
+			FlxGamepadInputID.BACK,
+			FlxGamepadInputID.START,
+			FlxGamepadInputID.LEFT_STICK_CLICK,
+			FlxGamepadInputID.RIGHT_STICK_CLICK,
+			FlxGamepadInputID.GUIDE,
+			FlxGamepadInputID.DPAD_UP,
+			FlxGamepadInputID.DPAD_DOWN,
+			FlxGamepadInputID.DPAD_LEFT,
+			FlxGamepadInputID.DPAD_RIGHT
+		];
+		
+		//Things that have to be tested separately:
+		// - LEFT/RIGHT_TRIGGER (digitized) and LEFT/RIGHT_TRIGGER_BUTTON
+		// - LEFT/RIGHT_STICK_DIGITAL_UP/DOWN/LEFT/RIGHT
+	}
+	
 	private function getFlxKeys():Array<String>
 	{
 		//Trying to get these values directly from FlxG.keys.fromStringMap will cause the thing to hard crash whenever I try to do *ANY* logical test to exclude "ANY" from the returned array.
@@ -316,8 +343,8 @@ class FlxActionInputDigitalTest extends FlxTest
 		var click = clickFlxKey.bind(key);
 		
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
-		test.name = test.name + ".any.";
-		testInputStates(test, clear, click, a, b, c, d, callbacks);
+		test.name = test.name + "any.";
+		testInputStates(test, clear, click, aAny, bAny, cAny, dAny, callbacks);
 	}
 	
 	@Test
@@ -400,26 +427,171 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, move, a, b, c, d, callbacks);
 	}
 	
-	function makeFakeGamepad():Dynamic
+	#if FLX_JOYSTICK_API
+	@Test
+	function testFlxGamepad()
 	{
-		#if FLX_JOYSTICK_API
-			//TODO:
-		#elseif FLX_GAMEINPUT_API
-			//TODO: 
-		#end
-		return null;
+		var buttons = getGamepadButtons();
+		
+		for (btn in buttons)
+		{
+			var t = new TestShell(btn + ".");
+			
+			_testFlxGamepad(t, btn, false, false);
+			
+			//Press & release w/ callbacks
+			t.assertTrue (btn+".press1.just");
+			t.assertTrue (btn+".press1.value");
+			t.assertFalse(btn+".press2.just");
+			t.assertTrue (btn+".press2.value");
+			t.assertTrue (btn+".release1.just");
+			t.assertTrue (btn+".release1.value");
+			t.assertFalse(btn+".release2.just");
+			t.assertTrue (btn+".release2.value");
+		}
 	}
 	
+	@Test
+	function testFlxGamepadAny()
+	{
+		var buttons = getGamepadButtons();
+		
+		for (btn in buttons)
+		{
+			var t = new TestShell(btn + ".any.");
+			
+			_testFlxGamepad(t, btn, false, true);
+			
+			//Press & release w/ callbacks
+			//Test "ANY" button input
+			t.assertTrue (btn+".any.press1.just");
+			t.assertTrue (btn+".any.press1.value");
+			t.assertFalse(btn+".any.press2.just");
+			t.assertTrue (btn+".any.press2.value");
+			t.assertTrue (btn+".any.release1.just");
+			t.assertTrue (btn+".any.release1.value");
+			t.assertFalse(btn+".any.release2.just");
+			t.assertTrue (btn+".any.release2.value");
+		}
+	}
+	
+	@Test
+	function testFlxGamepadCallbacks()
+	{
+		var buttons = getGamepadButtons();
+		
+		for (btn in buttons)
+		{
+			var t = new TestShell(btn + ".");
+			
+			_testFlxGamepad(t, btn, true, false);
+			
+			//Press & release w/o callbacks
+			t.assertTrue (btn+".press1.callbacks.just");
+			t.assertTrue (btn+".press1.callbacks.value");
+			t.assertFalse(btn+".press2.callbacks.just");
+			t.assertTrue (btn+".press2.callbacks.value");
+			t.assertTrue (btn+".release1.callbacks.just");
+			t.assertTrue (btn+".release1.callbacks.value");
+			t.assertFalse(btn+".release2.callbacks.just");
+			t.assertTrue (btn+".release2.callbacks.value");
+			
+			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+			for (i in 1...5)
+			{
+				t.assertTrue(btn+".press1.callbacks.callback"+i);
+				t.assertTrue(btn+".press2.callbacks.callback"+i);
+				t.assertTrue(btn+".release1.callbacks.callback"+i);
+				t.assertTrue(btn+".release2.callbacks.callback"+i);
+			}
+		}
+	}
+	
+	@Test
+	function testFlxGamepadAnyCallbacks()
+	{
+		var buttons = getGamepadButtons();
+		
+		for (btn in buttons)
+		{
+			var t = new TestShell(btn + ".any.");
+			
+			_testFlxGamepad(t, btn, true, true);
+			
+			//Press & release w/ callbacks
+			//Test "ANY" button input
+			t.assertTrue (btn+".any.press1.callbacks.just");
+			t.assertTrue (btn+".any.press1.callbacks.value");
+			t.assertFalse(btn+".any.press2.callbacks.just");
+			t.assertTrue (btn+".any.press2.callbacks.value");
+			t.assertTrue (btn+".any.release1.callbacks.just");
+			t.assertTrue (btn+".any.release1.callbacks.value");
+			t.assertFalse(btn+".any.release2.callbacks.just");
+			t.assertTrue (btn+".any.release2.callbacks.value");
+			
+			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
+			for (i in 1...5)
+			{
+				t.assertTrue(btn+".any.press1.callbacks.callback"+i);
+				t.assertTrue(btn+".any.press2.callbacks.callback"+i);
+				t.assertTrue(btn+".any.release1.callbacks.callback"+i);
+				t.assertTrue(btn+".any.release2.callbacks.callback"+i);
+			}
+		}
+	}
+	
+	function _testFlxGamepad(test:TestShell, inputID:FlxGamepadInputID, callbacks:Bool, any:Bool)
+	{
+		var a:FlxActionInputDigitalGamepad;
+		var b:FlxActionInputDigitalGamepad;
+		var c:FlxActionInputDigitalGamepad;
+		var d:FlxActionInputDigitalGamepad;
+		
+		//NOTE: I found that gamepad tests can fail in unexpected ways for "RELEASED" actions if 
+		//your gamepad ID is "FIRST_ACTIVE"... since "first active" means "the first gamepad with
+		//any non-released input" -- if there's no input on a given frame, then no gamepad is returned 
+		//that frame to register the releases! a strict reading of the API perhaps would not see this as a bug?
+		//In any case, we might consider warning about this unexpected (bug logically valid?) edge case
+		//when using FIRST_ACTIVE as the gamepad ID and RELEASED/JUST_RELEASED as the trigger
+		
+		var stateGrid:InputStateGrid = null;
+		
+		if (!any)
+		{
+			a = new FlxActionInputDigitalGamepad(inputID, FlxInputState.PRESSED, 0);
+			b = new FlxActionInputDigitalGamepad(inputID, FlxInputState.JUST_PRESSED, 0);
+			c = new FlxActionInputDigitalGamepad(inputID, FlxInputState.RELEASED, 0);
+			d = new FlxActionInputDigitalGamepad(inputID, FlxInputState.JUST_RELEASED, 0);
+		}
+		else
+		{
+			a = new FlxActionInputDigitalGamepad(FlxGamepadInputID.ANY, FlxInputState.PRESSED, 0);
+			b = new FlxActionInputDigitalGamepad(FlxGamepadInputID.ANY, FlxInputState.JUST_PRESSED, 0);
+			c = new FlxActionInputDigitalGamepad(FlxGamepadInputID.ANY, FlxInputState.RELEASED, 0);
+			d = new FlxActionInputDigitalGamepad(FlxGamepadInputID.ANY, FlxInputState.JUST_RELEASED, 0);
+			
+			stateGrid = 
+			{
+				press1   : [1, 1, 0, 1],
+				press2   : [1, 2, 0, 2],
+				release1 : [1, 2, 1, 3],
+				release2 : [1, 2, 1, 4]
+			};
+		}
+		
+		var clear = clearJoystick.bind(inputID);
+		var click = clickJoystick.bind(inputID);
+		
+		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
+	}
+	
+	#end
+	
+	#if FLX_GAMEINPUT_API
 	@Test
 	function testFlxGamepad()
 	{
 		//TODO: make a fake gamepad somehow
-		
-		#if FLX_JOYSTICK_API
-		
-		#elseif FLX_GAMEINPUT_API
-			
-		#end
 		
 	}
 	
@@ -437,6 +609,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
 		*/
 	}
+	#end
 	
 	@Test
 	function testSteam()
@@ -467,8 +640,19 @@ class FlxActionInputDigitalTest extends FlxTest
 		}
 	}
 	
-	function testInputStates(test:TestShell, clear:Void->Void, click:Bool->Array<FlxActionDigital>->Void, pressed:FlxActionInputDigital, jPressed:FlxActionInputDigital, released:FlxActionInputDigital, jReleased:FlxActionInputDigital, testCallbacks:Bool)
+	function testInputStates(test:TestShell, clear:Void->Void, click:Bool->Array<FlxActionDigital>->Void, pressed:FlxActionInputDigital, jPressed:FlxActionInputDigital, released:FlxActionInputDigital, jReleased:FlxActionInputDigital, testCallbacks:Bool, ?g:InputStateGrid)
 	{
+		if (g == null)
+		{
+			g =
+			{
+				press1   : [1, 1, 0, 0],
+				press2   : [1, 2, 0, 0],
+				release1 : [1, 2, 1, 1],
+				release2 : [1, 2, 1, 2]
+			};
+		}
+		
 		var aPressed:FlxActionDigital;
 		var ajPressed:FlxActionDigital;
 		var aReleased:FlxActionDigital;
@@ -497,6 +681,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		var arr = [aPressed, ajPressed, aReleased, ajReleased];
 		
 		clear();
+		clearValues();
 		
 		var callbackStr = (testCallbacks ? "callbacks." : "");
 		
@@ -504,56 +689,77 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//JUST PRESSED
 		click(true, arr);
+		
 		test.testIsTrue(ajPressed.triggered, "just");
 		test.testIsTrue(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 1, "callback2");
-			test.testIsTrue(value2 == 0, "callback3");
-			test.testIsTrue(value3 == 0, "callback4");
+			test.testIsTrue(value0 == g.press1[0], "callback1");
+			test.testIsTrue(value1 == g.press1[1], "callback2");
+			test.testIsTrue(value2 == g.press1[2], "callback3");
+			test.testIsTrue(value3 == g.press1[3], "callback4");
 		}
 		
 		test.prefix = "press2." + callbackStr;
 		
 		//STILL PRESSED
 		click(true, arr);
+		trace("press2 " + value0 + " " + value1 + " " + value2 + " " + value3);
+		
 		test.testIsFalse(ajPressed.triggered, "just");
 		test.testIsTrue(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 0, "callback3");
-			test.testIsTrue(value3 == 0, "callback4");
+			test.testIsTrue(value0 == g.press2[0], "callback1");
+			test.testIsTrue(value1 == g.press2[1], "callback2");
+			test.testIsTrue(value2 == g.press2[2], "callback3");
+			test.testIsTrue(value3 == g.press2[3], "callback4");
 		}
 		
 		test.prefix = "release1." + callbackStr;
 		
 		//JUST RELEASED
 		click(false, arr);
+		trace("release1 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release1);
+		
+		if (test.name == "A.any."){
+			trace("jp = " + ajPressed.triggered);
+			trace(" p = " + aPressed.triggered);
+			trace("jr = " + ajReleased.triggered);
+			trace(" r = " + aReleased.triggered);
+		}
+		
 		test.testIsTrue(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 1, "callback3");
-			test.testIsTrue(value3 == 1, "callback4");
+			test.testIsTrue(value0 == g.release1[0], "callback1");
+			test.testIsTrue(value1 == g.release1[1], "callback2");
+			test.testIsTrue(value2 == g.release1[2], "callback3");
+			test.testIsTrue(value3 == g.release1[3], "callback4");
 		}
 		
 		test.prefix = "release2." + callbackStr;
 		
 		//STILL RELEASED
 		click(false, arr);
+		trace("release2 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release2);
+		
+		if (test.name == "A.any."){
+			trace("jp = " + ajPressed.triggered);
+			trace(" p = " + aPressed.triggered);
+			trace("jr = " + ajReleased.triggered);
+			trace(" r = " + aReleased.triggered);
+		}
+		
 		test.testIsFalse(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 1, "callback3");
-			test.testIsTrue(value3 == 2, "callback4");
+			test.testIsTrue(value0 == g.release2[0], "callback1");
+			test.testIsTrue(value1 == g.release2[1], "callback2");
+			test.testIsTrue(value2 == g.release2[2], "callback3");
+			test.testIsTrue(value3 == g.release2[3], "callback4");
 		}
 		
 		clear();
@@ -563,6 +769,12 @@ class FlxActionInputDigitalTest extends FlxTest
 		aReleased.destroy();
 		ajPressed.destroy();
 		ajReleased.destroy();
+	}
+	
+	private function clearJoystick(ID:FlxGamepadInputID)
+	{
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.BUTTON_UP, false, false, 0, ID, 0, 0, 0));
+		step();
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
@@ -615,6 +827,18 @@ class FlxActionInputDigitalTest extends FlxTest
 		thing.update();
 		step();
 		thing.update();
+	}
+	
+	
+	private function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
+	{
+		var event = pressed ? JoystickEvent.BUTTON_DOWN : JoystickEvent.BUTTON_UP;
+		FlxG.stage.dispatchEvent(new JoystickEvent(event, false, false, 0, ID, 0, 0, 0));
+		
+		var g = FlxG.gamepads.getByID(0);
+		
+		step();
+		updateActions(arr);
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
@@ -718,4 +942,12 @@ class FlxActionInputDigitalTest extends FlxTest
 	{
 		value0 = value1 = value2 = value3 = 0;
 	}
+}
+
+typedef InputStateGrid = 
+{
+	press1:Array<Int>,
+	press2:Array<Int>,
+	release1:Array<Int>,
+	release2:Array<Int>
 }
