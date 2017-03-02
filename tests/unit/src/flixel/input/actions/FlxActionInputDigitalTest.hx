@@ -427,7 +427,6 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, move, a, b, c, d, callbacks);
 	}
 	
-	#if FLX_JOYSTICK_API
 	@Test
 	function testFlxGamepad()
 	{
@@ -579,37 +578,24 @@ class FlxActionInputDigitalTest extends FlxTest
 			};
 		}
 		
+		#if FLX_JOYSTICK_API
+		
 		var clear = clearJoystick.bind(inputID);
 		var click = clickJoystick.bind(inputID);
-		
 		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
-	}
-	
-	#end
-	
-	#if FLX_GAMEINPUT_API
-	@Test
-	function testFlxGamepad()
-	{
-		//TODO: make a fake gamepad somehow
 		
-	}
-	
-	function _testFlxGamepad(test:TestShell, g:FlxGamepad, inputID:FlxGamepadInputID, callbacks:Bool)
-	{
+		#elseif FLX_GAMEPAD_API
+		
+		//TODO, not yet implemented:
+		
 		/*
-		var a = new FlxActionInputDigitalGamepad(inputID, FlxInputState.PRESSED);
-		var b = new FlxActionInputDigitalGamepad(inputID, FlxInputState.JUST_PRESSED);
-		var c = new FlxActionInputDigitalGamepad(inputID, FlxInputState.RELEASED);
-		var d = new FlxActionInputDigitalGamepad(inputID, FlxInputState.JUST_RELEASED);
-		
-		var clear = clearFlxGamepad.bind(g, inputID);
-		var click = clickFlxGamepad.bind(g, inputID);
-		
-		testInputStates(test, clear, click, a, b, c, d, callbacks);
+		var clear = clearGamepad.bind(inputID);
+		var click = clickGamepad.bind(inputID);
+		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
 		*/
+		
+		#end
 	}
-	#end
 	
 	@Test
 	function testSteam()
@@ -619,17 +605,22 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	function _testSteam(test:TestShell, actionHandle:Int, callbacks:Bool)
 	{
-		/*
-		var a = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.PRESSED);
-		var b = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_PRESSED);
-		var c = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.RELEASED);
-		var d = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_RELEASED);
+		var a:FlxActionInputDigitalGamepad;
+		var b:FlxActionInputDigitalGamepad;
+		var c:FlxActionInputDigitalGamepad;
+		var d:FlxActionInputDigitalGamepad;
+		
+		var stateGrid:InputStateGrid = null;
+		
+		a = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.PRESSED, 0);
+		b = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_PRESSED, 0);
+		c = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.RELEASED, 0);
+		d = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_RELEASED, 0);
 		
 		var clear = clearSteam.bind(actionHandle);
-		var click = clearSteam.bind(actionHandle);
+		var click = clickSteam.bind(actionHandle);
 		
-		testInputStates(test, clear, click, a, b, c, d, callbacks);
-		*/
+		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
 	}
 	
 	/*********/
@@ -704,7 +695,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//STILL PRESSED
 		click(true, arr);
-		trace("press2 " + value0 + " " + value1 + " " + value2 + " " + value3);
+		//trace("press2 " + value0 + " " + value1 + " " + value2 + " " + value3);
 		
 		test.testIsFalse(ajPressed.triggered, "just");
 		test.testIsTrue(aPressed.triggered, "value");
@@ -720,14 +711,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//JUST RELEASED
 		click(false, arr);
-		trace("release1 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release1);
-		
-		if (test.name == "A.any."){
-			trace("jp = " + ajPressed.triggered);
-			trace(" p = " + aPressed.triggered);
-			trace("jr = " + ajReleased.triggered);
-			trace(" r = " + aReleased.triggered);
-		}
+		//trace("release1 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release1);
 		
 		test.testIsTrue(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
@@ -743,14 +727,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//STILL RELEASED
 		click(false, arr);
-		trace("release2 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release2);
-		
-		if (test.name == "A.any."){
-			trace("jp = " + ajPressed.triggered);
-			trace(" p = " + aPressed.triggered);
-			trace("jr = " + ajReleased.triggered);
-			trace(" r = " + aReleased.triggered);
-		}
+		//trace("release2 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release2);
 		
 		test.testIsFalse(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
@@ -769,6 +746,15 @@ class FlxActionInputDigitalTest extends FlxTest
 		aReleased.destroy();
 		ajPressed.destroy();
 		ajReleased.destroy();
+	}
+	
+	private function clearSteam(actionHandle:Int)
+	{
+		SteamMock.setDigitalAction(actionHandle, false);
+		SteamMock.update();
+		step();
+		SteamMock.update();
+		step();
 	}
 	
 	private function clearJoystick(ID:FlxGamepadInputID)
