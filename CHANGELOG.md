@@ -1,3 +1,8 @@
+4.2.1
+------------------------------
+- fixed rendering with Haxe 3.4.0 and OpenFL Next
+
+
 4.2.0
 ------------------------------
 #### New features:
