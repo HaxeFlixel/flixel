@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
@@ -12,6 +13,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
 import haxe.xml.Fast;
 import openfl.Assets;
@@ -25,6 +27,8 @@ class FlxBitmapFont extends FlxFramesCollection
 	private static inline var SPACE_CODE:Int = 32;
 	private static inline var TAB_CODE:Int = 9;
 	private static inline var NEW_LINE_CODE:Int = 10;
+	private static inline var CARRIAGE_RETURN_CODE:Int = 13;
+	private static inline var HYPHEN_CODE:Int = 45;
 	
 	private static inline var DEFAULT_FONT_KEY:String = "DEFAULT_FONT_KEY";
 	
@@ -53,6 +57,8 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	public var numLetters(default, null):Int = 0;
 	
+	public var distanceField(default, null):Bool = false;
+	
 	/**
 	 * Minimum x offset in this font.
 	 * This is a helper variable for rendering purposes.
@@ -65,14 +71,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	public var spaceWidth:Int = 0;
 	
 	/**
-	 * Helper map where character's frames are stored by char codes.
+	 * Helper map where characters are stored by their char codes.
 	 */
-	private var charMap:Map<Int, FlxFrame>;
-	
-	/**
-	 * Helper map where character's xAdvance are stored by char codes.
-	 */
-	private var charAdvance:Map<Int, Int>;
+	private var characters:Map<Int, FlxCharacter>;
 	
 	/**
 	 * Atlas frame from which this font has been parsed.
@@ -88,8 +89,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		this.frame = frame;
 		parent.persist = true;
 		parent.destroyOnNoUse = false;
-		charMap = new Map<Int, FlxFrame>();
-		charAdvance = new Map<Int, Int>();
+		characters = new Map<Int, FlxCharacter>();
 	}
 	
 	override public function destroy():Void 
@@ -97,8 +97,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		super.destroy();
 		frame = null;
 		fontName = null;
-		charMap = null;
-		charAdvance = null;
+		
+		if (characters != null)
+		{
+			for (char in characters)
+				char.destroy();
+		}
+		
+		characters = null;
 	}
 	
 	/**
@@ -134,14 +140,10 @@ class FlxBitmapFont extends FlxFramesCollection
 				{
 					i++;
 					
-					if (DEFAULT_FONT_DATA.substr(i, 1) == "1") 
-					{
+					if (DEFAULT_FONT_DATA.substr(i, 1) == "1")
 						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.WHITE);
-					}
-					else 
-					{
+					else
 						bd.setPixel32(1 + letterPos * 7 + px, 1 + py, FlxColor.TRANSPARENT);
-					}
 				}
 			}
 			
@@ -192,9 +194,7 @@ class FlxBitmapFont extends FlxFramesCollection
 				var data:String = Std.string(Data);
 				
 				if (Assets.exists(data))
-				{
 					data = Assets.getText(data);
-				}
 				
 				fontData = Xml.parse(data);
 			}
@@ -244,18 +244,12 @@ class FlxBitmapFont extends FlxFramesCollection
 			charStr = null;
 			
 			if (char.has.letter) // The ASCII value of the character this line is describing. Helpful for debugging
-			{
 				charStr = char.att.letter;
-			}
 			else if (char.has.id) // The character number in the ASCII table.
-			{
 				charCode = Std.parseInt(char.att.id);
-			}
 			
 			if (charCode == -1 && charStr == null) 
-			{
 				throw 'Invalid font xml data!';
-			}
 			
 			if (charStr != null)
 			{
@@ -275,17 +269,173 @@ class FlxBitmapFont extends FlxFramesCollection
 			font.addCharFrame(charCode, frame, offset, xAdvance);
 			
 			if (charCode == SPACE_CODE)
-			{
 				font.spaceWidth = xAdvance;
-			}
 			else
-			{
 				font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
+		}
+		
+		if (fast.hasNode.kernings)
+		{
+			var char:FlxCharacter;
+			var kernings = fast.node.kernings;
+			
+			for (kerning in kernings.nodes.kerning)
+			{
+				char = font.getCharacter(Std.parseInt(kerning.att.second));
+				
+				if (char != null)
+					char.addKerning(Std.parseInt(kerning.att.first), Std.parseInt(kerning.att.amount));
 			}
 		}
 		
 		font.updateSourceHeight();
 		return font;
+	}
+	
+	/**
+	 * Loads font data in Hiero's format 
+	 * (actually you can get the same output from BMFont program, but Hiero allows you to have distance field font).
+	 * 
+	 * @param   Source   		Font image source.
+	 * @param   Data     		Font data.
+	 * @param	DistanceField	If this font support distance field feature.
+	 * @return  Generated bitmap font object.
+	 */
+	public static function fromHiero(Source:FlxBitmapFontGraphicAsset, Data:String, DistanceField:Bool = false):FlxBitmapFont
+	{
+		// TODO: implement distance field property...
+		
+		var graphic:FlxGraphic = null;
+		var frame:FlxFrame = null;
+		
+		if (Std.is(Source, FlxFrame))
+		{
+			frame = cast Source;
+			graphic = frame.parent;
+		}
+		else
+		{
+			graphic = FlxG.bitmap.add(cast Source);
+			frame = graphic.imageFrame.frame;
+		}
+		
+		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
+		if (font != null)
+			return font;
+		
+		font = new FlxBitmapFont(frame);
+		font.distanceField = DistanceField;
+		
+		var data:String = Std.string(Data);
+		var fontData:Array<String> = null;
+		
+		if (Assets.exists(data))
+			fontData = Assets.getText(data).split("\n");
+		else
+			fontData = data.split("\n");
+		
+		var lineIndex:Int = 0;
+		var pairs = processLine(fontData[lineIndex]);
+		
+		font.fontName = pairs[0][1];
+		font.size = Std.parseInt(pairs[1][1]);
+		font.bold = (Std.parseInt(pairs[2][1]) != 0);
+		font.italic = (Std.parseInt(pairs[3][1]) != 0);
+		
+		var paddings:Array<String> = pairs[9][1].split(",");
+		var topPadding:Int = Std.parseInt(paddings[0]);
+		var leftPadding:Int = Std.parseInt(paddings[1]);
+		var bottomPadding:Int = Std.parseInt(paddings[2]);
+		var rightPadding:Int = Std.parseInt(paddings[3]);
+		var vPadding:Int = topPadding + bottomPadding;
+		var hPadding:Int = leftPadding + rightPadding;
+		
+		lineIndex = 1;
+		pairs =  processLine(fontData[lineIndex]);
+		font.lineHeight = Std.parseInt(pairs[0][1]) - vPadding;
+		
+		lineIndex = 3;
+		pairs =  processLine(fontData[lineIndex]);
+		var numChars:Int = Std.parseInt(pairs[0][1]);
+		
+		var frame:FlxRect;
+		var offset:FlxPoint;
+		var charStr:String;
+		var charCode:Int;
+		var xOffset:Int, yOffset:Int, xAdvance:Int;
+		var frameX:Int, frameY:Int, frameHeight:Int, frameWidth:Int;
+		
+		lineIndex = 4;
+		
+		for (i in 0...numChars)
+		{
+			pairs =  processLine(fontData[lineIndex]);
+			
+			charCode = Std.parseInt(pairs[0][1]);
+			frameX = Std.parseInt(pairs[1][1]) + leftPadding;
+			frameY = Std.parseInt(pairs[2][1]) + topPadding;
+			frameWidth = Std.parseInt(pairs[3][1]) - hPadding;
+			frameHeight = Std.parseInt(pairs[4][1]) - vPadding;
+			xOffset = Std.parseInt(pairs[5][1]);
+			yOffset = Std.parseInt(pairs[6][1]);
+			xAdvance = Std.parseInt(pairs[7][1]) - hPadding;
+			
+			frame = FlxRect.get(frameX, frameY, frameWidth, frameHeight);
+			offset = FlxPoint.get(xOffset, yOffset);
+			
+			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
+			
+			font.addCharFrame(charCode, frame, offset, xAdvance);
+			
+			if (charCode == SPACE_CODE)
+				font.spaceWidth = xAdvance;
+			else
+				font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
+			
+			lineIndex++;
+		}
+		
+		pairs =  processLine(fontData[lineIndex]);
+		var numKernings:Int = Std.parseInt(pairs[0][1]);
+		lineIndex++;
+		
+		var char:FlxCharacter;
+		var first:Int, second:Int, amount:Int;
+		
+		for (i in 0...numKernings)
+		{
+			pairs = processLine(fontData[lineIndex]);
+			
+			first = Std.parseInt(pairs[0][1]);
+			second = Std.parseInt(pairs[1][1]);
+			amount = Std.parseInt(pairs[2][1]);
+			
+			char = font.getCharacter(second);
+			
+			if (char != null)
+				char.addKerning(first, amount);
+			
+			lineIndex++;
+		}
+		
+		font.updateSourceHeight();
+		return font;
+	}
+	
+	private static function processLine(line:String):Array<Array<String>>
+	{
+		var result:Array<Array<String>> = [];
+		
+		var pairs:Array<String> = line.split(" ");
+		for (chunk in pairs)
+		{
+			var pair:Array<String> = chunk.split("=");
+			
+			if (pair.length == 2)
+				result.push(pair);
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -395,9 +545,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					font.addCharFrame(charCode, rect, offset, xAdvance);
 					
 					if (charCode == SPACE_CODE)
-					{
 						font.spaceWidth = xAdvance;
-					}
 					
 					// store max size
 					if (gh > rowHeight) rowHeight = gh;
@@ -432,10 +580,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		#end
 		
 		if (charBGColor != FlxColor.TRANSPARENT)
-		{
 			bmd.threshold(bmd, frameRect, point, "==", charBGColor, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
-		}
-
+		
 		return font;
 	}
 	
@@ -448,7 +594,6 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			point.x = frame.frame.width - y;
 			point.y = x;
-			
 		}
 		else if (frame.angle == FlxFrameAngle.ANGLE_90)
 		{
@@ -539,9 +684,7 @@ class FlxBitmapFont extends FlxFramesCollection
 				letterIndex++;
 				
 				if (letterIndex >= numLetters)
-				{
 					return font;
-				}
 			}
 		}
 		
@@ -557,13 +700,13 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   offset     Offset before rendering this char.
 	 * @param   xAdvance   How much cursor will jump after this char.
 	 */
-	private function addCharFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
+	private function addCharFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):FlxCharacter
 	{
 		var utf8:Utf8 = new Utf8();
 		utf8.addChar(charCode);
 		var charName:String = utf8.toString();
 		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)
-			return;
+			return null;
 		var charFrame:FlxFrame = this.frame.subFrameTo(frame);
 		
 		var w:Float = charFrame.sourceSize.x;
@@ -574,9 +717,13 @@ class FlxBitmapFont extends FlxFramesCollection
 		charFrame.offset.addPoint(offset);
 		charFrame.name = charName;
 		pushFrame(charFrame);
-		charMap.set(charCode, charFrame);
-		charAdvance.set(charCode, xAdvance);
+		
+		var character:FlxCharacter = new FlxCharacter(charCode, charFrame, xAdvance); 
+		characters.set(charCode, character);
+		
 		offset.put();
+		
+		return character;
 	}
 	
 	private function updateSourceHeight():Void
@@ -590,22 +737,27 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	public inline function charExists(charCode:Int):Bool
 	{
-		return charMap.exists(charCode);
+		return characters.exists(charCode);
 	}
 	
-	public inline function getCharFrame(charCode:Int):FlxFrame
+	public inline function getCharacter(charCode:Int):FlxCharacter
 	{
-		return charMap.get(charCode);
+		return characters.get(charCode);
 	}
 	
-	public inline function getCharAdvance(charCode:Int):Int
+	public inline function getCharAdvance(charCode:Int):Float
 	{
-		return charAdvance.exists(charCode) ? charAdvance.get(charCode) : 0;
+		return characters.exists(charCode) ? characters[charCode].xAdvance : 0;
+	}
+	
+	public inline function getCharKerning(charCode:Int, prevCharCode:Int):Int
+	{
+		return characters.exists(charCode) ? characters[charCode].getKerning(prevCharCode) : 0;
 	}
 	
 	public inline function getCharWidth(charCode:Int):Float
 	{
-		return charMap.exists(charCode) ? charMap.get(charCode).sourceSize.x : 0;
+		return characters.exists(charCode) ? characters[charCode].width : 0;
 	}
 	
 	public static function findFont(frame:FlxFrame, ?border:FlxPoint):FlxBitmapFont
@@ -617,10 +769,9 @@ class FlxBitmapFont extends FlxFramesCollection
 		for (font in bitmapFonts)
 		{
 			if (font.frame == frame && font.border.equals(border))
-			{
 				return font;
-			}
 		}
+		
 		return null;
 	}
 	
@@ -630,9 +781,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame, resultBorder);
 		if (font != null)
-		{
 			return font;
-		}
 		
 		font = new FlxBitmapFont(frame, border);
 		font.spaceWidth = spaceWidth;
@@ -645,17 +794,86 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.bold = bold;
 		
 		var charWithBorder:FlxFrame;
+		var character:FlxCharacter;
 		var code:Int;
 		for (char in frames)
 		{
 			charWithBorder = char.setBorderTo(border);
 			font.pushFrame(charWithBorder);
 			code = Utf8.charCodeAt(char.name, 0);
-			font.charMap.set(code, charWithBorder);
-			font.charAdvance.set(code, charAdvance.get(code));
+			
+			character = new FlxCharacter(code, charWithBorder, getCharAdvance(code));
+			font.characters.set(code, character);
+			
+			// TODO: copy character's kernings.
 		}
 		
 		font.updateSourceHeight();
 		return font;
+	}
+}
+
+class FlxCharacter implements IFlxDestroyable
+{
+	public var charCode(default, null):Int;
+	
+	public var frame(default, null):FlxFrame;
+	
+	public var xAdvance(default, null):Float = 0.0;
+	
+	public var xOffset(get, null):Float;
+	
+	public var yOffset(get, null):Float;
+	
+	public var width(get, null):Float;
+	
+	public var height(get, null):Float;
+	
+	private var kernings:Map<Int, Int> = new Map<Int, Int>();
+	
+	public function new(charCode:Int, frame:FlxFrame, xAdvance:Float)
+	{
+		this.charCode = charCode;
+		this.frame = frame;
+		this.xAdvance = xAdvance;
+	}
+	
+	public function destroy():Void
+	{
+		kernings = null;
+		frame = null;
+	}
+	
+	public function addKerning(charID:Int, amount:Int):Void
+    {
+        kernings[charID] = amount;
+    }
+    
+    public function getKerning(charID:Int):Int
+    {
+        if (kernings == null || kernings[charID] == null) 
+			return 0;
+        
+		return kernings[charID];
+    }
+	
+	private function get_width():Float
+	{
+		return frame.sourceSize.x;
+	}
+	
+	private function get_height():Float
+	{
+		return frame.sourceSize.y;
+	}
+	
+	private function get_xOffset():Float
+	{
+		return frame.offset.x;
+	}
+	
+	private function get_yOffset():Float
+	{
+		return frame.offset.y;
 	}
 }
