@@ -8,6 +8,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import flixel.graphics.shaders.tiles.FlxDistanceFieldShader;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;
@@ -24,6 +25,8 @@ import openfl.Assets;
 @:allow(flixel.text.FlxBitmapText)
 class FlxBitmapFont extends FlxFramesCollection
 {
+	public static var DistanceFieldShader:FlxDistanceFieldShader = new FlxDistanceFieldShader();
+	
 	private static inline var SPACE_CODE:Int = 32;
 	private static inline var TAB_CODE:Int = 9;
 	private static inline var NEW_LINE_CODE:Int = 10;
@@ -301,10 +304,8 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param	DistanceField	If this font support distance field feature.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromHiero(Source:FlxBitmapFontGraphicAsset, Data:String, DistanceField:Bool = false):FlxBitmapFont
+	public static function fromHiero(Source:FlxBitmapFontGraphicAsset, Data:String, DistanceField:Bool = false, DesiredPadding:Int = 0):FlxBitmapFont
 	{
-		// TODO: implement distance field property...
-		
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 		
@@ -343,10 +344,10 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.italic = (Std.parseInt(pairs[3][1]) != 0);
 		
 		var paddings:Array<String> = pairs[9][1].split(",");
-		var topPadding:Int = Std.parseInt(paddings[0]);
-		var leftPadding:Int = Std.parseInt(paddings[1]);
-		var bottomPadding:Int = Std.parseInt(paddings[2]);
-		var rightPadding:Int = Std.parseInt(paddings[3]);
+		var topPadding:Int = Std.parseInt(paddings[0]) - DesiredPadding;
+		var leftPadding:Int = Std.parseInt(paddings[1]) - DesiredPadding;
+		var bottomPadding:Int = Std.parseInt(paddings[2]) - DesiredPadding;
+		var rightPadding:Int = Std.parseInt(paddings[3]) - DesiredPadding;
 		var vPadding:Int = topPadding + bottomPadding;
 		var hPadding:Int = leftPadding + rightPadding;
 		
@@ -376,9 +377,9 @@ class FlxBitmapFont extends FlxFramesCollection
 			frameY = Std.parseInt(pairs[2][1]) + topPadding;
 			frameWidth = Std.parseInt(pairs[3][1]) - hPadding;
 			frameHeight = Std.parseInt(pairs[4][1]) - vPadding;
-			xOffset = Std.parseInt(pairs[5][1]);
-			yOffset = Std.parseInt(pairs[6][1]);
-			xAdvance = Std.parseInt(pairs[7][1]) - hPadding;
+			xOffset = Std.parseInt(pairs[5][1]) + leftPadding;
+			yOffset = Std.parseInt(pairs[6][1]) + topPadding;
+			xAdvance = Std.parseInt(pairs[7][1]) - hPadding + 2 * DesiredPadding;
 			
 			frame = FlxRect.get(frameX, frameY, frameWidth, frameHeight);
 			offset = FlxPoint.get(xOffset, yOffset);
