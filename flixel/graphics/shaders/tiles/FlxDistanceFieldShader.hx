@@ -3,7 +3,7 @@ package flixel.graphics.shaders.tiles;
 import flixel.graphics.shaders.FlxBaseShader;
 
 /**
- * Default shader used by batcher for rendering textured quads.
+ * Default shader used for rendering distance field fonts.
  * See: https://github.com/libgdx/libgdx/wiki/Distance-field-fonts
  */
 class FlxDistanceFieldShader extends FlxTexturedShader
@@ -16,11 +16,7 @@ class FlxDistanceFieldShader extends FlxTexturedShader
 			
 			uniform sampler2D uImage0;
 			
-			// right value for smoothing is `0.25f / (spread * scale)`
-			// so i should add 2 uniforms: 
-			// `spread` (should be set by font) 
-			// and `spread` (should be set by bitmap text instance)
-			const float smoothing = 1.0 / 16.0;
+			uniform float smoothing = 1.0 / 16.0;
 			
 			void main(void) 
 			{
@@ -29,8 +25,28 @@ class FlxDistanceFieldShader extends FlxTexturedShader
 				gl_FragColor = vec4(vColor.rgb * alpha, vColor.a * alpha);
 			}";
 	
-	public function new() 
+	public var smoothing(default, set):Float;
+	
+	public function new(?fragment:String) 
 	{
-		super(null, DEFAULT_FRAGMENT_SOURCE);
+		fragment = (fragment == null) ? DEFAULT_FRAGMENT_SOURCE : fragment;
+		super(null, fragment);
+		
+		smoothing = 1.0 / 16.0;
+	}
+	
+	/**
+	 * Font smoothing factor.
+	 * Right value for smoothing is `0.25f / (spread * scale)`, where
+	 * `spread` is defined at font atlas creation,
+	 * `scale` is the scale of bitmap text.
+	 * 
+	 * Default value is (1.0 / 16.0).
+	 */
+	private function set_smoothing(value:Float):Float
+	{
+		smoothing = value;
+		data.smoothing.value = [value];
+		return value;
 	}
 }

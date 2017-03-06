@@ -1,13 +1,12 @@
 package flixel.graphics.shaders.tiles;
 
-import flixel.graphics.shaders.FlxBaseShader;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
 /**
  * Shader for distance field font with outline
  */
-class FlxDistanceOutlineShader extends FlxTexturedShader
+class FlxDistanceOutlineShader extends FlxDistanceFieldShader
 {
 	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"
@@ -20,8 +19,7 @@ class FlxDistanceOutlineShader extends FlxTexturedShader
 			uniform float outlineDistance; // Between 0 and 0.5, 0 = thick outline, 0.5 = no outline
 			uniform vec4 outlineColor;
 			
-			// right value for smoothing is `0.25f / (spread * scale)`
-			const float smoothing = 1.0 / 16.0;
+			uniform float smoothing = 1.0 / 16.0;
 			
 			void main(void) 
 			{
@@ -45,7 +43,7 @@ class FlxDistanceOutlineShader extends FlxTexturedShader
 	
 	public function new() 
 	{
-		super(null, DEFAULT_FRAGMENT_SOURCE);
+		super(DEFAULT_FRAGMENT_SOURCE);
 		
 		outlineDistance = 0.0;
 		outlineColor = FlxColor.RED;

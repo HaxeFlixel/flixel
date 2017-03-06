@@ -1454,6 +1454,7 @@ class FlxBitmapText extends FlxSprite
 		if (font != value)
 		{
 			font = value;
+			smoothing = smoothing || font.distanceField;
 			pendingTextChange = true;
 		}
 		

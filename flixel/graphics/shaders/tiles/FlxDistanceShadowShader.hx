@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 /**
  * Shader for distance field font with outline
  */
-class FlxDistanceShadowShader extends FlxTexturedShader
+class FlxDistanceShadowShader extends FlxDistanceFieldShader
 {
 	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"
@@ -21,8 +21,7 @@ class FlxDistanceShadowShader extends FlxTexturedShader
 			uniform float shadowSmoothing;	// Between 0 and 0.5
 			uniform vec4 shadowColor;
 			
-			// right value for smoothing is `0.25f / (spread * scale)`
-			const float smoothing = 1.0 / 16.0;
+			uniform float smoothing = 1.0 / 16.0;
 			
 			void main(void) 
 			{
@@ -35,7 +34,6 @@ class FlxDistanceShadowShader extends FlxTexturedShader
 				vec4 shadow = vec4(shadowColor.rgb, shadowColor.a * shadowAlpha);
 				
 				gl_FragColor = mix(shadow, text, text.a);
-			//	gl_FragColor = vec4(color.rgb * alpha, color.a * alpha);
 			}";
 	
 	/**
@@ -63,7 +61,7 @@ class FlxDistanceShadowShader extends FlxTexturedShader
 	
 	public function new() 
 	{
-		super(null, DEFAULT_FRAGMENT_SOURCE);
+		super(DEFAULT_FRAGMENT_SOURCE);
 		
 		data.shadowOffset.value = [0.0, 0.0];
 		
