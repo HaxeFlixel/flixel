@@ -4,8 +4,6 @@ import flixel.graphics.shaders.FlxBaseShader;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
-// TODO: fix alpha problem...
-
 /**
  * Shader for distance field font with outline
  */
@@ -64,7 +62,8 @@ class FlxDistanceOutlineShader extends FlxTexturedShader
 	private function set_outlineColor(value:FlxColor):FlxColor
 	{
 		outlineColor = value;
-		data.outlineColor.value = [value.redFloat, value.greenFloat, value.blueFloat, value.alphaFloat];
+		var a = value.alphaFloat;
+		data.outlineColor.value = [value.redFloat * a, value.greenFloat * a, value.blueFloat * a, value.alphaFloat];
 		return value;
 	}
 }
