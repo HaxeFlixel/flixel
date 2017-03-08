@@ -7,6 +7,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -18,6 +19,8 @@ import flixel.util.FlxDestroyUtil;
  * @see http://www.flashandmath.com/advanced/p10triangles/index.html
  * 
  * WARNING: This class is EXTREMELY slow on Flash!
+ * You could try set `useFramePixels` to `true` in blit render mode to see if it help perfomance 
+ * (it should help if don't change object's data (such as vertices, indices, etc.) frequently)
  */
 class FlxStrip extends FlxSprite
 {
@@ -43,11 +46,6 @@ class FlxStrip extends FlxSprite
 	 */
 	public var repeat:Bool = true;
 	
-	// TODO: maybe add option to draw triangles on the sprite buffer (for less drawTriangles calls)...
-	
-	// TODO: maybe optimize FlxStrip, so it will have its own sprite and buffer
-	// which will be used for rendering (which means less drawTriangles calls)...
-	
 	/**
 	 * Data object which actually stores information about vertex coordinates, uv coordinates (if this sprite have texture applied), indices and vertex colors.
 	 * Plus it have some internal logic for rendering with OpenGL.
@@ -66,6 +64,7 @@ class FlxStrip extends FlxSprite
 		super(X, Y, SimpleGraphic);
 		
 		data = new FlxTrianglesData();
+		useFramePixels = false;
 	}
 	
 	override public function destroy():Void 
@@ -77,8 +76,17 @@ class FlxStrip extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (alpha == 0 || vertices == null)
+		if (alpha == 0 || data == null|| vertices == null)
 			return;
+		
+		if (FlxG.renderBlit && useFramePixels)
+		{
+			if (dirty) //rarely 
+				updateFramePixels();
+				
+			super.draw();
+			return;
+		}
 		
 		if (dirty)
 		{
@@ -119,6 +127,30 @@ class FlxStrip extends FlxSprite
 			
 			tempBounds.offset( -_point.x, -_point.y);
 		}
+	}
+	
+	override public function updateFramePixels():BitmapData 
+	{
+		if (!dirty || FlxG.renderTile || data == null)
+			return framePixels;
+		
+		var oldX:Float = data.bounds.x;
+		var oldY:Float = data.bounds.y;
+		
+		framePixels = data.getBitmapData(framePixels, graphic, color);
+		
+		x += (data.bounds.x - oldX);
+		y += (data.bounds.y - oldY);
+		
+		width = data.bounds.width;
+		height = data.bounds.height;
+		_flashRect.setTo(0, 0, width, height);
+		
+		if (useColorTransform)
+			framePixels.colorTransform(_flashRect, colorTransform);
+		
+		dirty = false;
+		return framePixels;
 	}
 	
 	private function get_vertices():DrawData<Float>

@@ -7,6 +7,8 @@ import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
 
 #if FLX_RENDER_GL
 import lime.graphics.GLRenderContext;
@@ -25,6 +27,9 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	private static var tempBounds:FlxRect = new FlxRect();
 	private static var tempPoint:FlxPoint = new FlxPoint();
+	
+	private static var sprite:Sprite = new Sprite();
+	private static var matrix:FlxMatrix = new FlxMatrix();
 	
 	/**
 	 * The length of `indices` vector.
@@ -87,7 +92,7 @@ class FlxTrianglesData implements IFlxDestroyable
 	/**
 	 * Bounding box for all vertices of this data object.
 	 */
-	private var bounds:FlxRect = FlxRect.get();
+	public var bounds(default, null):FlxRect = FlxRect.get();
 	
 	#if FLX_RENDER_GL
 	private var verticesArray:Float32Array;
@@ -233,6 +238,43 @@ class FlxTrianglesData implements IFlxDestroyable
 		tempBounds.unionWithPoint(tempPoint);
 		
 		return tempBounds;
+	}
+	
+	/**
+	 * Updates `pixels` data by drawing data of this object.
+	 */
+	public function getBitmapData(pixels:BitmapData, texture:FlxGraphic, color:FlxColor):BitmapData
+	{
+		updateBounds();
+		
+		var width:Int = Math.ceil(bounds.width);
+		var height:Int = Math.ceil(bounds.height);
+		
+		if (pixels == null || pixels.width != width || pixels.height != height)
+		{
+			pixels = FlxDestroyUtil.dispose(pixels);
+			pixels = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+		}
+		else
+		{
+			pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
+		}
+		
+		sprite.graphics.clear();
+		
+		if (texture != null)
+			sprite.graphics.beginBitmapFill(texture.bitmap);
+		else
+			sprite.graphics.beginFill(color);
+		
+		sprite.graphics.drawTriangles(vertices, indices, uvs);
+		sprite.graphics.endFill();
+		
+		matrix.identity();
+		matrix.translate( -bounds.x, -bounds.y);
+		
+		pixels.draw(sprite, matrix);
+		return pixels;
 	}
 	
 	private function set_vertices(value:DrawData<Float>):DrawData<Float>
