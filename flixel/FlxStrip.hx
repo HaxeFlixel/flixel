@@ -21,9 +21,6 @@ import flixel.util.FlxDestroyUtil;
  */
 class FlxStrip extends FlxSprite
 {
-	private static var tempBounds:FlxRect = new FlxRect();
-	private static var tempPoint:FlxPoint = new FlxPoint();
-	
 	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
@@ -36,9 +33,14 @@ class FlxStrip extends FlxSprite
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
 	public var uvtData(get, set):DrawData<Float>;
-	
+	/**
+	 * A `Vector` of colors for each vertex.
+	 */
 	public var colors(get, set):DrawData<FlxColor>;
 	
+	/**
+	 * Tells to repeat texture of the sprite if uv coordinates go outside of bounds [0.0-1.0].
+	 */
 	public var repeat:Bool = true;
 	
 	// TODO: maybe add option to draw triangles on the sprite buffer (for less drawTriangles calls)...
@@ -46,10 +48,19 @@ class FlxStrip extends FlxSprite
 	// TODO: maybe optimize FlxStrip, so it will have its own sprite and buffer
 	// which will be used for rendering (which means less drawTriangles calls)...
 	
-	private var bounds:FlxRect = FlxRect.get();
-	
+	/**
+	 * Data object which actually stores information about vertex coordinates, uv coordinates (if this sprite have texture applied), indices and vertex colors.
+	 * Plus it have some internal logic for rendering with OpenGL.
+	 */
 	public var data:FlxTrianglesData;
 	
+	/**
+	 * FlxStrip constructor
+	 * 
+	 * @param	X				intiial X coordinate of sprite
+	 * @param	Y				intiial Y coordinate of sprite
+	 * @param	SimpleGraphic	graphic to use as sprite's texture.
+	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
@@ -60,29 +71,20 @@ class FlxStrip extends FlxSprite
 	override public function destroy():Void 
 	{
 		data = FlxDestroyUtil.destroy(data);
-		bounds = FlxDestroyUtil.put(bounds);
 		
 		super.destroy();
 	}
 	
 	override public function draw():Void 
 	{
-		if (alpha == 0 || /*graphic == null ||*/ vertices == null)
+		if (alpha == 0 || vertices == null)
 			return;
 		
-		if ((dirty || data.verticesDirty) && vertices.length >= 6)
+		if (dirty)
 		{
 			dirty = false;
-			// calculate bounds in local coordinates
-			bounds.set(vertices[0], vertices[1], 0, 0);
-			var numVertices:Int = vertices.length;
-			var i:Int = 2;
-			
-			while (i < numVertices)
-			{
-				bounds.inflate(vertices[i], vertices[i + 1]);
-				i += 2;
-			}
+			data.updateBounds();
+			data.dirty = true;
 		}
 		
 		// update matrix
@@ -98,24 +100,7 @@ class FlxStrip extends FlxSprite
 		_matrix.translate(origin.x, origin.y);
 		
 		// now calculate transformed bounds of sprite
-		var tx:Float = _matrix.transformX(bounds.x, bounds.y);
-		var ty:Float = _matrix.transformY(bounds.x, bounds.y);
-		tempBounds.set(tx, ty, 0, 0);
-		
-		tx = _matrix.transformX(bounds.right, bounds.y);
-		ty = _matrix.transformY(bounds.right, bounds.y);
-		tempPoint.set(tx, ty);
-		tempBounds.unionWithPoint(tempPoint);
-		
-		tx = _matrix.transformX(bounds.right, bounds.bottom);
-		ty = _matrix.transformY(bounds.right, bounds.bottom);
-		tempPoint.set(tx, ty);
-		tempBounds.unionWithPoint(tempPoint);
-		
-		tx = _matrix.transformX(bounds.x, bounds.bottom);
-		ty = _matrix.transformY(bounds.x, bounds.bottom);
-		tempPoint.set(tx, ty);
-		tempBounds.unionWithPoint(tempPoint);
+		var tempBounds:FlxRect = data.getTransformedBounds(_matrix);
 		
 		for (camera in cameras)
 		{

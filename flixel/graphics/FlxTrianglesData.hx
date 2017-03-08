@@ -1,7 +1,11 @@
 package flixel.graphics;
 
+import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 #if FLX_RENDER_GL
@@ -14,26 +18,76 @@ import openfl.utils.Float32Array;
 import flixel.system.render.hardware.gl.GLUtils;
 #end
 
-// TODO: rename to FlxFlxTrianglesData...
 class FlxTrianglesData implements IFlxDestroyable
 {
+	/**
+	 * Helper variables for bounding box calculations.
+	 */
+	private static var tempBounds:FlxRect = new FlxRect();
+	private static var tempPoint:FlxPoint = new FlxPoint();
+	
+	/**
+	 * The length of `indices` vector.
+	 */
 	public var numIndices(get, null):Int;
 	
+	/**
+	 * The number of triangles this data object will draw.
+	 */
 	public var numTriangles(get, null):Int;
 	
+	/**
+	 * Tells if triangles have colors applied to vertices.
+	 */
 	public var colored(get, null):Bool;
 	
+	/**
+	 * Tells if all GL buffers should be regenerated before rendering this data object.
+	 */
 	public var dirty(default, set):Bool = true;
 	
+	/**
+	 * Tells if `verticesBuffer` should be regenerated before rendering this data object.
+	 * Set it to `true` when you change values in `vertices` vector directly (like `vertices[0] = x;`).
+	 */
 	public var verticesDirty:Bool = true;
+	/**
+	 * Tells if `uvsBuffer` should be regenerated before rendering this data object.
+	 * Set it to `true` when you change values in `uvs` vector directly (like `uvs[0] = 0.0;`).
+	 */
 	public var uvtDirty:Bool = true;
+	/**
+	 * Tells if `colorsBuffer` should be regenerated before rendering this data object.
+	 * Set it to `true` when you change values in `colors` vector directly (like `colors[0] = FlxColor.RED;`).
+	 */
 	public var colorsDirty:Bool = true;
+	/**
+	 * Tells if `indicesBuffer` should be regenerated before rendering this data object.
+	 * Set it to `true` when you change values in `indices` vector directly (like `indices[0] = 0;`).
+	 */
 	public var indicesDirty:Bool = true;
 	
+	/**
+	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
+	 */
 	public var vertices(default, set):DrawData<Float> = new DrawData<Float>();
+	/**
+	 * A `Vector` of normalized coordinates used to apply texture mapping.
+	 */
 	public var uvs(default, set):DrawData<Float> = new DrawData<Float>();
+	/**
+	 * A `Vector` of colors for each vertex.
+	 */
 	public var colors(default, set):DrawData<FlxColor> = new DrawData<FlxColor>();
+	/**
+	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
+	 */
 	public var indices(default, set):DrawData<Int> = new DrawData<Int>();
+	
+	/**
+	 * Bounding box for all vertices of this data object.
+	 */
+	private var bounds:FlxRect = FlxRect.get();
 	
 	#if FLX_RENDER_GL
 	private var verticesArray:Float32Array;
@@ -58,6 +112,8 @@ class FlxTrianglesData implements IFlxDestroyable
 		colors = null;
 		indices = null;
 		
+		bounds = FlxDestroyUtil.put(bounds);
+		
 		#if FLX_RENDER_GL
 		gl = null;
 		verticesArray = null;
@@ -72,6 +128,9 @@ class FlxTrianglesData implements IFlxDestroyable
 		#end
 	}
 	
+	/**
+	 * Clears all data stored in this object.
+	 */
 	public function clear():Void
 	{
 		vertices.splice(0, vertices.length);
@@ -82,8 +141,18 @@ class FlxTrianglesData implements IFlxDestroyable
 		dirty = true;
 	}
 	
+	/**
+	 * Fills this object with data to draw single quad
+	 * 
+	 * @param	width	width of the quad.
+	 * @param	height	height of the quad.
+	 * @param	color	color of the quad.
+	 * @return	This data object
+	 */
 	public function generateQuadData(width:Float = 100, height:Float = 100, color:FlxColor = FlxColor.WHITE):FlxTrianglesData
 	{
+		clear();
+		
 		vertices[0] = 0.0;
 		vertices[1] = 0.0;
 		vertices[2] = width;
@@ -115,6 +184,55 @@ class FlxTrianglesData implements IFlxDestroyable
 		indices[5] = 0;
 		
 		return this;
+	}
+	
+	/**
+	 * Updates bounding box for this object.
+	 */
+	public function updateBounds():Void
+	{
+		if (verticesDirty || vertices.length >= 6)
+		{
+			bounds.set(vertices[0], vertices[1], 0, 0);
+			var numVertices:Int = vertices.length;
+			var i:Int = 2;
+			
+			while (i < numVertices)
+			{
+				bounds.inflate(vertices[i], vertices[i + 1]);
+				i += 2;
+			}
+		}
+	}
+	
+	/**
+	 * Calculates transformed bounding object.
+	 * 
+	 * @param	matrix	Matrix to apply to bounding box.
+	 * @return	Transformed bounding box.
+	 */
+	public function getTransformedBounds(matrix:FlxMatrix):FlxRect
+	{
+		var tx:Float = matrix.transformX(bounds.x, bounds.y);
+		var ty:Float = matrix.transformY(bounds.x, bounds.y);
+		tempBounds.set(tx, ty, 0, 0);
+		
+		tx = matrix.transformX(bounds.right, bounds.y);
+		ty = matrix.transformY(bounds.right, bounds.y);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
+		tx = matrix.transformX(bounds.right, bounds.bottom);
+		ty = matrix.transformY(bounds.right, bounds.bottom);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
+		tx = matrix.transformX(bounds.x, bounds.bottom);
+		ty = matrix.transformY(bounds.x, bounds.bottom);
+		tempPoint.set(tx, ty);
+		tempBounds.unionWithPoint(tempPoint);
+		
+		return tempBounds;
 	}
 	
 	private function set_vertices(value:DrawData<Float>):DrawData<Float>
