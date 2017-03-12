@@ -53,13 +53,15 @@ class FlxDefines
 {
 	public static function run()
 	{
+		#if !display
 		checkDependencyCompatibility();
 		checkDefines();
-		defineInversions();
-		defineHelperDefines();
-		
 		if (defined("flash"))
 			checkSwfVersion();
+		#end
+
+		defineInversions();
+		defineHelperDefines();
 	}
 	
 	private static function checkDependencyCompatibility()
