@@ -906,6 +906,7 @@ class FlxActionInputDigitalTest extends FlxTest
 				manager.activateSet(setIndex, device);
 				var activatedSet = manager.getSetActivatedForDevice(device);
 				
+				//Test set is activated after we activate it for a specific device
 				test.testIsTrue(setObject == activatedSet, "activatedFor." + device);
 				
 				for (otherDevice in devices)
@@ -914,10 +915,12 @@ class FlxActionInputDigitalTest extends FlxTest
 					
 					if (device == ALL)
 					{
+						//Test set is activated for every device
 						test.testIsTrue(activatedSet == activatedOtherSet, "activatedForAll." + otherDevice);
 					}
 					else if (otherDevice != device)
 					{
+						//Test set is NOT activated for every other device
 						test.testIsTrue(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice+ ".but." + device);
 					}
 				}
@@ -925,6 +928,7 @@ class FlxActionInputDigitalTest extends FlxTest
 				manager.deactivateSet(setIndex);
 				activatedSet = manager.getSetActivatedForDevice(device);
 				
+				//Test set is deactivated after we deactivate it
 				test.testIsTrue(setObject != activatedSet, "deactivatedFor." + device);
 				
 				for (otherDevice in devices)
@@ -933,10 +937,12 @@ class FlxActionInputDigitalTest extends FlxTest
 					
 					if (device == ALL)
 					{
+						//Test set is deactivated for every device
 						test.testIsTrue(setObject != activatedOtherSet, "deactivatedForAll." + otherDevice);
 					}
 					else if (otherDevice != device)
 					{
+						//Test set is still not activated for every other device
 						test.testIsTrue(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice+".but."+device);
 					}
 				}
