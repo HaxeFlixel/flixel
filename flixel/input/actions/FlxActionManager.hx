@@ -476,12 +476,12 @@ class ActionSetRegister implements IFlxDestroyable
 	/**
 	 * The current action set for the mouse
 	 */
-	private var mouseSet:Int = 0;
+	private var mouseSet:Int = -1;
 	
 	/**
 	 * The current action set for the keyboard
 	 */
-	private var keyboardSet:Int = 0;
+	private var keyboardSet:Int = -1;
 	
 	/**
 	 * The current action set for ALL gamepads
