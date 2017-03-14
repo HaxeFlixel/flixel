@@ -207,6 +207,7 @@ class FlxActionSet implements IFlxDestroyable
 	public function addDigital(Action:FlxActionDigital):Bool
 	{
 		if (digitalActions.contains(Action)) return false;
+		digitalActions.push(Action);
 		return true;
 	}
 	
@@ -218,6 +219,7 @@ class FlxActionSet implements IFlxDestroyable
 	public function addAnalog(Action:FlxActionAnalog):Bool
 	{
 		if (analogActions.contains(Action)) return false;
+		analogActions.push(Action);
 		return true;
 	}
 	
