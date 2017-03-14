@@ -602,7 +602,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@Test
-	function testFlxActionManagerInit()
+	function testFlxActionManager()
 	{
 		var manager = _createFlxActionManager();
 		
@@ -631,7 +631,7 @@ class FlxActionInputDigitalTest extends FlxTest
 			["punch", "kick", "jump"]
 		];
 		
-		_testFlxActionManagerInit(t, manager, sets, analog, digital);
+		_testFlxActionManager(t, manager, sets, analog, digital);
 		
 		t.assertTrue("actionSetJson.MenuControls.indexExists");
 		t.assertTrue("actionSetJson.MenuControls.nameMatches");
@@ -648,16 +648,58 @@ class FlxActionInputDigitalTest extends FlxTest
 		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_1.exists");
 		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_2.exists");
 		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_3.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.extra.add");
+		t.assertTrue("actionSetJson.MenuControls.digital.extra.remove");
 		t.assertTrue("actionSetJson.MenuControls.analog.menu_move.exists");
+		t.assertTrue("actionSetJson.MenuControls.analog.extra.add");
+		t.assertTrue("actionSetJson.MenuControls.analog.extra.remove");
+		
 		t.assertTrue("actionSetJson.MenuControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		
 		t.assertTrue("actionSetJson.MenuControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		
 		t.assertTrue("actionSetJson.MenuControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		
 		t.assertTrue("actionSetJson.MenuControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.notActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.stillNotActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		
 		t.assertTrue("actionSetJson.MenuControls.activatedFor.ALL");
 		t.assertTrue("actionSetJson.MenuControls.activatedForAll.MOUSE");
 		t.assertTrue("actionSetJson.MenuControls.activatedForAll.KEYBOARD");
 		t.assertTrue("actionSetJson.MenuControls.activatedForAll.GAMEPAD");
 		t.assertTrue("actionSetJson.MenuControls.activatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedFor.ALL");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.deactivatedForAll.STEAM_CONTROLLER");
 		
 		t.assertTrue("actionSetJson.MapControls.indexExists");
 		t.assertTrue("actionSetJson.MapControls.nameMatches");
@@ -668,17 +710,59 @@ class FlxActionInputDigitalTest extends FlxTest
 		t.assertTrue("actionSetJson.MapControls.digital.map_exit.exists");
 		t.assertTrue("actionSetJson.MapControls.digital.map_menu.exists");
 		t.assertTrue("actionSetJson.MapControls.digital.map_journal.exists");
+		t.assertTrue("actionSetJson.MapControls.digital.extra.add");
+		t.assertTrue("actionSetJson.MapControls.digital.extra.remove");
 		t.assertTrue("actionSetJson.MapControls.analog.scroll_map.exists");
 		t.assertTrue("actionSetJson.MapControls.analog.move_map.exists");
+		t.assertTrue("actionSetJson.MapControls.analog.extra.add");
+		t.assertTrue("actionSetJson.MapControls.analog.extra.remove");
+		
 		t.assertTrue("actionSetJson.MapControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.deactivatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		
 		t.assertTrue("actionSetJson.MapControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.deactivatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		
 		t.assertTrue("actionSetJson.MapControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.deactivatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		
 		t.assertTrue("actionSetJson.MapControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.notActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.deactivatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.stillNotActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		
 		t.assertTrue("actionSetJson.MapControls.activatedFor.ALL");
 		t.assertTrue("actionSetJson.MapControls.activatedForAll.MOUSE");
 		t.assertTrue("actionSetJson.MapControls.activatedForAll.KEYBOARD");
 		t.assertTrue("actionSetJson.MapControls.activatedForAll.GAMEPAD");
 		t.assertTrue("actionSetJson.MapControls.activatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.deactivatedFor.ALL");
+		t.assertTrue("actionSetJson.MapControls.deactivatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.deactivatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.deactivatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.deactivatedForAll.STEAM_CONTROLLER");
 		
 		t.assertTrue("actionSetJson.BattleControls.indexExists");
 		t.assertTrue("actionSetJson.BattleControls.nameMatches");
@@ -688,16 +772,58 @@ class FlxActionInputDigitalTest extends FlxTest
 		t.assertTrue("actionSetJson.BattleControls.digital.punch.exists");
 		t.assertTrue("actionSetJson.BattleControls.digital.kick.exists");
 		t.assertTrue("actionSetJson.BattleControls.digital.jump.exists");
+		t.assertTrue("actionSetJson.BattleControls.digital.extra.add");
+		t.assertTrue("actionSetJson.BattleControls.digital.extra.remove");
 		t.assertTrue("actionSetJson.BattleControls.analog.move.exists");
+		t.assertTrue("actionSetJson.BattleControls.analog.extra.add");
+		t.assertTrue("actionSetJson.BattleControls.analog.extra.remove");
+		
 		t.assertTrue("actionSetJson.BattleControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedFor.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		
 		t.assertTrue("actionSetJson.BattleControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		
 		t.assertTrue("actionSetJson.BattleControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		
 		t.assertTrue("actionSetJson.BattleControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.notActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.MOUSE.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.KEYBOARD.but.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.stillNotActivatedFor.GAMEPAD.but.STEAM_CONTROLLER");
+		
 		t.assertTrue("actionSetJson.BattleControls.activatedFor.ALL");
 		t.assertTrue("actionSetJson.BattleControls.activatedForAll.MOUSE");
 		t.assertTrue("actionSetJson.BattleControls.activatedForAll.KEYBOARD");
 		t.assertTrue("actionSetJson.BattleControls.activatedForAll.GAMEPAD");
 		t.assertTrue("actionSetJson.BattleControls.activatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedFor.ALL");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.deactivatedForAll.STEAM_CONTROLLER");
 		
 		manager.destroy();
 	}
@@ -714,7 +840,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		return manager;
 	}
 	
-	function _testFlxActionManagerInit(test:TestShell, manager:FlxActionManager, sets:Array<String>, analog:Array<Array<String>>, digital:Array<Array<String>>)
+	function _testFlxActionManager(test:TestShell, manager:FlxActionManager, sets:Array<String>, analog:Array<Array<String>>, digital:Array<Array<String>>)
 	{
 		for (i in 0...3)
 		{
@@ -734,40 +860,85 @@ class FlxActionInputDigitalTest extends FlxTest
 			test.testIsTrue(setObject.digitalActions != null && setObject.digitalActions.length > 0, "hasDigital");
 			test.testIsTrue(setObject.analogActions != null && setObject.analogActions.length > 0, "hasAnalog");
 			
+			//Test digital actions exist
 			for (j in 0...setObject.digitalActions.length)
 			{
 				var d:FlxActionDigital = setObject.digitalActions[j];
 				test.testIsTrue(digitals.indexOf(d.name) != -1, "digital."+d.name+".exists");
 			}
 			
+			//Test analog actions exist
 			for (j in 0...setObject.analogActions.length)
 			{
 				var a:FlxActionAnalog = setObject.analogActions[j];
 				test.testIsTrue(analogs.indexOf(a.name) != -1, "analog." + a.name+".exists");
 			}
 			
+			//Test add & remove digital actions
+			var extraDigital = new FlxActionDigital("extra");
+			var result = manager.addDigitalAction(extraDigital, setIndex);
+			test.testIsTrue(result && setObject.digitalActions.indexOf(extraDigital) != -1, "digital.extra.add");
+			result = manager.removeDigitalAction(extraDigital, setIndex);
+			test.testIsTrue(result && setObject.digitalActions.indexOf(extraDigital) == -1, "digital.extra.remove");
+			
+			//Test add & remove analog actions
+			var extraAnalog = new FlxActionAnalog("extra");
+			var result = manager.addAnalogAction(extraAnalog, setIndex);
+			test.testIsTrue(result && setObject.analogActions.indexOf(extraAnalog) != -1, "analog.extra.add");
+			result = manager.removeAnalogAction(extraAnalog, setIndex);
+			test.testIsTrue(result && setObject.analogActions.indexOf(extraAnalog) == -1, "analog.extra.remove");
+			
+			//Test activating action sets for various devices
 			var devices:Array<FlxInputDevice> = 
 			[
-					MOUSE,
-					KEYBOARD,
-					GAMEPAD,
-					STEAM_CONTROLLER,
-					ALL
+				MOUSE,
+				KEYBOARD,
+				GAMEPAD,
+				STEAM_CONTROLLER,
+				ALL
 			];
 			
 			for (k in 0...devices.length)
 			{
 				var device = devices[k];
+				manager.deactivateSet(setIndex);
+				var dset = manager.getSetActivatedForDevice(device);
 				manager.activateSet(setIndex, device);
 				var activatedSet = manager.getSetActivatedForDevice(device);
 				
 				test.testIsTrue(setObject == activatedSet, "activatedFor." + device);
-				if (device == ALL)
+				
+				for (otherDevice in devices)
 				{
-					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.MOUSE);
-					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.KEYBOARD);
-					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.GAMEPAD);
-					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.STEAM_CONTROLLER);
+					var activatedOtherSet = manager.getSetActivatedForDevice(otherDevice);
+					
+					if (device == ALL)
+					{
+						test.testIsTrue(activatedSet == activatedOtherSet, "activatedForAll." + otherDevice);
+					}
+					else if (otherDevice != device)
+					{
+						test.testIsTrue(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice+ ".but." + device);
+					}
+				}
+				
+				manager.deactivateSet(setIndex);
+				activatedSet = manager.getSetActivatedForDevice(device);
+				
+				test.testIsTrue(setObject != activatedSet, "deactivatedFor." + device);
+				
+				for (otherDevice in devices)
+				{
+					var activatedOtherSet = manager.getSetActivatedForDevice(otherDevice);
+					
+					if (device == ALL)
+					{
+						test.testIsTrue(setObject != activatedOtherSet, "deactivatedForAll." + otherDevice);
+					}
+					else if (otherDevice != device)
+					{
+						test.testIsTrue(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice+".but."+device);
+					}
 				}
 			}
 		}
