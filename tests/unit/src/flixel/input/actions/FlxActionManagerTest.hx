@@ -3,6 +3,7 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import haxe.Json;
+import steamwrap.data.ControllerConfig;
 
 import massive.munit.Assert;
 
@@ -13,7 +14,8 @@ import massive.munit.Assert;
 class FlxActionManagerTest extends FlxTest
 {
 
-	private var manager:FlxActionManager;
+	private var basicManager:FlxActionManager;
+	private var steamManager:FlxActionManager;
 	private var sets:Array<String>;
 	private var analog:Array<Array<String>>;
 	private var digital:Array<Array<String>>;
@@ -21,7 +23,7 @@ class FlxActionManagerTest extends FlxTest
 	@Before
 	function before()
 	{
-		manager = _createFlxActionManager();
+		_createFlxActionManager();
 		sets = 
 		[
 			"MenuControls", 
@@ -41,16 +43,10 @@ class FlxActionManagerTest extends FlxTest
 		];
 	}
 	
-	@After
-	function after()
-	{
-		manager.destroy();
-	}
-	
 	@Test
 	function testInit()
 	{
-		Assert.isTrue(manager.numSets == 3);
+		Assert.isTrue(basicManager.numSets == 3);
 		
 		var t = new TestShell("init.");
 		
@@ -67,6 +63,30 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("init.BattleControls.indexExists");
 		t.assertTrue("init.BattleControls.nameMatches");
 		t.assertTrue("init.BattleControls.setExists");
+		
+		t.destroy();
+	}
+	
+	@Test
+	function testInitSteam()
+	{
+		Assert.isTrue(steamManager.numSets == 3);
+		
+		var t = new TestShell("steam.init.");
+		
+		_testFlxActionManagerInit(t, steamManager);
+		
+		t.assertTrue("steam.init.MenuControls.indexExists");
+		t.assertTrue("steam.init.MenuControls.nameMatches");
+		t.assertTrue("steam.init.MenuControls.setExists");
+		
+		t.assertTrue("steam.init.MapControls.indexExists");
+		t.assertTrue("steam.init.MapControls.nameMatches");
+		t.assertTrue("steam.init.MapControls.setExists");
+		
+		t.assertTrue("steam.init.BattleControls.indexExists");
+		t.assertTrue("steam.init.BattleControls.nameMatches");
+		t.assertTrue("steam.init.BattleControls.setExists");
 		
 		t.destroy();
 	}
@@ -107,6 +127,46 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("actions.BattleControls.digital.kick.exists");
 		t.assertTrue("actions.BattleControls.digital.jump.exists");
 		t.assertTrue("actions.BattleControls.analog.move.exists");
+		
+		t.destroy();
+	}
+	
+	@Test
+	function testActionsSteam()
+	{
+		var t = new TestShell("steam.actions.");
+		
+		_testFlxActionManagerActions(t, steamManager);
+		
+		t.assertTrue("steam.actions.MenuControls.hasDigital");
+		t.assertTrue("steam.actions.MenuControls.hasAnalog");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_up.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_down.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_left.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_right.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_select.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_menu.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_cancel.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_thing_1.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_thing_2.exists");
+		t.assertTrue("steam.actions.MenuControls.digital.menu_thing_3.exists");
+		t.assertTrue("steam.actions.MenuControls.analog.menu_move.exists");
+		
+		t.assertTrue("steam.actions.MapControls.hasDigital");
+		t.assertTrue("steam.actions.MapControls.hasAnalog");
+		t.assertTrue("steam.actions.MapControls.digital.map_select.exists");
+		t.assertTrue("steam.actions.MapControls.digital.map_exit.exists");
+		t.assertTrue("steam.actions.MapControls.digital.map_menu.exists");
+		t.assertTrue("steam.actions.MapControls.digital.map_journal.exists");
+		t.assertTrue("steam.actions.MapControls.analog.scroll_map.exists");
+		t.assertTrue("steam.actions.MapControls.analog.move_map.exists");
+		
+		t.assertTrue("steam.actions.BattleControls.hasDigital");
+		t.assertTrue("steam.actions.BattleControls.hasAnalog");
+		t.assertTrue("steam.actions.BattleControls.digital.punch.exists");
+		t.assertTrue("steam.actions.BattleControls.digital.kick.exists");
+		t.assertTrue("steam.actions.BattleControls.digital.jump.exists");
+		t.assertTrue("steam.actions.BattleControls.analog.move.exists");
 		
 		t.destroy();
 	}
@@ -327,20 +387,69 @@ class FlxActionManagerTest extends FlxTest
 		t.destroy();
 	}
 	
-	private function _createFlxActionManager():FlxActionManager
+	@Test
+	function testDeviceDisconnected()
 	{
-		var manager = new FlxActionManager();
+		
+	}
+	
+	@Test
+	function testDeviceConnected()
+	{
+		
+	}
+	
+	@Test
+	function testInputsChanged()
+	{
+		
+	}
+	
+	@Test
+	function testAddSet()
+	{
+		
+	}
+	
+	@Test
+	function testExportToJSON()
+	{
+		
+	}
+	
+	@Test
+	function testRemoveSet()
+	{
+		
+	}
+	
+	@Test
+	function testCallbacks()
+	{
+		
+	}
+	
+	private function _createFlxActionManager()
+	{
+		basicManager = new FlxActionManager();
 		
 		var actionsText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
 		var actionsJSON = Json.parse(actionsText);
 		
-		manager.initFromJSON(actionsJSON, null, null);
+		basicManager.initFromJSON(actionsJSON, null, null);
 		
-		return manager;
+		steamManager = new FlxActionManager();
+		
+		var vdfText = VDFString.get();
+		var config = ControllerConfig.fromVDF(vdfText);
+		
+		steamManager.initSteam(config, null, null);
 	}
 	
-	function _testFlxActionManagerInit(test:TestShell)
+	function _testFlxActionManagerInit(test:TestShell, manager:FlxActionManager=null)
 	{
+		if (manager == null) manager = basicManager;
+		
 		for (i in 0...3)
 		{
 			var set = sets[i];
@@ -359,8 +468,10 @@ class FlxActionManagerTest extends FlxTest
 		}
 	}
 	
-	function _testFlxActionManagerActions(test:TestShell)
+	function _testFlxActionManagerActions(test:TestShell, manager:FlxActionManager=null)
 	{
+		if (manager == null) manager = basicManager;
+		
 		for (i in 0...3)
 		{
 			var set = sets[i];
@@ -392,8 +503,10 @@ class FlxActionManagerTest extends FlxTest
 		}
 	}
 	
-	function _testFlxActionManagerAddRemove(test:TestShell)
+	function _testFlxActionManagerAddRemove(test:TestShell, manager:FlxActionManager = null)
 	{
+		if (manager == null) manager = basicManager;
+		
 		for (i in 0...3)
 		{
 			var set = sets[i];
@@ -422,8 +535,10 @@ class FlxActionManagerTest extends FlxTest
 		}
 	}
 	
-	function _testFlxActionManagerDevice(device:FlxInputDevice, test:TestShell)
+	function _testFlxActionManagerDevice(device:FlxInputDevice, test:TestShell, manager:FlxActionManager=null)
 	{
+		if (manager == null) manager = basicManager;
+		
 		for (i in 0...3)
 		{
 			var set = sets[i];
@@ -492,48 +607,6 @@ class FlxActionManagerTest extends FlxTest
 				}
 			}
 		}
-	}
-	
-	@Test
-	function testDeviceDisconnected()
-	{
-		
-	}
-	
-	@Test
-	function testDeviceConnected()
-	{
-		
-	}
-	
-	@Test
-	function testInputsChanged()
-	{
-		
-	}
-	
-	@Test
-	function testAddSet()
-	{
-		
-	}
-	
-	@Test
-	function testInitSteam()
-	{
-		
-	}
-	
-	@Test
-	function testExportToJSON()
-	{
-		
-	}
-	
-	@Test
-	function testRemoveSet()
-	{
-		
 	}
 }
 
