@@ -132,6 +132,17 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		return sets.length - 1;
 	}
 	
+	/**
+	 * Deactivate an action set for any devices it is currently active for
+	 * @param	ActionSet	The integer ID for the Action Set you want to deactivate
+	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
+	 */
+	public function deactivateSet(ActionSet:Int, ?DeviceID:Int = FlxInputDeviceID.ALL)
+	{
+		register.activate(ActionSet, FlxInputDevice.NONE, DeviceID);
+		onChange();
+	}
+	
 	public function destroy():Void
 	{
 		sets = FlxDestroyUtil.destroyArray(sets);
@@ -343,6 +354,28 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		return success;
 	}
 	
+	/**
+	 * Remove an action from a particular action set
+	 * @param	Action		The FlxActionDigital you want to remove
+	 * @param	ActionSet	The index of the FlxActionSet you want to remove
+	 * @return	whether it was successfully removed
+	 */
+	public function removeDigitalAction(Action:FlxActionDigital, ActionSet:Int):Bool
+	{
+		return removeAction(Action, ActionSet, FlxInputType.DIGITAL);
+	}
+	
+	/**
+	 * Remove an action to a particular action set
+	 * @param	Action		The FlxActionAnalog you want to remove
+	 * @param	ActionSet	The index of the FlxActionSet you want to remove
+	 * @return	whether it was successfully removed
+	 */
+	public function removeAnalogAction(Action:FlxActionAnalog, ActionSet:Int):Bool
+	{
+		return removeAction(Action, ActionSet, FlxInputType.ANALOG);
+	}
+	
 	public function reset():Void {}
 	
 	private function addAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
@@ -354,6 +387,22 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 			success = (type == FlxInputType.DIGITAL) ? 
 						sets[ActionSet].addDigital(cast Action) :
 						sets[ActionSet].addAnalog (cast Action);
+		}
+		
+		onChange();
+		
+		return success;
+	}
+	
+	private function removeAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
+	{
+		var success = false;
+		
+		if (ActionSet >= 0 && ActionSet < sets.length)
+		{
+			success = (type == FlxInputType.DIGITAL) ? 
+						sets[ActionSet].removeDigital(cast Action) :
+						sets[ActionSet].removeAnalog (cast Action);
 		}
 		
 		onChange();
@@ -518,63 +567,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		switch (Device)
-		{
-			case FlxInputDevice.MOUSE: mouseSet    = ActionSet;
-			case FlxInputDevice.KEYBOARD: keyboardSet = ActionSet;
-			
-			case FlxInputDevice.GAMEPAD: 
-				switch (DeviceID)
-				{
-					case FlxInputDeviceID.ALL:
-						gamepadAllSet = ActionSet;
-						clearSetFromArray( -1, gamepadSets);
-						
-					case FlxInputDeviceID.NONE:
-						clearSetFromArray(ActionSet, gamepadSets);
-						
-					#if FLX_GAMEPAD
-					case FlxInputDeviceID.FIRST_ACTIVE:
-						gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
-					#end
-					
-					default:
-						gamepadSets[DeviceID] = ActionSet;
-				}
-			
-			case FlxInputDevice.STEAM_CONTROLLER:
-				switch (DeviceID)
-				{
-					case FlxInputDeviceID.ALL:
-						steamControllerAllSet = ActionSet;
-						clearSetFromArray( -1, steamControllerSets);
-						for (i in 0...FlxSteamController.MAX_CONTROLLERS)
-						{
-							steamControllerSets[i] = ActionSet;
-						}
-						
-					case FlxInputDeviceID.NONE:
-						clearSetFromArray(ActionSet, steamControllerSets);
-						
-					case FlxInputDeviceID.FIRST_ACTIVE:
-						steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
-						
-					default:
-						steamControllerSets[DeviceID] = ActionSet;
-				}
-				
-			case FlxInputDevice.ALL:
-				activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID);
-				activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID);
-				activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID);
-				#if steamwrap
-				activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID);
-				#end
-				
-			default:
-				
-				//do nothing
-		}
+		_activate(ActionSet, Device, DeviceID);
 	}
 	
 	public function markActiveSets(sets:Array<FlxActionSet>)
@@ -628,6 +621,69 @@ class ActionSetRegister implements IFlxDestroyable
 		}
 		
 		#end
+	}
+	
+	private function _activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE, DoActivate:Bool=true)
+	{
+		switch (Device)
+		{
+			case FlxInputDevice.MOUSE: mouseSet = DoActivate ? ActionSet : -1;
+			case FlxInputDevice.KEYBOARD: keyboardSet = DoActivate ? ActionSet : -1;  
+			case FlxInputDevice.GAMEPAD: 
+				switch (DeviceID)
+				{
+					case FlxInputDeviceID.ALL:
+						clearSetFromArray( -1, gamepadSets);
+						gamepadAllSet = DoActivate ? ActionSet : -1;
+						
+					case FlxInputDeviceID.NONE:
+						clearSetFromArray(ActionSet, gamepadSets);
+						
+					#if FLX_GAMEPAD
+					case FlxInputDeviceID.FIRST_ACTIVE:
+						gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = DoActivate ? ActionSet : -1;
+					#end
+					
+					default:
+						gamepadSets[DeviceID] = DoActivate ? ActionSet : -1;
+				}
+			
+			case FlxInputDevice.STEAM_CONTROLLER:
+				switch (DeviceID)
+				{
+					case FlxInputDeviceID.ALL:
+						steamControllerAllSet = DoActivate ? ActionSet : -1;
+						clearSetFromArray( -1, steamControllerSets);
+						for (i in 0...FlxSteamController.MAX_CONTROLLERS)
+						{
+							steamControllerSets[i] = DoActivate ? ActionSet : -1;
+						}
+						
+					case FlxInputDeviceID.NONE:
+						clearSetFromArray(ActionSet, steamControllerSets);
+						
+					case FlxInputDeviceID.FIRST_ACTIVE:
+						steamControllerSets[FlxSteamController.getFirstActiveHandle()] = DoActivate ? ActionSet : -1;
+						
+					default:
+						steamControllerSets[DeviceID] = DoActivate ? ActionSet : -1;
+				}
+				
+			case FlxInputDevice.ALL:
+				_activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID, DoActivate);
+				_activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID, DoActivate);
+				_activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID, DoActivate);
+				#if steamwrap
+				_activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID, DoActivate);
+				#end
+				
+			case FlxInputDevice.NONE:
+				_activate(ActionSet, FlxInputDevice.ALL, DeviceID, false);
+				
+			default:
+				
+				//do nothing
+		}
 	}
 	
 	private function updateSteamOrigins(sets:Array<FlxActionSet>):Array<FlxAction>
