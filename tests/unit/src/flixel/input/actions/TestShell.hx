@@ -39,22 +39,22 @@ class TestShell implements IFlxDestroyable
 	
 	public function testIsTrue(b:Bool, id:String)
 	{
-		test(id, b == true, false, false, false, Std.string(b));
+		test(id, b == true, b == false, false, false, Std.string(b == true));
 	}
 	
 	public function testIsFalse(b:Bool, id:String)
 	{
-		test(id, false, b == false, false, false, Std.string(b));
+		test(id, b == true, b == false, false, false, Std.string(b == false));
 	}
 	
 	public function testIsNull(d:Dynamic, id:String)
 	{
-		test(id, false, false, d == null, false, d == null ? "null" : Std.string(d));
+		test(id, false, false, d == null, d != null, d == null ? "null" : Std.string(d));
 	}
 	
 	public function testIsNotNull(d:Dynamic, id:String)
 	{
-		test(id, false, false, false, d != null, d == null ? "null" : Std.string(d));
+		test(id, false, false, d == null, d != null, d == null ? "null" : Std.string(d));
 	}
 	
 	private function test(id:String, tTrue:Bool=false, tFalse:Bool=false, tNull:Bool=false, tNNull:Bool=false, strValue:String="untested")
