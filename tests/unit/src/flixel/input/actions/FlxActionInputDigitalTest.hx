@@ -2,7 +2,10 @@ package flixel.input.actions;
 import flixel.FlxState;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
+import flixel.input.IFlxInputManager;
+import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
+import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalIFlxInput;
@@ -18,6 +21,7 @@ import flixel.input.mouse.FlxMouseButton;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import haxe.Json;
 import haxe.PosInfos;
 import lime.ui.Gamepad;
 import openfl.events.JoystickEvent;
@@ -598,29 +602,203 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@Test
-	function testSteam()
+	function testFlxActionManagerInit()
 	{
+		var manager = _createFlxActionManager();
+		
+		Assert.isTrue(manager.numSets == 3);
+		
+		var t = new TestShell("actionSetJson.");
+		
+		var sets = 
+		[
+			"MenuControls", 
+			"MapControls", 
+			"BattleControls"
+		];
+		
+		var analog = 
+		[
+			["menu_move"],
+			["scroll_map", "move_map"],
+			["move"]
+		];
+		
+		var digital = 
+		[
+			["menu_up", "menu_down", "menu_left", "menu_right", "menu_select", "menu_menu", "menu_cancel", "menu_thing_1", "menu_thing_2", "menu_thing_3"],
+			["map_select", "map_exit", "map_menu", "map_journal"],
+			["punch", "kick", "jump"]
+		];
+		
+		_testFlxActionManagerInit(t, manager, sets, analog, digital);
+		
+		t.assertTrue("actionSetJson.MenuControls.indexExists");
+		t.assertTrue("actionSetJson.MenuControls.nameMatches");
+		t.assertTrue("actionSetJson.MenuControls.setExists");
+		t.assertTrue("actionSetJson.MenuControls.hasDigital");
+		t.assertTrue("actionSetJson.MenuControls.hasAnalog");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_up.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_down.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_left.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_right.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_select.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_menu.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_cancel.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_1.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_2.exists");
+		t.assertTrue("actionSetJson.MenuControls.digital.menu_thing_3.exists");
+		t.assertTrue("actionSetJson.MenuControls.analog.menu_move.exists");
+		t.assertTrue("actionSetJson.MenuControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MenuControls.activatedFor.ALL");
+		t.assertTrue("actionSetJson.MenuControls.activatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.MenuControls.activatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.MenuControls.activatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.MenuControls.activatedForAll.STEAM_CONTROLLER");
+		
+		t.assertTrue("actionSetJson.MapControls.indexExists");
+		t.assertTrue("actionSetJson.MapControls.nameMatches");
+		t.assertTrue("actionSetJson.MapControls.setExists");
+		t.assertTrue("actionSetJson.MapControls.hasDigital");
+		t.assertTrue("actionSetJson.MapControls.hasAnalog");
+		t.assertTrue("actionSetJson.MapControls.digital.map_select.exists");
+		t.assertTrue("actionSetJson.MapControls.digital.map_exit.exists");
+		t.assertTrue("actionSetJson.MapControls.digital.map_menu.exists");
+		t.assertTrue("actionSetJson.MapControls.digital.map_journal.exists");
+		t.assertTrue("actionSetJson.MapControls.analog.scroll_map.exists");
+		t.assertTrue("actionSetJson.MapControls.analog.move_map.exists");
+		t.assertTrue("actionSetJson.MapControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.MapControls.activatedFor.ALL");
+		t.assertTrue("actionSetJson.MapControls.activatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.MapControls.activatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.MapControls.activatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.MapControls.activatedForAll.STEAM_CONTROLLER");
+		
+		t.assertTrue("actionSetJson.BattleControls.indexExists");
+		t.assertTrue("actionSetJson.BattleControls.nameMatches");
+		t.assertTrue("actionSetJson.BattleControls.setExists");
+		t.assertTrue("actionSetJson.BattleControls.hasDigital");
+		t.assertTrue("actionSetJson.BattleControls.hasAnalog");
+		t.assertTrue("actionSetJson.BattleControls.digital.punch.exists");
+		t.assertTrue("actionSetJson.BattleControls.digital.kick.exists");
+		t.assertTrue("actionSetJson.BattleControls.digital.jump.exists");
+		t.assertTrue("actionSetJson.BattleControls.analog.move.exists");
+		t.assertTrue("actionSetJson.BattleControls.activatedFor.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.activatedFor.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.activatedFor.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.activatedFor.STEAM_CONTROLLER");
+		t.assertTrue("actionSetJson.BattleControls.activatedFor.ALL");
+		t.assertTrue("actionSetJson.BattleControls.activatedForAll.MOUSE");
+		t.assertTrue("actionSetJson.BattleControls.activatedForAll.KEYBOARD");
+		t.assertTrue("actionSetJson.BattleControls.activatedForAll.GAMEPAD");
+		t.assertTrue("actionSetJson.BattleControls.activatedForAll.STEAM_CONTROLLER");
+		
+		manager.destroy();
+	}
 	
+	private function _createFlxActionManager():FlxActionManager
+	{
+		var manager = new FlxActionManager();
+		
+		var actionsText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
+		var actionsJSON = Json.parse(actionsText);
+		
+		manager.initFromJSON(actionsJSON, null, null);
+		
+		return manager;
+	}
+	
+	function _testFlxActionManagerInit(test:TestShell, manager:FlxActionManager, sets:Array<String>, analog:Array<Array<String>>, digital:Array<Array<String>>)
+	{
+		for (i in 0...3)
+		{
+			var set = sets[i];
+			var analogs = analog[i];
+			var digitals = digital[i];
+			
+			var setIndex:Int = manager.getSetIndex(set);
+			var setName:String = manager.getSetName(setIndex);
+			var setObject:FlxActionSet = manager.getSet(setIndex);
+			
+			test.prefix = set + ".";
+			
+			test.testIsTrue(setIndex != -1, "indexExists");
+			test.testIsTrue(setName == set, "nameMatches");
+			test.testIsTrue(setObject != null, "setExists");
+			test.testIsTrue(setObject.digitalActions != null && setObject.digitalActions.length > 0, "hasDigital");
+			test.testIsTrue(setObject.analogActions != null && setObject.analogActions.length > 0, "hasAnalog");
+			
+			for (j in 0...setObject.digitalActions.length)
+			{
+				var d:FlxActionDigital = setObject.digitalActions[j];
+				test.testIsTrue(digitals.indexOf(d.name) != -1, "digital."+d.name+".exists");
+			}
+			
+			for (j in 0...setObject.analogActions.length)
+			{
+				var a:FlxActionAnalog = setObject.analogActions[j];
+				test.testIsTrue(analogs.indexOf(a.name) != -1, "analog." + a.name+".exists");
+			}
+			
+			var devices:Array<FlxInputDevice> = 
+			[
+					MOUSE,
+					KEYBOARD,
+					GAMEPAD,
+					STEAM_CONTROLLER,
+					ALL
+			];
+			
+			for (k in 0...devices.length)
+			{
+				var device = devices[k];
+				manager.activateSet(setIndex, device);
+				var activatedSet = manager.getSetActivatedForDevice(device);
+				
+				test.testIsTrue(setObject == activatedSet, "activatedFor." + device);
+				if (device == ALL)
+				{
+					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.MOUSE);
+					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.KEYBOARD);
+					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.GAMEPAD);
+					test.testIsTrue(setObject == activatedSet, "activatedForAll." + FlxInputDevice.STEAM_CONTROLLER);
+				}
+			}
+		}
+	}
+	
+	@Test
+	function testSteamDigital()
+	{
+		
 	}
 	
 	function _testSteam(test:TestShell, actionHandle:Int, callbacks:Bool)
 	{
-		var a:FlxActionInputDigitalGamepad;
-		var b:FlxActionInputDigitalGamepad;
-		var c:FlxActionInputDigitalGamepad;
-		var d:FlxActionInputDigitalGamepad;
+		/*
+		var a:FlxActionInputDigitalSteam;
+		var b:FlxActionInputDigitalSteam;
+		var c:FlxActionInputDigitalSteam;
+		var d:FlxActionInputDigitalSteam;
 		
 		var stateGrid:InputStateGrid = null;
 		
-		a = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.PRESSED, 0);
-		b = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_PRESSED, 0);
-		c = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.RELEASED, 0);
-		d = new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_RELEASED, 0);
+		a = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.PRESSED, 0);
+		b = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_PRESSED, 0);
+		c = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.RELEASED, 0);
+		d = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_RELEASED, 0);
 		
 		var clear = clearSteam.bind(actionHandle);
 		var click = clickSteam.bind(actionHandle);
 		
 		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
+		*/
 	}
 	
 	/*********/
@@ -815,6 +993,10 @@ class FlxActionInputDigitalTest extends FlxTest
 		thing.update();
 	}
 	
+	private function clickSteam(actionHandle:Int, pressed:Bool, arr:Array<FlxActionDigital>)
+	{
+		//updateActions(arr);
+	}
 	
 	private function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
