@@ -12,6 +12,7 @@
 	<haxelib name="munit" />
 	<haxelib name="flixel" />
 	<haxelib name="hamcrest" />
+	<haxelib name="steamwrap" />
 	
 	<haxedef name="FLX_UNIT_TEST" />
 	<haxedef name="FLX_RECORD" />
