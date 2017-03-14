@@ -89,6 +89,7 @@ enum FlxInputDevice
 	IFLXINPUT_OBJECT;
 	OTHER;
 	ALL;
+	NONE;
 }
 
 /**
