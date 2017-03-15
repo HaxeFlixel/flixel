@@ -5,6 +5,10 @@ import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.actions.FlxActionInput.FlxInputType;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
+import flixel.input.actions.FlxActionInputDigitalTest.InputStateGrid;
+import flixel.input.keyboard.FlxKey;
 import haxe.Json;
 
 import massive.munit.Assert;
@@ -16,6 +20,8 @@ import massive.munit.Assert;
 class FlxActionSetTest extends FlxTest
 {
 
+	private var valueTest:String = "";
+	
 	@Before
 	function before()
 	{
@@ -170,16 +176,172 @@ class FlxActionSetTest extends FlxTest
 		Assert.isTrue(set.analogActions.length == 0);
 	}
 	
-	@Test
-	function testCallbacks()
+	function testUpdateAndCallbacks()
 	{
-		//
+		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
+		var json = Json.parse(text);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		
+		var keys = [FlxKey.A, FlxKey.B, FlxKey.C, FlxKey.D, FlxKey.E, FlxKey.F, FlxKey.G, FlxKey.H, FlxKey.I, FlxKey.J];
+		
+		for (i in 0...set.digitalActions.length)
+		{
+			var action:FlxActionDigital = set.digitalActions[i];
+			action.addInput(new FlxActionInputDigitalKeyboard(keys[i], FlxInputState.JUST_PRESSED));
+			action.callback = function(a:FlxActionDigital)
+			{
+				onCallback(a.name);
+			};
+		}
+		
+		set.analogActions[0].addInput(new FlxActionInputAnalogMouseMotion(MOVED));
+		set.analogActions[0].callback = function(a:FlxActionAnalog)
+		{
+			onCallback(a.name);
+		};
+		
+		valueTest = "";
+		
+		for (key in keys)
+		{
+			clearFlxKey(key, set);
+			clickFlxKey(key, true, set);
+		}
+		
+		step();
+		set.update();
+		
+		moveMousePosition(100, 100, set);
+		
+		step();
+		set.update();
+		
+		Assert.isTrue(valueTest == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
 	@Test
 	function testAttachSteamController()
 	{
-		//
+		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
+		var json = Json.parse(text);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		
+		for (i in 0...set.digitalActions.length)
+		{
+			var d:FlxActionDigital = set.digitalActions[i];
+			@:privateAccess d.steamHandle = i;
+			d.callback = function(a:FlxActionDigital)
+			{
+				onCallback(a.name);
+			}
+		}
+		
+		var a:FlxActionAnalog = set.analogActions[0];
+		@:privateAccess a.steamHandle = 99;
+		a.callback = function(a:FlxActionAnalog)
+		{
+			onCallback(a.name+"_" + a.x + "x" + a.y);
+		}
+		
+		var controller = 0;
+		
+		set.attachSteamController(controller, true);
+		
+		valueTest = "";
+		
+		for (i in 0...set.digitalActions.length)
+		{
+			clearSteamDigital(controller, i, set);
+			clickSteamDigital(controller, i, true, set);
+		}
+		
+		step();
+		set.update();
+		
+		moveSteamAnalog(controller, 99, 100, 100, set);
+		
+		Assert.isTrue(valueTest == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move_100x100");
 	}
-
+	
+	private function onCallback(str:String)
+	{
+		if (valueTest != "")
+		{
+			valueTest += ",";
+		}
+		valueTest += str;
+		trace("onCallback(" + str + ") valueTest = " + valueTest);
+	}
+	
+	private function moveMousePosition(X:Float, Y:Float, set:FlxActionSet)
+	{
+		if (FlxG.mouse == null) return;
+		step();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		set.update();
+	}
+	
+	private function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
+	{
+		step();
+		
+		SteamMock.setAnalogAction(controller, actionHandle, X, Y, true);
+		
+		set.update();
+	}
+	
+	@:access(flixel.input.FlxKeyManager)
+	private function clickFlxKey(key:FlxKey, pressed:Bool, set:FlxActionSet)
+	{
+		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
+		
+		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
+		
+		step();
+		set.update();
+		
+		if (pressed)
+		{
+			input.press();
+		}
+		else
+		{
+			input.release();
+		}
+		
+		set.update();
+		
+	}
+	
+	private function clickSteamDigital(controller:Int, actionHandle:Int, pressed:Bool, set:FlxActionSet)
+	{
+		step();
+		set.update();
+		
+		SteamMock.setDigitalAction(controller, actionHandle, pressed);
+		
+		set.update();
+	}
+	
+	@:access(flixel.input.FlxKeyManager)
+	private function clearFlxKey(key:FlxKey, set:FlxActionSet)
+	{
+		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
+		input.release();
+		step();
+		set.update();
+		step();
+		set.update();
+	}
+	
+	private function clearSteamDigital(controller:Int, actionHandle:Int, set:FlxActionSet)
+	{
+		SteamMock.setDigitalAction(controller, actionHandle, false);
+		step();
+		set.update();
+		step();
+		set.update();
+	}
 }

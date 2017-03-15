@@ -21,7 +21,7 @@ class FlxActionDigital extends FlxAction
 	/**
 	 * Function to call when this action occurs
 	 */
-	public var callback(default, null):FlxActionDigital->Void;
+	public var callback:FlxActionDigital->Void;
 	
 	/**
 	 * Create a new digital action
@@ -75,7 +75,7 @@ class FlxActionAnalog extends FlxAction
 	/**
 	 * Function to call when this action occurs
 	 */
-	public var callback(default, null):FlxActionAnalog->Void;
+	public var callback:FlxActionAnalog->Void;
 	
 	/**
 	 * X axis value, or the value of a single-axis analog input.
