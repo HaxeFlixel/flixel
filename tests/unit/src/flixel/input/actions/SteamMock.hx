@@ -1,4 +1,7 @@
 package flixel.input.actions;
+import flixel.input.actions.FlxSteamController.FlxSteamControllerMetadata;
+import flixel.util.FlxArrayUtil;
+import haxe.CallStack;
 import steamwrap.api.Controller;
 import steamwrap.api.Steam;
 
@@ -12,17 +15,44 @@ class SteamMock
 	public static var digitalData:Map<String,ControllerDigitalActionData>;
 	public static var analogData:Map<String,ControllerAnalogActionData>;
 	
+	public static var digitalOrigins:Map<String,Array<EControllerActionOrigin>>;
+	public static var analogOrigins:Map<String,Array<EControllerActionOrigin>>;
+	
 	private static var inited:Bool = false;
+	private static var flxInited:Bool = false;
 	
 	@:access(steamwrap.api.Steam)
 	public static function init()
 	{
+		if (inited) return;
+		
 		digitalData = new Map<String,ControllerDigitalActionData>();
 		analogData = new Map<String,ControllerAnalogActionData>();
+		
+		digitalOrigins = new Map<String,Array<EControllerActionOrigin>>();
+		analogOrigins = new Map<String,Array<EControllerActionOrigin>>();
+		
 		@:privateAccess Steam.controllers = new FakeController(function(str:String){
 			trace(str);
 		});
+		
 		inited = true;
+	}
+	
+	public static function initFlx()
+	{
+		if (flxInited) return;
+		
+		var metaData = new FlxSteamControllerMetadata();
+		
+		metaData.handle = 0;
+		metaData.actionSet = -1;
+		metaData.active = false;
+		metaData.connected.press();
+		
+		@:privateAccess FlxSteamController.controllers = [metaData];
+		
+		flxInited = true;
 	}
 	
 	@:access(flixel.input.actions.FlxSteamController)
@@ -64,6 +94,25 @@ class SteamMock
 		data.x = x;
 		data.y = y;
 	}
+	
+	public static function setDigitalActionOrigins(controller:Int, actionSet:Int, action:Int, origins:Array<EControllerActionOrigin>)
+	{
+		if (!inited) init();
+		
+		var key = controller + "_" + actionSet + "_" + action;
+		
+		trace("setDigitalActionOrigins() key = " + key);
+		
+		digitalOrigins.set(key, origins);
+	}
+	
+	public static function setAnalogActionOrigins(controller:Int, actionSet:Int, action:Int, origins:Array<EControllerActionOrigin>)
+	{
+		if (!inited) init();
+		
+		var key = controller + "_" + actionSet + "_" + action;
+		analogOrigins.set(key, origins);
+	}
 }
 
 class FakeController extends Controller
@@ -75,10 +124,15 @@ class FakeController extends Controller
 	
 	override function init() 
 	{
-		//do nothing
+		
 	}
 	
 	override function get_MAX_ORIGINS():Int 
+	{
+		return 16;
+	}
+	
+	override function get_MAX_CONTROLLERS():Int
 	{
 		return 16;
 	}
@@ -112,5 +166,59 @@ class FakeController extends Controller
 		data.y = result.y;
 		
 		return data;
+	}
+	
+	override public function getDigitalActionOrigins(controller:Int, actionSet:Int, action:Int, ?originsOut:Array<EControllerActionOrigin>):Int 
+	{
+		var key = controller + "_" + actionSet + "_" + action;
+		
+		var first:Int = 0;
+		
+		if (SteamMock.digitalOrigins == null) return first;
+		var result = SteamMock.digitalOrigins.get(key);
+		if (result == null) return first;
+		
+		if (originsOut != null)
+		{
+			FlxArrayUtil.clearArray(originsOut);
+		}
+		else
+		{
+			originsOut = [];
+		}
+		
+		for (r in result)
+		{
+			originsOut.push(r);
+		}
+		
+		return originsOut.length;
+	}
+	
+	override public function getAnalogActionOrigins(controller:Int, actionSet:Int, action:Int, ?originsOut:Array<EControllerActionOrigin>):Int 
+	{
+		var key = controller + "_" + actionSet + "_" + action;
+		
+		var first:Int = 0;
+		
+		if (SteamMock.analogOrigins == null) return first;
+		var result = SteamMock.analogOrigins.get(key);
+		if (result == null) return first;
+		
+		if (originsOut != null)
+		{
+			FlxArrayUtil.clearArray(originsOut);
+		}
+		else
+		{
+			originsOut = [];
+		}
+		
+		for (r in result)
+		{
+			originsOut.push(r);
+		}
+		
+		return originsOut.length;
 	}
 }

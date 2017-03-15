@@ -2,8 +2,14 @@ package flixel.input.actions;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
+import flixel.input.keyboard.FlxKey;
 import haxe.Json;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import steamwrap.data.ControllerConfig;
+import flixel.input.FlxInput.FlxInputState;
+import steamwrap.api.Controller;
 
 import massive.munit.Assert;
 
@@ -19,6 +25,8 @@ class FlxActionManagerTest extends FlxTest
 	private var sets:Array<String>;
 	private var analog:Array<Array<String>>;
 	private var digital:Array<Array<String>>;
+	
+	private var valueTest = "";
 	
 	@Before
 	function before()
@@ -399,34 +407,247 @@ class FlxActionManagerTest extends FlxTest
 		
 	}
 	
-	@Test
-	function testInputsChanged()
+	private function _onInputsChanged(arr:Array<FlxAction>)
 	{
-		
+		trace("_onInputsChanged(" + arr + ")");
 	}
 	
 	@Test
-	function testAddSet()
+	function testAddRemoveSet()
 	{
+		var testManager = new FlxActionManager();
+		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
+		var actionsJSON = Json.parse(managerText);
 		
+		testManager.initFromJSON(actionsJSON, null, null);
+		
+		var setText = '{"name":"ExtraControls","analogActions":["extra_move"],"digitalActions":["extra_up","extra_down","extra_left","extra_right","extra_select","extra_menu","extra_cancel","extra_thing_1","extra_thing_2","extra_thing_3"]}';
+		var json = Json.parse(setText);
+		var extraSet:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		
+		testManager.addSet(extraSet);
+		
+		var setIndex = testManager.getSetIndex("ExtraControls");
+		var setName = testManager.getSetName(setIndex);
+		var setObject = testManager.getSet(setIndex);
+		
+		Assert.isTrue(setIndex == 3);
+		Assert.isTrue(setName == "ExtraControls");
+		Assert.isTrue(setObject == extraSet);
+		
+		testManager.removeSet(extraSet);
+		
+		setObject = testManager.getSet(setIndex);
+		setName = testManager.getSetName(setIndex);
+		setIndex = testManager.getSetIndex("ExtraControls");
+		
+		Assert.isTrue(setIndex == -1);
+		Assert.isTrue(setName == "");
+		Assert.isTrue(setObject == null);
 	}
 	
 	@Test
 	function testExportToJSON()
 	{
+		var testManager = new FlxActionManager();
+		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
+		var actionsJSON = Json.parse(managerText);
 		
+		testManager.initFromJSON(actionsJSON, null, null);
+		
+		var testManager2 = new FlxActionManager();
+		var outString = testManager.exportToJSON();
+		var actionsJSON2 = Json.parse(outString);
+		
+		testManager2.initFromJSON(actionsJSON2, null, null);
+		
+		Assert.isTrue(testManager.numSets == testManager2.numSets);
+		
+		var setNames1:String = "";
+		var setNames2:String = "";
+		
+		var setDigitals1:String = "";
+		var setDigitals2:String = "";
+		
+		var setAnalogs1:String = "";
+		var setAnalogs2:String = "";
+		
+		for (i in 0...testManager.numSets)
+		{
+			setNames1 += testManager.getSetName(i);
+			setNames2 += testManager2.getSetName(i);
+			
+			var set1:FlxActionSet = testManager.getSet(i);
+			var set2:FlxActionSet = testManager2.getSet(i);
+			
+			for (j in 0...set1.digitalActions.length)
+			{
+				setDigitals1 += set1.digitalActions[j].name;
+				setDigitals2 += set2.digitalActions[j].name;
+			}
+			
+			for (j in 0...set1.analogActions.length)
+			{
+				setAnalogs1 += set1.analogActions[j].name;
+				setAnalogs2 += set2.analogActions[j].name;
+			}
+		}
+		
+		Assert.isTrue(setNames1 == setNames2);
+		Assert.isTrue(setDigitals1 == setDigitals2);
+		Assert.isTrue(setAnalogs1 == setAnalogs2);
 	}
 	
 	@Test
-	function testRemoveSet()
+	function testInputsChanged()
 	{
+		//This one's tricky!
 		
+		/*
+		SteamMock.init();
+		SteamMock.initFlx();
+		
+		valueTest = "";
+		
+		var setName = "MenuControls";
+		var setIndex = steamManager.getSetIndex(setName);
+		var set:FlxActionSet = steamManager.getSet(setIndex);
+		
+		//Set up fake steam handles since we don't have Steam to do it automatically
+		for (i in 0...set.digitalActions.length)
+		{
+			var d:FlxActionDigital = set.digitalActions[i];
+			@:privateAccess d.steamHandle = i;
+		}
+		
+		var a:FlxActionAnalog = set.analogActions[0];
+		@:privateAccess a.steamHandle = 99;
+		
+		var controller = 0;
+		var actionsChanged = "";
+		
+		step();
+		@:privateAccess steamManager.update();
+		
+		var dOrigins:Array<EControllerActionOrigin> = 
+		[
+			LEFTPAD_DPADNORTH,
+			LEFTPAD_DPADSOUTH,
+			LEFTPAD_DPADWEST,
+			LEFTPAD_DPADEAST,
+			A,
+			START,
+			B,
+			X,
+			Y,
+			BACK
+		];
+		
+		var aOrigins:Array<EControllerActionOrigin> = 
+		[
+			LEFTSTICK_MOVE
+		];
+		
+		for (i in 0...set.digitalActions.length)
+		{
+			var d:FlxActionDigital = set.digitalActions[i];
+			SteamMock.setDigitalActionOrigins(controller, setIndex, @:privateAccess d.steamHandle, [dOrigins[i]]);
+		}
+		for (i in 0...set.analogActions.length)
+		{
+			var a:FlxActionAnalog = set.analogActions[i];
+			SteamMock.setAnalogActionOrigins(controller, setIndex, @:privateAccess a.steamHandle, [aOrigins[i]]);
+		}
+		
+		//Set up a signal callback for when inputs are changed (by our fake simulation of attaching a Steam Controller)
+		steamManager.inputsChanged.add(
+			function(arr:Array<FlxAction>)
+			{
+				for (i in 0...arr.length)
+				{
+					actionsChanged += arr[i].name;
+					if (i != arr.length-1)
+					{
+						actionsChanged += ",";
+					}
+				}
+			}
+		);
+		
+		//Activate this action set for Steam Controller 1 (handle 0), which should attach steam inputs to the actions under the hood, and trigger our signal
+		steamManager.activateSet(setIndex, FlxInputDevice.STEAM_CONTROLLER, controller);
+		
+		step();
+		@:privateAccess steamManager.update();
+		
+		//The Steam API explicitly recommends we activate the set continuously, so we will simulate that here
+		steamManager.activateSet(setIndex, FlxInputDevice.STEAM_CONTROLLER, controller);
+		
+		step();
+		@:privateAccess steamManager.update();
+		
+		var finalValue = actionsChanged;
+		
+		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
+		*/
 	}
 	
 	@Test
-	function testCallbacks()
+	function testUpdateAndCallbacks()
 	{
+		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
+		var actionsJSON = Json.parse(managerText);
+		var testManager = new FlxActionManager();
+		testManager.initFromJSON(actionsJSON, null, null);
 		
+		var keys = [FlxKey.A, FlxKey.B, FlxKey.C, FlxKey.D, FlxKey.E, FlxKey.F, FlxKey.G, FlxKey.H, FlxKey.I, FlxKey.J];
+		
+		var setIndex = testManager.getSetIndex("MenuControls");
+		var set = testManager.getSet(setIndex);
+		testManager.activateSet(setIndex, FlxInputDevice.ALL, FlxInputDeviceID.ALL);
+		
+		for (i in 0...set.digitalActions.length)
+		{
+			var action:FlxActionDigital = set.digitalActions[i];
+			action.addInput(new FlxActionInputDigitalKeyboard(keys[i], flixel.input.FlxInputState.JUST_PRESSED));
+			action.callback = function(a:FlxActionDigital)
+			{
+				onCallback(a.name);
+			};
+		}
+		
+		set.analogActions[0].addInput(new FlxActionInputAnalogMouseMotion(MOVED));
+		set.analogActions[0].callback = function(a:FlxActionAnalog)
+		{
+			onCallback(a.name);
+		};
+		
+		valueTest = "";
+		
+		for (key in keys)
+		{
+			clearFlxKey(key, testManager);
+			clickFlxKey(key, true, testManager);
+		}
+		
+		step();
+		@:privateAccess testManager.update();
+		
+		moveMousePosition(100, 100, testManager);
+		
+		step();
+		@:privateAccess testManager.update();
+		
+		var finalValue = Std.string(valueTest);
+		
+		//cleanup
+		for (key in keys)
+		{
+			clearFlxKey(key, testManager);
+		}
+		moveMousePosition(0, 0, testManager);
+		
+		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
 	private function _createFlxActionManager()
@@ -607,6 +828,59 @@ class FlxActionManagerTest extends FlxTest
 				}
 			}
 		}
+	}
+	
+	@:access(flixel.input.FlxKeyManager)
+	private function clickFlxKey(key:FlxKey, pressed:Bool, manager:FlxActionManager)
+	{
+		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
+		
+		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
+		
+		step();
+		@:privateAccess manager.update();
+		
+		if (pressed)
+		{
+			input.press();
+		}
+		else
+		{
+			input.release();
+		}
+		
+		@:privateAccess manager.update();
+		
+	}
+	
+	@:access(flixel.input.FlxKeyManager)
+	private function clearFlxKey(key:FlxKey, manager:FlxActionManager)
+	{
+		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
+		if (input == null) return;
+		input.release();
+		step();
+		@:privateAccess manager.update();
+		step();
+		@:privateAccess manager.update();
+	}
+	
+	private function moveMousePosition(X:Float, Y:Float, manager:FlxActionManager)
+	{
+		if (FlxG.mouse == null) return;
+		step();
+		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		@:privateAccess manager.update();
+	}
+	
+	private function onCallback(str:String)
+	{
+		if (valueTest != "")
+		{
+			valueTest += ",";
+		}
+		valueTest += str;
 	}
 }
 

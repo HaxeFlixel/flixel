@@ -217,7 +217,15 @@ class FlxActionSetTest extends FlxTest
 		step();
 		set.update();
 		
-		Assert.isTrue(valueTest == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
+		var finalValue = valueTest;
+		
+		for (key in keys)
+		{
+			clearFlxKey(key, set);
+		}
+		moveMousePosition(0, 0, set);
+		
+		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
 	@Test
@@ -261,7 +269,9 @@ class FlxActionSetTest extends FlxTest
 		
 		moveSteamAnalog(controller, 99, 100, 100, set);
 		
-		Assert.isTrue(valueTest == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move_100x100");
+		var finalValue = valueTest;
+		
+		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move_100x100");
 	}
 	
 	private function onCallback(str:String)
