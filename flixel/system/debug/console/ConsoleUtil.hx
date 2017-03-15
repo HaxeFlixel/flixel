@@ -80,7 +80,7 @@ class ConsoleUtil
 	 */
 	public static function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
-		if (Reflect.isObject(AnyObject))
+		if (AnyObject == null || Reflect.isObject(AnyObject))
 			interp.variables.set(ObjectAlias, AnyObject);
 	}
 	
