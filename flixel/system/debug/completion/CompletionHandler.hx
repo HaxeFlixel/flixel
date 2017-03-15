@@ -13,6 +13,9 @@ using flixel.util.FlxStringUtil;
 
 class CompletionHandler
 {
+	private static inline var ENTRY_VALUE = "Entry Value";
+	private static inline var ENTRY_TYPE = "Entry Type";
+
 	private var completionList:CompletionList;
 	private var input:TextField;
 	private var watchingSelection:Bool = false;
@@ -144,10 +147,27 @@ class CompletionHandler
 			var output = ConsoleUtil.runCommand(command);
 			
 			watchingSelection = true;
-			FlxG.watch.addQuick("Selection", output);
+			FlxG.watch.addQuick(ENTRY_VALUE, output);
+			FlxG.watch.addQuick(ENTRY_TYPE, getReadableType(output));
 		}
 		catch (e:Dynamic) {}
 		#end
+	}
+
+	private function getReadableType(v:Dynamic):String
+	{
+		return switch (Type.typeof(v))
+		{
+			case TNull: null;
+			case TInt: "Int";
+			case TFloat: "Float";
+			case TBool: "Bool";
+			case TObject: "Object";
+			case TFunction: "Function";
+			case TClass(c): FlxStringUtil.getClassName(c, true);
+			case TEnum(e): FlxStringUtil.getClassName(e, true);
+			case TUnknown: "Unknown";
+		}
 	}
 	
 	private function completionClosed()
@@ -155,7 +175,8 @@ class CompletionHandler
 		if (!watchingSelection)
 			return;
 		
-		FlxG.watch.removeQuick("Selection");
+		FlxG.watch.removeQuick(ENTRY_VALUE);
+		FlxG.watch.removeQuick(ENTRY_TYPE);
 		watchingSelection = false;
 	}
 	
