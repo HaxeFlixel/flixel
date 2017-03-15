@@ -64,6 +64,7 @@ class ConsoleCommands
 		console.registerClass(FlxCamera);
 		
 		console.registerObject("FlxDebuggerLayout", FlxDebuggerLayout);
+		console.registerObject("selection", null);
 	}
 	
 	private function help(?Alias:String):String

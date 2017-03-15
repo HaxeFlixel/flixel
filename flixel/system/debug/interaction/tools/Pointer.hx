@@ -104,6 +104,7 @@ class Pointer extends Tool
 		_selectionCancelled = false;
 		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		_itemsInSelectionArea.clearArray();
+		updateConsoleSelection();
 	}
 	
 	/**
@@ -134,11 +135,27 @@ class Pointer extends Tool
 		calculateSelectionArea();
 
 		if (findItems)
+		{
 			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
+			updateConsoleSelection();
+		}
 		
 		// Clear everything
 		_selectionHappening = false;
 		_selectionArea.set(0, 0, 0, 0);
+	}
+
+	/**
+	 * We register the current selection to the console for easy interaction.
+	 */
+	private function updateConsoleSelection()
+	{
+		FlxG.console.registerObject("selection", switch(_itemsInSelectionArea.length)
+		{
+			case 0: null;
+			case 1: _itemsInSelectionArea[0];
+			case _: _itemsInSelectionArea;
+		});
 	}
 	
 	private function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
