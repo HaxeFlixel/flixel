@@ -176,6 +176,7 @@ class FlxActionSetTest extends FlxTest
 		Assert.isTrue(set.analogActions.length == 0);
 	}
 	
+	@Test
 	function testUpdateAndCallbacks()
 	{
 		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
@@ -270,7 +271,6 @@ class FlxActionSetTest extends FlxTest
 			valueTest += ",";
 		}
 		valueTest += str;
-		trace("onCallback(" + str + ") valueTest = " + valueTest);
 	}
 	
 	private function moveMousePosition(X:Float, Y:Float, set:FlxActionSet)
