@@ -3,6 +3,7 @@ package flixel.system.debug.interaction;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.display.DisplayObject;
 import flash.events.KeyboardEvent;
 import flixel.FlxObject;
 import flash.events.MouseEvent;
@@ -126,9 +127,9 @@ class Interaction extends Window
 	
 	private function handleMouseClick(event:MouseEvent):Void 
 	{
-		// Did the user click a debugger icon instead of performing
+		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (Std.is(event.target, FlxSystemButton))
+		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(event.target))
 			return;
 		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
@@ -138,6 +139,15 @@ class Interaction extends Window
 			pointerPressed = true;
 		else if (pointerJustReleased)
 			pointerPressed = false;
+	}
+
+	private function belongsToDebugger(object:DisplayObject):Bool
+	{
+		if (object == null)
+			return false;
+		else if (Std.is(object, FlxDebugger))
+			return true;
+		return belongsToDebugger(object.parent);
 	}
 	
 	private function handleMouseInDebugger(event:MouseEvent):Void 
