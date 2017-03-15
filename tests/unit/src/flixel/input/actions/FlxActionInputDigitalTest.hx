@@ -701,7 +701,6 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//STILL PRESSED
 		click(true, arr);
-		//trace("press2 " + value0 + " " + value1 + " " + value2 + " " + value3);
 		
 		test.testIsFalse(ajPressed.triggered, "just");
 		test.testIsTrue(aPressed.triggered, "value");
@@ -717,7 +716,6 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//JUST RELEASED
 		click(false, arr);
-		//trace("release1 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release1);
 		
 		test.testIsTrue(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
@@ -733,7 +731,6 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		//STILL RELEASED
 		click(false, arr);
-		//trace("release2 " + value0 + " " + value1 + " " + value2 + " " + value3 + " vs " + g.release2);
 		
 		test.testIsFalse(ajReleased.triggered, "just");
 		test.testIsTrue(aReleased.triggered, "value");
@@ -756,11 +753,13 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	private function clearSteam(actionHandle:Int)
 	{
+		/*
 		SteamMock.setDigitalAction(actionHandle, false);
 		SteamMock.update();
 		step();
 		SteamMock.update();
 		step();
+		*/
 	}
 	
 	private function clearJoystick(ID:FlxGamepadInputID)
