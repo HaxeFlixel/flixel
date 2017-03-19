@@ -807,6 +807,8 @@ class FlxBitmapFont extends FlxFramesCollection
 			font.characters.set(code, character);
 			
 			// TODO: copy character's kernings.
+			
+			
 		}
 		
 		font.updateSourceHeight();

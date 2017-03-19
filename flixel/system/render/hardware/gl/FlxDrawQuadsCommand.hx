@@ -43,6 +43,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 */
 	private static var indices:UInt16Array;
 	
+	private static var indicesNumBytes:Int = 0;
+	
 	private static var indexBuffer:GLBuffer;
 	
 	private static var context:GLRenderContext;
@@ -63,10 +65,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 				indexBuffer = GL.createBuffer();
 				GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indexBuffer);
 				
-				// TODO: fix this...
-				
-				GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, (indices.length * BYTES_PER_INDEX), indices, GL.STATIC_DRAW);
-			//	GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indices, GL.STATIC_DRAW);
+				#if (openfl >= "4.9.0")
+				GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, GL.STATIC_DRAW);
+				#else
+				GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indices, GL.STATIC_DRAW);
+				#end
 			}
 		}
 	}
@@ -89,6 +92,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 * Holds the vertices data (positions, uvs, colors)
 	 */
 	private var vertices:ArrayBuffer;
+	
+	/**
+	 * The total number of bytes in vertices buffer.
+	 */
+	private var verticesNumBytes:Int = 0;
 	
 	/**
 	 * View on the vertices as a Float32Array
@@ -132,9 +140,9 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var elementsPerVertex:Int = (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 		
 		// The total number of bytes in our batch
-		var numBytes:Int = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
+		verticesNumBytes = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
 		
-		vertices = new ArrayBuffer(numBytes);
+		vertices = new ArrayBuffer(verticesNumBytes);
 		positions = new Float32Array(vertices);
 		colors = new UInt32Array(vertices);
 		
@@ -142,6 +150,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		{
 			// The total number of indices in our batch
 			var numIndices:Int = size * FlxCameraView.INDICES_PER_QUAD;
+			FlxDrawQuadsCommand.indicesNumBytes = numIndices * UInt16Array.BYTES_PER_ELEMENT;
 			FlxDrawQuadsCommand.indices = new UInt16Array(numIndices);
 			
 			var indexPos:Int = 0;
@@ -162,9 +171,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		}
 		
 		for (i in 0...size)
-		{
 			states[i] = new RenderState();
-		}
 	}
 	
 	private function setContext(gl:GLRenderContext):Void
@@ -179,10 +186,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			vertexBuffer = GL.createBuffer();
 			GL.bindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferData(GL.ARRAY_BUFFER, (positions.length * Float32Array.BYTES_PER_ELEMENT), positions, GL.DYNAMIC_DRAW);
-		//	GL.bufferData(GL.ARRAY_BUFFER, positions, GL.DYNAMIC_DRAW);
+			#if (openfl >= "4.9.0")
+			GL.bufferData(GL.ARRAY_BUFFER, verticesNumBytes, positions, GL.DYNAMIC_DRAW);
+			#else
+			GL.bufferData(GL.ARRAY_BUFFER, positions, GL.DYNAMIC_DRAW);
+			#end
 		}
 	}
 	
@@ -497,25 +505,30 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		// upload the verts to the buffer  
 		if (numQuads > 0.5 * size)
 		{
-			// TODO: fix this...
-			
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, (positions.length * Float32Array.BYTES_PER_ELEMENT), positions);
-			//GL.bufferSubData(GL.ARRAY_BUFFER, 0, positions);
+			#if (openfl >= "4.9.0")
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, verticesNumBytes, positions);
+			#else
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, positions);
+			#end
 		}
 		else
 		{
-			var view = positions.subarray(0, numQuads * Float32Array.BYTES_PER_ELEMENT * elementsPerVertex);
+			var viewLen:Int = numQuads * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
+			var numBytes:Int = viewLen * Float32Array.BYTES_PER_ELEMENT;
+			var view = positions.subarray(0, viewLen);
 			
-			// TODO: fix this...
-			
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, (view.length * Float32Array.BYTES_PER_ELEMENT), view);
-			//GL.bufferSubData(GL.ARRAY_BUFFER, 0, view);
+			#if (openfl >= "4.9.0")
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, numBytes, view);
+			#else
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, view);
+			#end
 		}
 		
-		// TODO: fix this...
-		
+		#if (openfl >= "4.9.0")
 		GL.uniformMatrix4fv(shader.data.uMatrix.index, 1, false, uniformMatrix);
-		//GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
+		#else
+		GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
+		#end
 	}
 	
 	private function renderBatch(texture:FlxGraphic, size:Int, startIndex:Int, smoothing:Bool = false):Void

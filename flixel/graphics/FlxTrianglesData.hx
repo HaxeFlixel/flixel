@@ -341,30 +341,37 @@ class FlxTrianglesData implements IFlxDestroyable
 		if (vertices == null)
 			return;
 		
+		var numCoords:Int = vertices.length;
+		#if (openfl >= "4.9.0")
+		var numBytes:Int = numCoords * Float32Array.BYTES_PER_ELEMENT;
+		#end
+		
 		if (verticesDirty)
 		{
-			if (verticesArray == null || verticesArray.length != vertices.length)
-				verticesArray = new Float32Array(vertices.length);
+			if (verticesArray == null || verticesArray.length != numCoords)
+				verticesArray = new Float32Array(numCoords);
 			
-			for (i in 0...vertices.length)
+			for (i in 0...numCoords)
 				verticesArray[i] = vertices[i];
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferData(GL.ARRAY_BUFFER, (vertices.length * Float32Array.BYTES_PER_ELEMENT), verticesArray, GL.STATIC_DRAW);
-		//	GL.bufferData(GL.ARRAY_BUFFER, verticesArray, GL.STATIC_DRAW);
+			#if (openfl >= "4.9.0")
+			GL.bufferData(GL.ARRAY_BUFFER, numBytes, verticesArray, GL.STATIC_DRAW);
+			#else
+			GL.bufferData(GL.ARRAY_BUFFER, verticesArray, GL.STATIC_DRAW);
+			#end
 			verticesDirty = false;
 		}
 		else
 		{
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, (vertices.length * Float32Array.BYTES_PER_ELEMENT), verticesArray);
-			//GL.bufferSubData(GL.ARRAY_BUFFER, 0, verticesArray);
+			#if (openfl >= "4.9.0")
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, numBytes, verticesArray);
+			#else
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, verticesArray);
+			#end
 		}
 	}
 	
@@ -375,18 +382,22 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (uvtDirty)
 		{
-			if (uvsArray == null || uvsArray.length != uvs.length)
-				uvsArray = new Float32Array(uvs.length);
+			var numUVs:Int = uvs.length;
 			
-			for (i in 0...uvs.length)
+			if (uvsArray == null || uvsArray.length != numUVs)
+				uvsArray = new Float32Array(numUVs);
+			
+			for (i in 0...numUVs)
 				uvsArray[i] = uvs[i];
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, uvsBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferData(GL.ARRAY_BUFFER, (uvsArray.length * Float32Array.BYTES_PER_ELEMENT), uvsArray, GL.STATIC_DRAW);
-			//GL.bufferData(GL.ARRAY_BUFFER, uvsArray, GL.STATIC_DRAW);
+			#if (openfl >= "4.9.0")
+			var numBytes:Int = numUVs * Float32Array.BYTES_PER_ELEMENT;
+			GL.bufferData(GL.ARRAY_BUFFER, numBytes, uvsArray, GL.STATIC_DRAW);
+			#else
+			GL.bufferData(GL.ARRAY_BUFFER, uvsArray, GL.STATIC_DRAW);
+			#end
 			uvtDirty = false;
 		}
 		else
@@ -402,19 +413,23 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (colorsDirty)
 		{
-			if (colorsArray == null || colorsArray.length != colors.length)
-				colorsArray = new UInt32Array(colors.length);
+			var numColors:Int = colors.length;
 			
-			for (i in 0...colors.length)
+			if (colorsArray == null || colorsArray.length != numColors)
+				colorsArray = new UInt32Array(numColors);
+			
+			for (i in 0...numColors)
 				colorsArray[i] = colors[i];
 			
 			// update the colors
 			GL.bindBuffer(GL.ARRAY_BUFFER, colorsBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferData(GL.ARRAY_BUFFER, (colorsArray.length * UInt32Array.BYTES_PER_ELEMENT), colorsArray, GL.STATIC_DRAW);
-		//	GL.bufferData(GL.ARRAY_BUFFER, colorsArray, GL.STATIC_DRAW);
+			#if (openfl >= "4.9.0")
+			var numBytes:Int = numColors * UInt32Array.BYTES_PER_ELEMENT;
+			GL.bufferData(GL.ARRAY_BUFFER, numBytes, colorsArray, GL.STATIC_DRAW);
+			#else
+			GL.bufferData(GL.ARRAY_BUFFER, colorsArray, GL.STATIC_DRAW);
+			#end
 			colorsDirty = false;
 		}
 		else
@@ -430,18 +445,22 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (indicesDirty)
 		{
-			if (indicesArray == null || indicesArray.length != indices.length)
-				indicesArray = new UInt16Array(indices.length);
+			var numIndices:Int = indices.length;
 			
-			for (i in 0...indices.length)
+			if (indicesArray == null || indicesArray.length != numIndices)
+				indicesArray = new UInt16Array(numIndices);
+			
+			for (i in 0...numIndices)
 				indicesArray[i] = indices[i];
 			
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indicesBuffer);
 			
-			// TODO: fix this...
-			
-			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, (indicesArray.length * UInt16Array.BYTES_PER_ELEMENT), indicesArray, GL.STATIC_DRAW);
-		//	GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indicesArray, GL.STATIC_DRAW);
+			#if (openfl >= "4.9.0")
+			var numBytes:Int = numIndices * UInt16Array.BYTES_PER_ELEMENT;
+			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, numBytes, indicesArray, GL.STATIC_DRAW);
+			#else
+			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indicesArray, GL.STATIC_DRAW);
+			#end
 			indicesDirty = false;
 		}
 		else

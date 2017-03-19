@@ -149,16 +149,14 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		GL.uniform4f(shader.data.uColor.index, red, green, blue, alpha);
 		GL.uniform4f(shader.data.uColorOffset.index, redOffset, greenOffset, blueOffset, alphaOffset);
 		
-		// TODO: fix this...
-		
+		#if (openfl >= "4.9.0")
 		GL.uniformMatrix4fv(shader.data.uMatrix.index, 1, false, uniformMatrix);
-		//GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
-		
-		// TODO: fix this...
-		
 		// set transform matrix for all triangles in this item:
 		GL.uniformMatrix4fv(shader.data.uModel.index, 1, false, matrix4);
-		//GL.uniformMatrix4fv(shader.data.uModel.index, false, matrix4);
+		#else
+		GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
+		GL.uniformMatrix4fv(shader.data.uModel.index, false, matrix4);
+		#end
 		
 		renderSession.blendModeManager.setBlendMode(blendMode);
 		
