@@ -52,6 +52,8 @@ class FlxStrip extends FlxSprite
 	 */
 	public var data:FlxTrianglesData;
 	
+	public var verticesDirty(get, set):Bool;
+	
 	/**
 	 * FlxStrip constructor
 	 * 
@@ -76,24 +78,23 @@ class FlxStrip extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		if (alpha == 0 || data == null|| vertices == null)
+		if (alpha == 0 || data == null || vertices == null)
 			return;
 		
 		if (FlxG.renderBlit && useFramePixels)
 		{
-			if (dirty) //rarely 
+			if (dirty || verticesDirty) //rarely 
+			{
 				updateFramePixels();
-				
+				dirty = false;
+			}
+			
 			super.draw();
 			return;
 		}
 		
-		if (dirty)
-		{
-			dirty = false;
+		if (verticesDirty)
 			data.updateBounds();
-			data.dirty = true;
-		}
 		
 		// update matrix
 		_matrix.identity();
@@ -131,7 +132,7 @@ class FlxStrip extends FlxSprite
 	
 	override public function updateFramePixels():BitmapData 
 	{
-		if (!dirty || FlxG.renderTile || data == null)
+		if (!(dirty || verticesDirty) || FlxG.renderTile || data == null)
 			return framePixels;
 		
 		var oldX:Float = data.bounds.x;
@@ -149,7 +150,6 @@ class FlxStrip extends FlxSprite
 		if (useColorTransform)
 			framePixels.colorTransform(_flashRect, colorTransform);
 		
-		dirty = false;
 		return framePixels;
 	}
 	
@@ -191,5 +191,23 @@ class FlxStrip extends FlxSprite
 	private function set_colors(value:DrawData<FlxColor>):DrawData<FlxColor>
 	{
 		return data.colors = value;
+	}
+	
+	private function get_verticesDirty():Bool
+	{
+		return data.verticesDirty;
+	}
+	
+	private function set_verticesDirty(value:Bool):Bool
+	{
+		return data.verticesDirty = value;
+	}
+	
+	override function set_dirty(value:Bool):Bool 
+	{
+		if (data != null)
+			data.dirty = value;
+		
+		return super.set_dirty(value);
 	}
 }

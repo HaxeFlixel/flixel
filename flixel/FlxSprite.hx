@@ -8,6 +8,7 @@ import flash.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
+//import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxTileFrames;
@@ -73,7 +74,7 @@ class FlxSprite extends FlxObject
 	 * Set this flag to true to force the sprite to update during the `draw()` call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
-	public var dirty:Bool = true;
+	public var dirty(default, set):Bool = true;
 	
 	/**
 	 * This sprite's graphic / `BitmapData` object.
@@ -102,6 +103,9 @@ class FlxSprite extends FlxObject
 	 */
 	public var frames(default, set):FlxFramesCollection;
 	public var graphic(default, set):FlxGraphic;
+	
+	//public var material:FlxMaterial;
+	
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: `90` means there
 	 * are 4 baked rotations in the spritesheet. `0` if this sprite does not have any baked rotations.
@@ -1397,6 +1401,12 @@ class FlxSprite extends FlxObject
 			useFramePixels = true;
 			return true;
 		}
+	}
+	
+	@:noCompletion
+	private function set_dirty(value:Bool):Bool
+	{
+		return dirty = value;
 	}
 	
 	@:noCompletion
