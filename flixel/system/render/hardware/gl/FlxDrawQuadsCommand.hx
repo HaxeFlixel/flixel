@@ -62,7 +62,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			{
 				indexBuffer = GL.createBuffer();
 				GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indexBuffer);
-				GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indices, GL.STATIC_DRAW);
+				
+				// TODO: fix this...
+				
+				GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, (indices.length * BYTES_PER_INDEX), indices, GL.STATIC_DRAW);
+			//	GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indices, GL.STATIC_DRAW);
 			}
 		}
 	}
@@ -174,7 +178,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			// create a couple of buffers
 			vertexBuffer = GL.createBuffer();
 			GL.bindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
-			GL.bufferData(GL.ARRAY_BUFFER, positions, GL.DYNAMIC_DRAW);
+			
+			// TODO: fix this...
+			
+			GL.bufferData(GL.ARRAY_BUFFER, (positions.length * Float32Array.BYTES_PER_ELEMENT), positions, GL.DYNAMIC_DRAW);
+		//	GL.bufferData(GL.ARRAY_BUFFER, positions, GL.DYNAMIC_DRAW);
 		}
 	}
 	
@@ -489,15 +497,25 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		// upload the verts to the buffer  
 		if (numQuads > 0.5 * size)
 		{
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, positions);
+			// TODO: fix this...
+			
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, (positions.length * Float32Array.BYTES_PER_ELEMENT), positions);
+			//GL.bufferSubData(GL.ARRAY_BUFFER, 0, positions);
 		}
 		else
 		{
 			var view = positions.subarray(0, numQuads * Float32Array.BYTES_PER_ELEMENT * elementsPerVertex);
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, view);
+			
+			// TODO: fix this...
+			
+			GL.bufferSubData(GL.ARRAY_BUFFER, 0, (view.length * Float32Array.BYTES_PER_ELEMENT), view);
+			//GL.bufferSubData(GL.ARRAY_BUFFER, 0, view);
 		}
 		
-		GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
+		// TODO: fix this...
+		
+		GL.uniformMatrix4fv(shader.data.uMatrix.index, 1, false, uniformMatrix);
+		//GL.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
 	}
 	
 	private function renderBatch(texture:FlxGraphic, size:Int, startIndex:Int, smoothing:Bool = false):Void
