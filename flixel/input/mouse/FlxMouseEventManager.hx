@@ -391,7 +391,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-	#if FLX_MOUSE
+		#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
@@ -421,7 +421,7 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-	#end
+		#end
 		
 		_mouseOverObjects = currentOverObjects;
 	}

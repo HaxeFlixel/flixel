@@ -599,25 +599,25 @@ class FlxG
 		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
-			if (!Lib.application.config.windows[0].hardware)
+		if (!Lib.application.config.windows[0].hardware)
+		{
+			renderMethod = BLITTING;
+		}
+		else
+		{
+			renderMethod = switch (stage.window.renderer.type)
 			{
-				renderMethod = BLITTING;
+				case OPENGL, CONSOLE: DRAW_TILES;
+				case CANVAS, FLASH, CAIRO: BLITTING;
+				default: BLITTING;
 			}
-			else
-			{
-				renderMethod = switch (stage.window.renderer.type)
-				{
-					case OPENGL, CONSOLE: DRAW_TILES;
-					case CANVAS, FLASH, CAIRO: BLITTING;
-					default: BLITTING;
-				}
-			}
+		}
 		#else
-			#if web
-				renderMethod = BLITTING;
-			#else
-				renderMethod = DRAW_TILES;
-			#end
+		#if web
+		renderMethod = BLITTING;
+		#else
+		renderMethod = DRAW_TILES;
+		#end
 		#end
 		
 		renderBlit = renderMethod == BLITTING;

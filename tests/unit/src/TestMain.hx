@@ -51,11 +51,11 @@ class TestMain
 		try
 		{
 			#if flash
-				flash.external.ExternalInterface.call("testResult", successful);
+			flash.external.ExternalInterface.call("testResult", successful);
 			#elseif js
-				js.Lib.eval("testResult(" + successful + ");");
+			js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys
-				Sys.exit(successful ? 0 : 1);
+			Sys.exit(successful ? 0 : 1);
 			#end
 		}
 		// if run from outside browser can get error which we can ignore

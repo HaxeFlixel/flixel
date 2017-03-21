@@ -65,13 +65,13 @@ class BitmapLog extends Window
 
 		setVisible(false);
 
-	#if FLX_MOUSE
+		#if FLX_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#if FLX_MOUSE_ADVANCED
 		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
 		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
 		#end
-	#end
+		#end
 
 		FlxG.signals.stateSwitched.add(clear);
 

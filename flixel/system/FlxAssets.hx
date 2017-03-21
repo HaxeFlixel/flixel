@@ -37,7 +37,7 @@ typedef FlxShader = #if (openfl_legacy || nme) Dynamic #else  openfl.display.Sha
 
 class FlxAssets
 {
-#if (macro || doc_gen)
+	#if (macro || doc_gen)
 	/**
 	 * Reads files from a directory relative to this project and generates `public static inline`
 	 * variables containing the string paths to the files in it. 
@@ -65,8 +65,8 @@ class FlxAssets
 		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions);
 		#end
 	}
-#end
-#if (!macro || doc_gen)
+	#end
+	#if (!macro || doc_gen)
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Monsterrat";
@@ -224,5 +224,5 @@ class FlxAssets
 		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
 		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
-#end
+	#end
 }

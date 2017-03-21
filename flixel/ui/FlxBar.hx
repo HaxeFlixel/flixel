@@ -965,7 +965,6 @@ class FlxBar extends FlxSprite
 		{
 			createImageFilledBar(value.frame.paint());
 		}
-	//	updateFilledBar();
 		return value;
 	}
 	

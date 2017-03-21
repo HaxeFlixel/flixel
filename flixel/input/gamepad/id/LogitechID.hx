@@ -7,7 +7,7 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  */
 class LogitechID
 {
-#if flash
+	#if flash
 	public static inline var ONE:Int = 8;
 	public static inline var TWO:Int = 9;
 	public static inline var THREE:Int = 10;
@@ -29,7 +29,7 @@ class LogitechID
 	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
 	public static inline var LOGITECH:Int = -1;
 	
-#else // native and html5
+	#else // native and html5
 	public static inline var ONE:Int = 0;
 	public static inline var TWO:Int = 1;
 	public static inline var THREE:Int = 2;
@@ -52,7 +52,7 @@ class LogitechID
 	//TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
 	public static inline var LOGITECH:Int = -5;
 	
-#end
+	#end
 
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:24, down:25, left:26, right:27});
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:28, down:29, left:30, right:31});

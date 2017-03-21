@@ -1041,7 +1041,7 @@ class FlxObject extends FlxBasic
 		height = Height;
 	}
 	
-#if FLX_DEBUG
+	#if FLX_DEBUG
 	public function drawDebug():Void
 	{
 		if (ignoreDrawDebug)
@@ -1112,7 +1112,7 @@ class FlxObject extends FlxBasic
 		if (FlxG.renderBlit)
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
-#end
+	#end
 
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{

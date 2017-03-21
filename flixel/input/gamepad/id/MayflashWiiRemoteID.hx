@@ -17,7 +17,7 @@ class MayflashWiiRemoteID
 	 * - Rumble
 	 * - Speaker
 	 */
-#if FLX_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	
 	// Standard Wii Remote inputs:
 	public static inline var REMOTE_ONE:Int = 0;
@@ -79,13 +79,13 @@ class MayflashWiiRemoteID
 	
 	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
-			up:    REMOTE_DPAD_UP,
-			down:  REMOTE_DPAD_DOWN,
-			left:  REMOTE_DPAD_LEFT,
-			right: REMOTE_DPAD_RIGHT,
-			threshold: 0.5,
-			mode: ONLY_DIGITAL
-		});
+		up:    REMOTE_DPAD_UP,
+		down:  REMOTE_DPAD_DOWN,
+		left:  REMOTE_DPAD_LEFT,
+		right: REMOTE_DPAD_RIGHT,
+		threshold: 0.5,
+		mode: ONLY_DIGITAL
+	});
 	
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, {up:26, down:27, left:28, right:29});	//the nunchuk only has the "left" analog stick
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:30, down:31, left:32, right:33});	//the classic controller has both the "left" and "right" analog sticks
@@ -100,7 +100,7 @@ class MayflashWiiRemoteID
 	public static inline var REMOTE_DPAD_LEFT:Int = 24;
 	public static inline var REMOTE_DPAD_RIGHT:Int = 25;
 	
-#else //gamepad API
+	#else //gamepad API
 	
 	// Standard Wii Remote inputs:
 	public static inline var REMOTE_ONE:Int = 8;
@@ -185,5 +185,5 @@ class MayflashWiiRemoteID
 	public static inline var REMOTE_DPAD_LEFT:Int = 24;
 	public static inline var REMOTE_DPAD_RIGHT:Int = 25;
 	
-#end
+	#end
 }
