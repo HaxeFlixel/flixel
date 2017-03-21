@@ -36,8 +36,8 @@ class FlxGamepadAnalogStateList
 			return false;
 		
 		//no matter what status we're checking for, we do two tests: 
-			//easy : both values are exactly the same (both JUST_PRESSED, both JUST_RELEASED)
-			//!easy: one axis == status, other axis == RELEASED || JUST_RELEASED
+		//easy : both values are exactly the same (both JUST_PRESSED, both JUST_RELEASED)
+		//!easy: one axis == status, other axis == RELEASED || JUST_RELEASED
 		
 		//if we're checking for JUST_RELEASED: one axis must be released and the other not pressed  (you just released one axis, and the other one is not pressed either)
 		//if we're checking for JUST_PRESSED:  one axis must be pressed  and the other not pressed  (it was released before, but now you have just moved it)

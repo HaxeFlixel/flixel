@@ -20,7 +20,7 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  */
 class PS4ID
 {
-#if flash
+	#if flash
 	
 	public static inline var SQUARE:Int = 10;
 	public static inline var X:Int = 11;
@@ -45,7 +45,7 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 8;
 	public static inline var DPAD_RIGHT:Int = 9;
 	
-#elseif FLX_GAMEINPUT_API
+	#elseif FLX_GAMEINPUT_API
 	
 	//#if (html5 || windows || mac || linux)
 	
@@ -78,7 +78,7 @@ class PS4ID
 	//So strictly speaking these ID's will probably not be used, but the compiler needs something or
 	//else it will not compile on Linux
 	
-#else //"legacy"
+	#else //"legacy"
 	
 	public static inline var SQUARE:Int = 0;
 	public static inline var X:Int = 1;
@@ -106,5 +106,5 @@ class PS4ID
 	public static inline var DPAD_DOWN:Int = 17;
 	public static inline var DPAD_UP:Int = 18;
 
-#end
+	#end
 }

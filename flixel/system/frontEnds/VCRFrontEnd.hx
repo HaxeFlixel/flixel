@@ -18,7 +18,7 @@ import flash.net.FileFilter;
 
 class VCRFrontEnd
 {
-#if FLX_RECORD
+	#if FLX_RECORD
 	#if flash
 	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
@@ -41,7 +41,7 @@ class VCRFrontEnd
 	#if flash
 	private var _file:FileReference;
 	#end
-#end
+	#end
 
 	/**
 	 * Whether the debugger has been paused.
