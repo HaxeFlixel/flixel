@@ -97,8 +97,7 @@ class FlxDrawStack implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	public function getTexturedTilesCommand(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
+	public function getTexturedTilesCommand(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial)
 	{
 		var itemToReturn:FlxDrawQuadsCommand = null;
 		
@@ -138,7 +137,7 @@ class FlxDrawStack implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	public function getColoredTilesCommand(?blend:BlendMode, ?shader:FlxShader)
+	public function getColoredTilesCommand(material:FlxMaterial)
 	{
 		var itemToReturn:FlxDrawQuadsCommand = null;
 		
@@ -178,8 +177,7 @@ class FlxDrawStack implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	public function getNewTrianglesCommand(graphic:FlxGraphic, smooth:Bool = false,
-		colored:Bool = false, repeat:Bool = true, ?blend:BlendMode, ?shader:FlxShader):FlxDrawTrianglesCommand
+	public function getNewTrianglesCommand(material:FlxMaterial, colored:Bool = false):FlxDrawTrianglesCommand
 	{
 		var itemToReturn:FlxDrawTrianglesCommand = null;
 		
@@ -212,8 +210,7 @@ class FlxDrawStack implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	public function getTrianglesCommand(graphic:FlxGraphic, smooth:Bool = false,
-		colored:Bool = false, repeat:Bool = true, ?blend:BlendMode, ?shader:FlxShader, numTriangles:Int):FlxDrawTrianglesCommand
+	public function getTrianglesCommand(material:FlxMaterial, colored:Bool = false, numTriangles:Int):FlxDrawTrianglesCommand
 	{
 		if (!FlxCameraView.BATCH_TRIANGLES)
 		{
@@ -306,7 +303,7 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, material);
 		
 		drawItem.addQuad(frame, matrix, transform, blend, smoothing);
 	}
@@ -320,7 +317,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
-		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, material);
 		drawItem.addQuad(frame, _helperMatrix, transform, blend, smoothing);
 	}
 	

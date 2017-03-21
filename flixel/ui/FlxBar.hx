@@ -833,9 +833,7 @@ class FlxBar extends FlxSprite
 			for (camera in cameras)
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
-				{
 					continue;
-				}
 				
 				getScreenPosition(_point, camera).subtractPoint(offset);
 				
@@ -843,20 +841,15 @@ class FlxBar extends FlxSprite
 				_matrix.translate( -origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
 				
-				// rotate matrix if sprite's graphic isn't prerotated
 				if (angle != 0)
-				{
 					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-				}
 				
 				_point.add(origin.x, origin.y);
 				if (isPixelPerfectRender(camera))
-				{
 					_point.floor();
-				}
 				
 				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, smoothing, shader);
+				camera.drawPixels(_frontFrame, material, _matrix, colorTransform);
 			}
 		}
 	}
@@ -864,13 +857,9 @@ class FlxBar extends FlxSprite
 	override private function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		if (FlxG.renderTile)
-		{
 			return Pixels; // hack
-		}
 		else
-		{
 			return super.set_pixels(Pixels);
-		}
 	}
 	
 	override public function toString():String
