@@ -127,7 +127,7 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.pixelPerfectOverlap(_player, _spikeBottom) || FlxG.pixelPerfectOverlap(_player, _spikeTop) 
-				|| FlxG.pixelPerfectOverlap(_player, _paddleLeft) || FlxG.pixelPerfectOverlap(_player, _paddleRight))
+			|| FlxG.pixelPerfectOverlap(_player, _paddleLeft) || FlxG.pixelPerfectOverlap(_player, _paddleRight))
 		{
 			_player.kill();
 		}

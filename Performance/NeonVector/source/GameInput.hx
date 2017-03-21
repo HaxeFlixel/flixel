@@ -42,8 +42,8 @@ class GameInput
 		lengthBeforeNormalize = Math.sqrt(Point.x * Point.x + Point.y * Point.y);
 		if (lengthBeforeNormalize != 0) 
 		{
-				Point.x /= lengthBeforeNormalize;
-				Point.y /= lengthBeforeNormalize;
+			Point.x /= lengthBeforeNormalize;
+			Point.y /= lengthBeforeNormalize;
 		}
 		
 		return Point;

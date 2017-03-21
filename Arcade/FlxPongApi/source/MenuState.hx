@@ -40,12 +40,14 @@ class MenuState extends FlxState
 	
 	private static inline function API_TEST_BUTTONS():Array<Array<String>>
 	{
-		return [["fetchUser", "authUser", "openSession", "pingSession"],
-		        ["closeSession", "fetchTrophy", "addTrophy", "fetchScore"],
-		        ["addScore", "getTables", "fetchData", "setData"],
-		        ["updateData", "removeData", "getAllKeys", "resetUser"],
-		        ["fetchTrophyImage", "fetchAvatarImage", "username", "usertoken"],
-		        ["isQuickPlay", "isEmbeddedFlash"]];
+		return [
+			["fetchUser", "authUser", "openSession", "pingSession"],
+			["closeSession", "fetchTrophy", "addTrophy", "fetchScore"],
+			["addScore", "getTables", "fetchData", "setData"],
+			["updateData", "removeData", "getAllKeys", "resetUser"],
+			["fetchTrophyImage", "fetchAvatarImage", "username", "usertoken"],
+			["isQuickPlay", "isEmbeddedFlash"]
+		];
 	}
 	
 	override public function create():Void

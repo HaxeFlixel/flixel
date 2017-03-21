@@ -107,7 +107,7 @@ class PlayState extends FlxState
 			if (touch.pressed)
 			{
 				if (touch.x > 10 && touch.x < 270)
-				_bat.x = touch.x;
+					_bat.x = touch.x;
 			}
 		}
 		// Vertical long swipe up or down resets game state

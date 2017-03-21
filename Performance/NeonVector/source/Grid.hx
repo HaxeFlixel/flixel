@@ -164,8 +164,8 @@ class Grid
 			if (_distance < Radius)
 			{
 				_mass.applyForce(
-						10 * Force * (Position.x - _mass.position.x) / (100 + _distance * _distance), 
-						10 * Force * (Position.y - _mass.position.y) / (100 + _distance * _distance));
+					10 * Force * (Position.x - _mass.position.x) / (100 + _distance * _distance), 
+					10 * Force * (Position.y - _mass.position.y) / (100 + _distance * _distance));
 				_mass.increaseDamping(0.6);
 			}
 		}
@@ -180,8 +180,8 @@ class Grid
 			if (_distance < Radius)
 			{
 				_mass.applyForce(
-						100 * Force * (_mass.position.x - Position.x) / (10000 + _distance * _distance),
-						100 * Force * (_mass.position.y - Position.y) / (10000 + _distance * _distance));
+					100 * Force * (_mass.position.x - Position.x) / (10000 + _distance * _distance),
+					100 * Force * (_mass.position.y - Position.y) / (10000 + _distance * _distance));
 				_mass.increaseDamping(0.6);
 			}
 		}
@@ -193,11 +193,11 @@ class Grid
 	*/ 
 	public function spline(Pt0:FlxPoint, Pt1:FlxPoint, Pt2:FlxPoint, Pt3:FlxPoint, t:Float):FlxPoint 
 	{
-			_pt.x = 0.5 * ((2 * Pt1.x) + t * ((-Pt0.x + Pt2.x) +
-							t * ((2 * Pt0.x - 5 * Pt1.x + 4 * Pt2.x - Pt3.x) + t * (-Pt0.x + 3 * Pt1.x - 3 * Pt2.x + Pt3.x))));
-			_pt.y = 0.5 * ((2 * Pt1.y) + t * (( -Pt0.y + Pt2.y) +
-							t * ((2 * Pt0.y - 5 * Pt1.y + 4 * Pt2.y - Pt3.y) + t * (-Pt0.y + 3 * Pt1.y - 3 * Pt2.y + Pt3.y))));
-			return _pt;                        
+		_pt.x = 0.5 * ((2 * Pt1.x) + t * ((-Pt0.x + Pt2.x) +
+			t * ((2 * Pt0.x - 5 * Pt1.x + 4 * Pt2.x - Pt3.x) + t * (-Pt0.x + 3 * Pt1.x - 3 * Pt2.x + Pt3.x))));
+		_pt.y = 0.5 * ((2 * Pt1.y) + t * (( -Pt0.y + Pt2.y) +
+			t * ((2 * Pt0.y - 5 * Pt1.y + 4 * Pt2.y - Pt3.y) + t * (-Pt0.y + 3 * Pt1.y - 3 * Pt2.y + Pt3.y))));
+		return _pt;                        
 	}
 	#end
 }

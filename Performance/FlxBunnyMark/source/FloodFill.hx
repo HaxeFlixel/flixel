@@ -4,7 +4,7 @@ import openfl.display.Shader;
 
 class FloodFill extends Shader
 {
-    @fragment var code = '
+	@fragment var code = '
 	
 	uniform float uFloodFillY;
 	
@@ -26,8 +26,8 @@ class FloodFill extends Shader
     }
     ';
     
-    public function new()
-    {
-        super();
-    }
+	public function new()
+	{
+		super();
+	}
 }

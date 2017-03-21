@@ -196,7 +196,7 @@ class PlayState extends FlxState
 		super.create();
 
 		#if SHOW_FPS
-			makeFPSCounter();
+		makeFPSCounter();
 		#end
 	}
 	
@@ -228,7 +228,7 @@ class PlayState extends FlxState
 		_tileMap = null;
 		
 		#if SHOW_FPS
-			FlxG.removeChild(fps);
+		FlxG.removeChild(fps);
 		#end
 		
 		super.destroy();

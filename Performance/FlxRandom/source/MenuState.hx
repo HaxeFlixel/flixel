@@ -40,9 +40,9 @@ class MenuState extends FlxState
 	inline private static function BUTTON_TEXT():Array<String>
 	{
 		return ["Reset Global Seed", "Get Current Seed", "Generate Integers",
-				"Generate Floats", "Normal Distribution Floats", "Weighted Coin Flips", "Generate Signs",
-				"Weighted Pick", "Get Array Object", "Weighted Get Array Object",
-				"Shuffle Array", "Generate Colors", "Test Accuracy"];
+			"Generate Floats", "Normal Distribution Floats", "Weighted Coin Flips", "Generate Signs",
+			"Weighted Pick", "Get Array Object", "Weighted Get Array Object",
+			"Shuffle Array", "Generate Colors", "Test Accuracy"];
 	}
 	
 	override public function create():Void
