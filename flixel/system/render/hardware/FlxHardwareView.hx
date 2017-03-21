@@ -1,6 +1,7 @@
 package flixel.system.render.hardware;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
@@ -127,33 +128,32 @@ class FlxHardwareView extends FlxCameraView
 		_scrollRect = null;
 	}
 	
-	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
-		drawStack.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		drawStack.drawPixels(frame, pixels, material, matrix, transform);
 	}
 	
-	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
+		destPoint:Point, ?transform:ColorTransform):Void
 	{
-		drawStack.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		drawStack.copyPixels(frame, pixels, material, sourceRect, destPoint, transform);
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
+	override public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		drawStack.drawTriangles(graphic, data, matrix, transform, blend, repeat, smoothing, shader);
+		drawStack.drawTriangles(material, data, matrix, transform);
 	}
 	
-	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
-		drawStack.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
+		drawStack.drawUVQuad(material, rect, uv, matrix, transform);
 	}
 	
-	override public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		drawStack.drawColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
+		drawStack.drawColorQuad(material, rect, matrix, color, alpha);
 	}
 	
 	override public function updateOffset():Void 

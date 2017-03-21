@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.graphics.FlxMaterial;
 import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -57,12 +58,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */ 
 	public var pixels(default, null):BitmapData;
 	
-	public var blend:BlendMode;
-	
-	public var smoothing:Bool = false;
-	
-	@:deprecated
-	public var antialiasing(get, set):Bool;
+	public var material:FlxMaterial;
 	
 	private var _flashRect:Rectangle;
 	private var _matrix:FlxMatrix;
@@ -100,9 +96,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		if (FlxG.renderBlit)
 		{
 			pixels = null;
-			blend = null;
 			_matrix = null;
 		}
+		
+		material = null;
 	}
 	
 	/**
@@ -131,16 +128,16 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			FlashPoint.y = Math.floor(FlashPoint.y);
 		}
 		
-		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
+		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && material.blendMode == null)
 		{
-			Camera.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
+			Camera.copyPixels(pixels, material, _flashRect, FlashPoint);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.drawPixels(pixels, _matrix, null, blend, smoothing);
+			Camera.drawPixels(pixels, material, _matrix);
 		}
 	}
 	
@@ -192,15 +189,5 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			Camera = FlxG.camera;
 		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
-	}
-	
-	private function get_antialiasing():Bool
-	{
-		return smoothing;
-	}
-	
-	private function set_antialiasing(value:Bool):Bool
-	{
-		return smoothing = value;
 	}
 }

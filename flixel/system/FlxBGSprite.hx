@@ -3,6 +3,7 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxMaterial;
 import flixel.util.FlxColor;
 
 class FlxBGSprite extends FlxSprite
@@ -28,7 +29,7 @@ class FlxBGSprite extends FlxSprite
 			
 			_matrix.identity();
 			_matrix.scale(camera.width, camera.height);
-			camera.drawPixels(frame, _matrix, colorTransform);
+			camera.drawPixels(frame, material, _matrix, colorTransform);
 			
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;

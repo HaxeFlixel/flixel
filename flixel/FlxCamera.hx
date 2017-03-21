@@ -5,6 +5,7 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMath;
@@ -305,38 +306,37 @@ class FlxCamera extends FlxBasic
 	 */
 	public var initialZoom(default, null):Float = 1;
 	
-	public inline function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public inline function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		if (view != null)
-			view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+			view.drawPixels(frame, pixels, material, matrix, transform);
 	}
 	
-	public inline function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public inline function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
+		destPoint:Point, ?transform:ColorTransform):Void
 	{
 		if (view != null)
-			view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+			view.copyPixels(frame, pixels, material, sourceRect, destPoint, transform);
 	}
 	
-	public inline function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void 
+	public inline function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		if (view != null)
-			view.drawTriangles(graphic, data, matrix, transform, blend, repeat, smoothing, shader);
+			view.drawTriangles(material, data, matrix, transform);
 	}
 	
-	public inline function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public inline function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		if (view != null)
-			view.drawUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing, shader);
+			view.drawUVQuad(material, rect, uv, matrix, transform);
 	}
 	
-	public inline function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public inline function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		if (view != null)
-			view.drawColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
+			view.drawColorQuad(material, rect, matrix, color, alpha);
 	}
 	
 	/**

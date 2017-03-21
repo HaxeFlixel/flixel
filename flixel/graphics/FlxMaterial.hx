@@ -1,10 +1,10 @@
 package flixel.graphics;
 
-/*
 import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import openfl.display.BitmapData;
+import openfl.display.BlendMode;
 import openfl.display.ShaderData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
@@ -13,6 +13,15 @@ import openfl.utils.Float32Array;
 
 @:access(openfl.display.ShaderInput)
 @:access(openfl.display.ShaderParameter)
+
+// if shader is null, then try to batch material
+// of shader isn't null, then look at the material properties to decide if batching is possible (number of textures)
+// if batching is impossible, then draw object separately???
+// if objects have the same material then we could try to batch them too.
+
+// material property `batchable` ??? !!!!!!!!!!!!!!
+
+// TODO: batch with previous (with material with the same shader)??? !!!!!!
 
 class FlxMaterial implements IFlxDestroyable
 {
@@ -24,7 +33,15 @@ class FlxMaterial implements IFlxDestroyable
 	
 	public var data(default, null):ShaderData;
 	
+	public var texture(get, set):FlxGraphic;
+	
 	public var numTextures(get, null):Int;
+	
+	public var blendMode:BlendMode = null;
+	
+	public var smoothing:Bool = false;
+	
+	public var repeat:Bool = true;
 	
 	private var inputTextures:Array<ShaderInput<FlxGraphic>>;
 	private var paramBool:Array<ShaderParameter<Bool>>;
@@ -52,7 +69,6 @@ class FlxMaterial implements IFlxDestroyable
 	// TODO: call this after setting the shader shader...
 	public function apply(gl:GLRenderContext):Void
 	{
-		
 		initData();
 		
 		var textureCount:Int = 0;
@@ -136,19 +152,31 @@ class FlxMaterial implements IFlxDestroyable
 						for (i in 0...4) 
 							uniformMatrix2[i] = value[i];
 						
+						#if (openfl >= "4.9.0")
+						gl.uniformMatrix2fv(index, 1, false, uniformMatrix2);
+						#else
 						gl.uniformMatrix2fv(index, false, uniformMatrix2);
+						#end
 					
 					case MATRIX3X3:
 						for (i in 0...9)
 							uniformMatrix3[i] = value[i];
 						
+						#if (openfl >= "4.9.0")
+						gl.uniformMatrix3fv(index, 1, false, uniformMatrix3);
+						#else
 						gl.uniformMatrix3fv(index, false, uniformMatrix3);
+						#end
 					
 					case MATRIX4X4:
 						for (i in 0...16)
 							uniformMatrix4[i] = value[i];
 						
+						#if (openfl >= "4.9.0")
+						gl.uniformMatrix4fv(index, 1, false, uniformMatrix4);
+						#else
 						gl.uniformMatrix4fv(index, false, uniformMatrix4);
+						#end
 					
 					default:
 						
@@ -186,7 +214,6 @@ class FlxMaterial implements IFlxDestroyable
 	
 	public function setTexture(name:String, texture:FlxGraphic):Void
 	{
-		
 		for (input in inputTextures)
 		{
 			if (input.name == name)
@@ -195,7 +222,6 @@ class FlxMaterial implements IFlxDestroyable
 				return;
 			}
 		}
-		
 	}
 	
 	private function set_shader(value:FlxShader):FlxShader
@@ -214,7 +240,6 @@ class FlxMaterial implements IFlxDestroyable
 	
 	private function initData():Void
 	{
-		
 		if (shader != null && numUniforms == 0)
 		{
 			var fields = Reflect.fields(shader.data);
@@ -271,9 +296,20 @@ class FlxMaterial implements IFlxDestroyable
 		
 	}
 	
+	// TODO: implement it...
+	private function get_texture():FlxGraphic
+	{
+		return null;
+	}
+	
+	// TODO: implement it...
+	private function set_texture(value:FlxGraphic):FlxGraphic
+	{
+		return value;
+	}
+	
 	private function get_numTextures():Int
 	{
 		return inputTextures.length;
 	}
 }
-*/

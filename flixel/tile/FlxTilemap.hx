@@ -10,6 +10,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
@@ -67,7 +68,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @since 4.3.0
 	 */
-	public var smoothing(default, set):Bool = false;
+	public var smoothing(get, set):Bool;
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -104,7 +105,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
-	public var blend(default, set):BlendMode = null;
+	public var blend(get, set):BlendMode;
 	
 	/**
 	 * GLSL shader for this tilemap. Only works with OpenFL Next or WebGL.
@@ -112,7 +113,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @since 4.1.0
 	 */
 	#if openfl_legacy @:noCompletion #end
-	public var shader:FlxShader;
+	public var shader(get, set):FlxShader;
+	
+	// TODO: document it...
+	public var material:FlxMaterial = new FlxMaterial();
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
@@ -193,6 +197,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	override public function destroy():Void
 	{
+		// TODO: proper clean up (after introducing material property)...
+		
 		_flashPoint = null;
 		_flashRect = null;
 		
@@ -234,6 +240,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 		
 		shader = null;
+		
+		material = FlxDestroyUtil.destroy(material);
+		
 		
 		super.destroy();
 	}
@@ -989,7 +998,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						
-						view.drawPixels(frame, null, _matrix, colorTransform, blend, smoothing, shader);
+						view.drawPixels(frame, null, material, _matrix, colorTransform);
 					}
 				}
 				
@@ -1006,12 +1015,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		Buffer.x = screenXInTiles * _scaledTileWidth;
 		Buffer.y = screenYInTiles * _scaledTileHeight;
 		
-		if (FlxG.renderBlit)
-		{
-			if (isColored)
-				Buffer.colorTransform(colorTransform);
-			Buffer.blend = blend;
-		}
+		if (FlxG.renderBlit && isColored)
+			Buffer.colorTransform(colorTransform);
 		
 		Buffer.dirty = false;
 	}
@@ -1072,15 +1077,18 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
-		buffer.smoothing = smoothing;
+		buffer.material = material;
 		return buffer;
+	}
+	
+	private function get_smoothing():Bool
+	{
+		return material.smoothing;
 	}
 	
 	private function set_smoothing(value:Bool):Bool
 	{
-		for (buffer in _buffers)
-			buffer.smoothing = value;
-		return smoothing = value;
+		return material.smoothing = value;
 	}
 	
 	private function get_antialiasing():Bool
@@ -1153,10 +1161,26 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		setDirty();
 	}
 	
+	private function get_blend():BlendMode
+	{
+		return material.blendMode;
+	}
+	
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
+		material.blendMode = Value;
 		setDirty();
-		return blend = Value;
+		return Value;
+	}
+	
+	private function get_shader():FlxShader
+	{
+		return material.shader;
+	}
+	
+	private function set_shader(Value:FlxShader):FlxShader
+	{
+		return material.shader = Value;
 	}
 	
 	private function setScaleXYCallback(Scale:FlxPoint):Void

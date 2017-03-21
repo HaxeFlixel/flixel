@@ -3,6 +3,7 @@ package flixel.system.render.common;
 import flash.display.Graphics;
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
@@ -300,8 +301,8 @@ class FlxDrawStack implements IFlxDestroyable
 		}
 	}
 	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
@@ -310,8 +311,8 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addQuad(frame, matrix, transform, blend, smoothing);
 	}
 	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
+		destPoint:Point, ?transform:ColorTransform):Void
 	{
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
@@ -323,8 +324,7 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addQuad(frame, _helperMatrix, transform, blend, smoothing);
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = true, smoothing:Bool = false, ?shader:FlxShader):Void
+	public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var isColored:Bool = data.colored;
 		
@@ -346,8 +346,8 @@ class FlxDrawStack implements IFlxDestroyable
 	#end
 	}
 	
-	public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
@@ -359,7 +359,8 @@ class FlxDrawStack implements IFlxDestroyable
 		drawItem.addUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing);
 	}
 	
-	public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	// TODO: maybe replace `material` argument with just `blendMode`???
+	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		#if (openfl >= "4.0.0")
 		var drawItem = getColoredTilesCommand(blend, shader);

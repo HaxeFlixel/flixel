@@ -2,6 +2,7 @@ package flixel.system.render.blit;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
@@ -128,12 +129,12 @@ class FlxBlitView extends FlxCameraView
 		_flashPoint = null;
 	}
 	
-	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		if (pixels != null)
 		{
-			_buffer.draw(pixels, matrix, null, blend, null, (smoothing || smoothing));
+			_buffer.draw(pixels, matrix, transform, material.blendMode, null, (this.smoothing || material.smoothing));
 		}
 		else
 		{
@@ -141,8 +142,8 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
+		destPoint:Point, ?transform:ColorTransform):Void
 	{
 		if (pixels != null)
 		{
@@ -154,17 +155,18 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, 
-		repeat:Bool = false, smoothing:Bool = false, ?shader:FlxShader):Void 
+	override public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		if (graphic == null && transform == null)
+		if (material == null && transform == null)
 			return;
 		
 		trianglesSprite.graphics.clear();
 		
+		var graphic:FlxGraphic = material.texture;
+		
 		if (graphic != null)
 		{
-			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, material.repeat, (this.smoothing || material.smoothing));
 			trianglesSprite.graphics.drawTriangles(data.vertices, data.indices, data.uvs);
 		}
 		else
@@ -174,17 +176,17 @@ class FlxBlitView extends FlxCameraView
 		}
 		
 		trianglesSprite.graphics.endFill();
-		_buffer.draw(trianglesSprite, matrix, transform, blend);
+		_buffer.draw(trianglesSprite, matrix, transform, material.blendMode);
 		
 		drawDebugTriangles(data.vertices, data.indices, matrix);
 		data.dirty = false;
 	}
 	
-	override public function drawUVQuad(graphic:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+		?transform:ColorTransform):Void
 	{
 		trianglesSprite.graphics.clear();
-		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, true, smoothing);
+		trianglesSprite.graphics.beginBitmapFill(material.texture.bitmap, null, true, smoothing);
 		
 		rectVertices[0] = 0;
 		rectVertices[1] = 0;
@@ -213,12 +215,12 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices, rectUVs);
 		trianglesSprite.graphics.endFill();
-		_buffer.draw(trianglesSprite, matrix, transform, blend);
+		_buffer.draw(trianglesSprite, matrix, transform, material.blendMode);
 		
 		drawDebugTriangles(rectVertices, rectIndices, matrix);
 	}
 	
-	override public function drawColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool = false, ?shader:FlxShader):Void
+	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		trianglesSprite.graphics.clear();
 		trianglesSprite.graphics.beginFill(color, alpha);
@@ -241,7 +243,7 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices);
 		trianglesSprite.graphics.endFill();
-		_buffer.draw(trianglesSprite, matrix, null, blend);
+		_buffer.draw(trianglesSprite, matrix, null, material.blendMode);
 		
 		drawDebugTriangles(rectVertices, rectIndices, matrix);
 	}

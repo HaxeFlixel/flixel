@@ -8,7 +8,7 @@ import flash.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
-//import flixel.graphics.FlxMaterial;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxTileFrames;
@@ -62,7 +62,7 @@ class FlxSprite extends FlxObject
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @since 4.3.0
 	 */
-	public var smoothing(default, set):Bool = false;
+	public var smoothing(get, set):Bool;
 	
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
@@ -104,7 +104,8 @@ class FlxSprite extends FlxObject
 	public var frames(default, set):FlxFramesCollection;
 	public var graphic(default, set):FlxGraphic;
 	
-	//public var material:FlxMaterial;
+	// TODO: document it...
+	public var material:FlxMaterial = new FlxMaterial();
 	
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: `90` means there
@@ -148,7 +149,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
-	public var blend(default, set):BlendMode;
+	public var blend(get, set):BlendMode;
 
 	/**
 	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
@@ -177,7 +178,7 @@ class FlxSprite extends FlxObject
 	 * @since 4.1.0
 	 */
 	#if openfl_legacy @:noCompletion #end
-	public var shader:FlxShader;
+	public var shader(get, set):FlxShader;
 	
 	/**
 	 * The actual frame used for sprite rendering
@@ -291,6 +292,8 @@ class FlxSprite extends FlxObject
 	{
 		super.destroy();
 		
+		// TODO: proper clean up (after introducing material property)...
+		
 		animation = FlxDestroyUtil.destroy(animation);
 		
 		offset = FlxDestroyUtil.put(offset);
@@ -314,6 +317,8 @@ class FlxSprite extends FlxObject
 		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		
 		shader = null;
+		
+		material = FlxDestroyUtil.destroy(material);
 	}
 	
 	public function clone():FlxSprite
@@ -688,8 +693,8 @@ class FlxSprite extends FlxObject
 			_point.floor();
 		
 		_point.copyToFlash(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect,
-			_flashPoint, colorTransform, blend, smoothing);
+		camera.copyPixels(_frame, framePixels, material, _flashRect,
+			_flashPoint, colorTransform);
 	}
 	
 	@:noCompletion
@@ -717,7 +722,7 @@ class FlxSprite extends FlxObject
 			_matrix.ty = Math.floor(_matrix.ty);
 		}
 		
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, smoothing, shader);
+		camera.drawPixels(_frame, framePixels, material, _matrix, colorTransform);
 	}
 	
 	/**
@@ -1260,9 +1265,15 @@ class FlxSprite extends FlxObject
 	}
 	
 	@:noCompletion
+	private function get_blend():BlendMode 
+	{
+		return material.blendMode;
+	}
+	
+	@:noCompletion
 	private function set_blend(Value:BlendMode):BlendMode 
 	{
-		return blend = Value;
+		return material.blendMode = Value;
 	}
 	
 	/**
@@ -1284,6 +1295,7 @@ class FlxSprite extends FlxObject
 			oldGraphic.useCount--;
 		}
 		
+		material.texture = Value;
 		return graphic = Value;
 	}
 	
@@ -1373,9 +1385,27 @@ class FlxSprite extends FlxObject
 	}
 	
 	@:noCompletion
+	private function get_smoothing():Bool
+	{
+		return material.smoothing;
+	}
+	
+	@:noCompletion
 	private function set_smoothing(value:Bool):Bool
 	{
-		return smoothing = value;
+		return material.smoothing = value;
+	}
+	
+	@:noCompletion
+	private function get_shader():FlxShader
+	{
+		return material.shader;
+	}
+	
+	@:noCompletion
+	private function set_shader(value:FlxShader):FlxShader
+	{
+		return material.shader = value;
 	}
 	
 	@:noCompletion
