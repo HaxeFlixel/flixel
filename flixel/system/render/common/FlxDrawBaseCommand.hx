@@ -121,22 +121,21 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 			&& this.graphics == graphic 
 			&& this.colored == colored
 			&& this.hasColorOffsets == hasColorOffsets
-			&& this.blending == blend
-			&& this.smoothing == smooth
-			&& this.repeat == repeat
-			&& this.shader == shader);
+			&& this.blending == material.blendMode
+			&& this.smoothing == material.smoothing
+			&& this.repeat == material.repeat
+			&& this.shader == material.shader);
 	}
 	
-	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Void
+	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Void
 	{
 		this.graphics = graphic;
 		this.colored = colored;
 		this.hasColorOffsets = hasColorOffsets;
-		this.blending = blend;
-		this.smoothing = smooth;
-		this.repeat = repeat;
-		this.shader = shader;
+		this.blending = material.blendMode;
+		this.smoothing = material.smoothing;
+		this.repeat = material.repeat;
+		this.shader = material.shader;
 	}
 	
 	private function get_numVertices():Int

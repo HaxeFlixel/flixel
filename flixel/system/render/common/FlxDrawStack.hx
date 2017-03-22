@@ -102,7 +102,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var itemToReturn:FlxDrawQuadsCommand = null;
 		
 		if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.QUADS, graphic, colored, hasColorOffsets, blend, smooth, true, shader) 
+			&& _currentCommand.equals(FlxDrawItemType.QUADS, graphic, colored, hasColorOffsets, material) 
 			&& _lastTexturedQuads.canAddQuad)
 		{
 			return _lastTexturedQuads;
@@ -120,7 +120,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawQuadsCommand(true);
 		}
 		
-		itemToReturn.set(graphic, colored, hasColorOffsets, blend, smooth, true, shader);
+		itemToReturn.set(graphic, colored, hasColorOffsets, material);
 		
 		itemToReturn.nextTyped = _lastTexturedQuads;
 		_lastTexturedQuads = itemToReturn;
@@ -142,7 +142,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var itemToReturn:FlxDrawQuadsCommand = null;
 		
 		if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.QUADS, null, true, false, blend, false, false, shader) 
+			&& _currentCommand.equals(FlxDrawItemType.QUADS, null, true, false, material) 
 			&& _lastColoredQuads.canAddQuad)
 		{
 			return _lastColoredQuads;
@@ -160,7 +160,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawQuadsCommand(false);
 		}
 		
-		itemToReturn.set(null, true, false, blend, false, false, shader);
+		itemToReturn.set(null, true, false, material);
 		
 		itemToReturn.nextTyped = _lastColoredQuads;
 		_lastColoredQuads = itemToReturn;
@@ -193,7 +193,7 @@ class FlxDrawStack implements IFlxDestroyable
 			itemToReturn = new FlxDrawTrianglesCommand();
 		}
 		
-		itemToReturn.set(graphic, colored, false, blend, smooth, repeat, shader);
+		itemToReturn.set(material.texture, colored, false, material);
 		
 		itemToReturn.nextTyped = _lastTriangles;
 		_lastTriangles = itemToReturn;
@@ -214,16 +214,16 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		if (!FlxCameraView.BATCH_TRIANGLES)
 		{
-			return getNewTrianglesCommand(graphic, smooth, colored, repeat, blend, shader);
+			return getNewTrianglesCommand(material, colored);
 		}
 		else if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.TRIANGLES, graphic, colored, false, blend, smooth, repeat, shader)
+			&& _currentCommand.equals(FlxDrawItemType.TRIANGLES, material.texture, colored, false, material)
 			&& _lastTriangles.canAddTriangles(numTriangles))
 		{	
 			return _lastTriangles;
 		}
 		
-		return getNewTrianglesCommand(graphic, smooth, colored, repeat, blend, shader);
+		return getNewTrianglesCommand(material, colored);
 	}
 	
 	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
@@ -305,7 +305,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, material);
 		
-		drawItem.addQuad(frame, matrix, transform, blend, smoothing);
+		drawItem.addQuad(frame, matrix, transform, material);
 	}
 	
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
@@ -318,7 +318,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		
 		var drawItem = getTexturedTilesCommand(frame.parent, isColored, hasColorOffsets, material);
-		drawItem.addQuad(frame, _helperMatrix, transform, blend, smoothing);
+		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
 	public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -326,7 +326,7 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored:Bool = data.colored;
 		
 	#if FLX_RENDER_GL
-		var drawItem = getNewTrianglesCommand(graphic, smoothing, isColored, repeat, blend, shader);
+		var drawItem = getNewTrianglesCommand(material, isColored);
 		drawItem.data = data;
 		drawItem.matrix = matrix;
 		drawItem.color = transform;
@@ -349,21 +349,21 @@ class FlxDrawStack implements IFlxDestroyable
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		#if (openfl >= "4.0.0")
-		var drawItem = getTexturedTilesCommand(graphic, isColored, hasColorOffsets, blend, smoothing, shader);
+		var drawItem = getTexturedTilesCommand(material.texture, isColored, hasColorOffsets, material);
 		#else
 		var drawItem = getTrianglesCommand(graphic, smoothing, isColored, true, blend, shader, FlxCameraView.TRIANGLES_PER_QUAD);
 		#end
-		drawItem.addUVQuad(graphic, rect, uv, matrix, transform, blend, smoothing);
+		drawItem.addUVQuad(material.texture, rect, uv, matrix, transform, material);
 	}
 	
 	// TODO: maybe replace `material` argument with just `blendMode`???
 	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		#if (openfl >= "4.0.0")
-		var drawItem = getColoredTilesCommand(blend, shader);
+		var drawItem = getColoredTilesCommand(material);
 		#else
-		var drawItem = getTrianglesCommand(null, smoothing, true, true, blend, shader, FlxCameraView.TRIANGLES_PER_QUAD);
+		var drawItem = getTrianglesCommand(material, true, FlxCameraView.TRIANGLES_PER_QUAD);
 		#end
-		drawItem.addColorQuad(rect, matrix, color, alpha, blend, smoothing, shader);
+		drawItem.addColorQuad(rect, matrix, color, alpha, material);
 	}
 }

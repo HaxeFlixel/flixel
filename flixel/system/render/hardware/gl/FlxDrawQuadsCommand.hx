@@ -1,6 +1,7 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
@@ -276,12 +277,12 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		numQuads++;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
-		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, blend, smoothing);
+		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, material);
 	}
 	
-	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
+	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
 		// get the uvs for the texture
 		var uvx:Float = uv.x;
@@ -589,7 +590,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	}
 	
 	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, repeat:Bool = true, ?shader:FlxShader):Bool
+		material:FlxMaterial):Bool
 	{
 		var hasGraphic:Bool = (graphic != null);
 		var bothHasGraphic:Bool = (hasGraphic == textured);
