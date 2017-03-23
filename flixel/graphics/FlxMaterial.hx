@@ -33,6 +33,7 @@ class FlxMaterial implements IFlxDestroyable
 	
 	public var data(default, null):ShaderData;
 	
+	@:isVar
 	public var texture(get, set):FlxGraphic;
 	
 	public var numTextures(get, null):Int;
@@ -299,13 +300,13 @@ class FlxMaterial implements IFlxDestroyable
 	// TODO: implement it...
 	private function get_texture():FlxGraphic
 	{
-		return null;
+		return texture;
 	}
 	
 	// TODO: implement it...
 	private function set_texture(value:FlxGraphic):FlxGraphic
 	{
-		return value;
+		return texture = value;
 	}
 	
 	private function get_numTextures():Int

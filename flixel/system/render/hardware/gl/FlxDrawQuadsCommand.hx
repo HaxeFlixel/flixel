@@ -211,7 +211,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		flush();
 	}
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void
 	{
 		var i = numQuads * Float32Array.BYTES_PER_ELEMENT * FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 		
@@ -272,7 +272,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var state:RenderState = states[numQuads];
 		
-		state.set(null, blend, false);
+		state.set(null, material);
 		
 		numQuads++;
 	}
@@ -383,7 +383,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		colors[i + 5] = colors[i + 11] = colors[i + 17] = colors[i + 23] = color;
 		
 		var state:RenderState = states[numQuads];
-		state.set(texture, blend, smoothing);
+		state.set(texture, material);
 		
 		numQuads++;
 	}
@@ -397,6 +397,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var startIndex:Int = 0;
 		
 		var state:RenderState = states[0];
+		var material:FlxMaterial = state.material;
 		
 		setShader();
 		uploadData();
@@ -407,12 +408,12 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var currentBlendMode:BlendMode;
 		var nextBlendMode:BlendMode;
-		currentBlendMode = nextBlendMode = state.blend;
+		currentBlendMode = nextBlendMode = material.blendMode;
 		renderSession.blendModeManager.setBlendMode(currentBlendMode);
 		
 		var currentSmoothing:Bool;
 		var nextSmoothing:Bool;
-		currentSmoothing = nextSmoothing = state.smoothing;
+		currentSmoothing = nextSmoothing = material.smoothing;
 		
 		var blendSwap:Bool = false;
 		var textureSwap:Bool = false;
@@ -423,8 +424,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			state = states[i];
 			
 			nextTexture = state.texture;
-			nextBlendMode = state.blend;
-			nextSmoothing = state.smoothing;
+			nextBlendMode = material.blendMode;
+			nextSmoothing = material.smoothing;
 			
 			blendSwap = (currentBlendMode != nextBlendMode);
 			textureSwap = (currentTexture != nextTexture);
@@ -622,26 +623,25 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 
 class RenderState implements IFlxDestroyable
 {
-	public var blend:BlendMode;
-	public var smoothing:Bool;
 	public var texture:FlxGraphic;
+	
+	public var material:FlxMaterial;
 	
 	public var startIndex:Int = 0;
 	public var size:Int = 0;
 	
 	public function new() {}
 	
-	public inline function set(texture:FlxGraphic, blend:BlendMode, smooth:Bool = false):Void
+	public inline function set(texture:FlxGraphic, material:FlxMaterial):Void
 	{
 		this.texture = texture;
-		this.smoothing = smooth;
-		this.blend = blend;
+		this.material = material;
 	}
 	
 	public function destroy():Void
 	{
 		this.texture = null;
-		this.blend = null;
+		this.material = null;
 	}
 }
 
@@ -659,7 +659,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		super();
 	}
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void {}
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void {}
 	
 }
 #end

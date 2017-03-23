@@ -326,7 +326,7 @@ class FlxCamera extends FlxBasic
 			view.drawTriangles(material, data, matrix, transform);
 	}
 	
-	public inline function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+	public inline function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
 		if (view != null)

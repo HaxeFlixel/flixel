@@ -32,6 +32,8 @@ using flixel.util.FlxColorTransformUtil;
 @:access(flixel.system.render.hardware.FlxHardwareView._canvas)
 class FlxDrawStack implements IFlxDestroyable
 {
+	private static var DefaultColorMaterial:FlxMaterial = new FlxMaterial();
+	
 	/**
 	 * Currently used draw stack item
 	 */
@@ -230,8 +232,8 @@ class FlxDrawStack implements IFlxDestroyable
 	{
 		#if FLX_RENDER_GL
 		_helperMatrix.identity();
-		var drawItem = getColoredTilesCommand(null, null);
-		drawItem.addColorQuad(rect, _helperMatrix, color, alpha);
+		var drawItem = getColoredTilesCommand(DefaultColorMaterial);
+		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, DefaultColorMaterial);
 		#else
 		var graphic:Graphics = view._canvas.graphics;
 		var camera:FlxCamera = view.camera;
@@ -337,7 +339,7 @@ class FlxDrawStack implements IFlxDestroyable
 	#else
 		isColored = isColored || (transform != null && transform.hasRGBMultipliers());
 		
-		var drawItem = getTrianglesCommand(graphic, smoothing, isColored, repeat, blend, shader, data.numTriangles);
+		var drawItem = getTrianglesCommand(material, isColored, data.numTriangles);
 		drawItem.addTriangles(data, matrix, transform);
 		data.dirty = false;
 	#end

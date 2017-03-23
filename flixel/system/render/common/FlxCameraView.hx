@@ -213,7 +213,7 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
-	public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+	public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void {}
 	
 	// TODO: maybe replace `material` argument with just `blendMode`???

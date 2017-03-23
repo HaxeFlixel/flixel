@@ -105,7 +105,7 @@ class FlxSprite extends FlxObject
 	public var graphic(default, set):FlxGraphic;
 	
 	// TODO: document it...
-	public var material:FlxMaterial = new FlxMaterial();
+	public var material:FlxMaterial;
 	
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: `90` means there
@@ -149,6 +149,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
+	@:isVar
 	public var blend(get, set):BlendMode;
 
 	/**
@@ -259,6 +260,8 @@ class FlxSprite extends FlxObject
 		super(X, Y);
 		
 		useFramePixels = FlxG.renderBlit;
+		material = new FlxMaterial();
+		
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
@@ -309,7 +312,6 @@ class FlxSprite extends FlxObject
 		_flashPointZero = null;
 		_matrix = null;
 		colorTransform = null;
-		blend = null;
 		
 		frames = null;
 		graphic = null;
