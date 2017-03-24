@@ -182,11 +182,11 @@ class FlxBlitView extends FlxCameraView
 		data.dirty = false;
 	}
 	
-	override public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+	override public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
 		trianglesSprite.graphics.clear();
-		trianglesSprite.graphics.beginBitmapFill(material.texture.bitmap, null, true, smoothing);
+		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, true, smoothing);
 		
 		rectVertices[0] = 0;
 		rectVertices[1] = 0;

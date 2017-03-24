@@ -545,8 +545,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		if (texture != null)
 		{
-			GLUtils.setTextureSmoothing(smoothing);
-			GLUtils.setTextureWrapping(repeat);
+			GLUtils.setTextureSmoothing(material.smoothing);
+			GLUtils.setTextureWrapping(material.repeat);
 			
 			GL.uniform2f(shader.data.uTextureSize.index, texture.width, texture.height);
 		}
@@ -593,11 +593,14 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
 		material:FlxMaterial):Bool
 	{
-		var hasGraphic:Bool = (graphic != null);
-		var bothHasGraphic:Bool = (hasGraphic == textured);
-		var hasSameShader:Bool = (this.shader == shader);
+		if (this.material == material && this.graphics == graphics)
+			return true;
 		
-		return bothHasGraphic && hasSameShader;
+		var bothShadersAreNull:Bool = (material.shader == null && shader == null);
+		var hasGraphic:Bool = (graphic != null);
+		var bothHasGraphicAreSame:Bool = (hasGraphic == textured);
+		
+		return bothShadersAreNull && bothHasGraphicAreSame;
 	}
 	
 	private function get_canAddQuad():Bool

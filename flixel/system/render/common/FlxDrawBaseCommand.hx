@@ -65,12 +65,10 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	public var next:FlxDrawBaseCommand<T>;
 	
 	public var graphics:FlxGraphic;
-	public var smoothing:Bool = false;
+	public var material:FlxMaterial;
+	public var shader:FlxShader;
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
-	public var blending:BlendMode = null;
-	public var shader:FlxShader;
-	public var repeat:Bool = true;
 	
 	public var type:FlxDrawItemType;
 	
@@ -87,12 +85,10 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	public function reset():Void
 	{
 		graphics = null;
-		smoothing = false;
+		material = null;
+		shader = null;
 		hasColorOffsets = false;
 		colored = false;
-		repeat = true;
-		blending = null;
-		shader = null;
 		nextTyped = null;
 		next = null;
 	}
@@ -100,7 +96,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	public function destroy():Void
 	{
 		graphics = null;
-		blending = null;
+		material = null;
 		shader = null;
 		next = null;
 		nextTyped = null;
@@ -121,21 +117,19 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 			&& this.graphics == graphic 
 			&& this.colored == colored
 			&& this.hasColorOffsets == hasColorOffsets
-			&& this.blending == material.blendMode
-			&& this.smoothing == material.smoothing
-			&& this.repeat == material.repeat
+			&& this.material.blendMode == material.blendMode
+			&& this.material.smoothing == material.smoothing
+			&& this.material.repeat == material.repeat
 			&& this.shader == material.shader);
 	}
 	
 	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Void
 	{
 		this.graphics = graphic;
+		this.material = material;
+		this.shader = material.shader;
 		this.colored = colored;
 		this.hasColorOffsets = hasColorOffsets;
-		this.blending = material.blendMode;
-		this.smoothing = material.smoothing;
-		this.repeat = material.repeat;
-		this.shader = material.shader;
 	}
 	
 	private function get_numVertices():Int

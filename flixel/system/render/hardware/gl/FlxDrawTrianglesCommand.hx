@@ -37,8 +37,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	private var _vertices:Vector<Float> = new Vector<Float>();
 	
-	public var blendMode:BlendMode;
-	
 	private var uniformMatrix:Matrix4;
 	
 	public var data:FlxTrianglesData;
@@ -67,8 +65,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	{
 		uniformMatrix = null;
 		
-		shader = null;
-		blendMode = null;
 		renderSession = null;
 		
 		data = null;
@@ -116,8 +112,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		
 		if (graphics != null)
 		{
-			GLUtils.setTextureSmoothing(smoothing);
-			GLUtils.setTextureWrapping(repeat);
+			GLUtils.setTextureSmoothing(material.smoothing);
+			GLUtils.setTextureWrapping(material.repeat);
 			
 			GL.uniform2f(shader.data.uTextureSize.index, graphics.width, graphics.height);
 		}
@@ -158,7 +154,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		GL.uniformMatrix4fv(shader.data.uModel.index, false, matrix4);
 		#end
 		
-		renderSession.blendModeManager.setBlendMode(blendMode);
+		renderSession.blendModeManager.setBlendMode(material.blendMode);
 		
 		data.updateVertices();
 		GL.vertexAttribPointer(shader.data.aPosition.index, 2, GL.FLOAT, false, 0, 0);

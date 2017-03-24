@@ -345,20 +345,19 @@ class FlxDrawStack implements IFlxDestroyable
 	#end
 	}
 	
-	public function drawUVQuad(material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+	public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 		#if (openfl >= "4.0.0")
-		var drawItem = getTexturedTilesCommand(material.texture, isColored, hasColorOffsets, material);
+		var drawItem = getTexturedTilesCommand(graphic, isColored, hasColorOffsets, material);
 		#else
 		var drawItem = getTrianglesCommand(graphic, smoothing, isColored, true, blend, shader, FlxCameraView.TRIANGLES_PER_QUAD);
 		#end
-		drawItem.addUVQuad(material.texture, rect, uv, matrix, transform, material);
+		drawItem.addUVQuad(graphic, rect, uv, matrix, transform, material);
 	}
 	
-	// TODO: maybe replace `material` argument with just `blendMode`???
 	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
 		#if (openfl >= "4.0.0")

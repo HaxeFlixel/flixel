@@ -330,7 +330,7 @@ class FlxCamera extends FlxBasic
 		?transform:ColorTransform):Void
 	{
 		if (view != null)
-			view.drawUVQuad(material, rect, uv, matrix, transform);
+			view.drawUVQuad(graphic, material, rect, uv, matrix, transform);
 	}
 	
 	public inline function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
