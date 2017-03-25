@@ -155,14 +155,12 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	override public function drawTriangles(graphic:FlxGraphic, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		if (material == null && transform == null)
 			return;
 		
 		trianglesSprite.graphics.clear();
-		
-		var graphic:FlxGraphic = material.texture;
 		
 		if (graphic != null)
 		{

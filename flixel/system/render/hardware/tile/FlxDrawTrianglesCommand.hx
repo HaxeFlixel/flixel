@@ -1,6 +1,7 @@
 package flixel.system.render.hardware.tile;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.shaders.FlxShader;
@@ -61,11 +62,11 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		}
 		else
 		{
-			view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, repeat, (view.smoothing || smoothing));
+			view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, material.repeat, (view.smoothing || material.smoothing));
 			#if !openfl_legacy
 			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 			#else
-			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, FlxDrawBaseCommand.blendToInt(blending));
+			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, FlxDrawBaseCommand.blendToInt(material.blendMode));
 			#end
 		}
 		
@@ -106,14 +107,13 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		colors = null;
 	}
 	
-	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
-		?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader):Bool
+	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Bool
 	{
 		return (this.type == type 
 			&& this.graphics == graphic 
 			&& this.colored == colored
-			&& this.blending == blend
-			&& this.smoothing == smooth);
+			&& this.material.blendMode == material.blendMode
+			&& this.material.smoothing == material.smoothing);
 	}
 	
 	public function addTriangles(data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -203,12 +203,12 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		#end
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
-		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, blend, smoothing);
+		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, material);
 	}
 	
-	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
+	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
 		var prevVerticesPos:Int = vertexPos;
 		var prevIndicesPos:Int = indexPos;
@@ -314,7 +314,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		return (this.numTriangles + numTriangles <= FlxCameraView.TRIANGLES_PER_BATCH);
 	}
 	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void
+	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void
 	{
 		var prevVerticesPos:Int = vertexPos;
 		var prevIndicesPos:Int = indexPos;

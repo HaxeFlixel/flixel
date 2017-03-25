@@ -1,5 +1,6 @@
 package flixel.system.render.hardware.tile;
 
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
@@ -42,7 +43,7 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 		drawData = null;
 	}
 	
-	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool):Void
+	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
 		setNext(matrix.tx);
 		setNext(matrix.ty);
@@ -99,11 +100,11 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 			flags |= Tilesheet.TILE_TRANS_COLOR;
 		#end
 		
-		flags |= FlxDrawBaseCommand.blendToInt(blending);
+		flags |= FlxDrawBaseCommand.blendToInt(material.blendMode);
 		
 		#if !(nme && flash)
 		view.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
-			(view.smoothing || smoothing), flags,
+			(view.smoothing || material.smoothing), flags,
 			#if !openfl_legacy shader, #end
 			position);
 		#end

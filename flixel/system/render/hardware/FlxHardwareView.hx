@@ -140,9 +140,9 @@ class FlxHardwareView extends FlxCameraView
 		drawStack.copyPixels(frame, pixels, material, sourceRect, destPoint, transform);
 	}
 	
-	override public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	override public function drawTriangles(graphic:FlxGraphic, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		drawStack.drawTriangles(material, data, matrix, transform);
+		drawStack.drawTriangles(graphic, material, data, matrix, transform);
 	}
 	
 	override public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,

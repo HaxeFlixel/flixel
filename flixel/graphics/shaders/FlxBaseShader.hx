@@ -1,5 +1,6 @@
 package flixel.graphics.shaders;
 
+#if (openfl >= "4.0.0")
 class FlxBaseShader extends FlxShader
 {
 	public function new(vertexSource:String, fragmentSource:String) 
@@ -13,3 +14,9 @@ class FlxBaseShader extends FlxShader
 		#end
 	}
 }
+#else
+class FlxBaseShader 
+{
+	public function new(vertexSource:String, fragmentSource:String) {}
+}
+#end

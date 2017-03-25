@@ -320,10 +320,10 @@ class FlxCamera extends FlxBasic
 			view.copyPixels(frame, pixels, material, sourceRect, destPoint, transform);
 	}
 	
-	public inline function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	public inline function drawTriangles(graphic:FlxGraphic, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		if (view != null)
-			view.drawTriangles(material, data, matrix, transform);
+			view.drawTriangles(graphic, material, data, matrix, transform);
 	}
 	
 	public inline function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,

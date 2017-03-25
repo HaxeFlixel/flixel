@@ -211,7 +211,7 @@ class FlxCameraView implements IFlxDestroyable
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform):Void {}
 	
-	public function drawTriangles(material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
+	public function drawTriangles(graphic:FlxGraphic, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
 	public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void {}
