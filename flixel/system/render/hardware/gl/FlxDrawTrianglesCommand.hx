@@ -118,6 +118,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			GL.uniform2f(shader.data.uTextureSize.index, graphics.width, graphics.height);
 		}
 		
+		material.apply(renderSession.gl);
+		
 		var red:Float = 1.0;
 		var green:Float = 1.0;
 		var blue:Float = 1.0;

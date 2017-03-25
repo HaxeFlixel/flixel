@@ -1,54 +1,86 @@
 package flixel.graphics;
 
 import flixel.graphics.shaders.FlxShader;
+import flixel.system.render.hardware.gl.GLUtils;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.gl.GLProgram;
+import openfl.utils.Float32Array;
+
+#if (openfl >= "4.0.0")
 import openfl.display.ShaderData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
-import openfl.gl.GLProgram;
-import openfl.utils.Float32Array;
+#end
 
 @:access(openfl.display.ShaderInput)
 @:access(openfl.display.ShaderParameter)
 @:access(openfl.display.Shader)
 
-// if shader is null, then try to batch material
-// of shader isn't null, then look at the material properties to decide if batching is possible (number of textures)
-// if batching is impossible, then draw object separately???
-// if objects have the same material then we could try to batch them too.
-
-// material property `batchable` ??? !!!!!!!!!!!!!!
-
-// TODO: batch with previous (with material with the same shader)??? !!!!!!
+// TODO: single quad draw element...
 
 class FlxMaterial implements IFlxDestroyable
 {
-	private static inline var DEFAULT_TEXTURE:String = "uImage0";
+	/**
+	 * Name of the default texture for all the shaders.
+	 */
+	public static inline var DEFAULT_TEXTURE:String = "uImage0";
 	
 	private static var uniformMatrix2:Float32Array = new Float32Array(4);
 	private static var uniformMatrix3:Float32Array = new Float32Array(9);
 	private static var uniformMatrix4:Float32Array = new Float32Array(16);
 	
+	/**
+	 * Shader of the material. Different shaders could have the same shader, 
+	 * but material stores different data (uniforms, textures).
+	 */
 	public var shader(default, set):FlxShader;
 	
+	/**
+	 * Data of the material, stores values for shader uniforms.
+	 * Use this property only after setting shader of the material, or you could get null pointer access error.
+	 */
+	#if (openfl >= "4.0.0")
 	public var data(default, null):ShaderData;
+	#else
+	public var data(default, null):Dynamic;
+	#end
 	
+	/**
+	 * Default texture for the shader.
+	 * If your shader uses texture, then set it by this property, not by `setTexture()` method.
+	 */
 	public var texture:FlxGraphic;
 	
+	/**
+	 * Blend mode for the material
+	 */
 	public var blendMode:BlendMode = null;
 	
+	/**
+	 * Tells if textures of the material should be smoothed or not.
+	 */
 	public var smoothing:Bool = false;
 	
+	/**
+	 * Tells if textures of the material should be repeated or not.
+	 */
 	public var repeat:Bool = true;
 	
+	/**
+	 * Tells if this material should be batched.
+	 */
+	public var batchable:Bool = false; // TODO: use this property...
+	
+	#if (openfl >= "4.0.0")
 	private var inputTextures:Array<ShaderInput<FlxGraphic>>;
 	private var paramBool:Array<ShaderParameter<Bool>>;
 	private var paramFloat:Array<ShaderParameter<Float>>;
 	private var paramInt:Array<ShaderParameter<Int>>;
+	#end
 	
 	private var gl:GLRenderContext;
 	
@@ -56,12 +88,12 @@ class FlxMaterial implements IFlxDestroyable
 	
 	public function new() 
 	{
-		data = new ShaderData(null);
-		
+		#if (openfl >= "4.0.0")
 		inputTextures = [];
 		paramBool = [];
 		paramFloat = [];
 		paramInt = [];
+		#end
 	}
 	
 	public function destroy():Void
@@ -72,43 +104,42 @@ class FlxMaterial implements IFlxDestroyable
 		
 		gl = null;
 		
+		#if (openfl >= "4.0.0")
 		inputTextures = null;
 		paramBool = null;
 		paramFloat = null;
 		paramInt = null;
+		#end
 	}
 	
+	/**
+	 * Uploads all the stored uniforms to the GPU.
+	 * @param	gl	Render context.
+	 */
 	public function apply(gl:GLRenderContext):Void
 	{
+		#if FLX_RENDER_GL
 		if (shader == null)
 			return;
 		
 		updateDataIndices(gl);
 		
-		var textureCount:Int = 0;
+		var textureCount:Int = 1;
 		
 		for (input in inputTextures) 
 		{
 			if (input.name == DEFAULT_TEXTURE)
-				input.input = texture;
+				continue;
 			
 			if (input.input != null)
 			{
 				gl.activeTexture(gl.TEXTURE0 + textureCount);
 				gl.bindTexture(gl.TEXTURE_2D, input.input.bitmap.getTexture(gl));
 				
-				gl.uniform1i(input.index, textureCount); 
+				gl.uniform1i(input.index, textureCount);
 				
-				if (smoothing) 
-				{	
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
-				} 
-				else 
-				{
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);	
-				}
+				GLUtils.setTextureSmoothing(smoothing);
+				GLUtils.setTextureWrapping(repeat);
 			}
 			
 			textureCount++;
@@ -203,6 +234,7 @@ class FlxMaterial implements IFlxDestroyable
 		for (parameter in paramInt) 
 		{
 			var value:Array<Int> = parameter.value;
+			index = parameter.index;
 			
 			if (value != null) 
 			{
@@ -225,11 +257,19 @@ class FlxMaterial implements IFlxDestroyable
 				}
 			} 
 		}
-		
+		#end
 	}
 	
+	/**
+	 * Sets the texture by its name.
+	 * Don't set "uImage0" texture with this method (it just will be ignored).
+	 * 
+	 * @param	name		name of the texture uniform
+	 * @param	texture		texture to set.
+	 */
 	public function setTexture(name:String, texture:FlxGraphic):Void
 	{
+		#if (openfl >= "4.0.0")
 		for (input in inputTextures)
 		{
 			if (input.name == name)
@@ -238,10 +278,12 @@ class FlxMaterial implements IFlxDestroyable
 				return;
 			}
 		}
+		#end
 	}
 	
 	private function set_shader(value:FlxShader):FlxShader
 	{
+		#if FLX_RENDER_GL
 		if (shader != value)
 		{
 			shader = value;
@@ -250,10 +292,12 @@ class FlxMaterial implements IFlxDestroyable
 			if (shader != null)
 				initData();
 		}
+		#end
 		
 		return shader = value;
 	}
 	
+	#if FLX_RENDER_GL
 	private function updateDataIndices(gl:GLRenderContext):Void
 	{
 		if (this.gl != gl && gl != null && shader != null)
@@ -282,6 +326,7 @@ class FlxMaterial implements IFlxDestroyable
 		if (shader != null && !isShaderInit)
 		{
 			data = new ShaderData(null);
+			
 			inputTextures.splice(0, inputTextures.length);
 			paramBool.splice(0, paramBool.length);
 			paramFloat.splice(0, paramFloat.length);
@@ -295,11 +340,13 @@ class FlxMaterial implements IFlxDestroyable
 				var name:String = field.name;
 				var index:Int = field.index;
 				
-				// Don't add attributes (we don't need them, for now...)
 				if (!shader.__isUniform.get(name))
+				{
+					// Don't add attributes (we don't need them, for now...)
 					continue;
+				}
 				
-				if (Std.is(field, ShaderInput))
+				if (!Reflect.hasField(field, "type"))
 				{
 					var input = new ShaderInput<FlxGraphic>();
 					input.name = name;
@@ -342,6 +389,6 @@ class FlxMaterial implements IFlxDestroyable
 			
 			isShaderInit = true;
 		}
-		
 	}
+	#end
 }
