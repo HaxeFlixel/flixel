@@ -402,6 +402,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		setShader();
 		uploadData();
 		
+		material.apply(gl);
+		
 		var currentTexture:FlxGraphic;
 		var nextTexture:FlxGraphic;
 		currentTexture = nextTexture = state.texture;
@@ -422,6 +424,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		for (i in 0...numQuads)
 		{
 			state = states[i];
+			material = state.material;
 			
 			nextTexture = state.texture;
 			nextBlendMode = material.blendMode;

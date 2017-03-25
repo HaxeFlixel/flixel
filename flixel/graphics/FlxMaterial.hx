@@ -9,10 +9,12 @@ import openfl.display.ShaderData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
+import openfl.gl.GLProgram;
 import openfl.utils.Float32Array;
 
 @:access(openfl.display.ShaderInput)
 @:access(openfl.display.ShaderParameter)
+@:access(openfl.display.Shader)
 
 // if shader is null, then try to batch material
 // of shader isn't null, then look at the material properties to decide if batching is possible (number of textures)
@@ -25,6 +27,8 @@ import openfl.utils.Float32Array;
 
 class FlxMaterial implements IFlxDestroyable
 {
+	private static inline var DEFAULT_TEXTURE:String = "uImage0";
+	
 	private static var uniformMatrix2:Float32Array = new Float32Array(4);
 	private static var uniformMatrix3:Float32Array = new Float32Array(9);
 	private static var uniformMatrix4:Float32Array = new Float32Array(16);
@@ -34,8 +38,6 @@ class FlxMaterial implements IFlxDestroyable
 	public var data(default, null):ShaderData;
 	
 	public var texture:FlxGraphic;
-	
-	public var numTextures(get, null):Int;
 	
 	public var blendMode:BlendMode = null;
 	
@@ -48,17 +50,27 @@ class FlxMaterial implements IFlxDestroyable
 	private var paramFloat:Array<ShaderParameter<Float>>;
 	private var paramInt:Array<ShaderParameter<Int>>;
 	
-	private var numUniforms:Int = 0;
+	private var gl:GLRenderContext;
+	
+	private var isShaderInit:Bool = false;
 	
 	public function new() 
 	{
 		data = new ShaderData(null);
+		
+		inputTextures = [];
+		paramBool = [];
+		paramFloat = [];
+		paramInt = [];
 	}
 	
 	public function destroy():Void
 	{
-		data = null;
 		shader = null;
+		texture = null;
+		data = null;
+		
+		gl = null;
 		
 		inputTextures = null;
 		paramBool = null;
@@ -66,24 +78,28 @@ class FlxMaterial implements IFlxDestroyable
 		paramInt = null;
 	}
 	
-	// TODO: call this after setting the shader shader...
 	public function apply(gl:GLRenderContext):Void
 	{
-		initData();
+		if (shader == null)
+			return;
+		
+		updateDataIndices(gl);
 		
 		var textureCount:Int = 0;
 		
 		for (input in inputTextures) 
 		{
-			if (input.input != null) 
+			if (input.name == DEFAULT_TEXTURE)
+				input.input = texture;
+			
+			if (input.input != null)
 			{
 				gl.activeTexture(gl.TEXTURE0 + textureCount);
 				gl.bindTexture(gl.TEXTURE_2D, input.input.bitmap.getTexture(gl));
 				
-				// TODO: call this line when number of textures > 1.
 				gl.uniform1i(input.index, textureCount); 
 				
-				if (input.smoothing) 
+				if (smoothing) 
 				{	
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 					gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	
@@ -98,11 +114,11 @@ class FlxMaterial implements IFlxDestroyable
 			textureCount++;
 		}
 		
-		var index:Dynamic = 0;
+		var index:Int = 0;
 		
 		for (parameter in paramBool) 
 		{
-			var value = parameter.value;
+			var value:Array<Bool> = parameter.value;
 			index = parameter.index;
 			
 			if (value != null) 
@@ -129,7 +145,7 @@ class FlxMaterial implements IFlxDestroyable
 		
 		for (parameter in paramFloat) 
 		{
-			var value = parameter.value;
+			var value:Array<Float> = parameter.value;
 			index = parameter.index;
 			
 			if (value != null) 
@@ -186,7 +202,7 @@ class FlxMaterial implements IFlxDestroyable
 		
 		for (parameter in paramInt) 
 		{
-			var value = parameter.value;
+			var value:Array<Int> = parameter.value;
 			
 			if (value != null) 
 			{
@@ -228,20 +244,49 @@ class FlxMaterial implements IFlxDestroyable
 	{
 		if (shader != value)
 		{
-			inputTextures = [];
-			paramBool = [];
-			paramFloat = [];
-			paramInt = [];
-			numUniforms = 0;
+			shader = value;
+			isShaderInit = false;
+			
+			if (shader != null)
+				initData();
 		}
 		
 		return shader = value;
 	}
 	
+	private function updateDataIndices(gl:GLRenderContext):Void
+	{
+		if (this.gl != gl && gl != null && shader != null)
+		{
+			this.gl = gl;
+			
+			var glProgram:GLProgram = shader.glProgram;
+			
+			for (input in inputTextures)
+				input.index = gl.getUniformLocation(glProgram, input.name);
+			
+			for (parameter in paramBool) 
+				parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+			
+			for (parameter in paramFloat) 
+				parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+			
+			for (parameter in paramInt) 
+				parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+			
+		}
+	}
+	
 	private function initData():Void
 	{
-		if (shader != null && numUniforms == 0)
+		if (shader != null && !isShaderInit)
 		{
+			data = new ShaderData(null);
+			inputTextures.splice(0, inputTextures.length);
+			paramBool.splice(0, paramBool.length);
+			paramFloat.splice(0, paramFloat.length);
+			paramInt.splice(0, paramInt.length);
+			
 			var fields = Reflect.fields(shader.data);
 			
 			for (fieldName in fields)
@@ -249,6 +294,10 @@ class FlxMaterial implements IFlxDestroyable
 				var field = Reflect.field(shader.data, fieldName);
 				var name:String = field.name;
 				var index:Int = field.index;
+				
+				// Don't add attributes (we don't need them, for now...)
+				if (!shader.__isUniform.get(name))
+					continue;
 				
 				if (Std.is(field, ShaderInput))
 				{
@@ -266,7 +315,7 @@ class FlxMaterial implements IFlxDestroyable
 					{
 						case BOOL, BOOL2, BOOL3, BOOL4:
 							var parameter = new ShaderParameter<Bool>();
-							parameter.name = field.name;
+							parameter.name = name;
 							parameter.type = parameterType;
 							parameter.index = index;
 							paramBool.push(parameter);
@@ -289,15 +338,10 @@ class FlxMaterial implements IFlxDestroyable
 							Reflect.setField(data, name, parameter);
 					}
 				}
-				
-				numUniforms++;
 			}
+			
+			isShaderInit = true;
 		}
 		
-	}
-	
-	private function get_numTextures():Int
-	{
-		return inputTextures.length;
 	}
 }
