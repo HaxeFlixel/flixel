@@ -145,12 +145,10 @@ class FlxMaterial implements IFlxDestroyable
 			textureCount++;
 		}
 		
-		var index:Int = 0;
-		
 		for (parameter in paramBool) 
 		{
 			var value:Array<Bool> = parameter.value;
-			index = parameter.index;
+			var index = parameter.index;
 			
 			if (value != null) 
 			{
@@ -177,7 +175,7 @@ class FlxMaterial implements IFlxDestroyable
 		for (parameter in paramFloat) 
 		{
 			var value:Array<Float> = parameter.value;
-			index = parameter.index;
+			var index = parameter.index;
 			
 			if (value != null) 
 			{
@@ -234,7 +232,7 @@ class FlxMaterial implements IFlxDestroyable
 		for (parameter in paramInt) 
 		{
 			var value:Array<Int> = parameter.value;
-			index = parameter.index;
+			var index = parameter.index;
 			
 			if (value != null) 
 			{
