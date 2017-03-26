@@ -7,6 +7,9 @@ import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import haxe.ds.StringMap;
+import haxe.xml.Fast;
+import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.display.Sprite;
 
@@ -30,6 +33,57 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	private static var sprite:Sprite = new Sprite();
 	private static var matrix:FlxMatrix = new FlxMatrix();
+	
+	/**
+	 * Loads all the sprites packed by TexturePacker with polygon algorithm.
+	 * Export format: XML (generic) with Algorithm: Polygon
+	 * @author loudo
+	 * 
+	 * @param	Description		Path to Xml file or its contents.
+	 * @param	TextureSize		The size of texture for atlas (required for uv calculations).
+	 * @return	Collection of `FlxTrianglesData` objects for each of packed sprite.
+	 */
+	public static function fromTexturePackerXml(Description:String, TextureSize:FlxPoint):StringMap<FlxTrianglesData>
+	{
+		if (Assets.exists(Description))
+			Description = Assets.getText(Description);
+		
+		var map:StringMap<FlxTrianglesData> = new StringMap<FlxTrianglesData>();
+		var fast:Fast = new Fast(Xml.parse(Description).firstElement());
+		
+		for (sprite in fast.nodes.sprite)
+		{
+			var indices:Array<Int> = sprite.node.triangles.innerData.toString().split(' ').map(function (str:String) return Std.parseInt(str));
+			var uv:Array<Int> = sprite.node.verticesUV.innerData.toString().split(' ').map(function (str:String) return Std.parseInt(str));
+			var vertices:Array<Float> = sprite.node.vertices.innerData.toString().split(' ').map(function (str:String) return Std.parseFloat(str));
+			
+			var drawIndices:DrawData<Int> = new DrawData<Int>();
+			for (i in 0...indices.length)
+				drawIndices[i] = indices[i];
+			
+			var drawUV:DrawData<Float> = new DrawData<Float>();
+			var uvCoord:Float;
+			for (i in 0...uv.length)
+			{
+				uvCoord = uv[i];
+				uvCoord /= (i % 2 == 0) ? TextureSize.x : TextureSize.y;
+				drawUV[i] = uvCoord;
+			}
+			
+			var drawVertices:DrawData<Float> = new DrawData<Float>();
+			for (i in 0...vertices.length)
+				drawVertices[i] = vertices[i];
+			
+			var data:FlxTrianglesData = new FlxTrianglesData();
+			data.vertices = drawVertices;
+			data.uvs = drawUV;
+			data.indices = drawIndices;
+			
+			map.set(sprite.att.n, data);
+		}
+		
+		return map;
+	}
 	
 	/**
 	 * The length of `indices` vector.
