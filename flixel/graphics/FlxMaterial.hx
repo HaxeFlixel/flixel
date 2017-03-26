@@ -53,7 +53,7 @@ class FlxMaterial implements IFlxDestroyable
 	 * Default texture for the shader.
 	 * If your shader uses texture, then set it by this property, not by `setTexture()` method.
 	 */
-	public var texture:FlxGraphic;
+	public var texture:FlxGraphic; // TODO: remove it (because i don't use it)???
 	
 	/**
 	 * Blend mode for the material
@@ -76,7 +76,7 @@ class FlxMaterial implements IFlxDestroyable
 	public var batchable:Bool = false; // TODO: use this property...
 	
 	#if (openfl >= "4.0.0")
-	private var inputTextures:Array<ShaderInput<FlxGraphic>>;
+	private var inputTextures:Array<ShaderInput<FlxGraphic>>; // TODO: convert it to Array<ShaderInput<BitmapData>>...
 	private var paramBool:Array<ShaderParameter<Bool>>;
 	private var paramFloat:Array<ShaderParameter<Float>>;
 	private var paramInt:Array<ShaderParameter<Int>>;

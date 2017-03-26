@@ -64,6 +64,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public var next:FlxDrawBaseCommand<T>;
 	
+	// TODO: convert `graphic:FlxGraphic` `to bitmap:BitmapData`???
 	public var graphics:FlxGraphic;
 	public var material:FlxMaterial;
 	public var shader:FlxShader;
