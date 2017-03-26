@@ -14,6 +14,7 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
@@ -62,7 +63,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		}
 		else
 		{
-			view.canvas.graphics.beginBitmapFill(graphics.bitmap, null, material.repeat, (view.smoothing || material.smoothing));
+			view.canvas.graphics.beginBitmapFill(bitmap, null, material.repeat, (view.smoothing || material.smoothing));
 			#if !openfl_legacy
 			view.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 			#else
@@ -107,10 +108,10 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		colors = null;
 	}
 	
-	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Bool
+	override public function equals(type:FlxDrawItemType, bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Bool
 	{
 		return (this.type == type 
-			&& this.graphics == graphic 
+			&& this.bitmap == bitmap 
 			&& this.colored == colored
 			&& this.material.blendMode == material.blendMode
 			&& this.material.smoothing == material.smoothing);
@@ -205,10 +206,10 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
-		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, material);
+		addUVQuad(frame.parent.bitmap, frame.frame, frame.uv, matrix, transform, material);
 	}
 	
-	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
+	override public function addUVQuad(bitmap:BitmapData, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
 		var prevVerticesPos:Int = vertexPos;
 		var prevIndicesPos:Int = indexPos;

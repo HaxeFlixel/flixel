@@ -9,6 +9,7 @@ import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
@@ -64,8 +65,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public var next:FlxDrawBaseCommand<T>;
 	
-	// TODO: convert `graphic:FlxGraphic` `to bitmap:BitmapData`???
-	public var graphics:FlxGraphic;
+	public var bitmap:BitmapData;
 	public var material:FlxMaterial;
 	public var shader:FlxShader;
 	public var colored:Bool = false;
@@ -85,7 +85,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public function reset():Void
 	{
-		graphics = null;
+		bitmap = null;
 		material = null;
 		shader = null;
 		hasColorOffsets = false;
@@ -96,7 +96,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		graphics = null;
+		bitmap = null;
 		material = null;
 		shader = null;
 		next = null;
@@ -108,14 +108,14 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void {}
 	
-	public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void {}
+	public function addUVQuad(bitmap:BitmapData, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void {}
 	
-	public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Bool
+	public function equals(type:FlxDrawItemType, bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Bool
 	{
 		if (hasColorOffsets)	return false;
 		
 		return (this.type == type 
-			&& this.graphics == graphic 
+			&& this.bitmap == bitmap 
 			&& this.colored == colored
 			&& this.hasColorOffsets == hasColorOffsets
 			&& this.material.blendMode == material.blendMode
@@ -124,9 +124,9 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 			&& this.shader == material.shader);
 	}
 	
-	public function set(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Void
+	public function set(bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial):Void
 	{
-		this.graphics = graphic;
+		this.bitmap = bitmap;
 		this.material = material;
 		this.shader = material.shader;
 		this.colored = colored;
@@ -150,6 +150,6 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	private inline function get_textured():Bool
 	{
-		return (graphics != null);
+		return (bitmap != null);
 	}
 }

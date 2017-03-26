@@ -155,16 +155,16 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override public function drawTriangles(graphic:FlxGraphic, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
+	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
 		if (material == null && transform == null)
 			return;
 		
 		trianglesSprite.graphics.clear();
 		
-		if (graphic != null)
+		if (bitmap != null)
 		{
-			trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, material.repeat, (this.smoothing || material.smoothing));
+			trianglesSprite.graphics.beginBitmapFill(bitmap, null, material.repeat, (this.smoothing || material.smoothing));
 			trianglesSprite.graphics.drawTriangles(data.vertices, data.indices, data.uvs);
 		}
 		else
@@ -180,11 +180,11 @@ class FlxBlitView extends FlxCameraView
 		data.dirty = false;
 	}
 	
-	override public function drawUVQuad(graphic:FlxGraphic, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
+	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
 		trianglesSprite.graphics.clear();
-		trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, true, smoothing);
+		trianglesSprite.graphics.beginBitmapFill(bitmap, null, true, smoothing);
 		
 		rectVertices[0] = 0;
 		rectVertices[1] = 0;

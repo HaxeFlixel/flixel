@@ -1288,16 +1288,11 @@ class FlxSprite extends FlxObject
 		var oldGraphic:FlxGraphic = graphic;
 		
 		if ((graphic != Value) && (Value != null))
-		{
 			Value.useCount++;
-		}
 		
 		if ((oldGraphic != null) && (oldGraphic != Value))
-		{
 			oldGraphic.useCount--;
-		}
 		
-		material.texture = Value;
 		return graphic = Value;
 	}
 	

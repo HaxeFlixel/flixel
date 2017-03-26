@@ -50,12 +50,6 @@ class FlxMaterial implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Default texture for the shader.
-	 * If your shader uses texture, then set it by this property, not by `setTexture()` method.
-	 */
-	public var texture:FlxGraphic; // TODO: remove it (because i don't use it)???
-	
-	/**
 	 * Blend mode for the material
 	 */
 	public var blendMode:BlendMode = null;
@@ -76,7 +70,7 @@ class FlxMaterial implements IFlxDestroyable
 	public var batchable:Bool = false; // TODO: use this property...
 	
 	#if (openfl >= "4.0.0")
-	private var inputTextures:Array<ShaderInput<FlxGraphic>>; // TODO: convert it to Array<ShaderInput<BitmapData>>...
+	private var inputTextures:Array<ShaderInput<BitmapData>>;
 	private var paramBool:Array<ShaderParameter<Bool>>;
 	private var paramFloat:Array<ShaderParameter<Float>>;
 	private var paramInt:Array<ShaderParameter<Int>>;
@@ -99,7 +93,6 @@ class FlxMaterial implements IFlxDestroyable
 	public function destroy():Void
 	{
 		shader = null;
-		texture = null;
 		data = null;
 		
 		gl = null;
@@ -134,7 +127,7 @@ class FlxMaterial implements IFlxDestroyable
 			if (input.input != null)
 			{
 				gl.activeTexture(gl.TEXTURE0 + textureCount);
-				gl.bindTexture(gl.TEXTURE_2D, input.input.bitmap.getTexture(gl));
+				gl.bindTexture(gl.TEXTURE_2D, input.input.getTexture(gl));
 				
 				gl.uniform1i(input.index, textureCount);
 				
@@ -265,7 +258,7 @@ class FlxMaterial implements IFlxDestroyable
 	 * @param	name		name of the texture uniform
 	 * @param	texture		texture to set.
 	 */
-	public function setTexture(name:String, texture:FlxGraphic):Void
+	public function setTexture(name:String, texture:BitmapData):Void
 	{
 		#if (openfl >= "4.0.0")
 		for (input in inputTextures)
@@ -346,7 +339,7 @@ class FlxMaterial implements IFlxDestroyable
 				
 				if (!Reflect.hasField(field, "type"))
 				{
-					var input = new ShaderInput<FlxGraphic>();
+					var input = new ShaderInput<BitmapData>();
 					input.name = name;
 					input.index = index;
 					inputTextures.push(input);

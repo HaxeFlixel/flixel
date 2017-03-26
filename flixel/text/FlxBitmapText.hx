@@ -18,6 +18,7 @@ import haxe.Utf8;
 import openfl.geom.ColorTransform;
 using flixel.util.FlxColorTransformUtil;
 
+// TODO: use flxmaterial!!!!
 // TODO: use Utf8 util for converting text to upper/lower case
 
 /**

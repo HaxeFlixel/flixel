@@ -10,6 +10,7 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 import flixel.graphics.shaders.FlxShader;
@@ -279,10 +280,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
-		addUVQuad(frame.parent, frame.frame, frame.uv, matrix, transform, material);
+		addUVQuad(frame.parent.bitmap, frame.frame, frame.uv, matrix, transform, material);
 	}
 	
-	override public function addUVQuad(texture:FlxGraphic, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
+	override public function addUVQuad(bitmap:BitmapData, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
 	{
 		// get the uvs for the texture
 		var uvx:Float = uv.x;
@@ -383,7 +384,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		colors[i + 5] = colors[i + 11] = colors[i + 17] = colors[i + 23] = color;
 		
 		var state:RenderState = states[numQuads];
-		state.set(texture, material);
+		state.set(bitmap, material);
 		
 		numQuads++;
 	}
@@ -404,9 +405,9 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		material.apply(gl);
 		
-		var currentTexture:FlxGraphic;
-		var nextTexture:FlxGraphic;
-		currentTexture = nextTexture = state.texture;
+		var currentTexture:BitmapData;
+		var nextTexture:BitmapData;
+		currentTexture = nextTexture = state.bitmap;
 		
 		var currentBlendMode:BlendMode;
 		var nextBlendMode:BlendMode;
@@ -426,7 +427,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			state = states[i];
 			material = state.material;
 			
-			nextTexture = state.texture;
+			nextTexture = state.bitmap;
 			nextBlendMode = material.blendMode;
 			nextSmoothing = material.smoothing;
 			
@@ -536,22 +537,22 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		#end
 	}
 	
-	private function renderBatch(texture:FlxGraphic, size:Int, startIndex:Int, smoothing:Bool = false):Void
+	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, smoothing:Bool = false):Void
 	{
 		if (size == 0)
 			return;
 		
-		var glTexture = (texture != null) ? texture.bitmap.getTexture(gl) : null;
-		
-		GL.activeTexture(GL.TEXTURE0);
-		GL.bindTexture(GL.TEXTURE_2D, glTexture);
-		
-		if (texture != null)
+		if (bitmap != null)
 		{
+			var glTexture = bitmap.getTexture(gl);
+			
+			GL.activeTexture(GL.TEXTURE0);
+			GL.bindTexture(GL.TEXTURE_2D, glTexture);
+			
 			GLUtils.setTextureSmoothing(material.smoothing);
 			GLUtils.setTextureWrapping(material.repeat);
 			
-			GL.uniform2f(shader.data.uTextureSize.index, texture.width, texture.height);
+			GL.uniform2f(shader.data.uTextureSize.index, bitmap.width, bitmap.height);
 		}
 		
 		// now draw those suckas!
@@ -593,14 +594,14 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		shader = null;
 	}
 	
-	override public function equals(type:FlxDrawItemType, graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false,
+	override public function equals(type:FlxDrawItemType, bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false,
 		material:FlxMaterial):Bool
 	{
-		if (this.material == material && this.graphics == graphics)
+		if (this.material == material && this.bitmap == bitmap)
 			return true;
 		
 		var bothShadersAreNull:Bool = (material.shader == null && shader == null);
-		var hasGraphic:Bool = (graphic != null);
+		var hasGraphic:Bool = (bitmap != null);
 		var bothHasGraphicAreSame:Bool = (hasGraphic == textured);
 		
 		return bothShadersAreNull && bothHasGraphicAreSame;
@@ -629,7 +630,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 
 class RenderState implements IFlxDestroyable
 {
-	public var texture:FlxGraphic;
+	public var bitmap:BitmapData;
 	
 	public var material:FlxMaterial;
 	
@@ -638,15 +639,15 @@ class RenderState implements IFlxDestroyable
 	
 	public function new() {}
 	
-	public inline function set(texture:FlxGraphic, material:FlxMaterial):Void
+	public inline function set(bitmap:BitmapData, material:FlxMaterial):Void
 	{
-		this.texture = texture;
+		this.bitmap = bitmap;
 		this.material = material;
 	}
 	
 	public function destroy():Void
 	{
-		this.texture = null;
+		this.bitmap = null;
 		this.material = null;
 	}
 }
