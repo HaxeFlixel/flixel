@@ -5,13 +5,13 @@
 [![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel-demos.svg?style=flat-square&label=haxelib)](http://lib.haxe.org/p/flixel-demos)
 [![Build Status](https://img.shields.io/travis/HaxeFlixel/flixel-demos.svg?style=flat-square)](https://travis-ci.org/HaxeFlixel/flixel-demos)
 
-##About
+## About
 
 This is a collection of **75+ demos** using the HaxeFlixel engine and demonstrating its capabilities. All the ones that are compatible with flash can be found on [haxeflixel.com/demos](http://haxeflixel.com/demos/).
 
 ![](demoSelection.png)
 
-##Installation
+## Installation
 
 To get the master branch / the release compatible with the latest flixel release, run:
 
@@ -19,7 +19,7 @@ To get the master branch / the release compatible with the latest flixel release
 
 You can then use [flixel-tools](https://github.com/HaxeFlixel/flixel-tools) `create` command to create one of the demos in a directory of your choice, or alternatively run them directly from the haxelib directory.
 
-##For Developers
+## For Developers
 
 If you are wanting to contribute code, please review the follwing documentation:
 
