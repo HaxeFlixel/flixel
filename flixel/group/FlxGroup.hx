@@ -94,10 +94,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	/**
-	 * WARNING: This will remove this group entirely. Use `kill()` if you want to disable it
-	 * temporarily only and be able to `revive()` it later.
-	 * Override this function to handle any deleting or "shutdown" type operations you might need,
-	 * such as removing traditional Flash children like `Sprite` objects.
+	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
+	 * It may even cause crashes if it is still part of a group or state.
+	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
+	 * 
+	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
+	 * 
+	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
+	 * Don't forget to call `super.destroy()`!
 	 */
 	override public function destroy():Void
 	{
