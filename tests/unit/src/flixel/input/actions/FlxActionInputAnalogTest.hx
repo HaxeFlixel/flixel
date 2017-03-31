@@ -252,6 +252,10 @@ class FlxActionInputAnalogTest extends FlxTest
 	@Test
 	function testGamepad()
 	{
+		#if flash
+		return;
+		#end
+		
 		var inputs = 
 		[
 			{input:FlxGamepadInputID.LEFT_ANALOG_STICK, value:FlxAnalogAxis.X, label:"left_stick_x"}, 
@@ -326,7 +330,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		#end
 	}
 	
-	#if FLX_GAMEINPUT_API
+	#if (!flash && FLX_GAMEINPUT_API)
 	private function makeFakeGamepad()
 	{
 		var xinput = @:privateAccess new Gamepad(0);
@@ -553,7 +557,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		Gamepad.axis[stick.x] = X;
 		Gamepad.axis[stick.y] = Y;
 		
-		#elseif FLX_GAMEINPUT_API
+		#elseif (FLX_GAMEINPUT_API && !flash)
 		
 		var controlX:GameInputControl = Gamepad._device.getControlAt(stick.x);
 		var controlY:GameInputControl = Gamepad._device.getControlAt(stick.y);

@@ -304,6 +304,10 @@ class FlxActionManagerTest extends FlxTest
 	@Test
 	function testGamepad()
 	{
+		#if flash
+		return;
+		#end
+		
 		var t = new TestShell("device.");
 		
 		runFlxActionManagerDevice(GAMEPAD, t);
@@ -424,6 +428,10 @@ class FlxActionManagerTest extends FlxTest
 	@Test
 	function testDeviceConnectedDisconnected()
 	{
+		#if flash
+		return;
+		#end
+		
 		var testManager = new FlxActionManager();
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
 		var actionsJSON = Json.parse(managerText);
@@ -446,7 +454,7 @@ class FlxActionManagerTest extends FlxTest
 		Assert.isTrue(connectStr == "gamepad_0_xinput,gamepad_1_ps4");
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 0, 0, 0, 0, 0));
 		
-		#elseif FLX_GAMEINPUT_API
+		#elseif (!flash && FLX_GAMEINPUT_API)
 		
 		//The model identifiers say "unknown" here because we're not able to spoof all the way down to SDL, from which the gamepads originate
 		
@@ -480,7 +488,7 @@ class FlxActionManagerTest extends FlxTest
 		disconnectStr += (Std.string(Device) + "_" + ID + "_" + Model).toLowerCase();
 	}
 	
-	#if FLX_GAMEINPUT_API
+	#if (!flash && FLX_GAMEINPUT_API)
 	private function removeGamepad(g:Gamepad)
 	{
 		@:privateAccess GameInput.__onGamepadDisconnect(g);
