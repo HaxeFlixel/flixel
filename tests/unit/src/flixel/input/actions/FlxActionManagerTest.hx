@@ -1,12 +1,19 @@
 package flixel.input.actions;
+import openfl.ui.GameInputDevice;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.keyboard.FlxKey;
 import haxe.Json;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+import lime.ui.Gamepad;
+import openfl.events.GameInputEvent;
+import openfl.events.JoystickEvent;
+import openfl.ui.GameInput;
+import openfl.ui.GameInputControl;
 import steamwrap.data.ControllerConfig;
 import flixel.input.FlxInput.FlxInputState;
 import steamwrap.api.Controller;
@@ -27,6 +34,8 @@ class FlxActionManagerTest extends FlxTest
 	private var digital:Array<Array<String>>;
 	
 	private var valueTest = "";
+	private var connectStr:String = "";
+	private var disconnectStr:String = "";
 	
 	@Before
 	function before()
@@ -396,21 +405,107 @@ class FlxActionManagerTest extends FlxTest
 	}
 	
 	@Test
-	function testDeviceDisconnected()
+	function testDeviceConnectedDisconnected()
 	{
+		var testManager = new FlxActionManager();
+		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
+		var actionsJSON = Json.parse(managerText);
+		testManager.initFromJSON(actionsJSON, null, null);
 		
+		var menuSet:Int = testManager.getSetIndex("MenuControls");
+		testManager.activateSet(menuSet, FlxInputDevice.GAMEPAD, FlxInputDeviceID.ALL);
+		
+		connectStr = "";
+		disconnectStr = "";
+		
+		testManager.deviceConnected.add(deviceConnected);
+		testManager.deviceDisconnected.add(deviceRemoved);
+		
+		#if FLX_JOYSTICK_API
+		
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 0, 0, 0, 0, 0));
+		Assert.isTrue(connectStr == "gamepad_0_xinput");
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 1, 0, 2, 0, 0));
+		Assert.isTrue(connectStr == "gamepad_0_xinput,gamepad_1_ps4");
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 0, 0, 0, 0, 0));
+		/*
+		Assert.isTrue(disconnectStr == "gamepad_0_xinput");
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 1, 0, 2, 0, 0));
+		Assert.isTrue(disconnectStr == "gamepad_0_xinput,gamepad_1_ps4");*/
+		
+		#elseif FLX_GAMEINPUT_API
+		
+		//The model identifiers say "unknown" here because we're not able to spoof all the way down to SDL, from which the gamepads originate
+		
+		var xinput = makeFakeGamepad("0", "xinput", FlxGamepadModel.XINPUT);
+		Assert.isTrue(connectStr == "gamepad_1_unknown");
+		
+		var ps4 = makeFakeGamepad("1", "wireless controller", FlxGamepadModel.PS4);
+		Assert.isTrue(connectStr == "gamepad_1_unknown,gamepad_2_unknown");
+		
+		removeGamepad(xinput);
+		Assert.isTrue(disconnectStr == "gamepad_1_unknown");
+		
+		removeGamepad(ps4);
+		Assert.isTrue(disconnectStr == "gamepad_1_unknown,gamepad_2_unknown");
+		
+		#end
+		
+		testManager.deviceConnected.remove(deviceConnected);
+		testManager.deviceDisconnected.remove(deviceRemoved);
 	}
 	
-	@Test
-	function testDeviceConnected()
+	private function deviceConnected(Device:FlxInputDevice, ID:Int, Model:String)
 	{
-		
+		if (connectStr != "") connectStr += ",";
+		connectStr += (Std.string(Device) + "_" + ID + "_" + Model).toLowerCase();
 	}
 	
-	private function _onInputsChanged(arr:Array<FlxAction>)
+	private function deviceRemoved(Device:FlxInputDevice, ID:Int, Model:String)
 	{
-		trace("_onInputsChanged(" + arr + ")");
+		if (disconnectStr != "") disconnectStr += ",";
+		disconnectStr += (Std.string(Device) + "_" + ID + "_" + Model).toLowerCase();
 	}
+	
+	#if FLX_GAMEINPUT_API
+	private function removeGamepad(g:Gamepad)
+	{
+		@:privateAccess GameInput.__onGamepadDisconnect(g);
+	}
+	
+	private function makeFakeGamepad(id:String, name:String, model:FlxGamepadModel):Gamepad
+	{
+		var limegamepad = @:privateAccess new Gamepad(0);
+		@:privateAccess GameInput.__onGamepadConnect(limegamepad);
+		var gamepad = FlxG.gamepads.getByID(0);
+		gamepad.model = model;
+		var gid:GameInputDevice = @:privateAccess gamepad._device;
+		
+		@:privateAccess gid.id = id;
+		@:privateAccess gid.name = name;
+		
+		var control:GameInputControl = null;
+		
+		for (i in 0...6) {
+			
+			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
+			@:privateAccess gid.__axis.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		for (i in 0...15) {
+			
+			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
+			@:privateAccess gid.__button.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		gamepad.update();
+		return limegamepad;
+	}
+	#end
 	
 	@Test
 	function testAddRemoveSet()

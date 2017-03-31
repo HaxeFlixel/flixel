@@ -1,10 +1,16 @@
 package flixel.input.actions;
+import flash.ui.GameInputDevice;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogGamepad;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMousePosition;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
+import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadAnalogStick;
+import flixel.input.gamepad.FlxGamepadButton;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.math.FlxPoint;
 import flixel.util.FlxArrayUtil;
@@ -13,6 +19,11 @@ import haxe.PosInfos;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import lime.ui.Gamepad;
+import openfl.events.GameInputEvent;
+import openfl.events.JoystickEvent;
+import openfl.ui.GameInput;
+import openfl.ui.GameInputControl;
 
 import massive.munit.Assert;
 
@@ -244,17 +255,124 @@ class FlxActionInputAnalogTest extends FlxTest
 		testInputStates(test, clear, move, [pos1,pos2,pos3,pos4], axis, a, b, c, d, callbacks);
 	}
 	
+	@Test
 	function testGamepad()
 	{
-		//TODO
+		var inputs = 
+		[
+			{input:FlxGamepadInputID.LEFT_ANALOG_STICK, value:FlxAnalogAxis.X, label:"left_stick_x"}, 
+			{input:FlxGamepadInputID.LEFT_ANALOG_STICK, value:FlxAnalogAxis.Y, label:"left_stick_y"}, 
+			{input:FlxGamepadInputID.LEFT_ANALOG_STICK, value:FlxAnalogAxis.EITHER, label:"left_stick_either"}, 
+			{input:FlxGamepadInputID.LEFT_ANALOG_STICK, value:FlxAnalogAxis.BOTH, label:"left_stick_both"},
+			{input:FlxGamepadInputID.RIGHT_ANALOG_STICK, value:FlxAnalogAxis.X, label:"right_stick_x"}, 
+			{input:FlxGamepadInputID.RIGHT_ANALOG_STICK, value:FlxAnalogAxis.Y, label:"right_stick_y"}, 
+			{input:FlxGamepadInputID.RIGHT_ANALOG_STICK, value:FlxAnalogAxis.EITHER, label:"right_stick_either"}, 
+			{input:FlxGamepadInputID.RIGHT_ANALOG_STICK, value:FlxAnalogAxis.BOTH, label:"right_stick_both"},
+			{input:FlxGamepadInputID.LEFT_TRIGGER, value:FlxAnalogAxis.X, label:"left_trigger_x"},
+			{input:FlxGamepadInputID.RIGHT_TRIGGER, value:FlxAnalogAxis.X, label:"right_trigger_x"},
+		];
+		
+		for (inp in inputs)
+		{
+			var name = "gamepad." + inp.label;
+			var input = inp.input;
+			var axis = inp.value;
+			
+			var t = new TestShell(name+".");
+			_testGamepad(t, input, axis, false);
+			
+			//Press & release w/o callbacks
+			t.assertTrue (name+".move1.just");
+			t.assertTrue (name+".move1.value");
+			t.assertFalse(name+".move2.just");
+			t.assertTrue (name+".move2.value");
+			t.assertTrue (name+".stop1.just");
+			t.assertTrue (name+".stop1.value");
+			t.assertFalse(name+".stop2.just");
+			t.assertTrue (name+".stop2.value");
+		}
 	}
 	
-	function testSteam()
+	function _testGamepad(test:TestShell, input:FlxGamepadInputID, axis:FlxAnalogAxis, callbacks:Bool)
 	{
-		//TODO
+		#if FLX_JOYSTICK_API
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 0, 0, 0, 0, 0));
+		#elseif FLX_GAMEINPUT_API
+		var g = makeFakeGamepad();
+		#end
+		
+		var gamepad:FlxGamepad = FlxG.gamepads.getByID(0);
+		
+		var a = new FlxActionInputAnalogGamepad(input, FlxAnalogState.MOVED, axis, 0);
+		var b = new FlxActionInputAnalogGamepad(input, FlxAnalogState.JUST_MOVED, axis, 0);
+		var c = new FlxActionInputAnalogGamepad(input, FlxAnalogState.STOPPED, axis, 0);
+		var d = new FlxActionInputAnalogGamepad(input, FlxAnalogState.JUST_STOPPED, axis, 0);
+		
+		var clear = clearGamepad.bind(gamepad, input);
+		var move = moveGamepad.bind(gamepad, input);
+		
+		var pos1 = new FlxPoint();
+		var pos2 = new FlxPoint();
+		var pos3 = new FlxPoint();
+		
+		switch(axis)
+		{
+			case X:      pos1.set(10,  0); pos2.set(20,  0); pos3.set(0, 0);
+			case Y:      pos1.set( 0, 10); pos2.set( 0, 20); pos3.set(0, 0);
+			case EITHER: pos1.set(10,  0); pos2.set(20,  0); pos3.set(0, 0);
+			case BOTH:   pos1.set(10, 10); pos2.set(20, 20); pos3.set(0, 0);
+		}
+		
+		testInputStates(test, clear, move, [pos1, pos2, pos3, pos3], axis, a, b, c, d, callbacks);
+		
+		#if FLX_JOYSTICK_API
+		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 0, 0, 0, 0, 0));
+		#elseif FLX_GAMEINPUT_API
+		removeGamepad(g);
+		#end
 	}
 	
 	/*********/
+	
+	#if FLX_GAMEINPUT_API
+	private function makeFakeGamepad()
+	{
+		var xinput = @:privateAccess new Gamepad(0);
+		@:privateAccess GameInput.__onGamepadConnect(xinput);
+		var gamepad = FlxG.gamepads.getByID(0);
+		gamepad.model = FlxGamepadModel.XINPUT;
+		var gid:GameInputDevice = @:privateAccess gamepad._device;
+		
+		@:privateAccess gid.id = "0";
+		@:privateAccess gid.name = "xinput";
+		
+		var control:GameInputControl = null;
+		
+		for (i in 0...6) {
+			
+			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
+			@:privateAccess gid.__axis.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		for (i in 0...15) {
+			
+			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
+			@:privateAccess gid.__button.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		gamepad.update();
+		return xinput;
+	}
+	
+	private function removeGamepad(g:Gamepad)
+	{
+		@:privateAccess GameInput.__onGamepadDisconnect(g);
+	}
+	#end
 	
 	function getCallback(i:Int){
 		return function (a:FlxActionAnalog){
@@ -391,6 +509,68 @@ class FlxActionInputAnalogTest extends FlxTest
 		step();
 	}
 	
+	@:access(flixel.input.gamepad.FlxGamepad)
+	private function clearGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID)
+	{
+		if (Input == FlxGamepadInputID.LEFT_ANALOG_STICK || Input == FlxGamepadInputID.RIGHT_ANALOG_STICK)
+		{
+			var stick:FlxGamepadAnalogStick = Gamepad.mapping.getAnalogStick(Input);
+			moveStick(Gamepad, stick, 0.0, 0.0);
+		}
+		else
+		{
+			moveTrigger(Gamepad, Input, 0.0);
+		}
+		step();
+		step();
+	}
+	
+	@:access(flixel.input.gamepad.FlxGamepad)
+	private function moveTrigger(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float)
+	{
+		#if FLX_JOYSTICK_API
+		var fakeAxisRawID:Int = Gamepad.mapping.checkForFakeAxis(Input);
+		if (fakeAxisRawID == -1)
+		{
+			//regular axis value
+			var rawID = Gamepad.mapping.getRawID(Input);
+			Gamepad.applyAxisFlip(X, Input);
+			Gamepad.axis[rawID] = X;
+		}
+		else
+		{
+			//if analog isn't supported for this input, return the correct digital button input instead
+			var btn:FlxGamepadButton = Gamepad.getButton(fakeAxisRawID);
+			if (btn != null)
+			{
+				btn.release();
+			}
+		}
+		#elseif FLX_GAMEINPUT_API
+		var rawAxisID = Gamepad.mapping.getRawID(Input);
+		var control:GameInputControl = Gamepad._device.getControlAt(rawAxisID);
+		@:privateAccess control.value = X;
+		#end
+	}
+	
+	@:access(flixel.input.gamepad.FlxGamepad)
+	private function moveStick(Gamepad:FlxGamepad, stick:FlxGamepadAnalogStick, X:Float, Y:Float)
+	{
+		#if FLX_JOYSTICK_API
+		
+		Gamepad.axis[stick.x] = X;
+		Gamepad.axis[stick.y] = Y;
+		
+		#elseif FLX_GAMEINPUT_API
+		
+		var controlX:GameInputControl = Gamepad._device.getControlAt(stick.x);
+		var controlY:GameInputControl = Gamepad._device.getControlAt(stick.y);
+		@:privateAccess controlX.value = X;
+		@:privateAccess controlY.value = Y;
+		
+		#end
+	}
+	
 	@:access(flixel.input.mouse.FlxMouse)
 	private function clearMousePosition()
 	{
@@ -415,6 +595,24 @@ class FlxActionInputAnalogTest extends FlxTest
 		if (FlxG.mouse == null) return;
 		step();
 		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		updateActions(arr);
+	}
+	
+	@:access(flixel.input.gamepad.FlxGamepad)
+	private function moveGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
+	{
+		step();
+		
+		if (Input == FlxGamepadInputID.LEFT_ANALOG_STICK || Input == FlxGamepadInputID.RIGHT_ANALOG_STICK)
+		{
+			var stick = Gamepad.mapping.getAnalogStick(Input);
+			moveStick(Gamepad, stick, X, Y);
+		}
+		else
+		{
+			moveTrigger(Gamepad, Input, X);
+		}
+		
 		updateActions(arr);
 	}
 	

@@ -1,4 +1,5 @@
 package flixel.input.actions;
+import flash.events.GameInputEvent;
 import flixel.FlxState;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
@@ -13,8 +14,8 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.FlxInput;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
 import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton;
@@ -26,6 +27,7 @@ import haxe.PosInfos;
 import lime.ui.Gamepad;
 import openfl.events.JoystickEvent;
 import openfl.ui.GameInput;
+import openfl.ui.GameInputControl;
 import openfl.ui.GameInputDevice;
 
 import flixel.util.typeLimit.OneOfFour;
@@ -219,7 +221,6 @@ class FlxActionInputDigitalTest extends FlxTest
 			FlxGamepadInputID.START,
 			FlxGamepadInputID.LEFT_STICK_CLICK,
 			FlxGamepadInputID.RIGHT_STICK_CLICK,
-			FlxGamepadInputID.GUIDE,
 			FlxGamepadInputID.DPAD_UP,
 			FlxGamepadInputID.DPAD_DOWN,
 			FlxGamepadInputID.DPAD_LEFT,
@@ -431,9 +432,47 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, move, a, b, c, d, callbacks);
 	}
 	
+	#if FLX_GAMEINPUT_API
+	private function makeFakeGamepad()
+	{
+		var xinput = @:privateAccess new Gamepad(0);
+		@:privateAccess GameInput.__onGamepadConnect(xinput);
+		var gamepad = FlxG.gamepads.getByID(0);
+		gamepad.model = FlxGamepadModel.XINPUT;
+		var gid:GameInputDevice = @:privateAccess gamepad._device;
+		
+		@:privateAccess gid.id = "0";
+		@:privateAccess gid.name = "xinput";
+		
+		var control:GameInputControl = null;
+		
+		for (i in 0...6) {
+			
+			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
+			@:privateAccess gid.__axis.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		for (i in 0...15) {
+			
+			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
+			@:privateAccess gid.__button.set (i, control);
+			@:privateAccess gid.__controls.push (control);
+			
+		}
+		
+		gamepad.update();
+	}
+	#end
+	
 	@Test
 	function testFlxGamepad()
 	{
+		#if FLX_GAMEINPUT_API
+		makeFakeGamepad();
+		#end
+		
 		var buttons = getGamepadButtons();
 		
 		for (btn in buttons)
@@ -588,45 +627,13 @@ class FlxActionInputDigitalTest extends FlxTest
 		var click = clickJoystick.bind(inputID);
 		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
 		
-		#elseif FLX_GAMEPAD_API
+		#elseif FLX_GAMEINPUT_API
 		
-		//TODO, not yet implemented:
-		
-		/*
 		var clear = clearGamepad.bind(inputID);
 		var click = clickGamepad.bind(inputID);
 		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
-		*/
 		
 		#end
-	}
-		
-	@Test
-	function testSteamDigital()
-	{
-		
-	}
-	
-	function _testSteam(test:TestShell, actionHandle:Int, callbacks:Bool)
-	{
-		/*
-		var a:FlxActionInputDigitalSteam;
-		var b:FlxActionInputDigitalSteam;
-		var c:FlxActionInputDigitalSteam;
-		var d:FlxActionInputDigitalSteam;
-		
-		var stateGrid:InputStateGrid = null;
-		
-		a = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.PRESSED, 0);
-		b = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_PRESSED, 0);
-		c = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.RELEASED, 0);
-		d = @:privateAccess new FlxActionInputDigitalSteam(actionHandle, FlxInputState.JUST_RELEASED, 0);
-		
-		var clear = clearSteam.bind(actionHandle);
-		var click = clickSteam.bind(actionHandle);
-		
-		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
-		*/
 	}
 	
 	/*********/
@@ -751,17 +758,6 @@ class FlxActionInputDigitalTest extends FlxTest
 		ajReleased.destroy();
 	}
 	
-	private function clearSteam(actionHandle:Int)
-	{
-		/*
-		SteamMock.setDigitalAction(actionHandle, false);
-		SteamMock.update();
-		step();
-		SteamMock.update();
-		step();
-		*/
-	}
-	
 	private function clearJoystick(ID:FlxGamepadInputID)
 	{
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.BUTTON_UP, false, false, 0, ID, 0, 0, 0));
@@ -769,14 +765,18 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function clearFlxGamepad(gamepad:FlxGamepad, ID:FlxGamepadInputID)
+	private function clearGamepad(ID:FlxGamepadInputID)
 	{
+		var gamepad = FlxG.gamepads.getByID(0);
+		if (gamepad == null) return;
 		var input:FlxInput<Int> = gamepad.buttons[gamepad.mapping.getRawID(ID)];
+		if (input == null) return;
 		input.release();
 		step();
-		input.update();
+		gamepad.update();
 		step();
-		input.update();
+		gamepad.update();
+		
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
@@ -820,30 +820,29 @@ class FlxActionInputDigitalTest extends FlxTest
 		thing.update();
 	}
 	
-	private function clickSteam(actionHandle:Int, pressed:Bool, arr:Array<FlxActionDigital>)
-	{
-		//updateActions(arr);
-	}
-	
 	private function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		var event = pressed ? JoystickEvent.BUTTON_DOWN : JoystickEvent.BUTTON_UP;
 		FlxG.stage.dispatchEvent(new JoystickEvent(event, false, false, 0, ID, 0, 0, 0));
-		
-		var g = FlxG.gamepads.getByID(0);
 		
 		step();
 		updateActions(arr);
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function clickFlxGamepad(gamepad:FlxGamepad, ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
+	private function clickGamepad(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
-		var input:FlxInput<Int> = gamepad.buttons[gamepad.mapping.getRawID(ID)];
-		if (input == null) return;
-		if (pressed) input.press();
-		else input.release();
+		var gamepad = FlxG.gamepads.getByID(0);
+		if (gamepad == null) return;
+		
+		var button:FlxGamepadButton = gamepad.buttons[gamepad.mapping.getRawID(ID)];
+		if (button == null) return;
+		
+		if (pressed) button.press();
+		else button.release();
+		
 		updateActions(arr);
+		step();
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
