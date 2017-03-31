@@ -2,7 +2,6 @@ package flixel.input.actions;
 
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 
 import massive.munit.Assert;

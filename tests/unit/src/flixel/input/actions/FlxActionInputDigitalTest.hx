@@ -1,7 +1,7 @@
 package flixel.input.actions;
 
 #if FLX_GAMEINPUT_API
-import flash.events.GameInputEvent;
+import openfl.events.GameInputEvent;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
@@ -302,15 +302,15 @@ class FlxActionInputDigitalTest extends FlxTest
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(key + ".press1.callbacks.callback"+i);
-				t.assertTrue(key + ".press2.callbacks.callback"+i);
-				t.assertTrue(key + ".release1.callbacks.callback"+i);
-				t.assertTrue(key + ".release2.callbacks.callback"+i);
+				t.assertTrue(key + ".press1.callbacks.callback" + i);
+				t.assertTrue(key + ".press2.callbacks.callback" + i);
+				t.assertTrue(key + ".release1.callbacks.callback" + i);
+				t.assertTrue(key + ".release2.callbacks.callback" + i);
 				
-				t.assertTrue(key + ".any.press1.callbacks.callback"+i);
-				t.assertTrue(key + ".any.press2.callbacks.callback"+i);
-				t.assertTrue(key + ".any.release1.callbacks.callback"+i);
-				t.assertTrue(key + ".any.release2.callbacks.callback"+i);
+				t.assertTrue(key + ".any.press1.callbacks.callback" + i);
+				t.assertTrue(key + ".any.press2.callbacks.callback" + i);
+				t.assertTrue(key + ".any.release1.callbacks.callback" + i);
+				t.assertTrue(key + ".any.release2.callbacks.callback" + i);
 			}
 		}
 	}
@@ -394,10 +394,10 @@ class FlxActionInputDigitalTest extends FlxTest
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(name + ".press1.callbacks.callback"+i);
-				t.assertTrue(name + ".press2.callbacks.callback"+i);
-				t.assertTrue(name + ".release1.callbacks.callback"+i);
-				t.assertTrue(name + ".release2.callbacks.callback"+i);
+				t.assertTrue(name + ".press1.callbacks.callback" + i);
+				t.assertTrue(name + ".press2.callbacks.callback" + i);
+				t.assertTrue(name + ".release1.callbacks.callback" + i);
+				t.assertTrue(name + ".release2.callbacks.callback" + i);
 			}
 		}
 	}
@@ -522,10 +522,10 @@ class FlxActionInputDigitalTest extends FlxTest
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(btn + ".press1.callbacks.callback"+i);
-				t.assertTrue(btn + ".press2.callbacks.callback"+i);
-				t.assertTrue(btn + ".release1.callbacks.callback"+i);
-				t.assertTrue(btn + ".release2.callbacks.callback"+i);
+				t.assertTrue(btn + ".press1.callbacks.callback" + i);
+				t.assertTrue(btn + ".press2.callbacks.callback" + i);
+				t.assertTrue(btn + ".release1.callbacks.callback" + i);
+				t.assertTrue(btn + ".release2.callbacks.callback" + i);
 			}
 		}
 	}
@@ -619,7 +619,8 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	function getCallback(i:Int)
 	{
-		return function (a:FlxActionDigital){
+		return function (a:FlxActionDigital)
+		{
 			onCallback(i);
 		}
 	}
