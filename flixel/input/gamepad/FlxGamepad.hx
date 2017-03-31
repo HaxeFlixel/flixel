@@ -85,6 +85,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var pressed(default, null):FlxGamepadButtonList;
 	/**
+	 * Helper class to check if a button is released
+	 */
+	public var released(default, null):FlxGamepadButtonList;
+	/**
 	 * Helper class to check if a button was just pressed.
 	 */
 	public var justPressed(default, null):FlxGamepadButtonList;
@@ -130,6 +134,7 @@ class FlxGamepad implements IFlxDestroyable
 		manager = Manager;
 		
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
+		released = new FlxGamepadButtonList(FlxInputState.RELEASED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
 		analog = new FlxGamepadAnalogList(this);
@@ -294,7 +299,7 @@ class FlxGamepad implements IFlxDestroyable
 				{
 					case PRESSED: pressed.ANY;
 					case JUST_PRESSED: justPressed.ANY;
-					case RELEASED: !pressed.ALL;
+					case RELEASED: released.ANY;
 					case JUST_RELEASED: justReleased.ANY;
 				}
 			case FlxGamepadInputID.NONE:
@@ -302,10 +307,24 @@ class FlxGamepad implements IFlxDestroyable
 				{
 					case PRESSED: pressed.NONE;
 					case JUST_PRESSED: justPressed.NONE;
-					case RELEASED: !pressed.ANY;
+					case RELEASED: released.NONE;
 					case JUST_RELEASED: justReleased.NONE;
 				}
-			default: checkStatusRaw(mapping.getRawID(ID), Status);
+			default: 
+				var rawID = mapping.getRawID(ID);
+				var button = buttons[rawID];
+				if (button == null)
+				{
+					return false;
+				}
+				var value = button.current;
+				switch(Status)
+				{
+					case PRESSED:       value == PRESSED;
+					case RELEASED:      value == RELEASED;
+					case JUST_PRESSED:  value == JUST_PRESSED;
+					case JUST_RELEASED: value == JUST_RELEASED;
+				}
 		}
 	}
 	
