@@ -1,5 +1,6 @@
 package flixel.input.actions;
-import flash.ui.GameInputDevice;
+
+import openfl.ui.GameInputDevice;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogGamepad;
@@ -60,7 +61,7 @@ class FlxActionInputAnalogTest extends FlxTest
 			var axis = a.value;
 			
 			var t = new TestShell(name+".");
-			_testMousePosition(t, axis, false);
+			runMousePosition(t, axis, false);
 			
 			//Press & release w/o callbacks
 			t.assertTrue (name+".move1.just");
@@ -74,7 +75,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	function _testMousePosition(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
+	function runMousePosition(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogMousePosition(FlxAnalogState.MOVED, axis);
 		var b = new FlxActionInputAnalogMousePosition(FlxAnalogState.JUST_MOVED, axis);
@@ -115,7 +116,7 @@ class FlxActionInputAnalogTest extends FlxTest
 			var axis = a.value;
 			
 			var t = new TestShell(name+".");
-			_testMouseMotion(t, axis, false);
+			runMouseMotion(t, axis, false);
 			
 			//Press & release w/o callbacks
 			t.assertTrue (name+".move1.just");
@@ -129,7 +130,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	function _testMouseMotion(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
+	function runMouseMotion(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogMouseMotion(FlxAnalogState.MOVED, axis);
 		var b = new FlxActionInputAnalogMouseMotion(FlxAnalogState.JUST_MOVED, axis);
@@ -198,7 +199,7 @@ class FlxActionInputAnalogTest extends FlxTest
 				var axis = a.value;
 				
 				var t = new TestShell(name+".");
-				_testClickAndDragMouseMotion(t, button, axis, false);
+				runClickAndDragMouseMotion(t, button, axis, false);
 				
 				//Press & release w/o callbacks
 				t.assertTrue (name+".move1.just");
@@ -213,7 +214,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	function _testClickAndDragMouseMotion(test:TestShell, button:FlxMouseButtonID, axis:FlxAnalogAxis, callbacks:Bool)
+	function runClickAndDragMouseMotion(test:TestShell, button:FlxMouseButtonID, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogClickAndDragMouseMotion(button, MOVED, axis);
 		var b = new FlxActionInputAnalogClickAndDragMouseMotion(button, JUST_MOVED, axis);
@@ -279,7 +280,7 @@ class FlxActionInputAnalogTest extends FlxTest
 			var axis = inp.value;
 			
 			var t = new TestShell(name+".");
-			_testGamepad(t, input, axis, false);
+			runGamepad(t, input, axis, false);
 			
 			//Press & release w/o callbacks
 			t.assertTrue (name+".move1.just");
@@ -293,7 +294,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	function _testGamepad(test:TestShell, input:FlxGamepadInputID, axis:FlxAnalogAxis, callbacks:Bool)
+	function runGamepad(test:TestShell, input:FlxGamepadInputID, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		#if FLX_JOYSTICK_API
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 0, 0, 0, 0, 0));
@@ -331,8 +332,6 @@ class FlxActionInputAnalogTest extends FlxTest
 		removeGamepad(g);
 		#end
 	}
-	
-	/*********/
 	
 	#if FLX_GAMEINPUT_API
 	private function makeFakeGamepad()

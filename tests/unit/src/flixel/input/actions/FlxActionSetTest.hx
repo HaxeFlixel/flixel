@@ -2,12 +2,8 @@ package flixel.input.actions;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
-import flixel.input.actions.FlxActionInput.FlxInputDevice;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
-import flixel.input.actions.FlxActionInputDigitalTest.InputStateGrid;
 import flixel.input.keyboard.FlxKey;
 import haxe.Json;
 
@@ -23,10 +19,7 @@ class FlxActionSetTest extends FlxTest
 	private var valueTest:String = "";
 	
 	@Before
-	function before()
-	{
-		
-	}
+	function before() {}
 	
 	@Test
 	function testFromJSON()
@@ -46,7 +39,8 @@ class FlxActionSetTest extends FlxTest
 		
 		var hasAnalog = false;
 		
-		for (a in analog){
+		for (a in analog)
+		{
 			hasAnalog = false;
 			for (aa in set.analogActions)
 			{
@@ -65,7 +59,8 @@ class FlxActionSetTest extends FlxTest
 		
 		var hasDigital = false;
 		
-		for (d in digital){
+		for (d in digital)
+		{
 			hasDigital = false;
 			for (dd in set.digitalActions)
 			{
@@ -92,7 +87,7 @@ class FlxActionSetTest extends FlxTest
 		
 		var outJson = set.toJSON();
 		
-		var out:{name:String, analogActions:Array<String>, digitalActions:Array<String>} = Json.parse(outJson);
+		var out:{name:String, analogActions:Array<{type:Int, steamHandle:Int, name:String}>, digitalActions:Array<{type:Int, steamHandle:Int, name:String}>} = Json.parse(outJson);
 		
 		var name = "MenuControls";
 		var analogActions = ["menu_move"];
@@ -107,9 +102,17 @@ class FlxActionSetTest extends FlxTest
 		{
 			for (i in 0...analogActions.length)
 			{
-				if (out.analogActions.indexOf(analogActions[i]) == -1)
+				var found = false;
+				for (ii in 0...out.analogActions.length)
 				{
-					analogEquivalent == false;
+					if (out.analogActions[ii].name == analogActions[i])
+					{
+						found = true;
+					}
+				}
+				if (!found)
+				{
+					analogEquivalent = false;
 					break;
 				}
 			}
@@ -121,9 +124,17 @@ class FlxActionSetTest extends FlxTest
 		{
 			for (i in 0...digitalActions.length)
 			{
-				if (out.digitalActions.indexOf(digitalActions[i]) == -1)
+				var found = false;
+				for (ii in 0...out.digitalActions.length)
 				{
-					digitalEquivalent == false;
+					if (out.digitalActions[ii].name == digitalActions[i])
+					{
+						found = true;
+					}
+				}
+				if (!found)
+				{
+					digitalEquivalent = false;
 					break;
 				}
 			}
@@ -249,7 +260,7 @@ class FlxActionSetTest extends FlxTest
 		@:privateAccess a.steamHandle = 99;
 		a.callback = function(a:FlxActionAnalog)
 		{
-			onCallback(a.name+"_" + a.x + "x" + a.y);
+			onCallback(a.name + "_" + a.x + "x" + a.y);
 		}
 		
 		var controller = 0;

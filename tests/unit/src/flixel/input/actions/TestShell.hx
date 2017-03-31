@@ -108,7 +108,8 @@ class TestShell implements IFlxDestroyable
 	}
 }
 
-typedef TestShellResult = {
+typedef TestShellResult = 
+{
 	id:String,
 	testedTrue:Bool,
 	testedFalse:Bool,
