@@ -1,7 +1,6 @@
 package flixel.input.actions;
 
 #if FLX_GAMEINPUT_API
-import openfl.events.GameInputEvent;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
