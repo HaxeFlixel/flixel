@@ -43,7 +43,7 @@ class FlxActionManagerTest extends FlxTest
 	@Before
 	function before()
 	{
-		_createFlxActionManager();
+		createFlxActionManager();
 		sets = 
 		[
 			"MenuControls", 
@@ -742,7 +742,7 @@ class FlxActionManagerTest extends FlxTest
 		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
-	private function _createFlxActionManager()
+	private function createFlxActionManager()
 	{
 		basicManager = new FlxActionManager();
 		
@@ -975,4 +975,3 @@ class FlxActionManagerTest extends FlxTest
 		valueTest += str;
 	}
 }
-

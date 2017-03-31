@@ -1,7 +1,5 @@
 package flixel.input.actions;
 
-import openfl.ui.GameInputDevice;
-import flixel.input.FlxInput;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogGamepad;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
@@ -14,19 +12,17 @@ import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.math.FlxPoint;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import haxe.PosInfos;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
-import flixel.input.FlxInput.FlxInputState;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+#if FLX_GAMEINPUT_API
 import lime.ui.Gamepad;
 import openfl.events.GameInputEvent;
-import openfl.events.JoystickEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputControl;
-
-import massive.munit.Assert;
+import openfl.ui.GameInputDevice;
+#elseif FLX_JOYSTICK_API
+import openfl.events.JoystickEvent;
+#end
 
 /**
  * ...
@@ -40,9 +36,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	private var value3:Int = 0;
 	
 	@Before
-	function before()
-	{
-	}
+	function before() {}
 	
 	@Test
 	function testMousePosition()
@@ -96,7 +90,7 @@ class FlxActionInputAnalogTest extends FlxTest
 			case BOTH:   pos1.set(10, 10); pos2.set(20, 20);
 		}
 		
-		testInputStates(test, clear, move, [pos1,pos2,pos2,pos2], axis, a, b, c, d, callbacks);
+		testInputStates(test, clear, move, [pos1, pos2, pos2, pos2], axis, a, b, c, d, callbacks);
 	}
 	
 	@Test
@@ -112,7 +106,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		
 		for (a in axes)
 		{
-			var name = "mouse_move."+a.name;
+			var name = "mouse_move." + a.name;
 			var axis = a.value;
 			
 			var t = new TestShell(name + ".");
@@ -169,7 +163,7 @@ class FlxActionInputAnalogTest extends FlxTest
 				pos4.set(100, 100);
 		}
 		
-		testInputStates(test, clear, move, [pos1,pos2,pos3,pos4], axis, a, b, c, d, callbacks);
+		testInputStates(test, clear, move, [pos1, pos2, pos3, pos4], axis, a, b, c, d, callbacks);
 	}
 	
 	@Test
@@ -253,7 +247,7 @@ class FlxActionInputAnalogTest extends FlxTest
 				pos4.set(100, 100);
 		}
 		
-		testInputStates(test, clear, move, [pos1,pos2,pos3,pos4], axis, a, b, c, d, callbacks);
+		testInputStates(test, clear, move, [pos1, pos2, pos3, pos4], axis, a, b, c, d, callbacks);
 	}
 	
 	@Test
