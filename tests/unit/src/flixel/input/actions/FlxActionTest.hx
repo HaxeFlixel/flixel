@@ -3,13 +3,10 @@ package flixel.input.actions;
 import flixel.FlxObject;
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
-import flixel.input.actions.FlxAction;
-import flixel.input.actions.FlxActionInput.FlxInputType;
+import flixel.input.actions.FlxAction.FlxActionAnalog;
+import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInputAnalog;
 import flixel.input.actions.FlxActionInputDigital;
-import flixel.input.actions.FlxActionInput.FlxInputType;
-import flixel.input.actions.FlxActionInput.FlxInputDevice;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.FlxInput.FlxInputState;
 
 import massive.munit.Assert;

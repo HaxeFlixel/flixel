@@ -1,4 +1,5 @@
 package flixel.input.actions;
+
 #if FLX_GAMEINPUT_API
 import openfl.events.GameInputEvent;
 import openfl.ui.GameInput;
@@ -69,7 +70,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		var t = new TestShell("init.");
 		
-		_testFlxActionManagerInit(t);
+		runFlxActionManagerInit(t);
 		
 		t.assertTrue("init.MenuControls.indexExists");
 		t.assertTrue("init.MenuControls.nameMatches");
@@ -93,7 +94,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		var t = new TestShell("steam.init.");
 		
-		_testFlxActionManagerInit(t, steamManager);
+		runFlxActionManagerInit(t, steamManager);
 		
 		t.assertTrue("steam.init.MenuControls.indexExists");
 		t.assertTrue("steam.init.MenuControls.nameMatches");
@@ -115,7 +116,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("actions.");
 		
-		_testFlxActionManagerActions(t);
+		runFlxActionManagerActions(t);
 		
 		t.assertTrue("actions.MenuControls.hasDigital");
 		t.assertTrue("actions.MenuControls.hasAnalog");
@@ -155,7 +156,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("steam.actions.");
 		
-		_testFlxActionManagerActions(t, steamManager);
+		runFlxActionManagerActions(t, steamManager);
 		
 		t.assertTrue("steam.actions.MenuControls.hasDigital");
 		t.assertTrue("steam.actions.MenuControls.hasAnalog");
@@ -195,7 +196,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("addRemove.");
 		
-		_testFlxActionManagerAddRemove(t);
+		runFlxActionManagerAddRemove(t);
 		
 		t.assertTrue("addRemove.MenuControls.digital.extra.add");
 		t.assertTrue("addRemove.MenuControls.digital.extra.remove");
@@ -220,7 +221,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("device.");
 		
-		_testFlxActionManagerDevice(MOUSE, t);
+		runFlxActionManagerDevice(MOUSE, t);
 		
 		t.assertTrue("device.MenuControls.activatedFor.MOUSE");
 		t.assertTrue("device.MenuControls.notActivatedFor.KEYBOARD.but.MOUSE");
@@ -257,7 +258,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("device.");
 		
-		_testFlxActionManagerDevice(KEYBOARD, t);
+		runFlxActionManagerDevice(KEYBOARD, t);
 		
 		t.assertTrue("device.MenuControls.activatedFor.KEYBOARD");
 		t.assertTrue("device.MenuControls.notActivatedFor.MOUSE.but.KEYBOARD");
@@ -294,7 +295,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("device.");
 		
-		_testFlxActionManagerDevice(GAMEPAD, t);
+		runFlxActionManagerDevice(GAMEPAD, t);
 		
 		t.assertTrue("device.MenuControls.activatedFor.GAMEPAD");
 		t.assertTrue("device.MenuControls.notActivatedFor.MOUSE.but.GAMEPAD");
@@ -331,7 +332,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("device.");
 		
-		_testFlxActionManagerDevice(STEAM_CONTROLLER, t);
+		runFlxActionManagerDevice(STEAM_CONTROLLER, t);
 		
 		t.assertTrue("device.MenuControls.activatedFor.STEAM_CONTROLLER");
 		t.assertTrue("device.MenuControls.notActivatedFor.MOUSE.but.STEAM_CONTROLLER");
@@ -368,7 +369,7 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var t = new TestShell("device.");
 		
-		_testFlxActionManagerDevice(ALL, t);
+		runFlxActionManagerDevice(ALL, t);
 		
 		t.assertTrue("device.MenuControls.activatedFor.ALL");
 		t.assertTrue("device.MenuControls.activatedForAll.MOUSE");
@@ -430,10 +431,6 @@ class FlxActionManagerTest extends FlxTest
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 1, 0, 2, 0, 0));
 		Assert.isTrue(connectStr == "gamepad_0_xinput,gamepad_1_ps4");
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 0, 0, 0, 0, 0));
-		/*
-		Assert.isTrue(disconnectStr == "gamepad_0_xinput");
-		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 1, 0, 2, 0, 0));
-		Assert.isTrue(disconnectStr == "gamepad_0_xinput,gamepad_1_ps4");*/
 		
 		#elseif FLX_GAMEINPUT_API
 		
@@ -488,20 +485,18 @@ class FlxActionManagerTest extends FlxTest
 		
 		var control:GameInputControl = null;
 		
-		for (i in 0...6) {
-			
+		for (i in 0...6)
+		{
 			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
 			@:privateAccess gid.__axis.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
-		for (i in 0...15) {
-			
+		for (i in 0...15
+		{
 			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
 			@:privateAccess gid.__button.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
 		gamepad.update();
@@ -764,7 +759,7 @@ class FlxActionManagerTest extends FlxTest
 		steamManager.initSteam(config, null, null);
 	}
 	
-	function _testFlxActionManagerInit(test:TestShell, manager:FlxActionManager=null)
+	function runFlxActionManagerInit(test:TestShell, ?manager:FlxActionManager)
 	{
 		if (manager == null) manager = basicManager;
 		
@@ -786,7 +781,7 @@ class FlxActionManagerTest extends FlxTest
 		}
 	}
 	
-	function _testFlxActionManagerActions(test:TestShell, manager:FlxActionManager=null)
+	function runFlxActionManagerActions(test:TestShell, ?manager:FlxActionManager)
 	{
 		if (manager == null) manager = basicManager;
 		
@@ -809,19 +804,19 @@ class FlxActionManagerTest extends FlxTest
 			for (j in 0...setObject.digitalActions.length)
 			{
 				var d:FlxActionDigital = setObject.digitalActions[j];
-				test.testIsTrue(digitals.indexOf(d.name) != -1, "digital."+d.name+".exists");
+				test.testIsTrue(digitals.indexOf(d.name) != -1, "digital." + d.name + ".exists");
 			}
 			
 			//Test analog actions exist
 			for (j in 0...setObject.analogActions.length)
 			{
 				var a:FlxActionAnalog = setObject.analogActions[j];
-				test.testIsTrue(analogs.indexOf(a.name) != -1, "analog." + a.name+".exists");
+				test.testIsTrue(analogs.indexOf(a.name) != -1, "analog." + a.name + ".exists");
 			}
 		}
 	}
 	
-	function _testFlxActionManagerAddRemove(test:TestShell, manager:FlxActionManager = null)
+	function runFlxActionManagerAddRemove(test:TestShell, ?manager:FlxActionManager)
 	{
 		if (manager == null) manager = basicManager;
 		
@@ -853,7 +848,7 @@ class FlxActionManagerTest extends FlxTest
 		}
 	}
 	
-	function _testFlxActionManagerDevice(device:FlxInputDevice, test:TestShell, manager:FlxActionManager=null)
+	function runFlxActionManagerDevice(device:FlxInputDevice, test:TestShell, ?manager:FlxActionManager)
 	{
 		if (manager == null) manager = basicManager;
 		
@@ -921,7 +916,7 @@ class FlxActionManagerTest extends FlxTest
 				else if (otherDevice != device)
 				{
 					//Test set is still not activated for every other device
-					test.testIsTrue(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice+".but."+device);
+					test.testIsTrue(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice + ".but." + device);
 				}
 			}
 		}
