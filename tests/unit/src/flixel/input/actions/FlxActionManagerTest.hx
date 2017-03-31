@@ -492,7 +492,7 @@ class FlxActionManagerTest extends FlxTest
 			@:privateAccess gid.__controls.push (control);
 		}
 		
-		for (i in 0...15
+		for (i in 0...15)
 		{
 			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
 			@:privateAccess gid.__button.set (i, control);

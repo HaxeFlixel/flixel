@@ -1,4 +1,5 @@
 package flixel.input.actions;
+
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;

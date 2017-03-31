@@ -16,7 +16,6 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 #if FLX_GAMEINPUT_API
 import lime.ui.Gamepad;
-import openfl.events.GameInputEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputControl;
 import openfl.ui.GameInputDevice;

@@ -2,6 +2,7 @@ package flixel.input.actions;
 
 #if FLX_GAMEINPUT_API
 import openfl.events.GameInputEvent;
+import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
@@ -739,12 +740,15 @@ class FlxActionInputDigitalTest extends FlxTest
 		ajReleased.destroy();
 	}
 	
+	#if FLX_JOYSTICK_API
 	private function clearJoystick(ID:FlxGamepadInputID)
 	{
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.BUTTON_UP, false, false, 0, ID, 0, 0, 0));
 		step();
 	}
+	#end
 	
+	#if FLX_GAMEINPUT_API
 	@:access(flixel.input.gamepad.FlxGamepad)
 	private function clearGamepad(ID:FlxGamepadInputID)
 	{
@@ -757,8 +761,8 @@ class FlxActionInputDigitalTest extends FlxTest
 		gamepad.update();
 		step();
 		gamepad.update();
-		
 	}
+	#end
 	
 	@:access(flixel.input.mouse.FlxMouse)
 	private function clearFlxMouseWheel()
@@ -801,6 +805,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		thing.update();
 	}
 	
+	#if FLX_JOYSTICK_API
 	private function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		var event = pressed ? JoystickEvent.BUTTON_DOWN : JoystickEvent.BUTTON_UP;
@@ -809,7 +814,9 @@ class FlxActionInputDigitalTest extends FlxTest
 		step();
 		updateActions(arr);
 	}
+	#end
 	
+	#if FLX_GAMEINPUT_API
 	@:access(flixel.input.gamepad.FlxGamepad)
 	private function clickGamepad(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
@@ -825,6 +832,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		updateActions(arr);
 		step();
 	}
+	#end
 	
 	@:access(flixel.input.mouse.FlxMouse)
 	private function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
