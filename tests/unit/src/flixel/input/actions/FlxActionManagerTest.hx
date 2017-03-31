@@ -1,7 +1,6 @@
 package flixel.input.actions;
 
 #if FLX_GAMEINPUT_API
-import openfl.events.GameInputEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputDevice;
 import openfl.ui.GameInputControl;
@@ -894,7 +893,7 @@ class FlxActionManagerTest extends FlxTest
 				else if (otherDevice != device)
 				{
 					//Test set is NOT activated for every other device
-					test.testIsTrue(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice+ ".but." + device);
+					test.testIsTrue(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice + ".but." + device);
 				}
 			}
 			
