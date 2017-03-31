@@ -292,10 +292,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function checkStatus(ID:FlxGamepadInputID, Status:FlxInputState):Bool
 	{
-		return switch(ID)
+		return switch (ID)
 		{
 			case FlxGamepadInputID.ANY: 
-				switch(Status)
+				switch (Status)
 				{
 					case PRESSED: pressed.ANY;
 					case JUST_PRESSED: justPressed.ANY;
@@ -303,7 +303,7 @@ class FlxGamepad implements IFlxDestroyable
 					case JUST_RELEASED: justReleased.ANY;
 				}
 			case FlxGamepadInputID.NONE:
-				switch(Status)
+				switch (Status)
 				{
 					case PRESSED: pressed.NONE;
 					case JUST_PRESSED: justPressed.NONE;
@@ -318,7 +318,7 @@ class FlxGamepad implements IFlxDestroyable
 					return false;
 				}
 				var value = button.current;
-				switch(Status)
+				switch (Status)
 				{
 					case PRESSED:       value == PRESSED;
 					case RELEASED:      value == RELEASED;

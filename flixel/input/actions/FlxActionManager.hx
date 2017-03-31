@@ -567,7 +567,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		_activate(ActionSet, Device, DeviceID);
+		setActivate(ActionSet, Device, DeviceID);
 	}
 	
 	public function markActiveSets(sets:Array<FlxActionSet>)
@@ -623,7 +623,7 @@ class ActionSetRegister implements IFlxDestroyable
 		#end
 	}
 	
-	private function _activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE, DoActivate:Bool=true)
+	private function setActivate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE, DoActivate:Bool = true)
 	{
 		switch (Device)
 		{
@@ -670,15 +670,15 @@ class ActionSetRegister implements IFlxDestroyable
 				}
 				
 			case FlxInputDevice.ALL:
-				_activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID, DoActivate);
-				_activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID, DoActivate);
-				_activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID, DoActivate);
+				setActivate(ActionSet, FlxInputDevice.MOUSE,    DeviceID, DoActivate);
+				setActivate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID, DoActivate);
+				setActivate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID, DoActivate);
 				#if steamwrap
-				_activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID, DoActivate);
+				setActivate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID, DoActivate);
 				#end
 				
 			case FlxInputDevice.NONE:
-				_activate(ActionSet, FlxInputDevice.ALL, DeviceID, false);
+				setActivate(ActionSet, FlxInputDevice.ALL, DeviceID, false);
 				
 			default:
 				
