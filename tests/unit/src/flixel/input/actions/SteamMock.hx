@@ -1,7 +1,7 @@
 package flixel.input.actions;
+
 import flixel.input.actions.FlxSteamController.FlxSteamControllerMetadata;
 import flixel.util.FlxArrayUtil;
-import haxe.CallStack;
 import steamwrap.api.Controller;
 import steamwrap.api.Steam;
 
@@ -12,11 +12,11 @@ import steamwrap.api.Steam;
 class SteamMock
 {
 
-	public static var digitalData:Map<String,ControllerDigitalActionData>;
-	public static var analogData:Map<String,ControllerAnalogActionData>;
+	public static var digitalData:Map<String, ControllerDigitalActionData>;
+	public static var analogData:Map<String, ControllerAnalogActionData>;
 	
-	public static var digitalOrigins:Map<String,Array<EControllerActionOrigin>>;
-	public static var analogOrigins:Map<String,Array<EControllerActionOrigin>>;
+	public static var digitalOrigins:Map<String, Array<EControllerActionOrigin>>;
+	public static var analogOrigins:Map<String, Array<EControllerActionOrigin>>;
 	
 	private static var inited:Bool = false;
 	private static var flxInited:Bool = false;
@@ -26,13 +26,14 @@ class SteamMock
 	{
 		if (inited) return;
 		
-		digitalData = new Map<String,ControllerDigitalActionData>();
-		analogData = new Map<String,ControllerAnalogActionData>();
+		digitalData = new Map<String, ControllerDigitalActionData>();
+		analogData = new Map<String, ControllerAnalogActionData>();
 		
-		digitalOrigins = new Map<String,Array<EControllerActionOrigin>>();
-		analogOrigins = new Map<String,Array<EControllerActionOrigin>>();
+		digitalOrigins = new Map<String, Array<EControllerActionOrigin>>();
+		analogOrigins = new Map<String, Array<EControllerActionOrigin>>();
 		
-		@:privateAccess Steam.controllers = new FakeController(function(str:String){
+		@:privateAccess Steam.controllers = new FakeController(function(str:String)
+		{
 			trace(str);
 		});
 		
@@ -75,7 +76,7 @@ class SteamMock
 		digitalData.set(key, newData);
 	}
 	
-	public static function setAnalogAction(controller:Int, actionHandle:Int, x:Float, y:Float, active:Bool, eMode:EControllerSourceMode=JOYSTICKMOVE)
+	public static function setAnalogAction(controller:Int, actionHandle:Int, x:Float, y:Float, active:Bool, eMode:EControllerSourceMode = JOYSTICKMOVE)
 	{
 		if (!inited) init();
 		
@@ -122,10 +123,7 @@ class FakeController extends Controller
 		super(CustomTrace);
 	}
 	
-	override function init() 
-	{
-		
-	}
+	override function init() {}
 	
 	override function get_MAX_ORIGINS():Int 
 	{

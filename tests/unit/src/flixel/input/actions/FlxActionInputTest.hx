@@ -1,4 +1,5 @@
 package flixel.input.actions;
+
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
@@ -14,10 +15,7 @@ class FlxActionInputTest extends FlxTest
 {
 
 	@Before
-	function before()
-	{
-		
-	}
+	function before() {}
 	
 	@Test
 	function testCompareState()
