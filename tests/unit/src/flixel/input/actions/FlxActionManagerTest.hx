@@ -231,29 +231,32 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.MenuControls.activatedFor.MOUSE");
 		t.assertTrue("device.MenuControls.notActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.MenuControls.notActivatedFor.GAMEPAD.but.MOUSE");
-		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.MenuControls.deactivatedFor.MOUSE");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
-		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		
 		t.assertTrue("device.MapControls.activatedFor.MOUSE");
 		t.assertTrue("device.MapControls.notActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.MapControls.notActivatedFor.GAMEPAD.but.MOUSE");
-		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.MapControls.deactivatedFor.MOUSE");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
-		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		
 		t.assertTrue("device.BattleControls.activatedFor.MOUSE");
 		t.assertTrue("device.BattleControls.notActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.BattleControls.notActivatedFor.GAMEPAD.but.MOUSE");
-		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.BattleControls.deactivatedFor.MOUSE");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
+		
+		#if (cpp && steamwrap)
+		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
+		#end
 		
 		t.destroy();
 	}
@@ -268,29 +271,32 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.MenuControls.activatedFor.KEYBOARD");
 		t.assertTrue("device.MenuControls.notActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.MenuControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
-		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.MenuControls.deactivatedFor.KEYBOARD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
-		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		
 		t.assertTrue("device.MapControls.activatedFor.KEYBOARD");
 		t.assertTrue("device.MapControls.notActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.MapControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
-		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.MapControls.deactivatedFor.KEYBOARD");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
-		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		
 		t.assertTrue("device.BattleControls.activatedFor.KEYBOARD");
 		t.assertTrue("device.BattleControls.notActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.BattleControls.notActivatedFor.GAMEPAD.but.KEYBOARD");
-		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.BattleControls.deactivatedFor.KEYBOARD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
+		
+		#if (cpp && steamwrap)
+		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
+		#end
 		
 		t.destroy();
 	}
@@ -305,29 +311,32 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.MenuControls.activatedFor.GAMEPAD");
 		t.assertTrue("device.MenuControls.notActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.MenuControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
-		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.MenuControls.deactivatedFor.GAMEPAD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
-		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		
 		t.assertTrue("device.MapControls.activatedFor.GAMEPAD");
 		t.assertTrue("device.MapControls.notActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.MapControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
-		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.MapControls.deactivatedFor.GAMEPAD");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.MapControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
-		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		
 		t.assertTrue("device.BattleControls.activatedFor.GAMEPAD");
 		t.assertTrue("device.BattleControls.notActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.BattleControls.notActivatedFor.KEYBOARD.but.GAMEPAD");
-		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.BattleControls.deactivatedFor.GAMEPAD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
+		
+		#if (cpp && steamwrap)
+		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("device.MapControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		t.assertTrue("device.BattleControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
+		#end
 		
 		t.destroy();
 	}
