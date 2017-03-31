@@ -68,6 +68,8 @@ class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 
 class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 {
+	private var input:FlxInput<Int>;
+	
 	/**
 	 * Gamepad action input for digital (button-like) events
 	 * @param	InputID "universal" gamepad input ID (A, X, DPAD_LEFT, etc)
@@ -77,19 +79,21 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxInputState, ?GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.GAMEPAD, InputID, Trigger, GamepadID);
+		input = new FlxInput<Int>(InputID);
 	}
 	
-	override public function check(Action:FlxAction):Bool 
+	override public function update():Void 
 	{
-		#if !FLX_NO_GAMEPAD
+		super.update();
 		if (deviceID == FlxInputDeviceID.ALL)
 		{
-			switch (trigger)
+			if (FlxG.gamepads.anyPressed(inputID) || FlxG.gamepads.anyJustPressed(inputID))
 			{
-				case PRESSED:       return  FlxG.gamepads.anyPressed(inputID)  || FlxG.gamepads.anyJustPressed (inputID);
-				case RELEASED:      return !FlxG.gamepads.anyPressed(inputID)  || FlxG.gamepads.anyJustReleased(inputID);
-				case JUST_PRESSED:  return  FlxG.gamepads.anyJustPressed (inputID);
-				case JUST_RELEASED: return  FlxG.gamepads.anyJustReleased(inputID);
+				input.press();
+			}
+			else
+			{
+				input.release();
 			}
 		}
 		else
@@ -107,30 +111,42 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 			
 			if (gamepad != null)
 			{
-				if (inputID == FlxGamepadInputID.ANY)
+				if (inputID == ANY && trigger == RELEASED)
 				{
-					switch(trigger)
+					if (gamepad.released.ANY)
 					{
-						case PRESSED:       return  gamepad.pressed.ANY || gamepad.justPressed.ANY;
-						case RELEASED:      return !gamepad.pressed.ALL && !gamepad.justPressed.ALL;
-						case JUST_PRESSED:  return  gamepad.justPressed.ANY;
-						case JUST_RELEASED: return  gamepad.justReleased.ANY;
+						input.release();
+					}
+					else
+					{
+						input.press();
 					}
 				}
 				else
 				{
-					switch (trigger)
+					if (gamepad.checkStatus(inputID, PRESSED) || gamepad.checkStatus(inputID, JUST_PRESSED))
 					{
-						case PRESSED:       return  gamepad.checkStatus(inputID, PRESSED)  || gamepad.checkStatus(inputID, JUST_PRESSED);
-						case RELEASED:      return  gamepad.checkStatus(inputID, RELEASED) || gamepad.checkStatus(inputID, JUST_RELEASED);
-						case JUST_PRESSED:  return  gamepad.checkStatus(inputID, JUST_PRESSED);
-						case JUST_RELEASED: return  gamepad.checkStatus(inputID, JUST_RELEASED);
+						input.press();
+					}
+					else
+					{
+						input.release();
 					}
 				}
 			}
 		}
-		#end
-		return false;
+	}
+	
+	override public function check(Action:FlxAction):Bool 
+	{
+		return switch (trigger)
+		{
+			case PRESSED:       return  input.pressed  || input.justPressed;
+			case RELEASED:      return  input.released || input.justReleased;
+			case JUST_PRESSED:  return  input.justPressed;
+			case JUST_RELEASED: return  input.justReleased;
+			default: false;
+		}
 	}
 }
 
