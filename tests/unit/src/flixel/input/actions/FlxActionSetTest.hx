@@ -240,6 +240,7 @@ class FlxActionSetTest extends FlxTest
 		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
+	#if (cpp && steamwrap)
 	@Test
 	function testAttachSteamController()
 	{
@@ -285,6 +286,7 @@ class FlxActionSetTest extends FlxTest
 		
 		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move_100x100");
 	}
+	#end
 	
 	private function onCallback(str:String)
 	{
@@ -300,15 +302,6 @@ class FlxActionSetTest extends FlxTest
 		if (FlxG.mouse == null) return;
 		step();
 		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
-		set.update();
-	}
-	
-	private function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
-	{
-		step();
-		
-		SteamMock.setAnalogAction(controller, actionHandle, X, Y, true);
-		
 		set.update();
 	}
 	
@@ -336,16 +329,6 @@ class FlxActionSetTest extends FlxTest
 		
 	}
 	
-	private function clickSteamDigital(controller:Int, actionHandle:Int, pressed:Bool, set:FlxActionSet)
-	{
-		step();
-		set.update();
-		
-		SteamMock.setDigitalAction(controller, actionHandle, pressed);
-		
-		set.update();
-	}
-	
 	@:access(flixel.input.FlxKeyManager)
 	private function clearFlxKey(key:FlxKey, set:FlxActionSet)
 	{
@@ -358,6 +341,26 @@ class FlxActionSetTest extends FlxTest
 		set.update();
 	}
 	
+	#if (cpp && steamwrap)
+	private function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
+	{
+		step();
+		
+		SteamMock.setAnalogAction(controller, actionHandle, X, Y, true);
+		
+		set.update();
+	}
+	
+	private function clickSteamDigital(controller:Int, actionHandle:Int, pressed:Bool, set:FlxActionSet)
+	{
+		step();
+		set.update();
+		
+		SteamMock.setDigitalAction(controller, actionHandle, pressed);
+		
+		set.update();
+	}
+	
 	private function clearSteamDigital(controller:Int, actionHandle:Int, set:FlxActionSet)
 	{
 		SteamMock.setDigitalAction(controller, actionHandle, false);
@@ -366,4 +369,5 @@ class FlxActionSetTest extends FlxTest
 		step();
 		set.update();
 	}
+	#end
 }
