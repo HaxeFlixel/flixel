@@ -1,6 +1,5 @@
 package flixel.input.actions;
 
-import flixel.FlxObject;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;

@@ -1,12 +1,11 @@
 package flixel.input.actions;
+
+#if FLX_GAMEINPUT_API
 import flash.events.GameInputEvent;
-import flixel.FlxState;
-import flixel.input.FlxInput;
-import flixel.input.IFlxInput;
-import flixel.input.IFlxInputManager;
-import flixel.input.actions.FlxAction.FlxActionAnalog;
+#elseif FLX_JOYSTICK_API
+import openfl.events.JoystickEvent;
+#end
 import flixel.input.actions.FlxAction.FlxActionDigital;
-import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalIFlxInput;
@@ -14,28 +13,15 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.FlxInput;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
-import flixel.util.FlxArrayUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import haxe.Json;
-import haxe.PosInfos;
 import lime.ui.Gamepad;
-import openfl.events.JoystickEvent;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputControl;
 import openfl.ui.GameInputDevice;
-
-import flixel.util.typeLimit.OneOfFour;
-import flixel.util.typeLimit.OneOfThree;
-import flixel.util.typeLimit.OneOfTwo;
-
-
-import massive.munit.Assert;
 
 /**
  * ...
@@ -51,17 +37,14 @@ class FlxActionInputDigitalTest extends FlxTest
 	private var value3:Int = 0;
 	
 	@Before
-	function before()
-	{
-		
-	}
+	function before() {}
 	
 	@Test
 	function testIFlxInput()
 	{
 		var t = new TestShell("iflxinput.");
 		
-		_testIFlxInput(t, false);
+		runTestIFlxInput(t, false);
 		
 		//Press & release w/o callbacks
 		t.assertTrue ("iflxinput.press1.just");
@@ -79,7 +62,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	{
 		var t = new TestShell("iflxinput.");
 		
-		_testIFlxInput(t, true);
+		runTestIFlxInput(t, true);
 		
 		//Press & release w/ callbacks
 		t.assertTrue ("iflxinput.press1.callbacks.just");
@@ -94,14 +77,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 		for (i in 1...5)
 		{
-			t.assertTrue("iflxinput.press1.callbacks.callback"+i);
-			t.assertTrue("iflxinput.press2.callbacks.callback"+i);
-			t.assertTrue("iflxinput.release1.callbacks.callback"+i);
-			t.assertTrue("iflxinput.release2.callbacks.callback"+i);
+			t.assertTrue("iflxinput.press1.callbacks.callback" + i);
+			t.assertTrue("iflxinput.press2.callbacks.callback" + i);
+			t.assertTrue("iflxinput.release1.callbacks.callback" + i);
+			t.assertTrue("iflxinput.release2.callbacks.callback" + i);
 		}
 	}
 	
-	function _testIFlxInput(test:TestShell, callbacks:Bool)
+	function runTestIFlxInput(test:TestShell, callbacks:Bool)
 	{
 		var state = new FlxInput<Int>(0);
 		
@@ -131,18 +114,18 @@ class FlxActionInputDigitalTest extends FlxTest
 			var name = button.name;
 			var value = button.value;
 			
-			var t = new TestShell(name+".");
-			_testFlxMouseButton(t, value, false);
+			var t = new TestShell(name + ".");
+			runTestFlxMouseButton(t, value, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (name+".press1.just");
-			t.assertTrue (name+".press1.value");
-			t.assertFalse(name+".press2.just");
-			t.assertTrue (name+".press2.value");
-			t.assertTrue (name+".release1.just");
-			t.assertTrue (name+".release1.value");
-			t.assertFalse(name+".release2.just");
-			t.assertTrue (name+".release2.value");
+			t.assertTrue (name + ".press1.just");
+			t.assertTrue (name + ".press1.value");
+			t.assertFalse(name + ".press2.just");
+			t.assertTrue (name + ".press2.value");
+			t.assertTrue (name + ".release1.just");
+			t.assertTrue (name + ".release1.value");
+			t.assertFalse(name + ".release2.just");
+			t.assertTrue (name + ".release2.value");
 		}
 		
 	}
@@ -162,33 +145,33 @@ class FlxActionInputDigitalTest extends FlxTest
 			var name = button.name;
 			var value = button.value;
 			
-			var t = new TestShell(name+".");
-			_testFlxMouseButton(t, value, true);
+			var t = new TestShell(name + ".");
+			runTestFlxMouseButton(t, value, true);
 			
 			//Press & release w/ callbacks
-			t.assertTrue (name+".press1.callbacks.just");
-			t.assertTrue (name+".press1.callbacks.value");
-			t.assertFalse(name+".press2.callbacks.just");
-			t.assertTrue (name+".press2.callbacks.value");
-			t.assertTrue (name+".release1.callbacks.just");
-			t.assertTrue (name+".release1.callbacks.value");
-			t.assertFalse(name+".release2.callbacks.just");
-			t.assertTrue (name+".release2.callbacks.value");
+			t.assertTrue (name + ".press1.callbacks.just");
+			t.assertTrue (name + ".press1.callbacks.value");
+			t.assertFalse(name + ".press2.callbacks.just");
+			t.assertTrue (name + ".press2.callbacks.value");
+			t.assertTrue (name + ".release1.callbacks.just");
+			t.assertTrue (name + ".release1.callbacks.value");
+			t.assertFalse(name + ".release2.callbacks.just");
+			t.assertTrue (name + ".release2.callbacks.value");
 			
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(name+".press1.callbacks.callback"+i);
-				t.assertTrue(name+".press2.callbacks.callback"+i);
-				t.assertTrue(name+".release1.callbacks.callback"+i);
-				t.assertTrue(name+".release2.callbacks.callback"+i);
+				t.assertTrue(name + ".press1.callbacks.callback" + i);
+				t.assertTrue(name + ".press2.callbacks.callback" + i);
+				t.assertTrue(name + ".release1.callbacks.callback" + i);
+				t.assertTrue(name + ".release2.callbacks.callback" + i);
 			}
 		}
 	}
 	
-	function _testFlxMouseButton(test:TestShell, buttonID:FlxMouseButtonID, callbacks:Bool)
+	function runTestFlxMouseButton(test:TestShell, buttonID:FlxMouseButtonID, callbacks:Bool)
 	{
-		var button:FlxMouseButton = switch(buttonID)
+		var button:FlxMouseButton = switch (buttonID)
 		{
 			case FlxMouseButtonID.LEFT: @:privateAccess FlxG.mouse._leftButton;
 			case FlxMouseButtonID.RIGHT: @:privateAccess FlxG.mouse._rightButton;
@@ -261,27 +244,27 @@ class FlxActionInputDigitalTest extends FlxTest
 		for (key in keys)
 		{
 			var t = new TestShell(key + ".");
-			_testFlxKeyboard(t, key, false);
+			runTestFlxKeyboard(t, key, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (key+".press1.just");
-			t.assertTrue (key+".press1.value");
-			t.assertFalse(key+".press2.just");
-			t.assertTrue (key+".press2.value");
-			t.assertTrue (key+".release1.just");
-			t.assertTrue (key+".release1.value");
-			t.assertFalse(key+".release2.just");
-			t.assertTrue (key+".release2.value");
+			t.assertTrue (key + ".press1.just");
+			t.assertTrue (key + ".press1.value");
+			t.assertFalse(key + ".press2.just");
+			t.assertTrue (key + ".press2.value");
+			t.assertTrue (key + ".release1.just");
+			t.assertTrue (key + ".release1.value");
+			t.assertFalse(key + ".release2.just");
+			t.assertTrue (key + ".release2.value");
 			
 			//Test "ANY" key input as well:
-			t.assertTrue (key+"any.press1.just");
-			t.assertTrue (key+"any.press1.value");
-			t.assertFalse(key+"any.press2.just");
-			t.assertTrue (key+"any.press2.value");
-			t.assertTrue (key+"any.release1.just");
-			t.assertTrue (key+"any.release1.value");
-			t.assertFalse(key+"any.release2.just");
-			t.assertTrue (key+"any.release2.value");
+			t.assertTrue (key + "any.press1.just");
+			t.assertTrue (key + "any.press1.value");
+			t.assertFalse(key + "any.press2.just");
+			t.assertTrue (key + "any.press2.value");
+			t.assertTrue (key + "any.release1.just");
+			t.assertTrue (key + "any.release1.value");
+			t.assertFalse(key + "any.release2.just");
+			t.assertTrue (key + "any.release2.value");
 		}
 	}
 	
@@ -294,45 +277,45 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			var t = new TestShell(key + ".");
 			
-			_testFlxKeyboard(t, key, true);
+			runTestFlxKeyboard(t, key, true);
 			
 			//Press & release w/ callbacks
-			t.assertTrue (key+".press1.callbacks.just");
-			t.assertTrue (key+".press1.callbacks.value");
-			t.assertFalse(key+".press2.callbacks.just");
-			t.assertTrue (key+".press2.callbacks.value");
-			t.assertTrue (key+".release1.callbacks.just");
-			t.assertTrue (key+".release1.callbacks.value");
-			t.assertFalse(key+".release2.callbacks.just");
-			t.assertTrue (key+".release2.callbacks.value");
+			t.assertTrue (key + ".press1.callbacks.just");
+			t.assertTrue (key + ".press1.callbacks.value");
+			t.assertFalse(key + ".press2.callbacks.just");
+			t.assertTrue (key + ".press2.callbacks.value");
+			t.assertTrue (key + ".release1.callbacks.just");
+			t.assertTrue (key + ".release1.callbacks.value");
+			t.assertFalse(key + ".release2.callbacks.just");
+			t.assertTrue (key + ".release2.callbacks.value");
 			
 			//Test "ANY" key input as well:
-			t.assertTrue (key+"any.press1.callbacks.just");
-			t.assertTrue (key+"any.press1.callbacks.value");
-			t.assertFalse(key+"any.press2.callbacks.just");
-			t.assertTrue (key+"any.press2.callbacks.value");
-			t.assertTrue (key+"any.release1.callbacks.just");
-			t.assertTrue (key+"any.release1.callbacks.value");
-			t.assertFalse(key+"any.release2.callbacks.just");
-			t.assertTrue (key+"any.release2.callbacks.value");
+			t.assertTrue (key + "any.press1.callbacks.just");
+			t.assertTrue (key + "any.press1.callbacks.value");
+			t.assertFalse(key + "any.press2.callbacks.just");
+			t.assertTrue (key + "any.press2.callbacks.value");
+			t.assertTrue (key + "any.release1.callbacks.just");
+			t.assertTrue (key + "any.release1.callbacks.value");
+			t.assertFalse(key + "any.release2.callbacks.just");
+			t.assertTrue (key + "any.release2.callbacks.value");
 			
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(key+".press1.callbacks.callback"+i);
-				t.assertTrue(key+".press2.callbacks.callback"+i);
-				t.assertTrue(key+".release1.callbacks.callback"+i);
-				t.assertTrue(key+".release2.callbacks.callback"+i);
+				t.assertTrue(key + ".press1.callbacks.callback"+i);
+				t.assertTrue(key + ".press2.callbacks.callback"+i);
+				t.assertTrue(key + ".release1.callbacks.callback"+i);
+				t.assertTrue(key + ".release2.callbacks.callback"+i);
 				
-				t.assertTrue(key+".any.press1.callbacks.callback"+i);
-				t.assertTrue(key+".any.press2.callbacks.callback"+i);
-				t.assertTrue(key+".any.release1.callbacks.callback"+i);
-				t.assertTrue(key+".any.release2.callbacks.callback"+i);
+				t.assertTrue(key + ".any.press1.callbacks.callback"+i);
+				t.assertTrue(key + ".any.press2.callbacks.callback"+i);
+				t.assertTrue(key + ".any.release1.callbacks.callback"+i);
+				t.assertTrue(key + ".any.release2.callbacks.callback"+i);
 			}
 		}
 	}
 	
-	function _testFlxKeyboard(test:TestShell, key:FlxKey, callbacks:Bool)
+	function runTestFlxKeyboard(test:TestShell, key:FlxKey, callbacks:Bool)
 	{
 		var a = new FlxActionInputDigitalKeyboard(key, FlxInputState.PRESSED);
 		var b = new FlxActionInputDigitalKeyboard(key, FlxInputState.JUST_PRESSED);
@@ -366,18 +349,18 @@ class FlxActionInputDigitalTest extends FlxTest
 			var name = polarity.name;
 			var value = polarity.value;
 			
-			var t = new TestShell(name+".");
-			_testFlxMouseWheel(t, value, false);
+			var t = new TestShell(name + ".");
+			runTestFlxMouseWheel(t, value, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (name+".press1.just");
-			t.assertTrue (name+".press1.value");
-			t.assertFalse(name+".press2.just");
-			t.assertTrue (name+".press2.value");
-			t.assertTrue (name+".release1.just");
-			t.assertTrue (name+".release1.value");
-			t.assertFalse(name+".release2.just");
-			t.assertTrue (name+".release2.value");
+			t.assertTrue (name + ".press1.just");
+			t.assertTrue (name + ".press1.value");
+			t.assertFalse(name + ".press2.just");
+			t.assertTrue (name + ".press2.value");
+			t.assertTrue (name + ".release1.just");
+			t.assertTrue (name + ".release1.value");
+			t.assertFalse(name + ".release2.just");
+			t.assertTrue (name + ".release2.value");
 		}
 	}
 	
@@ -395,31 +378,31 @@ class FlxActionInputDigitalTest extends FlxTest
 			var name = polarity.name;
 			var value = polarity.value;
 			
-			var t = new TestShell(name+".");
-			_testFlxMouseWheel(t, value, true);
+			var t = new TestShell(name + ".");
+			runTestFlxMouseWheel(t, value, true);
 			
 			//Press & release w/ callbacks
-			t.assertTrue (name+".press1.callbacks.just");
-			t.assertTrue (name+".press1.callbacks.value");
-			t.assertFalse(name+".press2.callbacks.just");
-			t.assertTrue (name+".press2.callbacks.value");
-			t.assertTrue (name+".release1.callbacks.just");
-			t.assertTrue (name+".release1.callbacks.value");
-			t.assertFalse(name+".release2.callbacks.just");
-			t.assertTrue (name+".release2.callbacks.value");
+			t.assertTrue (name + ".press1.callbacks.just");
+			t.assertTrue (name + ".press1.callbacks.value");
+			t.assertFalse(name + ".press2.callbacks.just");
+			t.assertTrue (name + ".press2.callbacks.value");
+			t.assertTrue (name + ".release1.callbacks.just");
+			t.assertTrue (name + ".release1.callbacks.value");
+			t.assertFalse(name + ".release2.callbacks.just");
+			t.assertTrue (name + ".release2.callbacks.value");
 			
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(name+".press1.callbacks.callback"+i);
-				t.assertTrue(name+".press2.callbacks.callback"+i);
-				t.assertTrue(name+".release1.callbacks.callback"+i);
-				t.assertTrue(name+".release2.callbacks.callback"+i);
+				t.assertTrue(name + ".press1.callbacks.callback"+i);
+				t.assertTrue(name + ".press2.callbacks.callback"+i);
+				t.assertTrue(name + ".release1.callbacks.callback"+i);
+				t.assertTrue(name + ".release2.callbacks.callback"+i);
 			}
 		}
 	}
 	
-	function _testFlxMouseWheel(test:TestShell, positive:Bool, callbacks:Bool)
+	function runTestFlxMouseWheel(test:TestShell, positive:Bool, callbacks:Bool)
 	{
 		var a = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.PRESSED);
 		var b = new FlxActionInputDigitalMouseWheel(positive, FlxInputState.JUST_PRESSED);
@@ -446,20 +429,18 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 		var control:GameInputControl = null;
 		
-		for (i in 0...6) {
-			
+		for (i in 0...6)
+		{
 			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
 			@:privateAccess gid.__axis.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
-		for (i in 0...15) {
-			
+		for (i in 0...15)
+		{
 			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
 			@:privateAccess gid.__button.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
 		gamepad.update();
@@ -479,17 +460,17 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			var t = new TestShell(btn + ".");
 			
-			_testFlxGamepad(t, btn, false, false);
+			runTestFlxGamepad(t, btn, false, false);
 			
 			//Press & release w/ callbacks
-			t.assertTrue (btn+".press1.just");
-			t.assertTrue (btn+".press1.value");
-			t.assertFalse(btn+".press2.just");
-			t.assertTrue (btn+".press2.value");
-			t.assertTrue (btn+".release1.just");
-			t.assertTrue (btn+".release1.value");
-			t.assertFalse(btn+".release2.just");
-			t.assertTrue (btn+".release2.value");
+			t.assertTrue (btn + ".press1.just");
+			t.assertTrue (btn + ".press1.value");
+			t.assertFalse(btn + ".press2.just");
+			t.assertTrue (btn + ".press2.value");
+			t.assertTrue (btn + ".release1.just");
+			t.assertTrue (btn + ".release1.value");
+			t.assertFalse(btn + ".release2.just");
+			t.assertTrue (btn + ".release2.value");
 		}
 	}
 	
@@ -502,18 +483,18 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			var t = new TestShell(btn + ".any.");
 			
-			_testFlxGamepad(t, btn, false, true);
+			runTestFlxGamepad(t, btn, false, true);
 			
 			//Press & release w/ callbacks
 			//Test "ANY" button input
-			t.assertTrue (btn+".any.press1.just");
-			t.assertTrue (btn+".any.press1.value");
-			t.assertFalse(btn+".any.press2.just");
-			t.assertTrue (btn+".any.press2.value");
-			t.assertTrue (btn+".any.release1.just");
-			t.assertTrue (btn+".any.release1.value");
-			t.assertFalse(btn+".any.release2.just");
-			t.assertTrue (btn+".any.release2.value");
+			t.assertTrue (btn + ".any.press1.just");
+			t.assertTrue (btn + ".any.press1.value");
+			t.assertFalse(btn + ".any.press2.just");
+			t.assertTrue (btn + ".any.press2.value");
+			t.assertTrue (btn + ".any.release1.just");
+			t.assertTrue (btn + ".any.release1.value");
+			t.assertFalse(btn + ".any.release2.just");
+			t.assertTrue (btn + ".any.release2.value");
 		}
 	}
 	
@@ -526,25 +507,25 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			var t = new TestShell(btn + ".");
 			
-			_testFlxGamepad(t, btn, true, false);
+			runTestFlxGamepad(t, btn, true, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (btn+".press1.callbacks.just");
-			t.assertTrue (btn+".press1.callbacks.value");
-			t.assertFalse(btn+".press2.callbacks.just");
-			t.assertTrue (btn+".press2.callbacks.value");
-			t.assertTrue (btn+".release1.callbacks.just");
-			t.assertTrue (btn+".release1.callbacks.value");
-			t.assertFalse(btn+".release2.callbacks.just");
-			t.assertTrue (btn+".release2.callbacks.value");
+			t.assertTrue (btn + ".press1.callbacks.just");
+			t.assertTrue (btn + ".press1.callbacks.value");
+			t.assertFalse(btn + ".press2.callbacks.just");
+			t.assertTrue (btn + ".press2.callbacks.value");
+			t.assertTrue (btn + ".release1.callbacks.just");
+			t.assertTrue (btn + ".release1.callbacks.value");
+			t.assertFalse(btn + ".release2.callbacks.just");
+			t.assertTrue (btn + ".release2.callbacks.value");
 			
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(btn+".press1.callbacks.callback"+i);
-				t.assertTrue(btn+".press2.callbacks.callback"+i);
-				t.assertTrue(btn+".release1.callbacks.callback"+i);
-				t.assertTrue(btn+".release2.callbacks.callback"+i);
+				t.assertTrue(btn + ".press1.callbacks.callback"+i);
+				t.assertTrue(btn + ".press2.callbacks.callback"+i);
+				t.assertTrue(btn + ".release1.callbacks.callback"+i);
+				t.assertTrue(btn + ".release2.callbacks.callback"+i);
 			}
 		}
 	}
@@ -558,31 +539,31 @@ class FlxActionInputDigitalTest extends FlxTest
 		{
 			var t = new TestShell(btn + ".any.");
 			
-			_testFlxGamepad(t, btn, true, true);
+			runTestFlxGamepad(t, btn, true, true);
 			
 			//Press & release w/ callbacks
 			//Test "ANY" button input
-			t.assertTrue (btn+".any.press1.callbacks.just");
-			t.assertTrue (btn+".any.press1.callbacks.value");
-			t.assertFalse(btn+".any.press2.callbacks.just");
-			t.assertTrue (btn+".any.press2.callbacks.value");
-			t.assertTrue (btn+".any.release1.callbacks.just");
-			t.assertTrue (btn+".any.release1.callbacks.value");
-			t.assertFalse(btn+".any.release2.callbacks.just");
-			t.assertTrue (btn+".any.release2.callbacks.value");
+			t.assertTrue (btn + ".any.press1.callbacks.just");
+			t.assertTrue (btn + ".any.press1.callbacks.value");
+			t.assertFalse(btn + ".any.press2.callbacks.just");
+			t.assertTrue (btn + ".any.press2.callbacks.value");
+			t.assertTrue (btn + ".any.release1.callbacks.just");
+			t.assertTrue (btn + ".any.release1.callbacks.value");
+			t.assertFalse(btn + ".any.release2.callbacks.just");
+			t.assertTrue (btn + ".any.release2.callbacks.value");
 			
 			//Callbacks themselves (1-4: pressed, just_pressed, released, just_released)
 			for (i in 1...5)
 			{
-				t.assertTrue(btn+".any.press1.callbacks.callback"+i);
-				t.assertTrue(btn+".any.press2.callbacks.callback"+i);
-				t.assertTrue(btn+".any.release1.callbacks.callback"+i);
-				t.assertTrue(btn+".any.release2.callbacks.callback"+i);
+				t.assertTrue(btn + ".any.press1.callbacks.callback" + i);
+				t.assertTrue(btn + ".any.press2.callbacks.callback" + i);
+				t.assertTrue(btn + ".any.release1.callbacks.callback" + i);
+				t.assertTrue(btn + ".any.release2.callbacks.callback" + i);
 			}
 		}
 	}
 	
-	function _testFlxGamepad(test:TestShell, inputID:FlxGamepadInputID, callbacks:Bool, any:Bool)
+	function runTestFlxGamepad(test:TestShell, inputID:FlxGamepadInputID, callbacks:Bool, any:Bool)
 	{
 		var a:FlxActionInputDigitalGamepad;
 		var b:FlxActionInputDigitalGamepad;
@@ -636,9 +617,8 @@ class FlxActionInputDigitalTest extends FlxTest
 		#end
 	}
 	
-	/*********/
-	
-	function getCallback(i:Int){
+	function getCallback(i:Int)
+	{
 		return function (a:FlxActionDigital){
 			onCallback(i);
 		}
@@ -924,7 +904,8 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	private function onCallback(i:Int)
 	{
-		switch(i){
+		switch (i)
+		{
 			case 0: value0++;
 			case 1: value1++;
 			case 2: value2++;

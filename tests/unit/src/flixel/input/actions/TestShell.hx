@@ -1,4 +1,5 @@
 package flixel.input.actions;
+
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.PosInfos;
@@ -24,10 +25,12 @@ class TestShell implements IFlxDestroyable
 	
 	public function get(id:String):TestShellResult
 	{
-		for (result in results){
+		for (result in results)
+		{
 			if (result.id == id) return result;
 		}
-		return {
+		return
+		{
 			id:"unknown id(" + id + ")",
 			testedTrue:false,
 			testedFalse:false,
@@ -39,12 +42,12 @@ class TestShell implements IFlxDestroyable
 	
 	public function testIsTrue(b:Bool, id:String)
 	{
-		test(id, b == true, b == false, false, false, Std.string(b == true));
+		test(id, b, !b, false, false, Std.string(b));
 	}
 	
 	public function testIsFalse(b:Bool, id:String)
 	{
-		test(id, b == true, b == false, false, false, Std.string(b == false));
+		test(id, b, !b, false, false, Std.string(!b));
 	}
 	
 	public function testIsNull(d:Dynamic, id:String)
@@ -57,7 +60,7 @@ class TestShell implements IFlxDestroyable
 		test(id, false, false, d == null, d != null, d == null ? "null" : Std.string(d));
 	}
 	
-	private function test(id:String, tTrue:Bool=false, tFalse:Bool=false, tNull:Bool=false, tNNull:Bool=false, strValue:String="untested")
+	private function test(id:String, tTrue:Bool = false, tFalse:Bool = false, tNull:Bool = false, tNNull:Bool = false, strValue:String = "untested")
 	{
 		results.push
 		(
