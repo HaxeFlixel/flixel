@@ -2,8 +2,10 @@ package flixel.input.actions;
 
 import flixel.input.actions.FlxSteamController.FlxSteamControllerMetadata;
 import flixel.util.FlxArrayUtil;
+#if (cpp && steamwrap)
 import steamwrap.api.Controller;
 import steamwrap.api.Steam;
+#end
 
 /**
  * ...
@@ -11,7 +13,7 @@ import steamwrap.api.Steam;
  */
 class SteamMock
 {
-
+	#if (cpp && steamwrap)
 	public static var digitalData:Map<String, ControllerDigitalActionData>;
 	public static var analogData:Map<String, ControllerAnalogActionData>;
 	
@@ -114,8 +116,10 @@ class SteamMock
 		var key = controller + "_" + actionSet + "_" + action;
 		analogOrigins.set(key, origins);
 	}
+	#end
 }
 
+#if(cpp && steamwrap)
 class FakeController extends Controller
 {
 	function new(CustomTrace:String->Void)
@@ -220,3 +224,4 @@ class FakeController extends Controller
 		return originsOut.length;
 	}
 }
+#end

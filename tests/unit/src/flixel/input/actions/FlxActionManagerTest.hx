@@ -28,9 +28,11 @@ import massive.munit.Assert;
  */
 class FlxActionManagerTest extends FlxTest
 {
-
-	private var basicManager:FlxActionManager;
+	#if (cpp && steamwrap)
 	private var steamManager:FlxActionManager;
+	#end
+	
+	private var basicManager:FlxActionManager;
 	private var sets:Array<String>;
 	private var analog:Array<Array<String>>;
 	private var digital:Array<Array<String>>;
@@ -85,7 +87,8 @@ class FlxActionManagerTest extends FlxTest
 		
 		t.destroy();
 	}
-	
+
+	#if (cpp && steamwrap)
 	@Test
 	function testInitSteam()
 	{
@@ -109,6 +112,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		t.destroy();
 	}
+	#end
 	
 	@Test
 	function testActions()
@@ -150,6 +154,7 @@ class FlxActionManagerTest extends FlxTest
 		t.destroy();
 	}
 	
+	#if (cpp && steamwrap)
 	@Test
 	function testActionsSteam()
 	{
@@ -189,6 +194,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		t.destroy();
 	}
+	#end
 	
 	@Test
 	function testAddRemove()
@@ -750,12 +756,14 @@ class FlxActionManagerTest extends FlxTest
 		
 		basicManager.initFromJSON(actionsJSON, null, null);
 		
+		#if (cpp && steamwrap)
 		steamManager = new FlxActionManager();
 		
 		var vdfText = VDFString.get();
 		var config = ControllerConfig.fromVDF(vdfText);
 		
 		steamManager.initSteam(config, null, null);
+		#end
 	}
 	
 	function runFlxActionManagerInit(test:TestShell, ?manager:FlxActionManager)

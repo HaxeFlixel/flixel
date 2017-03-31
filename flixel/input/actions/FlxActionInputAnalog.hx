@@ -8,7 +8,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 
-#if steamwrap
+#if (cpp && steamwrap)
 import steamwrap.api.Controller.ControllerAnalogActionData;
 #end
 
@@ -248,14 +248,14 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	private function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, cast Trigger, Axis, DeviceID);
-		#if !steamwrap
+		#if FLX_NO_STEAM
 			FlxG.log.warn("steamwrap library not installed; steam inputs will be ignored.");
 		#end
 	}
 	
 	override public function update():Void 
 	{
-		#if steamwrap
+		#if (cpp && steamwrap)
 		var handle = deviceID;
 		if (handle == FlxInputDeviceID.NONE)
 		{
@@ -271,7 +271,7 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 		#end
 	}
 	
-	#if steamwrap
+	#if (cpp && steamwrap)
 	private static var analogActionData:ControllerAnalogActionData = new ControllerAnalogActionData();
 	#end
 }

@@ -3,7 +3,7 @@ package flixel.input.actions;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-#if steamwrap
+#if (cpp && steamwrap)
 import steamwrap.api.Controller.EControllerActionOrigin;
 #end
 
@@ -187,7 +187,7 @@ class FlxAction implements IFlxDestroyable
 	 */
 	public var steamOriginsChanged(default, null):Bool = false;
 	
-	#if steamwrap
+	#if (cpp && steamwrap)
 	private var _steamOriginsChecksum:Int = 0;
 	private var _steamOrigins:Array<EControllerActionOrigin>;
 	#end
@@ -197,7 +197,7 @@ class FlxAction implements IFlxDestroyable
 		type = InputType;
 		name = Name;
 		inputs = [];
-		#if steamwrap
+		#if (cpp && steamwrap)
 		_steamOrigins = [];
 		for (i in 0...FlxSteamController.MAX_ORIGINS)
 		{
@@ -208,7 +208,7 @@ class FlxAction implements IFlxDestroyable
 	
 	public function getFirstSteamOrigin():Int
 	{
-		#if steamwrap
+		#if (cpp && steamwrap)
 		if (_steamOrigins == null) return 0;
 		for (i in 0..._steamOrigins.length)
 		{
@@ -223,7 +223,7 @@ class FlxAction implements IFlxDestroyable
 	
 	public function getSteamOrigins(?origins:Array<Int>):Array<Int>
 	{
-		#if steamwrap
+		#if (cpp && steamwrap)
 		if (origins == null)
 		{
 			origins = [];
@@ -320,7 +320,7 @@ class FlxAction implements IFlxDestroyable
 	{
 		FlxDestroyUtil.destroyArray(inputs);
 		inputs = null;
-		#if steamwrap
+		#if (cpp && steamwrap)
 		FlxArrayUtil.clearArray(_steamOrigins);
 		_steamOrigins = null;
 		#end
