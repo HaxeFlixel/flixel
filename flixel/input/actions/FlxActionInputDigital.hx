@@ -85,6 +85,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	override public function update():Void 
 	{
 		super.update();
+		#if !FLX_NO_GAMEPAD
 		if (deviceID == FlxInputDeviceID.ALL)
 		{
 			if (FlxG.gamepads.anyPressed(inputID) || FlxG.gamepads.anyJustPressed(inputID))
@@ -135,6 +136,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 				}
 			}
 		}
+		#end
 	}
 	
 	override public function check(Action:FlxAction):Bool 
