@@ -57,25 +57,25 @@ class FlxActionInputAnalogTest extends FlxTest
 		
 		for (a in axes)
 		{
-			var name = "mouse_pos."+a.name;
+			var name = "mouse_pos." + a.name;
 			var axis = a.value;
 			
-			var t = new TestShell(name+".");
-			runMousePosition(t, axis, false);
+			var t = new TestShell(name + ".");
+			runTestMousePosition(t, axis, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (name+".move1.just");
-			t.assertTrue (name+".move1.value");
-			t.assertFalse(name+".move2.just");
-			t.assertTrue (name+".move2.value");
-			t.assertTrue (name+".stop1.just");
-			t.assertTrue (name+".stop1.value");
-			t.assertFalse(name+".stop2.just");
-			t.assertTrue (name+".stop2.value");
+			t.assertTrue (name + ".move1.just");
+			t.assertTrue (name + ".move1.value");
+			t.assertFalse(name + ".move2.just");
+			t.assertTrue (name + ".move2.value");
+			t.assertTrue (name + ".stop1.just");
+			t.assertTrue (name + ".stop1.value");
+			t.assertFalse(name + ".stop2.just");
+			t.assertTrue (name + ".stop2.value");
 		}
 	}
 	
-	function runMousePosition(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
+	function runTestMousePosition(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogMousePosition(FlxAnalogState.MOVED, axis);
 		var b = new FlxActionInputAnalogMousePosition(FlxAnalogState.JUST_MOVED, axis);
@@ -88,7 +88,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		var pos1 = new FlxPoint();
 		var pos2 = new FlxPoint();
 		
-		switch(axis)
+		switch (axis)
 		{
 			case X:      pos1.set(10,  0); pos2.set(20,  0);
 			case Y:      pos1.set( 0, 10); pos2.set( 0, 20);
@@ -115,22 +115,22 @@ class FlxActionInputAnalogTest extends FlxTest
 			var name = "mouse_move."+a.name;
 			var axis = a.value;
 			
-			var t = new TestShell(name+".");
-			runMouseMotion(t, axis, false);
+			var t = new TestShell(name + ".");
+			runTestMouseMotion(t, axis, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (name+".move1.just");
-			t.assertTrue (name+".move1.value");
-			t.assertFalse(name+".move2.just");
-			t.assertTrue (name+".move2.value");
-			t.assertTrue (name+".stop1.just");
-			t.assertTrue (name+".stop1.value");
-			t.assertFalse(name+".stop2.just");
-			t.assertTrue (name+".stop2.value");
+			t.assertTrue (name + ".move1.just");
+			t.assertTrue (name + ".move1.value");
+			t.assertFalse(name + ".move2.just");
+			t.assertTrue (name + ".move2.value");
+			t.assertTrue (name + ".stop1.just");
+			t.assertTrue (name + ".stop1.value");
+			t.assertFalse(name + ".stop2.just");
+			t.assertTrue (name + ".stop2.value");
 		}
 	}
 	
-	function runMouseMotion(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
+	function runTestMouseMotion(test:TestShell, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogMouseMotion(FlxAnalogState.MOVED, axis);
 		var b = new FlxActionInputAnalogMouseMotion(FlxAnalogState.JUST_MOVED, axis);
@@ -145,7 +145,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		var pos3 = new FlxPoint();
 		var pos4 = new FlxPoint();
 		
-		switch(axis)
+		switch (axis)
 		{
 			case X: 
 				pos1.set( 50,   0);
@@ -195,26 +195,26 @@ class FlxActionInputAnalogTest extends FlxTest
 			var button = b.value;
 			for (a in axes)
 			{
-				var name = "mouse_click_and_drag_move."+b.name+"."+a.name;
+				var name = "mouse_click_and_drag_move." + b.name + "." + a.name;
 				var axis = a.value;
 				
-				var t = new TestShell(name+".");
-				runClickAndDragMouseMotion(t, button, axis, false);
+				var t = new TestShell(name + ".");
+				runTestClickAndDragMouseMotion(t, button, axis, false);
 				
 				//Press & release w/o callbacks
-				t.assertTrue (name+".move1.just");
-				t.assertTrue (name+".move1.value");
-				t.assertFalse(name+".move2.just");
-				t.assertTrue (name+".move2.value");
-				t.assertTrue (name+".stop1.just");
-				t.assertTrue (name+".stop1.value");
-				t.assertFalse(name+".stop2.just");
-				t.assertTrue (name+".stop2.value");
+				t.assertTrue (name + ".move1.just");
+				t.assertTrue (name + ".move1.value");
+				t.assertFalse(name + ".move2.just");
+				t.assertTrue (name + ".move2.value");
+				t.assertTrue (name + ".stop1.just");
+				t.assertTrue (name + ".stop1.value");
+				t.assertFalse(name + ".stop2.just");
+				t.assertTrue (name + ".stop2.value");
 			}
 		}
 	}
 	
-	function runClickAndDragMouseMotion(test:TestShell, button:FlxMouseButtonID, axis:FlxAnalogAxis, callbacks:Bool)
+	function runTestClickAndDragMouseMotion(test:TestShell, button:FlxMouseButtonID, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		var a = new FlxActionInputAnalogClickAndDragMouseMotion(button, MOVED, axis);
 		var b = new FlxActionInputAnalogClickAndDragMouseMotion(button, JUST_MOVED, axis);
@@ -229,7 +229,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		var pos3 = new FlxPoint();
 		var pos4 = new FlxPoint();
 		
-		switch(axis)
+		switch (axis)
 		{
 			case X: 
 				pos1.set( 50,   0);
@@ -279,22 +279,22 @@ class FlxActionInputAnalogTest extends FlxTest
 			var input = inp.input;
 			var axis = inp.value;
 			
-			var t = new TestShell(name+".");
-			runGamepad(t, input, axis, false);
+			var t = new TestShell(name + ".");
+			runTestGamepad(t, input, axis, false);
 			
 			//Press & release w/o callbacks
-			t.assertTrue (name+".move1.just");
-			t.assertTrue (name+".move1.value");
-			t.assertFalse(name+".move2.just");
-			t.assertTrue (name+".move2.value");
-			t.assertTrue (name+".stop1.just");
-			t.assertTrue (name+".stop1.value");
-			t.assertFalse(name+".stop2.just");
-			t.assertTrue (name+".stop2.value");
+			t.assertTrue (name + ".move1.just");
+			t.assertTrue (name + ".move1.value");
+			t.assertFalse(name + ".move2.just");
+			t.assertTrue (name + ".move2.value");
+			t.assertTrue (name + ".stop1.just");
+			t.assertTrue (name + ".stop1.value");
+			t.assertFalse(name + ".stop2.just");
+			t.assertTrue (name + ".stop2.value");
 		}
 	}
 	
-	function runGamepad(test:TestShell, input:FlxGamepadInputID, axis:FlxAnalogAxis, callbacks:Bool)
+	function runTestGamepad(test:TestShell, input:FlxGamepadInputID, axis:FlxAnalogAxis, callbacks:Bool)
 	{
 		#if FLX_JOYSTICK_API
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 0, 0, 0, 0, 0));
@@ -316,7 +316,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		var pos2 = new FlxPoint();
 		var pos3 = new FlxPoint();
 		
-		switch(axis)
+		switch (axis)
 		{
 			case X:      pos1.set(10,  0); pos2.set(20,  0); pos3.set(0, 0);
 			case Y:      pos1.set( 0, 10); pos2.set( 0, 20); pos3.set(0, 0);
@@ -347,20 +347,18 @@ class FlxActionInputAnalogTest extends FlxTest
 		
 		var control:GameInputControl = null;
 		
-		for (i in 0...6) {
-			
+		for (i in 0...6)
+		{
 			control = @:privateAccess new GameInputControl (gid, "AXIS_" + i, -1, 1);
 			@:privateAccess gid.__axis.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
-		for (i in 0...15) {
-			
+		for (i in 0...15)
+		{
 			control = @:privateAccess new GameInputControl (gid, "BUTTON_" + i, 0, 1);
 			@:privateAccess gid.__button.set (i, control);
 			@:privateAccess gid.__controls.push (control);
-			
 		}
 		
 		gamepad.update();
@@ -373,8 +371,10 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	#end
 	
-	function getCallback(i:Int){
-		return function (a:FlxActionAnalog){
+	function getCallback(i:Int)
+	{
+		return function (a:FlxActionAnalog)
+		{
 			onCallback(i);
 		}
 	}
@@ -581,7 +581,8 @@ class FlxActionInputAnalogTest extends FlxTest
 	
 	private function moveClickAndDragMousePosition(Button:FlxMouseButtonID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
 	{
-		var button:FlxMouseButton = switch(Button)
+		var button:FlxMouseButton = 
+		switch (Button)
 		{
 			case FlxMouseButtonID.LEFT: @:privateAccess FlxG.mouse._leftButton;
 			case FlxMouseButtonID.RIGHT: @:privateAccess FlxG.mouse._rightButton;
@@ -634,7 +635,8 @@ class FlxActionInputAnalogTest extends FlxTest
 	
 	private function onCallback(i:Int)
 	{
-		switch(i){
+		switch (i)
+		{
 			case 0: value0++;
 			case 1: value1++;
 			case 2: value2++;
