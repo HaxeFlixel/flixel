@@ -164,6 +164,7 @@ class CompletionHandler
 			case TBool: "Bool";
 			case TObject: "Object";
 			case TFunction: "Function";
+			case TClass(Array): 'Array[${v.length}]';
 			case TClass(c): FlxStringUtil.getClassName(c, true);
 			case TEnum(e): FlxStringUtil.getClassName(e, true);
 			case TUnknown: "Unknown";
