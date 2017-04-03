@@ -1,6 +1,6 @@
 package flixel.input.actions;
 
-#if FLX_GAMEINPUT_API
+#if (!flash && FLX_GAMEINPUT_API)
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
@@ -415,7 +415,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, move, a, b, c, d, callbacks);
 	}
 	
-	#if FLX_GAMEINPUT_API
+	#if (!flash && FLX_GAMEINPUT_API)
 	private function makeFakeGamepad()
 	{
 		var xinput = @:privateAccess new Gamepad(0);
@@ -450,7 +450,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	@Test
 	function testFlxGamepad()
 	{
-		#if FLX_GAMEINPUT_API
+		#if (!flash && FLX_GAMEINPUT_API)
 		makeFakeGamepad();
 		#end
 		
@@ -608,7 +608,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		var click = clickJoystick.bind(inputID);
 		testInputStates(test, clear, click, a, b, c, d, callbacks, stateGrid);
 		
-		#elseif FLX_GAMEINPUT_API
+		#elseif (!flash && FLX_GAMEINPUT_API)
 		
 		var clear = clearGamepad.bind(inputID);
 		var click = clickGamepad.bind(inputID);
@@ -747,7 +747,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	#end
 	
-	#if FLX_GAMEINPUT_API
+	#if (!flash && FLX_GAMEINPUT_API)
 	@:access(flixel.input.gamepad.FlxGamepad)
 	private function clearGamepad(ID:FlxGamepadInputID)
 	{
@@ -815,7 +815,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	#end
 	
-	#if FLX_GAMEINPUT_API
+	#if (!flash && FLX_GAMEINPUT_API)
 	@:access(flixel.input.gamepad.FlxGamepad)
 	private function clickGamepad(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{

@@ -2,7 +2,7 @@ package flixel.input.actions;
 
 import flixel.input.actions.FlxSteamController.FlxSteamControllerMetadata;
 import flixel.util.FlxArrayUtil;
-#if (cpp && steamwrap)
+#if (cpp && steamwrap && haxe_ver > "3.2")
 import steamwrap.api.Controller;
 import steamwrap.api.Steam;
 #end
@@ -13,7 +13,7 @@ import steamwrap.api.Steam;
  */
 class SteamMock
 {
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	public static var digitalData:Map<String, ControllerDigitalActionData>;
 	public static var analogData:Map<String, ControllerAnalogActionData>;
 	
@@ -119,7 +119,7 @@ class SteamMock
 	#end
 }
 
-#if(cpp && steamwrap)
+#if(cpp && steamwrap && haxe_ver > "3.2")
 class FakeController extends Controller
 {
 	function new(CustomTrace:String->Void)

@@ -295,7 +295,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	{
 		#if FLX_JOYSTICK_API
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_ADDED, false, false, 0, 0, 0, 0, 0));
-		#elseif FLX_GAMEINPUT_API
+		#elseif (!flash && FLX_GAMEINPUT_API)
 		var g = makeFakeGamepad();
 		#end
 		
@@ -325,7 +325,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		
 		#if FLX_JOYSTICK_API
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.DEVICE_REMOVED, false, false, 0, 0, 0, 0, 0));
-		#elseif FLX_GAMEINPUT_API
+		#elseif (!flash && FLX_GAMEINPUT_API)
 		removeGamepad(g);
 		#end
 	}
