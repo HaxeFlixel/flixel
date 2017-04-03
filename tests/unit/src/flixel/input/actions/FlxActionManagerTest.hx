@@ -28,7 +28,7 @@ import massive.munit.Assert;
  */
 class FlxActionManagerTest extends FlxTest
 {
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	private var steamManager:FlxActionManager;
 	#end
 	
@@ -88,7 +88,7 @@ class FlxActionManagerTest extends FlxTest
 		t.destroy();
 	}
 
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	@Test
 	function testInitSteam()
 	{
@@ -154,7 +154,7 @@ class FlxActionManagerTest extends FlxTest
 		t.destroy();
 	}
 	
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	@Test
 	function testActionsSteam()
 	{
@@ -249,7 +249,7 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.KEYBOARD.but.MOUSE");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.GAMEPAD.but.MOUSE");
 		
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.MOUSE");
 		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.MOUSE");
@@ -289,7 +289,7 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.MOUSE.but.KEYBOARD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.GAMEPAD.but.KEYBOARD");
 		
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
 		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.KEYBOARD");
@@ -333,7 +333,7 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.MOUSE.but.GAMEPAD");
 		t.assertTrue("device.BattleControls.stillNotActivatedFor.KEYBOARD.but.GAMEPAD");
 		
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		t.assertTrue("device.MenuControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.MenuControls.stillNotActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
 		t.assertTrue("device.MapControls.notActivatedFor.STEAM_CONTROLLER.but.GAMEPAD");
@@ -393,34 +393,37 @@ class FlxActionManagerTest extends FlxTest
 		t.assertTrue("device.MenuControls.activatedForAll.MOUSE");
 		t.assertTrue("device.MenuControls.activatedForAll.KEYBOARD");
 		t.assertTrue("device.MenuControls.activatedForAll.GAMEPAD");
-		t.assertTrue("device.MenuControls.activatedForAll.STEAM_CONTROLLER");
 		t.assertTrue("device.MenuControls.deactivatedFor.ALL");
 		t.assertTrue("device.MenuControls.deactivatedForAll.MOUSE");
 		t.assertTrue("device.MenuControls.deactivatedForAll.KEYBOARD");
 		t.assertTrue("device.MenuControls.deactivatedForAll.GAMEPAD");
-		t.assertTrue("device.MenuControls.deactivatedForAll.STEAM_CONTROLLER");
 		
 		t.assertTrue("device.MapControls.activatedFor.ALL");
 		t.assertTrue("device.MapControls.activatedForAll.MOUSE");
 		t.assertTrue("device.MapControls.activatedForAll.KEYBOARD");
 		t.assertTrue("device.MapControls.activatedForAll.GAMEPAD");
-		t.assertTrue("device.MapControls.activatedForAll.STEAM_CONTROLLER");
 		t.assertTrue("device.MapControls.deactivatedFor.ALL");
 		t.assertTrue("device.MapControls.deactivatedForAll.MOUSE");
 		t.assertTrue("device.MapControls.deactivatedForAll.KEYBOARD");
 		t.assertTrue("device.MapControls.deactivatedForAll.GAMEPAD");
-		t.assertTrue("device.MapControls.deactivatedForAll.STEAM_CONTROLLER");
 		
 		t.assertTrue("device.BattleControls.activatedFor.ALL");
 		t.assertTrue("device.BattleControls.activatedForAll.MOUSE");
 		t.assertTrue("device.BattleControls.activatedForAll.KEYBOARD");
 		t.assertTrue("device.BattleControls.activatedForAll.GAMEPAD");
-		t.assertTrue("device.BattleControls.activatedForAll.STEAM_CONTROLLER");
 		t.assertTrue("device.BattleControls.deactivatedFor.ALL");
 		t.assertTrue("device.BattleControls.deactivatedForAll.MOUSE");
 		t.assertTrue("device.BattleControls.deactivatedForAll.KEYBOARD");
 		t.assertTrue("device.BattleControls.deactivatedForAll.GAMEPAD");
+		
+		#if (cpp && steamwrap && haxe_ver > "3.2")
+		t.assertTrue("device.MenuControls.activatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("device.MenuControls.deactivatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("device.MapControls.activatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("device.MapControls.deactivatedForAll.STEAM_CONTROLLER");
+		t.assertTrue("device.BattleControls.activatedForAll.STEAM_CONTROLLER");
 		t.assertTrue("device.BattleControls.deactivatedForAll.STEAM_CONTROLLER");
+		#end
 		
 		t.destroy();
 	}
@@ -773,7 +776,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		basicManager.initFromJSON(actionsJSON, null, null);
 		
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		steamManager = new FlxActionManager();
 		
 		var vdfText = VDFString.get();
@@ -902,7 +905,9 @@ class FlxActionManagerTest extends FlxTest
 				MOUSE,
 				KEYBOARD,
 				GAMEPAD,
+				#if(cpp && steamwrap && haxe_ver > "3.2")
 				STEAM_CONTROLLER,
+				#end
 				ALL
 			];
 			

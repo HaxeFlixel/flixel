@@ -13,7 +13,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.Json;
 
-#if (cpp && steamwrap)
+#if (cpp && steamwrap && haxe_ver > "3.2")
 import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig;
 #end
@@ -253,7 +253,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		return null;
 	}
 	
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	/**
 	 * Load action sets from a steamwrap ControllerConfig object
 	 * @param	Config	ControllerConfig object derived from your game's "game_actions_XYZ.vdf" file
@@ -484,7 +484,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	@:access(flixel.input.actions.FlxSteamController)
 	private function updateSteamControllers():Void
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		for (i in 0...FlxSteamController.MAX_CONTROLLERS)
 		{
 			if (FlxSteamController.controllers[i].connected.justReleased)
@@ -501,7 +501,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	
 	private function updateSteamOrigins():Void
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		var changed = register.updateSteamOrigins(sets);
 		if (changed != null)
 		{
@@ -585,7 +585,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function update(sets:Array<FlxActionSet>)
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		updateSteam(sets);
 		#end
 		
@@ -597,7 +597,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function updateSteam(sets:Array<FlxActionSet>)
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		
 		//Steam explicitly recommend in their documentation that you should re-activate the current action set every frame
 		
@@ -673,7 +673,7 @@ class ActionSetRegister implements IFlxDestroyable
 				setActivate(ActionSet, FlxInputDevice.MOUSE,    DeviceID, DoActivate);
 				setActivate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID, DoActivate);
 				setActivate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID, DoActivate);
-				#if (cpp && steamwrap)
+				#if (cpp && steamwrap && haxe_ver > "3.2")
 				setActivate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID, DoActivate);
 				#end
 				
@@ -688,7 +688,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	private function updateSteamOrigins(sets:Array<FlxActionSet>):Array<FlxAction>
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		
 		var changed:Array<FlxAction> = null;
 		
@@ -739,7 +739,7 @@ class ActionSetRegister implements IFlxDestroyable
 	@:access(flixel.input.actions.FlxAction)
 	private function updateDigitalActionOrigins(action:FlxActionDigital, deviceID:Int, setHandle:Int)
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		if (Steam.controllers == null) return;
 		var checksum = action._steamOriginsChecksum;
 		if (deviceID == FlxInputDeviceID.ALL) deviceID = 0;
@@ -761,7 +761,7 @@ class ActionSetRegister implements IFlxDestroyable
 	@:access(flixel.input.actions.FlxAction)
 	private function updateAnalogActionOrigins(action:FlxActionAnalog, deviceID:Int, setHandle:Int)
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		if (Steam.controllers == null) return;
 		var checksum = action._steamOriginsChecksum;
 		if (deviceID == FlxInputDeviceID.ALL) deviceID = 0;
@@ -804,7 +804,7 @@ class ActionSetRegister implements IFlxDestroyable
 	 */
 	private function updateSteamInputs(sets:Array<FlxActionSet>):Void
 	{
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 		if (steamControllerAllSet != -1)
 		{
 			for (i in 0...steamControllerSets.length)

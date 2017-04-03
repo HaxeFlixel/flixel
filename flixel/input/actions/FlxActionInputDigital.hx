@@ -235,7 +235,7 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	private function new(ActionHandle:Int, Trigger:FlxInputState, ?DeviceHandle:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, Trigger, DeviceHandle);
-		#if (cpp && steamwrap)
+		#if (cpp && steamwrap && haxe_ver > "3.2")
 			steamInput = new FlxInput<Int>(ActionHandle);
 		#else
 			FlxG.log.warn("steamwrap library not installed; steam inputs will be ignored.");

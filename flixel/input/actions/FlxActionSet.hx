@@ -14,7 +14,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Json;
 
-#if (cpp && steamwrap)
+#if (cpp && steamwrap && haxe_ver > "3.2")
 import steamwrap.data.ControllerConfig.ControllerActionSet;
 #end
 
@@ -28,7 +28,7 @@ class FlxActionSet implements IFlxDestroyable
 	 */
 	public var name(default, null):String = "";
 	
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	/**
 	 * This action set's numeric handle for the Steam API (ignored if not using Steam)
 	 */
@@ -50,7 +50,7 @@ class FlxActionSet implements IFlxDestroyable
 	 */
 	public var active:Bool = true;
 	
-	#if (cpp && steamwrap)
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	/**
 	 * Create an action set from a steamwrap configuration file.
 	 * 
