@@ -205,10 +205,6 @@ class FlxActionInputDigitalTest extends FlxTest
 			FlxGamepadInputID.RIGHT_SHOULDER,
 			FlxGamepadInputID.BACK,
 			FlxGamepadInputID.START,
-			#if (!FLX_GAMEINPUT_API)
-			FlxGamepadInputID.LEFT_STICK_CLICK,
-			FlxGamepadInputID.RIGHT_STICK_CLICK,
-			#end
 			FlxGamepadInputID.DPAD_UP,
 			FlxGamepadInputID.DPAD_DOWN,
 			FlxGamepadInputID.DPAD_LEFT,
