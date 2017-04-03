@@ -18,10 +18,13 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+
+#if (!flash && FLX_GAMEINPUT_API)
 import lime.ui.Gamepad;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputControl;
 import openfl.ui.GameInputDevice;
+#end
 
 /**
  * ...
