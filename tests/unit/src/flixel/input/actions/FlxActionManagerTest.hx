@@ -345,6 +345,7 @@ class FlxActionManagerTest extends FlxTest
 		t.destroy();
 	}
 	
+	#if (cpp && steamwrap && haxe_ver > "3.2")
 	@Test
 	function testSteamController()
 	{
@@ -381,6 +382,7 @@ class FlxActionManagerTest extends FlxTest
 		
 		t.destroy();
 	}
+	#end
 	
 	@Test
 	function testAllDevices()

@@ -542,7 +542,7 @@ class FlxActionInputAnalogTest extends FlxTest
 				btn.release();
 			}
 		}
-		#elseif FLX_GAMEINPUT_API
+		#elseif (FLX_GAMEINPUT_API && !flash)
 		var rawAxisID = Gamepad.mapping.getRawID(Input);
 		var control:GameInputControl = Gamepad._device.getControlAt(rawAxisID);
 		@:privateAccess control.value = X;
