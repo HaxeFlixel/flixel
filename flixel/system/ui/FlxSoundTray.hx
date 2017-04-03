@@ -5,14 +5,17 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.Lib;
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
+
+#if flash
+import flash.text.AntiAliasType;
+import flash.text.GridFitType;
+#end
 
 /**
  * The flixel sound tray, the little volume meter that pops down sometimes.
@@ -130,7 +133,9 @@ class FlxSoundTray extends Sprite
 	{
 		if (!Silent)
 		{
-			FlxG.sound.load(FlxAssets.getSound("flixel/sounds/beep")).play();
+			var sound = FlxAssets.getSound("flixel/sounds/beep");
+			if (sound != null)
+				FlxG.sound.load(sound).play();
 		}
 		
 		_timer = 1;

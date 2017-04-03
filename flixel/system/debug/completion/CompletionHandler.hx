@@ -1,6 +1,5 @@
 package flixel.system.debug.completion;
 
-import flixel.system.debug.console.ConsoleUtil;
 import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
@@ -8,8 +7,15 @@ using flixel.util.FlxArrayUtil;
 using flixel.util.FlxStringUtil;
 using StringTools;
 
+#if hscript
+import flixel.system.debug.console.ConsoleUtil;
+#end
+
 class CompletionHandler
 {
+	private static inline var ENTRY_VALUE = "Entry Value";
+	private static inline var ENTRY_TYPE = "Entry Type";
+
 	private var completionList:CompletionList;
 	private var input:TextField;
 	private var watchingSelection:Bool = false;
@@ -26,9 +32,24 @@ class CompletionHandler
 		input.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 	}
 	
+	private function getTextUntilCaret():String
+	{
+		return input.text.substring(0, getCaretIndex());
+	}
+
+	private function getCaretIndex():Int
+	{
+		#if openfl_legacy
+		// caretIndex is not a thing on legacy...
+		return input.text.length;
+		#else
+		return input.caretIndex;
+		#end
+	}
+
 	private function onKeyUp(e:KeyboardEvent)
 	{
-		var text = input.text;
+		var text = getTextUntilCaret();
 		
 		// close completion so that enter works
 		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'"))
@@ -97,21 +118,22 @@ class CompletionHandler
 	private function getCharXPosition():Float
 	{
 		var pos = 0.0;
-		for (i in 0...input.text.length)
+		for (i in 0...getCaretIndex())
 			pos += #if flash input.getCharBoundaries(i).width #else 6 #end;
 		return pos;
 	}
 	
 	private function getCompletedText(text:String, selectedItem:String):String
 	{
-		// replace the last occurence with the selected item
-		return new EReg(getWordAfterDot(input.text) + "$", "g").replace(text, selectedItem);
+		// replace the last occurrence with the selected item
+		return new EReg(getWordAfterDot(text) + "$", "g").replace(text, selectedItem);
 	}
 	
 	private function completed(selectedItem:String)
 	{
-		var insert = getCompletedText(input.text, selectedItem);
-		input.text = insert;
+		var textUntilCaret = getTextUntilCaret();
+		var insert = getCompletedText(textUntilCaret, selectedItem);
+		input.text = insert + input.text.substr(getCaretIndex());
 		input.setSelection(insert.length, insert.length);
 	}
 	
@@ -125,10 +147,28 @@ class CompletionHandler
 			var output = ConsoleUtil.runCommand(command);
 			
 			watchingSelection = true;
-			FlxG.watch.addQuick("Selection", output);
+			FlxG.watch.addQuick(ENTRY_VALUE, output);
+			FlxG.watch.addQuick(ENTRY_TYPE, getReadableType(output));
 		}
 		catch (e:Dynamic) {}
 		#end
+	}
+
+	private function getReadableType(v:Dynamic):String
+	{
+		return switch (Type.typeof(v))
+		{
+			case TNull: null;
+			case TInt: "Int";
+			case TFloat: "Float";
+			case TBool: "Bool";
+			case TObject: "Object";
+			case TFunction: "Function";
+			case TClass(Array): 'Array[${v.length}]';
+			case TClass(c): FlxStringUtil.getClassName(c, true);
+			case TEnum(e): FlxStringUtil.getClassName(e, true);
+			case TUnknown: "Unknown";
+		}
 	}
 	
 	private function completionClosed()
@@ -136,7 +176,8 @@ class CompletionHandler
 		if (!watchingSelection)
 			return;
 		
-		FlxG.watch.removeQuick("Selection");
+		FlxG.watch.removeQuick(ENTRY_VALUE);
+		FlxG.watch.removeQuick(ENTRY_TYPE);
 		watchingSelection = false;
 	}
 	

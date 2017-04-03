@@ -54,8 +54,8 @@ class FlxBitmapFont extends FlxFramesCollection
 	public var numLetters(default, null):Int = 0;
 	
 	/**
-	 * Minimum x offset in this font. 
-	 * This is a helper varible for rendering purposes.
+	 * Minimum x offset in this font.
+	 * This is a helper variable for rendering purposes.
 	 */
 	public var minOffsetX:Int = 0;
 	
@@ -65,17 +65,17 @@ class FlxBitmapFont extends FlxFramesCollection
 	public var spaceWidth:Int = 0;
 	
 	/**
-	 * Helper map where character's frames are stored by char codes
+	 * Helper map where character's frames are stored by char codes.
 	 */
 	private var charMap:Map<Int, FlxFrame>;
 	
 	/**
-	 * Helper map where character's xAdvance are stored by char codes
+	 * Helper map where character's xAdvance are stored by char codes.
 	 */
 	private var charAdvance:Map<Int, Int>;
 	
 	/**
-	 * Atlas frame from which this font had been parsed.
+	 * Atlas frame from which this font has been parsed.
 	 */
 	private var frame:FlxFrame;
 	
@@ -102,7 +102,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	}
 	
 	/**
-	 * Retrieves default BitmapFont.
+	 * Retrieves the default `FlxBitmapFont`.
 	 */
 	public static function getDefaultFont():FlxBitmapFont
 	{
@@ -111,9 +111,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			var font:FlxBitmapFont = FlxBitmapFont.findFont(graphic.imageFrame.frame);
 			if (font != null)
-			{
 				return font;
-			}
 		}
 		
 		var letters:String = "";
@@ -157,9 +155,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Loads font data in AngelCode's format.
 	 * 
-	 * @param	Source		Font image source.
-	 * @param	Data		Font data. It could be Xml, or String, which could be parsed to Xml, or String path to font data file.
-	 * @return	Generated bitmap font object.
+	 * @param   Source   Font image source.
+	 * @param   Data     Font data.
+	 * @return  Generated bitmap font object.
 	 */
 	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource):FlxBitmapFont
 	{
@@ -206,7 +204,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		var fast:Fast = new Fast(fontData.firstElement());
 		
-		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight); // how much to move the cursor when going to the next line.
+		// how much to move the cursor when going to the next line.
+		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight);
 		font.size = Std.parseInt(fast.node.info.att.size);
 		font.fontName = Std.string(fast.node.info.att.face);
 		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
@@ -218,7 +217,6 @@ class FlxBitmapFont extends FlxFramesCollection
 		var charStr:String;
 		var charCode:Int;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
-		var xOffsetAbs:Int;
 		
 		var chars = fast.node.chars;
 		
@@ -231,9 +229,12 @@ class FlxBitmapFont extends FlxFramesCollection
 			frameHeight = Std.parseInt(char.att.height);
 			frame.height = frameHeight; // Height of the character in the image file.
 			
-			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0; // Number of pixels to move right before drawing this character.
-			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0; //  Number of pixels to move down before drawing this character.
-			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0; //  Number of pixels to jump right after drawing this character.
+			// Number of pixels to move right before drawing this character.
+			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0;
+			//  Number of pixels to move down before drawing this character.
+			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
+			//  Number of pixels to jump right after drawing this character.
+			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
 			
 			offset = FlxPoint.get(xOffset, yOffset);
 			
@@ -289,14 +290,16 @@ class FlxBitmapFont extends FlxFramesCollection
 	
 	/**
 	 * Load bitmap font in XNA/Pixelizer format.
-	 * May work incorrectly on html5 target.
+	 * May work incorrectly on HTML5.
 	 * 
-	 * @param	source			Source image for this font.
-	 * @param	letters			String of characters contained in the source image, in order (ex. " abcdefghijklmnopqrstuvwxyz"). Defaults to DEFAULT_CHARS.
-	 * @param	charBGColor		An additional background color to remove. Defaults to 0xFF202020, often used for characters background.
-	 * @return	Generated bitmap font object.
+	 * @param   source        Source image for this font.
+	 * @param   letters       `String` of characters contained in the source image,
+	 *                        in order (ex. `" abcdefghijklmnopqrstuvwxyz"`). Defaults to `DEFAULT_CHARS`.
+	 * @param   charBGColor   An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
+	 * @return  Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String,
+		charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -417,14 +420,14 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		// remove background color
 		point.setTo(Std.int(frame.frame.x), Std.int(frame.frame.y));
-		var bgColor32:Int = bmd.getPixel32(Std.int(frame.frame.x), Std.int(frame.frame.y));
-
+		
 		var frameRect = flashRect;
 		frame.frame.copyToFlash(frameRect);
 		
 		#if flash
 		// TODO: fix this issue...
 		// for some reason this line causes app crash on targets other than flash...
+		var bgColor32:Int = bmd.getPixel32(Std.int(frame.frame.x), Std.int(frame.frame.y));
 		bmd.threshold(bmd, frameRect, point, "==", bgColor32, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
 		#end
 		
@@ -459,16 +462,19 @@ class FlxBitmapFont extends FlxFramesCollection
 	}
 	
 	/**
-	 * Loads monospace bitmap font.
+	 * Loads a monospaced bitmap font.
 	 * 
-	 * @param	source		Source image for this font.
-	 * @param	letters		The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
-	 * @param	charSize	The size of each character in the font set.
-	 * @param	region		The region of image to use for the font. Default is null which means that the whole image will be used.
-	 * @param	spacing		Spaces between characters in the font set. Default is null which means no spaces.
-	 * @return	Generated bitmap font object.
+	 * @param   source    Source image for this font.
+	 * @param   letters   The characters used in the font set, in display order.
+	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
+	 * @param   charSiz   The size of each character in the font set.
+	 * @param   region    The region of image to use for the font.
+	 *                    Default is null which means that the whole image will be used.
+	 * @param   spacing   Spaces between characters in the font set. Default is `null` which means no spaces.
+	 * @return  Generated bitmap font object.
 	 */
-	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, ?letters:String, charSize:FlxPoint, ?region:FlxRect, ?spacing:FlxPoint):FlxBitmapFont
+	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, ?letters:String, charSize:FlxPoint,
+		?region:FlxRect, ?spacing:FlxPoint):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -521,7 +527,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var xAdvance:Int = charWidth;
 		font.spaceWidth = xAdvance;
 		var letterIndex:Int = 0;
-		var numLetters:Int = letters.length;
+		var numLetters:Int = Utf8.length(letters);
 		
 		for (j in 0...numRows)
 		{
@@ -546,17 +552,18 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Internal method which creates and add char frames into this font.
 	 * 
-	 * @param	charCode		Char code for char frame.
-	 * @param	frame			Character region from source image.	
-	 * @param	offset			Offset before rendering this char.
-	 * @param	xAdvance		How much cursor will jump after this char.
+	 * @param   charCode   Char code for char frame.
+	 * @param   frame      Character region from source image.
+	 * @param   offset     Offset before rendering this char.
+	 * @param   xAdvance   How much cursor will jump after this char.
 	 */
 	private function addCharFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{
 		var utf8:Utf8 = new Utf8();
 		utf8.addChar(charCode);
 		var charName:String = utf8.toString();
-		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)	return;
+		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)
+			return;
 		var charFrame:FlxFrame = this.frame.subFrameTo(frame);
 		
 		var w:Float = charFrame.sourceSize.x;

@@ -53,24 +53,64 @@ class FlxDefines
 {
 	public static function run()
 	{
+		#if !display
+		checkDependencyCompatibility();
+		checkDefines();
+		if (defined("flash"))
+			checkSwfVersion();
+		#end
+
+		defineInversions();
+		defineHelperDefines();
+	}
+	
+	private static function checkDependencyCompatibility()
+	{
 		#if (haxe_ver < "3.2")
-		abort('The minimum required Haxe version for HaxeFlixel is 3.2.0. '
-			+ 'Please install a newer version.', FlxMacroUtil.here());
+		abortMinVersion("Haxe", "3.2.0", (macro null).pos);
 		#end
 		
 		#if ((haxe_ver == "3.201") && flixel_ui)
 		if (defined("cpp"))
 			abort('flixel-ui is not compatible with Haxe 3.2.1 on the cpp target'
 				+' due to a compiler bug (#4343). Please use a different Haxe version.',
-				FlxMacroUtil.here());
+				(macro null).pos);
 		#end
 		
-		checkDefines();
-		defineInversions();
-		defineHelperDefines();
+		#if !nme
+		checkOpenFLVersions();
+		#end
+	}
+
+	private static function checkOpenFLVersions()
+	{
+		#if (openfl < "3.5.0")
+		abortMinVersion("OpenFL", "3.5.0", (macro null).pos);
+		#end
+
+		#if (lime < "2.8.1")
+		abortMinVersion("Lime", "2.8.1", (macro null).pos);
+		#end
+
+		#if (openfl >= "4.0.0")
+		abortMaxVersion("OpenFL", "4.0.0", "3.6.1", (macro null).pos);
+		#end
 		
-		if (defined("flash"))
-			checkSwfVersion();
+		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
+		abortMaxVersion("Lime", "3.0.0", "2.9.1", (macro null).pos);
+		#end
+	}
+
+	private static function abortMinVersion(dependency:String, minimumRequired:String, pos:Position)
+	{
+		abort('The minimum required $dependency version for HaxeFlixel is $minimumRequired. '
+			+ 'Please install a newer version.', pos);
+	}
+
+	private static function abortMaxVersion(lib:String, firstIncompatible:String, lastCompatible:String, pos:Position)
+	{
+		abort('Please run \'haxelib set ${lib.toLowerCase()} $lastCompatible\'' +
+			' (Flixel is currently incompatible with $lib $firstIncompatible or newer).' , pos);
 	}
 	
 	private static function checkDefines()
@@ -84,7 +124,7 @@ class FlxDefines
 		{
 			if (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
 			{
-				Context.warning('"$define" is not a valid flixel define.', FlxMacroUtil.here());
+				Context.warning('"$define" is not a valid flixel define.', (macro null).pos);
 			}
 		}
 		#end
@@ -93,7 +133,7 @@ class FlxDefines
 	private static function abortIfDefined(define:String)
 	{
 		if (defined(define))
-			abort('$define can only be defined by flixel.', FlxMacroUtil.here());
+			abort('$define can only be defined by flixel.', (macro null).pos);
 	}
 
 	private static function defineInversions()
@@ -140,7 +180,7 @@ class FlxDefines
 	{
 		if (!defined("flash11"))
 			abort("The minimum required Flash Player version for HaxeFlixel is 11." +
-				" Please specify a newer version in your Project.xml file.", FlxMacroUtil.here());
+				" Please specify a newer version in your Project.xml file.", (macro null).pos);
 		
 		swfVersionError("Middle and right mouse button events are", "11.2", FLX_NO_MOUSE_ADVANCED);
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
@@ -148,17 +188,11 @@ class FlxDefines
 	
 	private static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
-		var errorMessage = '[feature] only supported in Flash Player version [version] or higher. '
-			+ 'Define [define] to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
+		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
+			+ 'Define ${define.getName()} to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
 		
 		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
-		{
-			abort(errorMessage
-				.replace("[feature]", feature)
-				.replace("[version]", version)
-				.replace("[define]", define.getName()),
-				FlxMacroUtil.here());
-		}
+			abort(errorMessage, (macro null).pos);
 	}
 	
 	private static inline function defined(define:Dynamic)

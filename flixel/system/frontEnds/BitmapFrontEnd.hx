@@ -8,7 +8,10 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
+
+#if !flash
 import openfl.gl.GL;
+#end
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
@@ -33,9 +36,11 @@ class BitmapFrontEnd
 	
 	private var _whitePixel:FlxFrame;
 
+	private var _lastUniqueKeyIndex:Int = 0;
+
 	public function new()
 	{
-		clearCache();
+		reset();
 	}
 	
 	public function onAssetsReload(_):Void 
@@ -109,7 +114,7 @@ class BitmapFrontEnd
 	 */
 	public inline function checkCache(Key:String):Bool
 	{
-		return _cache.exists(Key) && _cache.get(Key) != null;
+		return get(Key) != null;
 	}
 	
 	/**
@@ -161,10 +166,7 @@ class BitmapFrontEnd
 	 */
 	public inline function addGraphic(graphic:FlxGraphic):FlxGraphic
 	{
-		if (!_cache.exists(graphic.key))
-		{
-			_cache.set(graphic.key, graphic);
-		}
+		_cache.set(graphic.key, graphic);
 		return graphic;
 	}
 	
@@ -173,16 +175,16 @@ class BitmapFrontEnd
 	 * @param	key	Key for FlxGraphic object (its name)
 	 * @return	FlxGraphic with the key name, or null if there is no such object
 	 */
-	public function get(key:String):FlxGraphic
+	public inline function get(key:String):FlxGraphic
 	{
 		return _cache.get(key);
 	}
 	
 	/**
-	 * Gets key from bitmap cache for specified bitmapdata
+	 * Gets key from bitmap cache for specified BitmapData
 	 * 
-	 * @param	bmd	bitmapdata to find in cache
-	 * @return	bitmapdata's key or null if there isn't such bitmapdata in cache
+	 * @param	bmd	BitmapData to find in cache
+	 * @return	BitmapData's key or null if there isn't such BitmapData in cache
 	 */
 	public function findKeyForBitmap(bmd:BitmapData):String
 	{
@@ -236,18 +238,20 @@ class BitmapFrontEnd
 		if (baseKey == null)
 			baseKey = "pixels";
 		
-		if (checkCache(baseKey))
+		if (!checkCache(baseKey))
+			return baseKey;
+		
+		var i:Int = _lastUniqueKeyIndex;
+		var uniqueKey:String;
+		do
 		{
-			var inc:Int = 0;
-			var ukey:String;
-			do
-			{
-				ukey = baseKey + inc++;
-			}
-			while (checkCache(ukey));
-			baseKey = ukey;
+			i++;
+			uniqueKey = baseKey + i;
 		}
-		return baseKey;
+		while (checkCache(uniqueKey));
+		
+		_lastUniqueKeyIndex = i;
+		return uniqueKey;
 	}
 	
 	/**
@@ -312,17 +316,35 @@ class BitmapFrontEnd
 	
 	/**
 	 * Clears image cache (and destroys those images).
-	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache
+	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache and its useCount is 0.
 	 */
 	public function clearCache():Void
 	{
 		if (_cache == null)
 			_cache = new Map();
-
+		
 		for (key in _cache.keys())
 		{
 			var obj = _cache.get(key);
-			if (obj != null && !obj.persist)
+			if (obj != null && !obj.persist && obj.useCount <= 0)
+			{
+				removeByKey(key);
+			}
+		}
+	}
+	
+	/**
+	 * Completely resets bitmap cache, which means destroying ALL of the cached FlxGraphic objects.
+	 */
+	public function reset():Void
+	{
+		if (_cache == null)
+			_cache = new Map();
+		
+		for (key in _cache.keys())
+		{
+			var obj = _cache.get(key);
+			if (obj != null)
 			{
 				removeByKey(key);
 			}

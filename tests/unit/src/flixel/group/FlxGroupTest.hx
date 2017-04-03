@@ -60,6 +60,36 @@ class FlxGroupTest extends FlxTest
 	}
 	
 	@Test
+	function testForEachOfTypeRecurseTrue():Void
+	{
+		forEachOfTypeGroupSetup(group);
+		forEachOfTypeGroupSetup(subGroup);
+		
+		var timesCalled:Int = 0;
+		group.forEachOfType(FlxObject, function(_) timesCalled++, true);
+		
+		Assert.areEqual(6, timesCalled);
+	}
+	
+	@Test
+	function testForEachOfTypeRecurseFalse():Void
+	{
+		forEachOfTypeGroupSetup(group);
+		forEachOfTypeGroupSetup(subGroup);
+		
+		var timesCalled:Int = 0;
+		group.forEachOfType(FlxObject, function(_) timesCalled++, false);
+		
+		Assert.areEqual(3, timesCalled);
+	}
+	
+	function forEachOfTypeGroupSetup(group:FlxGroup):Void
+	{
+		for (i in 0...3)
+			group.add(new FlxObject());
+	}
+	
+	@Test
 	function testForEachExistsRecurseFalse():Void
 	{
 		forEachExistsGroupSetup(group);
@@ -106,5 +136,42 @@ class FlxGroupTest extends FlxTest
 		{
 			Assert.isTrue(each.exists);
 		});
+	}
+	
+	@Test // #1891
+	function testKillRevive()
+	{
+		Assert.areEqual(group.length, group.countLiving());
+		Assert.areEqual(0, group.countDead());
+		
+		group.kill();
+		Assert.areEqual(0, group.countLiving());
+		Assert.areEqual(group.length, group.countDead());
+		
+		group.revive();
+		Assert.areEqual(group.length, group.countLiving());
+		Assert.areEqual(0, group.countDead());
+	}
+
+	@Test // #2010
+	function testRemoveSplice()
+	{
+		var group = new FlxGroup();
+		group.add(new FlxBasic());
+		Assert.areEqual(1, group.length);
+
+		group.remove(group.members[0], true);
+		Assert.areEqual(0, group.length);
+	}
+
+	function testRemoveNoSplice()
+	{
+		var group = new FlxGroup();
+		group.add(new FlxBasic());
+		Assert.areEqual(1, group.length);
+
+		group.remove(group.members[0], false);
+		Assert.areEqual(1, group.length);
+		Assert.isNull(group.members[0]);
 	}
 }

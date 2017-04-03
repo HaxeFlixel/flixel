@@ -3,8 +3,11 @@ package flixel.system.debug.console;
 #if FLX_DEBUG
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxCamera;
+import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.util.FlxStringUtil;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 using StringTools;
 
 class ConsoleCommands
@@ -17,7 +20,6 @@ class ConsoleCommands
 	
 	public function new(console:Console):Void
 	{
-		#if FLX_DEBUG
 		_console = console;
 		
 		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
@@ -31,6 +33,7 @@ class ConsoleCommands
 		console.registerFunction("listObjects", listObjects, "Lists the aliases of all registered objects.");
 		console.registerFunction("listFunctions", listFunctions, "Lists the aliases of all registered functions.");
 		
+		console.registerFunction("step", step, "Steps the game forward one frame if currently paused. No effect if unpaused.");
 		console.registerFunction("pause", pause, "Toggles the game between paused and unpaused.");
 		
 		console.registerFunction("clearBitmapLog", FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
@@ -45,10 +48,23 @@ class ConsoleCommands
 		
 		// Default classes to include
 		console.registerClass(Math);
+		console.registerClass(Reflect);
+		console.registerClass(Std);
+		console.registerClass(StringTools);
+		#if sys
+		console.registerClass(Sys);
+		#end
+		console.registerClass(Type);
+
 		console.registerClass(FlxG);
+		console.registerClass(FlxObject);
 		console.registerClass(FlxSprite);
 		console.registerClass(FlxMath);
-		#end
+		console.registerClass(FlxTween);
+		console.registerClass(FlxCamera);
+		
+		console.registerObject("FlxDebuggerLayout", FlxDebuggerLayout);
+		console.registerObject("selection", null);
 	}
 	
 	private function help(?Alias:String):String
@@ -81,7 +97,6 @@ class ConsoleCommands
 		}
 	}
 	
-	#if FLX_DEBUG
 	private inline function close():Void
 	{
 		FlxG.debugger.visible = false;
@@ -162,6 +177,11 @@ class ConsoleCommands
 			ConsoleUtil.log("pause: Game paused");
 		}
 	}
-	#end
+	
+	private function step():Void
+	{
+		if (FlxG.vcr.paused)
+			FlxG.game.debugger.vcr.onStep();
+	}
 }
 #end

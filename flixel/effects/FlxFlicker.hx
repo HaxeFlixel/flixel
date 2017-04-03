@@ -22,16 +22,20 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
 	 * 
-	 * @param  Object            The sprite.
-	 * @param  Duration        How long to flicker for.
-	 * @param  Interval          In what interval to toggle visibility. Set to FlxG.elapsed if <= 0!
-	 * @param  EndVisibility    Force the visible value when the flicker completes, useful with fast repetitive use.
-	 * @param  ForceRestart    Force the flicker to restart from beginnig, discarding the flickering effect already in progress if there is one.
-	 * @param  CompletionCallback An optional callback that will be triggered when a flickering has finished.
-	 * @param  ProgressCallback   An optional callback that will be triggered when visibility is toggled.
-	 * @return The FlxFlicker object. FlxFlickers are pooled internally, so beware of storing references.
+	 * @param   Object               The object.
+	 * @param   Duration             How long to flicker for.
+	 * @param   Interval             In what interval to toggle visibility. Set to `FlxG.elapsed` if `<= 0`!
+	 * @param   EndVisibility        Force the visible value when the flicker completes,
+	 *                               useful with fast repetitive use.
+	 * @param   ForceRestart         Force the flicker to restart from beginning,
+	 *                               discarding the flickering effect already in progress if there is one.
+	 * @param   CompletionCallback   An optional callback that will be triggered when a flickering has finished.
+	 * @param   ProgressCallback     An optional callback that will be triggered when visibility is toggled.
+	 * @return The `FlxFlicker` object. `FlxFlicker`s are pooled internally, so beware of storing references.
 	 */
-	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04, EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):FlxFlicker
+	public static function flicker(Object:FlxObject, Duration:Float = 1, Interval:Float = 0.04,
+		EndVisibility:Bool = true, ForceRestart:Bool = true, ?CompletionCallback:FlxFlicker->Void,
+		?ProgressCallback:FlxFlicker->Void):FlxFlicker
 	{
 		if (isFlickering(Object))
 		{
@@ -58,7 +62,8 @@ class FlxFlicker implements IFlxDestroyable
 	
 	/**
 	 * Returns whether the object is flickering or not.
-	 * @param  Object The object to test.
+	 * 
+	 * @param   Object The object to test.
 	 */
 	public static function isFlickering(Object:FlxObject):Bool
 	{
@@ -67,7 +72,8 @@ class FlxFlicker implements IFlxDestroyable
 	
 	/**
 	 * Stops flickering of the object. Also it will make the object visible.
-	 * @param  Object The object to stop flickering.
+	 * 
+	 * @param   Object The object to stop flickering.
 	 */
 	public static function stopFlickering(Object:FlxObject):Void
 	{
@@ -127,7 +133,8 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Starts flickering behavior.
 	 */
-	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool, ?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
+	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool,
+		?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
 		duration = Duration;

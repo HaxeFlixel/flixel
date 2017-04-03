@@ -22,9 +22,9 @@ class DebuggerFrontEnd
 	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
-	 * Default keys: ` and \. Set to null to deactivate.
+	 * Default keys: F2, ` and \. Set to null to deactivate.
 	 */
-	public var toggleKeys:Array<FlxKey> = [GRAVEACCENT, BACKSLASH];
+	public var toggleKeys:Array<FlxKey> = [F2, GRAVEACCENT, BACKSLASH];
 	#end
 	
 	/**
@@ -32,9 +32,14 @@ class DebuggerFrontEnd
 	 */
 	public var drawDebug(default, set):Bool = false;
 	/**
-	 * Dispatched when drawDebug is changed.
+	 * Dispatched when `drawDebug` is changed.
 	 */
 	public var drawDebugChanged(default, null):FlxSignal = new FlxSignal();
+	/**
+	 * Dispatched when `visible` is changed.
+	 * @since 4.1.0
+	 */
+	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 	
 	public var visible(default, set):Bool = false;
 	
@@ -133,18 +138,26 @@ class DebuggerFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() {}
 	
-	private inline function set_drawDebug(Value:Bool):Bool
+	private function set_drawDebug(Value:Bool):Bool
 	{
+		if (drawDebug == Value)
+			return drawDebug;
+	
+		drawDebug = Value;
 		#if FLX_DEBUG
-		if (Value != drawDebug)
-			drawDebugChanged.dispatch();
+		drawDebugChanged.dispatch();
 		#end
-		
-		return drawDebug = Value;
+		return drawDebug;
 	}
 	
-	private inline function set_visible(Value:Bool):Bool
+	@:access(flixel.FlxGame.onFocus)
+	private function set_visible(Value:Bool):Bool
 	{
+		if (visible == Value)
+			return visible;
+
+		visible = Value;
+	
 		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
 		
@@ -152,11 +165,14 @@ class DebuggerFrontEnd
 		// so the game still will be able to capture key presses
 		if (!Value)
 		{
-			FlxG.stage.stageFocusRect = false; // don't show yellow focus rect on flash
-			FlxG.stage.focus = FlxG.game;
+			FlxG.stage.focus = null;
+			// setting focus to null will trigger a focus lost event, let's undo that
+			FlxG.game.onFocus(null);
 		}
-		#end
 		
-		return visible = Value;
+		visibilityChanged.dispatch();
+		#end
+
+		return visible;
 	}
 }

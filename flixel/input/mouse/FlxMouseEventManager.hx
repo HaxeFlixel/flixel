@@ -103,7 +103,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 
 	/**
-	 * Removes all registerd objects from the registry.
+	 * Removes all registered objects from the registry.
 	 */
 	public static function removeAll():Void
 	{
@@ -128,8 +128,7 @@ class FlxMouseEventManager extends FlxBasic
 	public static function reorder():Void
 	{
 		var orderedObjects = new Array<ObjectMouseData<FlxObject>>();
-		var group:Array<FlxBasic> = FlxG.state.members;
-		
+
 		traverseFlxGroup(FlxG.state, orderedObjects);
 		
 		orderedObjects.reverse();
@@ -276,6 +275,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 	
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
@@ -391,7 +391,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-	#if FLX_MOUSE
+		#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
@@ -421,7 +421,7 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-	#end
+		#end
 		
 		_mouseOverObjects = currentOverObjects;
 	}
@@ -443,22 +443,30 @@ class FlxMouseEventManager extends FlxBasic
 		for (camera in Register.object.cameras)
 		{
 			#if FLX_MOUSE
-			_point = FlxG.mouse.getWorldPosition(camera, _point);
-			
-			if (checkOverlapWithPoint(Register, _point, camera))
+			_point = FlxG.mouse.getPositionInCameraView(camera, _point);
+			if (camera.containsPoint(_point))
 			{
-				return true;
+				_point = FlxG.mouse.getWorldPosition(camera, _point);
+				
+				if (checkOverlapWithPoint(Register, _point, camera))
+				{
+					return true;
+				}
 			}
 			#end
 			
 			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
-				_point = touch.getWorldPosition(camera, _point);
-				
-				if (checkOverlapWithPoint(Register, _point, camera))
+				_point = touch.getPositionInCameraView(camera, _point);
+				if (camera.containsPoint(_point))
 				{
-					return true;
+					_point = touch.getWorldPosition(camera, _point);
+					
+					if (checkOverlapWithPoint(Register, _point, camera))
+					{
+						return true;
+					}
 				}
 			}
 			#end
@@ -483,7 +491,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		if (Sprite.angle != 0)
 		{
-			var pivot = FlxPoint.weak(Sprite.x + Sprite.origin.x, Sprite.y + Sprite.origin.y);
+			var pivot = FlxPoint.weak(Sprite.x + Sprite.origin.x - Sprite.offset.x, Sprite.y + Sprite.origin.y - Sprite.offset.y);
 			Point.rotate(pivot, -Sprite.angle);
 		}
 		return Sprite.pixelsOverlapPoint(Point, 0x01, Camera);

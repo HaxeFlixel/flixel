@@ -74,6 +74,8 @@ class Window extends Sprite
 	private var _resizing:Bool;
 	private var _resizable:Bool;
 	
+	private var _closable:Bool;
+	
 	/**
 	 * The ID of this window.
 	 */
@@ -90,7 +92,8 @@ class Window extends Sprite
 	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 * @param   Closable    Whether this window has a close button that removes the window.
 	 */
-	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle, Closable:Bool = false)
+	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true,
+		?Bounds:Rectangle, Closable:Bool = false)
 	{
 		super();
 		
@@ -101,6 +104,7 @@ class Window extends Sprite
 		updateBounds(Bounds);
 		_drag = new Point();
 		_resizable = Resizable;
+		_closable = Closable;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
@@ -248,20 +252,21 @@ class Window extends Sprite
 	public function setVisible(Value:Bool):Void
 	{
 		visible = Value;
-		FlxG.save.data.windowSettings[_id] = visible;
-		FlxG.save.flush();
+		
+		if (!_closable)
+		{
+			FlxG.save.data.windowSettings[_id] = visible;
+			FlxG.save.flush();
+		}
 		
 		if (toggleButton != null)
-		{
 			toggleButton.toggled = !visible;
-		}
+	
 		if (visible)
-		{
 			putOnTop();
-		}
 	}
 	
-	public inline function toggleVisible():Void
+	public function toggleVisible():Void
 	{
 		setVisible(!visible);
 	}
@@ -326,7 +331,7 @@ class Window extends Sprite
 	 */
 	private function onMouseMove(?E:MouseEvent):Void
 	{
-		// mouseX / Y can be negative, which messes with the resizing if draggin in the opposite direction
+		// mouseX / Y can be negative, which messes with the resizing if dragging in the opposite direction
 		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
 		var mouseY:Float = (this.mouseY < 0) ? 0 : this.mouseY;
 		
@@ -389,9 +394,7 @@ class Window extends Sprite
 		_dragging = false;
 		_resizing = false;
 	}
-	
-	//***MISC GUI MGMT STUFF***//
-	
+		
 	/**
 	 * Keep the window within the pre-specified bounding rectangle. 
 	 */

@@ -76,7 +76,7 @@ class FlxDestroyUtil
 	/**
 	 * Checks if a BitmapData object is not null before calling dispose() on it, always returns null.
 	 * 
-	 * @param	Bitmap	A BitampData to be disposed if not null
+	 * @param	Bitmap	A BitmapData to be disposed if not null
 	 * @return 	null
 	 */
 	public static function dispose(bitmapData:BitmapData):BitmapData

@@ -3,7 +3,6 @@ package flixel.system.debug.log;
 #if FLX_DEBUG
 import flash.text.TextField;
 import flash.text.TextFormat;
-import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.GraphicLog;
 
 /**
@@ -80,7 +79,7 @@ class Log extends Window
 		
 		// Apply text formatting
 		#if (!js && !lime_console)
-		text = FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
+		text = flixel.util.FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
 		#end
 		
 		// Check if the text has been added yet already

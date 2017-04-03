@@ -63,7 +63,7 @@ class FlxAnalog extends FlxSpriteGroup
 	#if FLX_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
-	 */ 
+	 */
 	private var _currentTouch:FlxTouch;
 	/**
 	 * Helper array for checking touches
@@ -81,7 +81,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */ 
 	private var _radius:Float = 0;
 	private var _direction:Float = 0;
-	private var _amount:Float = 0;		
+	private var _amount:Float = 0;
 	/**
 	 * The speed of easing when the thumb is released.
 	 */ 
@@ -89,11 +89,12 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
-	 *  
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 * @param	radius	The radius where the thumb can move. If 0, half the background's width will be used as radius.
-	 * @param	ease	The duration of the easing. The value must be between 0 and 1.
+	 *
+	 * @param   X        The X-coordinate of the point in space.
+	 * @param   Y        The Y-coordinate of the point in space.
+	 * @param   radius   The radius where the thumb can move.
+	 *                   If `0`, half the background's width will be used as radius.
+	 * @param   ease     The duration of the easing. The value must be between `0` and `1`.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
 	{
@@ -159,16 +160,14 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 	
 	/**
-	 * Creates the touch zone. It's based on the size of the background. 
+	 * Creates the touch zone. It's based on the size of the background.
 	 * The thumb will react when the mouse is in the zone.
 	 * Override this to customize the zone.
 	 */
 	private function createZone():Void
 	{
-		if (base != null)			
-		{
+		if (base != null)
 			_radius = base.width / 2;
-		}
 		
 		_zone.set(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
 	}
@@ -197,57 +196,54 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 	
 	/**
-	 * Update the behavior. 
+	 * Update the behavior.
 	 */
 	override public function update(elapsed:Float):Void 
 	{
-		#if FLX_TOUCH
-		var touch:FlxTouch = null;
-		#end
 		var offAll:Bool = true;
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
 		#if FLX_TOUCH
-			if (_currentTouch != null)
-			{
-				_tempTouches.push(_currentTouch);
-			}
-			else
-			{
-				for (touch in FlxG.touches.list)
-				{		
-					var touchInserted:Bool = false;
+		if (_currentTouch != null)
+		{
+			_tempTouches.push(_currentTouch);
+		}
+		else
+		{
+			for (touch in FlxG.touches.list)
+			{		
+				var touchInserted:Bool = false;
 					
-					for (analog in _analogs)
-					{
-						// Check whether the pointer is already taken by another analog.
-						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog == this && analog._currentTouch != touch && !touchInserted) 
-						{		
-							_tempTouches.push(touch);
-							touchInserted = true;
-						}
+				for (analog in _analogs)
+				{
+					// Check whether the pointer is already taken by another analog.
+					// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
+					if (analog == this && analog._currentTouch != touch && !touchInserted) 
+					{		
+						_tempTouches.push(touch);
+						touchInserted = true;
 					}
 				}
 			}
+		}
 			
-			for (touch in _tempTouches)
-			{
-				_point = touch.getWorldPosition(FlxG.camera, _point);
+		for (touch in _tempTouches)
+		{
+			_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
-				{
-					offAll = false;
-					break;
-				}
-			}
-		#elseif !FLX_NO_MOUSE
-			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
-			
-			if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+			if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
 			{
 				offAll = false;
+				break;
 			}
+		}
+		#elseif !FLX_NO_MOUSE
+		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		
+		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+		{
+			offAll = false;
+		}
 		#end
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
@@ -309,13 +305,13 @@ class FlxAnalog extends FlxSpriteGroup
 					{
 						onDown();
 					}
-				}						
+				}
 				
 				if (status == PRESSED)
 				{
 					if (onPressed != null)
 					{
-						onPressed();						
+						onPressed();
 					}
 					
 					var dx:Float = TouchPoint.x - x;
@@ -332,11 +328,11 @@ class FlxAnalog extends FlxSpriteGroup
 					_amount = Math.min(_radius, dist) / _radius;
 					
 					acceleration.x = Math.cos(_direction) * _amount * _radius;
-					acceleration.y = Math.sin(_direction) * _amount * _radius;			
-				}					
+					acceleration.y = Math.sin(_direction) * _amount * _radius;
+				}
 			}
 			else if (JustReleased && status == PRESSED)
-			{				
+			{
 				#if FLX_TOUCH
 				_currentTouch = null;
 				#end
@@ -349,7 +345,7 @@ class FlxAnalog extends FlxSpriteGroup
 				}
 				
 				acceleration.set();
-			}					
+			}
 			
 			if (status == NORMAL)
 			{

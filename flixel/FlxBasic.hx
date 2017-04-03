@@ -4,8 +4,8 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxStringUtil;
 
 /**
- * This is a useful "generic" Flixel object. Both FlxObject and 
- * FlxGroup extend this class. Has no size, position or graphical data.
+ * This is a useful "generic" Flixel object. Both `FlxObject` and
+ * `FlxGroup` extend this class. Has no size, position or graphical data.
  */
 class FlxBasic implements IFlxDestroyable
 {
@@ -25,20 +25,20 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var ID:Int = -1;
 	/**
-	 * Controls whether update() is automatically called by FlxState/FlxGroup.
+	 * Controls whether `update()` is automatically called by `FlxState`/`FlxGroup`.
 	 */
 	public var active(default, set):Bool = true;
 	/**
-	 * Controls whether draw() is automatically called by FlxState/FlxGroup.
+	 * Controls whether `draw()` is automatically called by `FlxState`/`FlxGroup`.
 	 */
 	public var visible(default, set):Bool = true;
 	/**
-	 * Useful state for many game objects - "dead" (!alive) vs alive. kill() and
-	 * revive() both flip this switch (along with exists, but you can override that).
+	 * Useful state for many game objects - "dead" (`!alive`) vs `alive`. `kill()` and
+	 * `revive()` both flip this switch (along with `exists`, but you can override that).
 	 */
 	public var alive(default, set):Bool = true;
 	/**
-	 * Controls whether update() and draw() are automatically called by FlxState/FlxGroup.
+	 * Controls whether `update()` and `draw()` are automatically called by `FlxState`/`FlxGroup`.
 	 */
 	public var exists(default, set):Bool = true;
 	
@@ -47,33 +47,43 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public var camera(get, set):FlxCamera;
 	/**
-	 * This determines on which FlxCameras this object will be drawn. If it is null / has not been
-	 * set, it uses FlxCamera.defaultCameras, which is a reference to FlxG.cameras.list (all cameras) by default.
+	 * This determines on which `FlxCamera`s this object will be drawn. If it is `null` / has not been
+	 * set, it uses `FlxCamera.defaultCameras`, which is a reference to `FlxG.cameras.list` (all cameras) by default.
 	 */
 	public var cameras(get, set):Array<FlxCamera>;
 	
 	/**
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
+	@:noCompletion
 	private var flixelType(default, null):FlxType = NONE;
 	
+	@:noCompletion
 	private var _cameras:Array<FlxCamera>;
 	
 	public function new() {}
 	
 	/**
-	 * WARNING: This will remove this object entirely. Use kill() if you want to disable it temporarily only and revive() it later.
-	 * Override this function to null out variables manually or call destroy() on class members if necessary. Don't forget to call super.destroy()!
+	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
+	 * It may even cause crashes if it is still part of a group or state.
+	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
+	 * 
+	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
+	 * 
+	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
+	 * Don't forget to call `super.destroy()`!
 	 */
-	public function destroy():Void 
+	public function destroy():Void
 	{
 		exists = false;
 		_cameras = null;
 	}
 	
 	/**
-	 * Handy function for "killing" game objects. Use reset() to revive them. Default behavior is to flag them as nonexistent AND dead. However, if you want the 
-	 * "corpse" to remain in the game, like to animate an effect or whatever, you should override this, setting only alive to false, and leaving exists true.
+	 * Handy function for "killing" game objects. Use `reset()` to revive them.
+	 * Default behavior is to flag them as nonexistent AND dead.
+	 * However, if you want the "corpse" to remain in the game, like to animate an effect or whatever,
+	 * you should `override` this, setting only `alive` to `false`, and leaving `exists` `true`.
 	 */
 	public function kill():Void
 	{
@@ -82,8 +92,8 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Handy function for bringing game objects "back to life". Just sets alive and exists back to true.
-	 * In practice, this function is most often called by FlxObject.reset().
+	 * Handy function for bringing game objects "back to life". Just sets `alive` and `exists` back to `true`.
+	 * In practice, this function is most often called by `FlxObject#reset()`.
 	 */
 	public function revive():Void
 	{
@@ -104,7 +114,7 @@ class FlxBasic implements IFlxDestroyable
 	
 	/**
 	 * Override this function to control how the object is drawn.
-	 * Overriding draw() is rarely necessary, but can be very useful.
+	 * Doing so is rarely necessary, but can be very useful.
 	 */
 	public function draw():Void
 	{
@@ -122,31 +132,37 @@ class FlxBasic implements IFlxDestroyable
 			LabelValuePair.weak("exists", exists)]);
 	}
 	
+	@:noCompletion
 	private function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
 	
+	@:noCompletion
 	private function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
 	
+	@:noCompletion
 	private function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}
 	
+	@:noCompletion
 	private function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
 	}
 	
+	@:noCompletion
 	private function get_camera():FlxCamera
 	{
 		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
 	}
 	
+	@:noCompletion
 	private function set_camera(Value:FlxCamera):FlxCamera
 	{
 		if (_cameras == null)
@@ -156,11 +172,13 @@ class FlxBasic implements IFlxDestroyable
 		return Value;
 	}
 	
+	@:noCompletion
 	private function get_cameras():Array<FlxCamera>
 	{
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
 	}
 	
+	@:noCompletion
 	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
@@ -169,9 +187,6 @@ class FlxBasic implements IFlxDestroyable
 
 /**
  * Types of flixel objects - mainly for collisions.
- * 
- * Abstracted from an Int type for fast comparison code:
- * http://nadako.tumblr.com/post/64707798715/cool-feature-of-upcoming-haxe-3-2-enum-abstracts
  */
 @:enum
 abstract FlxType(Int)

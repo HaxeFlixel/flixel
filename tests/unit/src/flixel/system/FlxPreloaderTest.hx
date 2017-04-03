@@ -5,16 +5,16 @@ class FlxPreloaderTest
 	@Test // #1803
 	function testOverridePreloader()
 	{
-		new OverridenPreloader();
+		new OverriddenPreloader();
 	}
 }
 
-class OverridenPreloader extends FlxPreloader
+class OverriddenPreloader extends FlxPreloader
 {
 	public function new(minDisplayTime:Float = 0, ?allowedUrls:Array<String>)
-    {
-        super(minDisplayTime, allowedUrls);
-    }
+	{
+		super(minDisplayTime, allowedUrls);
+	}
 	
 	override private function create()
 	{

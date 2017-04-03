@@ -15,6 +15,7 @@ class FlxPointer
 	
 	private var _globalScreenX:Int = 0;
 	private var _globalScreenY:Int = 0;
+	private static var _cachedPoint:FlxPoint = new FlxPoint();
 	
 	public function new() {}
 	
@@ -36,10 +37,9 @@ class FlxPointer
 		{
 			point = FlxPoint.get();
 		}
-		var screenPosition:FlxPoint = getScreenPosition(Camera);
-		point.x = screenPosition.x + Camera.scroll.x;
-		point.y = screenPosition.y + Camera.scroll.y;
-		screenPosition.put();
+		getScreenPosition(Camera, _cachedPoint);
+		point.x = _cachedPoint.x + Camera.scroll.x;
+		point.y = _cachedPoint.y + Camera.scroll.y;
 		return point;
 	}
 	
@@ -69,6 +69,27 @@ class FlxPointer
 	}
 	
 	/**
+	 * Fetch the screen position of the pointer relative to given camera's viewport.
+	 * 
+	 * @param 	Camera		If unspecified, first/main global camera is used instead.
+	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 
+	 * @return 	The touch point's location relative to camera's viewport.
+	 */
+	public function getPositionInCameraView(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+		
+		if (point == null)
+			point = FlxPoint.get();
+		
+		point.x = (_globalScreenX - Camera.x) / Camera.zoom;
+		point.y = (_globalScreenY - Camera.y) / Camera.zoom;
+		
+		return point;
+	}
+	
+	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
 	public function getPosition(?point:FlxPoint):FlxPoint
@@ -87,6 +108,7 @@ class FlxPointer
 	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
 	 * @return 	Whether or not the two objects overlap.
 	 */
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -105,10 +127,9 @@ class FlxPointer
 		}
 		else 
 		{
-			var point:FlxPoint = getPosition();
+			getPosition(_cachedPoint);
 			var object:FlxObject = cast ObjectOrGroup;
-			result = object.overlapsPoint(point, true, Camera);
-			point.put();
+			result = object.overlapsPoint(_cachedPoint, true, Camera);
 		}
 		
 		return result;
@@ -139,14 +160,12 @@ class FlxPointer
 	 */
 	private function updatePositions():Void
 	{
-		var screenPosition:FlxPoint = getScreenPosition();
-		screenX = Std.int(screenPosition.x);
-		screenY = Std.int(screenPosition.y);
-		screenPosition.put();
+		getScreenPosition(FlxG.camera, _cachedPoint);
+		screenX = Std.int(_cachedPoint.x);
+		screenY = Std.int(_cachedPoint.y);
 		
-		var worldPosition = getWorldPosition();
-		x = Std.int(worldPosition.x);
-		y = Std.int(worldPosition.y);
-		worldPosition.put();
+		getWorldPosition(FlxG.camera, _cachedPoint);
+		x = Std.int(_cachedPoint.x);
+		y = Std.int(_cachedPoint.y);
 	}
 }

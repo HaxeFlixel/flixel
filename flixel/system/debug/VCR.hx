@@ -6,7 +6,9 @@ import flash.text.TextField;
 import flixel.FlxG;
 import flixel.system.ui.FlxSystemButton;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+#if FLX_RECORD
 import flixel.util.FlxStringUtil;
+#end
 
 @:bitmap("assets/images/debugger/buttons/open.png")
 private class GraphicOpen extends BitmapData {}
@@ -41,6 +43,12 @@ class VCR
 	
 	public var runtime:Float = 0;
 
+	/**
+	 * `true` if the pause happened via the debugger UI, `false` if it happened programmatically
+	 * (or if the VCR is not paused at all right now).
+	 */
+	public var manualPause(default, null):Bool = false;
+
 	public var playbackToggleBtn:FlxSystemButton;
 	public var stepBtn:FlxSystemButton;
 	public var restartBtn:FlxSystemButton;
@@ -56,8 +64,12 @@ class VCR
 		#if FLX_RECORD
 		recordBtn = Debugger.addButton(CENTER, new GraphicRecordOff(0, 0), FlxG.vcr.startRecording.bind(true));
 		openBtn = Debugger.addButton(CENTER, new GraphicOpen(0, 0), FlxG.vcr.onOpen);
+		#if !flash
+		openBtn.enabled = false;
+		openBtn.alpha = 0.3;
 		#end
-		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), FlxG.vcr.pause);
+		#end
+		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), onManualPause);
 		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
 		
 		#if FLX_RECORD
@@ -124,12 +136,18 @@ class VCR
 	}
 	#end
 
+	private function onManualPause()
+	{
+		manualPause = true;
+		FlxG.vcr.pause();
+	}
+
 	/**
 	 * Called when the user presses the Pause button.
 	 * This is different from user-defined pause behavior, or focus lost behavior.
 	 * Does NOT pause music playback!!
 	 */
-	public inline function onPause():Void
+	public function onPause():Void
 	{
 		playbackToggleBtn.upHandler = FlxG.vcr.resume;
 		playbackToggleBtn.changeIcon(new GraphicArrowRight(0, 0));
@@ -139,9 +157,10 @@ class VCR
 	 * Called when the user presses the Play button.
 	 * This is different from user-defined unpause behavior, or focus gained behavior.
 	 */
-	public inline function onResume():Void
+	public function onResume():Void
 	{
-		playbackToggleBtn.upHandler = FlxG.vcr.pause;
+		manualPause = false;
+		playbackToggleBtn.upHandler = onManualPause;
 		playbackToggleBtn.changeIcon(new GraphicPause(0, 0));
 	}
 

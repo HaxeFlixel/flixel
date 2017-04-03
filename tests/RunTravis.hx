@@ -18,7 +18,7 @@ abstract ExitCode(Int) from Int to Int
 
 class RunTravis
 {
-	static var importantDemos = ["Mode", "RPGInterface", "FlxNape"];
+	static var importantDemos = ["Mode"];
 	static var dryRun:Bool;
 
 	public static function main():Void
@@ -30,7 +30,6 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			generateMunit(),
 			setupHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
@@ -39,13 +38,6 @@ class RunTravis
 			buildNextDemos(target),
 			buildMechanicsDemos(target)
 		]));
-	}
-	
-	static function generateMunit():ExitCode
-	{
-		return runInDir("unit", function()
-			return haxelibRun(["munit", "gen"])
-		);
 	}
 	
 	static function setupHxcpp(target:Target):ExitCode
@@ -73,6 +65,10 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
+		runInDir("unit", function()
+			return haxelibRun(["munit", "gen"])
+		);
+
 		if (target == Target.FLASH || target == Target.HTML5)
 		{	
 			// can't run / display results without a browser,
@@ -107,7 +103,7 @@ class RunTravis
 	
 	static function buildNextDemos(target:Target):ExitCode
 	{
-		if (target != Target.NEKO)
+		if (target == Target.FLASH || target == Target.HTML5)
 			return ExitCode.SUCCESS;
 		
 		Sys.println("\nBuilding demos for OpenFL Next...\n");
@@ -127,7 +123,7 @@ class RunTravis
 	
 	static function buildProjects(target:Target, args:Array<String>):ExitCode
 	{
-		return return haxelibRun(["flixel-tools", "bp", target].concat(args));
+		return haxelibRun(["flixel-tools", "bp", target].concat(args));
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode

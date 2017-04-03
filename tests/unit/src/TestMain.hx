@@ -44,18 +44,18 @@ class TestMain
 
 	/**
 	 * updates the background color and closes the current browser
-	 * for flash and html targets (useful for continous integration servers)
+	 * for flash and html targets (useful for continuos integration servers)
 	 */
 	function completionHandler(successful:Bool):Void
 	{
 		try
 		{
 			#if flash
-				flash.external.ExternalInterface.call("testResult", successful);
+			flash.external.ExternalInterface.call("testResult", successful);
 			#elseif js
-				js.Lib.eval("testResult(" + successful + ");");
+			js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys
-				Sys.exit(successful ? 0 : 1);
+			Sys.exit(successful ? 0 : 1);
 			#end
 		}
 		// if run from outside browser can get error which we can ignore

@@ -4,7 +4,6 @@ import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
 
-@:allow(flixel)
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
 	/**
@@ -19,20 +18,21 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	public var preventDefaultKeys:Array<Key> = [];
 	
 	/**
-	 * Helper class to check if a keys is pressed.
+	 * Helper class to check if a key is pressed.
 	 */
 	public var pressed(default, null):KeyList;
 	/**
-	 * Helper class to check if a keys was just pressed.
+	 * Helper class to check if a key was just pressed.
 	 */
 	public var justPressed(default, null):KeyList;
 	/**
-	 * Helper class to check if a keys was just released.
+	 * Helper class to check if a key was just released.
 	 */
 	public var justReleased(default, null):KeyList;
 	/**
 	 * Internal storage of input keys as an array, for efficient iteration.
 	 */
+	@:allow(flixel.input.FlxBaseKeyList)
 	private var _keyListArray:Array<FlxInput<Key>> = [];
 	/**
 	 * Internal storage of input keys as a map, for efficient indexing.
@@ -142,10 +142,10 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 			}
 		}
 		#if FLX_DEBUG
-			else
-			{
-				throw 'Invalid key code: $KeyCode.';
-			}
+		else
+		{
+			throw 'Invalid key code: $KeyCode.';
+		}
 		#end
 		
 		return false;
@@ -289,7 +289,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<Key>, Key:Key):Bool
+	private function inKeyArray(KeyArray:Array<Key>, Event:KeyboardEvent):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -297,9 +297,10 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 		else
 		{
+			var code = resolveKeyCode(Event);
 			for (key in KeyArray)
 			{
-				if (key == Key || key == -2)
+				if (key == code || key == -2)
 				{
 					return true;
 				}

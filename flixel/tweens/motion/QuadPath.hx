@@ -1,12 +1,13 @@
 package flixel.tweens.motion;
 
 import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween.FlxTweenManager;
 import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxDestroyUtil;
 
 /**
  * A series of points which will determine a path from the
- * beginning point to the end poing using quadratic curves.
+ * beginning point to the end point using quadratic curves.
  */
 class QuadPath extends Motion
 {
@@ -27,9 +28,9 @@ class QuadPath extends Motion
 	private var _b:FlxPoint;
 	private var _c:FlxPoint;
 	
-	private function new(Options:TweenOptions)
+	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super(Options);
+		super(Options, manager);
 		
 		_points = [];
 		_curveT = [];

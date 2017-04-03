@@ -152,6 +152,20 @@ class FlxPoint implements IFlxPooled
 	}
 	
 	/**
+	 * Scale this point.
+	 * 
+	 * @param	k - scale coefficient
+	 * @return	scaled point
+	 * @since   4.1.0
+	 */
+	public function scale(k:Float):FlxPoint
+	{
+		x *= k;
+		y *= k;
+		return this;
+	}
+	
+	/**
 	 * Helper function, just copies the values from the specified point.
 	 * 
 	 * @param	point	Any FlxPoint.
@@ -393,8 +407,8 @@ class FlxPoint implements IFlxPooled
 	public function destroy() {}
 	
 	/**
-	 * Applies tranformation matrix to this point
-	 * @param	matrix	tranformation matrix
+	 * Applies transformation matrix to this point
+	 * @param	matrix	transformation matrix
 	 * @return	transformed point
 	 */
 	public inline function transform(matrix:Matrix):FlxPoint
@@ -448,7 +462,7 @@ class FlxCallbackPoint extends FlxPoint
 	private var _setXYCallback:FlxPoint->Void;
 	
 	/**
-	 * If you only specifiy one callback function, then the remaining two will use the same.
+	 * If you only specify one callback function, then the remaining two will use the same.
 	 * 
 	 * @param	setXCallback	Callback for set_x()
 	 * @param	setYCallback	Callback for set_y()

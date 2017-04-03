@@ -112,12 +112,14 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 
 	private inline function onMouseOver(_):Void
 	{
-		alpha -= 0.2;
+		if (enabled)
+			alpha -= 0.2;
 	}
 
 	private inline function onMouseOut(_):Void
 	{
-		alpha += 0.2;
+		if (enabled)
+			alpha += 0.2;
 	}
 	
 	private function set_toggled(Value:Bool):Bool

@@ -9,7 +9,6 @@ import flixel.system.replay.CodeValuePair;
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
  */
-@:allow(flixel)
 class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 {
 	#if !web
@@ -96,7 +95,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		
 		// Debugger toggle
 		#if FLX_DEBUG
-			if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event.keyCode))
+			if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event))
 			{
 				FlxG.debugger.visible = !FlxG.debugger.visible;
 			}
@@ -109,7 +108,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
-			if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event.keyCode) && inKeyArray(FlxG.vcr.cancelKeys, event.keyCode))
+			if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event) && inKeyArray(FlxG.vcr.cancelKeys, event))
 			{
 				FlxG.vcr.cancelReplay();
 			}
@@ -133,6 +132,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * 
 	 * @return	An array of key state data. Null if there is no data.
 	 */
+	@:allow(flixel.system.replay.FlxReplay)
 	private function record():Array<CodeValuePair>
 	{
 		var data:Array<CodeValuePair> = null;
@@ -161,17 +161,16 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * 
 	 * @param	Record	Array of data about key states.
 	 */
+	@:allow(flixel.system.replay.FlxReplay)
 	private function playback(Record:Array<CodeValuePair>):Void
 	{
 		var i:Int = 0;
 		var l:Int = Record.length;
-		var o:CodeValuePair;
-		var o2:FlxKeyInput;
 		
 		while (i < l)
 		{
-			o = Record[i++];
-			o2 = getKey(o.code);
+			var o = Record[i++];
+			var o2 = getKey(o.code);
 			o2.current = o.value;
 		}
 	}

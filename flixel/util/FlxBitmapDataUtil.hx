@@ -10,7 +10,7 @@ import flixel.math.FlxRect;
 
 /**
  * Just a collection of BitmapData utility methods.
- * Just for crossplatform stuff, since not all methods are implemented across all targets.
+ * Just for cross-platform stuff, since not all methods are implemented across all targets.
  */
 class FlxBitmapDataUtil
 {
@@ -243,7 +243,7 @@ class FlxBitmapDataUtil
 	}
 	
 	/**
-	 * Replaces all bitmapData's pixels with specified color with newColor pixels. 
+	 * Replaces all BitmapData's pixels with specified color with newColor pixels. 
 	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
 	 * 
 	 * @param	bitmapData			BitmapData to change
@@ -382,18 +382,44 @@ class FlxBitmapDataUtil
 				result.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
+		result.unlock();
 		
 		// copy borders
-		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, 1, result.height);
-		for (i in 0...numHorizontalFrames)
+		copyBorderPixels(result, frameWidth, frameHeight, spaceX, spaceY, borderX, borderY, numHorizontalFrames, numVerticalFrames);
+		return result;
+	}
+	
+	/**
+	 * Helper method for copying border pixels around tiles.
+	 * It modifies provided image, and assumes that there are spaces between tile images already.
+	 * 
+	 * @param	bitmapData 			image with spaces between tiles to fill with border pixels
+	 * @param	frameWidth			tile width
+	 * @param	frameHeight			tile height
+	 * @param	spaceX				horizontal spacing between tiles
+	 * @param	spaceY				vertical spacing between tiles
+	 * @param	borderX				how many times to copy border of tiles on horizontal axis.
+	 * @param	borderY				how many times to copy border of tiles on vertical axis.
+	 * @param	horizontalFrames	how many columns of tiles on provided image.
+	 * @param	verticalFrames		how many rows of tiles on provided image.
+	 * @return	Modified spritesheet with copied pixels around tile images.
+	 * @since   4.1.0
+	 */
+	public static function copyBorderPixels(bitmapData:BitmapData, frameWidth:Int, frameHeight:Int, spaceX:Int, spaceY:Int, borderX:Int, borderY:Int, horizontalFrames:Int, verticalFrames:Int):BitmapData
+	{
+		// copy borders
+		var tempRect:Rectangle = new Rectangle(0, 0, 1, bitmapData.height);
+		var tempPoint:Point = new Point();
+		bitmapData.lock();
+		
+		for (i in 0...horizontalFrames)
 		{
 			tempRect.x = i * (frameWidth + 2 * borderX + spaceX) + borderX;
 			
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.x += frameWidth - 1;
@@ -401,20 +427,20 @@ class FlxBitmapDataUtil
 			for (j in 0...borderX)
 			{
 				tempPoint.x = tempRect.x + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
 		tempPoint.setTo(0, 0);
-		tempRect.setTo(0, 0, result.width, 1);
-		for (i in 0...numVerticalFrames)
+		tempRect.setTo(0, 0, bitmapData.width, 1);
+		for (i in 0...verticalFrames)
 		{
 			tempRect.y = i * (frameHeight + 2 * borderY + spaceY) + borderY;
 			
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y - j - 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 			
 			tempRect.y += frameHeight - 1;
@@ -422,12 +448,12 @@ class FlxBitmapDataUtil
 			for (j in 0...borderY)
 			{
 				tempPoint.y = tempRect.y + j + 1;
-				result.copyPixels(result, tempRect, tempPoint);
+				bitmapData.copyPixels(bitmapData, tempRect, tempPoint);
 			}
 		}
 		
-		result.unlock();
-		return result;
+		bitmapData.unlock();
+		return bitmapData;
 	}
 	
 	/**
@@ -436,7 +462,7 @@ class FlxBitmapDataUtil
 	 * @param	brush			The image you want to rotate and stamp.
 	 * @param	rotations		The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
 	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
-	 * @param	autoBuffer		Whether to automatically increase the image size to accomodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @param	autoBuffer		Whether to automatically increase the image size to accommodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	Created BitmapData with stamped prerotations on it.
 	 */
 	public static function generateRotations(brush:BitmapData, rotations:Int = 16, antiAliasing:Bool = false, autoBuffer:Bool = false):BitmapData

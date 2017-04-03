@@ -21,9 +21,9 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	private function new(Options:TweenOptions)
+	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super(Options);
+		super(Options, manager);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ class VarTween extends FlxTween
 		{
 			if (_propertyInfos.length == 0)
 			{
-				// We don't initalize() in tween() because otherwise the start values 
+				// We don't initialize() in tween() because otherwise the start values 
 				// will be inaccurate with delays
 				initializeVars();
 			}
@@ -82,7 +82,6 @@ class VarTween extends FlxTween
 	
 	private function initializeVars():Void
 	{
-		var p:String;
 		var fields:Array<String>;
 		
 		if (Reflect.isObject(_properties))

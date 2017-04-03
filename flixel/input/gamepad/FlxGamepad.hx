@@ -14,8 +14,6 @@ import flixel.input.gamepad.mappings.PS4Mapping;
 import flixel.input.gamepad.mappings.PSVitaMapping;
 import flixel.input.gamepad.mappings.WiiRemoteMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
@@ -23,6 +21,9 @@ import flixel.util.FlxStringUtil;
 #if FLX_GAMEINPUT_API
 import flash.ui.GameInputControl;
 import flash.ui.GameInputDevice;
+import flixel.math.FlxMath;
+#elseif FLX_JOYSTICK_API
+import flixel.math.FlxPoint;
 #end
 
 @:allow(flixel.input.gamepad)

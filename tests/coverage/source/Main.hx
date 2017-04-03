@@ -1,3 +1,3 @@
 package;
 
-class Main {}
+class Main extends openfl.display.Sprite {}

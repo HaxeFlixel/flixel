@@ -3,7 +3,7 @@ package flixel.animation;
 import flixel.FlxG;
 
 /**
- * Just a helper structure for the FlxSprite animation system.
+ * Just a helper structure for the `FlxSprite` animation system.
  */
 class FlxAnimation extends FlxBaseAnimation
 {
@@ -19,7 +19,7 @@ class FlxAnimation extends FlxBaseAnimation
 	public var curFrame(default, set):Int = 0;
 	
 	/**
-	 * Accesor for frames.length
+	 * Accessor for `frames.length`
 	 */
 	public var numFrames(get, null):Int;
 	
@@ -36,10 +36,10 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
-	public var paused(default, null):Bool = true;
+	public var paused:Bool = true;
 	
 	/**
-	 * Whether or not the animation is looped
+	 * Whether or not the animation is looped.
 	 */
 	public var looped(default, null):Bool = true;
 	
@@ -59,10 +59,10 @@ class FlxAnimation extends FlxBaseAnimation
 	public var flipY:Bool = false;
 	
 	/**
-	 * A list of frames stored as int objects
+	 * A list of frames stored as int indices
+	 * @since 4.2.0
 	 */
-	@:allow(flixel.animation)
-	private var _frames:Array<Int>;
+	public var frames:Array<Int>;
 	
 	/**
 	 * Internal, used to time each frame of animation.
@@ -70,19 +70,20 @@ class FlxAnimation extends FlxBaseAnimation
 	private var _frameTimer:Float = 0;
 	
 	/**
-	 * @param	Name		What this animation should be called (e.g. "run")
-	 * @param	Frames		An array of numbers indicating what frames to play in what order (e.g. 1, 2, 3)
-	 * @param	FrameRate	The speed in frames per second that the animation should play at (e.g. 40)
-	 * @param	Looped		Whether or not the animation is looped or just plays once
-	 * @param	FlipX		Whether or not the frames of this animation are horizontally flipped
-	 * @param	FlipY		Whether or not the frames of this animation are vertically flipped
+	 * @param   Name        What this animation should be called (e.g. `"run"`).
+	 * @param   Frames      An array of numbers indicating what frames to play in what order (e.g. `[1, 2, 3]`).
+	 * @param   FrameRate   The speed in frames per second that the animation should play at (e.g. `40`).
+	 * @param   Looped      Whether or not the animation is looped or just plays once.
+	 * @param   FlipX       Whether or not the frames of this animation are horizontally flipped.
+	 * @param   FlipY       Whether or not the frames of this animation are vertically flipped.
 	 */
-	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false)
+	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0,
+		Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false)
 	{
 		super(Parent, Name);
 		
 		frameRate = FrameRate;
-		_frames = Frames;
+		frames = Frames;
 		looped = Looped;
 		flipX = FlipX;
 		flipY = FlipY;
@@ -93,7 +94,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 */
 	override public function destroy():Void
 	{
-		_frames = null;
+		frames = null;
 		name = null;
 		super.destroy();
 	}
@@ -101,12 +102,13 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Starts this animation playback.
 	 * 
-	 * @param	Force			Whether to force this animation to restart.
-	 * @param	Reversed		Whether to play animation backwards or not.
-	 * @param	Frame			The frame number in this animation you want to start from (0 by default).
-	 *                    	 	If you pass negative value then it will start from random frame.
-	 * 							If you set Reverse to true then Frame value will be "reversed" (Frame = numFrames - 1 - Frame),
-	 * 							so Frame value will mean frame index from the animation end in this case.
+	 * @param   Force      Whether to force this animation to restart.
+	 * @param   Reversed   Whether to play animation backwards or not.
+	 * @param   Frame      The frame number in this animation you want to start from (`0` by default).
+	 *                     If you pass a negative value then it will start from a random frame.
+	 *                     If you `Reversed` is `true`, the frame value will be "reversed"
+	 *                     (`Frame = numFrames - 1 - Frame`), so `Frame` value will mean frame index
+	 *                     from the animation's end in this case.
 	 */
 	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
@@ -120,34 +122,17 @@ class FlxAnimation extends FlxBaseAnimation
 		reversed = Reversed;
 		paused = false;
 		_frameTimer = 0;
-		
-		var numFramesMinusOne:Int = numFrames - 1;
-		
-		if (Frame >= 0)
-		{
-			// bound frame value
-			Frame = (Frame > numFramesMinusOne) ? numFramesMinusOne : Frame;
-			// "reverse" frame value
-			Frame = reversed ? (numFramesMinusOne - Frame) : Frame;
-		}
-		
-		if ((delay <= 0) 									// non-positive fps
-			|| (Frame > numFramesMinusOne && !reversed) 	// normal animation
-			|| (Frame < 0 && reversed))						// reversed animation
-		{
-			finished = true;
-		}
-		else
-		{
-			finished = false;
-		}
-		
+		finished = delay == 0;
+
+		var maxFrameIndex:Int = numFrames - 1;
 		if (Frame < 0)
-		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		else
 		{
+			if (Frame > maxFrameIndex)
+				Frame = maxFrameIndex;
+			if (reversed)
+				Frame = (maxFrameIndex - Frame);
 			curFrame = Frame;
 		}
 		
@@ -197,38 +182,33 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	override public function update(elapsed:Float):Void
 	{
-		if (delay <= 0 || finished || paused)
+		if (delay == 0 || finished || paused)
 			return;
 
 		_frameTimer += elapsed;
 		while (_frameTimer > delay && !finished)
 		{
 			_frameTimer -= delay;
-			
-			if (looped)
+			if (reversed)
 			{
-				var numFramesMinusOne:Int = numFrames - 1;
-				var tempFrame:Int = reversed ? (numFramesMinusOne - curFrame) : curFrame;
-				
-				if (tempFrame == numFramesMinusOne)
-				{
-					curFrame = reversed ? numFramesMinusOne : 0;
-				}
+				if (looped && curFrame == 0)
+					curFrame = numFrames - 1;
 				else
-				{
-					curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
-				}
+					curFrame--;
 			}
 			else
 			{
-				curFrame = reversed ? (curFrame - 1) : (curFrame + 1);
+				if (looped && curFrame == numFrames - 1)
+					curFrame = 0;
+				else
+					curFrame++;
 			}
 		}
 	}
 	
 	override public function clone(Parent:FlxAnimationController):FlxAnimation
 	{
-		return new FlxAnimation(Parent, name, _frames, frameRate, looped, flipX, flipY);
+		return new FlxAnimation(Parent, name, frames, frameRate, looped, flipX, flipY);
 	}
 	
 	private function set_frameRate(value:Int):Int
@@ -236,24 +216,21 @@ class FlxAnimation extends FlxBaseAnimation
 		delay = 0;
 		frameRate = value;
 		if (value > 0)
-		{
 			delay = 1.0 / value;
-		}
 		return value;
 	}
 	
 	private function set_curFrame(Frame:Int):Int
 	{
-		var numFramesMinusOne:Int = numFrames - 1;
-		// "reverse" frame value (if there is such need)
-		var tempFrame:Int = reversed ? (numFramesMinusOne - Frame) : Frame;
+		var maxFrameIndex:Int = numFrames - 1;
+		var tempFrame:Int = (reversed) ? (maxFrameIndex - Frame) : Frame;
 		
 		if (tempFrame >= 0)
 		{
-			if (!looped && tempFrame > numFramesMinusOne)
+			if (!looped && Frame > maxFrameIndex)
 			{
 				finished = true;
-				curFrame = reversed ? 0 : numFramesMinusOne;
+				curFrame = reversed ? 0 : maxFrameIndex;
 			}
 			else
 			{
@@ -261,11 +238,9 @@ class FlxAnimation extends FlxBaseAnimation
 			}
 		}
 		else
-		{
-			curFrame = FlxG.random.int(0, numFramesMinusOne);
-		}
+			curFrame = FlxG.random.int(0, maxFrameIndex);
 		
-		curIndex = _frames[curFrame];
+		curIndex = frames[curFrame];
 		
 		if (finished && parent != null)
 			parent.fireFinishCallback(name);
@@ -275,6 +250,6 @@ class FlxAnimation extends FlxBaseAnimation
 	
 	private inline function get_numFrames():Int
 	{
-		return _frames.length;
+		return frames.length;
 	}
 }

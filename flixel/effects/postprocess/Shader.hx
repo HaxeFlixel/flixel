@@ -14,7 +14,8 @@ class Shader
 	
 	/**
 	 * Creates a new Shader
-	 * @param sources  A list of glsl shader sources to compile and link into a program
+	 * 
+	 * @param  sources   A list of GLSL shader sources to compile and link into a program
 	 */
 	public function new(sources:Array<ShaderSource>)
 	{
@@ -41,8 +42,9 @@ class Shader
 
 	/**
 	 * Compiles the shader source into a GlShader object and prints any errors
-	 * @param source  The shader source code
-	 * @param type    The type of shader to compile (fragment, vertex)
+	 *
+	 * @param   source   The shader source code
+	 * @param   type     The type of shader to compile (fragment, vertex)
 	 */
 	private function compile(source:String, type:Int):GLShader
 	{
@@ -61,7 +63,8 @@ class Shader
 
 	/**
 	 * Return the attribute location in this shader
-	 * @param a  The attribute name to find
+	 *
+	 * @param   a   The attribute name to find
 	 */
 	public inline function attribute(a:String):Int
 	{
@@ -70,7 +73,8 @@ class Shader
 
 	/**
 	 * Return the uniform location in this shader
-	 * @param a  The uniform name to find
+	 *
+	 * @param   a   The uniform name to find
 	 */
 	public inline function uniform(u:String):Int
 	{

@@ -21,7 +21,7 @@ class WiiRemoteID
 	 * - Rumble
 	 * - Speaker
 	 */
-#if FLX_JOYSTICK_API
+	#if FLX_JOYSTICK_API
 	
 	// Standard Wii Remote inputs:
 	public static inline var REMOTE_ONE:Int = 0;
@@ -70,13 +70,13 @@ class WiiRemoteID
 	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
 	// so we have to pass in some "fake" ID's to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
-			up:    REMOTE_DPAD_UP,
-			down:  REMOTE_DPAD_DOWN,
-			left:  REMOTE_DPAD_LEFT,
-			right: REMOTE_DPAD_RIGHT,
-			threshold: 0.5,
-			mode: ONLY_DIGITAL
-		});
+		up:    REMOTE_DPAD_UP,
+		down:  REMOTE_DPAD_DOWN,
+		left:  REMOTE_DPAD_LEFT,
+		right: REMOTE_DPAD_RIGHT,
+		threshold: 0.5,
+		mode: ONLY_DIGITAL
+	});
 	
 	// the nunchuk only has the "left" analog stick
 	public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 32, down: 33, left: 34, right: 35 });
@@ -106,7 +106,7 @@ class WiiRemoteID
 	public static inline var NUNCHUK_DPAD_LEFT:Int = 30;
 	public static inline var NUNCHUK_DPAD_RIGHT:Int = 31;
 	
-#else //gamepad API
+	#else //gamepad API
 	
 	// Standard Wii Remote inputs:
 	public static inline var REMOTE_ONE:Int = 9;
@@ -194,5 +194,5 @@ class WiiRemoteID
 	public static inline var REMOTE_DPAD_X:Int = 26;
 	public static inline var REMOTE_DPAD_Y:Int = 27;
 	
-#end
+	#end
 }

@@ -22,19 +22,22 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends #if (lime_legacy || openfl <= "3.4.0") ByteArray #else ByteArrayData #end {}
+class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
 typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
+typedef FlxTexturePackerSource = OneOfTwo<String, TexturePackerObject>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+
+typedef FlxShader = #if (openfl_legacy || nme) Dynamic #else  openfl.display.Shader; #end
 #end
 
 class FlxAssets
 {
-#if macro
+	#if (macro || doc_gen)
 	/**
 	 * Reads files from a directory relative to this project and generates `public static inline`
 	 * variables containing the string paths to the files in it. 
@@ -54,11 +57,16 @@ class FlxAssets
 	 * @param   subDirectories     Whether to include subdirectories
 	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
 	 */
-	public static macro function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
+	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
 	{
+		#if doc_gen
+		return [];
+		#else
 		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions);
+		#end
 	}
-#else
+	#end
+	#if (!macro || doc_gen)
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
 	public static var FONT_DEBUGGER:String = "Monsterrat";
@@ -216,5 +224,5 @@ class FlxAssets
 		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
 		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
-#end
+	#end
 }

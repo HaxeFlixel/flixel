@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
@@ -13,6 +14,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var drawData:Array<Float> = [];
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
+	public var shader:FlxShader;
 	
 	public function new() 
 	{
@@ -24,86 +26,95 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	{
 		super.reset();
 		position = 0;
+		shader = null;
 	}
 	
 	override public function dispose():Void
 	{
 		super.dispose();
 		drawData = null;
+		shader = null;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		drawData[position++] = matrix.tx;
-		drawData[position++] = matrix.ty;
-		
+		setNext(matrix.tx);
+		setNext(matrix.ty);
+
 		var rect:FlxRect = frame.frame;
-		
-		drawData[position++] = rect.x;
-		drawData[position++] = rect.y;
-		drawData[position++] = rect.width;
-		drawData[position++] = rect.height;
-		
-		drawData[position++] = matrix.a;
-		drawData[position++] = matrix.b;
-		drawData[position++] = matrix.c;
-		drawData[position++] = matrix.d;
-		
+
+		setNext(rect.x);
+		setNext(rect.y);
+		setNext(rect.width);
+		setNext(rect.height);
+
+		setNext(matrix.a);
+		setNext(matrix.b);
+		setNext(matrix.c);
+		setNext(matrix.d);
+
 		if (colored && transform != null)
 		{
-			drawData[position++] = transform.redMultiplier; 
-			drawData[position++] = transform.greenMultiplier;
-			drawData[position++] = transform.blueMultiplier;
+			setNext(transform.redMultiplier);
+			setNext(transform.greenMultiplier);
+			setNext(transform.blueMultiplier);
 		}
-		
-		drawData[position++] = transform != null ? transform.alphaMultiplier : 1.0;
-		
+
+		setNext(transform != null ? transform.alphaMultiplier : 1.0);
+
 		#if (!openfl_legacy && openfl >= "3.6.0")
 		if (hasColorOffsets && transform != null)
 		{
-			drawData[position++] = transform.redOffset;
-			drawData[position++] = transform.greenOffset;
-			drawData[position++] = transform.blueOffset;
-			drawData[position++] = transform.alphaOffset;
+			setNext(transform.redOffset);
+			setNext(transform.greenOffset);
+			setNext(transform.blueOffset);
+			setNext(transform.alphaOffset);
 		}
 		#end
 	}
 	
+	private inline function setNext(f:Float):Void
+	{
+		drawData[position++] = f;
+	}
+	
 	override public function render(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile)
+		if (!FlxG.renderTile || position <= 0)
 			return;
 		
-		if (position > 0)
-		{
-			var tempFlags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
-			
-			if (colored)
-			{
-				tempFlags |= Tilesheet.TILE_RGB;
-			}
-			
-			#if (!openfl_legacy && openfl >= "3.6.0")
-			if (hasColorOffsets)
-			{
-				tempFlags |= Tilesheet.TILE_TRANS_COLOR;
-			}
-			#end
-			
-			tempFlags |= blending;
-			graphics.tilesheet.drawTiles(camera.canvas.graphics, drawData, (camera.antialiasing || antialiasing), tempFlags, position);
-			FlxTilesheet._DRAWCALLS++;
-		}
+		var flags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
+		
+		if (colored)
+			flags |= Tilesheet.TILE_RGB;
+		
+		#if (!openfl_legacy && openfl >= "3.6.0")
+		if (hasColorOffsets)
+			flags |= Tilesheet.TILE_TRANS_COLOR;
+		#end
+
+		flags |= blending;
+
+		#if !(nme && flash)
+		camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
+			(camera.antialiasing || antialiasing), flags,
+			#if !openfl_legacy shader, #end
+			position);
+		#end
+
+		FlxTilesheet._DRAWCALLS++;
 	}
 	
 	private function get_numTiles():Int
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
-		{
-			elementsPerTile += 3;	// r, g, b
-		}
-		
+			elementsPerTile += 3; // r, g, b
+		#if (!openfl_legacy && openfl >= "3.6.0")
+		if (hasColorOffsets)
+			elementsPerTile += 4; // r, g, b, a
+		#end
+
 		return Std.int(position / elementsPerTile);
 	}
 	

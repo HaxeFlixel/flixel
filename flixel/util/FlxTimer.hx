@@ -11,8 +11,17 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  */
 class FlxTimer implements IFlxDestroyable
 {
-	public static var manager:FlxTimerManager;
+	/**
+	 * The global timer manager that handles global timers
+	 * @since 4.2.0
+	 */
+	public static var globalManager:FlxTimerManager;
 	
+	/**
+	 * The manager to which this timer belongs
+	 * @since 4.2.0
+	 */
+	public var manager:FlxTimerManager;
 	/**
 	 * How much time the timer was set for.
 	 */
@@ -69,7 +78,10 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Creates a new timer.
 	 */
-	public function new() {}
+	public function new(?manager:FlxTimerManager)
+	{
+		this.manager = manager != null ? manager : globalManager;
+	}
 	
 	/**
 	 * Clean up memory.
@@ -102,14 +114,13 @@ class FlxTimer implements IFlxDestroyable
 		time = Math.abs(Time);
 		
 		if (Loops < 0) 
-		{
 			Loops *= -1;
-		}
 		
 		loops = Loops;
 		onComplete = OnComplete;
 		_timeCounter = 0;
 		_loopsCounter = 0;
+		
 		return this;
 	}
 	
@@ -120,9 +131,8 @@ class FlxTimer implements IFlxDestroyable
 	public function reset(NewTime:Float = -1):FlxTimer
 	{
 		if (NewTime < 0)
-		{
 			NewTime = time;
-		}
+		
 		start(NewTime, onComplete, loops);
 		return this;
 	}
@@ -157,16 +167,21 @@ class FlxTimer implements IFlxDestroyable
 			_timeCounter -= time;
 			_loopsCounter++;
 			
-			if (onComplete != null)
-			{
-				onComplete(this);
-			}
-			
 			if (loops > 0 && (_loopsCounter >= loops))
 			{
-				cancel();
+				finished = true;
 			}
 		}
+	}
+	
+	@:allow(flixel.util.FlxTimerManager)
+	private function onLoopFinished():Void
+	{
+		if (finished)
+			cancel();
+		
+		if (onComplete != null)
+			onComplete(this);
 	}
 	
 	private inline function get_timeLeft():Float
@@ -196,7 +211,8 @@ class FlxTimer implements IFlxDestroyable
 }
 
 /**
- * A simple manager for tracking and updating game timer objects.
+ * A simple manager for tracking and updating game timer objects. 
+ * Normally accessed via the static `FlxTimer.manager` rather than being created separately.
  */
 class FlxTimerManager extends FlxBasic
 {
@@ -232,11 +248,30 @@ class FlxTimerManager extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
+		var loopedTimers:Array<FlxTimer> = null;
+		
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
+				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
+				
+				if (timerLoops != timer.elapsedLoops)
+				{
+					if (loopedTimers == null)
+						loopedTimers = [];
+					
+					loopedTimers.push(timer);
+				}
+			}
+		}
+		
+		if (loopedTimers != null)
+		{
+			while (loopedTimers.length > 0)
+			{
+				loopedTimers.shift().onLoopFinished();
 			}
 		}
 	}
@@ -255,10 +290,9 @@ class FlxTimerManager extends FlxBasic
 	
 	/**
 	 * Remove a timer from the timer manager.
-	 * Called automatically by FlxTimer's stop() function.
+	 * Called automatically by FlxTimer's cancel() function.
 	 * 
 	 * @param	Timer	The FlxTimer you want to remove from the manager.
-	 * @param	ReturnInPool Whether to reset and put Timer into internal _pool.
 	 */
 	@:allow(flixel.util.FlxTimer)
 	private function remove(Timer:FlxTimer):Void
@@ -267,10 +301,44 @@ class FlxTimerManager extends FlxBasic
 	}
 	
 	/**
+	 * Immediately updates all `active`, non-infinite timers to their end points, repeatedly,
+	 * until all their loops are finished, resulting in `loopsLeft` callbacks being run.
+	 * @since 4.2.0
+	 */
+	public function completeAll():Void
+	{
+		var timersToFinish:Array<FlxTimer> = [];
+		for (timer in _timers)
+			if (timer.loops > 0 && timer.active)
+				timersToFinish.push(timer);
+
+		for (timer in timersToFinish)
+		{
+			while (!timer.finished)
+			{
+				timer.update(timer.timeLeft);
+				timer.onLoopFinished();
+			}
+		}
+	}
+
+	/**
 	 * Removes all the timers from the timer manager.
 	 */
 	public inline function clear():Void
 	{
 		FlxArrayUtil.clearArray(_timers);
+	}
+
+	/**
+	 * Applies a function to all timers
+	 * 
+	 * @param   Function   A function that modifies one timer at a time
+	 * @since   4.2.0
+	 */
+	public function forEach(Function:FlxTimer->Void)
+	{
+		for (timer in _timers)
+			Function(timer);
 	}
 }

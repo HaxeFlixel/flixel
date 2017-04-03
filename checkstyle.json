@@ -16,6 +16,14 @@
 		["neko", "desktop", "sys"],
 		["android", "cpp", "mobile"]
 	],
+	"exclude": {
+		"all": [
+			"TestSuite"
+		],
+		"AvoidStarImport": [
+			"flixel.math.FlxRandomTest"
+		]
+	},
 	"checks": [
 		{
 			"type": "ModifierOrder",
@@ -182,6 +190,9 @@
 					"haxe.macro.Expr"
 				]
 			}
+		},
+		{
+			"type": "PublicAccessor"
 		}
 	]
 }

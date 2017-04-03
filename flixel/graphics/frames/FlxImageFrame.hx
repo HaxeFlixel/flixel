@@ -18,7 +18,7 @@ class FlxImageFrame extends FlxFramesCollection
 {
 	/**
 	 * Single frame of this frame collection.
-	 * Added this var for faster access, so you don't need to type something like: imageFrame.frames[0]
+	 * Added this var for faster access, so you don't need to type something like: `imageFrame.frames[0]`
 	 */
 	public var frame(get, null):FlxFrame;
 	
@@ -28,22 +28,22 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Generates ImageFrame object with empty frame of specified size.
+	 * Generates a `FlxImageFrame` object with empty frame of specified size.
 	 * 
-	 * @param	graphic		graphic for ImageFrame.
-	 * @param	frameRect	the size of the empty frame to generate (only width and height of the frameRect are need to be set properly).
-	 * @return	Newly created ImageFrame object with empty frame of specified size.
+	 * @param   graphic     Graphic for the `FlxImageFrame`.
+	 * @param   frameRect   The size of the empty frame to generate
+	 *                      (only `width` and `height` of the `frameRect` need to be set properly).
+	 * @return  Newly created `FlxImageFrame` object with empty frame of specified size.
 	 */
 	public static function fromEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{
-		if (graphic == null || frameRect == null)	return null;
+		if (graphic == null || frameRect == null)
+			return null;
 		
 		// find ImageFrame, if there is one already
-		var imageFrame:FlxImageFrame = FlxImageFrame.findEmptyFrame(graphic, frameRect);
+		var imageFrame = FlxImageFrame.findEmptyFrame(graphic, frameRect);
 		if (imageFrame != null)
-		{
 			return imageFrame;
-		}
 		
 		// or create it, if there is no such object
 		imageFrame = new FlxImageFrame(graphic);
@@ -52,10 +52,10 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Generates ImageFrame object for specified FlxFrame.
+	 * Generates a `FlxImageFrame` object from the specified `FlxFrame`.
 	 * 
-	 * @param	source	FlxFrame to generate ImageFrame from.
-	 * @return	Created ImageFrame object.
+	 * @param   source   `FlxFrame` to generate `FlxImageFrame` from.
+	 * @return  Created `FlxImageFrame` object.
 	 */
 	public static function fromFrame(source:FlxFrame):FlxImageFrame
 	{
@@ -64,9 +64,7 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, rect);
 		if (imageFrame != null)
-		{
 			return imageFrame;
-		}
 		
 		imageFrame = new FlxImageFrame(graphic);
 		imageFrame.addSpriteSheetFrame(rect.copyTo(FlxRect.get()));
@@ -74,10 +72,10 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Creates ImageFrame object for the whole image.
+	 * Creates a `FlxImageFrame` object for the whole image.
 	 * 
-	 * @param	source	image graphic for ImageFrame. It could be String, BitmapData or FlxGraphic.
-	 * @return	Newly created ImageFrame object for specified graphic.
+	 * @param   source   image graphic for the `FlxImageFrame`.
+	 * @return  Newly created `FlxImageFrame` object for specified graphic.
 	 */
 	public static function fromImage(source:FlxGraphicAsset):FlxImageFrame
 	{
@@ -85,11 +83,11 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Creates ImageFrame for specified region of FlxGraphic.
+	 * Creates `FlxImageFrame` for the specified region of `FlxGraphic`.
 	 * 
-	 * @param	graphic	graphic for ImageFrame.
-	 * @param	region	region of image to create ImageFrame for.
-	 * @return	Newly created ImageFrame object for specified region of FlxGraphic object.
+	 * @param   graphic   Graphic for `FlxImageFrame`.
+	 * @param   region    Region of image to create the `FlxImageFrame` for.
+	 * @return  Newly created `FlxImageFrame` object for the specified region of `FlxGraphic` object.
 	 */
 	public static function fromGraphic(graphic:FlxGraphic, ?region:FlxRect):FlxImageFrame
 	{
@@ -104,9 +102,7 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, checkRegion);
 		if (imageFrame != null)
-		{
 			return imageFrame;
-		}
 		
 		// or create it, if there is no such object
 		imageFrame = new FlxImageFrame(graphic);
@@ -118,14 +114,10 @@ class FlxImageFrame extends FlxFramesCollection
 		else
 		{
 			if (region.width == 0)
-			{
 				region.width = graphic.width - region.x;
-			}
 			
 			if (region.height == 0)
-			{
 				region.height = graphic.height - region.y;
-			}
 		}
 		
 		imageFrame.addSpriteSheetFrame(region);
@@ -133,11 +125,11 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Creates ImageFrame object for specified region of image.
+	 * Creates a `FlxImageFrame` object for specified region of the image.
 	 * 
-	 * @param	source	image graphic for ImageFrame. It could be String, BitmapData or FlxGraphic.
-	 * @param	region	region of image to create ImageFrame for.
-	 * @return	Newly created ImageFrame object for specified region of image.
+	 * @param   source   Image graphic for `FlxImageFrame`.
+	 * @param   region   Region of the image to create the `FlxImageFrame` for.
+	 * @return  Newly created `FlxImageFrame` object for specified region of image.
 	 */
 	public static function fromRectangle(source:FlxGraphicAsset, ?region:FlxRect):FlxImageFrame
 	{
@@ -146,16 +138,17 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Gets source bitmapdata, generates new bitmapdata (if there is no such bitmapdata in the cache already) 
+	 * Gets source BitmapData, generates new BitmapData (if there is no such BitmapData in the cache already) 
 	 * and creates FlxImageFrame collection.
 	 * 
-	 * @param	source			the source of graphic for frame collection (can be String, BitmapData or FlxGraphic).
-	 * @param	border			Border to add around tiles (helps to avoid "tearing" problem)
-	 * @param	region			Region of image to generate image frame from. Default value is null, which means that
-	 * 							whole image will be used for it
-	 * @return	Newly created image frame collection
+	 * @param   source   The source of graphic for frame collection.
+	 * @param   border   Border to add around tiles (helps to avoid "tearing" problem).
+	 * @param   region   Region of image to generate image frame from. Default value is `null`, which means that
+	 *                   whole image will be used for it.
+	 * @return  Newly created image frame collection.
 	 */
-	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, ?region:FlxRect):FlxImageFrame
+	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint,
+		?region:FlxRect):FlxImageFrame
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null) return null;
@@ -168,20 +161,17 @@ class FlxImageFrame extends FlxFramesCollection
 			result = FlxG.bitmap.add(bitmap, false, key);
 		}
 		
-		var borderX:Int = Std.int(border.x);
-		var borderY:Int = Std.int(border.y);
-		
 		var imageFrame:FlxImageFrame = FlxImageFrame.fromGraphic(graphic);
 		return imageFrame.addBorder(border);
 	}
 	
 	/**
-	 * Gets FlxFrame object, generates new bitmapdata with border pixels around (if there is no such bitmapdata in the cache already) 
-	 * and creates image frame collection.
-	 *  
-	 * @param	frame		Frame to generate tiles from
-	 * @param	border		Border to add around frame image (helps to avoid "tearing" problem)
-	 * @return	Newly created image frame collection
+	 * Gets `FlxFrame` object, generates new `BitmapData` with border pixels around
+	 * (if there is no such BitmapData in the cache already) and creates image frame collection.
+	 * 
+	 * @param   frame    Frame to generate tiles from.
+	 * @param   border   Border to add around frame image (helps to avoid "tearing" problem).
+	 * @return  Newly created image frame collection.
 	 */
 	public static function fromFrameAddSpacesAndBorders(frame:FlxFrame, border:FlxPoint):FlxImageFrame
 	{
@@ -190,11 +180,13 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Searches ImageFrame object for specified FlxGraphic object which have the same frame rectangle.
+	 * Searches `FlxImageFrame` object for specified `FlxGraphic` object which have the same frame rectangle.
 	 * 
-	 * @param	graphic		FlxGraphic object to search ImageFrame for.
-	 * @param	frameRect	ImageFrame object should have frame with the same position and dimensions as specified with this argument.
-	 * @return	ImageFrame object which corresponds to specified rectangle. Could be null if there is no such ImageFrame.
+	 * @param    graphic     `FlxGraphic` object to search the `FlxImageFrame` for.
+	 * @param    frameRect   `FlxImageFrame` object should have frame with
+	 *                        the same position and dimensions as specified with this argument.
+	 * @return   `FlxImageFrame` object which corresponds to specified rectangle.
+	 *           Could be `null` if there is no such `FlxImageFrame`.
 	 */
 	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, ?frameBorder:FlxPoint):FlxImageFrame
 	{
@@ -202,20 +194,17 @@ class FlxImageFrame extends FlxFramesCollection
 			frameBorder = FlxPoint.weak();
 		
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-		var imageFrame:FlxImageFrame;
 		for (imageFrame in imageFrames)
 		{
 			if (imageFrame.equals(frameRect, frameBorder) && imageFrame.frame.type != FlxFrameType.EMPTY)
-			{
 				return imageFrame;
-			}
 		}
 		
 		return null;
 	}
 	
 	/**
-	 * ImageFrame comparison method. For internal use.
+	 * `FlxImageFrame` comparison method. For internal use.
 	 */
 	private inline function equals(rect:FlxRect, border:FlxPoint):Bool
 	{
@@ -223,26 +212,22 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 	
 	/**
-	 * Searches ImageFrame object with the empty frame which have specified size.
+	 * Searches `FlxImageFrame` object with the empty frame which have specified size.
 	 * 
-	 * @param	graphic		FlxGraphic object to search ImageFrame for.
-	 * @param	frameRect	The size of empty frame to search for.
-	 * @return	ImageFrame with empty frame.
+	 * @param   graphic     `FlxGraphic` object to search `FlxImageFrame` for.
+	 * @param   frameRect   The size of empty frame to search for.
+	 * @return  `FlxImageFrame` with empty frame.
 	 */
 	public static function findEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{
 		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-		var imageFrame:FlxImageFrame;
-		var frame:FlxFrame;
-		
+
 		for (imageFrame in imageFrames)
 		{
-			frame = imageFrame.frame;
-			
-			if (frame.sourceSize.x == frameRect.width && frame.sourceSize.y == frameRect.height && frame.type == FlxFrameType.EMPTY)
-			{
+			var frame = imageFrame.frame;
+			if (frame.sourceSize.x == frameRect.width &&
+				frame.sourceSize.y == frameRect.height && frame.type == FlxFrameType.EMPTY)
 				return imageFrame;
-			}
 		}
 		
 		return null;
@@ -254,9 +239,7 @@ class FlxImageFrame extends FlxFramesCollection
 		
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(parent, frame.frame, resultBorder);
 		if (imageFrame != null)
-		{
 			return imageFrame;
-		}
 		
 		imageFrame = new FlxImageFrame(parent, resultBorder);
 		imageFrame.pushFrame(frame.setBorderTo(border));

@@ -85,6 +85,7 @@ class FlxStringUtilTest
 		Assert.areEqual("0.60", FlxStringUtil.formatMoney(0.6)); // #1754
 		Assert.areEqual("0", FlxStringUtil.formatMoney(0.6, false));
 		Assert.areEqual("0.00", FlxStringUtil.formatMoney(0));
+		Assert.areEqual("4.03", FlxStringUtil.formatMoney(4.0312));
 
 		Assert.areEqual("-100,000,000.00", FlxStringUtil.formatMoney(-100000000));
 		Assert.areEqual("-110.20", FlxStringUtil.formatMoney(-110.2));
@@ -98,5 +99,55 @@ class FlxStringUtilTest
 		Assert.isTrue(FlxStringUtil.isNullOrEmpty(""));
 		Assert.isFalse(FlxStringUtil.isNullOrEmpty("."));
 		Assert.isFalse(FlxStringUtil.isNullOrEmpty("Hello World"));
+	}
+
+	@Test
+	function testGetDomainNonLocal()
+	{
+		var domain = "xn--eckwd4c7c.test";
+
+		// Examples of valid URI components.
+		var schemes = ["http", "https", "fake.but-valid+scheme"];
+		var hosts = ['$domain', 'www.$domain', 'aaa.bbb.ccc.$domain'];
+		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
+
+		for (scheme in schemes) for (host in hosts) for (path in paths)
+		{
+			var uri = mixedCase('$scheme://$host$path');
+			Assert.areEqual(domain, FlxStringUtil.getDomain(uri));
+		}
+	}
+
+	/**
+	 * Returns a string with a mixture of upper and lower case characters.
+	 */
+	function mixedCase(string:String):String
+	{
+		var result = "", upper = false;
+		for (i in 0...string.length)
+		{
+			var char = string.charAt(i);
+			result += (upper = !upper) ? char.toUpperCase() : char.toLowerCase();
+		}
+		return result;
+	}
+
+	@Test
+	function testGetDomainLocal()
+	{
+		// Examples of some Unix-style and Windows-style local file paths.
+		var paths = [
+			"/root/folder/file.extension",
+			"./folder/file.extension",
+			"~/.extension",
+			"D:\\folder\\file.extension",
+			"D:\\folder\\file.extension:alternate_stream_name",
+			"D:file.extension",
+			"\\\\server\\folder\\file.extension",
+			"\\\\?\\D:\\folder\\file.extension"
+		];
+		
+		for (path in paths)
+			Assert.areEqual("local", FlxStringUtil.getDomain(path));
 	}
 }

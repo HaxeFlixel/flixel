@@ -154,7 +154,7 @@ class FlxRandom
 	
 	/**
 	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
-	 * (This uses the Box-Muller transform algorithm for guassian pseudorandom numbers)
+	 * (This uses the Box-Muller transform algorithm for gaussian pseudorandom numbers)
 	 * 
 	 * Normal distribution: 68% values are within 1 standard deviation, 95% are in 2 StdDevs, 99% in 3 StdDevs.
 	 * See this image: https://github.com/HaxeFlixel/flixel-demos/blob/dev/Performance/FlxRandom/normaldistribution.png
@@ -289,7 +289,7 @@ class FlxRandom
 			}
 			
 			_arrayFloatHelper = [for (i in StartIndex...EndIndex + 1) WeightsArray[i]];
-			selected = Objects[weightedPick(_arrayFloatHelper)];
+			selected = Objects[StartIndex + weightedPick(_arrayFloatHelper)];
 		}
 		
 		return selected;
@@ -304,6 +304,7 @@ class FlxRandom
 	 * @return  The newly shuffled array.
 	 */
 	@:generic
+	@:deprecated("Unless you rely on reproducing the exact output of shuffleArray(), you should use shuffle() instead, which is both faster and higher quality.")
 	public function shuffleArray<T>(Objects:Array<T>, HowManyTimes:Int):Array<T>
 	{
 		HowManyTimes = Std.int(Math.max(HowManyTimes, 0));
@@ -321,6 +322,26 @@ class FlxRandom
 		}
 		
 		return Objects;
+	}
+
+	/**
+	 * Shuffles the entries in an array in-place into a new pseudorandom order,
+	 * using the standard Fisher-Yates shuffle algorithm.
+	 *
+	 * @param  array  The array to shuffle.
+	 * @since  4.2.0
+	 */
+	@:generic
+	public function shuffle<T>(array:Array<T>):Void
+	{
+		var maxValidIndex = array.length - 1;
+		for (i in 0...array.length)
+		{
+			var j = int(i, maxValidIndex);
+			var tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
+		}
 	}
 	
 	/**
@@ -455,7 +476,7 @@ class FlxRandom
 	 * 
 	 * @return  The new value of the state seed.
 	 */
-	@:allow(flixel.FlxGame.switchState)
+	@:allow(flixel.FlxGame)
 	private static inline function updateStateSeed():Int
 	{
 		return _stateSeed = FlxG.random.currentSeed;
@@ -467,7 +488,7 @@ class FlxRandom
 	 * 
 	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
 	 */
-	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
+	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
 		return _recordingSeed = FlxG.random.initialSeed = StandardMode ? FlxG.random.initialSeed : _stateSeed;

@@ -2,6 +2,10 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 
+#if hscript
+import flixel.system.debug.console.ConsoleUtil;
+#end
+
 class WatchFrontEnd
 {
 	public function new() {}
@@ -65,25 +69,31 @@ class WatchFrontEnd
 	 * Add an expression to the watch list in the debugger.
 	 * The expression gets evaluated with hscript, and you can see its current value all the time.
 	 * 
-	 * @param	expression		A Haxe expression written as a string that will be evaluated and watched.
-	 * @param	displayName		Optional, display your own string instead of the expression string: e.g. "enemy count".
+	 * @param   expression    A Haxe expression written as a string that will be evaluated and watched.
+	 * @param   displayName   Optional, display your own string instead of the expression string: e.g. "enemy count".
+	 * @since   4.1.0
 	 */
 	public function addExpression(expression:String, ?displayName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.add(displayName, EXPRESSION(expression));
+		var parsedExpr = null;
+		#if hscript
+		parsedExpr = ConsoleUtil.parseCommand(expression);
+		#end
+		FlxG.game.debugger.watch.add(displayName == null ? expression : displayName, EXPRESSION(expression, parsedExpr));
 		#end
 	}
 	
 	/**
 	 * Remove an expression from the watch list in the debugger.
 	 * 
-	 * @param	expression	The Haxe expression that you want to remove.
+	 * @param   displayName   The display name of the registered expression, if you supplied one, or the Haxe expression that you want to remove, in string form.
+	 * @since   4.1.0
 	 */
-	public function removeExpression(expression:String):Void
+	public function removeExpression(displayName:String):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.remove(null, EXPRESSION(expression));
+		FlxG.game.debugger.watch.remove(displayName, null);
 		#end
 	}
 	

@@ -102,10 +102,9 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	public inline function scale(k:Float):FlxVector
+	override public function scale(k:Float):FlxVector
 	{
-		x *= k;
-		y *= k;
+		super.scale(k);
 		return this;
 	}
 	
@@ -228,7 +227,6 @@ class FlxVector extends FlxPoint
 	{
 		if (isZero()) 
 		{
-			x = 1;
 			return this;
 		}
 		return scale(1 / length);
@@ -263,7 +261,7 @@ class FlxVector extends FlxPoint
 	/**
 	 * Rotate the vector for a given angle.
 	 * 
-	 * @param	rads	angle to rotate
+	 * @param	degs	angle to rotate
 	 * @return	rotated vector
 	 */
 	public inline function rotateByDegrees(degs:Float):FlxVector
@@ -272,7 +270,7 @@ class FlxVector extends FlxPoint
 	}
 	
 	/**
-	 * Rotate the vector vector with the values of sine and cosine of the angle of rotation.
+	 * Rotate the vector with the values of sine and cosine of the angle of rotation.
 	 * 
 	 * @param	sin	the value of sine of the angle of rotation
 	 * @param	cos	the value of cosine of the angle of rotation

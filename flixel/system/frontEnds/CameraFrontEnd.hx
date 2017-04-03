@@ -5,8 +5,8 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
-@:allow(flixel.FlxGame)
 class CameraFrontEnd
 {
 	/**
@@ -19,6 +19,15 @@ class CameraFrontEnd
 	 * The current (global, applies to all cameras) bgColor.
 	 */
 	public var bgColor(get, set):FlxColor;
+	
+	/** @since 4.2.0 */
+	public var cameraAdded(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
+	
+	/** @since 4.2.0 */
+	public var cameraRemoved(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
+	
+	/** @since 4.2.0 */
+	public var cameraResized(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
 	
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
@@ -42,6 +51,7 @@ class CameraFrontEnd
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		FlxG.cameras.list.push(NewCamera);
 		NewCamera.ID = FlxG.cameras.list.length - 1;
+		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
 	
@@ -54,14 +64,15 @@ class CameraFrontEnd
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
 		var index:Int = list.indexOf(Camera);
-		if ((Camera != null) && index != -1)
+		if (Camera != null && index != -1)
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
 		}
 		else
 		{
-			FlxG.log.warn("FlxG.cameras.remove(): The camera you attemped to remove is not a part of the game.");
+			FlxG.log.warn("FlxG.cameras.remove(): The camera you attempted to remove is not a part of the game.");
+			return;
 		}
 		
 		if (FlxG.renderTile)
@@ -73,9 +84,9 @@ class CameraFrontEnd
 		}
 		
 		if (Destroy)
-		{
 			Camera.destroy();
-		}
+		
+		cameraRemoved.dispatch(Camera);
 	}
 		
 	/**
@@ -86,18 +97,11 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
-		for (camera in list)
-		{
-			FlxG.game.removeChild(camera.flashSprite);
-			camera.destroy();
-		}
-		
-		list.splice(0, list.length);
-		
+		while (list.length > 0)
+			remove(list[0]);
+
 		if (NewCamera == null)
-		{
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		}
 		
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
@@ -164,6 +168,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function lock():Void
 	{
 		for (camera in list)
@@ -205,6 +210,7 @@ class CameraFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private inline function render():Void
 	{
 		if (FlxG.renderTile)
@@ -222,6 +228,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function unlock():Void
 	{
 		for (camera in list)
@@ -248,6 +255,7 @@ class CameraFrontEnd
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function update(elapsed:Float):Void
 	{
 		for (camera in list)
@@ -262,6 +270,7 @@ class CameraFrontEnd
 	/**
 	 * Resizes and moves cameras when the game resizes (onResize signal).
 	 */
+	@:allow(flixel.FlxGame)
 	private function resize():Void
 	{
 		for (camera in list)

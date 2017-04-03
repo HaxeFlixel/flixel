@@ -1,22 +1,24 @@
 package flixel.system.frontEnds;
 
+import flash.ui.Mouse;
+import flixel.FlxG;
+
+#if FLX_RECORD
 import flash.events.Event;
 import flash.events.IOErrorEvent;
-import flash.ui.Mouse;
 import flash.utils.ByteArray;
-import flixel.FlxG;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxRandom;
-
 #if flash
 import flash.net.FileReference;
 import flash.net.FileFilter;
 #end
+#end
 
 class VCRFrontEnd
 {
-#if FLX_RECORD
+	#if FLX_RECORD
 	#if flash
 	private static var FILE_TYPES:Array<FileFilter> = [new FileFilter("Flixel Game Recording", "*.fgr")];
 
@@ -39,7 +41,7 @@ class VCRFrontEnd
 	#if flash
 	private var _file:FileReference;
 	#end
-#end
+	#end
 
 	/**
 	 * Whether the debugger has been paused.

@@ -4,7 +4,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 
-@:allow(flixel.FlxGame)
 class PluginFrontEnd
 {
 	/**
@@ -106,13 +105,14 @@ class PluginFrontEnd
 	@:allow(flixel.FlxG)
 	private function new() 
 	{
-		add(FlxTimer.manager = new FlxTimerManager());
-		add(FlxTween.manager = new FlxTweenManager());
+		add(FlxTimer.globalManager = new FlxTimerManager());
+		add(FlxTween.globalManager = new FlxTweenManager());
 	}
 	
 	/**
 	 * Used by the game object to call update() on all the plugins.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function update(elapsed:Float):Void
 	{
 		for (plugin in list)
@@ -127,6 +127,7 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call draw() on all the plugins.
 	 */
+	@:allow(flixel.FlxGame)
 	private inline function draw():Void
 	{
 		for (plugin in list)

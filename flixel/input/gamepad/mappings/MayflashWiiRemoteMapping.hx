@@ -18,7 +18,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 	
 	override function initValues():Void 
 	{
-		//But you'll only get non-zero values for it when the Nunchuk is attached
+		// but you'll only get non-zero values for it when the Nunchuk is attached
 		supportsPointer = true;
 	}
 	
@@ -51,16 +51,15 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.CLASSIC_DPAD_DOWN: DPAD_DOWN;
 			case MayflashWiiRemoteID.CLASSIC_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.CLASSIC_DPAD_RIGHT: DPAD_RIGHT;
-			default:
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)     LEFT_STICK_DIGITAL_UP;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)   LEFT_STICK_DIGITAL_DOWN;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)   LEFT_STICK_DIGITAL_LEFT;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight)  LEFT_STICK_DIGITAL_RIGHT;
-				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp)    RIGHT_STICK_DIGITAL_UP;
-				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown)  RIGHT_STICK_DIGITAL_DOWN;
-				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft)  RIGHT_STICK_DIGITAL_LEFT;
-				if (rawID == MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight) RIGHT_STICK_DIGITAL_RIGHT;
-				NONE;
+			case id if (id == leftStick.rawUp): LEFT_STICK_DIGITAL_UP;
+			case id if (id == leftStick.rawDown): LEFT_STICK_DIGITAL_DOWN;
+			case id if (id == leftStick.rawLeft): LEFT_STICK_DIGITAL_LEFT;
+			case id if (id == leftStick.rawRight): LEFT_STICK_DIGITAL_RIGHT;
+			case id if (id == rightStick.rawUp): RIGHT_STICK_DIGITAL_UP;
+			case id if (id == rightStick.rawDown): RIGHT_STICK_DIGITAL_DOWN;
+			case id if (id == rightStick.rawLeft): RIGHT_STICK_DIGITAL_LEFT;
+			case id if (id == rightStick.rawRight): RIGHT_STICK_DIGITAL_RIGHT;
+			case _: NONE;
 		}
 	}
 	

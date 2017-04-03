@@ -1,21 +1,26 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
-import openfl.events.Event;
-import openfl.events.FocusEvent;
-import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
 import openfl.text.TextField;
-import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
-import openfl.ui.Keyboard;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.FlxDebugger.GraphicConsole;
 import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
 import flixel.util.FlxStringUtil;
+
+#if (!next && sys)
+import openfl.events.MouseEvent;
+#end
+
+#if hscript
+import openfl.events.FocusEvent;
+import openfl.events.KeyboardEvent;
+import openfl.text.TextFieldType;
+import openfl.ui.Keyboard;
 using StringTools;
+#end
 
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 
@@ -124,6 +129,7 @@ class Console extends Window
 	}
 	
 	#if (!next && sys)
+	@:access(flixel.FlxGame.onFocus)
 	override public function update()
 	{
 		super.update();
@@ -149,11 +155,9 @@ class Console extends Window
 		#end
 		
 		#if FLX_DEBUG
-		#if flash 
 		// Pause game
 		if (FlxG.console.autoPause)
 			FlxG.vcr.pause();
-		#end
 		
 		// Block keyboard input
 		#if FLX_KEYBOARD
@@ -174,11 +178,10 @@ class Console extends Window
 		#end
 		
 		#if FLX_DEBUG
-		#if flash
 		// Unpause game
-		if (FlxG.console.autoPause)
+		if (FlxG.console.autoPause && !FlxG.game.debugger.vcr.manualPause)
 			FlxG.vcr.resume();
-		#end
+		
 		// Unblock keyboard input
 		#if FLX_KEYBOARD
 		FlxG.keys.enabled = true;
@@ -246,8 +249,8 @@ class Console extends Window
 			history.addCommand(input.text);
 			
 			// Step forward one frame to see the results of the command
-			#if (flash && FLX_DEBUG)
-			if (FlxG.vcr.paused)
+			#if FLX_DEBUG
+			if (FlxG.vcr.paused && FlxG.console.stepAfterCommand)
 				FlxG.game.debugger.vcr.onStep();
 			#end
 			

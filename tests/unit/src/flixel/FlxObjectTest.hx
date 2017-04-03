@@ -67,7 +67,7 @@ class FlxObjectTest extends FlxTest
 		
 		Assert.isTrue(FlxG.overlap(object1, object2));
 		
-		//Move the objects away from eachother
+		//Move the objects away from each other
 		object1.velocity.x = 2000;
 		object2.velocity.x = -2000;
 		
@@ -140,17 +140,17 @@ class FlxObjectTest extends FlxTest
 	function testVelocityCollidingWithObject():Void
 	{
 		object2.setSize(100, 10);
-		velocityColldingWith(object2);
+		velocityCollidingWith(object2);
 	}
 	
 	@Test
 	function testVelocityCollidingWithTilemap():Void
 	{
 		tilemap.loadMapFromCSV("1, 1, 1, 1, 1, 1, 1", FlxGraphic.fromClass(GraphicAuto));
-		velocityColldingWith(tilemap);
+		velocityCollidingWith(tilemap);
 	}
 	
-	function velocityColldingWith(ground:FlxObject)
+	function velocityCollidingWith(ground:FlxObject)
 	{
 		switchState(new CollisionState());
 		
@@ -174,11 +174,70 @@ class FlxObjectTest extends FlxTest
 	@Test // #1313
 	function testSetVariablesInReviveOverride()
 	{
-		object1 = new OverridenReviveObject();
+		object1 = new OverriddenReviveObject();
 		object1.reset(0, 0);
 		
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.getPosition()));
 		Assert.isTrue(FlxPoint.get(10, 10).equals(object1.velocity));
+	}
+	
+	@Test
+	function testOverlapsPoint()
+	{
+		overlapsPointInScreenSpace(true);
+		overlapsPointInScreenSpace(false);
+	}
+
+	function overlapsPointInScreenSpace(inScreenSpace:Bool)
+	{
+		var overlapsPoint = object1.overlapsPoint.bind(_, inScreenSpace, null);
+		object1.setPosition(-5, -5);
+		object1.setSize(10, 10);
+	
+		var rect = object1.getHitbox();
+		var topLeft = FlxPoint.get(rect.left, rect.top);
+		var bottomLeft = FlxPoint.get(rect.left, rect.bottom - 1);
+		var topRight = FlxPoint.get(rect.right - 1, rect.top);
+		var bottomRight = FlxPoint.get(rect.right - 1, rect.bottom - 1);
+		
+		function assertTrue(p) Assert.isTrue(overlapsPoint(p));
+		assertTrue(topLeft);
+		assertTrue(bottomLeft);
+		assertTrue(topRight);
+		assertTrue(bottomRight);
+
+		function assertFalse(p) Assert.isFalse(overlapsPoint(p));
+		assertFalse(topLeft.add(-1, -1));
+		assertFalse(bottomLeft.add(-1, 1));
+		assertFalse(topRight.add(1, -1));
+		assertFalse(bottomRight.add(1, 1));
+	}
+
+	@Test
+	function testIsOnScreen()
+	{
+		var object = new FlxObject(0, 0, 1, 1);
+
+		function assertOnScreen(x, y)
+		{
+			object.setPosition(x, y);
+			Assert.isTrue(object.isOnScreen());
+		}
+		function assertNotOnScreen(x, y)
+		{
+			object.setPosition(x, y);
+			Assert.isFalse(object.isOnScreen());
+		}
+
+		assertOnScreen(0, 0);
+		assertNotOnScreen(-1, 0);
+		assertNotOnScreen(0, -1);
+
+		assertOnScreen(FlxG.width - 1, 0);
+		assertNotOnScreen(FlxG.width, 0);
+
+		assertOnScreen(0, FlxG.height - 1);
+		assertNotOnScreen(0, FlxG.height);
 	}
 }
 
@@ -191,7 +250,7 @@ class CollisionState extends FlxState
 	}
 }
 
-class OverridenReviveObject extends FlxObject
+class OverriddenReviveObject extends FlxObject
 {
 	override public function revive()
 	{

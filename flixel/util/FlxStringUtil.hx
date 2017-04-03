@@ -1,12 +1,15 @@
 package flixel.util;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 using StringTools;
+
+#if flash
+import flash.geom.Matrix;
+#end
 
 /**
  * A class primarily containing functions related 
@@ -34,7 +37,7 @@ class FlxStringUtil
 	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
 	 * @return	A nicely formatted String, like "1:03".
 	 */
-	public static inline function formatTime(Seconds:Float, ShowMS:Bool = false):String
+	public static function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
 		var timeString:String = Std.int(Seconds / 60) + ":";
 		var timeStringHelper:Int = Std.int(Seconds) % 60;
@@ -64,7 +67,7 @@ class FlxStringUtil
 	 * @param	AnyArray	Any Array object.
 	 * @return	A comma-separated String containing the .toString() output of each element in the array.
 	 */
-	public static inline function formatArray(AnyArray:Array<Dynamic>):String
+	public static function formatArray(AnyArray:Array<Dynamic>):String
 	{
 		var string:String = "";
 		if ((AnyArray != null) && (AnyArray.length > 0))
@@ -81,12 +84,12 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Generate a comma-seperated string representation of the keys of a StringMap.
+	 * Generate a comma-separated string representation of the keys of a StringMap.
 	 * 
 	 * @param  AnyMap    A StringMap object.
 	 * @return  A String formatted like this: key1, key2, ..., keyX
 	 */
-	public static inline function formatStringMap(AnyMap:Map<String, Dynamic>):String
+	public static function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
 		var string:String = "";
 		for (key in AnyMap.keys())
@@ -109,7 +112,7 @@ class FlxStringUtil
 	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.
 	 * @return	A nicely formatted String. Does not include a dollar sign or anything!
 	 */
-	public static inline function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
+	public static function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
 		var isNegative = Amount < 0;
 		Amount = Math.abs(Amount);
@@ -141,9 +144,10 @@ class FlxStringUtil
 		if (ShowDecimal)
 		{
 			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
-			string += (EnglishStyle ? "." : ",") + amount;
+			string += (EnglishStyle ? "." : ",");
 			if (amount < 10)
 				string += "0";
+			string += amount;
 		}
 		
 		if (isNegative)
@@ -230,8 +234,7 @@ class FlxStringUtil
 	 * @param	Simple	Returns only the class name, not the package or packages.
 	 * @return	The name of the Class as a String object.
 	 */
-	@:extern
-	public static inline function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	public static function getClassName(Obj:Dynamic, Simple:Bool = false):String
 	{
 		var cl:Class<Dynamic>;
 		if (Std.is(Obj, Class))
@@ -260,14 +263,8 @@ class FlxStringUtil
 	 */
 	public static function getDomain(url:String):String
 	{
-		var urlStart:Int = url.indexOf("://") + 3;
-		var urlEnd:Int = url.indexOf("/", urlStart);
-		var home:String = url.substring(urlStart, urlEnd);
-		var lastDot:Int = home.lastIndexOf(".") - 1;
-		var domEnd:Int = home.lastIndexOf(".", lastDot) + 1;
-		home = home.substring(domEnd, home.length);
-		home = home.split(":")[0];
-		return (home == "") ? "local" : home;
+		var regex:EReg = ~/(?:[a-z0-9.+-]+:\/\/)(?:[a-z0-9-]+\.)*([a-z0-9-]+\.[a-z0-9-]+)/i;
+		return regex.match(url) ? regex.matched(1).toLowerCase() : "local";
 	}
 	
 	/**
@@ -559,7 +556,7 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Removes occurences of a substring by calling `StringTools.replace(s, sub, "")`.
+	 * Removes occurrences of a substring by calling `StringTools.replace(s, sub, "")`.
 	 */
 	public static inline function remove(s:String, sub:String):String
 	{
@@ -589,6 +586,7 @@ class FlxStringUtil
 	
 	/**
 	 * Returns true if `s` equals `null` or is empty.
+	 * @since 4.1.0
 	 */
 	public static inline function isNullOrEmpty(s:String):Bool
 	{

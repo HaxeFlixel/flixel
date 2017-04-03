@@ -55,15 +55,17 @@ class FlxArrayUtil
 	 * Removes an element from an array by swapping it with the last element and calling `pop()`.
 	 * This is a lot faster than regular `splice()`, but it can only be used on arrays where order doesn't matter.
 	 * 
-	 * IMPORTANT: always count down from length to zero if removing elements from whithin a loop
+	 * IMPORTANT: always count down from length to zero if removing elements from within a loop
 	 * 
 	 * ```haxe
+	 * using flixel.util.FlxArrayUtil;
+	 *
 	 * var i = array.length;
 	 * while (i-- > 0)
 	 * {
 	 *      if (array[i].shouldRemove)
 	 *      {
-	 *           FlxArrayUtil.swapAndPop(array, i);
+	 *           array.swapAndPop(i);
 	 *      }
 	 * }
 	 * ```

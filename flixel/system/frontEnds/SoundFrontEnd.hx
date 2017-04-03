@@ -11,7 +11,6 @@ import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 
-@:allow(flixel.FlxGame)
 @:allow(flixel.FlxG)
 class SoundFrontEnd
 {
@@ -142,7 +141,7 @@ class SoundFrontEnd
 	
 	/**
 	 * Method for sound caching (especially useful on mobile targets). The game may freeze
-	 * for some time the first time yout try to play a sound if you don't use this method.
+	 * for some time the first time you try to play a sound if you don't use this method.
 	 * 
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
@@ -316,6 +315,7 @@ class SoundFrontEnd
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
+	@:allow(flixel.FlxGame)
 	private function update(elapsed:Float):Void
 	{
 		if (music != null && music.active)
@@ -334,6 +334,7 @@ class SoundFrontEnd
 		#end
 	}
 	
+	@:allow(flixel.FlxGame)
 	private function onFocusLost():Void
 	{
 		if (music != null)
@@ -350,6 +351,7 @@ class SoundFrontEnd
 		}
 	}
 	
+	@:allow(flixel.FlxGame)
 	private function onFocus():Void
 	{
 		if (music != null)

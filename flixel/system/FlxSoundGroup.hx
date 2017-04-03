@@ -17,7 +17,7 @@ class FlxSoundGroup
 	
 	/**
 	 * Create a new sound group
-	 * @param	volume  The intial volume of this group
+	 * @param	volume  The initial volume of this group
 	 */
 	public function new(volume:Float = 1)
 	{
@@ -53,6 +53,26 @@ class FlxSoundGroup
 			return sounds.remove(sound);
 		}
 		return false;
+	}
+	
+	/**
+	 * Call this function to pause all sounds in this group.
+	 * @since 4.3.0
+	 */
+	public function pause():Void
+	{
+		for (sound in sounds)
+			sound.pause();
+	}
+	
+	/**
+	 * Unpauses all sounds in this group. Only works on sounds that have been paused.
+	 * @since 4.3.0
+	 */
+	public function resume():Void
+	{
+		for (sound in sounds)
+			sound.resume();
 	}
 	
 	private function set_volume(volume:Float):Float

@@ -1,8 +1,8 @@
-*.n
-template-bak/*
-*.log
 tests/unit/report/
 tests/unit/.temp/
 tests/unit/bin/
 export
 tests/unit/src/TestSuite.hx
+dump
+.vscode
+tests/RunTravis.n
