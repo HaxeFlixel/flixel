@@ -722,6 +722,8 @@ class FlxPath implements IFlxDestroyable
 			_point.x = node.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
 			_point.y = node.y - (Camera.scroll.y * object.scrollFactor.y);
 			
+			_point = Camera.transformPoint(_point);
+			
 			//decide what color this node should be
 			var nodeSize:Int = 2;
 			if ((i == 0) || (i == l - 1))
@@ -762,6 +764,10 @@ class FlxPath implements IFlxDestroyable
 			gfx.lineStyle(1, debugColor, lineAlpha);
 			_point.x = nextNode.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
 			_point.y = nextNode.y - (Camera.scroll.y * object.scrollFactor.y);
+			
+			if (FlxG.renderBlit)
+				_point.subtract(Camera.viewOffsetX, Camera.viewOffsetY);
+			
 			gfx.lineTo(_point.x, _point.y);
 			
 			i++;

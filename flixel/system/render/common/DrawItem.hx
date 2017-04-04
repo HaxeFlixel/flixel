@@ -28,4 +28,5 @@ enum FlxDrawItemType
 {
 	QUADS;
 	TRIANGLES;
+	SINGLE_QUAD;
 }

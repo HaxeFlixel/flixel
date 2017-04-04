@@ -70,12 +70,12 @@ class FlxCamera extends FlxBasic
 	 * The scaling on horizontal axis for this camera.
 	 * Setting `scaleX` changes `scaleX` and x coordinate of camera's internal display objects.
 	 */
-	public var scaleX(default, null):Float;
+	public var scaleX(default, null):Float = 0;
 	/**
 	 * The scaling on vertical axis for this camera.
 	 * Setting `scaleY` changes `scaleY` and y coordinate of camera's internal display objects.
 	 */
-	public var scaleY(default, null):Float;
+	public var scaleY(default, null):Float = 0;
 	/**
 	 * Product of camera's `scaleX` and game's scale mode `scale.x` multiplication.
 	 */
@@ -229,6 +229,12 @@ class FlxCamera extends FlxBasic
 	 * Reference to camera's `view.screen`.
 	 */
 	public var screen(get, never):FlxSprite;
+	
+	public var viewOffsetX(get, null):Float;
+	public var viewOffsetY(get, null):Float;
+	
+	public var viewWidth(get, null):Float;
+	public var viewHeight(get, null):Float;
 	
 	/**
 	 * Internal, represents the color of `flash()` special effect.
@@ -924,7 +930,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
-		return (point.x + width > 0) && (point.x < this.width) && (point.y + height > 0) && (point.y < this.height);
+		return (point.x + width > view.viewOffsetX) && (point.x < view.viewOffsetWidth) && (point.y + height > view.viewOffsetY) && (point.y < view.viewOffsetHeight);
 	}
 	
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
@@ -1016,6 +1022,8 @@ class FlxCamera extends FlxBasic
 		updateViewPosition();
 		updateScrollRect();
 		updateInternalPositions();
+		
+		FlxG.cameras.cameraResized.dispatch(this);
 	}
 	
 	/**
@@ -1028,6 +1036,39 @@ class FlxCamera extends FlxBasic
 		setScale(scaleX, scaleY);
 	}
 	
+	/**
+	 * Helper method preparing debug rectangle for rendering in blit render mode
+	 * @param	rect	rectangle to prepare for rendering
+	 * @return	trasformed rectangle with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public inline function transformRect(rect:FlxRect):FlxRect
+	{
+		return view.transformRect(rect);
+	}
+	
+	/**
+	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
+	 * @param	point		point to prepare for rendering
+	 * @return	trasformed point with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public inline function transformPoint(point:FlxPoint):FlxPoint
+	{
+		return view.transformPoint(point);
+	}
+	
+	/**
+	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
+	 * @param	vector	relative position to prepare for rendering
+	 * @return	trasformed vector with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public inline function transformVector(vector:FlxPoint):FlxPoint
+	{
+		return view.transformVector(vector);
+	}
+	
 	private function set_followLerp(Value:Float):Float
 	{
 		return followLerp = FlxMath.bound(Value, 0, 60 / FlxG.updateFramerate);
@@ -1037,7 +1078,10 @@ class FlxCamera extends FlxBasic
 	{
 		if (width != Value && Value > 0)
 		{
-			width = Value; 
+			width = Value;
+			
+			if (view != null)
+				view.calcOffsetX();
 			
 			updateFlashOffset();
 			updateScrollRect();
@@ -1053,6 +1097,9 @@ class FlxCamera extends FlxBasic
 		if (height != Value && Value > 0)
 		{
 			height = Value;
+			
+			if (view != null)
+				view.calcOffsetY();
 			
 			updateFlashOffset();
 			updateScrollRect();
@@ -1157,6 +1204,26 @@ class FlxCamera extends FlxBasic
 	private function get_screen():FlxSprite
 	{
 		return (view != null) ? view.screen : null; 
+	}
+	
+	private inline function get_viewOffsetX():Float
+	{
+		return view.viewOffsetX;
+	}
+	
+	private inline function get_viewOffsetY():Float
+	{
+		return view.viewOffsetY;
+	}
+	
+	private inline function get_viewWidth():Float
+	{
+		return view.viewWidth;
+	}
+	
+	private inline function get_viewHeight():Float
+	{
+		return view.viewHeight;
 	}
 }
 

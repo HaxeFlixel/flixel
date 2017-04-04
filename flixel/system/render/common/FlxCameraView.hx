@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
@@ -123,6 +124,32 @@ class FlxCameraView implements IFlxDestroyable
 	public var canvas(get, null):DisplayObjectContainer;
 	
 	/**
+	 * Difference between native size of camera and zoomed size, divided in half
+	 * Needed to do occlusion of objects when zoom != initialZoom
+	 */
+	public var viewOffsetX(default, null):Float = 0;
+	public var viewOffsetY(default, null):Float = 0;
+
+	/**
+	 * Floored down values of viewOffsetX and viewOffsetY.
+	 */
+	private var viewOffsetXFloored:Int = 0;
+	private var viewOffsetYFloored:Int = 0;
+	
+	/**
+	 * The size of the camera plus view offset.
+	 * These variables are used for object visibility checks.
+	 */
+	public var viewOffsetWidth(default, null):Float = 0;
+	public var viewOffsetHeight(default, null):Float = 0;
+	
+	/**
+	 * Dimensions of area visible at current camera zoom.
+	 */
+	public var viewWidth(default, null):Float = 0;
+	public var viewHeight(default, null):Float = 0;
+	
+	/**
 	 * Internal, used for positioning camera's `flashSprite` on screen.
 	 * Basically it represents position of camera's center point in game sprite.
 	 * It's recalculated every time you resize game or camera.
@@ -174,7 +201,11 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function updateFilters():Void {}
 	
-	public function updateScale():Void {}
+	public function updateScale():Void 
+	{
+		calcOffsetX();
+		calcOffsetY();
+	}
 	
 	public function checkResize():Void {}
 	
@@ -218,6 +249,52 @@ class FlxCameraView implements IFlxDestroyable
 	
 	// TODO: maybe replace `material` argument with just `blendMode`???
 	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void {}
+	
+	/**
+	 * Helper method preparing debug rectangle for rendering in blit render mode
+	 * @param	rect	rectangle to prepare for rendering
+	 * @return	trasformed rectangle with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public function transformRect(rect:FlxRect):FlxRect
+	{
+		return rect;
+	}
+	
+	/**
+	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
+	 * @param	point		point to prepare for rendering
+	 * @return	trasformed point with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public function transformPoint(point:FlxPoint):FlxPoint
+	{
+		return point;
+	}
+	
+	/**
+	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
+	 * @param	vector	relative position to prepare for rendering
+	 * @return	trasformed vector with respect to camera's zoom factor
+	 */
+	@:noCompletion
+	public function transformVector(vector:FlxPoint):FlxPoint
+	{
+		return vector;
+	}
+	
+	/**
+	 * Helper method for applying transformations (scaling and offsets) 
+	 * to specified display objects which has been added to the camera display list.
+	 * For example, debug sprite for nape debug rendering.
+	 * @param	object	display object to apply transformations to.
+	 * @return	transformed object.
+	 */
+	@:noCompletion
+	public function transformObject(object:DisplayObject):DisplayObject
+	{
+		return object;
+	}
 	
 	private function get_color():FlxColor
 	{
@@ -288,6 +365,24 @@ class FlxCameraView implements IFlxDestroyable
 	private function get_canvas():DisplayObjectContainer
 	{
 		return null;
+	}
+	
+	public inline function calcOffsetX():Void
+	{
+		viewOffsetX = 0.5 * camera.width * (camera.scaleX - camera.initialZoom) / camera.scaleX;
+		viewOffsetWidth = camera.width - viewOffsetX;
+		viewWidth = camera.width - 2 * viewOffsetX;
+		
+		viewOffsetXFloored = Std.int(viewOffsetX);
+	}
+	
+	public inline function calcOffsetY():Void
+	{
+		viewOffsetY = 0.5 * camera.height * (camera.scaleY - camera.initialZoom) / camera.scaleY;
+		viewOffsetHeight = camera.height - viewOffsetY;
+		viewHeight = camera.height - 2 * viewOffsetY;
+		
+		viewOffsetYFloored = Std.int(viewOffsetY);
 	}
 	
 }

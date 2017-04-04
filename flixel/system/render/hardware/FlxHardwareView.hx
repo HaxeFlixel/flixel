@@ -230,7 +230,8 @@ class FlxHardwareView extends FlxCameraView
 		
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		_fillRect.set( -1, -1, camera.width + 2, camera.height + 2);
+		_fillRect.set(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
+		
 		drawStack.fillRect(_fillRect, Color, FxAlpha);
 	}
 	

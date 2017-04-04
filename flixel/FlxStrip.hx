@@ -117,7 +117,7 @@ class FlxStrip extends FlxSprite
 			if (!camera.visible || !camera.exists)
 				continue;
 			
-			getScreenPosition(_point, camera);
+			getScreenPosition(_point, camera).subtractPoint(offset);
 			tempBounds.offset(_point.x, _point.y);
 			
 			if (camera.view.bounds.overlaps(tempBounds))

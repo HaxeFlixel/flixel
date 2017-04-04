@@ -517,6 +517,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		}
 	}
 	
+	// TODO: update this to upload colors in any way...
 	public function updateColors():Void
 	{
 		if (colors == null)
