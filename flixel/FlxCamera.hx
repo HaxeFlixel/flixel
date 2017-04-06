@@ -20,6 +20,7 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
@@ -1067,6 +1068,19 @@ class FlxCamera extends FlxBasic
 	public inline function transformVector(vector:FlxPoint):FlxPoint
 	{
 		return view.transformVector(vector);
+	}
+	
+	/**
+	 * Helper method for applying transformations (scaling and offsets) 
+	 * to specified display objects which has been added to the camera display list.
+	 * For example, debug sprite for nape debug rendering.
+	 * @param	object	display object to apply transformations to.
+	 * @return	transformed object.
+	 */
+	@:noCompletion
+	public inline function transformObject(object:DisplayObject):DisplayObject
+	{
+		return view.transformObject(object);
 	}
 	
 	private function set_followLerp(Value:Float):Float
