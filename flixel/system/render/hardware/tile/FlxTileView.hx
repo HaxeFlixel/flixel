@@ -8,7 +8,6 @@ import flixel.math.FlxRect;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flixel.system.render.common.FlxDrawStack;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
@@ -56,8 +55,6 @@ class FlxTileView extends FlxCameraView
 	public var debugLayer:Sprite;
 	#end
 	
-	public var drawStack:FlxDrawStack;
-	
 	public function new(camera:FlxCamera) 
 	{
 		super(camera);
@@ -72,8 +69,6 @@ class FlxTileView extends FlxCameraView
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
-		
-		drawStack = new FlxDrawStack(this);
 	}
 	
 	override public function destroy():Void 
@@ -234,7 +229,7 @@ class FlxTileView extends FlxCameraView
 	
 	override public function lock(useBufferLocking:Bool):Void 
 	{
-		drawStack.clearDrawStack();
+		clearDrawStack();
 		
 		_canvas.graphics.clear();
 		
@@ -369,7 +364,6 @@ class FlxTileView extends FlxCameraView
 		}
 		
 		itemToReturn.set(bitmap, colored, hasColorOffsets, material);
-		
 		itemToReturn.nextTyped = _lastTexturedQuads;
 		_lastTexturedQuads = itemToReturn;
 		
@@ -401,7 +395,6 @@ class FlxTileView extends FlxCameraView
 		}
 		
 		itemToReturn.set(bitmap, colored, false, material);
-		
 		itemToReturn.nextTyped = _lastTriangles;
 		_lastTriangles = itemToReturn;
 		
