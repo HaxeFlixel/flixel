@@ -53,8 +53,6 @@ class FlxGLView extends FlxCameraView
 	public var debugLayer:Sprite;
 	#end
 	
-	public var drawStack:FlxDrawStack;
-	
 	private static var _fillRect:FlxRect = FlxRect.get();
 	
 	public function new(camera:FlxCamera) 
@@ -100,12 +98,7 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
-		
+		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, material);
 		drawItem.addQuad(frame, matrix, transform, material);
 	}
 	
@@ -115,12 +108,7 @@ class FlxGLView extends FlxCameraView
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		
-		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
-		
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
+		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, material);
 		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
@@ -139,11 +127,7 @@ class FlxGLView extends FlxCameraView
 	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
-		
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem = getTexturedTilesCommand(bitmap, isColored, hasColorOffsets, material);
+		var drawItem = getTexturedTilesCommand(bitmap, material);
 		drawItem.addUVQuad(bitmap, rect, uv, matrix, transform, material);
 	}
 	
@@ -246,7 +230,7 @@ class FlxGLView extends FlxCameraView
 	
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
-		drawStack.render();
+		render();
 	}
 	
 	override public function offsetView(X:Float, Y:Float):Void 
@@ -329,13 +313,13 @@ class FlxGLView extends FlxCameraView
 	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
-	private inline function getTexturedTilesCommand(bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial)
+	private inline function getTexturedTilesCommand(bitmap:BitmapData, material:FlxMaterial)
 	{
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.render(this);
 			
 		_currentCommand = _texturedQuads;
-		_texturedQuads.set(bitmap, colored, hasColorOffsets, material);
+		_texturedQuads.set(bitmap, true, true, material);
 		return _texturedQuads;
 	}
 	
@@ -360,7 +344,7 @@ class FlxGLView extends FlxCameraView
 		return _triangles;
 	}
 	
-	private function render():Void
+	private inline function render():Void
 	{
 		
 		// TODO: use this var in other way...
