@@ -87,6 +87,12 @@ class FlxGLView extends FlxCameraView
 		FlxDestroyUtil.removeChild(_scrollRect, _canvas);
 		_canvas = FlxDestroyUtil.destroy(_canvas);
 		
+		_texturedQuads = FlxDestroyUtil.destroy(_texturedQuads);
+		_coloredQuads = FlxDestroyUtil.destroy(_coloredQuads);
+		_triangles = FlxDestroyUtil.destroy(_triangles);
+		_currentCommand = null;
+		_helperMatrix = null;
+		
 		flashSprite = null;
 		_scrollRect = null;
 	}
@@ -94,29 +100,57 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		drawStack.drawPixels(frame, pixels, material, matrix, transform);
+		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
+		
+		drawItem.addQuad(frame, matrix, transform, material);
 	}
 	
 	override public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
 		destPoint:Point, ?transform:ColorTransform):Void
 	{
-		drawStack.copyPixels(frame, pixels, material, sourceRect, destPoint, transform);
+		_helperMatrix.identity();
+		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
+		
+		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
+		
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		
+		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
+		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
 	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		drawStack.drawTriangles(bitmap, material, data, matrix, transform);
+		var drawItem = getTrianglesCommand(bitmap, material, data.colored);
+		drawItem.data = data;
+		drawItem.matrix = matrix;
+		drawItem.color = transform;
+		
+		#if FLX_DEBUG
+		drawItem.drawDebug(view.camera);
+		#end
 	}
 	
 	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		drawStack.drawUVQuad(bitmap, material, rect, uv, matrix, transform);
+		// TODO: do i need to calculate `isColored` and `hasColorOffsets` here???
+		
+		var isColored = (transform != null && transform.hasRGBMultipliers());
+		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+		var drawItem = getTexturedTilesCommand(bitmap, isColored, hasColorOffsets, material);
+		drawItem.addUVQuad(bitmap, rect, uv, matrix, transform, material);
 	}
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		drawStack.drawColorQuad(material, rect, matrix, color, alpha);
+		var drawItem = getColoredTilesCommand(material);
+		drawItem.addColorQuad(rect, matrix, color, alpha, material);
 	}
 	
 	override public function updateOffset():Void 
@@ -183,7 +217,9 @@ class FlxGLView extends FlxCameraView
 		// which could appear while cameras fading
 		_fillRect.set(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
 		
-		drawStack.fillRect(_fillRect, Color, FxAlpha);
+		_helperMatrix.identity();
+		var drawItem = getColoredTilesCommand(DefaultColorMaterial);
+		drawItem.addColorQuad(_fillRect, _helperMatrix, Color, FxAlpha, DefaultColorMaterial);
 	}
 	
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
@@ -194,7 +230,10 @@ class FlxGLView extends FlxCameraView
 	
 	override public function lock(useBufferLocking:Bool):Void 
 	{
-		drawStack.clearDrawStack();
+		_texturedQuads.reset();
+		_coloredQuads.reset();
+		_triangles.reset();
+		_currentCommand = null;
 		
 		_canvas.clear();
 		
@@ -276,300 +315,59 @@ class FlxGLView extends FlxCameraView
 	private var _currentCommand:FlxDrawBaseCommand<Dynamic>;
 	
 	/**
-	 * Pointer to head of stack with draw items
+	 * Last draw tiles item
 	 */
-	private var _firstCommand:FlxDrawBaseCommand<Dynamic>;
+	private var _texturedQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
 	/**
 	 * Last draw tiles item
 	 */
-	private var _lastTexturedQuads:FlxDrawQuadsCommand;
-	/**
-	 * Last draw tiles item
-	 */
-	private var _lastColoredQuads:FlxDrawQuadsCommand;
+	private var _coloredQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
 	/**
 	 * Last draw triangles item
 	 */
-	private var _lastTriangles:FlxDrawTrianglesCommand;
-	
-	public var view:FlxHardwareView;
-	
-	/**
-	 * Draw tiles stack items that can be reused
-	 */
-	private static var _texturedTilesStorage:FlxDrawQuadsCommand;
-	
-	/**
-	 * Draw tiles stack items that can be reused
-	 */
-	private static var _coloredTilesStorage:FlxDrawQuadsCommand;
-	
-	/**
-	 * Draw triangles stack items that can be reused
-	 */
-	private static var _trianglesStorage:FlxDrawTrianglesCommand;
+	private var _triangles:FlxDrawTrianglesCommand = new FlxDrawTrianglesCommand();
 	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
-	public function destroy():Void
+	private inline function getTexturedTilesCommand(bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial)
 	{
-		clearDrawStack();
-		_helperMatrix = null;
-		view = null;
+		if (_currentCommand != null && _currentCommand != _texturedQuads)
+			_currentCommand.render(this);
+			
+		_currentCommand = _texturedQuads;
+		_texturedQuads.set(bitmap, colored, hasColorOffsets, material);
+		return _texturedQuads;
 	}
 	
-	private function destroyDrawItemsChain(item:FlxDrawBaseCommand<Dynamic>):Void
+	private inline function getColoredTilesCommand(material:FlxMaterial)
 	{
-		var next:FlxDrawBaseCommand<Dynamic>;
-		while (item != null)
-		{
-			next = item.next;
-			item = FlxDestroyUtil.destroy(item);
-			item = next;
-		}
+		if (_currentCommand != null && _currentCommand != _coloredQuads)
+			_currentCommand.render(this);
+			
+		_currentCommand = _coloredQuads;
+		_coloredQuads.set(null, true, false, material);
+		return _coloredQuads;
 	}
 	
-	@:noCompletion
-	public function getTexturedTilesCommand(bitmap:BitmapData, colored:Bool, hasColorOffsets:Bool = false, material:FlxMaterial)
+	private inline function getTrianglesCommand(bitmap:BitmapData, material:FlxMaterial, colored:Bool = false):FlxDrawTrianglesCommand
 	{
-		var itemToReturn:FlxDrawQuadsCommand = null;
+		if (_currentCommand != null && _currentCommand != _triangles)
+			_currentCommand.render(this);
 		
-		if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.QUADS, bitmap, colored, hasColorOffsets, material) 
-			&& _lastTexturedQuads.canAddQuad)
-		{
-			return _lastTexturedQuads;
-		}
+		// TODO: check this case...
+		_currentCommand = null;  // i don't batch triangles...
+		_triangles.set(bitmap, colored, false, material);
+		return _triangles;
+	}
+	
+	private function render():Void
+	{
 		
-		if (_texturedTilesStorage != null)
-		{
-			itemToReturn = _texturedTilesStorage;
-			var newHead:FlxDrawQuadsCommand = _texturedTilesStorage.nextTyped;
-			itemToReturn.reset();
-			_texturedTilesStorage = newHead;
-		}
-		else
-		{
-			itemToReturn = new FlxDrawQuadsCommand(true);
-		}
-		
-		itemToReturn.set(bitmap, colored, hasColorOffsets, material);
-		
-		itemToReturn.nextTyped = _lastTexturedQuads;
-		_lastTexturedQuads = itemToReturn;
-		
-		if (_firstCommand == null)
-			_firstCommand = itemToReturn;
+		// TODO: use this var in other way...
+	//	FlxDrawHardwareCommand.currentShader = null;
 		
 		if (_currentCommand != null)
-			_currentCommand.next = itemToReturn;
-		
-		_currentCommand = itemToReturn;
-		
-		return itemToReturn;
+			_currentCommand.render(this);
 	}
 	
-	@:noCompletion
-	public function getColoredTilesCommand(material:FlxMaterial)
-	{
-		var itemToReturn:FlxDrawQuadsCommand = null;
-		
-		if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.QUADS, null, true, false, material) 
-			&& _lastColoredQuads.canAddQuad)
-		{
-			return _lastColoredQuads;
-		}
-		
-		if (_coloredTilesStorage != null)
-		{
-			itemToReturn = _coloredTilesStorage;
-			var newHead:FlxDrawQuadsCommand = _coloredTilesStorage.nextTyped;
-			itemToReturn.reset();
-			_coloredTilesStorage = newHead;
-		}
-		else
-		{
-			itemToReturn = new FlxDrawQuadsCommand(false);
-		}
-		
-		itemToReturn.set(null, true, false, material);
-		
-		itemToReturn.nextTyped = _lastColoredQuads;
-		_lastColoredQuads = itemToReturn;
-		
-		if (_firstCommand == null)
-			_firstCommand = itemToReturn;
-		
-		if (_currentCommand != null)
-			_currentCommand.next = itemToReturn;
-		
-		_currentCommand = itemToReturn;
-		
-		return itemToReturn;
-	}
-	
-	@:noCompletion
-	public function getNewTrianglesCommand(bitmap:BitmapData, material:FlxMaterial, colored:Bool = false):FlxDrawTrianglesCommand
-	{
-		var itemToReturn:FlxDrawTrianglesCommand = null;
-		
-		if (_trianglesStorage != null)
-		{
-			itemToReturn = _trianglesStorage;
-			var newHead:FlxDrawTrianglesCommand = _trianglesStorage.nextTyped;
-			itemToReturn.reset();
-			_trianglesStorage = newHead;
-		}
-		else
-		{
-			itemToReturn = new FlxDrawTrianglesCommand();
-		}
-		
-		itemToReturn.set(bitmap, colored, false, material);
-		
-		itemToReturn.nextTyped = _lastTriangles;
-		_lastTriangles = itemToReturn;
-		
-		if (_firstCommand == null)
-			_firstCommand = itemToReturn;
-		
-		if (_currentCommand != null)
-			_currentCommand.next = itemToReturn;
-		
-		_currentCommand = itemToReturn;
-		
-		return itemToReturn;
-	}
-	
-	@:noCompletion
-	public function getTrianglesCommand(bitmap:BitmapData, material:FlxMaterial, colored:Bool = false, numTriangles:Int):FlxDrawTrianglesCommand
-	{
-		if (!FlxCameraView.BATCH_TRIANGLES)
-		{
-			return getNewTrianglesCommand(bitmap, material, colored);
-		}
-		else if (_currentCommand != null
-			&& _currentCommand.equals(FlxDrawItemType.TRIANGLES, bitmap, colored, false, material)
-			&& _lastTriangles.canAddTriangles(numTriangles))
-		{	
-			return _lastTriangles;
-		}
-		
-		return getNewTrianglesCommand(bitmap, material, colored);
-	}
-	
-	public function fillRect(rect:FlxRect, color:FlxColor, alpha:Float = 1.0):Void
-	{
-		_helperMatrix.identity();
-		var drawItem = getColoredTilesCommand(DefaultColorMaterial);
-		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, DefaultColorMaterial);
-	}
-	
-	@:noCompletion
-	public function clearDrawStack():Void
-	{	
-		var currTiles:FlxDrawQuadsCommand = _lastTexturedQuads;
-		var newTilesHead:FlxDrawQuadsCommand;
-		
-		while (currTiles != null)
-		{
-			newTilesHead = currTiles.nextTyped;
-			currTiles.reset();
-			currTiles.nextTyped = _texturedTilesStorage;
-			_texturedTilesStorage = currTiles;
-			currTiles = newTilesHead;
-		}
-		
-		currTiles = _lastColoredQuads;
-		
-		while (currTiles != null)
-		{
-			newTilesHead = currTiles.nextTyped;
-			currTiles.reset();
-			currTiles.nextTyped = _coloredTilesStorage;
-			_coloredTilesStorage = currTiles;
-			currTiles = newTilesHead;
-		}
-		
-		var currTriangles:FlxDrawTrianglesCommand = _lastTriangles;
-		var newTrianglesHead:FlxDrawTrianglesCommand;
-		
-		while (currTriangles != null)
-		{
-			newTrianglesHead = currTriangles.nextTyped;
-			currTriangles.reset();
-			currTriangles.nextTyped = _trianglesStorage;
-			_trianglesStorage = currTriangles;
-			currTriangles = newTrianglesHead;
-		}
-		
-		_currentCommand = null;
-		_firstCommand = null;
-		_lastTexturedQuads = null;
-		_lastColoredQuads = null;
-		_lastTriangles = null;
-	}
-	
-	public function render():Void
-	{
-		FlxDrawHardwareCommand.currentShader = null;
-		
-		var currItem:FlxDrawBaseCommand<Dynamic> = _firstCommand;
-		while (currItem != null)
-		{
-			currItem.render(view);
-			currItem = currItem.next;
-		}
-	}
-	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
-		?transform:ColorTransform):Void
-	{
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
-		
-		drawItem.addQuad(frame, matrix, transform, material);
-	}
-	
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, ?sourceRect:Rectangle,
-		destPoint:Point, ?transform:ColorTransform):Void
-	{
-		_helperMatrix.identity();
-		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-		
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, isColored, hasColorOffsets, material);
-		drawItem.addQuad(frame, _helperMatrix, transform, material);
-	}
-	
-	public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void
-	{
-		var drawItem = getNewTrianglesCommand(bitmap, material, data.colored);
-		drawItem.data = data;
-		drawItem.matrix = matrix;
-		drawItem.color = transform;
-		
-		#if FLX_DEBUG
-		drawItem.drawDebug(view.camera);
-		#end
-	}
-	
-	public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
-		?transform:ColorTransform):Void
-	{
-		var isColored = (transform != null && transform.hasRGBMultipliers());
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		var drawItem = getTexturedTilesCommand(bitmap, isColored, hasColorOffsets, material);
-		drawItem.addUVQuad(bitmap, rect, uv, matrix, transform, material);
-	}
-	
-	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
-	{
-		var drawItem = getColoredTilesCommand(material);
-		drawItem.addColorQuad(rect, matrix, color, alpha, material);
-	}
 }
