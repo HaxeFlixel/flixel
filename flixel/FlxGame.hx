@@ -39,7 +39,7 @@ import flixel.system.replay.FlxReplay;
 
 #if FLX_RENDER_GL
 import openfl._internal.renderer.RenderSession;
-import flixel.system.render.hardware.gl.GLFilterManager;
+import flixel.system.render.hardware.gl.GLContextHelper;
 #end
 
 /**
@@ -889,15 +889,12 @@ class FlxGame extends Sprite
 	}
 	
 	#if FLX_RENDER_GL
-	private var _filterManager:GLFilterManager;
+	@:noCompletion
+	public var glContextHelper:GLContextHelper = new GLContextHelper();
 	
 	private override function __renderGL(renderSession:RenderSession):Void 
 	{
-		if (_filterManager == null)
-		{
-			_filterManager = new GLFilterManager(cast renderSession.renderer, renderSession);
-			renderSession.filterManager = _filterManager;
-		}
+		glContextHelper.checkFilterManager(renderSession);
 		
 		super.__renderGL(renderSession);
 	}

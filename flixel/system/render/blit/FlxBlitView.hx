@@ -145,8 +145,6 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (pixels != null)
 		{
-		//	_buffer.draw(pixels, matrix, transform, material.blendMode, null, (this.smoothing || material.smoothing));
-			
 			_helperMatrix.copyFrom(matrix);
 			
 			if (_useBlitMatrix)

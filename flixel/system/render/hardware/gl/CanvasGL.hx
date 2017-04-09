@@ -29,11 +29,10 @@ using flixel.util.FlxColorTransformUtil;
  * @author Pavel Alexandrov aka Yanrishatum https://github.com/Yanrishatum
  * @author Zaphod
  */
-class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
+class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 {
 	#if FLX_RENDER_GL
-	private var states:Array<FlxDrawHardwareCommand<Dynamic>>;
-	private var stateNum:Int;
+	public var buffer:RenderTexture;
 	
 	private var __height:Int;
 	private var __width:Int;
@@ -45,11 +44,7 @@ class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
 	{
 		super();
 		
-		__width = width;
-		__height = height;
-		
-		states = [];
-		stateNum = 0;
+		resize(width, height);
 		
 		colorFilter = new ColorTransformFilter();
 		filtersArray = [colorFilter];
@@ -57,7 +52,7 @@ class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
 	
 	public function destroy():Void
 	{
-		states = null;
+		buffer = FlxDestroyUtil.destroy(buffer);
 		colorFilter = null;
 		filtersArray = null;
 	}
@@ -66,16 +61,13 @@ class HardwareRenderer extends DisplayObjectContainer implements IFlxDestroyable
 	{
 		this.width = width;
 		this.height = height;
+		
+		buffer = new RenderTexture(width, height);
 	}
 	
 	public function clear():Void
 	{
-		stateNum = 0;
-	}
-
-	public function drawItem(item:FlxDrawHardwareCommand<Dynamic>):Void
-	{
-		states[stateNum++] = item;
+		
 	}
 	
 	@:access(openfl.geom.Rectangle)

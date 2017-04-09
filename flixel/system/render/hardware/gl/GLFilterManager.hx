@@ -58,8 +58,6 @@ class GLFilterManager extends AbstractFilterManager
 	
 	public override function pushObject(object:DisplayObject):Shader 
 	{	
-		// TODO: Support one-pass filters?
-		
 		if (object.__filters != null && object.__filters.length > 0)
 		{
 			renderer.getRenderTarget(true);
@@ -77,14 +75,6 @@ class GLFilterManager extends AbstractFilterManager
 			
 			if (numPasses > 0)
 			{
-				//if (filter.__cacheObject)
-				//{
-					//currentTarget = renderer.currentRenderTarget;
-					//renderer.getCacheObject();
-					//
-					//renderPass(currentTarget, renderSession.shaderManager.defaultShader);
-				//}
-				
 				var currentTarget, shader;
 				
 				for (filter in object.__filters)

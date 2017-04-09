@@ -467,6 +467,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 		if (shader != FlxDrawHardwareCommand.currentShader)
 		{
+		//	FlxG.game.glContextHelper.shaderManager.setShader(shader);
 			renderSession.shaderManager.setShader(shader);
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, FlxDrawQuadsCommand.indexBuffer);
 			FlxDrawHardwareCommand.currentShader = shader;
@@ -633,9 +634,6 @@ class RenderState implements IFlxDestroyable
 	public var bitmap:BitmapData;
 	
 	public var material:FlxMaterial;
-	
-	public var startIndex:Int = 0;
-	public var size:Int = 0;
 	
 	public function new() {}
 	

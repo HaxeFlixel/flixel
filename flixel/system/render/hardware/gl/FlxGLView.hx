@@ -9,15 +9,22 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import lime.graphics.GLRenderContext;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
+import openfl.gl.GL;
 
 class FlxGLView extends FlxCameraView
 {
+	public static var currentBuffer:RenderTexture;
+	
+	private static var _fillRect:FlxRect = FlxRect.get();
+	
 	/**
 	 * Used to render buffer to screen space.
 	 * NOTE: We don't recommend modifying this directly unless you are fairly experienced.
@@ -53,7 +60,7 @@ class FlxGLView extends FlxCameraView
 	public var debugLayer:Sprite;
 	#end
 	
-	private static var _fillRect:FlxRect = FlxRect.get();
+	private var gl:GLRenderContext;
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -219,7 +226,11 @@ class FlxGLView extends FlxCameraView
 		_triangles.reset();
 		_currentCommand = null;
 		
-		_canvas.clear();
+		FlxGLView.currentBuffer = null;
+		
+		gl = GL.context; // TODO: check the value of this variable...
+		
+		_canvas.clear(); // TODO: maybe remove this line???
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
@@ -352,6 +363,8 @@ class FlxGLView extends FlxCameraView
 		
 		if (_currentCommand != null)
 			_currentCommand.render(this);
+			
+		// TODO: render canvasgl...
 	}
 	
 }
