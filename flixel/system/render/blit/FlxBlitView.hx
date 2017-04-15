@@ -148,15 +148,11 @@ class FlxBlitView extends FlxCameraView
 			_helperMatrix.copyFrom(matrix);
 			
 			if (_useBlitMatrix)
-			{
 				_helperMatrix.concat(_blitMatrix);
-				_buffer.draw(pixels, _helperMatrix, null, material.blendMode, null, (this.smoothing || material.smoothing));
-			}
 			else
-			{
 				_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-				_buffer.draw(pixels, _helperMatrix, null, material.blendMode, null, (this.smoothing || material.smoothing));
-			}
+			
+			_buffer.draw(pixels, _helperMatrix, null, material.blendMode, null, (this.smoothing || material.smoothing));
 		}
 		else
 		{
@@ -210,9 +206,11 @@ class FlxBlitView extends FlxCameraView
 		}
 		
 		trianglesSprite.graphics.endFill();
+		
 	//	_buffer.draw(trianglesSprite, matrix, transform, material.blendMode);
 		
 		// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
+		/*
 		if (_useBlitMatrix)
 		{
 			_helperMatrix.copyFrom(_blitMatrix);
@@ -222,6 +220,15 @@ class FlxBlitView extends FlxCameraView
 			_helperMatrix.identity();
 			_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
 		}
+		*/
+		
+		_helperMatrix.copyFrom(matrix);
+		
+		if (_useBlitMatrix)
+			_helperMatrix.concat(_blitMatrix);
+		else
+			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
+		
 		_buffer.draw(trianglesSprite, _helperMatrix, transform, material.blendMode);
 		
 		drawDebugTriangles(data.vertices, data.indices, _helperMatrix);

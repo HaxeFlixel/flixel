@@ -100,6 +100,8 @@ class GLRenderHelper implements IFlxDestroyable
 	 */
 	private var _projection:Matrix4;
 	
+	private var _projectionFlipped:Matrix4;
+	
 	public function new(object:DisplayObject, width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false)
 	{
 		this.smoothing = smoothing;
@@ -117,7 +119,8 @@ class GLRenderHelper implements IFlxDestroyable
 		_texture = FlxDestroyUtil.destroy(_texture);
 		_texture = new PingPongTexture(width, height, smoothing, powerOfTwo);
 		
-		_projection = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
+		_projection = Matrix4.createOrtho(0, width, 0, height, -1000, 1000);
+		_projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 		
 		createBuffer();
 	}
@@ -154,6 +157,9 @@ class GLRenderHelper implements IFlxDestroyable
 		_renderMatrix = null;
 		_scissor = null;
 		_viewport = null;
+		
+		_projection = null;
+		_projectionFlipped = null;
 		
 		if (_buffer != null)
 			GL.deleteBuffer(_buffer);

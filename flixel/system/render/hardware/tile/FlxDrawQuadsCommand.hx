@@ -10,8 +10,9 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.FlxHardwareView;
 import flash.display.BlendMode;
-import openfl.display.Tilesheet;
 import flash.geom.ColorTransform;
+
+import openfl.display.Tilesheet;
 
 class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 {

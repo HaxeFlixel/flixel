@@ -6,6 +6,8 @@ import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
 import openfl.gl.GL;
+import openfl.gl.GLBuffer;
+import openfl.utils.Float32Array;
 
 class RenderTexture implements IFlxDestroyable
 {
@@ -14,6 +16,8 @@ class RenderTexture implements IFlxDestroyable
 	public var frameBuffer:GLFramebuffer;
 	public var renderBuffer:GLRenderbuffer;
 	public var texture:GLTexture;
+	
+	public var buffer:GLBuffer;
 	
 	public var width(default, null):Int = 0;
 	public var height(default, null):Int = 0;
@@ -75,6 +79,7 @@ class RenderTexture implements IFlxDestroyable
 		actualHeight = pow2H;
 		
 		createUVs();
+		createBuffer();
 		
 		if (lastW == pow2W && lastH == pow2H) return;
 		
@@ -145,6 +150,26 @@ class RenderTexture implements IFlxDestroyable
 		uvData.y = 0;
 		uvData.width = w;
 		uvData.height = h;
+	}
+	
+	function createBuffer():Void
+	{
+		var alpha:Float = 1.0;
+		
+		var bufferData:Float32Array = new Float32Array([
+				width,	height,	0,	uvData.width,	uvData.height,	alpha,
+				0,		height, 0,	0,				uvData.height,	alpha,
+				width, 	0, 		0,	uvData.width,	0,				alpha,
+				0, 		0, 		0,	0,				0,				alpha
+		]);
+		
+		if (buffer != null)
+			GL.deleteBuffer(buffer);
+		
+		buffer = GL.createBuffer();
+		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
+		GL.bufferData(GL.ARRAY_BUFFER, bufferData.byteLength, bufferData, GL.STATIC_DRAW);
+		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 	}
 	
 	private inline function powOfTwo(value:Int):Int

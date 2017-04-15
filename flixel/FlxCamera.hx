@@ -373,7 +373,11 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			view = new FlxHardwareView(this);
+			#if FLX_RENDER_GL
+			view = new flixel.system.render.hardware.gl2.FlxGLView(this);
+			#else
+			view = new flixel.system.render.hardware.tile.FlxTileView(this);
+			#end
 		}
 		
 		pixelPerfectRender = FlxG.renderBlit;
