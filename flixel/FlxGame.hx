@@ -281,6 +281,8 @@ class FlxGame extends Sprite
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
 	
+	fail in travis!
+	
 	/**
 	 * Sets the filter array to be applied to the game.
 	 */
