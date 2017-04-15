@@ -169,8 +169,8 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		renderSession.maskManager.pushObject(this);
 		
 		var shader = renderSession.filterManager.pushObject(this);
-		shader.data.uMatrix.value = renderer.getMatrix(__worldTransform);
-	//	shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
+	//	shader.data.uMatrix.value = renderer.getMatrix(__worldTransform);
+		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);

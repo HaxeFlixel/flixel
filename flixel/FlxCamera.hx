@@ -377,6 +377,8 @@ class FlxCamera extends FlxBasic
 		{
 			#if FLX_RENDER_GL
 			view = new flixel.system.render.hardware.gl.FlxGLView(this);
+			#elseif (openfl >= "4.0.0")
+			view = new FlxCameraView(this); // just stub
 			#else
 			view = new flixel.system.render.hardware.tile.FlxTileView(this);
 			#end
@@ -393,6 +395,7 @@ class FlxCamera extends FlxBasic
 		updateFlashOffset();
 		updateViewPosition();
 		updateInternalPositions();
+		updateScale();
 		
 		bgColor = FlxG.cameras.bgColor;
 	}
