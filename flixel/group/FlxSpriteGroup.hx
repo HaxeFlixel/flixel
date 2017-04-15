@@ -10,6 +10,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup.FlxTypedGroupIterator;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -280,6 +281,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		sprite.alpha *= alpha;
 		sprite.scrollFactor.copyFrom(scrollFactor);
 		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
+		
+		if (clipRect != null)
+			clipRectTransform(sprite, clipRect);
 	}
 	
 	/**
@@ -763,6 +767,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return blend = Value;
 	}
 	
+	override function set_clipRect(rect:FlxRect):FlxRect
+	{
+		if (exists) 
+			transformChildren(clipRectTransform, rect);
+		return super.set_clipRect(rect);
+	}
+	
 	override private function set_pixelPerfectRender(Value:Bool):Bool
 	{
 		if (exists && pixelPerfectRender != Value)
@@ -879,6 +890,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)             Sprite.origin.copyFrom(Origin);
 	private inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)               Sprite.scale.copyFrom(Scale);
 	private inline function scrollFactorTransform(Sprite:FlxSprite, ScrollFactor:FlxPoint) Sprite.scrollFactor.copyFrom(ScrollFactor);
+	private inline function clipRectTransform(Sprite:FlxSprite, ClipRect:FlxRect)          Sprite.clipRect = FlxRect.get(ClipRect.x - Sprite.x + x, ClipRect.y - Sprite.y + y, ClipRect.width, ClipRect.height);
 
 	// Functions for the FlxCallbackPoint
 	private inline function offsetCallback(Offset:FlxPoint)             transformChildren(offsetTransform, Offset);
