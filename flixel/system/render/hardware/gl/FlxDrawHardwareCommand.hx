@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl2;
+package flixel.system.render.hardware.gl;
 
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxDrawBaseCommand;
@@ -56,7 +56,6 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		if (FlxDrawHardwareCommand.currentBuffer != buffer)
 		{
 			FlxDrawHardwareCommand.currentBuffer = buffer;
-			FlxDrawHardwareCommand.currentShader = null;
 			
 			// set render target and configure viewport.
 			var gl = context.gl;

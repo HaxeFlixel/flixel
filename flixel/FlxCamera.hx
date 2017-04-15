@@ -373,7 +373,7 @@ class FlxCamera extends FlxBasic
 		else
 		{
 			#if FLX_RENDER_GL
-			view = new flixel.system.render.hardware.gl2.FlxGLView(this);
+			view = new flixel.system.render.hardware.gl.FlxGLView(this);
 			#else
 			view = new flixel.system.render.hardware.tile.FlxTileView(this);
 			#end

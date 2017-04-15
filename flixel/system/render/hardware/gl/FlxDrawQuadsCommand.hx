@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl2;
+package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;

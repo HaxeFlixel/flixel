@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl2;
+package flixel.system.render.hardware.gl;
 
 import flixel.system.render.hardware.gl.GLUtils;
 import flixel.system.render.hardware.gl.RenderTexture;
@@ -84,16 +84,6 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 	}
 	
-	public function clear():Void
-	{
-		/*
-		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-		
-		GL.clearColor(1.0, 0.0, 0.0, 1.0);
-		GL.clear(GL.COLOR_BUFFER_BIT);
-		*/
-	}
-	
 	@:access(openfl.geom.Rectangle)
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
 	{
@@ -155,14 +145,25 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
+		var useColorTransform:Bool = false;
 		var hasNoFilters:Bool = (__filters == null);
-		colorFilter.transform = __worldColorTransform;
 		
-		if (hasNoFilters)
-			__filters = filtersArray;
-		else
-			__filters.unshift(colorFilter);
+		var color:ColorTransform = __worldColorTransform;
+		colorFilter.transform = color;
+		
+		if (color != null)
+			useColorTransform = color.hasAnyTransformation();
 			
+		if (useColorTransform)
+		{
+			colorFilter.transform = color;
+			
+			if (hasNoFilters)
+				__filters = filtersArray;
+			else
+				__filters.unshift(colorFilter);
+		}
+		
 		var transform:Matrix = this.__worldTransform;
 		var uMatrix:Array<Float> = renderer.getMatrix(transform);
 		var uniformMatrix:Matrix4 = GLUtils.arrayToMatrix(uMatrix);
@@ -208,10 +209,13 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		
 		renderSession.filterManager.popObject(this);
 		
-		if (hasNoFilters)
-			__filters = null;
-		else
-			__filters.shift();
+		if (useColorTransform)
+		{
+			if (hasNoFilters)
+				__filters = null;
+			else
+				__filters.shift();
+		}
 	}
 	
 	#else

@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl2;
+package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
@@ -9,7 +9,7 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.gl.GLContextHelper;
 import flixel.system.render.hardware.gl.RenderTexture;
-import flixel.system.render.hardware.gl2.CanvasGL;
+import flixel.system.render.hardware.gl.CanvasGL;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import lime.graphics.GLRenderContext;
@@ -331,9 +331,6 @@ class FlxGLView extends FlxCameraView
 		_coloredQuads.prepare(matrix, context, renderTexture);
 		_triangles.prepare(matrix, context, renderTexture);
 		_currentCommand = null;
-		
-		
-		_canvas.clear(); // TODO: maybe remove this line???
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
