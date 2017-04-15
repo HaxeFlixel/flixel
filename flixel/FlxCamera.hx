@@ -24,6 +24,9 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 
+// TODO: shader based scaling modes
+// TODO: add property for using background color (gl optimization?)...
+
 // TODO: proper camera scaling...
 // with suport for different camera following styles...
 

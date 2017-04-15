@@ -104,7 +104,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	}
 	
 	// TODO: remove this line???
-//	public function render(view:FlxHardwareView):Void {}
+	public function render(view:FlxCameraView):Void {}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void {}
 	

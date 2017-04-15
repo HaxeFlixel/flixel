@@ -83,7 +83,7 @@ class FlxGLView extends FlxCameraView
 		context = FlxG.game.glContextHelper;
 		
 		flashSprite.addChild(_scrollRect);
-		_scrollRect.scrollRect = new Rectangle();
+	//	_scrollRect.scrollRect = new Rectangle();
 		
 		_canvas = new CanvasGL(camera.width, camera.height);
 		_scrollRect.addChild(_canvas);
@@ -221,6 +221,7 @@ class FlxGLView extends FlxCameraView
 	
 	override public function updateScrollRect():Void 
 	{
+		/*
 		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
@@ -232,6 +233,10 @@ class FlxGLView extends FlxCameraView
 			_scrollRect.x = -0.5 * rect.width;
 			_scrollRect.y = -0.5 * rect.height;
 		}
+		*/
+		
+		_scrollRect.x = -0.5 * camera.width * camera.initialZoom * FlxG.scaleMode.scale.x;
+		_scrollRect.y = -0.5 * camera.height * camera.initialZoom * FlxG.scaleMode.scale.y;
 	}
 	
 	override public function updateInternals():Void 

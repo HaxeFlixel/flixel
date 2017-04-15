@@ -77,7 +77,7 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		this.width = width;
 		this.height = height;
 		
-		buffer = FlxDestroyUtil.destroy(buffer);
+		FlxDestroyUtil.destroy(buffer);
 		buffer = new RenderTexture(width, height, false);
 		
 		projection = Matrix4.createOrtho(0, width, 0, height, -1000, 1000);
@@ -153,7 +153,7 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		
 		if (color != null)
 			useColorTransform = color.hasAnyTransformation();
-			
+		
 		if (useColorTransform)
 		{
 			colorFilter.transform = color;
@@ -164,16 +164,13 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 				__filters.unshift(colorFilter);
 		}
 		
-		var transform:Matrix = this.__worldTransform;
-		var uMatrix:Array<Float> = renderer.getMatrix(transform);
-		var uniformMatrix:Matrix4 = GLUtils.arrayToMatrix(uMatrix);
-		
 		// code from GLBitmap
 		renderSession.blendModeManager.setBlendMode(blendMode);
 		renderSession.maskManager.pushObject(this);
 		
 		var shader = renderSession.filterManager.pushObject(this);
-		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
+		shader.data.uMatrix.value = renderer.getMatrix(__worldTransform);
+	//	shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
@@ -191,8 +188,6 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		renderSession.filterManager.popObject(this);
 		renderSession.maskManager.popObject(this);
 		// end of code from GLBitmap
-		
-		// TODO: render buffer on the screen...
 		
 		FlxDrawHardwareCommand.currentShader = null;
 		
