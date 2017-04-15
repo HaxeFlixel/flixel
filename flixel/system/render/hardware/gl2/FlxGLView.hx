@@ -345,6 +345,8 @@ class FlxGLView extends FlxCameraView
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
 		render();
+		
+		FlxDrawHardwareCommand.resetFrameBuffer();
 	}
 	
 	override public function offsetView(X:Float, Y:Float):Void 

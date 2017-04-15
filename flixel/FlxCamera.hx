@@ -15,7 +15,6 @@ import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.blit.FlxBlitView;
-import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;

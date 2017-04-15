@@ -7,7 +7,6 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.DrawItem.FlxDrawItemType;
-import flixel.system.render.hardware.FlxHardwareView;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
@@ -104,7 +103,8 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 		type = null;
 	}
 	
-	public function render(view:FlxHardwareView):Void {}
+	// TODO: remove this line???
+//	public function render(view:FlxHardwareView):Void {}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void {}
 	

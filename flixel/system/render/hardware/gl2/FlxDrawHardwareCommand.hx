@@ -1,7 +1,6 @@
 package flixel.system.render.hardware.gl2;
 
 import flixel.graphics.shaders.FlxShader;
-import flixel.system.render.hardware.FlxHardwareView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.gl.RenderTexture;
 import openfl.gl.GL;
@@ -19,6 +18,18 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	public static var currentShader:FlxShader = null;
 	
 	public static var currentBuffer:RenderTexture = null;
+	
+	public static function resetFrameBuffer():Void
+	{
+		if (currentBuffer != null)
+		{
+			GL.bindFramebuffer(GL.FRAMEBUFFER, null);
+		//	gl.viewport(0, 0, buffer.width, buffer.height);
+		}
+		
+		currentBuffer = null;
+		currentShader = null;
+	}
 	
 	private var uniformMatrix:Matrix4;
 	
@@ -45,6 +56,7 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		if (FlxDrawHardwareCommand.currentBuffer != buffer)
 		{
 			FlxDrawHardwareCommand.currentBuffer = buffer;
+			FlxDrawHardwareCommand.currentShader = null;
 			
 			// set render target and configure viewport.
 			var gl = context.gl;
