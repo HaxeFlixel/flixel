@@ -161,6 +161,17 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		var color = new FlxColor();
 		return color.setHSL(Hue, Saturation, Lightness, Alpha);
 	}
+
+	/** 
+	 * Generates a color from a String name.
+	 * 
+	 * @param Name	The name of the color
+	 * @return The color as a FlxColor
+	 */
+	public static inline function fromName(Name:String):FlxColor
+	{
+		return Reflect.field(FlxColor, Name);
+	}
 	
 	/**
 	 * Parses a `String` and returns a `FlxColor` or `null` if the `String` couldn't be parsed.
