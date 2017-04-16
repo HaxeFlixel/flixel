@@ -393,6 +393,69 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		members.sort(Function.bind(Order));
 	}
+
+	/**
+	 * Go through and set the specified variable to the specified value on all members of the group.
+	 *
+	 * @param	VariableName	The string representation of the variable name you want to modify, for example "visible" or "scrollFactor".
+	 * @param	Value			The value you want to assign to that variable.
+	 * @param	Recurse			Default value is true, meaning if setAll() encounters a member that is a group, it will call setAll() on that group rather than modifying its variable.
+	 */
+	public function setAll(VariableName:String, Value:Dynamic, Recurse:Bool = true):Void
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+		
+		while (i < length)
+		{
+			basic = members[i++];
+			
+			if (basic != null)
+			{
+				if (Recurse && basic.flixelType == GROUP)
+				{
+					(cast basic).setAll(VariableName, Value, Recurse);
+				}
+				else
+				{
+					Reflect.setProperty(basic, VariableName, Value);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Go through and call the specified function on all members of the group, recursively by default.
+	 *
+	 * @param	FunctionName	The string representation of the function you want to call on each object, for example "kill()" or "init()".
+	 * @param	Args			An array of arguments to call the function with
+	 * @param	Recurse			Default value is true, meaning if callAll() encounters a member that is a group, it will call callAll() on that group rather than calling the group's function.
+	 */
+	public function callAll(FunctionName:String, ?Args:Array<Dynamic>, Recurse:Bool = true):Void
+	{
+		if (Args == null)
+			Args = [];
+		
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+		
+		while (i < length)
+		{
+			basic = members[i++];
+			
+			if (basic != null)
+			{
+				if (Recurse && (basic.flixelType == GROUP))
+				{
+					(cast(basic, FlxTypedGroup<Dynamic>)).callAll(FunctionName, Args, Recurse);
+				}
+				else
+				{
+					Reflect.callMethod(basic, Reflect.getProperty(basic, FunctionName), Args);
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Call this function to retrieve the first object with `exists == false` in the group.
