@@ -84,6 +84,15 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 	}
 	
+	public function clear():Void
+	{
+		var gl = GL.context;
+		gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.frameBuffer);
+		gl.viewport(0, 0, buffer.width, buffer.height);
+		buffer.clear(0, 0, 0, 1.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+		FlxDrawHardwareCommand.currentBuffer = buffer;
+	}
+	
 	@:access(openfl.geom.Rectangle)
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
 	{

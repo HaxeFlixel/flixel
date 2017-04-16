@@ -166,8 +166,6 @@ class FlxGLView extends FlxCameraView
 		drawItem.matrix = _helperMatrix;
 		drawItem.color = transform;
 		
-		// TODO: flush data...
-		
 		drawItem.flush(); // TODO: implement it...
 		
 		#if FLX_DEBUG
@@ -336,6 +334,8 @@ class FlxGLView extends FlxCameraView
 		_coloredQuads.prepare(matrix, context, renderTexture);
 		_triangles.prepare(matrix, context, renderTexture);
 		_currentCommand = null;
+		
+		_canvas.clear();
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG

@@ -200,7 +200,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		super.prepare(uniformMatrix, context, buffer);
 		
 		reset();
-		
 		start();
 		
 	//	stop();
@@ -271,7 +270,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		colors[i + 2] = colors[i + 5] = colors[i + 8] = colors[i + 11] = color;
 		
 		var state:RenderState = states[numQuads];
-		
 		state.set(null, material);
 		
 		numQuads++;
@@ -572,7 +570,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	public function stop():Void
 	{
 		flush();
-		
 		dirty = true;
 	}
 	

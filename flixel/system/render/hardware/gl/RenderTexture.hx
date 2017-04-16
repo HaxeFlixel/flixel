@@ -5,6 +5,8 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
+import openfl.Lib;
+import openfl.display.BitmapData;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
@@ -98,18 +100,26 @@ class RenderTexture implements IFlxDestroyable
 	
 	private inline function createTexture(width:Int, height:Int)
 	{
-		texture = GL.createTexture();
+		var gl = GL.context;
 		
-		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, actualWidth, actualHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, null);
+		#if (openfl >= "4.9.0")
+		// code from GLRenderer's resize() method
+		var renderBitmap:BitmapData = BitmapData.fromTexture(Lib.current.stage.stage3Ds[0].context3D.createRectangleTexture(actualWidth, actualHeight, BGRA, true));
+		texture = renderBitmap.getTexture(gl);
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		#else
+		texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, actualWidth, actualHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		#end
 		
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , GL.LINEAR);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		
 		// specify texture as color attachment
-		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, texture, 0);
+		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 	}
 	
 	private inline function createRenderbuffer(width:Int, height:Int)
