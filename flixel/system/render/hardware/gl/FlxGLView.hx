@@ -435,7 +435,9 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.flush();
-			
+		
+		// TODO: flush if material shader isn't null (both materials)...
+		
 		_currentCommand = _texturedQuads;
 		_texturedQuads.set(bitmap, true, true, material);
 		return _texturedQuads;
@@ -445,7 +447,9 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _coloredQuads)
 			_currentCommand.flush();
-			
+		
+		// TODO: flush if material shader isn't null (both materials)...
+		
 		_currentCommand = _coloredQuads;
 		_coloredQuads.set(null, true, false, material);
 		return _coloredQuads;
@@ -464,18 +468,14 @@ class FlxGLView extends FlxCameraView
 	
 	override private inline function render():Void
 	{
-		
 		// TODO: use this var in other way...
 	//	FlxDrawHardwareCommand.currentShader = null;
 		
 		if (_currentCommand != null)
 			_currentCommand.flush();
-			
-		
-			
-		// TODO: render canvasgl...
 	}
 	
+	// TODO: rename it to buffer...
 	private function get_renderTexture():RenderTexture
 	{
 		if (_canvas != null)

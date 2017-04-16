@@ -323,7 +323,7 @@ class FlxMaterial implements IFlxDestroyable
 			paramFloat.splice(0, paramFloat.length);
 			paramInt.splice(0, paramInt.length);
 			
-			var fields = Reflect.fields(shader.data);
+			var fields:Array<String> = Reflect.fields(shader.data);
 			
 			for (fieldName in fields)
 			{

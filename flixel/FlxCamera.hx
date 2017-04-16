@@ -893,12 +893,12 @@ class FlxCamera extends FlxBasic
 			else
 			{
 				if (deadzone == null)
-				{
 					deadzone = FlxRect.get();
-				}
+				
 				deadzone.copyFrom(Camera.deadzone);
 			}
 		}
+		
 		return this;
 	}
 	

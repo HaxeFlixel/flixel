@@ -11,6 +11,8 @@ class FlxBaseShader extends FlxShader
 		__glVertexSource = vertexSource;
 		__glFragmentSource = fragmentSource;
 		__glSourceDirty = true;
+		__data = null;
+		__init();
 		#end
 	}
 }
