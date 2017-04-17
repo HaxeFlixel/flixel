@@ -435,6 +435,8 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.flush();
+		else if (_currentCommand != null && _currentCommand.shader != material.shader)
+			_currentCommand.flush();
 		
 		// TODO: flush if material shader isn't null (both materials)...
 		
@@ -446,6 +448,8 @@ class FlxGLView extends FlxCameraView
 	private inline function getColoredTilesCommand(material:FlxMaterial)
 	{
 		if (_currentCommand != null && _currentCommand != _coloredQuads)
+			_currentCommand.flush();
+		else if (_currentCommand != null && _currentCommand.shader != material.shader)
 			_currentCommand.flush();
 		
 		// TODO: flush if material shader isn't null (both materials)...
