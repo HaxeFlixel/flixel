@@ -58,11 +58,24 @@ class GLFilterManager extends AbstractFilterManager
 	
 	public override function pushObject(object:DisplayObject):Shader 
 	{	
+		
 		if (object.__filters != null && object.__filters.length > 0)
 		{
 			renderer.getRenderTarget(true);
 			filterDepth++;
 		}
+		
+		/*
+		if (object.__filters != null && object.__filters.length > 0) 
+		{	
+			if (object.__filters.length == 1 && object.__filters[0].__numPasses == 0) 
+				return object.__filters[0].__initShader(renderSession, 0);
+			else
+				renderer.getRenderTarget(true);	
+			
+			filterDepth++;
+		}
+		*/
 		
 		return renderSession.shaderManager.defaultShader;
 	}
@@ -122,7 +135,7 @@ class GLFilterManager extends AbstractFilterManager
 		
 		renderSession.shaderManager.setShader(shader);
 		
-		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1));
+		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0));
 		gl.vertexAttribPointer(shader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
 		gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
 		gl.vertexAttribPointer(shader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);

@@ -74,6 +74,8 @@ class FlxMaterial implements IFlxDestroyable
 	private var paramBool:Array<ShaderParameter<Bool>>;
 	private var paramFloat:Array<ShaderParameter<Float>>;
 	private var paramInt:Array<ShaderParameter<Int>>;
+	
+	private var isUniform:Map<String, Bool>;
 	#end
 	
 	private var gl:GLRenderContext;
@@ -323,63 +325,134 @@ class FlxMaterial implements IFlxDestroyable
 			paramFloat.splice(0, paramFloat.length);
 			paramInt.splice(0, paramInt.length);
 			
-			var fields:Array<String> = Reflect.fields(shader.data);
+			isUniform = new Map();
 			
-			for (fieldName in fields)
-			{
-				var field = Reflect.field(shader.data, fieldName);
-				var name:String = field.name;
-				var index:Int = field.index;
-				
-				if (!shader.__isUniform.get(name))
-				{
-					// Don't add attributes (we don't need them, for now...)
-					continue;
+			var glProgram:GLProgram = shader.glProgram;
+			var glVertexSource:String = shader.glVertexSource;
+			var glFragmentSource:String = shader.glFragmentSource;
+			
+		//	processGLData(glVertexSource, "attribute"); // Don't add attributes (we don't need them, for now...)
+			processGLData(glVertexSource, "uniform");
+			processGLData(glFragmentSource, "uniform");
+			
+			if (glProgram != null)
+			{	
+				for (input in inputTextures) 
+				{	
+					if (isUniform.get(input.name))
+						input.index = gl.getUniformLocation(glProgram, input.name);
+					else
+						input.index = gl.getAttribLocation(glProgram, input.name);
 				}
 				
-				if (!Reflect.hasField(field, "type"))
+				for (parameter in paramBool) 
 				{
-					var input = new ShaderInput<BitmapData>();
-					input.name = name;
-					input.index = index;
-					inputTextures.push(input);
-					Reflect.setField(data, name, input);
+					if (isUniform.get(parameter.name))
+						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+					else
+						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
 				}
-				else
+				
+				for (parameter in paramFloat) 
 				{
-					var parameterType:ShaderParameterType = cast field.type;
-					
-					switch (parameterType) 
-					{
-						case BOOL, BOOL2, BOOL3, BOOL4:
-							var parameter = new ShaderParameter<Bool>();
-							parameter.name = name;
-							parameter.type = parameterType;
-							parameter.index = index;
-							paramBool.push(parameter);
-							Reflect.setField(data, name, parameter);
-						
-						case INT, INT2, INT3, INT4:
-							var parameter = new ShaderParameter<Int>();
-							parameter.name = name;
-							parameter.type = parameterType;
-							parameter.index = index;
-							paramInt.push(parameter);
-							Reflect.setField(data, name, parameter);
-						
-						default:	
-							var parameter = new ShaderParameter<Float>();
-							parameter.name = name;
-							parameter.type = parameterType;
-							parameter.index = index;
-							paramFloat.push(parameter);
-							Reflect.setField(data, name, parameter);
-					}
+					if (isUniform.get(parameter.name))
+						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+					else
+						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
 				}
+				
+				for (parameter in paramInt)
+				{
+					if (isUniform.get(parameter.name)) 
+						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
+					else
+						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
+				}	
 			}
 			
 			isShaderInit = true;
 		}
+	}
+	
+	private function processGLData(source:String, storageType:String):Void
+	{
+		var lastMatch = 0, position, regex, name, type;
+		
+		if (storageType == "uniform") 	
+			regex = ~/uniform ([A-Za-z0-9]+) ([A-Za-z0-9]+)/;	
+		else 
+			regex = ~/attribute ([A-Za-z0-9]+) ([A-Za-z0-9]+)/;
+		
+		while (regex.matchSub(source, lastMatch)) 
+		{	
+			type = regex.matched(1);
+			name = regex.matched(2);
+			
+			if (StringTools.startsWith(type, "sampler"))
+			{	
+				var input = new ShaderInput<BitmapData>();
+				input.name = name;
+				inputTextures.push(input);
+				Reflect.setField(data, name, input);
+			} 
+			else 
+			{	
+				var parameterType:ShaderParameterType = switch (type) 
+				{	
+					case "bool": BOOL;
+					case "double", "float": FLOAT;
+					case "int", "uint": INT;
+					case "bvec2": BOOL2;
+					case "bvec3": BOOL3;
+					case "bvec4": BOOL4;
+					case "ivec2", "uvec2": INT2;
+					case "ivec3", "uvec3": INT3;
+					case "ivec4", "uvec4": INT4;
+					case "vec2", "dvec2": FLOAT2;
+					case "vec3", "dvec3": FLOAT3;
+					case "vec4", "dvec4": FLOAT4;
+					case "mat2", "mat2x2": MATRIX2X2;
+					case "mat2x3": MATRIX2X3;
+					case "mat2x4": MATRIX2X4;
+					case "mat3x2": MATRIX3X2;
+					case "mat3", "mat3x3": MATRIX3X3;
+					case "mat3x4": MATRIX3X4;
+					case "mat4x2": MATRIX4X2;
+					case "mat4x3": MATRIX4X3;
+					case "mat4", "mat4x4": MATRIX4X4;
+					default: null;
+				}
+				
+				switch (parameterType) 
+				{	
+					case BOOL, BOOL2, BOOL3, BOOL4:
+						var parameter = new ShaderParameter<Bool>();
+						parameter.name = name;
+						parameter.type = parameterType;
+						paramBool.push(parameter);
+						Reflect.setField(data, name, parameter);
+					
+					case INT, INT2, INT3, INT4:
+						var parameter = new ShaderParameter<Int>();
+						parameter.name = name;
+						parameter.type = parameterType;
+						paramInt.push(parameter);
+						Reflect.setField(data, name, parameter);
+					
+					default:
+						var parameter = new ShaderParameter<Float>();
+						parameter.name = name;
+						parameter.type = parameterType;
+						paramFloat.push(parameter);
+						Reflect.setField(data, name, parameter);
+				}
+			}
+			
+			isUniform.set(name, storageType == "uniform");
+			
+			position = regex.matchedPos();
+			lastMatch = position.pos + position.len;
+		}	
 	}
 	#end
 }

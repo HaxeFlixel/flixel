@@ -83,7 +83,7 @@ class FlxGLView extends FlxCameraView
 		context = FlxG.game.glContextHelper;
 		
 		flashSprite.addChild(_scrollRect);
-	//	_scrollRect.scrollRect = new Rectangle();
+	//	_scrollRect.scrollRect = new Rectangle(); // TODO: fix scroll rects...
 		
 		_canvas = new CanvasGL(camera.width, camera.height);
 		_scrollRect.addChild(_canvas);

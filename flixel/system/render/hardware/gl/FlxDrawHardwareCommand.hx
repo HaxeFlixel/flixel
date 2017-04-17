@@ -24,7 +24,7 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		if (currentBuffer != null)
 		{
 			GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-		//	gl.viewport(0, 0, buffer.width, buffer.height);
+			GL.disable(GL.SCISSOR_TEST);
 		}
 		
 		currentBuffer = null;

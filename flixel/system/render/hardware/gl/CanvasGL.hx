@@ -175,7 +175,10 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		
 		// code from GLBitmap
 		renderSession.blendModeManager.setBlendMode(blendMode);
-		renderSession.maskManager.pushObject(this);
+	//	renderSession.maskManager.pushObject(this);
+		
+	//	GL.enable(GL.SCISSOR_TEST);
+	//	GL.scissor(0, 0, Std.int(FlxG.stage.stageWidth * 0.5), Std.int(FlxG.stage.stageHeight * 0.5));
 		
 		var shader = renderSession.filterManager.pushObject(this);
 	//	shader.data.uMatrix.value = renderer.getMatrix(__worldTransform);
@@ -195,8 +198,10 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 		
 		renderSession.filterManager.popObject(this);
-		renderSession.maskManager.popObject(this);
+	//	renderSession.maskManager.popObject(this);
 		// end of code from GLBitmap
+		
+	//	GL.disable(GL.SCISSOR_TEST);
 		
 		FlxDrawHardwareCommand.currentShader = null;
 		
