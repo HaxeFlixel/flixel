@@ -127,7 +127,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	
 	/**
 	 * Adds empty frame into this frame collection. 
-	 * An emty frame is doing almost nothing for all the time.
+	 * An empty frame does almost nothing for all the time.
 	 * 
 	 * @param	size	dimensions of the frame to add.
 	 * @return	Newly added empty frame.
