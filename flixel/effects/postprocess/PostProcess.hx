@@ -4,6 +4,7 @@ import flash.geom.Rectangle;
 
 #if FLX_POST_PROCESS
 import flixel.FlxG;
+import flixel.util.typeLimit.OneOfTwo;
 import openfl.Assets;
 import openfl.display.OpenGLView;
 import openfl.gl.GL;
@@ -39,7 +40,7 @@ class PostProcess extends OpenGLView
 	 *
 	 * @param  fragmentShader  A GLSL file in your assets path
 	 */
-	public function new(fragmentShader:String)
+	public function new(shader:OneOfTwo<String,Shader>)
 	{
 		super();
 		uniforms = new Map<String, Uniform>();
@@ -69,10 +70,14 @@ class PostProcess extends OpenGLView
 		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(#if !openfl_next cast #end vertices), GL.STATIC_DRAW);
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
-		postProcessShader = new Shader([
-			{ src: VERTEX_SHADER, fragment: false },
-			{ src: Assets.getText(fragmentShader), fragment: true }
-		]);
+		if(Std.is(shader,String)){
+			postProcessShader = new Shader([
+				{ src: VERTEX_SHADER, fragment: false },
+				{ src: Assets.getText(cast(shader,String)), fragment: true }
+			]);
+		}else if(Std.is(shader,Shader)){
+			postProcessShader = cast(shader,Shader);
+		}
 
 		// default shader variables
 		imageUniform = postProcessShader.uniform("uImage0");
@@ -162,8 +167,8 @@ class PostProcess extends OpenGLView
 
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , GL.LINEAR);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , GL.NEAREST);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
 
 		// specify texture as color attachment
 		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, texture, 0);
