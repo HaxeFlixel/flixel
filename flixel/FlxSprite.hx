@@ -897,6 +897,33 @@ class FlxSprite extends FlxObject
 		}
 	}
 	
+	
+	/**
+	 * Checks to see if a point in 2D world space overlaps this FlxObject object. Takes sprite scaling into account.
+	 * 
+	 * @param	Point			The point in world space you want to check.
+	 * @param	InScreenSpace	Whether to take scroll factors into account when checking for overlap.
+	 * @param	Camera			Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @return	Whether or not the point overlaps this object.
+	 */
+	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
+	{
+		if (!InScreenSpace)
+		{
+			return (point.x >= x) && (point.x < x + width * scale.x) && (point.y >= y) && (point.y < y + height * scale.y);
+		}
+		
+		if (Camera == null)
+		{
+			Camera = FlxG.camera;
+		}
+		var xPos:Float = point.x - Camera.scroll.x;
+		var yPos:Float = point.y - Camera.scroll.y;
+		getScreenPosition(_point, Camera);
+		point.putWeak();
+		return (xPos >= _point.x) && (xPos < _point.x + width * scale.x) && (yPos >= _point.y) && (yPos < _point.y + height * scale.y);
+	}
+	
 	/**
 	 * Internal function to update the current animation frame.
 	 * 
