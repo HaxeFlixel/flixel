@@ -111,7 +111,7 @@ class FlxMaterial implements IFlxDestroyable
 	 * Uploads all the stored uniforms to the GPU.
 	 * @param	gl	Render context.
 	 */
-	public function apply(gl:GLRenderContext/*, bitmap:BitmapData = null*/):Void
+	public function apply(gl:GLRenderContext):Void
 	{
 		#if FLX_RENDER_GL
 		if (shader == null)
@@ -121,25 +121,14 @@ class FlxMaterial implements IFlxDestroyable
 		
 		updateDataIndices(gl);
 		
-	//	var textureCount:Int = 0;
 		var textureCount:Int = 1;
 		
 		for (input in inputTextures) 
 		{
-			if (input.name == DEFAULT_TEXTURE/* && bitmap != null*/)
-			{
-				/*
-				gl.activeTexture(gl.TEXTURE0 + textureCount);
-				gl.bindTexture(gl.TEXTURE_2D, bitmap.getTexture(gl));
-				
-				gl.uniform1i(input.index, textureCount);
-				
-				GLUtils.setTextureSmoothing(smoothing);
-				GLUtils.setTextureWrapping(repeat);
-				*/
+			if (input.name == DEFAULT_TEXTURE)
 				continue;
-			}
-			else if (input.input != null)
+			
+			if (input.input != null)
 			{
 				gl.activeTexture(gl.TEXTURE0 + textureCount);
 				gl.bindTexture(gl.TEXTURE_2D, input.input.getTexture(gl));
@@ -350,56 +339,18 @@ class FlxMaterial implements IFlxDestroyable
 			
 			if (glProgram != null)
 			{	
-				trace(glFragmentSource);
-				
 				for (input in inputTextures) 
-				{	
-					trace(input.name);
 					
 					input.index = Reflect.field(shader.data, input.name).index;
-					/*
-					if (isUniform.get(input.name))
-						input.index = gl.getUniformLocation(glProgram, input.name);
-					else
-						input.index = gl.getAttribLocation(glProgram, input.name);
-					*/
-				}
 				
 				for (parameter in paramBool) 
-				{
 					parameter.index = Reflect.field(shader.data, parameter.name).index;
-					
-					/*
-					if (isUniform.get(parameter.name))
-						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					else
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					*/
-				}
 				
 				for (parameter in paramFloat) 
-				{
 					parameter.index = Reflect.field(shader.data, parameter.name).index;
-					
-					/*
-					if (isUniform.get(parameter.name))
-						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					else
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					*/
-				}
 				
 				for (parameter in paramInt)
-				{
-					parameter.index = Reflect.field(shader.data, parameter.name).index;
-					
-					/*
-					if (isUniform.get(parameter.name)) 
-						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					else
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					*/
-				}	
+					parameter.index = Reflect.field(shader.data, parameter.name).index;	
 			}
 			
 			isShaderInit = true;

@@ -166,8 +166,7 @@ class FlxGLView extends FlxCameraView
 		
 		drawItem.matrix = _helperMatrix;
 		drawItem.color = transform;
-		
-		drawItem.flush(); // TODO: implement it...
+		drawItem.flush();
 		
 		#if FLX_DEBUG
 		drawItem.drawDebug(this.camera);
@@ -437,26 +436,24 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.flush();
-		else if (_currentCommand == _texturedQuads)
-		{
-			if (!_texturedQuads.equals(FlxDrawItemType.QUADS, bitmap, true, true, material) || _texturedQuads.numQuads >= _texturedQuads.size)
-				_texturedQuads.flush();
-		}
+		else if ((_currentCommand == _texturedQuads) && (!_texturedQuads.equals(FlxDrawItemType.QUADS, bitmap, true, true, material) || _texturedQuads.numQuads >= _texturedQuads.size))
+			_texturedQuads.flush();
 		
 		_currentCommand = _texturedQuads;
 		_texturedQuads.set(bitmap, true, true, material);
 		return _texturedQuads;
 	}
 	
+	// TODO: request drawCommand...
+	
+	// TODO: check camera flash and camera shake effects...
+	
 	private inline function getColoredTilesCommand(material:FlxMaterial)
 	{
 		if (_currentCommand != null && _currentCommand != _coloredQuads)
 			_currentCommand.flush();
-		else if (_currentCommand == _coloredQuads)
-		{
-			if (!_coloredQuads.equals(FlxDrawItemType.QUADS, null, true, false, material) || _coloredQuads.numQuads >= _coloredQuads.size)
-				_coloredQuads.flush();
-		}
+		else if ((_currentCommand == _coloredQuads) && (!_coloredQuads.equals(FlxDrawItemType.QUADS, null, true, false, material) || _coloredQuads.numQuads >= _coloredQuads.size))
+			_coloredQuads.flush();
 		
 		_currentCommand = _coloredQuads;
 		_coloredQuads.set(null, true, false, material);

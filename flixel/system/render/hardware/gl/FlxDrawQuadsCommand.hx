@@ -128,8 +128,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private var vertexBuffer:GLBuffer;
 	
-	private var _textured:Bool;
-	
 	public function new(textured:Bool = true) 
 	{
 		super();
@@ -138,7 +136,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		this.size = FlxCameraView.QUADS_PER_BATCH;
 		
 		var elementsPerVertex:Int = (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
-		_textured = textured;
+		this.textured = textured;
 		
 		// The total number of bytes in our batch
 		verticesNumBytes = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
@@ -405,20 +403,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		shader = setShader(currentMaterial);
 		uploadData();
 		
-		currentMaterial.apply(gl/*, state.bitmap*/);
-		
-		/*
-		if (bitmap != null)
-		{
-			gl.activeTexture(gl.TEXTURE0);
-			gl.bindTexture(GL.TEXTURE_2D, bitmap.getTexture(gl));
-			
-			GLUtils.setTextureSmoothing(material.smoothing);
-			GLUtils.setTextureWrapping(material.repeat);
-			
-			gl.uniform2f(shader.data.uTextureSize.index, bitmap.width, bitmap.height);
-		}
-		*/
+		currentMaterial.apply(gl);
 		
 		var currentTexture:BitmapData;
 		var nextTexture:BitmapData;
@@ -474,6 +459,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		// then reset the batch!
 		numQuads = 0;
 		dirty = true;
+		shader = null;
 	}
 	
 	private inline function setShader(material:FlxMaterial):FlxShader
@@ -618,8 +604,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var bothHasGraphicAreSame:Bool = (hasGraphic == textured);
 		
 		return bothShadersAreNull && bothHasGraphicAreSame;
-		
-	//	return (this.material == material);
 	}
 	
 	private function get_canAddQuad():Bool
@@ -640,11 +624,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	override private function get_elementsPerVertex():Int
 	{
 		return (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
-	}
-	
-	override private function get_textured():Bool 
-	{
-		return _textured;
 	}
 }
 

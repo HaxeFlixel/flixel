@@ -78,7 +78,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	
 	public var elementsPerVertex(get, null):Int;
 	
-	public var textured(get, null):Bool;
+	public var textured(default, null):Bool;
 	
 	public function new() {}
 	
@@ -131,6 +131,8 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 		this.shader = material.shader;
 		this.colored = colored;
 		this.hasColorOffsets = hasColorOffsets;
+		
+		this.textured = (bitmap != null);
 	}
 	
 	private function get_numVertices():Int
@@ -146,10 +148,5 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 	private function get_elementsPerVertex():Int
 	{
 		return 0;
-	}
-	
-	private /*inline*/ function get_textured():Bool
-	{
-		return (bitmap != null);
 	}
 }
