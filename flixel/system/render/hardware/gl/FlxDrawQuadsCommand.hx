@@ -128,6 +128,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private var vertexBuffer:GLBuffer;
 	
+	private var _textured:Bool;
+	
 	public function new(textured:Bool = true) 
 	{
 		super();
@@ -136,6 +138,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		this.size = FlxCameraView.QUADS_PER_BATCH;
 		
 		var elementsPerVertex:Int = (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
+		_textured = textured;
 		
 		// The total number of bytes in our batch
 		verticesNumBytes = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
@@ -397,12 +400,25 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var startIndex:Int = 0;
 		
 		var state:RenderState = states[0];
-		var material:FlxMaterial = state.material;
+		var currentMaterial:FlxMaterial = state.material;
 		
-		setShader();
+		shader = setShader(currentMaterial);
 		uploadData();
 		
-		material.apply(gl);
+		currentMaterial.apply(gl/*, state.bitmap*/);
+		
+		/*
+		if (bitmap != null)
+		{
+			gl.activeTexture(gl.TEXTURE0);
+			gl.bindTexture(GL.TEXTURE_2D, bitmap.getTexture(gl));
+			
+			GLUtils.setTextureSmoothing(material.smoothing);
+			GLUtils.setTextureWrapping(material.repeat);
+			
+			gl.uniform2f(shader.data.uTextureSize.index, bitmap.width, bitmap.height);
+		}
+		*/
 		
 		var currentTexture:BitmapData;
 		var nextTexture:BitmapData;
@@ -410,12 +426,12 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var currentBlendMode:BlendMode;
 		var nextBlendMode:BlendMode;
-		currentBlendMode = nextBlendMode = material.blendMode;
+		currentBlendMode = nextBlendMode = currentMaterial.blendMode;
 		context.blendModeManager.setBlendMode(currentBlendMode);
 		
 		var currentSmoothing:Bool;
 		var nextSmoothing:Bool;
-		currentSmoothing = nextSmoothing = material.smoothing;
+		currentSmoothing = nextSmoothing = currentMaterial.smoothing;
 		
 		var blendSwap:Bool = false;
 		var textureSwap:Bool = false;
@@ -424,11 +440,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		for (i in 0...numQuads)
 		{
 			state = states[i];
-			material = state.material;
+			currentMaterial = state.material;
 			
 			nextTexture = state.bitmap;
-			nextBlendMode = material.blendMode;
-			nextSmoothing = material.smoothing;
+			nextBlendMode = currentMaterial.blendMode;
+			nextSmoothing = currentMaterial.smoothing;
 			
 			blendSwap = (currentBlendMode != nextBlendMode);
 			textureSwap = (currentTexture != nextTexture);
@@ -436,7 +452,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 			if (textureSwap || blendSwap || smoothingSwap)
 			{
-				renderBatch(currentTexture, batchSize, startIndex, nextSmoothing);
+				renderBatch(currentTexture, batchSize, startIndex, currentSmoothing);
 				
 				startIndex = i;
 				batchSize = 0;
@@ -457,13 +473,16 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		// then reset the batch!
 		numQuads = 0;
+		dirty = true;
 	}
 	
-	private inline function setShader():FlxShader
+	private inline function setShader(material:FlxMaterial):FlxShader
 	{
+		var shader:FlxShader = material.shader;
+		
 		if (shader == null)
 			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
-			
+		
 		if (shader != FlxDrawHardwareCommand.currentShader)
 		{
 			context.shaderManager.setShader(shader);
@@ -540,7 +559,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, smoothing:Bool = false):Void
 	{
-		if (size == 0)
+		if (numQuads == 0)
 			return;
 		
 		var gl:GLRenderContext = context.gl;
@@ -549,6 +568,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		{
 			gl.activeTexture(gl.TEXTURE0);
 			gl.bindTexture(GL.TEXTURE_2D, bitmap.getTexture(gl));
+			
+			gl.uniform1i(shader.data.uImage0.index, 0);
 			
 			GLUtils.setTextureSmoothing(material.smoothing);
 			GLUtils.setTextureWrapping(material.repeat);
@@ -597,6 +618,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var bothHasGraphicAreSame:Bool = (hasGraphic == textured);
 		
 		return bothShadersAreNull && bothHasGraphicAreSame;
+		
+	//	return (this.material == material);
 	}
 	
 	private function get_canAddQuad():Bool
@@ -617,6 +640,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	override private function get_elementsPerVertex():Int
 	{
 		return (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
+	}
+	
+	override private function get_textured():Bool 
+	{
+		return _textured;
 	}
 }
 

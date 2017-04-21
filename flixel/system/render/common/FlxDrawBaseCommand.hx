@@ -148,7 +148,7 @@ class FlxDrawBaseCommand<T> implements IFlxDestroyable
 		return 0;
 	}
 	
-	private inline function get_textured():Bool
+	private /*inline*/ function get_textured():Bool
 	{
 		return (bitmap != null);
 	}

@@ -148,7 +148,6 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		// TODO: every camera will have its own render texture where i will draw everthing onto and only then draw this texture on the screen
 		// TODO: sprites might have renderTarget property
 		
 		var gl:GLRenderContext = renderSession.gl;

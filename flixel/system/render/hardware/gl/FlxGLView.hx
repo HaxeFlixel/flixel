@@ -5,6 +5,7 @@ import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
+import flixel.system.render.common.DrawItem.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.gl.GLContextHelper;
@@ -330,6 +331,8 @@ class FlxGLView extends FlxCameraView
 	{
 		var matrix = _canvas.projection;
 		
+		context.shaderManager.setShader(null);
+		
 		_texturedQuads.prepare(matrix, context, renderTexture);
 		_coloredQuads.prepare(matrix, context, renderTexture);
 		_triangles.prepare(matrix, context, renderTexture);
@@ -347,7 +350,6 @@ class FlxGLView extends FlxCameraView
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
 		render();
-		
 		FlxDrawHardwareCommand.resetFrameBuffer();
 	}
 	
@@ -435,10 +437,11 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.flush();
-		else if (_currentCommand != null && _currentCommand.shader != material.shader)
-			_currentCommand.flush();
-		
-		// TODO: flush if material shader isn't null (both materials)...
+		else if (_currentCommand == _texturedQuads)
+		{
+			if (!_texturedQuads.equals(FlxDrawItemType.QUADS, bitmap, true, true, material) || _texturedQuads.numQuads >= _texturedQuads.size)
+				_texturedQuads.flush();
+		}
 		
 		_currentCommand = _texturedQuads;
 		_texturedQuads.set(bitmap, true, true, material);
@@ -449,10 +452,11 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_currentCommand != null && _currentCommand != _coloredQuads)
 			_currentCommand.flush();
-		else if (_currentCommand != null && _currentCommand.shader != material.shader)
-			_currentCommand.flush();
-		
-		// TODO: flush if material shader isn't null (both materials)...
+		else if (_currentCommand == _coloredQuads)
+		{
+			if (!_coloredQuads.equals(FlxDrawItemType.QUADS, null, true, false, material) || _coloredQuads.numQuads >= _coloredQuads.size)
+				_coloredQuads.flush();
+		}
 		
 		_currentCommand = _coloredQuads;
 		_coloredQuads.set(null, true, false, material);
@@ -467,16 +471,18 @@ class FlxGLView extends FlxCameraView
 		// TODO: check this case...
 		_currentCommand = null;  // i don't batch triangles...
 		_triangles.set(bitmap, colored, false, material);
+		
 		return _triangles;
 	}
 	
 	override private inline function render():Void
 	{
 		// TODO: use this var in other way...
-	//	FlxDrawHardwareCommand.currentShader = null;
 		
 		if (_currentCommand != null)
 			_currentCommand.flush();
+			
+	//	FlxDrawHardwareCommand.currentShader = null;
 	}
 	
 	// TODO: rename it to buffer...
