@@ -165,15 +165,13 @@ class Pointer extends Tool
 		
 	override public function draw():Void 
 	{
-		var gfx:Graphics = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
-		
 		if (_selectionHappening)
 		{
 			// Render the selection rectangle
-			gfx.lineStyle(0.9, 0xbb0000);
-			gfx.drawRect(_selectionArea.x - FlxG.camera.scroll.x, _selectionArea.y - FlxG.camera.scroll.y, _selectionArea.width, _selectionArea.height);
+			FlxG.camera.drawDebugRect(_selectionArea.x - FlxG.camera.scroll.x, 
+									_selectionArea.y - FlxG.camera.scroll.y, 
+									_selectionArea.width, _selectionArea.height,
+									0xbb0000, 0.9);
 		}
 
 		// Render everything into the camera buffer

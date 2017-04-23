@@ -1066,12 +1066,12 @@ class FlxObject extends FlxBasic
 			return;
 		
 		var rect = getBoundingBox(camera);
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+		beginDrawDebug(camera);
+		drawDebugBoundingBox(camera, rect, allowCollisions, immovable);
 		endDrawDebug(camera);
 	}
 	
-	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
+	function drawDebugBoundingBox(camera:FlxCamera, rect:FlxRect, allowCollisions:Int, partial:Bool)
 	{
 		// Find the color to use
 		var color:Null<Int> = debugBoundingBoxColor;
@@ -1088,13 +1088,12 @@ class FlxObject extends FlxBasic
 		}
 		
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.5);
-		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+		camera.drawDebugRect(rect.x, rect.y, rect.width, rect.height, color, 1, 0.5);
 	}
 
-	private inline function beginDrawDebug(camera:FlxCamera):Graphics
+	private inline function beginDrawDebug(camera:FlxCamera):Void
 	{
-		return camera.beginDrawDebug();
+		camera.beginDrawDebug();
 	}
 	
 	private inline function endDrawDebug(camera:FlxCamera)

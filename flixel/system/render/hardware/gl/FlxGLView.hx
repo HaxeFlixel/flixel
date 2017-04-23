@@ -14,6 +14,7 @@ import flixel.system.render.hardware.gl.CanvasGL;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import lime.graphics.GLRenderContext;
+import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
@@ -171,10 +172,6 @@ class FlxGLView extends FlxCameraView
 		drawItem.matrix = _helperMatrix;
 		drawItem.color = transform;
 		drawItem.flush();
-		
-		#if FLX_DEBUG
-		drawItem.drawDebug(this.camera);
-		#end
 	}
 	
 	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
@@ -366,14 +363,32 @@ class FlxGLView extends FlxCameraView
 		flashSprite.y += Y;
 	}
 	
-	override public function beginDrawDebug():Graphics 
+	override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
 	{
-		#if FLX_DEBUG
-		return null; // TODO: fix this...
-	//	return debugLayer.graphics;
-		#else
-		return null;
-		#end
+		var drawColor:FlxColor = color;
+		drawColor.alphaFloat = alpha;
+		debugLayer.rect(x, y, width, height, drawColor, thickness);
+	}
+	
+	override public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
+	{
+		var drawColor:FlxColor = color;
+		drawColor.alphaFloat = alpha;
+		debugLayer.line(x1, y1, x2, y2, drawColor, thickness);
+	}
+	
+	override public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:Int, alpha:Float = 1.0):Void 
+	{
+		var drawColor:FlxColor = color;
+		drawColor.alphaFloat = alpha;
+		debugLayer.fillRect(x, y, width, height, color);
+	}
+	
+	override public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void
+	{
+		var drawColor:FlxColor = color;
+		drawColor.alphaFloat = alpha;
+		debugLayer.triangles(matrix, data.vertices, data.indices, drawColor, thickness);
 	}
 	
 	override private function set_color(Color:FlxColor):FlxColor 

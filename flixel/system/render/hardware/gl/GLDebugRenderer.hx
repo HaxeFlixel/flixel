@@ -1,10 +1,12 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.graphics.FlxMaterial;
+import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import lime.graphics.GLRenderContext;
 import lime.math.Matrix4;
+import openfl.Vector;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.geom.Matrix;
@@ -321,6 +323,44 @@ class GLDebugRenderer extends DisplayObjectContainer implements IFlxDestroyable
             offset += step;
         }
     }
+	
+	public function triangles(matrix:FlxMatrix, vertices:Vector<Float>, indices:Vector<Int>, color:FlxColor, thickness:Float = 1):Void
+	{
+		var numTriangles = Std.int(indices.length / 3);
+		
+		var x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float;
+		var xt1:Float, yt1:Float, xt2:Float, yt2:Float, xt3:Float, yt3:Float;
+		var index1:Int, index2:Int, index3:Int;
+		
+		for (i in 0...numTriangles)
+		{
+			index1 = indices[3 * i];
+			index2 = index1 + 1;
+			index3 = index2 + 1;
+			
+			x1 = vertices[index1 * 2];
+			y1 = vertices[index1 * 2 + 1];
+			
+			x2 = vertices[index2 * 2];
+			y2 = vertices[index2 * 2 + 1];
+			
+			x3 = vertices[index3 * 2];
+			y3 = vertices[index3 * 2 + 1];
+			
+			xt1 = matrix.transformX(x1, y1);
+			yt1 = matrix.transformY(x1, y1);
+			
+			xt2 = matrix.transformX(x2, y2);
+			yt2 = matrix.transformY(x2, y2);
+			
+			xt3 = matrix.transformX(x3, y3);
+			yt3 = matrix.transformY(x3, y3);
+			
+			line(x1, y1, x2, y2, color, thickness);
+			line(x2, y2, x3, y3, color, thickness);
+			line(x1, y1, x3, y3, color, thickness);
+		}
+	}
 	
 	#else
 	

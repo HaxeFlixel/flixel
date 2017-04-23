@@ -11,6 +11,7 @@ import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
@@ -229,12 +230,17 @@ class FlxCameraView implements IFlxDestroyable
 	@:allow(flixel.FlxCamera)
 	private function render():Void {}
 	
-	public function beginDrawDebug():Graphics
-	{
-		return null;
-	}
+	public function beginDrawDebug():Void {}
 	
-	public function endDrawDebug():Void {}
+	public function endDrawDebug(?matrix:FlxMatrix):Void {}
+	
+	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void {}
+	
+	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:Int, alpha:Float = 1.0):Void {}
+	
+	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void {}
+	
+	public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void {}
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void {}

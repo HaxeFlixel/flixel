@@ -230,8 +230,6 @@ class FlxBlitView extends FlxCameraView
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
 		_buffer.draw(trianglesSprite, _helperMatrix, transform, material.blendMode);
-		
-		drawDebugTriangles(data.vertices, data.indices, _helperMatrix);
 		data.dirty = false;
 	}
 	
@@ -269,8 +267,6 @@ class FlxBlitView extends FlxCameraView
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices, rectUVs);
 		trianglesSprite.graphics.endFill();
 		_buffer.draw(trianglesSprite, matrix, transform, material.blendMode);
-		
-		drawDebugTriangles(rectVertices, rectIndices, matrix);
 	}
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
@@ -298,21 +294,7 @@ class FlxBlitView extends FlxCameraView
 		trianglesSprite.graphics.endFill();
 		_buffer.draw(trianglesSprite, matrix, null, material.blendMode);
 		
-		drawDebugTriangles(rectVertices, rectIndices, matrix);
-	}
-	
-	private function drawDebugTriangles(rectVertices:Vector<Float>, rectIndices:Vector<Int>, matrix:FlxMatrix):Void
-	{
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			var gfx:Graphics = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(rectVertices, rectIndices);
-			_buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
-		}
-		#end
+	//	drawDebugTriangles(rectVertices, rectIndices, matrix); // TODO: remove this line????
 	}
 	
 	override public function transformRect(rect:FlxRect):FlxRect
@@ -518,15 +500,48 @@ class FlxBlitView extends FlxCameraView
 		screen.dirty = true;
 	}
 	
-	override public function beginDrawDebug():Graphics 
+	override public function beginDrawDebug():Void 
 	{
 		FlxSpriteUtil.flashGfx.clear();
-		return FlxSpriteUtil.flashGfx;
 	}
 	
-	override public function endDrawDebug():Void 
+	override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
 	{
-		_buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.lineStyle(thickness, color, alpha);
+		gfx.drawRect(x, y, width, height);
+	}
+	
+	override public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:Int, alpha:Float = 1.0):Void 
+	{
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.beginFill(color, alpha);
+		gfx.lineStyle();
+		gfx.drawRect(x, y, width, height);
+		gfx.endFill();
+	}
+	
+	override public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
+	{
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.lineStyle(thickness, color, alpha);
+		gfx.moveTo(x1, y1);
+		gfx.lineTo(x2, y2);
+	}
+	
+	override public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void
+	{
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.clear();
+		gfx.lineStyle(thickness, color, alpha);
+		gfx.drawTriangles(data.vertices, data.indices);
+		endDrawDebug(matrix);
+		beginDrawDebug();
+	}
+	
+	override public function endDrawDebug(?matrix:FlxMatrix):Void 
+	{
+		_buffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
 	}
 	
 	override private function set_angle(Angle:Float):Float 

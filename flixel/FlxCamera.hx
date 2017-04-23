@@ -18,6 +18,7 @@ import flixel.system.render.blit.FlxBlitView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.Vector;
 import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -858,9 +859,34 @@ class FlxCamera extends FlxBasic
 			view.render();
 	}
 	
-	public inline function beginDrawDebug():Graphics
+	public inline function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void
 	{
-		return (view != null) ? view.beginDrawDebug() : null;
+		if (view != null)
+			view.drawDebugRect(x, y, width, height, color, thickness, alpha);
+	}
+	
+	public inline function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:Int, alpha:Float = 1.0):Void
+	{
+		if (view != null)
+			view.drawDebugFilledRect(x, y, width, height, color, alpha);
+	}
+	
+	public inline function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void
+	{
+		if (view != null)
+			view.drawDebugLine(x1, y1, x2, y2, color, thickness, alpha);
+	}
+	
+	public inline function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void
+	{
+		if (view != null)
+			view.drawDebugTriangles(matrix, data, color, thickness, alpha);
+	}
+	
+	public inline function beginDrawDebug():Void
+	{
+		if (view != null) 
+			view.beginDrawDebug();
 	}
 	
 	public inline function endDrawDebug():Void

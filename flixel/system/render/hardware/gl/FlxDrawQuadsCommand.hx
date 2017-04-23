@@ -419,7 +419,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		if (numQuads == 1)
 		{
-			renderBatch(currentTexture, 1, 0, currentSmoothing);
+			renderBatch(currentTexture, 1, 0, currentMaterial);
 			reset();
 			return;
 		}
@@ -443,7 +443,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 			if (textureSwap || blendSwap || smoothingSwap)
 			{
-				renderBatch(currentTexture, batchSize, startIndex, currentSmoothing);
+				renderBatch(currentTexture, batchSize, startIndex, currentMaterial);
 				
 				startIndex = i;
 				batchSize = 0;
@@ -460,7 +460,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			batchSize++;
 		}
 		
-		renderBatch(currentTexture, batchSize, startIndex, currentSmoothing);
+		renderBatch(currentTexture, batchSize, startIndex, currentMaterial);
 		
 		// then reset the batch!
 		reset();
@@ -543,7 +543,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		#end
 	}
 	
-	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, smoothing:Bool = false):Void
+	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, material:FlxMaterial):Void
 	{
 		if (numQuads == 0)
 			return;

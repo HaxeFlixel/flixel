@@ -384,7 +384,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var buffer:FlxTilemapBuffer = null;
 		var l:Int = FlxG.cameras.list.length;
-		var gfx:Graphics = Camera.beginDrawDebug();
+		Camera.beginDrawDebug();
 		
 		for (i in 0...l)
 		{
@@ -435,7 +435,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
+					drawDebugBoundingBox(Camera, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
 				columnIndex++;

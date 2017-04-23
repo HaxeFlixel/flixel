@@ -172,35 +172,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			data.setContext(context.gl);
 	}
 	
-	public function drawDebug(camera:FlxCamera):Void
-	{
-		#if FLX_DEBUG
-		if (!FlxG.debugger.drawDebug)
-			return;
-		
-		var verticesLength:Int = data.vertices.length;
-		_vertices.splice(0, _vertices.length);
-		var px:Float, py:Float;
-		var i:Int = 0;
-		
-		while (i < verticesLength)
-		{
-			px = data.vertices[i]; 
-			py = data.vertices[i + 1];
-			
-			_vertices[i] = px * matrix.a + py * matrix.c + matrix.tx;
-			_vertices[i + 1] = px * matrix.b + py * matrix.d + matrix.ty;
-			
-			i += 2;
-		}
-		
-		var gfx:Graphics = camera.beginDrawDebug();
-		gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-		gfx.drawTriangles(_vertices, data.indices);
-		camera.endDrawDebug();
-		#end
-	}
-	
 	public function canAddTriangles(numTriangles:Int):Bool
 	{
 		return true;

@@ -124,6 +124,12 @@ class FlxStrip extends FlxSprite
 			{
 				_matrix.translate(_point.x, _point.y);
 				camera.drawTriangles(graphic.bitmap, material, data, _matrix, colorTransform);
+				
+				#if FLX_DEBUG
+				if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+					camera.drawDebugTriangles(_matrix, data, 0x0000ff, 1, 0.5);
+				#end
+				
 				_matrix.translate( -_point.x, -_point.y);
 			}
 			
@@ -210,5 +216,13 @@ class FlxStrip extends FlxSprite
 			data.dirty = value;
 		
 		return super.set_dirty(value);
+	}
+	
+	override function set_useFramePixels(value:Bool):Bool 
+	{
+		if (FlxG.renderTile)
+			return super.set_useFramePixels(value);
+		else
+			return useFramePixels = value;
 	}
 }
