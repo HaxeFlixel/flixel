@@ -6,12 +6,6 @@ import openfl.Vector;
  * ...
  * @author Zaphod
  */
-typedef DrawData<T> =	#if ((openfl >= "4.0.0") || flash)
-							Vector<T>
-						#else 
-							Array<T>
-						#end;
-
 typedef FlxDrawQuadsCommand =		#if (openfl >= "4.0.0")
 										flixel.system.render.hardware.gl.FlxDrawQuadsCommand
 									#else 
@@ -28,5 +22,4 @@ enum FlxDrawItemType
 {
 	QUADS;
 	TRIANGLES;
-	SINGLE_QUAD;
 }

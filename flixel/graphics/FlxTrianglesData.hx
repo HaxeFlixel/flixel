@@ -3,13 +3,13 @@ package flixel.graphics;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.ds.StringMap;
 import haxe.xml.Fast;
 import openfl.Assets;
+import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.Sprite;
 
@@ -57,11 +57,11 @@ class FlxTrianglesData implements IFlxDestroyable
 			var uv:Array<Int> = sprite.node.verticesUV.innerData.toString().split(' ').map(function (str:String) return Std.parseInt(str));
 			var vertices:Array<Float> = sprite.node.vertices.innerData.toString().split(' ').map(function (str:String) return Std.parseFloat(str));
 			
-			var drawIndices:DrawData<Int> = new DrawData<Int>();
+			var drawIndices:Vector<Int> = new Vector<Int>();
 			for (i in 0...indices.length)
 				drawIndices[i] = indices[i];
 			
-			var drawUV:DrawData<Float> = new DrawData<Float>();
+			var drawUV:Vector<Float> = new Vector<Float>();
 			var uvCoord:Float;
 			for (i in 0...uv.length)
 			{
@@ -70,7 +70,7 @@ class FlxTrianglesData implements IFlxDestroyable
 				drawUV[i] = uvCoord;
 			}
 			
-			var drawVertices:DrawData<Float> = new DrawData<Float>();
+			var drawVertices:Vector<Float> = new Vector<Float>();
 			for (i in 0...vertices.length)
 				drawVertices[i] = vertices[i];
 			
@@ -119,15 +119,15 @@ class FlxTrianglesData implements IFlxDestroyable
 				}
 			}
 			
-			var drawVertices:DrawData<Float> = new DrawData<Float>();
+			var drawVertices:Vector<Float> = new Vector<Float>();
 			for (i in 0...mesh.v2.length)
 				drawVertices[i] = mesh.v2[i];
 			
-			var drawUV:DrawData<Float> = new DrawData<Float>();
+			var drawUV:Vector<Float> = new Vector<Float>();
 			for (i in 0...mesh.uv.length)
 				drawUV[i] = mesh.uv[i];
 			
-			var drawIndices:DrawData<Int> = new DrawData<Int>();
+			var drawIndices:Vector<Int> = new Vector<Int>();
 			for (i in 0...mesh.tri.length)
 				drawIndices[i] = mesh.tri[i];
 			
@@ -181,19 +181,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices(default, set):DrawData<Float> = new DrawData<Float>();
+	public var vertices(default, set):Vector<Float> = new Vector<Float>();
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvs(default, set):DrawData<Float> = new DrawData<Float>();
+	public var uvs(default, set):Vector<Float> = new Vector<Float>();
 	/**
 	 * A `Vector` of colors for each vertex.
 	 */
-	public var colors(default, set):DrawData<FlxColor> = new DrawData<FlxColor>();
+	public var colors(default, set):Vector<FlxColor> = new Vector<FlxColor>();
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices(default, set):DrawData<Int> = new DrawData<Int>();
+	public var indices(default, set):Vector<Int> = new Vector<Int>();
 	
 	/**
 	 * Bounding box for all vertices of this data object.
@@ -383,25 +383,25 @@ class FlxTrianglesData implements IFlxDestroyable
 		return pixels;
 	}
 	
-	private function set_vertices(value:DrawData<Float>):DrawData<Float>
+	private function set_vertices(value:Vector<Float>):Vector<Float>
 	{
 		verticesDirty = verticesDirty || (value != null);
 		return vertices = value;
 	}
 	
-	private function set_uvs(value:DrawData<Float>):DrawData<Float>
+	private function set_uvs(value:Vector<Float>):Vector<Float>
 	{
 		uvtDirty = uvtDirty || (value != null);
 		return uvs = value;
 	}
 	
-	private function set_colors(value:DrawData<FlxColor>):DrawData<FlxColor>
+	private function set_colors(value:Vector<FlxColor>):Vector<FlxColor>
 	{
 		colorsDirty = colorsDirty || (value != null);
 		return colors = value;
 	}
 	
-	private function set_indices(value:DrawData<Int>):DrawData<Int>
+	private function set_indices(value:Vector<Int>):Vector<Int>
 	{
 		indicesDirty = indicesDirty || (value != null);
 		return indices = value;

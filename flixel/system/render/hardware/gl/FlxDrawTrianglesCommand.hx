@@ -1,6 +1,7 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.FlxCamera;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
@@ -73,38 +74,23 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	{
 		// init! init!
 		setContext(context);
-		checkRenderTarget();
-		setShader();
+		context.checkRenderTarget(buffer);
+		shader = setShader(material.shader);
 		renderStrip();
 	}
 	
-	private function setShader():FlxShader
+	override private function setShader(shader:FlxShader):FlxShader
 	{
 		if (shader == null)
 			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
 		
-		if (shader != FlxDrawHardwareCommand.currentShader) // TODO: move this block to context helper...
-		{
-			context.shaderManager.setShader(shader);
-			FlxDrawHardwareCommand.currentShader = shader;
-		}
-		
+		context.setShader(shader);
 		return shader;
 	}
 	
 	private function renderStrip():Void
 	{
-		if (bitmap != null)
-		{
-			gl.activeTexture(gl.TEXTURE0);
-			gl.bindTexture(gl.TEXTURE_2D, bitmap.getTexture(gl));
-			
-			GLUtils.setTextureSmoothing(material.smoothing);
-			GLUtils.setTextureWrapping(material.repeat);
-			
-			gl.uniform2f(shader.data.uTextureSize.index, bitmap.width, bitmap.height);
-		}
-		
+		context.setBitmap(bitmap, material.smoothing, material.repeat);
 		material.apply(gl);
 		
 		var red:Float = 1.0;
@@ -143,7 +129,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		gl.uniformMatrix4fv(shader.data.uModel.index, false, matrix4);
 		#end
 		
-		context.blendModeManager.setBlendMode(material.blendMode);
+		context.setBlendMode(material.blendMode);
 		
 		data.updateVertices();
 		gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, 0, 0);

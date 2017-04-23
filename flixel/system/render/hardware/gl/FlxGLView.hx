@@ -61,7 +61,7 @@ class FlxGLView extends FlxCameraView
 	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
-	public var debugLayer:Sprite;
+	public var debugLayer:GLDebugRenderer;
 	#end
 	
 	private var context:GLContextHelper;
@@ -86,11 +86,11 @@ class FlxGLView extends FlxCameraView
 		flashSprite.addChild(_scrollRect);
 	//	_scrollRect.scrollRect = new Rectangle(); // TODO: fix scroll rects...
 		
-		_canvas = new CanvasGL(camera.width, camera.height);
+		_canvas = new CanvasGL(camera.width, camera.height, context);
 		_scrollRect.addChild(_canvas);
 		
 		#if FLX_DEBUG
-		debugLayer = new Sprite();
+		debugLayer = new GLDebugRenderer(camera.width, camera.height, context);
 		_scrollRect.addChild(debugLayer);
 		#end
 	}
@@ -127,7 +127,8 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, material);
+		var bitmap = frame.parent.bitmap;
+		var drawItem = (material.batchable) ? getTexturedTilesCommand(bitmap, material) : getSingleTextureQuadCommand(bitmap, material);
 		
 		_helperMatrix.copyFrom(matrix);
 		
@@ -150,7 +151,8 @@ class FlxGLView extends FlxCameraView
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
-		var drawItem = getTexturedTilesCommand(frame.parent.bitmap, material);
+		var bitmap = frame.parent.bitmap;
+		var drawItem = (material.batchable) ? getTexturedTilesCommand(bitmap, material) : getSingleTextureQuadCommand(bitmap, material);
 		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
@@ -192,15 +194,13 @@ class FlxGLView extends FlxCameraView
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		var drawItem = getColoredTilesCommand(material);
-		
 		_helperMatrix.copyFrom(matrix);
-		
 		if (_useRenderMatrix)
 			_helperMatrix.concat(_renderMatrix);
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
+		var drawItem = (material.batchable) ? getColoredTilesCommand(material) : getSingleColorQuadCommand(material);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, material);
 	}
 	
@@ -318,10 +318,8 @@ class FlxGLView extends FlxCameraView
 		_fillRect.set(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
 		
 		_helperMatrix.identity();
-	//	var drawItem = getColoredTilesCommand(DefaultColorMaterial);
 		var drawItem = getSingleColorQuadCommand(DefaultColorMaterial);
 		drawItem.addColorQuad(_fillRect, _helperMatrix, Color, FxAlpha, DefaultColorMaterial);
-		drawItem.flush();
 	}
 	
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
@@ -347,7 +345,8 @@ class FlxGLView extends FlxCameraView
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
-		debugLayer.graphics.clear();
+		debugLayer.prepare();
+		debugLayer.clear();
 		#end
 		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 	}
@@ -355,7 +354,10 @@ class FlxGLView extends FlxCameraView
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
 		render();
-		FlxDrawHardwareCommand.resetFrameBuffer();
+		#if FLX_DEBUG
+		debugLayer.finish();
+		#end
+		context.resetFrameBuffer();
 	}
 	
 	override public function offsetView(X:Float, Y:Float):Void 
@@ -367,7 +369,8 @@ class FlxGLView extends FlxCameraView
 	override public function beginDrawDebug():Graphics 
 	{
 		#if FLX_DEBUG
-		return debugLayer.graphics;
+		return null; // TODO: fix this...
+	//	return debugLayer.graphics;
 		#else
 		return null;
 		#end
@@ -458,6 +461,8 @@ class FlxGLView extends FlxCameraView
 	
 	private inline function getColoredTilesCommand(material:FlxMaterial)
 	{
+		// TODO: optimize this stuff...
+		
 		if (_currentCommand != null && _currentCommand != _coloredQuads)
 			_currentCommand.flush();
 		else if ((_currentCommand == _coloredQuads) && (!_coloredQuads.equals(FlxDrawItemType.QUADS, null, true, false, material) || _coloredQuads.numQuads >= _coloredQuads.size))
@@ -468,12 +473,22 @@ class FlxGLView extends FlxCameraView
 		return _coloredQuads;
 	}
 	
+	private inline function getSingleTextureQuadCommand(bitmap:BitmapData, material:FlxMaterial)
+	{
+		if (_currentCommand != null)
+			_currentCommand.flush();
+		
+		_currentCommand = _singleTexturedQuad;
+		_singleTexturedQuad.set(bitmap, true, true, material);
+		return _singleTexturedQuad;
+	}
+	
 	private inline function getSingleColorQuadCommand(material:FlxMaterial)
 	{
 		if (_currentCommand != null)
 			_currentCommand.flush();
 		
-		_currentCommand = null;
+		_currentCommand = _singleColoredQuad;
 		_singleColoredQuad.set(null, true, false, material);
 		return _singleColoredQuad;
 	}
@@ -491,12 +506,8 @@ class FlxGLView extends FlxCameraView
 	
 	override private inline function render():Void
 	{
-		// TODO: use this var in other way...
-		
 		if (_currentCommand != null)
 			_currentCommand.flush();
-			
-	//	FlxDrawHardwareCommand.currentShader = null;
 	}
 	
 	// TODO: rename it to buffer...

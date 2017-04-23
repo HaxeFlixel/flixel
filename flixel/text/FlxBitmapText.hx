@@ -532,8 +532,6 @@ class FlxBitmapText extends FlxSprite
 			}
 		}
 		
-		// TODO: continue from here...
-		
 		if (!autoSize)
 		{
 			if (wordWrap)

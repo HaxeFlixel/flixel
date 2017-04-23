@@ -16,22 +16,6 @@ import lime.math.Matrix4;
  */
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
-	public static var currentShader:FlxShader = null; // TODO: move this var to context helper...
-	
-	public static var currentBuffer:RenderTexture = null; // TODO: move this var to context helper...
-	
-	public static function resetFrameBuffer():Void // TODO: move this method to context helper...
-	{
-		if (currentBuffer != null)
-		{
-			GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-			GL.disable(GL.SCISSOR_TEST);
-		}
-		
-		currentBuffer = null;
-		currentShader = null;
-	}
-	
 	private var uniformMatrix:Matrix4;
 	
 	private var context:GLContextHelper;
@@ -50,23 +34,15 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		this.uniformMatrix = uniformMatrix;
 		this.context = context;
 		this.buffer = buffer;
-		
-		FlxDrawHardwareCommand.currentBuffer = null;
-	}
-	
-	public function checkRenderTarget():Void
-	{
-		if (FlxDrawHardwareCommand.currentBuffer != buffer)
-		{
-			FlxDrawHardwareCommand.currentBuffer = buffer;
-			
-			// set render target and configure viewport.
-			gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.frameBuffer);
-			gl.viewport(0, 0, buffer.width, buffer.height);
-		}
+		context.currentBuffer = null;
 	}
 	
 	public function flush():Void {}
+	
+	private function setShader(shader:FlxShader):FlxShader 
+	{
+		return shader;
+	}
 	
 	override public function destroy():Void 
 	{

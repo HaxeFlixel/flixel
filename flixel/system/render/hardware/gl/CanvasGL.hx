@@ -24,8 +24,6 @@ import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
-// TODO: multitexture batching...
-
 /**
  * Display object for actual rendering for openfl 4 in tile render mode.
  * Huge part of it is taken from HaxePunk fork by @Yanrishatum. 
@@ -51,10 +49,13 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 	private var colorFilter:ColorTransformFilter;
 	private var filtersArray:Array<BitmapFilter>;
 	
-	public function new(width:Int, height:Int)
+	private var context:GLContextHelper;
+	
+	public function new(width:Int, height:Int, context:GLContextHelper)
 	{
 		super();
 		
+		this.context = context;
 		resize(width, height);
 		
 		colorFilter = new ColorTransformFilter();
@@ -67,6 +68,7 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		
 		projection = null;
 		projectionFlipped = null;
+		context = null;
 		
 		colorFilter = null;
 		filtersArray = null;
@@ -86,11 +88,9 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 	
 	public function clear():Void
 	{
-		var gl = GL.context;
-		gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.frameBuffer);
-		gl.viewport(0, 0, buffer.width, buffer.height);
-		buffer.clear(0, 0, 0, 1.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-		FlxDrawHardwareCommand.currentBuffer = buffer;
+		var gl = context.gl;
+		context.checkRenderTarget(buffer);
+		buffer.clear(0.0, 0, 0, 0.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	}
 	
 	@:access(openfl.geom.Rectangle)
@@ -201,7 +201,7 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 		
 	//	GL.disable(GL.SCISSOR_TEST);
 		
-		FlxDrawHardwareCommand.currentShader = null;
+		context.currentShader = null;
 		
 		for (child in __children) 
 			child.__renderGL(renderSession);

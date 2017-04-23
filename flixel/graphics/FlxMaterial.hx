@@ -20,8 +20,6 @@ import openfl.display.ShaderParameterType;
 @:access(openfl.display.ShaderParameter)
 @:access(openfl.display.Shader)
 
-// TODO: single quad draw element...
-
 class FlxMaterial implements IFlxDestroyable
 {
 	/**
@@ -67,7 +65,7 @@ class FlxMaterial implements IFlxDestroyable
 	/**
 	 * Tells if this material should be batched.
 	 */
-	public var batchable:Bool = false; // TODO: use this property...
+	public var batchable:Bool = true;
 	
 	#if (openfl >= "4.0.0")
 	private var inputTextures:Array<ShaderInput<BitmapData>>;

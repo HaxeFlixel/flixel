@@ -90,6 +90,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 */
 	public var numQuads(default, null):Int = 0;
 	
+	private var vertexIndex:Int = 0;
+	
 	public var canAddQuad(get, null):Bool;
 	
 	private var dirty:Bool = true;
@@ -101,6 +103,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private var vertexBuffer:GLBuffer;
 	
+	private var stride:Int;
+	
 	public function new(textured:Bool = true, size:Int = 0)
 	{
 		super();
@@ -110,9 +114,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			size = FlxCameraView.QUADS_PER_BATCH;
 		
 		this.size = size;
-		
-		var elementsPerVertex:Int = (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 		this.textured = textured;
+		stride = Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
 		
 		// The total number of bytes in our batch
 		verticesNumBytes = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
@@ -207,53 +210,58 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var intX:Int, intY:Int;
 		
+		var x1:Float, y1:Float,
+			x2:Float, y2:Float,
+			x3:Float, y3:Float,
+			x4:Float, y4:Float;
+		
 		if (roundPixels)
 		{
 			intX = Std.int(tx);
 			intY = Std.int(ty);
 			
 			// xy
-			positions[i] = intX; 							// 0 * a + 0 * c + tx | 0;
-			positions[i + 1] = intY; 						// 0 * b + 0 * d + ty | 0;
+			x1 = intX; 						// 0 * a + 0 * c + tx | 0;
+			y1 = intY; 						// 0 * b + 0 * d + ty | 0;
 			
 			// xy
-			positions[i + 3] = w * a + intX;				// w * a + 0 * c + tx | 0;
-			positions[i + 4] = w * b + intY;				// w * b + 0 * d + ty | 0;
+			x2 = w * a + intX;				// w * a + 0 * c + tx | 0;
+			y2 = w * b + intY;				// w * b + 0 * d + ty | 0;
 			
 			// xy
-			positions[i + 6] = h * c + intX;				// 0 * a + h * c + tx | 0;
-			positions[i + 7] = h * d + intY;				// 0 * b + h * d + ty | 0;
+			x3 = h * c + intX;				// 0 * a + h * c + tx | 0;
+			y3 = h * d + intY;				// 0 * b + h * d + ty | 0;
 			
 			// xy
-			positions[i + 9] = w * a + h * c + intX;
-			positions[i + 10] = w * b + h * d + intY;
+			x4 = w * a + h * c + intX;
+			y4 = w * b + h * d + intY;
 		}
 		else
 		{
 			// xy
-			positions[i] = tx;
-			positions[i + 1] = ty;
+			x1 = tx;
+			y1 = ty;
 			
 			// xy
-			positions[i + 3] = w * a + tx;
-			positions[i + 4] = w * b + ty;
+			x2 = w * a + tx;
+			y2 = w * b + ty;
 			
 			// xy
-			positions[i + 6] = h * c + tx;
-			positions[i + 7] = h * d + ty;
+			x3 = h * c + tx;
+			y3 = h * d + ty;
 			
 			// xy
-			positions[i + 9] = w * a + h * c + tx;
-			positions[i + 10] = w * b + h * d + ty;
+			x4 = w * a + h * c + tx;
+			y4 = w * b + h * d + ty;
 		}
 		
 		color.alphaFloat = alpha;
-		colors[i + 2] = colors[i + 5] = colors[i + 8] = colors[i + 11] = color;
 		
-		var state:RenderState = states[numQuads];
-		state.set(null, material);
-		
-		numQuads++;
+		startQuad(null, material);
+		addColoredVertex(x1, y1, color);
+		addColoredVertex(x2, y2, color);
+		addColoredVertex(x3, y3, color);
+		addColoredVertex(x4, y4, color);
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
@@ -269,8 +277,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var uvx2:Float = uv.width;
 		var uvy2:Float = uv.height;
 		
-		var i = numQuads * Float32Array.BYTES_PER_ELEMENT * FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX;
-		
 		var w:Float = rect.width;
 		var h:Float = rect.height;
 		
@@ -283,61 +289,50 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var intX:Int, intY:Int;
 		
+		var x1:Float, y1:Float,
+			x2:Float, y2:Float,
+			x3:Float, y3:Float,
+			x4:Float, y4:Float;
+		
 		if (roundPixels)
 		{
 			intX = Std.int(tx);
 			intY = Std.int(ty);
 			
 			// xy
-			positions[i] = intX; 							// 0 * a + 0 * c + tx | 0;
-			positions[i + 1] = intY; 						// 0 * b + 0 * d + ty | 0;
+			x1 = intX; 						// 0 * a + 0 * c + tx | 0;
+			y1 = intY; 						// 0 * b + 0 * d + ty | 0;
 			
 			// xy
-			positions[i + 6] = w * a + intX;				// w * a + 0 * c + tx | 0;
-			positions[i + 7] = w * b + intY;				// w * b + 0 * d + ty | 0;
+			x2 = w * a + intX;				// w * a + 0 * c + tx | 0;
+			y2 = w * b + intY;				// w * b + 0 * d + ty | 0;
 			
 			// xy
-			positions[i + 12] = h * c + intX;				// 0 * a + h * c + tx | 0;
-			positions[i + 13] = h * d + intY;				// 0 * b + h * d + ty | 0;
+			x3 = h * c + intX;				// 0 * a + h * c + tx | 0;
+			y3 = h * d + intY;				// 0 * b + h * d + ty | 0;
 			
 			// xy
-			positions[i + 18] = w * a + h * c + intX;
-			positions[i + 19] = w * b + h * d + intY;
+			x4 = w * a + h * c + intX;
+			y4 = w * b + h * d + intY;
 		}
 		else
 		{
 			// xy
-			positions[i] = tx;
-			positions[i + 1] = ty;
+			x1 = tx;
+			y1 = ty;
 			
 			// xy
-			positions[i + 6] = w * a + tx;
-			positions[i + 7] = w * b + ty;
+			x2 = w * a + tx;
+			y2 = w * b + ty;
 			
 			// xy
-			positions[i + 12] = h * c + tx;
-			positions[i + 13] = h * d + ty;
+			x3 = h * c + tx;
+			y3 = h * d + ty;
 			
 			// xy
-			positions[i + 18] = w * a + h * c + tx;
-			positions[i + 19] = w * b + h * d + ty;
+			x4 = w * a + h * c + tx;
+			y4 = w * b + h * d + ty;
 		}
-		
-		// uv
-		positions[i + 2] = uvx;
-		positions[i + 3] = uvy;
-		
-		// uv
-		positions[i + 8] = uvx2;
-		positions[i + 9] = uvy;
-		
-		// uv
-		positions[i + 14] = uvx;
-		positions[i + 15] = uvy2;
-		
-		// uv
-		positions[i + 20] = uvx2;
-		positions[i + 21] = uvy2;
 		
 		var tint = 0xFFFFFF, color = 0xFFFFFFFF;
 		
@@ -347,24 +342,48 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			color = (Std.int(transform.alphaMultiplier * 255) & 0xFF) << 24 | tint;
 		}
 		
-		colors[i + 4] = colors[i + 10] = colors[i + 16] = colors[i + 22] = color;
-		
 		tint = 0x000000;
-		color = 0x00000000;
+		var colorOffset = 0x00000000;
 		
 		// update color offsets
 		if (transform != null)
 		{
 			tint = Std.int(transform.redOffset) << 16 | Std.int(transform.greenOffset) << 8 | Std.int(transform.blueOffset);
-			color = (Std.int(transform.alphaOffset) & 0xFF) << 24 | tint;
+			colorOffset = (Std.int(transform.alphaOffset) & 0xFF) << 24 | tint;
 		}
 		
-		colors[i + 5] = colors[i + 11] = colors[i + 17] = colors[i + 23] = color;
+		startQuad(bitmap, material);
+		addTexturedVertex(x1, y1, uvx, uvy, color, colorOffset);
+		addTexturedVertex(x2, y2, uvx2, uvy, color, colorOffset);
+		addTexturedVertex(x3, y3, uvx, uvy2, color, colorOffset);
+		addTexturedVertex(x4, y4, uvx2, uvy2, color, colorOffset);
+	}
+	
+	public inline function startQuad(bitmap:BitmapData, material:FlxMaterial):Void
+	{
+		if (!canAddQuad)
+			flush();
 		
 		var state:RenderState = states[numQuads];
 		state.set(bitmap, material);
-		
 		numQuads++;
+	}
+	
+	public inline function addTexturedVertex(x:Float = 0, y:Float = 0, u:Float = 0, v:Float = 0, color:Int = FlxColor.WHITE, colorOffset:FlxColor = FlxColor.TRANSPARENT):Void
+	{
+		positions[vertexIndex++] = x;
+		positions[vertexIndex++] = y;
+		positions[vertexIndex++] = u;
+		positions[vertexIndex++] = v;
+		colors[vertexIndex++] = color;
+		colors[vertexIndex++] = colorOffset;
+	}
+	
+	public inline function addColoredVertex(x:Float = 0, y:Float = 0, color:Int = FlxColor.WHITE):Void
+	{
+		positions[vertexIndex++] = x;
+		positions[vertexIndex++] = y;
+		colors[vertexIndex++] = color;
 	}
 	
 	override public function flush():Void
@@ -372,7 +391,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (numQuads == 0)
 			return;
 		
-		checkRenderTarget();
+		context.checkRenderTarget(buffer);
 		
 		var batchSize:Int = 0;
 		var startIndex:Int = 0;
@@ -380,7 +399,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var state:RenderState = states[0];
 		var currentMaterial:FlxMaterial = state.material;
 		
-		shader = setShader(currentMaterial);
+		shader = setShader(currentMaterial.shader);
 		uploadData();
 		
 		currentMaterial.apply(gl);
@@ -392,15 +411,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var currentBlendMode:BlendMode;
 		var nextBlendMode:BlendMode;
 		currentBlendMode = nextBlendMode = currentMaterial.blendMode;
-		context.blendModeManager.setBlendMode(currentBlendMode);
+		context.setBlendMode(currentBlendMode);
 		
 		var currentSmoothing:Bool;
 		var nextSmoothing:Bool;
 		currentSmoothing = nextSmoothing = currentMaterial.smoothing;
-		
-		var blendSwap:Bool = false;
-		var textureSwap:Bool = false;
-		var smoothingSwap:Bool = false;
 		
 		if (numQuads == 1)
 		{
@@ -408,6 +423,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			reset();
 			return;
 		}
+		
+		var blendSwap:Bool = false;
+		var textureSwap:Bool = false;
+		var smoothingSwap:Bool = false;
 		
 		for (i in 0...numQuads)
 		{
@@ -434,7 +453,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 				if (blendSwap)
 				{
 					currentBlendMode = nextBlendMode;
-					context.blendModeManager.setBlendMode(currentBlendMode);
+					context.setBlendMode(currentBlendMode);
 				}
 			}
 			
@@ -453,21 +472,16 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		dirty = true;
 		numQuads = 0;
+		vertexIndex = 0;
 	}
 	
-	private inline function setShader(material:FlxMaterial):FlxShader
+	override private inline function setShader(shader:FlxShader):FlxShader
 	{
-		var shader:FlxShader = material.shader;
-		
 		if (shader == null)
 			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
 		
-		if (shader != FlxDrawHardwareCommand.currentShader)
-		{
-			context.shaderManager.setShader(shader);
+		if (context.setShader(shader))
 			context.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-			FlxDrawHardwareCommand.currentShader = shader;
-		}
 		
 		return shader;
 	}
@@ -480,8 +494,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 			
-			// this is the same for each shader?
-			var stride:Int = Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
 			var offset:Int = 0;
 			
 			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, stride, offset);
@@ -499,10 +511,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 			// quads also have color offset attribute, so we'll need to activate it also...
 			if (textured)
-			{
-				// color offsets will be interpreted as unsigned bytes and normalized
 				gl.vertexAttribPointer(shader.data.aColorOffset.index, 4, gl.UNSIGNED_BYTE, true, stride, offset);
-			}
 		}
 		
 		// upload the verts to the buffer  
@@ -539,22 +548,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (numQuads == 0)
 			return;
 		
-		if (bitmap != null)
-		{
-			gl.activeTexture(gl.TEXTURE0);
-			gl.bindTexture(GL.TEXTURE_2D, bitmap.getTexture(gl));
-			
-			gl.uniform1i(shader.data.uImage0.index, 0);
-			
-			GLUtils.setTextureSmoothing(material.smoothing);
-			GLUtils.setTextureWrapping(material.repeat);
-			
-			gl.uniform2f(shader.data.uTextureSize.index, bitmap.width, bitmap.height);
-		}
+		context.setBitmap(bitmap, material.smoothing, material.repeat);
 		
 		// now draw those suckas!
 		gl.drawElements(gl.TRIANGLES, size * FlxCameraView.INDICES_PER_QUAD, gl.UNSIGNED_SHORT, startIndex * FlxCameraView.INDICES_PER_QUAD * BYTES_PER_INDEX);
-		
 		FlxCameraView.drawCalls++;
 	}
 	

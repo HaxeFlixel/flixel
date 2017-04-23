@@ -5,9 +5,9 @@ import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.render.common.DrawItem.DrawData;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.Vector;
 import openfl.display.BitmapData;
 
 /**
@@ -28,19 +28,19 @@ class FlxStrip extends FlxSprite
 	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices(get, set):DrawData<Float>;
+	public var vertices(get, set):Vector<Float>;
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices(get, set):DrawData<Int>;
+	public var indices(get, set):Vector<Int>;
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvtData(get, set):DrawData<Float>;
+	public var uvtData(get, set):Vector<Float>;
 	/**
 	 * A `Vector` of colors for each vertex.
 	 */
-	public var colors(get, set):DrawData<FlxColor>;
+	public var colors(get, set):Vector<FlxColor>;
 	
 	/**
 	 * Tells to repeat texture of the sprite if uv coordinates go outside of bounds [0.0-1.0].
@@ -154,42 +154,42 @@ class FlxStrip extends FlxSprite
 		return framePixels;
 	}
 	
-	private function get_vertices():DrawData<Float>
+	private function get_vertices():Vector<Float>
 	{
 		return data.vertices;
 	}
 	
-	private function set_vertices(value:DrawData<Float>):DrawData<Float>
+	private function set_vertices(value:Vector<Float>):Vector<Float>
 	{
 		return data.vertices = value;
 	}
 	
-	private function get_indices():DrawData<Int>
+	private function get_indices():Vector<Int>
 	{
 		return data.indices;
 	}
 	
-	private function set_indices(value:DrawData<Int>):DrawData<Int>
+	private function set_indices(value:Vector<Int>):Vector<Int>
 	{
 		return data.indices = value;
 	}
 	
-	private function get_uvtData():DrawData<Float>
+	private function get_uvtData():Vector<Float>
 	{
 		return data.uvs;
 	}
 	
-	private function set_uvtData(value:DrawData<Float>):DrawData<Float>
+	private function set_uvtData(value:Vector<Float>):Vector<Float>
 	{
 		return data.uvs = value;
 	}
 	
-	private function get_colors():DrawData<FlxColor>
+	private function get_colors():Vector<FlxColor>
 	{
 		return data.colors;
 	}
 	
-	private function set_colors(value:DrawData<FlxColor>):DrawData<FlxColor>
+	private function set_colors(value:Vector<FlxColor>):Vector<FlxColor>
 	{
 		return data.colors = value;
 	}
