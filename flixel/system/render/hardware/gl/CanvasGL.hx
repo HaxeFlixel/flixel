@@ -180,7 +180,6 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 	//	GL.scissor(0, 0, Std.int(FlxG.stage.stageWidth * 0.5), Std.int(FlxG.stage.stageHeight * 0.5));
 		
 		var shader = renderSession.filterManager.pushObject(this);
-	//	shader.data.uMatrix.value = renderer.getMatrix(__worldTransform);
 		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		

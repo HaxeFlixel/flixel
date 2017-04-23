@@ -45,45 +45,18 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	/**
 	 * Holds the indices
 	 */
-	private static var indices:UInt16Array;
+	private var indices:UInt16Array;
 	
-	private static var indicesNumBytes:Int = 0;
+	private var indicesNumBytes:Int = 0;
 	
-	private static var indexBuffer:GLBuffer;
-	
-	private static var gl:GLRenderContext;
-	
-	/**
-	 * Creates index buffer (`GLBuffer` object) general for all `FlxDrawQuadsCommand` objects, if its not been created yet.
-	 * @param	gl	rendering context, which will be used for creating buffer.
-	 */
-	private static function createIndexBuffer(gl:GLRenderContext):Void
-	{
-		if (FlxDrawQuadsCommand.gl == null || FlxDrawQuadsCommand.gl != gl)
-		{
-			FlxDrawQuadsCommand.gl = gl;
-			
-			//upload the index data
-			if (indexBuffer == null)
-			{
-				indexBuffer = gl.createBuffer();
-				GL.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-				
-				#if (openfl >= "4.9.0")
-				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, gl.STATIC_DRAW);
-				#else
-				gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-				#end
-			}
-		}
-	}
+	private var indexBuffer:GLBuffer;
 	
 	/**
 	 * Default tile shader.
 	 */
-	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
+	public static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
 	
-	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
+	public static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	
 	public var roundPixels:Bool = false;
 	
@@ -128,12 +101,15 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private var vertexBuffer:GLBuffer;
 	
-	public function new(textured:Bool = true) 
+	public function new(textured:Bool = true, size:Int = 0)
 	{
 		super();
 		type = FlxDrawItemType.QUADS;
 		
-		this.size = FlxCameraView.QUADS_PER_BATCH;
+		if (size <= 0)
+			size = FlxCameraView.QUADS_PER_BATCH;
+		
+		this.size = size;
 		
 		var elementsPerVertex:Int = (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 		this.textured = textured;
@@ -145,45 +121,42 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		positions = new Float32Array(vertices);
 		colors = new UInt32Array(vertices);
 		
-		if (FlxDrawQuadsCommand.indices == null)
+		// The total number of indices in our batch
+		var numIndices:Int = size * FlxCameraView.INDICES_PER_QUAD;
+		indicesNumBytes = numIndices * UInt16Array.BYTES_PER_ELEMENT;
+		indices = new UInt16Array(numIndices);
+		
+		var indexPos:Int = 0;
+		var index:Int = 0;
+		
+		while (indexPos < numIndices)
 		{
-			// The total number of indices in our batch
-			var numIndices:Int = size * FlxCameraView.INDICES_PER_QUAD;
-			FlxDrawQuadsCommand.indicesNumBytes = numIndices * UInt16Array.BYTES_PER_ELEMENT;
-			FlxDrawQuadsCommand.indices = new UInt16Array(numIndices);
+			indices[indexPos + 0] = index + 0;
+			indices[indexPos + 1] = index + 1;
+			indices[indexPos + 2] = index + 2;
+			indices[indexPos + 3] = index + 1;
+			indices[indexPos + 4] = index + 3;
+			indices[indexPos + 5] = index + 2;
 			
-			var indexPos:Int = 0;
-			var index:Int = 0;
-			
-			while (indexPos < numIndices)
-			{
-				FlxDrawQuadsCommand.indices[indexPos + 0] = index + 0;
-				FlxDrawQuadsCommand.indices[indexPos + 1] = index + 1;
-				FlxDrawQuadsCommand.indices[indexPos + 2] = index + 2;
-				FlxDrawQuadsCommand.indices[indexPos + 3] = index + 1;
-				FlxDrawQuadsCommand.indices[indexPos + 4] = index + 3;
-				FlxDrawQuadsCommand.indices[indexPos + 5] = index + 2;
-				
-				indexPos += FlxCameraView.INDICES_PER_QUAD;
-				index += FlxCameraView.VERTICES_PER_QUAD;
-			}
+			indexPos += FlxCameraView.INDICES_PER_QUAD;
+			index += FlxCameraView.VERTICES_PER_QUAD;
 		}
 		
 		for (i in 0...size)
 			states[i] = new RenderState();
 	}
 	
-	private function setContext(context:GLContextHelper):Void
+	override private function setContext(context:GLContextHelper):Void
 	{
-		if (this.context == null || this.context.gl != context.gl)
+		if (this.gl == null || this.gl != context.gl)
 		{
-			var gl:GLRenderContext = context.gl;
-			FlxDrawQuadsCommand.createIndexBuffer(gl);
+			super.setContext(context);
+			
+			createIndexBuffer(gl);
 			
 			// create a couple of buffers
 			vertexBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-			
 			#if (openfl >= "4.9.0")
 			gl.bufferData(gl.ARRAY_BUFFER, verticesNumBytes, positions, gl.DYNAMIC_DRAW);
 			#else
@@ -194,21 +167,28 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		this.context = context;
 	}
 	
+	/**
+	 * Creates index buffer (`GLBuffer` object) if its not been created yet.
+	 * @param	gl	rendering context, which will be used for creating buffer.
+	 */
+	private function createIndexBuffer(gl:GLRenderContext):Void
+	{
+		//upload the index data
+		indexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		
+		#if (openfl >= "4.9.0")
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, gl.STATIC_DRAW);
+		#else
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+		#end
+	}
+	
 	override public function prepare(uniformMatrix:Matrix4, context:GLContextHelper, buffer:RenderTexture):Void
 	{
 		setContext(context);
-		
 		super.prepare(uniformMatrix, context, buffer);
-		
 		reset();
-		start();
-		
-	//	stop();
-	}
-	
-	public function end():Void
-	{
-		flush();
 	}
 	
 	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void
@@ -422,6 +402,13 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var textureSwap:Bool = false;
 		var smoothingSwap:Bool = false;
 		
+		if (numQuads == 1)
+		{
+			renderBatch(currentTexture, 1, 0, currentSmoothing);
+			reset();
+			return;
+		}
+		
 		for (i in 0...numQuads)
 		{
 			state = states[i];
@@ -457,9 +444,15 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		renderBatch(currentTexture, batchSize, startIndex, currentSmoothing);
 		
 		// then reset the batch!
-		numQuads = 0;
+		reset();
+	}
+	
+	override public function reset():Void 
+	{
+		super.reset();
+		
 		dirty = true;
-		shader = null;
+		numQuads = 0;
 	}
 	
 	private inline function setShader(material:FlxMaterial):FlxShader
@@ -472,7 +465,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (shader != FlxDrawHardwareCommand.currentShader)
 		{
 			context.shaderManager.setShader(shader);
-			context.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, FlxDrawQuadsCommand.indexBuffer);
+			context.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			FlxDrawHardwareCommand.currentShader = shader;
 		}
 		
@@ -481,8 +474,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private function uploadData():Void
 	{
-		var gl:GLRenderContext = context.gl;
-		
 		if (dirty)
 		{
 			dirty = false;
@@ -548,8 +539,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (numQuads == 0)
 			return;
 		
-		var gl:GLRenderContext = context.gl;
-		
 		if (bitmap != null)
 		{
 			gl.activeTexture(gl.TEXTURE0);
@@ -569,17 +558,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		FlxCameraView.drawCalls++;
 	}
 	
-	public function start():Void
-	{
-		dirty = true;
-	}
-	
-	public function stop():Void
-	{
-		flush();
-		dirty = true;
-	}
-	
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -590,6 +568,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		shader = null;
 		
 		vertexBuffer = GLUtils.destroyBuffer(vertexBuffer);
+		indexBuffer = GLUtils.destroyBuffer(indexBuffer);
 		states = FlxDestroyUtil.destroyArray(states);
 	}
 	
@@ -630,7 +609,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 class RenderState implements IFlxDestroyable
 {
 	public var bitmap:BitmapData;
-	
 	public var material:FlxMaterial;
 	
 	public function new() {}

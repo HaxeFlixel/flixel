@@ -3,6 +3,7 @@ package flixel.system.render.hardware.gl;
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.system.render.hardware.gl.RenderTexture;
+import lime.graphics.GLRenderContext;
 import openfl.gl.GL;
 
 #if FLX_RENDER_GL
@@ -15,11 +16,11 @@ import lime.math.Matrix4;
  */
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
-	public static var currentShader:FlxShader = null;
+	public static var currentShader:FlxShader = null; // TODO: move this var to context helper...
 	
-	public static var currentBuffer:RenderTexture = null;
+	public static var currentBuffer:RenderTexture = null; // TODO: move this var to context helper...
 	
-	public static function resetFrameBuffer():Void
+	public static function resetFrameBuffer():Void // TODO: move this method to context helper...
 	{
 		if (currentBuffer != null)
 		{
@@ -34,6 +35,8 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	private var uniformMatrix:Matrix4;
 	
 	private var context:GLContextHelper;
+	
+	private var gl:GLRenderContext;
 	
 	private var buffer:RenderTexture;
 	
@@ -58,7 +61,6 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 			FlxDrawHardwareCommand.currentBuffer = buffer;
 			
 			// set render target and configure viewport.
-			var gl = context.gl;
 			gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.frameBuffer);
 			gl.viewport(0, 0, buffer.width, buffer.height);
 		}
@@ -70,9 +72,16 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	{
 		uniformMatrix = null;
 		context = null;
+		gl = null;
 		buffer = null;
 		
 		super.destroy();
+	}
+	
+	private function setContext(context:GLContextHelper):Void 
+	{
+		this.context = context;
+		this.gl = context.gl;
 	}
 	
 }

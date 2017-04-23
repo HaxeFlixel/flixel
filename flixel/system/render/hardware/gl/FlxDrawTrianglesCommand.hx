@@ -37,7 +37,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	private static var defaultSingleColoredShader:FlxSingleColoredShader = new FlxSingleColoredShader();
 	
-	private var _vertices:Vector<Float> = new Vector<Float>();
+	private var _vertices:Vector<Float> = new Vector<Float>(); // TODO: remove this and implement gl based debug rendering...
 	
 	public var data:FlxTrianglesData;
 	
@@ -76,7 +76,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	override public function flush():Void
 	{
 		// init! init!
-		setContext(context.gl);
+		setContext(context);
 		checkRenderTarget();
 		setShader();
 		renderStrip();
@@ -103,8 +103,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	private function renderStrip():Void
 	{
-		var gl:GLRenderContext = context.gl;
-		
 		if (bitmap != null)
 		{
 			gl.activeTexture(gl.TEXTURE0);
@@ -189,10 +187,12 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		color = null;
 	}
 	
-	private function setContext(gl:GLRenderContext):Void
+	override private function setContext(context:GLContextHelper):Void 
 	{
+		super.setContext(context);
+		
 		if (data != null)
-			data.setContext(gl);
+			data.setContext(context.gl);
 	}
 	
 	public function drawDebug(camera:FlxCamera):Void
