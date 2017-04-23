@@ -102,7 +102,7 @@ class RenderTexture implements IFlxDestroyable
 	{
 		var gl = GL.context;
 		
-		#if (openfl >= "4.9.0")
+		#if ((openfl >= "4.9.0") && !flash)
 		// code from GLRenderer's resize() method
 		var renderBitmap:BitmapData = BitmapData.fromTexture(Lib.current.stage.stage3Ds[0].context3D.createRectangleTexture(actualWidth, actualHeight, BGRA, true));
 		texture = renderBitmap.getTexture(gl);

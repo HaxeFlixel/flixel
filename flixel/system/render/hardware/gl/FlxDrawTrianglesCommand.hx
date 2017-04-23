@@ -19,9 +19,7 @@ import openfl.geom.Matrix;
 
 #if FLX_RENDER_GL
 import flixel.graphics.shaders.triangles.FlxColoredShader;
-import flixel.graphics.shaders.triangles.FlxSingleColoredShader;
 import flixel.graphics.shaders.triangles.FlxTexturedShader;
-import flixel.graphics.shaders.triangles.FlxTexturedColoredShader;
 
 import lime.math.Matrix4;
 import openfl.gl.GL;
@@ -32,10 +30,8 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	/**
 	 * Default tile shader.
 	 */
-	private static var defaultTextureColoredShader:FlxTexturedColoredShader = new FlxTexturedColoredShader();
 	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
 	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
-	private static var defaultSingleColoredShader:FlxSingleColoredShader = new FlxSingleColoredShader();
 	
 	private var _vertices:Vector<Float> = new Vector<Float>(); // TODO: remove this and implement gl based debug rendering...
 	
@@ -85,14 +81,9 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	private function setShader():FlxShader
 	{
 		if (shader == null)
-		{
-			if (textured)
-				shader = (colored) ? defaultTextureColoredShader : defaultTexturedShader;
-			else
-				shader = (colored) ? defaultColoredShader : defaultSingleColoredShader;
-		}
+			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
 		
-		if (shader != FlxDrawHardwareCommand.currentShader)
+		if (shader != FlxDrawHardwareCommand.currentShader) // TODO: move this block to context helper...
 		{
 			context.shaderManager.setShader(shader);
 			FlxDrawHardwareCommand.currentShader = shader;
@@ -164,12 +155,12 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			GL.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 0, 0);
 		}
 		
-		if (colored)
-		{
+	//	if (colored)
+	//	{
 			// update the colors
 			data.updateColors();
 			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.UNSIGNED_BYTE, true, 0, 0);
-		}
+	//	}
 		
 		data.updateIndices();
 		data.dirty = false;

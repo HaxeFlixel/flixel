@@ -153,11 +153,6 @@ class FlxTrianglesData implements IFlxDestroyable
 	public var numTriangles(get, null):Int;
 	
 	/**
-	 * Tells if triangles have colors applied to vertices.
-	 */
-	public var colored(get, null):Bool;
-	
-	/**
 	 * Tells if all GL buffers should be regenerated before rendering this data object.
 	 */
 	public var dirty(default, set):Bool = true;
@@ -428,11 +423,6 @@ class FlxTrianglesData implements IFlxDestroyable
 		return Std.int(numIndices / 3);
 	}
 	
-	private function get_colored():Bool
-	{
-		return (colors != null) && (colors.length > 0);
-	}
-	
 	#if FLX_RENDER_GL
 	public function setContext(gl:GLRenderContext):Void
 	{
@@ -517,21 +507,26 @@ class FlxTrianglesData implements IFlxDestroyable
 		}
 	}
 	
-	// TODO: update this to upload colors in any way...
 	public function updateColors():Void
 	{
-		if (colors == null)
-			return;
-		
 		if (colorsDirty)
 		{
-			var numColors:Int = colors.length;
+			var useColors:Bool = (colors != null);
+			var numColors:Int = Std.int(vertices.length * 0.5);
 			
 			if (colorsArray == null || colorsArray.length != numColors)
 				colorsArray = new UInt32Array(numColors);
 			
-			for (i in 0...numColors)
-				colorsArray[i] = colors[i];
+			if (useColors)
+			{
+				for (i in 0...numColors)
+					colorsArray[i] = colors[i];
+			}
+			else
+			{
+				for (i in 0...numColors)
+					colorsArray[i] = FlxColor.WHITE;
+			}
 			
 			// update the colors
 			GL.bindBuffer(GL.ARRAY_BUFFER, colorsBuffer);

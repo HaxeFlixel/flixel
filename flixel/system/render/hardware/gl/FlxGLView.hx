@@ -156,7 +156,7 @@ class FlxGLView extends FlxCameraView
 	
 	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		var drawItem = getTrianglesCommand(bitmap, material, data.colored);
+		var drawItem = getTrianglesCommand(bitmap, material);
 		drawItem.data = data;
 		
 		_helperMatrix.copyFrom(matrix);
@@ -478,13 +478,13 @@ class FlxGLView extends FlxCameraView
 		return _singleColoredQuad;
 	}
 	
-	private inline function getTrianglesCommand(bitmap:BitmapData, material:FlxMaterial, colored:Bool = false):FlxDrawTrianglesCommand
+	private inline function getTrianglesCommand(bitmap:BitmapData, material:FlxMaterial):FlxDrawTrianglesCommand
 	{
 		if (_currentCommand != null)
 			_currentCommand.flush();
 		
 		_currentCommand = null;  // i don't batch triangles...
-		_triangles.set(bitmap, colored, false, material);
+		_triangles.set(bitmap, true, false, material);
 		
 		return _triangles;
 	}
