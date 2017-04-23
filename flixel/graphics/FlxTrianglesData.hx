@@ -511,20 +511,17 @@ class FlxTrianglesData implements IFlxDestroyable
 	{
 		if (colorsDirty)
 		{
-			var useColors:Bool = (colors != null);
 			var numColors:Int = Std.int(vertices.length * 0.5);
+			var numColorsAvailable:Int = (colors != null) ? colors.length : 0;
 			
 			if (colorsArray == null || colorsArray.length != numColors)
 				colorsArray = new UInt32Array(numColors);
 			
-			if (useColors)
+			for (i in 0...numColors)
 			{
-				for (i in 0...numColors)
+				if (i < numColorsAvailable)
 					colorsArray[i] = colors[i];
-			}
-			else
-			{
-				for (i in 0...numColors)
+				else
 					colorsArray[i] = FlxColor.WHITE;
 			}
 			
