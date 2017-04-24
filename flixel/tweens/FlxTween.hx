@@ -1051,8 +1051,16 @@ class FlxTweenManager extends FlxBasic
 	 */
 	public function clear():Void
 	{
-		while (_tweens.length > 0)
-			remove(_tweens[0]);
+		for (tween in _tweens)
+		{
+			if (tween != null)
+			{
+				tween.active = false;
+				tween.destroy();
+			}
+		}
+		
+		_tweens.splice(0, _tweens.length);
 	}
 
 	/**
