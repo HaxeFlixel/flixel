@@ -462,6 +462,8 @@ class FlxGLView extends FlxCameraView
 	
 	private inline function getTexturedTilesCommand(bitmap:BitmapData, material:FlxMaterial)
 	{
+		// TODO: optimize this stuff...
+		
 		if (_currentCommand != null && _currentCommand != _texturedQuads)
 			_currentCommand.flush();
 		else if ((_currentCommand == _texturedQuads) && (!_texturedQuads.equals(FlxDrawItemType.QUADS, bitmap, true, true, material) || _texturedQuads.numQuads >= _texturedQuads.size))

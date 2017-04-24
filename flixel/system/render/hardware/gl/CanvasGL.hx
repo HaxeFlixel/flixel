@@ -1,26 +1,17 @@
 package flixel.system.render.hardware.gl;
 
 import flixel.system.render.hardware.gl.GLUtils;
-import flixel.system.render.hardware.gl.RenderTexture;
-import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
-import openfl.gl.GL;
-import openfl.utils.Float32Array;
 
 #if FLX_RENDER_GL
-import lime.math.Matrix4;
+import openfl.gl.GL;
+import openfl.utils.Float32Array;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 import flixel.graphics.shaders.FlxCameraColorTransform.ColorTransformFilter;
 #end
-
-import openfl.display.DisplayObject;
-import openfl.display.DisplayObjectContainer;
-import openfl.geom.Matrix;
-import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -31,119 +22,26 @@ using flixel.util.FlxColorTransformUtil;
  * @author Pavel Alexandrov aka Yanrishatum https://github.com/Yanrishatum
  * @author Zaphod
  */
-class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
+class CanvasGL extends GLDisplayObject
 {
 	#if FLX_RENDER_GL
-	public var buffer(default, null):RenderTexture;
-	
-	/**
-	 * Projection matrix used for render passes (excluding last render pass, which uses global projection matrix from GLRenderer)
-	 */
-	public var projection(default, null):Matrix4;
-	
-	public var projectionFlipped(default, null):Matrix4;
-	
-	private var __height:Int;
-	private var __width:Int;
-	
 	private var colorFilter:ColorTransformFilter;
 	private var filtersArray:Array<BitmapFilter>;
 	
-	private var context:GLContextHelper;
-	
 	public function new(width:Int, height:Int, context:GLContextHelper)
 	{
-		super();
-		
-		this.context = context;
-		resize(width, height);
+		super(width, height, context);
 		
 		colorFilter = new ColorTransformFilter();
 		filtersArray = [colorFilter];
 	}
 	
-	public function destroy():Void
+	override public function destroy():Void
 	{
-		buffer = FlxDestroyUtil.destroy(buffer);
-		
-		projection = null;
-		projectionFlipped = null;
-		context = null;
+		super.destroy();
 		
 		colorFilter = null;
 		filtersArray = null;
-	}
-	
-	public function resize(width:Int, height:Int):Void
-	{
-		this.width = width;
-		this.height = height;
-		
-		FlxDestroyUtil.destroy(buffer);
-		buffer = new RenderTexture(width, height, false);
-		
-		projection = Matrix4.createOrtho(0, width, 0, height, -1000, 1000);
-		projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
-	}
-	
-	public function clear():Void
-	{
-		var gl = context.gl;
-		context.checkRenderTarget(buffer);
-		buffer.clear(0.0, 0, 0, 0.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-	}
-	
-	@:access(openfl.geom.Rectangle)
-	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
-	{
-		var bounds = Rectangle.__temp;
-		bounds.setTo(0, 0, __width, __height);
-		bounds.__transform(bounds, matrix);
-		rect.__expand(bounds.x, bounds.y, bounds.width, bounds.height);	
-	}
-	
-	override private function __hitTest(x:Float, y:Float, shapeFlag:Bool, stack:Array<DisplayObject>, interactiveOnly:Bool, hitObject:DisplayObject):Bool 
-	{
-		if (!hitObject.visible || __isMask) 
-			return false;
-		
-		if (mask != null && !mask.__hitTestMask(x, y))
-			return false;
-		
-		__getWorldTransform();
-		
-		var px = __worldTransform.__transformInverseX(x, y);
-		var py = __worldTransform.__transformInverseY(x, y);
-		
-		if (px > 0 && py > 0 && px <= __width && py <= __height) 
-		{
-			if (stack != null && !interactiveOnly) 
-				stack.push(hitObject);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	override private function get_height():Float 
-	{	
-		return __height;	
-	}
-	
-	override private function set_height(value:Float):Float 
-	{	
-		return __height = Std.int(value);	
-	}
-	
-	override private function get_width():Float 
-	{	
-		return __width;	
-	}
-	
-	override private function set_width(value:Float):Float 
-	{	
-		return __width = Std.int(value);	
 	}
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
@@ -224,11 +122,5 @@ class CanvasGL extends DisplayObjectContainer implements IFlxDestroyable
 				__filters.shift();
 		}
 	}
-	
-	#else
-	
-	public function destroy():Void {}
-	
 	#end
-	
 }
