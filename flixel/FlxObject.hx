@@ -10,7 +10,6 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPath;
-import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -1100,21 +1099,12 @@ class FlxObject extends FlxBasic
 
 	private inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		if (FlxG.renderBlit)
-		{
-			FlxSpriteUtil.flashGfx.clear();
-			return FlxSpriteUtil.flashGfx;
-		}
-		else
-		{
-			return camera.debugLayer.graphics;
-		}
+		return camera.beginDrawDebug();
 	}
 	
 	private inline function endDrawDebug(camera:FlxCamera)
 	{
-		if (FlxG.renderBlit)
-			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		camera.endDrawDebug();
 	}
 	#end
 

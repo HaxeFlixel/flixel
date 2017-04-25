@@ -1,11 +1,11 @@
 package flixel.tile;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
@@ -58,10 +58,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var pixels(default, null):BitmapData;
 	
 	public var blend:BlendMode;
-	public var antialiasing:Bool = false;
+	
+	public var smoothing:Bool = false;
+	
+	@:deprecated
+	public var antialiasing(get, set):Bool;
 	
 	private var _flashRect:Rectangle;
-	private var _matrix:Matrix;
+	private var _matrix:FlxMatrix;
 	
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
@@ -82,7 +86,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		{
 			pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
 			_flashRect = new Rectangle(0, 0, pixels.width, pixels.height);
-			_matrix = new Matrix();
+			_matrix = new FlxMatrix();
 		}
 		
 		dirty = true;
@@ -110,9 +114,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function fill(Color:FlxColor = FlxColor.TRANSPARENT):Void
 	{
 		if (FlxG.renderBlit)
-		{
 			pixels.fillRect(_flashRect, Color);
-		}
 	}
 	
 	/**
@@ -131,14 +133,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		
 		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
 		{
-			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
+			Camera.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(pixels, _matrix, null, blend, null, antialiasing);
+			Camera.drawPixels(pixels, _matrix, null, blend, smoothing);
 		}
 	}
 	
@@ -150,48 +152,34 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (WidthInTiles < 0) 
-		{
 			WidthInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 
 		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
 		
 		if (columns > WidthInTiles)
-		{
 			columns = WidthInTiles;
-		}
 		
 		width = Std.int(columns * TileWidth * ScaleX);
-		
 		dirty = true;
 	}
 	
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (HeightInTiles < 0) 
-		{
 			HeightInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
 		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
 		
 		if (rows > HeightInTiles)
-		{
 			rows = HeightInTiles;
-		}
 		
 		height = Std.int(rows * TileHeight * ScaleY);	
-		
 		dirty = true;
 	}
 
@@ -201,9 +189,18 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
+		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	private function get_antialiasing():Bool
+	{
+		return smoothing;
+	}
+	
+	private function set_antialiasing(value:Bool):Bool
+	{
+		return smoothing = value;
 	}
 }

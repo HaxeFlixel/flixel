@@ -461,11 +461,11 @@ class FlxBitmapDataUtil
 	 * 
 	 * @param	brush			The image you want to rotate and stamp.
 	 * @param	rotations		The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
-	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
+	 * @param	smoothing		Whether to use high quality rotations when creating the graphic.  Default is false.
 	 * @param	autoBuffer		Whether to automatically increase the image size to accommodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
 	 * @return	Created BitmapData with stamped prerotations on it.
 	 */
-	public static function generateRotations(brush:BitmapData, rotations:Int = 16, antiAliasing:Bool = false, autoBuffer:Bool = false):BitmapData
+	public static function generateRotations(brush:BitmapData, rotations:Int = 16, smoothing:Bool = false, autoBuffer:Bool = false):BitmapData
 	{
 		var brushWidth:Int = brush.width;
 		var brushHeight:Int = brush.height;
@@ -499,7 +499,7 @@ class FlxBitmapDataUtil
 				matrix.rotate(bakedAngle * FlxAngle.TO_RAD);
 				matrix.translate(max * column + midpointX, midpointY);
 				bakedAngle += bakedRotationAngle;
-				result.draw(brush, matrix, null, null, null, antiAliasing);
+				result.draw(brush, matrix, null, null, null, smoothing);
 				column++;
 			}
 			midpointY += max;

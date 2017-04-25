@@ -21,7 +21,7 @@ private enum UserDefines
 	FLX_RECORD;
 	FLX_UNIT_TEST;
 	/* additional rendering define */
-	FLX_RENDER_TRIANGLE;
+	FLX_RENDER_GL;
 }
 
 /**
@@ -91,14 +91,6 @@ class FlxDefines
 		#if (lime < "2.8.1")
 		abortMinVersion("Lime", "2.8.1", (macro null).pos);
 		#end
-
-		#if (openfl >= "4.0.0")
-		abortMaxVersion("OpenFL", "4.0.0", "3.6.1", (macro null).pos);
-		#end
-		
-		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
-		abortMaxVersion("Lime", "3.0.0", "2.9.1", (macro null).pos);
-		#end
 	}
 
 	private static function abortMinVersion(dependency:String, minimumRequired:String, pos:Position)
@@ -158,16 +150,26 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 		
+		#if (openfl >= "4.0.0")
+		if (defined("flash11_8") || (defined("cpp") || defined("neko")) || defined("js"))
+			define(FLX_GAMEINPUT_API);
+		
+		if (!defined("flash"))
+			define(FLX_RENDER_GL);
+		#else
 		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
+		#end
 		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
 		
+		#if (openfl < "4.0.0")
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
+		#end
 	}
 	
 	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)

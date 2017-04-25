@@ -703,18 +703,10 @@ class FlxPath implements IFlxDestroyable
 			Camera = FlxG.camera;
 		}
 		
-		var gfx:Graphics = null;
+		var gfx:Graphics = Camera.beginDrawDebug();
 		
-		//Set up our global flash graphics object to draw out the path
-		if (FlxG.renderBlit)
-		{
-			gfx = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-		}
-		else
-		{
-			gfx = Camera.debugLayer.graphics;
-		}
+		if (gfx == null)
+			return;
 		
 		//Then fill up the object with node and path graphics
 		var node:FlxPoint;
@@ -733,9 +725,8 @@ class FlxPath implements IFlxDestroyable
 			//decide what color this node should be
 			var nodeSize:Int = 2;
 			if ((i == 0) || (i == l - 1))
-			{
 				nodeSize *= 2;
-			}
+			
 			var nodeColor:FlxColor = debugColor;
 			if (l > 1)
 			{
@@ -754,7 +745,7 @@ class FlxPath implements IFlxDestroyable
 			gfx.lineStyle();
 			gfx.drawRect(_point.x - nodeSize * 0.5, _point.y - nodeSize * 0.5, nodeSize, nodeSize);
 			gfx.endFill();
-
+			
 			//then find the next node in the path
 			var lineAlpha:Float = 0.3;
 			if (i < l - 1)
@@ -772,15 +763,12 @@ class FlxPath implements IFlxDestroyable
 			_point.x = nextNode.x - (Camera.scroll.x * object.scrollFactor.x); //copied from getScreenPosition()
 			_point.y = nextNode.y - (Camera.scroll.y * object.scrollFactor.y);
 			gfx.lineTo(_point.x, _point.y);
-
+			
 			i++;
 		}
 		
-		if (FlxG.renderBlit)
-		{
-			//then stamp the path down onto the game buffer
-			Camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		}
+		//then stamp the path down onto the game buffer
+		Camera.endDrawDebug();
 	}
 	#end
 	

@@ -5,7 +5,7 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flixel.graphics.tile.FlxTilesheet;
+import flixel.system.render.common.FlxCameraView;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
@@ -35,6 +35,11 @@ import flixel.system.ui.FlxFocusLostScreen;
 #if FLX_RECORD
 import flixel.math.FlxRandom;
 import flixel.system.replay.FlxReplay;
+#end
+
+#if FLX_RENDER_GL
+import openfl._internal.renderer.RenderSession;
+import flixel.system.render.hardware.gl.GLFilterManager;
 #end
 
 /**
@@ -827,6 +832,7 @@ class FlxGame extends Sprite
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
+	@:allow(flixel.system.render.hardware)
 	private function draw():Void
 	{
 		if (!_state.visible || !_state.exists)
@@ -838,9 +844,6 @@ class FlxGame extends Sprite
 		#end
 		
 		FlxG.signals.preDraw.dispatch();
-		
-		if (FlxG.renderTile)
-			FlxTilesheet._DRAWCALLS = 0;
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -858,10 +861,10 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			debugger.stats.drawCalls(FlxCameraView.drawCalls);
 			#end
 		}
-	
+		
 		FlxG.cameras.unlock();
 		
 		FlxG.signals.postDraw.dispatch();
@@ -869,6 +872,9 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+		
+		if (FlxG.renderTile)
+			FlxCameraView.drawCalls = 0;
 	}
 	
 	private inline function getTicks()
@@ -881,4 +887,19 @@ class FlxGame extends Sprite
 		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
+	
+	#if FLX_RENDER_GL
+	private var _filterManager:GLFilterManager;
+	
+	private override function __renderGL(renderSession:RenderSession):Void 
+	{
+		if (_filterManager == null)
+		{
+			_filterManager = new GLFilterManager(cast renderSession.renderer, renderSession);
+			renderSession.filterManager = _filterManager;
+		}
+		
+		super.__renderGL(renderSession);
+	}
+	#end
 }
