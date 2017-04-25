@@ -362,8 +362,19 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	public inline function startQuad(bitmap:BitmapData, material:FlxMaterial):Void
 	{
 		if (!canAddQuad)
+		{
 			flush();
+		}
+		else if (numQuads > 0)
+		{
+			var sameMaterial:Bool = (this.material == material);
+			var bothNullShaders:Bool = (material.shader == null && shader == null);
+			
+			if (!(sameMaterial || bothNullShaders))
+				flush();
+		}
 		
+		set(bitmap, true, (bitmap != null), material);
 		var state:RenderState = states[numQuads];
 		state.set(bitmap, material);
 		numQuads++;
@@ -575,11 +586,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		if (this.material == material && this.bitmap == bitmap)
 			return true;
 		
-		var bothShadersAreNull:Bool = (material.shader == null && shader == null);
+		var bothNullShaders:Bool = (material.shader == null && shader == null);
 		var hasGraphic:Bool = (bitmap != null);
-		var bothHasGraphicAreSame:Bool = (hasGraphic == textured);
+		var sameHasGraphic:Bool = (hasGraphic == textured);
 		
-		return bothShadersAreNull && bothHasGraphicAreSame;
+		return bothNullShaders && sameHasGraphic;
 	}
 	
 	private function get_canAddQuad():Bool

@@ -31,7 +31,7 @@ class GLDebugRenderer extends GLDisplayObject
 		drawCommands = FlxDestroyUtil.destroy(drawCommands);
 	}
 	
-	public function prepare():Void
+	override public function prepare():Void
 	{
 		drawCommands.prepare(projection, context, buffer);
 		drawCommands.set(null, true, false, DefaultColorMaterial);

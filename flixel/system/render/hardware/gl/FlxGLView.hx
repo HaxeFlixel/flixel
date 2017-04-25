@@ -112,11 +112,11 @@ class FlxGLView extends FlxCameraView
 		FlxDestroyUtil.removeChild(_scrollRect, _canvas);
 		_canvas = FlxDestroyUtil.destroy(_canvas);
 		
-		_texturedQuads = FlxDestroyUtil.destroy(_texturedQuads);
-		_coloredQuads = FlxDestroyUtil.destroy(_coloredQuads);
+		_textureQuads = FlxDestroyUtil.destroy(_textureQuads);
+		_colorQuads = FlxDestroyUtil.destroy(_colorQuads);
 		_triangles = FlxDestroyUtil.destroy(_triangles);
-		_singleTexturedQuad = FlxDestroyUtil.destroy(_singleTexturedQuad);
-		_singleColoredQuad = FlxDestroyUtil.destroy(_singleColoredQuad);
+		_singleTextureQuad = FlxDestroyUtil.destroy(_singleTextureQuad);
+		_singleColorQuad = FlxDestroyUtil.destroy(_singleColorQuad);
 		_currentCommand = null;
 		_helperMatrix = null;
 		
@@ -128,16 +128,14 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		var bitmap = frame.parent.bitmap;
-		var drawItem = (material.batchable) ? getTexturedTilesCommand(bitmap, material) : getSingleTextureQuadCommand(bitmap, material);
-		
 		_helperMatrix.copyFrom(matrix);
-		
 		if (_useRenderMatrix)
 			_helperMatrix.concat(_renderMatrix);
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
+		var bitmap = frame.parent.bitmap;
+		var drawItem = (material.batchable) ? getTextureQuads(bitmap, material) : getSingleTextureQuad(bitmap, material);
 		drawItem.addQuad(frame, matrix, transform, material);
 	}
 	
@@ -153,15 +151,12 @@ class FlxGLView extends FlxCameraView
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
 		var bitmap = frame.parent.bitmap;
-		var drawItem = (material.batchable) ? getTexturedTilesCommand(bitmap, material) : getSingleTextureQuadCommand(bitmap, material);
+		var drawItem = (material.batchable) ? getTextureQuads(bitmap, material) : getSingleTextureQuad(bitmap, material);
 		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
 	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		var drawItem = getTrianglesCommand(bitmap, material);
-		drawItem.data = data;
-		
 		_helperMatrix.copyFrom(matrix);
 		
 		if (_useRenderMatrix)
@@ -169,6 +164,8 @@ class FlxGLView extends FlxCameraView
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
+		var drawItem = getTriangles(bitmap, material);
+		drawItem.data = data;
 		drawItem.matrix = _helperMatrix;
 		drawItem.color = transform;
 		drawItem.flush();
@@ -177,8 +174,6 @@ class FlxGLView extends FlxCameraView
 	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		var drawItem = getTexturedTilesCommand(bitmap, material);
-		
 		_helperMatrix.copyFrom(matrix);
 		
 		if (_useRenderMatrix)
@@ -186,6 +181,7 @@ class FlxGLView extends FlxCameraView
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
+		var drawItem = (material.batchable) ? getTextureQuads(bitmap, material) : getSingleTextureQuad(bitmap, material);
 		drawItem.addUVQuad(bitmap, rect, uv, _helperMatrix, transform, material);
 	}
 	
@@ -197,7 +193,7 @@ class FlxGLView extends FlxCameraView
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
-		var drawItem = (material.batchable) ? getColoredTilesCommand(material) : getSingleColorQuadCommand(material);
+		var drawItem = (material.batchable) ? getColorQuads(material) : getSingleColorQuad(material);
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, material);
 	}
 	
@@ -315,7 +311,7 @@ class FlxGLView extends FlxCameraView
 		_fillRect.set(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
 		
 		_helperMatrix.identity();
-		var drawItem = getSingleColorQuadCommand(DefaultColorMaterial);
+		var drawItem = getSingleColorQuad(DefaultColorMaterial);
 		drawItem.addColorQuad(_fillRect, _helperMatrix, Color, FxAlpha, DefaultColorMaterial);
 	}
 	
@@ -327,15 +323,14 @@ class FlxGLView extends FlxCameraView
 	
 	override public function lock(useBufferLocking:Bool):Void 
 	{
-		var matrix = _canvas.projection;
-		
 		context.shaderManager.setShader(null);
 		
-		_texturedQuads.prepare(matrix, context, renderTexture);
-		_coloredQuads.prepare(matrix, context, renderTexture);
+		var matrix = _canvas.projection;
+		_textureQuads.prepare(matrix, context, renderTexture);
+		_colorQuads.prepare(matrix, context, renderTexture);
 		_triangles.prepare(matrix, context, renderTexture);
-		_singleTexturedQuad.prepare(matrix, context, renderTexture);
-		_singleColoredQuad.prepare(matrix, context, renderTexture);
+		_singleTextureQuad.prepare(matrix, context, renderTexture);
+		_singleColorQuad.prepare(matrix, context, renderTexture);
 		_currentCommand = null;
 		
 		_canvas.clear();
@@ -441,18 +436,18 @@ class FlxGLView extends FlxCameraView
 	 */
 	private var _currentCommand:FlxDrawHardwareCommand<Dynamic>;
 	
-	private var _singleTexturedQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true, 1);
+	private var _singleTextureQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true, 1);
 	
-	private var _singleColoredQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false, 1);
+	private var _singleColorQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false, 1);
 	
 	/**
 	 * Last draw tiles item
 	 */
-	private var _texturedQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
+	private var _textureQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
 	/**
 	 * Last draw tiles item
 	 */
-	private var _coloredQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
+	private var _colorQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
 	/**
 	 * Last draw triangles item
 	 */
@@ -460,64 +455,51 @@ class FlxGLView extends FlxCameraView
 	
 	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
-	private inline function getTexturedTilesCommand(bitmap:BitmapData, material:FlxMaterial)
+	private inline function getTextureQuads(bitmap:BitmapData, material:FlxMaterial)
 	{
-		// TODO: optimize this stuff...
-		
-		if (_currentCommand != null && _currentCommand != _texturedQuads)
+		if (_currentCommand != null && _currentCommand != _textureQuads)
 			_currentCommand.flush();
-		else if ((_currentCommand == _texturedQuads) && (!_texturedQuads.equals(FlxDrawItemType.QUADS, bitmap, true, true, material) || _texturedQuads.numQuads >= _texturedQuads.size))
-			_texturedQuads.flush();
 		
-		_currentCommand = _texturedQuads;
-		_texturedQuads.set(bitmap, true, true, material);
-		return _texturedQuads;
+		_currentCommand = _textureQuads;
+		return _textureQuads;
 	}
 	
 	// TODO: request drawCommand (optimization for drawing sequence of quads with the same material)...
 	
-	private inline function getColoredTilesCommand(material:FlxMaterial)
+	private inline function getColorQuads(material:FlxMaterial)
 	{
-		// TODO: optimize this stuff...
-		
-		if (_currentCommand != null && _currentCommand != _coloredQuads)
+		if (_currentCommand != null && _currentCommand != _colorQuads)
 			_currentCommand.flush();
-		else if ((_currentCommand == _coloredQuads) && (!_coloredQuads.equals(FlxDrawItemType.QUADS, null, true, false, material) || _coloredQuads.numQuads >= _coloredQuads.size))
-			_coloredQuads.flush();
 		
-		_currentCommand = _coloredQuads;
-		_coloredQuads.set(null, true, false, material);
-		return _coloredQuads;
+		_currentCommand = _colorQuads;
+		return _colorQuads;
 	}
 	
-	private inline function getSingleTextureQuadCommand(bitmap:BitmapData, material:FlxMaterial)
+	private inline function getSingleTextureQuad(bitmap:BitmapData, material:FlxMaterial)
 	{
 		if (_currentCommand != null)
 			_currentCommand.flush();
 		
-		_currentCommand = _singleTexturedQuad;
-		_singleTexturedQuad.set(bitmap, true, true, material);
-		return _singleTexturedQuad;
+		_currentCommand = _singleTextureQuad;
+		return _singleTextureQuad;
 	}
 	
-	private inline function getSingleColorQuadCommand(material:FlxMaterial)
+	private inline function getSingleColorQuad(material:FlxMaterial)
 	{
 		if (_currentCommand != null)
 			_currentCommand.flush();
 		
-		_currentCommand = _singleColoredQuad;
-		_singleColoredQuad.set(null, true, false, material);
-		return _singleColoredQuad;
+		_currentCommand = _singleColorQuad;
+		return _singleColorQuad;
 	}
 	
-	private inline function getTrianglesCommand(bitmap:BitmapData, material:FlxMaterial):FlxDrawTrianglesCommand
+	private inline function getTriangles(bitmap:BitmapData, material:FlxMaterial):FlxDrawTrianglesCommand
 	{
 		if (_currentCommand != null)
 			_currentCommand.flush();
 		
 		_currentCommand = null;  // i don't batch triangles...
 		_triangles.set(bitmap, true, false, material);
-		
 		return _triangles;
 	}
 	
