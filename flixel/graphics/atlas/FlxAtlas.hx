@@ -309,7 +309,7 @@ class FlxAtlas implements IFlxDestroyable
 				}
 				
 				firstGrandChild = new FlxNode(FlxRect.get(firstChild.x, firstChild.y, insertWidth, insertHeight),
-				this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
+					this, firstGrandChildFilled, firstGrandChildKey, firstGrandChildRotated);
 				
 				if (firstChild.width - insertWidth > 0)
 				{

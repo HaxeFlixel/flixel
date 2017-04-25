@@ -47,9 +47,9 @@ class PostProcess extends OpenGLView
 		// create and bind the framebuffer
 		framebuffer = GL.createFramebuffer();
 		rebuild();
-	#if (ios || tvos)
+		#if (ios || tvos)
 		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
-	#else
+		#else
 		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
 		
 		switch (status)
@@ -62,7 +62,7 @@ class PostProcess extends OpenGLView
 			default:
 				trace("Check frame buffer: " + status);
 		}
-	#end
+		#end
 		
 		buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);

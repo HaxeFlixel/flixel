@@ -179,7 +179,7 @@ class Console extends Window
 		
 		#if FLX_DEBUG
 		// Unpause game
-		if (FlxG.console.autoPause)
+		if (FlxG.console.autoPause && !FlxG.game.debugger.vcr.manualPause)
 			FlxG.vcr.resume();
 		
 		// Unblock keyboard input

@@ -8,7 +8,8 @@ class RunScript
 	public static function main()
 	{
 		var args = Sys.args();
-		args.pop(); // working directory path
-		Sys.command("haxelib",  ["run", "flixel-tools"].concat(args));
+		var cwd = args.pop();
+		Sys.setCwd(cwd);
+		Sys.exit(Sys.command("haxelib", ["run", "flixel-tools"].concat(args)));
 	}
 }

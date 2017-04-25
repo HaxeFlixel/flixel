@@ -204,46 +204,46 @@ class FlxAnalog extends FlxSpriteGroup
 		
 		// There is no reason to get into the loop if their is already a pointer on the analog
 		#if FLX_TOUCH
-			if (_currentTouch != null)
-			{
-				_tempTouches.push(_currentTouch);
-			}
-			else
-			{
-				for (touch in FlxG.touches.list)
-				{		
-					var touchInserted:Bool = false;
+		if (_currentTouch != null)
+		{
+			_tempTouches.push(_currentTouch);
+		}
+		else
+		{
+			for (touch in FlxG.touches.list)
+			{		
+				var touchInserted:Bool = false;
 					
-					for (analog in _analogs)
-					{
-						// Check whether the pointer is already taken by another analog.
-						// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
-						if (analog == this && analog._currentTouch != touch && !touchInserted) 
-						{		
-							_tempTouches.push(touch);
-							touchInserted = true;
-						}
+				for (analog in _analogs)
+				{
+					// Check whether the pointer is already taken by another analog.
+					// TODO: check this place. This line was 'if (analog != this && analog._currentTouch != touch && touchInserted == false)'
+					if (analog == this && analog._currentTouch != touch && !touchInserted) 
+					{		
+						_tempTouches.push(touch);
+						touchInserted = true;
 					}
 				}
 			}
+		}
 			
-			for (touch in _tempTouches)
-			{
-				_point = touch.getWorldPosition(FlxG.camera, _point);
+		for (touch in _tempTouches)
+		{
+			_point = touch.getWorldPosition(FlxG.camera, _point);
 				
-				if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
-				{
-					offAll = false;
-					break;
-				}
-			}
-		#elseif !FLX_NO_MOUSE
-			_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
-			
-			if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+			if (!updateAnalog(_point, touch.pressed, touch.justPressed, touch.justReleased, touch))
 			{
 				offAll = false;
+				break;
 			}
+		}
+		#elseif !FLX_NO_MOUSE
+		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		
+		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+		{
+			offAll = false;
+		}
 		#end
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)

@@ -30,7 +30,8 @@ class FlxRandomTest extends FlxTest
 		var s1:String = "";
 		var s2:String = "";
 		var data = ["x", "y", "z", "e", "e"];
-		for (i in 0...10) {
+		for (i in 0...10)
+		{
 			s1 += FlxG.random.getObject(data, null, 3, 4);
 			s2 += "e";
 		}

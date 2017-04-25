@@ -90,12 +90,7 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			if (reg.object == Object)
 			{
-				reg.object = null;
-				reg.sprite = null;
-				reg.onMouseDown = null;
-				reg.onMouseUp = null;
-				reg.onMouseOver = null;
-				reg.onMouseOut = null;
+				reg.destroy();
 				_registeredObjects.remove(reg);
 			}
 		}
@@ -111,10 +106,11 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			for (reg in _registeredObjects)
 			{
-				remove(reg.object);
+				reg.destroy();
 			}
 		}
-		_registeredObjects = [];
+		
+		_registeredObjects.splice(0, _registeredObjects.length);
 		_mouseOverObjects = [];
 	}
 
@@ -391,7 +387,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-	#if FLX_MOUSE
+		#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
@@ -421,7 +417,7 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-	#end
+		#end
 		
 		_mouseOverObjects = currentOverObjects;
 	}
@@ -429,13 +425,7 @@ class FlxMouseEventManager extends FlxBasic
 	private function clearRegistry():Void
 	{
 		_mouseOverObjects = null;
-		
-		for (reg in _registeredObjects)
-		{
-			remove(reg.object);
-		}
-		
-		_registeredObjects = null;
+		_registeredObjects = FlxDestroyUtil.destroyArray(_registeredObjects);
 	}
 
 	private function checkOverlap<T:FlxObject>(Register:ObjectMouseData<T>):Bool
@@ -498,7 +488,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 }
 
-private class ObjectMouseData<T:FlxObject>
+private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 {
 	public var object:FlxObject;
 	public var onMouseDown:T->Void;
@@ -524,5 +514,16 @@ private class ObjectMouseData<T:FlxObject>
 		this.mouseEnabled = mouseEnabled;
 		this.pixelPerfect = pixelPerfect;
 		this.mouseButtons = (mouseButtons == null) ? [FlxMouseButtonID.LEFT] : mouseButtons;
+	}
+	
+	public function destroy():Void
+	{
+		object = null;
+		sprite = null;
+		onMouseDown = null;
+		onMouseUp = null;
+		onMouseOver = null;
+		onMouseOut = null;
+		mouseButtons = null;
 	}
 }

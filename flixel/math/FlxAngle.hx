@@ -108,7 +108,7 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless asDegrees is true)
 	 */
-	public static inline function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
+	public static function angleBetween(SpriteA:FlxSprite, SpriteB:FlxSprite, AsDegrees:Bool = false):Float
 	{
 		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
 		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
@@ -180,9 +180,9 @@ class FlxAngle
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	public static inline function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
+	public static function angleBetweenTouch(Object:FlxObject, Touch:FlxTouch, AsDegrees:Bool = false):Float
 	{
-		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
+		// In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = Object.getScreenPosition();
 		
 		var dx:Float = Touch.screenX - p.x;
@@ -204,7 +204,7 @@ class FlxAngle
 	 * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	public static inline function angleFromFacing(FacingBitmask:Int, AsDegrees:Bool = false):Float
+	public static function angleFromFacing(FacingBitmask:Int, AsDegrees:Bool = false):Float
 	{		
 		var degrees = switch (FacingBitmask)
 		{

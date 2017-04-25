@@ -136,12 +136,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * If false, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
-#if FLX_MOUSE
+	#if FLX_MOUSE
 	/**
 	 * Which mouse buttons can trigger the button - by default only the left mouse button.
 	 */
 	public var mouseButtons:Array<FlxMouseButtonID> = [FlxMouseButtonID.LEFT];
-#end
+	#end
 	/**
 	 * Maximum distance a pointer can move to still trigger event handlers.
 	 * If it moves beyond this limit, onOut is triggered.
@@ -216,12 +216,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		scrollFactor.set();
 		
 		#if FLX_MOUSE
-			FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
 		#if FLX_NO_MOUSE // no need for highlight frame without mouse input
-			statusAnimations[FlxButton.HIGHLIGHT] = "normal";
-			labelAlphas[FlxButton.HIGHLIGHT] = 1;
+		statusAnimations[FlxButton.HIGHLIGHT] = "normal";
+		labelAlphas[FlxButton.HIGHLIGHT] = 1;
 		#end
 		
 		input = new FlxInput(0);
@@ -268,7 +268,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		input = null;
 		
 		#if FLX_MOUSE
-			FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
+		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 		
 		super.destroy();
@@ -287,7 +287,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		{
 			// Update the button, but only if at least either mouse or touches are enabled
 			#if FLX_POINTER_INPUT
-				updateButton();
+			updateButton();
 			#end
 			
 			// Trigger the animation only if the button's input status changes. 
@@ -318,7 +318,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		}
 	}
 	
-#if FLX_DEBUG
+	#if FLX_DEBUG
 	/**
 	 * Helper function to draw the debug graphic for the label as well.
 	 */
@@ -331,7 +331,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			_spriteLabel.drawDebug();
 		}
 	}
-#end
+	#end
 
 	/**
 	 * Stamps button's graphic and label onto specified atlas object and loads graphic from this atlas.
@@ -490,7 +490,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * Using an event listener is necessary for security reasons on flash - 
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
-#if FLX_MOUSE
+	#if FLX_MOUSE
 	private function onUpEventListener(_):Void
 	{
 		if (visible && exists && active && status == FlxButton.PRESSED)
@@ -498,7 +498,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			onUpHandler();
 		}
 	}
-#end
+	#end
 	
 	/**
 	 * Internal function that handles the onUp event.
@@ -620,12 +620,12 @@ private class FlxButtonEvent implements IFlxDestroyable
 	 */
 	public var callback:Void->Void;
 	
-#if FLX_SOUND_SYSTEM
+	#if FLX_SOUND_SYSTEM
 	/**
 	 * The sound to play when this event fires.
 	 */
 	public var sound:FlxSound;
-#end
+	#end
 	
 	/**
 	 * @param   Callback   The callback function to call when this even fires.
@@ -636,7 +636,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = Callback;
 		
 		#if FLX_SOUND_SYSTEM
-			this.sound = sound;
+		this.sound = sound;
 		#end
 	}
 	
@@ -648,7 +648,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 		callback = null;
 		
 		#if FLX_SOUND_SYSTEM
-			sound = FlxDestroyUtil.destroy(sound);
+		sound = FlxDestroyUtil.destroy(sound);
 		#end
 	}
 	

@@ -16,7 +16,8 @@
 	</section>
 	
 	<set name="legacy" unless="next" />
-	
+	<haxedef name="analyzer-optimize" unless="no-analyzer" if="next" />
+
 	<haxelib name="openfl" unless="create" />
 	<haxelib name="hscript" unless="create||coverage2" optional="true" />
 	

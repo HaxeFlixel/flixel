@@ -105,9 +105,14 @@ class Watch extends Window
 	
 	public function removeAll():Void
 	{
-		for (entry in entries.copy())
-			removeEntry(entry);
-		entries = [];
+		for (i in 0...entries.length)
+		{
+			var entry = entries[i];
+			entriesContainer.removeChild(entry);
+			entry.destroy();
+		}
+		entries.splice(0, entries.length);
+		resetEntries();
 	}
 
 	override public function update():Void

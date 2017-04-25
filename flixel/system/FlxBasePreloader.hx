@@ -24,7 +24,7 @@ class FlxBasePreloader extends #if (openfl < "4.5.0") NMEPreloader #else Default
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine 
 	 */
-	public static inline var LOCAL:String = #if flash "local" #else "localhost" #end;
+	public static inline var LOCAL:String = "localhost";
 	
 	/**
 	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds (no delay).
@@ -255,21 +255,15 @@ class FlxBasePreloader extends #if (openfl < "4.5.0") NMEPreloader #else Default
 	private function isHostUrlAllowed():Bool
 	{
 		if (allowedURLs.length == 0)
-		{
 			return true;
-		}
-		
-		var homeDomain:String = FlxStringUtil.getDomain(#if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #end);
+
+		var homeURL:String = #if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #end;
+		var homeDomain:String = FlxStringUtil.getDomain(homeURL);
 		for (allowedURL in allowedURLs)
 		{
-			if (FlxStringUtil.getDomain(allowedURL) == homeDomain)
-			{
+			var allowedDomain = FlxStringUtil.getDomain(allowedURL);
+			if (allowedDomain == homeDomain)
 				return true;
-			}
-			else if (allowedURL == LOCAL && homeDomain == LOCAL)
-			{
-				return true;
-			}
 		}
 		return false;
 	}
