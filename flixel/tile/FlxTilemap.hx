@@ -18,13 +18,15 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.graphics.shaders.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+
 using flixel.util.FlxColorTransformUtil;
 
 @:keep @:bitmap("assets/images/tile/autotiles.png")
@@ -63,9 +65,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * @since 4.3.0
+	 */
+	public var smoothing(default, set):Bool = false;
+	
+	/**
+	 * Controls whether the object is smoothed when rotated, affects performance.
 	 * @since 4.1.0
 	 */
-	public var antialiasing(default, set):Bool = false;
+	@:deprecated("Use `smoothing` property instead.")
+	public var antialiasing(get, set):Bool;
 	
 	/**
 	 * Use to offset the drawing position of the tilemap,
@@ -372,6 +381,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		var buffer:FlxTilemapBuffer = null;
 		var l:Int = FlxG.cameras.list.length;
+		var gfx:Graphics = Camera.beginDrawDebug();
 		
 		for (i in 0...l)
 		{
@@ -422,8 +432,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(Camera.debugLayer.graphics, rect,
-						tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
+					drawDebugBoundingBox(gfx, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
 				columnIndex++;
@@ -885,9 +894,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		//only used for renderTile
 		var drawX:Float = 0;
 		var drawY:Float = 0;
-		var scaledWidth:Float = 0;
-		var scaledHeight:Float = 0;
-		var drawItem = null;
+		var view:FlxCameraView = Camera.view;
 		
 		if (FlxG.renderBlit)
 		{
@@ -899,12 +906,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
-			
-			scaledWidth  = _scaledTileWidth;
-			scaledHeight = _scaledTileHeight;
-			
-			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = Camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
 		}
 		
 		// Copy tile images into the tile buffer
@@ -971,8 +972,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					}
 					else
 					{
-						drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
-						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
+						drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
+						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 						
 						_matrix.identity();
 						
@@ -993,7 +994,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
 						
-						drawItem.addQuad(frame, _matrix, colorTransform);
+						view.drawPixels(frame, null, _matrix, colorTransform, blend, smoothing, shader);
 					}
 				}
 				
@@ -1076,15 +1077,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
-		buffer.antialiasing = antialiasing;
+		buffer.smoothing = smoothing;
 		return buffer;
+	}
+	
+	private function set_smoothing(value:Bool):Bool
+	{
+		for (buffer in _buffers)
+			buffer.smoothing = value;
+		return smoothing = value;
+	}
+	
+	private function get_antialiasing():Bool
+	{
+		return smoothing;
 	}
 	
 	private function set_antialiasing(value:Bool):Bool
 	{
-		for (buffer in _buffers)
-			buffer.antialiasing = value;
-		return antialiasing = value;
+		return smoothing = value;
 	}
 	
 	/**

@@ -11,7 +11,10 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+
+#if (openfl < "4.0.0")
 import openfl.display.Tilesheet;
+#end
 
 /**
  * `BitmapData` wrapper which is used for rendering.
@@ -316,7 +319,9 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
+	#if (openfl < "4.0.0")
 	public var tilesheet(get, null):Tilesheet;
+	#end
 	
 	/**
 	 * Usage counter for this `FlxGraphic` object.
@@ -364,7 +369,9 @@ class FlxGraphic implements IFlxDestroyable
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in `FlxG.renderTile` mode
 	 */
+	#if (openfl < "4.0.0")
 	private var _tilesheet:Tilesheet;
+	#end
 	
 	private var _useCount:Int = 0;
 	
@@ -397,6 +404,7 @@ class FlxGraphic implements IFlxDestroyable
 		#if (lime_legacy && !flash)
 		if (FlxG.renderTile && canBeDumped)
 		{
+			// TODO: recreate dumpBits() for new hardware renderer...
 			bitmap.dumpBits();
 			isDumped = true;
 		}
@@ -449,17 +457,13 @@ class FlxGraphic implements IFlxDestroyable
 	public function destroy():Void
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
-		
-		if (FlxG.renderTile)
-			_tilesheet = null;
-		
+		#if (openfl < "4.0.0")
+		_tilesheet = null;
+		#end
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
 		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
-		
-		if (frameCollections == null) // no need to destroy frame collections if it's already null
-			return;
 		
 		var collections:Array<FlxFramesCollection>;
 		for (collectionType in frameCollectionTypes)
@@ -522,6 +526,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
+	#if (openfl < "4.0.0")
 	private function get_tilesheet():Tilesheet
 	{
 		if (_tilesheet == null)
@@ -539,6 +544,7 @@ class FlxGraphic implements IFlxDestroyable
 		
 		return _tilesheet;
 	}
+	#end
 	
 	/**
 	 * Gets the `BitmapData` for this graphic object from OpenFL.
@@ -560,7 +566,11 @@ class FlxGraphic implements IFlxDestroyable
 	
 	private inline function get_canBeDumped():Bool
 	{
+		#if (openfl < "4.0.0")
 		return assetsClass != null || assetsKey != null;
+		#else
+		return false;
+		#end
 	}
 	
 	private function get_useCount():Int
@@ -611,7 +621,7 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if !flash
+			#if (!flash && openfl < "4.0.0")
 			if (FlxG.renderTile && _tilesheet != null)
 				_tilesheet = new Tilesheet(bitmap);
 			#end

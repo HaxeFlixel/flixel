@@ -7,7 +7,6 @@ import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.interaction.Interaction;
-import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
 
 @:bitmap("assets/images/debugger/cursorCross.png") 
@@ -195,7 +194,6 @@ class Pointer extends Tool
 		}
 
 		// Render everything into the camera buffer
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
 }

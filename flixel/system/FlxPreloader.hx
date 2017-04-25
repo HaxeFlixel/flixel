@@ -36,7 +36,7 @@ class FlxPreloader extends FlxBasePreloader
 	 * super(10); // example of long delay (10 seconds)
 	 * ```
 	 */
-	override public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
+	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>):Void
 	{
 		super(MinDisplayTime, AllowedURLs);
 	}
@@ -124,9 +124,8 @@ class FlxPreloader extends FlxBasePreloader
 	override private function destroy():Void
 	{
 		if (_buffer != null)	
-		{
 			removeChild(_buffer);
-		}
+		
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;

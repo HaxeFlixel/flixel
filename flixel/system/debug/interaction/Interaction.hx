@@ -19,7 +19,6 @@ import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSpriteUtil;
 
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
 import flash.display.Bitmap;
@@ -129,7 +128,7 @@ class Interaction extends Window
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(event.target))
+		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(cast event.target))
 			return;
 		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
@@ -263,17 +262,7 @@ class Interaction extends Window
 	
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderBlit)
-		{
-			FlxSpriteUtil.flashGfx.clear();
-			return FlxSpriteUtil.flashGfx;
-		}
-		
-		#if FLX_DEBUG
-		return FlxG.camera.debugLayer.graphics;
-		#end
-		
-		return null;
+		return FlxG.camera.beginDrawDebug();
 	}
 	
 	private function drawItemsSelection():Void 
@@ -295,8 +284,7 @@ class Interaction extends Window
 		}
 		
 		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
 	
 	private function getTool(className:Class<Tool>):Tool
