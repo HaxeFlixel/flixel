@@ -26,11 +26,14 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 	
 	private var graphic:FlxGraphic;
 	
-	public function new(textured:Bool = true) 
+	public function new(textured:Bool = true, size:Int = 0) 
 	{
 		super();
 		
-		this.size = FlxCameraView.QUADS_PER_BATCH;
+		if (size <= 0)
+			size = FlxCameraView.QUADS_PER_BATCH;
+		
+		this.size = size;
 		type = FlxDrawItemType.QUADS;
 	}
 	
@@ -121,7 +124,7 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 	
 	private function get_canAddQuad():Bool
 	{
-		return ((numQuads + 1) <= FlxCameraView.QUADS_PER_BATCH);
+		return ((numQuads + 1) <= size);
 	}
 	
 	private function get_numQuads():Int

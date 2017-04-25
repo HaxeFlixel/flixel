@@ -595,7 +595,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private function get_canAddQuad():Bool
 	{
-		return numQuads < FlxCameraView.QUADS_PER_BATCH;
+		return numQuads < size;
 	}
 	
 	override private function get_numVertices():Int
