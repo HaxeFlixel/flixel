@@ -1,10 +1,12 @@
 package flixel.system.render.gl;
 
 import flixel.util.FlxColorTransformUtil;
+import openfl.display.BitmapData;
 import openfl.display.Shader;
 import openfl.geom.ColorTransform;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
+import openfl.gl.GLTexture;
 
 #if FLX_RENDER_GL
 import lime.math.Matrix4;

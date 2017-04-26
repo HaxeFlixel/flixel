@@ -113,9 +113,7 @@ class FlxMaterial implements IFlxDestroyable
 	{
 		#if FLX_RENDER_GL
 		if (shader == null)
-		{
 			return;
-		}
 		
 		updateDataIndices(gl);
 		

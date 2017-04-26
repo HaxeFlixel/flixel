@@ -138,12 +138,9 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 			GL.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 0, 0);
 		}
 		
-	//	if (colored)
-	//	{
-			// update the colors
-			data.updateColors();
-			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.UNSIGNED_BYTE, true, 0, 0);
-	//	}
+		// update the colors
+		data.updateColors();
+		gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.UNSIGNED_BYTE, true, 0, 0);
 		
 		data.updateIndices();
 		data.dirty = false;
@@ -199,23 +196,5 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		
 		return matrix = value;
 	}
-}
-
-#else
-class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCommand>
-{
-	public var data:FlxTrianglesData;
-	public var matrix:Matrix;
-	public var color:ColorTransform;
-	
-	public function canAddTriangles(numTriangles:Int):Bool
-	{
-		return true;
-	}
-	
-	public function addTriangles(data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void {}
-	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, ?blend:BlendMode, ?smoothing:Bool, ?shader:FlxShader):Void {}
-	
 }
 #end

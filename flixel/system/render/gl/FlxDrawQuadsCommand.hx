@@ -40,15 +40,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	private static inline var BYTES_PER_INDEX:Int = 2;
 	
 	/**
-	 * Holds the indices
-	 */
-	private var indices:UInt16Array;
-	
-	private var indicesNumBytes:Int = 0;
-	
-	private var indexBuffer:GLBuffer;
-	
-	/**
 	 * Default tile shader.
 	 */
 	public static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
@@ -70,7 +61,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	/**
 	 * The total number of bytes in vertices buffer.
 	 */
-	private var verticesNumBytes:Int = 0;
+	private var verticesNumBytes(get, null):Int;
 	
 	/**
 	 * View on the vertices as a Float32Array
@@ -81,6 +72,15 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 * View on the vertices as a UInt32Array
 	 */
 	private var colors:UInt32Array;
+	
+	private var vertexBuffer:GLBuffer;
+	
+	/**
+	 * Holds the indices
+	 */
+	private var indices:UInt16Array;
+	
+	private var indexBuffer:GLBuffer;
 	
 	/**
 	 * Current number of quads in our batch.
@@ -98,10 +98,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 */
 	private var states:Array<RenderState> = [];
 	
-	private var vertexBuffer:GLBuffer;
-	
-	private var stride:Int;
-	
 	public function new(textured:Bool = true, size:Int = 0)
 	{
 		super();
@@ -112,10 +108,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		this.size = size;
 		this.textured = textured;
-		stride = Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
-		
-		// The total number of bytes in our batch
-		verticesNumBytes = size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
 		
 		vertices = new ArrayBuffer(verticesNumBytes);
 		positions = new Float32Array(vertices);
@@ -123,7 +115,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		// The total number of indices in our batch
 		var numIndices:Int = size * FlxCameraView.INDICES_PER_QUAD;
-		indicesNumBytes = numIndices * UInt16Array.BYTES_PER_ELEMENT;
 		indices = new UInt16Array(numIndices);
 		
 		var indexPos:Int = 0;
@@ -152,9 +143,17 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		{
 			super.setContext(context);
 			
-			createIndexBuffer(gl);
-			
 			// create a couple of buffers
+			indexBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+			
+			#if (openfl >= "4.9.0")
+			var indicesNumBytes:Int = size * FlxCameraView.INDICES_PER_QUAD * UInt16Array.BYTES_PER_ELEMENT;
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, gl.STATIC_DRAW);
+			#else
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+			#end
+			
 			vertexBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 			#if (openfl >= "4.9.0")
@@ -165,23 +164,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		}
 		
 		this.context = context;
-	}
-	
-	/**
-	 * Creates index buffer (`GLBuffer` object) if its not been created yet.
-	 * @param	gl	rendering context, which will be used for creating buffer.
-	 */
-	private function createIndexBuffer(gl:GLRenderContext):Void
-	{
-		//upload the index data
-		indexBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-		
-		#if (openfl >= "4.9.0")
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, gl.STATIC_DRAW);
-		#else
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-		#end
 	}
 	
 	override public function prepare(uniformMatrix:Matrix4, context:GLContextHelper, buffer:RenderTexture):Void
@@ -412,18 +394,15 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		currentMaterial.apply(gl);
 		
-		var currentTexture:BitmapData;
-		var nextTexture:BitmapData;
-		currentTexture = nextTexture = state.bitmap;
+		var currentTexture:BitmapData = state.bitmap;
+		var nextTexture:BitmapData = currentTexture;
 		
-		var currentBlendMode:BlendMode;
-		var nextBlendMode:BlendMode;
-		currentBlendMode = nextBlendMode = currentMaterial.blendMode;
+		var currentBlendMode:BlendMode = currentMaterial.blendMode;
+		var nextBlendMode:BlendMode = currentBlendMode;
 		context.setBlendMode(currentBlendMode);
 		
-		var currentSmoothing:Bool;
-		var nextSmoothing:Bool;
-		currentSmoothing = nextSmoothing = currentMaterial.smoothing;
+		var currentSmoothing:Bool = currentMaterial.smoothing;
+		var nextSmoothing:Bool = currentSmoothing;
 		
 		if (numQuads == 1)
 		{
@@ -502,6 +481,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 			
+			var stride:Int = Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
 			var offset:Int = 0;
 			
 			gl.vertexAttribPointer(shader.data.aPosition.index, 2, gl.FLOAT, false, stride, offset);
@@ -534,10 +514,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		else
 		{
 			var viewLen:Int = numQuads * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
-			var numBytes:Int = viewLen * Float32Array.BYTES_PER_ELEMENT;
 			var view = positions.subarray(0, viewLen);
 			
 			#if (openfl >= "4.9.0")
+			var numBytes:Int = viewLen * Float32Array.BYTES_PER_ELEMENT;
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, numBytes, view);
 			#else
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
@@ -609,6 +589,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	{
 		return (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
 	}
+	
+	private inline function get_verticesNumBytes():Int
+	{
+		return size * Float32Array.BYTES_PER_ELEMENT * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
+	}
 }
 
 class RenderState implements IFlxDestroyable
@@ -629,23 +614,5 @@ class RenderState implements IFlxDestroyable
 		this.bitmap = null;
 		this.material = null;
 	}
-}
-
-#else
-class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
-{
-	public static var BATCH_SIZE:Int;
-	
-	public var numQuads(default, null):Int = 0;
-	
-	public var canAddQuad(default, null):Bool = false;
-	
-	public function new(textured:Bool = true) 
-	{ 
-		super();
-	}
-	
-	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void {}
-	
 }
 #end

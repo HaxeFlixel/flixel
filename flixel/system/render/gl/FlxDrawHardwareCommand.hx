@@ -61,19 +61,4 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	}
 	
 }
-#else
-class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
-{
-	public static var currentShader:FlxShader = null;
-	
-	public function new() 
-	{
-		super();
-	}
-	
-	public function prepare(uniformMatrix:Dynamic, context:Dynamic, buffer:Dynamic):Void {}
-	
-	public function flush():Void {}
-	
-}
 #end
