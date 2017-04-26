@@ -10,7 +10,7 @@ import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
 
-@:bitmap("assets/images/debugger/cursorCross.png") 
+@:bitmap("assets/images/debugger/cursorCross.png")
 class GraphicCursorCross extends BitmapData {}
 
 /**
@@ -150,7 +150,7 @@ class Pointer extends Tool
 	 */
 	private function updateConsoleSelection()
 	{
-		FlxG.console.registerObject("selection", switch(_itemsInSelectionArea.length)
+		FlxG.console.registerObject("selection", switch (_itemsInSelectionArea.length)
 		{
 			case 0: null;
 			case 1: _itemsInSelectionArea[0];

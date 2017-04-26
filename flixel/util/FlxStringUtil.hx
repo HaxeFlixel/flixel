@@ -208,17 +208,17 @@ class FlxStringUtil
 		var prefix:String = "<font size='" + Size + "' color='#" + Color + "'>";
 		var suffix:String = "</font>";
 		
-		if (Bold) 
+		if (Bold)
 		{
 			prefix = "<b>" + prefix;
 			suffix = suffix + "</b>";
 		}
-		if (Italic) 
+		if (Italic)
 		{
 			prefix = "<i>" + prefix;
 			suffix = suffix + "</i>";
 		}
-		if (Underlined) 
+		if (Underlined)
 		{
 			prefix = "<u>" + prefix;
 			suffix = suffix + "</u>";
@@ -241,7 +241,7 @@ class FlxStringUtil
 		{
 			cl = cast Obj;
 		}
-		else 
+		else
 		{
 			cl = Type.getClass(Obj);
 		}
@@ -264,6 +264,7 @@ class FlxStringUtil
 	 * For example, the host for "ftp://anonymous@ftp.domain.test:990/" is "ftp.domain.test".
 	 *
 	 * @return	The host from the URL; or the empty string ("") upon failure.
+	 * @since 4.3.0
 	 */
 	public static function getHost(url:String):String
 	{
@@ -288,9 +289,9 @@ class FlxStringUtil
 	{
 		var host:String = getHost(url);
 
-		var isLocalhostOrIPaddress:EReg = ~/^(localhost|[0-9.]+|\[[a-f0-9:.]+\])$/i;
+		var isLocalhostOrIpAddress:EReg = ~/^(localhost|[0-9.]+|\[[a-f0-9:.]+\])$/i;
 		var domainFromHost:EReg = ~/^(?:[a-z0-9\-]+\.)*([a-z0-9\-]+\.[a-z0-9\-]+)$/i;
-		if (!isLocalhostOrIPaddress.match(host) && domainFromHost.match(host))
+		if (!isLocalhostOrIpAddress.match(host) && domainFromHost.match(host))
 		{
 			var domain = domainFromHost.matched(1);
 			return (domain != null) ? domain.toLowerCase() : "";
@@ -429,7 +430,7 @@ class FlxStringUtil
 	 */
 	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
-		if (Scale < 1) 
+		if (Scale < 1)
 		{
 			Scale = 1;
 		}

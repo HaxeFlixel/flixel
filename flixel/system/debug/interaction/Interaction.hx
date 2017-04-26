@@ -17,7 +17,6 @@ import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
-import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 
