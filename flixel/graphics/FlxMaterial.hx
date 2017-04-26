@@ -1,7 +1,7 @@
 package flixel.graphics;
 
 import flixel.graphics.shaders.FlxShader;
-import flixel.system.render.hardware.gl.GLUtils;
+import flixel.system.render.gl.GLUtils;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import openfl.display.BitmapData;

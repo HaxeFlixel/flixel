@@ -6,7 +6,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
-import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;

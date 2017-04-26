@@ -1,6 +1,5 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
-import flixel.system.render.hardware.gl.GLUtils;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 

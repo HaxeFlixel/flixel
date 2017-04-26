@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import flixel.util.FlxDestroyUtil;
 import openfl.display.DisplayObject;

@@ -374,11 +374,11 @@ class FlxCamera extends FlxBasic
 		else
 		{
 			#if FLX_RENDER_GL
-			view = new flixel.system.render.hardware.gl.FlxGLView(this);
+			view = new flixel.system.render.gl.FlxGLView(this);
 			#elseif (openfl >= "4.0.0")
 			view = new FlxCameraView(this); // just stub
 			#else
-			view = new flixel.system.render.hardware.tile.FlxTileView(this);
+			view = new flixel.system.render.tile.FlxTileView(this);
 			#end
 		}
 		

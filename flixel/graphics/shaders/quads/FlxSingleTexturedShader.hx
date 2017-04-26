@@ -1,4 +1,4 @@
-package flixel.graphics.shaders.tiles;
+package flixel.graphics.shaders.quads;
 
 /**
  * Default shader used by batcher for rendering textured quads.

@@ -1,13 +1,13 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flixel.system.render.hardware.gl.RenderTexture;
+import flixel.system.render.gl.RenderTexture;
 import lime.graphics.GLRenderContext;
 import openfl.gl.GL;
 
 #if FLX_RENDER_GL
-import flixel.system.render.hardware.gl.GLContextHelper;
+import flixel.system.render.gl.GLContextHelper;
 import lime.math.Matrix4;
 
 /**

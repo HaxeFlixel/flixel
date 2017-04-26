@@ -1,4 +1,4 @@
-package flixel.graphics.shaders.tiles;
+package flixel.graphics.shaders.quads;
 
 import flixel.graphics.shaders.FlxBaseShader;
 

@@ -1,15 +1,12 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
-import flixel.system.render.hardware.gl.GLContextHelper;
-import flixel.system.render.hardware.gl.GLUtils;
-import flixel.system.render.hardware.gl.RenderTexture;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -19,8 +16,8 @@ import openfl.geom.ColorTransform;
 import flixel.graphics.shaders.FlxShader;
 
 #if FLX_RENDER_GL
-import flixel.graphics.shaders.tiles.FlxColoredShader;
-import flixel.graphics.shaders.tiles.FlxTexturedShader;
+import flixel.graphics.shaders.quads.FlxColoredShader;
+import flixel.graphics.shaders.quads.FlxTexturedShader;
 import lime.graphics.GLRenderContext;
 import lime.math.Matrix4;
 import lime.utils.UInt16Array;

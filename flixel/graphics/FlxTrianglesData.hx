@@ -20,7 +20,7 @@ import lime.utils.UInt32Array;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
-import flixel.system.render.hardware.gl.GLUtils;
+import flixel.system.render.gl.GLUtils;
 #end
 
 class FlxTrianglesData implements IFlxDestroyable

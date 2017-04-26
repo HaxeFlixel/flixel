@@ -39,7 +39,7 @@ import flixel.system.replay.FlxReplay;
 
 #if FLX_RENDER_GL
 import openfl._internal.renderer.RenderSession;
-import flixel.system.render.hardware.gl.GLContextHelper;
+import flixel.system.render.gl.GLContextHelper;
 #end
 
 /**

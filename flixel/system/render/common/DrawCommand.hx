@@ -7,15 +7,15 @@ import openfl.Vector;
  * @author Zaphod
  */
 typedef FlxDrawQuadsCommand =		#if (openfl >= "4.0.0")
-										flixel.system.render.hardware.gl.FlxDrawQuadsCommand
+										flixel.system.render.gl.FlxDrawQuadsCommand
 									#else 
-										flixel.system.render.hardware.tile.FlxDrawQuadsCommand
+										flixel.system.render.tile.FlxDrawQuadsCommand
 									#end;
 
 typedef FlxDrawTrianglesCommand =	#if (openfl >= "4.0.0") 
-										flixel.system.render.hardware.gl.FlxDrawTrianglesCommand  
+										flixel.system.render.gl.FlxDrawTrianglesCommand  
 									#else 
-										flixel.system.render.hardware.tile.FlxDrawTrianglesCommand 
+										flixel.system.render.tile.FlxDrawTrianglesCommand 
 									#end;
 
 enum FlxDrawItemType 

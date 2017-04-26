@@ -1,11 +1,11 @@
-package flixel.system.render.hardware.tile;
+package flixel.system.render.tile;
 
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.util.FlxColor;

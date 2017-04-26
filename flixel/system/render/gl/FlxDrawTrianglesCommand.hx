@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import flixel.FlxCamera;
 import flixel.graphics.FlxMaterial;
@@ -6,11 +6,8 @@ import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
-import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
-import flixel.system.render.hardware.gl.GLContextHelper;
-import flixel.system.render.hardware.gl.GLUtils;
-import flixel.system.render.hardware.gl.RenderTexture;
 import flixel.util.FlxColor;
 import openfl.Vector;
 import openfl.display.BlendMode;

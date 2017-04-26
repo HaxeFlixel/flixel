@@ -1,16 +1,13 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.render.common.DrawItem.FlxDrawItemType;
+import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flixel.system.render.hardware.gl.GLContextHelper;
-import flixel.system.render.hardware.gl.RenderTexture;
-import flixel.system.render.hardware.gl.CanvasGL;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import lime.graphics.GLRenderContext;

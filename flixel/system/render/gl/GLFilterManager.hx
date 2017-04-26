@@ -1,4 +1,4 @@
-package flixel.system.render.hardware.gl;
+package flixel.system.render.gl;
 
 import lime.graphics.GLRenderContext;
 import lime.utils.Float32Array;
