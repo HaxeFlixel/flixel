@@ -1,7 +1,55 @@
+4.3.0 (to be released)
+------------------------------
+#### New features:
+
+- `FlxTween`: added `cancelChain()` (#1988)
+- `FlxMatrix`: added `transformX()` and `transformY()` (dcc66b3)
+- `FlxCamera`: added `containsPoint()` (#1964)
+- `FlxSubState`: added `openCallback` (#2023)
+- `FlxSpriteGroup`: added `insert()` (#2020)
+- `FlxSoundGroup`: added `pause()` and `resume()` (#2043)
+- `FlxDebugger` interaction tool:
+	- added tooltips (#2006)
+	- added a selection rectangle (#1995)
+- `FlxDebugger` console: added an "Entry Type" quick watch entry (d354352)
+- `FlxStringUtil`: added `getHost()` (#1996)
+
+#### Bugfixes:
+
+- `FlxAnimation`: fixed reversed animations (#1998)
+- `FlxRandom`: fixed `getObject()` not respecting `startIndex` (#2009)
+- `FlxGroup`: fixed `remove()` with `Splice = true` not decreasing `length` (#2010)
+- `FlxStringUtil`: fixed an issue with decimals in `formatMoney()` (#2011)
+- `FlxMouseEventManager`:
+	- fixed overlap checks for off-camera sprites (#1964)
+	- fixed pixel-perfect overlaps with `offset` (#1999)
+- `FlxPreloader`: fixed missing assets with full DCE (764a5a8)
+- `FlxG.cameras`: fixed `reset()` not removing all cameras (#2016)
+- `FlxAnimationController`: fixed `flipX` / `Y` not being copied in `copyFrom()` (#2027)
+- `haxelib run flixel`: fixed the working directory not being passed on (61f2c20)
+- `FlxDebugger` interaction tool:
+	- fixed selection of `FlxSpriteGroup` members (89a4ee2)
+	- fixed selection of objects in substates (69042ab)
+	- fixed selections being canceled on interaction with debugger UI (897f21f)
+- `FlxG.html5`: fixed `platform` detecting iPhone and iPod as "Mac" (#2052)
+- `FlxTilemap`: fixed a missing bounds check in `getTileIndexByCoords()` (#2024)
+
+#### Changes and improvements:
+
+- `FlxBitmapText`: allowed negative `lineSpacing` values (#1984)
+- `FlxStringUtil`: made `getDomain()` more robust (#1993, #1996)
+- `FlxG.signals`: changed `gameResized` to be dispatched after camera resize (#2012)
+- `FlxAtlasFrames`: allowed passing a parsed `Description` in `fromTexturePackerJson()` (#2021)
+- `FlxG.watch`: optimized expression watch entries (#2004)
+- `FlxDebugger` console:
+	- allowed `null` objects in `registerObject()` to unregister (f52c73e)
+	- registered a reference to the current `selection` of the interaction tool (1bb7b48)
+	- prevented unpause after manual pausing through UI (56854fc)
+- `FlxBasePreloader`: improved the design of the sitelock failure notice (#1994)
+
 4.2.1
 ------------------------------
 - fixed rendering with Haxe 3.4.0 and OpenFL Next
-
 
 4.2.0
 ------------------------------
