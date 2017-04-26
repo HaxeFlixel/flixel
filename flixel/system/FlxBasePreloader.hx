@@ -50,16 +50,18 @@ class FlxBasePreloader extends NMEPreloader
 	 * The title text to display on the sitelock failure screen.
 	 * NOTE: This string should be reviewed for accuracy and may need to be localized.
 	 *
-	 * To customize this variable, create a class extending `FlxBasePreloader`, and override its value in the new function:
+	 * To customize this variable, create a class extending `FlxBasePreloader`, and override its value in the constructor:
 	 *
 	 * ```haxe
-	 * class Preloader extends FlxBasePreloader {
-	 *   public function new():Void {
-	 *     super(0, [ "http://placeholder.domain.test/path/document.html" ]);
+	 * class Preloader extends FlxBasePreloader
+	 * {
+	 *     public function new():Void
+	 *     {
+	 *         super(0, ["http://placeholder.domain.test/path/document.html"]);
 	 *
-	 *     siteLockTitleText = "Custom title text.";
-	 *     siteLockBodyText = "Custom body text.";
-	 *   }
+	 *         siteLockTitleText = "Custom title text.";
+	 *         siteLockBodyText = "Custom body text.";
+	 *     }
 	 * }
 	 * ```
 	 * @since 4.3.0
@@ -70,8 +72,8 @@ class FlxBasePreloader extends NMEPreloader
 	 * The body text to display on the sitelock failure screen.
 	 * NOTE: This string should be reviewed for accuracy and may need to be localized.
 	 *
-	 * To customize this variable, create a class extending `FlxBasePreloader`, and override its value in the new function.
-	 * @see siteLockTitleText
+	 * To customize this variable, create a class extending `FlxBasePreloader`, and override its value in the constructor.
+	 * @see `siteLockTitleText`
 	 * @since 4.3.0
 	 */
 	public var siteLockBodyText:String =
@@ -241,7 +243,8 @@ class FlxBasePreloader extends NMEPreloader
 	private function checkSiteLock():Void
 	{
 		#if web
-		if (_urlChecked) return;
+		if (_urlChecked)
+			return;
 
 		if (!isHostUrlAllowed())
 		{
@@ -295,13 +298,13 @@ class FlxBasePreloader extends NMEPreloader
 
 		graphics.beginFill(color);
 		graphics.drawPath(
-			[ 1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6 ],
-			[ 120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
+			[1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6],
+			[120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
 				120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40, 35, 75, 0, 120, 0,
 				220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320,
 				20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0, 148, 8, 140, 20, 140, 120, 190, 108,
 				190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130,
-				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190 ],
+				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190],
 			GraphicsPathWinding.NON_ZERO
 		);
 		graphics.endFill();
@@ -370,8 +373,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * When overridden, allows the customization of the text fields in the sitelock failure screen.
 	 * @since 4.3.0
 	 */
-	private function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void
-	{}
+	private function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void {}
 
 	private function goToMyURL(?e:MouseEvent):Void
 	{
