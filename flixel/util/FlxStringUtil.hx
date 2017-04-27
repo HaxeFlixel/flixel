@@ -268,7 +268,7 @@ class FlxStringUtil
 	 */
 	public static function getHost(url:String):String
 	{
-		var hostFromURL:EReg = ~/^[a-z][a-z0-9+\-.]*:\/\/(?:[a-z0-9\-._~%!$&'()*+,;=]+@)?([a-z0-9\-._~%]+|\[[a-f0-9:.]+\])?(?::[0-9]+)?/i;
+		var hostFromURL:EReg = ~/^(?:[a-z][a-z0-9+\-.]*:\/\/)?(?:[a-z0-9\-._~%!$&'()*+,;=]+@)?([a-z0-9\-._~%]{3,}|\[[a-f0-9:.]+\])?(?::[0-9]+)?/i;
 		if (hostFromURL.match(url))
 		{
 			var host = hostFromURL.matched(1);

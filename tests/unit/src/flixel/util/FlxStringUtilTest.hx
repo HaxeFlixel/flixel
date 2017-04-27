@@ -110,11 +110,12 @@ class FlxStringUtilTest
 	{
 		var urls = new Array<String>();
 
+		var protocols = ["http://", "fake.but-valid+scheme://", ""];
 		var authorities = ['$host', 'user@$host', '$host:1234'];
 		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
-		for (authority in authorities) for (path in paths)
-			urls.push(mixedCase('fake.but-valid+scheme://$authority$path'));
+		for (protocol in protocols) for (authority in authorities) for (path in paths)
+			urls.push(mixedCase('$protocol$authority$path'));
 		
 		return urls;
 	}
