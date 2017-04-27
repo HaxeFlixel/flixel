@@ -110,7 +110,7 @@ class FlxStringUtilTest
 	{
 		var urls = new Array<String>();
 
-		var protocols = ["fake.but-valid+scheme://", ""];
+		var protocols = ["http://", "fake.but-valid+scheme://", ""];
 		var authorities = ['$host', 'user@$host', '$host:1234'];
 		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
