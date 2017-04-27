@@ -206,6 +206,18 @@ class FlxTilemapTest extends FlxTest
 		Assert.isFalse(tilemap.overlapsPoint(point, true));
 	}
 	
+	@Test // #2024
+	function testOverlapsPointOutOfBounds()
+	{
+		tilemap.loadMapFrom2DArray([[1]], new BitmapData(2, 1));
+		function overlaps(x, y)
+			return tilemap.overlapsPoint(FlxPoint.get(x, y));
+
+		Assert.isFalse(overlaps(-1, -1));
+		Assert.isTrue(overlaps(0, 0));
+		Assert.isFalse(overlaps(1, 1));
+	}
+
 	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)
 	{
 		Assert.areEqual(FlxG.camera.buffer.getPixel(x, 0), color, info);
