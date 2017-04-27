@@ -6,6 +6,8 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 using StringTools;
@@ -62,6 +64,8 @@ class ConsoleCommands
 		console.registerClass(FlxMath);
 		console.registerClass(FlxTween);
 		console.registerClass(FlxCamera);
+		console.registerClass(FlxPoint);
+		console.registerClass(FlxRect);
 		
 		console.registerObject("FlxDebuggerLayout", FlxDebuggerLayout);
 		console.registerObject("selection", null);
