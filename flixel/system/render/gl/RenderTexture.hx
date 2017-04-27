@@ -6,6 +6,7 @@ import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
+import lime.utils.ArrayBufferView;
 import openfl.Lib;
 import openfl.display.BitmapData;
 import openfl.gl.GL;
@@ -17,9 +18,10 @@ class RenderTexture implements IFlxDestroyable
 {
 	public static var defaultFramebuffer:GLFramebuffer = null;
 	
-	public var frameBuffer:GLFramebuffer;
-	public var renderBuffer:GLRenderbuffer;
-	public var texture:GLTexture;
+	public var frameBuffer(default, null):GLFramebuffer;
+	public var renderBuffer(default, null):GLRenderbuffer;
+	public var texture(default, null):GLTexture;
+	public var bitmap(default, null):BitmapData;
 	
 	public var buffer:GLBuffer;
 	
@@ -32,8 +34,6 @@ class RenderTexture implements IFlxDestroyable
 	public var actualHeight(default, null):Int = 0;
 	
 	public var uvData(default, null):FlxRect;
-	
-	public var gl(default, null):GLRenderContext;
 	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
 	{
@@ -65,8 +65,6 @@ class RenderTexture implements IFlxDestroyable
 	public function resize(width:Int, height:Int) 
 	{
 		if (this.width == width && this.height == height) return;
-		
-		gl = GL.context;
 		
 		this.width = width;
 		this.height = height;
@@ -106,14 +104,14 @@ class RenderTexture implements IFlxDestroyable
 	
 	private inline function createTexture(width:Int, height:Int)
 	{
-		#if ((openfl >= "4.9.0") && !flash)
-		// code from GLRenderer's resize() method
-		var renderBitmap:BitmapData = BitmapData.fromTexture(Lib.current.stage.stage3Ds[0].context3D.createRectangleTexture(actualWidth, actualHeight, BGRA, true));
-		texture = renderBitmap.getTexture(gl);
-		gl.bindTexture(gl.TEXTURE_2D, texture);
-		#else
+		var gl = GL.context;
 		texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
+		
+		#if ((openfl >= "4.9.0") && !flash)
+		var data:ArrayBufferView = null;
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, actualWidth, actualHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+		#else
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, actualWidth, actualHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 		#end
 		
@@ -122,6 +120,12 @@ class RenderTexture implements IFlxDestroyable
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		
+		bitmap = new BitmapData(width, height, true, 0);
+		bitmap.readable = false;
+		bitmap.__texture = texture;
+		bitmap.__textureContext = gl;
+		bitmap.image = null;
+		
 		// specify texture as color attachment
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 	}
@@ -129,13 +133,13 @@ class RenderTexture implements IFlxDestroyable
 	private inline function createRenderbuffer(width:Int, height:Int)
 	{
 		// Bind the renderbuffer and create a depth buffer
-		renderBuffer = gl.createRenderbuffer();
+		renderBuffer = GL.createRenderbuffer();
 		
-		gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer);
-		gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, actualWidth, actualHeight);
+		GL.bindRenderbuffer(GL.RENDERBUFFER, renderBuffer);
+		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, actualWidth, actualHeight);
 		
 		// Specify renderbuffer as depth attachement
-		gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer);
+		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderBuffer);
 	}
 	
 	public function destroy():Void
@@ -147,26 +151,12 @@ class RenderTexture implements IFlxDestroyable
 		frameBuffer = null;
 		texture = null;
 		renderBuffer = null;
-		gl = null;
 	}
 	
 	public function clear(?r:Float = 0, ?g:Float = 0, ?b:Float = 0, ?a:Float = 0, ?mask:Null<Int>):Void
 	{	
-		gl.clearColor(r, g, b, a);
-		gl.clear(mask == null ? gl.COLOR_BUFFER_BIT : mask);	
-	}
-	
-	public function createBitmapData():BitmapData
-	{
-		if (texture == null)
-			return null;
-		
-		var bitmapData = new BitmapData(width, height, true, 0);
-		bitmapData.readable = false;
-		bitmapData.__texture = texture;
-		bitmapData.__textureContext = gl;
-		bitmapData.image = null;
-		return bitmapData;
+		GL.clearColor(r, g, b, a);
+		GL.clear(mask == null ? GL.COLOR_BUFFER_BIT : mask);	
 	}
 	
 	private function createUVs():Void
@@ -192,12 +182,12 @@ class RenderTexture implements IFlxDestroyable
 		]);
 		
 		if (buffer != null)
-			gl.deleteBuffer(buffer);
+			GL.deleteBuffer(buffer);
 		
-		buffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, bufferData.byteLength, bufferData, gl.STATIC_DRAW);
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);
+		buffer = GL.createBuffer();
+		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
+		GL.bufferData(GL.ARRAY_BUFFER, bufferData.byteLength, bufferData, GL.STATIC_DRAW);
+		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 	}
 	
 	private inline function powOfTwo(value:Int):Int
