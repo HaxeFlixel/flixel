@@ -453,6 +453,29 @@ class FlxDebugger extends Sprite
 		return result;
 	}
 	
+	#if flash @:setter(visible) #else override #end
+	public function set_visible(Value:Bool): #if flash Void #else Bool #end
+	{
+		#if flash
+		super.visible = Value;
+		#else
+		super.set_visible(Value);
+		#end
+        
+		if (Value)
+		{
+			FlxG.signals.debuggerShowed.dispatch();
+		}
+		else
+		{
+			FlxG.signals.debuggerHid.dispatch();
+		}
+		
+		#if !flash
+		return Value;
+		#end
+	}
+	
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
