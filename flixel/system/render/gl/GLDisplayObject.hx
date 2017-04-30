@@ -58,7 +58,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	{
 		var gl = context.gl;
 		context.checkRenderTarget(buffer);
-		buffer.clear(0.0, 0, 0, 0.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+		buffer.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	}
 	
 	public function prepare():Void {}

@@ -204,11 +204,7 @@ class FlxGLView extends FlxCameraView
 		
 		if (currentRenderTexture != renderTarget)
 		{
-			if (_currentCommand != null)
-			{
-				_currentCommand.flush();
-				_currentCommand = null;
-			}
+			render();
 			
 			_textureQuads.prepare(matrix, context, renderTarget);
 			_colorQuads.prepare(matrix, context, renderTarget);
@@ -220,7 +216,7 @@ class FlxGLView extends FlxCameraView
 			{
 				var gl = context.gl;
 				context.checkRenderTarget(renderTarget);
-				renderTarget.clear(0.0, 0, 0, 0.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+				renderTarget.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 				renderTarget.clearBeforeRender = false;
 			}
 		}
@@ -534,7 +530,10 @@ class FlxGLView extends FlxCameraView
 	override private inline function render():Void
 	{
 		if (_currentCommand != null)
+		{
 			_currentCommand.flush();
+			_currentCommand = null;
+		}
 	}
 	
 	// TODO: rename it to buffer...

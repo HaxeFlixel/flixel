@@ -13,13 +13,13 @@ import openfl.gl.GL;
  */
 class FlxRenderTarget extends FlxSprite
 {
-	// TODO: add clearColor property to this class and to RenderTexture class...
-	
 	public var renderTexture(default, null):RenderTexture;
 	
 	public var renderCamera(get, set):FlxCamera;
 	
 	public var clearBeforeRender:Bool = true;
+	
+	public var clearColor(get, set):FlxColor;
 	
 	@:allow(flixel.FlxSprite)
 	private var renderCameras(default, null):Array<FlxCamera>;
@@ -69,5 +69,19 @@ class FlxRenderTarget extends FlxSprite
 	private function get_renderCamera():FlxCamera
 	{
 		return renderCameras[0];
+	}
+	
+	private function get_clearColor():FlxColor
+	{
+		return FlxColor.fromRGBFloat(renderTexture.clearRed, renderTexture.clearGreen, renderTexture.clearBlue, renderTexture.clearAlpha);
+	}
+	
+	private function set_clearColor(value:FlxColor):FlxColor
+	{
+		renderTexture.clearRed = value.redFloat;
+		renderTexture.clearGreen = value.greenFloat;
+		renderTexture.clearBlue = value.blueFloat;
+		renderTexture.clearAlpha = value.alphaFloat;
+		return value;
 	}
 }

@@ -2,6 +2,7 @@ package flixel.system.render.gl;
 
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
@@ -12,10 +13,76 @@ import lime.math.Matrix4;
 import lime.utils.ArrayBufferView;
 import openfl.Lib;
 import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
+#if flash
+class RenderTexture implements IFlxDestroyable
+{
+	public var bitmap(default, null):BitmapData;
+	public var graphic(default, null):FlxGraphic;
+	
+	public var width(default, null):Int = 0;
+	public var height(default, null):Int = 0;
+	public var powerOfTwo(default, null):Bool = false;
+	public var smoothing:Bool;
+	
+	public var actualWidth(default, null):Int = 0;
+	public var actualHeight(default, null):Int = 0;
+	
+	public var clearBeforeRender:Bool = true;
+	
+	public var clearRed:Float = 0.0;
+	public var clearGreen:Float = 0.0;
+	public var clearBlue:Float = 0.0;
+	public var clearAlpha:Float = 0.0;
+	
+	private var rect:Rectangle;
+	
+	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
+	{
+		this.powerOfTwo = false;
+		this.smoothing = smoothing;
+		rect = new Rectangle();
+		resize(width, height);
+	}
+	
+	public function resize(width:Int, height:Int) 
+	{
+		if (this.width == width && this.height == height) 
+			return;
+		
+		this.width = width;
+		this.height = height;
+		
+		actualWidth = width;
+		actualHeight = height;
+		
+		createTexture(width, height);
+	}
+	
+	private inline function createTexture(width:Int, height:Int)
+	{
+		bitmap = new BitmapData(width, height, true, 0);
+		graphic = FlxGraphic.fromBitmapData(bitmap, false, null, false);
+		rect.setTo(0, 0, width, height);
+	}
+	
+	public function destroy():Void
+	{
+		bitmap = FlxDestroyUtil.dispose(bitmap);
+		graphic = FlxDestroyUtil.destroy(graphic);
+		rect = null;
+	}
+	
+	public function clear(?mask:Null<Int>):Void
+	{	
+		bitmap.fillRect(rect, FlxColor.fromRGBFloat(clearRed, clearGreen, clearBlue, clearAlpha));
+	}
+}
+#else
 @:access(openfl.display.BitmapData)
 class RenderTexture implements IFlxDestroyable
 {
@@ -47,6 +114,11 @@ class RenderTexture implements IFlxDestroyable
 	public var projection(default, null):Matrix4;
 	
 	public var projectionFlipped(default, null):Matrix4;
+	
+	public var clearRed:Float = 0.0;
+	public var clearGreen:Float = 0.0;
+	public var clearBlue:Float = 0.0;
+	public var clearAlpha:Float = 0.0;
 	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
 	{
@@ -176,10 +248,10 @@ class RenderTexture implements IFlxDestroyable
 		projectionFlipped = null;
 	}
 	
-	public function clear(?r:Float = 0, ?g:Float = 0, ?b:Float = 0, ?a:Float = 0, ?mask:Null<Int>):Void
+	public function clear(?mask:Null<Int>):Void
 	{	
-		GL.clearColor(r, g, b, a);
-		GL.clear(mask == null ? GL.COLOR_BUFFER_BIT : mask);	
+		GL.clearColor(clearRed, clearGreen, clearBlue, clearAlpha);
+		GL.clear(mask == null ? GL.COLOR_BUFFER_BIT : mask);
 	}
 	
 	private function createUVs():Void
@@ -220,3 +292,4 @@ class RenderTexture implements IFlxDestroyable
 		return n;
 	}
 }
+#end
