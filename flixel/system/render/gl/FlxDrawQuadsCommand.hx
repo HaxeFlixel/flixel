@@ -388,6 +388,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		
 		var state:RenderState = states[0];
 		var currentMaterial:FlxMaterial = state.material;
+		var nextMaterial:FlxMaterial;
 		
 		shader = setShader(currentMaterial.shader);
 		uploadData();
@@ -418,11 +419,11 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		for (i in 0...numQuads)
 		{
 			state = states[i];
-			currentMaterial = state.material;
+			nextMaterial = state.material;
 			
 			nextTexture = state.bitmap;
-			nextBlendMode = currentMaterial.blendMode;
-			nextSmoothing = currentMaterial.smoothing;
+			nextBlendMode = nextMaterial.blendMode;
+			nextSmoothing = nextMaterial.smoothing;
 			
 			blendSwap = (currentBlendMode != nextBlendMode);
 			textureSwap = (currentTexture != nextTexture);
@@ -444,6 +445,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 				}
 			}
 			
+			currentMaterial = nextMaterial;
 			batchSize++;
 		}
 		
@@ -533,7 +535,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, material:FlxMaterial):Void
 	{
-		if (numQuads == 0)
+		if (size == 0)
 			return;
 		
 		context.setBitmap(bitmap, material.smoothing, material.repeat);

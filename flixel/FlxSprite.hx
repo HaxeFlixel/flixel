@@ -7,6 +7,7 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
+import flixel.effects.FlxRenderTarget;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
@@ -180,6 +181,8 @@ class FlxSprite extends FlxObject
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader(get, set):FlxShader;
+	
+	public var renderTarget(default, set):FlxRenderTarget;
 	
 	/**
 	 * The actual frame used for sprite rendering
@@ -663,12 +666,15 @@ class FlxSprite extends FlxObject
 			return;
 		
 		if (dirty) //rarely 
-			calcFrame(useFramePixels);
+			calcFrame(useFramePixels);	
 		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
+			
+			if (renderTarget != null)
+				camera.setRenderTarget(renderTarget);
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			
@@ -680,6 +686,9 @@ class FlxSprite extends FlxObject
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
+			
+			if (renderTarget != null)
+				camera.setRenderTarget(null);
 		}
 		
 		#if FLX_DEBUG
@@ -1443,6 +1452,12 @@ class FlxSprite extends FlxObject
 			return doFlipY != animation.curAnim.flipY;
 		}
 		return doFlipY;
+	}
+	
+	private function set_renderTarget(value:FlxRenderTarget):FlxRenderTarget
+	{
+		this.cameras = (value != null) ? value.renderCameras : null;
+		return renderTarget = value;
 	}
 }
 

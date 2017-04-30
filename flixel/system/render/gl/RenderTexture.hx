@@ -1,11 +1,14 @@
 package flixel.system.render.gl;
 
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLTexture;
+import lime.math.Matrix4;
 import lime.utils.ArrayBufferView;
 import openfl.Lib;
 import openfl.display.BitmapData;
@@ -22,6 +25,7 @@ class RenderTexture implements IFlxDestroyable
 	public var renderBuffer(default, null):GLRenderbuffer;
 	public var texture(default, null):GLTexture;
 	public var bitmap(default, null):BitmapData;
+	public var graphic(default, null):FlxGraphic;
 	
 	public var buffer:GLBuffer;
 	
@@ -34,6 +38,15 @@ class RenderTexture implements IFlxDestroyable
 	public var actualHeight(default, null):Int = 0;
 	
 	public var uvData(default, null):FlxRect;
+	
+	public var clearBeforeRender:Bool = true;
+	
+	/**
+	 * Projection matrix used for render passes (excluding last render pass, which uses global projection matrix from GLRenderer)
+	 */
+	public var projection(default, null):Matrix4;
+	
+	public var projectionFlipped(default, null):Matrix4;
 	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
 	{
@@ -68,6 +81,9 @@ class RenderTexture implements IFlxDestroyable
 		
 		this.width = width;
 		this.height = height;
+		
+		projection = Matrix4.createOrtho(0, width, 0, height, -1000, 1000);
+		projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 		
 		var pow2W = width;
 		var pow2H = height;
@@ -126,6 +142,8 @@ class RenderTexture implements IFlxDestroyable
 		bitmap.__textureContext = gl;
 		bitmap.image = null;
 		
+		graphic = FlxGraphic.fromBitmapData(bitmap, false, null, false);
+		
 		// specify texture as color attachment
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 	}
@@ -151,6 +169,11 @@ class RenderTexture implements IFlxDestroyable
 		frameBuffer = null;
 		texture = null;
 		renderBuffer = null;
+		bitmap = FlxDestroyUtil.dispose(bitmap);
+		graphic = FlxDestroyUtil.destroy(graphic);
+		
+		projection = null;
+		projectionFlipped = null;
 	}
 	
 	public function clear(?r:Float = 0, ?g:Float = 0, ?b:Float = 0, ?a:Float = 0, ?mask:Null<Int>):Void

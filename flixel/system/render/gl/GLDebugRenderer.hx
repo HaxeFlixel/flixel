@@ -33,7 +33,7 @@ class GLDebugRenderer extends GLDisplayObject
 	
 	override public function prepare():Void
 	{
-		drawCommands.prepare(projection, context, buffer);
+		drawCommands.prepare(buffer.projection, context, buffer);
 		drawCommands.set(null, true, false, DefaultColorMaterial);
 	}
 	

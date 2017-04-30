@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.effects.FlxRenderTarget;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
@@ -37,7 +38,7 @@ import openfl.filters.BitmapFilter;
  * `flashSprite:Sprite` (which is a container for everything else in the camera, it's added to FlxG.game sprite)
  *     |-> `_scrollRect:Sprite` (which is used for cropping camera's graphic, mostly in tile render mode)
  *         |-> `_flashBitmap:Bitmap`  (its bitmapData property is buffer BitmapData, this var is used in blit render mode.
- *                                    Everything is rendered on buffer in blit render mode)
+ *         |                           Everything is rendered on buffer in blit render mode)
  *         |-> `canvas:Sprite`        (its graphics is used for rendering objects in tile render mode)
  *         |-> `debugLayer:Sprite`    (this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
@@ -344,6 +345,12 @@ class FlxCamera extends FlxBasic
 	{
 		if (view != null)
 			view.drawColorQuad(material, rect, matrix, color, alpha);
+	}
+	
+	public inline function setRenderTarget(?target:FlxRenderTarget):Void
+	{
+		if (view != null)
+			view.setRenderTarget(target);
 	}
 	
 	/**

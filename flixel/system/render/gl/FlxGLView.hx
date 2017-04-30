@@ -1,5 +1,6 @@
 package flixel.system.render.gl;
 
+import flixel.effects.FlxRenderTarget;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
@@ -24,6 +25,8 @@ import openfl.gl.GL;
 class FlxGLView extends FlxCameraView
 {
 	public var renderTexture(get, null):RenderTexture;
+	
+	private var currentRenderTexture:RenderTexture;
 	
 	private static var _fillRect:FlxRect = FlxRect.get();
 	
@@ -194,6 +197,37 @@ class FlxGLView extends FlxCameraView
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, material);
 	}
 	
+	override public function setRenderTarget(?target:FlxRenderTarget):Void 
+	{
+		var renderTarget:RenderTexture = (target != null) ? target.renderTexture : renderTexture;
+		var matrix = renderTarget.projection;
+		
+		if (currentRenderTexture != renderTarget)
+		{
+			if (_currentCommand != null)
+			{
+				_currentCommand.flush();
+				_currentCommand = null;
+			}
+			
+			_textureQuads.prepare(matrix, context, renderTarget);
+			_colorQuads.prepare(matrix, context, renderTarget);
+			_triangles.prepare(matrix, context, renderTarget);
+			_singleTextureQuad.prepare(matrix, context, renderTarget);
+			_singleColorQuad.prepare(matrix, context, renderTarget);
+			
+			if (renderTarget.clearBeforeRender)
+			{
+				var gl = context.gl;
+				context.checkRenderTarget(renderTarget);
+				renderTarget.clear(0.0, 0, 0, 0.0, gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+				renderTarget.clearBeforeRender = false;
+			}
+		}
+		
+		currentRenderTexture = renderTarget;
+	}
+	
 	override public function updateOffset():Void 
 	{
 		super.updateOffset();
@@ -322,15 +356,11 @@ class FlxGLView extends FlxCameraView
 	{
 		context.shaderManager.setShader(null);
 		
-		var matrix = _canvas.projection;
-		_textureQuads.prepare(matrix, context, renderTexture);
-		_colorQuads.prepare(matrix, context, renderTexture);
-		_triangles.prepare(matrix, context, renderTexture);
-		_singleTextureQuad.prepare(matrix, context, renderTexture);
-		_singleColorQuad.prepare(matrix, context, renderTexture);
-		_currentCommand = null;
+		currentRenderTexture = null;
+		renderTexture.clearBeforeRender = true; // TODO: change this behavior...
+		setRenderTarget(null);
 		
-		_canvas.clear();
+	//	_canvas.clear();
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
@@ -359,6 +389,7 @@ class FlxGLView extends FlxCameraView
 	{
 		var drawColor:FlxColor = color;
 		drawColor.alphaFloat = alpha;
+		debugLayer.rect(x, y, width, height, drawColor, thickness);
 		debugLayer.rect(x, y, width, height, drawColor, thickness);
 	}
 	

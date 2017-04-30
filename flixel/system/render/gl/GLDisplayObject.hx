@@ -26,13 +26,6 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	#if FLX_RENDER_GL
 	public var buffer(default, null):RenderTexture;
 	
-	/**
-	 * Projection matrix used for render passes (excluding last render pass, which uses global projection matrix from GLRenderer)
-	 */
-	public var projection(default, null):Matrix4;
-	
-	public var projectionFlipped(default, null):Matrix4;
-	
 	private var __height:Int;
 	private var __width:Int;
 	
@@ -49,9 +42,6 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	public function destroy():Void
 	{
 		buffer = FlxDestroyUtil.destroy(buffer);
-		
-		projection = null;
-		projectionFlipped = null;
 		context = null;
 	}
 	
@@ -62,9 +52,6 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		
 		FlxDestroyUtil.destroy(buffer);
 		buffer = new RenderTexture(width, height, false);
-		
-		projection = Matrix4.createOrtho(0, width, 0, height, -1000, 1000);
-		projectionFlipped = Matrix4.createOrtho(0, width, height, 0, -1000, 1000);
 	}
 	
 	public function clear():Void

@@ -1,6 +1,7 @@
 package flixel.system.render.common;
 
 import flixel.FlxCamera;
+import flixel.effects.FlxRenderTarget;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
@@ -254,6 +255,8 @@ class FlxCameraView implements IFlxDestroyable
 		?transform:ColorTransform):Void {}
 	
 	public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void {}
+	
+	public function setRenderTarget(?target:FlxRenderTarget):Void {}
 	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
