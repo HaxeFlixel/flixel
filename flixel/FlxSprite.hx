@@ -105,7 +105,7 @@ class FlxSprite extends FlxObject
 	public var graphic(default, set):FlxGraphic;
 	
 	/**
-	 * Sprite's material. Hold information about blending, shader, textures, etc.
+	 * Sprite's material. Stores information about blending, shader, textures, etc.
 	 * Useful for complex effects in gl render mode.
 	 */
 	public var material:FlxMaterial;

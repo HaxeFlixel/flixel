@@ -37,6 +37,8 @@ class GraphicAuto extends BitmapData {}
 class GraphicAutoAlt extends BitmapData {}
 
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
+// TODO: optionally use buffers for rendering in gl render mode
+// TODO: render target property???
 
 /**
  * This is a traditional tilemap display and collision class. It takes a string of comma-separated numbers and then associates
@@ -109,7 +111,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if openfl_legacy @:noCompletion #end
 	public var shader(get, set):FlxShader;
 	
-	// TODO: document it...
+	/**
+	 * Tilemap's material. Stores information about blending, shader, textures, etc.
+	 * Useful for complex effects in gl render mode.
+	 */
 	public var material:FlxMaterial = new FlxMaterial();
 	
 	/**
@@ -191,13 +196,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	override public function destroy():Void
 	{
-		// TODO: proper clean up (after introducing material property)...
-		
 		_flashPoint = null;
 		_flashRect = null;
 		
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		_buffers = FlxDestroyUtil.destroyArray(_buffers);
+		
+		material = FlxDestroyUtil.destroy(material);
 		
 		if (FlxG.renderBlit)
 		{
@@ -232,11 +237,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
-		
-		shader = null;
-		
-		material = FlxDestroyUtil.destroy(material);
-		
 		
 		super.destroy();
 	}
