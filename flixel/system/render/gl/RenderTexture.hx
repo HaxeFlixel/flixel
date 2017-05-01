@@ -39,6 +39,8 @@ class RenderTexture implements IFlxDestroyable
 	public var clearBlue:Float = 0.0;
 	public var clearAlpha:Float = 0.0;
 	
+	public var clearColor(get, set):FlxColor;
+	
 	private var rect:Rectangle;
 	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
@@ -79,7 +81,21 @@ class RenderTexture implements IFlxDestroyable
 	
 	public function clear(?mask:Null<Int>):Void
 	{	
-		bitmap.fillRect(rect, FlxColor.fromRGBFloat(clearRed, clearGreen, clearBlue, clearAlpha));
+		bitmap.fillRect(rect, clearColor);
+	}
+	
+	private inline function get_clearColor():FlxColor
+	{
+		return FlxColor.fromRGBFloat(clearRed, clearGreen, clearBlue, clearAlpha);
+	}
+	
+	private inline function set_clearColor(value:FlxColor):FlxColor
+	{
+		clearRed = value.redFloat;
+		clearGreen = value.greenFloat;
+		clearBlue = value.blueFloat;
+		clearAlpha = value.alphaFloat;
+		return value;
 	}
 }
 #else
@@ -119,6 +135,8 @@ class RenderTexture implements IFlxDestroyable
 	public var clearGreen:Float = 0.0;
 	public var clearBlue:Float = 0.0;
 	public var clearAlpha:Float = 0.0;
+	
+	public var clearColor(get, set):FlxColor;
 	
 	public function new(width:Int, height:Int, smoothing:Bool = true, powerOfTwo:Bool = false) 
 	{
@@ -290,6 +308,20 @@ class RenderTexture implements IFlxDestroyable
 		var n = 1;
 		while (n < value) n <<= 1;
 		return n;
+	}
+	
+	private inline function get_clearColor():FlxColor
+	{
+		return FlxColor.fromRGBFloat(clearRed, clearGreen, clearBlue, clearAlpha);
+	}
+	
+	private inline function set_clearColor(value:FlxColor):FlxColor
+	{
+		clearRed = value.redFloat;
+		clearGreen = value.greenFloat;
+		clearBlue = value.blueFloat;
+		clearAlpha = value.alphaFloat;
+		return value;
 	}
 }
 #end

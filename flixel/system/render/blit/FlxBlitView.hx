@@ -471,7 +471,9 @@ class FlxBlitView extends FlxCameraView
 		if (useBufferLocking)
 			_buffer.lock();
 		
-		fill(camera.bgColor, camera.useBgAlphaBlending);
+		if (camera.useBgColorFill)
+			fill(camera.bgColor, camera.useBgAlphaBlending);
+		
 		screen.dirty = true;
 	}
 	

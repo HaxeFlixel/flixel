@@ -202,7 +202,6 @@ class FlxGLView extends FlxCameraView
 	override public function setRenderTarget(?target:FlxRenderTarget):Void 
 	{
 		var renderTarget:RenderTexture = (target != null) ? target.renderTexture : renderTexture;
-		var matrix = renderTarget.projection;
 		
 		if (currentRenderTexture != renderTarget)
 		{
@@ -350,17 +349,18 @@ class FlxGLView extends FlxCameraView
 		context.shaderManager.setShader(null);
 		
 		currentRenderTexture = null;
-		renderTexture.clearBeforeRender = true; // TODO: change this behavior...
-		setRenderTarget(null);
+		renderTexture.clearBeforeRender = !camera.useBgAlphaBlending;
 		
-	//	_canvas.clear();
+		setRenderTarget(null);
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
 		debugLayer.prepare();
 		debugLayer.clear();
 		#end
-		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+		
+		if (camera.useBgColorFill)
+			fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 	}
 	
 	override public function unlock(useBufferLocking:Bool):Void 

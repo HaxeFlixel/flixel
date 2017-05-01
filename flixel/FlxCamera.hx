@@ -156,6 +156,11 @@ class FlxCamera extends FlxBasic
 	public var useBgAlphaBlending:Bool = false;
 	
 	/**
+	 * Whether to fill camera's view with its backgroung color or not.
+	 */
+	public var useBgColorFill:Bool = true;
+	
+	/**
 	 * Render view for this camera. 
 	 * All rendering related commands (like draw rectangle or fill camera view with specified color) are handled by this object.
 	 */

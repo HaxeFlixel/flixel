@@ -237,7 +237,9 @@ class FlxTileView extends FlxCameraView
 		#if FLX_DEBUG
 		debugLayer.graphics.clear();
 		#end
-		fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+		
+		if (camera.useBgColorFill)
+			fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 	}
 	
 	override public function unlock(useBufferLocking:Bool):Void 

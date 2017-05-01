@@ -73,15 +73,11 @@ class FlxRenderTarget extends FlxSprite
 	
 	private function get_clearColor():FlxColor
 	{
-		return FlxColor.fromRGBFloat(renderTexture.clearRed, renderTexture.clearGreen, renderTexture.clearBlue, renderTexture.clearAlpha);
+		return renderTexture.clearColor;
 	}
 	
 	private function set_clearColor(value:FlxColor):FlxColor
 	{
-		renderTexture.clearRed = value.redFloat;
-		renderTexture.clearGreen = value.greenFloat;
-		renderTexture.clearBlue = value.blueFloat;
-		renderTexture.clearAlpha = value.alphaFloat;
-		return value;
+		return renderTexture.clearColor = value;
 	}
 }
