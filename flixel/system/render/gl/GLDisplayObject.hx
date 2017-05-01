@@ -15,8 +15,6 @@ import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 #end
 
-// TODO: document this class...
-
 /**
  * Display object used by flixel for rendering cameras (buffer and debug layer) in gl render mode
  * @author Zaphod
@@ -24,11 +22,22 @@ import openfl._internal.renderer.opengl.GLRenderer;
 class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 {
 	#if FLX_RENDER_GL
+	/**
+	 * Render texture of this display object.
+	 * All flixel's commands are drawn on this texture.
+	 * And then this texture will be drawn on the screen.
+	 */
 	public var buffer(default, null):RenderTexture;
 	
-	private var __height:Int;
-	private var __width:Int;
+	/**
+	 * Internal variables for tracking object's dimensions.
+	 */
+	private var _width:Int;
+	private var _height:Int;
 	
+	/**
+	 * Render context helper, which is used for managing blendmodes, shaders, filters, etc.
+	 */
 	private var context:GLContextHelper;
 	
 	public function new(width:Int, height:Int, context:GLContextHelper)
@@ -69,7 +78,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
 	{
 		var bounds = Rectangle.__temp;
-		bounds.setTo(0, 0, __width, __height);
+		bounds.setTo(0, 0, _width, _height);
 		bounds.__transform(bounds, matrix);
 		rect.__expand(bounds.x, bounds.y, bounds.width, bounds.height);	
 	}
@@ -87,7 +96,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		var px = __worldTransform.__transformInverseX(x, y);
 		var py = __worldTransform.__transformInverseY(x, y);
 		
-		if (px > 0 && py > 0 && px <= __width && py <= __height) 
+		if (px > 0 && py > 0 && px <= _width && py <= _height) 
 		{
 			if (stack != null && !interactiveOnly) 
 				stack.push(hitObject);
@@ -100,24 +109,27 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	
 	override private function get_height():Float 
 	{	
-		return __height;	
+		return _height;	
 	}
 	
 	override private function set_height(value:Float):Float 
 	{	
-		return __height = Std.int(value);	
+		return _height = Std.int(value);	
 	}
 	
 	override private function get_width():Float 
 	{	
-		return __width;	
+		return _width;	
 	}
 	
 	override private function set_width(value:Float):Float 
 	{	
-		return __width = Std.int(value);	
+		return _width = Std.int(value);	
 	}
 	
+	/**
+	 * Actual rendering on the screen is handled here.
+	 */
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
 		var gl:GLRenderContext = renderSession.gl;

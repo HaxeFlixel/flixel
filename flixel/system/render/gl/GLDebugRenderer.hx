@@ -7,8 +7,6 @@ import flixel.util.FlxDestroyUtil;
 import openfl.Vector;
 import openfl.display.DisplayObjectContainer;
 
-// TODO: document this class...
-
 /**
  * Display object for camera's debug layer. All debug rendering is done with this object.
  * @author Zaphod
@@ -58,10 +56,11 @@ class GLDebugRenderer extends GLDisplayObject
 	
 	/**
 	 * Draws a circle to the screen
-	 * @param x       the x-axis value of the circle
-	 * @param y       the y-axis value of the circle
-	 * @param radius  the radius of the circle
-	 * @param color   the color of the circle
+	 * @param x       	the x-axis value of the circle
+	 * @param y       	the y-axis value of the circle
+	 * @param radius  	the radius of the circle
+	 * @param color   	the color of the circle
+	 * @param numSides	the number of segments circle will be divided.
 	 */
 	public function circle(x:Float, y:Float, radius:Float, color:FlxColor, numSides:Int = 40):Void
 	{
@@ -177,6 +176,14 @@ class GLDebugRenderer extends GLDisplayObject
         }
     }
 	
+	/**
+	 * Draws triangles wireframe to the screen
+	 * @param	matrix		transform matrix which will be applied to each vertex
+	 * @param	vertices	vertices coordinates (xy values)
+	 * @param	indices		indices of vertices to draw
+	 * @param	color		color of the wireframe lines
+	 * @param	thickness	the thickness of the wireframe line
+	 */
 	public function triangles(matrix:FlxMatrix, vertices:Vector<Float>, indices:Vector<Int>, color:FlxColor, thickness:Float = 1):Void
 	{
 		var numTriangles = Std.int(indices.length / 3);
@@ -216,8 +223,6 @@ class GLDebugRenderer extends GLDisplayObject
 	}
 	
 	#else
-	
 	public function destroy():Void {}
-	
 	#end
 }

@@ -20,6 +20,8 @@ import openfl.display.ShaderParameterType;
 @:access(openfl.display.ShaderParameter)
 @:access(openfl.display.Shader)
 
+// TODO: document it...
+
 class FlxMaterial implements IFlxDestroyable
 {
 	/**

@@ -24,8 +24,15 @@ import openfl.gl.GL;
 
 class FlxGLView extends FlxCameraView
 {
+	/**
+	 * Render texture of canvas object.
+	 */
 	public var renderTexture(get, null):RenderTexture;
 	
+	/**
+	 * Render texture currently used for rendering.
+	 * Values could be: canvas.buffer or render texture of render pass.
+	 */
 	private var currentRenderTexture:RenderTexture;
 	
 	private static var _fillRect:FlxRect = FlxRect.get();
@@ -78,7 +85,12 @@ class FlxGLView extends FlxCameraView
 	 */
 	private var _useRenderMatrix:Bool = false;
 	
+	/**
+	 * Default material used for rendering backround color quad.
+	 */
 	private var defaultColorMaterial:FlxMaterial;
+	
+	private var _helperMatrix:FlxMatrix = new FlxMatrix();
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -199,6 +211,11 @@ class FlxGLView extends FlxCameraView
 		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, material);
 	}
 	
+	/**
+	 * Switches currently used render texture.
+	 * Useful for render passes.
+	 * @param	target	render target to use. If null, then this camera's render texture will be used.
+	 */
 	override public function setRenderTarget(?target:FlxRenderTarget):Void 
 	{
 		var renderTarget:RenderTexture = (target != null) ? target.renderTexture : renderTexture;
@@ -350,7 +367,6 @@ class FlxGLView extends FlxCameraView
 		
 		currentRenderTexture = null;
 		renderTexture.clearBeforeRender = !camera.useBgAlphaBlending;
-		
 		setRenderTarget(null);
 		
 		// Clearing camera's debug sprite
@@ -448,20 +464,23 @@ class FlxGLView extends FlxCameraView
 		return _canvas;
 	}
 	
-	// Draw stack related code...
-	
-	private var _helperMatrix:FlxMatrix = new FlxMatrix();
-	
 	override private inline function render():Void
 	{
 		_canvas.finish();
 	}
 	
-	// TODO: rename it to buffer...
 	private function get_renderTexture():RenderTexture
 	{
 		if (_canvas != null)
 			return _canvas.buffer;
+		
+		return null;
+	}
+	
+	override function get_buffer():BitmapData 
+	{
+		if (_canvas != null)
+			return _canvas.buffer.bitmap;
 		
 		return null;
 	}

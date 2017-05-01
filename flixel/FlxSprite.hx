@@ -29,7 +29,6 @@ using flixel.util.FlxColorTransformUtil;
 // And don't forget about sprites with clipped frames: what i should do with their size in this case?
 
 // TODO: add option to "center origin" or create special subclass for it
-// TODO: render target...
 
 /**
  * The main "game object" class, the sprite is a `FlxObject`
@@ -105,7 +104,10 @@ class FlxSprite extends FlxObject
 	public var frames(default, set):FlxFramesCollection;
 	public var graphic(default, set):FlxGraphic;
 	
-	// TODO: document it...
+	/**
+	 * Sprite's material. Hold information about blending, shader, textures, etc.
+	 * Useful for complex effects in gl render mode.
+	 */
 	public var material:FlxMaterial;
 	
 	/**
@@ -182,6 +184,11 @@ class FlxSprite extends FlxObject
 	#if openfl_legacy @:noCompletion #end
 	public var shader(get, set):FlxShader;
 	
+	/**
+	 * Render target for this sprite. 
+	 * If null then sprite will render on camera's buffer.
+	 * Could be used as render pass target in gl render mode.
+	 */
 	public var renderTarget(default, set):FlxRenderTarget;
 	
 	/**
@@ -298,8 +305,6 @@ class FlxSprite extends FlxObject
 	{
 		super.destroy();
 		
-		// TODO: proper clean up (after introducing material property)...
-		
 		animation = FlxDestroyUtil.destroy(animation);
 		
 		offset = FlxDestroyUtil.put(offset);
@@ -320,8 +325,6 @@ class FlxSprite extends FlxObject
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
-		
-		shader = null;
 		
 		material = FlxDestroyUtil.destroy(material);
 	}

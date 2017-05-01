@@ -18,6 +18,10 @@ import lime.graphics.RenderContext;
 import lime.graphics.Renderer;
 #end
 
+/**
+ * Helper class to work with various gl context state properties,
+ * such as switching shaders, blendmodes, frame buffers, etc.
+ */
 class GLContextHelper 
 {
 	#if FLX_RENDER_GL
@@ -126,8 +130,8 @@ class GLContextHelper
 	{
 		createManagers();
 	}
-	#else
 	
+	#else
 	public function new() {}
 	#end
 }

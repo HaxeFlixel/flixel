@@ -27,7 +27,6 @@ import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 
 // TODO: shader based scaling modes
-// TODO: add property for using background color (gl optimization?)...
 
 /**
  * The camera class is used to display the game's visuals.

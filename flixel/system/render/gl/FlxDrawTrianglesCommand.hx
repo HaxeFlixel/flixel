@@ -31,8 +31,6 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
 	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	
-	private var _vertices:Vector<Float> = new Vector<Float>(); // TODO: remove this and implement gl based debug rendering...
-	
 	public var data:FlxTrianglesData;
 	
 	/**
