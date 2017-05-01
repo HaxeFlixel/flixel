@@ -61,7 +61,9 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		buffer.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	}
 	
-	public function prepare():Void {}
+	public function prepare(?renderTarget:RenderTexture):Void {}
+	
+	public function finish():Void {}
 	
 	@:access(openfl.geom.Rectangle)
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 

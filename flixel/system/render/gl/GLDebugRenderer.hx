@@ -16,7 +16,7 @@ import openfl.display.DisplayObjectContainer;
 class GLDebugRenderer extends GLDisplayObject
 {
 	#if FLX_RENDER_GL
-	private static var DefaultColorMaterial:FlxMaterial = new FlxMaterial();
+	private var defaultColorMaterial:FlxMaterial = new FlxMaterial();
 	
 	private var drawCommands:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
 	
@@ -29,15 +29,16 @@ class GLDebugRenderer extends GLDisplayObject
 	{
 		super.destroy();
 		drawCommands = FlxDestroyUtil.destroy(drawCommands);
+		defaultColorMaterial = FlxDestroyUtil.destroy(defaultColorMaterial);
 	}
 	
-	override public function prepare():Void
+	override public function prepare(?renderTarget:RenderTexture):Void
 	{
-		drawCommands.prepare(buffer.projection, context, buffer);
-		drawCommands.set(null, true, false, DefaultColorMaterial);
+		drawCommands.prepare(context, buffer);
+		drawCommands.set(null, true, false, defaultColorMaterial);
 	}
 	
-	public function finish():Void
+	override public function finish():Void
 	{
 		drawCommands.flush();
 	}
@@ -114,7 +115,7 @@ class GLDebugRenderer extends GLDisplayObject
 	 */
 	public function fillRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
 	{
-		drawCommands.startQuad(null, DefaultColorMaterial);
+		drawCommands.startQuad(null, defaultColorMaterial);
 		drawCommands.addColoredVertex(x, y, color);
 		drawCommands.addColoredVertex(x + width, y, color);
 		drawCommands.addColoredVertex(x + width, y + height, color);
@@ -143,7 +144,7 @@ class GLDebugRenderer extends GLDisplayObject
 		dx = (dy / len) * ht;
 		dy = (tx / len) * ht;
 		
-		drawCommands.startQuad(null, DefaultColorMaterial);
+		drawCommands.startQuad(null, defaultColorMaterial);
 		drawCommands.addColoredVertex(x1 + dx, y1 + dy, color);
 		drawCommands.addColoredVertex(x1 - dx, y1 - dy, color);
 		drawCommands.addColoredVertex(x2 - dx, y2 - dy, color);

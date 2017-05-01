@@ -29,9 +29,9 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		super();
 	}
 	
-	public function prepare(uniformMatrix:Matrix4, context:GLContextHelper, buffer:RenderTexture):Void 
+	public function prepare(context:GLContextHelper, buffer:RenderTexture):Void 
 	{
-		this.uniformMatrix = uniformMatrix;
+		this.uniformMatrix = buffer.projection;
 		this.context = context;
 		this.buffer = buffer;
 		context.currentBuffer = null;

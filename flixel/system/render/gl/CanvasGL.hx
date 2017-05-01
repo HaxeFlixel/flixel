@@ -1,5 +1,8 @@
 package flixel.system.render.gl;
 
+import flixel.graphics.FlxMaterial;
+import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 
@@ -27,6 +30,28 @@ class CanvasGL extends GLDisplayObject
 	private var colorFilter:ColorTransformFilter;
 	private var filtersArray:Array<BitmapFilter>;
 	
+	/**
+	 * Currently used draw stack item
+	 */
+	private var currentCommand:FlxDrawHardwareCommand<Dynamic>;
+	
+	private var singleTextureQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true, 1);
+	
+	private var singleColorQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false, 1);
+	
+	/**
+	 * Last draw tiles item
+	 */
+	private var textureQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
+	/**
+	 * Last draw tiles item
+	 */
+	private var colorQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
+	/**
+	 * Last draw triangles item
+	 */
+	private var triangles:FlxDrawTrianglesCommand = new FlxDrawTrianglesCommand();
+	
 	public function new(width:Int, height:Int, context:GLContextHelper)
 	{
 		super(width, height, context);
@@ -41,6 +66,73 @@ class CanvasGL extends GLDisplayObject
 		
 		colorFilter = null;
 		filtersArray = null;
+		
+		textureQuads = FlxDestroyUtil.destroy(textureQuads);
+		colorQuads = FlxDestroyUtil.destroy(colorQuads);
+		triangles = FlxDestroyUtil.destroy(triangles);
+		singleTextureQuad = FlxDestroyUtil.destroy(singleTextureQuad);
+		singleColorQuad = FlxDestroyUtil.destroy(singleColorQuad);
+		currentCommand = null;
+	}
+	
+	override public function finish():Void 
+	{
+		if (currentCommand != null)
+		{
+			currentCommand.flush();
+			currentCommand = null;
+		}
+	}
+	
+	override public function prepare(?renderTarget:RenderTexture):Void 
+	{
+		textureQuads.prepare(context, renderTarget);
+		colorQuads.prepare(context, renderTarget);
+		triangles.prepare(context, renderTarget);
+		singleTextureQuad.prepare(context, renderTarget);
+		singleColorQuad.prepare(context, renderTarget);
+		currentCommand = null;
+	}
+	
+	public inline function getTextureQuads(material:FlxMaterial):FlxDrawQuadsCommand
+	{
+		if (currentCommand != null)
+		{
+			if (material.batchable && currentCommand != textureQuads)
+				currentCommand.flush();
+			else if (!material.batchable)
+				currentCommand.flush();
+		}
+		
+		var result = (material.batchable) ? textureQuads : singleTextureQuad;
+		currentCommand = result;
+		return result;
+	}
+	
+	// TODO: request drawCommand (optimization for drawing sequence of quads with the same material)...
+	
+	public inline function getColorQuads(material:FlxMaterial):FlxDrawQuadsCommand
+	{
+		if (currentCommand != null)
+		{
+			if (material.batchable && currentCommand != textureQuads)
+				currentCommand.flush();
+			else if (!material.batchable)
+				currentCommand.flush();
+		}
+		
+		var result = (material.batchable) ? colorQuads : singleColorQuad;
+		currentCommand = result;
+		return result;
+	}
+	
+	public inline function getTriangles(material:FlxMaterial):FlxDrawTrianglesCommand
+	{
+		if (currentCommand != null)
+			currentCommand.flush();
+		
+		currentCommand = null;  // i don't batch triangles...
+		return triangles;
 	}
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
