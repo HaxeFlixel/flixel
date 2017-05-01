@@ -20,8 +20,9 @@ import openfl.display.ShaderParameterType;
 @:access(openfl.display.ShaderParameter)
 @:access(openfl.display.Shader)
 
-// TODO: document it...
-
+/**
+ * Material for holding information about graphical effects applied to sprite or tilemap.
+ */
 class FlxMaterial implements IFlxDestroyable
 {
 	/**
@@ -34,7 +35,7 @@ class FlxMaterial implements IFlxDestroyable
 	private static var uniformMatrix4:Float32Array = new Float32Array(16);
 	
 	/**
-	 * Shader of the material. Different shaders could have the same shader, 
+	 * Shader of the material. Different materials could have the same shader, 
 	 * but material stores different data (uniforms, textures).
 	 */
 	public var shader(default, set):FlxShader;
@@ -65,7 +66,7 @@ class FlxMaterial implements IFlxDestroyable
 	public var repeat:Bool = true;
 	
 	/**
-	 * Tells if this material should be batched.
+	 * Tells if this material should be batched (try to batch it with another sprites or not).
 	 */
 	public var batchable:Bool = true;
 	
@@ -355,6 +356,11 @@ class FlxMaterial implements IFlxDestroyable
 		}
 	}
 	
+	/**
+	 * Method for analizing shader's source and build shader data (list of shader's uniforms and attributes).
+	 * @param	source			source of the shader (vertex or fragment)
+	 * @param	storageType		type of the data to search (uniforms or attributes).
+	 */
 	private function processGLData(source:String, storageType:String):Void
 	{
 		var lastMatch = 0, position, regex, name, type;
