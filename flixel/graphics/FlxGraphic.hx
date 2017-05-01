@@ -404,8 +404,13 @@ class FlxGraphic implements IFlxDestroyable
 		#if (lime_legacy && !flash)
 		if (FlxG.renderTile && canBeDumped)
 		{
-			// TODO: recreate dumpBits() for new hardware renderer...
 			bitmap.dumpBits();
+			isDumped = true;
+		}
+		#elseif FLX_RENDER_GL
+		if (FlxG.renderTile && canBeDumped)
+		{
+			bitmap.disposeImage();
 			isDumped = true;
 		}
 		#end
