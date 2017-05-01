@@ -31,24 +31,33 @@ class CanvasGL extends GLDisplayObject
 	private var filtersArray:Array<BitmapFilter>;
 	
 	/**
-	 * Currently used draw stack item
+	 * Currently used draw command
 	 */
 	private var currentCommand:FlxDrawHardwareCommand<Dynamic>;
 	
+	/**
+	 * Draw command used for rendering single textured quad (for less data upload on GPU)
+	 */
 	private var singleTextureQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true, 1);
 	
+	/**
+	 * Draw command used for rendering single colored (non-textured) quad.
+	 * Used for quads with materials without batching.
+	 */
 	private var singleColorQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false, 1);
 	
 	/**
-	 * Last draw tiles item
+	 * Draw command used for rendering batches of textured quads.
 	 */
 	private var textureQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
+	
 	/**
-	 * Last draw tiles item
+	 * Draw command used for rendering batches of non-textured quads.
 	 */
 	private var colorQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
+	
 	/**
-	 * Last draw triangles item
+	 * Draw command used for rendering complex meashes, both textured and non-textured.
 	 */
 	private var triangles:FlxDrawTrianglesCommand = new FlxDrawTrianglesCommand();
 	
@@ -137,8 +146,6 @@ class CanvasGL extends GLDisplayObject
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		// TODO: sprites might have renderTarget property
-		
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
