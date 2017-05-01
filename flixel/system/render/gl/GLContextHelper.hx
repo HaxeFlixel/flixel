@@ -1,5 +1,6 @@
 package flixel.system.render.gl;
 
+import flixel.system.render.gl.FlxRenderTexture;
 import lime.graphics.GLRenderContext;
 import openfl.Lib;
 import openfl.display.BitmapData;
@@ -26,7 +27,7 @@ class GLContextHelper
 {
 	#if FLX_RENDER_GL
 	public var currentShader:FlxShader = null;
-	public var currentBuffer:RenderTexture = null;
+	public var currentBuffer:FlxRenderTexture = null;
 	
 	public var blendModeManager:GLBlendModeManager;
 	public var shaderManager:GLShaderManager;
@@ -61,7 +62,7 @@ class GLContextHelper
 		}
 	}
 	
-	public inline function checkRenderTarget(buffer:RenderTexture):Void
+	public inline function checkRenderTarget(buffer:FlxRenderTexture):Void
 	{
 		if (currentBuffer != buffer)
 		{

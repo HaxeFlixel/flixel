@@ -59,7 +59,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		color = null;
 	}
 	
-	override public function prepare(context:GLContextHelper, buffer:RenderTexture):Void
+	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void
 	{
 		reset();
 		super.prepare(context, buffer);

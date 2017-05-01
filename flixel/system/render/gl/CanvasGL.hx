@@ -93,7 +93,7 @@ class CanvasGL extends GLDisplayObject
 		}
 	}
 	
-	override public function prepare(?renderTarget:RenderTexture):Void 
+	override public function prepare(?renderTarget:FlxRenderTexture):Void 
 	{
 		textureQuads.prepare(context, renderTarget);
 		colorQuads.prepare(context, renderTarget);

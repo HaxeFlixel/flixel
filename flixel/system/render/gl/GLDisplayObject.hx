@@ -27,7 +27,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	 * All flixel's commands are drawn on this texture.
 	 * And then this texture will be drawn on the screen.
 	 */
-	public var buffer(default, null):RenderTexture;
+	public var buffer(default, null):FlxRenderTexture;
 	
 	/**
 	 * Internal variables for tracking object's dimensions.
@@ -60,7 +60,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		this.height = height;
 		
 		FlxDestroyUtil.destroy(buffer);
-		buffer = new RenderTexture(width, height, false);
+		buffer = new FlxRenderTexture(width, height, false);
 	}
 	
 	public function clear():Void
@@ -70,7 +70,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		buffer.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	}
 	
-	public function prepare(?renderTarget:RenderTexture):Void {}
+	public function prepare(?renderTarget:FlxRenderTexture):Void {}
 	
 	public function finish():Void {}
 	

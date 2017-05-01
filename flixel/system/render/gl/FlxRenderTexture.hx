@@ -19,7 +19,7 @@ import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
 #if flash
-class RenderTexture implements IFlxDestroyable
+class FlxRenderTexture implements IFlxDestroyable
 {
 	public var bitmap(default, null):BitmapData;
 	public var graphic(default, null):FlxGraphic;
@@ -100,7 +100,7 @@ class RenderTexture implements IFlxDestroyable
 }
 #else
 @:access(openfl.display.BitmapData)
-class RenderTexture implements IFlxDestroyable
+class FlxRenderTexture implements IFlxDestroyable
 {
 	public static var defaultFramebuffer:GLFramebuffer = null;
 	

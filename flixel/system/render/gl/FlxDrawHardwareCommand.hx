@@ -2,7 +2,7 @@ package flixel.system.render.gl;
 
 import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flixel.system.render.gl.RenderTexture;
+import flixel.system.render.gl.FlxRenderTexture;
 import lime.graphics.GLRenderContext;
 import openfl.gl.GL;
 
@@ -22,14 +22,14 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	
 	private var gl:GLRenderContext;
 	
-	private var buffer:RenderTexture;
+	private var buffer:FlxRenderTexture;
 	
 	public function new() 
 	{
 		super();
 	}
 	
-	public function prepare(context:GLContextHelper, buffer:RenderTexture):Void 
+	public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void 
 	{
 		this.uniformMatrix = buffer.projection;
 		this.context = context;

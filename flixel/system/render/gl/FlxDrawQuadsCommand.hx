@@ -166,7 +166,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		this.context = context;
 	}
 	
-	override public function prepare(context:GLContextHelper, buffer:RenderTexture):Void
+	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void
 	{
 		setContext(context);
 		super.prepare(context, buffer);

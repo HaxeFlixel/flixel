@@ -30,7 +30,7 @@ class GLDebugRenderer extends GLDisplayObject
 		defaultColorMaterial = FlxDestroyUtil.destroy(defaultColorMaterial);
 	}
 	
-	override public function prepare(?renderTarget:RenderTexture):Void
+	override public function prepare(?renderTarget:FlxRenderTexture):Void
 	{
 		drawCommands.prepare(context, buffer);
 		drawCommands.set(null, true, false, defaultColorMaterial);

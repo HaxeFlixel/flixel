@@ -27,13 +27,13 @@ class FlxGLView extends FlxCameraView
 	/**
 	 * Render texture of canvas object.
 	 */
-	public var renderTexture(get, null):RenderTexture;
+	public var renderTexture(get, null):FlxRenderTexture;
 	
 	/**
 	 * Render texture currently used for rendering.
 	 * Values could be: canvas.buffer or render texture of render pass.
 	 */
-	private var currentRenderTexture:RenderTexture;
+	private var currentRenderTexture:FlxRenderTexture;
 	
 	private static var _fillRect:FlxRect = FlxRect.get();
 	
@@ -218,7 +218,7 @@ class FlxGLView extends FlxCameraView
 	 */
 	override public function setRenderTarget(?target:FlxRenderTarget):Void 
 	{
-		var renderTarget:RenderTexture = (target != null) ? target.renderTexture : renderTexture;
+		var renderTarget:FlxRenderTexture = (target != null) ? target.renderTexture : renderTexture;
 		
 		if (currentRenderTexture != renderTarget)
 		{
@@ -469,7 +469,7 @@ class FlxGLView extends FlxCameraView
 		_canvas.finish();
 	}
 	
-	private function get_renderTexture():RenderTexture
+	private function get_renderTexture():FlxRenderTexture
 	{
 		if (_canvas != null)
 			return _canvas.buffer;
