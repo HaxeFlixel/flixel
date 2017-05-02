@@ -8,6 +8,7 @@ import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.shaders.FlxShader;
+import flixel.graphics.shaders.quads.FlxDistanceFieldShader;
 import flixel.math.FlxPoint;
 import flixel.system.render.common.FlxCameraView;
 import flixel.text.FlxText.FlxTextAlign;
@@ -355,8 +356,6 @@ class FlxBitmapText extends FlxSprite
 			
 			if (_facingVerticalMult != 1)
 				oy = frameHeight - oy;
-				
-			var textShader:FlxShader = (shader == null && font.distanceField) ? FlxBitmapFont.DistanceFieldShader : shader;
 			
 			for (camera in cameras)
 			{
@@ -406,7 +405,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, textShader);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
 				}
 				
 				for (j in 0...textLength)
@@ -428,7 +427,7 @@ class FlxBitmapText extends FlxSprite
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, textShader);
+					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
 				}
 				
 				#if FLX_DEBUG
@@ -1454,6 +1453,13 @@ class FlxBitmapText extends FlxSprite
 		{
 			font = value;
 			smoothing = smoothing || font.distanceField;
+			
+			if (shader == null && font.distanceField)
+			{
+				shader = FlxBitmapFont.DistanceFieldShader;
+				shader.data.smoothing = [FlxDistanceFieldShader.DEFAULT_FONT_SMOOTHING];
+			}
+			
 			pendingTextChange = true;
 		}
 		

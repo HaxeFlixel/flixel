@@ -1,13 +1,19 @@
 package flixel.graphics.shaders.quads;
 
-import flixel.graphics.shaders.FlxBaseShader;
-
 /**
  * Default shader used for rendering distance field fonts.
  * See: https://github.com/libgdx/libgdx/wiki/Distance-field-fonts
  */
 class FlxDistanceFieldShader extends FlxTexturedShader
 {
+	/**
+	 * Default font smoothing factor, equals to (1.0 / 16.0).
+	 * Right value for smoothing is `0.25f / (spread * scale)`, where
+	 * `spread` value is defined at font atlas creation,
+	 * and `scale` value is the scale factor of bitmap text.
+	 */
+	public static inline var DEFAULT_FONT_SMOOTHING:Float = 1.0 / 16.0;
+	
 	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"
 			varying vec2 vTexCoord;
@@ -25,28 +31,9 @@ class FlxDistanceFieldShader extends FlxTexturedShader
 				gl_FragColor = vec4(vColor.rgb * alpha, vColor.a * alpha);
 			}";
 	
-	public var smoothing(default, set):Float;
-	
 	public function new(?fragment:String) 
 	{
 		fragment = (fragment == null) ? DEFAULT_FRAGMENT_SOURCE : fragment;
 		super(null, fragment);
-		
-		smoothing = 1.0 / 16.0;
-	}
-	
-	/**
-	 * Font smoothing factor.
-	 * Right value for smoothing is `0.25f / (spread * scale)`, where
-	 * `spread` is defined at font atlas creation,
-	 * `scale` is the scale of bitmap text.
-	 * 
-	 * Default value is (1.0 / 16.0).
-	 */
-	private function set_smoothing(value:Float):Float
-	{
-		smoothing = value;
-		data.smoothing.value = [value];
-		return value;
 	}
 }

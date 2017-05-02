@@ -8,7 +8,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.graphics.shaders.tiles.FlxDistanceFieldShader;
+import flixel.graphics.shaders.quads.FlxDistanceFieldShader;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;
@@ -804,11 +804,8 @@ class FlxBitmapFont extends FlxFramesCollection
 			code = Utf8.charCodeAt(char.name, 0);
 			
 			character = new FlxCharacter(code, charWithBorder, getCharAdvance(code));
+			character.kernings = char.kernings;
 			font.characters.set(code, character);
-			
-			// TODO: copy character's kernings.
-			
-			
 		}
 		
 		font.updateSourceHeight();

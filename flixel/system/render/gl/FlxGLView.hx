@@ -60,7 +60,7 @@ class FlxGLView extends FlxCameraView
 	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
-	private var _canvas:CanvasGL; // TODO: implement canvas version of this class for js target...
+	private var _canvas:CanvasGL;
 	
 	#if FLX_DEBUG
 	/**
