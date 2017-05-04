@@ -22,7 +22,7 @@ class FlxDistanceFieldShader extends FlxTexturedShader
 			
 			uniform sampler2D uImage0;
 			
-			uniform float smoothing = 1.0 / 16.0;
+			uniform float smoothing;// = 1.0 / 16.0;
 			
 			void main(void) 
 			{

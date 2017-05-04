@@ -384,7 +384,8 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing);
+				// TODO: fix this...
+				//	view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing);
 				}
 				
 				for (j in 0...borderLength)
@@ -405,7 +406,7 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
+					view.drawPixels(currFrame, material, _matrix, _colorParams);
 				}
 				
 				for (j in 0...textLength)
@@ -427,7 +428,7 @@ class FlxBitmapText extends FlxSprite
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					
-					view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing, shader);
+					view.drawPixels(currFrame, material, _matrix, _colorParams);
 				}
 				
 				#if FLX_DEBUG
@@ -1457,7 +1458,7 @@ class FlxBitmapText extends FlxSprite
 			if (shader == null && font.distanceField)
 			{
 				shader = FlxBitmapFont.DistanceFieldShader;
-				shader.data.smoothing = [FlxDistanceFieldShader.DEFAULT_FONT_SMOOTHING];
+				shader.data.smoothing.value = [FlxDistanceFieldShader.DEFAULT_FONT_SMOOTHING];
 			}
 			
 			pendingTextChange = true;

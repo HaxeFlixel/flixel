@@ -804,7 +804,8 @@ class FlxBitmapFont extends FlxFramesCollection
 			code = Utf8.charCodeAt(char.name, 0);
 			
 			character = new FlxCharacter(code, charWithBorder, getCharAdvance(code));
-			character.kernings = char.kernings;
+		// TODO: fix this...
+		//	character.kernings = char.kernings;
 			font.characters.set(code, character);
 		}
 		
