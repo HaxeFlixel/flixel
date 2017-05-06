@@ -2,10 +2,9 @@ package flixel.effects;
 
 import flixel.FlxCamera;
 import flixel.FlxSprite;
-import flixel.system.render.gl.FlxRenderTexture;
+import flixel.system.render.common.FlxRenderTexture;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.gl.GL;
 
 /**
  * Special case of FlxSprite which can be used as a render target for other sprites.

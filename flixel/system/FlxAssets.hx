@@ -32,7 +32,10 @@ typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 
-typedef FlxShader = #if (openfl_legacy || nme) Dynamic #else  openfl.display.Shader; #end
+typedef FlxShader = #if (openfl_legacy || nme) Dynamic; #else  openfl.display.Shader; #end
+
+typedef AssetType = #if (openfl >= "5.0.0") openfl.utils.AssetType #else  openfl.Assets.AssetType; #end
+
 #end
 
 class FlxAssets

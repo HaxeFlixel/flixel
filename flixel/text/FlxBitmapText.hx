@@ -1455,11 +1455,13 @@ class FlxBitmapText extends FlxSprite
 			font = value;
 			smoothing = smoothing || font.distanceField;
 			
+			#if FLX_RENDER_GL
 			if (shader == null && font.distanceField)
 			{
 				shader = FlxBitmapFont.DistanceFieldShader;
 				shader.data.smoothing.value = [FlxDistanceFieldShader.DEFAULT_FONT_SMOOTHING];
 			}
+			#end
 			
 			pendingTextChange = true;
 		}

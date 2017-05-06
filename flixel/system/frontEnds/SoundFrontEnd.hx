@@ -10,6 +10,7 @@ import flixel.system.FlxSound;
 import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
+import flixel.system.FlxAssets.AssetType;
 
 @:allow(flixel.FlxG)
 class SoundFrontEnd

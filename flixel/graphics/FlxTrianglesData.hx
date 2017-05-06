@@ -443,9 +443,7 @@ class FlxTrianglesData implements IFlxDestroyable
 			return;
 		
 		var numCoords:Int = vertices.length;
-		#if (openfl >= "4.9.0")
 		var numBytes:Int = numCoords * Float32Array.BYTES_PER_ELEMENT;
-		#end
 		
 		if (verticesDirty)
 		{
@@ -457,22 +455,13 @@ class FlxTrianglesData implements IFlxDestroyable
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
 			
-			#if (openfl >= "4.9.0")
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, verticesArray, GL.STATIC_DRAW);
-			#else
-			GL.bufferData(GL.ARRAY_BUFFER, verticesArray, GL.STATIC_DRAW);
-			#end
 			verticesDirty = false;
 		}
 		else
 		{
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
-			
-			#if (openfl >= "4.9.0")
 			GL.bufferSubData(GL.ARRAY_BUFFER, 0, numBytes, verticesArray);
-			#else
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, verticesArray);
-			#end
 		}
 	}
 	
@@ -493,12 +482,8 @@ class FlxTrianglesData implements IFlxDestroyable
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, uvsBuffer);
 			
-			#if (openfl >= "4.9.0")
 			var numBytes:Int = numUVs * Float32Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, uvsArray, GL.STATIC_DRAW);
-			#else
-			GL.bufferData(GL.ARRAY_BUFFER, uvsArray, GL.STATIC_DRAW);
-			#end
 			uvtDirty = false;
 		}
 		else
@@ -528,12 +513,8 @@ class FlxTrianglesData implements IFlxDestroyable
 			// update the colors
 			GL.bindBuffer(GL.ARRAY_BUFFER, colorsBuffer);
 			
-			#if (openfl >= "4.9.0")
 			var numBytes:Int = numColors * UInt32Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, colorsArray, GL.STATIC_DRAW);
-			#else
-			GL.bufferData(GL.ARRAY_BUFFER, colorsArray, GL.STATIC_DRAW);
-			#end
 			colorsDirty = false;
 		}
 		else
@@ -559,12 +540,8 @@ class FlxTrianglesData implements IFlxDestroyable
 			
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indicesBuffer);
 			
-			#if (openfl >= "4.9.0")
 			var numBytes:Int = numIndices * UInt16Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, numBytes, indicesArray, GL.STATIC_DRAW);
-			#else
-			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indicesArray, GL.STATIC_DRAW);
-			#end
 			indicesDirty = false;
 		}
 		else

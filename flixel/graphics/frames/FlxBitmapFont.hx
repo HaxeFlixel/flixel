@@ -804,8 +804,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			code = Utf8.charCodeAt(char.name, 0);
 			
 			character = new FlxCharacter(code, charWithBorder, getCharAdvance(code));
-		// TODO: fix this...
-		//	character.kernings = char.kernings;
+			character.kernings = getCharacter(code).kernings;
 			font.characters.set(code, character);
 		}
 		
@@ -830,6 +829,7 @@ class FlxCharacter implements IFlxDestroyable
 	
 	public var height(get, null):Float;
 	
+	@:allow(flixel.graphics.frames.FlxBitmapFont)
 	private var kernings:Map<Int, Int> = new Map<Int, Int>();
 	
 	public function new(charCode:Int, frame:FlxFrame, xAdvance:Float)

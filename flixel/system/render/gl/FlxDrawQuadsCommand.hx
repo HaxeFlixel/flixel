@@ -147,20 +147,12 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			indexBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			
-			#if (openfl >= "4.9.0")
 			var indicesNumBytes:Int = size * FlxCameraView.INDICES_PER_QUAD * UInt16Array.BYTES_PER_ELEMENT;
 			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesNumBytes, indices, gl.STATIC_DRAW);
-			#else
-			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-			#end
 			
 			vertexBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-			#if (openfl >= "4.9.0")
 			gl.bufferData(gl.ARRAY_BUFFER, verticesNumBytes, positions, gl.DYNAMIC_DRAW);
-			#else
-			gl.bufferData(gl.ARRAY_BUFFER, positions, gl.DYNAMIC_DRAW);
-			#end
 		}
 		
 		this.context = context;
@@ -507,30 +499,18 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		// upload the verts to the buffer  
 		if (numQuads > 0.5 * size)
 		{
-			#if (openfl >= "4.9.0")
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, verticesNumBytes, positions);
-			#else
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, positions);
-			#end
 		}
 		else
 		{
 			var viewLen:Int = numQuads * FlxCameraView.VERTICES_PER_QUAD * elementsPerVertex;
 			var view = positions.subarray(0, viewLen);
 			
-			#if (openfl >= "4.9.0")
 			var numBytes:Int = viewLen * Float32Array.BYTES_PER_ELEMENT;
 			gl.bufferSubData(gl.ARRAY_BUFFER, 0, numBytes, view);
-			#else
-			gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
-			#end
 		}
 		
-		#if (openfl >= "4.9.0")
 		gl.uniformMatrix4fv(shader.data.uMatrix.index, 1, false, uniformMatrix);
-		#else
-		gl.uniformMatrix4fv(shader.data.uMatrix.index, false, uniformMatrix);
-		#end
 	}
 	
 	private function renderBatch(bitmap:BitmapData, size:Int, startIndex:Int, material:FlxMaterial):Void

@@ -193,31 +193,19 @@ class FlxMaterial implements IFlxDestroyable
 						for (i in 0...4) 
 							uniformMatrix2[i] = value[i];
 						
-						#if (openfl >= "4.9.0")
 						gl.uniformMatrix2fv(index, 1, false, uniformMatrix2);
-						#else
-						gl.uniformMatrix2fv(index, false, uniformMatrix2);
-						#end
 					
 					case MATRIX3X3:
 						for (i in 0...9)
 							uniformMatrix3[i] = value[i];
 						
-						#if (openfl >= "4.9.0")
 						gl.uniformMatrix3fv(index, 1, false, uniformMatrix3);
-						#else
-						gl.uniformMatrix3fv(index, false, uniformMatrix3);
-						#end
 					
 					case MATRIX4X4:
 						for (i in 0...16)
 							uniformMatrix4[i] = value[i];
 						
-						#if (openfl >= "4.9.0")
 						gl.uniformMatrix4fv(index, 1, false, uniformMatrix4);
-						#else
-						gl.uniformMatrix4fv(index, false, uniformMatrix4);
-						#end
 					
 					default:
 						
