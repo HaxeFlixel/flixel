@@ -170,7 +170,7 @@ class FlxTrianglesBatchData extends FlxTrianglesData
 	 */
 	public function addTriangles(vertices:Vector<Float>, ?uv:Vector<Float>, indices:Vector<Int>, ?colors:Vector<FlxColor>):FlxTrianglesBatchData
 	{
-		var numVertices:Int = vertices.length >> 2;
+		var numVertices:Int = vertices.length >> 1;
 		var numIndices:Int = indices.length;
 		
 		if (vertexCount + numVertices > maxVertices)
@@ -338,7 +338,7 @@ class FlxTrianglesBatchData extends FlxTrianglesData
 			}
 			#end
 			
-			vertexCount = value.length >> 2;
+			vertexCount = value.length >> 1;
 			trianglesOffset = vertexCount;
 		}
 		
