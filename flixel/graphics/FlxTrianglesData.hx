@@ -23,8 +23,14 @@ import openfl.utils.Float32Array;
 import flixel.system.render.gl.GLUtils;
 #end
 
+// TODO: restrict direct modifications of vertices/uvs/colors/indices arrays...
+
 class FlxTrianglesData implements IFlxDestroyable
 {
+	public static inline var MAX_VERTICES:Int = 65536;
+	
+	public static inline var MAX_INDICES:Int = 65536;
+	
 	/**
 	 * Helper variables for bounding box calculations.
 	 */
@@ -143,7 +149,17 @@ class FlxTrianglesData implements IFlxDestroyable
 	}
 	
 	/**
-	 * The length of `indices` vector.
+	 * Max number of vertices for this data object.
+	 */
+	public var maxVertices(default, null):Int; // TODO: maybe add setter...
+	
+	/**
+	 * Max number on indices for this data object.
+	 */
+	public var maxIndices(default, null):Int; // TODO: maybe add setter...
+	
+	/**
+	 * Number of vertex indices in this data object.
 	 */
 	public var numIndices(get, null):Int;
 	
@@ -219,7 +235,34 @@ class FlxTrianglesData implements IFlxDestroyable
 	private var _colors:Vector<FlxColor> = new Vector<FlxColor>();
 	private var _indices:Vector<Int> = new Vector<Int>();
 	
-	public function new() {}
+	/**
+	 * Helper variables, helps to track number of vertices and indices added to this data object.
+	 */
+	private var vertexCount:Int = 0;
+	private var indexCount:Int = 0;
+	private var trianglesOffset:Int = 0;
+	
+	/**
+	 * Data object constructor
+	 * 
+	 * @param	maxVertices	max number of vertices for this object. You'll be able to increase this number later by calling `setMaxVertices()` method
+	 * @param	maxIndices	max number of indices for this object. You'll be able to increase this number later by calling `setMaxIndices()` method
+	 */
+	public function new(maxVertices:Int = 4092, maxIndices:Int = 4092) 
+	{
+		this.maxVertices = (maxVertices < MAX_VERTICES) ? maxVertices : MAX_VERTICES;
+		this.maxIndices = (maxIndices < MAX_INDICES) ? maxIndices : MAX_INDICES;
+		
+		#if FLX_RENDER_GL
+		verticesArray = new Float32Array(maxVertices << 1);
+		uvsArray = new Float32Array(maxVertices << 1);
+		colorsArray = new UInt32Array(maxVertices);
+		indicesArray = new UInt16Array(maxIndices);
+		
+		for (i in 0...maxVertices)
+			colorsArray[i] = FlxColor.WHITE;
+		#end
+	}
 	
 	public function destroy():Void
 	{
@@ -246,6 +289,8 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	/**
 	 * Clears all data stored in this object.
+	 * Nothing will be rendered after you call this method.
+	 * You'll need to add new vertices again.
 	 */
 	public function clear():Void
 	{
@@ -253,6 +298,10 @@ class FlxTrianglesData implements IFlxDestroyable
 		_uvs.splice(0, _uvs.length);
 		_colors.splice(0, _colors.length);
 		_indices.splice(0, _indices.length);
+		
+		vertexCount = 0;
+		indexCount = 0;
+		trianglesOffset = 0;
 		
 		dirty = true;
 	}
@@ -388,6 +437,245 @@ class FlxTrianglesData implements IFlxDestroyable
 		return pixels;
 	}
 	
+	/**
+	 * Starts tracking vertices you'll add to this object.
+	 * Call it BEFORE adding new vertices. For example:
+	 * ```
+	 * var data:FlxTrianglesData = new FlxTrianglesData();
+	 * data.start();
+	 * data.addColorVertex(0, 0);
+	 * data.addColorVertex(100, 0);
+	 * data.addColorVertex(0, 100);
+	 * data.addTriangle(0, 1, 2);
+	 * ```
+	 */
+	public function start():FlxTrianglesData
+	{
+		trianglesOffset = vertexCount;
+		return this;
+	}
+	
+	/**
+	 * Adds textured vertex to this data object
+	 * 
+	 * @param	x		vertex x posisition
+	 * @param	y		vertex y position
+	 * @param	u		vertex u texture coordinate
+	 * @param	v		vertex v texture coordinate
+	 * @param	color	vertex color. `FlxColor.WHITE` is the default value.
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public function addTexturedVertex(x:Float, y:Float, u:Float, v:Float, color:FlxColor = FlxColor.WHITE):FlxTrianglesData
+	{
+		if (vertexCount >= maxVertices)
+		{
+			trace("Can't add new vertex. Max vertex count reached!");
+			return this;
+		}
+		
+		var pos:Int = vertexCount << 1;
+		
+		_vertices[pos] = x;
+		_vertices[pos + 1] = y;
+		
+		_uvs[pos] = u;
+		_uvs[pos + 1] = v;
+		
+		_colors[vertexCount] = color;
+		
+		verticesDirty = uvtDirty = colorsDirty = true;
+		vertexCount++;
+		
+		return this;
+	}
+	
+	/**
+	 * Adds non-textured vertex to this data object
+	 * 
+	 * @param	x		vertex x posisition
+	 * @param	y		vertex y position
+	 * @param	color	vertex color. `FlxColor.WHITE` is the default value.
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public function addColorVertex(x:Float, y:Float, color:FlxColor = FlxColor.WHITE):FlxTrianglesData
+	{
+		if (vertexCount >= maxVertices)
+		{
+			trace("Can't add new vertex. Max vertex count reached!");
+			return this;
+		}
+		
+		var pos:Int = vertexCount << 1;
+		
+		_vertices[pos] = x;
+		_vertices[pos + 1] = y;
+		
+		_colors[vertexCount] = color;
+		
+		verticesDirty = colorsDirty = true;
+		vertexCount++;
+		
+		return this;
+	}
+	
+	/**
+	 * Adds indices for added vertices.
+	 * This way you can modify index buffer.
+	 * See `start()` method documentation for usage example.
+	 * 
+	 * @param	index1	the first index of the triangle
+	 * @param	index2	the second index of the triangle
+	 * @param	index3	the third index of the triangle
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public function addTriangle(index1:Int, index2:Int, index3:Int):FlxTrianglesData
+	{
+		if (indexCount >= maxIndices)
+		{
+			trace("Can't add new triangle. Max index count reached!");
+			return this;
+		}
+		
+		var i1:Int = index1 + trianglesOffset;
+		var i2:Int = index2 + trianglesOffset;
+		var i3:Int = index3 + trianglesOffset;
+		
+		_indices[indexCount] = i1;
+		_indices[indexCount + 1] = i2;
+		_indices[indexCount + 2] = i3;
+		
+		indicesDirty = true;
+		indexCount += 3;
+		
+		return this;
+	}
+	
+	/**
+	 * Adds bunch of triangles to this data object.
+	 * Previously added triangle will stay in this object as well
+	 * 
+	 * @param	vertices	array of vertex coordinates pairs.
+	 * @param	uv			array of vertex texture coordinates pairs. Optional, only required if you add textured vertices.
+	 * @param	indices		array of vertex indices.
+	 * @param	colors		array of colors for each of the vertices. Optional, `FlxColor.WHITE` color will be used if you skip this parameter.
+	 */
+	public function addTriangles(vertices:Vector<Float>, ?uv:Vector<Float>, indices:Vector<Int>, ?colors:Vector<FlxColor>):FlxTrianglesData
+	{
+		var numVertices:Int = vertices.length >> 1;
+		var numIndices:Int = indices.length;
+		
+		if (vertexCount + numVertices > maxVertices)
+		{
+			trace("Can't add new vertices. Max vertex count reached!");
+			return this;
+		}
+		
+		if (indexCount + numIndices > maxIndices)
+		{
+			trace("Can't add new triangles. Max index count reached!");
+			return this;
+		}
+		
+		start();
+		
+		var i1:Int, i2:Int, i3:Int;
+		var pos1:Int, pos2:Int;
+		var colorPos:Int = vertexCount;
+		
+		var x:Float, y:Float;
+		var u:Float, v:Float;
+		var color:FlxColor;
+		
+		for (i in 0...numVertices)
+		{
+			i1 = i * 2;
+			i2 = i1 + 1;
+			
+			x = vertices[i1];
+			y = vertices[i2];
+			
+			color = (colors != null) ? color = colors[i] : FlxColor.WHITE;
+			
+			if (uv != null)
+			{
+				u = uvs[i1];
+				v = uvs[i2];
+				
+				addTexturedVertex(x, y, u, v, color);
+			}
+			else
+			{
+				addColorVertex(x, y, color);
+			}
+			
+		}
+		
+		var index1:Int, index2:Int, index3:Int;
+		var triangles:Int = Std.int(numIndices / 3);
+		
+		for (i in 0...triangles)
+		{
+			index1 = indices[i * 3];
+			index2 = indices[i * 3 + 1];
+			index3 = indices[i * 3 + 2];
+			
+			addTriangle(index1, index2, index3);
+		}
+		
+		return this;
+	}
+	
+	/**
+	 * Sets max vertices number for this data object.
+	 * Will erase all data previosly added to this object.
+	 * 
+	 * @param	value	new max number of vertices. If you specify number greater than `MAX_VERTICES`, then exception will be thrown.
+	 */
+	public function setMaxVertices(value:Int):Void
+	{
+		if (value > maxVertices)
+		{
+			if (value > MAX_VERTICES)
+				throw "Can't draw over " + MAX_VERTICES + " vertices in one draw call!";
+			
+			#if FLX_RENDER_GL
+			verticesArray = new Float32Array(value << 1);
+			uvsArray = new Float32Array(value << 1);
+			colorsArray = new UInt32Array(value);
+			
+			for (i in 0...value)
+				colorsArray[i] = FlxColor.WHITE;
+			#end
+			
+			maxVertices = value;
+			
+			vertexCount = 0;
+			trianglesOffset = 0;
+		}
+	}
+	
+	/**
+	 * Sets max indices number for this data object.
+	 * Will erase all index data previosly added to this object.
+	 * 
+	 * @param	value	new max number of indices. If you specify number greater than `MAX_INDICES`, then exception will be thrown.
+	 */
+	public function setMaxIndices(value:Int):Void
+	{
+		if (value > maxIndices)
+		{
+			if (value > MAX_INDICES)
+				throw "Can't draw over " + MAX_INDICES + " indices in one draw call!";
+			
+			#if FLX_RENDER_GL
+			indicesArray = new UInt16Array(value);
+			#end
+			
+			maxIndices = value;
+			indexCount = 0;
+		}
+	}
+	
 	private function get_vertices():Vector<Float>
 	{
 		return _vertices;
@@ -396,7 +684,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	private function set_vertices(value:Vector<Float>):Vector<Float>
 	{
 		verticesDirty = verticesDirty || (value != null);
-		return _vertices = value;
+		_vertices = value;
+		
+		vertexCount = 0;
+		trianglesOffset = 0;
+		
+		if (value != null)
+		{
+			setMaxVertices(value.length >> 1);
+			vertexCount = value.length >> 1;
+			trianglesOffset = vertexCount;
+		}
+		
+		return value;
 	}
 	
 	private function get_uvs():Vector<Float>
@@ -407,7 +707,14 @@ class FlxTrianglesData implements IFlxDestroyable
 	private function set_uvs(value:Vector<Float>):Vector<Float>
 	{
 		uvtDirty = uvtDirty || (value != null);
-		return _uvs = value;
+		_uvs = value;
+		
+		if (value != null)
+		{
+			setMaxVertices(value.length >> 1);
+		}
+		
+		return value;
 	}
 	
 	private function get_colors():Vector<FlxColor>
@@ -418,7 +725,15 @@ class FlxTrianglesData implements IFlxDestroyable
 	private function set_colors(value:Vector<FlxColor>):Vector<FlxColor>
 	{
 		colorsDirty = colorsDirty || (value != null);
-		return _colors = value;
+		_colors = value;
+		
+		if (value != null)
+		{
+			var numColors:Int = value.length;
+			setMaxVertices(numColors);
+		}
+		
+		return value;
 	}
 	
 	private function get_indices():Vector<Int>
@@ -429,7 +744,18 @@ class FlxTrianglesData implements IFlxDestroyable
 	private function set_indices(value:Vector<Int>):Vector<Int>
 	{
 		indicesDirty = indicesDirty || (value != null);
-		return _indices = value;
+		_indices = value;
+		
+		indexCount = 0;
+		
+		if (value != null)
+		{
+			var numIndices:Int = value.length;
+			setMaxIndices(numIndices);
+			indexCount = numIndices;
+		}
+		
+		return value;
 	}
 	
 	private function set_dirty(value:Bool):Bool
@@ -440,7 +766,7 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	private function get_numIndices():Int
 	{
-		return (_indices != null) ? _indices.length : 0;
+		return indexCount;
 	}
 	
 	private function get_numTriangles():Int
@@ -464,22 +790,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateVertices():Void
 	{
-		if (_vertices == null)
+		if (verticesArray == null || _vertices == null)
 			return;
 		
-		var numCoords:Int = _vertices.length;
-		var numBytes:Int = numCoords * Float32Array.BYTES_PER_ELEMENT;
+		var numBytes:Int = (maxVertices << 1) * Float32Array.BYTES_PER_ELEMENT;
 		
 		if (verticesDirty)
 		{
-			if (verticesArray == null || verticesArray.length < numCoords)
-				verticesArray = new Float32Array(numCoords);
+			vertexCount = _vertices.length >> 1;
 			
-			for (i in 0...numCoords)
+			for (i in 0..._vertices.length)
 				verticesArray[i] = _vertices[i];
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
-			
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, verticesArray, GL.STATIC_DRAW);
 			verticesDirty = false;
 		}
@@ -492,22 +815,16 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateUV():Void
 	{
-		if (_uvs == null)
+		if (uvsArray == null)
 			return;
-		
+			
 		if (uvtDirty)
 		{
-			var numUVs:Int = _uvs.length;
-			
-			if (uvsArray == null || uvsArray.length < numUVs)
-				uvsArray = new Float32Array(numUVs);
-			
-			for (i in 0...numUVs)
+			for (i in 0..._uvs.length)
 				uvsArray[i] = _uvs[i];
 			
+			var numBytes:Int = (maxVertices << 1) * Float32Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ARRAY_BUFFER, uvsBuffer);
-			
-			var numBytes:Int = numUVs * Float32Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, uvsArray, GL.STATIC_DRAW);
 			uvtDirty = false;
 		}
@@ -519,26 +836,16 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateColors():Void
 	{
+		if (colorsArray == null)
+			return;
+		
 		if (colorsDirty)
 		{
-			var numColors:Int = Std.int(_vertices.length * 0.5);
-			var numColorsAvailable:Int = (_colors != null) ? _colors.length : 0;
+			for (i in 0..._colors.length)
+				colorsArray[i] = _colors[i];
 			
-			if (colorsArray == null || colorsArray.length < numColors)
-				colorsArray = new UInt32Array(numColors);
-			
-			for (i in 0...numColors)
-			{
-				if (i < numColorsAvailable)
-					colorsArray[i] = _colors[i];
-				else
-					colorsArray[i] = FlxColor.WHITE;
-			}
-			
-			// update the colors
+			var numBytes:Int = maxVertices * UInt32Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ARRAY_BUFFER, colorsBuffer);
-			
-			var numBytes:Int = numColors * UInt32Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, colorsArray, GL.STATIC_DRAW);
 			colorsDirty = false;
 		}
@@ -550,22 +857,18 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateIndices():Void
 	{
-		if (_indices == null)
+		if (indicesArray == null || indices == null)
 			return;
 		
 		if (indicesDirty)
 		{
-			var numIndices:Int = _indices.length;
+			indexCount = _indices.length;
 			
-			if (indicesArray == null || indicesArray.length < numIndices)
-				indicesArray = new UInt16Array(numIndices);
-			
-			for (i in 0...numIndices)
+			for (i in 0...indexCount)
 				indicesArray[i] = _indices[i];
 			
+			var numBytes:Int = maxIndices * UInt16Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indicesBuffer);
-			
-			var numBytes:Int = numIndices * UInt16Array.BYTES_PER_ELEMENT;
 			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, numBytes, indicesArray, GL.STATIC_DRAW);
 			indicesDirty = false;
 		}
