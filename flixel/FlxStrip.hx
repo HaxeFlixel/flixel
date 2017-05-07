@@ -53,7 +53,7 @@ class FlxStrip extends FlxSprite
 	 */
 	public var data:FlxTrianglesData;
 	
-	public var verticesDirty(get, set):Bool;
+	public var verticesDirty(get, null):Bool;
 	
 	/**
 	 * FlxStrip constructor
@@ -162,6 +162,53 @@ class FlxStrip extends FlxSprite
 		return framePixels;
 	}
 	
+	/**
+	 * Reset vertices array of data object, forcing it update vertex buffer.
+	 */
+	public function resetVertices():Void
+	{
+		var vs = data.vertices;
+		data.vertices = vs;
+	}
+	
+	/**
+	 * Reset uvs array of data object, forcing it update uv buffer.
+	 */
+	public function resetUVs():Void
+	{
+		var uv = data.uvs;
+		data.uvs = uv;
+	}
+	
+	/**
+	 * Reset colors array of data object, forcing it update colors buffer.
+	 */
+	public function resetColors():Void
+	{
+		var cols = data.colors;
+		data.colors = cols;
+	}
+	
+	/**
+	 * Reset index array of data object, forcing it update index buffer.
+	 */
+	public function resetIndices():Void
+	{
+		var ids = data.indices;
+		data.indices = ids;
+	}
+	
+	/**
+	 * Reset all data arrays, forcing it update all gl buffers.
+	 */
+	public function resetData():Void
+	{
+		resetVertices();
+		resetUVs();
+		resetColors();
+		resetIndices();
+	}
+	
 	private function get_vertices():Vector<Float>
 	{
 		return data.vertices;
@@ -205,11 +252,6 @@ class FlxStrip extends FlxSprite
 	private function get_verticesDirty():Bool
 	{
 		return data.verticesDirty;
-	}
-	
-	private function set_verticesDirty(value:Bool):Bool
-	{
-		return data.verticesDirty = value;
 	}
 	
 	override function set_dirty(value:Bool):Bool 
