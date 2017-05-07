@@ -112,6 +112,8 @@ class FlxStrip extends FlxSprite
 		// now calculate transformed bounds of sprite
 		var tempBounds:FlxRect = data.getTransformedBounds(_matrix);
 		
+		var bitmap:BitmapData = (graphic != null) ? graphic.bitmap : null;
+		
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)
@@ -123,7 +125,7 @@ class FlxStrip extends FlxSprite
 			if (camera.view.bounds.overlaps(tempBounds))
 			{
 				_matrix.translate(_point.x, _point.y);
-				camera.drawTriangles(graphic.bitmap, material, data, _matrix, colorTransform);
+				camera.drawTriangles(bitmap, material, data, _matrix, colorTransform);
 				
 				#if FLX_DEBUG
 				if (FlxG.debugger.drawDebug && !ignoreDrawDebug)

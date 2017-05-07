@@ -181,19 +181,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices(default, set):Vector<Float> = new Vector<Float>();
+	public var vertices(get, set):Vector<Float>;
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvs(default, set):Vector<Float> = new Vector<Float>();
+	public var uvs(get, set):Vector<Float>;
 	/**
 	 * A `Vector` of colors for each vertex.
 	 */
-	public var colors(default, set):Vector<FlxColor> = new Vector<FlxColor>();
+	public var colors(get, set):Vector<FlxColor>;
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices(default, set):Vector<Int> = new Vector<Int>();
+	public var indices(get, set):Vector<Int>;
 	
 	/**
 	 * Bounding box for all vertices of this data object.
@@ -214,14 +214,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	private var gl:GLRenderContext;
 	#end
 	
+	private var _vertices:Vector<Float> = new Vector<Float>();
+	private var _uvs:Vector<Float> = new Vector<Float>();
+	private var _colors:Vector<FlxColor> = new Vector<FlxColor>();
+	private var _indices:Vector<Int> = new Vector<Int>();
+	
 	public function new() {}
 	
 	public function destroy():Void
 	{
-		vertices = null;
-		uvs = null;
-		colors = null;
-		indices = null;
+		_vertices = null;
+		_uvs = null;
+		_colors = null;
+		_indices = null;
 		
 		bounds = FlxDestroyUtil.put(bounds);
 		
@@ -244,10 +249,10 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	public function clear():Void
 	{
-		vertices.splice(0, vertices.length);
-		uvs.splice(0, uvs.length);
-		colors.splice(0, colors.length);
-		indices.splice(0, indices.length);
+		_vertices.splice(0, _vertices.length);
+		_uvs.splice(0, _uvs.length);
+		_colors.splice(0, _colors.length);
+		_indices.splice(0, _indices.length);
 		
 		dirty = true;
 	}
@@ -264,35 +269,35 @@ class FlxTrianglesData implements IFlxDestroyable
 	{
 		clear();
 		
-		vertices[0] = 0.0;
-		vertices[1] = 0.0;
-		vertices[2] = width;
-		vertices[3] = 0.0;
-		vertices[4] = width;
-		vertices[5] = height;
-		vertices[6] = 0;
-		vertices[7] = height;
+		_vertices[0] = 0.0;
+		_vertices[1] = 0.0;
+		_vertices[2] = width;
+		_vertices[3] = 0.0;
+		_vertices[4] = width;
+		_vertices[5] = height;
+		_vertices[6] = 0;
+		_vertices[7] = height;
 		
-		uvs[0] = 0.0;
-		uvs[1] = 0.0;
-		uvs[2] = 1.0;
-		uvs[3] = 0.0;
-		uvs[4] = 1.0;
-		uvs[5] = 1.0;
-		uvs[6] = 0;
-		uvs[7] = 1.0;
+		_uvs[0] = 0.0;
+		_uvs[1] = 0.0;
+		_uvs[2] = 1.0;
+		_uvs[3] = 0.0;
+		_uvs[4] = 1.0;
+		_uvs[5] = 1.0;
+		_uvs[6] = 0;
+		_uvs[7] = 1.0;
 		
-		colors[0] = color;
-		colors[1] = color;
-		colors[2] = color;
-		colors[3] = color;
+		_colors[0] = color;
+		_colors[1] = color;
+		_colors[2] = color;
+		_colors[3] = color;
 		
-		indices[0] = 0;
-		indices[1] = 1;
-		indices[2] = 2;
-		indices[3] = 2;
-		indices[4] = 3;
-		indices[5] = 0;
+		_indices[0] = 0;
+		_indices[1] = 1;
+		_indices[2] = 2;
+		_indices[3] = 2;
+		_indices[4] = 3;
+		_indices[5] = 0;
 		
 		return this;
 	}
@@ -302,15 +307,15 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	public function updateBounds():Void
 	{
-		if (verticesDirty || vertices.length >= 6)
+		if (verticesDirty && _vertices.length >= 6)
 		{
-			bounds.set(vertices[0], vertices[1], 0, 0);
-			var numVertices:Int = vertices.length;
+			bounds.set(_vertices[0], _vertices[1], 0, 0);
+			var numVertices:Int = _vertices.length;
 			var i:Int = 2;
 			
 			while (i < numVertices)
 			{
-				bounds.inflate(vertices[i], vertices[i + 1]);
+				bounds.inflate(_vertices[i], _vertices[i + 1]);
 				i += 2;
 			}
 		}
@@ -373,7 +378,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		else
 			sprite.graphics.beginFill(color);
 		
-		sprite.graphics.drawTriangles(vertices, indices, uvs);
+		sprite.graphics.drawTriangles(_vertices, _indices, _uvs);
 		sprite.graphics.endFill();
 		
 		matrix.identity();
@@ -383,28 +388,48 @@ class FlxTrianglesData implements IFlxDestroyable
 		return pixels;
 	}
 	
+	private function get_vertices():Vector<Float>
+	{
+		return _vertices;
+	}
+	
 	private function set_vertices(value:Vector<Float>):Vector<Float>
 	{
 		verticesDirty = verticesDirty || (value != null);
-		return vertices = value;
+		return _vertices = value;
+	}
+	
+	private function get_uvs():Vector<Float>
+	{
+		return _uvs;
 	}
 	
 	private function set_uvs(value:Vector<Float>):Vector<Float>
 	{
 		uvtDirty = uvtDirty || (value != null);
-		return uvs = value;
+		return _uvs = value;
+	}
+	
+	private function get_colors():Vector<FlxColor>
+	{
+		return _colors;
 	}
 	
 	private function set_colors(value:Vector<FlxColor>):Vector<FlxColor>
 	{
 		colorsDirty = colorsDirty || (value != null);
-		return colors = value;
+		return _colors = value;
+	}
+	
+	private function get_indices():Vector<Int>
+	{
+		return _indices;
 	}
 	
 	private function set_indices(value:Vector<Int>):Vector<Int>
 	{
 		indicesDirty = indicesDirty || (value != null);
-		return indices = value;
+		return _indices = value;
 	}
 	
 	private function set_dirty(value:Bool):Bool
@@ -415,7 +440,7 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	private function get_numIndices():Int
 	{
-		return (indices != null) ? indices.length : 0;
+		return (_indices != null) ? _indices.length : 0;
 	}
 	
 	private function get_numTriangles():Int
@@ -439,19 +464,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateVertices():Void
 	{
-		if (vertices == null)
+		if (_vertices == null)
 			return;
 		
-		var numCoords:Int = vertices.length;
+		var numCoords:Int = _vertices.length;
 		var numBytes:Int = numCoords * Float32Array.BYTES_PER_ELEMENT;
 		
 		if (verticesDirty)
 		{
-			if (verticesArray == null || verticesArray.length != numCoords)
+			if (verticesArray == null || verticesArray.length < numCoords)
 				verticesArray = new Float32Array(numCoords);
 			
 			for (i in 0...numCoords)
-				verticesArray[i] = vertices[i];
+				verticesArray[i] = _vertices[i];
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
 			
@@ -461,24 +486,24 @@ class FlxTrianglesData implements IFlxDestroyable
 		else
 		{
 			GL.bindBuffer(GL.ARRAY_BUFFER, verticesBuffer);
-			GL.bufferSubData(GL.ARRAY_BUFFER, 0, numBytes, verticesArray);
+		//	GL.bufferSubData(GL.ARRAY_BUFFER, 0, numBytes, verticesArray);
 		}
 	}
 	
 	public function updateUV():Void
 	{
-		if (uvs == null)
+		if (_uvs == null)
 			return;
 		
 		if (uvtDirty)
 		{
-			var numUVs:Int = uvs.length;
+			var numUVs:Int = _uvs.length;
 			
-			if (uvsArray == null || uvsArray.length != numUVs)
+			if (uvsArray == null || uvsArray.length < numUVs)
 				uvsArray = new Float32Array(numUVs);
 			
 			for (i in 0...numUVs)
-				uvsArray[i] = uvs[i];
+				uvsArray[i] = _uvs[i];
 			
 			GL.bindBuffer(GL.ARRAY_BUFFER, uvsBuffer);
 			
@@ -496,16 +521,16 @@ class FlxTrianglesData implements IFlxDestroyable
 	{
 		if (colorsDirty)
 		{
-			var numColors:Int = Std.int(vertices.length * 0.5);
-			var numColorsAvailable:Int = (colors != null) ? colors.length : 0;
+			var numColors:Int = Std.int(_vertices.length * 0.5);
+			var numColorsAvailable:Int = (_colors != null) ? _colors.length : 0;
 			
-			if (colorsArray == null || colorsArray.length != numColors)
+			if (colorsArray == null || colorsArray.length < numColors)
 				colorsArray = new UInt32Array(numColors);
 			
 			for (i in 0...numColors)
 			{
 				if (i < numColorsAvailable)
-					colorsArray[i] = colors[i];
+					colorsArray[i] = _colors[i];
 				else
 					colorsArray[i] = FlxColor.WHITE;
 			}
@@ -525,18 +550,18 @@ class FlxTrianglesData implements IFlxDestroyable
 	
 	public function updateIndices():Void
 	{
-		if (indices == null)
+		if (_indices == null)
 			return;
 		
 		if (indicesDirty)
 		{
-			var numIndices:Int = indices.length;
+			var numIndices:Int = _indices.length;
 			
-			if (indicesArray == null || indicesArray.length != numIndices)
+			if (indicesArray == null || indicesArray.length < numIndices)
 				indicesArray = new UInt16Array(numIndices);
 			
 			for (i in 0...numIndices)
-				indicesArray[i] = indices[i];
+				indicesArray[i] = _indices[i];
 			
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indicesBuffer);
 			
