@@ -40,48 +40,6 @@ class GLDebugRenderer extends GLDisplayObject
 	{
 		drawCommands.flush();
 	}
-	
-	/**
-	 * Draws a single pixel to the screen
-	 * @param x      the x-axis value of the pixel
-	 * @param y      the y-axis value of the pixel
-	 * @param color  the color of the pixel
-	 * @param size   the overall size of the pixel square
-	 */
-	public function pixel(x:Float, y:Float, color:FlxColor, size:Float = 1):Void
-	{
-		var hs = size / 2;
-		fillRect(x - hs, y - hs, size, size, color);
-	}
-	
-	/**
-	 * Draws a circle to the screen
-	 * @param x       	the x-axis value of the circle
-	 * @param y       	the y-axis value of the circle
-	 * @param radius  	the radius of the circle
-	 * @param color   	the color of the circle
-	 * @param numSides	the number of segments circle will be divided.
-	 */
-	public function circle(x:Float, y:Float, radius:Float, color:FlxColor, numSides:Int = 40):Void
-	{
-		var sides = numSides,
-			angle = 0.0,
-			angleStep = (Math.PI * 2) / sides,
-			lastX = x + Math.cos(angle) * radius,
-			lastY = y + Math.sin(angle) * radius,
-			pointX:Float,
-			pointY:Float;
-		
-		for (i in 0...sides)
-		{
-			angle += angleStep;
-			pointX = x + Math.cos(angle) * radius;
-			pointY = y + Math.sin(angle) * radius;
-			line(lastX, lastY, pointX, pointY, color);
-			lastX = pointX;
-			lastY = pointY;
-		}
-	}
 
 	/**
 	 * Draws a non-filled rectangle to the screen
