@@ -418,7 +418,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function hypot():Float
 	{
-		return Math.sqrt(x * x + y * y);
+		return Math.sqrt(Math.abs(x * x) + Math.abs(y * y));
 	}
 	
 	/**
