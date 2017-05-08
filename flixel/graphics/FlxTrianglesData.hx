@@ -650,7 +650,6 @@ class FlxTrianglesData implements IFlxDestroyable
 			#end
 			
 			maxVertices = value;
-			
 			vertexCount = 0;
 			trianglesOffset = 0;
 		}
@@ -682,7 +681,6 @@ class FlxTrianglesData implements IFlxDestroyable
 	{
 		verticesDirty = verticesDirty || (value != null);
 		vertices = value;
-		
 		vertexCount = 0;
 		trianglesOffset = 0;
 		
@@ -691,6 +689,8 @@ class FlxTrianglesData implements IFlxDestroyable
 			setMaxVertices(value.length >> 1);
 			vertexCount = value.length >> 1;
 			trianglesOffset = vertexCount;
+			
+			if (uvs != null) uvs.length = value.length;
 			
 			#if FLX_RENDER_GL
 			for (i in 0...value.length)
