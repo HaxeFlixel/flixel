@@ -614,6 +614,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getAnalogYAxisValue(Stick);
 	}
+
+	public function getAnalogAxes(AxesButtonID:FlxGamepadInputID):FlxVector
+	{
+		return FlxVector.get(getXAxis(AxesButtonID), getYAxis(AxesButtonID));
+	}
 	
 	/**
 	 * Whether any buttons have the specified input state.
