@@ -387,6 +387,11 @@ class FlxPoint implements IFlxPooled
 		point.putWeak();
 		return angle;
 	}
+
+	public inline function toVector():FlxVector
+	{
+		return FlxVector.get(x, y);
+	}
 	
 	/**
 	 * Function to compare this FlxPoint to another.
