@@ -12,12 +12,14 @@ import openfl.geom.Point;
 class FlxDraw extends FlxStrip
 {
 	private static var aa:Point = new Point();
-	private static var bb:Point = new Point(); // saves first vertex for last draw
+	private static var bb:Point = new Point();
 	private static var a:Point = new Point();
 	private static var b:Point = new Point();
 	private static var c:Point = new Point(); // current
 	private static var u:Point = new Point();
 	private static var v:Point = new Point();
+	private static var prev:Point = new Point();
+	private static var next:Point = new Point();
 	private static var delta:Point = new Point();
 	
 	public var fillColor:FlxColor = FlxColor.WHITE;
@@ -244,6 +246,97 @@ class FlxDraw extends FlxStrip
 		}
 		
 		drawPolygon(points);
+	}
+	
+	/**
+	 * Draws a quadratic curve.
+	 * @param	x1			X start.
+	 * @param	y1			Y start.
+	 * @param	x2			X control point, used to determine the curve.
+	 * @param	y2			Y control point, used to determine the curve.
+	 * @param	x3			X finish.
+	 * @param	y3			Y finish.
+	 * @param	segments	Increasing will smooth the curve but takes longer to render. Must be a value greater than zero.
+	 */
+	public function drawCurve(x1:Int, y1:Int, x2:Int, y2:Int, x3:Int, y3:Int, segments:Int = 25)
+	{
+		var points:Array<Float> = [];
+		points.push(x1);
+		points.push(y1);
+		
+		var deltaT:Float = 1 / segments;
+		
+		for (segment in 1...segments)
+		{
+			var t:Float = segment * deltaT;
+			var x:Float = (1 - t) * (1 - t) * x1 + 2 * t * (1 - t) * x2 + t * t * x3;
+			var y:Float = (1 - t) * (1 - t) * y1 + 2 * t * (1 - t) * y2 + t * t * y3;
+			points.push(x);
+			points.push(y);
+		}
+		
+		points.push(x3);
+		points.push(y3);
+		
+		drawPolyline(points);
+	}
+	
+	/**
+	 * Draws a triangulated polyline to the screen.
+	 * @param	points		An array of floats containing the points of the polygon. The array is ordered in x, y format and must have an even number of values.
+	 */
+	public function drawPolyline(points:Array<Float>)
+	{
+		if (points.length < 4 || (points.length % 2) == 1)
+			throw "Invalid number of points. Expected an even number greater than 4.";
+		
+		var numPoints:Int = points.length >> 1;
+		prev.setTo(points[0], points[1]);
+		var ht:Float = lineThickness / 2;
+		
+		for (i in 0...numPoints)
+		{
+			var index:Int = i * 2;
+			
+			c.x = points[index];
+			c.y = points[index + 1];
+			
+			if (i < numPoints - 1)
+			{
+				next.x = points[index + 2];
+				next.y = points[index + 3];
+			}
+			else
+			{
+				next.copyFrom(c);
+			}
+			
+			delta.y = -(next.x - prev.x);
+			delta.x = next.y - prev.y;
+			delta.normalize(ht);
+			
+			if (i != 0)
+			{
+				u.x = c.x - delta.x;
+				u.y = c.y - delta.y;
+				v.x = c.x + delta.x;
+				v.y = c.y + delta.y;
+				
+				drawQuad(	
+					a.x, a.y,
+					b.x, b.y,
+					u.x, u.y,
+					v.x, v.y,
+					lineColor);
+			}
+			
+			a.x = c.x + delta.x;
+			a.y = c.y + delta.y;
+			b.x = c.x - delta.x;
+			b.y = c.y - delta.y;
+			
+			prev.copyFrom(c);
+		}
 	}
 
 	/**
