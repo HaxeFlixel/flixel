@@ -396,6 +396,16 @@ class FlxPoint implements IFlxPooled
 	{
 		return FlxVector.get(x, y);
 	}
+
+	/**
+	 * Function to get the hypotenuse of the right triangle 
+	 * formed by the components of this `FlxPoint`
+	 * @since 4.3.0
+	 */
+	public inline function hypot():Float
+	{
+		return Math.sqrt(x * x + y * y);
+	}
 	
 	/**
 	 * Function to compare this FlxPoint to another.
