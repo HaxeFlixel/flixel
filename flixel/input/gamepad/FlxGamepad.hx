@@ -615,6 +615,11 @@ class FlxGamepad implements IFlxDestroyable
 		return getAnalogYAxisValue(Stick);
 	}
 
+	/**
+	 * Given a ButtonID for an analog stick, gets a `FlxVector`
+	 * from the values of its x and y axes.
+	 * @param	AxesButtonID an analog stick FlxGamepadButtonID.LEFT_STICK
+	 */
 	public function getAnalogAxes(AxesButtonID:FlxGamepadInputID):FlxVector
 	{
 		return FlxVector.get(getXAxis(AxesButtonID), getYAxis(AxesButtonID));
