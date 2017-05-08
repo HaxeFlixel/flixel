@@ -388,6 +388,10 @@ class FlxPoint implements IFlxPooled
 		return angle;
 	}
 
+	/**
+	 * Function to get a FlxVector from this FlxPoint
+	 * @since 4.3.0
+	 */
 	public inline function toVector():FlxVector
 	{
 		return FlxVector.get(x, y);
