@@ -389,7 +389,7 @@ class FlxPoint implements IFlxPooled
 	}
 
 	/**
-	 * Function to get a FlxVector from this FlxPoint
+	 * Function to get a `FlxVector` from this `FlxPoint`
 	 * @since 4.3.0
 	 */
 	public inline function toVector():FlxVector
