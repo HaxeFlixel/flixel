@@ -258,7 +258,7 @@ class FlxDraw extends FlxStrip
 	 * @param	y3			Y finish.
 	 * @param	segments	Increasing will smooth the curve but takes longer to render. Must be a value greater than zero.
 	 */
-	public function drawCurve(x1:Int, y1:Int, x2:Int, y2:Int, x3:Int, y3:Int, segments:Int = 25)
+	public function drawCurve(x1:Float, y1:Float, x2:Float, y2:Int, x3:Float, y3:Float, segments:Int = 25)
 	{
 		var points:Array<Float> = [];
 		points.push(x1);
@@ -277,6 +277,42 @@ class FlxDraw extends FlxStrip
 		
 		points.push(x3);
 		points.push(y3);
+		
+		drawPolyline(points);
+	}
+	
+	/**
+	 * Draws a cubic curve.
+	 * @param	x1			X start.
+	 * @param	y1			Y start.
+	 * @param	x2			X of the first control point, used to determine the curve.
+	 * @param	y2			Y of the first control point, used to determine the curve.
+	 * @param	x3			X of the second control point, used to determine the curve.
+	 * @param	y3			X of the second control point, used to determine the curve.
+	 * @param	x4			X finish.
+	 * @param	y4			Y finish.
+	 * @param	segments	Increasing will smooth the curve but takes longer to render. Must be a value greater than zero.
+	 */
+	public function drawCubicCurve(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, x4:Float, y4:Float, segments:Int = 25)
+	{
+		var points:Array<Float> = [];
+		points.push(x1);
+		points.push(y1);
+		
+		var deltaT:Float = 1 / segments;
+		
+		for (segment in 1...segments)
+		{
+			var t:Float = segment * deltaT;
+			var invT:Float = (1.0 - t);
+			var x:Float = invT * invT * invT * x1 + 3 * invT * invT * t * x2 + 3 * invT * t * t * x3 + t * t * t * x4;
+			var y:Float = invT * invT * invT * y1 + 3 * invT * invT * t * y2 + 3 * invT * t * t * y3 + t * t * t * y4;
+			points.push(x);
+			points.push(y);
+		}
+		
+		points.push(x4);
+		points.push(y4);
 		
 		drawPolyline(points);
 	}
