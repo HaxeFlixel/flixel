@@ -180,7 +180,7 @@ class CanvasGL extends GLDisplayObject
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
-		GLUtils.setTextureSmoothing(false); // TODO: set texture smoothing...
+		GLUtils.setTextureSmoothing(smoothing);
 		GLUtils.setTextureWrapping(false);
 		
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);

@@ -467,6 +467,7 @@ class FlxGLView extends FlxCameraView
 	override private inline function render():Void
 	{
 		_canvas.finish();
+		
 	}
 	
 	private function get_renderTexture():FlxRenderTexture
@@ -475,6 +476,13 @@ class FlxGLView extends FlxCameraView
 			return _canvas.buffer;
 		
 		return null;
+	}
+	
+	override private function set_smoothing(value:Bool):Bool
+	{
+		_canvas.smoothing = value;
+		debugLayer.smoothing = value;
+		return value;
 	}
 	
 	override function get_buffer():BitmapData 
