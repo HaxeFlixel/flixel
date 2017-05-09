@@ -50,7 +50,7 @@ class FlxGamepad implements IFlxDestroyable
 	public var detectedModel(default, null):FlxGamepadModel;
 	
 	/**
-	 * The mapping that is used to map the raw hardware IDs to the values in `FlxGamepdInputID`.
+	 * The mapping that is used to map the raw hardware IDs to the values in `FlxGamepadInputID`.
 	 * Determined by the current `model`.
 	 * It's also possible to create a custom mapping and assign it here.
 	 */
@@ -711,7 +711,7 @@ class FlxGamepad implements IFlxDestroyable
 		return if (deadZoneMode == CIRCULAR)
 			getAnalogAxisValueCircular(stick, stick.x);
 		else
-			getAnalogAxisValueIndependant(stick.x);
+			getAnalogAxisValueIndependent(stick.x);
 	}
 	
 	private function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
@@ -721,7 +721,7 @@ class FlxGamepad implements IFlxDestroyable
 		return if (deadZoneMode == CIRCULAR)
 			getAnalogAxisValueCircular(stick, stick.y);
 		else
-			getAnalogAxisValueIndependant(stick.y);
+			getAnalogAxisValueIndependent(stick.y);
 	}
 	
 	private function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
@@ -742,7 +742,7 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 	}
 	
-	private function getAnalogAxisValueIndependant(axisID:Int):Float
+	private function getAnalogAxisValueIndependent(axisID:Int):Float
 	{
 		var axisValue = getAxisValue(axisID);
 		if (Math.abs(axisValue) > deadZone)
