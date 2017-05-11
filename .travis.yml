@@ -2,7 +2,7 @@ language: haxe
 
 haxe:
   - 3.2.0
-  - development
+  - 3.4.2
 
 env:
   - TARGET=flash
@@ -17,8 +17,6 @@ addons:
     packages:
     - gcc-multilib
     - g++-multilib
-    - zlib1g
-    - libpcre3
 
 before_install:
   - export DISPLAY=:99.0
