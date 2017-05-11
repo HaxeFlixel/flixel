@@ -608,22 +608,93 @@ class FlxTrianglesData implements IFlxDestroyable
 			return this;
 		}
 		
+		setVertexPosition(vertexId, x, y);
+		setVertexUV(vertexId, u, v);
+		setVertexColor(vertexId, color);
+		
+		return this;
+	}
+	
+	/**
+	 * Modifies positions of the vertex which had been added previously to this data object.
+	 * 
+	 * @param	vertexId	vertex index.
+	 * @param	x			vertex x posisition
+	 * @param	y			vertex y position
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public inline function setVertexPosition(vertexId:Int, x:Float, y:Float):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
 		var pos:Int = vertexId << 1;
 		vertices[pos] = x;
 		vertices[pos + 1] = y;
-		uvs[pos] = u;
-		uvs[pos + 1] = v;
-		colors[vertexId] = color;
 		
 		#if FLX_RENDER_GL
 		verticesArray[pos] = x;
 		verticesArray[pos + 1] = y;
+		#end
+		
+		verticesDirty = true;
+		return this;
+	}
+	
+	/**
+	 * Modifies uv texture coordinates of the vertex which had been added previously to this data object.
+	 * 
+	 * @param	vertexId	vertex index.
+	 * @param	u			vertex u texture coordinate. Set it to anything (for example, to `0`) if the sprite using this data object doesn't use texture.
+	 * @param	v			vertex v texture coordinate. Set it to anything (for example, to `0`) if the sprite using this data object doesn't use texture.
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public inline function setVertexUV(vertexId:Int, u:Float = 0.0, v:Float = 0.0):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		var pos:Int = vertexId << 1;
+		uvs[pos] = u;
+		uvs[pos + 1] = v;
+		
+		#if FLX_RENDER_GL
 		uvsArray[pos] = u;
 		uvsArray[pos + 1] = v;
+		#end
+		
+		uvtDirty = true;
+		return this;
+	}
+	
+	/**
+	 * Modifies color of the vertex which had been added previously to this data object.
+	 * 
+	 * @param	vertexId	vertex index.
+	 * @param	color		vertex color. `FlxColor.WHITE` is the default value.
+	 * @return	this data object. Might be usefull for chaining.
+	 */
+	public inline function setVertexColor(vertexId:Int, color:FlxColor = FlxColor.WHITE):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		colors[vertexId] = color;
+		
+		#if FLX_RENDER_GL
 		colorsArray[vertexId] = color;
 		#end
 		
-		verticesDirty = uvtDirty = colorsDirty = true;
+		colorsDirty = true;
 		return this;
 	}
 	

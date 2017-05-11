@@ -163,7 +163,6 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		}
 		
 		#if openfl_legacy
-		// TODO: check do we need to use alpha component of color???
 		if (colored)
 		{
 			var tr:Float = 1.0;

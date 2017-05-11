@@ -4,22 +4,24 @@ import flash.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.shaders.FlxShader;
 import flixel.graphics.shaders.quads.FlxDistanceFieldShader;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import haxe.Utf8;
+import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 using flixel.util.FlxColorTransformUtil;
 
-// TODO: use flxmaterial!!!!
 // TODO: use Utf8 util for converting text to upper/lower case
 
 /**
@@ -186,6 +188,10 @@ class FlxBitmapText extends FlxSprite
 	 */
 	public var fieldWidth(get, set):Int;
 	
+	public var backgroundMaterial:FlxMaterial;
+	
+	private var _backgroundRect:FlxRect;
+	
 	private var _fieldWidth:Int;
 	
 	private var pendingTextChange:Bool = true;
@@ -226,6 +232,8 @@ class FlxBitmapText extends FlxSprite
 			textDrawData = [];
 			borderDrawData = [];
 		}
+		
+		_backgroundRect = FlxRect.get();
 	}
 	
 	/**
@@ -238,6 +246,9 @@ class FlxBitmapText extends FlxSprite
 		_lines = null;
 		_charCodes = null;
 		_linesWidth = null;
+		
+		_backgroundRect.put();
+		_backgroundRect = null;
 		
 		shadowOffset = FlxDestroyUtil.put(shadowOffset);
 		textBitmap = FlxDestroyUtil.dispose(textBitmap);
@@ -373,9 +384,7 @@ class FlxBitmapText extends FlxSprite
 				if (background)
 				{
 					// backround tile transformations
-					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
-					_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
 					_matrix.translate(-ox, -oy);
 					_matrix.scale(sx, sy);
 					
@@ -383,9 +392,9 @@ class FlxBitmapText extends FlxSprite
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
-				// TODO: fix this...
-				//	view.drawPixels(currFrame, null, _matrix, _colorParams, blend, smoothing);
+					
+					_backgroundRect.set(0, 0, frameWidth, frameHeight);
+					view.drawColorQuad(backgroundMaterial, _backgroundRect, _matrix, backgroundColor, backgroundColor.alphaFloat * alpha);
 				}
 				
 				for (j in 0...borderLength)
@@ -1400,6 +1409,18 @@ class FlxBitmapText extends FlxSprite
 		pendingTextBitmapChange = true;
 	}
 	
+	private function checkBackgroundMaterial():Void
+	{
+		if (background)
+		{
+			if (backgroundMaterial == null)
+				backgroundMaterial = new FlxMaterial();
+			
+			backgroundMaterial.smoothing = smoothing;
+			backgroundMaterial.blendMode = blend;
+		}
+	}
+	
 	private function get_fieldWidth():Int
 	{
 		return (autoSize) ? textWidth : _fieldWidth;
@@ -1576,6 +1597,8 @@ class FlxBitmapText extends FlxSprite
 			
 			if (FlxG.renderBlit)
 				pendingPixelsChange = true;
+			
+			checkBackgroundMaterial();
 		}
 		
 		return value;
@@ -1694,4 +1717,13 @@ class FlxBitmapText extends FlxSprite
 		checkPendingChanges(true);
 		return super.get_height();
 	}
+	
+	override function set_blend(Value:BlendMode):BlendMode 
+	{
+		super.set_blend(Value);
+		checkBackgroundMaterial();
+		return Value;
+	}
+	
+	
 }
