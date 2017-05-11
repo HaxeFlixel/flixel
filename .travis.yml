@@ -17,6 +17,8 @@ addons:
     packages:
     - gcc-multilib
     - g++-multilib
+    - zlib1g
+    - libpcre3
 
 before_install:
   - export DISPLAY=:99.0
