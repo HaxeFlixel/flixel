@@ -238,7 +238,8 @@ class FlxAnalog extends FlxSpriteGroup
 			}
 		}
 		#end
-		#if !FLX_NO_MOUSE
+
+		#if FLX_MOUSE
 		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
 		
 		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
@@ -393,7 +394,8 @@ class FlxAnalog extends FlxSpriteGroup
 			return _currentTouch.justPressed && status == PRESSED;
 		}
 		#end
-		#if !FLX_NO_MOUSE
+
+		#if FLX_MOUSE
 		return FlxG.mouse.justPressed && status == PRESSED;
 		#end
 		
@@ -413,7 +415,8 @@ class FlxAnalog extends FlxSpriteGroup
 			return _currentTouch.justReleased && status == HIGHLIGHT;
 		}
 		#end
-		#if !FLX_NO_MOUSE
+
+		#if FLX_MOUSE
 		return FlxG.mouse.justReleased && status == HIGHLIGHT;
 		#end
 		
