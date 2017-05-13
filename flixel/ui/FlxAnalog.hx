@@ -202,6 +202,15 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		var offAll:Bool = true;
 		
+		#if FLX_MOUSE
+		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		
+		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+		{
+			offAll = false;
+		}
+		#end
+
 		// There is no reason to get into the loop if their is already a pointer on the analog
 		#if FLX_TOUCH
 		if (_currentTouch != null)
@@ -211,9 +220,9 @@ class FlxAnalog extends FlxSpriteGroup
 		else
 		{
 			for (touch in FlxG.touches.list)
-			{		
+			{
 				var touchInserted:Bool = false;
-					
+				
 				for (analog in _analogs)
 				{
 					// Check whether the pointer is already taken by another analog.
@@ -236,15 +245,6 @@ class FlxAnalog extends FlxSpriteGroup
 				offAll = false;
 				break;
 			}
-		}
-		#end
-
-		#if FLX_MOUSE
-		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
-		
-		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
-		{
-			offAll = false;
 		}
 		#end
 		
@@ -299,7 +299,7 @@ class FlxAnalog extends FlxSpriteGroup
 					_currentTouch = Touch;
 				}
 				#end
-				status = PRESSED;	
+				status = PRESSED;
 				
 				if (JustPressed)
 				{
@@ -388,15 +388,15 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justPressed():Bool
 	{
+		#if FLX_MOUSE
+		return FlxG.mouse.justPressed && status == PRESSED;
+		#end
+
 		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justPressed && status == PRESSED;
 		}
-		#end
-
-		#if FLX_MOUSE
-		return FlxG.mouse.justPressed && status == PRESSED;
 		#end
 		
 		return false;
@@ -409,6 +409,10 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justReleased():Bool
 	{
+		#if FLX_MOUSE
+		return FlxG.mouse.justReleased && status == HIGHLIGHT;
+		#end
+
 		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
@@ -416,10 +420,6 @@ class FlxAnalog extends FlxSpriteGroup
 		}
 		#end
 
-		#if FLX_MOUSE
-		return FlxG.mouse.justReleased && status == HIGHLIGHT;
-		#end
-		
 		return false;
 	}
 	
