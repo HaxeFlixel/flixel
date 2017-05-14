@@ -45,7 +45,6 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 			uniformMatrix.copyFrom(buffer.projection);
 		}
 		
-	//	this.uniformMatrix = buffer.projection;
 		this.context = context;
 		this.buffer = buffer;
 		context.currentBuffer = null;

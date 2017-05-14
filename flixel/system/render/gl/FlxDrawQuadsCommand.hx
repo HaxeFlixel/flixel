@@ -29,9 +29,7 @@ import openfl.utils.Float32Array;
  */
 class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 {
-	private static inline var ELEMENTS_PER_TEXTURED_VERTEX:Int = 6;
-	
-	private static inline var ELEMENTS_PER_COLORED_VERTEX:Int = 3;
+	private static inline var ELEMENTS_PER_VERTEX:Int = 6;
 	
 	private static inline var BYTES_PER_INDEX:Int = 2;
 	
@@ -94,7 +92,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 */
 	private var states:Array<RenderState> = [];
 	
-	public function new(textured:Bool = true, size:Int = 0)
+	public function new(size:Int = 0)
 	{
 		super();
 		type = FlxDrawItemType.QUADS;
@@ -103,7 +101,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			size = FlxCameraView.QUADS_PER_BATCH;
 		
 		this.size = size;
-		this.textured = textured;
 		
 		vertices = new ArrayBuffer(verticesNumBytes);
 		positions = new Float32Array(vertices);
@@ -163,7 +160,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	public function addColorQuad(rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0, material:FlxMaterial):Void
 	{
-		var i = numQuads * Float32Array.BYTES_PER_ELEMENT * FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
+		var i = numQuads * Float32Array.BYTES_PER_ELEMENT * elementsPerVertex;
 		
 		var w:Float = rect.width;
 		var h:Float = rect.height;
@@ -225,10 +222,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		color.alphaFloat = alpha;
 		
 		startQuad(null, material);
-		addColoredVertex(x1, y1, color);
-		addColoredVertex(x2, y2, color);
-		addColoredVertex(x3, y3, color);
-		addColoredVertex(x4, y4, color);
+		addVertex(x1, y1, 0.0, 0.0, color);
+		addVertex(x2, y2, 0.0, 0.0, color);
+		addVertex(x3, y3, 0.0, 0.0, color);
+		addVertex(x4, y4, 0.0, 0.0, color);
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform, material:FlxMaterial):Void
@@ -320,10 +317,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		}
 		
 		startQuad(bitmap, material);
-		addTexturedVertex(x1, y1, uvx, uvy, color, colorOffset);
-		addTexturedVertex(x2, y2, uvx2, uvy, color, colorOffset);
-		addTexturedVertex(x3, y3, uvx, uvy2, color, colorOffset);
-		addTexturedVertex(x4, y4, uvx2, uvy2, color, colorOffset);
+		addVertex(x1, y1, uvx, uvy, color, colorOffset);
+		addVertex(x2, y2, uvx2, uvy, color, colorOffset);
+		addVertex(x3, y3, uvx, uvy2, color, colorOffset);
+		addVertex(x4, y4, uvx2, uvy2, color, colorOffset);
 	}
 	
 	public inline function startQuad(bitmap:BitmapData, material:FlxMaterial):Void
@@ -336,8 +333,9 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		{
 			var sameMaterial:Bool = (this.material == material);
 			var bothNullShaders:Bool = (material.shader == null && shader == null);
+			var sameTextured:Bool = (this.textured == (bitmap != null));
 			
-			if (!(sameMaterial || bothNullShaders))
+			if (!(sameMaterial || bothNullShaders || sameTextured))
 				flush();
 		}
 		
@@ -347,7 +345,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		numQuads++;
 	}
 	
-	public inline function addTexturedVertex(x:Float = 0, y:Float = 0, u:Float = 0, v:Float = 0, color:Int = FlxColor.WHITE, colorOffset:FlxColor = FlxColor.TRANSPARENT):Void
+	public inline function addVertex(x:Float = 0, y:Float = 0, u:Float = 0, v:Float = 0, color:Int = FlxColor.WHITE, colorOffset:FlxColor = FlxColor.TRANSPARENT):Void
 	{
 		positions[vertexIndex++] = x;
 		positions[vertexIndex++] = y;
@@ -355,13 +353,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		positions[vertexIndex++] = v;
 		colors[vertexIndex++] = color;
 		colors[vertexIndex++] = colorOffset;
-	}
-	
-	public inline function addColoredVertex(x:Float = 0, y:Float = 0, color:Int = FlxColor.WHITE):Void
-	{
-		positions[vertexIndex++] = x;
-		positions[vertexIndex++] = y;
-		colors[vertexIndex++] = color;
 	}
 	
 	override public function flush():Void
@@ -478,10 +469,9 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			offset += 2 * 4;
 			
 			if (textured)
-			{
 				gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, stride, offset);
-				offset += 2 * 4;
-			}
+			
+			offset += 2 * 4;
 			
 			// color attributes will be interpreted as unsigned bytes and normalized
 			gl.vertexAttribPointer(shader.data.aColor.index, 4, gl.UNSIGNED_BYTE, true, stride, offset);
@@ -565,7 +555,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	override private function get_elementsPerVertex():Int
 	{
-		return (textured) ? FlxDrawQuadsCommand.ELEMENTS_PER_TEXTURED_VERTEX : FlxDrawQuadsCommand.ELEMENTS_PER_COLORED_VERTEX;
+		return FlxDrawQuadsCommand.ELEMENTS_PER_VERTEX;
 	}
 	
 	private inline function get_verticesNumBytes():Int

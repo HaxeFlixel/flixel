@@ -96,6 +96,7 @@ class FlxGLView extends FlxCameraView
 		context = FlxG.game.glContextHelper;
 		
 		flashSprite.addChild(_scrollRect);
+		
 	//	_scrollRect.scrollRect = new Rectangle(); // TODO: fix scroll rects...
 		
 		_canvas = new CanvasGL(camera.width, camera.height, context);
@@ -135,7 +136,7 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		var drawItem = _canvas.getTextureQuads(material);
+		var drawItem = _canvas.getQuads(material);
 		drawItem.addQuad(frame, matrix, transform, material);
 	}
 	
@@ -145,7 +146,7 @@ class FlxGLView extends FlxCameraView
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		
-		var drawItem = _canvas.getTextureQuads(material);
+		var drawItem = _canvas.getQuads(material);
 		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
@@ -163,13 +164,13 @@ class FlxGLView extends FlxCameraView
 		?transform:ColorTransform):Void
 	{
 		_helperMatrix.identity();
-		var drawItem = _canvas.getTextureQuads(material);
+		var drawItem = _canvas.getQuads(material);
 		drawItem.addUVQuad(bitmap, rect, uv, _helperMatrix, transform, material);
 	}
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		var drawItem = _canvas.getColorQuads(material);
+		var drawItem = _canvas.getQuads(material);
 		drawItem.addColorQuad(rect, matrix, color, alpha, material);
 	}
 	
@@ -314,7 +315,7 @@ class FlxGLView extends FlxCameraView
 		_helperMatrix.copyFrom(_renderMatrix);
 		_helperMatrix.invert();
 		
-		var drawItem = _canvas.getColorQuads(defaultColorMaterial);
+		var drawItem = _canvas.getQuads(defaultColorMaterial);
 		drawItem.addColorQuad(_fillRect, _helperMatrix, Color, FxAlpha, defaultColorMaterial);
 	}
 	

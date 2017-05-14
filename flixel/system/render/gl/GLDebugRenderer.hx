@@ -15,7 +15,7 @@ class GLDebugRenderer extends GLDisplayObject
 	#if FLX_RENDER_GL
 	private var defaultColorMaterial:FlxMaterial = new FlxMaterial();
 	
-	private var drawCommands:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
+	private var drawCommands:FlxDrawQuadsCommand = new FlxDrawQuadsCommand();
 	
 	public function new(width:Int, height:Int, context:GLContextHelper)
 	{
@@ -72,10 +72,10 @@ class GLDebugRenderer extends GLDisplayObject
 	public function fillRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
 	{
 		drawCommands.startQuad(null, defaultColorMaterial);
-		drawCommands.addColoredVertex(x, y, color);
-		drawCommands.addColoredVertex(x + width, y, color);
-		drawCommands.addColoredVertex(x + width, y + height, color);
-		drawCommands.addColoredVertex(x, y + height, color);
+		drawCommands.addVertex(x, 			y,			0.0, 0.0, color);
+		drawCommands.addVertex(x + width, 	y, 			0.0, 0.0, color);
+		drawCommands.addVertex(x + width, 	y + height,	0.0, 0.0, color);
+		drawCommands.addVertex(x, 			y + height,	0.0, 0.0, color);
 	}
 
 	/**
@@ -101,10 +101,10 @@ class GLDebugRenderer extends GLDisplayObject
 		dy = (tx / len) * ht;
 		
 		drawCommands.startQuad(null, defaultColorMaterial);
-		drawCommands.addColoredVertex(x1 + dx, y1 + dy, color);
-		drawCommands.addColoredVertex(x1 - dx, y1 - dy, color);
-		drawCommands.addColoredVertex(x2 - dx, y2 - dy, color);
-		drawCommands.addColoredVertex(x2 + dx, y2 + dy, color);
+		drawCommands.addVertex(x1 + dx, y1 + dy, 0.0, 0.0, color);
+		drawCommands.addVertex(x1 - dx, y1 - dy, 0.0, 0.0, color);
+		drawCommands.addVertex(x2 - dx, y2 - dy, 0.0, 0.0, color);
+		drawCommands.addVertex(x2 + dx, y2 + dy, 0.0, 0.0, color);
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import flixel.math.FlxMatrix;
 import flixel.util.FlxDestroyUtil;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
 
 #if FLX_RENDER_GL
 import openfl.gl.GL;
@@ -36,25 +37,14 @@ class CanvasGL extends GLDisplayObject
 	private var currentCommand:FlxDrawHardwareCommand<Dynamic>;
 	
 	/**
-	 * Draw command used for rendering single textured quad (for less data upload on GPU)
+	 * Draw command used for rendering single quads (for less data upload on GPU)
 	 */
-	private var singleTextureQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true, 1);
+	private var singleQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(1);
 	
 	/**
-	 * Draw command used for rendering single colored (non-textured) quad.
-	 * Used for quads with materials without batching.
+	 * Draw command used for rendering batches of quads.
 	 */
-	private var singleColorQuad:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false, 1);
-	
-	/**
-	 * Draw command used for rendering batches of textured quads.
-	 */
-	private var textureQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(true);
-	
-	/**
-	 * Draw command used for rendering batches of non-textured quads.
-	 */
-	private var colorQuads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand(false);
+	private var quads:FlxDrawQuadsCommand = new FlxDrawQuadsCommand();
 	
 	/**
 	 * Draw command used for rendering complex meashes, both textured and non-textured.
@@ -76,11 +66,9 @@ class CanvasGL extends GLDisplayObject
 		colorFilter = null;
 		filtersArray = null;
 		
-		textureQuads = FlxDestroyUtil.destroy(textureQuads);
-		colorQuads = FlxDestroyUtil.destroy(colorQuads);
+		quads = FlxDestroyUtil.destroy(quads);
 		triangles = FlxDestroyUtil.destroy(triangles);
-		singleTextureQuad = FlxDestroyUtil.destroy(singleTextureQuad);
-		singleColorQuad = FlxDestroyUtil.destroy(singleColorQuad);
+		singleQuad = FlxDestroyUtil.destroy(singleQuad);
 		currentCommand = null;
 	}
 	
@@ -95,45 +83,28 @@ class CanvasGL extends GLDisplayObject
 	
 	override public function prepare(?renderTarget:FlxRenderTexture, ?transform:FlxMatrix):Void 
 	{
-		textureQuads.prepare(context, renderTarget, transform);
-		colorQuads.prepare(context, renderTarget, transform);
+		quads.prepare(context, renderTarget, transform);
 		triangles.prepare(context, renderTarget, transform);
-		singleTextureQuad.prepare(context, renderTarget, transform);
-		singleColorQuad.prepare(context, renderTarget, transform);
+		singleQuad.prepare(context, renderTarget, transform);
 		currentCommand = null;
 	}
 	
-	public inline function getTextureQuads(material:FlxMaterial):FlxDrawQuadsCommand
+	public inline function getQuads(material:FlxMaterial):FlxDrawQuadsCommand
 	{
 		if (currentCommand != null)
 		{
-			if (material.batchable && currentCommand != textureQuads)
+			if (material.batchable && currentCommand != quads)
 				currentCommand.flush();
 			else if (!material.batchable)
 				currentCommand.flush();
 		}
 		
-		var result = (material.batchable) ? textureQuads : singleTextureQuad;
+		var result = (material.batchable) ? quads : singleQuad;
 		currentCommand = result;
 		return result;
 	}
 	
 	// TODO: request drawCommand (optimization for drawing sequence of quads with the same material)...
-	
-	public inline function getColorQuads(material:FlxMaterial):FlxDrawQuadsCommand
-	{
-		if (currentCommand != null)
-		{
-			if (material.batchable && currentCommand != textureQuads)
-				currentCommand.flush();
-			else if (!material.batchable)
-				currentCommand.flush();
-		}
-		
-		var result = (material.batchable) ? colorQuads : singleColorQuad;
-		currentCommand = result;
-		return result;
-	}
 	
 	public inline function getTriangles(material:FlxMaterial):FlxDrawTrianglesCommand
 	{
@@ -170,13 +141,15 @@ class CanvasGL extends GLDisplayObject
 		
 		// code from GLBitmap
 		renderSession.blendModeManager.setBlendMode(blendMode);
-	//	renderSession.maskManager.pushObject(this);
+		renderSession.maskManager.pushObject(this);
 		
-	//	GL.enable(GL.SCISSOR_TEST);
-	//	GL.scissor(0, 0, Std.int(FlxG.stage.stageWidth * 0.5), Std.int(FlxG.stage.stageHeight * 0.5));
+		var renderTransform:Matrix = __renderTransform;
+		
+	//	gl.enable(gl.SCISSOR_TEST);
+	//	gl.scissor(0, 0, _width, _height);
 		
 		var shader = renderSession.filterManager.pushObject(this);
-		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
+		shader.data.uMatrix.value = renderer.getMatrix(renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
