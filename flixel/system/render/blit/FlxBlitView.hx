@@ -9,7 +9,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -17,7 +16,6 @@ import flixel.util.FlxSpriteUtil;
 import openfl.Vector;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
-import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Graphics;
@@ -209,21 +207,6 @@ class FlxBlitView extends FlxCameraView
 		}
 		
 		trianglesSprite.graphics.endFill();
-		
-	//	_buffer.draw(trianglesSprite, matrix, transform, material.blendMode);
-		
-		// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
-		/*
-		if (_useBlitMatrix)
-		{
-			_helperMatrix.copyFrom(_blitMatrix);
-		}
-		else
-		{
-			_helperMatrix.identity();
-			_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
-		}
-		*/
 		
 		_helperMatrix.copyFrom(matrix);
 		
@@ -423,9 +406,9 @@ class FlxBlitView extends FlxCameraView
 		_blitMatrix.identity();
 		_blitMatrix.translate(-viewOffsetX, -viewOffsetY);
 		_blitMatrix.scale(camera.scaleX, camera.scaleY);
-  		
+		
 		_useBlitMatrix = (camera.scaleX < camera.initialZoom) || (camera.scaleY < camera.initialZoom);
-  	}
+	}
 	
 	override public function updateScale():Void 
 	{

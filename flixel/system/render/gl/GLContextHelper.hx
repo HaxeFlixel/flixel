@@ -1,6 +1,5 @@
 package flixel.system.render.gl;
 
-import flixel.system.render.gl.FlxRenderTexture;
 import lime.graphics.GLRenderContext;
 import openfl.Lib;
 import openfl.display.BitmapData;
@@ -12,7 +11,6 @@ import flixel.graphics.shaders.FlxShader;
 import openfl._internal.renderer.opengl.GLBlendModeManager;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLShaderManager;
-import openfl._internal.renderer.opengl.GLRenderer;
 
 import openfl.gl.GL;
 import lime.graphics.RenderContext;

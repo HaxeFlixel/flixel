@@ -11,7 +11,6 @@ import lime.graphics.opengl.GLTexture;
 import lime.math.Matrix4;
 import lime.utils.ArrayBufferView;
 import openfl.display.BitmapData;
-import openfl.geom.Rectangle;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;

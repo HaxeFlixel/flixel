@@ -116,12 +116,12 @@ class FlxTrianglesData implements IFlxDestroyable
 			{
 				for (j in 0...mesh.uv.length)
 				{
-					if(j % 2 != 0)
+					if (j % 2 != 0)
 						mesh.uv[j] = 1 - mesh.uv[j];
 				}
 				for (j in 0...mesh.v2.length)
 				{
-					if(j % 2 != 0)
+					if (j % 2 != 0)
 						mesh.v2[j] = 1 - mesh.v2[j];
 				}
 			}
@@ -951,21 +951,24 @@ class FlxTrianglesData implements IFlxDestroyable
 }
 
 typedef SpriteUV = {
-  var mat:Material;
-  var mesh:Array<Mesh>;
+	var mat:Material;
+	var mesh:Array<Mesh>;
 }
+
 typedef Material = {
-  var name:String;
-  var txName:Array<String>;
+	var name:String;
+	var txName:Array<String>;
 }
+
 typedef Mesh = {
-  var mat:String;
-  var name:String;
-  var pos:MeshPos;
-  var tri:Array<Int>;
-  var uv:Array<Float>;
-  var v2:Array<Float>;
+	var mat:String;
+	var name:String;
+	var pos:MeshPos;
+	var tri:Array<Int>;
+	var uv:Array<Float>;
+	var v2:Array<Float>;
 }
+
 typedef MeshPos = {
 	var x:Float;
 	var y:Float;

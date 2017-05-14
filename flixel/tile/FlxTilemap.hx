@@ -501,7 +501,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			if (FlxG.renderBlit)
 			{
 				if (buffer.checkDirty(this, camera))
-  					drawTilemap(buffer, camera);
+					drawTilemap(buffer, camera);
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
 				buffer.draw(camera, _flashPoint, scale.x, scale.y);

@@ -98,7 +98,7 @@ class FlxDraw extends FlxStrip
 			var index = i * 2;
 			
 			c.x = points[index];
-			c.y = points[index+1];
+			c.y = points[index + 1];
 			
 			// vector u (difference between last and current)
 			u.x = c.x - wrap(points, index - 2);

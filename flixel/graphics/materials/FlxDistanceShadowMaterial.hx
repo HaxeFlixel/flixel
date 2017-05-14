@@ -6,6 +6,9 @@ import flixel.graphics.shaders.quads.FlxDistanceShadowShader;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
+// TODO: make stub for flash target...
+// TODO: make it work correctly...
+
 /**
  * ...
  * @author Zaphod

@@ -1,13 +1,11 @@
 package flixel.system.render.gl;
 
 import flixel.graphics.shaders.FlxShader;
+import flixel.math.FlxMatrix;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flixel.system.render.gl.FlxRenderTexture;
 import lime.graphics.GLRenderContext;
-import openfl.gl.GL;
 
 #if FLX_RENDER_GL
-import flixel.system.render.gl.GLContextHelper;
 import lime.math.Matrix4;
 
 /**
@@ -16,7 +14,7 @@ import lime.math.Matrix4;
  */
 class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 {
-	private var uniformMatrix:Matrix4;
+	private var uniformMatrix:Matrix4 = new Matrix4();
 	
 	private var context:GLContextHelper;
 	
@@ -29,9 +27,25 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 		super();
 	}
 	
-	public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void 
+	public function prepare(context:GLContextHelper, buffer:FlxRenderTexture, ?transform:FlxMatrix):Void 
 	{
-		this.uniformMatrix = buffer.projection;
+		if (transform != null)
+		{
+			uniformMatrix.identity();
+			uniformMatrix[0] = transform.a;
+			uniformMatrix[1] = transform.b;
+			uniformMatrix[4] = transform.c;
+			uniformMatrix[5] = transform.d;
+			uniformMatrix[12] = transform.tx;
+			uniformMatrix[13] = transform.ty;
+			uniformMatrix.append(buffer.projection);
+		}
+		else
+		{
+			uniformMatrix.copyFrom(buffer.projection);
+		}
+		
+	//	this.uniformMatrix = buffer.projection;
 		this.context = context;
 		this.buffer = buffer;
 		context.currentBuffer = null;

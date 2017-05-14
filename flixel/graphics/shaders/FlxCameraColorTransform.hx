@@ -1,4 +1,5 @@
 package flixel.graphics.shaders;
+
 import flixel.graphics.shaders.FlxCameraColorTransform.ColorTransformFilter;
 import openfl._internal.renderer.RenderSession;
 import openfl.display.Shader;
@@ -84,8 +85,6 @@ class FlxCameraColorTransform extends Shader
 			offsets[1] = transform.greenOffset / 255;
 			offsets[2] = transform.blueOffset / 255;
 			offsets[3] = transform.alphaOffset / 255;
-			
-			
 		}
 		else
 		{

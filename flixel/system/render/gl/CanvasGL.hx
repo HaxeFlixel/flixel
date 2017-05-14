@@ -1,8 +1,8 @@
 package flixel.system.render.gl;
 
 import flixel.graphics.FlxMaterial;
+import flixel.math.FlxMatrix;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.BitmapData;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 
@@ -93,13 +93,13 @@ class CanvasGL extends GLDisplayObject
 		}
 	}
 	
-	override public function prepare(?renderTarget:FlxRenderTexture):Void 
+	override public function prepare(?renderTarget:FlxRenderTexture, ?transform:FlxMatrix):Void 
 	{
-		textureQuads.prepare(context, renderTarget);
-		colorQuads.prepare(context, renderTarget);
-		triangles.prepare(context, renderTarget);
-		singleTextureQuad.prepare(context, renderTarget);
-		singleColorQuad.prepare(context, renderTarget);
+		textureQuads.prepare(context, renderTarget, transform);
+		colorQuads.prepare(context, renderTarget, transform);
+		triangles.prepare(context, renderTarget, transform);
+		singleTextureQuad.prepare(context, renderTarget, transform);
+		singleColorQuad.prepare(context, renderTarget, transform);
 		currentCommand = null;
 	}
 	

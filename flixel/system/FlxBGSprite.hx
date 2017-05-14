@@ -3,7 +3,6 @@ package flixel.system;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.FlxMaterial;
 import flixel.util.FlxColor;
 
 class FlxBGSprite extends FlxSprite

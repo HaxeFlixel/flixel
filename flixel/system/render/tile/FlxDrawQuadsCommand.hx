@@ -8,7 +8,6 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
-import flash.display.BlendMode;
 import flash.geom.ColorTransform;
 
 import openfl.display.Tilesheet;

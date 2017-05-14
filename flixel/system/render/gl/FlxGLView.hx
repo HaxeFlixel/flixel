@@ -6,21 +6,15 @@ import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
-import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
-import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import lime.graphics.GLRenderContext;
-import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObjectContainer;
-import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import openfl.gl.GL;
 
 class FlxGLView extends FlxCameraView
 {
@@ -141,13 +135,6 @@ class FlxGLView extends FlxCameraView
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		_helperMatrix.copyFrom(matrix);
-		if (_useRenderMatrix)
-			_helperMatrix.concat(_renderMatrix);
-		else
-			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-		
-		var bitmap = frame.parent.bitmap;
 		var drawItem = _canvas.getTextureQuads(material);
 		drawItem.addQuad(frame, matrix, transform, material);
 	}
@@ -158,29 +145,16 @@ class FlxGLView extends FlxCameraView
 		_helperMatrix.identity();
 		_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
 		
-		if (_useRenderMatrix)
-			_helperMatrix.concat(_renderMatrix);
-		else
-			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-		
-		var bitmap = frame.parent.bitmap;
 		var drawItem = _canvas.getTextureQuads(material);
 		drawItem.addQuad(frame, _helperMatrix, transform, material);
 	}
 	
 	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		_helperMatrix.copyFrom(matrix);
-		
-		if (_useRenderMatrix)
-			_helperMatrix.concat(_renderMatrix);
-		else
-			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-		
 		var drawItem = _canvas.getTriangles(material);
 		drawItem.set(bitmap, true, false, material);
 		drawItem.data = data;
-		drawItem.matrix = _helperMatrix;
+		drawItem.matrix = matrix;
 		drawItem.color = transform;
 		drawItem.flush();
 	}
@@ -188,27 +162,15 @@ class FlxGLView extends FlxCameraView
 	override public function drawUVQuad(bitmap:BitmapData, material:FlxMaterial, rect:FlxRect, uv:FlxRect, matrix:FlxMatrix,
 		?transform:ColorTransform):Void
 	{
-		_helperMatrix.copyFrom(matrix);
-		
-		if (_useRenderMatrix)
-			_helperMatrix.concat(_renderMatrix);
-		else
-			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-		
+		_helperMatrix.identity();
 		var drawItem = _canvas.getTextureQuads(material);
 		drawItem.addUVQuad(bitmap, rect, uv, _helperMatrix, transform, material);
 	}
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
 	{
-		_helperMatrix.copyFrom(matrix);
-		if (_useRenderMatrix)
-			_helperMatrix.concat(_renderMatrix);
-		else
-			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
-		
 		var drawItem = _canvas.getColorQuads(material);
-		drawItem.addColorQuad(rect, _helperMatrix, color, alpha, material);
+		drawItem.addColorQuad(rect, matrix, color, alpha, material);
 	}
 	
 	/**
@@ -223,7 +185,7 @@ class FlxGLView extends FlxCameraView
 		if (currentRenderTexture != renderTarget)
 		{
 			render();
-			_canvas.prepare(renderTarget);
+			_canvas.prepare(renderTarget, _renderMatrix);
 			
 			if (renderTarget.clearBeforeRender)
 			{
@@ -276,11 +238,8 @@ class FlxGLView extends FlxCameraView
 	{
 		if (_canvas != null)
 		{
-			_canvas.x = -0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
-			_canvas.y = -0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
-			
-			_canvas.scaleX = camera.totalScaleX;
-			_canvas.scaleY = camera.totalScaleY;
+			_canvas.x = 0;
+			_canvas.y = 0;
 			
 			#if FLX_DEBUG
 			if (debugLayer != null)
@@ -319,12 +278,14 @@ class FlxGLView extends FlxCameraView
 	
 	private inline function updateRenderMatrix():Void
 	{
+		_useRenderMatrix = (camera.scaleX < camera.initialZoom) || (camera.scaleY < camera.initialZoom);
+		
 		_renderMatrix.identity();
 		_renderMatrix.translate(-viewOffsetX, -viewOffsetY);
-		_renderMatrix.scale(camera.scaleX, camera.scaleY);
-  		
-		_useRenderMatrix = (camera.scaleX < camera.initialZoom) || (camera.scaleY < camera.initialZoom);
-  	}
+		
+		if (_useRenderMatrix)
+			_renderMatrix.scale(camera.scaleX, camera.scaleY);
+	}
 	
 	override public function updateScale():Void 
 	{
@@ -350,7 +311,9 @@ class FlxGLView extends FlxCameraView
 		// which could appear while cameras fading
 		_fillRect.set(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
 		
-		_helperMatrix.identity();
+		_helperMatrix.copyFrom(_renderMatrix);
+		_helperMatrix.invert();
+		
 		var drawItem = _canvas.getColorQuads(defaultColorMaterial);
 		drawItem.addColorQuad(_fillRect, _helperMatrix, Color, FxAlpha, defaultColorMaterial);
 	}
@@ -371,7 +334,7 @@ class FlxGLView extends FlxCameraView
 		
 		// Clearing camera's debug sprite
 		#if FLX_DEBUG
-		debugLayer.prepare();
+		debugLayer.prepare(null, _renderMatrix);
 		debugLayer.clear();
 		#end
 		
@@ -492,5 +455,4 @@ class FlxGLView extends FlxCameraView
 		
 		return null;
 	}
-	
 }

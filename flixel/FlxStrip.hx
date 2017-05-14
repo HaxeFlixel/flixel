@@ -1,8 +1,6 @@
 package flixel;
 
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxTrianglesData;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;

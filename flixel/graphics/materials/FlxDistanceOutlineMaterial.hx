@@ -6,6 +6,8 @@ import flixel.graphics.shaders.quads.FlxDistanceOutlineShader;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
+// TODO: make stub for flash target...
+
 /**
  * Material for distance field font with outline.
  * @author Zaphod

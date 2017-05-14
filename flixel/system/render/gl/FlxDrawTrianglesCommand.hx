@@ -1,17 +1,10 @@
 package flixel.system.render.gl;
 
-import flixel.FlxCamera;
-import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
-import flixel.math.FlxMatrix;
-import flixel.math.FlxRect;
 import flixel.graphics.shaders.FlxShader;
+import flixel.math.FlxMatrix;
 import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
-import flixel.util.FlxColor;
-import openfl.Vector;
-import openfl.display.BlendMode;
-import openfl.display.Graphics;
 import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 
@@ -21,7 +14,6 @@ import flixel.graphics.shaders.triangles.FlxTexturedShader;
 
 import lime.math.Matrix4;
 import openfl.gl.GL;
-import lime.graphics.GLRenderContext;
 
 class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCommand>
 {
@@ -59,10 +51,10 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		color = null;
 	}
 	
-	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void
+	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture, ?transform:FlxMatrix):Void
 	{
 		reset();
-		super.prepare(context, buffer);
+		super.prepare(context, buffer, transform);
 	}
 	
 	override public function flush():Void

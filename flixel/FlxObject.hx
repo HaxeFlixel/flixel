@@ -1,6 +1,5 @@
 package flixel;
 
-import flash.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;

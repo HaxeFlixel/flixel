@@ -1,5 +1,6 @@
 package flixel.system.render.gl;
 
+import flixel.math.FlxMatrix;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -9,7 +10,6 @@ import openfl.geom.Rectangle;
 #if FLX_RENDER_GL
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
-import lime.math.Matrix4;
 import openfl.utils.Float32Array;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
@@ -72,7 +72,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		buffer.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	}
 	
-	public function prepare(?renderTarget:FlxRenderTexture):Void {}
+	public function prepare(?renderTarget:FlxRenderTexture, ?transform:FlxMatrix):Void {}
 	
 	public function finish():Void {}
 	

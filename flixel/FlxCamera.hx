@@ -5,7 +5,6 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.effects.FlxRenderTarget;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
@@ -13,17 +12,13 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.blit.FlxBlitView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.Vector;
-import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
-import openfl.display.Graphics;
 import openfl.filters.BitmapFilter;
 
 /**

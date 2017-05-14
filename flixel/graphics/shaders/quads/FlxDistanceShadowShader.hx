@@ -1,7 +1,5 @@
 package flixel.graphics.shaders.quads;
 
-import flixel.graphics.shaders.FlxBaseShader;
-
 /**
  * Shader for distance field font with outline
  */

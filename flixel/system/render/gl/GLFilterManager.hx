@@ -8,9 +8,7 @@ import openfl._internal.renderer.RenderSession;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Shader;
-import openfl.filters.BitmapFilter;
 import openfl.geom.Matrix;
-import openfl.Vector;
 
 #if !openfl_debug
 @:fileXml('tags="haxe,release"')
@@ -56,7 +54,7 @@ class GLFilterManager extends AbstractFilterManager
 		return numPasses;
 	}
 	
-	public override function pushObject(object:DisplayObject):Shader 
+	override public function pushObject(object:DisplayObject):Shader 
 	{	
 		
 		if (object.__filters != null && object.__filters.length > 0)
@@ -80,7 +78,7 @@ class GLFilterManager extends AbstractFilterManager
 		return renderSession.shaderManager.defaultShader;
 	}
 	
-	public override function popObject(object:DisplayObject):Void
+	override public function popObject(object:DisplayObject):Void
 	{
 		if (object.__filters != null && object.__filters.length > 0)
 		{

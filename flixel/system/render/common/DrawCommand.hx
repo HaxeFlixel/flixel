@@ -1,7 +1,5 @@
 package flixel.system.render.common;
 
-import openfl.Vector;
-
 /**
  * ...
  * @author Zaphod

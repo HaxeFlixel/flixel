@@ -1,6 +1,5 @@
 package flixel.system.render.gl;
 
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
@@ -18,11 +17,8 @@ import flixel.graphics.shaders.FlxShader;
 #if FLX_RENDER_GL
 import flixel.graphics.shaders.quads.FlxColoredShader;
 import flixel.graphics.shaders.quads.FlxTexturedShader;
-import lime.graphics.GLRenderContext;
-import lime.math.Matrix4;
 import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
-import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import lime.utils.ArrayBuffer;
 import openfl.utils.Float32Array;
@@ -158,10 +154,10 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		this.context = context;
 	}
 	
-	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture):Void
+	override public function prepare(context:GLContextHelper, buffer:FlxRenderTexture, ?transform:FlxMatrix):Void
 	{
 		setContext(context);
-		super.prepare(context, buffer);
+		super.prepare(context, buffer, transform);
 		reset();
 	}
 	

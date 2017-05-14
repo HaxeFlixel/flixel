@@ -5,7 +5,6 @@ import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.Vector;
-import openfl.display.DisplayObjectContainer;
 
 /**
  * Display object for camera's debug layer. All debug rendering is done with this object.
@@ -30,9 +29,9 @@ class GLDebugRenderer extends GLDisplayObject
 		defaultColorMaterial = FlxDestroyUtil.destroy(defaultColorMaterial);
 	}
 	
-	override public function prepare(?renderTarget:FlxRenderTexture):Void
+	override public function prepare(?renderTarget:FlxRenderTexture, ?transform:FlxMatrix):Void
 	{
-		drawCommands.prepare(context, buffer);
+		drawCommands.prepare(context, buffer, transform);
 		drawCommands.set(null, true, false, defaultColorMaterial);
 	}
 	
@@ -117,22 +116,22 @@ class GLDebugRenderer extends GLDisplayObject
 	 * @param color  the color of the grid lines
 	 */
 	public function grid(gx:Float, gy:Float, gw:Float, gh:Float, cellX:Int, cellY:Int, color:FlxColor):Void
-    {
-        var offset = gx,
-            step = gw / cellX; // horizontal offset
-        for (i in 0...cellX+1)
-        {
-            line(offset, gy, offset, gy + gh, color);
-            offset += step;
-        }
-        offset = gy; // vertical offset
-        step = gh / cellY;
-        for (i in 0...cellY+1)
-        {
-            line(gx, offset, gx + gw, offset, color);
-            offset += step;
-        }
-    }
+	{
+		var offset = gx,
+			step = gw / cellX; // horizontal offset
+		for (i in 0...cellX+1)
+		{
+			line(offset, gy, offset, gy + gh, color);
+			offset += step;
+		}
+		offset = gy; // vertical offset
+		step = gh / cellY;
+		for (i in 0...cellY+1)
+		{
+			line(gx, offset, gx + gw, offset, color);
+			offset += step;
+		}
+	}
 	
 	/**
 	 * Draws triangles wireframe to the screen

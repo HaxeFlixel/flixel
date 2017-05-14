@@ -14,7 +14,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
 import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Utf8;
 import haxe.xml.Fast;
 import openfl.Assets;

@@ -8,7 +8,6 @@ import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxBitmapFont.FlxCharacter;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.shaders.FlxShader;
 import flixel.graphics.shaders.quads.FlxDistanceFieldShader;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -1724,6 +1723,4 @@ class FlxBitmapText extends FlxSprite
 		checkBackgroundMaterial();
 		return Value;
 	}
-	
-	
 }

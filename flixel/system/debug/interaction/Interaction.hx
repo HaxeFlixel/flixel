@@ -1,7 +1,6 @@
 package flixel.system.debug.interaction;
 
 import flash.display.BitmapData;
-import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
 import flixel.FlxObject;

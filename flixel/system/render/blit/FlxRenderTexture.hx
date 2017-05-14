@@ -4,7 +4,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import openfl.Lib;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 

@@ -10,7 +10,6 @@ import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
 /**
@@ -98,29 +97,29 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function resize(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
 		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
-  		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
-  		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
-  		
-  		if (FlxG.renderBlit)
-  		{
-			var newWidth:Int = Std.int(columns * TileWidth);
-			var newHeight:Int = Std.int(rows * TileHeight);
-			
-			if (pixels == null)
-			{
-				pixels = new BitmapData(newWidth, newHeight, true, 0);
-				_flashRect = new Rectangle(0, 0, newWidth, newHeight);
-				_matrix = new FlxMatrix();
-				dirty = true;
-			}
-			else if (pixels.width != newWidth || pixels.height != newHeight)
-			{
-				FlxDestroyUtil.dispose(pixels);
-				pixels = new BitmapData(newWidth, newHeight, true, 0);
-				_flashRect.setTo(0, 0, newWidth, newHeight);
-				dirty = true;
-			}
-  		}
+		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
+		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
+		
+		if (FlxG.renderBlit)
+		{
+		var newWidth:Int = Std.int(columns * TileWidth);
+		var newHeight:Int = Std.int(rows * TileHeight);
+
+		if (pixels == null)
+		{
+			pixels = new BitmapData(newWidth, newHeight, true, 0);
+			_flashRect = new Rectangle(0, 0, newWidth, newHeight);
+			_matrix = new FlxMatrix();
+			dirty = true;
+		}
+		else if (pixels.width != newWidth || pixels.height != newHeight)
+		{
+			FlxDestroyUtil.dispose(pixels);
+			pixels = new BitmapData(newWidth, newHeight, true, 0);
+			_flashRect.setTo(0, 0, newWidth, newHeight);
+			dirty = true;
+		}
+		}
   	}
 	
 	/**

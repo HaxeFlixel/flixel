@@ -1,6 +1,5 @@
 package flixel.system.render.common;
 
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.FlxMaterial;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
