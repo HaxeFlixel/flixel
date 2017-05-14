@@ -6,13 +6,17 @@
 - `FlxMatrix`: added `transformX()` and `transformY()` (dcc66b3)
 - `FlxCamera`: added `containsPoint()` (#1964)
 - `FlxSubState`: added `openCallback` (#2023)
-- `FlxSpriteGroup`: added `insert()` (#2020)
+- `FlxSpriteGroup`:
+	- added `insert()` (#2020)
+	- added `clipRect` support (#2051)
 - `FlxSoundGroup`: added `pause()` and `resume()` (#2043)
 - `FlxDebugger` interaction tool:
 	- added tooltips (#2006)
 	- added a selection rectangle (#1995)
 - `FlxDebugger` console: added an "Entry Type" quick watch entry (d354352)
 - `FlxStringUtil`: added `getHost()` (#1996)
+- `FlxPoint`: added `toVector()` (#2061)
+- `FlxGamepad`: added `getAnalogAxes()` (#2064)
 
 #### Bugfixes:
 
@@ -33,6 +37,7 @@
 	- fixed selections being canceled on interaction with debugger UI (897f21f)
 - `FlxG.html5`: fixed `platform` detecting iPhone and iPod as "Mac" (#2052)
 - `FlxTilemap`: fixed a missing bounds check in `getTileIndexByCoords()` (#2024)
+- `FlxAnalog`: fixed mouse input without `FLX_NO_TOUCH` (#2067) 
 
 #### Changes and improvements:
 
