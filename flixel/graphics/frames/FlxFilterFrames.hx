@@ -90,7 +90,14 @@ class FlxFilterFrames extends FlxFramesCollection
 		
 		var w:Float = spr.width;
 		var h:Float = spr.height;
+		
+		// FlxSprite.setFrames(frames) sets the graphic to the parent of "frames"
+		// To keep the original graphic on the sprite we temporarily use the sprite's graphic as parent
+		var oldParent:FlxGraphic = parent;
+		parent = spr.graphic;
 		spr.setFrames(this, saveAnimations);
+		parent = oldParent;
+		
 		spr.offset.set(0.5 * widthInc, 0.5 * heightInc);
 		spr.setSize(w, h);
 	}
