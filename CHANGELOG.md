@@ -1,4 +1,4 @@
-2.3.0
+2.3.0 (October 11, 2016)
 ------------------------------
 * Compatibility with flixel 4.2.0
 * FlxTextFormat: added an example of multi-character markers for `applyMarkup()`
@@ -9,7 +9,7 @@
 * TurnBasedRPG: fixed highscore not being saved (#248)
 * TiledEdtior: added animated tiles (#251)
 
-2.2.0
+2.2.0 (July 10, 2016)
 ------------------------------
 * Compatibility with flixel 4.1.0
 * Added 2 new demos: (#225)
@@ -20,7 +20,7 @@
 * FlxCamera: added an overlay visualizing the camera deadzone (#224)
 * FlxBunnyMark: added a shader example for OpenFL Next (#229)
 
-2.1.0
+2.1.0 (February 28, 2016)
 ------------------------------
 * FlxSnake:
  * fixed the pickup sound effect not being played
@@ -34,7 +34,7 @@
 * FlxSpriteFilters: mobile compile fix
 * Minor code cleanup for several demos
 
-2.0.0
+2.0.0 (February 16, 2016)
 ------------------------------
 * Compatibility with flixel 4.0.0
 * Renamed "Arcade Classics" to "Arcade"
@@ -85,17 +85,17 @@
  * added a label with the gamepad's name
 * TiledEditor: updated to showcase support for image layers and image tilesets
 
-1.1.2
+1.1.2 (June 5, 2015)
 ------------------------------
 * Added Tutorials/TurnBasedRPG
 
-1.1.1
+1.1.1 (May 3, 2014)
 ------------------------------
 * GamepadTest: now compatible with OpenFL 1.4.0
 * Mode: fixed infinite gun jam
 * FlxAccelerometer: fix orientation
 
-1.1.0
+1.1.0 (April 24, 2014)
 ------------------------------
 * Compatibility with flixel 3.3.0
 * Added 8 new demos:
@@ -114,7 +114,7 @@
 * GridMovement: added a FlxVirtualPad on mobile
 * Breakout: added touch controls for mobile
 
-1.0.2
+1.0.2 (February 21, 2014)
 ------------------------------
 * Compatibility with flixel 3.2.0
 * Added demos:
@@ -122,7 +122,7 @@
  * Flappybalt
 * Replaced usage of Actuate with FlxTween 
 
-1.0.1
+1.0.1 (February 6, 2014)
 ------------------------------
 * Compatibility with flixel 3.1.0
 * Added several new demos:
@@ -138,6 +138,6 @@
 * Renamed Xbox-Gamepad to GamepadTest, some improvements
 * FlxTween: improvements to the UI (now using dropdown menus)
 
-1.0.0
+1.0.0 (December 28, 2013)
 ------------------------------
 * Initial haxelib release
