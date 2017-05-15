@@ -1,3 +1,10 @@
+2.4.0 (May 15, 2017)
+------------------------------
+* Added a BlendModeShaders demo (#255)
+* Fixed a missing trail effect in FlxNape
+* Updated the FlxSpine demo
+* TiledEditor: added a flipped image (#257)
+
 2.3.0 (October 11, 2016)
 ------------------------------
 * Compatibility with flixel 4.2.0
