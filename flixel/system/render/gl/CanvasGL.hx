@@ -145,15 +145,28 @@ class CanvasGL extends GLDisplayObject
 		
 		var renderTransform:Matrix = __renderTransform;
 		
-	//	gl.enable(gl.SCISSOR_TEST);
-	//	gl.scissor(0, 0, _width, _height);
+		/*
+		var scissorX:Float = renderTransform.__transformX(this.x, this.y);
+		var scissorY:Float = renderTransform.__transformY(this.x, this.y);
+		var scissorRight:Float = renderTransform.__transformX(this.x + _width, this.y);
+		var scissorBottom:Float = renderTransform.__transformY(this.x, this.y + _height);
+		
+		trace("scissorX: " + scissorX);
+		trace("scissorY: " + scissorY);
+		trace("scissorRight: " + scissorRight);
+		trace("scissorBottom: " + scissorBottom);
+		
+		gl.enable(gl.SCISSOR_TEST);
+		gl.scissor(0, 0, 100, 100);
+		*/
 		
 		var shader = renderSession.filterManager.pushObject(this);
 		shader.data.uMatrix.value = renderer.getMatrix(renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
-		GLUtils.setTextureSmoothing(smoothing);
+		GLUtils.setTextureSmoothing(false);
+	//	GLUtils.setTextureSmoothing(smoothing);
 		GLUtils.setTextureWrapping(false);
 		
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);

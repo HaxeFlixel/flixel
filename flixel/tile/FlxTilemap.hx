@@ -47,13 +47,6 @@ class GraphicAutoAlt extends BitmapData {}
  */
 class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
-	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
-	/**
-	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
-	 * so the tile will look one pixel wider than it is.
-	 */
-	public var useScaleHack:Bool = true;
-	
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1). 
 	 * Anything other than the default is very slow with blitting!
@@ -981,6 +974,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						drawX = _helperPoint.x + (columnIndex % widthInTiles) * _scaledTileWidth;
 						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * _scaledTileHeight;
 						
+						drawX = Std.int(drawX);
+						drawY = Std.int(drawY);
+						
 						_matrix.identity();
 						
 						if (frame.angle != FlxFrameAngle.ANGLE_0)
@@ -990,12 +986,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						
 						var scaleX:Float = scale.x;
 						var scaleY:Float = scale.y;
-						
-						if (useScaleHack)
-						{
-							scaleX += 1 / (frame.sourceSize.x * Camera.totalScaleX);
-							scaleY += 1 / (frame.sourceSize.y * Camera.totalScaleY);
-						}
 						
 						_matrix.scale(scaleX, scaleY);
 						_matrix.translate(drawX, drawY);
