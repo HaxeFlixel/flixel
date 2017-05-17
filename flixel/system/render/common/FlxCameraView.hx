@@ -370,7 +370,7 @@ class FlxCameraView implements IFlxDestroyable
 		return null;
 	}
 	
-	public inline function calcOffsetX():Void
+	public function calcOffsetX():Void
 	{
 		viewOffsetX = 0.5 * camera.width * (camera.scaleX - camera.initialZoom) / camera.scaleX;
 		viewOffsetWidth = camera.width - viewOffsetX;
@@ -379,7 +379,7 @@ class FlxCameraView implements IFlxDestroyable
 		viewOffsetXFloored = Std.int(viewOffsetX);
 	}
 	
-	public inline function calcOffsetY():Void
+	public function calcOffsetY():Void
 	{
 		viewOffsetY = 0.5 * camera.height * (camera.scaleY - camera.initialZoom) / camera.scaleY;
 		viewOffsetHeight = camera.height - viewOffsetY;
@@ -387,5 +387,4 @@ class FlxCameraView implements IFlxDestroyable
 		
 		viewOffsetYFloored = Std.int(viewOffsetY);
 	}
-	
 }

@@ -166,8 +166,6 @@ class FlxBlitView extends FlxCameraView
 	{
 		if (pixels != null)
 		{
-		//	_buffer.copyPixels(pixels, sourceRect, destPoint, null, null, true);
-			
 			if (_useBlitMatrix)
 			{
 				_helperMatrix.identity();

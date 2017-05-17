@@ -96,7 +96,6 @@ class FlxGLView extends FlxCameraView
 		context = FlxG.game.glContextHelper;
 		
 		flashSprite.addChild(_scrollRect);
-		
 	//	_scrollRect.scrollRect = new Rectangle(); // TODO: fix scroll rects...
 		
 		_canvas = new CanvasGL(camera.width, camera.height, context);
@@ -112,8 +111,6 @@ class FlxGLView extends FlxCameraView
 	{
 		super.destroy();
 		
-		context = null;
-		
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		
 		#if FLX_DEBUG
@@ -126,8 +123,8 @@ class FlxGLView extends FlxCameraView
 		
 		defaultColorMaterial = FlxDestroyUtil.destroy(defaultColorMaterial);
 		
+		context = null;
 		_helperMatrix = null;
-		
 		flashSprite = null;
 		_scrollRect = null;
 		_renderMatrix = null;
@@ -217,6 +214,7 @@ class FlxGLView extends FlxCameraView
 	
 	override public function updateScrollRect():Void 
 	{
+		// TODO: fix scroll rect...
 		/*
 		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
@@ -274,6 +272,18 @@ class FlxGLView extends FlxCameraView
 		//	screen.origin.set();
 		}
 		
+		updateRenderMatrix();
+	}
+	
+	override public function calcOffsetX():Void 
+	{
+		super.calcOffsetX();
+		updateRenderMatrix();
+	}
+	
+	override public function calcOffsetY():Void 
+	{
+		super.calcOffsetY();
 		updateRenderMatrix();
 	}
 	
