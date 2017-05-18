@@ -74,7 +74,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Time in ticks of last left mouse button press.
 	 * @since 4.3.0
 	 */
-	public var justPressedTimeInTicks(get, never):Float;
+	public var justPressedTimeInTicks(get, never):Int;
 
 	#if FLX_MOUSE_ADVANCED
 	/**
@@ -93,7 +93,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Time in ticks of last right mouse button press.
 	 * @since 4.3.0
 	 */
-	public var justPressedTimeInTicksRight(get, never):Float;
+	public var justPressedTimeInTicksRight(get, never):Int;
 
 	/**
 	 * Check to see if the middle mouse button is currently pressed.
@@ -111,7 +111,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Time in ticks of last middle mouse button press.
 	 * @since 4.3.0
 	 */
-	public var justPressedTimeInTicksMiddle(get, never):Float;
+	public var justPressedTimeInTicksMiddle(get, never):Int;
 	#end
 
 	/**
@@ -512,18 +512,18 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private inline function get_pressed():Bool                       return _leftButton.pressed;
 	private inline function get_justPressed():Bool                   return _leftButton.justPressed;
 	private inline function get_justReleased():Bool                  return _leftButton.justReleased;
-	private inline function get_justPressedTimeInTicks():Float       return _leftButton.justPressedTimeInTicks;
+	private inline function get_justPressedTimeInTicks():Int         return _leftButton.justPressedTimeInTicks;
 
 	#if FLX_MOUSE_ADVANCED
 	private inline function get_pressedRight():Bool                  return _rightButton.pressed;
 	private inline function get_justPressedRight():Bool              return _rightButton.justPressed;
 	private inline function get_justReleasedRight():Bool             return _rightButton.justReleased;
-	private inline function get_justPressedTimeInTicksRight():Float  return _rightButton.justPressedTimeInTicks;
+	private inline function get_justPressedTimeInTicksRight():Int    return _rightButton.justPressedTimeInTicks;
 	
 	private inline function get_pressedMiddle():Bool                 return _middleButton.pressed;
 	private inline function get_justPressedMiddle():Bool             return _middleButton.justPressed;
 	private inline function get_justReleasedMiddle():Bool            return _middleButton.justReleased;
-	private inline function get_justPressedTimeInTicksMiddle():Float return _middleButton.justPressedTimeInTicks;
+	private inline function get_justPressedTimeInTicksMiddle():Int   return _middleButton.justPressedTimeInTicks;
 	#end
 	
 	private function showSystemCursor():Void

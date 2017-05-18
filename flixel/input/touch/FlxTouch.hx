@@ -18,7 +18,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 {	
 	/**
 	 * The _unique_ ID of this touch. You should not make not any further assumptions
-	 * about this value - IDs are not guruanteed to start from 0 or ascend in order.
+	 * about this value - IDs are not guaranteed to start from 0 or ascend in order.
 	 * The behavior may vary from device to device.
 	 */
 	public var touchPointID(get, never):Int;
@@ -32,7 +32,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	private var flashPoint = new Point();
 	
 	public var justPressedPosition(default, null) = FlxPoint.get();
-	public var justPressedTimeInTicks(default, null):Float = -1;
+	public var justPressedTimeInTicks(default, null):Int = -1;
 
 	public function destroy():Void
 	{
