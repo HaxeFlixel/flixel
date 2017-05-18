@@ -23,10 +23,10 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 	}
 
 	public var justPressedPosition(default, null) = FlxPoint.get();
-	public var justPressedTimeInTicks(default, null):Float = -1;
+	public var justPressedTimeInTicks(default, null):Int = -1;
 	
 	/**
-	 * Upates the last and current state of this mouse button.
+	 * Updates the last and current state of this mouse button.
 	 */
 	override public function update():Void
 	{

@@ -22,10 +22,10 @@ class FlxSwipe
 	public var angle(get, never):Float;
 	public var duration(get, never):Float;
 	
-	private var _startTimeInTicks:Float;
-	private var _endTimeInTicks:Float;
+	private var _startTimeInTicks:Int;
+	private var _endTimeInTicks:Int;
 	
-	private function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Float)
+	private function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Int)
 	{
 		this.ID = ID;
 		startPosition = StartPosition;
