@@ -33,7 +33,9 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Float = -1;
-
+	
+	private var _currentSwipe:FlxSwipe;
+	
 	public function destroy():Void
 	{
 		input = null;
@@ -75,11 +77,19 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		{
 			justPressedPosition.set(screenX, screenY);
 			justPressedTimeInTicks = FlxG.game.ticks;
+			#if FLX_POINTER_INPUT 
+			FlxG.swipes.push(_currentSwipe = new FlxSwipe(touchPointID, justPressedPosition, justPressedTimeInTicks)); 
+			#end
 		}
 		#if FLX_POINTER_INPUT
+		else if (pressed)
+		{
+			_currentSwipe.path.addPoint(getScreenPosition());
+		}
 		else if (justReleased)
 		{
-			FlxG.swipes.push(new FlxSwipe(touchPointID, justPressedPosition, getScreenPosition(), justPressedTimeInTicks));
+			if (_currentSwipe != null)
+				_currentSwipe.release();
 		}
 		#end
 	}
