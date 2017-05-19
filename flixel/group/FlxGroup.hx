@@ -190,10 +190,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			members[index] = Object;
 			
-			if (index >= length)
-			{
-				length = index + 1;
-			}
+			length++;
 			
 			return Object;
 		}
@@ -356,6 +353,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		else
 			members[index] = null;
 		
+		length--;
+			
 		return Object;
 	}
 	
