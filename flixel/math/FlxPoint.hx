@@ -293,6 +293,20 @@ class FlxPoint implements IFlxPooled
 		point.putWeak();
 		return FlxMath.vectorLength(dx, dy);
 	}
+
+	/**
+	 * Get the vector between this point and another point.
+	 * 
+	 * @param 	AnotherPoint	A FlxPoint object to calculate a vector to.
+	 * @return	The vector between the two points as a FlxVector.
+	 */
+	public function vectorTo(point:FlxPoint):FlxVector
+	{
+		var dx:Float = x - point.x;
+		var dy:Float = y - point.y;
+		point.putWeak();
+		return FlxVector.get(dx, dy);
+	}
 	
 	/**
 	 * Rounds x and y using Math.floor()
@@ -395,6 +409,16 @@ class FlxPoint implements IFlxPooled
 	public inline function toVector():FlxVector
 	{
 		return FlxVector.get(x, y);
+	}
+
+	/**
+	 * Function to get the hypotenuse of the right triangle 
+	 * formed by the components of this `FlxPoint`
+	 * @since 4.3.0
+	 */
+	public inline function hypot():Float
+	{
+		return Math.sqrt(Math.abs(x * x) + Math.abs(y * y));
 	}
 	
 	/**
