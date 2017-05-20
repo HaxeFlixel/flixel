@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Flash",
+			"type": "fdb",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/flash/bin/TestMain.swf",
+			"preLaunchTask": "targets/debug-flash.hxml"
+		}
+	]
+}

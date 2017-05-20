@@ -4,6 +4,7 @@ import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
 import massive.munit.TestRunner;
+import massive.munit.client.AbstractTestResultClient;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.RichPrintClient;
 import massive.munit.client.SummaryReportClient;
@@ -27,15 +28,15 @@ class TestMain
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);
 
-		#if MCOVER
-		var client = new mcover.coverage.munit.client.MCoverPrintClient();
-		var httpClient = new HTTPClient(new mcover.coverage.munit.client.MCoverSummaryReportClient());
+		#if fdb
+		var client = new AbstractTestResultClient();
 		#else
 		var client = new RichPrintClient();
-		var httpClient = new HTTPClient(new SummaryReportClient());
 		#end
-
-		var runner:TestRunner = new TestRunner(client);
+		
+		var httpClient = new HTTPClient(new SummaryReportClient());
+		
+		var runner = new TestRunner(client);
 		runner.addResultClient(httpClient);
 
 		runner.completionHandler = completionHandler;
