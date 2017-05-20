@@ -60,16 +60,13 @@ class ScrollRectSprite extends Sprite
 			var renderer:GLRenderer = cast renderSession.renderer;
 			tempRect.__transform(clipRect, renderer.displayMatrix);
 			
-			var x:Int = Math.floor(clipRect.x);
-			var y:Int = Math.floor(renderer.height - clipRect.y - clipRect.height);
-			var width:Int = Math.ceil(clipRect.width);
-			var height:Int = Math.ceil(clipRect.height);
+			var x = Std.int(clipRect.x);
+			var y = Std.int(clipRect.y);
+			var width = Math.ceil(clipRect.width);
+			var height = Std.int(renderer.height - clipRect.y);
 			
-			if (width < 0)
-				width = 0;
-			
-			if (height < 0) 
-				height = 0;
+			if (width < 0) width = 0;
+			if (height < 0) height = 0;
 			
 			gl.enable(gl.SCISSOR_TEST);
 			gl.scissor(x, y, width, height);

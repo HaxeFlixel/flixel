@@ -28,6 +28,8 @@ using flixel.util.FlxColorTransformUtil;
 class CanvasGL extends GLDisplayObject
 {
 	#if FLX_RENDER_GL
+	// TODO: implement camera color transform with custom shader not the filter, 
+	// since it causes to overdraw whole screen which is very bad for perfomance...
 	private var colorFilter:ColorTransformFilter;
 	private var filtersArray:Array<BitmapFilter>;
 	
