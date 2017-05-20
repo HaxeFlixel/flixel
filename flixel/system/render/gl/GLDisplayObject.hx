@@ -139,14 +139,15 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		
 		// code from GLBitmap
 		renderSession.blendModeManager.setBlendMode(blendMode);
-	//	renderSession.maskManager.pushObject(this);
+		renderSession.maskManager.pushObject(this);
 		
 		var shader = renderSession.filterManager.pushObject(this);
 		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(gl.TEXTURE_2D, buffer.texture);
-		GLUtils.setTextureSmoothing(smoothing);
+		GLUtils.setTextureSmoothing(false);
+	//	GLUtils.setTextureSmoothing(smoothing);
 		GLUtils.setTextureWrapping(false);
 		
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);
@@ -156,9 +157,6 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		gl.vertexAttribPointer(shader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
 		
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-		
-		renderSession.filterManager.popObject(this);
-	//	renderSession.maskManager.popObject(this);
 		// end of code from GLBitmap
 		
 		context.currentShader = null;
@@ -175,6 +173,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		__removedChildren.length = 0;
 		
 		renderSession.filterManager.popObject(this);
+		renderSession.maskManager.popObject(this);
 	}
 	
 	#else

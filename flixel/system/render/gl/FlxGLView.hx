@@ -46,7 +46,7 @@ class FlxGLView extends FlxCameraView
 	 * It is a child of `flashSprite`.
 	 * Its position is modified by `updateScrollRect()` method, which is called on camera's resize and scale events.
 	 */
-	private var _scrollRect:Sprite = new Sprite();
+	private var _scrollRect:ScrollRectSprite = new ScrollRectSprite();
 	
 	/**
 	 * Sprite used for actual rendering in tile render mode (instead of `_flashBitmap` for blitting).
@@ -96,7 +96,7 @@ class FlxGLView extends FlxCameraView
 		context = FlxG.game.glContextHelper;
 		
 		flashSprite.addChild(_scrollRect);
-	//	_scrollRect.scrollRect = new Rectangle(); // TODO: fix scroll rects...
+		_scrollRect.scrollRect = new Rectangle();
 		
 		_canvas = new CanvasGL(camera.width, camera.height, context);
 		_scrollRect.addChild(_canvas);
@@ -214,23 +214,18 @@ class FlxGLView extends FlxCameraView
 	
 	override public function updateScrollRect():Void 
 	{
-		// TODO: fix scroll rect...
-		/*
 		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
 		if (rect != null)
 		{
-			rect.x = rect.y = 0;
+			rect.x = 0;
+			rect.y = 0;
 			rect.width = camera.width * camera.initialZoom * FlxG.scaleMode.scale.x;
 			rect.height = camera.height * camera.initialZoom * FlxG.scaleMode.scale.y;
 			_scrollRect.scrollRect = rect;
 			_scrollRect.x = -0.5 * rect.width;
 			_scrollRect.y = -0.5 * rect.height;
 		}
-		*/
-		
-		_scrollRect.x = -0.5 * camera.width * camera.initialZoom * FlxG.scaleMode.scale.x;
-		_scrollRect.y = -0.5 * camera.height * camera.initialZoom * FlxG.scaleMode.scale.y;
 	}
 	
 	override public function updateInternals():Void 
@@ -441,7 +436,6 @@ class FlxGLView extends FlxCameraView
 	override private inline function render():Void
 	{
 		_canvas.finish();
-		
 	}
 	
 	private function get_renderTexture():FlxRenderTexture

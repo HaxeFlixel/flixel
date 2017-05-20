@@ -426,8 +426,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				
 				if (tile != null && tile.visible)
 				{
-					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
+					rect.x = Std.int(_helperPoint.x + (columnIndex % widthInTiles) * rectWidth);
+					rect.y = Std.int(_helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight);
 					drawDebugBoundingBox(Camera, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
 				}
 				
