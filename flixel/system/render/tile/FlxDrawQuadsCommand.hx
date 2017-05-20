@@ -94,7 +94,7 @@ class FlxDrawQuadsCommand extends FlxDrawBaseCommand<FlxDrawQuadsCommand>
 		drawData[position++] = f;
 	}
 	
-	override public function render(view:FlxHardwareView):Void
+	override public function render(view:FlxCameraView):Void
 	{
 		if (!FlxG.renderTile || position <= 0)
 			return;

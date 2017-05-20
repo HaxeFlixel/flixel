@@ -4,13 +4,13 @@ import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.frames.FlxFrame;
 import flixel.system.render.common.DrawCommand.FlxDrawItemType;
-import flixel.system.render.common.DrawCommand.DrawData;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.render.common.FlxCameraView;
 import flixel.system.render.common.FlxDrawBaseCommand;
 import flixel.util.FlxColor;
+import openfl.Vector;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
@@ -25,10 +25,10 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 	private static var point:FlxPoint = FlxPoint.get();
 	private static var rect:FlxRect = FlxRect.get();
 	
-	public var vertices:DrawData<Float> = new DrawData<Float>();
-	public var indices:DrawData<Int> = new DrawData<Int>();
-	public var uvtData:DrawData<Float> = new DrawData<Float>();
-	public var colors:DrawData<Int> = new DrawData<Int>();
+	public var vertices:Vector<Float> = new Vector<Float>();
+	public var indices:Vector<Int> = new Vector<Int>();
+	public var uvtData:Vector<Float> = new Vector<Float>();
+	public var colors:Vector<Int> = new Vector<Int>();
 	
 	// variables for drawing non-textured triangles:
 	public var color:FlxColor;
@@ -44,7 +44,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		type = FlxDrawItemType.TRIANGLES;
 	}
 	
-	override public function render(view:FlxHardwareView):Void 
+	override public function render(view:FlxCameraView):Void 
 	{
 		if (!FlxG.renderTile)
 			return;
@@ -72,7 +72,7 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 		{
-			var gfx:Graphics = view.debugLayer.graphics;
+			var gfx:Graphics = cast(view, FlxTileView).debugLayer.graphics;
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 			gfx.drawTriangles(vertices, indices);
 		}
@@ -176,24 +176,11 @@ class FlxDrawTrianglesCommand extends FlxDrawBaseCommand<FlxDrawTrianglesCommand
 			}
 			
 			var color:FlxColor;
-			var c:FlxColor;
 			
-			if (data.colored)
+			for (i in 0...numberOfVertices)
 			{
-				for (i in 0...numberOfVertices)
-				{
-					color = data.colors[i];
-					this.colors[colorPos++] = FlxColor.fromRGBFloat(tr * color.redFloat, tg * color.greenFloat, tb * color.blueFloat, ta * color.alphaFloat);
-				}
-			}
-			else
-			{
-				color = FlxColor.fromRGBFloat(tr, tg, tb, ta);
-				
-				for (i in 0...numberOfVertices)
-				{
-					this.colors[colorPos++] = color;
-				}
+				color = data.colors[i];
+				this.colors[colorPos++] = FlxColor.fromRGBFloat(tr * color.redFloat, tg * color.greenFloat, tb * color.blueFloat, ta * color.alphaFloat);
 			}
 		}
 		#end

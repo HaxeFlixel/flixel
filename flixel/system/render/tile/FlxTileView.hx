@@ -18,6 +18,8 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+using flixel.util.FlxColorTransformUtil;
+
 class FlxTileView extends FlxCameraView
 {
 	/**
@@ -124,8 +126,7 @@ class FlxTileView extends FlxCameraView
 	
 	override public function drawTriangles(bitmap:BitmapData, material:FlxMaterial, data:FlxTrianglesData, ?matrix:FlxMatrix, ?transform:ColorTransform):Void 
 	{
-		var isColored = data.colored || (transform != null && transform.hasRGBMultipliers());
-		var drawItem = getTrianglesCommand(bitmap, material, isColored, data.numTriangles);
+		var drawItem = getTrianglesCommand(bitmap, material, true, data.numTriangles);
 		drawItem.addTriangles(data, matrix, transform);
 		data.dirty = false;
 	}
@@ -247,7 +248,7 @@ class FlxTileView extends FlxCameraView
 		var currItem:FlxDrawBaseCommand<Dynamic> = _firstCommand;
 		while (currItem != null)
 		{
-			currItem.render(view);
+			currItem.render(this);
 			currItem = currItem.next;
 		}
 	}
