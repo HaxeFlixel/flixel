@@ -14,7 +14,6 @@ import openfl.utils.Float32Array;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
-import flixel.graphics.shaders.FlxCameraColorTransform.ColorTransformFilter;
 #end
 
 using flixel.util.FlxColorTransformUtil;
