@@ -1,34 +1,7 @@
 package flixel.graphics.shaders;
 
-import flixel.graphics.shaders.FlxCameraColorTransform.ColorTransformFilter;
-import openfl._internal.renderer.RenderSession;
 import openfl.display.Shader;
-import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
-
-@:final class ColorTransformFilter extends BitmapFilter
-{
-	private static var _colorTransformShader:FlxCameraColorTransform = new FlxCameraColorTransform();
-	
-	public var transform:ColorTransform;
-	
-	public function new()
-	{
-		super();
-		__numPasses = 1;
-	}
-	
-	override public function clone():BitmapFilter 
-	{
-		return new ColorTransformFilter();
-	}
-	
-	override private function __initShader(renderSession:RenderSession, pass:Int):Shader 
-	{
-		_colorTransformShader.init(transform);
-		return _colorTransformShader;
-	}
-}
 
 /**
  * Shader user for applying camera color transform (it there is any).

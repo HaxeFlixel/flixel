@@ -1,6 +1,7 @@
 package flixel.system.render.gl;
 
 import flixel.graphics.FlxMaterial;
+import flixel.graphics.shaders.FlxCameraColorTransform;
 import flixel.math.FlxMatrix;
 import flixel.util.FlxDestroyUtil;
 import openfl.filters.BitmapFilter;
@@ -28,10 +29,7 @@ using flixel.util.FlxColorTransformUtil;
 class CanvasGL extends GLDisplayObject
 {
 	#if FLX_RENDER_GL
-	// TODO: implement camera color transform with custom shader not the filter, 
-	// since it causes to overdraw whole screen which is very bad for perfomance...
-	private var colorFilter:ColorTransformFilter;
-	private var filtersArray:Array<BitmapFilter>;
+	private var colorShader:FlxCameraColorTransform;
 	
 	/**
 	 * Currently used draw command
@@ -57,21 +55,18 @@ class CanvasGL extends GLDisplayObject
 	{
 		super(width, height, context);
 		
-		colorFilter = new ColorTransformFilter();
-		filtersArray = [colorFilter];
+		colorShader = new FlxCameraColorTransform();
 	}
 	
 	override public function destroy():Void
 	{
 		super.destroy();
 		
-		colorFilter = null;
-		filtersArray = null;
-		
 		quads = FlxDestroyUtil.destroy(quads);
 		triangles = FlxDestroyUtil.destroy(triangles);
 		singleQuad = FlxDestroyUtil.destroy(singleQuad);
 		currentCommand = null;
+		colorShader = null;
 	}
 	
 	override public function finish():Void 
@@ -122,33 +117,15 @@ class CanvasGL extends GLDisplayObject
 		var gl:GLRenderContext = renderSession.gl;
 		var renderer:GLRenderer = cast renderSession.renderer;
 		
-		var useColorTransform:Bool = false;
-		var hasNoFilters:Bool = (__filters == null);
-		
-		var color:ColorTransform = __worldColorTransform;
-		colorFilter.transform = color;
-		
-		if (color != null)
-			useColorTransform = color.hasAnyTransformation();
-		
-		if (useColorTransform)
-		{
-			colorFilter.transform = color;
-			
-			if (hasNoFilters)
-				__filters = filtersArray;
-			else
-				__filters.unshift(colorFilter);
-		}
-		
 		// code from GLBitmap
 		renderSession.blendModeManager.setBlendMode(blendMode);
 		renderSession.maskManager.pushObject(this);
 		
 		var renderTransform:Matrix = __renderTransform;
-		var shader = renderSession.filterManager.pushObject(this);
-		shader.data.uMatrix.value = renderer.getMatrix(renderTransform);
-		renderSession.shaderManager.setShader(shader);
+		colorShader.init(__worldColorTransform);
+		renderSession.filterManager.pushObject(this);
+		colorShader.data.uMatrix.value = renderer.getMatrix(renderTransform);
+		renderSession.shaderManager.setShader(colorShader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
 		GLUtils.setTextureSmoothing(false);
@@ -157,14 +134,11 @@ class CanvasGL extends GLDisplayObject
 		
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);
 		
-		gl.vertexAttribPointer(shader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
-		gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
-		gl.vertexAttribPointer(shader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
+		gl.vertexAttribPointer(colorShader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
+		gl.vertexAttribPointer(colorShader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
+		gl.vertexAttribPointer(colorShader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
 		
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-		
-		renderSession.filterManager.popObject(this);
-		renderSession.maskManager.popObject(this);
 		// end of code from GLBitmap
 		
 		context.currentShader = null;
@@ -181,14 +155,7 @@ class CanvasGL extends GLDisplayObject
 		__removedChildren.length = 0;
 		
 		renderSession.filterManager.popObject(this);
-		
-		if (useColorTransform)
-		{
-			if (hasNoFilters)
-				__filters = null;
-			else
-				__filters.shift();
-		}
+		renderSession.maskManager.popObject(this);
 	}
 	#end
 }
