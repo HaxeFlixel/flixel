@@ -59,7 +59,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 * @param   OnMouseOut      Callback when mouse moves out of this object.
 	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
-	 * @param   MouseChildren   If true, other objects overlaped by this will still receive mouse events.
+	 * @param   MouseChildren   If true, other objects overlapped by this will still receive mouse events.
 	 * @param   MouseEnabled    If true, this object will receive mouse events.
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
@@ -82,7 +82,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 	
 	/**
-	 * Removes a registerd object from the registry.
+	 * Removes a registered object from the registry.
 	 */
 	public static function remove<T:FlxObject>(Object:T):T
 	{
@@ -321,12 +321,15 @@ class FlxMouseEventManager extends FlxBasic
 		}
 		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
 		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
+
+		FlxG.signals.stateSwitched.add(removeAll);
 	}
 	
 	override public function destroy():Void
 	{
 		clearRegistry();
 		_point = FlxDestroyUtil.put(_point);
+		FlxG.signals.stateSwitched.remove(removeAll);
 		super.destroy();
 	}
 	
@@ -338,13 +341,6 @@ class FlxMouseEventManager extends FlxBasic
 		
 		for (reg in _registeredObjects)
 		{
-			// Sprite destroyed check.
-			if (reg.object.acceleration == null)
-			{
-				remove(reg.object);
-				continue;
-			}
-			
 			if (!reg.object.alive || !reg.object.exists || !reg.object.visible || !reg.mouseEnabled)
 			{
 				continue;
