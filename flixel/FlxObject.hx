@@ -1100,7 +1100,8 @@ class FlxObject extends FlxBasic
 		camera.endDrawDebug();
 	}
 #end
-
+	
+	@:access(flixel.FlxCamera)
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);
@@ -1116,6 +1117,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
+	@:access(flixel.FlxCamera)
 	override public function toString():String
 	{
 		return FlxStringUtil.getDebugString([

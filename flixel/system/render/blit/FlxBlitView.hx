@@ -290,7 +290,7 @@ class FlxBlitView extends FlxCameraView
 		currentBuffer = (target != null) ? target.renderTexture.bitmap : _buffer;
 	}
 	
-	override public function transformRect(rect:FlxRect):FlxRect
+	override private function transformRect(rect:FlxRect):FlxRect
 	{
 		rect.offset(-viewOffsetX, -viewOffsetY);
 		
@@ -307,7 +307,7 @@ class FlxBlitView extends FlxCameraView
 		return rect;
 	}
 	
-	override public function transformPoint(point:FlxPoint):FlxPoint
+	override private function transformPoint(point:FlxPoint):FlxPoint
 	{
 		point.subtract(viewOffsetX, viewOffsetY);
 		
@@ -317,7 +317,7 @@ class FlxBlitView extends FlxCameraView
 		return point;
 	}
 	
-	override public function transformVector(vector:FlxPoint):FlxPoint
+	override private function transformVector(vector:FlxPoint):FlxPoint
 	{
 		if (_useBlitMatrix)
 			vector.scale(camera.zoom);
@@ -325,7 +325,7 @@ class FlxBlitView extends FlxCameraView
 		return vector;
 	}
 	
-	override public function transformObject(object:DisplayObject):DisplayObject
+	override private function transformObject(object:DisplayObject):DisplayObject
 	{
 		object.scaleX *= camera.totalScaleX;
 		object.scaleY *= camera.totalScaleY;

@@ -17,6 +17,7 @@ class FlxBGSprite extends FlxSprite
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
+	@:access(flixel.FlxCamera)
 	override public function draw():Void
 	{
 		for (camera in cameras)

@@ -493,7 +493,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			if (FlxG.renderBlit)
 			{
-				if (buffer.checkDirty(this, camera))
+				if (buffer.isDirty(this, camera))
 					drawTilemap(buffer, camera);
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
@@ -886,6 +886,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Buffer		The FlxTilemapBuffer you are rendering to.
 	 * @param	Camera		The related FlxCamera, mainly for scroll values.
 	 */
+	@:access(flixel.FlxCamera)
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		var isColored:Bool = (alpha != 1) || (color != 0xffffff);

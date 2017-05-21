@@ -34,6 +34,7 @@ import openfl.filters.BitmapFilter;
  *         |-> `canvas:Sprite`        (its graphics is used for rendering objects in tile render mode)
  *         |-> `debugLayer:Sprite`    (this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
+@:access(flixel.system.render.common.FlxCameraView)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -229,11 +230,25 @@ class FlxCamera extends FlxBasic
 	 */
 	public var screen(get, never):FlxSprite;
 	
-	public var viewOffsetX(get, null):Float;
-	public var viewOffsetY(get, null):Float;
+	/**
+	 * Difference between native size of camera and zoomed size, divided in half
+	 * Needed to do occlusion of objects when zoom != initialZoom
+	 */
+	private var viewOffsetX(get, null):Float;
+	private var viewOffsetY(get, null):Float;
 	
-	public var viewWidth(get, null):Float;
-	public var viewHeight(get, null):Float;
+	/**
+	 * Dimensions of area visible at current camera zoom.
+	 */
+	private var viewWidth(get, null):Float;
+	private var viewHeight(get, null):Float;
+	
+	/**
+	 * The size of the camera plus view offset.
+	 * These variables are used for object visibility checks.
+	 */
+	private var viewOffsetWidth(get, null):Float = 0;
+	private var viewOffsetHeight(get, null):Float = 0;
 	
 	/**
 	 * Internal, represents the color of `flash()` special effect.
@@ -1076,10 +1091,10 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
 	 * @param	rect	rectangle to prepare for rendering
-	 * @return	trasformed rectangle with respect to camera's zoom factor
+	 * @return	transformed rectangle with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public inline function transformRect(rect:FlxRect):FlxRect
+	
+	private inline function transformRect(rect:FlxRect):FlxRect
 	{
 		return view.transformRect(rect);
 	}
@@ -1087,10 +1102,9 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
 	 * @param	point		point to prepare for rendering
-	 * @return	trasformed point with respect to camera's zoom factor
+	 * @return	transformed point with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public inline function transformPoint(point:FlxPoint):FlxPoint
+	private inline function transformPoint(point:FlxPoint):FlxPoint
 	{
 		return view.transformPoint(point);
 	}
@@ -1098,10 +1112,9 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
 	 * @param	vector	relative position to prepare for rendering
-	 * @return	trasformed vector with respect to camera's zoom factor
+	 * @return	transformed vector with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public inline function transformVector(vector:FlxPoint):FlxPoint
+	private inline function transformVector(vector:FlxPoint):FlxPoint
 	{
 		return view.transformVector(vector);
 	}
@@ -1113,8 +1126,7 @@ class FlxCamera extends FlxBasic
 	 * @param	object	display object to apply transformations to.
 	 * @return	transformed object.
 	 */
-	@:noCompletion
-	public inline function transformObject(object:DisplayObject):DisplayObject
+	private inline function transformObject(object:DisplayObject):DisplayObject
 	{
 		return view.transformObject(object);
 	}
@@ -1274,6 +1286,16 @@ class FlxCamera extends FlxBasic
 	private inline function get_viewHeight():Float
 	{
 		return view.viewHeight;
+	}
+	
+	private inline function get_viewOffsetWidth():Float
+	{
+		return view.viewOffsetWidth;
+	}
+	
+	private inline function get_viewOffsetHeight():Float
+	{
+		return view.viewOffsetHeight;
 	}
 }
 

@@ -691,6 +691,7 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @param	Camera		The camera object the path will draw to.
 	 */
+	@:access(flixel.FlxCamera)
 	public function drawDebug(?Camera:FlxCamera):Void
 	{
 		if (_nodes == null || _nodes.length <= 0)
