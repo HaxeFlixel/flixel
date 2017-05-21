@@ -17,6 +17,7 @@ class FlxBGSprite extends FlxSprite
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
+	@:access(flixel.FlxCamera)
 	override public function draw():Void
 	{
 		for (camera in cameras)
@@ -27,7 +28,7 @@ class FlxBGSprite extends FlxSprite
 			}
 			
 			_matrix.identity();
-			_matrix.scale(camera.width, camera.height);
+			_matrix.scale(camera.viewWidth, camera.viewHeight);
 			camera.drawPixels(frame, _matrix, colorTransform);
 			
 			#if FLX_DEBUG
