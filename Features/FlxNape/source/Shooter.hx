@@ -16,7 +16,6 @@ import nape.callbacks.InteractionType;
 import nape.constraint.DistanceJoint;
 import nape.dynamics.InteractionFilter;
 import nape.geom.Vec2;
-import nape.phys.Body;
 
 /**
  * Fires small projectiles to where the user clicks.
@@ -66,7 +65,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			InteractionType.COLLISION, 
 			CB_BULLET,
 			CbType.ANY_BODY,
-			onBulletColides));
+			onBulletCollides));
 	}
 	
 	function launchProjectile(spr:FlxSprite) 
@@ -87,10 +86,10 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 			impulse * Math.cos(angle * 3.14 / 180),
 			impulse * Math.sin(angle * 3.14 / 180));
 		
-		spr.body.angularVel = 30;				
+		spr.body.angularVel = 30;
 	}
 
-	public function onBulletColides(clbk:InteractionCallback) 
+	public function onBulletCollides(clbk:InteractionCallback) 
 	{
 		var spr = getFirstAlive();
 		if (spr != null)
