@@ -215,7 +215,7 @@ class FlxTileView extends FlxCameraView
 		#end
 		
 		var graphic:Graphics = _canvas.graphics;
-		graphic.beginFill(color, alpha);
+		graphic.beginFill(Color, alpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
 		graphic.drawRect(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);

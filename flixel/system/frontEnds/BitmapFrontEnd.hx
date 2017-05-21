@@ -360,7 +360,7 @@ class BitmapFrontEnd
 		for (key in _cache.keys())
 		{
 			var obj = _cache.get(key);
-			if (obj != null && obj.useCount <= 0 && !obj.persist && obj.destroyOnNoUse)
+			if (obj != null && obj.useCount <= 0 && !obj.persist)
 			{
 				removeByKey(key);
 			}

@@ -351,9 +351,6 @@ class FlxGLView extends FlxCameraView
 	override public function unlock(useBufferLocking:Bool):Void 
 	{
 		render();
-		#if FLX_DEBUG
-		debugLayer.finish();
-		#end
 		context.resetFrameBuffer();
 	}
 	
@@ -365,31 +362,38 @@ class FlxGLView extends FlxCameraView
 	
 	override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
 	{
+		#if FLX_DEBUG
 		var drawColor:FlxColor = color;
 		drawColor.alphaFloat = alpha;
 		debugLayer.rect(x, y, width, height, drawColor, thickness);
-		debugLayer.rect(x, y, width, height, drawColor, thickness);
+		#end
 	}
 	
 	override public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0):Void 
 	{
+		#if FLX_DEBUG
 		var drawColor:FlxColor = color;
 		drawColor.alphaFloat = alpha;
 		debugLayer.line(x1, y1, x2, y2, drawColor, thickness);
+		#end
 	}
 	
 	override public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:Int, alpha:Float = 1.0):Void 
 	{
+		#if FLX_DEBUG
 		var drawColor:FlxColor = color;
 		drawColor.alphaFloat = alpha;
 		debugLayer.fillRect(x, y, width, height, color);
+		#end
 	}
 	
 	override public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void
 	{
+		#if FLX_DEBUG
 		var drawColor:FlxColor = color;
 		drawColor.alphaFloat = alpha;
 		debugLayer.triangles(matrix, data.vertices, data.indices, drawColor, thickness);
+		#end
 	}
 	
 	override private function set_color(Color:FlxColor):FlxColor 
@@ -436,6 +440,9 @@ class FlxGLView extends FlxCameraView
 	override private inline function render():Void
 	{
 		_canvas.finish();
+		#if FLX_DEBUG
+		debugLayer.finish();
+		#end
 	}
 	
 	private function get_renderTexture():FlxRenderTexture
@@ -449,7 +456,9 @@ class FlxGLView extends FlxCameraView
 	override private function set_smoothing(value:Bool):Bool
 	{
 		_canvas.smoothing = value;
+		#if FLX_DEBUG
 		debugLayer.smoothing = value;
+		#end
 		return value;
 	}
 	

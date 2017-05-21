@@ -175,8 +175,8 @@ class FlxBlitView extends FlxCameraView
 			}
 			else
 			{
-				_helperPoint.x = destPoint.x - viewOffsetXFloored;
-				_helperPoint.y = destPoint.y - viewOffsetYFloored;
+				_helperPoint.x = destPoint.x - Std.int(viewOffsetX);
+				_helperPoint.y = destPoint.y - Std.int(viewOffsetY);
 				currentBuffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 			}
 		}
