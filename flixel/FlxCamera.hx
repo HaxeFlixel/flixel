@@ -206,21 +206,21 @@ class FlxCamera extends FlxBasic
 	 * Difference between native size of camera and zoomed size, divided in half
 	 * Needed to do occlusion of objects when zoom != initialZoom
 	 */
-	public var viewOffsetX(default, null):Float = 0;
-	public var viewOffsetY(default, null):Float = 0;
+	private var viewOffsetX(default, null):Float = 0;
+	private var viewOffsetY(default, null):Float = 0;
 	
 	/**
 	 * The size of the camera plus view offset.
 	 * These variables are used for object visibility checks.
 	 */
-	public var viewOffsetWidth(default, null):Float = 0;
-	public var viewOffsetHeight(default, null):Float = 0;
+	private var viewOffsetWidth(default, null):Float = 0;
+	private var viewOffsetHeight(default, null):Float = 0;
 	
 	/**
 	 * Dimensions of area visible at current camera zoom.
 	 */
-	public var viewWidth(default, null):Float = 0;
-	public var viewHeight(default, null):Float = 0;
+	private var viewWidth(default, null):Float = 0;
+	private var viewHeight(default, null):Float = 0;
 	
 	/**
 	 * Helper matrix object. Used in blit render mode when camera's zoom is less than initialZoom

@@ -876,6 +876,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Buffer		The FlxTilemapBuffer you are rendering to.
 	 * @param	Camera		The related FlxCamera, mainly for scroll values.
 	 */
+	@:access(flixel.FlxCamera)
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
