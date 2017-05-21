@@ -417,10 +417,16 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		particle.allowCollisions = allowCollisions;
 		particle.autoUpdateHitbox = autoUpdateHitbox;
 		
+		// Particle lifespan settings
+		if (lifespan.active)
+		{
+			particle.lifespan = FlxG.random.float(lifespan.min, lifespan.max);
+		}
+		
 		if (velocity.active)
 		{
 			// Particle velocity/launch angle settings
-			particle.velocityRange.active = !particle.velocityRange.start.equals(particle.velocityRange.end);
+			particle.velocityRange.active = particle.lifespan > 0 && !particle.velocityRange.start.equals(particle.velocityRange.end);
 		
 			if (launchMode == FlxEmitterMode.CIRCLE)
 			{
@@ -452,7 +458,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.velocityRange.active = false;
 		
 		// Particle angular velocity settings
-		particle.angularVelocityRange.active = angularVelocity.start != angularVelocity.end;
+		particle.angularVelocityRange.active = particle.lifespan > 0 && angularVelocity.start != angularVelocity.end;
 		
 		if (!ignoreAngularVelocity)
 		{
@@ -478,10 +484,6 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		// Particle angle settings
 		if (angle.active)
 			particle.angle = FlxG.random.float(angle.start.min, angle.start.max);
-			
-		// Particle lifespan settings
-		if (lifespan.active)
-			particle.lifespan = FlxG.random.float(lifespan.min, lifespan.max);
 		
 		// Particle scale settings
 		if (scale.active)
@@ -490,7 +492,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.scaleRange.start.y = keepScaleRatio ? particle.scaleRange.start.x : FlxG.random.float(scale.start.min.y, scale.start.max.y);
 			particle.scaleRange.end.x = FlxG.random.float(scale.end.min.x, scale.end.max.x);
 			particle.scaleRange.end.y = keepScaleRatio ? particle.scaleRange.end.x : FlxG.random.float(scale.end.min.y, scale.end.max.y);
-			particle.scaleRange.active = !particle.scaleRange.start.equals(particle.scaleRange.end);
+			particle.scaleRange.active = particle.lifespan > 0 && !particle.scaleRange.start.equals(particle.scaleRange.end);
 			particle.scale.x = particle.scaleRange.start.x;
 			particle.scale.y = particle.scaleRange.start.y;
 			if (particle.autoUpdateHitbox)
@@ -504,7 +506,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			particle.alphaRange.start = FlxG.random.float(alpha.start.min, alpha.start.max);
 			particle.alphaRange.end = FlxG.random.float(alpha.end.min, alpha.end.max);
-			particle.alphaRange.active = particle.alphaRange.start != particle.alphaRange.end;
+			particle.alphaRange.active = particle.lifespan > 0 && particle.alphaRange.start != particle.alphaRange.end;
 			particle.alpha = particle.alphaRange.start;
 		}
 		else
@@ -515,7 +517,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			particle.colorRange.start = FlxG.random.color(color.start.min, color.start.max);
 			particle.colorRange.end = FlxG.random.color(color.end.min, color.end.max);
-			particle.colorRange.active = particle.colorRange.start != particle.colorRange.end;
+			particle.colorRange.active = particle.lifespan > 0 && particle.colorRange.start != particle.colorRange.end;
 			particle.color = particle.colorRange.start;
 		}
 		else
@@ -528,7 +530,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.dragRange.start.y = FlxG.random.float(drag.start.min.y, drag.start.max.y);
 			particle.dragRange.end.x = FlxG.random.float(drag.end.min.x, drag.end.max.x);
 			particle.dragRange.end.y = FlxG.random.float(drag.end.min.y, drag.end.max.y);
-			particle.dragRange.active = !particle.dragRange.start.equals(particle.dragRange.end);
+			particle.dragRange.active = particle.lifespan > 0 && !particle.dragRange.start.equals(particle.dragRange.end);
 			particle.drag.x = particle.dragRange.start.x;
 			particle.drag.y = particle.dragRange.start.y;
 		}
@@ -542,7 +544,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			particle.accelerationRange.start.y = FlxG.random.float(acceleration.start.min.y, acceleration.start.max.y);
 			particle.accelerationRange.end.x = FlxG.random.float(acceleration.end.min.x, acceleration.end.max.x);
 			particle.accelerationRange.end.y = FlxG.random.float(acceleration.end.min.y, acceleration.end.max.y);
-			particle.accelerationRange.active = !particle.accelerationRange.start.equals(particle.accelerationRange.end);
+			particle.accelerationRange.active = particle.lifespan > 0 && !particle.accelerationRange.start.equals(particle.accelerationRange.end);
 			particle.acceleration.x = particle.accelerationRange.start.x;
 			particle.acceleration.y = particle.accelerationRange.start.y;
 		}
@@ -554,7 +556,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		{
 			particle.elasticityRange.start = FlxG.random.float(elasticity.start.min, elasticity.start.max);
 			particle.elasticityRange.end = FlxG.random.float(elasticity.end.min, elasticity.end.max);
-			particle.elasticityRange.active = particle.elasticityRange.start != particle.elasticityRange.end;
+			particle.elasticityRange.active = particle.lifespan > 0 && particle.elasticityRange.start != particle.elasticityRange.end;
 			particle.elasticity = particle.elasticityRange.start;
 		}
 		else
