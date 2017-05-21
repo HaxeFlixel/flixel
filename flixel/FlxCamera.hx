@@ -276,7 +276,7 @@ class FlxCamera extends FlxBasic
 	 * Internal, used for positioning camera's `flashSprite` on screen.
 	 * Basically it represents position of camera's center point in game sprite.
 	 * It's recalculated every time you resize game or camera.
-	 * Its value dependes on camera's size (`width` and `height`), game's `scale` and camera's initial zoom factor.
+	 * Its value depends on camera's size (`width` and `height`), game's `scale` and camera's initial zoom factor.
 	 * Do not modify it unless you know what are you doing.
 	 */
 	private var _flashOffset:FlxPoint = FlxPoint.get();
@@ -777,7 +777,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
 	 * @param	rect	rectangle to prepare for rendering
-	 * @return	trasformed rectangle with respect to camera's zoom factor
+	 * @return	transformed rectangle with respect to camera's zoom factor
 	 */
 	@:noCompletion
 	public function transformRect(rect:FlxRect):FlxRect
@@ -801,7 +801,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug point for rendering in blit render mode (for debug path rendering, for example)
 	 * @param	point		point to prepare for rendering
-	 * @return	trasformed point with respect to camera's zoom factor
+	 * @return	transformed point with respect to camera's zoom factor
 	 */
 	@:noCompletion
 	public inline function transformPoint(point:FlxPoint):FlxPoint
@@ -820,7 +820,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper method preparing debug vectors (relative positions) for rendering in blit render mode
 	 * @param	vector	relative position to prepare for rendering
-	 * @return	trasformed vector with respect to camera's zoom factor
+	 * @return	transformed vector with respect to camera's zoom factor
 	 */
 	@:noCompletion
 	public inline function transformVector(vector:FlxPoint):FlxPoint
