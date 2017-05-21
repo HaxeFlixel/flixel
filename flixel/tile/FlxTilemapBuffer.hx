@@ -1,12 +1,13 @@
 package flixel.tile;
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -61,7 +62,23 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var antialiasing:Bool = false;
 	
 	private var _flashRect:Rectangle;
-	private var _matrix:Matrix;
+	private var _matrix:FlxMatrix;
+	
+	/**
+	 * Variables related to calculation of dirty value
+	 */
+	private var _prevTilemapX:Float;
+	private var _prevTilemapY:Float;
+	private var _prevTilemapScaleX:Float;
+	private var _prevTilemapScaleY:Float;
+	private var _prevTilemapScrollX:Float;
+	private var _prevTilemapScrollY:Float;
+	private var _prevCameraScrollX:Float;
+	private var _prevCameraScrollY:Float;
+	private var _prevCameraScaleX:Float;
+	private var _prevCameraScaleY:Float;
+	private var _prevCameraWidth:Int;
+	private var _prevCameraHeight:Int;
 	
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
@@ -75,17 +92,35 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
 		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
+		resize(TileWidth, TileHeight, WidthInTiles, HeightInTiles, Camera, ScaleX, ScaleY);
+	}
+	
+	public function resize(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int,
+		?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
+	{
 		updateColumns(TileWidth, WidthInTiles, ScaleX, Camera);
 		updateRows(TileHeight, HeightInTiles, ScaleY, Camera);
 		
 		if (FlxG.renderBlit)
 		{
-			pixels = new BitmapData(Std.int(columns * TileWidth), Std.int(rows * TileHeight), true, 0);
-			_flashRect = new Rectangle(0, 0, pixels.width, pixels.height);
-			_matrix = new Matrix();
+			var newWidth:Int = Std.int(columns * TileWidth);
+			var newHeight:Int = Std.int(rows * TileHeight);
+			
+			if (pixels == null)
+			{
+				pixels = new BitmapData(newWidth, newHeight, true, 0);
+				_flashRect = new Rectangle(0, 0, newWidth, newHeight);
+				_matrix = new FlxMatrix();
+				dirty = true;
+			}
+			else if (pixels.width != newWidth || pixels.height != newHeight)
+			{
+				FlxDestroyUtil.dispose(pixels);
+				pixels = new BitmapData(newWidth, newHeight, true, 0);
+				_flashRect.setTo(0, 0, newWidth, newHeight);
+				dirty = true;
+			}
 		}
-		
-		dirty = true;
 	}
 	
 	/**
@@ -95,9 +130,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	{
 		if (FlxG.renderBlit)
 		{
-			pixels = null;
+			pixels = FlxDestroyUtil.dispose(pixels);
 			blend = null;
 			_matrix = null;
+			_flashRect = null;
 		}
 	}
 	
@@ -131,14 +167,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		
 		if (isPixelPerfectRender(Camera) && (ScaleX == 1.0 && ScaleY == 1.0) && blend == null)
 		{
-			Camera.buffer.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
+			Camera.copyPixels(pixels, _flashRect, FlashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(ScaleX, ScaleY);
 			_matrix.translate(FlashPoint.x, FlashPoint.y);
-			Camera.buffer.draw(pixels, _matrix, null, blend, null, antialiasing);
+			Camera.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		}
 	}
 	
@@ -147,50 +183,40 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		pixels.colorTransform(_flashRect, Transform);
 	}
 	
+	@:access(flixel.FlxCamera.viewWidth)
 	public function updateColumns(TileWidth:Int, WidthInTiles:Int, ScaleX:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (WidthInTiles < 0) 
-		{
 			WidthInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
-
-		columns = Math.ceil(Camera.width / (TileWidth * ScaleX)) + 1;
+		
+		columns = Math.ceil(Camera.viewWidth / (TileWidth * ScaleX)) + 1;
 		
 		if (columns > WidthInTiles)
-		{
 			columns = WidthInTiles;
-		}
 		
 		width = Std.int(columns * TileWidth * ScaleX);
 		
 		dirty = true;
 	}
 	
+	@:access(flixel.FlxCamera.viewHeight)
 	public function updateRows(TileHeight:Int, HeightInTiles:Int, ScaleY:Float = 1.0, ?Camera:FlxCamera):Void
 	{
 		if (HeightInTiles < 0) 
-		{
 			HeightInTiles = 0;
-		}
 		
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
 		
-		rows = Math.ceil(Camera.height / (TileHeight * ScaleY)) + 1;
+		rows = Math.ceil(Camera.viewHeight / (TileHeight * ScaleY)) + 1;
 		
 		if (rows > HeightInTiles)
-		{
 			rows = HeightInTiles;
-		}
 		
-		height = Std.int(rows * TileHeight * ScaleY);	
+		height = Std.int(rows * TileHeight * ScaleY);
 		
 		dirty = true;
 	}
@@ -201,9 +227,43 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
+		
 		return pixelPerfectRender == null ? Camera.pixelPerfectRender : pixelPerfectRender;
+	}
+	
+	/**
+	 * Check if tilemap or camera has changed (scrolled, moved, resized or scaled) since the previous frame.
+	 * If so, then it means that we need to redraw this buffer.
+	 * @param	Tilemap	Tilemap to check against. It's a tilemap this buffer belongs to.
+	 * @param	Camera	Camera to check against. It's a camera this buffer is used for drawing on.
+	 * @return	The value of dirty flag.
+	 */
+	public function isDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
+	{
+		dirty = dirty || (Tilemap.x != _prevTilemapX) || (Tilemap.y != _prevTilemapY) 
+				|| (Tilemap.scale.x != _prevTilemapScaleX) || (Tilemap.scale.y != _prevTilemapScaleY) 
+				|| (Tilemap.scrollFactor.x != _prevTilemapScrollX) || (Tilemap.scrollFactor.y != _prevTilemapScrollY) 
+				|| (Camera.scroll.x != _prevCameraScrollX) || (Camera.scroll.y != _prevCameraScrollY) 
+				|| (Camera.scaleX != _prevCameraScaleX) || (Camera.scaleY != _prevCameraScaleY)
+				|| (Camera.width != _prevCameraWidth) || (Camera.height != _prevCameraHeight);
+		
+		if (dirty)
+		{
+			_prevTilemapX = Tilemap.x;
+			_prevTilemapY = Tilemap.y;
+			_prevTilemapScaleX = Tilemap.scale.x;
+			_prevTilemapScaleY = Tilemap.scale.y;
+			_prevTilemapScrollX = Tilemap.scrollFactor.x;
+			_prevTilemapScrollY = Tilemap.scrollFactor.y;
+			_prevCameraScrollX = Camera.scroll.x;
+			_prevCameraScrollY = Camera.scroll.y;
+			_prevCameraScaleX = Camera.scaleX;
+			_prevCameraScaleY = Camera.scaleY;
+			_prevCameraWidth = Camera.width;
+			_prevCameraHeight = Camera.height;
+		}
+		
+		return dirty;
 	}
 }

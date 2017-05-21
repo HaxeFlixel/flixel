@@ -42,12 +42,6 @@ class GraphicAutoAlt extends BitmapData {}
  */
 class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
-	/** 
-	 * A helper buffer for calculating number of columns and rows when the game size changed
-	 * We are only using its member functions that's why it is an empty instance
-	 */
-	private static var _helperBuffer:FlxTilemapBuffer = Type.createEmptyInstance(FlxTilemapBuffer);
-	
 	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
 	/**
 	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale, 
@@ -437,6 +431,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#end
 	
 	/**
+	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
+	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * 
+	 * @param   Camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
+	 * @return  Whether the object is on screen or not.
+	 */
+	override public function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+			
+		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
+		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
+		
+		_point.set(minX, minY);
+		return Camera.containsPoint(_point, _scaledTileWidth * widthInTiles, _scaledTileHeight * heightInTiles);
+	}
+	
+	/**
 	 * Draws the tilemap buffers to the cameras.
 	 */
 	override public function draw():Void
@@ -459,7 +472,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			camera = cameras[i];
 			
-			if (!camera.visible || !camera.exists)
+			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
 			
 			if (_buffers[i] == null)
@@ -469,10 +482,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			
 			if (FlxG.renderBlit)
 			{
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y);
-				buffer.dirty = buffer.dirty || _point.x > 0 || (_point.y > 0) || (_point.x + buffer.width < camera.width) || (_point.y + buffer.height < camera.height);
-				
-				if (buffer.dirty)
+				if (buffer.isDirty(this, camera))
 					drawTilemap(buffer, camera);
 				
 				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
@@ -501,18 +511,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			var camera = cameras[i];
 			var buffer = _buffers[i];
 			
-			// Calculate the required number of columns and rows
-			_helperBuffer.updateColumns(_tileWidth, widthInTiles, scale.x, camera);
-			_helperBuffer.updateRows(_tileHeight, heightInTiles, scale.y, camera);
-			
 			// Create a new buffer if the number of columns and rows differs
-			if (buffer == null || _helperBuffer.columns != buffer.columns || _helperBuffer.rows != buffer.rows)
-			{
-				if (buffer != null)
-					buffer.destroy();
-				
+			if (buffer == null)
 				_buffers[i] = createBuffer(camera);
-			}
+			else
+				buffer.resize(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		}
 	}
 	
@@ -878,6 +881,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Buffer		The FlxTilemapBuffer you are rendering to.
 	 * @param	Camera		The related FlxCamera, mainly for scroll values.
 	 */
+	@:access(flixel.FlxCamera)
 	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
@@ -908,8 +912,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 		
 		// Copy tile images into the tile buffer
-		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x; //modified from getScreenPosition()
-		_point.y = (Camera.scroll.y * scrollFactor.y) - y - offset.y;
+		_point.x = (Camera.scroll.x * scrollFactor.x) - x - offset.x + Camera.viewOffsetX; //modified from getScreenPosition()
+		_point.y = (Camera.scroll.y * scrollFactor.y) - y - offset.y + Camera.viewOffsetY;
 		
 		var screenXInTiles:Int = Math.floor(_point.x / _scaledTileWidth);
 		var screenYInTiles:Int = Math.floor(_point.y / _scaledTileHeight);
@@ -928,7 +932,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		#if FLX_DEBUG
 		var debugTile:BitmapData;
-		#end 
+		#end
 		
 		for (row in 0...screenRows)
 		{
@@ -999,6 +1003,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				
 				if (FlxG.renderBlit)
 					_flashPoint.x += _tileWidth;
+				
 				columnIndex++;
 			}
 			

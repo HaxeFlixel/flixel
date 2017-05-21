@@ -947,9 +947,8 @@ class FlxObject extends FlxBasic
 	public function isOnScreen(?Camera:FlxCamera):Bool
 	{
 		if (Camera == null)
-		{
 			Camera = FlxG.camera;
-		}
+		
 		getScreenPosition(_point, Camera);
 		return Camera.containsPoint(_point, width, height);
 	}
@@ -1118,10 +1117,13 @@ class FlxObject extends FlxBasic
 	}
 	#end
 
+	@:access(flixel.FlxCamera)
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);
+		
 		_rect.set(_point.x, _point.y, width, height);
+		_rect = camera.transformRect(_rect);
 		
 		if (isPixelPerfectRender(camera))
 		{

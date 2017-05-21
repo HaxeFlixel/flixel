@@ -75,6 +75,7 @@ class FlxPointer
 	 * @param 	point		An existing point object to store the results (if you don't want a new one created). 
 	 * @return 	The touch point's location relative to camera's viewport.
 	 */
+	@:access(flixel.FlxCamera)
 	public function getPositionInCameraView(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
 		if (Camera == null)
@@ -83,8 +84,8 @@ class FlxPointer
 		if (point == null)
 			point = FlxPoint.get();
 		
-		point.x = (_globalScreenX - Camera.x) / Camera.zoom;
-		point.y = (_globalScreenY - Camera.y) / Camera.zoom;
+		point.x = (_globalScreenX - Camera.x) / Camera.zoom + Camera.viewOffsetX;
+		point.y = (_globalScreenY - Camera.y) / Camera.zoom + Camera.viewOffsetY;
 		
 		return point;
 	}
