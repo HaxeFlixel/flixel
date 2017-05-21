@@ -233,11 +233,11 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	/**
 	 * Check if tilemap or camera has changed (scrolled, moved, resized or scaled) since the previous frame.
 	 * If so, then it means that we need to redraw this buffer.
-	 * @param	Tilemap	Tilemap to check againist. It's a tilemap this buffer belongs to.
-	 * @param	Camera	Camera to check againist. It's a camera this buffer is used for drawing on.
+	 * @param	Tilemap	Tilemap to check against. It's a tilemap this buffer belongs to.
+	 * @param	Camera	Camera to check against. It's a camera this buffer is used for drawing on.
 	 * @return	The value of dirty flag.
 	 */
-	public function checkDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
+	public function isDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
 	{
 		dirty = dirty || (Tilemap.x != _prevTilemapX) || (Tilemap.y != _prevTilemapY) 
 				|| (Tilemap.scale.x != _prevTilemapScaleX) || (Tilemap.scale.y != _prevTilemapScaleY) 
