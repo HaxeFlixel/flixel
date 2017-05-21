@@ -210,12 +210,6 @@ class FlxCamera extends FlxBasic
 	public var viewOffsetY(default, null):Float = 0;
 	
 	/**
-	 * Floored down values of viewOffsetX and viewOffsetY.
-	 */
-	private var viewOffsetXFloored:Int = 0;
-	private var viewOffsetYFloored:Int = 0;
-	
-	/**
 	 * The size of the camera plus view offset.
 	 * These variables are used for object visibility checks.
 	 */
@@ -666,8 +660,8 @@ class FlxCamera extends FlxBasic
 				}
 				else
 				{
-					_helperPoint.x = destPoint.x - viewOffsetXFloored;
-					_helperPoint.y = destPoint.y - viewOffsetYFloored;
+					_helperPoint.x = destPoint.x - Std.int(viewOffsetX);
+					_helperPoint.y = destPoint.y - Std.int(viewOffsetY);
 					buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 				}
 			}
@@ -1834,8 +1828,6 @@ class FlxCamera extends FlxBasic
 		viewOffsetX = 0.5 * width * (scaleX - initialZoom) / scaleX;
 		viewOffsetWidth = width - viewOffsetX;
 		viewWidth = width - 2 * viewOffsetX;
-		
-		viewOffsetXFloored = Std.int(viewOffsetX);
 	}
 	
 	private inline function calcOffsetY():Void
@@ -1843,8 +1835,6 @@ class FlxCamera extends FlxBasic
 		viewOffsetY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 		viewOffsetHeight = height - viewOffsetY;
 		viewHeight = height - 2 * viewOffsetY;
-		
-		viewOffsetYFloored = Std.int(viewOffsetY);
 	}
 }
 
