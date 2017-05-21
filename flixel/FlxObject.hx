@@ -1113,6 +1113,7 @@ class FlxObject extends FlxBasic
 	}
 #end
 
+	@:access(flixel.FlxCamera)
 	private function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);

@@ -779,8 +779,7 @@ class FlxCamera extends FlxBasic
 	 * @param	rect	rectangle to prepare for rendering
 	 * @return	transformed rectangle with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public function transformRect(rect:FlxRect):FlxRect
+	private function transformRect(rect:FlxRect):FlxRect
 	{
 		if (FlxG.renderBlit)
 		{
@@ -803,8 +802,7 @@ class FlxCamera extends FlxBasic
 	 * @param	point		point to prepare for rendering
 	 * @return	transformed point with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public inline function transformPoint(point:FlxPoint):FlxPoint
+	private function transformPoint(point:FlxPoint):FlxPoint
 	{
 		if (FlxG.renderBlit)
 		{
@@ -822,8 +820,7 @@ class FlxCamera extends FlxBasic
 	 * @param	vector	relative position to prepare for rendering
 	 * @return	transformed vector with respect to camera's zoom factor
 	 */
-	@:noCompletion
-	public inline function transformVector(vector:FlxPoint):FlxPoint
+	private inline function transformVector(vector:FlxPoint):FlxPoint
 	{
 		if (FlxG.renderBlit && _useBlitMatrix)
 			vector.scale(zoom);
@@ -838,8 +835,7 @@ class FlxCamera extends FlxBasic
 	 * @param	object	display object to apply transformations to.
 	 * @return	transformed object.
 	 */
-	@:noCompletion
-	public function transformObject(object:DisplayObject):DisplayObject
+	private function transformObject(object:DisplayObject):DisplayObject
 	{
 		object.scaleX *= totalScaleX;
 		object.scaleY *= totalScaleY;
