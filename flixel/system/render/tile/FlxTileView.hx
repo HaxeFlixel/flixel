@@ -47,7 +47,6 @@ class FlxTileView extends FlxCameraView
 	 */
 	private var _canvas:Sprite;
 	
-	#if FLX_DEBUG
 	/**
 	 * Sprite for visual effects (flash and fade) and drawDebug information 
 	 * (bounding boxes are drawn on it) for tile render mode.
@@ -55,7 +54,8 @@ class FlxTileView extends FlxCameraView
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
 	public var debugLayer:Sprite;
-	#end
+	
+	private var targetGraphics:Graphics;
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -67,10 +67,10 @@ class FlxTileView extends FlxCameraView
 		_canvas = new Sprite();
 		_scrollRect.addChild(_canvas);
 		
-		#if FLX_DEBUG
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
-		#end
+		
+		targetGraphics = _canvas.graphics;
 	}
 	
 	override public function destroy():Void 
@@ -79,10 +79,8 @@ class FlxTileView extends FlxCameraView
 		
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		
-		#if FLX_DEBUG
 		FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
 		debugLayer = null;
-		#end
 		
 		FlxDestroyUtil.removeChild(_scrollRect, _canvas);
 		
@@ -189,7 +187,6 @@ class FlxTileView extends FlxCameraView
 			_canvas.scaleX = camera.totalScaleX;
 			_canvas.scaleY = camera.totalScaleY;
 			
-			#if FLX_DEBUG
 			if (debugLayer != null)
 			{
 				debugLayer.x = _canvas.x;
@@ -198,7 +195,6 @@ class FlxTileView extends FlxCameraView
 				debugLayer.scaleX = _canvas.scaleX;
 				debugLayer.scaleY = _canvas.scaleY;
 			}
-			#end
 		}
 	}
 	
@@ -214,18 +210,19 @@ class FlxTileView extends FlxCameraView
 			return;
 		#end
 		
-		var graphic:Graphics = _canvas.graphics;
-		graphic.beginFill(Color, alpha);
+		targetGraphics.beginFill(Color, alpha);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		graphic.drawRect(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
-		graphic.endFill();
+		targetGraphics.drawRect(viewOffsetX - 1, viewOffsetY - 1, viewWidth + 2, viewHeight + 2);
+		targetGraphics.endFill();
 	}
 	
 	override public function drawFX(FxColor:FlxColor, FxAlpha:Float = 1.0):Void 
 	{
 		var alphaComponent:Float = FxColor.alpha;
+		targetGraphics = debugLayer.graphics;
 		fill(FxColor.to24Bit(), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * FxAlpha / 255);
+		targetGraphics = _canvas.graphics;
 	}
 	
 	override public function lock(useBufferLocking:Bool):Void 
@@ -235,12 +232,13 @@ class FlxTileView extends FlxCameraView
 		_canvas.graphics.clear();
 		
 		// Clearing camera's debug sprite
-		#if FLX_DEBUG
 		debugLayer.graphics.clear();
-		#end
 		
 		if (camera.useBgColorFill)
+		{
+			targetGraphics = _canvas.graphics;
 			fill(camera.bgColor.to24Bit(), camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
+		}
 	}
 	
 	override public function unlock(useBufferLocking:Bool):Void 
