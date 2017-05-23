@@ -90,13 +90,14 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
 	 *
-	 * @param   X        The X-coordinate of the point in space.
-	 * @param   Y        The Y-coordinate of the point in space.
-	 * @param   radius   The radius where the thumb can move.
-	 *                   If `0`, half the background's width will be used as radius.
-	 * @param   ease     The duration of the easing. The value must be between `0` and `1`.
+	 * @param   X            The X-coordinate of the point in space.
+	 * @param   Y            The Y-coordinate of the point in space.
+	 * @param   radius       The radius where the thumb can move. If `0`, half the base's width will be used.
+	 * @param   ease         The duration of the easing. The value must be between `0` and `1`.
+	 * @param   BaseGraphic  The graphic you want to display as base of the joystick.
+	 * @param   ThumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
+	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, ?Ease:Float = 0.25, ?BaseGraphic:FlxGraphicAsset, ?ThumbGraphic:FlxGraphicAsset)
 	{
 		super();
 		
@@ -107,8 +108,8 @@ class FlxAnalog extends FlxSpriteGroup
 		
 		_point = FlxPoint.get();
 		
-		createBase();
-		createThumb();
+		createBase(BaseGraphic);
+		createThumb(ThumbGraphic);
 		
 		x = X;
 		y = Y;
@@ -119,14 +120,16 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Creates the background of the analog stick.
-	 * Override this to customize the background.
 	 */
-	private function createBase():Void
+	private function createBase(?Graphic:FlxGraphicAsset):Void
 	{
-		base = new FlxSprite(x, y);
-		base.frames = FlxAssets.getVirtualInputFrames();
-		base.animation.frameName = "base";
-		base.resetSizeFromFrame();
+		base = new FlxSprite(x, y, Graphic);
+		if (Graphic == null)
+		{
+			base.frames = FlxAssets.getVirtualInputFrames();
+			base.animation.frameName = "base";
+			base.resetSizeFromFrame();
+		}
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -141,14 +144,16 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Creates the thumb of the analog stick.
-	 * Override this to customize the thumb.
 	 */
-	private function createThumb():Void 
+	private function createThumb(?Graphic:FlxGraphicAsset):Void 
 	{
-		thumb = new FlxSprite(x, y);
-		thumb.frames = FlxAssets.getVirtualInputFrames();
-		thumb.animation.frameName = "thumb";
-		thumb.resetSizeFromFrame();
+		thumb = new FlxSprite(x, y, Graphic);
+		if (Graphic == null)
+		{
+			thumb.frames = FlxAssets.getVirtualInputFrames();
+			thumb.animation.frameName = "thumb";
+			thumb.resetSizeFromFrame();
+		}
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
@@ -162,12 +167,11 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Creates the touch zone. It's based on the size of the background.
 	 * The thumb will react when the mouse is in the zone.
-	 * Override this to customize the zone.
 	 */
 	private function createZone():Void
 	{
-		if (base != null)
-			_radius = base.width / 2;
+		if (base != null && _radius == 0)
+			_radius = base.width * 0.5;
 		
 		_zone.set(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
 	}
@@ -210,7 +214,7 @@ class FlxAnalog extends FlxSpriteGroup
 			offAll = false;
 		}
 		#end
-
+		
 		// There is no reason to get into the loop if their is already a pointer on the analog
 		#if FLX_TOUCH
 		if (_currentTouch != null)
@@ -255,6 +259,7 @@ class FlxAnalog extends FlxSpriteGroup
 			if (Math.abs(_amount) < 0.1) 
 			{
 				_amount = 0;
+				_direction = 0;
 			}
 		}
 		
@@ -368,7 +373,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public function getAngle():Float
 	{
-		return Math.atan2(acceleration.y, acceleration.x) * FlxAngle.TO_DEG;
+		return _direction * FlxAngle.TO_DEG;
 	}
 	
 	/**
