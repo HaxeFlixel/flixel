@@ -329,8 +329,8 @@ class FlxAnalog extends FlxSpriteGroup
 					_direction = Math.atan2(dy, dx);
 					_amount = Math.min(_radius, dist) / _radius;
 					
-					acceleration.x = Math.cos(_direction) * _amount * _radius;
-					acceleration.y = Math.sin(_direction) * _amount * _radius;
+					acceleration.x = Math.cos(_direction);
+					acceleration.y = Math.sin(_direction);
 				}
 			}
 			else if (JustReleased && status == PRESSED)
