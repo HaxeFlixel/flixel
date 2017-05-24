@@ -17,9 +17,9 @@ import openfl.display.Sprite;
 import lime.graphics.GLRenderContext;
 import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
-import openfl.gl.GL;
-import openfl.gl.GLBuffer;
-import openfl.utils.Float32Array;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
+import lime.utils.Float32Array;
 import flixel.system.render.gl.GLUtils;
 #end
 

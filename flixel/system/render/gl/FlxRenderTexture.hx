@@ -11,9 +11,9 @@ import lime.graphics.opengl.GLTexture;
 import lime.math.Matrix4;
 import lime.utils.ArrayBufferView;
 import openfl.display.BitmapData;
-import openfl.gl.GL;
-import openfl.gl.GLBuffer;
-import openfl.utils.Float32Array;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
+import lime.utils.Float32Array;
 
 @:access(openfl.display.BitmapData)
 class FlxRenderTexture implements IFlxDestroyable

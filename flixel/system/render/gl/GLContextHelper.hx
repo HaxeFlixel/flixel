@@ -12,7 +12,7 @@ import openfl._internal.renderer.opengl.GLBlendModeManager;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLShaderManager;
 
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 import lime.graphics.RenderContext;
 import lime.graphics.Renderer;
 #end

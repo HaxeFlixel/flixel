@@ -21,7 +21,7 @@ import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
 import openfl.gl.GLBuffer;
 import lime.utils.ArrayBuffer;
-import openfl.utils.Float32Array;
+import lime.utils.Float32Array;
 
 /**
  * ...

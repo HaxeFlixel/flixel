@@ -10,7 +10,7 @@ import openfl.geom.Rectangle;
 #if FLX_RENDER_GL
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
-import openfl.utils.Float32Array;
+import lime.utils.Float32Array;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
 #end

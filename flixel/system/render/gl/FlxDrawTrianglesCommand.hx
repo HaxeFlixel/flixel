@@ -13,7 +13,7 @@ import flixel.graphics.shaders.triangles.FlxColoredShader;
 import flixel.graphics.shaders.triangles.FlxTexturedShader;
 
 import lime.math.Matrix4;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCommand>
 {

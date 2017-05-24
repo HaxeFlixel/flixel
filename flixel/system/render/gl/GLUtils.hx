@@ -3,8 +3,8 @@ package flixel.system.render.gl;
 import flixel.util.FlxColorTransformUtil;
 import openfl.display.Shader;
 import openfl.geom.ColorTransform;
-import openfl.gl.GL;
-import openfl.gl.GLBuffer;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
 
 #if FLX_RENDER_GL
 import lime.math.Matrix4;

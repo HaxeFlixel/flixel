@@ -9,8 +9,8 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 
 #if FLX_RENDER_GL
-import openfl.gl.GL;
-import openfl.utils.Float32Array;
+import lime.graphics.opengl.GL;
+import lime.utils.Float32Array;
 import lime.graphics.GLRenderContext;
 import openfl._internal.renderer.RenderSession;
 import openfl._internal.renderer.opengl.GLRenderer;
