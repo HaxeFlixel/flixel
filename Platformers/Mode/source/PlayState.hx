@@ -408,7 +408,6 @@ class PlayState extends FlxState
 		buildRoom(r * 3, r * 3, true);
 		
 		_tileMap = new FlxTilemap();
-		_tileMap.useScaleHack = true;
 		_tileMap.loadMapFromArray(_map, MAP_WIDTH_IN_TILES, MAP_HEIGHT_IN_TILES, AssetPaths.img_tiles__png, 8, 8);
 		add(_tileMap);
 	}

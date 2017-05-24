@@ -49,7 +49,6 @@ class PlayState extends FlxState
 		var levelTiles = FlxTileFrames.fromBitmapAddSpacesAndBorders("assets/colortiles.png",
 			new FlxPoint(10, 10), new FlxPoint(2, 2), new FlxPoint(2, 2));
 		level.frames = levelTiles;
-		level.useScaleHack = false;
 		
 		var tempNW:Array<Int> = [5, 9, 10, 13, 15];
 		var tempNE:Array<Int> = [6, 11, 12, 14, 16];
