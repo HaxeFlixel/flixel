@@ -79,10 +79,11 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 	@:access(openfl.geom.Rectangle)
 	override private function __getBounds(rect:Rectangle, matrix:Matrix):Void 
 	{
-		var bounds = Rectangle.__temp;
+		var bounds = Rectangle.__pool.get();
 		bounds.setTo(0, 0, _width, _height);
 		bounds.__transform(bounds, matrix);
-		rect.__expand(bounds.x, bounds.y, bounds.width, bounds.height);	
+		rect.__expand(bounds.x, bounds.y, bounds.width, bounds.height);
+		Rectangle.__pool.release(bounds);
 	}
 	
 	override private function __hitTest(x:Float, y:Float, shapeFlag:Bool, stack:Array<DisplayObject>, interactiveOnly:Bool, hitObject:DisplayObject):Bool 
