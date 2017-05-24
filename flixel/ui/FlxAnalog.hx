@@ -98,7 +98,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * @param   BaseGraphic  The graphic you want to display as base of the joystick.
 	 * @param   ThumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, ?Ease:Float = 0.25, ?BaseGraphic:FlxGraphicAsset, ?ThumbGraphic:FlxGraphicAsset)
+	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25, ?BaseGraphic:FlxGraphicAsset, ?ThumbGraphic:FlxGraphicAsset)
 	{
 		super();
 		
