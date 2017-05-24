@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -92,8 +93,8 @@ class FlxAnalog extends FlxSpriteGroup
 	 *
 	 * @param   X            The X-coordinate of the point in space.
 	 * @param   Y            The Y-coordinate of the point in space.
-	 * @param   radius       The radius where the thumb can move. If `0`, half the base's width will be used.
-	 * @param   ease         The duration of the easing. The value must be between `0` and `1`.
+	 * @param   Radius       The radius where the thumb can move. If 0, half the base's width will be used.
+	 * @param   Ease         Used to smoothly back thumb to center. Must be between 0 and (FlxG.updateFrameRate / 60).
 	 * @param   BaseGraphic  The graphic you want to display as base of the joystick.
 	 * @param   ThumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
@@ -102,7 +103,7 @@ class FlxAnalog extends FlxSpriteGroup
 		super();
 		
 		_radius = Radius;
-		_ease = Ease;
+		_ease = FlxMath.bound(Ease, 0, 60 / FlxG.updateFramerate);
 		
 		_analogs.push(this);
 		
@@ -123,7 +124,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	private function createBase(?Graphic:FlxGraphicAsset):Void
 	{
-		base = new FlxSprite(x, y, Graphic);
+		base = new FlxSprite(0, 0, Graphic);
 		if (Graphic == null)
 		{
 			base.frames = FlxAssets.getVirtualInputFrames();
@@ -147,7 +148,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	private function createThumb(?Graphic:FlxGraphicAsset):Void 
 	{
-		thumb = new FlxSprite(x, y, Graphic);
+		thumb = new FlxSprite(0, 0, Graphic);
 		if (Graphic == null)
 		{
 			thumb.frames = FlxAssets.getVirtualInputFrames();
@@ -254,7 +255,7 @@ class FlxAnalog extends FlxSpriteGroup
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{
-			_amount *= _ease;
+			_amount -= _amount * _ease * FlxG.updateFramerate / 60;
 			
 			if (Math.abs(_amount) < 0.1) 
 			{
@@ -334,8 +335,8 @@ class FlxAnalog extends FlxSpriteGroup
 					_direction = Math.atan2(dy, dx);
 					_amount = Math.min(_radius, dist) / _radius;
 					
-					acceleration.x = Math.cos(_direction);
-					acceleration.y = Math.sin(_direction);
+					acceleration.x = Math.cos(_direction) * _amount;
+					acceleration.y = Math.sin(_direction) * _amount;
 				}
 			}
 			else if (JustReleased && status == PRESSED)
