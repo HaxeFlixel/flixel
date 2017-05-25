@@ -104,7 +104,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		if (_registeredObjects != null)
 		{
-			for (reg in _registeredObjects)
+			for (reg in _registeredObjects.copy())
 			{
 				reg.destroy();
 			}
