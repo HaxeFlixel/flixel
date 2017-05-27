@@ -258,8 +258,8 @@ class FlxTrianglesData implements IFlxDestroyable
 	/**
 	 * Helper variables, helps to track number of vertices and indices added to this data object.
 	 */
-	private var vertexCount:Int = 0;
-	private var indexCount:Int = 0;
+	private var vertexCount:Int = 0;		// TODO: add getter
+	private var indexCount:Int = 0;			// TODO: add getter and add triangles count prop
 	private var trianglesOffset:Int = 0;
 	
 	/**

@@ -147,7 +147,7 @@ class GLDisplayObject extends DisplayObjectContainer implements IFlxDestroyable
 		renderSession.shaderManager.setShader(shader);
 		
 		gl.bindTexture(gl.TEXTURE_2D, buffer.texture);
-		GLUtils.setTextureSmoothing(false);
+		GLUtils.setTextureSmoothing(true);
 	//	GLUtils.setTextureSmoothing(smoothing);
 		GLUtils.setTextureWrapping(false);
 		
