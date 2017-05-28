@@ -20,6 +20,8 @@ class GLDebugRenderer extends GLDisplayObject
 	public function new(width:Int, height:Int, context:GLContextHelper)
 	{
 		super(width, height, context);
+		
+		drawCommands.roundPixels = true;
 	}
 	
 	override public function destroy():Void

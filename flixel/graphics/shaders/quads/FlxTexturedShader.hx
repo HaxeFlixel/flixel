@@ -41,13 +41,6 @@ class FlxTexturedShader extends FlxBaseShader
 			void main(void) 
 			{
 				vec4 color = texture2D(uImage0, vTexCoord);
-				
-			//	vec4 unmultiply = vec4(color.rgb / color.a, color.a);
-			//	vec4 result = unmultiply * vColor;
-			//	result = result + vColorOffset;
-			//	result = clamp(result, 0.0, 1.0);
-			//	result = vec4(result.rgb * result.a, result.a * color.a);
-				
 				vec4 result = color * vColor + vColorOffset;
 				result = clamp(result, 0.0, 1.0);
 				

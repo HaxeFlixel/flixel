@@ -70,6 +70,12 @@ class FlxMaterial implements IFlxDestroyable
 	 */
 	public var batchable:Bool = true;
 	
+	/**
+	 * Tells whether this graphic have premultiplied alpha.
+	 * This value helps to pick default shader for correct visual output.
+	 */
+	public var premultipliedAlpha:Bool = false;
+	
 	#if (openfl >= "4.0.0")
 	private var inputTextures:Array<ShaderInput<BitmapData>>;
 	private var paramBool:Array<ShaderParameter<Bool>>;

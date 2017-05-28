@@ -1,5 +1,6 @@
 package flixel.system.render.gl;
 
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.shaders.FlxShader;
 import flixel.math.FlxMatrix;
 import flixel.system.render.common.FlxDrawBaseCommand;
@@ -52,9 +53,9 @@ class FlxDrawHardwareCommand<T> extends FlxDrawBaseCommand<T>
 	
 	public function flush():Void {}
 	
-	private function setShader(shader:FlxShader):FlxShader 
+	private function setShader(material:FlxMaterial):FlxShader 
 	{
-		return shader;
+		return (material != null) ? material.shader : null;
 	}
 	
 	override public function destroy():Void 

@@ -1,7 +1,9 @@
 package flixel.system.render.gl;
 
+import flixel.graphics.FlxMaterial;
 import flixel.graphics.FlxTrianglesData;
 import flixel.graphics.shaders.FlxShader;
+import flixel.graphics.shaders.triangles.FlxTexturedNoPMAShader;
 import flixel.math.FlxMatrix;
 import flixel.system.render.common.DrawCommand.FlxDrawItemType;
 import flixel.system.render.common.FlxCameraView;
@@ -21,6 +23,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	 * Default tile shader.
 	 */
 	private static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
+	private static var defaultTexturedNoPMAShader:FlxTexturedNoPMAShader = new FlxTexturedNoPMAShader();
 	private static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	
 	public var data:FlxTrianglesData;
@@ -62,14 +65,21 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		// init! init!
 		setContext(context);
 		context.checkRenderTarget(buffer);
-		shader = setShader(material.shader);
+		shader = setShader(material);
 		renderStrip();
 	}
 	
-	override private function setShader(shader:FlxShader):FlxShader
+	override private function setShader(material:FlxMaterial):FlxShader
 	{
+		var shader = material.shader;
+		
 		if (shader == null)
-			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
+		{
+			if (textured)
+				shader = (material.premultipliedAlpha) ? defaultTexturedShader : defaultTexturedNoPMAShader;
+			else
+				shader = defaultColoredShader;
+		}
 		
 		context.setShader(shader);
 		return shader;
