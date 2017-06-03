@@ -11,6 +11,7 @@ env:
   - TARGET=html5
 
 sudo: false
+dist: trusty
 
 addons:
   apt:
