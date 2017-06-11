@@ -8,10 +8,10 @@ class FlxBaseShader extends FlxShader
 		super();
 		
 		#if FLX_RENDER_GL
-		__glVertexSource = vertexSource;
-		__glFragmentSource = fragmentSource;
-		__glSourceDirty = true;
-		__data = null;
+		glVertexSource = vertexSource;
+		glFragmentSource = fragmentSource;
+		
+		data = null;
 		__init();
 		#end
 	}

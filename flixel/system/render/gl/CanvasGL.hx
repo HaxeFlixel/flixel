@@ -124,6 +124,8 @@ class CanvasGL extends GLDisplayObject
 		colorShader.init(__worldColorTransform);
 		renderSession.filterManager.pushObject(this);
 		colorShader.data.uMatrix.value = renderer.getMatrix(renderTransform);
+		
+		renderSession.shaderManager.setShader(null);
 		renderSession.shaderManager.setShader(colorShader);
 		
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
