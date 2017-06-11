@@ -181,6 +181,35 @@ class GLDebugRenderer extends GLDisplayObject
 		}
 	}
 	
+	/**
+	 * Draws a circle to the screen
+	 * @param x       	the x-axis value of the circle
+	 * @param y       	the y-axis value of the circle
+	 * @param radius  	the radius of the circle
+	 * @param color   	the color of the circle
+	 * @param numSides	the number of segments circle will be divided.
+	 */
+	public function circle(x:Float, y:Float, radius:Float, color:FlxColor, thickness:Float = 1.0, numSides:Int = 25):Void
+	{
+		var sides = numSides,
+			angle = 0.0,
+			angleStep = (Math.PI * 2) / sides,
+			lastX = x + Math.cos(angle) * radius,
+			lastY = y + Math.sin(angle) * radius,
+			pointX:Float,
+			pointY:Float;
+		
+		for (i in 0...sides)
+		{
+			angle += angleStep;
+			pointX = x + Math.cos(angle) * radius;
+			pointY = y + Math.sin(angle) * radius;
+			line(lastX, lastY, pointX, pointY, color);
+			lastX = pointX;
+			lastY = pointY;
+		}
+	}
+	
 	#else
 	public function destroy():Void {}
 	#end

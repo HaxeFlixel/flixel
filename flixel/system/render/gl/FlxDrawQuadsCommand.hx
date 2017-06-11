@@ -17,7 +17,6 @@ import flixel.graphics.shaders.FlxShader;
 #if FLX_RENDER_GL
 import flixel.graphics.shaders.quads.FlxColoredShader;
 import flixel.graphics.shaders.quads.FlxTexturedShader;
-import flixel.graphics.shaders.quads.FlxTexturedNoPMAShader;
 import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
 import openfl.gl.GLBuffer;
@@ -38,7 +37,6 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	 * Default tile shaders.
 	 */
 	public static var defaultTexturedShader:FlxTexturedShader = new FlxTexturedShader();
-	public static var defaultTexturedNoPMAShader:FlxTexturedNoPMAShader = new FlxTexturedNoPMAShader();
 	public static var defaultColoredShader:FlxColoredShader = new FlxColoredShader();
 	
 	public var roundPixels:Bool = false;
@@ -335,9 +333,8 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			var sameMaterial:Bool = (this.material == material);
 			var bothNullShaders:Bool = (material.shader == null && shader == null);
 			var sameTextured:Bool = (this.textured == (bitmap != null));
-			var samePMA:Bool = (this.material.premultipliedAlpha == material.premultipliedAlpha);
 			
-			if (!(sameMaterial || bothNullShaders || sameTextured || samePMA))
+			if (!(sameMaterial || bothNullShaders || sameTextured))
 				flush();
 		}
 		
@@ -450,12 +447,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 		var shader = material.shader;
 		
 		if (shader == null)
-		{
-			if (textured)
-				shader = (material.premultipliedAlpha) ? defaultTexturedShader : defaultTexturedNoPMAShader;
-			else
-				shader = defaultColoredShader;
-		}
+			shader = (textured) ? defaultTexturedShader : defaultColoredShader;
 		
 		if (context.setShader(shader))
 			context.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);

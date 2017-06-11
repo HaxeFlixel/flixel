@@ -232,6 +232,8 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void {}
 	
+	public function drawDebugCircle(x:Float, y:Float, radius:Float, color:FlxColor, thickness:Float = 1.0, alpha:Float = 1.0, numSides:Int = 40):Void {}
+	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
 		?transform:ColorTransform):Void {}
 	

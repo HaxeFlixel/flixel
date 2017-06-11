@@ -390,7 +390,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		var width:Int = Math.ceil(bounds.width);
 		var height:Int = Math.ceil(bounds.height);
 		
-		if (pixels == null || pixels.width != width || pixels.height != height)
+		if (pixels == null || pixels.width < width || pixels.height < height)
 		{
 			pixels = FlxDestroyUtil.dispose(pixels);
 			pixels = new BitmapData(width, height, true, FlxColor.TRANSPARENT);

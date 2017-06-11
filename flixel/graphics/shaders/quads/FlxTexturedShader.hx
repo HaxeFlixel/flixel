@@ -1,9 +1,7 @@
 package flixel.graphics.shaders.quads;
 
-import flixel.graphics.shaders.FlxBaseShader;
-
 /**
- * Default shader used by batcher for rendering textured quads.
+ * Default shader used by batcher for rendering textured quads without premultiplied alpha.
  */
 class FlxTexturedShader extends FlxBaseShader
 {
@@ -29,7 +27,7 @@ class FlxTexturedShader extends FlxBaseShader
 				vColorOffset = aColorOffset.bgra;
 				gl_Position = uMatrix * aPosition;
 			}";		
-			
+	
 	public static inline var DEFAULT_FRAGMENT_SOURCE:String = 
 			"
 			varying vec2 vTexCoord;
@@ -41,8 +39,11 @@ class FlxTexturedShader extends FlxBaseShader
 			void main(void) 
 			{
 				vec4 color = texture2D(uImage0, vTexCoord);
-				vec4 result = color * vColor + vColorOffset;
+				vec4 unmultiply = vec4(color.rgb / color.a, color.a);
+				vec4 result = unmultiply * vColor;
+				result = result + vColorOffset;
 				result = clamp(result, 0.0, 1.0);
+				result = vec4(result.rgb * result.a, result.a);
 				
 				gl_FragColor = result;
 			}";

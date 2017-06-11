@@ -387,6 +387,15 @@ class FlxGLView extends FlxCameraView
 		#end
 	}
 	
+	override public function drawDebugCircle(x:Float, y:Float, radius:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0, numSides:Int = 40):Void 
+	{
+		#if FLX_DEBUG
+		var drawColor:FlxColor = color;
+		drawColor.alphaFloat = alpha;
+		debugLayer.circle(x, y, radius, drawColor, thickness, numSides);
+		#end
+	}
+	
 	override public function drawDebugTriangles(matrix:FlxMatrix, data:FlxTrianglesData, color:Int, thickness:Float = 1, alpha:Float = 1.0):Void
 	{
 		#if FLX_DEBUG

@@ -902,6 +902,12 @@ class FlxCamera extends FlxBasic
 			view.drawDebugTriangles(matrix, data, color, thickness, alpha);
 	}
 	
+	public inline function drawDebugCircle(x:Float, y:Float, radius:Float, color:Int, thickness:Float = 1.0, alpha:Float = 1.0, numSides:Int = 40):Void
+	{
+		if (view != null)
+			view.drawDebugCircle(x, y, radius, color, thickness, alpha, numSides);
+	}
+	
 	public inline function beginDrawDebug():Void
 	{
 		if (view != null) 
