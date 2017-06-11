@@ -21,8 +21,8 @@ class StageSizeScaleMode extends BaseScaleMode
 			var newH = Math.ceil(Height / FlxG.camera.zoom);
 			
 			FlxG.camera.setSize(newW, newH);
-			FlxG.camera.flashSprite.x += (newW - oldW) / 2;
-			FlxG.camera.flashSprite.y += (newH - oldH) / 2;
+			FlxG.camera.display.x += (newW - oldW) / 2;
+			FlxG.camera.display.y += (newH - oldH) / 2;
 		}
 	}
 }

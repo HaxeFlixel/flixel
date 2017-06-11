@@ -226,6 +226,11 @@ class FlxCamera extends FlxBasic
 	public var canvas(get, never):DisplayObjectContainer;
 	
 	/**
+	 * Reference to camera's `view.display`.
+	 */
+	public var display(get, never):DisplayObjectContainer;
+	
+	/**
 	 * Reference to camera's `view.screen`.
 	 */
 	public var screen(get, never):FlxSprite;
@@ -1267,6 +1272,11 @@ class FlxCamera extends FlxBasic
 	private function get_canvas():DisplayObjectContainer
 	{
 		return (view != null) ? view.canvas : null; 
+	}
+	
+	private function get_display():DisplayObjectContainer
+	{
+		return (view != null) ? view.display : null; 
 	}
 	
 	private function get_screen():FlxSprite
