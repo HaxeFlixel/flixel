@@ -354,7 +354,7 @@ class FlxG
 	}
 
 	/**
-	 * Call this function to see if one `FlxObject` overlaps another.
+	 * Call this function to see if one `FlxObject` overlaps another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a `FlxGroup` (or even bundling groups together!).
@@ -414,7 +414,7 @@ class FlxG
 	}
 	
 	/**
-	 * Call this function to see if one `FlxObject` collides with another.
+	 * Call this function to see if one `FlxObject` collides with another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).
