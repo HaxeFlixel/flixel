@@ -333,8 +333,8 @@ class FlxBlitView extends FlxCameraView
 		object.x -= camera.scroll.x * camera.totalScaleX;
 		object.y -= camera.scroll.y * camera.totalScaleY;
 		
-		object.x -= 0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x;
-		object.y -= 0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y;
+		object.x -= 0.5 * camera.width * FlxG.scaleMode.scale.x;
+		object.y -= 0.5 * camera.height * FlxG.scaleMode.scale.y;
 		
 		return object;
 	}

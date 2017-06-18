@@ -10,6 +10,7 @@ import flixel.system.render.common.FlxCameraView;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
@@ -210,6 +211,20 @@ class FlxGLView extends FlxCameraView
 			flashSprite.x = camera.x * FlxG.scaleMode.scale.x + _flashOffset.x;
 			flashSprite.y = camera.y * FlxG.scaleMode.scale.y + _flashOffset.y;
 		}
+	}
+	
+	override private function transformObject(object:DisplayObject):DisplayObject
+	{
+		object.scaleX *= camera.totalScaleX;
+		object.scaleY *= camera.totalScaleY;
+		
+		object.x -= camera.scroll.x * camera.totalScaleX;
+		object.y -= camera.scroll.y * camera.totalScaleY;
+		
+		object.x -= 0.5 * camera.width * FlxG.scaleMode.scale.x;
+		object.y -= 0.5 * camera.height * FlxG.scaleMode.scale.y;
+		
+		return object;
 	}
 	
 	override public function updateScrollRect():Void 
