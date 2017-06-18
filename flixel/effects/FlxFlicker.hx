@@ -148,7 +148,7 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Prematurely ends flickering.
 	 */
-	private function stop():Void
+	public function stop():Void
 	{
 		timer.cancel();
 		object.visible = true;
