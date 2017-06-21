@@ -93,12 +93,12 @@ class FlxEase
 		return ((t *= 2) < 1) ? (t * t * t * t * t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2;
 	}
 	
-	public static inline function smoothStepIn(t:float):Float
+	public static inline function smoothStepIn(t:Float):Float
 	{
 		return 2 * smoothStepInOut(t / 2);
 	}
 	
-	public static inline function smoothStepOut(t:float):Float
+	public static inline function smoothStepOut(t:Float):Float
 	{
 		return 2 * smoothStepInOut(t / 2 + 0.5) - 1;
 	}
@@ -108,12 +108,12 @@ class FlxEase
 		return t * t * (t * -2 + 3);
 	}
 	
-	public static inline function smootherStepIn(t:float):Float
+	public static inline function smootherStepIn(t:Float):Float
 	{
 		return 2 * smootherStepInOut(t / 2);
 	}
 	
-	public static inline function smootherStepOut(t:float):Float
+	public static inline function smootherStepOut(t:Float):Float
 	{
 		return 2 * smootherStepInOut(t / 2 + 0.5) - 1;
 	}
