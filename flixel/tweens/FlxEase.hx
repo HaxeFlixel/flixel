@@ -27,6 +27,12 @@ class FlxEase
 	private static var B6:Float = 2.625 / 2.75;
 	private static var ELASTIC_AMPLITUDE:Float = 1;
 	private static var ELASTIC_PERIOD:Float = 0.4;
+	
+	/** @since 4.3.0 */
+	public static inline function linear(t:Float):Float
+	{
+		return t;
+	}
 
 	public static inline function quadIn(t:Float):Float
 	{
@@ -86,6 +92,42 @@ class FlxEase
 	public static inline function quintInOut(t:Float):Float
 	{
 		return ((t *= 2) < 1) ? (t * t * t * t * t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2;
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smoothStepIn(t:Float):Float
+	{
+		return 2 * smoothStepInOut(t / 2);
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smoothStepOut(t:Float):Float
+	{
+		return 2 * smoothStepInOut(t / 2 + 0.5) - 1;
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smoothStepInOut(t:Float):Float
+	{
+		return t * t * (t * -2 + 3);
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smootherStepIn(t:Float):Float
+	{
+		return 2 * smootherStepInOut(t / 2);
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smootherStepOut(t:Float):Float
+	{
+		return 2 * smootherStepInOut(t / 2 + 0.5) - 1;
+	}
+	
+	/** @since 4.3.0 */
+	public static inline function smootherStepInOut(t:Float):Float
+	{
+		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
 	
 	public static inline function sineIn(t:Float):Float
