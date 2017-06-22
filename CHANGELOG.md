@@ -17,6 +17,8 @@
 - `FlxStringUtil`: added `getHost()` (#1996)
 - `FlxPoint`: added `toVector()` (#2061)
 - `FlxGamepad`: added `getAnalogAxes()` (#2064)
+- `FlxMouse`: added getters for `justPressedTimeInTicks` (#2070)
+- `FlxEase`: added `linear` / `smooth` / `smoother` functions (#2080)
 
 #### Bugfixes:
 
@@ -27,6 +29,7 @@
 - `FlxMouseEventManager`:
 	- fixed overlap checks for off-camera sprites (#1964)
 	- fixed pixel-perfect overlaps with `offset` (#1999)
+	- fixed reset logic on state switches (#1986)
 - `FlxPreloader`: fixed missing assets with full DCE (764a5a8)
 - `FlxG.cameras`: fixed `reset()` not removing all cameras (#2016)
 - `FlxAnimationController`: fixed `flipX` / `Y` not being copied in `copyFrom()` (#2027)
@@ -38,6 +41,9 @@
 - `FlxG.html5`: fixed `platform` detecting iPhone and iPod as "Mac" (#2052)
 - `FlxTilemap`: fixed a missing bounds check in `getTileIndexByCoords()` (#2024)
 - `FlxAnalog`: fixed mouse input without `FLX_NO_TOUCH` (#2067) 
+- `flixel.input`: fixed `Float` being used for tick values (#2071)
+- `FlxCamera`: fixed object visibility for `zoom < 1` (#2003)
+- `FlxEmitter`: fixed issues with `lifespan == 0` (#2074)
 
 #### Changes and improvements:
 
@@ -51,6 +57,8 @@
 	- registered a reference to the current `selection` of the interaction tool (1bb7b48)
 	- prevented unpause after manual pausing through UI (56854fc)
 - `FlxBasePreloader`: improved the design of the sitelock failure notice (#1994)
+- `FlxFlicker`: made `stop()` public (#2084)
+- `FlxAnalog`: several fixes and improvements (#2073)
 
 4.2.1 (March 4, 2017)
 ------------------------------
