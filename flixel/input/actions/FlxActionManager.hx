@@ -894,6 +894,10 @@ class ActionSetRegister implements IFlxDestroyable
 	{
 		var lastSet = FlxSteamController.getCurrentActionSet(controllerHandle);
 		if (lastSet == newSet) return;
+		if (sets == null || sets.length <= lastSet)
+		{
+			return;
+		}
 		if (lastSet != -1)
 		{
 			//detach inputs for this controller from any steam-aware actions in the old set
