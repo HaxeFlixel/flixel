@@ -36,6 +36,7 @@ class FlxMouseEventManager extends FlxBasic
 {
 	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
 	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
+	private static var _mouseDownObjects:Array<ObjectMouseData<FlxObject>> = [];
 
 	private static var _point:FlxPoint = FlxPoint.get();
 	
@@ -112,6 +113,7 @@ class FlxMouseEventManager extends FlxBasic
 		
 		_registeredObjects.splice(0, _registeredObjects.length);
 		_mouseOverObjects = [];
+		_mouseDownObjects = [];
 	}
 
 	/**
@@ -159,6 +161,23 @@ class FlxMouseEventManager extends FlxBasic
 		if (reg != null)
 		{
 			reg.onMouseUp = OnMouseUp;
+		}
+	}
+	
+	/**
+	 * Sets the mouseClick callback associated with an object.
+	 *
+	 * @param   OnMouseClick    Callback when mouse is pressed and released over this object.
+	 *                      	Must have Object as argument - e.g. onMouseClick(object:FlxObject).
+	 * @since 4.3.0
+	 */
+	public static function setMouseClickCallback<T:FlxObject>(Object:T, OnMouseClick:T->Void):Void
+	{
+		var reg = getRegister(Object);
+		
+		if (reg != null)
+		{
+			reg.onMouseClick = OnMouseClick;
 		}
 	}
 	
@@ -355,6 +374,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
 		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
+		_mouseDownObjects = new Array<ObjectMouseData<FlxObject>>();
 
 		FlxG.signals.stateSwitched.add(removeAll);
 	}
@@ -445,6 +465,18 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
+		// MouseClick - Look for objects with mouse down first.
+		if (FlxG.mouse.justPressed)
+		{
+			for (current in currentOverObjects)
+			{
+				if (current.onMouseClick != null && current.object.exists && current.object.visible)
+				{
+					_mouseDownObjects.push(current);
+				}
+			}
+		}
+		
 		// MouseUp - Look for objects with mouse over when user releases mouse button.
 		for (current in currentOverObjects)
 		{
@@ -457,6 +489,23 @@ class FlxMouseEventManager extends FlxBasic
 						current.onMouseUp(current.object);
 					}
 				}
+			}
+		}
+		
+		// MouseClick - Look for objects that had mouse down and now have mouse over when the user releases the mouse button.
+		if (FlxG.mouse.justReleased)
+		{
+			for (down in _mouseDownObjects)
+			{
+				if (down.onMouseClick != null && down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
+				{
+					down.onMouseClick(down.object);
+				}
+			}
+			
+			if (_mouseDownObjects.length > 0)
+			{
+				_mouseDownObjects = [];
 			}
 		}
 		
@@ -479,6 +528,7 @@ class FlxMouseEventManager extends FlxBasic
 	private function clearRegistry():Void
 	{
 		_mouseOverObjects = null;
+		_mouseDownObjects = null;
 		_registeredObjects = FlxDestroyUtil.destroyArray(_registeredObjects);
 	}
 
@@ -547,6 +597,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 	public var object:FlxObject;
 	public var onMouseDown:T->Void;
 	public var onMouseUp:T->Void;
+	public var onMouseClick:T->Void;
 	public var onMouseOver:T->Void;
 	public var onMouseOut:T->Void;
 	public var onMouseMove:T->Void;
@@ -578,6 +629,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 		sprite = null;
 		onMouseDown = null;
 		onMouseUp = null;
+		onMouseClick = null;
 		onMouseOver = null;
 		onMouseOut = null;
 		onMouseMove = null;
