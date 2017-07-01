@@ -59,6 +59,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public var useSystemCursor(default, set):Bool = false;
 	/**
+	 * Check to see if the mouse has just been moved.
+	 * @since 4.3.0
+	 */
+	public var justMoved(get, never):Bool;
+	/**
 	 * Check to see if the left mouse button is currently pressed.
 	 */
 	public var pressed(get, never):Bool;
@@ -113,7 +118,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public var justPressedTimeInTicksMiddle(get, never):Int;
 	#end
-
+	
 	/**
 	 * The left mouse button.
 	 */
@@ -148,6 +153,12 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private var _lastY:Int = 0;
 	private var _lastWheel:Int = 0;
 	private var _lastLeftButtonState:FlxInputState;
+	
+	/**
+	 * Helper variables to see if the mouse has moved since the last update.
+	 */
+	private var _prevX:Int = 0;
+	private var _prevY:Int = 0;
 	
 	//Helper variable for cleaning up memory
 	private var _stage:Stage;
@@ -421,6 +432,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	private function update():Void
 	{
+		_prevX = x;
+		_prevY = y;
+		
 		#if !FLX_UNIT_TEST // Travis segfaults when game.mouseX / Y is accessed
 		setGlobalScreenPositionUnsafe(FlxG.game.mouseX, FlxG.game.mouseY); 
 		
@@ -509,6 +523,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 	#end
 	
+	private inline function get_justMoved():Bool					 return _prevX != x || _prevY != y;
 	private inline function get_pressed():Bool                       return _leftButton.pressed;
 	private inline function get_justPressed():Bool                   return _leftButton.justPressed;
 	private inline function get_justReleased():Bool                  return _leftButton.justReleased;

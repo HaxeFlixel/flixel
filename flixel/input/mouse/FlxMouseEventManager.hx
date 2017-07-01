@@ -195,10 +195,28 @@ class FlxMouseEventManager extends FlxBasic
 	}
 	
 	/**
+	 * Sets the mouseMove callback associated with an object.
+	 *
+	 * @param   OnMouseMove   Callback when the mouse is moved while over this object.
+	 *                        Must have Object as argument - e.g. onMouseMove(object:FlxObject).
+	 * @since 4.3.0
+	 */
+	public static function setMouseMoveCallback<T:FlxObject>(Object:T, OnMouseMove:T->Void):Void
+	{
+		var reg = getRegister(Object);
+		
+		if (reg != null)
+		{
+			reg.onMouseMove = OnMouseMove;
+		}
+	}
+	
+	/**
 	 * Sets the mouseWheel callback associated with an object.
 	 *
-	 * @param   OnMouseWheel  Callback when mouse wheel is moved while over this object.
+	 * @param   OnMouseWheel  Callback when the mouse wheel is moved while over this object.
 	 *                        Must have Object as argument - e.g. onMouseWheel(object:FlxObject).
+	 * @since 4.3.0
 	 */
 	public static function setMouseWheelCallback<T:FlxObject>(Object:T, OnMouseWheel:T->Void):Void
 	{
@@ -399,6 +417,18 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
+		// MouseMove - Look for objects with mouse over that have mouseMove callbacks
+		if (FlxG.mouse.justMoved)
+		{
+			for (current in currentOverObjects)
+			{
+				if (current.onMouseMove != null && current.object.exists && current.object.visible)
+				{
+					current.onMouseMove(current.object);
+				}
+			}
+		}
+		
 		#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
@@ -519,6 +549,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 	public var onMouseUp:T->Void;
 	public var onMouseOver:T->Void;
 	public var onMouseOut:T->Void;
+	public var onMouseMove:T->Void;
 	public var onMouseWheel:T->Void;
 	public var mouseChildren:Bool;
 	public var mouseEnabled:Bool;
@@ -549,6 +580,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 		onMouseUp = null;
 		onMouseOver = null;
 		onMouseOut = null;
+		onMouseMove = null;
 		onMouseWheel = null;
 		mouseButtons = null;
 	}
