@@ -181,7 +181,7 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Sets the mouseOut callback associated with an object.
 	 *
-	 * @param   OnMouseOver   Callback when mouse is moves out of this object.
+	 * @param   OnMouseOver   Callback when mouse is moved out of this object.
 	 *                        Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 */
 	public static function setMouseOutCallback<T:FlxObject>(Object:T, OnMouseOut:T->Void):Void
@@ -191,6 +191,22 @@ class FlxMouseEventManager extends FlxBasic
 		if (reg != null)
 		{
 			reg.onMouseOut = OnMouseOut;
+		}
+	}
+	
+	/**
+	 * Sets the mouseWheel callback associated with an object.
+	 *
+	 * @param   OnMouseWheel  Callback when mouse wheel is moved while over this object.
+	 *                        Must have Object as argument - e.g. onMouseWheel(object:FlxObject).
+	 */
+	public static function setMouseWheelCallback<T:FlxObject>(Object:T, OnMouseWheel:T->Void):Void
+	{
+		var reg = getRegister(Object);
+		
+		if (reg != null)
+		{
+			reg.onMouseWheel = OnMouseWheel;
 		}
 	}
 	
@@ -413,6 +429,18 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
+		
+		// MouseWheel - Look for objects with mouse over when user spins the mouse wheel.
+		for (current in currentOverObjects)
+		{
+			if (current.onMouseWheel != null && current.object.exists && current.object.visible)
+			{
+				if (FlxG.mouse.wheel != 0)
+				{
+					current.onMouseWheel(current.object);
+				}
+			}
+		}
 		#end
 		
 		_mouseOverObjects = currentOverObjects;
@@ -491,6 +519,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 	public var onMouseUp:T->Void;
 	public var onMouseOver:T->Void;
 	public var onMouseOut:T->Void;
+	public var onMouseWheel:T->Void;
 	public var mouseChildren:Bool;
 	public var mouseEnabled:Bool;
 	public var pixelPerfect:Bool;
@@ -520,6 +549,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 		onMouseUp = null;
 		onMouseOver = null;
 		onMouseOut = null;
+		onMouseWheel = null;
 		mouseButtons = null;
 	}
 }
