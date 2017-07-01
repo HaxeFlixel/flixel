@@ -437,6 +437,7 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
+		#if FLX_MOUSE
 		// MouseMove - Look for objects with mouse over that have mouseMove callbacks
 		if (FlxG.mouse.justMoved)
 		{
@@ -449,7 +450,6 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-		#if FLX_MOUSE
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
