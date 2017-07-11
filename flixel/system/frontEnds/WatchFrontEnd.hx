@@ -49,7 +49,7 @@ class WatchFrontEnd
 	public inline function addQuick(displayName:String, value:Dynamic):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.watch.add(displayName, QUICK(value));
+		FlxG.game.debugger.watch.add(displayName, QUICK(Std.string(value)));
 		#end
 	}
 	
