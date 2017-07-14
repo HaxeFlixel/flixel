@@ -552,8 +552,8 @@ class FlxSpriteUtil
 	 * A simple flicker effect for sprites achieved by toggling visibility.
 	 * 
 	 * @param	Object				The sprite.
-	 * @param	Duration			How long to flicker for. 0 means "forever".
-	 * @param	Interval			In what interval to toggle visibility. Set to FlxG.elapsed if <= 0!
+	 * @param	Duration			How long to flicker for (in seconds). `0` means "forever".
+	 * @param	Interval			In what interval to toggle visibility. Set to `FlxG.elapsed` if `<= 0`!
 	 * @param	EndVisibility		Force the visible value when the flicker completes, useful with fast repetitive use.
 	 * @param	ForceRestart		Force the flicker to restart from beginning, discarding the flickering effect already in progress if there is one.
 	 * @param	CompletionCallback	An optional callback that will be triggered when a flickering has finished.
