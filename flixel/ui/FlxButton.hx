@@ -60,6 +60,31 @@ class FlxButton extends FlxTypedButton<FlxText>
 		
 		initLabel(Text);
 	}
+    
+    /**
+	 * Updates the FlxButton's hitbox (`width`, `height`, `offset`) according to the current `scale`.
+	 * Also calls `centerOrigin()` and `updateLabelFormat()`
+	 */
+    override public function updateHitbox():Void
+    {
+        super.updateHitbox();
+        updateLabelFormat();
+    }
+    
+    /**
+     * Updates the label format.
+     * Also updates the label's `fieldWidth` and `offset.y`.
+     */
+    private function updateLabelFormat():Void
+    {
+        if (label == null)
+            return;
+        
+        label.fieldWidth = width;
+        label.setFormat(label.font, Math.round(scale.y * 8), label.color, 
+            label.alignment, label.borderStyle, label.borderColor, label.embedded);
+        label.offset.y = (height - label.textField.height) * -0.25;
+    }
 	
 	/**
 	 * Updates the size of the text field to match the button.
