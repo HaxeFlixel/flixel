@@ -23,7 +23,7 @@ class FlxFlicker implements IFlxDestroyable
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
 	 * 
 	 * @param   Object               The object.
-	 * @param   Duration             How long to flicker for.
+	 * @param   Duration             How long to flicker for (in seconds).
 	 * @param   Interval             In what interval to toggle visibility. Set to `FlxG.elapsed` if `<= 0`!
 	 * @param   EndVisibility        Force the visible value when the flicker completes,
 	 *                               useful with fast repetitive use.
