@@ -6,12 +6,12 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxImageFrame;
+import flixel.graphics.tile.FlxTilesheet;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.Tilesheet;
 
 /**
  * `BitmapData` wrapper which is used for rendering.
@@ -316,7 +316,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
-	public var tilesheet(get, null):Tilesheet;
+	public var tilesheet(get, null):FlxTilesheet;
 	
 	/**
 	 * Usage counter for this `FlxGraphic` object.
@@ -364,7 +364,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in `FlxG.renderTile` mode
 	 */
-	private var _tilesheet:Tilesheet;
+	private var _tilesheet:FlxTilesheet;
 	
 	private var _useCount:Int = 0;
 	
@@ -522,7 +522,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
-	private function get_tilesheet():Tilesheet
+	private function get_tilesheet():FlxTilesheet
 	{
 		if (_tilesheet == null)
 		{
@@ -531,7 +531,7 @@ class FlxGraphic implements IFlxDestroyable
 			if (dumped)
 				undump();
 			
-			_tilesheet = new Tilesheet(bitmap);
+			_tilesheet = new FlxTilesheet(bitmap);
 			
 			if (dumped)
 				dump();
@@ -613,7 +613,7 @@ class FlxGraphic implements IFlxDestroyable
 			height = bitmap.height;
 			#if !flash
 			if (FlxG.renderTile && _tilesheet != null)
-				_tilesheet = new Tilesheet(bitmap);
+				_tilesheet = new FlxTilesheet(bitmap);
 			#end
 		}
 		

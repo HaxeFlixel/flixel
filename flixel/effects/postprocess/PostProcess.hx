@@ -6,12 +6,30 @@ import flash.geom.Rectangle;
 import flixel.FlxG;
 import openfl.Assets;
 import openfl.display.OpenGLView;
+
+#if openfl_legacy
 import openfl.gl.GL;
 import openfl.gl.GLFramebuffer;
 import openfl.gl.GLRenderbuffer;
 import openfl.gl.GLTexture;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
+#else
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLFramebuffer;
+import lime.graphics.opengl.GLRenderbuffer;
+import lime.graphics.opengl.GLTexture;
+import lime.graphics.opengl.GLBuffer;
+import lime.utils.Float32Array;
+#end
+
+#if (lime >= "4.0.0")
+import lime.graphics.opengl.WebGLContext;
+#end
+
+#if (openfl >= "5.0.0")
+import openfl.utils.AssetType;
+#end
 
 private class Uniform
 {
@@ -66,7 +84,11 @@ class PostProcess extends OpenGLView
 
 		buffer = GL.createBuffer();
 		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
+		#if (lime >= "4.0.0")
+		(GL:WebGLContext).bufferData(GL.ARRAY_BUFFER, new Float32Array(vertices), GL.STATIC_DRAW);
+		#else
 		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(#if !openfl_next cast #end vertices), GL.STATIC_DRAW);
+		#end
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		postProcessShader = new Shader([

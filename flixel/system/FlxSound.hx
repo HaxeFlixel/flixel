@@ -14,6 +14,10 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 
+#if (openfl >= "5.0.0")
+import openfl.utils.AssetType;
+#end
+
 #if flash11
 import flash.utils.ByteArray;
 #end
