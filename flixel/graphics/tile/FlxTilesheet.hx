@@ -42,11 +42,17 @@ class FlxTilesheet extends Tilesheet
 #else
 
 import openfl.display.BitmapData;
+import openfl.display.BlendMode;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
+import openfl.display.Tile;
+import openfl.display.TileArray;
+import openfl.display.Tilemap;
 import openfl.display.Tileset;
+import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
+import openfl.Lib;
 
 class FlxTilesheet extends Tileset
 {
@@ -75,23 +81,141 @@ class FlxTilesheet extends Tileset
 	public static inline var TILE_BLEND_DIFFERENCE = 0x01000000;
 	public static inline var TILE_BLEND_INVERT = 0x02000000;
 	
-	private var _centerPoints = new Array<Point>();
+	private var _tilemap = new Map<Sprite, Tilemap>();
+	private var _tileArray = new Map<Sprite, TileArray>();
 	
 	public function new(image:BitmapData)
 	{	
 		super(image);
 	}
 	
-	public function addTileRect(rectangle:Rectangle, centerPoint:Point = null):Int
+	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Dynamic, count:Int = -1):Void
 	{
-		var id = addRect (rectangle);
-		_centerPoints.push (centerPoint);
-		return id;
+		var tilemap = _tilemap[canvas];
+		var tileArray = _tileArray[canvas];
+		if (tilemap == null)
+		{
+			tilemap = new Tilemap(0, 0, this);
+			tileArray = new TileArray();
+			tilemap.addTile(tileArray);
+			_tilemap[canvas] = tilemap;
+			_tileArray[canvas] = tileArray;
+			canvas.addChild(tilemap);
+		}
+		tilemap.width = Lib.current.stage.stageWidth;
+		tilemap.height = Lib.current.stage.stageHeight;
+		tilemap.smoothing = smooth;
+		// TODO: Shader support?
+		_updateTileData(tilemap, tileArray, tileData, flags, count);
+		//drawTiles (canvas.graphics, tileData, smooth, flags, count);
 	}
 	
-	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Dynamic, #end count:Int = -1):Void
+	private function _updateTileData(tilemap:Tilemap, tileArray:TileArray, tileData:Array<Float>, flags:Int, count:Int):Void
 	{
-		//drawTiles (canvas.graphics, tileData, smooth, flags, count);
+		var useScale = (flags & TILE_SCALE) > 0;
+		var useRotation = (flags & TILE_ROTATION) > 0;
+		var useTransform = (flags & TILE_TRANS_2x2) > 0;
+		var useRGB = (flags & TILE_RGB) > 0;
+		var useAlpha = (flags & TILE_ALPHA) > 0;
+		var useRect = (flags & TILE_RECT) > 0;
+		var useOrigin = (flags & TILE_ORIGIN) > 0;
+		var useRGBOffset = ((flags & TILE_TRANS_COLOR) > 0);
+		
+		var blendMode:BlendMode = switch(flags & 0xF0000) {
+			case TILE_BLEND_ADD:                ADD;
+			case TILE_BLEND_MULTIPLY:           MULTIPLY;
+			case TILE_BLEND_SCREEN:             SCREEN;
+			case TILE_BLEND_SUBTRACT:           SUBTRACT;
+			case _: switch(flags & 0xF00000) {
+				case TILE_BLEND_DARKEN:         DARKEN;
+				case TILE_BLEND_LIGHTEN:        LIGHTEN;
+				case TILE_BLEND_OVERLAY:        OVERLAY;
+				case TILE_BLEND_HARDLIGHT:      HARDLIGHT;
+				case _: switch(flags & 0xF000000) {
+					case TILE_BLEND_DIFFERENCE: DIFFERENCE;
+					case TILE_BLEND_INVERT:     INVERT;
+					case _:                               NORMAL;
+				}
+			}
+		};
+		
+		if (useTransform) { useScale = false; useRotation = false; }
+		
+		var scaleIndex = 0;
+		var rotationIndex = 0;
+		var rgbIndex = 0;
+		var rgbOffsetIndex = 0;
+		var alphaIndex = 0;
+		var transformIndex = 0;
+		
+		var numValues = 3;
+		
+		if (useRect) { numValues = useOrigin ? 8 : 6; }
+		if (useScale) { scaleIndex = numValues; numValues ++; }
+		if (useRotation) { rotationIndex = numValues; numValues ++; }
+		if (useTransform) { transformIndex = numValues; numValues += 4; }
+		if (useRGB) { rgbIndex = numValues; numValues += 3; }
+		if (useAlpha) { alphaIndex = numValues; numValues ++; }
+		if (useRGBOffset) { rgbOffsetIndex = numValues; numValues += 4; }
+		
+		var totalCount = tileData.length;
+		if (count >= 0 && totalCount > count) totalCount = count;
+		var itemCount = Math.ceil (totalCount / numValues);
+		var iIndex = 0, tile;
+		var tint = 0xFFFFFF;
+		
+		var i = 0;
+		var matrix = new Matrix();
+		var rect = new Rectangle();
+		tileArray.length = itemCount;
+		
+		while (iIndex < totalCount) {
+			
+			tile = tileArray[i];
+			
+			matrix.tx = tileData[iIndex + 0];
+			matrix.ty = tileData[iIndex + 1];
+			
+			// useRect is always true
+			
+			rect.x = tileData[iIndex + 2];
+			rect.y = tileData[iIndex + 3];
+			rect.width = tileData[iIndex + 4];
+			rect.height = tileData[iIndex + 5];
+			
+			tile.rect = rect;
+			
+			// useAlpha is always true
+			
+			tile.alpha = tileData[iIndex + alphaIndex];
+			
+			// TODO
+			tint = 0xFFFFFF;
+			if (useRGB) {
+				tint = Std.int(tileData[iIndex + rgbIndex] * 255) << 16 | Std.int(tileData[iIndex + rgbIndex + 1] * 255) << 8 | Std.int(tileData[iIndex + rgbIndex + 2] * 255);
+			}
+			
+			// TODO
+			// if (useRGBOffset) {
+			// 	colorTransform.redOffset   += tileData[iIndex + rgbOffsetIndex + 0];
+			// 	colorTransform.greenOffset += tileData[iIndex + rgbOffsetIndex + 1];
+			// 	colorTransform.blueOffset  += tileData[iIndex + rgbOffsetIndex + 2];
+			// 	colorTransform.alphaOffset += tileData[iIndex + rgbOffsetIndex + 3];
+			// }
+			
+			// useTransform is always true
+			
+			matrix.a = tileData[iIndex + transformIndex + 0];
+			matrix.b = tileData[iIndex + transformIndex + 1];
+			matrix.c = tileData[iIndex + transformIndex + 2];
+			matrix.d = tileData[iIndex + transformIndex + 3];
+			
+			tile.matrix = matrix;
+			
+			i++;
+			iIndex += numValues;
+			
+		}
 	}
 	
 	//public function getTileCenter (index:Int):Point;
