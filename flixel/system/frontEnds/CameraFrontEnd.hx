@@ -191,6 +191,13 @@ class CameraFrontEnd
 			if (FlxG.renderTile)
 			{
 				camera.clearDrawStack();
+				#if (openfl >= "4.0.0")
+				// TODO: Better solution, hide unused tilemaps
+				for (i in 0...camera.canvas.numChildren)
+				{
+					camera.canvas.getChildAt(i).visible = false;
+				}
+				#end
 				camera.canvas.graphics.clear();
 				// Clearing camera's debug sprite
 				#if FLX_DEBUG

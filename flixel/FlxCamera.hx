@@ -1481,7 +1481,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			#if openfl_legacy // can't skip this on next, see #1793
+			#if (openfl_legacy || (openfl >= "4.0.0")) // can't skip this on next, see #1793
 			if (FxAlpha == 0)
 				return;
 			#end
