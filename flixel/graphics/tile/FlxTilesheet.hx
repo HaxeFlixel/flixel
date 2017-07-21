@@ -49,6 +49,7 @@ import openfl.display.Tile;
 import openfl.display.TileArray;
 import openfl.display.Tilemap;
 import openfl.display.Tileset;
+import openfl.events.Event;
 import openfl.geom.Matrix;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
@@ -82,35 +83,45 @@ class FlxTilesheet extends Tileset
 	public static inline var TILE_BLEND_INVERT = 0x02000000;
 	
 	private var _tilemap = new Map<Sprite, Tilemap>();
-	private var _tileArray = new Map<Sprite, TileArray>();
 	
 	public function new(image:BitmapData)
 	{	
 		super(image);
+		// TODO: Better solution, cleanup removed tilemaps
+		Lib.current.addEventListener(Event.ENTER_FRAME, function(_)
+		{
+			var tilemap:Tilemap;
+			for (canvas in _tilemap.keys())
+			{
+				tilemap = _tilemap[canvas];
+				if (tilemap.parent == null)
+				{
+					_tilemap.remove(canvas);
+				}
+			}
+		});
 	}
 	
 	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Dynamic, count:Int = -1):Void
 	{
+		// TODO: Cleanup old tilemaps
 		var tilemap = _tilemap[canvas];
-		var tileArray = _tileArray[canvas];
 		if (tilemap == null)
 		{
 			tilemap = new Tilemap(0, 0, this);
-			tileArray = new TileArray();
-			tilemap.addTile(tileArray);
 			_tilemap[canvas] = tilemap;
-			_tileArray[canvas] = tileArray;
 			canvas.addChild(tilemap);
 		}
+		tilemap.visible = true;
 		tilemap.width = Lib.current.stage.stageWidth;
 		tilemap.height = Lib.current.stage.stageHeight;
 		tilemap.smoothing = smooth;
 		// TODO: Shader support?
-		_updateTileData(tilemap, tileArray, tileData, flags, count);
+		_updateTileData(tilemap, tileData, flags, count);
 		//drawTiles (canvas.graphics, tileData, smooth, flags, count);
 	}
 	
-	private function _updateTileData(tilemap:Tilemap, tileArray:TileArray, tileData:Array<Float>, flags:Int, count:Int):Void
+	private function _updateTileData(tilemap:Tilemap, tileData:Array<Float>, flags:Int, count:Int):Void
 	{
 		var useScale = (flags & TILE_SCALE) > 0;
 		var useRotation = (flags & TILE_ROTATION) > 0;
@@ -161,33 +172,39 @@ class FlxTilesheet extends Tileset
 		var totalCount = tileData.length;
 		if (count >= 0 && totalCount > count) totalCount = count;
 		var itemCount = Math.ceil (totalCount / numValues);
-		var iIndex = 0, tile;
+		var iIndex = 0;
 		var tint = 0xFFFFFF;
 		
-		var i = 0;
-		var matrix = new Matrix();
-		var rect = new Rectangle();
+		var a, b, c, d, tx, ty, x, y, width, height;
+		var tileArray = tilemap.getTiles();
 		tileArray.length = itemCount;
+		tileArray.position = 0;
 		
 		while (iIndex < totalCount) {
 			
-			tile = tileArray[i];
-			
-			matrix.tx = tileData[iIndex + 0];
-			matrix.ty = tileData[iIndex + 1];
-			
 			// useRect is always true
 			
-			rect.x = tileData[iIndex + 2];
-			rect.y = tileData[iIndex + 3];
-			rect.width = tileData[iIndex + 4];
-			rect.height = tileData[iIndex + 5];
+			x = tileData[iIndex + 2];
+			y = tileData[iIndex + 3];
+			width = tileData[iIndex + 4];
+			height = tileData[iIndex + 5];
 			
-			tile.rect = rect;
+			tileArray.setRect(x, y, width, height);
+			
+			// useTransform is always true
+			
+			a = tileData[iIndex + transformIndex + 0];
+			b = tileData[iIndex + transformIndex + 1];
+			c = tileData[iIndex + transformIndex + 2];
+			d = tileData[iIndex + transformIndex + 3];
+			tx = tileData[iIndex + 0];
+			ty = tileData[iIndex + 1];
+			
+			tileArray.setMatrix(a, b, c, d, tx, ty);
 			
 			// useAlpha is always true
 			
-			tile.alpha = tileData[iIndex + alphaIndex];
+			tileArray.alpha = tileData[iIndex + alphaIndex];
 			
 			// TODO
 			tint = 0xFFFFFF;
@@ -203,19 +220,12 @@ class FlxTilesheet extends Tileset
 			// 	colorTransform.alphaOffset += tileData[iIndex + rgbOffsetIndex + 3];
 			// }
 			
-			// useTransform is always true
-			
-			matrix.a = tileData[iIndex + transformIndex + 0];
-			matrix.b = tileData[iIndex + transformIndex + 1];
-			matrix.c = tileData[iIndex + transformIndex + 2];
-			matrix.d = tileData[iIndex + transformIndex + 3];
-			
-			tile.matrix = matrix;
-			
-			i++;
+			tileArray.position++;
 			iIndex += numValues;
 			
 		}
+		
+		tilemap.setTiles(tileArray);
 	}
 	
 	//public function getTileCenter (index:Int):Point;
