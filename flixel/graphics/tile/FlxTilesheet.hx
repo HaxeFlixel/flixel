@@ -1,5 +1,6 @@
 package flixel.graphics.tile; #if (openfl < "4.0.0")
 
+import openfl.display.Shader;
 import openfl.display.Sprite;
 import openfl.display.Tilesheet;
 
@@ -33,7 +34,7 @@ class FlxTilesheet extends Tilesheet
 	public static inline var TILE_BLEND_INVERT = Tilesheet.TILE_BLEND_INVERT;
 	#end
 	
-	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Dynamic, #end, count:Int = -1):Void
+	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Shader, #end, count:Int = -1):Void
 	{
 		drawTiles (canvas.graphics, tileData, smooth, flags, #if !openfl_legacy shader:Dynamic, #end count);
 	}
@@ -44,6 +45,7 @@ class FlxTilesheet extends Tilesheet
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
+import openfl.display.Shader;
 import openfl.display.Sprite;
 import openfl.display.Tile;
 import openfl.display.TileArray;
@@ -102,9 +104,8 @@ class FlxTilesheet extends Tileset
 		});
 	}
 	
-	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Dynamic, count:Int = -1):Void
+	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Shader, count:Int = -1):Void
 	{
-		// TODO: Cleanup old tilemaps
 		var tilemap = _tilemap[canvas];
 		if (tilemap == null)
 		{
@@ -112,13 +113,12 @@ class FlxTilesheet extends Tileset
 			_tilemap[canvas] = tilemap;
 			canvas.addChild(tilemap);
 		}
+		tilemap.shader = shader;
 		tilemap.visible = true;
 		tilemap.width = Lib.current.stage.stageWidth;
 		tilemap.height = Lib.current.stage.stageHeight;
 		tilemap.smoothing = smooth;
-		// TODO: Shader support?
 		_updateTileData(tilemap, tileData, flags, count);
-		//drawTiles (canvas.graphics, tileData, smooth, flags, count);
 	}
 	
 	private function _updateTileData(tilemap:Tilemap, tileData:Array<Float>, flags:Int, count:Int):Void
@@ -176,6 +176,8 @@ class FlxTilesheet extends Tileset
 		var tint = 0xFFFFFF;
 		
 		var a, b, c, d, tx, ty, x, y, width, height;
+		var rM = 1.0, gM = 1.0, bM = 1.0, aM = 1.0, rO = 0.0, gO = 0.0, bO = 0.0, aO = 0.0;
+		
 		var tileArray = tilemap.getTiles();
 		tileArray.length = itemCount;
 		tileArray.position = 0;
@@ -206,19 +208,26 @@ class FlxTilesheet extends Tileset
 			
 			tileArray.alpha = tileData[iIndex + alphaIndex];
 			
-			// TODO
-			tint = 0xFFFFFF;
-			if (useRGB) {
-				tint = Std.int(tileData[iIndex + rgbIndex] * 255) << 16 | Std.int(tileData[iIndex + rgbIndex + 1] * 255) << 8 | Std.int(tileData[iIndex + rgbIndex + 2] * 255);
+			if (useRGB)
+			{
+				rM = tileData[iIndex + rgbIndex];
+				gM = tileData[iIndex + rgbIndex + 1];
+				bM = tileData[iIndex + rgbIndex + 2];
+				aM = tileData[iIndex + rgbIndex + 3];
 			}
 			
-			// TODO
-			// if (useRGBOffset) {
-			// 	colorTransform.redOffset   += tileData[iIndex + rgbOffsetIndex + 0];
-			// 	colorTransform.greenOffset += tileData[iIndex + rgbOffsetIndex + 1];
-			// 	colorTransform.blueOffset  += tileData[iIndex + rgbOffsetIndex + 2];
-			// 	colorTransform.alphaOffset += tileData[iIndex + rgbOffsetIndex + 3];
-			// }
+			if (useRGBOffset)
+			{
+				rO = tileData[iIndex + rgbOffsetIndex];
+				gO = tileData[iIndex + rgbOffsetIndex];
+				bO = tileData[iIndex + rgbOffsetIndex];
+				aO = tileData[iIndex + rgbOffsetIndex];
+			}
+			
+			if (useRGB || useRGBOffset)
+			{
+				tileArray.setColorTransform(rM, gM, bM, aM, rO, gO, bO, aO);
+			}
 			
 			tileArray.position++;
 			iIndex += numValues;
