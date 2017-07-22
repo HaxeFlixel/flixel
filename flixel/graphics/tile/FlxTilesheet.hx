@@ -34,7 +34,7 @@ class FlxTilesheet extends Tilesheet
 	public static inline var TILE_BLEND_INVERT = Tilesheet.TILE_BLEND_INVERT;
 	#end
 	
-	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Shader, #end, count:Int = -1):Void
+	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Shader, #end count:Int = -1):Void
 	{
 		drawTiles (canvas.graphics, tileData, smooth, flags, #if !openfl_legacy shader:Dynamic, #end count);
 	}
