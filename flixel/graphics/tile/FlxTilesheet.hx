@@ -36,7 +36,7 @@ class FlxTilesheet extends Tilesheet
 	
 	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, #if !openfl_legacy shader:Shader, #end count:Int = -1):Void
 	{
-		drawTiles (canvas.graphics, tileData, smooth, flags, #if !openfl_legacy shader:Dynamic, #end count);
+		canvas.graphics.drawTiles (this, tileData, smooth, flags, #if !openfl_legacy shader, #end count);
 	}
 }
 
