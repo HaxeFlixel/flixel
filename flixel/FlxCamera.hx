@@ -899,8 +899,8 @@ class FlxCamera extends FlxBasic
 		
 		set_color(FlxColor.WHITE);
 		
+		initialZoom = (Zoom == 0) ? defaultZoom : Zoom;
 		zoom = Zoom; //sets the scale of flash sprite, which in turn loads flashOffset values
-		initialZoom = zoom;
 		
 		updateScrollRect();
 		updateFlashOffset();
