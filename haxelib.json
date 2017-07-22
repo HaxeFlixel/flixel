@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.4.0",
-    "releasenote": "New BlendModeShaders demo + minor fixes. See CHANGELOG.md for more details.",
+    "version": "2.4.1",
+    "releasenote": "Updated the FlxTween demo for Flixel 4.3.0.",
     "contributors": [ "haxeflixel" ],
     "dependencies": { "flixel": "" }
 }

@@ -1,3 +1,7 @@
+2.4.1 (July 22, 2017)
+------------------------------
+* Updated the FlxTween demo for Flixel 4.3.0 (#260)
+
 2.4.0 (May 15, 2017)
 ------------------------------
 * Added a BlendModeShaders demo (#255)
