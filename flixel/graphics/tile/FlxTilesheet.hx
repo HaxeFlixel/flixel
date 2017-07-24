@@ -111,8 +111,8 @@ class FlxTilesheet extends Tileset
 		{
 			tilemap = new Tilemap(0, 0, this);
 			_tilemap[canvas] = tilemap;
-			canvas.addChild(tilemap);
 		}
+		canvas.addChild(tilemap);
 		tilemap.shader = shader;
 		tilemap.visible = true;
 		tilemap.width = Lib.current.stage.stageWidth;
