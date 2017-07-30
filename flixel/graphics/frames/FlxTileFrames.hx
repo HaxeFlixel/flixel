@@ -128,16 +128,10 @@ class FlxTileFrames extends FlxFramesCollection
 	 */
 	public static function fromFrame(frame:FlxFrame, tileSize:FlxPoint, ?tileSpacing:FlxPoint):FlxTileFrames
 	{
-		var graphic:FlxGraphic = frame.parent;
-		// find TileFrames object, if there is one already
-		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, null, frame, tileSpacing);
-		if (tileFrames != null)
-			return tileFrames;
-		
-		// or create it, if there is no such object
 		tileSpacing = (tileSpacing != null) ? tileSpacing : FlxPoint.get(0, 0);
 		
-		tileFrames = new FlxTileFrames(graphic);
+		var graphic:FlxGraphic = frame.parent;
+		var tileFrames:FlxTileFrames = new FlxTileFrames(graphic);
 		tileFrames.atlasFrame = frame;
 		tileFrames.region = frame.frame;
 		tileFrames.tileSize = tileSize;
@@ -259,11 +253,6 @@ class FlxTileFrames extends FlxFramesCollection
 	public static function fromGraphic(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect,
 		?tileSpacing:FlxPoint):FlxTileFrames
 	{
-		// find TileFrames object, if there is one already
-		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(graphic, tileSize, region, null, tileSpacing);
-		if (tileFrames != null)
-			return tileFrames;
-		
 		// or create it, if there is no such object
 		if (region == null)
 		{
@@ -280,7 +269,7 @@ class FlxTileFrames extends FlxFramesCollection
 		
 		tileSpacing = (tileSpacing != null) ? tileSpacing : FlxPoint.get(0, 0);
 		
-		tileFrames = new FlxTileFrames(graphic);
+		var tileFrames = new FlxTileFrames(graphic);
 		tileFrames.region = region;
 		tileFrames.atlasFrame = null;
 		tileFrames.tileSize = tileSize;
@@ -459,82 +448,18 @@ class FlxTileFrames extends FlxFramesCollection
 		return result;
 	}
 	
-	/**
-	 * Searches `FlxTileFrames` object for a specified `FlxGraphic` object
-	 * which has the same parameters (frame size, frame spacings, region of image, etc.).
-	 * 
-	 * @param   graphic       `FlxGraphic` object to search `FlxTileFrames` for.
-	 * @param   tileSize      The size of tiles in TileFrames.
-	 * @param   region        The region of source image used for spritesheet generation.
-	 * @param   atlasFrame    Optional `FlxFrame` object used for spritesheet generation.
-	 * @param   tileSpacing   Spaces between tiles in spritesheet.
-	 * @return  `FlxTileFrames` object which corresponds to specified arguments.
-	 *          Could be null if there is no such `FlxTileFrames`.
-	 */
-	public static function findFrame(graphic:FlxGraphic, tileSize:FlxPoint, ?region:FlxRect, ?atlasFrame:FlxFrame,
-		?tileSpacing:FlxPoint, ?border:FlxPoint):FlxTileFrames
-	{
-		var tileFrames:Array<FlxTileFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.TILES);
-
-		for (sheet in tileFrames)
-		{
-			if (sheet.equals(tileSize, region, null, tileSpacing, border))
-				return sheet;
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * TileFrames comparison method. For internal use.
-	 */
-	public function equals(tileSize:FlxPoint, ?region:FlxRect, ?atlasFrame:FlxFrame, ?tileSpacing:FlxPoint, ?border:FlxPoint):Bool
-	{
-		if (this.region == null && this.atlasFrame == null)
-		{
-			return false;
-		}
-		
-		if (atlasFrame != null)
-		{
-			region = atlasFrame.frame;
-		}
-		
-		if (region == null)
-			region = FlxRect.weak(0, 0, parent.width, parent.height);
-		
-		if (tileSpacing == null)
-			tileSpacing = FlxPoint.weak();
-		
-		if (border == null)
-			border = FlxPoint.weak();
-		
-		return this.atlasFrame == atlasFrame && this.region.equals(region) &&
-			this.tileSize.equals(tileSize) && this.tileSpacing.equals(tileSpacing) &&
-			this.border.equals(border);
-	}
-	
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
 		var resultBorder:FlxPoint = FlxPoint.get().addPoint(this.border).addPoint(border);
 		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
-		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
-		if (tileFrames != null)
-		{
-			resultSize = FlxDestroyUtil.put(resultSize);
-			return tileFrames;
-		}
-		
-		tileFrames = new FlxTileFrames(parent, resultBorder);
+		var tileFrames:FlxTileFrames = new FlxTileFrames(parent, resultBorder);
 		tileFrames.region = FlxRect.get().copyFrom(region);
 		tileFrames.atlasFrame = atlasFrame;
 		tileFrames.tileSize = resultSize;
 		tileFrames.tileSpacing = FlxPoint.get().copyFrom(tileSpacing);
 		
 		for (frame in frames)
-		{
 			tileFrames.pushFrame(frame.setBorderTo(border));
-		}
 		
 		return tileFrames;
 	}

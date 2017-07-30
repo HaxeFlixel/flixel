@@ -57,9 +57,6 @@ class FlxFramesCollection implements IFlxDestroyable
 		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
 		framesHash = new Map<String, FlxFrame>();
-		
-		if (parent != null)
-			parent.addFrameCollection(this);
 	}
 	
 	/**

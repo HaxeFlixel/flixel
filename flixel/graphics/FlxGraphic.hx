@@ -29,7 +29,7 @@ class FlxGraphic implements IFlxDestroyable
 	public static var defaultPersist:Bool = false;
 	
 	/**
-	 * Creates and caches FlxGraphic object from openfl.Assets key string.
+	 * Creates and optionally caches FlxGraphic object from openfl.Assets key string.
 	 * 
 	 * @param   Source   `openfl.Assets` key string. For example: `"assets/image.png"`.
 	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
@@ -65,7 +65,7 @@ class FlxGraphic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Creates and caches `FlxGraphic` object from a specified `Class<BitmapData>`.
+	 * Creates and optionally caches `FlxGraphic` object from a specified `Class<BitmapData>`.
 	 * 
 	 * @param   Source   `Class<BitmapData>` to create `BitmapData` for `FlxGraphic` from.
 	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
@@ -74,8 +74,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  `FlxGraphic` object we just created.
 	 */
-	public static function fromClass(Source:Class<BitmapData>, Unique:Bool = false, ?Key:String,
-		Cache:Bool = true):FlxGraphic
+	public static function fromClass(Source:Class<BitmapData>, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
 		var bitmap:BitmapData = null;
 		if (!Cache)
@@ -97,7 +96,7 @@ class FlxGraphic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Creates and caches `FlxGraphic` object from specified `BitmapData` object.
+	 * Creates and optionally caches `FlxGraphic` object from specified `BitmapData` object.
 	 * 
 	 * @param   Source   `BitmapData` for `FlxGraphic` to use.
 	 * @param   Unique   Ensures that the `BitmapData` uses a new slot in the cache.
@@ -106,8 +105,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  `FlxGraphic` object we just created.
 	 */
-	public static function fromBitmapData(Source:BitmapData, Unique:Bool = false, ?Key:String,
-		Cache:Bool = true):FlxGraphic
+	public static function fromBitmapData(Source:BitmapData, Unique:Bool = false, ?Key:String, Cache:Bool = true):FlxGraphic
 	{
 		if (!Cache)
 			return createGraphic(Source, Key, Unique, Cache);
@@ -239,7 +237,7 @@ class FlxGraphic implements IFlxDestroyable
 	}
 	
 	/**
-	 * Creates and caches the specified `BitmapData` object.
+	 * Creates and optionally caches the specified `BitmapData` object.
 	 * 
 	 * @param   Bitmap   `BitmapData` to use as a graphic source for the new `FlxGraphic`.
 	 * @param   Key      Key to use as a cache key for the created `FlxGraphic`.
@@ -248,8 +246,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * @param   Cache    Whether to use graphic caching or not. Default value is `true`, which means automatic caching.
 	 * @return  Created `FlxGraphic` object.
 	 */
-	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false,
-		Cache:Bool = true):FlxGraphic
+	private static function createGraphic(Bitmap:BitmapData, Key:String, Unique:Bool = false, Cache:Bool = true):FlxGraphic
 	{
 		Bitmap = FlxGraphic.getBitmap(Bitmap, Unique);
 		var graphic:FlxGraphic = null;
@@ -333,18 +330,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * You should fill it yourself with one of `FlxAtlasFrames`'s static methods
 	 * (like `fromTexturePackerJson()`, `fromTexturePackerXml()`, etc).
 	 */
-	public var atlasFrames(get, null):FlxAtlasFrames;
-	
-	/**
-	 * Storage for all available frame collection of all types for this graphic object.
-	 */
-	private var frameCollections:Map<FlxFrameCollectionType, Array<Dynamic>>;
-	
-	/**
-	 * All types of frames collection which had been added to this graphic object.
-	 * It helps to avoid map iteration, which produces a lot of garbage.
-	 */
-	private var frameCollectionTypes:Array<FlxFrameCollectionType>;
+	public var atlasFrames:FlxAtlasFrames;
 	
 	/**
 	 * Shows whether this object unique in cache or not.
@@ -380,9 +366,6 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		key = Key;
 		persist = (Persist != null) ? Persist : defaultPersist;
-		
-		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
-		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 		bitmap = Bitmap;
 	}
 	
@@ -459,48 +442,10 @@ class FlxGraphic implements IFlxDestroyable
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
-		_imageFrame = null;	// no need to dispose _imageFrame since it exists in imageFrames
 		
-		var collections:Array<FlxFramesCollection>;
-		for (collectionType in frameCollectionTypes)
-		{
-			collections = cast frameCollections.get(collectionType);
-			FlxDestroyUtil.destroyArray(collections);
-		}
-		
-		frameCollections = null;
-		frameCollectionTypes = null;
-	}
-	
-	/**
-	 * Stores specified `FlxFrame` collection in internal map (this helps reduce object creation).
-	 * 
-	 * @param   collection   frame collection to store.
-	 */
-	public function addFrameCollection(collection:FlxFramesCollection):Void
-	{
-		if (collection.type != null)
-		{
-			var collections:Array<Dynamic> = getFramesCollections(collection.type);
-			collections.push(collection);
-		}
-	}
-	
-	/**
-	 * Searches frame collections of specified type for this `FlxGraphic` object.
-	 * 
-	 * @param   type   The type of frames collections to search for.
-	 * @return  Array of available frames collections of specified type for this object.
-	 */
-	public inline function getFramesCollections(type:FlxFrameCollectionType):Array<Dynamic>
-	{
-		var collections:Array<Dynamic> = frameCollections.get(type);
-		if (collections == null)
-		{
-			collections = new Array<FlxFramesCollection>();
-			frameCollections.set(type, collections);
-		}
-		return collections;
+		atlasFrames = FlxDestroyUtil.destroy(atlasFrames);
+		_imageFrame = null;
+	//	_imageFrame = FlxDestroyUtil.destroy(_imageFrame); // TODO: use this...
 	}
 	
 	/**
@@ -549,6 +494,7 @@ class FlxGraphic implements IFlxDestroyable
 	private function getBitmapFromSystem():BitmapData
 	{
 		var newBitmap:BitmapData = null;
+		
 		if (assetsClass != null)
 			newBitmap = FlxAssets.getBitmapFromClass(assetsClass);
 		else if (assetsKey != null)
@@ -562,11 +508,7 @@ class FlxGraphic implements IFlxDestroyable
 	
 	private inline function get_canBeDumped():Bool
 	{
-		#if (openfl < "4.0.0")
-		return assetsClass != null || assetsKey != null;
-		#else
-		return false;
-		#end
+		return (assetsClass != null || assetsKey != null);
 	}
 	
 	private function get_imageFrame():FlxImageFrame
@@ -575,11 +517,6 @@ class FlxGraphic implements IFlxDestroyable
 			_imageFrame = FlxImageFrame.fromRectangle(this, FlxRect.get(0, 0, bitmap.width, bitmap.height));
 		
 		return _imageFrame;
-	}
-	
-	private function get_atlasFrames():FlxAtlasFrames
-	{
-		return FlxAtlasFrames.findFrame(this, null);
 	}
 	
 	private function set_bitmap(value:BitmapData):BitmapData

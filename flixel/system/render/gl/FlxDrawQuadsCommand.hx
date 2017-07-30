@@ -346,8 +346,17 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 	
 	public inline function addVertex(x:Float = 0, y:Float = 0, u:Float = 0, v:Float = 0, color:Int = FlxColor.WHITE, colorOffset:FlxColor = FlxColor.TRANSPARENT):Void
 	{
-		positions[vertexIndex++] = x;
-		positions[vertexIndex++] = y;
+		if (roundPixels)
+		{
+			positions[vertexIndex++] = Std.int(x);
+			positions[vertexIndex++] = Std.int(y);
+		}
+		else
+		{
+			positions[vertexIndex++] = x;
+			positions[vertexIndex++] = y;
+		}
+		
 		positions[vertexIndex++] = u;
 		positions[vertexIndex++] = v;
 		colors[vertexIndex++] = color;

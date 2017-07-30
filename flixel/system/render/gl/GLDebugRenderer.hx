@@ -53,14 +53,20 @@ class GLDebugRenderer extends GLDisplayObject
 	 */
 	public function rect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1):Void
 	{
+		x = Std.int(x);
+		y = Std.int(y);
+		width = Std.int(width);
+		height = Std.int(height);
+		
 		var ht = thickness / 2,
 			x2 = x + width,
 			y2 = y + height;
+			
 		// offset values to create an inline border
-		line(x, y + ht, x2, y + ht, color, thickness);
-		line(x2 - ht, y, x2 - ht, y2, color, thickness);
-		line(x2, y2 - ht, x, y2 - ht, color, thickness);
-		line(x + ht, y2, x + ht, y, color, thickness);
+		line(x - ht, y, x2 - ht, y, color, thickness);
+		line(x2, y - ht, x2, y2 - ht, color, thickness);
+		line(x2 + ht, y2, x + ht, y2, color, thickness);
+		line(x, y2 + ht, x, y + ht, color, thickness);
 	}
 
 	/**

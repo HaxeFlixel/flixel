@@ -41,7 +41,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			return null;
 		
 		// No need to parse data again
-		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic);
+		var frames:FlxAtlasFrames = graphic.atlasFrames;
 		if (frames != null)
 			return frames;
 		
@@ -132,7 +132,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			return null;
 		
 		// No need to parse data again
-		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic);
+		var frames:FlxAtlasFrames = graphic.atlasFrames;
 		if (frames != null)
 			return frames;
 		
@@ -240,7 +240,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			return null;
 		
 		// No need to parse data again
-		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic);
+		var frames:FlxAtlasFrames = graphic.atlasFrames;
 		if (frames != null)
 			return frames;
 		
@@ -305,7 +305,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			return null;
 		
 		// No need to parse data again
-		var frames = FlxAtlasFrames.findFrame(graphic);
+		var frames = graphic.atlasFrames;
 		if (frames != null)
 			return frames;
 		
@@ -358,7 +358,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			return null;
 		
 		// No need to parse data again
-		var frames = FlxAtlasFrames.findFrame(graphic);
+		var frames = graphic.atlasFrames;
 		if (frames != null)
 			return frames;
 		
@@ -390,35 +390,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 		return frames;
 	}
 	
-	/**
-	 * Returns the `FlxAtlasFrame` of the specified `FlxGraphic` object.
-	 * 
-	 * @param   graphic   `FlxGraphic` object to find the `FlxAtlasFrames` collection for.
-	 * @return  `FlxAtlasFrames` collection for the specified `FlxGraphic` object
-	 *          Could be `null` if `FlxGraphic` doesn't have it yet.
-	 */
-	public static function findFrame(graphic:FlxGraphic, ?border:FlxPoint):FlxAtlasFrames
-	{
-		if (border == null)
-			border = FlxPoint.weak();
-		
-		var atlasFrames:Array<FlxAtlasFrames> = cast graphic.getFramesCollections(FlxFrameCollectionType.ATLAS);
-		
-		for (atlas in atlasFrames)
-			if (atlas.border.equals(border))
-				return atlas;
-		
-		return null;
-	}
-	
 	override public function addBorder(border:FlxPoint):FlxAtlasFrames
 	{
 		var resultBorder = FlxPoint.weak().addPoint(this.border).addPoint(border);
-		var atlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
-		if (atlasFrames != null)
-			return atlasFrames;
-		
-		atlasFrames = new FlxAtlasFrames(parent, resultBorder);
+		var atlasFrames = new FlxAtlasFrames(parent, resultBorder);
 		
 		for (frame in frames)
 			atlasFrames.pushFrame(frame.setBorderTo(border));
@@ -429,5 +404,5 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 typedef TexturePackerObject = 
 {
-	frames : Dynamic
+	frames:Dynamic
 }

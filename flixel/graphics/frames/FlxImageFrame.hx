@@ -40,13 +40,7 @@ class FlxImageFrame extends FlxFramesCollection
 		if (graphic == null || frameRect == null)
 			return null;
 		
-		// find ImageFrame, if there is one already
-		var imageFrame = FlxImageFrame.findEmptyFrame(graphic, frameRect);
-		if (imageFrame != null)
-			return imageFrame;
-		
-		// or create it, if there is no such object
-		imageFrame = new FlxImageFrame(graphic);
+		var imageFrame = new FlxImageFrame(graphic);
 		imageFrame.addEmptyFrame(frameRect);
 		return imageFrame;
 	}
@@ -61,12 +55,7 @@ class FlxImageFrame extends FlxFramesCollection
 	{
 		var graphic:FlxGraphic = source.parent;
 		var rect:FlxRect = source.frame;
-		
-		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, rect);
-		if (imageFrame != null)
-			return imageFrame;
-		
-		imageFrame = new FlxImageFrame(graphic);
+		var imageFrame:FlxImageFrame = new FlxImageFrame(graphic);
 		imageFrame.addSpriteSheetFrame(rect.copyTo(FlxRect.get()));
 		return imageFrame;
 	}
@@ -94,18 +83,12 @@ class FlxImageFrame extends FlxFramesCollection
 		if (graphic == null)
 			return null;
 		
-		// find ImageFrame, if there is one already
 		var checkRegion:FlxRect = region;
 		
 		if (checkRegion == null)
 			checkRegion = FlxRect.weak(0, 0, graphic.width, graphic.height);
 		
-		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(graphic, checkRegion);
-		if (imageFrame != null)
-			return imageFrame;
-		
-		// or create it, if there is no such object
-		imageFrame = new FlxImageFrame(graphic);
+		var imageFrame:FlxImageFrame = new FlxImageFrame(graphic);
 		
 		if (region == null)
 		{
@@ -179,69 +162,10 @@ class FlxImageFrame extends FlxFramesCollection
 		return FlxImageFrame.fromBitmapAddSpacesAndBorders(bitmap, border);
 	}
 	
-	/**
-	 * Searches `FlxImageFrame` object for specified `FlxGraphic` object which have the same frame rectangle.
-	 * 
-	 * @param    graphic     `FlxGraphic` object to search the `FlxImageFrame` for.
-	 * @param    frameRect   `FlxImageFrame` object should have frame with
-	 *                        the same position and dimensions as specified with this argument.
-	 * @return   `FlxImageFrame` object which corresponds to specified rectangle.
-	 *           Could be `null` if there is no such `FlxImageFrame`.
-	 */
-	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, ?frameBorder:FlxPoint):FlxImageFrame
-	{
-		if (frameBorder == null)
-			frameBorder = FlxPoint.weak();
-		
-		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-		for (imageFrame in imageFrames)
-		{
-			if (imageFrame.equals(frameRect, frameBorder) && imageFrame.frame.type != FlxFrameType.EMPTY)
-				return imageFrame;
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * `FlxImageFrame` comparison method. For internal use.
-	 */
-	private inline function equals(rect:FlxRect, border:FlxPoint):Bool
-	{
-		return rect.equals(frame.frame) && border.equals(this.border);
-	}
-	
-	/**
-	 * Searches `FlxImageFrame` object with the empty frame which have specified size.
-	 * 
-	 * @param   graphic     `FlxGraphic` object to search `FlxImageFrame` for.
-	 * @param   frameRect   The size of empty frame to search for.
-	 * @return  `FlxImageFrame` with empty frame.
-	 */
-	public static function findEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
-	{
-		var imageFrames:Array<FlxImageFrame> = cast graphic.getFramesCollections(FlxFrameCollectionType.IMAGE);
-
-		for (imageFrame in imageFrames)
-		{
-			var frame = imageFrame.frame;
-			if (frame.sourceSize.x == frameRect.width &&
-				frame.sourceSize.y == frameRect.height && frame.type == FlxFrameType.EMPTY)
-				return imageFrame;
-		}
-		
-		return null;
-	}
-	
 	override public function addBorder(border:FlxPoint):FlxImageFrame 
 	{
 		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
-		
-		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(parent, frame.frame, resultBorder);
-		if (imageFrame != null)
-			return imageFrame;
-		
-		imageFrame = new FlxImageFrame(parent, resultBorder);
+		var imageFrame:FlxImageFrame = new FlxImageFrame(parent, resultBorder);
 		imageFrame.pushFrame(frame.setBorderTo(border));
 		return imageFrame;
 	}
