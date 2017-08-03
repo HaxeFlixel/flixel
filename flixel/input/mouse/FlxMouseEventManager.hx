@@ -510,11 +510,11 @@ class FlxMouseEventManager extends FlxBasic
 		}
 		
 		// MouseWheel - Look for objects with mouse over when user spins the mouse wheel.
-		for (current in currentOverObjects)
+		if (FlxG.mouse.wheel != 0)
 		{
-			if (current.onMouseWheel != null && current.object.exists && current.object.visible)
+			for (current in currentOverObjects)
 			{
-				if (FlxG.mouse.wheel != 0)
+				if (current.onMouseWheel != null && current.object.exists && current.object.visible)
 				{
 					current.onMouseWheel(current.object);
 				}
