@@ -37,8 +37,17 @@ class FlxMouseEventManager extends FlxBasic
 	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
 	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
 	private static var _mouseDownObjects:Array<ObjectMouseData<FlxObject>> = [];
+	private static var _mouseClickedObjects:Array<ObjectMouseData<FlxObject>> = [];
+	
+	private static var _mouseClickedTime:Int = -1;
 
 	private static var _point:FlxPoint = FlxPoint.get();
+	
+	/**
+	 * The maximum amount of time between two clicks that is considered a double click, in milliseconds.
+	 * @since 4.4.0
+	 */
+	public static var MAX_DOUBLE_CLICK_DELAY:Int = 500;
 	
 	/**
 	 * As alternative you can call FlxMouseEventManager.init().
@@ -114,6 +123,7 @@ class FlxMouseEventManager extends FlxBasic
 		_registeredObjects.splice(0, _registeredObjects.length);
 		_mouseOverObjects = [];
 		_mouseDownObjects = [];
+		_mouseClickedObjects = [];
 	}
 
 	/**
@@ -169,7 +179,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *
 	 * @param   OnMouseClick    Callback when mouse is pressed and released over this object.
 	 *                      	Must have Object as argument - e.g. onMouseClick(object:FlxObject).
-	 * @since 4.3.0
+	 * @since 4.4.0
 	 */
 	public static function setMouseClickCallback<T:FlxObject>(Object:T, OnMouseClick:T->Void):Void
 	{
@@ -178,6 +188,23 @@ class FlxMouseEventManager extends FlxBasic
 		if (reg != null)
 		{
 			reg.onMouseClick = OnMouseClick;
+		}
+	}
+	
+	/**
+	 * Sets the mouseDoubleClick callback associated with an object.
+	 *
+	 * @param   OnMouseDoubleClick    	Callback when mouse is pressed and released over this object twice.
+	 *                      			Must have Object as argument - e.g. onMouseDoubleClick(object:FlxObject).
+	 * @since 4.4.0
+	 */
+	public static function setMouseDoubleClickCallback<T:FlxObject>(Object:T, OnMouseDoubleClick:T->Void):Void
+	{
+		var reg = getRegister(Object);
+		
+		if (reg != null)
+		{
+			reg.onMouseDoubleClick = OnMouseDoubleClick;
 		}
 	}
 	
@@ -218,7 +245,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *
 	 * @param   OnMouseMove   Callback when the mouse is moved while over this object.
 	 *                        Must have Object as argument - e.g. onMouseMove(object:FlxObject).
-	 * @since 4.3.0
+	 * @since 4.4.0
 	 */
 	public static function setMouseMoveCallback<T:FlxObject>(Object:T, OnMouseMove:T->Void):Void
 	{
@@ -235,7 +262,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *
 	 * @param   OnMouseWheel  Callback when the mouse wheel is moved while over this object.
 	 *                        Must have Object as argument - e.g. onMouseWheel(object:FlxObject).
-	 * @since 4.3.0
+	 * @since 4.4.0
 	 */
 	public static function setMouseWheelCallback<T:FlxObject>(Object:T, OnMouseWheel:T->Void):Void
 	{
@@ -375,6 +402,7 @@ class FlxMouseEventManager extends FlxBasic
 		_registeredObjects = new Array<ObjectMouseData<FlxObject>>();
 		_mouseOverObjects = new Array<ObjectMouseData<FlxObject>>();
 		_mouseDownObjects = new Array<ObjectMouseData<FlxObject>>();
+		_mouseClickedObjects = new Array<ObjectMouseData<FlxObject>>();
 
 		FlxG.signals.stateSwitched.add(removeAll);
 	}
@@ -465,12 +493,12 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-		// MouseClick - Look for objects with mouse down first.
+		// MouseClick/MouseDoubleClick - Look for objects with mouse down first.
 		if (FlxG.mouse.justPressed)
 		{
 			for (current in currentOverObjects)
 			{
-				if (current.onMouseClick != null && current.object.exists && current.object.visible)
+				if ((current.onMouseClick != null || current.onMouseDoubleClick != null) && current.object.exists && current.object.visible)
 				{
 					_mouseDownObjects.push(current);
 				}
@@ -493,13 +521,44 @@ class FlxMouseEventManager extends FlxBasic
 		}
 		
 		// MouseClick - Look for objects that had mouse down and now have mouse over when the user releases the mouse button.
+		// DoubleClick - Look for objects that were recently clicked and have just been clicked again.
+		if (_mouseClickedObjects.length > 0 && FlxG.game.ticks - _mouseClickedTime > MAX_DOUBLE_CLICK_DELAY)
+		{
+			_mouseClickedObjects = [];
+		}
+		
 		if (FlxG.mouse.justReleased)
 		{
+			_mouseClickedTime = FlxG.game.ticks;
+			
+			var previousClickedObjects = _mouseClickedObjects;
+			
+			if (_mouseClickedObjects.length > 0)
+			{
+				_mouseClickedObjects = [];
+			}
+			
 			for (down in _mouseDownObjects)
 			{
-				if (down.onMouseClick != null && down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
+				if (down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
 				{
-					down.onMouseClick(down.object);
+					if (down.onMouseClick != null)
+					{
+						down.onMouseClick(down.object);
+					}
+					
+					if (down.onMouseDoubleClick != null)
+					{
+						if (getRegister(down.object, previousClickedObjects) != null)
+						{
+							down.onMouseDoubleClick(down.object);
+						}
+						
+						else
+						{
+							_mouseClickedObjects.push(down);
+						}
+					}
 				}
 			}
 			
@@ -529,6 +588,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		_mouseOverObjects = null;
 		_mouseDownObjects = null;
+		_mouseClickedObjects = null;
 		_registeredObjects = FlxDestroyUtil.destroyArray(_registeredObjects);
 	}
 
@@ -598,6 +658,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 	public var onMouseDown:T->Void;
 	public var onMouseUp:T->Void;
 	public var onMouseClick:T->Void;
+	public var onMouseDoubleClick:T->Void;
 	public var onMouseOver:T->Void;
 	public var onMouseOut:T->Void;
 	public var onMouseMove:T->Void;
@@ -630,6 +691,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 		onMouseDown = null;
 		onMouseUp = null;
 		onMouseClick = null;
+		onMouseDoubleClick = null;
 		onMouseOver = null;
 		onMouseOut = null;
 		onMouseMove = null;

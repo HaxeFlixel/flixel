@@ -60,7 +60,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var useSystemCursor(default, set):Bool = false;
 	/**
 	 * Check to see if the mouse has just been moved.
-	 * @since 4.3.0
+	 * @since 4.4.0
 	 */
 	public var justMoved(get, never):Bool;
 	/**
