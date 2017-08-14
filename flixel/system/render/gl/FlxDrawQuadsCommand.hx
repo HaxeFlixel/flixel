@@ -17,9 +17,9 @@ import flixel.graphics.shaders.FlxShader;
 #if FLX_RENDER_GL
 import flixel.graphics.shaders.quads.FlxColoredShader;
 import flixel.graphics.shaders.quads.FlxTexturedShader;
+import lime.graphics.opengl.GLBuffer;
 import lime.utils.UInt16Array;
 import lime.utils.UInt32Array;
-import openfl.gl.GLBuffer;
 import lime.utils.ArrayBuffer;
 import lime.utils.Float32Array;
 

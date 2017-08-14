@@ -56,24 +56,11 @@ class GLFilterManager extends AbstractFilterManager
 	
 	override public function pushObject(object:DisplayObject):Shader 
 	{	
-		
 		if (object.__filters != null && object.__filters.length > 0)
 		{
 			renderer.getRenderTarget(true);
 			filterDepth++;
 		}
-		
-		/*
-		if (object.__filters != null && object.__filters.length > 0) 
-		{	
-			if (object.__filters.length == 1 && object.__filters[0].__numPasses == 0) 
-				return object.__filters[0].__initShader(renderSession, 0);
-			else
-				renderer.getRenderTarget(true);	
-			
-			filterDepth++;
-		}
-		*/
 		
 		return renderSession.shaderManager.defaultShader;
 	}
@@ -90,32 +77,26 @@ class GLFilterManager extends AbstractFilterManager
 				
 				for (filter in object.__filters)
 				{
-					if (filter.__numPasses > 0)
-					{
-						for (i in 0...filter.__numPasses)
-						{
-							currentTarget = renderer.currentRenderTarget;
-							renderer.getRenderTarget(true);
-							shader = filter.__initShader(renderSession, i);
-							
-							renderPass(currentTarget, shader);
-						}
-					}
-					else
-					{
+					var i:Int = 0;
+					
+					do {
 						currentTarget = renderer.currentRenderTarget;
 						renderer.getRenderTarget(true);
-						shader = filter.__initShader(renderSession, 0);
+						shader = filter.__initShader(renderSession, i);
 						
 						renderPass(currentTarget, shader);
+						
+						i++;
 					}
+					while (i < filter.__numPasses);
 					
 					// TODO: Properly handle filter-within-filter rendering
 					
 					filterDepth--;
+					currentTarget = renderer.currentRenderTarget;
 					renderer.getRenderTarget(filterDepth > 0);
 					
-					renderPass(renderer.currentRenderTarget, renderSession.shaderManager.defaultShader);
+					renderPass(currentTarget, renderSession.shaderManager.defaultShader);
 				}
 			}
 			else
@@ -127,13 +108,17 @@ class GLFilterManager extends AbstractFilterManager
 	
 	private function renderPass(target:BitmapData, shader:Shader):Void
 	{
+		if (target == null || shader == null) 
+			return;
+		
 		shader.data.uImage0.input = target;
 		shader.data.uImage0.smoothing = renderSession.allowSmoothing && renderSession.upscaled;
 		shader.data.uMatrix.value = renderer.getMatrix(matrix);
 		
 		renderSession.shaderManager.setShader(shader);
 		
-		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0));
+	//	gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0, null)); // TODO: fix this line...
+		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0)); // TODO: fix this line...
 		gl.vertexAttribPointer(shader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
 		gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
 		gl.vertexAttribPointer(shader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);

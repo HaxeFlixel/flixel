@@ -4,10 +4,10 @@ import flixel.graphics.shaders.FlxShader;
 import flixel.system.render.gl.GLUtils;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
+import lime.graphics.opengl.GLProgram;
+import lime.utils.Float32Array;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.gl.GLProgram;
-import openfl.utils.Float32Array;
 
 #if (openfl >= "4.0.0")
 import openfl.display.ShaderData;
