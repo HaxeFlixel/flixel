@@ -357,18 +357,6 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-		// MouseOver - Look for new objects with mouse over.
-		for (current in currentOverObjects)
-		{
-			if (current.onMouseOver != null)
-			{
-				if (current.object.exists && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
-				{
-					current.onMouseOver(current.object);
-				}
-			}
-		}
-		
 		// MouseOut - Look for objects that lost mouse over.
 		for (over in _mouseOverObjects)
 		{
@@ -379,6 +367,18 @@ class FlxMouseEventManager extends FlxBasic
 				if (!over.object.exists || !over.object.visible || getRegister(over.object, currentOverObjects) == null)
 				{
 					over.onMouseOut(over.object);
+				}
+			}
+		}
+		
+		// MouseOver - Look for new objects with mouse over.
+		for (current in currentOverObjects)
+		{
+			if (current.onMouseOver != null)
+			{
+				if (current.object.exists && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
+				{
+					current.onMouseOver(current.object);
 				}
 			}
 		}
