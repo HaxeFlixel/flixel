@@ -47,7 +47,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * The maximum amount of time between two clicks that is considered a double click, in milliseconds.
 	 * @since 4.4.0
 	 */
-	public static var MAX_DOUBLE_CLICK_DELAY:Int = 500;
+	public static var maxDoubleClickDelay:Int = 500;
 	
 	/**
 	 * As alternative you can call FlxMouseEventManager.init().
@@ -522,7 +522,7 @@ class FlxMouseEventManager extends FlxBasic
 		
 		// MouseClick - Look for objects that had mouse down and now have mouse over when the user releases the mouse button.
 		// DoubleClick - Look for objects that were recently clicked and have just been clicked again.
-		if (_mouseClickedObjects.length > 0 && FlxG.game.ticks - _mouseClickedTime > MAX_DOUBLE_CLICK_DELAY)
+		if (_mouseClickedObjects.length > 0 && FlxG.game.ticks - _mouseClickedTime > maxDoubleClickDelay)
 		{
 			_mouseClickedObjects = [];
 		}
