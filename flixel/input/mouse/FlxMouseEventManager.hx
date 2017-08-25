@@ -77,7 +77,16 @@ class FlxMouseEventManager extends FlxBasic
 			newReg.sprite = cast Object;
 		}
 		
-		_registeredObjects.unshift(cast newReg);
+		if (!MouseChildren)
+		{
+			_registeredObjects.unshift(cast newReg);
+		}
+		
+		else
+		{
+			_registeredObjects.push(cast newReg);
+		}
+		
 		return Object;
 	}
 	
@@ -235,9 +244,20 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		var reg = getRegister(Object);
 		
-		if (reg != null)
+		if (reg != null && reg.mouseChildren != MouseChildren)
 		{
 			reg.mouseChildren = MouseChildren;
+			_registeredObjects.remove(cast reg);
+			
+			if (!MouseChildren)
+			{
+				_registeredObjects.unshift(cast reg);
+			}
+			
+			else
+			{
+				_registeredObjects.push(cast reg);
+			}
 		}
 	}
 	
