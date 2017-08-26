@@ -1,0 +1,247 @@
+{
+	"folders": [
+		{
+			"path": "Arcade/Breakout"
+		},
+		{
+			"path": "Arcade/Flappybalt"
+		},
+		{
+			"path": "Arcade/Flixius"
+		},
+		{
+			"path": "Arcade/FlxInvaders"
+		},
+		{
+			"path": "Arcade/FlxPongApi"
+		},
+		{
+			"path": "Arcade/FlxSnake"
+		},
+		{
+			"path": "Arcade/FlxTeroids"
+		},
+		{
+			"path": "Arcade/MinimalistTD"
+		},
+		{
+			"path": "Editors/FlxPexParser"
+		},
+		{
+			"path": "Editors/FlxSpine"
+		},
+		{
+			"path": "Editors/TexturePackerAtlas"
+		},
+		{
+			"path": "Editors/TiledEditor"
+		},
+		{
+			"path": "Effects/BlendModes"
+		},
+		{
+			"path": "Effects/BlendModeShaders"
+		},
+		{
+			"path": "Effects/DynamicShadows"
+		},
+		{
+			"path": "Effects/Filters"
+		},
+		{
+			"path": "Effects/FloodFill"
+		},
+		{
+			"path": "Effects/FlxBloom"
+		},
+		{
+			"path": "Effects/FlxBlur"
+		},
+		{
+			"path": "Effects/FlxClothSprite"
+		},
+		{
+			"path": "Effects/FlxEffectSprite"
+		},
+		{
+			"path": "Effects/FlxFloodFill"
+		},
+		{
+			"path": "Effects/FlxSkewedSprite"
+		},
+		{
+			"path": "Effects/FlxSpriteFilters"
+		},
+		{
+			"path": "Effects/FlxTrailArea"
+		},
+		{
+			"path": "Effects/FlxTween"
+		},
+		{
+			"path": "Effects/MosaicEffect"
+		},
+		{
+			"path": "Effects/Parallax"
+		},
+		{
+			"path": "Effects/PostProcess"
+		},
+		{
+			"path": "Effects/Transitions"
+		},
+		{
+			"path": "Features/CollisionAndGrouping"
+		},
+		{
+			"path": "Features/Colors"
+		},
+		{
+			"path": "Features/FlxCamera"
+		},
+		{
+			"path": "Features/FlxFSM"
+		},
+		{
+			"path": "Features/FlxNape"
+		},
+		{
+			"path": "Features/FlxNapeTerrain"
+		},
+		{
+			"path": "Features/FlxNapeTilemap"
+		},
+		{
+			"path": "Features/FlxPieDial"
+		},
+		{
+			"path": "Features/FlxScene"
+		},
+		{
+			"path": "Features/FlxShape"
+		},
+		{
+			"path": "Features/FlxSound"
+		},
+		{
+			"path": "Features/HeatmapPathfinding"
+		},
+		{
+			"path": "Features/Particles"
+		},
+		{
+			"path": "Features/Pathfinding"
+		},
+		{
+			"path": "Features/Replay"
+		},
+		{
+			"path": "Features/Save"
+		},
+		{
+			"path": "Features/ScaleModes"
+		},
+		{
+			"path": "Features/SetTileProperties"
+		},
+		{
+			"path": "Features/SplitScreen"
+		},
+		{
+			"path": "Features/SubState"
+		},
+		{
+			"path": "Features/Tilemap"
+		},
+		{
+			"path": "Input/FlxAccelerometer"
+		},
+		{
+			"path": "Input/FlxMouseEventManager"
+		},
+		{
+			"path": "Input/GamepadTest"
+		},
+		{
+			"path": "Input/GridMovement"
+		},
+		{
+			"path": "Input/Multitouch"
+		},
+		{
+			"path": "Other/BSPMapGen"
+		},
+		{
+			"path": "Other/Calculator"
+		},
+		{
+			"path": "Other/FlxAsyncLoop"
+		},
+		{
+			"path": "Other/FlxAtlas"
+		},
+		{
+			"path": "Other/FlxCollisions"
+		},
+		{
+			"path": "Other/FrameCollections"
+		},
+		{
+			"path": "Performance/FlxBunnyMark"
+		},
+		{
+			"path": "Performance/FlxRandom"
+		},
+		{
+			"path": "Performance/NeonVector"
+		},
+		{
+			"path": "Performance/PixelPerfectCollision"
+		},
+		{
+			"path": "Platformers/EZPlatformer"
+		},
+		{
+			"path": "Platformers/FlipRotationAnimationTiles"
+		},
+		{
+			"path": "Platformers/FlxCaveGenerator"
+		},
+		{
+			"path": "Platformers/FlxTilemapExt"
+		},
+		{
+			"path": "Platformers/Mode"
+		},
+		{
+			"path": "Platformers/ProjectJumper"
+		},
+		{
+			"path": "Platformers/Revenge"
+		},
+		{
+			"path": "Tutorials/TurnBasedRPG"
+		},
+		{
+			"path": "UserInterface/Cursor"
+		},
+		{
+			"path": "UserInterface/FileBrowse"
+		},
+		{
+			"path": "UserInterface/FlxBitmapText"
+		},
+		{
+			"path": "UserInterface/FlxTextFormat"
+		},
+		{
+			"path": "UserInterface/FlxTypeText"
+		},
+		{
+			"path": "UserInterface/RPGInterface"
+		},
+		{
+			"path": "UserInterface/Tooltips"
+		}
+	]
+}
