@@ -14,6 +14,7 @@ import openfl.display.BitmapData;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLBuffer;
 import lime.utils.Float32Array;
+import openfl.geom.Rectangle;
 
 @:access(openfl.display.BitmapData)
 class FlxRenderTexture implements IFlxDestroyable
@@ -131,13 +132,16 @@ class FlxRenderTexture implements IFlxDestroyable
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		
-		// TODO: optimize this block of code (in terms of memory)...
-		bitmap = new BitmapData(width, height, true, 0);
-		bitmap.readable = false;
+		bitmap = new BitmapData(0, 0, true, 0);
+		bitmap.width = width;
+		bitmap.height = height;
+		bitmap.rect = new Rectangle(0, 0, width, height);
+		
 		bitmap.__texture = texture;
 		bitmap.__textureContext = gl;
+		bitmap.__isValid = true;
 		bitmap.image = null;
-		// end of TODO...
+		bitmap.readable = false;
 		
 		graphic = FlxGraphic.fromBitmapData(bitmap, false, null, false);
 		
