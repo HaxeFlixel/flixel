@@ -26,8 +26,6 @@ class FlxRenderTexture implements IFlxDestroyable
 	public var bitmap(default, null):BitmapData;
 	public var graphic(default, null):FlxGraphic;
 	
-	public var buffer:GLBuffer;
-	
 	public var width(default, null):Int = 0;
 	public var height(default, null):Int = 0;
 	public var powerOfTwo(default, null):Bool = false;
@@ -35,8 +33,6 @@ class FlxRenderTexture implements IFlxDestroyable
 	
 	public var actualWidth(default, null):Int = 0;
 	public var actualHeight(default, null):Int = 0;
-	
-	public var uvData(default, null):FlxRect;
 	
 	public var clearBeforeRender:Bool = true;
 	
@@ -106,9 +102,6 @@ class FlxRenderTexture implements IFlxDestroyable
 		actualWidth = pow2W;
 		actualHeight = pow2H;
 		
-		createUVs();
-		createBuffer();
-		
 		if (lastW == pow2W && lastH == pow2H) return;
 		
 		GL.bindFramebuffer(GL.FRAMEBUFFER, frameBuffer);
@@ -138,11 +131,13 @@ class FlxRenderTexture implements IFlxDestroyable
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		
+		// TODO: optimize this block of code (in terms of memory)...
 		bitmap = new BitmapData(width, height, true, 0);
 		bitmap.readable = false;
 		bitmap.__texture = texture;
 		bitmap.__textureContext = gl;
 		bitmap.image = null;
+		// end of TODO...
 		
 		graphic = FlxGraphic.fromBitmapData(bitmap, false, null, false);
 		
@@ -182,37 +177,6 @@ class FlxRenderTexture implements IFlxDestroyable
 	{	
 		GL.clearColor(clearRed, clearGreen, clearBlue, clearAlpha);
 		GL.clear(mask == null ? GL.COLOR_BUFFER_BIT : mask);
-	}
-	
-	private function createUVs():Void
-	{	
-		if (uvData == null) uvData = FlxRect.get();
-		var w = width / actualWidth;
-		var h = height / actualHeight;
-		uvData.x = 0;
-		uvData.y = 0;
-		uvData.width = w;
-		uvData.height = h;
-	}
-	
-	private function createBuffer():Void
-	{
-		var alpha:Float = 1.0;
-		
-		var bufferData:Float32Array = new Float32Array([
-				width,	height,	0,	uvData.width,	uvData.height,	alpha,
-				0,		height, 0,	0,				uvData.height,	alpha,
-				width, 	0, 		0,	uvData.width,	0,				alpha,
-				0, 		0, 		0,	0,				0,				alpha
-		]);
-		
-		if (buffer != null)
-			GL.deleteBuffer(buffer);
-		
-		buffer = GL.createBuffer();
-		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-		GL.bufferData(GL.ARRAY_BUFFER, bufferData.byteLength, bufferData, GL.STATIC_DRAW);
-		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 	}
 	
 	private inline function powOfTwo(value:Int):Int

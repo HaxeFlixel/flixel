@@ -36,7 +36,7 @@ class FlxRenderTarget extends FlxSprite
 	
 	/**
 	 * An array of cameras used for rendering of sprites.
-	 * Always contain only on camera object - `renderCamera`.
+	 * Always contain only one camera object - `renderCamera`.
 	 */
 	@:allow(flixel.FlxSprite)
 	private var renderCameras(default, null):Array<FlxCamera>;

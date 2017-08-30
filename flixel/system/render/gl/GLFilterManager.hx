@@ -48,7 +48,7 @@ class GLFilterManager extends AbstractFilterManager
 			numPasses = object.__filters.length;
 			
 			for (filter in object.__filters)
-				numPasses += (filter.__numPasses > 0) ? (filter.__numPasses - 1) : 0;
+				numPasses += (filter.__numShaderPasses > 0) ? (filter.__numShaderPasses - 1) : 0;
 		}
 		
 		return numPasses;
@@ -88,7 +88,7 @@ class GLFilterManager extends AbstractFilterManager
 						
 						i++;
 					}
-					while (i < filter.__numPasses);
+					while (i < filter.__numShaderPasses);
 					
 					// TODO: Properly handle filter-within-filter rendering
 					
@@ -115,13 +115,24 @@ class GLFilterManager extends AbstractFilterManager
 		shader.data.uImage0.smoothing = renderSession.allowSmoothing && renderSession.upscaled;
 		shader.data.uMatrix.value = renderer.getMatrix(matrix);
 		
-		renderSession.shaderManager.setShader(shader);
+		// for the last render pass with default shader we need to not to use color transform
+		// and need to declare this explicitly, so the shader would work correctly.
+		if (shader == renderSession.shaderManager.defaultShader)
+		{
+			if (shader.data.uColorTransform.value == null) 
+				shader.data.uColorTransform.value = [];
+			
+			shader.data.uColorTransform.value[0] = false;
+		}
 		
-	//	gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0, null)); // TODO: fix this line...
-		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0)); // TODO: fix this line...
-		gl.vertexAttribPointer(shader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
-		gl.vertexAttribPointer(shader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
-		gl.vertexAttribPointer(shader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
+		renderSession.shaderManager.setShader(shader);
+		renderSession.shaderManager.updateShader(shader);
+		
+		gl.bindBuffer(gl.ARRAY_BUFFER, target.getBuffer(gl, 1.0, null));
+		
+		gl.vertexAttribPointer(shader.data.aPosition.index,	3, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 0);
+		gl.vertexAttribPointer(shader.data.aTexCoord.index,	2, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
+		gl.vertexAttribPointer(shader.data.aAlpha.index,	1, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
 		
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 	}

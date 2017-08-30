@@ -18,6 +18,8 @@ import openfl._internal.renderer.opengl.GLRenderer;
 
 using flixel.util.FlxColorTransformUtil;
 
+@:access(openfl.geom.ColorTransform)
+
 /**
  * Display object for actual rendering for openfl 4 in tile render mode.
  * Huge part of it is taken from HaxePunk fork by @Yanrishatum. 
@@ -113,36 +115,54 @@ class CanvasGL extends GLDisplayObject
 	
 	override public function __renderGL(renderSession:RenderSession):Void 
 	{
-		var gl:GLRenderContext = renderSession.gl;
-		var renderer:GLRenderer = cast renderSession.renderer;
-		
-		// code from GLBitmap
-		renderSession.blendModeManager.setBlendMode(blendMode);
-		renderSession.maskManager.pushObject(this);
-		
-		var renderTransform:Matrix = __renderTransform;
-		colorShader.init(__worldColorTransform);
-		renderSession.filterManager.pushObject(this);
-		colorShader.data.uMatrix.value = renderer.getMatrix(renderTransform);
-		
-		renderSession.shaderManager.setShader(null);
-		renderSession.shaderManager.setShader(colorShader);
-		
+		/*
 		gl.bindTexture(GL.TEXTURE_2D, buffer.texture);
 		GLUtils.setTextureSmoothing(false);
 	//	GLUtils.setTextureSmoothing(smoothing);
 		GLUtils.setTextureWrapping(false);
+		*/
 		
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);
+		context.setShader(null);
 		
-		gl.vertexAttribPointer(colorShader.data.aPosition.index, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0);
-		gl.vertexAttribPointer(colorShader.data.aTexCoord.index, 2, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
-		gl.vertexAttribPointer(colorShader.data.aAlpha.index, 1, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
+		var renderer:GLRenderer = cast renderSession.renderer;
+		var gl = renderSession.gl;
+		
+		renderSession.blendModeManager.setBlendMode(__worldBlendMode);
+		renderSession.maskManager.pushObject(this);
+		
+		renderSession.shaderManager.setShader(null);
+		var shader = renderSession.filterManager.pushObject(this);
+		renderSession.shaderManager.setShader(shader);
+		
+		shader.data.uImage0.input = buffer.bitmap;
+		shader.data.uImage0.smoothing = false;
+		shader.data.uMatrix.value = renderer.getMatrix(__renderTransform);
+		
+		var useColorTransform = !__worldColorTransform.__isDefault();
+		
+		if (shader.data.uColorTransform.value == null) 
+			shader.data.uColorTransform.value = [];
+		
+		shader.data.uColorTransform.value[0] = useColorTransform;
+		
+		renderSession.shaderManager.updateShader(shader);
+		
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer.bitmap.getBuffer(gl, __worldAlpha, __worldColorTransform));
+		
+		gl.vertexAttribPointer(shader.data.aPosition.index,	3, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 0);
+		gl.vertexAttribPointer(shader.data.aTexCoord.index,	2, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
+		gl.vertexAttribPointer(shader.data.aAlpha.index,	1, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 5 * Float32Array.BYTES_PER_ELEMENT);
+		
+		if (true || useColorTransform) 
+		{
+			gl.vertexAttribPointer(shader.data.aColorMultipliers.index,		4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 6 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(shader.data.aColorMultipliers.index + 1,	4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 10 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(shader.data.aColorMultipliers.index + 2,	4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 14 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(shader.data.aColorMultipliers.index + 3,	4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 18 * Float32Array.BYTES_PER_ELEMENT);
+			gl.vertexAttribPointer(shader.data.aColorOffsets.index,			4, gl.FLOAT, false, 26 * Float32Array.BYTES_PER_ELEMENT, 22 * Float32Array.BYTES_PER_ELEMENT);	
+		}
 		
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-		// end of code from GLBitmap
-		
-		context.currentShader = null;
 		
 		for (child in __children) 
 			child.__renderGL(renderSession);
@@ -158,5 +178,6 @@ class CanvasGL extends GLDisplayObject
 		renderSession.filterManager.popObject(this);
 		renderSession.maskManager.popObject(this);
 	}
+	
 	#end
 }

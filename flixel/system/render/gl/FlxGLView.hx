@@ -231,6 +231,8 @@ class FlxGLView extends FlxCameraView
 	{
 		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 		
+		var rect:Rectangle = new Rectangle();
+		
 		if (rect != null)
 		{
 			rect.x = 0;

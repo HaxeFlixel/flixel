@@ -90,6 +90,7 @@ class GLContextHelper
 		if (shader != currentShader)
 		{
 			shaderManager.setShader(shader);
+			shaderManager.updateShader(shader); // TODO: check this line...
 			currentShader = shader;
 			result = true;
 		}
