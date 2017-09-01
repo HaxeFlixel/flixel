@@ -561,11 +561,12 @@ class FlxMouseEventManager extends FlxBasic
 					}
 				}
 			}
-			
-			if (_mouseDownObjects.length > 0)
-			{
-				_mouseDownObjects = [];
-			}
+		}
+		
+		if (_mouseDownObjects.length > 0 && !FlxG.mouse.pressed)
+		{
+			// if the user just released the mouse OR if the user released the mouse while the window was tabbed out
+			_mouseDownObjects = [];
 		}
 		
 		// MouseWheel - Look for objects with mouse over when user spins the mouse wheel.
