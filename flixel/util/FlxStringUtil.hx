@@ -228,29 +228,29 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Get the String name of any Object.
+	 * Get the string name of any class or class instance. Wraps `Type.getClassName()`.
 	 * 
-	 * @param	Obj		The object in question.
-	 * @param	Simple	Returns only the class name, not the package or packages.
-	 * @return	The name of the Class as a String object.
+	 * @param	objectOrClass	The class or class instance in question.
+	 * @param	simple	Returns only the class name, not the package or packages.
+	 * @return	The name of the class as a string.
 	 */
-	public static function getClassName(Obj:Dynamic, Simple:Bool = false):String
+	public static function getClassName(objectOrClass:Dynamic, simple:Bool = false):String
 	{
 		var cl:Class<Dynamic>;
-		if (Std.is(Obj, Class))
+		if (Std.is(objectOrClass, Class))
 		{
-			cl = cast Obj;
+			cl = cast objectOrClass;
 		}
 		else
 		{
-			cl = Type.getClass(Obj);
+			cl = Type.getClass(objectOrClass);
 		}
 		
 		var s:String = Type.getClassName(cl);
 		if (s != null)
 		{
 			s = s.replace("::", ".");
-			if (Simple)
+			if (simple)
 			{
 				s = s.substr(s.lastIndexOf(".") + 1);
 			}

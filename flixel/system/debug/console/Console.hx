@@ -278,7 +278,7 @@ class Console extends Window
 	 * @param 	Function		The function to register.
 	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
+	public function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
 	{
 		registeredFunctions.set(functionAlias, func);
 		#if hscript
@@ -295,7 +295,7 @@ class Console extends Window
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
 	 */
-	public inline function registerObject(objectAlias:String, anyObject:Dynamic)
+	public function registerObject(objectAlias:String, anyObject:Dynamic)
 	{
 		registeredObjects.set(objectAlias, anyObject);
 		#if hscript

@@ -188,4 +188,16 @@ class FlxStringUtilTest
 		for (path in generateLocalPaths())
 			Assert.areEqual("", FlxStringUtil.getDomain(path));
 	}
+
+	@Test
+	function testGetClassName()
+	{
+		function test(value:Dynamic, simple:Bool, expected:String)
+			Assert.areEqual(FlxStringUtil.getClassName(value, simple), expected);
+
+		test(FlxSprite, false, "flixel.FlxSprite");
+		test(FlxSprite, true, "FlxSprite");
+		test(new FlxSprite(), false, "flixel.FlxSprite");
+		test(new FlxSprite(), true, "FlxSprite");
+	}
 }
