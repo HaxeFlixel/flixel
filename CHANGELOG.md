@@ -1,3 +1,19 @@
+4.4.0 (to be released)
+------------------------------
+#### New features:
+
+- `FlxStringUtil`: added `getEnumName()` (95615382)
+- `FlxG.console`: added `registerEnum()` (24905c4b)
+- `FlxMouse`: added `justMoved` (#2087)
+- `FlxMouseEventManager`:
+	- added mouse move, click, double-click and wheel events (#2087)
+	- added `maxDoubleClickDelay` (#2087)
+
+#### Bugfixes:
+
+- `FlxDebugger` console: fixed enum completion on non-Flash targets (404c16b3)
+- `FlxMouseEventManager`: fixed mouseOver being fired before mouseOut (#2103)
+
 4.3.0 (July 22, 2017)
 ------------------------------
 #### New features:
