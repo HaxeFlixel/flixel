@@ -102,9 +102,14 @@ class ConsoleUtil
 		var fields = [];
 		if (Std.is(Object, Class)) // passed a class -> get static fields
 			fields = Type.getClassFields(Object);
+		else if (Std.is(Object, Enum))
+			fields = Type.getEnumConstructs(Object);
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));
 		
+		// on Flash, enums are classes, so Std.is(_, Enum) fails
+		fields.remove("__constructs__");
+
 		var filteredFields = [];
 		for (field in fields)
 		{
