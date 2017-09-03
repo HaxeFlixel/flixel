@@ -4,6 +4,7 @@ import flixel.addons.nape.FlxNapeSpace;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.math.FlxPoint;
 import flixel.group.FlxGroup;
 import flixel.input.mouse.FlxMouseEventManager;
 import nape.constraint.DistanceJoint;
@@ -47,22 +48,28 @@ class PlayState extends FlxState
 		var cards = new FlxTypedGroup<Card>();
 		var pickedCards = [];
 
-		function pickRandomCard():Int
+		function createCardStack(amount:Int, start:FlxPoint, offset:FlxPoint)
 		{
-			// Choose a random card from the first 52 cards on the spritesheet 
-			// - excluding those who have already been picked!
-			var pick = FlxG.random.int(0, 51, pickedCards);
-			pickedCards.push(pick);
-			return pick;
+			var x = start.x;
+			var y = start.y;
+
+			for (i in 0...amount)
+			{
+				// Choose a random card from the first 52 cards on the spritesheet 
+				// - excluding those who have already been picked!
+				var pick = FlxG.random.int(0, 51, pickedCards);
+				cards.add(new Card(x, y, pick));
+
+				x += offset.x;
+				y += offset.y;
+			}
 		}
 
-		// Creating the 10 cards in the middle
-		for (i in 0...10)
-			cards.add(new Card(230, 340, 20, -20, i, pickRandomCard()));
-		
 		// Creating a stack of 7 cards in the upper left corner
-		for (i in 0...7)
-			cards.add(new Card(40, 50, 2, -2, i, pickRandomCard()));
+		createCardStack(7, FlxPoint.get(40, 50), FlxPoint.get(2, -2));
+
+		// Creating the 10 cards in the middle
+		createCardStack(10, FlxPoint.get(230, 340), FlxPoint.get(20, -20));
 
 		return cards;
 	}

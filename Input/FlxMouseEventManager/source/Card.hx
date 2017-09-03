@@ -29,9 +29,9 @@ class Card extends FlxNapeSprite
 	 */
 	private var cardIndex:Int;
 	
-	public function new(x:Int, y:Int, offsetX:Int, offsetY:Int, index:Int, cardIndex:Int):Void
+	public function new(x:Float, y:Float, cardIndex:Int):Void
 	{
-		super(x + offsetX * index, y + offsetY * index);
+		super(x, y);
 		this.cardIndex = cardIndex;
 		loadGraphic("assets/Deck.png", true, 79, 123);
 		
