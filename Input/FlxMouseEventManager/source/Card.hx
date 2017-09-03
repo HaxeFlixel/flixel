@@ -20,19 +20,19 @@ class Card extends FlxNapeSprite
 	private static inline var TURNING_TIME:Float = 0.2;
 	
 	/**
-	 * This is a helper Array to keep track of the cards that have
-	 * been picked so far, to avoid the same card being shown twice!
-	 */
-	public static var pickedCards = new Array<Int>();
-	
-	/**
 	 * Whether the card has been turned around yet or not
 	 */
 	private var turned:Bool = false;
+
+	/**
+	 * Which card this is (index in the sprite sheet).
+	 */
+	private var cardIndex:Int;
 	
-	public function new(x:Int, y:Int, offsetX:Int, offsetY:Int, index:Int):Void
+	public function new(x:Int, y:Int, offsetX:Int, offsetY:Int, index:Int, cardIndex:Int):Void
 	{
 		super(x + offsetX * index, y + offsetY * index);
+		this.cardIndex = cardIndex;
 		loadGraphic("assets/Deck.png", true, 79, 123);
 		
 		// The card starts out being turned around
@@ -81,10 +81,7 @@ class Card extends FlxNapeSprite
 	
 	private function pickCard(_):Void
 	{
-		// Choose a random card from the first 52 cards on the spritesheet 
-		// - excluding those who have already been picked!
-		animation.frameIndex = FlxG.random.int(0, 51, pickedCards);
-		pickedCards.push(animation.frameIndex);
+		animation.frameIndex = cardIndex;
 		
 		// Finish the card animation
 		FlxTween.tween(scale, { x: 1 }, TURNING_TIME / 2);

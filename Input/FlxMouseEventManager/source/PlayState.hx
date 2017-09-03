@@ -17,7 +17,6 @@ class PlayState extends FlxState
 {
 	public static var cardJoint:DistanceJoint;
 	
-	private var cards:FlxTypedGroup<Card>;
 	private var fan:FlxSprite;
 	
 	override public function create():Void
@@ -32,9 +31,7 @@ class PlayState extends FlxState
 		FlxG.plugins.add(new FlxMouseEventManager());
 		
 		// Creating the card group and the cards
-		cards = new FlxTypedGroup<Card>();
-		createCards();
-		add(cards);
+		add(createCards());
 
 		FlxNapeSpace.createWalls();
 		
@@ -45,15 +42,29 @@ class PlayState extends FlxState
 		add(fan);
 	}
 
-	private function createCards()
+	private function createCards():FlxTypedGroup<Card>
 	{
+		var cards = new FlxTypedGroup<Card>();
+		var pickedCards = [];
+
+		function pickRandomCard():Int
+		{
+			// Choose a random card from the first 52 cards on the spritesheet 
+			// - excluding those who have already been picked!
+			var pick = FlxG.random.int(0, 51, pickedCards);
+			pickedCards.push(pick);
+			return pick;
+		}
+
 		// Creating the 10 cards in the middle
 		for (i in 0...10)
-			cards.add(new Card(230, 340, 20, -20, i));
+			cards.add(new Card(230, 340, 20, -20, i, pickRandomCard()));
 		
 		// Creating a stack of 7 cards in the upper left corner
 		for (i in 0...7)
-			cards.add(new Card(40, 50, 2, -2, i));
+			cards.add(new Card(40, 50, 2, -2, i, pickRandomCard()));
+
+		return cards;
 	}
 
 	override public function update(elapsed:Float):Void
