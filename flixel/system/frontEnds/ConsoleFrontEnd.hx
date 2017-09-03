@@ -46,7 +46,7 @@ class ConsoleFrontEnd
 	/**
 	 * Register a new class to use in any command.
 	 * 
-	 * @param 	cl	The class to register.
+	 * @param	cl	The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>):Void
 	{
@@ -56,8 +56,18 @@ class ConsoleFrontEnd
 	}
 	
 	/**
-	 * Just needed to create an instance.
+	 * Register a new enum to use in any command.
+	 * 
+	 * @param	e	The enum to register.
+	 * @since 4.4.0
 	 */
+	public inline function registerEnum(e:Enum<Dynamic>):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.registerEnum(e);
+		#end
+	}
+
 	@:allow(flixel.FlxG)
 	private function new() {}
 }

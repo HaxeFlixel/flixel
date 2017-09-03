@@ -25,7 +25,7 @@ using StringTools;
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 
  * objects and functions and saves the last 25 commands used. Inspired by Eric Smith's "CoolConsole".
- * @link http://www.youtube.com/watch?v=QWfpw7elWk8
+ * @see http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends Window
 {
@@ -306,11 +306,22 @@ class Console extends Window
 	/**
 	 * Register a new class to use in any command.
 	 * 
-	 * @param 	cl			The class to register.
+	 * @param	cl	The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>)
 	{
 		registerObject(FlxStringUtil.getClassName(cl, true), cl);
+	}
+
+	/**
+	 * Register a new enum to use in any command.
+	 * 
+	 * @param	e	The enum to register.
+	 * @since 4.4.0
+	 */
+	public inline function registerEnum(e:Enum<Dynamic>)
+	{
+		registerObject(FlxStringUtil.getEnumName(e, true), e);
 	}
 	
 	override public function destroy()

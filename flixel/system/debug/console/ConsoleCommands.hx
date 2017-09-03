@@ -67,7 +67,8 @@ class ConsoleCommands
 		console.registerClass(FlxPoint);
 		console.registerClass(FlxRect);
 		
-		console.registerObject("FlxDebuggerLayout", FlxDebuggerLayout);
+		console.registerEnum(FlxDebuggerLayout);
+
 		console.registerObject("selection", null);
 	}
 	
