@@ -4,7 +4,6 @@ import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
 /**
@@ -16,36 +15,36 @@ class FlxDrawBaseItem<T>
 	public static function blendToInt(blend:BlendMode):Int
 	{
 		if (blend == null)
-			return Tilesheet.TILE_BLEND_NORMAL;
+			return FlxTilesheet.TILE_BLEND_NORMAL;
 		
 		return switch (blend)
 		{
 			case BlendMode.ADD:
-				Tilesheet.TILE_BLEND_ADD;
+				FlxTilesheet.TILE_BLEND_ADD;
 			#if !flash
 			case BlendMode.MULTIPLY:
-				Tilesheet.TILE_BLEND_MULTIPLY;
+				FlxTilesheet.TILE_BLEND_MULTIPLY;
 			case BlendMode.SCREEN:
-				Tilesheet.TILE_BLEND_SCREEN;
+				FlxTilesheet.TILE_BLEND_SCREEN;
 			case BlendMode.SUBTRACT:
-				Tilesheet.TILE_BLEND_SUBTRACT;
+				FlxTilesheet.TILE_BLEND_SUBTRACT;
 			#if !lime_legacy
 			case BlendMode.DARKEN:
-				Tilesheet.TILE_BLEND_DARKEN;
+				FlxTilesheet.TILE_BLEND_DARKEN;
 			case BlendMode.LIGHTEN:
-				Tilesheet.TILE_BLEND_LIGHTEN;
+				FlxTilesheet.TILE_BLEND_LIGHTEN;
 			case BlendMode.OVERLAY:
-				Tilesheet.TILE_BLEND_OVERLAY;
+				FlxTilesheet.TILE_BLEND_OVERLAY;
 			case BlendMode.HARDLIGHT:
-				Tilesheet.TILE_BLEND_HARDLIGHT;
+				FlxTilesheet.TILE_BLEND_HARDLIGHT;
 			case BlendMode.DIFFERENCE:
-				Tilesheet.TILE_BLEND_DIFFERENCE;
+				FlxTilesheet.TILE_BLEND_DIFFERENCE;
 			case BlendMode.INVERT:
-				Tilesheet.TILE_BLEND_INVERT;
+				FlxTilesheet.TILE_BLEND_INVERT;
 			#end
 			#end
 			default:
-				Tilesheet.TILE_BLEND_NORMAL;
+				FlxTilesheet.TILE_BLEND_NORMAL;
 		}
 	}
 	

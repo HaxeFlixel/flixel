@@ -11,6 +11,10 @@ import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 
+#if (openfl >= "5.0.0")
+import openfl.utils.AssetType;
+#end
+
 @:allow(flixel.FlxG)
 class SoundFrontEnd
 {
