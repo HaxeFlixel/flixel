@@ -49,7 +49,7 @@ class Card extends FlxNapeSprite
 		FlxMouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
-	private function onDown(sprite:FlxSprite)
+	private function onDown(_)
 	{
 		// Play the turning animation if the card hasn't been turned around yet
 		if (!turned)
@@ -57,8 +57,6 @@ class Card extends FlxNapeSprite
 			turned = true;
 			FlxTween.tween(scale, { x: 0 }, TURNING_TIME / 2, { onComplete: pickCard });
 		}
-		
-		var body:Body = cast(sprite, FlxNapeSprite).body;
 		
 		PlayState.cardJoint = new DistanceJoint(FlxNapeSpace.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
 			body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
@@ -69,12 +67,12 @@ class Card extends FlxNapeSprite
 		PlayState.cardJoint.space = FlxNapeSpace.space;
 	}
 	
-	private function onOver(sprite:FlxSprite)
+	private function onOver(_)
 	{
 		color = 0x00FF00;
 	}
 	
-	private function onOut(sprite:FlxSprite)
+	private function onOut(_)
 	{
 		color = FlxColor.WHITE;
 	}

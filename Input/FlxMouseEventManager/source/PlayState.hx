@@ -58,6 +58,8 @@ class PlayState extends FlxState
 				// Choose a random card from the first 52 cards on the spritesheet 
 				// - excluding those who have already been picked!
 				var pick = FlxG.random.int(0, 51, pickedCards);
+				pickedCards.push(pick);
+
 				cards.add(new Card(x, y, pick));
 
 				x += offset.x;
