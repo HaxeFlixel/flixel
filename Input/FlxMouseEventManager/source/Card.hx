@@ -20,19 +20,19 @@ class Card extends FlxNapeSprite
 	private static inline var TURNING_TIME:Float = 0.2;
 	
 	/**
-	 * This is a helper Array to keep track of the cards that have 
+	 * This is a helper Array to keep track of the cards that have
 	 * been picked so far, to avoid the same card being shown twice!
 	 */
-	public static var pickedCards:Array<Int> = new Array<Int>();
+	public static var pickedCards = new Array<Int>();
 	
 	/**
 	 * Whether the card has been turned around yet or not
 	 */
-	private var _turned:Bool = false;
+	private var turned:Bool = false;
 	
-	public function new(X:Int, Y:Int, OffsetX:Int, OffsetY:Int, Index:Int):Void
+	public function new(x:Int, y:Int, offsetX:Int, offsetY:Int, index:Int):Void
 	{
-		super(X + OffsetX * Index, Y + OffsetY * Index);
+		super(x + offsetX * index, y + offsetY * index);
 		loadGraphic("assets/Deck.png", true, 79, 123);
 		
 		// The card starts out being turned around
@@ -49,16 +49,16 @@ class Card extends FlxNapeSprite
 		FlxMouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
-	private function onDown(Sprite:FlxSprite)
+	private function onDown(sprite:FlxSprite)
 	{
 		// Play the turning animation if the card hasn't been turned around yet
-		if (!_turned)
+		if (!turned)
 		{
-			_turned = true;
+			turned = true;
 			FlxTween.tween(scale, { x: 0 }, TURNING_TIME / 2, { onComplete: pickCard });
 		}
 		
-		var body:Body = cast(Sprite, FlxNapeSprite).body;
+		var body:Body = cast(sprite, FlxNapeSprite).body;
 		
 		PlayState.cardJoint = new DistanceJoint(FlxNapeSpace.space.world, body, Vec2.weak(FlxG.mouse.x, FlxG.mouse.y),
 			body.worldPointToLocal(Vec2.weak(FlxG.mouse.x, FlxG.mouse.y)), 0, 0);
@@ -69,17 +69,17 @@ class Card extends FlxNapeSprite
 		PlayState.cardJoint.space = FlxNapeSpace.space;
 	}
 	
-	private function onOver(Sprite:FlxSprite) 
+	private function onOver(sprite:FlxSprite)
 	{
 		color = 0x00FF00;
 	}
 	
-	private function onOut(Sprite:FlxSprite)
+	private function onOut(sprite:FlxSprite)
 	{
 		color = FlxColor.WHITE;
 	}
 	
-	private function pickCard(Tween:FlxTween):Void
+	private function pickCard(_):Void
 	{
 		// Choose a random card from the first 52 cards on the spritesheet 
 		// - excluding those who have already been picked!
@@ -90,7 +90,7 @@ class Card extends FlxNapeSprite
 		FlxTween.tween(scale, { x: 1 }, TURNING_TIME / 2);
 	}
 	
-	override public function destroy():Void 
+	override public function destroy():Void
 	{
 		// Make sure that this object is removed from the FlxMouseEventManager for GC
 		FlxMouseEventManager.remove(this);
