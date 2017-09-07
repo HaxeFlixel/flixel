@@ -47,9 +47,11 @@ class FlxAssetPaths
 				
 				if (filterExtensions != null)
 				{
-					var extension:String = name.split(".")[1]; // get the string after the dot
-					if (filterExtensions.indexOf(extension) == -1)
+					var explodedName:Array<String> = name.split(".");
+					var extension:String = explodedName[explodedName.length-1]; // get the last string with a dot before it
+					if (filterExtensions.indexOf(extension) == -1){
 						continue;
+					}
 				}
 				
 				fileReferences.push(new FileReference(directory + name));
