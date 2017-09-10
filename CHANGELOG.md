@@ -1,3 +1,10 @@
+2.4.2 (September 10, 2017)
+------------------------------
+* FlxMouseEventManager and MinimalistTD:
+  * fixed some crashes (637e29e, #261)
+  * cleaned up the code a bit
+* Added a `flixel-demos.code-workspace` file
+
 2.4.1 (July 22, 2017)
 ------------------------------
 * Updated the FlxTween demo for Flixel 4.3.0 (#260)
