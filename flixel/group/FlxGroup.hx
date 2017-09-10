@@ -217,38 +217,38 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * WARNING: If the group has a `maxSize` that has already been met,
 	 * the object will NOT be inserted to the group!
 	 * 
-	 * @param   position   The position in the group where you want to insert the object.
-	 * @param   object     The object you want to insert into the group.
+	 * @param   Position   The position in the group where you want to insert the object.
+	 * @param   Object     The object you want to insert into the group.
 	 * @return  The same `FlxBasic` object that was passed in.
 	 */
-	public function insert(position:Int, object:T):T
+	public function insert(Position:Int, Object:T):T
 	{
-		if (object == null)
+		if (Object == null)
 		{
 			FlxG.log.warn("Cannot insert a `null` object into a FlxGroup.");
 			return null;
 		}
 
 		// Don't bother inserting an object twice.
-		if (members.indexOf(object) >= 0)
-			return object;
+		if (members.indexOf(Object) >= 0)
+			return Object;
 
 		// First, look if the member at position is null, so we can directly assign the object at the position.
-		if (position < length && members[position] == null)
+		if (Position < length && members[Position] == null)
 		{
-			members[position] = object;
-			return object;
+			members[Position] = Object;
+			return Object;
 		}
 
 		// If the group is full, return the object
 		if (maxSize > 0 && length >= maxSize)
-			return object;
+			return Object;
 
 		// If we made it this far, we need to insert the object into the group at the specified position.
-		members.insert(position, object);
+		members.insert(Position, Object);
 		length++;
 
-		return object;
+		return Object;
 	}
 
 	/**
