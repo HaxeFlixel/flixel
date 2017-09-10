@@ -41,16 +41,16 @@ class PlayState extends FlxState
 	public var wave:Int = 0;
 	
 	// Public groups
-	public var bulletGroup:FlxTypedGroup<Bullet>;
-	public var emitterGroup:FlxTypedGroup<EnemyGibs>;
-	public var enemyGroup:FlxTypedGroup<Enemy>;
+	public var bullets:FlxTypedGroup<Bullet>;
+	public var emitters:FlxTypedGroup<EnemyGibs>;
+	public var enemies:FlxTypedGroup<Enemy>;
 	public var towerIndicators:FlxTypedGroup<FlxSprite>;
 	
 	// Groups
-	private var _guiGroup:FlxGroup;
-	private var _lifeGroup:FlxGroup;
+	private var _gui:FlxGroup;
+	private var _lives:FlxGroup;
 	private var _topGui:FlxGroup;
-	private var _towerGroup:FlxTypedGroup<Tower>;
+	private var _towers:FlxTypedGroup<Tower>;
 	private var _upgradeMenu:FlxGroup;
 	private var _sellMenu:FlxGroup;
 	private var _sellConfirm:FlxGroup;
@@ -85,7 +85,7 @@ class PlayState extends FlxState
 	
 	private var _buildingMode:Bool = false;
 	private var _gameOver:Bool = false;
-	private var _lives:Int = 9;
+	private var _numLives:Int = 9;
 	private var _money:Int = 50;
 	private var _spawnCounter:Int = 0;
 	private var _spawnInterval:Int = 1;
@@ -111,10 +111,10 @@ class PlayState extends FlxState
 		_map = new FlxTilemap();
 		_map.loadMapFromCSV("tilemaps/play_tilemap.csv", Reg.tileImage);
 		
-		bulletGroup = new FlxTypedGroup<Bullet>();
-		emitterGroup = new FlxTypedGroup<EnemyGibs>();
-		enemyGroup = new FlxTypedGroup<Enemy>();
-		_towerGroup = new FlxTypedGroup<Tower>();
+		bullets = new FlxTypedGroup<Bullet>();
+		emitters = new FlxTypedGroup<EnemyGibs>();
+		enemies = new FlxTypedGroup<Enemy>();
+		_towers = new FlxTypedGroup<Tower>();
 		towerIndicators = new FlxTypedGroup<FlxSprite>();
 		
 		// Set up bottom default GUI
@@ -122,7 +122,7 @@ class PlayState extends FlxState
 		var guiUnderlay = new FlxSprite(0, FlxG.height - 16);
 		guiUnderlay.makeGraphic(FlxG.width, 16, FlxColor.WHITE);
 		
-		_guiGroup = new FlxGroup();
+		_gui = new FlxGroup();
 		
 		var height:Int = FlxG.height - 18;
 		_towerButton = new Button(2, height, "Buy [T]ower ($" + towerPrice + ")", buildTowerCallback.bind(false), 120);
@@ -135,11 +135,11 @@ class PlayState extends FlxState
 		_tutText.alignment = CENTER;
 		_tutText.visible = false;
 		
-		_guiGroup.add(_towerButton);
-		_guiGroup.add(_nextWaveButton);
-		_guiGroup.add(_speedButton);
-		_guiGroup.add(_sellButton);
-		_guiGroup.add(_tutText);
+		_gui.add(_towerButton);
+		_gui.add(_nextWaveButton);
+		_gui.add(_speedButton);
+		_gui.add(_sellButton);
+		_gui.add(_tutText);
 		
 		// Set up upgrade menu, hidden initially, also part of bottom GUI
 		
@@ -204,7 +204,7 @@ class PlayState extends FlxState
 		
 		_goal = new FlxSprite(_goalPosition.x, _goalPosition.y, "images/goal.png");
 		
-		_lifeGroup = new FlxGroup();
+		_lives = new FlxGroup();
 		
 		for (xPos in 0...3)
 		{
@@ -212,7 +212,7 @@ class PlayState extends FlxState
 			{
 				var life = new FlxSprite(_goal.x + 5 + 4 * xPos, _goal.y + 5 + 4 * yPos);
 				life.makeGraphic(2, 2, FlxColor.WHITE);
-				_lifeGroup.add(life);
+				_lives.add(life);
 			}
 		}
 		
@@ -235,17 +235,17 @@ class PlayState extends FlxState
 		// Add everything to the state
 		
 		add(_map);
-		add(bulletGroup);
-		add(emitterGroup);
-		add(enemyGroup);
+		add(bullets);
+		add(emitters);
+		add(enemies);
 		add(_towerRange);
-		add(_towerGroup);
+		add(_towers);
 		add(towerIndicators);
 		add(_goal);
-		add(_lifeGroup);
+		add(_lives);
 		add(_buildHelper);
 		add(guiUnderlay);
-		add(_guiGroup);
+		add(_gui);
 		add(_upgradeMenu);
 		add(_sellMenu);
 		add(_sellConfirm);
@@ -343,7 +343,7 @@ class PlayState extends FlxState
 				
 				#if !mobile
 				// If the user clicked on a tower, they get the upgrade menu, or the sell menu
-				for (tower in _towerGroup)
+				for (tower in _towers)
 				{
 					if (FlxMath.pointInCoordinates(Std.int(FlxG.mouse.x), Std.int(FlxG.mouse.y), Std.int(tower.x), Std.int(tower.y), Std.int(tower.width), Std.int(tower.height)))
 					{
@@ -404,15 +404,15 @@ class PlayState extends FlxState
 		
 		// If an enemy hits the goal, it will lose life and the enemy explodes
 		
-		FlxG.overlap(enemyGroup, _goal, hitGoal);
+		FlxG.overlap(enemies, _goal, hitGoal);
 		
 		// If a bullet hits an enemy, it will lose health
 		
-		FlxG.overlap(bulletGroup, enemyGroup, hitEnemy);
+		FlxG.overlap(bullets, enemies, hitEnemy);
 		
 		// Controls wave spawning, enemy spawning, 
 		
-		if (enemiesToKill == 0 && _towerGroup.length > 0)
+		if (enemiesToKill == 0 && _towers.length > 0)
 		{
 			_waveCounter -= Std.int(FlxG.timeScale);
 			_nextWaveButton.text = "[N]ext Wave in " + Math.ceil(_waveCounter / FlxG.updateFramerate);
@@ -450,7 +450,7 @@ class PlayState extends FlxState
 		var closestTower:Tower = null;
 		var searchPoint:FlxPoint = FlxPoint.get(X, Y);
 		
-		for (tower in _towerGroup)
+		for (tower in _towers)
 		{
 			var dist:Float = searchPoint.distanceTo(tower.getMidpoint());
 			
@@ -470,13 +470,13 @@ class PlayState extends FlxState
 	 */
 	private function hitGoal(enemy:Enemy, goal:FlxSprite):Void
 	{
-		_lives--;
+		_numLives--;
 		enemy.explode(false);
 		
-		if (_lives >= 0)
-			_lifeGroup.members[_lives].kill();
+		if (_numLives >= 0)
+			_lives.members[_numLives].kill();
 		
-		if (_lives == 0)
+		if (_numLives == 0)
 			loseGame();
 		
 		FlxG.sound.play("hurt");
@@ -503,14 +503,14 @@ class PlayState extends FlxState
 		_sellConfirm.visible = false;
 		_sellMenu.visible = false;
 		_upgradeMenu.visible = false;
-		_guiGroup.visible = false;
+		_gui.visible = false;
 		_towerRange.visible = false;
 		
 		switch (Menu)
 		{
 			case General:
 				_towerSelected = null;
-				_guiGroup.visible = true;
+				_gui.visible = true;
 				_buildingMode = false;
 				_buildHelper.visible = false;
 			case Upgrade:
@@ -547,7 +547,7 @@ class PlayState extends FlxState
 	 */
 	private function speedButtonCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip)
+		if (!_gui.visible && !Skip)
 			return;
 		
 		if (_speed < 3)
@@ -566,7 +566,7 @@ class PlayState extends FlxState
 	 */
 	private function sellButtonCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible || _towerGroup.length == 0)
+		if (!_gui.visible || _towers.length == 0)
 			return;
 		
 		toggleMenus(Sell);
@@ -598,7 +598,7 @@ class PlayState extends FlxState
 		
 		if (Sure)
 		{
-			_towerGroup.remove(_towerSelected, true);
+			_towers.remove(_towerSelected, true);
 			_towerSelected.visible = false;
 			
 			// Remove the indicator for this tower as well
@@ -613,7 +613,7 @@ class PlayState extends FlxState
 			}
 			
 			// If there are no towers, having the tutorial text and sell button is a bit superfluous
-			if (_towerGroup.countLiving() == -1 && _towerGroup.countDead() == -1)
+			if (_towers.countLiving() == -1 && _towers.countDead() == -1)
 			{
 				_sellButton.visible = false;
 				
@@ -649,7 +649,7 @@ class PlayState extends FlxState
 	 */
 	private function nextWaveCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip)
+		if (!_gui.visible && !Skip)
 			return;
 		
 		if (enemiesToKill > 0)
@@ -664,7 +664,7 @@ class PlayState extends FlxState
 	 */
 	private function resetCallback(Skip:Bool = false):Void
 	{
-		if (!_guiGroup.visible && !Skip)
+		if (!_gui.visible && !Skip)
 			return;
 		
 		FlxG.resetState();
@@ -697,7 +697,7 @@ class PlayState extends FlxState
 		var yPos:Float = FlxG.mouse.y - (FlxG.mouse.y % TILE_SIZE);
 		
 		// Can't place towers on other towers
-		for (tower in _towerGroup)
+		for (tower in _towers)
 		{
 			if (tower.x == xPos && tower.y == yPos)
 			{
@@ -717,7 +717,7 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		_towerGroup.add(new Tower(xPos, yPos, towerPrice));
+		_towers.add(new Tower(xPos, yPos, towerPrice));
 		
 		// After the first tower is bought, sell mode becomes available.
 		if (_sellButton.visible == false)
@@ -725,7 +725,7 @@ class PlayState extends FlxState
 		
 		// If this is the first tower the player has built, they get the tutorial text.
 		// This is made invisible after they've bought an upgrade.
-		if (_tutText.visible == false && _towerGroup.length == 1)
+		if (_tutText.visible == false && _towers.length == 1)
 			_tutText.visible = true;
 		
 		FlxG.sound.play("build");
@@ -794,14 +794,14 @@ class PlayState extends FlxState
 	}
 	
 	/**
-	 * Spawns an enemy. Decrements the enemiesToSpawn variable, and recycles an enemy from enemyGroup and then initiates
+	 * Spawns an enemy. Decrements the enemiesToSpawn variable, and recycles an enemy from enemies and then initiates
 	 * it and gives it a path to follow.
 	 */
 	private function spawnEnemy():Void
 	{
 		enemiesToSpawn--;
 		
-		var enemy = enemyGroup.recycle(Enemy.new.bind(0, 0));
+		var enemy = enemies.recycle(Enemy.new.bind(0, 0));
 		enemy.init(_enemySpawnPosition.x, _enemySpawnPosition.y);
 		enemy.followPath(_map.findPath(_enemySpawnPosition, _goalPosition.copyTo().add(5, 5)), 20 + Reg.PS.wave);
 		_spawnCounter = 0;
@@ -814,9 +814,9 @@ class PlayState extends FlxState
 	{
 		_gameOver = true;
 		
-		enemyGroup.kill();
+		enemies.kill();
 		towerIndicators.kill();
-		_towerGroup.kill();
+		_towers.kill();
 		_upgradeMenu.kill();
 		_towerRange.kill();
 		

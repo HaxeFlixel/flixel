@@ -41,7 +41,7 @@ class EnemyGibs extends FlxEmitter
 			add(p);
 		}
 		
-		Reg.PS.emitterGroup.add(this);
+		Reg.PS.emitters.add(this);
 	}
 	
 	/**

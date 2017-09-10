@@ -93,7 +93,7 @@ class Tower extends FlxSprite
 		if (target == null)
 			return;
 		
-		var bullet = Reg.PS.bulletGroup.recycle(Bullet.new);
+		var bullet = Reg.PS.bullets.recycle(Bullet.new);
 		var midpoint = getMidpoint();
 		bullet.init(midpoint.x, midpoint.y, target, damage);
 		midpoint.put();
@@ -111,7 +111,7 @@ class Tower extends FlxSprite
 	private function getNearestEnemy():Enemy
 	{
 		var firstEnemy:Enemy = null;
-		var enemies:FlxTypedGroup<Enemy> = Reg.PS.enemyGroup;
+		var enemies:FlxTypedGroup<Enemy> = Reg.PS.enemies;
 		
 		for (enemy in enemies)
 		{
