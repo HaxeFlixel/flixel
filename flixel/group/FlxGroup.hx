@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 
 typedef FlxGroup = FlxTypedGroup<FlxBasic>;
@@ -75,6 +76,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * variable instead of `members.length` unless you really know what you're doing!
 	 */
 	public var length(default, null):Int = 0;
+	
+	public var addedToGroup(default, null):FlxTypedSignal<T->Void>;
+	public var removedFromGroup(default, null):FlxTypedSignal<T->Void>;
+	
 	/**
 	 * Internal helper variable for recycling objects a la `FlxEmitter`.
 	 */
@@ -91,6 +96,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		members = [];
 		maxSize = Std.int(Math.abs(MaxSize));
 		flixelType = GROUP;
+		
+		addedToGroup = new FlxTypedSignal<T->Void>();
+		removedFromGroup = new FlxTypedSignal<T->Void>();
 	}
 	
 	/**
@@ -106,6 +114,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	override public function destroy():Void
 	{
 		super.destroy();
+		
+		if (addedToGroup != null)
+		{
+			addedToGroup.removeAll();
+			addedToGroup = null;
+		}
+		
+		if (removedFromGroup != null)
+		{
+			removedFromGroup.removeAll();
+			removedFromGroup = null;
+		}
 		
 		if (members != null)
 		{
@@ -195,6 +215,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				length = index + 1;
 			}
 			
+			addedToGroup.dispatch(Object);
+			
 			return Object;
 		}
 		
@@ -205,6 +227,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		// If we made it this far, we need to add the object to the group.
 		members.push(Object);
 		length++;
+		
+		addedToGroup.dispatch(Object);
 		
 		return Object;
 	}
@@ -237,6 +261,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (position < length && members[position] == null)
 		{
 			members[position] = object;
+			addedToGroup.dispatch(object);
 			return object;
 		}
 
@@ -247,7 +272,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		// If we made it this far, we need to insert the object into the group at the specified position.
 		members.insert(position, object);
 		length++;
-
+		
+		addedToGroup.dispatch(object);
+		
 		return object;
 	}
 
@@ -356,6 +383,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		else
 			members[index] = null;
 		
+		removedFromGroup.dispatch(Object);
+		
 		return Object;
 	}
 	
@@ -375,6 +404,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			return null;
 		
 		members[index] = NewObject;
+		
+		removedFromGroup.dispatch(OldObject);
+		addedToGroup.dispatch(NewObject);
 		
 		return NewObject;
 	}
@@ -590,6 +622,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public function clear():Void
 	{
 		length = 0;
+		
+		for (member in members)
+		{
+			if (member != null)
+				removedFromGroup.dispatch(member);
+		}
+		
 		FlxArrayUtil.clearArray(members);
 	}
 	
