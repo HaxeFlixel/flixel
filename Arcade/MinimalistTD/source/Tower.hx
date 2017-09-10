@@ -6,25 +6,25 @@ import flixel.group.FlxGroup;
 
 class Tower extends FlxSprite
 {
+	private static inline var COST_INCREASE:Float = 1.5;
+	private static inline var BASE_PRICE:Int = 10;
+
 	public var range:Int = 40;
 	public var fireRate:Float = 1;
 	public var damage:Int = 1;
 	
-	public var range_LEVEL:Int = 1;
-	public var firerate_LEVEL:Int = 1;
-	public var damage_LEVEL:Int = 1;
+	public var rangeLevel:Int = 1;
+	public var fireRateLevel:Int = 1;
+	public var damageLevel:Int = 1;
 	
-	public var range_PRIZE:Int = BASE_PRIZE;
-	public var firerate_PRIZE:Int = BASE_PRIZE;
-	public var damage_PRIZE:Int =  BASE_PRIZE;
+	public var rangePrice:Int = BASE_PRICE;
+	public var fireRatePrice:Int = BASE_PRICE;
+	public var damagePrice:Int = BASE_PRICE;
 	
 	private var _shootInterval:Int = 2;
 	private var _shootCounter:Int = 0;
 	private var _initialCost:Int = 0;
 	private var _indicator:FlxSprite;
-	
-	private static inline var COST_INCREASE:Float = 1.5;
-	private static inline var BASE_PRIZE:Int = 10;
 	
 	/**
 	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.
@@ -76,9 +76,9 @@ class Tower extends FlxSprite
 	{
 		var val:Float = _initialCost;
 		
-		val += range_PRIZE - BASE_PRIZE;
-		val += firerate_PRIZE - BASE_PRIZE;
-		val += damage_PRIZE - BASE_PRIZE;
+		val += rangePrice - BASE_PRICE;
+		val += fireRatePrice - BASE_PRICE;
+		val += damagePrice - BASE_PRICE;
 		val = Math.round(val / 2);
 		
 		return Std.int(val);
@@ -131,34 +131,34 @@ class Tower extends FlxSprite
 	
 	/**
 	 * Upgrading range increases the radius within which it will consider enemies valid targets by 10.
-	 * Also updates the range_LEVEL and range_PRIZE (1.5 x LEVEL) values for display and player money impact.
+	 * Also updates the rangeLevel and rangePrice (1.5 x LEVEL) values for display and player money impact.
 	 */
 	public function upgradeRange():Void
 	{
 		range += 10;
-		range_LEVEL++;
-		range_PRIZE = Std.int(range_PRIZE * COST_INCREASE);
+		rangeLevel++;
+		rangePrice = Std.int(rangePrice * COST_INCREASE);
 	}
 	
 	/**
 	 * Upgrading damage increases the damage value passed to bullets, and later enemies, by 1.
-	 * Also updates the damage_LEVEL and damage_PRIZE (1.5 x LEVEL) values for display and player money impact.
+	 * Also updates the damageLevel and damagePrice (1.5 x LEVEL) values for display and player money impact.
 	 */
 	public function upgradeDamage():Void
 	{
 		damage++;
-		damage_LEVEL++;
-		damage_PRIZE = Std.int(damage_PRIZE * COST_INCREASE);
+		damageLevel++;
+		damagePrice = Std.int(damagePrice * COST_INCREASE);
 	}
 	
 	/**
 	 * Upgrading fire rate decreases time between shots by 10%.
-	 * Also updates the firerate_LEVEL and firerate_PRIZE (1.5 x LEVEL) values for display and player money impact.
+	 * Also updates the fireRateLevel and fireRatePrice (1.5 x LEVEL) values for display and player money impact.
 	 */
 	public function upgradeFirerate():Void
 	{
 		fireRate *= 0.9;
-		firerate_LEVEL++;
-		firerate_PRIZE = Std.int(firerate_PRIZE * COST_INCREASE);
+		fireRateLevel++;
+		fireRatePrice = Std.int(fireRatePrice * COST_INCREASE);
 	}
 }

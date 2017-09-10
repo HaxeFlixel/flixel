@@ -18,7 +18,7 @@
 * Replaced FlxNapeTilemap with an improved demo (#242)
 * FlxPexParser: added support for changing `scale` (#246)
 * TurnBasedRPG: fixed highscore not being saved (#248)
-* TiledEdtior: added animated tiles (#251)
+* TiledEditor: added animated tiles (#251)
 
 2.2.0 (July 10, 2016)
 ------------------------------

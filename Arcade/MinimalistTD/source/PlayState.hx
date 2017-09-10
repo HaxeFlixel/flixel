@@ -160,7 +160,7 @@ class PlayState extends FlxState
 		
 		_sellMenu = new FlxGroup();
 		
-		var sellMessage:FlxText = new FlxText(0, height + 3, FlxG.width, "Click on a tower to sell it");
+		var sellMessage = new FlxText(0, height + 3, FlxG.width, "Click on a tower to sell it");
 		sellMessage.color = FlxColor.BLACK;
 		sellMessage.alignment = CENTER;
 		
@@ -448,7 +448,7 @@ class PlayState extends FlxState
 	{
 		var minDistance:Float = SearchRadius;
 		var closestTower:Tower = null;
-		var searchPoint:FlxPoint = FlxPoint.get(X, Y);
+		var searchPoint = FlxPoint.get(X, Y);
 		
 		for (tower in _towers)
 		{
@@ -863,9 +863,9 @@ class PlayState extends FlxState
 		if (!_upgradeMenu.visible)
 			return;
 		
-		if (money >= _towerSelected.range_PRIZE)
+		if (money >= _towerSelected.rangePrice)
 		{
-			money -= _towerSelected.range_PRIZE;
+			money -= _towerSelected.rangePrice;
 			_towerSelected.upgradeRange();
 			upgradeHelper();
 		}
@@ -880,9 +880,9 @@ class PlayState extends FlxState
 		if (!_upgradeMenu.visible)
 			return;
 		
-		if (money >= _towerSelected.damage_PRIZE)
+		if (money >= _towerSelected.damagePrice)
 		{
-			money -= _towerSelected.damage_PRIZE;
+			money -= _towerSelected.damagePrice;
 			_towerSelected.upgradeDamage();
 			upgradeHelper();
 		}
@@ -897,9 +897,9 @@ class PlayState extends FlxState
 		if (!_upgradeMenu.visible)
 			return;
 		
-		if (money >= _towerSelected.firerate_PRIZE)
+		if (money >= _towerSelected.fireRatePrice)
 		{
-			money -= _towerSelected.firerate_PRIZE;
+			money -= _towerSelected.fireRatePrice;
 			_towerSelected.upgradeFirerate();
 			upgradeHelper();
 		}
@@ -922,9 +922,9 @@ class PlayState extends FlxState
 	 */
 	private function updateUpgradeLabels():Void
 	{
-		_rangeButton.text = "Range (" + _towerSelected.range_LEVEL + "): $" + _towerSelected.range_PRIZE; 
-		_damageButton.text = "Damage (" + _towerSelected.damage_LEVEL + "): $" + _towerSelected.damage_PRIZE; 
-		_firerateButton.text = "Firerate (" + _towerSelected.firerate_LEVEL + "): $" + _towerSelected.firerate_PRIZE; 
+		_rangeButton.text = "Range (" + _towerSelected.rangeLevel + "): $" + _towerSelected.rangePrice; 
+		_damageButton.text = "Damage (" + _towerSelected.damageLevel + "): $" + _towerSelected.damagePrice; 
+		_firerateButton.text = "Firerate (" + _towerSelected.fireRateLevel + "): $" + _towerSelected.fireRatePrice; 
 		
 		updateRangeSprite(_towerSelected.getMidpoint(), _towerSelected.range);
 	}
