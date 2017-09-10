@@ -30,10 +30,6 @@ class PlayState extends FlxState
 	 */
 	private static var RANGE_SPRITE:Sprite = null;
 	
-	#if debug
-	private static inline var MONEY_CHEAT:Bool = true;
-	#end
-	
 	// Public variables
 	public var enemiesToKill:Int = 0;
 	public var enemiesToSpawn:Int = 0;
@@ -46,6 +42,11 @@ class PlayState extends FlxState
 	public var enemies:FlxTypedGroup<Enemy>;
 	public var towerIndicators:FlxTypedGroup<FlxSprite>;
 	
+	/**
+	 * Controls how money is handled. Setting money automatically "balloons" the money HUD indicator.
+	 */
+	public var money(default, set):Int = 50;
+
 	// Groups
 	private var _gui:FlxGroup;
 	private var _lives:FlxGroup;
@@ -86,7 +87,6 @@ class PlayState extends FlxState
 	private var _buildingMode:Bool = false;
 	private var _gameOver:Bool = false;
 	private var _numLives:Int = 9;
-	private var _money:Int = 50;
 	private var _spawnCounter:Int = 0;
 	private var _spawnInterval:Int = 1;
 	private var _speed:Int = 1;
@@ -929,28 +929,12 @@ class PlayState extends FlxState
 		updateRangeSprite(_towerSelected.getMidpoint(), _towerSelected.range);
 	}
 	
-	/**
-	 * Controls how money is handled. Setting money automatically "balloons" the money HUD indicator.
-	 */
-	public var money(get, set):Int;
-	
-	private function get_money():Int
-	{
-		#if debug
-		if (MONEY_CHEAT) return 0x7FFFFFFF;
-		#end
-		return _money;
-	}
-	
 	private function set_money(NewMoney:Int):Int
 	{
-		#if debug
-		if (MONEY_CHEAT) return _money;
-		#end
-		_money = NewMoney;
-		_moneyText.text = "$: " + _money;
+		money = NewMoney;
+		_moneyText.text = "$: " + money;
 		_moneyText.size = 16;
 		
-		return _money;
+		return money;
 	}
 }
