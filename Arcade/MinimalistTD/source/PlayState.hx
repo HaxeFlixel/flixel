@@ -221,7 +221,7 @@ class PlayState extends FlxState
 		_centerText.alignment = CENTER;
 		_centerText.borderStyle = SHADOW;
 		
-		#if !(cpp || neko || js)
+		#if flash
 		_centerText.blend = BlendMode.INVERT;
 		#end
 		
@@ -526,7 +526,6 @@ class PlayState extends FlxState
 	
 	/**
 	 * A function that is called when the user enters build mode.
-	 * @param	Skip
 	 */
 	private function buildTowerCallback(Skip:Bool = false):Void
 	{
@@ -782,7 +781,7 @@ class PlayState extends FlxState
 		if (_gameOver)
 			return;
 		
-		wave ++;
+		wave++;
 		announceWave();
 		enemiesToKill = 5 + wave;
 		enemiesToSpawn = enemiesToKill;
@@ -845,7 +844,7 @@ class PlayState extends FlxState
 		
 		_towerRange.pixels.draw(RANGE_SPRITE);
 		
-		#if !(cpp || neko || js)
+		#if flash
 		_towerRange.blend = BlendMode.INVERT;
 		#else
 		_towerRange.alpha = 0.5;
