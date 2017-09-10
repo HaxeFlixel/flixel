@@ -11,7 +11,7 @@ import Reg.TILE_SIZE;
 
 class MenuState extends FlxState
 {
-	private var startPosition = FlxPoint.get(TILE_SIZE * 5 + 1, 0);
+	private var startPosition = FlxPoint.get(TILE_SIZE * 5 + 4, 0);
 	private var endPosition = FlxPoint.get(34 * TILE_SIZE + 2, 28 * TILE_SIZE);
 	
 	private var _enemy:Enemy;
@@ -47,7 +47,7 @@ class MenuState extends FlxState
 		playButton.screenCenter();
 		
 		// The enemy that repeatedly traverses the screen.
-		_enemy = new Enemy(startPosition.x, startPosition.y);
+		_enemy = new Enemy();
 		enemyFollowPath();
 		
 		// Add everything to the state
@@ -82,9 +82,8 @@ class MenuState extends FlxState
 	 */
 	public function enemyFollowPath(?_):Void
 	{
+		_enemy.setPosition(startPosition.x, startPosition.y - 12);
 		var path:Array<FlxPoint> = _map.findPath(startPosition, endPosition);
-		path[0].y = -10;
-		path[0].x = path[1].x;
 		var lastPoint = path[path.length - 1];
 		lastPoint.x = path[path.length - 2].x;
 		lastPoint.y += 20;

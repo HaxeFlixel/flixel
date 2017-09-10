@@ -92,7 +92,7 @@ class PlayState extends FlxState
 	private var _speed:Int = 1;
 	private var _waveCounter:Int = 0;
 	
-	private var _enemySpawnPosition = FlxPoint.get(25, -6);
+	private var _enemySpawnPosition = FlxPoint.get(TILE_SIZE * 3 + 4, 0);
 	private var _goalPosition = FlxPoint.get(245, 43);
 	
 	/**
@@ -802,7 +802,7 @@ class PlayState extends FlxState
 		enemiesToSpawn--;
 		
 		var enemy = enemies.recycle(Enemy.new.bind(0, 0));
-		enemy.init(_enemySpawnPosition.x, _enemySpawnPosition.y);
+		enemy.init(_enemySpawnPosition.x, _enemySpawnPosition.y - 12);
 		enemy.followPath(_map.findPath(_enemySpawnPosition, _goalPosition.copyTo().add(5, 5)), 20 + Reg.PS.wave);
 		_spawnCounter = 0;
 	}

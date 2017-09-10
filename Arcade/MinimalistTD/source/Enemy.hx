@@ -13,7 +13,7 @@ class Enemy extends FlxSprite
 	/**
 	 * Create a new enemy. Used in the menu and playstate.
 	 */
-	override public function new(X:Float, Y:Float) 
+	override public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y, Reg.enemyImage);
 		health = maxHealth;
@@ -91,8 +91,8 @@ class Enemy extends FlxSprite
 		if (Path == null)
 			throw("No valid path was passed to the enemy! Does the tilemap provide a valid path from start to finish?");
 		
-		x = Path[0].x;
-		y = Path[0].y;
+		Path[0].x = x;
+		Path[0].y = y;
 		
 		path = new FlxPath().start(Path, Speed, 0, true);
 		path.onComplete = OnComplete;
