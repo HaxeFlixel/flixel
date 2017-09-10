@@ -16,7 +16,6 @@ class Enemy extends FlxSprite
 	override public function new(X:Float, Y:Float) 
 	{
 		super(X, Y, Reg.enemyImage);
-		
 		health = maxHealth;
 	}
 	
@@ -39,7 +38,6 @@ class Enemy extends FlxSprite
 	override public function update(elapsed:Float):Void
 	{
 		alpha = health / maxHealth; 
-		
 		super.update(elapsed);
 	}
 	
@@ -96,7 +94,7 @@ class Enemy extends FlxSprite
 		x = Path[0].x;
 		y = Path[0].y;
 		
-		this.path = new FlxPath().start(Path, Speed, 0, true);
+		path = new FlxPath().start(Path, Speed, 0, true);
 		path.onComplete = OnComplete;
 	}
 }

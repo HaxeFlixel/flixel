@@ -7,10 +7,10 @@ import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.tile.FlxTilemap;
+import Reg.TILE_SIZE;
 
 class MenuState extends FlxState
 {
-	private static inline var TILE_SIZE:Int = 8;
 	private var startPosition = FlxPoint.get(TILE_SIZE * 5 + 1, 0);
 	private var endPosition = FlxPoint.get(34 * TILE_SIZE + 2, 28 * TILE_SIZE);
 	
@@ -72,9 +72,7 @@ class MenuState extends FlxState
 	{
 		// Begin the game on a P keypress.
 		if (FlxG.keys.justReleased.P)
-		{
 			startGame();
-		}
 		
 		super.update(elapsed);
 	}

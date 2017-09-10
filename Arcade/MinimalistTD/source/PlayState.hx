@@ -13,6 +13,7 @@ import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import Reg.TILE_SIZE;
 
 enum MenuType
 {
@@ -322,8 +323,8 @@ class PlayState extends FlxState
 		#if !mobile
 		if (_buildingMode)
 		{
-			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % 8);
-			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % 8);
+			_buildHelper.x = FlxG.mouse.x - (FlxG.mouse.x % TILE_SIZE);
+			_buildHelper.y = FlxG.mouse.y - (FlxG.mouse.y % TILE_SIZE);
 			updateRangeSprite(_buildHelper.getMidpoint(), 40);
 		}
 		#end
@@ -692,8 +693,8 @@ class PlayState extends FlxState
 		}
 		
 		// Snap to grid
-		var xPos:Float = FlxG.mouse.x - (FlxG.mouse.x % 8);
-		var yPos:Float = FlxG.mouse.y - (FlxG.mouse.y % 8);
+		var xPos:Float = FlxG.mouse.x - (FlxG.mouse.x % TILE_SIZE);
+		var yPos:Float = FlxG.mouse.y - (FlxG.mouse.y % TILE_SIZE);
 		
 		// Can't place towers on other towers
 		for (tower in _towerGroup)
@@ -707,8 +708,8 @@ class PlayState extends FlxState
 			}
 		}
 		
-		//Can't place towers on the road
-		if (_map.getTile(Std.int(xPos / 8), Std.int(yPos / 8)) == 0)
+		// Can't place towers on the road
+		if (_map.getTile(Std.int(xPos / TILE_SIZE), Std.int(yPos / TILE_SIZE)) == 0)
 		{
 			FlxG.sound.play("deny");
 			
