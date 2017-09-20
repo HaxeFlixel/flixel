@@ -48,13 +48,10 @@ class FlxTexturedShader extends FlxBaseShader
 				}
 				else
 				{
-					vec4 unmultiply = vec4(color.rgb / color.a, color.a);
-					vec4 result = unmultiply * vColor * uColor;
-					result = result + uColorOffset;
-					result = clamp(result, 0.0, 1.0);
-					result = vec4(result.rgb * result.a, result.a);
+					color = vec4(color.rgb / color.a, color.a);
+					color = color * vColor * uColor + uColorOffset;
 					
-					gl_FragColor = result;
+					gl_FragColor = vec4(color.rgb * color.a, color.a);
 				}
 			}";
 	
