@@ -334,7 +334,7 @@ class FlxDrawQuadsCommand extends FlxDrawHardwareCommand<FlxDrawQuadsCommand>
 			var bothNullShaders:Bool = (material.shader == null && shader == null);
 			var sameTextured:Bool = (this.textured == (bitmap != null));
 			
-			if (!sameMaterial || !bothNullShaders || !sameTextured)
+			if (!(sameMaterial || bothNullShaders) || !sameTextured)
 			{
 				flush();
 			}
