@@ -1,7 +1,6 @@
 package flixel;
 
 import flixel.FlxCamera;
-import flixel.system.FlxBGSprite;
 import flixel.util.FlxColor;
 
 /**
