@@ -3,6 +3,7 @@ package flixel.ui;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -818,40 +819,35 @@ class FlxBar extends FlxSprite
 		super.update(elapsed);
 	}
 	
-	override public function draw():Void 
+	override public function drawTo(Camera:FlxCamera):Void 
 	{
-		super.draw();
+		super.drawTo(Camera);
 		
-		if (!FlxG.renderTile)
+		if (!FlxG.renderTile || percent <= 0 || _frontFrame.type == FlxFrameType.EMPTY)
 			return;
 		
-		if (alpha == 0)
+		if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
 			return;
 		
-		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
-		{
-			for (camera in cameras)
-			{
-				if (!camera.visible || !camera.exists || !isOnScreen(camera))
-					continue;
-				
-				getScreenPosition(_point, camera).subtractPoint(offset);
-				
-				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
-				_matrix.translate( -origin.x, -origin.y);
-				_matrix.scale(scale.x, scale.y);
-				
-				if (angle != 0)
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-				
-				_point.add(origin.x, origin.y);
-				if (isPixelPerfectRender(camera))
-					_point.floor();
-				
-				_matrix.translate(_point.x, _point.y);
-				camera.drawPixels(_frontFrame, material, _matrix, colorTransform);
-			}
-		}
+		getScreenPosition(_point, Camera).subtractPoint(offset);
+		
+		_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
+		_matrix.translate( -origin.x, -origin.y);
+		_matrix.scale(scale.x, scale.y);
+		
+		if (angle != 0)
+			_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+		
+		_point.add(origin.x, origin.y);
+		if (isPixelPerfectRender(Camera))
+			_point.floor();
+		
+		_matrix.translate(_point.x, _point.y);
+		Camera.drawPixels(_frontFrame, material, _matrix, colorTransform);
+		
+		#if FLX_DEBUG
+		FlxBasic.visibleCount++;
+		#end
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData

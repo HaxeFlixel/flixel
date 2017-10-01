@@ -864,10 +864,10 @@ class FlxText extends FlxSprite
 	}
 	#end
 	
-	override public function draw():Void 
+	override public function preDrawCheck():Bool 
 	{
 		regenGraphic();
-		super.draw();
+		return super.preDrawCheck();
 	}
 	
 	/**

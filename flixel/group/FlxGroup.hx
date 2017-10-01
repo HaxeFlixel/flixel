@@ -1,6 +1,7 @@
 package flixel.group;
 
 import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.util.FlxArrayUtil;
@@ -152,9 +153,21 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			basic = members[i++];
 			
 			if (basic != null && basic.exists && basic.visible)
-			{
 				basic.draw();
-			}
+		}
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		var i:Int = 0;
+		var basic:FlxBasic = null;
+		
+		while (i < length)
+		{
+			basic = members[i++];
+			
+			if (basic != null && basic.exists && basic.visible && basic.preDrawCheck())
+				basic.drawTo(Camera);
 		}
 	}
 	

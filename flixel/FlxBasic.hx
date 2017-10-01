@@ -114,9 +114,27 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function draw():Void
 	{
+		
+	}
+	
+	/**
+	 * 
+	 * @param	Camera
+	 */
+	public function drawTo(Camera:FlxCamera):Void
+	{
 		#if FLX_DEBUG
 		visibleCount++;
 		#end
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public function preDrawCheck():Bool
+	{
+		return true;
 	}
 	
 	public function toString():String

@@ -460,14 +460,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return Camera.containsPoint(_point, _scaledTileWidth * widthInTiles, _scaledTileHeight * heightInTiles);
 	}
 	
-	/**
-	 * Draws the tilemap buffers to the cameras.
-	 */
-	override public function draw():Void
+	override public function preDrawCheck():Bool 
 	{
 		// don't try to render a tilemap that isn't loaded yet
 		if (graphic == null)
-			return;
+			return false;
 		
 		if (_checkBufferChanges)
 		{
@@ -475,43 +472,36 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_checkBufferChanges = false;
 		}
 		
-		var camera:FlxCamera;
-		var buffer:FlxTilemapBuffer;
-		var l:Int = cameras.length;
+		return true;
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
+			return;
 		
-		for (i in 0...l)
+		var i:Int = cameras.indexOf(Camera);
+		
+		if (_buffers[i] == null)
+			_buffers[i] = createBuffer(Camera);
+		
+		var buffer:FlxTilemapBuffer = _buffers[i];
+		
+		if (FlxG.renderBlit)
 		{
-			camera = cameras[i];
+			if (buffer.isDirty(this, Camera))
+				drawTilemap(buffer, Camera);
 			
-			if (!camera.visible || !camera.exists || !isOnScreen(camera))
-				continue;
-			
-			if (_buffers[i] == null)
-				_buffers[i] = createBuffer(camera);
-			
-			buffer = _buffers[i];
-			
-			if (FlxG.renderBlit)
-			{
-				if (buffer.isDirty(this, camera))
-					drawTilemap(buffer, camera);
-				
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
-				buffer.draw(camera, _flashPoint, scale.x, scale.y);
-			}
-			else
-			{
-				drawTilemap(buffer, camera);
-			}
-			
-			#if FLX_DEBUG
-			FlxBasic.visibleCount++;
-			#end
+			getScreenPosition(_point, Camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
+			buffer.draw(Camera, _flashPoint, scale.x, scale.y);
+		}
+		else
+		{
+			drawTilemap(buffer, Camera);
 		}
 		
 		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
+		FlxBasic.visibleCount++;
 		#end
 	}
 	

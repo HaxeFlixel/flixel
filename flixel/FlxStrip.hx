@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.FlxCamera;
 import flixel.graphics.FlxTrianglesData;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -75,10 +76,10 @@ class FlxStrip extends FlxSprite
 		super.destroy();
 	}
 	
-	override public function draw():Void 
+	override public function preDrawCheck():Bool 
 	{
 		if (alpha == 0 || data == null || vertices == null)
-			return;
+			return false;
 		
 		if (FlxG.renderBlit && useFramePixels)
 		{
@@ -88,12 +89,25 @@ class FlxStrip extends FlxSprite
 				dirty = false;
 			}
 			
-			super.draw();
-			return;
+			return super.preDrawCheck();
 		}
 		
 		if (verticesDirty)
 			data.updateBounds();
+		
+		return true;
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		if (!Camera.visible || !Camera.exists)
+			return;
+		
+		if (FlxG.renderBlit && useFramePixels)
+		{
+			super.drawTo(Camera);
+			return;
+		}
 		
 		// update matrix
 		_matrix.identity();
@@ -107,33 +121,23 @@ class FlxStrip extends FlxSprite
 		
 		_matrix.translate(origin.x, origin.y);
 		
-		// now calculate transformed bounds of sprite
-		var tempBounds:FlxRect = data.getTransformedBounds(_matrix);
+		getScreenPosition(_point, Camera).subtractPoint(offset);
+		_matrix.translate(_point.x, _point.y);
 		
+		// now calculate transformed bounds of sprite
+		var tempBounds:FlxRect = data.getTransformedBounds(_matrix); // TODO: maybe don't recalculate this for every camera...
 		var bitmap:BitmapData = (graphic != null) ? graphic.bitmap : null;
 		
-		for (camera in cameras)
+		if (Camera.view.bounds.overlaps(tempBounds))
 		{
-			if (!camera.visible || !camera.exists)
-				continue;
+			Camera.drawTriangles(bitmap, material, data, _matrix, colorTransform);
 			
-			getScreenPosition(_point, camera).subtractPoint(offset);
-			tempBounds.offset(_point.x, _point.y);
+			#if FLX_DEBUG
+			if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+				Camera.drawDebugTriangles(_matrix, data, 0x0000ff, 1, 0.5);
 			
-			if (camera.view.bounds.overlaps(tempBounds))
-			{
-				_matrix.translate(_point.x, _point.y);
-				camera.drawTriangles(bitmap, material, data, _matrix, colorTransform);
-				
-				#if FLX_DEBUG
-				if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
-					camera.drawDebugTriangles(_matrix, data, 0x0000ff, 1, 0.5);
-				#end
-				
-				_matrix.translate( -_point.x, -_point.y);
-			}
-			
-			tempBounds.offset( -_point.x, -_point.y);
+			FlxBasic.visibleCount++;
+			#end
 		}
 	}
 	

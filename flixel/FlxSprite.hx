@@ -6,6 +6,7 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
+import flixel.FlxCamera;
 import flixel.animation.FlxAnimationController;
 import flixel.effects.FlxRenderTarget;
 import flixel.graphics.FlxGraphic;
@@ -183,13 +184,6 @@ class FlxSprite extends FlxObject
 	 */
 	#if openfl_legacy @:noCompletion #end
 	public var shader(get, set):FlxShader;
-	
-	/**
-	 * Render target for this sprite. 
-	 * If null then sprite will render on camera's buffer.
-	 * Could be used as render pass target in gl render mode.
-	 */
-	public var renderTarget(default, set):FlxRenderTarget;
 	
 	/**
 	 * The actual frame used for sprite rendering
@@ -657,47 +651,35 @@ class FlxSprite extends FlxObject
 		if (_frame == null)
 			loadGraphic("flixel/images/logo/default.png");
 	}
-
-	/**
-	 * Called by game loop, updates then blits or renders current frame of animation to the screen.
-	 */
-	override public function draw():Void
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
+			return;
+		
+		getScreenPosition(_point, Camera).subtractPoint(offset);
+		
+		if (isSimpleRender(Camera))
+			drawSimple(Camera);
+		else
+			drawComplex(Camera);
+		
+		#if FLX_DEBUG
+		super.drawTo(Camera);
+		#end
+	}
+	
+	override public function preDrawCheck():Bool 
 	{
 		checkEmptyFrame();
 		
 		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
-			return;
+			return false;
 		
 		if (dirty) //rarely 
 			calcFrame(useFramePixels);	
 		
-		for (camera in cameras)
-		{
-			if (!camera.visible || !camera.exists || !isOnScreen(camera))
-				continue;
-			
-			if (renderTarget != null)
-				camera.setRenderTarget(renderTarget);
-			
-			getScreenPosition(_point, camera).subtractPoint(offset);
-			
-			if (isSimpleRender(camera))
-				drawSimple(camera);
-			else
-				drawComplex(camera);
-			
-			#if FLX_DEBUG
-			FlxBasic.visibleCount++;
-			#end
-			
-			if (renderTarget != null)
-				camera.setRenderTarget(null);
-		}
-		
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
-		#end
+		return true;
 	}
 	
 	@:noCompletion
@@ -1455,12 +1437,6 @@ class FlxSprite extends FlxObject
 			return doFlipY != animation.curAnim.flipY;
 		}
 		return doFlipY;
-	}
-	
-	private function set_renderTarget(value:FlxRenderTarget):FlxRenderTarget
-	{
-		this.cameras = (value != null) ? value.renderCameras : null;
-		return renderTarget = value;
 	}
 }
 

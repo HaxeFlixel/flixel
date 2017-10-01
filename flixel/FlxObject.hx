@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.FlxCamera;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -701,10 +702,20 @@ class FlxObject extends FlxBasic
 	 */
 	override public function draw():Void
 	{
+		if (!preDrawCheck())
+			return;
+		
+		for (camera in cameras)
+			drawTo(camera);
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
 		#if FLX_DEBUG
-		super.draw();
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
+		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+			drawDebugOnCamera(Camera);
+		
+		FlxBasic.visibleCount++;
 		#end
 	}
 	
@@ -1045,12 +1056,7 @@ class FlxObject extends FlxBasic
 			return;
 		
 		for (camera in cameras)
-		{
 			drawDebugOnCamera(camera);
-			
-			if (path != null && !path.ignoreDrawDebug)
-				path.drawDebug();
-		}
 	}
 	
 	/**
@@ -1068,6 +1074,9 @@ class FlxObject extends FlxBasic
 		beginDrawDebug(camera);
 		drawDebugBoundingBox(camera, rect, allowCollisions, immovable);
 		endDrawDebug(camera);
+		
+		if (path != null && !path.ignoreDrawDebug)
+			path.drawDebug(camera);
 	}
 	
 	function drawDebugBoundingBox(camera:FlxCamera, rect:FlxRect, allowCollisions:Int, partial:Bool)

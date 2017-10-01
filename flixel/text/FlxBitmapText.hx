@@ -2,6 +2,7 @@ package flixel.text;
 
 import flash.display.BitmapData;
 import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxMaterial;
@@ -300,16 +301,22 @@ class FlxBitmapText extends FlxSprite
 			updatePixels(useTiles);
 	}
 	
-	override public function draw():Void 
+	override public function preDrawCheck():Bool 
+	{
+		checkPendingChanges(FlxG.renderTile);
+		return super.preDrawCheck();
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
 	{
 		if (FlxG.renderBlit)
 		{
-			checkPendingChanges(false);
-			super.draw();
+			super.drawTo(Camera);
 		}
 		else
 		{
-			checkPendingChanges(true);
+			if (!Camera.visible || !Camera.exists || !isOnScreen(Camera))
+				return;
 			
 			var textLength:Int = Std.int(textDrawData.length / 3);
 			var borderLength:Int = Std.int(borderDrawData.length / 3);
@@ -367,87 +374,72 @@ class FlxBitmapText extends FlxSprite
 			if (_facingVerticalMult != 1)
 				oy = frameHeight - oy;
 			
-			for (camera in cameras)
+			getScreenPosition(_point, Camera).subtractPoint(offset);
+			
+			if (isPixelPerfectRender(Camera))
+				_point.floor();
+			
+			updateTrig();
+			view = Camera.view;
+			
+			if (background)
 			{
-				if (!camera.visible || !camera.exists || !isOnScreen(camera))
-					continue;
+				// backround tile transformations
+				_matrix.identity();
+				_matrix.translate(-ox, -oy);
+				_matrix.scale(sx, sy);
 				
-				getScreenPosition(_point, camera).subtractPoint(offset);
+				if (angle != 0)
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 				
-				if (isPixelPerfectRender(camera))
-					_point.floor();
+				_matrix.translate(_point.x + ox, _point.y + oy);
 				
-				updateTrig();
-				view = camera.view;
-				
-				if (background)
-				{
-					// backround tile transformations
-					_matrix.identity();
-					_matrix.translate(-ox, -oy);
-					_matrix.scale(sx, sy);
-					
-					if (angle != 0)
-						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-					
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					
-					_backgroundRect.set(0, 0, frameWidth, frameHeight);
-					view.drawColorQuad(backgroundMaterial, _backgroundRect, _matrix, backgroundColor, backgroundColor.alphaFloat * alpha);
-				}
-				
-				for (j in 0...borderLength)
-				{
-					dataPos = j * 3;
-					
-					currFrame = font.getCharacter(Std.int(borderDrawData[dataPos])).frame;
-					
-					currTileX = borderDrawData[dataPos + 1];
-					currTileY = borderDrawData[dataPos + 2];
-					
-					currFrame.prepareMatrix(_matrix);
-					_matrix.translate(currTileX - ox, currTileY - oy);
-					_matrix.scale(sx, sy);
-					
-					if (angle != 0)
-						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-					
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					view.drawPixels(currFrame, material, _matrix, _colorParams);
-				}
-				
-				for (j in 0...textLength)
-				{
-					dataPos = j * 3;
-					
-					currFrame = font.getCharacter(Std.int(textDrawData[dataPos])).frame;
-					
-					currTileX = textDrawData[dataPos + 1];
-					currTileY = textDrawData[dataPos + 2];
-					
-					currFrame.prepareMatrix(_matrix);
-					_matrix.translate(currTileX - ox, currTileY - oy);
-					_matrix.scale(sx, sy);
-					
-					if (angle != 0)
-						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-					
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
-					
-					view.drawPixels(currFrame, material, _matrix, _colorParams);
-				}
-				
-				#if FLX_DEBUG
-				FlxBasic.visibleCount++;
-				#end
+				_backgroundRect.set(0, 0, frameWidth, frameHeight);
+				view.drawColorQuad(backgroundMaterial, _backgroundRect, _matrix, backgroundColor, backgroundColor.alphaFloat * alpha);
 			}
 			
-			#if FLX_DEBUG
-			if (FlxG.debugger.drawDebug)
-				drawDebug();
-			#end
+			for (j in 0...borderLength)
+			{
+				dataPos = j * 3;
+				
+				currFrame = font.getCharacter(Std.int(borderDrawData[dataPos])).frame;
+				
+				currTileX = borderDrawData[dataPos + 1];
+				currTileY = borderDrawData[dataPos + 2];
+				
+				currFrame.prepareMatrix(_matrix);
+				_matrix.translate(currTileX - ox, currTileY - oy);
+				_matrix.scale(sx, sy);
+				
+				if (angle != 0)
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				
+				_matrix.translate(_point.x + ox, _point.y + oy);
+				_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
+				view.drawPixels(currFrame, material, _matrix, _colorParams);
+			}
+			
+			for (j in 0...textLength)
+			{
+				dataPos = j * 3;
+				
+				currFrame = font.getCharacter(Std.int(textDrawData[dataPos])).frame;
+				
+				currTileX = textDrawData[dataPos + 1];
+				currTileY = textDrawData[dataPos + 2];
+				
+				currFrame.prepareMatrix(_matrix);
+				_matrix.translate(currTileX - ox, currTileY - oy);
+				_matrix.scale(sx, sy);
+				
+				if (angle != 0)
+					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				
+				_matrix.translate(_point.x + ox, _point.y + oy);
+				_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
+				
+				view.drawPixels(currFrame, material, _matrix, _colorParams);
+			}
 		}
 	}
 	

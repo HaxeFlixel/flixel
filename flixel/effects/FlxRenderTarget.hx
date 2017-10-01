@@ -2,6 +2,7 @@ package flixel.effects;
 
 import flixel.FlxCamera;
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.system.render.common.FlxRenderTexture;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -12,6 +13,11 @@ import flixel.util.FlxDestroyUtil;
  */
 class FlxRenderTarget extends FlxSprite
 {
+	/**
+	 * The actual group which holds all sprites.
+	 */
+	public var group:FlxGroup;
+	
 	/**
 	 * Render texture of this sprite. All sprites which have `renderTarget` equal to this sprite, 
 	 * will be rendered on this texture. 
@@ -41,34 +47,40 @@ class FlxRenderTarget extends FlxSprite
 	@:allow(flixel.FlxSprite)
 	private var renderCameras(default, null):Array<FlxCamera>;
 	
+	private var renderedGroup:Bool = false;
+	
 	/**
 	 * Render target constructor
 	 * 
 	 * @param	Width			width of render target
 	 * @param	Height			height of render target
+	 * @param	Camera			renderCamera for this render target 
 	 * @param	Smoothing		smoothing of  render texture
 	 * @param	PowerOfTwo		whether size of render texture should be multiple of two.
 	 */
-	public function new(Width:Int, Height:Int, Smoothing:Bool = true, PowerOfTwo:Bool = false) 
+	public function new(Width:Int, Height:Int, ?Camera:FlxCamera, Smoothing:Bool = true, PowerOfTwo:Bool = false) 
 	{
 		super(0, 0);
 		
 		renderTexture = new FlxRenderTexture(Width, Height, Smoothing, PowerOfTwo);
 		frames = renderTexture.graphic.imageFrame;
-		renderCameras = [FlxG.camera];
+		Camera = (Camera == null) ? FlxG.camera : Camera;
+		renderCameras = [Camera];
+		group = new FlxGroup();
 	}
 	
 	override public function destroy():Void 
 	{
 		renderTexture = FlxDestroyUtil.destroy(renderTexture);
 		renderCameras = null;
+		group = FlxDestroyUtil.destroy(group);
 		
 		super.destroy();
 	}
 	
 	/**
 	 * Forces clearing of render texture. 
-	 * Usually you won't need this method.
+	 * Usually you won't need to call this method.
 	 */
 	public function clear():Void
 	{
@@ -85,18 +97,49 @@ class FlxRenderTarget extends FlxSprite
 	 */
 	public function drawObject(object:FlxSprite):Void
 	{
-		var temp:FlxRenderTarget = object.renderTarget;
-		object.renderTarget = this;
 		renderCamera.setRenderTarget(this);
-		object.draw();
+		object.drawTo(renderCamera);
 		renderCamera.setRenderTarget(null);
-		object.renderTarget = temp;
 	}
 	
-	override public function draw():Void 
+	override public function update(elapsed:Float):Void 
 	{
-		super.draw();
+		group.update(elapsed);
+		super.update(elapsed);
+		
+		renderedGroup = false;
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		renderGroup();
+		
+		super.drawTo(Camera);
 		renderTexture.clearBeforeRender = clearBeforeRender;
+	}
+	
+	public function add<T:FlxBasic>(Object:T):T
+	{
+		group.add(Object);
+		return Object;
+	}
+	
+	public function remove<T:FlxBasic>(Object:T, Splice:Bool = false):T
+	{
+		group.remove(Object, Splice);
+		return Object;
+	}
+	
+	private function renderGroup():Void
+	{
+		if (!renderedGroup)
+		{
+			renderCamera.setRenderTarget(this);
+			group.drawTo(renderCamera);
+			renderCamera.setRenderTarget(null);
+		}
+		
+		renderedGroup = true;
 	}
 	
 	private function set_renderCamera(value:FlxCamera):FlxCamera

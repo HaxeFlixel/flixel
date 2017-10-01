@@ -1,6 +1,7 @@
 package flixel.ui;
 
 import flash.events.MouseEvent;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
@@ -307,15 +308,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Just draws the button graphic and text label to the screen.
 	 */
-	override public function draw():Void
+	override public function drawTo(Camera:FlxCamera):Void 
 	{
-		super.draw();
+		super.drawTo(Camera);
 		
 		if (_spriteLabel != null && _spriteLabel.visible)
-		{
-			_spriteLabel.cameras = cameras;
-			_spriteLabel.draw();
-		}
+			_spriteLabel.drawTo(Camera);
 	}
 	
 #if FLX_DEBUG
@@ -327,9 +325,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		super.drawDebug();
 		
 		if (_spriteLabel != null) 
-		{
 			_spriteLabel.drawDebug();
-		}
 	}
 #end
 

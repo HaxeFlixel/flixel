@@ -206,6 +206,16 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		#end
 	}
 	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		group.drawTo(Camera);
+		
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+			drawDebugOnCamera(Camera);
+		#end
+	}
+	
 	/**
 	 * Replaces all pixels with specified `Color` with `NewColor` pixels.
 	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.

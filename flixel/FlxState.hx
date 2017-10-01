@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.FlxCamera;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 
@@ -71,6 +72,15 @@ class FlxState extends FlxGroup
 		
 		if (subState != null)
 			subState.draw();
+	}
+	
+	override public function drawTo(Camera:FlxCamera):Void 
+	{
+		if (persistentDraw || subState == null)
+			super.drawTo(Camera);
+		
+		if (subState != null)
+			subState.drawTo(Camera);
 	}
 	
 	public function openSubState(SubState:FlxSubState):Void
