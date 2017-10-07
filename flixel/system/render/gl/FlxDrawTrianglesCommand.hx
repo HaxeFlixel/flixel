@@ -134,7 +134,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 		data.updateIndices();
 		data.dirty = false;
 		
-		gl.drawElements(gl.TRIANGLES, data.numIndices, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(gl.TRIANGLES, data.indexCount, gl.UNSIGNED_SHORT, 0);
 		
 		FlxCameraView.drawCalls++;
 	}
@@ -162,7 +162,7 @@ class FlxDrawTrianglesCommand extends FlxDrawHardwareCommand<FlxDrawTrianglesCom
 	
 	override private function get_numVertices():Int
 	{
-		return (data != null) ? data.numIndices : 0;
+		return (data != null) ? data.vertexCount : 0;
 	}
 	
 	override private function get_numTriangles():Int 
