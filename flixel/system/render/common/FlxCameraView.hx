@@ -249,6 +249,11 @@ class FlxCameraView implements IFlxDestroyable
 	
 	public function setRenderTarget(?target:FlxRenderTarget):Void {}
 	
+	public function getRenderTarget():FlxRenderTarget
+	{
+		return null;
+	}
+	
 	/**
 	 * Helper method preparing debug rectangle for rendering in blit render mode
 	 * @param	rect	rectangle to prepare for rendering

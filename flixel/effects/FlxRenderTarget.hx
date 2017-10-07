@@ -85,8 +85,9 @@ class FlxRenderTarget extends FlxSprite
 	public function clear():Void
 	{
 		renderTexture.clearBeforeRender = true; // force cleaning.
-		renderCamera.setRenderTarget(this);
-		renderCamera.setRenderTarget(null);
+		var prevTarget = renderCamera.renderTarget;
+		renderCamera.renderTarget = this;
+		renderCamera.renderTarget = prevTarget;
 	}
 	
 	/**
@@ -97,9 +98,10 @@ class FlxRenderTarget extends FlxSprite
 	 */
 	public function drawObject(object:FlxSprite):Void
 	{
-		renderCamera.setRenderTarget(this);
+		var prevTarget = renderCamera.renderTarget;
+		renderCamera.renderTarget = this;
 		object.drawTo(renderCamera);
-		renderCamera.setRenderTarget(null);
+		renderCamera.renderTarget = prevTarget;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -130,13 +132,14 @@ class FlxRenderTarget extends FlxSprite
 		return Object;
 	}
 	
-	private function renderGroup():Void
+	public function renderGroup(force:Bool = false):Void
 	{
-		if (!renderedGroup)
+		if (!renderedGroup || force)
 		{
-			renderCamera.setRenderTarget(this);
+			var prevTarget = renderCamera.renderTarget;
+			renderCamera.renderTarget = this; 
 			group.drawTo(renderCamera);
-			renderCamera.setRenderTarget(null);
+			renderCamera.renderTarget = prevTarget; // TODO: set previous render target (before this)...
 		}
 		
 		renderedGroup = true;

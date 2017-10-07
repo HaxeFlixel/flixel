@@ -150,16 +150,6 @@ class FlxTrianglesData implements IFlxDestroyable
 	}
 	
 	/**
-	 * Max number of vertices for this data object.
-	 */
-	public var maxVertices(default, null):Int; // TODO: maybe add setter...
-	
-	/**
-	 * Max number on indices for this data object.
-	 */
-	public var maxIndices(default, null):Int; // TODO: maybe add setter...
-	
-	/**
 	 * Number of vertex indices in this data object.
 	 */
 	public var numIndices(get, null):Int;
@@ -177,19 +167,19 @@ class FlxTrianglesData implements IFlxDestroyable
 	/**
 	 * Tells if `verticesBuffer` should be regenerated before rendering this data object.
 	 */
-	public var verticesDirty(default, null):Bool = true;
+	public var verticesDirty(default, set):Bool = true;
 	/**
 	 * Tells if `uvsBuffer` should be regenerated before rendering this data object.
 	 */
-	public var uvtDirty(default, null):Bool = true;
+	public var uvtDirty(default, set):Bool = true;
 	/**
 	 * Tells if `colorsBuffer` should be regenerated before rendering this data object.
 	 */
-	public var colorsDirty(default, null):Bool = true;
+	public var colorsDirty(default, set):Bool = true;
 	/**
 	 * Tells if `indicesBuffer` should be regenerated before rendering this data object.
 	 */
-	public var indicesDirty(default, null):Bool = true;
+	public var indicesDirty(default, set):Bool = true;
 	
 	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
@@ -241,6 +231,18 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	public var bounds(default, null):FlxRect = FlxRect.get();
 	
+	// TODO: document this...
+	/**
+	 * 
+	 */
+	public var vertexCapacity(default, null):Int; // TODO: update this value...
+	
+	// TODO: document this...
+	/**
+	 * 
+	 */
+	public var indexCapacity(default, null):Int; // TODO: update this value...
+	
 	#if FLX_RENDER_GL
 	private var verticesArray:Float32Array;
 	private var uvsArray:Float32Array;
@@ -268,18 +270,18 @@ class FlxTrianglesData implements IFlxDestroyable
 	 * @param	maxVertices	max number of vertices for this object. You'll be able to increase this number later by calling `setMaxVertices()` method
 	 * @param	maxIndices	max number of indices for this object. You'll be able to increase this number later by calling `setMaxIndices()` method
 	 */
-	public function new(maxVertices:Int = 4092, maxIndices:Int = 4092) 
+	public function new(numVertices:Int = 0, numIndices:Int = 0) 
 	{
-		this.maxVertices = (maxVertices < MAX_VERTICES) ? maxVertices : MAX_VERTICES;
-		this.maxIndices = (maxIndices < MAX_INDICES) ? maxIndices : MAX_INDICES;
+		this.vertexCapacity = (numVertices < MAX_VERTICES) ? numVertices : MAX_VERTICES;
+		this.indexCapacity = (numIndices < MAX_INDICES) ? numIndices : MAX_INDICES;
 		
 		#if FLX_RENDER_GL
-		verticesArray = new Float32Array(maxVertices << 1);
-		uvsArray = new Float32Array(maxVertices << 1);
-		colorsArray = new UInt32Array(maxVertices);
-		indicesArray = new UInt16Array(maxIndices);
+		verticesArray = new Float32Array(vertexCapacity << 1);
+		uvsArray = new Float32Array(vertexCapacity << 1);
+		colorsArray = new UInt32Array(vertexCapacity);
+		indicesArray = new UInt16Array(indexCapacity);
 		
-		for (i in 0...maxVertices)
+		for (i in 0...vertexCapacity)
 			colorsArray[i] = FlxColor.WHITE;
 		#end
 		
@@ -447,7 +449,7 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	public function addVertex(x:Float, y:Float, u:Float = 0.0, v:Float = 0.0, color:FlxColor = FlxColor.WHITE):FlxTrianglesData
 	{
-		if (vertexCount >= maxVertices)
+		if (vertexCount >= vertexCapacity)
 		{
 			trace("Can't add new vertex. Max vertex count reached!");
 			return this;
@@ -491,7 +493,7 @@ class FlxTrianglesData implements IFlxDestroyable
 	 */
 	public function addTriangle(index1:Int, index2:Int, index3:Int):FlxTrianglesData
 	{
-		if (indexCount >= maxIndices)
+		if (indexCount >= indexCapacity)
 		{
 			trace("Can't add new triangle. Max index count reached!");
 			return this;
@@ -531,13 +533,13 @@ class FlxTrianglesData implements IFlxDestroyable
 		var numVertices:Int = vertices.length >> 1;
 		var numIndices:Int = indices.length;
 		
-		if (vertexCount + numVertices > maxVertices)
+		if (vertexCount + numVertices > MAX_VERTICES)
 		{
 			trace("Can't add new vertices. Max vertex count reached!");
 			return this;
 		}
 		
-		if (indexCount + numIndices > maxIndices)
+		if (indexCount + numIndices > MAX_INDICES)
 		{
 			trace("Can't add new triangles. Max index count reached!");
 			return this;
@@ -615,6 +617,9 @@ class FlxTrianglesData implements IFlxDestroyable
 		return this;
 	}
 	
+	// TODO: add methods for getting vertex coordinates, uv and color...
+	// TODO: add methods for setting individual values in vertices, uv and colors arrays by indices in arrays not by vertex indices (to minify copying data)
+	
 	/**
 	 * Modifies positions of the vertex which had been added previously to this data object.
 	 * 
@@ -644,6 +649,44 @@ class FlxTrianglesData implements IFlxDestroyable
 		return this;
 	}
 	
+	public inline function setVertexX(vertexId:Int, x:Float):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		var pos:Int = vertexId << 1;
+		vertices[pos] = x;
+		
+		#if FLX_RENDER_GL
+		verticesArray[pos] = x;
+		#end
+		
+		verticesDirty = true;
+		return this;
+	}
+	
+	public inline function setVertexY(vertexId:Int, y:Float):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		var pos:Int = vertexId << 1;
+		vertices[pos + 1] = y;
+		
+		#if FLX_RENDER_GL
+		verticesArray[pos + 1] = y;
+		#end
+		
+		verticesDirty = true;
+		return this;
+	}
+	
 	/**
 	 * Modifies uv texture coordinates of the vertex which had been added previously to this data object.
 	 * 
@@ -666,6 +709,44 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		#if FLX_RENDER_GL
 		uvsArray[pos] = u;
+		uvsArray[pos + 1] = v;
+		#end
+		
+		uvtDirty = true;
+		return this;
+	}
+	
+	public inline function setVertexU(vertexId:Int, u:Float = 0.0):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		var pos:Int = vertexId << 1;
+		uvs[pos] = u;
+		
+		#if FLX_RENDER_GL
+		uvsArray[pos] = u;
+		#end
+		
+		uvtDirty = true;
+		return this;
+	}
+	
+	public inline function setVertexV(vertexId:Int, v:Float = 0.0):FlxTrianglesData
+	{
+		if (vertexId > vertexCount)
+		{
+			trace("Vertex with id " + vertexId + " hasn't been added yet.");
+			return this;
+		}
+		
+		var pos:Int = vertexId << 1;
+		uvs[pos + 1] = v;
+		
+		#if FLX_RENDER_GL
 		uvsArray[pos + 1] = v;
 		#end
 		
@@ -704,9 +785,9 @@ class FlxTrianglesData implements IFlxDestroyable
 	 * 
 	 * @param	value	new max number of vertices. If you specify number greater than `MAX_VERTICES`, then exception will be thrown.
 	 */
-	public function setMaxVertices(value:Int):Void
+	public function extendVertices(value:Int):Void
 	{
-		if (value > maxVertices)
+		if (value > vertexCapacity)
 		{
 			if (value > MAX_VERTICES)
 				throw "Can't draw over " + MAX_VERTICES + " vertices in one draw call!";
@@ -716,11 +797,12 @@ class FlxTrianglesData implements IFlxDestroyable
 			uvsArray = new Float32Array(value << 1);
 			colorsArray = new UInt32Array(value);
 			
+			// TODO: don't override existing colors...
 			for (i in 0...value)
 				colorsArray[i] = FlxColor.WHITE;
 			#end
 			
-			maxVertices = value;
+			vertexCapacity = value;
 			vertexCount = 0;
 			trianglesOffset = 0;
 		}
@@ -732,9 +814,9 @@ class FlxTrianglesData implements IFlxDestroyable
 	 * 
 	 * @param	value	new max number of indices. If you specify number greater than `MAX_INDICES`, then exception will be thrown.
 	 */
-	public function setMaxIndices(value:Int):Void
+	public function extendIndices(value:Int):Void
 	{
-		if (value > maxIndices)
+		if (value > indexCapacity)
 		{
 			if (value > MAX_INDICES)
 				throw "Can't draw over " + MAX_INDICES + " indices in one draw call!";
@@ -743,7 +825,7 @@ class FlxTrianglesData implements IFlxDestroyable
 			indicesArray = new UInt16Array(value);
 			#end
 			
-			maxIndices = value;
+			indexCapacity = value;
 			indexCount = 0;
 		}
 	}
@@ -757,7 +839,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (value != null)
 		{
-			setMaxVertices(value.length >> 1);
+			extendVertices(value.length >> 1);
 			vertexCount = value.length >> 1;
 			trianglesOffset = vertexCount;
 			
@@ -779,7 +861,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (value != null)
 		{
-			setMaxVertices(value.length >> 1);
+			extendVertices(value.length >> 1);
 			
 			#if FLX_RENDER_GL
 			for (i in 0...value.length)
@@ -798,7 +880,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		if (value != null)
 		{
 			var numColors:Int = value.length;
-			setMaxVertices(numColors);
+			extendVertices(numColors);
 			
 			#if FLX_RENDER_GL
 			for (i in 0...value.length)
@@ -819,7 +901,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		if (value != null)
 		{
 			var numIndices:Int = value.length;
-			setMaxIndices(numIndices);
+			extendIndices(numIndices);
 			indexCount = numIndices;
 			
 			#if FLX_RENDER_GL
@@ -835,6 +917,26 @@ class FlxTrianglesData implements IFlxDestroyable
 	{
 		verticesDirty = uvtDirty = colorsDirty = indicesDirty = value;
 		return dirty = value;
+	}
+	
+	private function set_verticesDirty(value:Bool):Bool
+	{
+		return verticesDirty = value;
+	}
+	
+	private function set_uvtDirty(value:Bool):Bool
+	{
+		return uvtDirty = value;
+	}
+	
+	private function set_colorsDirty(value:Bool):Bool
+	{
+		return colorsDirty = value;
+	}
+	
+	private function set_indicesDirty(value:Bool):Bool
+	{
+		return indicesDirty = value;
 	}
 	
 	private function get_numIndices():Int
@@ -869,7 +971,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		if (verticesArray == null || vertices == null)
 			return;
 		
-		var numBytes:Int = (maxVertices << 1) * Float32Array.BYTES_PER_ELEMENT;
+		var numBytes:Int = (vertexCapacity << 1) * Float32Array.BYTES_PER_ELEMENT;
 		
 		if (verticesDirty)
 		{
@@ -894,7 +996,7 @@ class FlxTrianglesData implements IFlxDestroyable
 			
 		if (uvtDirty)
 		{
-			var numBytes:Int = (maxVertices << 1) * Float32Array.BYTES_PER_ELEMENT;
+			var numBytes:Int = (vertexCapacity << 1) * Float32Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ARRAY_BUFFER, uvsBuffer);
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, uvsArray, GL.STATIC_DRAW);
 			uvtDirty = false;
@@ -915,7 +1017,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (colorsDirty)
 		{
-			var numBytes:Int = maxVertices * UInt32Array.BYTES_PER_ELEMENT;
+			var numBytes:Int = vertexCapacity * UInt32Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ARRAY_BUFFER, colorsBuffer);
 			GL.bufferData(GL.ARRAY_BUFFER, numBytes, colorsArray, GL.STATIC_DRAW);
 			colorsDirty = false;
@@ -936,7 +1038,7 @@ class FlxTrianglesData implements IFlxDestroyable
 		
 		if (indicesDirty)
 		{
-			var numBytes:Int = maxIndices * UInt16Array.BYTES_PER_ELEMENT;
+			var numBytes:Int = indexCapacity * UInt16Array.BYTES_PER_ELEMENT;
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, indicesBuffer);
 			GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, numBytes, indicesArray, GL.STATIC_DRAW);
 			indicesDirty = false;

@@ -844,10 +844,6 @@ class FlxBar extends FlxSprite
 		
 		_matrix.translate(_point.x, _point.y);
 		Camera.drawPixels(_frontFrame, material, _matrix, colorTransform);
-		
-		#if FLX_DEBUG
-		FlxBasic.visibleCount++;
-		#end
 	}
 	
 	override private function set_pixels(Pixels:BitmapData):BitmapData

@@ -28,7 +28,9 @@ class FlxGLView extends FlxCameraView
 	 * Render texture currently used for rendering.
 	 * Values could be: canvas.buffer or render texture of render pass.
 	 */
-	private var currentRenderTexture:FlxRenderTexture;
+	private var _currentRenderTexture:FlxRenderTexture;
+	
+	private var _currentRenderTarget:FlxRenderTarget;
 	
 	private static var _fillRect:FlxRect = FlxRect.get();
 	
@@ -129,6 +131,9 @@ class FlxGLView extends FlxCameraView
 		flashSprite = null;
 		_scrollRect = null;
 		_renderMatrix = null;
+		
+		_currentRenderTexture = null;
+		_currentRenderTarget = null;
 	}
 	
 	override public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, material:FlxMaterial, matrix:FlxMatrix,
@@ -179,23 +184,29 @@ class FlxGLView extends FlxCameraView
 	 */
 	override public function setRenderTarget(?target:FlxRenderTarget):Void 
 	{
-		var renderTarget:FlxRenderTexture = (target != null) ? target.renderTexture : renderTexture;
+		var newRenderTexture:FlxRenderTexture = (target != null) ? target.renderTexture : renderTexture;
+		_currentRenderTarget = target;
 		
-		if (currentRenderTexture != renderTarget)
+		if (_currentRenderTexture != newRenderTexture)
 		{
 			render();
-			_canvas.prepare(renderTarget, _renderMatrix);
+			_canvas.prepare(newRenderTexture, _renderMatrix);
 			
-			if (renderTarget.clearBeforeRender)
+			if (newRenderTexture.clearBeforeRender)
 			{
 				var gl = context.gl;
-				context.checkRenderTarget(renderTarget);
-				renderTarget.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-				renderTarget.clearBeforeRender = false;
+				context.checkRenderTarget(newRenderTexture);
+				newRenderTexture.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+				newRenderTexture.clearBeforeRender = false;
 			}
 		}
 		
-		currentRenderTexture = renderTarget;
+		_currentRenderTexture = newRenderTexture;
+	}
+	
+	override public function getRenderTarget():FlxRenderTarget 
+	{
+		return _currentRenderTarget;
 	}
 	
 	override public function updateOffset():Void 
@@ -349,7 +360,7 @@ class FlxGLView extends FlxCameraView
 	{
 		context.shaderManager.setShader(null);
 		
-		currentRenderTexture = null;
+		_currentRenderTexture = null;
 		renderTexture.clearBeforeRender = !camera.useBgAlphaBlending;
 		setRenderTarget(null);
 		

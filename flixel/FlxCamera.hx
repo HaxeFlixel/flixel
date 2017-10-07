@@ -235,6 +235,8 @@ class FlxCamera extends FlxBasic
 	 */
 	public var screen(get, never):FlxSprite;
 	
+	public var renderTarget(get, set):FlxRenderTarget;
+	
 	/**
 	 * Difference between native size of camera and zoomed size, divided in half
 	 * Needed to do occlusion of objects when zoom != initialZoom
@@ -364,10 +366,17 @@ class FlxCamera extends FlxBasic
 			view.drawColorQuad(material, rect, matrix, color, alpha);
 	}
 	
-	public inline function setRenderTarget(?target:FlxRenderTarget):Void
+	private inline function set_renderTarget(?target:FlxRenderTarget):FlxRenderTarget
 	{
 		if (view != null)
 			view.setRenderTarget(target);
+		
+		return target;
+	}
+	
+	private inline function get_renderTarget():FlxRenderTarget 
+	{
+		return (view != null) ? view.getRenderTarget() : null;
 	}
 	
 	/**

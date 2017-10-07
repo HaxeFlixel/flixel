@@ -101,7 +101,9 @@ class FlxBlitView extends FlxCameraView
 	
 	private var _helperPoint:Point = new Point();
 	
-	private var currentBuffer:BitmapData;
+	private var _currentBuffer:BitmapData;
+	
+	private var _currentRenderTarget:FlxRenderTarget;
 	
 	public function new(camera:FlxCamera) 
 	{
@@ -153,7 +155,7 @@ class FlxBlitView extends FlxCameraView
 			else
 				_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 			
-			currentBuffer.draw(pixels, _helperMatrix, null, material.blendMode, null, (this.smoothing || material.smoothing));
+			_currentBuffer.draw(pixels, _helperMatrix, null, material.blendMode, null, (this.smoothing || material.smoothing));
 		}
 		else
 		{
@@ -171,18 +173,18 @@ class FlxBlitView extends FlxCameraView
 				_helperMatrix.identity();
 				_helperMatrix.translate(destPoint.x, destPoint.y);
 				_helperMatrix.concat(_blitMatrix);
-				currentBuffer.draw(pixels, _helperMatrix, null, null, null, (this.smoothing || material.smoothing));
+				_currentBuffer.draw(pixels, _helperMatrix, null, null, null, (this.smoothing || material.smoothing));
 			}
 			else
 			{
 				_helperPoint.x = destPoint.x - Std.int(viewOffsetX);
 				_helperPoint.y = destPoint.y - Std.int(viewOffsetY);
-				currentBuffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
+				_currentBuffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 			}
 		}
 		else if (frame != null)
 		{
-			frame.paint(currentBuffer, destPoint, true);
+			frame.paint(_currentBuffer, destPoint, true);
 		}
 	}
 	
@@ -213,7 +215,7 @@ class FlxBlitView extends FlxCameraView
 		else
 			_helperMatrix.translate( -viewOffsetX, -viewOffsetY);
 		
-		currentBuffer.draw(trianglesSprite, _helperMatrix, transform, material.blendMode);
+		_currentBuffer.draw(trianglesSprite, _helperMatrix, transform, material.blendMode);
 		data.dirty = false;
 	}
 	
@@ -250,7 +252,7 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices, rectUVs);
 		trianglesSprite.graphics.endFill();
-		currentBuffer.draw(trianglesSprite, matrix, transform, material.blendMode);
+		_currentBuffer.draw(trianglesSprite, matrix, transform, material.blendMode);
 	}
 	
 	override public function drawColorQuad(material:FlxMaterial, rect:FlxRect, matrix:FlxMatrix, color:FlxColor, alpha:Float = 1.0):Void
@@ -276,7 +278,7 @@ class FlxBlitView extends FlxCameraView
 		
 		trianglesSprite.graphics.drawTriangles(rectVertices, rectIndices);
 		trianglesSprite.graphics.endFill();
-		currentBuffer.draw(trianglesSprite, matrix, null, material.blendMode);
+		_currentBuffer.draw(trianglesSprite, matrix, null, material.blendMode);
 	}
 	
 	override public function setRenderTarget(?target:FlxRenderTarget):Void 
@@ -287,7 +289,13 @@ class FlxBlitView extends FlxCameraView
 			target.renderTexture.clearBeforeRender = false;
 		}
 		
-		currentBuffer = (target != null) ? target.renderTexture.bitmap : _buffer;
+		_currentRenderTarget = target;
+		_currentBuffer = (target != null) ? target.renderTexture.bitmap : _buffer;
+	}
+	
+	override public function getRenderTarget():FlxRenderTarget 
+	{
+		return _currentRenderTarget; // TODO: fix this
 	}
 	
 	override private function transformRect(rect:FlxRect):FlxRect
@@ -431,11 +439,11 @@ class FlxBlitView extends FlxCameraView
 		if (BlendAlpha)
 		{
 			_fill.fillRect(_flashRect, Color);
-			currentBuffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
+			_currentBuffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, BlendAlpha);
 		}
 		else
 		{
-			currentBuffer.fillRect(_flashRect, Color);
+			_currentBuffer.fillRect(_flashRect, Color);
 		}
 	}
 	
@@ -448,7 +456,7 @@ class FlxBlitView extends FlxCameraView
 	override public function lock(useBufferLocking:Bool):Void 
 	{
 		checkResize();
-		currentBuffer = _buffer;
+		_currentBuffer = _buffer;
 		if (useBufferLocking)
 			_buffer.lock();
 		
@@ -544,7 +552,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function endDrawDebug(?matrix:FlxMatrix):Void 
 	{
-		currentBuffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
+		_currentBuffer.draw(FlxSpriteUtil.flashGfxSprite, matrix);
 	}
 	
 	override private function set_angle(Angle:Float):Float 
