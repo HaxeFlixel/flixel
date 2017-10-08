@@ -139,7 +139,13 @@ class FlxRenderTarget extends FlxSprite
 			var prevTarget = renderCamera.renderTarget;
 			renderCamera.renderTarget = this; 
 			group.drawTo(renderCamera);
-			renderCamera.renderTarget = prevTarget; // TODO: set previous render target (before this)...
+			renderCamera.renderTarget = prevTarget;
+			
+			if (FlxG.renderBlit)
+			{
+				dirty = true;
+				calcFrame(useFramePixels);
+			}
 		}
 		
 		renderedGroup = true;

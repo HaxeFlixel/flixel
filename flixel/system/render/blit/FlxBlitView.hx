@@ -295,7 +295,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override public function getRenderTarget():FlxRenderTarget 
 	{
-		return _currentRenderTarget; // TODO: fix this
+		return _currentRenderTarget;
 	}
 	
 	override private function transformRect(rect:FlxRect):FlxRect
