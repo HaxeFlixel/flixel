@@ -5,7 +5,11 @@ class FlxBaseShader extends FlxShader
 {
 	public function new(vertexSource:String, fragmentSource:String) 
 	{
+		#if flash
+		super(vertexSource, fragmentSource);
+		#else
 		super();
+		#end
 		
 		#if FLX_RENDER_GL
 		glVertexSource = vertexSource;

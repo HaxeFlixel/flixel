@@ -1,6 +1,7 @@
 package flixel.graphics;
 
 import flixel.graphics.shaders.FlxShader;
+import flixel.system.render.common.FlxShaderData;
 import flixel.system.render.gl.GLUtils;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import lime.graphics.GLRenderContext;
@@ -44,11 +45,7 @@ class FlxMaterial implements IFlxDestroyable
 	 * Data of the material, stores values for shader uniforms.
 	 * Use this property only after setting shader of the material, or you could get null pointer access error.
 	 */
-	#if (openfl >= "4.0.0")
-	public var data(default, null):ShaderData;
-	#else
-	public var data(default, null):Dynamic;
-	#end
+	public var data(default, null):FlxShaderData;
 	
 	/**
 	 * Blend mode for the material
@@ -265,7 +262,6 @@ class FlxMaterial implements IFlxDestroyable
 	
 	private function set_shader(value:FlxShader):FlxShader
 	{
-		#if FLX_RENDER_GL
 		if (shader != value)
 		{
 			shader = value;
@@ -274,7 +270,6 @@ class FlxMaterial implements IFlxDestroyable
 			if (shader != null)
 				initData();
 		}
-		#end
 		
 		return shader = value;
 	}
@@ -302,12 +297,13 @@ class FlxMaterial implements IFlxDestroyable
 			
 		}
 	}
+	#end
 	
 	private function initData():Void
 	{
 		if (shader != null && !isShaderInit)
 		{
-			data = new ShaderData(null);
+			data = new FlxShaderData(null);
 			
 			inputTextures.splice(0, inputTextures.length);
 			paramBool.splice(0, paramBool.length);
@@ -316,7 +312,6 @@ class FlxMaterial implements IFlxDestroyable
 			
 			isUniform = new Map();
 			
-			var glProgram:GLProgram = shader.glProgram;
 			var glVertexSource:String = shader.glVertexSource;
 			var glFragmentSource:String = shader.glFragmentSource;
 			
@@ -324,10 +319,11 @@ class FlxMaterial implements IFlxDestroyable
 			processGLData(glVertexSource, "uniform");
 			processGLData(glFragmentSource, "uniform");
 			
+		#if !flash
+			var glProgram:GLProgram = shader.glProgram;
 			if (glProgram != null)
 			{	
 				for (input in inputTextures) 
-					
 					input.index = Reflect.field(shader.data, input.name).index;
 				
 				for (parameter in paramBool) 
@@ -339,6 +335,7 @@ class FlxMaterial implements IFlxDestroyable
 				for (parameter in paramInt)
 					parameter.index = Reflect.field(shader.data, parameter.name).index;	
 			}
+		#end
 			
 			isShaderInit = true;
 		}
@@ -403,21 +400,27 @@ class FlxMaterial implements IFlxDestroyable
 					case BOOL, BOOL2, BOOL3, BOOL4:
 						var parameter = new ShaderParameter<Bool>();
 						parameter.name = name;
+					#if !flash
 						parameter.type = parameterType;
+					#end
 						paramBool.push(parameter);
 						Reflect.setField(data, name, parameter);
 					
 					case INT, INT2, INT3, INT4:
 						var parameter = new ShaderParameter<Int>();
 						parameter.name = name;
+					#if !flash
 						parameter.type = parameterType;
+					#end
 						paramInt.push(parameter);
 						Reflect.setField(data, name, parameter);
 					
 					default:
 						var parameter = new ShaderParameter<Float>();
 						parameter.name = name;
+					#if !flash
 						parameter.type = parameterType;
+					#end
 						paramFloat.push(parameter);
 						Reflect.setField(data, name, parameter);
 				}
@@ -429,5 +432,4 @@ class FlxMaterial implements IFlxDestroyable
 			lastMatch = position.pos + position.len;
 		}	
 	}
-	#end
 }
