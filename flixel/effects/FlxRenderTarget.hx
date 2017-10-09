@@ -14,13 +14,12 @@ import flixel.util.FlxDestroyUtil;
 class FlxRenderTarget extends FlxSprite
 {
 	/**
-	 * The actual group which holds all sprites.
+	 * The actual group which holds all sprites added for rendering to thing render target's texture.
 	 */
 	public var group:FlxGroup;
 	
 	/**
-	 * Render texture of this sprite. All sprites which have `renderTarget` equal to this sprite, 
-	 * will be rendered on this texture. 
+	 * Render texture of this sprite. All sprites added to this target, will be rendered on this texture. 
 	 */
 	public var renderTexture(default, null):FlxRenderTexture;
 	
@@ -41,13 +40,22 @@ class FlxRenderTarget extends FlxSprite
 	public var clearColor(get, set):FlxColor;
 	
 	/**
+	 * Tells if internal group should be re-drawn each frame on the texture.
+	 * True by default, which means that every frame texture of this render target will be cleared and internal group will be rendered on it.
+	 * If you want to have "static" texture (which won't change every frame), then you can set it to false.
+	 */
+	public var keepRenderingGroup:Bool = true;
+	
+	/**
 	 * An array of cameras used for rendering of sprites.
 	 * Always contain only one camera object - `renderCamera`.
 	 */
-	@:allow(flixel.FlxSprite)
 	private var renderCameras(default, null):Array<FlxCamera>;
 	
-	private var renderedGroup:Bool = false;
+	/**
+	 * Internal variable. Keeps track if internal group had been drawn on texture this frame.
+	 */
+	private var groupIsRendered:Bool = false;
 	
 	/**
 	 * Render target constructor
@@ -92,11 +100,11 @@ class FlxRenderTarget extends FlxSprite
 	
 	/**
 	 * Renders object on this sprite's texture one time.
-	 * To constantly render sprite you'll need just to set `sprite.renderTarget = this;`
+	 * To constantly render sprite you'll need just to add sprite to this target `renderTarget.add(sprite);`
 	 * 
 	 * @param	object Object to draw on this sprite's texture.
 	 */
-	public function drawObject(object:FlxSprite):Void
+	public function drawObject(object:FlxBasic):Void
 	{
 		var prevTarget = renderCamera.renderTarget;
 		renderCamera.renderTarget = this;
@@ -109,32 +117,51 @@ class FlxRenderTarget extends FlxSprite
 		group.update(elapsed);
 		super.update(elapsed);
 		
-		renderedGroup = false;
+		groupIsRendered = false;
 	}
 	
 	override public function drawTo(Camera:FlxCamera):Void 
 	{
-		renderGroup();
+		if (keepRenderingGroup)
+			updateTexture();
 		
 		super.drawTo(Camera);
 		renderTexture.clearBeforeRender = clearBeforeRender;
 	}
 	
+	/**
+	 * Just a little bit shorter way to add object to internal group of this render target.
+	 * Once you've added object it will be rendered on texture of this render target.
+	 * 
+	 * @return	object that you've passed to this method.
+	 */
 	public function add<T:FlxBasic>(Object:T):T
 	{
 		group.add(Object);
 		return Object;
 	}
 	
+	/**
+	 * Just a little bit shorter way to remove object from internal group of this render target.
+	 * 
+	 * @return	object that you've passed to this method.
+	 */
 	public function remove<T:FlxBasic>(Object:T, Splice:Bool = false):T
 	{
 		group.remove(Object, Splice);
 		return Object;
 	}
 	
-	public function renderGroup(force:Bool = false):Void
+	/**
+	 * Renders internal group to this render target's texture.
+	 * Usually you won't need to call it manually, but if you set `keepRenderingGroup` to `false`
+	 * and you want to update texture, then you will need to call it yourself.
+	 * 
+	 * @param	force	Forces redraw of the texture (if `true` then if will ignore the fact that texture had been updated this frame already).
+	 */
+	public function updateTexture(force:Bool = false):Void
 	{
-		if (!renderedGroup || force)
+		if (!groupIsRendered || force)
 		{
 			var prevTarget = renderCamera.renderTarget;
 			renderCamera.renderTarget = this; 
@@ -148,7 +175,7 @@ class FlxRenderTarget extends FlxSprite
 			}
 		}
 		
-		renderedGroup = true;
+		groupIsRendered = true;
 	}
 	
 	private function set_renderCamera(value:FlxCamera):FlxCamera
