@@ -174,4 +174,66 @@ class FlxGroupTest extends FlxTest
 		Assert.areEqual(1, group.length);
 		Assert.isNull(group.members[0]);
 	}
+	
+	@Test // #2111
+	function testAddedSignal()
+	{
+		var group = new FlxGroup();
+		Assert.isNotNull(group.addedToGroup);
+		
+		var success = false;
+		var child = new FlxBasic();
+		
+		group.addedToGroup.add(function (basic:FlxBasic)
+		{
+			success = child == basic;
+		});
+		
+		group.add(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testAddedSignal has failed.");
+		}
+		
+		child = new FlxBasic();
+		group.add(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testAddedSignal has failed.");
+		}
+	}
+	
+	@Test // #2111
+	function testRemovedSignal()
+	{
+		var group = new FlxGroup();
+		Assert.isNotNull(group.removedFromGroup);
+		
+		var success = false;
+		var child = new FlxBasic();
+		group.add(child);
+		
+		group.removedFromGroup.add(function (basic:FlxBasic)
+		{
+			success = child == basic;
+		});
+		
+		group.remove(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testRemovedSignal has failed.");
+		}
+		
+		child = new FlxBasic();
+		group.add(child);
+		group.remove(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testRemovedSignal has failed.");
+		}
+	}
 }
