@@ -3,6 +3,7 @@ package flixel.input;
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
+using flixel.util.FlxArrayUtil;
 
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
@@ -38,6 +39,12 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * Internal storage of input keys as a map, for efficient indexing.
 	 */
 	private var _keyListMap:Map<Int, FlxInput<Key>> = new Map<Int, FlxInput<Key>>();
+	
+	/**
+	 * Internal storage of functions listening for key input
+	 */
+	private var _keyDownCallbacks:Map<Int, Array<Int->Void>> = new Map<Int, Array<Int->Void>>();
+	private var _keyUpCallbacks:Map<Int, Array<Int->Void>> = new Map<Int, Array<Int->Void>>();
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
@@ -314,6 +321,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		return e.keyCode;
 	}
 	
+	
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
@@ -326,12 +334,72 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 			if (Down)
 			{
 				key.press();
+				if (_keyDownCallbacks.exists(KeyCode))
+				{
+					for (f in _keyDownCallbacks[KeyCode])
+					{
+						f(KeyCode);
+					}
+				}
 			}
 			else
 			{
 				key.release();
+				if (_keyUpCallbacks.exists(KeyCode))
+				{
+					for (f in _keyUpCallbacks[KeyCode])
+					{
+						f(KeyCode);
+					}
+				}
 			}
 		}
+	}
+	
+	public function addKeyDownCallback(keycode:Int, method:Int->Void):Void
+	{
+		if (_keyDownCallbacks.exists(keycode))
+		{
+			_keyDownCallbacks[keycode].push(method);
+		}
+		else
+		{
+			_keyDownCallbacks[keycode] = [method];
+		}
+	}
+	
+	public function removeKeyDownCallback(keycode:Int, method:Int->Void):Void
+	{
+		if (_keyDownCallbacks.exists(keycode))
+		{
+			_keyDownCallbacks[keycode].remove(method);
+		}
+	}
+	
+	public function addKeyUpCallback(keycode:Int, method:Int->Void):Void
+	{
+		if (_keyUpCallbacks.exists(keycode))
+		{
+			_keyUpCallbacks[keycode].push(method);
+		}
+		else
+		{
+			_keyUpCallbacks[keycode] = [method];
+		}
+	}
+	
+	public function removeKeyUpCallback(keycode:Int, method:Int->Void):Void
+	{
+		if (_keyUpCallbacks.exists(keycode))
+		{
+			_keyUpCallbacks[keycode].remove(method);
+		}
+	}
+	
+	public function clearCallbacks():Void
+	{
+		_keyUpCallbacks = new Map();
+		_keyDownCallbacks = new Map();
 	}
 	
 	private inline function onFocus():Void {}
