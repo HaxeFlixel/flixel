@@ -163,7 +163,8 @@ class FlxGroupTest extends FlxTest
 		group.remove(group.members[0], true);
 		Assert.areEqual(0, group.length);
 	}
-
+	
+	@Test
 	function testRemoveNoSplice()
 	{
 		var group = new FlxGroup();
