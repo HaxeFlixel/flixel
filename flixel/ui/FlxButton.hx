@@ -281,8 +281,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		super.update(elapsed);
 		
-		input.update();
-		
 		if (visible) 
 		{
 			// Update the button, but only if at least either mouse or touches are enabled
@@ -297,6 +295,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 				lastStatus = status;
 			}
 		}
+		
+		input.update();
 	}
 	
 	private function updateStatusAnimation():Void
