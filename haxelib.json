@@ -7,5 +7,5 @@
     "version": "2.4.2",
     "releasenote": "Crash fixes and code cleanup for FlxMouseEventManager and MinimalistTD.",
     "contributors": [ "haxeflixel" ],
-    "dependencies": { "flixel": "" }
+    "dependencies": {}
 }
