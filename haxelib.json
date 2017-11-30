@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.4.2",
-    "releasenote": "Crash fixes and code cleanup for FlxMouseEventManager and MinimalistTD.",
+    "version": "2.4.3",
+    "releasenote": "Fixed flixel-tools not finding demos if dependencies are missing.",
     "contributors": [ "haxeflixel" ],
     "dependencies": {}
 }

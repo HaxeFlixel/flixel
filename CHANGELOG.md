@@ -1,3 +1,7 @@
+2.4.3 (November 30, 2017)
+------------------------------
+* Fixed flixel-tools not finding demos if dependencies are missing
+
 2.4.2 (September 10, 2017)
 ------------------------------
 * FlxMouseEventManager and MinimalistTD:
