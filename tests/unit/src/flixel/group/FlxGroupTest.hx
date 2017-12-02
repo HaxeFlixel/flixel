@@ -179,12 +179,12 @@ class FlxGroupTest extends FlxTest
 	function testAddedSignal()
 	{
 		var group = new FlxGroup();
-		Assert.isNotNull(group.addedToGroup);
+		Assert.isNotNull(group.memberAdded);
 		
 		var success = false;
 		var child = new FlxBasic();
 		
-		group.addedToGroup.add(function (basic:FlxBasic)
+		group.memberAdded.add(function (basic:FlxBasic)
 		{
 			success = child == basic;
 		});
@@ -209,13 +209,13 @@ class FlxGroupTest extends FlxTest
 	function testRemovedSignal()
 	{
 		var group = new FlxGroup();
-		Assert.isNotNull(group.removedFromGroup);
+		Assert.isNotNull(group.memberRemoved);
 		
 		var success = false;
 		var child = new FlxBasic();
 		group.add(child);
 		
-		group.removedFromGroup.add(function (basic:FlxBasic)
+		group.memberRemoved.add(function (basic:FlxBasic)
 		{
 			success = child == basic;
 		});
