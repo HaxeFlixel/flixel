@@ -120,15 +120,15 @@ class FlxStringUtil
 
 		var string:String = "";
 		var comma:String = "";
-		var amount:Int = Math.floor(Amount);
+		var amount:Float = Math.ffloor(Amount);
 		while (amount > 0)
 		{
 			if (string.length > 0 && comma.length <= 0)
 				comma = (EnglishStyle ? "," : ".");
 
 			var zeroes = "";
-			var helper = amount - Math.floor(amount / 1000) * 1000;
-			amount = Math.floor(amount / 1000);
+			var helper = amount - Math.ffloor(amount / 1000) * 1000;
+			amount = Math.ffloor(amount / 1000);
 			if (amount > 0)
 			{
 				if (helper < 100)
@@ -144,7 +144,7 @@ class FlxStringUtil
 		
 		if (ShowDecimal)
 		{
-			amount = Math.floor(Amount * 100) - (Math.floor(Amount) * 100);
+			amount = Math.ffloor(Amount * 100) - (Math.ffloor(Amount) * 100);
 			string += (EnglishStyle ? "." : ",");
 			if (amount < 10)
 				string += "0";
