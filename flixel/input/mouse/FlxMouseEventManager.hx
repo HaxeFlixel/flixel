@@ -540,7 +540,7 @@ class FlxMouseEventManager extends FlxBasic
 			
 			for (down in _mouseDownObjects)
 			{
-				if (down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
+				if (down.object != null && down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
 				{
 					if (down.onMouseClick != null)
 					{
