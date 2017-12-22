@@ -19,22 +19,22 @@ import flixel.system.debug.console.ConsoleUtil;
 
 class WatchEntry extends Sprite implements IFlxDestroyable
 {
-	private static inline var GUTTER = 4;
-	private static inline var TEXT_HEIGHT = 20;
-	private static inline var MAX_NAME_WIDTH = 125;
-	
+	static inline var GUTTER = 4;
+	static inline var TEXT_HEIGHT = 20;
+	static inline var MAX_NAME_WIDTH = 125;
+
 	public var data:WatchEntryData;
 	public var displayName(default, null):String;
 
-	private var nameText:TextField;
-	private var valueText:EditableTextField;
-	private var removeButton:FlxSystemButton;
-	private var defaultFormat:TextFormat;
+	var nameText:TextField;
+	var valueText:EditableTextField;
+	var removeButton:FlxSystemButton;
+	var defaultFormat:TextFormat;
 
 	public function new(displayName:String, data:WatchEntryData, removeEntry:WatchEntry->Void)
 	{
 		super();
-		
+
 		this.displayName = displayName;
 		this.data = data;
 
@@ -45,13 +45,13 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			new EditableTextField(data.match(FIELD(_, _)), defaultFormat, submitValue, expectedType)));
 
 		updateName();
-		
+
 		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
 		removeButton.y = (TEXT_HEIGHT - removeButton.height) / 2;
 		removeButton.alpha = 0.3;
 	}
-	
-	private function getTextColor():FlxColor
+
+	function getTextColor():FlxColor
 	{
 		return switch (data)
 		{
@@ -60,8 +60,8 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case EXPRESSION(_, _): 0xC4FE83;
 		}
 	}
-	
-	private function initTextField<T:TextField>(textField:T):T
+
+	function initTextField<T:TextField>(textField:T):T
 	{
 		textField.selectable = true;
 		textField.defaultTextFormat = defaultFormat;
@@ -74,21 +74,21 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	public function updateSize(nameWidth:Float, windowWidth:Float):Void
 	{
 		var textWidth = windowWidth - removeButton.width - GUTTER;
-		
+
 		nameText.width = nameWidth;
 		valueText.x = nameWidth + GUTTER;
 		valueText.width = textWidth - nameWidth - GUTTER;
 		removeButton.x = textWidth;
 	}
-	
-	private function updateName()
+
+	function updateName()
 	{
 		if (displayName != null)
 		{
 			setNameText(displayName);
 			return;
 		}
-		
+
 		switch (data)
 		{
 			case FIELD(object, field):
@@ -98,15 +98,15 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case QUICK(_):
 		}
 	}
-	
-	private function setNameText(name:String)
+
+	function setNameText(name:String)
 	{
 		nameText.text = name;
 		var currentWidth = nameText.textWidth + 4;
 		nameText.width = Math.min(currentWidth, MAX_NAME_WIDTH);
 	}
-	
-	private function getValue():Dynamic
+
+	function getValue():Dynamic
 	{
 		return switch (data)
 		{
@@ -123,15 +123,15 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 
-	private function getFormattedValue():String
+	function getFormattedValue():String
 	{
 		var value:Dynamic = getValue();
 		if (Std.is(value, Float))
 			value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
 		return Std.string(value);
 	}
-	
-	private function submitValue(value:Dynamic):Void
+
+	function submitValue(value:Dynamic):Void
 	{
 		switch (data)
 		{
@@ -140,23 +140,23 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 			case _:
 		}
 	}
-	
+
 	public function updateValue()
 	{
 		if (!valueText.isEditing)
 			valueText.text = getFormattedValue();
 	}
-	
+
 	public function getNameWidth():Float
 	{
 		return nameText.width;
 	}
-	
+
 	public function getMinWidth():Float
 	{
-		return valueText.x + GUTTER * 2 + removeButton.width; 
+		return valueText.x + GUTTER * 2 + removeButton.width;
 	}
-	
+
 	public function destroy()
 	{
 		nameText = FlxDestroyUtil.removeChild(this, nameText);

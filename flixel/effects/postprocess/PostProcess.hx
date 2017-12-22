@@ -13,11 +13,11 @@ import openfl.gl.GLTexture;
 import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
-private class Uniform
+class Uniform
 {
 	public var id:Int;
 	public var value:Float;
-	
+
 	public function new(id, value)
 	{
 		this.id = id;
@@ -31,8 +31,8 @@ private class Uniform
  */
 class PostProcess extends OpenGLView
 {
-	private var screenWidth:Int;
-	private var screenHeight:Int;
+	var screenWidth:Int;
+	var screenHeight:Int;
 
 	/**
 	 * Create a new PostProcess object
@@ -43,7 +43,7 @@ class PostProcess extends OpenGLView
 	{
 		super();
 		uniforms = new Map<String, Uniform>();
-		
+
 		// create and bind the framebuffer
 		framebuffer = GL.createFramebuffer();
 		rebuild();
@@ -51,7 +51,7 @@ class PostProcess extends OpenGLView
 		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
 		#else
 		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
-		
+
 		switch (status)
 		{
 			case GL.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -116,8 +116,8 @@ class PostProcess extends OpenGLView
 	 * Set to `null` to render to the screen.
 	 */
 	public var to(never, set):PostProcess;
-	
-	private function set_to(value:PostProcess):PostProcess
+
+	function set_to(value:PostProcess):PostProcess
 	{
 		renderTo = (value == null ? defaultFramebuffer : value.framebuffer);
 		return value;
@@ -137,15 +137,15 @@ class PostProcess extends OpenGLView
 		this.screenHeight = FlxG.stage.stageHeight;
 		createTexture(screenWidth, screenHeight);
 		createRenderbuffer(screenWidth, screenHeight);
-		
+
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 
-	private inline function createRenderbuffer(width:Int, height:Int)
+	inline function createRenderbuffer(width:Int, height:Int)
 	{
 		// Bind the renderbuffer and create a depth buffer
 		renderbuffer = GL.createRenderbuffer();
-		
+
 		GL.bindRenderbuffer(GL.RENDERBUFFER, renderbuffer);
 		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, width, height);
 
@@ -153,10 +153,10 @@ class PostProcess extends OpenGLView
 		GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, renderbuffer);
 	}
 
-	private inline function createTexture(width:Int, height:Int)
+	inline function createTexture(width:Int, height:Int)
 	{
 		texture = GL.createTexture();
-		
+
 		GL.bindTexture(GL.TEXTURE_2D, texture);
 		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
 
@@ -177,7 +177,7 @@ class PostProcess extends OpenGLView
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
-	
+
 	public function update(elapsed:Float)
 	{
 		time += elapsed;
@@ -191,7 +191,7 @@ class PostProcess extends OpenGLView
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 		GL.viewport(0, 0, screenWidth, screenHeight);
-		
+
 		postProcessShader.bind();
 
 		GL.enableVertexAttribArray(vertexSlot);
@@ -224,9 +224,9 @@ class PostProcess extends OpenGLView
 		GL.disableVertexAttribArray(texCoordSlot);
 
 		GL.useProgram(null);
-		
+
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-		
+
 		// check gl error
 		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)
 		{
@@ -235,27 +235,27 @@ class PostProcess extends OpenGLView
 	}
 	#end
 
-	private var framebuffer:GLFramebuffer;
-	private var renderbuffer:GLRenderbuffer;
-	private var texture:GLTexture;
+	var framebuffer:GLFramebuffer;
+	var renderbuffer:GLRenderbuffer;
+	var texture:GLTexture;
 
-	private var postProcessShader:Shader;
-	private var buffer:GLBuffer;
-	private var renderTo:GLFramebuffer;
-	private var defaultFramebuffer:GLFramebuffer = null;
+	var postProcessShader:Shader;
+	var buffer:GLBuffer;
+	var renderTo:GLFramebuffer;
+	var defaultFramebuffer:GLFramebuffer = null;
 
 	/* @private Time accumulator passed to the shader */
-	private var time:Float = 0;
+	var time:Float = 0;
 
-	private var vertexSlot:Int;
-	private var texCoordSlot:Int;
-	private var imageUniform:Int;
-	private var resolutionUniform:Int;
-	private var timeUniform:Int;
-	private var uniforms:Map<String, Uniform>;
+	var vertexSlot:Int;
+	var texCoordSlot:Int;
+	var imageUniform:Int;
+	var resolutionUniform:Int;
+	var timeUniform:Int;
+	var uniforms:Map<String, Uniform>;
 
 	/* @private Simple full screen vertex shader */
-	private static inline var VERTEX_SHADER:String = "
+	static inline var VERTEX_SHADER:String = "
 #ifdef GL_ES
 	precision mediump float;
 #endif
@@ -269,8 +269,8 @@ void main() {
 	gl_Position = vec4(aVertex, 0.0, 1.0);
 }";
 
-	private static var vertices(get, never):Array<Float>;
-	private static inline function get_vertices():Array<Float>
+	static var vertices(get, never):Array<Float>;
+	static inline function get_vertices():Array<Float>
 	{
 		return [
 			-1.0, -1.0, 0, 0,
@@ -289,7 +289,7 @@ class PostProcess
 	{
 		FlxG.log.error("Post processing is only supported on cpp and neko");
 	}
-	
+
 	public function enable(?to:PostProcess) {}
 	public function capture() {}
 	public function rebuild() {}

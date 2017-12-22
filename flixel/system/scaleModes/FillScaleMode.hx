@@ -4,7 +4,7 @@ import flixel.FlxG;
 
 class FillScaleMode extends BaseScaleMode
 {
-	override private function updateGamePosition():Void 
+	override function updateGamePosition():Void
 	{
 		FlxG.game.x = FlxG.game.y = 0;
 	}

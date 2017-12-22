@@ -16,16 +16,16 @@ class Motion extends FlxTween
 	 * Current y position of the Tween.
 	 */
 	public var y:Float = 0;
-	
-	private var _object:FlxObject;
-	private var _wasObjectImmovable:Bool;
-	
-	override public function destroy():Void 
+
+	var _object:FlxObject;
+	var _wasObjectImmovable:Bool;
+
+	override public function destroy():Void
 	{
 		super.destroy();
 		_object = null;
 	}
-	
+
 	public function setObject(object:FlxObject):Motion
 	{
 		_object = object;
@@ -33,20 +33,20 @@ class Motion extends FlxTween
 		_object.immovable = true;
 		return this;
 	}
-	
-	override private function update(elapsed:Float):Void 
+
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		postUpdate();
 	}
-	
-	override private function onEnd():Void
+
+	override function onEnd():Void
 	{
 		_object.immovable = _wasObjectImmovable;
 		super.onEnd();
 	}
-	
-	private function postUpdate():Void
+
+	function postUpdate():Void
 	{
 		if (_object != null)
 		{

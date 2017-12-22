@@ -6,20 +6,20 @@ package flixel.tweens.motion;
 class CubicMotion extends Motion
 {
 	// Curve information.
-	private var _fromX:Float = 0;
-	private var _fromY:Float = 0;
-	private var _toX:Float = 0;
-	private var _toY:Float = 0;
-	private var _aX:Float = 0;
-	private var _aY:Float = 0;
-	private var _bX:Float = 0;
-	private var _bY:Float = 0;
-	private var _ttt:Float = 0;
-	private var _tt:Float = 0;
-	
+	var _fromX:Float = 0;
+	var _fromY:Float = 0;
+	var _toX:Float = 0;
+	var _toY:Float = 0;
+	var _aX:Float = 0;
+	var _aY:Float = 0;
+	var _bX:Float = 0;
+	var _bY:Float = 0;
+	var _ttt:Float = 0;
+	var _tt:Float = 0;
+
 	/**
 	 * Starts moving along the curve.
-	 * 
+	 *
 	 * @param	fromX		X start.
 	 * @param	fromY		Y start.
 	 * @param	aX			First control x.
@@ -44,8 +44,8 @@ class CubicMotion extends Motion
 		start();
 		return this;
 	}
-	
-	override private function update(elapsed:Float):Void
+
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		x = scale * scale * scale * (_toX + 3 * (_aX - _bX) - _fromX) + 3 * scale * scale * (_fromX - 2 * _aX + _bX) + 3 * scale * (_aX - _fromX) + _fromX;

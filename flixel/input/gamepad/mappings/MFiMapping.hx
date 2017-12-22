@@ -5,13 +5,13 @@ import flixel.input.gamepad.id.MFiID;
 
 class MFiMapping extends FlxGamepadMapping
 {
-	override function initValues():Void 
+	override function initValues():Void
 	{
 		leftStick = MFiID.LEFT_ANALOG_STICK;
 		rightStick = MFiID.RIGHT_ANALOG_STICK;
 	}
-	
-	override public function getID(rawID:Int):FlxGamepadInputID 
+
+	override public function getID(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -41,8 +41,8 @@ class MFiMapping extends FlxGamepadMapping
 			case _: NONE;
 		}
 	}
-	
-	override public function getRawID(ID:FlxGamepadInputID):Int 
+
+	override public function getRawID(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -78,9 +78,9 @@ class MFiMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
+
 	#if FLX_JOYSTICK_API
-	override public function axisIndexToRawID(axisID:Int):Int 
+	override public function axisIndexToRawID(axisID:Int):Int
 	{
 		//the axis index values for this don't overlap with anything so we can just return the original values!
 		return axisID;

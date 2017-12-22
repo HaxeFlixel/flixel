@@ -16,7 +16,7 @@ class FlxTimer implements IFlxDestroyable
 	 * @since 4.2.0
 	 */
 	public static var globalManager:FlxTimerManager;
-	
+
 	/**
 	 * The manager to which this timer belongs
 	 * @since 4.2.0
@@ -63,18 +63,18 @@ class FlxTimer implements IFlxDestroyable
 	 * Read-only: how far along the timer is, on a scale of 0.0 to 1.0.
 	 */
 	public var progress(get, never):Float;
-	
+
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
-	private var _timeCounter:Float = 0;
+	var _timeCounter:Float = 0;
 	/**
 	 * Internal tracker for the loops counting up.
 	 */
-	private var _loopsCounter:Int = 0;
-	
-	private var _inManager:Bool = false;
-	
+	var _loopsCounter:Int = 0;
+
+	var _inManager:Bool = false;
+
 	/**
 	 * Creates a new timer.
 	 */
@@ -82,7 +82,7 @@ class FlxTimer implements IFlxDestroyable
 	{
 		this.manager = manager != null ? manager : globalManager;
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -90,10 +90,10 @@ class FlxTimer implements IFlxDestroyable
 	{
 		onComplete = null;
 	}
-	
+
 	/**
 	 * Starts the timer and adds the timer to the timer manager.
-	 * 
+	 *
 	 * @param	Time		How many seconds it takes for the timer to go off.
 	 * 						If 0 then timer will fire OnComplete callback only once at the first call of update method (which means that Loops argument will be ignored).
 	 * @param	OnComplete	Optional, triggered whenever the time runs out, once for each loop.
@@ -108,22 +108,22 @@ class FlxTimer implements IFlxDestroyable
 			manager.add(this);
 			_inManager = true;
 		}
-		
+
 		active = true;
 		finished = false;
 		time = Math.abs(Time);
-		
-		if (Loops < 0) 
+
+		if (Loops < 0)
 			Loops *= -1;
-		
+
 		loops = Loops;
 		onComplete = OnComplete;
 		_timeCounter = 0;
 		_loopsCounter = 0;
-		
+
 		return this;
 	}
-	
+
 	/**
 	 * Restart the timer using the new duration
 	 * @param	NewDuration	The duration of this timer in ms.
@@ -132,11 +132,11 @@ class FlxTimer implements IFlxDestroyable
 	{
 		if (NewTime < 0)
 			NewTime = time;
-		
+
 		start(NewTime, onComplete, loops);
 		return this;
 	}
-	
+
 	/**
 	 * Stops the timer and removes it from the timer manager.
 	 */
@@ -144,14 +144,14 @@ class FlxTimer implements IFlxDestroyable
 	{
 		finished = true;
 		active = false;
-		
+
 		if (manager != null && _inManager)
 		{
 			manager.remove(this);
 			_inManager = false;
 		}
 	}
-	
+
 	/**
 	 * Called by the timer manager plugin to update the timer.
 	 * If time runs out, the loop counter is advanced, the timer reset, and the callback called if it exists.
@@ -161,76 +161,76 @@ class FlxTimer implements IFlxDestroyable
 	public function update(elapsed:Float):Void
 	{
 		_timeCounter += elapsed;
-		
+
 		while ((_timeCounter >= time) && active && !finished)
 		{
 			_timeCounter -= time;
 			_loopsCounter++;
-			
+
 			if (loops > 0 && (_loopsCounter >= loops))
 			{
 				finished = true;
 			}
 		}
 	}
-	
+
 	@:allow(flixel.util.FlxTimerManager)
-	private function onLoopFinished():Void
+	function onLoopFinished():Void
 	{
 		if (finished)
 			cancel();
-		
+
 		if (onComplete != null)
 			onComplete(this);
 	}
-	
-	private inline function get_timeLeft():Float
+
+	inline function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
-	
-	private inline function get_elapsedTime():Float
+
+	inline function get_elapsedTime():Float
 	{
 		return _timeCounter;
 	}
-	
-	private inline function get_loopsLeft():Int
+
+	inline function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
 	}
-	
-	private inline function get_elapsedLoops():Int
+
+	inline function get_elapsedLoops():Int
 	{
 		return _loopsCounter;
 	}
-	
-	private inline function get_progress():Float
+
+	inline function get_progress():Float
 	{
 		return (time > 0) ? (_timeCounter / time) : 0;
 	}
 }
 
 /**
- * A simple manager for tracking and updating game timer objects. 
+ * A simple manager for tracking and updating game timer objects.
  * Normally accessed via the static `FlxTimer.manager` rather than being created separately.
  */
 class FlxTimerManager extends FlxBasic
 {
-	private var _timers:Array<FlxTimer> = [];
-	
+	var _timers:Array<FlxTimer> = [];
+
 	/**
 	 * Instantiates a new timer manager.
 	 */
 	public function new()
 	{
 		super();
-		
+
 		// Don't call draw on this plugin
 		visible = false;
-		
+
 		FlxG.signals.stateSwitched.add(clear);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -241,7 +241,7 @@ class FlxTimerManager extends FlxBasic
 		FlxG.signals.stateSwitched.remove(clear);
 		super.destroy();
 	}
-	
+
 	/**
 	 * Called by FlxG.plugins.update() before the game state has been updated.
 	 * Cycles through timers and calls update() on each one.
@@ -249,24 +249,24 @@ class FlxTimerManager extends FlxBasic
 	override public function update(elapsed:Float):Void
 	{
 		var loopedTimers:Array<FlxTimer> = null;
-		
+
 		for (timer in _timers)
 		{
 			if (timer.active && !timer.finished && timer.time >= 0)
 			{
 				var timerLoops:Int = timer.elapsedLoops;
 				timer.update(elapsed);
-				
+
 				if (timerLoops != timer.elapsedLoops)
 				{
 					if (loopedTimers == null)
 						loopedTimers = [];
-					
+
 					loopedTimers.push(timer);
 				}
 			}
 		}
-		
+
 		if (loopedTimers != null)
 		{
 			while (loopedTimers.length > 0)
@@ -275,31 +275,31 @@ class FlxTimerManager extends FlxBasic
 			}
 		}
 	}
-	
+
 	/**
 	 * Add a new timer to the timer manager.
 	 * Called when FlxTimer is started.
-	 * 
+	 *
 	 * @param	Timer	The FlxTimer you want to add to the manager.
 	 */
 	@:allow(flixel.util.FlxTimer)
-	private function add(Timer:FlxTimer):Void
+	function add(Timer:FlxTimer):Void
 	{
 		_timers.push(Timer);
 	}
-	
+
 	/**
 	 * Remove a timer from the timer manager.
 	 * Called automatically by FlxTimer's cancel() function.
-	 * 
+	 *
 	 * @param	Timer	The FlxTimer you want to remove from the manager.
 	 */
 	@:allow(flixel.util.FlxTimer)
-	private function remove(Timer:FlxTimer):Void
+	function remove(Timer:FlxTimer):Void
 	{
 		FlxArrayUtil.fastSplice(_timers, Timer);
 	}
-	
+
 	/**
 	 * Immediately updates all `active`, non-infinite timers to their end points, repeatedly,
 	 * until all their loops are finished, resulting in `loopsLeft` callbacks being run.
@@ -332,7 +332,7 @@ class FlxTimerManager extends FlxBasic
 
 	/**
 	 * Applies a function to all timers
-	 * 
+	 *
 	 * @param   Function   A function that modifies one timer at a time
 	 * @since   4.2.0
 	 */

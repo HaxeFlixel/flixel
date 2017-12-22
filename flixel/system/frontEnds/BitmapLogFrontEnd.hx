@@ -11,7 +11,7 @@ class BitmapLogFrontEnd
 		FlxG.game.debugger.bitmapLog.add(Data, Name);
 		#end
 	}
-	
+
 	/**
 	 * Clears all bitmaps
 	 */
@@ -21,18 +21,18 @@ class BitmapLogFrontEnd
 		FlxG.game.debugger.bitmapLog.clear();
 		#end
 	}
-	
+
 	/**
-	 * Clear one bitmap object from the log -- the last one, by default 
+	 * Clear one bitmap object from the log -- the last one, by default
 	 * @param	Index
 	 */
-	public inline function clearAt(Index:Int = -1):Void 
+	public inline function clearAt(Index:Int = -1):Void
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.bitmapLog.clearAt(Index);
 		#end
 	}
-	
+
 	/**
 	 * Clears the bitmapLog window and adds the entire cache to it.
 	 */
@@ -46,7 +46,7 @@ class BitmapLogFrontEnd
 		}
 		#end
 	}
-	
+
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 }

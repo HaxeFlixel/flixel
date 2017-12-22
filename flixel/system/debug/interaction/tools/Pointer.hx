@@ -15,35 +15,35 @@ class GraphicCursorCross extends BitmapData {}
 
 /**
  * A tool to use the mouse cursor to select game elements.
- * 
+ *
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Pointer extends Tool
-{		
-	private var _selectionStartPoint:FlxPoint = new FlxPoint();
-	private var _selectionEndPoint:FlxPoint = new FlxPoint();
-	private var _selectionHappening:Bool = false;
-	private var _selectionCancelled:Bool = false;
-	private var _selectionArea:FlxRect = new FlxRect();
-	private var _itemsInSelectionArea:Array<FlxBasic> = [];
-	
-	override public function init(brain:Interaction):Tool 
+{
+	var _selectionStartPoint:FlxPoint = new FlxPoint();
+	var _selectionEndPoint:FlxPoint = new FlxPoint();
+	var _selectionHappening:Bool = false;
+	var _selectionCancelled:Bool = false;
+	var _selectionArea:FlxRect = new FlxRect();
+	var _itemsInSelectionArea:Array<FlxBasic> = [];
+
+	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
-		
+
 		_name = "Pointer";
 		setButton(GraphicCursorCross);
 		setCursor(new GraphicCursorCross(0, 0));
-		
+
 		return this;
 	}
-	
-	override public function update():Void 
+
+	override public function update():Void
 	{
 		// If the tool is active, update the custom cursor cursor
 		if (!isActive())
 			return;
-		
+
 		if (_brain.pointerJustPressed && !_selectionHappening)
 			startSelection();
 
@@ -52,7 +52,7 @@ class Pointer extends Tool
 			_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 			calculateSelectionArea();
 		}
-			
+
 		// Check clicks on the screen
 		if (!_brain.pointerJustReleased)
 			return;
@@ -71,29 +71,29 @@ class Pointer extends Tool
 			// User clicked an empty space without holding the "add more items" key,
 			// so it's time to unselect everything.
 			_brain.clearSelection();
-			
+
 	}
-	
-	private function calculateSelectionArea():Void
+
+	function calculateSelectionArea():Void
 	{
 		_selectionArea.x = _selectionStartPoint.x;
 		_selectionArea.y = _selectionStartPoint.y;
 		_selectionArea.width = _selectionEndPoint.x - _selectionArea.x;
 		_selectionArea.height = _selectionEndPoint.y - _selectionArea.y;
-		
+
 		if (_selectionArea.width < 0)
 		{
 			_selectionArea.width *= -1;
 			_selectionArea.x = _selectionArea.x - _selectionArea.width;
 		}
-		
+
 		if (_selectionArea.height < 0)
 		{
 			_selectionArea.height *= -1;
 			_selectionArea.y = _selectionArea.y - _selectionArea.height;
 		}
 	}
-	
+
 	/**
 	 * Start a selection area. A selection area is a rectangular shaped area
 	 * whose boundaries will be used to select game elements.
@@ -106,32 +106,32 @@ class Pointer extends Tool
 		_itemsInSelectionArea.clearArray();
 		updateConsoleSelection();
 	}
-	
+
 	/**
 	 * Cancel any selection activity that is happening, removing the selection rectangle from the screen.
 	 * Any item within the (canceled) selection area will be ignored. If you want to stop the selection
 	 * and actually process the action/items, use `stopSelection()`.
 	 */
 	public function cancelSelection():Void
-	{	
+	{
 		if (!_selectionHappening)
 			return;
-		
+
 		_selectionCancelled = true;
 		stopSelection(false);
 	}
-	
+
 	/**
-	 * Stop any selection activity that is happening. 
-	 * 
+	 * Stop any selection activity that is happening.
+	 *
 	 * @param	findItems	If `true` (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
 	 */
 	public function stopSelection(findItems:Bool = true):Void
-	{	
+	{
 		if (!_selectionHappening)
 			return;
-		
-		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);	
+
+		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		calculateSelectionArea();
 
 		if (findItems)
@@ -139,7 +139,7 @@ class Pointer extends Tool
 			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
 			updateConsoleSelection();
 		}
-		
+
 		// Clear everything
 		_selectionHappening = false;
 		_selectionArea.set(0, 0, 0, 0);
@@ -148,7 +148,7 @@ class Pointer extends Tool
 	/**
 	 * We register the current selection to the console for easy interaction.
 	 */
-	private function updateConsoleSelection()
+	function updateConsoleSelection()
 	{
 		FlxG.console.registerObject("selection", switch (_itemsInSelectionArea.length)
 		{
@@ -157,21 +157,21 @@ class Pointer extends Tool
 			case _: _itemsInSelectionArea;
 		});
 	}
-	
-	private function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
+
+	function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		var adding = _brain.keyPressed(Keyboard.CONTROL);
 		var selectedItems = _brain.selectedItems;
-		
+
 		if (itemsInSelectionArea.length == 0)
 			return;
-			
+
 		// If we are not selectively adding items, just clear
 		// the brain's list of selected items.
 		if (!adding)
 			_brain.clearSelection();
-		
+
 		for (item in itemsInSelectionArea)
 		{
 			if (selectedItems.members.contains(cast item) && adding)
@@ -180,13 +180,13 @@ class Pointer extends Tool
 				selectedItems.add(cast item);
 		}
 	}
-		
-	override public function draw():Void 
+
+	override public function draw():Void
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
 		if (gfx == null)
 			return;
-		
+
 		if (_selectionHappening)
 		{
 			// Render the selection rectangle

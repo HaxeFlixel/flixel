@@ -7,17 +7,17 @@ import sys.FileSystem;
 using flixel.util.FlxArrayUtil;
 using StringTools;
 
-class FlxAssetPaths 
+class FlxAssetPaths
 {
 	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
-			
+
 		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
-		
+
 		var fields:Array<Field> = Context.getBuildFields();
-			
+
 		for (fileRef in fileReferences)
 		{
 			// create new field based on file references!
@@ -31,8 +31,8 @@ class FlxAssetPaths
 		}
 		return fields;
 	}
-	
-	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
+
+	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
@@ -44,14 +44,14 @@ class FlxAssetPaths
 				// ignore invisible files
 				if (name.startsWith("."))
 					continue;
-				
+
 				if (filterExtensions != null)
 				{
 					var extension:String = name.split(".").last(); // get the last string with a dot before it
 					if (!filterExtensions.contains(extension))
 						continue;
 				}
-				
+
 				fileReferences.push(new FileReference(directory + name));
 			}
 			else if (subDirectories)
@@ -59,7 +59,7 @@ class FlxAssetPaths
 				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions));
 			}
 		}
-		
+
 		return fileReferences;
 	}
 }
@@ -69,16 +69,16 @@ private class FileReference
 	public var name:String;
 	public var value:String;
 	public var documentation:String;
-	
+
 	public function new(value:String)
 	{
 		this.value = value;
-		
+
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
 		this.name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
 		this.name = split.last();
-		
+
 		// auto generate documentation
 		this.documentation = "\"" + value + "\" (auto generated).";
 	}

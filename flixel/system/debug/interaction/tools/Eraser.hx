@@ -7,38 +7,38 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.system.debug.interaction.Interaction;
 
-@:bitmap("assets/images/debugger/buttons/eraser.png") 
+@:bitmap("assets/images/debugger/buttons/eraser.png")
 class GraphicEraserTool extends BitmapData {}
 
 /**
  * A tool to delete items from the screen.
- * 
+ *
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Eraser extends Tool
-{			
-	override public function init(Brain:Interaction):Tool 
+{
+	override public function init(Brain:Interaction):Tool
 	{
 		super.init(Brain);
 		_name = "Eraser";
 		return this;
 	}
-	
-	override public function update():Void 
+
+	override public function update():Void
 	{
 		if (_brain.keyJustPressed(Keyboard.DELETE))
 			doDeletion(_brain.keyPressed(Keyboard.SHIFT));
 	}
-	
-	override public function activate():Void 
+
+	override public function activate():Void
 	{
 		doDeletion(_brain.keyPressed(Keyboard.SHIFT));
-		
+
 		// No need to stay active
 		_brain.setActiveTool(null);
 	}
-	
-	private function doDeletion(remove:Bool):Void
+
+	function doDeletion(remove:Bool):Void
 	{
 		var selectedItems = _brain.selectedItems;
 		if (selectedItems != null)
@@ -47,14 +47,14 @@ class Eraser extends Tool
 			selectedItems.clear();
 		}
 	}
-	
-	private function findAndDelete(items:FlxTypedGroup<FlxObject>, remove:Bool = false):Void
+
+	function findAndDelete(items:FlxTypedGroup<FlxObject>, remove:Bool = false):Void
 	{
 		for (member in items)
 		{
 			if (member == null)
 				continue;
-			
+
 			if (Std.is(member, FlxTypedGroup))
 			{
 				// TODO: walk in the group, removing all members.
@@ -67,14 +67,14 @@ class Eraser extends Tool
 			}
 		}
 	}
-	
-	private function removeFromMemory(item:FlxBasic, parentGroup:FlxGroup):Void
+
+	function removeFromMemory(item:FlxBasic, parentGroup:FlxGroup):Void
 	{
 		for (member in parentGroup.members)
 		{
 			if (member == null)
 				continue;
-			
+
 			if (Std.is(member, FlxTypedGroup))
 				removeFromMemory(item, cast member);
 			else if (member == item)

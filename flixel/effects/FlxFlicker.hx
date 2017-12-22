@@ -12,16 +12,16 @@ import flixel.util.FlxTimer;
  */
 class FlxFlicker implements IFlxDestroyable
 {
-	private static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
-	
+	static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
+
 	/**
 	 * Internal map for looking up which objects are currently flickering and getting their flicker data.
 	 */
-	private static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
-	
+	static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
+
 	/**
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
-	 * 
+	 *
 	 * @param   Object               The object.
 	 * @param   Duration             How long to flicker for (in seconds). `0` means "forever".
 	 * @param   Interval             In what interval to toggle visibility. Set to `FlxG.elapsed` if `<= 0`!
@@ -49,30 +49,30 @@ class FlxFlicker implements IFlxDestroyable
 				return _boundObjects[Object];
 			}
 		}
-		
-		if (Interval <= 0) 
+
+		if (Interval <= 0)
 		{
 			Interval = FlxG.elapsed;
 		}
-		
+
 		var flicker:FlxFlicker = _pool.get();
 		flicker.start(Object, Duration, Interval, EndVisibility, CompletionCallback, ProgressCallback);
 		return _boundObjects[Object] = flicker;
 	}
-	
+
 	/**
 	 * Returns whether the object is flickering or not.
-	 * 
+	 *
 	 * @param   Object The object to test.
 	 */
 	public static function isFlickering(Object:FlxObject):Bool
 	{
 		return _boundObjects.exists(Object);
 	}
-	
+
 	/**
 	 * Stops flickering of the object. Also it will make the object visible.
-	 * 
+	 *
 	 * @param   Object The object to stop flickering.
 	 */
 	public static function stopFlickering(Object:FlxObject):Void
@@ -83,42 +83,42 @@ class FlxFlicker implements IFlxDestroyable
 			boundFlicker.stop();
 		}
 	}
-	
+
 	/**
 	 * The flickering object.
 	 */
 	public var object(default, null):FlxObject;
-	
+
 	/**
 	 * The final visibility of the object after flicker is complete.
 	 */
 	public var endVisibility(default, null):Bool;
-	
+
 	/**
 	 * The flicker timer. You can check how many seconds has passed since flickering started etc.
 	 */
 	public var timer(default, null):FlxTimer;
-	
+
 	/**
 	 * The callback that will be triggered after flicker has completed.
 	 */
 	public var completionCallback(default, null):FlxFlicker->Void;
-	
+
 	/**
 	 * The callback that will be triggered every time object visiblity is changed.
 	 */
 	public var progressCallback(default, null):FlxFlicker->Void;
-	
+
 	/**
 	 * The duration of the flicker (in seconds). `0` means "forever".
 	 */
 	public var duration(default, null):Float;
-	
+
 	/**
 	 * The interval of the flicker.
 	 */
 	public var interval(default, null):Float;
-	
+
 	/**
 	 * Nullifies the references to prepare object for reuse and avoid memory leaks.
 	 */
@@ -129,11 +129,11 @@ class FlxFlicker implements IFlxDestroyable
 		completionCallback = null;
 		progressCallback = null;
 	}
-	
+
 	/**
 	 * Starts flickering behavior.
 	 */
-	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool,
+	function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool,
 		?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
@@ -144,7 +144,7 @@ class FlxFlicker implements IFlxDestroyable
 		endVisibility = EndVisibility;
 		timer = new FlxTimer().start(interval, flickerProgress, Std.int(duration / interval));
 	}
-	
+
 	/**
 	 * Prematurely ends flickering.
 	 */
@@ -154,28 +154,28 @@ class FlxFlicker implements IFlxDestroyable
 		object.visible = true;
 		release();
 	}
-	
+
 	/**
 	 * Unbinds the object from flicker and releases it into pool for reuse.
 	 */
-	private function release():Void
+	function release():Void
 	{
 		_boundObjects.remove(object);
 		_pool.put(this);
 	}
-	
+
 	/**
 	 * Just a helper function for flicker() to update object's visibility.
 	 */
-	private function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(Timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
-		
+
 		if (progressCallback != null)
 		{
 			progressCallback(this);
 		}
-		
+
 		if (Timer.loops > 0 && Timer.loopsLeft == 0)
 		{
 			object.visible = endVisibility;
@@ -186,10 +186,10 @@ class FlxFlicker implements IFlxDestroyable
 			release();
 		}
 	}
-	
+
 	/**
 	 * Internal constructor. Use static methods.
 	 */
 	@:keep
-	private function new() {}
+	function new() {}
 }

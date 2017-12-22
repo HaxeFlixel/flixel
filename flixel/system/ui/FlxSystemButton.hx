@@ -18,7 +18,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	 */
 	public var upHandler:Void->Void;
 	/**
-	 * Whether or not the downHandler function will be called when 
+	 * Whether or not the downHandler function will be called when
 	 * the button is clicked.
 	 */
 	public var enabled:Bool = true;
@@ -31,19 +31,19 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	 * Whether the button has been toggled in toggleMode.
 	 */
 	public var toggled(default, set):Bool = false;
-	
+
 	/**
 	 * The icon this button uses.
 	 */
-	private var _icon:Bitmap;
+	var _icon:Bitmap;
 	/**
 	 * Whether the mouse has been pressed while over this button.
 	 */
-	private var _mouseDown:Bool = false;
-	
+	var _mouseDown:Bool = false;
+
 	/**
 	 * Create a new FlxSystemButton
-	 * 
+	 *
 	 * @param	Icon		The icon to use for the button.
 	 * @param	UpHandler	The function to be called when the button is pressed.
 	 * @param	ToggleMode	Whether this is a toggle button or not.
@@ -51,17 +51,17 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	public function new(Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false)
 	{
 		super();
-		
+
 		if (Icon != null)
 			changeIcon(Icon);
-		
+
 		#if flash
 		tabEnabled = false;
 		#end
-		
+
 		upHandler = UpHandler;
 		toggleMode = ToggleMode;
-		
+
 		addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
@@ -70,19 +70,19 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 
 	/**
 	 * Change the Icon of the button
-	 * 
+	 *
 	 * @param	Icon	The new icon to use for the button.
 	 */
 	public function changeIcon(Icon:BitmapData):Void
 	{
 		if (_icon != null)
 			removeChild(_icon);
-		
+
 		DebuggerUtil.fixSize(Icon);
 		_icon = new Bitmap(Icon);
 		addChild(_icon);
 	}
-	
+
 	public function destroy():Void
 	{
 		removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -93,36 +93,36 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		upHandler = null;
 	}
 
-	private function onMouseUp(_):Void
+	function onMouseUp(_):Void
 	{
 		if (enabled && _mouseDown)
 		{
 			toggled = !toggled;
 			_mouseDown = false;
-			
+
 			if (upHandler != null)
 				upHandler();
 		}
 	}
-	
-	private function onMouseDown(_):Void
+
+	function onMouseDown(_):Void
 	{
 		_mouseDown = true;
 	}
 
-	private inline function onMouseOver(_):Void
+	inline function onMouseOver(_):Void
 	{
 		if (enabled)
 			alpha -= 0.2;
 	}
 
-	private inline function onMouseOut(_):Void
+	inline function onMouseOut(_):Void
 	{
 		if (enabled)
 			alpha += 0.2;
 	}
-	
-	private function set_toggled(Value:Bool):Bool
+
+	function set_toggled(Value:Bool):Bool
 	{
 		if (toggleMode)
 			alpha = Value ? 0.3 : 1;

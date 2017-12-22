@@ -12,20 +12,20 @@ class FlxGamepadMapping
 {
 	public var supportsMotion:Bool = false;
 	public var supportsPointer:Bool = false;
-	
+
 	public var leftStick:FlxGamepadAnalogStick;
 	public var rightStick:FlxGamepadAnalogStick;
-	
+
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	private var attachment(default, set):FlxGamepadAttachment = NONE;
-	
-	private var manufacturer:Manufacturer;
-	
-	public function new(?attachment:FlxGamepadAttachment) 
+	var attachment(default, set):FlxGamepadAttachment = NONE;
+
+	var manufacturer:Manufacturer;
+
+	public function new(?attachment:FlxGamepadAttachment)
 	{
 		if (attachment != null)
 			this.attachment = attachment;
-		
+
 		#if flash
 		manufacturer = switch (Capabilities.manufacturer)
 		{
@@ -34,12 +34,12 @@ class FlxGamepadMapping
 			default: Unknown;
 		}
 		#end
-		
+
 		initValues();
 	}
-	
-	private function initValues():Void {}
-	
+
+	function initValues():Void {}
+
 	public function getAnalogStick(ID:FlxGamepadInputID):FlxGamepadAnalogStick
 	{
 		return switch (ID)
@@ -52,7 +52,7 @@ class FlxGamepadMapping
 				null;
 		}
 	}
-	
+
 	/**
 	 * Given a raw hardware code, return the "universal" ID
 	 */
@@ -60,7 +60,7 @@ class FlxGamepadMapping
 	{
 		return FlxGamepadInputID.NONE;
 	}
-	
+
 	/**
 	 * Given an ID, return the raw hardware code
 	 */
@@ -68,12 +68,12 @@ class FlxGamepadMapping
 	{
 		return -1;
 	}
-	
+
 	public function isAxisForMotion(ID:FlxGamepadInputID):Bool
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Whether this axis needs to be flipped
 	 */
@@ -81,7 +81,7 @@ class FlxGamepadMapping
 	{
 		return false;
 	}
-	
+
 	#if FLX_JOYSTICK_API
 	/**
 	 * Given an axis index value like 0-6, figures out which input that
@@ -91,14 +91,14 @@ class FlxGamepadMapping
 	{
 		return -1;
 	}
-	
+
 	public function checkForFakeAxis(ID:FlxGamepadInputID):Int
 	{
 		return -1;
 	}
 	#end
-	
-	private function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
+
+	function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		return this.attachment = attachment;
 	}

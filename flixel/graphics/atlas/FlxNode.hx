@@ -22,7 +22,7 @@ class FlxNode implements IFlxDestroyable
 	 * Right child of this node.
 	 */
 	public var right:FlxNode;
-	
+
 	/**
 	 * Region of the atlas which this node holds, includes spacings between nodes.
 	 */
@@ -40,7 +40,7 @@ class FlxNode implements IFlxDestroyable
 	 * Atlas object which contains this node.
 	 */
 	public var atlas:FlxAtlas;
-	
+
 	/**
 	 * The x coordinate of the top-left corner of this node.
 	 */
@@ -61,9 +61,9 @@ class FlxNode implements IFlxDestroyable
 	 * Logical flag, showing whether this node have any child nodes or image in it.
 	 */
 	public var isEmpty(get, null):Bool;
-	
+
 	public var rotated(default, null):Bool;
-	
+
 	/**
 	 * Node constructor
 	 *
@@ -82,7 +82,7 @@ class FlxNode implements IFlxDestroyable
 		this.atlas = atlas;
 		this.rotated = rotated;
 	}
-	
+
 	public inline function destroy():Void
 	{
 		key = null;
@@ -91,7 +91,7 @@ class FlxNode implements IFlxDestroyable
 		rect = null;
 		atlas = null;
 	}
-	
+
 	/**
 	 * Whether we place node with specified width and height in this node.
 	 */
@@ -99,7 +99,7 @@ class FlxNode implements IFlxDestroyable
 	{
 		return rect.width >= width && rect.height >= height;
 	}
-	
+
 	/**
 	 * Generates TileFrames object for this node
 	 *
@@ -112,7 +112,7 @@ class FlxNode implements IFlxDestroyable
 	{
 		FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
-		
+
 		if (frame != null)
 		{
 			var tileFrames:FlxTileFrames = FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
@@ -120,10 +120,10 @@ class FlxNode implements IFlxDestroyable
 				tileFrames = tileFrames.addBorder(tileBorder);
 			return tileFrames;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Generates a `FlxImageFrame` object for this node.
 	 *
@@ -133,45 +133,45 @@ class FlxNode implements IFlxDestroyable
 	{
 		FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame = atlas.getAtlasFrames().getByName(key);
-		
+
 		if (frame != null)
 			return FlxImageFrame.fromFrame(frame);
-		
+
 		return null;
 	}
-	
-	private inline function get_isEmpty():Bool
+
+	inline function get_isEmpty():Bool
 	{
 		return !filled && left == null && right == null;
 	}
-	
-	private inline function get_x():Int
+
+	inline function get_x():Int
 	{
 		return Std.int(rect.x);
 	}
-	
-	private inline function get_y():Int
+
+	inline function get_y():Int
 	{
 		return Std.int(rect.y);
 	}
-	
-	private inline function get_width():Int
+
+	inline function get_width():Int
 	{
 		return Std.int(rect.width);
 	}
-	
-	private function set_width(value:Int):Int
+
+	function set_width(value:Int):Int
 	{
 		rect.width = value;
 		return value;
 	}
-	
-	private inline function get_height():Int
+
+	inline function get_height():Int
 	{
 		return Std.int(rect.height);
 	}
-	
-	private function set_height(value:Int):Int
+
+	function set_height(value:Int):Int
 	{
 		rect.height = value;
 		return value;

@@ -14,40 +14,40 @@ using StringTools;
 
 class ConsoleCommands
 {
-	private var _console:Console;
+	var _console:Console;
 	/**
 	 * Helper variable for toggling the mouse coords in the watch window.
 	 */
-	private var _watchingMouse:Bool = false;
-	
+	var _watchingMouse:Bool = false;
+
 	public function new(console:Console):Void
 	{
 		_console = console;
-		
+
 		console.registerFunction("help", help, "Displays the help text of a registered object or function. See \"help\".");
 		console.registerFunction("close", close, "Closes the debugger overlay.");
-		
+
 		console.registerFunction("clearHistory", _console.history.clear, "Closes the debugger overlay.");
 		console.registerFunction("clearLog", FlxG.log.clear, "Clears the command history.");
-		
+
 		console.registerFunction("fields", fields, "Lists the fields of a class or instance");
-		
+
 		console.registerFunction("listObjects", listObjects, "Lists the aliases of all registered objects.");
 		console.registerFunction("listFunctions", listFunctions, "Lists the aliases of all registered functions.");
-		
+
 		console.registerFunction("step", step, "Steps the game forward one frame if currently paused. No effect if unpaused.");
 		console.registerFunction("pause", pause, "Toggles the game between paused and unpaused.");
-		
+
 		console.registerFunction("clearBitmapLog", FlxG.bitmapLog.clear, "Clears the bitmapLog window.");
 		console.registerFunction("viewCache", FlxG.bitmapLog.viewCache, "Adds the cache to the bitmapLog window.");
-		
+
 		console.registerFunction("create", create, "Creates a new FlxObject and registers it - by default at the mouse position. \"create(ObjClass:Class<T>, PlaceAtMouse:Bool, ExtraParams:Array<Dynamic>)\" Ex: \"create(FlxSprite, false, [100, 100])\"");
-		
+
 		console.registerFunction("watch", FlxG.watch.add, "Adds the specified field of an object to the watch window.");
 		console.registerFunction("watchExpression", FlxG.watch.addExpression, "Adds the specified expression to the watch window. Be sure any objects, functions, and classes used are registered!");
 		console.registerFunction("watchMouse", watchMouse, "Adds the mouse coordinates to the watch window.");
 		console.registerFunction("track", FlxG.debugger.track, "Adds a tracker window for the specified object or class.");
-		
+
 		// Default classes to include
 		console.registerClass(Math);
 		console.registerClass(Reflect);
@@ -66,15 +66,15 @@ class ConsoleCommands
 		console.registerClass(FlxCamera);
 		console.registerClass(FlxPoint);
 		console.registerClass(FlxRect);
-		
+
 		console.registerEnum(FlxDebuggerLayout);
 
 		console.registerObject("selection", null);
 	}
-	
-	private function help(?Alias:String):String
+
+	function help(?Alias:String):String
 	{
-		if (Alias == null || Alias.length == 0) 
+		if (Alias == null || Alias.length == 0)
 		{
 			var output:String = "System classes and commands: ";
 			for (obj in _console.registeredObjects.keys())
@@ -85,15 +85,15 @@ class ConsoleCommands
 			{
 				output += func + "(), ";
 			}
-			return output + "\nTry 'help(\"command\")' for more information about a specific command."; 
+			return output + "\nTry 'help(\"command\")' for more information about a specific command.";
 		}
-		else 
+		else
 		{
 			if (_console.registeredHelp.exists(Alias))
 			{
 				return Alias + (_console.registeredFunctions.exists(Alias) ? "()" : "") + ": " + _console.registeredHelp.get(Alias);
 			}
-			
+
 			else
 			{
 				FlxG.log.error("Help: The command '" + Alias + "' does not have help text.");
@@ -101,89 +101,89 @@ class ConsoleCommands
 			}
 		}
 	}
-	
-	private inline function close():Void
+
+	inline function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
-	
-	private function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
+
+	function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
 	{
 		if (Params == null)
 			Params = [];
-		
+
 		var obj:FlxObject = Type.createInstance(ObjClass, Params);
-		
+
 		if (obj == null) return;
-		
+
 		if (MousePos)
 		{
 			obj.x = FlxG.game.mouseX;
 			obj.y = FlxG.game.mouseY;
 		}
-		
+
 		FlxG.state.add(obj);
-		
+
 		if (Params.length == 0)
 			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y);
 		else
 			ConsoleUtil.log("create: New " + ObjClass + " created at X = " + obj.x + " Y = " + obj.y + " with params " + Params);
-		
+
 		_console.objectStack.push(obj);
-		
+
 		var name = "Object_" + _console.objectStack.length;
 		_console.registerObject(name, obj);
-		
+
 		ConsoleUtil.log("create: " + ObjClass + " registered as '" + name + "'");
 	}
-	
-	private function fields(Object:Dynamic):String
+
+	function fields(Object:Dynamic):String
 	{
 		return 'Fields of ${Type.getClassName(Object)}:\n' +
 			ConsoleUtil.getFields(Object).join("\n").trim();
 	}
-	
-	private function listObjects():Void
+
+	function listObjects():Void
 	{
-		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
+		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects));
 	}
-	
-	private function listFunctions():Void
+
+	function listFunctions():Void
 	{
-		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
+		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions));
 	}
-	
-	private function watchMouse():Void
+
+	function watchMouse():Void
 	{
-		if (!_watchingMouse) 
+		if (!_watchingMouse)
 		{
 			FlxG.watch.addMouse();
 			ConsoleUtil.log("watchMouse: Mouse position added to watch window");
 		}
-		else 
+		else
 		{
 			FlxG.watch.removeMouse();
 			ConsoleUtil.log("watchMouse: Mouse position removed from watch window");
 		}
-		
+
 		_watchingMouse = !_watchingMouse;
 	}
-	
-	private function pause():Void
+
+	function pause():Void
 	{
-		if (FlxG.vcr.paused) 
+		if (FlxG.vcr.paused)
 		{
 			FlxG.vcr.resume();
 			ConsoleUtil.log("pause: Game unpaused");
 		}
-		else 
+		else
 		{
 			FlxG.vcr.pause();
 			ConsoleUtil.log("pause: Game paused");
 		}
 	}
-	
-	private function step():Void
+
+	function step():Void
 	{
 		if (FlxG.vcr.paused)
 			FlxG.game.debugger.vcr.onStep();
