@@ -383,14 +383,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			var i:Int = 0;
 			while (i < totalTiles)
 			{
-				if ( auto == FULL )
-				{
-					autoTileFull(i++);
-				}
-				else
-				{
-					autoTile(i++);
-				}
+				autoTile(i++);
 			}
 		}
 	}
@@ -457,6 +450,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		{
 			return;
 		}
+
+		if ( auto == FULL )
+		{
+			autoTileFull(Index);
+			return;
+		}
 		
 		_data[Index] = 0;
 		
@@ -516,10 +515,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	private function autoTileFull(Index:Int):Void
 	{
-		if (_data[Index] == 0)
-		{
-			return;
-		}
 		
 		_data[Index] = 0;
 
