@@ -114,17 +114,17 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function getDefaultFont():FlxBitmapFont
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.get(DEFAULT_FONT_KEY);
+		/*var graphic:FlxGraphic = FlxG.bitmap.get(DEFAULT_FONT_KEY);
 		if (graphic != null)
 		{
 			var font:FlxBitmapFont = FlxBitmapFont.findFont(graphic.imageFrame.frame);
 			if (font != null)
 				return font;
-		}
+		}*/
 		
 		var letters:String = "";
 		var bd:BitmapData = new BitmapData(700, 9, true, 0xFF888888);
-		graphic = FlxG.bitmap.add(bd, false, DEFAULT_FONT_KEY);
+		var graphic = FlxG.bitmap.add(bd, false, DEFAULT_FONT_KEY);
 		
 		var letterPos:Int = 0;
 		var i:Int = 0;
@@ -179,10 +179,6 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame = graphic.imageFrame.frame;
 		}
 		
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
-		if (font != null)
-			return font;
-		
 		var fontData:Xml = null;
 		
 		if (Data != null)
@@ -202,7 +198,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			}
 		}
 		
-		font = new FlxBitmapFont(frame);
+		var font = new FlxBitmapFont(frame);
 		
 		var fast:Fast = new Fast(fontData.firstElement());
 		
@@ -319,11 +315,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame = graphic.imageFrame.frame;
 		}
 		
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
-		if (font != null)
-			return font;
-		
-		font = new FlxBitmapFont(frame);
+		var font = new FlxBitmapFont(frame);
 		font.distanceField = DistanceField;
 		
 		var data:String = Std.string(Data);
@@ -465,12 +457,8 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame = graphic.imageFrame.frame;
 		}
 		
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
-		if (font != null)
-			return font;
-		
 		letters = (letters == null) ? DEFAULT_CHARS : letters;
-		font = new FlxBitmapFont(frame);
+		var font = new FlxBitmapFont(frame);
 		font.fontName = graphic.key;
 		
 		var bmd:BitmapData = graphic.bitmap;
@@ -635,10 +623,6 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame = graphic.imageFrame.frame;
 		}
 		
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
-		if (font != null)
-			return font;
-		
 		letters = (letters == null) ? DEFAULT_CHARS : letters;
 		region = (region == null) ? FlxRect.weak(0, 0, frame.sourceSize.x, frame.sourceSize.y) : region;
 		spacing = (spacing == null) ? FlxPoint.get(0, 0) : spacing;
@@ -663,7 +647,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var numRows:Int = (charHeight == 0) ? 1 : Std.int((bitmapHeight + ySpacing) / spacedHeight);
 		var numCols:Int = (charWidth == 0) ? 1 : Std.int((bitmapWidth + xSpacing) / spacedWidth);
 		
-		font = new FlxBitmapFont(frame);
+		var font = new FlxBitmapFont(frame);
 		font.fontName = graphic.key;
 		font.lineHeight = font.size = charHeight;
 		
@@ -760,30 +744,11 @@ class FlxBitmapFont extends FlxFramesCollection
 		return characters.exists(charCode) ? characters[charCode].width : 0;
 	}
 	
-	public static function findFont(frame:FlxFrame, ?border:FlxPoint):FlxBitmapFont
-	{
-		if (border == null)
-			border = FlxPoint.weak();
-		
-		var bitmapFonts:Array<FlxBitmapFont> = cast frame.parent.getFramesCollections(FlxFrameCollectionType.FONT);
-		for (font in bitmapFonts)
-		{
-			if (font.frame == frame && font.border.equals(border))
-				return font;
-		}
-		
-		return null;
-	}
-	
 	override public function addBorder(border:FlxPoint):FlxBitmapFont 
 	{
 		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
 		
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame, resultBorder);
-		if (font != null)
-			return font;
-		
-		font = new FlxBitmapFont(frame, border);
+		var font = new FlxBitmapFont(frame, border);
 		font.spaceWidth = spaceWidth;
 		font.fontName = fontName;
 		font.numLetters = numLetters;
