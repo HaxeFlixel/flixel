@@ -276,7 +276,7 @@ class FlxMath
 	 * @param 	stop2 	Upper bound of the value's target range
 	 * @return The remapped value
 	 */
-	public static function remapToRange(value:Float, start1:Float, stop1:Float, start2:Float, stop2:Float)
+	public static function remapToRange(value:Float, start1:Float, stop1:Float, start2:Float, stop2:Float):Float
 	{
 		return start2 + (value - start1) * ((stop2 - start2) / (stop1 - start1));
 	}
