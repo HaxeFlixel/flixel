@@ -62,7 +62,7 @@ class FlxMath
 		{
 			mult *= 10;
 		}
-		return Math.round(Value * mult) / mult;
+		return Math.fround(Value * mult) / mult;
 	}
 	
 	/**
