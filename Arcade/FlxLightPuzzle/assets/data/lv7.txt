@@ -1,0 +1,4 @@
+250 72 30 B; 250 144 30 B; 250 216 30 B; 350 72 30 B; 350 144 30 B; 350 216 30 B; 450 72 30 B; 450 144 30 B; 450 216 30 B
+
+BB
+// just a bunch of the same color laid out in a grid

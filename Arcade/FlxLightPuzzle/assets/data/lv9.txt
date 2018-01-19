@@ -1,0 +1,5 @@
+300 144 30 W
+
+RYB
+// one white to show that color combinations aren't limited to secondary colors
+// ends the game. until you add more levels, that is

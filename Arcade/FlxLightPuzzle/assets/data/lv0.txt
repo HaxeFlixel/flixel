@@ -1,0 +1,5 @@
+300 144 30 R
+
+R
+// gets the player used to the core gameplay
+// don't worry, the game doesn't look past the 3rd line of these data files :)

@@ -1,0 +1,4 @@
+200 108 30 B; 200 180 30 R; 300 108 30 R; 300 180 30 B; 400 144 30 P
+
+BRR
+// requires a bit of thinking and a bit of precision

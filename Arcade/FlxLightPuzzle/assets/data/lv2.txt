@@ -1,0 +1,4 @@
+200 50 30 R; 200 238 30 B; 450 144 30 P
+200 100 200 188
+RB
+// introduces mixing colors

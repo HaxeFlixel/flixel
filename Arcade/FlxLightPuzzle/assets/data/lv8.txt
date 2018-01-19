@@ -1,0 +1,4 @@
+300 144 30 Y
+230 94 230 194; 370 94 370 194; 250 94 350 94; 250 194 350 194
+Y
+// this one requires a fairly precise aim, or multiple retries

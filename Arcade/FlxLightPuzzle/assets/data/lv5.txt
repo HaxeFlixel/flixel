@@ -1,0 +1,4 @@
+256 144 30 O; 356 144 30 O; 306 94 30 O; 306 194 30 O; 306 144 30 Y
+
+YRR
+// this one is a bit tricky, but more importantly it looks nice

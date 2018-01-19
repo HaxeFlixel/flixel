@@ -1,0 +1,5 @@
+396 96 30 Y; 396 192 30 B
+512 0 452 144 512 288
+BY
+// introduces that combined colors cannot hit primary colors
+// requires an unconventional bounce

@@ -1,0 +1,4 @@
+256 144 30 R; 356 144 30 R; 306 94 30 R; 306 194 30 R
+
+RR
+// preview for the next level

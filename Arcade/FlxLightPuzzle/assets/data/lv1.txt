@@ -1,0 +1,4 @@
+300 144 30 R
+200 100 200 188
+RR
+// gets the player used to the core/only obstacle: mirrors
