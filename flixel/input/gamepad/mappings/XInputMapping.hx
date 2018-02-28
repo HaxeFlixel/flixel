@@ -18,14 +18,17 @@ class XInputMapping extends FlxGamepadMapping
 	
 	override function initValues():Void 
 	{
+		#if FLX_JOYSTICK_API
 		leftStick = XInputID.LEFT_ANALOG_STICK;
 		rightStick = XInputID.RIGHT_ANALOG_STICK;
+		#end
 	}
 	
 	override public function getID(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
+			#if (flash || FLX_GAMEINPUT_API || FLX_JOYSTICK_API)
 			case XInputID.A: B;
 			case XInputID.B: A;
 			case XInputID.X: Y;
@@ -56,6 +59,7 @@ class XInputMapping extends FlxGamepadMapping
 			case id if (id == rightStick.rawDown): RIGHT_STICK_DIGITAL_DOWN;
 			case id if (id == rightStick.rawLeft): RIGHT_STICK_DIGITAL_LEFT;
 			case id if (id == rightStick.rawRight): RIGHT_STICK_DIGITAL_RIGHT;
+			#end
 			case _: NONE;
 		}
 	}
@@ -64,6 +68,7 @@ class XInputMapping extends FlxGamepadMapping
 	{
 		return switch (ID)
 		{
+			#if (flash || FLX_GAMEINPUT_API || FLX_JOYSTICK_API)
 			case A: XInputID.A;
 			case B: XInputID.B;
 			case X: XInputID.X;
@@ -93,6 +98,7 @@ class XInputMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: XInputID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: XInputID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: XInputID.RIGHT_ANALOG_STICK.rawRight;
+			#end
 			default: -1;
 		}
 	}

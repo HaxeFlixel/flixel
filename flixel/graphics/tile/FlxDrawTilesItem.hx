@@ -6,7 +6,6 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
 
 class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
@@ -83,20 +82,20 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		if (!FlxG.renderTile || position <= 0)
 			return;
 		
-		var flags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
+		var flags:Int = FlxTilesheet.TILE_TRANS_2x2 | FlxTilesheet.TILE_RECT | FlxTilesheet.TILE_ALPHA;
 		
 		if (colored)
-			flags |= Tilesheet.TILE_RGB;
+			flags |= FlxTilesheet.TILE_RGB;
 		
 		#if (!openfl_legacy && openfl >= "3.6.0")
 		if (hasColorOffsets)
-			flags |= Tilesheet.TILE_TRANS_COLOR;
+			flags |= FlxTilesheet.TILE_TRANS_COLOR;
 		#end
 
 		flags |= blending;
 
 		#if !(nme && flash)
-		camera.canvas.graphics.drawTiles(graphics.tilesheet, drawData,
+		graphics.tilesheet.draw(camera.canvas, drawData,
 			(camera.antialiasing || antialiasing), flags,
 			#if !openfl_legacy shader, #end
 			position);

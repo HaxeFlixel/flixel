@@ -10,6 +10,7 @@ import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.ProgressEvent;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import flash.Lib;
@@ -19,8 +20,9 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import openfl.Vector;
 
-class FlxBasePreloader extends NMEPreloader
+class FlxBasePreloader extends DefaultPreloader
 {
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine
@@ -298,13 +300,13 @@ class FlxBasePreloader extends NMEPreloader
 
 		graphics.beginFill(color);
 		graphics.drawPath(
-			[1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6],
-			[120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
+			Vector.ofArray([1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6]),
+			Vector.ofArray([120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
 				120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40, 35, 75, 0, 120, 0,
 				220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320,
 				20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0, 148, 8, 140, 20, 140, 120, 190, 108,
 				190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130,
-				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190],
+				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190]),
 			GraphicsPathWinding.NON_ZERO
 		);
 		graphics.endFill();
@@ -401,3 +403,208 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
+
+#if (openfl >= "4.0.0")
+@:dox(hide) class DefaultPreloader extends Sprite {
+	
+	
+	private var endAnimation:Int;
+	private var outline:Sprite;
+	private var progress:Sprite;
+	private var startAnimation:Int;
+	
+	
+	public function new () {
+		
+		super ();
+		
+		var backgroundColor = getBackgroundColor ();
+		var r = backgroundColor >> 16 & 0xFF;
+		var g = backgroundColor >> 8  & 0xFF;
+		var b = backgroundColor & 0xFF;
+		var perceivedLuminosity = (0.299 * r + 0.587 * g + 0.114 * b);
+		var color = 0x000000;
+		
+		if (perceivedLuminosity < 70) {
+			
+			color = 0xFFFFFF;
+			
+		}
+		
+		var x = 30;
+		var height = 7;
+		var y = getHeight () / 2 - height / 2;
+		var width = getWidth () - x * 2;
+		
+		var padding = 2;
+		
+		outline = new Sprite ();
+		outline.graphics.beginFill (color, 0.07);
+		outline.graphics.drawRect (0, 0, width, height);
+		outline.x = x;
+		outline.y = y;
+		outline.alpha = 0;
+		addChild (outline);
+		
+		progress = new Sprite ();
+		progress.graphics.beginFill (color, 0.35);
+		progress.graphics.drawRect (0, 0, width - padding * 2, height - padding * 2);
+		progress.x = x + padding;
+		progress.y = y + padding;
+		progress.scaleX = 0;
+		progress.alpha = 0;
+		addChild (progress);
+		
+		startAnimation = Lib.getTimer () + 100;
+		endAnimation = startAnimation + 1000;
+		
+		addEventListener (Event.ADDED_TO_STAGE, this_onAddedToStage);
+		
+	}
+	
+	
+	public function getBackgroundColor ():Int {
+		
+		return Lib.current.stage.window.config.background;
+		
+	}
+	
+	
+	public function getHeight ():Float {
+		
+		var height = Lib.current.stage.window.config.height;
+		
+		if (height > 0) {
+			
+			return height;
+			
+		} else {
+			
+			return Lib.current.stage.stageHeight;
+			
+		}
+		
+	}
+	
+	
+	public function getWidth ():Float {
+		
+		var width = Lib.current.stage.window.config.width;
+		
+		if (width > 0) {
+			
+			return width;
+			
+		} else {
+			
+			return Lib.current.stage.stageWidth;
+			
+		}
+		
+	}
+	
+	
+	@:keep public function onInit ():Void {
+		
+		addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+		
+	}
+	
+	
+	@:keep public function onLoaded ():Void {
+		
+		removeEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+		
+		dispatchEvent (new Event (Event.UNLOAD));
+		
+	}
+	
+	
+	@:keep public function onUpdate (bytesLoaded:Int, bytesTotal:Int):Void {
+		
+		var percentLoaded = 0.0;
+		
+		if (bytesTotal > 0) {
+			
+			percentLoaded = bytesLoaded / bytesTotal;
+			
+			if (percentLoaded > 1) {
+				
+				percentLoaded = 1;
+				
+			}
+			
+		}
+		
+		progress.scaleX = percentLoaded;
+		
+	}
+	
+	
+	
+	
+	// Event Handlers
+	
+	
+	
+	
+	private function this_onAddedToStage (event:Event):Void {
+		
+		removeEventListener (Event.ADDED_TO_STAGE, this_onAddedToStage);
+		
+		onInit ();
+		onUpdate (loaderInfo.bytesLoaded, loaderInfo.bytesTotal);
+		
+		addEventListener (ProgressEvent.PROGRESS, this_onProgress);
+		addEventListener (Event.COMPLETE, this_onComplete);
+		
+	}
+	
+	
+	private function this_onComplete (event:Event):Void {
+		
+		event.preventDefault ();
+		
+		removeEventListener (ProgressEvent.PROGRESS, this_onProgress);
+		removeEventListener (Event.COMPLETE, this_onComplete);
+		
+		#if (openfl < "5.0.0")
+		addEventListener (Event.COMPLETE, function (event) {
+			
+			dispatchEvent (new Event (Event.UNLOAD));
+			
+		});
+		#end
+		
+		onLoaded ();
+		
+	}
+	
+	
+	private function this_onEnterFrame (event:Event):Void {
+		
+		var elapsed = Lib.getTimer () - startAnimation;
+		var total = endAnimation - startAnimation;
+		
+		var percent = elapsed / total;
+		
+		if (percent < 0) percent = 0;
+		if (percent > 1) percent = 1;
+		
+		outline.alpha = percent;
+		progress.alpha = percent;
+		
+	}
+	
+	
+	private function this_onProgress (event:ProgressEvent):Void {
+		
+		onUpdate (Std.int (event.bytesLoaded), Std.int (event.bytesTotal));
+		
+	}
+	
+	
+}
+#else
+typedef DefaultPreloader = NMEPreloader;
+#end

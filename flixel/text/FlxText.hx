@@ -23,6 +23,10 @@ import openfl.Assets;
 import haxe.Utf8;
 using flixel.util.FlxStringUtil;
 
+#if (openfl >= "5.0.0")
+import openfl.utils.AssetType;
+#end
+
 #if flash
 import openfl.geom.Rectangle;
 #end
@@ -771,13 +775,7 @@ class FlxText extends FlxSprite
 			height = newHeight;
 			var key:String = FlxG.bitmap.getUniqueKey("text");
 			
-			// retain the clipRect through text changes
-			var tempRect = clipRect;
-			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
-			
-			clipRect = tempRect;
-			
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
 			frameHeight = Std.int(height);

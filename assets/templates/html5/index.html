@@ -3,12 +3,14 @@
 <head>
 	
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
 	<title>::APP_TITLE::</title>
 	
 	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	::if favicons::::foreach (favicons)::
+	<link rel="::__current__.rel::" type="::__current__.type::" href="::__current__.href::">::end::::end::
 	
 	::if linkedLibraries::::foreach (linkedLibraries)::
 	<script type="text/javascript" src="::__current__::"></script>::end::::end::
@@ -25,16 +27,17 @@
 	<style>
 		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: black; }
 		#openfl-content { margin: 0 auto; width: ::if (WIN_RESIZABLE)::100%::elseif (WIN_WIDTH > 0)::::WIN_WIDTH::px::else::100%::end::; height: ::if (WIN_RESIZABLE)::100%::elseif (WIN_WIDTH > 0)::::WIN_HEIGHT::px::else::100%::end::; }
-		::foreach assets::::if (type == "font")::
+::foreach assets::::if (type == "font")::::if (cssFontFace)::::cssFontFace::::else::
 		@font-face {
 			font-family: '::fontName::';
 			src: url('::targetPath::.eot');
 			src: url('::targetPath::.eot?#iefix') format('embedded-opentype'),
 			url('::targetPath::.svg#my-font-family') format('svg'),
+			url('::targetPath::.woff') format('woff'),
 			url('::targetPath::.ttf') format('truetype');
 			font-weight: normal;
 			font-style: normal;
-		}::end::::end::
+		}::end::::end::::end::
 	</style>
 	
 </head>
@@ -45,7 +48,7 @@
 	<div id="openfl-content"></div>
 	
 	<script type="text/javascript">
-		lime.embed ("openfl-content", ::WIN_WIDTH::, ::WIN_HEIGHT::, "::WIN_FLASHBACKGROUND::");
+		lime.embed ("::APP_FILE::", "openfl-content", ::WIN_WIDTH::, ::WIN_HEIGHT::, { parameters: {} });
 	</script>
 	
 </body>
