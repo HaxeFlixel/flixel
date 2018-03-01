@@ -45,6 +45,7 @@ class FlxTilesheet extends Tilesheet
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.display.Graphics;
+import openfl.display.GraphicsShader;
 import openfl.display.Shader;
 import openfl.display.Sprite;
 import openfl.display.Tileset;
@@ -83,9 +84,148 @@ class FlxTilesheet extends Tileset
 	public static inline var TILE_BLEND_DIFFERENCE = 0x01000000;
 	public static inline var TILE_BLEND_INVERT = 0x02000000;
 	
+	private static var defaultShader = new GraphicsShader ();
+	
 	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Shader, count:Int = -1):Void
 	{
+		#if (openfl >= "8.0.0")
 		
+		// TODO: Build data in advance
+		
+		var matrices = new Vector<Float>();
+		var rects = new Vector<Float>();
+		
+		var useScale = (flags & TILE_SCALE) > 0;
+		var useRotation = (flags & TILE_ROTATION) > 0;
+		var useTransform = (flags & TILE_TRANS_2x2) > 0;
+		var useRGB = (flags & TILE_RGB) > 0;
+		var useAlpha = (flags & TILE_ALPHA) > 0;
+		var useRect = (flags & TILE_RECT) > 0;
+		var useOrigin = (flags & TILE_ORIGIN) > 0;
+		var useRGBOffset = ((flags & TILE_TRANS_COLOR) > 0);
+		
+		var blendMode:BlendMode = switch(flags & 0xF0000) {
+			case TILE_BLEND_ADD:                ADD;
+			case TILE_BLEND_MULTIPLY:           MULTIPLY;
+			case TILE_BLEND_SCREEN:             SCREEN;
+			case TILE_BLEND_SUBTRACT:           SUBTRACT;
+			case _: switch(flags & 0xF00000) {
+				case TILE_BLEND_DARKEN:         DARKEN;
+				case TILE_BLEND_LIGHTEN:        LIGHTEN;
+				case TILE_BLEND_OVERLAY:        OVERLAY;
+				case TILE_BLEND_HARDLIGHT:      HARDLIGHT;
+				case _: switch(flags & 0xF000000) {
+					case TILE_BLEND_DIFFERENCE: DIFFERENCE;
+					case TILE_BLEND_INVERT:     INVERT;
+					case _:                               NORMAL;
+				}
+			}
+		};
+		
+		if (useTransform) { useScale = false; useRotation = false; }
+		
+		var scaleIndex = 0;
+		var rotationIndex = 0;
+		var rgbIndex = 0;
+		var rgbOffsetIndex = 0;
+		var alphaIndex = 0;
+		var transformIndex = 0;
+		
+		var numValues = 3;
+		
+		if (useRect) { numValues = useOrigin ? 8 : 6; }
+		if (useScale) { scaleIndex = numValues; numValues ++; }
+		if (useRotation) { rotationIndex = numValues; numValues ++; }
+		if (useTransform) { transformIndex = numValues; numValues += 4; }
+		if (useRGB) { rgbIndex = numValues; numValues += 3; }
+		if (useAlpha) { alphaIndex = numValues; numValues ++; }
+		if (useRGBOffset) { rgbOffsetIndex = numValues; numValues += 4; }
+		
+		var totalCount = tileData.length;
+		if (count >= 0 && totalCount > count) totalCount = count;
+		var itemCount = Math.ceil (totalCount / numValues);
+		var iIndex = 0;
+		var tint = 0xFFFFFF;
+		
+		//var shader:GraphicsShader = shader != null ? cast shader : defaultShader;
+		var shader = new GraphicsShader ();
+		
+		shader.data.texture0.input = bitmapData;
+		shader.data.texture0.smoothing = smooth;
+		
+		if (useAlpha)
+		{
+			shader.data.alpha.value = [];
+		}
+		
+		if (useRGB)
+		{
+			shader.data.colorMultipliers.value = [];
+		}
+		
+		if (useRGBOffset)
+		{
+			shader.data.colorOffsets.value = [];
+		}
+		
+		var alphaValues = shader.data.alpha.value;
+		var colorMultiplierValues = shader.data.colorMultipliers.value;
+		var colorOffsetValues = shader.data.colorOffsets.value;
+		
+		for (i in 0...itemCount)
+		{
+			// useRect is always true
+			
+			rects.push (tileData[iIndex + 2]); //x
+			rects.push (tileData[iIndex + 3]); //y
+			rects.push (tileData[iIndex + 4]); //width
+			rects.push (tileData[iIndex + 5]); //height
+			
+			// useTransform is always true
+			
+			matrices.push (tileData[iIndex + transformIndex + 0]); //a
+			matrices.push (tileData[iIndex + transformIndex + 1]); //b
+			matrices.push (tileData[iIndex + transformIndex + 2]); //c
+			matrices.push (tileData[iIndex + transformIndex + 3]); //d
+			matrices.push (tileData[iIndex + 0]); //tx
+			matrices.push (tileData[iIndex + 1]); //ty
+			
+			// useAlpha is always true
+			
+			for (j in 0...6)
+			{
+				alphaValues.push (1);
+			}
+			
+			if (useRGB)
+			{
+				for (j in 0...6)
+				{
+					colorMultiplierValues.push (tileData[iIndex + rgbIndex]);
+					colorMultiplierValues.push (tileData[iIndex + rgbIndex + 1]);
+					colorMultiplierValues.push (tileData[iIndex + rgbIndex + 2]);
+					colorMultiplierValues.push (1);
+				}
+			}
+			
+			if (useRGBOffset)
+			{
+				for (j in 0...6)
+				{
+					colorOffsetValues.push (tileData[iIndex + rgbOffsetIndex]);
+					colorOffsetValues.push (tileData[iIndex + rgbOffsetIndex + 1]);
+					colorOffsetValues.push (tileData[iIndex + rgbOffsetIndex + 2]);
+					colorOffsetValues.push (tileData[iIndex + rgbOffsetIndex + 3]);
+				}
+			}
+			
+			iIndex += numValues;
+		}
+		
+		canvas.graphics.beginShaderFill (shader);
+		canvas.graphics.drawQuads (matrices, rects);
+		
+		#end
 	}
 }
 
