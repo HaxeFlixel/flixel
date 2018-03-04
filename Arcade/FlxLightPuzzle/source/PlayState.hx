@@ -1,13 +1,14 @@
 package;
 
-import flixel.util.FlxSpriteUtil;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxVector;
+import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import openfl.Assets;
 
 /**
@@ -64,7 +65,7 @@ class PlayState extends FlxState
 		
 		// the original file was edited to have a 44100 Hz sampling frequency, since Flash cannot use 48000 Hz
 		// this is really easy to change using a free program like Audacity
-		FlxG.sound.playMusic(AssetPaths.Waltzon_edit__mp3, 0.5);
+		FlxG.sound.playMusic(FlxAssets.getSound("assets/music/Waltzon_edit"), 0.5);
 		
 		openMenu();
 	}
