@@ -223,7 +223,7 @@ class FlxTilesheet extends Tileset
 		}
 		
 		canvas.graphics.beginShaderFill (shader);
-		canvas.graphics.drawQuads (matrices, rects);
+		canvas.graphics.drawQuads (rects, null, matrices);
 		
 		#end
 	}
