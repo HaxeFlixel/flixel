@@ -507,14 +507,13 @@ class FlxBasePreloader extends DefaultPreloader
 	{
 		var percentLoaded = 0.0;
 		
-		if (bytesTotal > 0) {
-			
+		if (bytesTotal > 0)
+		{
 			percentLoaded = bytesLoaded / bytesTotal;
 			
-			if (percentLoaded > 1) {
-				
+			if (percentLoaded > 1)
+			{
 				percentLoaded = 1;
-				
 			}
 			
 		}
@@ -524,8 +523,8 @@ class FlxBasePreloader extends DefaultPreloader
 	
 	// Event Handlers
 	
-	private function mOnAddedToStage (event:Event):Void {
-		
+	private function mOnAddedToStage (event:Event):Void
+	{
 		removeEventListener (Event.ADDED_TO_STAGE, mOnAddedToStage);
 		
 		onInit ();
