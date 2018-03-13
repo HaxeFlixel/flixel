@@ -82,7 +82,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		if (!FlxG.renderTile || position <= 0)
 			return;
 		
-		var flags:Int = FlxTilesheet.TILE_TRANS_2x2 | FlxTilesheet.TILE_RECT | FlxTilesheet.TILE_ALPHA;
+		var flags:Int = FlxTilesheet.TILE_TRANS_2X2 | FlxTilesheet.TILE_RECT | FlxTilesheet.TILE_ALPHA;
 		
 		if (colored)
 			flags |= FlxTilesheet.TILE_RGB;

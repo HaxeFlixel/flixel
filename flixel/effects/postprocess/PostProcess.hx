@@ -27,10 +27,6 @@ import lime.utils.Float32Array;
 import lime.graphics.opengl.WebGLContext;
 #end
 
-#if (openfl >= "5.0.0")
-import openfl.utils.AssetType;
-#end
-
 private class Uniform
 {
 	public var id:Int;

@@ -405,17 +405,15 @@ class FlxBasePreloader extends DefaultPreloader
 }
 
 #if (openfl >= "4.0.0")
-@:dox(hide) class DefaultPreloader extends Sprite {
-	
-	
+@:dox(hide) class DefaultPreloader extends Sprite
+{
 	private var endAnimation:Int;
 	private var outline:Sprite;
 	private var progress:Sprite;
 	private var startAnimation:Int;
 	
-	
-	public function new () {
-		
+	public function new ()
+	{
 		super ();
 		
 		var backgroundColor = getBackgroundColor ();
@@ -425,10 +423,9 @@ class FlxBasePreloader extends DefaultPreloader
 		var perceivedLuminosity = (0.299 * r + 0.587 * g + 0.114 * b);
 		var color = 0x000000;
 		
-		if (perceivedLuminosity < 70) {
-			
+		if (perceivedLuminosity < 70)
+		{
 			color = 0xFFFFFF;
-			
 		}
 		
 		var x = 30;
@@ -458,70 +455,56 @@ class FlxBasePreloader extends DefaultPreloader
 		startAnimation = Lib.getTimer () + 100;
 		endAnimation = startAnimation + 1000;
 		
-		addEventListener (Event.ADDED_TO_STAGE, this_onAddedToStage);
-		
+		addEventListener (Event.ADDED_TO_STAGE, mOnAddedToStage);
 	}
 	
-	
-	public function getBackgroundColor ():Int {
-		
+	public function getBackgroundColor ():Int
+	{
 		return Lib.current.stage.window.config.background;
-		
 	}
 	
-	
-	public function getHeight ():Float {
-		
+	public function getHeight ():Float
+	{
 		var height = Lib.current.stage.window.config.height;
 		
-		if (height > 0) {
-			
+		if (height > 0)
+		{
 			return height;
-			
-		} else {
-			
-			return Lib.current.stage.stageHeight;
-			
 		}
-		
+		else
+		{
+			return Lib.current.stage.stageHeight;
+		}
 	}
 	
-	
-	public function getWidth ():Float {
-		
+	public function getWidth ():Float
+	{
 		var width = Lib.current.stage.window.config.width;
 		
-		if (width > 0) {
-			
+		if (width > 0)
+		{
 			return width;
-			
-		} else {
-			
-			return Lib.current.stage.stageWidth;
-			
 		}
-		
+		else
+		{
+			return Lib.current.stage.stageWidth;
+		}
 	}
 	
-	
-	@:keep public function onInit ():Void {
-		
-		addEventListener (Event.ENTER_FRAME, this_onEnterFrame);
-		
+	@:keep public function onInit ():Void
+	{
+		addEventListener (Event.ENTER_FRAME, mOnEnterFrame);
 	}
 	
-	
-	@:keep public function onLoaded ():Void {
-		
-		removeEventListener (Event.ENTER_FRAME, this_onEnterFrame);
+	@:keep public function onLoaded ():Void
+	{
+		removeEventListener (Event.ENTER_FRAME, mOnEnterFrame);
 		
 		dispatchEvent (new Event (Event.UNLOAD));
-		
 	}
 	
-	
-	@:keep public function onUpdate (bytesLoaded:Int, bytesTotal:Int):Void {
-		
+	@:keep public function onUpdate (bytesLoaded:Int, bytesTotal:Int):Void
+	{
 		var percentLoaded = 0.0;
 		
 		if (bytesTotal > 0) {
@@ -537,52 +520,41 @@ class FlxBasePreloader extends DefaultPreloader
 		}
 		
 		progress.scaleX = percentLoaded;
-		
 	}
-	
-	
-	
 	
 	// Event Handlers
 	
-	
-	
-	
-	private function this_onAddedToStage (event:Event):Void {
+	private function mOnAddedToStage (event:Event):Void {
 		
-		removeEventListener (Event.ADDED_TO_STAGE, this_onAddedToStage);
+		removeEventListener (Event.ADDED_TO_STAGE, mOnAddedToStage);
 		
 		onInit ();
 		onUpdate (loaderInfo.bytesLoaded, loaderInfo.bytesTotal);
 		
-		addEventListener (ProgressEvent.PROGRESS, this_onProgress);
-		addEventListener (Event.COMPLETE, this_onComplete);
+		addEventListener (ProgressEvent.PROGRESS, mOnProgress);
+		addEventListener (Event.COMPLETE, mOnComplete);
 		
 	}
 	
-	
-	private function this_onComplete (event:Event):Void {
-		
+	private function mOnComplete (event:Event):Void
+	{
 		event.preventDefault ();
 		
-		removeEventListener (ProgressEvent.PROGRESS, this_onProgress);
-		removeEventListener (Event.COMPLETE, this_onComplete);
+		removeEventListener (ProgressEvent.PROGRESS, mOnProgress);
+		removeEventListener (Event.COMPLETE, mOnComplete);
 		
 		#if (openfl < "5.0.0")
-		addEventListener (Event.COMPLETE, function (event) {
-			
+		addEventListener (Event.COMPLETE, function (event)
+		{
 			dispatchEvent (new Event (Event.UNLOAD));
-			
 		});
 		#end
 		
 		onLoaded ();
-		
 	}
 	
-	
-	private function this_onEnterFrame (event:Event):Void {
-		
+	private function mOnEnterFrame (event:Event):Void
+	{
 		var elapsed = Lib.getTimer () - startAnimation;
 		var total = endAnimation - startAnimation;
 		
@@ -593,16 +565,12 @@ class FlxBasePreloader extends DefaultPreloader
 		
 		outline.alpha = percent;
 		progress.alpha = percent;
-		
 	}
 	
-	
-	private function this_onProgress (event:ProgressEvent):Void {
-		
+	private function mOnProgress (event:ProgressEvent):Void
+	{
 		onUpdate (Std.int (event.bytesLoaded), Std.int (event.bytesTotal));
-		
 	}
-	
 	
 }
 #else

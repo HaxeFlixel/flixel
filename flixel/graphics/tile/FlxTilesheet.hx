@@ -1,7 +1,10 @@
-package flixel.graphics.tile; #if (openfl < "4.0.0")
+package flixel.graphics.tile;
 
 import openfl.display.Shader;
 import openfl.display.Sprite;
+
+#if (openfl < "4.0.0")
+
 import openfl.display.Tilesheet;
 
 class FlxTilesheet extends Tilesheet
@@ -15,7 +18,7 @@ class FlxTilesheet extends Tilesheet
 	public static inline var TILE_ROTATION = Tilesheet.TILE_ROTATION;
 	public static inline var TILE_RGB = Tilesheet.TILE_RGB;
 	public static inline var TILE_ALPHA = Tilesheet.TILE_ALPHA;
-	public static inline var TILE_TRANS_2x2 = Tilesheet.TILE_TRANS_2x2;
+	public static inline var TILE_TRANS_2X2 = Tilesheet.TILE_TRANS_2x2;
 	public static inline var TILE_RECT = Tilesheet.TILE_RECT;
 	public static inline var TILE_ORIGIN = Tilesheet.TILE_ORIGIN;
 	public static inline var TILE_BLEND_NORMAL = Tilesheet.TILE_BLEND_NORMAL;
@@ -42,20 +45,13 @@ class FlxTilesheet extends Tilesheet
 
 #else
 
-import openfl.display.BitmapData;
 import openfl.display.BlendMode;
-import openfl.display.Graphics;
-import openfl.display.GraphicsShader;
-import openfl.display.Shader;
-import openfl.display.Sprite;
 import openfl.display.Tileset;
-import openfl.events.Event;
-import openfl.geom.ColorTransform;
-import openfl.geom.Matrix;
-import openfl.geom.Rectangle;
-import openfl.geom.Point;
-import openfl.Lib;
 import openfl.Vector;
+
+#if (openfl >= "8.0.0")
+import openfl.display.GraphicsShader;
+#end
 
 class FlxTilesheet extends Tileset
 {
@@ -68,7 +64,7 @@ class FlxTilesheet extends Tileset
 	public static inline var TILE_ROTATION = 0x0002;
 	public static inline var TILE_RGB = 0x0004;
 	public static inline var TILE_ALPHA = 0x0008;
-	public static inline var TILE_TRANS_2x2 = 0x0010;
+	public static inline var TILE_TRANS_2X2 = 0x0010;
 	public static inline var TILE_RECT = 0x0020;
 	public static inline var TILE_ORIGIN = 0x0040;
 	public static inline var TILE_TRANS_COLOR = 0x0080;
@@ -84,8 +80,6 @@ class FlxTilesheet extends Tileset
 	public static inline var TILE_BLEND_DIFFERENCE = 0x01000000;
 	public static inline var TILE_BLEND_INVERT = 0x02000000;
 	
-	private static var defaultShader = new GraphicsShader ();
-	
 	public function draw (canvas:Sprite, tileData:Array<Float>, smooth:Bool = false, flags:Int = 0, shader:Shader, count:Int = -1):Void
 	{
 		#if (openfl >= "8.0.0")
@@ -97,24 +91,27 @@ class FlxTilesheet extends Tileset
 		
 		var useScale = (flags & TILE_SCALE) > 0;
 		var useRotation = (flags & TILE_ROTATION) > 0;
-		var useTransform = (flags & TILE_TRANS_2x2) > 0;
+		var useTransform = (flags & TILE_TRANS_2X2) > 0;
 		var useRGB = (flags & TILE_RGB) > 0;
 		var useAlpha = (flags & TILE_ALPHA) > 0;
 		var useRect = (flags & TILE_RECT) > 0;
 		var useOrigin = (flags & TILE_ORIGIN) > 0;
 		var useRGBOffset = ((flags & TILE_TRANS_COLOR) > 0);
 		
-		var blendMode:BlendMode = switch(flags & 0xF0000) {
+		var blendMode:BlendMode = switch (flags & 0xF0000)
+		{
 			case TILE_BLEND_ADD:                ADD;
 			case TILE_BLEND_MULTIPLY:           MULTIPLY;
 			case TILE_BLEND_SCREEN:             SCREEN;
 			case TILE_BLEND_SUBTRACT:           SUBTRACT;
-			case _: switch(flags & 0xF00000) {
+			case _: switch (flags & 0xF00000)
+			{
 				case TILE_BLEND_DARKEN:         DARKEN;
 				case TILE_BLEND_LIGHTEN:        LIGHTEN;
 				case TILE_BLEND_OVERLAY:        OVERLAY;
 				case TILE_BLEND_HARDLIGHT:      HARDLIGHT;
-				case _: switch(flags & 0xF000000) {
+				case _: switch (flags & 0xF000000)
+				{
 					case TILE_BLEND_DIFFERENCE: DIFFERENCE;
 					case TILE_BLEND_INVERT:     INVERT;
 					case _:                               NORMAL;
@@ -122,7 +119,11 @@ class FlxTilesheet extends Tileset
 			}
 		};
 		
-		if (useTransform) { useScale = false; useRotation = false; }
+		if (useTransform)
+		{
+			useScale = false;
+			useRotation = false;
+		}
 		
 		var scaleIndex = 0;
 		var rotationIndex = 0;
@@ -133,13 +134,46 @@ class FlxTilesheet extends Tileset
 		
 		var numValues = 3;
 		
-		if (useRect) { numValues = useOrigin ? 8 : 6; }
-		if (useScale) { scaleIndex = numValues; numValues ++; }
-		if (useRotation) { rotationIndex = numValues; numValues ++; }
-		if (useTransform) { transformIndex = numValues; numValues += 4; }
-		if (useRGB) { rgbIndex = numValues; numValues += 3; }
-		if (useAlpha) { alphaIndex = numValues; numValues ++; }
-		if (useRGBOffset) { rgbOffsetIndex = numValues; numValues += 4; }
+		if (useRect)
+		{
+			numValues = useOrigin ? 8 : 6;
+		}
+		
+		if (useScale)
+		{
+			scaleIndex = numValues;
+			numValues++;
+		}
+		
+		if (useRotation)
+		{
+			rotationIndex = numValues;
+			numValues++;
+		}
+		
+		if (useTransform)
+		{
+			transformIndex = numValues;
+			numValues += 4;
+		}
+		
+		if (useRGB)
+		{
+			rgbIndex = numValues;
+			numValues += 3;
+		}
+		
+		if (useAlpha)
+		{
+			alphaIndex = numValues;
+			numValues++;
+		}
+		
+		if (useRGBOffset)
+		{
+			rgbOffsetIndex = numValues;
+			numValues += 4;
+		}
 		
 		var totalCount = tileData.length;
 		if (count >= 0 && totalCount > count) totalCount = count;
@@ -147,9 +181,7 @@ class FlxTilesheet extends Tileset
 		var iIndex = 0;
 		var tint = 0xFFFFFF;
 		
-		//var shader:GraphicsShader = shader != null ? cast shader : defaultShader;
 		var shader = new GraphicsShader ();
-		
 		shader.data.texture0.input = bitmapData;
 		shader.data.texture0.smoothing = smooth;
 		
@@ -194,7 +226,7 @@ class FlxTilesheet extends Tileset
 			
 			for (j in 0...6)
 			{
-				alphaValues.push (1);
+				alphaValues.push (tileData[iIndex + alphaIndex]);
 			}
 			
 			if (useRGB)
