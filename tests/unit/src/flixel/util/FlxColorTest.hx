@@ -53,22 +53,22 @@ class FlxColorTest extends FlxTest
 	@Test
 	function addNotSame()
 	{
-		Assert.areSame(0xFFFF8000, (FlxColor.RED + FlxColor.GREEN)); // 0xFFFF0000 + 0xFF008000
-		Assert.areSame(0xFFFF8000, (FlxColor.GREEN + FlxColor.RED));
+		Assert.areEqual(0xFFFF8000, (FlxColor.RED + FlxColor.GREEN)); // 0xFFFF0000 + 0xFF008000
+		Assert.areEqual(0xFFFF8000, (FlxColor.GREEN + FlxColor.RED));
 	}
 
 	@Test
 	function subtractNotSame()
 	{
-		Assert.areSame(FlxColor.RED, (FlxColor.RED - FlxColor.GREEN));
-		Assert.areSame(FlxColor.GREEN, (FlxColor.GREEN - FlxColor.RED));
+		Assert.areEqual(FlxColor.RED, (FlxColor.RED - FlxColor.GREEN));
+		Assert.areEqual(FlxColor.GREEN, (FlxColor.GREEN - FlxColor.RED));
 	}
 
 	@Test
 	function multiplyNotSame()
 	{
-		Assert.areSame(FlxColor.BLACK, (FlxColor.RED * FlxColor.GREEN));
-		Assert.areSame(FlxColor.BLACK, (FlxColor.GREEN * FlxColor.RED));
+		Assert.areEqual(FlxColor.BLACK, (FlxColor.RED * FlxColor.GREEN));
+		Assert.areEqual(FlxColor.BLACK, (FlxColor.GREEN * FlxColor.RED));
 	}
 	
 	@Test // #1609
