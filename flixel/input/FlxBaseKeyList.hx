@@ -4,23 +4,23 @@ import flixel.input.FlxInput.FlxInputState;
 
 class FlxBaseKeyList
 {
-	private var status:FlxInputState;
-	private var keyManager:FlxKeyManager<Dynamic, Dynamic>;
-	
+	var status:FlxInputState;
+	var keyManager:FlxKeyManager<Dynamic, Dynamic>;
+
 	public function new(status:FlxInputState, keyManager:FlxKeyManager<Dynamic, Dynamic>)
 	{
 		this.status = status;
 		this.keyManager = keyManager;
 	}
-	
-	private inline function check(keyCode:Int):Bool
+
+	inline function check(keyCode:Int):Bool
 	{
 		return keyManager.checkStatus(keyCode, status);
 	}
-	
-	public var ANY(get, never):Bool; 
-	
-	private function get_ANY():Bool
+
+	public var ANY(get, never):Bool;
+
+	function get_ANY():Bool
 	{
 		for (key in keyManager._keyListArray)
 		{
@@ -29,7 +29,7 @@ class FlxBaseKeyList
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

@@ -15,27 +15,27 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var position:Int = 0;
 	public var numTiles(get, never):Int;
 	public var shader:FlxShader;
-	
-	public function new() 
+
+	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TILES;
 	}
-	
+
 	override public function reset():Void
 	{
 		super.reset();
 		position = 0;
 		shader = null;
 	}
-	
+
 	override public function dispose():Void
 	{
 		super.dispose();
 		drawData = null;
 		shader = null;
 	}
-	
+
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		setNext(matrix.tx);
@@ -72,22 +72,22 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		}
 		#end
 	}
-	
-	private inline function setNext(f:Float):Void
+
+	inline function setNext(f:Float):Void
 	{
 		drawData[position++] = f;
 	}
-	
+
 	override public function render(camera:FlxCamera):Void
 	{
 		if (!FlxG.renderTile || position <= 0)
 			return;
-		
+
 		var flags:Int = Tilesheet.TILE_TRANS_2x2 | Tilesheet.TILE_RECT | Tilesheet.TILE_ALPHA;
-		
+
 		if (colored)
 			flags |= Tilesheet.TILE_RGB;
-		
+
 		#if (!openfl_legacy && openfl >= "3.6.0")
 		if (hasColorOffsets)
 			flags |= Tilesheet.TILE_TRANS_COLOR;
@@ -104,8 +104,8 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 
 		FlxTilesheet._DRAWCALLS++;
 	}
-	
-	private function get_numTiles():Int
+
+	function get_numTiles():Int
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
@@ -117,13 +117,13 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 
 		return Std.int(position / elementsPerTile);
 	}
-	
-	override private function get_numVertices():Int
+
+	override function get_numVertices():Int
 	{
 		return 4 * numTiles;
 	}
-	
-	override private function get_numTriangles():Int
+
+	override function get_numTriangles():Int
 	{
 		return 2 * numTiles;
 	}

@@ -9,7 +9,7 @@ import flixel.input.gamepad.FlxGamepad;
 @:keep
 class FlxGamepadPointerValueList
 {
-	private var gamepad:FlxGamepad;
+	var gamepad:FlxGamepad;
 
 	/**
 	 * whether or not the current gamepad model supports any pointer features (IR Camera, touch surface, etc)
@@ -32,14 +32,14 @@ class FlxGamepadPointerValueList
 		this.gamepad = gamepad;
 	}
 
-	private inline function getAxis(id:FlxGamepadInputID):Float
+	inline function getAxis(id:FlxGamepadInputID):Float
 	{
 		if (!isSupported)
 			return 0;
 		return gamepad.getAxis(id);
 	}
 
-	private inline function get_isSupported():Bool
+	inline function get_isSupported():Bool
 	{
 		return gamepad.mapping.supportsPointer;
 	}

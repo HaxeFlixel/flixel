@@ -23,17 +23,17 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * The local shared object itself.
 	 */
-	private var _sharedObject:SharedObject;
-	
+	var _sharedObject:SharedObject;
+
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	private var _onComplete:Bool->Void;
+	var _onComplete:Bool->Void;
 	/**
 	 * Internal tracker for save object close request.
 	 */
-	private var _closeRequested:Bool = false;
-	
+	var _closeRequested:Bool = false;
+
 	public function new() {}
 
 	/**
@@ -47,10 +47,10 @@ class FlxSave implements IFlxDestroyable
 		_onComplete = null;
 		_closeRequested = false;
 	}
-	
+
 	/**
 	 * Automatically creates or reconnects to locally saved data.
-	 * 
+	 *
 	 * @param	Name	The name of the object (should be the same each time to access old data).
 	 * 					May not contain spaces or any of the following characters: `~ % & \ ; : " ' , < > ? #`
 	 * @return	Whether or not you successfully connected to the save data.
@@ -72,12 +72,12 @@ class FlxSave implements IFlxDestroyable
 		data = _sharedObject.data;
 		return true;
 	}
-	
+
 	/**
 	 * A way to safely call flush() and destroy() on your save file.
 	 * Will correctly handle storage size popups and all that good stuff.
 	 * If you don't want to save your changes first, just call destroy() instead.
-	 * 
+	 *
 	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	The result of result of the flush() call (see below for more details).
@@ -90,7 +90,7 @@ class FlxSave implements IFlxDestroyable
 
 	/**
 	 * Writes the local shared object to disk immediately. Leaves the object open in memory.
-	 * 
+	 *
 	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
 	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
 	 * @return	Whether or not the data was written immediately. False could be an error OR a storage request popup.
@@ -104,7 +104,7 @@ class FlxSave implements IFlxDestroyable
 		_onComplete = OnComplete;
 		var result = null;
 		try
-		{ 
+		{
 			result = _sharedObject.flush();
 		}
 		catch (_:Error)
@@ -114,12 +114,12 @@ class FlxSave implements IFlxDestroyable
 
 		return onDone(result == SharedObjectFlushStatus.FLUSHED ? SUCCESS : PENDING);
 	}
-	
+
 	/**
 	 * Erases everything stored in the local shared object.
 	 * Data is immediately erased and the object is saved that way,
 	 * so use with caution!
-	 * 
+	 *
 	 * @return	Returns false if the save object is not bound yet.
 	 */
 	public function erase():Bool
@@ -132,15 +132,15 @@ class FlxSave implements IFlxDestroyable
 		data = {};
 		return true;
 	}
-	
+
 	/**
 	 * Event handler for special case storage requests.
 	 * Handles logging of errors and calling of callback.
-	 * 
+	 *
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	private function onDone(Result:FlxSaveStatus):Bool
+	function onDone(Result:FlxSaveStatus):Bool
 	{
 		switch (Result)
 		{
@@ -150,22 +150,22 @@ class FlxSave implements IFlxDestroyable
 				FlxG.log.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			default:
 		}
-		
+
 		if (_onComplete != null)
 			_onComplete(Result == SUCCESS);
-			
+
 		if (_closeRequested)
 			destroy();
-			
+
 		return Result == SUCCESS;
 	}
-	
+
 	/**
 	 * Handy utility function for checking and warning if the shared object is bound yet or not.
-	 * 
+	 *
 	 * @return	Whether the shared object was bound yet.
 	 */
-	private function checkBinding():Bool
+	function checkBinding():Bool
 	{
 		if (_sharedObject == null)
 		{

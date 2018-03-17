@@ -28,25 +28,25 @@ class BitmapLog extends Window
 {
 	public var zoom(default, set):Float = 1;
 
-	private var _canvas(get, never):BitmapData;
-	private var _canvasBitmap:Bitmap;
-	private var _entries:Array<BitmapLogEntry> = [];
-	private var _curIndex:Int = 0;
-	private var _curEntry(get, never):BitmapLogEntry;
-	private var _curBitmap(get, never):BitmapData;
-	private var _point:FlxPoint = FlxPoint.get();
-	private var _lastMousePos:FlxPoint = FlxPoint.get();
-	private var _curMouseOffset:FlxPoint = FlxPoint.get();
-	private var _matrix:Matrix = new Matrix();
-	private var _buttonLeft:FlxSystemButton;
-	private var _buttonText:FlxSystemButton;
-	private var _buttonRight:FlxSystemButton;
-	private var _counterText:TextField;
-	private var _dimensionsText:TextField;
-	private var _ui:Sprite;
-	private var _middleMouseDown:Bool = false;
-	private var _footer:Bitmap;
-	private var _footerText:TextField;
+	var _canvas(get, never):BitmapData;
+	var _canvasBitmap:Bitmap;
+	var _entries:Array<BitmapLogEntry> = [];
+	var _curIndex:Int = 0;
+	var _curEntry(get, never):BitmapLogEntry;
+	var _curBitmap(get, never):BitmapData;
+	var _point:FlxPoint = FlxPoint.get();
+	var _lastMousePos:FlxPoint = FlxPoint.get();
+	var _curMouseOffset:FlxPoint = FlxPoint.get();
+	var _matrix:Matrix = new Matrix();
+	var _buttonLeft:FlxSystemButton;
+	var _buttonText:FlxSystemButton;
+	var _buttonRight:FlxSystemButton;
+	var _counterText:TextField;
+	var _dimensionsText:TextField;
+	var _ui:Sprite;
+	var _middleMouseDown:Bool = false;
+	var _footer:Bitmap;
+	var _footerText:TextField;
 
 	public function new()
 	{
@@ -82,7 +82,7 @@ class BitmapLog extends Window
 		removeChild(_shadow);
 	}
 
-	private function createHeaderUI():Void
+	function createHeaderUI():Void
 	{
 		_ui = new Sprite();
 		_ui.y = 2;
@@ -113,7 +113,7 @@ class BitmapLog extends Window
 		addChild(_dimensionsText);
 	}
 
-	private function createFooterUI():Void
+	function createFooterUI():Void
 	{
 		_footer = new Bitmap(new BitmapData(1, Window.HEADER_HEIGHT, true, Window.HEADER_COLOR));
 		_footer.alpha = Window.HEADER_ALPHA;
@@ -158,7 +158,7 @@ class BitmapLog extends Window
 		}
 	}
 
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		super.updateSize();
 		// account for the footer
@@ -207,7 +207,7 @@ class BitmapLog extends Window
 	/**
 	 * Show the next logged BitmapData in memory
 	 */
-	private inline function next():Void
+	inline function next():Void
 	{
 		resetSettings();
 		refreshCanvas(_curIndex + 1);
@@ -216,13 +216,13 @@ class BitmapLog extends Window
 	/**
 	 * Show the previous logged BitmapData in memory
 	 */
-	private inline function previous():Void
+	inline function previous():Void
 	{
 		resetSettings();
 		refreshCanvas(_curIndex - 1);
 	}
 
-	private inline function resetSettings():Void
+	inline function resetSettings():Void
 	{
 		zoom = 1;
 		_curMouseOffset.set();
@@ -278,7 +278,7 @@ class BitmapLog extends Window
 		_footerText.text = "";
 	}
 
-	private function refreshCanvas(?Index:Null<Int>):Bool
+	function refreshCanvas(?Index:Null<Int>):Bool
 	{
 		if (_entries == null || _entries.length <= 0)
 		{
@@ -324,7 +324,7 @@ class BitmapLog extends Window
 		return true;
 	}
 
-	private function refreshTexts():Void
+	function refreshTexts():Void
 	{
 		_dimensionsText.text = _curBitmap.width + "x" + _curBitmap.height;
 		_counterText.text = '${_curIndex + 1}/${_entries.length}';
@@ -336,7 +336,7 @@ class BitmapLog extends Window
 		resizeTexts();
 	}
 
-	private function drawBoundingBox(bitmap:BitmapData):Void
+	function drawBoundingBox(bitmap:BitmapData):Void
 	{
 		var gfx:Graphics = FlxSpriteUtil.flashGfx;
 		gfx.clear();
@@ -345,24 +345,24 @@ class BitmapLog extends Window
 		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
 	}
 
-	private function onMouseWheel(e:MouseEvent):Void
+	function onMouseWheel(e:MouseEvent):Void
 	{
 		zoom += FlxMath.signOf(e.delta) * 0.25 * zoom;
 		refreshCanvas();
 	}
 
-	private function onMiddleDown(e:MouseEvent):Void
+	function onMiddleDown(e:MouseEvent):Void
 	{
 		_middleMouseDown = true;
 		_lastMousePos.set(mouseX, mouseY);
 	}
 
-	private function onMiddleUp(e:MouseEvent):Void
+	function onMiddleUp(e:MouseEvent):Void
 	{
 		_middleMouseDown = false;
 	}
 
-	private function set_zoom(Value:Float):Float
+	function set_zoom(Value:Float):Float
 	{
 		if (Value < 0)
 		{
@@ -371,17 +371,17 @@ class BitmapLog extends Window
 		return zoom = Value;
 	}
 
-	private inline function get__canvas():BitmapData
+	inline function get__canvas():BitmapData
 	{
 		return _canvasBitmap.bitmapData;
 	}
 
-	private inline function get__curEntry():BitmapLogEntry
+	inline function get__curEntry():BitmapLogEntry
 	{
 		return _entries[_curIndex];
 	}
 
-	private inline function get__curBitmap():BitmapData
+	inline function get__curBitmap():BitmapData
 	{
 		return _entries[_curIndex].bitmap;
 	}

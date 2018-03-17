@@ -10,16 +10,16 @@ class InputFrontEnd
 	 * A read-only list of all inputs.
 	 */
 	public var list(default, null):Array<IFlxInputManager> = [];
-	
+
 	/**
 	 * Whether inputs are reset on state switches.
 	 * Disable if you need persistent input states across states.
 	 */
 	public var resetOnStateSwitch:Bool = true;
-	
+
 	/**
 	 * Add an input to the system
-	 * 
+	 *
 	 * @param	Input 	The input to add
 	 * @return	The input
 	 */
@@ -34,14 +34,14 @@ class InputFrontEnd
 				return Input;
 			}
 		}
-		
+
 		list.push(Input);
 		return Input;
 	}
-	
+
 	/**
 	 * Removes an input from the system
-	 * 
+	 *
 	 * @param	Input	The input to remove
 	 * @return	Bool indicating whether it was removed or not
 	 */
@@ -60,10 +60,10 @@ class InputFrontEnd
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Replace an existing input in the system with a new one
-	 * 
+	 *
 	 * @param	Old 	The old input to replace
 	 * @param	New 	The new input to put in its place
 	 * @return	If successful returns New. Otherwise returns null.
@@ -83,14 +83,14 @@ class InputFrontEnd
 			}
 			i++;
 		}
-		
+
 		if (success)
 		{
 			return New;
 		}
 		return null;
 	}
-	
+
 	public function reset():Void
 	{
 		for (input in list)
@@ -98,48 +98,48 @@ class InputFrontEnd
 			input.reset();
 		}
 	}
-	
+
 	@:allow(flixel.FlxG)
-	private function new() {}
-	
+	function new() {}
+
 	@:allow(flixel.FlxGame)
-	private inline function update():Void
+	inline function update():Void
 	{
 		for (input in list)
 		{
 			input.update();
 		}
 	}
-	
+
 	@:allow(flixel.FlxGame)
-	private inline function onFocus():Void
+	inline function onFocus():Void
 	{
 		for (input in list)
 		{
 			input.onFocus();
 		}
 	}
-	
+
 	@:allow(flixel.FlxGame)
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		for (input in list)
 		{
 			input.onFocusLost();
 		}
 	}
-	
+
 	@:allow(flixel.FlxGame)
 	@:allow(flixel.FlxState.resetSubState)
-	private function onStateSwitch():Void
+	function onStateSwitch():Void
 	{
 		if (resetOnStateSwitch)
 		{
 			reset();
 		}
 	}
-	
-	private function destroy():Void
+
+	function destroy():Void
 	{
 		for (input in list)
 		{

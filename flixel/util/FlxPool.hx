@@ -7,26 +7,26 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
  * WARNING: Pooled objects must have parameter-less constructors: function new()
  */
 #if !display
-@:generic 
+@:generic
 #end
 class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
 	public var length(get, never):Int;
-	
-	private var _pool:Array<T> = [];
-	private var _class:Class<T>;
-	
+
+	var _pool:Array<T> = [];
+	var _class:Class<T>;
+
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
 	 * _count keeps track of the valid, accessible pool objects.
 	 */
-	private var _count:Int = 0;
-	
-	public function new(classObj:Class<T>) 
+	var _count:Int = 0;
+
+	public function new(classObj:Class<T>)
 	{
 		_class = classObj;
 	}
-	
+
 	public function get():T
 	{
 		if (_count == 0)
@@ -35,7 +35,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 		}
 		return _pool[--_count];
 	}
-	
+
 	public function put(obj:T):Void
 	{
 		// we don't want to have the same object in the accessible pool twice (ok to have multiple in the inaccessible zone)
@@ -50,7 +50,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			}
 		}
 	}
-	
+
 	public function putUnsafe(obj:T):Void
 	{
 		if (obj != null)
@@ -59,7 +59,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			_pool[_count++] = obj;
 		}
 	}
-	
+
 	public function preAllocate(numObjects:Int):Void
 	{
 		while (numObjects-- > 0)
@@ -67,7 +67,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			_pool[_count++] = Type.createInstance(_class, []);
 		}
 	}
-	
+
 	public function clear():Array<T>
 	{
 		_count = 0;
@@ -75,8 +75,8 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 		_pool = [];
 		return oldPool;
 	}
-	
-	private inline function get_length():Int
+
+	inline function get_length():Int
 	{
 		return _count;
 	}
@@ -88,7 +88,7 @@ interface IFlxPooled extends IFlxDestroyable
 	private var _inPool:Bool;
 }
 
-interface IFlxPool<T:IFlxDestroyable> 
+interface IFlxPool<T:IFlxDestroyable>
 {
 	public function preAllocate(numObjects:Int):Void;
 	public function clear():Array<T>;

@@ -7,7 +7,7 @@ import flash.sensors.Accelerometer;
 /**
  * A class providing access to the accelerometer data of the mobile device.
  */
-class FlxAccelerometer 
+class FlxAccelerometer
 {
 	/**
 	 * The x-axis value, in Gs (1G is roughly 9.8m/s/s), usually between -1 and 1.
@@ -24,29 +24,29 @@ class FlxAccelerometer
 	 * The z-axis runs perpendicular to the screen of the device. The acceleration is positive if the device is moving the direction the screen is facing.
 	 */
 	public var z(default, null):Float = 0;
-	
+
 	/**
 	 * Wether the accelerometer is supported on this mobile device
 	 */
 	public var isSupported(get, never):Bool;
-	
-	private var _sensor:Accelerometer;
-	
-	public function new() 
+
+	var _sensor:Accelerometer;
+
+	public function new()
 	{
-		if (Accelerometer.isSupported) 
+		if (Accelerometer.isSupported)
 		{
 			_sensor = new Accelerometer();
 			_sensor.addEventListener(AccelerometerEvent.UPDATE, updateCallback);
 		}
 	}
-	
-	inline function get_isSupported():Bool 
+
+	inline function get_isSupported():Bool
 	{
 		return Accelerometer.isSupported;
 	}
-	
-	private function updateCallback(Event:AccelerometerEvent):Void 
+
+	function updateCallback(Event:AccelerometerEvent):Void
 	{
 		#if android
 		x = Event.accelerationX;

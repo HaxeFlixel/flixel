@@ -30,41 +30,41 @@ import flixel.math.FlxPoint;
 class FlxGamepad implements IFlxDestroyable
 {
 	public var id(default, null):Int;
-	
+
 	#if FLX_GAMEINPUT_API
 	/**
 	 * The device name. Used to determine the `model`.
 	 */
 	public var name(get, never):String;
 	#end
-	
+
 	/**
 	 * The gamepad model used for the mapping of the IDs.
 	 * Defaults to `detectedModel`, but can be changed manually.
 	 */
 	public var model(default, set):FlxGamepadModel;
-	
+
 	/**
 	 * The gamepad model this gamepad has been identified as.
 	 */
 	public var detectedModel(default, null):FlxGamepadModel;
-	
+
 	/**
 	 * The mapping that is used to map the raw hardware IDs to the values in `FlxGamepadInputID`.
 	 * Determined by the current `model`.
 	 * It's also possible to create a custom mapping and assign it here.
 	 */
 	public var mapping:FlxGamepadMapping;
-	
+
 	public var connected(default, null):Bool = true;
-	
+
 	/**
 	 * For gamepads that can have things plugged into them (the Wii Remote, basically).
-	 * Making the user set this helps Flixel properly interpret inputs properly. 
-	 * EX: if you plug a nunchuk into the Wii Remote, you will get different values for 
+	 * Making the user set this helps Flixel properly interpret inputs properly.
+	 * EX: if you plug a nunchuk into the Wii Remote, you will get different values for
 	 * certain buttons than with the Wii Remote alone.
 	 * (This is probably why Wii games ask the player what control scheme they are using.)
-	 * 
+	 *
 	 * In the future, this could also be used for any attachment that exposes new API features
 	 * to the controller, e.g. a microphone or headset
 	 */
@@ -79,7 +79,7 @@ class FlxGamepad implements IFlxDestroyable
 	 * Which dead zone mode to use for analog sticks.
 	 */
 	public var deadZoneMode:FlxGamepadDeadZoneMode = INDEPENDENT_AXES;
-	
+
 	/**
 	 * Helper class to check if a button is pressed.
 	 */
@@ -105,69 +105,69 @@ class FlxGamepad implements IFlxDestroyable
 	 * (contains continously updated X and Y coordinates, each between 0.0 and 1.0)
 	 */
 	public var pointer(default, null):FlxGamepadPointerValueList;
-	
+
 	#if FLX_JOYSTICK_API
 	public var hat(default, null):FlxPoint = FlxPoint.get();
 	public var ball(default, null):FlxPoint = FlxPoint.get();
 	#end
-	
-	private var axis:Array<Float> = [for (i in 0...6) 0];
-	private var axisActive:Bool = false;
-	
-	private var manager:FlxGamepadManager;
-	private var _deadZone:Float = 0.15;
-	
+
+	var axis:Array<Float> = [for (i in 0...6) 0];
+	var axisActive:Bool = false;
+
+	var manager:FlxGamepadManager;
+	var _deadZone:Float = 0.15;
+
 	#if FLX_GAMEINPUT_API
-	private var _device:GameInputDevice; 
+	var _device:GameInputDevice;
 	#end
-	
-	private var buttons:Array<FlxGamepadButton> = [];
-	
-	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadAttachment) 
+
+	var buttons:Array<FlxGamepadButton> = [];
+
+	public function new(ID:Int, Manager:FlxGamepadManager, ?Model:FlxGamepadModel, ?Attachment:FlxGamepadAttachment)
 	{
 		id = ID;
-		
+
 		manager = Manager;
-		
+
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
 		analog = new FlxGamepadAnalogList(this);
 		motion = new FlxGamepadMotionValueList(this);
 		pointer = new FlxGamepadPointerValueList(this);
-		
+
 		if (Model == null)
 			Model = XINPUT;
-			
+
 		if (Attachment == null)
 			Attachment = NONE;
-		
+
 		model = Model;
 		detectedModel = Model;
 	}
-	
-	private function getButton(RawID:Int):FlxGamepadButton
+
+	function getButton(RawID:Int):FlxGamepadButton
 	{
 		if (RawID == -1)
 			return null;
 		var gamepadButton:FlxGamepadButton = buttons[RawID];
-		
+
 		if (gamepadButton == null)
 		{
 			gamepadButton = new FlxGamepadButton(RawID);
 			buttons[RawID] = gamepadButton;
 		}
-		
+
 		return gamepadButton;
 	}
-	
-	private inline function applyAxisFlip(axisValue:Float, axisID:Int):Float
+
+	inline function applyAxisFlip(axisValue:Float, axisID:Int):Float
 	{
 		if (mapping.isAxisFlipped(axisID))
 			axisValue *= -1;
 		return axisValue;
 	}
-	
+
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
@@ -176,26 +176,26 @@ class FlxGamepad implements IFlxDestroyable
 		#if FLX_GAMEINPUT_API
 		var control:GameInputControl;
 		var button:FlxGamepadButton;
-		
+
 		if (_device == null)
 			return;
-		
+
 		for (i in 0..._device.numControls)
 		{
 			control = _device.getControlAt(i);
-			
+
 			//quick absolute value for analog sticks
 			button = getButton(i);
-			
+
 			if (isAxisForAnalogStick(i))
 			{
 				handleAxisMove(i, control.value, button.value);
 			}
-			
+
 			button.value = control.value;
-			
+
 			var value = Math.abs(control.value);
-			
+
 			if (value < deadZone)
 			{
 				button.release();
@@ -205,7 +205,7 @@ class FlxGamepad implements IFlxDestroyable
 				button.press();
 			}
 		}
-		
+
 		#elseif FLX_JOYSTICK_API
 		for (i in 0...axis.length)
 		{
@@ -224,20 +224,20 @@ class FlxGamepad implements IFlxDestroyable
 					button.release();
 				}
 			}
-			
+
 			axisActive = false;
 		}
 		#end
-		
+
 		for (button in buttons)
 		{
-			if (button != null) 
+			if (button != null)
 			{
 				button.update();
 			}
 		}
 	}
-	
+
 	public function reset():Void
 	{
 		for (button in buttons)
@@ -247,40 +247,40 @@ class FlxGamepad implements IFlxDestroyable
 				button.reset();
 			}
 		}
-		
+
 		var numAxis:Int = axis.length;
-		
+
 		for (i in 0...numAxis)
 		{
 			axis[i] = 0;
 		}
-		
+
 		#if FLX_JOYSTICK_API
 		hat.set();
 		ball.set();
 		#end
 	}
-	
+
 	public function destroy():Void
 	{
 		connected = false;
-		
+
 		buttons = null;
 		axis = null;
 		manager = null;
-		
+
 		#if FLX_JOYSTICK_API
 		hat = FlxDestroyUtil.put(hat);
 		ball = FlxDestroyUtil.put(ball);
-		
+
 		hat  = null;
 		ball = null;
 		#end
 	}
-	
+
 	/**
 	 * Check the status of a "universal" button ID, auto-mapped to this gamepad (something like FlxGamepadInputID.A).
-	 * 
+	 *
 	 * @param	ID			"universal" gamepad input ID
 	 * @param	Status		The key state to check for
 	 * @return	Whether the provided button has the specified status
@@ -289,26 +289,26 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return checkStatusRaw(mapping.getRawID(ID), Status);
 	}
-	
+
 	/**
 	 * Check the status of a raw button ID (like XInputID.A).
-	 * 
+	 *
 	 * @param	RawID	Index into buttons array.
 	 * @param	Status	The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
-	public function checkStatusRaw(RawID:Int, Status:FlxInputState):Bool 
-	{ 
+	public function checkStatusRaw(RawID:Int, Status:FlxInputState):Bool
+	{
 		if (buttons[RawID] != null)
 		{
 			return buttons[RawID].current == Status;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
-	 * 
+	 *
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
@@ -327,10 +327,10 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of raw button IDs is pressed.
-	 * 
+	 *
 	 * @param	RawIDArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
@@ -344,13 +344,13 @@ class FlxGamepad implements IFlxDestroyable
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of universal button IDs was just pressed.
-	 * 
+	 *
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
@@ -365,13 +365,13 @@ class FlxGamepad implements IFlxDestroyable
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of raw button IDs was just pressed.
-	 * 
+	 *
 	 * @param	RawIDArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
@@ -385,13 +385,13 @@ class FlxGamepad implements IFlxDestroyable
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of gamepad input IDs was just released.
-	 * 
+	 *
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
@@ -406,13 +406,13 @@ class FlxGamepad implements IFlxDestroyable
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of raw button IDs was just released.
-	 * 
+	 *
 	 * @param	RawArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
@@ -426,10 +426,10 @@ class FlxGamepad implements IFlxDestroyable
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Get the first found "universal" ID of the button which is currently pressed.
 	 * Returns NONE if no button is pressed.
@@ -438,7 +438,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return mapping.getID(firstPressedRawID());
 	}
-	
+
 	/**
 	 * Get the first found raw ID of the button which is currently pressed.
 	 * Returns -1 if no button is pressed.
@@ -454,7 +454,7 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Get the first found "universal" ButtonID of the button which has been just pressed.
 	 * Returns NONE if no button was just pressed.
@@ -463,7 +463,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return mapping.getID(firstJustPressedRawID());
 	}
-	
+
 	/**
 	 * Get the first found raw ID of the button which has been just pressed.
 	 * Returns -1 if no button was just pressed.
@@ -479,7 +479,7 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Get the first found "universal" ButtonID of the button which has been just released.
 	 * Returns NONE if no button was just released.
@@ -488,7 +488,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return mapping.getID(firstJustReleasedRawID());
 	}
-	
+
 	/**
 	 * Get the first found raw ID of the button which has been just released.
 	 * Returns -1 if no button was just released.
@@ -502,12 +502,12 @@ class FlxGamepad implements IFlxDestroyable
 				return button.ID;
 			}
 		}
-		return -1; 
+		return -1;
 	}
-	
+
 	/**
-	 * Gets the value of the specified axis using the "universal" ButtonID - 
-	 * use this only for things like FlxGamepadButtonID.LEFT_TRIGGER, 
+	 * Gets the value of the specified axis using the "universal" ButtonID -
+	 * use this only for things like FlxGamepadButtonID.LEFT_TRIGGER,
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
 	public function getAxis(AxisButtonID:FlxGamepadInputID):Float
@@ -534,9 +534,9 @@ class FlxGamepad implements IFlxDestroyable
 		return 0;
 		#end
 	}
-	
+
 	/**
-	 * Gets the value of the specified axis using the raw ID - 
+	 * Gets the value of the specified axis using the raw ID -
 	 * use this only for things like XInputID.LEFT_TRIGGER,
 	 * use getXAxis() / getYAxis() for analog sticks!
 	 */
@@ -549,15 +549,15 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return 0;
 	}
-	
-	private function isAxisForAnalogStick(AxisIndex:Int):Bool
+
+	function isAxisForAnalogStick(AxisIndex:Int):Bool
 	{
 		var leftStick = mapping.leftStick;
 		var rightStick = mapping.rightStick;
-		
+
 		if (leftStick != null)
 		{
-			if (AxisIndex == leftStick.x || AxisIndex == leftStick.y) 
+			if (AxisIndex == leftStick.x || AxisIndex == leftStick.y)
 				return true;
 		}
 		if (rightStick != null)
@@ -567,19 +567,19 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return false;
 	}
-	
-	private inline function getAnalogStickByAxis(AxisIndex:Int):FlxGamepadAnalogStick
+
+	inline function getAnalogStickByAxis(AxisIndex:Int):FlxGamepadAnalogStick
 	{
 		var leftStick = mapping.leftStick;
 		var rightStick = mapping.rightStick;
-		
+
 		if (leftStick != null && AxisIndex == leftStick.x || AxisIndex == leftStick.y)
 			return leftStick;
 		if (rightStick != null && AxisIndex == rightStick.x || AxisIndex == rightStick.y)
 			return rightStick;
 		return null;
 	}
-	
+
 	/**
 	 * Given a ButtonID for an analog stick, gets the value of its x axis
 	 * @param	AxesButtonID an analog stick like FlxGamepadButtonID.LEFT_STICK
@@ -588,7 +588,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getAnalogXAxisValue(mapping.getAnalogStick(AxesButtonID));
 	}
-	
+
 	/**
 	 * Given both raw IDs for the axes of an analog stick, gets the value of its x axis
 	 */
@@ -596,7 +596,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getAnalogXAxisValue(Stick);
 	}
-	
+
 	/**
 	 * Given a ButtonID for an analog stick, gets the value of its y axis
 	 * @param	AxesButtonID an analog stick like FlxGamepadButtonID.LEFT_STICK
@@ -605,7 +605,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return getYAxisRaw(mapping.getAnalogStick(AxesButtonID));
 	}
-	
+
 	/**
 	 * Given both raw ID's for the axes of an analog stick, gets the value of its Y axis
 	 * (should be used in flash to correct the inverted y axis)
@@ -625,7 +625,7 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return FlxVector.get(getXAxis(AxesButtonID), getYAxis(AxesButtonID));
 	}
-	
+
 	/**
 	 * Whether any buttons have the specified input state.
 	 */
@@ -640,7 +640,7 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check to see if any buttons are pressed right or Axis, Ball and Hat moved now.
 	 */
@@ -648,9 +648,9 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		if (anyButton())
 			return true;
-		
+
 		var numAxis:Int = axis.length;
-		
+
 		for (i in 0...numAxis)
 		{
 			if (axis[0] != 0)
@@ -658,26 +658,26 @@ class FlxGamepad implements IFlxDestroyable
 				return true;
 			}
 		}
-		
+
 		#if FLX_JOYSTICK_API
 		if (ball.x != 0 || ball.y != 0)
 		{
 			return true;
 		}
-		
+
 		if (hat.x != 0 || hat.y != 0)
 		{
 			return true;
 		}
 		#end
-		
+
 		return false;
 	}
-	
-	private function getAxisValue(AxisID:Int):Float
+
+	function getAxisValue(AxisID:Int):Float
 	{
 		var axisValue:Float = 0;
-		
+
 		#if FLX_GAMEINPUT_API
 		if (AxisID == -1)
 		{
@@ -692,19 +692,19 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return 0;
 		}
-		
+
 		axisValue = axis[AxisID];
 		#end
-		
+
 		if (isAxisForAnalogStick(AxisID))
 		{
 			axisValue = applyAxisFlip(axisValue, AxisID);
 		}
-		
+
 		return axisValue;
 	}
-	
-	private function getAnalogXAxisValue(stick:FlxGamepadAnalogStick):Float
+
+	function getAnalogXAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
 		if (stick == null)
 			return 0;
@@ -713,8 +713,8 @@ class FlxGamepad implements IFlxDestroyable
 		else
 			getAnalogAxisValueIndependent(stick.x);
 	}
-	
-	private function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
+
+	function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
 		if (stick == null)
 			return 0;
@@ -723,56 +723,56 @@ class FlxGamepad implements IFlxDestroyable
 		else
 			getAnalogAxisValueIndependent(stick.y);
 	}
-	
-	private function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
+
+	function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
 	{
 		if (stick == null)
 			return 0;
 		var xAxis = getAxisValue(stick.x);
 		var yAxis = getAxisValue(stick.y);
-		
+
 		var vector = FlxVector.get(xAxis, yAxis);
 		var length = vector.length;
 		vector.put();
-		
+
 		if (length > deadZone)
 		{
 			return getAxisValue(axisID);
 		}
 		return 0;
 	}
-	
-	private function getAnalogAxisValueIndependent(axisID:Int):Float
+
+	function getAnalogAxisValueIndependent(axisID:Int):Float
 	{
 		var axisValue = getAxisValue(axisID);
 		if (Math.abs(axisValue) > deadZone)
 			return axisValue;
 		return 0;
 	}
-	
-	private function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
+
+	function handleAxisMove(axis:Int, newValue:Float, oldValue:Float)
 	{
 		newValue = applyAxisFlip(newValue, axis);
 		oldValue = applyAxisFlip(oldValue, axis);
-		
+
 		//check to see if we should send digital inputs as well as analog
 		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
 		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
 		{
 			handleAxisMoveSub(stick, axis, newValue, oldValue,  1.0);
 			handleAxisMoveSub(stick, axis, newValue, oldValue, -1.0);
-			
+
 			if (stick.mode == ONLY_DIGITAL)
 			{
 				//still haven't figured out how to suppress the analog inputs properly. Oh well.
 			}
 		}
 	}
-	
-	private function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float = 1.0)
+
+	function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float = 1.0)
 	{
 		var digitalButton = -1;
-		
+
 		if (axis == stick.x)
 		{
 			digitalButton = (sign < 0) ? stick.rawLeft : stick.rawRight;
@@ -781,11 +781,11 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			digitalButton = (sign < 0) ? stick.rawUp : stick.rawDown;
 		}
-		
+
 		var threshold = stick.digitalThreshold;
 		var valueSign = value * sign;
 		var oldValueSign = oldValue * sign;
-		
+
 		if (valueSign > threshold && oldValueSign <= threshold)
 		{
 			var btn = getButton(digitalButton);
@@ -797,7 +797,7 @@ class FlxGamepad implements IFlxDestroyable
 			if (btn != null) btn.release();
 		}
 	}
-	private function createMappingForModel(model:FlxGamepadModel):FlxGamepadMapping
+	function createMappingForModel(model:FlxGamepadModel):FlxGamepadMapping
 	{
 		return switch (model)
 		{
@@ -813,41 +813,41 @@ class FlxGamepad implements IFlxDestroyable
 			case _: new XInputMapping(attachment);
 		}
 	}
-	
+
 	#if FLX_GAMEINPUT_API
-	private function get_name():String
+	function get_name():String
 	{
 		if (_device == null)
 			return null;
 		return _device.name;
 	}
 	#end
-	
-	private function set_model(Model:FlxGamepadModel):FlxGamepadModel
+
+	function set_model(Model:FlxGamepadModel):FlxGamepadModel
 	{
 		model = Model;
 		mapping = createMappingForModel(model);
-		
+
 		return model;
 	}
-	
-	private function set_attachment(Attachment:FlxGamepadAttachment):FlxGamepadAttachment
+
+	function set_attachment(Attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		attachment = Attachment;
 		mapping.attachment = Attachment;
 		return attachment;
 	}
-	
-	private function get_deadZone():Float
+
+	function get_deadZone():Float
 	{
 		return (manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
 	}
-	
-	private inline function set_deadZone(deadZone:Float):Float
+
+	inline function set_deadZone(deadZone:Float):Float
 	{
 		return _deadZone = deadZone;
 	}
-	
+
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([

@@ -7,28 +7,28 @@ import flixel.tweens.FlxTween;
  */
 class VarTween extends FlxTween
 {
-	private var _object:Dynamic;
-	private var _properties:Dynamic;
-	private var _propertyInfos:Array<VarTweenProperty> = [];
-	
+	var _object:Dynamic;
+	var _properties:Dynamic;
+	var _propertyInfos:Array<VarTweenProperty> = [];
+
 	/**
 	 * Clean up references
 	 */
-	override public function destroy():Void 
+	override public function destroy():Void
 	{
 		super.destroy();
 		_object = null;
 		_properties = null;
 	}
-	
-	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
+
+	function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
 		super(Options, manager);
 	}
-	
+
 	/**
 	 * Tweens multiple numeric public properties.
-	 * 
+	 *
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
@@ -45,18 +45,18 @@ class VarTween extends FlxTween
 			throw "Cannot tween null properties.";
 		}
 		#end
-		
+
 		_object = object;
 		_properties = properties;
 		this.duration = duration;
 		start();
 		return this;
 	}
-	
-	override private function update(elapsed:Float):Void
+
+	override function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
-		
+
 		if (_secondsSinceStart < delay)
 		{
 			// Leave properties alone until delay is over
@@ -66,24 +66,24 @@ class VarTween extends FlxTween
 		{
 			if (_propertyInfos.length == 0)
 			{
-				// We don't initialize() in tween() because otherwise the start values 
+				// We don't initialize() in tween() because otherwise the start values
 				// will be inaccurate with delays
 				initializeVars();
 			}
-			
+
 			super.update(elapsed);
-			
+
 			for (info in _propertyInfos)
 			{
 				Reflect.setProperty(_object, info.name, (info.startValue + info.range * scale));
 			}
 		}
 	}
-	
-	private function initializeVars():Void
+
+	function initializeVars():Void
 	{
 		var fields:Array<String>;
-		
+
 		if (Reflect.isObject(_properties))
 		{
 			fields = Reflect.fields(_properties);
@@ -92,21 +92,21 @@ class VarTween extends FlxTween
 		{
 			throw "Unsupported properties container - use an object containing key/value pairs.";
 		}
-		
+
 		for (p in fields)
 		{
 			if (Reflect.getProperty(_object, p) == null)
 			{
 				throw 'The Object does not have the property "$p"';
 			}
-			
+
 			var a:Dynamic = Reflect.getProperty(_object, p);
-			
-			if (Math.isNaN(a)) 
+
+			if (Math.isNaN(a))
 			{
 				throw "The property \"" + p + "\" is not numeric.";
 			}
-			
+
 			_propertyInfos.push({ name: p, startValue: a, range: Reflect.getProperty(_properties, p) - a });
 		}
 	}

@@ -6,22 +6,22 @@ import flixel.input.gamepad.id.XInputID;
 class XInputMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
-	private static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 15;
-	private static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 16;
+	static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 15;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 16;
 
-	private static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 17;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 18;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 17;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 18;
 
-	private static inline var LEFT_TRIGGER_FAKE:Int = 19;
-	private static inline var RIGHT_TRIGGER_FAKE:Int = 20;
+	static inline var LEFT_TRIGGER_FAKE:Int = 19;
+	static inline var RIGHT_TRIGGER_FAKE:Int = 20;
 	#end
-	
-	override function initValues():Void 
+
+	override function initValues():Void
 	{
 		leftStick = XInputID.LEFT_ANALOG_STICK;
 		rightStick = XInputID.RIGHT_ANALOG_STICK;
 	}
-	
+
 	override public function getID(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
@@ -59,7 +59,7 @@ class XInputMapping extends FlxGamepadMapping
 			case _: NONE;
 		}
 	}
-	
+
 	override public function getRawID(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
@@ -96,20 +96,20 @@ class XInputMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
+
 	#if flash
 	override public function isAxisFlipped(axisID:Int):Bool
-	{ 
+	{
 		if (manufacturer == GooglePepper)
 			return false;
-		
+
 		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
 			axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
 	#end
-	
+
 	#if FLX_JOYSTICK_API
-	override public function axisIndexToRawID(axisID:Int):Int 
+	override public function axisIndexToRawID(axisID:Int):Int
 	{
 		// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
 		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X;

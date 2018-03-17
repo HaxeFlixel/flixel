@@ -16,21 +16,21 @@ private class GraphicLogoLight extends BitmapData {}
 private class GraphicLogoCorners extends BitmapData {}
 
 /**
- * This is the Default HaxeFlixel Themed Preloader 
+ * This is the Default HaxeFlixel Themed Preloader
  * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
  * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	private var _buffer:Sprite;
-	private var _bmpBar:Bitmap;
-	private var _text:TextField;
-	private var _logo:Sprite;
-	private var _logoGlow:Sprite;
-	
+	var _buffer:Sprite;
+	var _bmpBar:Bitmap;
+	var _text:TextField;
+	var _logo:Sprite;
+	var _logoGlow:Sprite;
+
 	/**
 	 * Initialize your preloader here.
-	 * 
+	 *
 	 * ```haxe
 	 * super(0, ["test.com", FlxPreloaderBase.LOCAL]); // example of site-locking
 	 * super(10); // example of long delay (10 seconds)
@@ -40,13 +40,13 @@ class FlxPreloader extends FlxBasePreloader
 	{
 		super(MinDisplayTime, AllowedURLs);
 	}
-	
+
 	/**
 	 * This class is called as soon as the FlxPreloaderBase has finished initializing.
 	 * Override it to draw all your graphics and things - make sure you also override update
 	 * Make sure you call super.create()
 	 */
-	override private function create():Void
+	override function create():Void
 	{
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
@@ -54,7 +54,7 @@ class FlxPreloader extends FlxBasePreloader
 		_width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
 		_height = Std.int(Lib.current.stage.stageHeight / _buffer.scaleY);
 		_buffer.addChild(new Bitmap(new BitmapData(_width, _height, false, 0x00345e)));
-		
+
 		var logoLight = createBitmap(GraphicLogoLight, function(logoLight:Bitmap)
 		{
 			logoLight.width = logoLight.height = _height;
@@ -66,7 +66,7 @@ class FlxPreloader extends FlxBasePreloader
 		_bmpBar.x = 4;
 		_bmpBar.y = _height - 11;
 		_buffer.addChild(_bmpBar);
-		
+
 		_text = new TextField();
 		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 8, 0x5f6aff);
 		_text.embedFonts = true;
@@ -76,7 +76,7 @@ class FlxPreloader extends FlxBasePreloader
 		_text.y = _bmpBar.y - 11;
 		_text.width = 200;
 		_buffer.addChild(_text);
-		
+
 		_logo = new Sprite();
 		FlxAssets.drawLogo(_logo.graphics);
 		_logo.scaleX = _logo.scaleY = _height / 8 * 0.04;
@@ -97,7 +97,7 @@ class FlxPreloader extends FlxBasePreloader
 		});
 		corners.smoothing = true;
 		_buffer.addChild(corners);
-		
+
 		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
 		var i:Int = 0;
 		var j:Int = 0;
@@ -113,17 +113,17 @@ class FlxPreloader extends FlxBasePreloader
 		bitmap.blendMode = BlendMode.OVERLAY;
 		bitmap.alpha = 0.25;
 		_buffer.addChild(bitmap);
-		
+
 		super.create();
 	}
-	
+
 	/**
 	 * Cleanup your objects!
 	 * Make sure you call super.destroy()!
 	 */
-	override private function destroy():Void
+	override function destroy():Void
 	{
-		if (_buffer != null)	
+		if (_buffer != null)
 		{
 			removeChild(_buffer);
 		}
@@ -134,7 +134,7 @@ class FlxPreloader extends FlxBasePreloader
 		_logoGlow = null;
 		super.destroy();
 	}
-	
+
 	/**
 	 * Update is called every frame, passing the current percent loaded. Use this to change your loading bar or whatever.
 	 * @param	Percent	The percentage that the project is loaded
@@ -143,7 +143,7 @@ class FlxPreloader extends FlxBasePreloader
 	{
 		_bmpBar.scaleX = Percent * (_width - 8);
 		_text.text = Std.string(FlxG.VERSION) + " " + Std.int(Percent * 100) + "%";
-		
+
 		if (Percent < 0.1)
 		{
 			_logoGlow.alpha = 0;

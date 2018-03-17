@@ -5,13 +5,13 @@ import flixel.input.gamepad.id.PSVitaID;
 
 class PSVitaMapping extends FlxGamepadMapping
 {
-	override function initValues():Void 
+	override function initValues():Void
 	{
 		leftStick = PSVitaID.LEFT_ANALOG_STICK;
 		rightStick = PSVitaID.RIGHT_ANALOG_STICK;
 	}
-	
-	override public function getID(rawID:Int):FlxGamepadInputID 
+
+	override public function getID(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -38,8 +38,8 @@ class PSVitaMapping extends FlxGamepadMapping
 			case _: NONE;
 		}
 	}
-	
-	override public function getRawID(ID:FlxGamepadInputID):Int 
+
+	override public function getRawID(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -66,8 +66,8 @@ class PSVitaMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
-	override public function isAxisFlipped(axisID:Int):Bool 
+
+	override public function isAxisFlipped(axisID:Int):Bool
 	{
 		return axisID == PSVitaID.LEFT_ANALOG_STICK.y ||
 			axisID == PSVitaID.RIGHT_ANALOG_STICK.y;

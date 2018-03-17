@@ -9,12 +9,12 @@ class FlxSoundGroup
 	 * The sounds in this group
 	 */
 	public var sounds:Array<FlxSound> = [];
-	
+
 	/**
 	 * The volume of this group
 	 */
 	public var volume(default, set):Float;
-	
+
 	/**
 	 * Create a new sound group
 	 * @param	volume  The initial volume of this group
@@ -23,7 +23,7 @@ class FlxSoundGroup
 	{
 		this.volume = volume;
 	}
-	
+
 	/**
 	 * Add a sound to this group
 	 * @param	sound The sound to add to this group
@@ -39,7 +39,7 @@ class FlxSoundGroup
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Remove a sound from this group
 	 * @param	sound The sound to remove
@@ -54,7 +54,7 @@ class FlxSoundGroup
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Call this function to pause all sounds in this group.
 	 * @since 4.3.0
@@ -64,7 +64,7 @@ class FlxSoundGroup
 		for (sound in sounds)
 			sound.pause();
 	}
-	
+
 	/**
 	 * Unpauses all sounds in this group. Only works on sounds that have been paused.
 	 * @since 4.3.0
@@ -74,8 +74,8 @@ class FlxSoundGroup
 		for (sound in sounds)
 			sound.resume();
 	}
-	
-	private function set_volume(volume:Float):Float
+
+	function set_volume(volume:Float):Float
 	{
 		this.volume = volume;
 		for (sound in sounds)
