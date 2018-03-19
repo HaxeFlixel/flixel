@@ -24,8 +24,6 @@
 	<haxedef name="HXCPP_QUIET" />
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
-	<template path="assets/templates/html5/index.html" rename="index.html" if="html5" />
-	
 	<section if="setup">
 		<haxelib name="hscript" />
 		<haxelib name="systools" />
