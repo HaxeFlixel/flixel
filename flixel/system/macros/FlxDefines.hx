@@ -166,8 +166,10 @@ class FlxDefines
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
 		
+		#if (openfl < "4.0.0")
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
+		#end
 	}
 	
 	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
