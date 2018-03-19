@@ -7,5 +7,5 @@
 	"version": "4.3.0",
 	"releasenote": "Various improvements and fixes. See CHANGELOG.md for details.",
 	"contributors": ["haxeflixel"],
-	"dependencies": { "lime": "2.9.1", "openfl": "3.6.1" }
+	"dependencies": {}
 }
