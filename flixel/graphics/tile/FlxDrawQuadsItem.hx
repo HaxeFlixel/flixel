@@ -10,9 +10,6 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
-	static inline var ITEMS_PER_RECT = 4;
-	static inline var ITEMS_PER_TRANSFORM = 6;
-
 	public var shader:FlxShader;
 
 	var rects:Vector<Float>;
@@ -66,20 +63,5 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		FlxDrawBaseItem.drawCalls++;
-	}
-	
-	private function get_numTiles():Int
-	{
-		return 0;
-	}
-	
-	override private function get_numVertices():Int
-	{
-		return 0;
-	}
-	
-	override private function get_numTriangles():Int
-	{
-		return 0;
 	}
 }

@@ -21,9 +21,11 @@ class FlxDrawBaseItem<T>
 	 */
 	public static var drawCalls:Int = 0;
 
-	#if (openfl < "4.0.0")
 	public static function blendToInt(blend:BlendMode):Int
 	{
+		#if (openfl >= "8.0.0")
+		return 0;
+		#else
 		if (blend == null)
 			return Tilesheet.TILE_BLEND_NORMAL;
 		
@@ -56,8 +58,8 @@ class FlxDrawBaseItem<T>
 			default:
 				Tilesheet.TILE_BLEND_NORMAL;
 		}
+		#end
 	}
-	#end
 	
 	public var nextTyped:T;
 	

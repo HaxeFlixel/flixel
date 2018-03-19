@@ -462,13 +462,13 @@ class FlxCamera extends FlxBasic
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 		#else
 		var itemToReturn = null;
-		// var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
 			&& _headTiles.graphics == graphic 
 			&& _headTiles.colored == colored
 			&& _headTiles.hasColorOffsets == hasColorOffsets
-			// && _headTiles.blending == blendInt
+			&& _headTiles.blending == blendInt
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
 		{	
@@ -517,14 +517,14 @@ class FlxCamera extends FlxBasic
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false,
 		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
 	{
-		// var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TRIANGLES 
 			&& _headTriangles.graphics == graphic 
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
-			/* && _headTriangles.blending == blendInt */)
-		{	
+			&& _headTriangles.blending == blendInt)
+		{
 			return _headTriangles;
 		}
 		
@@ -536,7 +536,7 @@ class FlxCamera extends FlxBasic
 		isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
-		// var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
+		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_storageTrianglesHead != null)
 		{
@@ -553,7 +553,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
-		// itemToReturn.blending = blendInt;
+		itemToReturn.blending = blendInt;
 		
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
