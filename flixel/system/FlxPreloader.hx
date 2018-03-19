@@ -1,5 +1,6 @@
 package flixel.system;
 
+#if (openfl < "4.0.0")
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -180,3 +181,4 @@ class FlxPreloader extends FlxBasePreloader
 		}
 	}
 }
+#end

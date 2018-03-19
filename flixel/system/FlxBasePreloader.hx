@@ -1,5 +1,6 @@
 package flixel.system;
 
+#if (openfl < "4.0.0")
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.GradientType;
@@ -401,3 +402,4 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
+#end

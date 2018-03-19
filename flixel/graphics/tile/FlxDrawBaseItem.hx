@@ -4,8 +4,11 @@ import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
+
+#if (openfl < "4.0.0")
+import openfl.display.Tilesheet;
+#end
 
 /**
  * ...
@@ -18,6 +21,7 @@ class FlxDrawBaseItem<T>
 	 */
 	public static var drawCalls:Int = 0;
 
+	#if (openfl < "4.0.0")
 	public static function blendToInt(blend:BlendMode):Int
 	{
 		if (blend == null)
@@ -53,6 +57,7 @@ class FlxDrawBaseItem<T>
 				Tilesheet.TILE_BLEND_NORMAL;
 		}
 	}
+	#end
 	
 	public var nextTyped:T;
 	
