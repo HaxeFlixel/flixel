@@ -10,8 +10,6 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
-	public var shader:FlxShader;
-
 	var rects:Vector<Float>;
 	var transforms:Vector<Float>;
 
@@ -35,7 +33,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.dispose();
 		rects = null;
 		transforms = null;
-		shader = null;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -56,11 +53,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	
 	override public function render(camera:FlxCamera):Void
 	{
-		if (shader == null)
-			shader = new FlxShader();
-		shader.data.texture0.input = graphics.bitmap;
+		graphics.shader.data.texture0.input = graphics.bitmap;
 
-		camera.canvas.graphics.beginShaderFill(shader);
+		camera.canvas.graphics.beginShaderFill(graphics.shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		FlxDrawBaseItem.drawCalls++;
 	}

@@ -321,6 +321,8 @@ class FlxGraphic implements IFlxDestroyable
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
 	public var tilesheet(get, null):Tilesheet;
+	#else
+	public var shader(default, null):FlxShader;
 	#end
 
 	/**
@@ -393,6 +395,10 @@ class FlxGraphic implements IFlxDestroyable
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 		bitmap = Bitmap;
+
+		#if (openfl >= "8.0.0")
+		shader = new FlxShader();
+		#end
 	}
 	
 	/**
