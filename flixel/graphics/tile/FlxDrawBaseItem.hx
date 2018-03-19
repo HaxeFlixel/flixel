@@ -13,6 +13,11 @@ import openfl.geom.ColorTransform;
  */
 class FlxDrawBaseItem<T>
 {
+	/**
+	 * Tracks the total number of `drawTiles()` calls made each frame.
+	 */
+	public static var drawCalls:Int = 0;
+
 	public static function blendToInt(blend:BlendMode):Int
 	{
 		if (blend == null)

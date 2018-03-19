@@ -37,7 +37,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
@@ -67,7 +67,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		#end
 		
-		FlxTilesheet._DRAWCALLS++;
+		FlxDrawBaseItem.drawCalls++;
 	}
 	
 	override public function reset():Void 
