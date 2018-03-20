@@ -10,6 +10,13 @@ abstract Target(String) from String to String
 }
 
 @:enum
+abstract OpenFLVersion(String) from String to String
+{
+	var OLD = "old";
+	var NEW = "new";
+}
+
+@:enum
 abstract ExitCode(Int) from Int to Int
 {
 	var SUCCESS = 0;
@@ -26,11 +33,14 @@ class RunTravis
 		var target:Target = Sys.args()[0];
 		if (target == null)
 			target = Target.FLASH;
+
+		var openflVersion:OpenFLVersion = Sys.args()[1];
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			setupHxcpp(target),
+			installOpenFL(openflVersion),
+			installHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
@@ -39,8 +49,25 @@ class RunTravis
 			buildMechanicsDemos(target)
 		]));
 	}
+
+	static function installOpenFL(version:OpenFLVersion):ExitCode
+	{
+		return getResult(switch (version)
+		{
+			case NEW: [haxelibInstall("openfl"), haxelibInstall("lime")]
+			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")]
+		});
+	}
+
+	static function haxelibInstall(lib:String, ?version:String):ExitCode
+	{
+		var args = ["install", lib];
+		if (version != null)
+			args.push(version);
+		return runCommand("haxelib", args);
+	}
 	
-	static function setupHxcpp(target:Target):ExitCode
+	static function installHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
@@ -54,7 +81,7 @@ class RunTravis
 			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
 		#else
-		return runCommand("haxelib", ["install", "hxcpp", "3.3.49"]);
+		return haxelibInstall("hxcpp", "3.3.49");
 		#end
 	}
 	
