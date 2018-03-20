@@ -39,8 +39,8 @@ install:
   - haxelib git hscript https://github.com/HaxeFoundation/hscript > /dev/null
   - haxelib git firetongue https://github.com/larsiusprime/firetongue > /dev/null
   - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools > /dev/null
-  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos dev > /dev/null
-  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons dev > /dev/null
+  - haxelib git flixel-demos https://github.com/Gama11/flixel-demos draw-quads > /dev/null
+  - haxelib git flixel-addons https://github.com/Gama11/flixel-addons draw-quads > /dev/null
   - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev > /dev/null
   - haxelib dev flixel $TRAVIS_BUILD_DIR
   - haxelib list

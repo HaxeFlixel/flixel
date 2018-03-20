@@ -11,11 +11,7 @@ import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
 
-#if (flash || openfl >= "4.0.0")
-import openfl.Vector;
-#end
-
-typedef DrawData<T> = #if (flash || openfl >= "4.0.0") Vector<T> #else Array<T> #end;
+typedef DrawData<T> = #if (flash || openfl >= "4.0.0") openfl.Vector<T> #else Array<T> #end;
 
 /**
  * ...
