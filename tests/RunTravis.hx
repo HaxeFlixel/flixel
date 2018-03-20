@@ -10,7 +10,7 @@ abstract Target(String) from String to String
 }
 
 @:enum
-abstract OpenFLVersion(String) from String to String
+abstract OpenFL(String) from String to String
 {
 	var OLD = "old";
 	var NEW = "new";
@@ -34,25 +34,25 @@ class RunTravis
 		if (target == null)
 			target = Target.FLASH;
 
-		var openflVersion:OpenFLVersion = Sys.args()[1];
+		var openfl:OpenFL = Sys.args()[1];
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			installOpenFL(openflVersion),
+			installOpenFL(openfl),
 			installHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
 			buildDemos(target),
-			buildNextDemos(target),
+			buildNextDemos(target, openfl),
 			buildMechanicsDemos(target)
 		]));
 	}
 
-	static function installOpenFL(version:OpenFLVersion):ExitCode
+	static function installOpenFL(openfl:OpenFL):ExitCode
 	{
-		return getResult(switch (version)
+		return getResult(switch (openfl)
 		{
 			case NEW: [runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]), haxelibInstall("lime")];
 			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
@@ -131,9 +131,9 @@ class RunTravis
 		return buildProjects(target, demos);
 	}
 	
-	static function buildNextDemos(target:Target):ExitCode
+	static function buildNextDemos(target:Target, openfl:OpenFL):ExitCode
 	{
-		if (target == Target.FLASH || target == Target.HTML5)
+		if (target == Target.FLASH || target == Target.HTML5 || openfl == NEW)
 			return ExitCode.SUCCESS;
 		
 		Sys.println("\nBuilding demos for OpenFL Next...\n");
