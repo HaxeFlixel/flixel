@@ -12,6 +12,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
 	var rects:Vector<Float>;
 	var transforms:Vector<Float>;
+	var alpha:Array<Float>;
 
 	public function new()
 	{
@@ -19,6 +20,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		type = FlxDrawItemType.TILES;
 		rects = new Vector<Float>();
 		transforms = new Vector<Float>();
+		alpha = [];
 	}
 	
 	override public function reset():Void
@@ -26,6 +28,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.reset();
 		rects.splice(0, rects.length);
 		transforms.splice(0, transforms.length);
+		alpha.splice(0, alpha.length);
 	}
 	
 	override public function dispose():Void
@@ -49,13 +52,21 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.d);
 		transforms.push(matrix.tx);
 		transforms.push(matrix.ty);
+
+		alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
 	}
 	
 	override public function render(camera:FlxCamera):Void
 	{
-		graphics.shader.data.texture0.input = graphics.bitmap;
+		if (rects.length == 0)
+			return;
 
-		camera.canvas.graphics.beginShaderFill(graphics.shader);
+		var shader = graphics.shader;
+		shader.data.texture0.input = graphics.bitmap;
+		shader.data.texture0.smoothing = camera.antialiasing || antialiasing;
+		shader.data.alpha.value = alpha;
+
+		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);
 	}
