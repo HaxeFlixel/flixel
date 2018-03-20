@@ -64,7 +64,6 @@ class RunTravis
 		var args = ["install", lib];
 		if (version != null)
 			args.push(version);
-		args.push("--quiet");
 		return runCommand("haxelib", args);
 	}
 	
