@@ -57,6 +57,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 
 		camera.canvas.graphics.beginShaderFill(graphics.shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
-		FlxDrawBaseItem.drawCalls++;
+		super.render(camera);
 	}
 }

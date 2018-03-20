@@ -95,7 +95,10 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 	}
 	
-	public function render(camera:FlxCamera):Void {}
+	public function render(camera:FlxCamera):Void
+	{
+		drawCalls++;
+	}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	

@@ -67,7 +67,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		#end
 		
-		FlxDrawBaseItem.drawCalls++;
+		super.render(camera);
 	}
 	
 	override public function reset():Void 

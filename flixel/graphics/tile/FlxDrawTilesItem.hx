@@ -102,7 +102,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			position);
 		#end
 
-		FlxDrawBaseItem.drawCalls++;
+		super.render(camera);
 	}
 	
 	private function get_numTiles():Int
