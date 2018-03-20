@@ -10,6 +10,8 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
+	public var shader:FlxShader;
+
 	var rects:Vector<Float>;
 	var transforms:Vector<Float>;
 	var alpha:Array<Float>;
@@ -116,7 +118,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (rects.length == 0)
 			return;
 
-		var shader = graphics.shader;
+		var shader = shader != null ? shader : graphics.shader;
 		shader.data.texture0.input = graphics.bitmap;
 		shader.data.texture0.smoothing = camera.antialiasing || antialiasing;
 		shader.data.alpha.value = alpha;
