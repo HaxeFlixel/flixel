@@ -1,6 +1,8 @@
 package flixel.system;
 
-#if (openfl < "4.0.0")
+#if (openfl >= "8.0.0")
+typedef FlxPreloader = openfl.display.Sprite;
+#else
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
