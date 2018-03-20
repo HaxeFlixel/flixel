@@ -6,7 +6,7 @@ import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
-#if (openfl < "4.0.0")
+#if !FLX_DRAW_QUADS
 import openfl.display.Tilesheet;
 #end
 
@@ -17,14 +17,14 @@ import openfl.display.Tilesheet;
 class FlxDrawBaseItem<T>
 {
 	/**
-	 * Tracks the total number of `drawTiles()` calls made each frame.
+	 * Tracks the total number of draw calls made each frame.
 	 */
 	public static var drawCalls:Int = 0;
 
 	public static function blendToInt(blend:BlendMode):Int
 	{
-		#if (openfl >= "8.0.0")
-		return 0;
+		#if FLX_DRAW_QUADS
+		return 0; // no blend mode support in drawQuads()
 		#else
 		if (blend == null)
 			return Tilesheet.TILE_BLEND_NORMAL;

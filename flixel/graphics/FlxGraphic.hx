@@ -12,7 +12,7 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
-#if (openfl < "4.0.0")
+#if !FLX_DRAW_QUADS
 import openfl.display.Tilesheet;
 #end
 
@@ -316,13 +316,13 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var canBeDumped(get, never):Bool;
 	
-	#if (openfl < "4.0.0")
+	#if FLX_DRAW_QUADS
+	public var shader(default, null):FlxShader;
+	#else
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
 	public var tilesheet(get, null):Tilesheet;
-	#else
-	public var shader(default, null):FlxShader;
 	#end
 
 	/**
@@ -367,7 +367,7 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
-	#if (openfl < "4.0.0")
+	#if !FLX_DRAW_QUADS
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in `FlxG.renderTile` mode
@@ -396,7 +396,7 @@ class FlxGraphic implements IFlxDestroyable
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 		bitmap = Bitmap;
 
-		#if (openfl >= "8.0.0")
+		#if FLX_DRAW_QUADS
 		shader = new FlxShader();
 		#end
 	}
@@ -463,7 +463,9 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
 		
-		#if (openfl < "4.0.0")
+		#if FLX_DRAW_QUADS
+		shader = null;
+		#else
 		if (FlxG.renderTile)
 			_tilesheet = null;
 		#end
@@ -534,7 +536,7 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 	
-	#if (openfl < "4.0.0")
+	#if !FLX_DRAW_QUADS
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
@@ -601,9 +603,7 @@ class FlxGraphic implements IFlxDestroyable
 	private function set_destroyOnNoUse(Value:Bool):Bool
 	{
 		if (Value && _useCount <= 0 && key != null && !persist)
-		{
 			FlxG.bitmap.remove(this);
-		}
 		
 		return _destroyOnNoUse = Value;
 	}
@@ -628,7 +628,7 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if (!flash && openfl < "4.0.0")
+			#if (!flash && !FLX_DRAW_QUADS)
 			if (FlxG.renderTile && _tilesheet != null)
 				_tilesheet = new Tilesheet(bitmap);
 			#end

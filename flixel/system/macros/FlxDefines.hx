@@ -47,6 +47,7 @@ private enum HelperDefines
 	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
+	FLX_DRAW_QUADS;
 }
 
 class FlxDefines
@@ -169,6 +170,10 @@ class FlxDefines
 		#if (openfl < "4.0.0")
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
+		#end
+
+		#if (openfl >= "8.0.0")
+		define(FLX_DRAW_QUADS);
 		#end
 	}
 	
