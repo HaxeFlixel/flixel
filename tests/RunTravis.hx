@@ -54,7 +54,7 @@ class RunTravis
 	{
 		return getResult(switch (version)
 		{
-			case NEW: [haxelibInstall("openfl"), haxelibInstall("lime")];
+			case NEW: [runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]), haxelibInstall("lime")];
 			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
 		});
 	}
