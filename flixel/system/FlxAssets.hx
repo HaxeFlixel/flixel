@@ -34,12 +34,12 @@ typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, 
 
 typedef FlxShader =
 #if (openfl_legacy || nme)
-	Dynamic
+	Dynamic;
 #elseif FLX_DRAW_QUADS
-	openfl.display.GraphicsShader
+	openfl.display.GraphicsShader;
 #else
-	openfl.display.Shader
-#end ;
+	openfl.display.Shader;
+#end
 #end
 
 class FlxAssets

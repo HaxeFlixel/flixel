@@ -26,10 +26,11 @@ import openfl.filters.BitmapFilter;
 import openfl.Vector;
 using flixel.util.FlxColorTransformUtil;
 
-#if (openfl < "4.0.0")
-import flixel.graphics.tile.FlxDrawTilesItem;
+typedef FlxDrawItem =
+#if FLX_DRAW_QUADS
+	flixel.graphics.tile.FlxDrawQuadsItem;
 #else
-import flixel.graphics.tile.FlxDrawQuadsItem;
+	flixel.graphics.tile.FlxDrawTilesItem;
 #end
 
 /**
@@ -423,7 +424,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Last draw tiles item
 	 */
-	private var _headTiles:FlxDrawQuadsItem;
+	private var _headTiles:FlxDrawItem;
 	/**
 	 * Last draw triangles item
 	 */
@@ -432,7 +433,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Draw tiles stack items that can be reused
 	 */
-	private static var _storageTilesHead:FlxDrawQuadsItem;
+	private static var _storageTilesHead:FlxDrawItem;
 	
 	/**
 	 * Draw triangles stack items that can be reused
@@ -484,7 +485,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			itemToReturn = new FlxDrawQuadsItem();
+			itemToReturn = new FlxDrawItem();
 		}
 		
 		itemToReturn.graphics = graphic;
