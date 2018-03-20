@@ -13,6 +13,8 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	var rects:Vector<Float>;
 	var transforms:Vector<Float>;
 	var alpha:Array<Float>;
+	var colorMultipliers:Array<Float>;
+	var colorOffsets:Array<Float>;
 
 	public function new()
 	{
@@ -29,6 +31,10 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		rects.splice(0, rects.length);
 		transforms.splice(0, transforms.length);
 		alpha.splice(0, alpha.length);
+		if (colorMultipliers != null)
+			colorMultipliers.splice(0, colorMultipliers.length);
+		if (colorOffsets != null)
+			colorOffsets.splice(0, colorOffsets.length);
 	}
 	
 	override public function dispose():Void
@@ -54,6 +60,31 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.ty);
 
 		alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
+
+		if (transform != null)
+		{
+			if (colored)
+			{
+				if (colorMultipliers == null)
+					colorMultipliers = [];
+
+				colorMultipliers.push(transform.redMultiplier);
+				colorMultipliers.push(transform.greenMultiplier);
+				colorMultipliers.push(transform.blueMultiplier);
+				colorMultipliers.push(1);
+			}
+
+			if (hasColorOffsets)
+			{
+				if (colorOffsets == null)
+					colorOffsets = [];
+
+				colorOffsets.push(transform.redOffset);
+				colorOffsets.push(transform.greenOffset);
+				colorOffsets.push(transform.blueOffset);
+				colorOffsets.push(transform.alphaOffset);
+			}
+		}
 	}
 	
 	override public function render(camera:FlxCamera):Void
@@ -64,7 +95,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var shader = graphics.shader;
 		shader.data.texture0.input = graphics.bitmap;
 		shader.data.texture0.smoothing = camera.antialiasing || antialiasing;
-		shader.data.alpha.value = alpha;
+		// shader.data.alpha.value = alpha;
+		shader.data.colorMultipliers.value = colorMultipliers;
+		shader.data.colorOffsets.value = colorOffsets;
 
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);

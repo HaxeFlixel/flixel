@@ -26,7 +26,7 @@ import openfl.filters.BitmapFilter;
 import openfl.Vector;
 using flixel.util.FlxColorTransformUtil;
 
-typedef FlxDrawItem =
+private typedef FlxDrawItem =
 #if FLX_DRAW_QUADS
 	flixel.graphics.tile.FlxDrawQuadsItem;
 #else
