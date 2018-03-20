@@ -59,30 +59,54 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.tx);
 		transforms.push(matrix.ty);
 
-		alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
+		for (i in 0...6)
+			alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
 
-		if (transform != null)
+		if (colored)
 		{
-			if (colored)
-			{
-				if (colorMultipliers == null)
-					colorMultipliers = [];
+			if (colorMultipliers == null)
+				colorMultipliers = [];
 
-				colorMultipliers.push(transform.redMultiplier);
-				colorMultipliers.push(transform.greenMultiplier);
-				colorMultipliers.push(transform.blueMultiplier);
+			for (i in 0...6)
+			{
+				if (transform != null)
+				{
+					colorMultipliers.push(transform.redMultiplier);
+					colorMultipliers.push(transform.greenMultiplier);
+					colorMultipliers.push(transform.blueMultiplier);
+				}
+				else
+				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+				}
+
 				colorMultipliers.push(1);
 			}
+		}
 
-			if (hasColorOffsets)
+		if (hasColorOffsets)
+		{
+			if (colorOffsets == null)
+				colorOffsets = [];
+
+			for (i in 0...6)
 			{
-				if (colorOffsets == null)
-					colorOffsets = [];
-
-				colorOffsets.push(transform.redOffset);
-				colorOffsets.push(transform.greenOffset);
-				colorOffsets.push(transform.blueOffset);
-				colorOffsets.push(transform.alphaOffset);
+				if (transform != null)
+				{
+					colorOffsets.push(transform.redOffset);
+					colorOffsets.push(transform.greenOffset);
+					colorOffsets.push(transform.blueOffset);
+					colorOffsets.push(transform.alphaOffset);
+				}
+				else
+				{
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+				}
 			}
 		}
 	}
@@ -95,7 +119,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var shader = graphics.shader;
 		shader.data.texture0.input = graphics.bitmap;
 		shader.data.texture0.smoothing = camera.antialiasing || antialiasing;
-		// shader.data.alpha.value = alpha;
+		shader.data.alpha.value = alpha;
 		shader.data.colorMultipliers.value = colorMultipliers;
 		shader.data.colorOffsets.value = colorOffsets;
 
