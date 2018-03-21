@@ -149,5 +149,34 @@ class XInputID
 		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, { up: 25, down: 26, left: 27, right: 28 });
 
 	#end
+	#else // dummy values
+	
+		public static inline var A:Int = 0;
+		public static inline var B:Int = 0;
+		public static inline var X:Int = 0;
+		public static inline var Y:Int = 0;
+		
+		public static inline var LB:Int = 4;
+		public static inline var RB:Int = 5;
+		
+		public static inline var LEFT_STICK_CLICK:Int = 6;
+		public static inline var RIGHT_STICK_CLICK:Int = 7;
+		
+		public static inline var BACK:Int = 9;
+		public static inline var START:Int = 8;
+		
+		public static inline var GUIDE:Int = 10;
+		
+		public static inline var DPAD_UP:Int = 11;
+		public static inline var DPAD_DOWN:Int = 12;
+		public static inline var DPAD_LEFT:Int = 13;
+		public static inline var DPAD_RIGHT:Int = 14;
+		
+		public static inline var LEFT_TRIGGER:Int = 2;
+		public static inline var RIGHT_TRIGGER:Int = 5;
+		
+		public static var LEFT_ANALOG_STICK(default, null)  = new FlxGamepadAnalogStick(0, 1, { up: 21, down: 22, left: 23, right: 24 });
+		public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(3, 4, { up: 25, down: 26, left: 27, right: 28 });
+		
 	#end
 }

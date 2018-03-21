@@ -92,12 +92,14 @@ class FlxDefines
 		abortMinVersion("Lime", "2.8.1", (macro null).pos);
 		#end
 
+		#if openfl_legacy
 		#if (openfl >= "4.0.0")
 		abortMaxVersion("OpenFL", "4.0.0", "3.6.1", (macro null).pos);
 		#end
 		
 		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
 		abortMaxVersion("Lime", "3.0.0", "2.9.1", (macro null).pos);
+		#end
 		#end
 	}
 

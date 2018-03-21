@@ -128,7 +128,7 @@ class Interaction extends Window
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(event.target))
+		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(cast event.target))
 			return;
 		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;

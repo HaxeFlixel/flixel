@@ -23,6 +23,10 @@ import openfl.Assets;
 import haxe.Utf8;
 using flixel.util.FlxStringUtil;
 
+#if (openfl >= "5.0.0")
+import openfl.utils.AssetType;
+#end
+
 #if flash
 import openfl.geom.Rectangle;
 #end
