@@ -29,9 +29,7 @@ class PlayState extends FlxState
 	private var _collisions:Bool = false;
 	
 	private var _bunnies:FlxTypedGroup<Bunny>;
-	private var _pirate:FlxSprite;
 	private var _complexityButton:FlxButton;
-	private var _pirateButton:FlxButton;
 	private var _collisionButton:FlxButton;
 	private var _timestepButton:FlxButton;
 	private var _offScreenButton:FlxButton;
@@ -70,11 +68,6 @@ class PlayState extends FlxState
 		changeBunnyNumber(true);
 		add(_bunnies);
 		
-		// Add a jumping pirate
-		_pirate = new FlxSprite();
-		_pirate.loadGraphic("assets/pirate.png");
-		add(_pirate);
-		
 		// All the GUI stuff
 		var uiBackground:FlxSprite = new FlxSprite();
 		uiBackground.makeGraphic(FlxG.width, 100, FlxColor.WHITE);
@@ -101,10 +94,7 @@ class PlayState extends FlxState
 		_complexityButton = new FlxButton(rightButtonX, 10, "Simple", onComplexityToggle);
 		add(_complexityButton);
 		
-		_pirateButton = new FlxButton(rightButtonX, 35, "Pirate: On", onPirateToggle);
-		add(_pirateButton);
-		
-		_collisionButton = new FlxButton(rightButtonX, 60, "Collisons: Off", onCollisionToggle);
+		_collisionButton = new FlxButton(rightButtonX, 35, "Collisons: Off", onCollisionToggle);
 		add(_collisionButton);
 		
 		// Column2
@@ -142,9 +132,6 @@ class PlayState extends FlxState
 		#if shaders_supported
 		floodFill.uFloodFillY = 0.5 * (1.0 + Math.sin(t / 1000));
 		#end
-		
-		_pirate.x = Std.int((FlxG.width - _pirate.width) * (0.5 + 0.5 * Math.sin(t / 3000)));
-		_pirate.y = Std.int(FlxG.height - 1.3 * _pirate.height + 70 - 30 * Math.sin(t / 100));
 		
 		if (_collisions)
 		{
@@ -216,12 +203,6 @@ class PlayState extends FlxState
 				bunny.complex = complex;
 			}
 		}
-	}
-	
-	private function onPirateToggle():Void
-	{
-		_pirate.visible = !_pirate.visible;
-		toggleHelper(_pirateButton, "Pirate: On", "Pirate: Off");
 	}
 	
 	private function onCollisionToggle():Void
