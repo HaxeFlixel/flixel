@@ -114,6 +114,14 @@ class Console extends Window
 		input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+
+		#if !flash
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, function(e:KeyboardEvent)
+		{
+			if (e.keyCode == Keyboard.TAB)
+				FlxG.stage.focus = input;
+		});
+		#end
 		#end
 		
 		#if (!next && sys) // workaround for broken TextField focus on native
@@ -149,11 +157,6 @@ class Console extends Window
 	@:access(flixel.FlxGame)
 	private function onFocus(_)
 	{
-		#if (sys && next)
-		if (!FlxG.game._lostFocus)
-			return;
-		#end
-		
 		#if FLX_DEBUG
 		// Pause game
 		if (FlxG.console.autoPause)
@@ -172,11 +175,6 @@ class Console extends Window
 	@:access(flixel.FlxGame)
 	private function onFocusLost(_)
 	{
-		#if (sys && next)
-		if (FlxG.game._lostFocus)
-			return;
-		#end
-		
 		#if FLX_DEBUG
 		// Unpause game
 		if (FlxG.console.autoPause && !FlxG.game.debugger.vcr.manualPause)
