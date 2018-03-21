@@ -356,8 +356,10 @@ class Interaction extends Window
 				for (i in 0..._customCursor.numChildren)
 				{
 					var sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == activeTool.name;
+					sprite.visible = sprite.name == activeTool.getName();
 				}
+				if (FlxG.mouse.visible)
+					FlxG.mouse.visible = false;
 				#end
 			}
 			else

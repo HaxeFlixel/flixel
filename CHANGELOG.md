@@ -14,6 +14,7 @@
 - `FlxDebugger` console: fixed enum completion on non-Flash targets ([404c16b3](https://github.com/HaxeFlixel/flixel/commit/404c16b3))
 - `FlxMouseEventManager`: fixed mouseOver being fired before mouseOut ([#2103](https://github.com/HaxeFlixel/flixel/issues/2103))
 - `FlxAssetPaths`: fixed `filterExtensions` for files with multiple dots ([#2107](https://github.com/HaxeFlixel/flixel/issues/2107))
+- `FlxDebugger` interaction tool: fixed custom cursors not showing on native targets
 
 4.3.0 (July 22, 2017)
 ------------------------------
