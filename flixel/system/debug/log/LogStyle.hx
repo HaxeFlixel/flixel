@@ -10,7 +10,7 @@ class LogStyle
 	public static var WARNING:LogStyle = new LogStyle("[WARNING] ", "D9F85C", 12, false, false, false, "flixel/sounds/beep", true);
 	public static var ERROR:LogStyle = new LogStyle("[ERROR] ", "FF8888", 12, false, false, false, "flixel/sounds/beep", true);
 	public static var NOTICE:LogStyle = new LogStyle("[NOTICE] ", "5CF878", 12, false);
-	public static var CONSOLE:LogStyle = new LogStyle("&#62; ", "5A96FA", 12, false);
+	public static var CONSOLE:LogStyle = new LogStyle("> ", "5A96FA", 12, false);
 
 	/**
 	 * A prefix which is always attached to the start of the logged data.
