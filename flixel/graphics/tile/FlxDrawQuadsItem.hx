@@ -11,6 +11,8 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
+	static inline var VERTICES_PER_QUAD = 6;
+
 	public var shader:FlxShader;
 
 	var rects:Vector<Float>;
@@ -45,6 +47,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.dispose();
 		rects = null;
 		transforms = null;
+		alpha = null;
+		colorMultipliers = null;
+		colorOffsets = null;
 	}
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
@@ -62,7 +67,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.tx);
 		transforms.push(matrix.ty);
 
-		for (i in 0...6)
+		for (i in 0...VERTICES_PER_QUAD)
 			alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
 
 		if (colored)
@@ -70,7 +75,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			if (colorMultipliers == null)
 				colorMultipliers = [];
 
-			for (i in 0...6)
+			for (i in 0...VERTICES_PER_QUAD)
 			{
 				if (transform != null)
 				{
@@ -94,7 +99,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			if (colorOffsets == null)
 				colorOffsets = [];
 
-			for (i in 0...6)
+			for (i in 0...VERTICES_PER_QUAD)
 			{
 				if (transform != null)
 				{
