@@ -1,5 +1,6 @@
 package flixel.graphics.tile;
 
+#if FLX_DRAW_QUADS
 import flixel.system.FlxAssets;
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
@@ -130,3 +131,4 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.render(camera);
 	}
 }
+#end
