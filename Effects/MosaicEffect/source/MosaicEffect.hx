@@ -27,9 +27,10 @@ class MosaicEffect
 	 */
 	public var strengthY(default, null):Float = DEFAULT_STRENGTH;
 	
-	public function new():Void
+	public function new(width:Float, height:Float):Void
 	{
 		shader = new MosaicShader();
+		shader.uTextureSize = [width, height];
 		shader.uBlocksize = [strengthX, strengthY];
 	}
 	
@@ -52,15 +53,14 @@ class MosaicEffect
 class MosaicShader extends Shader
 {
 	@fragment var code = '
-	
+	uniform vec2 uTextureSize;
 	uniform vec2 uBlocksize;
 
 	void main()
 	{
-		vec2 blocks = ${Shader.uTextureSize} / uBlocksize;
+		vec2 blocks = uTextureSize / uBlocksize;
 		gl_FragColor = texture2D(${Shader.uSampler}, floor(${Shader.vTexCoord} * blocks) / blocks);
-	}
-	';
+	}';
 	
 	public function new()
 	{

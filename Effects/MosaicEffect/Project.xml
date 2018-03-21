@@ -35,6 +35,8 @@
 
 	<!--Enable OpenFL next -->
 	<set name="next" />
+	<set name="webgl" />
+	<haxedef name="webgl" />
 
 	<haxelib name="flixel" />
 
