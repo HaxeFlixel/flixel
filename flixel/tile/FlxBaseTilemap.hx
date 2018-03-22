@@ -236,7 +236,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         An array containing the tile indices
+	 * @param   MapData         An array containing the (non-negative) tile indices.
 	 * @param   WidthInTiles    The width of the tilemap in tiles
 	 * @param   HeightInTiles   The height of the tilemap in tiles
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
@@ -267,7 +267,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         A 2D array containing the tile indices. The length of the inner arrays should be consistent.
+	 * @param   MapData         A 2D array containing the (non-negative) tile indices. The length of the inner arrays should be consistent.
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
