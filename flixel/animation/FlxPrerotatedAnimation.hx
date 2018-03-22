@@ -23,9 +23,12 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	
 	private function set_angle(Value:Float):Float
 	{
+		if (Math.isNaN(Value))
+			throw "angle must not be NaN";
+
 		var oldIndex:Int = curIndex;
 		var angleHelper:Int = Math.floor(Value % 360);
-		
+
 		while (angleHelper < 0)
 		{
 			angleHelper += 360;

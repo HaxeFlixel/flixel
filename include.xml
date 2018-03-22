@@ -16,12 +16,10 @@
 	</section>
 	
 	<set name="legacy" unless="next" />
-	<haxedef name="analyzer-optimize" unless="no-analyzer" if="next" />
-
-	<haxelib name="openfl" unless="create" />
-	<haxelib name="hscript" unless="create||coverage2" optional="true" />
 	
-	<haxedef name="HXCPP_QUIET" />
+	<haxelib name="openfl" unless="create" />
+	<haxelib name="hscript" unless="create || coverage2" optional="true" />
+	
 	<haxeflag name="--macro" value="flixel.system.macros.FlxDefines.run()" />
 	
 	<section if="setup">
