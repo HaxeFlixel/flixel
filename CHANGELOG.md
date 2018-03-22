@@ -15,6 +15,7 @@
 - `FlxMouseEventManager`: fixed mouseOver being fired before mouseOut ([#2103](https://github.com/HaxeFlixel/flixel/issues/2103))
 - `FlxAssetPaths`: fixed `filterExtensions` for files with multiple dots ([#2107](https://github.com/HaxeFlixel/flixel/issues/2107))
 - `FlxDebugger` interaction tool: fixed custom cursors not showing on native targets
+- `FlxMath`: fixed `roundDecimals()` for large inputs ([#2127](https://github.com/HaxeFlixel/flixel/issues/2127))
 
 4.3.0 (July 22, 2017)
 ------------------------------
