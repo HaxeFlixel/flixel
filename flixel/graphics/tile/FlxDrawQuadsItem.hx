@@ -1,10 +1,10 @@
 package flixel.graphics.tile;
 
 #if FLX_DRAW_QUADS
-import flixel.system.FlxAssets;
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.math.FlxMatrix;
 import openfl.geom.ColorTransform;
 import openfl.Vector;
