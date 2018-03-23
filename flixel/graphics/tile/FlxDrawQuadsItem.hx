@@ -17,7 +17,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 
 	var rects:Vector<Float>;
 	var transforms:Vector<Float>;
-	var alpha:Array<Float>;
+	var alphas:Array<Float>;
 	var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
 
@@ -27,7 +27,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		type = FlxDrawItemType.TILES;
 		rects = new Vector<Float>();
 		transforms = new Vector<Float>();
-		alpha = [];
+		alphas = [];
 	}
 	
 	override public function reset():Void
@@ -35,7 +35,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.reset();
 		rects.splice(0, rects.length);
 		transforms.splice(0, transforms.length);
-		alpha.splice(0, alpha.length);
+		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
 		if (colorOffsets != null)
@@ -47,7 +47,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.dispose();
 		rects = null;
 		transforms = null;
-		alpha = null;
+		alphas = null;
 		colorMultipliers = null;
 		colorOffsets = null;
 	}
@@ -68,7 +68,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.ty);
 
 		for (i in 0...VERTICES_PER_QUAD)
-			alpha.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 
 		if (colored)
 		{
@@ -125,11 +125,15 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			return;
 
 		var shader = shader != null ? shader : graphics.shader;
-		shader.data.texture0.input = graphics.bitmap;
-		shader.data.texture0.smoothing = camera.antialiasing || antialiasing;
-		shader.data.alpha.value = alpha;
-		shader.data.colorMultipliers.value = colorMultipliers;
-		shader.data.colorOffsets.value = colorOffsets;
+		shader.bitmap.input = graphics.bitmap;
+		shader.bitmap.smoothing = camera.antialiasing || antialiasing;
+		shader.alpha.value = alphas;
+
+		if (colored)
+			shader.colorMultiplier.value = colorMultipliers;
+		if (hasColorOffsets)
+			shader.colorOffset.value = colorOffsets;
+		shader.hasColorTransform.value = [colored || hasColorOffsets];
 
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);

@@ -36,7 +36,7 @@ typedef FlxShader =
 #if (openfl_legacy || nme)
 	Dynamic;
 #elseif FLX_DRAW_QUADS
-	openfl.display.GraphicsShader;
+	flixel.graphics.tile.FlxGraphicsShader;
 #else
 	openfl.display.Shader;
 #end
