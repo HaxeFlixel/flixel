@@ -503,7 +503,7 @@ class FlxPath implements IFlxDestroyable
 	}
 	
 	/**
-	 * Stops path movement and removes this path it from the path manager.
+	 * Stops the path's movement.
 	 * 
 	 * @return	This path object.
 	 */
