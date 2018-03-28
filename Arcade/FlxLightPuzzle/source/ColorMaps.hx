@@ -1,7 +1,6 @@
 package;
 
 import flixel.util.FlxColor;
-import haxe.ds.IntMap;
 
 /**
  * Mappings to convert between the internally used "color" and the displayed color.
@@ -11,7 +10,7 @@ import haxe.ds.IntMap;
 class ColorMaps
 {
 	// internally used color => display color
-	public static var rybMap:IntMap<FlxColor> = [
+	public static var rybMap:Map<Color, FlxColor> = [
 		Color.MIRROR => 0xFFAAAAAA, // FlxColor.GRAY is a bit too dark for this game, so we're defining our own grey
 		Color.RED => FlxColor.RED,
 		Color.YELLOW => FlxColor.YELLOW,
@@ -23,7 +22,7 @@ class ColorMaps
 	];
 	
 	// display color is different for RGB mapping than RYB mapping
-	public static var rgbMap:IntMap<FlxColor> = [
+	public static var rgbMap:Map<Color, FlxColor> = [
 		Color.MIRROR => 0xFFAAAAAA,
 		Color.RED => FlxColor.RED,
 		Color.YELLOW => FlxColor.LIME,
@@ -34,7 +33,7 @@ class ColorMaps
 		Color.WHITE => FlxColor.WHITE
 	];
 	
-	public static var cmyMap:IntMap<FlxColor> = [
+	public static var cmyMap:Map<Color, FlxColor> = [
 		Color.MIRROR => 0xFFAAAAAA,
 		Color.RED => FlxColor.MAGENTA,
 		Color.YELLOW => FlxColor.YELLOW,
@@ -46,5 +45,5 @@ class ColorMaps
 	];
 	
 	// the mapping that is actually used
-	public static var defaultColorMap:IntMap<FlxColor> = rybMap;
+	public static var defaultColorMap:Map<Color, FlxColor> = rybMap;
 }

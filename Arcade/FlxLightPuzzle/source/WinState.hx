@@ -15,7 +15,7 @@ class WinState extends FlxSubState
 	
 	override public function create():Void
 	{
-		var bg = ColorMaps.defaultColorMap.get(Color.WHITE) == FlxColor.BLACK ? FlxColor.WHITE : FlxColor.BLACK; // if the background is black, we want white text, and vice-versa
+		var bg = ColorMaps.defaultColorMap[Color.WHITE] == FlxColor.BLACK ? FlxColor.WHITE : FlxColor.BLACK; // if the background is black, we want white text, and vice-versa
 		
 		winMessage = new FlxText(256, 40, 250, "Want more?\n\nYou can copy the code to make more levels or change it however you want.\n\n" +
 			"This project is open source and released under MIT license thanks to HaxeFlixel supporters.\n\n" +

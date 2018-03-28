@@ -110,7 +110,7 @@ class UILayer extends FlxSpriteGroup
 		
 		for (i in 0...3)
 		{
-			if (i < remainingAmmo.length) color = ColorMaps.defaultColorMap.get(remainingAmmo[i]);
+			if (i < remainingAmmo.length) color = ColorMaps.defaultColorMap[remainingAmmo[i]];
 			else color = FlxColor.BLACK;
 			
 			rect.y = 40 - i * 20;

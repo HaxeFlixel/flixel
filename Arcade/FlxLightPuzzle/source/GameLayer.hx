@@ -27,7 +27,7 @@ class GameLayer extends FlxGroup
 	public function drawSegment(segment:Segment, delay:Float):Void
 	{
 		var light = new FlxSprite();
-		light.makeGraphic(1000, 1, ColorMaps.defaultColorMap.get(segment.color), true);
+		light.makeGraphic(1000, 1, ColorMaps.defaultColorMap[segment.color], true);
 		
 		light.x = segment.start.x;
 		light.y = segment.start.y;
@@ -78,7 +78,7 @@ class GameLayer extends FlxGroup
 		
 		circle.graphic = sprite;
 		
-		FlxSpriteUtil.drawCircle(sprite, -1, -1, circle.radius * resize, ColorMaps.defaultColorMap.get(circle.color), null, defaultDrawStyle);
+		FlxSpriteUtil.drawCircle(sprite, -1, -1, circle.radius * resize, ColorMaps.defaultColorMap[circle.color], null, defaultDrawStyle);
 		
 		FlxTween.num(0, 1 / resize, duration, { onStart : addSprite.bind(sprite), startDelay : delay, ease : FlxEase.elasticOut }, updateCircle.bind(sprite));
 	}
