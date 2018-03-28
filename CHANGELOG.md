@@ -1,3 +1,9 @@
+2.5.0 (March 28, 2018)
+------------------------------
+* Added the FlxLightPuzzle demo (#263)
+* MosaicEffect: replaced the camera shader with a sprite shader
+* FlxBunnyMark: removed the pirate
+
 2.4.3 (November 30, 2017)
 ------------------------------
 * Fixed flixel-tools not finding demos if dependencies are missing
