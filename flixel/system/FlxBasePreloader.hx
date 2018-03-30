@@ -444,7 +444,10 @@ private class DefaultPreloader extends Sprite
 
 	public function onInit() {}
 
-	public function onLoaded() {}
+	public function onLoaded()
+	{
+		dispatchEvent(new Event(Event.UNLOAD));
+	}
 
 	public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void
 	{
