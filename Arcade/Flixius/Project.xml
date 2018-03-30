@@ -15,7 +15,7 @@
 	<!--------------------------------WINDOW SETTINGS------------------------------->
 	
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="60" background="#160100" hardware="true" vsync="true" />
+	<window width="1280" height="720" fps="60" background="#160100" hardware="true" vsync="false" />
 	
 	<!--HTML5-specific-->
 	<window if="html5" resizable="false" />
