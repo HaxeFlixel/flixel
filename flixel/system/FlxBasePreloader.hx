@@ -113,6 +113,11 @@ class FlxBasePreloader extends DefaultPreloader
 			allowedURLs = [];
 
 		_startTime = Date.now().getTime();
+
+		#if !web
+		// just skip the preloader on native targets
+		onLoaded();
+		#end
 	}
 
 	/**
