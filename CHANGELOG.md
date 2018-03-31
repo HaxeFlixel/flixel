@@ -12,7 +12,9 @@
 #### Bugfixes:
 
 - `FlxDebugger` console: fixed enum completion on non-Flash targets ([404c16b3](https://github.com/HaxeFlixel/flixel/commit/404c16b3))
-- `FlxMouseEventManager`: fixed mouseOver being fired before mouseOut ([#2103](https://github.com/HaxeFlixel/flixel/issues/2103))
+- `FlxMouseEventManager`:
+	- fixed mouseOver being fired before mouseOut ([#2103](https://github.com/HaxeFlixel/flixel/issues/2103))
+	- fixed items with `mouseChildren = false` still allowing events for overlapping objects ([#2110](https://github.com/HaxeFlixel/flixel/issues/2110))
 - `FlxAssetPaths`: fixed `filterExtensions` for files with multiple dots ([#2107](https://github.com/HaxeFlixel/flixel/issues/2107))
 - `FlxDebugger` interaction tool: fixed custom cursors not showing on native targets ([ca52e7a2](https://github.com/HaxeFlixel/flixel/commit/ca52e7a2))
 - `FlxDebugger` console: fixed tab not focusing the text field on native targets
