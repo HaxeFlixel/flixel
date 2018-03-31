@@ -3,7 +3,7 @@ package flixel.input.mouse;
 import flixel.input.mouse.FlxMouseEventManager;
 import massive.munit.Assert;
 
-class FlxMouseEventManagerTest
+class FlxMouseEventManagerTest extends FlxTest
 {
 	var sprite0:FlxSprite;
 	var sprite1:FlxSprite;
@@ -29,7 +29,7 @@ class FlxMouseEventManagerTest
 		FlxMouseEventManager.add(sprite0, null, null, function(_) Assert.fail(""), null, true, true, false);
 		FlxMouseEventManager.add(sprite1, null, null, function(_) count++, null, false, true, false);
 		
-		FlxG.plugins.get(FlxMouseEventManager).update(0); // force mouse status to update
+		step();
 		
 		Assert.areEqual(1, count);
 	}
@@ -45,7 +45,7 @@ class FlxMouseEventManagerTest
 		FlxMouseEventManager.setObjectMouseChildren(sprite0, true);
 		FlxMouseEventManager.setObjectMouseChildren(sprite1, false);
 		
-		FlxG.plugins.get(FlxMouseEventManager).update(0);
+		step();
 		
 		Assert.areEqual(1, count);
 	}
@@ -60,7 +60,7 @@ class FlxMouseEventManagerTest
 		
 		FlxMouseEventManager.setObjectMouseChildren(sprite1, false); // brings sprite1 to the front
 		
-		FlxG.plugins.get(FlxMouseEventManager).update(0);
+		step();
 		
 		Assert.areEqual(1, count);
 	}
@@ -73,7 +73,7 @@ class FlxMouseEventManagerTest
 		FlxMouseEventManager.add(sprite0, null, null, function(_) Assert.fail(""), null, false, true, false);
 		FlxMouseEventManager.add(sprite1, null, null, function(_) count++, null, false, true, false);
 		
-		FlxG.plugins.get(FlxMouseEventManager).update(0);
+		step();
 		
 		Assert.areEqual(1, count);
 	}
@@ -86,7 +86,7 @@ class FlxMouseEventManagerTest
 		FlxMouseEventManager.add(sprite0, null, null, function(_) count++, null, true, true, false);
 		FlxMouseEventManager.add(sprite1, null, null, function(_) count++, null, true, true, false);
 		
-		FlxG.plugins.get(FlxMouseEventManager).update(0);
+		step();
 		
 		Assert.areEqual(2, count);
 	}
