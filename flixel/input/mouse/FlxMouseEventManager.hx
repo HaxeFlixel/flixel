@@ -1,5 +1,6 @@
 package flixel.input.mouse;
 
+import haxe.ds.ArraySort;
 import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -87,7 +88,22 @@ class FlxMouseEventManager extends FlxBasic
 			newReg.sprite = cast Object;
 		}
 		
-		_registeredObjects.unshift(cast newReg);
+		if (!MouseChildren)
+		{
+			_registeredObjects.unshift(cast newReg);
+		}
+		
+		else
+		{
+			// place mouseChildren=true objects immediately after =false ones
+			var index = 0;
+			
+			while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
+				index++;
+			
+			_registeredObjects.insert(index, cast newReg);
+		}
+		
 		return Object;
 	}
 	
@@ -141,6 +157,8 @@ class FlxMouseEventManager extends FlxBasic
 		
 		orderedObjects.reverse();
 		_registeredObjects = orderedObjects;
+		
+		ArraySort.sort(_registeredObjects, sortByMouseChildren); // stable sort preserves the order of registers with the same mouseChildren status
 	}
 	
 	/**
@@ -318,6 +336,22 @@ class FlxMouseEventManager extends FlxBasic
 		if (reg != null)
 		{
 			reg.mouseChildren = MouseChildren;
+			_registeredObjects.remove(cast reg);
+			
+			if (!MouseChildren)
+			{
+				_registeredObjects.unshift(cast reg);
+			}
+			
+			else
+			{
+				var index = 0;
+				
+				while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
+					index++;
+				
+				_registeredObjects.insert(index, cast reg);
+			}
 		}
 	}
 	
@@ -389,6 +423,21 @@ class FlxMouseEventManager extends FlxBasic
 		}
 		
 		return null;
+	}
+	
+	private static function sortByMouseChildren(reg1:ObjectMouseData<FlxObject>, reg2:ObjectMouseData<FlxObject>):Int
+	{
+		if (reg1.mouseChildren == reg2.mouseChildren)
+		{
+			return 0;
+		}
+		
+		if (!reg1.mouseChildren)
+		{
+			return -1;
+		}
+		
+		return 1;
 	}
 	
 	public function new()
