@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.display.BitmapData;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 import massive.munit.Assert;
 
 class FlxStringUtilTest
@@ -81,6 +82,7 @@ class FlxStringUtilTest
 		Assert.areEqual("110.20", FlxStringUtil.formatMoney(110.2));
 		Assert.areEqual("110", FlxStringUtil.formatMoney(110.2, false));
 		Assert.areEqual("100,000,000.00", FlxStringUtil.formatMoney(100000000));
+		Assert.areEqual("10,000,000,000.00", FlxStringUtil.formatMoney(10000000000)); // #2120
 		Assert.areEqual("100.000.000,00", FlxStringUtil.formatMoney(100000000, true, false));
 		Assert.areEqual("0.60", FlxStringUtil.formatMoney(0.6)); // #1754
 		Assert.areEqual("0", FlxStringUtil.formatMoney(0.6, false));
@@ -187,5 +189,35 @@ class FlxStringUtilTest
 		
 		for (path in generateLocalPaths())
 			Assert.areEqual("", FlxStringUtil.getDomain(path));
+	}
+
+	@Test
+	function testGetClassName()
+	{
+		function test(value:Dynamic, simple:Bool, expected:String)
+			Assert.areEqual(FlxStringUtil.getClassName(value, simple), expected);
+
+		var longName = "flixel.FlxSprite";
+		var shortName = "FlxSprite";
+
+		test(FlxSprite, false, longName);
+		test(FlxSprite, true, shortName);
+		test(new FlxSprite(), false, longName);
+		test(new FlxSprite(), true, shortName);
+	}
+
+	@Test
+	function testGetEnumName()
+	{
+		function test(value, simple:Bool, expected:String)
+			Assert.areEqual(FlxStringUtil.getEnumName(value, simple), expected);
+
+		var longName = "flixel.system.debug.FlxDebuggerLayout";
+		var shortName = "FlxDebuggerLayout";
+
+		test(FlxDebuggerLayout, false, longName);
+		test(FlxDebuggerLayout, true, shortName);
+		test(FlxDebuggerLayout.BIG, false, longName);
+		test(FlxDebuggerLayout.BIG, true, shortName);
 	}
 }

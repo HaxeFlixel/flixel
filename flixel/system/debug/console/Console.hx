@@ -25,7 +25,7 @@ using StringTools;
 /**
  * A powerful console for the flixel debugger screen with supports custom commands, registering 
  * objects and functions and saves the last 25 commands used. Inspired by Eric Smith's "CoolConsole".
- * @link http://www.youtube.com/watch?v=QWfpw7elWk8
+ * @see http://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends Window
 {
@@ -114,6 +114,15 @@ class Console extends Window
 		input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		
+		#if !flash
+		// openfl/openfl#1856
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, function(e:KeyboardEvent)
+		{
+			if (FlxG.debugger.visible && FlxG.game.debugger.console.visible && e.keyCode == Keyboard.TAB)
+				FlxG.stage.focus = input;
+		});
+		#end
 		#end
 		
 		#if (!next && sys) // workaround for broken TextField focus on native
@@ -149,11 +158,6 @@ class Console extends Window
 	@:access(flixel.FlxGame)
 	private function onFocus(_)
 	{
-		#if (sys && next)
-		if (!FlxG.game._lostFocus)
-			return;
-		#end
-		
 		#if FLX_DEBUG
 		// Pause game
 		if (FlxG.console.autoPause)
@@ -172,11 +176,6 @@ class Console extends Window
 	@:access(flixel.FlxGame)
 	private function onFocusLost(_)
 	{
-		#if (sys && next)
-		if (FlxG.game._lostFocus)
-			return;
-		#end
-		
 		#if FLX_DEBUG
 		// Unpause game
 		if (FlxG.console.autoPause && !FlxG.game.debugger.vcr.manualPause)
@@ -278,7 +277,7 @@ class Console extends Window
 	 * @param 	Function		The function to register.
 	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
 	 */
-	public inline function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
+	public function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
 	{
 		registeredFunctions.set(functionAlias, func);
 		#if hscript
@@ -295,7 +294,7 @@ class Console extends Window
 	 * @param 	ObjectAlias		The name with which you want to access the object.
 	 * @param 	AnyObject		The object to register.
 	 */
-	public inline function registerObject(objectAlias:String, anyObject:Dynamic)
+	public function registerObject(objectAlias:String, anyObject:Dynamic)
 	{
 		registeredObjects.set(objectAlias, anyObject);
 		#if hscript
@@ -306,11 +305,22 @@ class Console extends Window
 	/**
 	 * Register a new class to use in any command.
 	 * 
-	 * @param 	cl			The class to register.
+	 * @param	cl	The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>)
 	{
 		registerObject(FlxStringUtil.getClassName(cl, true), cl);
+	}
+
+	/**
+	 * Register a new enum to use in any command.
+	 * 
+	 * @param	e	The enum to register.
+	 * @since 4.4.0
+	 */
+	public inline function registerEnum(e:Enum<Dynamic>)
+	{
+		registerObject(FlxStringUtil.getEnumName(e, true), e);
 	}
 	
 	override public function destroy()

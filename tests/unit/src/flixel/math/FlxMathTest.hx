@@ -93,4 +93,11 @@ class FlxMathTest extends FlxTest
 		Assert.areEqual(10, FlxMath.lerp(5, 15, 0.5));
 		Assert.areEqual(-5, FlxMath.lerp(5, 15, -1));
 	}
+
+	@Test
+	function testRoundDecimal()
+	{
+		// #2126
+		Assert.areEqual(1521730678.942, FlxMath.roundDecimal(1521730678.942, 3));
+	}
 }
