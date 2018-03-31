@@ -253,7 +253,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		var reg = getRegister(Object);
 		
-		if (reg != null && reg.mouseChildren != MouseChildren)
+		if (reg != null)
 		{
 			reg.mouseChildren = MouseChildren;
 			_registeredObjects.remove(cast reg);
