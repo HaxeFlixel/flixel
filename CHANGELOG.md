@@ -20,6 +20,7 @@
 - `FlxDebugger` console: fixed tab not focusing the text field on native targets
 - `FlxMath`: fixed `roundDecimals()` for large inputs ([#2127](https://github.com/HaxeFlixel/flixel/issues/2127))
 - `FlxG.sound`: fixed sounds not being removed from the default groups on state switches ([#2124](https://github.com/HaxeFlixel/flixel/issues/2124))
+- `FlxObject`: fixed an issue that could lead to getting stuck on y-axis collisions ([#2138](https://github.com/HaxeFlixel/flixel/issues/2138))
 
 4.3.0 (July 22, 2017)
 ------------------------------
