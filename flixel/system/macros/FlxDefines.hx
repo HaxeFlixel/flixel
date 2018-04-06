@@ -157,17 +157,9 @@ class FlxDefines
 			define(FLX_POST_PROCESS);
 		#end
 
-		var openfl8 = false;
 		#if (openfl >= "8.0.0")
-		openfl8 = true;
+		define(FLX_DRAW_QUADS);
 		#end
-
-		if (openfl8)
-			define(FLX_DRAW_QUADS);
-
-		// TODO: remove this once filters are supported in OpenFL 8
-		if (!defined("flash") && !defined("openfl_legacy") && !openfl8)
-			define("filters_supported");
 	}
 	
 	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)

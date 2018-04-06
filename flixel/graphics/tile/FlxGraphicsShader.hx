@@ -64,9 +64,9 @@ class FlxGraphicsShader extends GraphicsShader
 		}"
 	)
 	
-	public function new ()
+	public function new()
 	{
-		super ();
+		super();
 	}
 }
 #end
