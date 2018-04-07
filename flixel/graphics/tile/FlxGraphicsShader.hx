@@ -34,7 +34,7 @@ class FlxGraphicsShader extends GraphicsShader
 		
 		void main(void)
 		{
-			vec4 color = texture2D(bitmap, openfl_TexCoordv);
+			vec4 color = texture2D(bitmap, openfl_TextureCoordv);
 			
 			if (color.a == 0.0)
 			{
