@@ -14,12 +14,16 @@ class GameSound
 
 	public static function create():Void
 	{
+		#if (flash || html5)
 		FlxG.sound.playMusic("music/Music.mp3", 0.4);
 		FlxG.sound.volume = 0.5;
+		#end
 	}
 	
 	public static function randomSound(Sounds:Array<FlxSoundAsset>, VolumeMultiplier:Float = 1.0):Void
 	{
+		#if (flash || html5)
 		FlxG.sound.play(FlxG.random.getObject(Sounds), FlxG.sound.volume * VolumeMultiplier, false, false);
+		#end
 	}
 }

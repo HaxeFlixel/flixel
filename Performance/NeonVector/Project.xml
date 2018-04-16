@@ -81,7 +81,8 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<assets path="assets/images" rename="images" />
 
-	<assets path="assets/sounds" rename="sounds" />
-
-	<assets path="assets/music" rename="music" />
+	<section if="flash || html5">
+		<assets path="assets/sounds" rename="sounds" />
+		<assets path="assets/music" rename="music" />
+	</section>
 </project>

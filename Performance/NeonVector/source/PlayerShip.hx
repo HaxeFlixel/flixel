@@ -14,14 +14,14 @@ class PlayerShip extends Entity
 	private static inline var MULTIPLIER_EXPIRY_TIME:Float = 0.8; // amount of time it takes, in seconds, for a multiplier to expire.
 	private static inline var MULTIPLIER_MAX:Int = 20;
 	
-	public static var lives:Int;
-	public static var score:UInt;
-	public static var highScore:UInt;
-	public static var multiplier:Int;
+	public static var lives:Int = 0;
+	public static var score:UInt = 0;
+	public static var highScore:UInt = 0;
+	public static var multiplier:Int = 0;
 	public static var isGameOver:Bool = false;
 	
-	private static var multiplierTimeLeft:Float; // time until the current multiplier expires
-	private static var scoreForExtraLife:UInt; // score required to gain an extra life
+	private static var multiplierTimeLeft:Float = 0; // time until the current multiplier expires
+	private static var scoreForExtraLife:UInt = 0; // score required to gain an extra life
 	
 	public var bulletSpeed:Float = 660;
 	private var aim:FlxPoint;

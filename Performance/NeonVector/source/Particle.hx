@@ -38,7 +38,7 @@ class Particle extends Entity
 		max += 1;
 		
 		angle = 0;
-		radius = 0;                        
+		radius = 0;
 		kill();
 		loadGraphic("images/Glow.png");
 		width = height = 20;
