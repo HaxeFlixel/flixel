@@ -398,7 +398,7 @@ class PlayState extends FlxState
 	{
 		var v:Float = 0;
 		
-		#if android
+		#if mobile
 		var t:FlxTouch = FlxG.touches.getFirst();
 		
 		if (t!=null)
@@ -426,7 +426,7 @@ class PlayState extends FlxState
 		_sprPlayer.velocity.y = v;
 		v = _chaser.velocity.x;
 		
-		#if android
+		#if mobile
 		if (t!=null)
 		{
 			if (t.x < _sprPlayer.x)
@@ -445,7 +445,7 @@ class PlayState extends FlxState
 		
 		_sprPlayer.velocity.x = v;
 		
-		#if android
+		#if mobile
 		var t:FlxTouch = FlxG.touches.getFirst();
 		if (t != null && t.pressed)
 		{
