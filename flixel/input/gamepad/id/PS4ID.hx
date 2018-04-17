@@ -1,7 +1,7 @@
 package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepadGyro;
+//import flixel.input.gamepad.FlxGamepadGyro;
 
 /**
  * IDs for PlayStation 4 controllers
