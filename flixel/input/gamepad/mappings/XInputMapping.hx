@@ -108,6 +108,14 @@ class XInputMapping extends FlxGamepadMapping
 	}
 	#end
 	
+	#if xbox1
+	override public function isAxisFlipped(axisID:Int):Bool
+	{
+		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
+			axisID == XInputID.RIGHT_ANALOG_STICK.y;
+	}
+	#end
+	
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int 
 	{

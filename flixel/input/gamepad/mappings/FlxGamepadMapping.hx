@@ -3,6 +3,7 @@ package flixel.input.gamepad.mappings;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadAttachment;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.math.FlxQuaternion;
 
 #if flash
 import openfl.system.Capabilities;
@@ -15,6 +16,8 @@ class FlxGamepadMapping
 	
 	public var leftStick:FlxGamepadAnalogStick;
 	public var rightStick:FlxGamepadAnalogStick;
+	
+	public var gyro:FlxGamepadGyro;
 	
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	private var attachment(default, set):FlxGamepadAttachment = NONE;
@@ -69,15 +72,15 @@ class FlxGamepadMapping
 		return -1;
 	}
 	
-	public function isAxisForMotion(ID:FlxGamepadInputID):Bool
-	{
-		return false;
-	}
-	
 	/**
 	 * Whether this axis needs to be flipped
 	 */
 	public function isAxisFlipped(axisID:Int):Bool
+	{
+		return false;
+	}
+	
+	public function isAxisForMotion(ID:FlxGamepadInputID):Bool 
 	{
 		return false;
 	}

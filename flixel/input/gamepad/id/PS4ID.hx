@@ -1,6 +1,7 @@
 package flixel.input.gamepad.id;
 
 import flixel.input.gamepad.FlxGamepadAnalogStick;
+import flixel.input.gamepad.FlxGamepadGyro;
 
 /**
  * IDs for PlayStation 4 controllers
@@ -53,7 +54,6 @@ class PS4ID
 	public static inline var CIRCLE:Int = 7;
 	public static inline var SQUARE:Int = 8;
 	public static inline var TRIANGLE:Int = 9;
-	public static inline var SHARE:Int = 10;
 	public static inline var PS:Int = 11;
 	public static inline var OPTIONS:Int = 12;
 	public static inline var LEFT_STICK_CLICK:Int = 13;
@@ -61,10 +61,23 @@ class PS4ID
 	public static inline var L1:Int = 15;
 	public static inline var R1:Int = 16;
 	
-	public static inline var TOUCHPAD_CLICK:Int = 21;
+	#if ps4
+	public static inline var TOUCHPAD_CLICK:Int = 10;	//On an actual PS4, share is reserved by the system, and the touchpad click can serve more or less as a replacement for the "back/select" button
+	
+	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:32, down:33, left:34, right:35});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:36, down:37, left:38, right:39});
+
+	//public static var GYRO(default, null) = new FlxGamepadGyro = new FlxGamepadGyro(
+	
+	public static inline var SHARE:Int = 40;			//Not accessible on an actual PS4, just setting it to a dummy value
+	#else
+	public static inline var SHARE:Int = 10;			//This is only accessible when not using an actual Playstation 4, otherwise it's reserved by the system
 	
 	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:22, down:23, left:24, right:25});
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:26, down:27, left:28, right:29});
+		
+	public static inline var TOUCHPAD_CLICK:Int = 30;	//I don't believe this is normally accessible on PC, just setting it to a dummy value
+	#end
 	
 	public static inline var L2:Int = 4;
 	public static inline var R2:Int = 5;
