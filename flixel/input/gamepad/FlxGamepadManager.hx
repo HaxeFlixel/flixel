@@ -6,15 +6,19 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
-#if FLX_JOYSTICK_API
-import flixel.FlxG;
-import flixel.math.FlxPoint;
-import openfl.events.JoystickEvent;
-#elseif FLX_GAMEINPUT_API
+#if FLX_GAMEINPUT_API
+
 import flash.ui.GameInput;
 import flash.ui.GameInputDevice;
 import flash.events.GameInputEvent;
 using flixel.util.FlxStringUtil;
+
+#elseif FLX_JOYSTICK_API
+
+import flixel.FlxG;
+import flixel.math.FlxPoint;
+import openfl.events.JoystickEvent;
+
 #end
 
 class FlxGamepadManager implements IFlxInputManager
