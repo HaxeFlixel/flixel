@@ -251,6 +251,14 @@ class FlxAction implements IFlxDestroyable
 		}
 	}
 	
+	public function removeAllInputs(Destroy:Bool = true):Void
+	{
+		for (input in inputs)
+		{
+			removeInput(input, Destroy);
+		}
+	}
+	
 	public function removeInput(Input:FlxActionInput, Destroy:Bool = false):Void
 	{
 		if (Input == null) return;
