@@ -283,13 +283,13 @@ class FlxAction implements IFlxDestroyable
 		_x = null;
 		_y = null;
 		
-		if (_timestamp == FlxG.game.ticks)
+		if (_timestamp == @:privateAccess FlxG.game._total)
 		{
 			triggered = _check;
 			return _check;	//run no more than once per frame
 		}
 		
-		_timestamp = FlxG.game.ticks;
+		_timestamp = @:privateAccess FlxG.game._total;
 		_check = false;
 		
 		var len = inputs != null ? inputs.length : 0;
