@@ -306,7 +306,7 @@ class FlxActionInputAnalog extends FlxActionInput
 			case BOTH:   compareState(xMoved.current, trigger) && compareState(yMoved.current, trigger);
 			//in practice, "both pressed" and "both released" could be useful, whereas 
 			//"both just pressed" and "both just released" seem like very unlikely real-world events
-			case EITHER: 
+			case EITHER:
 				switch (trigger)
 				{
 					case PRESSED:
@@ -334,10 +334,10 @@ class FlxActionInputAnalog extends FlxActionInput
 		return returnVal;
 	}
 	
-	private function checkAxis(isX:Bool, state:FlxAnalogState):Bool
+	private function checkAxis(isX:Bool, state:FlxInputState):Bool
 	{
 		var input = isX ? xMoved : yMoved;
-		return compareState(cast state, input.current);
+		return compareState(state, input.current);
 	}
 	
 	private function updateVals(X:Float, Y:Float):Void
