@@ -39,8 +39,8 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			installHxcpp(target, openfl),
-			installOpenFL(target, openfl),
+			installOpenFL(openfl),
+			installHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
@@ -50,9 +50,26 @@ class RunTravis
 		]));
 	}
 
-	static function installHxcpp(target:Target, openfl:OpenFL):ExitCode
+	static function installOpenFL(openfl:OpenFL):ExitCode
 	{
-		if (target != Target.CPP && openfl == OLD)
+		return getResult(switch (openfl)
+		{
+			case NEW: [runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]), haxelibInstall("lime")];
+			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
+		});
+	}
+
+	static function haxelibInstall(lib:String, ?version:String):ExitCode
+	{
+		var args = ["install", lib];
+		if (version != null)
+			args.push(version);
+		return runCommand("haxelib", args);
+	}
+	
+	static function installHxcpp(target:Target):ExitCode
+	{
+		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
 		#if (haxe_ver >= "3.3")
@@ -66,33 +83,6 @@ class RunTravis
 		#else
 		return haxelibInstall("hxcpp", "3.3.49");
 		#end
-	}
-
-	static function installOpenFL(target:Target, openfl:OpenFL):ExitCode
-	{
-		return getResult(switch (openfl)
-		{
-			case NEW:
-				var exitCodes = [
-					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
-					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
-					haxelibInstall("format"),
-					haxelibRun(["lime", "rebuild", "tools"]),
-				];
-				if (target == CPP)
-					exitCodes.push(haxelibRun(["lime", "rebuild", "linux"]));
-				exitCodes;
-			case OLD:
-				[haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
-		});
-	}
-
-	static function haxelibInstall(lib:String, ?version:String):ExitCode
-	{
-		var args = ["install", lib];
-		if (version != null)
-			args.push(version);
-		return runCommand("haxelib", args);
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
@@ -110,7 +100,7 @@ class RunTravis
 		);
 
 		if (target == Target.FLASH || target == Target.HTML5)
-		{
+		{	
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
 			Sys.println("Building unit tests...\n");
