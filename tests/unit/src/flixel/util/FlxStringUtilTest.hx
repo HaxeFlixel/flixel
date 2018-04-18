@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flash.display.BitmapData;
+import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 import massive.munit.Assert;
 
 class FlxStringUtilTest
@@ -81,6 +82,7 @@ class FlxStringUtilTest
 		Assert.areEqual("110.20", FlxStringUtil.formatMoney(110.2));
 		Assert.areEqual("110", FlxStringUtil.formatMoney(110.2, false));
 		Assert.areEqual("100,000,000.00", FlxStringUtil.formatMoney(100000000));
+		Assert.areEqual("10,000,000,000.00", FlxStringUtil.formatMoney(10000000000)); // #2120
 		Assert.areEqual("100.000.000,00", FlxStringUtil.formatMoney(100000000, true, false));
 		Assert.areEqual("0.60", FlxStringUtil.formatMoney(0.6)); // #1754
 		Assert.areEqual("0", FlxStringUtil.formatMoney(0.6, false));
@@ -101,21 +103,23 @@ class FlxStringUtilTest
 		Assert.isFalse(FlxStringUtil.isNullOrEmpty("Hello World"));
 	}
 
-	@Test
-	function testGetDomainNonLocal()
+	/**
+	 * Returns an array of valid URLs for testing.
+	 *
+	 * @param	host	The host to insert into the generated URLs.
+	 */
+	function generateTestURLs(host:String):Array<String>
 	{
-		var domain = "xn--eckwd4c7c.test";
+		var urls = new Array<String>();
 
-		// Examples of valid URI components.
-		var schemes = ["http", "https", "fake.but-valid+scheme"];
-		var hosts = ['$domain', 'www.$domain', 'aaa.bbb.ccc.$domain'];
+		var protocols = ["http://", "fake.but-valid+scheme://", ""];
+		var authorities = ['$host', 'user@$host', '$host:1234'];
 		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
-		for (scheme in schemes) for (host in hosts) for (path in paths)
-		{
-			var uri = mixedCase('$scheme://$host$path');
-			Assert.areEqual(domain, FlxStringUtil.getDomain(uri));
-		}
+		for (protocol in protocols) for (authority in authorities) for (path in paths)
+			urls.push(mixedCase('$protocol$authority$path'));
+		
+		return urls;
 	}
 
 	/**
@@ -123,7 +127,7 @@ class FlxStringUtilTest
 	 */
 	function mixedCase(string:String):String
 	{
-		var result = "", upper = false;
+		var result = "", upper = (string.length % 2 == 0);
 		for (i in 0...string.length)
 		{
 			var char = string.charAt(i);
@@ -132,11 +136,13 @@ class FlxStringUtilTest
 		return result;
 	}
 
-	@Test
-	function testGetDomainLocal()
+	/**
+	 * Returns an array of local file paths for testing.
+	 * Includes Unix-style and Windows-style paths as well as a file:// URL.
+	 */
+	function generateLocalPaths():Array<String>
 	{
-		// Examples of some Unix-style and Windows-style local file paths.
-		var paths = [
+		return [
 			"/root/folder/file.extension",
 			"./folder/file.extension",
 			"~/.extension",
@@ -144,10 +150,74 @@ class FlxStringUtilTest
 			"D:\\folder\\file.extension:alternate_stream_name",
 			"D:file.extension",
 			"\\\\server\\folder\\file.extension",
-			"\\\\?\\D:\\folder\\file.extension"
+			"\\\\?\\D:\\folder\\file.extension",
+			"file:///D:/folder/file.extension"
 		];
+	}
+
+	@Test
+	function testGetHostValidURLs()
+	{
+		var hosts = ["123.45.67.89", "[1234:5678:9abc:def0::1]", "asdf.xn--eckwd4c7c.test"];
+		for (host in hosts) for (url in generateTestURLs(host))
+			Assert.areEqual(host, FlxStringUtil.getHost(url));
+
+		Assert.areEqual("abc.test", FlxStringUtil.getHost("http://%41%42%43.test")); 
+	}
+
+	@Test
+	function testGetHostInvalidURLs()
+	{
+		for (path in generateLocalPaths())
+			Assert.areEqual("", FlxStringUtil.getHost(path));
+	}
+
+	@Test
+	function testGetDomainNonLocal()
+	{
+		var domain = "xn--eckwd4c7c.test";
+		for (url in generateTestURLs('extra.data.$domain'))
+			Assert.areEqual(domain, FlxStringUtil.getDomain(url));
+	}
+
+	@Test
+	function testGetDomainLocal()
+	{
+		var hosts = ["localhost", "123.45.67.89", "[1234:5678:9abc:def0::1]"];
+		for (host in hosts) for (url in generateTestURLs(host))
+			Assert.areEqual("", FlxStringUtil.getDomain(url));
 		
-		for (path in paths)
-			Assert.areEqual("local", FlxStringUtil.getDomain(path));
+		for (path in generateLocalPaths())
+			Assert.areEqual("", FlxStringUtil.getDomain(path));
+	}
+
+	@Test
+	function testGetClassName()
+	{
+		function test(value:Dynamic, simple:Bool, expected:String)
+			Assert.areEqual(FlxStringUtil.getClassName(value, simple), expected);
+
+		var longName = "flixel.FlxSprite";
+		var shortName = "FlxSprite";
+
+		test(FlxSprite, false, longName);
+		test(FlxSprite, true, shortName);
+		test(new FlxSprite(), false, longName);
+		test(new FlxSprite(), true, shortName);
+	}
+
+	@Test
+	function testGetEnumName()
+	{
+		function test(value, simple:Bool, expected:String)
+			Assert.areEqual(FlxStringUtil.getEnumName(value, simple), expected);
+
+		var longName = "flixel.system.debug.FlxDebuggerLayout";
+		var shortName = "FlxDebuggerLayout";
+
+		test(FlxDebuggerLayout, false, longName);
+		test(FlxDebuggerLayout, true, shortName);
+		test(FlxDebuggerLayout.BIG, false, longName);
+		test(FlxDebuggerLayout.BIG, true, shortName);
 	}
 }

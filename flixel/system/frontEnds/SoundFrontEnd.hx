@@ -246,7 +246,7 @@ class SoundFrontEnd
 			}
 		}
 	}
-	
+	 
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
@@ -256,7 +256,7 @@ class SoundFrontEnd
 	{
 		if (music != null && (ForceDestroy || !music.persist))
 		{
-			music.destroy();
+			destroySound(music);
 			music = null;
 		}
 		
@@ -264,9 +264,16 @@ class SoundFrontEnd
 		{
 			if (sound != null && (ForceDestroy || !sound.persist))
 			{
-				sound.destroy();
+				destroySound(sound);
 			}
 		}
+	}
+
+	private function destroySound(sound:FlxSound):Void
+	{
+		defaultMusicGroup.remove(sound);
+		defaultSoundGroup.remove(sound);
+		sound.destroy();
 	}
 	
 	/**

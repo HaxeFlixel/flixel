@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -90,25 +91,26 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
 	 *
-	 * @param   X        The X-coordinate of the point in space.
-	 * @param   Y        The Y-coordinate of the point in space.
-	 * @param   radius   The radius where the thumb can move.
-	 *                   If `0`, half the background's width will be used as radius.
-	 * @param   ease     The duration of the easing. The value must be between `0` and `1`.
+	 * @param   X            The X-coordinate of the point in space.
+	 * @param   Y            The Y-coordinate of the point in space.
+	 * @param   Radius       The radius where the thumb can move. If 0, half the base's width will be used.
+	 * @param   Ease         Used to smoothly back thumb to center. Must be between 0 and (FlxG.updateFrameRate / 60).
+	 * @param   BaseGraphic  The graphic you want to display as base of the joystick.
+	 * @param   ThumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25)
+	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25, ?BaseGraphic:FlxGraphicAsset, ?ThumbGraphic:FlxGraphicAsset)
 	{
 		super();
 		
 		_radius = Radius;
-		_ease = Ease;
+		_ease = FlxMath.bound(Ease, 0, 60 / FlxG.updateFramerate);
 		
 		_analogs.push(this);
 		
 		_point = FlxPoint.get();
 		
-		createBase();
-		createThumb();
+		createBase(BaseGraphic);
+		createThumb(ThumbGraphic);
 		
 		x = X;
 		y = Y;
@@ -119,14 +121,16 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Creates the background of the analog stick.
-	 * Override this to customize the background.
 	 */
-	private function createBase():Void
+	private function createBase(?Graphic:FlxGraphicAsset):Void
 	{
-		base = new FlxSprite(x, y);
-		base.frames = FlxAssets.getVirtualInputFrames();
-		base.animation.frameName = "base";
-		base.resetSizeFromFrame();
+		base = new FlxSprite(0, 0, Graphic);
+		if (Graphic == null)
+		{
+			base.frames = FlxAssets.getVirtualInputFrames();
+			base.animation.frameName = "base";
+			base.resetSizeFromFrame();
+		}
 		base.x += -base.width * 0.5;
 		base.y += -base.height * 0.5;
 		base.scrollFactor.set();
@@ -141,14 +145,16 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	/**
 	 * Creates the thumb of the analog stick.
-	 * Override this to customize the thumb.
 	 */
-	private function createThumb():Void 
+	private function createThumb(?Graphic:FlxGraphicAsset):Void 
 	{
-		thumb = new FlxSprite(x, y);
-		thumb.frames = FlxAssets.getVirtualInputFrames();
-		thumb.animation.frameName = "thumb";
-		thumb.resetSizeFromFrame();
+		thumb = new FlxSprite(0, 0, Graphic);
+		if (Graphic == null)
+		{
+			thumb.frames = FlxAssets.getVirtualInputFrames();
+			thumb.animation.frameName = "thumb";
+			thumb.resetSizeFromFrame();
+		}
 		thumb.scrollFactor.set();
 		thumb.solid = false;
 		
@@ -162,12 +168,11 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Creates the touch zone. It's based on the size of the background.
 	 * The thumb will react when the mouse is in the zone.
-	 * Override this to customize the zone.
 	 */
 	private function createZone():Void
 	{
-		if (base != null)
-			_radius = base.width / 2;
+		if (base != null && _radius == 0)
+			_radius = base.width * 0.5;
 		
 		_zone.set(x - _radius, y - _radius, 2 * _radius, 2 * _radius);
 	}
@@ -202,6 +207,15 @@ class FlxAnalog extends FlxSpriteGroup
 	{
 		var offAll:Bool = true;
 		
+		#if FLX_MOUSE
+		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		
+		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
+		{
+			offAll = false;
+		}
+		#end
+		
 		// There is no reason to get into the loop if their is already a pointer on the analog
 		#if FLX_TOUCH
 		if (_currentTouch != null)
@@ -211,9 +225,9 @@ class FlxAnalog extends FlxSpriteGroup
 		else
 		{
 			for (touch in FlxG.touches.list)
-			{		
+			{
 				var touchInserted:Bool = false;
-					
+				
 				for (analog in _analogs)
 				{
 					// Check whether the pointer is already taken by another analog.
@@ -237,22 +251,16 @@ class FlxAnalog extends FlxSpriteGroup
 				break;
 			}
 		}
-		#elseif !FLX_NO_MOUSE
-		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
-		
-		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
-		{
-			offAll = false;
-		}
 		#end
 		
 		if ((status == HIGHLIGHT || status == NORMAL) && _amount != 0)
 		{
-			_amount *= _ease;
+			_amount -= _amount * _ease * FlxG.updateFramerate / 60;
 			
 			if (Math.abs(_amount) < 0.1) 
 			{
 				_amount = 0;
+				_direction = 0;
 			}
 		}
 		
@@ -297,7 +305,7 @@ class FlxAnalog extends FlxSpriteGroup
 					_currentTouch = Touch;
 				}
 				#end
-				status = PRESSED;	
+				status = PRESSED;
 				
 				if (JustPressed)
 				{
@@ -327,8 +335,8 @@ class FlxAnalog extends FlxSpriteGroup
 					_direction = Math.atan2(dy, dx);
 					_amount = Math.min(_radius, dist) / _radius;
 					
-					acceleration.x = Math.cos(_direction) * _amount * _radius;
-					acceleration.y = Math.sin(_direction) * _amount * _radius;
+					acceleration.x = Math.cos(_direction) * _amount;
+					acceleration.y = Math.sin(_direction) * _amount;
 				}
 			}
 			else if (JustReleased && status == PRESSED)
@@ -366,7 +374,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public function getAngle():Float
 	{
-		return Math.atan2(acceleration.y, acceleration.x) * FlxAngle.TO_DEG;
+		return _direction * FlxAngle.TO_DEG;
 	}
 	
 	/**
@@ -386,13 +394,15 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justPressed():Bool
 	{
+		#if FLX_MOUSE
+		return FlxG.mouse.justPressed && status == PRESSED;
+		#end
+
 		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justPressed && status == PRESSED;
 		}
-		#elseif !FLX_NO_MOUSE
-		return FlxG.mouse.justPressed && status == PRESSED;
 		#end
 		
 		return false;
@@ -405,15 +415,17 @@ class FlxAnalog extends FlxSpriteGroup
 	
 	private function get_justReleased():Bool
 	{
+		#if FLX_MOUSE
+		return FlxG.mouse.justReleased && status == HIGHLIGHT;
+		#end
+
 		#if FLX_TOUCH
 		if (_currentTouch != null)
 		{
 			return _currentTouch.justReleased && status == HIGHLIGHT;
 		}
-		#elseif !FLX_NO_MOUSE
-		return FlxG.mouse.justReleased && status == HIGHLIGHT;
 		#end
-		
+
 		return false;
 	}
 	

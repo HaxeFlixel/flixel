@@ -17,7 +17,6 @@ import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
-import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 
@@ -357,8 +356,10 @@ class Interaction extends Window
 				for (i in 0..._customCursor.numChildren)
 				{
 					var sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == activeTool.name;
+					sprite.visible = sprite.name == activeTool.getName();
 				}
+				if (FlxG.mouse.visible)
+					FlxG.mouse.visible = false;
 				#end
 			}
 			else

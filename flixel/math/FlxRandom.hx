@@ -335,7 +335,7 @@ class FlxRandom
 	public function shuffle<T>(array:Array<T>):Void
 	{
 		var maxValidIndex = array.length - 1;
-		for (i in 0...array.length)
+		for (i in 0...maxValidIndex)
 		{
 			var j = int(i, maxValidIndex);
 			var tmp = array[i];

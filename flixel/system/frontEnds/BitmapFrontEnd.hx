@@ -290,7 +290,10 @@ class BitmapFrontEnd
 	public function remove(graphic:FlxGraphic):Void
 	{
 		if (graphic != null)
-			removeByKey(graphic.key);
+		{
+			removeKey(graphic.key);
+			graphic.destroy();
+		}
 	}
 	
 	/**
@@ -299,12 +302,13 @@ class BitmapFrontEnd
 	 */
 	public function removeByKey(key:String):Void
 	{
-		if (key != null && _cache.exists(key))
+		if (key != null)
 		{
-			var obj:FlxGraphic = _cache.get(key);
-			Assets.cache.removeBitmapData(key);
-			_cache.remove(key);
-			obj.destroy();
+			var obj = get(key);
+			removeKey(key);
+			
+			if (obj != null)
+				obj.destroy();
 		}
 	}
 	
@@ -321,15 +325,28 @@ class BitmapFrontEnd
 	public function clearCache():Void
 	{
 		if (_cache == null)
+		{
 			_cache = new Map();
+			return;
+		}
 		
 		for (key in _cache.keys())
 		{
-			var obj = _cache.get(key);
+			var obj = get(key);
 			if (obj != null && !obj.persist && obj.useCount <= 0)
 			{
-				removeByKey(key);
+				removeKey(key);
+				obj.destroy();
 			}
+		}
+	}
+	
+	private inline function removeKey(key:String):Void
+	{
+		if (key != null)
+		{
+			Assets.cache.removeBitmapData(key);
+			_cache.remove(key);
 		}
 	}
 	
@@ -339,15 +356,18 @@ class BitmapFrontEnd
 	public function reset():Void
 	{
 		if (_cache == null)
+		{
 			_cache = new Map();
+			return;
+		}
 		
 		for (key in _cache.keys())
 		{
-			var obj = _cache.get(key);
+			var obj = get(key);
+			removeKey(key);
+			
 			if (obj != null)
-			{
-				removeByKey(key);
-			}
+				obj.destroy();
 		}
 	}
 	

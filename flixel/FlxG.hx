@@ -94,7 +94,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 3, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 4, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -354,7 +354,7 @@ class FlxG
 	}
 
 	/**
-	 * Call this function to see if one `FlxObject` overlaps another.
+	 * Call this function to see if one `FlxObject` overlaps another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a `FlxGroup` (or even bundling groups together!).
@@ -414,7 +414,7 @@ class FlxG
 	}
 	
 	/**
-	 * Call this function to see if one `FlxObject` collides with another.
+	 * Call this function to see if one `FlxObject` collides with another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).

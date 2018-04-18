@@ -55,14 +55,6 @@ class HTML5FrontEnd
 		{
 			return WINDOWS;
 		}
-		else if (userAgentContains("Mac") && !userAgentContains("iPad"))
-		{
-			return MAC;
-		}
-		else if (userAgentContains("Linux") && !userAgentContains("Android"))
-		{
-			return LINUX;
-		}
 		else if (userAgentContains("IEMobile"))
 		{
 			return WINDOWS_PHONE;
@@ -70,6 +62,10 @@ class HTML5FrontEnd
 		else if (userAgentContains("Android"))
 		{
 			return ANDROID;
+		}
+		else if (userAgentContains("Linux"))
+		{
+			return LINUX;
 		}
 		else if (userAgentContains("BlackBerry"))
 		{
@@ -86,6 +82,10 @@ class HTML5FrontEnd
 		else if (userAgentContains("iPod"))
 		{
 			return IOS(IPOD);
+		}
+		else if (userAgentContains("Mac"))
+		{
+			return MAC;
 		}
 		else return FlxPlatform.UNKNOWN;
 	}

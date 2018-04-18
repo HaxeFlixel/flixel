@@ -86,4 +86,12 @@ class FlxRandomTest extends FlxTest
 		var keys = [for (key in seen.keys()) key];
 		assertThat(keys, containsInAnyOrder("1,2,3", "1,3,2", "2,1,3", "2,3,1", "3,1,2", "3,2,1"));
 	}
+
+	@Test
+	function testShuffleDeterminism()
+	{
+		var a = [for (i in 0...10) i];
+		random.shuffle(a);
+		FlxAssert.arraysEqual([0, 1, 6, 9, 3, 5, 8, 2, 7, 4], a);
+	}
 }

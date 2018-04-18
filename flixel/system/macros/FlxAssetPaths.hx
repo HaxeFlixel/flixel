@@ -47,8 +47,8 @@ class FlxAssetPaths
 				
 				if (filterExtensions != null)
 				{
-					var extension:String = name.split(".")[1]; // get the string after the dot
-					if (filterExtensions.indexOf(extension) == -1)
+					var extension:String = name.split(".").last(); // get the last string with a dot before it
+					if (!filterExtensions.contains(extension))
 						continue;
 				}
 				

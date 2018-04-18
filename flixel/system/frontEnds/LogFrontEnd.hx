@@ -71,7 +71,7 @@ class LogFrontEnd
 		
 		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
-			#if !FLX_NO_SOUND_SYSTEM
+			#if FLX_SOUND_SYSTEM
 			if (Style.errorSound != null)
 			{
 				var sound = FlxAssets.getSound(Style.errorSound); 

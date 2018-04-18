@@ -68,11 +68,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public var pressed(get, never):Bool;
 	/**
-	 * Check to see if the mouse was just pressed.
+	 * Check to see if the left mouse button has just been pressed.
 	 */
 	public var justPressed(get, never):Bool;
 	/**
-	 * Check to see if the mouse was just released.
+	 * Check to see if the left mouse button has just been released.
 	 */
 	public var justReleased(get, never):Bool;
 	/**
@@ -83,7 +83,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	#if FLX_MOUSE_ADVANCED
 	/**
-	 * Check to see if the right mouse button is pressed.
+	 * Check to see if the right mouse button is currently pressed.
 	 */
 	public var pressedRight(get, never):Bool;
 	/**
@@ -101,15 +101,15 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var justPressedTimeInTicksRight(get, never):Int;
 
 	/**
-	 * Check to see if the middle mouse button is pressed.
+	 * Check to see if the middle mouse button is currently pressed.
 	 */
 	public var pressedMiddle(get, never):Bool;
 	/**
-	 * Check to see if the middle mouse button was just pressed.
+	 * Check to see if the middle mouse button has just been pressed.
 	 */
 	public var justPressedMiddle(get, never):Bool;
 	/**
-	 * Check to see if the middle mouse button was just released.
+	 * Check to see if the middle mouse button has just been released.
 	 */
 	public var justReleasedMiddle(get, never):Bool;
 	/**

@@ -1,5 +1,6 @@
 package flixel.input.mouse;
 
+import haxe.ds.ArraySort;
 import flash.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -69,7 +70,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
 	 * @param   OnMouseOut      Callback when mouse moves out of this object.
 	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
-	 * @param   MouseChildren   If true, other objects overlaped by this will still receive mouse events.
+	 * @param   MouseChildren   If true, other objects overlapped by this will still receive mouse events.
 	 * @param   MouseEnabled    If true, this object will receive mouse events.
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
@@ -87,12 +88,27 @@ class FlxMouseEventManager extends FlxBasic
 			newReg.sprite = cast Object;
 		}
 		
-		_registeredObjects.unshift(cast newReg);
+		if (!MouseChildren)
+		{
+			_registeredObjects.unshift(cast newReg);
+		}
+		
+		else
+		{
+			// place mouseChildren=true objects immediately after =false ones
+			var index = 0;
+			
+			while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
+				index++;
+			
+			_registeredObjects.insert(index, cast newReg);
+		}
+		
 		return Object;
 	}
 	
 	/**
-	 * Removes a registerd object from the registry.
+	 * Removes a registered object from the registry.
 	 */
 	public static function remove<T:FlxObject>(Object:T):T
 	{
@@ -100,12 +116,7 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			if (reg.object == Object)
 			{
-				reg.object = null;
-				reg.sprite = null;
-				reg.onMouseDown = null;
-				reg.onMouseUp = null;
-				reg.onMouseOver = null;
-				reg.onMouseOut = null;
+				reg.destroy();
 				_registeredObjects.remove(reg);
 			}
 		}
@@ -121,10 +132,11 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			for (reg in _registeredObjects)
 			{
-				remove(reg.object);
+				reg.destroy();
 			}
 		}
-		_registeredObjects = [];
+		
+		_registeredObjects.splice(0, _registeredObjects.length);
 		_mouseOverObjects = [];
 		_mouseDownObjects = [];
 		_mouseClickedObjects = [];
@@ -145,6 +157,8 @@ class FlxMouseEventManager extends FlxBasic
 		
 		orderedObjects.reverse();
 		_registeredObjects = orderedObjects;
+		
+		ArraySort.sort(_registeredObjects, sortByMouseChildren); // stable sort preserves the order of registers with the same mouseChildren status
 	}
 	
 	/**
@@ -322,6 +336,22 @@ class FlxMouseEventManager extends FlxBasic
 		if (reg != null)
 		{
 			reg.mouseChildren = MouseChildren;
+			_registeredObjects.remove(cast reg);
+			
+			if (!MouseChildren)
+			{
+				_registeredObjects.unshift(cast reg);
+			}
+			
+			else
+			{
+				var index = 0;
+				
+				while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
+					index++;
+				
+				_registeredObjects.insert(index, cast reg);
+			}
 		}
 	}
 	
@@ -395,6 +425,21 @@ class FlxMouseEventManager extends FlxBasic
 		return null;
 	}
 	
+	private static function sortByMouseChildren(reg1:ObjectMouseData<FlxObject>, reg2:ObjectMouseData<FlxObject>):Int
+	{
+		if (reg1.mouseChildren == reg2.mouseChildren)
+		{
+			return 0;
+		}
+		
+		if (!reg1.mouseChildren)
+		{
+			return -1;
+		}
+		
+		return 1;
+	}
+	
 	public function new()
 	{
 		super();
@@ -415,6 +460,7 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		clearRegistry();
 		_point = FlxDestroyUtil.put(_point);
+		FlxG.signals.stateSwitched.remove(removeAll);
 		super.destroy();
 	}
 	
@@ -426,13 +472,6 @@ class FlxMouseEventManager extends FlxBasic
 		
 		for (reg in _registeredObjects)
 		{
-			// Sprite destroyed check.
-			if (reg.object.acceleration == null)
-			{
-				remove(reg.object);
-				continue;
-			}
-			
 			if (!reg.object.alive || !reg.object.exists || !reg.object.visible || !reg.mouseEnabled)
 			{
 				continue;
@@ -449,18 +488,6 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		
-		// MouseOver - Look for new objects with mouse over.
-		for (current in currentOverObjects)
-		{
-			if (current.onMouseOver != null)
-			{
-				if (current.object.exists && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
-				{
-					current.onMouseOver(current.object);
-				}
-			}
-		}
-		
 		// MouseOut - Look for objects that lost mouse over.
 		for (over in _mouseOverObjects)
 		{
@@ -471,6 +498,18 @@ class FlxMouseEventManager extends FlxBasic
 				if (!over.object.exists || !over.object.visible || getRegister(over.object, currentOverObjects) == null)
 				{
 					over.onMouseOut(over.object);
+				}
+			}
+		}
+		
+		// MouseOver - Look for new objects with mouse over.
+		for (current in currentOverObjects)
+		{
+			if (current.onMouseOver != null)
+			{
+				if (current.object.exists && current.object.visible && getRegister(current.object, _mouseOverObjects) == null)
+				{
+					current.onMouseOver(current.object);
 				}
 			}
 		}
@@ -550,7 +589,7 @@ class FlxMouseEventManager extends FlxBasic
 			
 			for (down in _mouseDownObjects)
 			{
-				if (down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
+				if (down.object != null && down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
 				{
 					if (down.onMouseClick != null)
 					{
@@ -598,7 +637,6 @@ class FlxMouseEventManager extends FlxBasic
 	private function clearRegistry():Void
 	{
 		_mouseOverObjects = null;
-		
 		_mouseDownObjects = null;
 		_mouseClickedObjects = null;
 		_registeredObjects = FlxDestroyUtil.destroyArray(_registeredObjects);

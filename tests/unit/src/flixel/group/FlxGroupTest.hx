@@ -163,7 +163,8 @@ class FlxGroupTest extends FlxTest
 		group.remove(group.members[0], true);
 		Assert.areEqual(0, group.length);
 	}
-
+	
+	@Test
 	function testRemoveNoSplice()
 	{
 		var group = new FlxGroup();
@@ -173,5 +174,67 @@ class FlxGroupTest extends FlxTest
 		group.remove(group.members[0], false);
 		Assert.areEqual(1, group.length);
 		Assert.isNull(group.members[0]);
+	}
+	
+	@Test // #2111
+	function testAddedSignal()
+	{
+		var group = new FlxGroup();
+		Assert.isNotNull(group.memberAdded);
+		
+		var success = false;
+		var child = new FlxBasic();
+		
+		group.memberAdded.add(function (basic:FlxBasic)
+		{
+			success = child == basic;
+		});
+		
+		group.add(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testAddedSignal has failed.");
+		}
+		
+		child = new FlxBasic();
+		group.add(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testAddedSignal has failed.");
+		}
+	}
+	
+	@Test // #2111
+	function testRemovedSignal()
+	{
+		var group = new FlxGroup();
+		Assert.isNotNull(group.memberRemoved);
+		
+		var success = false;
+		var child = new FlxBasic();
+		group.add(child);
+		
+		group.memberRemoved.add(function (basic:FlxBasic)
+		{
+			success = child == basic;
+		});
+		
+		group.remove(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testRemovedSignal has failed.");
+		}
+		
+		child = new FlxBasic();
+		group.add(child);
+		group.remove(child);
+		
+		if (!success)
+		{
+			Assert.fail("FlxGroupTest#testRemovedSignal has failed.");
+		}
 	}
 }

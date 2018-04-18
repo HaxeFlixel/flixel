@@ -54,7 +54,7 @@ class RunTravis
 			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
 		#else
-		return runCommand("haxelib", ["install", "hxcpp"]);
+		return runCommand("haxelib", ["install", "hxcpp", "3.3.49"]);
 		#end
 	}
 	
@@ -65,6 +65,9 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
+		if (target == Target.FLASH)
+			return ExitCode.SUCCESS;
+
 		runInDir("unit", function()
 			return haxelibRun(["munit", "gen"])
 		);
