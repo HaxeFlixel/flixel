@@ -1,7 +1,6 @@
 package flixel.input.actions;
 
 import flixel.input.IFlxInputManager;
-import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 
 #if (cpp && steamwrap && haxe_ver > "3.2")

@@ -84,7 +84,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	
 	public function toString():String
 	{
-		return "FlxActionInputDigitalGamepad{inputID:" + inputID + ",trigger:" + trigger + ",deviceID:" + deviceID + ",device:"+device+",type:"+type+"}";
+		return "FlxActionInputDigitalGamepad{inputID:" + inputID + ",trigger:" + trigger + ",deviceID:" + deviceID + ",device:" + device + ",type:" + type + "}";
 	}
 	
 	override public function update():Void 

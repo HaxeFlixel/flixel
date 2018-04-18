@@ -4,7 +4,6 @@ import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 #if (cpp && steamwrap && haxe_ver > "3.2")
-import steamwrap.api.Controller;
 import steamwrap.api.Controller.EControllerActionOrigin;
 #end
 

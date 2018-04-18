@@ -686,8 +686,8 @@ class ActionSetRegister implements IFlxDestroyable
 				//do nothing
 		}
 	}
-	/**********PRIVATE*********/
 	
+	/**********PRIVATE*********/
 	private function updateSteamOrigins(sets:Array<FlxActionSet>):Array<FlxAction>
 	{
 		#if (cpp && steamwrap && haxe_ver > "3.2")
