@@ -252,11 +252,7 @@ class FlxSteamController
 	#else
 	private static function getDigitalActionData(controller:Int, action:Int):DigitalActionData
 	{
-		return
-		{
-			bActive:false,
-			bState:false
-		};
+		return new DigitalActionData(false, false);
 	}
 	#end
 	
@@ -281,10 +277,14 @@ class FlxSteamController
 	}
 }
 
-typedef DigitalActionData =
-{
-	bActive:Bool,
-	bState:Bool
+class DigitalActionData {
+	public var bActive:Bool;
+	public var bState:Bool;
+	
+	public function new(bActive:Bool, bState:Bool) {
+		this.bActive = bActive;
+		this.bState = bState;
+	}
 }
 
 @:allow(flixel.input.actions)
