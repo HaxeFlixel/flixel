@@ -39,7 +39,7 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			installOpenFL(openfl),
+			installOpenFL(target, openfl),
 			installHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
@@ -50,12 +50,22 @@ class RunTravis
 		]));
 	}
 
-	static function installOpenFL(openfl:OpenFL):ExitCode
+	static function installOpenFL(target:Target, openfl:OpenFL):ExitCode
 	{
 		return getResult(switch (openfl)
 		{
-			case NEW: [runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]), haxelibInstall("lime")];
-			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
+			case NEW:
+				var exitCodes = [
+					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
+					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
+					runCommand("haxelib", ["run", "lime", "rebuild", "tools"]),
+				];
+				if (target == CPP) {
+					exitCodes.push(runCommand("haxelib", ["run", "lime", "rebuild", "linux"]));
+				}
+				exitCodes;
+			case OLD:
+				[haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
 		});
 	}
 
