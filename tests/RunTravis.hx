@@ -52,7 +52,7 @@ class RunTravis
 
 	static function installHxcpp(target:Target, openfl:OpenFL):ExitCode
 	{
-		if (target != Target.CPP || openfl == OLD)
+		if (target != Target.CPP && openfl == OLD)
 			return ExitCode.SUCCESS;
 
 		#if (haxe_ver >= "3.3")
@@ -79,9 +79,8 @@ class RunTravis
 					haxelibInstall("format"),
 					haxelibRun(["lime", "rebuild", "tools"]),
 				];
-				if (target == CPP) {
+				if (target == CPP)
 					exitCodes.push(haxelibRun(["lime", "rebuild", "linux"]));
-				}
 				exitCodes;
 			case OLD:
 				[haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
@@ -111,7 +110,7 @@ class RunTravis
 		);
 
 		if (target == Target.FLASH || target == Target.HTML5)
-		{	
+		{
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
 			Sys.println("Building unit tests...\n");
