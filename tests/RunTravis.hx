@@ -39,7 +39,7 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			installHxcpp(target),
+			installHxcpp(target, openfl),
 			installOpenFL(target, openfl),
 			runUnitTests(target),
 			buildCoverageTests(target),
@@ -50,8 +50,11 @@ class RunTravis
 		]));
 	}
 
-	static function installHxcpp(target:Target):ExitCode
+	static function installHxcpp(target:Target, openfl:OpenFL):ExitCode
 	{
+		if (target != Target.CPP || openfl == OLD)
+			return ExitCode.SUCCESS;
+
 		#if (haxe_ver >= "3.3")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
