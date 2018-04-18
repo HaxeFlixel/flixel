@@ -240,7 +240,7 @@ class FlxActionSetTest extends FlxTest
 		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
-	#if (cpp && steamwrap && haxe_ver > "3.2")
+	#if FLX_STEAMWRAP
 	@Test
 	function testAttachSteamController()
 	{
@@ -341,7 +341,7 @@ class FlxActionSetTest extends FlxTest
 		set.update();
 	}
 	
-	#if (cpp && steamwrap && haxe_ver > "3.2")
+	#if FLX_STEAMWRAP
 	private function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
 	{
 		step();

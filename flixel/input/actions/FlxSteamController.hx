@@ -3,7 +3,7 @@ package flixel.input.actions;
 import flixel.input.IFlxInputManager;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 
-#if (cpp && steamwrap && haxe_ver > "3.2")
+#if FLX_STEAMWRAP
 import steamwrap.api.Steam;
 import steamwrap.api.Controller.ControllerDigitalActionData;
 import steamwrap.api.Controller.ControllerAnalogActionData;
@@ -52,7 +52,7 @@ class FlxSteamController
 	
 	private static inline function get_MAX_CONTROLLERS():Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 			if (Steam.controllers == null) return 0;
 			return Steam.controllers.MAX_CONTROLLERS;
 		#else
@@ -62,7 +62,7 @@ class FlxSteamController
 	
 	private static inline function get_MAX_ORIGINS():Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 			if (Steam.controllers == null) return 0;
 			return Steam.controllers.MAX_ORIGINS;
 		#else
@@ -72,7 +72,7 @@ class FlxSteamController
 	
 	private static function clear()
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (controllers == null) return;
 		for (i in 0...controllers.length)
 		{
@@ -85,7 +85,7 @@ class FlxSteamController
 	private static function init()
 	{
 		controllers = [];
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		
 		if (Steam.controllers == null) return;
 		
@@ -116,7 +116,7 @@ class FlxSteamController
 	
 	private static function getActionSetHandle(name:String):Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
 		return Steam.controllers.getActionSetHandle(name);
 		#end
@@ -125,7 +125,7 @@ class FlxSteamController
 	
 	private static function getCurrentActionSet(SteamControllerHandle:Int):Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (controllers == null) return -1;
 		if (SteamControllerHandle >= 0 && SteamControllerHandle <= controllers.length)
 		{
@@ -137,7 +137,7 @@ class FlxSteamController
 	
 	private static function activateActionSet(SteamControllerHandle:Int, ActionSetHandle:Int)
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return;
 		if (SteamControllerHandle == FlxInputDeviceID.NONE) return;
 		if (SteamControllerHandle == FlxInputDeviceID.ALL)
@@ -170,7 +170,7 @@ class FlxSteamController
 	
 	private static function getFirstActiveHandle():Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (controllers == null) return -1;
 		for (i in 0...controllers.length)
 		{
@@ -185,7 +185,7 @@ class FlxSteamController
 	
 	private static function getConnectedControllers():Array<Int>
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return [];
 		var arr = Steam.controllers.getConnectedControllers();
 		
@@ -214,7 +214,7 @@ class FlxSteamController
 		#end
 	}
 	
-	#if (cpp && steamwrap && haxe_ver > "3.2")
+	#if FLX_STEAMWRAP
 	private static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
 	{
 		if (Steam.controllers == null) return data;
@@ -235,7 +235,7 @@ class FlxSteamController
 	}
 	#end
 	
-	#if (cpp && steamwrap && haxe_ver > "3.2")
+	#if FLX_STEAMWRAP
 	private static function getDigitalActionData(controller:Int, action:Int):ControllerDigitalActionData 
 	{
 		if (Steam.controllers == null) return 0;
@@ -258,7 +258,7 @@ class FlxSteamController
 	
 	private static inline function getAnalogActionHandle(name:String):Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
 		return Steam.controllers.getAnalogActionHandle(name);
 		#else
@@ -268,7 +268,7 @@ class FlxSteamController
 	
 	private static inline function getDigitalActionHandle(name:String):Int
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
 		return Steam.controllers.getDigitalActionHandle(name);
 		#else
@@ -315,7 +315,7 @@ class FlxSteamUpdater implements IFlxInputManager
 	//run the steam API every frame if steam is detected
 	private function update():Void
 	{
-		#if (cpp && steamwrap && haxe_ver > "3.2")
+		#if FLX_STEAMWRAP
 		Steam.onEnterFrame();
 		
 		controllerTime += FlxG.elapsed;
