@@ -59,6 +59,7 @@ class RunTravis
 					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
 					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
 					runCommand("haxelib", ["run", "lime", "rebuild", "tools"]),
+					runCommand("haxelib", ["install", "format"]),
 				];
 				if (target == CPP) {
 					exitCodes.push(runCommand("haxelib", ["run", "lime", "rebuild", "linux"]));
