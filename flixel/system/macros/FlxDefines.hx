@@ -18,7 +18,6 @@ private enum UserDefines
 	FLX_NO_SOUND_TRAY;
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
-	FLX_NO_STEAMWRAP;
 	FLX_RECORD;
 	FLX_UNIT_TEST;
 	/* additional rendering define */
@@ -147,7 +146,6 @@ class FlxDefines
 		defineInversion(FLX_NO_SOUND_SYSTEM, FLX_SOUND_SYSTEM);
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
-		defineInversion(FLX_NO_STEAMWRAP, FLX_STEAMWRAP);
 	}
 
 	private static function defineHelperDefines()
