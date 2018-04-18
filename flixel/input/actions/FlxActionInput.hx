@@ -71,10 +71,10 @@ class FlxActionInput implements IFlxDestroyable
 	{
 		return switch (condition)
 		{
-			case PRESSED:       b == PRESSED  || b == JUST_PRESSED;
-			case RELEASED:      b == RELEASED || b == JUST_RELEASED;
-			case JUST_PRESSED:  b == JUST_PRESSED;
-			case JUST_RELEASED: b == JUST_RELEASED;
+			case PRESSED:       state == PRESSED  || state == JUST_PRESSED;
+			case RELEASED:      state == RELEASED || state == JUST_RELEASED;
+			case JUST_PRESSED:  state == JUST_PRESSED;
+			case JUST_RELEASED: state == JUST_RELEASED;
 			default:            false;
 		}
 	}
