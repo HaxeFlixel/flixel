@@ -56,9 +56,7 @@ class RunTravis
 		{
 			case NEW: [
 					runCommand("git", ["clone", "https://github.com/openfl/openfl"]),
-					runCommand("cd", ["openfl"]),
-					runCommand("git", ["checkout", "d49569e7fecdd160654617d23a4c0d9a420567d1"]),
-					runCommand("cd", [".."]),
+					runCommandInDir("openfl", "git", ["checkout", "d49569e7fecdd160654617d23a4c0d9a420567d1"]),
 					runCommand("haxelib", ["dev", "openfl", "openfl"]),
 					haxelibInstall("lime")
 				];
