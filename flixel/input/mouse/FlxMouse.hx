@@ -512,7 +512,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	private inline function get_pressed():Bool                       return _leftButton.pressed;
 	private inline function get_justPressed():Bool                   return _leftButton.justPressed;
 	private inline function get_justReleased():Bool                  return _leftButton.justReleased;
-	private inline function get_justPressedTimeInTicks():Int         return _leftButton.justPressedTimeInTicks;
+	private inline function get_justPressedTimeInTicks():Float       return _leftButton.justPressedTimeInTicks;
 
 	#if FLX_MOUSE_ADVANCED
 	private inline function get_pressedRight():Bool       return _rightButton.pressed;

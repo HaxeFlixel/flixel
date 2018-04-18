@@ -664,7 +664,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 }
 
-private class ObjectMouseData<T:FlxObject>
+private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 {
 	public var object:FlxObject;
 	public var onMouseDown:T->Void;
