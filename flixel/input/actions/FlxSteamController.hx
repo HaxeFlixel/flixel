@@ -277,11 +277,13 @@ class FlxSteamController
 	}
 }
 
-class DigitalActionData {
+class DigitalActionData
+{
 	public var bActive:Bool;
 	public var bState:Bool;
 	
-	public function new(bActive:Bool, bState:Bool) {
+	public function new(bActive:Bool, bState:Bool)
+	{
 		this.bActive = bActive;
 		this.bState = bState;
 	}
