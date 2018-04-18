@@ -180,7 +180,7 @@ class FlxAction implements IFlxDestroyable
 	private var _y:Null<Float> = null;
 	
 	private var _timestamp:Int = 0;
-	private var _check:Bool = false;
+	private var _checked:Bool = false;
 	
 	/**
 	 * Whether the steam controller inputs for this action have changed since the last time origins were polled. Always false if steam isn't active
@@ -277,12 +277,12 @@ class FlxAction implements IFlxDestroyable
 		
 		if (_timestamp == FlxG.game.ticks)
 		{
-			triggered = _check;
-			return _check;	//run no more than once per frame
+			triggered = _checked;
+			return _checked;	//run no more than once per frame
 		}
 		
 		_timestamp = FlxG.game.ticks;
-		_check = false;
+		_checked = false;
 		
 		var len = inputs != null ? inputs.length : 0;
 		for (i in 0...len)
@@ -300,12 +300,12 @@ class FlxAction implements IFlxDestroyable
 			
 			if (input.check(this))
 			{
-				_check = true;
+				_checked = true;
 			}
 		}
 		
-		triggered = _check;
-		return _check;
+		triggered = _checked;
+		return _checked;
 	}
 	
 	/**
