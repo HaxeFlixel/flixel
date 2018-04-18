@@ -52,9 +52,6 @@ class RunTravis
 
 	static function installHxcpp(target:Target):ExitCode
 	{
-		if (target != Target.CPP)
-			return ExitCode.SUCCESS;
-
 		#if (haxe_ver >= "3.3")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
@@ -77,10 +74,10 @@ class RunTravis
 					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
 					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
 					haxelibInstall("format"),
-					runCommand("haxelib", ["run", "lime", "rebuild", "tools"]),
+					haxelibRun(["lime", "rebuild", "tools"]),
 				];
 				if (target == CPP) {
-					exitCodes.push(runCommand("haxelib", ["run", "lime", "rebuild", "linux"]));
+					exitCodes.push(haxelibRun(["lime", "rebuild", "linux"]));
 				}
 				exitCodes;
 			case OLD:
