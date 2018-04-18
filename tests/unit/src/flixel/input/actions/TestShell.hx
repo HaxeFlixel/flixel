@@ -40,14 +40,9 @@ class TestShell implements IFlxDestroyable
 		};
 	}
 	
-	public function testIsTrue(b:Bool, id:String)
+	public function testBool(b:Bool, id:String)
 	{
 		test(id, b, !b, false, false, Std.string(b));
-	}
-	
-	public function testIsFalse(b:Bool, id:String)
-	{
-		test(id, b, !b, false, false, Std.string(!b));
 	}
 	
 	public function testIsNull(d:Dynamic, id:String)

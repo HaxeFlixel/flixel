@@ -426,56 +426,56 @@ class FlxActionInputAnalogTest extends FlxTest
 		//JUST moved
 		move(x1, y1, arr);
 		
-		test.testIsTrue(ajMoved.triggered, "just");
-		test.testIsTrue(aMoved.triggered, "value");
+		test.testBool(ajMoved.triggered, "just");
+		test.testBool(aMoved.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 1, "callback2");
-			test.testIsTrue(value2 == 0, "callback3");
-			test.testIsTrue(value3 == 0, "callback4");
+			test.testBool(value0 == 1, "callback1");
+			test.testBool(value1 == 1, "callback2");
+			test.testBool(value2 == 0, "callback3");
+			test.testBool(value3 == 0, "callback4");
 		}
 		
 		test.prefix = "move2." + callbackStr;
 		
 		//STILL moved
 		move(x2, y2, arr);
-		test.testIsFalse(ajMoved.triggered, "just");
-		test.testIsTrue(aMoved.triggered, "value");
+		test.testBool(ajMoved.triggered, "just");
+		test.testBool(aMoved.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 0, "callback3");
-			test.testIsTrue(value3 == 0, "callback4");
+			test.testBool(value0 == 1, "callback1");
+			test.testBool(value1 == 2, "callback2");
+			test.testBool(value2 == 0, "callback3");
+			test.testBool(value3 == 0, "callback4");
 		}
 		
 		test.prefix = "stop1." + callbackStr;
 		
 		//JUST stopped
 		move(x3, y3, arr);
-		test.testIsTrue(ajStopped.triggered, "just");
-		test.testIsTrue(aStopped.triggered, "value");
+		test.testBool(ajStopped.triggered, "just");
+		test.testBool(aStopped.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 1, "callback3");
-			test.testIsTrue(value3 == 1, "callback4");
+			test.testBool(value0 == 1, "callback1");
+			test.testBool(value1 == 2, "callback2");
+			test.testBool(value2 == 1, "callback3");
+			test.testBool(value3 == 1, "callback4");
 		}
 		
 		test.prefix = "stop2." + callbackStr;
 		
 		//STILL stopped
 		move(x4, y4, arr);
-		test.testIsFalse(ajStopped.triggered, "just");
-		test.testIsTrue(aStopped.triggered, "value");
+		test.testBool(ajStopped.triggered, "just");
+		test.testBool(aStopped.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == 1, "callback1");
-			test.testIsTrue(value1 == 2, "callback2");
-			test.testIsTrue(value2 == 1, "callback3");
-			test.testIsTrue(value3 == 2, "callback4");
+			test.testBool(value0 == 1, "callback1");
+			test.testBool(value1 == 2, "callback2");
+			test.testBool(value2 == 1, "callback3");
+			test.testBool(value3 == 2, "callback4");
 		}
 		
 		clear();

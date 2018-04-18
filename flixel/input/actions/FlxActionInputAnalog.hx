@@ -301,9 +301,9 @@ class FlxActionInputAnalog extends FlxActionInput
 	{
 		var returnVal = switch (axis)
 		{
-			case X:      compareState(xMoved.current, trigger);
-			case Y:      compareState(yMoved.current, trigger);
-			case BOTH:   compareState(xMoved.current, trigger) && compareState(yMoved.current, trigger);
+			case X:      compareState(trigger, xMoved.current);
+			case Y:      compareState(trigger, yMoved.current);
+			case BOTH:   compareState(trigger, xMoved.current) && compareState(trigger, yMoved.current);
 			//in practice, "both pressed" and "both released" could be useful, whereas 
 			//"both just pressed" and "both just released" seem like very unlikely real-world events
 			case EITHER:

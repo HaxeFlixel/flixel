@@ -59,9 +59,17 @@ class FlxActionInput implements IFlxDestroyable
 		return false;
 	}
 	
-	private inline function compareState(a:FlxInputState, b:FlxInputState):Bool
+	/**
+	 * Check whether `state` fulfills `condition`. Note: order of operations is
+	 * important here. `compareState(JUST_PRESSED, PRESSED) == false`, while
+	 * `compareState(PRESSED, JUST_PRESSED) == true`.
+	 * @param condition
+	 * @param state
+	 * @return Whether or not the condition is satisfied by state.
+	 */
+	private inline function compareState(condition:FlxInputState, state:FlxInputState):Bool
 	{
-		return switch (a)
+		return switch (condition)
 		{
 			case PRESSED:       b == PRESSED  || b == JUST_PRESSED;
 			case RELEASED:      b == RELEASED || b == JUST_RELEASED;

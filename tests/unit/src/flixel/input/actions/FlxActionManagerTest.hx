@@ -804,9 +804,9 @@ class FlxActionManagerTest extends FlxTest
 			
 			test.prefix = set + ".";
 			
-			test.testIsTrue(setIndex != -1, "indexExists");
-			test.testIsTrue(setName == set, "nameMatches");
-			test.testIsTrue(setObject != null, "setExists");
+			test.testBool(setIndex != -1, "indexExists");
+			test.testBool(setName == set, "nameMatches");
+			test.testBool(setObject != null, "setExists");
 		}
 	}
 	
@@ -826,21 +826,21 @@ class FlxActionManagerTest extends FlxTest
 			
 			test.prefix = set + ".";
 			
-			test.testIsTrue(setObject.digitalActions != null && setObject.digitalActions.length > 0, "hasDigital");
-			test.testIsTrue(setObject.analogActions != null && setObject.analogActions.length > 0, "hasAnalog");
+			test.testBool(setObject.digitalActions != null && setObject.digitalActions.length > 0, "hasDigital");
+			test.testBool(setObject.analogActions != null && setObject.analogActions.length > 0, "hasAnalog");
 			
 			//Test digital actions exist
 			for (j in 0...setObject.digitalActions.length)
 			{
 				var d:FlxActionDigital = setObject.digitalActions[j];
-				test.testIsTrue(digitals.indexOf(d.name) != -1, "digital." + d.name + ".exists");
+				test.testBool(digitals.indexOf(d.name) != -1, "digital." + d.name + ".exists");
 			}
 			
 			//Test analog actions exist
 			for (j in 0...setObject.analogActions.length)
 			{
 				var a:FlxActionAnalog = setObject.analogActions[j];
-				test.testIsTrue(analogs.indexOf(a.name) != -1, "analog." + a.name + ".exists");
+				test.testBool(analogs.indexOf(a.name) != -1, "analog." + a.name + ".exists");
 			}
 		}
 	}
@@ -864,16 +864,16 @@ class FlxActionManagerTest extends FlxTest
 			//Test add & remove digital actions
 			var extraDigital = new FlxActionDigital("extra");
 			var result = manager.addDigitalAction(extraDigital, setIndex);
-			test.testIsTrue(result && setObject.digitalActions.indexOf(extraDigital) != -1, "digital.extra.add");
+			test.testBool(result && setObject.digitalActions.indexOf(extraDigital) != -1, "digital.extra.add");
 			result = manager.removeDigitalAction(extraDigital, setIndex);
-			test.testIsTrue(result && setObject.digitalActions.indexOf(extraDigital) == -1, "digital.extra.remove");
+			test.testBool(result && setObject.digitalActions.indexOf(extraDigital) == -1, "digital.extra.remove");
 			
 			//Test add & remove analog actions
 			var extraAnalog = new FlxActionAnalog("extra");
 			var result = manager.addAnalogAction(extraAnalog, setIndex);
-			test.testIsTrue(result && setObject.analogActions.indexOf(extraAnalog) != -1, "analog.extra.add");
+			test.testBool(result && setObject.analogActions.indexOf(extraAnalog) != -1, "analog.extra.add");
 			result = manager.removeAnalogAction(extraAnalog, setIndex);
-			test.testIsTrue(result && setObject.analogActions.indexOf(extraAnalog) == -1, "analog.extra.remove");
+			test.testBool(result && setObject.analogActions.indexOf(extraAnalog) == -1, "analog.extra.remove");
 		}
 	}
 	
@@ -900,7 +900,7 @@ class FlxActionManagerTest extends FlxTest
 			var activatedSet = manager.getSetActivatedForDevice(device);
 			
 			//Test set is activated after we activate it for a specific device
-			test.testIsTrue(setObject == activatedSet, "activatedFor." + device);
+			test.testBool(setObject == activatedSet, "activatedFor." + device);
 			
 			var devices:Array<FlxInputDevice> = 
 			[
@@ -920,12 +920,12 @@ class FlxActionManagerTest extends FlxTest
 				if (device == ALL)
 				{
 					//Test set is activated for every device
-					test.testIsTrue(activatedSet == activatedOtherSet, "activatedForAll." + otherDevice);
+					test.testBool(activatedSet == activatedOtherSet, "activatedForAll." + otherDevice);
 				}
 				else if (otherDevice != device)
 				{
 					//Test set is NOT activated for every other device
-					test.testIsTrue(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice + ".but." + device);
+					test.testBool(activatedSet != activatedOtherSet, "notActivatedFor." + otherDevice + ".but." + device);
 				}
 			}
 			
@@ -933,7 +933,7 @@ class FlxActionManagerTest extends FlxTest
 			activatedSet = manager.getSetActivatedForDevice(device);
 			
 			//Test set is deactivated after we deactivate it
-			test.testIsTrue(setObject != activatedSet, "deactivatedFor." + device);
+			test.testBool(setObject != activatedSet, "deactivatedFor." + device);
 			
 			for (otherDevice in devices)
 			{
@@ -942,12 +942,12 @@ class FlxActionManagerTest extends FlxTest
 				if (device == ALL)
 				{
 					//Test set is deactivated for every device
-					test.testIsTrue(setObject != activatedOtherSet, "deactivatedForAll." + otherDevice);
+					test.testBool(setObject != activatedOtherSet, "deactivatedForAll." + otherDevice);
 				}
 				else if (otherDevice != device)
 				{
 					//Test set is still not activated for every other device
-					test.testIsTrue(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice + ".but." + device);
+					test.testBool(setObject != activatedOtherSet, "stillNotActivatedFor." + otherDevice + ".but." + device);
 				}
 			}
 		}

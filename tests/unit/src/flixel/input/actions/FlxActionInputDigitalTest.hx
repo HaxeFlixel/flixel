@@ -676,14 +676,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		//JUST PRESSED
 		click(true, arr);
 		
-		test.testIsTrue(ajPressed.triggered, "just");
-		test.testIsTrue(aPressed.triggered, "value");
+		test.testBool(ajPressed.triggered, "just");
+		test.testBool(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == g.press1[0], "callback1");
-			test.testIsTrue(value1 == g.press1[1], "callback2");
-			test.testIsTrue(value2 == g.press1[2], "callback3");
-			test.testIsTrue(value3 == g.press1[3], "callback4");
+			test.testBool(value0 == g.press1[0], "callback1");
+			test.testBool(value1 == g.press1[1], "callback2");
+			test.testBool(value2 == g.press1[2], "callback3");
+			test.testBool(value3 == g.press1[3], "callback4");
 		}
 		
 		test.prefix = "press2." + callbackStr;
@@ -691,14 +691,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		//STILL PRESSED
 		click(true, arr);
 		
-		test.testIsFalse(ajPressed.triggered, "just");
-		test.testIsTrue(aPressed.triggered, "value");
+		test.testBool(ajPressed.triggered, "just");
+		test.testBool(aPressed.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == g.press2[0], "callback1");
-			test.testIsTrue(value1 == g.press2[1], "callback2");
-			test.testIsTrue(value2 == g.press2[2], "callback3");
-			test.testIsTrue(value3 == g.press2[3], "callback4");
+			test.testBool(value0 == g.press2[0], "callback1");
+			test.testBool(value1 == g.press2[1], "callback2");
+			test.testBool(value2 == g.press2[2], "callback3");
+			test.testBool(value3 == g.press2[3], "callback4");
 		}
 		
 		test.prefix = "release1." + callbackStr;
@@ -706,14 +706,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		//JUST RELEASED
 		click(false, arr);
 		
-		test.testIsTrue(ajReleased.triggered, "just");
-		test.testIsTrue(aReleased.triggered, "value");
+		test.testBool(ajReleased.triggered, "just");
+		test.testBool(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == g.release1[0], "callback1");
-			test.testIsTrue(value1 == g.release1[1], "callback2");
-			test.testIsTrue(value2 == g.release1[2], "callback3");
-			test.testIsTrue(value3 == g.release1[3], "callback4");
+			test.testBool(value0 == g.release1[0], "callback1");
+			test.testBool(value1 == g.release1[1], "callback2");
+			test.testBool(value2 == g.release1[2], "callback3");
+			test.testBool(value3 == g.release1[3], "callback4");
 		}
 		
 		test.prefix = "release2." + callbackStr;
@@ -721,14 +721,14 @@ class FlxActionInputDigitalTest extends FlxTest
 		//STILL RELEASED
 		click(false, arr);
 		
-		test.testIsFalse(ajReleased.triggered, "just");
-		test.testIsTrue(aReleased.triggered, "value");
+		test.testBool(ajReleased.triggered, "just");
+		test.testBool(aReleased.triggered, "value");
 		if (testCallbacks)
 		{
-			test.testIsTrue(value0 == g.release2[0], "callback1");
-			test.testIsTrue(value1 == g.release2[1], "callback2");
-			test.testIsTrue(value2 == g.release2[2], "callback3");
-			test.testIsTrue(value3 == g.release2[3], "callback4");
+			test.testBool(value0 == g.release2[0], "callback1");
+			test.testBool(value1 == g.release2[1], "callback2");
+			test.testBool(value2 == g.release2[2], "callback3");
+			test.testBool(value3 == g.release2[3], "callback4");
 		}
 		
 		clear();
