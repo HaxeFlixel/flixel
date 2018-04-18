@@ -39,8 +39,8 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			installOpenFL(target, openfl),
 			installHxcpp(target),
+			installOpenFL(target, openfl),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
@@ -50,34 +50,6 @@ class RunTravis
 		]));
 	}
 
-	static function installOpenFL(target:Target, openfl:OpenFL):ExitCode
-	{
-		return getResult(switch (openfl)
-		{
-			case NEW:
-				var exitCodes = [
-					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
-					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
-					runCommand("haxelib", ["run", "lime", "rebuild", "tools"]),
-					runCommand("haxelib", ["install", "format"]),
-				];
-				if (target == CPP) {
-					exitCodes.push(runCommand("haxelib", ["run", "lime", "rebuild", "linux"]));
-				}
-				exitCodes;
-			case OLD:
-				[haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
-		});
-	}
-
-	static function haxelibInstall(lib:String, ?version:String):ExitCode
-	{
-		var args = ["install", lib];
-		if (version != null)
-			args.push(version);
-		return runCommand("haxelib", args);
-	}
-	
 	static function installHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
@@ -94,6 +66,34 @@ class RunTravis
 		#else
 		return haxelibInstall("hxcpp", "3.3.49");
 		#end
+	}
+
+	static function installOpenFL(target:Target, openfl:OpenFL):ExitCode
+	{
+		return getResult(switch (openfl)
+		{
+			case NEW:
+				var exitCodes = [
+					runCommand("haxelib", ["git", "openfl", "https://github.com/openfl/openfl"]),
+					runCommand("haxelib", ["git", "lime", "https://github.com/openfl/lime"]),
+					runCommand("haxelib", ["run", "lime", "rebuild", "tools"]),
+					haxelibInstall("format"),
+				];
+				if (target == CPP) {
+					exitCodes.push(runCommand("haxelib", ["run", "lime", "rebuild", "linux"]));
+				}
+				exitCodes;
+			case OLD:
+				[haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
+		});
+	}
+
+	static function haxelibInstall(lib:String, ?version:String):ExitCode
+	{
+		var args = ["install", lib];
+		if (version != null)
+			args.push(version);
+		return runCommand("haxelib", args);
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
