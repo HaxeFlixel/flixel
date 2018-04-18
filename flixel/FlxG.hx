@@ -91,10 +91,10 @@ class FlxG
 	public static var camera:FlxCamera;
 	
 	/**
-	 * The HaxeFlixel version, in semantic versioning syntax. Use Std.string()
-	 * on it to get a String formatted like this: "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA".
-	 */ 
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 2, 1);
+	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
+	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
+	 */
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 3, 0);
 	
 	/**
 	 * Internal tracker for game object.

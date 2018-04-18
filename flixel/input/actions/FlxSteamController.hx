@@ -90,8 +90,6 @@ class FlxSteamController
 		
 		if (Steam.controllers == null) return;
 		
-		if (Steam.controllers == null) return;
-		
 		for (i in 0...Steam.controllers.MAX_CONTROLLERS)
 		{
 			controllers.push(new FlxSteamControllerMetadata());

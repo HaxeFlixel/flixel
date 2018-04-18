@@ -10,12 +10,12 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-
-#if (cpp && steamwrap && haxe_ver > "3.2")
-import steamwrap.api.Steam;
-import flixel.input.FlxInput.FlxInputType;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.Json;
+
+#if (cpp && steamwrap && haxe_ver > "3.2")
+import flixel.input.FlxInput.FlxInputType;
+import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig;
 #end
 
@@ -568,63 +568,7 @@ class ActionSetRegister implements IFlxDestroyable
 	
 	public function activate(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		switch (Device)
-		{
-			case FlxInputDevice.MOUSE: mouseSet    = ActionSet;
-			case FlxInputDevice.KEYBOARD: keyboardSet = ActionSet;
-			
-			case FlxInputDevice.GAMEPAD: 
-				switch (DeviceID)
-				{
-					case FlxInputDeviceID.ALL:
-						gamepadAllSet = ActionSet;
-						clearSetFromArray( -1, gamepadSets);
-						
-					case FlxInputDeviceID.NONE:
-						clearSetFromArray(ActionSet, gamepadSets);
-						
-					#if FLX_GAMEPAD
-					case FlxInputDeviceID.FIRST_ACTIVE:
-						gamepadSets[FlxG.gamepads.getFirstActiveGamepadID()] = ActionSet;
-					#end
-					
-					default:
-						gamepadSets[DeviceID] = ActionSet;
-				}
-			
-			case FlxInputDevice.STEAM_CONTROLLER:
-				switch (DeviceID)
-				{
-					case FlxInputDeviceID.ALL:
-						steamControllerAllSet = ActionSet;
-						clearSetFromArray( -1, steamControllerSets);
-						for (i in 0...FlxSteamController.MAX_CONTROLLERS)
-						{
-							steamControllerSets[i] = ActionSet;
-						}
-						
-					case FlxInputDeviceID.NONE:
-						clearSetFromArray(ActionSet, steamControllerSets);
-						
-					case FlxInputDeviceID.FIRST_ACTIVE:
-						steamControllerSets[FlxSteamController.getFirstActiveHandle()] = ActionSet;
-						
-					default:
-						steamControllerSets[DeviceID] = ActionSet;
-				}
-				
-			case FlxInputDevice.ALL:
-				activate(ActionSet, FlxInputDevice.MOUSE,    DeviceID);
-				activate(ActionSet, FlxInputDevice.KEYBOARD, DeviceID);
-				activate(ActionSet, FlxInputDevice.GAMEPAD,  DeviceID);
-				#if steamwrap
-				activate(ActionSet, FlxInputDevice.STEAM_CONTROLLER, DeviceID);
-				#end
-				
-			default:
-				
-				//do nothing
-		}
+		setActivate(ActionSet, Device, DeviceID);
 	}
 	
 	public function markActiveSets(sets:Array<FlxActionSet>)
