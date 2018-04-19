@@ -47,6 +47,7 @@ private enum HelperDefines
 	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
+	FLX_DRAW_QUADS;
 }
 
 class FlxDefines
@@ -67,7 +68,7 @@ class FlxDefines
 	private static function checkDependencyCompatibility()
 	{
 		#if (haxe_ver < "3.2")
-		abortMinVersion("Haxe", "3.2.0", (macro null).pos);
+		abortVersion("Haxe", "3.2.0 or newer", "haxe_ver", (macro null).pos);
 		#end
 		
 		#if ((haxe_ver == "3.201") && flixel_ui)
@@ -84,33 +85,18 @@ class FlxDefines
 
 	private static function checkOpenFLVersions()
 	{
-		#if (openfl < "3.5.0")
-		abortMinVersion("OpenFL", "3.5.0", (macro null).pos);
+		#if ((lime < "6.2.0") && ((lime < "2.8.1") || (lime >= "3.0.0"))) 
+		abortVersion("Lime", "6.2.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
 		#end
 
-		#if (lime < "2.8.1")
-		abortMinVersion("Lime", "2.8.1", (macro null).pos);
-		#end
-
-		#if (openfl >= "4.0.0")
-		abortMaxVersion("OpenFL", "4.0.0", "3.6.1", (macro null).pos);
-		#end
-		
-		#if ((lime >= "3.0.0") || (tools >= "3.0.0"))
-		abortMaxVersion("Lime", "3.0.0", "2.9.1", (macro null).pos);
+		#if ((openfl < "8.0.0") && ((openfl < "3.5.0") || (openfl >= "4.0.0")))
+		abortVersion("OpenFL", "8.0.0 or newer and 3.5.0-3.6.1", "openfl", (macro null).pos);
 		#end
 	}
 
-	private static function abortMinVersion(dependency:String, minimumRequired:String, pos:Position)
+	private static function abortVersion(dependency:String, supported:String, found:String, pos:Position)
 	{
-		abort('The minimum required $dependency version for HaxeFlixel is $minimumRequired. '
-			+ 'Please install a newer version.', pos);
-	}
-
-	private static function abortMaxVersion(lib:String, firstIncompatible:String, lastCompatible:String, pos:Position)
-	{
-		abort('Please run \'haxelib set ${lib.toLowerCase()} $lastCompatible\'' +
-			' (Flixel is currently incompatible with $lib $firstIncompatible or newer).' , pos);
+		abort('Unsupported $dependency version! Supported versions are $supported (found ${Context.definedValue(found)}).', pos);
 	}
 	
 	private static function checkDefines()
@@ -158,7 +144,7 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 		
-		if ((defined("openfl_next") && !defined("flash")) || defined("flash11_8"))
+		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
@@ -166,8 +152,14 @@ class FlxDefines
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
 		
+		#if (openfl < "4.0.0")
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
+		#end
+
+		#if (openfl >= "8.0.0")
+		define(FLX_DRAW_QUADS);
+		#end
 	}
 	
 	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)

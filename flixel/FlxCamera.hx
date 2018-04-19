@@ -11,7 +11,6 @@ import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
-import flixel.graphics.tile.FlxDrawTilesItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -26,6 +25,13 @@ import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 import openfl.Vector;
 using flixel.util.FlxColorTransformUtil;
+
+private typedef FlxDrawItem =
+#if FLX_DRAW_QUADS
+	flixel.graphics.tile.FlxDrawQuadsItem;
+#else
+	flixel.graphics.tile.FlxDrawTilesItem;
+#end
 
 /**
  * The camera class is used to display the game's visuals.
@@ -418,7 +424,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Last draw tiles item
 	 */
-	private var _headTiles:FlxDrawTilesItem;
+	private var _headTiles:FlxDrawItem;
 	/**
 	 * Last draw triangles item
 	 */
@@ -427,7 +433,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Draw tiles stack items that can be reused
 	 */
-	private static var _storageTilesHead:FlxDrawTilesItem;
+	private static var _storageTilesHead:FlxDrawItem;
 	
 	/**
 	 * Draw triangles stack items that can be reused
@@ -456,7 +462,7 @@ class FlxCamera extends FlxBasic
 		#if FLX_RENDER_TRIANGLE
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 		#else
-		var itemToReturn:FlxDrawTilesItem = null;
+		var itemToReturn = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 		
 		if (_currentDrawItem != null && _currentDrawItem.type == FlxDrawItemType.TILES 
@@ -473,13 +479,13 @@ class FlxCamera extends FlxBasic
 		if (_storageTilesHead != null)
 		{
 			itemToReturn = _storageTilesHead;
-			var newHead:FlxDrawTilesItem = _storageTilesHead.nextTyped;
+			var newHead = _storageTilesHead.nextTyped;
 			itemToReturn.reset();
 			_storageTilesHead = newHead;
 		}
 		else
 		{
-			itemToReturn = new FlxDrawTilesItem();
+			itemToReturn = new FlxDrawItem();
 		}
 		
 		itemToReturn.graphics = graphic;
@@ -519,7 +525,7 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
 			&& _headTriangles.blending == blendInt)
-		{	
+		{
 			return _headTriangles;
 		}
 		
@@ -571,8 +577,8 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	private function clearDrawStack():Void
 	{	
-		var currTiles:FlxDrawTilesItem = _headTiles;
-		var newTilesHead:FlxDrawTilesItem;
+		var currTiles = _headTiles;
+		var newTilesHead;
 		
 		while (currTiles != null)
 		{
@@ -638,7 +644,7 @@ class FlxCamera extends FlxBasic
 			#if FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#else
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+			var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 			#end
 			drawItem.addQuad(frame, matrix, transform);
 		}
@@ -680,7 +686,7 @@ class FlxCamera extends FlxBasic
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			
 			#if !FLX_RENDER_TRIANGLE
-			var drawItem:FlxDrawTilesItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+			var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
 			#end

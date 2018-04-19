@@ -156,7 +156,21 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Update: \nDraw:" + (FlxG.renderTile ? "\nDrawTiles:" : "") + "\nQuadTrees: \nLists:";
+		var drawMethod = "";
+		if (FlxG.renderTile)
+		{
+			drawMethod =
+				#if FLX_RENDER_TRIANGLE
+				"DrawTrian.";
+				#elseif FLX_DRAW_QUADS
+				"DrawQuads";
+				#else
+				"DrawTiles";
+				#end
+			drawMethod = '\n$drawMethod:';
+		}
+
+		_leftTextField.text = "Update: \nDraw:" + drawMethod + "\nQuadTrees: \nLists:";
 		
 		_toggleSizeButton = new FlxSystemButton(new GraphicMaximizeButton(0, 0), toggleSize);
 		_toggleSizeButton.alpha = Window.HEADER_ALPHA;

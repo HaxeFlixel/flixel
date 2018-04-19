@@ -1,5 +1,7 @@
 package flixel.system;
 
+import flash.Lib;
+import flash.Vector;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.GradientType;
@@ -9,10 +11,10 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.events.ProgressEvent;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
-import flash.Lib;
 import flash.net.URLRequest;
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -20,7 +22,7 @@ import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
-class FlxBasePreloader extends NMEPreloader
+class FlxBasePreloader extends DefaultPreloader
 {
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine
@@ -99,8 +101,10 @@ class FlxBasePreloader extends NMEPreloader
 	{
 		super();
 
+		#if (openfl <= "4.0.0")
 		removeChild(progress);
 		removeChild(outline);
+		#end
 
 		minDisplayTime = MinDisplayTime;
 		if (AllowedURLs != null)
@@ -109,6 +113,11 @@ class FlxBasePreloader extends NMEPreloader
 			allowedURLs = [];
 
 		_startTime = Date.now().getTime();
+
+		#if !web
+		// just skip the preloader on native targets
+		onLoaded();
+		#end
 	}
 
 	/**
@@ -298,13 +307,13 @@ class FlxBasePreloader extends NMEPreloader
 
 		graphics.beginFill(color);
 		graphics.drawPath(
-			[1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6],
-			[120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
+			Vector.ofArray([1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6]),
+			Vector.ofArray([120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
 				120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40, 35, 75, 0, 120, 0,
 				220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320,
 				20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0, 148, 8, 140, 20, 140, 120, 190, 108,
 				190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130,
-				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190],
+				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190]),
 			GraphicsPathWinding.NON_ZERO
 		);
 		graphics.endFill();
@@ -401,3 +410,61 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
+
+#if (openfl >= "8.0.0")
+// This is a slightly trimmed down version of the NMEPreloader present in older OpenFL versions
+private class DefaultPreloader extends Sprite
+{
+	public function new()
+	{
+		super();
+		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+	}
+
+	public function onAddedToStage(_)
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		
+		onInit();
+		onUpdate(loaderInfo.bytesLoaded, loaderInfo.bytesTotal);
+
+		addEventListener(ProgressEvent.PROGRESS, onProgress);
+		addEventListener(Event.COMPLETE, onComplete);
+	}
+
+	private function onComplete(event:Event):Void
+	{
+		event.preventDefault();
+
+		removeEventListener(ProgressEvent.PROGRESS, onProgress);
+		removeEventListener(Event.COMPLETE, onComplete);
+
+		onLoaded();
+	}
+
+	public function onProgress(event:ProgressEvent):Void
+	{
+		onUpdate(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
+	}
+
+	public function onInit() {}
+
+	public function onLoaded()
+	{
+		dispatchEvent(new Event(Event.UNLOAD));
+	}
+
+	public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void
+	{
+		var percentLoaded = 0.0;
+		if (bytesTotal > 0)
+		{
+			percentLoaded = bytesLoaded / bytesTotal;
+			if (percentLoaded > 1)
+				percentLoaded = 1;
+		}
+	}
+}
+#else
+private typedef DefaultPreloader = NMEPreloader;
+#end

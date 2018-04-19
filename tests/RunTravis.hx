@@ -10,6 +10,13 @@ abstract Target(String) from String to String
 }
 
 @:enum
+abstract OpenFL(String) from String to String
+{
+	var OLD = "old";
+	var NEW = "new";
+}
+
+@:enum
 abstract ExitCode(Int) from Int to Int
 {
 	var SUCCESS = 0;
@@ -26,21 +33,46 @@ class RunTravis
 		var target:Target = Sys.args()[0];
 		if (target == null)
 			target = Target.FLASH;
+
+		var openfl:OpenFL = Sys.args()[1];
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
 		Sys.exit(getResult([
-			setupHxcpp(target),
+			installOpenFL(openfl),
+			installHxcpp(target),
 			runUnitTests(target),
 			buildCoverageTests(target),
 			buildSwfVersionTests(target),
 			buildDemos(target),
-			buildNextDemos(target),
+			buildNextDemos(target, openfl),
 			buildMechanicsDemos(target)
 		]));
 	}
+
+	static function installOpenFL(openfl:OpenFL):ExitCode
+	{
+		return getResult(switch (openfl)
+		{
+			case NEW: [
+					runCommand("git", ["clone", "https://github.com/openfl/openfl"]),
+					runCommandInDir("openfl", "git", ["checkout", "d49569e7fecdd160654617d23a4c0d9a420567d1"]),
+					runCommand("haxelib", ["dev", "openfl", "openfl"]),
+					haxelibInstall("lime")
+				];
+			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
+		});
+	}
+
+	static function haxelibInstall(lib:String, ?version:String):ExitCode
+	{
+		var args = ["install", lib];
+		if (version != null)
+			args.push(version);
+		return runCommand("haxelib", args);
+	}
 	
-	static function setupHxcpp(target:Target):ExitCode
+	static function installHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
@@ -54,7 +86,7 @@ class RunTravis
 			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
 		#else
-		return runCommand("haxelib", ["install", "hxcpp", "3.3.49"]);
+		return haxelibInstall("hxcpp", "3.3.49");
 		#end
 	}
 	
@@ -104,9 +136,9 @@ class RunTravis
 		return buildProjects(target, demos);
 	}
 	
-	static function buildNextDemos(target:Target):ExitCode
+	static function buildNextDemos(target:Target, openfl:OpenFL):ExitCode
 	{
-		if (target == Target.FLASH || target == Target.HTML5)
+		if (target == Target.FLASH || target == Target.HTML5 || openfl == NEW)
 			return ExitCode.SUCCESS;
 		
 		Sys.println("\nBuilding demos for OpenFL Next...\n");

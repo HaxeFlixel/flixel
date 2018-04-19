@@ -11,6 +11,10 @@ import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
 
+#if (openfl >= "8.0.0")
+import openfl.utils.AssetType;
+#end
+
 @:allow(flixel.FlxG)
 class SoundFrontEnd
 {
@@ -163,7 +167,7 @@ class SoundFrontEnd
 	 */
 	public function cacheAll():Void
 	{
-		for (id in Assets.list(AssetType.SOUND)) 
+		for (id in Assets.list(AssetType.SOUND))
 		{
 			cache(id);
 		}
