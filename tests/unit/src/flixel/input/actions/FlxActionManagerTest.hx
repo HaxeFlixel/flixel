@@ -4,6 +4,7 @@ package flixel.input.actions;
 import openfl.ui.GameInput;
 import openfl.ui.GameInputDevice;
 import openfl.ui.GameInputControl;
+import lime.ui.Gamepad;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
@@ -17,7 +18,6 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.keyboard.FlxKey;
 import haxe.Json;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import lime.ui.Gamepad;
 import steamwrap.data.ControllerConfig;
 
 import massive.munit.Assert;
