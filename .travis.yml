@@ -2,7 +2,6 @@ language: haxe
 
 haxe:
   - 3.2.0
-  - development
 
 env:
   - TARGET=flash OPENFL=new
@@ -13,17 +12,6 @@ env:
   - TARGET=neko  OPENFL=old
   - TARGET=cpp   OPENFL=old
   - TARGET=html5 OPENFL=old
-
-matrix:
-  exclude:
-    - haxe: development
-      env: TARGET=flash OPENFL=new
-    - haxe: development
-      env: TARGET=neko  OPENFL=new
-    - haxe: development
-      env: TARGET=cpp   OPENFL=new
-    - haxe: development
-      env: TARGET=html5 OPENFL=new
 
 sudo: false
 dist: trusty
