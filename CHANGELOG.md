@@ -1,3 +1,10 @@
+2.6.0 (to be released)
+------------------------------
+* Compatibility with flixel 4.4.0
+* Disabled `vsync` by default in `Project.xml` files
+* NeonVector: fixed Neko compatibility (#243)
+* Flixius: fixed Android compilation (#232)
+
 2.5.0 (March 28, 2018)
 ------------------------------
 * Added the FlxLightPuzzle demo (#263)
