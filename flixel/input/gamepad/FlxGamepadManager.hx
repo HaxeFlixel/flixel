@@ -382,6 +382,7 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		//If we're actually running on console hardware, we know what controller hardware you're using
 		//TODO: add support for multiple controller types on console that support that (WiiU for instance)
+		if (name == null) return UNKNOWN;
 		
 		#if vita
 			return PSVITA;
