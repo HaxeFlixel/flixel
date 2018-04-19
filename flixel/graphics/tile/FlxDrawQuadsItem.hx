@@ -134,11 +134,20 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			shader.colorMultiplier.value = colorMultipliers;
 		if (hasColorOffsets)
 			shader.colorOffset.value = colorOffsets;
-		shader.hasColorTransform.value = [colored || hasColorOffsets];
+
+		setParameterValue(shader.hasTransform, true);
+		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);
+	}
+
+	private inline function setParameterValue(parameter, value):Void
+	{
+		if (parameter.value == null)
+			parameter.value = [];
+		parameter.value[0] = value;
 	}
 	#end
 }
