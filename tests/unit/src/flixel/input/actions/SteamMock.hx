@@ -34,7 +34,7 @@ class SteamMock
 		digitalOrigins = new Map<String, Array<EControllerActionOrigin>>();
 		analogOrigins = new Map<String, Array<EControllerActionOrigin>>();
 		
-		@:privateAccess Steam.controllers = new FakeController(function(str:String)
+		Steam.controllers = new FakeController(function(str:String)
 		{
 			trace(str);
 		});
@@ -122,7 +122,7 @@ class SteamMock
 #if FLX_STEAMWRAP
 class FakeController extends Controller
 {
-	function new(CustomTrace:String->Void)
+	public function new(CustomTrace:String->Void)
 	{
 		super(CustomTrace);
 	}
