@@ -14,7 +14,7 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.Json;
 
 #if FLX_STEAMWRAP
-import flixel.input.FlxInput.FlxInputType;
+import flixel.input.actions.FlxActionInput.FlxInputType;
 import steamwrap.api.Steam;
 import steamwrap.data.ControllerConfig;
 #end
