@@ -119,7 +119,7 @@ class SteamMock
 	#end
 }
 
-#if(cpp && steamwrap && haxe_ver > "3.2")
+#if FLX_STEAMWRAP
 class FakeController extends Controller
 {
 	function new(CustomTrace:String->Void)

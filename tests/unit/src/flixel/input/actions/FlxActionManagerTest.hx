@@ -907,7 +907,7 @@ class FlxActionManagerTest extends FlxTest
 				MOUSE,
 				KEYBOARD,
 				GAMEPAD,
-				#if(cpp && steamwrap && haxe_ver > "3.2")
+				#if FLX_STEAMWRAP
 				STEAM_CONTROLLER,
 				#end
 				ALL
