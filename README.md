@@ -2,7 +2,8 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-[![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?style=flat-square&label=haxelib)](http://lib.haxe.org/p/flixel) [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg?style=flat-square)](https://www.patreon.com/haxeflixel) [![Build Status](https://img.shields.io/travis/HaxeFlixel/flixel.svg?style=flat-square)](https://travis-ci.org/HaxeFlixel/flixel) [![Code Climate](https://img.shields.io/codeclimate/issues/github/HaxeFlixel/flixel.svg?style=flat-square)](https://codeclimate.com/github/HaxeFlixel/flixel/issues)
+[![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?label=haxelib)](http://lib.haxe.org/p/flixel) [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) [![Build Status](https://img.shields.io/travis/HaxeFlixel/flixel.svg)](https://travis-ci.org/HaxeFlixel/flixel) [![Code Climate](https://img.shields.io/codeclimate/issues/HaxeFlixel/flixel.svg)](https://codeclimate.com/github/HaxeFlixel/flixel/issues)
+
 
 [![](images/showcase.png)](http://www.haxeflixel.com/showcase)
 
