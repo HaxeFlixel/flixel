@@ -93,7 +93,7 @@ class CompletionList extends Sprite
 				updateIndices(1);
 			
 			case Keyboard.UP:
-				updateIndices( -1);
+				updateIndices(-1);
 			
 			case Keyboard.ENTER:
 				if (completed != null)

@@ -27,6 +27,10 @@ using flixel.util.FlxStringUtil;
 import openfl.geom.Rectangle;
 #end
 
+#if (openfl >= "8.0.0")
+import openfl.utils.AssetType;
+#end
+
 // TODO: think about filters and text
 
 /**

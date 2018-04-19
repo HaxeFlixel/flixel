@@ -5,7 +5,7 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flixel.graphics.tile.FlxTilesheet;
+import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
@@ -339,7 +339,7 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
-		#if desktop
+		#if (desktop && openfl <= "4.0.0")
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#else
@@ -840,7 +840,7 @@ class FlxGame extends Sprite
 		FlxG.signals.preDraw.dispatch();
 		
 		if (FlxG.renderTile)
-			FlxTilesheet._DRAWCALLS = 0;
+			FlxDrawBaseItem.drawCalls = 0;
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -858,7 +858,7 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			debugger.stats.drawCalls(FlxDrawBaseItem.drawCalls);
 			#end
 		}
 	

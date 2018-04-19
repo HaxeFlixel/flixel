@@ -11,7 +11,10 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+
+#if !FLX_DRAW_QUADS
 import openfl.display.Tilesheet;
+#end
 
 /**
  * `BitmapData` wrapper which is used for rendering.
@@ -313,11 +316,15 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var canBeDumped(get, never):Bool;
 	
+	#if FLX_DRAW_QUADS
+	public var shader(default, null):FlxShader;
+	#else
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
 	public var tilesheet(get, null):Tilesheet;
-	
+	#end
+
 	/**
 	 * Usage counter for this `FlxGraphic` object.
 	 */
@@ -360,12 +367,14 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	private var _imageFrame:FlxImageFrame;
 	
+	#if !FLX_DRAW_QUADS
 	/**
 	 * Internal var holding Tilesheet for bitmap of this graphic.
 	 * It is used only in `FlxG.renderTile` mode
 	 */
 	private var _tilesheet:Tilesheet;
-	
+	#end
+
 	private var _useCount:Int = 0;
 	
 	private var _destroyOnNoUse:Bool = true;
@@ -386,6 +395,10 @@ class FlxGraphic implements IFlxDestroyable
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
 		bitmap = Bitmap;
+
+		#if FLX_DRAW_QUADS
+		shader = new FlxShader();
+		#end
 	}
 	
 	/**
@@ -450,9 +463,13 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		bitmap = FlxDestroyUtil.dispose(bitmap);
 		
+		#if FLX_DRAW_QUADS
+		shader = null;
+		#else
 		if (FlxG.renderTile)
 			_tilesheet = null;
-		
+		#end
+
 		key = null;
 		assetsKey = null;
 		assetsClass = null;
@@ -519,6 +536,7 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 	
+	#if !FLX_DRAW_QUADS
 	/**
 	 * Tilesheet getter. Generates new one (and regenerates) if there is no tilesheet for this graphic yet.
 	 */
@@ -539,7 +557,8 @@ class FlxGraphic implements IFlxDestroyable
 		
 		return _tilesheet;
 	}
-	
+	#end
+
 	/**
 	 * Gets the `BitmapData` for this graphic object from OpenFL.
 	 * This method is used for undumping graphic.
@@ -584,9 +603,7 @@ class FlxGraphic implements IFlxDestroyable
 	private function set_destroyOnNoUse(Value:Bool):Bool
 	{
 		if (Value && _useCount <= 0 && key != null && !persist)
-		{
 			FlxG.bitmap.remove(this);
-		}
 		
 		return _destroyOnNoUse = Value;
 	}
@@ -611,7 +628,7 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
-			#if !flash
+			#if (!flash && !FLX_DRAW_QUADS)
 			if (FlxG.renderTile && _tilesheet != null)
 				_tilesheet = new Tilesheet(bitmap);
 			#end

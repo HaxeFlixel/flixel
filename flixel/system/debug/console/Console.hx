@@ -114,7 +114,7 @@ class Console extends Window
 		input.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		input.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		input.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		
+
 		#if !flash
 		// openfl/openfl#1856
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, function(e:KeyboardEvent)

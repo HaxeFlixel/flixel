@@ -11,11 +11,7 @@ import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
 
-#if flash
-import openfl.Vector;
-#end
-
-typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
+typedef DrawData<T> = #if (flash || openfl >= "4.0.0") openfl.Vector<T> #else Array<T> #end;
 
 /**
  * ...
@@ -37,7 +33,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	private var bounds:FlxRect = FlxRect.get();
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
@@ -67,7 +63,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		#end
 		
-		FlxTilesheet._DRAWCALLS++;
+		super.render(camera);
 	}
 	
 	override public function reset():Void 

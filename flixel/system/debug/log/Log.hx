@@ -18,7 +18,7 @@ class Log extends Window
 	
 	/**
 	 * Creates a log window object.
-	 */	
+	 */
 	public function new()
 	{
 		super("Log", new GraphicLog(0, 0));
