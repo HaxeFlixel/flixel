@@ -21,7 +21,7 @@ If you want to contribute code or report an issue, please check our [CONTRIBUTIN
 
 Thanks to being built on top of [Haxe](https://haxe.org/) and [OpenFL](http://www.openfl.org/), HaxeFlixel can target the following platforms _natively_:
 
-<div style="text-align:center"><img src ="images/targets.png" /></div>
+![](images/platforms.png)
 
 ## About
 
