@@ -89,7 +89,7 @@ class FlxMatrix extends Matrix
 	 * @since 4.3.0
 	 */
 	public inline function transformY(px:Float, py:Float):Float
-	{	
+	{
 		return px * b + py * d + ty;
 	}
 }

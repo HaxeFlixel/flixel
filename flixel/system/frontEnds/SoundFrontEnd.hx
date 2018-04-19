@@ -250,7 +250,7 @@ class SoundFrontEnd
 			}
 		}
 	}
-	 
+	
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
 	 * 
