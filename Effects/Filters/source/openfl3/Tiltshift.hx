@@ -1,14 +1,9 @@
-package shaders;
+package openfl3;
 
 import openfl.display.Shader;
 
-/**
- * ...
- * @author MrCdK
- */
 class Tiltshift extends Shader
 {
-	
 	@fragment var code = '
 		// Modified version of a tilt shift shader from Martin Jonasson (http://grapefrukt.com/)
 		// Read http://notes.underscorediscovery.com/ for context on shaders and this file
@@ -44,7 +39,7 @@ class Tiltshift extends Shader
 				   Therefore, you split them up into two passes, one for x, one for y.
 			*/
 		 
-			//I am hardcoding the constants like a jerk
+		// I am hardcoding the constants like a jerk
 			
 		const float bluramount  = 1.0;
 		const float center      = 1.0;
@@ -55,43 +50,37 @@ class Tiltshift extends Shader
 		const float maxOffs     = (float(steps-1.0)) / +2.0;
 		 
 		void main() {
-		 
 			float amount;
 			vec4 blurred;
 				
-				//Work out how much to blur based on the mid point 
+			// Work out how much to blur based on the mid point 
 			amount = pow((${Shader.vTexCoord}.y * center) * 2.0 - 1.0, 2.0) * bluramount;
 				
-				//This is the accumulation of color from the surrounding pixels in the texture
+			// This is the accumulation of color from the surrounding pixels in the texture
 			blurred = vec4(0.0, 0.0, 0.0, 1.0);
 				
-				//From minimum offset to maximum offset
+			// From minimum offset to maximum offset
 			for (float offsX = minOffs; offsX <= maxOffs; ++offsX) {
 				for (float offsY = minOffs; offsY <= maxOffs; ++offsY) {
 		 
-						//copy the coord so we can mess with it
+					// copy the coord so we can mess with it
 					vec2 temp_tcoord = ${Shader.vTexCoord}.xy;
 		 
-						//work out which uv we want to sample now
+					//work out which uv we want to sample now
 					temp_tcoord.x += offsX * amount * stepSize;
 					temp_tcoord.y += offsY * amount * stepSize;
 		 
-						//accumulate the sample 
+					// accumulate the sample 
 					blurred += texture2D(${Shader.uSampler}, temp_tcoord);
+				}
+			} 
 				
-				} //for y
-			} //for x 
-				
-				//because we are doing an average, we divide by the amount (x AND y, hence steps * steps)
+			// because we are doing an average, we divide by the amount (x AND y, hence steps * steps)
 			blurred /= float(steps * steps);
 		 
-				//return the final blurred color
+			// return the final blurred color
 			gl_FragColor = blurred;
-		 
-		} //main 
-
-	
-	';
+		}';
 
 	public function new() 
 	{

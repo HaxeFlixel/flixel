@@ -12,6 +12,10 @@ import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.util.FlxColor;
 import openfl.Assets;
 
+#if (openfl >= "4.0.0")
+import openfl.utils.AssetType;
+#end
+
 /**
  * A FlxState which can be used for the game's menu.
  */

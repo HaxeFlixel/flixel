@@ -1,4 +1,4 @@
-package effects;
+package openfl3.effects;
 
 import flixel.FlxG;
 import openfl.display.Shader;
@@ -84,69 +84,67 @@ class ShutterEffect
 class ShutterShader extends Shader
 {
 	@fragment var code = '
+		#ifdef GL_ES
+			precision mediump float;
+		#endif
 
-	#ifdef GL_ES
-		precision mediump float;
-	#endif
+		const int SHUTTER_TARGET_FLXSPRITE = 0;
+		const int SHUTTER_TARGET_FLXCAMERA = 1;
+		const float scale = 1.0;
 
-	const int SHUTTER_TARGET_FLXSPRITE = 0;
-	const int SHUTTER_TARGET_FLXCAMERA = 1;
-	const float scale = 1.0;
-	
-	uniform vec2 uResolution;
-	uniform float centerPtX;
-	uniform float centerPtY;
-	uniform float uCircleRadius;
-	uniform int shutterTargetMode;
-	uniform bool shaderIsActive;
-	
-	vec2 getCoordinates()
-	{
-		return vec2(
-			(${Shader.vTexCoord}.x * uResolution.x) / scale,
-			(${Shader.vTexCoord}.y * uResolution.y) / scale
-		);
-	}
-	
-	float getDist(vec2 pt1, vec2 pt2)
-	{
-		float dx = pt1.x - pt2.x;
-		float dy = pt1.y - pt2.y;
-		
-		return sqrt(
-			(dx*dx) + (dy*dy)
-		);
-	}
-	
-	void main()
-	{
-		if (!shaderIsActive)
+		uniform vec2 uResolution;
+		uniform float centerPtX;
+		uniform float centerPtY;
+		uniform float uCircleRadius;
+		uniform int shutterTargetMode;
+		uniform bool shaderIsActive;
+
+		vec2 getCoordinates()
 		{
-			gl_FragColor = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
-			return;
+			return vec2(
+				(${Shader.vTexCoord}.x * uResolution.x) / scale,
+				(${Shader.vTexCoord}.y * uResolution.y) / scale
+			);
 		}
-		
-		vec2 centerPt = vec2(centerPtX, centerPtY);
-		
-		if (uCircleRadius <= 0.0 || getDist(getCoordinates(), centerPt) > uCircleRadius)
+
+		float getDist(vec2 pt1, vec2 pt2)
 		{
-			gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			float dx = pt1.x - pt2.x;
+			float dy = pt1.y - pt2.y;
+
+			return sqrt(
+				(dx*dx) + (dy*dy)
+			);
 		}
-		else
+
+		void main()
 		{
-			/* If this shader is used on a FlxCamera, uncomment the line below to
-			draw the underlying pixels inside the shutter (as they would look normally).
-			
-			If using this shader on a FlxSprite, keep the line below commented out, to
-			draw transparency inside the shutter */
-			
-			if (shutterTargetMode == SHUTTER_TARGET_FLXCAMERA)
+			if (!shaderIsActive)
 			{
 				gl_FragColor = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
+				return;
 			}
-		}
-	}
-	';
+
+			vec2 centerPt = vec2(centerPtX, centerPtY);
+
+			if (uCircleRadius <= 0.0 || getDist(getCoordinates(), centerPt) > uCircleRadius)
+			{
+				gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			}
+			else
+			{
+				/* If this shader is used on a FlxCamera, uncomment the line below to
+				draw the underlying pixels inside the shutter (as they would look normally).
+
+				If using this shader on a FlxSprite, keep the line below commented out, to
+				draw transparency inside the shutter */
+
+				if (shutterTargetMode == SHUTTER_TARGET_FLXCAMERA)
+				{
+					gl_FragColor = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
+				}
+			}
+		}';
 	
 	public function new()
 	{

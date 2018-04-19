@@ -1,16 +1,10 @@
-package shaders;
+package openfl3;
 
 import openfl.display.Shader;
 
-/**
- * ...
- * @author MrCdK
- */
 class Hq2x extends Shader
 {
-
 	@fragment var code = '
-
 		void main()
 		{
 			float x = 1.0 / ${Shader.uTextureSize}.x;
@@ -30,14 +24,10 @@ class Hq2x extends Shader
 			vec4 avg = color1 + color2 + color3 + color4 + color5 + color6 + color7 + color8 + color9;
 
 			gl_FragColor = avg / 9.0;
-		}
-		
-	';
+		}';
 	
 	public function new() 
 	{
 		super();
-		
 	}
-	
 }

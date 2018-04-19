@@ -11,11 +11,13 @@ import flixel.system.FlxAssets;
 import openfl.filters.BitmapFilter;
 import openfl.filters.BlurFilter;
 import openfl.filters.ColorMatrixFilter;
-#if (next && !flash)
-import shaders.Grain;
-import shaders.Hq2x;
-import shaders.Scanline;
-import shaders.Tiltshift;
+
+#if shaders_supported
+#if (openfl >= "8.0.0")
+import openfl8.*;
+#else
+import openfl3.*;
+#end
 import openfl.filters.ShaderFilter;
 import openfl.Lib;
 #end
@@ -29,21 +31,27 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		filterMap = [
-			#if (next && !flash)
+			#if shaders_supported
 			"Scanline" => {
-				filter:new ShaderFilter(new Scanline()),
+				filter: new ShaderFilter(new Scanline()),
 			},
 			"Hq2x" => {
-				filter:new ShaderFilter(new Hq2x()),
+				filter: new ShaderFilter(new Hq2x()),
 			},
 			"Tiltshift" => {
-				filter:new ShaderFilter(new Tiltshift()),
+				filter: new ShaderFilter(new Tiltshift()),
 			},
 			"Grain" => {
 				var shader = new Grain();
 				{
-					filter:new ShaderFilter(shader),
-					onUpdate: function() shader.uTime = Lib.getTimer() / 1000
+					filter: new ShaderFilter(shader),
+					onUpdate: function() {
+						#if (openfl >= "8.0.0")
+						shader.uTime.value = [Lib.getTimer() / 1000];
+						#else
+						shader.uTime = Lib.getTimer() / 1000;
+						#end
+					}
 				}
 			},
 			#end

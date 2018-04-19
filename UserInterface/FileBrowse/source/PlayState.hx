@@ -177,7 +177,7 @@ class PlayState extends FlxState
 
 	private function _onLoad(E:Event):Void
 	{
-		var fr:FileReference = E.target;
+		var fr:FileReference = cast E.target;
 		fr.removeEventListener(Event.COMPLETE, _onLoad);
 
 		var loader:Loader = new Loader();
@@ -187,7 +187,7 @@ class PlayState extends FlxState
 
 	private function _onImgLoad(E:Event):Void
 	{
-		var loaderInfo:LoaderInfo = E.target;
+		var loaderInfo:LoaderInfo = cast E.target;
 		loaderInfo.removeEventListener(Event.COMPLETE, _onImgLoad);
 		var bmp:Bitmap = cast(loaderInfo.content, Bitmap);
 		_showImage(bmp.bitmapData);

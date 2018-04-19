@@ -5,10 +5,14 @@ haxe:
   - development
 
 env:
-  - TARGET=flash
-  - TARGET=neko
-  - TARGET=cpp
-  - TARGET=html5
+  - TARGET=flash OPENFL=new
+  - TARGET=neko  OPENFL=new
+  - TARGET=cpp   OPENFL=new
+  - TARGET=html5 OPENFL=new
+  - TARGET=flash OPENFL=old
+  - TARGET=neko  OPENFL=old
+  - TARGET=cpp   OPENFL=old
+  - TARGET=html5 OPENFL=old
 
 sudo: false
 dist: trusty
@@ -27,8 +31,6 @@ before_install:
 install:
   - haxelib install munit > /dev/null
   - haxelib install hamcrest > /dev/null
-  - haxelib install lime 2.9.1 > /dev/null
-  - haxelib install openfl 3.6.1 > /dev/null
   - haxelib install systools > /dev/null
   - haxelib install nape > /dev/null
   - haxelib install task > /dev/null
@@ -49,4 +51,4 @@ script:
   - haxe build.hxml
   - cd ~/haxe/lib/flixel/git/tests
   - haxe RunTravis.hxml
-  - neko RunTravis.n $TARGET
+  - neko RunTravis.n $TARGET $OPENFL

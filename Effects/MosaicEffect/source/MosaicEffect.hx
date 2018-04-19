@@ -1,10 +1,11 @@
 package;
 
-import openfl.display.Shader;
- 
-/**
- * Note: BitmapFilters can only be used on 'OpenFL next'
- */
+#if (openfl >= "8.0.0")
+import openfl8.MosaicShader;
+#else
+import openfl3.MosaicShader;
+#end
+
 class MosaicEffect
 {
 	/**
@@ -30,40 +31,25 @@ class MosaicEffect
 	public function new(width:Float, height:Float):Void
 	{
 		shader = new MosaicShader();
+		#if (openfl >= "8.0.0")
+		shader.data.uTextureSize.value = [width, height];
+		shader.data.uBlocksize.value = [strengthX, strengthY];
+		#else
 		shader.uTextureSize = [width, height];
 		shader.uBlocksize = [strengthX, strengthY];
+		#end
 	}
 	
 	public function setStrength(strengthX:Float, strengthY:Float):Void
 	{
 		this.strengthX = strengthX;
 		this.strengthY = strengthY;
+		#if (openfl >= "8.0.0")
+		shader.uBlocksize.value[0] = strengthX;
+		shader.uBlocksize.value[1] = strengthY;
+		#else
 		shader.uBlocksize[0] = strengthX;
 		shader.uBlocksize[1] = strengthY;
-	}
-}
-
-/**
- * A classic mosaic effect, just like in the old days!
- * 
- * Usage notes:
- * - The effect will be applied to the whole screen.
- * - Set the x/y-values on the 'uBlocksize' vector to the desired size (setting this to 0 will make the screen go black)
- */
-class MosaicShader extends Shader
-{
-	@fragment var code = '
-	uniform vec2 uTextureSize;
-	uniform vec2 uBlocksize;
-
-	void main()
-	{
-		vec2 blocks = uTextureSize / uBlocksize;
-		gl_FragColor = texture2D(${Shader.uSampler}, floor(${Shader.vTexCoord} * blocks) / blocks);
-	}';
-	
-	public function new()
-	{
-		super();
+		#end
 	}
 }

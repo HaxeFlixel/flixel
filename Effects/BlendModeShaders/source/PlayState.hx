@@ -5,27 +5,27 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
 
-#if !flash
-import blends.ColorBurnShader;
-import blends.HardMixShader;
-import blends.LightenShader;
-import blends.LinearDodgeShader;
-import blends.MultiplyShader;
-import blends.VividLightShader;
-import effects.BlendModeEffect;
-import effects.WiggleEffect;
-import effects.ColorSwapEffect;
-import effects.ShutterEffect;
-import openfl.filters.ShaderFilter;
-import flixel.text.FlxText;
+#if shaders_supported
+#if (openfl >= "8.0.0")
+import openfl8.blends.*;
+import openfl8.effects.*;
+import openfl8.effects.WiggleEffect.WiggleEffectType;
+import openfl8.effects.BlendModeEffect.BlendModeShader;
+#else
+import openfl3.blends.*;
+import openfl3.effects.*;
+import openfl3.effects.WiggleEffect.WiggleEffectType;
+import openfl3.effects.BlendModeEffect.BlendModeShader;
+#end
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.addons.ui.FlxUIDropDownMenu;
+import flixel.text.FlxText;
+import openfl.filters.ShaderFilter;
 #else
 import flixel.text.FlxText;
 #end
-
 @:enum abstract LogoColor(FlxColor) to FlxColor
 {
 	static var LIST(default, null) = [RED, BLUE, YELLOW, CYAN, GREEN];
@@ -44,7 +44,9 @@ import flixel.text.FlxText;
 
 class PlayState extends FlxState
 {
-	#if !flash
+	var backdrop:FlxSprite;
+
+	#if shaders_supported
 	var wiggleEffect:WiggleEffect;
 
 	var effects:Map<String, BlendModeShader> = [
@@ -61,22 +63,22 @@ class PlayState extends FlxState
 	{
 		super.create();
 
-		var backdrop = new FlxSprite(0, 0, AssetPaths.backdrop__png);
+		backdrop = new FlxSprite(0, 0, AssetPaths.backdrop__png);
 		add(backdrop);
-		
-		#if flash
-		add(createText(0, 0, "Not supported on Flash!", 16).screenCenter());
+
+		#if !shaders_supported
+		add(createText(0, 0, "Not supported on this target!", 16).screenCenter());
 		#else
+		var logo = new FlxSprite(0, 0, AssetPaths.logo__png);
+		logo.screenCenter();
+		add(logo);
+		
 		wiggleEffect = new WiggleEffect();
 		wiggleEffect.effectType = WiggleEffectType.DREAMY;
 		wiggleEffect.waveAmplitude = 0.2;
 		wiggleEffect.waveFrequency = 7;
 		wiggleEffect.waveSpeed = 1;
 		backdrop.shader = wiggleEffect.shader;
-		
-		var logo = new FlxSprite(0, 0, AssetPaths.logo__png);
-		logo.screenCenter();
-		add(logo);
 		
 		var colorSwap = new ColorSwapEffect();
 		logo.shader = colorSwap.shader;
@@ -100,7 +102,7 @@ class PlayState extends FlxState
 		return text;
 	}
 
-	#if !flash
+	#if shaders_supported
 	private function createUI()
 	{
 		var dropDownWidth = 155;
@@ -125,7 +127,11 @@ class PlayState extends FlxState
 		color.alphaFloat = 0.5;
 
 		var effect = new BlendModeEffect(effects[blendEffect], color);
+		#if filters_supported
 		FlxG.camera.setFilters([new ShaderFilter(cast effect.shader)]);
+		#else
+		backdrop.shader = cast effect.shader;
+		#end
 	}
 	
 	private function createShutterEffect():Void

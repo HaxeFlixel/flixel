@@ -78,7 +78,7 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	
-	<haxedef name="shaders_supported" unless="flash" if="next" />
+	<haxedef name="shaders_supported" unless="flash || openfl-legacy" />
 	
 	<!--------------------------------CUSTOM---------------------------------------->
 	

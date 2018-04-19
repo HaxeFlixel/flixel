@@ -6,11 +6,16 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.system.FlxAssets.FlxShader;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
+
+#if (openfl >= "8.0.0")
+import openfl8.*;
+#else
+import openfl3.*;
+#end
 
 /**
  * ...
@@ -41,9 +46,6 @@ class PlayState extends FlxState
 	
 	private var floodFill = new FloodFill();
 	private var invert = new Invert();
-	#else
-	private var floodFill:FlxShader;
-	private var invert:FlxShader;
 	#end
 	
 	override public function create():Void
@@ -53,14 +55,19 @@ class PlayState extends FlxState
 		var bgWidth:Int = Math.ceil(FlxG.width / bgSize) * bgSize;
 		var bgHeight:Int = Math.ceil(FlxG.height / bgSize) * bgSize;
 		
-		if (FlxG.renderBlit #if !openfl_legacy || true #end)
+		var useAnimatedBackground = !FlxG.renderBlit;
+		#if (!openfl_legacy && openfl <= "4.0.0")
+		useAnimatedBackground = false;
+		#end
+
+		if (useAnimatedBackground)
 		{
-			var bg:FlxTileblock = new FlxTileblock(0, 0, bgWidth, bgHeight);
-			add(bg.loadTiles("assets/grass.png"));
+			add(new Background());
 		}
 		else
 		{
-			add(new Background());
+			var bg = new FlxTileblock(0, 0, bgWidth, bgHeight);
+			add(bg.loadTiles("assets/grass.png"));
 		}
 		
 		// Create the bunnies
@@ -75,7 +82,6 @@ class PlayState extends FlxState
 		add(uiBackground);
 		
 		// Left UI
-		
 		var amountSlider:FlxSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
 		amountSlider.nameLabel.text = "Change amount by:";
 		amountSlider.decimals = 0;
@@ -130,7 +136,12 @@ class PlayState extends FlxState
 		var t = FlxG.game.ticks;
 		
 		#if shaders_supported
-		floodFill.uFloodFillY = 0.5 * (1.0 + Math.sin(t / 1000));
+		var floodFillY = 0.5 * (1.0 + Math.sin(t / 1000));
+		#if (openfl >= "8.0.0")
+		floodFill.uFloodFillY.value = [floodFillY];
+		#else
+		floodFill.uFloodFillY = floodFillY;
+		#end
 		#end
 		
 		if (_collisions)
@@ -153,12 +164,13 @@ class PlayState extends FlxState
 	{
 		if (Add)
 		{
-			var halfAmount:Int = Std.int(0.5 * _changeAmount);
-			var shader:FlxShader = null;
-			
 			for (i in 0..._changeAmount)
 			{
-				shader = (i <  halfAmount) ? floodFill : invert;
+				var shader = null;
+				#if shaders_supported
+				shader = (i < _changeAmount / 2) ? floodFill : invert;
+				#end
+
 				// It's much slower to recycle objects, but keeps runtime costs of garbage collection low
 				_bunnies.add(new Bunny().init(offScreen, useShaders, shader));
 			}
