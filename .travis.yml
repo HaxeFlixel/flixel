@@ -51,5 +51,4 @@ script:
   - haxe build.hxml
   - cd $TRAVIS_BUILD_DIR/tests
   - haxe RunTravis.hxml
-  - neko RunTravis.n $TARGET
   - neko RunTravis.n $TARGET $OPENFL
