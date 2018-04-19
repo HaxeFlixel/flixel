@@ -2,6 +2,7 @@
 ------------------------------
 #### New features:
 
+- Added support for OpenFL 8 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
 - `FlxStringUtil`: added `getEnumName()` ([95615382](https://github.com/HaxeFlixel/flixel/commit/95615382))
 - `FlxG.console`: added `registerEnum()` ([24905c4b](https://github.com/HaxeFlixel/flixel/commit/24905c4b))
 - `FlxMouse`: added `justMoved` ([#2087](https://github.com/HaxeFlixel/flixel/issues/2087))
@@ -20,7 +21,7 @@
 - `FlxDebugger` console: fixed tab not focusing the text field on native targets
 - `FlxMath`: fixed `roundDecimals()` for large inputs ([#2127](https://github.com/HaxeFlixel/flixel/issues/2127))
 - `FlxG.sound`: fixed sounds not being removed from the default groups on state switches ([#2124](https://github.com/HaxeFlixel/flixel/issues/2124))
-- `FlxObject`: fixed an issue that could lead to getting stuck on y-axis collisions ([#2138](https://github.com/HaxeFlixel/flixel/issues/2138))
+- `FlxBar`: fixed bars not reaching 100% by rounding ([#2139](https://github.com/HaxeFlixel/flixel/issues/2139))
 
 4.3.0 (July 22, 2017)
 ------------------------------
