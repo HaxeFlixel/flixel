@@ -56,16 +56,15 @@ class Blob extends BaseState
 		FlxNapeSpace.space.gravity.setxy(0, 500);
 		
 		shooter = new Shooter();
-		add(shooter);														 
+		add(shooter);
 		
 		createBlob();
 		
 		for (i in 0...NUM_TWINKLES)
 		{
-			var t:Twinkle = new Twinkle();
-			add(t);
-			shooter.registerPhysSprite(t);
-			
+			var twinkle = new Twinkle();
+			shooter.registerPhysSprite(twinkle);
+			add(twinkle);
 		}
 		
 		add(new FlxSprite(0, 0, "assets/blob/BlobFground.png"));
@@ -262,7 +261,7 @@ class Twinkle extends FlxNapeSprite
 	var radius:Float;
 	var destinationJoint:DistanceJoint;
 	
-	function new()
+	public function new()
 	{
 		var rand = FlxG.random.int(0, 4);
 		var graphic:String = "assets/blob/Twinkle";
