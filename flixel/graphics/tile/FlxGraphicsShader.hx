@@ -39,7 +39,7 @@ class FlxGraphicsShader extends GraphicsShader
 			
 			if (color.a == 0.0)
 			{
-				gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+				return vec4(0.0, 0.0, 0.0, 0.0);
 			}
 			else if (hasColorTransform)
 			{
