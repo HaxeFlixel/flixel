@@ -70,7 +70,6 @@ class RunTravis
 			haxelibInstall.bind("spinehaxe"),
 			haxelibGit.bind("HaxeFoundation", "hscript"),
 			haxelibGit.bind("larsiusprime", "firetongue"),
-			haxelibGit.bind("HaxeFlixel", "flixel"),
 			haxelibGit.bind("HaxeFlixel", "flixel-tools"),
 			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
 			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
