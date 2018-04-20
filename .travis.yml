@@ -1,7 +1,7 @@
 language: haxe
 
 haxe:
-  - 3.2.0
+  - 3.4.7
 
 env:
   - TARGET=flash OPENFL=new

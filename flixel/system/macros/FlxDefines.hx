@@ -67,15 +67,8 @@ class FlxDefines
 	
 	private static function checkDependencyCompatibility()
 	{
-		#if (haxe_ver < "3.2")
-		abortVersion("Haxe", "3.2.0 or newer", "haxe_ver", (macro null).pos);
-		#end
-		
-		#if ((haxe_ver == "3.201") && flixel_ui)
-		if (defined("cpp"))
-			abort('flixel-ui is not compatible with Haxe 3.2.1 on the cpp target'
-				+' due to a compiler bug (#4343). Please use a different Haxe version.',
-				(macro null).pos);
+		#if (haxe_ver < "3.4")
+		abortVersion("Haxe", "3.4.0 or newer", "haxe_ver", (macro null).pos);
 		#end
 		
 		#if !nme
@@ -85,7 +78,7 @@ class FlxDefines
 
 	private static function checkOpenFLVersions()
 	{
-		#if ((lime < "6.2.0") && ((lime < "2.8.1") || (lime >= "3.0.0"))) 
+		#if ((lime < "6.2.0") && ((lime < "2.8.1") || (lime >= "3.0.0")))
 		abortVersion("Lime", "6.2.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
 		#end
 
@@ -104,7 +97,6 @@ class FlxDefines
 		for (define in HelperDefines.getConstructors())
 			abortIfDefined(define);
 		
-		#if (haxe_ver >= "3.2")
 		var userDefinable = UserDefines.getConstructors();
 		for (define in Context.getDefines().keys())
 		{
@@ -113,7 +105,6 @@ class FlxDefines
 				Context.warning('"$define" is not a valid flixel define.', (macro null).pos);
 			}
 		}
-		#end
 	}
 	
 	private static function abortIfDefined(define:String)

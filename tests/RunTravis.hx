@@ -77,7 +77,7 @@ class RunTravis
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		#if (haxe_ver >= "3.3")
+		#if (haxe_ver >= "4.0.0")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
 			runCommand("haxelib", ["git", "hxcpp", "https://github.com/HaxeFoundation/hxcpp"]),

@@ -1,8 +1,13 @@
 4.4.0 (to be released)
 ------------------------------
-#### New features:
+#### Dependencies:
 
 - Added support for OpenFL 8 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
+- Removed support for Haxe versions < 3.4.0
+- Fixed compatibility with Haxe 4 / development
+
+#### New features:
+
 - `FlxStringUtil`: added `getEnumName()` ([95615382](https://github.com/HaxeFlixel/flixel/commit/95615382))
 - `FlxG.console`: added `registerEnum()` ([24905c4b](https://github.com/HaxeFlixel/flixel/commit/24905c4b))
 - `FlxMouse`: added `justMoved` ([#2087](https://github.com/HaxeFlixel/flixel/issues/2087))
@@ -22,10 +27,6 @@
 - `FlxMath`: fixed `roundDecimals()` for large inputs ([#2127](https://github.com/HaxeFlixel/flixel/issues/2127))
 - `FlxG.sound`: fixed sounds not being removed from the default groups on state switches ([#2124](https://github.com/HaxeFlixel/flixel/issues/2124))
 - `FlxBar`: fixed bars not reaching 100% by rounding ([#2139](https://github.com/HaxeFlixel/flixel/issues/2139))
-
-#### Changes and improvements:
-
-- compatibility fixes for Haxe 4
 
 4.3.0 (July 22, 2017)
 ------------------------------
