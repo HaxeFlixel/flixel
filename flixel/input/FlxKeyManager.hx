@@ -282,7 +282,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		{
 			event.stopImmediatePropagation();
 			event.stopPropagation();
+			#if html5
 			event.preventDefault();
+			#end
 		}
 	}
 	
