@@ -24,6 +24,10 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	{
 		super(FlxKeyList);
 		
+		#if html5
+		preventDefaultKeys = [FlxKey.UP, FlxKey.DOWN, FlxKey.LEFT, FlxKey.RIGHT, FlxKey.SPACE, FlxKey.TAB];
+		#end
+
 		for (code in FlxKey.fromStringMap)
 		{
 			if (code != FlxKey.ANY && code != FlxKey.NONE)

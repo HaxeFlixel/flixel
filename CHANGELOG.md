@@ -28,6 +28,10 @@
 - `FlxG.sound`: fixed sounds not being removed from the default groups on state switches ([#2124](https://github.com/HaxeFlixel/flixel/issues/2124))
 - `FlxBar`: fixed bars not reaching 100% by rounding ([#2139](https://github.com/HaxeFlixel/flixel/issues/2139))
 
+#### Changes and improvements:
+
+- `FlxG.keys`: added arrow keys, space and tab to `preventDefaultKeys` on HTML5
+
 4.3.0 (July 22, 2017)
 ------------------------------
 #### New features:

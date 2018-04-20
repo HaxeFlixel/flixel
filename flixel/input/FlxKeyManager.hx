@@ -210,7 +210,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	{
 		for (key in _keyListArray)
 		{
-			if (key != null) 
+			if (key != null)
 			{
 				key.update();
 			}
@@ -282,6 +282,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		{
 			event.stopImmediatePropagation();
 			event.stopPropagation();
+			event.preventDefault();
 		}
 	}
 	
