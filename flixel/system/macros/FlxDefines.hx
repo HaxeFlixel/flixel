@@ -140,6 +140,10 @@ class FlxDefines
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
 		
+		#if nme
+		define(FLX_JOYSTICK_API);
+		#end
+		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
 		
