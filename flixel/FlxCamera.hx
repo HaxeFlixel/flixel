@@ -627,7 +627,7 @@ class FlxCamera extends FlxBasic
 			
 			if (_useBlitMatrix)
 			{
-				_helperMatrix.concat(_blitMatrix);	
+				_helperMatrix.concat(_blitMatrix);
 				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
 			}
 			else
