@@ -22,7 +22,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	
 	public function new()
 	{
-		super(FlxKeyList);
+		super(FlxKeyList.new);
 		
 		#if html5
 		preventDefaultKeys = [FlxKey.UP, FlxKey.DOWN, FlxKey.LEFT, FlxKey.RIGHT, FlxKey.SPACE, FlxKey.TAB];

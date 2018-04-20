@@ -193,14 +193,14 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 	}
 	
-	private function new(keyListClass:Class<FlxBaseKeyList>)
+	private function new(createKeyList:FlxInputState->FlxKeyManager<Dynamic, Dynamic>->KeyList)
 	{
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		
-		pressed = cast Type.createInstance(keyListClass, [FlxInputState.PRESSED, this]);
-		justPressed = cast Type.createInstance(keyListClass, [FlxInputState.JUST_PRESSED, this]);
-		justReleased = cast Type.createInstance(keyListClass, [FlxInputState.JUST_RELEASED, this]);
+		pressed = createKeyList(FlxInputState.PRESSED, this);
+		justPressed = createKeyList(FlxInputState.JUST_PRESSED, this);
+		justReleased = createKeyList(FlxInputState.JUST_RELEASED, this);
 	}
 	
 	/**

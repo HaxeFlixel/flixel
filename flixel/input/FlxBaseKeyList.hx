@@ -4,6 +4,8 @@ import flixel.input.FlxInput.FlxInputState;
 
 class FlxBaseKeyList
 {
+	public var ANY(get, never):Bool;
+	
 	private var status:FlxInputState;
 	private var keyManager:FlxKeyManager<Dynamic, Dynamic>;
 	
@@ -17,8 +19,6 @@ class FlxBaseKeyList
 	{
 		return keyManager.checkStatus(keyCode, status);
 	}
-	
-	public var ANY(get, never):Bool; 
 	
 	private function get_ANY():Bool
 	{

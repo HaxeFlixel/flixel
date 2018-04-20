@@ -8,7 +8,7 @@ class FlxAndroidKeys extends FlxKeyManager<FlxAndroidKey, FlxAndroidKeyList>
 {
 	public function new()
 	{
-		super(FlxAndroidKeyList);
+		super(FlxAndroidKeyList.new);
 		
 		// BACK button
 		var back:FlxAndroidKeyInput = new FlxAndroidKeyInput(27);
