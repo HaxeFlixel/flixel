@@ -28,26 +28,11 @@ before_install:
   - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x32 -extension GLX
 
 install:
-  - haxelib install munit > /dev/null
-  - haxelib install hamcrest > /dev/null
-  - haxelib install systools > /dev/null
-  - haxelib install nape > /dev/null
-  - haxelib install task > /dev/null
-  - haxelib install poly2trihx > /dev/null
-  - haxelib install spinehaxe > /dev/null
-  - haxelib git hscript https://github.com/HaxeFoundation/hscript > /dev/null
-  - haxelib git firetongue https://github.com/larsiusprime/firetongue > /dev/null
-  - haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools > /dev/null
-  - haxelib git flixel-demos https://github.com/HaxeFlixel/flixel-demos > /dev/null
-  - haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons > /dev/null
-  - haxelib git flixel-ui https://github.com/HaxeFlixel/flixel-ui dev > /dev/null
   - haxelib dev flixel $TRAVIS_BUILD_DIR
   - haxelib list
 
 script:
   - export HXCPP_COMPILE_CACHE=~/hxcache
-  - cd $HOME/haxe/lib/flixel-tools/git
-  - haxe build.hxml
   - cd $TRAVIS_BUILD_DIR/tests
   - haxe RunTravis.hxml
   - neko RunTravis.n $TARGET $OPENFL
