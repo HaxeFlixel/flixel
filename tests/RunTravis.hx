@@ -77,7 +77,6 @@ class RunTravis
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		#if (haxe_ver >= "4.0.0")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return getResult([
 			runCommand("haxelib", ["git", "hxcpp", "https://github.com/HaxeFoundation/hxcpp"]),
@@ -85,9 +84,6 @@ class RunTravis
 			runCommandInDir(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
 			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
 		]);
-		#else
-		return haxelibInstall("hxcpp", "3.3.49");
-		#end
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
