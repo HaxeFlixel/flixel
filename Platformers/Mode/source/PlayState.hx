@@ -10,6 +10,7 @@ import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import flixel.system.FlxAssets;
 
 #if SHOW_FPS
 import openfl.display.FPS;
@@ -64,16 +65,16 @@ class PlayState extends FlxState
 		// Here we are creating a pool of 100 little metal bits that can be exploded.
 		// We will recycle the crap out of these!
 		_littleGibs = new FlxEmitter();
-		_littleGibs.velocity.set( -150, -200, 150, 0);
-		_littleGibs.angularVelocity.set( -720);
+		_littleGibs.velocity.set(-150, -200, 150, 0);
+		_littleGibs.angularVelocity.set(-720);
 		_littleGibs.acceleration.set(0, 350);
 		_littleGibs.elasticity.set(0.5);
 		_littleGibs.loadParticles(AssetPaths.gibs__png, 100, 10, true);
 		
 		// Next we create a smaller pool of larger metal bits for exploding.
 		_bigGibs = new FlxEmitter();
-		_bigGibs.velocity.set( -200, -300, 200, 0);
-		_bigGibs.angularVelocity.set( -720, -720);
+		_bigGibs.velocity.set(-200, -300, 200, 0);
+		_bigGibs.angularVelocity.set(-720, -720);
 		_bigGibs.acceleration.set(0, 350);
 		_bigGibs.elasticity.set(0.35);
 		_bigGibs.loadParticles(AssetPaths.spawner_gibs__png, 50, 20, true);
@@ -175,7 +176,7 @@ class PlayState extends FlxState
 			s.cameras = [FlxG.camera];
 		});
 		
-		FlxG.sound.playMusic("Mode");
+		FlxG.sound.playMusic(FlxAssets.getSound("assets/sounds/mode"));
 		
 		FlxG.cameras.flash(0xff131c1b);
 		_fading = false;
@@ -311,7 +312,7 @@ class PlayState extends FlxState
 						volume = 1.0;
 					}
 					
-					FlxG.sound.play("Countdown", volume);
+					FlxG.sound.play(FlxAssets.getSound("assets/sounds/countdown"), volume);
 				}
 			}
 			

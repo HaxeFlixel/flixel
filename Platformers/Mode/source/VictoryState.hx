@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxAxes;
+import flixel.system.FlxAssets;
 
 /**
  * A FlxState which is shown when the player wins.
@@ -51,7 +52,7 @@ class VictoryState extends FlxState
 				#if FLX_KEYBOARD || FlxG.keys.anyJustPressed([X, C]) #end ))
 			{
 				_fading = true;
-				FlxG.sound.play("MenuHit2");
+				FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
 				FlxG.cameras.fade(0xff131c1b, 2, false, function()
 				{
 					FlxG.switchState(new PlayState());

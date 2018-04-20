@@ -6,6 +6,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxSave;
+import flixel.system.FlxAssets;
 import openfl.Assets;
 
 /**
@@ -116,7 +117,7 @@ class MenuState extends FlxState
 			_title2.velocity.x = 0;
 			
 			// Then, play a cool sound, change their color, and blow up pieces everywhere
-			FlxG.sound.play("MenuHit");
+			FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit"));
 			
 			FlxG.cameras.flash(0xffd8eba2, 0.5);
 			FlxG.cameras.shake(0.035, 0.5);
@@ -168,10 +169,10 @@ class MenuState extends FlxState
 		#if FLX_KEYBOARD
 		if (!_fading)
 		{
-			if  ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _demoMode)
+			if ((FlxG.keys.pressed.X && FlxG.keys.pressed.C) || _demoMode)
 			{
 				_fading = true;
-				FlxG.sound.play("MenuHit2");
+				FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
 				
 				FlxG.cameras.flash(0xffd8eba2, 0.5);
 				FlxG.cameras.fade(0xff131c1b, 1, false, onFade);
@@ -194,7 +195,7 @@ class MenuState extends FlxState
 	function onPlay()
 	{
 		onFade();
-		FlxG.sound.play("MenuHit2");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
 	}
 	
 	/**

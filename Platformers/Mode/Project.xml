@@ -80,42 +80,13 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
 	<assets path="assets" exclude="*.ogg|*.mp3" />
+	<assets path="assets" include="*.mp3" if="web" />
+	<assets path="assets" include="*.ogg" unless="flash" />
+
 	<icon path="assets/images/bot.png" />
-	
-	<assets path="assets/sounds" if="flash">
-		<music path="asplode.mp3" id="Asplode" />
-		<music path="button.mp3" id="Button" />
-		<music path="countdown.mp3" id="Countdown" />
-		<music path="enemy.mp3" id="Enemy" />
-		<music path="hit.mp3" id="Hit" />
-		<music path="hurt.mp3" id="Hurt" />
-		<music path="jam.mp3" id="Jam" />
-		<music path="jet.mp3" id="Jet" />
-		<music path="jump.mp3" id="Jump" />
-		<music path="menu_hit.mp3" id="MenuHit" />
-		<music path="menu_hit_2.mp3" id="MenuHit2" />
-		<music path="mode.mp3" id="Mode" />
-		<music path="shoot.mp3" id="Shoot" />
-	</assets>
-	
-	<assets path="assets/sounds" unless="flash">
-		<sound path="asplode.ogg" id="Asplode" />
-		<sound path="button.ogg" id="Button" />
-		<sound path="countdown.ogg" id="Countdown" />
-		<sound path="enemy.ogg" id="Enemy" />
-		<sound path="hit.ogg" id="Hit" />
-		<sound path="hurt.ogg" id="Hurt" />
-		<sound path="jam.ogg" id="Jam" />
-		<sound path="jet.ogg" id="Jet" />
-		<sound path="jump.ogg" id="Jump" />
-		<sound path="menu_hit.ogg" id="MenuHit" />
-		<sound path="menu_hit_2.ogg" id="MenuHit2" />
-		<music path="mode.ogg" id="Mode" />
-		<sound path="shoot.ogg" id="Shoot" />
-	</assets>
-		
+
 	<!--Enable this to show a custom FPS counter in Mode-->
 	<!--<haxedef name="SHOW_FPS" />-->
-		
+	
 	<haxedef name="VIRTUAL_PAD" if="mobile" />
 </project>

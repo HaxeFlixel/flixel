@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxSpriteUtil;
+import flixel.system.FlxAssets;
 
 class Spawner extends FlxSprite
 {
@@ -80,7 +81,7 @@ class Spawner extends FlxSprite
 	
 	override public function hurt(Damage:Float):Void
 	{
-		FlxG.sound.play("Hit");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/hit"));
 		FlxSpriteUtil.flicker(this, 0.2, 0.02, true);
 		Reg.score += 50;
 		
@@ -94,8 +95,8 @@ class Spawner extends FlxSprite
 			return;
 		}
 		
-		FlxG.sound.play("Asplode");
-		FlxG.sound.play("MenuHit2");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/asplode"));
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
 		
 		super.kill();
 		

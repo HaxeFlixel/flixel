@@ -7,6 +7,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 import flixel.util.FlxSpriteUtil;
+import flixel.system.FlxAssets;
 
 class Enemy extends FlxSprite
 {
@@ -198,7 +199,7 @@ class Enemy extends FlxSprite
 				_jets.start(false, 0.01);
 				
 				if (isOnScreen())
-					FlxG.sound.play("Jet");
+					FlxG.sound.play(FlxAssets.getSound("assets/sounds/jet"));
 			}
 			// Then, position the jets at the center of the Enemy,
 			// and point the jets the opposite way from where we're moving.
@@ -235,7 +236,7 @@ class Enemy extends FlxSprite
 	 */
 	override public function hurt(Damage:Float):Void
 	{
-		FlxG.sound.play("Hit");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/hit"));
 		FlxSpriteUtil.flicker(this, 0.2, 0.02, true);
 		Reg.score += 10;
 		
@@ -251,7 +252,7 @@ class Enemy extends FlxSprite
 		if (!alive)
 			return;
 		
-		FlxG.sound.play("Asplode");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/asplode"));
 		
 		super.kill();
 		

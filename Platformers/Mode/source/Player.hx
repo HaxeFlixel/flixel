@@ -8,6 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
+import flixel.system.FlxAssets;
 
 #if VIRTUAL_PAD
 import flixel.ui.FlxVirtualPad;
@@ -196,7 +197,7 @@ class Player extends FlxSprite
 		if (flickering)
 			return;
 		
-		FlxG.sound.play("Hurt");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/hurt"));
 		
 		flicker(1.3);
 		
@@ -226,8 +227,8 @@ class Player extends FlxSprite
 			return;
 		
 		solid = false;
-		FlxG.sound.play("Asplode");
-		FlxG.sound.play("MenuHit2");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/asplode"));
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
 		
 		super.kill();
 		
@@ -279,7 +280,7 @@ class Player extends FlxSprite
 		if (isReadyToJump && (velocity.y == 0))
 		{
 			velocity.y = -_jumpPower;
-			FlxG.sound.play("Jump");
+			FlxG.sound.play(FlxAssets.getSound("assets/sounds/jump"));
 		}
 	}
 	
@@ -291,7 +292,7 @@ class Player extends FlxSprite
 		
 		if (flickering)
 		{
-			FlxG.sound.play("Jam");
+			FlxG.sound.play(FlxAssets.getSound("assets/sounds/jam"));
 		}
 		else
 		{

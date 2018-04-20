@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets;
 
 class EnemyBullet extends FlxSprite
 {
@@ -12,8 +13,8 @@ class EnemyBullet extends FlxSprite
 	{
 		super();
 		loadGraphic(AssetPaths.bot_bullet__png, true);
-		animation.add("idle",[0, 1], 50);
-		animation.add("poof",[2, 3, 4], 50, false);
+		animation.add("idle", [0, 1], 50);
+		animation.add("poof", [2, 3, 4], 50, false);
 		speed = 120;
 	}
 	
@@ -39,7 +40,7 @@ class EnemyBullet extends FlxSprite
 
 		velocity.set();
 		if (isOnScreen())
-			FlxG.sound.play("Jump");
+			FlxG.sound.play(FlxAssets.getSound("assets/sounds/jump"));
 
 		alive = false;
 		solid = false;
@@ -48,7 +49,7 @@ class EnemyBullet extends FlxSprite
 	
 	public function shoot(Location:FlxPoint, Angle:Float):Void
 	{
-		FlxG.sound.play("Enemy", 0.5);
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/enemy"), 0.5);
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
 		_point.set(0, -speed);

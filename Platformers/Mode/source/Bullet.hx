@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets;
 
 class Bullet extends FlxSprite
 {
@@ -49,7 +50,7 @@ class Bullet extends FlxSprite
 		velocity.set(0, 0);
 		
 		if (isOnScreen())
-			FlxG.sound.play("Jump");
+			FlxG.sound.play(FlxAssets.getSound("assets/sounds/jump"));
 		
 		alive = false;
 		solid = false;
@@ -58,7 +59,7 @@ class Bullet extends FlxSprite
 	
 	public function shoot(Location:FlxPoint, Aim:Int):Void
 	{
-		FlxG.sound.play("Shoot");
+		FlxG.sound.play(FlxAssets.getSound("assets/sounds/shoot"));
 		
 		super.reset(Location.x - width / 2, Location.y - height / 2);
 		
