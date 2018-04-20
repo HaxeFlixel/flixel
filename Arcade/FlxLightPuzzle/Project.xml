@@ -29,7 +29,10 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" />
+	<assets path="assets/data" />
+	<assets path="assets/images" />
+	<assets path="assets/music" include="*.mp3" if="web" />
+	<assets path="assets/music" include="*.ogg" unless="flash" />
 	
 	<!-- _______________________________ Libraries ______________________________ -->
 
