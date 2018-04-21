@@ -16,7 +16,7 @@ class Bunny extends FlxSprite
 	
 	private var _shader:FlxShader;
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		
@@ -26,21 +26,17 @@ class Bunny extends FlxSprite
 			loadGraphic("assets/wabbit_alpha.png");
 	}
 	
-	public function init(Offscreen:Bool = false, UseShader:Bool = false, ?Shader:FlxShader):Bunny
+	public function init(offscreen:Bool = false, useShader:Bool = false, ?shader:FlxShader):Bunny
 	{
 		var speedMultiplier:Int = 50;
 		
-		if (Offscreen)
-		{
+		if (offscreen)
 			speedMultiplier = 5000;
-		}
 		
-		if (Shader != null)
-		{
-			_shader = Shader;
-		}
+		if (shader != null)
+			_shader = shader;
 		
-		useShader = UseShader;
+		this.useShader = useShader;
 		
 		velocity.x = speedMultiplier * FlxG.random.float( -5, 5);
 		velocity.y = speedMultiplier * FlxG.random.float( -7.5, 2.5);
@@ -58,14 +54,10 @@ class Bunny extends FlxSprite
 		super.update(elapsed);
 		
 		if (complex)
-		{
 			alpha = 0.3 + 0.7 * y / FlxG.height;
-		}
 		
 		if (!PlayState.offScreen)
-		{
 			updateBounds();
-		}
 	}
 	
 	private function updateBounds():Void
@@ -86,10 +78,8 @@ class Bunny extends FlxSprite
 			velocity.y *= -0.8;
 			y = (FlxG.height - height);
 			
-			if (FlxG.random.bool()) 
-			{
+			if (FlxG.random.bool())
 				velocity.y -= FlxG.random.float(3, 7);
-			}
 		}
 		else if (y < 0)
 		{
@@ -98,32 +88,24 @@ class Bunny extends FlxSprite
 		}
 	}
 	
-	private function set_complex(Value:Bool):Bool
+	private function set_complex(value:Bool):Bool
 	{
-		if (Value)
+		if (value)
 		{
 			scale.x = scale.y = FlxG.random.float(0.3, 1.3);
 		}
-		else 
+		else
 		{
 			scale.set(1, 1);
 			alpha = 1;
 		}
 		
-		return complex = Value;
+		return complex = value;
 	}
 	
-	private function set_useShader(Value:Bool):Bool
+	private function set_useShader(value:Bool):Bool
 	{
-		if (Value)
-		{
-			shader = _shader;
-		}
-		else
-		{
-			shader = null;
-		}
-		
-		return useShader = Value;
+		shader = if (value) _shader else null;
+		return useShader = value;
 	}
 }

@@ -9,7 +9,7 @@ class Background extends FlxStrip
 	public var cols:Int;
 	public var rows:Int;
 	
-	public function new() 
+	public function new()
 	{
 		super(-50, -50, "assets/grass.png"); 
 		
@@ -22,7 +22,7 @@ class Background extends FlxStrip
 		build();
 	}
 	
-	private function build():Void 
+	private function build():Void
 	{
 		var sw:Float = width;
 		var sh:Float = height;
@@ -49,6 +49,7 @@ class Background extends FlxStrip
 				uvtData[ci + 1] = uh * ky;
 			}
 		}
+
 		for (j in 0...rows)
 		{
 			ri = j * (cols + 1);
@@ -82,11 +83,11 @@ class Background extends FlxStrip
 				ci = ri + i * 2;
 				kx = i / cols + Math.cos(t + i) * 0.02;
 				ky = j / rows + Math.sin(t + j + i) * 0.02;
-				vertices[ci] = sw * kx; 
-				vertices[ci + 1] = sh * ky; 
+				vertices[ci] = sw * kx;
+				vertices[ci + 1] = sh * ky;
 			}
 		}
 		
 		super.update(elapsed);
-	}	
+	}
 }

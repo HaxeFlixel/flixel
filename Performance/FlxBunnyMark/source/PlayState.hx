@@ -72,30 +72,27 @@ class PlayState extends FlxState
 		
 		// Create the bunnies
 		_bunnies = new FlxTypedGroup<Bunny>();
-		changeBunnyNumber(true);
+		changeBunnyNumber(true, INITIAL_AMOUNT);
 		add(_bunnies);
 		
 		// All the GUI stuff
-		var uiBackground:FlxSprite = new FlxSprite();
+		var uiBackground = new FlxSprite();
 		uiBackground.makeGraphic(FlxG.width, 100, FlxColor.WHITE);
 		uiBackground.alpha = 0.7;
 		add(uiBackground);
 		
 		// Left UI
-		var amountSlider:FlxSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
+		var amountSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
 		amountSlider.nameLabel.text = "Change amount by:";
 		amountSlider.decimals = 0;
 		add(amountSlider);
 		
-		var removeButton:FlxButton = new FlxButton(15, 65, "Remove", changeBunnyNumber.bind(false));
-		add(removeButton);
-		
-		var addButton:FlxButton = new FlxButton(100, 65, "Add", changeBunnyNumber.bind(true));
-		add(addButton);
+		add(new FlxButton(15, 65, "Remove", function() changeBunnyNumber(false, _changeAmount)));
+		add(new FlxButton(100, 65, "Add", function() changeBunnyNumber(true, _changeAmount)));
 		
 		// Right UI
 		// Column2 1
-		var rightButtonX:Float = FlxG.width - 100; 
+		var rightButtonX:Float = FlxG.width - 100;
 		
 		_complexityButton = new FlxButton(rightButtonX, 10, "Simple", onComplexityToggle);
 		add(_complexityButton);
@@ -133,10 +130,10 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
-		var t = FlxG.game.ticks;
+		var time = FlxG.game.ticks;
 		
 		#if shaders_supported
-		var floodFillY = 0.5 * (1.0 + Math.sin(t / 1000));
+		var floodFillY = 0.5 * (1.0 + Math.sin(time / 1000));
 		#if (openfl >= "8.0.0")
 		floodFill.uFloodFillY.value = [floodFillY];
 		#else
@@ -145,26 +142,22 @@ class PlayState extends FlxState
 		#end
 		
 		if (_collisions)
-		{
 			FlxG.collide(_bunnies, _bunnies);
-		}
 		
-		var now:Float = t / 1000;
+		var now:Float = time / 1000;
 		_times.push(now);
 		
 		while (_times[0] < now - 1)
-		{
 			_times.shift();
-		}
 		
 		_fpsCounter.text = "FPS: " + _times.length + "/" + Lib.current.stage.frameRate;
 	}
 
-	private function changeBunnyNumber(Add:Bool):Void
+	private function changeBunnyNumber(add:Bool, amount:Int):Void
 	{
-		if (Add)
+		for (i in 0...amount)
 		{
-			for (i in 0..._changeAmount)
+			if (add)
 			{
 				var shader = null;
 				#if shaders_supported
@@ -174,30 +167,19 @@ class PlayState extends FlxState
 				// It's much slower to recycle objects, but keeps runtime costs of garbage collection low
 				_bunnies.add(new Bunny().init(offScreen, useShaders, shader));
 			}
-		}
-		else 
-		{
-			for (i in 0..._changeAmount) 
+			else 
 			{
 				var bunny:Bunny = _bunnies.getFirstAlive();
-				
-				if (bunny != null) 
-				{
+				if (bunny != null)
 					_bunnies.remove(bunny);
-				}
 			}
 		}
 		
-		// Update the bunny counter
 		if (_bunnyCounter != null)
 		{
 			var bunnyAmount:Int = _bunnies.countLiving();
-			
-			if (bunnyAmount == -1) 
-			{
+			if (bunnyAmount == -1)
 				bunnyAmount = 0;
-			}
-			
 			_bunnyCounter.text = "Bunnies: " + bunnyAmount;
 		}
 	}
@@ -205,74 +187,49 @@ class PlayState extends FlxState
 	private function onComplexityToggle():Void
 	{
 		complex = !complex;
-		toggleHelper(_complexityButton, "Complex", "Simple");
+		toggleLabel(_complexityButton, "Complex", "Simple");
 		
-		// Update the bunnies
 		for (bunny in _bunnies)
-		{
 			if (bunny != null)
-			{
 				bunny.complex = complex;
-			}
-		}
 	}
 	
 	private function onCollisionToggle():Void
 	{
 		_collisions = !_collisions;
-		toggleHelper(_collisionButton, "Collisions: Off", "Collisions: On");
+		toggleLabel(_collisionButton, "Collisions: Off", "Collisions: On");
 	}
 	
 	private function onTimestepToggle():Void
 	{
 		FlxG.fixedTimestep = !FlxG.fixedTimestep;
-		toggleHelper(_timestepButton, "Step: Fixed", "Step: Variable");
+		toggleLabel(_timestepButton, "Step: Fixed", "Step: Variable");
 	}
 	
 	private function onOffScreenToggle():Void
 	{
 		offScreen = !offScreen;
-		toggleHelper(_offScreenButton, "On-Screen", "Off-Screen");
+		toggleLabel(_offScreenButton, "On-Screen", "Off-Screen");
 		
-		// Update the bunnies
 		for (bunny in _bunnies)
-		{
 			if (bunny != null)
-			{
 				bunny.init(offScreen, useShaders);
-			}
-		}
 	}
 	
 	#if shaders_supported
 	private function onShaderToggle():Void
 	{
 		useShaders = !useShaders;
-		toggleHelper(_shaderButton, "Shaders: Off", "Shaders: On");
+		toggleLabel(_shaderButton, "Shaders: Off", "Shaders: On");
 		
-		// Update the bunnies
 		for (bunny in _bunnies)
-		{
 			if (bunny != null)
-			{
 				bunny.useShader = useShaders;
-			}
-		}
 	}
 	#end
 	
-	/**
-	 * Just a little helper function for some toggle button behaviour.
-	 */
-	private function toggleHelper(Button:FlxButton, Text1:String, Text2:String):Void
+	private function toggleLabel(button:FlxButton, text1:String, text2:String):Void
 	{
-		if (Button.label.text == Text1)
-		{
-			Button.label.text = Text2;
-		}
-		else 
-		{
-			Button.label.text = Text1;
-		}
+		button.label.text = if (button.label.text == text1) text2 else text1;
 	}
 }
