@@ -7,6 +7,7 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.math.FlxMatrix;
 import openfl.geom.ColorTransform;
+import openfl.display.ShaderParameter;
 import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
@@ -143,7 +144,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.render(camera);
 	}
 
-	private inline function setParameterValue(parameter, value):Void
+	private inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
 	{
 		if (parameter.value == null)
 			parameter.value = [];
