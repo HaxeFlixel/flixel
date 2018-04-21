@@ -18,9 +18,13 @@ class State_SaveMenu extends FlxUIState
 	public override function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		var xml:Fast;
+		#if (haxe_ver < "4.0.0")
 		if (Std.is(data, Fast))
+		#else
+		if (Std.is(data, Xml))
+		#end
 		{
-			xml = cast(data, Fast);
+			xml = cast data;
 		}
 		if (id.indexOf("ui_get:") == 0)
 		{
