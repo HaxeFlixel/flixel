@@ -23,13 +23,11 @@ import openfl3.*;
  */
 class PlayState extends FlxState
 {
-	public static inline var INITIAL_AMOUNT:Int = 1000;
-	
 	public static var complex:Bool = false;
 	public static var offScreen:Bool = false;
 	public static var useShaders:Bool = false;
 	
-	private var _changeAmount:Int = Std.int(INITIAL_AMOUNT / 2);
+	private var _changeAmount:Int = 1000;
 	private var _times:Array<Float>;
 	private var _collisions:Bool = false;
 	
@@ -70,9 +68,14 @@ class PlayState extends FlxState
 			add(bg.loadTiles("assets/grass.png"));
 		}
 		
+		var initialAmount = _changeAmount;
+		var define = haxe.macro.Compiler.getDefine("bunnies");
+		if (define != null)
+			initialAmount = Std.parseInt(define);
+
 		// Create the bunnies
 		_bunnies = new FlxTypedGroup<Bunny>();
-		changeBunnyNumber(true, INITIAL_AMOUNT);
+		changeBunnyNumber(true, initialAmount);
 		add(_bunnies);
 		
 		// All the GUI stuff
@@ -82,7 +85,7 @@ class PlayState extends FlxState
 		add(uiBackground);
 		
 		// Left UI
-		var amountSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, INITIAL_AMOUNT);
+		var amountSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, _changeAmount * 2);
 		amountSlider.nameLabel.text = "Change amount by:";
 		amountSlider.decimals = 0;
 		add(amountSlider);
@@ -115,7 +118,7 @@ class PlayState extends FlxState
 		#end
 		
 		// The texts
-		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + _changeAmount);
+		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + initialAmount);
 		_bunnyCounter.setFormat(null, 22, FlxColor.BLACK, CENTER);
 		add(_bunnyCounter);
 		

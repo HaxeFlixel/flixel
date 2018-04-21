@@ -4,6 +4,7 @@
 * Disabled `vsync` by default in `Project.xml` files
 * NeonVector: fixed Neko compatibility (#243)
 * Flixius: fixed Android compilation (#232)
+* FlxBunnyMark: added support for `-Dbunnies=<amount>`
 
 2.5.0 (March 28, 2018)
 ------------------------------
