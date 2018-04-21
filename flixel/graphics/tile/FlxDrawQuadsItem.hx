@@ -33,8 +33,8 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	override public function reset():Void
 	{
 		super.reset();
-		rects.splice(0, rects.length);
-		transforms.splice(0, transforms.length);
+		rects.length = 0;
+		transforms.length = 0;
 		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
