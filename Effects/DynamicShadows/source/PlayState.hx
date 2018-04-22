@@ -131,7 +131,7 @@ class PlayState extends FlxState
 				var yPos:Float = tileY * TILE_SIZE;
 				
 				if (tileIndex == Prop.BARREL)
-				{					
+				{
 					add(new Barrel(xPos, yPos));
 					cleanTile(tileX, tileY);
 				}
