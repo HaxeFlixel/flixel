@@ -398,7 +398,7 @@ class FlxBasePreloader extends DefaultPreloader
 		if (allowedURLs.length == 0)
 			return true;
 
-		var homeURL:String = #if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #end;
+		var homeURL:String = #if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #else "" #end;
 		var homeDomain:String = FlxStringUtil.getDomain(homeURL);
 		for (allowedURL in allowedURLs)
 		{
