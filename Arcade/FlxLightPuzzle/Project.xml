@@ -31,8 +31,8 @@
 	<classpath name="source" />
 	<assets path="assets/data" />
 	<assets path="assets/images" />
-	<assets path="assets/music" include="*.mp3" if="web" />
-	<assets path="assets/music" include="*.ogg" unless="flash" />
+	<assets path="assets/music" include="*.mp3" if="web || air" />
+	<assets path="assets/music" include="*.ogg" unless="flash || air" />
 	
 	<!-- _______________________________ Libraries ______________________________ -->
 

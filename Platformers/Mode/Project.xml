@@ -80,8 +80,8 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
 	<assets path="assets" exclude="*.ogg|*.mp3" />
-	<assets path="assets" include="*.mp3" if="web" />
-	<assets path="assets" include="*.ogg" unless="flash" />
+	<assets path="assets" include="*.mp3" if="web || air" />
+	<assets path="assets" include="*.ogg" unless="flash || air" />
 
 	<icon path="assets/images/bot.png" />
 
