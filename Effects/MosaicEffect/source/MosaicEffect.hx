@@ -28,14 +28,12 @@ class MosaicEffect
 	 */
 	public var strengthY(default, null):Float = DEFAULT_STRENGTH;
 	
-	public function new(width:Float, height:Float):Void
+	public function new():Void
 	{
 		shader = new MosaicShader();
 		#if (openfl >= "8.0.0")
-		shader.data.uTextureSize.value = [width, height];
 		shader.data.uBlocksize.value = [strengthX, strengthY];
 		#else
-		shader.uTextureSize = [width, height];
 		shader.uBlocksize = [strengthX, strengthY];
 		#end
 	}

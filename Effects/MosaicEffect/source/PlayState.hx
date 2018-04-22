@@ -25,7 +25,7 @@ class PlayState extends FlxState
 		var backdrop = new FlxSprite(0, 0, "assets/images/backdrop.png");
 		add(backdrop);
 
-		var effect = new MosaicEffect(backdrop.width, backdrop.height);
+		var effect = new MosaicEffect();
 		backdrop.shader = effect.shader;
 		
 		var infoText = new FlxText(10, 10, 100, "Press SPACE to pause the effect.");
