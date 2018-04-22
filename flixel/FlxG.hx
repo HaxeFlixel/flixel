@@ -321,7 +321,13 @@ class FlxG
 		#if openfl_legacy
 		stage.resize(Width, Height);
 		#else
-		Lib.application.window.resize(Width, Height);
+			#if air
+			var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
+			window.width = Width;
+			window.height = Height;
+			#else
+			Lib.application.window.resize(Width, Height);
+			#end
 		#end
 		#end
 	}
@@ -619,7 +625,11 @@ class FlxG
 		renderMethod = DRAW_TILES;
 		#end
 		#end
-		
+
+		#if air
+		renderMethod = BLITTING;
+		#end
+
 		renderBlit = renderMethod == BLITTING;
 		renderTile = renderMethod == DRAW_TILES;
 		
@@ -644,7 +654,7 @@ class FlxG
 		timeScale = 1.0;
 		elapsed = 0;
 		maxElapsed = 0.1;
-		worldBounds.set( -10, -10, width + 20, height + 20);
+		worldBounds.set(-10, -10, width + 20, height + 20);
 		worldDivisions = 6;
 	}
 	

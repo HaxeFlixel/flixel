@@ -3,8 +3,8 @@
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
 	<section unless="unit-test">
-		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="web" embed="true" />
-		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash" embed="true" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="web || air" embed="true" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || air" embed="true" />
 	</section>
 	
 	<assets path="assets/fonts/nokiafc22.ttf" rename="flixel/fonts/nokiafc22.ttf" embed="true" />
