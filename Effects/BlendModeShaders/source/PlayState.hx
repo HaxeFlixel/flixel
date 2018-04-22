@@ -127,11 +127,7 @@ class PlayState extends FlxState
 		color.alphaFloat = 0.5;
 
 		var effect = new BlendModeEffect(effects[blendEffect], color);
-		#if filters_supported
 		FlxG.camera.setFilters([new ShaderFilter(cast effect.shader)]);
-		#else
-		backdrop.shader = cast effect.shader;
-		#end
 	}
 	
 	private function createShutterEffect():Void
