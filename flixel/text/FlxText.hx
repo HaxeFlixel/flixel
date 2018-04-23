@@ -201,11 +201,7 @@ class FlxText extends FlxSprite
 		textField.text = Text;
 		fieldWidth = FieldWidth;
 		textField.embedFonts = EmbeddedFont;
-		
-		#if flash
 		textField.sharpness = 100;
-		#end
-		
 		textField.height = (Text.length <= 0) ? 1 : 10;
 		
 		allowCollisions = FlxObject.NONE;
