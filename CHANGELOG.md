@@ -4,7 +4,9 @@
 * Disabled `vsync` by default in `Project.xml` files
 * NeonVector: fixed Neko compatibility (#243)
 * Flixius: fixed Android compilation (#232)
-* FlxBunnyMark: added support for `-Dbunnies=<amount>`
+* FlxBunnyMark:
+  * added support for `-Dbunnies=<amount>`
+  * added the ability to toggle the UI overlay with space
 * Fixed HTML5 compatibility of several demos (FlxTween, Filters, ...)
 
 2.5.0 (March 28, 2018)

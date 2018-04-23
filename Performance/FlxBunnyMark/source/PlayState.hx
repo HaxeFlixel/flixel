@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTileblock;
 import flixel.ui.FlxButton;
@@ -32,6 +33,7 @@ class PlayState extends FlxState
 	private var _collisions:Bool = false;
 	
 	private var _bunnies:FlxTypedGroup<Bunny>;
+	private var _uiOverlay:FlxSpriteGroup;
 	private var _complexityButton:FlxButton;
 	private var _collisionButton:FlxButton;
 	private var _timestepButton:FlxButton;
@@ -77,58 +79,68 @@ class PlayState extends FlxState
 		_bunnies = new FlxTypedGroup<Bunny>();
 		changeBunnyNumber(true, initialAmount);
 		add(_bunnies);
-		
+
 		// All the GUI stuff
+		_uiOverlay = createOverlay();
+		add(_uiOverlay);
+
+		_times = [];
+	}
+
+	private function createOverlay():FlxSpriteGroup
+	{
+		var overlay = new FlxSpriteGroup();
+
 		var uiBackground = new FlxSprite();
 		uiBackground.makeGraphic(FlxG.width, 100, FlxColor.WHITE);
 		uiBackground.alpha = 0.7;
-		add(uiBackground);
+		overlay.add(uiBackground);
 		
 		// Left UI
 		var amountSlider = new FlxSlider(this, "_changeAmount", 40, 5, 1, _changeAmount * 2);
 		amountSlider.nameLabel.text = "Change amount by:";
 		amountSlider.decimals = 0;
-		add(amountSlider);
+		overlay.add(amountSlider);
 		
-		add(new FlxButton(15, 65, "Remove", function() changeBunnyNumber(false, _changeAmount)));
-		add(new FlxButton(100, 65, "Add", function() changeBunnyNumber(true, _changeAmount)));
+		overlay.add(new FlxButton(15, 65, "Remove", function() changeBunnyNumber(false, _changeAmount)));
+		overlay.add(new FlxButton(100, 65, "Add", function() changeBunnyNumber(true, _changeAmount)));
 		
 		// Right UI
 		// Column2 1
 		var rightButtonX:Float = FlxG.width - 100;
 		
 		_complexityButton = new FlxButton(rightButtonX, 10, "Simple", onComplexityToggle);
-		add(_complexityButton);
+		overlay.add(_complexityButton);
 		
 		_collisionButton = new FlxButton(rightButtonX, 35, "Collisons: Off", onCollisionToggle);
-		add(_collisionButton);
+		overlay.add(_collisionButton);
 		
 		// Column2
 		rightButtonX -= 100;
 		
 		_timestepButton = new FlxButton(rightButtonX, 10, "Step: Fixed", onTimestepToggle);
-		add(_timestepButton);
+		overlay.add(_timestepButton);
 		
 		_offScreenButton = new FlxButton(rightButtonX, 35, "On-Screen", onOffScreenToggle);
-		add(_offScreenButton);
+		overlay.add(_offScreenButton);
 		
 		#if shaders_supported
 		_shaderButton = new FlxButton(rightButtonX, 60, "Shaders: Off", onShaderToggle);
-		add(_shaderButton);
+		overlay.add(_shaderButton);
 		#end
 		
 		// The texts
-		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + initialAmount);
+		_bunnyCounter = new FlxText(0, 10, FlxG.width, "Bunnies: " + _bunnies.length);
 		_bunnyCounter.setFormat(null, 22, FlxColor.BLACK, CENTER);
-		add(_bunnyCounter);
+		overlay.add(_bunnyCounter);
 		
 		_fpsCounter = new FlxText(0, _bunnyCounter.y + _bunnyCounter.height + 20, FlxG.width, "FPS: " + 30);
 		_fpsCounter.setFormat(null, 22, FlxColor.BLACK, CENTER);
-		add(_fpsCounter);
+		overlay.add(_fpsCounter);
 		
-		_times = [];
+		return overlay;
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
@@ -154,6 +166,9 @@ class PlayState extends FlxState
 			_times.shift();
 		
 		_fpsCounter.text = "FPS: " + _times.length + "/" + Lib.current.stage.frameRate;
+
+		if (FlxG.keys.justPressed.SPACE)
+			_uiOverlay.visible = !_uiOverlay.visible;
 	}
 
 	private function changeBunnyNumber(add:Bool, amount:Int):Void
