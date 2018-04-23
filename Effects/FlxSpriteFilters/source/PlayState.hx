@@ -15,6 +15,9 @@ import flixel.tweens.FlxTween;
 import flash.filters.BevelFilter;
 import flash.filters.DisplacementMapFilter;
 import flash.filters.DisplacementMapFilterMode;
+import flash.geom.Point;
+import flixel.tweens.FlxEase;
+import openfl.Assets;
 #end
 
 class PlayState extends FlxState
@@ -86,7 +89,7 @@ class PlayState extends FlxState
 		
 		#if flash
 		var bevelFilter = new BevelFilter(6); 
-		spr5 = createSprite(0.5, 100, "Bevel\n( flash only )");
+		spr5 = createSprite(0.5, 100, "Bevel\n(flash only)");
 		spr5Filter = createFilterFrames(spr5, bevelFilter);
 		tween5 = FlxTween.tween(bevelFilter, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
 		tween5.active = false;
@@ -94,7 +97,7 @@ class PlayState extends FlxState
 		displacementFilter = new DisplacementMapFilter(
 			Assets.getBitmapData("assets/StaticMap.png"), 
 			new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0);
-		spr6 = createSprite(0.75, 100, "Displacement\n( flash only )");
+		spr6 = createSprite(0.75, 100, "Displacement\n(flash only)");
 		spr6Filter = createFilterFrames(spr6, displacementFilter);	
 		#end
 	}
