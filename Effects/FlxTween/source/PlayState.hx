@@ -7,7 +7,6 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxEase.EaseFunction;
@@ -16,8 +15,6 @@ import flixel.tweens.FlxTween.TweenOptions;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-import flixel.util.FlxSpriteUtil;
-import flixel.system.FlxAssets;
 import haxe.EnumTools;
 
 /**
@@ -110,7 +107,7 @@ class PlayState extends FlxState
 		
 		// Create the sprite to tween (flixel logo)
 		_sprite = new FlxSprite();
-		_sprite.loadGraphic(FlxGraphic.fromClass(GraphicLogo), true);
+		_sprite.loadGraphic("assets/logo.png", true);
 		_sprite.antialiasing = true;
 		
 		// force subpixel rendering for smoother movement 
@@ -118,7 +115,7 @@ class PlayState extends FlxState
 		_sprite.pixelPerfectRender = false;
 		
 		// Add a trail effect
-		_trail = new FlxTrail(_sprite, FlxGraphic.fromClass(GraphicLogo), 12, 0, 0.4, 0.02);
+		_trail = new FlxTrail(_sprite, "assets/logo.png", 12, 0, 0.4, 0.02);
 		
 		add(_trail);
 		add(_sprite);

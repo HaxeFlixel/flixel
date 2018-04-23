@@ -6,8 +6,6 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.effects.postprocess.PostProcess;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets;
 
 class PlayState extends FlxState
 {
@@ -21,13 +19,14 @@ class PlayState extends FlxState
 		"invert",
 		"protanopia",
 		"scanline",
-		"tritanopia"];
+		"tritanopia"
+	];
 		
 	var fragmentShaders:Array<PostProcess> = [];
 	
 	override public function create():Void
 	{
-		var backdrop = new FlxBackdrop(FlxGraphic.fromClass(GraphicLogo));
+		var backdrop = new FlxBackdrop("assets/images/logo.png");
 		backdrop.velocity.set(150, 150);
 		add(backdrop);
 		
@@ -52,18 +51,13 @@ class PlayState extends FlxState
 	function createCheckbox(x:Float, y:Float, name:String, shader:PostProcess)
 	{
 		var checkbox = new FlxUICheckBox(x, y, FlxUIAssets.IMG_CHECK_BOX,  FlxUIAssets.IMG_CHECK_MARK, name);
-		add(checkbox);
-		
 		checkbox.callback = function()
 		{
 			if (checkbox.checked)
-			{
 				FlxG.addPostProcess(shader);
-			}
 			else
-			{
 				FlxG.removePostProcess(shader);
-			}
 		}
+		add(checkbox);
 	}
 }

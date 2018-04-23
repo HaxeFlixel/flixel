@@ -29,7 +29,8 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
-	<assets path="assets" type="text" />
+	<assets path="assets/shaders" type="text" />
+	<assets path="assets/images" />
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 

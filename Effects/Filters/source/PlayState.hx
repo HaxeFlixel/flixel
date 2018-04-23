@@ -6,8 +6,6 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets;
 import openfl.filters.BitmapFilter;
 import openfl.filters.BlurFilter;
 import openfl.filters.ColorMatrixFilter;
@@ -113,7 +111,7 @@ class PlayState extends FlxState
 		uiCamera = new FlxCamera(0, 0, 130, 300);
 		FlxG.cameras.add(uiCamera);
 		
-		var backdrop = new FlxBackdrop(FlxGraphic.fromClass(GraphicLogo));
+		var backdrop = new FlxBackdrop("assets/logo.png");
 		backdrop.cameras = [FlxG.camera];
 		backdrop.velocity.set(150, 150);
 		add(backdrop);

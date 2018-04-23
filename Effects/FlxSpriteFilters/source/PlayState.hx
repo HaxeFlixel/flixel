@@ -4,17 +4,12 @@ import flash.filters.BitmapFilter;
 import flash.filters.BlurFilter;
 import flash.filters.DropShadowFilter;
 import flash.filters.GlowFilter;
-import flash.geom.Point;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFilterFrames;
-import flixel.system.FlxAssets.GraphicLogo;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import openfl.Assets;
 
 #if flash
 import flash.filters.BevelFilter;
@@ -70,11 +65,6 @@ class PlayState extends FlxState
 		txt.alignment = CENTER;
 		add(txt);
 		
-		#if js
-		txt.text = "Filters are currently not supported on HTML5";
-		return;
-		#end
-		
 		spr1 = createSprite(0.25, -100, "No filter");
 		spr1.antialiasing = true;
 		
@@ -95,7 +85,6 @@ class PlayState extends FlxState
 		spr4Filter = createFilterFrames(spr4, dropShadowFilter);
 		
 		#if flash
-		
 		var bevelFilter = new BevelFilter(6); 
 		spr5 = createSprite(0.5, 100, "Bevel\n( flash only )");
 		spr5Filter = createFilterFrames(spr5, bevelFilter);
@@ -107,7 +96,6 @@ class PlayState extends FlxState
 			new Point(0, 0), 1, 1, 15, 1, DisplacementMapFilterMode.COLOR, 1, 0);
 		spr6 = createSprite(0.75, 100, "Displacement\n( flash only )");
 		spr6Filter = createFilterFrames(spr6, displacementFilter);	
-		
 		#end
 	}
 	
@@ -116,7 +104,7 @@ class PlayState extends FlxState
 		var sprite = new FlxSprite(
 			FlxG.width * xFactor - SIZE_INCREASE,
 			FlxG.height / 2 + yOffset - SIZE_INCREASE,
-			FlxGraphic.fromClass(GraphicLogo));
+			"assets/logo.png");
 		add(sprite);
 		
 		var text = new FlxText(sprite.x, sprite.y + 120, sprite.width, label, 10);
