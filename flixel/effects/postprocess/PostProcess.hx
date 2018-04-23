@@ -287,7 +287,7 @@ class PostProcess
 {
 	public function new(shader:String)
 	{
-		FlxG.log.error("Post processing is only supported on cpp and neko");
+		FlxG.log.error("Post processing is only supported on the CPP and Neko targets of OpenFL legacy - for newer OpenFL versions, please use shader filters.");
 	}
 	
 	public function enable(?to:PostProcess) {}
