@@ -631,6 +631,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	// PROPERTIES GETTERS/SETTERS
 	
+	override private function set_camera(Value:FlxCamera):FlxCamera
+	{
+		if (camera != Value)
+			transformChildren(cameraTransform, Value);
+		return super.set_camera(Value);
+	}
+	
 	override private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		if (cameras != Value)
@@ -883,6 +890,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	private inline function solidTransform(Sprite:FlxSprite, Solid:Bool)                   Sprite.solid = Solid;
 	private inline function aliveTransform(Sprite:FlxSprite, Alive:Bool)                   Sprite.alive = Alive;
 	private inline function existsTransform(Sprite:FlxSprite, Exists:Bool)                 Sprite.exists = Exists;
+	private inline function cameraTransform(Sprite:FlxSprite, Camera:FlxCamera)            Sprite.camera = Camera;
 	private inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)   Sprite.cameras = Cameras;
 
 	private inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)             Sprite.offset.copyFrom(Offset);
