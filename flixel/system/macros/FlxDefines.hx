@@ -78,8 +78,8 @@ class FlxDefines
 
 	private static function checkOpenFLVersions()
 	{
-		#if ((lime < "6.2.0") && ((lime < "2.8.1") || (lime >= "3.0.0")))
-		abortVersion("Lime", "6.2.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
+		#if ((lime < "6.3.0") && ((lime < "2.8.1") || (lime >= "3.0.0")))
+		abortVersion("Lime", "6.3.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
 		#end
 
 		#if ((openfl < "8.0.0") && ((openfl < "3.5.0") || (openfl >= "4.0.0")))
