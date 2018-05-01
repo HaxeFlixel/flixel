@@ -11,8 +11,8 @@ import flixel.text.FlxText;
 class PlayState extends FlxState
 {
 	public var player:Player;
-	private var _level:TiledLevel;
-	private var _howto:FlxText;
+	var _level:TiledLevel;
+	var _howto:FlxText;
 	
 	override public function create():Void
 	{

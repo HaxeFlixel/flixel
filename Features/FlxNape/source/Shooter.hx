@@ -140,7 +140,7 @@ class Shooter extends FlxTypedGroup<FlxNapeSprite>
 
 class Trail extends FlxEmitter
 {
-	private var attach:FlxNapeSprite;
+	var attach:FlxNapeSprite;
 	
 	public function new(Attach:FlxNapeSprite)
 	{

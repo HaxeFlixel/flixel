@@ -16,7 +16,7 @@ class State_Battle extends FlxUIState
 		hideFailedUI();
 	}
 	
-	private function hideFailedUI():Void
+	function hideFailedUI():Void
 	{
 		
 		//Determine which is the best layout by looking at failure thresholds
@@ -57,7 +57,7 @@ class State_Battle extends FlxUIState
 		}
 	}
 	
-	private override function reloadUI(?e:Event):Void
+	override function reloadUI(?e:Event):Void
 	{
 		super.reloadUI(e);
 		hideFailedUI();

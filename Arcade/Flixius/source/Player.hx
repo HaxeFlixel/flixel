@@ -7,8 +7,8 @@ import flixel.util.FlxColor;
 class Player extends FlxSprite
 {
 	public var dying:Bool = false;
-	private var _dyingTimer:Float = 2;
-	private var _deathCallback:FlxSprite->Void;
+	var _dyingTimer:Float = 2;
+	var _deathCallback:FlxSprite->Void;
 	
 	public function new(DeathCallback:FlxSprite->Void) 
 	{

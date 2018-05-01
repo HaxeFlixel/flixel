@@ -15,8 +15,8 @@ import flixel.addons.text.FlxTypeText;
  */
 class MenuState extends FlxState
 {
-	private var _typeText:FlxTypeText;
-	private var _status:FlxTypeText;
+	var _typeText:FlxTypeText;
+	var _status:FlxTypeText;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -95,37 +95,37 @@ class MenuState extends FlxState
 		super.create();
 	}
 	
-	private function startCallback():Void
+	function startCallback():Void
 	{
 		_typeText.start(0.02, false, false, null, onComplete.bind("Fully typed"));
 	}
 	
-	private function pauseCallback():Void
+	function pauseCallback():Void
 	{
 		_typeText.paused = !_typeText.paused;
 	}
 	
-	private function eraseCallback():Void
+	function eraseCallback():Void
 	{
 		_typeText.erase(0.01, false, null, onComplete.bind("Fully erased"));
 	}
 	
-	private function forceStartCallback():Void
+	function forceStartCallback():Void
 	{
 		_typeText.start(0.03, true, true, null, onComplete.bind("Typed, erasing..."));
 	}
 	
-	private function cursorCallback():Void
+	function cursorCallback():Void
 	{
 		_typeText.cursorCharacter = (_typeText.cursorCharacter == "|") ? "#" : "|";
 	}
 	
-	private function forceEraseCallback():Void
+	function forceEraseCallback():Void
 	{
 		_typeText.erase(0.02, true, null, onComplete.bind("Erased"));
 	}
 	
-	private function onComplete(Text:String):Void
+	function onComplete(Text:String):Void
 	{
 		_status.resetText(Text);
 		_status.start(null, true);

@@ -61,7 +61,7 @@ class PlayState extends FlxState
 		updateSeekers();
 	}
 	
-	private function updateSeekers():Void
+	function updateSeekers():Void
 	{
 		FlxG.collide(tilemap, seekers);
 		
@@ -114,7 +114,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function placeSeeker():Void
+	function placeSeeker():Void
 	{
 		var x:Float = FlxG.mouse.x - (FlxG.mouse.x % 16);
 		var y:Float = FlxG.mouse.y - (FlxG.mouse.y % 16);
@@ -123,7 +123,7 @@ class PlayState extends FlxState
 		seeker.reset(x, y);
 	}
 	
-	private function placeMcguffin(X:Float, Y:Float):Void
+	function placeMcguffin(X:Float, Y:Float):Void
 	{
 		mcguffin.x = Std.int(X / 16);
 		mcguffin.y = Std.int(Y / 16);
@@ -134,7 +134,7 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function updateDistance():Void
+	function updateDistance():Void
 	{
 		var startX:Int = Std.int((mcguffin.y * tilemap.widthInTiles) + mcguffin.x);
 		var endX:Int = 0;
@@ -167,7 +167,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function clickTile(value:Int):Void
+	function clickTile(value:Int):Void
 	{
 		var tx:Int = Std.int(FlxG.mouse.x / 16);
 		var ty:Int = Std.int(FlxG.mouse.y / 16);
@@ -179,7 +179,7 @@ class PlayState extends FlxState
 		updateDistance();
 	}
 	
-	private function makeTiles():Void
+	function makeTiles():Void
 	{
 		tilemap = new FlxTilemap();
 		distmap = new FlxTilemap();

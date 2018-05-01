@@ -14,41 +14,41 @@ class Enemy extends FlxSprite
 	/**
 	 * The player object
 	 */
-	private var _player:Player;
+	var _player:Player;
 	/**
 	 * A group of enemy bullet objects (Enemies shoot these out)
 	 */ 
-	private var _bullets:FlxTypedGroup<EnemyBullet>;
+	var _bullets:FlxTypedGroup<EnemyBullet>;
 	/**
 	 * A group of bits and pieces that explode when the Enemy dies.
 	 */
-	private var _gibs:FlxEmitter;
+	var _gibs:FlxEmitter;
 	/**
 	 * We use this number to figure out how fast the ship is flying
 	 */
-	private var _thrust:Float;
+	var _thrust:Float;
 	/**
 	 * A special effect - little poofs shoot out the back of the ship
 	 */
-	private var _jets:FlxEmitter;
+	var _jets:FlxEmitter;
 	
 	// These are "timers" - numbers that count down until we want something interesting to happen.
 	
 	/**
 	 * Helps us decide when to fly and when to stop flying.
 	 */
-	private var _timer:Float;
+	var _timer:Float;
 	/**
 	 * Helps us decide when to shoot.
 	 */
-	private var _shotClock:Float;	
+	var _shotClock:Float;	
 	
 	/**
 	 * This object isn't strictly necessary, and is only used with getMidpoint().
 	 * By passing this object, we can avoid a potentially costly allocation of
 	 * a FlxPoint.get() object by the getMidpoint() function.
 	 */
-	private var _playerMidpoint:FlxPoint;
+	var _playerMidpoint:FlxPoint;
 	
 	/**
 	 * This is the constructor for the enemy class. Because we are recycling 
@@ -267,7 +267,7 @@ class Enemy extends FlxSprite
 	 * A helper function that returns the angle between
 	 * the Enemy's midpoint and the player's midpoint.
 	 */
-	private function angleTowardPlayer():Float
+	function angleTowardPlayer():Float
 	{
 		return getMidpoint(_point).angleBetween(_player.getMidpoint(_playerMidpoint));
 	}

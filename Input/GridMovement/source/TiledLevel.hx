@@ -20,13 +20,13 @@ class TiledLevel extends TiledMap
 {
 	// For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image 
 	// used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-	private inline static var c_PATH_LEVEL_TILESHEETS = "assets/data/";
+	inline static var c_PATH_LEVEL_TILESHEETS = "assets/data/";
 	
 	public var foregroundTiles:FlxGroup;
 	public var backgroundTiles:FlxGroup;
 	public var player:Player;
 	
-	private var collidableTileLayers:Array<FlxTilemap>;
+	var collidableTileLayers:Array<FlxTilemap>;
 
 	public function new(tiledLevel:FlxTiledMapAsset)
 	{
@@ -97,7 +97,7 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectLayer, state:PlayState)
+	function loadObject(o:TiledObject, g:TiledObjectLayer, state:PlayState)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;

@@ -6,8 +6,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EnemyPod extends FlxSprite
 {
-	private var _parent:PlayState;
-	private var _dying:Float = 2;
+	var _parent:PlayState;
+	var _dying:Float = 2;
 	
 	public function new(X:Float=0, Y:Float=0, ParentState:PlayState) 
 	{

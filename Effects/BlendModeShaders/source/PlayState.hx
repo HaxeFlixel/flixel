@@ -95,7 +95,7 @@ class PlayState extends FlxState
 		#end
 	}
 
-	private function createText(x, y, label, size = 8):FlxText
+	function createText(x, y, label, size = 8):FlxText
 	{
 		var text = new FlxText(x, y, 0, label, size);
 		text.color = FlxColor.BLACK;
@@ -103,7 +103,7 @@ class PlayState extends FlxState
 	}
 
 	#if shaders_supported
-	private function createUI()
+	function createUI()
 	{
 		var dropDownWidth = 155;
 
@@ -121,7 +121,7 @@ class PlayState extends FlxState
 		add(new FlxUIDropDownMenu(80, 4, blendModes, selectBlendEffect, new FlxUIDropDownHeader(dropDownWidth)));
 	}
 
-	private function selectBlendEffect(blendEffect:String)
+	function selectBlendEffect(blendEffect:String)
 	{
 		var color = FlxG.random.color();
 		color.alphaFloat = 0.5;
@@ -130,7 +130,7 @@ class PlayState extends FlxState
 		FlxG.camera.setFilters([new ShaderFilter(cast effect.shader)]);
 	}
 	
-	private function createShutterEffect():Void
+	function createShutterEffect():Void
 	{
 		var shutter = new ShutterEffect();
 		var shutterCanvas = new FlxSprite();

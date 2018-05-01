@@ -20,27 +20,27 @@ import nape.phys.Body;
 
 class Terrain #if flash implements nape.geom.IsoFunction #end 
 {
-	private var cellSize:Float;
-	private var subSize:Float;
+	var cellSize:Float;
+	var subSize:Float;
 	
-	private var width:Int;
-	private var height:Int;
-	private var cells:Array<Body>;
+	var width:Int;
+	var height:Int;
+	var cells:Array<Body>;
 	
-	private var isoBounds:AABB;
+	var isoBounds:AABB;
 	
 	public var bitmap:BitmapData;
 	public var isoGranularity:Vec2;
 	public var isoQuality:Int = 8;
 	
-	private var strips:Array<FlxStrip>;
-	private var megaStrip:FlxStrip;
+	var strips:Array<FlxStrip>;
+	var megaStrip:FlxStrip;
 	
 	public var sprite:FlxSprite;
 	
-	private var flashSprite:Sprite;
+	var flashSprite:Sprite;
 	
-	private var graphicPath:String = "assets/Patagonia30.jpg";
+	var graphicPath:String = "assets/Patagonia30.jpg";
 	
 	public function new(bitmap:BitmapData, cellSize:Float, subSize:Float) 
 	{

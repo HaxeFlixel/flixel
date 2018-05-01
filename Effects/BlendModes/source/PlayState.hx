@@ -19,15 +19,15 @@ import flixel.util.FlxColor;
  */
 class PlayState extends FlxUIState
 {
-	private var _bottom:FlxSprite;
-	private var _top:FlxSprite;
+	var _bottom:FlxSprite;
+	var _top:FlxSprite;
 	
-	private var _step_alpha:FlxUINumericStepper;
+	var _step_alpha:FlxUINumericStepper;
 	
-	private var _bottoms:Map<String,FlxSprite>;
-	private var _tops:Map<String,FlxSprite>;
+	var _bottoms:Map<String,FlxSprite>;
+	var _tops:Map<String,FlxSprite>;
 	
-	private var _list_blends:Array<String> = null;
+	var _list_blends:Array<String> = null;
 	
 	override public function create():Void
 	{
@@ -50,7 +50,7 @@ class PlayState extends FlxUIState
 		makeBlendImages();
 	}
 
-	private function makeBlendImages():Void
+	function makeBlendImages():Void
 	{
 		var xx:Int = 100;
 		var yy:Int = 12;
@@ -100,12 +100,12 @@ class PlayState extends FlxUIState
 		}
 	}
 	
-	private function onClickBlend(str:String):Void
+	function onClickBlend(str:String):Void
 	{
 		_top.blend = getBlend(str);
 	}
 
-	private function getBlend(str:String):BlendMode
+	function getBlend(str:String):BlendMode
 	{
 		return switch (str)
 		{

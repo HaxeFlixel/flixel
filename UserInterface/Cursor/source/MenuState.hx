@@ -12,9 +12,9 @@ import flixel.addons.ui.interfaces.IFlxUIWidget;
  */
 class MenuState extends FlxUIState
 {
-	private var click_text:FlxUIText;
-	private var move_text:FlxUIText;
-	private var event_text:FlxUIText;
+	var click_text:FlxUIText;
+	var move_text:FlxUIText;
+	var event_text:FlxUIText;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -80,7 +80,7 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function updateInputMethod():Void
+	function updateInputMethod():Void
 	{
 		var check:FlxUICheckBox;
 		var input:Int = 0;

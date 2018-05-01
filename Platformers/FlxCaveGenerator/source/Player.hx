@@ -5,8 +5,8 @@ import flixel.FlxSprite;
 
 class Player extends FlxSprite
 {
-	private var _isReadyToJump:Bool = true;
-	private var _jumpPower:Int = 200;
+	var _isReadyToJump:Bool = true;
+	var _jumpPower:Int = 200;
 
 	// This is the player object class.  Most of the comments I would put in here
 	// would be near duplicates of the Enemy class, so if you're confused at all

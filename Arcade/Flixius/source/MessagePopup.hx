@@ -14,20 +14,20 @@ import openfl.geom.Rectangle;
 
 class MessagePopup extends FlxSubState
 {
-	private var _back:FlxSprite;
-	private var _box:FlxUI9SliceSprite;
-	private var _face:FlxSprite;
-	private var _glitchFace:FlxEffectSprite;
-	private var _glitchEffect:FlxGlitchEffect;
-	private var _glitchAmt:Int;
-	private var _glitchTimer:Float;
-	private var _talkTimer:Float;
-	private var _text:FlxText;
-	private var _textContinue:FlxText;
+	var _back:FlxSprite;
+	var _box:FlxUI9SliceSprite;
+	var _face:FlxSprite;
+	var _glitchFace:FlxEffectSprite;
+	var _glitchEffect:FlxGlitchEffect;
+	var _glitchAmt:Int;
+	var _glitchTimer:Float;
+	var _talkTimer:Float;
+	var _text:FlxText;
+	var _textContinue:FlxText;
 	
-	private var _fadingIn:Bool = true;
-	private var _alpha:Float = 0;
-	private var _fadingOut:Bool = false;
+	var _fadingIn:Bool = true;
+	var _alpha:Float = 0;
+	var _fadingOut:Bool = false;
 	
 	public function new(CloseCallback:Void->Void)
 	{
@@ -90,7 +90,7 @@ class MessagePopup extends FlxSubState
 		}}, updateAlpha);
 	}
 	
-	private function updateAlpha(A:Float):Void
+	function updateAlpha(A:Float):Void
 	{
 		_back.alpha = _box.alpha = _glitchFace.alpha = _text.alpha = _textContinue.alpha = A;
 	}

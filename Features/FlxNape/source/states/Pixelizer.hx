@@ -15,7 +15,7 @@ import openfl.Assets;
  */
 class Pixelizer extends FlxNapeState 
 {
-	private var shooter:Shooter;
+	var shooter:Shooter;
 	
 	override public function create():Void 
 	{	
@@ -31,7 +31,7 @@ class Pixelizer extends FlxNapeState
 		add(shooter);
 	}
 	
-	private function createPixels() 
+	function createPixels() 
 	{
 		var image:BitmapData = Assets.getBitmapData("assets/logo.png");
 		

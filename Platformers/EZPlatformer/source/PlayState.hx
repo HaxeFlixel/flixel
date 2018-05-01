@@ -16,14 +16,14 @@ import flixel.util.FlxColor;
  */
 class PlayState extends FlxState
 {
-	private static var _justDied:Bool = false;
+	static var _justDied:Bool = false;
 	
-	private var _level:FlxTilemap;
-	private var _player:FlxSprite;
-	private var _exit:FlxSprite;
-	private var _scoreText:FlxText;
-	private var _status:FlxText;
-	private var _coins:FlxGroup;
+	var _level:FlxTilemap;
+	var _player:FlxSprite;
+	var _exit:FlxSprite;
+	var _scoreText:FlxText;
+	var _status:FlxText;
+	var _coins:FlxGroup;
 	
 	override public function create():Void 
 	{
@@ -151,21 +151,21 @@ class PlayState extends FlxState
 	/**
 	 * Creates a new coin located on the specified tile
 	 */
-	private function createCoin(X:Int,Y:Int):Void
+	function createCoin(X:Int,Y:Int):Void
 	{
 		var coin:FlxSprite = new FlxSprite(X * 8 + 3, Y * 8 + 2);
 		coin.makeGraphic(2, 4, 0xffffff00);
 		_coins.add(coin);
 	}
 	
-	private function win(Exit:FlxObject, Player:FlxObject):Void
+	function win(Exit:FlxObject, Player:FlxObject):Void
 	{
 		_status.text = "Yay, you won!";
 		_scoreText.text = "SCORE: 5000";
 		_player.kill();
 	}
 	
-	private function getCoin(Coin:FlxObject, Player:FlxObject):Void
+	function getCoin(Coin:FlxObject, Player:FlxObject):Void
 	{
 		Coin.kill();
 		_scoreText.text = "SCORE: " + (_coins.countDead() * 100);

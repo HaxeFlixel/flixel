@@ -13,9 +13,9 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	private var currentPolicy:FlxText;
-	private var scaleModes:Array<ScaleMode> = [RATIO_DEFAULT, RATIO_FILL_SCREEN, FIXED, RELATIVE, FILL];
-	private var scaleModeIndex:Int = 0;
+	var currentPolicy:FlxText;
+	var scaleModes:Array<ScaleMode> = [RATIO_DEFAULT, RATIO_FILL_SCREEN, FIXED, RELATIVE, FILL];
+	var scaleModeIndex:Int = 0;
 	
 	override public function create():Void
 	{
@@ -48,7 +48,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function setScaleMode(scaleMode:ScaleMode)
+	function setScaleMode(scaleMode:ScaleMode)
 	{
 		currentPolicy.text = scaleMode;
 		

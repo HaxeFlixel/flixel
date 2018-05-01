@@ -6,7 +6,7 @@ import flixel.math.FlxVelocity;
 
 class Player extends PongSprite
 {
-	private var _emitter:Emitter;
+	var _emitter:Emitter;
 	
 	public function new()
 	{

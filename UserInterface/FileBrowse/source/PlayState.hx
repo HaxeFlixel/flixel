@@ -28,16 +28,16 @@ import systools.Dialogs;
  */
 class PlayState extends FlxState
 {
-	private static inline var MIN_SCALE:Float = 0.1;
-	private static inline var MAX_SCALE:Float = 5;
-	private static inline var ZOOM_FACTOR:Int = 15;
+	static inline var MIN_SCALE:Float = 0.1;
+	static inline var MAX_SCALE:Float = 5;
+	static inline var ZOOM_FACTOR:Int = 15;
 
-	private var _text:FlxText;
-	private var _button:FlxButton;
-	private var _img:FlxSprite;
-	private var _displayWidth:Float;
-	private var _displayHeight:Float;
-	private var _scaleText:FlxText;
+	var _text:FlxText;
+	var _button:FlxButton;
+	var _img:FlxSprite;
+	var _displayWidth:Float;
+	var _displayHeight:Float;
+	var _scaleText:FlxText;
 
 	override public function create():Void
 	{
@@ -110,7 +110,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 
-	private function _updateScale(NewScale:Float):Void
+	function _updateScale(NewScale:Float):Void
 	{
 		if (NewScale > MAX_SCALE)
 		{
@@ -127,19 +127,19 @@ class PlayState extends FlxState
 		_centerImage();
 	}
 
-	private function _centerImage():Void
+	function _centerImage():Void
 	{
 		_img.offset.x = _displayWidth * _img.scale.x / 2;
 		_img.offset.y = _displayHeight * _img.scale.y / 2;
 		_img.centerOffsets();
 	}
 
-	private function _onClick():Void
+	function _onClick():Void
 	{
 		_showFileDialog();
 	}
 
-	private function _showFileDialog():Void
+	function _showFileDialog():Void
 	{
 		#if flash
 			var fr:FileReference = new FileReference();
@@ -167,7 +167,7 @@ class PlayState extends FlxState
 	}
 
 	#if flash
-	private function _onSelect(E:Event):Void
+	function _onSelect(E:Event):Void
 	{
 		var fr:FileReference = cast(E.target, FileReference);
 		_text.text = fr.name;
@@ -175,7 +175,7 @@ class PlayState extends FlxState
 		fr.load();
 	}
 
-	private function _onLoad(E:Event):Void
+	function _onLoad(E:Event):Void
 	{
 		var fr:FileReference = cast E.target;
 		fr.removeEventListener(Event.COMPLETE, _onLoad);
@@ -185,7 +185,7 @@ class PlayState extends FlxState
 		loader.loadBytes(fr.data);
 	}
 
-	private function _onImgLoad(E:Event):Void
+	function _onImgLoad(E:Event):Void
 	{
 		var loaderInfo:LoaderInfo = cast E.target;
 		loaderInfo.removeEventListener(Event.COMPLETE, _onImgLoad);
@@ -194,7 +194,7 @@ class PlayState extends FlxState
 	}
 
 	#elseif sys
-	private function _onSelect(arr:Array<String>):Void
+	function _onSelect(arr:Array<String>):Void
 	{
 		if (arr != null && arr.length > 0)
 		{
@@ -218,12 +218,12 @@ class PlayState extends FlxState
 	}
 	#end
 
-	private function _onCancel(_):Void
+	function _onCancel(_):Void
 	{
 		_text.text = "Cancelled!";
 	}
 
-	private function _showImage(Data:BitmapData):Void
+	function _showImage(Data:BitmapData):Void
 	{
 		_img.scale.set(1, 1);
 

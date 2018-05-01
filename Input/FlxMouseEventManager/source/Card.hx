@@ -17,17 +17,17 @@ class Card extends FlxNapeSprite
 	/**
 	 * How long the turning animation takes
 	 */
-	private static inline var TURNING_TIME:Float = 0.2;
+	static inline var TURNING_TIME:Float = 0.2;
 	
 	/**
 	 * Whether the card has been turned around yet or not
 	 */
-	private var turned:Bool = false;
+	var turned:Bool = false;
 
 	/**
 	 * Which card this is (index in the sprite sheet).
 	 */
-	private var cardIndex:Int;
+	var cardIndex:Int;
 	
 	public function new(x:Float, y:Float, cardIndex:Int):Void
 	{
@@ -49,7 +49,7 @@ class Card extends FlxNapeSprite
 		FlxMouseEventManager.add(this, onDown, null, onOver, onOut);
 	}
 	
-	private function onDown(_)
+	function onDown(_)
 	{
 		// Play the turning animation if the card hasn't been turned around yet
 		if (!turned)
@@ -67,17 +67,17 @@ class Card extends FlxNapeSprite
 		PlayState.cardJoint.space = FlxNapeSpace.space;
 	}
 	
-	private function onOver(_)
+	function onOver(_)
 	{
 		color = 0x00FF00;
 	}
 	
-	private function onOut(_)
+	function onOut(_)
 	{
 		color = FlxColor.WHITE;
 	}
 	
-	private function pickCard(_):Void
+	function pickCard(_):Void
 	{
 		animation.frameIndex = cardIndex;
 		

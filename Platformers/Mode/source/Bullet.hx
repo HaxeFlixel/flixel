@@ -8,7 +8,7 @@ import flixel.system.FlxAssets;
 
 class Bullet extends FlxSprite
 {
-	private var _speed:Float;
+	var _speed:Float;
 	
 	public function new()
 	{

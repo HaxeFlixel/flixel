@@ -14,25 +14,25 @@ class PlayState extends FlxState
 	/**
 	 * We use these to tell which mode we are at, recording or replaying
 	 */
-	private static var recording:Bool = false;
-	private static var replaying:Bool = false;
+	static var recording:Bool = false;
+	static var replaying:Bool = false;
 	
 	/**
 	 * Some intructions
 	 */
-	private var _hintText:FlxText;
+	var _hintText:FlxText;
 	/**
 	 * Just a simple tilemap
 	 */
-	private var _tilemap:FlxTilemap;
+	var _tilemap:FlxTilemap;
 	/**
 	 * The blue block player controls
 	 */
-	private var _player:FlxSprite;
+	var _player:FlxSprite;
 	/**
 	 * The red block represents mouse
 	 */
-	private var _cursor:FlxSprite;
+	var _cursor:FlxSprite;
 	
 	override public function create():Void
 	{
@@ -120,7 +120,7 @@ class PlayState extends FlxState
 	/**
 	 * I use this funtion to do the init differs from recording to replaying
 	 */
-	private function init():Void
+	function init():Void
 	{
 		if (recording) 
 		{
@@ -136,7 +136,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function startRecording():Void 
+	function startRecording():Void 
 	{
 		recording = true;
 		replaying = false;
@@ -149,7 +149,7 @@ class PlayState extends FlxState
 		FlxG.vcr.startRecording(false);
 	}
 	
-	private function loadReplay():Void 
+	function loadReplay():Void 
 	{
 		replaying = true;
 		recording = false;

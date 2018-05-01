@@ -15,12 +15,12 @@ class Enemy extends Entity
 	public static inline var WANDERER:UInt = 1;
 	public static inline var BLACK_HOLE:UInt = 2;
 	
-	//private var enemyPixels:Array<BitmapData>;
-	private var enemyPixels:Array<String>;
-	private var pointValue:Int = 10;
+	//var enemyPixels:Array<BitmapData>;
+	var enemyPixels:Array<String>;
+	var pointValue:Int = 10;
 	
-	private var _saveWidth:Int;
-	private var _saveHeight:Int;
+	var _saveWidth:Int;
+	var _saveHeight:Int;
 	
 	public function new(X:Float = 0, Y:Float = 0, Type:UInt = 0)
 	{
@@ -233,14 +233,14 @@ class Enemy extends Entity
 		super.reset(X - 0.5 * width, Y - 0.5 * height);
 	}
 	
-	private function applyBehaviors():Void
+	function applyBehaviors():Void
 	{
 		if (type == SEEKER) followPlayer();
 		else if (type == WANDERER) moveRandomly();
 		else if (type == BLACK_HOLE) applyGravity();
 	}
 	
-	private function followPlayer(Acceleration:Float = 5):Void
+	function followPlayer(Acceleration:Float = 5):Void
 	{
 		if (PlayerShip.instance.alive) 
 		{
@@ -251,7 +251,7 @@ class Enemy extends Entity
 		else moveRandomly();
 	}
 	
-	private function moveRandomly(Acceleration:Float = 320):Void
+	function moveRandomly(Acceleration:Float = 320):Void
 	{
 		var Angle:Float;
 		if (hitEdgeOfScreen) 
@@ -277,7 +277,7 @@ class Enemy extends Entity
 		angularVelocity = 200;
 	}
 	
-	private function applyGravity(Acceleration:Float = 320):Void
+	function applyGravity(Acceleration:Float = 320):Void
 	{
 		angularVelocity = 200;
 	}

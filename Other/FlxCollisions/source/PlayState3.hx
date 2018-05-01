@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 
 class PlayState3 extends FlxState
 {
-	private var _platform:FlxSprite;
+	var _platform:FlxSprite;
 	
 	override public function create():Void
 	{

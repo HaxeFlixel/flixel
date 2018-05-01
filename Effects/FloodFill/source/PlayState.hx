@@ -10,9 +10,9 @@ import openfl.Assets;
 
 class PlayState extends FlxState
 {
-	private var effectSprite:FloodFill;
-	private var effectSprite2:FloodFill;
-	private var infoText:FlxText;
+	var effectSprite:FloodFill;
+	var effectSprite2:FloodFill;
+	var infoText:FlxText;
 	
 	override public function create():Void
 	{

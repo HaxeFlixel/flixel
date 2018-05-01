@@ -12,20 +12,20 @@ import flixel.util.FlxSave;
 class OptionsState extends FlxState
 {
 	// define our screen elements
-	private var _txtTitle:FlxText;
-	private var _barVolume:FlxBar;
-	private var _txtVolume:FlxText;
-	private var _txtVolumeAmt:FlxText;
-	private var _btnVolumeDown:FlxButton;
-	private var _btnVolumeUp:FlxButton;
-	private var _btnClearData:FlxButton;
-	private var _btnBack:FlxButton;
+	var _txtTitle:FlxText;
+	var _barVolume:FlxBar;
+	var _txtVolume:FlxText;
+	var _txtVolumeAmt:FlxText;
+	var _btnVolumeDown:FlxButton;
+	var _btnVolumeUp:FlxButton;
+	var _btnClearData:FlxButton;
+	var _btnBack:FlxButton;
 	#if desktop
-	private var _btnFullScreen:FlxButton;
+	var _btnFullScreen:FlxButton;
 	#end
 	
 	// a save object for saving settings
-	private var _save:FlxSave;
+	var _save:FlxSave;
 	
 	override public function create():Void 
 	{
@@ -90,7 +90,7 @@ class OptionsState extends FlxState
 	}
 	
 	#if desktop
-	private function clickFullscreen():Void
+	function clickFullscreen():Void
 	{
 		FlxG.fullscreen = !FlxG.fullscreen;
 		_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
@@ -101,7 +101,7 @@ class OptionsState extends FlxState
 	/**
 	 * The user wants to clear the saved data - we just call erase on our save object and then reset the volume to .5
 	 */
-	private function clickClearData():Void
+	function clickClearData():Void
 	{
 		_save.erase();
 		FlxG.sound.volume = .5;
@@ -111,7 +111,7 @@ class OptionsState extends FlxState
 	/**
 	 * The user clicked the back button - close our save object, and go back to the MenuState
 	 */
-	private function clickBack():Void
+	function clickBack():Void
 	{
 		_save.close();
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
@@ -123,7 +123,7 @@ class OptionsState extends FlxState
 	/**
 	 * The user clicked the down button for volume - we reduce the volume by 10% and update the bar
 	 */
-	private function clickVolumeDown():Void
+	function clickVolumeDown():Void
 	{
 		FlxG.sound.volume -= 0.1;
 		_save.data.volume = FlxG.sound.volume;
@@ -133,7 +133,7 @@ class OptionsState extends FlxState
 	/**
 	 * The user clicked the up button for volume - we increase the volume by 10% and update the bar
 	 */
-	private function clickVolumeUp():Void
+	function clickVolumeUp():Void
 	{
 		FlxG.sound.volume += 0.1;
 		_save.data.volume = FlxG.sound.volume;
@@ -143,7 +143,7 @@ class OptionsState extends FlxState
 	/**
 	 * Whenever we want to show the value of volume, we call this to change the bar and the amount text
 	 */
-	private function updateVolume():Void
+	function updateVolume():Void
 	{
 		var vol:Int = Math.round(FlxG.sound.volume * 100);
 		_barVolume.value = vol;

@@ -12,13 +12,13 @@ import flixel.math.FlxPoint;
  */
 class SolarSystem extends BaseState
 {
-	private var shooter:Shooter;
-	private var planets:Array<FlxNapeSprite>;
-	private static var halfWidth:Int;
-	private static var halfHeight:Int;
-	private static var gravity:Int = Std.int(5e4);
+	var shooter:Shooter;
+	var planets:Array<FlxNapeSprite>;
+	static var halfWidth:Int;
+	static var halfHeight:Int;
+	static var gravity:Int = Std.int(5e4);
 
-	private var sun:FlxNapeSprite;
+	var sun:FlxNapeSprite;
 	
 	override public function create():Void 
 	{	
@@ -41,7 +41,7 @@ class SolarSystem extends BaseState
 		add(shooter);
 	}
 	
-	private function createSolarSystem() 
+	function createSolarSystem() 
 	{
 		planets = new Array<FlxNapeSprite>();
 		

@@ -85,20 +85,20 @@ class PropertySlider extends FlxSpriteGroup
 		add(upBigButton);
 	}
 	
-	private function set_value(value:Float):Float
+	function set_value(value:Float):Float
 	{
 		this.value = FlxMath.bound(value, minValue, maxValue);
 		valueText.text = Std.string(decimalPlaces > 0 ? FlxMath.roundDecimal(this.value, decimalPlaces) : Math.round(this.value));
 		return value;
 	}
 	
-	private function set_label(name:String):String
+	function set_label(name:String):String
 	{
 		labelText.text = name;
 		return name;
 	}
 	
-	private function get_label():String
+	function get_label():String
 	{
 		return labelText.text;
 	}

@@ -15,29 +15,29 @@ import flixel.group.FlxGroup;
 
 class MenuState extends FlxState
 {
-	private var _display:FlxText;
-	private var _colorTest:FlxSprite;
-	private var _histogram:FlxSprite;
-	private var _noise:FlxSprite;
-	private var _buttonGroup:FlxTypedGroup<FlxButton>;
-	private var _pendingFunction:Void->Void;
+	var _display:FlxText;
+	var _colorTest:FlxSprite;
+	var _histogram:FlxSprite;
+	var _noise:FlxSprite;
+	var _buttonGroup:FlxTypedGroup<FlxButton>;
+	var _pendingFunction:Void->Void;
 	
-	private var dummyInt:Int = 0;
-	private var dummyFloat:Float = 0;
-	private var dummyString:String = "";
-	private var dummyBitmapdata:BitmapData;
-	private var dummyByteArray:ByteArray;
-	private var dummyRect:Rectangle;
-	private var dummyText:FlxText;
-	private var timer:Int = 0;
-	private var _static:Bool = false;
-	private var _staticBitmapdata:BitmapData;
-	private var _updateNext:Bool = false;
+	var dummyInt:Int = 0;
+	var dummyFloat:Float = 0;
+	var dummyString:String = "";
+	var dummyBitmapdata:BitmapData;
+	var dummyByteArray:ByteArray;
+	var dummyRect:Rectangle;
+	var dummyText:FlxText;
+	var timer:Int = 0;
+	var _static:Bool = false;
+	var _staticBitmapdata:BitmapData;
+	var _updateNext:Bool = false;
 	
-	private static inline var ONEMIL:Int = 1000000;
-	private static inline var TENMIL:Int = 10000000;
+	static inline var ONEMIL:Int = 1000000;
+	static inline var TENMIL:Int = 10000000;
 	
-	inline private static function BUTTON_TEXT():Array<String>
+	inline static function BUTTON_TEXT():Array<String>
 	{
 		return ["Reset Global Seed", "Get Current Seed", "Generate Integers",
 			"Generate Floats", "Normal Distribution Floats", "Weighted Coin Flips", "Generate Signs",
@@ -103,7 +103,7 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function buttonCallback(Label:String):Void
+	function buttonCallback(Label:String):Void
 	{
 		_display.text = "";
 		_colorTest.visible = Label == BUTTON_TEXT()[10];
@@ -145,7 +145,7 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function intRandom():Void
+	function intRandom():Void
 	{
 		_display.text = "Randomly generated 10 million integers using each of the following methods.";
 		
@@ -170,7 +170,7 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
 	}
 	
-	private function floatNormal():Void
+	function floatNormal():Void
 	{
 		_display.text = "Randomly generated 10 million floats in a normal distribution";
 		
@@ -242,7 +242,7 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms.";
 	}
 	
-	private function floatRandom():Void
+	function floatRandom():Void
 	{
 		_display.text = "Randomly generated 10 million floats using each of the following methods.";
 		
@@ -267,7 +267,7 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms using Math.random().";
 	}
 	
-	private function coinFlipsWeighted():Void
+	function coinFlipsWeighted():Void
 	{
 		var heads:Int = 0;
 		var tails:Int = 0;
@@ -293,14 +293,14 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function randomSigns():Void
+	function randomSigns():Void
 	{
 		timer = Lib.getTimer();
 		for (i in 0...TENMIL) dummyInt = FlxG.random.sign();
 		_display.text = "Selected 10 million positive or negative signs. Time: " + (Lib.getTimer() - timer) + "ms.";
 	}
 	
-	private function weightedPicks():Void
+	function weightedPicks():Void
 	{
 		var array:Array<Float> = [for (i in 0...10) FlxG.random.int(0, 99)];
 		var results:Array<Int> = [for (i in 0...array.length) 0];
@@ -323,7 +323,7 @@ class MenuState extends FlxState
 		_display.text += "\nTime: " + (Lib.getTimer() - timer) + "ms. Actual results (in percentages):\n" + percentResults;
 	}
 	
-	private function getObjects():Void
+	function getObjects():Void
 	{
 		var array:Array<Int> = [for (i in 0...20) i];
 		var results:Array<Int> = [for (i in 0...20) 0];
@@ -335,7 +335,7 @@ class MenuState extends FlxState
 		createHistogram([for (i in 0...results.length) ""+i], results);
 	}
 	
-	private function getObjectsWeighted():Void
+	function getObjectsWeighted():Void
 	{
 		var objectArray:Array<Int> = [for (i in 0...10) i];
 		var weightArray:Array<Float> = [for (i in 0...objectArray.length) FlxG.random.int(0, 100)];
@@ -359,7 +359,7 @@ class MenuState extends FlxState
 		createHistogram([for (i in 0...results.length) ""+i], results);
 	}
 	
-	private function shuffleObj():Void
+	function shuffleObj():Void
 	{
 		var array:Array<Int> = [for (i in 0...20) FlxG.random.int(0, 100)];
 		timer = Lib.getTimer();
@@ -369,7 +369,7 @@ class MenuState extends FlxState
 		_display.text += "\nNew array is " + array + ", time: " + (Lib.getTimer() - timer) + "ms.";
 	}
 	
-	private function randomColors():Void
+	function randomColors():Void
 	{
 		dummyBitmapdata = new BitmapData(FlxG.width, FlxG.height, false, 0);
 		timer = Lib.getTimer();
@@ -388,7 +388,7 @@ class MenuState extends FlxState
 		_colorTest.visible = true;
 	}
 	
-	private function createHistogram(Labels:Array<String>, ?Data:Array<Int>, ?DataFloat:Array<Float>):Void
+	function createHistogram(Labels:Array<String>, ?Data:Array<Int>, ?DataFloat:Array<Float>):Void
 	{
 		if (Data != null)
 		{
@@ -423,7 +423,7 @@ class MenuState extends FlxState
 	/**
 	 * See here: https://github.com/HaxeFlixel/flixel/pull/1148
 	 */
-	private function verification():Void
+	function verification():Void
 	{
 		var status:Bool = true;
 		var int:Int = 0;
@@ -473,12 +473,12 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private static inline var INT_1:Int = 1199842497;
-	private static inline var INT_2:Int = 2110696744;
-	private static inline var INT_3:Int = 228381356;
-	private static inline var INT_4:Int = 1162875425;
-	private static inline var INT_5:Int = 84591242;
-	private static inline var INT_100:Int = 2086347125;
-	private static inline var INT_1000:Int = 1729281946;
-	private static inline var INT_100000:Int = 1064120637;
+	static inline var INT_1:Int = 1199842497;
+	static inline var INT_2:Int = 2110696744;
+	static inline var INT_3:Int = 228381356;
+	static inline var INT_4:Int = 1162875425;
+	static inline var INT_5:Int = 84591242;
+	static inline var INT_100:Int = 2086347125;
+	static inline var INT_1000:Int = 1729281946;
+	static inline var INT_100000:Int = 1064120637;
 }

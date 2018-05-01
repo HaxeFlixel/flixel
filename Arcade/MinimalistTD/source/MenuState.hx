@@ -11,11 +11,11 @@ import Reg.TILE_SIZE;
 
 class MenuState extends FlxState
 {
-	private var startPosition = FlxPoint.get(TILE_SIZE * 5 + 4, 0);
-	private var endPosition = FlxPoint.get(34 * TILE_SIZE + 2, 28 * TILE_SIZE);
+	var startPosition = FlxPoint.get(TILE_SIZE * 5 + 4, 0);
+	var endPosition = FlxPoint.get(34 * TILE_SIZE + 2, 28 * TILE_SIZE);
 	
-	private var _enemy:Enemy;
-	private var _map:FlxTilemap;
+	var _enemy:Enemy;
+	var _map:FlxTilemap;
 	
 	/**
 	 * Creates the title menu screen.
@@ -63,7 +63,7 @@ class MenuState extends FlxState
 	/**
 	 * Activated when clicking "Play" or pressing P; switches to the playstate.
 	 */
-	private function startGame():Void
+	function startGame():Void
 	{
 		FlxG.switchState(new PlayState());
 	}

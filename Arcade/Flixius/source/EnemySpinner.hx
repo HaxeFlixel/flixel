@@ -6,9 +6,9 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EnemySpinner extends FlxSprite
 {
-	private var _shootTimer:Float = 2;
-	private var _parent:PlayState;
-	private var _dying:Float = 2;
+	var _shootTimer:Float = 2;
+	var _parent:PlayState;
+	var _dying:Float = 2;
 	
 	public function new(X:Float = 0, Y:Float = 0, ParentState:PlayState) 
 	{

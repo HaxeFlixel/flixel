@@ -13,9 +13,9 @@ class GUI extends FlxSpriteGroup
 {
 	public static inline var WIDTH = 200;
 	
-	private var _trailArea:FlxTrailArea;
-	private var _sliderCallback:Float->Void;
-	private var _xPos:Int;
+	var _trailArea:FlxTrailArea;
+	var _sliderCallback:Float->Void;
+	var _xPos:Int;
 	
 	public function new(TrailArea:FlxTrailArea, ?SliderCallback:Float->Void, ShowClickInstructions:Bool = true) 
 	{
@@ -57,9 +57,9 @@ class GUI extends FlxSpriteGroup
 		add(toggleText);
 	}
 	
-	private var _curY = 5; 
+	var _curY = 5; 
 	
-	private function addSlider(VarName:String, MinValue:Float, MaxValue:Float):Void
+	function addSlider(VarName:String, MinValue:Float, MaxValue:Float):Void
 	{
 		var slider = new FlxSlider(_trailArea, VarName, _xPos + 20, _curY, MinValue, MaxValue, WIDTH - 50);
 		slider.callback = _sliderCallback;
@@ -77,7 +77,7 @@ class GUI extends FlxSpriteGroup
 			toggleSimpleRender();
 	}
 	
-	private inline function toggleSimpleRender():Void
+	inline function toggleSimpleRender():Void
 	{
 		_trailArea.simpleRender = !_trailArea.simpleRender; 
 	}

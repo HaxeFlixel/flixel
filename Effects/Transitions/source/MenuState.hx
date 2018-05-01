@@ -27,7 +27,7 @@ class MenuState extends FlxUIState
 		init();
 	}
 	
-	private function init():Void
+	function init():Void
 	{
 		if (!initialized)
 		{
@@ -56,7 +56,7 @@ class MenuState extends FlxUIState
 		matchUI(false);
 	}
 	
-	private function matchUI(matchData:Bool=true):Void
+	function matchUI(matchData:Bool=true):Void
 	{
 		var in_duration:FlxUINumericStepper = cast _ui.getAsset("in_duration");
 		var in_type:FlxUIRadioGroup = cast _ui.getAsset("in_type");
@@ -91,7 +91,7 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function matchTransitionData():Void
+	function matchTransitionData():Void
 	{
 		var in_duration:FlxUINumericStepper = cast _ui.getAsset("in_duration");
 		var in_type:FlxUIRadioGroup = cast _ui.getAsset("in_type");
@@ -156,7 +156,7 @@ class MenuState extends FlxUIState
 		out_dir.selectedId = getDirection(cast FlxTransitionableState.defaultTransOut.direction.x, cast FlxTransitionableState.defaultTransOut.direction.y);
 	}
 	
-	private function getDefaultAssetStr(c:FlxGraphic):String
+	function getDefaultAssetStr(c:FlxGraphic):String
 	{
 		return switch (c.assetsClass)
 		{
@@ -166,7 +166,7 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function getDefaultAsset(str):FlxGraphic
+	function getDefaultAsset(str):FlxGraphic
 	{
 		var graphicClass:Class<Dynamic> = switch (str)
 		{
@@ -181,7 +181,7 @@ class MenuState extends FlxUIState
 		return graphic;
 	}
 	
-	private function getDirection(ix:Int, iy:Int):String
+	function getDirection(ix:Int, iy:Int):String
 	{
 		if (ix < 0)
 		{
@@ -203,7 +203,7 @@ class MenuState extends FlxUIState
 		return "center";
 	}
 	
-	private function setDirectionFromStr(str:String, ?p:FlxPoint):FlxPoint
+	function setDirectionFromStr(str:String, ?p:FlxPoint):FlxPoint
 	{
 		if (p == null)
 			p = new FlxPoint();
@@ -223,7 +223,7 @@ class MenuState extends FlxUIState
 		return p;
 	}
 	
-	private function transition():Void
+	function transition():Void
 	{
 		FlxG.switchState(new MenuStateB());
 	}

@@ -19,33 +19,33 @@ using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
-	private var _sprPlayer:Player;
-	private var _map:FlxTilemap;
-	private var _mapDecoTop:FlxTilemap;
-	private var _mapDecoBottom:FlxTilemap;
-	private var _chaser:FlxSprite;
-	private var _grpAllEnemies:FlxGroup;
-	private var _grpEnemies:FlxTypedGroup<Enemy>;
-	private var _grpEnemiesPods:FlxTypedGroup<EnemyPod>;
-	private var _grpEnemiesSpinners:FlxTypedGroup<EnemySpinner>;
-	private var _grpPBullets:FlxTypedGroup<PBullet>;
-	private var _grpEBullets:FlxTypedGroup<EBullet>;
-	private var _grpEBulletBubbles:FlxTypedGroup<EBulletBubble>;
-	private var _shootDelay:Float = 0;
-	private var _hits:FlxTypedGroup<Hit>;
-	private var _txtScore:FlxText;
-	private var _sparks:FlxTypedGroup<Spark>;
-	private var _explosions:FlxTypedGroup<Explosion>;
-	private var _pThrust:Jet;
-	private var _grpEThrust:FlxTypedGroup<Jet>;
-	private var _fading:Bool = false;
-	private var _healthBar:FlxBar;
-	private var _launchedSubstate:Bool = false;
-	private var _starting:Bool = true;
-	private var _score = 0;
+	var _sprPlayer:Player;
+	var _map:FlxTilemap;
+	var _mapDecoTop:FlxTilemap;
+	var _mapDecoBottom:FlxTilemap;
+	var _chaser:FlxSprite;
+	var _grpAllEnemies:FlxGroup;
+	var _grpEnemies:FlxTypedGroup<Enemy>;
+	var _grpEnemiesPods:FlxTypedGroup<EnemyPod>;
+	var _grpEnemiesSpinners:FlxTypedGroup<EnemySpinner>;
+	var _grpPBullets:FlxTypedGroup<PBullet>;
+	var _grpEBullets:FlxTypedGroup<EBullet>;
+	var _grpEBulletBubbles:FlxTypedGroup<EBulletBubble>;
+	var _shootDelay:Float = 0;
+	var _hits:FlxTypedGroup<Hit>;
+	var _txtScore:FlxText;
+	var _sparks:FlxTypedGroup<Spark>;
+	var _explosions:FlxTypedGroup<Explosion>;
+	var _pThrust:Jet;
+	var _grpEThrust:FlxTypedGroup<Jet>;
+	var _fading:Bool = false;
+	var _healthBar:FlxBar;
+	var _launchedSubstate:Bool = false;
+	var _starting:Bool = true;
+	var _score = 0;
 	
-	private var _stars:FlxStarField2D;
-	private var _backgroundStuff:FlxTypedGroup<FlxSprite>;
+	var _stars:FlxStarField2D;
+	var _backgroundStuff:FlxTypedGroup<FlxSprite>;
 	
 	override public function create():Void
 	{
@@ -152,7 +152,7 @@ class PlayState extends FlxState
 		FlxG.camera.style = FlxCameraFollowStyle.LOCKON;
 	}
 
-	private function loadMaps():Void
+	function loadMaps():Void
 	{
 		var gfxMap:FlxSprite = new FlxSprite();
 		var arrMap:Array<Array<Int>> = [];
@@ -305,7 +305,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function bubbleHitsWall(B:EBulletBubble, W:FlxTilemap):Void
+	function bubbleHitsWall(B:EBulletBubble, W:FlxTilemap):Void
 	{
 		if (B.alive && B.exists && B.isOnScreen())
 		{
@@ -313,7 +313,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function collision():Void
+	function collision():Void
 	{
 		FlxG.collide(_sprPlayer, _map,playerHitsWall);
 		FlxG.collide(_grpEBulletBubbles, _map, bubbleHitsWall);
@@ -330,7 +330,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_grpEBulletBubbles, _sprPlayer, eBulletHitPlayer);
 	}
 	
-	private function bulletHitsWall(B:FlxSprite, W:FlxTilemap):Void
+	function bulletHitsWall(B:FlxSprite, W:FlxTilemap):Void
 	{
 		if (B.alive)
 		{
@@ -338,7 +338,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function eBulletHitPlayer(EB:FlxSprite, P:FlxSprite):Void
+	function eBulletHitPlayer(EB:FlxSprite, P:FlxSprite):Void
 	{
 		if (EB.alive)
 		{
@@ -349,14 +349,14 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function spawnHit():Void
+	function spawnHit():Void
 	{
 		var hit = _hits.recycle(Hit.new.bind(_sprPlayer));
 		hit.hit();
 		_hits.add(hit);
 	}
 	
-	private function playerHitEnemy(P:FlxSprite, E:FlxSprite):Void
+	function playerHitEnemy(P:FlxSprite, E:FlxSprite):Void
 	{
 		if (E.alive)
 		{
@@ -367,13 +367,13 @@ class PlayState extends FlxState
 			_sprPlayer.hurt(1);
 		}
 	}
-	private function playerHitsWall(P:FlxSprite, W:FlxTilemap):Void
+	function playerHitsWall(P:FlxSprite, W:FlxTilemap):Void
 	{
 		_sprPlayer.kill();
 		FlxG.camera.flash(FlxColor.WHITE, .1);
 	}
 	
-	private function pBulletHitEnemy(PB:PBullet, E:FlxSprite):Void
+	function pBulletHitEnemy(PB:PBullet, E:FlxSprite):Void
 	{
 		if (PB.alive && E.alive)
 		{
@@ -384,7 +384,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function addExplosions(Target:FlxSprite):Void
+	function addExplosions(Target:FlxSprite):Void
 	{
 		for (i in 0...3)
 		{
@@ -394,7 +394,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function playerMovement():Void
+	function playerMovement():Void
 	{
 		var v:Float = 0;
 		
@@ -482,7 +482,7 @@ class PlayState extends FlxState
 		FlxG.sound.play(AssetPaths.bubble__wav,.66);
 	}
 	
-	private function shootPBullet():Void
+	function shootPBullet():Void
 	{
 		if (_shootDelay <= 0 && _grpPBullets.countLiving() < 12)
 		{

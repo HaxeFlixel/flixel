@@ -11,8 +11,8 @@ import flixel.util.FlxTimer;
  */
 class PlayerShip extends Entity
 {
-	private static inline var MULTIPLIER_EXPIRY_TIME:Float = 0.8; // amount of time it takes, in seconds, for a multiplier to expire.
-	private static inline var MULTIPLIER_MAX:Int = 20;
+	static inline var MULTIPLIER_EXPIRY_TIME:Float = 0.8; // amount of time it takes, in seconds, for a multiplier to expire.
+	static inline var MULTIPLIER_MAX:Int = 20;
 	
 	public static var lives:Int = 0;
 	public static var score:UInt = 0;
@@ -20,11 +20,11 @@ class PlayerShip extends Entity
 	public static var multiplier:Int = 0;
 	public static var isGameOver:Bool = false;
 	
-	private static var multiplierTimeLeft:Float = 0; // time until the current multiplier expires
-	private static var scoreForExtraLife:UInt = 0; // score required to gain an extra life
+	static var multiplierTimeLeft:Float = 0; // time until the current multiplier expires
+	static var scoreForExtraLife:UInt = 0; // score required to gain an extra life
 	
 	public var bulletSpeed:Float = 660;
-	private var aim:FlxPoint;
+	var aim:FlxPoint;
 	
 	public static var instance:PlayerShip;
 
@@ -155,7 +155,7 @@ class PlayerShip extends Entity
 		GameSound.randomSound(GameSound.sfxShoot, 0.4);
 	}
 	
-	private function exhaust():Void
+	function exhaust():Void
 	{
 		var t:Float = Lib.getTimer();
 		

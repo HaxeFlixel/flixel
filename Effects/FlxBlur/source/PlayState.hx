@@ -9,7 +9,7 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	private var _enabled:Bool;
+	var _enabled:Bool;
 	
 	override public function create():Void
 	{

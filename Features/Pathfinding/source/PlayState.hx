@@ -17,64 +17,64 @@ class PlayState extends FlxState
 	/**
 	 * Tile width
 	 */
-	private static inline var TILE_WIDTH:Int = 12;
+	static inline var TILE_WIDTH:Int = 12;
 	/**
 	 * Tile height
 	 */
-	private static inline var TILE_HEIGHT:Int = 12;
+	static inline var TILE_HEIGHT:Int = 12;
 	/**
 	 * Unit value for action go
 	 */
-	private static inline var ACTION_GO:Int = 1;
+	static inline var ACTION_GO:Int = 1;
 	/**
 	 * Unit value for action idle
 	 */
-	private static inline var ACTION_IDLE:Int = 0;
+	static inline var ACTION_IDLE:Int = 0;
 	/**
 	 * Unit move speed
 	 */
-	private static inline var MOVE_SPEED:Int = 50;
+	static inline var MOVE_SPEED:Int = 50;
 	
-	private static inline var INSTRUCTION_1:String = "Click in map to place or remove a tile.";
-	private static inline var INSTRUCTION_2:String = "No path found!";
+	static inline var INSTRUCTION_1:String = "Click in map to place or remove a tile.";
+	static inline var INSTRUCTION_2:String = "No path found!";
 	
 	/**
 	 * Map
 	 */
-	private var _map:FlxTilemap;
+	var _map:FlxTilemap;
 	/**
 	/**
 	 * Goal sprite
 	 */
-	private var _goal:FlxSprite;
+	var _goal:FlxSprite;
 	/**
 	 * Unit sprite
 	 */
-	private var _unit:FlxSprite;
+	var _unit:FlxSprite;
 	/**
 	 * Unit action
 	 */
-	private var _action:Int;
+	var _action:Int;
 	/**
 	 * Destination
 	 */
-	private var _destination:Int;
+	var _destination:Int;
 	/**
 	 * Button to move unit to Goal
 	 */
-	private var _findPathButton:FlxButton;
+	var _findPathButton:FlxButton;
 	/**
 	 * Button to stop unit
 	 */
-	private var _stopUnitButton:FlxButton;
+	var _stopUnitButton:FlxButton;
 	/**
 	 * Button to reset unit to start point
 	 */
-	private var _resetUnitButton:FlxButton;
+	var _resetUnitButton:FlxButton;
 	/**
 	 * Instructions
 	 */
-	private var _instructions:FlxText;
+	var _instructions:FlxText;
 	
 	override public function create():Void
 	{
@@ -182,7 +182,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function moveToGoal():Void
+	function moveToGoal():Void
 	{
 		// Find path to goal from unit to goal
 		var pathPoints:Array<FlxPoint> = _map.findPath(
@@ -202,7 +202,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function stopUnit():Void
+	function stopUnit():Void
 	{
 		// Stop unit and destroy unit path
 		_action = ACTION_IDLE;
@@ -210,7 +210,7 @@ class PlayState extends FlxState
 		_unit.velocity.x = _unit.velocity.y = 0;
 	}
 	
-	private function resetUnit():Void
+	function resetUnit():Void
 	{
 		// Reset _unit position
 		_unit.x = 0;

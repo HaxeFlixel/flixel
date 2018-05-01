@@ -12,12 +12,12 @@ class Enemy extends FlxSprite
 {
 	public var speed:Float = 80;
 	public var etype(default, null):Int;
-	private var _brain:FSM;
-	private var _idleTmr:Float;
-	private var _moveDir:Float;
+	var _brain:FSM;
+	var _idleTmr:Float;
+	var _moveDir:Float;
 	public var seesPlayer:Bool = false;
 	public var playerPos(default, null):FlxPoint;
-	private var _sndStep:FlxSound;
+	var _sndStep:FlxSound;
 	
 	public function new(X:Float=0, Y:Float=0, EType:Int) 
 	{

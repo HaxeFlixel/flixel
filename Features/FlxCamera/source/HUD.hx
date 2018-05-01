@@ -14,10 +14,10 @@ class HUD extends FlxGroup
 	public var height:Int = 180;
 	public var background:FlxSprite;
 	
-	private var txtStyle:FlxText;
-	private var txtLerp:FlxText;
-	private var txtLead:FlxText;
-	private var txtZoom:FlxText;
+	var txtStyle:FlxText;
+	var txtLerp:FlxText;
+	var txtLead:FlxText;
+	var txtZoom:FlxText;
 	
 	public function new() 
 	{
@@ -47,7 +47,7 @@ class HUD extends FlxGroup
 		addGreenText(txtZoom = new FlxText(x, startY + 148, width, "Camera zoom: 1"));
 	}
 	
-	private function addGreenText(text:FlxText)
+	function addGreenText(text:FlxText)
 	{
 		text.setFormat(null, 11, 0x55FF55);
 		add(text);

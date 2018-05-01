@@ -14,15 +14,15 @@ class PlayState extends FlxState
 	/**
 	 * Allows users to toggle the effect on and off with the space bar.
 	 */
-	private var _enabled:Bool = true;
+	var _enabled:Bool = true;
 	/**
 	 * How much light bloom to have - larger numbers = more
 	 */
-	private var _bloom:Int = 10;
+	var _bloom:Int = 10;
 	/**
 	 * Our helper sprite - basically a mini screen buffer (see below)
 	 */
-	private var _fx:FlxSprite;
+	var _fx:FlxSprite;
 	
 	/**
 	 * This is where everything gets set up for the game state

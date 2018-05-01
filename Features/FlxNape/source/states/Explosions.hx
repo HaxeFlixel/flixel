@@ -19,7 +19,7 @@ import openfl.Assets;
  */
 class Explosions extends FlxNapeState
 {
-	private var shooter:Shooter;
+	var shooter:Shooter;
 	public var buildingSprites:Array<FlxNapeSprite>;
 	
 	override public function create():Void 
@@ -36,13 +36,13 @@ class Explosions extends FlxNapeState
 		//add(shooter);
 	}
 	
-	private function createBuildings() 
+	function createBuildings() 
 	{
 		buildingSprites = new Array<FlxNapeSprite>();
 		createBuilding(Assets.getBitmapData("assets/building1.png"), 40, 380);
 	}
 	
-	private function createBuilding(bitmapData:BitmapData, x:Int, y:Int) 
+	function createBuilding(bitmapData:BitmapData, x:Int, y:Int) 
 	{
 		var spr:FlxNapeSprite;
 		for (i in 0...bitmapData.width)
@@ -84,13 +84,13 @@ class Explosions extends FlxNapeState
 		}
 	}
 	
-	private function startBulletTime(Timer:FlxTimer) 
+	function startBulletTime(Timer:FlxTimer) 
 	{
 		FlxG.timeScale = 0.2;
 		FlxTween.tween(FlxG, { timeScale: 1.0 }, 1, { ease: FlxEase.quadIn, delay: 1 });
 	}
 	
-	private function createExplosion() 
+	function createExplosion() 
 	{
 		var explosion:Explosion = new Explosion(FlxG.mouse.x, FlxG.mouse.y, "assets/ExplosionWave.png", this); 
 		add(explosion);
@@ -156,7 +156,7 @@ class Explosion extends FlxSprite
 		applyGravity();
 	}
 	
-	private function applyGravity():Void 
+	function applyGravity():Void 
 	{
 		for (i in buildingSprites)
 		{

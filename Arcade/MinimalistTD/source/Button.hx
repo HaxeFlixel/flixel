@@ -32,7 +32,7 @@ class Button extends FlxButton
 	/**
 	 * Override set_status to change how highlight / normal state looks.
 	 */
-	override private function set_status(Value:Int):Int
+	override function set_status(Value:Int):Int
 	{
 		if (label != null)
 		{

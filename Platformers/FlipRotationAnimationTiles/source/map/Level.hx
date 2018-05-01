@@ -22,7 +22,7 @@ import flixel.group.FlxGroup;
  */
 class Level extends TiledMap
 {
-	private inline static var PATH_TILESETS = "maps/";
+	inline static var PATH_TILESETS = "maps/";
 	
 	public var backgroundGroup:FlxTypedGroup<FlxTilemapExt>;
 	public var foregroundGroup:FlxTypedGroup<FlxTilemapExt>;
@@ -138,7 +138,7 @@ class Level extends TiledMap
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectLayer)
+	function loadObject(o:TiledObject, g:TiledObjectLayer)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
@@ -184,7 +184,7 @@ class Level extends TiledMap
 		FlxG.collide(characterGroup, characterGroup);
 	}
 	
-	private inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool
+	inline function isSpecialTile(tile:TiledTile, animations:Dynamic):Bool
 	{
 		return tile.isFlipHorizontally || tile.isFlipVertically || tile.rotate != FlxTileSpecial.ROTATE_0 || animations.exists(tile.tilesetID);
 	}

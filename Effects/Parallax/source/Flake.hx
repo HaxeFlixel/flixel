@@ -7,8 +7,8 @@ import flixel.util.FlxColor;
 
 class Flake extends FlxSprite
 {
-	private var _level:Int = 0;
-	private var _initialized:Bool = false;
+	var _level:Int = 0;
+	var _initialized:Bool = false;
 	
 	public function new(Level:Int = 0) 
 	{

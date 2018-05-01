@@ -12,11 +12,11 @@ import flash.system.System;
 
 class MenuState extends FlxState
 {
-	private var _txtTitle:FlxText;
-	private var _btnOptions:FlxButton;
-	private var _btnPlay:FlxButton;
+	var _txtTitle:FlxText;
+	var _btnOptions:FlxButton;
+	var _btnPlay:FlxButton;
 	#if desktop
-	private var _btnExit:FlxButton;
+	var _btnExit:FlxButton;
 	#end
 	
 	override public function create():Void
@@ -61,7 +61,7 @@ class MenuState extends FlxState
 		super.create();
 	}
 	
-	private function clickPlay():Void
+	function clickPlay():Void
 	{
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
 		{
@@ -69,7 +69,7 @@ class MenuState extends FlxState
 		});
 	}
 	
-	private function clickOptions():Void
+	function clickOptions():Void
 	{
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
 		{

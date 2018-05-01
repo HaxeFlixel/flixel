@@ -7,7 +7,7 @@ class MathUtil
 		collection.sort(fakeRandomCompare);
 	}
 
-	private static function fakeRandomCompare<T>(x:T, y:T)
+	static function fakeRandomCompare<T>(x:T, y:T)
 	{
 		return if (Math.random() < 0.5) -1 else 1;
 	}

@@ -36,7 +36,7 @@ class Reg
 		return dustMoteData;
 	}
 	
-	static private var dustMoteData:BitmapData;
+	static var dustMoteData:BitmapData;
 	
 	/**
 	 * Draws the bounce panels. Useful for mobile devices with weird resolutions.
@@ -75,11 +75,11 @@ class Reg
 	
 	// This is all stuff used for drawing the paddles.
 	
-	static private var _bitmapData:BitmapData;
-	static private var _rect:Rectangle;
+	static var _bitmapData:BitmapData;
+	static var _rect:Rectangle;
 	
-	inline static private var WHITE:Int = 0xffFFFFFF;
-	inline static private var GREY_LIGHT:Int = 0xffB0B0BF;
-	inline static private var GREY_MED:Int = 0xff646A7D;
-	inline static private var GREY_DARK:Int = 0xff35353D;
+	inline static var WHITE:Int = 0xffFFFFFF;
+	inline static var GREY_LIGHT:Int = 0xffB0B0BF;
+	inline static var GREY_MED:Int = 0xff646A7D;
+	inline static var GREY_DARK:Int = 0xff35353D;
 }

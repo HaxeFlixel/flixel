@@ -9,8 +9,8 @@ class Seeker extends FlxSprite
 {
 	public var moving:Bool = false;
 	
-	private var dest:FlxPoint;
-	private var vec:FlxVector;
+	var dest:FlxPoint;
+	var vec:FlxVector;
 	
 	public function new()
 	{
@@ -36,7 +36,7 @@ class Seeker extends FlxSprite
 		velocity.y = vec.y * Speed;
 	}
 	
-	private function finishMoveTo():Void
+	function finishMoveTo():Void
 	{
 		setPosition(dest.x, dest.y);
 		velocity.set();
@@ -55,7 +55,7 @@ class Seeker extends FlxSprite
 			finishMoveTo();
 	}
 	
-	private function signOf(f:Float):Int
+	function signOf(f:Float):Int
 	{
 		if (f < 0)
 			return -1;

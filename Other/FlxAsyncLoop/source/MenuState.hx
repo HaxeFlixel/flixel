@@ -11,12 +11,12 @@ import flixel.util.FlxColor;
 
 class MenuState extends FlxState
 {
-	private var _grpProgress:FlxGroup;
-	private var _grpFinished:FlxGroup;
-	private var _loopOne:FlxAsyncLoop;
-	private var _maxItems:Int = 5000;
-	private var _bar:FlxBar;
-	private var _barText:FlxText;
+	var _grpProgress:FlxGroup;
+	var _grpFinished:FlxGroup;
+	var _loopOne:FlxAsyncLoop;
+	var _maxItems:Int = 5000;
+	var _bar:FlxBar;
+	var _barText:FlxText;
 	
 	override public function create():Void
 	{

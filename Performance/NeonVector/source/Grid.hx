@@ -17,15 +17,15 @@ class Grid
 	public var springs:Array<Spring>;
 	public var points:Array<PointMass>;
 	public var fixedPoints:Array<PointMass>;
-	private var numColumns:Int;
-	private var numRows:Int;
-	private var majorGridSize:Int;
-	private var _pt:FlxPoint;
+	var numColumns:Int;
+	var numRows:Int;
+	var majorGridSize:Int;
+	var _pt:FlxPoint;
 	
-	private var lineCommands:Vector<Int>;
-	private var lineData:Vector<Float>;
-	private var useDrawPath:Bool = true;
-	private var renderGrid:Bool = true;
+	var lineCommands:Vector<Int>;
+	var lineData:Vector<Float>;
+	var useDrawPath:Bool = true;
+	var renderGrid:Bool = true;
 	
 	public function new(GridRectangle:Rectangle, NumColumns:Int, NumRows:Int, MajorGridSize:Int = 4)
 	{

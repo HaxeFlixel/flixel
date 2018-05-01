@@ -5,9 +5,9 @@ import flixel.FlxSprite;
 
 class Enemy extends FlxSprite
 {
-	private var _shootTimer:Float = 6;
-	private var _parent:PlayState;
-	private var _dying:Float = 2;
+	var _shootTimer:Float = 6;
+	var _parent:PlayState;
+	var _dying:Float = 2;
 	
 	public function new(X:Float, Y:Float, ParentState:PlayState):Void
 	{

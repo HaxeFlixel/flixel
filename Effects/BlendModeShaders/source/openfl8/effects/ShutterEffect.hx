@@ -39,40 +39,40 @@ class ShutterEffect
 		radius = 0;
 	}
 	
-	private function setResolution():Void
+	function setResolution():Void
 	{
 		shader.uResolution.value = [FlxG.width, FlxG.height];
 	}
 	
-	private function set_shutterTargetMode(v:Int):Int
+	function set_shutterTargetMode(v:Int):Int
 	{	
 		shutterTargetMode = v;
 		shader.shutterTargetMode.value = [shutterTargetMode];
 		return v;
 	}
 	
-	private function set_isActive(v:Bool):Bool
+	function set_isActive(v:Bool):Bool
 	{
 		isActive = v;
 		shader.shaderIsActive.value = [isActive];
 		return v;
 	}
 	
-	private function set_radius(v:Float):Float
+	function set_radius(v:Float):Float
 	{
 		radius = (v <= 0.0 ? 0.0 : v);
 		shader.uCircleRadius.value = [radius];
 		return v;
 	}
 	
-	private function set_shutterCenterX(v:Float):Float
+	function set_shutterCenterX(v:Float):Float
 	{
 		shutterCenterX = v;
 		shader.centerPtX.value = [v];
 		return v;
 	}
 	
-	private function set_shutterCenterY(v:Float):Float
+	function set_shutterCenterY(v:Float):Float
 	{
 		shutterCenterY = v;
 		shader.centerPtY.value = [v];

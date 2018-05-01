@@ -6,8 +6,8 @@ import flixel.group.FlxGroup;
 
 class Tower extends FlxSprite
 {
-	private static inline var COST_INCREASE:Float = 1.5;
-	private static inline var BASE_PRICE:Int = 10;
+	static inline var COST_INCREASE:Float = 1.5;
+	static inline var BASE_PRICE:Int = 10;
 
 	public var range:Int = 40;
 	public var fireRate:Float = 1;
@@ -21,10 +21,10 @@ class Tower extends FlxSprite
 	public var fireRatePrice:Int = BASE_PRICE;
 	public var damagePrice:Int = BASE_PRICE;
 	
-	private var _shootInterval:Int = 2;
-	private var _shootCounter:Int = 0;
-	private var _initialCost:Int = 0;
-	private var _indicator:FlxSprite;
+	var _shootInterval:Int = 2;
+	var _shootCounter:Int = 0;
+	var _initialCost:Int = 0;
+	var _indicator:FlxSprite;
 	
 	/**
 	 * Create a new tower at X and Y with default range, fire rate, and damage; create this tower's indicator.
@@ -72,7 +72,7 @@ class Tower extends FlxSprite
 	 */
 	public var value(get, null):Int;
 	
-	private function get_value():Int
+	function get_value():Int
 	{
 		var val:Float = _initialCost;
 		
@@ -87,7 +87,7 @@ class Tower extends FlxSprite
 	/**
 	 * Shoots a bullet! Called when shootCounter reaches the required limit.
 	 */
-	private function shoot():Void
+	function shoot():Void
 	{
 		var target:Enemy = getNearestEnemy();
 		if (target == null)
@@ -108,7 +108,7 @@ class Tower extends FlxSprite
 	 * 
 	 * @return	The first enemy that is not null, in range, and alive. Returns null if none found.
 	 */
-	private function getNearestEnemy():Enemy
+	function getNearestEnemy():Enemy
 	{
 		var firstEnemy:Enemy = null;
 		var enemies:FlxTypedGroup<Enemy> = Reg.PS.enemies;

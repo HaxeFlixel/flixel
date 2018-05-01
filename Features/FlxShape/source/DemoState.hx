@@ -22,22 +22,22 @@ import openfl.display.JointStyle;
  */
 class DemoState extends FlxState
 {
-	private var box:FlxShapeBox;
-	private var circle:FlxShapeCircle;
-	private var cross:FlxShapeCross;
-	private var cross2:FlxShapeCross;
-	private var donut:FlxShapeDonut;
-	private var sdonut:FlxShapeSquareDonut;
+	var box:FlxShapeBox;
+	var circle:FlxShapeCircle;
+	var cross:FlxShapeCross;
+	var cross2:FlxShapeCross;
+	var donut:FlxShapeDonut;
+	var sdonut:FlxShapeSquareDonut;
 	
-	private var dcircle:FlxShapeDoubleCircle;
-	private var grid:FlxShapeGrid;
+	var dcircle:FlxShapeDoubleCircle;
+	var grid:FlxShapeGrid;
 	
-	private var line:FlxShapeLine;
-	private var lightning:FlxShapeLightning;
+	var line:FlxShapeLine;
+	var lightning:FlxShapeLightning;
 	
-	private var norg_back:FlxShapeBox;
-	private var norg_cross:FlxShapeCross;
-	private var norg_cross2:FlxShapeCross;
+	var norg_back:FlxShapeBox;
+	var norg_cross:FlxShapeCross;
+	var norg_cross2:FlxShapeCross;
 	
 	public override function create():Void
 	{

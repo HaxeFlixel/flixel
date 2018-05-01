@@ -21,10 +21,10 @@ class PlayState extends FlxState
 	public static var asteroids:FlxTypedGroup<Asteroid>;
 	public static var bullets:FlxTypedGroup<FlxSprite>;
 	
-	private var _playerShip:PlayerShip;
-	private var _scoreText:FlxText;
+	var _playerShip:PlayerShip;
+	var _scoreText:FlxText;
 	
-	private var _score:Int = 0;
+	var _score:Int = 0;
 	
 	override public function create():Void
 	{
@@ -118,7 +118,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function increaseScore(Amount:Int = 10):Void
+	function increaseScore(Amount:Int = 10):Void
 	{
 		_score += Amount;
 		_scoreText.text = "Score: " + _score;
@@ -126,14 +126,14 @@ class PlayState extends FlxState
 		FlxTween.tween(_scoreText, { alpha: 1 }, 0.5);
 	}
 	
-	private function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
+	function bulletHitsAsteroid(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		Object1.kill();
 		Object2.kill();
 		increaseScore();
 	}
 	
-	private function asteroidHitsShip(Object1:FlxObject, Object2:FlxObject):Void
+	function asteroidHitsShip(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		Object1.kill();
 		Object2.kill();
@@ -141,13 +141,13 @@ class PlayState extends FlxState
 		_scoreText.text = "Game Over! Final score: " + _score + " - Press R to retry.";
 	}
 	
-	private function resetTimer(Timer:FlxTimer):Void
+	function resetTimer(Timer:FlxTimer):Void
 	{
 		Timer.start(5, resetTimer);
 		spawnAsteroid();
 	}
 	
-	private function spawnAsteroid():Void
+	function spawnAsteroid():Void
 	{
 		var asteroid = asteroids.recycle(Asteroid.new);
 		asteroid.init();

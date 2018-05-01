@@ -14,7 +14,7 @@ class OldFlxRandom
 	/**
 	 * Internal helper for <code>FlxG.random.int()</code>
 	 */
-	private static var intHelper:Int = 0;
+	static var intHelper:Int = 0;
 	/**
 	 * Maximum value returned by <code>FlxG.random.intRanged</code> and <code>FlxG.random.floatRanged</code> by default.
 	 */

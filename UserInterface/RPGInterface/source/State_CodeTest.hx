@@ -42,7 +42,7 @@ class State_CodeTest extends FlxUIState
 		}
 	}
 	
-	private function makeStuffByHand():Void
+	function makeStuffByHand():Void
 	{
 		/***Basic Sprite***/
 		
@@ -164,18 +164,18 @@ class State_CodeTest extends FlxUIState
 		add(back_btn);
 	}
 	
-	/*private function _onClickRadioGroup(params:Dynamic = null):Void {
+	/*function _onClickRadioGroup(params:Dynamic = null):Void {
 		FlxG.log.add("FlxUI._onClickRadioGroup(" + params + ")");
 		getEvent("click_radio_group", this, null, params);
 	}*/
 	
 	
-	/*private function _onClickButton(params:Array<Dynamic> = null):Void{
+	/*function _onClickButton(params:Array<Dynamic> = null):Void{
 		FlxG.log.add("FlxUI._onClickButton(" + params + ")");
 		getEvent("click_button", this, null, params);
 	}*/
 	
-	/*private function _onClickCheckBox(params:Dynamic = null):Void {
+	/*function _onClickCheckBox(params:Dynamic = null):Void {
 		FlxG.log.add("FlxUI._onClickCheckBox(" + params + ")");
 		getEvent("click_checkbox", this, null, params);
 	}*/

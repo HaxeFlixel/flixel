@@ -23,22 +23,22 @@ using StringTools;
 
 class MenuState extends FlxState
 {
-	private var _connection:FlxText;
-	private var _return:FlxText;
-	private var _main:FlxGroup;
-	private var _highScores:FlxGroup;
-	private var _apiTest:FlxGroup;
-	private var _loginGroup:FlxGroup;
-	private var _allScreens:FlxGroup;
-	private var _apiPages:Array<FlxGroup>;
-	private var _login:Button;
-	private var _apiCurrentPage:Int;
-	private var _mainMenuTime:Float = 0.0;
-	private var _input1:FlxTextField;
-	private var _input2:FlxTextField;
-	private var _imageDisplay:FlxSprite;
+	var _connection:FlxText;
+	var _return:FlxText;
+	var _main:FlxGroup;
+	var _highScores:FlxGroup;
+	var _apiTest:FlxGroup;
+	var _loginGroup:FlxGroup;
+	var _allScreens:FlxGroup;
+	var _apiPages:Array<FlxGroup>;
+	var _login:Button;
+	var _apiCurrentPage:Int;
+	var _mainMenuTime:Float = 0.0;
+	var _input1:FlxTextField;
+	var _input2:FlxTextField;
+	var _imageDisplay:FlxSprite;
 	
-	private static inline function API_TEST_BUTTONS():Array<Array<String>>
+	static inline function API_TEST_BUTTONS():Array<Array<String>>
 	{
 		return [
 			["fetchUser", "authUser", "openSession", "pingSession"],
@@ -329,39 +329,39 @@ class MenuState extends FlxState
 	}
 	
 	#if debug
-	private function colorCallback(Name:String):Void
+	function colorCallback(Name:String):Void
 	{
 		Reg.genColors();
 		FlxG.switchState(new MenuState());
 	}
 	#end
 	
-	private function playCallback(Name:String):Void
+	function playCallback(Name:String):Void
 	{
 		FlxG.switchState(new PlayState());
 	}
 	
-	private function hfCallback(Name:String):Void
+	function hfCallback(Name:String):Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}
 	
-	private function sourceCallback(Name:String):Void
+	function sourceCallback(Name:String):Void
 	{
 		FlxG.openURL("https://github.com/HaxeFlixel/flixel-addons/blob/master/flixel/addons/api/FlxGameJolt.hx");
 	}
 	
-	private function docCallback(Name:String):Void
+	function docCallback(Name:String):Void
 	{
 		FlxG.openURL("http://gamejolt.com/api/doc/game/");
 	}
 	
-	private function scoresCallback(Name:String):Void
+	function scoresCallback(Name:String):Void
 	{
 		// stuff
 	}
 	
-	private function switchMenu(Name:String):Void
+	function switchMenu(Name:String):Void
 	{
 		if (_loginGroup.visible)
 		{
@@ -394,18 +394,18 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function loginCallback(Name:String):Void
+	function loginCallback(Name:String):Void
 	{
 		_connection.text = "Attempting to log in...";
 		FlxGameJolt.authUser(_input1.text.trim(), _input2.text.trim(), initCallback);
 	}
 	
-	private function mineCallback(Name:String):Void
+	function mineCallback(Name:String):Void
 	{
 		
 	}
 	
-	private function apiCallback(Name:String):Void
+	function apiCallback(Name:String):Void
 	{
 		_imageDisplay.visible = false;
 		_return.text = "Sending " + Name + " request to GameJolt...";
@@ -461,19 +461,19 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function apiReturn(ReturnMap:Map<String,String>):Void
+	function apiReturn(ReturnMap:Map<String,String>):Void
 	{
 		_return.text = "Received from GameJolt:\n" + ReturnMap.toString();
 	}
 	
-	private function apiImageReturn(Bits:BitmapData):Void
+	function apiImageReturn(Bits:BitmapData):Void
 	{
 		_return.text = "";
 		_imageDisplay.loadGraphic(Bits);
 		_imageDisplay.visible = true;
 	}
 	
-	private function authReturn(Success:Bool):Void
+	function authReturn(Success:Bool):Void
 	{
 		_return.text = "The user authentication returned: " + Success;
 		
@@ -483,7 +483,7 @@ class MenuState extends FlxState
 		}
 	}
 	
-	private function testMove(Name:String):Void
+	function testMove(Name:String):Void
 	{
 		_apiPages[_apiCurrentPage].visible = false;
 		_apiPages[_apiCurrentPage].active = false;
@@ -507,7 +507,7 @@ class MenuState extends FlxState
 		_apiPages[_apiCurrentPage].active = true;
 	}
 	
-	private function initCallback(Result:Bool):Void
+	function initCallback(Result:Bool):Void
 	{
 		if (_connection != null)
 		{

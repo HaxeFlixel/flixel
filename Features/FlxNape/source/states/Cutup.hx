@@ -82,7 +82,7 @@ class Cutup extends BaseState
 			shootLaser();
 	}
 	
-	private function shootLaser() 
+	function shootLaser() 
 	{
 		var source:FlxPoint = ufo.getMidpoint();
 		var mouse:FlxPoint = FlxG.mouse.getWorldPosition();
@@ -119,7 +119,7 @@ class Cutup extends BaseState
 		eP.dispose();
 	}
 	
-	private function applyCut(orgPhySpr:FlxNapeSprite, sP:Vec2, eP:Vec2):Void 
+	function applyCut(orgPhySpr:FlxNapeSprite, sP:Vec2, eP:Vec2):Void 
 	{
 		var orgBody = orgPhySpr.body;
 		var geomPoly = new GeomPoly(orgBody.shapes.at(0).castPolygon.worldVerts);

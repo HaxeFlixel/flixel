@@ -17,8 +17,8 @@ class Enemy extends EnemyTemplate
 	public static inline var HEALTH:Int = 1;
 	public static inline var SPAWNTIME:Float = 30;
 	
-	private var _gibs:FlxEmitter;
-	private var _spawntimer:Float;
+	var _gibs:FlxEmitter;
+	var _spawntimer:Float;
 	
 	public function new(X:Float, Y:Float, ThePlayer:Player, Gibs:FlxEmitter)
 	{

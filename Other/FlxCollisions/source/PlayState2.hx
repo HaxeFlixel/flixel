@@ -9,7 +9,7 @@ import flixel.text.FlxText;
 
 class PlayState2 extends FlxState
 {	
-	private var _focus:FlxSprite;
+	var _focus:FlxSprite;
 	
 	override public function create():Void
 	{

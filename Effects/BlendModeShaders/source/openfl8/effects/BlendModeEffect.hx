@@ -22,7 +22,7 @@ class BlendModeEffect
 		this.color = color;
 	}
 	
-	private function set_color(color:FlxColor):FlxColor
+	function set_color(color:FlxColor):FlxColor
 	{
 		shader.uBlendColor.value[0] = color.redFloat;
 		shader.uBlendColor.value[1] = color.greenFloat;

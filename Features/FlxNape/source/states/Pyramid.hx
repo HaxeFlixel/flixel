@@ -12,8 +12,8 @@ import flixel.text.FlxText;
  */
 class Pyramid extends BaseState
 {
-	private var shooter:Shooter;
-	private static var levels = 10;
+	var shooter:Shooter;
+	static var levels = 10;
 	var bricks:Array<FlxNapeSprite>;
 	
 	override public function create():Void 
@@ -38,7 +38,7 @@ class Pyramid extends BaseState
 		add(txt);
 	}
 	
-	private function createBricks() 
+	function createBricks() 
 	{
 		bricks = new Array<FlxNapeSprite>();
 		var brick:FlxNapeSprite;

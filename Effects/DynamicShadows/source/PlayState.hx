@@ -34,42 +34,42 @@ class PlayState extends FlxState
 {
 	public static inline var TILE_SIZE:Int = 16;
 	
-	private static inline var SHADOW_COLOR = 0xff2a2963;
-	private static inline var OVERLAY_COLOR = 0xff887fff;
+	static inline var SHADOW_COLOR = 0xff2a2963;
+	static inline var OVERLAY_COLOR = 0xff887fff;
 	
 	/**
 	 * Only contains non-collidabe tiles
 	 */
-	private var background:FlxTilemap;
+	var background:FlxTilemap;
 	
 	/**
 	 * The layer into which the actual "level" will be drawn, and also the one objects will collide with
 	 */
-	private var foreground:FlxNapeTilemap;
+	var foreground:FlxNapeTilemap;
 	
 	/**
 	 * The sprite that shadows will be drawn to
 	 */
-	private var shadowCanvas:FlxSprite;
+	var shadowCanvas:FlxSprite;
 	
 	/**
 	 * The sprite that the actual darkness and the gem's flare-like effect will be drawn to
 	 */
-	private var shadowOverlay:FlxSprite;
+	var shadowOverlay:FlxSprite;
 	
 	/**
 	 * The light source!
 	 */
-	private var gem:Gem;
+	var gem:Gem;
 	
 	/**
 	 * If there's a small gap between something (could be two tiles,
 	 * even if they're right next to each other), this should cover it up for us
 	 */
-	private var lineStyle:LineStyle = { color: SHADOW_COLOR, thickness: 1 };
+	var lineStyle:LineStyle = { color: SHADOW_COLOR, thickness: 1 };
 	
-	private var infoText:FlxText;
-	private var fps:FPS;
+	var infoText:FlxText;
+	var fps:FPS;
 	
 	override public function create():Void
 	{
@@ -120,7 +120,7 @@ class PlayState extends FlxState
 		fps.visible = false;
 	}
 	
-	private function createProps():Void
+	function createProps():Void
 	{
 		for (tileY in 0...foreground.heightInTiles)
 		{
@@ -148,7 +148,7 @@ class PlayState extends FlxState
 	/**
 	 * The tile in question was replaced by an actual object, this function will clean up the tile for us
 	 */
-	private function cleanTile(x:Int, y:Int):Void
+	function cleanTile(x:Int, y:Int):Void
 	{
 		foreground.setTile(x, y, 0);
 	}
@@ -190,7 +190,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function processBodyShapes(body:Body)
+	function processBodyShapes(body:Body)
 	{
 		for (shape in body.shapes) 
 		{
@@ -204,7 +204,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function processShapeVertex(startVertex:Vec2, endVertex:Vec2):Void
+	function processShapeVertex(startVertex:Vec2, endVertex:Vec2):Void
 	{
 		var tempLightOrigin:Vec2 = Vec2.get(
 			gem.body.position.x + FlxG.random.float( -.3, 3),
@@ -225,7 +225,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function projectPoint(point:Vec2, light:Vec2):Vec2
+	function projectPoint(point:Vec2, light:Vec2):Vec2
 	{
 		var lightToPoint:Vec2 = point.copy();
 		lightToPoint.subeq(light);
@@ -234,7 +234,7 @@ class PlayState extends FlxState
 		return projectedPoint.addeq(lightToPoint.muleq(.45));
 	}
 	
-	private function doesEdgeCastShadow(start:Vec2, end:Vec2, light:Vec2):Bool
+	function doesEdgeCastShadow(start:Vec2, end:Vec2, light:Vec2):Bool
 	{
 		var startToEnd:Vec2 = end.copy();
 		startToEnd.subeq(start);

@@ -11,11 +11,11 @@ import flixel.util.FlxTimer;
 
 class Toast extends FlxSpriteGroup
 {
-	private static inline var WIDTH:Int = 105;
-	private static inline var HEIGHT:Int = 115;
-	private var _name:String;
-	private var _id:Int;
-	private var _had:String;
+	static inline var WIDTH:Int = 105;
+	static inline var HEIGHT:Int = 115;
+	var _name:String;
+	var _id:Int;
+	var _had:String;
 	
 	/**
 	 * Just a handy class to unlock a trophy, and provide visual notification of such to the player.
@@ -30,13 +30,13 @@ class Toast extends FlxSpriteGroup
 		FlxGameJolt.fetchTrophy(_id, setUpTrophy);
 	}
 	
-	private function setUpTrophy(Return:Map<String,String>):Void
+	function setUpTrophy(Return:Map<String,String>):Void
 	{
 		_name = Return.get("title");
 		FlxGameJolt.fetchTrophyImage(_id, awardTrophy);
 	}
 	
-	private function awardTrophy(bd:BitmapData):Void
+	function awardTrophy(bd:BitmapData):Void
 	{
 		var bg:PongSprite = new PongSprite(0, 0, WIDTH, HEIGHT, Reg.dark);
 		var top:FlxText = new FlxText(0, -2, WIDTH, "Trophy Get!");
@@ -56,7 +56,7 @@ class Toast extends FlxSpriteGroup
 		new FlxTimer().start(6, removeThis, 1);
 	}
 	
-	private function removeThis(t:FlxTimer):Void
+	function removeThis(t:FlxTimer):Void
 	{
 		visible = false;
 		active = false;

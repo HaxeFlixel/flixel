@@ -58,7 +58,7 @@ class PointMass
 	 * Useful for cases when you need to update this but are buried down in too many supers.
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independenct motion.
 	 */
-	private function updateMotion(elapsed:Float):Void
+	function updateMotion(elapsed:Float):Void
 	{
 		var delta:Float;
 		var velocityDelta:Float;

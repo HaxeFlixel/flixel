@@ -13,11 +13,11 @@ class SubState extends FlxSubState
 {
 	// Some test sprite, showing that if the state is persistent (not destroyed after closing)
 	// then it will save it's position (and all other properties)
-	private var testSprite:FlxSprite;
+	var testSprite:FlxSprite;
 	
-	private var closeBtn:FlxButton;
-	private var switchParentDrawingBtn:FlxButton;
-	private var switchParentUpdatingBtn:FlxButton;
+	var closeBtn:FlxButton;
+	var switchParentDrawingBtn:FlxButton;
+	var switchParentUpdatingBtn:FlxButton;
 	
 	// just a helper flag, showing if this substate is persistent or not
 	public var isPersistent:Bool = false;
@@ -40,7 +40,7 @@ class SubState extends FlxSubState
 		add(testSprite);
 	}
 	
-	private function onSwitchUpdate() 
+	function onSwitchUpdate() 
 	{
 		if (_parentState != null)
 		{
@@ -51,7 +51,7 @@ class SubState extends FlxSubState
 		}
 	}
 	
-	private function onSwitchDraw() 
+	function onSwitchDraw() 
 	{
 		if (_parentState != null)
 		{
@@ -71,7 +71,7 @@ class SubState extends FlxSubState
 		}
 	}
 	
-	private function onClick() 
+	function onClick() 
 	{
 		// if you will pass 'true' (which is by default) into close() method then this substate will be destroyed
 		// but when you'll pass 'false' then you should destroy it manually

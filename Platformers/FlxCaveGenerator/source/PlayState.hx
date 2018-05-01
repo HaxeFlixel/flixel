@@ -16,11 +16,11 @@ import haxe.Timer;
 
 class PlayState extends FlxState
 {
-	private var _tilemap:FlxTilemap;
-	private var _player:Player;
-	private var _smoothingIterations:Int = 6;
-	private var _wallRatio:Float = 0.5;
-	private var _generationTime:FlxText;
+	var _tilemap:FlxTilemap;
+	var _player:Player;
+	var _smoothingIterations:Int = 6;
+	var _wallRatio:Float = 0.5;
+	var _generationTime:FlxText;
 	
 	override public function create():Void 
 	{
@@ -90,7 +90,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function generateCave():Void
+	function generateCave():Void
 	{
 		// Determine the width and height (in tiles) needed to fill the screen with tiles that are 8x8 pixels 
 		var width:Int = Math.floor(FlxG.width / 8);

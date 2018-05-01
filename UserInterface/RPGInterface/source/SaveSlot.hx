@@ -12,7 +12,7 @@ import haxe.xml.Fast;
  */
 class SaveSlot extends FlxUI
 {
-	private var ptr:IEventGetter;
+	var ptr:IEventGetter;
 	public var valid : Bool;
 	
 	public function new(data:Fast, ?_ptr:Dynamic)

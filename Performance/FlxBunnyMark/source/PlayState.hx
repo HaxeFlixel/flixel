@@ -28,24 +28,24 @@ class PlayState extends FlxState
 	public static var offScreen:Bool = false;
 	public static var useShaders:Bool = false;
 	
-	private var _changeAmount:Int = 1000;
-	private var _times:Array<Float>;
-	private var _collisions:Bool = false;
+	var _changeAmount:Int = 1000;
+	var _times:Array<Float>;
+	var _collisions:Bool = false;
 	
-	private var _bunnies:FlxTypedGroup<Bunny>;
-	private var _uiOverlay:FlxSpriteGroup;
-	private var _complexityButton:FlxButton;
-	private var _collisionButton:FlxButton;
-	private var _timestepButton:FlxButton;
-	private var _offScreenButton:FlxButton;
-	private var _bunnyCounter:FlxText;
-	private var _fpsCounter:FlxText;
+	var _bunnies:FlxTypedGroup<Bunny>;
+	var _uiOverlay:FlxSpriteGroup;
+	var _complexityButton:FlxButton;
+	var _collisionButton:FlxButton;
+	var _timestepButton:FlxButton;
+	var _offScreenButton:FlxButton;
+	var _bunnyCounter:FlxText;
+	var _fpsCounter:FlxText;
 	
 	#if shaders_supported
-	private var _shaderButton:FlxButton;
+	var _shaderButton:FlxButton;
 	
-	private var floodFill = new FloodFill();
-	private var invert = new Invert();
+	var floodFill = new FloodFill();
+	var invert = new Invert();
 	#end
 	
 	override public function create():Void
@@ -87,7 +87,7 @@ class PlayState extends FlxState
 		_times = [];
 	}
 
-	private function createOverlay():FlxSpriteGroup
+	function createOverlay():FlxSpriteGroup
 	{
 		var overlay = new FlxSpriteGroup();
 
@@ -171,7 +171,7 @@ class PlayState extends FlxState
 			_uiOverlay.visible = !_uiOverlay.visible;
 	}
 
-	private function changeBunnyNumber(add:Bool, amount:Int):Void
+	function changeBunnyNumber(add:Bool, amount:Int):Void
 	{
 		for (i in 0...amount)
 		{
@@ -202,7 +202,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onComplexityToggle():Void
+	function onComplexityToggle():Void
 	{
 		complex = !complex;
 		toggleLabel(_complexityButton, "Complex", "Simple");
@@ -212,19 +212,19 @@ class PlayState extends FlxState
 				bunny.complex = complex;
 	}
 	
-	private function onCollisionToggle():Void
+	function onCollisionToggle():Void
 	{
 		_collisions = !_collisions;
 		toggleLabel(_collisionButton, "Collisions: Off", "Collisions: On");
 	}
 	
-	private function onTimestepToggle():Void
+	function onTimestepToggle():Void
 	{
 		FlxG.fixedTimestep = !FlxG.fixedTimestep;
 		toggleLabel(_timestepButton, "Step: Fixed", "Step: Variable");
 	}
 	
-	private function onOffScreenToggle():Void
+	function onOffScreenToggle():Void
 	{
 		offScreen = !offScreen;
 		toggleLabel(_offScreenButton, "On-Screen", "Off-Screen");
@@ -235,7 +235,7 @@ class PlayState extends FlxState
 	}
 	
 	#if shaders_supported
-	private function onShaderToggle():Void
+	function onShaderToggle():Void
 	{
 		useShaders = !useShaders;
 		toggleLabel(_shaderButton, "Shaders: Off", "Shaders: On");
@@ -246,7 +246,7 @@ class PlayState extends FlxState
 	}
 	#end
 	
-	private function toggleLabel(button:FlxButton, text1:String, text2:String):Void
+	function toggleLabel(button:FlxButton, text1:String, text2:String):Void
 	{
 		button.label.text = if (button.label.text == text1) text2 else text1;
 	}

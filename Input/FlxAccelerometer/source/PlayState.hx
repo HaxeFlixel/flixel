@@ -12,11 +12,11 @@ import flixel.math.FlxMath;
 
 class PlayState extends FlxState
 {
-	private static inline var GRAVITY_FACTOR:Int = 5000; 
+	static inline var GRAVITY_FACTOR:Int = 5000; 
 	
-	private var xText:FlxText;
-	private var yText:FlxText;
-	private var zText:FlxText;
+	var xText:FlxText;
+	var yText:FlxText;
+	var zText:FlxText;
 	
 	override public function create():Void
 	{

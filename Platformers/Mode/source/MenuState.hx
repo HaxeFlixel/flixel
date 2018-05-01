@@ -14,13 +14,13 @@ import openfl.Assets;
  */
 class MenuState extends FlxState
 {
-	private var _gibs:FlxEmitter;
-	private var _playButton:FlxButton;
-	private var _title1:FlxText;
-	private var _title2:FlxText;
-	private var _fading:Bool;
-	private var _timer:Float;
-	private var _demoMode:Bool;
+	var _gibs:FlxEmitter;
+	var _playButton:FlxButton;
+	var _title1:FlxText;
+	var _title2:FlxText;
+	var _fading:Bool;
+	var _timer:Float;
+	var _demoMode:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -203,7 +203,7 @@ class MenuState extends FlxState
 	 * When FlxG.fade() finishes, it will call this, which in turn will either load
 	 * up a game demo/replay, or let the player start playing, depending on user input.
 	 */
-	private function onFade():Void
+	function onFade():Void
 	{
 		if (_demoMode)
 		{
@@ -219,7 +219,7 @@ class MenuState extends FlxState
 	 * This function is called by FlxG.loadReplay() when the replay finishes.
 	 * Here, we initiate another fade effect.
 	 */
-	private function onDemoComplete():Void
+	function onDemoComplete():Void
 	{
 		FlxG.cameras.fade(0xff131c1b, 1, false, onDemoFaded);
 	}
@@ -229,7 +229,7 @@ class MenuState extends FlxState
 	 * in relation to the callback above.  It stops the replay, and resets the game
 	 * once the gameplay demo has faded out.
 	 */
-	private function onDemoFaded():Void
+	function onDemoFaded():Void
 	{
 		FlxG.vcr.stopReplay();
 		FlxG.resetGame();

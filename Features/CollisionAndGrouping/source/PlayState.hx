@@ -10,40 +10,40 @@ import flixel.ui.FlxButton;
 class PlayState extends FlxState
 {
 	// This is for our messages
-	private var _topText:FlxText;
+	var _topText:FlxText;
 	
 	// This is our elevator, for smashing the crates
-	private var _elevator:FlxSprite;
+	var _elevator:FlxSprite;
 	
 	// We'll reuse this when we make a bunch of crates
-	private var _crate:FlxSprite;
+	var _crate:FlxSprite;
 	
 	// We'll make 100 per group crates to smash about
-	private var _numCrates:Int = 200;
+	var _numCrates:Int = 200;
 	
 	//these are the groups that will hold all of our crates
-	private var _crateStormGroup:FlxTypedGroup<FlxSprite>;
-	private var _crateStormGroup2:FlxTypedGroup<FlxSprite>;
-	private var _crateStormMegaGroup:FlxGroup;
+	var _crateStormGroup:FlxTypedGroup<FlxSprite>;
+	var _crateStormGroup2:FlxTypedGroup<FlxSprite>;
+	var _crateStormMegaGroup:FlxGroup;
 	
 	// We'll make a sweet flixel logo to ride the elevator for option #2
-	private var _flixelRider:FlxSprite;
+	var _flixelRider:FlxSprite;
 	
 	// Here we have a few buttons for use in altering the demo
-	private var _crateStorm:FlxButton;
-	private var _crateStormG1:FlxButton;
-	private var _crateStormG2:FlxButton;
-	private var _quitButton:FlxButton;
-	private var _flxRiderButton:FlxButton;
-	private var _groupCollision:FlxButton;
+	var _crateStorm:FlxButton;
+	var _crateStormG1:FlxButton;
+	var _crateStormG2:FlxButton;
+	var _quitButton:FlxButton;
+	var _flxRiderButton:FlxButton;
+	var _groupCollision:FlxButton;
 	
 	// Some toggle variables for use with the buttons
-	private var _isCrateStormOn:Bool = true;
-	private var _isFlxRiderOn:Bool = false;
-	private var _collideGroups:Bool = false;
-	private var _redGroup:Bool = true;
-	private var _blueGroup:Bool = true;
-	private var _rising:Bool = true;
+	var _isCrateStormOn:Bool = true;
+	var _isFlxRiderOn:Bool = false;
+	var _collideGroups:Bool = false;
+	var _redGroup:Bool = true;
+	var _blueGroup:Bool = true;
+	var _rising:Bool = true;
 	
 	override public function create():Void
 	{
@@ -222,7 +222,7 @@ class PlayState extends FlxState
 	/**
 	 * This calls our friend the Flixel Rider into play
 	 */ 
-	private function onFlixelRider():Void
+	function onFlixelRider():Void
 	{
 		if (!_isFlxRiderOn)
 		{
@@ -252,7 +252,7 @@ class PlayState extends FlxState
 	/**
 	 * Enable the CRATE STOOOOOORM!
 	 */
-	private function onCrateStorm():Void
+	function onCrateStorm():Void
 	{
 		_isCrateStormOn = true;
 		_isFlxRiderOn = false;
@@ -282,7 +282,7 @@ class PlayState extends FlxState
 	/**
 	 * Toggle the Blue group
 	 */ 
-	private function onBlue():Void
+	function onBlue():Void
 	{
 		_blueGroup = !_blueGroup;
 		_crateStormGroup.visible = _crateStormGroup.exists = !_crateStormGroup.exists;
@@ -315,7 +315,7 @@ class PlayState extends FlxState
 	/**
 	 * Toggle the Red group
 	 */
-	private function onRed():Void 
+	function onRed():Void 
 	{
 		_redGroup = !_redGroup;
 		_crateStormGroup2.visible = _crateStormGroup2.exists = !_crateStormGroup2.exists;
@@ -349,7 +349,7 @@ class PlayState extends FlxState
 	/**
 	 * Toggle the group collision
 	 */
-	private function onCollideGroups():Void
+	function onCollideGroups():Void
 	{
 		_collideGroups = !_collideGroups;
 		

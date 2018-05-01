@@ -12,7 +12,7 @@ class ParticleState extends FlxState
 {
 	public static inline var PARTICLE_AMOUNT:Int = 100;
 	
-	private var _emitter:FlxEmitter;
+	var _emitter:FlxEmitter;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -80,7 +80,7 @@ class ParticleState extends FlxState
 	/**
 	 * Helper function to start the emtitter. Called from the FlxSliders!
 	 */
-	private inline function startEmitter(?Value:Null<Float>):Void
+	inline function startEmitter(?Value:Null<Float>):Void
 	{
 		// Prevent emitter from restarting when using a slider before releasing the mouse
 		if (FlxG.mouse.justPressed) 

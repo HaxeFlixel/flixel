@@ -20,64 +20,64 @@ class PlayState extends FlxState
 	/**
 	 * Our example emitter.
 	 */
-	private var _emitter:FlxEmitter;
+	var _emitter:FlxEmitter;
 	
 	/**
 	 * Some buttons
 	 */
-	private var _blendButton:FlxButton;
-	private var _launchModeButton:FlxButton;
-	private var _directionButton:FlxButton;
-	private var _velocityButton:FlxButton;
-	private var _angularVelocityButton:FlxButton;
-	private var _angleButton:FlxButton;
-	private var _lifespanButton:FlxButton;
-	private var _scaleButton:FlxButton;
-	private var _alphaButton:FlxButton;
-	private var _colorButton:FlxButton;
-	private var _dragButton:FlxButton;
-	private var _accelerationButton:FlxButton;
-	private var _elasticityButton:FlxButton;
-	private var _collisionButton:FlxButton;
-	private var _gravityButton:FlxButton;
-	private var _resetButton:FlxButton;
+	var _blendButton:FlxButton;
+	var _launchModeButton:FlxButton;
+	var _directionButton:FlxButton;
+	var _velocityButton:FlxButton;
+	var _angularVelocityButton:FlxButton;
+	var _angleButton:FlxButton;
+	var _lifespanButton:FlxButton;
+	var _scaleButton:FlxButton;
+	var _alphaButton:FlxButton;
+	var _colorButton:FlxButton;
+	var _dragButton:FlxButton;
+	var _accelerationButton:FlxButton;
+	var _elasticityButton:FlxButton;
+	var _collisionButton:FlxButton;
+	var _gravityButton:FlxButton;
+	var _resetButton:FlxButton;
 	
 	/**
 	 * Some walls stuff
 	 */
-	private var _collisionGroup:FlxGroup;
-	private var _wall:FlxSprite;
-	private var _floor:FlxSprite;
+	var _collisionGroup:FlxGroup;
+	var _wall:FlxSprite;
+	var _floor:FlxSprite;
 	
 	/**
 	 * We'll use these to track the current state of gravity and collision
 	 */
-	private var _isBlendOn:Bool = false;
-	private var _isLaunchOn:Bool = false;
-	private var _isDirectionOn:Bool = false;
-	private var _isVelocityOn:Bool = false;
-	private var _isAngularVelocityOn:Bool = false;
-	private var _isAngleOn:Bool = false;
-	private var _isLifespanOn:Bool = false;
-	private var _isScaleOn:Bool = false;
-	private var _isAlphaOn:Bool = false;
-	private var _isColorOn:Bool = false;
-	private var _isDragOn:Bool = false;
-	private var _isAccelerationOn:Bool = false;
-	private var _isElasticityOn:Bool = false;
-	private var _isCollisionOn:Bool = false;
-	private var _isGravityOn:Bool = false;
+	var _isBlendOn:Bool = false;
+	var _isLaunchOn:Bool = false;
+	var _isDirectionOn:Bool = false;
+	var _isVelocityOn:Bool = false;
+	var _isAngularVelocityOn:Bool = false;
+	var _isAngleOn:Bool = false;
+	var _isLifespanOn:Bool = false;
+	var _isScaleOn:Bool = false;
+	var _isAlphaOn:Bool = false;
+	var _isColorOn:Bool = false;
+	var _isDragOn:Bool = false;
+	var _isAccelerationOn:Bool = false;
+	var _isElasticityOn:Bool = false;
+	var _isCollisionOn:Bool = false;
+	var _isGravityOn:Bool = false;
 	
 	/**
 	 * Just a useful flxText for notifications
 	 */
-	private var topText:FlxText;
-	private var _alphaTween:VarTween;
+	var topText:FlxText;
+	var _alphaTween:VarTween;
 	
 	/**
 	 * Just a simple flag to see if we should display the welcome message.
 	 */
-	private static var _firstLoad:Bool = true;
+	static var _firstLoad:Bool = true;
 	
 	override public function create():Void
 	{
@@ -204,7 +204,7 @@ class PlayState extends FlxState
 		FlxG.collide(_emitter, _collisionGroup);
 	}
 	
-	private function updateText(NewText:String, ?Status:Null<Bool>):Void
+	function updateText(NewText:String, ?Status:Null<Bool>):Void
 	{
 		topText.text = NewText;
 		
@@ -227,7 +227,7 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	private function onBlendToggle():Void
+	function onBlendToggle():Void
 	{
 		_isBlendOn = !_isBlendOn;
 		
@@ -243,7 +243,7 @@ class PlayState extends FlxState
 		updateText("BlendMode", _isBlendOn);
 	}
 	
-	private function onLaunchModeToggle():Void
+	function onLaunchModeToggle():Void
 	{
 		_isLaunchOn = !_isLaunchOn;
 		
@@ -271,7 +271,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onDirectionToggle():Void
+	function onDirectionToggle():Void
 	{
 		_isDirectionOn = !_isDirectionOn;
 		
@@ -297,7 +297,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onVelocityToggle():Void
+	function onVelocityToggle():Void
 	{
 		_isVelocityOn = !_isVelocityOn;
 		
@@ -313,7 +313,7 @@ class PlayState extends FlxState
 		updateText("Emitter velocity scaling", _isVelocityOn);
 	}
 	
-	private function onAngularVelocityToggle():Void
+	function onAngularVelocityToggle():Void
 	{
 		_isAngularVelocityOn = !_isAngularVelocityOn;
 		
@@ -329,7 +329,7 @@ class PlayState extends FlxState
 		updateText("Angular velocity", _isAngularVelocityOn);
 	}
 	
-	private function onAngleToggle():Void
+	function onAngleToggle():Void
 	{
 		_isAngleOn = !_isAngleOn;
 		
@@ -345,7 +345,7 @@ class PlayState extends FlxState
 		updateText("Random initial angle", _isAngleOn);
 	}
 	
-	private function onLifespanToggle():Void
+	function onLifespanToggle():Void
 	{
 		_isLifespanOn = !_isLifespanOn;
 		
@@ -361,7 +361,7 @@ class PlayState extends FlxState
 		updateText("Lifespan range is " + _emitter.lifespan.min + " - " + _emitter.lifespan.max);
 	}
 	
-	private function onScaleToggle():Void
+	function onScaleToggle():Void
 	{
 		_isScaleOn = !_isScaleOn;
 		
@@ -377,7 +377,7 @@ class PlayState extends FlxState
 		updateText("Scaling", _isScaleOn);
 	}
 	
-	private function onAlphaToggle():Void
+	function onAlphaToggle():Void
 	{
 		_isAlphaOn = !_isAlphaOn;
 		
@@ -393,7 +393,7 @@ class PlayState extends FlxState
 		updateText("Alpha", _isAlphaOn);
 	}
 	
-	private function onColorToggle():Void
+	function onColorToggle():Void
 	{
 		_isColorOn = !_isColorOn;
 		
@@ -409,7 +409,7 @@ class PlayState extends FlxState
 		updateText("Color", _isColorOn);
 	}
 	
-	private function onDragToggle():Void
+	function onDragToggle():Void
 	{
 		_isDragOn = !_isDragOn;
 		
@@ -425,7 +425,7 @@ class PlayState extends FlxState
 		updateText("Drag", _isDragOn);
 	}
 	
-	private function onAccelerationToggle():Void
+	function onAccelerationToggle():Void
 	{
 		_isAccelerationOn = !_isAccelerationOn;
 		
@@ -441,7 +441,7 @@ class PlayState extends FlxState
 		updateText("Acceleration", _isAccelerationOn);
 	}
 	
-	private function onElasticityToggle():Void
+	function onElasticityToggle():Void
 	{
 		_isElasticityOn = !_isElasticityOn;
 		
@@ -457,7 +457,7 @@ class PlayState extends FlxState
 		updateText("Elasticity", _isElasticityOn);
 	}
 	
-	private function onCollisionToggle():Void
+	function onCollisionToggle():Void
 	{
 		_isCollisionOn = !_isCollisionOn;
 		
@@ -477,7 +477,7 @@ class PlayState extends FlxState
 		updateText("Collisions", _isCollisionOn);
 	}
 	
-	private function onGravityToggle():Void
+	function onGravityToggle():Void
 	{
 		_isGravityOn = !_isGravityOn;
 		
@@ -496,7 +496,7 @@ class PlayState extends FlxState
 		updateText("Gravity", _isGravityOn);
 	}
 	
-	private function onResetRequest():Void
+	function onResetRequest():Void
 	{
 		FlxG.resetGame();
 	}

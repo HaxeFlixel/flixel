@@ -20,19 +20,19 @@ import flixel.util.FlxDestroyUtil;
  */
 class FlxFloodFill extends FlxSprite
 {
-	private var complete:Bool = false;
-	private var isFilling:Bool = false;
-	private var dropRect:Rectangle;
-	private var dropPoint:Point;
-	private var dropY:Int;
-	private var srcBitmapData:BitmapData;
-	private var fillDelay:Float = .05;
-	private var fillClock:Float = 0;
+	var complete:Bool = false;
+	var isFilling:Bool = false;
+	var dropRect:Rectangle;
+	var dropPoint:Point;
+	var dropY:Int;
+	var srcBitmapData:BitmapData;
+	var fillDelay:Float = .05;
+	var fillClock:Float = 0;
 	
 	/**
 	 * How many pixels to drop per update
 	 */
-	private var fillOffset:Int = 1;
+	var fillOffset:Int = 1;
 	
 	/**
 	 * @param x The effect's x-position.

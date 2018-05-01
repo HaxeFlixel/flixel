@@ -21,16 +21,16 @@ class Player extends FlxSprite
 	public static var virtualPad:FlxVirtualPad;
 	#end
 	
-	private static var FIRE_RATE:Float = 1 / 10; // 10 shots per second
+	static var FIRE_RATE:Float = 1 / 10; // 10 shots per second
 	
 	public var isReadyToJump:Bool = true;
 	public var flickering:Bool = false;
 	
-	private var _shootTimer = new FlxTimer();
-	private var _jumpPower:Int = 200;
-	private var _aim:Int = FlxObject.RIGHT;
-	private var _gibs:FlxEmitter;
-	private var _bullets:FlxTypedGroup<Bullet>;
+	var _shootTimer = new FlxTimer();
+	var _jumpPower:Int = 200;
+	var _aim:Int = FlxObject.RIGHT;
+	var _gibs:FlxEmitter;
+	var _bullets:FlxTypedGroup<Bullet>;
 	
 	/**
 	 * This is the player object class.  Most of the comments I would put in here
@@ -103,7 +103,7 @@ class Player extends FlxSprite
 		super.update(elapsed);
 	}
 	
-	private function updateKeyboardInput():Void
+	function updateKeyboardInput():Void
 	{
 		#if FLX_KEYBOARD
 		if (FlxG.keys.anyPressed([A, LEFT]))
@@ -123,7 +123,7 @@ class Player extends FlxSprite
 		#end
 	}
 	
-	private function updateVirtualPadInput():Void
+	function updateVirtualPadInput():Void
 	{
 		#if VIRTUAL_PAD
 		if (virtualPad.buttonLeft.pressed)
@@ -143,7 +143,7 @@ class Player extends FlxSprite
 		#end
 	}
 	
-	private function updateGamepadInput():Void
+	function updateGamepadInput():Void
 	{
 		#if FLX_GAMEPAD
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
@@ -168,7 +168,7 @@ class Player extends FlxSprite
 		#end
 	}
 	
-	private function updateAnimations():Void
+	function updateAnimations():Void
 	{
 		if (velocity.y != 0)
 		{
@@ -212,7 +212,7 @@ class Player extends FlxSprite
 		super.hurt(Damage);
 	}
 	
-	private function flicker(Duration:Float):Void
+	function flicker(Duration:Float):Void
 	{
 		FlxSpriteUtil.flicker(this, Duration, 0.02, true, true, function(_)
 		{

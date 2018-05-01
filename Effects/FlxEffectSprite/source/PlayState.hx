@@ -17,17 +17,17 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	private var _sprite:FlxSprite;
-	private var _effectSprite:FlxEffectSprite;
+	var _sprite:FlxSprite;
+	var _effectSprite:FlxEffectSprite;
 	
-	private var _rainbow:FlxRainbowEffect;
-	private var _outline:FlxOutlineEffect;
-	private var _wave:FlxWaveEffect;
-	private var _glitch:FlxGlitchEffect;
-	private var _trail:FlxTrailEffect;
-	private var _shake:FlxShakeEffect;
+	var _rainbow:FlxRainbowEffect;
+	var _outline:FlxOutlineEffect;
+	var _wave:FlxWaveEffect;
+	var _glitch:FlxGlitchEffect;
+	var _trail:FlxTrailEffect;
+	var _shake:FlxShakeEffect;
 	
-	private var _tween:FlxTween;
+	var _tween:FlxTween;
 	
 	override public function create():Void
 	{

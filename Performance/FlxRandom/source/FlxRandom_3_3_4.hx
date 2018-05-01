@@ -17,7 +17,7 @@ class FlxRandom_3_3_4
 	/**
 	 * Internal function to update the internal seed whenever the global seed is reset, and keep the global seed's value in range.
 	 */
-	private static function set_globalSeed(NewSeed:Int):Int
+	static function set_globalSeed(NewSeed:Int):Int
 	{
 		if (NewSeed < 1)
 		{
@@ -38,7 +38,7 @@ class FlxRandom_3_3_4
 	/**
 	 * Internal seed used to generate new random numbers.
 	 */
-	private static var _internalSeed:Int = 1;
+	static var _internalSeed:Int = 1;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -47,31 +47,31 @@ class FlxRandom_3_3_4
 	 * @see 	http://en.wikipedia.org/wiki/Linear_congruential_generator
 	 * @see 	Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988). "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	private static inline var MULTIPLIER:Int = 48271;
-	private static inline var MODULUS:Int = 2147483647;
+	static inline var MULTIPLIER:Int = 48271;
+	static inline var MODULUS:Int = 2147483647;
 	
 	/**
 	 * Internal helper variables.
 	 */
-	private static var _intHelper:Int = 0;
-	private static var _intHelper2:Int = 0;
-	private static var _intHelper3:Int = 0;
-	private static var _floatHelper:Float = 0;
-	private static var _arrayFloatHelper:Array<Float> = null;
-	private static var _red:Int = 0;
-	private static var _green:Int = 0;
-	private static var _blue:Int = 0;
-	private static var _alpha:Int = 0;
+	static var _intHelper:Int = 0;
+	static var _intHelper2:Int = 0;
+	static var _intHelper3:Int = 0;
+	static var _floatHelper:Float = 0;
+	static var _arrayFloatHelper:Array<Float> = null;
+	static var _red:Int = 0;
+	static var _green:Int = 0;
+	static var _blue:Int = 0;
+	static var _alpha:Int = 0;
 	
 	#if FLX_RECORD
 	/**
 	 * Internal storage for the seed used to generate the most recent state.
 	 */
-	private static var _stateSeed:Int = 1;
+	static var _stateSeed:Int = 1;
 	/**
 	 * The seed to be used by the recording requested in FlxGame.
 	 */
-	private static var _recordingSeed:Int = 1;
+	static var _recordingSeed:Int = 1;
 	
 	/**
 	 * Update the seed that was used to create the most recent state.
@@ -80,7 +80,7 @@ class FlxRandom_3_3_4
 	 * @return	The new value of the state seed.
 	 */
 	@:allow(flixel.FlxGame.switchState)
-	private static inline function updateStateSeed():Int
+	static inline function updateStateSeed():Int
 	{
 		return _stateSeed = _internalSeed;
 	}
@@ -93,7 +93,7 @@ class FlxRandom_3_3_4
 	 * @return
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd.startRecording)
-	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
+	static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
 		return _recordingSeed = globalSeed = StandardMode ? globalSeed : _stateSeed;
 	}
@@ -102,7 +102,7 @@ class FlxRandom_3_3_4
 	 * Returns the seed to use for the requested recording.
 	 */
 	@:allow(flixel.FlxGame.step)
-	private static inline function getRecordingSeed():Int
+	static inline function getRecordingSeed():Int
 	{
 		return _recordingSeed;
 	}
@@ -494,7 +494,7 @@ class FlxRandom_3_3_4
 	 * 
 	 * @return	A new pseudorandom number.
 	 */
-	private static inline function generate():Int
+	static inline function generate():Int
 	{
 		return _internalSeed = ((_internalSeed * MULTIPLIER) % MODULUS) & MODULUS;
 	}

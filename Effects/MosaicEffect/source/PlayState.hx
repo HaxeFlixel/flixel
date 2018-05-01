@@ -18,7 +18,7 @@ class PlayState extends FlxState
 		add(infoText);
 	}
 	#else
-	private var effectTween:FlxTween;
+	var effectTween:FlxTween;
 	
 	override public function create():Void
 	{

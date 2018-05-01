@@ -15,7 +15,7 @@ class Bullet extends FlxSprite
 	/**
 	 * This bullet's targeted enemy. Set via init(), and determines direction of motion.
 	 */
-	private var _target:Enemy;
+	var _target:Enemy;
 	
 	/**
 	 * Create a new Bullet object. Generally this would be used by the game to create a pool of bullets that can be recycled later on, as needed.

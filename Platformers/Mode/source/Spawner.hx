@@ -9,13 +9,13 @@ import flixel.system.FlxAssets;
 
 class Spawner extends FlxSprite
 {
-	private var _timer:Float;
-	private var _bots:FlxTypedGroup<Enemy>;
-	private var _botBullets:FlxTypedGroup<EnemyBullet>;
-	private var _botGibs:FlxEmitter;
-	private var _gibs:FlxEmitter;
-	private var _player:Player;
-	private var _open:Bool;
+	var _timer:Float;
+	var _bots:FlxTypedGroup<Enemy>;
+	var _botBullets:FlxTypedGroup<EnemyBullet>;
+	var _botGibs:FlxEmitter;
+	var _gibs:FlxEmitter;
+	var _player:Player;
+	var _open:Bool;
 	
 	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxTypedGroup<Enemy>, BotBullets:FlxTypedGroup<EnemyBullet>, BotGibs:FlxEmitter, ThePlayer:Player)
 	{
@@ -113,12 +113,12 @@ class Spawner extends FlxSprite
 		Reg.score += 1000;
 	}
 	
-	private function makeBot():Void
+	function makeBot():Void
 	{
 		_bots.recycle(Enemy.new).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
 	}
 	
-	private function turnOffSlowMo():Void
+	function turnOffSlowMo():Void
 	{
 		FlxG.timeScale = 1.0;
 	}

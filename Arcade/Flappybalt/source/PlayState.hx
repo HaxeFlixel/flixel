@@ -10,18 +10,18 @@ import flixel.util.FlxSave;
 
 class PlayState extends FlxState
 {
-	private var _player:Player;
-	private var _bounceLeft:FlxSprite;
-	private var _bounceRight:FlxSprite;
-	private var _paddleLeft:Paddle;
-	private var _paddleRight:Paddle;
-	private var _spikeBottom:FlxSprite;
-	private var _spikeTop:FlxSprite;
-	private var _scoreDisplay:FlxText;
-	private var _feathers:FlxEmitter;
-	private var _highScore:FlxText;
+	var _player:Player;
+	var _bounceLeft:FlxSprite;
+	var _bounceRight:FlxSprite;
+	var _paddleLeft:Paddle;
+	var _paddleRight:Paddle;
+	var _spikeBottom:FlxSprite;
+	var _spikeTop:FlxSprite;
+	var _scoreDisplay:FlxText;
+	var _feathers:FlxEmitter;
+	var _highScore:FlxText;
 	
-	inline static private var SAVE_DATA:String = "FLAPPYBALT";
+	inline static var SAVE_DATA:String = "FLAPPYBALT";
 	
 	override public function create():Void
 	{
@@ -173,7 +173,7 @@ class PlayState extends FlxState
 		return FlxG.random.int(Std.int(_bounceLeft.y), Std.int(_bounceLeft.y + _bounceLeft.height - _paddleLeft.height));
 	}
 	
-	private function increaseScore():Void
+	function increaseScore():Void
 	{
 		Reg.score++;
 		_scoreDisplay.text = Std.string(Reg.score);

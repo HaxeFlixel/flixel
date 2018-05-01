@@ -6,11 +6,11 @@ import flixel.math.FlxPoint;
 
 class Ball extends PongSprite
 {
-	private var _minVelocity:FlxPoint;
-	private var _exhaust:Emitter;
-	private var _emitter:Emitter;
+	var _minVelocity:FlxPoint;
+	var _exhaust:Emitter;
+	var _emitter:Emitter;
 	
-	inline private static function DEFAULT_VELOCITY():FlxPoint
+	inline static function DEFAULT_VELOCITY():FlxPoint
 	{
 		return FlxPoint.get(-128, -128);
 	}
@@ -47,7 +47,7 @@ class Ball extends PongSprite
 		super.update(elapsed);
 	}
 	
-	private function ballBounce(BallObject:FlxObject, CollidedWith:FlxObject):Void
+	function ballBounce(BallObject:FlxObject, CollidedWith:FlxObject):Void
 	{
 		FlxG.sound.play("plip");
 	}

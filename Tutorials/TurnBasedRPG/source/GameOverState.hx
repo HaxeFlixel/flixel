@@ -11,14 +11,14 @@ import flixel.util.FlxSave;
 
 class GameOverState extends FlxState
 {
-	private var _score:Int = 0;			// number of coins we've collected
-	private var _win:Bool;				// if we won or lost
-	private var _txtTitle:FlxText;		// the title text
-	private var _txtMessage:FlxText;	// the final score message text
-	private var _sprScore:FlxSprite;	// sprite for a coin icon
-	private var _txtScore:FlxText;		// text of the score
-	private var _txtHiScore:FlxText;	// text to show the hi-score
-	private var _btnMainMenu:FlxButton;	// button to go to main menu
+	var _score:Int = 0;			// number of coins we've collected
+	var _win:Bool;				// if we won or lost
+	var _txtTitle:FlxText;		// the title text
+	var _txtMessage:FlxText;	// the final score message text
+	var _sprScore:FlxSprite;	// sprite for a coin icon
+	var _txtScore:FlxText;		// text of the score
+	var _txtHiScore:FlxText;	// text to show the hi-score
+	var _btnMainMenu:FlxButton;	// button to go to main menu
 	
 	/**
 	 * Called from PlayState, this will set our win and score variables
@@ -83,7 +83,7 @@ class GameOverState extends FlxState
 	 * @param	Score	The new score
 	 * @return	the hi-score
 	 */
-	private function checkHiScore(Score:Int):Int
+	function checkHiScore(Score:Int):Int
 	{
 		var _hi:Int = Score;
 		var _save:FlxSave = new FlxSave();
@@ -106,7 +106,7 @@ class GameOverState extends FlxState
 	/**
 	 * When the user hits the main menu button, it should fade out and then take them back to the MenuState
 	 */
-	private function goMainMenu():Void
+	function goMainMenu():Void
 	{
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
 		{

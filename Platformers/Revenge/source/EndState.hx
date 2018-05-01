@@ -30,8 +30,8 @@ import flixel.util.FlxColor;
  */
 class EndState extends FlxState
 {
-	private var _gameTitle:FlxText;
-	private var _startButton:FlxButton;
+	var _gameTitle:FlxText;
+	var _startButton:FlxButton;
 	
 	override public function create():Void 
 	{
@@ -55,22 +55,22 @@ class EndState extends FlxState
 		add(_startButton);
 	}
 	
-	private function onStartOut():Void
+	function onStartOut():Void
 	{
 		_startButton.loadGraphic("assets/ok0.png");
 	}
 	
-	private function onStartOver():Void
+	function onStartOver():Void
 	{
 		_startButton.loadGraphic("assets/ok1.png");
 	}
 	
-	private function onStart():Void
+	function onStart():Void
 	{
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
-	private function onFade():Void
+	function onFade():Void
 	{
 		FlxG.switchState(new MenuState());
 	}

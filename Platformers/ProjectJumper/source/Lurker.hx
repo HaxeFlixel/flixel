@@ -20,11 +20,11 @@ class Lurker extends EnemyTemplate
 	public static inline var GUN_DELAY:Int = 1;
 	public static inline var BULLET_SPEED:Int =100;
 	
-	private var _spawntimer:Float;
-	private var _burntimer:Float;
-	private var _playdeathsound:Bool;
-	private var _bullets:FlxTypedGroup<Bullet>;
-	private var _cooldown:Float;
+	var _spawntimer:Float;
+	var _burntimer:Float;
+	var _playdeathsound:Bool;
+	var _bullets:FlxTypedGroup<Bullet>;
+	var _cooldown:Float;
 	
 	public function new(X:Float, Y:Float, ThePlayer:Player, Bullets:FlxTypedGroup<Bullet>)
 	{
@@ -161,7 +161,7 @@ class Lurker extends EnemyTemplate
 		health -= 1;
 	}
 	
-	private function shoot(P:Player):Void 
+	function shoot(P:Player):Void 
 	{
 		// Bullet code will go here
 		var bulletX:Int = Math.floor(x);

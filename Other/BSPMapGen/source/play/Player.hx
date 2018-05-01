@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 
 class Player extends FlxSprite
 {
-	private static inline var SPEED:Int = 100;
+	static inline var SPEED:Int = 100;
 	
 	public function new(x:Float, y:Float) 
 	{

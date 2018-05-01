@@ -55,7 +55,7 @@ class State_Title extends FlxUIState
 		}
 	}
 	
-	private function reloadState():Void
+	function reloadState():Void
 	{
 		FlxG.switchState(new State_Title());
 	}

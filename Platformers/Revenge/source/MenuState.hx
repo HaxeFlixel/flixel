@@ -31,10 +31,10 @@ import flixel.util.FlxColor;
  */
 class MenuState extends FlxState
 {
-	private var _gameTitle:FlxText;
-	private var _bg:FlxSprite;
-	private var _bgEye:FlxSprite;
-	private var _startButton:FlxButton;
+	var _gameTitle:FlxText;
+	var _bg:FlxSprite;
+	var _bgEye:FlxSprite;
+	var _startButton:FlxButton;
 	
 	override public function create():Void 
 	{
@@ -73,22 +73,22 @@ class MenuState extends FlxState
 		add(new FlxText(280, 200, 40, "by Yadu Rajiv"));
 	}
 	
-	private function onStart():Void
+	function onStart():Void
 	{
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
-	private function onFade():Void
+	function onFade():Void
 	{
 		FlxG.switchState(new PlayState());
 	}
 	
-	private function onStartOver():Void
+	function onStartOver():Void
 	{
 		_startButton.loadGraphic("assets/btnStart1.png");
 	}
 	
-	private function onStartOut():Void
+	function onStartOut():Void
 	{
 		_startButton.loadGraphic("assets/btnStart0.png");
 	}

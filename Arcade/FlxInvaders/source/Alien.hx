@@ -12,11 +12,11 @@ class Alien extends FlxSprite
 	/**
 	 * A simple timer for deciding when to shoot
 	 */ 
-	private var _shotClock:Float;
+	var _shotClock:Float;
 	/**
 	 * Saves the starting horizontal position (for movement logic)
 	 */
-	private var _originalX:Int;
+	var _originalX:Int;
 	
 	/**
 	 * This is the constructor for the squid monster.
@@ -89,7 +89,7 @@ class Alien extends FlxSprite
 	/**
 	 * This function just resets our bullet logic timer to a random value between 1 and 11
 	 */
-	private function resetShotClock():Void
+	function resetShotClock():Void
 	{
 		_shotClock = 1 + FlxG.random.float() * 10;
 	}

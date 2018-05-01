@@ -13,12 +13,12 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	private var _player:FlxSprite;
-	private var _blocks:FlxGroup;
-	private var _hud:FlxGroup;
-	private var _objects:FlxGroup;
-	private var _levelText:FlxText;
-	private var level:FlxTilemapExt;
+	var _player:FlxSprite;
+	var _blocks:FlxGroup;
+	var _hud:FlxGroup;
+	var _objects:FlxGroup;
+	var _levelText:FlxText;
+	var level:FlxTilemapExt;
 	
 	override public function create():Void
 	{
@@ -81,7 +81,7 @@ class PlayState extends FlxState
 		_hud.add(_levelText);
 	}
 	
-	private function fallInClouds(Tile:FlxObject, Object:FlxObject):Void
+	function fallInClouds(Tile:FlxObject, Object:FlxObject):Void
 	{
 		if (FlxG.keys.anyPressed([DOWN, S]))
 		{
@@ -93,13 +93,13 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function wallJump(Tile:FlxObject, Object:FlxObject):Void
+	function wallJump(Tile:FlxObject, Object:FlxObject):Void
 	{
 		Object.velocity.y *= 0.9;
 		Object.touching |= FlxObject.FLOOR | FlxObject.CEILING;
 	}
 	
-	private function wallJumpReflect():Void
+	function wallJumpReflect():Void
 	{
 		if (_player.isTouching(FlxObject.RIGHT))
 		{

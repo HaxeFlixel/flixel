@@ -11,7 +11,7 @@ import flixel.util.FlxSpriteUtil;
  */
 class PlayerShip extends FlxSprite
 {
-	private var _thrust:Float = 0;
+	var _thrust:Float = 0;
 	
 	public function new()
 	{

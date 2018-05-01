@@ -9,7 +9,7 @@ import nape.phys.Material;
  
 class Barrel extends FlxNapeSprite
 {
-	private var dragJoint:PivotJoint;
+	var dragJoint:PivotJoint;
 	
 	public function new(X:Float, Y:Float)
 	{

@@ -26,32 +26,32 @@ class PlayState extends FlxState
 	public static inline var MAP_WIDTH_IN_TILES:Int = 80;
 	public static inline var MAP_HEIGHT_IN_TILES:Int = 80;
 	
-	private var _map:Array<Int>;
-	private var _tileMap:FlxTilemap;
+	var _map:Array<Int>;
+	var _tileMap:FlxTilemap;
 	
 	// Major game object storage
-	private var _bullets:FlxTypedGroup<Bullet>;
-	private var _player:Player;
-	private var _enemies:FlxTypedGroup<Enemy>;
-	private var _spawners:FlxTypedGroup<Spawner>;
-	private var _enemyBullets:FlxTypedGroup<EnemyBullet>;
-	private var _littleGibs:FlxEmitter;
-	private var _bigGibs:FlxEmitter;
-	private var _hud:FlxSpriteGroup;
-	private var _gunjam:FlxSpriteGroup;
+	var _bullets:FlxTypedGroup<Bullet>;
+	var _player:Player;
+	var _enemies:FlxTypedGroup<Enemy>;
+	var _spawners:FlxTypedGroup<Spawner>;
+	var _enemyBullets:FlxTypedGroup<EnemyBullet>;
+	var _littleGibs:FlxEmitter;
+	var _bigGibs:FlxEmitter;
+	var _hud:FlxSpriteGroup;
+	var _gunjam:FlxSpriteGroup;
 	
 	// Meta groups, to help speed up collisions
-	private var _objects:FlxGroup;
-	private var _hazards:FlxGroup;
+	var _objects:FlxGroup;
+	var _hazards:FlxGroup;
 	
 	// HUD/User Interface stuff
-	private var _score:FlxText;
-	private var _score2:FlxText;
-	private var _scoreTimer:Float;
-	private var _jamTimer:Float;
+	var _score:FlxText;
+	var _score2:FlxText;
+	var _scoreTimer:Float;
+	var _jamTimer:Float;
 	
 	// Just to prevent weirdness during level transition
-	private var _fading:Bool;
+	var _fading:Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -349,7 +349,7 @@ class PlayState extends FlxState
 	/**
 	 * This is an overlap callback function, triggered by the calls to FlxG.overlap().
 	 */
-	private function overlapped(Sprite1:FlxObject, Sprite2:FlxObject):Void
+	function overlapped(Sprite1:FlxObject, Sprite2:FlxObject):Void
 	{
 		if (Std.is(Sprite1, EnemyBullet) || Std.is(Sprite1, Bullet))
 			Sprite1.kill();
@@ -360,7 +360,7 @@ class PlayState extends FlxState
 	/**
 	 * A FlxG.fade callback, like in MenuState.
 	 */
-	private function onVictory():Void
+	function onVictory():Void
 	{
 		// Reset the sounds for going inbetween the menu etc
 		FlxG.sound.destroy(true);
@@ -371,7 +371,7 @@ class PlayState extends FlxState
 	 * These next two functions look crazy, but all they're doing is 
 	 * generating the level structure and placing the enemy spawners.
 	 */
-	private function generateLevel():Void
+	function generateLevel():Void
 	{
 		var r:Int = 160;
 		
@@ -416,7 +416,7 @@ class PlayState extends FlxState
 	/**
 	 * Just plops down a spawner and some blocks - haphazard and crappy atm but functional!
 	 */
-	private function buildRoom(RX:Int, RY:Int, ?Spawners:Bool = false):Void
+	function buildRoom(RX:Int, RY:Int, ?Spawners:Bool = false):Void
 	{
 		// First place the spawn point (if necessary)
 		var rw:Int = 20;
@@ -488,7 +488,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function fillTileMapRectWithRandomTiles(X:Int, Y:Int, Width:Int, Height:Int, StartTile:Int, EndTile:Int, MapArray:Array<Int>, MapWidth:Int):Array<Int>
+	function fillTileMapRectWithRandomTiles(X:Int, Y:Int, Width:Int, Height:Int, StartTile:Int, EndTile:Int, MapArray:Array<Int>, MapWidth:Int):Array<Int>
 	{
 		var numColsToPush:Int = Math.floor(Width / TILE_SIZE);
 		var numRowsToPush:Int = Math.floor(Height / TILE_SIZE);
@@ -512,9 +512,9 @@ class PlayState extends FlxState
 	}
 	
 	#if SHOW_FPS
-	private var fps:FPS;
+	var fps:FPS;
 	
-	private function makeFPSCounter():Void
+	function makeFPSCounter():Void
 	{
 		fps = new FPS(FlxG.stage.stageWidth - 50, 0, 0xFFFFFF);
 		FlxG.addChildBelowMouse(fps);

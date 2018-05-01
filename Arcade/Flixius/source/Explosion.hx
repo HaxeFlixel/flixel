@@ -7,9 +7,9 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Explosion extends FlxSprite
 {
-	private var _delay:Float = 0;
-	private var _target:FlxSprite;
-	private var _pos:FlxPoint;
+	var _delay:Float = 0;
+	var _target:FlxSprite;
+	var _pos:FlxPoint;
 	
 	public function new() 
 	{

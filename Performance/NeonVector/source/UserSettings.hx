@@ -8,10 +8,10 @@ import flixel.util.FlxSave;
  */
 class UserSettings
 {
-	private static var _save:FlxSave; //The FlxSave instance
-	private static var _loaded:Bool = false; //Did bind() work? Do we have a valid SharedObject?
-	private static var _highScore:UInt = 0;
-	private static var _tempHighScore:UInt;
+	static var _save:FlxSave; //The FlxSave instance
+	static var _loaded:Bool = false; //Did bind() work? Do we have a valid SharedObject?
+	static var _highScore:UInt = 0;
+	static var _tempHighScore:UInt;
 	public static var highScore(get, set):UInt;
 
 	public static function get_highScore():UInt

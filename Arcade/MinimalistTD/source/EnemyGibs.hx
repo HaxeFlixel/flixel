@@ -10,8 +10,8 @@ import flixel.FlxG;
 
 class EnemyGibs extends FlxEmitter
 {
-	private static inline var SPEED:Int = 10;
-	private static inline var SIZE:Int = 10;
+	static inline var SPEED:Int = 10;
+	static inline var SIZE:Int = 10;
 	
 	/**
 	 * Creates a FlxEmitter with pre-defined particle size, speed, color, inversion, and so forth.

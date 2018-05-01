@@ -30,26 +30,26 @@ class PlayState extends FlxState
 	/**
 	 * Refers to the little player ship at the bottom
 	 */ 
-	private var _player:PlayerShip;
+	var _player:PlayerShip;
 	/**
 	 * Refers to all the squid monsters
 	 */
-	private var _aliens:FlxTypedGroup<Alien>;
+	var _aliens:FlxTypedGroup<Alien>;
 	/**
 	 * Refers to the box shields along the bottom of the game
 	 */
-	private var _shields:FlxTypedGroup<FlxSprite>;
+	var _shields:FlxTypedGroup<FlxSprite>;
 	
 	//Some meta-groups for speeding up overlap checks later
 	
 	/**
 	 * Meta-group to speed up the shield collisions later
 	 */
-	private var _vsPlayerBullets:FlxGroup;
+	var _vsPlayerBullets:FlxGroup;
 	/**
 	 * Meta-group to speed up the shield collisions later
 	 */
-	private var _vsAlienBullets:FlxGroup;
+	var _vsAlienBullets:FlxGroup;
 	
 	/**
 	 * This is where we create the main game state!
@@ -189,7 +189,7 @@ class PlayState extends FlxState
 	/**
 	 * We want aliens to mow down shields when they touch them, not die
 	 */
-	private function stuffHitStuff(Object1:FlxObject, Object2:FlxObject):Void
+	function stuffHitStuff(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		Object1.kill();
 		Object2.kill();

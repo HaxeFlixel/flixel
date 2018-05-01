@@ -75,7 +75,7 @@ class PlayState extends FlxState
 	 * @param	atlas	atlas to load image onto
 	 * @return	created FlxNode object for image
 	 */
-	private function createNodeAndDisposeBitmap(source:String, atlas:FlxAtlas):FlxNode
+	function createNodeAndDisposeBitmap(source:String, atlas:FlxAtlas):FlxNode
 	{
 		var bitmap:BitmapData = Assets.getBitmapData(source);
 		var node:FlxNode = atlas.addNode(bitmap, source);

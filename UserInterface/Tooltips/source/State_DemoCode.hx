@@ -43,13 +43,13 @@ class State_DemoCode extends FlxUIState
 		}
 	}
 	
-	private function makeFontDef(name:String, size:Int, alignment = null, isBold:Bool = true, color:FlxColor = FlxColor.WHITE, extension:String = ".ttf"):FontDef
+	function makeFontDef(name:String, size:Int, alignment = null, isBold:Bool = true, color:FlxColor = FlxColor.WHITE, extension:String = ".ttf"):FontDef
 	{
 		var suffix:String = isBold ? "b" : "";
 		return new FontDef(name, extension, "assets/fonts/" + name + suffix + extension, new TextFormat(null, size, color, isBold, null, null, null, null, alignment));
 	}
 	
-	private function makeByHand():Void
+	function makeByHand():Void
 	{
 		_ui.addAsset(cast new FlxUISprite().makeGraphic(FlxG.width, FlxG.height, 0xFF404040), "bkg");
 		
@@ -113,14 +113,14 @@ class State_DemoCode extends FlxUIState
 			"This button takes you back to the first screen" );
 	}
 	
-	private function addBtn(name:String="", b:FlxUIButton, title:String = "", body:String = "", anchor:Anchor = null, style:FlxUITooltipStyle = null):FlxUIButton
+	function addBtn(name:String="", b:FlxUIButton, title:String = "", body:String = "", anchor:Anchor = null, style:FlxUITooltipStyle = null):FlxUIButton
 	{
 		tooltips.add(b, { title:title, body:body, anchor:anchor, style:style } );
 		_ui.addAsset(b,name);
 		return b;
 	}
 	
-	private function addTxt(name:String="", t:FlxUIText, f:FontDef, b:BorderDef):FlxUIText
+	function addTxt(name:String="", t:FlxUIText, f:FontDef, b:BorderDef):FlxUIText
 	{
 		_ui.addAsset(cast b.apply(f.applyFlx(t)),name);
 		return t;

@@ -18,7 +18,7 @@ class PlayState extends FlxState
 {
 	public static var cardJoint:DistanceJoint;
 	
-	private var fan:FlxSprite;
+	var fan:FlxSprite;
 	
 	override public function create():Void
 	{
@@ -43,7 +43,7 @@ class PlayState extends FlxState
 		add(fan);
 	}
 
-	private function createCards():FlxTypedGroup<Card>
+	function createCards():FlxTypedGroup<Card>
 	{
 		var cards = new FlxTypedGroup<Card>();
 		var pickedCards = [];

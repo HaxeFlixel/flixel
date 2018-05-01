@@ -25,13 +25,13 @@ class TiledLevel extends TiledMap
 {
 	// For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image 
 	// used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-	private inline static var c_PATH_LEVEL_TILESHEETS = "assets/tiled/";
+	inline static var c_PATH_LEVEL_TILESHEETS = "assets/tiled/";
 	
 	// Array of tilemaps used for collision
 	public var foregroundTiles:FlxGroup;
 	public var objectsLayer:FlxGroup;
 	public var backgroundLayer:FlxGroup;
-	private var collidableTileLayers:Array<FlxTilemap>;
+	var collidableTileLayers:Array<FlxTilemap>;
 	
 	// Sprites of images layers
 	public var imagesLayer:FlxGroup;
@@ -118,7 +118,7 @@ class TiledLevel extends TiledMap
 		}
 	}
 
-	private function getAnimatedTile(props:TiledTilePropertySet, tileset:TiledTileSet):FlxTileSpecial
+	function getAnimatedTile(props:TiledTilePropertySet, tileset:TiledTileSet):FlxTileSpecial
 	{
 		var special = new FlxTileSpecial(1, false, false, 0);
 		var n:Int = props.animationFrames.length;
@@ -158,7 +158,7 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	private function loadImageObject(object:TiledObject)
+	function loadImageObject(object:TiledObject)
 	{
 		var tilesImageCollection:TiledTileSet = this.getTileSet("imageCollection");
 		var tileImagesSource:TiledImageTile = tilesImageCollection.getImageSourceByGid(object.gid);
@@ -199,7 +199,7 @@ class TiledLevel extends TiledMap
 		backgroundLayer.add(decoSprite);
 	}
 	
-	private function loadObject(state:PlayState, o:TiledObject, g:TiledObjectLayer, group:FlxGroup)
+	function loadObject(state:PlayState, o:TiledObject, g:TiledObjectLayer, group:FlxGroup)
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;

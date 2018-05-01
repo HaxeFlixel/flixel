@@ -9,7 +9,7 @@ import flixel.system.FlxSound;
 class Player extends FlxSprite
 {
 	public var speed:Float = 200;
-	private var _sndStep:FlxSound;
+	var _sndStep:FlxSound;
 	
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
@@ -28,7 +28,7 @@ class Player extends FlxSprite
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
 	}
 	
-	private function movement():Void
+	function movement():Void
 	{
 		var _up:Bool = false;
 		var _down:Bool = false;

@@ -15,20 +15,20 @@ import flixel.ui.FlxVirtualPad;
 
 class PlayState extends FlxState
 {
-	private var _player:Player;
-	private var _map:FlxOgmoLoader;
-	private var _mWalls:FlxTilemap;
-	private var _grpCoins:FlxTypedGroup<Coin>;
-	private var _grpEnemies:FlxTypedGroup<Enemy>;
-	private var _hud:HUD;
-	private var _money:Int = 0;
-	private var _health:Int = 3;
-	private var _inCombat:Bool = false;
-	private var _combatHud:CombatHUD;
-	private var _ending:Bool;
-	private var _won:Bool;
-	private var _paused:Bool;
-	private var _sndCoin:FlxSound;
+	var _player:Player;
+	var _map:FlxOgmoLoader;
+	var _mWalls:FlxTilemap;
+	var _grpCoins:FlxTypedGroup<Coin>;
+	var _grpEnemies:FlxTypedGroup<Enemy>;
+	var _hud:HUD;
+	var _money:Int = 0;
+	var _health:Int = 3;
+	var _inCombat:Bool = false;
+	var _combatHud:CombatHUD;
+	var _ending:Bool;
+	var _won:Bool;
+	var _paused:Bool;
+	var _sndCoin:FlxSound;
 	
 	#if mobile
 	public static var virtualPad:FlxVirtualPad;
@@ -79,7 +79,7 @@ class PlayState extends FlxState
 		super.create();
 	}
 	
-	private function placeEntities(entityName:String, entityData:Xml):Void
+	function placeEntities(entityName:String, entityData:Xml):Void
 	{
 		var x:Int = Std.parseInt(entityData.get("x"));
 		var y:Int = Std.parseInt(entityData.get("y"));
@@ -150,12 +150,12 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function doneFadeOut():Void 
+	function doneFadeOut():Void 
 	{
 		FlxG.switchState(new GameOverState(_won, _money));
 	}
 	
-	private function playerTouchEnemy(P:Player, E:Enemy):Void
+	function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 		if (P.alive && P.exists && E.alive && E.exists && !E.isFlickering())
 		{
@@ -163,7 +163,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function startCombat(E:Enemy):Void
+	function startCombat(E:Enemy):Void
 	{
 		_inCombat = true;
 		_player.active = false;
@@ -174,7 +174,7 @@ class PlayState extends FlxState
 		#end
 	}
 	
-	private function checkEnemyVision(e:Enemy):Void
+	function checkEnemyVision(e:Enemy):Void
 	{
 		if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
 		{
@@ -185,7 +185,7 @@ class PlayState extends FlxState
 			e.seesPlayer = false;		
 	}
 	
-	private function playerTouchCoin(P:Player, C:Coin):Void
+	function playerTouchCoin(P:Player, C:Coin):Void
 	{
 		if (P.alive && P.exists && C.alive && C.exists)
 		{

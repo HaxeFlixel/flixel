@@ -14,7 +14,7 @@ class Bunny extends FlxSprite
 	
 	public var useShader(default, set):Bool = false;
 	
-	private var _shader:FlxShader;
+	var _shader:FlxShader;
 	
 	public function new()
 	{
@@ -60,7 +60,7 @@ class Bunny extends FlxSprite
 			updateBounds();
 	}
 	
-	private function updateBounds():Void
+	function updateBounds():Void
 	{
 		if (x > (FlxG.width - width))
 		{
@@ -88,7 +88,7 @@ class Bunny extends FlxSprite
 		}
 	}
 	
-	private function set_complex(value:Bool):Bool
+	function set_complex(value:Bool):Bool
 	{
 		if (value)
 		{
@@ -103,7 +103,7 @@ class Bunny extends FlxSprite
 		return complex = value;
 	}
 	
-	private function set_useShader(value:Bool):Bool
+	function set_useShader(value:Bool):Bool
 	{
 		shader = if (value) _shader else null;
 		return useShader = value;

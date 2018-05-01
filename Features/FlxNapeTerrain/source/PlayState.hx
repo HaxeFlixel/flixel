@@ -28,10 +28,10 @@ import openfl.display.BitmapDataChannel;
 
 class PlayState extends FlxState
 {
-	private var bodyList:BodyList = null;
-	private var terrain:Terrain;
-	private var bomb:Sprite;
-	private var hand:PivotJoint;
+	var bodyList:BodyList = null;
+	var terrain:Terrain;
+	var bomb:Sprite;
+	var hand:PivotJoint;
 	
 	override public function create():Void
 	{
@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		super.create();
 	}
 	
-	private function init():Void 
+	function init():Void 
 	{
 		FlxNapeSpace.init();
 		

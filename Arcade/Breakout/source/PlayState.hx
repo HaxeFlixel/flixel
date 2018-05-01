@@ -15,18 +15,18 @@ import flixel.util.FlxColor;
 */
 class PlayState extends FlxState
 {
-	private static inline var BAT_SPEED:Int = 350;
+	static inline var BAT_SPEED:Int = 350;
 	
-	private var _bat:FlxSprite;
-	private var _ball:FlxSprite;
+	var _bat:FlxSprite;
+	var _ball:FlxSprite;
 	
-	private var _walls:FlxGroup;
-	private var _leftWall:FlxSprite;
-	private var _rightWall:FlxSprite;
-	private var _topWall:FlxSprite;
-	private var _bottomWall:FlxSprite;
+	var _walls:FlxGroup;
+	var _leftWall:FlxSprite;
+	var _rightWall:FlxSprite;
+	var _topWall:FlxSprite;
+	var _bottomWall:FlxSprite;
 	
-	private var _bricks:FlxGroup;
+	var _bricks:FlxGroup;
 	
 	override public function create():Void
 	{
@@ -152,12 +152,12 @@ class PlayState extends FlxState
 		FlxG.collide(_ball, _bricks, hit);
 	}
 	
-	private function hit(Ball:FlxObject, Brick:FlxObject):Void
+	function hit(Ball:FlxObject, Brick:FlxObject):Void
 	{
 		Brick.exists = false;
 	}
 	
-	private function ping(Bat:FlxObject, Ball:FlxObject):Void
+	function ping(Bat:FlxObject, Ball:FlxObject):Void
 	{
 		var batmid:Int = Std.int(Bat.x) + 20;
 		var ballmid:Int = Std.int(Ball.x) + 3;

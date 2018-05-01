@@ -15,16 +15,16 @@ class MenuState extends FlxState
 	public static inline var TEXT_SPEED:Float = 600;
 	
 	// Augh, so many text objects. I should make arrays.
-	private var _text1:FlxText;
-	private var _text2:FlxText;
-	private var _text3:FlxText;
-	private var _text4:FlxText;
-	private var _text5:FlxText;
+	var _text1:FlxText;
+	var _text2:FlxText;
+	var _text3:FlxText;
+	var _text4:FlxText;
+	var _text5:FlxText;
 	
-	private var _pointer:FlxSprite;
+	var _pointer:FlxSprite;
 	
 	// This will indicate what the pointer is pointing at
-	private var _option:Option = PLAY;
+	var _option:Option = PLAY;
 	
 	override public function create():Void
 	{
@@ -116,7 +116,7 @@ class MenuState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function modifySelectedOption(modifier:Int):Void
+	function modifySelectedOption(modifier:Int):Void
 	{
 		var options = Option.getConstructors();
 		var index = options.indexOf(Std.string(_option)) + modifier;
@@ -125,7 +125,7 @@ class MenuState extends FlxState
 		FlxG.sound.play("assets/sounds/menu" + Reg.SoundExtension, 1, false);
 	}
 	
-	private function startGame():Void
+	function startGame():Void
 	{
 		FlxG.switchState(new PlayState());
 	}

@@ -25,10 +25,10 @@ import nape.phys.Material;
  */
 class Gem extends FlxNapeSprite
 {
-	private var isBeingDragged:Bool = false;
-	private var lastX:Int = 0;
-	private var lastY:Int = 0;
-	private var dragJoint:PivotJoint;
+	var isBeingDragged:Bool = false;
+	var lastX:Int = 0;
+	var lastY:Int = 0;
+	var dragJoint:PivotJoint;
 	
 	public function new(X:Float, Y:Float) 
 	{
@@ -55,7 +55,7 @@ class Gem extends FlxNapeSprite
 		super.update(elapsed);
 	}
 	
-	private function handleGlitterEffect():Void
+	function handleGlitterEffect():Void
 	{
 		var moved = Std.int(x) != lastX || Std.int(y) != lastY;
 		if (moved)
@@ -67,7 +67,7 @@ class Gem extends FlxNapeSprite
 		lastY = Std.int(y);
 	}
 	
-	private function handleDragInput():Void
+	function handleDragInput():Void
 	{
 		if (FlxG.mouse.justPressed && FlxG.mouse.getWorldPosition().inCoords(x, y, width, height)) 
 		{

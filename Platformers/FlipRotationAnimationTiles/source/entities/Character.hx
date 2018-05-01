@@ -79,7 +79,7 @@ class Character extends FlxExtendedSprite
 	/**
 	* Check bounds of map
 	*/
-	private function checkBoundsMap():Void
+	function checkBoundsMap():Void
 	{
 		if (maxBounds == null)
 		{
@@ -109,7 +109,7 @@ class Character extends FlxExtendedSprite
 		}
 	}
 	
-	private function resolveAnimation()
+	function resolveAnimation()
 	{
 		anim = "idle_";
 		
@@ -155,7 +155,7 @@ class Character extends FlxExtendedSprite
 		}
 	}
 	
-	private function parseJson(file:String)
+	function parseJson(file:String)
 	{
 		var filePath:Path = new Path(file);
 		var fileStr:String = Assets.getText(file);

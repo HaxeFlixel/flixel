@@ -10,7 +10,7 @@ import flixel.FlxG;
  */
 class MenuStateB extends MenuState
 {
-	private override function init():Void
+	override function init():Void
 	{
 		super.init();
 		var back:FlxUISprite = cast _ui.getAsset("back");
@@ -19,7 +19,7 @@ class MenuStateB extends MenuState
 		welcome.text = "STATE B";
 	}
 	
-	private override function transition():Void
+	override function transition():Void
 	{
 		FlxG.switchState(new MenuState());
 	}

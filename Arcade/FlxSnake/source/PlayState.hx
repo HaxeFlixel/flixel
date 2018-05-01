@@ -23,20 +23,20 @@ import flixel.util.FlxTimer;
 */
 class PlayState extends FlxState
 {
-	private static inline var MIN_INTERVAL:Float = 2;
-	private static inline var BLOCK_SIZE:Int = 8;
+	static inline var MIN_INTERVAL:Float = 2;
+	static inline var BLOCK_SIZE:Int = 8;
 	
-	private var _scoreText:FlxText;
-	private var _fruit:FlxSprite;
-	private var _snakeHead:FlxSprite;
-	private var _snakeBody:FlxSpriteGroup;
+	var _scoreText:FlxText;
+	var _fruit:FlxSprite;
+	var _snakeHead:FlxSprite;
+	var _snakeBody:FlxSpriteGroup;
 	
-	private var _headPositions:Array<FlxPoint>;
-	private var _movementInterval:Float = 8;
-	private var _score:Int = 0;
+	var _headPositions:Array<FlxPoint>;
+	var _movementInterval:Float = 8;
+	var _score:Int = 0;
 	
-	private var _currentDirection = FlxObject.LEFT;
-	private var _nextDirection:Int = FlxObject.LEFT;
+	var _currentDirection = FlxObject.LEFT;
+	var _nextDirection:Int = FlxObject.LEFT;
 	
 	override public function create():Void
 	{
@@ -135,19 +135,19 @@ class PlayState extends FlxState
 	/**
 	 * To get a nice little 2px gap between the tiles
 	 */
-	private function offestSprite(Sprite:FlxSprite):Void
+	function offestSprite(Sprite:FlxSprite):Void
 	{
 		Sprite.offset.set(1, 1);
 		Sprite.centerOffsets();
 	}
 	
-	private function updateText(NewText:String):Void
+	function updateText(NewText:String):Void
 	{
 		_scoreText.text = NewText;
 		_scoreText.alpha = 0;
 	}
 	
-	private function collectFruit(Object1:FlxObject, Object2:FlxObject):Void
+	function collectFruit(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		// Update the score
 		_score += 10;
@@ -166,7 +166,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function randomizeFruitPosition(?Object1:FlxObject, ?Object2:FlxObject):Void
+	function randomizeFruitPosition(?Object1:FlxObject, ?Object2:FlxObject):Void
 	{
 		// Pick a random place to put the fruit down
 		_fruit.x = FlxG.random.int(0, Math.floor(FlxG.width / 8) - 1) * 8;
@@ -176,14 +176,14 @@ class PlayState extends FlxState
 		FlxG.overlap(_fruit, _snakeBody, randomizeFruitPosition);
 	}
 	
-	private function gameOver(Object1:FlxObject, Object2:FlxObject):Void
+	function gameOver(Object1:FlxObject, Object2:FlxObject):Void
 	{
 		_snakeHead.alive = false;
 		updateText("Game Over - Space to restart!");
 		FlxG.sound.play("assets/flixel.wav");
 	}
 	
-	private function addSegment():Void
+	function addSegment():Void
 	{
 		// Spawn the new segment outside of the screen
 		// It'll be attached to the snake end in the next moveSnake() call
@@ -192,7 +192,7 @@ class PlayState extends FlxState
 		_snakeBody.add(segment);
 	}
 	
-	private function resetTimer(?Timer:FlxTimer):Void
+	function resetTimer(?Timer:FlxTimer):Void
 	{
 		// Stop the movement cycle if we're dead
 		if (!_snakeHead.alive && Timer != null)
@@ -205,7 +205,7 @@ class PlayState extends FlxState
 		moveSnake();
 	}
 	
-	private function moveSnake():Void
+	function moveSnake():Void
 	{	
 		_headPositions.unshift(FlxPoint.get(_snakeHead.x, _snakeHead.y));
 		

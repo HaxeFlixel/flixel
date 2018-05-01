@@ -11,16 +11,16 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	private var _map:FlxTilemap;
+	var _map:FlxTilemap;
 	
-	private var _redEmitter:FlxEmitter;
-	private var _blueEmitter:FlxEmitter;
+	var _redEmitter:FlxEmitter;
+	var _blueEmitter:FlxEmitter;
 	
-	private var _redScore:Int = 0;
-	private var _blueScore:Int = 0;
+	var _redScore:Int = 0;
+	var _blueScore:Int = 0;
 	
-	private var _redScoreText:FlxText;
-	private var _blueScoreText:FlxText;
+	var _redScoreText:FlxText;
+	var _blueScoreText:FlxText;
 	
 	override public function create():Void
 	{
@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		add(instructionText);
 	}
 	
-	private function createEmitter(Color:FlxColor):FlxEmitter
+	function createEmitter(Color:FlxColor):FlxEmitter
 	{
 		var emitter = new FlxEmitter(0, Std.int(FlxG.height * .6));
 		emitter.makeParticles(12, 12, Color, 50);
@@ -82,7 +82,7 @@ class PlayState extends FlxState
 		return emitter;
 	}
 	
-	private function createText(X:Int, Y:Int, Align:FlxTextAlign, Color:FlxColor):FlxText
+	function createText(X:Int, Y:Int, Align:FlxTextAlign, Color:FlxColor):FlxText
 	{
 		var text = new FlxText(X, Y, 100);
 		text.color = FlxColor.WHITE;
@@ -107,18 +107,18 @@ class PlayState extends FlxState
 			FlxG.camera.flash(FlxColor.BLACK, .1, FlxG.resetState);
 	}	
 	
-	private function removeTile(Tile:FlxTile):Void
+	function removeTile(Tile:FlxTile):Void
 	{
 		_map.setTileByIndex(Tile.mapIndex, 0, true);
 	}
 	
-	private function leftHit(Tile:FlxObject, Particle:FlxObject):Void
+	function leftHit(Tile:FlxObject, Particle:FlxObject):Void
 	{
 		removeTile(cast Tile);
 		_blueScore++;
 	}
 	
-	private function rightHit(Tile:FlxObject, Particle:FlxObject):Void
+	function rightHit(Tile:FlxObject, Particle:FlxObject):Void
 	{
 		removeTile(cast Tile);
 		_redScore++;

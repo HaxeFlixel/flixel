@@ -12,8 +12,8 @@ import flixel.system.FlxAssets;
  */
 class VictoryState extends FlxState
 {
-	private var _timer:Float = 0;
-	private var _fading:Bool = false;
+	var _timer:Float = 0;
+	var _fading:Bool = false;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 

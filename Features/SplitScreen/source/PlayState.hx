@@ -13,12 +13,12 @@ import openfl.Assets;
 
 class PlayState extends FlxState
 {
-	private var _level:FlxTilemap;
-	private var _player1:FlxSprite;
-	private var _player2:FlxSprite;
+	var _level:FlxTilemap;
+	var _player1:FlxSprite;
+	var _player2:FlxSprite;
 	
-	private var _halfWidth:Int;
-	private var _textY:Int;
+	var _halfWidth:Int;
+	var _textY:Int;
 	
 	override public function create():Void
 	{
@@ -61,7 +61,7 @@ class PlayState extends FlxState
 		add(redText);
 	}
 	
-	private function createPlayer(X:Int, Y:Int, Color:Int):FlxSprite
+	function createPlayer(X:Int, Y:Int, Color:Int):FlxSprite
 	{
 		var player:FlxSprite = new FlxSprite(X, Y);
 		player.makeGraphic(10, 12, Color);
@@ -72,7 +72,7 @@ class PlayState extends FlxState
 		return player;
 	}
 	
-	private function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
+	function createCamera(X:Int, Color:Int, Follow:FlxSprite):Void
 	{
 		var camera:FlxCamera = new FlxCamera(X, 0, _halfWidth, _textY);
 		camera.setScrollBoundsRect(0, 0, _level.width - 8, _textY);

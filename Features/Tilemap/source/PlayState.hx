@@ -17,30 +17,30 @@ class PlayState extends FlxState
 	/**
 	 * Some static constants for the size of the tilemap tiles
 	 */
-	private static inline var TILE_WIDTH:Int = 16;
-	private static inline var TILE_HEIGHT:Int = 16;
+	static inline var TILE_WIDTH:Int = 16;
+	static inline var TILE_HEIGHT:Int = 16;
 	
 	/**
 	 * The FlxTilemap we're using
 	 */ 
-	private var _collisionMap:FlxTilemap;
+	var _collisionMap:FlxTilemap;
 	
 	/**
 	 * Box to show the user where they're placing stuff
 	 */ 
-	private var _highlightBox:FlxSprite;
+	var _highlightBox:FlxSprite;
 	
 	/**
 	 * Player modified from "Mode" demo
 	 */ 
-	private var _player:FlxSprite;
+	var _player:FlxSprite;
 	
 	/**
 	 * Some interface buttons and text
 	 */
-	private var _autoAltButton:FlxButton;
-	private var _resetButton:FlxButton;
-	private var _helperText:FlxText;
+	var _autoAltButton:FlxButton;
+	var _resetButton:FlxButton;
+	var _helperText:FlxText;
 	
 	override public function create():Void
 	{
@@ -89,7 +89,7 @@ class PlayState extends FlxState
 		add(_helperText);
 	}
 	
-	private function setupPlayer():Void
+	function setupPlayer():Void
 	{
 		_player = new FlxSprite(64, 220);
 		_player.loadGraphic("assets/spaceman.png", true, 16);
@@ -132,7 +132,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function updatePlayer():Void
+	function updatePlayer():Void
 	{
 		FlxSpriteUtil.screenWrap(_player);
 		
@@ -170,7 +170,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onAlt():Void
+	function onAlt():Void
 	{
 		switch (_collisionMap.auto)
 		{
@@ -191,7 +191,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function onReset():Void
+	function onReset():Void
 	{
 		switch (_collisionMap.auto)
 		{

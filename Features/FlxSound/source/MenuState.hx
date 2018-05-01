@@ -21,10 +21,10 @@ import openfl.utils.AssetType;
  */
 class MenuState extends FlxUIState
 {
-	private var loop_music:Bool = false;
-	private var music_volume:Float = 0.5;
-	private var sfx_volume:Float = 0.5;
-	private var loop_count:Int = 0;
+	var loop_music:Bool = false;
+	var music_volume:Float = 0.5;
+	var sfx_volume:Float = 0.5;
+	var loop_count:Int = 0;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -137,7 +137,7 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function enablePause(b:Bool):Void
+	function enablePause(b:Bool):Void
 	{
 		var butt_pause:FlxUIButton = cast _ui.getAsset("butt_pause");
 		if (b)
@@ -153,7 +153,7 @@ class MenuState extends FlxUIState
 		}
 	}
 	
-	private function musicComplete():Void
+	function musicComplete():Void
 	{
 		if (!loop_music)
 		{

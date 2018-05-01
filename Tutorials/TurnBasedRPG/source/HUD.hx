@@ -9,11 +9,11 @@ using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
 {
-	private var _sprBack:FlxSprite;
-	private var _txtHealth:FlxText;
-	private var _txtMoney:FlxText;
-	private var _sprHealth:FlxSprite;
-	private var _sprMoney:FlxSprite;
+	var _sprBack:FlxSprite;
+	var _txtHealth:FlxText;
+	var _txtMoney:FlxText;
+	var _sprHealth:FlxSprite;
+	var _sprMoney:FlxSprite;
 	
 	public function new() 
 	{

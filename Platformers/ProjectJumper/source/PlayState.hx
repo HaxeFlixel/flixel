@@ -17,15 +17,15 @@ class PlayState extends FlxState
 	public var ladders:FlxTilemap;
 	public var player:Player;
 
-	private var _gibs:FlxEmitter;
-	private var _mongibs:FlxEmitter;
-	private var _bullets:FlxTypedGroup<Bullet>;
-	private var _badbullets:FlxTypedGroup<Bullet>;
-	private var _restart:Bool;
-	private var _text1:FlxText;
-	private var _enemies:FlxTypedGroup<EnemyTemplate>;
-	private var _coins:FlxTypedGroup<Coin>;
-	private var _score:FlxText;
+	var _gibs:FlxEmitter;
+	var _mongibs:FlxEmitter;
+	var _bullets:FlxTypedGroup<Bullet>;
+	var _badbullets:FlxTypedGroup<Bullet>;
+	var _restart:Bool;
+	var _text1:FlxText;
+	var _enemies:FlxTypedGroup<EnemyTemplate>;
+	var _coins:FlxTypedGroup<Coin>;
+	var _score:FlxText;
 	
 	override public function create():Void
 	{
@@ -148,12 +148,12 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function collectCoin(P:FlxObject, C:FlxObject):Void 
+	function collectCoin(P:FlxObject, C:FlxObject):Void 
 	{
 		C.kill();
 	}
 	
-	private function hitPlayer(P:FlxObject, Monster:FlxObject):Void 
+	function hitPlayer(P:FlxObject, Monster:FlxObject):Void 
 	{
 		if (Std.is(Monster, Bullet))
 		{
@@ -167,7 +167,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function hitmonster(Blt:FlxObject, Monster:FlxObject):Void 
+	function hitmonster(Blt:FlxObject, Monster:FlxObject):Void 
 	{
 		if (!Monster.alive) 
 		{
@@ -182,7 +182,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function placeMonsters(MonsterData:String, Monster:Class<FlxObject>):Void
+	function placeMonsters(MonsterData:String, Monster:Class<FlxObject>):Void
 	{
 		var coords:Array<String>;
 		// Each line becomes an entry in the array of strings
@@ -204,7 +204,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function placeCoins(CoinData:String, Sparkle:Class<FlxObject>):Void 
+	function placeCoins(CoinData:String, Sparkle:Class<FlxObject>):Void 
 	{
 		var coords:Array<String>;
 		// Each line becomes an entry in the array of strings

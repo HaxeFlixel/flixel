@@ -15,10 +15,10 @@ class Entity extends FlxSprite
 	public var hitboxRadius:Float = 0;
 	public var moveSpeed:Float = 0;
 	public var moveAcceleration:Float = 0;
-	private var cooldownTimer:FlxTimer;
-	private var _position : FlxPoint;
+	var cooldownTimer:FlxTimer;
+	var _position : FlxPoint;
 	public var position(get, set):FlxPoint;
-	private var hitEdgeOfScreen:Bool = false;
+	var hitEdgeOfScreen:Bool = false;
 	public var cooldown:Float = 0.075;
 	
 	public function new(X:Float = 0, Y:Float = 0)
@@ -62,7 +62,7 @@ class Entity extends FlxSprite
 		return _wasClamped;
 	}
 	
-	private function get_position():FlxPoint
+	function get_position():FlxPoint
 	{
 		_position.x = x + radius;
 		_position.y = y + radius;
@@ -70,7 +70,7 @@ class Entity extends FlxSprite
 		return _position;
 	}
 	
-	private function set_position(Value:FlxPoint):FlxPoint
+	function set_position(Value:FlxPoint):FlxPoint
 	{
 		x = Value.x - radius;
 		y = Value.y - radius;
@@ -80,7 +80,7 @@ class Entity extends FlxSprite
 		return _position;
 	}
 	
-	private function set_type(Value:UInt) 
+	function set_type(Value:UInt) 
 	{
 		return type = Value;
 	}

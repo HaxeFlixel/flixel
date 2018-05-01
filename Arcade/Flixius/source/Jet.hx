@@ -7,9 +7,9 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Jet extends FlxSprite
 {
-	private var _target:FlxSprite;
-	private var _targetType:Int = 0;
-	private var _pos:FlxPoint;
+	var _target:FlxSprite;
+	var _targetType:Int = 0;
+	var _pos:FlxPoint;
 	
 	public function new(Target:FlxSprite, TargetType:Int = 0) 
 	{

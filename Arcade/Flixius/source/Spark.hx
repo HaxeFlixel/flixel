@@ -6,9 +6,9 @@ import flixel.math.FlxPoint;
 
 class Spark extends FlxSprite
 {
-	private var _life:Float = 1;
-	private var _pos:FlxPoint;
-	private var _source:FlxSprite;
+	var _life:Float = 1;
+	var _pos:FlxPoint;
+	var _source:FlxSprite;
 	
 	public function new() 
 	{

@@ -11,7 +11,7 @@ class GameInput
 	public static var move(get, null):FlxPoint;
 	public static var aim(get, null):FlxPoint;
 	public static var wasBombButtonPressed(get, never):Bool;
-	private static var _mouseLast:FlxPoint;
+	static var _mouseLast:FlxPoint;
 	public static var aimWithMouse(default, null):Bool = false;
 
 	public static var lengthBeforeNormalize:Float;

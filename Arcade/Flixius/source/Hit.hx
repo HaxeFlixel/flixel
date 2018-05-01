@@ -7,8 +7,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Hit extends FlxSprite
 {
-	private var _pos:FlxPoint;
-	private var _player:FlxSprite;
+	var _pos:FlxPoint;
+	var _player:FlxSprite;
 	
 	public function new(P:Player) 
 	{

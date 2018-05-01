@@ -202,7 +202,7 @@ class State extends FlxState
 	}
 	
 	/** Convers hex string to binary string **/
-	private function HexToBin(hex:String):String
+	function HexToBin(hex:String):String
 	{
 		var out:String = "";
 		

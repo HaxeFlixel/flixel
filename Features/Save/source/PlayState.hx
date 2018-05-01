@@ -12,26 +12,26 @@ import flixel.util.FlxSave;
 
 class PlayState extends FlxState
 {
-	private static inline var NUM_BOXES:Int = 20;
+	static inline var NUM_BOXES:Int = 20;
 	
 	// Here's the FlxSave variable this is what we're going to be saving to.
-	private var _gameSave:FlxSave;
+	var _gameSave:FlxSave;
 	
 	// We're just going to drop a bunch of boxes into a group
-	private var _boxGroup:FlxTypedGroup<FlxButton>;
+	var _boxGroup:FlxTypedGroup<FlxButton>;
 	
 	// We'll use these variables for the dragging
-	private var dragOffset:FlxPoint;
-	private var _dragging:Bool = false;
-	private var _dragTarget:FlxObject;
+	var dragOffset:FlxPoint;
+	var _dragging:Bool = false;
+	var _dragTarget:FlxObject;
 	
 	// Buttons for the demo
-	private var _saveButton:FlxButton;
-	private var _loadButton:FlxButton;
-	private var _clearButton:FlxButton;
+	var _saveButton:FlxButton;
+	var _loadButton:FlxButton;
+	var _clearButton:FlxButton;
 	
 	// The top text that yells at you
-	private var _topText:FlxText;
+	var _topText:FlxText;
 	
 	override public function create():Void
 	{
@@ -147,7 +147,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when the user clicks the 'Save Locations' button
 	 */
-	private function onSave():Void 
+	function onSave():Void 
 	{
 		// Do we already have a save? if not then we need to make one
 		if (_gameSave.data.boxPositions == null) 
@@ -189,7 +189,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when the user clicks the 'Load Locations' button 
 	 */
-	private function onLoad():Void 
+	function onLoad():Void 
 	{
 		// Loading what? Theres no save data!
 		if (_gameSave.data.boxPositions == null)
@@ -219,7 +219,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when the user clicks the 'Clear Save' button
 	 */
-	private function onClear():Void 
+	function onClear():Void 
 	{
 		// Lets just wipe the whole boxPositions array
 		_gameSave.data.boxPositions = null;

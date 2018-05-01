@@ -18,7 +18,7 @@ class PlayState extends FlxState
 	public var floor:FlxObject;
 	public var exit:FlxSprite;
 	
-	private static var youDied:Bool = false;
+	static var youDied:Bool = false;
 	
 	override public function create():Void 
 	{

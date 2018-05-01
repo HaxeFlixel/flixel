@@ -22,7 +22,7 @@ class Background extends FlxStrip
 		build();
 	}
 	
-	private function build():Void
+	function build():Void
 	{
 		var sw:Float = width;
 		var sh:Float = height;

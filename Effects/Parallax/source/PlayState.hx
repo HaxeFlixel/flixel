@@ -16,12 +16,12 @@ import openfl.geom.ColorTransform;
 
 class PlayState extends FlxState
 {
-	private inline static var GUY_SPEED = 100;	 // how fast we want our guy to move
+	inline static var GUY_SPEED = 100;	 // how fast we want our guy to move
 	
-	private var _guy:FlxSprite;	// this is our 'guy' the player will move around
-	private var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
-	private var _flakes:FlxTypedGroup<Flake>; // a group of flakes
-	private var _vPad:FlxVirtualPad;
+	var _guy:FlxSprite;	// this is our 'guy' the player will move around
+	var _baseY:Float;	// this is the starting Y position of our guy, we will use this to make the guy float up and down
+	var _flakes:FlxTypedGroup<Flake>; // a group of flakes
+	var _vPad:FlxVirtualPad;
 
 	override public function create():Void
 	{
@@ -100,7 +100,7 @@ class PlayState extends FlxState
 	/**
 	 * This function spawns a new Tileblock of clouds which will be positioned near the top of the screen
 	 */
-	private function spawnCloud(Pos:Int):FlxTileblock
+	function spawnCloud(Pos:Int):FlxTileblock
 	{
 		var clouds:FlxTileblock = new FlxTileblock(0, 0, Math.ceil(FlxG.width * 4), 64);
 		clouds.x += -8 + Math.floor(FlxG.random.float( 1, 8) * 4);
@@ -113,7 +113,7 @@ class PlayState extends FlxState
 	/**
 	 * This function generates and returns a new FlxTileblock using our mountain sprites.
 	 */
-	private function spawnMountain(Pos:Int):FlxTileblock
+	function spawnMountain(Pos:Int):FlxTileblock
 	{
 		var mountain:FlxTileblock = new FlxTileblock(0, FlxG.height - (180 + ((5 - Pos) * 16)) , Math.ceil(FlxG.width * 4), 116);
 		mountain.loadTiles(bakeColors(FlxColor.WHITE.getDarkened(1 - (.2 + (Pos * .1))), "assets/mountains.png"), 256, 116, 0);
@@ -121,12 +121,12 @@ class PlayState extends FlxState
 		return mountain;
 	}
 	
-	private function guyFloat(Amt:Float):Void
+	function guyFloat(Amt:Float):Void
 	{
 		_guy.y = _baseY - Amt * 10;
 	}
 	
-	private function guyFade(Amt:Float):Void
+	function guyFade(Amt:Float):Void
 	{
 		_guy.alpha = Amt;
 	}
@@ -134,7 +134,7 @@ class PlayState extends FlxState
 	/**
 	 * this is just logic to make the guy move when the player presses left/right and to keep him within the 'world'
 	 */
-	private function movement():Void
+	function movement():Void
 	{
 		var _left:Bool = false;
 		var _right:Bool = false;
@@ -186,7 +186,7 @@ class PlayState extends FlxState
 	 * @param	alpha	if you want to apply alpha to the bitmap
 	 * @return	the key to get the modified bitmap
 	 */
-	private function bakeColors(color:FlxColor, asset:String, ?alpha:Float = 1):String
+	function bakeColors(color:FlxColor, asset:String, ?alpha:Float = 1):String
 	{
 		var bmpData:BitmapData = FlxG.bitmap.get(asset).bitmap.clone();
 		

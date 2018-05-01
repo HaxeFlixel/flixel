@@ -33,14 +33,14 @@ class ColorSwapEffect
 		shader.colorNew.value = [];
 	}
 	
-	private function set_isShaderActive(value:Bool):Bool
+	function set_isShaderActive(value:Bool):Bool
 	{
 		isShaderActive = value;
 		shader.shaderIsActive.value[0] = value;
 		return value;
 	}
 	
-	private function set_colorToReplace(color:FlxColor):FlxColor
+	function set_colorToReplace(color:FlxColor):FlxColor
 	{
 		colorToReplace = color;
 
@@ -51,7 +51,7 @@ class ColorSwapEffect
 		return color;
 	}
 	
-	private function set_newColor(color:FlxColor):FlxColor
+	function set_newColor(color:FlxColor):FlxColor
 	{
 		newColor = color;
 		

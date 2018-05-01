@@ -26,22 +26,22 @@ import haxe.EnumTools;
  */
 class PlayState extends FlxState
 {
-	private static inline var DURATION:Float = 1;
+	static inline var DURATION:Float = 1;
 
-	private var _easeInfo:Array<EaseInfo>;
+	var _easeInfo:Array<EaseInfo>;
 	
-	private var _currentEaseIndex:Int = 0;
-	private var _currentEaseType:String = "quad";
-	private var _currentEaseDirection:String = "In";
-	private var _currentTween:TweenType = TWEEN; // Start with tween() tween, it's used most commonly.
+	var _currentEaseIndex:Int = 0;
+	var _currentEaseType:String = "quad";
+	var _currentEaseDirection:String = "In";
+	var _currentTween:TweenType = TWEEN; // Start with tween() tween, it's used most commonly.
 	
-	private var _tween:FlxTween;
-	private var _sprite:FlxSprite;
-	private var _trail:FlxTrail;
-	private var _min:FlxPoint;
-	private var _max:FlxPoint;
+	var _tween:FlxTween;
+	var _sprite:FlxSprite;
+	var _trail:FlxTrail;
+	var _min:FlxPoint;
+	var _max:FlxPoint;
 	
-	private var _currentEase(get, never):EaseFunction;
+	var _currentEase(get, never):EaseFunction;
 
 	override public function create():Void
 	{
@@ -194,7 +194,7 @@ class PlayState extends FlxState
 		#end
 	}
 
-	private function startTween():Void
+	function startTween():Void
 	{
 		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase };
 		
@@ -276,24 +276,24 @@ class PlayState extends FlxState
 		_trail.resetTrail();
 	}
 
-	private inline function get__currentEase():EaseFunction
+	inline function get__currentEase():EaseFunction
 	{
 		return _easeInfo[_currentEaseIndex].ease;
 	}
 	
-	private function onEaseTypeChange(ID:String):Void
+	function onEaseTypeChange(ID:String):Void
 	{
 		_currentEaseType = ID;
 		updateEaseIndex();
 	}
 	
-	private function onEaseDirectionChange(ID:String):Void
+	function onEaseDirectionChange(ID:String):Void
 	{
 		_currentEaseDirection = ID;
 		updateEaseIndex();
 	}
 	
-	private function updateEaseIndex():Void
+	function updateEaseIndex():Void
 	{
 		var curEase = _currentEaseType + _currentEaseDirection;
 		var foundEase:Bool = false;
@@ -317,13 +317,13 @@ class PlayState extends FlxState
 		startTween();
 	}
 	
-	private function onTweenChange(ID:String):Void
+	function onTweenChange(ID:String):Void
 	{
 		_currentTween = EnumTools.createByIndex(TweenType, Std.parseInt(ID));
 		startTween();
 	}
 	
-	private function onToggleTrail():Void
+	function onToggleTrail():Void
 	{
 		_trail.visible = !_trail.visible;
 		_trail.resetTrail();

@@ -32,13 +32,13 @@ import flixel.util.FlxStringUtil;
  */
 class PlayState extends FlxState 
 {
-	private var _map:FlxTilemap;
-	private var _exit:FlxSprite;
-	private var _player:FlxSprite;
+	var _map:FlxTilemap;
+	var _exit:FlxSprite;
+	var _player:FlxSprite;
 	
-	private var _playerSpeed:Float = 120;
-	private var _playerJump:Float = 200;
-	private var _flagWalking:Bool = false;
+	var _playerSpeed:Float = 120;
+	var _playerJump:Float = 200;
+	var _flagWalking:Bool = false;
 	
 	/**
 	 * You might notice that there is no level1() constructor here, that is because doing things in the 
@@ -169,12 +169,12 @@ class PlayState extends FlxState
 		super.update(elapsed);
 	}
 	
-	private function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void
+	function onOverlap(Obj1:FlxObject, Obj2:FlxObject):Void
 	{
 		FlxG.cameras.fade(FlxColor.BLACK, 1, false, onFade);
 	}
 	
-	private function onFade():Void
+	function onFade():Void
 	{
 		// FlxG.fade.start also takes in a callback which is called after the fade ends!!
 		FlxG.switchState(new EndState());

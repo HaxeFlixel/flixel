@@ -14,13 +14,13 @@ class PlayState extends FlxState
 	public var emitterGroup:FlxTypedGroup<Emitter>;
 	public var collidables:FlxGroup;
 	
-	private var _obstacles:FlxTypedGroup<PongSprite>;
-	private var _centerText:FlxText;
-	private var _player:Player;
-	private var _debris:Emitter;
-	private var _enemy:Enemy;
-	private var _enemyBullets:Emitter;
-	private var _paused:Bool = false;
+	var _obstacles:FlxTypedGroup<PongSprite>;
+	var _centerText:FlxText;
+	var _player:Player;
+	var _debris:Emitter;
+	var _enemy:Enemy;
+	var _enemyBullets:Emitter;
+	var _paused:Bool = false;
 	
 	override public function create():Void
 	{
@@ -149,7 +149,7 @@ class PlayState extends FlxState
 		obs.immovable = true;
 	}
 	
-	private function endGame(f:FlxTimer):Void
+	function endGame(f:FlxTimer):Void
 	{
 		FlxG.switchState(new MenuState());
 	}

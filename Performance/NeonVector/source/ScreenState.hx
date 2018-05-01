@@ -21,26 +21,26 @@ import flixel.util.FlxSpriteUtil;
 class ScreenState extends FlxState
 {
 
-	private var _fx:FlxSprite;
+	var _fx:FlxSprite;
 	#if !js
-	private var blur:BlurFilter;
+	var blur:BlurFilter;
 	#end
-	private var _rect:Rectangle;
-	private var _point:Point;
-	private var lastTimeStamp:Int = 0;
-	private var currentTimeStamp:Int = 0;
+	var _rect:Rectangle;
+	var _point:Point;
+	var lastTimeStamp:Int = 0;
+	var currentTimeStamp:Int = 0;
 	
-	private var fpsBuffer:Array<Int>;
-	private var fpsIndex:Int;
+	var fpsBuffer:Array<Int>;
+	var fpsIndex:Int;
 	
 	public static var grid:Grid;
 	public static var blackholes:FlxTypedGroup<Enemy>;
-	private static var particles:FlxTypedGroup<Particle>;
-	private static var entities:FlxGroup;
-	private static var cursor:FlxSprite;
-	private static var displayText:FlxText;
-	private static var inverseSpawnChance:Float = 60;
-	private static var _spawnPosition:FlxPoint;
+	static var particles:FlxTypedGroup<Particle>;
+	static var entities:FlxGroup;
+	static var cursor:FlxSprite;
+	static var displayText:FlxText;
+	static var inverseSpawnChance:Float = 60;
+	static var _spawnPosition:FlxPoint;
 	
 	override public function create():Void
 	{

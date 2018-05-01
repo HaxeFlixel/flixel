@@ -11,8 +11,8 @@ import openfl.Assets;
 
 class PlayState extends FlxState
 {
-	private var tf:FlxBitmapText;
-	private var tf2:FlxBitmapText;
+	var tf:FlxBitmapText;
+	var tf2:FlxBitmapText;
 	
 	override public function create():Void
 	{

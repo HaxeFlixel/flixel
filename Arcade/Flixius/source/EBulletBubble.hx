@@ -7,7 +7,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EBulletBubble extends FlxSprite
 {
-	private var _aliveTimer:Float = 4;
+	var _aliveTimer:Float = 4;
 	
 	public function new() 
 	{

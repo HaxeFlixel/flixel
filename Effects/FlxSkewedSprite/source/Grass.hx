@@ -13,7 +13,7 @@ class Grass extends FlxSkewedSprite
 	public var minSkew:Float = -30;
 	public var skewSpeed:Float = 15;
 	
-	private var _skewDirection:Int = 1;
+	var _skewDirection:Int = 1;
 	
 	public function new(X:Float = 0, Y:Float = 0, Frame:Int = 0, StartSkew:Float = 0)
 	{

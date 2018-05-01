@@ -7,13 +7,13 @@ import flixel.util.FlxColor;
 class MenuState extends FlxState
 {
 	// Link to the persistent substate (which will exist after closing)
-	private var persistentSubState:SubState;
+	var persistentSubState:SubState;
 	
-	private var openpersistentBtn:FlxButton;
-	private var openTempBtn:FlxButton;
-	private var sprites:MySpriteGroup;
+	var openpersistentBtn:FlxButton;
+	var openTempBtn:FlxButton;
+	var sprites:MySpriteGroup;
 	
-	private var subStateColor:FlxColor;
+	var subStateColor:FlxColor;
 	
 	override public function create():Void
 	{
@@ -38,7 +38,7 @@ class MenuState extends FlxState
 		add(openTempBtn);
 	}
 	
-	private function onTempClick():Void
+	function onTempClick():Void
 	{
 		// This is temp substate, it will be destroyed after closing
 		var tempState:SubState = new SubState(subStateColor);
@@ -46,7 +46,7 @@ class MenuState extends FlxState
 		openSubState(tempState);
 	}
 	
-	private function onpersistentClick():Void
+	function onpersistentClick():Void
 	{
 		openSubState(persistentSubState);
 	}

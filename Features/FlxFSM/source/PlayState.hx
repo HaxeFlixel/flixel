@@ -10,13 +10,13 @@ using StringTools;
 
 class PlayState extends FlxState
 {
-	private var _map:FlxTilemap;
-	private var _slime:Slime;
-	private var _powerup:FlxSprite;
+	var _map:FlxTilemap;
+	var _slime:Slime;
+	var _powerup:FlxSprite;
 	
-	private var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air) " +
+	var _info:String = "LEFT & RIGHT to move, UP to jump\nDOWN (in the air) " +
 		"to ground-pound.\nR to Reset\n\nCurrent State: {STATE}";
-	private var _txtInfo:FlxText;
+	var _txtInfo:FlxText;
 	
 	override public function create():Void
 	{
@@ -68,7 +68,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function getPowerup(slime:Slime, particle:FlxSprite):Void
+	function getPowerup(slime:Slime, particle:FlxSprite):Void
 	{		
 		slime.fsm.transitions.replace(Slime.Jump, Slime.SuperJump);
 		slime.fsm.transitions.add(Slime.Jump, Slime.Idle, Slime.Conditions.grounded);

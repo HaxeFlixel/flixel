@@ -27,13 +27,13 @@ import nape.shape.Circle;
  */
 class Balloons extends BaseState
 {
-	private inline static var WIRE_MAX_LENGTH = 200;
-	private inline static var NUM_BALLOONS = 7;
-	private inline static var NUM_SEGMENTS = 10;
+	inline static var WIRE_MAX_LENGTH = 200;
+	inline static var NUM_BALLOONS = 7;
+	inline static var NUM_SEGMENTS = 10;
 	public var CB_BALLOON:CbType = new CbType();
 	
 	var listBalloons:Array<Balloon>;
-	private var shooter:Shooter;
+	var shooter:Shooter;
 	var wiresSprite:FlxSprite; // Sprite that shows the wires graphics.
 	var wires:Array<Wire>;
 	var box:FlxNapeSprite;

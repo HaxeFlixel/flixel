@@ -130,7 +130,7 @@ class SuperJump extends Jump
 
 class GroundPound extends FlxFSMState<FlxSprite>
 {
-	private var _ticks:Float;
+	var _ticks:Float;
 	
 	override public function enter(owner:FlxSprite, fsm:FlxFSM<FlxSprite>):Void 
 	{

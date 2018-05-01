@@ -8,9 +8,9 @@ using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
 {
-	private var _activeSprites:Map<Int, TouchSprite>;
-	private var _inactiveSprites:Array<TouchSprite>;
-	private var _touchSprite:TouchSprite;
+	var _activeSprites:Map<Int, TouchSprite>;
+	var _inactiveSprites:Array<TouchSprite>;
+	var _touchSprite:TouchSprite;
 	
 	override public function create():Void
 	{

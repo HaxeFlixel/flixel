@@ -20,22 +20,22 @@ class Player extends FlxSprite
 	public static inline var BULLET_SPEED:Int = 200;
 	public static inline var GUN_DELAY:Float = 0.4;
 	
-	private var _gibs:FlxEmitter;
-	private var _bullets:FlxTypedGroup<Bullet>;
-	private var _blt:Bullet;
-	private var _cooldown:Float;
-	private var _parent:PlayState;
+	var _gibs:FlxEmitter;
+	var _bullets:FlxTypedGroup<Bullet>;
+	var _blt:Bullet;
+	var _cooldown:Float;
+	var _parent:PlayState;
 	
-	private var _jumpTime:Float = -1;
-	private var _timesJumped:Int = 0;
-	private var _jumpKeys:Array<FlxKey> = [C, K, SPACE];
+	var _jumpTime:Float = -1;
+	var _timesJumped:Int = 0;
+	var _jumpKeys:Array<FlxKey> = [C, K, SPACE];
 	
-	private var _xgridleft:Int = 0;
-	private var _xgridright:Int = 0;
-	private var _ygrid:Int = 0;
+	var _xgridleft:Int = 0;
+	var _xgridright:Int = 0;
+	var _ygrid:Int = 0;
 	
 	public var climbing:Bool = false;
-	private var _onLadder:Bool = false;
+	var _onLadder:Bool = false;
 	
 	public function new(X:Int, Y:Int, Parent:PlayState, Gibs:FlxEmitter, Bullets:FlxTypedGroup<Bullet>) 
 	{
@@ -157,7 +157,7 @@ class Player extends FlxSprite
 		super.update(elapsed);
 	}
 	
-	private function climb():Void
+	function climb():Void
 	{
 		if (FlxG.keys.anyPressed([UP, W]))
 		{
@@ -187,7 +187,7 @@ class Player extends FlxSprite
 		}
 	}
 	
-	private function jump(elapsed:Float):Void
+	function jump(elapsed:Float):Void
 	{
 		if (FlxG.keys.anyJustPressed(_jumpKeys))
 		{
@@ -220,7 +220,7 @@ class Player extends FlxSprite
 			_jumpTime = -1.0;
 	}
 	
-	private function shoot():Void 
+	function shoot():Void 
 	{
 		// Prepare some variables to pass on to the bullet
 		var bulletX:Int = Math.floor(x);

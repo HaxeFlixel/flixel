@@ -25,37 +25,37 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	public var outcome(default, null):Outcome;	// when combat has finished, we will need to know if the player killed the enemy or fled
 	
 	// ** These are the sprites that we will use to show the combat hud interface
-	private var _sprBack:FlxSprite;	// this is the background sprite
-	private var _sprPlayer:Player;	// this is a sprite of the player
-	private var _sprEnemy:Enemy;	// this is a sprite of the enemy
+	var _sprBack:FlxSprite;	// this is the background sprite
+	var _sprPlayer:Player;	// this is a sprite of the player
+	var _sprEnemy:Enemy;	// this is a sprite of the enemy
 	
 	// ** These variables will be used to track the enemy's health
-	private var _enemyHealth:Int;
-	private var _enemyMaxHealth:Int;
-	private var _enemyHealthBar:FlxBar;	// This FlxBar will show us the enemy's current/max health
+	var _enemyHealth:Int;
+	var _enemyMaxHealth:Int;
+	var _enemyHealthBar:FlxBar;	// This FlxBar will show us the enemy's current/max health
 	
-	private var _txtPlayerHealth:FlxText;	// this will show the player's current/max health
+	var _txtPlayerHealth:FlxText;	// this will show the player's current/max health
 	
-	private var _damages:Array<FlxText>;	// This array will contain 2 FlxText objects which will appear to show damage dealt (or misses)
+	var _damages:Array<FlxText>;	// This array will contain 2 FlxText objects which will appear to show damage dealt (or misses)
 	
-	private var _pointer:FlxSprite;			// This will be the pointer to show which option (Fight or Flee) the user is pointing to.
-	private var _selected:Int = 0;			// this will track which option is selected
-	private var _choices:Array<FlxText>;	// this array will contain the FlxTexts for our 2 options: Fight and Flee
+	var _pointer:FlxSprite;			// This will be the pointer to show which option (Fight or Flee) the user is pointing to.
+	var _selected:Int = 0;			// this will track which option is selected
+	var _choices:Array<FlxText>;	// this array will contain the FlxTexts for our 2 options: Fight and Flee
 	
-	private var _results:FlxText;	// this text will show the outcome of the battle for the player.
+	var _results:FlxText;	// this text will show the outcome of the battle for the player.
 	
-	private var _alpha:Float = 0;	// we will use this to fade in and out our combat hud
-	private var _wait:Bool = true;	// this flag will be set to true when don't want the player to be able to do anything (between turns)
+	var _alpha:Float = 0;	// we will use this to fade in and out our combat hud
+	var _wait:Bool = true;	// this flag will be set to true when don't want the player to be able to do anything (between turns)
 	
-	private var _sndFled:FlxSound;
-	private var _sndHurt:FlxSound;
-	private var _sndLose:FlxSound;
-	private var _sndMiss:FlxSound;
-	private var _sndSelect:FlxSound;
-	private var _sndWin:FlxSound;
-	private var _sndCombat:FlxSound;
+	var _sndFled:FlxSound;
+	var _sndHurt:FlxSound;
+	var _sndLose:FlxSound;
+	var _sndMiss:FlxSound;
+	var _sndSelect:FlxSound;
+	var _sndWin:FlxSound;
+	var _sndCombat:FlxSound;
 	
-	private var _sprScreen:FlxSprite;
+	var _sprScreen:FlxSprite;
 	
 	public function new() 
 	{
@@ -199,7 +199,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is called by our Tween to fade in/out all the items in our hud.
 	 */
-	private function updateAlpha(Value:Float):Void
+	function updateAlpha(Value:Float):Void
 	{
 		_alpha = Value;
 		forEach(function(spr:FlxSprite)
@@ -211,7 +211,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * When we've finished fading in, we set our hud to active (so it gets updates), and allow the player to interact. We show our pointer, too.
 	 */
-	private function finishFadeIn(_):Void
+	function finishFadeIn(_):Void
 	{
 		active = true;
 		_wait = false;
@@ -222,7 +222,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * After we fade our hud out, we set it to not be active or visible (no update and no draw)
 	 */
-	private function finishFadeOut(_):Void
+	function finishFadeOut(_):Void
 	{
 		active = false;
 		visible = false;
@@ -231,7 +231,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is called to change the Player's health text on the screen.
 	 */
-	private function updatePlayerHealth():Void
+	function updatePlayerHealth():Void
 	{
 		_txtPlayerHealth.text = playerHealth + " / 3";
 		_txtPlayerHealth.x = _sprPlayer.x + 4 - (_txtPlayerHealth.width / 2);
@@ -322,7 +322,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * Call this function to place the pointer next to the currently selected choice
 	 */
-	private function movePointer():Void
+	function movePointer():Void
 	{
 		_pointer.y = _choices[_selected].y + (_choices[_selected].height / 2) - 8;
 	}
@@ -330,7 +330,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function will process the choice the player picked
 	 */
-	private function makeChoice():Void
+	function makeChoice():Void
 	{
 		_pointer.visible = false;	// hide our pointer
 		switch (_selected)	// check which item was selected when the player picked it
@@ -404,7 +404,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is called anytime we want the enemy to swing at the player
 	 */
-	private function enemyAttack():Void
+	function enemyAttack():Void
 	{
 		// first, lets see if the enemy hits or not. We'll give him a 30% chance to hit
 		if (FlxG.random.bool(30))
@@ -435,7 +435,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 * This function is called from our Tweens to move the damage displays up on the screen
 	 * @param	Value
 	 */
-	private function updateDamageY(Value:Float):Void
+	function updateDamageY(Value:Float):Void
 	{
 		_damages[0].y = _damages[1].y = Value;
 	}
@@ -443,7 +443,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is called from our Tweens to fade in/out the damage text
 	 */
-	private function updateDamageAlpha(Value:Float):Void
+	function updateDamageAlpha(Value:Float):Void
 	{
 		_damages[0].alpha = _damages[1].alpha = Value;
 	}
@@ -451,7 +451,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is called when our damage texts have finished fading in - it will trigger them to start fading out again, after a short delay
 	 */
-	private function doneDamageIn(_):Void
+	function doneDamageIn(_):Void
 	{
 		FlxTween.num(1, 0, .66, { ease: FlxEase.circInOut, startDelay: 1, onComplete: doneDamageOut}, updateDamageAlpha);
 	}
@@ -459,7 +459,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	/**
 	 * This function is triggered when our results text has finished fading in. If we're not defeated, we will fade out the entire hud after a short delay
 	 */
-	private function doneResultsIn(_):Void
+	function doneResultsIn(_):Void
 	{
 		FlxTween.num(1, 0, .66, { ease: FlxEase.circOut, onComplete: finishFadeOut, startDelay: 1 }, updateAlpha);
 	}
@@ -468,7 +468,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	 * This function is triggered when the damage texts have finished fading out again. They will clear and reset them for next time. 
 	 * It will also check to see what we're supposed to do next - if the enemy is dead, we trigger victory, if the player is dead we trigger defeat, otherwise we reset for the next round.
 	 */
-	private function doneDamageOut(_):Void
+	function doneDamageOut(_):Void
 	{
 		_damages[0].visible = false;
 		_damages[1].visible = false;

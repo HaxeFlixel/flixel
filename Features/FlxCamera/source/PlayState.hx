@@ -25,12 +25,12 @@ class PlayState extends FlxState
 	static var LEVEL_MIN_Y;
 	static var LEVEL_MAX_Y;
 
-	private var orb:Orb;
-	private var orbShadow:FlxSprite;
-	private var hud:HUD;
-	private var hudCam:FlxCamera;
-	private var overlayCamera:FlxCamera;
-	private var deadzoneOverlay:FlxSprite;
+	var orb:Orb;
+	var orbShadow:FlxSprite;
+	var hud:HUD;
+	var hudCam:FlxCamera;
+	var overlayCamera:FlxCamera;
+	var deadzoneOverlay:FlxSprite;
 
 	override public function create():Void 
 	{	
@@ -167,7 +167,7 @@ class PlayState extends FlxState
 		hud.updateZoom(FlxG.camera.zoom);
 	}
 
-	private function createFloorTiles() 
+	function createFloorTiles() 
 	{
 		var	floorImg = Assets.getBitmapData("assets/FloorTexture.png");
 		var imgWidth = floorImg.width;
@@ -225,7 +225,7 @@ class PlayState extends FlxState
 			FlxG.camera.shake();
 	}
 	
-	private function setLead(lead:Float) 
+	function setLead(lead:Float) 
 	{
 		var cam = FlxG.camera;
 		cam.followLead.x += lead;
@@ -240,7 +240,7 @@ class PlayState extends FlxState
 		hud.updateCamLead(cam.followLead.x);
 	}
 	
-	private function setLerp(lerp:Float) 
+	function setLerp(lerp:Float) 
 	{
 		var cam = FlxG.camera;
 		cam.followLerp += lerp;
@@ -248,7 +248,7 @@ class PlayState extends FlxState
 		hud.updateCamLerp(cam.followLerp);
 	}
 	
-	private function setStyle(i:Int) 
+	function setStyle(i:Int) 
 	{	
 		var newCamStyleIndex:Int = Type.enumIndex(FlxG.camera.style) + i;
 		newCamStyleIndex < 0 ? newCamStyleIndex += 6 : newCamStyleIndex %= 6;

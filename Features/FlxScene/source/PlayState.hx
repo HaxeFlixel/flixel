@@ -12,12 +12,12 @@ import entities.Monster;
 
 class PlayState extends FlxState
 {
-	private var _scene:FlxScene;
-	private var _specificMonster:Monster;
+	var _scene:FlxScene;
+	var _specificMonster:Monster;
 
 	// layers
-	private var _hudGroup:FlxGroup;
-	private var _monsterGroup:FlxGroup;
+	var _hudGroup:FlxGroup;
+	var _monsterGroup:FlxGroup;
 
 	override public function create():Void
 	{
@@ -69,7 +69,7 @@ class PlayState extends FlxState
 		FlxG.camera.antialiasing = true;
 	}
 
-	private function createGroups():Void
+	function createGroups():Void
 	{
 		_monsterGroup = new FlxGroup();
 		add(_monsterGroup);

@@ -28,7 +28,7 @@ class PlayState extends FlxState
 	/**
 	 * Helper Sprite object to draw tower's range graphic
 	 */
-	private static var RANGE_SPRITE:Sprite = null;
+	static var RANGE_SPRITE:Sprite = null;
 	
 	// Public variables
 	public var enemiesToKill:Int = 0;
@@ -48,52 +48,52 @@ class PlayState extends FlxState
 	public var money(default, set):Int = 50;
 
 	// Groups
-	private var _gui:FlxGroup;
-	private var _lives:FlxGroup;
-	private var _topGui:FlxGroup;
-	private var _towers:FlxTypedGroup<Tower>;
-	private var _upgradeMenu:FlxGroup;
-	private var _sellMenu:FlxGroup;
-	private var _sellConfirm:FlxGroup;
+	var _gui:FlxGroup;
+	var _lives:FlxGroup;
+	var _topGui:FlxGroup;
+	var _towers:FlxTypedGroup<Tower>;
+	var _upgradeMenu:FlxGroup;
+	var _sellMenu:FlxGroup;
+	var _sellConfirm:FlxGroup;
 	
 	// Sprites
-	private var _buildHelper:FlxSprite;
-	private var _goal:FlxSprite;
-	private var _towerRange:FlxSprite;
+	var _buildHelper:FlxSprite;
+	var _goal:FlxSprite;
+	var _towerRange:FlxSprite;
 	
 	// Text
-	private var _centerText:FlxText;
-	private var _enemyText:FlxText;
-	private var _moneyText:FlxText;
-	private var _tutText:FlxText;
-	private var _waveText:FlxText;
-	private var _areYouSure:FlxText;
+	var _centerText:FlxText;
+	var _enemyText:FlxText;
+	var _moneyText:FlxText;
+	var _tutText:FlxText;
+	var _waveText:FlxText;
+	var _areYouSure:FlxText;
 	
 	// Buttons
-	private var _damageButton:Button;
-	private var _firerateButton:Button;
-	private var _nextWaveButton:Button;
-	private var _rangeButton:Button;
-	private var _speedButton:Button;
-	private var _towerButton:Button;
-	private var _sellButton:Button;
+	var _damageButton:Button;
+	var _firerateButton:Button;
+	var _nextWaveButton:Button;
+	var _rangeButton:Button;
+	var _speedButton:Button;
+	var _towerButton:Button;
+	var _sellButton:Button;
 	
 	// Other objects
-	private var _map:FlxTilemap;
-	private var _towerSelected:Tower;
+	var _map:FlxTilemap;
+	var _towerSelected:Tower;
 	
-	// Private variables
+	// variables
 	
-	private var _buildingMode:Bool = false;
-	private var _gameOver:Bool = false;
-	private var _numLives:Int = 9;
-	private var _spawnCounter:Int = 0;
-	private var _spawnInterval:Int = 1;
-	private var _speed:Int = 1;
-	private var _waveCounter:Int = 0;
+	var _buildingMode:Bool = false;
+	var _gameOver:Bool = false;
+	var _numLives:Int = 9;
+	var _spawnCounter:Int = 0;
+	var _spawnInterval:Int = 1;
+	var _speed:Int = 1;
+	var _waveCounter:Int = 0;
 	
-	private var _enemySpawnPosition = FlxPoint.get(TILE_SIZE * 3 + 4, 0);
-	private var _goalPosition = FlxPoint.get(245, 43);
+	var _enemySpawnPosition = FlxPoint.get(TILE_SIZE * 3 + 4, 0);
+	var _goalPosition = FlxPoint.get(245, 43);
 	
 	/**
 	 * Create a new playable game state.
@@ -444,7 +444,7 @@ class PlayState extends FlxState
 	 * @param	SearchRadius	How far from the touch point to search.
 	 * @return	The nearest tower, as a Tower object.
 	 */
-	private function getNearestTower(X:Float, Y:Float, SearchRadius:Float):Tower
+	function getNearestTower(X:Float, Y:Float, SearchRadius:Float):Tower
 	{
 		var minDistance:Float = SearchRadius;
 		var closestTower:Tower = null;
@@ -468,7 +468,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when an enemy collides with a goal. Explodes the enemy, damages the goal.
 	 */
-	private function hitGoal(enemy:Enemy, goal:FlxSprite):Void
+	function hitGoal(enemy:Enemy, goal:FlxSprite):Void
 	{
 		_numLives--;
 		enemy.explode(false);
@@ -485,7 +485,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when a bullet hits an enemy. Damages the enemy, kills the bullet.
 	 */
-	private function hitEnemy(bullet:Bullet, enemy:FlxSprite):Void
+	function hitEnemy(bullet:Bullet, enemy:FlxSprite):Void
 	{
 		enemy.hurt(bullet.damage);
 		bullet.kill();
@@ -498,7 +498,7 @@ class PlayState extends FlxState
 	 * 
 	 * @param	Menu	The desired menu; one of the enum constructors above this class.
 	 */
-	private function toggleMenus(Menu:MenuType):Void
+	function toggleMenus(Menu:MenuType):Void
 	{
 		_sellConfirm.visible = false;
 		_sellMenu.visible = false;
@@ -528,7 +528,7 @@ class PlayState extends FlxState
 	/**
 	 * A function that is called when the user enters build mode.
 	 */
-	private function buildTowerCallback(Skip:Bool = false):Void
+	function buildTowerCallback(Skip:Bool = false):Void
 	{
 		if (towerPrice > money)
 			return;
@@ -545,7 +545,7 @@ class PlayState extends FlxState
 	/**
 	 * A function that is called when the user changes game speed.
 	 */
-	private function speedButtonCallback(Skip:Bool = false):Void
+	function speedButtonCallback(Skip:Bool = false):Void
 	{
 		if (!_gui.visible && !Skip)
 			return;
@@ -564,7 +564,7 @@ class PlayState extends FlxState
 	/**
 	 * A function that is called when the user wants to sell a tower.
 	 */
-	private function sellButtonCallback(Skip:Bool = false):Void
+	function sellButtonCallback(Skip:Bool = false):Void
 	{
 		if (!_gui.visible || _towers.length == 0)
 			return;
@@ -580,7 +580,7 @@ class PlayState extends FlxState
 		playSelectSound();
 	}
 	
-	private function sellConfirmCheck():Void
+	function sellConfirmCheck():Void
 	{
 		_areYouSure.text = "Tower value $" + _towerSelected.value + ", really sell?";
 		
@@ -589,7 +589,7 @@ class PlayState extends FlxState
 		updateRangeSprite(_towerSelected.getMidpoint(), _towerSelected.range);
 	}
 	
-	private function sellConfirmCallback(Sure:Bool):Void
+	function sellConfirmCallback(Sure:Bool):Void
 	{
 		if (!_sellConfirm.visible)
 			return;
@@ -639,7 +639,7 @@ class PlayState extends FlxState
 		}
 	}
 	
-	private function sellMenuCancel(Skip:Bool = false):Void
+	function sellMenuCancel(Skip:Bool = false):Void
 	{
 		toggleMenus(General);
 	}
@@ -647,7 +647,7 @@ class PlayState extends FlxState
 	/**
 	 * A function that is called when the user selects to call the next wave.
 	 */
-	private function nextWaveCallback(Skip:Bool = false):Void
+	function nextWaveCallback(Skip:Bool = false):Void
 	{
 		if (!_gui.visible && !Skip)
 			return;
@@ -662,7 +662,7 @@ class PlayState extends FlxState
 	/**
 	 * A function that is called when the user elects to restart, which is only possible after losing.
 	 */
-	private function resetCallback(Skip:Bool = false):Void
+	function resetCallback(Skip:Bool = false):Void
 	{
 		if (!_gui.visible && !Skip)
 			return;
@@ -675,7 +675,7 @@ class PlayState extends FlxState
 	 * A function that attempts to build a tower when the user clicks on the playable space. Must have money,
 	 * and be building in a valid place (not on another tower, the road, or the GUI).
 	 */
-	private function buildTower():Void
+	function buildTower():Void
 	{
 		// Can't place towers on GUI
 		if (FlxG.mouse.y > FlxG.height - 16)
@@ -739,7 +739,7 @@ class PlayState extends FlxState
 	/**
 	 * The select sound gets played from a lot of places, so it's in a convenient function.
 	 */
-	private function playSelectSound():Void
+	function playSelectSound():Void
 	{
 		FlxG.sound.play("select");
 	} 
@@ -749,7 +749,7 @@ class PlayState extends FlxState
 	 * 
 	 * @param	End		Whether or not this is the end of the game. If true, message will say "Game Over! :("
 	 */
-	private function announceWave(End:Bool = false):Void
+	function announceWave(End:Bool = false):Void
 	{
 		_centerText.x = -200;
 		_centerText.text = "Wave " + wave;
@@ -767,7 +767,7 @@ class PlayState extends FlxState
 	/**
 	 * Hides the center text message display on announceWave, once the first tween is complete.
 	 */
-	private function hideText(Tween:FlxTween):Void
+	function hideText(Tween:FlxTween):Void
 	{
 		FlxTween.tween(_centerText, { x: FlxG.width }, 2, { ease: FlxEase.expoIn });
 	}
@@ -777,7 +777,7 @@ class PlayState extends FlxState
 	 * sets the number of enemies to spawn and kill, hides the next wave button, and shows the
 	 * notification of the number of enemies.
 	 */
-	private function spawnWave():Void
+	function spawnWave():Void
 	{
 		if (_gameOver)
 			return;
@@ -797,7 +797,7 @@ class PlayState extends FlxState
 	 * Spawns an enemy. Decrements the enemiesToSpawn variable, and recycles an enemy from enemies and then initiates
 	 * it and gives it a path to follow.
 	 */
-	private function spawnEnemy():Void
+	function spawnEnemy():Void
 	{
 		enemiesToSpawn--;
 		
@@ -810,7 +810,7 @@ class PlayState extends FlxState
 	/**
 	 * Called when you lose. Of course!
 	 */
-	private function loseGame():Void
+	function loseGame():Void
 	{
 		_gameOver = true;
 		
@@ -831,7 +831,7 @@ class PlayState extends FlxState
 	/**
 	 * Called either when building, or upgrading, a tower.
 	 */
-	private function updateRangeSprite(Center:FlxPoint, Range:Int):Void
+	function updateRangeSprite(Center:FlxPoint, Range:Int):Void
 	{
 		_towerRange.setPosition(Center.x - Range, Center.y - Range);
 		_towerRange.makeGraphic(Range * 2, Range * 2, FlxColor.TRANSPARENT);
@@ -858,7 +858,7 @@ class PlayState extends FlxState
 	 * Called when the user attempts to update range. If they have enough money, the upgradeRange() function
 	 * for this tower is called, and the money is decreased.
 	 */
-	private function upgradeRangeCallback():Void
+	function upgradeRangeCallback():Void
 	{
 		if (!_upgradeMenu.visible)
 			return;
@@ -875,7 +875,7 @@ class PlayState extends FlxState
 	 * Called when the user attempts to update damage. If they have enough money, the upgradeDamage() function
 	 * for this tower is called, and the money is decreased.
 	 */
-	private function upgradeDamageCallback():Void
+	function upgradeDamageCallback():Void
 	{
 		if (!_upgradeMenu.visible)
 			return;
@@ -892,7 +892,7 @@ class PlayState extends FlxState
 	 * Called when the user attempts to update fire rate. If they have enough money, the upgradeFirerate() function
 	 * for this tower is called, and the money is decreased.
 	 */
-	private function upgradeFirerateCallback():Void
+	function upgradeFirerateCallback():Void
 	{
 		if (!_upgradeMenu.visible)
 			return;
@@ -908,7 +908,7 @@ class PlayState extends FlxState
 	/**
 	 * Called after an upgrade. Updates button text, plays a sound, and sets the upgrade bought flag to true.
 	 */
-	private function upgradeHelper():Void
+	function upgradeHelper():Void
 	{
 		updateUpgradeLabels();
 		playSelectSound();
@@ -920,7 +920,7 @@ class PlayState extends FlxState
 	/**
 	 * Update button labels for upgrades, and makes sure the range indicator sprite is updated.
 	 */
-	private function updateUpgradeLabels():Void
+	function updateUpgradeLabels():Void
 	{
 		_rangeButton.text = "Range (" + _towerSelected.rangeLevel + "): $" + _towerSelected.rangePrice; 
 		_damageButton.text = "Damage (" + _towerSelected.damageLevel + "): $" + _towerSelected.damagePrice; 
@@ -929,7 +929,7 @@ class PlayState extends FlxState
 		updateRangeSprite(_towerSelected.getMidpoint(), _towerSelected.range);
 	}
 	
-	private function set_money(NewMoney:Int):Int
+	function set_money(NewMoney:Int):Int
 	{
 		money = NewMoney;
 		_moneyText.text = "$: " + money;

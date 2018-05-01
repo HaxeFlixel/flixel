@@ -5,7 +5,7 @@ import flixel.tweens.FlxTween;
 
 class Enemy extends PongSprite
 {
-	private var _emitter:Emitter;
+	var _emitter:Emitter;
 	
 	public function new()
 	{
