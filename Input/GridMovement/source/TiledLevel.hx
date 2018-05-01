@@ -28,7 +28,7 @@ class TiledLevel extends TiledMap
 	
 	private var collidableTileLayers:Array<FlxTilemap>;
 
-	public function new(tiledLevel:Dynamic)
+	public function new(tiledLevel:FlxTiledMapAsset)
 	{
 		super(tiledLevel);
 		

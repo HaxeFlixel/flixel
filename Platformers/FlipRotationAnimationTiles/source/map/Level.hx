@@ -32,7 +32,7 @@ class Level extends TiledMap
 	
 	public var bounds:FlxRect;
 
-	public function new(level:Dynamic, animFile:Dynamic) 
+	public function new(level:FlxTiledMapAsset, animFile:String) 
 	{
 		super(level);
 		

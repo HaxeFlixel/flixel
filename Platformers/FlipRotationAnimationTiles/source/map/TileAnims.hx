@@ -12,31 +12,16 @@ typedef AnimData = { name:String, speed:Float, randomizeSpeed:Float, frames:Arra
  */
 class TileAnims
 {
-	
 	/**
 	 * Parse the animations in the *.tanim file.
 	 * Returns a map with:
 	 *	- Key: the tilesetID of the tile
 	 * 	- Value: An array with the differents animations of the tile
-	 * @return A Map<Int, Array<AnimData>> 
 	 */
-	public static function getAnimations(Data:Dynamic):Map<Int, Array<AnimData>>
+	public static function getAnimations(filePath:String):Map<Int, Array<AnimData>>
 	{
 		//load the xml file
-		var source:Fast;
-		if (Std.is(Data, String))
-		{
-			source = new Fast(Xml.parse(Assets.getText(Data)));
-		}
-		else if (Std.is(Data, Xml))
-		{
-			source = new Fast(Data);
-		}
-		else
-		{
-			throw "No tanim file";
-		}
-		
+		var source = new Fast(Xml.parse(Assets.getText(filePath)));
 		source = source.node.animations;
 		
 		// parse the file

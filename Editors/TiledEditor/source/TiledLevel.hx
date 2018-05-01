@@ -36,7 +36,7 @@ class TiledLevel extends TiledMap
 	// Sprites of images layers
 	public var imagesLayer:FlxGroup;
 	
-	public function new(tiledLevel:Dynamic, state:PlayState)
+	public function new(tiledLevel:FlxTiledMapAsset, state:PlayState)
 	{
 		super(tiledLevel);
 		
