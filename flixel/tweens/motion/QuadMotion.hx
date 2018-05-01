@@ -13,13 +13,13 @@ class QuadMotion extends Motion
 	public var distance(get, never):Float;
 	
 	// Curve information.
-	private var _distance:Float = -1;
-	private var _fromX:Float = 0;
-	private var _fromY:Float = 0;
-	private var _toX:Float = 0;
-	private var _toY:Float = 0;
-	private var _controlX:Float = 0;
-	private var _controlY:Float = 0;
+	var _distance:Float = -1;
+	var _fromX:Float = 0;
+	var _fromY:Float = 0;
+	var _toX:Float = 0;
+	var _toY:Float = 0;
+	var _controlX:Float = 0;
+	var _controlY:Float = 0;
 	
 	/**
 	 * Starts moving along the curve.
@@ -57,7 +57,7 @@ class QuadMotion extends Motion
 		return this;
 	}
 	
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		x = _fromX * (1 - scale) * (1 - scale) + _controlX * 2 * (1 - scale) * scale + _toX * scale * scale;
@@ -68,7 +68,7 @@ class QuadMotion extends Motion
 		}
 	}
 	
-	private function get_distance():Float
+	function get_distance():Float
 	{
 		if (_distance >= 0)
 			return _distance;

@@ -10,7 +10,7 @@ class FlxGamepadButton extends FlxInput<Int>
 	public var value:Float = 0;
 	
 	#if flash
-	private var _pressed:Bool = false;
+	var _pressed:Bool = false;
 	
 	override public function release():Void
 	{

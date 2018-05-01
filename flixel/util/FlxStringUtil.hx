@@ -265,7 +265,7 @@ class FlxStringUtil
 		return formatPackage(Type.getEnumName(e), simple);
 	}
 
-	private static function formatPackage(s:String, simple:Bool):String
+	static function formatPackage(s:String, simple:Bool):String
 	{
 		if (s == null)
 			return null;
@@ -647,7 +647,7 @@ class FlxStringUtil
 
 class LabelValuePair implements IFlxDestroyable
 {
-	private static var _pool = new FlxPool<LabelValuePair>(LabelValuePair);
+	static var _pool = new FlxPool<LabelValuePair>(LabelValuePair);
 	
 	public static inline function weak(label:String, value:Dynamic):LabelValuePair
 	{
@@ -676,5 +676,5 @@ class LabelValuePair implements IFlxDestroyable
 	}
 
 	@:keep
-	private function new() {}
+	function new() {}
 }

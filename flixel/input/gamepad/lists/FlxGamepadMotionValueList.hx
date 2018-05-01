@@ -9,7 +9,7 @@ import flixel.input.gamepad.FlxGamepad;
 @:keep
 class FlxGamepadMotionValueList
 {
-	private var gamepad:FlxGamepad;
+	var gamepad:FlxGamepad;
 
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	/**
@@ -31,14 +31,14 @@ class FlxGamepadMotionValueList
 		this.gamepad = gamepad;
 	}
 
-	private inline function getAxis(id:FlxGamepadInputID):Float
+	inline function getAxis(id:FlxGamepadInputID):Float
 	{
 		if (!isSupported)
 			return 0;
 		return gamepad.getAxis(id);
 	}
 
-	private inline function get_isSupported():Bool
+	inline function get_isSupported():Bool
 	{
 		return gamepad.mapping.supportsMotion;
 	}

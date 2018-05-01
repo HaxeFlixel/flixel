@@ -73,7 +73,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public var lightness(get, set):Float;
 	
-	private static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 	
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -530,7 +530,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	/**
 	 * Private utility function to perform common operations between setHSB and setHSL
 	 */
-	private inline function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
+	inline function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
 	{
 		Hue %= 360;
 		var hueD = Hue / 60;
@@ -555,7 +555,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		this = Value;
 	}
 	
-	private inline function getThis():Int
+	inline function getThis():Int
 	{
 		#if neko
 		return Std.int(this);
@@ -564,54 +564,54 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		#end
 	}
 	
-	private inline function validate():Void
+	inline function validate():Void
 	{
 		#if neko
 		this = Std.int(this);
 		#end
 	}
 	
-	private inline function get_red():Int
+	inline function get_red():Int
 	{
 		return (getThis() >> 16) & 0xff;
 	}
 	
-	private inline function get_green():Int
+	inline function get_green():Int
 	{
 		return (getThis() >> 8) & 0xff;
 	}
 	
-	private inline function get_blue():Int
+	inline function get_blue():Int
 	{
 		return getThis() & 0xff;
 	}
 	
-	private inline function get_alpha():Int
+	inline function get_alpha():Int
 	{
 		return (getThis() >> 24) & 0xff;
 	}
 	
-	private inline function get_redFloat():Float
+	inline function get_redFloat():Float
 	{
 		return red / 255;
 	}
 	
-	private inline function get_greenFloat():Float
+	inline function get_greenFloat():Float
 	{
 		return green / 255;
 	}
 	
-	private inline function get_blueFloat():Float
+	inline function get_blueFloat():Float
 	{
 		return blue / 255;
 	}
 	
-	private inline function get_alphaFloat():Float
+	inline function get_alphaFloat():Float
 	{
 		return alpha / 255;
 	}
 	
-	private inline function set_red(Value:Int):Int
+	inline function set_red(Value:Int):Int
 	{
 		validate();
 		this &= 0xff00ffff;
@@ -619,7 +619,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 	
-	private inline function set_green(Value:Int):Int
+	inline function set_green(Value:Int):Int
 	{
 		validate();
 		this &= 0xffff00ff;
@@ -627,7 +627,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 	
-	private inline function set_blue(Value:Int):Int
+	inline function set_blue(Value:Int):Int
 	{
 		validate();
 		this &= 0xffffff00;
@@ -635,7 +635,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 	
-	private inline function set_alpha(Value:Int):Int
+	inline function set_alpha(Value:Int):Int
 	{
 		validate();
 		this &= 0x00ffffff;
@@ -643,75 +643,75 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 	
-	private inline function set_redFloat(Value:Float):Float
+	inline function set_redFloat(Value:Float):Float
 	{
 		red = Math.round(Value * 255);
 		return Value;
 	}
 	
-	private inline function set_greenFloat(Value:Float):Float
+	inline function set_greenFloat(Value:Float):Float
 	{
 		green = Math.round(Value * 255);
 		return Value;
 	}
 	
-	private inline function set_blueFloat(Value:Float):Float
+	inline function set_blueFloat(Value:Float):Float
 	{
 		blue = Math.round(Value * 255);
 		return Value;
 	}
 	
-	private inline function set_alphaFloat(Value:Float):Float
+	inline function set_alphaFloat(Value:Float):Float
 	{
 		alpha = Math.round(Value * 255);
 		return Value;
 	}
 	
-	private inline function get_cyan():Float
+	inline function get_cyan():Float
 	{
 		return (1 - redFloat - black) / brightness;
 	}
 	
-	private inline function get_magenta():Float
+	inline function get_magenta():Float
 	{
 		return (1 - greenFloat - black) / brightness;
 	}
 	
-	private inline function get_yellow():Float
+	inline function get_yellow():Float
 	{
 		return (1 - blueFloat - black) / brightness;
 	}
 	
-	private inline function get_black():Float
+	inline function get_black():Float
 	{
 		return 1 - brightness;
 	}
 	
-	private inline function set_cyan(Value:Float):Float
+	inline function set_cyan(Value:Float):Float
 	{
 		setCMYK(Value, magenta, yellow, black, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_magenta(Value:Float):Float
+	inline function set_magenta(Value:Float):Float
 	{
 		setCMYK(cyan, Value, yellow, black, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_yellow(Value:Float):Float
+	inline function set_yellow(Value:Float):Float
 	{
 		setCMYK(cyan, magenta, Value, black, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_black(Value:Float):Float
+	inline function set_black(Value:Float):Float
 	{
 		setCMYK(cyan, magenta, yellow, Value, alphaFloat);
 		return Value;
 	}
 	
-	private function get_hue():Float
+	function get_hue():Float
 	{
 		var hueRad = Math.atan2(Math.sqrt(3) * (greenFloat - blueFloat), 2 * redFloat - greenFloat - blueFloat);
 		var hue:Float = 0;
@@ -723,56 +723,56 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return hue < 0 ? hue + 360 : hue;
 	}
 	
-	private inline function get_brightness():Float
+	inline function get_brightness():Float
 	{
 		return maxColor();
 	}
 	
-	private inline function get_saturation():Float
+	inline function get_saturation():Float
 	{
 		return (maxColor() - minColor()) / brightness;
 	}
 	
-	private inline function get_lightness():Float
+	inline function get_lightness():Float
 	{
 		return (maxColor() + minColor()) / 2;
 	}
 	
-	private inline function set_hue(Value:Float):Float
+	inline function set_hue(Value:Float):Float
 	{
 		setHSB(Value, saturation, brightness, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_saturation(Value:Float):Float
+	inline function set_saturation(Value:Float):Float
 	{
 		setHSB(hue, Value, brightness, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_brightness(Value:Float):Float
+	inline function set_brightness(Value:Float):Float
 	{
 		setHSB(hue, saturation, Value, alphaFloat);
 		return Value;
 	}
 	
-	private inline function set_lightness(Value:Float):Float
+	inline function set_lightness(Value:Float):Float
 	{
 		setHSL(hue, saturation, Value, alphaFloat);
 		return Value;
 	}
 	
-	private inline function maxColor():Float
+	inline function maxColor():Float
 	{
 		return Math.max(redFloat, Math.max(greenFloat, blueFloat));
 	}
 	
-	private inline function minColor():Float
+	inline function minColor():Float
 	{
 		return Math.min(redFloat, Math.min(greenFloat, blueFloat));
 	}
 	
-	private inline function boundChannel(Value:Int):Int
+	inline function boundChannel(Value:Int):Int
 	{
 		return Value > 0xff ? 0xff : Value < 0 ? 0 : Value;
 	}

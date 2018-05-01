@@ -6,11 +6,11 @@ import flixel.input.gamepad.id.OUYAID;
 class OUYAMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
-	private static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 19;
-	private static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 20;
+	static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 19;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 20;
 
-	private static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 21;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 22;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 21;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 22;
 	#end
 	
 	override function initValues():Void 

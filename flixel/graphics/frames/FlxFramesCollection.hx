@@ -193,7 +193,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   name    Optional frame name for debugging info.
 	 * @return  Checked and trimmed frame rectangle.
 	 */
-	private function checkFrame(frame:FlxRect, ?name:String):FlxRect
+	function checkFrame(frame:FlxRect, ?name:String):FlxRect
 	{
 		var x:Float = FlxMath.bound(frame.x, 0, parent.width);
 		var y:Float = FlxMath.bound(frame.y, 0, parent.height);
@@ -249,7 +249,7 @@ class FlxFramesCollection implements IFlxDestroyable
 			LabelValuePair.weak("type", type)]);
 	}
 	
-	private inline function get_numFrames():Int
+	inline function get_numFrames():Int
 	{
 		return frames.length;
 	}

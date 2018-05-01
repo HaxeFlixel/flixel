@@ -193,6 +193,9 @@
 		},
 		{
 			"type": "PublicAccessor"
+		},
+		{
+			"type": "RedundantModifier"
 		}
 	]
 }

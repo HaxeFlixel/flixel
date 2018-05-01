@@ -146,11 +146,11 @@ class FlxRandom
 	}
 	
 	//helper variables for floatNormal -- it produces TWO random values with each call so we have to store some state outside the function
-	private var _hasFloatNormalSpare:Bool = false;
-	private var _floatNormalRand1:Float = 0;
-	private var _floatNormalRand2:Float = 0;
-	private var _twoPI:Float = Math.PI * 2;
-	private var _floatNormalRho:Float = 0;
+	var _hasFloatNormalSpare:Bool = false;
+	var _floatNormalRand1:Float = 0;
+	var _floatNormalRand2:Float = 0;
+	var _twoPI:Float = Math.PI * 2;
+	var _floatNormalRho:Float = 0;
 	
 	/**
 	 * Returns a pseudorandom float value in a statistical normal distribution centered on Mean with a standard deviation size of StdDev.
@@ -398,7 +398,7 @@ class FlxRandom
 	 * 
 	 * @return  A new pseudorandom number.
 	 */
-	private inline function generate():Float
+	inline function generate():Float
 	{
 		return internalSeed = (internalSeed * MULTIPLIER) % MODULUS;
 	}
@@ -407,13 +407,13 @@ class FlxRandom
 	 * The actual internal seed. Stored as a Float value to prevent inaccuracies due to
 	 * integer overflow in the generate() equation.
 	 */
-	private var internalSeed:Float = 1;
+	var internalSeed:Float = 1;
 	
 	/**
 	 * Internal function to update the current seed whenever the initial seed is reset,
 	 * and keep the initial seed's value in range.
 	 */
-	private inline function set_initialSeed(NewSeed:Int):Int
+	inline function set_initialSeed(NewSeed:Int):Int
 	{
 		return initialSeed = currentSeed = rangeBound(NewSeed);
 	}
@@ -421,7 +421,7 @@ class FlxRandom
 	/**
 	 * Returns the internal seed as an integer.
 	 */
-	private inline function get_currentSeed():Int
+	inline function get_currentSeed():Int
 	{
 		return Std.int(internalSeed);
 	}
@@ -429,7 +429,7 @@ class FlxRandom
 	/**
 	 * Sets the internal seed to an integer value.
 	 */
-	private inline function set_currentSeed(NewSeed:Int):Int
+	inline function set_currentSeed(NewSeed:Int):Int
 	{
 		return Std.int(internalSeed = rangeBound(NewSeed));
 	}
@@ -437,7 +437,7 @@ class FlxRandom
 	/**
 	 * Internal shared function to ensure an arbitrary value is in the valid range of seed values.
 	 */
-	private static inline function rangeBound(Value:Int):Int
+	static inline function rangeBound(Value:Int):Int
 	{
 		return Std.int(FlxMath.bound(Value, 1, MODULUS - 1));
 	}
@@ -445,7 +445,7 @@ class FlxRandom
 	/**
 	 * Internal shared helper variable. Used by getObject().
 	 */
-	private static var _arrayFloatHelper:Array<Float> = null;
+	static var _arrayFloatHelper:Array<Float> = null;
 	
 	/**
 	 * Constants used in the pseudorandom number generation equation.
@@ -456,19 +456,19 @@ class FlxRandom
 	 * @see Stephen K. Park and Keith W. Miller and Paul K. Stockmeyer (1988).
 	 *      "Technical Correspondence". Communications of the ACM 36 (7): 105–110.
 	 */
-	private static inline var MULTIPLIER:Float = 48271.0;
-	private static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
+	static inline var MULTIPLIER:Float = 48271.0;
+	static inline var MODULUS:Int = FlxMath.MAX_VALUE_INT;
 	
 	#if FLX_RECORD
 	/**
 	 * Internal storage for the seed used to generate the most recent state.
 	 */
-	private static var _stateSeed:Int = 1;
+	static var _stateSeed:Int = 1;
 	
 	/**
 	 * The seed to be used by the recording requested in FlxGame.
 	 */
-	private static var _recordingSeed:Int = 1;
+	static var _recordingSeed:Int = 1;
 	
 	/**
 	 * Update the seed that was used to create the most recent state.
@@ -477,7 +477,7 @@ class FlxRandom
 	 * @return  The new value of the state seed.
 	 */
 	@:allow(flixel.FlxGame)
-	private static inline function updateStateSeed():Int
+	static inline function updateStateSeed():Int
 	{
 		return _stateSeed = FlxG.random.currentSeed;
 	}
@@ -489,7 +489,7 @@ class FlxRandom
 	 * @param   StandardMode   If true, entire game will be reset, else just the current state will be reset.
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
-	private static inline function updateRecordingSeed(StandardMode:Bool = true):Int
+	static inline function updateRecordingSeed(StandardMode:Bool = true):Int
 	{
 		return _recordingSeed = FlxG.random.initialSeed = StandardMode ? FlxG.random.initialSeed : _stateSeed;
 	}
@@ -498,7 +498,7 @@ class FlxRandom
 	 * Returns the seed to use for the requested recording.
 	 */
 	@:allow(flixel.FlxGame.handleReplayRequests)
-	private static inline function getRecordingSeed():Int
+	static inline function getRecordingSeed():Int
 	{
 		return _recordingSeed;
 	}

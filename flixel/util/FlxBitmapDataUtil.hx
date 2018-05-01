@@ -14,7 +14,7 @@ import flixel.math.FlxRect;
  */
 class FlxBitmapDataUtil
 {
-	private static var matrix:FlxMatrix = new FlxMatrix();
+	static var matrix:FlxMatrix = new FlxMatrix();
 	
 	/**
 	 * Performs per-channel blending from a source image to a destination image.
@@ -144,7 +144,7 @@ class FlxBitmapDataUtil
 		#end
 	}
 	
-	private static inline function mergeColorComponent(source:Int, dest:Int, multiplier:Int):Int
+	static inline function mergeColorComponent(source:Int, dest:Int, multiplier:Int):Int
 	{
 		return Std.int(((source * multiplier) + (dest * (256 - multiplier))) / 256);
 	}
@@ -228,7 +228,7 @@ class FlxBitmapDataUtil
 		#end
 	}
 	
-	private static inline function getDiff(value1:Int, value2:Int):Int
+	static inline function getDiff(value1:Int, value2:Int):Int
 	{
 		var diff = value1 - value2;
 		return (diff >= 0) ? diff : (256 + diff);

@@ -49,13 +49,13 @@ class FlxState extends FlxGroup
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
 	@:noCompletion
-	private var _requestedSubState:FlxSubState;
+	var _requestedSubState:FlxSubState;
 
 	/**
 	 * Whether to reset the substate (when it changes, or when it's closed).
 	 */
 	@:noCompletion
-	private var _requestSubStateReset:Bool = false;
+	var _requestSubStateReset:Bool = false;
 
 	/**
 	 * This function is called after the game engine successfully switches states.
@@ -166,7 +166,7 @@ class FlxState extends FlxGroup
 	public function onResize(Width:Int, Height:Int):Void {}
 	
 	@:allow(flixel.FlxGame)
-	private function tryUpdate(elapsed:Float):Void
+	function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || subState == null)
 			update(elapsed);
@@ -183,13 +183,13 @@ class FlxState extends FlxGroup
 	}
 
 	@:noCompletion
-	private function get_bgColor():FlxColor
+	function get_bgColor():FlxColor
 	{
 		return FlxG.cameras.bgColor;
 	}
 
 	@:noCompletion
-	private function set_bgColor(Value:FlxColor):FlxColor
+	function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
 	}

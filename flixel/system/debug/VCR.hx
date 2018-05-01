@@ -136,7 +136,7 @@ class VCR
 	}
 	#end
 
-	private function onManualPause()
+	function onManualPause()
 	{
 		manualPause = true;
 		FlxG.vcr.pause();

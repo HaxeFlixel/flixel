@@ -100,10 +100,10 @@ class InputFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 	
 	@:allow(flixel.FlxGame)
-	private inline function update():Void
+	inline function update():Void
 	{
 		for (input in list)
 		{
@@ -112,7 +112,7 @@ class InputFrontEnd
 	}
 	
 	@:allow(flixel.FlxGame)
-	private inline function onFocus():Void
+	inline function onFocus():Void
 	{
 		for (input in list)
 		{
@@ -121,7 +121,7 @@ class InputFrontEnd
 	}
 	
 	@:allow(flixel.FlxGame)
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		for (input in list)
 		{
@@ -131,7 +131,7 @@ class InputFrontEnd
 	
 	@:allow(flixel.FlxGame)
 	@:allow(flixel.FlxState.resetSubState)
-	private function onStateSwitch():Void
+	function onStateSwitch():Void
 	{
 		if (resetOnStateSwitch)
 		{
@@ -139,7 +139,7 @@ class InputFrontEnd
 		}
 	}
 	
-	private function destroy():Void
+	function destroy():Void
 	{
 		for (input in list)
 		{

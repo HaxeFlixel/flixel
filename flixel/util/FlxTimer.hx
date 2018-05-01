@@ -67,13 +67,13 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Internal tracker for the actual timer counting up.
 	 */
-	private var _timeCounter:Float = 0;
+	var _timeCounter:Float = 0;
 	/**
 	 * Internal tracker for the loops counting up.
 	 */
-	private var _loopsCounter:Int = 0;
+	var _loopsCounter:Int = 0;
 	
-	private var _inManager:Bool = false;
+	var _inManager:Bool = false;
 	
 	/**
 	 * Creates a new timer.
@@ -175,7 +175,7 @@ class FlxTimer implements IFlxDestroyable
 	}
 	
 	@:allow(flixel.util.FlxTimerManager)
-	private function onLoopFinished():Void
+	function onLoopFinished():Void
 	{
 		if (finished)
 			cancel();
@@ -184,27 +184,27 @@ class FlxTimer implements IFlxDestroyable
 			onComplete(this);
 	}
 	
-	private inline function get_timeLeft():Float
+	inline function get_timeLeft():Float
 	{
 		return time - _timeCounter;
 	}
 	
-	private inline function get_elapsedTime():Float
+	inline function get_elapsedTime():Float
 	{
 		return _timeCounter;
 	}
 	
-	private inline function get_loopsLeft():Int
+	inline function get_loopsLeft():Int
 	{
 		return loops - _loopsCounter;
 	}
 	
-	private inline function get_elapsedLoops():Int
+	inline function get_elapsedLoops():Int
 	{
 		return _loopsCounter;
 	}
 	
-	private inline function get_progress():Float
+	inline function get_progress():Float
 	{
 		return (time > 0) ? (_timeCounter / time) : 0;
 	}
@@ -216,7 +216,7 @@ class FlxTimer implements IFlxDestroyable
  */
 class FlxTimerManager extends FlxBasic
 {
-	private var _timers:Array<FlxTimer> = [];
+	var _timers:Array<FlxTimer> = [];
 	
 	/**
 	 * Instantiates a new timer manager.
@@ -283,7 +283,7 @@ class FlxTimerManager extends FlxBasic
 	 * @param	Timer	The FlxTimer you want to add to the manager.
 	 */
 	@:allow(flixel.util.FlxTimer)
-	private function add(Timer:FlxTimer):Void
+	function add(Timer:FlxTimer):Void
 	{
 		_timers.push(Timer);
 	}
@@ -295,7 +295,7 @@ class FlxTimerManager extends FlxBasic
 	 * @param	Timer	The FlxTimer you want to remove from the manager.
 	 */
 	@:allow(flixel.util.FlxTimer)
-	private function remove(Timer:FlxTimer):Void
+	function remove(Timer:FlxTimer):Void
 	{
 		FlxArrayUtil.fastSplice(_timers, Timer);
 	}

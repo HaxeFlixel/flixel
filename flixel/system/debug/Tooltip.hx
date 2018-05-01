@@ -15,8 +15,8 @@ import flixel.util.FlxDestroyUtil;
  */
 class Tooltip
 {
-	private static var _tooltips:Array<TooltipOverlay> = [];
-	private static var _container:Sprite;
+	static var _tooltips:Array<TooltipOverlay> = [];
+	static var _container:Sprite;
 	
 	public static function init(container:Sprite):Void
 	{
@@ -58,38 +58,38 @@ class TooltipOverlay extends Sprite
 	/**
 	 * The background color of all tooltips.
 	 */
-	private static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
+	static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
 	
 	/**
 	 * Alpha applied to the tooltips text.
 	 */
-	private static inline var TEXT_ALPHA:Float = 0.8;
+	static inline var TEXT_ALPHA:Float = 0.8;
 	
 	/**
 	 * How many pixels the tooltip should be away from the target in the x axis.
 	 */
-	private static inline var MARGIN_X:Int = 10;
+	static inline var MARGIN_X:Int = 10;
 	
 	/**
 	 * How many pixels the tooltip should be away from the target in the y axis.
 	 */
-	private static inline var MARGIN_Y:Float = 10;
+	static inline var MARGIN_Y:Float = 10;
 	
 	/**
 	 * Width of the tooltip. Using Sprite.width is super unreliable for some reason!
 	 */
-	private var _width:Int;
+	var _width:Int;
 	/**
 	 * Height of the tooltip. Using Sprite.height is super unreliable for some reason!
 	 */
-	private var _height:Int;
+	var _height:Int;
 	
 	/**
 	 * Main elements
 	 */ 
-	private var _background:Bitmap;
-	private var _shadow:Bitmap;
-	private var _text:TextField;
+	var _background:Bitmap;
+	var _shadow:Bitmap;
+	var _text:TextField;
 	
 	/**
 	 * The element the tooltip is attached to.
@@ -204,7 +204,7 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 */
-	private function updateSize():Void
+	function updateSize():Void
 	{
 		_width = Std.int(maxSize.x <= 0 ? _text.textWidth : Math.abs(maxSize.x)) + 8;
 		_height = Std.int(maxSize.y <= 0 ? _text.textHeight : Math.abs(maxSize.y)) + 8;
@@ -215,7 +215,7 @@ class TooltipOverlay extends Sprite
 		_text.width = _width;
 	}
 	
-	private function ensureOnScreen():Void
+	function ensureOnScreen():Void
 	{
 		// Move the tooltip back to the screen if top-left corner
 		// is out of the screen.
@@ -231,7 +231,7 @@ class TooltipOverlay extends Sprite
 		y += offsetY;
 	}
 	
-	private function handleMouseEvents(event:MouseEvent):Void
+	function handleMouseEvents(event:MouseEvent):Void
 	{
 		if (event.type == MouseEvent.MOUSE_OVER && !visible)
 		{

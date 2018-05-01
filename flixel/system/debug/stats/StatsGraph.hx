@@ -15,9 +15,9 @@ import flixel.util.FlxDestroyUtil;
 #if FLX_DEBUG
 class StatsGraph extends Sprite
 {
-	private static inline var AXIS_COLOR:FlxColor = 0xffffff;
-	private static inline var AXIS_ALPHA:Float = 0.5;
-	private static inline var HISTORY_MAX:Int = 30;
+	static inline var AXIS_COLOR:FlxColor = 0xffffff;
+	static inline var AXIS_ALPHA:Float = 0.5;
+	static inline var HISTORY_MAX:Int = 30;
 	
 	public var minLabel:TextField;
 	public var curLabel:TextField;
@@ -31,12 +31,12 @@ class StatsGraph extends Sprite
 	
 	public var history:Array<Float> = [];
 	
-	private var _axis:Shape;
-	private var _width:Int;
-	private var _height:Int;
-	private var _unit:String;
-	private var _labelWidth:Int;
-	private var _label:String;
+	var _axis:Shape;
+	var _width:Int;
+	var _height:Int;
+	var _unit:String;
+	var _labelWidth:Int;
+	var _label:String;
 	
 	public function new(X:Int, Y:Int, Width:Int, Height:Int, GraphColor:FlxColor, Unit:String, LabelWidth:Int = 45, ?Label:String)
 	{
@@ -74,7 +74,7 @@ class StatsGraph extends Sprite
 	/**
 	 * Redraws the axes of the graph.
 	 */
-	private function drawAxes():Void
+	function drawAxes():Void
 	{
 		var gfx = _axis.graphics;
 		gfx.clear();
@@ -92,7 +92,7 @@ class StatsGraph extends Sprite
 	/**
 	 * Redraws the graph based on the values stored in the history.
 	 */
-	private function drawGraph():Void
+	function drawGraph():Void
 	{
 		var gfx:Graphics = graphics;
 		gfx.clear();
@@ -132,7 +132,7 @@ class StatsGraph extends Sprite
 		drawGraph();
 	}
 	
-	private function formatValue(value:Float):String
+	function formatValue(value:Float):String
 	{
 		return FlxMath.roundDecimal(value, Stats.DECIMALS) + " " + _unit;
 	}

@@ -13,12 +13,12 @@ import flixel.system.debug.console.ConsoleUtil;
 
 class CompletionHandler
 {
-	private static inline var ENTRY_VALUE = "Entry Value";
-	private static inline var ENTRY_TYPE = "Entry Type";
+	static inline var ENTRY_VALUE = "Entry Value";
+	static inline var ENTRY_TYPE = "Entry Type";
 
-	private var completionList:CompletionList;
-	private var input:TextField;
-	private var watchingSelection:Bool = false;
+	var completionList:CompletionList;
+	var input:TextField;
+	var watchingSelection:Bool = false;
 	
 	public function new(completionList:CompletionList, input:TextField) 
 	{
@@ -32,12 +32,12 @@ class CompletionHandler
 		input.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 	}
 	
-	private function getTextUntilCaret():String
+	function getTextUntilCaret():String
 	{
 		return input.text.substring(0, getCaretIndex());
 	}
 
-	private function getCaretIndex():Int
+	function getCaretIndex():Int
 	{
 		#if openfl_legacy
 		// caretIndex is not a thing on legacy...
@@ -47,7 +47,7 @@ class CompletionHandler
 		#end
 	}
 
-	private function onKeyUp(e:KeyboardEvent)
+	function onKeyUp(e:KeyboardEvent)
 	{
 		var text = getTextUntilCaret();
 		
@@ -74,7 +74,7 @@ class CompletionHandler
 		}
 	}
 	
-	private function invokeCompletion(path:String, isPeriod:Bool)
+	function invokeCompletion(path:String, isPeriod:Bool)
 	{
 		#if hscript
 		var items:Array<String> = null;
@@ -106,7 +106,7 @@ class CompletionHandler
 		#end
 	}
 	
-	private function getGlobals():Array<String>
+	function getGlobals():Array<String>
 	{
 		#if hscript
 		return ConsoleUtil.interp.getGlobals().sortAlphabetically();
@@ -115,7 +115,7 @@ class CompletionHandler
 		#end
 	}
 	
-	private function getCharXPosition():Float
+	function getCharXPosition():Float
 	{
 		var pos = 0.0;
 		for (i in 0...getCaretIndex())
@@ -123,13 +123,13 @@ class CompletionHandler
 		return pos;
 	}
 	
-	private function getCompletedText(text:String, selectedItem:String):String
+	function getCompletedText(text:String, selectedItem:String):String
 	{
 		// replace the last occurrence with the selected item
 		return new EReg(getWordAfterDot(text) + "$", "g").replace(text, selectedItem);
 	}
 	
-	private function completed(selectedItem:String)
+	function completed(selectedItem:String)
 	{
 		var textUntilCaret = getTextUntilCaret();
 		var insert = getCompletedText(textUntilCaret, selectedItem);
@@ -137,7 +137,7 @@ class CompletionHandler
 		input.setSelection(insert.length, insert.length);
 	}
 	
-	private function selectionChanged(selectedItem:String)
+	function selectionChanged(selectedItem:String)
 	{
 		#if hscript
 		try
@@ -154,7 +154,7 @@ class CompletionHandler
 		#end
 	}
 
-	private function getReadableType(v:Dynamic):String
+	function getReadableType(v:Dynamic):String
 	{
 		return switch (Type.typeof(v))
 		{
@@ -171,7 +171,7 @@ class CompletionHandler
 		}
 	}
 	
-	private function completionClosed()
+	function completionClosed()
 	{
 		if (!watchingSelection)
 			return;
@@ -181,14 +181,14 @@ class CompletionHandler
 		watchingSelection = false;
 	}
 	
-	private function getPathBeforeDot(text:String):String
+	function getPathBeforeDot(text:String):String
 	{
 		var lastWord = getLastWord(text);
 		var dotIndex = lastWord.lastIndexOf(".");
 		return lastWord.substr(0, dotIndex);
 	}
 	
-	private function getWordAfterDot(text:String):String
+	function getWordAfterDot(text:String):String
 	{
 		var lastWord = getLastWord(text);
 		
@@ -202,7 +202,7 @@ class CompletionHandler
 		return (word == null) ? "" : word; 
 	}
 	
-	private function getLastWord(text:String):String
+	function getLastWord(text:String):String
 	{
 		return ~/([^.a-zA-Z0-9_\[\]"']+)/g.split(text).last();
 	}

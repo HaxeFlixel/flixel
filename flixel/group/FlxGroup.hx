@@ -21,7 +21,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Helper for overlap functions in `FlxObject` and `FlxTilemap`.
 	 */
 	@:noCompletion
-	private static function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
+	static function overlaps(Callback:FlxBasic->Float->Float->Bool->FlxCamera->Bool, 
 		Group:FlxTypedGroup<FlxBasic>, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -46,7 +46,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	@:noCompletion
-	private static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
+	static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
 		if (ObjectOrGroup != null)
@@ -93,15 +93,15 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Internal variables for lazily creating `memberAdded` and `memberRemoved` signals when needed.
 	 */
 	@:noCompletion
-	private var _memberAdded:FlxTypedSignal<T->Void>;
+	var _memberAdded:FlxTypedSignal<T->Void>;
 	@:noCompletion
-	private var _memberRemoved:FlxTypedSignal<T->Void>;
+	var _memberRemoved:FlxTypedSignal<T->Void>;
 	
 	/**
 	 * Internal helper variable for recycling objects a la `FlxEmitter`.
 	 */
 	@:noCompletion
-	private var _marker:Int = 0;
+	var _marker:Int = 0;
 	
 	/**
 	 * @param   MaxSize   Maximum amount of members allowed.
@@ -357,7 +357,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	@:noCompletion
-	private inline function recycleCreateObject(?ObjectClass:Class<T>, ?ObjectFactory:Void->T):T
+	inline function recycleCreateObject(?ObjectClass:Class<T>, ?ObjectFactory:Void->T):T
 	{
 		var object:T = null;
 		
@@ -844,7 +844,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	@:noCompletion
-	private function set_maxSize(Size:Int):Int
+	function set_maxSize(Size:Int):Int
 	{
 		maxSize = Std.int(Math.abs(Size));
 		
@@ -878,7 +878,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return maxSize;
 	}
 	
-	private function get_memberAdded():FlxTypedSignal<T->Void>
+	function get_memberAdded():FlxTypedSignal<T->Void>
 	{
 		if (_memberAdded == null)
 			_memberAdded = new FlxTypedSignal<T->Void>();
@@ -886,7 +886,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return _memberAdded;
 	}
 	
-	private function get_memberRemoved():FlxTypedSignal<T->Void>
+	function get_memberRemoved():FlxTypedSignal<T->Void>
 	{
 		if (_memberRemoved == null)
 			_memberRemoved = new FlxTypedSignal<T->Void>();
@@ -902,10 +902,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
  */
 class FlxTypedGroupIterator<T>
 {
-	private var _groupMembers:Array<T>;
-	private var _filter:T->Bool;
-	private var _cursor:Int;
-	private var _length:Int;
+	var _groupMembers:Array<T>;
+	var _filter:T->Bool;
+	var _cursor:Int;
+	var _length:Int;
 
 	public function new(GroupMembers:Array<T>, ?filter:T->Bool)
 	{

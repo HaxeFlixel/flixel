@@ -15,7 +15,7 @@ class FlxLinkedList implements IFlxDestroyable
 	 * to this collection, and when they get recycled they get removed.
 	 */
 	public static var  _NUM_CACHED_FLX_LIST:Int = 0;
-	private static var _cachedListsHead:FlxLinkedList;
+	static var _cachedListsHead:FlxLinkedList;
 	
 	/**
 	 * Recycle a cached Linked List, or creates a new one if needed.
@@ -67,7 +67,7 @@ class FlxLinkedList implements IFlxDestroyable
 	/**
 	 * Private, use recycle instead.
 	 */
-	private function new() {}
+	function new() {}
 	
 	/**
 	 * Clean up memory.

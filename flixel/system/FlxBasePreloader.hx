@@ -85,12 +85,12 @@ class FlxBasePreloader extends DefaultPreloader
 		+ "Thank you for your interest in this game! Please support the developer by "
 		+ "visiting the following website to play the game:";
 
-	private var _percent:Float = 0;
-	private var _width:Int;
-	private var _height:Int;
-	private var _loaded:Bool = false;
-	private var _urlChecked:Bool = false;
-	private var _startTime:Float;
+	var _percent:Float = 0;
+	var _width:Int;
+	var _height:Int;
+	var _loaded:Bool = false;
+	var _urlChecked:Bool = false;
+	var _startTime:Float;
 
 	/**
 	 * FlxBasePreloader Constructor.
@@ -123,7 +123,7 @@ class FlxBasePreloader extends DefaultPreloader
 	/**
 	 * Override this to create your own preloader objects.
 	 */
-	private function create():Void {}
+	function create():Void {}
 
 	/**
 	 * This function is called externally to initialize the Preloader.
@@ -161,7 +161,7 @@ class FlxBasePreloader extends DefaultPreloader
 	 * This function is triggered on each 'frame'.
 	 * It is highly recommended that you do NOT override this.
 	 */
-	private function onEnterFrame(E:Event):Void
+	function onEnterFrame(E:Event):Void
 	{
 		var time = Date.now().getTime() - _startTime;
 		var min = minDisplayTime * 1000;
@@ -182,14 +182,14 @@ class FlxBasePreloader extends DefaultPreloader
 	 * This function is called when the project has finished loading.
 	 * Override it to remove all of your objects.
 	 */
-	private function destroy():Void {}
+	function destroy():Void {}
 
 	/**
 	 * Override to draw your preloader objects in response to the Percent
 	 *
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void {}
+	function update(Percent:Float):Void {}
 
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded.
@@ -211,7 +211,7 @@ class FlxBasePreloader extends DefaultPreloader
 	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new Bitmap instance is passed as an argument.
 	 * @return  The Bitmap instance that was created.
 	 */
-	private function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
+	function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
 	{
 		#if html5
 		var bmp = new Bitmap();
@@ -235,7 +235,7 @@ class FlxBasePreloader extends DefaultPreloader
 	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new BitmapData instance is passed as an argument.
 	 * @return  The BitmapData instance that was created.
 	 */
-	private function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
+	function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
 	{
 		#if html5
 		return Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, onLoad]);
@@ -249,7 +249,7 @@ class FlxBasePreloader extends DefaultPreloader
 	/**
 	 * Site-locking Functionality
 	 */
-	private function checkSiteLock():Void
+	function checkSiteLock():Void
 	{
 		#if web
 		if (_urlChecked)
@@ -274,14 +274,14 @@ class FlxBasePreloader extends DefaultPreloader
 	 * When overridden, allows the customized creation of the sitelock failure screen.
 	 * @since 4.3.0
 	 */
-	private function createSiteLockFailureScreen():Void
+	function createSiteLockFailureScreen():Void
 	{
 		addChild(createSiteLockFailureBackground(0xffffff, 0xe5e5e5));
 		addChild(createSiteLockFailureIcon(0xe5e5e5, 0.9));
 		addChild(createSiteLockFailureText(30));
 	}
 
-	private function createSiteLockFailureBackground(innerColor:FlxColor, outerColor:FlxColor):Shape
+	function createSiteLockFailureBackground(innerColor:FlxColor, outerColor:FlxColor):Shape
 	{
 		var shape = new Shape();
 		var graphics = shape.graphics;
@@ -299,7 +299,7 @@ class FlxBasePreloader extends DefaultPreloader
 		return shape;
 	}
 
-	private function createSiteLockFailureIcon(color:FlxColor, scale:Float):Shape
+	function createSiteLockFailureIcon(color:FlxColor, scale:Float):Shape
 	{
 		var shape = new Shape();
 		var graphics = shape.graphics;
@@ -327,7 +327,7 @@ class FlxBasePreloader extends DefaultPreloader
 		return shape;
 	}
 
-	private function createSiteLockFailureText(margin:Float):Sprite
+	function createSiteLockFailureText(margin:Float):Sprite
 	{
 		var sprite = new Sprite();
 		var bounds = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
@@ -382,9 +382,9 @@ class FlxBasePreloader extends DefaultPreloader
 	 * When overridden, allows the customization of the text fields in the sitelock failure screen.
 	 * @since 4.3.0
 	 */
-	private function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void {}
+	function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void {}
 
-	private function goToMyURL(?e:MouseEvent):Void
+	function goToMyURL(?e:MouseEvent):Void
 	{
 		//if the chosen URL isn't "local", use FlxG's openURL() function.
 		if (allowedURLs[siteLockURLIndex] != FlxBasePreloader.LOCAL)
@@ -393,7 +393,7 @@ class FlxBasePreloader extends DefaultPreloader
 			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
 	}
 
-	private function isHostUrlAllowed():Bool
+	function isHostUrlAllowed():Bool
 	{
 		if (allowedURLs.length == 0)
 			return true;
@@ -432,7 +432,7 @@ private class DefaultPreloader extends Sprite
 		addEventListener(Event.COMPLETE, onComplete);
 	}
 
-	private function onComplete(event:Event):Void
+	function onComplete(event:Event):Void
 	{
 		event.preventDefault();
 

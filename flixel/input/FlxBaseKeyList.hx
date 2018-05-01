@@ -6,8 +6,8 @@ class FlxBaseKeyList
 {
 	public var ANY(get, never):Bool;
 	
-	private var status:FlxInputState;
-	private var keyManager:FlxKeyManager<Dynamic, Dynamic>;
+	var status:FlxInputState;
+	var keyManager:FlxKeyManager<Dynamic, Dynamic>;
 	
 	public function new(status:FlxInputState, keyManager:FlxKeyManager<Dynamic, Dynamic>)
 	{
@@ -15,12 +15,12 @@ class FlxBaseKeyList
 		this.keyManager = keyManager;
 	}
 	
-	private inline function check(keyCode:Int):Bool
+	inline function check(keyCode:Int):Bool
 	{
 		return keyManager.checkStatus(keyCode, status);
 	}
 	
-	private function get_ANY():Bool
+	function get_ANY():Bool
 	{
 		for (key in keyManager._keyListArray)
 		{

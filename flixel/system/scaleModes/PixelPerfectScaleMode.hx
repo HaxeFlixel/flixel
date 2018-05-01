@@ -8,7 +8,7 @@ import flixel.FlxG;
  */
 class PixelPerfectScaleMode extends BaseScaleMode 
 {
-	override private function updateGameSize(Width:Int, Height:Int) 
+	override function updateGameSize(Width:Int, Height:Int) 
 	{
 		var scaleFactorX:Float = Width / FlxG.width;
 		var scaleFactorY:Float = Height / FlxG.height;

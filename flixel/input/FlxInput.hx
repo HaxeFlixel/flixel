@@ -60,22 +60,22 @@ class FlxInput<T> implements IFlxInput
 		}
 	}
 	
-	private inline function get_justReleased():Bool
+	inline function get_justReleased():Bool
 	{
 		return current == JUST_RELEASED;
 	}
 	
-	private inline function get_released():Bool
+	inline function get_released():Bool
 	{
 		return current == RELEASED || justReleased;
 	}
 	
-	private inline function get_pressed():Bool
+	inline function get_pressed():Bool
 	{
 		return current == PRESSED || justPressed;
 	}
 	
-	private inline function get_justPressed():Bool
+	inline function get_justPressed():Bool
 	{
 		return current == JUST_PRESSED;
 	}

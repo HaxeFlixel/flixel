@@ -35,14 +35,14 @@ import flixel.util.FlxDestroyUtil;
  */
 class FlxMouseEventManager extends FlxBasic
 {
-	private static var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
-	private static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
-	private static var _mouseDownObjects:Array<ObjectMouseData<FlxObject>> = [];
-	private static var _mouseClickedObjects:Array<ObjectMouseData<FlxObject>> = [];
+	static var _registeredObjects:Array<ObjectMouseData<FlxObject>> = [];
+	static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
+	static var _mouseDownObjects:Array<ObjectMouseData<FlxObject>> = [];
+	static var _mouseClickedObjects:Array<ObjectMouseData<FlxObject>> = [];
 	
-	private static var _mouseClickedTime:Int = -1;
+	static var _mouseClickedTime:Int = -1;
 
-	private static var _point:FlxPoint = FlxPoint.get();
+	static var _point:FlxPoint = FlxPoint.get();
 	
 	/**
 	 * The maximum amount of time between two clicks that is considered a double click, in milliseconds.
@@ -386,7 +386,7 @@ class FlxMouseEventManager extends FlxBasic
 	}
 	
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	private static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
+	static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
 		for (basic in Group.members)
 		{
@@ -407,7 +407,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 
-	private static function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<FlxObject>>):ObjectMouseData<T>
+	static function getRegister<T:FlxObject>(Object:T, ?Register:Array<ObjectMouseData<FlxObject>>):ObjectMouseData<T>
 	{
 		if (Register == null)
 		{
@@ -425,7 +425,7 @@ class FlxMouseEventManager extends FlxBasic
 		return null;
 	}
 	
-	private static function sortByMouseChildren(reg1:ObjectMouseData<FlxObject>, reg2:ObjectMouseData<FlxObject>):Int
+	static function sortByMouseChildren(reg1:ObjectMouseData<FlxObject>, reg2:ObjectMouseData<FlxObject>):Int
 	{
 		if (reg1.mouseChildren == reg2.mouseChildren)
 		{
@@ -634,7 +634,7 @@ class FlxMouseEventManager extends FlxBasic
 		_mouseOverObjects = currentOverObjects;
 	}
 	
-	private function clearRegistry():Void
+	function clearRegistry():Void
 	{
 		_mouseOverObjects = null;
 		_mouseDownObjects = null;
@@ -642,7 +642,7 @@ class FlxMouseEventManager extends FlxBasic
 		_registeredObjects = FlxDestroyUtil.destroyArray(_registeredObjects);
 	}
 
-	private function checkOverlap<T:FlxObject>(Register:ObjectMouseData<T>):Bool
+	function checkOverlap<T:FlxObject>(Register:ObjectMouseData<T>):Bool
 	{
 		for (camera in Register.object.cameras)
 		{
@@ -679,7 +679,7 @@ class FlxMouseEventManager extends FlxBasic
 		return false;
 	}
 	
-	private inline function checkOverlapWithPoint<T:FlxObject>(Register:ObjectMouseData<T>, Point:FlxPoint, Camera:FlxCamera):Bool
+	inline function checkOverlapWithPoint<T:FlxObject>(Register:ObjectMouseData<T>, Point:FlxPoint, Camera:FlxCamera):Bool
 	{
 		if (Register.pixelPerfect && (Register.sprite != null))
 		{
@@ -691,7 +691,7 @@ class FlxMouseEventManager extends FlxBasic
 		}
 	}
 	
-	private inline function checkPixelPerfectOverlap(Point:FlxPoint, Sprite:FlxSprite, Camera:FlxCamera):Bool
+	inline function checkPixelPerfectOverlap(Point:FlxPoint, Sprite:FlxSprite, Camera:FlxCamera):Bool
 	{
 		if (Sprite.angle != 0)
 		{

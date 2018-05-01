@@ -7,7 +7,7 @@ import sys.FileSystem;
 using flixel.util.FlxArrayUtil;
 using StringTools;
 
-class FlxAssetPaths 
+class FlxAssetPaths
 {
 	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
 	{
@@ -32,7 +32,7 @@ class FlxAssetPaths
 		return fields;
 	}
 	
-	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
+	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;

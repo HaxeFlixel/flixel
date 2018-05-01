@@ -33,11 +33,11 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * Internal storage of input keys as an array, for efficient iteration.
 	 */
 	@:allow(flixel.input.FlxBaseKeyList)
-	private var _keyListArray:Array<FlxInput<Key>> = [];
+	var _keyListArray:Array<FlxInput<Key>> = [];
 	/**
 	 * Internal storage of input keys as a map, for efficient indexing.
 	 */
-	private var _keyListMap:Map<Int, FlxInput<Key>> = new Map<Int, FlxInput<Key>>();
+	var _keyListMap:Map<Int, FlxInput<Key>> = new Map<Int, FlxInput<Key>>();
 	
 	/**
 	 * Check to see if at least one key from an array of keys is pressed.
@@ -193,7 +193,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 	}
 	
-	private function new(createKeyList:FlxInputState->FlxKeyManager<Dynamic, Dynamic>->KeyList)
+	function new(createKeyList:FlxInputState->FlxKeyManager<Dynamic, Dynamic>->KeyList)
 	{
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -206,7 +206,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * Updates the key states (for tracking just pressed, just released, etc).
 	 */
-	private function update():Void
+	function update():Void
 	{
 		for (key in _keyListArray)
 		{
@@ -224,7 +224,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * @param	State		The key state to check for
 	 * @return	Whether at least one of the keys has the specified status
 	 */
-	private function checkKeyArrayState(KeyArray:Array<Key>, State:FlxInputState):Bool
+	function checkKeyArrayState(KeyArray:Array<Key>, State:FlxInputState):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -250,7 +250,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * Event handler so FlxGame can toggle keys.
 	 */
-	private function onKeyUp(event:KeyboardEvent):Void
+	function onKeyUp(event:KeyboardEvent):Void
 	{
 		var c:Int = resolveKeyCode(event);
 		handlePreventDefaultKeys(c, event);
@@ -264,7 +264,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * Internal event handler for input and focus.
 	 */
-	private function onKeyDown(event:KeyboardEvent):Void
+	function onKeyDown(event:KeyboardEvent):Void
 	{
 		var c:Int = resolveKeyCode(event);
 		handlePreventDefaultKeys(c, event);
@@ -275,7 +275,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 	}
 	
-	private function handlePreventDefaultKeys(keyCode:Int, event:KeyboardEvent):Void
+	function handlePreventDefaultKeys(keyCode:Int, event:KeyboardEvent):Void
 	{
 		var key:FlxInput<Key> = getKey(keyCode);
 		if (key != null && preventDefaultKeys != null && preventDefaultKeys.indexOf(key.ID) != -1)
@@ -292,7 +292,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * A Helper function to check whether an array of keycodes contains 
 	 * a certain key safely (returns false if the array is null).
 	 */ 
-	private function inKeyArray(KeyArray:Array<Key>, Event:KeyboardEvent):Bool
+	function inKeyArray(KeyArray:Array<Key>, Event:KeyboardEvent):Bool
 	{
 		if (KeyArray == null)
 		{
@@ -312,7 +312,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		return false;
 	}
 	
-	private function resolveKeyCode(e:KeyboardEvent):Int
+	function resolveKeyCode(e:KeyboardEvent):Int
 	{
 		return e.keyCode;
 	}
@@ -320,7 +320,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * A helper function to update the key states based on a keycode provided.
 	 */
-	private inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
+	inline function updateKeyStates(KeyCode:Int, Down:Bool):Void
 	{
 		var key:FlxInput<Key> = getKey(KeyCode);
 		
@@ -337,9 +337,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		}
 	}
 	
-	private inline function onFocus():Void {}
+	inline function onFocus():Void {}
 
-	private inline function onFocusLost():Void
+	inline function onFocusLost():Void
 	{
 		reset();
 	}
@@ -347,7 +347,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	/**
 	 * Return a key from the key list, if found. Will return null if not found.
 	 */
-	private inline function getKey(KeyCode:Int):FlxInput<Key>
+	inline function getKey(KeyCode:Int):FlxInput<Key>
 	{
 		return _keyListMap.get(KeyCode);
 	}

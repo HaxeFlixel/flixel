@@ -48,5 +48,5 @@ class BitmapLogFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 }

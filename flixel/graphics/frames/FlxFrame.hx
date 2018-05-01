@@ -18,10 +18,10 @@ import haxe.ds.ArraySort;
  */
 class FlxFrame implements IFlxDestroyable
 {
-	private var point1:Point = new Point();
-	private var point2:Point = new Point();
-	private var rect:Rectangle = new Rectangle();
-	private var matrix:FlxMatrix = new FlxMatrix();
+	var point1:Point = new Point();
+	var point2:Point = new Point();
+	var rect:Rectangle = new Rectangle();
+	var matrix:FlxMatrix = new FlxMatrix();
 	
 	/**
 	 * Sorts an array of `FlxFrame` objects by their name, e.g.
@@ -85,13 +85,13 @@ class FlxFrame implements IFlxDestroyable
 	 */
 	public var type:FlxFrameType;
 	
-	private var tileMatrix:Vector<Float>;
+	var tileMatrix:Vector<Float>;
 	
-	private var blitMatrix:Vector<Float>;
+	var blitMatrix:Vector<Float>;
 	
 	@:allow(flixel.graphics.FlxGraphic)
 	@:allow(flixel.graphics.frames.FlxFramesCollection)
-	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false,
+	function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false,
 		flipY:Bool = false)
 	{
 		this.parent = parent;
@@ -111,7 +111,7 @@ class FlxFrame implements IFlxDestroyable
 	
 	@:allow(flixel.graphics.frames.FlxFramesCollection)
 	@:allow(flixel.graphics.frames.FlxBitmapFont)
-	private function cacheFrameMatrix():Void
+	function cacheFrameMatrix():Void
 	{
 		prepareBlitMatrix(matrix, true);
 		blitMatrix[0] = matrix.a;
@@ -141,7 +141,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   blit   Whether specified matrix will be used for blitting or for tile rendering.
 	 * @return  Transformed matrix.
 	 */
-	private inline function prepareBlitMatrix(mat:FlxMatrix, blit:Bool = true):FlxMatrix
+	inline function prepareBlitMatrix(mat:FlxMatrix, blit:Bool = true):FlxMatrix
 	{
 		mat.identity();
 		
@@ -173,7 +173,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   flipY      Do we need to flip frame vertically
 	 * @return  Transformed matrix with applied rotation and flipping
 	 */
-	private inline function rotateAndFlip(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0,
+	inline function rotateAndFlip(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0,
 		flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
 		var w:Int = Std.int(sourceSize.x);
@@ -223,7 +223,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   flipY      Do we need to flip frame vertically.
 	 * @return  Transformed matrix which can be used for frame painting.
 	 */
-	private function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0,
+	function prepareTransformedBlitMatrix(mat:FlxMatrix, rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0,
 		flipX:Bool = false, flipY:Bool = false):FlxMatrix
 	{
 		mat = fillBlitMatrix(mat);
@@ -264,7 +264,7 @@ class FlxFrame implements IFlxDestroyable
 		return rotateAndFlip(mat, rotation, doFlipX, doFlipY);
 	}
 	
-	private inline function fillBlitMatrix(mat:FlxMatrix):FlxMatrix
+	inline function fillBlitMatrix(mat:FlxMatrix):FlxMatrix
 	{
 		mat.a = blitMatrix[0];
 		mat.b = blitMatrix[1];
@@ -375,7 +375,7 @@ class FlxFrame implements IFlxDestroyable
 	 *                              equal to frame's original size (`sourceSize`).
 	 * @return  Prepared `BitmapData` for further frame blitting. Output `BitmapData` could be a different object.
 	 */
-	private inline function checkInputBitmap(?bmd:BitmapData, ?point:Point,
+	inline function checkInputBitmap(?bmd:BitmapData, ?point:Point,
 		rotation:FlxFrameAngle = FlxFrameAngle.ANGLE_0, mergeAlpha:Bool = false,
 		disposeIfNotEqual:Bool = false):BitmapData
 	{
@@ -412,7 +412,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param   mat   Frame transformation matrix (rotated / flipped / translated).
 	 * @return  Clipping rectangle which will be used for frame blitting.
 	 */
-	private inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
+	inline function getDrawFrameRect(mat:FlxMatrix):Rectangle
 	{
 		var p1:FlxPoint = FlxPoint.weak(frame.x, frame.y);
 		var p2:FlxPoint = FlxPoint.weak(frame.right, frame.bottom);
@@ -665,7 +665,7 @@ class FlxFrame implements IFlxDestroyable
 			LabelValuePair.weak("name", name)]);
 	}
 	
-	private function set_frame(value:FlxRect):FlxRect
+	function set_frame(value:FlxRect):FlxRect
 	{
 		if (value != null)
 		{

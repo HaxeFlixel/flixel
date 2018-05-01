@@ -18,17 +18,17 @@ class LinearPath extends Motion
 	public var points:Array<FlxPoint>;
 	
 	// Path information.
-	private var _pointD:Array<Float>;
-	private var _pointT:Array<Float>;
-	private var _speed:Float = 0;
-	private var _index:Int = 0;
+	var _pointD:Array<Float>;
+	var _pointT:Array<Float>;
+	var _speed:Float = 0;
+	var _index:Int = 0;
 
 	// Line information.
-	private var _last:FlxPoint;
-	private var _prevPoint:FlxPoint;
-	private var _nextPoint:FlxPoint;
+	var _last:FlxPoint;
+	var _prevPoint:FlxPoint;
+	var _nextPoint:FlxPoint;
 	
-	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
+	function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
 		super(Options, manager);
 		
@@ -102,7 +102,7 @@ class LinearPath extends Motion
 		return this;
 	}
 
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		var td:Float;
@@ -164,7 +164,7 @@ class LinearPath extends Motion
 	/**
 	 * Updates the path, preparing it for motion. 
 	 */
-	private function updatePath():Void
+	function updatePath():Void
 	{
 		if (points.length < 2)	throw "A LinearPath must have at least 2 points to operate.";
 		if (_pointD.length == _pointT.length) return;

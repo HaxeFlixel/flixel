@@ -12,12 +12,12 @@ import flixel.util.FlxTimer;
  */
 class FlxFlicker implements IFlxDestroyable
 {
-	private static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
+	static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker);
 	
 	/**
 	 * Internal map for looking up which objects are currently flickering and getting their flicker data.
 	 */
-	private static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
+	static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
 	
 	/**
 	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
@@ -133,7 +133,7 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Starts flickering behavior.
 	 */
-	private function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool,
+	function start(Object:FlxObject, Duration:Float, Interval:Float, EndVisibility:Bool,
 		?CompletionCallback:FlxFlicker->Void, ?ProgressCallback:FlxFlicker->Void):Void
 	{
 		object = Object;
@@ -158,7 +158,7 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Unbinds the object from flicker and releases it into pool for reuse.
 	 */
-	private function release():Void
+	function release():Void
 	{
 		_boundObjects.remove(object);
 		_pool.put(this);
@@ -167,7 +167,7 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Just a helper function for flicker() to update object's visibility.
 	 */
-	private function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(Timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
 		
@@ -191,5 +191,5 @@ class FlxFlicker implements IFlxDestroyable
 	 * Internal constructor. Use static methods.
 	 */
 	@:keep
-	private function new() {}
+	function new() {}
 }

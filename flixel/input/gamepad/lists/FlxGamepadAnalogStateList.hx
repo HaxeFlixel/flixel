@@ -10,8 +10,8 @@ import flixel.input.gamepad.FlxGamepadInputID;
 @:keep
 class FlxGamepadAnalogStateList
 {
-	private var gamepad:FlxGamepad;
-	private var status:FlxInputState;
+	var gamepad:FlxGamepad;
+	var status:FlxInputState;
 	
 	public var LEFT_STICK     (get, never):Bool; inline function get_LEFT_STICK()    return checkXY(FlxGamepadInputID.LEFT_ANALOG_STICK);
 	public var LEFT_STICK_X   (get, never):Bool; inline function get_LEFT_STICK_X()  return checkX(FlxGamepadInputID.LEFT_ANALOG_STICK);
@@ -29,7 +29,7 @@ class FlxGamepadAnalogStateList
 	/**
 	 * Checks if the entire stick itself is in the given state
 	 */
-	private function checkXY(id:FlxGamepadInputID):Bool
+	function checkXY(id:FlxGamepadInputID):Bool
 	{
 		var stick = gamepad.mapping.getAnalogStick(id);
 		if (stick == null)
@@ -73,7 +73,7 @@ class FlxGamepadAnalogStateList
 		return false;
 	}
 	
-	private inline function checkX(id:FlxGamepadInputID):Bool
+	inline function checkX(id:FlxGamepadInputID):Bool
 	{
 		var stick = gamepad.mapping.getAnalogStick(id);
 		if (stick == null)
@@ -81,7 +81,7 @@ class FlxGamepadAnalogStateList
 		return checkRaw(stick.x, status);
 	}
 	
-	private inline function checkY(id:FlxGamepadInputID):Bool
+	inline function checkY(id:FlxGamepadInputID):Bool
 	{
 		var stick = gamepad.mapping.getAnalogStick(id);
 		if (stick == null)
@@ -89,7 +89,7 @@ class FlxGamepadAnalogStateList
 		return checkRaw(stick.y, status);
 	}
 	
-	private inline function checkRaw(RawID:Int, Status:FlxInputState):Bool
+	inline function checkRaw(RawID:Int, Status:FlxInputState):Bool
 	{
 		#if FLX_JOYSTICK_API
 		//in legacy this is the axis index and not the RawID, 

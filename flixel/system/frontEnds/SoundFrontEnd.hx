@@ -273,7 +273,7 @@ class SoundFrontEnd
 		}
 	}
 
-	private function destroySound(sound:FlxSound):Void
+	function destroySound(sound:FlxSound):Void
 	{
 		defaultMusicGroup.remove(sound);
 		defaultSoundGroup.remove(sound);
@@ -318,7 +318,7 @@ class SoundFrontEnd
 		#end
 	}
 	
-	private function new()
+	function new()
 	{
 		loadSavedPrefs();
 	}
@@ -327,7 +327,7 @@ class SoundFrontEnd
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
 	@:allow(flixel.FlxGame)
-	private function update(elapsed:Float):Void
+	function update(elapsed:Float):Void
 	{
 		if (music != null && music.active)
 			music.update(elapsed);
@@ -346,7 +346,7 @@ class SoundFrontEnd
 	}
 	
 	@:allow(flixel.FlxGame)
-	private function onFocusLost():Void
+	function onFocusLost():Void
 	{
 		if (music != null)
 		{
@@ -363,7 +363,7 @@ class SoundFrontEnd
 	}
 	
 	@:allow(flixel.FlxGame)
-	private function onFocus():Void
+	function onFocus():Void
 	{
 		if (music != null)
 		{
@@ -382,7 +382,7 @@ class SoundFrontEnd
 	/**
 	 * Loads saved sound preferences if they exist.
 	 */
-	private function loadSavedPrefs():Void
+	function loadSavedPrefs():Void
 	{
 		if (FlxG.save.data.volume != null)
 		{
@@ -395,7 +395,7 @@ class SoundFrontEnd
 		}
 	}
 	
-	private function set_volume(Volume:Float):Float
+	function set_volume(Volume:Float):Float
 	{
 		Volume = FlxMath.bound(Volume, 0, 1);
 		

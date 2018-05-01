@@ -259,12 +259,12 @@ class FlxAngle
 		return p;
 	}
 	
-	private static inline function get_TO_DEG():Float
+	static inline function get_TO_DEG():Float
 	{
 		return 180 / Math.PI;
 	}
 	
-	private static inline function get_TO_RAD():Float
+	static inline function get_TO_RAD():Float
 	{
 		return Math.PI / 180;
 	}

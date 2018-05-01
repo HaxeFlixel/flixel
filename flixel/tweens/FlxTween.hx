@@ -71,7 +71,7 @@ class FlxTween implements IFlxDestroyable
 	 * conjunction with a TweenFunction requires more setup, but is faster than VarTween because it doesn't use Reflection.
 	 * 
 	 * ```haxe
-	 * private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
+	 * function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
 	 * FlxTween.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * ```
 	 * 
@@ -301,17 +301,17 @@ class FlxTween implements IFlxDestroyable
 	 */
 	public var loopDelay(default, set):Float = 0;
 	
-	private var _secondsSinceStart:Float = 0;
-	private var _delayToUse:Float = 0;
-	private var _running:Bool = false;
-	private var _waitingForRestart:Bool = false;
-	private var _chainedTweens:Array<FlxTween>;
-	private var _nextTweenInChain:FlxTween;
+	var _secondsSinceStart:Float = 0;
+	var _delayToUse:Float = 0;
+	var _running:Bool = false;
+	var _waitingForRestart:Bool = false;
+	var _chainedTweens:Array<FlxTween>;
+	var _nextTweenInChain:FlxTween;
 	
 	/**
 	 * This function is called when tween is created, or recycled.
 	 */
-	private function new(Options:TweenOptions, ?manager:FlxTweenManager):Void
+	function new(Options:TweenOptions, ?manager:FlxTweenManager):Void
 	{
 		Options = resolveTweenOptions(Options);
 		
@@ -324,7 +324,7 @@ class FlxTween implements IFlxDestroyable
 		this.manager = manager != null ? manager : globalManager;
 	}
 	
-	private function resolveTweenOptions(Options:TweenOptions):TweenOptions
+	function resolveTweenOptions(Options:TweenOptions):TweenOptions
 	{
 		if (Options == null)
 			Options = { type : ONESHOT };
@@ -363,7 +363,7 @@ class FlxTween implements IFlxDestroyable
 		return addChainedTween(FlxTween.num(0, 0, delay));
 	}
 	
-	private function addChainedTween(tween:FlxTween):FlxTween
+	function addChainedTween(tween:FlxTween):FlxTween
 	{
 		tween.setVarsOnEnd();
 		tween.manager.remove(tween, false);
@@ -375,7 +375,7 @@ class FlxTween implements IFlxDestroyable
 		return this;
 	}
 	
-	private function update(elapsed:Float):Void
+	function update(elapsed:Float):Void
 	{
 		_secondsSinceStart += elapsed;
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
@@ -466,7 +466,7 @@ class FlxTween implements IFlxDestroyable
 		cancel();
 	}
 	
-	private function finish():Void
+	function finish():Void
 	{
 		executions++;
 		
@@ -512,20 +512,20 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Called when the tween ends, either via finish() or cancel().
 	 */
-	private function onEnd():Void
+	function onEnd():Void
 	{
 		setVarsOnEnd();
 		processTweenChain();
 	}
 	
-	private function setVarsOnEnd():Void
+	function setVarsOnEnd():Void
 	{
 		active = false;
 		_running = false;
 		finished = true;
 	}
 	
-	private function processTweenChain():Void
+	function processTweenChain():Void
 	{
 		if (_chainedTweens == null || _chainedTweens.length <= 0)
 			return;
@@ -537,7 +537,7 @@ class FlxTween implements IFlxDestroyable
 		_chainedTweens = null;
 	}
 	
-	private function doNextTween(tween:FlxTween):Void
+	function doNextTween(tween:FlxTween):Void
 	{
 		if (!tween.active)
 		{
@@ -548,7 +548,7 @@ class FlxTween implements IFlxDestroyable
 		tween.setChain(_chainedTweens);
 	}
 	
-	private function setChain(previousChain:Array<FlxTween>):Void
+	function setChain(previousChain:Array<FlxTween>):Void
 	{
 		if (previousChain == null)
 			return;
@@ -563,7 +563,7 @@ class FlxTween implements IFlxDestroyable
 	 * In case the tween.active was set to false in onComplete(),
 	 * the tween should not be restarted yet.
 	 */
-	private function restart():Void
+	function restart():Void
 	{
 		if (active)
 		{
@@ -581,14 +581,14 @@ class FlxTween implements IFlxDestroyable
 	 * @param	startDelay	Seconds to wait until starting this tween, 0 by default.
 	 * @param	loopDelay	Seconds to wait between loops of this tween, 0 by default.
 	 */
-	private function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):FlxTween
+	function setDelays(?StartDelay:Null<Float>, ?LoopDelay:Null<Float>):FlxTween
 	{
 		startDelay = (StartDelay != null) ? StartDelay : 0;
 		loopDelay = (LoopDelay != null) ? LoopDelay : 0;
 		return this;
 	}
 	
-	private function set_startDelay(value:Float):Float
+	function set_startDelay(value:Float):Float
 	{
 		var dly:Float = Math.abs(value);
 		if (executions == 0)
@@ -599,7 +599,7 @@ class FlxTween implements IFlxDestroyable
 		return startDelay = dly;
 	}
 	
-	private function set_loopDelay(value:Null<Float>):Float
+	function set_loopDelay(value:Null<Float>):Float
 	{
 		var dly:Float = Math.abs(value);
 		if (executions > 0)
@@ -610,17 +610,17 @@ class FlxTween implements IFlxDestroyable
 		return loopDelay = dly;
 	}
 	
-	private inline function get_percent():Float 
+	inline function get_percent():Float 
 	{ 
 		return Math.max((_secondsSinceStart - _delayToUse), 0) / duration; 
 	}
 	
-	private function set_percent(value:Float):Float
+	function set_percent(value:Float):Float
 	{ 
 		return _secondsSinceStart = duration * value + _delayToUse;
 	}
 	
-	private function set_type(value:Int):Int
+	function set_type(value:Int):Int
 	{
 		if (value == 0) 
 		{
@@ -635,7 +635,7 @@ class FlxTween implements IFlxDestroyable
 		return type = value;
 	}
 	
-	private function set_active(active:Bool):Bool
+	function set_active(active:Bool):Bool
 	{
 		this.active = active;
 		
@@ -691,7 +691,7 @@ class FlxTweenManager extends FlxBasic
 	/**
 	 * A list of all FlxTween objects.
 	 */
-	private var _tweens(default, null):Array<FlxTween> = [];
+	var _tweens(default, null):Array<FlxTween> = [];
 	
 	public function new():Void
 	{
@@ -726,7 +726,7 @@ class FlxTweenManager extends FlxBasic
 	 * conjunction with a TweenFunction requires more setup, but is faster than VarTween because it doesn't use Reflection.
 	 * 
 	 * ```haxe
-	 * private function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
+	 * function tweenFunction(s:FlxSprite, v:Float) { s.alpha = v; }
 	 * FlxTween.num(1, 0, 2.0, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: FlxTween.ONESHOT }, tweenFunction.bind(mySprite));
 	 * ```
 	 * 
@@ -1011,7 +1011,7 @@ class FlxTweenManager extends FlxBasic
 	 */
 	@:generic
 	@:allow(flixel.tweens.FlxTween)
-	private function add<T:FlxTween>(Tween:T, Start:Bool = false):T
+	function add<T:FlxTween>(Tween:T, Start:Bool = false):T
 	{
 		// Don't add a null object
 		if (Tween == null)
@@ -1032,7 +1032,7 @@ class FlxTweenManager extends FlxBasic
 	 * @return	The removed FlxTween object.
 	 */
 	@:allow(flixel.tweens.FlxTween)
-	private function remove(Tween:FlxTween, Destroy:Bool = true):FlxTween
+	function remove(Tween:FlxTween, Destroy:Bool = true):FlxTween
 	{
 		if (Tween == null)
 			return null;

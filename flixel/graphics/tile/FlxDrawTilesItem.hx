@@ -74,7 +74,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		#end
 	}
 	
-	private inline function setNext(f:Float):Void
+	inline function setNext(f:Float):Void
 	{
 		drawData[position++] = f;
 	}
@@ -106,7 +106,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		super.render(camera);
 	}
 	
-	private function get_numTiles():Int
+	function get_numTiles():Int
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
@@ -119,12 +119,12 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		return Std.int(position / elementsPerTile);
 	}
 	
-	override private function get_numVertices():Int
+	override function get_numVertices():Int
 	{
 		return 4 * numTiles;
 	}
 	
-	override private function get_numTriangles():Int
+	override function get_numTriangles():Int
 	{
 		return 2 * numTiles;
 	}

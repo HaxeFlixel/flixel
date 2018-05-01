@@ -10,11 +10,11 @@ class FlxVector extends FlxPoint
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
 	
-	private static var _pool = new FlxPool<FlxVector>(FlxVector);
+	static var _pool = new FlxPool<FlxVector>(FlxVector);
 	
-	private static var _vector1:FlxVector = new FlxVector();
-	private static var _vector2:FlxVector = new FlxVector();
-	private static var _vector3:FlxVector = new FlxVector();
+	static var _vector1:FlxVector = new FlxVector();
+	static var _vector2:FlxVector = new FlxVector();
+	static var _vector3:FlxVector = new FlxVector();
 	
 	/**
 	 * Recycle or create new FlxVector.
@@ -573,26 +573,26 @@ class FlxVector extends FlxPoint
 		return vec;
 	}
 	
-	private inline function get_dx():Float
+	inline function get_dx():Float
 	{
 		if (isZero()) return 0;
 		
 		return x / length;
 	}
 	
-	private inline function get_dy():Float
+	inline function get_dy():Float
 	{
 		if (isZero()) return 0;
 		
 		return y / length;
 	}
 	
-	private inline function get_length():Float
+	inline function get_length():Float
 	{
 		return Math.sqrt(lengthSquared);
 	}
 	
-	private inline function set_length(l:Float):Float
+	inline function set_length(l:Float):Float
 	{
 		if (!isZero())
 		{
@@ -603,30 +603,30 @@ class FlxVector extends FlxPoint
 		return l;
 	}
 	
-	private inline function get_lengthSquared():Float
+	inline function get_lengthSquared():Float
 	{
 		return x * x + y * y;
 	}
 	
-	private inline function get_degrees():Float
+	inline function get_degrees():Float
 	{
 		return radians * FlxAngle.TO_DEG;
 	}
 	
-	private inline function set_degrees(degs:Float):Float
+	inline function set_degrees(degs:Float):Float
 	{
 		radians = degs * FlxAngle.TO_RAD;
 		return degs;
 	}
 	
-	private function get_radians():Float
+	function get_radians():Float
 	{
 		if (isZero()) return 0;
 		
 		return Math.atan2(y, x);
 	}
 	
-	private inline function set_radians(rads:Float):Float
+	inline function set_radians(rads:Float):Float
 	{
 		var len:Float = length;
 		
@@ -635,22 +635,22 @@ class FlxVector extends FlxPoint
 		return rads;
 	}
 	
-	private inline function get_rx():Float
+	inline function get_rx():Float
 	{
 		return -y;
 	}
 	
-	private inline function get_ry():Float
+	inline function get_ry():Float
 	{
 		return x;
 	}
 	
-	private inline function get_lx():Float
+	inline function get_lx():Float
 	{
 		return y;
 	}
 	
-	private inline function get_ly():Float
+	inline function get_ly():Float
 	{
 		return -x;
 	}

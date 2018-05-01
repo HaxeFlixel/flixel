@@ -15,8 +15,8 @@ class AngleTween extends FlxTween
 	 */
 	public var sprite(default, null):FlxSprite;
 	
-	private var _start:Float;
-	private var _range:Float;
+	var _start:Float;
+	var _range:Float;
 	
 	/**
 	 * Clean up references
@@ -48,7 +48,7 @@ class AngleTween extends FlxTween
 		return this;
 	}
 	
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		angle = _start + _range * scale;

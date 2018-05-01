@@ -517,7 +517,7 @@ class FlxG
 	}
 	
 	#if FLX_POST_PROCESS
-	private static function chainPostProcesses():Void
+	static function chainPostProcesses():Void
 	{
 		var postProcesses = game.postProcesses;
 		
@@ -552,7 +552,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
-	private static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
 	{
 		game = Game;
 		width = Std.int(Math.abs(Width));
@@ -600,7 +600,7 @@ class FlxG
 		#end
 	}
 	
-	private static function initRenderMethod():Void
+	static function initRenderMethod():Void
 	{
 		renderMethod = BLITTING;
 		
@@ -640,7 +640,7 @@ class FlxG
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
 	 */
 	@:allow(flixel.FlxGame)
-	private static function reset():Void
+	static function reset():Void
 	{
 		random.resetInitialSeed();
 		
@@ -658,7 +658,7 @@ class FlxG
 		worldDivisions = 6;
 	}
 	
-	private static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
+	static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
 	{
 		scaleMode = ScaleMode;
 		game.onResize(null);
@@ -666,7 +666,7 @@ class FlxG
 	}
 	
 	#if FLX_MOUSE
-	private static function set_mouse(NewMouse:FlxMouse):FlxMouse
+	static function set_mouse(NewMouse:FlxMouse):FlxMouse
 	{
 		if (mouse == null) // if no mouse, just add it
 		{
@@ -685,7 +685,7 @@ class FlxG
 	}
 	#end
 	
-	private static function set_updateFramerate(Framerate:Int):Int
+	static function set_updateFramerate(Framerate:Int):Int
 	{
 		if (Framerate < drawFramerate)
 			log.warn("FlxG.framerate: the game's framerate shouldn't be smaller than the flash framerate," +
@@ -702,7 +702,7 @@ class FlxG
 		return Framerate;
 	}
 	
-	private static function set_drawFramerate(Framerate:Int):Int
+	static function set_drawFramerate(Framerate:Int):Int
 	{
 		if (Framerate > updateFramerate)
 			log.warn("FlxG.drawFramerate: the update framerate shouldn't be smaller than the draw framerate," +
@@ -721,29 +721,29 @@ class FlxG
 		return Framerate;
 	}
 	
-	private static function get_fullscreen():Bool
+	static function get_fullscreen():Bool
 	{
 		return stage.displayState == StageDisplayState.FULL_SCREEN
 			|| stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	}
 	
-	private static function set_fullscreen(Value:Bool):Bool
+	static function set_fullscreen(Value:Bool):Bool
 	{
 		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
 		return Value;
 	}
 	
-	private static inline function get_stage():Stage
+	static inline function get_stage():Stage
 	{
 		return Lib.current.stage;
 	}
 	
-	private static inline function get_state():FlxState
+	static inline function get_state():FlxState
 	{
 		return game._state;
 	}
 	
-	private static inline function get_onMobile():Bool
+	static inline function get_onMobile():Bool
 	{
 		return
 			#if js

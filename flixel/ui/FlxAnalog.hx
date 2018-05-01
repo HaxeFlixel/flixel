@@ -46,47 +46,47 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Used with public variable status, means not highlighted or pressed.
 	 */ 
-	private static inline var NORMAL:Int = 0;
+	static inline var NORMAL:Int = 0;
 	/**
 	 * Used with public variable status, means highlighted (usually from mouse over).
 	 */ 
-	private static inline var HIGHLIGHT:Int = 1;
+	static inline var HIGHLIGHT:Int = 1;
 	/**
 	 * Used with public variable status, means pressed (usually from mouse click).
 	 */ 
-	private static inline var PRESSED:Int = 2;
+	static inline var PRESSED:Int = 2;
 	
 	/**
 	 * A list of analogs that are currently active.
 	 */ 
-	private static var _analogs:Array<FlxAnalog> = [];
+	static var _analogs:Array<FlxAnalog> = [];
 	
 	#if FLX_TOUCH
 	/**
 	 * The current pointer that's active on the analog.
 	 */
-	private var _currentTouch:FlxTouch;
+	var _currentTouch:FlxTouch;
 	/**
 	 * Helper array for checking touches
 	 */ 
-	private var _tempTouches:Array<FlxTouch> = [];
+	var _tempTouches:Array<FlxTouch> = [];
 	#end
 	
 	/**
 	 * The area which the joystick will react.
 	 */
-	private var _zone:FlxRect = FlxRect.get();
+	var _zone:FlxRect = FlxRect.get();
 	
 	/**
 	 * The radius in which the stick can move.
 	 */ 
-	private var _radius:Float = 0;
-	private var _direction:Float = 0;
-	private var _amount:Float = 0;
+	var _radius:Float = 0;
+	var _direction:Float = 0;
+	var _amount:Float = 0;
 	/**
 	 * The speed of easing when the thumb is released.
 	 */ 
-	private var _ease:Float;
+	var _ease:Float;
 	
 	/**
 	 * Create a virtual thumbstick - useful for input on mobile devices.
@@ -122,7 +122,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Creates the background of the analog stick.
 	 */
-	private function createBase(?Graphic:FlxGraphicAsset):Void
+	function createBase(?Graphic:FlxGraphicAsset):Void
 	{
 		base = new FlxSprite(0, 0, Graphic);
 		if (Graphic == null)
@@ -146,7 +146,7 @@ class FlxAnalog extends FlxSpriteGroup
 	/**
 	 * Creates the thumb of the analog stick.
 	 */
-	private function createThumb(?Graphic:FlxGraphicAsset):Void 
+	function createThumb(?Graphic:FlxGraphicAsset):Void 
 	{
 		thumb = new FlxSprite(0, 0, Graphic);
 		if (Graphic == null)
@@ -169,7 +169,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 * Creates the touch zone. It's based on the size of the background.
 	 * The thumb will react when the mouse is in the zone.
 	 */
-	private function createZone():Void
+	function createZone():Void
 	{
 		if (base != null && _radius == 0)
 			_radius = base.width * 0.5;
@@ -279,7 +279,7 @@ class FlxAnalog extends FlxSpriteGroup
 		super.update(elapsed);
 	}
 	
-	private function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
+	function updateAnalog(TouchPoint:FlxPoint, Pressed:Bool, JustPressed:Bool, JustReleased:Bool, ?Touch:FlxTouch):Bool
 	{
 		var offAll:Bool = true;
 		
@@ -382,7 +382,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var pressed(get, never):Bool;
 	
-	private inline function get_pressed():Bool
+	inline function get_pressed():Bool
 	{
 		return status == PRESSED;
 	}
@@ -392,7 +392,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justPressed(get, never):Bool;
 	
-	private function get_justPressed():Bool
+	function get_justPressed():Bool
 	{
 		#if FLX_MOUSE
 		return FlxG.mouse.justPressed && status == PRESSED;
@@ -413,7 +413,7 @@ class FlxAnalog extends FlxSpriteGroup
 	 */
 	public var justReleased(get, never):Bool;
 	
-	private function get_justReleased():Bool
+	function get_justReleased():Bool
 	{
 		#if FLX_MOUSE
 		return FlxG.mouse.justReleased && status == HIGHLIGHT;
@@ -429,7 +429,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return false;
 	}
 	
-	override private function set_x(X:Float):Float
+	override function set_x(X:Float):Float
 	{
 		super.set_x(X);
 		createZone();
@@ -437,7 +437,7 @@ class FlxAnalog extends FlxSpriteGroup
 		return X;
 	}
 	
-	override private function set_y(Y:Float):Float
+	override function set_y(Y:Float):Float
 	{
 		super.set_y(Y);
 		createZone();

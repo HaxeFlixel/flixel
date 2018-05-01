@@ -144,7 +144,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		super.render(camera);
 	}
 
-	private inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
+	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
 	{
 		if (parameter.value == null)
 			parameter.value = [];

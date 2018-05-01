@@ -12,23 +12,23 @@ import flixel.util.FlxDestroyUtil;
 class QuadPath extends Motion
 {
 	// Path information.
-	private var _points:Array<FlxPoint>;
-	private var _distance:Float = 0;
-	private var _speed:Float = 0;
-	private var _index:Int = 0;
-	private var _numSegs:Int = 0;
+	var _points:Array<FlxPoint>;
+	var _distance:Float = 0;
+	var _speed:Float = 0;
+	var _index:Int = 0;
+	var _numSegs:Int = 0;
 	
 	// Curve information.
-	private var _updateCurve:Bool = true;
-	private var _curveT:Array<Float>;
-	private var _curveD:Array<Float>;
+	var _updateCurve:Bool = true;
+	var _curveT:Array<Float>;
+	var _curveD:Array<Float>;
 	
 	// Curve points.
-	private var _a:FlxPoint;
-	private var _b:FlxPoint;
-	private var _c:FlxPoint;
+	var _a:FlxPoint;
+	var _b:FlxPoint;
+	var _c:FlxPoint;
 	
-	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
+	function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
 		super(Options, manager);
 		
@@ -104,7 +104,7 @@ class QuadPath extends Motion
 		return this;
 	}
 	
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		var td:Float;
@@ -161,7 +161,7 @@ class QuadPath extends Motion
 	}
 	
 	// [from, control, to, control, to, control, to, control, to ...]
-	private function updatePath():Void
+	function updatePath():Void
 	{
 		if ((_points.length - 1) % 2 != 0 || _points.length < 3)	
 		{
@@ -197,7 +197,7 @@ class QuadPath extends Motion
 		_curveT.unshift(0);
 	}
 	
-	private function getCurveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
+	function getCurveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
 	{
 		var p1 = FlxPoint.get();
 		var p2 = FlxPoint.get();

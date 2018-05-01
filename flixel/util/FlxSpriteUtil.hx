@@ -618,7 +618,7 @@ class FlxSpriteUtil
 		return sprite;
 	}
 	
-	private static function alphaTween(sprite:FlxSprite, f:Float):Void
+	static function alphaTween(sprite:FlxSprite, f:Float):Void
 	{
 		sprite.alpha = f;
 	}

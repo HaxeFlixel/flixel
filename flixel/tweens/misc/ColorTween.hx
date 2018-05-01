@@ -11,8 +11,8 @@ import flixel.util.FlxColor;
 class ColorTween extends FlxTween
 {
 	public var color(default, null):FlxColor;
-	private var startColor:FlxColor;
-	private var endColor:FlxColor;
+	var startColor:FlxColor;
+	var endColor:FlxColor;
 	
 	/**
 	 * Optional sprite object whose color to tween
@@ -47,7 +47,7 @@ class ColorTween extends FlxTween
 		return this;
 	}
 	
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		color = FlxColor.interpolate(startColor, endColor, scale);
