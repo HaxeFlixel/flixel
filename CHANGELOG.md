@@ -2,7 +2,7 @@
 ------------------------------
 #### Dependencies:
 
-- Added support for OpenFL 8 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
+- Added support for OpenFL 8 and Lime 6.3.0 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
 - Removed support for Haxe versions < 3.4.0
 - Fixed compatibility with Haxe 4 / development
 
@@ -31,6 +31,7 @@
 #### Changes and improvements:
 
 - `FlxG.keys`: added arrow keys, space and tab to `preventDefaultKeys` on HTML5
+- `FlxSpriteGroup`: added a `camera` setter override ([#2146](https://github.com/HaxeFlixel/flixel/issues/2146))
 
 4.3.0 (July 22, 2017)
 ------------------------------
