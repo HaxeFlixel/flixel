@@ -48,6 +48,9 @@ class RunTravis
 			Sys.exit(ExitCode.FAILURE);
 		runCommand("haxelib", ["list"]);
 
+		if (Sys.args().indexOf("-install") != -1)
+			return;
+
 		Sys.exit(runAll([
 			runUnitTests.bind(target),
 			buildCoverageTests.bind(target),
