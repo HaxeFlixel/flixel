@@ -88,7 +88,7 @@ class WiggleShader extends FlxShader
 		 */
 		uniform float uWaveAmplitude;
 
-		vec2 sineWave( vec2 pt )
+		vec2 sineWave(vec2 pt)
 		{
 			float x = 0.0;
 			float y = 0.0;
@@ -113,8 +113,8 @@ class WiggleShader extends FlxShader
 			}
 			else if (effectType == EFFECT_TYPE_FLAG)
 			{
-				y = sin(pt.y * uFrequency + 10 * pt.x + uTime * uSpeed) * uWaveAmplitude;
-				x = sin(pt.x * uFrequency + 5 * pt.y + uTime * uSpeed) * uWaveAmplitude;
+				y = sin(pt.y * uFrequency + 10.0 * pt.x + uTime * uSpeed) * uWaveAmplitude;
+				x = sin(pt.x * uFrequency + 5.0 * pt.y + uTime * uSpeed) * uWaveAmplitude;
 			}
 			
 			return vec2(pt.x + x, pt.y + y);
