@@ -74,6 +74,7 @@ class RunTravis
 			haxelibGit.bind("HaxeFoundation", "hscript"),
 			haxelibGit.bind("larsiusprime", "firetongue"),
 			haxelibGit.bind("HaxeFlixel", "flixel-tools"),
+			haxelibGit.bind("HaxeFlixel", "flixel-templates"),
 			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
 			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
 			haxelibGit.bind("HaxeFlixel", "flixel-ui")
