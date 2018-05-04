@@ -86,12 +86,13 @@ class RunTravis
 		return runAll(switch (openfl)
 		{
 			case NEW: [
-					haxelibGit.bind("openfl", "openfl"),
-					runCommand.bind("wget", ["http://builds.openfl.org.s3-us-east-2.amazonaws.com/lime/lime-6.2.0-93-g430107f.zip"]),
-					runCommand.bind("unzip", ["lime-6.2.0-93-g430107f.zip"]),
-					runCommand.bind("haxelib", ["dev", "lime", "lime"])
+					haxelibInstall.bind("openfl"),
+					haxelibInstall.bind("lime")
 				];
-			case OLD: [haxelibInstall.bind("openfl", "3.6.1"), haxelibInstall.bind("lime", "2.9.1")];
+			case OLD: [
+					haxelibInstall.bind("openfl", "3.6.1"),
+					haxelibInstall.bind("lime", "2.9.1")
+				];
 		});
 	}
 
