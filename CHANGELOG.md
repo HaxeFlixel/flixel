@@ -1,4 +1,4 @@
-2.6.0 (to be released)
+2.6.0 (May 4, 2018)
 ------------------------------
 * Compatibility with flixel 4.4.0
 * Disabled `vsync` by default in `Project.xml` files
