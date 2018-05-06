@@ -878,6 +878,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return maxSize;
 	}
 	
+	@:noCompletion
 	function get_memberAdded():FlxTypedSignal<T->Void>
 	{
 		if (_memberAdded == null)
@@ -886,6 +887,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		return _memberAdded;
 	}
 	
+	@:noCompletion
 	function get_memberRemoved():FlxTypedSignal<T->Void>
 	{
 		if (_memberRemoved == null)
