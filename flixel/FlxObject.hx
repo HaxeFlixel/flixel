@@ -1243,16 +1243,19 @@ class FlxObject extends FlxBasic
 	}
 
 	#if FLX_DEBUG
+	@:noCompletion
 	function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorSolid = color;
 	}
 
+	@:noCompletion
 	function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorNotSolid = color;
 	}
 	
+	@:noCompletion
 	function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		return debugBoundingBoxColorPartial = color;
