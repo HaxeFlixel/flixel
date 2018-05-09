@@ -1,7 +1,6 @@
 package flixel.system;
 
 import flash.Lib;
-import flash.Vector;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.GradientType;
@@ -21,6 +20,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import openfl.Vector;
 
 class FlxBasePreloader extends DefaultPreloader
 {
