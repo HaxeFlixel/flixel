@@ -1,3 +1,9 @@
+4.4.1 (May 10, 2018)
+------------------------------
+#### Bugfixes:
+
+- Fixed an issue with code completion on the Flash target in VSCode
+
 4.4.0 (May 4, 2018)
 ------------------------------
 #### Dependencies:
