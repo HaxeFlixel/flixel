@@ -39,37 +39,37 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 		this.removeAll();
 	}
 	
-	private inline function get_dispatch():T
+	inline function get_dispatch():T
 	{
 		return this.dispatch;
 	}
 	
 	@:to 
-	private static inline function toSignal0(signal:IFlxSignal<Void->Void>):FlxSignal0 
+	static inline function toSignal0(signal:IFlxSignal<Void->Void>):FlxSignal0 
 	{
 		return new FlxSignal0();
 	}
 	
 	@:to 
-	private static inline function toSignal1<T1>(signal:IFlxSignal<T1->Void>):FlxSignal1<T1> 
+	static inline function toSignal1<T1>(signal:IFlxSignal<T1->Void>):FlxSignal1<T1> 
 	{
 		return new FlxSignal1();
 	}
 	
 	@:to 
-	private static inline function toSignal2<T1, T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1, T2> 
+	static inline function toSignal2<T1, T2>(signal:IFlxSignal<T1->T2->Void>):FlxSignal2<T1, T2> 
 	{
 		return new FlxSignal2();
 	}
 	
 	@:to 
-	private static inline function toSignal3<T1, T2, T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1, T2, T3> 
+	static inline function toSignal3<T1, T2, T3>(signal:IFlxSignal<T1->T2->T3->Void>):FlxSignal3<T1, T2, T3> 
 	{
 		return new FlxSignal3();
 	}
 	
 	@:to 
-	private static inline function toSignal4<T1, T2, T3, T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1, T2, T3, T4> 
+	static inline function toSignal4<T1, T2, T3, T4>(signal:IFlxSignal<T1->T2->T3->T4->Void>):FlxSignal4<T1, T2, T3, T4> 
 	{
 		return new FlxSignal4();
 	}
@@ -93,15 +93,15 @@ private class FlxSignalHandler<T> implements IFlxDestroyable
 }
 
 private class FlxBaseSignal<T> implements IFlxSignal<T> 
-{	
+{
 	/**
 	 * Typed function reference used to dispatch this signal.
 	 */
 	public var dispatch:T;
 	
-	private var handlers:Array<FlxSignalHandler<T>>;
-	private var pendingRemove:Array<FlxSignalHandler<T>>;
-	private var processingListeners:Bool = false;
+	var handlers:Array<FlxSignalHandler<T>>;
+	var pendingRemove:Array<FlxSignalHandler<T>>;
+	var processingListeners:Bool = false;
 	
 	public function new() 
 	{
@@ -159,7 +159,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		pendingRemove = null;
 	}
 	
-	private function registerListener(listener:T, dispatchOnce:Bool):FlxSignalHandler<T>
+	function registerListener(listener:T, dispatchOnce:Bool):FlxSignalHandler<T>
 	{
 		var handler = getHandler(listener);
 		
@@ -180,7 +180,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		}
 	}
 	
-	private function getHandler(listener:T):FlxSignalHandler<T>
+	function getHandler(listener:T):FlxSignalHandler<T>
 	{
 		for (handler in handlers)
 		{
@@ -270,12 +270,12 @@ private class FlxSignal4<T1, T2, T3, T4> extends FlxBaseSignal<T1->T2->T3->T4->V
 
 interface IFlxSignal<T> extends IFlxDestroyable
 {
-	public var dispatch:T;
-	public function add(listener:T):Void;
-	public function addOnce(listener:T):Void;
-	public function remove(listener:T):Void;
-	public function removeAll():Void;
-	public function has(listener:T):Bool;
+	var dispatch:T;
+	function add(listener:T):Void;
+	function addOnce(listener:T):Void;
+	function remove(listener:T):Void;
+	function removeAll():Void;
+	function has(listener:T):Bool;
 }
 
 #end

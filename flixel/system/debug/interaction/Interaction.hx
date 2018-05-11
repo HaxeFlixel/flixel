@@ -41,16 +41,16 @@ class Interaction extends Window
 	public var pointerJustReleased:Bool = false;
 	public var pointerPressed:Bool = false;
 	
-	private var _container:Sprite;
-	private var _customCursor:Sprite;
-	private var _tools:Array<Tool> = [];
-	private var _turn:Int = 2;
-	private var _keysDown:Map<Int, Bool> = new Map();
-	private var _keysUp:Map<Int, Int> = new Map();
-	private var _wasMouseVisible:Bool;
-	private var _wasUsingSystemCursor:Bool;
-	private var _debuggerInteraction:Bool = false;
-	private var _flixelPointer:FlxPointer = new FlxPointer();
+	var _container:Sprite;
+	var _customCursor:Sprite;
+	var _tools:Array<Tool> = [];
+	var _turn:Int = 2;
+	var _keysDown:Map<Int, Bool> = new Map();
+	var _keysUp:Map<Int, Int> = new Map();
+	var _wasMouseVisible:Bool;
+	var _wasUsingSystemCursor:Bool;
+	var _debuggerInteraction:Bool = false;
+	var _flixelPointer:FlxPointer = new FlxPointer();
 	
 	public function new(container:Sprite)
 	{
@@ -80,7 +80,7 @@ class Interaction extends Window
 		_container.addEventListener(MouseEvent.MOUSE_OUT, handleMouseInDebugger);
 	}
 	
-	private function handleDebuggerVisibilityChanged():Void
+	function handleDebuggerVisibilityChanged():Void
 	{
 		if (FlxG.debugger.visible)
 			saveSystemCursorInfo();
@@ -88,7 +88,7 @@ class Interaction extends Window
 			restoreSystemCursor();
 	}
 	
-	private function updateMouse(event:MouseEvent):Void
+	function updateMouse(event:MouseEvent):Void
 	{
 		#if (neko || js) // openfl/openfl#1305
 		if (event.stageX == null || event.stageY == null)
@@ -124,7 +124,7 @@ class Interaction extends Window
 		#end
 	}
 	
-	private function handleMouseClick(event:MouseEvent):Void 
+	function handleMouseClick(event:MouseEvent):Void 
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
@@ -140,7 +140,7 @@ class Interaction extends Window
 			pointerPressed = false;
 	}
 
-	private function belongsToDebugger(object:DisplayObject):Bool
+	function belongsToDebugger(object:DisplayObject):Bool
 	{
 		if (object == null)
 			return false;
@@ -149,7 +149,7 @@ class Interaction extends Window
 		return belongsToDebugger(object.parent);
 	}
 	
-	private function handleMouseInDebugger(event:MouseEvent):Void 
+	function handleMouseInDebugger(event:MouseEvent):Void 
 	{
 		// If we are not active, we don't really care about
 		// mouse events in the debugger.
@@ -164,7 +164,7 @@ class Interaction extends Window
 		event.stopPropagation();
 	}
 	
-	private function handleKeyEvent(event:KeyboardEvent):Void
+	function handleKeyEvent(event:KeyboardEvent):Void
 	{
 		if (event.type == KeyboardEvent.KEY_DOWN)
 			_keysDown.set(event.keyCode, true);
@@ -175,7 +175,7 @@ class Interaction extends Window
 		}
 	}
 	
-	private function addTool(tool:Tool):Void
+	function addTool(tool:Tool):Void
 	{
 		tool.init(this);
 		_tools.push(tool);
@@ -249,7 +249,7 @@ class Interaction extends Window
 	/**
 	 * Called after the game state has been drawn.
 	 */
-	private function postDraw():Void
+	function postDraw():Void
 	{
 		if (!isActive())
 			return;
@@ -275,7 +275,7 @@ class Interaction extends Window
 		return null;
 	}
 	
-	private function drawItemsSelection():Void 
+	function drawItemsSelection():Void 
 	{
 		var gfx:Graphics = getDebugGraphics();
 		if (gfx == null)
@@ -298,7 +298,7 @@ class Interaction extends Window
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	
-	private function getTool(className:Class<Tool>):Tool
+	function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
 			if (Std.is(tool, className))
@@ -378,7 +378,7 @@ class Interaction extends Window
 		#end
 	}
 	
-	private function saveSystemCursorInfo():Void
+	function saveSystemCursorInfo():Void
 	{
 		#if FLX_MOUSE
 		_wasMouseVisible = FlxG.mouse.visible;
@@ -386,7 +386,7 @@ class Interaction extends Window
 		#end
 	}
 	
-	private function restoreSystemCursor():Void
+	function restoreSystemCursor():Void
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
@@ -425,7 +425,7 @@ class Interaction extends Window
 		}
 	}
 	
-	private function setSystemCursorVisibility(status:Bool):Void
+	function setSystemCursorVisibility(status:Bool):Void
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.useSystemCursor = status;
@@ -433,7 +433,7 @@ class Interaction extends Window
 		_customCursor.visible = !status;
 	}
 	
-	private function setToolsCursorVisibility(status:Bool):Void
+	function setToolsCursorVisibility(status:Bool):Void
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.useSystemCursor = #if FLX_NATIVE_CURSOR status #else false #end;

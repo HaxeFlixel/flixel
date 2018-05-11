@@ -35,11 +35,11 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	/**
 	 * The icon this button uses.
 	 */
-	private var _icon:Bitmap;
+	var _icon:Bitmap;
 	/**
 	 * Whether the mouse has been pressed while over this button.
 	 */
-	private var _mouseDown:Bool = false;
+	var _mouseDown:Bool = false;
 	
 	/**
 	 * Create a new FlxSystemButton
@@ -93,7 +93,7 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		upHandler = null;
 	}
 
-	private function onMouseUp(_):Void
+	function onMouseUp(_):Void
 	{
 		if (enabled && _mouseDown)
 		{
@@ -105,24 +105,24 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 		}
 	}
 	
-	private function onMouseDown(_):Void
+	function onMouseDown(_):Void
 	{
 		_mouseDown = true;
 	}
 
-	private inline function onMouseOver(_):Void
+	inline function onMouseOver(_):Void
 	{
 		if (enabled)
 			alpha -= 0.2;
 	}
 
-	private inline function onMouseOut(_):Void
+	inline function onMouseOut(_):Void
 	{
 		if (enabled)
 			alpha += 0.2;
 	}
 	
-	private function set_toggled(Value:Bool):Bool
+	function set_toggled(Value:Bool):Bool
 	{
 		if (toggleMode)
 			alpha = Value ? 0.3 : 1;

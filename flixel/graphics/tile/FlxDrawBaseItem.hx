@@ -102,12 +102,12 @@ class FlxDrawBaseItem<T>
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
-	private function get_numVertices():Int
+	function get_numVertices():Int
 	{
 		return 0;
 	}
 	
-	private function get_numTriangles():Int
+	function get_numTriangles():Int
 	{
 		return 0;
 	}

@@ -20,9 +20,9 @@ class FlxGamepadMapping
 	//public var gyro:FlxGamepadGyro;
 	
 	@:allow(flixel.input.gamepad.FlxGamepad)
-	private var attachment(default, set):FlxGamepadAttachment = NONE;
+	var attachment(default, set):FlxGamepadAttachment = NONE;
 	
-	private var manufacturer:Manufacturer;
+	var manufacturer:Manufacturer;
 	
 	public function new(?attachment:FlxGamepadAttachment) 
 	{
@@ -41,7 +41,7 @@ class FlxGamepadMapping
 		initValues();
 	}
 	
-	private function initValues():Void {}
+	function initValues():Void {}
 	
 	public function getAnalogStick(ID:FlxGamepadInputID):FlxGamepadAnalogStick
 	{
@@ -101,7 +101,7 @@ class FlxGamepadMapping
 	}
 	#end
 	
-	private function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
+	function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		return this.attachment = attachment;
 	}

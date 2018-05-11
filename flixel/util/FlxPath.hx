@@ -75,7 +75,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
-	private static var _point:FlxPoint = FlxPoint.get();
+	static var _point:FlxPoint = FlxPoint.get();
 	
 	/**
 	 * The list of FlxPoints that make up the path data.
@@ -85,7 +85,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * An actual array, which holds all the path points.
 	 */
-	private var _nodes:Array<FlxPoint>;
+	var _nodes:Array<FlxPoint>;
 	
 	/**
 	 * The speed at which the object is moving on the path.
@@ -133,25 +133,25 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
 	 */
-	private var _mode:Int;
+	var _mode:Int;
 	/**
 	 * Internal helper for node navigation, specifically yo-yo and backwards movement.
 	 */
-	private var _inc:Int = 1;
+	var _inc:Int = 1;
 	/**
 	 * Internal flag for whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
-	private var _autoRotate:Bool = false;
+	var _autoRotate:Bool = false;
 	
-	private var _wasObjectImmovable:Null<Bool> = null;
+	var _wasObjectImmovable:Null<Bool> = null;
 	
-	private var _firstUpdate:Bool = false;
+	var _firstUpdate:Bool = false;
 	
 	/**
 	 * Object which will follow this path
 	 */
 	@:allow(flixel.FlxObject)
-	private var object:FlxObject;
+	var object:FlxObject;
 	
 	public function new(?Nodes:Array<FlxPoint>)
 	{
@@ -361,7 +361,7 @@ class FlxPath implements IFlxDestroyable
 		}
 	}
 	
-	private function calculateVelocity(node:FlxPoint, horizontalOnly:Bool, verticalOnly:Bool):Void
+	function calculateVelocity(node:FlxPoint, horizontalOnly:Bool, verticalOnly:Bool):Void
 	{
 		if (horizontalOnly || _point.y == node.y)
 		{
@@ -400,7 +400,7 @@ class FlxPath implements IFlxDestroyable
 	 * 
 	 * @return	The node (a `FlxPoint`) we are aiming for next.
 	 */
-	private function advancePath(Snap:Bool = true):FlxPoint
+	function advancePath(Snap:Bool = true):FlxPoint
 	{
 		if (Snap)
 		{
@@ -521,7 +521,7 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Called when the path ends, either by completing normally or via `cancel()`.
 	 */
-	private function onEnd():Void
+	function onEnd():Void
 	{
 		finished = true;
 		active = false;
@@ -791,12 +791,12 @@ class FlxPath implements IFlxDestroyable
 	}
 	#end
 	
-	private function get_nodes():Array<FlxPoint>
+	function get_nodes():Array<FlxPoint>
 	{
 		return _nodes;
 	}
 	
-	private function set_nodes(Nodes:Array<FlxPoint>):Array<FlxPoint>
+	function set_nodes(Nodes:Array<FlxPoint>):Array<FlxPoint>
 	{
 		if (Nodes != null)
 		{

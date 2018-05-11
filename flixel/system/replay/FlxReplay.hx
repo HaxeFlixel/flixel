@@ -32,15 +32,15 @@ class FlxReplay
 	/**
 	 * Internal container for all the frames in this replay.
 	 */
-	private var _frames:Array<FrameRecord>;
+	var _frames:Array<FrameRecord>;
 	/**
 	 * Internal tracker for max number of frames we can fit before growing the _frames again.
 	 */
-	private var _capacity:Int;
+	var _capacity:Int;
 	/**
 	 * Internal helper variable for keeping track of where we are in _frames during recording or replay.
 	 */
-	private var _marker:Int;
+	var _marker:Int;
 	
 	/**
 	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
@@ -227,7 +227,7 @@ class FlxReplay
 	/**
 	 * Common initialization terms used by both create() and load() to set up the replay object.
 	 */
-	private function init():Void
+	function init():Void
 	{
 		_capacity = 100;
 		_frames = new Array<FrameRecord>(/*_capacity*/);

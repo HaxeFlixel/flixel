@@ -13,7 +13,7 @@ class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
 	
-	private static var _pool = new FlxPool<FlxPoint>(FlxPoint);
+	static var _pool = new FlxPool<FlxPoint>(FlxPoint);
 	
 	/**
 	 * Recycle or create a new FlxPoint. 
@@ -48,8 +48,8 @@ class FlxPoint implements IFlxPooled
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
-	private var _weak:Bool = false;
-	private var _inPool:Bool = false;
+	var _weak:Bool = false;
+	var _inPool:Bool = false;
 	
 	@:keep
 	public function new(X:Float = 0, Y:Float = 0) 
@@ -441,7 +441,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Necessary for FlxCallbackPoint.
 	 */
-	private function set_x(Value:Float):Float 
+	function set_x(Value:Float):Float 
 	{ 
 		return x = Value;
 	}
@@ -449,12 +449,12 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Necessary for FlxCallbackPoint.
 	 */
-	private function set_y(Value:Float):Float
+	function set_y(Value:Float):Float
 	{
 		return y = Value; 
 	}
 	
-	private static function get_pool():IFlxPool<FlxPoint>
+	static function get_pool():IFlxPool<FlxPoint>
 	{
 		return _pool;
 	}
@@ -466,9 +466,9 @@ class FlxPoint implements IFlxPooled
  */
 class FlxCallbackPoint extends FlxPoint
 {
-	private var _setXCallback:FlxPoint->Void;
-	private var _setYCallback:FlxPoint->Void;
-	private var _setXYCallback:FlxPoint->Void;
+	var _setXCallback:FlxPoint->Void;
+	var _setYCallback:FlxPoint->Void;
+	var _setXYCallback:FlxPoint->Void;
 	
 	/**
 	 * If you only specify one callback function, then the remaining two will use the same.
@@ -502,7 +502,7 @@ class FlxCallbackPoint extends FlxPoint
 		return this;
 	}
 	
-	override private inline function set_x(Value:Float):Float
+	override inline function set_x(Value:Float):Float
 	{
 		super.set_x(Value);
 		if (_setXCallback != null)
@@ -510,7 +510,7 @@ class FlxCallbackPoint extends FlxPoint
 		return Value;
 	}
 	
-	override private inline function set_y(Value:Float):Float
+	override inline function set_y(Value:Float):Float
 	{
 		super.set_y(Value);
 		if (_setYCallback != null)

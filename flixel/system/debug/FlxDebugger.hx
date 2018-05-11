@@ -79,34 +79,34 @@ class FlxDebugger extends Sprite
 	public var vcr:VCR;
 	public var console:Console;
 	public var interaction:Interaction;
-	private var completionList:CompletionList;
+	var completionList:CompletionList;
 
 	/**
 	 * Internal, tracks what debugger window layout user has currently selected.
 	 */
-	private var _layout:FlxDebuggerLayout = FlxDebuggerLayout.STANDARD;
+	var _layout:FlxDebuggerLayout = FlxDebuggerLayout.STANDARD;
 	/**
 	 * Internal, stores width and height of the game.
 	 */
-	private var _screen:Point = new Point();
+	var _screen:Point = new Point();
 	/**
 	 * Stores the bounds in which the windows can move.
 	 */
-	private var _screenBounds:Rectangle;
+	var _screenBounds:Rectangle;
 	
-	private var _buttons:Map<FlxHorizontalAlign, Array<FlxSystemButton>> =
+	var _buttons:Map<FlxHorizontalAlign, Array<FlxSystemButton>> =
 		[LEFT => [], CENTER => [], RIGHT => []];
 	
 	/**
 	 * The flash Sprite used for the top bar of the debugger ui
 	 **/
-	private var _topBar:Sprite;
+	var _topBar:Sprite;
 	
-	private var _windows:Array<Window> = [];
+	var _windows:Array<Window> = [];
 
-	private var _usingSystemCursor = false;
-	private var _wasMouseVisible:Bool = true;
-	private var _wasUsingSystemCursor:Bool = false;
+	var _usingSystemCursor = false;
+	var _wasMouseVisible:Bool = true;
+	var _wasUsingSystemCursor:Bool = false;
 
 	/**
 	 * Instantiates the debugger overlay.
@@ -115,7 +115,7 @@ class FlxDebugger extends Sprite
 	 * @param   Height   The height of the screen.
 	 */
 	@:allow(flixel.FlxGame)
-	private function new(Width:Float, Height:Float)
+	function new(Width:Float, Height:Float)
 	{
 		super();
 		
@@ -332,7 +332,7 @@ class FlxDebugger extends Sprite
 		y = -FlxG.scaleMode.offset.y;
 	}
 	
-	private function updateBounds():Void
+	function updateBounds():Void
 	{
 		_screenBounds = new Rectangle(GUTTER, TOP_HEIGHT + GUTTER / 2, _screen.x - GUTTER * 2, _screen.y - GUTTER * 2 - TOP_HEIGHT);
 		for (window in _windows)
@@ -344,7 +344,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Align an array of debugger buttons, used for the middle and right layouts
 	 */
-	private function hAlignButtons(Sprites:Array<FlxSystemButton>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
+	function hAlignButtons(Sprites:Array<FlxSystemButton>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
 	{
 		var width:Float = 0;
 		var last:Float = LeftOffset;
@@ -364,7 +364,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Position the debugger buttons
 	 */
-	private function resetButtonLayout():Void
+	function resetButtonLayout():Void
 	{
 		hAlignButtons(_buttons[FlxHorizontalAlign.LEFT], 10, true, 10);
 		
@@ -456,7 +456,7 @@ class FlxDebugger extends Sprite
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private function onMouseOver(_):Void
+	function onMouseOver(_):Void
 	{
 		onMouseFocus();
 	}
@@ -464,12 +464,12 @@ class FlxDebugger extends Sprite
 	/**
 	 * Mouse handler that helps with fake "mouse focus" type behavior.
 	 */
-	private function onMouseOut(_):Void
+	function onMouseOut(_):Void
 	{
 		onMouseFocusLost();
 	}
 
-	private function onMouseFocus():Void
+	function onMouseFocus():Void
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.enabled = false;
@@ -481,7 +481,7 @@ class FlxDebugger extends Sprite
 	}
 	
 	@:allow(flixel.system.debug)
-	private function onMouseFocusLost():Void
+	function onMouseFocusLost():Void
 	{
 		if (_usingSystemCursor)
 		{
@@ -493,17 +493,17 @@ class FlxDebugger extends Sprite
 		}	
 	}
 
-	private inline function toggleDrawDebug():Void
+	inline function toggleDrawDebug():Void
 	{
 		FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
 	}
 	
-	private inline function openHomepage():Void
+	inline function openHomepage():Void
 	{
 		FlxG.openURL("http://www.haxeflixel.com");
 	}
 	
-	private inline function openGitHub():Void
+	inline function openGitHub():Void
 	{
 		var url = "https://github.com/HaxeFlixel/flixel";
 		if (FlxVersion.sha != "")

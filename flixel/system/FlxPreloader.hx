@@ -22,11 +22,11 @@ private class GraphicLogoCorners extends BitmapData {}
  */
 class FlxPreloader extends FlxBasePreloader
 {
-	private var _buffer:Sprite;
-	private var _bmpBar:Bitmap;
-	private var _text:TextField;
-	private var _logo:Sprite;
-	private var _logoGlow:Sprite;
+	var _buffer:Sprite;
+	var _bmpBar:Bitmap;
+	var _text:TextField;
+	var _logo:Sprite;
+	var _logoGlow:Sprite;
 	
 	/**
 	 * Initialize your preloader here.
@@ -46,7 +46,7 @@ class FlxPreloader extends FlxBasePreloader
 	 * Override it to draw all your graphics and things - make sure you also override update
 	 * Make sure you call super.create()
 	 */
-	override private function create():Void
+	override function create():Void
 	{
 		_buffer = new Sprite();
 		_buffer.scaleX = _buffer.scaleY = 2;
@@ -121,7 +121,7 @@ class FlxPreloader extends FlxBasePreloader
 	 * Cleanup your objects!
 	 * Make sure you call super.destroy()!
 	 */
-	override private function destroy():Void
+	override function destroy():Void
 	{
 		if (_buffer != null)	
 		{

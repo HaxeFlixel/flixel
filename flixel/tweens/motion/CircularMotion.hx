@@ -16,11 +16,11 @@ class CircularMotion extends Motion
 	public var circumference(get, never):Float;
 	
 	// Circle information.
-	private var _centerX:Float = 0;
-	private var _centerY:Float = 0;
-	private var _radius:Float = 0;
-	private var _angleStart:Float = 0;
-	private var _angleFinish:Float = 0;
+	var _centerX:Float = 0;
+	var _centerY:Float = 0;
+	var _radius:Float = 0;
+	var _angleStart:Float = 0;
+	var _angleFinish:Float = 0;
 
 	/**
 	 * Starts moving along a circle.
@@ -54,7 +54,7 @@ class CircularMotion extends Motion
 		return this;
 	}
 
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		angle = _angleStart + _angleFinish * scale;
@@ -66,7 +66,7 @@ class CircularMotion extends Motion
 		}
 	}
 
-	private function get_circumference():Float 
+	function get_circumference():Float 
 	{ 
 		return _radius * (Math.PI * 2); 
 	}

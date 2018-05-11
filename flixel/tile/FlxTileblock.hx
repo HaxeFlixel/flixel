@@ -16,7 +16,7 @@ import flixel.util.FlxSpriteUtil;
  */
 class FlxTileblock extends FlxSprite
 {
-	private var tileSprite:FlxSprite;
+	var tileSprite:FlxSprite;
 	
 	/**
 	 * Creates a new FlxBlock object with the specified position and size.

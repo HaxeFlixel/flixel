@@ -38,29 +38,62 @@ class RunTravis
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 	
-		Sys.exit(getResult([
-			installOpenFL(openfl),
-			installHxcpp(target),
-			runUnitTests(target),
-			buildCoverageTests(target),
-			buildSwfVersionTests(target),
-			buildDemos(target),
-			buildNextDemos(target, openfl),
-			buildMechanicsDemos(target)
+		var installationResult = runUntilFailure([
+			installHaxelibs,
+			installOpenFL.bind(openfl),
+			installHxcpp.bind(target)
+		]);
+
+		if (installationResult != ExitCode.SUCCESS)
+			Sys.exit(ExitCode.FAILURE);
+		runCommand("haxelib", ["list"]);
+
+		if (Sys.args().indexOf("-install") != -1)
+			return;
+
+		Sys.exit(runAll([
+			runUnitTests.bind(target),
+			buildCoverageTests.bind(target),
+			buildSwfVersionTests.bind(target),
+			buildDemos.bind(target),
+			buildNextDemos.bind(target, openfl),
+			buildMechanicsDemos.bind(target)
 		]));
+	}
+
+	static function installHaxelibs():ExitCode
+	{
+		return runUntilFailure([
+			haxelibInstall.bind("munit"),
+			haxelibInstall.bind("hamcrest"),
+			haxelibInstall.bind("systools"),
+			haxelibInstall.bind("nape"),
+			haxelibInstall.bind("task"),
+			haxelibInstall.bind("poly2trihx"),
+			haxelibInstall.bind("spinehaxe"),
+			haxelibGit.bind("HaxeFoundation", "hscript"),
+			haxelibGit.bind("larsiusprime", "firetongue"),
+			haxelibGit.bind("HaxeFlixel", "flixel-tools"),
+			haxelibGit.bind("HaxeFlixel", "flixel-templates"),
+			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
+			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
+			haxelibGit.bind("HaxeFlixel", "flixel-ui"),
+			haxelibGit.bind("larsiusprime", "steamwrap")
+		]);
 	}
 
 	static function installOpenFL(openfl:OpenFL):ExitCode
 	{
-		return getResult(switch (openfl)
+		return runAll(switch (openfl)
 		{
 			case NEW: [
-					runCommand("git", ["clone", "https://github.com/openfl/openfl"]),
-					runCommandInDir("openfl", "git", ["checkout", "d49569e7fecdd160654617d23a4c0d9a420567d1"]),
-					runCommand("haxelib", ["dev", "openfl", "openfl"]),
-					haxelibInstall("lime")
+					haxelibInstall.bind("openfl"),
+					haxelibInstall.bind("lime")
 				];
-			case OLD: [haxelibInstall("openfl", "3.6.1"), haxelibInstall("lime", "2.9.1")];
+			case OLD: [
+					haxelibInstall.bind("openfl", "3.6.1"),
+					haxelibInstall.bind("lime", "2.9.1")
+				];
 		});
 	}
 
@@ -69,7 +102,13 @@ class RunTravis
 		var args = ["install", lib];
 		if (version != null)
 			args.push(version);
+		args.push("--quiet");
 		return runCommand("haxelib", args);
+	}
+
+	static function haxelibGit(user:String, lib:String):ExitCode
+	{
+		return runCommand("haxelib", ["git", lib, 'https://github.com/$user/$lib', "--quiet"]);
 	}
 	
 	static function installHxcpp(target:Target):ExitCode
@@ -77,17 +116,13 @@ class RunTravis
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		#if (haxe_ver >= "3.3")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
-		return getResult([
-			runCommand("haxelib", ["git", "hxcpp", "https://github.com/HaxeFoundation/hxcpp"]),
-			runCommandInDir(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
-			runCommandInDir(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
-			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
+		return runAll([
+			haxelibGit.bind("HaxeFoundation", "hxcpp"),
+			runCommandInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
+			runCommandInDir.bind(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
+			runCommandInDir.bind(hxcppDir + "project", "neko", ["build.n"])
 		]);
-		#else
-		return haxelibInstall("hxcpp", "3.3.49");
-		#end
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
@@ -121,9 +156,9 @@ class RunTravis
 	static function buildCoverageTests(target:Target):ExitCode
 	{
 		Sys.println("\nBuilding coverage tests...\n");
-		return getResult([
-			build("coverage", target, "coverage1"),
-			build("coverage", target, "coverage2")
+		return runAll([
+			build.bind("coverage", target, "coverage1"),
+			build.bind("coverage", target, "coverage2")
 		]);
 	}
 	
@@ -166,9 +201,9 @@ class RunTravis
 		if (target == Target.FLASH)
 		{
 			Sys.println("\nBuilding swf version tests...\n");
-			return getResult([
-				build("swfVersion/11", target),
-				build("swfVersion/11_2", target)
+			return runAll([
+				build.bind("swfVersion/11", target),
+				build.bind("swfVersion/11_2", target)
 			]);
 		}
 		else return ExitCode.SUCCESS;
@@ -192,10 +227,19 @@ class RunTravis
 		return runCommand("haxelib", ["run"].concat(args));
 	}
 	
-	static function getResult(results:Array<ExitCode>):ExitCode
+	static function runAll(methods:Array<Void->ExitCode>):ExitCode
 	{
-		for (result in results)
-			if (result != ExitCode.SUCCESS)
+		var result = ExitCode.SUCCESS;
+		for (method in methods)
+			if (method() != ExitCode.SUCCESS)
+				result = ExitCode.FAILURE;
+		return result;
+	}
+
+	static function runUntilFailure(methods:Array<Void->ExitCode>):ExitCode
+	{
+		for (method in methods)
+			if (method() != ExitCode.SUCCESS)
 				return ExitCode.FAILURE;
 		return ExitCode.SUCCESS;
 	}

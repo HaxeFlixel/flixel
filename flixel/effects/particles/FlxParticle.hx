@@ -69,7 +69,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	/**
 	 * The amount of change from the previous frame.
 	 */
-	private var _delta:Float = 0;
+	var _delta:Float = 0;
 	
 	/**
 	 * Instantiate a new particle. Like `FlxSprite`, all meaningful creation
@@ -212,18 +212,18 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 
 interface IFlxParticle extends IFlxSprite
 {
-	public var lifespan:Float;
-	public var age(default, null):Float;
-	public var percent(default, null):Float;
-	public var autoUpdateHitbox:Bool;
-	public var velocityRange:FlxRange<FlxPoint>;
-	public var angularVelocityRange:FlxRange<Float>;
-	public var scaleRange:FlxRange<FlxPoint>;
-	public var alphaRange:FlxRange<Float>;
-	public var colorRange:FlxRange<FlxColor>;
-	public var dragRange:FlxRange<FlxPoint>;
-	public var accelerationRange:FlxRange<FlxPoint>;
-	public var elasticityRange:FlxRange<Float>;
-	
-	public function onEmit():Void;
+	var lifespan:Float;
+	var age(default, null):Float;
+	var percent(default, null):Float;
+	var autoUpdateHitbox:Bool;
+	var velocityRange:FlxRange<FlxPoint>;
+	var angularVelocityRange:FlxRange<Float>;
+	var scaleRange:FlxRange<FlxPoint>;
+	var alphaRange:FlxRange<Float>;
+	var colorRange:FlxRange<FlxColor>;
+	var dragRange:FlxRange<FlxPoint>;
+	var accelerationRange:FlxRange<FlxPoint>;
+	var elasticityRange:FlxRange<Float>;
+
+	function onEmit():Void;
 }

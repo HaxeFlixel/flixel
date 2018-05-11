@@ -9,7 +9,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 @:keep
 class FlxGamepadAnalogValueList
 {
-	private var gamepad:FlxGamepad;
+	var gamepad:FlxGamepad;
 	
 	public var LEFT_STICK_X   (get, never):Float; inline function get_LEFT_STICK_X()  return getXAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
 	public var LEFT_STICK_Y   (get, never):Float; inline function get_LEFT_STICK_Y()  return getYAxis(FlxGamepadInputID.LEFT_ANALOG_STICK);
@@ -26,17 +26,17 @@ class FlxGamepadAnalogValueList
 		this.gamepad = gamepad;
 	}
 	
-	private inline function getAxis(id:FlxGamepadInputID):Float
+	inline function getAxis(id:FlxGamepadInputID):Float
 	{
 		return gamepad.getAxis(id);
 	}
 	
-	private inline function getXAxis(id:FlxGamepadInputID):Float
+	inline function getXAxis(id:FlxGamepadInputID):Float
 	{
 		return gamepad.getXAxis(id);
 	}
 	
-	private inline function getYAxis(id:FlxGamepadInputID):Float
+	inline function getYAxis(id:FlxGamepadInputID):Float
 	{
 		return gamepad.getYAxis(id);
 	}

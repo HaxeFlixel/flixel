@@ -4,8 +4,8 @@ import flixel.FlxG;
 
 class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 {
-	private var fixedWidth:Bool = false;
-	private var fixedHeight:Bool = false;
+	var fixedWidth:Bool = false;
+	var fixedHeight:Bool = false;
 	
 	public function new(fixedWidth:Bool = false, fixedHeight:Bool = false)
 	{
@@ -27,7 +27,7 @@ class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 		updateGamePosition();
 	}
 	
-	override private function updateGameSize(Width:Int, Height:Int):Void 
+	override function updateGameSize(Width:Int, Height:Int):Void 
 	{
 		gameSize.x = FlxG.width * FlxG.initialZoom;
 		gameSize.y = FlxG.height * FlxG.initialZoom;

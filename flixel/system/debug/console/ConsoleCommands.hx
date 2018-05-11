@@ -14,11 +14,11 @@ using StringTools;
 
 class ConsoleCommands
 {
-	private var _console:Console;
+	var _console:Console;
 	/**
 	 * Helper variable for toggling the mouse coords in the watch window.
 	 */
-	private var _watchingMouse:Bool = false;
+	var _watchingMouse:Bool = false;
 	
 	public function new(console:Console):Void
 	{
@@ -72,7 +72,7 @@ class ConsoleCommands
 		console.registerObject("selection", null);
 	}
 	
-	private function help(?Alias:String):String
+	function help(?Alias:String):String
 	{
 		if (Alias == null || Alias.length == 0) 
 		{
@@ -102,12 +102,12 @@ class ConsoleCommands
 		}
 	}
 	
-	private inline function close():Void
+	inline function close():Void
 	{
 		FlxG.debugger.visible = false;
 	}
 	
-	private function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
+	function create<T:FlxObject>(ObjClass:Class<T>, MousePos:Bool = true, ?Params:Array<Dynamic>):Void
 	{
 		if (Params == null)
 			Params = [];
@@ -137,23 +137,23 @@ class ConsoleCommands
 		ConsoleUtil.log("create: " + ObjClass + " registered as '" + name + "'");
 	}
 	
-	private function fields(Object:Dynamic):String
+	function fields(Object:Dynamic):String
 	{
 		return 'Fields of ${Type.getClassName(Object)}:\n' +
 			ConsoleUtil.getFields(Object).join("\n").trim();
 	}
 	
-	private function listObjects():Void
+	function listObjects():Void
 	{
 		ConsoleUtil.log("Objects registered: \n" + FlxStringUtil.formatStringMap(_console.registeredObjects)); 
 	}
 	
-	private function listFunctions():Void
+	function listFunctions():Void
 	{
 		ConsoleUtil.log("Functions registered: \n" + FlxStringUtil.formatStringMap(_console.registeredFunctions)); 
 	}
 	
-	private function watchMouse():Void
+	function watchMouse():Void
 	{
 		if (!_watchingMouse) 
 		{
@@ -169,7 +169,7 @@ class ConsoleCommands
 		_watchingMouse = !_watchingMouse;
 	}
 	
-	private function pause():Void
+	function pause():Void
 	{
 		if (FlxG.vcr.paused) 
 		{
@@ -183,7 +183,7 @@ class ConsoleCommands
 		}
 	}
 	
-	private function step():Void
+	function step():Void
 	{
 		if (FlxG.vcr.paused)
 			FlxG.game.debugger.vcr.onStep();

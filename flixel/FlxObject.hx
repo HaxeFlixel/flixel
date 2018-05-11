@@ -69,9 +69,9 @@ class FlxObject extends FlxBasic
 	public static inline var ANY:Int = LEFT | RIGHT | UP | DOWN;
 	
 	@:noCompletion
-	private static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
+	static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	@:noCompletion
-	private static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
+	static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
 	
 	/**
 	 * The main collision resolution function in Flixel.
@@ -108,7 +108,7 @@ class FlxObject extends FlxBasic
 	 * greater than a certain maximum (linked to `SEPARATE_BIAS`). Default is `true`, handy for `separateX` code.
 	 */
 	@:noCompletion
-	private static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
+	static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
 		//First, get the two object deltas
@@ -256,7 +256,7 @@ class FlxObject extends FlxBasic
 	 * greater than a certain maximum (linked to `SEPARATE_BIAS`). Default is `true`, handy for `separateY` code.
 	 */
 	@:noCompletion
-	private static function computeOverlapY(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
+	static function computeOverlapY(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
 		//First, get the two object deltas
@@ -581,9 +581,9 @@ class FlxObject extends FlxBasic
 	public var path(default, set):FlxPath = null;
 	
 	@:noCompletion
-	private var _point:FlxPoint = FlxPoint.get();
+	var _point:FlxPoint = FlxPoint.get();
 	@:noCompletion
-	private var _rect:FlxRect = FlxRect.get();
+	var _rect:FlxRect = FlxRect.get();
 	
 	/**
 	 * @param   X        The X-coordinate of the point in space.
@@ -607,7 +607,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for initialization of some object's variables.
 	 */
 	@:noCompletion
-	private function initVars():Void
+	function initVars():Void
 	{
 		flixelType = OBJECT;
 		last = FlxPoint.get(x, y);
@@ -621,7 +621,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for initialization of some variables that are used in `updateMotion()`.
 	 */
 	@:noCompletion
-	private inline function initMotionVars():Void
+	inline function initMotionVars():Void
 	{
 		velocity = FlxPoint.get();
 		acceleration = FlxPoint.get();
@@ -682,7 +682,7 @@ class FlxObject extends FlxBasic
 	 * Does a slightly fancier-than-normal integration to help with higher fidelity framerate-independent motion.
 	 */
 	@:noCompletion
-	private function updateMotion(elapsed:Float):Void
+	function updateMotion(elapsed:Float):Void
 	{
 		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
 		angularVelocity += velocityDelta; 
@@ -761,7 +761,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:noCompletion
-	private inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool,
+	inline function overlapsCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool,
 		Camera:FlxCamera):Bool
 	{
 		return overlaps(ObjectOrGroup, InScreenSpace, Camera);
@@ -823,7 +823,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:noCompletion
-	private inline function overlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool,
+	inline function overlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool,
 		Camera:FlxCamera):Bool
 	{
 		return overlapsAt(X, Y, ObjectOrGroup, InScreenSpace, Camera);
@@ -1097,7 +1097,7 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
 	}
 
-	private inline function beginDrawDebug(camera:FlxCamera):Graphics
+	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
 		if (FlxG.renderBlit)
 		{
@@ -1110,7 +1110,7 @@ class FlxObject extends FlxBasic
 		}
 	}
 	
-	private inline function endDrawDebug(camera:FlxCamera)
+	inline function endDrawDebug(camera:FlxCamera)
 	{
 		if (FlxG.renderBlit)
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
@@ -1118,7 +1118,7 @@ class FlxObject extends FlxBasic
 	#end
 
 	@:access(flixel.FlxCamera)
-	private function getBoundingBox(camera:FlxCamera):FlxRect
+	function getBoundingBox(camera:FlxCamera):FlxRect
 	{
 		getScreenPosition(_point, camera);
 		
@@ -1148,19 +1148,19 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:noCompletion
-	private function set_x(NewX:Float):Float
+	function set_x(NewX:Float):Float
 	{
 		return x = NewX;
 	}
 	
 	@:noCompletion
-	private function set_y(NewY:Float):Float
+	function set_y(NewY:Float):Float
 	{
 		return y = NewY;
 	}
 	
 	@:noCompletion
-	private function set_width(Width:Float):Float
+	function set_width(Width:Float):Float
 	{
 		#if FLX_DEBUG
 		if (Width < 0)
@@ -1174,7 +1174,7 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:noCompletion
-	private function set_height(Height:Float):Float
+	function set_height(Height:Float):Float
 	{
 		#if FLX_DEBUG
 		if (Height < 0)
@@ -1188,79 +1188,82 @@ class FlxObject extends FlxBasic
 	}
 	
 	@:noCompletion
-	private function get_width():Float
+	function get_width():Float
 	{
 		return width;
 	}
 	
 	@:noCompletion
-	private function get_height():Float
+	function get_height():Float
 	{
 		return height;
 	}
 	
 	@:noCompletion
-	private inline function get_solid():Bool
+	inline function get_solid():Bool
 	{
 		return (allowCollisions & ANY) > NONE;
 	}
 	
 	@:noCompletion
-	private function set_solid(Solid:Bool):Bool
+	function set_solid(Solid:Bool):Bool
 	{
 		allowCollisions = Solid ? ANY : NONE;
 		return Solid;
 	}
 	
 	@:noCompletion
-	private function set_angle(Value:Float):Float
+	function set_angle(Value:Float):Float
 	{
 		return angle = Value;
 	}
 	
 	@:noCompletion
-	private function set_moves(Value:Bool):Bool
+	function set_moves(Value:Bool):Bool
 	{
 		return moves = Value;
 	}
 	
 	@:noCompletion
-	private function set_immovable(Value:Bool):Bool
+	function set_immovable(Value:Bool):Bool
 	{
 		return immovable = Value;
 	}
 	
 	@:noCompletion
-	private function set_pixelPerfectRender(Value:Bool):Bool 
+	function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		return pixelPerfectRender = Value;
 	}
 	
 	@:noCompletion
-	private function set_allowCollisions(Value:Int):Int 
+	function set_allowCollisions(Value:Int):Int 
 	{
 		return allowCollisions = Value;
 	}
 
 	#if FLX_DEBUG
-	private function set_debugBoundingBoxColorSolid(color:FlxColor)
+	@:noCompletion
+	function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorSolid = color;
 	}
 
-	private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
+	@:noCompletion
+	function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		return debugBoundingBoxColorNotSolid = color;
 	}
 	
-	private function set_debugBoundingBoxColorPartial(color:FlxColor)
+	@:noCompletion
+	function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		return debugBoundingBoxColorPartial = color;
 	}
 	#end
 	
 	@:noCompletion
-	private function set_path(path:FlxPath):FlxPath
+	function set_path(path:FlxPath):FlxPath
 	{
 		if (this.path == path)
 			return path;

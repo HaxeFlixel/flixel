@@ -32,7 +32,7 @@ class Console extends Window
 	/**
 	 * The text that is displayed in the console's input field by default.
 	 */
-	private static inline var DEFAULT_TEXT:String = #if hscript
+	static inline var DEFAULT_TEXT:String = #if hscript
 		"(Click here / press [Tab] to enter command. Type 'help' for help.)" #else
 		"Using the console requires hscript - please run 'haxelib install hscript'." #end;
 	
@@ -57,16 +57,16 @@ class Console extends Window
 	/**
 	 * The input textfield used to enter commands.
 	 */
-	private var input:TextField;
+	var input:TextField;
 	
 	#if (!next && sys)
-	private var inputMouseDown:Bool = false;
-	private var stageMouseDown:Bool = false;
+	var inputMouseDown:Bool = false;
+	var stageMouseDown:Bool = false;
 	#end
 	
 	public var history:ConsoleHistory;
 	
-	private var completionList:CompletionList;
+	var completionList:CompletionList;
 	
 	/**
 	 * Creates a new console window object.
@@ -92,7 +92,7 @@ class Console extends Window
 		#end
 	}
 	
-	private function createInputTextField()
+	function createInputTextField()
 	{
 		// Create the input textfield
 		input = new TextField();
@@ -107,7 +107,7 @@ class Console extends Window
 		addChild(input);
 	}
 	
-	private function registerEventListeners()
+	function registerEventListeners()
 	{
 		#if hscript
 		input.type = TextFieldType.INPUT;
@@ -156,7 +156,7 @@ class Console extends Window
 	#end
 	
 	@:access(flixel.FlxGame)
-	private function onFocus(_)
+	function onFocus(_)
 	{
 		#if FLX_DEBUG
 		// Pause game
@@ -174,7 +174,7 @@ class Console extends Window
 	}
 	
 	@:access(flixel.FlxGame)
-	private function onFocusLost(_)
+	function onFocusLost(_)
 	{
 		#if FLX_DEBUG
 		// Unpause game
@@ -195,7 +195,7 @@ class Console extends Window
 	}
 	
 	#if hscript
-	private function onKeyDown(e:KeyboardEvent)
+	function onKeyDown(e:KeyboardEvent)
 	{
 		if (completionList.visible)
 			return;
@@ -222,14 +222,14 @@ class Console extends Window
 		}
 	}
 	
-	private function setText(text:String)
+	function setText(text:String)
 	{
 		input.text = text;
 		// Set caret to the end of the command
 		input.setSelection(text.length, text.length);
 	}
 	
-	private function processCommand()
+	function processCommand()
 	{
 		try
 		{
@@ -349,7 +349,7 @@ class Console extends Window
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
-	override private function updateSize()
+	override function updateSize()
 	{
 		super.updateSize();
 		

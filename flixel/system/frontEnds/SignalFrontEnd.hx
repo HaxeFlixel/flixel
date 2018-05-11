@@ -28,5 +28,5 @@ class SignalFrontEnd
 	public var focusLost(default, null):FlxSignal = new FlxSignal();
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 }

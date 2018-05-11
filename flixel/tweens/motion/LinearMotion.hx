@@ -11,11 +11,11 @@ class LinearMotion extends Motion
 	public var distance(get, never):Float;
 	
 	// Line information.
-	private var _fromX:Float = 0;
-	private var _fromY:Float = 0;
-	private var _moveX:Float = 0;
-	private var _moveY:Float = 0;
-	private var _distance:Float = -1;
+	var _fromX:Float = 0;
+	var _fromY:Float = 0;
+	var _moveX:Float = 0;
+	var _moveY:Float = 0;
+	var _distance:Float = -1;
 
 	/**
 	 * Starts moving along a line.
@@ -49,7 +49,7 @@ class LinearMotion extends Motion
 		return this;
 	}
 
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		x = _fromX + _moveX * scale;
@@ -66,7 +66,7 @@ class LinearMotion extends Motion
 		}
 	}
 
-	private function get_distance():Float
+	function get_distance():Float
 	{
 		if (_distance >= 0)
 			return _distance;

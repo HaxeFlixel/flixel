@@ -69,5 +69,5 @@ class ConsoleFrontEnd
 	}
 
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 }

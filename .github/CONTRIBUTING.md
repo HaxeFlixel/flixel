@@ -1,15 +1,13 @@
 Thanks for contributing to HaxeFlixel!
 
-## Reporting a bug
+## Reporting a Bug
 
-When reporting a bug, please answer the following questions:
+When reporting a bug, simply fill in the [issue template](https://github.com/HaxeFlixel/flixel/blob/dev/.github/ISSUE_TEMPLATE.md) that is presented to you.
 
-1. How can the bug be reproduced? (*compilable* code snippet)
-2. What is the expected behaviour in your opinion, and what is happening instead?
-2. On what targets is it happening? (all, just flash, just native etc...)
-3. What Flixel and OpenFL versions are you using? (`haxelib list`)
+## Contributing Code
 
+For code contributions, check out the following pages:
 
-## Contributing code
-
-Please refer to [this page](http://haxeflixel.com/documentation/code-contributions/).
+- [Install Development Flixel](http://haxeflixel.com/documentation/install-development-flixel/)
+- [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
+- [Code Style](http://haxeflixel.com/documentation/code-style)

@@ -3,19 +3,14 @@
 	<icon path="assets/images/logo/HaxeFlixel.svg" />
 	
 	<section unless="unit-test">
-		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" if="html5" />
-		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="flash" embed="true" />
-		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || html5" embed="true" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="web || air" embed="true" />
+		<assets path="assets/sounds" rename="flixel/sounds" include="*.ogg" unless="flash || air" embed="true" />
 	</section>
 	
 	<assets path="assets/fonts/nokiafc22.ttf" rename="flixel/fonts/nokiafc22.ttf" embed="true" />
 	<assets path="assets/fonts/monsterrat.ttf" rename="flixel/fonts/monsterrat.ttf" embed="true" />
-
-	<section if="html5" unless="unit-test">
-		<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" />
-		<assets path="assets/images/logo/default.png" rename="flixel/images/logo/default.png" />
-	</section>
-	<section unless="html5">
+	
+	<section unless="unit-test html5">
 		<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" />
 		<assets path="assets/images/logo/default.png" rename="flixel/images/logo/default.png" embed="true" />
 	</section>

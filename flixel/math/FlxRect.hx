@@ -12,7 +12,7 @@ class FlxRect implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxRect>;
 	
-	private static var _pool = new FlxPool<FlxRect>(FlxRect);
+	static var _pool = new FlxPool<FlxRect>(FlxRect);
 	
 	/**
 	 * Recycle or create new FlxRect.
@@ -66,8 +66,8 @@ class FlxRect implements IFlxPooled
 	 */
 	public var isEmpty(get, null):Bool;
 	
-	private var _weak:Bool = false;
-	private var _inPool:Bool = false;
+	var _weak:Bool = false;
+	var _inPool:Bool = false;
 	
 	@:keep
 	public function new(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0)
@@ -404,56 +404,56 @@ class FlxRect implements IFlxPooled
 			LabelValuePair.weak("h", height)]);
 	}
 	
-	private inline function get_left():Float
+	inline function get_left():Float
 	{
 		return x;
 	}
 	
-	private inline function set_left(Value:Float):Float
+	inline function set_left(Value:Float):Float
 	{
 		width -= Value - x;
 		return x = Value;
 	}
 	
-	private inline function get_right():Float
+	inline function get_right():Float
 	{
 		return x + width;
 	}
 	
-	private inline function set_right(Value:Float):Float
+	inline function set_right(Value:Float):Float
 	{
 		width = Value - x;
 		return Value;
 	}
 	
-	private inline function get_top():Float
+	inline function get_top():Float
 	{
 		return y;
 	}
 	
-	private inline function set_top(Value:Float):Float
+	inline function set_top(Value:Float):Float
 	{
 		height -= Value - y;
 		return y = Value;
 	}
 	
-	private inline function get_bottom():Float
+	inline function get_bottom():Float
 	{
 		return y + height;
 	}
 	
-	private inline function set_bottom(Value:Float):Float
+	inline function set_bottom(Value:Float):Float
 	{
 		height = Value - y;
 		return Value;
 	}
 	
-	private inline function get_isEmpty():Bool
+	inline function get_isEmpty():Bool
 	{
 		return width == 0 || height == 0;
 	}
 	
-	private static function get_pool():IFlxPool<FlxRect>
+	static function get_pool():IFlxPool<FlxRect>
 	{
 		return _pool;
 	}

@@ -1,8 +1,19 @@
-4.4.0 (to be released)
+4.4.1 (May 10, 2018)
 ------------------------------
+#### Bugfixes:
+
+- Fixed an issue with code completion on the Flash target in VSCode
+
+4.4.0 (May 4, 2018)
+------------------------------
+#### Dependencies:
+
+- Added support for OpenFL 8 and Lime 6.3.0 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
+- Removed support for Haxe versions < 3.4.0
+- Fixed compatibility with Haxe 4 / development
+
 #### New features:
 
-- Added support for OpenFL 8 ([#2136](https://github.com/HaxeFlixel/flixel/issues/2136))
 - `FlxStringUtil`: added `getEnumName()` ([95615382](https://github.com/HaxeFlixel/flixel/commit/95615382))
 - `FlxG.console`: added `registerEnum()` ([24905c4b](https://github.com/HaxeFlixel/flixel/commit/24905c4b))
 - `FlxMouse`: added `justMoved` ([#2087](https://github.com/HaxeFlixel/flixel/issues/2087))
@@ -25,7 +36,8 @@
 
 #### Changes and improvements:
 
-- compatibility fixes for Haxe 4
+- `FlxG.keys`: added arrow keys, space and tab to `preventDefaultKeys` on HTML5
+- `FlxSpriteGroup`: added a `camera` setter override ([#2146](https://github.com/HaxeFlixel/flixel/issues/2146))
 
 4.3.0 (July 22, 2017)
 ------------------------------

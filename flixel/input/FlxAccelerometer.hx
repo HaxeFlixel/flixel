@@ -30,7 +30,7 @@ class FlxAccelerometer
 	 */
 	public var isSupported(get, never):Bool;
 	
-	private var _sensor:Accelerometer;
+	var _sensor:Accelerometer;
 	
 	public function new() 
 	{
@@ -46,7 +46,7 @@ class FlxAccelerometer
 		return Accelerometer.isSupported;
 	}
 	
-	private function updateCallback(Event:AccelerometerEvent):Void 
+	function updateCallback(Event:AccelerometerEvent):Void 
 	{
 		#if android
 		x = Event.accelerationX;

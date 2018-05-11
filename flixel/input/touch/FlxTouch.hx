@@ -28,8 +28,8 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 	
-	private var input:FlxInput<Int>;
-	private var flashPoint = new Point();
+	var input:FlxInput<Int>;
+	var flashPoint = new Point();
 	
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Int = -1;
@@ -56,7 +56,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
 	 */
-	private function new(x:Int = 0, y:Int = 0, pointID:Int = 0)
+	function new(x:Int = 0, y:Int = 0, pointID:Int = 0)
 	{
 		super();
 		
@@ -67,7 +67,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	/**
 	 * Called by the internal game loop to update the just pressed/just released flags.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		input.update();
 		
@@ -90,7 +90,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 * @param	X	stageX touch coordinate
 	 * @param	Y	stageY touch coordinate
 	 */
-	private function setXY(X:Int, Y:Int):Void
+	function setXY(X:Int, Y:Int):Void
 	{
 		flashPoint.setTo(X, Y);
 		flashPoint = FlxG.game.globalToLocal(flashPoint);
@@ -98,27 +98,27 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		setGlobalScreenPositionUnsafe(flashPoint.x, flashPoint.y);
 	}
 	
-	private inline function get_touchPointID():Int
+	inline function get_touchPointID():Int
 	{
 		return input.ID;
 	}
 	
-	private inline function get_justReleased():Bool
+	inline function get_justReleased():Bool
 	{
 		return input.justReleased;
 	}
 	
-	private inline function get_released():Bool
+	inline function get_released():Bool
 	{
 		return input.released;
 	}
 	
-	private inline function get_pressed():Bool
+	inline function get_pressed():Bool
 	{
 		return input.pressed;
 	}
 	
-	private inline function get_justPressed():Bool
+	inline function get_justPressed():Bool
 	{
 		return input.justPressed;
 	}

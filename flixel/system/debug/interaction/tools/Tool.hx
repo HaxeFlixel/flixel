@@ -16,9 +16,9 @@ class Tool extends Sprite implements IFlxDestroyable
 	public var button(default, null):FlxSystemButton;
 	public var cursor(default, null):BitmapData;
 	
-	private var _name:String = "(Unknown tool)";
-	private var _shortcut:String;
-	private var _brain:Interaction;
+	var _name:String = "(Unknown tool)";
+	var _shortcut:String;
+	var _brain:Interaction;
 	
 	public function init(brain:Interaction):Tool
 	{
@@ -41,7 +41,7 @@ class Tool extends Sprite implements IFlxDestroyable
 		return _brain.activeTool == this && _brain.visible;
 	}
 	
-	private function setButton(Icon:Class<BitmapData>):Void
+	function setButton(Icon:Class<BitmapData>):Void
 	{
 		button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 		button.toggled = true;
@@ -52,13 +52,13 @@ class Tool extends Sprite implements IFlxDestroyable
 		Tooltip.add(button, tooltip);
 	}
 	
-	private function setCursor(Icon:BitmapData):Void
+	function setCursor(Icon:BitmapData):Void
 	{
 		cursor = Icon;
 		_brain.registerCustomCursor(_name, cursor);
 	}
 	
-	private function onButtonClicked():Void
+	function onButtonClicked():Void
 	{
 		_brain.setActiveTool(this);
 	}

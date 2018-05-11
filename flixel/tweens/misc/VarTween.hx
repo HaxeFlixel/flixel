@@ -7,9 +7,9 @@ import flixel.tweens.FlxTween;
  */
 class VarTween extends FlxTween
 {
-	private var _object:Dynamic;
-	private var _properties:Dynamic;
-	private var _propertyInfos:Array<VarTweenProperty> = [];
+	var _object:Dynamic;
+	var _properties:Dynamic;
+	var _propertyInfos:Array<VarTweenProperty> = [];
 	
 	/**
 	 * Clean up references
@@ -21,7 +21,7 @@ class VarTween extends FlxTween
 		_properties = null;
 	}
 	
-	private function new(Options:TweenOptions, ?manager:FlxTweenManager)
+	function new(Options:TweenOptions, ?manager:FlxTweenManager)
 	{
 		super(Options, manager);
 	}
@@ -53,7 +53,7 @@ class VarTween extends FlxTween
 		return this;
 	}
 	
-	override private function update(elapsed:Float):Void
+	override function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		
@@ -80,7 +80,7 @@ class VarTween extends FlxTween
 		}
 	}
 	
-	private function initializeVars():Void
+	function initializeVars():Void
 	{
 		var fields:Array<String>;
 		

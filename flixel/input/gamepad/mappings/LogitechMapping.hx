@@ -6,11 +6,11 @@ import flixel.input.gamepad.id.LogitechID;
 class LogitechMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
-	private static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
-	private static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
+	static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
 
-	private static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
 	#end
 	
 	override function initValues():Void 

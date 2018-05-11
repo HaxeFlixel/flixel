@@ -67,7 +67,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
-	private var _frameTimer:Float = 0;
+	var _frameTimer:Float = 0;
 	
 	/**
 	 * @param   Name        What this animation should be called (e.g. `"run"`).
@@ -211,7 +211,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return new FlxAnimation(Parent, name, frames, frameRate, looped, flipX, flipY);
 	}
 	
-	private function set_frameRate(value:Int):Int
+	function set_frameRate(value:Int):Int
 	{
 		delay = 0;
 		frameRate = value;
@@ -220,7 +220,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return value;
 	}
 	
-	private function set_curFrame(Frame:Int):Int
+	function set_curFrame(Frame:Int):Int
 	{
 		var maxFrameIndex:Int = numFrames - 1;
 		var tempFrame:Int = (reversed) ? (maxFrameIndex - Frame) : Frame;
@@ -248,7 +248,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return Frame;
 	}
 	
-	private inline function get_numFrames():Int
+	inline function get_numFrames():Int
 	{
 		return frames.length;
 	}

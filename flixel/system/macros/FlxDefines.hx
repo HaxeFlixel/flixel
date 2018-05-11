@@ -66,17 +66,10 @@ class FlxDefines
 		defineHelperDefines();
 	}
 	
-	private static function checkDependencyCompatibility()
+	static function checkDependencyCompatibility()
 	{
-		#if (haxe_ver < "3.2")
-		abortVersion("Haxe", "3.2.0 or newer", "haxe_ver", (macro null).pos);
-		#end
-		
-		#if ((haxe_ver == "3.201") && flixel_ui)
-		if (defined("cpp"))
-			abort('flixel-ui is not compatible with Haxe 3.2.1 on the cpp target'
-				+' due to a compiler bug (#4343). Please use a different Haxe version.',
-				(macro null).pos);
+		#if (haxe_ver < "3.4")
+		abortVersion("Haxe", "3.4.0 or newer", "haxe_ver", (macro null).pos);
 		#end
 		
 		#if !nme
@@ -84,10 +77,10 @@ class FlxDefines
 		#end
 	}
 
-	private static function checkOpenFLVersions()
+	static function checkOpenFLVersions()
 	{
-		#if ((lime < "6.2.0") && ((lime < "2.8.1") || (lime >= "3.0.0"))) 
-		abortVersion("Lime", "6.2.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
+		#if ((lime < "6.3.0") && ((lime < "2.8.1") || (lime >= "3.0.0")))
+		abortVersion("Lime", "6.3.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
 		#end
 
 		#if ((openfl < "8.0.0") && ((openfl < "3.5.0") || (openfl >= "4.0.0")))
@@ -95,17 +88,16 @@ class FlxDefines
 		#end
 	}
 
-	private static function abortVersion(dependency:String, supported:String, found:String, pos:Position)
+	static function abortVersion(dependency:String, supported:String, found:String, pos:Position)
 	{
 		abort('Unsupported $dependency version! Supported versions are $supported (found ${Context.definedValue(found)}).', pos);
 	}
 	
-	private static function checkDefines()
+	static function checkDefines()
 	{
 		for (define in HelperDefines.getConstructors())
 			abortIfDefined(define);
 		
-		#if (haxe_ver >= "3.2")
 		var userDefinable = UserDefines.getConstructors();
 		for (define in Context.getDefines().keys())
 		{
@@ -114,16 +106,15 @@ class FlxDefines
 				Context.warning('"$define" is not a valid flixel define.', (macro null).pos);
 			}
 		}
-		#end
 	}
 	
-	private static function abortIfDefined(define:String)
+	static function abortIfDefined(define:String)
 	{
 		if (defined(define))
 			abort('$define can only be defined by flixel.', (macro null).pos);
 	}
 
-	private static function defineInversions()
+	static function defineInversions()
 	{
 		defineInversion(FLX_NO_GAMEPAD, FLX_GAMEPAD);
 		defineInversion(FLX_NO_MOUSE, FLX_MOUSE);
@@ -134,7 +125,7 @@ class FlxDefines
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 	}
 
-	private static function defineHelperDefines()
+	static function defineHelperDefines()
 	{
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 			define(FLX_MOUSE_ADVANCED);
@@ -149,6 +140,10 @@ class FlxDefines
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
+		
+		#if nme
+		define(FLX_JOYSTICK_API);
+		#end
 		
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
@@ -166,13 +161,13 @@ class FlxDefines
 		#end
 	}
 	
-	private static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
+	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
 	{
 		if (!defined(userDefine))
 			define(invertedDefine);
 	}
 	
-	private static function checkSwfVersion()
+	static function checkSwfVersion()
 	{
 		if (!defined("flash11"))
 			abort("The minimum required Flash Player version for HaxeFlixel is 11." +
@@ -182,7 +177,7 @@ class FlxDefines
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
 	}
 	
-	private static function swfVersionError(feature:String, version:String, define:UserDefines)
+	static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
 		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
 			+ 'Define ${define.getName()} to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
@@ -191,17 +186,17 @@ class FlxDefines
 			abort(errorMessage, (macro null).pos);
 	}
 	
-	private static inline function defined(define:Dynamic)
+	static inline function defined(define:Dynamic)
 	{
 		return Context.defined(Std.string(define));
 	}
 	
-	private static inline function define(define:Dynamic)
+	static inline function define(define:Dynamic)
 	{
 		Compiler.define(Std.string(define));
 	}
 	
-	private static function abort(message:String, pos:Position)
+	static function abort(message:String, pos:Position)
 	{
 		Context.fatalError(message, pos);
 	}

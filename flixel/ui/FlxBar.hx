@@ -110,25 +110,25 @@ class FlxBar extends FlxSprite
 	 * The direction from which the health bar will fill-up. Default is from left to right. Change takes effect immediately.
 	 */
 	public var fillDirection(default, set):FlxBarFillDirection;	
-	private var _fillHorizontal:Bool;
+	var _fillHorizontal:Bool;
 	
 	/**
 	 * FlxSprite which is used for rendering front graphics of bar (showing value) in tile render mode.
 	 */
-	private var _frontFrame:FlxFrame;
-	private var _filledFlxRect:FlxRect;
+	var _frontFrame:FlxFrame;
+	var _filledFlxRect:FlxRect;
 	
-	private var _emptyBar:BitmapData;
-	private var _emptyBarRect:Rectangle;
+	var _emptyBar:BitmapData;
+	var _emptyBarRect:Rectangle;
 	
-	private var _filledBar:BitmapData;
+	var _filledBar:BitmapData;
 	
-	private var _zeroOffset:Point;
+	var _zeroOffset:Point;
 	
-	private var _filledBarRect:Rectangle;
-	private var _filledBarPoint:Point;
+	var _filledBarRect:Rectangle;
+	var _filledBarPoint:Point;
 	
-	private var _maxPercent:Int = 100;
+	var _maxPercent:Int = 100;
 	
 	/**
 	 * Create a new FlxBar Object
@@ -678,7 +678,7 @@ class FlxBar extends FlxSprite
 		return this;
 	}
 	
-	private function set_fillDirection(direction:FlxBarFillDirection):FlxBarFillDirection
+	function set_fillDirection(direction:FlxBarFillDirection):FlxBarFillDirection
 	{
 		fillDirection = direction;
 		
@@ -694,7 +694,7 @@ class FlxBar extends FlxSprite
 		return fillDirection;
 	}
 	
-	private function updateValueFromParent():Void
+	function updateValueFromParent():Void
 	{
 		value = Reflect.getProperty(parent, parentVariable);
 	}
@@ -861,7 +861,7 @@ class FlxBar extends FlxSprite
 		}
 	}
 	
-	override private function set_pixels(Pixels:BitmapData):BitmapData
+	override function set_pixels(Pixels:BitmapData):BitmapData
 	{
 		if (FlxG.renderTile)
 		{
@@ -884,7 +884,7 @@ class FlxBar extends FlxSprite
 			LabelValuePair.weak("value", value)]);
 	}
 	
-	private function get_percent():Float
+	function get_percent():Float
 	{
 		if (value > max)
 		{
@@ -894,7 +894,7 @@ class FlxBar extends FlxSprite
 		return Math.floor(((value - min) / range) * _maxPercent);
 	}
 
-	private function set_percent(newPct:Float):Float
+	function set_percent(newPct:Float):Float
 	{
 		if (newPct >= 0 && newPct <= _maxPercent)
 		{
@@ -903,7 +903,7 @@ class FlxBar extends FlxSprite
 		return newPct;
 	}
 	
-	private function set_value(newValue:Float):Float
+	function set_value(newValue:Float):Float
 	{
 		value = Math.max(min, Math.min(newValue, max));
 		
@@ -926,7 +926,7 @@ class FlxBar extends FlxSprite
 		return newValue;
 	}
 	
-	private function get_value():Float
+	function get_value():Float
 	{
 		#if neko
 		if (value == null) 
@@ -938,14 +938,14 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	private function set_numDivisions(newValue:Int):Int
+	function set_numDivisions(newValue:Int):Int
 	{
 		numDivisions = (newValue > 0) ? newValue : 100;
 		updateFilledBar();
 		return newValue;
 	}
 	
-	private function get_frontFrames():FlxImageFrame
+	function get_frontFrames():FlxImageFrame
 	{
 		if (FlxG.renderTile)
 		{
@@ -954,7 +954,7 @@ class FlxBar extends FlxSprite
 		return null;
 	}
 	
-	private function set_frontFrames(value:FlxImageFrame):FlxImageFrame
+	function set_frontFrames(value:FlxImageFrame):FlxImageFrame
 	{
 		if (FlxG.renderTile)
 		{
@@ -968,7 +968,7 @@ class FlxBar extends FlxSprite
 		return value;
 	}
 	
-	private function get_backFrames():FlxImageFrame
+	function get_backFrames():FlxImageFrame
 	{
 		if (FlxG.renderTile)
 		{
@@ -977,7 +977,7 @@ class FlxBar extends FlxSprite
 		return null;
 	}
 	
-	private function set_backFrames(value:FlxImageFrame):FlxImageFrame
+	function set_backFrames(value:FlxImageFrame):FlxImageFrame
 	{
 		if (FlxG.renderTile)
 		{

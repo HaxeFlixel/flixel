@@ -14,9 +14,7 @@ Run the `.hxml` file in [`/targets`](targets) to run the tests on that specific 
 - `cpp`
 - `neko`
 
-Alternatively, this can be done in
- - FlashDevelop - open [`FlixelUnitTests.hxproj`](FlixelUnitTests.hxproj) and enter the target name into the target dropdown (has to be done manually).
- - Visual Studio Code - a pre-configured `tasks.json` comes with this repo (`F1` -> `Tasks: Run Task` -> Choose the target to test).
+Alternatively, this can be done from within Visual Studio Code - a pre-configured `tasks.json` comes with this repo (`F1` -> `Tasks: Run Task` -> Choose the target to test).
 
 ### Limitations
 

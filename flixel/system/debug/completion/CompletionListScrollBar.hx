@@ -7,10 +7,10 @@ import openfl.display.Sprite;
 
 class CompletionListScrollBar extends Sprite
 {
-	private static inline var BG_COLOR = 0xFF444444;
-	private static inline var HANDLE_COLOR = 0xFF222222;
+	static inline var BG_COLOR = 0xFF444444;
+	static inline var HANDLE_COLOR = 0xFF222222;
 	
-	private var handle:Bitmap;
+	var handle:Bitmap;
 	
 	public function new(x:Int, y:Int, width:Int, height:Int) 
 	{

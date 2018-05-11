@@ -2,13 +2,13 @@ package flixel.system.debug.console;
 
 class ConsoleHistory
 {
-	private static inline var MAX_LENGTH:Int = 50;
+	static inline var MAX_LENGTH:Int = 50;
 	
 	public var commands:Array<String>;
 	
 	public var isEmpty(get, never):Bool;
 	
-	private var index:Int = 0;
+	var index:Int = 0;
 	
 	public function new() 
 	{
@@ -59,7 +59,7 @@ class ConsoleHistory
 		FlxG.save.flush();
 	}
 	
-	private function get_isEmpty():Bool
+	function get_isEmpty():Bool
 	{
 		return commands.length == 0;
 	}

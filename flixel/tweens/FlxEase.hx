@@ -17,16 +17,16 @@ class FlxEase
 	/**
 	 * Easing constants.
 	 */ 
-	private static var PI2:Float = Math.PI / 2;
-	private static var EL:Float = 2 * Math.PI / .45;
-	private static var B1:Float = 1 / 2.75;
-	private static var B2:Float = 2 / 2.75;
-	private static var B3:Float = 1.5 / 2.75;
-	private static var B4:Float = 2.5 / 2.75;
-	private static var B5:Float = 2.25 / 2.75;
-	private static var B6:Float = 2.625 / 2.75;
-	private static var ELASTIC_AMPLITUDE:Float = 1;
-	private static var ELASTIC_PERIOD:Float = 0.4;
+	static var PI2:Float = Math.PI / 2;
+	static var EL:Float = 2 * Math.PI / .45;
+	static var B1:Float = 1 / 2.75;
+	static var B2:Float = 2 / 2.75;
+	static var B3:Float = 1.5 / 2.75;
+	static var B4:Float = 2.5 / 2.75;
+	static var B5:Float = 2.25 / 2.75;
+	static var B6:Float = 2.625 / 2.75;
+	static var ELASTIC_AMPLITUDE:Float = 1;
+	static var ELASTIC_PERIOD:Float = 0.4;
 	
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float

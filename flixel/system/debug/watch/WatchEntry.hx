@@ -19,17 +19,17 @@ import flixel.system.debug.console.ConsoleUtil;
 
 class WatchEntry extends Sprite implements IFlxDestroyable
 {
-	private static inline var GUTTER = 4;
-	private static inline var TEXT_HEIGHT = 20;
-	private static inline var MAX_NAME_WIDTH = 125;
+	static inline var GUTTER = 4;
+	static inline var TEXT_HEIGHT = 20;
+	static inline var MAX_NAME_WIDTH = 125;
 	
 	public var data:WatchEntryData;
 	public var displayName(default, null):String;
 
-	private var nameText:TextField;
-	private var valueText:EditableTextField;
-	private var removeButton:FlxSystemButton;
-	private var defaultFormat:TextFormat;
+	var nameText:TextField;
+	var valueText:EditableTextField;
+	var removeButton:FlxSystemButton;
+	var defaultFormat:TextFormat;
 
 	public function new(displayName:String, data:WatchEntryData, removeEntry:WatchEntry->Void)
 	{
@@ -51,7 +51,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		removeButton.alpha = 0.3;
 	}
 	
-	private function getTextColor():FlxColor
+	function getTextColor():FlxColor
 	{
 		return switch (data)
 		{
@@ -61,7 +61,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 	
-	private function initTextField<T:TextField>(textField:T):T
+	function initTextField<T:TextField>(textField:T):T
 	{
 		textField.selectable = true;
 		textField.defaultTextFormat = defaultFormat;
@@ -81,7 +81,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		removeButton.x = textWidth;
 	}
 	
-	private function updateName()
+	function updateName()
 	{
 		if (displayName != null)
 		{
@@ -99,14 +99,14 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 	
-	private function setNameText(name:String)
+	function setNameText(name:String)
 	{
 		nameText.text = name;
 		var currentWidth = nameText.textWidth + 4;
 		nameText.width = Math.min(currentWidth, MAX_NAME_WIDTH);
 	}
 	
-	private function getValue():Dynamic
+	function getValue():Dynamic
 	{
 		return switch (data)
 		{
@@ -123,7 +123,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		}
 	}
 
-	private function getFormattedValue():String
+	function getFormattedValue():String
 	{
 		var value:Dynamic = getValue();
 		if (Std.is(value, Float))
@@ -131,7 +131,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		return Std.string(value);
 	}
 	
-	private function submitValue(value:Dynamic):Void
+	function submitValue(value:Dynamic):Void
 	{
 		switch (data)
 		{

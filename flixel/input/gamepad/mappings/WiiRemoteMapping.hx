@@ -7,10 +7,10 @@ import flixel.input.gamepad.id.WiiRemoteID;
 class WiiRemoteMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
-	private static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
-	private static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
+	static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 20;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 21;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
 	#end
 	
 	override function initValues():Void 
@@ -30,7 +30,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDClassicController(rawID:Int):FlxGamepadInputID
+	function getIDClassicController(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -63,7 +63,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDNunchuk(rawID:Int):FlxGamepadInputID
+	function getIDNunchuk(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -89,7 +89,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDDefault(rawID:Int):FlxGamepadInputID
+	function getIDDefault(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -118,7 +118,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawClassicController(ID:FlxGamepadInputID):Int
+	function getRawClassicController(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -151,7 +151,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawNunchuk(ID:FlxGamepadInputID):Int
+	function getRawNunchuk(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -178,7 +178,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawDefault(ID:FlxGamepadInputID):Int
+	function getRawDefault(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{

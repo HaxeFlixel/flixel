@@ -7,13 +7,13 @@ import flixel.input.gamepad.id.MayflashWiiRemoteID;
 class MayflashWiiRemoteMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
-	private static inline var REMOTE_DPAD_X:Int = 16;
-	private static inline var REMOTE_DPAD_Y:Int = 17;
+	static inline var REMOTE_DPAD_X:Int = 16;
+	static inline var REMOTE_DPAD_Y:Int = 17;
 
-	private static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 18;
-	private static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 19;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 20;
-	private static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 21;
+	static inline var LEFT_ANALOG_STICK_FAKE_X:Int = 18;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y:Int = 19;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 20;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 21;
 	#end
 	
 	override function initValues():Void 
@@ -32,7 +32,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDClassicController(rawID:Int):FlxGamepadInputID
+	function getIDClassicController(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -63,7 +63,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDNunchuk(rawID:Int):FlxGamepadInputID
+	function getIDNunchuk(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -89,7 +89,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getIDDefault(rawID:Int):FlxGamepadInputID
+	function getIDDefault(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -118,7 +118,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawClassicController(ID:FlxGamepadInputID):Int
+	function getRawClassicController(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -151,7 +151,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawNunchuk(ID:FlxGamepadInputID):Int
+	function getRawNunchuk(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -178,7 +178,7 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 		}
 	}
 	
-	private function getRawDefault(ID:FlxGamepadInputID):Int
+	function getRawDefault(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{

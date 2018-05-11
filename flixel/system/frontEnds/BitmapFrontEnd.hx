@@ -36,11 +36,11 @@ class BitmapFrontEnd
 	public var whitePixel(get, never):FlxFrame;
 
 	@:allow(flixel.system.frontEnds.BitmapLogFrontEnd)
-	private var _cache:Map<String, FlxGraphic>;
+	var _cache:Map<String, FlxGraphic>;
 	
-	private var _whitePixel:FlxFrame;
+	var _whitePixel:FlxFrame;
 
-	private var _lastUniqueKeyIndex:Int = 0;
+	var _lastUniqueKeyIndex:Int = 0;
 
 	public function new()
 	{
@@ -345,7 +345,7 @@ class BitmapFrontEnd
 		}
 	}
 	
-	private inline function removeKey(key:String):Void
+	inline function removeKey(key:String):Void
 	{
 		if (key != null)
 		{
@@ -392,13 +392,13 @@ class BitmapFrontEnd
 	}
 	
 	#if !flash
-	private function get_maxTextureSize():Int
+	function get_maxTextureSize():Int
 	{
 		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
 	}
 	#end
 	
-	private function get_whitePixel():FlxFrame
+	function get_whitePixel():FlxFrame
 	{
 		if (_whitePixel == null)
 		{

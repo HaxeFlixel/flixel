@@ -22,7 +22,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 */
 	public var frame(get, null):FlxFrame;
 	
-	private function new(parent:FlxGraphic, ?border:FlxPoint)
+	function new(parent:FlxGraphic, ?border:FlxPoint)
 	{
 		super(parent, FlxFrameCollectionType.IMAGE, border);
 	}
@@ -206,7 +206,7 @@ class FlxImageFrame extends FlxFramesCollection
 	/**
 	 * `FlxImageFrame` comparison method. For internal use.
 	 */
-	private inline function equals(rect:FlxRect, border:FlxPoint):Bool
+	inline function equals(rect:FlxRect, border:FlxPoint):Bool
 	{
 		return rect.equals(frame.frame) && border.equals(this.border);
 	}
@@ -252,7 +252,7 @@ class FlxImageFrame extends FlxFramesCollection
 		frame = FlxDestroyUtil.destroy(frame);
 	}
 	
-	private function get_frame():FlxFrame
+	function get_frame():FlxFrame
 	{
 		return frames[0];
 	}

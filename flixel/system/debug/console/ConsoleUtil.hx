@@ -20,7 +20,7 @@ class ConsoleUtil
 	/**
 	 * The hscript parser to make strings into haxe code.
 	 */
-	private static var parser:Parser;
+	static var parser:Parser;
 	/**
 	 * The custom hscript interpreter to run the haxe code from the parser.
 	 */
@@ -128,7 +128,7 @@ class ConsoleUtil
 		return sortFields(filteredFields);
 	}
 	
-	private static function sortFields(fields:Array<String>):Array<String>
+	static function sortFields(fields:Array<String>):Array<String>
 	{
 		var underscoreList = [];
 		
@@ -170,7 +170,7 @@ private class Interp extends hscript.Interp
 		return toArray(locals.keys()).concat(toArray(variables.keys()));
 	}
 	
-	private function toArray<T>(iterator:Iterator<T>):Array<T>
+	function toArray<T>(iterator:Iterator<T>):Array<T>
 	{
 		var array = [];
 		for (element in iterator)
