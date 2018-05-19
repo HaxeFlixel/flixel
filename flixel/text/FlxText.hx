@@ -1231,8 +1231,8 @@ abstract FlxTextAlign(String) from String
 }
 
 @:enum
-abstract FlxTextType(String) from String {
-	
+abstract FlxTextType(String) from String
+{
 	var DYNAMIC = "dynamic";
 	
 	var INPUT = "input";
