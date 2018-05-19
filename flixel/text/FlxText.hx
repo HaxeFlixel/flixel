@@ -1,9 +1,12 @@
 package flixel.text;
 
 import flash.display.BitmapData;
+import flash.events.Event;
+import flash.events.FocusEvent;
 import flash.geom.ColorTransform;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
+import flash.text.TextFieldType;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
@@ -13,6 +16,7 @@ import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -137,15 +141,18 @@ class FlxText extends FlxSprite
 	 */
 	public var shadowOffset(default, null):FlxPoint;
 	
+	public var type(get, set):FlxTextType;
+	
 	var _defaultFormat:TextFormat;
 	var _formatAdjusted:TextFormat;
 	var _formatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
 	
 	/**
-	 * Helper boolean which tells whether to update graphic of this text object or not.
+	 * Helper booleans which tells whether to update graphic of this text object or not.
 	 */
 	var _regen:Bool = true;
+	var _persistentDraw:Bool = false;
 	
 	/**
 	 * Helper vars to draw border styles with transparency.
@@ -530,6 +537,44 @@ class FlxText extends FlxSprite
 		return (textField != null) ? (textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 	
+	function get_type():FlxTextType
+	{
+		return FlxTextType.fromOpenFL(textField.type);
+	}
+	
+	function set_type(type:FlxTextType):FlxTextType
+	{
+		var otype = FlxTextType.toOpenFL(type);
+		
+		if (textField.type != otype)
+		{
+			textField.type = otype;
+			
+			#if FLX_MOUSE
+			switch (type)
+			{
+				case INPUT:
+					
+					textField.selectable = true;
+					
+					FlxMouseEventManager.add(this, onFocusIn, null, null, null, true, true, false);
+					textField.addEventListener(Event.CHANGE, onChange);
+					textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+				default:
+					
+					textField.selectable = false;
+					_persistentDraw = false;
+					
+					FlxMouseEventManager.remove(this);
+					textField.removeEventListener(Event.CHANGE, onChange);
+					textField.removeEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
+			}
+			#end
+		}
+		
+		return type;
+	}
+	
 	function set_text(Text:String):String
 	{
 		text = Text;
@@ -814,6 +859,7 @@ class FlxText extends FlxSprite
 		}
 		
 		_regen = false;
+		
 		resetFrame();
 	}
 	
@@ -872,6 +918,9 @@ class FlxText extends FlxSprite
 	
 	override public function draw():Void 
 	{
+		if (_persistentDraw)
+			_regen = true; // TODO: optimize for fewer draws?
+		
 		regenGraphic();
 		super.draw();
 	}
@@ -891,6 +940,36 @@ class FlxText extends FlxSprite
 		
 		regenGraphic();
 		super.calcFrame(RunOnCpp);
+	}
+	
+	#if FLX_MOUSE
+	function onFocusIn(_):Void
+	{
+		FlxG.stage.focus = textField;
+		
+		if (textField.selectable)
+		{
+			var index = textField.getCharIndexAtPoint(FlxG.mouse.x, FlxG.mouse.y);
+			
+			if (index < 0)
+				index = 0;
+			
+			textField.setSelection(index, index);
+		}
+		
+		_persistentDraw = true;
+	}
+	
+	function onFocusOut(_):Void
+	{
+		_regen = true;
+		_persistentDraw = false;
+	}
+	#end
+	
+	function onChange(_):Void
+	{
+		text = textField.text;
 	}
 	
 	function applyBorderStyle():Void
@@ -1147,6 +1226,34 @@ abstract FlxTextAlign(String) from String
 			case RIGHT: TextFormatAlign.RIGHT;
 			case JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
+		}
+	}
+}
+
+@:enum
+abstract FlxTextType(String) from String {
+	
+	var DYNAMIC = "dynamic";
+	
+	var INPUT = "input";
+	
+	public static function fromOpenFL(align:TextFieldType):FlxTextType
+	{
+		return switch (align)
+		{
+			case TextFieldType.DYNAMIC: DYNAMIC;
+			case TextFieldType.INPUT: INPUT;
+			default: DYNAMIC;
+		}
+	}
+	
+	public static function toOpenFL(align:FlxTextType):TextFieldType
+	{
+		return switch (align)
+		{
+			case DYNAMIC: TextFieldType.DYNAMIC;
+			case INPUT: TextFieldType.INPUT;
+			default: TextFieldType.DYNAMIC;
 		}
 	}
 }
