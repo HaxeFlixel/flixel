@@ -564,8 +564,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	function computeTextSize():Void 
 	{
-		var txtWidth:Int = textWidth;
-		var txtHeight:Int = textHeight + 2 * padding;
+		var txtWidth:Int = textWidth + Std.int(borderSize) * 2;
+		var txtHeight:Int = textHeight + 2 * padding + Std.int(borderSize) * 2;
 		
 		if (autoSize)
 		{
