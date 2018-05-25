@@ -3,6 +3,7 @@
 #### Bugfixes:
 
 - `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
+- `FlxAssetPaths`: fixed variables with invalid Haxe identifiers being generated ([#1796](https://github.com/HaxeFlixel/flixel/issues/1796))
 
 4.4.1 (May 10, 2018)
 ------------------------------
