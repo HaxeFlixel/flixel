@@ -81,9 +81,9 @@ private class FileReference
 		return new FileReference(name, value);
 	}
 
-	public var name(default,null):String;
-	public var value(default,null):String;
-	public var documentation(default,null):String;
+	public var name(default, null):String;
+	public var value(default, null):String;
+	public var documentation(default, null):String;
 	
 	function new(name:String, value:String)
 	{
