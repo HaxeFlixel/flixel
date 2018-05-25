@@ -75,7 +75,18 @@ class VarTween extends FlxTween
 			
 			for (info in _propertyInfos)
 			{
-				Reflect.setProperty(_object, info.name, (info.startValue + info.range * scale));
+				var exploded:Array<String> = info.name.split(".");
+				var target = _object;
+				var prop = exploded[0];
+				
+				//Drill down to get the final target object and property if it's a nested object (like FlxSprite.scale)
+				var i:Int = 0;
+				while (i < exploded.length - 1){ 
+					target = Reflect.getProperty(target, exploded[i]);
+					prop = exploded[i + 1];
+					i++;
+				}
+				Reflect.setProperty(target, prop, (info.startValue + info.range * scale));
 			}
 		}
 	}
@@ -95,12 +106,24 @@ class VarTween extends FlxTween
 		
 		for (p in fields)
 		{
-			if (Reflect.getProperty(_object, p) == null)
+			var prop = p;
+			var exploded:Array<String> = p.split(".");
+			var target:Dynamic = _object;
+			var i:Int = 0;
+			while (i < exploded.length-1){
+				if (Reflect.isObject(Reflect.getProperty(target, exploded[i]))){
+					target = Reflect.getProperty(target, exploded[i]);
+					prop = exploded[i + 1];
+				}
+				i++;
+			}
+			
+			if (Reflect.getProperty(target, prop) == null)
 			{
 				throw 'The Object does not have the property "$p"';
 			}
 			
-			var a:Dynamic = Reflect.getProperty(_object, p);
+			var a:Dynamic = Reflect.getProperty(target, prop);
 			
 			if (Math.isNaN(a)) 
 			{
