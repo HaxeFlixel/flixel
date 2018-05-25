@@ -111,9 +111,10 @@ class VarTween extends FlxTween
 			var exploded:Array<String> = p.split(".");
 			var target:Dynamic = _object;
 			var i:Int = 0;
-			while (i < exploded.length-1)
+			while (i < exploded.length - 1)
 			{
-				if (Reflect.isObject(Reflect.getProperty(target, exploded[i]))){
+				if (Reflect.isObject(Reflect.getProperty(target, exploded[i])))
+				{
 					target = Reflect.getProperty(target, exploded[i]);
 					prop = exploded[i + 1];
 				}
