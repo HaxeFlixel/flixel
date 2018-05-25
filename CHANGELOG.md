@@ -1,3 +1,9 @@
+4.5.0 (to be released)
+------------------------------
+#### Bugfixes:
+
+- `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
+
 4.4.1 (May 10, 2018)
 ------------------------------
 #### Bugfixes:
