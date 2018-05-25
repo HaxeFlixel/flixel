@@ -52,7 +52,7 @@ class FlxAssetPaths
 						continue;
 				}
 				
-				fileReferences.push(new FileReference(directory + name));
+				fileReferences.push(FileReference.fromPath(directory + name));
 			}
 			else if (subDirectories)
 			{
@@ -66,20 +66,23 @@ class FlxAssetPaths
 
 private class FileReference
 {
-	public var name:String;
-	public var value:String;
-	public var documentation:String;
-	
-	public function new(value:String)
+	public static function fromPath(value:String):FileReference
 	{
-		this.value = value;
-		
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		this.name = value.split("-").join("_").split(".").join("__");
+		var name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
-		this.name = split.last();
-		
-		// auto generate documentation
+		name = split.last();
+		return new FileReference(name, value);
+	}
+
+	public var name(default,null):String;
+	public var value(default,null):String;
+	public var documentation(default,null):String;
+	
+	function new(name:String, value:String)
+	{
+		this.name = name;
+		this.value = value;
 		this.documentation = "\"" + value + "\" (auto generated).";
 	}
 }
