@@ -9,7 +9,7 @@ class VarTween extends FlxTween
 {
 	var _object:Dynamic;
 	var _properties:Dynamic;
-	var _propertyInfos:Array<VarTweenProperty> = [];
+	var _propertyInfos:Array<VarTweenProperty>;
 	
 	function new(options:TweenOptions, ?manager:FlxTweenManager)
 	{
@@ -34,6 +34,7 @@ class VarTween extends FlxTween
 		
 		_object = object;
 		_properties = properties;
+		_propertyInfos = [];
 		this.duration = duration;
 		start();
 		return this;
@@ -56,32 +57,43 @@ class VarTween extends FlxTween
 			super.update(elapsed);
 			
 			for (info in _propertyInfos)
-				Reflect.setProperty(_object, info.name, (info.startValue + info.range * scale));
+				Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
 		}
 	}
 	
 	function initializeVars():Void
 	{
-		var fields:Array<String>;
+		var fieldPaths:Array<String>;
 		if (Reflect.isObject(_properties))
-			fields = Reflect.fields(_properties);
+			fieldPaths = Reflect.fields(_properties);
 		else
 			throw "Unsupported properties container - use an object containing key/value pairs.";
 		
-		for (field in fields)
+		for (fieldPath in fieldPaths)
 		{
-			if (Reflect.getProperty(_object, field) == null)
-				throw 'The Object does not have the property "$field"';
+			var target = _object;
+			var path = fieldPath.split(".");
+			var field = path.pop();
+			for (component in path)
+			{
+				target = Reflect.getProperty(target, component);
+				if (!Reflect.isObject(target))
+					throw 'The object does not have the property "$component" in "$fieldPath"';
+			}
+
+			if (Reflect.getProperty(target, field) == null)
+				throw 'The object does not have the property "$field"';
 			
-			var value:Dynamic = Reflect.getProperty(_object, field);
-			
+			var value:Dynamic = Reflect.getProperty(target, field);
 			if (Math.isNaN(value))
 				throw 'The property "$field" is not numeric.';
 			
+			var targetValue:Dynamic = Reflect.getProperty(_properties, fieldPath);
 			_propertyInfos.push({
-				name: field,
+				object: target,
+				field: field,
 				startValue: value,
-				range: Reflect.getProperty(_properties, field) - value
+				range: targetValue - value
 			});
 		}
 	}
@@ -95,9 +107,10 @@ class VarTween extends FlxTween
 	}
 }
 
-typedef VarTweenProperty =
+private typedef VarTweenProperty =
 {
-	name:String,
+	object:Dynamic,
+	field:String,
 	startValue:Float,
 	range:Float
 }
