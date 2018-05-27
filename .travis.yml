@@ -29,11 +29,9 @@ before_install:
 
 install:
   - haxelib git flixel https://github.com/HaxeFlixel/flixel
-  - haxelib dev flixel-demos $TRAVIS_BUILD_DIR
-  - haxelib list
+  - haxelib dev flixel-demos .
 
 script:
-  - export HXCPP_COMPILE_CACHE=~/hxcache
-  - cd ~/haxe/lib/flixel/git/tests
-  - haxe RunTravis.hxml
-  - neko RunTravis.n $TARGET $OPENFL
+  - while sleep 540; do echo "=====[ $SECONDS seconds still running ]====="; done &
+  - haxe --cwd ~/haxe/lib/flixel/git/tests --run RunTravis $TARGET $OPENFL
+  - kill %1
