@@ -1,6 +1,7 @@
 package flixel.tweens.motion;
 
 import massive.munit.Assert;
+import flixel.tweens.FlxTween.FlxTweenType;
 
 class QuadMotionTest
 {
