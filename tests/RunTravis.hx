@@ -135,9 +135,6 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
-		if (target == Target.FLASH)
-			return ExitCode.SUCCESS;
-
 		runInDir("unit", function()
 			return haxelibRun(["munit", "gen"])
 		);
