@@ -39,7 +39,7 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 
 		putEnv("HXCPP_SILENT", "1");
-		putEnv("HXCPP_COMPILE_CACHE", "~/hxcpp_cache");
+		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
 	
 		var installationResult = runUntilFailure([
