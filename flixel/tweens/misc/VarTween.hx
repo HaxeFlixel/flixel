@@ -3,7 +3,7 @@ package flixel.tweens.misc;
 import flixel.tweens.FlxTween;
 
 /**
- * Tweens multiple numeric public properties of an Object simultaneously.
+ * Tweens multiple numeric properties of an object simultaneously.
  */
 class VarTween extends FlxTween
 {
@@ -11,19 +11,9 @@ class VarTween extends FlxTween
 	var _properties:Dynamic;
 	var _propertyInfos:Array<VarTweenProperty> = [];
 	
-	/**
-	 * Clean up references
-	 */
-	override public function destroy():Void 
+	function new(options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super.destroy();
-		_object = null;
-		_properties = null;
-	}
-	
-	function new(Options:TweenOptions, ?manager:FlxTweenManager)
-	{
-		super(Options, manager);
+		super(options, manager);
 	}
 	
 	/**
@@ -37,13 +27,9 @@ class VarTween extends FlxTween
 	{
 		#if FLX_DEBUG
 		if (object == null)
-		{
 			throw "Cannot tween variables of an object that is null.";
-		}
 		else if (properties == null)
-		{
 			throw "Cannot tween null properties.";
-		}
 		#end
 		
 		_object = object;
@@ -57,58 +43,55 @@ class VarTween extends FlxTween
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
 		
+		// Leave properties alone until delay is over
 		if (_secondsSinceStart < delay)
-		{
-			// Leave properties alone until delay is over
 			super.update(elapsed);
-		}
 		else
 		{
+			// We don't initialize() in tween() because otherwise the start values
+			// will be inaccurate with delays
 			if (_propertyInfos.length == 0)
-			{
-				// We don't initialize() in tween() because otherwise the start values 
-				// will be inaccurate with delays
 				initializeVars();
-			}
 			
 			super.update(elapsed);
 			
 			for (info in _propertyInfos)
-			{
 				Reflect.setProperty(_object, info.name, (info.startValue + info.range * scale));
-			}
 		}
 	}
 	
 	function initializeVars():Void
 	{
 		var fields:Array<String>;
-		
 		if (Reflect.isObject(_properties))
-		{
 			fields = Reflect.fields(_properties);
-		}
 		else
-		{
 			throw "Unsupported properties container - use an object containing key/value pairs.";
-		}
 		
-		for (p in fields)
+		for (field in fields)
 		{
-			if (Reflect.getProperty(_object, p) == null)
-			{
-				throw 'The Object does not have the property "$p"';
-			}
+			if (Reflect.getProperty(_object, field) == null)
+				throw 'The Object does not have the property "$field"';
 			
-			var a:Dynamic = Reflect.getProperty(_object, p);
+			var value:Dynamic = Reflect.getProperty(_object, field);
 			
-			if (Math.isNaN(a)) 
-			{
-				throw "The property \"" + p + "\" is not numeric.";
-			}
+			if (Math.isNaN(value))
+				throw 'The property "$field" is not numeric.';
 			
-			_propertyInfos.push({ name: p, startValue: a, range: Reflect.getProperty(_properties, p) - a });
+			_propertyInfos.push({
+				name: field,
+				startValue: value,
+				range: Reflect.getProperty(_properties, field) - value
+			});
 		}
+	}
+
+	override public function destroy():Void
+	{
+		super.destroy();
+		_object = null;
+		_properties = null;
+		_propertyInfos = null;
 	}
 }
 
