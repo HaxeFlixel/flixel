@@ -203,7 +203,7 @@ class UFO extends FlxSprite
 		
 		var path:Array<FlxPoint> = [FlxPoint.get(50, 100), FlxPoint.get(FlxG.width / 2, 20), FlxPoint.get(FlxG.width - 50, 100), 
 		                            FlxPoint.get(FlxG.width / 2, 150), FlxPoint.get(50, 100)];
-		FlxTween.quadPath(this, path, 5, true, { type: FlxTween.LOOPING } );
+		FlxTween.quadPath(this, path, 5, true, { type: LOOPING } );
 	}
 
 	override public function update(elapsed:Float)

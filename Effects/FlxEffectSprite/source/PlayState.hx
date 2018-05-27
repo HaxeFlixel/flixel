@@ -59,7 +59,7 @@ class PlayState extends FlxState
 			(FlxG.width * 0.5) - (_sprite.width / 2), 
 			(FlxG.height * 0.5) - (_sprite.height / 2),
 			_sprite.width, 359,
-			true, 3, true, { type: FlxTween.PINGPONG });
+			true, 3, true, { type: PINGPONG });
 	}	
 	
 	function createButtons() 

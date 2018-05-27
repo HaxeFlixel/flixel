@@ -86,8 +86,8 @@ class PlayState extends FlxState
 		FlxG.camera.setScrollBounds(0, FlxG.width * 4, 0, FlxG.height);
 		
 		// add some tweens to fade the player in and out and to make him 'float' up and down
-		FlxTween.num(0, 1, 2, { ease:FlxEase.sineInOut, type:FlxTween.PINGPONG }, guyFloat);
-		FlxTween.num(.4, 1, 3, { ease:FlxEase.sineInOut, type:FlxTween.PINGPONG }, guyFade);
+		FlxTween.num(0, 1, 2, { ease: FlxEase.sineInOut, type: PINGPONG }, guyFloat);
+		FlxTween.num(.4, 1, 3, { ease: FlxEase.sineInOut, type: PINGPONG }, guyFade);
 		
 		#if (mobile)
 		_vPad = new FlxVirtualPad(FlxDPadMode.LEFT_RIGHT, FlxActionMode.NONE);

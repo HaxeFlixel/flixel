@@ -32,7 +32,7 @@ class PlayState extends FlxState
 		infoText.color = FlxColor.BLACK;
 		add(infoText);
 		
-		effectTween = FlxTween.num(MosaicEffect.DEFAULT_STRENGTH, 15, 2, { type:FlxTween.PINGPONG }, function(v)
+		effectTween = FlxTween.num(MosaicEffect.DEFAULT_STRENGTH, 15, 2, { type: PINGPONG }, function(v)
 		{
 			effect.setStrength(v, v);
 		});

@@ -84,7 +84,7 @@ class MessagePopup extends FlxSubState
 			sprite.alpha = 0;
 		});
 		
-		FlxTween.num(0, 1, .66, { type:FlxTween.ONESHOT, ease:FlxEase.sineOut, onComplete:function(_)
+		FlxTween.num(0, 1, .66, { type: ONESHOT, ease: FlxEase.sineOut, onComplete: function(_)
 		{
 			_fadingIn = false;
 		}}, updateAlpha);
@@ -126,7 +126,7 @@ class MessagePopup extends FlxSubState
 			if (FlxG.keys.anyJustReleased([X]))
 			{
 				_fadingOut = true;
-				FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_)
+				FlxTween.num(1, 0, .66, { type: ONESHOT, ease: FlxEase.circOut, onComplete: function(_)
 				{
 					close();
 				}}, updateAlpha);
@@ -137,7 +137,7 @@ class MessagePopup extends FlxSubState
 			if (t != null && t.justReleased)
 			{
 				_fadingOut = true;
-				FlxTween.num(1, 0, .66, { type:FlxTween.ONESHOT, ease:FlxEase.circOut, onComplete:function(_)
+				FlxTween.num(1, 0, .66, { type: ONESHOT, ease: FlxEase.circOut, onComplete: function(_)
 				{
 					close();
 				}}, updateAlpha);

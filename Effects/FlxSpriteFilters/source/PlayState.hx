@@ -74,13 +74,13 @@ class PlayState extends FlxState
 		var glowFilter = new GlowFilter(0xFF0000, 1, 50, 50, 1.5, 1);
 		spr2 = createSprite(0.5, -100, "Glow");
 		spr2Filter = createFilterFrames(spr2, glowFilter);
-		tween2 = FlxTween.tween(glowFilter, { blurX: 4, blurY: 4 }, 1, { type: FlxTween.PINGPONG });
+		tween2 = FlxTween.tween(glowFilter, { blurX: 4, blurY: 4 }, 1, { type: PINGPONG });
 		tween2.active = false;
 		
 		var blurFilter = new BlurFilter();
 		spr3 = createSprite(0.75, -100, "Blur");
 		spr3Filter = createFilterFrames(spr3, blurFilter);
-		tween3 = FlxTween.tween(blurFilter, { blurX: 50, blurY: 50 }, 1.5, { type: FlxTween.PINGPONG });
+		tween3 = FlxTween.tween(blurFilter, { blurX: 50, blurY: 50 }, 1.5, { type: PINGPONG });
 		tween3.active = false;
 		
 		dropShadowFilter = new DropShadowFilter(10, 45, 0, .75, 10, 10, 1, 1);
@@ -91,7 +91,7 @@ class PlayState extends FlxState
 		var bevelFilter = new BevelFilter(6); 
 		spr5 = createSprite(0.5, 100, "Bevel\n(flash only)");
 		spr5Filter = createFilterFrames(spr5, bevelFilter);
-		tween5 = FlxTween.tween(bevelFilter, { distance: -6 }, 1.5, { type: FlxTween.PINGPONG, ease: FlxEase.quadInOut });
+		tween5 = FlxTween.tween(bevelFilter, { distance: -6 }, 1.5, { type: PINGPONG, ease: FlxEase.quadInOut });
 		tween5.active = false;
 		
 		displacementFilter = new DisplacementMapFilter(

@@ -93,6 +93,6 @@ class DemoState extends FlxState
 		pieDial.amount = 0.0;
 		add(pieDial);
 		
-		FlxTween.tween(pieDial, { amount: 1.0 }, 2.0, { type: FlxTween.PINGPONG });
+		FlxTween.tween(pieDial, { amount: 1.0 }, 2.0, { type: PINGPONG });
 	}
 }

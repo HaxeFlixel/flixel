@@ -196,7 +196,7 @@ class PlayState extends FlxState
 
 	function startTween():Void
 	{
-		var options:TweenOptions = { type: FlxTween.PINGPONG, ease: _currentEase };
+		var options:TweenOptions = { type: PINGPONG, ease: _currentEase };
 		
 		_sprite.screenCenter(FlxAxes.Y);
 		_sprite.x = _min.x;
