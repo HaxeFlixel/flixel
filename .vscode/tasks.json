@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "RunTravis -dry-run",
+			"type": "shell",
+			"command": "haxe --cwd tests --run RunTravis cpp new -dry-run",
+			"problemMatcher": []
+		}
+	]
+}
