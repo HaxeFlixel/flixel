@@ -187,6 +187,75 @@ class FlxSpriteUtil
 	}
 	
 	/**
+	 * Distributes an array of FlxObjects from a given point, vertically or horizontally, such that they won't overlap (unless padding is negative).
+	 * Has the option to have a supplied function do the positioning (for tweening purposes)
+	 * EG: FlxSpriteUtil.distribute(VERTICAL, mySprites, 50, 10, function(obj, y){FlxTween.tween(obj, {x:10, y:y}, 0.5);} );
+	 * 	   //Tweens the sprites in mySprites from their current position to being in a column 10px from the left, 50px from the top, 10px apart.
+	 * @param	axis          HORIZONTAL or VERTICAL
+	 * @param	targets       An array of FlxObjects. Cast may be needed.
+	 * @param	from          x position to start placing from for HORIZONTAL, or y position for VERTICAL.
+	 * @param	padding		  Gap in px to leave between objects
+	 * @param	positioner    Function that accepts a FlxObject and a Float representing the new x or y position for that object, returning Void.
+	 */
+	public static function distribute(axis:Axis, targets:Array<FlxObject>, from:Float = null, padding:Float = 0, positioner:FlxObject->Float->Void = null):Void
+	{
+		if (targets.length == 0)
+		{
+			return;
+		}
+		var running_offset:Float = 0;
+		var prev:FlxObject = targets[0];
+		if (from != null)
+		{
+			if (positioner == null)
+			{
+				if (axis == HORIZONTAL)
+				{
+					prev.x = from;
+				}
+				else{
+					prev.y = from;
+				}
+			}
+			else{
+				positioner(prev, from);
+				running_offset = from;
+			}
+		}
+		var i:Int = 1;
+		while (i < targets.length)
+		{
+			if (axis == HORIZONTAL)
+			{
+				if (positioner == null)
+				{
+					targets[i].x = prev.x + prev.width + padding;
+				}
+				else
+				{
+					positioner(targets[i], running_offset + prev.width + padding);
+					running_offset += prev.width + padding;
+				}
+			}
+			else
+			{
+				if (positioner == null)
+				{
+					targets[i].y = prev.y + prev.height + padding;
+				}
+				else
+				{
+					positioner(targets[i], running_offset + prev.height + padding);
+					running_offset += prev.height + padding;
+				}
+			}
+			prev = targets[i];
+			i++;
+		}
+		return;
+	}
+	
+	/**
 	 * This function draws a line on a FlxSprite from position X1,Y1
 	 * to position X2,Y2 with the specified color.
 	 * 
@@ -622,6 +691,12 @@ class FlxSpriteUtil
 	{
 		sprite.alpha = f;
 	}
+}
+
+enum Axis
+{
+	HORIZONTAL;
+	VERTICAL;
 }
 
 typedef LineStyle =
