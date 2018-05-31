@@ -53,7 +53,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Used to toggle the visiblity of the mouse cursor - works on both 
 	 * the flixel and the system cursor, depending on which one is active.
 	 */
-	public var visible(default, set):Bool = #if mobile false #else true #end;
+	public var visible(default, set):Bool = #if (mobile || switch) false #else true #end;
 	/**
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 */
