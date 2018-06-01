@@ -197,13 +197,13 @@ class FlxSpriteUtil
 	 * @param	padding		  Gap in px to leave between objects
 	 * @param	positioner    Function that accepts a FlxObject and a Float representing the new x or y position for that object, returning Void.
 	 */
-	public static function distribute(axis:Axis, targets:Array<FlxObject>, from:Float = null, padding:Float = 0, positioner:FlxObject->Float->Void = null):Void
+	public static function distribute(axis:Axis, targets:Array<FlxObject>, ?from:Float, padding:Float = 0, ?positioner:FlxObject->Float->Void):Void
 	{
 		if (targets.length == 0)
 		{
 			return;
 		}
-		var running_offset:Float = 0;
+		var runningOffset:Float = 0;
 		var prev:FlxObject = targets[0];
 		if (from != null)
 		{
@@ -213,13 +213,15 @@ class FlxSpriteUtil
 				{
 					prev.x = from;
 				}
-				else{
+				else
+				{
 					prev.y = from;
 				}
 			}
-			else{
+			else
+			{
 				positioner(prev, from);
-				running_offset = from;
+				runningOffset = from;
 			}
 		}
 		var i:Int = 1;
@@ -233,8 +235,8 @@ class FlxSpriteUtil
 				}
 				else
 				{
-					positioner(targets[i], running_offset + prev.width + padding);
-					running_offset += prev.width + padding;
+					positioner(targets[i], runningOffset + prev.width + padding);
+					runningOffset += prev.width + padding;
 				}
 			}
 			else
@@ -245,8 +247,8 @@ class FlxSpriteUtil
 				}
 				else
 				{
-					positioner(targets[i], running_offset + prev.height + padding);
-					running_offset += prev.height + padding;
+					positioner(targets[i], runningOffset + prev.height + padding);
+					runningOffset += prev.height + padding;
 				}
 			}
 			prev = targets[i];
