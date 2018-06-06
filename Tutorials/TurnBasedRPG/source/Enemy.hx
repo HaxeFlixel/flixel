@@ -44,7 +44,7 @@ class Enemy extends FlxSprite
 	
 	override public function update(elapsed:Float):Void 
 	{
-		if (isFlickering())
+		if (this.isFlickering())
 			return;
 		
 		_brain.update();

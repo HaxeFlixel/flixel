@@ -75,6 +75,6 @@ class TouchSprite extends FlxSprite
 		var size:Int = 70;
 		makeGraphic(size, size, FlxColor.TRANSPARENT);
 		antialiasing = true;
-		drawCircle();
+		this.drawCircle();
 	}
 }
