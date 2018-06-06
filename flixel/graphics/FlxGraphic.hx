@@ -11,6 +11,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Tileset;
 
 #if !FLX_DRAW_QUADS
 import openfl.display.Tilesheet;
@@ -318,6 +319,8 @@ class FlxGraphic implements IFlxDestroyable
 	
 	#if FLX_DRAW_QUADS
 	public var shader(default, null):FlxShader;
+	
+	public var tileset(get, null):Tileset;
 	#else
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
@@ -374,6 +377,8 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	var _tilesheet:Tilesheet;
 	#end
+	
+	var _tileset:Tileset;
 
 	var _useCount:Int = 0;
 	
@@ -558,6 +563,24 @@ class FlxGraphic implements IFlxDestroyable
 		return _tilesheet;
 	}
 	#end
+	
+	function get_tileset():Tileset
+	{
+		if (_tileset == null)
+		{
+			var dumped:Bool = isDumped;
+			
+			if (dumped)
+				undump();
+			
+			_tileset = new Tileset(bitmap);
+			
+			if (dumped)
+				dump();
+		}
+		
+		return _tileset;
+	}
 
 	/**
 	 * Gets the `BitmapData` for this graphic object from OpenFL.
@@ -631,6 +654,11 @@ class FlxGraphic implements IFlxDestroyable
 			#if (!flash && !FLX_DRAW_QUADS)
 			if (FlxG.renderTile && _tilesheet != null)
 				_tilesheet = new Tilesheet(bitmap);
+			#end
+			
+			#if (!flash)
+			if (FlxG.renderTile && _tileset != null)
+				_tileset = new Tileset(bitmap);
 			#end
 		}
 		

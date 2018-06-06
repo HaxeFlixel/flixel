@@ -191,7 +191,8 @@ class CameraFrontEnd
 			if (FlxG.renderTile)
 			{
 				camera.clearDrawStack();
-				camera.canvas.graphics.clear();
+				camera.canvas.removeTiles();
+			//	camera.canvas.graphics.clear();
 				// Clearing camera's debug sprite
 				#if FLX_DEBUG
 				camera.debugLayer.graphics.clear();
