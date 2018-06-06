@@ -667,6 +667,8 @@ class FlxCamera extends FlxBasic
 			var tile:Tile = getTile();
 			
 			tile.colorTransform = transform;
+			tile.shader = shader;
+			
 			var m:Matrix = tile.matrix;
 			tile.matrix = null;
 			m.copyFrom(matrix);
@@ -738,6 +740,8 @@ class FlxCamera extends FlxBasic
 			var tile:Tile = getTile();
 			
 			tile.colorTransform = transform;
+			tile.shader = shader;
+			
 			var m:Matrix = tile.matrix;
 			tile.matrix = null;
 			m.identity();
