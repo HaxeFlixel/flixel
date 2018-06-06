@@ -24,7 +24,11 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
  * at set intervals by setting their positions and velocities accordingly.
  * It is easy to use and relatively efficient, relying on `FlxGroup`'s RECYCLE POWERS.
  */
+#if (haxe_ver >= "4.0.0")
+class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
+#else
 class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
+#end
 {
 	/**
 	 * Set your own particle class type here. The custom class must extend `FlxParticle`. Default is `FlxParticle`.
