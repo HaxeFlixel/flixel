@@ -394,7 +394,7 @@ class FlxBitmapText extends FlxSprite
 				
 				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 				
-				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
+			//	drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				
 				for (j in 0...borderLength)
 				{
@@ -415,7 +415,9 @@ class FlxBitmapText extends FlxSprite
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
+				//	drawItem.addQuad(currFrame, _matrix, _colorParams);
+					
+					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
 				}
 				
 				for (j in 0...textLength)
@@ -438,7 +440,9 @@ class FlxBitmapText extends FlxSprite
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
+				//	drawItem.addQuad(currFrame, _matrix, _colorParams);
+					
+					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing, shader);
 				}
 				
 				#if FLX_DEBUG
