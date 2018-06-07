@@ -667,19 +667,18 @@ class FlxCamera extends FlxBasic
 			var tile:Tile = getTile();
 			
 			tile.colorTransform = transform;
-			tile.shader = shader;
 			
 			var m:Matrix = tile.matrix;
-			tile.matrix = null;
 			m.copyFrom(matrix);
-			tile.matrix = m;
 			
 			var rect = tile.rect;
-			tile.rect = null;
+			tile.rect = null; // this will force tile data update
 			frame.frame.copyToFlash(rect);
 			tile.rect = rect;
 			
 			tile.tileset = frame.parent.tileset;
+			
+			tile.shader = shader;
 			
 			canvas.addTile(tile);
 			
@@ -740,20 +739,19 @@ class FlxCamera extends FlxBasic
 			var tile:Tile = getTile();
 			
 			tile.colorTransform = transform;
-			tile.shader = shader;
 			
 			var m:Matrix = tile.matrix;
-			tile.matrix = null;
 			m.identity();
 			m.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
-			tile.matrix = m;
 			
 			var rect = tile.rect;
-			tile.rect = null;
+			tile.rect = null; // this will force tile data update
 			frame.frame.copyToFlash(rect);
 			tile.rect = rect;
 			
 			tile.tileset = frame.parent.tileset;
+			
+			tile.shader = shader;
 			
 			canvas.addTile(tile);
 		}
