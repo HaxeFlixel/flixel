@@ -960,6 +960,7 @@ class FlxCamera extends FlxBasic
 		else
 		{
 			canvas = new Tilemap(width, height);
+			canvas.tileBlendModeEnabled = true;
 			_scrollRect.addChild(canvas);
 			
 			#if FLX_DEBUG
