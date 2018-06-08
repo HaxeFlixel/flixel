@@ -712,7 +712,7 @@ typedef TweenOptions =
 
 /**
  * A simple manager for tracking and updating game tween objects.
- * Normally accessed via the static `FlxTween.manager` rather than being created separately.
+ * Normally accessed via the static `FlxTween.globalManager` rather than being created separately.
  */
 @:access(flixel.tweens)
 @:access(flixel.tweens.FlxTween)
