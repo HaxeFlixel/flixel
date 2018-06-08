@@ -679,6 +679,7 @@ class FlxCamera extends FlxBasic
 			tile.tileset = frame.parent.tileset;
 			
 			tile.shader = shader;
+			tile.blendMode = blend;
 			
 			canvas.addTile(tile);
 			
@@ -752,6 +753,7 @@ class FlxCamera extends FlxBasic
 			tile.tileset = frame.parent.tileset;
 			
 			tile.shader = shader;
+			tile.blendMode = null;
 			
 			canvas.addTile(tile);
 		}
