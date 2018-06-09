@@ -25,8 +25,10 @@ import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.display.Tile;
 import openfl.display.Tilemap;
+import openfl.display.Tileset;
 import openfl.filters.BitmapFilter;
 import openfl.Vector;
+
 using flixel.util.FlxColorTransformUtil;
 
 /*
@@ -53,6 +55,25 @@ private typedef FlxDrawItem =
  */
 class FlxCamera extends FlxBasic
 {
+	private static var _fillTileset:Tileset;
+	
+	private var fillMatrix:Matrix = new Matrix();
+	private var fillColorTransform:ColorTransform = new ColorTransform();
+	
+	private static var fillTileset(get, null):Tileset;
+	
+	private static function get_fillTileset():Tileset
+	{
+		if (_fillTileset == null)
+		{
+			var bd:BitmapData = new BitmapData(16, 16, true, 0xffffffff);
+			_fillTileset = new Tileset(bd);
+			_fillTileset.addRect(new Rectangle(0, 0, 10, 10)); // tile rect with id = 0
+		}
+		
+		return _fillTileset;
+	}
+	
 	private var tilePool:Array<Tile> = [];
 	
 	private var poolIndex:Int = 0;
@@ -1566,6 +1587,21 @@ class FlxCamera extends FlxBasic
 			if (FxAlpha == 0)
 				return;
 			#end
+			
+			fillColorTransform.color = Color;
+			fillColorTransform.alphaMultiplier = FxAlpha;
+			
+			fillMatrix.identity();
+			fillMatrix.scale(_flashRect.width / 10, _flashRect.height / 10);
+			
+			var tile:Tile = getTile();
+			
+			tile.id = 0;
+			tile.tileset = fillTileset;
+			tile.colorTransform = fillColorTransform;
+			tile.matrix = fillMatrix;
+			
+			canvas.addTile(tile);
 			
 			// TODO (Zaphod): fix color fill...
 			/*
