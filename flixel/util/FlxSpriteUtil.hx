@@ -209,13 +209,10 @@ class FlxSpriteUtil
 			objects[0].y = runningY;
 		}
 		
-		
 		for (i in 1...objects.length)
 		{
 			var object = objects[i];
-			
-			
-			
+				
 			if (horizontalSpacing != null)
 			{
 				curX = runningX + prevWidth + horizontalSpacing;
@@ -230,7 +227,8 @@ class FlxSpriteUtil
 				curY = runningY + prevHeight + verticalSpacing;
 				runningY = curY;
 			}
-			else{
+			else
+			{
 				curY = object.y;
 			}
 			
