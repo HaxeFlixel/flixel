@@ -159,102 +159,97 @@ class FlxSpriteUtil
 	 * @param	objects				An Array of FlxObjects
 	 * @param	startX				The base X coordinate to start the spacing from
 	 * @param	startY				The base Y coordinate to start the spacing from
-	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally (default 0)
-	 * @param	verticalSpacing		The amount of pixels between each sprite vertically (default 0)
+	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally. Set to 'null' to just keep the current X position of each object.
+	 * @param	verticalSpacing		The amount of pixels between each sprite vertically. Set to 'null' to just keep the current Y position of each object.
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
+	 * @param 	positioner			An function with the signature (target:FlxObject, x:Float, y:Float):Void. You can use this to tween objects into their spaced position, etc.
 	 */
-	public static function space(objects:Array<FlxObject>, startX:Int, startY:Int, horizontalSpacing:Int = 0, 
-		verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
+	public static function space(objects:Array<FlxObject>, startX:Float, startY:Float, ?horizontalSpacing:Float, 
+		?verticalSpacing:Float, spaceFromBounds:Bool = false, ?positioner:FlxObject->Float->Float->Void):Void
 	{
-		var prevWidth:Int = 0;
-		var prevHeight:Int = 0;
+		var prevWidth:Float = 0;
+		var prevHeight:Float = 0;
+		var runningX:Float = 0;
+		var runningY:Float = 0;
+		var curX:Float = 0;
+		var curY:Float = 0;
 		
-		for (i in 0...objects.length)
+		if (horizontalSpacing != null)
+		{
+			if (spaceFromBounds)
+			{
+				prevWidth = objects[0].width;
+			}
+			runningX = startX;
+		}
+		else
+		{
+			runningX = objects[0].x;
+		}
+		if (verticalSpacing != null)
+		{
+			if (spaceFromBounds)
+			{
+				prevHeight = objects[0].height;
+			}
+			runningY = startY;
+		}
+		else
+		{
+			runningY = objects[0].y;
+		}
+		
+		if (positioner != null)
+		{
+			positioner(objects[0], runningX, runningY);
+		}
+		else
+		{
+			objects[0].x = runningX;
+			objects[0].y = runningY;
+		}
+		
+		
+		for (i in 1...objects.length)
 		{
 			var object = objects[i];
 			
+			
+			
+			if (horizontalSpacing != null)
+			{
+				curX = runningX + prevWidth + horizontalSpacing;
+				runningX = curX;
+			}
+			else{
+				curX = object.x;
+			}
+
+			if (verticalSpacing != null)
+			{
+				curY = runningY + prevHeight + verticalSpacing;
+				runningY = curY;
+			}
+			else{
+				curY = object.y;
+			}
+			
+			if (positioner != null)
+			{
+				positioner(object, curX, curY);
+			}
+			else
+			{
+				object.x = curX;
+				object.y = curY;
+			}
+			
 			if (spaceFromBounds)
 			{
-				object.x = startX + prevWidth + (i * horizontalSpacing);
-				object.y = startY + prevHeight + (i * verticalSpacing);
-			}
-			else
-			{
-				object.x = startX + (i * horizontalSpacing);
-				object.y = startY + (i * verticalSpacing);
+				prevWidth = object.width;
+				prevHeight = object.height;
 			}
 		}
-	}
-	
-	/**
-	 * Distributes an array of FlxObjects from a given point, vertically or horizontally, such that they won't overlap (unless padding is negative).
-	 * Has the option to have a supplied function do the positioning (for tweening purposes)
-	 * EG: FlxSpriteUtil.distribute(VERTICAL, mySprites, 50, 10, function(obj, y){FlxTween.tween(obj, {x:10, y:y}, 0.5);} );
-	 * 	   //Tweens the sprites in mySprites from their current position to being in a column 10px from the left, 50px from the top, 10px apart.
-	 * @param	axis          HORIZONTAL or VERTICAL
-	 * @param	targets       An array of FlxObjects. Cast may be needed.
-	 * @param	from          x position to start placing from for HORIZONTAL, or y position for VERTICAL.
-	 * @param	padding		  Gap in px to leave between objects
-	 * @param	positioner    Function that accepts a FlxObject and a Float representing the new x or y position for that object, returning Void.
-	 */
-	public static function distribute(axis:Axis, targets:Array<FlxObject>, ?from:Float, padding:Float = 0, ?positioner:FlxObject->Float->Void):Void
-	{
-		if (targets.length == 0)
-		{
-			return;
-		}
-		var runningOffset:Float = 0;
-		var prev:FlxObject = targets[0];
-		if (from != null)
-		{
-			if (positioner == null)
-			{
-				if (axis == HORIZONTAL)
-				{
-					prev.x = from;
-				}
-				else
-				{
-					prev.y = from;
-				}
-			}
-			else
-			{
-				positioner(prev, from);
-				runningOffset = from;
-			}
-		}
-		var i:Int = 1;
-		while (i < targets.length)
-		{
-			if (axis == HORIZONTAL)
-			{
-				if (positioner == null)
-				{
-					targets[i].x = prev.x + prev.width + padding;
-				}
-				else
-				{
-					positioner(targets[i], runningOffset + prev.width + padding);
-					runningOffset += prev.width + padding;
-				}
-			}
-			else
-			{
-				if (positioner == null)
-				{
-					targets[i].y = prev.y + prev.height + padding;
-				}
-				else
-				{
-					positioner(targets[i], runningOffset + prev.height + padding);
-					runningOffset += prev.height + padding;
-				}
-			}
-			prev = targets[i];
-			i++;
-		}
-		return;
 	}
 	
 	/**
@@ -693,12 +688,6 @@ class FlxSpriteUtil
 	{
 		sprite.alpha = f;
 	}
-}
-
-enum Axis
-{
-	HORIZONTAL;
-	VERTICAL;
 }
 
 typedef LineStyle =
