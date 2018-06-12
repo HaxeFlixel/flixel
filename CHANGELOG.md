@@ -11,10 +11,12 @@
 - `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
 - `FlxAssetPaths`: fixed variables with invalid Haxe identifiers being generated ([#1796](https://github.com/HaxeFlixel/flixel/issues/1796))
 
+4.4.2 (June 12, 2018)
+------------------------------
+- Fixed compatibility with Haxe 4.0.0-preview.4
+
 4.4.1 (May 10, 2018)
 ------------------------------
-#### Bugfixes:
-
 - Fixed an issue with code completion on the Flash target in VSCode
 
 4.4.0 (May 4, 2018)
