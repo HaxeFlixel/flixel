@@ -218,7 +218,8 @@ class FlxSpriteUtil
 				curX = runningX + prevWidth + horizontalSpacing;
 				runningX = curX;
 			}
-			else{
+			else
+			{
 				curX = object.x;
 			}
 
