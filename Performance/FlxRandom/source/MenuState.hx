@@ -361,11 +361,13 @@ class MenuState extends FlxState
 	
 	function shuffleObj():Void
 	{
+		var amount = 100000;
 		var array:Array<Int> = [for (i in 0...20) FlxG.random.int(0, 100)];
 		timer = Lib.getTimer();
 		
-		_display.text = "Shuffled the array " + array + " one million times.";
-		array = FlxG.random.shuffleArray(array, ONEMIL);
+		_display.text = 'Shuffled the array $array $amount times.';
+		for (i in 0...amount)
+			FlxG.random.shuffle(array);
 		_display.text += "\nNew array is " + array + ", time: " + (Lib.getTimer() - timer) + "ms.";
 	}
 	
