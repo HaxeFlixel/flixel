@@ -159,20 +159,16 @@ class FlxSpriteUtil
 	 * @param	objects				An Array of FlxObjects
 	 * @param	startX				The base X coordinate to start the spacing from
 	 * @param	startY				The base Y coordinate to start the spacing from
-	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally. Set to 'null' to just keep the current X position of each object.
-	 * @param	verticalSpacing		The amount of pixels between each sprite vertically. Set to 'null' to just keep the current Y position of each object.
+	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally. Set to `null` to just keep the current X position of each object.
+	 * @param	verticalSpacing		The amount of pixels between each sprite vertically. Set to `null` to just keep the current Y position of each object.
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
-	 * @param 	positioner			An function with the signature (target:FlxObject, x:Float, y:Float):Void. You can use this to tween objects into their spaced position, etc.
+	 * @param	position			An function with the signature `(target:FlxObject, x:Float, y:Float):Void`. You can use this to tween objects into their spaced position, etc.
 	 */
 	public static function space(objects:Array<FlxObject>, startX:Float, startY:Float, ?horizontalSpacing:Float, 
-		?verticalSpacing:Float, spaceFromBounds:Bool = false, ?positioner:FlxObject->Float->Float->Void):Void
+		?verticalSpacing:Float, spaceFromBounds:Bool = false, ?position:FlxObject->Float->Float->Void):Void
 	{
 		var prevWidth:Float = 0;
-		var prevHeight:Float = 0;
 		var runningX:Float = 0;
-		var runningY:Float = 0;
-		var curX:Float = 0;
-		var curY:Float = 0;
 		
 		if (horizontalSpacing != null)
 		{
@@ -186,6 +182,10 @@ class FlxSpriteUtil
 		{
 			runningX = objects[0].x;
 		}
+
+		var prevHeight:Float = 0;
+		var runningY:Float = 0;
+
 		if (verticalSpacing != null)
 		{
 			if (spaceFromBounds)
@@ -199,9 +199,9 @@ class FlxSpriteUtil
 			runningY = objects[0].y;
 		}
 		
-		if (positioner != null)
+		if (position != null)
 		{
-			positioner(objects[0], runningX, runningY);
+			position(objects[0], runningX, runningY);
 		}
 		else
 		{
@@ -209,10 +209,13 @@ class FlxSpriteUtil
 			objects[0].y = runningY;
 		}
 		
+		var curX:Float = 0;
+		var curY:Float = 0;
+
 		for (i in 1...objects.length)
 		{
 			var object = objects[i];
-				
+			
 			if (horizontalSpacing != null)
 			{
 				curX = runningX + prevWidth + horizontalSpacing;
@@ -233,9 +236,9 @@ class FlxSpriteUtil
 				curY = object.y;
 			}
 			
-			if (positioner != null)
+			if (position != null)
 			{
-				positioner(object, curX, curY);
+				position(object, curX, curY);
 			}
 			else
 			{
