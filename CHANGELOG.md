@@ -10,6 +10,11 @@
 
 - `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
 - `FlxAssetPaths`: fixed variables with invalid Haxe identifiers being generated ([#1796](https://github.com/HaxeFlixel/flixel/issues/1796))
+- `FlxSpriteUtil`: fixed `spaceFromBounds` in `space()` not being respected ([#1963](https://github.com/HaxeFlixel/flixel/issues/1963))
+
+#### Changes and improvements:
+
+- `FlxSpriteUtil`: added an argument allowing to use a positioning function in `space()` ([#2154](https://github.com/HaxeFlixel/flixel/issues/2154))
 
 4.4.2 (June 12, 2018)
 ------------------------------
