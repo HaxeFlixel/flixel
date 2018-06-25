@@ -159,29 +159,97 @@ class FlxSpriteUtil
 	 * @param	objects				An Array of FlxObjects
 	 * @param	startX				The base X coordinate to start the spacing from
 	 * @param	startY				The base Y coordinate to start the spacing from
-	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally (default 0)
-	 * @param	verticalSpacing		The amount of pixels between each sprite vertically (default 0)
+	 * @param	horizontalSpacing	The amount of pixels between each sprite horizontally. Set to `null` to just keep the current X position of each object.
+	 * @param	verticalSpacing		The amount of pixels between each sprite vertically. Set to `null` to just keep the current Y position of each object.
 	 * @param	spaceFromBounds		If set to true the h/v spacing values will be added to the width/height of the sprite, if false it will ignore this
+	 * @param	position			A function with the signature `(target:FlxObject, x:Float, y:Float):Void`. You can use this to tween objects into their spaced position, etc.
 	 */
-	public static function space(objects:Array<FlxObject>, startX:Int, startY:Int, horizontalSpacing:Int = 0, 
-		verticalSpacing:Int = 0, spaceFromBounds:Bool = false):Void
+	public static function space(objects:Array<FlxObject>, startX:Float, startY:Float, ?horizontalSpacing:Float, 
+		?verticalSpacing:Float, spaceFromBounds:Bool = false, ?position:FlxObject->Float->Float->Void):Void
 	{
-		var prevWidth:Int = 0;
-		var prevHeight:Int = 0;
+		var prevWidth:Float = 0;
+		var runningX:Float = 0;
 		
-		for (i in 0...objects.length)
+		if (horizontalSpacing != null)
+		{
+			if (spaceFromBounds)
+			{
+				prevWidth = objects[0].width;
+			}
+			runningX = startX;
+		}
+		else
+		{
+			runningX = objects[0].x;
+		}
+
+		var prevHeight:Float = 0;
+		var runningY:Float = 0;
+
+		if (verticalSpacing != null)
+		{
+			if (spaceFromBounds)
+			{
+				prevHeight = objects[0].height;
+			}
+			runningY = startY;
+		}
+		else
+		{
+			runningY = objects[0].y;
+		}
+		
+		if (position != null)
+		{
+			position(objects[0], runningX, runningY);
+		}
+		else
+		{
+			objects[0].x = runningX;
+			objects[0].y = runningY;
+		}
+		
+		var curX:Float = 0;
+		var curY:Float = 0;
+
+		for (i in 1...objects.length)
 		{
 			var object = objects[i];
 			
-			if (spaceFromBounds)
+			if (horizontalSpacing != null)
 			{
-				object.x = startX + prevWidth + (i * horizontalSpacing);
-				object.y = startY + prevHeight + (i * verticalSpacing);
+				curX = runningX + prevWidth + horizontalSpacing;
+				runningX = curX;
 			}
 			else
 			{
-				object.x = startX + (i * horizontalSpacing);
-				object.y = startY + (i * verticalSpacing);
+				curX = object.x;
+			}
+
+			if (verticalSpacing != null)
+			{
+				curY = runningY + prevHeight + verticalSpacing;
+				runningY = curY;
+			}
+			else
+			{
+				curY = object.y;
+			}
+			
+			if (position != null)
+			{
+				position(object, curX, curY);
+			}
+			else
+			{
+				object.x = curX;
+				object.y = curY;
+			}
+			
+			if (spaceFromBounds)
+			{
+				prevWidth = object.width;
+				prevHeight = object.height;
 			}
 		}
 	}
