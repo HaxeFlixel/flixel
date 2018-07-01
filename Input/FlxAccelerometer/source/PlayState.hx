@@ -6,13 +6,13 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import nape.geom.Vec2;
-#if mobile
+#if FLX_ACCELEROMETER
 import flixel.math.FlxMath;
 #end
 
 class PlayState extends FlxState
 {
-	static inline var GRAVITY_FACTOR:Int = 5000; 
+	static inline var GRAVITY_FACTOR:Int = 5000;
 	
 	var xText:FlxText;
 	var yText:FlxText;
@@ -43,8 +43,8 @@ class PlayState extends FlxState
 		add(yText);
 		add(zText);
 		
-		#if !mobile
-		xText.text = "FlxG.accelerometer is only available on mobile targets!";
+		#if !FLX_ACCELEROMETER
+		xText.text = "FlxG.accelerometer is only available on HTML5 and mobile targets!";
 		yText.text = zText.text = "";
 		#end
 	}
@@ -53,7 +53,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
-		#if mobile
+		#if FLX_ACCELEROMETER
 		if (FlxG.accelerometer.isSupported)
 		{
 			//Display the accelerometer values rounded to the first decimal number
