@@ -43,7 +43,7 @@ import flixel.input.gamepad.FlxGamepadManager;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
-#if mobile
+#if FLX_ACCELEROMETER
 import flixel.input.FlxAccelerometer;
 #end
 #if FLX_POINTER_INPUT
@@ -230,7 +230,7 @@ class FlxG
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
-	#if mobile
+	#if FLX_ACCELEROMETER
 	/**
 	 * Provides access to the accelerometer data of mobile devices as `x`/`y`/`z` values.
 	 */
@@ -587,7 +587,7 @@ class FlxG
 		android = inputs.add(new FlxAndroidKeys());
 		#end
 		
-		#if mobile
+		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
 		save.bind("flixel");

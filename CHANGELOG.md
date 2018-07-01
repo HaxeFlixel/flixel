@@ -15,6 +15,7 @@
 #### Changes and improvements:
 
 - `FlxSpriteUtil`: added an argument allowing to use a positioning function in `space()` ([#2154](https://github.com/HaxeFlixel/flixel/issues/2154))
+- `FlxG.accelerometer`: enabled accelerometer support on HTML5
 
 4.4.2 (June 12, 2018)
 ------------------------------
