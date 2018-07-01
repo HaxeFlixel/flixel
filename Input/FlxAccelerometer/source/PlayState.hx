@@ -62,7 +62,7 @@ class PlayState extends FlxState
 			zText.text = "z: " + FlxMath.roundDecimal(FlxG.accelerometer.z, 1);
 			
 			//Inverting the x axis to align the device and the screen coordinates
-			FlxNapeSpace.space.gravity.setxy(-FlxG.accelerometer.x * GRAVITY_FACTOR, FlxG.accelerometer.y * GRAVITY_FACTOR);
+			FlxNapeSpace.space.gravity.setxy(FlxG.accelerometer.x * GRAVITY_FACTOR, FlxG.accelerometer.y * GRAVITY_FACTOR);
 		}
 		#end
 	}	
