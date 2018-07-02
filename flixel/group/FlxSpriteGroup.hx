@@ -42,8 +42,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var length(get, null):Int;
 	
 	/**
-	 * Whether to attempt to preserve the ratio of alpha values of group members, or set them directly through 
+	 * Whether to attempt to preserve the ratio of alpha values of group members, or set them directly through
 	 * the alpha property. Defaults to `false` (preservation).
+	 * @since 4.5.0
 	 */
 	public var directAlpha:Bool = false;
 	
@@ -719,13 +720,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		{
 			var factor:Float = (alpha > 0) ? Value / alpha : 0;
 			if (!directAlpha && alpha != 0)
-			{
 				transformChildren(alphaTransform, factor);
-			}
 			else
-			{
 				transformChildren(directAlphaTransform, Value);
-			}
 		}
 		return alpha = Value;
 	}
@@ -889,17 +886,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	inline function xTransform(Sprite:FlxSprite, X:Float)                          Sprite.x += X; // addition
 	inline function yTransform(Sprite:FlxSprite, Y:Float)                          Sprite.y += Y; // addition
 	inline function angleTransform(Sprite:FlxSprite, Angle:Float)                  Sprite.angle += Angle; // addition
+	
 	inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)
 	{
 		if (Sprite.alpha != 0 || Alpha == 0)
-		{
 			Sprite.alpha *= Alpha; // multiplication
-		}
 		else
-		{
 			Sprite.alpha = 1 / Alpha; //direct set to avoid stuck sprites
-		}
 	}
+	
 	inline function directAlphaTransform(Sprite:FlxSprite, Alpha:Float)            Sprite.alpha = Alpha;  // direct set
 	inline function facingTransform(Sprite:FlxSprite, Facing:Int)                  Sprite.facing = Facing;
 	inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)                   Sprite.flipX = FlipX;
