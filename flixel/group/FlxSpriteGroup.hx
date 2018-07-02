@@ -722,7 +722,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			{
 				transformChildren(alphaTransform, factor);
 			}
-			else{
+			else
+			{
 				transformChildren(directAlphaTransform, Value);
 			}
 		}
@@ -890,7 +891,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	inline function angleTransform(Sprite:FlxSprite, Angle:Float)                  Sprite.angle += Angle; // addition
 	inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)
 	{
-		if (Sprite.alpha != 0 || Alpha == 0){
+		if (Sprite.alpha != 0 || Alpha == 0)
+		{
 			Sprite.alpha *= Alpha; // multiplication
 		}
 		else
