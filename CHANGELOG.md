@@ -5,12 +5,14 @@
 - `FlxTween`:
 	- added support for tweening sub-properties like `"scale.x"` with `tween()` ([#2152](https://github.com/HaxeFlixel/flixel/issues/2152))
 	- added a `FlxTweenType` enum abstract and deprecated the constants in `FlxTween`
+- `FlxSpriteGroup`: added `directAlpha` ([#2157](https://github.com/HaxeFlixel/flixel/issues/2157))
 
 #### Bugfixes:
 
 - `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
 - `FlxAssetPaths`: fixed variables with invalid Haxe identifiers being generated ([#1796](https://github.com/HaxeFlixel/flixel/issues/1796))
 - `FlxSpriteUtil`: fixed `spaceFromBounds` in `space()` not being respected ([#1963](https://github.com/HaxeFlixel/flixel/issues/1963))
+- `FlxSpriteGroup`: fixed sprites not showing up again after setting `alpha` to `0` ([#1353](https://github.com/HaxeFlixel/flixel/issues/1353))
 
 #### Changes and improvements:
 
