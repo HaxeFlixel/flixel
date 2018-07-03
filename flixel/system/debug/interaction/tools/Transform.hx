@@ -23,6 +23,8 @@ class GraphicCursorScale extends BitmapData {}
 class Transform extends Tool
 {		
 	var _actionStartPoint:FlxPoint = new FlxPoint();
+	var _actionStartTargetCenter:FlxPoint = new FlxPoint();
+	var _actionStartTargetScale:FlxPoint = new FlxPoint();
 	var _actionHappening:Bool;
 	var _actionWhichMarker:Int;
 	var _markers:Array<FlxPoint> = [];
@@ -59,8 +61,11 @@ class Transform extends Tool
 			{
 				if (!groupTargetArea)
 				{
-					_targetArea.setPosition(member.x, member.y);
+					_targetArea.setPosition(member.x - FlxG.camera.scroll.x, member.y - FlxG.camera.scroll.y);
 					_targetArea.setSize(member.width, member.height);
+					
+					if (!_actionHappening)
+						_actionStartTargetScale.set(cast(member, FlxSprite).scale.x, cast(member, FlxSprite).scale.y);
 				}
 				else
 				{
@@ -81,8 +86,12 @@ class Transform extends Tool
 			return;
 
 		_actionHappening = true;
-		_actionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		_actionWhichMarker = whichMarker;
+		_actionStartPoint.set(
+			_brain.flixelPointer.x - FlxG.camera.scroll.x,
+			_brain.flixelPointer.y - FlxG.camera.scroll.y
+		);		
+		_actionStartTargetCenter.set(_targetArea.x, _targetArea.y);
 	}
 	
 	/**
@@ -118,12 +127,16 @@ class Transform extends Tool
 		if (!_actionHappening || _actionWhichMarker < 0)
 			return;
 
-		var deltaX = Math.abs(_markers[_actionWhichMarker].x - _mouseCursor.x);
-		var deltaY = Math.abs(_markers[_actionWhichMarker].y - _mouseCursor.y);
+		var distanceTargetCenter = _mouseCursor.distanceTo(_actionStartTargetCenter);
+		var distanceStartMarker = _mouseCursor.distanceTo(_actionStartPoint);
+		var deltaX = (_mouseCursor.x - _actionStartPoint.x) / 30;
+		var deltaY = (_mouseCursor.y - _actionStartPoint.y) / 30;
 		
-		if (deltaX <= 5 || deltaY <= 5)
+		FlxG.log.add("distC=" + distanceTargetCenter + ", distM=" + distanceStartMarker + " -> dx=" + deltaX + ", dy=" + deltaY);
+
+		//if (deltaX <= 0.01 || deltaY <= 0.01)
 			// Almost no movement in the interaction, nothing to do actually.
-			return;
+		//	return;
 
 		for (member in _brain.selectedItems)
 		{
@@ -133,15 +146,21 @@ class Transform extends Tool
 					// TODO: implement rotation action
 				}
 				else
-					cast(member, FlxSprite).scale.set(deltaX / 5, deltaY / 5);
+				{
+					var target = cast(member, FlxSprite);
+					//target.setGraphicSize(Std.int(target.width + deltaX), Std.int(target.height + deltaY));
+					target.scale.x = _actionStartTargetScale.x + deltaX;
+					target.scale.y = _actionStartTargetScale.y + deltaY;
+					target.updateHitbox();
+				}
 		}
 	}
 
 	private function updateMarkersPosition():Void
 	{
 		var padding = 5;
-		var topLeftX = _targetArea.x - FlxG.camera.scroll.x - padding;
-		var topLeftY = _targetArea.y - FlxG.camera.scroll.y - padding;
+		var topLeftX = _targetArea.x - padding;
+		var topLeftY = _targetArea.y - padding;
 		var width = _targetArea.width + padding * 2;
 		var height = _targetArea.height + padding * 2;
 
