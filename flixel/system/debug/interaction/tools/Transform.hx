@@ -28,6 +28,7 @@ class Transform extends Tool
 	var _selectionCancelled:Bool = false;
 	var _selectionArea:FlxRect = new FlxRect();
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
+	var _markers:Array<FlxPoint> = [];
 	var _targetArea:FlxRect = new FlxRect();
 	
 	override public function init(brain:Interaction):Tool 
@@ -38,12 +39,10 @@ class Transform extends Tool
 		setButton(GraphicCursorScale);
 		setCursor(new GraphicCursorScale(0, 0));
 
-		return this;
-	}
+		for(i in 0...5)
+			_markers.push(new FlxPoint());
 
-	private function handleMouseMarkerInteraction(event:MouseEvent):Void
-	{
-		trace(event.type);
+		return this;
 	}
 
 	private function updateTargetArea():Void
@@ -71,6 +70,30 @@ class Transform extends Tool
 			}
 		}
 	}
+
+	private function handleInteractionWithMarkers():Void
+	{
+
+	}
+
+	private function updateMarkersPosition():Void
+	{
+		var padding = 5;
+		var topLeftX = _targetArea.x - FlxG.camera.scroll.x - padding;
+		var topLeftY = _targetArea.y - FlxG.camera.scroll.y - padding;
+		var width = _targetArea.width + padding * 2;
+		var height = _targetArea.height + padding * 2;
+
+		// Markers in the corners of the target area
+		_markers[0].set(topLeftX, topLeftY);
+		_markers[1].set(topLeftX + width, topLeftY);
+		_markers[2].set(topLeftX + width, topLeftY + height);
+		_markers[3].set(topLeftX, topLeftY + height);
+
+		// Marker separated from the target area, used
+		// to handle rotations
+		_markers[4].set(topLeftX + width / 2, topLeftY - padding * 3);
+	}
 	
 	override public function update():Void 
 	{
@@ -78,37 +101,39 @@ class Transform extends Tool
 			return;
 
 		updateTargetArea();
+		updateMarkersPosition();
+		handleInteractionWithMarkers();
 	}
 	
-	private function drawControlMarkers(gfx:Graphics):Void
+	private function drawTargetAreaOutline(gfx:Graphics):Void
 	{
-		gfx.lineStyle(1.2, 0xd800ff);
-		for(i in 0...8)
-			gfx.drawRect(_targetArea.x - FlxG.camera.scroll.x - 5, _targetArea.y - FlxG.camera.scroll.y - 5, 3, 3);
+		gfx.moveTo(_markers[0].x, _markers[0].y);		
+		gfx.lineStyle(1.0, 0xd800ff);		
+
+		for(i in 0...4)
+			gfx.lineTo(_markers[i].x, _markers[i].y);
+
+		gfx.lineTo(_markers[0].x, _markers[0].y);
+	}
+
+	private function drawMarkers(gfx:Graphics):Void
+	{
+		var markerSize = 3;
+		
+		gfx.lineStyle(1.5, 0xd800ff);
+		for(i in 0...4)
+			gfx.drawRect(_markers[i].x - markerSize / 2, _markers[i].y - markerSize / 2, markerSize, markerSize);
 	}
 
 	override public function draw():Void 
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
-		
-		if (_brain.selectedItems.length == 0)
+
+		if (gfx == null || _brain.selectedItems.length == 0)
 			return;
 
-		drawControlMarkers(gfx);
-
-		for (member in _brain.selectedItems)
-		{
-			if (member != null && member.scrollFactor != null && member.isOnScreen())
-			{
-				// Render transformation marks on key positions of the item
-				//gfx.lineStyle(1.9, 0xd800ff);
-				//gfx.drawRect(member.x - FlxG.camera.scroll.x - 10,
-				//	member.y - FlxG.camera.scroll.y + 10,
-				//	member.width * 1.0, member.height * 1.0);
-			}
-		}
+		drawTargetAreaOutline(gfx);
+		drawMarkers(gfx);
 		
 		// Draw the debug info to the main camera buffer.
 		if (FlxG.renderBlit)
