@@ -22,14 +22,12 @@ class GraphicCursorScale extends BitmapData {}
  */
 class Transform extends Tool
 {		
-	var _selectionStartPoint:FlxPoint = new FlxPoint();
-	var _selectionEndPoint:FlxPoint = new FlxPoint();
-	var _selectionHappening:Bool = false;
-	var _selectionCancelled:Bool = false;
-	var _selectionArea:FlxRect = new FlxRect();
-	var _itemsInSelectionArea:Array<FlxBasic> = [];
+	var _actionStartPoint:FlxPoint = new FlxPoint();
+	var _actionHappening:Bool;
+	var _actionWhichMarker:Int;
 	var _markers:Array<FlxPoint> = [];
 	var _targetArea:FlxRect = new FlxRect();
+	var _mouseCursor:FlxPoint = new FlxPoint();
 	
 	override public function init(brain:Interaction):Tool 
 	{
@@ -39,9 +37,11 @@ class Transform extends Tool
 		setButton(GraphicCursorScale);
 		setCursor(new GraphicCursorScale(0, 0));
 
+		// TODO: name markers with enum
 		for(i in 0...5)
 			_markers.push(new FlxPoint());
 
+		stopAction();
 		return this;
 	}
 
@@ -71,9 +71,70 @@ class Transform extends Tool
 		}
 	}
 
-	private function handleInteractionWithMarkers():Void
+	/**
+	 * Start an interaction with a marker. Depending on the marker being used, the interaction
+	 * can be for resizing or rotating something.
+	 */
+	private function startAction(whichMarker:Int):Void
 	{
+		if (_actionHappening)
+			return;
 
+		_actionHappening = true;
+		_actionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
+		_actionWhichMarker = whichMarker;
+	}
+	
+	/**
+	 * Stop any interaction activity that is happening with any marker.
+	 */
+	private function stopAction():Void
+	{	
+		_actionHappening = false;
+		_actionWhichMarker = -1;
+	}
+
+	private function handleInteractionsWithMarkersUI():Void
+	{
+		if (_actionHappening)
+			// If any action is happening, e.g. resizing, UI interactions with
+			// any other marker different than the active one are not allowed.
+			return;
+
+		for (i in 0..._markers.length)
+			if (_mouseCursor.distanceTo(_markers[i]) <= 10)
+			{
+				// TODO: change mouse cursor according to current marker
+				if (_brain.pointerJustPressed)
+				{
+					startAction(i);
+					break;
+				}
+			}
+	}
+
+	private function updateAction():Void
+	{
+		if (!_actionHappening || _actionWhichMarker < 0)
+			return;
+
+		var deltaX = Math.abs(_markers[_actionWhichMarker].x - _mouseCursor.x);
+		var deltaY = Math.abs(_markers[_actionWhichMarker].y - _mouseCursor.y);
+		
+		if (deltaX <= 5 || deltaY <= 5)
+			// Almost no movement in the interaction, nothing to do actually.
+			return;
+
+		for (member in _brain.selectedItems)
+		{
+			if (member != null && member.scrollFactor != null && member.isOnScreen())
+				if (_actionWhichMarker == 4)
+				{
+					// TODO: implement rotation action
+				}
+				else
+					cast(member, FlxSprite).scale.set(deltaX / 5, deltaY / 5);
+		}
 	}
 
 	private function updateMarkersPosition():Void
@@ -90,19 +151,30 @@ class Transform extends Tool
 		_markers[2].set(topLeftX + width, topLeftY + height);
 		_markers[3].set(topLeftX, topLeftY + height);
 
-		// Marker separated from the target area, used
+		// Marker separated from the target area used
 		// to handle rotations
 		_markers[4].set(topLeftX + width / 2, topLeftY - padding * 3);
 	}
 	
 	override public function update():Void 
 	{
-		if (_brain.selectedItems.length == 0)
-			return;
+		//if (_brain.selectedItems.length == 0)
+		//	return;
+
+		_mouseCursor.x = _brain.flixelPointer.x - FlxG.camera.scroll.x;
+		_mouseCursor.y = _brain.flixelPointer.y - FlxG.camera.scroll.y;
 
 		updateTargetArea();
 		updateMarkersPosition();
-		handleInteractionWithMarkers();
+		
+		if (_actionHappening)
+		{
+			updateAction();
+			if (_brain.pointerJustReleased)
+				stopAction();
+		}
+		else
+			handleInteractionsWithMarkersUI();
 	}
 	
 	private function drawTargetAreaOutline(gfx:Graphics):Void
