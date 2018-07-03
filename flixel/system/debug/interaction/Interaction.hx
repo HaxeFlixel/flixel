@@ -13,6 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
+import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
@@ -66,6 +67,7 @@ class Interaction extends Window
 		addTool(new Pointer());
 		addTool(new Mover());
 		addTool(new Eraser());
+		addTool(new Transform());
 		
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
