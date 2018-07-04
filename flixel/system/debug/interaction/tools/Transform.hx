@@ -122,6 +122,18 @@ class Transform extends Tool
 			}
 	}
 
+	private function calculateActionsMovementDirection():FlxPoint
+	{
+		var direction :FlxPoint = new FlxPoint(); // TODO: remove this dynamic allocation?
+		var deltaX = _mouseCursor.x - _actionStartPoint.x;
+		var deltaY = _mouseCursor.y - _actionStartPoint.y;
+
+		direction.x = deltaX >=0 ? 1 : -1;
+		direction.y = deltaY >=0 ? 1 : -1;
+
+		return direction;
+	}
+
 	private function updateAction():Void
 	{
 		if (!_actionHappening || _actionWhichMarker < 0)
@@ -129,10 +141,11 @@ class Transform extends Tool
 
 		var distanceTargetCenter = _mouseCursor.distanceTo(_actionStartTargetCenter);
 		var distanceStartMarker = _mouseCursor.distanceTo(_actionStartPoint);
-		var deltaX = (_mouseCursor.x - _actionStartPoint.x) / 30;
-		var deltaY = (_mouseCursor.y - _actionStartPoint.y) / 30;
+		var direction = calculateActionsMovementDirection();
+		var deltaX = direction.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / 10;
+		var deltaY = direction.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / 10;
 		
-		FlxG.log.add("distC=" + distanceTargetCenter + ", distM=" + distanceStartMarker + " -> dx=" + deltaX + ", dy=" + deltaY);
+		FlxG.log.add("distC=" + distanceTargetCenter + ", distM=" + distanceStartMarker + ", d=" + direction + " -> dx=" + deltaX + ", dy=" + deltaY);
 
 		//if (deltaX <= 0.01 || deltaY <= 0.01)
 			// Almost no movement in the interaction, nothing to do actually.
@@ -148,10 +161,12 @@ class Transform extends Tool
 				else
 				{
 					var target = cast(member, FlxSprite);
-					//target.setGraphicSize(Std.int(target.width + deltaX), Std.int(target.height + deltaY));
-					target.scale.x = _actionStartTargetScale.x + deltaX;
-					target.scale.y = _actionStartTargetScale.y + deltaY;
+					if(_actionWhichMarker == 1 || _actionWhichMarker == 2)
+						target.scale.x = _actionStartTargetScale.x + deltaX;
+					if(_actionWhichMarker == 2 || _actionWhichMarker == 3)						
+						target.scale.y = _actionStartTargetScale.y + deltaY;
 					target.updateHitbox();
+					target.centerOrigin();
 				}
 		}
 	}
@@ -212,7 +227,7 @@ class Transform extends Tool
 		var markerSize = 3;
 		
 		gfx.lineStyle(1.5, 0xd800ff);
-		for(i in 0...4)
+		for(i in 1...4)
 			gfx.drawRect(_markers[i].x - markerSize / 2, _markers[i].y - markerSize / 2, markerSize, markerSize);
 	}
 
