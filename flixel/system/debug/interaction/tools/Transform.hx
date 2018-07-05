@@ -3,6 +3,8 @@ package flixel.system.debug.interaction.tools;
 import flash.display.BitmapData;
 import flash.display.Graphics;
 import flash.display.Sprite;
+import flash.display.LineScaleMode;
+import flash.display.CapsStyle;
 import flash.ui.Keyboard;
 import flash.events.MouseEvent;
 import flixel.FlxBasic;
@@ -21,12 +23,17 @@ class GraphicCursorScale extends BitmapData {}
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Transform extends Tool
-{		
+{	
+	public static inline var OUTLINE_PADDING = 5.0;
+	public static inline var MARKER_SIZE = 3.0;
+	public static inline var RESIZE_STEP = 10.0;
+
 	var _actionStartPoint:FlxPoint = new FlxPoint();
 	var _actionStartTargetCenter:FlxPoint = new FlxPoint();
 	var _actionStartTargetScale:FlxPoint = new FlxPoint();
 	var _actionHappening:Bool;
 	var _actionWhichMarker:Int;
+	var _actionDirection:FlxPoint = new FlxPoint();
 	var _markers:Array<FlxPoint> = [];
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
@@ -40,7 +47,7 @@ class Transform extends Tool
 		setCursor(new GraphicCursorScale(0, 0));
 
 		// TODO: name markers with enum
-		for(i in 0...5)
+		for(i in 0...4)
 			_markers.push(new FlxPoint());
 
 		stopAction();
@@ -52,7 +59,6 @@ class Transform extends Tool
 		_targetArea.setPosition(0, 0);
 		_targetArea.setSize(0, 0);
 
-		// TODO: refactor this
 		var groupTargetArea:Bool = _brain.selectedItems.length > 1;
 
 		for (member in _brain.selectedItems)
@@ -67,11 +73,7 @@ class Transform extends Tool
 					if (!_actionHappening)
 						_actionStartTargetScale.set(cast(member, FlxSprite).scale.x, cast(member, FlxSprite).scale.y);
 				}
-				else
-				{
-					// TODO: calculate targetArea using multiple elements, i.e. centroid, etc.
-				}
-				//cast(member, FlxSprite).scale.set(3, 3);
+				// TODO: calculate targetArea using multiple elements, i.e. centroid, etc.
 			}
 		}
 	}
@@ -122,16 +124,13 @@ class Transform extends Tool
 			}
 	}
 
-	private function calculateActionsMovementDirection():FlxPoint
+	private function updateActionDirection():Void
 	{
-		var direction :FlxPoint = new FlxPoint(); // TODO: remove this dynamic allocation?
 		var deltaX = _mouseCursor.x - _actionStartPoint.x;
 		var deltaY = _mouseCursor.y - _actionStartPoint.y;
 
-		direction.x = deltaX >=0 ? 1 : -1;
-		direction.y = deltaY >=0 ? 1 : -1;
-
-		return direction;
+		_actionDirection.x = deltaX >=0 ? 1 : -1;
+		_actionDirection.y = deltaY >=0 ? 1 : -1;
 	}
 
 	private function updateAction():Void
@@ -139,62 +138,58 @@ class Transform extends Tool
 		if (!_actionHappening || _actionWhichMarker < 0)
 			return;
 
-		var distanceTargetCenter = _mouseCursor.distanceTo(_actionStartTargetCenter);
-		var distanceStartMarker = _mouseCursor.distanceTo(_actionStartPoint);
-		var direction = calculateActionsMovementDirection();
-		var deltaX = direction.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / 10;
-		var deltaY = direction.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / 10;
-		
-		FlxG.log.add("distC=" + distanceTargetCenter + ", distM=" + distanceStartMarker + ", d=" + direction + " -> dx=" + deltaX + ", dy=" + deltaY);
+		// Decide if the mouse cursor is moving away from or towards the target,
+		// i.e. making the object bigger or smaller.
+		updateActionDirection();
 
-		//if (deltaX <= 0.01 || deltaY <= 0.01)
-			// Almost no movement in the interaction, nothing to do actually.
-		//	return;
+		var deltaX = _actionDirection.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / RESIZE_STEP;
+		var deltaY = _actionDirection.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / RESIZE_STEP;
 
 		for (member in _brain.selectedItems)
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
-				if (_actionWhichMarker == 4)
+			{
+				if (_actionWhichMarker == 0)
 				{
-					// TODO: implement rotation action
+					// This is a rotation action
+					// TODO: implement the action
 				}
 				else
 				{
+					// This is a scale action
 					var target = cast(member, FlxSprite);
+
 					if(_actionWhichMarker == 1 || _actionWhichMarker == 2)
 						target.scale.x = _actionStartTargetScale.x + deltaX;
 					if(_actionWhichMarker == 2 || _actionWhichMarker == 3)						
 						target.scale.y = _actionStartTargetScale.y + deltaY;
+					
 					target.updateHitbox();
 					target.centerOrigin();
 				}
+			}
 		}
 	}
 
 	private function updateMarkersPosition():Void
 	{
-		var padding = 5;
-		var topLeftX = _targetArea.x - padding;
-		var topLeftY = _targetArea.y - padding;
-		var width = _targetArea.width + padding * 2;
-		var height = _targetArea.height + padding * 2;
+		var topLeftX = _targetArea.x - OUTLINE_PADDING;
+		var topLeftY = _targetArea.y - OUTLINE_PADDING;
+		var width = _targetArea.width + OUTLINE_PADDING * 2;
+		var height = _targetArea.height + OUTLINE_PADDING * 2;
 
-		// Markers in the corners of the target area
 		_markers[0].set(topLeftX, topLeftY);
 		_markers[1].set(topLeftX + width, topLeftY);
 		_markers[2].set(topLeftX + width, topLeftY + height);
 		_markers[3].set(topLeftX, topLeftY + height);
-
-		// Marker separated from the target area used
-		// to handle rotations
-		_markers[4].set(topLeftX + width / 2, topLeftY - padding * 3);
 	}
 	
 	override public function update():Void 
 	{
-		//if (_brain.selectedItems.length == 0)
-		//	return;
+		if (!isActive() || _brain.selectedItems.length == 0)
+			return;
 
+		// Calculate mouse cursor position on the screen (screen space/coordinates)
 		_mouseCursor.x = _brain.flixelPointer.x - FlxG.camera.scroll.x;
 		_mouseCursor.y = _brain.flixelPointer.y - FlxG.camera.scroll.y;
 
@@ -213,10 +208,10 @@ class Transform extends Tool
 	
 	private function drawTargetAreaOutline(gfx:Graphics):Void
 	{
+		gfx.lineStyle(1, 0xd800ff, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		
 		gfx.moveTo(_markers[0].x, _markers[0].y);		
-		gfx.lineStyle(1.0, 0xd800ff);		
-
-		for(i in 0...4)
+		for(i in 0..._markers.length)
 			gfx.lineTo(_markers[i].x, _markers[i].y);
 
 		gfx.lineTo(_markers[0].x, _markers[0].y);
@@ -224,11 +219,16 @@ class Transform extends Tool
 
 	private function drawMarkers(gfx:Graphics):Void
 	{
-		var markerSize = 3;
-		
-		gfx.lineStyle(1.5, 0xd800ff);
-		for(i in 1...4)
-			gfx.drawRect(_markers[i].x - markerSize / 2, _markers[i].y - markerSize / 2, markerSize, markerSize);
+		gfx.lineStyle(1, 0xd800ff, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.beginFill(0xd800ff);
+		for(i in 0..._markers.length)
+			if (i == 0)
+				// Rotation marker
+				gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
+			else
+				// Scale marker
+				gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
+		gfx.endFill();
 	}
 
 	override public function draw():Void 
