@@ -14,8 +14,23 @@ import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
 
+@:bitmap("assets/images/debugger/buttons/transform.png")
+class GraphicTransformTool extends BitmapData {}
+
 @:bitmap("assets/images/debugger/cursorCross.png")
-class GraphicCursorScale extends BitmapData {}
+class GraphicTransformCursorDefault extends BitmapData {}
+
+@:bitmap("assets/images/debugger/cursors/transformScaleY.png")
+class GraphicTransformCursorScaleY extends BitmapData {}
+
+@:bitmap("assets/images/debugger/cursors/transformScaleX.png")
+class GraphicTransformCursorScaleX extends BitmapData {}
+
+@:bitmap("assets/images/debugger/cursors/transformScaleXY.png")
+class GraphicTransformCursorScaleXY extends BitmapData {}
+
+@:bitmap("assets/images/debugger/cursors/transformRotate.png")
+class GraphicTransformCursorRotate extends BitmapData {}
 
 /**
  * A tool to scale and rotate selected game elements.
@@ -43,8 +58,8 @@ class Transform extends Tool
 		super.init(brain);
 		
 		_name = "Transform";
-		setButton(GraphicCursorScale);
-		setCursor(new GraphicCursorScale(0, 0));
+		setButton(GraphicTransformTool);
+		setCursor(new GraphicTransformCursorDefault(0, 0));
 
 		// TODO: name markers with enum
 		for(i in 0...4)
@@ -235,7 +250,7 @@ class Transform extends Tool
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
 
-		if (gfx == null || _brain.selectedItems.length == 0)
+		if (gfx == null || _brain.selectedItems.length == 0 || !isActive())
 			return;
 
 		drawTargetAreaOutline(gfx);
