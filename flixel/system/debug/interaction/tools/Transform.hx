@@ -61,6 +61,11 @@ class Transform extends Tool
 		setButton(GraphicTransformTool);
 		setCursor(new GraphicTransformCursorDefault(0, 0));
 
+		brain.registerCustomCursor("transformRotate", new GraphicTransformCursorRotate(0, 0));
+		brain.registerCustomCursor("transformScaleX", new GraphicTransformCursorScaleX(0, 0));
+		brain.registerCustomCursor("transformScaleXY", new GraphicTransformCursorScaleXY(0, 0));
+		brain.registerCustomCursor("transformScaleY", new GraphicTransformCursorScaleY(0, 0));
+
 		// TODO: name markers with enum
 		for(i in 0...4)
 			_markers.push(new FlxPoint());
@@ -120,6 +125,18 @@ class Transform extends Tool
 		_actionWhichMarker = -1;
 	}
 
+	private function getCursorNameByMarker(marker:Int):String
+	{
+		return switch(marker)
+		{
+			case 0: "transformRotate";
+			case 1: "transformScaleX";
+			case 2: "transformScaleXY";
+			case 3: "transformScaleY";
+			case _: "";
+		}
+	}
+
 	private function handleInteractionsWithMarkersUI():Void
 	{
 		if (_actionHappening)
@@ -127,16 +144,25 @@ class Transform extends Tool
 			// any other marker different than the active one are not allowed.
 			return;
 
+		var cursorName = "";
+
 		for (i in 0..._markers.length)
+		{
 			if (_mouseCursor.distanceTo(_markers[i]) <= 10)
 			{
-				// TODO: change mouse cursor according to current marker
+				cursorName = getCursorNameByMarker(i);
 				if (_brain.pointerJustPressed)
 				{
 					startAction(i);
 					break;
 				}
 			}
+		}
+		
+		if (cursorName != "")
+			setCursorInUse(cursorName);
+		else
+			useDefaultCursor();		
 	}
 
 	private function updateActionDirection():Void

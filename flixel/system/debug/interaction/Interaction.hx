@@ -362,17 +362,18 @@ class Interaction extends Window
 			if (activeTool.cursor != null)
 			{
 				// Yep. Let's show it then
+				var cursorInUse = activeTool.cursorInUse == "" ? activeTool.getName() : activeTool.cursorInUse;
 				#if FLX_NATIVE_CURSOR
 				// We have lag-free native cursors available, yay!
 				// Activate it then.
-				FlxG.mouse.setNativeCursor(activeTool.getName());
+				FlxG.mouse.setNativeCursor(cursorInUse);
 				#else
 				// No fancy native cursors, so we have to emulate it.
 				// Let's make the currently active tool's fake cursor visible
 				for (i in 0..._customCursor.numChildren)
 				{
 					var sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == activeTool.getName();
+					sprite.visible = sprite.name == cursorInUse;
 				}
 				if (FlxG.mouse.visible)
 					FlxG.mouse.visible = false;
