@@ -177,21 +177,35 @@ class Interaction extends Window
 		}
 	}
 	
+	private function countToolsWithUIButton():Int
+	{
+		var count = 0;
+		for (tool in _tools)
+			if (tool.button != null)
+				count++;
+		return count;
+	}
+
 	function addTool(tool:Tool):Void
 	{
 		tool.init(this);
 		_tools.push(tool);
 		
-		// If the tool has a button, add it to the interaction window
+		// If the tool has no button, it is not added to the interaction window
 		var button = tool.button;
 		if (button == null)
 			return;
 
-		button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
-		button.y = 20;
+		var buttonsPerLine = 2;
+		var buttons = countToolsWithUIButton();
+		var lines = Std.int(Math.ceil(buttons / buttonsPerLine));
+		var slot = Std.int(buttons / lines);
+
+		button.x = -15 + slot * 25;
+		button.y = 20 * lines;
+
 		addChild(button);
-		
-		resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
+		resize(25 * Math.min(buttons, buttonsPerLine) + 10, 25 * lines + 10);
 	}
 	
 	/**
