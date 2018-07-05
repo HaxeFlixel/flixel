@@ -39,9 +39,19 @@ class GraphicTransformCursorRotate extends BitmapData {}
  */
 class Transform extends Tool
 {	
-	public static inline var OUTLINE_PADDING = 5.0;
-	public static inline var MARKER_SIZE = 3.0;
-	public static inline var RESIZE_STEP = 10.0;
+	static inline var OUTLINE_PADDING = 5.0;
+	static inline var MARKER_SIZE = 3.0;
+	static inline var RESIZE_STEP = 10.0;
+
+	static inline var CURSOR_ROTATE = "transformRotate";
+	static inline var CURSOR_SCALE_X = "transformScaleX";
+	static inline var CURSOR_SCALE_Y = "transformScaleY";
+	static inline var CURSOR_SCALE_XY = "transformScaleXY";
+
+	static inline var MARKER_ROTATE = 0;
+	static inline var MARKER_SCALE_X = 1;
+	static inline var MARKER_SCALE_XY = 2;
+	static inline var MARKER_SCALE_Y = 3;
 
 	var _actionStartPoint:FlxPoint = new FlxPoint();
 	var _actionStartTargetCenter:FlxPoint = new FlxPoint();
@@ -61,12 +71,11 @@ class Transform extends Tool
 		setButton(GraphicTransformTool);
 		setCursor(new GraphicTransformCursorDefault(0, 0));
 
-		brain.registerCustomCursor("transformRotate", new GraphicTransformCursorRotate(0, 0));
-		brain.registerCustomCursor("transformScaleX", new GraphicTransformCursorScaleX(0, 0));
-		brain.registerCustomCursor("transformScaleXY", new GraphicTransformCursorScaleXY(0, 0));
-		brain.registerCustomCursor("transformScaleY", new GraphicTransformCursorScaleY(0, 0));
+		brain.registerCustomCursor(CURSOR_ROTATE, new GraphicTransformCursorRotate(0, 0));
+		brain.registerCustomCursor(CURSOR_SCALE_X, new GraphicTransformCursorScaleX(0, 0));
+		brain.registerCustomCursor(CURSOR_SCALE_Y, new GraphicTransformCursorScaleY(0, 0));
+		brain.registerCustomCursor(CURSOR_SCALE_XY, new GraphicTransformCursorScaleXY(0, 0));		
 
-		// TODO: name markers with enum
 		for(i in 0...4)
 			_markers.push(new FlxPoint());
 
@@ -129,10 +138,10 @@ class Transform extends Tool
 	{
 		return switch(marker)
 		{
-			case 0: "transformRotate";
-			case 1: "transformScaleX";
-			case 2: "transformScaleXY";
-			case 3: "transformScaleY";
+			case MARKER_ROTATE: CURSOR_ROTATE;
+			case MARKER_SCALE_X: CURSOR_SCALE_X;
+			case MARKER_SCALE_XY: CURSOR_SCALE_XY;
+			case MARKER_SCALE_Y: CURSOR_SCALE_Y;
 			case _: "";
 		}
 	}
@@ -190,19 +199,18 @@ class Transform extends Tool
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
-				if (_actionWhichMarker == 0)
+				if (_actionWhichMarker == MARKER_ROTATE)
 				{
-					// This is a rotation action
-					// TODO: implement the action
+					// TODO: implement the rotation action
 				}
 				else
 				{
 					// This is a scale action
 					var target = cast(member, FlxSprite);
 
-					if(_actionWhichMarker == 1 || _actionWhichMarker == 2)
+					if(_actionWhichMarker == MARKER_SCALE_X || _actionWhichMarker == MARKER_SCALE_XY)
 						target.scale.x = _actionStartTargetScale.x + deltaX;
-					if(_actionWhichMarker == 2 || _actionWhichMarker == 3)						
+					if(_actionWhichMarker == MARKER_SCALE_XY || _actionWhichMarker == MARKER_SCALE_Y)
 						target.scale.y = _actionStartTargetScale.y + deltaY;
 					
 					target.updateHitbox();
@@ -219,10 +227,10 @@ class Transform extends Tool
 		var width = _targetArea.width + OUTLINE_PADDING * 2;
 		var height = _targetArea.height + OUTLINE_PADDING * 2;
 
-		_markers[0].set(topLeftX, topLeftY);
-		_markers[1].set(topLeftX + width, topLeftY);
-		_markers[2].set(topLeftX + width, topLeftY + height);
-		_markers[3].set(topLeftX, topLeftY + height);
+		_markers[MARKER_ROTATE].set(topLeftX, topLeftY);
+		_markers[MARKER_SCALE_X].set(topLeftX + width, topLeftY);
+		_markers[MARKER_SCALE_XY].set(topLeftX + width, topLeftY + height);
+		_markers[MARKER_SCALE_Y].set(topLeftX, topLeftY + height);
 	}
 	
 	override public function update():Void 
