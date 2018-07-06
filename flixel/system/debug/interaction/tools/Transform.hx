@@ -56,14 +56,14 @@ class Transform extends Tool
 	static inline var MARKER_SCALE_XY = 2;
 	static inline var MARKER_SCALE_Y = 3;
 
-	var _actionStartPoint:FlxPoint = new FlxPoint();
-	var _actionStartTargetCenter:FlxPoint = new FlxPoint();
-	var _actionStartTargetScale:FlxPoint = new FlxPoint();
-	var _actionStartTargetAngle:Float;
+	var _actionTargetStartScale:FlxPoint = new FlxPoint();
+	var _actionTargetStartAngle:Float;
+	var _actionStartPoint:FlxPoint = new FlxPoint();	
 	var _actionHappening:Bool;
 	var _actionWhichMarker:Int;
-	var _actionDirection:FlxPoint = new FlxPoint();
+	var _actionScaleDirection:FlxPoint = new FlxPoint();
 	var _markers:Array<FlxPoint> = [];
+	var _target:FlxSprite;	
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
 	
@@ -89,25 +89,15 @@ class Transform extends Tool
 
 	private function updateTargetArea():Void
 	{
-		_targetArea.setPosition(0, 0);
-		_targetArea.setSize(0, 0);
-
-		var groupTargetArea:Bool = _brain.selectedItems.length > 1;
-
-		for (member in _brain.selectedItems)
+		if (_target == null)
 		{
-			if (member != null && member.scrollFactor != null && member.isOnScreen())
-			{
-				if (!groupTargetArea)
-				{
-					_targetArea.setPosition(member.x - FlxG.camera.scroll.x, member.y - FlxG.camera.scroll.y);
-					_targetArea.setSize(member.width, member.height);
-					
-					if (!_actionHappening)
-						_actionStartTargetScale.set(cast(member, FlxSprite).scale.x, cast(member, FlxSprite).scale.y);
-				}
-				// TODO: calculate targetArea using multiple elements, i.e. centroid, etc.
-			}
+			_targetArea.setPosition(0, 0);
+			_targetArea.setSize(0, 0);
+		}
+		else
+		{
+			_targetArea.setPosition(_target.x - FlxG.camera.scroll.x, _target.y - FlxG.camera.scroll.y);
+			_targetArea.setSize(_target.width, _target.height);
 		}
 	}
 
@@ -126,8 +116,8 @@ class Transform extends Tool
 			_brain.flixelPointer.x - FlxG.camera.scroll.x,
 			_brain.flixelPointer.y - FlxG.camera.scroll.y
 		);		
-		_actionStartTargetCenter.set(_targetArea.x, _targetArea.y);
-		_actionStartTargetAngle = FlxAngle.angleBetweenPoint(cast _brain.selectedItems.members[0], _markers[0], true);
+		_actionTargetStartAngle = FlxAngle.angleBetweenPoint(_target, _markers[MARKER_ROTATE], true);
+		_actionTargetStartScale.set(_target.scale.x, _target.scale.y);
 	}
 	
 	/**
@@ -154,8 +144,8 @@ class Transform extends Tool
 	private function handleInteractionsWithMarkersUI():Void
 	{
 		if (_actionHappening)
-			// If any action is happening, e.g. resizing, UI interactions with
-			// any other marker different than the active one are not allowed.
+			// If any action is already happening, e.g. resizing, then any UI interaction
+			// with a marker other than the active one is not allowed.
 			return;
 
 		var cursorName = "";
@@ -179,13 +169,36 @@ class Transform extends Tool
 			useDefaultCursor();		
 	}
 
-	private function updateActionDirection():Void
+	private function updateScaleActionDirection():Void
 	{
 		var deltaX = _mouseCursor.x - _actionStartPoint.x;
 		var deltaY = _mouseCursor.y - _actionStartPoint.y;
 
-		_actionDirection.x = deltaX >=0 ? 1 : -1;
-		_actionDirection.y = deltaY >=0 ? 1 : -1;
+		_actionScaleDirection.x = deltaX >=0 ? 1 : -1;
+		_actionScaleDirection.y = deltaY >=0 ? 1 : -1;
+	}
+
+	private function updateScaleAction():Void
+	{
+		// Decide if the mouse cursor is moving away from or towards the target,
+		// i.e. making the object bigger or smaller.
+		updateScaleActionDirection();
+
+		var deltaX = _actionScaleDirection.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / RESIZE_STEP;
+		var deltaY = _actionScaleDirection.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / RESIZE_STEP;
+
+		if(_actionWhichMarker == MARKER_SCALE_X || _actionWhichMarker == MARKER_SCALE_XY)
+			_target.scale.x = _actionTargetStartScale.x + deltaX;
+		if(_actionWhichMarker == MARKER_SCALE_XY || _actionWhichMarker == MARKER_SCALE_Y)
+			_target.scale.y = _actionTargetStartScale.y + deltaY;
+		
+		_target.updateHitbox();
+		_target.centerOrigin();		
+	}
+
+	private function updateRotateAction():Void
+	{
+		_target.angle = FlxAngle.angleBetweenMouse(_target, true) - _actionTargetStartAngle;
 	}
 
 	private function updateAction():Void
@@ -193,38 +206,10 @@ class Transform extends Tool
 		if (!_actionHappening || _actionWhichMarker < 0)
 			return;
 
-		// Decide if the mouse cursor is moving away from or towards the target,
-		// i.e. making the object bigger or smaller.
-		updateActionDirection();
-
-		var deltaX = _actionDirection.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / RESIZE_STEP;
-		var deltaY = _actionDirection.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / RESIZE_STEP;
-
-		for (member in _brain.selectedItems)
-		{
-			if (member != null && member.scrollFactor != null && member.isOnScreen())
-			{
-				if (_actionWhichMarker == MARKER_ROTATE)
-				{
-					// TODO: implement the rotation action
-					//FlxG.log.add("angle: " + FlxAngle.angleBetweenMouse(member, true) + " | " + FlxAngle.angleBetweenPoint(cast member, _markers[0], true));
-					member.angle = FlxAngle.angleBetweenMouse(member, true) - _actionStartTargetAngle;
-				}
-				else
-				{
-					// This is a scale action
-					var target = cast(member, FlxSprite);
-
-					if(_actionWhichMarker == MARKER_SCALE_X || _actionWhichMarker == MARKER_SCALE_XY)
-						target.scale.x = _actionStartTargetScale.x + deltaX;
-					if(_actionWhichMarker == MARKER_SCALE_XY || _actionWhichMarker == MARKER_SCALE_Y)
-						target.scale.y = _actionStartTargetScale.y + deltaY;
-					
-					target.updateHitbox();
-					target.centerOrigin();
-				}
-			}
-		}
+		if (_actionWhichMarker == MARKER_ROTATE)
+			updateRotateAction();
+		else
+			updateScaleAction();
 	}
 
 	private function updateMarkersPosition():Void
@@ -239,33 +224,30 @@ class Transform extends Tool
 		_markers[MARKER_SCALE_XY].set(topLeftX + width, topLeftY + height);
 		_markers[MARKER_SCALE_Y].set(topLeftX, topLeftY + height);
 
-		updateMarkersRotation();
+		if (_target.angle != 0)
+			updateMarkersRotation();
 	}
 	
 	private function updateMarkersRotation():Void
 	{
-		var target :FlxSprite = cast _brain.selectedItems.members[0];
+		var rotationAngleRad = _target.angle * FlxAngle.TO_RAD;
 		var originX = _markers[0].x + (_targetArea.width + OUTLINE_PADDING * 2) / 2;
 		var originY = _markers[0].y + (_targetArea.height + OUTLINE_PADDING * 2) / 2;
-		var rotationAngleRad = target.angle * FlxAngle.TO_RAD;
 		var cos = FlxMath.fastCos(rotationAngleRad);
 		var sin = FlxMath.fastSin(rotationAngleRad);
 
 		for(marker in _markers)
 		{
-			// Idea to implementation rotation from: https://stackoverflow.com/a/2259502/29827
+			// From: https://stackoverflow.com/a/2259502/29827
 			var rotatedX = (marker.x - originX) * cos - (marker.y - originY) * sin;
 			var rotatedY = (marker.x - originX) * sin + (marker.y - originY) * cos;
-
-			//FlxG.log.add((rotationAngleRad * FlxAngle.TO_DEG) + " -> (" + (marker.x - originX) + "," + (marker.x - originX) + ") to (" + rotatedX + "," + rotatedY + ")");
-			//FlxG.log.notice(rotatedX + originX, rotatedY + originY);
 			marker.set(rotatedX + originX, rotatedY + originY);
 		}
 	}
 
 	override public function update():Void 
 	{
-		if (!isActive() || _brain.selectedItems.length == 0)
+		if (!isActive() || _target == null)
 			return;
 
 		// Calculate mouse cursor position on the screen (screen space/coordinates)
@@ -274,15 +256,14 @@ class Transform extends Tool
 
 		updateTargetArea();
 		updateMarkersPosition();
-		
+		handleInteractionsWithMarkersUI();
+
 		if (_actionHappening)
 		{
 			updateAction();
 			if (_brain.pointerJustReleased)
 				stopAction();
 		}
-		else
-			handleInteractionsWithMarkersUI();
 	}
 	
 	private function drawTargetAreaOutline(gfx:Graphics):Void
@@ -314,7 +295,7 @@ class Transform extends Tool
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
 
-		if (gfx == null || _brain.selectedItems.length == 0 || !isActive())
+		if (gfx == null || _target == null || !isActive())
 			return;
 
 		drawTargetAreaOutline(gfx);
@@ -323,5 +304,22 @@ class Transform extends Tool
 		// Draw the debug info to the main camera buffer.
 		if (FlxG.renderBlit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+	}
+
+	override public function activate():Void
+	{
+		_target = null;
+
+		if (_brain.selectedItems.length == 0)
+			return;
+
+		for (member in _brain.selectedItems)
+		{
+			if (member != null && member.scrollFactor != null && member.isOnScreen())
+			{
+				_target = cast member;
+				break;
+			}
+		}
 	}
 }
