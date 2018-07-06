@@ -41,6 +41,7 @@ class Transform extends Tool
 {	
 	static inline var OUTLINE_PADDING = 5.0;
 	static inline var MARKER_SIZE = 3.0;
+	static inline var MARKER_INTERACTION_DISTANCE = 5.0;
 	static inline var RESIZE_STEP = 10.0;
 
 	static inline var CURSOR_ROTATE = "transformRotate";
@@ -157,7 +158,7 @@ class Transform extends Tool
 
 		for (i in 0..._markers.length)
 		{
-			if (_mouseCursor.distanceTo(_markers[i]) <= 10)
+			if (_mouseCursor.distanceTo(_markers[i]) <= MARKER_INTERACTION_DISTANCE)
 			{
 				cursorName = getCursorNameByMarker(i);
 				if (_brain.pointerJustPressed)
