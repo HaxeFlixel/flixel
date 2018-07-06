@@ -10,6 +10,8 @@ import flash.events.MouseEvent;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.math.FlxAngle;
+import flixel.math.FlxMath;
 import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
@@ -203,6 +205,8 @@ class Transform extends Tool
 				if (_actionWhichMarker == MARKER_ROTATE)
 				{
 					// TODO: implement the rotation action
+					//FlxG.log.add("angle: " + FlxAngle.angleBetweenMouse(member, true));
+					member.angle = FlxAngle.angleBetweenMouse(member, true);
 				}
 				else
 				{
@@ -232,8 +236,31 @@ class Transform extends Tool
 		_markers[MARKER_SCALE_X].set(topLeftX + width, topLeftY);
 		_markers[MARKER_SCALE_XY].set(topLeftX + width, topLeftY + height);
 		_markers[MARKER_SCALE_Y].set(topLeftX, topLeftY + height);
+
+		updateMarkersRotation();
 	}
 	
+	private function updateMarkersRotation():Void
+	{
+		var target :FlxSprite = cast _brain.selectedItems.members[0];
+		var originX = _markers[0].x + (_targetArea.width + OUTLINE_PADDING * 2) / 2;
+		var originY = _markers[0].y + (_targetArea.height + OUTLINE_PADDING * 2) / 2;
+		var rotationAngleRad = target.angle * FlxAngle.TO_RAD;
+		var cos = FlxMath.fastCos(rotationAngleRad);
+		var sin = FlxMath.fastSin(rotationAngleRad);		
+
+		for(marker in _markers)
+		{
+			// Idea to implementation rotation from: https://stackoverflow.com/a/2259502/29827
+			var rotatedX = (marker.x - originX) * cos - (marker.y - originY) * sin;
+			var rotatedY = (marker.x - originX) * sin + (marker.y - originY) * cos;
+
+			FlxG.log.add((rotationAngleRad * FlxAngle.TO_DEG) + " -> (" + (marker.x - originX) + "," + (marker.x - originX) + ") to (" + rotatedX + "," + rotatedY + ")");
+			//FlxG.log.notice(rotatedX + originX, rotatedY + originY);
+			marker.set(rotatedX + originX, rotatedY + originY);
+		}
+	}
+
 	override public function update():Void 
 	{
 		if (!isActive() || _brain.selectedItems.length == 0)
