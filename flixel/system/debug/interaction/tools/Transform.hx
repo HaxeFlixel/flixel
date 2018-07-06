@@ -59,6 +59,7 @@ class Transform extends Tool
 	var _actionStartPoint:FlxPoint = new FlxPoint();
 	var _actionStartTargetCenter:FlxPoint = new FlxPoint();
 	var _actionStartTargetScale:FlxPoint = new FlxPoint();
+	var _actionStartTargetAngle:Float;
 	var _actionHappening:Bool;
 	var _actionWhichMarker:Int;
 	var _actionDirection:FlxPoint = new FlxPoint();
@@ -126,6 +127,7 @@ class Transform extends Tool
 			_brain.flixelPointer.y - FlxG.camera.scroll.y
 		);		
 		_actionStartTargetCenter.set(_targetArea.x, _targetArea.y);
+		_actionStartTargetAngle = FlxAngle.angleBetweenPoint(cast _brain.selectedItems.members[0], _markers[0], true);
 	}
 	
 	/**
@@ -205,8 +207,8 @@ class Transform extends Tool
 				if (_actionWhichMarker == MARKER_ROTATE)
 				{
 					// TODO: implement the rotation action
-					//FlxG.log.add("angle: " + FlxAngle.angleBetweenMouse(member, true));
-					member.angle = FlxAngle.angleBetweenMouse(member, true);
+					//FlxG.log.add("angle: " + FlxAngle.angleBetweenMouse(member, true) + " | " + FlxAngle.angleBetweenPoint(cast member, _markers[0], true));
+					member.angle = FlxAngle.angleBetweenMouse(member, true) - _actionStartTargetAngle;
 				}
 				else
 				{
@@ -247,7 +249,7 @@ class Transform extends Tool
 		var originY = _markers[0].y + (_targetArea.height + OUTLINE_PADDING * 2) / 2;
 		var rotationAngleRad = target.angle * FlxAngle.TO_RAD;
 		var cos = FlxMath.fastCos(rotationAngleRad);
-		var sin = FlxMath.fastSin(rotationAngleRad);		
+		var sin = FlxMath.fastSin(rotationAngleRad);
 
 		for(marker in _markers)
 		{
@@ -255,7 +257,7 @@ class Transform extends Tool
 			var rotatedX = (marker.x - originX) * cos - (marker.y - originY) * sin;
 			var rotatedY = (marker.x - originX) * sin + (marker.y - originY) * cos;
 
-			FlxG.log.add((rotationAngleRad * FlxAngle.TO_DEG) + " -> (" + (marker.x - originX) + "," + (marker.x - originX) + ") to (" + rotatedX + "," + rotatedY + ")");
+			//FlxG.log.add((rotationAngleRad * FlxAngle.TO_DEG) + " -> (" + (marker.x - originX) + "," + (marker.x - originX) + ") to (" + rotatedX + "," + rotatedY + ")");
 			//FlxG.log.notice(rotatedX + originX, rotatedY + originY);
 			marker.set(rotatedX + originX, rotatedY + originY);
 		}
