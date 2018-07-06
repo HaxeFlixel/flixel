@@ -13,7 +13,9 @@ import flixel.math.FlxRect;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.system.debug.interaction.Interaction;
+import flixel.system.debug.Tooltip;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
 using flixel.util.FlxArrayUtil;
 
 @:bitmap("assets/images/debugger/buttons/transform.png")
@@ -62,6 +64,7 @@ class Transform extends Tool
 	var _actionHappening:Bool;
 	var _actionWhichMarker:Int;
 	var _actionScaleDirection:FlxPoint = new FlxPoint();
+	var _tooltip:TooltipOverlay;
 	var _markers:Array<FlxPoint> = [];
 	var _target:FlxSprite;	
 	var _targetArea:FlxRect = new FlxRect();
@@ -78,7 +81,10 @@ class Transform extends Tool
 		brain.registerCustomCursor(CURSOR_ROTATE, new GraphicTransformCursorRotate(0, 0));
 		brain.registerCustomCursor(CURSOR_SCALE_X, new GraphicTransformCursorScaleX(0, 0));
 		brain.registerCustomCursor(CURSOR_SCALE_Y, new GraphicTransformCursorScaleY(0, 0));
-		brain.registerCustomCursor(CURSOR_SCALE_XY, new GraphicTransformCursorScaleXY(0, 0));		
+		brain.registerCustomCursor(CURSOR_SCALE_XY, new GraphicTransformCursorScaleXY(0, 0));
+
+		_tooltip = Tooltip.add(null, "");
+		_tooltip.textField.wordWrap = false;
 
 		for(i in 0...4)
 			_markers.push(new FlxPoint());
@@ -127,6 +133,7 @@ class Transform extends Tool
 	{	
 		_actionHappening = false;
 		_actionWhichMarker = -1;
+		_tooltip.setVisible(false);
 	}
 
 	private function getCursorNameByMarker(marker:Int):String
@@ -169,6 +176,23 @@ class Transform extends Tool
 			useDefaultCursor();		
 	}
 
+	private function formatFloat(number:Float, decimals:Int = 1):String
+	{
+		var string = Std.string(number);
+		var dotPosition = string.indexOf(".");
+		return dotPosition == -1 ? string : string.substring(0, dotPosition + 2);
+	}
+
+	private function showTooltip(text:String):Void
+	{
+		if (!_tooltip.visible)
+			_tooltip.setVisible(true);
+
+		_tooltip.x = _target.x - FlxG.camera.scroll.x;
+		_tooltip.y = _target.y - FlxG.camera.scroll.y;
+		_tooltip.setText(text);
+	}
+
 	private function updateScaleActionDirection():Void
 	{
 		var deltaX = _mouseCursor.x - _actionStartPoint.x;
@@ -193,12 +217,15 @@ class Transform extends Tool
 			_target.scale.y = _actionTargetStartScale.y + deltaY;
 		
 		_target.updateHitbox();
-		_target.centerOrigin();		
+		_target.centerOrigin();
+
+		showTooltip("W: " + formatFloat(_target.width) + "\nH: " + formatFloat(_target.height));
 	}
 
 	private function updateRotateAction():Void
 	{
 		_target.angle = FlxAngle.angleBetweenMouse(_target, true) - _actionTargetStartAngle;
+		showTooltip("deg: " + formatFloat(_target.angle) + "\nrad: " + formatFloat(_target.angle * FlxAngle.TO_RAD));
 	}
 
 	private function updateAction():Void
@@ -268,7 +295,7 @@ class Transform extends Tool
 	
 	private function drawTargetAreaOutline(gfx:Graphics):Void
 	{
-		gfx.lineStyle(1, 0xd800ff, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.lineStyle(1, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		
 		gfx.moveTo(_markers[0].x, _markers[0].y);		
 		for(i in 0..._markers.length)
@@ -279,8 +306,8 @@ class Transform extends Tool
 
 	private function drawMarkers(gfx:Graphics):Void
 	{
-		gfx.lineStyle(1, 0xd800ff, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		gfx.beginFill(0xd800ff);
+		gfx.lineStyle(1, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.beginFill(FlxColor.MAGENTA);
 		for(i in 0..._markers.length)
 			if (i == 0)
 				// Rotation marker
@@ -300,7 +327,7 @@ class Transform extends Tool
 
 		drawTargetAreaOutline(gfx);
 		drawMarkers(gfx);
-		
+
 		// Draw the debug info to the main camera buffer.
 		if (FlxG.renderBlit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
