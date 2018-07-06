@@ -348,5 +348,12 @@ class Transform extends Tool
 				break;
 			}
 		}
+
+		_brain.shouldDrawItemsSelection = false;
+	}
+
+	override public function deactivate():Void
+	{
+		_brain.shouldDrawItemsSelection = true;
 	}
 }

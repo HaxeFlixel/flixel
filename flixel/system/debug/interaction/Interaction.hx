@@ -42,6 +42,13 @@ class Interaction extends Window
 	public var pointerJustReleased:Bool = false;
 	public var pointerPressed:Bool = false;
 	
+	/**
+	 * Control if an outline should be drawn on selected elements.
+	 * Tools can set this property to `false` if they want to draw custom
+	 * selection marks, for instance.
+	 */
+	public var shouldDrawItemsSelection:Bool = true;
+	
 	var _container:Sprite;
 	var _customCursor:Sprite;
 	var _tools:Array<Tool> = [];
@@ -273,7 +280,8 @@ class Interaction extends Window
 		for (tool in _tools)
 			tool.draw();
 		
-		drawItemsSelection();
+		if (shouldDrawItemsSelection)
+			drawItemsSelection();
 	}
 	
 	public function getDebugGraphics():Graphics
