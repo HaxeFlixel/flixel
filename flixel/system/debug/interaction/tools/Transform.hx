@@ -224,7 +224,7 @@ class Transform extends Tool
 
 	private function updateRotateAction():Void
 	{
-		_target.angle = FlxAngle.angleBetweenMouse(_target, true) - _actionTargetStartAngle;
+		_target.angle = FlxAngle.angleBetweenPoint(_target, _brain.flixelPointer, true) - _actionTargetStartAngle;
 		showTooltip("deg: " + formatFloat(_target.angle) + "\nrad: " + formatFloat(_target.angle * FlxAngle.TO_RAD));
 	}
 
