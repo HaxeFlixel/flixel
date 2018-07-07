@@ -62,7 +62,7 @@ class Transform extends Tool
 	var _actionTargetStartAngle:Float;
 	var _actionStartPoint:FlxPoint = new FlxPoint();	
 	var _actionHappening:Bool;
-	var _actionWhichMarker:Int;
+	var _actionMarker:Int;
 	var _actionScaleDirection:FlxPoint = new FlxPoint();
 	var _tooltip:TooltipOverlay;
 	var _markers:Array<FlxPoint> = [];
@@ -93,7 +93,7 @@ class Transform extends Tool
 		return this;
 	}
 
-	private function updateTargetArea():Void
+	function updateTargetArea():Void
 	{
 		if (_target == null)
 		{
@@ -109,15 +109,15 @@ class Transform extends Tool
 
 	/**
 	 * Start an interaction with a marker. Depending on the marker being used, the interaction
-	 * can be for resizing or rotating something.
+	 * can be to resize or rotate something.
 	 */
-	private function startAction(whichMarker:Int):Void
+	function startAction(whichMarker:Int):Void
 	{
 		if (_actionHappening)
 			return;
 
 		_actionHappening = true;
-		_actionWhichMarker = whichMarker;
+		_actionMarker = whichMarker;
 		_actionStartPoint.set(
 			_brain.flixelPointer.x - FlxG.camera.scroll.x,
 			_brain.flixelPointer.y - FlxG.camera.scroll.y
@@ -129,14 +129,14 @@ class Transform extends Tool
 	/**
 	 * Stop any interaction activity that is happening with any marker.
 	 */
-	private function stopAction():Void
+	function stopAction():Void
 	{	
 		_actionHappening = false;
-		_actionWhichMarker = -1;
+		_actionMarker = -1;
 		_tooltip.setVisible(false);
 	}
 
-	private function getCursorNameByMarker(marker:Int):String
+	function getCursorNameByMarker(marker:Int):String
 	{
 		return switch(marker)
 		{
@@ -148,7 +148,7 @@ class Transform extends Tool
 		}
 	}
 
-	private function handleInteractionsWithMarkersUI():Void
+	function handleInteractionsWithMarkersUI():Void
 	{
 		if (_actionHappening)
 			// If any action is already happening, e.g. resizing, then any UI interaction
@@ -176,14 +176,13 @@ class Transform extends Tool
 			useDefaultCursor();		
 	}
 
-	private function formatFloat(number:Float, decimals:Int = 1):String
+	function formatFloat(number:Float):String
 	{
-		var string = Std.string(number);
-		var dotPosition = string.indexOf(".");
-		return dotPosition == -1 ? string : string.substring(0, dotPosition + 2);
+		var value = FlxMath.roundDecimal(cast number, FlxG.debugger.precision);
+		return Std.string(value);
 	}
 
-	private function showTooltip(text:String):Void
+	function showTooltip(text:String):Void
 	{
 		if (!_tooltip.visible)
 			_tooltip.setVisible(true);
@@ -193,7 +192,7 @@ class Transform extends Tool
 		_tooltip.setText(text);
 	}
 
-	private function updateScaleActionDirection():Void
+	function updateScaleActionDirection():Void
 	{
 		var deltaX = _mouseCursor.x - _actionStartPoint.x;
 		var deltaY = _mouseCursor.y - _actionStartPoint.y;
@@ -202,7 +201,7 @@ class Transform extends Tool
 		_actionScaleDirection.y = deltaY >=0 ? 1 : -1;
 	}
 
-	private function updateScaleAction():Void
+	function updateScaleAction():Void
 	{
 		// Decide if the mouse cursor is moving away from or towards the target,
 		// i.e. making the object bigger or smaller.
@@ -211,35 +210,35 @@ class Transform extends Tool
 		var deltaX = _actionScaleDirection.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / RESIZE_STEP;
 		var deltaY = _actionScaleDirection.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / RESIZE_STEP;
 
-		if(_actionWhichMarker == MARKER_SCALE_X || _actionWhichMarker == MARKER_SCALE_XY)
+		if(_actionMarker == MARKER_SCALE_X || _actionMarker == MARKER_SCALE_XY)
 			_target.scale.x = _actionTargetStartScale.x + deltaX;
-		if(_actionWhichMarker == MARKER_SCALE_XY || _actionWhichMarker == MARKER_SCALE_Y)
+		if(_actionMarker == MARKER_SCALE_XY || _actionMarker == MARKER_SCALE_Y)
 			_target.scale.y = _actionTargetStartScale.y + deltaY;
 		
 		_target.updateHitbox();
 		_target.centerOrigin();
 
-		showTooltip("W: " + formatFloat(_target.width) + "\nH: " + formatFloat(_target.height));
+		showTooltip("w: " + formatFloat(_target.width) + "\nh: " + formatFloat(_target.height));
 	}
 
-	private function updateRotateAction():Void
+	function updateRotateAction():Void
 	{
 		_target.angle = FlxAngle.angleBetweenPoint(_target, _brain.flixelPointer, true) - _actionTargetStartAngle;
 		showTooltip("deg: " + formatFloat(_target.angle) + "\nrad: " + formatFloat(_target.angle * FlxAngle.TO_RAD));
 	}
 
-	private function updateAction():Void
+	function updateAction():Void
 	{
-		if (!_actionHappening || _actionWhichMarker < 0)
+		if (!_actionHappening || _actionMarker < 0)
 			return;
 
-		if (_actionWhichMarker == MARKER_ROTATE)
+		if (_actionMarker == MARKER_ROTATE)
 			updateRotateAction();
 		else
 			updateScaleAction();
 	}
 
-	private function updateMarkersPosition():Void
+	function updateMarkersPosition():Void
 	{
 		var topLeftX = _targetArea.x - OUTLINE_PADDING;
 		var topLeftY = _targetArea.y - OUTLINE_PADDING;
@@ -252,14 +251,14 @@ class Transform extends Tool
 		_markers[MARKER_SCALE_Y].set(topLeftX, topLeftY + height);
 
 		if (_target.angle != 0)
-			updateMarkersRotation();
+			updateMarkersRotation(width, height);
 	}
 	
-	private function updateMarkersRotation():Void
+	function updateMarkersRotation(outlineWidth :Float, outlineHeight :Float):Void
 	{
 		var rotationAngleRad = _target.angle * FlxAngle.TO_RAD;
-		var originX = _markers[0].x + (_targetArea.width + OUTLINE_PADDING * 2) / 2;
-		var originY = _markers[0].y + (_targetArea.height + OUTLINE_PADDING * 2) / 2;
+		var originX = _markers[0].x + outlineWidth / 2;
+		var originY = _markers[0].y + outlineHeight / 2;
 		var cos = FlxMath.fastCos(rotationAngleRad);
 		var sin = FlxMath.fastSin(rotationAngleRad);
 
@@ -293,9 +292,9 @@ class Transform extends Tool
 		}
 	}
 	
-	private function drawTargetAreaOutline(gfx:Graphics):Void
+	function drawTargetAreaOutline(gfx:Graphics):Void
 	{
-		gfx.lineStyle(1, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		
 		gfx.moveTo(_markers[0].x, _markers[0].y);		
 		for(i in 0..._markers.length)
@@ -304,12 +303,12 @@ class Transform extends Tool
 		gfx.lineTo(_markers[0].x, _markers[0].y);
 	}
 
-	private function drawMarkers(gfx:Graphics):Void
+	function drawMarkers(gfx:Graphics):Void
 	{
-		gfx.lineStyle(1, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		gfx.beginFill(FlxColor.MAGENTA);
 		for(i in 0..._markers.length)
-			if (i == 0)
+			if (i == MARKER_ROTATE)
 				// Rotation marker
 				gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
 			else
@@ -344,6 +343,8 @@ class Transform extends Tool
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
+				// Allow only a single element to be worked on. Working with multiple
+				// elements at once requires some further thoughts and love.
 				_target = cast member;
 				break;
 			}
