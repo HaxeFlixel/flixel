@@ -2,12 +2,8 @@ package flixel.system.debug.interaction.tools;
 
 import flash.display.BitmapData;
 import flash.display.Graphics;
-import flash.display.Sprite;
 import flash.display.LineScaleMode;
 import flash.display.CapsStyle;
-import flash.ui.Keyboard;
-import flash.events.MouseEvent;
-import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxAngle;
@@ -86,7 +82,7 @@ class Transform extends Tool
 		_tooltip = Tooltip.add(null, "");
 		_tooltip.textField.wordWrap = false;
 
-		for(i in 0...4)
+		for (i in 0...4)
 			_markers.push(new FlxPoint());
 
 		stopAction();
@@ -138,7 +134,7 @@ class Transform extends Tool
 
 	function getCursorNameByMarker(marker:Int):String
 	{
-		return switch(marker)
+		return switch (marker)
 		{
 			case MARKER_ROTATE: CURSOR_ROTATE;
 			case MARKER_SCALE_X: CURSOR_SCALE_X;
@@ -197,8 +193,8 @@ class Transform extends Tool
 		var deltaX = _mouseCursor.x - _actionStartPoint.x;
 		var deltaY = _mouseCursor.y - _actionStartPoint.y;
 
-		_actionScaleDirection.x = deltaX >=0 ? 1 : -1;
-		_actionScaleDirection.y = deltaY >=0 ? 1 : -1;
+		_actionScaleDirection.x = deltaX >= 0 ? 1 : -1;
+		_actionScaleDirection.y = deltaY >= 0 ? 1 : -1;
 	}
 
 	function updateScaleAction():Void
@@ -210,9 +206,9 @@ class Transform extends Tool
 		var deltaX = _actionScaleDirection.x * Math.abs(_mouseCursor.x - _actionStartPoint.x) / RESIZE_STEP;
 		var deltaY = _actionScaleDirection.y * Math.abs(_mouseCursor.y - _actionStartPoint.y) / RESIZE_STEP;
 
-		if(_actionMarker == MARKER_SCALE_X || _actionMarker == MARKER_SCALE_XY)
+		if (_actionMarker == MARKER_SCALE_X || _actionMarker == MARKER_SCALE_XY)
 			_target.scale.x = _actionTargetStartScale.x + deltaX;
-		if(_actionMarker == MARKER_SCALE_XY || _actionMarker == MARKER_SCALE_Y)
+		if (_actionMarker == MARKER_SCALE_XY || _actionMarker == MARKER_SCALE_Y)
 			_target.scale.y = _actionTargetStartScale.y + deltaY;
 		
 		_target.updateHitbox();
@@ -262,7 +258,7 @@ class Transform extends Tool
 		var cos = FlxMath.fastCos(rotationAngleRad);
 		var sin = FlxMath.fastSin(rotationAngleRad);
 
-		for(marker in _markers)
+		for (marker in _markers)
 		{
 			// From: https://stackoverflow.com/a/2259502/29827
 			var rotatedX = (marker.x - originX) * cos - (marker.y - originY) * sin;
@@ -297,7 +293,7 @@ class Transform extends Tool
 		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		
 		gfx.moveTo(_markers[0].x, _markers[0].y);		
-		for(i in 0..._markers.length)
+		for (i in 0..._markers.length)
 			gfx.lineTo(_markers[i].x, _markers[i].y);
 
 		gfx.lineTo(_markers[0].x, _markers[0].y);
@@ -307,7 +303,7 @@ class Transform extends Tool
 	{
 		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		gfx.beginFill(FlxColor.MAGENTA);
-		for(i in 0..._markers.length)
+		for (i in 0..._markers.length)
 			if (i == MARKER_ROTATE)
 				// Rotation marker
 				gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);

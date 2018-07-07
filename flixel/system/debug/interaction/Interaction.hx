@@ -184,7 +184,7 @@ class Interaction extends Window
 		}
 	}
 	
-	private function countToolsWithUIButton():Int
+	function countToolsWithUIButton():Int
 	{
 		var count = 0;
 		for (tool in _tools)
