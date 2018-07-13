@@ -605,6 +605,13 @@ class FlxG
 		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
+		#if (lime >= "7.0.0")
+		renderMethod = switch (stage.window.context.type)
+		{
+			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
+			default: BLITTING;
+		}
+		#else
 		if (!Lib.application.config.windows[0].hardware)
 		{
 			renderMethod = BLITTING;
@@ -618,6 +625,7 @@ class FlxG
 				default: BLITTING;
 			}
 		}
+		#end
 		#else
 		#if web
 		renderMethod = BLITTING;
