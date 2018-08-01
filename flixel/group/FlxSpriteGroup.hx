@@ -97,10 +97,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Handy function for "killing" game objects. Use `reset()` to revive them.
-	 * Default behavior is to flag them as nonexistent AND dead.
-	 * However, if you want the "corpse" to remain in the game, like to animate an effect or whatever,
-	 * you should `override` this, setting only `alive` to `false`, and leaving `exists` `true`.
+	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
+	 * It may even cause crashes if it is still part of a group or state.
+	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
+	 * 
+	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
+	 * 
+	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
+	 * Don't forget to call `super.destroy()`!
 	 */
 	override public function destroy():Void
 	{
