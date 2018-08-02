@@ -504,7 +504,8 @@ class PlayState extends FlxState
 				randomTile = FlxG.random.int(StartTile, EndTile);
 				
 				currentTileIndex = (xStartIndex + j) + (yStartIndex + i) * MapWidth;
-				_map[currentTileIndex] = randomTile;
+				if (currentTileIndex >= 0)
+					_map[currentTileIndex] = randomTile;
 			}
 		}
 		
