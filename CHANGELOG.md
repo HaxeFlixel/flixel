@@ -1,11 +1,16 @@
-4.5.0 (to be released)
+4.5.0 (August 10, 2018)
 ------------------------------
+#### Dependencies:
+
+- Added support for Lime 7
+
 #### New features:
 
 - `FlxTween`:
 	- added support for tweening sub-properties like `"scale.x"` with `tween()` ([#2152](https://github.com/HaxeFlixel/flixel/issues/2152))
 	- added a `FlxTweenType` enum abstract and deprecated the constants in `FlxTween`
 - `FlxSpriteGroup`: added `directAlpha` ([#2157](https://github.com/HaxeFlixel/flixel/issues/2157))
+- `FlxDebugger`: added a transform interaction tool ([#2159](https://github.com/HaxeFlixel/flixel/issues/2159))
 
 #### Bugfixes:
 
