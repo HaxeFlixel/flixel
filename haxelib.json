@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.6.0",
-    "releasenote": "Compatibility with flixel 4.4.0.",
+    "version": "2.6.1",
+    "releasenote": "Compatibility with flixel 4.5.0.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }
