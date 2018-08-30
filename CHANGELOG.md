@@ -1,3 +1,9 @@
+4.5.1 (to be released)
+------------------------------
+#### Bugfixes:
+
+- `FlxSoundGroup`: fixed `add()` adding sounds twice
+
 4.5.0 (August 10, 2018)
 ------------------------------
 #### Dependencies:
