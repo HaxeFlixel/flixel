@@ -33,7 +33,7 @@ class FlxActionInput implements IFlxDestroyable
 	 */
 	public var trigger(default, null):FlxInputState;
 	
-	private function new(InputType:FlxInputType, Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new(InputType:FlxInputType, Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		type = InputType;
 		device = Device;
@@ -67,7 +67,7 @@ class FlxActionInput implements IFlxDestroyable
 	 * @param state
 	 * @return Whether or not the condition is satisfied by state.
 	 */
-	private inline function compareState(condition:FlxInputState, state:FlxInputState):Bool
+	inline function compareState(condition:FlxInputState, state:FlxInputState):Bool
 	{
 		return switch (condition)
 		{
