@@ -1,23 +1,13 @@
 {
-    "version": "2.0.0",
-    "command": "haxe",
-    "tasks": [
-        {
-            "taskName": "targets/test-cpp.hxml",
-            "problemMatcher": "$haxe"
-        },
-        {
-            "taskName": "targets/test-web.hxml",
-            "problemMatcher": "$haxe"
-        },
-        {
-            "taskName": "targets/test-neko.hxml",
-            "isBuildCommand": true,
-            "problemMatcher": "$haxe"
-        },
-        {
-            "taskName": "targets/debug-flash.hxml",
-            "problemMatcher": "$haxe"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "hxml",
+			"file": "test-neko.hxml",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
 }

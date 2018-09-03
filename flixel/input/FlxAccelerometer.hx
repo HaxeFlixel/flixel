@@ -1,13 +1,13 @@
 package flixel.input;
 
-#if mobile
+#if FLX_ACCELEROMETER
 import flash.events.AccelerometerEvent;
 import flash.sensors.Accelerometer;
 
 /**
  * A class providing access to the accelerometer data of the mobile device.
  */
-class FlxAccelerometer 
+class FlxAccelerometer
 {
 	/**
 	 * The x-axis value, in Gs (1G is roughly 9.8m/s/s), usually between -1 and 1.
@@ -32,12 +32,12 @@ class FlxAccelerometer
 	
 	var _sensor:Accelerometer;
 	
-	public function new() 
+	public function new()
 	{
-		if (Accelerometer.isSupported) 
+		if (Accelerometer.isSupported)
 		{
 			_sensor = new Accelerometer();
-			_sensor.addEventListener(AccelerometerEvent.UPDATE, updateCallback);
+			_sensor.addEventListener(AccelerometerEvent.UPDATE, update);
 		}
 	}
 	
@@ -46,9 +46,9 @@ class FlxAccelerometer
 		return Accelerometer.isSupported;
 	}
 	
-	function updateCallback(Event:AccelerometerEvent):Void 
+	function update(Event:AccelerometerEvent):Void
 	{
-		#if android
+		#if (android || js)
 		x = Event.accelerationX;
 		y = Event.accelerationY;
 		z = Event.accelerationZ;
@@ -56,6 +56,12 @@ class FlxAccelerometer
 		x = -Event.accelerationX;
 		y = -Event.accelerationY;
 		z = -Event.accelerationZ;
+		#end
+
+		#if js
+		x /= 10;
+		y /= 10;
+		z /= 10;
 		#end
 	}
 }

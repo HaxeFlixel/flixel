@@ -1,0 +1,7 @@
+{
+	"haxecheckstyle.sourceFolders": [
+		"flixel",
+		"script",
+		"tests"
+	]
+}

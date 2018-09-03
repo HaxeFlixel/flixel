@@ -13,6 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
+import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
@@ -41,6 +42,13 @@ class Interaction extends Window
 	public var pointerJustReleased:Bool = false;
 	public var pointerPressed:Bool = false;
 	
+	/**
+	 * Control if an outline should be drawn on selected elements.
+	 * Tools can set this property to `false` if they want to draw custom
+	 * selection marks, for instance.
+	 */
+	public var shouldDrawItemsSelection:Bool = true;
+	
 	var _container:Sprite;
 	var _customCursor:Sprite;
 	var _tools:Array<Tool> = [];
@@ -66,6 +74,7 @@ class Interaction extends Window
 		addTool(new Pointer());
 		addTool(new Mover());
 		addTool(new Eraser());
+		addTool(new Transform());
 		
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
@@ -175,21 +184,35 @@ class Interaction extends Window
 		}
 	}
 	
+	function countToolsWithUIButton():Int
+	{
+		var count = 0;
+		for (tool in _tools)
+			if (tool.button != null)
+				count++;
+		return count;
+	}
+
 	function addTool(tool:Tool):Void
 	{
 		tool.init(this);
 		_tools.push(tool);
 		
-		// If the tool has a button, add it to the interaction window
+		// If the tool has no button, it is not added to the interaction window
 		var button = tool.button;
 		if (button == null)
 			return;
 
-		button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
-		button.y = 20;
+		var buttonsPerLine = 2;
+		var buttons = countToolsWithUIButton();
+		var lines = Std.int(Math.ceil(buttons / buttonsPerLine));
+		var slot = Std.int(buttons / lines);
+
+		button.x = -15 + slot * 25;
+		button.y = 20 * lines;
+
 		addChild(button);
-		
-		resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
+		resize(25 * Math.min(buttons, buttonsPerLine) + 10, 25 * lines + 10);
 	}
 	
 	/**
@@ -257,7 +280,8 @@ class Interaction extends Window
 		for (tool in _tools)
 			tool.draw();
 		
-		drawItemsSelection();
+		if (shouldDrawItemsSelection)
+			drawItemsSelection();
 	}
 	
 	public function getDebugGraphics():Graphics
@@ -346,17 +370,18 @@ class Interaction extends Window
 			if (activeTool.cursor != null)
 			{
 				// Yep. Let's show it then
+				var cursorInUse = activeTool.cursorInUse == "" ? activeTool.getName() : activeTool.cursorInUse;
 				#if FLX_NATIVE_CURSOR
 				// We have lag-free native cursors available, yay!
 				// Activate it then.
-				FlxG.mouse.setNativeCursor(activeTool.getName());
+				FlxG.mouse.setNativeCursor(cursorInUse);
 				#else
 				// No fancy native cursors, so we have to emulate it.
 				// Let's make the currently active tool's fake cursor visible
 				for (i in 0..._customCursor.numChildren)
 				{
 					var sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == activeTool.getName();
+					sprite.visible = sprite.name == cursorInUse;
 				}
 				if (FlxG.mouse.visible)
 					FlxG.mouse.visible = false;

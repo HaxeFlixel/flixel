@@ -4,6 +4,7 @@ import flixel.FlxG;
 
 class SoundFrontEndTest
 {
+	#if FLX_SOUND_SYSTEM
 	@Test // #1511
 	function testPlayInvalidSoundPathNoCrash()
 	{
@@ -21,4 +22,5 @@ class SoundFrontEndTest
 	{
 		FlxG.sound.load("assets/invalid").play();
 	}
+	#end
 }

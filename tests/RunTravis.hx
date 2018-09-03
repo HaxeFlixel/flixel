@@ -37,6 +37,10 @@ class RunTravis
 		var openfl:OpenFL = Sys.args()[1];
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
+
+		putEnv("HXCPP_SILENT", "1");
+		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
+		putEnv("HXCPP_CACHE_MB", "5000");
 	
 		var installationResult = runUntilFailure([
 			installHaxelibs,
@@ -132,9 +136,6 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
-		if (target == Target.FLASH)
-			return ExitCode.SUCCESS;
-
 		runInDir("unit", function()
 			return haxelibRun(["munit", "gen"])
 		);
@@ -253,6 +254,12 @@ class RunTravis
 		return result;
 	}
 	
+	static function putEnv(s:String, v:String) {
+		Sys.println('Sys.putEnv("$s", "$v")');
+		if (!dryRun)
+			Sys.putEnv(s, v);
+	}
+
 	static function cd(dir:String)
 	{
 		Sys.println("cd " + dir);

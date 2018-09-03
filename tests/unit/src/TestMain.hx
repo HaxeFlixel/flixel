@@ -4,9 +4,7 @@ import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
 import massive.munit.TestRunner;
-import massive.munit.client.AbstractTestResultClient;
 import massive.munit.client.HTTPClient;
-import massive.munit.client.RichPrintClient;
 import massive.munit.client.SummaryReportClient;
 
 /**
@@ -29,9 +27,9 @@ class TestMain
 		suites.push(TestSuite);
 
 		#if fdb
-		var client = new AbstractTestResultClient();
+		var client = new massive.munit.client.AbstractTestResultClient();
 		#else
-		var client = new RichPrintClient();
+		var client = new massive.munit.client.RichPrintClient();
 		#end
 		
 		var httpClient = new HTTPClient(new SummaryReportClient());

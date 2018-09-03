@@ -34,7 +34,7 @@ class FlxTweenTest extends FlxTest
 		var tweenActive:Bool = false;
 		
 		var tween = FlxTween.tween(this, { value: 50 }, 0.05, {
-			type: FlxTween.LOOPING,
+			type: LOOPING,
 			onComplete: function (tween:FlxTween)
 			{
 				tween.active = false;

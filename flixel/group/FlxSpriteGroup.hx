@@ -42,6 +42,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var length(get, null):Int;
 	
 	/**
+	 * Whether to attempt to preserve the ratio of alpha values of group members, or set them directly through
+	 * the alpha property. Defaults to `false` (preservation).
+	 * @since 4.5.0
+	 */
+	public var directAlpha:Bool = false;
+	
+	/**
 	 * The maximum capacity of this group. Default is `0`, meaning no max capacity, and the group can just grow.
 	 */
 	public var maxSize(get, set):Int;
@@ -90,10 +97,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 	
 	/**
-	 * Handy function for "killing" game objects. Use `reset()` to revive them.
-	 * Default behavior is to flag them as nonexistent AND dead.
-	 * However, if you want the "corpse" to remain in the game, like to animate an effect or whatever,
-	 * you should `override` this, setting only `alive` to `false`, and leaving `exists` `true`.
+	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
+	 * It may even cause crashes if it is still part of a group or state.
+	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
+	 * 
+	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
+	 * 
+	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
+	 * Don't forget to call `super.destroy()`!
 	 */
 	override public function destroy():Void
 	{
@@ -712,7 +723,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		if (exists && alpha != Value)
 		{
 			var factor:Float = (alpha > 0) ? Value / alpha : 0;
-			transformChildren(alphaTransform, factor);
+			if (!directAlpha && alpha != 0)
+				transformChildren(alphaTransform, factor);
+			else
+				transformChildren(directAlphaTransform, Value);
 		}
 		return alpha = Value;
 	}
@@ -876,7 +890,16 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	inline function xTransform(Sprite:FlxSprite, X:Float)                          Sprite.x += X; // addition
 	inline function yTransform(Sprite:FlxSprite, Y:Float)                          Sprite.y += Y; // addition
 	inline function angleTransform(Sprite:FlxSprite, Angle:Float)                  Sprite.angle += Angle; // addition
-	inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)                  Sprite.alpha *= Alpha; // multiplication
+	
+	inline function alphaTransform(Sprite:FlxSprite, Alpha:Float)
+	{
+		if (Sprite.alpha != 0 || Alpha == 0)
+			Sprite.alpha *= Alpha; // multiplication
+		else
+			Sprite.alpha = 1 / Alpha; //direct set to avoid stuck sprites
+	}
+	
+	inline function directAlphaTransform(Sprite:FlxSprite, Alpha:Float)            Sprite.alpha = Alpha;  // direct set
 	inline function facingTransform(Sprite:FlxSprite, Facing:Int)                  Sprite.facing = Facing;
 	inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)                   Sprite.flipX = FlipX;
 	inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)                   Sprite.flipY = FlipY;

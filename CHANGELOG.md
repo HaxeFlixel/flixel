@@ -1,7 +1,41 @@
-4.4.1 (May 10, 2018)
+4.5.1 (to be released)
 ------------------------------
 #### Bugfixes:
 
+- `FlxSoundGroup`: fixed `add()` adding sounds twice
+
+4.5.0 (August 10, 2018)
+------------------------------
+#### Dependencies:
+
+- Added support for Lime 7
+
+#### New features:
+
+- `FlxTween`:
+	- added support for tweening sub-properties like `"scale.x"` with `tween()` ([#2152](https://github.com/HaxeFlixel/flixel/issues/2152))
+	- added a `FlxTweenType` enum abstract and deprecated the constants in `FlxTween`
+- `FlxSpriteGroup`: added `directAlpha` ([#2157](https://github.com/HaxeFlixel/flixel/issues/2157))
+- `FlxDebugger`: added a transform interaction tool ([#2159](https://github.com/HaxeFlixel/flixel/issues/2159))
+
+#### Bugfixes:
+
+- `FlxBitmapText`: fixed clipping issues with text using borders ([#2151](https://github.com/HaxeFlixel/flixel/issues/2151))
+- `FlxAssetPaths`: fixed variables with invalid Haxe identifiers being generated ([#1796](https://github.com/HaxeFlixel/flixel/issues/1796))
+- `FlxSpriteUtil`: fixed `spaceFromBounds` in `space()` not being respected ([#1963](https://github.com/HaxeFlixel/flixel/issues/1963))
+- `FlxSpriteGroup`: fixed sprites not showing up again after setting `alpha` to `0` ([#1353](https://github.com/HaxeFlixel/flixel/issues/1353))
+
+#### Changes and improvements:
+
+- `FlxSpriteUtil`: added an argument allowing to use a positioning function in `space()` ([#2154](https://github.com/HaxeFlixel/flixel/issues/2154))
+- `FlxG.accelerometer`: enabled accelerometer support on HTML5
+
+4.4.2 (June 12, 2018)
+------------------------------
+- Fixed compatibility with Haxe 4.0.0-preview.4
+
+4.4.1 (May 10, 2018)
+------------------------------
 - Fixed an issue with code completion on the Flash target in VSCode
 
 4.4.0 (May 4, 2018)
@@ -275,18 +309,18 @@
 ### Restructures:
 
 * Changed `static inline` vars to enums: ([#998](https://github.com/HaxeFlixel/flixel/issues/998))
- * `FlxCamera` follow styles
- * `FlxCamera` shake modes
- * `FlxText` border styles
- * `FlxTilemap` auto-tiling options
- * `FlxBar` fill directions
- * `FlxG.html5` browser types
+	* `FlxCamera` follow styles
+	* `FlxCamera` shake modes
+	* `FlxText` border styles
+	* `FlxTilemap` auto-tiling options
+	* `FlxBar` fill directions
+	* `FlxG.html5` browser types
 * Moved `FlxMath`, `FlxPoint`, `FlxVector`, `FlxRect`, `FlxAngle`, `FlxVelocity` and `FlxRandom` to `flixel.math`
 * Moved "typed" classes: ([#1100](https://github.com/HaxeFlixel/flixel/issues/1100))
- * `FlxTypedGroup` into `FlxGroup.hx`
- * `FlxTypedSpriteGroup` into `FlxSpriteGroup.hx`
- * `FlxTypedEmitter` into `FlxEmitter.hx`
- * `FlxTypedButton` into `FlxButton.hx`
+	* `FlxTypedGroup` into `FlxGroup.hx`
+	* `FlxTypedSpriteGroup` into `FlxSpriteGroup.hx`
+	* `FlxTypedEmitter` into `FlxEmitter.hx`
+	* `FlxTypedButton` into `FlxButton.hx`
 * The signature of `update()` functions was changed to `update(elapsed:Float)`. The `elapsed` argument should be used instead of `FlxG.elapsed`. ([#1188](https://github.com/HaxeFlixel/flixel/issues/1188))
 
 ### Rendering:
@@ -315,8 +349,8 @@
 
 * `debugger`: fixed a crash when calling `addTrackerProfile()` before `track()`
 * `signals`:
- * split `gameReset` into pre/post signals
- * added `preStateCreate` ([#1557](https://github.com/HaxeFlixel/flixel/issues/1557))
+	* split `gameReset` into pre/post signals
+	* added `preStateCreate` ([#1557](https://github.com/HaxeFlixel/flixel/issues/1557))
 * `android`: `preventDefaultBackAction` has been replaced by `preventDefaultKeys`
 * `inputs`: added `resetOnStateSwitch`
 * added `FlxG.addPostProcess()` / `removePostProcess()`
@@ -359,166 +393,166 @@
 ### flixel.animation:
 
 * `FlxAnimation`:
- * added `reversed` var which allows you to play animation backwards
- * second argument of `play()` method is `Reversed` now
- * added `flipX` and `flipY` ([#1670](https://github.com/HaxeFlixel/flixel/issues/1670))
+	* added `reversed` var which allows you to play animation backwards
+	* second argument of `play()` method is `Reversed` now
+	* added `flipX` and `flipY` ([#1670](https://github.com/HaxeFlixel/flixel/issues/1670))
 * `FlxAnimationController`:
- * `curAnim` does also return animations that have finished now
- * removed `get()`
- * `callback`: fixed old `frameIndex` value being passed instead of the current one
- * `add()` now makes a copy of the `Frames` array before calling `splice()` on it
- * fixed `finished` not being true during the last animation frame in the `callback`
- * added `Reversed` argument in `play()` method, which allows you to set animation's playback direction
+	* `curAnim` does also return animations that have finished now
+	* removed `get()`
+	* `callback`: fixed old `frameIndex` value being passed instead of the current one
+	* `add()` now makes a copy of the `Frames` array before calling `splice()` on it
+	* fixed `finished` not being true during the last animation frame in the `callback`
+	* added `Reversed` argument in `play()` method, which allows you to set animation's playback direction
 
 ### flixel.effects:
 
 * `FlxEmitter`:
- * `at()` -> `focusOn()`
- * `on` -> `emitting`
- * emitters and particles now use `FlxColor` instead of separate red, green, and blue values
- * removed `FlxEmitterExt`, `FlxEmitter` now has two launch modes: `CIRCLE` (the new default) and `SQUARE` ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
- * removed `xPosition`, `yPosition`, `life`, `bounce`, and various other properties, and property setting convenience functions (see below) ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
- * a variety of values can now be set with much greater control, via `lifespan.set()`, `scale.set()`, `velocity.set()` and so on ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
- * simplified `start()` parameters ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
- * added `angularDrag` and `angularAcceleration` ([#1246](https://github.com/HaxeFlixel/flixel/issues/1246))
+	* `at()` -> `focusOn()`
+	* `on` -> `emitting`
+	* emitters and particles now use `FlxColor` instead of separate red, green, and blue values
+	* removed `FlxEmitterExt`, `FlxEmitter` now has two launch modes: `CIRCLE` (the new default) and `SQUARE` ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
+	* removed `xPosition`, `yPosition`, `life`, `bounce`, and various other properties, and property setting convenience functions (see below) ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
+	* a variety of values can now be set with much greater control, via `lifespan.set()`, `scale.set()`, `velocity.set()` and so on ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
+	* simplified `start()` parameters ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
+	* added `angularDrag` and `angularAcceleration` ([#1246](https://github.com/HaxeFlixel/flixel/issues/1246))
 * `FlxParticle`: ([#1174](https://github.com/HaxeFlixel/flixel/issues/1174))
- * `maxLifespan` -> `lifespan`, `lifespan` -> `age`, percent indicates `(age / lifespan)`
- * `age` counts up (as opposed to `lifespan`, which counted down)
- * range properties (`velocityRange`, `alphaRange`) which determine particle behavior after launch
- * "active" flags (`alphaRange.active`, `velocityRange.active`, etc) which `FlxEmitter` uses to control particle behavior
+	* `maxLifespan` -> `lifespan`, `lifespan` -> `age`, percent indicates `(age / lifespan)`
+	* `age` counts up (as opposed to `lifespan`, which counted down)
+	* range properties (`velocityRange`, `alphaRange`) which determine particle behavior after launch
+	* "active" flags (`alphaRange.active`, `velocityRange.active`, etc) which `FlxEmitter` uses to control particle behavior
 
 ### flixel.graphics:
 
 * `FlxGraphic`:
- * renamed from `CachedGraphics` and moved to `flixel.graphics`
- * added `defaultPersist` ([#1241](https://github.com/HaxeFlixel/flixel/issues/1241))
- * added `fromAssetKey()`, `fromClass()` and `fromBitmapData()`
- * `bitmap` is now settable
+	* renamed from `CachedGraphics` and moved to `flixel.graphics`
+	* added `defaultPersist` ([#1241](https://github.com/HaxeFlixel/flixel/issues/1241))
+	* added `fromAssetKey()`, `fromClass()` and `fromBitmapData()`
+	* `bitmap` is now settable
 * `FlxAtlas`:
- * moved to `flixel.graphics.atlas`
- * added `addNodeWithSpacings()`
- * added `minWidth`, `maxWidth`, `minHeight` and `maxHeight` (the size starts at `min` and grows up until `max` as images are added)
- * added `powerOfTwo` (forces atlas size to a power of two)
- * added `allowRotation` (indicates whether added images may be rotated to save space)
+	* moved to `flixel.graphics.atlas`
+	* added `addNodeWithSpacings()`
+	* added `minWidth`, `maxWidth`, `minHeight` and `maxHeight` (the size starts at `min` and grows up until `max` as images are added)
+	* added `powerOfTwo` (forces atlas size to a power of two)
+	* added `allowRotation` (indicates whether added images may be rotated to save space)
 * `FlxNode`:
- * moved to `flixel.graphics.atlas`
- * added `getTileFrames()` and `getImageFrame()`
+	* moved to `flixel.graphics.atlas`
+	* added `getTileFrames()` and `getImageFrame()`
 * Introduced a new frames collections concept replacing regions:
- * added `FlxImageFrame` frames collection which contains single frame
- * added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
- * added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
- * added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
+	* added `FlxImageFrame` frames collection which contains single frame
+	* added `FlxTileFrames` frames collection which contains frames for spritesheet, which can be generated from image region or frame (including rotated and trimmed frames)
+	* added `FlxAtlasFrames` frames collection instead of various texture atlas loaders (like `SparrowData` and `TexturePackerData`). It contains various static methods for parsing atlas files
+	* added `FlxFilterFrames` frames collection instead of `FlxSpriteFilter` (see filters demo)
 * Rewrote `PxBitmapFont` and renamed it to `FlxBitmapFont`. It supports AngelCode, XNA and Monospace bitmap fonts now.
 * `FlxFrame`:
- * doesn't store the frame's bitmapatas anymore, so `getBitmap()` and other bitmap methods have been removed
- * added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
- * added `flipX` and `flipY` ([#1591](https://github.com/HaxeFlixel/flixel/issues/1591))
+	* doesn't store the frame's bitmapatas anymore, so `getBitmap()` and other bitmap methods have been removed
+	* added `paint()` and `paintFlipped()` methods instead. This solution requires much less memory, but will be a bit slower.
+	* added `flipX` and `flipY` ([#1591](https://github.com/HaxeFlixel/flixel/issues/1591))
 
 ### flixel.group:
 
 * `FlxTypedGroup`:
- * added a `recurse` argument to the `forEach()` functions
- * removed `callAll()` and `setAll()` - use `forEach()` instead ([#1086](https://github.com/HaxeFlixel/flixel/issues/1086))
- * replaced the parameter array in `recycle()` with an optional factory method ([#1191](https://github.com/HaxeFlixel/flixel/issues/1191))
- * `revive()` now calls `revive()` on all `members` of a group as well ([#1243](https://github.com/HaxeFlixel/flixel/issues/1243))
- * added `insert()` ([#1671](https://github.com/HaxeFlixel/flixel/issues/1671))
+	* added a `recurse` argument to the `forEach()` functions
+	* removed `callAll()` and `setAll()` - use `forEach()` instead ([#1086](https://github.com/HaxeFlixel/flixel/issues/1086))
+	* replaced the parameter array in `recycle()` with an optional factory method ([#1191](https://github.com/HaxeFlixel/flixel/issues/1191))
+	* `revive()` now calls `revive()` on all `members` of a group as well ([#1243](https://github.com/HaxeFlixel/flixel/issues/1243))
+	* added `insert()` ([#1671](https://github.com/HaxeFlixel/flixel/issues/1671))
 * `FlxTypedSpriteGroup`: added `iterator()`
 
 ### flixel.input:
 
 * `FlxSwipe`: `duration` now uses seconds instead of milliseconds ([#1272](https://github.com/HaxeFlixel/flixel/issues/1272))
 * `FlxMouse` and `FlxTouch` now extend a new common base class `FlxPointer` instead of `FlxPoint` ([#1099](https://github.com/HaxeFlixel/flixel/issues/1099))
- * adds `overlaps()` to `FlxMouse`
+	* adds `overlaps()` to `FlxMouse`
 
 ### flixel.input.gamepad:
 
 * `FlxGamepadManager`:
- * better handling of disconnecting and reconnecting gamepads. `getByID()` can now return `null`.
- * `anyButton()` now has a `state` argument
- * `globalDeadZone` can now be 0
- * `globalDeadZone` now overshadows instead of overriding the gamepad's deadzone values
+	* better handling of disconnecting and reconnecting gamepads. `getByID()` can now return `null`.
+	* `anyButton()` now has a `state` argument
+	* `globalDeadZone` can now be 0
+	* `globalDeadZone` now overshadows instead of overriding the gamepad's deadzone values
 * `FlxGamepad`:
- * refactored gamepads to include mappings, removing the need to write separate logic for each gamepad type ([#1502](https://github.com/HaxeFlixel/flixel/issues/1502)):
+	* refactored gamepads to include mappings, removing the need to write separate logic for each gamepad type ([#1502](https://github.com/HaxeFlixel/flixel/issues/1502)):
  	* each gamepad now has a `model`, `mapping` and `name`
  	* moved the ID classes to `flixel.input.gamepad.id`
  	* all IDs are now mapped to a value in `FlxGamepadInputID`
  	* the previous "raw" gamepad IDs are now available via separate functions
  	* added `pressed`, `justPressed`, `justReleased` and `analog`
  	* removed the dpad properties, they are now mapped to buttons
- * added a `connected` flag
- * added `deadZoneMode`, circular deadzones are now supported ([#1177](https://github.com/HaxeFlixel/flixel/issues/1177))
- * `anyButton()` now has a `state` argument
- * added support for WiiMote ([#1563](https://github.com/HaxeFlixel/flixel/issues/1563)) and PS Vita ([#1714](https://github.com/HaxeFlixel/flixel/issues/1714)) controllers
+	* added a `connected` flag
+	* added `deadZoneMode`, circular deadzones are now supported ([#1177](https://github.com/HaxeFlixel/flixel/issues/1177))
+	* `anyButton()` now has a `state` argument
+	* added support for WiiMote ([#1563](https://github.com/HaxeFlixel/flixel/issues/1563)) and PS Vita ([#1714](https://github.com/HaxeFlixel/flixel/issues/1714)) controllers
 
 ### flixel.input.keyboard:
 
 * `FlxKeyboard`:
- * added `preventDefaultKeys` for HTML5
- * added an `abstract` enum for key names (`FlxG.keys.anyPressed([A, LEFT])` is now possible)
- * the any-functions now take an Array of `FlxKey`s instead of Array of Strings (string names are still supported)
- * removed `FlxKey.NUMPADSLASH` (`SLASH` has the same keycode)
+	* added `preventDefaultKeys` for HTML5
+	* added an `abstract` enum for key names (`FlxG.keys.anyPressed([A, LEFT])` is now possible)
+	* the any-functions now take an Array of `FlxKey`s instead of Array of Strings (string names are still supported)
+	* removed `FlxKey.NUMPADSLASH` (`SLASH` has the same keycode)
 
 ### flixel.input.mouse:
 
 * `FlxMouseEventManager`:
- * moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
- * added `removeAll()` ([#1141](https://github.com/HaxeFlixel/flixel/issues/1141))
- * fixed inaccurate pixel-perfect sprite overlap checks ([#1075](https://github.com/HaxeFlixel/flixel/issues/1075))
- * now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
+	* moved from `flixel.plugin.MouseEventManager` to `flixel.input.mouse.FlxMouseEventManager`
+	* added `removeAll()` ([#1141](https://github.com/HaxeFlixel/flixel/issues/1141))
+	* fixed inaccurate pixel-perfect sprite overlap checks ([#1075](https://github.com/HaxeFlixel/flixel/issues/1075))
+	* now supports all mouse buttons (`mouseButtons` argument in `add()` / `setObjectMouseButtons()`)
 
 ### flixel.math:
 
 * `FlxAngle`:
- * changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
- * `rotatePoint()` -> `FlxPoint#rotate()` ([#1143](https://github.com/HaxeFlixel/flixel/issues/1143))
- * `getAngle()` -> `FlxPoint#angleBetween()` ([#1143](https://github.com/HaxeFlixel/flixel/issues/1143))
- * added `angleFromFacing()` ([#1193](https://github.com/HaxeFlixel/flixel/issues/1193))
- * fixed `wrapAngle()` ([#1610](https://github.com/HaxeFlixel/flixel/issues/1610))
- * removed `angleLimit()` ([#1618](https://github.com/HaxeFlixel/flixel/issues/1618))
+	* changed `rotatePoint()` to not invert the y-axis anymore and rotate clockwise (consistent with `FlxSprite#angle`)
+	* `rotatePoint()` -> `FlxPoint#rotate()` ([#1143](https://github.com/HaxeFlixel/flixel/issues/1143))
+	* `getAngle()` -> `FlxPoint#angleBetween()` ([#1143](https://github.com/HaxeFlixel/flixel/issues/1143))
+	* added `angleFromFacing()` ([#1193](https://github.com/HaxeFlixel/flixel/issues/1193))
+	* fixed `wrapAngle()` ([#1610](https://github.com/HaxeFlixel/flixel/issues/1610))
+	* removed `angleLimit()` ([#1618](https://github.com/HaxeFlixel/flixel/issues/1618))
 * `FlxMath`:
- * `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction" ([#1070](https://github.com/HaxeFlixel/flixel/issues/1070))
- * `wrapValue()` -> `wrap()`, replaced the `amount` argument with a lower bound
- * changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT` ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
- * added `sinh()` ([#1309](https://github.com/HaxeFlixel/flixel/issues/1309))
- * added `fastSin()` and `fastCos()` ([#1534](https://github.com/HaxeFlixel/flixel/issues/1534))
- * optimized `isEven()` and `isOdd()`
- * added `remapToRange()` ([#1633](https://github.com/HaxeFlixel/flixel/issues/1633))
- * `getDistance()` -> `FlxPoint#distanceTo()` ([#1716](https://github.com/HaxeFlixel/flixel/issues/1716))
+	* `bound()` and `inBounds()` now accept `null` as values, meaning "unbounded in that direction" ([#1070](https://github.com/HaxeFlixel/flixel/issues/1070))
+	* `wrapValue()` -> `wrap()`, replaced the `amount` argument with a lower bound
+	* changed `MIN_VALUE` and `MAX_VALUE` to `MIN_VALUE_FLOAT` and `MAX_VALUE_FLOAT`, added `MAX_VALUE_INT` ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
+	* added `sinh()` ([#1309](https://github.com/HaxeFlixel/flixel/issues/1309))
+	* added `fastSin()` and `fastCos()` ([#1534](https://github.com/HaxeFlixel/flixel/issues/1534))
+	* optimized `isEven()` and `isOdd()`
+	* added `remapToRange()` ([#1633](https://github.com/HaxeFlixel/flixel/issues/1633))
+	* `getDistance()` -> `FlxPoint#distanceTo()` ([#1716](https://github.com/HaxeFlixel/flixel/issues/1716))
 * `FlxPoint`:
- * `inFlxRect()` -> `inRect`
+	* `inFlxRect()` -> `inRect`
 * `FlxRandom`:
- * `FlxRandom` functions are now member functions, call `FlxG.random` instead of `FlxRandom` ([#1201](https://github.com/HaxeFlixel/flixel/issues/1201))
- * exposed `currentSeed` as an external representation of `internalSeed` ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
- * removed `intRanged()` and `floatRanged()`, `int()` and `float()` now provide optional ranges ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
- * removed `weightedGetObject()`, `getObject()` now has an optional `weights` parameter ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
- * removed `colorExt()`, try using `FlxColor` to get finer control over randomly-generated colors ([#1158](https://github.com/HaxeFlixel/flixel/issues/1158))
- * updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x! ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
- * can now create an instance of `FlxRandom` to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
- * `chanceRoll()` -> `bool()`
- * added `floatNormal()` ([#1251](https://github.com/HaxeFlixel/flixel/issues/1251))
+	* `FlxRandom` functions are now member functions, call `FlxG.random` instead of `FlxRandom` ([#1201](https://github.com/HaxeFlixel/flixel/issues/1201))
+	* exposed `currentSeed` as an external representation of `internalSeed` ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
+	* removed `intRanged()` and `floatRanged()`, `int()` and `float()` now provide optional ranges ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
+	* removed `weightedGetObject()`, `getObject()` now has an optional `weights` parameter ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
+	* removed `colorExt()`, try using `FlxColor` to get finer control over randomly-generated colors ([#1158](https://github.com/HaxeFlixel/flixel/issues/1158))
+	* updated random number generation equation to avoid inconsistent results across platforms; may break recordings made in 3.x! ([#1148](https://github.com/HaxeFlixel/flixel/issues/1148))
+	* can now create an instance of `FlxRandom` to create deterministic pseudorandom numbers independently of HaxeFlixel core functions (e.g. particle emitters)
+	* `chanceRoll()` -> `bool()`
+	* added `floatNormal()` ([#1251](https://github.com/HaxeFlixel/flixel/issues/1251))
 * `FlxRect`:
- * added `weak()`, `putWeak()`, `ceil()` and `floor()`
- * `containsFlxPoint()` -> `containsPoint()`
+	* added `weak()`, `putWeak()`, `ceil()` and `floor()`
+	* `containsFlxPoint()` -> `containsPoint()`
 * `FlxVelocity`:
- * `accelerateTowards*()`-functions now only take a single `maxSpeed` argument (instead of `x` and `y`)
+	* `accelerateTowards*()`-functions now only take a single `maxSpeed` argument (instead of `x` and `y`)
 
 ### flixel.system:
 
 * `FlxAssets`:
- * `cacheSounds()` -> `FlxG.sound.cacheAll()` ([#1097](https://github.com/HaxeFlixel/flixel/issues/1097))
- * OpenFL live asset reloading is now supported (native targets) 
+	* `cacheSounds()` -> `FlxG.sound.cacheAll()` ([#1097](https://github.com/HaxeFlixel/flixel/issues/1097))
+	* OpenFL live asset reloading is now supported (native targets) 
 * `FlxSound`
- * can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled ([#1199](https://github.com/HaxeFlixel/flixel/issues/1199))
- * `looped` is now `public`
- * added `pitch` ([#1465](https://github.com/HaxeFlixel/flixel/issues/1465))
- * added `FlxSoundGroup` ([#1316](https://github.com/HaxeFlixel/flixel/issues/1316))
+	* can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled ([#1199](https://github.com/HaxeFlixel/flixel/issues/1199))
+	* `looped` is now `public`
+	* added `pitch` ([#1465](https://github.com/HaxeFlixel/flixel/issues/1465))
+	* added `FlxSoundGroup` ([#1316](https://github.com/HaxeFlixel/flixel/issues/1316))
 
 ### flixel.system.debug:
 
 * `Console`:
- * refactored the console to be powered by hscript ([#1637](https://github.com/HaxeFlixel/flixel/issues/1637))
- * added auto-completion
- * fixed focus on native targets
+	* refactored the console to be powered by hscript ([#1637](https://github.com/HaxeFlixel/flixel/issues/1637))
+	* added auto-completion
+	* fixed focus on native targets
 
 ### flixel.system.scaleModes:
 
@@ -530,16 +564,16 @@
 
 * Rewrote `FlxBitmapTextField` and renamed it to `FlxBitmapText`
 * `FlxText`:
- * added an `abstract` enum for alignment (`text.alignment = CENTER;` is now possible)
- * `font` now supports font assets not embedded via `openfl.Assets` (i.e. `@:font`)
- * `font = null;` now resets it to the default font
- * fixed an issue where the value returned by `get_font()` wouldn't be the same as the one passed into `set_font()`
- * added `applyMarkup()` ([#1229](https://github.com/HaxeFlixel/flixel/issues/1229))
- * fixed issues with `borderStyle` and `FlxTextFormat` on native
- * added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
- * retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
- * `borderColor` now supports alpha values / ARBG colors
- * fixed `setFormat()` resetting `alignment` ([#1629](https://github.com/HaxeFlixel/flixel/issues/1629))
+	* added an `abstract` enum for alignment (`text.alignment = CENTER;` is now possible)
+	* `font` now supports font assets not embedded via `openfl.Assets` (i.e. `@:font`)
+	* `font = null;` now resets it to the default font
+	* fixed an issue where the value returned by `get_font()` wouldn't be the same as the one passed into `set_font()`
+	* added `applyMarkup()` ([#1229](https://github.com/HaxeFlixel/flixel/issues/1229))
+	* fixed issues with `borderStyle` and `FlxTextFormat` on native
+	* added `stampOnAtlas()` method, which stamps text graphic on provided atlas and loads result node's graphic into this text object
+	* retrieving text dimensions (`width` and `height`) can now trigger text graphic regeneration (if any changes led to a dimensions change) to report the correct values
+	* `borderColor` now supports alpha values / ARBG colors
+	* fixed `setFormat()` resetting `alignment` ([#1629](https://github.com/HaxeFlixel/flixel/issues/1629))
 * Moved `FlxTextField` to flixel-addons
 
 ### flixel.tile:
@@ -549,89 +583,89 @@
 * `FlxTile`:
  added `frame` variable which holds tile's "graphic"
 * `FlxTileblock`: 
- * added `setTile()` and `tileSprite` ([#1300](https://github.com/HaxeFlixel/flixel/issues/1300))
- * added `loadFrames()` method which allows you to use frames collection as a source of graphic
+	* added `setTile()` and `tileSprite` ([#1300](https://github.com/HaxeFlixel/flixel/issues/1300))
+	* added `loadFrames()` method which allows you to use frames collection as a source of graphic
 * `FlxTilemap`:
- * separated rendering and logic, adding `FlxBaseTilemap` ([#1101](https://github.com/HaxeFlixel/flixel/issues/1101))
- * added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
- * fixed a bug in `overlapsAt()`
- * `loadMap()` now treats tile indices with negative values in the map data as 0 ([#1166](https://github.com/HaxeFlixel/flixel/issues/1166))
- * added `blend`, `alpha` and `color`
- * added `frames` property, so you can change tilemap's graphic without reloading map
- * `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
- * `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()` ([#1292](https://github.com/HaxeFlixel/flixel/issues/1292))
- * added `loadMapFrom2DArray()` ([#1292](https://github.com/HaxeFlixel/flixel/issues/1292))
- * added `offset` property ([#1444](https://github.com/HaxeFlixel/flixel/issues/1444))
- * `allowCollisions` now sets the `allowCollisions` property of each tile
- * fixed `ray()` not detecting a collision with perfectly diagonal start and end points ([#1617](https://github.com/HaxeFlixel/flixel/issues/1617))
- * `findPath()`: replaced `WideDiagonal` argument with `DiagonalPolicy` ([#1659](https://github.com/HaxeFlixel/flixel/issues/1659))
+	* separated rendering and logic, adding `FlxBaseTilemap` ([#1101](https://github.com/HaxeFlixel/flixel/issues/1101))
+	* added `getTileIndexByCoords()` and `getTileCoordsByIndex()`
+	* fixed a bug in `overlapsAt()`
+	* `loadMap()` now treats tile indices with negative values in the map data as 0 ([#1166](https://github.com/HaxeFlixel/flixel/issues/1166))
+	* added `blend`, `alpha` and `color`
+	* added `frames` property, so you can change tilemap's graphic without reloading map
+	* `loadMap()` accepts `FlxGraphic`, `String`, `FlxTileFrames` or `BitmapData` as `TileGraphic` now
+	* `loadMap()` has been split into `loadMapFromCSV()` and `loadMapFromArray()` ([#1292](https://github.com/HaxeFlixel/flixel/issues/1292))
+	* added `loadMapFrom2DArray()` ([#1292](https://github.com/HaxeFlixel/flixel/issues/1292))
+	* added `offset` property ([#1444](https://github.com/HaxeFlixel/flixel/issues/1444))
+	* `allowCollisions` now sets the `allowCollisions` property of each tile
+	* fixed `ray()` not detecting a collision with perfectly diagonal start and end points ([#1617](https://github.com/HaxeFlixel/flixel/issues/1617))
+	* `findPath()`: replaced `WideDiagonal` argument with `DiagonalPolicy` ([#1659](https://github.com/HaxeFlixel/flixel/issues/1659))
 
 ### flixel.tweens:
 
 * `FlxTween`
- * `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`. ([#1273](https://github.com/HaxeFlixel/flixel/issues/1273))
- * added `onStart` and `onUpdate` callback parameters in options ([#1273](https://github.com/HaxeFlixel/flixel/issues/1273))
- * fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
- * angle tween sets sprite's angle on start now
- * added `then()` and `wait()` for chaining ([#1614](https://github.com/HaxeFlixel/flixel/issues/1614))
- * made `start()` public ([#1692](https://github.com/HaxeFlixel/flixel/issues/1692))
- * `active` is now only true when in progress
+	* `complete` callback parameter in options is now called `onComplete`. Its type, `CompleteCallback`, is now called `TweenCallback`. ([#1273](https://github.com/HaxeFlixel/flixel/issues/1273))
+	* added `onStart` and `onUpdate` callback parameters in options ([#1273](https://github.com/HaxeFlixel/flixel/issues/1273))
+	* fixed `active = false;` not doing anything during `onComplete()` of `LOOPING` or `PINGPONG` tweens
+	* angle tween sets sprite's angle on start now
+	* added `then()` and `wait()` for chaining ([#1614](https://github.com/HaxeFlixel/flixel/issues/1614))
+	* made `start()` public ([#1692](https://github.com/HaxeFlixel/flixel/issues/1692))
+	* `active` is now only true when in progress
 * Motion tweens:
- * the original `FlxObject#immovable` value is now restored after completion
+	* the original `FlxObject#immovable` value is now restored after completion
 
 ### flixel.ui:
 
 * `FlxAnalog` and `FlxVirtualPad` now have their own atlas to reduce draw calls
 * `FlxTypedButton`:
- * now implements `IFlxInput`, adding `pressed`, `justPressed`, `released` and `justReleased`
- * now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
- * disabling the highlight frame is now tied to `#if FLX_NO_MOUSE` instead of `#if mobile`
- * `labelAlphas[FlxButton.HIGHLIGHT]` is now 1 for `FLX_NO_MOUSE`
- * `set_label()` now updates the label position
- * added `maxInputMovement`
- * added `mouseButtons` to control which mouse buttons can trigger the button
- * `label` is no longer initialized if the text passed to `new()` is `null`
- * added `stampOnAtlas()` for draw call optimization
+	* now implements `IFlxInput`, adding `pressed`, `justPressed`, `released` and `justReleased`
+	* now uses animations for statuses instead of setting `frameIndex` directly for more flexibility (removes `allowHighlightOnMobile`, adds `statusAnimations`)
+	* disabling the highlight frame is now tied to `#if FLX_NO_MOUSE` instead of `#if mobile`
+	* `labelAlphas[FlxButton.HIGHLIGHT]` is now 1 for `FLX_NO_MOUSE`
+	* `set_label()` now updates the label position
+	* added `maxInputMovement`
+	* added `mouseButtons` to control which mouse buttons can trigger the button
+	* `label` is no longer initialized if the text passed to `new()` is `null`
+	* added `stampOnAtlas()` for draw call optimization
 * Added `FlxSpriteButton`
 
 ### flixel.util:
 
 * `FlxArrayUtil`:
- * removed `indexOf()`
- * moved randomness-related to `FlxRandom` ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
+	* removed `indexOf()`
+	* moved randomness-related to `FlxRandom` ([#1138](https://github.com/HaxeFlixel/flixel/issues/1138))
 * `FlxBitmapDataUtil`:
- * renamed from `FlxBitmapUtil` ([#1118](https://github.com/HaxeFlixel/flixel/issues/1118))
- * added `replaceColor()` (used by `FlxSprite#replaceColor()`)
- * added `addSpacing()`
- * added `generateRotations()`
+	* renamed from `FlxBitmapUtil` ([#1118](https://github.com/HaxeFlixel/flixel/issues/1118))
+	* added `replaceColor()` (used by `FlxSprite#replaceColor()`)
+	* added `addSpacing()`
+	* added `generateRotations()`
 * `FlxColor`:
- * `FlxColor` is now an `abstract`, interchangeable with `Int` - the `FlxColorUtil` functions have been merged into it ([#1027](https://github.com/HaxeFlixel/flixel/issues/1027))
- * the color presets have been reduced to a smaller, more useful selection ([#1117](https://github.com/HaxeFlixel/flixel/issues/1117))
+	* `FlxColor` is now an `abstract`, interchangeable with `Int` - the `FlxColorUtil` functions have been merged into it ([#1027](https://github.com/HaxeFlixel/flixel/issues/1027))
+	* the color presets have been reduced to a smaller, more useful selection ([#1117](https://github.com/HaxeFlixel/flixel/issues/1117))
 * `FlxPath`: 
- * the original `FlxObject#immovable` value is now restored after completion
- * `active` is now only true when in progress
- * fixed velocity being set even if the object position matches the current node
- * exposed `nodeIndex` as a read-only property
- * removed the `Object` argument from `start()`, now the path has to be assigned to `FlxObject#path` ([#1712](https://github.com/HaxeFlixel/flixel/issues/1712))
+	* the original `FlxObject#immovable` value is now restored after completion
+	* `active` is now only true when in progress
+	* fixed velocity being set even if the object position matches the current node
+	* exposed `nodeIndex` as a read-only property
+	* removed the `Object` argument from `start()`, now the path has to be assigned to `FlxObject#path` ([#1712](https://github.com/HaxeFlixel/flixel/issues/1712))
 * `FlxPool`:
- * improved pooling performance ([#1189](https://github.com/HaxeFlixel/flixel/issues/1189))
+	* improved pooling performance ([#1189](https://github.com/HaxeFlixel/flixel/issues/1189))
 * `FlxSignal`:
- * fixed a bug that occurred when calling `remove()` during a dispatch ([#1420](https://github.com/HaxeFlixel/flixel/issues/1420))
+	* fixed a bug that occurred when calling `remove()` during a dispatch ([#1420](https://github.com/HaxeFlixel/flixel/issues/1420))
 * `FlxSpriteUtil`:
- * `drawLine()`: default settings for `lineStyle` are now thickness 1 and color white
- * `fadeIn()` and `fadeOut()` now tween `alpha` instead of `color`
- * added `drawCurve()` ([#1263](https://github.com/HaxeFlixel/flixel/issues/1263))
- * removed `FillStyle`, the same functionality is now covered by `FillColor`
- * moved `screenCenter()` to `FlxObject` and changed the the arguments from two booleans to the `FlxAxes` enum ([#1541](https://github.com/HaxeFlixel/flixel/issues/1541))
+	* `drawLine()`: default settings for `lineStyle` are now thickness 1 and color white
+	* `fadeIn()` and `fadeOut()` now tween `alpha` instead of `color`
+	* added `drawCurve()` ([#1263](https://github.com/HaxeFlixel/flixel/issues/1263))
+	* removed `FillStyle`, the same functionality is now covered by `FillColor`
+	* moved `screenCenter()` to `FlxObject` and changed the the arguments from two booleans to the `FlxAxes` enum ([#1541](https://github.com/HaxeFlixel/flixel/issues/1541))
 * `FlxTimer`:
- * `complete` -> `onComplete` ([#1275](https://github.com/HaxeFlixel/flixel/issues/1275))
- * `active` is now only true when in progress
+	* `complete` -> `onComplete` ([#1275](https://github.com/HaxeFlixel/flixel/issues/1275))
+	* `active` is now only true when in progress
 
 ### Other:
 
 * Added an initialization macro that aborts compilation with helpful errors when:
- * targeting older SWF versions with invalid defines
- * using an unsupported Haxe version 
+	* targeting older SWF versions with invalid defines
+	* using an unsupported Haxe version 
 * Flixel sound assets are now being embedded via `embed="true"`
 
 3.3.12 (December 15, 2015)
@@ -642,8 +676,8 @@
 ------------------------------
 * Fix compilation with OpenFL next
 * `FlxAssets.getFileReferences()`:
-  * now ignores invisible files ([#1280](https://github.com/HaxeFlixel/flixel/issues/1280))
-  * fixed compiler error with iOS builds ([#1276](https://github.com/HaxeFlixel/flixel/issues/1276))
+ 	* now ignores invisible files ([#1280](https://github.com/HaxeFlixel/flixel/issues/1280))
+ 	* fixed compiler error with iOS builds ([#1276](https://github.com/HaxeFlixel/flixel/issues/1276))
 
 3.3.10 (July 3, 2015)
 ------------------------------
@@ -653,14 +687,14 @@
 ------------------------------
 * HTML5 builds no longer default to using openfl-bitfive over OpenFL's backend
 * `FlxTilemap`:
-  * fixed a collision bug near the edge of the tilemap ([#1546](https://github.com/HaxeFlixel/flixel/issues/1546))
-  * fixed `loadMap()` with trailing whitespace in CSV files ([#1550](https://github.com/HaxeFlixel/flixel/issues/1550))
+ 	* fixed a collision bug near the edge of the tilemap ([#1546](https://github.com/HaxeFlixel/flixel/issues/1546))
+ 	* fixed `loadMap()` with trailing whitespace in CSV files ([#1550](https://github.com/HaxeFlixel/flixel/issues/1550))
 * `FlxTextField`: fixed a crash when calling the constructor with `Text == null`
 * `FlxGamepadManager`: fixed `lastActive` only updating when a new gamepad connects
 * `FlxText`: fixed the default font not working on Android due to an OpenFL bug ([#1399](https://github.com/HaxeFlixel/flixel/issues/1399))
 * `FlxVector`:
-  * fixed behaviour of `set_length()` for `(0, 0)` vectors ([#1144](https://github.com/HaxeFlixel/flixel/issues/1144))
-  * fixed `subtractNew()` ([#1231](https://github.com/HaxeFlixel/flixel/issues/1231))
+ 	* fixed behaviour of `set_length()` for `(0, 0)` vectors ([#1144](https://github.com/HaxeFlixel/flixel/issues/1144))
+ 	* fixed `subtractNew()` ([#1231](https://github.com/HaxeFlixel/flixel/issues/1231))
 * `FlxTimer`: timers with a time of 0 can now be started
 * `FlxSignal`: fixed `addOnce()` not working on neko ([#1223](https://github.com/HaxeFlixel/flixel/issues/1223))
 * `FlxSave`: fixed `data` still having the deleted properties after `erase()` ([#1302](https://github.com/HaxeFlixel/flixel/issues/1302))
@@ -681,8 +715,8 @@
 3.3.5 (July 16, 2014)
 ------------------------------
 * FlxTilemap:
- * fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
- * fixed a crash when trying to create a single-column tilemap
+	* fixed pixelPerfectRender not being respected with FLX_RENDER_TILE
+	* fixed a crash when trying to create a single-column tilemap
 * FlxCamera: fixed defaultCameras not being reset on state switches
 * FlxPoint#putWeak(): fixed an issue which could lead to a single point being allocated more than once when weak() is used
 * FlxVector: fixed radiansBetween() / degreesBetween()
@@ -690,16 +724,16 @@
 * FlxTypedEmitter: fixed type parameter not being respected (T was always FlxSprite)
 * FlxAssets#getFileReferences(): fixed the filterExtensions parameter
 * FlxBitmapTextField:
- * fixed issue with width increasing when the text is updated
- * fixed text disappearing after state switches on HTML5
+	* fixed issue with width increasing when the text is updated
+	* fixed text disappearing after state switches on HTML5
 * FlxAnalog: changed the default value for scrollFactor to (0, 0) and for moves to false
 * FlxGamepad:
- * fixed a bug that would prevent buttons from being updated
- * anyPressed() now also works when the button status is justPressed
+	* fixed a bug that would prevent buttons from being updated
+	* anyPressed() now also works when the button status is justPressed
 * FlxTween: fixed a bug when tweening the same field with several tweens + startDelay
 * FlxSubState:
- * fixed calling close() within create()
- * fixed openSubState() not working when close() is called afterwards on the current substate on the same frame
+	* fixed calling close() within create()
+	* fixed openSubState() not working when close() is called afterwards on the current substate on the same frame
 
 3.3.4 (May 28, 2014)
 ------------------------------
@@ -742,68 +776,68 @@
 3.3.0 (April 24, 2014)
 ------------------------------
 * Added flash gamepad support. This either requires a swf-player-version of 11.8 to be set or FLX_NO_GAMEPAD to be defined.
- * FlxGamepad.getAxis() has been split into getXAxis() and getYAxis() for consistency across targets
- * FlxGamepad.dpadUp / Down / Left / Right don't work in flash, use getButton() in conjunction with the IDs in the button ID classes instead
+	* FlxGamepad.getAxis() has been split into getXAxis() and getYAxis() for consistency across targets
+	* FlxGamepad.dpadUp / Down / Left / Right don't work in flash, use getButton() in conjunction with the IDs in the button ID classes instead
 * Added "tracker" window to the debugger which creates a Watch window with the most important properties of an object
- * Use FlxG.debugger.track(Object); to create a new tracker window
- * Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
- * Use the "track [object]" command to open a tracker window from the console
+	* Use FlxG.debugger.track(Object); to create a new tracker window
+	* Use FlxG.debugger.addTrackerProfile() to add a profile for classes don't have one yet or override existing ones
+	* Use the "track [object]" command to open a tracker window from the console
 * FlxCamera: 
- * Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
- * Fixed a bug where following a target would prevent you from setting the coordinates of the camera
-* Added pooling for FlxPoint, FlxVector, and FlxRect. Usage: var point = FlxPoint.get(); /* do stuff with point */ point.put(); // recycle point. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
+	* Added static defaultCameras array which is used by FlxBasics when their cameras array has not been set - previously the use of FlxG.cameras.list / all existing cameras was hardcoded
+	* Fixed a bug where following a target would prevent you from setting the coordinates of the camera
+* Added pooling for FlxPoint, FlxVector, and FlxRect. Usage: var point = FlxPoint.get(); /* do stuff with point	*/ point.put(); // recycle point. FlxPoint.weak() should be used instead of get() when passing points into flixel functions, that way they'll be recycled automatically.
 * Debugger windows:
- * Fixed dragging of overlapping windows
- * Fixed the visibility of windows on native targets (now saving correctly)
- * Fixed resizing when moving the mouse to the left / above the window
+	* Fixed dragging of overlapping windows
+	* Fixed the visibility of windows on native targets (now saving correctly)
+	* Fixed resizing when moving the mouse to the left / above the window
 * FlxPath: fixed a bug with drawDebug()
 * FlxG:
- * fullscreen: fixed offset in flash
- * openURL(): now adds "http://" to the URL if necessary
- * Added maxElapsed
- * Fixed some variables not being reset in resetGame()
- * added FlxG.accelerometer for mobile targets
+	* fullscreen: fixed offset in flash
+	* openURL(): now adds "http://" to the URL if necessary
+	* Added maxElapsed
+	* Fixed some variables not being reset in resetGame()
+	* added FlxG.accelerometer for mobile targets
 * FlxSound: 
- * Added loadByteArray()
- * Now has a read-only variable time
- * Allow sound caching on all targets instead of only on Android
- * Added FlxG.sound.soundTrayEnabled to allow dis- and enabling the tray at runtime
- * survive -> persist
+	* Added loadByteArray()
+	* Now has a read-only variable time
+	* Allow sound caching on all targets instead of only on Android
+	* Added FlxG.sound.soundTrayEnabled to allow dis- and enabling the tray at runtime
+	* survive -> persist
 * MouseEventManager: 
- * Improved handling of visible / exists
- * Now works on FlxObjects
- * addSprite() -> add()
+	* Improved handling of visible / exists
+	* Now works on FlxObjects
+	* addSprite() -> add()
 * FlxPoint: 
- * Added floor() and ceil()
- * Added add() and addPoint() (removed add() from FlxVector)
- * Added subtract() and subtractPoint() (removed substract() from FlxVector)
+	* Added floor() and ceil()
+	* Added add() and addPoint() (removed add() from FlxVector)
+	* Added subtract() and subtractPoint() (removed substract() from FlxVector)
 * Changed the default html5 backend to openfl-bitfive
- * Middle and right mouse events are now supported
- * Sounds are now supported
+	* Middle and right mouse events are now supported
+	* Sounds are now supported
 * FlxObject: replaced forceComplexRender by pixelPerfectRender which rounds coordinates by default (if true) for drawing (also on cpp targets, making it consistent with flash)
 * FlxText: 
- * Added shadowOffset
- * Fixed the widthInc and heightInc of addFilter() which did not work at all previously
- * Separated visible and physical width by adding fieldWidth to fix a bug
- * Added autoSize that makes sure the entire text is displayed if true with wordWrap = false. Setting fieldWidth to 0 in the constructor is now allowed and activates this behaviour.
- * Fixed variation in height of empty texts
+	* Added shadowOffset
+	* Fixed the widthInc and heightInc of addFilter() which did not work at all previously
+	* Separated visible and physical width by adding fieldWidth to fix a bug
+	* Added autoSize that makes sure the entire text is displayed if true with wordWrap = false. Setting fieldWidth to 0 in the constructor is now allowed and activates this behaviour.
+	* Fixed variation in height of empty texts
 * FlxSpriteUtil: added bound()
 * FlxSpriteGroup:
- * Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
- * Setting cameras will now set cameras on its members, add()-ing a sprite will synchronize the values
+	* Added FlxTypedSpriteGroup, which can be used in the same way as FlxTypedGroup, but its type parameter is T:FlxSprite
+	* Setting cameras will now set cameras on its members, add()-ing a sprite will synchronize the values
 * Abstracted rendering into FLX_RENDER_TILE and FLX_RENDER_BLIT conditionals as opposed to being hardcoded based on the target
 * FlxTween:
- * num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
- * singleVar() and multiVar() have been replaced by tween()
- * Removed SfxFader and Fader
+	* num(): added an optional tweenFunction parameter which can be used for increased performance (as MultiVarTween and SingleVarTween are fairly slow, using Reflection)
+	* singleVar() and multiVar() have been replaced by tween()
+	* Removed SfxFader and Fader
 * FlxKeyboard:
- * Implemented a workaround for function and numpad keys not working on native targets
- * Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY"
- * Added firstPressed(), firstJustPressed() and firstJustReleased()
+	* Implemented a workaround for function and numpad keys not working on native targets
+	* Added FlxKey.NUMPADMULTIPLY / "NUMPADMULTIPLY"
+	* Added firstPressed(), firstJustPressed() and firstJustReleased()
 * Added FlxCallbackPoint, a FlxPoint that calls a function when x, y or both are changed.
 * FlxTilemap: 
- * Replaced scaleX and scaleY by a scale FlxPoint
- * Removed rayHit(), ray() provides the same functionality
+	* Replaced scaleX and scaleY by a scale FlxPoint
+	* Removed rayHit(), ray() provides the same functionality
 * Added FlxDestroyUtil (FlxG.safeDestroy() -> FlxDestroyUtil.destroy())
 * Debugger stats window: added a button to expand the window and show two more graphs (draw and update time)
 * Added buildFileReferences() macro to FlxAssets.hx (auto-completion for asset string paths)
@@ -811,45 +845,45 @@
 * Added FlxColor.MAGENTA
 * Added FlxMouse.setGlobalScreenPositionUnsafe()
 * FlxTypedButton: 
- * Fixed label.visible = false; not working
- * Fixed a one-frame-delay between setting the label's position and it taking effect
- * Fixed label scrollFactor being out of sync before the first update()
+	* Fixed label.visible = false; not working
+	* Fixed a one-frame-delay between setting the label's position and it taking effect
+	* Fixed label scrollFactor being out of sync before the first update()
 * FlxButton: Added a text property as a shortcut for label.text
 * FlxSprite:
- * Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
- * Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
- * setOriginToCenter() -> centerOrigin()
- * Fixed a "jittering"-issue between simple and complex render sprites due to rounding
- * Removed flipped as well as the "Reverse" param from loadGraphic() and loadGraphicFromTexture()
- * Added flipX, flipY and setFacingFlip() - graphics can now be flipped vertically as well
- * Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
+	* Added support for more texture packer formats: LibGDXData, SparrowData, TexturePackerXMLData
+	* Fixed a null error crash in FlxAtlas on cpp targets with haxe 3.1.0+
+	* setOriginToCenter() -> centerOrigin()
+	* Fixed a "jittering"-issue between simple and complex render sprites due to rounding
+	* Removed flipped as well as the "Reverse" param from loadGraphic() and loadGraphicFromTexture()
+	* Added flipX, flipY and setFacingFlip() - graphics can now be flipped vertically as well
+	* Fixed a bug with flipped graphics + origin on FLX_RENDER_TILE targets
 * FlxPreloader:
- * Spit up FlxPreloader into FlxPreloader and FlxPreloaderBase to make it easier to extend
- * Small fix that should prevent it from getting stuck
- * Added siteLockURLIndex to control which URL in allowedURLs is used when the site-lock triggers
- * allowedURLs now works with URLs that don't start with "http://"
+	* Spit up FlxPreloader into FlxPreloader and FlxPreloaderBase to make it easier to extend
+	* Small fix that should prevent it from getting stuck
+	* Added siteLockURLIndex to control which URL in allowedURLs is used when the site-lock triggers
+	* allowedURLs now works with URLs that don't start with "http://"
 * Fixed camera shifting after resizing with StageSizeScaleMode
 * Added flixel.util.FlxSignal and FlxG.signals
 * FlxAnimationController:
- * Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
- * addByStringIndicies() -> addByStringIndices()
- * addByIndicies() -> addByIndices()
- * Fixed a bug with callback firing every time play() was called instead of only when the frame changes
+	* Added append(), appendByNames(), appendByStringIndices(), appendByIndices() and appendByPrefix()
+	* addByStringIndicies() -> addByStringIndices()
+	* addByIndicies() -> addByIndices()
+	* Fixed a bug with callback firing every time play() was called instead of only when the frame changes
 * FlxTypedGroup: added forEachOfType() iterator
 * FlxGamepad: 
- * Added anyPressed(), anyJustPressed() and anyJustReleased()
- * Added PS4ButtonID
+	* Added anyPressed(), anyJustPressed() and anyJustReleased()
+	* Added PS4ButtonID
 * Traces are not being redirected to the debugger log window anymore by default
 * Fixed mouse cursor scale at initial camera zoom levels different from 1
 * FlxState: active, visible and exists are now respected
 * FlxVector: substractNew() -> subtractNew()
 * FlxGradient: fixed a memory leak in the overlayGradientOn()-functions
 * FlxTimer and FlxPath:
- * paused -> active
- * abort() -> cancel()
- * removed pooling due to potential issues
- * start() -> new FlxTimer() / FlxPath()
- * run() -> start()
+	* paused -> active
+	* abort() -> cancel()
+	* removed pooling due to potential issues
+	* start() -> new FlxTimer() / FlxPath()
+	* run() -> start()
 * FlxTimer and FlxTween: removed userData
 
 3.2.2 (March 8, 2014)
@@ -859,27 +893,27 @@
 3.2.1 (February 23, 2014)
 ------------------------------
 * FlxTypedButton:
- * add onUp event listener again for actions that need to be user-initiated, like ExternalInterface.call()
- * fix buttons not working when FLX_NO_TOUCH is defined
+	* add onUp event listener again for actions that need to be user-initiated, like ExternalInterface.call()
+	* fix buttons not working when FLX_NO_TOUCH is defined
 * FlxSprite
- * small optimization for set_pixels()
- * fix for frame being null after loadGraphic() in some cases
+	* small optimization for set_pixels()
+	* fix for frame being null after loadGraphic() in some cases
 * FlxRandom: fix inaccurate results in weightedPick()
 
 3.2.0 (February 21, 2014)
 ------------------------------
 * Added PixelPerfectScaleMode (scales the game to the highest integer factor possible while maintaining the aspect ratio)
 * FlxTween
- * backward is now a public, read-only property
- * renamed delay to startDelay
- * added loopDelay that controls the delay between loop executions with LOOPING and PINGPONG
- * Added easier to use FlxTween.tween() function, which automatically determines whether to use single VarTween or MultiVarTween based on the number of Values being tweened
+	* backward is now a public, read-only property
+	* renamed delay to startDelay
+	* added loopDelay that controls the delay between loop executions with LOOPING and PINGPONG
+	* Added easier to use FlxTween.tween() function, which automatically determines whether to use single VarTween or MultiVarTween based on the number of Values being tweened
 * Added some basic unit tests
 * FlxCamera: removed followAdjust(), the followLead point should be set directly
 * FlxSpriteUtil.screenWrap(): prevent sprite from ever being offscreen
 * FlxSprite:
- * fixed crash on cpp with loadRotatedGraphic() on state switches
- * fixed "jittering" in certain cases with y velocity in simple render on flash (for example when standing on a platform in a platformer)
+	* fixed crash on cpp with loadRotatedGraphic() on state switches
+	* fixed "jittering" in certain cases with y velocity in simple render on flash (for example when standing on a platform in a platformer)
 * Moved FlxTilemap-functions arrayToCSV(), bitmapToCSV() and imageToCSV() to FlxStringUtil
 * FlxMath.computeVelocity() -> FlxVelocity.computeVelocity()
 * FlxState.setSubState() -> FlxState.openSubState()
@@ -889,65 +923,65 @@
 * Exposed complete callback in FlxTimer, so now you can do: FlxTimer.start(...).complete = function(t) { };
 * Fixed a bug with onFocus() not firing the first time on Android
 * FlxTypedButton
- * added allowSwiping flag
- * added allowHighlightOnMobile flag
+	* added allowSwiping flag
+	* added allowHighlightOnMobile flag
 
 3.1.0 (February 7, 2014)
 ------------------------------
 * Refactor of FlxRandom
-  * All functions are now deterministic and safe to use with replays
-  * Due to the use of a new algorithm for pseudo-random number generation (a linear congruential generator) and a new seed type (integer instead of float values), old replays will have unpredictable results
-  * FlxColorUtil.getRandomColor(), FlxArrayUtil.shuffle(), and FlxArrayUtil.getRandom() have been moved to FlxRandom.color(), FlxRandom.shuffleArray(), and FlxRandom.getObject(), respectively. The old functions are still in place but are marked as deprecated.
-  * weightedPick(), weightedGetObject() and colorExt() have been added
-  * Replays are now fully deterministic, whether replaying the whole game or just a single state.
+ 	* All functions are now deterministic and safe to use with replays
+ 	* Due to the use of a new algorithm for pseudo-random number generation (a linear congruential generator) and a new seed type (integer instead of float values), old replays will have unpredictable results
+ 	* FlxColorUtil.getRandomColor(), FlxArrayUtil.shuffle(), and FlxArrayUtil.getRandom() have been moved to FlxRandom.color(), FlxRandom.shuffleArray(), and FlxRandom.getObject(), respectively. The old functions are still in place but are marked as deprecated.
+ 	* weightedPick(), weightedGetObject() and colorExt() have been added
+ 	* Replays are now fully deterministic, whether replaying the whole game or just a single state.
 * New FLX_NO_SOUND_SYSTEM conditional
 * FlxTrailArea: 
- * can now be resized with setSize()
- * default delay is now 2
- * removed smoothing, use antialising instead
- * is now compatible with animated sprites / sprites that have a spritesheet
+	* can now be resized with setSize()
+	* default delay is now 2
+	* removed smoothing, use antialising instead
+	* is now compatible with animated sprites / sprites that have a spritesheet
 * Moved FlxSlider, FlxTrail and FlxTrailArea to flixel-addons
 * FlxMisc has been removed, openURL() can now be found in FlxG. Added Target param to openURL().
 * FlxCamera: 
- * getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
- * BUG: fixed alpha being initialized with 0 instead of 1
- * BUG: fixed FlxSprites not taking camera.alpha into account on cpp targets
+	* getContainerSprite() has been removed, as well as the underscore in some public variables ("_flashSprite")
+	* BUG: fixed alpha being initialized with 0 instead of 1
+	* BUG: fixed FlxSprites not taking camera.alpha into account on cpp targets
 * FlxSpriteGroup: Added forEach(), forEachAlive(), forEachDead() and forEachExists()
 * FlxSpriteUtil: 
-  * new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
-  * more control for the drawing functions via FillStyle and DrawStyle
-  * added convenient default values for drawCircle()
-  * allow FlxObjects in screenWrap() and screenCenter()
-  * now the functions return the sprite / object to allow chaining
-  * BUG: fixed null error in alphaMaskFlxSprite()
+ 	* new drawTriangle() and drawPolygon(), fadeIn() and fadeOut() functions 
+ 	* more control for the drawing functions via FillStyle and DrawStyle
+ 	* added convenient default values for drawCircle()
+ 	* allow FlxObjects in screenWrap() and screenCenter()
+ 	* now the functions return the sprite / object to allow chaining
+ 	* BUG: fixed null error in alphaMaskFlxSprite()
 * FlxTypedButton refactor
-  *  Callbacks are now set via the FlxButtonEvent objects, for example button.onDown.callback = someFunction;
-  *  The type of callback has been changed from Dynamic to Void->Void to avoid Reflection. This means you need to bind custom parameters to your callback function like so: callback = someFunction.bind(1); ([more info](https://github.com/HaxeFlixel/flixel/issues/805?source=cc))
-  *  new labelAlphas and labelOffsets arrays for more control
-  *  the highlight frame is now disabled by default on mobile 
-  *  "swiping" is now possible (entering the button area while the input is pressed to press the button)
+ 	*  Callbacks are now set via the FlxButtonEvent objects, for example button.onDown.callback = someFunction;
+ 	*  The type of callback has been changed from Dynamic to Void->Void to avoid Reflection. This means you need to bind custom parameters to your callback function like so: callback = someFunction.bind(1); ([more info](https://github.com/HaxeFlixel/flixel/issues/805?source=cc))
+ 	*  new labelAlphas and labelOffsets arrays for more control
+ 	*  the highlight frame is now disabled by default on mobile 
+ 	*  "swiping" is now possible (entering the button area while the input is pressed to press the button)
 * FlxTypedEmitter and FlxSound: Added setPosition() methods
 * FlxSlider: New setVariable flag, improvements to inner update logic
 * FlxSprite: 
-  * pixelsOverlapPoint() has been removed
-  * setGraphicDimensions() -> setGraphicSize(), removed the UpdateHitbox flag
-  * added getGraphicsMidpoint()
-  * bakedRotation -> bakedRotationAngle
-  * loadfromSprite() -> loadGraphicFromSprite()
-  * loadImageFromTexture() -> loadGraphicFromTexture()
-  * loadRotatedImageFromTexture() -> loadRotatedGraphicFromTexture()
-  * setColorTransformation() -> setColorTransform()
+ 	* pixelsOverlapPoint() has been removed
+ 	* setGraphicDimensions() -> setGraphicSize(), removed the UpdateHitbox flag
+ 	* added getGraphicsMidpoint()
+ 	* bakedRotation -> bakedRotationAngle
+ 	* loadfromSprite() -> loadGraphicFromSprite()
+ 	* loadImageFromTexture() -> loadGraphicFromTexture()
+ 	* loadRotatedImageFromTexture() -> loadRotatedGraphicFromTexture()
+ 	* setColorTransformation() -> setColorTransform()
 * Optimized input checking when using FlxG.keys (aka FlxKeyShortcuts)
 * FlxTypedGroup: 
-  * autoReviveMembers flag has been removed
-  * Revive param has been added to recycle()
-  * Fixed a bug with callAll()'s Args parameter which would get lost in recursive mode 
+ 	* autoReviveMembers flag has been removed
+ 	* Revive param has been added to recycle()
+ 	* Fixed a bug with callAll()'s Args parameter which would get lost in recursive mode 
 * FlxRect, FlxPoint and FlxBasic and FlxObject now have toString() functions used for traces and the flixel debugger
 * The focus lost screen and the sound tray now react to window resizes
 * BUG: Fixed numpad minus not working as a default volume down key
 * FlxStringUtil:
- * added sameClassName() 
- * added getDomain()
+	* added sameClassName() 
+	* added getDomain()
 * The stats window of the debugger has been refactored, now has fancy FPS and memory graphs
 * FlxGame.focusLostFramerate added
 * BUG: Fixed flixel cursor reappearing after regaining focus
@@ -956,40 +990,40 @@
 * Fix for a bug in the standalone flash player that would fire onFocus / onFocusLost twice
 * Prevent paused sounds from playing after regaining focus
 * FlxText:
- * BUG: Fix inaccurate text color when setting both color and alpha
- * BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
- * BUG: Fixed changing color or alpha of a FlxText affecting its origin
- * Internal optimizations for less BitmapData creations
- * Added basic text formatting via FlxTextFormat, so different sections of the same FlxText can have different formatting. For this, addFormat(), removeFormat() and clearFormats() have been added.
- * Added italic property (flash-only for now)
+	* BUG: Fix inaccurate text color when setting both color and alpha
+	* BUG: Fix incompatiblity of FlxText.borderStyle and FlxText.alpha
+	* BUG: Fixed changing color or alpha of a FlxText affecting its origin
+	* Internal optimizations for less BitmapData creations
+	* Added basic text formatting via FlxTextFormat, so different sections of the same FlxText can have different formatting. For this, addFormat(), removeFormat() and clearFormats() have been added.
+	* Added italic property (flash-only for now)
 * Renamed framerates to clear up confusion: 
-  * gameFramerate -> updateFramerate
-  * flashFramerate -> drawFramerate
+ 	* gameFramerate -> updateFramerate
+ 	* flashFramerate -> drawFramerate
 * BUG: Fixed order of operations issue that was causing FlxSubStates to crash on close.
 * BUG: Fixed a splash screen repeating bug when using default splash screen.
 * Gamepad support improvements
-  * Improvements and optimizations to gamepad api, fixed Ouya compatibility!
-  * FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
-  * FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
-  * Added PS3ButtonID and LogitechButtonID classes
-  * FlxG.gamepads.get() -> getByID()
+ 	* Improvements and optimizations to gamepad api, fixed Ouya compatibility!
+ 	* FlxGamepadManager: getActiveGamepadIDs(), getActiveGamepads(), getFirstActiveGamepadID(), getFirstActiveGamepad and anyInput() added
+ 	* FlxGamepad: firstPressedButtonID(), firstJustPressedButtonID() and firstJustReleasedButtonID() added
+ 	* Added PS3ButtonID and LogitechButtonID classes
+ 	* FlxG.gamepads.get() -> getByID()
 * Ported scale modes from flixel for moneky (FlxG.scaleMode / flixel.system.scaleModes) and removed FlxG.autoResize
 * Renamed FlxG.debugger.visualDebug to drawDebug
 * FlxTween:
- * optimizations
- * AngleTween now accepts FlxSprite as a parameter
- * Now possible to delay tweens via the TweenOptions typedef 
- * FlxEase: Added elastic easing functions
- * Exposed the duration and the type of tweens so they can be changed after they have been started
+	* optimizations
+	* AngleTween now accepts FlxSprite as a parameter
+	* Now possible to delay tweens via the TweenOptions typedef 
+	* FlxEase: Added elastic easing functions
+	* Exposed the duration and the type of tweens so they can be changed after they have been started
 * BUG: Fixed jittering movement of FlxObjects following a FlxPath
 * Removed FlxG.paused, it was a container variable without functionality
 * FlxRect: 
- * Added setSize()
- * top / bottom / left / right can now be set
+	* Added setSize()
+	* top / bottom / left / right can now be set
 * FlxArrayUtil:
- * added fastSplice() 
- * moved intFromString() to FlxStringUtil.toIntArray()
- * moved floatFromString() to FlxStringUtil.toFloatArray()
+	* added fastSplice() 
+	* moved intFromString() to FlxStringUtil.toIntArray()
+	* moved floatFromString() to FlxStringUtil.toFloatArray()
 * Moved flixel.system.input to flixel.input
 * Moved interfaces into a new interfaces package
 * BUG: Fixed crash when using traces on android
@@ -997,19 +1031,19 @@
 * FlxG.keyboard has been merged with Flx.keys again. FlxG.keyboard.pressed(), justPressed() and justReleased() have been removed, anyPressed(), anyJustPressed() and anyJustReleased() should be used instead.
 * Removed dynamic types and casting in some places
 * FlxMouse refactor
- * Removed show() and hide(), visible should be used instead
- * load() should be used for loading a cursor graphic, which was previously possible via show()
- * FLX_MOUSE_ADVANCED has been turned into FLX_NO_MOUSE_ADVANCED, which means the event listeners for middle and right mouse clicks are now available by default / opt-out
- * FlxState.useMouse has been removed
- * The mouse cursor is now by default visible on non-mobile targets
+	* Removed show() and hide(), visible should be used instead
+	* load() should be used for loading a cursor graphic, which was previously possible via show()
+	* FLX_MOUSE_ADVANCED has been turned into FLX_NO_MOUSE_ADVANCED, which means the event listeners for middle and right mouse clicks are now available by default / opt-out
+	* FlxState.useMouse has been removed
+	* The mouse cursor is now by default visible on non-mobile targets
 * FlxG.pixelPerfectOverlap() / FlxCollision.pixelPerfectCheck() has been heavily optimized to perform well on cpp targets, default AlphaTolerance is now 1
 * FlxG.LIBRARY_MINOR_VERSION, LIBRARY_MAJOR_VERSION, LIBRARY_NAME and libraryName have been refactored into a FlxVersion object available via FlxG.VERSION
 * FlxSound:
- * Made fadeIn() and fadeOut() more intuitive to use
- * Added pan property to allow non-proximity-based panning
+	* Made fadeIn() and fadeOut() more intuitive to use
+	* Added pan property to allow non-proximity-based panning
 * FlxAngle:
- * added getCartesianCoords() and getPolarCoords()
- * removed the Round parameter from getAngle()
+	* added getCartesianCoords() and getPolarCoords()
+	* removed the Round parameter from getAngle()
 * FlxVirtualPad now extends FlxSpriteGroups and uses enums for the action and dpad-button-styles
 * Added collisionXDrag flag to FlxObject to allow turning off the default "move-with-horizontally-moving-platform"-behaviour
 * FlxSoundUtil has been removed
@@ -1022,11 +1056,11 @@
 * Code style change for keyword order, public/private first, see the [styleguide](http://haxeflixel.com/documentation/code-style/) for more info
 * Added getByID() to FlxG.touches
 * Added FlxG.swipes (contains all the FlxSwipe objects that are active this frame) to allow for better handling of touch inputs. A FlxSwipe has the following properties:
- * startPosition
- * endPosition
- * distance
- * angle
- * duration
+	* startPosition
+	* endPosition
+	* distance
+	* angle
+	* duration
 * All FlxPoints of FlxObject and FlxSprite are now (default, null) / read-only - this means you should now use .set(x, y) if you were previously new()-ing the point.
 * Asset embedding has been optimized to only embed sound / graphic assets when they are needed, as opposed to always including all of them.
 * Changed the way FlxTypedGroup.sort() works by adding flixel.util.FlxSort for increased performance
