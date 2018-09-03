@@ -23,7 +23,7 @@ abstract FlxAnalogState(Int) from Int
 
 class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMouseMotion
 {
-	private var button:FlxMouseButtonID;
+	var button:FlxMouseButtonID;
 	
 	/**
 	 * Mouse input -- same as FlxActionInputAnalogMouseMotion, but requires a particular mouse button to be PRESSED
@@ -65,12 +65,12 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 
 class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 {
-	private var lastX:Float = 0;
-	private var lastY:Float = 0;
-	private var pixelsPerUnit:Int;
-	private var deadZone:Float;
-	private var invertX:Bool;
-	private var invertY:Bool;
+	var lastX:Float = 0;
+	var lastY:Float = 0;
+	var pixelsPerUnit:Int;
+	var deadZone:Float;
+	var invertX:Bool;
+	var invertY:Bool;
 	
 	/**
 	 * Mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
@@ -99,7 +99,7 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		#end
 	}
 	
-	private function updateXYPosition(X:Float, Y:Float):Void
+	function updateXYPosition(X:Float, Y:Float):Void
 	{
 		var xDiff = X - lastX;
 		var yDiff = Y - lastY;
@@ -139,7 +139,7 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 		#end
 	}
 	
-	override private function updateVals(X:Float, Y:Float):Void
+	override function updateVals(X:Float, Y:Float):Void
 	{
 		if (X != x)
 		{
@@ -245,7 +245,7 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FlxInputDeviceID.FIRST_ACTIVE
 	 */
 	@:allow(flixel.input.actions.FlxActionSet)
-	private function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
+	function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, cast Trigger, Axis, DeviceID);
 		#if FLX_NO_STEAM
@@ -286,10 +286,10 @@ class FlxActionInputAnalog extends FlxActionInput
 	public var xMoved(default, null):FlxInput<Int>;
 	public var yMoved(default, null):FlxInput<Int>;
 	
-	private static inline var A_X = true;
-	private static inline var A_Y = false;
+	static inline var A_X = true;
+	static inline var A_Y = false;
 	
-	private function new (Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new (Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputType.ANALOG, Device, InputID, Trigger, DeviceID);
 		axis = Axis;
@@ -334,13 +334,13 @@ class FlxActionInputAnalog extends FlxActionInput
 		return returnVal;
 	}
 	
-	private function checkAxis(isX:Bool, state:FlxInputState):Bool
+	function checkAxis(isX:Bool, state:FlxInputState):Bool
 	{
 		var input = isX ? xMoved : yMoved;
 		return compareState(state, input.current);
 	}
 	
-	private function updateVals(X:Float, Y:Float):Void
+	function updateVals(X:Float, Y:Float):Void
 	{
 		if (X != 0)
 		{

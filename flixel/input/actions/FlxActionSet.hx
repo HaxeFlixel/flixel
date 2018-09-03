@@ -121,7 +121,7 @@ class FlxActionSet implements IFlxDestroyable
 	 * @return	An action set
 	 */
 	@:access(flixel.input.actions.FlxActionManager)
-	private static function fromJSON(Data:ActionSetJSON, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
+	static function fromJSON(Data:ActionSetJSON, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
 		var digitalActions:Array<FlxActionDigital> = [];
 		var analogActions:Array<FlxActionAnalog> = [];
@@ -277,7 +277,7 @@ class FlxActionSet implements IFlxDestroyable
 		}
 	}
 	
-	private function attachSteamControllerSub(Handle:Int, Attach:Bool, InputType:FlxInputType, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
+	function attachSteamControllerSub(Handle:Int, Attach:Bool, InputType:FlxInputType, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
 	{
 		var length = InputType == FlxInputType.DIGITAL ? DigitalActions.length : AnalogActions.length;
 		

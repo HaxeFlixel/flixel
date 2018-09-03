@@ -12,7 +12,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 
 class FlxActionInputDigital extends FlxActionInput
 {
-	private function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputType.DIGITAL, Device, InputID, Trigger, DeviceID);
 		inputID = InputID;
@@ -21,8 +21,8 @@ class FlxActionInputDigital extends FlxActionInput
 
 class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 {
-	private var input:FlxInput<Int>;
-	private var sign:Int = 0;
+	var input:FlxInput<Int>;
+	var sign:Int = 0;
 	
 	/**
 	 * Action for mouse wheel events
@@ -68,7 +68,7 @@ class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 
 class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 {
-	private var input:FlxInput<Int>;
+	var input:FlxInput<Int>;
 	
 	/**
 	 * Gamepad action input for digital (button-like) events
@@ -237,7 +237,7 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FIRST_ACTIVE
 	 */
 	@:allow(flixel.input.actions.FlxActionSet)
-	private function new(ActionHandle:Int, Trigger:FlxInputState, ?DeviceHandle:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new(ActionHandle:Int, Trigger:FlxInputState, ?DeviceHandle:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, Trigger, DeviceHandle);
 		#if FLX_STEAMWRAP
@@ -266,9 +266,9 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 			steamInput.release();
 	}
 	
-	private var steamInput:FlxInput<Int>;
+	var steamInput:FlxInput<Int>;
 	
-	private inline function getSteamControllerData(controllerHandle:Int):Bool
+	inline function getSteamControllerData(controllerHandle:Int):Bool
 	{
 		if (controllerHandle == FlxInputDeviceID.FIRST_ACTIVE)
 		{
@@ -319,6 +319,6 @@ class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 		input = null;
 	}
 	
-	private var input:IFlxInput;
+	var input:IFlxInput;
 	
 }

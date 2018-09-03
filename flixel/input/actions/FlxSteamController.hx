@@ -45,12 +45,12 @@ class FlxSteamController
 	 */
 	public static var ORIGIN_DATA_POLL_TIME(default, null):Float = 1.0;
 	
-	private static var controllers:Array<FlxSteamControllerMetadata>;
+	static var controllers:Array<FlxSteamControllerMetadata>;
 	
-	private static var onControllerConnect(default, null):Void->Void = null;
-	private static var onOriginUpdate(default, null):Void->Void = null;
+	static var onControllerConnect(default, null):Void->Void = null;
+	static var onOriginUpdate(default, null):Void->Void = null;
 	
-	private static inline function get_MAX_CONTROLLERS():Int
+	static inline function get_MAX_CONTROLLERS():Int
 	{
 		#if FLX_STEAMWRAP
 			if (Steam.controllers == null) return 0;
@@ -60,7 +60,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static inline function get_MAX_ORIGINS():Int
+	static inline function get_MAX_ORIGINS():Int
 	{
 		#if FLX_STEAMWRAP
 			if (Steam.controllers == null) return 0;
@@ -70,7 +70,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static function clear()
+	static function clear()
 	{
 		#if FLX_STEAMWRAP
 		if (controllers == null) return;
@@ -82,7 +82,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static function init()
+	static function init()
 	{
 		controllers = [];
 		#if FLX_STEAMWRAP
@@ -114,7 +114,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static function getActionSetHandle(name:String):Int
+	static function getActionSetHandle(name:String):Int
 	{
 		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
@@ -123,7 +123,7 @@ class FlxSteamController
 		return -1;
 	}
 	
-	private static function getCurrentActionSet(SteamControllerHandle:Int):Int
+	static function getCurrentActionSet(SteamControllerHandle:Int):Int
 	{
 		#if FLX_STEAMWRAP
 		if (controllers == null) return -1;
@@ -135,7 +135,7 @@ class FlxSteamController
 		return -1;
 	}
 	
-	private static function activateActionSet(SteamControllerHandle:Int, ActionSetHandle:Int)
+	static function activateActionSet(SteamControllerHandle:Int, ActionSetHandle:Int)
 	{
 		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return;
@@ -168,7 +168,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static function getFirstActiveHandle():Int
+	static function getFirstActiveHandle():Int
 	{
 		#if FLX_STEAMWRAP
 		if (controllers == null) return -1;
@@ -183,7 +183,7 @@ class FlxSteamController
 		return -1;
 	}
 	
-	private static function getConnectedControllers():Array<Int>
+	static function getConnectedControllers():Array<Int>
 	{
 		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return [];
@@ -215,7 +215,7 @@ class FlxSteamController
 	}
 	
 	#if FLX_STEAMWRAP
-	private static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
+	static function getAnalogActionData(controller:Int, action:Int, ?data:ControllerAnalogActionData):ControllerAnalogActionData
 	{
 		if (Steam.controllers == null) return data;
 		data = Steam.controllers.getAnalogActionData(controller, action, data);
@@ -229,7 +229,7 @@ class FlxSteamController
 		return data;
 	}
 	#else
-	private static function getAnalogActionData(controller:Int, action:Int, ?data:Dynamic):Dynamic
+	static function getAnalogActionData(controller:Int, action:Int, ?data:Dynamic):Dynamic
 	{
 		return null;
 	}
@@ -250,13 +250,13 @@ class FlxSteamController
 		return data;
 	}
 	#else
-	private static function getDigitalActionData(controller:Int, action:Int):DigitalActionData
+	static function getDigitalActionData(controller:Int, action:Int):DigitalActionData
 	{
 		return new DigitalActionData(false, false);
 	}
 	#end
 	
-	private static inline function getAnalogActionHandle(name:String):Int
+	static inline function getAnalogActionHandle(name:String):Int
 	{
 		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
@@ -266,7 +266,7 @@ class FlxSteamController
 		#end
 	}
 	
-	private static inline function getDigitalActionHandle(name:String):Int
+	static inline function getDigitalActionHandle(name:String):Int
 	{
 		#if FLX_STEAMWRAP
 		if (Steam.controllers == null) return -1;
@@ -297,23 +297,23 @@ class FlxSteamControllerMetadata
 	public var active:Bool = false;
 	public var connected:FlxInput<Int> = new FlxInput<Int>(0);
 	
-	private function new():Void{}
+	function new():Void{}
 }
 
 @:allow(flixel.input.actions)
 class FlxSteamUpdater implements IFlxInputManager
 {
-	private var controllerTime:Float = 0.0;
-	private var originTime:Float = 0.0;
+	var controllerTime:Float = 0.0;
+	var originTime:Float = 0.0;
 	
-	private function new(){};
+	function new(){};
 	
 	public function destroy():Void {}
 	
 	public function reset():Void {}
 	
 	//run the steam API every frame if steam is detected
-	private function update():Void
+	function update():Void
 	{
 		#if FLX_STEAMWRAP
 		Steam.onEnterFrame();
@@ -338,7 +338,7 @@ class FlxSteamUpdater implements IFlxInputManager
 		#end
 	}
 	
-	private function onFocus():Void {}
+	function onFocus():Void {}
 	
-	private function onFocusLost():Void {}
+	function onFocusLost():Void {}
 }

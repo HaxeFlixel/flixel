@@ -42,7 +42,7 @@ class FlxBaseGamepadList
 	
 	public var ALL(get, never):Bool;
 	
-	private function get_ALL():Bool
+	function get_ALL():Bool
 	{
 		for (button in gamepad.buttons)
 		{
@@ -57,7 +57,7 @@ class FlxBaseGamepadList
 	
 	public var NONE(get, never):Bool;
 	
-	private function get_NONE():Bool
+	function get_NONE():Bool
 	{
 		for (button in gamepad.buttons)
 		{
