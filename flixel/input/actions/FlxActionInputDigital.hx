@@ -140,6 +140,13 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 					}
 				}
 			}
+			else
+			{
+				if (deviceID == FlxInputDeviceID.FIRST_ACTIVE)
+				{
+					input.release();
+				}
+			}
 		}
 		#end
 	}
