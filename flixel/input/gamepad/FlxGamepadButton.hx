@@ -14,8 +14,6 @@ class FlxGamepadButton extends FlxInput<Int>
 	
 	override public function release():Void
 	{
-		trace("release(" + ID + ")");
-		
 		// simulate button onUp event which does not exist on flash
 		if (!_pressed)
 		{
@@ -28,8 +26,6 @@ class FlxGamepadButton extends FlxInput<Int>
 	
 	override public function press():Void
 	{
-		trace("press(" + ID + ")");
-		
 		// simulate button onDown event which does not exist on flash
 		if (_pressed)
 		{

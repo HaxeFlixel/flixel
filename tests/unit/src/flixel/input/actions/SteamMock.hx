@@ -103,9 +103,6 @@ class SteamMock
 		if (!inited) init();
 		
 		var key = controller + "_" + actionSet + "_" + action;
-		
-		trace("setDigitalActionOrigins() key = " + key);
-		
 		digitalOrigins.set(key, origins);
 	}
 	
