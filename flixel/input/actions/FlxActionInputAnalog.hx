@@ -42,7 +42,7 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 		button = ButtonID;
 	}
 	
-	override function updateVals(X:Float, Y:Float):Void 
+	override function updateValues(X:Float, Y:Float):Void 
 	{
 		var pass = false;
 		#if !FLX_NO_MOUSE
@@ -58,7 +58,7 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 			X = 0;
 			Y = 0;
 		}
-		super.updateVals(X, Y);
+		super.updateValues(X, Y);
 		
 	}
 }
@@ -116,7 +116,7 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		if (Math.abs(xDiff) < deadZone) xDiff = 0;
 		if (Math.abs(yDiff) < deadZone) yDiff = 0;
 		
-		updateVals(xDiff, yDiff);
+		updateValues(xDiff, yDiff);
 	}
 }
 
@@ -135,11 +135,11 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 	override public function update():Void 
 	{
 		#if !FLX_NO_MOUSE
-		updateVals(FlxG.mouse.x, FlxG.mouse.y);
+		updateValues(FlxG.mouse.x, FlxG.mouse.y);
 		#end
 	}
 	
-	override function updateVals(X:Float, Y:Float):Void
+	override function updateValues(X:Float, Y:Float):Void
 	{
 		if (X != x)
 		{
@@ -202,25 +202,25 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 			switch (inputID)
 			{
 				case FlxGamepadInputID.LEFT_ANALOG_STICK: 
-					updateVals(gamepad.analog.value.LEFT_STICK_X, gamepad.analog.value.LEFT_STICK_Y);
+					updateValues(gamepad.analog.value.LEFT_STICK_X, gamepad.analog.value.LEFT_STICK_Y);
 					
 				case FlxGamepadInputID.RIGHT_ANALOG_STICK:
-					updateVals(gamepad.analog.value.RIGHT_STICK_X, gamepad.analog.value.RIGHT_STICK_Y);
+					updateValues(gamepad.analog.value.RIGHT_STICK_X, gamepad.analog.value.RIGHT_STICK_Y);
 					
 				case FlxGamepadInputID.LEFT_TRIGGER:
-					updateVals(gamepad.analog.value.LEFT_TRIGGER, 0);
+					updateValues(gamepad.analog.value.LEFT_TRIGGER, 0);
 					
 				case FlxGamepadInputID.RIGHT_TRIGGER:
-					updateVals(gamepad.analog.value.RIGHT_TRIGGER, 0);
+					updateValues(gamepad.analog.value.RIGHT_TRIGGER, 0);
 					
 				case FlxGamepadInputID.POINTER_X:
-					updateVals(gamepad.analog.value.POINTER_X, 0);
+					updateValues(gamepad.analog.value.POINTER_X, 0);
 					
 				case FlxGamepadInputID.POINTER_Y:
-					updateVals(gamepad.analog.value.POINTER_Y, 0);
+					updateValues(gamepad.analog.value.POINTER_Y, 0);
 					
 				case FlxGamepadInputID.DPAD:
-					updateVals(
+					updateValues(
 						gamepad.pressed.DPAD_LEFT ? -1.0 : gamepad.pressed.DPAD_RIGHT ? 1.0 : 0.0, 
 						gamepad.pressed.DPAD_UP ? -1.0 : gamepad.pressed.DPAD_DOWN ? 1.0 : 0.0
 					);
@@ -229,7 +229,7 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 		}
 		else
 		{
-			updateVals(0, 0);
+			updateValues(0, 0);
 		}
 		#end
 	}
@@ -267,7 +267,7 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 		}
 		
 		analogActionData = FlxSteamController.getAnalogActionData(handle, inputID, analogActionData);
-		updateVals(analogActionData.x, analogActionData.y);
+		updateValues(analogActionData.x, analogActionData.y);
 		#end
 	}
 	
@@ -340,7 +340,7 @@ class FlxActionInputAnalog extends FlxActionInput
 		return compareState(state, input.current);
 	}
 	
-	function updateVals(X:Float, Y:Float):Void
+	function updateValues(X:Float, Y:Float):Void
 	{
 		if (X != 0)
 		{
