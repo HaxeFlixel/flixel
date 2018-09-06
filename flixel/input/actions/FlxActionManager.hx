@@ -374,44 +374,26 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	}
 	
 	/**
-	 * Remove an action from a particular action set
-	 * @param	Action		The FlxActionDigital you want to remove
-	 * @param	ActionSet	The index of the FlxActionSet you want to remove
-	 * @return	whether it was successfully removed
-	 */
-	public function removeDigitalAction(Action:FlxActionDigital, ActionSet:Int):Bool
-	{
-		return removeAction(Action, ActionSet, FlxInputType.DIGITAL);
-	}
-	
-	/**
 	 * Remove an action to a particular action set
-	 * @param	Action		The FlxActionAnalog you want to remove
+	 * @param	Action		The FlxAction you want to remove
 	 * @param	ActionSet	The index of the FlxActionSet you want to remove
 	 * @return	whether it was successfully removed
 	 */
-	public function removeAnalogAction(Action:FlxActionAnalog, ActionSet:Int):Bool
-	{
-		return removeAction(Action, ActionSet, FlxInputType.ANALOG);
-	}
-	
-	public function reset():Void {}
-	
-	function removeAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
+	public function removeAction(Action:FlxAction, ActionSet:Int):Bool
 	{
 		var success = false;
 		
 		if (ActionSet >= 0 && ActionSet < sets.length)
 		{
-			success = (type == FlxInputType.DIGITAL) ? 
-						sets[ActionSet].removeDigital(cast Action) :
-						sets[ActionSet].removeAnalog (cast Action);
+			success = sets[ActionSet].remove(Action);
 		}
 		
 		onChange();
 		
 		return success;
 	}
+	
+	public function reset():Void {}
 	
 	function get_numSets():Int
 	{

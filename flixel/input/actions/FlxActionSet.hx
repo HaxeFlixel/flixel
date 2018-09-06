@@ -227,33 +227,29 @@ class FlxActionSet implements IFlxDestroyable
 	}
 	
 	/**
-	 * Remove a digital action from this set
-	 * @param	Action a FlxActionDigital
+	 * Remove an action from this set
+	 * @param	Action a FlxAction
 	 * @param	Destroy whether to destroy it as well
 	 * @return	whether it was found and removed
 	 */
-	public function removeDigital(Action:FlxActionDigital, Destroy:Bool = true):Bool
+	public function remove(Action:FlxAction, Destroy:Bool = true):Bool
 	{
-		var result = digitalActions.remove(Action);
-		if (result && Destroy)
+		var result = false;
+		if(Action.type == DIGITAL)
 		{
-			Action.destroy();
+			result = digitalActions.remove(cast Action);
+			if (result && Destroy)
+			{
+				Action.destroy();
+			}
 		}
-		return result;
-	}
-	
-	/**
-	 * Remove an analog action from this set
-	 * @param	Action a FlxActionAnalog
-	 * @param	Destroy whether to destroy it as well
-	 * @return	whether it was found and removed
-	 */
-	public function removeAnalog(Action:FlxActionAnalog, Destroy:Bool = true):Bool
-	{
-		var result = analogActions.remove(Action);
-		if (result && Destroy)
+		else if (Action.type == ANALOG)
 		{
-			Action.destroy();
+			result = analogActions.remove(cast Action);
+			if (result && Destroy)
+			{
+				Action.destroy();
+			}
 		}
 		return result;
 	}

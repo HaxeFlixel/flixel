@@ -154,15 +154,15 @@ class FlxActionSetTest extends FlxTest
 		var d1 = new FlxActionDigital("d1");
 		var d2 = new FlxActionDigital("d2");
 		
-		set.addDigital(d1);
+		set.add(d1);
 		Assert.isTrue(set.digitalActions.length == 1);
-		set.addDigital(d2);
+		set.add(d2);
 		Assert.isTrue(set.digitalActions.length == 2);
 		
-		set.removeDigital(d1);
+		set.remove(d1);
 		Assert.isTrue(set.digitalActions.length == 1);
 		Assert.isTrue(set.digitalActions[0] == d2);
-		set.removeDigital(d2);
+		set.remove(d2);
 		Assert.isTrue(set.digitalActions.length == 0);
 	}
 	
@@ -176,15 +176,15 @@ class FlxActionSetTest extends FlxTest
 		var a1 = new FlxActionAnalog("a1");
 		var a2 = new FlxActionAnalog("a2");
 		
-		set.addAnalog(a1);
+		set.add(a1);
 		Assert.isTrue(set.analogActions.length == 1);
-		set.addAnalog(a2);
+		set.add(a2);
 		Assert.isTrue(set.analogActions.length == 2);
 		
-		set.removeAnalog(a1);
+		set.remove(a1);
 		Assert.isTrue(set.analogActions.length == 1);
 		Assert.isTrue(set.analogActions[0] == a2);
-		set.removeAnalog(a2);
+		set.remove(a2);
 		Assert.isTrue(set.analogActions.length == 0);
 	}
 	

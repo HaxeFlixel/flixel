@@ -863,16 +863,16 @@ class FlxActionManagerTest extends FlxTest
 			
 			//Test add & remove digital actions
 			var extraDigital = new FlxActionDigital("extra");
-			var result = manager.addDigitalAction(extraDigital, setIndex);
+			var result = manager.addAction(extraDigital, setIndex);
 			test.testBool(result && setObject.digitalActions.indexOf(extraDigital) != -1, "digital.extra.add");
-			result = manager.removeDigitalAction(extraDigital, setIndex);
+			result = manager.removeAction(extraDigital, setIndex);
 			test.testBool(result && setObject.digitalActions.indexOf(extraDigital) == -1, "digital.extra.remove");
 			
 			//Test add & remove analog actions
 			var extraAnalog = new FlxActionAnalog("extra");
-			var result = manager.addAnalogAction(extraAnalog, setIndex);
+			var result = manager.addAction(extraAnalog, setIndex);
 			test.testBool(result && setObject.analogActions.indexOf(extraAnalog) != -1, "analog.extra.add");
-			result = manager.removeAnalogAction(extraAnalog, setIndex);
+			result = manager.removeAction(extraAnalog, setIndex);
 			test.testBool(result && setObject.analogActions.indexOf(extraAnalog) == -1, "analog.extra.remove");
 		}
 	}
