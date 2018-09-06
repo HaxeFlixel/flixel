@@ -896,7 +896,7 @@ class FlxActionManagerTest extends FlxTest
 			//Test activating action sets for a device
 			manager.deactivateSet(setIndex);
 			var dset = manager.getSetActivatedForDevice(device);
-			manager.activateSet(setIndex, device);
+			manager.activateSet(setIndex, device, FlxInputDeviceID.ALL);
 			var activatedSet = manager.getSetActivatedForDevice(device);
 			
 			//Test set is activated after we activate it for a specific device

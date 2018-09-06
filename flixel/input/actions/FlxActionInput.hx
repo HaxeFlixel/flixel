@@ -82,18 +82,18 @@ enum FlxInputType
 	ANALOG;
 }
 
-@:enum abstract FlxInputDevice(Int)
+enum FlxInputDevice
 {
-	var UNKNOWN = 0;
-	var MOUSE = 1;
-	var MOUSE_WHEEL = 2;
-	var KEYBOARD = 3;
-	var GAMEPAD = 4;
-	var STEAM_CONTROLLER = 5;
-	var IFLXINPUT_OBJECT = 6;
-	var OTHER = 7;
-	var ALL = 8;
-	var NONE = 9;
+	UNKNOWN;
+	MOUSE;
+	MOUSE_WHEEL;
+	KEYBOARD;
+	GAMEPAD;
+	STEAM_CONTROLLER;
+	IFLXINPUT_OBJECT;
+	OTHER;
+	ALL;
+	NONE;
 }
 
 /**

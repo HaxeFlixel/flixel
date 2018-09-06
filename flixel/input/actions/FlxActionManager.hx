@@ -85,7 +85,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	Device		The device type (Mouse, Keyboard, Gamepad, SteamController, etc)
 	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
 	 */
-	public function activateSet(ActionSet:Int, Device:FlxInputDevice = FlxInputDevice.ALL, DeviceID:Int = FlxInputDeviceID.ALL)
+	public function activateSet(ActionSet:Int, Device:FlxInputDevice, DeviceID:Int)
 	{
 		register.activate(ActionSet, Device, DeviceID);
 		onChange();
@@ -122,7 +122,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		if (sets.length == 0)
 		{
 			sets.push(new FlxActionSet("default"));
-			activateSet(getSetIndex("default"));
+			activateSet(getSetIndex("default"), FlxInputDevice.ALL, FlxInputDeviceID.ALL);
 		}
 
 		if (ActionSet >= 0 && ActionSet < sets.length)
