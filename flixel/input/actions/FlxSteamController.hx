@@ -277,7 +277,7 @@ class FlxSteamController
 	}
 }
 
-class DigitalActionData
+private class DigitalActionData
 {
 	public var bActive:Bool;
 	public var bState:Bool;
@@ -290,7 +290,7 @@ class DigitalActionData
 }
 
 @:allow(flixel.input.actions)
-class FlxSteamControllerMetadata
+private class FlxSteamControllerMetadata
 {
 	public var handle:Int = -1;
 	public var actionSet:Int = -1;
@@ -301,7 +301,7 @@ class FlxSteamControllerMetadata
 }
 
 @:allow(flixel.input.actions)
-class FlxSteamUpdater implements IFlxInputManager
+private class FlxSteamUpdater implements IFlxInputManager
 {
 	var controllerTime:Float = 0.0;
 	var originTime:Float = 0.0;

@@ -51,8 +51,6 @@ class FlxActionInput implements IFlxDestroyable
 	
 	/**
 	 * Check whether this action has just been triggered
-	 * @param	action
-	 * @return
 	 */
 	public function check(action:FlxAction):Bool
 	{
@@ -63,8 +61,6 @@ class FlxActionInput implements IFlxDestroyable
 	 * Check whether `state` fulfills `condition`. Note: order of operations is
 	 * important here. `compareState(JUST_PRESSED, PRESSED) == false`, while
 	 * `compareState(PRESSED, JUST_PRESSED) == true`.
-	 * @param condition
-	 * @param state
 	 * @return Whether or not the condition is satisfied by state.
 	 */
 	inline function compareState(condition:FlxInputState, state:FlxInputState):Bool

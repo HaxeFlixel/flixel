@@ -17,7 +17,6 @@ using flixel.util.FlxArrayUtil;
  */
 class FlxActionDigital extends FlxAction
 {
-	
 	/**
 	 * Function to call when this action occurs
 	 */
@@ -36,8 +35,6 @@ class FlxActionDigital extends FlxAction
 	
 	/**
 	 * Add a digital input that will trigger this action
-	 * @param	input
-	 * @return
 	 */
 	public function addInput(input:FlxActionInputDigital):FlxActionDigital
 	{
@@ -100,8 +97,6 @@ class FlxActionAnalog extends FlxAction
 	
 	/**
 	 * Add an analog input that will trigger this action
-	 * @param	input
-	 * @return
 	 */
 	public function addInput(input:FlxActionInputAnalog):FlxActionAnalog
 	{
@@ -268,7 +263,6 @@ class FlxAction implements IFlxDestroyable
 	
 	/**
 	 * See if this action has just been triggered
-	 * @return
 	 */
 	public function check():Bool
 	{

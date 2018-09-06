@@ -237,6 +237,8 @@ class FlxActionInputDigitalMouse extends FlxActionInputDigital
 
 class FlxActionInputDigitalSteam extends FlxActionInputDigital
 {
+	var steamInput:FlxInput<Int>;
+
 	/**
 	 * Steam Controller action input for digital (button-like) events
 	 * @param	ActionHandle handle received from FlxSteamController.getDigitalActionHandle()
@@ -273,8 +275,6 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 			steamInput.release();
 	}
 	
-	var steamInput:FlxInput<Int>;
-	
 	inline function getSteamControllerData(controllerHandle:Int):Bool
 	{
 		if (controllerHandle == FlxInputDeviceID.FIRST_ACTIVE)
@@ -290,6 +290,8 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 
 class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 {
+	var input:IFlxInput;
+
 	/**
 	 * Generic IFlxInput action input
 	 *
@@ -325,7 +327,4 @@ class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 		super.destroy();
 		input = null;
 	}
-	
-	var input:IFlxInput;
-	
 }

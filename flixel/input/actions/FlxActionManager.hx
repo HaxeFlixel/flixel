@@ -189,9 +189,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	
 	/**
 	 * Returns the action set that has been activated for this specific device
-	 * @param	device
-	 * @param	deviceID
-	 * @return
 	 */
 	@:access(flixel.input.actions.FlxActionManager.ActionSetRegister)
 	public function getSetActivatedForDevice(device:FlxInputDevice, deviceID:Int = FlxInputDeviceID.ALL):FlxActionSet
@@ -420,15 +417,9 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		register.markActiveSets(sets);
 	}
 	
-	function onFocus():Void
-	{
-		//
-	}
+	function onFocus():Void {}
 	
-	function onFocusLost():Void
-	{
-		//
-	}
+	function onFocusLost():Void {}
 	
 	function onDeviceConnected(gamepad:FlxGamepad)
 	{
@@ -598,9 +589,7 @@ class ActionSetRegister implements IFlxDestroyable
 	public function updateSteam(sets:Array<FlxActionSet>)
 	{
 		#if FLX_STEAMWRAP
-		
 		//Steam explicitly recommend in their documentation that you should re-activate the current action set every frame
-		
 		if (steamControllerAllSet != -1)
 		{
 			var allSet = sets[steamControllerAllSet];
@@ -619,7 +608,6 @@ class ActionSetRegister implements IFlxDestroyable
 				}
 			}
 		}
-		
 		#end
 	}
 	
