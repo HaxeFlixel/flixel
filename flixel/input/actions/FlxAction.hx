@@ -173,7 +173,7 @@ class FlxActionAnalog extends FlxAction
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(Name:String, ?Callback:FlxActionAnalog->Void)
+	public function new(?Name:String="", ?Callback:FlxActionAnalog->Void)
 	{
 		super(FlxInputType.ANALOG, Name);
 		callback = Callback;
