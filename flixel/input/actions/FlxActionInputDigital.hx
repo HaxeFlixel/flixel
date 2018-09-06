@@ -76,7 +76,7 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.ALL / FIRST_ACTIVE
 	 */
-	public function new(InputID:FlxGamepadInputID, Trigger:FlxInputState, ?GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	public function new(InputID:FlxGamepadInputID, Trigger:FlxInputState, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
 		super(FlxInputDevice.GAMEPAD, InputID, Trigger, GamepadID);
 		input = new FlxInput<Int>(InputID);

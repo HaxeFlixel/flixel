@@ -398,10 +398,10 @@ class FlxActionInputAnalogTest extends FlxTest
 			aStopped = new FlxActionAnalog("stopped", getCallback(3));
 		}
 		
-		ajMoved.addInput(jMoved);
-		aMoved.addInput(moved);
-		ajStopped.addInput(jStopped);
-		aStopped.addInput(stopped);
+		ajMoved.add(jMoved);
+		aMoved.add(moved);
+		ajStopped.add(jStopped);
+		aStopped.add(stopped);
 		
 		var arr = [aMoved, ajMoved, aStopped, ajStopped];
 		

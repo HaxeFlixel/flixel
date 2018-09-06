@@ -200,14 +200,14 @@ class FlxActionSetTest extends FlxTest
 		for (i in 0...set.digitalActions.length)
 		{
 			var action:FlxActionDigital = set.digitalActions[i];
-			action.addInput(new FlxActionInputDigitalKeyboard(keys[i], FlxInputState.JUST_PRESSED));
+			action.addKey(keys[i], FlxInputState.JUST_PRESSED);
 			action.callback = function(a:FlxActionDigital)
 			{
 				onCallback(a.name);
 			};
 		}
 		
-		set.analogActions[0].addInput(new FlxActionInputAnalogMouseMotion(MOVED));
+		set.analogActions[0].addMouseMotion(MOVED);
 		set.analogActions[0].callback = function(a:FlxActionAnalog)
 		{
 			onCallback(a.name);

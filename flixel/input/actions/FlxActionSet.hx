@@ -311,18 +311,18 @@ class FlxActionSet implements IFlxDestroyable
 					{
 						if (InputType == FlxInputType.DIGITAL)
 						{
-							DigitalActions[i].addInput(new FlxActionInputDigitalSteam(action.steamHandle, FlxInputState.JUST_PRESSED, Handle));
+							DigitalActions[i].add(new FlxActionInputDigitalSteam(action.steamHandle, FlxInputState.JUST_PRESSED, Handle));
 						}
 						else if (InputType == FlxInputType.ANALOG)
 						{
-							AnalogActions[i].addInput(new FlxActionInputAnalogSteam(action.steamHandle, FlxAnalogState.MOVED, FlxAnalogAxis.EITHER, Handle));
+							AnalogActions[i].add(new FlxActionInputAnalogSteam(action.steamHandle, FlxAnalogState.MOVED, FlxAnalogAxis.EITHER, Handle));
 						}
 					}
 				}
 				else if (inputExists)
 				{
 					//detaching: remove inputs for this controller if they exist
-					action.removeInput(theInput);
+					action.remove(theInput);
 				}
 			}
 		}

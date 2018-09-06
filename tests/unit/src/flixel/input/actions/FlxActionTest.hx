@@ -37,26 +37,26 @@ class FlxActionTest extends FlxTest
 		
 		aInput = new FlxActionInputAnalogMousePosition(FlxAnalogState.MOVED, FlxAnalogAxis.EITHER);
 		
-		digital.addInput(dInput);
-		analog.addInput(aInput);
+		digital.add(dInput);
+		analog.add(aInput);
 	}
 	
 	@Test
 	function testAddRemoveInputs()
 	{
 		var oldInputs = digital.inputs.copy();
-		digital.removeAllInputs(false);
+		digital.removeAll(false);
 		
 		var input1 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
 		var input2 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
 		var input3 = new FlxActionInputDigitalIFlxInput(null, FlxInputState.PRESSED);
-		digital.addInput(input1);
-		digital.addInput(input2);
-		digital.addInput(input3);
+		digital.add(input1);
+		digital.add(input2);
+		digital.add(input3);
 		
 		Assert.isTrue(digital.inputs.length == 3);
 		
-		digital.removeInput(input1, false);
+		digital.remove(input1, false);
 		
 		Assert.isTrue(digital.inputs.length == 2);
 		Assert.isFalse(input1.destroyed);
@@ -66,7 +66,7 @@ class FlxActionTest extends FlxTest
 		Assert.isTrue(input1.destroyed);
 		Assert.isTrue(digital.inputs[0] == input2);
 		
-		digital.removeAllInputs(true);
+		digital.removeAll(true);
 		
 		Assert.isTrue(digital.inputs.length == 0);
 		Assert.isTrue(input2.destroyed);
@@ -87,13 +87,13 @@ class FlxActionTest extends FlxTest
 				value++;
 			}
 		);
-		d.addInput(dInput);
+		d.add(dInput);
 		pulseDigital();
 		d.check();
 		
 		Assert.isTrue(value == 1);
 		
-		d.removeAllInputs(false);
+		d.removeAll(false);
 		d.destroy();
 		
 		//digital w/o callback
@@ -101,13 +101,13 @@ class FlxActionTest extends FlxTest
 		value = 0;
 		
 		var d2:FlxActionDigital = new FlxActionDigital("dNoCallback", null);
-		d2.addInput(dInput);
+		d2.add(dInput);
 		pulseDigital();
 		digital.check();
 		
 		Assert.isTrue(value == 0);
 		
-		d2.removeAllInputs(false);
+		d2.removeAll(false);
 		d2.destroy();
 		
 		//analog w/ callback
@@ -119,13 +119,13 @@ class FlxActionTest extends FlxTest
 				value++;
 			}
 		);
-		a.addInput(aInput);
+		a.add(aInput);
 		pulseAnalog(a);
 		var result = analog.check();
 		
 		Assert.isTrue(value == 1);
 		
-		a.removeAllInputs(false);
+		a.removeAll(false);
 		a.destroy();
 		
 		//analog w/o callback
@@ -133,13 +133,13 @@ class FlxActionTest extends FlxTest
 		value = 0;
 		
 		var a2:FlxActionAnalog = new FlxActionAnalog("aNoCallback", null);
-		a2.addInput(aInput);
+		a2.add(aInput);
 		pulseAnalog(a2);
 		analog.check();
 		
 		Assert.isTrue(value == 0);
 		
-		a2.removeAllInputs(false);
+		a2.removeAll(false);
 		a2.destroy();
 	}
 	
@@ -199,8 +199,8 @@ class FlxActionTest extends FlxTest
 		var oldInputsD = digital.inputs.copy();
 		var oldInputsA = analog.inputs.copy();
 		
-		digital.removeAllInputs(false);
-		analog.removeAllInputs(false);
+		digital.removeAll(false);
+		analog.removeAll(false);
 		
 		pulseDigital();
 		

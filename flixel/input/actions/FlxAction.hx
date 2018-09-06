@@ -1,8 +1,27 @@
 package flixel.input.actions;
 
+import flixel.input.FlxInput.FlxInputState;
+import flixel.input.IFlxInput;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.actions.FlxActionInput.FlxInputType;
+import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
+import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogGamepad;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
+import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMousePosition;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalIFlxInput;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+
 #if FLX_STEAMWRAP
 import steamwrap.api.Controller.EControllerActionOrigin;
 #end
@@ -27,19 +46,84 @@ class FlxActionDigital extends FlxAction
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(Name:String, ?Callback:FlxActionDigital->Void)
+	public function new(?Name:String="", ?Callback:FlxActionDigital->Void)
 	{
 		super(FlxInputType.DIGITAL, Name);
 		callback = Callback;
 	}
 	
 	/**
-	 * Add a digital input that will trigger this action
+	 * Add a digital input (any kind) that will trigger this action
+	 * @param	input
+	 * @return	This action
 	 */
-	public function addInput(input:FlxActionInputDigital):FlxActionDigital
+	public function add(input:FlxActionInputDigital):FlxActionDigital
 	{
 		addGenericInput(input);
 		return this;
+	}
+
+	/**
+	 * Add a generic IFlxInput action input
+	 *
+	 * WARNING: IFlxInput objects are often member variables of some other
+	 * object that is often destructed at the end of a state. If you don't
+	 * destroy() this input (or the action you assign it to), the IFlxInput
+	 * reference will persist forever even after its parent object has been
+	 * destroyed!
+	 * 
+	 * @param	Input	A generic IFlxInput object (ex: FlxButton.input)
+	 * @param	Trigger	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 */
+	public function addInput(Input:IFlxInput, Trigger:FlxInputState):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalIFlxInput(Input, Trigger));
+	}
+
+	/**
+	 * Add a gamepad action input for digital (button-like) events
+	 * @param	InputID "universal" gamepad input ID (A, X, DPAD_LEFT, etc)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.ALL / FIRST_ACTIVE
+	 * @return	This action
+	 */
+	public function addGamepad(InputID:FlxGamepadInputID, Trigger:FlxInputState, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalGamepad(InputID, Trigger, GamepadID));
+	}
+
+	/**
+	 * Add a keyboard action input
+	 * @param	Key Key identifier (FlxKey.SPACE, FlxKey.Z, etc)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 */
+	public function addKey(Key:FlxKey, Trigger:FlxInputState):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalKeyboard(Key, Trigger));
+	}
+
+	/**
+	 * Mouse button action input
+	 * @param	ButtonID Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 */
+	public function addMouse(ButtonID:FlxMouseButtonID, Trigger:FlxInputState):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalMouse(ButtonID, Trigger));
+	}
+
+	/**
+	 * Action for mouse wheel events
+	 * @param	Positive	True: respond to mouse wheel values > 0; False: respond to mouse wheel values < 0
+	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 */
+	public function addMouseWheel(Positive:Bool, Trigger:FlxInputState):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalMouseWheel(Positive, Trigger));
 	}
 	
 	override public function destroy():Void 
@@ -98,10 +182,66 @@ class FlxActionAnalog extends FlxAction
 	/**
 	 * Add an analog input that will trigger this action
 	 */
-	public function addInput(input:FlxActionInputAnalog):FlxActionAnalog
+	public function add(input:FlxActionInputAnalog):FlxActionAnalog
 	{
 		addGenericInput(input);
 		return this;
+	}
+
+	/**
+	 * Add mouse input -- same as mouse motion, but requires a particular mouse button to be PRESSED
+	 * Very useful for e.g. panning a map or canvas around
+	 * @param	ButtonID	Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
+	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
+	 * @param	DeadZone	Minimum analog value before motion will be reported
+	 * @param	InvertY	Invert the Y axis
+	 * @param	InvertX	Invert the X axis
+	 * @return	This action
+	 */
+	public function addMouseClickAndDragMotion(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = FlxAnalogAxis.EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false):FlxActionAnalog
+	{
+		return add(new FlxActionInputAnalogClickAndDragMouseMotion(ButtonID, Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX));
+	}
+
+	/**
+	 * Add mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
+	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
+	 * @param	DeadZone	Minimum analog value before motion will be reported
+	 * @param	InvertY	Invert the Y axis
+	 * @param	InvertX	Invert the X axis
+	 * @return	This action
+	 */
+	public function addMouseMotion(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false):FlxActionAnalog
+	{
+		return add(new FlxActionInputAnalogMouseMotion(Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX));
+	}
+
+	/**
+	 * Add mouse input -- X/Y is the mouse's absolute screen position
+	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @return	This action
+	 */
+	public function addMousePosition(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER):FlxActionAnalog
+	{
+		return add(new FlxActionInputAnalogMousePosition(Trigger, Axis));
+	}
+
+	/**
+	 * Add gamepad action input for analog (trigger, joystick, touchpad, etc) events
+	 * @param	InputID "universal" gamepad input ID (LEFT_TRIGGER, RIGHT_ANALOG_STICK, TILT_PITCH, etc)
+	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
+	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.FIRST_ACTIVE / ALL
+	 * @return	This action
+	 */
+	public function addGamepad(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE):FlxActionAnalog
+	{
+		return add(new FlxActionInputAnalogGamepad(InputID, Trigger, Axis, GamepadID));
 	}
 	
 	override public function update():Void 
@@ -234,19 +374,19 @@ class FlxAction implements IFlxDestroyable
 		return origins;
 	}
 	
-	public function removeAllInputs(Destroy:Bool = true):Void
+	public function removeAll(Destroy:Bool = true):Void
 	{
 		var len = inputs.length;
 		for (i in 0...len)
 		{
 			var j = len - i - 1;
 			var input = inputs[j];
-			removeInput(input, Destroy);
+			remove(input, Destroy);
 			inputs.splice(j, 1);
 		}
 	}
 	
-	public function removeInput(Input:FlxActionInput, Destroy:Bool = false):Void
+	public function remove(Input:FlxActionInput, Destroy:Bool = false):Void
 	{
 		if (Input == null) return;
 		inputs.remove(Input);

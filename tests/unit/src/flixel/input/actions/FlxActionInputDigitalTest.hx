@@ -659,10 +659,10 @@ class FlxActionInputDigitalTest extends FlxTest
 			aReleased = new FlxActionDigital("released", getCallback(3));
 		}
 		
-		ajPressed.addInput(jPressed);
-		aPressed.addInput(pressed);
-		ajReleased.addInput(jReleased);
-		aReleased.addInput(released);
+		ajPressed.add(jPressed);
+		aPressed.add(pressed);
+		ajReleased.add(jReleased);
+		aReleased.add(released);
 		
 		var arr = [aPressed, ajPressed, aReleased, ajReleased];
 		
