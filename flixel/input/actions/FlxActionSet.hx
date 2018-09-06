@@ -3,7 +3,6 @@ package flixel.input.actions;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
-import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogSteam;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
@@ -235,7 +234,7 @@ class FlxActionSet implements IFlxDestroyable
 	public function remove(Action:FlxAction, Destroy:Bool = true):Bool
 	{
 		var result = false;
-		if(Action.type == DIGITAL)
+		if (Action.type == DIGITAL)
 		{
 			result = digitalActions.remove(cast Action);
 			if (result && Destroy)
