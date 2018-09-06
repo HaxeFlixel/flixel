@@ -180,9 +180,11 @@ class FlxActionSet implements IFlxDestroyable
 		, space);
 	}
 	
-	public function new(Name:String, DigitalActions:Array<FlxActionDigital>, AnalogActions:Array<FlxActionAnalog>)
+	public function new(Name:String, ?DigitalActions:Array<FlxActionDigital>, ?AnalogActions:Array<FlxActionAnalog>)
 	{
 		name = Name;
+		if(DigitalActions == null) DigitalActions = [];
+		if(AnalogActions == null) AnalogActions = [];
 		digitalActions = DigitalActions;
 		analogActions = AnalogActions;
 	}
@@ -199,28 +201,23 @@ class FlxActionSet implements IFlxDestroyable
 		attachSteamControllerSub(Handle, Attach, FlxInputType.ANALOG, null, analogActions);
 	}
 	
-	/**
-	 * Add a digital action to this set if it doesn't already exist
-	 * @param	Action a FlxActionDigital
-	 * @return	whether it was added
-	 */
-	public function addDigital(Action:FlxActionDigital):Bool
+	public function add(Action:FlxAction):Bool
 	{
-		if (digitalActions.contains(Action)) return false;
-		digitalActions.push(Action);
-		return true;
-	}
-	
-	/**
-	 * Add an analog action to this set if it doesn't already exist
-	 * @param	Action a FlxActionAnalog
-	 * @return	whether it was added
-	 */
-	public function addAnalog(Action:FlxActionAnalog):Bool
-	{
-		if (analogActions.contains(Action)) return false;
-		analogActions.push(Action);
-		return true;
+		if(Action.type == DIGITAL)
+		{
+			var dAction:FlxActionDigital = cast Action;
+			if (digitalActions.contains(dAction)) return false;
+			digitalActions.push(dAction);
+			return true;
+		}
+		else if(Action.type == ANALOG)
+		{
+			var aAction:FlxActionAnalog = cast Action;
+			if (analogActions.contains(aAction)) return false;
+			analogActions.push(aAction);
+			return true;
+		}
+		return false;
 	}
 	
 	public function destroy():Void

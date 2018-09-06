@@ -85,34 +85,56 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	Device		The device type (Mouse, Keyboard, Gamepad, SteamController, etc)
 	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
 	 */
-	public function activateSet(ActionSet:Int, Device:FlxInputDevice, ?DeviceID:Int = FlxInputDeviceID.ALL)
+	public function activateSet(ActionSet:Int, Device:FlxInputDevice = FlxInputDevice.ALL, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		register.activate(ActionSet, Device, DeviceID);
 		onChange();
 	}
 	
 	/**
-	 * Add an action to a particular action set
-	 * @param	Action		The FlxActionDigital you want to add
+	 * Add actions to a particular action set
+	 * @param	Actions		The FlxActions you want to add
 	 * @param	ActionSet	The index of the FlxActionSet you want to add
-	 * @return	whether it was successfully added
+	 * @return	whether they were all successfully added
 	 */
-	public function addDigitalAction(Action:FlxActionDigital, ActionSet:Int):Bool
+	public function addActions(Actions:Array<FlxAction>,ActionSet:Int=0):Bool
 	{
-		return addAction(Action, ActionSet, FlxInputType.DIGITAL);
+		var success = true;
+		for(Action in Actions)
+		{
+			var result = addAction(Action);
+			if(!result) success = false;
+		}
+		return success;
 	}
-	
+
 	/**
 	 * Add an action to a particular action set
-	 * @param	Action		The FlxActionAnalog you want to add
+	 * @param	Action		The FlxAction you want to add
 	 * @param	ActionSet	The index of the FlxActionSet you want to add
 	 * @return	whether it was successfully added
 	 */
-	public function addAnalogAction(Action:FlxActionAnalog, ActionSet:Int):Bool
+	public function addAction(Action:FlxAction, ActionSet:Int=0):Bool
 	{
-		return addAction(Action, ActionSet, FlxInputType.ANALOG);
+		var success = false;
+		
+		if(sets == null) sets = [];
+		if(sets.length == 0)
+		{
+			sets.push(new FlxActionSet("default"));
+			activateSet(getSetIndex("default"));
+		}
+
+		if (ActionSet >= 0 && ActionSet < sets.length)
+		{
+			success = sets[ActionSet].add(Action);
+		}
+		
+		onChange();
+		
+		return success;
 	}
-	
+
 	/**
 	 * Add a FlxActionSet to the manager
 	 * @param	set	The FlxActionSet you want to add
@@ -137,7 +159,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	ActionSet	The integer ID for the Action Set you want to deactivate
 	 * @param	DeviceID	FlxGamepad ID or a Steam Controller Handle (ignored for Mouse/Keyboard)
 	 */
-	public function deactivateSet(ActionSet:Int, ?DeviceID:Int = FlxInputDeviceID.ALL)
+	public function deactivateSet(ActionSet:Int, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		register.activate(ActionSet, FlxInputDevice.NONE, DeviceID);
 		onChange();
@@ -374,22 +396,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	}
 	
 	public function reset():Void {}
-	
-	function addAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
-	{
-		var success = false;
-		
-		if (ActionSet >= 0 && ActionSet < sets.length)
-		{
-			success = (type == FlxInputType.DIGITAL) ? 
-						sets[ActionSet].addDigital(cast Action) :
-						sets[ActionSet].addAnalog (cast Action);
-		}
-		
-		onChange();
-		
-		return success;
-	}
 	
 	function removeAction(Action:FlxAction, ActionSet:Int, type:FlxInputType):Bool
 	{
