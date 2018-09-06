@@ -183,8 +183,8 @@ class FlxActionSet implements IFlxDestroyable
 	public function new(Name:String, ?DigitalActions:Array<FlxActionDigital>, ?AnalogActions:Array<FlxActionAnalog>)
 	{
 		name = Name;
-		if(DigitalActions == null) DigitalActions = [];
-		if(AnalogActions == null) AnalogActions = [];
+		if (DigitalActions == null) DigitalActions = [];
+		if (AnalogActions == null) AnalogActions = [];
 		digitalActions = DigitalActions;
 		analogActions = AnalogActions;
 	}
@@ -203,14 +203,14 @@ class FlxActionSet implements IFlxDestroyable
 	
 	public function add(Action:FlxAction):Bool
 	{
-		if(Action.type == DIGITAL)
+		if (Action.type == DIGITAL)
 		{
 			var dAction:FlxActionDigital = cast Action;
 			if (digitalActions.contains(dAction)) return false;
 			digitalActions.push(dAction);
 			return true;
 		}
-		else if(Action.type == ANALOG)
+		else if (Action.type == ANALOG)
 		{
 			var aAction:FlxActionAnalog = cast Action;
 			if (analogActions.contains(aAction)) return false;

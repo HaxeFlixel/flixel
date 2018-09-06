@@ -97,13 +97,13 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	ActionSet	The index of the FlxActionSet you want to add
 	 * @return	whether they were all successfully added
 	 */
-	public function addActions(Actions:Array<FlxAction>,ActionSet:Int=0):Bool
+	public function addActions(Actions:Array<FlxAction>, ActionSet:Int = 0):Bool
 	{
 		var success = true;
-		for(Action in Actions)
+		for (Action in Actions)
 		{
 			var result = addAction(Action);
-			if(!result) success = false;
+			if (!result) success = false;
 		}
 		return success;
 	}
@@ -114,12 +114,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 * @param	ActionSet	The index of the FlxActionSet you want to add
 	 * @return	whether it was successfully added
 	 */
-	public function addAction(Action:FlxAction, ActionSet:Int=0):Bool
+	public function addAction(Action:FlxAction, ActionSet:Int = 0):Bool
 	{
 		var success = false;
 		
-		if(sets == null) sets = [];
-		if(sets.length == 0)
+		if (sets == null) sets = [];
+		if (sets.length == 0)
 		{
 			sets.push(new FlxActionSet("default"));
 			activateSet(getSetIndex("default"));
