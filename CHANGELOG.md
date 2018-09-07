@@ -1,3 +1,9 @@
+2.7.0 (to be released)
+------------------------------
+* Compatibility with flixel 4.6.0
+* Added a new `FlxAction` demo (#268)
+* Updated Mode to use `FlxAction` for the player controls
+
 2.6.1 (August 10, 2018)
 ------------------------------
 * Compatibility with flixel 4.5.0
