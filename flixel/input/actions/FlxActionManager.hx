@@ -43,6 +43,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 {
 	var sets:Array<FlxActionSet>;
 	var register:ActionSetRegister;
+	var defaultSet:FlxActionSet = null;
 	
 	/**
 	 * The number of registered action sets
@@ -64,6 +65,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	 */
 	public var inputsChanged(default, null):FlxTypedSignal<Array<FlxAction>->Void>;
 	
+	/**
+	 * Whether action sets are reset on state switches.
+	 * Disable if you need the default action set to persist across states.
+	 */
+	public var resetOnStateSwitch:ResetPolicy = ResetPolicy.DEFAULT_SET_ONLY;
+
 	public function new() 
 	{
 		sets = [];
@@ -77,6 +84,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		#end
 		FlxSteamController.onControllerConnect = updateSteamControllers;
 		FlxSteamController.onOriginUpdate = updateSteamOrigins;
+		FlxG.signals.stateSwitched.add(onStateSwitched);
 	}
 	
 	/**
@@ -121,8 +129,9 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		if (sets == null) sets = [];
 		if (sets.length == 0)
 		{
-			sets.push(new FlxActionSet("default"));
-			activateSet(getSetIndex("default"), FlxInputDevice.ALL, FlxInputDeviceID.ALL);
+			defaultSet = new FlxActionSet("default");
+			var defaultSetIndex = addSet(defaultSet);
+			activateSet(defaultSetIndex, FlxInputDevice.ALL, FlxInputDeviceID.ALL);
 		}
 
 		if (ActionSet >= 0 && ActionSet < sets.length)
@@ -405,10 +414,6 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		register.markActiveSets(sets);
 	}
 	
-	function onFocus():Void {}
-	
-	function onFocusLost():Void {}
-	
 	function onDeviceConnected(gamepad:FlxGamepad)
 	{
 		deviceConnected.dispatch(FlxInputDevice.GAMEPAD, gamepad.id, Std.string(gamepad.model).toLowerCase());
@@ -428,6 +433,31 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		}
 	}
 	
+	function onFocus():Void {}
+	
+	function onFocusLost():Void {}
+	
+	function onStateSwitched()
+	{
+		switch(resetOnStateSwitch)
+		{
+			case DEFAULT_SET_ONLY:
+				if(defaultSet != null)
+				{
+					removeSet(defaultSSet, true);
+				}
+				defaultSet = null;
+			case ALL_SETS:
+				while(sets.length > 0)
+				{
+					removeSet(getSet(0), true);
+				}
+				defaultSet = null;
+			default:
+				//do nothing
+		}
+	}
+
 	function onSteamConnected(handle:Int)
 	{
 		var allSetIndex = register.steamControllerAllSet;
@@ -912,4 +942,22 @@ typedef ActionSetJson =
 	@:optional var name:String;
 	@:optional var analogActions:Array<String>;
 	@:optional var digitalActions:Array<String>;
+}
+
+@:enum abstract ResetPolicy(Int)
+{
+	/**
+	 * Do not reset any action sets.
+	 */
+	var NONE:Int = 0;
+
+	/**
+	 * Reset all action sets.
+	 */
+	var ALL_SETS:Int = 1;
+
+	/**
+	 * Only reset the default action set (created automatically by adding actions to the action manager without first defining an action set)
+	 */
+	var DEFAULT_SET_ONLY:Int = 2;
 }
