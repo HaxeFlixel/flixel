@@ -944,20 +944,20 @@ typedef ActionSetJson =
 	@:optional var digitalActions:Array<String>;
 }
 
-@:enum abstract ResetPolicy(Int) from Int to Int
+enum ResetPolicy
 {
 	/**
 	 * Do not reset any action sets.
 	 */
-	var NONE:Int = 0;
+	NONE;
 
 	/**
 	 * Reset all action sets.
 	 */
-	var ALL_SETS:Int = 1;
+	ALL_SETS;
 
 	/**
 	 * Only reset the default action set (created automatically by adding actions to the action manager without first defining an action set)
 	 */
-	var DEFAULT_SET_ONLY:Int = 2;
+	DEFAULT_SET_ONLY;
 }
