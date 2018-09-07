@@ -1,11 +1,12 @@
 package;
 
+import flixel.input.actions.FlxActionManager;
+import flixel.input.actions.FlxAction;
 import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import flixel.system.FlxAssets;
@@ -31,15 +32,22 @@ class Player extends FlxSprite
 	var _aim:Int = FlxObject.RIGHT;
 	var _gibs:FlxEmitter;
 	var _bullets:FlxTypedGroup<Bullet>;
+
+	var _up:FlxActionDigital;
+	var _down:FlxActionDigital;
+	var _left:FlxActionDigital;
+	var _right:FlxActionDigital;
+	var _shoot:FlxActionDigital;
+	var _jump:FlxActionDigital;
 	
 	/**
 	 * This is the player object class.  Most of the comments I would put in here
 	 * would be near duplicates of the Enemy class, so if you're confused at all
 	 * I'd recommend checking that out for some ideas!
 	 */
-	public function new(X:Int, Y:Int, Bullets:FlxTypedGroup<Bullet>, Gibs:FlxEmitter)
+	public function new(x:Int, y:Int, bullets:FlxTypedGroup<Bullet>, gibs:FlxEmitter)
 	{
-		super(X, Y);
+		super(x, y);
 		
 		loadGraphic(AssetPaths.spaceman__png, true, 8);
 		
@@ -69,103 +77,82 @@ class Player extends FlxSprite
 		animation.add(Animation.JUMP_DOWN, [10]);
 		
 		// Bullet stuff
-		_bullets = Bullets;
-		_gibs = Gibs;
-		
+		_bullets = bullets;
+		_gibs = gibs;
+
+		_up = new FlxActionDigital()
+			.addGamepad(DPAD_UP, PRESSED)
+			.addGamepad(LEFT_STICK_DIGITAL_UP, PRESSED)
+			.addKey(UP, PRESSED)
+			.addKey(W, PRESSED);
+
+		_down = new FlxActionDigital()
+		 	.addGamepad(DPAD_DOWN, PRESSED)
+		 	.addGamepad(LEFT_STICK_DIGITAL_DOWN, PRESSED)
+		 	.addKey(DOWN, PRESSED)
+		 	.addKey(S, PRESSED);
+
+		_left = new FlxActionDigital()
+			.addGamepad(DPAD_LEFT, PRESSED)
+			.addGamepad(LEFT_STICK_DIGITAL_LEFT, PRESSED)
+			.addKey(LEFT, PRESSED)
+			.addKey(A, PRESSED);
+
+		_right = new FlxActionDigital()
+			.addGamepad(DPAD_RIGHT, PRESSED)
+			.addGamepad(LEFT_STICK_DIGITAL_RIGHT, PRESSED)
+			.addKey(RIGHT, PRESSED)
+			.addKey(D, PRESSED);
+
+		_jump = new FlxActionDigital()
+			.addGamepad(A, JUST_PRESSED)
+			.addKey(X, JUST_PRESSED);
+
+		_shoot = new FlxActionDigital()
+			.addGamepad(X, PRESSED)
+			.addKey(C, PRESSED);
+
 		#if VIRTUAL_PAD
 		virtualPad = new FlxVirtualPad(FULL, A_B);
 		virtualPad.alpha = 0.5;
+
+		_up.addInput(virtualPad.buttonUp, PRESSED);
+		_down.addInput(virtualPad.buttonDown, PRESSED);
+		_left.addInput(virtualPad.buttonLeft, PRESSED);
+		_right.addInput(virtualPad.buttonRight, PRESSED);
+		_jump.addInput(virtualPad.buttonA, JUST_PRESSED);
+		_shoot.addInput(virtualPad.buttonB, PRESSED);
 		#end
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
-		
-		#if VIRTUAL_PAD
-		virtualPad = FlxDestroyUtil.destroy(virtualPad);
-		#end
-		
-		_bullets = null;
-		_gibs = null;
+
+		var manager = new FlxActionManager();
+		manager.addActions([_up, _down, _left, _right, _jump, _shoot]);
+		FlxG.inputs.add(manager);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
 		acceleration.x = 0;
-		
-		updateKeyboardInput();
-		updateGamepadInput();
-		updateVirtualPadInput();
-		
+		updateInput();
 		updateAnimations();
-		
 		super.update(elapsed);
 	}
-	
-	function updateKeyboardInput():Void
+
+	function updateInput()
 	{
-		#if FLX_KEYBOARD
-		if (FlxG.keys.anyPressed([A, LEFT]))
+		if (_left.triggered)
 			moveLeft();
-		else if (FlxG.keys.anyPressed([D, RIGHT]))
+		else if (_right.triggered)
 			moveRight();
-		
-		if (FlxG.keys.anyPressed([W, UP]))
+
+		if (_up.triggered)
 			moveUp();
-		else if (FlxG.keys.anyPressed([S, DOWN]))
+		else if (_down.triggered)
 			moveDown();
 		
-		if (FlxG.keys.pressed.X)
+		if (_jump.triggered)
 			jump();
-		if (FlxG.keys.pressed.C)
+		if (_shoot.triggered)
 			shoot();
-		#end
-	}
-	
-	function updateVirtualPadInput():Void
-	{
-		#if VIRTUAL_PAD
-		if (virtualPad.buttonLeft.pressed)
-			moveLeft();
-		else if (virtualPad.buttonRight.pressed)
-			moveRight();
-		
-		if (virtualPad.buttonUp.pressed)
-			moveUp();
-		else if (virtualPad.buttonDown.pressed)
-			moveDown();
-		
-		if (virtualPad.buttonA.justPressed)
-			jump();
-		if (virtualPad.buttonB.pressed)
-			shoot();
-		#end
-	}
-	
-	function updateGamepadInput():Void
-	{
-		#if FLX_GAMEPAD
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-		if (gamepad == null)
-			return;
-		
-		if (gamepad.analog.value.LEFT_STICK_X < 0 || gamepad.pressed.DPAD_LEFT)
-			moveLeft();
-		else if (gamepad.analog.value.LEFT_STICK_X > 0 || gamepad.pressed.DPAD_RIGHT)
-			moveRight();
-		
-		if (gamepad.analog.value.LEFT_STICK_Y < 0 || gamepad.pressed.DPAD_UP)
-			moveUp();
-		else if (gamepad.analog.value.LEFT_STICK_Y > 0 || gamepad.pressed.DPAD_DOWN)
-			moveDown();
-		
-		if (gamepad.justPressed.A)
-			jump();
-		
-		if (gamepad.pressed.X)
-			shoot();
-		#end
 	}
 	
 	function updateAnimations():Void
@@ -190,9 +177,9 @@ class Player extends FlxSprite
 		}
 	}
 	
-	override public function hurt(Damage:Float):Void
+	override public function hurt(damage:Float):Void
 	{
-		Damage = 0;
+		damage = 0;
 		
 		if (flickering)
 			return;
@@ -209,7 +196,7 @@ class Player extends FlxSprite
 		else
 			velocity.x = maxVelocity.x;
 		
-		super.hurt(Damage);
+		super.hurt(damage);
 	}
 	
 	function flicker(Duration:Float):Void
@@ -304,6 +291,18 @@ class Player extends FlxSprite
 				velocity.y -= 36;
 			}
 		}
+	}
+
+	override public function destroy():Void
+	{
+		super.destroy();
+		
+		#if VIRTUAL_PAD
+		virtualPad = FlxDestroyUtil.destroy(virtualPad);
+		#end
+		
+		_bullets = null;
+		_gibs = null;
 	}
 }
 
