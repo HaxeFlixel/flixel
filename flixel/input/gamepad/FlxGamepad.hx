@@ -85,6 +85,10 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public var pressed(default, null):FlxGamepadButtonList;
 	/**
+	 * Helper class to check if a button is released
+	 */
+	public var released(default, null):FlxGamepadButtonList;
+	/**
 	 * Helper class to check if a button was just pressed.
 	 */
 	public var justPressed(default, null):FlxGamepadButtonList;
@@ -130,6 +134,7 @@ class FlxGamepad implements IFlxDestroyable
 		manager = Manager;
 		
 		pressed = new FlxGamepadButtonList(FlxInputState.PRESSED, this);
+		released = new FlxGamepadButtonList(FlxInputState.RELEASED, this);
 		justPressed = new FlxGamepadButtonList(FlxInputState.JUST_PRESSED, this);
 		justReleased = new FlxGamepadButtonList(FlxInputState.JUST_RELEASED, this);
 		analog = new FlxGamepadAnalogList(this);
@@ -137,7 +142,17 @@ class FlxGamepad implements IFlxDestroyable
 		pointer = new FlxGamepadPointerValueList(this);
 		
 		if (Model == null)
-			Model = XINPUT;
+		{
+			#if vita
+				Model = PSVITA;
+			#elseif ps4
+				Model = PS4;
+			#elseif xbox1
+				Model = XINPUT;
+			#else
+				Model = XINPUT;
+			#end
+		}
 			
 		if (Attachment == null)
 			Attachment = NONE;
@@ -287,7 +302,40 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function checkStatus(ID:FlxGamepadInputID, Status:FlxInputState):Bool
 	{
-		return checkStatusRaw(mapping.getRawID(ID), Status);
+		return switch (ID)
+		{
+			case FlxGamepadInputID.ANY: 
+				switch (Status)
+				{
+					case PRESSED: pressed.ANY;
+					case JUST_PRESSED: justPressed.ANY;
+					case RELEASED: released.ANY;
+					case JUST_RELEASED: justReleased.ANY;
+				}
+			case FlxGamepadInputID.NONE:
+				switch (Status)
+				{
+					case PRESSED: pressed.NONE;
+					case JUST_PRESSED: justPressed.NONE;
+					case RELEASED: released.NONE;
+					case JUST_RELEASED: justReleased.NONE;
+				}
+			default: 
+				var rawID = mapping.getRawID(ID);
+				var button = buttons[rawID];
+				if (button == null)
+				{
+					return false;
+				}
+				var value = button.current;
+				switch (Status)
+				{
+					case PRESSED:       value == PRESSED;
+					case RELEASED:      value == RELEASED;
+					case JUST_PRESSED:  value == JUST_PRESSED;
+					case JUST_RELEASED: value == JUST_RELEASED;
+				}
+		}
 	}
 	
 	/**
@@ -840,7 +888,7 @@ class FlxGamepad implements IFlxDestroyable
 	
 	function get_deadZone():Float
 	{
-		return (manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
+		return (manager == null || manager.globalDeadZone == null) ? _deadZone : manager.globalDeadZone;
 	}
 	
 	inline function set_deadZone(deadZone:Float):Float

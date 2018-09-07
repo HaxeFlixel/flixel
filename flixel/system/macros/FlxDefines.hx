@@ -38,6 +38,7 @@ private enum HelperDefines
 	FLX_SOUND_SYSTEM;
 	FLX_FOCUS_LOST_SCREEN;
 	FLX_DEBUG;
+	FLX_STEAMWRAP;
 	
 	FLX_MOUSE_ADVANCED;
 	FLX_NATIVE_CURSOR;
@@ -152,6 +153,9 @@ class FlxDefines
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
 		#end
+		
+		if (defined("cpp") && defined("steamwrap"))
+			define(FLX_STEAMWRAP);
 
 		if (defined("mobile") || defined("js"))
 			define(FLX_ACCELEROMETER);

@@ -69,15 +69,15 @@ class FlxGamepadMapping
 		return -1;
 	}
 	
-	public function isAxisForMotion(ID:FlxGamepadInputID):Bool
-	{
-		return false;
-	}
-	
 	/**
 	 * Whether this axis needs to be flipped
 	 */
 	public function isAxisFlipped(axisID:Int):Bool
+	{
+		return false;
+	}
+	
+	public function isAxisForMotion(ID:FlxGamepadInputID):Bool 
 	{
 		return false;
 	}
