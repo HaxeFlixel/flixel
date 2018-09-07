@@ -298,23 +298,23 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Load action sets from a parsed JSON object
-	 * @param	data	JSON object parsed from the same format that "exportToJSON()" outputs
+	 * Load action sets from a parsed Json object
+	 * @param	data	Json object parsed from the same format that "exportToJson()" outputs
 	 * @param	CallbackDigital	Callback function for digital actions
 	 * @param	CallbackAnalog	Callback function for analog actions
 	 * @return	The number of new FlxActionSets created and added. 0 means nothing happened.
 	 */
-	public function initFromJSON(data:ActionSetJSONArray, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
+	public function initFromJson(data:ActionSetJsonArray, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):Int
 	{
 		if (data == null) return 0;
 		
 		var i:Int = 0;
-		var actionSets:Array<ActionSetJSON> = Reflect.hasField(data, "actionSets") ? Reflect.field(data, "actionSets") : null;
+		var actionSets:Array<ActionSetJson> = data.actionSets;
 		if (actionSets == null) return 0;
 		
 		for (set in actionSets)
 		{
-			if (addSet(FlxActionSet.fromJSON(set, CallbackDigital, CallbackAnalog)) != -1)
+			if (addSet(FlxActionSet.fromJson(set, CallbackDigital, CallbackAnalog)) != -1)
 			{
 				i++;
 			}
@@ -326,7 +326,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	}
 	
 	@:access(flixel.input.actions.FlxAction)
-	public function exportToJSON():String
+	public function exportToJson():String
 	{
 		var space:String = "\t";
 		return Json.stringify({"actionSets":sets}, 
@@ -902,12 +902,12 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 }
 
-typedef ActionSetJSONArray = 
+typedef ActionSetJsonArray = 
 {
-	@:optional var actionSets:Array<ActionSetJSON>;
+	@:optional var actionSets:Array<ActionSetJson>;
 }
 
-typedef ActionSetJSON =
+typedef ActionSetJson =
 {
 	@:optional var name:String;
 	@:optional var analogActions:Array<String>;

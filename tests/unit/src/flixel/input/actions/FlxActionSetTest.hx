@@ -18,11 +18,11 @@ class FlxActionSetTest extends FlxTest
 	function before() {}
 	
 	@Test
-	function testFromJSON()
+	function testFromJson()
 	{
 		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
 		var json = Json.parse(text);
-		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJson(json, null, null);
 		
 		Assert.isTrue(set.name == "MenuControls");
 		Assert.isTrue(set.analogActions != null);
@@ -75,13 +75,13 @@ class FlxActionSetTest extends FlxTest
 	}
 	
 	@Test
-	function testToJSON()
+	function testToJson()
 	{
 		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
 		var json = Json.parse(text);
-		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJson(json, null, null);
 		
-		var outJson = set.toJSON();
+		var outJson = set.toJson();
 		
 		var out:{name:String, analogActions:Array<{type:Int, steamHandle:Int, name:String}>, digitalActions:Array<{type:Int, steamHandle:Int, name:String}>} = Json.parse(outJson);
 		
@@ -188,7 +188,7 @@ class FlxActionSetTest extends FlxTest
 	{
 		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
 		var json = Json.parse(text);
-		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJson(json, null, null);
 		
 		var keys = [FlxKey.A, FlxKey.B, FlxKey.C, FlxKey.D, FlxKey.E, FlxKey.F, FlxKey.G, FlxKey.H, FlxKey.I, FlxKey.J];
 		
@@ -242,7 +242,7 @@ class FlxActionSetTest extends FlxTest
 	{
 		var text = '{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]}';
 		var json = Json.parse(text);
-		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		var set:FlxActionSet = @:privateAccess FlxActionSet.fromJson(json, null, null);
 		
 		for (i in 0...set.digitalActions.length)
 		{

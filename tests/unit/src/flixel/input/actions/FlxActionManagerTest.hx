@@ -32,7 +32,7 @@ class FlxActionManagerTest extends FlxTest
 	var sets:Array<String>;
 	var analog:Array<Array<String>>;
 	var digital:Array<Array<String>>;
-	
+
 	var valueTest = "";
 	var connectStr:String = "";
 	var disconnectStr:String = "";
@@ -435,8 +435,8 @@ class FlxActionManagerTest extends FlxTest
 		
 		var testManager = new FlxActionManager();
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
-		var actionsJSON = Json.parse(managerText);
-		testManager.initFromJSON(actionsJSON, null, null);
+		var actionsJson = Json.parse(managerText);
+		testManager.initFromJson(actionsJson, null, null);
 		
 		var menuSet:Int = testManager.getSetIndex("MenuControls");
 		testManager.activateSet(menuSet, FlxInputDevice.GAMEPAD, FlxInputDeviceID.ALL);
@@ -532,13 +532,13 @@ class FlxActionManagerTest extends FlxTest
 	{
 		var testManager = new FlxActionManager();
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
-		var actionsJSON = Json.parse(managerText);
+		var actionsJson = Json.parse(managerText);
 		
-		testManager.initFromJSON(actionsJSON, null, null);
+		testManager.initFromJson(actionsJson, null, null);
 		
 		var setText = '{"name":"ExtraControls","analogActions":["extra_move"],"digitalActions":["extra_up","extra_down","extra_left","extra_right","extra_select","extra_menu","extra_cancel","extra_thing_1","extra_thing_2","extra_thing_3"]}';
 		var json = Json.parse(setText);
-		var extraSet:FlxActionSet = @:privateAccess FlxActionSet.fromJSON(json, null, null);
+		var extraSet:FlxActionSet = @:privateAccess FlxActionSet.fromJson(json, null, null);
 		
 		testManager.addSet(extraSet);
 		
@@ -562,19 +562,19 @@ class FlxActionManagerTest extends FlxTest
 	}
 	
 	@Test
-	function testExportToJSON()
+	function testExportToJson()
 	{
 		var testManager = new FlxActionManager();
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
-		var actionsJSON = Json.parse(managerText);
+		var actionsJson = Json.parse(managerText);
 		
-		testManager.initFromJSON(actionsJSON, null, null);
+		testManager.initFromJson(actionsJson, null, null);
 		
 		var testManager2 = new FlxActionManager();
-		var outString = testManager.exportToJSON();
-		var actionsJSON2 = Json.parse(outString);
+		var outString = testManager.exportToJson();
+		var actionsJson2 = Json.parse(outString);
 		
-		testManager2.initFromJSON(actionsJSON2, null, null);
+		testManager2.initFromJson(actionsJson2, null, null);
 		
 		Assert.isTrue(testManager.numSets == testManager2.numSets);
 		
@@ -711,9 +711,9 @@ class FlxActionManagerTest extends FlxTest
 	function testUpdateAndCallbacks()
 	{
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
-		var actionsJSON = Json.parse(managerText);
+		var actionsJson = Json.parse(managerText);
 		var testManager = new FlxActionManager();
-		testManager.initFromJSON(actionsJSON, null, null);
+		testManager.initFromJson(actionsJson, null, null);
 		
 		var keys = [FlxKey.A, FlxKey.B, FlxKey.C, FlxKey.D, FlxKey.E, FlxKey.F, FlxKey.G, FlxKey.H, FlxKey.I, FlxKey.J];
 		
@@ -770,9 +770,9 @@ class FlxActionManagerTest extends FlxTest
 		basicManager = new FlxActionManager();
 		
 		var actionsText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';
-		var actionsJSON = Json.parse(actionsText);
+		var actionsJson = Json.parse(actionsText);
 		
-		basicManager.initFromJSON(actionsJSON, null, null);
+		basicManager.initFromJson(actionsJson, null, null);
 		
 		#if FLX_STEAMWRAP
 		steamManager = new FlxActionManager();

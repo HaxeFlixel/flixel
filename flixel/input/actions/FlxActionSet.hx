@@ -9,7 +9,7 @@ import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogSteam;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
-import flixel.input.actions.FlxActionManager.ActionSetJSON;
+import flixel.input.actions.FlxActionManager.ActionSetJson;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Json;
@@ -113,15 +113,15 @@ class FlxActionSet implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Create an action set from a parsed JSON object
+	 * Create an action set from a parsed Json object
 	 * 
-	 * @param	Data	A parsed JSON object
+	 * @param	Data	A parsed Json object
 	 * @param	CallbackDigital	A function to call when digital actions fire
 	 * @param	CallbackAnalog	A function to call when analog actions fire
 	 * @return	An action set
 	 */
 	@:access(flixel.input.actions.FlxActionManager)
-	static function fromJSON(Data:ActionSetJSON, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
+	static function fromJson(Data:ActionSetJson, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
 	{
 		var digitalActions:Array<FlxActionDigital> = [];
 		var analogActions:Array<FlxActionAnalog> = [];
@@ -160,7 +160,7 @@ class FlxActionSet implements IFlxDestroyable
 		return null;
 	}
 	
-	public function toJSON():String
+	public function toJson():String
 	{
 		var space:String = "\t";
 		return Json.stringify(this, 
