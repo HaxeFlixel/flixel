@@ -1,7 +1,6 @@
-4.5.1 (to be released)
+4.5.1 (September 7, 2018)
 ------------------------------
-#### Bugfixes:
-
+- Fixed compatibility with OpenFL 8.5.0
 - `FlxSoundGroup`: fixed `add()` adding sounds twice
 
 4.5.0 (August 10, 2018)
