@@ -1,3 +1,10 @@
+4.6.0 (to be released)
+------------------------------
+#### New features:
+
+- Added a new `FlxAction` API ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
+* `FlxGamepadManager`: added `deviceConnected` and `deviceDisconnected` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
+
 4.5.1 (September 7, 2018)
 ------------------------------
 - Fixed compatibility with OpenFL 8.5.0

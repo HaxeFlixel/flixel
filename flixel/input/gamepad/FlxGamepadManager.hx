@@ -42,13 +42,13 @@ class FlxGamepadManager implements IFlxInputManager
 	 * Signal for when a device is connected; returns the connected gamepad object to the attached listener
 	 * @since 4.6.0
 	 */
-	public var deviceConnected:FlxTypedSignal<FlxGamepad->Void>;
+	public var deviceConnected(default, null):FlxTypedSignal<FlxGamepad->Void>;
 	
 	/**
 	 * Signal for when a device is disconnected; returns the id of the disconnected gamepad to the attached listener
 	 * @since 4.6.0
 	 */
-	public var deviceDisconnected:FlxTypedSignal<FlxGamepad->Void>;
+	public var deviceDisconnected(default, null):FlxTypedSignal<FlxGamepad->Void>;
 	
 	/**
 	 * Stores all gamepads - can have null entries, but index matches event.device
