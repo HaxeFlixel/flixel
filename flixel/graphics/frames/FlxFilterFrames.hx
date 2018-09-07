@@ -16,8 +16,8 @@ import openfl.filters.BitmapFilter;
  */
 class FlxFilterFrames extends FlxFramesCollection
 {
-	private static var point:Point = new Point();
-	private static var rect:Rectangle = new Rectangle();
+	static var point:Point = new Point();
+	static var rect:Rectangle = new Rectangle();
 	
 	/**
 	 * Generates new frames collection from specified frames.
@@ -54,7 +54,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 	
-	private function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0,
+	function new(sourceFrames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0,
 		?filters:Array<BitmapFilter>)
 	{
 		super(null, FlxFrameCollectionType.FILTER);
@@ -95,7 +95,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		spr.setSize(w, h);
 	}
 	
-	private function genFrames():Void
+	function genFrames():Void
 	{
 		var canvas:BitmapData;
 		var graph:FlxGraphic;
@@ -160,13 +160,13 @@ class FlxFilterFrames extends FlxFramesCollection
 		regenBitmaps();
 	}
 	
-	private function regenAndApplyFilters():Void
+	function regenAndApplyFilters():Void
 	{
 		regenBitmaps();
 		applyFilters();
 	}
 	
-	private function regenBitmaps(fill:Bool = true):Void
+	function regenBitmaps(fill:Bool = true):Void
 	{
 		var numFrames:Int = frames.length;
 		var frame:FlxFrame;
@@ -200,7 +200,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		}
 	}
 	
-	private function applyFilters():Void
+	function applyFilters():Void
 	{
 		for (filter in filters)
 			applyFilter(filter);
@@ -217,7 +217,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		super.destroy();
 	}
 	
-	private function set_filters(value:Array<BitmapFilter>):Array<BitmapFilter>
+	function set_filters(value:Array<BitmapFilter>):Array<BitmapFilter>
 	{
 		filters = value;
 		

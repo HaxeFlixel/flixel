@@ -13,7 +13,7 @@ class LogFrontEnd
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	
-	private var _standardTraceFunction:Dynamic;	
+	var _standardTraceFunction:Dynamic;	
 	
 	public inline function add(Data:Dynamic):Void
 	{
@@ -71,7 +71,7 @@ class LogFrontEnd
 		
 		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
 		{
-			#if FLX_SOUND_SYSTEM
+			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
 			if (Style.errorSound != null)
 			{
 				var sound = FlxAssets.getSound(Style.errorSound); 
@@ -106,12 +106,12 @@ class LogFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() 
+	function new() 
 	{ 
 		_standardTraceFunction = haxe.Log.trace;
 	}
 	
-	private inline function set_redirectTraces(Redirect:Bool):Bool
+	inline function set_redirectTraces(Redirect:Bool):Bool
 	{
 		Log.trace = (Redirect) ?  processTraceData : _standardTraceFunction;
 		return redirectTraces = Redirect;
@@ -123,7 +123,7 @@ class LogFrontEnd
 	 * @param	Data	The data that has been traced
 	 * @param	Inf		Information about the position at which trace() was called
 	 */
-	private function processTraceData(Data:Dynamic, ?Info:PosInfos):Void
+	function processTraceData(Data:Dynamic, ?Info:PosInfos):Void
 	{
 		var paramArray:Array<Dynamic> = [Data];
 		

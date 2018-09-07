@@ -94,7 +94,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   FrameData   The TexturePacker data excluding "filename".
 	 * @param   Frames      The `FlxAtlasFrames` to add this frame to.
 	 */
-	private static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
+	static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
 	{
 		var rotated:Bool = FrameData.rotated;
 		var name:String = FrameName;
@@ -212,7 +212,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   size   `Array` to store extracted info to.
 	 * @return  `Array` filled with dimensions info.
 	 */
-	private static function getDimensions(line:String, size:Array<Int>):Array<Int>
+	static function getDimensions(line:String, size:Array<Int>):Array<Int>
 	{
 		var colonPosition:Int = line.indexOf(":");
 		var comaPosition:Int = line.indexOf(",");

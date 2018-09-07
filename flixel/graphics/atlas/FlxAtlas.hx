@@ -23,9 +23,9 @@ import openfl.geom.Matrix;
  * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
  */
 class FlxAtlas implements IFlxDestroyable
-{	
-	private static var point:Point = new Point();
-	private static var matrix:Matrix = new Matrix();
+{
+	static var point:Point = new Point();
+	static var matrix:Matrix = new Matrix();
 	
 	/**
 	 * Default minimum size for atlases.
@@ -110,12 +110,12 @@ class FlxAtlas implements IFlxDestroyable
 	 */
 	public var powerOfTwo(default, set):Bool = false;
 	
-	private var _graphic:FlxGraphic;
+	var _graphic:FlxGraphic;
 	
 	/**
 	 * Internal storage for building atlas from queue
 	 */
-	private var _tempStorage:Array<TempAtlasObj>;
+	var _tempStorage:Array<TempAtlasObj>;
 	
 	/**
 	 * Atlas constructor
@@ -149,7 +149,7 @@ class FlxAtlas implements IFlxDestroyable
 		FlxG.signals.preStateCreate.add(onClear);
 	}
 	
-	private function initRoot():Void
+	function initRoot():Void
 	{
 		var rootWidth:Int = minWidth;
 		var rootHeight:Int = minHeight;
@@ -214,14 +214,14 @@ class FlxAtlas implements IFlxDestroyable
 		return expand(data, key);
 	}
 	
-	private function wrapRoot():Void
+	function wrapRoot():Void
 	{
 		var temp:FlxNode = root;
 		root = new FlxNode(FlxRect.get(0, 0, temp.width, temp.height), this);
 		root.left = temp;
 	}
 	
-	private function tryInsert(data:BitmapData, key:String):FlxNode
+	function tryInsert(data:BitmapData, key:String):FlxNode
 	{
 		var insertWidth:Int = data.width + border;
 		var insertHeight:Int = data.height + border;
@@ -257,7 +257,7 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
-	private function needToDivideHorizontally(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int):Bool
+	function needToDivideHorizontally(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int):Bool
 	{
 		var dw:Int = nodeToDivide.width - insertWidth;
 		var dh:Int = nodeToDivide.height - insertHeight;
@@ -265,7 +265,7 @@ class FlxAtlas implements IFlxDestroyable
 		return dw > dh; // divide horizontally if true, vertically if false
 	}
 	
-	private function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool,
+	function divideNode(nodeToDivide:FlxNode, insertWidth:Int, insertHeight:Int, divideHorizontally:Bool,
 		?firstGrandChildData:BitmapData, ?firstGrandChildKey:String, firstGrandChildRotated:Bool = false):FlxNode
 	{
 		if (nodeToDivide != null)
@@ -352,7 +352,7 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
-	private function insertFirstNodeInRoot(data:BitmapData, key:String):FlxNode
+	function insertFirstNodeInRoot(data:BitmapData, key:String):FlxNode
 	{
 		if (root.left == null)
 		{
@@ -397,7 +397,7 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
-	private function expand(data:BitmapData, key:String):FlxNode
+	function expand(data:BitmapData, key:String):FlxNode
 	{
 		if (root.right == null)
 		{
@@ -551,7 +551,7 @@ class FlxAtlas implements IFlxDestroyable
 		return null;
 	}
 	
-	private function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool,
+	function expandRoot(newWidth:Float, newHeight:Float, divideHorizontally:Bool,
 		decideHowToDivide:Bool = false):Void
 	{
 		if (newWidth > root.width || newHeight > root.height)
@@ -566,7 +566,7 @@ class FlxAtlas implements IFlxDestroyable
 		}
 	}
 	
-	private function expandBitmapData():Void
+	function expandBitmapData():Void
 	{
 		if (bitmapData != null && bitmapData.width == root.width && bitmapData.height == root.height)
 		{
@@ -584,7 +584,7 @@ class FlxAtlas implements IFlxDestroyable
 		bitmapData = newBitmapData;
 	}
 	
-	private function getNextPowerOfTwo(number:Float):Int
+	function getNextPowerOfTwo(number:Float):Int
 	{
 		var n:Int = Std.int(number);
 		if (n > 0 && (n & (n - 1)) == 0) // see: http://goo.gl/D9kPj
@@ -678,7 +678,7 @@ class FlxAtlas implements IFlxDestroyable
 		return atlasFrames;
 	}
 	
-	private function addNodeToAtlasFrames(node:FlxNode):Void
+	function addNodeToAtlasFrames(node:FlxNode):Void
 	{
 		if (_graphic == null || _graphic.atlasFrames == null || node == null)
 			return;
@@ -750,7 +750,7 @@ class FlxAtlas implements IFlxDestroyable
 		return this;
 	}
 	
-	private function addFromAtlasObjects(objects:Array<TempAtlasObj>):Void
+	function addFromAtlasObjects(objects:Array<TempAtlasObj>):Void
 	{
 		objects.sort(bitmapSorter);
 		var numBitmaps:Int = objects.length;
@@ -764,7 +764,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Internal method for sorting bitmaps
 	 */
-	private function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
+	function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
 	{
 		if (allowRotation)
 		{
@@ -818,7 +818,7 @@ class FlxAtlas implements IFlxDestroyable
 		return this;
 	}
 	
-	private function onClear(_):Void
+	function onClear(_):Void
 	{
 		if (!persist || (_graphic != null && _graphic.useCount <= 0))
 			destroy();
@@ -891,7 +891,7 @@ class FlxAtlas implements IFlxDestroyable
 		return data;
 	}
 	
-	private function deleteSubtree(node:FlxNode):Void
+	function deleteSubtree(node:FlxNode):Void
 	{
 		if (node != null)
 		{
@@ -902,7 +902,7 @@ class FlxAtlas implements IFlxDestroyable
 	}
 	
 	// Internal iteration method
-	private function findNodeToInsert(insertWidth:Int, insertHeight:Int):FlxNode
+	function findNodeToInsert(insertWidth:Int, insertHeight:Int):FlxNode
 	{
 		// Node stack
 		var stack:Array<FlxNode> = new Array<FlxNode>();
@@ -968,7 +968,7 @@ class FlxAtlas implements IFlxDestroyable
 		return result;
 	}
 	
-	private function set_bitmapData(value:BitmapData):BitmapData
+	function set_bitmapData(value:BitmapData):BitmapData
 	{
 		// update graphic bitmapData
 		if (value != null && _graphic != null)
@@ -977,7 +977,7 @@ class FlxAtlas implements IFlxDestroyable
 		return bitmapData = value;
 	}
 	
-	private function get_graphic():FlxGraphic
+	function get_graphic():FlxGraphic
 	{
 		if (_graphic != null)
 			return _graphic;
@@ -988,7 +988,7 @@ class FlxAtlas implements IFlxDestroyable
 		return _graphic;
 	}
 	
-	private function set_persist(value:Bool):Bool
+	function set_persist(value:Bool):Bool
 	{
 		if (_graphic != null)
 			_graphic.persist = value;
@@ -996,7 +996,7 @@ class FlxAtlas implements IFlxDestroyable
 		return persist = value;
 	}
 	
-	private function set_minWidth(value:Int):Int
+	function set_minWidth(value:Int):Int
 	{
 		if (value <= maxWidth)
 		{
@@ -1008,7 +1008,7 @@ class FlxAtlas implements IFlxDestroyable
 		return minWidth;
 	}
 	
-	private function set_minHeight(value:Int):Int
+	function set_minHeight(value:Int):Int
 	{
 		if (value <= maxHeight)
 		{
@@ -1020,7 +1020,7 @@ class FlxAtlas implements IFlxDestroyable
 		return minHeight;
 	}
 	
-	private function get_width():Int
+	function get_width():Int
 	{
 		if (root != null)
 			return root.width;
@@ -1028,7 +1028,7 @@ class FlxAtlas implements IFlxDestroyable
 		return 0;
 	}
 	
-	private function set_width(value:Int):Int
+	function set_width(value:Int):Int
 	{
 		if (value > get_width())
 		{
@@ -1047,14 +1047,14 @@ class FlxAtlas implements IFlxDestroyable
 		return value;
 	}
 	
-	private function get_height():Int
+	function get_height():Int
 	{
 		if (root != null)
 			return root.height;
 		return 0;
 	}
 	
-	private function set_height(value:Int):Int
+	function set_height(value:Int):Int
 	{
 		if (value > get_height())
 		{
@@ -1073,7 +1073,7 @@ class FlxAtlas implements IFlxDestroyable
 		return value;
 	}
 	
-	private function set_maxWidth(value:Int):Int
+	function set_maxWidth(value:Int):Int
 	{
 		if (value >= minWidth && (root == null || value >= width))
 			maxWidth = value;
@@ -1081,7 +1081,7 @@ class FlxAtlas implements IFlxDestroyable
 		return maxWidth;
 	}
 	
-	private function set_maxHeight(value:Int):Int
+	function set_maxHeight(value:Int):Int
 	{
 		if (value >= minHeight && (root == null || value >= height))
 			maxHeight = value;
@@ -1089,7 +1089,7 @@ class FlxAtlas implements IFlxDestroyable
 		return maxHeight;
 	}
 	
-	private function set_powerOfTwo(value:Bool):Bool
+	function set_powerOfTwo(value:Bool):Bool
 	{
 		if (value != powerOfTwo && value && root != null)
 		{

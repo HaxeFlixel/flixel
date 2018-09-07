@@ -13,14 +13,14 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
 	public var length(get, never):Int;
 	
-	private var _pool:Array<T> = [];
-	private var _class:Class<T>;
+	var _pool:Array<T> = [];
+	var _class:Class<T>;
 	
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
 	 * _count keeps track of the valid, accessible pool objects.
 	 */
-	private var _count:Int = 0;
+	var _count:Int = 0;
 	
 	public function new(classObj:Class<T>) 
 	{
@@ -76,7 +76,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 		return oldPool;
 	}
 	
-	private inline function get_length():Int
+	inline function get_length():Int
 	{
 		return _count;
 	}
@@ -84,12 +84,12 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 
 interface IFlxPooled extends IFlxDestroyable
 {
-	public function put():Void;
+	function put():Void;
 	private var _inPool:Bool;
 }
 
 interface IFlxPool<T:IFlxDestroyable> 
 {
-	public function preAllocate(numObjects:Int):Void;
-	public function clear():Array<T>;
+	function preAllocate(numObjects:Int):Void;
+	function clear():Array<T>;
 }

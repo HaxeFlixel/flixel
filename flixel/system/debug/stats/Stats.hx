@@ -30,65 +30,65 @@ class Stats extends Window
 	/**
 	 * How often to update the stats, in ms. The lower, the more performance-intense!
 	 */
-	private static inline var UPDATE_DELAY:Int = 250;
+	static inline var UPDATE_DELAY:Int = 250;
 	/**
 	 * The initial width of the stats window.
 	 */
-	private static inline var INITIAL_WIDTH:Int = 160;
+	static inline var INITIAL_WIDTH:Int = 160;
 	/**
 	 * The minimal height of the window.
 	 */
-	private static var MIN_HEIGHT:Int = 0;
+	static var MIN_HEIGHT:Int = 0;
 	
-	private static inline var FPS_COLOR:FlxColor = 0xff96ff00;
-	private static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
-	private static inline var DRAW_TIME_COLOR:FlxColor = 0xffA60004;
-	private static inline var UPDATE_TIME_COLOR:FlxColor = 0xffdcd400;
+	static inline var FPS_COLOR:FlxColor = 0xff96ff00;
+	static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
+	static inline var DRAW_TIME_COLOR:FlxColor = 0xffA60004;
+	static inline var UPDATE_TIME_COLOR:FlxColor = 0xffdcd400;
 	
 	public static inline var LABEL_COLOR:FlxColor = 0xaaffffff;
 	public static inline var TEXT_SIZE:Int = 11;
 	public static inline var DECIMALS:Int = 1;
 	
-	private var _leftTextField:TextField;
-	private var _rightTextField:TextField;
+	var _leftTextField:TextField;
+	var _rightTextField:TextField;
 	
-	private var _itvTime:Int = 0;
-	private var _frameCount:Int;
-	private var _currentTime:Int;
+	var _itvTime:Int = 0;
+	var _frameCount:Int;
+	var _currentTime:Int;
 	
-	private var fpsGraph:StatsGraph;
-	private var memoryGraph:StatsGraph;
-	private var drawTimeGraph:StatsGraph;
-	private var updateTimeGraph:StatsGraph;
+	var fpsGraph:StatsGraph;
+	var memoryGraph:StatsGraph;
+	var drawTimeGraph:StatsGraph;
+	var updateTimeGraph:StatsGraph;
 	
-	private var flashPlayerFramerate:Float = 0;
-	private var visibleCount:Int = 0;
-	private var activeCount:Int = 0;
-	private var updateTime:Int = 0;
-	private var drawTime:Int = 0;
-	private var drawCallsCount:Int = 0;
+	var flashPlayerFramerate:Float = 0;
+	var visibleCount:Int = 0;
+	var activeCount:Int = 0;
+	var updateTime:Int = 0;
+	var drawTime:Int = 0;
+	var drawCallsCount:Int = 0;
 
-	private var _lastTime:Int = 0;
-	private var _updateTimer:Int = 0;
+	var _lastTime:Int = 0;
+	var _updateTimer:Int = 0;
 	
-	private var _update:Array<Int> = [];
-	private var _updateMarker:Int = 0;
+	var _update:Array<Int> = [];
+	var _updateMarker:Int = 0;
 	
-	private var _draw:Array<Int> = [];
-	private var _drawMarker:Int = 0;
+	var _draw:Array<Int> = [];
+	var _drawMarker:Int = 0;
 	
-	private var _drawCalls:Array<Int> = [];
-	private var _drawCallsMarker:Int = 0;
+	var _drawCalls:Array<Int> = [];
+	var _drawCallsMarker:Int = 0;
 	
-	private var _visibleObject:Array<Int> = [];
-	private var _visibleObjectMarker:Int = 0;
+	var _visibleObject:Array<Int> = [];
+	var _visibleObjectMarker:Int = 0;
 	
-	private var _activeObject:Array<Int> = [];
-	private var _activeObjectMarker:Int = 0;
+	var _activeObject:Array<Int> = [];
+	var _activeObjectMarker:Int = 0;
 	
-	private var _paused:Bool = true;
+	var _paused:Bool = true;
 	
-	private var _toggleSizeButton:FlxSystemButton;
+	var _toggleSizeButton:FlxSystemButton;
 	
 	/**
 	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
@@ -156,7 +156,21 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 		
-		_leftTextField.text = "Update: \nDraw:" + (FlxG.renderTile ? "\nDrawTiles:" : "") + "\nQuadTrees: \nLists:";
+		var drawMethod = "";
+		if (FlxG.renderTile)
+		{
+			drawMethod =
+				#if FLX_RENDER_TRIANGLE
+				"DrawTrian.";
+				#elseif FLX_DRAW_QUADS
+				"DrawQuads";
+				#else
+				"DrawTiles";
+				#end
+			drawMethod = '\n$drawMethod:';
+		}
+
+		_leftTextField.text = "Update: \nDraw:" + drawMethod + "\nQuadTrees: \nLists:";
 		
 		_toggleSizeButton = new FlxSystemButton(new GraphicMaximizeButton(0, 0), toggleSize);
 		_toggleSizeButton.alpha = Window.HEADER_ALPHA;
@@ -304,7 +318,7 @@ class Stats extends Window
 		}
 	}
 	
-	private function updateTexts():Void
+	function updateTexts():Void
 	{
 		var updTime = FlxMath.roundDecimal(divide(updateTime, _updateMarker), DECIMALS);
 		var drwTime = FlxMath.roundDecimal(divide(drawTime, _drawMarker), DECIMALS);
@@ -320,7 +334,7 @@ class Stats extends Window
 			FlxLinkedList._NUM_CACHED_FLX_LIST;
 	}
 	
-	private function divide(f1:Float, f2:Float):Float
+	function divide(f1:Float, f2:Float):Float
 	{
 		if (f2 == 0)
 			return 0;
@@ -427,7 +441,7 @@ class Stats extends Window
 		_paused = true;
 	}
 	
-	private function toggleSize():Void
+	function toggleSize():Void
 	{
 		if (_width == INITIAL_WIDTH)
 		{
@@ -450,7 +464,7 @@ class Stats extends Window
 		bound();
 	}
 	
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		super.updateSize();
 		if (_toggleSizeButton != null)

@@ -14,9 +14,9 @@ class FlxBasic implements IFlxDestroyable
 	 * Static counters for performance tracking.
 	 */
 	@:allow(flixel.FlxGame)
-	private static var activeCount:Int = 0;
+	static var activeCount:Int = 0;
 	@:allow(flixel.FlxGame)
-	private static var visibleCount:Int = 0;
+	static var visibleCount:Int = 0;
 	#end
 	
 	/**
@@ -56,10 +56,10 @@ class FlxBasic implements IFlxDestroyable
 	 * Enum that informs the collision system which type of object this is (to avoid expensive type casting).
 	 */
 	@:noCompletion
-	private var flixelType(default, null):FlxType = NONE;
+	var flixelType(default, null):FlxType = NONE;
 	
 	@:noCompletion
-	private var _cameras:Array<FlxCamera>;
+	var _cameras:Array<FlxCamera>;
 	
 	public function new() {}
 	
@@ -133,37 +133,37 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	private function set_visible(Value:Bool):Bool
+	function set_visible(Value:Bool):Bool
 	{
 		return visible = Value;
 	}
 	
 	@:noCompletion
-	private function set_active(Value:Bool):Bool
+	function set_active(Value:Bool):Bool
 	{
 		return active = Value;
 	}
 	
 	@:noCompletion
-	private function set_exists(Value:Bool):Bool
+	function set_exists(Value:Bool):Bool
 	{
 		return exists = Value;
 	}
 	
 	@:noCompletion
-	private function set_alive(Value:Bool):Bool
+	function set_alive(Value:Bool):Bool
 	{
 		return alive = Value;
 	}
 	
 	@:noCompletion
-	private function get_camera():FlxCamera
+	function get_camera():FlxCamera
 	{
 		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
 	}
 	
 	@:noCompletion
-	private function set_camera(Value:FlxCamera):FlxCamera
+	function set_camera(Value:FlxCamera):FlxCamera
 	{
 		if (_cameras == null)
 			_cameras = [Value];
@@ -173,13 +173,13 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	@:noCompletion
-	private function get_cameras():Array<FlxCamera>
+	function get_cameras():Array<FlxCamera>
 	{
 		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
 	}
 	
 	@:noCompletion
-	private function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
 	}
@@ -200,18 +200,18 @@ abstract FlxType(Int)
 
 interface IFlxBasic
 {
-	public var ID:Int;
-	public var active(default, set):Bool;
-	public var visible(default, set):Bool;
-	public var alive(default, set):Bool;
-	public var exists(default, set):Bool;
+	var ID:Int;
+	var active(default, set):Bool;
+	var visible(default, set):Bool;
+	var alive(default, set):Bool;
+	var exists(default, set):Bool;
 
-	public function draw():Void;
-	public function update(elapsed:Float):Void;
-	public function destroy():Void;
-	
-	public function kill():Void;
-	public function revive():Void;
-	
-	public function toString():String;
+	function draw():Void;
+	function update(elapsed:Float):Void;
+	function destroy():Void;
+
+	function kill():Void;
+	function revive():Void;
+
+	function toString():String;
 }

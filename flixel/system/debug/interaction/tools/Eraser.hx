@@ -38,7 +38,7 @@ class Eraser extends Tool
 		_brain.setActiveTool(null);
 	}
 	
-	private function doDeletion(remove:Bool):Void
+	function doDeletion(remove:Bool):Void
 	{
 		var selectedItems = _brain.selectedItems;
 		if (selectedItems != null)
@@ -48,7 +48,7 @@ class Eraser extends Tool
 		}
 	}
 	
-	private function findAndDelete(items:FlxTypedGroup<FlxObject>, remove:Bool = false):Void
+	function findAndDelete(items:FlxTypedGroup<FlxObject>, remove:Bool = false):Void
 	{
 		for (member in items)
 		{
@@ -68,7 +68,7 @@ class Eraser extends Tool
 		}
 	}
 	
-	private function removeFromMemory(item:FlxBasic, parentGroup:FlxGroup):Void
+	function removeFromMemory(item:FlxBasic, parentGroup:FlxGroup):Void
 	{
 		for (member in parentGroup.members)
 		{

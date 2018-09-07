@@ -20,12 +20,12 @@ class GraphicCursorCross extends BitmapData {}
  */
 class Pointer extends Tool
 {		
-	private var _selectionStartPoint:FlxPoint = new FlxPoint();
-	private var _selectionEndPoint:FlxPoint = new FlxPoint();
-	private var _selectionHappening:Bool = false;
-	private var _selectionCancelled:Bool = false;
-	private var _selectionArea:FlxRect = new FlxRect();
-	private var _itemsInSelectionArea:Array<FlxBasic> = [];
+	var _selectionStartPoint:FlxPoint = new FlxPoint();
+	var _selectionEndPoint:FlxPoint = new FlxPoint();
+	var _selectionHappening:Bool = false;
+	var _selectionCancelled:Bool = false;
+	var _selectionArea:FlxRect = new FlxRect();
+	var _itemsInSelectionArea:Array<FlxBasic> = [];
 	
 	override public function init(brain:Interaction):Tool 
 	{
@@ -74,7 +74,7 @@ class Pointer extends Tool
 			
 	}
 	
-	private function calculateSelectionArea():Void
+	function calculateSelectionArea():Void
 	{
 		_selectionArea.x = _selectionStartPoint.x;
 		_selectionArea.y = _selectionStartPoint.y;
@@ -148,7 +148,7 @@ class Pointer extends Tool
 	/**
 	 * We register the current selection to the console for easy interaction.
 	 */
-	private function updateConsoleSelection()
+	function updateConsoleSelection()
 	{
 		FlxG.console.registerObject("selection", switch (_itemsInSelectionArea.length)
 		{
@@ -158,7 +158,7 @@ class Pointer extends Tool
 		});
 	}
 	
-	private function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
+	function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		var adding = _brain.keyPressed(Keyboard.CONTROL);

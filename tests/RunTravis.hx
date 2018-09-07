@@ -10,6 +10,13 @@ abstract Target(String) from String to String
 }
 
 @:enum
+abstract OpenFL(String) from String to String
+{
+	var OLD = "old";
+	var NEW = "new";
+}
+
+@:enum
 abstract ExitCode(Int) from Int to Int
 {
 	var SUCCESS = 0;
@@ -26,36 +33,100 @@ class RunTravis
 		var target:Target = Sys.args()[0];
 		if (target == null)
 			target = Target.FLASH;
+
+		var openfl:OpenFL = Sys.args()[1];
 		
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
+
+		putEnv("HXCPP_SILENT", "1");
+		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
+		putEnv("HXCPP_CACHE_MB", "5000");
 	
-		Sys.exit(getResult([
-			setupHxcpp(target),
-			runUnitTests(target),
-			buildCoverageTests(target),
-			buildSwfVersionTests(target),
-			buildDemos(target),
-			buildNextDemos(target),
-			buildMechanicsDemos(target)
+		var installationResult = runUntilFailure([
+			installHaxelibs,
+			installOpenFL.bind(openfl),
+			installHxcpp.bind(target)
+		]);
+
+		if (installationResult != ExitCode.SUCCESS)
+			Sys.exit(ExitCode.FAILURE);
+		runCommand("haxelib", ["list"]);
+
+		if (Sys.args().indexOf("-install") != -1)
+			return;
+
+		Sys.exit(runAll([
+			runUnitTests.bind(target),
+			buildCoverageTests.bind(target),
+			buildSwfVersionTests.bind(target),
+			buildDemos.bind(target),
+			buildNextDemos.bind(target, openfl),
+			buildMechanicsDemos.bind(target)
 		]));
 	}
+
+	static function installHaxelibs():ExitCode
+	{
+		return runUntilFailure([
+			haxelibInstall.bind("munit"),
+			haxelibInstall.bind("hamcrest"),
+			haxelibInstall.bind("systools"),
+			haxelibInstall.bind("nape"),
+			haxelibInstall.bind("task"),
+			haxelibInstall.bind("poly2trihx"),
+			haxelibInstall.bind("spinehaxe"),
+			haxelibGit.bind("HaxeFoundation", "hscript"),
+			haxelibGit.bind("larsiusprime", "firetongue"),
+			haxelibGit.bind("HaxeFlixel", "flixel-tools"),
+			haxelibGit.bind("HaxeFlixel", "flixel-templates"),
+			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
+			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
+			haxelibGit.bind("HaxeFlixel", "flixel-ui"),
+			haxelibGit.bind("larsiusprime", "steamwrap")
+		]);
+	}
+
+	static function installOpenFL(openfl:OpenFL):ExitCode
+	{
+		return runAll(switch (openfl)
+		{
+			case NEW: [
+					haxelibInstall.bind("openfl"),
+					haxelibInstall.bind("lime")
+				];
+			case OLD: [
+					haxelibInstall.bind("openfl", "3.6.1"),
+					haxelibInstall.bind("lime", "2.9.1")
+				];
+		});
+	}
+
+	static function haxelibInstall(lib:String, ?version:String):ExitCode
+	{
+		var args = ["install", lib];
+		if (version != null)
+			args.push(version);
+		args.push("--quiet");
+		return runCommand("haxelib", args);
+	}
+
+	static function haxelibGit(user:String, lib:String):ExitCode
+	{
+		return runCommand("haxelib", ["git", lib, 'https://github.com/$user/$lib', "--quiet"]);
+	}
 	
-	static function setupHxcpp(target:Target):ExitCode
+	static function installHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		#if (haxe_ver >= "3.3")
 		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
-		return getResult([
-			runCommand("haxelib", ["git", "hxcpp", "https://github.com/HaxeFoundation/hxcpp"]),
-			runCommandInDir(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
-			runCommandInDir(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
-			runCommandInDir(hxcppDir + "project", "neko", ["build.n"])
+		return runAll([
+			haxelibGit.bind("HaxeFoundation", "hxcpp"),
+			runCommandInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
+			runCommandInDir.bind(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
+			runCommandInDir.bind(hxcppDir + "project", "neko", ["build.n"])
 		]);
-		#else
-		return runCommand("haxelib", ["install", "hxcpp", "3.3.49"]);
-		#end
 	}
 	
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
@@ -79,16 +150,16 @@ class RunTravis
 		else
 		{
 			Sys.println("Running unit tests...\n");
-			return runOpenFL("test", "unit", target);
+			return runOpenFL("test", "unit", target, "travis");
 		}
 	}
 	
 	static function buildCoverageTests(target:Target):ExitCode
 	{
 		Sys.println("\nBuilding coverage tests...\n");
-		return getResult([
-			build("coverage", target, "coverage1"),
-			build("coverage", target, "coverage2")
+		return runAll([
+			build.bind("coverage", target, "coverage1"),
+			build.bind("coverage", target, "coverage2")
 		]);
 	}
 	
@@ -101,9 +172,9 @@ class RunTravis
 		return buildProjects(target, demos);
 	}
 	
-	static function buildNextDemos(target:Target):ExitCode
+	static function buildNextDemos(target:Target, openfl:OpenFL):ExitCode
 	{
-		if (target == Target.FLASH || target == Target.HTML5)
+		if (target == Target.FLASH || target == Target.HTML5 || openfl == NEW)
 			return ExitCode.SUCCESS;
 		
 		Sys.println("\nBuilding demos for OpenFL Next...\n");
@@ -131,9 +202,9 @@ class RunTravis
 		if (target == Target.FLASH)
 		{
 			Sys.println("\nBuilding swf version tests...\n");
-			return getResult([
-				build("swfVersion/11", target),
-				build("swfVersion/11_2", target)
+			return runAll([
+				build.bind("swfVersion/11", target),
+				build.bind("swfVersion/11_2", target)
 			]);
 		}
 		else return ExitCode.SUCCESS;
@@ -157,10 +228,19 @@ class RunTravis
 		return runCommand("haxelib", ["run"].concat(args));
 	}
 	
-	static function getResult(results:Array<ExitCode>):ExitCode
+	static function runAll(methods:Array<Void->ExitCode>):ExitCode
 	{
-		for (result in results)
-			if (result != ExitCode.SUCCESS)
+		var result = ExitCode.SUCCESS;
+		for (method in methods)
+			if (method() != ExitCode.SUCCESS)
+				result = ExitCode.FAILURE;
+		return result;
+	}
+
+	static function runUntilFailure(methods:Array<Void->ExitCode>):ExitCode
+	{
+		for (method in methods)
+			if (method() != ExitCode.SUCCESS)
 				return ExitCode.FAILURE;
 		return ExitCode.SUCCESS;
 	}
@@ -174,6 +254,12 @@ class RunTravis
 		return result;
 	}
 	
+	static function putEnv(s:String, v:String) {
+		Sys.println('Sys.putEnv("$s", "$v")');
+		if (!dryRun)
+			Sys.putEnv(s, v);
+	}
+
 	static function cd(dir:String)
 	{
 		Sys.println("cd " + dir);

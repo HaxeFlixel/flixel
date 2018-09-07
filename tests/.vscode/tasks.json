@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Dry Run",
+			"command": "neko",
+			"args": [
+				"RunTravis.n",
+				"cpp",
+				"new",
+				"-dry-run"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": ["haxe: RunTravis.hxml"],
+			"problemMatcher": []
+		}
+	]
+}

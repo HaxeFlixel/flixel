@@ -140,38 +140,38 @@ class FlxNode implements IFlxDestroyable
 		return null;
 	}
 	
-	private inline function get_isEmpty():Bool
+	inline function get_isEmpty():Bool
 	{
 		return !filled && left == null && right == null;
 	}
 	
-	private inline function get_x():Int
+	inline function get_x():Int
 	{
 		return Std.int(rect.x);
 	}
 	
-	private inline function get_y():Int
+	inline function get_y():Int
 	{
 		return Std.int(rect.y);
 	}
 	
-	private inline function get_width():Int
+	inline function get_width():Int
 	{
 		return Std.int(rect.width);
 	}
 	
-	private function set_width(value:Int):Int
+	function set_width(value:Int):Int
 	{
 		rect.width = value;
 		return value;
 	}
 	
-	private inline function get_height():Int
+	inline function get_height():Int
 	{
 		return Std.int(rect.height);
 	}
 	
-	private function set_height(value:Int):Int
+	function set_height(value:Int):Int
 	{
 		rect.height = value;
 		return value;

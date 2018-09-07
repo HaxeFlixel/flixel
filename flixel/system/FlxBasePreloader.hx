@@ -1,5 +1,6 @@
 package flixel.system;
 
+import flash.Lib;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.GradientType;
@@ -9,18 +10,19 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.events.ProgressEvent;
 import flash.events.MouseEvent;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
-import flash.Lib;
 import flash.net.URLRequest;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import openfl.Vector;
 
-class FlxBasePreloader extends NMEPreloader
+class FlxBasePreloader extends DefaultPreloader
 {
 	/**
 	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine
@@ -83,12 +85,12 @@ class FlxBasePreloader extends NMEPreloader
 		+ "Thank you for your interest in this game! Please support the developer by "
 		+ "visiting the following website to play the game:";
 
-	private var _percent:Float = 0;
-	private var _width:Int;
-	private var _height:Int;
-	private var _loaded:Bool = false;
-	private var _urlChecked:Bool = false;
-	private var _startTime:Float;
+	var _percent:Float = 0;
+	var _width:Int;
+	var _height:Int;
+	var _loaded:Bool = false;
+	var _urlChecked:Bool = false;
+	var _startTime:Float;
 
 	/**
 	 * FlxBasePreloader Constructor.
@@ -99,8 +101,10 @@ class FlxBasePreloader extends NMEPreloader
 	{
 		super();
 
+		#if (openfl <= "4.0.0")
 		removeChild(progress);
 		removeChild(outline);
+		#end
 
 		minDisplayTime = MinDisplayTime;
 		if (AllowedURLs != null)
@@ -109,12 +113,17 @@ class FlxBasePreloader extends NMEPreloader
 			allowedURLs = [];
 
 		_startTime = Date.now().getTime();
+
+		#if !web
+		// just skip the preloader on native targets
+		onLoaded();
+		#end
 	}
 
 	/**
 	 * Override this to create your own preloader objects.
 	 */
-	private function create():Void {}
+	function create():Void {}
 
 	/**
 	 * This function is called externally to initialize the Preloader.
@@ -152,7 +161,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * This function is triggered on each 'frame'.
 	 * It is highly recommended that you do NOT override this.
 	 */
-	private function onEnterFrame(E:Event):Void
+	function onEnterFrame(E:Event):Void
 	{
 		var time = Date.now().getTime() - _startTime;
 		var min = minDisplayTime * 1000;
@@ -173,14 +182,14 @@ class FlxBasePreloader extends NMEPreloader
 	 * This function is called when the project has finished loading.
 	 * Override it to remove all of your objects.
 	 */
-	private function destroy():Void {}
+	function destroy():Void {}
 
 	/**
 	 * Override to draw your preloader objects in response to the Percent
 	 *
 	 * @param	Percent		How much of the program has loaded.
 	 */
-	private function update(Percent:Float):Void {}
+	function update(Percent:Float):Void {}
 
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded.
@@ -202,7 +211,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new Bitmap instance is passed as an argument.
 	 * @return  The Bitmap instance that was created.
 	 */
-	private function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
+	function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
 	{
 		#if html5
 		var bmp = new Bitmap();
@@ -226,7 +235,7 @@ class FlxBasePreloader extends NMEPreloader
 	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new BitmapData instance is passed as an argument.
 	 * @return  The BitmapData instance that was created.
 	 */
-	private function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
+	function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
 	{
 		#if html5
 		return Type.createInstance(bitmapDataClass, [0, 0, true, 0xFFFFFFFF, onLoad]);
@@ -240,7 +249,7 @@ class FlxBasePreloader extends NMEPreloader
 	/**
 	 * Site-locking Functionality
 	 */
-	private function checkSiteLock():Void
+	function checkSiteLock():Void
 	{
 		#if web
 		if (_urlChecked)
@@ -265,14 +274,14 @@ class FlxBasePreloader extends NMEPreloader
 	 * When overridden, allows the customized creation of the sitelock failure screen.
 	 * @since 4.3.0
 	 */
-	private function createSiteLockFailureScreen():Void
+	function createSiteLockFailureScreen():Void
 	{
 		addChild(createSiteLockFailureBackground(0xffffff, 0xe5e5e5));
 		addChild(createSiteLockFailureIcon(0xe5e5e5, 0.9));
 		addChild(createSiteLockFailureText(30));
 	}
 
-	private function createSiteLockFailureBackground(innerColor:FlxColor, outerColor:FlxColor):Shape
+	function createSiteLockFailureBackground(innerColor:FlxColor, outerColor:FlxColor):Shape
 	{
 		var shape = new Shape();
 		var graphics = shape.graphics;
@@ -290,7 +299,7 @@ class FlxBasePreloader extends NMEPreloader
 		return shape;
 	}
 
-	private function createSiteLockFailureIcon(color:FlxColor, scale:Float):Shape
+	function createSiteLockFailureIcon(color:FlxColor, scale:Float):Shape
 	{
 		var shape = new Shape();
 		var graphics = shape.graphics;
@@ -298,13 +307,13 @@ class FlxBasePreloader extends NMEPreloader
 
 		graphics.beginFill(color);
 		graphics.drawPath(
-			[1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6],
-			[120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
+			Vector.ofArray([1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6]),
+			Vector.ofArray([120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
 				120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40, 35, 75, 0, 120, 0,
 				220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320,
 				20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0, 148, 8, 140, 20, 140, 120, 190, 108,
 				190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130,
-				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190],
+				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190]),
 			GraphicsPathWinding.NON_ZERO
 		);
 		graphics.endFill();
@@ -318,7 +327,7 @@ class FlxBasePreloader extends NMEPreloader
 		return shape;
 	}
 
-	private function createSiteLockFailureText(margin:Float):Sprite
+	function createSiteLockFailureText(margin:Float):Sprite
 	{
 		var sprite = new Sprite();
 		var bounds = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
@@ -373,9 +382,9 @@ class FlxBasePreloader extends NMEPreloader
 	 * When overridden, allows the customization of the text fields in the sitelock failure screen.
 	 * @since 4.3.0
 	 */
-	private function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void {}
+	function adjustSiteLockTextFields(titleText:TextField, bodyText:TextField, hyperlinkText:TextField):Void {}
 
-	private function goToMyURL(?e:MouseEvent):Void
+	function goToMyURL(?e:MouseEvent):Void
 	{
 		//if the chosen URL isn't "local", use FlxG's openURL() function.
 		if (allowedURLs[siteLockURLIndex] != FlxBasePreloader.LOCAL)
@@ -384,12 +393,12 @@ class FlxBasePreloader extends NMEPreloader
 			Lib.getURL(new URLRequest(allowedURLs[siteLockURLIndex]));
 	}
 
-	private function isHostUrlAllowed():Bool
+	function isHostUrlAllowed():Bool
 	{
 		if (allowedURLs.length == 0)
 			return true;
 
-		var homeURL:String = #if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #end;
+		var homeURL:String = #if flash loaderInfo.loaderURL #elseif js js.Browser.location.href #else "" #end;
 		var homeDomain:String = FlxStringUtil.getDomain(homeURL);
 		for (allowedURL in allowedURLs)
 		{
@@ -401,3 +410,61 @@ class FlxBasePreloader extends NMEPreloader
 	}
 	#end
 }
+
+#if (openfl >= "8.0.0")
+// This is a slightly trimmed down version of the NMEPreloader present in older OpenFL versions
+private class DefaultPreloader extends Sprite
+{
+	public function new()
+	{
+		super();
+		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+	}
+
+	public function onAddedToStage(_)
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		
+		onInit();
+		onUpdate(loaderInfo.bytesLoaded, loaderInfo.bytesTotal);
+
+		addEventListener(ProgressEvent.PROGRESS, onProgress);
+		addEventListener(Event.COMPLETE, onComplete);
+	}
+
+	function onComplete(event:Event):Void
+	{
+		event.preventDefault();
+
+		removeEventListener(ProgressEvent.PROGRESS, onProgress);
+		removeEventListener(Event.COMPLETE, onComplete);
+
+		onLoaded();
+	}
+
+	public function onProgress(event:ProgressEvent):Void
+	{
+		onUpdate(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
+	}
+
+	public function onInit() {}
+
+	public function onLoaded()
+	{
+		dispatchEvent(new Event(Event.UNLOAD));
+	}
+
+	public function onUpdate(bytesLoaded:Int, bytesTotal:Int):Void
+	{
+		var percentLoaded = 0.0;
+		if (bytesTotal > 0)
+		{
+			percentLoaded = bytesLoaded / bytesTotal;
+			if (percentLoaded > 1)
+				percentLoaded = 1;
+		}
+	}
+}
+#else
+private typedef DefaultPreloader = NMEPreloader;
+#end

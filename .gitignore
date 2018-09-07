@@ -6,3 +6,5 @@ tests/unit/src/TestSuite.hx
 dump
 .vscode
 tests/RunTravis.n
+*.diff
+*.hxproj

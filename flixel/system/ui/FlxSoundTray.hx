@@ -30,17 +30,17 @@ class FlxSoundTray extends Sprite
 	/**
 	 * Helps us auto-hide the sound tray after a volume change.
 	 */
-	private var _timer:Float;
+	var _timer:Float;
 	/**
 	 * Helps display the volume bars on the sound tray.
 	 */
-	private var _bars:Array<Bitmap>;
+	var _bars:Array<Bitmap>;
 	/**
 	 * How wide the sound tray background is.
 	 */
-	private var _width:Int = 80;
+	var _width:Int = 80;
 	
-	private var _defaultScale:Float = 2.0;
+	var _defaultScale:Float = 2.0;
 	
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.

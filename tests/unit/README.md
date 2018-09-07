@@ -8,15 +8,13 @@ There's a 1:1 mapping between `.hx` files in Flixel and the unit test project - 
 
 ### Building
 
-Run the `.hxml` file in [`/targets`](targets) to run the tests on that specific target. This needs to be done from the [unit](.) directory, e.g. `haxe targets/test-neko.hxml`. Currently supported are:
+Run one of the `test-*.hxml` files in this directory to run the tests on that specific target, e.g. `haxe test-neko.hxml`. Currently supported are:
 
 - `web` (Flash + HTML5)
 - `cpp`
 - `neko`
 
-Alternatively, this can be done in
- - FlashDevelop - open [`FlixelUnitTests.hxproj`](FlixelUnitTests.hxproj) and enter the target name into the target dropdown (has to be done manually).
- - Visual Studio Code - a pre-configured `tasks.json` comes with this repo (`F1` -> `Tasks: Run Task` -> Choose the target to test).
+Alternatively, this can be done from within Visual Studio Code - (`F1` -> `Tasks: Run Task` -> Choose the target to test).
 
 ### Limitations
 
@@ -24,10 +22,7 @@ Alternatively, this can be done in
 
 ### Code Style
 
-The [Flixel Code Styleguide](http://haxeflixel.com/documentation/code-style/) applies, except for a few minor differences:
-
-- the `private` keyword is omitted
-- `:Void` return values of functions may be omitted
+Refer to the [Flixel Code Styleguide](http://haxeflixel.com/documentation/code-style/).
 
 #### Functions
 

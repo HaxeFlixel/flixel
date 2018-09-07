@@ -20,11 +20,11 @@ class FlxTileFrames extends FlxFramesCollection
 	 * Atlas frame from which this frame collection had been generated.
 	 * Could be `null` if this collection generated from rectangle.
 	 */
-	private var atlasFrame:FlxFrame;
+	var atlasFrame:FlxFrame;
 	/**
 	 * Image region of the image from which this frame collection had been generated.
 	 */
-	private var region:FlxRect;
+	var region:FlxRect;
 	/**
 	 * The size of frame in this spritesheet.
 	 */
@@ -32,13 +32,13 @@ class FlxTileFrames extends FlxFramesCollection
 	/**
 	 * Offsets between frames in this spritesheet.
 	 */
-	private var tileSpacing:FlxPoint;
+	var tileSpacing:FlxPoint;
 	
 	public var numRows:Int = 0;
 	
 	public var numCols:Int = 0;
 	
-	private function new(parent:FlxGraphic, ?border:FlxPoint) 
+	function new(parent:FlxGraphic, ?border:FlxPoint) 
 	{
 		super(parent, FlxFrameCollectionType.TILES, border);
 	}

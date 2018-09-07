@@ -49,7 +49,7 @@ class Tracker extends Watch
 	 */ 
 	public static var objectsBeingTracked:Array<Dynamic> = [];
 	
-	private static var _numTrackerWindows:Int = 0;
+	static var _numTrackerWindows:Int = 0;
 	
 	public static inline function addProfile(Profile:TrackerProfile):Void
 	{
@@ -77,7 +77,7 @@ class Tracker extends Watch
 		_numTrackerWindows = 0;
 	}
 	
-	private static function initProfiles():Void
+	static function initProfiles():Void
 	{
 		if (profiles == null)
 		{
@@ -141,7 +141,7 @@ class Tracker extends Watch
 		}
 	}
 	
-	private var _object:Dynamic;
+	var _object:Dynamic;
 	
 	public function new(Profile:TrackerProfile, ObjectOrClass:Dynamic, ?WindowTitle:String) 
 	{
@@ -175,7 +175,7 @@ class Tracker extends Watch
 		super.destroy();
 	}
 	
-	private function findProfileByClass(ObjectClass:Class<Dynamic>):TrackerProfile
+	function findProfileByClass(ObjectClass:Class<Dynamic>):TrackerProfile
 	{
 		for (profile in profiles)
 			if (profile.objectClass == ObjectClass)
@@ -184,7 +184,7 @@ class Tracker extends Watch
 		return null;
 	}
 	
-	private function initWatchEntries(Profile:TrackerProfile):Void
+	function initWatchEntries(Profile:TrackerProfile):Void
 	{
 		if (Profile != null)
 		{
@@ -193,7 +193,7 @@ class Tracker extends Watch
 		}
 	}
 	
-	private function addExtensions(Profile:TrackerProfile):Void
+	function addExtensions(Profile:TrackerProfile):Void
 	{
 		if (Profile.extensions == null)
 			return;
@@ -212,7 +212,7 @@ class Tracker extends Watch
 		}
 	}
 	
-	private function addVariables(Variables:Array<String>):Void
+	function addVariables(Variables:Array<String>):Void
 	{
 		if (Variables == null)
 			return;

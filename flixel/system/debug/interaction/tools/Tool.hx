@@ -15,10 +15,11 @@ class Tool extends Sprite implements IFlxDestroyable
 {
 	public var button(default, null):FlxSystemButton;
 	public var cursor(default, null):BitmapData;
+	public var cursorInUse(default, null):String = "";
 	
-	private var _name:String = "(Unknown tool)";
-	private var _shortcut:String;
-	private var _brain:Interaction;
+	var _name:String = "(Unknown tool)";
+	var _shortcut:String;
+	var _brain:Interaction;
 	
 	public function init(brain:Interaction):Tool
 	{
@@ -41,7 +42,7 @@ class Tool extends Sprite implements IFlxDestroyable
 		return _brain.activeTool == this && _brain.visible;
 	}
 	
-	private function setButton(Icon:Class<BitmapData>):Void
+	function setButton(Icon:Class<BitmapData>):Void
 	{
 		button = new FlxSystemButton(Type.createInstance(Icon, [0, 0]), onButtonClicked, true);
 		button.toggled = true;
@@ -52,13 +53,43 @@ class Tool extends Sprite implements IFlxDestroyable
 		Tooltip.add(button, tooltip);
 	}
 	
-	private function setCursor(Icon:BitmapData):Void
+	/**
+	 * Set the default icon for the tool. The default icon is used when
+	 * the tool is selected in the interaction window toolbar. Tools
+	 * can have more than one cursor, e.g. a custom cursor to indicate
+	 * that a specific action is happening. Use `setCursorInUse()` to
+	 * learn more about custom cursors.
+	 */
+	function setCursor(Icon:BitmapData):Void
 	{
 		cursor = Icon;
 		_brain.registerCustomCursor(_name, cursor);
 	}
+
+	/**
+	 * Make the tool use a custom cursor that it is not its default one.
+	 * This is  particularly useful to indicate to users that a particular
+	 * action of the tool is happening, e.g. rotating something.
+	 * Any custom cursor to be used must be previously registed via
+	 * `Interaction#registerCustomCursor()`.
+	 * 
+	 * @param	customCursorName	Name of the custom cursor that will be used from now on for the tool. If an empty string is informed, the tool's default icon (informed via `setCursor()`) will be used.
+	 */
+	function setCursorInUse(customCursorName:String):Void
+	{
+		cursorInUse = customCursorName;
+	}
+
+	/**
+	 * Make the tool use its default cursor, which was informed via `setCursor()`.
+	 */
+	function useDefaultCursor():Void
+	{
+		if (cursorInUse != "")
+			cursorInUse = "";
+	}
 	
-	private function onButtonClicked():Void
+	function onButtonClicked():Void
 	{
 		_brain.setActiveTool(this);
 	}

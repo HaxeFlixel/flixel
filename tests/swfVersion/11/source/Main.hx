@@ -1,3 +1,6 @@
 package;
 
-class Main {}
+class Main
+{
+	static function main() {}
+}

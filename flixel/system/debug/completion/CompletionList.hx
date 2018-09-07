@@ -17,13 +17,13 @@ class CompletionList extends Sprite
 	
 	public var items(default, null):Array<String>;
 	
-	private var entries:Array<CompletionListEntry> = [];
-	private var originalItems:Array<String>;
-	private var selectedIndex:Int = 0;
-	private var lowerVisibleIndex:Int = 0;
-	private var upperVisibleIndex:Int = 0;
-	private var scrollBar:CompletionListScrollBar;
-	private var actualHeight:Int;
+	var entries:Array<CompletionListEntry> = [];
+	var originalItems:Array<String>;
+	var selectedIndex:Int = 0;
+	var lowerVisibleIndex:Int = 0;
+	var upperVisibleIndex:Int = 0;
+	var scrollBar:CompletionListScrollBar;
+	var actualHeight:Int;
 	
 	public function new(capacity:Int) 
 	{
@@ -64,7 +64,7 @@ class CompletionList extends Sprite
 			closed();
 	}
 	
-	private function createPopupEntries(amount:Int)
+	function createPopupEntries(amount:Int)
 	{
 		for (i in 0...amount)
 		{
@@ -75,14 +75,14 @@ class CompletionList extends Sprite
 		}
 	}
 	
-	private function createScrollBar()
+	function createScrollBar()
 	{
 		scrollBar = new CompletionListScrollBar(
 			CompletionListEntry.WIDTH, 0, 5, actualHeight);
 		addChild(scrollBar);
 	}
 	
-	private function onKeyDown(e:KeyboardEvent)
+	function onKeyDown(e:KeyboardEvent)
 	{
 		if (!visible)
 			return;
@@ -93,7 +93,7 @@ class CompletionList extends Sprite
 				updateIndices(1);
 			
 			case Keyboard.UP:
-				updateIndices( -1);
+				updateIndices(-1);
 			
 			case Keyboard.ENTER:
 				if (completed != null)
@@ -109,7 +109,7 @@ class CompletionList extends Sprite
 		updateEntries();
 	}
 	
-	private function updateIndices(modifier:Int)
+	function updateIndices(modifier:Int)
 	{
 		selectedIndex = bound(selectedIndex + modifier);
 		if (FlxMath.inBounds(selectedIndex, lowerVisibleIndex, upperVisibleIndex))
@@ -130,19 +130,19 @@ class CompletionList extends Sprite
 			lowerVisibleIndex = items.length - entries.length;
 	}
 	
-	private function bound(index:Int)
+	function bound(index:Int)
 	{
 		return Std.int(FlxMath.bound(index, 0, items.length - 1));
 	}
 	
-	private function updateEntries()
+	function updateEntries()
 	{
 		updateLabels();
 		updateSelectedItem();
 		scrollBar.updateHandle(lowerVisibleIndex, items.length, entries.length);
 	}
 	
-	private function updateLabels()
+	function updateLabels()
 	{
 		for (i in 0...entries.length)
 		{
@@ -153,7 +153,7 @@ class CompletionList extends Sprite
 		}
 	}
 	
-	private function updateSelectedItem()
+	function updateSelectedItem()
 	{
 		for (entry in entries)
 			entry.selected = false;
@@ -163,7 +163,7 @@ class CompletionList extends Sprite
 			selectionChanged(items[selectedIndex]);
 	}
 	
-	private function setItems(items:Array<String>)
+	function setItems(items:Array<String>)
 	{
 		if (items == null)
 			return;
@@ -178,7 +178,7 @@ class CompletionList extends Sprite
 		updateEntries();
 	}
 	
-	private function filterItems(filter:String):Array<String>
+	function filterItems(filter:String):Array<String>
 	{
 		if (filter == null)
 			filter = "";
@@ -194,7 +194,7 @@ class CompletionList extends Sprite
 	 *   - strings starting with the filter have a higher priority than those only containing it
 	 *   - of those, shorter items (-> closer to the filter) have a higher priority
 	 */
-	private function sortItems(filter:String, items:Array<String>):Array<String>
+	function sortItems(filter:String, items:Array<String>):Array<String>
 	{
 		if (filter == "")
 			return items;
@@ -218,7 +218,7 @@ class CompletionList extends Sprite
 	/**
 	 * Custom startsWith() that ignores leading underscores.
 	 */
-	private function startsWithExt(s:String, start:String):Int
+	function startsWithExt(s:String, start:String):Int
 	{
 		if (s.startsWith(start))
 			return 2;
@@ -227,7 +227,7 @@ class CompletionList extends Sprite
 		return 0;
 	}
 	
-	private function set_filter(filter:String):String
+	function set_filter(filter:String):String
 	{
 		if (filter == this.filter)
 			return filter;

@@ -5,7 +5,7 @@ import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
-import flixel.graphics.tile.FlxTilesheet;
+import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import openfl.Assets;
@@ -91,71 +91,71 @@ class FlxGame extends Sprite
 	 * A flag for triggering the `gameStarted` "event".
 	 */
 	@:allow(flixel.system.FlxSplash)
-	private var _gameJustStarted:Bool = false;
+	var _gameJustStarted:Bool = false;
 	
 	/**
 	 * Class type of the initial/first game state for the game, usually `MenuState` or something like that.
 	 */
-	private var _initialState:Class<FlxState>;
+	var _initialState:Class<FlxState>;
 	/**
 	 * Current game state.
 	 */
-	private var _state:FlxState;
+	var _state:FlxState;
 	/**
 	 * Total number of milliseconds elapsed since game start.
 	 */
-	private var _total:Int = 0;
+	var _total:Int = 0;
 	/**
 	 * Time stamp of game startup. Needed on JS where `Lib.getTimer()`
 	 * returns time stamp of current date, not the time passed since app start.
 	 */
-	private var _startTime:Int = 0;
+	var _startTime:Int = 0;
 	/**
 	 * Total number of milliseconds elapsed since last update loop.
 	 * Counts down as we step through the game loop.
 	 */
-	private var _accumulator:Float;
+	var _accumulator:Float;
 	/**
 	 * Milliseconds of time since last step.
 	 */
-	private var _elapsedMS:Float;
+	var _elapsedMS:Float;
 	/**
 	 * Milliseconds of time per step of the game loop. e.g. 60 fps = 16ms.
 	 */
-	private var _stepMS:Float;
+	var _stepMS:Float;
 	/**
 	 * Optimization so we don't have to divide step by 1000 to get its value in seconds every frame.
 	 */
-	private var _stepSeconds:Float;
+	var _stepSeconds:Float;
 	/**
 	 * Max allowable accumulation (see `_accumulator`).
 	 * Should always (and automatically) be set to roughly 2x the stage framerate.
 	 */
-	private var _maxAccumulation:Float;
+	var _maxAccumulation:Float;
 	
 	/**
 	 * Whether the game lost focus.
 	 */
-	private var _lostFocus:Bool = false;
+	var _lostFocus:Bool = false;
 	
 	/**
 	 * The filters array to be applied to the game.
 	 */
-	private var _filters:Array<BitmapFilter>;
+	var _filters:Array<BitmapFilter>;
 	
 	#if (desktop && lime_legacy)
 	/**
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
 	 */
-	private var _onFocusFiredOnce:Bool = false;
+	var _onFocusFiredOnce:Bool = false;
 	#end
 	
 	#if FLX_FOCUS_LOST_SCREEN 
 	/**
 	 * The "focus lost" screen.
 	 */
-	private var _focusLostScreen:FlxFocusLostScreen;
+	var _focusLostScreen:FlxFocusLostScreen;
 	#end
 	
 	/**
@@ -163,14 +163,14 @@ class FlxGame extends Sprite
 	 */
 	@:allow(flixel.FlxG)
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	private var _inputContainer:Sprite;
+	var _inputContainer:Sprite;
 	
 	#if FLX_SOUND_TRAY
 	/**
 	 * Change this after calling `super()` in the `FlxGame` constructor
 	 * to use a customized sound tray based on `FlxSoundTray`.
 	 */
-	private var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
+	var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
 	#end
 	
 	#if FLX_FOCUS_LOST_SCREEN
@@ -178,58 +178,58 @@ class FlxGame extends Sprite
 	 * Change this after calling `super()` in the `FlxGame` constructor
 	 * to use a customized screen which will be show when the application lost focus.
 	 */
-	private var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
+	var _customFocusLostScreen:Class<FlxFocusLostScreen> = FlxFocusLostScreen;
 	#end
 	
 	/**
 	 * Whether the splash screen should be skipped.
 	 */
-	private var _skipSplash:Bool = false;
+	var _skipSplash:Bool = false;
 	
 	#if desktop
 	/**
 	 * Should we start fullscreen or not? This is useful if you want to load fullscreen settings from a
 	 * `FlxSave` and set it when the game starts, instead of having it hard-set in your `Project.xml`.
 	 */
-	private var _startFullscreen:Bool = false;
+	var _startFullscreen:Bool = false;
 	#end
 	
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
-	private var _requestedState:FlxState;
+	var _requestedState:FlxState;
 	/**
 	 * A flag for keeping track of whether a game reset was requested or not.
 	 */
-	private var _resetGame:Bool = false;
+	var _resetGame:Bool = false;
 	
 	#if FLX_RECORD
 	/**
 	 * Container for a game replay object.
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
-	private var _replay:FlxReplay;
+	var _replay:FlxReplay;
 	/**
 	 * Flag for whether a playback of a recording was requested.
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
-	private var _replayRequested:Bool = false;
+	var _replayRequested:Bool = false;
 	/**
 	 * Flag for whether a new recording was requested.
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
-	private var _recordingRequested:Bool = false;
+	var _recordingRequested:Bool = false;
 	#end
 	
 	#if FLX_POST_PROCESS
 	/**
 	 * `Sprite` for postprocessing effects
 	 */
-	private var postProcessLayer:Sprite = new Sprite();
+	var postProcessLayer:Sprite = new Sprite();
 	/**
 	 * Post process effects active on the `postProcessLayer`.
 	 */
-	private var postProcesses:Array<PostProcess> = [];
+	var postProcesses:Array<PostProcess> = [];
 	#end
 	
 	/**
@@ -292,7 +292,7 @@ class FlxGame extends Sprite
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 */
-	private function create(_):Void
+	function create(_):Void
 	{
 		if (stage == null)
 			return;
@@ -339,7 +339,7 @@ class FlxGame extends Sprite
 		#end
 		
 		// Focus gained/lost monitoring
-		#if desktop
+		#if (desktop && openfl <= "4.0.0")
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#else
@@ -368,7 +368,7 @@ class FlxGame extends Sprite
 		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
 	}
 	
-	private function onFocus(_):Void
+	function onFocus(_):Void
 	{
 		#if flash
 		if (!_lostFocus) 
@@ -412,7 +412,7 @@ class FlxGame extends Sprite
 		FlxG.inputs.onFocus();
 	}
 	
-	private function onFocusLost(event:Event):Void
+	function onFocusLost(event:Event):Void
 	{
 		#if next
 		if (event != null && event.target != FlxG.stage)
@@ -448,7 +448,7 @@ class FlxGame extends Sprite
 	}
 	
 	@:allow(flixel.FlxG)
-	private function onResize(_):Void 
+	function onResize(_):Void 
 	{
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
@@ -461,7 +461,7 @@ class FlxGame extends Sprite
 		resizeGame(width, height);
 	}
 	
-	private function resizeGame(width:Int, height:Int):Void
+	function resizeGame(width:Int, height:Int):Void
 	{
 		FlxG.resizeGame(width, height);
 		
@@ -493,7 +493,7 @@ class FlxGame extends Sprite
 	/**
 	 * Handles the `onEnterFrame` call and figures out how many updates and draw calls to do.
 	 */
-	private function onEnterFrame(_):Void
+	function onEnterFrame(_):Void
 	{
 		ticks = getTicks();
 		_elapsedMS = ticks - _total;
@@ -561,7 +561,7 @@ class FlxGame extends Sprite
 	 * Internal method to create a new instance of `_initialState` and reset the game.
 	 * This gets called when the game is created, as well as when a new state is requested.
 	 */
-	private inline function resetGame():Void
+	inline function resetGame():Void
 	{
 		FlxG.signals.preGameReset.dispatch();
 		
@@ -597,7 +597,7 @@ class FlxGame extends Sprite
 	 * this function handles actual destroying the old state and related processes,
 	 * and calls creates on the new state and plugs it into the game object.
 	 */
-	private function switchState():Void
+	function switchState():Void
 	{
 		// Basic reset stuff
 		FlxG.cameras.reset();
@@ -634,7 +634,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	private function gameStart():Void
+	function gameStart():Void
 	{
 		FlxG.signals.gameStarted.dispatch();
 		_gameJustStarted = false;
@@ -646,7 +646,7 @@ class FlxGame extends Sprite
 	 * the appropriate number of times each frame.
 	 * This block handles state changes, replays, all that good stuff.
 	 */
-	private function step():Void
+	function step():Void
 	{
 		// Handle game reset request
 		if (_resetGame)
@@ -669,7 +669,7 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	private function handleReplayRequests():Void
+	function handleReplayRequests():Void
 	{
 		#if FLX_RECORD
 		// Handle replay-related requests
@@ -703,7 +703,7 @@ class FlxGame extends Sprite
 	 * This function is called by `step()` and updates the actual game state.
 	 * May be called multiple times per "frame" or draw call.
 	 */
-	private function update():Void
+	function update():Void
 	{
 		if (!_state.active || !_state.exists)
 			return;
@@ -748,7 +748,7 @@ class FlxGame extends Sprite
 		filters = filtersEnabled ? _filters : null;
 	}
 	
-	private function updateElapsed():Void
+	function updateElapsed():Void
 	{
 		if (FlxG.fixedTimestep)
 		{
@@ -764,7 +764,7 @@ class FlxGame extends Sprite
 		}
 	}
 	
-	private function updateInput():Void
+	function updateInput():Void
 	{
 		#if FLX_RECORD
 		if (replaying)
@@ -827,7 +827,7 @@ class FlxGame extends Sprite
 	/**
 	 * Goes through the game state and draws all the game objects and special effects.
 	 */
-	private function draw():Void
+	function draw():Void
 	{
 		if (!_state.visible || !_state.exists)
 			return;
@@ -840,7 +840,7 @@ class FlxGame extends Sprite
 		FlxG.signals.preDraw.dispatch();
 		
 		if (FlxG.renderTile)
-			FlxTilesheet._DRAWCALLS = 0;
+			FlxDrawBaseItem.drawCalls = 0;
 		
 		#if FLX_POST_PROCESS
 		if (postProcesses[0] != null)
@@ -858,7 +858,7 @@ class FlxGame extends Sprite
 			FlxG.cameras.render();
 			
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxTilesheet._DRAWCALLS);
+			debugger.stats.drawCalls(FlxDrawBaseItem.drawCalls);
 			#end
 		}
 	
@@ -871,12 +871,12 @@ class FlxGame extends Sprite
 		#end
 	}
 	
-	private inline function getTicks()
+	inline function getTicks()
 	{
 		return getTimer() - _startTime;
 	}
 	
-	private dynamic function getTimer():Int
+	dynamic function getTimer():Int
 	{
 		// expensive, only call if necessary
 		return Lib.getTimer();

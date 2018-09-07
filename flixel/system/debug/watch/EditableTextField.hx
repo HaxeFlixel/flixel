@@ -15,12 +15,12 @@ class EditableTextField extends TextField implements IFlxDestroyable
 {
 	public var isEditing(default, null):Bool;
 
-	private var allowEditing:Bool;
-	private var submitValue:Dynamic->Void;
-	private var expectedType:ValueType;
+	var allowEditing:Bool;
+	var submitValue:Dynamic->Void;
+	var expectedType:ValueType;
 
-	private var defaultFormat:TextFormat;
-	private var editFormat:TextFormat;
+	var defaultFormat:TextFormat;
+	var editFormat:TextFormat;
 	
 	public function new(allowEditing:Bool, defaultFormat:TextFormat, submitValue:Dynamic->Void, expectedType:ValueType)
 	{
@@ -52,12 +52,12 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		}
 	}
 	
-	private function onMouseUp(_):Void
+	function onMouseUp(_):Void
 	{
 		setIsEditing(true);
 	}
 	
-	private function onKeyUp(e:KeyboardEvent):Void
+	function onKeyUp(e:KeyboardEvent):Void
 	{
 		switch (e.keyCode)
 		{
@@ -68,7 +68,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		}
 	}
 
-	private function onKeyDown(e:KeyboardEvent):Void
+	function onKeyDown(e:KeyboardEvent):Void
 	{
 		var modifier = 1.0;
 		if (e.altKey)
@@ -83,7 +83,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		}
 	}
 
-	private function cycleValue(modifier:Float, selection:Int):Void
+	function cycleValue(modifier:Float, selection:Int):Void
 	{
 		switch (expectedType)
 		{
@@ -101,12 +101,12 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		}
 	}
 
-	private function selectEnd():Void
+	function selectEnd():Void
 	{
 		setSelection(text.length, text.length);
 	}
 	
-	private function cycleNumericValue(modifier:Float):Void
+	function cycleNumericValue(modifier:Float):Void
 	{
 		var value:Float = Std.parseFloat(text);
 		if (Math.isNaN(value))
@@ -117,7 +117,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		text = Std.string(value);
 	}
 
-	private function cycleEnumValue(e:Enum<Dynamic>, modifier:Int):Void
+	function cycleEnumValue(e:Enum<Dynamic>, modifier:Int):Void
 	{
 		var values = e.getConstructors();
 		var index = values.indexOf(text);
@@ -131,7 +131,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		text = Std.string(values[index]);
 	}
 
-	private function onFocusLost(_)
+	function onFocusLost(_)
 	{
 		setIsEditing(false);
 	}
@@ -161,7 +161,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		setIsEditing(false);
 	}
 	
-	private function setIsEditing(isEditing:Bool)
+	function setIsEditing(isEditing:Bool)
 	{
 		this.isEditing = isEditing;
 		

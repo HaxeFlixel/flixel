@@ -119,5 +119,5 @@ class FlxDestroyUtil
 
 interface IFlxDestroyable
 {
-	public function destroy():Void;
+	function destroy():Void;
 }

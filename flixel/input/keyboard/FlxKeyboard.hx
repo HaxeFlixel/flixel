@@ -17,13 +17,17 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * this workaround fixes that. Thanks @HaxePunk!
 	 * @see https://github.com/openfl/openfl-native/issues/193
 	 */
-	private var _nativeCorrection:Map<String, Int>;
+	var _nativeCorrection:Map<String, Int>;
 	#end
 	
 	public function new()
 	{
-		super(FlxKeyList);
+		super(FlxKeyList.new);
 		
+		#if html5
+		preventDefaultKeys = [FlxKey.UP, FlxKey.DOWN, FlxKey.LEFT, FlxKey.RIGHT, FlxKey.SPACE, FlxKey.TAB];
+		#end
+
 		for (code in FlxKey.fromStringMap)
 		{
 			if (code != FlxKey.ANY && code != FlxKey.NONE)
@@ -89,7 +93,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		#end
 	}
 	
-	override private function onKeyUp(event:KeyboardEvent):Void
+	override function onKeyUp(event:KeyboardEvent):Void
 	{
 		super.onKeyUp(event);
 		
@@ -102,7 +106,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		#end
 	}
 	
-	override private function onKeyDown(event:KeyboardEvent):Void
+	override function onKeyDown(event:KeyboardEvent):Void
 	{
 		super.onKeyDown(event);
 		
@@ -115,7 +119,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		#end
 	}
 	
-	override private function resolveKeyCode(e:KeyboardEvent):Int
+	override function resolveKeyCode(e:KeyboardEvent):Int
 	{
 		#if web
 			return e.keyCode;
@@ -133,7 +137,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @return	An array of key state data. Null if there is no data.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	private function record():Array<CodeValuePair>
+	function record():Array<CodeValuePair>
 	{
 		var data:Array<CodeValuePair> = null;
 		
@@ -162,7 +166,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @param	Record	Array of data about key states.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	private function playback(Record:Array<CodeValuePair>):Void
+	function playback(Record:Array<CodeValuePair>):Void
 	{
 		var i:Int = 0;
 		var l:Int = Record.length;

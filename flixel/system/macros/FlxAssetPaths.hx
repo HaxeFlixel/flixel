@@ -7,7 +7,7 @@ import sys.FileSystem;
 using flixel.util.FlxArrayUtil;
 using StringTools;
 
-class FlxAssetPaths 
+class FlxAssetPaths
 {
 	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
 	{
@@ -32,7 +32,7 @@ class FlxAssetPaths
 		return fields;
 	}
 	
-	private static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
+	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
@@ -52,7 +52,9 @@ class FlxAssetPaths
 						continue;
 				}
 				
-				fileReferences.push(new FileReference(directory + name));
+				var reference = FileReference.fromPath(directory + name);
+				if (reference != null)
+					fileReferences.push(reference);
 			}
 			else if (subDirectories)
 			{
@@ -66,21 +68,28 @@ class FlxAssetPaths
 
 private class FileReference
 {
-	public var name:String;
-	public var value:String;
-	public var documentation:String;
-	
-	public function new(value:String)
+	private static var validIdentifierPattern = ~/^[_A-Za-z]\w*$/;
+
+	public static function fromPath(value:String):Null<FileReference>
 	{
-		this.value = value;
-		
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		this.name = value.split("-").join("_").split(".").join("__");
+		var name = value.split("-").join("_").split(".").join("__");
 		var split:Array<String> = name.split("/");
-		this.name = split.last();
-		
-		// auto generate documentation
-		this.documentation = "\"" + value + "\" (auto generated).";
+		name = split.last();
+		if (!validIdentifierPattern.match(name)) // #1796
+			return null;
+		return new FileReference(name, value);
+	}
+
+	public var name(default, null):String;
+	public var value(default, null):String;
+	public var documentation(default, null):String;
+	
+	function new(name:String, value:String)
+	{
+		this.name = name;
+		this.value = value;
+		this.documentation = "`\"" + value + "\"` (auto generated).";
 	}
 }
 #end

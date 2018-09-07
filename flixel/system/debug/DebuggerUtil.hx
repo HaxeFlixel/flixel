@@ -38,7 +38,7 @@ class DebuggerUtil
 	}
 	
 	@:allow(flixel.system)
-	private static function fixSize(bitmapData:BitmapData):BitmapData
+	static function fixSize(bitmapData:BitmapData):BitmapData
 	{
 		#if html5 // dirty hack for openfl/openfl#682
 		Reflect.setProperty(bitmapData, "width", 11);

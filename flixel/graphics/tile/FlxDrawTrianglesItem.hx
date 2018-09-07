@@ -11,11 +11,7 @@ import openfl.display.Graphics;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
 
-#if flash
-import openfl.Vector;
-#end
-
-typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
+typedef DrawData<T> = #if (flash || openfl >= "4.0.0") openfl.Vector<T> #else Array<T> #end;
 
 /**
  * ...
@@ -23,8 +19,8 @@ typedef DrawData<T> = #if flash Vector<T> #else Array<T> #end;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
-	private static var point:FlxPoint = FlxPoint.get();
-	private static var rect:FlxRect = FlxRect.get();
+	static var point:FlxPoint = FlxPoint.get();
+	static var rect:FlxRect = FlxRect.get();
 	
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
@@ -35,9 +31,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var indicesPosition:Int = 0;
 	public var colorsPosition:Int = 0;
 	
-	private var bounds:FlxRect = FlxRect.get();
+	var bounds:FlxRect = FlxRect.get();
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
@@ -67,7 +63,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		}
 		#end
 		
-		FlxTilesheet._DRAWCALLS++;
+		super.render(camera);
 	}
 	
 	override public function reset():Void 
@@ -282,12 +278,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indicesPosition += 6;
 	}
 	
-	override private function get_numVertices():Int
+	override function get_numVertices():Int
 	{
 		return Std.int(vertices.length / 2);
 	}
 	
-	override private function get_numTriangles():Int
+	override function get_numTriangles():Int
 	{
 		return Std.int(indices.length / 3);
 	}

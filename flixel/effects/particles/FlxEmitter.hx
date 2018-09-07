@@ -24,7 +24,11 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
  * at set intervals by setting their positions and velocities accordingly.
  * It is easy to use and relatively efficient, relying on `FlxGroup`'s RECYCLE POWERS.
  */
+#if (haxe_ver >= "4.0.0")
+class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
+#else
 class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
+#end
 {
 	/**
 	 * Set your own particle class type here. The custom class must extend `FlxParticle`. Default is `FlxParticle`.
@@ -153,27 +157,27 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	/**
 	 * Internal helper for deciding how many particles to launch.
 	 */
-	private var _quantity:Int = 0;
+	var _quantity:Int = 0;
 	/**
 	 * Internal helper for the style of particle emission (all at once, or one at a time).
 	 */
-	private var _explode:Bool = true;
+	var _explode:Bool = true;
 	/**
 	 * Internal helper for deciding when to launch particles or kill them.
 	 */
-	private var _timer:Float = 0;
+	var _timer:Float = 0;
 	/**
 	 * Internal counter for figuring out how many particles to launch.
 	 */
-	private var _counter:Int = 0;
+	var _counter:Int = 0;
 	/**
 	 * Internal point object, handy for reusing for memory management purposes.
 	 */
-	private var _point:FlxPoint = FlxPoint.get();
+	var _point:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal helper for automatically calling the `kill()` method
 	 */
-	private var _waitForKill:Bool = false;
+	var _waitForKill:Bool = false;
 	
 	/**
 	 * Creates a new `FlxTypedEmitter` object at a specific position.
@@ -252,7 +256,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		return this;
 	}
 	
-	private function loadParticle(Graphics:FlxGraphicAsset, Quantity:Int, bakedRotationAngles:Int,
+	function loadParticle(Graphics:FlxGraphicAsset, Quantity:Int, bakedRotationAngles:Int,
 		Multiple:Bool = false, AutoBuffer:Bool = false, totalFrames:Int):T
 	{
 		var particle:T = Type.createInstance(particleClass, []);
@@ -317,7 +321,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		super.update(elapsed);
 	}
 	
-	private function explode():Void
+	function explode():Void
 	{
 		var amount:Int = _quantity;
 		if (amount <= 0 || amount > length)
@@ -329,7 +333,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		onFinished();
 	}
 	
-	private function emitContinuously(elapsed:Float):Void
+	function emitContinuously(elapsed:Float):Void
 	{
 		// Spawn one particle per frame
 		if (frequency <= 0)
@@ -348,7 +352,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		}
 	}
 	
-	private function emitParticleContinuously():Void
+	function emitParticleContinuously():Void
 	{
 		emitParticle();
 		_counter++;
@@ -357,7 +361,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 			onFinished();
 	}
 	
-	private function onFinished():Void
+	function onFinished():Void
 	{
 		emitting = false;
 		_waitForKill = true;
@@ -603,12 +607,12 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 		height = Height;
 	}
 	
-	private inline function get_solid():Bool
+	inline function get_solid():Bool
 	{
 		return (allowCollisions & FlxObject.ANY) > FlxObject.NONE;
 	}
 	
-	private function set_solid(Solid:Bool):Bool
+	function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{

@@ -11,14 +11,14 @@ import flixel.system.debug.FlxDebugger.GraphicLog;
 class Log extends Window
 {
 	public static inline var MAX_LOG_LINES:Int = 200;
-	private static inline var LINE_BREAK:String = #if js "\n" #else "<br>"#end; 
+	static inline var LINE_BREAK:String = #if js "\n" #else "<br>"#end; 
 
-	private var _text:TextField;
-	private var _lines:Array<String>;
+	var _text:TextField;
+	var _lines:Array<String>;
 	
 	/**
 	 * Creates a log window object.
-	 */	
+	 */
 	public function new()
 	{
 		super("Log", new GraphicLog(0, 0));
@@ -143,7 +143,7 @@ class Log extends Window
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		super.updateSize();
 		

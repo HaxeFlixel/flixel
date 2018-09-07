@@ -136,9 +136,9 @@ class DebuggerFrontEnd
 	}
 	
 	@:allow(flixel.FlxG)
-	private function new() {}
+	function new() {}
 	
-	private function set_drawDebug(Value:Bool):Bool
+	function set_drawDebug(Value:Bool):Bool
 	{
 		if (drawDebug == Value)
 			return drawDebug;
@@ -151,7 +151,7 @@ class DebuggerFrontEnd
 	}
 	
 	@:access(flixel.FlxGame.onFocus)
-	private function set_visible(Value:Bool):Bool
+	function set_visible(Value:Bool):Bool
 	{
 		if (visible == Value)
 			return visible;

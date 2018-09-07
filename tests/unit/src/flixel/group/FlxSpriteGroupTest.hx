@@ -53,7 +53,7 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.areEqual(0, group.countDead());
 	}
 	
-	@Test // 2051
+	@Test // #2051
 	function testClipRect()
 	{
 		var rect = FlxRect.get(10, 10, 50, 50);
@@ -75,5 +75,15 @@ class FlxSpriteGroupTest extends FlxTest
 		group2.clipRect = FlxRect.get(20, 20, 50, 50);
 		
 		Assert.isTrue(child.clipRect.equals(FlxRect.weak( -80, -80, 50, 50))); // child.clipRect should be overridden
+	}
+
+	@Test // #1353
+	function testZeroAlpha()
+	{
+		group.alpha = 0;
+		Assert.areEqual(0, group.members[0].alpha);
+
+		group.alpha = 1;
+		Assert.areEqual(1, group.members[0].alpha);
 	}
 }

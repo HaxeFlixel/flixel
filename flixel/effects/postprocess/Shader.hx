@@ -10,7 +10,7 @@ import openfl.gl.GLShader;
  */
 class Shader
 {
-	private var program:GLProgram;
+	var program:GLProgram;
 	
 	/**
 	 * Creates a new Shader
@@ -46,7 +46,7 @@ class Shader
 	 * @param   source   The shader source code
 	 * @param   type     The type of shader to compile (fragment, vertex)
 	 */
-	private function compile(source:String, type:Int):GLShader
+	function compile(source:String, type:Int):GLShader
 	{
 		var shader = GL.createShader(type);
 		GL.shaderSource(shader, source);

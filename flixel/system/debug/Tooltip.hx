@@ -15,20 +15,21 @@ import flixel.util.FlxDestroyUtil;
  */
 class Tooltip
 {
-	private static var _tooltips:Array<TooltipOverlay> = [];
-	private static var _container:Sprite;
+	static var _tooltips:Array<TooltipOverlay> = [];
+	static var _container:Sprite;
 	
 	public static function init(container:Sprite):Void
 	{
 		_container = container;
 	}
 	
-	public static function add(element:Sprite, text:String):Void
+	public static function add(element:Sprite, text:String):TooltipOverlay
 	{
 		var tooltip = new TooltipOverlay(element, text);
 		
 		_container.addChild(tooltip);
 		_tooltips.push(tooltip);
+		return tooltip;
 	}
 	
 	public static function remove(element:Sprite):Bool
@@ -58,41 +59,48 @@ class TooltipOverlay extends Sprite
 	/**
 	 * The background color of all tooltips.
 	 */
-	private static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
+	static inline var BG_COLOR:FlxColor = 0xFF3A3A3A;
 	
 	/**
 	 * Alpha applied to the tooltips text.
 	 */
-	private static inline var TEXT_ALPHA:Float = 0.8;
+	static inline var TEXT_ALPHA:Float = 0.8;
 	
 	/**
 	 * How many pixels the tooltip should be away from the target in the x axis.
 	 */
-	private static inline var MARGIN_X:Int = 10;
+	static inline var MARGIN_X:Int = 10;
 	
 	/**
 	 * How many pixels the tooltip should be away from the target in the y axis.
 	 */
-	private static inline var MARGIN_Y:Float = 10;
+	static inline var MARGIN_Y:Float = 10;
 	
 	/**
 	 * Width of the tooltip. Using Sprite.width is super unreliable for some reason!
 	 */
-	private var _width:Int;
+	var _width:Int;
 	/**
 	 * Height of the tooltip. Using Sprite.height is super unreliable for some reason!
 	 */
-	private var _height:Int;
+	var _height:Int;
 	
 	/**
 	 * Main elements
 	 */ 
-	private var _background:Bitmap;
-	private var _shadow:Bitmap;
-	private var _text:TextField;
+	var _background:Bitmap;
+	var _shadow:Bitmap;
+
+	/**
+	 * Texfield used by the tooltip to display text. If you change anything in the textfield,
+	 * be sure to call the proper methods of the tooltip to ensure it keeps a correct size, etc.
+	 * If you just want to change the text of the tooltip, use the method `setText()` instead, since
+	 * it takes care of properly resizing and positioning the tooltip after the text changes.
+	 */
+	public var textField(default, null):TextField;
 	
 	/**
-	 * The element the tooltip is attached to.
+	 * The element the tooltip is monitoring.
 	 */
 	public var owner(default, null):Sprite;
 	
@@ -105,7 +113,7 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Creates a new tooltip.
 	 * 
-	 * @param	target	Element where the tooltip will be attached to.
+	 * @param	target	Element the tooltip will monitor. If the tooltip is being used in "stand alone" fashion, i.e. not monitoring any element, then use `null` as the target.
 	 * @param	text	Text displayed with this tooltip.
 	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accommodate the text.
 	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accommodate the text.
@@ -121,20 +129,23 @@ class TooltipOverlay extends Sprite
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		
-		_text = DebuggerUtil.createTextField(2, 1);
-		_text.alpha = TEXT_ALPHA;
-		_text.text = text;
-		_text.wordWrap = true;
+		textField = DebuggerUtil.createTextField(2, 1);
+		textField.alpha = TEXT_ALPHA;
+		textField.text = text;
+		textField.wordWrap = true;
 		
 		addChild(_shadow);
 		addChild(_background);
-		addChild(_text);
+		addChild(textField);
 		
 		updateSize();
 		setVisible(false);
 		
-		owner.addEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
-		owner.addEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		if (owner != null)
+		{
+			owner.addEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
+			owner.addEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		}
 	}
 	
 	/**
@@ -144,11 +155,14 @@ class TooltipOverlay extends Sprite
 	{
 		_shadow = FlxDestroyUtil.removeChild(this, _shadow);
 		_background = FlxDestroyUtil.removeChild(this, _background);
-		_text = FlxDestroyUtil.removeChild(this, _text);
+		textField = FlxDestroyUtil.removeChild(this, textField);
 		maxSize = null;
 		
-		owner.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
-		owner.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		if (owner != null)
+		{
+			owner.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseEvents);
+			owner.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseEvents);
+		}
 		owner = null;
 	}
 	
@@ -188,6 +202,18 @@ class TooltipOverlay extends Sprite
 			ensureOnScreen();
 		}
 	}
+
+	/**
+	 * Change the text of the tooltip.
+	 *
+	 * @param 	Text	Text to be used in the tooltip.
+	 */
+	public function setText(Text:String):Void
+	{
+		textField.text = Text;
+		updateSize();
+		ensureOnScreen();
+	}	
 	
 	public function toggleVisible():Void
 	{
@@ -204,18 +230,18 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 */
-	private function updateSize():Void
+	function updateSize():Void
 	{
-		_width = Std.int(maxSize.x <= 0 ? _text.textWidth : Math.abs(maxSize.x)) + 8;
-		_height = Std.int(maxSize.y <= 0 ? _text.textHeight : Math.abs(maxSize.y)) + 8;
+		_width = Std.int(maxSize.x <= 0 ? textField.textWidth : Math.abs(maxSize.x)) + 8;
+		_height = Std.int(maxSize.y <= 0 ? textField.textHeight : Math.abs(maxSize.y)) + 8;
 		_background.scaleX = _width;
 		_background.scaleY = _height;
 		_shadow.scaleX = _width;
 		_shadow.y = _height;
-		_text.width = _width;
+		textField.width = _width;
 	}
 	
-	private function ensureOnScreen():Void
+	function ensureOnScreen():Void
 	{
 		// Move the tooltip back to the screen if top-left corner
 		// is out of the screen.
@@ -231,7 +257,7 @@ class TooltipOverlay extends Sprite
 		y += offsetY;
 	}
 	
-	private function handleMouseEvents(event:MouseEvent):Void
+	function handleMouseEvents(event:MouseEvent):Void
 	{
 		if (event.type == MouseEvent.MOUSE_OVER && !visible)
 		{

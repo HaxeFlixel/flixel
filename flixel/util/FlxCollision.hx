@@ -22,17 +22,17 @@ import flixel.tile.FlxTileblock;
 class FlxCollision 
 {
 	// Optimization: Local static vars to reduce allocations
-	private static var pointA:FlxVector = new FlxVector();
-	private static var pointB:FlxVector = new FlxVector();
-	private static var centerA:FlxVector = new FlxVector();
-	private static var centerB:FlxVector = new FlxVector();
-	private static var matrixA:FlxMatrix = new FlxMatrix();
-	private static var matrixB:FlxMatrix = new FlxMatrix();
-	private static var testMatrix:FlxMatrix = new FlxMatrix();
-	private static var boundsA:FlxRect = new FlxRect();
-	private static var boundsB:FlxRect = new FlxRect();
-	private static var intersect:FlxRect = new FlxRect();
-	private static var flashRect:Rectangle = new Rectangle();
+	static var pointA:FlxVector = new FlxVector();
+	static var pointB:FlxVector = new FlxVector();
+	static var centerA:FlxVector = new FlxVector();
+	static var centerB:FlxVector = new FlxVector();
+	static var matrixA:FlxMatrix = new FlxMatrix();
+	static var matrixB:FlxMatrix = new FlxMatrix();
+	static var testMatrix:FlxMatrix = new FlxMatrix();
+	static var boundsA:FlxRect = new FlxRect();
+	static var boundsB:FlxRect = new FlxRect();
+	static var intersect:FlxRect = new FlxRect();
+	static var flashRect:Rectangle = new Rectangle();
 	
 	/**
 	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a 

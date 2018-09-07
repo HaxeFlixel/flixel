@@ -23,16 +23,16 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * The local shared object itself.
 	 */
-	private var _sharedObject:SharedObject;
+	var _sharedObject:SharedObject;
 	
 	/**
 	 * Internal tracker for callback function in case save takes too long.
 	 */
-	private var _onComplete:Bool->Void;
+	var _onComplete:Bool->Void;
 	/**
 	 * Internal tracker for save object close request.
 	 */
-	private var _closeRequested:Bool = false;
+	var _closeRequested:Bool = false;
 	
 	public function new() {}
 
@@ -140,7 +140,7 @@ class FlxSave implements IFlxDestroyable
 	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
 	 * @return	Whether the operation was a success or not.
 	 */
-	private function onDone(Result:FlxSaveStatus):Bool
+	function onDone(Result:FlxSaveStatus):Bool
 	{
 		switch (Result)
 		{
@@ -165,7 +165,7 @@ class FlxSave implements IFlxDestroyable
 	 * 
 	 * @return	Whether the shared object was bound yet.
 	 */
-	private function checkBinding():Bool
+	function checkBinding():Bool
 	{
 		if (_sharedObject == null)
 		{

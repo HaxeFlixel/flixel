@@ -33,8 +33,8 @@ class FlxSoundGroup
 	{
 		if (sounds.indexOf(sound) < 0)
 		{
-			sound.group = this;
 			sounds.push(sound);
+			sound.group = this;
 			return true;
 		}
 		return false;
@@ -75,7 +75,7 @@ class FlxSoundGroup
 			sound.resume();
 	}
 	
-	private function set_volume(volume:Float):Float
+	function set_volume(volume:Float):Float
 	{
 		this.volume = volume;
 		for (sound in sounds)

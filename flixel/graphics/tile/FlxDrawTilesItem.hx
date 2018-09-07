@@ -1,5 +1,6 @@
 package flixel.graphics.tile;
 
+#if !FLX_DRAW_QUADS
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
@@ -16,7 +17,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 	public var numTiles(get, never):Int;
 	public var shader:FlxShader;
 	
-	public function new() 
+	public function new()
 	{
 		super();
 		type = FlxDrawItemType.TILES;
@@ -73,7 +74,7 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		#end
 	}
 	
-	private inline function setNext(f:Float):Void
+	inline function setNext(f:Float):Void
 	{
 		drawData[position++] = f;
 	}
@@ -102,10 +103,10 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 			position);
 		#end
 
-		FlxTilesheet._DRAWCALLS++;
+		super.render(camera);
 	}
 	
-	private function get_numTiles():Int
+	function get_numTiles():Int
 	{
 		var elementsPerTile:Int = 8; // x, y, id, trans (4 elements) and alpha
 		if (colored)
@@ -118,13 +119,14 @@ class FlxDrawTilesItem extends FlxDrawBaseItem<FlxDrawTilesItem>
 		return Std.int(position / elementsPerTile);
 	}
 	
-	override private function get_numVertices():Int
+	override function get_numVertices():Int
 	{
 		return 4 * numTiles;
 	}
 	
-	override private function get_numTriangles():Int
+	override function get_numTriangles():Int
 	{
 		return 2 * numTiles;
 	}
 }
+#end

@@ -102,48 +102,48 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
-	private var _flashPoint:Point = new Point();
+	var _flashPoint:Point = new Point();
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods.
 	 */
-	private var _flashRect:Rectangle = new Rectangle();
+	var _flashRect:Rectangle = new Rectangle();
 	/**
 	 * Internal list of buffers, one for each camera, used for drawing the tilemaps.
 	 */
-	private var _buffers:Array<FlxTilemapBuffer> = [];
+	var _buffers:Array<FlxTilemapBuffer> = [];
 	/**
 	 * Internal, the width of a single tile.
 	 */
-	private var _tileWidth:Int = 0;
+	var _tileWidth:Int = 0;
 	/**
 	 * Internal, the height of a single tile.
 	 */
-	private var _tileHeight:Int = 0;
+	var _tileHeight:Int = 0;
 	
-	private var _scaledTileWidth:Float = 0;
-	private var _scaledTileHeight:Float = 0;
+	var _scaledTileWidth:Float = 0;
+	var _scaledTileHeight:Float = 0;
 	
 	#if FLX_DEBUG
-	private var _debugTileNotSolid:BitmapData;
-	private var _debugTilePartial:BitmapData;
-	private var _debugTileSolid:BitmapData;
-	private var _debugRect:Rectangle;
+	var _debugTileNotSolid:BitmapData;
+	var _debugTilePartial:BitmapData;
+	var _debugTileSolid:BitmapData;
+	var _debugRect:Rectangle;
 	#end
 	
 	/**
 	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in tile rendering mode
 	 */
-	private var _helperPoint:Point;
+	var _helperPoint:Point;
 	
 	/**
 	 * Rendering helper, used for tile's frame transformations (only in tile rendering mode).
 	 */
-	private var _matrix:FlxMatrix;
+	var _matrix:FlxMatrix;
 	
 	/**
 	 * Whether buffers need to be checked again next draw().
 	 */
-	private var _checkBufferChanges:Bool = false;
+	var _checkBufferChanges:Bool = false;
 	
 	public function new()
 	{
@@ -223,7 +223,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		super.destroy();
 	}
 	
-	private function set_frames(value:FlxFramesCollection):FlxFramesCollection
+	function set_frames(value:FlxFramesCollection):FlxFramesCollection
 	{
 		frames = value;
 		
@@ -239,17 +239,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return value;
 	}
 	
-	private function onGameResized(_, _):Void
+	function onGameResized(_, _):Void
 	{
 		_checkBufferChanges = true;
 	}
 	
-	private function onCameraChanged(_):Void
+	function onCameraChanged(_):Void
 	{
 		_checkBufferChanges = true;
 	}
 	
-	override private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
+	override function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void 
 	{
 		if (Std.is(TileGraphic, FlxFramesCollection))
 		{
@@ -273,7 +273,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(_tileWidth, _tileHeight));
 	}
 	
-	override private function initTileObjects():Void 
+	override function initTileObjects():Void 
 	{
 		if (frames == null)
 			return;
@@ -297,22 +297,22 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	
 	#if FLX_DEBUG
-	private function updateDebugTileBoundingBoxSolid():Void 
+	function updateDebugTileBoundingBoxSolid():Void 
 	{
 		_debugTileSolid = updateDebugTile(_debugTileSolid, debugBoundingBoxColorSolid);
 	}
 	
-	private function updateDebugTileBoundingBoxNotSolid():Void 
+	function updateDebugTileBoundingBoxNotSolid():Void 
 	{
 		_debugTileNotSolid = updateDebugTile(_debugTileNotSolid, debugBoundingBoxColorNotSolid);
 	}
 	
-	private function updateDebugTileBoundingBoxPartial():Void 
+	function updateDebugTileBoundingBoxPartial():Void 
 	{
 		_debugTilePartial = updateDebugTile(_debugTilePartial, debugBoundingBoxColorPartial);
 	}
 	
-	private function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
+	function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
 	{
 		if (FlxG.renderTile)
 			return null;
@@ -336,7 +336,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	#end
 	
-	override private function computeDimensions():Void 
+	override function computeDimensions():Void 
 	{
 		_scaledTileWidth = _tileWidth * scale.x;
 		_scaledTileHeight = _tileHeight * scale.y;
@@ -346,7 +346,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		height = heightInTiles * _scaledTileHeight;
 	}
 	
-	override private function updateMap():Void 
+	override function updateMap():Void 
 	{
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
@@ -504,7 +504,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		#end
 	}
 	
-	private function refreshBuffers():Void
+	function refreshBuffers():Void
 	{
 		for (i in 0...cameras.length)
 		{
@@ -882,7 +882,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	Camera		The related FlxCamera, mainly for scroll values.
 	 */
 	@:access(flixel.FlxCamera)
-	private function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
+	function drawTilemap(Buffer:FlxTilemapBuffer, Camera:FlxCamera):Void
 	{
 		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
 		
@@ -1030,7 +1030,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if FLX_DEBUG
-	private function makeDebugTile(color:FlxColor):BitmapData
+	function makeDebugTile(color:FlxColor):BitmapData
 	{
 		if (FlxG.renderTile)
 			return null;
@@ -1040,7 +1040,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return debugTile;
 	}
 	
-	private function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void
+	function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void
 	{
 		if (color != FlxColor.TRANSPARENT)
 		{
@@ -1057,7 +1057,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		}
 	}
 
-	private function onDrawDebugChanged():Void
+	function onDrawDebugChanged():Void
 	{
 		setDirty();
 	}
@@ -1068,7 +1068,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * 
 	 * @param	Index		The index of the tile object in _tileObjects internal array you want to update.
 	 */
-	override private function updateTile(Index:Int):Void
+	override function updateTile(Index:Int):Void
 	{
 		var tile:FlxTile = _tileObjects[Index];
 		if (tile == null || !tile.visible)
@@ -1077,7 +1077,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		tile.frame = frames.frames[Index - _startingIndex];
 	}
 	
-	private inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer
+	inline function createBuffer(camera:FlxCamera):FlxTilemapBuffer
 	{
 		var buffer = new FlxTilemapBuffer(_tileWidth, _tileHeight, widthInTiles, heightInTiles, camera, scale.x, scale.y);
 		buffer.pixelPerfectRender = pixelPerfectRender;
@@ -1085,7 +1085,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return buffer;
 	}
 	
-	private function set_antialiasing(value:Bool):Bool
+	function set_antialiasing(value:Bool):Bool
 	{
 		for (buffer in _buffers)
 			buffer.antialiasing = value;
@@ -1096,7 +1096,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Internal function for setting graphic property for this object. 
 	 * It changes graphic' useCount also for better memory tracking.
 	 */
-	private function set_graphic(Value:FlxGraphic):FlxGraphic
+	function set_graphic(Value:FlxGraphic):FlxGraphic
 	{
 		//If graphics are changing
 		if (graphic != Value)
@@ -1113,7 +1113,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return graphic = Value;
 	}
 	
-	override private function set_pixelPerfectRender(Value:Bool):Bool 
+	override function set_pixelPerfectRender(Value:Bool):Bool 
 	{
 		if (_buffers != null)
 			for (buffer in _buffers)
@@ -1122,14 +1122,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return pixelPerfectRender = Value;
 	}
 	
-	private function set_alpha(Alpha:Float):Float
+	function set_alpha(Alpha:Float):Float
 	{
 		alpha = FlxMath.bound(Alpha, 0, 1);
 		updateColorTransform();
 		return alpha;
 	}
 	
-	private function set_color(Color:FlxColor):Int
+	function set_color(Color:FlxColor):Int
 	{
 		if (color == Color)
 			return Color;
@@ -1139,7 +1139,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return color;
 	}
 	
-	private function updateColorTransform():Void
+	function updateColorTransform():Void
 	{
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
@@ -1152,19 +1152,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		setDirty();
 	}
 	
-	private function set_blend(Value:BlendMode):BlendMode 
+	function set_blend(Value:BlendMode):BlendMode 
 	{
 		setDirty();
 		return blend = Value;
 	}
 	
-	private function setScaleXYCallback(Scale:FlxPoint):Void
+	function setScaleXYCallback(Scale:FlxPoint):Void
 	{
 		setScaleXCallback(Scale);
 		setScaleYCallback(Scale);
 	}
 	
-	private function setScaleXCallback(Scale:FlxPoint):Void
+	function setScaleXCallback(Scale:FlxPoint):Void
 	{
 		_scaledTileWidth = _tileWidth * scale.x;
 		width = widthInTiles * _scaledTileWidth;
@@ -1177,7 +1177,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				_buffers[i].updateColumns(_tileWidth, widthInTiles, scale.x, cameras[i]);
 	}
 	
-	private function setScaleYCallback(Scale:FlxPoint):Void
+	function setScaleYCallback(Scale:FlxPoint):Void
 	{
 		_scaledTileHeight = _tileHeight * scale.y;
 		height = heightInTiles * _scaledTileHeight;
@@ -1196,7 +1196,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param	TileProperties	properties for new sprite
 	 * @return	New FlxSprite with specified graphic
 	 */
-	private function defaultTileToSprite(TileProperties:FlxTileProperties):FlxSprite
+	function defaultTileToSprite(TileProperties:FlxTileProperties):FlxSprite
 	{
 		var tileSprite = new FlxSprite(TileProperties.x, TileProperties.y);
 		tileSprite.frames = TileProperties.graphic;
@@ -1217,21 +1217,21 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	#if FLX_DEBUG
-	override private function set_debugBoundingBoxColorSolid(color:FlxColor)
+	override function set_debugBoundingBoxColorSolid(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorSolid(color);
 		updateDebugTileBoundingBoxSolid();
 		return color;
 	}
 	
-	override private function set_debugBoundingBoxColorNotSolid(color:FlxColor)
+	override function set_debugBoundingBoxColorNotSolid(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorNotSolid(color);
 		updateDebugTileBoundingBoxNotSolid();
 		return color;
 	}
 	
-	override private function set_debugBoundingBoxColorPartial(color:FlxColor)
+	override function set_debugBoundingBoxColorPartial(color:FlxColor)
 	{
 		super.set_debugBoundingBoxColorPartial(color);
 		updateDebugTileBoundingBoxPartial();

@@ -16,12 +16,12 @@ class OverriddenPreloader extends FlxPreloader
 		super(minDisplayTime, allowedUrls);
 	}
 	
-	override private function create()
+	override function create()
 	{
 		super.create();
 	}
 	
-	override private function destroy()
+	override function destroy()
 	{
 		super.destroy();
 	}

@@ -8,9 +8,9 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 {
 	public static inline var PREROTATED:String = "prerotated_animation";
 	
-	private var rotations:Int;
+	var rotations:Int;
 	
-	private var baked:Float;
+	var baked:Float;
 	
 	public function new(Parent:FlxAnimationController, Baked:Float)
 	{
@@ -21,11 +21,14 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 	
 	public var angle(default, set):Float = 0;
 	
-	private function set_angle(Value:Float):Float
+	function set_angle(Value:Float):Float
 	{
+		if (Math.isNaN(Value))
+			throw "angle must not be NaN";
+
 		var oldIndex:Int = curIndex;
 		var angleHelper:Int = Math.floor(Value % 360);
-		
+
 		while (angleHelper < 0)
 		{
 			angleHelper += 360;
@@ -41,7 +44,7 @@ class FlxPrerotatedAnimation extends FlxBaseAnimation
 		return angle = Value;
 	}
 	
-	override private function set_curIndex(Value:Int):Int
+	override function set_curIndex(Value:Int):Int
 	{
 		curIndex = Value;
 		

@@ -6,7 +6,6 @@ import flixel.input.FlxBaseKeyList;
  * A helper class for keyboard input.
  * Provides optimized key checking using direct array access.
  */
-@:keep
 class FlxKeyList extends FlxBaseKeyList
 {
 	public var A             (get, never):Bool; inline function get_A()              return check(FlxKey.A);

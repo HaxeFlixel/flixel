@@ -16,8 +16,8 @@ class GraphicMoverTool extends BitmapData {}
  */
 class Mover extends Tool
 {
-	private var _dragging:Bool = false;
-	private var _lastCursorPosition:FlxPoint;
+	var _dragging:Bool = false;
+	var _lastCursorPosition:FlxPoint;
 	
 	override public function init(brain:Interaction):Tool 
 	{
@@ -49,12 +49,12 @@ class Mover extends Tool
 		_lastCursorPosition.y = _brain.flixelPointer.y;
 	}
 	
-	private function stopDragging():Void
+	function stopDragging():Void
 	{
 		_dragging = false;
 	}
 	
-	private function startDragging():Void
+	function startDragging():Void
 	{
 		if (_dragging)
 			return;
@@ -68,7 +68,7 @@ class Mover extends Tool
 			cast(_brain.activeTool, Pointer).cancelSelection();
 	}
 	
-	private function doDragging():Void
+	function doDragging():Void
 	{
 		var dx:Float = _brain.flixelPointer.x - _lastCursorPosition.x;
 		var dy:Float = _brain.flixelPointer.y - _lastCursorPosition.y;

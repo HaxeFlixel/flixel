@@ -14,11 +14,11 @@ using flixel.util.FlxArrayUtil;
 class Watch extends Window
 {
 	#if FLX_DEBUG
-	private static inline var LINE_HEIGHT:Int = 15;
+	static inline var LINE_HEIGHT:Int = 15;
 	
-	private var entriesContainer:Sprite;
-	private var entriesContainerOffset:FlxPoint = FlxPoint.get(2, 15);
-	private var entries:Array<WatchEntry> = [];
+	var entriesContainer:Sprite;
+	var entriesContainerOffset:FlxPoint = FlxPoint.get(2, 15);
+	var entries:Array<WatchEntry> = [];
 
 	public function new(closable:Bool = false)
 	{
@@ -52,7 +52,7 @@ class Watch extends Window
 		addEntry(displayName, data);
 	}
 	
-	private function isInvalid(displayName:String, data:WatchEntryData):Bool
+	function isInvalid(displayName:String, data:WatchEntryData):Bool
 	{
 		return switch (data)
 		{
@@ -65,7 +65,7 @@ class Watch extends Window
 		}
 	}
 	
-	private function getExistingEntry(displayName:String, data:WatchEntryData):WatchEntry
+	function getExistingEntry(displayName:String, data:WatchEntryData):WatchEntry
 	{
 		for (entry in entries)
 		{
@@ -80,7 +80,7 @@ class Watch extends Window
 		return null;
 	}
 	
-	private function addEntry(displayName:String, data:WatchEntryData):Void
+	function addEntry(displayName:String, data:WatchEntryData):Void
 	{
 		var entry = new WatchEntry(displayName, data, removeEntry);
 		entries.push(entry);
@@ -95,7 +95,7 @@ class Watch extends Window
 			removeEntry(existing);
 	}
 	
-	private function removeEntry(entry:WatchEntry):Void
+	function removeEntry(entry:WatchEntry):Void
 	{
 		entries.fastSplice(entry);
 		entriesContainer.removeChild(entry);
@@ -121,7 +121,7 @@ class Watch extends Window
 			entry.updateValue();
 	}
 	
-	override private function updateSize():Void
+	override function updateSize():Void
 	{
 		minSize.setTo(
 			getMaxMinWidth() + entriesContainerOffset.x,
@@ -130,7 +130,7 @@ class Watch extends Window
 		resetEntries();
 	}
 	
-	private function resetEntries():Void
+	function resetEntries():Void
 	{
 		for (i in 0...entries.length)
 		{
@@ -140,17 +140,17 @@ class Watch extends Window
 		}
 	}
 	
-	private function getMaxNameWidth():Float
+	function getMaxNameWidth():Float
 	{
 		return getMax(function(entry) return entry.getNameWidth());
 	}
 	
-	private function getMaxMinWidth():Float
+	function getMaxMinWidth():Float
 	{
 		return getMax(function(entry) return entry.getMinWidth());
 	}
 	
-	private function getMax(getValue:WatchEntry->Float):Float
+	function getMax(getValue:WatchEntry->Float):Float
 	{
 		var max = 0.0;
 		for (entry in entries)

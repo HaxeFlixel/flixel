@@ -13,9 +13,9 @@ class FlxPointer
 	public var screenX(default, null):Int = 0;
 	public var screenY(default, null):Int = 0;
 	
-	private var _globalScreenX:Int = 0;
-	private var _globalScreenY:Int = 0;
-	private static var _cachedPoint:FlxPoint = new FlxPoint();
+	var _globalScreenX:Int = 0;
+	var _globalScreenY:Int = 0;
+	static var _cachedPoint:FlxPoint = new FlxPoint();
 	
 	public function new() {}
 	
@@ -159,7 +159,7 @@ class FlxPointer
 	 * Helper function to update the cursor used by update() and playback().
 	 * Updates the x, y, screenX, and screenY variables based on the default camera.
 	 */
-	private function updatePositions():Void
+	function updatePositions():Void
 	{
 		getScreenPosition(FlxG.camera, _cachedPoint);
 		screenX = Std.int(_cachedPoint.x);

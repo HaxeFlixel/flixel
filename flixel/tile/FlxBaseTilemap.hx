@@ -76,54 +76,54 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Everywhere the tilemap has a value of 12 it will be replaced by 0, 1, or, 2
 	 * Everywhere the tilemap has a value of 14 it will be replaced by 3, 4, 5, 6, 7
 	 */
-	private var _randomIndices:Array<Int>;
-	private var _randomChoices:Array<Array<Int>>;
+	var _randomIndices:Array<Int>;
+	var _randomChoices:Array<Array<Int>>;
 	/**
 	 * Setting this function allows you to control which choice will be selected for each element within _randomIndices array.
 	 * Must return a 0-1 value that gets multiplied by _randomChoices[randIndex].length;
 	 */
-	private var _randomLambda:Void->Float;
+	var _randomLambda:Void->Float;
 	/**
 	 * Internal collection of tile objects, one for each type of tile in the map (NOT one for every single tile in the whole map).
 	 */
-	private var _tileObjects:Array<Tile> = [];
+	var _tileObjects:Array<Tile> = [];
 
 	/**
 	 * Internal, used to sort of insert blank tiles in front of the tiles in the provided graphic.
 	 */
-	private var _startingIndex:Int = 0;
+	var _startingIndex:Int = 0;
 	/**
 	 * Internal representation of the actual tile data, as a large 1D array of integers.
 	 */
-	private var _data:Array<Int>;
+	var _data:Array<Int>;
 	
-	private var _drawIndex:Int = 0;
-	private var _collideIndex:Int = 0;
+	var _drawIndex:Int = 0;
+	var _collideIndex:Int = 0;
 	
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
-	private function updateTile(Index:Int):Void 
+	function updateTile(Index:Int):Void 
 	{
 		throw "updateTile must be implemented";
 	}
 	
-	private function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
+	function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
 	{
 		throw "cacheGraphics must be implemented";
 	}
 	
-	private function initTileObjects():Void 
+	function initTileObjects():Void 
 	{
 		throw "initTileObjects must be implemented";
 	}
 	
-	private function updateMap():Void
+	function updateMap():Void
 	{
 		throw "updateMap must be implemented";
 	}
 	
-	private function computeDimensions():Void
+	function computeDimensions():Void
 	{
 		throw "computeDimensions must be implemented";
 	}
@@ -157,7 +157,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "setDirty must be implemented";
 	}
 
-	private function new()
+	function new()
 	{
 		super();
 		
@@ -256,7 +256,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         An array containing the tile indices
+	 * @param   MapData         An array containing the (non-negative) tile indices.
 	 * @param   WidthInTiles    The width of the tilemap in tiles
 	 * @param   HeightInTiles   The height of the tilemap in tiles
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
@@ -287,7 +287,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Load the tilemap with string data and a tile graphic.
 	 * 
-	 * @param   MapData         A 2D array containing the tile indices. The length of the inner arrays should be consistent.
+	 * @param   MapData         A 2D array containing the (non-negative) tile indices. The length of the inner arrays should be consistent.
 	 * @param   TileGraphic     All the tiles you want to use, arranged in a strip corresponding to the numbers in MapData.
 	 * @param   TileWidth       The width of your tiles (e.g. 8) - defaults to height of the tile graphic if unspecified.
 	 * @param   TileHeight      The height of your tiles (e.g. 8) - defaults to width if unspecified.
@@ -344,7 +344,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return loadMapFromCSV(mapData, TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 	}
 	
-	private function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling,
+	function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling,
 		StartingIndex:Int = 0, DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
 		totalTiles = _data.length;
@@ -368,14 +368,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		postGraphicLoad();
 	}
 
-	private function postGraphicLoad()
+	function postGraphicLoad()
 	{
 		initTileObjects();
 		computeDimensions();
 		updateMap();
 	}
 	
-	private function applyAutoTile():Void	
+	function applyAutoTile():Void	
 	{
 		// Pre-process the map data if it's auto-tiled
 		if ( auto != OFF )
@@ -388,7 +388,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 	}
 	
-	private function applyCustomRemap():Void
+	function applyCustomRemap():Void
 	{
 		var i:Int = 0;
 
@@ -408,7 +408,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 	}
 	
-	private function randomizeIndices():Void
+	function randomizeIndices():Void
 	{
 		var i:Int = 0;
 
@@ -444,7 +444,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to analyze.
 	 */
-	private function autoTile(Index:Int):Void
+	function autoTile(Index:Int):Void
 	{
 		if (_data[Index] == 0)
 		{
@@ -1057,7 +1057,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	Start	The tile we're on in our walk backward.
 	 * @param	Points	An array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
 	 */
-	private function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
 	{
 		Points.push(getTileCoordsByIndex(Start));
 		
@@ -1156,7 +1156,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Points		An array of FlxPoint nodes.
 	 */
-	private function simplifyPath(Points:Array<FlxPoint>):Void
+	function simplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var deltaPrevious:Float;
 		var deltaNext:Float;
@@ -1189,7 +1189,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Points		An array of FlxPoint nodes.
 	 */
-	private function raySimplifyPath(Points:Array<FlxPoint>):Void
+	function raySimplifyPath(Points:Array<FlxPoint>):Void
 	{
 		var source:FlxPoint = Points[0];
 		var lastIndex:Int = -1;
@@ -1247,7 +1247,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return false;
 	}
 	
-	private inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
+	inline function tilemapOverlapsCallback(ObjectOrGroup:FlxBasic, X:Float = 0, Y:Float = 0, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
 		if (ObjectOrGroup.flixelType == OBJECT || ObjectOrGroup.flixelType == TILEMAP)
 		{
@@ -1287,7 +1287,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return false;
 	}
 	
-	private inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
+	inline function tilemapOverlapsAtCallback(ObjectOrGroup:FlxBasic, X:Float, Y:Float, InScreenSpace:Bool, Camera:FlxCamera):Bool
 	{
 		if (ObjectOrGroup.flixelType == OBJECT || ObjectOrGroup.flixelType == TILEMAP)
 		{
@@ -1321,7 +1321,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return tileAtPointAllowsCollisions(WorldPoint);
 	}
 	
-	private function tileAtPointAllowsCollisions(point:FlxPoint):Bool
+	function tileAtPointAllowsCollisions(point:FlxPoint):Bool
 	{
 		var tileIndex = getTileIndexByCoords(point);
 		if (tileIndex < 0 || tileIndex >= _data.length)

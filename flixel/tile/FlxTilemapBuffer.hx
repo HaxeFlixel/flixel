@@ -61,24 +61,24 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var blend:BlendMode;
 	public var antialiasing:Bool = false;
 	
-	private var _flashRect:Rectangle;
-	private var _matrix:FlxMatrix;
+	var _flashRect:Rectangle;
+	var _matrix:FlxMatrix;
 	
 	/**
 	 * Variables related to calculation of dirty value
 	 */
-	private var _prevTilemapX:Float;
-	private var _prevTilemapY:Float;
-	private var _prevTilemapScaleX:Float;
-	private var _prevTilemapScaleY:Float;
-	private var _prevTilemapScrollX:Float;
-	private var _prevTilemapScrollY:Float;
-	private var _prevCameraScrollX:Float;
-	private var _prevCameraScrollY:Float;
-	private var _prevCameraScaleX:Float;
-	private var _prevCameraScaleY:Float;
-	private var _prevCameraWidth:Int;
-	private var _prevCameraHeight:Int;
+	var _prevTilemapX:Float;
+	var _prevTilemapY:Float;
+	var _prevTilemapScaleX:Float;
+	var _prevTilemapScaleY:Float;
+	var _prevTilemapScrollX:Float;
+	var _prevTilemapScrollY:Float;
+	var _prevCameraScrollX:Float;
+	var _prevCameraScrollY:Float;
+	var _prevCameraScaleX:Float;
+	var _prevCameraScaleY:Float;
+	var _prevCameraWidth:Int;
+	var _prevCameraHeight:Int;
 	
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.

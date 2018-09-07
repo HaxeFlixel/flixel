@@ -4,8 +4,11 @@ import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
-import openfl.display.Tilesheet;
 import openfl.geom.ColorTransform;
+
+#if !FLX_DRAW_QUADS
+import openfl.display.Tilesheet;
+#end
 
 /**
  * ...
@@ -13,8 +16,16 @@ import openfl.geom.ColorTransform;
  */
 class FlxDrawBaseItem<T>
 {
+	/**
+	 * Tracks the total number of draw calls made each frame.
+	 */
+	public static var drawCalls:Int = 0;
+
 	public static function blendToInt(blend:BlendMode):Int
 	{
+		#if FLX_DRAW_QUADS
+		return 0; // no blend mode support in drawQuads()
+		#else
 		if (blend == null)
 			return Tilesheet.TILE_BLEND_NORMAL;
 		
@@ -47,6 +58,7 @@ class FlxDrawBaseItem<T>
 			default:
 				Tilesheet.TILE_BLEND_NORMAL;
 		}
+		#end
 	}
 	
 	public var nextTyped:T;
@@ -83,16 +95,19 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 	}
 	
-	public function render(camera:FlxCamera):Void {}
+	public function render(camera:FlxCamera):Void
+	{
+		drawCalls++;
+	}
 	
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
 	
-	private function get_numVertices():Int
+	function get_numVertices():Int
 	{
 		return 0;
 	}
 	
-	private function get_numTriangles():Int
+	function get_numTriangles():Int
 	{
 		return 0;
 	}
