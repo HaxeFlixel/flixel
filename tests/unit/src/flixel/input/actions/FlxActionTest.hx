@@ -9,10 +9,6 @@ import flixel.input.FlxInput.FlxInputState;
 
 import massive.munit.Assert;
 
-/**
- * ...
- * @author 
- */
 class FlxActionTest extends FlxTest
 {
 	var digital:FlxActionDigital;

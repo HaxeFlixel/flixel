@@ -26,18 +26,14 @@ import openfl.ui.GameInputControl;
 import openfl.ui.GameInputDevice;
 #end
 
-/**
- * ...
- * @author 
- */
 class FlxActionInputDigitalTest extends FlxTest
 {
-	private var action:FlxActionDigital;
+	var action:FlxActionDigital;
 	
-	private var value0:Int = 0;
-	private var value1:Int = 0;
-	private var value2:Int = 0;
-	private var value3:Int = 0;
+	var value0:Int = 0;
+	var value1:Int = 0;
+	var value2:Int = 0;
+	var value3:Int = 0;
 	
 	@Before
 	function before() {}

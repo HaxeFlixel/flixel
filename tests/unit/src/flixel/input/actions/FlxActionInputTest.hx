@@ -6,13 +6,8 @@ import flixel.input.actions.FlxActionInput.FlxInputType;
 
 import massive.munit.Assert;
 
-/**
- * ...
- * @author 
- */
 class FlxActionInputTest extends FlxTest
 {
-
 	@Before
 	function before() {}
 	

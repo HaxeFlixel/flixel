@@ -22,24 +22,20 @@ import steamwrap.data.ControllerConfig;
 
 import massive.munit.Assert;
 
-/**
- * ...
- * @author 
- */
 class FlxActionManagerTest extends FlxTest
 {
 	#if FLX_STEAMWRAP
 	private var steamManager:FlxActionManager;
 	#end
 	
-	private var basicManager:FlxActionManager;
-	private var sets:Array<String>;
-	private var analog:Array<Array<String>>;
-	private var digital:Array<Array<String>>;
+	var basicManager:FlxActionManager;
+	var sets:Array<String>;
+	var analog:Array<Array<String>>;
+	var digital:Array<Array<String>>;
 	
-	private var valueTest = "";
-	private var connectStr:String = "";
-	private var disconnectStr:String = "";
+	var valueTest = "";
+	var connectStr:String = "";
+	var disconnectStr:String = "";
 	
 	@Before
 	function before()

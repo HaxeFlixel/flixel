@@ -7,10 +7,6 @@ import steamwrap.api.Controller;
 import steamwrap.api.Steam;
 #end
 
-/**
- * ...
- * @author 
- */
 class SteamMock
 {
 	#if FLX_STEAMWRAP
@@ -20,8 +16,8 @@ class SteamMock
 	public static var digitalOrigins:Map<String, Array<EControllerActionOrigin>>;
 	public static var analogOrigins:Map<String, Array<EControllerActionOrigin>>;
 	
-	private static var inited:Bool = false;
-	private static var flxInited:Bool = false;
+	static var inited:Bool = false;
+	static var flxInited:Bool = false;
 	
 	@:access(steamwrap.api.Steam)
 	public static function init()

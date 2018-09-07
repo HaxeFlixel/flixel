@@ -10,14 +10,9 @@ import haxe.Json;
 
 import massive.munit.Assert;
 
-/**
- * ...
- * @author 
- */
 class FlxActionSetTest extends FlxTest
 {
-
-	private var valueTest:String = "";
+	var valueTest:String = "";
 	
 	@Before
 	function before() {}

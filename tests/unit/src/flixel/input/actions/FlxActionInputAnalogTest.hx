@@ -23,16 +23,12 @@ import openfl.ui.GameInputDevice;
 import openfl.events.JoystickEvent;
 #end
 
-/**
- * ...
- * @author 
- */
 class FlxActionInputAnalogTest extends FlxTest
 {
-	private var value0:Int = 0;
-	private var value1:Int = 0;
-	private var value2:Int = 0;
-	private var value3:Int = 0;
+	var value0:Int = 0;
+	var value1:Int = 0;
+	var value2:Int = 0;
+	var value3:Int = 0;
 	
 	@Before
 	function before() {}

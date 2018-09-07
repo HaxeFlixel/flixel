@@ -1,12 +1,7 @@
 package flixel.input.actions;
 
-/**
- * ...
- * @author 
- */
 class VDFString
 {
-
 	public static function get():String
 	{
 		return
@@ -118,5 +113,4 @@ class VDFString
 		'	}' + '\n' +
 		'}' + '\n';
 	}
-	
 }

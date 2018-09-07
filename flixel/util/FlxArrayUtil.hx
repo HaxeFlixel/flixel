@@ -161,6 +161,7 @@ class FlxArrayUtil
 	
 	/**
 	 * Pushes the element into the array (and if the array is null, creates it first) and returns the array.
+	 * @since 4.6.0
 	 */
 	public static function safePush<T>(array:Array<T>, element:T):Array<T>
 	{
