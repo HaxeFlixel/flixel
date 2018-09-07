@@ -22,6 +22,7 @@ class Player extends FlxSprite
 	public static var virtualPad:FlxVirtualPad;
 	#end
 	
+	static var actions:FlxActionManager;
 	static var FIRE_RATE:Float = 1 / 10; // 10 shots per second
 	
 	public var isReadyToJump:Bool = true;
@@ -124,11 +125,11 @@ class Player extends FlxSprite
 		_shoot.addInput(virtualPad.buttonB, PRESSED);
 		#end
 
-		var manager = new FlxActionManager();
-		manager.addActions([_up, _down, _left, _right, _jump, _shoot]);
-		FlxG.inputs.add(manager);
+		if (actions == null)
+			actions = FlxG.inputs.add(new FlxActionManager());
+		actions.addActions([_up, _down, _left, _right, _jump, _shoot]);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		acceleration.x = 0;
