@@ -444,7 +444,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 			case DEFAULT_SET_ONLY:
 				if(defaultSet != null)
 				{
-					removeSet(defaultSSet, true);
+					removeSet(defaultSet, true);
 				}
 				defaultSet = null;
 			case ALL_SETS:
@@ -944,7 +944,7 @@ typedef ActionSetJson =
 	@:optional var digitalActions:Array<String>;
 }
 
-@:enum abstract ResetPolicy(Int)
+@:enum abstract ResetPolicy(Int) from Int to Int
 {
 	/**
 	 * Do not reset any action sets.
