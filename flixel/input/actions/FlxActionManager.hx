@@ -66,8 +66,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	public var inputsChanged(default, null):FlxTypedSignal<Array<FlxAction>->Void>;
 	
 	/**
-	 * Whether action sets are reset on state switches.
-	 * Disable if you need the default action set to persist across states.
+	 * Which action sets to remove on state switches.
 	 */
 	public var resetOnStateSwitch:ResetPolicy = ResetPolicy.DEFAULT_SET_ONLY;
 
@@ -439,16 +438,16 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	
 	function onStateSwitched()
 	{
-		switch(resetOnStateSwitch)
+		switch (resetOnStateSwitch)
 		{
 			case DEFAULT_SET_ONLY:
-				if(defaultSet != null)
+				if (defaultSet != null)
 				{
 					removeSet(defaultSet, true);
 				}
 				defaultSet = null;
 			case ALL_SETS:
-				while(sets.length > 0)
+				while (sets.length > 0)
 				{
 					removeSet(getSet(0), true);
 				}
