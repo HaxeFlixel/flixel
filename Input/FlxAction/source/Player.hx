@@ -18,6 +18,8 @@ class Player extends FlxSprite
 	 * How many pixels to move each frame.
 	 */
 	static inline var MOVEMENT_SPEED:Int = 2;
+
+	static var actions:FlxActionManager;
 	
 	var up:FlxActionDigital;
 	var down:FlxActionDigital;
@@ -76,10 +78,10 @@ class Player extends FlxSprite
 		
 		//this analog action allows for smooth movement
 		move = new FlxActionAnalog();
-		
-		var manager = new FlxActionManager();
-		FlxG.inputs.add(manager);
-		manager.addActions([up,down,left,right,trigger1,trigger2,move]);
+
+		if (actions == null)		
+			actions = FlxG.inputs.add(new FlxActionManager());
+		actions.addActions([up, down, left, right, trigger1, trigger2, move]);
 		
 		//Add keyboard inputs
 		up.addKey(UP, PRESSED);
