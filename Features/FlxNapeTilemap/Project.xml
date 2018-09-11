@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<!------------------------------APPLICATION SETTINGS---------------------------->
+	<!-- _________________________ Application Settings _________________________ -->
 	
 	<app title="FlxNapeTilemap" file="FlxNapeTilemap" main="Main" version="0.0.1" company="DerivativesStudio" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
+		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
 	<app preloader="flixel.system.FlxPreloader" />
 	
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2 -->
 	<set name="SWF_VERSION" value="11.8" />
 	
-	<!--------------------------------WINDOW SETTINGS------------------------------->
+	<!-- ____________________________ Window Settings ___________________________ -->
 	
 	<!--These window settings apply to all targets-->
 	<window width="1024" height="768" fps="60" background="#000000" hardware="true" vsync="false" />
@@ -26,15 +26,15 @@
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
 	
-	<!--------------------------------PATHS SETTINGS-------------------------------->
+	<!-- _____________________________ Path Settings ____________________________ -->
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<assets path="assets" />
 	
-	<!--------------------------------LIBRARIES------------------------------------->
+	<!-- _______________________________ Libraries ______________________________ -->
 	
-	<haxelib name="flixel"/>
+	<haxelib name="flixel" />
 	<haxelib name="flixel-addons"/>
 	<haxelib name="nape"/>
 	

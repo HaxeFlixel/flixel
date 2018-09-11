@@ -13,7 +13,7 @@
 	<classpath name="source" />
 	<assets path="assets"> <font path="Font.ttf" id="Font" /> </assets>
 	
-	<haxelib name="flixel"/>
+	<haxelib name="flixel" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="hscript" />
 	<haxelib name="firetongue" />
