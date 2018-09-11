@@ -33,13 +33,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * The link to a group's `members` array.
 	 */
-	public var members(get, null):Array<T>;
+	public var members(get, never):Array<T>;
 	
 	/**
 	 * The number of entries in the members array. For performance and safety you should check this
 	 * variable instead of `members.length` unless you really know what you're doing!
 	 */
-	public var length(get, null):Int;
+	public var length(get, never):Int;
 	
 	/**
 	 * Whether to attempt to preserve the ratio of alpha values of group members, or set them directly through
