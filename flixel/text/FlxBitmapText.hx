@@ -488,6 +488,10 @@ class FlxBitmapText extends FlxSprite
 				#end
 			}
 			
+			// dispose clipRect helpers
+			frameRect.put();
+			clippedFrameRect.put();
+			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
