@@ -1311,7 +1311,6 @@ class FlxSprite extends FlxObject
 			graphic = null;
 		}
 		
-		clipRect = null;
 		return Frames;
 	}
 	
