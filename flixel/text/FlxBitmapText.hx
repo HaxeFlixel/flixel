@@ -359,18 +359,14 @@ class FlxBitmapText extends FlxSprite
 			}
 			
 			var frameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
-			var clippedFrameRect = FlxRect.get();
+			var clippedFrameRect = frameRect;
 			
 			if (clipRect != null)
 			{
-				clippedFrameRect = clipRect.intersection(frameRect, clippedFrameRect);
+				clippedFrameRect = clipRect.intersection(frameRect);
 				
 				if (clippedFrameRect.isEmpty)
 					return;
-			}
-			else
-			{
-				clippedFrameRect = frameRect;
 			}
 			
 			for (camera in cameras)
