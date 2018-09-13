@@ -770,13 +770,7 @@ class FlxText extends FlxSprite
 			// Need to generate a new buffer to store the text graphic
 			height = newHeight;
 			var key:String = FlxG.bitmap.getUniqueKey("text");
-			
-			// retain the clipRect through text changes
-			var tempRect = clipRect;
-			
 			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
-			
-			clipRect = tempRect;
 			
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
