@@ -395,7 +395,7 @@ class FlxBitmapText extends FlxSprite
 					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
 					_matrix.scale(0.1 * clippedFrameRect.width, 0.1 * clippedFrameRect.height);
-					_matrix.translate(-ox, -oy);
+					_matrix.translate(clippedFrameRect.x - ox, clippedFrameRect.y - oy);
 					_matrix.scale(sx, sy);
 					
 					if (angle != 0)
@@ -403,7 +403,7 @@ class FlxBitmapText extends FlxSprite
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
 					
-					_matrix.translate(_point.x + ox + clippedFrameRect.x, _point.y + oy + clippedFrameRect.y);
+					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
 					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
