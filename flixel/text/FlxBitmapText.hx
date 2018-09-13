@@ -421,8 +421,7 @@ class FlxBitmapText extends FlxSprite
 					{
 						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
 						clippedFrameRect.set(0, 0, 0, 0);
-						if (clipRect.intersection(frameRect, clippedFrameRect).isEmpty)
-							continue;
+						clipRect.intersection(frameRect, clippedFrameRect);
 						
 						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
 						{
@@ -458,8 +457,7 @@ class FlxBitmapText extends FlxSprite
 					{
 						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
 						clippedFrameRect.set(0, 0, 0, 0);
-						if (clipRect.intersection(frameRect, clippedFrameRect).isEmpty)
-							continue;
+						clipRect.intersection(frameRect, clippedFrameRect);
 						
 						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
 						{
@@ -499,6 +497,16 @@ class FlxBitmapText extends FlxSprite
 			}
 			#end
 		}
+	}
+	
+	override function set_clipRect(Rect:FlxRect):FlxRect
+	{
+		super.set_clipRect(Rect);
+		if (!FlxG.renderBlit)
+		{
+			pendingTextBitmapChange = true;
+		}
+		return clipRect;
 	}
 	
 	override function set_color(Color:FlxColor):FlxColor
@@ -1283,6 +1291,9 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
+		var frameRect:FlxRect = FlxRect.get();
+		var clippedFrameRect:FlxRect = FlxRect.get();
+		var frameVisible;
 		
 		for (i in 0...lineLength)
 		{
@@ -1301,15 +1312,29 @@ class FlxBitmapText extends FlxSprite
 				charFrame = font.getCharFrame(charCode);
 				if (charFrame != null)
 				{
-					textData[pos++] = charCode;
-					textData[pos++] = curX;
-					textData[pos++] = curY;
+					frameVisible = true;
+					if (clipRect != null)
+					{
+						frameRect.set(curX, curY, charFrame.frame.width, charFrame.frame.height);
+						clippedFrameRect.set(0, 0, 0, 0);
+						frameVisible = !clipRect.intersection(frameRect, clippedFrameRect).isEmpty;
+					}
+					
+					if (frameVisible)
+					{
+						textData[pos++] = charCode;
+						textData[pos++] = curX;
+						textData[pos++] = curY;
+					}
 					curX += font.getCharAdvance(charCode);
 				}
 			}
 			
 			curX += letterSpacing;
 		}
+		
+		frameRect.put();
+		clippedFrameRect.put();
 	}
 	
 	function updatePixels(useTiles:Bool = false):Void
