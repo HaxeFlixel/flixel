@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
@@ -357,6 +358,21 @@ class FlxBitmapText extends FlxSprite
 				oy = frameHeight - oy;
 			}
 			
+			var frameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
+			var clippedFrameRect = FlxRect.get();
+			
+			if (clipRect != null)
+			{
+				clippedFrameRect = clipRect.intersection(frameRect, clippedFrameRect);
+				
+				if (clippedFrameRect.isEmpty)
+					return;
+			}
+			else
+			{
+				clippedFrameRect = frameRect;
+			}
+			
 			for (camera in cameras)
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -378,7 +394,7 @@ class FlxBitmapText extends FlxSprite
 					// backround tile transformations
 					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
-					_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
+					_matrix.scale(0.1 * clippedFrameRect.width, 0.1 * clippedFrameRect.height);
 					_matrix.translate(-ox, -oy);
 					_matrix.scale(sx, sy);
 					
@@ -387,7 +403,7 @@ class FlxBitmapText extends FlxSprite
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
 					
-					_matrix.translate(_point.x + ox, _point.y + oy);
+					_matrix.translate(_point.x + ox + clippedFrameRect.x, _point.y + oy + clippedFrameRect.y);
 					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
 					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
@@ -404,6 +420,21 @@ class FlxBitmapText extends FlxSprite
 					
 					currTileX = borderDrawData[dataPos + 1];
 					currTileY = borderDrawData[dataPos + 2];
+					
+					if (clipRect != null)
+					{
+						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
+						clippedFrameRect.set(0, 0, 0, 0);
+						if (clipRect.intersection(frameRect, clippedFrameRect).isEmpty)
+							continue;
+						
+						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
+						{
+							clippedFrameRect.x -= frameRect.x;
+							clippedFrameRect.y -= frameRect.y;
+							currFrame = currFrame.clipTo(clippedFrameRect);
+						}
+					}
 					
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
@@ -426,6 +457,21 @@ class FlxBitmapText extends FlxSprite
 					
 					currTileX = textDrawData[dataPos + 1];
 					currTileY = textDrawData[dataPos + 2];
+					
+					if (clipRect != null)
+					{
+						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
+						clippedFrameRect.set(0, 0, 0, 0);
+						if (clipRect.intersection(frameRect, clippedFrameRect).isEmpty)
+							continue;
+						
+						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
+						{
+							clippedFrameRect.x -= frameRect.x;
+							clippedFrameRect.y -= frameRect.y;
+							currFrame = currFrame.clipTo(clippedFrameRect);
+						}
+					}
 					
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
