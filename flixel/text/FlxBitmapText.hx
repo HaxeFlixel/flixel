@@ -1291,9 +1291,6 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
-		var frameRect:FlxRect = FlxRect.get();
-		var clippedFrameRect:FlxRect = FlxRect.get();
-		var frameVisible;
 		
 		for (i in 0...lineLength)
 		{
@@ -1312,29 +1309,15 @@ class FlxBitmapText extends FlxSprite
 				charFrame = font.getCharFrame(charCode);
 				if (charFrame != null)
 				{
-					frameVisible = true;
-					if (clipRect != null)
-					{
-						frameRect.set(curX, curY, charFrame.frame.width, charFrame.frame.height);
-						clippedFrameRect.set(0, 0, 0, 0);
-						frameVisible = !clipRect.intersection(frameRect, clippedFrameRect).isEmpty;
-					}
-					
-					if (frameVisible)
-					{
-						textData[pos++] = charCode;
-						textData[pos++] = curX;
-						textData[pos++] = curY;
-					}
+					textData[pos++] = charCode;
+					textData[pos++] = curX;
+					textData[pos++] = curY;
 					curX += font.getCharAdvance(charCode);
 				}
 			}
 			
 			curX += letterSpacing;
 		}
-		
-		frameRect.put();
-		clippedFrameRect.put();
 	}
 	
 	function updatePixels(useTiles:Bool = false):Void
@@ -1541,14 +1524,33 @@ class FlxBitmapText extends FlxSprite
 		var pos:Int = data.length;
 		var textPos:Int;
 		var textLen:Int = Std.int(textData.length / 3);
+		var frameRect = FlxRect.get();
+		var clippedFrameRect = FlxRect.get();
+		var frameVisible = true;
+		var frame;
 		
 		for (i in 0...textLen)
 		{
 			textPos = 3 * i;
-			data[pos++] = textData[textPos];
-			data[pos++] = textData[textPos + 1] + posX;
-			data[pos++] = textData[textPos + 2] + posY;
+			
+			if (clipRect != null)
+			{
+				frame = font.getCharFrame(Std.int(textData[textPos])).frame;
+				frameRect.set(posX + textData[textPos + 1], posY + textData[textPos + 2], frame.width, frame.height);
+				clippedFrameRect.set(0, 0, 0, 0);
+				frameVisible = !clipRect.intersection(frameRect, clippedFrameRect).isEmpty;
+			}
+			
+			if (frameVisible)
+			{
+				data[pos++] = textData[textPos];
+				data[pos++] = textData[textPos + 1] + posX;
+				data[pos++] = textData[textPos + 2] + posY;
+			}
 		}
+		
+		frameRect.put();
+		clippedFrameRect.put();
 	}
 	
 	/**
