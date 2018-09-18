@@ -3,7 +3,8 @@
 #### New features:
 
 - Added a new `FlxAction` API ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
-* `FlxGamepadManager`: added `deviceConnected` and `deviceDisconnected` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
+- `FlxGamepadManager`: added `deviceConnected` and `deviceDisconnected` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
+- `FlxBitmapText`: added `clipRect` support ([#2171](https://github.com/HaxeFlixel/flixel/issues/2171))
 
 4.5.1 (September 7, 2018)
 ------------------------------

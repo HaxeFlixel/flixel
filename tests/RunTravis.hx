@@ -140,10 +140,11 @@ class RunTravis
 			return haxelibRun(["munit", "gen"])
 		);
 
-		if (target == Target.FLASH || target == Target.HTML5)
+		if (target == Target.FLASH || target == Target.HTML5 || target == Target.NEKO)
 		{	
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
+			// also, neko fails randomly for some reason... (#2148)
 			Sys.println("Building unit tests...\n");
 			return build("unit", target);
 		}
