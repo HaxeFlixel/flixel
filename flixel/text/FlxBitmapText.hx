@@ -421,7 +421,8 @@ class FlxBitmapText extends FlxSprite
 					
 					if (clipRect != null)
 					{
-						currFrame = currFrame.clipTo(clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY));
+						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
+						currFrame = currFrame.clipTo(clippedFrameRect);
 					}
 					
 					currFrame.prepareMatrix(_matrix);
@@ -448,7 +449,8 @@ class FlxBitmapText extends FlxSprite
 					
 					if (clipRect != null)
 					{
-						currFrame = currFrame.clipTo(clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY));
+						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
+						currFrame = currFrame.clipTo(clippedFrameRect);
 					}
 					
 					currFrame.prepareMatrix(_matrix);
