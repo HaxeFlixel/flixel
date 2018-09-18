@@ -358,15 +358,17 @@ class FlxBitmapText extends FlxSprite
 				oy = frameHeight - oy;
 			}
 			
-			var frameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
-			var clippedFrameRect = frameRect;
-			
+			var clippedFrameRect;
 			if (clipRect != null)
 			{
-				clippedFrameRect = clipRect.intersection(frameRect);
+				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
 				
 				if (clippedFrameRect.isEmpty)
 					return;
+			}
+			else
+			{
+				clippedFrameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
 			}
 			
 			for (camera in cameras)
@@ -419,16 +421,7 @@ class FlxBitmapText extends FlxSprite
 					
 					if (clipRect != null)
 					{
-						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
-						clippedFrameRect.set(0, 0, 0, 0);
-						clipRect.intersection(frameRect, clippedFrameRect);
-						
-						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
-						{
-							clippedFrameRect.x -= frameRect.x;
-							clippedFrameRect.y -= frameRect.y;
-							currFrame = currFrame.clipTo(clippedFrameRect);
-						}
+						currFrame = currFrame.clipTo(clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY));
 					}
 					
 					currFrame.prepareMatrix(_matrix);
@@ -455,16 +448,7 @@ class FlxBitmapText extends FlxSprite
 					
 					if (clipRect != null)
 					{
-						frameRect.set(currTileX, currTileY, currFrame.frame.width, currFrame.frame.height);
-						clippedFrameRect.set(0, 0, 0, 0);
-						clipRect.intersection(frameRect, clippedFrameRect);
-						
-						if (clippedFrameRect.width != frameRect.width || clippedFrameRect.height != frameRect.height)
-						{
-							clippedFrameRect.x -= frameRect.x;
-							clippedFrameRect.y -= frameRect.y;
-							currFrame = currFrame.clipTo(clippedFrameRect);
-						}
+						currFrame = currFrame.clipTo(clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY));
 					}
 					
 					currFrame.prepareMatrix(_matrix);
@@ -476,7 +460,6 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
@@ -487,7 +470,6 @@ class FlxBitmapText extends FlxSprite
 			}
 			
 			// dispose clipRect helpers
-			frameRect.put();
 			clippedFrameRect.put();
 			
 			#if FLX_DEBUG
@@ -1524,21 +1506,19 @@ class FlxBitmapText extends FlxSprite
 		var pos:Int = data.length;
 		var textPos:Int;
 		var textLen:Int = Std.int(textData.length / 3);
-		var frameRect = FlxRect.get();
-		var clippedFrameRect = FlxRect.get();
-		var frameVisible = true;
-		var frame;
+		var rect = FlxRect.get();
+		var frameVisible;
 		
 		for (i in 0...textLen)
 		{
 			textPos = 3 * i;
 			
+			frameVisible = true;
+			
 			if (clipRect != null)
 			{
-				frame = font.getCharFrame(Std.int(textData[textPos])).frame;
-				frameRect.set(posX + textData[textPos + 1], posY + textData[textPos + 2], frame.width, frame.height);
-				clippedFrameRect.set(0, 0, 0, 0);
-				frameVisible = !clipRect.intersection(frameRect, clippedFrameRect).isEmpty;
+				rect.copyFrom(clipRect).offset(-textData[textPos + 1] - posX, -textData[textPos + 2] - posY);
+				frameVisible = font.getCharFrame(Std.int(textData[textPos])).clipTo(rect).type != FlxFrameType.EMPTY;
 			}
 			
 			if (frameVisible)
@@ -1549,8 +1529,7 @@ class FlxBitmapText extends FlxSprite
 			}
 		}
 		
-		frameRect.put();
-		clippedFrameRect.put();
+		rect.put();
 	}
 	
 	/**
