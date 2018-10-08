@@ -293,6 +293,17 @@ class FlxTween implements IFlxDestroyable
 	}
 	
 	/**
+	 * Kills all related tweens
+	 * 
+	 * @param Object The object with tweens to kill
+	 * @param Fields Optional list of the tween fields to kill. If empty, all tweens are killed
+	 */
+	public static function killTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	{
+		globalManager.killTweensOf(Object, Fields);
+	}
+	
+	/**
 	 * The manager to which this tween belongs
 	 * @since 4.2.0
 	 */
@@ -603,6 +614,17 @@ class FlxTween implements IFlxDestroyable
 		{
 			_waitingForRestart = true;
 		}
+	}
+	
+	/**
+	 * returns true if this is tweening any of the specified fields on the object
+	 * 
+	 * @param Object The object
+	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
+	 */
+	function isTweenOf(Object:Dynamic, fields:Array<String> = null):Bool
+	{
+		return false;
 	}
 	
 	/**
@@ -1092,6 +1114,23 @@ class FlxTweenManager extends FlxBasic
 		}
 		
 		_tweens.splice(0, _tweens.length);
+	}
+
+	/**
+	 * Kills all related tweens
+	 * 
+	 * @param Object The object with tweens to kill
+	 * @param Fields Optional list of the tween fields to kill. If empty, all tweens are killed
+	 */
+	public function killTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	{
+		for (tween in _tweens)
+		{
+			if (tween.isTweenOf(Object, Fields))
+			{
+				tween.cancel();
+			}
+		}
 	}
 
 	/**
