@@ -167,8 +167,10 @@ class PlayState extends FlxState
 		
 		_fpsCounter.text = "FPS: " + _times.length + "/" + Lib.current.stage.frameRate;
 
+		#if FLX_KEYBOARD
 		if (FlxG.keys.justPressed.SPACE)
 			_uiOverlay.visible = !_uiOverlay.visible;
+		#end
 	}
 
 	function changeBunnyNumber(add:Bool, amount:Int):Void
