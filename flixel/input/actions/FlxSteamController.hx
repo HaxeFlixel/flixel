@@ -127,7 +127,7 @@ class FlxSteamController
 	{
 		#if FLX_STEAMWRAP
 		if (controllers == null) return -1;
-		if (SteamControllerHandle >= 0 && SteamControllerHandle <= controllers.length)
+		if (SteamControllerHandle >= 0 && SteamControllerHandle < controllers.length)
 		{
 			return controllers[SteamControllerHandle].actionSet;
 		}
