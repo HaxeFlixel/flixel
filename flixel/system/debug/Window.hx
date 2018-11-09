@@ -62,6 +62,7 @@ class Window extends Sprite
 	var _shadow:Bitmap;
 	var _title:TextField;
 	var _handle:Bitmap;
+	var _icon:Bitmap;
 	var _closeButton:FlxSystemButton;
 	
 	/**
@@ -75,6 +76,7 @@ class Window extends Sprite
 	var _resizable:Bool;
 	
 	var _closable:Bool;
+	var _alwaysOnTop:Bool;
 	
 	/**
 	 * The ID of this window.
@@ -91,9 +93,10 @@ class Window extends Sprite
 	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
 	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 * @param   Closable    Whether this window has a close button that removes the window.
+	 * @param   AlwaysOnTop Whether this window should be forcibly put in front of any other window when clicked.
 	 */
 	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true,
-		?Bounds:Rectangle, Closable:Bool = false)
+		?Bounds:Rectangle, Closable:Bool = false, AlwaysOnTop:Bool = true)
 	{
 		super();
 		
@@ -105,6 +108,7 @@ class Window extends Sprite
 		_drag = new Point();
 		_resizable = Resizable;
 		_closable = Closable;
+		_alwaysOnTop = AlwaysOnTop;
 		
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
@@ -123,12 +127,12 @@ class Window extends Sprite
 		if (Icon != null)
 		{
 			DebuggerUtil.fixSize(Icon);
-			var icon = new Bitmap(Icon);
-			icon.x = 5;
-			icon.y = 2;
-			icon.alpha = HEADER_ALPHA;
-			_title.x = icon.x + icon.width + 2;
-			addChild(icon);
+			_icon = new Bitmap(Icon);
+			_icon.x = 5;
+			_icon.y = 2;
+			_icon.alpha = HEADER_ALPHA;
+			_title.x = _icon.x + _icon.width + 2;
+			addChild(_icon);
 		}
 		
 		if (_resizable)
@@ -262,7 +266,7 @@ class Window extends Sprite
 		if (toggleButton != null)
 			toggleButton.toggled = !visible;
 	
-		if (visible)
+		if (visible && _alwaysOnTop)
 			putOnTop();
 	}
 	
@@ -372,14 +376,16 @@ class Window extends Sprite
 	{
 		if (_overHeader)
 		{
-			putOnTop();
+			if (_alwaysOnTop)
+				putOnTop();
 			_dragging = true;
 			_drag.x = mouseX;
 			_drag.y = mouseY;
 		}
 		else if (_overHandle)
 		{
-			putOnTop();
+			if (_alwaysOnTop)
+				putOnTop();
 			_resizing = true;
 			_drag.x = _width - mouseX;
 			_drag.y = _height - mouseY;
