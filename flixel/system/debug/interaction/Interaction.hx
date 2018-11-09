@@ -196,7 +196,7 @@ class Interaction extends Window
 	/**
 	 * Add a new tool to the interaction system.
 	 * 
-	 * Any tool added to the interaction system* must extend the class
+	 * Any tool added to the interaction system must extend the class
 	 * `flixel.system.debug.interaction.tools.Tool`. The class contains several methods
 	 * that can be used to provide new funcionalities to the interaction, or they can be
 	 * overridden to alter existing behavior. For instance, tools can draw things on the
