@@ -193,7 +193,19 @@ class Interaction extends Window
 		return count;
 	}
 
-	function addTool(tool:Tool):Void
+	/**
+	 * Add a new tool to the interaction system.
+	 * 
+	 * Any tool added to the interaction system* must extend the class
+	 * `flixel.system.debug.interaction.tools.Tool`. The class contains several methods
+	 * that can be used to provide new funcionalities to the interaction, or they can be
+	 * overridden to alter existing behavior. For instance, tools can draw things on the
+	 * screen, they can be activated when the user clicks a button, and so on. Check
+	 * the classes in the package `flixel.system.debug.interaction.tools` for examples.
+	 * 
+	 * @param tool instance of a tool that will be added to the interaction system.
+	 */
+	public function addTool(tool:Tool):Void
 	{
 		tool.init(this);
 		_tools.push(tool);
@@ -322,7 +334,15 @@ class Interaction extends Window
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	
-	function getTool(className:Class<Tool>):Tool
+	/**
+	 * Obtain a reference to a tool that has been added to the interaction system and is
+	 * available for use. This method can be used to access information provided by any
+	 * tool in the system, or to change their behavior.
+	 * 
+	 * @param className name of the class to be fetched, e.g. `flixel.system.debug.interaction.tools.Pointer`.
+	 * @return Tool reference to the first tool found whose type matches the class name provided. If no tool is found, `null` is returned.
+	 */
+	public function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
 			if (Std.is(tool, className))
