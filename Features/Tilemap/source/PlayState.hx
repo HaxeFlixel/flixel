@@ -179,10 +179,16 @@ class PlayState extends FlxState
 					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_autoAltButton.label.text = "ALT";
 			
-			case ALT:
+			case FULL:
 				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
 					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_autoAltButton.label.text = "OFF";
+			
+			case ALT:
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
+					"assets/full_tiles.png", TILE_WIDTH, TILE_HEIGHT, FULL);
+				_autoAltButton.label.text = "FULL";
+			
 			
 			case OFF:
 				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
@@ -203,9 +209,15 @@ class PlayState extends FlxState
 				_collisionMap.loadMapFromCSV("assets/default_alt.txt", "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_player.setPosition(64, 128);
 				
+			case FULL:
+				_collisionMap.loadMapFromCSV("assets/default_auto.txt", "assets/full_tiles.png", TILE_WIDTH, TILE_HEIGHT, FULL);
+				_player.setPosition(64, 64);
+				
 			case OFF:
 				_collisionMap.loadMapFromCSV("assets/default_empty.txt", "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_player.setPosition(64, 64);
+			default:
+				
 		}
 	}
 }
