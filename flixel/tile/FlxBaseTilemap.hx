@@ -21,7 +21,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public var auto:FlxTilemapAutoTiling = OFF;
 	
-	private var offsetAutoTile:Array<Int> = 
+	var offsetAutoTile:Array<Int> = 
 		[
 			0, 0, 0, 0, 2, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0,
 			11, 11, 0, 0, 13, 13, 0, 14, 0, 0, 0, 0, 18, 18, 0, 19,
@@ -513,7 +513,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param	Index		The index of the tile you want to analyze.
 	 */
-	private function autoTileFull(Index:Int):Void
+	function autoTileFull(Index:Int):Void
 	{
 		_data[Index] = 0;
 
@@ -527,8 +527,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var right = wallRight || _data[Index + 1] > 0;
 		var rightDown = wallRight || wallDown || _data[Index + widthInTiles + 1] > 0;
 		var down = wallDown || _data[Index + widthInTiles] > 0;
-		var downLeft = wallDown || wallLeft ||_data[Index + widthInTiles - 1] > 0;
-		var left = wallLeft ||_data[Index - 1] > 0;
+		var downLeft = wallDown || wallLeft || _data[Index + widthInTiles - 1] > 0;
+		var left = wallLeft || _data[Index - 1] > 0;
 		var leftUp = wallLeft || wallUp || _data[Index - widthInTiles - 1] > 0;
 
 		if (up) _data[Index] += 1;
