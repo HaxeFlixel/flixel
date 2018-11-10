@@ -378,7 +378,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	function applyAutoTile():Void	
 	{
 		// Pre-process the map data if it's auto-tiled
-		if ( auto != OFF )
+		if (auto != OFF)
 		{
 			var i:Int = 0;
 			while (i < totalTiles)
@@ -451,7 +451,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return;
 		}
 
-		if ( auto == FULL )
+		if (auto == FULL)
 		{
 			autoTileFull(Index);
 			return;
@@ -515,7 +515,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	private function autoTileFull(Index:Int):Void
 	{
-		
 		_data[Index] = 0;
 
 		var wallUp:Bool = Index - widthInTiles < 0;
@@ -523,34 +522,25 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		var wallDown:Bool = Std.int(Index + widthInTiles) >= totalTiles;
 		var wallLeft:Bool = Index % widthInTiles <= 0;
 
-		var up = _data[Index - widthInTiles] > 0;
-		var upRight = _data[Index - widthInTiles + 1] > 0;
-		var right = _data[Index + 1] > 0;
-		var rightDown = _data[Index + widthInTiles + 1] > 0;
-		var down = _data[Index + widthInTiles] > 0;
-		var downLeft = _data[Index + widthInTiles - 1] > 0;
-		var left = _data[Index - 1] > 0;
-		var leftUp = _data[Index - widthInTiles - 1] > 0;
+		var up = wallUp || _data[Index - widthInTiles] > 0;
+		var upRight = wallUp || wallRight || _data[Index - widthInTiles + 1] > 0;
+		var right = wallRight || _data[Index + 1] > 0;
+		var rightDown = wallRight || wallDown || _data[Index + widthInTiles + 1] > 0;
+		var down = wallDown || _data[Index + widthInTiles] > 0;
+		var downLeft = wallDown || wallLeft ||_data[Index + widthInTiles - 1] > 0;
+		var left = wallLeft ||_data[Index - 1] > 0;
+		var leftUp = wallLeft || wallUp || _data[Index - widthInTiles - 1] > 0;
 
-		if ( wallUp || up ) _data[Index] += 1; // UP
-		
-		if ( wallUp || wallRight || ( upRight && up && right ) ) _data[Index] += 2; // UP - RIGHT
-		
-		if ( wallRight || right ) _data[Index] += 4; // RIGHT
-		
-		if ( wallRight || wallDown || ( rightDown && right && down ) ) _data[Index] += 8; // RIGHT - DOWN
-		
-		if ( wallDown || down )  _data[Index] += 16; // DOWN
-		
-		if ( wallDown || wallLeft || ( downLeft && down && left ) ) _data[Index] += 32; // DOWN - LEFT
-		
-		if ( wallLeft || left ) _data[Index] += 64; // LEFT
-		
-		if ( wallLeft || wallUp || ( leftUp && left && up ) ) _data[Index] += 128; // LEFT - UP
+		if (up) _data[Index] += 1;
+		if (upRight && up && right) _data[Index] += 2;
+		if (right) _data[Index] += 4;
+		if (rightDown && right && down) _data[Index] += 8;
+		if (down)  _data[Index] += 16;
+		if (downLeft && down && left) _data[Index] += 32;
+		if (left) _data[Index] += 64;
+		if (leftUp && left && up) _data[Index] += 128;
 
-		_data[Index] += 1;
-
-		_data[Index] -= offsetAutoTile[_data[Index] - 1];
+		_data[Index] -= offsetAutoTile[_data[Index]] - 1;
 	}
 
 	/**
