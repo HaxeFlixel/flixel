@@ -21,7 +21,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public var auto:FlxTilemapAutoTiling = OFF;
 	
-	var offsetAutoTile:Array<Int> = 
+	static var offsetAutoTile:Array<Int> = 
 		[
 			0, 0, 0, 0, 2, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0,
 			11, 11, 0, 0, 13, 13, 0, 14, 0, 0, 0, 0, 18, 18, 0, 19,
