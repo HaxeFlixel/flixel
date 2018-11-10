@@ -33,6 +33,9 @@ class GraphicAuto extends BitmapData {}
 @:keep @:bitmap("assets/images/tile/autotiles_alt.png")
 class GraphicAutoAlt extends BitmapData {}
 
+@:keep @:bitmap("assets/images/tile/autotiles_full.png")
+class GraphicAutoFull extends BitmapData {}
+
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
 
 /**
