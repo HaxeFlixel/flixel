@@ -10,8 +10,13 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTexturePackerSource;
 import haxe.Json;
-import haxe.xml.Fast;
 import openfl.Assets;
+
+#if (haxe_ver >= 4)
+import haxe.xml.Access in Fast;
+#else
+import haxe.xml.Fast;
+#end
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
@@ -252,7 +257,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (Assets.exists(Description))
 			Description = Assets.getText(Description);
 		
-		var data:Fast = new haxe.xml.Fast(Xml.parse(Description).firstElement());
+		var data:Fast = new Fast(Xml.parse(Description).firstElement());
 		
 		for (texture in data.nodes.SubTexture)
 		{
