@@ -1,6 +1,5 @@
 package flixel.math;
 
-import haxe.ds.Vector;
 import flash.geom.Point;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
