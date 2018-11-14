@@ -1,5 +1,6 @@
 package flixel.math;
 
+import haxe.ds.Vector;
 import flash.geom.Point;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
@@ -48,6 +49,7 @@ class FlxPoint implements IFlxPooled
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
+	@:allow(flixel.math.FlxVector)
 	var _weak:Bool = false;
 	var _inPool:Bool = false;
 	

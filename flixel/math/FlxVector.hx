@@ -26,6 +26,19 @@ import flixel.util.FlxPool;
 		return FlxPoint.get();
 	}
 	
+	/**
+	 * Recycle or create new FlxVector.
+	 * Be sure to put() them back into the pool after you're done with them!
+	 * 
+	 * @param	X		The X-coordinate of the point in space.
+	 * @param	Y		The Y-coordinate of the point in space.
+	 */
+	public static inline function weak(X:Float = 0, Y:Float = 0):FlxVector
+	{
+		return FlxPoint.weak();
+	}
+	
+	// Without these delegates we have to say `this.x` everywhere.
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 	
@@ -86,6 +99,20 @@ import flixel.util.FlxPool;
 		return this.set();
 	}
 	
+	inline function tempUnweaken():Bool
+	{
+		var wasWeak = this._weak;
+		this._weak = false;
+		return wasWeak;
+	}
+	
+	inline function putWasWeak(wasWeak:Bool):FlxVector
+	{
+		this._weak = wasWeak;
+		this.putWeak();
+		return this;
+	}
+	
 	/**
 	 * Scale this vector.
 	 * 
@@ -116,9 +143,7 @@ import flixel.util.FlxPool;
 	 */
 	public inline function addNew(v:FlxVector):FlxVector
 	{
-		var nv:FlxVector = clone();
-		nv.addPoint(v);
-		return nv;
+		return clone().addPoint(v);
 	}
 	
 	/**
@@ -129,9 +154,7 @@ import flixel.util.FlxPool;
 	 */
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
-		var nv:FlxVector = clone();
-		nv.subtractPoint(v);
-		return nv;
+		return clone().subtractPoint(v);
 	}
 	
 	/**
@@ -142,7 +165,9 @@ import flixel.util.FlxPool;
 	 */
 	public inline function dotProduct(v:FlxVector):Float
 	{
-		return x * v.x + y * v.y;
+		var dp = x * v.x + y * v.y;
+		v.putWeak();
+		return dp;
 	}
 	
 	/**
@@ -154,6 +179,7 @@ import flixel.util.FlxPool;
 	public inline function dotProdWithNormalizing(v:FlxVector):Float
 	{
 		var normalized:FlxVector = v.clone(_vector1).normalize();
+		v.putWeak();
 		return dotProduct(normalized);
 	}
 	
@@ -176,7 +202,9 @@ import flixel.util.FlxPool;
 	 */
 	public inline function crossProductLength(v:FlxVector):Float
 	{
-		return x * v.y - y * v.x;
+		var cp = x * v.y - y * v.x;
+		v.putWeak();
+		return cp;
 	}
 	
 	/**
@@ -324,6 +352,7 @@ import flixel.util.FlxPool;
 	 */
 	public function projectTo(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
+		var vWeak = v.tempUnweaken();
 		var dp:Float = dotProduct(v);
 		var lenSq:Float = v.lengthSquared;
 		
@@ -332,7 +361,9 @@ import flixel.util.FlxPool;
 			proj = FlxVector.get();
 		}
 		
-		return proj.set(dp * v.x / lenSq, dp * v.y / lenSq);
+		proj.set(dp * v.x / lenSq, dp * v.y / lenSq);
+		v.putWasWeak(vWeak);
+		return proj;
 	}
 		
 	/**
@@ -344,6 +375,7 @@ import flixel.util.FlxPool;
 	 */
 	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
+		var vWeak = v.tempUnweaken();
 		var dp:Float = dotProduct(v);
 		
 		if (proj == null)
@@ -351,7 +383,9 @@ import flixel.util.FlxPool;
 			proj = FlxVector.get();
 		}
 		
-		return proj.set(dp * v.x, dp * v.y);
+		proj.set(dp * v.x, dp * v.y);
+		v.putWasWeak(vWeak);
+		return proj;
 	}
 		
 	/**
@@ -359,7 +393,9 @@ import flixel.util.FlxPool;
 	 */
 	public inline function perpProduct(v:FlxVector):Float
 	{
-		return lx * v.x + ly * v.y;
+		var pp = lx * v.x + ly * v.y;
+		v.putWeak();
+		return pp;
 	}
 	
 	/**
@@ -372,13 +408,30 @@ import flixel.util.FlxPool;
 	 */
 	public function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
-		if (isParallel(v)) return Math.NaN;
-		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
+		var vWeak = v.tempUnweaken();
+		if (isParallel(v))
+		{
+			a.putWeak();
+			b.putWeak();
+			v.putWasWeak(vWeak);
+			return Math.NaN;
+		}
+		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED)
+		{
+			a.putWeak();
+			b.putWeak();
+			v.putWasWeak(vWeak);
+			return Math.NaN;
+		}
 		
 		_vector1 = b.clone(_vector1);
+		b.putWeak();
 		_vector1.subtractPoint(a);
 		
-		return _vector1.perpProduct(v) / perpProduct(v);
+		var vWeak = v.tempUnweaken();
+		var r = _vector1.perpProduct(v) / perpProduct(v);
+		v.putWasWeak(vWeak);
+		return r;
 	}
 		
 	/**
@@ -391,6 +444,7 @@ import flixel.util.FlxPool;
 	 */
 	public function findIntersection(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
+		var aWeak = a.tempUnweaken();
 		var t:Float = ratio(a, b, v);
 		
 		if (intersection == null)
@@ -400,10 +454,15 @@ import flixel.util.FlxPool;
 		
 		if (Math.isNaN(t))
 		{
-			return intersection.set(Math.NaN, Math.NaN);
+			intersection.set(Math.NaN, Math.NaN);
+		}
+		else
+		{
+			intersection.set(a.x + t * x, a.y + t * y);
 		}
 		
-		return intersection.set(a.x + t * x, a.y + t * y);
+		a.putWasWeak(aWeak);
+		return intersection;
 	}
 	
 	/**
@@ -421,14 +480,25 @@ import flixel.util.FlxPool;
 			intersection = FlxVector.get();
 		}
 		
+		var aWeak = a.tempUnweaken();
+		var bWeak = b.tempUnweaken();
+		var vWeak = v.tempUnweaken();
+		
 		var t1:Float = ratio(a, b, v);
 		var t2:Float = v.ratio(b, a, this);
 		if (!Math.isNaN(t1) && !Math.isNaN(t2) && t1 > 0 && t1 <= 1 && t2 > 0 && t2 <= 1)
 		{
-			return intersection.set(a.x + t1 * x, a.y + t1 * y);
+			intersection.set(a.x + t1 * x, a.y + t1 * y);
+		}
+		else
+		{
+			intersection.set(Math.NaN, Math.NaN);
 		}
 		
-		return intersection.set(Math.NaN, Math.NaN);
+		a.putWasWeak(aWeak);
+		b.putWasWeak(bWeak);
+		v.putWasWeak(vWeak);
+		return intersection;
 	}
 	
 	/**
@@ -450,7 +520,10 @@ import flixel.util.FlxPool;
 	 */
 	public inline function radiansBetween(v:FlxVector):Float
 	{
-		return Math.acos(dotProduct(v) / (length * v.length));
+		var vWeak = v.tempUnweaken();
+		var rads = Math.acos(dotProduct(v) / (length * v.length));
+		v.putWasWeak(vWeak);
+		return rads;
 	}
 	
 	/**
@@ -473,6 +546,8 @@ import flixel.util.FlxPool;
 	public function sign(a:FlxVector, b:FlxVector):Int
 	{
 		var signFl:Float = (a.x - x) * (b.y - y) - (a.y - y) * (b.x - x);
+		a.putWeak();
+		b.putWeak();
 		if (signFl == 0)
 		{
 			return 0;
@@ -495,6 +570,7 @@ import flixel.util.FlxPool;
 	{
 		var dx:Float = v.x - x;
 		var dy:Float = v.y - y;
+		v.putWeak();
 		return dx * dx + dy * dy;
 	}
 		
@@ -507,9 +583,11 @@ import flixel.util.FlxPool;
 	 */
 	public inline function bounce(normal:FlxVector, bounceCoeff:Float = 1):FlxVector
 	{
+		var wasWeak = normal.tempUnweaken();
 		var d:Float = (1 + bounceCoeff) * dotProduct(normal);
 		x -= d * normal.x;
 		y -= d * normal.y;
+		normal.putWasWeak(wasWeak);
 		return this;
 	}
 	
