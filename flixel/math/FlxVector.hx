@@ -5,12 +5,10 @@ import flixel.util.FlxPool;
 /**
  * 2-dimensional vector class
  */
-class FlxVector extends FlxPoint
+@:forward abstract FlxVector(FlxPoint) from FlxPoint to FlxPoint
 {
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
-	
-	static var _pool = new FlxPool<FlxVector>(FlxVector);
 	
 	static var _vector1:FlxVector = new FlxVector();
 	static var _vector2:FlxVector = new FlxVector();
@@ -25,22 +23,11 @@ class FlxVector extends FlxPoint
 	 */
 	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		var vector = _pool.get().set(X, Y);
-		vector._inPool = false;
-		return vector;
+		return FlxPoint.get();
 	}
 	
-	/**
-	 * Add this FlxVector to the recycling pool.
-	 */
-	override public function put():Void
-	{
-		if (!_inPool)
-		{
-			_inPool = true;
-			_pool.putUnsafe(this);
-		}
-	}
+	public var x(get, set):Float;
+	public var y(get, set):Float;
 	
 	/**
 	 * The horizontal component of the unit vector
@@ -83,17 +70,20 @@ class FlxVector extends FlxPoint
 	 */
 	public var ly(get, never):Float;
 	
+	public inline function new (X:Float = 0, Y:Float = 0)
+	{
+		this = new FlxPoint(X, Y);
+	}
+	
 	/**
 	 * Set the coordinates of this point object.
 	 * 
 	 * @param	X		The X-coordinate of the point in space.
 	 * @param	Y		The Y-coordinate of the point in space.
 	 */
-	override public function set(X:Float = 0, Y:Float = 0):FlxVector
+	public inline function set(X:Float = 0, Y:Float = 0):FlxVector
 	{
-		x = X;
-		y = Y;
-		return this;
+		return this.set();
 	}
 	
 	/**
@@ -102,10 +92,9 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	override public function scale(k:Float):FlxVector
+	public inline function scale(k:Float):FlxVector
 	{
-		super.scale(k);
-		return this;
+		return this.scale(k);
 	}
 	
 	/**
@@ -573,6 +562,26 @@ class FlxVector extends FlxPoint
 		return vec;
 	}
 	
+	inline function get_x():Float
+	{
+		return this.x;
+	}
+	
+	inline function set_x(x:Float):Float
+	{
+		return this.x = x;
+	}
+	
+	inline function get_y():Float
+	{
+		return this.y;
+	}
+	
+	inline function set_y(y:Float):Float
+	{
+		return this.y = y;
+	}
+	
 	inline function get_dx():Float
 	{
 		if (isZero()) return 0;
@@ -653,5 +662,10 @@ class FlxVector extends FlxPoint
 	inline function get_ly():Float
 	{
 		return -x;
+	}
+	
+	static function get_pool():IFlxPool<FlxPoint>
+	{
+		return FlxPoint.pool;
 	}
 }
