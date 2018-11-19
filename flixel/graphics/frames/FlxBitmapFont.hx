@@ -424,12 +424,8 @@ class FlxBitmapFont extends FlxFramesCollection
 		var frameRect = flashRect;
 		frame.frame.copyToFlash(frameRect);
 		
-		#if flash
-		// TODO: fix this issue...
-		// for some reason this line causes app crash on targets other than flash...
 		var bgColor32:Int = bmd.getPixel32(Std.int(frame.frame.x), Std.int(frame.frame.y));
 		bmd.threshold(bmd, frameRect, point, "==", bgColor32, FlxColor.TRANSPARENT, FlxColor.WHITE, true);
-		#end
 		
 		if (charBGColor != FlxColor.TRANSPARENT)
 		{
