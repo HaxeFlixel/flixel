@@ -145,13 +145,13 @@ class FlxGame extends Sprite
 	
 	#if (desktop && lime_legacy)
 	/**
-	 * Ugly workaround to ensure consistent behaviour between flash and cpp
+	 * Ugly workaround to ensure consistent behaviour between flash and cpp 
 	 * (the focus event should not fire when the game starts up!)
 	 */
 	var _onFocusFiredOnce:Bool = false;
 	#end
 	
-	#if FLX_FOCUS_LOST_SCREEN
+	#if FLX_FOCUS_LOST_SCREEN 
 	/**
 	 * The "focus lost" screen.
 	 */
@@ -234,7 +234,7 @@ class FlxGame extends Sprite
 	
 	/**
 	 * Instantiate a new game object.
-	 *
+	 * 
 	 * @param GameWidth       The width of your game in game pixels, not necessarily final display pixels (see `Zoom`).
 	 *                        If equal to `0`, the window width specified in the `Project.xml` is used.
 	 * @param GameHeight      The height of your game in game pixels, not necessarily final display pixels (see `Zoom`).
@@ -354,7 +354,7 @@ class FlxGame extends Sprite
 		if (FlxG.updateFramerate < FlxG.drawFramerate)
 			FlxG.log.warn("FlxG.updateFramerate: The update framerate shouldn't be smaller" +
 				" than the draw framerate, since it can slow down your game.");
-
+		
 		// Finally, set up an event for the actual game loop stuff.
 		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		
@@ -367,16 +367,16 @@ class FlxGame extends Sprite
 		
 		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
 	}
-
+	
 	function onFocus(_):Void
 	{
 		#if flash
-		if (!_lostFocus)
+		if (!_lostFocus) 
 			return; // Don't run this function twice (bug in standalone flash player)
 		#end
 		
 		#if (desktop && lime_legacy)
-		// make sure the on focus event doesn't fire on startup
+		// make sure the on focus event doesn't fire on startup 
 		if (!_onFocusFiredOnce)
 		{
 			_onFocusFiredOnce = true;
@@ -399,7 +399,7 @@ class FlxGame extends Sprite
 		#if FLX_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
 			_focusLostScreen.visible = false;
-		#end
+		#end 
 		
 		#if FLX_DEBUG
 		debugger.stats.onFocus();
@@ -434,7 +434,7 @@ class FlxGame extends Sprite
 		#if FLX_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
 			_focusLostScreen.visible = true;
-		#end
+		#end 
 		
 		#if FLX_DEBUG
 		debugger.stats.onFocusLost();
@@ -448,7 +448,7 @@ class FlxGame extends Sprite
 	}
 	
 	@:allow(flixel.FlxG)
-	function onResize(_):Void
+	function onResize(_):Void 
 	{
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
@@ -536,7 +536,7 @@ class FlxGame extends Sprite
 				while (_accumulator >= _stepMS)
 				{
 					step();
-					_accumulator -= _stepMS;
+					_accumulator -= _stepMS; 
 				}
 			}
 			else
@@ -591,7 +591,7 @@ class FlxGame extends Sprite
 		
 		FlxG.signals.postGameReset.dispatch();
 	}
-	
+
 	/**
 	 * If there is a state change requested during the update loop,
 	 * this function handles actual destroying the old state and related processes,
@@ -671,7 +671,7 @@ class FlxGame extends Sprite
 		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
-
+	
 	function handleReplayRequests():Void
 	{
 		#if FLX_RECORD
@@ -864,7 +864,7 @@ class FlxGame extends Sprite
 			debugger.stats.drawCalls(FlxDrawBaseItem.drawCalls);
 			#end
 		}
-		
+
 		FlxG.cameras.unlock();
 		
 		FlxG.signals.postDraw.dispatch();
