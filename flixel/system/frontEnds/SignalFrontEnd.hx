@@ -36,7 +36,8 @@ class SignalFrontEnd
 	@:allow(flixel.FlxG)
 	function new() {}
 	
-	function get_gameStarted():FlxSignal {
+	function get_gameStarted():FlxSignal
+	{
 		return postGameStart;
 	}
 }
