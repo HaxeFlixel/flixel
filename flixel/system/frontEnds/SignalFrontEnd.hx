@@ -24,6 +24,8 @@ class SignalFrontEnd
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
 	public var postGameStart(default, null):FlxSignal = new FlxSignal();
+	@:deprecated("Use postGameStart instead of gameStarted")
+	public var gameStarted(get, null):FlxSignal;
 	public var preUpdate(default, null):FlxSignal = new FlxSignal();
 	public var postUpdate(default, null):FlxSignal = new FlxSignal();
 	public var preDraw(default, null):FlxSignal = new FlxSignal();
@@ -33,4 +35,8 @@ class SignalFrontEnd
 	
 	@:allow(flixel.FlxG)
 	function new() {}
+	
+	function get_gameStarted():FlxSignal {
+		return postGameStart;
+	}
 }
