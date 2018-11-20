@@ -10,7 +10,7 @@ class SignalFrontEnd
 	public var stateSwitched(default, null):FlxSignal = new FlxSignal();
 	public var preStateCreate(default, null):FlxTypedSignal<FlxState->Void> = new FlxTypedSignal<FlxState->Void>();
 	/**
-	 * Gets dispatched when the game is resized.
+	 * Gets dispatched when the game is resized. 
 	 * Passes the new window width and height to callback functions.
 	 */
 	public var gameResized(default, null):FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal<Int->Int->Void>();
@@ -30,7 +30,7 @@ class SignalFrontEnd
 	public var postDraw(default, null):FlxSignal = new FlxSignal();
 	public var focusGained(default, null):FlxSignal = new FlxSignal();
 	public var focusLost(default, null):FlxSignal = new FlxSignal();
-
+	
 	@:allow(flixel.FlxG)
 	function new() {}
 }
