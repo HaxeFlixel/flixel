@@ -50,7 +50,7 @@ class FlxGame extends Sprite
 	 * Framerate to use on focus lost. Default is `10`.
 	 */
 	public var focusLostFramerate:Int = 10;
-
+	
 	#if FLX_RECORD
 	/**
 	 * Flag for whether a replay is currently playing.
@@ -63,21 +63,21 @@ class FlxGame extends Sprite
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	public var recording(default, null):Bool = false;
 	#end
-
+	
 	#if FLX_SOUND_TRAY
 	/**
 	 * The sound tray display container.
 	 */
 	public var soundTray(default, null):FlxSoundTray;
 	#end
-
+	
 	#if FLX_DEBUG
 	/**
 	 * The debugger overlay object.
 	 */
 	public var debugger(default, null):FlxDebugger;
 	#end
-
+	
 	/**
 	 * Time in milliseconds that has passed (amount of "ticks" passed) since the game has started.
 	 */
@@ -86,13 +86,13 @@ class FlxGame extends Sprite
 	 * Enables or disables the filters set via `setFilters()`.
 	 */
 	public var filtersEnabled:Bool = true;
-
+	
 	/**
 	 * A flag for triggering the `preGameStart` and `postGameStart` "events".
 	 */
 	@:allow(flixel.system.FlxSplash)
 	var _gameJustStarted:Bool = false;
-
+	
 	/**
 	 * Class type of the initial/first game state for the game, usually `MenuState` or something like that.
 	 */
@@ -132,7 +132,7 @@ class FlxGame extends Sprite
 	 * Should always (and automatically) be set to roughly 2x the stage framerate.
 	 */
 	var _maxAccumulation:Float;
-
+	
 	/**
 	 * Whether the game lost focus.
 	 */
