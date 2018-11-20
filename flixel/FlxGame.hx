@@ -274,7 +274,7 @@ class FlxGame extends Sprite
 		#if FLX_RECORD
 		_replay = new FlxReplay();
 		#end
-
+		
 		// Then get ready to create the game object for real
 		_initialState = (InitialState == null) ? FlxState : InitialState;
 
