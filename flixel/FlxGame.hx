@@ -864,7 +864,7 @@ class FlxGame extends Sprite
 			debugger.stats.drawCalls(FlxDrawBaseItem.drawCalls);
 			#end
 		}
-
+	
 		FlxG.cameras.unlock();
 		
 		FlxG.signals.postDraw.dispatch();
