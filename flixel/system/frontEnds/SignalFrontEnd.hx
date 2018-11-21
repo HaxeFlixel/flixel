@@ -25,7 +25,7 @@ class SignalFrontEnd
 	 */
 	public var postGameStart(default, null):FlxSignal = new FlxSignal();
 	@:deprecated("Use postGameStart instead of gameStarted")
-	public var gameStarted(get, null):FlxSignal;
+	public var gameStarted(get, never):FlxSignal;
 	public var preUpdate(default, null):FlxSignal = new FlxSignal();
 	public var postUpdate(default, null):FlxSignal = new FlxSignal();
 	public var preDraw(default, null):FlxSignal = new FlxSignal();
