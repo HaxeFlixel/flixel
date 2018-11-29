@@ -9,6 +9,8 @@ import openfl.geom.Matrix;
 /**
  * Stores a 2D floating point coordinate.
  */
+ 
+@:allow(flixel.math.FlxVector)
 class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
@@ -48,7 +50,6 @@ class FlxPoint implements IFlxPooled
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 	
-	@:allow(flixel.math.FlxVector)
 	var _weak:Bool = false;
 	var _inPool:Bool = false;
 	
@@ -118,6 +119,11 @@ class FlxPoint implements IFlxPooled
 	 */
 	public function addPoint(point:FlxPoint):FlxPoint
 	{
+		return __addPoint(point, true);
+	}
+	
+	inline function __addPoint(point:FlxPoint, put:Bool = false):FlxPoint
+	{
 		x += point.x;
 		y += point.y;
 		point.putWeak();
@@ -145,6 +151,11 @@ class FlxPoint implements IFlxPooled
 	 * @return	This point.
 	 */
 	public function subtractPoint(point:FlxPoint):FlxPoint
+	{
+		return __subtractPoint(point, true);
+	}
+	
+	inline function __subtractPoint(point:FlxPoint, put:Bool = false):FlxPoint
 	{
 		x -= point.x;
 		y -= point.y;
@@ -395,7 +406,7 @@ class FlxPoint implements IFlxPooled
 	 */
 	public inline function toVector():FlxVector
 	{
-		return FlxVector.get(x, y);
+		return this;
 	}
 	
 	/**
