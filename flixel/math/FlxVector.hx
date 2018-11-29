@@ -128,13 +128,13 @@ import openfl.geom.Point;
 	/**
 	 * Subtracts from the coordinates of this point.
 	 * 
-	 * @param	X	Amount to subtract from x
-	 * @param	Y	Amount to subtract from y
+	 * @param	x	Amount to subtract from x
+	 * @param	y	Amount to subtract from y
 	 * @return	This point.
 	 */
-	public inline function subtract(X:Float = 0, Y:Float = 0):FlxVector
+	public inline function subtract(x:Float = 0, y:Float = 0):FlxVector
 	{
-		return this.subtract(X, Y);
+		return this.subtract(x, y);
 	}
 	
 	/**
