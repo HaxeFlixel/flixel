@@ -9,7 +9,6 @@ import openfl.geom.Matrix;
 /**
  * Stores a 2D floating point coordinate.
  */
- 
 @:allow(flixel.math.FlxVector)
 class FlxPoint implements IFlxPooled
 {

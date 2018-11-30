@@ -1,8 +1,7 @@
 package flixel.math;
 
+import flixel.util.FlxPool.IFlxPool;
 import openfl.geom.Matrix;
-import flixel.util.FlxPool;
-
 import openfl.geom.Point;
 
 /**
@@ -16,6 +15,8 @@ import openfl.geom.Point;
 	static var _vector1:FlxVector = new FlxVector();
 	static var _vector2:FlxVector = new FlxVector();
 	static var _vector3:FlxVector = new FlxVector();
+	
+	public static var pool(get, never):IFlxPool<FlxPoint>;
 	
 	/**
 	 * Recycle or create new FlxVector.
@@ -120,7 +121,7 @@ import openfl.geom.Point;
 	 * @param	point	The point to add to this point
 	 * @return	This point.
 	 */
-	public function addPoint(point:FlxPoint):FlxVector
+	public inline function addPoint(point:FlxPoint):FlxVector
 	{
 		return this.addPoint(point);
 	}
@@ -143,7 +144,7 @@ import openfl.geom.Point;
 	 * @param	point	The point to subtract from this point
 	 * @return	This point.
 	 */
-	public function subtractPoint(point:FlxPoint):FlxVector
+	public inline function subtractPoint(point:FlxPoint):FlxVector
 	{
 		return this.subtractPoint(point);
 	}
@@ -859,7 +860,7 @@ import openfl.geom.Point;
 		return -x;
 	}
 	
-	static function get_pool():IFlxPool<FlxPoint>
+	static inline function get_pool():IFlxPool<FlxPoint>
 	{
 		return FlxPoint.pool;
 	}
