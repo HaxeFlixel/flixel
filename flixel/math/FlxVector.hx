@@ -267,10 +267,10 @@ import openfl.geom.Point;
 	 */
 	public inline function dotProduct(v:FlxVector):Float
 	{
-		return __dotProduct(v, true);
+		return dotProductWeak(v, true);
 	}
 	
-	inline function __dotProduct(v:FlxVector, put:Bool = false):Float
+	inline function dotProductWeak(v:FlxVector, put:Bool = false):Float
 	{
 		var dp = x * v.x + y * v.y;
 		if (put) v.putWeak();
@@ -287,7 +287,7 @@ import openfl.geom.Point;
 	{
 		var normalized:FlxVector = v.clone(_vector1).normalize();
 		v.putWeak();
-		return __dotProduct(normalized);
+		return dotProductWeak(normalized);
 	}
 	
 	/**
@@ -309,10 +309,10 @@ import openfl.geom.Point;
 	 */
 	public inline function crossProductLength(v:FlxVector):Float
 	{
-		return __crossProductLength(v, true);
+		return crossProductLengthWeak(v, true);
 	}
 	
-	inline function __crossProductLength(v:FlxVector, put:Bool = false):Float
+	inline function crossProductLengthWeak(v:FlxVector, put:Bool = false):Float
 	{
 		var cp = x * v.y - y * v.x;
 		if (put) v.putWeak();
@@ -327,12 +327,12 @@ import openfl.geom.Point;
 	 */
 	public inline function isParallel(v:FlxVector):Bool
 	{
-		return __isParallel(v, true);
+		return isParallelWeak(v, true);
 	}
 	
-	inline function __isParallel(v:FlxVector, put:Bool = false):Bool
+	inline function isParallelWeak(v:FlxVector, put:Bool = false):Bool
 	{
-		return Math.abs(__crossProductLength(v, put)) < EPSILON_SQUARED;
+		return Math.abs(crossProductLengthWeak(v, put)) < EPSILON_SQUARED;
 	}
 	
 	/**
@@ -469,7 +469,7 @@ import openfl.geom.Point;
 	 */
 	public function projectTo(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
-		var dp:Float = __dotProduct(v);
+		var dp:Float = dotProductWeak(v);
 		var lenSq:Float = v.lengthSquared;
 		
 		if (proj == null)
@@ -491,12 +491,12 @@ import openfl.geom.Point;
 	 */
 	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
-		return __projectToNormalized(v, proj, true);
+		return projectToNormalizedWeak(v, proj, true);
 	}
 	
-	inline function __projectToNormalized(v:FlxVector, ?proj:FlxVector, put:Bool = false):FlxVector
+	inline function projectToNormalizedWeak(v:FlxVector, ?proj:FlxVector, put:Bool = false):FlxVector
 	{
-		var dp:Float = __dotProduct(v);
+		var dp:Float = dotProductWeak(v);
 		
 		if (proj == null)
 		{
@@ -513,10 +513,10 @@ import openfl.geom.Point;
 	 */
 	public inline function perpProduct(v:FlxVector):Float
 	{
-		return __perpProduct(v, true);
+		return perpProductWeak(v, true);
 	}
 	
-	inline function __perpProduct(v:FlxVector, put:Bool = false):Float
+	inline function perpProductWeak(v:FlxVector, put:Bool = false):Float
 	{
 		var pp = lx * v.x + ly * v.y;
 		if (put) v.putWeak();
@@ -533,18 +533,18 @@ import openfl.geom.Point;
 	 */
 	public inline function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
-		return __ratio(a, b, v, true);
+		return ratioWeak(a, b, v, true);
 	}
 	
-	inline function __ratio(a:FlxVector, b:FlxVector, v:FlxVector, put:Bool = false):Float
+	inline function ratioWeak(a:FlxVector, b:FlxVector, v:FlxVector, put:Bool = false):Float
 	{
 		var r = Math.NaN;
-		if (!__isParallel(v) && lengthSquared >= EPSILON_SQUARED && v.lengthSquared >= EPSILON_SQUARED)
+		if (!isParallelWeak(v) && lengthSquared >= EPSILON_SQUARED && v.lengthSquared >= EPSILON_SQUARED)
 		{
 			_vector1 = b.clone(_vector1);
-			_vector1.__subtractPoint(a);
+			_vector1.subtractPointWeak(a);
 			
-			r = _vector1.__perpProduct(v) / __perpProduct(v);
+			r = _vector1.perpProductWeak(v) / perpProductWeak(v);
 		}
 		
 		if (put)
@@ -566,7 +566,7 @@ import openfl.geom.Point;
 	 */
 	public function findIntersection(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
-		var t:Float = __ratio(a, b, v);
+		var t:Float = ratioWeak(a, b, v);
 		
 		if (intersection == null)
 		{
@@ -603,8 +603,8 @@ import openfl.geom.Point;
 			intersection = FlxVector.get();
 		}
 		
-		var t1:Float = __ratio(a, b, v);
-		var t2:Float = v.__ratio(b, a, this);
+		var t1:Float = ratioWeak(a, b, v);
+		var t2:Float = v.ratioWeak(b, a, this);
 		if (!Math.isNaN(t1) && !Math.isNaN(t2) && t1 > 0 && t1 <= 1 && t2 > 0 && t2 <= 1)
 		{
 			intersection.set(a.x + t1 * x, a.y + t1 * y);
@@ -639,7 +639,7 @@ import openfl.geom.Point;
 	 */
 	public inline function radiansBetween(v:FlxVector):Float
 	{
-		var rads = Math.acos(__dotProduct(v) / (length * v.length));
+		var rads = Math.acos(dotProductWeak(v) / (length * v.length));
 		v.putWeak();
 		return rads;
 	}
@@ -701,7 +701,7 @@ import openfl.geom.Point;
 	 */
 	public inline function bounce(normal:FlxVector, bounceCoeff:Float = 1):FlxVector
 	{
-		var d:Float = (1 + bounceCoeff) * __dotProduct(normal);
+		var d:Float = (1 + bounceCoeff) * dotProductWeak(normal);
 		x -= d * normal.x;
 		y -= d * normal.y;
 		normal.putWeak();
@@ -718,8 +718,8 @@ import openfl.geom.Point;
 	 */
 	public inline function bounceWithFriction(normal:FlxVector, bounceCoeff:Float = 1, friction:Float = 0):FlxVector
 	{
-		var p1:FlxVector = __projectToNormalized(normal.rightNormal(_vector3), _vector1);
-		var p2:FlxVector = __projectToNormalized(normal, _vector2);
+		var p1:FlxVector = projectToNormalizedWeak(normal.rightNormal(_vector3), _vector1);
+		var p2:FlxVector = projectToNormalizedWeak(normal, _vector2);
 		var bounceX:Float = -p2.x;
 		var bounceY:Float = -p2.y;
 		var frictionX:Float = p1.x;
