@@ -538,7 +538,7 @@ import openfl.geom.Point;
 	inline function __ratio(a:FlxVector, b:FlxVector, v:FlxVector, put:Bool = false):Float
 	{
 		var r = Math.NaN;
-		if (!__isParallel(v) && lengthSquared > EPSILON_SQUARED && v.lengthSquared > EPSILON_SQUARED)
+		if (!__isParallel(v) && lengthSquared >= EPSILON_SQUARED && v.lengthSquared >= EPSILON_SQUARED)
 		{
 			_vector1 = b.clone(_vector1);
 			_vector1.__subtractPoint(a);
@@ -569,12 +569,16 @@ import openfl.geom.Point;
 		
 		if (intersection == null)
 		{
-			intersection = FlxVector.get(Math.NaN, Math.NaN);
+			intersection = FlxVector.get();
 		}
 		
 		if (!Math.isNaN(t))
 		{
 			intersection.set(a.x + t * x, a.y + t * y);
+		}
+		else
+		{
+			intersection.set(Math.NaN, Math.NaN);
 		}
 		
 		a.putWeak();
@@ -595,7 +599,7 @@ import openfl.geom.Point;
 	{
 		if (intersection == null)
 		{
-			intersection = FlxVector.get(Math.NaN, Math.NaN);
+			intersection = FlxVector.get();
 		}
 		
 		var t1:Float = __ratio(a, b, v);
@@ -603,6 +607,10 @@ import openfl.geom.Point;
 		if (!Math.isNaN(t1) && !Math.isNaN(t2) && t1 > 0 && t1 <= 1 && t2 > 0 && t2 <= 1)
 		{
 			intersection.set(a.x + t1 * x, a.y + t1 * y);
+		}
+		else
+		{
+			intersection.set(Math.NaN, Math.NaN);
 		}
 		
 		a.putWeak();
