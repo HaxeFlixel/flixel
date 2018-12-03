@@ -570,13 +570,13 @@ import openfl.geom.Point;
 			intersection = FlxVector.get();
 		}
 		
-		if (!Math.isNaN(t))
+		if (Math.isNaN(t))
 		{
-			intersection.set(a.x + t * x, a.y + t * y);
+			intersection.set(Math.NaN, Math.NaN);
 		}
 		else
 		{
-			intersection.set(Math.NaN, Math.NaN);
+			intersection.set(a.x + t * x, a.y + t * y);
 		}
 		
 		a.putWeak();
