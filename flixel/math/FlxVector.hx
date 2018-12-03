@@ -723,7 +723,7 @@ import openfl.geom.Point;
 		var frictionY:Float = p1.y;
 		x = bounceX * bounceCoeff + frictionX * friction;
 		y = bounceY * bounceCoeff + frictionY * friction;
-		normal.putweak();
+		normal.putWeak();
 		return this;
 	}
 	
