@@ -346,7 +346,6 @@ import openfl.geom.Point;
 		return p;
 	}
 	
-	
 	/**
 	 * Check for parallelism of two vectors.
 	 * Meant for internal use, does not call putWeak.
@@ -575,7 +574,6 @@ import openfl.geom.Point;
 		v.putWeak();
 		return r;
 	}
-	
 	
 	/**
 	 * Find the ratio between the perpProducts of this vector and v vector. This helps to find the intersection point.
