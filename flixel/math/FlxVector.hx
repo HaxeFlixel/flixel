@@ -267,14 +267,14 @@ import openfl.geom.Point;
 	 */
 	public inline function dotProduct(v:FlxVector):Float
 	{
-		return dotProductWeak(v, true);
+		var dp = dotProductWeak(v);
+		v.putWeak();
+		return dp;
 	}
 	
-	inline function dotProductWeak(v:FlxVector, put:Bool = false):Float
+	inline function dotProductWeak(v:FlxVector):Float
 	{
-		var dp = x * v.x + y * v.y;
-		if (put) v.putWeak();
-		return dp;
+		return x * v.x + y * v.y;
 	}
 	
 	/**
@@ -309,14 +309,14 @@ import openfl.geom.Point;
 	 */
 	public inline function crossProductLength(v:FlxVector):Float
 	{
-		return crossProductLengthWeak(v, true);
+		var cp = crossProductLengthWeak(v);
+		v.putWeak();
+		return cp;
 	}
 	
-	inline function crossProductLengthWeak(v:FlxVector, put:Bool = false):Float
+	inline function crossProductLengthWeak(v:FlxVector):Float
 	{
-		var cp = x * v.y - y * v.x;
-		if (put) v.putWeak();
-		return cp;
+		return x * v.y - y * v.x;
 	}
 	
 	/**
@@ -327,12 +327,14 @@ import openfl.geom.Point;
 	 */
 	public inline function isParallel(v:FlxVector):Bool
 	{
-		return isParallelWeak(v, true);
+		var p = isParallelWeak(v);
+		v.putWeak();
+		return p;
 	}
 	
-	inline function isParallelWeak(v:FlxVector, put:Bool = false):Bool
+	inline function isParallelWeak(v:FlxVector):Bool
 	{
-		return Math.abs(crossProductLengthWeak(v, put)) < EPSILON_SQUARED;
+		return Math.abs(crossProductLengthWeak(v)) < EPSILON_SQUARED;
 	}
 	
 	/**
@@ -491,10 +493,12 @@ import openfl.geom.Point;
 	 */
 	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
-		return projectToNormalizedWeak(v, proj, true);
+		proj = projectToNormalizedWeak(v, proj);
+		v.putWeak();
+		return proj;
 	}
 	
-	inline function projectToNormalizedWeak(v:FlxVector, ?proj:FlxVector, put:Bool = false):FlxVector
+	inline function projectToNormalizedWeak(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProductWeak(v);
 		
@@ -503,9 +507,7 @@ import openfl.geom.Point;
 			proj = FlxVector.get();
 		}
 		
-		proj.set(dp * v.x, dp * v.y);
-		if (put) v.putWeak();
-		return proj;
+		return proj.set(dp * v.x, dp * v.y);
 	}
 		
 	/**
@@ -513,14 +515,14 @@ import openfl.geom.Point;
 	 */
 	public inline function perpProduct(v:FlxVector):Float
 	{
-		return perpProductWeak(v, true);
+		var pp:Float = perpProductWeak(v);
+		v.putWeak();
+		return pp;
 	}
 	
-	inline function perpProductWeak(v:FlxVector, put:Bool = false):Float
+	inline function perpProductWeak(v:FlxVector):Float
 	{
-		var pp = lx * v.x + ly * v.y;
-		if (put) v.putWeak();
-		return pp;
+		return lx * v.x + ly * v.y;
 	}
 	
 	/**
@@ -533,27 +535,22 @@ import openfl.geom.Point;
 	 */
 	public inline function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
-		return ratioWeak(a, b, v, true);
+		var r = ratioWeak(a, b, v);
+		a.putWeak();
+		b.putWeak();
+		v.putWeak();
+		return r;
 	}
 	
-	inline function ratioWeak(a:FlxVector, b:FlxVector, v:FlxVector, put:Bool = false):Float
+	inline function ratioWeak(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
-		var r = Math.NaN;
-		if (!isParallelWeak(v) && lengthSquared >= EPSILON_SQUARED && v.lengthSquared >= EPSILON_SQUARED)
-		{
-			_vector1 = b.clone(_vector1);
-			_vector1.subtractPointWeak(a);
-			
-			r = _vector1.perpProductWeak(v) / perpProductWeak(v);
-		}
+		if (isParallelWeak(v)) return Math.NaN;
+		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
-		if (put)
-		{
-			a.putWeak();
-			b.putWeak();
-			v.putWeak();
-		}
-		return r;
+		_vector1 = b.clone(_vector1);
+		_vector1.subtractPointWeak(a);
+		
+		return _vector1.perpProductWeak(v) / perpProductWeak(v);
 	}
 		
 	/**

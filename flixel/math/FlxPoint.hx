@@ -118,14 +118,15 @@ class FlxPoint implements IFlxPooled
 	 */
 	public function addPoint(point:FlxPoint):FlxPoint
 	{
-		return addPointWeak(point, true);
+		addPointWeak(point);
+		point.putWeak();
+		return this;
 	}
 	
-	inline function addPointWeak(point:FlxPoint, put:Bool = false):FlxPoint
+	inline function addPointWeak(point:FlxPoint):FlxPoint
 	{
 		x += point.x;
 		y += point.y;
-		point.putWeak();
 		return this;
 	}
 	
@@ -151,14 +152,15 @@ class FlxPoint implements IFlxPooled
 	 */
 	public function subtractPoint(point:FlxPoint):FlxPoint
 	{
-		return subtractPointWeak(point, true);
+		subtractPointWeak(point);
+		point.putWeak();
+		return this;
 	}
 	
-	inline function subtractPointWeak(point:FlxPoint, put:Bool = false):FlxPoint
+	inline function subtractPointWeak(point:FlxPoint):FlxPoint
 	{
 		x -= point.x;
 		y -= point.y;
-		point.putWeak();
 		return this;
 	}
 	
