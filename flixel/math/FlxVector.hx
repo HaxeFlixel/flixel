@@ -272,6 +272,13 @@ import openfl.geom.Point;
 		return dp;
 	}
 	
+	/**
+	 * Dot product between two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to multiply
+	 * @return	dot product of two vectors
+	 */
 	inline function dotProductWeak(v:FlxVector):Float
 	{
 		return x * v.x + y * v.y;
@@ -314,6 +321,13 @@ import openfl.geom.Point;
 		return cp;
 	}
 	
+	/**
+	 * Find the length of cross product between two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to multiply
+	 * @return	the length of cross product of two vectors
+	 */
 	inline function crossProductLengthWeak(v:FlxVector):Float
 	{
 		return x * v.y - y * v.x;
@@ -332,6 +346,14 @@ import openfl.geom.Point;
 		return p;
 	}
 	
+	
+	/**
+	 * Check for parallelism of two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to check
+	 * @return	true - if they are parallel
+	 */
 	inline function isParallelWeak(v:FlxVector):Bool
 	{
 		return Math.abs(crossProductLengthWeak(v)) < EPSILON_SQUARED;
@@ -483,7 +505,7 @@ import openfl.geom.Point;
 		v.putWeak();
 		return proj;
 	}
-		
+	
 	/**
 	 * Projecting this vector on the normalized vector v.
 	 * 
@@ -498,6 +520,14 @@ import openfl.geom.Point;
 		return proj;
 	}
 	
+	/**
+	 * Projecting this vector on the normalized vector v.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	this vector has to be normalized, ie have unit length
+	 * @param	proj	optional argument - result vector
+	 * @return	projection of the vector
+	 */
 	inline function projectToNormalizedWeak(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
 		var dp:Float = dotProductWeak(v);
@@ -509,9 +539,9 @@ import openfl.geom.Point;
 		
 		return proj.set(dp * v.x, dp * v.y);
 	}
-		
+	
 	/**
-	 * Dot product of left the normal vector and vector v
+	 * Dot product of left the normal vector and vector v.
 	 */
 	public inline function perpProduct(v:FlxVector):Float
 	{
@@ -520,6 +550,10 @@ import openfl.geom.Point;
 		return pp;
 	}
 	
+	/**
+	 * Dot product of left the normal vector and vector v.
+	 * Meant for internal use, does not call putWeak.
+	 */
 	inline function perpProductWeak(v:FlxVector):Float
 	{
 		return lx * v.x + ly * v.y;
@@ -542,6 +576,16 @@ import openfl.geom.Point;
 		return r;
 	}
 	
+	
+	/**
+	 * Find the ratio between the perpProducts of this vector and v vector. This helps to find the intersection point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	a	start point of the vector
+	 * @param	b	start point of the v vector
+	 * @param	v	the second vector
+	 * @return	the ratio between the perpProducts of this vector and v vector
+	 */
 	inline function ratioWeak(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
 		if (isParallelWeak(v)) return Math.NaN;
@@ -552,7 +596,7 @@ import openfl.geom.Point;
 		
 		return _vector1.perpProductWeak(v) / perpProductWeak(v);
 	}
-		
+	
 	/**
 	 * Finding the point of intersection of vectors.
 	 * 
@@ -584,7 +628,6 @@ import openfl.geom.Point;
 		v.putWeak();
 		return intersection;
 	}
-	
 	/**
 	 * Finding the point of intersection of vectors if it is in the "bounds" of the vectors.
 	 * 

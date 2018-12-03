@@ -123,6 +123,13 @@ class FlxPoint implements IFlxPooled
 		return this;
 	}
 	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	point	The point to add to this point
+	 * @return	This point.
+	 */
 	inline function addPointWeak(point:FlxPoint):FlxPoint
 	{
 		x += point.x;
@@ -157,6 +164,13 @@ class FlxPoint implements IFlxPooled
 		return this;
 	}
 	
+	/**
+	 * Subtracts the coordinates of another point from the coordinates of this point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	point	The point to subtract from this point
+	 * @return	This point.
+	 */
 	inline function subtractPointWeak(point:FlxPoint):FlxPoint
 	{
 		x -= point.x;
