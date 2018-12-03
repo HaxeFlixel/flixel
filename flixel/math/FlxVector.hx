@@ -32,8 +32,8 @@ import openfl.geom.Point;
 	}
 	
 	/**
-	 * Recycle or create new FlxVector.
-	 * Be sure to put() them back into the pool after you're done with them!
+	 * Recycle or create a new FlxPoint which will automatically be released 
+	 * to the pool when passed into a flixel function.
 	 * 
 	 * @param	x		The X-coordinate of the point in space.
 	 * @param	y		The Y-coordinate of the point in space.
