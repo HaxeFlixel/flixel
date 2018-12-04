@@ -375,7 +375,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#end
 		
 		_cursorBitmapData = FlxDestroyUtil.dispose(_cursorBitmapData);
-		FlxG.signals.gameStarted.remove(onGameStart);
+		FlxG.signals.postGameStart.remove(onGameStart);
 	}
 	
 	/**
@@ -422,7 +422,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		
-		FlxG.signals.gameStarted.add(onGameStart);
+		FlxG.signals.postGameStart.add(onGameStart);
 		Mouse.hide();
 	}
 	
