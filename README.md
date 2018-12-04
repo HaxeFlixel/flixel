@@ -12,7 +12,7 @@
 Here are the most important links to get you started with HaxeFlixel:
 
 - [Getting Started](https://haxeflixel.com/documentation/getting-started/)
-- [Documentation](https://www.haxeflixel.com/documentation)
+- [Documentation](https://haxeflixel.com/documentation)
 - [API](https://api.haxeflixel.com/)
 - [Community](https://haxeflixel.com/documentation/community/)
 

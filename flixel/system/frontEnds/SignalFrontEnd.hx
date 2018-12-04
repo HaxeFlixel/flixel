@@ -17,9 +17,15 @@ class SignalFrontEnd
 	public var preGameReset(default, null):FlxSignal = new FlxSignal();
 	public var postGameReset(default, null):FlxSignal = new FlxSignal();
 	/**
+	 * Gets dispatched just before the game is started (before the first state after the splash screen is created)
+	 */
+	public var preGameStart(default, null):FlxSignal = new FlxSignal();
+	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
 	 */
-	public var gameStarted(default, null):FlxSignal = new FlxSignal();
+	public var postGameStart(default, null):FlxSignal = new FlxSignal();
+	@:deprecated("Use postGameStart instead of gameStarted")
+	public var gameStarted(get, never):FlxSignal;
 	public var preUpdate(default, null):FlxSignal = new FlxSignal();
 	public var postUpdate(default, null):FlxSignal = new FlxSignal();
 	public var preDraw(default, null):FlxSignal = new FlxSignal();
@@ -29,4 +35,9 @@ class SignalFrontEnd
 	
 	@:allow(flixel.FlxG)
 	function new() {}
+	
+	function get_gameStarted():FlxSignal
+	{
+		return postGameStart;
+	}
 }
