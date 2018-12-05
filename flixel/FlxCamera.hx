@@ -493,6 +493,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.colored = colored;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.blending = blendInt;
+		itemToReturn.blend = blend;
 		itemToReturn.shader = shader;
 		
 		itemToReturn.nextTyped = _headTiles;
