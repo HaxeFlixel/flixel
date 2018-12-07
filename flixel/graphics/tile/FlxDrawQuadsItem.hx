@@ -128,7 +128,10 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
-
+		
+		#if (openfl > "8.7.0")
+		camera.canvas.graphics.overrideBlendMode(blend);
+		#end
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);
