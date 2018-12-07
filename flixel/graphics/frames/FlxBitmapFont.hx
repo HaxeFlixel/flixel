@@ -13,8 +13,13 @@ import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
 import flixel.util.FlxColor;
 import haxe.Utf8;
-import haxe.xml.Fast;
 import openfl.Assets;
+
+#if haxe4
+import haxe.xml.Access;
+#else
+import haxe.xml.Fast as Access;
+#end
 
 /**
  * Holds information and bitmap characters for a bitmap font.
@@ -202,7 +207,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		
 		font = new FlxBitmapFont(frame);
 		
-		var fast:Fast = new Fast(fontData.firstElement());
+		var fast:Access = new Access(fontData.firstElement());
 		
 		// how much to move the cursor when going to the next line.
 		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight);
