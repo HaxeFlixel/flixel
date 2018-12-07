@@ -9,8 +9,6 @@ import flixel.math.FlxMatrix;
 import openfl.geom.ColorTransform;
 import openfl.display.ShaderParameter;
 import openfl.Vector;
-import openfl.display.DisplayObject;
-import openfl.display.BlendMode;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
@@ -131,7 +129,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 		
-		camera.canvas.graphics.beginBlend(blend);
+		camera.canvas.graphics.overrideBlendMode(blend);
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);
