@@ -5,6 +5,15 @@
 - Added a new `FlxAction` API ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
 - `FlxGamepadManager`: added `deviceConnected` and `deviceDisconnected` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
 - `FlxBitmapText`: added `clipRect` support ([#2171](https://github.com/HaxeFlixel/flixel/issues/2171))
+- `FlxTilemap`: added 47 tile autotiling ([#2184](https://github.com/HaxeFlixel/flixel/issues/2184))
+- `FlxG.signals`: added `preGameStart` ([#2188](https://github.com/HaxeFlixel/flixel/issues/2188))
+- Added blend mode support for `drawQuads()` rendering with OpenFL > 8.7.0 ([#2199](https://github.com/HaxeFlixel/flixel/issues/2199))
+
+#### Bugfixes:
+
+- `FlxFilterFrames`: fixed previous `offset` being ignored in `applyToSprite()` ([#2176](https://github.com/HaxeFlixel/flixel/issues/2176))
+- `FlxBitmapFont`: fixed background only being removed on Flash in `fromXNA()` ([#2187](https://github.com/HaxeFlixel/flixel/issues/2187))
+- Fixed `drawQuads()` rendering issues if there are color offsets, but no multipliers ([#2195](https://github.com/HaxeFlixel/flixel/issues/2195))
 
 4.5.1 (September 7, 2018)
 ------------------------------
