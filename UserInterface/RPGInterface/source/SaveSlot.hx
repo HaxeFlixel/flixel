@@ -4,7 +4,12 @@ import flixel.addons.ui.interfaces.IFlxUIButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.U;
 import flixel.FlxG;
-import haxe.xml.Fast;
+
+#if haxe4
+import haxe.xml.Access;
+#else
+import haxe.xml.Fast as Access;
+#end
 
 /**
  * ...
@@ -13,9 +18,9 @@ import haxe.xml.Fast;
 class SaveSlot extends FlxUI
 {
 	var ptr:IEventGetter;
-	public var valid : Bool;
+	public var valid:Bool;
 	
-	public function new(data:Fast, ?_ptr:Dynamic)
+	public function new(data:Access, ?_ptr:Dynamic)
 	{
 		super(null, _ptr);
 		if (_ptr != null)
@@ -33,7 +38,7 @@ class SaveSlot extends FlxUI
 		init();
 	}
 
-	public function loadStuff(data:Fast, _ptr:Dynamic):Void
+	public function loadStuff(data:Access, _ptr:Dynamic):Void
 	{
 		load(data);
 		name = U.xml_name(data.x);

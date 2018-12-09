@@ -1,8 +1,13 @@
 package map;
 
 import flixel.addons.tile.FlxTileSpecial;
-import haxe.xml.Fast;
 import openfl.Assets;
+
+#if haxe4
+import haxe.xml.Access;
+#else
+import haxe.xml.Fast as Access;
+#end
 
 typedef AnimData = { name:String, speed:Float, randomizeSpeed:Float, frames:Array<Int>, ?framesData:Array<AnimParams> };
 
@@ -21,12 +26,12 @@ class TileAnims
 	public static function getAnimations(filePath:String):Map<Int, Array<AnimData>>
 	{
 		//load the xml file
-		var source = new Fast(Xml.parse(Assets.getText(filePath)));
+		var source = new Access(Xml.parse(Assets.getText(filePath)));
 		source = source.node.animations;
 		
 		// parse the file
 		var anims:Map<Int, Array<AnimData>> = new Map();
-		var node:Fast;
+		var node:Access;
 		
 		var startTileID:Int = -1;
 		var name:String;
