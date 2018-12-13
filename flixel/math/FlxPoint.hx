@@ -419,9 +419,10 @@ class FlxPoint implements IFlxPooled
 	 * Function to get a `FlxVector` from this `FlxPoint`
 	 * @since 4.3.0
 	 */
+	@:deprecated
 	public inline function toVector():FlxVector
 	{
-		return this;
+		return FlxVector.get(x, y);
 	}
 	
 	/**
