@@ -419,7 +419,7 @@ class FlxPoint implements IFlxPooled
 	 * Function to get a `FlxVector` from this `FlxPoint`
 	 * @since 4.3.0
 	 */
-	@:deprecated("The `toVector` method is deprecated, use `cast(myPoint, FlxVector)` or `FlxVector.get` instead")
+	@:deprecated("The `toVector` method is deprecated, FlxPoints can be casted to FlxVectors implicity")
 	public inline function toVector():FlxVector
 	{
 		return FlxVector.get(x, y);
