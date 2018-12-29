@@ -43,7 +43,7 @@ import flixel.input.gamepad.FlxGamepadManager;
 #if android
 import flixel.input.android.FlxAndroidKeys;
 #end
-#if mobile
+#if FLX_ACCELEROMETER
 import flixel.input.FlxAccelerometer;
 #end
 #if FLX_POINTER_INPUT
@@ -94,7 +94,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 4, 1);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 6, 0);
 	
 	/**
 	 * Internal tracker for game object.
@@ -230,7 +230,7 @@ class FlxG
 	public static var android(default, null):FlxAndroidKeys;
 	#end
 	
-	#if mobile
+	#if FLX_ACCELEROMETER
 	/**
 	 * Provides access to the accelerometer data of mobile devices as `x`/`y`/`z` values.
 	 */
@@ -587,7 +587,7 @@ class FlxG
 		android = inputs.add(new FlxAndroidKeys());
 		#end
 		
-		#if mobile
+		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
 		save.bind("flixel");
@@ -605,6 +605,13 @@ class FlxG
 		renderMethod = BLITTING;
 		
 		#if (!lime_legacy && !flash)
+		#if (lime >= "7.0.0")
+		renderMethod = switch (stage.window.context.type)
+		{
+			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
+			default: BLITTING;
+		}
+		#else
 		if (!Lib.application.config.windows[0].hardware)
 		{
 			renderMethod = BLITTING;
@@ -618,6 +625,7 @@ class FlxG
 				default: BLITTING;
 			}
 		}
+		#end
 		#else
 		#if web
 		renderMethod = BLITTING;

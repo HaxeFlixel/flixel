@@ -21,6 +21,26 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public var auto:FlxTilemapAutoTiling = OFF;
 	
+	static var offsetAutoTile:Array<Int> = 
+		[
+			0, 0, 0, 0, 2, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+			11, 11, 0, 0, 13, 13, 0, 14, 0, 0, 0, 0, 18, 18, 0, 19,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			51, 51, 0, 0, 53, 53, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0,
+			62, 62, 0, 0, 64, 64, 0, 65, 0, 0, 0, 0, 69, 69, 0, 70,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			86, 86, 0, 0, 88, 88, 0, 89, 0, 0, 0, 0, 93, 93, 0, 94,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 159, 0, 0, 0, 162, 0, 163, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 172, 0, 0, 0, 175, 0, 176, 0, 0, 0, 0, 0, 181, 0, 182,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 199, 0, 0, 0, 202, 0, 203, 0, 0, 0, 0, 0, 208, 0, 209
+		];
+	
 	public var widthInTiles(default, null):Int = 0;
 	
 	public var heightInTiles(default, null):Int = 0;
@@ -420,7 +440,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 
 	/**
-	 * An internal function used by the binary auto-tilers.
+	 * An internal function used by the binary auto-tilers. (16 tiles)
 	 * 
 	 * @param	Index		The index of the tile you want to analyze.
 	 */
@@ -428,6 +448,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (_data[Index] == 0)
 		{
+			return;
+		}
+
+		if (auto == FULL)
+		{
+			autoTileFull(Index);
 			return;
 		}
 		
@@ -480,6 +506,41 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 		
 		_data[Index] += 1;
+	}
+
+	/**
+	 * An internal function used by the binary auto-tilers. (47 tiles)
+	 * 
+	 * @param	Index		The index of the tile you want to analyze.
+	 */
+	function autoTileFull(Index:Int):Void
+	{
+		_data[Index] = 0;
+
+		var wallUp:Bool = Index - widthInTiles < 0;
+		var wallRight:Bool = Index % widthInTiles >= widthInTiles - 1;
+		var wallDown:Bool = Std.int(Index + widthInTiles) >= totalTiles;
+		var wallLeft:Bool = Index % widthInTiles <= 0;
+
+		var up = wallUp || _data[Index - widthInTiles] > 0;
+		var upRight = wallUp || wallRight || _data[Index - widthInTiles + 1] > 0;
+		var right = wallRight || _data[Index + 1] > 0;
+		var rightDown = wallRight || wallDown || _data[Index + widthInTiles + 1] > 0;
+		var down = wallDown || _data[Index + widthInTiles] > 0;
+		var downLeft = wallDown || wallLeft || _data[Index + widthInTiles - 1] > 0;
+		var left = wallLeft || _data[Index - 1] > 0;
+		var leftUp = wallLeft || wallUp || _data[Index - widthInTiles - 1] > 0;
+
+		if (up) _data[Index] += 1;
+		if (upRight && up && right) _data[Index] += 2;
+		if (right) _data[Index] += 4;
+		if (rightDown && right && down) _data[Index] += 8;
+		if (down)  _data[Index] += 16;
+		if (downLeft && down && left) _data[Index] += 32;
+		if (left) _data[Index] += 64;
+		if (leftUp && left && up) _data[Index] += 128;
+
+		_data[Index] -= offsetAutoTile[_data[Index]] - 1;
 	}
 
 	/**
@@ -1284,6 +1345,10 @@ enum FlxTilemapAutoTiling
 	 * Better for levels with thick walls that look better with interior corner art.
 	 */
 	ALT;
+	/**
+	 * Better for all, but need 47 tiles.
+	 */
+	FULL;
 }
 
 @:enum

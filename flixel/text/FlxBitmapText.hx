@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
@@ -357,6 +358,19 @@ class FlxBitmapText extends FlxSprite
 				oy = frameHeight - oy;
 			}
 			
+			var clippedFrameRect;
+			if (clipRect != null)
+			{
+				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
+				
+				if (clippedFrameRect.isEmpty)
+					return;
+			}
+			else
+			{
+				clippedFrameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
+			}
+			
 			for (camera in cameras)
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
@@ -378,8 +392,8 @@ class FlxBitmapText extends FlxSprite
 					// backround tile transformations
 					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
-					_matrix.scale(0.1 * frameWidth, 0.1 * frameHeight);
-					_matrix.translate(-ox, -oy);
+					_matrix.scale(0.1 * clippedFrameRect.width, 0.1 * clippedFrameRect.height);
+					_matrix.translate(clippedFrameRect.x - ox, clippedFrameRect.y - oy);
 					_matrix.scale(sx, sy);
 					
 					if (angle != 0)
@@ -405,6 +419,12 @@ class FlxBitmapText extends FlxSprite
 					currTileX = borderDrawData[dataPos + 1];
 					currTileY = borderDrawData[dataPos + 2];
 					
+					if (clipRect != null)
+					{
+						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
+						currFrame = currFrame.clipTo(clippedFrameRect);
+					}
+					
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
 					_matrix.scale(sx, sy);
@@ -427,6 +447,12 @@ class FlxBitmapText extends FlxSprite
 					currTileX = textDrawData[dataPos + 1];
 					currTileY = textDrawData[dataPos + 2];
 					
+					if (clipRect != null)
+					{
+						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
+						currFrame = currFrame.clipTo(clippedFrameRect);
+					}
+					
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
 					_matrix.scale(sx, sy);
@@ -436,7 +462,6 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					_matrix.translate(_point.x + ox, _point.y + oy);
-					
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
@@ -446,6 +471,9 @@ class FlxBitmapText extends FlxSprite
 				#end
 			}
 			
+			// dispose clipRect helpers
+			clippedFrameRect.put();
+			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
@@ -453,6 +481,16 @@ class FlxBitmapText extends FlxSprite
 			}
 			#end
 		}
+	}
+	
+	override function set_clipRect(Rect:FlxRect):FlxRect
+	{
+		super.set_clipRect(Rect);
+		if (!FlxG.renderBlit)
+		{
+			pendingTextBitmapChange = true;
+		}
+		return clipRect;
 	}
 	
 	override function set_color(Color:FlxColor):FlxColor
@@ -564,8 +602,8 @@ class FlxBitmapText extends FlxSprite
 	 */
 	function computeTextSize():Void 
 	{
-		var txtWidth:Int = textWidth;
-		var txtHeight:Int = textHeight + 2 * padding;
+		var txtWidth:Int = textWidth + Std.int(borderSize) * 2;
+		var txtHeight:Int = textHeight + 2 * padding + Std.int(borderSize) * 2;
 		
 		if (autoSize)
 		{
@@ -1470,14 +1508,30 @@ class FlxBitmapText extends FlxSprite
 		var pos:Int = data.length;
 		var textPos:Int;
 		var textLen:Int = Std.int(textData.length / 3);
+		var rect = FlxRect.get();
+		var frameVisible;
 		
 		for (i in 0...textLen)
 		{
 			textPos = 3 * i;
-			data[pos++] = textData[textPos];
-			data[pos++] = textData[textPos + 1] + posX;
-			data[pos++] = textData[textPos + 2] + posY;
+			
+			frameVisible = true;
+			
+			if (clipRect != null)
+			{
+				rect.copyFrom(clipRect).offset(-textData[textPos + 1] - posX, -textData[textPos + 2] - posY);
+				frameVisible = font.getCharFrame(Std.int(textData[textPos])).clipTo(rect).type != FlxFrameType.EMPTY;
+			}
+			
+			if (frameVisible)
+			{
+				data[pos++] = textData[textPos];
+				data[pos++] = textData[textPos + 1] + posX;
+				data[pos++] = textData[textPos + 2] + posY;
+			}
 		}
+		
+		rect.put();
 	}
 	
 	/**

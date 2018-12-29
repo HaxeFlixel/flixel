@@ -470,6 +470,7 @@ class FlxCamera extends FlxBasic
 			&& _headTiles.colored == colored
 			&& _headTiles.hasColorOffsets == hasColorOffsets
 			&& _headTiles.blending == blendInt
+			&& _headTiles.blend == blend
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
 		{	
@@ -493,6 +494,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.colored = colored;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.blending = blendInt;
+		itemToReturn.blend = blend;
 		itemToReturn.shader = shader;
 		
 		itemToReturn.nextTyped = _headTiles;

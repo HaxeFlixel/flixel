@@ -1,22 +1,25 @@
 package flixel.tweens;
 
 /**
- * Static class with useful easer functions that can be used by Tweens.
+ * Static class with useful easer functions that can be used by tweens.
  * 
  * Operation of in/out easers:
  * 
- * in(t)
- * 	return t;
- * out(t)
- * 		return 1 - in(1 - t);
- * inOut(t)
- * 		return (t <= .5) ? in(t * 2) / 2 : out(t * 2 - 1) / 2 + .5;
+ * - **in(t)**:
+ *
+ *       return t;
+ *
+ * - **out(t)**
+ *
+ *       return 1 - in(1 - t);
+ *
+ * - **inOut(t)**
+ *
+ *       return (t <= .5) ? in(t * 2) / 2 : out(t * 2 - 1) / 2 + .5;
  */
-class FlxEase 
+class FlxEase
 {
-	/**
-	 * Easing constants.
-	 */ 
+	/** Easing constants */
 	static var PI2:Float = Math.PI / 2;
 	static var EL:Float = 2 * Math.PI / .45;
 	static var B1:Float = 1 / 2.75;

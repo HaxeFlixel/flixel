@@ -337,20 +337,20 @@ class FlxTileFrames extends FlxFramesCollection
 	 * tiles in them and then combine them in one big tileset.
 	 * The order of bitmaps in the array is important.
 	 * 
-	 * @param   bitmaps    tilesets
-	 * @param   tileSize   The size of tiles (tilesets should have tiles of the same size).
-	 * @return  Atlas frames collection, which you can load in tilemaps or sprites:
-	 * 
 	 * ```haxe
 	 * var combinedFrames = FlxTileFrames.combineTileSets(bitmaps, FlxPoint.get(16, 16));
 	 * tilemap.loadMapFromCSV(mapData, combinedFrames);
-	 *```
+	 * ```
 	 *
 	 * or
 	 * 
 	 * ```haxe
 	 * sprite.frames = combinedFrames;
 	 * ```
+	 *
+	 * @param   bitmaps    tilesets
+	 * @param   tileSize   The size of tiles (tilesets should have tiles of the same size).
+	 * @return  Atlas frames collection, which you can load in tilemaps or sprites:
 	 */
 	public static function combineTileSets(bitmaps:Array<BitmapData>, tileSize:FlxPoint, ?spacing:FlxPoint,
 		?border:FlxPoint):FlxTileFrames
@@ -367,8 +367,6 @@ class FlxTileFrames extends FlxFramesCollection
 	 * This method takes array of tile frames collections and then combine them in one big tileset.
 	 * The order of bitmaps in array is important.
 	 * 
-	 * @param   tileframes   Tile frames collection to combine tiles from.
-	 * @return  Atlas frames collection, which you can load in tilemaps or sprites:
 	 * 
 	 * ```haxe
 	 * var combinedFrames = FlxTileFrames.combineTileFrames(tileframes);
@@ -380,6 +378,9 @@ class FlxTileFrames extends FlxFramesCollection
 	 * ```haxe
 	 * sprite.frames = combinedFrames;
 	 * ```
+	 *
+	 * @param   tileframes   Tile frames collection to combine tiles from.
+	 * @return  Atlas frames collection, which you can load in tilemaps or sprites:
 	 */
 	public static function combineTileFrames(tileframes:Array<FlxTileFrames>, ?spacing:FlxPoint,
 		?border:FlxPoint):FlxTileFrames

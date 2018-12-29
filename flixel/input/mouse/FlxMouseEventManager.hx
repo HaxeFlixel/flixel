@@ -13,24 +13,32 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
 /**
- * Provides mouse event detection for FlxObjects and FlxSprites (pixel-perfect for those).
+ * Provides mouse event detection for `FlxObject` and `FlxSprite` (pixel-perfect for those).
  * To use it, initialize the manager and register objects / sprites. 
  * 
- *    FlxG.plugins.add(new FlxMouseEventManager());
- *    var object = new FlxObject();
- *    FlxMouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
- * 
+ * ```haxe
+ * FlxG.plugins.add(new FlxMouseEventManager());
+ * var object = new FlxObject();
+ * FlxMouseEventManager.add(
+ *	 object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+ * ```
+ *
  * Or simply add a new object and this plugin will initialize itself: 
  * 
- *    FlxMouseEventManager.add(object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
- * 
+ * ```haxe
+ * FlxMouseEventManager.add(
+ *	 object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
+ * ```
+ *
  * Also implement the callbacks with the object's type as parameters:
  * 
- *    function onMouseDown(object:FlxObject) {}
- *    function onMouseUp(object:FlxObject) {}
- *    function onMouseOver(object:FlxObject) {}
- *    function onMouseOut(object:FlxObject) {} 
- * 
+ * ```haxe
+ * function onMouseDown(object:FlxObject) {}
+ * function onMouseUp(object:FlxObject) {}
+ * function onMouseOver(object:FlxObject) {}
+ * function onMouseOut(object:FlxObject) {} 
+ * ``` 
+ *
  * @author TiagoLr (~~~ ProG4mr ~~~)
  */
 class FlxMouseEventManager extends FlxBasic
@@ -63,13 +71,13 @@ class FlxMouseEventManager extends FlxBasic
 	 * Adds an object to the FlxMouseEventManager registry. Automatically initializes the plugin.
 	 *
 	 * @param   OnMouseDown     Callback when mouse is pressed down over this object.
-	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   OnMouseUp       Callback when mouse is released over this object.
-	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   OnMouseOver     Callback when mouse is this object.
-	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   OnMouseOut      Callback when mouse moves out of this object.
-	 *                          Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   MouseChildren   If true, other objects overlapped by this will still receive mouse events.
 	 * @param   MouseEnabled    If true, this object will receive mouse events.
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
@@ -145,9 +153,9 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Reorders the registered objects, using the current object drawing order.
 	 * This should be called if you alter the draw/update order of a registered object,
-	 * That is, if you alter the position of a registered object inside its FlxGroup.
+	 * That is, if you alter the position of a registered object inside its `FlxGroup`.
 	 * It may also be called if the objects are not registered by the same order they are
-	 * added to FlxGroup.
+	 * added to `FlxGroup`.
 	 */
 	public static function reorder():Void
 	{
@@ -164,7 +172,8 @@ class FlxMouseEventManager extends FlxBasic
 	/**
 	 * Sets the mouseDown callback associated with an object.
 	 *
-	 * @param 	OnMouseDown 	Callback when mouse is pressed down over this object. Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 * @param 	OnMouseDown 	Callback when mouse is pressed down over this object.
+	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 */
 	public static function setMouseDownCallback<T:FlxObject>(Object:T, OnMouseDown:T->Void):Void
 	{
@@ -180,7 +189,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseUp callback associated with an object.
 	 *
 	 * @param   OnMouseUp   Callback when mouse is released over this object.
-	 *                      Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                      Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 */
 	public static function setMouseUpCallback<T:FlxObject>(Object:T, OnMouseUp:T->Void):Void
 	{
@@ -196,7 +205,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseClick callback associated with an object.
 	 *
 	 * @param   OnMouseClick    Callback when mouse is pressed and released over this object.
-	 *                      	Must have Object as argument - e.g. onMouseClick(object:FlxObject).
+	 *                      	Must have Object as argument - e.g. `onMouseClick(object:FlxObject)`.
 	 * @since 4.4.0
 	 */
 	public static function setMouseClickCallback<T:FlxObject>(Object:T, OnMouseClick:T->Void):Void
@@ -213,7 +222,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseDoubleClick callback associated with an object.
 	 *
 	 * @param   OnMouseDoubleClick    	Callback when mouse is pressed and released over this object twice.
-	 *                      			Must have Object as argument - e.g. onMouseDoubleClick(object:FlxObject).
+	 *                      			Must have Object as argument - e.g. `onMouseDoubleClick(object:FlxObject)`.
 	 * @since 4.4.0
 	 */
 	public static function setMouseDoubleClickCallback<T:FlxObject>(Object:T, OnMouseDoubleClick:T->Void):Void
@@ -230,7 +239,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseOver callback associated with an object.
 	 *
 	 * @param   OnMouseOver   Callback when mouse is over this object.
-	 *                        Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                        Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 */
 	public static function setMouseOverCallback<T:FlxObject>(Object:T, OnMouseOver:T->Void):Void
 	{
@@ -246,7 +255,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseOut callback associated with an object.
 	 *
 	 * @param   OnMouseOver   Callback when mouse is moved out of this object.
-	 *                        Must have Object as argument - e.g. onMouseDown(object:FlxObject).
+	 *                        Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 */
 	public static function setMouseOutCallback<T:FlxObject>(Object:T, OnMouseOut:T->Void):Void
 	{
@@ -262,7 +271,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseMove callback associated with an object.
 	 *
 	 * @param   OnMouseMove   Callback when the mouse is moved while over this object.
-	 *                        Must have Object as argument - e.g. onMouseMove(object:FlxObject).
+	 *                        Must have Object as argument - e.g. `onMouseMove(object:FlxObject)`.
 	 * @since 4.4.0
 	 */
 	public static function setMouseMoveCallback<T:FlxObject>(Object:T, OnMouseMove:T->Void):Void
@@ -279,7 +288,7 @@ class FlxMouseEventManager extends FlxBasic
 	 * Sets the mouseWheel callback associated with an object.
 	 *
 	 * @param   OnMouseWheel  Callback when the mouse wheel is moved while over this object.
-	 *                        Must have Object as argument - e.g. onMouseWheel(object:FlxObject).
+	 *                        Must have Object as argument - e.g. `onMouseWheel(object:FlxObject)`.
 	 * @since 4.4.0
 	 */
 	public static function setMouseWheelCallback<T:FlxObject>(Object:T, OnMouseWheel:T->Void):Void

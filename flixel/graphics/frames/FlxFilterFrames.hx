@@ -91,7 +91,7 @@ class FlxFilterFrames extends FlxFramesCollection
 		var w:Float = spr.width;
 		var h:Float = spr.height;
 		spr.setFrames(this, saveAnimations);
-		spr.offset.set(0.5 * widthInc, 0.5 * heightInc);
+		spr.offset.add(0.5 * widthInc, 0.5 * heightInc);
 		spr.setSize(w, h);
 	}
 	

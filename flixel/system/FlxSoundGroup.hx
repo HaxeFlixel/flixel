@@ -33,8 +33,8 @@ class FlxSoundGroup
 	{
 		if (sounds.indexOf(sound) < 0)
 		{
-			sound.group = this;
 			sounds.push(sound);
+			sound.group = this;
 			return true;
 		}
 		return false;

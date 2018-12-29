@@ -6,7 +6,7 @@
 			"type": "fdb",
 			"request": "launch",
 			"program": "${workspaceRoot}/bin/flash/bin/TestMain.swf",
-			"preLaunchTask": "targets/debug-flash.hxml"
+			"preLaunchTask": "haxe: debug-flash.hxml"
 		}
 	]
 }

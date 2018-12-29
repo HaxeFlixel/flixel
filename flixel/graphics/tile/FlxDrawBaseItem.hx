@@ -70,6 +70,7 @@ class FlxDrawBaseItem<T>
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
 	public var blending:Int = 0;
+	public var blend:BlendMode;
 	
 	public var type:FlxDrawItemType;
 	

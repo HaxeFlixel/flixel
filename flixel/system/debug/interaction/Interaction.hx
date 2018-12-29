@@ -13,6 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
+import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
@@ -41,6 +42,13 @@ class Interaction extends Window
 	public var pointerJustReleased:Bool = false;
 	public var pointerPressed:Bool = false;
 	
+	/**
+	 * Control if an outline should be drawn on selected elements.
+	 * Tools can set this property to `false` if they want to draw custom
+	 * selection marks, for instance.
+	 */
+	public var shouldDrawItemsSelection:Bool = true;
+	
 	var _container:Sprite;
 	var _customCursor:Sprite;
 	var _tools:Array<Tool> = [];
@@ -66,6 +74,7 @@ class Interaction extends Window
 		addTool(new Pointer());
 		addTool(new Mover());
 		addTool(new Eraser());
+		addTool(new Transform());
 		
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
@@ -175,21 +184,47 @@ class Interaction extends Window
 		}
 	}
 	
-	function addTool(tool:Tool):Void
+	function countToolsWithUIButton():Int
+	{
+		var count = 0;
+		for (tool in _tools)
+			if (tool.button != null)
+				count++;
+		return count;
+	}
+
+	/**
+	 * Add a new tool to the interaction system.
+	 * 
+	 * Any tool added to the interaction system must extend the class
+	 * `flixel.system.debug.interaction.tools.Tool`. The class contains several methods
+	 * that can be used to provide new funcionalities to the interaction, or they can be
+	 * overridden to alter existing behavior. For instance, tools can draw things on the
+	 * screen, they can be activated when the user clicks a button, and so on. Check
+	 * the classes in the package `flixel.system.debug.interaction.tools` for examples.
+	 * 
+	 * @param tool instance of a tool that will be added to the interaction system.
+	 */
+	public function addTool(tool:Tool):Void
 	{
 		tool.init(this);
 		_tools.push(tool);
 		
-		// If the tool has a button, add it to the interaction window
+		// If the tool has no button, it is not added to the interaction window
 		var button = tool.button;
 		if (button == null)
 			return;
 
-		button.x = -10 + _tools.length * 20; // TODO: fix this hardcoded number
-		button.y = 20;
+		var buttonsPerLine = 2;
+		var buttons = countToolsWithUIButton();
+		var lines = Std.int(Math.ceil(buttons / buttonsPerLine));
+		var slot = Std.int(buttons / lines);
+
+		button.x = -15 + slot * 25;
+		button.y = 20 * lines;
+
 		addChild(button);
-		
-		resize(Math.max(_tools.length * 20, 55), 35);  // TODO: fix this hardcoded number
+		resize(25 * Math.min(buttons, buttonsPerLine) + 10, 25 * lines + 10);
 	}
 	
 	/**
@@ -257,7 +292,8 @@ class Interaction extends Window
 		for (tool in _tools)
 			tool.draw();
 		
-		drawItemsSelection();
+		if (shouldDrawItemsSelection)
+			drawItemsSelection();
 	}
 	
 	public function getDebugGraphics():Graphics
@@ -298,7 +334,15 @@ class Interaction extends Window
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	
-	function getTool(className:Class<Tool>):Tool
+	/**
+	 * Obtain a reference to a tool that has been added to the interaction system and is
+	 * available for use. This method can be used to access information provided by any
+	 * tool in the system, or to change their behavior.
+	 * 
+	 * @param className name of the class to be fetched, e.g. `flixel.system.debug.interaction.tools.Pointer`.
+	 * @return Tool reference to the first tool found whose type matches the class name provided. If no tool is found, `null` is returned.
+	 */
+	public function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
 			if (Std.is(tool, className))
@@ -346,17 +390,18 @@ class Interaction extends Window
 			if (activeTool.cursor != null)
 			{
 				// Yep. Let's show it then
+				var cursorInUse = activeTool.cursorInUse == "" ? activeTool.getName() : activeTool.cursorInUse;
 				#if FLX_NATIVE_CURSOR
 				// We have lag-free native cursors available, yay!
 				// Activate it then.
-				FlxG.mouse.setNativeCursor(activeTool.getName());
+				FlxG.mouse.setNativeCursor(cursorInUse);
 				#else
 				// No fancy native cursors, so we have to emulate it.
 				// Let's make the currently active tool's fake cursor visible
 				for (i in 0..._customCursor.numChildren)
 				{
 					var sprite = _customCursor.getChildAt(i);
-					sprite.visible = sprite.name == activeTool.getName();
+					sprite.visible = sprite.name == cursorInUse;
 				}
 				if (FlxG.mouse.visible)
 					FlxG.mouse.visible = false;

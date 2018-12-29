@@ -12,7 +12,7 @@ import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 {
-	static inline var VERTICES_PER_QUAD = 6;
+	static inline var VERTICES_PER_QUAD = #if (openfl >= "8.5.0") 4 #else 6 #end;
 
 	public var shader:FlxShader;
 
@@ -71,10 +71,13 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		for (i in 0...VERTICES_PER_QUAD)
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 
-		if (colored)
+		if (colored || hasColorOffsets)
 		{
 			if (colorMultipliers == null)
 				colorMultipliers = [];
+			
+			if (colorOffsets == null)
+				colorOffsets = [];
 
 			for (i in 0...VERTICES_PER_QUAD)
 			{
@@ -83,27 +86,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 					colorMultipliers.push(transform.redMultiplier);
 					colorMultipliers.push(transform.greenMultiplier);
 					colorMultipliers.push(transform.blueMultiplier);
-				}
-				else
-				{
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-				}
-
-				colorMultipliers.push(1);
-			}
-		}
-
-		if (hasColorOffsets)
-		{
-			if (colorOffsets == null)
-				colorOffsets = [];
-
-			for (i in 0...VERTICES_PER_QUAD)
-			{
-				if (transform != null)
-				{
+					
 					colorOffsets.push(transform.redOffset);
 					colorOffsets.push(transform.greenOffset);
 					colorOffsets.push(transform.blueOffset);
@@ -111,11 +94,17 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 				}
 				else
 				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					
 					colorOffsets.push(0);
 					colorOffsets.push(0);
 					colorOffsets.push(0);
 					colorOffsets.push(0);
 				}
+
+				colorMultipliers.push(1);
 			}
 		}
 	}
@@ -131,14 +120,18 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;
 
-		if (colored)
+		if (colored || hasColorOffsets)
+		{
 			shader.colorMultiplier.value = colorMultipliers;
-		if (hasColorOffsets)
 			shader.colorOffset.value = colorOffsets;
+		}
 
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
-
+		
+		#if (openfl > "8.7.0")
+		camera.canvas.graphics.overrideBlendMode(blend);
+		#end
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);

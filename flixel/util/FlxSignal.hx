@@ -185,7 +185,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		for (handler in handlers)
 		{
 			if (
-				#if neko // simply comparing the functions doesn't do the trick on neko
+				#if (neko || hl) // simply comparing the functions doesn't do the trick on these targets
 					Reflect.compareMethods(handler.listener, listener)
 				#else
 					handler.listener == listener

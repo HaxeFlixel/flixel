@@ -26,10 +26,10 @@ class XInputMapping extends FlxGamepadMapping
 	{
 		return switch (rawID)
 		{
-			case XInputID.A: B;
-			case XInputID.B: A;
-			case XInputID.X: Y;
-			case XInputID.Y: X;
+			case XInputID.A: A;
+			case XInputID.B: B;
+			case XInputID.X: X;
+			case XInputID.Y: Y;
 			case XInputID.BACK: BACK;
 			case XInputID.GUIDE: GUIDE;
 			case XInputID.START: START;
@@ -103,6 +103,14 @@ class XInputMapping extends FlxGamepadMapping
 		if (manufacturer == GooglePepper)
 			return false;
 		
+		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
+			axisID == XInputID.RIGHT_ANALOG_STICK.y;
+	}
+	#end
+	
+	#if xbox1
+	override public function isAxisFlipped(axisID:Int):Bool
+	{
 		return axisID == XInputID.LEFT_ANALOG_STICK.y ||
 			axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
