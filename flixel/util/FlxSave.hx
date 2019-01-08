@@ -21,6 +21,10 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public var name(default, null):String;
 	/**
+	 * The path of the local shared object.
+	 */
+	public var path(default, null):String;
+	/**
 	 * The local shared object itself.
 	 */
 	var _sharedObject:SharedObject;
@@ -43,6 +47,7 @@ class FlxSave implements IFlxDestroyable
 	{
 		_sharedObject = null;
 		name = null;
+		path = null;
 		data = null;
 		_onComplete = null;
 		_closeRequested = false;
@@ -53,15 +58,19 @@ class FlxSave implements IFlxDestroyable
 	 * 
 	 * @param	Name	The name of the object (should be the same each time to access old data).
 	 * 					May not contain spaces or any of the following characters: `~ % & \ ; : " ' , < > ? #`
+	 * @param	Path	The full or partial path to the file that created the shared object,
+	 * 					and that determines where the shared object will be stored locally.
+	 * 					If you do not specify this parameter, the full path is used.
 	 * @return	Whether or not you successfully connected to the save data.
 	 */
-	public function bind(Name:String):Bool
+	public function bind(Name:String, Path:String = null):Bool
 	{
 		destroy();
 		name = Name;
+		path = Path;
 		try
 		{
-			_sharedObject = SharedObject.getLocal(name);
+			_sharedObject = SharedObject.getLocal(name, path);
 		}
 		catch (e:Error)
 		{
