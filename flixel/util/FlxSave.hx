@@ -63,7 +63,7 @@ class FlxSave implements IFlxDestroyable
 	 * 					If you do not specify this parameter, the full path is used.
 	 * @return	Whether or not you successfully connected to the save data.
 	 */
-	public function bind(Name:String, Path:String = null):Bool
+	public function bind(Name:String, ?Path:String):Bool
 	{
 		destroy();
 		name = Name;
