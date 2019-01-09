@@ -176,7 +176,7 @@ class FlxState extends FlxGroup
 			_requestSubStateReset = false;
 			resetSubState();
 		}
-		else if (subState != null)
+		if (subState != null)
 		{
 			subState.tryUpdate(elapsed);
 		}
