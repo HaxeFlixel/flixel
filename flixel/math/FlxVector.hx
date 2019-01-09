@@ -28,15 +28,15 @@ import openfl.geom.Point;
 	public static inline function get(x:Float = 0, y:Float = 0):FlxVector
 	{
 		return FlxPoint.get(x, y);
-		
 	}
 	
 	/**
-	 * Recycle or create a new FlxPoint which will automatically be released 
+	 * Recycle or create a new FlxVector which will automatically be released 
 	 * to the pool when passed into a flixel function.
 	 * 
 	 * @param	x		The X-coordinate of the point in space.
 	 * @param	y		The Y-coordinate of the point in space.
+	 * @since 4.6.0
 	 */
 	public static inline function weak(x:Float = 0, y:Float = 0):FlxVector
 	{
@@ -88,7 +88,7 @@ import openfl.geom.Point;
 	 */
 	public var ly(get, never):Float;
 	
-	public inline function new (x:Float = 0, y:Float = 0)
+	public inline function new(x:Float = 0, y:Float = 0)
 	{
 		this = new FlxPoint(x, y);
 	}
@@ -103,6 +103,7 @@ import openfl.geom.Point;
 	{
 		return this.set(x, y);
 	}
+
 	/**
 	 * Adds to the coordinates of this point.
 	 * 
