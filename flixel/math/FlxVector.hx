@@ -1,46 +1,51 @@
 package flixel.math;
 
-import flixel.util.FlxPool;
+import flixel.util.FlxPool.IFlxPool;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 
 /**
  * 2-dimensional vector class
  */
-class FlxVector extends FlxPoint
+@:forward abstract FlxVector(FlxPoint) from FlxPoint to FlxPoint
 {
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
-	
-	static var _pool = new FlxPool<FlxVector>(FlxVector);
 	
 	static var _vector1:FlxVector = new FlxVector();
 	static var _vector2:FlxVector = new FlxVector();
 	static var _vector3:FlxVector = new FlxVector();
 	
+	public static var pool(get, never):IFlxPool<FlxPoint>;
+	
 	/**
 	 * Recycle or create new FlxVector.
 	 * Be sure to put() them back into the pool after you're done with them!
 	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	x		The X-coordinate of the point in space.
+	 * @param	y		The Y-coordinate of the point in space.
 	 */
-	public static inline function get(X:Float = 0, Y:Float = 0):FlxVector
+	public static inline function get(x:Float = 0, y:Float = 0):FlxVector
 	{
-		var vector = _pool.get().set(X, Y);
-		vector._inPool = false;
-		return vector;
+		return FlxPoint.get(x, y);
 	}
 	
 	/**
-	 * Add this FlxVector to the recycling pool.
+	 * Recycle or create a new FlxVector which will automatically be released 
+	 * to the pool when passed into a flixel function.
+	 * 
+	 * @param	x		The X-coordinate of the point in space.
+	 * @param	y		The Y-coordinate of the point in space.
+	 * @since 4.6.0
 	 */
-	override public function put():Void
+	public static inline function weak(x:Float = 0, y:Float = 0):FlxVector
 	{
-		if (!_inPool)
-		{
-			_inPool = true;
-			_pool.putUnsafe(this);
-		}
+		return FlxPoint.weak(x, y);
 	}
+	
+	// Without these delegates we have to say `this.x` everywhere.
+	public var x(get, set):Float;
+	public var y(get, set):Float;
 	
 	/**
 	 * The horizontal component of the unit vector
@@ -83,17 +88,66 @@ class FlxVector extends FlxPoint
 	 */
 	public var ly(get, never):Float;
 	
+	public inline function new(x:Float = 0, y:Float = 0)
+	{
+		this = new FlxPoint(x, y);
+	}
+	
 	/**
 	 * Set the coordinates of this point object.
 	 * 
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
+	 * @param	x		The X-coordinate of the point in space.
+	 * @param	y		The Y-coordinate of the point in space.
 	 */
-	override public function set(X:Float = 0, Y:Float = 0):FlxVector
+	public inline function set(x:Float = 0, y:Float = 0):FlxVector
 	{
-		x = X;
-		y = Y;
-		return this;
+		return this.set(x, y);
+	}
+
+	/**
+	 * Adds to the coordinates of this point.
+	 * 
+	 * @param	x	Amount to add to x
+	 * @param	y	Amount to add to y
+	 * @return	This point.
+	 */
+	public inline function add(x:Float = 0, y:Float = 0):FlxVector
+	{
+		return this.add(x, y);
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * 
+	 * @param	point	The point to add to this point
+	 * @return	This point.
+	 */
+	public inline function addPoint(point:FlxPoint):FlxVector
+	{
+		return this.addPoint(point);
+	}
+	
+	/**
+	 * Subtracts from the coordinates of this point.
+	 * 
+	 * @param	x	Amount to subtract from x
+	 * @param	y	Amount to subtract from y
+	 * @return	This point.
+	 */
+	public inline function subtract(x:Float = 0, y:Float = 0):FlxVector
+	{
+		return this.subtract(x, y);
+	}
+	
+	/**
+	 * Subtracts the coordinates of another point from the coordinates of this point.
+	 * 
+	 * @param	point	The point to subtract from this point
+	 * @return	This point.
+	 */
+	public inline function subtractPoint(point:FlxPoint):FlxVector
+	{
+		return this.subtractPoint(point);
 	}
 	
 	/**
@@ -102,10 +156,9 @@ class FlxVector extends FlxPoint
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	override public function scale(k:Float):FlxVector
+	public inline function scale(k:Float):FlxVector
 	{
-		super.scale(k);
-		return this;
+		return this.scale(k);
 	}
 	
 	/**
@@ -127,9 +180,7 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function addNew(v:FlxVector):FlxVector
 	{
-		var nv:FlxVector = clone();
-		nv.addPoint(v);
-		return nv;
+		return clone().addPoint(v);
 	}
 	
 	/**
@@ -140,9 +191,73 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
-		var nv:FlxVector = clone();
-		nv.subtractPoint(v);
-		return nv;
+		return clone().subtractPoint(v);
+	}
+	/**
+	 * Helper function, just copies the values from the specified point.
+	 * 
+	 * @param	point	Any FlxPoint.
+	 * @return	A reference to itself.
+	 */
+	public inline function copyFrom(point:FlxPoint):FlxVector
+	{
+		return this.copyFrom(point);
+	}
+	
+	/**
+	 * Helper function, just copies the values from the specified Flash point.
+	 * 
+	 * @param	Point	Any Point.
+	 * @return	A reference to itself.
+	 */
+	public inline function copyFromFlash(flashPoint:Point):FlxVector
+	{
+		return this.copyFromFlash(flashPoint);
+	}
+	/**
+	 * Rounds x and y using Math.floor()
+	 */
+	public inline function floor():FlxVector
+	{
+		return this.floor();
+	}
+	
+	/**
+	 * Rounds x and y using Math.ceil()
+	 */
+	public inline function ceil():FlxVector
+	{
+		return this.ceil();
+	}
+	
+	/**
+	 * Rounds x and y using Math.round()
+	 */
+	public inline function round():FlxVector
+	{
+		return this.round();
+	}
+	
+	/**
+	 * Rotates this point clockwise in 2D space around another point by the given angle.
+	 * 
+	 * @param   Pivot   The pivot you want to rotate this point around
+	 * @param   Angle   Rotate the point by this many degrees clockwise.
+	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 */
+	public function rotate(pivot:FlxPoint, angle:Float):FlxVector
+	{
+		return this.rotate(pivot, angle);
+	}
+	
+	/**
+	 * Applies transformation matrix to this point
+	 * @param	matrix	transformation matrix
+	 * @return	transformed point
+	 */
+	public inline function transform(matrix:Matrix):FlxVector
+	{
+		return this.transform(matrix);
 	}
 	
 	/**
@@ -152,6 +267,20 @@ class FlxVector extends FlxPoint
 	 * @return	dot product of two vectors
 	 */
 	public inline function dotProduct(v:FlxVector):Float
+	{
+		var dp = dotProductWeak(v);
+		v.putWeak();
+		return dp;
+	}
+	
+	/**
+	 * Dot product between two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to multiply
+	 * @return	dot product of two vectors
+	 */
+	inline function dotProductWeak(v:FlxVector):Float
 	{
 		return x * v.x + y * v.y;
 	}
@@ -165,7 +294,8 @@ class FlxVector extends FlxPoint
 	public inline function dotProdWithNormalizing(v:FlxVector):Float
 	{
 		var normalized:FlxVector = v.clone(_vector1).normalize();
-		return dotProduct(normalized);
+		v.putWeak();
+		return dotProductWeak(normalized);
 	}
 	
 	/**
@@ -187,6 +317,20 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function crossProductLength(v:FlxVector):Float
 	{
+		var cp = crossProductLengthWeak(v);
+		v.putWeak();
+		return cp;
+	}
+	
+	/**
+	 * Find the length of cross product between two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to multiply
+	 * @return	the length of cross product of two vectors
+	 */
+	inline function crossProductLengthWeak(v:FlxVector):Float
+	{
 		return x * v.y - y * v.x;
 	}
 	
@@ -198,7 +342,21 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function isParallel(v:FlxVector):Bool
 	{
-		return Math.abs(crossProductLength(v)) < EPSILON_SQUARED;
+		var p = isParallelWeak(v);
+		v.putWeak();
+		return p;
+	}
+	
+	/**
+	 * Check for parallelism of two vectors.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	vector to check
+	 * @return	true - if they are parallel
+	 */
+	inline function isParallelWeak(v:FlxVector):Bool
+	{
+		return Math.abs(crossProductLengthWeak(v)) < EPSILON_SQUARED;
 	}
 	
 	/**
@@ -335,7 +493,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function projectTo(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
-		var dp:Float = dotProduct(v);
+		var dp:Float = dotProductWeak(v);
 		var lenSq:Float = v.lengthSquared;
 		
 		if (proj == null)
@@ -343,9 +501,11 @@ class FlxVector extends FlxPoint
 			proj = FlxVector.get();
 		}
 		
-		return proj.set(dp * v.x / lenSq, dp * v.y / lenSq);
+		proj.set(dp * v.x / lenSq, dp * v.y / lenSq);
+		v.putWeak();
+		return proj;
 	}
-		
+	
 	/**
 	 * Projecting this vector on the normalized vector v.
 	 * 
@@ -355,7 +515,22 @@ class FlxVector extends FlxPoint
 	 */
 	public function projectToNormalized(v:FlxVector, ?proj:FlxVector):FlxVector
 	{
-		var dp:Float = dotProduct(v);
+		proj = projectToNormalizedWeak(v, proj);
+		v.putWeak();
+		return proj;
+	}
+	
+	/**
+	 * Projecting this vector on the normalized vector v.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	v	this vector has to be normalized, ie have unit length
+	 * @param	proj	optional argument - result vector
+	 * @return	projection of the vector
+	 */
+	inline function projectToNormalizedWeak(v:FlxVector, ?proj:FlxVector):FlxVector
+	{
+		var dp:Float = dotProductWeak(v);
 		
 		if (proj == null)
 		{
@@ -364,11 +539,22 @@ class FlxVector extends FlxPoint
 		
 		return proj.set(dp * v.x, dp * v.y);
 	}
-		
+	
 	/**
-	 * Dot product of left the normal vector and vector v
+	 * Dot product of left the normal vector and vector v.
 	 */
 	public inline function perpProduct(v:FlxVector):Float
+	{
+		var pp:Float = perpProductWeak(v);
+		v.putWeak();
+		return pp;
+	}
+	
+	/**
+	 * Dot product of left the normal vector and vector v.
+	 * Meant for internal use, does not call putWeak.
+	 */
+	inline function perpProductWeak(v:FlxVector):Float
 	{
 		return lx * v.x + ly * v.y;
 	}
@@ -381,17 +567,35 @@ class FlxVector extends FlxPoint
 	 * @param	v	the second vector
 	 * @return	the ratio between the perpProducts of this vector and v vector
 	 */
-	public function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
+	public inline function ratio(a:FlxVector, b:FlxVector, v:FlxVector):Float
 	{
-		if (isParallel(v)) return Math.NaN;
+		var r = ratioWeak(a, b, v);
+		a.putWeak();
+		b.putWeak();
+		v.putWeak();
+		return r;
+	}
+	
+	/**
+	 * Find the ratio between the perpProducts of this vector and v vector. This helps to find the intersection point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	a	start point of the vector
+	 * @param	b	start point of the v vector
+	 * @param	v	the second vector
+	 * @return	the ratio between the perpProducts of this vector and v vector
+	 */
+	inline function ratioWeak(a:FlxVector, b:FlxVector, v:FlxVector):Float
+	{
+		if (isParallelWeak(v)) return Math.NaN;
 		if (lengthSquared < EPSILON_SQUARED || v.lengthSquared < EPSILON_SQUARED) return Math.NaN;
 		
 		_vector1 = b.clone(_vector1);
-		_vector1.subtractPoint(a);
+		_vector1.subtractPointWeak(a);
 		
-		return _vector1.perpProduct(v) / perpProduct(v);
+		return _vector1.perpProductWeak(v) / perpProductWeak(v);
 	}
-		
+	
 	/**
 	 * Finding the point of intersection of vectors.
 	 * 
@@ -402,7 +606,7 @@ class FlxVector extends FlxPoint
 	 */
 	public function findIntersection(a:FlxVector, b:FlxVector, v:FlxVector, ?intersection:FlxVector):FlxVector
 	{
-		var t:Float = ratio(a, b, v);
+		var t:Float = ratioWeak(a, b, v);
 		
 		if (intersection == null)
 		{
@@ -411,12 +615,18 @@ class FlxVector extends FlxPoint
 		
 		if (Math.isNaN(t))
 		{
-			return intersection.set(Math.NaN, Math.NaN);
+			intersection.set(Math.NaN, Math.NaN);
+		}
+		else
+		{
+			intersection.set(a.x + t * x, a.y + t * y);
 		}
 		
-		return intersection.set(a.x + t * x, a.y + t * y);
+		a.putWeak();
+		b.putWeak();
+		v.putWeak();
+		return intersection;
 	}
-	
 	/**
 	 * Finding the point of intersection of vectors if it is in the "bounds" of the vectors.
 	 * 
@@ -432,14 +642,21 @@ class FlxVector extends FlxPoint
 			intersection = FlxVector.get();
 		}
 		
-		var t1:Float = ratio(a, b, v);
-		var t2:Float = v.ratio(b, a, this);
+		var t1:Float = ratioWeak(a, b, v);
+		var t2:Float = v.ratioWeak(b, a, this);
 		if (!Math.isNaN(t1) && !Math.isNaN(t2) && t1 > 0 && t1 <= 1 && t2 > 0 && t2 <= 1)
 		{
-			return intersection.set(a.x + t1 * x, a.y + t1 * y);
+			intersection.set(a.x + t1 * x, a.y + t1 * y);
+		}
+		else
+		{
+			intersection.set(Math.NaN, Math.NaN);
 		}
 		
-		return intersection.set(Math.NaN, Math.NaN);
+		a.putWeak();
+		b.putWeak();
+		v.putWeak();
+		return intersection;
 	}
 	
 	/**
@@ -461,7 +678,9 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function radiansBetween(v:FlxVector):Float
 	{
-		return Math.acos(dotProduct(v) / (length * v.length));
+		var rads = Math.acos(dotProductWeak(v) / (length * v.length));
+		v.putWeak();
+		return rads;
 	}
 	
 	/**
@@ -484,6 +703,8 @@ class FlxVector extends FlxPoint
 	public function sign(a:FlxVector, b:FlxVector):Int
 	{
 		var signFl:Float = (a.x - x) * (b.y - y) - (a.y - y) * (b.x - x);
+		a.putWeak();
+		b.putWeak();
 		if (signFl == 0)
 		{
 			return 0;
@@ -506,6 +727,7 @@ class FlxVector extends FlxPoint
 	{
 		var dx:Float = v.x - x;
 		var dy:Float = v.y - y;
+		v.putWeak();
 		return dx * dx + dy * dy;
 	}
 		
@@ -518,9 +740,10 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function bounce(normal:FlxVector, bounceCoeff:Float = 1):FlxVector
 	{
-		var d:Float = (1 + bounceCoeff) * dotProduct(normal);
+		var d:Float = (1 + bounceCoeff) * dotProductWeak(normal);
 		x -= d * normal.x;
 		y -= d * normal.y;
+		normal.putWeak();
 		return this;
 	}
 	
@@ -534,14 +757,15 @@ class FlxVector extends FlxPoint
 	 */
 	public inline function bounceWithFriction(normal:FlxVector, bounceCoeff:Float = 1, friction:Float = 0):FlxVector
 	{
-		var p1:FlxVector = projectToNormalized(normal.rightNormal(_vector3), _vector1);
-		var p2:FlxVector = projectToNormalized(normal, _vector2);
+		var p1:FlxVector = projectToNormalizedWeak(normal.rightNormal(_vector3), _vector1);
+		var p2:FlxVector = projectToNormalizedWeak(normal, _vector2);
 		var bounceX:Float = -p2.x;
 		var bounceY:Float = -p2.y;
 		var frictionX:Float = p1.x;
 		var frictionY:Float = p1.y;
 		x = bounceX * bounceCoeff + frictionX * friction;
 		y = bounceY * bounceCoeff + frictionY * friction;
+		normal.putWeak();
 		return this;
 	}
 	
@@ -571,6 +795,26 @@ class FlxVector extends FlxPoint
 		vec.x = x;
 		vec.y = y;
 		return vec;
+	}
+	
+	inline function get_x():Float
+	{
+		return this.x;
+	}
+	
+	inline function set_x(x:Float):Float
+	{
+		return this.x = x;
+	}
+	
+	inline function get_y():Float
+	{
+		return this.y;
+	}
+	
+	inline function set_y(y:Float):Float
+	{
+		return this.y = y;
 	}
 	
 	inline function get_dx():Float
@@ -653,5 +897,10 @@ class FlxVector extends FlxPoint
 	inline function get_ly():Float
 	{
 		return -x;
+	}
+	
+	static inline function get_pool():IFlxPool<FlxPoint>
+	{
+		return FlxPoint.pool;
 	}
 }
