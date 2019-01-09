@@ -22,6 +22,7 @@ class FlxSave implements IFlxDestroyable
 	public var name(default, null):String;
 	/**
 	 * The path of the local shared object.
+	 * @since 4.6.0
 	 */
 	public var path(default, null):String;
 	/**
