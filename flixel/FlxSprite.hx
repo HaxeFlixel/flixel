@@ -583,6 +583,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function updateHitbox():Void
 	{
+		drawFrame();
 		width = Math.abs(scale.x) * frameWidth;
 		height = Math.abs(scale.y) * frameHeight;
 		offset.set(-0.5 * (width - frameWidth), -0.5 * (height - frameHeight));
