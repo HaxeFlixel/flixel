@@ -9,6 +9,7 @@ import openfl.geom.Matrix;
 /**
  * Stores a 2D floating point coordinate.
  */
+@:allow(flixel.math.FlxVector)
 class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
@@ -117,9 +118,22 @@ class FlxPoint implements IFlxPooled
 	 */
 	public function addPoint(point:FlxPoint):FlxPoint
 	{
+		addPointWeak(point);
+		point.putWeak();
+		return this;
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	point	The point to add to this point
+	 * @return	This point.
+	 */
+	inline function addPointWeak(point:FlxPoint):FlxPoint
+	{
 		x += point.x;
 		y += point.y;
-		point.putWeak();
 		return this;
 	}
 	
@@ -145,9 +159,22 @@ class FlxPoint implements IFlxPooled
 	 */
 	public function subtractPoint(point:FlxPoint):FlxPoint
 	{
+		subtractPointWeak(point);
+		point.putWeak();
+		return this;
+	}
+	
+	/**
+	 * Subtracts the coordinates of another point from the coordinates of this point.
+	 * Meant for internal use, does not call putWeak.
+	 * 
+	 * @param	point	The point to subtract from this point
+	 * @return	This point.
+	 */
+	inline function subtractPointWeak(point:FlxPoint):FlxPoint
+	{
 		x -= point.x;
 		y -= point.y;
-		point.putWeak();
 		return this;
 	}
 	
@@ -392,6 +419,7 @@ class FlxPoint implements IFlxPooled
 	 * Function to get a `FlxVector` from this `FlxPoint`
 	 * @since 4.3.0
 	 */
+	@:deprecated("The `toVector` method is deprecated, FlxPoints can be casted to FlxVectors implicitly")
 	public inline function toVector():FlxVector
 	{
 		return FlxVector.get(x, y);
