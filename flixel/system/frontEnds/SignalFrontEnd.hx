@@ -7,7 +7,10 @@ class SignalFrontEnd
 	/**
 	 * Gets dispatched when a state change occurs.
 	 */
-	public var stateSwitched(default, null):FlxSignal = new FlxSignal();
+	public var preStateSwitch(default, null):FlxSignal = new FlxSignal();
+	public var postStateSwitch(default, null):FlxSignal = new FlxSignal();
+	@:deprecated("Use preStateSwitch instead of stateSwitched")
+	public var stateSwitched(get, never):FlxSignal;
 	public var preStateCreate(default, null):FlxTypedSignal<FlxState->Void> = new FlxTypedSignal<FlxState->Void>();
 	/**
 	 * Gets dispatched when the game is resized. 
@@ -35,6 +38,11 @@ class SignalFrontEnd
 	
 	@:allow(flixel.FlxG)
 	function new() {}
+	
+	function get_stateSwitched():FlxSignal
+	{
+		return preStateSwitch;
+	}
 	
 	function get_gameStarted():FlxSignal
 	{

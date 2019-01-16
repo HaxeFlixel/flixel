@@ -29,7 +29,7 @@ class Watch extends Window
 		entriesContainer.y = entriesContainerOffset.y;
 		addChild(entriesContainer);
 		
-		FlxG.signals.stateSwitched.add(removeAll);
+		FlxG.signals.preStateSwitch.add(removeAll);
 	}
 
 	public function add(displayName:String, data:WatchEntryData):Void
