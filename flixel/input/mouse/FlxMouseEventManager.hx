@@ -462,14 +462,14 @@ class FlxMouseEventManager extends FlxBasic
 		_mouseDownObjects = new Array<ObjectMouseData<FlxObject>>();
 		_mouseClickedObjects = new Array<ObjectMouseData<FlxObject>>();
 
-		FlxG.signals.stateSwitched.add(removeAll);
+		FlxG.signals.preStateSwitch.add(removeAll);
 	}
 	
 	override public function destroy():Void
 	{
 		clearRegistry();
 		_point = FlxDestroyUtil.put(_point);
-		FlxG.signals.stateSwitched.remove(removeAll);
+		FlxG.signals.preStateSwitch.remove(removeAll);
 		super.destroy();
 	}
 	

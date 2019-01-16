@@ -83,7 +83,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		#end
 		FlxSteamController.onControllerConnect = updateSteamControllers;
 		FlxSteamController.onOriginUpdate = updateSteamOrigins;
-		FlxG.signals.stateSwitched.add(onStateSwitched);
+		FlxG.signals.preStateSwitch.add(onStateSwitched);
 	}
 	
 	/**
