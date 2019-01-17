@@ -165,6 +165,12 @@ class FlxGame extends Sprite
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	var _inputContainer:Sprite;
 	
+	/**
+	 * MouseEvent listener
+	 */
+	@:allow(flixel.input.mouse.FlxMouse)
+	var _mouseListener:Sprite;
+	
 	#if FLX_SOUND_TRAY
 	/**
 	 * Change this after calling `super()` in the `FlxGame` constructor
@@ -257,6 +263,7 @@ class FlxGame extends Sprite
 		
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
+		_mouseListener = new Sprite();
 		
 		if (GameWidth == 0)
 			GameWidth = FlxG.stage.stageWidth;
@@ -312,6 +319,12 @@ class FlxGame extends Sprite
 		stage.frameRate = FlxG.drawFramerate;
 		
 		addChild(_inputContainer);
+		addChild(_mouseListener);
+		_mouseListener.graphics.beginFill(0, 0);
+		_mouseListener.graphics.drawRect(0, 0, FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+		_mouseListener.graphics.endFill();
+		
+		trace("create", FlxG.width, FlxG.height, FlxG.stage.stageWidth, FlxG.stage.stageHeight, FlxG.initialZoom);
 		
 		#if FLX_POST_PROCESS
 		if (OpenGLView.isSupported)

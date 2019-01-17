@@ -3,8 +3,8 @@ package flixel.input.mouse;
 #if FLX_MOUSE
 import flash.display.Bitmap;
 import flash.display.BitmapData;
+import flash.display.InteractiveObject;
 import flash.display.Sprite;
-import flash.display.Stage;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.Lib;
@@ -161,7 +161,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _prevY:Int = 0;
 	
 	//Helper variable for cleaning up memory
-	var _stage:Stage;
+	var _mouseListener:InteractiveObject;
 	
 	/**
 	 * Helper variables for flash native cursors
@@ -344,21 +344,21 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	@:noCompletion
 	public function destroy():Void
 	{
-		if (_stage != null)
+		if (_mouseListener != null)
 		{
-			_stage.removeEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
-			_stage.removeEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+			_mouseListener.removeEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+			_mouseListener.removeEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 			
 			#if FLX_MOUSE_ADVANCED
-			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
-			_stage.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
-			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
-			_stage.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+			_mouseListener.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+			_mouseListener.removeEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+			_mouseListener.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+			_mouseListener.removeEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
 			
-			_stage.removeEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+			_mouseListener.removeEventListener(Event.MOUSE_LEAVE, onMouseLeave);
 			#end
 			
-			_stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			_mouseListener.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
 		cursorContainer = null;
@@ -404,23 +404,23 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		_leftButton = new FlxMouseButton(FlxMouseButtonID.LEFT);
 		
-		_stage = Lib.current.stage;
-		_stage.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
-		_stage.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
+		_mouseListener = FlxG.game._mouseListener;
+		_mouseListener.addEventListener(MouseEvent.MOUSE_DOWN, _leftButton.onDown);
+		_mouseListener.addEventListener(MouseEvent.MOUSE_UP, _leftButton.onUp);
 		
 		#if FLX_MOUSE_ADVANCED
 		_middleButton = new FlxMouseButton(FlxMouseButtonID.MIDDLE);
 		_rightButton = new FlxMouseButton(FlxMouseButtonID.RIGHT);
 		
-		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
-		_stage.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
-		_stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
-		_stage.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
+		_mouseListener.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_DOWN, _middleButton.onDown);
+		_mouseListener.addEventListener(untyped MouseEvent.MIDDLE_MOUSE_UP, _middleButton.onUp);
+		_mouseListener.addEventListener(untyped MouseEvent.RIGHT_MOUSE_DOWN, _rightButton.onDown);
+		_mouseListener.addEventListener(untyped MouseEvent.RIGHT_MOUSE_UP, _rightButton.onUp);
 		
-		_stage.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
+		_mouseListener.addEventListener(Event.MOUSE_LEAVE, onMouseLeave);
 		#end
 		
-		_stage.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		_mouseListener.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		
 		FlxG.signals.postGameStart.add(onGameStart);
 		Mouse.hide();
@@ -643,7 +643,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		if ((_lastLeftButtonState == PRESSED || _lastLeftButtonState == JUST_PRESSED)
 			&& (Record.button == RELEASED || Record.button == JUST_RELEASED))
 		{
-			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, Record.x, Record.y));
+			_mouseListener.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, Record.x, Record.y));
 		}
 		_lastLeftButtonState = _leftButton.current = Record.button;
 		wheel = Record.wheel;
