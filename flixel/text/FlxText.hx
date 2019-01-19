@@ -488,6 +488,12 @@ class FlxText extends FlxSprite
 		return this;
 	}
 	
+	override function updateHitbox()
+	{
+		regenGraphic();
+		super.updateHitbox();
+	}
+	
 	function set_fieldWidth(value:Float):Float
 	{
 		if (textField == null)
