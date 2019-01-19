@@ -13,7 +13,7 @@ class LogFrontEnd
 	 */
 	public var redirectTraces(default, set):Bool = false;
 	
-	var _standardTraceFunction:Dynamic;	
+	var _standardTraceFunction:Dynamic->?PosInfos->Void;
 	
 	public inline function add(Data:Dynamic):Void
 	{
