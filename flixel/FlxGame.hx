@@ -324,8 +324,6 @@ class FlxGame extends Sprite
 		_mouseListener.graphics.drawRect(0, 0, FlxG.stage.stageWidth, FlxG.stage.stageHeight);
 		_mouseListener.graphics.endFill();
 		
-		trace("create", FlxG.width, FlxG.height, FlxG.stage.stageWidth, FlxG.stage.stageHeight, FlxG.initialZoom);
-		
 		#if FLX_POST_PROCESS
 		if (OpenGLView.isSupported)
 			addChild(postProcessLayer);
