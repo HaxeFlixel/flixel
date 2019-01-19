@@ -179,7 +179,7 @@ class FlxDebugger extends Sprite
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		
-		FlxG.signals.stateSwitched.add(Tracker.onStateSwitch);
+		FlxG.signals.preStateSwitch.add(Tracker.onStateSwitch);
 	}
 	
 	/**

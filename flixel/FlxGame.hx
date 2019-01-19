@@ -606,7 +606,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		
-		FlxG.signals.stateSwitched.dispatch();
+		FlxG.signals.preStateSwitch.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -635,6 +635,8 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.console.registerObject("state", _state);
 		#end
+		
+		FlxG.signals.postStateSwitch.dispatch();
 	}
 	
 	function gameStart():Void

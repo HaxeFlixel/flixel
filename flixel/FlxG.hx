@@ -300,7 +300,7 @@ class FlxG
 	#end
 	
 	/**
-	 * Contains system-wide signals like `gameResized` or `stateSwitched`.
+	 * Contains system-wide signals like `gameResized` or `preStateSwitch`.
 	 */ 
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 	
