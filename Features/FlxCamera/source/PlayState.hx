@@ -20,10 +20,10 @@ using flixel.util.FlxSpriteUtil;
 class PlayState extends FlxState
 {
 	// Demo arena boundaries
-	static var LEVEL_MIN_X;
-	static var LEVEL_MAX_X;
-	static var LEVEL_MIN_Y;
-	static var LEVEL_MAX_Y;
+	static var LEVEL_MIN_X:Float;
+	static var LEVEL_MAX_X:Float;
+	static var LEVEL_MIN_Y:Float;
+	static var LEVEL_MAX_Y:Float;
 
 	var orb:Orb;
 	var orbShadow:FlxSprite;
