@@ -476,6 +476,13 @@ class FlxMouseEventManager extends FlxBasic
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		#if FLX_MOUSE
+		// If mouse input is not enabled globally, keep all tracked objects
+		// in their currennt state until mouse input is re-enabled.
+		if (!FlxG.mouse.enabled)
+			return;
+		#end
 		
 		var currentOverObjects = new Array<ObjectMouseData<FlxObject>>();
 		
