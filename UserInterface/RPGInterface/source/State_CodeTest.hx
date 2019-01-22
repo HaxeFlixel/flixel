@@ -111,8 +111,6 @@ class State_CodeTest extends FlxUIState
 		
 		//Make the tab menu itself:
 		var tab_menu = new FlxUITabMenu(null, tabs, true);
-		add(tab_menu);
-		
 		tab_menu.x = 500;
 		tab_menu.y = 212;
 		
@@ -144,7 +142,6 @@ class State_CodeTest extends FlxUIState
 		tab_menu.addGroup(tab_group_2);
 		
 		//Add tab group itself to the state
-		
 		add(tab_menu);
 		
 		/***"Back" button***/
