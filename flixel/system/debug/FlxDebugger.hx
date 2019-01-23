@@ -487,15 +487,13 @@ class FlxDebugger extends Sprite
 		// Disable mouse input if the interaction tool is active/visible,
 		// so users can select interactable elements, e.g. buttons.
 		FlxG.mouse.enabled = !interaction.visible;	
-		#end
 
 		if (_usingSystemCursor)
 		{
-			#if FLX_MOUSE
 			FlxG.mouse.useSystemCursor = _wasUsingSystemCursor;
 			FlxG.mouse.visible = _wasMouseVisible;
-			#end
-		}	
+		}
+		#end	
 	}
 
 	inline function toggleDrawDebug():Void
