@@ -34,11 +34,10 @@ private class GraphicCursor extends BitmapData {}
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
-	 * Whether or not mouse input is currently enabled. It will be temporarily
-	 * set to `false` while the debugger interaction tool is active.  
+	 * Whether or not mouse input is currently enabled. 
 	 * @since 4.1.0
 	 */
-	@:isVar public var enabled(get, set):Bool = true;
+	public var enabled:Bool = true;
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up, 
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
@@ -617,17 +616,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			hideCursor();
 		
 		return visible = Value;
-	}
-
-	function get_enabled():Bool
-	{
-		var isDebuggerInteractionActive = FlxG.game.debugger.visible && FlxG.game.debugger.interaction.visible;
-		return enabled && !isDebuggerInteractionActive;	
-	}
-
-	function set_enabled(value:Bool):Bool
-	{
-		return enabled = value;
 	}
 	
 	@:allow(flixel.system.replay.FlxReplay)
