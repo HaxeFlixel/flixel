@@ -34,7 +34,7 @@ private class GraphicCursor extends BitmapData {}
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
-	 * Whether or not mouse input is currently enabled. 
+	 * Whether or not mouse input is currently enabled.
 	 * @since 4.1.0
 	 */
 	public var enabled:Bool = true;
