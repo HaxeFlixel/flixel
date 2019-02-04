@@ -1,8 +1,12 @@
-2.7.0 (to be released)
+2.7.0 (February 4, 2019)
 ------------------------------
-* Compatibility with flixel 4.6.0
-* Added a new `FlxAction` demo (#268)
-* Updated Mode to use `FlxAction` for the player controls
+* Compatibility with Flixel 4.6.0 and Haxe 4.0.0-rc.1
+* Added 2 new demos:
+   * FlxAction (#268)
+   * FlxSimplex (#270)
+* Mode: use `FlxAction` for the player controls
+* Tilemap: update for `FlxTilemapAutoTiling.FULL` (#271)
+* FlxBunnyMark: fixed Android compilation
 
 2.6.1 (August 10, 2018)
 ------------------------------

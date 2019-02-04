@@ -5,7 +5,7 @@
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
     "version": "2.7.0",
-    "releasenote": "FlxAction demo + use FlxAction in Mode.",
+    "releasenote": "Compatibility with Flixel 4.6.0 and Haxe 4.0.0-rc.1, new FlxAction and FlxSimplex demos.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }
