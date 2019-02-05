@@ -8,7 +8,7 @@ import flixel.group.FlxGroup;
 import flixel.system.debug.interaction.Interaction;
 
 @:bitmap("assets/images/debugger/buttons/eraser.png") 
-class GraphicEraserTool extends BitmapData {}
+private class GraphicEraserTool extends BitmapData {}
 
 /**
  * A tool to delete items from the screen.
