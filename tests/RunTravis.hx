@@ -68,13 +68,17 @@ class RunTravis
 	static function installHaxelibs():ExitCode
 	{
 		return runUntilFailure([
+			runCommand.bind("wget", ["https://github.com/deltaluca/nape/files/2364240/2.0.21.zip"]),
+			runCommand.bind("unzip", ["2.0.21.zip"]),
+			runCommand.bind("haxelib", ["dev", "nape", "2,0,21"]),
+			runCommand.bind("haxelib", ["git", "hamcrest", "https://github.com/kaikoga/hamcrest-haxe", "patch-haxe4-p5", "src"]),
+			haxelibGit.bind("Gama11", "spinehaxe", "patch-1"),
+
 			haxelibInstall.bind("munit"),
-			haxelibInstall.bind("hamcrest"),
 			haxelibInstall.bind("systools"),
-			haxelibInstall.bind("nape"),
 			haxelibInstall.bind("task"),
 			haxelibInstall.bind("poly2trihx"),
-			haxelibInstall.bind("spinehaxe"),
+
 			haxelibGit.bind("HaxeFoundation", "hscript"),
 			haxelibGit.bind("larsiusprime", "firetongue"),
 			haxelibGit.bind("HaxeFlixel", "flixel-tools"),
@@ -110,9 +114,15 @@ class RunTravis
 		return runCommand("haxelib", args);
 	}
 
-	static function haxelibGit(user:String, lib:String):ExitCode
+	static function haxelibGit(user:String, lib:String, ?branch:String, ?path:String):ExitCode
 	{
-		return runCommand("haxelib", ["git", lib, 'https://github.com/$user/$lib', "--quiet"]);
+		var args = ["git", lib, 'https://github.com/$user/$lib'];
+		if (branch != null)
+			args.push(branch);
+		if (path != null)
+			args.push(path);
+		args.push("--quiet");
+		return runCommand("haxelib", args);
 	}
 	
 	static function installHxcpp(target:Target):ExitCode
