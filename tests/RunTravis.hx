@@ -68,11 +68,8 @@ class RunTravis
 	static function installHaxelibs():ExitCode
 	{
 		return runUntilFailure([
-			runCommand.bind("wget", ["https://github.com/deltaluca/nape/files/2364240/2.0.21.zip"]),
-			runCommand.bind("unzip", ["2.0.21.zip"]),
-			runCommand.bind("haxelib", ["dev", "nape", "2,0,21"]),
 			runCommand.bind("haxelib", ["git", "hamcrest", "https://github.com/kaikoga/hamcrest-haxe", "patch-haxe4-p5", "src"]),
-			haxelibGit.bind("Gama11", "spinehaxe", "patch-1"),
+			runCommand.bind("haxelib", ["git", "nape", "https://github.com/XenizoGames/nape_haxe_4"]),
 
 			haxelibInstall.bind("munit"),
 			haxelibInstall.bind("systools"),
@@ -86,6 +83,7 @@ class RunTravis
 			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
 			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
 			haxelibGit.bind("HaxeFlixel", "flixel-ui"),
+			haxelibGit.bind("bendmorris", "spinehaxe"),
 			haxelibGit.bind("larsiusprime", "steamwrap")
 		]);
 	}
