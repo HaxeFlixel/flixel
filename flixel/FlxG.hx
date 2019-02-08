@@ -451,7 +451,6 @@ class FlxG
 	 * @param   IndexModifier   Amount to add to the index - makes sure the index stays within bounds.
 	 * @return  The added `DisplayObject`
 	 */
-	@:generic
 	public static function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
 	{
 		var index = game.getChildIndex(game._inputContainer);
@@ -468,7 +467,6 @@ class FlxG
 	 * @param   Child   The `DisplayObject` to add
 	 * @return  The removed `DisplayObject`
 	 */
-	@:generic
 	public static inline function removeChild<T:DisplayObject>(Child:T):T
 	{
 		if (game.contains(Child))
