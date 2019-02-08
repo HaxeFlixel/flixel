@@ -90,6 +90,7 @@ class FlxBasePreloader extends DefaultPreloader
 	var _height:Int;
 	var _loaded:Bool = false;
 	var _urlChecked:Bool = false;
+	var _destroyed:Bool = false;
 	var _startTime:Float;
 
 	/**
@@ -168,13 +169,15 @@ class FlxBasePreloader extends DefaultPreloader
 		var percent:Float = _percent;
 		if ((min > 0) && (_percent > time / min))
 			percent = time / min;
-		update(percent);
+		if (!_destroyed)
+			update(percent);
 
 		if (_loaded && (min <= 0 || time / min >= 1))
 		{
 			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			super.onLoaded();
 			destroy();
+			_destroyed = true;
 		}
 	}
 
