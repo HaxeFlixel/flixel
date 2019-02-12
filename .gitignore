@@ -8,3 +8,4 @@ dump
 tests/RunTravis.n
 *.diff
 *.hxproj
+.unittest
