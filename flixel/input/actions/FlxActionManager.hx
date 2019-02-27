@@ -4,7 +4,6 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionManager.ActionSetRegister;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxArrayUtil;
@@ -659,10 +658,12 @@ class ActionSetRegister implements IFlxDestroyable
 					case FlxInputDeviceID.ALL:
 						steamControllerAllSet = DoActivate ? ActionSet : -1;
 						clearSetFromArray( -1, steamControllerSets);
+						#if FLX_STEAMWRAP
 						for (i in 0...FlxSteamController.MAX_CONTROLLERS)
 						{
 							steamControllerSets[i] = DoActivate ? ActionSet : -1;
 						}
+						#end
 						
 					case FlxInputDeviceID.NONE:
 						clearSetFromArray(ActionSet, steamControllerSets);

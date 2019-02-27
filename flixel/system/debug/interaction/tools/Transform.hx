@@ -15,22 +15,22 @@ import flixel.util.FlxColor;
 using flixel.util.FlxArrayUtil;
 
 @:bitmap("assets/images/debugger/buttons/transform.png")
-class GraphicTransformTool extends BitmapData {}
+private class GraphicTransformTool extends BitmapData {}
 
 @:bitmap("assets/images/debugger/cursorCross.png")
-class GraphicTransformCursorDefault extends BitmapData {}
+private class GraphicTransformCursorDefault extends BitmapData {}
 
 @:bitmap("assets/images/debugger/cursors/transformScaleY.png")
-class GraphicTransformCursorScaleY extends BitmapData {}
+private class GraphicTransformCursorScaleY extends BitmapData {}
 
 @:bitmap("assets/images/debugger/cursors/transformScaleX.png")
-class GraphicTransformCursorScaleX extends BitmapData {}
+private class GraphicTransformCursorScaleX extends BitmapData {}
 
 @:bitmap("assets/images/debugger/cursors/transformScaleXY.png")
-class GraphicTransformCursorScaleXY extends BitmapData {}
+private class GraphicTransformCursorScaleXY extends BitmapData {}
 
 @:bitmap("assets/images/debugger/cursors/transformRotate.png")
-class GraphicTransformCursorRotate extends BitmapData {}
+private class GraphicTransformCursorRotate extends BitmapData {}
 
 /**
  * A tool to scale and rotate selected game elements.

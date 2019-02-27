@@ -30,31 +30,31 @@ private class GraphicFlixel extends BitmapData {}
 private class GraphicDrawDebug extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/log.png")
-class GraphicLog extends BitmapData {}
+@:noCompletion class GraphicLog extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/stats.png") 
-class GraphicStats extends BitmapData {}
+@:noCompletion class GraphicStats extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/watch.png")
-class GraphicWatch extends BitmapData {}
+@:noCompletion class GraphicWatch extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/bitmapLog.png")
-class GraphicBitmapLog extends BitmapData {}
+@:noCompletion class GraphicBitmapLog extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/console.png") 
-class GraphicConsole extends BitmapData {}
+@:noCompletion class GraphicConsole extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/arrowLeft.png") 
-class GraphicArrowLeft extends BitmapData {}
+@:noCompletion class GraphicArrowLeft extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/arrowRight.png") 
-class GraphicArrowRight extends BitmapData {}
+@:noCompletion class GraphicArrowRight extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/close.png")
-class GraphicCloseButton extends BitmapData {}
+@:noCompletion class GraphicCloseButton extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/interactive.png")
-class GraphicInteractive extends BitmapData {}
+@:noCompletion class GraphicInteractive extends BitmapData {}
 
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
