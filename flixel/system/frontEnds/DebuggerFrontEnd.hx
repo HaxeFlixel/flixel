@@ -168,6 +168,18 @@ class DebuggerFrontEnd
 			FlxG.stage.focus = null;
 			// setting focus to null will trigger a focus lost event, let's undo that
 			FlxG.game.onFocus(null);
+
+			#if FLX_MOUSE
+			FlxG.mouse.enabled = true;
+			#end
+		}
+		else
+		{
+			#if FLX_MOUSE
+			// Debugger is visible, allow mouse input in the game only if the
+			// interaction tool is not active.
+			FlxG.mouse.enabled = !FlxG.game.debugger.interaction.visible;
+			#end
 		}
 		
 		visibilityChanged.dispatch();

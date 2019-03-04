@@ -372,13 +372,6 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	function updateButton():Void
 	{
-		#if FLX_MOUSE
-		// If mouse input is not enabled, this button must remain in whatever
-		// state it currently is untill mouse input is enabled again.
-		if (!FlxG.mouse.enabled)
-			return;
-		#end
-
 		// We're looking for any touch / mouse overlaps with this button
 		var overlapFound = checkMouseOverlap();
 		if (!overlapFound)
@@ -535,6 +528,15 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	function onOverHandler():Void
 	{
+		#if FLX_MOUSE
+		// If mouse input is not enabled, this button must ignore over actions
+		// by remaining in the normal state (until mouse input is re-enabled).
+		if (!FlxG.mouse.enabled)
+		{
+			status = FlxButton.NORMAL;
+			return;
+		}
+		#end
 		status = FlxButton.HIGHLIGHT;
 		// Order matters here, because onOver.fire() could cause a state change and destroy this object.
 		onOver.fire();
