@@ -448,6 +448,8 @@ class Interaction extends Window
 			activeTool.button.toggled = true;
 		}
 		
+		// If the requested new tool is the same as the already active one,
+		// we deactive it (toggle behavior).
 		if (activeTool == value)
 			value = null;
 		
@@ -468,6 +470,12 @@ class Interaction extends Window
 			// so the user can click buttons, drag windows, etc.
 			setSystemCursorVisibility(true);
 		}
+
+		#if FLX_MOUSE
+		// Allow mouse input only if the interaction tool is visible
+		// and no tool is active.
+		FlxG.mouse.enabled = !isInUse();
+		#end
 	}
 	
 	function setSystemCursorVisibility(status:Bool):Void
@@ -509,6 +517,17 @@ class Interaction extends Window
 	{
 		var value:Int = _keysUp.get(key) == null ? 0 : _keysUp.get(key);
 		return (_turn - value) == 1;
+	}
+
+	/**
+	 * Informs whether the interactive debug is in use or not. Usage is defined
+	 * as the interactive debug being visible and one of its tools is selected/active. 
+	 * 
+	 * @return `true` if the interactive debug is visible and one of its tools is selected/active. 
+	 */
+	public function isInUse():Bool
+	{
+		return FlxG.debugger.visible && visible && activeTool != null;
 	}
 	
 	public function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void

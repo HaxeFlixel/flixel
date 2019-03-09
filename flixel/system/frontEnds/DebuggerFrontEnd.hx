@@ -177,8 +177,8 @@ class DebuggerFrontEnd
 		{
 			#if FLX_MOUSE
 			// Debugger is visible, allow mouse input in the game only if the
-			// interaction tool is not active.
-			FlxG.mouse.enabled = !FlxG.game.debugger.interaction.visible;
+			// interaction tool is not in use.
+			FlxG.mouse.enabled = !FlxG.game.debugger.interaction.isInUse();
 			#end
 		}
 		

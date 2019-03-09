@@ -484,9 +484,9 @@ class FlxDebugger extends Sprite
 	function onMouseFocusLost():Void
 	{
 		#if FLX_MOUSE
-		// Disable mouse input if the interaction tool is active/visible,
+		// Disable mouse input if the interaction tool is in use,
 		// so users can select interactable elements, e.g. buttons.
-		FlxG.mouse.enabled = !interaction.visible;	
+		FlxG.mouse.enabled = !interaction.isInUse();	
 
 		if (_usingSystemCursor)
 		{
