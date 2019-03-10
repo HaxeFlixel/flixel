@@ -12,12 +12,12 @@ class State_TestMenu extends FlxUIState
 		super.create();
 	}
 	
-	public override function getRequest(name:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	override public function getRequest(name:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		return null;
 	}	
 	
-	public override function getEvent(name:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(name:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (params != null)
 		{
@@ -32,7 +32,7 @@ class State_TestMenu extends FlxUIState
 		}
 	}
 	
-	public override function update(elapsed:Float):Void
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 	}

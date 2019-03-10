@@ -20,7 +20,7 @@ class State_SaveMenu extends FlxUIState
 		super.create();
 	}
 	
-	public override function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	override public function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		var xml:Access;
 		#if (haxe_ver < "4.0.0")
@@ -42,7 +42,7 @@ class State_SaveMenu extends FlxUIState
 		return null;
 	}
 	
-	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (params != null)
 		{

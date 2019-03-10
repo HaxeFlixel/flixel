@@ -2,14 +2,14 @@ import flixel.addons.ui.FlxUIPopup;
 
 class Popup_Demo extends FlxUIPopup
 {
-	public override function create():Void
+	override public function create():Void
 	{		
 		_xml_id = "popup_demo";
 		super.create();
 		_ui.setMode("demo_0");
 	}
 	
-	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void 
+	override public function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void 
 	{
 		if (params != null && params.length > 0)
 		{

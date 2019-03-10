@@ -44,7 +44,7 @@ class SaveSlot extends FlxUI
 		name = U.xml_name(data.x);
 	}
 	
-	public override function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		super.getEvent(event, sender, data);
 		if (Std.is(data, String))

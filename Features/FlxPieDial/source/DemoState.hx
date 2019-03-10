@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
 
 class DemoState extends FlxState
 {
-	public override function create():Void
+	override public function create():Void
 	{
 		super.create();
 		

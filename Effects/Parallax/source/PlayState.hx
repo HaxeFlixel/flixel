@@ -89,7 +89,7 @@ class PlayState extends FlxState
 		FlxTween.num(0, 1, 2, { ease: FlxEase.sineInOut, type: PINGPONG }, guyFloat);
 		FlxTween.num(.4, 1, 3, { ease: FlxEase.sineInOut, type: PINGPONG }, guyFade);
 		
-		#if (mobile)
+		#if mobile
 		_vPad = new FlxVirtualPad(FlxDPadMode.LEFT_RIGHT, FlxActionMode.NONE);
 		add(_vPad);
 		#end

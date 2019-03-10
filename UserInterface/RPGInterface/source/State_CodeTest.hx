@@ -22,12 +22,12 @@ class State_CodeTest extends FlxUIState
 		makeStuffByHand();
 	}
 	
-	public override function getRequest(event:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	override public function getRequest(event:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		return null;
 	}	
 	
-	public override function getEvent(event:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(event:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (params != null)
 		{
@@ -124,7 +124,7 @@ class State_CodeTest extends FlxUIState
 			_tongue.get("$MENU_RED_FISH","ui"),
 			_tongue.get("$MENU_BLUE_FISH", "ui")]);
 		
-		var tab_group_1:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
+		var tab_group_1 = new FlxUI(null, tab_menu, null, _tongue);
 		tab_group_1.name = "tab_1";
 		tab_group_1.add(tabs_radio_1);
 		
@@ -132,7 +132,7 @@ class State_CodeTest extends FlxUIState
 		var tabs_check_1 = new FlxUICheckBox(10, 10, null, null, _tongue.get("$MENU_THING_1", "ui"), 100, ["thing 1"]);
 		var tabs_check_2 = new FlxUICheckBox(10, 40, null, null, _tongue.get("$MENU_THING_2", "ui"), 100, ["thing 2"]);
 		
-		var tab_group_2:FlxUI = new FlxUI(null, tab_menu, null, _tongue);
+		var tab_group_2 = new FlxUI(null, tab_menu, null, _tongue);
 		tab_group_2.name = "tab_2";
 		tab_group_2.add(tabs_check_1);
 		tab_group_2.add(tabs_check_2);

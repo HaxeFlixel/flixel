@@ -64,7 +64,7 @@ class Player extends FlxSprite
 		_parent = Parent;  
 	}
 	
-	public override function update(elapsed:Float):Void
+	override public function update(elapsed:Float):Void
 	{
 		// Reset to 0 when no button is pushed
 		acceleration.x = 0;

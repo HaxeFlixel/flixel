@@ -31,7 +31,7 @@ class State_Demo extends FlxUIState
 		}
 	}
 	
-	public override function update(elapsed:Float):Void
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		#if debug

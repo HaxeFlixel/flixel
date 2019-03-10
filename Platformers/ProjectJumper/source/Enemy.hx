@@ -43,7 +43,7 @@ class Enemy extends EnemyTemplate
 		_gibs = Gibs;
 	}
 	
-	public override function update(elapsed:Float):Void
+	override public function update(elapsed:Float):Void
 	{
 		if (!alive)
 		{

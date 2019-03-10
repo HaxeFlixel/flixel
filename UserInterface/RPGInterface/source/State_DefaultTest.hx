@@ -13,12 +13,12 @@ class State_DefaultTest extends FlxUIState
 		super.create();
 	}
 	
-	public override function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
+	override public function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		return null;
 	}	
 	
-	public override function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (params != null)
 		{
@@ -46,7 +46,7 @@ class State_DefaultTest extends FlxUIState
 									
 					}
 				case "click_popup":
-					switch (cast(params[0], Int))
+					switch (cast params[0] : Int)
 					{
 						case 0: FlxG.log.add("Yes was clicked");
 						case 1: FlxG.log.add("No was clicked");

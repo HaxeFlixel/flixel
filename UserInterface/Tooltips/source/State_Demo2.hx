@@ -14,7 +14,7 @@ class State_Demo2 extends FlxUIState
 		super();
 	}
 	
-	public override function create() 
+	override public function create() 
 	{
 		_xml_id = "state_menu_2";
 		super.create();

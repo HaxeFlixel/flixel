@@ -124,7 +124,7 @@ class PlayState extends FlxUIState
 		}
 	}
 	
-	public override function getEvent(event:String, sender:Dynamic, data:Dynamic, ?params:Dynamic):Void
+	override public function getEvent(event:String, sender:Dynamic, data:Dynamic, ?params:Dynamic):Void
 	{
 		if (event == FlxUINumericStepper.CHANGE_EVENT && sender == _step_alpha)
 		{

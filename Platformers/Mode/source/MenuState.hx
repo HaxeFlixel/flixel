@@ -183,7 +183,7 @@ class MenuState extends FlxState
 		}
 		#end
 		
-		#if (FLX_GAMEPAD)
+		#if FLX_GAMEPAD
 		if (FlxG.gamepads.anyButton())
 		{
 			if (FlxG.gamepads.lastActive.justPressed.A)

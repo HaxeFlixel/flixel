@@ -41,7 +41,7 @@ class MenuState extends FlxUIState
 		enablePause(false);
 	}
 	
-	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (destroyed) 
 		{ 
