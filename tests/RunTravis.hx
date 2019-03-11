@@ -203,7 +203,7 @@ class RunTravis
 	
 	static function buildProjects(target:Target, args:Array<String>):ExitCode
 	{
-		return haxelibRun(["flixel-tools", "bp"].concat(args).concat(["-Dno-deprecation-warnings"]));
+		return haxelibRun(["flixel-tools", "bp", target].concat(args).concat(["-Dno-deprecation-warnings"]));
 	}
 	
 	static function buildSwfVersionTests(target:Target):ExitCode
