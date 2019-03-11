@@ -86,6 +86,8 @@ class Transform extends Tool
 			_markers.push(new FlxPoint());
 
 		stopAction();
+
+		FlxG.signals.preStateSwitch.add(function() _target = null);
 		return this;
 	}
 
