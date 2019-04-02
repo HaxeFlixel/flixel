@@ -1,3 +1,13 @@
+4.6.1 (April 2, 2019)
+------------------------------
+
+#### Bugfixes:
+
+- `FlxDebugger`:
+	- disabled mouse input when the debugger interaction tool is active ([#2209](https://github.com/HaxeFlixel/flixel/issues/2209))
+	- clear the transform tool target on state switches
+- `FlxBasePreloader`: fixed a crash on the HashLink target
+
 4.6.0 (February 4, 2019)
 ------------------------------
 #### Dependencies:
