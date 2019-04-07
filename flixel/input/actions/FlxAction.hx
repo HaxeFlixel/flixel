@@ -272,14 +272,14 @@ class FlxActionAnalog extends FlxAction
 		return val;
 	}
 	
-	private function get_x():Float
+	function get_x():Float
 	{
-		(_x != null) ? return _x : return 0;
+		return (_x != null) ? _x : 0;
 	}
 	
-	private function get_y():Float 
+	function get_y():Float 
 	{
-		(_y != null) ? return _y : return 0;
+		return (_y != null) ? _y : 0;
 	}
 }
 
@@ -299,7 +299,7 @@ class FlxAction implements IFlxDestroyable
 	/**
 	 * This action's numeric handle for the Steam API (ignored if not using Steam)
 	 */
-	private var steamHandle(default, null):Int = -1;
+	var steamHandle(default, null):Int = -1;
 	
 	/**
 	 * If true, this action has just been triggered
@@ -311,11 +311,11 @@ class FlxAction implements IFlxDestroyable
 	 */
 	public var inputs:Array<FlxActionInput>;
 	
-	private var _x:Null<Float> = null;
-	private var _y:Null<Float> = null;
+	var _x:Null<Float> = null;
+	var _y:Null<Float> = null;
 	
-	private var _timestamp:Int = 0;
-	private var _checked:Bool = false;
+	var _timestamp:Int = 0;
+	var _checked:Bool = false;
 	
 	/**
 	 * Whether the steam controller inputs for this action have changed since the last time origins were polled. Always false if steam isn't active
@@ -323,11 +323,11 @@ class FlxAction implements IFlxDestroyable
 	public var steamOriginsChanged(default, null):Bool = false;
 	
 	#if FLX_STEAMWRAP
-	private var _steamOriginsChecksum:Int = 0;
-	private var _steamOrigins:Array<EControllerActionOrigin>;
+	var _steamOriginsChecksum:Int = 0;
+	var _steamOrigins:Array<EControllerActionOrigin>;
 	#end
 	
-	private function new(InputType:FlxInputType, Name:String)
+	function new(InputType:FlxInputType, Name:String)
 	{
 		type = InputType;
 		name = Name;
@@ -398,7 +398,7 @@ class FlxAction implements IFlxDestroyable
 	
 	public function toString():String
 	{
-		return("FlxAction(" + type + ") name:" + name);
+		return "FlxAction(" + type + ") name:" + name;
 	}
 	
 	/**
@@ -465,7 +465,7 @@ class FlxAction implements IFlxDestroyable
 		return name == other.name && steamHandle == other.steamHandle;
 	}
 	
-	private function addGenericInput(input:FlxActionInput):FlxAction
+	function addGenericInput(input:FlxActionInput):FlxAction
 	{
 		if (inputs == null)
 		{
@@ -476,7 +476,7 @@ class FlxAction implements IFlxDestroyable
 		return this;
 	}
 	
-	private function checkExists(input:FlxActionInput):Bool
+	function checkExists(input:FlxActionInput):Bool
 	{
 		if (inputs == null) return false;
 		return inputs.contains(input);

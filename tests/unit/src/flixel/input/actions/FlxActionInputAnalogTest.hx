@@ -327,7 +327,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	#if (!flash && FLX_GAMEINPUT_API)
-	private function makeFakeGamepad()
+	function makeFakeGamepad()
 	{
 		var xinput = @:privateAccess new Gamepad(0);
 		@:privateAccess GameInput.__onGamepadConnect(xinput);
@@ -358,7 +358,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		return xinput;
 	}
 	
-	private function removeGamepad(g:Gamepad)
+	function removeGamepad(g:Gamepad)
 	{
 		@:privateAccess GameInput.__onGamepadDisconnect(g);
 	}
@@ -484,7 +484,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
-	private function clearClickAndDragMousePosition()
+	function clearClickAndDragMousePosition()
 	{
 		if (FlxG.mouse == null) return;
 		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
@@ -502,7 +502,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function clearGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID)
+	function clearGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID)
 	{
 		if (Input == FlxGamepadInputID.LEFT_ANALOG_STICK || Input == FlxGamepadInputID.RIGHT_ANALOG_STICK)
 		{
@@ -518,7 +518,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function moveTrigger(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float)
+	function moveTrigger(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float)
 	{
 		#if FLX_JOYSTICK_API
 		var fakeAxisRawID:Int = Gamepad.mapping.checkForFakeAxis(Input);
@@ -546,7 +546,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function moveStick(Gamepad:FlxGamepad, stick:FlxGamepadAnalogStick, X:Float, Y:Float)
+	function moveStick(Gamepad:FlxGamepad, stick:FlxGamepadAnalogStick, X:Float, Y:Float)
 	{
 		#if FLX_JOYSTICK_API
 		
@@ -564,7 +564,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
-	private function clearMousePosition()
+	function clearMousePosition()
 	{
 		if (FlxG.mouse == null) return;
 		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
@@ -572,7 +572,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		step();
 	}
 	
-	private function moveClickAndDragMousePosition(Button:FlxMouseButtonID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
+	function moveClickAndDragMousePosition(Button:FlxMouseButtonID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
 	{
 		var button:FlxMouseButton = 
 		switch (Button)
@@ -592,7 +592,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	}
 	
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function moveGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
+	function moveGamepad(Gamepad:FlxGamepad, Input:FlxGamepadInputID, X:Float, Y:Float, arr:Array<FlxActionAnalog>)
 	{
 		step();
 		
@@ -609,7 +609,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		updateActions(arr);
 	}
 	
-	private function moveMousePosition(X:Float, Y:Float, arr:Array<FlxActionAnalog>)
+	function moveMousePosition(X:Float, Y:Float, arr:Array<FlxActionAnalog>)
 	{
 		if (FlxG.mouse == null) return;
 		step();
@@ -617,7 +617,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		updateActions(arr);
 	}
 	
-	private function updateActions(arr:Array<FlxActionAnalog>)
+	function updateActions(arr:Array<FlxActionAnalog>)
 	{
 		for (a in arr)
 		{
@@ -626,7 +626,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	private function onCallback(i:Int)
+	function onCallback(i:Int)
 	{
 		switch (i)
 		{
@@ -637,7 +637,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		}
 	}
 	
-	private function clearValues()
+	function clearValues()
 	{
 		value0 = value1 = value2 = value3 = 0;
 	}

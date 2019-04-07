@@ -189,7 +189,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		testInputStates(test, clear, click, a, b, c, d, callbacks);
 	}
 	
-	private function getGamepadButtons():Array<FlxGamepadInputID>
+	function getGamepadButtons():Array<FlxGamepadInputID>
 	{
 		return 
 		[
@@ -212,7 +212,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		// - LEFT/RIGHT_STICK_DIGITAL_UP/DOWN/LEFT/RIGHT
 	}
 	
-	private function getFlxKeys():Array<String>
+	function getFlxKeys():Array<String>
 	{
 		//Trying to get these values directly from FlxG.keys.fromStringMap will cause the thing to hard crash whenever I try to do *ANY* logical test to exclude "ANY" from the returned array.
 		//It's really creepy and weird!
@@ -413,7 +413,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	#if (!flash && FLX_GAMEINPUT_API)
-	private function makeFakeGamepad()
+	function makeFakeGamepad()
 	{
 		var xinput = @:privateAccess new Gamepad(0);
 		@:privateAccess GameInput.__onGamepadConnect(xinput);
@@ -737,7 +737,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	#if FLX_JOYSTICK_API
-	private function clearJoystick(ID:FlxGamepadInputID)
+	function clearJoystick(ID:FlxGamepadInputID)
 	{
 		FlxG.stage.dispatchEvent(new JoystickEvent(JoystickEvent.BUTTON_UP, false, false, 0, ID, 0, 0, 0));
 		step();
@@ -746,7 +746,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	#if (!flash && FLX_GAMEINPUT_API)
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function clearGamepad(ID:FlxGamepadInputID)
+	function clearGamepad(ID:FlxGamepadInputID)
 	{
 		var gamepad = FlxG.gamepads.getByID(0);
 		if (gamepad == null) return;
@@ -761,7 +761,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	#end
 	
 	@:access(flixel.input.mouse.FlxMouse)
-	private function clearFlxMouseWheel()
+	function clearFlxMouseWheel()
 	{
 		if (FlxG.mouse == null) return;
 		FlxG.mouse.wheel = 0;
@@ -770,7 +770,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clearFlxKey(key:FlxKey)
+	function clearFlxKey(key:FlxKey)
 	{
 		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
 		if (input == null) return;
@@ -781,7 +781,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		input.update();
 	}
 	
-	private function clearMouseButton(button:FlxMouseButton)
+	function clearMouseButton(button:FlxMouseButton)
 	{
 		if (button == null) return;
 		button.release();
@@ -791,7 +791,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		button.update();
 	}
 	
-	private function clearFlxInput(thing:FlxInput<Int>)
+	function clearFlxInput(thing:FlxInput<Int>)
 	{
 		if (thing == null) return;
 		thing.release();
@@ -802,7 +802,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	#if FLX_JOYSTICK_API
-	private function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
+	function clickJoystick(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		var event = pressed ? JoystickEvent.BUTTON_DOWN : JoystickEvent.BUTTON_UP;
 		FlxG.stage.dispatchEvent(new JoystickEvent(event, false, false, 0, ID, 0, 0, 0));
@@ -814,7 +814,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	
 	#if (!flash && FLX_GAMEINPUT_API)
 	@:access(flixel.input.gamepad.FlxGamepad)
-	private function clickGamepad(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
+	function clickGamepad(ID:FlxGamepadInputID, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		var gamepad = FlxG.gamepads.getByID(0);
 		if (gamepad == null) return;
@@ -831,7 +831,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	#end
 	
 	@:access(flixel.input.mouse.FlxMouse)
-	private function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
+	function moveFlxMouseWheel(positive:Bool, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		if (FlxG.mouse == null) return;
 		if (pressed)
@@ -854,7 +854,7 @@ class FlxActionInputDigitalTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clickFlxKey(key:FlxKey, pressed:Bool, arr:Array<FlxActionDigital>)
+	function clickFlxKey(key:FlxKey, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
 		
@@ -878,7 +878,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		
 	}
 	
-	private function clickMouseButton(button:FlxMouseButton, pressed:Bool, arr:Array<FlxActionDigital>)
+	function clickMouseButton(button:FlxMouseButton, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		if (button == null) return;
 		step();
@@ -888,7 +888,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		updateActions(arr);
 	}
 	
-	private function clickFlxInput(thing:FlxInput<Int>, pressed:Bool, arr:Array<FlxActionDigital>)
+	function clickFlxInput(thing:FlxInput<Int>, pressed:Bool, arr:Array<FlxActionDigital>)
 	{
 		if (thing == null) return;
 		step();
@@ -898,7 +898,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		updateActions(arr);
 	}
 	
-	private function updateActions(arr:Array<FlxActionDigital>)
+	function updateActions(arr:Array<FlxActionDigital>)
 	{
 		for (a in arr)
 		{
@@ -907,7 +907,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		}
 	}
 	
-	private function onCallback(i:Int)
+	function onCallback(i:Int)
 	{
 		switch (i)
 		{
@@ -918,7 +918,7 @@ class FlxActionInputDigitalTest extends FlxTest
 		}
 	}
 	
-	private function clearValues()
+	function clearValues()
 	{
 		value0 = value1 = value2 = value3 = 0;
 	}

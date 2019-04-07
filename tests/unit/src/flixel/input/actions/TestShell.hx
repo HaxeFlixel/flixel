@@ -55,7 +55,7 @@ class TestShell implements IFlxDestroyable
 		test(id, false, false, d == null, d != null, d == null ? "null" : Std.string(d));
 	}
 	
-	private function test(id:String, tTrue:Bool = false, tFalse:Bool = false, tNull:Bool = false, tNNull:Bool = false, strValue:String = "untested")
+	function test(id:String, tTrue:Bool = false, tFalse:Bool = false, tNull:Bool = false, tNNull:Bool = false, strValue:String = "untested")
 	{
 		results.push
 		(

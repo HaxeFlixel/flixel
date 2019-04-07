@@ -210,14 +210,14 @@ class FlxActionTest extends FlxTest
 		analog.inputs = oldInputsA;
 	}
 	
-	private function clearDigital()
+	function clearDigital()
 	{
 		dState.release();
 		dState.update();
 		
 	}
 	
-	private function pulseDigital()
+	function pulseDigital()
 	{
 		step();
 		dState.release();
@@ -227,7 +227,7 @@ class FlxActionTest extends FlxTest
 		dState.update();
 	}
 	
-	private function clearAnalog()
+	function clearAnalog()
 	{
 		step();
 		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
@@ -236,7 +236,7 @@ class FlxActionTest extends FlxTest
 	}
 	
 	@:access(flixel.input.mouse.FlxMouse)
-	private function pulseAnalog(a:FlxActionAnalog, X:Float = 10.0, Y:Float = 10.0)
+	function pulseAnalog(a:FlxActionAnalog, X:Float = 10.0, Y:Float = 10.0)
 	{
 		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
 		step();
@@ -246,7 +246,7 @@ class FlxActionTest extends FlxTest
 		a.update();
 	}
 	
-	private function moveAnalog(a:FlxActionAnalog, X:Float, Y:Float)
+	function moveAnalog(a:FlxActionAnalog, X:Float, Y:Float)
 	{
 		step();
 		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);

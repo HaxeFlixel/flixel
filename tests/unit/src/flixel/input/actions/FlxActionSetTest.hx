@@ -284,7 +284,7 @@ class FlxActionSetTest extends FlxTest
 	}
 	#end
 	
-	private function onCallback(str:String)
+	function onCallback(str:String)
 	{
 		if (valueTest != "")
 		{
@@ -293,7 +293,7 @@ class FlxActionSetTest extends FlxTest
 		valueTest += str;
 	}
 	
-	private function moveMousePosition(X:Float, Y:Float, set:FlxActionSet)
+	function moveMousePosition(X:Float, Y:Float, set:FlxActionSet)
 	{
 		if (FlxG.mouse == null) return;
 		step();
@@ -302,7 +302,7 @@ class FlxActionSetTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clickFlxKey(key:FlxKey, pressed:Bool, set:FlxActionSet)
+	function clickFlxKey(key:FlxKey, pressed:Bool, set:FlxActionSet)
 	{
 		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
 		
@@ -326,7 +326,7 @@ class FlxActionSetTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clearFlxKey(key:FlxKey, set:FlxActionSet)
+	function clearFlxKey(key:FlxKey, set:FlxActionSet)
 	{
 		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
 		if (input == null) return;
@@ -338,7 +338,7 @@ class FlxActionSetTest extends FlxTest
 	}
 	
 	#if FLX_STEAMWRAP
-	private function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
+	function moveSteamAnalog(controller:Int, actionHandle:Int, X:Float, Y:Float, set:FlxActionSet)
 	{
 		step();
 		
@@ -347,7 +347,7 @@ class FlxActionSetTest extends FlxTest
 		set.update();
 	}
 	
-	private function clickSteamDigital(controller:Int, actionHandle:Int, pressed:Bool, set:FlxActionSet)
+	function clickSteamDigital(controller:Int, actionHandle:Int, pressed:Bool, set:FlxActionSet)
 	{
 		step();
 		set.update();
@@ -357,7 +357,7 @@ class FlxActionSetTest extends FlxTest
 		set.update();
 	}
 	
-	private function clearSteamDigital(controller:Int, actionHandle:Int, set:FlxActionSet)
+	function clearSteamDigital(controller:Int, actionHandle:Int, set:FlxActionSet)
 	{
 		SteamMock.setDigitalAction(controller, actionHandle, false);
 		step();

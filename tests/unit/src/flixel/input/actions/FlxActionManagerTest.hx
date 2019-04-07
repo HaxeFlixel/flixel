@@ -25,7 +25,7 @@ import massive.munit.Assert;
 class FlxActionManagerTest extends FlxTest
 {
 	#if FLX_STEAMWRAP
-	private var steamManager:FlxActionManager;
+	var steamManager:FlxActionManager;
 	#end
 	
 	var basicManager:FlxActionManager;
@@ -477,25 +477,25 @@ class FlxActionManagerTest extends FlxTest
 		testManager.deviceDisconnected.remove(deviceRemoved);
 	}
 	
-	private function deviceConnected(Device:FlxInputDevice, ID:Int, Model:String)
+	function deviceConnected(Device:FlxInputDevice, ID:Int, Model:String)
 	{
 		if (connectStr != "") connectStr += ",";
 		connectStr += (Std.string(Device) + "_" + ID + "_" + Model).toLowerCase();
 	}
 	
-	private function deviceRemoved(Device:FlxInputDevice, ID:Int, Model:String)
+	function deviceRemoved(Device:FlxInputDevice, ID:Int, Model:String)
 	{
 		if (disconnectStr != "") disconnectStr += ",";
 		disconnectStr += (Std.string(Device) + "_" + ID + "_" + Model).toLowerCase();
 	}
 	
 	#if (!flash && FLX_GAMEINPUT_API)
-	private function removeGamepad(g:Gamepad)
+	function removeGamepad(g:Gamepad)
 	{
 		@:privateAccess GameInput.__onGamepadDisconnect(g);
 	}
 	
-	private function makeFakeGamepad(id:String, name:String, model:FlxGamepadModel):Gamepad
+	function makeFakeGamepad(id:String, name:String, model:FlxGamepadModel):Gamepad
 	{
 		var limegamepad = @:privateAccess new Gamepad(0);
 		@:privateAccess GameInput.__onGamepadConnect(limegamepad);
@@ -765,7 +765,7 @@ class FlxActionManagerTest extends FlxTest
 		Assert.isTrue(finalValue == "menu_up,menu_down,menu_left,menu_right,menu_select,menu_menu,menu_cancel,menu_thing_1,menu_thing_2,menu_thing_3,menu_move");
 	}
 	
-	private function createFlxActionManager()
+	function createFlxActionManager()
 	{
 		basicManager = new FlxActionManager();
 		
@@ -950,7 +950,7 @@ class FlxActionManagerTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clickFlxKey(key:FlxKey, pressed:Bool, manager:FlxActionManager)
+	function clickFlxKey(key:FlxKey, pressed:Bool, manager:FlxActionManager)
 	{
 		if (FlxG.keys == null || FlxG.keys._keyListMap == null) return;
 		
@@ -974,7 +974,7 @@ class FlxActionManagerTest extends FlxTest
 	}
 	
 	@:access(flixel.input.FlxKeyManager)
-	private function clearFlxKey(key:FlxKey, manager:FlxActionManager)
+	function clearFlxKey(key:FlxKey, manager:FlxActionManager)
 	{
 		var input:FlxInput<Int> = FlxG.keys._keyListMap.get(key);
 		if (input == null) return;
@@ -985,7 +985,7 @@ class FlxActionManagerTest extends FlxTest
 		@:privateAccess manager.update();
 	}
 	
-	private function moveMousePosition(X:Float, Y:Float, manager:FlxActionManager)
+	function moveMousePosition(X:Float, Y:Float, manager:FlxActionManager)
 	{
 		if (FlxG.mouse == null) return;
 		step();
@@ -993,7 +993,7 @@ class FlxActionManagerTest extends FlxTest
 		@:privateAccess manager.update();
 	}
 	
-	private function onCallback(str:String)
+	function onCallback(str:String)
 	{
 		if (valueTest != "")
 		{
