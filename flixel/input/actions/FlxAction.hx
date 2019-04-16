@@ -15,7 +15,6 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
-import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -46,7 +45,7 @@ class FlxActionDigital extends FlxAction
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(?Name:String="", ?Callback:FlxActionDigital->Void)
+	public function new(?Name:String = "", ?Callback:FlxActionDigital->Void)
 	{
 		super(FlxInputType.DIGITAL, Name);
 		callback = Callback;
@@ -173,7 +172,7 @@ class FlxActionAnalog extends FlxAction
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(?Name:String="", ?Callback:FlxActionAnalog->Void)
+	public function new(?Name:String = "", ?Callback:FlxActionAnalog->Void)
 	{
 		super(FlxInputType.ANALOG, Name);
 		callback = Callback;
