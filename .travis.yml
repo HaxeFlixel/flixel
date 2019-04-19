@@ -1,5 +1,7 @@
 language: haxe
 
+dist: xenial
+
 haxe:
   - 3.4.7
   - development
@@ -9,9 +11,6 @@ env:
   - TARGET=neko  OPENFL=new
   - TARGET=cpp   OPENFL=new
   - TARGET=html5 OPENFL=new
-
-sudo: false
-dist: trusty
 
 addons:
   apt:
