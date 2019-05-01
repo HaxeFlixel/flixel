@@ -36,6 +36,6 @@
 	
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons"/>
-	<haxelib name="nape"/>
+	<haxelib name="nape-haxe4"/>
 	
 </project>
