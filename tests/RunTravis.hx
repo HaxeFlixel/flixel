@@ -69,8 +69,8 @@ class RunTravis
 	{
 		return runUntilFailure([
 			runCommand.bind("haxelib", ["git", "hamcrest", "https://github.com/kaikoga/hamcrest-haxe", "patch-haxe4-p5", "src"]),
-			runCommand.bind("haxelib", ["git", "nape", "https://github.com/XenizoGames/nape_haxe_4"]),
 
+			haxelibInstall.bind("nape-haxe4"),
 			haxelibInstall.bind("munit"),
 			haxelibInstall.bind("systools"),
 			haxelibInstall.bind("task"),
