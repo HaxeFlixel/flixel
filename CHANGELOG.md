@@ -1,3 +1,7 @@
+2.7.1 (May 1, 2019)
+------------------------------
+* Replaced `nape` in `Project.xml` with `nape-haxe4`
+
 2.7.0 (February 4, 2019)
 ------------------------------
 * Compatibility with Flixel 4.6.0 and Haxe 4.0.0-rc.1

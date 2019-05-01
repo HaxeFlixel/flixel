@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.7.0",
-    "releasenote": "Compatibility with Flixel 4.6.0 and Haxe 4.0.0-rc.1, new FlxAction and FlxSimplex demos.",
+    "version": "2.7.1",
+    "releasenote": "Replaced nape with nape-haxe4.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }
