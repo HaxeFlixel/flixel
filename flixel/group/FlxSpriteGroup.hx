@@ -54,6 +54,11 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var maxSize(get, set):Int;
 	
 	/**
+	 * Whether to be trated as a single collider instead of colliding with each member
+	 */
+	public var collideAsSprite:Bool = false;
+	
+	/**
 	 * Optimization to allow setting position of group without transforming children twice.
 	 */
 	var _skipTransformChildren:Bool = false;
@@ -85,6 +90,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		flixelType = SPRITEGROUP;
 		
+		last = FlxPoint.get(x, y);
 		offset = new FlxCallbackPoint(offsetCallback);
 		origin = new FlxCallbackPoint(originCallback);
 		scale = new FlxCallbackPoint(scaleCallback);
@@ -204,8 +210,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		group.update(elapsed);
 		
+		last.set(x, y);
+		
 		if (moves)
 			updateMotion(elapsed);
+		
+		wasTouching = touching;
+		touching = FlxObject.NONE;
 	}
 	
 	override public function draw():Void 

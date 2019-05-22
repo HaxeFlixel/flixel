@@ -46,7 +46,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 	
 	@:noCompletion
-	static function resolveGroup(ObjectOrGroup:FlxBasic):FlxTypedGroup<FlxBasic>
+	static function resolveGroup(ObjectOrGroup:FlxBasic, isCollision:Bool = false):FlxTypedGroup<FlxBasic>
 	{
 		var group:FlxTypedGroup<FlxBasic> = null;
 		if (ObjectOrGroup != null)
@@ -58,7 +58,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			else if (ObjectOrGroup.flixelType == SPRITEGROUP)
 			{
 				var spriteGroup:FlxTypedSpriteGroup<Dynamic> = cast ObjectOrGroup;
-				group = cast spriteGroup.group;
+				if (!isCollision || !spriteGroup.collideAsSprite)
+					group = cast spriteGroup.group;
 			}
 		}
 		return group;
