@@ -22,7 +22,7 @@ class LightenShader extends Shader
 			vec4 base = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
 			gl_FragColor = blendLighten(base, uBlendColor, uBlendColor.a);
 		}';
-	
+
 	public function new()
 	{
 		super();

@@ -10,35 +10,35 @@ class Explosion extends FlxSprite
 	var _delay:Float = 0;
 	var _target:FlxSprite;
 	var _pos:FlxPoint;
-	
-	public function new() 
+
+	public function new()
 	{
 		super();
 		loadGraphic(AssetPaths.explosion__png, true, 25, 25);
 		animation.add("explode", [0, 1, 2], 12, false);
 		_pos = FlxPoint.get();
 	}
-	
+
 	public function explode(Target:FlxSprite, Delay:Float = 0):Void
 	{
 		_delay = Delay;
-		
+
 		_target = Target;
-		_pos.x = FlxG.random.float(-20, _target.width-5);
-		_pos.y = FlxG.random.float( -20, _target.height-5);
+		_pos.x = FlxG.random.float(-20, _target.width - 5);
+		_pos.y = FlxG.random.float(-20, _target.height - 5);
 		reset(_target.x + _pos.x, _target.y + _pos.y);
-		
+
 		visible = false;
 	}
-	
-	override public function draw():Void 
+
+	override public function draw():Void
 	{
 		x = _target.x + _pos.x;
 		y = _target.y + _pos.y;
 		super.draw();
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		if (alive && !visible)
@@ -46,7 +46,7 @@ class Explosion extends FlxSprite
 			if (_delay <= 0)
 			{
 				visible = true;
-				FlxG.sound.play(AssetPaths.Explosion__wav,.66);
+				FlxG.sound.play(AssetPaths.Explosion__wav, .66);
 				animation.play("explode");
 			}
 			else

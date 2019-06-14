@@ -57,9 +57,7 @@ class HardMixShader extends FlxShader
 			vec4 res = blendHardMix(uBlendColor, blend);
 
 			gl_FragColor = blendHardMix(blend, res, uBlendColor[3]);
-		}'
-	)
-	
+		}')
 	public function new()
 	{
 		super();

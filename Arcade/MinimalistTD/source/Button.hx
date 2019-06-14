@@ -7,7 +7,7 @@ class Button extends FlxButton
 {
 	/**
 	 * Create a new minimalist button that has black and white text and no background.
-	 * 
+	 *
 	 * @param	X		The X position of the button.
 	 * @param	Y		The Y position of the button.
 	 * @param	Label	The text for this button to display.
@@ -17,7 +17,7 @@ class Button extends FlxButton
 	public function new(X:Int = 0, Y:Int = 0, Label:String, ?OnDown:Void->Void, Width:Int = -1)
 	{
 		super(X, Y, Label, OnDown);
-		
+
 		if (Width > 0)
 			width = Width;
 		else
@@ -25,10 +25,10 @@ class Button extends FlxButton
 		height = 20;
 		label.alpha = 1;
 		set_status(status);
-		
+
 		makeGraphic(Std.int(width), Std.int(height), 0);
 	}
-	
+
 	/**
 	 * Override set_status to change how highlight / normal state looks.
 	 */
@@ -44,7 +44,7 @@ class Button extends FlxButton
 				label.borderColor = FlxColor.BLACK;
 				#end
 			}
-			else 
+			else
 			{
 				label.color = FlxColor.BLACK;
 				label.borderStyle = OUTLINE_FAST;

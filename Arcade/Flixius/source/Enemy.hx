@@ -8,15 +8,15 @@ class Enemy extends FlxSprite
 	var _shootTimer:Float = 6;
 	var _parent:PlayState;
 	var _dying:Float = 2;
-	
+
 	public function new(X:Float, Y:Float, ParentState:PlayState):Void
 	{
 		super(X, Y, AssetPaths.enemy_destroyer__png);
 		_parent = ParentState;
 		_dying = 2;
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		if (alive)
@@ -36,7 +36,7 @@ class Enemy extends FlxSprite
 			else
 			{
 				if (isOnScreen())
-				{	
+				{
 					velocity.x = -20;
 					velocity.y = Math.sin(x / 10) * 20;
 					_shootTimer -= elapsed * 4;
@@ -44,7 +44,6 @@ class Enemy extends FlxSprite
 					{
 						_shootTimer = 3;
 						_parent.shootEBullet(this);
-						
 					}
 					else if (_shootTimer < 2 && _shootTimer > 1)
 					{
@@ -60,10 +59,10 @@ class Enemy extends FlxSprite
 			}
 		}
 	}
-	
-	override public function kill():Void 
+
+	override public function kill():Void
 	{
 		_dying = 1;
-		velocity.set( -20, 40);
+		velocity.set(-20, 40);
 	}
 }

@@ -10,21 +10,21 @@ class Jet extends FlxSprite
 	var _target:FlxSprite;
 	var _targetType:Int = 0;
 	var _pos:FlxPoint;
-	
-	public function new(Target:FlxSprite, TargetType:Int = 0) 
+
+	public function new(Target:FlxSprite, TargetType:Int = 0)
 	{
 		super();
 		loadGraphic(AssetPaths.thrust__png, true, 8, 8);
-		
-		_pos = FlxPoint.get(0,0);
-		
+
+		_pos = FlxPoint.get(0, 0);
+
 		_target = Target;
 		_targetType = TargetType;
-		
+
 		animation.add("thrust", [0, 1, 2], 12);
 		setFacingFlip(FlxObject.LEFT, true, false);
 		setFacingFlip(FlxObject.RIGHT, false, false);
-		
+
 		if (_targetType == 0)
 		{
 			facing = FlxObject.RIGHT;
@@ -41,8 +41,8 @@ class Jet extends FlxSprite
 		y = _target.y + _pos.y;
 		animation.play("thrust");
 	}
-	
-	override public function draw():Void 
+
+	override public function draw():Void
 	{
 		if (!_target.isOnScreen() || isOnScreen())
 		{
@@ -51,8 +51,8 @@ class Jet extends FlxSprite
 		}
 		super.draw();
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		if (alive && !_target.alive)

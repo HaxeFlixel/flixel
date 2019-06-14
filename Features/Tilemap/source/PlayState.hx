@@ -18,37 +18,39 @@ class PlayState extends FlxState
 	 * Some static constants for the size of the tilemap tiles
 	 */
 	static inline var TILE_WIDTH:Int = 16;
+
 	static inline var TILE_HEIGHT:Int = 16;
-	
+
 	/**
 	 * The FlxTilemap we're using
-	 */ 
+	 */
 	var _collisionMap:FlxTilemap;
-	
+
 	/**
 	 * Box to show the user where they're placing stuff
-	 */ 
+	 */
 	var _highlightBox:FlxSprite;
-	
+
 	/**
 	 * Player modified from "Mode" demo
-	 */ 
+	 */
 	var _player:FlxSprite;
-	
+
 	/**
 	 * Some interface buttons and text
 	 */
 	var _autoAltButton:FlxButton;
+
 	var _resetButton:FlxButton;
 	var _helperText:FlxText;
-	
+
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-		
+
 		// Creates a new tilemap with no arguments
 		_collisionMap = new FlxTilemap();
-		
+
 		/*
 		 * FlxTilemaps are created using strings of comma seperated values (csv)
 		 * This string ends up looking something like this:
@@ -65,61 +67,62 @@ class PlayState extends FlxState
 		 * When using the auto map generation, the '1's are converted into the corresponding frame
 		 * in the tileset.
 		 */
-		
+
 		// Initializes the map using the generated string, the tile images, and the tile size
 		_collisionMap.loadMapFromCSV("assets/default_auto.txt", "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 		add(_collisionMap);
-		
+
 		_highlightBox = new FlxSprite(0, 0);
 		_highlightBox.makeGraphic(TILE_WIDTH, TILE_HEIGHT, FlxColor.TRANSPARENT);
-		FlxSpriteUtil.drawRect(_highlightBox, 0, 0, TILE_WIDTH - 1, TILE_HEIGHT - 1, FlxColor.TRANSPARENT, { thickness: 1, color: FlxColor.RED });
+		FlxSpriteUtil.drawRect(_highlightBox, 0, 0, TILE_WIDTH - 1, TILE_HEIGHT - 1, FlxColor.TRANSPARENT, {thickness: 1, color: FlxColor.RED});
 		add(_highlightBox);
-		
+
 		setupPlayer();
-		
+
 		// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
 		// Notice that different tilesets are used when the auto mode is switched
 		_autoAltButton = new FlxButton(4, FlxG.height - 24, "AUTO", onAlt);
 		add(_autoAltButton);
-		
-		_resetButton = new FlxButton(8 + _autoAltButton.width, FlxG.height - 24, "Reset", onReset); 
+
+		_resetButton = new FlxButton(8 + _autoAltButton.width, FlxG.height - 24, "Reset", onReset);
 		add(_resetButton);
-		
-		_helperText = new FlxText(20 + _autoAltButton.width * 2, FlxG.height - 26, 300, "Click to place tiles, shift-click to remove\nArrow keys / WASD to move");
+
+		_helperText = new FlxText(20 + _autoAltButton.width * 2, FlxG.height - 26, 300,
+			"Click to place tiles, shift-click to remove\nArrow keys / WASD to move");
 		add(_helperText);
 	}
-	
+
 	function setupPlayer():Void
 	{
 		_player = new FlxSprite(64, 220);
 		_player.loadGraphic("assets/spaceman.png", true, 16);
-		
+
 		// Bounding box tweaks
 		_player.setSize(14, 14);
 		_player.offset.set(1, 1);
-		
+
 		// Basic player physics
 		_player.drag.x = 640;
 		_player.acceleration.y = 420;
 		_player.maxVelocity.set(120, 200);
-		
+
 		// Animations
 		_player.animation.add("idle", [0]);
 		_player.animation.add("run", [1, 2, 3, 0], 12);
 		_player.animation.add("jump", [4]);
-		
+
 		add(_player);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		// Tilemaps can be collided just like any other FlxObject, and flixel
 		// automatically collides each individual tile with the object.
 		FlxG.collide(_player, _collisionMap);
-		
+
 		_highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 		_highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
-		
+
 		if (FlxG.mouse.pressed)
 		{
 			// FlxTilemaps can be manually edited at runtime as well.
@@ -127,18 +130,18 @@ class PlayState extends FlxState
 			// If auto map is on, the map will automatically update all surrounding tiles.
 			_collisionMap.setTile(Std.int(FlxG.mouse.x / TILE_WIDTH), Std.int(FlxG.mouse.y / TILE_HEIGHT), FlxG.keys.pressed.SHIFT ? 0 : 1);
 		}
-		
+
 		updatePlayer();
 		super.update(elapsed);
 	}
-	
+
 	function updatePlayer():Void
 	{
 		FlxSpriteUtil.screenWrap(_player);
-		
+
 		// MOVEMENT
 		_player.acceleration.x = 0;
-		
+
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			_player.flipX = true;
@@ -154,7 +157,7 @@ class PlayState extends FlxState
 			_player.y -= 1;
 			_player.velocity.y = -200;
 		}
-		
+
 		// ANIMATION
 		if (_player.velocity.y != 0)
 		{
@@ -169,34 +172,33 @@ class PlayState extends FlxState
 			_player.animation.play("run");
 		}
 	}
-	
+
 	function onAlt():Void
 	{
 		switch (_collisionMap.auto)
 		{
 			case AUTO:
-				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles), "assets/alt_tiles.png",
+					TILE_WIDTH, TILE_HEIGHT, ALT);
 				_autoAltButton.label.text = "ALT";
-			
+
 			case FULL:
-				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles), "assets/empty_tiles.png",
+					TILE_WIDTH, TILE_HEIGHT, OFF);
 				_autoAltButton.label.text = "OFF";
-			
+
 			case ALT:
-				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/full_tiles.png", TILE_WIDTH, TILE_HEIGHT, FULL);
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles), "assets/full_tiles.png",
+					TILE_WIDTH, TILE_HEIGHT, FULL);
 				_autoAltButton.label.text = "FULL";
-			
-			
+
 			case OFF:
-				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles),
-					"assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
+				_collisionMap.loadMapFromCSV(FlxStringUtil.arrayToCSV(_collisionMap.getData(true), _collisionMap.widthInTiles), "assets/auto_tiles.png",
+					TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_autoAltButton.label.text = "AUTO";
 		}
 	}
-	
+
 	function onReset():Void
 	{
 		switch (_collisionMap.auto)
@@ -204,20 +206,19 @@ class PlayState extends FlxState
 			case AUTO:
 				_collisionMap.loadMapFromCSV("assets/default_auto.txt", "assets/auto_tiles.png", TILE_WIDTH, TILE_HEIGHT, AUTO);
 				_player.setPosition(64, 220);
-				
+
 			case ALT:
 				_collisionMap.loadMapFromCSV("assets/default_alt.txt", "assets/alt_tiles.png", TILE_WIDTH, TILE_HEIGHT, ALT);
 				_player.setPosition(64, 128);
-				
+
 			case FULL:
 				_collisionMap.loadMapFromCSV("assets/default_auto.txt", "assets/full_tiles.png", TILE_WIDTH, TILE_HEIGHT, FULL);
 				_player.setPosition(64, 64);
-				
+
 			case OFF:
 				_collisionMap.loadMapFromCSV("assets/default_empty.txt", "assets/empty_tiles.png", TILE_WIDTH, TILE_HEIGHT, OFF);
 				_player.setPosition(64, 64);
 			default:
-				
 		}
 	}
 }

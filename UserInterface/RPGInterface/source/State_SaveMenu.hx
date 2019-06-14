@@ -1,5 +1,6 @@
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+
 using flixel.util.FlxStringUtil;
 
 #if haxe4
@@ -14,12 +15,12 @@ import haxe.xml.Fast as Access;
  */
 class State_SaveMenu extends FlxUIState
 {
-	override public function create() 
+	override public function create()
 	{
 		_xml_id = "state_save";
 		super.create();
 	}
-	
+
 	override public function getRequest(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Dynamic
 	{
 		var xml:Access;
@@ -41,7 +42,7 @@ class State_SaveMenu extends FlxUIState
 		}
 		return null;
 	}
-	
+
 	override public function getEvent(id:String, target:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		if (params != null)

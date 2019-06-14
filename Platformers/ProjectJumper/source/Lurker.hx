@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+
 /**
  * ...
  * @author David Bell
@@ -18,26 +19,26 @@ class Lurker extends EnemyTemplate
 	public static inline var JUMP_SPEED:Int = 60;
 	public static inline var BURNTIME:Int = 5;
 	public static inline var GUN_DELAY:Int = 1;
-	public static inline var BULLET_SPEED:Int =100;
-	
+	public static inline var BULLET_SPEED:Int = 100;
+
 	var _spawntimer:Float;
 	var _burntimer:Float;
 	var _playdeathsound:Bool;
 	var _bullets:FlxTypedGroup<Bullet>;
 	var _cooldown:Float;
-	
+
 	public function new(X:Float, Y:Float, ThePlayer:Player, Bullets:FlxTypedGroup<Bullet>)
 	{
 		super(X, Y, ThePlayer);
-		
+
 		_spawntimer = 0;
 		_burntimer = 0;
 		_playdeathsound = true;
 		_bullets = Bullets;
 		_cooldown = 0;
-		
+
 		loadGraphic("assets/art/lurkmonsta.png", true, 16, 17);
-		
+
 		animation.add("walking", [0, 1], 18, true);
 		animation.add("burning", [2, 3], 18, true);
 		animation.add("wrecked", [4, 5], 18, true);
@@ -51,7 +52,7 @@ class Lurker extends EnemyTemplate
 		offset.x = 3;
 		width = 10;
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		if (touching == FlxObject.DOWN)
@@ -62,28 +63,28 @@ class Lurker extends EnemyTemplate
 				_playdeathsound = false;
 			}
 		}
-		
+
 		// Animation
 		if ((velocity.x == 0) && (velocity.y == 0))
-		{ 
+		{
 			animation.play("idle");
 		}
 		else if (health < HEALTH)
-		{ 
+		{
 			if (velocity.y == 0)
-			{ 
+			{
 				animation.play("wrecked");
 			}
-			else 
+			else
 			{
 				animation.play("burning");
-			} 
+			}
 		}
-		else 
-		{ 
-			animation.play("walking"); 
+		else
+		{
+			animation.play("walking");
 		}
-		
+
 		if (health > 0)
 		{
 			if (velocity.y == 0)
@@ -94,24 +95,24 @@ class Lurker extends EnemyTemplate
 			{
 				acceleration.x = (_startx - x);
 			}
-			
+
 			var xdistance:Float = _player.x - x;
 			var ydistance:Float = _player.y - y;
 			var distancesquared:Float = xdistance * xdistance + ydistance * ydistance;
-			
+
 			if (distancesquared < 45000)
 			{
 				shoot(_player);
 			}
 		}
-		
+
 		if (health <= 0)
 		{
 			maxVelocity.y = JUMP_SPEED * 4;
 			acceleration.y = GRAVITY * 3;
 			velocity.x = 0;
 			_burntimer += elapsed;
-			
+
 			if (_burntimer >= BURNTIME)
 			{
 				super.kill();
@@ -120,23 +121,23 @@ class Lurker extends EnemyTemplate
 				visible = false;
 				acceleration.y = 0;
 			}
-			
+
 			_spawntimer += elapsed;
-			
+
 			if (_spawntimer >= SPAWNTIME)
 			{
 				reset(_startx, _starty);
 			}
 		}
-		
+
 		_cooldown += elapsed;
 		super.update(elapsed);
 	}
-	
-	override public function reset(X:Float, Y:Float):Void 
+
+	override public function reset(X:Float, Y:Float):Void
 	{
 		super.reset(X, Y);
-		
+
 		health = HEALTH;
 		_spawntimer = 0;
 		_burntimer = 0;
@@ -144,8 +145,8 @@ class Lurker extends EnemyTemplate
 		maxVelocity.y = JUMP_SPEED;
 		_playdeathsound = true;
 	}
-	
-	override public function hurt(Damage:Float):Void 
+
+	override public function hurt(Damage:Float):Void
 	{
 		if (x > _player.x)
 		{
@@ -155,18 +156,18 @@ class Lurker extends EnemyTemplate
 		{
 			velocity.x = -drag.x * 4;
 		}
-		
+
 		FlxSpriteUtil.flicker(this, 0.5);
 		FlxG.sound.play("assets/sounds/monhurt2" + Reg.SoundExtension, 1, false);
 		health -= 1;
 	}
-	
-	function shoot(P:Player):Void 
+
+	function shoot(P:Player):Void
 	{
 		// Bullet code will go here
 		var bulletX:Int = Math.floor(x);
 		var bulletY:Int = Math.floor(y + 4);
-		
+
 		if (_cooldown > GUN_DELAY)
 		{
 			var bullet = _bullets.getFirstAvailable();
@@ -175,7 +176,7 @@ class Lurker extends EnemyTemplate
 				bullet = new Bullet();
 				_bullets.add(bullet);
 			}
-			
+
 			if (P.x < x)
 			{
 				// nudge it a little to the side so it doesn't emerge from the middle of helmutguy
@@ -185,21 +186,21 @@ class Lurker extends EnemyTemplate
 			{
 				bulletX += Math.floor(width - 8);
 			}
-			
+
 			bullet.angleshoot(bulletX, bulletY, BULLET_SPEED, FlxPoint.get(P.x, P.y));
 			FlxG.sound.play("assets/sounds/badshoot" + Reg.SoundExtension, 1, false);
 			// reset the shot clock
 			_cooldown = 0;
 		}
 	}
-	
-	override public function kill():Void 
+
+	override public function kill():Void
 	{
 		if (!alive)
-		{ 
+		{
 			return;
 		}
-		
+
 		exists = true;
 		solid = true;
 		visible = true;

@@ -4,7 +4,6 @@ import flixel.addons.ui.interfaces.IFlxUIButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.U;
 import flixel.FlxG;
-
 #if haxe4
 import haxe.xml.Access;
 #else
@@ -18,8 +17,9 @@ import haxe.xml.Fast as Access;
 class SaveSlot extends FlxUI
 {
 	var ptr:IEventGetter;
+
 	public var valid:Bool;
-	
+
 	public function new(data:Access, ?_ptr:Dynamic)
 	{
 		super(null, _ptr);
@@ -43,27 +43,30 @@ class SaveSlot extends FlxUI
 		load(data);
 		name = U.xml_name(data.x);
 	}
-	
+
 	override public function getEvent(event:String, sender:IFlxUIWidget, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		super.getEvent(event, sender, data);
 		if (Std.is(data, String))
 		{
 			var str:String = cast(data, String);
-			switch (str) 
+			switch (str)
 			{
-				case "play": onPress();
-				case "play+": onPlus();
-				case "export": onExport();
-				case "import": onImport();
-				case "delete": onDel();
+				case "play":
+					onPress();
+				case "play+":
+					onPlus();
+				case "export":
+					onExport();
+				case "import":
+					onImport();
+				case "delete":
+					onDel();
 			}
 		}
 	}
-	
-	function init():Void
-	{
-	}
+
+	function init():Void {}
 
 	function onPlus():Void
 	{
@@ -80,15 +83,9 @@ class SaveSlot extends FlxUI
 		valid = false;
 	}
 
-	function onExport():Void
-	{
-	}
+	function onExport():Void {}
 
-	function onImport():Void
-	{
-	}
+	function onImport():Void {}
 
-	function onDel():Void
-	{
-	}
+	function onDel():Void {}
 }

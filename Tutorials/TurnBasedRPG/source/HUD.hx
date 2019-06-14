@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+
 using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
@@ -14,8 +15,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	var _txtMoney:FlxText;
 	var _sprHealth:FlxSprite;
 	var _sprMoney:FlxSprite;
-	
-	public function new() 
+
+	public function new()
 	{
 		super();
 		_sprBack = new FlxSprite().makeGraphic(FlxG.width, 20, FlxColor.BLACK);
@@ -24,8 +25,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtHealth.setBorderStyle(SHADOW, FlxColor.GRAY, 1, 1);
 		_txtMoney = new FlxText(0, 2, 0, "0", 8);
 		_txtMoney.setBorderStyle(SHADOW, FlxColor.GRAY, 1, 1);
-		_sprHealth = new FlxSprite(4, _txtHealth.y + (_txtHealth.height/2)  - 4, AssetPaths.health__png);
-		_sprMoney = new FlxSprite(FlxG.width - 12, _txtMoney.y + (_txtMoney.height/2)  - 4, AssetPaths.coin__png);
+		_sprHealth = new FlxSprite(4, _txtHealth.y + (_txtHealth.height / 2) - 4, AssetPaths.health__png);
+		_sprMoney = new FlxSprite(FlxG.width - 12, _txtMoney.y + (_txtMoney.height / 2) - 4, AssetPaths.coin__png);
 		_txtMoney.alignment = RIGHT;
 		_txtMoney.x = _sprMoney.x - _txtMoney.width - 4;
 		add(_sprBack);
@@ -33,14 +34,14 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		add(_sprMoney);
 		add(_txtHealth);
 		add(_txtMoney);
-		
+
 		// HUD elements shouldn't move with the camera
 		forEach(function(spr:FlxSprite)
 		{
 			spr.scrollFactor.set(0, 0);
 		});
 	}
-	
+
 	public function updateHUD(Health:Int = 0, Money:Int = 0):Void
 	{
 		_txtHealth.text = Health + " / 3";

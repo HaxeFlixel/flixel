@@ -17,17 +17,17 @@ class MosaicEffect
 	 * The instance of the actual shader class
 	 */
 	public var shader(default, null):MosaicShader;
-	
+
 	/**
 	 * The effect's strength on the x-axis.
 	 */
 	public var strengthX(default, null):Float = DEFAULT_STRENGTH;
-	
+
 	/**
 	 * The effect's strength on the y-axis.
 	 */
 	public var strengthY(default, null):Float = DEFAULT_STRENGTH;
-	
+
 	public function new():Void
 	{
 		shader = new MosaicShader();
@@ -37,7 +37,7 @@ class MosaicEffect
 		shader.uBlocksize = [strengthX, strengthY];
 		#end
 	}
-	
+
 	public function setStrength(strengthX:Float, strengthY:Float):Void
 	{
 		this.strengthX = strengthX;

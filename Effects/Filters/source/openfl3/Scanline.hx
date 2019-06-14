@@ -14,7 +14,7 @@ class Scanline extends Shader
 			else
 				gl_FragColor = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
 		}';
-	
+
 	public function new()
 	{
 		super();

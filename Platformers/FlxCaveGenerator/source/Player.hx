@@ -13,33 +13,33 @@ class Player extends FlxSprite
 	// I'd recommend checking that out for some ideas!
 	public function new(X:Int, Y:Int)
 	{
-		super(X,Y);
+		super(X, Y);
 		loadGraphic("assets/spaceman.png", true, 8);
-		
-		//bounding box tweaks
+
+		// bounding box tweaks
 		width = 6;
 		height = 7;
 		offset.x = 1;
 		offset.y = 1;
-		
-		//basic player physics
+
+		// basic player physics
 		var runSpeed:Int = 80;
 		drag.x = runSpeed * 8;
 		acceleration.y = 420;
 		maxVelocity.x = runSpeed;
 		maxVelocity.y = _jumpPower;
-		
-		//animations
+
+		// animations
 		animation.add("idle", [0]);
 		animation.add("run", [1, 2, 3, 0], 12);
 		animation.add("jump", [4]);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		// MOVEMENT
 		acceleration.x = 0;
-		
+
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
 			flipX = true;
@@ -50,12 +50,12 @@ class Player extends FlxSprite
 			flipX = false;
 			acceleration.x += drag.x;
 		}
-		
+
 		if (FlxG.keys.anyJustPressed([UP, W, SPACE]) && _isReadyToJump && velocity.y == 0)
 		{
 			velocity.y = -_jumpPower;
 		}
-		
+
 		// ANIMATION
 		if (velocity.y != 0)
 		{
@@ -69,7 +69,7 @@ class Player extends FlxSprite
 		{
 			animation.play("run");
 		}
-		
+
 		super.update(elapsed);
 	}
 }

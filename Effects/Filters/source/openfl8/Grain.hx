@@ -142,10 +142,8 @@ class Grain extends FlxShader
 			col = col+noise*grainamount;
 
 			gl_FragColor =  vec4(col,1.0);
-		}'
-	)
-
-	public function new() 
+		}')
+	public function new()
 	{
 		super();
 	}

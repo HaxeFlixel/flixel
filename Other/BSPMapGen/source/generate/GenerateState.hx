@@ -12,9 +12,9 @@ import play.PlayState;
 class GenerateState extends FlxState
 {
 	static inline var TILE_SIZE:Int = 16;
-	
+
 	public static var mapData:BitmapData;
-	
+
 	var rooms:Array<Rectangle>;
 	var hallways:Array<Rectangle>;
 	var leafs:Array<Leaf>;
@@ -26,19 +26,19 @@ class GenerateState extends FlxState
 	{
 		mapWidth = Std.int(FlxG.width / TILE_SIZE);
 		mapHeight = Std.int(FlxG.height / TILE_SIZE);
-		
+
 		// Create sprite to display map, will be scaled to fill screen
 		mapSprite = new FlxSprite(0, 0);
 		mapSprite.makeGraphic(mapWidth, mapHeight, FlxColor.BLACK);
 		mapSprite.scale.set(TILE_SIZE, TILE_SIZE);
 		mapSprite.screenCenter();
 		add(mapSprite);
-		
+
 		// Setup UI
 		var gutter:Int = 10;
 		add(new FlxButton(gutter, gutter, "Generate (G)", generateMap));
 		add(new FlxButton(gutter * 2 + 80, gutter, "Play (Space)", play));
-		
+
 		if (mapData == null)
 			generateMap();
 		else
@@ -64,7 +64,7 @@ class GenerateState extends FlxState
 		while (didSplit)
 		{
 			didSplit = false;
-			
+
 			for (leaf in leafs)
 			{
 				if (leaf.leftChild == null && leaf.rightChild == null) // If not split
@@ -100,7 +100,7 @@ class GenerateState extends FlxState
 				drawHalls(leaf.hallways);
 			}
 		}
-		
+
 		updateSprite();
 	}
 
@@ -110,7 +110,7 @@ class GenerateState extends FlxState
 		mapSprite.pixels = mapData.clone();
 		mapSprite.dirty = true;
 	}
-	
+
 	/**
 	 * Add each hall to the hall array, and draw the hall onto our mapData
 	 */
@@ -131,11 +131,11 @@ class GenerateState extends FlxState
 		rooms.push(roomRect);
 		mapData.fillRect(roomRect, FlxColor.WHITE);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		if (FlxG.keys.justReleased.G)
 		{
 			generateMap();
@@ -145,7 +145,7 @@ class GenerateState extends FlxState
 			play();
 		}
 	}
-	
+
 	function play():Void
 	{
 		FlxG.switchState(new PlayState());

@@ -8,7 +8,7 @@ class Leaf
 {
 	public static inline var MIN_SIZE = 6;
 	public static inline var MAX_SIZE = 24;
-	
+
 	public var x:Int;
 	public var y:Int;
 	public var width:Int;
@@ -18,7 +18,7 @@ class Leaf
 	public var rightChild:Leaf;
 	public var room:Rectangle;
 	public var hallways:Array<Rectangle>;
-	
+
 	public function new(x:Int, y:Int, width:Int, height:Int)
 	{
 		this.x = x;
@@ -119,14 +119,10 @@ class Leaf
 		else
 		{
 			// Room can be between 3x3 tiles to the leaf size - 2
-			var roomSize = new FlxPoint(
-				FlxG.random.float(3, width - 2),
-				FlxG.random.float(3, height - 2));
+			var roomSize = new FlxPoint(FlxG.random.float(3, width - 2), FlxG.random.float(3, height - 2));
 			// Place the room within leaf, but not against sides (would merge)
-			var roomPos = new FlxPoint(
-				FlxG.random.float(1, width - roomSize.x - 1),
-				FlxG.random.float(1, height - roomSize.y - 1));
-				
+			var roomPos = new FlxPoint(FlxG.random.float(1, width - roomSize.x - 1), FlxG.random.float(1, height - roomSize.y - 1));
+
 			room = new Rectangle(x + roomPos.x, y + roomPos.y, roomSize.x, roomSize.y);
 		}
 	}
@@ -136,12 +132,8 @@ class Leaf
 		// Connects 2 rooms together with hallways
 		hallways = [];
 
-		var point1 = FlxPoint.get(
-			FlxG.random.float(left.left + 1, left.right - 2),
-			FlxG.random.float(left.top + 1, left.bottom - 2));
-		var point2 = FlxPoint.get(
-			FlxG.random.float(right.left + 1, right.right - 2),
-			FlxG.random.float(right.top + 1, right.bottom - 2));
+		var point1 = FlxPoint.get(FlxG.random.float(left.left + 1, left.right - 2), FlxG.random.float(left.top + 1, left.bottom - 2));
+		var point2 = FlxPoint.get(FlxG.random.float(right.left + 1, right.right - 2), FlxG.random.float(right.top + 1, right.bottom - 2));
 
 		var w = point2.x - point1.x;
 		var h = point2.y - point1.y;

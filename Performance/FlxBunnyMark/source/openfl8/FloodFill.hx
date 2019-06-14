@@ -23,9 +23,7 @@ class FloodFill extends FlxShader
 			}
 
 			gl_FragColor = color;
-		}'
-	)
-
+		}')
 	public function new()
 	{
 		super();

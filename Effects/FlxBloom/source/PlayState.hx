@@ -15,22 +15,24 @@ class PlayState extends FlxState
 	 * Allows users to toggle the effect on and off with the space bar.
 	 */
 	var _enabled:Bool = true;
+
 	/**
 	 * How much light bloom to have - larger numbers = more
 	 */
 	var _bloom:Int = 10;
+
 	/**
 	 * Our helper sprite - basically a mini screen buffer (see below)
 	 */
 	var _fx:FlxSprite;
-	
+
 	/**
 	 * This is where everything gets set up for the game state
 	 */
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-		
+
 		#if !flash
 		FlxG.log.error("FlxBloom is only supported on Flash target for now.");
 		#else
@@ -39,11 +41,11 @@ class PlayState extends FlxState
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 - 20, Math.floor(FlxG.width / 2), "FlxBloom");
 		text.setFormat(null, 32, FlxColor.WHITE, CENTER);
 		add(text);
-		
+
 		text = new FlxText(FlxG.width / 4, FlxG.height / 2 + 20, Math.floor(FlxG.width / 2), "press space to toggle");
 		text.setFormat(null, 16, FlxColor.BLUE, CENTER);
 		add(text);
-		
+
 		// This is the sprite we're going to use to help with the light bloom effect
 		// First, we're going to initialize it to be a fraction of the screens size
 		_fx = new FlxSprite();
@@ -57,12 +59,12 @@ class PlayState extends FlxState
 		// Set blend mode to "screen" to make the blurred copy transparent and brightening
 		_fx.blend = BlendMode.SCREEN;
 		// Note that we do not add it to the game state!  It's just a helper, not a "real" sprite.
-		
+
 		// Then we scale the screen buffer down, so it draws a smaller version of itself
 		// into our tiny FX buffer, which is already scaled up.  The net result of this operation
 		// is a blurry image that we can render back over the screen buffer to create the bloom.
 		FlxG.camera.screen.scale.set(1 / _bloom, 1 / _bloom);
-		
+
 		// This is the particle emitter that spews things off the bottom of the screen.
 		// I'm not going to go over it in too much detail here, but basically we
 		// create the emitter, then we create 50 16x16 sprites and add them to it.
@@ -71,10 +73,16 @@ class PlayState extends FlxState
 		emitter.width = FlxG.width;
 		emitter.y = FlxG.height + 20;
 		emitter.acceleration.set(0, -40);
-		emitter.velocity.set( -20, -75, 20, -25);
+		emitter.velocity.set(-20, -75, 20, -25);
 		var particle:FlxParticle;
-		var colors:Array<Int> = [FlxColor.BLUE, (FlxColor.BLUE | FlxColor.GREEN), FlxColor.GREEN, (FlxColor.GREEN | FlxColor.RED), FlxColor.RED];
-		
+		var colors:Array<Int> = [
+			FlxColor.BLUE,
+			(FlxColor.BLUE | FlxColor.GREEN),
+			FlxColor.GREEN,
+			(FlxColor.GREEN | FlxColor.RED),
+			FlxColor.RED
+		];
+
 		for (i in 0...particles)
 		{
 			particle = new FlxParticle();
@@ -82,25 +90,25 @@ class PlayState extends FlxState
 			particle.exists = false;
 			emitter.add(particle);
 		}
-		
+
 		emitter.start(false, 0.1);
 		add(emitter);
 		#end
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			_enabled = !_enabled;
 		}
-		
+
 		super.update(elapsed);
 	}
-	
+
 	/**
 	 * This is where we do the actual drawing logic for the game state
-	 */ 
+	 */
 	override public function draw():Void
 	{
 		// This draws all the game objects
@@ -108,10 +116,10 @@ class PlayState extends FlxState
 		#if flash
 		if (_enabled)
 		{
-			//The actual blur process is quite simple now.
-			//First we draw the contents of the screen onto the tiny FX buffer:
+			// The actual blur process is quite simple now.
+			// First we draw the contents of the screen onto the tiny FX buffer:
 			_fx.stamp(FlxG.camera.screen);
-			//Then we draw the scaled-up contents of the FX buffer back onto the screen:
+			// Then we draw the scaled-up contents of the FX buffer back onto the screen:
 			_fx.draw();
 		}
 		#end

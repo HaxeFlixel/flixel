@@ -1,4 +1,5 @@
 package;
+
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.FlxG;
@@ -13,19 +14,19 @@ class State_Demo2 extends FlxUIState
 	{
 		super();
 	}
-	
-	override public function create() 
+
+	override public function create()
 	{
 		_xml_id = "state_menu_2";
 		super.create();
 	}
-	
-	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void 
+
+	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		super.getEvent(id, sender, data, params);
 		switch (id)
 		{
-			case FlxUITypedButton.CLICK_EVENT: 
+			case FlxUITypedButton.CLICK_EVENT:
 				var str:String = (params != null && params.length >= 1) ? cast params[0] : "";
 				if (str == "no_defaults")
 				{

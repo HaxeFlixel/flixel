@@ -11,7 +11,6 @@ import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.util.FlxColor;
 import openfl.Assets;
-
 #if (openfl >= "4.0.0")
 import openfl.utils.AssetType;
 #end
@@ -25,29 +24,29 @@ class MenuState extends FlxUIState
 	var music_volume:Float = 0.5;
 	var sfx_volume:Float = 0.5;
 	var loop_count:Int = 0;
-	
+
 	/**
-	 * Function that is called up when to state is created to set it up. 
+	 * Function that is called up when to state is created to set it up.
 	 */
 	override public function create():Void
 	{
 		_xml_id = "menu";
 		super.create();
-		
+
 		var butt_music:FlxUIButton = cast _ui.getAsset("butt_music");
 		butt_music.color = FlxColor.RED;
-		
+
 		var butt_pause:FlxUIButton = cast _ui.getAsset("butt_pause");
 		enablePause(false);
 	}
-	
+
 	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		if (destroyed) 
-		{ 
+		if (destroyed)
+		{
 			return;
 		}
-		
+
 		if (name == FlxUICheckBox.CLICK_EVENT)
 		{
 			var check:FlxUICheckBox = cast sender;
@@ -85,18 +84,18 @@ class MenuState extends FlxUIState
 				}
 			}
 		}
-		else if (name == FlxUITypedButton.CLICK_EVENT && Std.is(sender,FlxUIButton))
+		else if (name == FlxUITypedButton.CLICK_EVENT && Std.is(sender, FlxUIButton))
 		{
 			var fuib:FlxUIButton = cast sender;
 			var label = fuib.label.text;
-			
-			var sound_id:String = "assets/sounds/"+label;
+
+			var sound_id:String = "assets/sounds/" + label;
 			#if flash
-				sound_id += ".mp3";
+			sound_id += ".mp3";
 			#else
-				sound_id += ".ogg";
+			sound_id += ".ogg";
 			#end
-			
+
 			if (label == "pause music")
 			{
 				if (FlxG.sound.music != null && FlxG.sound.music.exists)
@@ -136,7 +135,7 @@ class MenuState extends FlxUIState
 			}
 		}
 	}
-	
+
 	function enablePause(b:Bool):Void
 	{
 		var butt_pause:FlxUIButton = cast _ui.getAsset("butt_pause");
@@ -147,12 +146,12 @@ class MenuState extends FlxUIState
 			butt_pause.color = FlxColor.fromRGB(128, 192, 255);
 		}
 		else
-		{ 
+		{
 			butt_pause.active = false;
 			butt_pause.color = FlxColor.fromRGB(128, 128, 128);
 		}
 	}
-	
+
 	function musicComplete():Void
 	{
 		if (!loop_music)

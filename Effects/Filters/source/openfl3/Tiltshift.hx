@@ -82,7 +82,7 @@ class Tiltshift extends Shader
 			gl_FragColor = blurred;
 		}';
 
-	public function new() 
+	public function new()
 	{
 		super();
 	}

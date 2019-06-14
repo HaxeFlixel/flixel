@@ -9,22 +9,22 @@ class ColorSwapEffect
 	 * The instance of the actual shader class
 	 */
 	public var shader(default, null):ColorSwapShader;
-	
+
 	/**
 	 * The color to replace with another
 	 */
 	public var colorToReplace(default, set):FlxColor;
-	
+
 	/**
 	 * The desired new color
 	 */
 	public var newColor(default, set):FlxColor;
-	
+
 	/**
 	 * Activates/Deactivates the shader
 	 */
 	public var isShaderActive(default, set):Bool;
-	
+
 	public function new():Void
 	{
 		shader = new ColorSwapShader();
@@ -32,14 +32,14 @@ class ColorSwapEffect
 		shader.colorOld.value = [];
 		shader.colorNew.value = [];
 	}
-	
+
 	function set_isShaderActive(value:Bool):Bool
 	{
 		isShaderActive = value;
 		shader.shaderIsActive.value[0] = value;
 		return value;
 	}
-	
+
 	function set_colorToReplace(color:FlxColor):FlxColor
 	{
 		colorToReplace = color;
@@ -47,18 +47,18 @@ class ColorSwapEffect
 		shader.colorOld.value[0] = color.red;
 		shader.colorOld.value[1] = color.green;
 		shader.colorOld.value[2] = color.blue;
-		
+
 		return color;
 	}
-	
+
 	function set_newColor(color:FlxColor):FlxColor
 	{
 		newColor = color;
-		
+
 		shader.colorNew.value[0] = color.red;
 		shader.colorNew.value[1] = color.green;
 		shader.colorNew.value[2] = color.blue;
-		
+
 		return color;
 	}
 }
@@ -110,9 +110,7 @@ class ColorSwapShader extends FlxShader
 			}
 
 			gl_FragColor = pixel;
-		}'
-	)
-	
+		}')
 	public function new()
 	{
 		super();

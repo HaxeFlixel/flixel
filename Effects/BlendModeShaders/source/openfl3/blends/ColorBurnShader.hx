@@ -32,7 +32,7 @@ class ColorBurnShader extends Shader
 			vec4 base = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
 			gl_FragColor = blendColorBurn(base, uBlendColor, uBlendColor[3]);
 		}';
-	
+
 	public function new()
 	{
 		super();

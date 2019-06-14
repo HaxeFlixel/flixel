@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import nape.geom.Vec2;
 import nape.phys.Body;
+
 using logic.PhysUtil;
 
 class PlayerController extends FlxBasic
@@ -21,8 +22,7 @@ class PlayerController extends FlxBasic
 	var maxJumps:Int;
 	var keyMap:PlayerControls;
 
-	public function new(playerBody:Body, levelBody:Body, keyMap:PlayerControls,
-		impulseGround:Float = 500, impulseAir:Float = 200, impulseJump:Float = 200)
+	public function new(playerBody:Body, levelBody:Body, keyMap:PlayerControls, impulseGround:Float = 500, impulseAir:Float = 200, impulseJump:Float = 200)
 	{
 		super();
 		this.playerBody = playerBody;
@@ -37,7 +37,7 @@ class PlayerController extends FlxBasic
 	{
 		var impulseVec = new Vec2();
 		onGround = playerBody.onTop();
-        
+
 		var impulse = if (onGround) impulseGround else impulseAir;
 		var totalX = 0.0;
 		if (FlxG.keys.anyPressed(keyMap.leftKeys))

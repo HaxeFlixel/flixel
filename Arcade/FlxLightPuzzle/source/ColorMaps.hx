@@ -20,7 +20,7 @@ class ColorMaps
 		Color.PURPLE => FlxColor.PURPLE,
 		Color.WHITE => FlxColor.BLACK
 	];
-	
+
 	// display color is different for RGB mapping than RYB mapping
 	public static var rgbMap:Map<Color, FlxColor> = [
 		Color.MIRROR => 0xFFAAAAAA,
@@ -32,7 +32,7 @@ class ColorMaps
 		Color.PURPLE => FlxColor.MAGENTA,
 		Color.WHITE => FlxColor.WHITE
 	];
-	
+
 	public static var cmyMap:Map<Color, FlxColor> = [
 		Color.MIRROR => 0xFFAAAAAA,
 		Color.RED => FlxColor.MAGENTA,
@@ -43,7 +43,7 @@ class ColorMaps
 		Color.PURPLE => FlxColor.BLUE,
 		Color.WHITE => FlxColor.BLACK
 	];
-	
+
 	// the mapping that is actually used
 	public static var defaultColorMap:Map<Color, FlxColor> = rybMap;
 }

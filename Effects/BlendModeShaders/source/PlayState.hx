@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
-
 #if shaders_supported
 #if (openfl >= "8.0.0")
 import openfl8.blends.*;
@@ -26,10 +25,10 @@ import openfl.filters.ShaderFilter;
 #else
 import flixel.text.FlxText;
 #end
+
 @:enum abstract LogoColor(FlxColor) to FlxColor
 {
 	static var LIST(default, null) = [RED, BLUE, YELLOW, CYAN, GREEN];
-
 	var RED = 0xff3366;
 	var BLUE = 0x3333ff;
 	var YELLOW = 0xffcc33;
@@ -72,17 +71,17 @@ class PlayState extends FlxState
 		var logo = new FlxSprite(0, 0, AssetPaths.logo__png);
 		logo.screenCenter();
 		add(logo);
-		
+
 		wiggleEffect = new WiggleEffect();
 		wiggleEffect.effectType = WiggleEffectType.DREAMY;
 		wiggleEffect.waveAmplitude = 0.2;
 		wiggleEffect.waveFrequency = 7;
 		wiggleEffect.waveSpeed = 1;
 		backdrop.shader = wiggleEffect.shader;
-		
+
 		var colorSwap = new ColorSwapEffect();
 		logo.shader = colorSwap.shader;
-		
+
 		new FlxTimer().start(0.2, function(timer)
 		{
 			colorSwap.colorToReplace = LogoColor.getRandom();
@@ -129,7 +128,7 @@ class PlayState extends FlxState
 		var effect = new BlendModeEffect(effects[blendEffect], color);
 		FlxG.camera.setFilters([new ShaderFilter(cast effect.shader)]);
 	}
-	
+
 	function createShutterEffect():Void
 	{
 		var shutter = new ShutterEffect();
@@ -138,7 +137,7 @@ class PlayState extends FlxState
 		shutterCanvas.shader = shutter.shader;
 		add(shutterCanvas);
 
-		FlxTween.tween(shutter, { radius: 450 }, 1.5, { ease: FlxEase.quintOut, startDelay: 0.2 });
+		FlxTween.tween(shutter, {radius: 450}, 1.5, {ease: FlxEase.quintOut, startDelay: 0.2});
 	}
 
 	override public function update(elapsed:Float):Void

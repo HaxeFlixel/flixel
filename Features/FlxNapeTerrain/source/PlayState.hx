@@ -32,33 +32,33 @@ class PlayState extends FlxState
 	var terrain:Terrain;
 	var bomb:Sprite;
 	var hand:PivotJoint;
-	
+
 	override public function create():Void
 	{
 		init();
-		
+
 		super.create();
 	}
-	
-	function init():Void 
+
+	function init():Void
 	{
 		FlxNapeSpace.init();
-		
+
 		FlxNapeSpace.space.gravity = new Vec2(0, 600);
-		
+
 		FlxNapeSpace.createWalls();
-		
+
 		FlxNapeSpace.drawDebug = true;
-		
+
 		hand = new PivotJoint(FlxNapeSpace.space.world, null, Vec2.weak(), Vec2.weak());
 		hand.active = false;
 		hand.stiff = false;
 		hand.maxForce = 1e5;
 		hand.space = FlxNapeSpace.space;
-		
+
 		var w:Int = FlxG.width;
 		var h:Int = FlxG.height;
-		
+
 		// Initialise terrain bitmap.
 		#if flash
 		var bit = new BitmapData(w, h, true, 0x00000000);
@@ -66,20 +66,20 @@ class PlayState extends FlxState
 		#else
 		var bit = Assets.getBitmapData("assets/terrain.png");
 		#end
-		
+
 		// Create initial terrain state, invalidating the whole screen.
 		terrain = new Terrain(bit, 30, 5);
 		terrain.invalidate(new AABB(0, 0, w, h), this);
-		
+
 		add(terrain.sprite);
-		
+
 		// Create bomb sprite for destruction
 		bomb = new Sprite();
 		bomb.graphics.beginFill(0xffffff, 1);
 		bomb.graphics.drawCircle(0, 0, 40);
 	}
-	
-	function explosion(pos:Vec2) 
+
+	function explosion(pos:Vec2)
 	{
 		var region = AABB.fromRect(bomb.getBounds(bomb));
 		// Erase bomb graphic out of terrain.
@@ -92,7 +92,7 @@ class PlayState extends FlxState
 		var centerX:Int = Std.int(pos.x);
 		var centerY:Int = Std.int(pos.y);
 		var dx:Int, dy:Int;
-		
+
 		for (x in 0...diameter)
 		{
 			for (y in 0...diameter)
@@ -107,24 +107,24 @@ class PlayState extends FlxState
 			}
 		}
 		#end
-		
+
 		// Invalidate region of terrain effected.
 		region.x += pos.x;
 		region.y += pos.y;
 		terrain.invalidate(region, this);
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		if (FlxG.mouse.justPressed)
 		{
 			var mp = Vec2.get(FlxG.mouse.x, FlxG.mouse.y);
-			
+
 			bodyList = FlxNapeSpace.space.bodiesUnderPoint(mp, null, bodyList);
-			
-			for (body in bodyList) 
+
+			for (body in bodyList)
 			{
-				if (body.isDynamic()) 
+				if (body.isDynamic())
 				{
 					hand.body2 = body;
 					hand.anchor2 = body.worldPointToLocal(mp, true);
@@ -132,44 +132,44 @@ class PlayState extends FlxState
 					break;
 				}
 			}
-	
-			if (bodyList.empty()) 
+
+			if (bodyList.empty())
 			{
 				createObject(mp);
 			}
-			else if (!hand.active) 
+			else if (!hand.active)
 			{
 				explosion(mp);
 			}
-		
+
 			// recycle nodes.
 			bodyList.clear();
-			
+
 			mp.dispose();
 		}
 		else if (FlxG.mouse.justReleased)
 		{
 			hand.active = false;
 		}
-		
-		if (hand.active) 
+
+		if (hand.active)
 		{
 			hand.anchor1.setxy(FlxG.mouse.x, FlxG.mouse.y);
 			hand.body2.angularVel *= 0.9;
 		}
-	
+
 		super.update(elapsed);
 	}
-	
-	function createObject(pos:Vec2) 
+
+	function createObject(pos:Vec2)
 	{
 		var sprite = new FlxNapeSprite(pos.x, pos.y, null, false);
-		
-		if (FlxG.random.bool(33)) 
+
+		if (FlxG.random.bool(33))
 			sprite.createCircularBody(10 + Math.random() * 20);
 		else
 			sprite.createRectangularBody(10 + Math.random() * 20, 10 + Math.random() * 20);
-		
+
 		sprite.body.space = FlxNapeSpace.space;
 		add(sprite);
 	}

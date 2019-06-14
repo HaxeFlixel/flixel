@@ -15,11 +15,11 @@ class Bullet extends Entity
 		offset.y = 0.5 * (28 - 9);
 		kill();
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		angle = Entity.angleInDegrees(velocity);
 		if (!isOnScreen())
 		{
@@ -27,10 +27,11 @@ class Bullet extends Entity
 			kill();
 		}
 		#if !js
-		else ScreenState.grid.applyExplosiveForce(position, 0.25 * Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y), 80);
+		else
+			ScreenState.grid.applyExplosiveForce(position, 0.25 * Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y), 80);
 		#end
 	}
-	
+
 	override public function reset(X:Float, Y:Float):Void
 	{
 		cooldownTimer.cancel();

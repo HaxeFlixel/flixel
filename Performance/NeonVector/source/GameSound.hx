@@ -19,7 +19,7 @@ class GameSound
 		FlxG.sound.volume = 0.5;
 		#end
 	}
-	
+
 	public static function randomSound(Sounds:Array<FlxSoundAsset>, VolumeMultiplier:Float = 1.0):Void
 	{
 		#if (flash || html5)

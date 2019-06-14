@@ -12,7 +12,6 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
-
 #if flash
 import flash.display.Loader;
 import flash.display.LoaderInfo;
@@ -142,27 +141,22 @@ class PlayState extends FlxState
 	function _showFileDialog():Void
 	{
 		#if flash
-			var fr:FileReference = new FileReference();
-			fr.addEventListener(Event.SELECT, _onSelect, false, 0, true);
-			fr.addEventListener(Event.CANCEL, _onCancel, false, 0, true);
-			var filters:Array<FileFilter> = new Array<FileFilter>();
-			filters.push(new FileFilter("PNG Files", "*.png"));
-			filters.push(new FileFilter("JPEG Files", "*.jpg;*.jpeg"));
-			fr.browse();
+		var fr:FileReference = new FileReference();
+		fr.addEventListener(Event.SELECT, _onSelect, false, 0, true);
+		fr.addEventListener(Event.CANCEL, _onCancel, false, 0, true);
+		var filters:Array<FileFilter> = new Array<FileFilter>();
+		filters.push(new FileFilter("PNG Files", "*.png"));
+		filters.push(new FileFilter("JPEG Files", "*.jpg;*.jpeg"));
+		fr.browse();
 		#elseif sys
-			var filters: FILEFILTERS =
-			{
-				count: 2,
-				descriptions: ["PNG files", "JPEG files"],
-				extensions: ["*.png","*.jpg;*.jpeg"]
-			};
-			var result:Array<String> = Dialogs.openFile(
-				"Select a file please!",
-				"Please select one or more files, so we can see if this method works",
-				filters
-			);
+		var filters:FILEFILTERS = {
+			count: 2,
+			descriptions: ["PNG files", "JPEG files"],
+			extensions: ["*.png", "*.jpg;*.jpeg"]
+		};
+		var result:Array<String> = Dialogs.openFile("Select a file please!", "Please select one or more files, so we can see if this method works", filters);
 
-			_onSelect(result);
+		_onSelect(result);
 		#end
 	}
 
@@ -192,19 +186,13 @@ class PlayState extends FlxState
 		var bmp:Bitmap = cast(loaderInfo.content, Bitmap);
 		_showImage(bmp.bitmapData);
 	}
-
 	#elseif sys
 	function _onSelect(arr:Array<String>):Void
 	{
 		if (arr != null && arr.length > 0)
 		{
 			_text.text = arr[0];
-			var img =
-			#if lime_legacy
-				BitmapData.load(arr[0]);
-			#else
-				BitmapData.fromFile(arr[0]);
-			#end
+			var img = #if lime_legacy BitmapData.load(arr[0]); #else BitmapData.fromFile(arr[0]); #end
 
 			if (img != null)
 			{

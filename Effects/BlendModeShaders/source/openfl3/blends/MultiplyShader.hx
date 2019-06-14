@@ -22,7 +22,7 @@ class MultiplyShader extends Shader
 			vec4 base = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
 			gl_FragColor = blendMultiply(base, uBlendColor, uBlendColor.a);
 		}';
-	
+
 	public function new()
 	{
 		super();

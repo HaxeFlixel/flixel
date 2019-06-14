@@ -8,20 +8,20 @@ class Background extends FlxStrip
 {
 	public var cols:Int;
 	public var rows:Int;
-	
+
 	public function new()
 	{
-		super(-50, -50, "assets/grass.png"); 
-		
+		super(-50, -50, "assets/grass.png");
+
 		width = FlxG.width + 100;
 		height = FlxG.height + 100;
-		
+
 		cols = Std.int(width / frame.sourceSize.x);
 		rows = Std.int(height / frame.sourceSize.y);
-		
+
 		build();
 	}
-	
+
 	function build():Void
 	{
 		var sw:Float = width;
@@ -30,11 +30,11 @@ class Background extends FlxStrip
 		var uh:Float = sh / frame.sourceSize.y;
 		var kx:Float, ky:Float;
 		var ci:Int, ci2:Int, ri:Int;
-		
+
 		vertices.splice(0, vertices.length);
 		uvtData.splice(0, uvtData.length);
 		indices.splice(0, indices.length);
-		
+
 		for (j in 0...rows + 1)
 		{
 			ri = j * (cols + 1) * 2;
@@ -43,9 +43,9 @@ class Background extends FlxStrip
 			{
 				ci = ri + i * 2;
 				kx = i / cols;
-				vertices[ci] = sw * kx; 
-				vertices[ci + 1] = sh * ky; 
-				uvtData[ci] = uw * kx; 
+				vertices[ci] = sw * kx;
+				vertices[ci + 1] = sh * ky;
+				uvtData[ci] = uw * kx;
 				uvtData[ci + 1] = uh * ky;
 			}
 		}
@@ -66,7 +66,7 @@ class Background extends FlxStrip
 			}
 		}
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		var t:Float = Lib.getTimer() / 1000.0;
@@ -87,7 +87,7 @@ class Background extends FlxStrip
 				vertices[ci + 1] = sh * ky;
 			}
 		}
-		
+
 		super.update(elapsed);
 	}
 }

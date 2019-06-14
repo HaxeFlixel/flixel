@@ -4,12 +4,12 @@ import flixel.FlxSprite;
 
 class PBullet extends FlxSprite
 {
-	public function new() 
+	public function new()
 	{
 		super(0, 0, AssetPaths.bullet__png);
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		if (!isOnScreen())

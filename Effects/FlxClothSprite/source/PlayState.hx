@@ -19,9 +19,9 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-		
+
 		super.create();
-		
+
 		// This show how to load graphics with animation, set pinnedSide, setMesh and gravity
 		flag = new FlxClothSprite(0, 0, "assets/images/flag.png");
 		flag.pinnedSide = FlxObject.LEFT;
@@ -29,7 +29,7 @@ class PlayState extends FlxState
 		flag.maxVelocity.set(200, 200);
 		flag.meshVelocity.y = 40;
 		add(flag);
-		
+
 		// This show how to set mesh scale, custom pinned points and set iterations
 		flag2 = new FlxClothSprite(FlxG.width / 2 - 105, 10, "assets/images/flag.png");
 		flag2.pinnedSide = FlxObject.NONE;
@@ -39,35 +39,35 @@ class PlayState extends FlxState
 		flag2.maxVelocity.set(200, 200);
 		flag2.meshVelocity.y = 40;
 		add(flag2);
-		
+
 		// This show how to load a simple graphic sprite with crossing constraints
 		rope = new FlxClothSprite(FlxG.width / 2 + 200, 10, "assets/images/rope.png", 2, 10, FlxObject.UP, true);
 		rope.maxVelocity.set(40, 40);
 		rope.meshVelocity.y = 40;
 		add(rope);
-		
+
 		rope2 = new FlxClothSprite(FlxG.width / 2 - 200, 10, "assets/images/rope.png", 2, 10, FlxObject.UP, true);
 		rope2.maxVelocity.set(40, 40);
 		rope2.meshVelocity.y = 40;
 		add(rope2);
-		
+
 		var instruction = new FlxText(0, FlxG.height - 20, FlxG.width, "Click -> Apply wind");
 		instruction.alignment = CENTER;
 		add(instruction);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		var halfHeight = flag.frameHeight / 2;
-		
+
 		// Apply a volocity to the object based on mouse position
 		flag.velocity.x = FlxG.mouse.x - flag.x;
 		flag.velocity.y = FlxG.mouse.y - flag.y - halfHeight;
-		
+
 		// Move the flag in the direction of mouse
 		flag.x += (FlxG.mouse.x - flag.x);
 		flag.y += (FlxG.mouse.y - flag.y - halfHeight);
-		
+
 		// Apply a random wind
 		if (FlxG.mouse.pressed)
 		{
@@ -83,7 +83,7 @@ class PlayState extends FlxState
 			rope.meshVelocity.x = 0;
 			rope2.meshVelocity.x = 0;
 		}
-		
+
 		super.update(elapsed);
 	}
 }

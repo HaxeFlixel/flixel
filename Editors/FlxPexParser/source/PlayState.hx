@@ -13,14 +13,13 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-		
+
 		emitter = new FlxEmitter(FlxG.width / 2, FlxG.height / 2);
 		initEmitter();
 		emitter.start(false, 0.01);
 		add(emitter);
 
-		var instructions = new FlxText(0, 10, 0,
-			"Drag left mouse to move the fire\nHold right mouse to increase scale");
+		var instructions = new FlxText(0, 10, 0, "Drag left mouse to move the fire\nHold right mouse to increase scale");
 		instructions.alignment = CENTER;
 		instructions.screenCenter(X);
 		add(instructions);

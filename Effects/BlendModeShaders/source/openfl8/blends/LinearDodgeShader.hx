@@ -33,9 +33,7 @@ class LinearDodgeShader extends FlxShader
 		{
 			vec4 base = texture2D(bitmap, openfl_TextureCoordv);
 			gl_FragColor = blendLinearDodge(base, uBlendColor, uBlendColor[3]);
-		}'
-	)
-	
+		}')
 	public function new()
 	{
 		super();

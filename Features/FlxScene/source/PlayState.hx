@@ -5,8 +5,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.ui.FlxButton;
-
-// Make sure that classes that are only referenced via 
+// Make sure that classes that are only referenced via
 // xml are actually compiled by importing them
 import entities.Monster;
 
@@ -33,13 +32,13 @@ class PlayState extends FlxState
 		_scene.spawn(_monsterGroup, "monsters");
 
 		/* Alternatively:
-		
-		add all instances of all layers to specified FlxGroup:
-		_scene.spawn(_myGroup);
 
-		simply add all instances of all layers to stage:
-		_scene.spawn();
-		*/
+			add all instances of all layers to specified FlxGroup:
+			_scene.spawn(_myGroup);
+
+			simply add all instances of all layers to stage:
+			_scene.spawn();
+		 */
 
 		// References (by id)
 
@@ -52,11 +51,11 @@ class PlayState extends FlxState
 
 		// Constants (Int, Bool, Float, String)
 		/*
-		<const id="lives" type="Int" value="3" />
-		<const id="precise" type="Float" value="60.2313" />
-		<const id="raining" type="Bool" value="false" />
-		<const id="boss_name" type="String" value="Hades" />
-		*/
+			<const id="lives" type="Int" value="3" />
+			<const id="precise" type="Float" value="60.2313" />
+			<const id="raining" type="Bool" value="false" />
+			<const id="boss_name" type="String" value="Hades" />
+		 */
 
 		var lives:Int = _scene.const("lives");
 		var raining:Bool = _scene.const("raining");

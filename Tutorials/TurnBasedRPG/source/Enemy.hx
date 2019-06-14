@@ -6,20 +6,24 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 import flixel.system.FlxSound;
+
 using flixel.util.FlxSpriteUtil;
 
 class Enemy extends FlxSprite
 {
 	public var speed:Float = 80;
 	public var etype(default, null):Int;
+
 	var _brain:FSM;
 	var _idleTmr:Float;
 	var _moveDir:Float;
+
 	public var seesPlayer:Bool = false;
 	public var playerPos(default, null):FlxPoint;
+
 	var _sndStep:FlxSound;
-	
-	public function new(X:Float=0, Y:Float=0, EType:Int) 
+
+	public function new(X:Float = 0, Y:Float = 0, EType:Int)
 	{
 		super(X, Y);
 		etype = EType;
@@ -37,26 +41,26 @@ class Enemy extends FlxSprite
 		_brain = new FSM(idle);
 		_idleTmr = 0;
 		playerPos = FlxPoint.get();
-		
-		_sndStep = FlxG.sound.load(AssetPaths.step__wav,.4);
-		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width *.6);
+
+		_sndStep = FlxG.sound.load(AssetPaths.step__wav, .4);
+		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		if (this.isFlickering())
 			return;
-		
+
 		_brain.update();
 		super.update(elapsed);
-		
+
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 		{
 			_sndStep.setPosition(x + frameWidth / 2, y + height);
 			_sndStep.play();
 		}
 	}
-	
+
 	public function idle():Void
 	{
 		if (seesPlayer)
@@ -73,18 +77,16 @@ class Enemy extends FlxSprite
 			else
 			{
 				_moveDir = FlxG.random.int(0, 8) * 45;
-				
+
 				velocity.set(speed * 0.5, 0);
 				velocity.rotate(FlxPoint.weak(), _moveDir);
-				
 			}
-			_idleTmr = FlxG.random.int(1, 4);			
+			_idleTmr = FlxG.random.int(1, 4);
 		}
 		else
 			_idleTmr -= FlxG.elapsed;
-		
 	}
-	
+
 	public function chase():Void
 	{
 		if (!seesPlayer)
@@ -96,12 +98,11 @@ class Enemy extends FlxSprite
 			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
 		}
 	}
-	
-	override public function draw():Void 
+
+	override public function draw():Void
 	{
 		if ((velocity.x != 0 || velocity.y != 0) && touching != FlxObject.NONE)
 		{
-			
 			if (Math.abs(velocity.x) > Math.abs(velocity.y))
 			{
 				if (velocity.x < 0)
@@ -116,23 +117,23 @@ class Enemy extends FlxSprite
 				else
 					facing = FlxObject.DOWN;
 			}
-			
+
 			switch (facing)
 			{
 				case FlxObject.LEFT, FlxObject.RIGHT:
 					animation.play("lr");
-					
+
 				case FlxObject.UP:
 					animation.play("u");
-					
+
 				case FlxObject.DOWN:
 					animation.play("d");
 			}
 		}
-			
+
 		super.draw();
 	}
-	
+
 	public function changeEnemy(EType:Int):Void
 	{
 		if (etype != EType)

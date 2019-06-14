@@ -51,7 +51,7 @@ class HardMixShader extends Shader
 
 			gl_FragColor = blendHardMix(blend, res, uBlendColor[3]);
 		}';
-	
+
 	public function new()
 	{
 		super();

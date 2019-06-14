@@ -17,25 +17,25 @@ import nape.geom.Vec2;
 class PlayState extends FlxState
 {
 	public static var cardJoint:DistanceJoint;
-	
+
 	var fan:FlxSprite;
-	
+
 	override public function create():Void
 	{
 		FlxNapeSpace.init();
-		
+
 		// A table as a background
 		add(new FlxSprite(0, 0, "assets/Table.jpg"));
-		
+
 		// We need the FlxMouseEventManager plugin for sprite-mouse-interaction
 		// Important to set this up before createCards()
 		FlxG.plugins.add(new FlxMouseEventManager());
-		
+
 		// Creating the card group and the cards
 		add(createCards());
 
 		FlxNapeSpace.createWalls();
-		
+
 		fan = new FlxSprite(340, -280, "assets/Fan.png");
 		fan.antialiasing = true;
 		// Let the fan spin at 10 degrees per second
@@ -55,7 +55,7 @@ class PlayState extends FlxState
 
 			for (i in 0...amount)
 			{
-				// Choose a random card from the first 52 cards on the spritesheet 
+				// Choose a random card from the first 52 cards on the spritesheet
 				// - excluding those who have already been picked!
 				var pick = FlxG.random.int(0, 51, pickedCards);
 				pickedCards.push(pick);
@@ -79,20 +79,20 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		if (cardJoint != null)
 			cardJoint.anchor1 = Vec2.weak(FlxG.mouse.x, FlxG.mouse.y);
-		
+
 		// Remove the joint again if the mouse is not down
 		if (FlxG.mouse.justReleased)
 		{
 			if (cardJoint == null)
 				return;
-			
+
 			cardJoint.space = null;
 			cardJoint = null;
 		}
-		
+
 		// Keyboard hotkey to reset the state
 		if (FlxG.keys.pressed.R)
 			FlxG.resetState();

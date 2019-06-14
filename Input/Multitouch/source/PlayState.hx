@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxColor;
+
 using flixel.util.FlxSpriteUtil;
 
 class PlayState extends FlxState
@@ -11,11 +12,11 @@ class PlayState extends FlxState
 	var _activeSprites:Map<Int, TouchSprite>;
 	var _inactiveSprites:Array<TouchSprite>;
 	var _touchSprite:TouchSprite;
-	
+
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		
+
 		_activeSprites = new Map<Int, TouchSprite>();
 		_inactiveSprites = new Array<TouchSprite>();
 	}
@@ -24,11 +25,11 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		for (touch in FlxG.touches.list)
 		{
 			_touchSprite = null;
-			
+
 			if (touch.justPressed && !_activeSprites.exists(touch.touchPointID))
 			{
 				if (_inactiveSprites.length > 0)
@@ -41,7 +42,7 @@ class PlayState extends FlxState
 					_touchSprite = new TouchSprite();
 					add(_touchSprite);
 				}
-				
+
 				_touchSprite.color = FlxG.random.color();
 				_activeSprites.set(touch.touchPointID, _touchSprite);
 			}
@@ -57,7 +58,7 @@ class PlayState extends FlxState
 			{
 				_touchSprite = _activeSprites.get(touch.touchPointID);
 			}
-			
+
 			if (_touchSprite != null)
 			{
 				_touchSprite.setPosition(touch.x - (_touchSprite.width / 2), touch.y - (_touchSprite.height / 2));

@@ -18,10 +18,10 @@ class Main extends Sprite
 			startFullscreen = _save.data.fullscreen;
 		}
 		#end
-		
+
 		super();
 		addChild(new FlxGame(320, 240, MenuState, 1, 60, 60, false, startFullscreen));
-		
+
 		if (_save.data.volume != null)
 		{
 			FlxG.sound.volume = _save.data.volume;

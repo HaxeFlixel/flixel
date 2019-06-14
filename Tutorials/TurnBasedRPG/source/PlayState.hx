@@ -8,7 +8,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+
 using flixel.util.FlxSpriteUtil;
+
 #if mobile
 import flixel.ui.FlxVirtualPad;
 #end
@@ -29,7 +31,7 @@ class PlayState extends FlxState
 	var _won:Bool;
 	var _paused:Bool;
 	var _sndCoin:FlxSound;
-	
+
 	#if mobile
 	public static var virtualPad:FlxVirtualPad;
 	#end
@@ -39,46 +41,46 @@ class PlayState extends FlxState
 		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
-		
+
 		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.follow();
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
-		
+
 		_grpCoins = new FlxTypedGroup<Coin>();
 		add(_grpCoins);
-		
+
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
-		
+
 		_player = new Player();
-		
+
 		_map.loadEntities(placeEntities, "entities");
-		
+
 		add(_player);
-		
+
 		FlxG.camera.follow(_player, TOPDOWN, 1);
-		
+
 		_hud = new HUD();
 		add(_hud);
-		
+
 		_combatHud = new CombatHUD();
 		add(_combatHud);
-		
+
 		_sndCoin = FlxG.sound.load(AssetPaths.coin__wav);
-		
+
 		#if mobile
-		virtualPad = new FlxVirtualPad(FULL, NONE);		
+		virtualPad = new FlxVirtualPad(FULL, NONE);
 		add(virtualPad);
 		#end
-		
+
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
-		
+
 		super.create();
 	}
-	
+
 	function placeEntities(entityName:String, entityData:Xml):Void
 	{
 		var x:Int = Std.parseInt(entityData.get("x"));
@@ -106,7 +108,7 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
+
 		if (!_inCombat)
 		{
 			FlxG.collide(_player, _mWalls);
@@ -136,7 +138,7 @@ class PlayState extends FlxState
 						FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
 					}
 				}
-				else 
+				else
 				{
 					_combatHud.e.flicker();
 				}
@@ -149,12 +151,12 @@ class PlayState extends FlxState
 			}
 		}
 	}
-	
-	function doneFadeOut():Void 
+
+	function doneFadeOut():Void
 	{
 		FlxG.switchState(new GameOverState(_won, _money));
 	}
-	
+
 	function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 		if (P.alive && P.exists && E.alive && E.exists && !E.isFlickering())
@@ -162,7 +164,7 @@ class PlayState extends FlxState
 			startCombat(E);
 		}
 	}
-	
+
 	function startCombat(E:Enemy):Void
 	{
 		_inCombat = true;
@@ -173,7 +175,7 @@ class PlayState extends FlxState
 		virtualPad.visible = false;
 		#end
 	}
-	
+
 	function checkEnemyVision(e:Enemy):Void
 	{
 		if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
@@ -182,9 +184,9 @@ class PlayState extends FlxState
 			e.playerPos.copyFrom(_player.getMidpoint());
 		}
 		else
-			e.seesPlayer = false;		
+			e.seesPlayer = false;
 	}
-	
+
 	function playerTouchCoin(P:Player, C:Coin):Void
 	{
 		if (P.alive && P.exists && C.alive && C.exists)

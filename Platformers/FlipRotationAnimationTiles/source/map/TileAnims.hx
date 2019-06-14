@@ -2,14 +2,20 @@ package map;
 
 import flixel.addons.tile.FlxTileSpecial;
 import openfl.Assets;
-
 #if haxe4
 import haxe.xml.Access;
 #else
 import haxe.xml.Fast as Access;
 #end
 
-typedef AnimData = { name:String, speed:Float, randomizeSpeed:Float, frames:Array<Int>, ?framesData:Array<AnimParams> };
+typedef AnimData =
+{
+	name:String,
+	speed:Float,
+	randomizeSpeed:Float,
+	frames:Array<Int>,
+	?framesData:Array<AnimParams>
+};
 
 /**
  * Load the tiles animations from the *.tanim file
@@ -25,14 +31,14 @@ class TileAnims
 	 */
 	public static function getAnimations(filePath:String):Map<Int, Array<AnimData>>
 	{
-		//load the xml file
+		// load the xml file
 		var source = new Access(Xml.parse(Assets.getText(filePath)));
 		source = source.node.animations;
-		
+
 		// parse the file
 		var anims:Map<Int, Array<AnimData>> = new Map();
 		var node:Access;
-		
+
 		var startTileID:Int = -1;
 		var name:String;
 		var speed:Float = 0;
@@ -61,26 +67,24 @@ class TileAnims
 					{
 						randomizeSpeed = Std.parseFloat(animation.att.randomizeSpeed);
 					}
-					var data:AnimData =
-					{
+					var data:AnimData = {
 						name: name,
 						speed: Std.parseFloat(animation.att.speed),
 						randomizeSpeed: randomizeSpeed,
 						frames: new Array<Int>(),
-						framesData: new Array<AnimParams>() 
+						framesData: new Array<AnimParams>()
 					};
 					for (frame in animation.nodes.frame)
 					{
 						data.frames.push(Std.parseInt(frame.att.id) + firstGID);
 						if (frame.has.flipX || frame.has.flipY || frame.has.rotation)
 						{
-							var params:AnimParams =
-							{
+							var params:AnimParams = {
 								flipX: false,
 								flipY: false,
 								rotate: FlxTileSpecial.ROTATE_0
 							};
-							
+
 							if (frame.has.flipX && frame.att.flipX == "true")
 								params.flipX = true;
 							if (frame.has.flipY && frame.att.flipY == "true")
@@ -99,7 +103,7 @@ class TileAnims
 										params.rotate = FlxTileSpecial.ROTATE_0;
 								}
 							}
-							
+
 							data.framesData.push(params);
 						}
 						else
@@ -107,14 +111,14 @@ class TileAnims
 							data.framesData.push(null);
 						}
 					}
-					
+
 					animsData.push(data);
 				}
-				
+
 				anims.set(startTileID, animsData);
 			}
 		}
-		
+
 		return anims;
 	}
 }

@@ -13,7 +13,7 @@ class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 	public function new(numSprites:Int = 50)
 	{
 		super();
-		
+
 		for (i in 0...numSprites)
 		{
 			var sprite = new FlxSprite(FlxG.random.float(0, FlxG.width), FlxG.random.float(0, FlxG.height));
@@ -21,11 +21,11 @@ class MySpriteGroup extends FlxTypedGroup<FlxSprite>
 			add(sprite);
 		}
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		for (sprite in members)
 		{
 			if (sprite.x < 0)

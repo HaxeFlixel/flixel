@@ -82,10 +82,8 @@ class Tiltshift extends FlxShader
 		 
 			// return the final blurred color
 			gl_FragColor = blurred;
-		}'
-	)
-
-	public function new() 
+		}')
+	public function new()
 	{
 		super();
 	}

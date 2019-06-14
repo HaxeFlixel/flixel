@@ -2,32 +2,33 @@ package openfl3.effects;
 
 import flixel.FlxG;
 import openfl.display.Shader;
- 
+
 class ShutterEffect
 {
 	public static inline var SHUTTER_TARGET_FLXSPRITE:Int = 0;
 	public static inline var SHUTTER_TARGET_FLXCAMERA:Int = 1;
-	
+
 	public var shutterTargetMode(default, set):Int = 0;
-	
+
 	/**
 	 * The instance of the actual shader class
 	 */
 	public var shader(default, null):ShutterShader;
-	
+
 	/**
 	 * Size of the circle or "shutter"
 	 */
 	public var radius(default, set):Float;
-	
+
 	/**
 	 * Center point of the "shutter"
 	 */
 	public var shutterCenterX(default, set):Float;
+
 	public var shutterCenterY(default, set):Float;
-	
+
 	public var isActive(default, set):Bool;
-	
+
 	public function new():Void
 	{
 		shader = new ShutterShader();
@@ -38,41 +39,41 @@ class ShutterEffect
 		shutterTargetMode = SHUTTER_TARGET_FLXSPRITE;
 		radius = 0;
 	}
-	
+
 	function setResolution():Void
 	{
 		shader.uResolution[0] = FlxG.width;
 		shader.uResolution[1] = FlxG.height;
 	}
-	
+
 	function set_shutterTargetMode(v:Int):Int
-	{	
+	{
 		shutterTargetMode = v;
 		shader.shutterTargetMode = shutterTargetMode;
 		return v;
 	}
-	
+
 	function set_isActive(v:Bool):Bool
 	{
 		isActive = v;
 		shader.shaderIsActive = isActive;
 		return v;
 	}
-	
+
 	function set_radius(v:Float):Float
 	{
 		radius = (v <= 0.0 ? 0.0 : v);
 		shader.uCircleRadius = radius;
 		return v;
 	}
-	
+
 	function set_shutterCenterX(v:Float):Float
 	{
 		shutterCenterX = v;
 		shader.centerPtX = v;
 		return v;
 	}
-	
+
 	function set_shutterCenterY(v:Float):Float
 	{
 		shutterCenterY = v;
@@ -145,7 +146,7 @@ class ShutterShader extends Shader
 				}
 			}
 		}';
-	
+
 	public function new()
 	{
 		super();

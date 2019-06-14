@@ -10,16 +10,16 @@ typedef BlendModeShader =
 class BlendModeEffect
 {
 	public var shader(default, null):BlendModeShader;
-	
+
 	@:isVar
 	public var color(default, set):FlxColor;
-	
+
 	public function new(shader:BlendModeShader, color:FlxColor):Void
 	{
 		this.shader = shader;
 		this.color = color;
 	}
-	
+
 	function set_color(color:FlxColor):FlxColor
 	{
 		shader.uBlendColor[0] = color.redFloat;

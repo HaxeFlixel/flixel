@@ -8,28 +8,28 @@ import flixel.text.FlxText;
 class MenuState extends FlxState
 {
 	var spineSprite:FlxSpine;
-	
+
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		
+
 		spineSprite = new SpineBoyTest(FlxSpine.readSkeletonData("spineboy", "spineboy", "assets", 0.6), 0.5 * FlxG.width, FlxG.height);
 		spineSprite.antialiasing = true;
 		add(spineSprite);
-		
+
 		var instructions = new FlxText(0, 0, 250, "Space: Toggle Debug Display\nMove: Arrows / WASD\nLeft mouse: Jump", 12);
 		instructions.ignoreDrawDebug = true;
 		add(instructions);
-		
+
 		super.create();
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		// toggle debug display
 		if (FlxG.keys.justPressed.SPACE)
 			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
-		
+
 		// movement
 		if (FlxG.keys.anyPressed([W, UP]))
 		{
@@ -49,7 +49,7 @@ class MenuState extends FlxState
 			spineSprite.x -= 500 * elapsed;
 			spineSprite.skeleton.flipX = true;
 		}
-		
+
 		super.update(elapsed);
 	}
 }

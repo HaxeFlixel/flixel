@@ -30,7 +30,7 @@ class LinearDodgeShader extends Shader
 			vec4 base = texture2D(${Shader.uSampler}, ${Shader.vTexCoord});
 			gl_FragColor = blendLinearDodge(base, uBlendColor, uBlendColor[3]);
 		}';
-	
+
 	public function new()
 	{
 		super();

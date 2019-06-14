@@ -10,22 +10,22 @@ class Reg
 	 * The current total score.
 	 */
 	static public var score:Int = 0;
-	
+
 	/**
 	 * High score storage.
 	 */
 	static public var highScore:Int = 0;
-	
+
 	/**
 	 * A reference to the active playstate. Lets you call Reg.PS globally to access the playstate.
 	 */
 	static public var PS:PlayState;
-	
+
 	/**
 	 * Used for saving and loading high scores.
 	 */
 	static public var save:FlxSave;
-	
+
 	/**
 	 * Just a 2px by 2px transparent piece of "dust".
 	 */
@@ -35,12 +35,12 @@ class Reg
 			dustMoteData = new BitmapData(2, 2, true, 0x88FFFFFF);
 		return dustMoteData;
 	}
-	
+
 	static var dustMoteData:BitmapData;
-	
+
 	/**
 	 * Draws the bounce panels. Useful for mobile devices with weird resolutions.
-	 * 
+	 *
 	 * @param	Height	The height of the panel to draw.
 	 * @return	A BitmapData object representing the paddle. Cached for the second paddle to save time.
 	 */
@@ -48,9 +48,9 @@ class Reg
 	{
 		if (_bitmapData != null)
 			return _bitmapData;
-		
+
 		_bitmapData = new BitmapData(8, Height, false, GREY_MED);
-		
+
 		_rect = new Rectangle(4, 0, 4, Height);
 		_bitmapData.fillRect(_rect, GREY_LIGHT);
 		_rect = new Rectangle(0, 1, 1, Height - 2);
@@ -69,15 +69,14 @@ class Reg
 		_bitmapData.fillRect(_rect, WHITE);
 		_rect.y = Height - 1;
 		_bitmapData.fillRect(_rect, WHITE);
-		
+
 		return _bitmapData;
 	}
-	
+
 	// This is all stuff used for drawing the paddles.
-	
 	static var _bitmapData:BitmapData;
 	static var _rect:Rectangle;
-	
+
 	inline static var WHITE:Int = 0xffFFFFFF;
 	inline static var GREY_LIGHT:Int = 0xffB0B0BF;
 	inline static var GREY_MED:Int = 0xff646A7D;

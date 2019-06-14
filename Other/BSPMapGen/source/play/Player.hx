@@ -6,22 +6,22 @@ import flixel.FlxSprite;
 class Player extends FlxSprite
 {
 	static inline var SPEED:Int = 100;
-	
-	public function new(x:Float, y:Float) 
+
+	public function new(x:Float, y:Float)
 	{
 		super(x, y, "assets/images/player.png");
 		pixelPerfectRender = false;
-		
-		// let's decrease the hitbox size so it's less 
+
+		// let's decrease the hitbox size so it's less
 		// frustrating to move through the narrow hallways
 		setSize(12, 12);
 		centerOffsets();
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		if (FlxG.keys.anyPressed([A, LEFT]))
 		{
 			velocity.x = -SPEED;

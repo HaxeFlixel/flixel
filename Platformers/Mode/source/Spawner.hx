@@ -16,7 +16,7 @@ class Spawner extends FlxSprite
 	var _gibs:FlxEmitter;
 	var _player:Player;
 	var _open:Bool;
-	
+
 	public function new(X:Int, Y:Int, Gibs:FlxEmitter, Bots:FlxTypedGroup<Enemy>, BotBullets:FlxTypedGroup<EnemyBullet>, BotGibs:FlxEmitter, ThePlayer:Player)
 	{
 		super(X, Y);
@@ -34,7 +34,7 @@ class Spawner extends FlxSprite
 		animation.add("close", [4, 3, 2, 1, 0], 40, false);
 		animation.add("dead", [6]);
 	}
-	
+
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -44,12 +44,12 @@ class Spawner extends FlxSprite
 		_gibs = null;
 		_player = null;
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		_timer += elapsed;
 		var limit:Int = 20;
-		
+
 		if (isOnScreen())
 		{
 			limit = 4;
@@ -75,31 +75,31 @@ class Spawner extends FlxSprite
 				_open = false;
 			}
 		}
-		
+
 		super.update(elapsed);
 	}
-	
+
 	override public function hurt(Damage:Float):Void
 	{
 		FlxG.sound.play(FlxAssets.getSound("assets/sounds/hit"));
 		FlxSpriteUtil.flicker(this, 0.2, 0.02, true);
 		Reg.score += 50;
-		
+
 		super.hurt(Damage);
 	}
-	
+
 	override public function kill():Void
 	{
 		if (!alive)
 		{
 			return;
 		}
-		
+
 		FlxG.sound.play(FlxAssets.getSound("assets/sounds/asplode"));
 		FlxG.sound.play(FlxAssets.getSound("assets/sounds/menu_hit_2"));
-		
+
 		super.kill();
-		
+
 		active = false;
 		exists = true;
 		solid = false;
@@ -109,15 +109,15 @@ class Spawner extends FlxSprite
 		FlxG.timeScale = 0.35;
 		makeBot();
 		_gibs.focusOn(this);
-		_gibs.start(true,3);
+		_gibs.start(true, 3);
 		Reg.score += 1000;
 	}
-	
+
 	function makeBot():Void
 	{
 		_bots.recycle(Enemy.new).init(Math.floor(x + width / 2), Math.floor(y + height / 2), _botBullets, _botGibs, _player);
 	}
-	
+
 	function turnOffSlowMo():Void
 	{
 		FlxG.timeScale = 1.0;

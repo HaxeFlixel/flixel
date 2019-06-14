@@ -18,35 +18,35 @@ class WiggleEffect
 	public var waveSpeed(default, set):Float = 0;
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
-	
+
 	public function new():Void {}
-	
+
 	public function update(elapsed:Float):Void
 	{
 		shader.uTime += elapsed;
 	}
-	
+
 	function set_effectType(v:WiggleEffectType):WiggleEffectType
 	{
 		effectType = v;
 		shader.effectType = WiggleEffectType.getConstructors().indexOf(Std.string(v));
 		return v;
 	}
-	
+
 	function set_waveSpeed(v:Float):Float
 	{
 		waveSpeed = v;
 		shader.uSpeed = waveSpeed;
 		return v;
 	}
-	
+
 	function set_waveFrequency(v:Float):Float
 	{
 		waveFrequency = v;
 		shader.uFrequency = waveFrequency;
 		return v;
 	}
-	
+
 	function set_waveAmplitude(v:Float):Float
 	{
 		waveAmplitude = v;
@@ -121,7 +121,7 @@ class WiggleShader extends Shader
 			vec2 uv = sineWave(${Shader.vTexCoord});
 			gl_FragColor = texture2D(${Shader.uSampler}, uv);
 		}';
-	
+
 	public function new()
 	{
 		super();

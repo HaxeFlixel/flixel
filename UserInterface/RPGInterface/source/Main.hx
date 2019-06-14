@@ -6,7 +6,7 @@ import openfl.display.Sprite;
 class Main extends Sprite
 {
 	public static var tongue:FireTongueEx;
-	
+
 	public function new()
 	{
 		super();

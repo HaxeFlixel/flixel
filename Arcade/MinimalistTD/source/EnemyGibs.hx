@@ -12,25 +12,25 @@ class EnemyGibs extends FlxEmitter
 {
 	static inline var SPEED:Int = 10;
 	static inline var SIZE:Int = 10;
-	
+
 	/**
 	 * Creates a FlxEmitter with pre-defined particle size, speed, color, inversion, and so forth.
 	 */
 	public function new()
 	{
 		super(0, 0, SIZE);
-		
+
 		velocity.set(-SPEED, -SPEED, SPEED, SPEED);
 		lifespan.set(1, 1);
-		
+
 		#if flash
 		blend = BlendMode.INVERT;
 		#end
-		
+
 		for (i in 0...SIZE)
 		{
 			var p = new FlxParticle();
-			
+
 			var color = FlxColor.BLACK;
 			#if flash
 			if (FlxG.random.bool())
@@ -40,10 +40,10 @@ class EnemyGibs extends FlxEmitter
 			p.makeGraphic(2, 2, FlxColor.BLACK);
 			add(p);
 		}
-		
+
 		Reg.PS.emitters.add(this);
 	}
-	
+
 	/**
 	 * Explode this emitter at a given X and Y.
 	 */

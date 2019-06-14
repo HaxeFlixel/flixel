@@ -10,19 +10,19 @@ class State_Title extends FlxUIState
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = 0xff131c1b;
-		
+
 		if (Main.tongue == null)
 		{
 			Main.tongue = new FireTongueEx();
 			Main.tongue.init("en-US");
 			FlxUIState.static_tongue = Main.tongue;
 		}
-		
+
 		_xml_id = "state_title";
-		
+
 		super.create();
 	}
-	
+
 	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
 		switch (name)
@@ -54,7 +54,7 @@ class State_Title extends FlxUIState
 				}
 		}
 	}
-	
+
 	function reloadState():Void
 	{
 		FlxG.switchState(new State_Title());

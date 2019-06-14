@@ -9,12 +9,13 @@ import flixel.system.FlxSound;
 class Player extends FlxSprite
 {
 	public var speed:Float = 200;
+
 	var _sndStep:FlxSound;
-	
-	public function new(X:Float = 0, Y:Float = 0) 
+
+	public function new(X:Float = 0, Y:Float = 0)
 	{
 		super(X, Y);
-		
+
 		loadGraphic(AssetPaths.player__png, true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -24,17 +25,17 @@ class Player extends FlxSprite
 		drag.x = drag.y = 1600;
 		setSize(8, 14);
 		offset.set(4, 2);
-		
+
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
 	}
-	
+
 	function movement():Void
 	{
 		var _up:Bool = false;
 		var _down:Bool = false;
 		var _left:Bool = false;
 		var _right:Bool = false;
-		
+
 		#if FLX_KEYBOARD
 		_up = FlxG.keys.anyPressed([UP, W]);
 		_down = FlxG.keys.anyPressed([DOWN, S]);
@@ -45,16 +46,16 @@ class Player extends FlxSprite
 		var virtualPad = PlayState.virtualPad;
 		_up = _up || virtualPad.buttonUp.pressed;
 		_down = _down || virtualPad.buttonDown.pressed;
-		_left  = _left || virtualPad.buttonLeft.pressed;
+		_left = _left || virtualPad.buttonLeft.pressed;
 		_right = _right || virtualPad.buttonRight.pressed;
 		#end
-		
+
 		if (_up && _down)
 			_up = _down = false;
 		if (_left && _right)
 			_left = _right = false;
-		
-		if ( _up || _down || _left || _right)
+
+		if (_up || _down || _left || _right)
 		{
 			var mA:Float = 0;
 			if (_up)
@@ -64,7 +65,7 @@ class Player extends FlxSprite
 					mA -= 45;
 				else if (_right)
 					mA += 45;
-					
+
 				facing = FlxObject.UP;
 			}
 			else if (_down)
@@ -74,7 +75,7 @@ class Player extends FlxSprite
 					mA += 45;
 				else if (_right)
 					mA -= 45;
-				
+
 				facing = FlxObject.DOWN;
 			}
 			else if (_left)
@@ -87,22 +88,22 @@ class Player extends FlxSprite
 				mA = 0;
 				facing = FlxObject.RIGHT;
 			}
-			
+
 			velocity.set(speed, 0);
 			velocity.rotate(FlxPoint.weak(0, 0), mA);
-			
+
 			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 			{
 				_sndStep.play();
-				
+
 				switch (facing)
 				{
 					case FlxObject.LEFT, FlxObject.RIGHT:
 						animation.play("lr");
-						
+
 					case FlxObject.UP:
 						animation.play("u");
-						
+
 					case FlxObject.DOWN:
 						animation.play("d");
 				}
@@ -114,8 +115,8 @@ class Player extends FlxSprite
 			animation.curAnim.pause();
 		}
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		movement();
 		super.update(elapsed);

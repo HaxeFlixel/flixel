@@ -1,4 +1,5 @@
 package entities;
+
 import flash.geom.Rectangle;
 import flixel.addons.display.FlxExtendedSprite;
 import flixel.FlxObject;
@@ -18,18 +19,18 @@ class Character extends FlxExtendedSprite
 {
 	public var collisionMap:FlxRect;
 	public var maxBounds:FlxRect;
-	
+
 	public var controllable:Bool = false;
-	
+
 	public var anim:String;
-	
+
 	public var name:String = "";
-	
+
 	public function new(Name:String, X:Float = 0, Y:Float = 0, ?JsonPath:String, ?SimpleGraphic:Dynamic)
 	{
 		super(X, Y, SimpleGraphic);
 		name = Name;
-		
+
 		parseJson(JsonPath);
 
 		facing = FlxObject.DOWN;
@@ -37,13 +38,13 @@ class Character extends FlxExtendedSprite
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		if (controllable)
 		{
 			acceleration.set(0, 0);
-			
+
 			if (FlxG.keys.anyPressed([RIGHT, D]))
 			{
 				acceleration.x = drag.x;
@@ -54,7 +55,7 @@ class Character extends FlxExtendedSprite
 				acceleration.x = -drag.x;
 				facing = FlxObject.LEFT;
 			}
-			
+
 			if (FlxG.keys.anyPressed([UP, W]))
 			{
 				acceleration.y = -drag.y;
@@ -70,22 +71,22 @@ class Character extends FlxExtendedSprite
 		resolveAnimation();
 		super.update(elapsed);
 	}
-	
+
 	public function setBoundsMap(boundsMap:FlxRect)
 	{
 		maxBounds = boundsMap;
 	}
-	
+
 	/**
-	* Check bounds of map
-	*/
+	 * Check bounds of map
+	 */
 	function checkBoundsMap():Void
 	{
 		if (maxBounds == null)
 		{
 			return;
 		}
-		
+
 		if (x + collisionMap.x < maxBounds.x)
 		{
 			x = maxBounds.x - collisionMap.x;
@@ -108,53 +109,55 @@ class Character extends FlxExtendedSprite
 			acceleration.y = 0;
 		}
 	}
-	
+
 	function resolveAnimation()
 	{
 		anim = "idle_";
-		
+
 		if (velocity.x != 0 || velocity.y != 0)
 		{
 			anim = "walking_";
 			if (velocity.x > 0)
 			{
 				facing = FlxObject.RIGHT;
-			} else if (velocity.x < 0)
+			}
+			else if (velocity.x < 0)
 			{
 				facing = FlxObject.LEFT;
 			}
 			if (velocity.y > 0)
 			{
 				facing = FlxObject.DOWN;
-			} else if (velocity.y < 0)
+			}
+			else if (velocity.y < 0)
 			{
 				facing = FlxObject.UP;
-			}			
+			}
 		}
 		switch (facing)
 		{
 			case FlxObject.UP:
 				anim += "up";
-				
+
 			case FlxObject.DOWN:
 				anim += "down";
-				
+
 			case FlxObject.LEFT:
 				anim += "left";
-				
+
 			case FlxObject.RIGHT:
 				anim += "right";
-				
+
 			default:
 				anim += "down";
-		}			
-		
+		}
+
 		if (animation.name != anim)
 		{
 			animation.play(anim);
 		}
 	}
-	
+
 	function parseJson(file:String)
 	{
 		var filePath:Path = new Path(file);
@@ -163,20 +166,20 @@ class Character extends FlxExtendedSprite
 		{
 			throw 'The file {$file} doesn\'t exist!';
 		}
-		
+
 		var json = Json.parse(fileStr);
-		
+
 		// sprite
 		var texture:String = filePath.dir + "/" + json.sprite.texture;
 		var frameWidth:Int = Std.int(json.sprite.framewidth);
 		var frameHeight:Int = Std.int(json.sprite.frameheight);
 		this.loadGraphic(texture, true, frameWidth, frameHeight);
-		
+
 		// velocity
 		var maxX:Float = json.velocity.max_x;
 		var maxY:Float = json.velocity.max_y;
 		this.maxVelocity.set(maxX, maxY);
-		
+
 		// collision
 		var x:Float = json.collision.x;
 		var y:Float = json.collision.y;
@@ -185,7 +188,7 @@ class Character extends FlxExtendedSprite
 		this.offset.set(x, y);
 		this.width = w;
 		this.height = h;
-		
+
 		// collision_map
 		x = json.collision_map.x;
 		y = json.collision_map.y;
@@ -198,7 +201,7 @@ class Character extends FlxExtendedSprite
 		var v_idl:Int = json.animations.velocities.idle;
 		var v_wal:Int = json.animations.velocities.walking;
 		var v_run:Int = json.animations.velocities.running;
-		
+
 		var tmp:Int;
 		for (dir in Reflect.fields(json.animations.frames))
 		{
@@ -210,16 +213,16 @@ class Character extends FlxExtendedSprite
 				{
 					case "def":
 						tmp = v_def;
-						
+
 					case "idle":
 						tmp = v_idl;
-						
+
 					case "walking":
 						tmp = v_wal;
-						
+
 					case "running":
 						tmp = v_run;
-						
+
 					default:
 						tmp = v_def;
 				}

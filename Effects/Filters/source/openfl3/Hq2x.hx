@@ -25,8 +25,8 @@ class Hq2x extends Shader
 
 			gl_FragColor = avg / 9.0;
 		}';
-	
-	public function new() 
+
+	public function new()
 	{
 		super();
 	}

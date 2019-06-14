@@ -5,6 +5,7 @@ import flixel.addons.nape.FlxNapeTilemap;
 import flixel.system.FlxAssets;
 import flixel.math.FlxPoint;
 import nape.geom.Vec2;
+
 using logic.PhysUtil;
 using Lambda;
 
@@ -29,7 +30,7 @@ class CustomNapeTilemap extends FlxNapeTilemap
 		placeCustomPolygon(TileType.SLOPE_NW, vertices);
 		vertices[2] = Vec2.get(16, 16);
 		placeCustomPolygon(TileType.SLOPE_NE, vertices);
-        
+
 		for (ty in 0...heightInTiles)
 		{
 			var prevOneWay = false;

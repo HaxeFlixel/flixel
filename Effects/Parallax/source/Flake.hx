@@ -9,8 +9,8 @@ class Flake extends FlxSprite
 {
 	var _level:Int = 0;
 	var _initialized:Bool = false;
-	
-	public function new(Level:Int = 0) 
+
+	public function new(Level:Int = 0)
 	{
 		super();
 		_level = Level;
@@ -20,27 +20,27 @@ class Flake extends FlxSprite
 		revive();
 		_initialized = true;
 	}
-	
-	override public function revive():Void 
+
+	override public function revive():Void
 	{
 		super.revive();
 		alpha = 1;
 		if (_initialized)
 		{
 			x = FlxG.random.int(0, FlxG.width * 4 * _level);
-			y = FlxG.random.int( -5, -10);
+			y = FlxG.random.int(-5, -10);
 		}
 		else
 		{
 			x = FlxG.random.int(0, FlxG.width * 4 * _level);
-			y = FlxG.random.int( -10, FlxG.height);
+			y = FlxG.random.int(-10, FlxG.height);
 		}
 		scrollFactor.set(.7 + (_level * .1), 0);
-		velocity.y = FlxG.random.int(20, 40) * ((_level+1) * .2);
-		velocity.x = FlxG.random.int( -25, -50) * ((_level+1) * .1);
+		velocity.y = FlxG.random.int(20, 40) * ((_level + 1) * .2);
+		velocity.x = FlxG.random.int(-25, -50) * ((_level + 1) * .1);
 	}
-	
-	override public function update(elapsed:Float):Void 
+
+	override public function update(elapsed:Float):Void
 	{
 		if (velocity.y == 0)
 			alpha -= elapsed * .5;

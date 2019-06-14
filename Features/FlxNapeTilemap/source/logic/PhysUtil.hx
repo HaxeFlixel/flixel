@@ -17,8 +17,7 @@ class PhysUtil
 	{
 		for (contact in thing.arbiters)
 		{
-			if ((surface == null || contact.body1 == thing || contact.body2 == thing)
-				&& contact.type == ArbiterType.COLLISION)
+			if ((surface == null || contact.body1 == thing || contact.body2 == thing) && contact.type == ArbiterType.COLLISION)
 			{
 				var normal:Float = contact.collisionArbiter.normal.angle;
 				if (contact.body1 == thing)
@@ -30,8 +29,7 @@ class PhysUtil
 		return false;
 	}
 
-	public static function setOneWay(tilemap:FlxNapeTilemap, index:Int, vertices:Array<Vec2>,
-		?mat:Material)
+	public static function setOneWay(tilemap:FlxNapeTilemap, index:Int, vertices:Array<Vec2>, ?mat:Material)
 	{
 		tilemap.body.space = null;
 		var polygon:Polygon;
@@ -46,8 +44,7 @@ class PhysUtil
 		tilemap.body.space = FlxNapeSpace.space;
 	}
 
-	public static function setOneWayLong(tilemap:FlxNapeTilemap, startPos:FlxPoint, length:Int,
-		?mat:Material)
+	public static function setOneWayLong(tilemap:FlxNapeTilemap, startPos:FlxPoint, length:Int, ?mat:Material)
 	{
 		tilemap.body.space = null;
 		var vertices = [

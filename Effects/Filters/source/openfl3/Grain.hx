@@ -142,7 +142,7 @@ class Grain extends Shader
 			gl_FragColor =  vec4(col,1.0);
 		}';
 
-	public function new() 
+	public function new()
 	{
 		super();
 	}

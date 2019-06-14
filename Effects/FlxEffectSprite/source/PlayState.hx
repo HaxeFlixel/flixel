@@ -19,30 +19,30 @@ class PlayState extends FlxState
 {
 	var _sprite:FlxSprite;
 	var _effectSprite:FlxEffectSprite;
-	
+
 	var _rainbow:FlxRainbowEffect;
 	var _outline:FlxOutlineEffect;
 	var _wave:FlxWaveEffect;
 	var _glitch:FlxGlitchEffect;
 	var _trail:FlxTrailEffect;
 	var _shake:FlxShakeEffect;
-	
+
 	var _tween:FlxTween;
-	
+
 	override public function create():Void
 	{
 		super.create();
-		
+
 		// Target Sprite
 		_sprite = new FlxSprite();
 		_sprite.loadGraphic("assets/flags.png", true, 140, 140);
 		_sprite.animation.add("anim", [0, 1, 2, 3], 3, true);
 		_sprite.animation.play("anim");
 		_sprite.screenCenter();
-		
+
 		// Effect Sprite
 		add(_effectSprite = new FlxEffectSprite(_sprite));
-		
+
 		// Effects
 		_rainbow = new FlxRainbowEffect(0.5);
 		_outline = new FlxOutlineEffect(FlxColor.RED, 8);
@@ -50,19 +50,16 @@ class PlayState extends FlxState
 		_glitch = new FlxGlitchEffect(10, 2, 0.1);
 		_trail = new FlxTrailEffect(_effectSprite, 10, 0.5, 8);
 		_shake = new FlxShakeEffect(10, 1);
-		
+
 		_effectSprite.effects = [_rainbow, _outline, _wave, _glitch, _trail, _shake];
-		
+
 		createButtons();
-		
-		_tween = FlxTween.circularMotion(_effectSprite,
-			(FlxG.width * 0.5) - (_sprite.width / 2), 
-			(FlxG.height * 0.5) - (_sprite.height / 2),
-			_sprite.width, 359,
-			true, 3, true, { type: PINGPONG });
-	}	
-	
-	function createButtons() 
+
+		_tween = FlxTween.circularMotion(_effectSprite, (FlxG.width * 0.5) - (_sprite.width / 2), (FlxG.height * 0.5) - (_sprite.height / 2), _sprite.width,
+			359, true, 3, true, {type: PINGPONG});
+	}
+
+	function createButtons()
 	{
 		addToggleActiveButton(30, 400, "Rainbow", _rainbow);
 		addToggleActiveButton(130, 400, "Outline", _outline);
@@ -70,10 +67,10 @@ class PlayState extends FlxState
 		addToggleActiveButton(330, 400, "Glitch", _glitch);
 		addToggleActiveButton(430, 400, "Trail", _trail);
 		add(new FlxButton(530, 400, "Shake", function() _shake.start()));
-		
+
 		add(new FlxButton(230, 425, "Direction", function()
 		{
-			_wave.direction = switch (_wave.direction) 
+			_wave.direction = switch (_wave.direction)
 			{
 				case FlxWaveDirection.VERTICAL: FlxWaveDirection.HORIZONTAL;
 				default: FlxWaveDirection.VERTICAL;
@@ -81,7 +78,7 @@ class PlayState extends FlxState
 		}));
 		add(new FlxButton(230, 450, "Mode", function()
 		{
-			_wave.mode = switch (_wave.mode) 
+			_wave.mode = switch (_wave.mode)
 			{
 				case FlxWaveMode.ALL: FlxWaveMode.START;
 				case FlxWaveMode.START: FlxWaveMode.END;
@@ -90,14 +87,14 @@ class PlayState extends FlxState
 		}));
 		add(new FlxButton(330, 425, "Direction", function()
 		{
-			_glitch.direction = switch (_glitch.direction) 
+			_glitch.direction = switch (_glitch.direction)
 			{
 				case FlxGlitchDirection.VERTICAL: FlxGlitchDirection.HORIZONTAL;
 				default: FlxGlitchDirection.VERTICAL;
 			}
 		}));
 	}
-	
+
 	function addToggleActiveButton(x:Float, y:Float, label:String, effect:IFlxEffect):Void
 	{
 		var button = new FlxButton(x, y, label);
@@ -116,7 +113,7 @@ class PlayState extends FlxState
 		{
 			_effectSprite.setPosition(_sprite.x, _sprite.y);
 		}
-		
+
 		super.update(elapsed);
 	}
 }

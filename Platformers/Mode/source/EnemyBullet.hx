@@ -8,7 +8,7 @@ import flixel.system.FlxAssets;
 class EnemyBullet extends FlxSprite
 {
 	public var speed:Float;
-	
+
 	public function new()
 	{
 		super();
@@ -17,7 +17,7 @@ class EnemyBullet extends FlxSprite
 		animation.add("poof", [2, 3, 4], 50, false);
 		speed = 120;
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		if (!alive)
@@ -32,7 +32,7 @@ class EnemyBullet extends FlxSprite
 
 		super.update(elapsed);
 	}
-	
+
 	override public function kill():Void
 	{
 		if (!alive)
@@ -46,11 +46,11 @@ class EnemyBullet extends FlxSprite
 		solid = false;
 		animation.play("poof");
 	}
-	
+
 	public function shoot(Location:FlxPoint, Angle:Float):Void
 	{
 		FlxG.sound.play(FlxAssets.getSound("assets/sounds/enemy"), 0.5);
-		
+
 		super.reset(Location.x - width / 2, Location.y - height / 2);
 		_point.set(0, -speed);
 		_point.rotate(FlxPoint.weak(0, 0), Angle);
