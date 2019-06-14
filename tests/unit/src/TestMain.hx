@@ -31,9 +31,9 @@ class TestMain
 		#else
 		var client = new massive.munit.client.RichPrintClient();
 		#end
-		
+
 		var httpClient = new HTTPClient(new SummaryReportClient());
-		
+
 		var runner = new TestRunner(client);
 		runner.addResultClient(httpClient);
 

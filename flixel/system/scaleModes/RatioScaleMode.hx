@@ -5,7 +5,7 @@ import flixel.FlxG;
 class RatioScaleMode extends BaseScaleMode
 {
 	var fillScreen:Bool;
-	
+
 	/**
 	 * @param fillScreen Whether to cut the excess side to fill the
 	 * screen or always display everything.
@@ -15,18 +15,18 @@ class RatioScaleMode extends BaseScaleMode
 		super();
 		this.fillScreen = fillScreen;
 	}
-	
-	override function updateGameSize(Width:Int, Height:Int):Void 
+
+	override function updateGameSize(Width:Int, Height:Int):Void
 	{
 		var ratio:Float = FlxG.width / FlxG.height;
 		var realRatio:Float = Width / Height;
-		
+
 		var scaleY:Bool = realRatio < ratio;
 		if (fillScreen)
 		{
 			scaleY = !scaleY;
 		}
-		
+
 		if (scaleY)
 		{
 			gameSize.x = Width;

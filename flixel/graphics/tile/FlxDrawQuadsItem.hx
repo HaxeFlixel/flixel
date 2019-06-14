@@ -30,7 +30,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms = new Vector<Float>();
 		alphas = [];
 	}
-	
+
 	override public function reset():Void
 	{
 		super.reset();
@@ -42,7 +42,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		if (colorOffsets != null)
 			colorOffsets.splice(0, colorOffsets.length);
 	}
-	
+
 	override public function dispose():Void
 	{
 		super.dispose();
@@ -52,7 +52,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		colorMultipliers = null;
 		colorOffsets = null;
 	}
-	
+
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		var rect = frame.frame;
@@ -75,7 +75,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		{
 			if (colorMultipliers == null)
 				colorMultipliers = [];
-			
+
 			if (colorOffsets == null)
 				colorOffsets = [];
 
@@ -86,7 +86,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 					colorMultipliers.push(transform.redMultiplier);
 					colorMultipliers.push(transform.greenMultiplier);
 					colorMultipliers.push(transform.blueMultiplier);
-					
+
 					colorOffsets.push(transform.redOffset);
 					colorOffsets.push(transform.greenOffset);
 					colorOffsets.push(transform.blueOffset);
@@ -97,7 +97,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 					colorMultipliers.push(1);
 					colorMultipliers.push(1);
 					colorMultipliers.push(1);
-					
+
 					colorOffsets.push(0);
 					colorOffsets.push(0);
 					colorOffsets.push(0);
@@ -108,7 +108,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			}
 		}
 	}
-	
+
 	#if !flash
 	override public function render(camera:FlxCamera):Void
 	{
@@ -128,7 +128,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
-		
+
 		#if (openfl > "8.7.0")
 		camera.canvas.graphics.overrideBlendMode(blend);
 		#end

@@ -2,6 +2,7 @@ package;
 
 import haxe.PosInfos;
 import massive.munit.Assert;
+
 using flixel.util.FlxArrayUtil;
 
 class FlxAssert

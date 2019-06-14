@@ -16,7 +16,7 @@ private class GraphicOpen extends BitmapData {}
 @:bitmap("assets/images/debugger/buttons/pause.png")
 private class GraphicPause extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/record_off.png") 
+@:bitmap("assets/images/debugger/buttons/record_off.png")
 private class GraphicRecordOff extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/record_on.png")
@@ -40,7 +40,7 @@ class VCR
 	 * Texfield that displays the runtime display data for a game replay
 	 */
 	public var runtimeDisplay:TextField;
-	
+
 	public var runtime:Float = 0;
 
 	/**
@@ -71,11 +71,11 @@ class VCR
 		#end
 		playbackToggleBtn = Debugger.addButton(CENTER, new GraphicPause(0, 0), onManualPause);
 		stepBtn = Debugger.addButton(CENTER, new GraphicStep(0, 0), onStep);
-		
+
 		#if FLX_RECORD
 		runtimeDisplay = DebuggerUtil.createTextField(0, -9);
 		updateRuntime(0);
-		
+
 		var runtimeBtn = Debugger.addButton(CENTER);
 		runtimeBtn.addChild(runtimeDisplay);
 		#end
@@ -101,7 +101,7 @@ class VCR
 		recordBtn.changeIcon(new GraphicRecordOn(0, 0));
 		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
-	
+
 	/**
 	 * Usually called by FlxGame when a replay has been stopped.
 	 * Just updates the VCR GUI so the buttons are in the right state.
@@ -111,7 +111,7 @@ class VCR
 		recordBtn.changeIcon(new GraphicRecordOff(0, 0));
 		recordBtn.upHandler = FlxG.vcr.startRecording.bind(true);
 	}
-	
+
 	/**
 	 * Usually called by FlxGame when a requested replay has begun.
 	 * Just updates the VCR GUI so the buttons are in the right state.
@@ -121,7 +121,7 @@ class VCR
 		recordBtn.changeIcon(new GraphicStop(0, 0));
 		recordBtn.upHandler = FlxG.vcr.stopReplay;
 	}
-	
+
 	/**
 	 * Just updates the VCR GUI so the runtime displays roughly the right thing.
 	 */

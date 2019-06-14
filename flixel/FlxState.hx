@@ -23,7 +23,7 @@ class FlxState extends FlxGroup
 	 * For example, if you have your game state first, and then you push a menu state on top of it,
 	 * if this is set to `true`, the game state would continue to be drawn behind the pause state.
 	 * By default this is `true`, so background states will continue to be drawn behind the current state.
-	 * 
+	 *
 	 * If background states are not `visible` when you have a different state on top,
 	 * you should set this to `false` for improved performance.
 	 */
@@ -34,17 +34,17 @@ class FlxState extends FlxGroup
 	 * `false` might reduce state creation time, at greater memory cost.
 	 */
 	public var destroySubStates:Bool = true;
-	
+
 	/**
 	 * The natural background color the cameras default to. In `AARRGGBB` format.
 	 */
 	public var bgColor(get, set):FlxColor;
-	
+
 	/**
 	 * Current substate. Substates also can be nested.
 	 */
 	public var subState(default, null):FlxSubState;
-	
+
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
@@ -68,17 +68,17 @@ class FlxState extends FlxGroup
 	{
 		if (persistentDraw || subState == null)
 			super.draw();
-		
+
 		if (subState != null)
 			subState.draw();
 	}
-	
+
 	public function openSubState(SubState:FlxSubState):Void
 	{
 		_requestSubStateReset = true;
 		_requestedSubState = SubState;
 	}
-	
+
 	/**
 	 * Closes the substate of this state, if one exists.
 	 */
@@ -101,19 +101,19 @@ class FlxState extends FlxGroup
 			if (destroySubStates)
 				subState.destroy();
 		}
-		
+
 		// Assign the requested state (or set it to null)
 		subState = _requestedSubState;
 		_requestedSubState = null;
-		
+
 		if (subState != null)
 		{
 			// Reset the input so things like "justPressed" won't interfere
 			if (!persistentUpdate)
 				FlxG.inputs.onStateSwitch();
-			
+
 			subState._parentState = this;
-			
+
 			if (!subState._created)
 			{
 				subState._created = true;
@@ -133,18 +133,18 @@ class FlxState extends FlxGroup
 		}
 		super.destroy();
 	}
-	
+
 	/**
 	 * Called from `FlxG.switchState()`. If `false` is returned, the state
 	 * switch is cancelled - the default implementation returns `true`.
-	 * 
+	 *
 	 * Useful for customizing state switches, e.g. for transition effects.
 	 */
 	public function switchTo(nextState:FlxState):Bool
 	{
 		return true;
 	}
-	
+
 	/**
 	 * This method is called after the game loses focus.
 	 * Can be useful for third party libraries, such as tweening engines.
@@ -159,18 +159,18 @@ class FlxState extends FlxGroup
 
 	/**
 	 * This function is called whenever the window size has been changed.
-	 * 
+	 *
 	 * @param   Width    The new window width
 	 * @param   Height   The new window Height
 	 */
 	public function onResize(Width:Int, Height:Int):Void {}
-	
+
 	@:allow(flixel.FlxGame)
 	function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || subState == null)
 			update(elapsed);
-		
+
 		if (_requestSubStateReset)
 		{
 			_requestSubStateReset = false;

@@ -14,14 +14,14 @@ class FlxGamepadManagerTest extends FlxTest
 		hatMove(1, 1);
 		hatMove(0, -1);
 		hatMove(0, 0);
-		
+
 		var gamepad = FlxG.gamepads.lastActive;
 		Assert.isFalse(gamepad.pressed.DPAD_LEFT);
 		Assert.isFalse(gamepad.pressed.DPAD_RIGHT);
 		Assert.isFalse(gamepad.pressed.DPAD_UP);
 		Assert.isFalse(gamepad.pressed.DPAD_DOWN);
 	}
-	
+
 	function hatMove(x, y)
 	{
 		FlxG.stage.dispatchEvent(new JoystickEvent("hatMove", false, false, 0, x, y, 0));

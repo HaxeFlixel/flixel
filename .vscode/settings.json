@@ -3,5 +3,8 @@
 		"flixel",
 		"script",
 		"tests"
-	]
+	],
+	"[haxe]": {
+		"editor.formatOnSave": true
+	}
 }

@@ -4,6 +4,7 @@ package flixel.system.macros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+
 using StringTools;
 
 private enum UserDefines
@@ -39,11 +40,10 @@ private enum HelperDefines
 	FLX_FOCUS_LOST_SCREEN;
 	FLX_DEBUG;
 	FLX_STEAMWRAP;
-	
+
 	FLX_MOUSE_ADVANCED;
 	FLX_NATIVE_CURSOR;
 	FLX_SOUND_TRAY;
-
 	FLX_POINTER_INPUT;
 	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
@@ -66,13 +66,13 @@ class FlxDefines
 		defineInversions();
 		defineHelperDefines();
 	}
-	
+
 	static function checkDependencyCompatibility()
 	{
 		#if (haxe_ver < "3.4")
 		abortVersion("Haxe", "3.4.0 or newer", "haxe_ver", (macro null).pos);
 		#end
-		
+
 		#if !nme
 		checkOpenFLVersions();
 		#end
@@ -93,12 +93,12 @@ class FlxDefines
 	{
 		abort('Unsupported $dependency version! Supported versions are $supported (found ${Context.definedValue(found)}).', pos);
 	}
-	
+
 	static function checkDefines()
 	{
 		for (define in HelperDefines.getConstructors())
 			abortIfDefined(define);
-		
+
 		var userDefinable = UserDefines.getConstructors();
 		for (define in Context.getDefines().keys())
 		{
@@ -108,7 +108,7 @@ class FlxDefines
 			}
 		}
 	}
-	
+
 	static function abortIfDefined(define:String)
 	{
 		if (defined(define))
@@ -130,30 +130,30 @@ class FlxDefines
 	{
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 			define(FLX_MOUSE_ADVANCED);
-		
+
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_NATIVE_CURSOR) && defined("flash10_2"))
 			define(FLX_NATIVE_CURSOR);
-		
+
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
-		
+
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
-		
+
 		#if nme
 		define(FLX_JOYSTICK_API);
 		#end
-		
+
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
-		
+
 		#if (openfl < "4.0.0")
 		if (defined("cpp") || defined("neko"))
 			define(FLX_POST_PROCESS);
 		#end
-		
+
 		if (defined("cpp") && defined("steamwrap"))
 			define(FLX_STEAMWRAP);
 
@@ -164,42 +164,42 @@ class FlxDefines
 		define(FLX_DRAW_QUADS);
 		#end
 	}
-	
+
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
 	{
 		if (!defined(userDefine))
 			define(invertedDefine);
 	}
-	
+
 	static function checkSwfVersion()
 	{
 		if (!defined("flash11"))
-			abort("The minimum required Flash Player version for HaxeFlixel is 11." +
-				" Please specify a newer version in your Project.xml file.", (macro null).pos);
-		
+			abort("The minimum required Flash Player version for HaxeFlixel is 11." + " Please specify a newer version in your Project.xml file.",
+				(macro null).pos);
+
 		swfVersionError("Middle and right mouse button events are", "11.2", FLX_NO_MOUSE_ADVANCED);
 		swfVersionError("Gamepad input is", "11.8", FLX_NO_GAMEPAD);
 	}
-	
+
 	static function swfVersionError(feature:String, version:String, define:UserDefines)
 	{
 		var errorMessage = '$feature only supported in Flash Player version $version or higher. '
 			+ 'Define ${define.getName()} to disable this feature or add <set name="SWF_VERSION" value="$version" /> to your Project.xml.';
-		
+
 		if (!defined("flash" + version.replace(".", "_")) && !defined(define))
 			abort(errorMessage, (macro null).pos);
 	}
-	
+
 	static inline function defined(define:Dynamic)
 	{
 		return Context.defined(Std.string(define));
 	}
-	
+
 	static inline function define(define:Dynamic)
 	{
 		Compiler.define(Std.string(define));
 	}
-	
+
 	static function abort(message:String, pos:Position)
 	{
 		Context.fatalError(message, pos);
