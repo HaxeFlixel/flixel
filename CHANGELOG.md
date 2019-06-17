@@ -1,3 +1,8 @@
+4.6.2 (to be released)
+------------------------------
+
+- `FlxGraphicsShader`: fixed crashes on some old iOS devices ([#2219](https://github.com/HaxeFlixel/flixel/issues/2219))
+
 4.6.1 (April 2, 2019)
 ------------------------------
 
