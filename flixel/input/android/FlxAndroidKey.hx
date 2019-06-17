@@ -13,8 +13,8 @@ abstract FlxAndroidKey(Int) from Int to Int
 	public static var toStringMap(default, null):Map<FlxAndroidKey, String> = FlxMacroUtil.buildMap("flixel.input.android.FlxAndroidKey", true);
 	var ANY = -2;
 	var NONE = -1;
-	var MENU = 16777234;
-	var BACK = 27;
+	var MENU = #if (openfl >= "8.0.0") 0x4000010C #else 16777234 #end;
+	var BACK = #if (openfl >= "8.0.0") 0x4000010E #else 27 #end;
 
 	@:from
 	public static inline function fromString(s:String)
