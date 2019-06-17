@@ -11,12 +11,12 @@ class FlxAndroidKeys extends FlxKeyManager<FlxAndroidKey, FlxAndroidKeyList>
 		super(FlxAndroidKeyList.new);
 
 		// BACK button
-		var back:FlxAndroidKeyInput = new FlxAndroidKeyInput(27);
+		var back:FlxAndroidKeyInput = new FlxAndroidKeyInput(FlxAndroidKey.BACK);
 		_keyListArray.push(back);
 		_keyListMap.set(back.ID, back);
 
 		// MENU button
-		var menu:FlxAndroidKeyInput = new FlxAndroidKeyInput(16777234);
+		var menu:FlxAndroidKeyInput = new FlxAndroidKeyInput(FlxAndroidKey.MENU);
 		_keyListArray.push(menu);
 		_keyListMap.set(menu.ID, menu);
 	}
