@@ -14,8 +14,8 @@ import flixel.util.FlxDestroyUtil;
 
 /**
  * Provides mouse event detection for `FlxObject` and `FlxSprite` (pixel-perfect for those).
- * To use it, initialize the manager and register objects / sprites. 
- * 
+ * To use it, initialize the manager and register objects / sprites.
+ *
  * ```haxe
  * FlxG.plugins.add(new FlxMouseEventManager());
  * var object = new FlxObject();
@@ -23,21 +23,21 @@ import flixel.util.FlxDestroyUtil;
  *	 object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
  * ```
  *
- * Or simply add a new object and this plugin will initialize itself: 
- * 
+ * Or simply add a new object and this plugin will initialize itself:
+ *
  * ```haxe
  * FlxMouseEventManager.add(
  *	 object, onMouseDown, onMouseUp, onMouseOver, onMouseOut);
  * ```
  *
  * Also implement the callbacks with the object's type as parameters:
- * 
+ *
  * ```haxe
  * function onMouseDown(object:FlxObject) {}
  * function onMouseUp(object:FlxObject) {}
  * function onMouseOver(object:FlxObject) {}
- * function onMouseOut(object:FlxObject) {} 
- * ``` 
+ * function onMouseOut(object:FlxObject) {}
+ * ```
  *
  * @author TiagoLr (~~~ ProG4mr ~~~)
  */
@@ -47,17 +47,17 @@ class FlxMouseEventManager extends FlxBasic
 	static var _mouseOverObjects:Array<ObjectMouseData<FlxObject>> = [];
 	static var _mouseDownObjects:Array<ObjectMouseData<FlxObject>> = [];
 	static var _mouseClickedObjects:Array<ObjectMouseData<FlxObject>> = [];
-	
+
 	static var _mouseClickedTime:Int = -1;
 
 	static var _point:FlxPoint = FlxPoint.get();
-	
+
 	/**
 	 * The maximum amount of time between two clicks that is considered a double click, in milliseconds.
 	 * @since 4.4.0
 	 */
 	public static var maxDoubleClickDelay:Int = 500;
-	
+
 	/**
 	 * As alternative you can call FlxMouseEventManager.init().
 	 */
@@ -66,7 +66,7 @@ class FlxMouseEventManager extends FlxBasic
 		if (FlxG.plugins.get(FlxMouseEventManager) == null)
 			FlxG.plugins.add(new FlxMouseEventManager());
 	}
-	
+
 	/**
 	 * Adds an object to the FlxMouseEventManager registry. Automatically initializes the plugin.
 	 *
@@ -83,38 +83,36 @@ class FlxMouseEventManager extends FlxBasic
 	 * @param   PixelPerfect    If true, the collision check will be pixel-perfect. Only works for FlxSprites.
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
 	 */
-	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void,
-		?OnMouseOut:T->Void, MouseChildren = false, MouseEnabled = true, PixelPerfect = true, ?MouseButtons:Array<FlxMouseButtonID>):T
+	public static function add<T:FlxObject>(Object:T, ?OnMouseDown:T->Void, ?OnMouseUp:T->Void, ?OnMouseOver:T->Void, ?OnMouseOut:T->Void,
+			MouseChildren = false, MouseEnabled = true, PixelPerfect = true, ?MouseButtons:Array<FlxMouseButtonID>):T
 	{
 		init(); // MEManager is initialized and added to plugins if it was not there already.
-		
-		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver,
-			OnMouseOut, MouseChildren, MouseEnabled, PixelPerfect, MouseButtons);
-		
+
+		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver, OnMouseOut, MouseChildren, MouseEnabled, PixelPerfect, MouseButtons);
+
 		if (Std.is(Object, FlxSprite))
 		{
 			newReg.sprite = cast Object;
 		}
-		
+
 		if (!MouseChildren)
 		{
 			_registeredObjects.unshift(cast newReg);
 		}
-		
 		else
 		{
 			// place mouseChildren=true objects immediately after =false ones
 			var index = 0;
-			
+
 			while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
 				index++;
-			
+
 			_registeredObjects.insert(index, cast newReg);
 		}
-		
+
 		return Object;
 	}
-	
+
 	/**
 	 * Removes a registered object from the registry.
 	 */
@@ -143,7 +141,7 @@ class FlxMouseEventManager extends FlxBasic
 				reg.destroy();
 			}
 		}
-		
+
 		_registeredObjects.splice(0, _registeredObjects.length);
 		_mouseOverObjects = [];
 		_mouseDownObjects = [];
@@ -162,13 +160,13 @@ class FlxMouseEventManager extends FlxBasic
 		var orderedObjects = new Array<ObjectMouseData<FlxObject>>();
 
 		traverseFlxGroup(FlxG.state, orderedObjects);
-		
+
 		orderedObjects.reverse();
 		_registeredObjects = orderedObjects;
-		
+
 		ArraySort.sort(_registeredObjects, sortByMouseChildren); // stable sort preserves the order of registers with the same mouseChildren status
 	}
-	
+
 	/**
 	 * Sets the mouseDown callback associated with an object.
 	 *
@@ -178,13 +176,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseDownCallback<T:FlxObject>(Object:T, OnMouseDown:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseDown = OnMouseDown;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseUp callback associated with an object.
 	 *
@@ -194,13 +192,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseUpCallback<T:FlxObject>(Object:T, OnMouseUp:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseUp = OnMouseUp;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseClick callback associated with an object.
 	 *
@@ -211,13 +209,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseClickCallback<T:FlxObject>(Object:T, OnMouseClick:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseClick = OnMouseClick;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseDoubleClick callback associated with an object.
 	 *
@@ -228,13 +226,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseDoubleClickCallback<T:FlxObject>(Object:T, OnMouseDoubleClick:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseDoubleClick = OnMouseDoubleClick;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseOver callback associated with an object.
 	 *
@@ -244,13 +242,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseOverCallback<T:FlxObject>(Object:T, OnMouseOver:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseOver = OnMouseOver;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseOut callback associated with an object.
 	 *
@@ -260,13 +258,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseOutCallback<T:FlxObject>(Object:T, OnMouseOut:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseOut = OnMouseOut;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseMove callback associated with an object.
 	 *
@@ -277,13 +275,13 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseMoveCallback<T:FlxObject>(Object:T, OnMouseMove:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseMove = OnMouseMove;
 		}
 	}
-	
+
 	/**
 	 * Sets the mouseWheel callback associated with an object.
 	 *
@@ -294,35 +292,35 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setMouseWheelCallback<T:FlxObject>(Object:T, OnMouseWheel:T->Void):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.onMouseWheel = OnMouseWheel;
 		}
 	}
-	
+
 	/**
 	 * Enables/disables mouse behavior for an object.
-	 * 
+	 *
 	 * @param   MouseEnabled   Whether this object will be tested for mouse events.
 	 */
 	public static function setObjectMouseEnabled<T:FlxObject>(Object:T, MouseEnabled:Bool):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.mouseEnabled = MouseEnabled;
 		}
 	}
-	
+
 	/**
 	 * Checks if a registered object is mouseEnabled.
 	 */
 	public static function isObjectMouseEnabled<T:FlxObject>(Object:T):Bool
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			return reg.mouseEnabled;
@@ -332,7 +330,7 @@ class FlxMouseEventManager extends FlxBasic
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Enables/disables mouseChildren for an object.
 	 *
@@ -341,36 +339,35 @@ class FlxMouseEventManager extends FlxBasic
 	public static function setObjectMouseChildren<T:FlxObject>(Object:T, MouseChildren:Bool):Void
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			reg.mouseChildren = MouseChildren;
 			_registeredObjects.remove(cast reg);
-			
+
 			if (!MouseChildren)
 			{
 				_registeredObjects.unshift(cast reg);
 			}
-			
 			else
 			{
 				var index = 0;
-				
+
 				while (index < _registeredObjects.length && !_registeredObjects[index].mouseChildren)
 					index++;
-				
+
 				_registeredObjects.insert(index, cast reg);
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks if an object allows mouseChildren.
 	 */
 	public static function isObjectMouseChildren<T:FlxObject>(Object:T):Bool
 	{
 		var reg = getRegister(Object);
-		
+
 		if (reg != null)
 		{
 			return reg.mouseChildren;
@@ -380,20 +377,20 @@ class FlxMouseEventManager extends FlxBasic
 			throw new Error("FlxMouseEventManager , isObjectMouseChildren() : object not found");
 		}
 	}
-	
+
 	/**
 	 * @param   MouseButtons    The mouse buttons that can trigger callbacks. Left only by default.
 	 */
 	public static function setObjectMouseButtons<T:FlxObject>(object:T, mouseButtons:Array<FlxMouseButtonID>):Void
 	{
 		var reg = getRegister(object);
-		
+
 		if (reg != null)
 		{
 			reg.mouseButtons = mouseButtons;
 		}
 	}
-	
+
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	static function traverseFlxGroup(Group:FlxTypedGroup<Dynamic>, OrderedObjects:Array<ObjectMouseData<Dynamic>>):Void
 	{
@@ -407,7 +404,7 @@ class FlxMouseEventManager extends FlxBasic
 			if (Std.is(basic, FlxObject))
 			{
 				var reg = getRegister(cast basic);
-				
+
 				if (reg != null)
 				{
 					OrderedObjects.push(reg);
@@ -422,7 +419,7 @@ class FlxMouseEventManager extends FlxBasic
 		{
 			Register = _registeredObjects;
 		}
-		
+
 		for (reg in Register)
 		{
 			if (reg.object == Object)
@@ -430,29 +427,29 @@ class FlxMouseEventManager extends FlxBasic
 				return cast reg;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	static function sortByMouseChildren(reg1:ObjectMouseData<FlxObject>, reg2:ObjectMouseData<FlxObject>):Int
 	{
 		if (reg1.mouseChildren == reg2.mouseChildren)
 		{
 			return 0;
 		}
-		
+
 		if (!reg1.mouseChildren)
 		{
 			return -1;
 		}
-		
+
 		return 1;
 	}
-	
+
 	public function new()
 	{
 		super();
-		
+
 		if (_registeredObjects != null)
 		{
 			clearRegistry();
@@ -464,7 +461,7 @@ class FlxMouseEventManager extends FlxBasic
 
 		FlxG.signals.preStateSwitch.add(removeAll);
 	}
-	
+
 	override public function destroy():Void
 	{
 		clearRegistry();
@@ -472,45 +469,45 @@ class FlxMouseEventManager extends FlxBasic
 		FlxG.signals.preStateSwitch.remove(removeAll);
 		super.destroy();
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+
 		var currentOverObjects = new Array<ObjectMouseData<FlxObject>>();
-		
+
 		for (reg in _registeredObjects)
 		{
 			if (!reg.object.alive || !reg.object.exists || !reg.object.visible || !reg.mouseEnabled)
 			{
 				continue;
 			}
-			
+
 			if (checkOverlap(reg))
 			{
 				currentOverObjects.push(reg);
-				
+
 				if (!reg.mouseChildren)
 				{
 					break;
 				}
 			}
 		}
-		
+
 		// MouseOut - Look for objects that lost mouse over.
 		for (over in _mouseOverObjects)
 		{
 			if (over.onMouseOut != null)
 			{
 				// slightly different logic here - objects whose exists or visible
-				// property has been set to false should also receive a mouse out! 
+				// property has been set to false should also receive a mouse out!
 				if (!over.object.exists || !over.object.visible || getRegister(over.object, currentOverObjects) == null)
 				{
 					over.onMouseOut(over.object);
 				}
 			}
 		}
-		
+
 		// MouseOver - Look for new objects with mouse over.
 		for (current in currentOverObjects)
 		{
@@ -522,7 +519,7 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-		
+
 		#if FLX_MOUSE
 		// If mouse input is not enabled globally, prevent all tracked objects from responding to
 		// down/click/doubleclick/up events until mouse input is re-enabled.
@@ -540,7 +537,7 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-		
+
 		// MouseDown - Look for objects with mouse over when user presses mouse button.
 		for (current in currentOverObjects)
 		{
@@ -555,19 +552,21 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-		
+
 		// MouseClick/MouseDoubleClick - Look for objects with mouse down first.
 		if (FlxG.mouse.justPressed)
 		{
 			for (current in currentOverObjects)
 			{
-				if ((current.onMouseClick != null || current.onMouseDoubleClick != null) && current.object.exists && current.object.visible)
+				if ((current.onMouseClick != null || current.onMouseDoubleClick != null)
+					&& current.object.exists
+					&& current.object.visible)
 				{
 					_mouseDownObjects.push(current);
 				}
 			}
 		}
-		
+
 		// MouseUp - Look for objects with mouse over when user releases mouse button.
 		for (current in currentOverObjects)
 		{
@@ -582,41 +581,43 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-		
+
 		// MouseClick - Look for objects that had mouse down and now have mouse over when the user releases the mouse button.
 		// DoubleClick - Look for objects that were recently clicked and have just been clicked again.
 		if (_mouseClickedObjects.length > 0 && FlxG.game.ticks - _mouseClickedTime > maxDoubleClickDelay)
 		{
 			_mouseClickedObjects = [];
 		}
-		
+
 		if (FlxG.mouse.justReleased)
 		{
 			_mouseClickedTime = FlxG.game.ticks;
-			
+
 			var previousClickedObjects = _mouseClickedObjects;
-			
+
 			if (_mouseClickedObjects.length > 0)
 			{
 				_mouseClickedObjects = [];
 			}
-			
+
 			for (down in _mouseDownObjects)
 			{
-				if (down.object != null && down.object.exists && down.object.visible && getRegister(down.object, currentOverObjects) != null)
+				if (down.object != null
+					&& down.object.exists
+					&& down.object.visible
+					&& getRegister(down.object, currentOverObjects) != null)
 				{
 					if (down.onMouseClick != null)
 					{
 						down.onMouseClick(down.object);
 					}
-					
+
 					if (down.onMouseDoubleClick != null)
 					{
 						if (getRegister(down.object, previousClickedObjects) != null)
 						{
 							down.onMouseDoubleClick(down.object);
 						}
-						
 						else
 						{
 							_mouseClickedObjects.push(down);
@@ -625,13 +626,13 @@ class FlxMouseEventManager extends FlxBasic
 				}
 			}
 		}
-		
+
 		if (_mouseDownObjects.length > 0 && !FlxG.mouse.pressed)
 		{
 			// if the user just released the mouse OR if the user released the mouse while the window was tabbed out
 			_mouseDownObjects = [];
 		}
-		
+
 		// MouseWheel - Look for objects with mouse over when user spins the mouse wheel.
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -644,10 +645,10 @@ class FlxMouseEventManager extends FlxBasic
 			}
 		}
 		#end
-		
+
 		_mouseOverObjects = currentOverObjects;
 	}
-	
+
 	function clearRegistry():Void
 	{
 		_mouseOverObjects = null;
@@ -665,14 +666,14 @@ class FlxMouseEventManager extends FlxBasic
 			if (camera.containsPoint(_point))
 			{
 				_point = FlxG.mouse.getWorldPosition(camera, _point);
-				
+
 				if (checkOverlapWithPoint(Register, _point, camera))
 				{
 					return true;
 				}
 			}
 			#end
-			
+
 			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
@@ -680,7 +681,7 @@ class FlxMouseEventManager extends FlxBasic
 				if (camera.containsPoint(_point))
 				{
 					_point = touch.getWorldPosition(camera, _point);
-					
+
 					if (checkOverlapWithPoint(Register, _point, camera))
 					{
 						return true;
@@ -689,22 +690,22 @@ class FlxMouseEventManager extends FlxBasic
 			}
 			#end
 		}
-		
+
 		return false;
 	}
-	
+
 	inline function checkOverlapWithPoint<T:FlxObject>(Register:ObjectMouseData<T>, Point:FlxPoint, Camera:FlxCamera):Bool
 	{
 		if (Register.pixelPerfect && (Register.sprite != null))
 		{
 			return checkPixelPerfectOverlap(Point, Register.sprite, Camera);
 		}
-		else 
+		else
 		{
 			return Register.object.overlapsPoint(Point, true, Camera);
 		}
 	}
-	
+
 	inline function checkPixelPerfectOverlap(Point:FlxPoint, Sprite:FlxSprite, Camera:FlxCamera):Bool
 	{
 		if (Sprite.angle != 0)
@@ -733,9 +734,9 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 	public var sprite:FlxSprite;
 	public var mouseButtons:Array<FlxMouseButtonID>;
 	public var currentMouseButton:Null<FlxMouseButtonID>;
-	
-	public function new(object:T, onMouseDown:T->Void, onMouseUp:T->Void, onMouseOver:T->Void, onMouseOut:T->Void, 
-		mouseChildren:Bool, mouseEnabled:Bool, pixelPerfect:Bool, mouseButtons:Array<FlxMouseButtonID>)
+
+	public function new(object:T, onMouseDown:T->Void, onMouseUp:T->Void, onMouseOver:T->Void, onMouseOut:T->Void, mouseChildren:Bool, mouseEnabled:Bool,
+			pixelPerfect:Bool, mouseButtons:Array<FlxMouseButtonID>)
 	{
 		this.object = object;
 		this.onMouseDown = onMouseDown;
@@ -747,7 +748,7 @@ private class ObjectMouseData<T:FlxObject> implements IFlxDestroyable
 		this.pixelPerfect = pixelPerfect;
 		this.mouseButtons = (mouseButtons == null) ? [FlxMouseButtonID.LEFT] : mouseButtons;
 	}
-	
+
 	public function destroy():Void
 	{
 		object = null;

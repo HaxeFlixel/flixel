@@ -16,7 +16,7 @@ class BitmapFrontEndTest
 
 		FlxG.bitmap.add(FlxGraphic.fromBitmapData(new BitmapData(1, 1)), true, key);
 		Assert.isTrue(FlxG.bitmap.checkCache(key));
-		
+
 		var newKey = FlxG.bitmap.getUniqueKey("test");
 		Assert.areNotEqual(key, newKey);
 	}

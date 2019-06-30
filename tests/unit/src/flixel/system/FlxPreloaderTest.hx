@@ -1,6 +1,6 @@
 package flixel.system;
 
-class FlxPreloaderTest 
+class FlxPreloaderTest
 {
 	@Test // #1803
 	function testOverridePreloader()
@@ -15,17 +15,17 @@ class OverriddenPreloader extends FlxPreloader
 	{
 		super(minDisplayTime, allowedUrls);
 	}
-	
+
 	override function create()
 	{
 		super.create();
 	}
-	
+
 	override function destroy()
 	{
 		super.destroy();
 	}
-	
+
 	override public function update(percent:Float):Void
 	{
 		super.update(percent);

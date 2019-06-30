@@ -24,14 +24,14 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Int = -1;
-	
+
 	/**
 	 * Updates the last and current state of this mouse button.
 	 */
 	override public function update():Void
 	{
 		super.update();
-		
+
 		if (justPressed)
 		{
 			justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
@@ -44,12 +44,12 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 		}
 		#end
 	}
-	
+
 	public inline function destroy():Void
 	{
 		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
 	}
-	
+
 	public function onDown(_):Void
 	{
 		// Check for replay cancel keys
@@ -66,11 +66,11 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 			}
 		}
 		#end
-		
+
 		if (FlxG.mouse.enabled)
 			press();
 	}
-	
+
 	public function onUp(?_):Void
 	{
 		if (FlxG.mouse.enabled)
@@ -85,7 +85,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 @:enum
 abstract FlxMouseButtonID(Int) to Int
 {
-	var LEFT   = -1;
+	var LEFT = -1;
 	var MIDDLE = -2;
-	var RIGHT  = -3;
+	var RIGHT = -3;
 }
