@@ -13,6 +13,11 @@ env:
   - TARGET=cpp   OPENFL=new
   - TARGET=html5 OPENFL=new
 
+matrix:
+  exclude:
+    - haxe: development
+      env: TARGET=html5 OPENFL=new
+
 addons:
   apt:
     packages:

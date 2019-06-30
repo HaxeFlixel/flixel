@@ -14,7 +14,7 @@ class CircularMotion extends Motion
 	 * The circumference of the current circle motion.
 	 */
 	public var circumference(get, never):Float;
-	
+
 	// Circle information.
 	var _centerX:Float = 0;
 	var _centerY:Float = 0;
@@ -24,7 +24,7 @@ class CircularMotion extends Motion
 
 	/**
 	 * Starts moving along a circle.
-	 * 
+	 *
 	 * @param	CenterX			X position of the circle's center.
 	 * @param	CenterY			Y position of the circle's center.
 	 * @param	Radius			Radius of the circle.
@@ -33,14 +33,15 @@ class CircularMotion extends Motion
 	 * @param	DurationOrSpeed	Duration of the movement.
 	 * @param	UseDuration		Duration of the movement.
 	 */
-	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float, UseDuration:Bool = true):CircularMotion
+	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float,
+			UseDuration:Bool = true):CircularMotion
 	{
 		_centerX = CenterX;
 		_centerY = CenterY;
 		_radius = Radius;
-		this.angle = _angleStart = Angle * Math.PI / ( -180);
+		this.angle = _angleStart = Angle * Math.PI / (-180);
 		_angleFinish = (Math.PI * 2) * (Clockwise ? 1 : -1);
-		
+
 		if (UseDuration)
 		{
 			duration = DurationOrSpeed;
@@ -49,7 +50,7 @@ class CircularMotion extends Motion
 		{
 			duration = (_radius * (Math.PI * 2)) / DurationOrSpeed;
 		}
-		
+
 		start();
 		return this;
 	}
@@ -66,8 +67,8 @@ class CircularMotion extends Motion
 		}
 	}
 
-	function get_circumference():Float 
-	{ 
-		return _radius * (Math.PI * 2); 
+	function get_circumference():Float
+	{
+		return _radius * (Math.PI * 2);
 	}
 }

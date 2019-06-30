@@ -78,8 +78,7 @@ class FlxBasePreloader extends DefaultPreloader
 	 * @see `siteLockTitleText`
 	 * @since 4.3.0
 	 */
-	public var siteLockBodyText:String =
-		"It appears the website you are using is hosting an unauthorized copy of this game. "
+	public var siteLockBodyText:String = "It appears the website you are using is hosting an unauthorized copy of this game. "
 		+ "Storage or redistribution of this content, without the express permission of the "
 		+ "developer or other copyright holder, is prohibited under copyright law.\n\n"
 		+ "Thank you for your interest in this game! Please support the developer by "
@@ -309,16 +308,12 @@ class FlxBasePreloader extends DefaultPreloader
 		graphics.clear();
 
 		graphics.beginFill(color);
-		graphics.drawPath(
-			Vector.ofArray([1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6]),
-			Vector.ofArray([120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40,
-				120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40, 35, 75, 0, 120, 0,
-				220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320,
-				20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0, 148, 8, 140, 20, 140, 120, 190, 108,
-				190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130,
-				227, 135, 223, 140, 217, 140, 210, 140, 198, 131, 190, 120, 190]),
-			GraphicsPathWinding.NON_ZERO
-		);
+		graphics.drawPath(Vector.ofArray([1, 6, 2, 2, 2, 6, 6, 2, 2, 2, 6, 1, 6, 2, 6, 2, 6, 2, 6, 1, 6, 6, 2, 2, 2, 6, 6]), Vector.ofArray([
+			120.0, 0, 164, 0, 200, 35, 200, 79, 200, 130, 160, 130, 160, 79, 160, 57, 142, 40, 120, 40, 97, 40, 79, 57, 79, 79, 80, 130, 40, 130, 40, 79, 40,
+			35, 75, 0, 120, 0, 220, 140, 231, 140, 240, 148, 240, 160, 240, 300, 240, 311, 231, 320, 220, 320, 20, 320, 8, 320, 0, 311, 0, 300, 0, 160, 0,
+			148, 8, 140, 20, 140, 120, 190, 108, 190, 100, 198, 100, 210, 100, 217, 104, 223, 110, 227, 110, 270, 130, 270, 130, 227, 135, 223, 140, 217, 140,
+			210, 140, 198, 131, 190, 120, 190
+		]), GraphicsPathWinding.NON_ZERO);
 		graphics.endFill();
 
 		var transformMatrix = new Matrix();
@@ -389,7 +384,7 @@ class FlxBasePreloader extends DefaultPreloader
 
 	function goToMyURL(?e:MouseEvent):Void
 	{
-		//if the chosen URL isn't "local", use FlxG's openURL() function.
+		// if the chosen URL isn't "local", use FlxG's openURL() function.
 		if (allowedURLs[siteLockURLIndex] != FlxBasePreloader.LOCAL)
 			FlxG.openURL(allowedURLs[siteLockURLIndex]);
 		else
@@ -427,7 +422,7 @@ private class DefaultPreloader extends Sprite
 	public function onAddedToStage(_)
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		
+
 		onInit();
 		onUpdate(loaderInfo.bytesLoaded, loaderInfo.bytesTotal);
 

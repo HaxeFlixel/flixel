@@ -19,6 +19,7 @@ import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
+
 using flixel.util.FlxBitmapDataUtil;
 
 /**
@@ -238,7 +239,7 @@ class BitmapLog extends Window
 			return false;
 		}
 		setVisible(true);
-		_entries.push({bitmap: bmp.clone(), name: name });
+		_entries.push({bitmap: bmp.clone(), name: name});
 		return refreshCanvas();
 	}
 
@@ -330,7 +331,7 @@ class BitmapLog extends Window
 		_counterText.text = '${_curIndex + 1}/${_entries.length}';
 
 		var entryName:String = _curEntry.name;
-		var name:String = (entryName == "") ? "" : '"$entryName" | ' ;
+		var name:String = (entryName == "") ? "" : '"$entryName" | ';
 		_footerText.text = name + FlxStringUtil.formatBytes(_curBitmap.getMemorySize());
 
 		resizeTexts();

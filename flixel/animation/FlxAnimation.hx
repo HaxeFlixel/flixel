@@ -11,64 +11,64 @@ class FlxAnimation extends FlxBaseAnimation
 	 * Animation frameRate - the speed in frames per second that the animation should play at.
 	 */
 	public var frameRate(default, set):Int;
-	
+
 	/**
 	 * Keeps track of the current frame of animation.
 	 * This is NOT an index into the tile sheet, but the frame number in the animation object.
 	 */
 	public var curFrame(default, set):Int = 0;
-	
+
 	/**
 	 * Accessor for `frames.length`
 	 */
 	public var numFrames(get, null):Int;
-	
+
 	/**
 	 * Seconds between frames (basically the framerate)
 	 */
 	public var delay(default, null):Float = 0;
-	
+
 	/**
 	 * Whether the current animation has finished.
 	 */
 	public var finished(default, null):Bool = true;
-	
+
 	/**
 	 * Whether the current animation gets updated or not.
 	 */
 	public var paused:Bool = true;
-	
+
 	/**
 	 * Whether or not the animation is looped.
 	 */
 	public var looped(default, null):Bool = true;
-	
+
 	/**
 	 * Whether or not this animation is being played backwards.
 	 */
 	public var reversed(default, null):Bool = false;
-	
+
 	/**
 	 * Whether or not the frames of this animation are horizontally flipped
 	 */
 	public var flipX:Bool = false;
-	
+
 	/**
 	 * Whether or not the frames of this animation are vertically flipped
 	 */
 	public var flipY:Bool = false;
-	
+
 	/**
 	 * A list of frames stored as int indices
 	 * @since 4.2.0
 	 */
 	public var frames:Array<Int>;
-	
+
 	/**
 	 * Internal, used to time each frame of animation.
 	 */
 	var _frameTimer:Float = 0;
-	
+
 	/**
 	 * @param   Name        What this animation should be called (e.g. `"run"`).
 	 * @param   Frames      An array of numbers indicating what frames to play in what order (e.g. `[1, 2, 3]`).
@@ -77,18 +77,18 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @param   FlipX       Whether or not the frames of this animation are horizontally flipped.
 	 * @param   FlipY       Whether or not the frames of this animation are vertically flipped.
 	 */
-	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0,
-		Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false)
+	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true, FlipX:Bool = false,
+			FlipY:Bool = false)
 	{
 		super(Parent, Name);
-		
+
 		frameRate = FrameRate;
 		frames = Frames;
 		looped = Looped;
 		flipX = FlipX;
 		flipY = FlipY;
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -98,10 +98,10 @@ class FlxAnimation extends FlxBaseAnimation
 		name = null;
 		super.destroy();
 	}
-	
+
 	/**
 	 * Starts this animation playback.
-	 * 
+	 *
 	 * @param   Force      Whether to force this animation to restart.
 	 * @param   Reversed   Whether to play animation backwards or not.
 	 * @param   Frame      The frame number in this animation you want to start from (`0` by default).
@@ -118,7 +118,7 @@ class FlxAnimation extends FlxBaseAnimation
 			finished = false;
 			return;
 		}
-		
+
 		reversed = Reversed;
 		paused = false;
 		_frameTimer = 0;
@@ -135,51 +135,51 @@ class FlxAnimation extends FlxBaseAnimation
 				Frame = (maxFrameIndex - Frame);
 			curFrame = Frame;
 		}
-		
+
 		if (finished)
 			parent.fireFinishCallback(name);
 	}
-	
+
 	public function restart():Void
 	{
 		play(true, reversed);
 	}
-	
+
 	public function stop():Void
 	{
 		finished = true;
 		paused = true;
 	}
-	
+
 	public function reset():Void
 	{
 		stop();
 		curFrame = reversed ? (numFrames - 1) : 0;
 	}
-	
+
 	public function finish():Void
 	{
 		stop();
 		curFrame = reversed ? 0 : (numFrames - 1);
 	}
-	
+
 	public function pause():Void
 	{
 		paused = true;
 	}
-	
+
 	public inline function resume():Void
 	{
 		paused = false;
 	}
-	
+
 	public function reverse():Void
 	{
 		reversed = !reversed;
 		if (finished)
 			play(false, reversed);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		if (delay == 0 || finished || paused)
@@ -205,12 +205,12 @@ class FlxAnimation extends FlxBaseAnimation
 			}
 		}
 	}
-	
+
 	override public function clone(Parent:FlxAnimationController):FlxAnimation
 	{
 		return new FlxAnimation(Parent, name, frames, frameRate, looped, flipX, flipY);
 	}
-	
+
 	function set_frameRate(value:Int):Int
 	{
 		delay = 0;
@@ -219,12 +219,12 @@ class FlxAnimation extends FlxBaseAnimation
 			delay = 1.0 / value;
 		return value;
 	}
-	
+
 	function set_curFrame(Frame:Int):Int
 	{
 		var maxFrameIndex:Int = numFrames - 1;
 		var tempFrame:Int = (reversed) ? (maxFrameIndex - Frame) : Frame;
-		
+
 		if (tempFrame >= 0)
 		{
 			if (!looped && Frame > maxFrameIndex)
@@ -239,15 +239,15 @@ class FlxAnimation extends FlxBaseAnimation
 		}
 		else
 			curFrame = FlxG.random.int(0, maxFrameIndex);
-		
+
 		curIndex = frames[curFrame];
-		
+
 		if (finished && parent != null)
 			parent.fireFinishCallback(name);
-		
+
 		return Frame;
 	}
-	
+
 	inline function get_numFrames():Int
 	{
 		return frames.length;

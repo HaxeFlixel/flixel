@@ -6,13 +6,13 @@ import massive.munit.Assert;
 class FlxPoolTest extends FlxTest
 {
 	var ppool:FlxPool<FlxPoint>;
-	
+
 	@Before
 	function before():Void
 	{
 		ppool = new FlxPool<FlxPoint>(FlxPoint);
 	}
-	
+
 	@Test
 	function putNull():Void
 	{
@@ -20,7 +20,7 @@ class FlxPoolTest extends FlxTest
 		ppool.putUnsafe(null);
 		Assert.areEqual(ppool.length, 0);
 	}
-	
+
 	@Test
 	function putDuplicateSafe():Void
 	{
@@ -29,7 +29,7 @@ class FlxPoolTest extends FlxTest
 		ppool.put(pt);
 		Assert.areEqual(ppool.length, 1);
 	}
-	
+
 	@Test
 	function putDuplicateUnsafe():Void
 	{
@@ -39,7 +39,7 @@ class FlxPoolTest extends FlxTest
 		var old = ppool.clear();
 		Assert.areEqual(old[0], old[1]);
 	}
-	
+
 	@Test
 	function testPreAllocate():Void
 	{
@@ -47,12 +47,12 @@ class FlxPoolTest extends FlxTest
 		ppool.preAllocate(5);
 		Assert.areEqual(ppool.length, 10);
 	}
-	
+
 	@Test
 	function putGetComplex():Void
 	{
 		ppool.preAllocate(5);
-		
+
 		var pt1 = ppool.get();
 		var pt2 = ppool.get();
 		var pt3 = ppool.get();
@@ -62,12 +62,12 @@ class FlxPoolTest extends FlxTest
 		ppool.put(pt3); // 3|4321
 		ppool.put(pt2); // 32|321
 		ppool.put(pt5); // 325|21
-		ppool.get();    // 32|521
+		ppool.get(); // 32|521
 		ppool.put(pt1); // 321|21
 		ppool.put(pt5); // 3215|1
-		
+
 		var old = ppool.clear();
-		
+
 		FlxAssert.arraysEqual([pt3, pt2, pt1, pt5, pt1], old);
 	}
 }

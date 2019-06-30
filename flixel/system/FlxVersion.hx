@@ -10,16 +10,16 @@ class FlxVersion
 	public var major(default, null):Int;
 	public var minor(default, null):Int;
 	public var patch(default, null):Int;
-	
-	public function new(Major:Int, Minor:Int, Patch:Int) 
+
+	public function new(Major:Int, Minor:Int, Patch:Int)
 	{
 		major = Major;
 		minor = Minor;
 		patch = Patch;
 	}
-	
+
 	/**
-	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA", 
+	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA",
 	 * e.g. HaxeFlixel 3.0.4.
 	 * If this is a dev version, the git sha is included.
 	 */

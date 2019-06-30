@@ -10,7 +10,6 @@ import flixel.system.FlxSound;
 import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
 import openfl.Assets;
-
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
 #end
@@ -22,61 +21,67 @@ class SoundFrontEnd
 	 * A handy container for a background music object.
 	 */
 	public var music:FlxSound;
+
 	/**
 	 * Whether or not the game sounds are muted.
 	 */
 	public var muted:Bool = false;
+
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
 	public var volumeHandler:Float->Void;
-	
+
 	#if FLX_KEYBOARD
 	/**
 	 * The key codes used to increase volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
 	public var volumeUpKeys:Array<FlxKey> = [PLUS, NUMPADPLUS];
+
 	/**
 	 * The keys to decrease volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
 	public var volumeDownKeys:Array<FlxKey> = [MINUS, NUMPADMINUS];
+
 	/**
 	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<FlxKey> = [ZERO, NUMPADZERO]; 
+	public var muteKeys:Array<FlxKey> = [ZERO, NUMPADZERO];
 	#end
-	
+
 	/**
 	 * Whether or not the soundTray should be shown when any of the
 	 * volumeUp-, volumeDown- or muteKeys is pressed.
-	 */ 
+	 */
 	public var soundTrayEnabled:Bool = true;
-	
+
 	/**
 	 * The group sounds played via playMusic() are added to unless specified otherwise.
 	 */
 	public var defaultMusicGroup:FlxSoundGroup = new FlxSoundGroup();
+
 	/**
 	 * The group sounds in load() / play() / stream() are added to unless specified otherwise.
 	 */
 	public var defaultSoundGroup:FlxSoundGroup = new FlxSoundGroup();
-	
+
 	/**
 	 * A list of all the sounds being played in the game.
 	 */
 	public var list(default, null):FlxTypedGroup<FlxSound> = new FlxTypedGroup<FlxSound>();
+
 	/**
 	 * Set this to a number between 0 and 1 to change the global volume.
 	 */
 	public var volume(default, set):Float = 1;
-	
+
 	/**
 	 * Set up and play a looping background soundtrack.
-	 * 
+	 *
 	 * @param	Music		The sound file you want to loop in the background.
 	 * @param	Volume		How loud the sound should be, from 0 to 1.
 	 * @param	Looped		Whether to loop this music.
@@ -92,17 +97,17 @@ class SoundFrontEnd
 		{
 			music.stop();
 		}
-		
+
 		music.loadEmbedded(Music, Looped);
 		music.volume = Volume;
 		music.persist = true;
 		music.group = (Group == null) ? defaultMusicGroup : Group;
 		music.play();
 	}
-	
+
 	/**
-	 * Creates a new FlxSound object. 
-	 * 
+	 * Creates a new FlxSound object.
+	 *
 	 * @param	EmbeddedSound	The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
@@ -112,17 +117,17 @@ class SoundFrontEnd
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @return	A FlxSound object.
 	 */
-	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false,
-		?Group:FlxSoundGroup, AutoDestroy:Bool = false, AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
+	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = false,
+			AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{
 			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
-		
+
 		var sound:FlxSound = list.recycle(FlxSound);
-		
+
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
@@ -131,36 +136,34 @@ class SoundFrontEnd
 		{
 			sound.loadStream(URL, Looped, AutoDestroy, OnComplete);
 		}
-		
+
 		sound.volume = Volume;
-		
+
 		if (AutoPlay)
 		{
 			sound.play();
 		}
-		
+
 		sound.group = (Group == null) ? defaultSoundGroup : Group;
 		return sound;
 	}
-	
+
 	/**
 	 * Method for sound caching (especially useful on mobile targets). The game may freeze
 	 * for some time the first time you try to play a sound if you don't use this method.
-	 * 
+	 *
 	 * @param	EmbeddedSound	Name of sound assets specified in your .xml project file
 	 * @return	Cached Sound object
 	 */
 	public inline function cache(EmbeddedSound:String):Sound
 	{
 		// load the sound into the OpenFL assets cache
-		if (Assets.exists(EmbeddedSound, AssetType.SOUND) ||
-			Assets.exists(EmbeddedSound, AssetType.MUSIC))
+		if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
 			return Assets.getSound(EmbeddedSound, true);
 		FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		return null;
-		
 	}
-	
+
 	/**
 	 * Calls FlxG.sound.cache() on all sounds that are embedded.
 	 * WARNING: can lead to high memory usage.
@@ -172,10 +175,10 @@ class SoundFrontEnd
 			cache(id);
 		}
 	}
-	
+
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
-	 * 
+	 *
 	 * @param	EmbeddedSound	The sound you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
@@ -183,8 +186,8 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	The FlxSound object.
 	 */
-	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
-		AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
+			?OnComplete:Void->Void):FlxSound
 	{
 		if (Std.is(EmbeddedSound, String))
 		{
@@ -195,11 +198,11 @@ class SoundFrontEnd
 		sound.group = (Group == null) ? defaultSoundGroup : Group;
 		return sound.play();
 	}
-	
+
 	/**
 	 * Creates a new sound object from a URL.
 	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
-	 * 
+	 *
 	 * @param	URL		The URL of the sound you want to play.
 	 * @param	Volume	How loud to play it (0 to 1).
 	 * @param	Looped	Whether or not to loop this sound.
@@ -207,12 +210,12 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @return	A FlxSound object.
 	 */
-	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
-		AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
+			?OnComplete:Void->Void):FlxSound
 	{
 		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
 	}
-	
+
 	/**
 	 * Pause all sounds currently playing.
 	 */
@@ -222,7 +225,7 @@ class SoundFrontEnd
 		{
 			music.pause();
 		}
-		
+
 		for (sound in list.members)
 		{
 			if (sound != null && sound.exists && sound.active)
@@ -231,7 +234,7 @@ class SoundFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Resume playing existing sounds.
 	 */
@@ -241,7 +244,7 @@ class SoundFrontEnd
 		{
 			music.resume();
 		}
-		
+
 		for (sound in list.members)
 		{
 			if (sound != null && sound.exists)
@@ -250,10 +253,10 @@ class SoundFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Called by FlxGame on state changes to stop and destroy sounds.
-	 * 
+	 *
 	 * @param	ForceDestroy	Kill sounds even if persist is true.
 	 */
 	public function destroy(ForceDestroy:Bool = false):Void
@@ -263,7 +266,7 @@ class SoundFrontEnd
 			destroySound(music);
 			music = null;
 		}
-		
+
 		for (sound in list.members)
 		{
 			if (sound != null && (ForceDestroy || !sound.persist))
@@ -279,32 +282,32 @@ class SoundFrontEnd
 		defaultSoundGroup.remove(sound);
 		sound.destroy();
 	}
-	
+
 	/**
 	 * Toggles muted, also activating the sound tray.
-	 */ 
+	 */
 	public function toggleMuted():Void
 	{
 		muted = !muted;
-		
+
 		if (volumeHandler != null)
 		{
 			volumeHandler(muted ? 0 : volume);
 		}
-		
+
 		showSoundTray();
 	}
-	
+
 	/**
 	 * Changes the volume by a certain amount, also activating the sound tray.
-	 */ 
+	 */
 	public function changeVolume(Amount:Float):Void
 	{
 		muted = false;
 		volume += Amount;
 		showSoundTray();
 	}
-	
+
 	/**
 	 * Shows the sound tray if it is enabled.
 	 */
@@ -317,12 +320,12 @@ class SoundFrontEnd
 		}
 		#end
 	}
-	
+
 	function new()
 	{
 		loadSavedPrefs();
 	}
-	
+
 	/**
 	 * Called by the game loop to make sure the sounds get updated each frame.
 	 */
@@ -331,10 +334,10 @@ class SoundFrontEnd
 	{
 		if (music != null && music.active)
 			music.update(elapsed);
-		
+
 		if (list != null && list.active)
 			list.update(elapsed);
-		
+
 		#if FLX_KEYBOARD
 		if (FlxG.keys.anyJustReleased(muteKeys))
 			toggleMuted();
@@ -344,7 +347,7 @@ class SoundFrontEnd
 			changeVolume(-0.1);
 		#end
 	}
-	
+
 	@:allow(flixel.FlxGame)
 	function onFocusLost():Void
 	{
@@ -352,7 +355,7 @@ class SoundFrontEnd
 		{
 			music.onFocusLost();
 		}
-		
+
 		for (sound in list.members)
 		{
 			if (sound != null)
@@ -361,7 +364,7 @@ class SoundFrontEnd
 			}
 		}
 	}
-	
+
 	@:allow(flixel.FlxGame)
 	function onFocus():Void
 	{
@@ -369,7 +372,7 @@ class SoundFrontEnd
 		{
 			music.onFocus();
 		}
-		
+
 		for (sound in list.members)
 		{
 			if (sound != null)
@@ -378,7 +381,7 @@ class SoundFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads saved sound preferences if they exist.
 	 */
@@ -388,17 +391,17 @@ class SoundFrontEnd
 		{
 			volume = FlxG.save.data.volume;
 		}
-		
+
 		if (FlxG.save.data.mute != null)
 		{
 			muted = FlxG.save.data.mute;
 		}
 	}
-	
+
 	function set_volume(Volume:Float):Float
 	{
 		Volume = FlxMath.bound(Volume, 0, 1);
-		
+
 		if (volumeHandler != null)
 		{
 			var param:Float = muted ? 0 : Volume;

@@ -1,3 +1,11 @@
+4.6.2 (June 19, 2019)
+------------------------------
+
+- `FlxGraphicsShader`: fixed crashes on some old iOS devices ([#2219](https://github.com/HaxeFlixel/flixel/issues/2219))
+- `FlxG.android`:
+	- fixed `preventDefaultKeys` handling with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+	- fixed the key codes for `FlxAndroidKey.BACK` and `MENU` with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+
 4.6.1 (April 2, 2019)
 ------------------------------
 

@@ -4,10 +4,10 @@ package flixel.util;
  * A set of functions for array manipulation.
  */
 class FlxArrayUtil
-{	
+{
 	/**
 	 * Sets the length of an array.
-	 * 
+	 *
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
@@ -21,7 +21,7 @@ class FlxArrayUtil
 		var diff:Int = newLength - oldLength;
 		if (diff >= 0)
 			return array;
-		
+
 		#if flash
 		untyped array.length = newLength;
 		#else
@@ -32,12 +32,12 @@ class FlxArrayUtil
 
 		return array;
 	}
-	
+
 	/**
 	 * Safely removes an element from an array by swapping it with the last element and calling `pop()`
-	 * (won't do anything if the element is not in the array). This is a lot faster than regular `splice()`, 
+	 * (won't do anything if the element is not in the array). This is a lot faster than regular `splice()`,
 	 * but it can only be used on arrays where order doesn't matter.
-	 * 
+	 *
 	 * @param	array	The array to remove the element from
 	 * @param 	element	The element to remove from the array
 	 * @return	The array
@@ -50,13 +50,13 @@ class FlxArrayUtil
 			return swapAndPop(array, index);
 		return array;
 	}
-	
+
 	/**
 	 * Removes an element from an array by swapping it with the last element and calling `pop()`.
 	 * This is a lot faster than regular `splice()`, but it can only be used on arrays where order doesn't matter.
-	 * 
+	 *
 	 * IMPORTANT: always count down from length to zero if removing elements from within a loop
-	 * 
+	 *
 	 * ```haxe
 	 * using flixel.util.FlxArrayUtil;
 	 *
@@ -69,7 +69,7 @@ class FlxArrayUtil
 	 *      }
 	 * }
 	 * ```
-	 * 
+	 *
 	 * @param	array	The array to remove the element from
 	 * @param 	index	The index of the element to be removed from the array
 	 * @return	The array
@@ -81,7 +81,7 @@ class FlxArrayUtil
 		array.pop();
 		return array;
 	}
-	
+
 	/**
 	 * Clears an array structure, but leaves the object data untouched
 	 * Useful for cleaning up temporary references to data you want to preserve.
@@ -112,7 +112,7 @@ class FlxArrayUtil
 
 		return array;
 	}
-	
+
 	/**
 	 * Flattens 2D arrays into 1D arrays.
 	 * Example: `[[1, 2], [3, 2], [1, 1]]` -> `[1, 2, 3, 2, 1, 1]`
@@ -126,7 +126,7 @@ class FlxArrayUtil
 				result.push(element);
 		return result;
 	}
-	
+
 	/**
 	 * Compares the contents with `==` to see if the two arrays are the same.
 	 * Also takes null arrays and the length of the arrays into account.
@@ -141,14 +141,14 @@ class FlxArrayUtil
 			return false;
 		if (array1.length != array2.length)
 			return false;
-		
+
 		for (i in 0...array1.length)
 			if (array1[i] != array2[i])
 				return false;
 
 		return true;
 	}
-	
+
 	/**
 	 * Returns the last element of an array or `null` if the array is `null` / empty.
 	 */
@@ -158,7 +158,7 @@ class FlxArrayUtil
 			return null;
 		return array[array.length - 1];
 	}
-	
+
 	/**
 	 * Pushes the element into the array (and if the array is null, creates it first) and returns the array.
 	 * @since 4.6.0
@@ -170,7 +170,7 @@ class FlxArrayUtil
 		array.push(element);
 		return array;
 	}
-	
+
 	public static inline function contains<T>(array:Array<T>, element:T):Bool
 	{
 		return array.indexOf(element) != -1;
