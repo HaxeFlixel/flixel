@@ -787,6 +787,18 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			transformChildren(pixelPerfectTransform, Value);
 		return super.set_pixelPerfectRender(Value);
 	}
+	
+	override function set_camera(camera:FlxCamera):FlxCamera
+	{
+		group.set_camera(camera);
+		return super.set_camera(camera);
+	}
+	
+	override function set_cameras(cameras:Array<FlxCamera>):Array<FlxCamera>
+	{
+		group.set_cameras(cameras);
+		return super.set_cameras(cameras);
+	}
 
 	/**
 	 * This functionality isn't supported in SpriteGroup
