@@ -408,7 +408,7 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Create a pre-rotated sprite sheet from a simple sprite.
-	 * This can make a huge difference in graphical performance!
+	 * This can make a huge difference in graphical performance on blitting targets!
 	 *
 	 * @param   Graphic        The image you want to rotate and stamp.
 	 * @param   Rotations      The number of rotation frames the final sprite should have.
