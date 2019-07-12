@@ -642,21 +642,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	// PROPERTIES GETTERS/SETTERS
-
-	override function set_camera(Value:FlxCamera):FlxCamera
-	{
-		if (camera != Value)
-			transformChildren(cameraTransform, Value);
-		return super.set_camera(Value);
-	}
-
-	override function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
-	{
-		if (cameras != Value)
-			transformChildren(camerasTransform, Value);
-		return super.set_cameras(Value);
-	}
-
+	
 	override function set_exists(Value:Bool):Bool
 	{
 		if (exists != Value)
@@ -800,6 +786,18 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		if (exists && pixelPerfectRender != Value)
 			transformChildren(pixelPerfectTransform, Value);
 		return super.set_pixelPerfectRender(Value);
+	}
+	
+	override function set_camera(camera:FlxCamera):FlxCamera
+	{
+		group.camera = camera;
+		return super.set_camera(camera);
+	}
+	
+	override function set_cameras(cameras:Array<FlxCamera>):Array<FlxCamera>
+	{
+		group.cameras = cameras;
+		return super.set_cameras(cameras);
 	}
 
 	/**
@@ -948,12 +946,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	inline function existsTransform(Sprite:FlxSprite, Exists:Bool)
 		Sprite.exists = Exists;
-
-	inline function cameraTransform(Sprite:FlxSprite, Camera:FlxCamera)
-		Sprite.camera = Camera;
-
-	inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)
-		Sprite.cameras = Cameras;
 
 	inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)
 		Sprite.offset.copyFrom(Offset);
