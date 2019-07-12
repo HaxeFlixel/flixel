@@ -790,13 +790,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	
 	override function set_camera(camera:FlxCamera):FlxCamera
 	{
-		group.set_camera(camera);
+		group.camera = camera;
 		return super.set_camera(camera);
 	}
 	
 	override function set_cameras(cameras:Array<FlxCamera>):Array<FlxCamera>
 	{
-		group.set_cameras(cameras);
+		group.cameras = cameras;
 		return super.set_cameras(cameras);
 	}
 
