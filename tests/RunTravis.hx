@@ -35,18 +35,14 @@ class RunTravis
 			target = Target.FLASH;
 
 		var openfl:OpenFL = Sys.args()[1];
-		
+
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 
 		putEnv("HXCPP_SILENT", "1");
 		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
-	
-		var installationResult = runUntilFailure([
-			installHaxelibs,
-			installOpenFL.bind(openfl),
-			installHxcpp.bind(target)
-		]);
+
+		var installationResult = runUntilFailure([installHaxelibs, installOpenFL.bind(openfl), installHxcpp.bind(target)]);
 
 		if (installationResult != ExitCode.SUCCESS)
 			Sys.exit(ExitCode.FAILURE);
@@ -68,9 +64,16 @@ class RunTravis
 	static function installHaxelibs():ExitCode
 	{
 		return runUntilFailure([
-			runCommand.bind("haxelib", ["git", "hamcrest", "https://github.com/kaikoga/hamcrest-haxe", "patch-haxe4-p5", "src"]),
-			runCommand.bind("haxelib", ["git", "nape", "https://github.com/XenizoGames/nape_haxe_4"]),
+			runCommand.bind("haxelib",
+				[
+					"git",
+					"hamcrest",
+					"https://github.com/kaikoga/hamcrest-haxe",
+					"patch-haxe4-p5",
+					"src"
+				]),
 
+			haxelibInstall.bind("nape-haxe4"),
 			haxelibInstall.bind("munit"),
 			haxelibInstall.bind("systools"),
 			haxelibInstall.bind("task"),
@@ -92,14 +95,8 @@ class RunTravis
 	{
 		return runAll(switch (openfl)
 		{
-			case NEW: [
-					haxelibInstall.bind("openfl"),
-					haxelibInstall.bind("lime")
-				];
-			case OLD: [
-					haxelibInstall.bind("openfl", "3.6.1"),
-					haxelibInstall.bind("lime", "2.9.1")
-				];
+			case NEW: [haxelibInstall.bind("openfl"), haxelibInstall.bind("lime")];
+			case OLD: [haxelibInstall.bind("openfl", "3.6.1"), haxelibInstall.bind("lime", "2.9.1")];
 		});
 	}
 
@@ -122,7 +119,7 @@ class RunTravis
 		args.push("--quiet");
 		return runCommand("haxelib", args);
 	}
-	
+
 	static function installHxcpp(target:Target):ExitCode
 	{
 		if (target != Target.CPP)
@@ -136,20 +133,18 @@ class RunTravis
 			runCommandInDir.bind(hxcppDir + "project", "neko", ["build.n"])
 		]);
 	}
-	
+
 	static function runCommandInDir(dir:String, cmd:String, args:Array<String>):ExitCode
 	{
 		return runInDir(dir, function() return runCommand(cmd, args));
 	}
-	
+
 	static function runUnitTests(target:Target):ExitCode
 	{
-		runInDir("unit", function()
-			return haxelibRun(["munit", "gen"])
-		);
+		runInDir("unit", function() return haxelibRun(["munit", "gen"]));
 
 		if (target == Target.FLASH || target == Target.HTML5 || target == Target.NEKO)
-		{	
+		{
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
 			// also, neko fails randomly for some reason... (#2148)
@@ -162,7 +157,7 @@ class RunTravis
 			return runOpenFL("test", "unit", target, "travis");
 		}
 	}
-	
+
 	static function buildCoverageTests(target:Target):ExitCode
 	{
 		Sys.println("\nBuilding coverage tests...\n");
@@ -171,7 +166,7 @@ class RunTravis
 			build.bind("coverage", target, "coverage2")
 		]);
 	}
-	
+
 	static function buildDemos(target:Target):ExitCode
 	{
 		Sys.println("\nBuilding demos...\n");
@@ -180,50 +175,48 @@ class RunTravis
 			demos = importantDemos;
 		return buildProjects(target, demos);
 	}
-	
+
 	static function buildNextDemos(target:Target, openfl:OpenFL):ExitCode
 	{
 		if (target == Target.FLASH || target == Target.HTML5 || openfl == NEW)
 			return ExitCode.SUCCESS;
-		
+
 		Sys.println("\nBuilding demos for OpenFL Next...\n");
 		return buildProjects(target, importantDemos.concat(["-Dnext"]));
 	}
-	
+
 	static function buildMechanicsDemos(target:Target):ExitCode
 	{
 		if (target == Target.CPP)
 			return ExitCode.SUCCESS;
-		
+
 		Sys.println("\nBuilding mechanics demos...\n");
 		runCommand("git", ["clone", "https://github.com/HaxeFlixel/haxeflixel-mechanics"]);
-		
+
 		return buildProjects(target, ["-dir", "haxeflixel-mechanics"]);
 	}
-	
+
 	static function buildProjects(target:Target, args:Array<String>):ExitCode
 	{
-		return haxelibRun(["flixel-tools", "bp", target].concat(args));
+		return haxelibRun(["flixel-tools", "bp", target].concat(args).concat(["-Dno-deprecation-warnings"]));
 	}
-	
+
 	static function buildSwfVersionTests(target:Target):ExitCode
 	{
 		if (target == Target.FLASH)
 		{
 			Sys.println("\nBuilding swf version tests...\n");
-			return runAll([
-				build.bind("swfVersion/11", target),
-				build.bind("swfVersion/11_2", target)
-			]);
+			return runAll([build.bind("swfVersion/11", target), build.bind("swfVersion/11_2", target)]);
 		}
-		else return ExitCode.SUCCESS;
+		else
+			return ExitCode.SUCCESS;
 	}
-	
+
 	static function build(path:String, target:Target, ?define:String):ExitCode
 	{
 		return runOpenFL("build", path, target, define);
 	}
-	
+
 	static function runOpenFL(operation:String, path:String, target:Target, ?define:String):ExitCode
 	{
 		var args = ["openfl", operation, path, target];
@@ -231,12 +224,12 @@ class RunTravis
 			args.push('-D$define');
 		return haxelibRun(args);
 	}
-	
+
 	static function haxelibRun(args:Array<String>):ExitCode
 	{
 		return runCommand("haxelib", ["run"].concat(args));
 	}
-	
+
 	static function runAll(methods:Array<Void->ExitCode>):ExitCode
 	{
 		var result = ExitCode.SUCCESS;
@@ -253,7 +246,7 @@ class RunTravis
 				return ExitCode.FAILURE;
 		return ExitCode.SUCCESS;
 	}
-	
+
 	static function runInDir(dir:String, func:Void->ExitCode):ExitCode
 	{
 		var oldCwd = Sys.getCwd();
@@ -262,8 +255,9 @@ class RunTravis
 		cd(oldCwd);
 		return result;
 	}
-	
-	static function putEnv(s:String, v:String) {
+
+	static function putEnv(s:String, v:String)
+	{
 		Sys.println('Sys.putEnv("$s", "$v")');
 		if (!dryRun)
 			Sys.putEnv(s, v);
@@ -275,7 +269,7 @@ class RunTravis
 		if (!dryRun)
 			Sys.setCwd(dir);
 	}
-	
+
 	static function runCommand(cmd:String, args:Array<String>):ExitCode
 	{
 		Sys.println(cmd + " " + args.join(" "));

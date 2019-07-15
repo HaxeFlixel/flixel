@@ -5,7 +5,6 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
-
 #if !FLX_DRAW_QUADS
 import openfl.display.Tilesheet;
 #end
@@ -28,7 +27,7 @@ class FlxDrawBaseItem<T>
 		#else
 		if (blend == null)
 			return Tilesheet.TILE_BLEND_NORMAL;
-		
+
 		return switch (blend)
 		{
 			case BlendMode.ADD:
@@ -60,26 +59,26 @@ class FlxDrawBaseItem<T>
 		}
 		#end
 	}
-	
+
 	public var nextTyped:T;
-	
+
 	public var next:FlxDrawBaseItem<T>;
-	
+
 	public var graphics:FlxGraphic;
 	public var antialiasing:Bool = false;
 	public var colored:Bool = false;
 	public var hasColorOffsets:Bool = false;
 	public var blending:Int = 0;
 	public var blend:BlendMode;
-	
+
 	public var type:FlxDrawItemType;
-	
+
 	public var numVertices(get, never):Int;
-	
+
 	public var numTriangles(get, never):Int;
-	
+
 	public function new() {}
-	
+
 	public function reset():Void
 	{
 		graphics = null;
@@ -87,7 +86,7 @@ class FlxDrawBaseItem<T>
 		nextTyped = null;
 		next = null;
 	}
-	
+
 	public function dispose():Void
 	{
 		graphics = null;
@@ -95,26 +94,26 @@ class FlxDrawBaseItem<T>
 		type = null;
 		nextTyped = null;
 	}
-	
+
 	public function render(camera:FlxCamera):Void
 	{
 		drawCalls++;
 	}
-	
+
 	public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {}
-	
+
 	function get_numVertices():Int
 	{
 		return 0;
 	}
-	
+
 	function get_numTriangles():Int
 	{
 		return 0;
 	}
 }
 
-enum FlxDrawItemType 
+enum FlxDrawItemType
 {
 	TILES;
 	TRIANGLES;

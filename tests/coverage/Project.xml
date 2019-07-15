@@ -24,7 +24,7 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-ui" />
-	<haxelib name="nape" />
+	<haxelib name="nape-haxe4" />
 	<haxelib name="spinehaxe" />
 	
 	<!-- ______________________________ Haxedefines _____________________________ -->

@@ -5,7 +5,7 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
 /**
  * Native PSVita input values.
  * (The only way to use these is to actually be using a PSVita with the upcoming openfl vita target!)
- * 
+ *
  * This will ONLY work with the gamepad API (available only in OpenFL "next", not "legacy") and will NOT work with the joystick API
  */
 class PSVitaID
@@ -24,6 +24,16 @@ class PSVitaID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 
-	public static var LEFT_ANALOG_STICK (default, null) = new FlxGamepadAnalogStick(0, 1, {up:21, down:22, left:23, right:24});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {up:25, down:26, left:27, right:28});
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
+		up: 21,
+		down: 22,
+		left: 23,
+		right: 24
+	});
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
+		up: 25,
+		down: 26,
+		left: 27,
+		right: 28
+	});
 }

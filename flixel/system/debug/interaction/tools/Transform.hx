@@ -12,6 +12,7 @@ import flixel.system.debug.interaction.Interaction;
 import flixel.system.debug.Tooltip;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxColor;
+
 using flixel.util.FlxArrayUtil;
 
 @:bitmap("assets/images/debugger/buttons/transform.png")
@@ -34,11 +35,11 @@ private class GraphicTransformCursorRotate extends BitmapData {}
 
 /**
  * A tool to scale and rotate selected game elements.
- * 
+ *
  * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Transform extends Tool
-{	
+{
 	static inline var OUTLINE_PADDING = 5.0;
 	static inline var MARKER_SIZE = 3.0;
 	static inline var MARKER_INTERACTION_DISTANCE = 5.0;
@@ -56,20 +57,20 @@ class Transform extends Tool
 
 	var _actionTargetStartScale:FlxPoint = new FlxPoint();
 	var _actionTargetStartAngle:Float;
-	var _actionStartPoint:FlxPoint = new FlxPoint();	
+	var _actionStartPoint:FlxPoint = new FlxPoint();
 	var _actionHappening:Bool;
 	var _actionMarker:Int;
 	var _actionScaleDirection:FlxPoint = new FlxPoint();
 	var _tooltip:TooltipOverlay;
 	var _markers:Array<FlxPoint> = [];
-	var _target:FlxSprite;	
+	var _target:FlxSprite;
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
-	
-	override public function init(brain:Interaction):Tool 
+
+	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
-		
+
 		_name = "Transform";
 		setButton(GraphicTransformTool);
 		setCursor(new GraphicTransformCursorDefault(0, 0));
@@ -86,6 +87,8 @@ class Transform extends Tool
 			_markers.push(new FlxPoint());
 
 		stopAction();
+
+		FlxG.signals.preStateSwitch.add(function() _target = null);
 		return this;
 	}
 
@@ -114,19 +117,16 @@ class Transform extends Tool
 
 		_actionHappening = true;
 		_actionMarker = whichMarker;
-		_actionStartPoint.set(
-			_brain.flixelPointer.x - FlxG.camera.scroll.x,
-			_brain.flixelPointer.y - FlxG.camera.scroll.y
-		);		
+		_actionStartPoint.set(_brain.flixelPointer.x - FlxG.camera.scroll.x, _brain.flixelPointer.y - FlxG.camera.scroll.y);
 		_actionTargetStartAngle = FlxAngle.angleBetweenPoint(_target, _markers[MARKER_ROTATE], true);
 		_actionTargetStartScale.set(_target.scale.x, _target.scale.y);
 	}
-	
+
 	/**
 	 * Stop any interaction activity that is happening with any marker.
 	 */
 	function stopAction():Void
-	{	
+	{
 		_actionHappening = false;
 		_actionMarker = -1;
 		_tooltip.setVisible(false);
@@ -165,11 +165,11 @@ class Transform extends Tool
 				}
 			}
 		}
-		
+
 		if (cursorName != "")
 			setCursorInUse(cursorName);
 		else
-			useDefaultCursor();		
+			useDefaultCursor();
 	}
 
 	function formatFloat(number:Float):String
@@ -210,7 +210,7 @@ class Transform extends Tool
 			_target.scale.x = _actionTargetStartScale.x + deltaX;
 		if (_actionMarker == MARKER_SCALE_XY || _actionMarker == MARKER_SCALE_Y)
 			_target.scale.y = _actionTargetStartScale.y + deltaY;
-		
+
 		_target.updateHitbox();
 		_target.centerOrigin();
 
@@ -249,8 +249,8 @@ class Transform extends Tool
 		if (_target.angle != 0)
 			updateMarkersRotation(width, height);
 	}
-	
-	function updateMarkersRotation(outlineWidth :Float, outlineHeight :Float):Void
+
+	function updateMarkersRotation(outlineWidth:Float, outlineHeight:Float):Void
 	{
 		var rotationAngleRad = _target.angle * FlxAngle.TO_RAD;
 		var originX = _markers[0].x + outlineWidth / 2;
@@ -267,7 +267,7 @@ class Transform extends Tool
 		}
 	}
 
-	override public function update():Void 
+	override public function update():Void
 	{
 		if (!isActive() || _target == null)
 			return;
@@ -287,12 +287,12 @@ class Transform extends Tool
 				stopAction();
 		}
 	}
-	
+
 	function drawTargetAreaOutline(gfx:Graphics):Void
 	{
 		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		
-		gfx.moveTo(_markers[0].x, _markers[0].y);		
+
+		gfx.moveTo(_markers[0].x, _markers[0].y);
 		for (i in 0..._markers.length)
 			gfx.lineTo(_markers[i].x, _markers[i].y);
 
@@ -313,7 +313,7 @@ class Transform extends Tool
 		gfx.endFill();
 	}
 
-	override public function draw():Void 
+	override public function draw():Void
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
 

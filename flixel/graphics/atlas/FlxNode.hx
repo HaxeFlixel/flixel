@@ -18,52 +18,60 @@ class FlxNode implements IFlxDestroyable
 	 * Left child of this node.
 	 */
 	public var left:FlxNode;
+
 	/**
 	 * Right child of this node.
 	 */
 	public var right:FlxNode;
-	
+
 	/**
 	 * Region of the atlas which this node holds, includes spacings between nodes.
 	 */
 	public var rect:FlxRect;
+
 	/**
 	 * The "name" of this node. You can get access to this node with it:
 	 * `atlas.getNode(key);`
 	 */
 	public var key:String;
+
 	/**
 	 * Logical flag showing whether this node has an image in it or not.
 	 */
 	public var filled(default, null):Bool;
+
 	/**
 	 * Atlas object which contains this node.
 	 */
 	public var atlas:FlxAtlas;
-	
+
 	/**
 	 * The x coordinate of the top-left corner of this node.
 	 */
 	public var x(get, null):Int;
+
 	/**
 	 * The y coordinate of the top-left corner of this node.
 	 */
 	public var y(get, null):Int;
+
 	/**
 	 * The width of this node.
 	 */
 	public var width(get, set):Int;
+
 	/**
 	 * The height of this node.
 	 */
 	public var height(get, set):Int;
+
 	/**
 	 * Logical flag, showing whether this node have any child nodes or image in it.
 	 */
 	public var isEmpty(get, null):Bool;
-	
+
 	public var rotated(default, null):Bool;
-	
+
 	/**
 	 * Node constructor
 	 *
@@ -82,7 +90,7 @@ class FlxNode implements IFlxDestroyable
 		this.atlas = atlas;
 		this.rotated = rotated;
 	}
-	
+
 	public inline function destroy():Void
 	{
 		key = null;
@@ -91,7 +99,7 @@ class FlxNode implements IFlxDestroyable
 		rect = null;
 		atlas = null;
 	}
-	
+
 	/**
 	 * Whether we place node with specified width and height in this node.
 	 */
@@ -99,7 +107,7 @@ class FlxNode implements IFlxDestroyable
 	{
 		return rect.width >= width && rect.height >= height;
 	}
-	
+
 	/**
 	 * Generates TileFrames object for this node
 	 *
@@ -112,7 +120,7 @@ class FlxNode implements IFlxDestroyable
 	{
 		FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame:FlxFrame = atlas.getAtlasFrames().getByName(key);
-		
+
 		if (frame != null)
 		{
 			var tileFrames:FlxTileFrames = FlxTileFrames.fromFrame(frame, tileSize, tileSpacing);
@@ -120,10 +128,10 @@ class FlxNode implements IFlxDestroyable
 				tileFrames = tileFrames.addBorder(tileBorder);
 			return tileFrames;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Generates a `FlxImageFrame` object for this node.
 	 *
@@ -133,44 +141,44 @@ class FlxNode implements IFlxDestroyable
 	{
 		FlxG.bitmap.add(atlas.bitmapData, false, atlas.name);
 		var frame = atlas.getAtlasFrames().getByName(key);
-		
+
 		if (frame != null)
 			return FlxImageFrame.fromFrame(frame);
-		
+
 		return null;
 	}
-	
+
 	inline function get_isEmpty():Bool
 	{
 		return !filled && left == null && right == null;
 	}
-	
+
 	inline function get_x():Int
 	{
 		return Std.int(rect.x);
 	}
-	
+
 	inline function get_y():Int
 	{
 		return Std.int(rect.y);
 	}
-	
+
 	inline function get_width():Int
 	{
 		return Std.int(rect.width);
 	}
-	
+
 	function set_width(value:Int):Int
 	{
 		rect.width = value;
 		return value;
 	}
-	
+
 	inline function get_height():Int
 	{
 		return Std.int(rect.height);
 	}
-	
+
 	function set_height(value:Int):Int
 	{
 		rect.height = value;

@@ -1,7 +1,7 @@
 package flixel.system.debug.log;
 
 /**
- * A class that allows you to create a custom style for FlxG.log.advanced(). 
+ * A class that allows you to create a custom style for FlxG.log.advanced().
  * Also used internally for the pre-defined styles.
  */
 class LogStyle
@@ -16,27 +16,31 @@ class LogStyle
 	 * A prefix which is always attached to the start of the logged data.
 	 */
 	public var prefix:String;
+
 	public var color:String;
 	public var size:Int;
 	public var bold:Bool;
 	public var italic:Bool;
 	public var underlined:Bool;
+
 	/**
 	 * A sound to be played when this LogStyle is used.
 	 */
 	public var errorSound:String;
+
 	/**
 	 * Whether the console should be forced to open when this LogStyle is used.
 	 */
 	public var openConsole:Bool;
+
 	/**
 	 * A callback function that is called when this LogStyle is used.
 	 */
 	public var callbackFunction:Void->Void;
-	
+
 	/**
 	 * Create a new LogStyle to be used in conjunction with FlxG.log.advanced()
-	 * 
+	 *
 	 * @param	Prefix				A prefix which is always attached to the start of the logged data.
 	 * @param	Color				The text color.
 	 * @param	Size				The text size.
@@ -47,8 +51,8 @@ class LogStyle
 	 * @param	OpenConsole			Whether the console should be forced to open when this LogStyle is used.
 	 * @param	CallbackFunction	A callback function that is called when this LogStyle is used.
 	 */
-	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false,
-		Italic:Bool = false, Underlined:Bool = false, ?ErrorSound:String, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
+	public function new(Prefix:String = "", Color:String = "FFFFFF", Size:Int = 12, Bold:Bool = false, Italic:Bool = false, Underlined:Bool = false,
+			?ErrorSound:String, OpenConsole:Bool = false, ?CallbackFunction:Void->Void)
 	{
 		prefix = Prefix;
 		color = Color;

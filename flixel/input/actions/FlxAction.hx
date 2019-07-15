@@ -15,13 +15,11 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
-import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-
 #if FLX_STEAMWRAP
 import steamwrap.api.Controller.EControllerActionOrigin;
 #end
@@ -29,8 +27,8 @@ import steamwrap.api.Controller.EControllerActionOrigin;
 using flixel.util.FlxArrayUtil;
 
 /**
- * A digital action is a binary on/off event like "jump" or "fire". 
- * FlxActions let you attach multiple inputs to a single in-game action, 
+ * A digital action is a binary on/off event like "jump" or "fire".
+ * FlxActions let you attach multiple inputs to a single in-game action,
  * so "jump" could be performed by a keyboard press, a mouse click,
  * or a gamepad button press.
  */
@@ -40,18 +38,18 @@ class FlxActionDigital extends FlxAction
 	 * Function to call when this action occurs
 	 */
 	public var callback:FlxActionDigital->Void;
-	
+
 	/**
 	 * Create a new digital action
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(?Name:String="", ?Callback:FlxActionDigital->Void)
+	public function new(?Name:String = "", ?Callback:FlxActionDigital->Void)
 	{
 		super(FlxInputType.DIGITAL, Name);
 		callback = Callback;
 	}
-	
+
 	/**
 	 * Add a digital input (any kind) that will trigger this action
 	 * @param	input
@@ -71,7 +69,7 @@ class FlxActionDigital extends FlxAction
 	 * destroy() this input (or the action you assign it to), the IFlxInput
 	 * reference will persist forever even after its parent object has been
 	 * destroyed!
-	 * 
+	 *
 	 * @param	Input	A generic IFlxInput object (ex: FlxButton.input)
 	 * @param	Trigger	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @return	This action
@@ -125,14 +123,14 @@ class FlxActionDigital extends FlxAction
 	{
 		return add(new FlxActionInputDigitalMouseWheel(Positive, Trigger));
 	}
-	
-	override public function destroy():Void 
+
+	override public function destroy():Void
 	{
 		callback = null;
 		super.destroy();
 	}
-	
-	override public function check():Bool 
+
+	override public function check():Bool
 	{
 		var val = super.check();
 		if (val && callback != null)
@@ -147,8 +145,8 @@ class FlxActionDigital extends FlxAction
  * Analog actions are events with continuous (floating-point) values, and up
  * to two axes (x,y). This is for events like "move" and "accelerate" where the
  * event is not simply on or off.
- * 
- * FlxActions let you attach multiple inputs to a single in-game action, 
+ *
+ * FlxActions let you attach multiple inputs to a single in-game action,
  * so "move" could be performed by a gamepad joystick, a mouse movement, etc.
  */
 class FlxActionAnalog extends FlxAction
@@ -157,28 +155,28 @@ class FlxActionAnalog extends FlxAction
 	 * Function to call when this action occurs
 	 */
 	public var callback:FlxActionAnalog->Void;
-	
+
 	/**
 	 * X axis value, or the value of a single-axis analog input.
 	 */
 	public var x(get, null):Float;
-	
+
 	/**
 	 * Y axis value. (If action only has single-axis input this is always == 0)
 	 */
 	public var y(get, null):Float;
-	
+
 	/**
 	 * Create a new analog action
 	 * @param	Name	name of the action
 	 * @param	Callback	function to call when this action occurs
 	 */
-	public function new(?Name:String="", ?Callback:FlxActionAnalog->Void)
+	public function new(?Name:String = "", ?Callback:FlxActionAnalog->Void)
 	{
 		super(FlxInputType.ANALOG, Name);
 		callback = Callback;
 	}
-	
+
 	/**
 	 * Add an analog input that will trigger this action
 	 */
@@ -200,7 +198,8 @@ class FlxActionAnalog extends FlxAction
 	 * @param	InvertX	Invert the X axis
 	 * @return	This action
 	 */
-	public function addMouseClickAndDragMotion(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = FlxAnalogAxis.EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false):FlxActionAnalog
+	public function addMouseClickAndDragMotion(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = FlxAnalogAxis.EITHER,
+			PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false):FlxActionAnalog
 	{
 		return add(new FlxActionInputAnalogClickAndDragMouseMotion(ButtonID, Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX));
 	}
@@ -215,7 +214,8 @@ class FlxActionAnalog extends FlxAction
 	 * @param	InvertX	Invert the X axis
 	 * @return	This action
 	 */
-	public function addMouseMotion(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false):FlxActionAnalog
+	public function addMouseMotion(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false,
+			InvertX:Bool = false):FlxActionAnalog
 	{
 		return add(new FlxActionInputAnalogMouseMotion(Trigger, Axis, PixelsPerUnit, DeadZone, InvertY, InvertX));
 	}
@@ -239,30 +239,31 @@ class FlxActionAnalog extends FlxAction
 	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.FIRST_ACTIVE / ALL
 	 * @return	This action
 	 */
-	public function addGamepad(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE):FlxActionAnalog
+	public function addGamepad(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER,
+			GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE):FlxActionAnalog
 	{
 		return add(new FlxActionInputAnalogGamepad(InputID, Trigger, Axis, GamepadID));
 	}
-	
-	override public function update():Void 
+
+	override public function update():Void
 	{
 		_x = null;
 		_y = null;
 		super.update();
 	}
-	
-	override public function destroy():Void 
+
+	override public function destroy():Void
 	{
 		callback = null;
 		super.destroy();
 	}
-	
-	override public function toString():String 
+
+	override public function toString():String
 	{
 		return "FlxAction(" + type + ") name:" + name + " x/y:" + _x + "," + _y;
 	}
-	
-	override public function check():Bool 
+
+	override public function check():Bool
 	{
 		var val = super.check();
 		if (val && callback != null)
@@ -271,15 +272,15 @@ class FlxActionAnalog extends FlxAction
 		}
 		return val;
 	}
-	
-	private function get_x():Float
+
+	function get_x():Float
 	{
-		(_x != null) ? return _x : return 0;
+		return (_x != null) ? _x : 0;
 	}
-	
-	private function get_y():Float 
+
+	function get_y():Float
 	{
-		(_y != null) ? return _y : return 0;
+		return (_y != null) ? _y : 0;
 	}
 }
 
@@ -290,44 +291,44 @@ class FlxAction implements IFlxDestroyable
 	 * Digital or Analog
 	 */
 	public var type(default, null):FlxInputType;
-	
+
 	/**
 	 * The name of the action, "jump", "fire", "move", etc.
 	 */
 	public var name(default, null):String;
-	
+
 	/**
 	 * This action's numeric handle for the Steam API (ignored if not using Steam)
 	 */
-	private var steamHandle(default, null):Int = -1;
-	
+	var steamHandle(default, null):Int = -1;
+
 	/**
 	 * If true, this action has just been triggered
 	 */
 	public var triggered(default, null):Bool = false;
-	
+
 	/**
 	 * The inputs attached to this action
 	 */
 	public var inputs:Array<FlxActionInput>;
-	
-	private var _x:Null<Float> = null;
-	private var _y:Null<Float> = null;
-	
-	private var _timestamp:Int = 0;
-	private var _checked:Bool = false;
-	
+
+	var _x:Null<Float> = null;
+	var _y:Null<Float> = null;
+
+	var _timestamp:Int = 0;
+	var _checked:Bool = false;
+
 	/**
 	 * Whether the steam controller inputs for this action have changed since the last time origins were polled. Always false if steam isn't active
 	 */
 	public var steamOriginsChanged(default, null):Bool = false;
-	
+
 	#if FLX_STEAMWRAP
-	private var _steamOriginsChecksum:Int = 0;
-	private var _steamOrigins:Array<EControllerActionOrigin>;
+	var _steamOriginsChecksum:Int = 0;
+	var _steamOrigins:Array<EControllerActionOrigin>;
 	#end
-	
-	private function new(InputType:FlxInputType, Name:String)
+
+	function new(InputType:FlxInputType, Name:String)
 	{
 		type = InputType;
 		name = Name;
@@ -340,11 +341,12 @@ class FlxAction implements IFlxDestroyable
 		}
 		#end
 	}
-	
+
 	public function getFirstSteamOrigin():Int
 	{
 		#if FLX_STEAMWRAP
-		if (_steamOrigins == null) return 0;
+		if (_steamOrigins == null)
+			return 0;
 		for (i in 0..._steamOrigins.length)
 		{
 			if (_steamOrigins[i] != EControllerActionOrigin.NONE)
@@ -355,7 +357,7 @@ class FlxAction implements IFlxDestroyable
 		#end
 		return 0;
 	}
-	
+
 	public function getSteamOrigins(?origins:Array<Int>):Array<Int>
 	{
 		#if FLX_STEAMWRAP
@@ -373,7 +375,7 @@ class FlxAction implements IFlxDestroyable
 		#end
 		return origins;
 	}
-	
+
 	public function removeAll(Destroy:Bool = true):Void
 	{
 		var len = inputs.length;
@@ -385,22 +387,23 @@ class FlxAction implements IFlxDestroyable
 			inputs.splice(j, 1);
 		}
 	}
-	
+
 	public function remove(Input:FlxActionInput, Destroy:Bool = false):Void
 	{
-		if (Input == null) return;
+		if (Input == null)
+			return;
 		inputs.remove(Input);
 		if (Destroy)
 		{
 			Input.destroy();
 		}
 	}
-	
+
 	public function toString():String
 	{
-		return("FlxAction(" + type + ") name:" + name);
+		return "FlxAction(" + type + ") name:" + name;
 	}
-	
+
 	/**
 	 * See if this action has just been triggered
 	 */
@@ -408,40 +411,40 @@ class FlxAction implements IFlxDestroyable
 	{
 		_x = null;
 		_y = null;
-		
+
 		if (_timestamp == FlxG.game.ticks)
 		{
 			triggered = _checked;
-			return _checked;	//run no more than once per frame
+			return _checked; // run no more than once per frame
 		}
-		
+
 		_timestamp = FlxG.game.ticks;
 		_checked = false;
-		
+
 		var len = inputs != null ? inputs.length : 0;
 		for (i in 0...len)
 		{
 			var j = len - i - 1;
 			var input = inputs[j];
-			
+
 			if (input.destroyed)
 			{
 				inputs.splice(j, 1);
 				continue;
 			}
-			
+
 			input.update();
-			
+
 			if (input.check(this))
 			{
 				_checked = true;
 			}
 		}
-		
+
 		triggered = _checked;
 		return _checked;
 	}
-	
+
 	/**
 	 * Check input states & fire callbacks if anything is triggered
 	 */
@@ -449,7 +452,7 @@ class FlxAction implements IFlxDestroyable
 	{
 		check();
 	}
-	
+
 	public function destroy():Void
 	{
 		FlxDestroyUtil.destroyArray(inputs);
@@ -459,26 +462,28 @@ class FlxAction implements IFlxDestroyable
 		_steamOrigins = null;
 		#end
 	}
-	
+
 	public function match(other:FlxAction):Bool
 	{
 		return name == other.name && steamHandle == other.steamHandle;
 	}
-	
-	private function addGenericInput(input:FlxActionInput):FlxAction
+
+	function addGenericInput(input:FlxActionInput):FlxAction
 	{
 		if (inputs == null)
 		{
 			inputs = [];
 		}
-		if (!checkExists(input)) inputs.push(input);
-		
+		if (!checkExists(input))
+			inputs.push(input);
+
 		return this;
 	}
-	
-	private function checkExists(input:FlxActionInput):Bool
+
+	function checkExists(input:FlxActionInput):Bool
 	{
-		if (inputs == null) return false;
+		if (inputs == null)
+			return false;
 		return inputs.contains(input);
 	}
 }

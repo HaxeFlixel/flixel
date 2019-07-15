@@ -1,3 +1,21 @@
+4.6.2 (June 19, 2019)
+------------------------------
+
+- `FlxGraphicsShader`: fixed crashes on some old iOS devices ([#2219](https://github.com/HaxeFlixel/flixel/issues/2219))
+- `FlxG.android`:
+	- fixed `preventDefaultKeys` handling with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+	- fixed the key codes for `FlxAndroidKey.BACK` and `MENU` with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+
+4.6.1 (April 2, 2019)
+------------------------------
+
+#### Bugfixes:
+
+- `FlxDebugger`:
+	- disabled mouse input when the debugger interaction tool is active ([#2209](https://github.com/HaxeFlixel/flixel/issues/2209))
+	- clear the transform tool target on state switches
+- `FlxBasePreloader`: fixed a crash on the HashLink target
+
 4.6.0 (February 4, 2019)
 ------------------------------
 #### Dependencies:
