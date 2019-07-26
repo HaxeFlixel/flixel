@@ -159,7 +159,6 @@ class State extends FlxState
 		interp.variables.set("FlxPoint", FlxPoint);
 		interp.variables.set("FlxRandom", FlxRandom);
 		interp.variables.set("FlxRect", FlxRect);
-		interp.variables.set("FlxVector", FlxVector);
 		interp.variables.set("FlxVelocity", FlxVelocity);
 	}
 
