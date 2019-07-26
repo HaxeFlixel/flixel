@@ -65,12 +65,12 @@ class FlxAssets
 	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
 	 */
 	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false,
-			?filterExtensions:Array<String>):Array<haxe.macro.Expr.Field>
+			?filterExtensions:Array<String>, ?rename:String->String):Array<haxe.macro.Expr.Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions, rename);
 		#end
 	}
 	#end

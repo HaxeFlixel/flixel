@@ -10,12 +10,12 @@ using StringTools;
 
 class FlxAssetPaths
 {
-	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<Field>
+	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>, ?rename:String->String):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
 
-		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions);
+		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
 
 		var fields:Array<Field> = Context.getBuildFields();
 
@@ -33,7 +33,7 @@ class FlxAssetPaths
 		return fields;
 	}
 
-	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>):Array<FileReference>
+	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>, ?rename:String->String):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
@@ -53,13 +53,13 @@ class FlxAssetPaths
 						continue;
 				}
 
-				var reference = FileReference.fromPath(directory + name);
+				var reference = FileReference.fromPath(directory + name, rename);
 				if (reference != null)
 					fileReferences.push(reference);
 			}
 			else if (subDirectories)
 			{
-				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions));
+				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions, rename));
 			}
 		}
 
@@ -71,12 +71,17 @@ private class FileReference
 {
 	private static var validIdentifierPattern = ~/^[_A-Za-z]\w*$/;
 
-	public static function fromPath(value:String):Null<FileReference>
+	public static function fromPath(value:String, ?rename:String->String):Null<FileReference>
 	{
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		var name = value.split("-").join("_").split(".").join("__");
-		var split:Array<String> = name.split("/");
-		name = split.last();
+		var name = value.split("/").last();
+		
+		if (rename != null)
+		{
+			name = rename(name);
+		}
+		
+		name = name.split("-").join("_").split(".").join("__");
 		if (!validIdentifierPattern.match(name)) // #1796
 			return null;
 		return new FileReference(name, value);
