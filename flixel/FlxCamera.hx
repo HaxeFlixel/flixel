@@ -53,7 +53,6 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Which cameras a `FlxBasic` uses to be drawn on when nothing else has been specified.
 	 * By default, this is just a reference to `FlxG.cameras.list` / all cameras, but it can be very useful to change.
-	 * This may be temporarily modified during a `draw` call.
 	 */
 	public static var defaultCameras:Array<FlxCamera>;
 
