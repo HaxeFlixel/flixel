@@ -20,9 +20,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
-import haxe.Utf8;
 
 using flixel.util.FlxStringUtil;
+using flixel.util.FlxUnicodeUtil;
 
 #if flash
 import openfl.geom.Rectangle;
@@ -296,15 +296,15 @@ class FlxText extends FlxSprite
 				continue;
 
 			var start:Bool = false;
-			var markerLength:Int = Utf8.length(rule.marker);
+			var markerLength:Int = rule.marker.uLength();
 
-			if (input.indexOf(rule.marker) == -1)
+			if (!input.contains(rule.marker))
 				continue; // marker not present
 
 			// inspect each character
-			for (charIndex in 0...Utf8.length(input))
+			for (charIndex in 0...input.uLength())
 			{
-				if (Utf8.compare(Utf8.sub(input, charIndex, markerLength), rule.marker) != 0)
+				if (!input.uSub(charIndex, markerLength).uEquals(rule.marker))
 					continue; // it's not one of the markers
 
 				if (start)
@@ -338,7 +338,7 @@ class FlxText extends FlxSprite
 		{
 			// Consider each range start
 			var delIndex:Int = rangeStarts[i];
-			var markerLength:Int = Utf8.length(rulesToApply[i].marker);
+			var markerLength:Int = rulesToApply[i].marker.uLength();
 
 			// Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
