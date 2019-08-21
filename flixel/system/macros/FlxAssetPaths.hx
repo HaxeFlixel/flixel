@@ -1,6 +1,5 @@
 package flixel.system.macros;
 
-#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.FileSystem;
@@ -10,7 +9,8 @@ using StringTools;
 
 class FlxAssetPaths
 {
-	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>, ?rename:String->String):Array<Field>
+	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>,
+			?rename:String->String):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
@@ -33,7 +33,8 @@ class FlxAssetPaths
 		return fields;
 	}
 
-	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>, ?rename:String->String):Array<FileReference>
+	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>,
+			?rename:String->String):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
@@ -75,12 +76,12 @@ private class FileReference
 	{
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
 		var name = value.split("/").last();
-		
+
 		if (rename != null)
 		{
 			name = rename(name);
 		}
-		
+
 		name = name.split("-").join("_").split(".").join("__");
 		if (!validIdentifierPattern.match(name)) // #1796
 			return null;
@@ -98,4 +99,3 @@ private class FileReference
 		this.documentation = "`\"" + value + "\"` (auto generated).";
 	}
 }
-#end

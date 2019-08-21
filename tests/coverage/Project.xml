@@ -29,7 +29,7 @@
 	
 	<!-- ______________________________ Haxedefines _____________________________ -->
 	
-	<haxeflag name="--macro" value="include('flixel')" />
+	<haxeflag name="--macro" value="include('flixel', true, ['flixel.system.macros'])" />
 	
 	<section if="coverage1">
 		<haxedef name="FLX_NO_MOUSE_ADVANCED" />

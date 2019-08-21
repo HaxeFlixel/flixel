@@ -1,6 +1,5 @@
 package flixel.system.macros;
 
-#if macro
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
@@ -205,4 +204,3 @@ class FlxDefines
 		Context.fatalError(message, pos);
 	}
 }
-#end
