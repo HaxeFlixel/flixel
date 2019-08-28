@@ -469,7 +469,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha	How opaque the color should be, from 0 to 1
 	 * @return This color
 	 */
-	public inline function setRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
+	public function setRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
 	{
 		redFloat = Red;
 		greenFloat = Green;
@@ -488,7 +488,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha		How opaque the color should be, from 0 to 1
 	 * @return This color
 	 */
-	public inline function setCMYK(Cyan:Float, Magenta:Float, Yellow:Float, Black:Float, Alpha:Float = 1):FlxColor
+	public function setCMYK(Cyan:Float, Magenta:Float, Yellow:Float, Black:Float, Alpha:Float = 1):FlxColor
 	{
 		redFloat = (1 - Cyan) * (1 - Black);
 		greenFloat = (1 - Magenta) * (1 - Black);
@@ -506,7 +506,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	This color
 	 */
-	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
+	public function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
 	{
 		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
@@ -522,7 +522,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255
 	 * @return	This color
 	 */
-	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
+	public function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
 	{
 		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
@@ -532,7 +532,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	/**
 	 * Private utility function to perform common operations between setHSB and setHSL
 	 */
-	inline function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
+	function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
 	{
 		Hue %= 360;
 		var hueD = Hue / 60;
