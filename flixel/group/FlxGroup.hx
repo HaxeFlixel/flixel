@@ -179,7 +179,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
-
+		
+		var oldDefaultCameras = FlxCamera.defaultCameras;
+		if (cameras != null)
+		{
+			FlxCamera.defaultCameras = cameras;
+		}
+		
 		while (i < length)
 		{
 			basic = members[i++];
@@ -189,6 +195,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				basic.draw();
 			}
 		}
+		
+		FlxCamera.defaultCameras = oldDefaultCameras;
 	}
 
 	/**
