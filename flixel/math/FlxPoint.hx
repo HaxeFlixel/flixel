@@ -520,7 +520,7 @@ class FlxCallbackPoint extends FlxPoint
 		}
 	}
 
-	override public inline function set(X:Float = 0, Y:Float = 0):FlxCallbackPoint
+	override public function set(X:Float = 0, Y:Float = 0):FlxCallbackPoint
 	{
 		super.set(X, Y);
 		if (_setXYCallback != null)
@@ -528,7 +528,7 @@ class FlxCallbackPoint extends FlxPoint
 		return this;
 	}
 
-	override inline function set_x(Value:Float):Float
+	override function set_x(Value:Float):Float
 	{
 		super.set_x(Value);
 		if (_setXCallback != null)
@@ -536,7 +536,7 @@ class FlxCallbackPoint extends FlxPoint
 		return Value;
 	}
 
-	override inline function set_y(Value:Float):Float
+	override function set_y(Value:Float):Float
 	{
 		super.set_y(Value);
 		if (_setYCallback != null)
