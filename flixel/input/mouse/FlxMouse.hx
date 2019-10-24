@@ -650,6 +650,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	function set_visible(value:Bool):Bool
 	{
+		_visibleWhenFocusLost = value;
+
 		if (value)
 			showCursor();
 		else
