@@ -310,7 +310,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 *
 	 * @param   Name         The ID name used for the cursor
 	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
-	 * @param   Show         Whether to call setNativeCursor afterwards
 	 */
 	public inline function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
 	{
