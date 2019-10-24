@@ -289,14 +289,14 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	#if FLX_NATIVE_CURSOR
 	/**
-	 * Set a Native cursor that has been registered by Name
+	 * Set a Native cursor that has been registered by name
 	 * Warning, you need to use registerNativeCursor() before you use it here
 	 *
-	 * @param   Name   The name ID used when registered
+	 * @param   name   The name ID used when registered
 	 */
-	public function setNativeCursor(Name:String):Void
+	public function setNativeCursor(name:String):Void
 	{
-		_currentNativeCursor = Name;
+		_currentNativeCursor = name;
 
 		Mouse.show();
 
@@ -308,34 +308,34 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * Shortcut to register a native cursor in flash
 	 *
-	 * @param   Name         The ID name used for the cursor
-	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @param   name         The ID name used for the cursor
+	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
 	 */
-	public inline function registerNativeCursor(Name:String, CursorData:MouseCursorData):Void
+	public inline function registerNativeCursor(name:String, cursorData:MouseCursorData):Void
 	{
-		untyped Mouse.registerCursor(Name, CursorData);
+		untyped Mouse.registerCursor(name, cursorData);
 	}
 
 	/**
 	 * Shortcut to register a simple MouseCursorData
 	 *
-	 * @param   Name         The ID name used for the cursor
-	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @param   name         The ID name used for the cursor
+	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
 	 * @since   4.2.0
 	 */
-	public function registerSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
+	public function registerSimpleNativeCursorData(name:String, cursorBitmap:BitmapData):MouseCursorData
 	{
 		var cursorVector = new Vector<BitmapData>();
-		cursorVector[0] = CursorBitmap;
+		cursorVector[0] = cursorBitmap;
 
-		if (CursorBitmap.width > 32 || CursorBitmap.height > 32)
+		if (cursorBitmap.width > 32 || cursorBitmap.height > 32)
 			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
 
 		var cursorData = new MouseCursorData();
 		cursorData.hotSpot = new Point(0, 0);
 		cursorData.data = cursorVector;
 
-		registerNativeCursor(Name, cursorData);
+		registerNativeCursor(name, cursorData);
 
 		return cursorData;
 	}
@@ -343,13 +343,13 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * Shortcut to create and set a simple MouseCursorData
 	 *
-	 * @param   Name         The ID name used for the cursor
-	 * @param   CursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @param   name         The ID name used for the cursor
+	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
 	 */
-	public function setSimpleNativeCursorData(Name:String, CursorBitmap:BitmapData):MouseCursorData
+	public function setSimpleNativeCursorData(name:String, cursorBitmap:BitmapData):MouseCursorData
 	{
-		var data = registerSimpleNativeCursorData(Name, CursorBitmap);
-		setNativeCursor(Name);
+		var data = registerSimpleNativeCursorData(name, cursorBitmap);
+		setNativeCursor(name);
 		Mouse.show();
 		return data;
 	}
@@ -409,15 +409,15 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * @param   CursorContainer   The cursor container sprite passed by FlxGame
+	 * @param   cursorContainer   The cursor container sprite passed by FlxGame
 	 */
 	@:allow(flixel.FlxG)
-	function new(CursorContainer:Sprite)
+	function new(cursorContainer:Sprite)
 	{
 		super();
-		cursorContainer = CursorContainer;
-		cursorContainer.mouseChildren = false;
-		cursorContainer.mouseEnabled = false;
+		this.cursorContainer = cursorContainer;
+		this.cursorContainer.mouseChildren = false;
+		this.cursorContainer.mouseEnabled = false;
 
 		_leftButton = new FlxMouseButton(FlxMouseButtonID.LEFT);
 
@@ -519,12 +519,12 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * Internal event handler for input and focus.
 	 */
-	function onMouseWheel(FlashEvent:MouseEvent):Void
+	function onMouseWheel(flashEvent:MouseEvent):Void
 	{
 		if (enabled)
 		{
 			_wheelUsed = true;
-			wheel = FlashEvent.delta;
+			wheel = flashEvent.delta;
 		}
 	}
 
@@ -609,9 +609,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#end
 	}
 
-	function set_useSystemCursor(Value:Bool):Bool
+	function set_useSystemCursor(value:Bool):Bool
 	{
-		if (Value)
+		if (value)
 		{
 			showSystemCursor();
 		}
@@ -619,7 +619,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		{
 			hideSystemCursor();
 		}
-		return useSystemCursor = Value;
+		return useSystemCursor = value;
 	}
 
 	function showCursor():Void
@@ -648,14 +648,14 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		Mouse.hide();
 	}
 
-	function set_visible(Value:Bool):Bool
+	function set_visible(value:Bool):Bool
 	{
-		if (Value)
+		if (value)
 			showCursor();
 		else
 			hideCursor();
 
-		return visible = Value;
+		return visible = value;
 	}
 
 	@:allow(flixel.system.replay.FlxReplay)
@@ -677,20 +677,20 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	@:allow(flixel.system.replay.FlxReplay)
-	function playback(Record:MouseRecord):Void
+	function playback(record:MouseRecord):Void
 	{
 		// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
 		// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
 		// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
 		if ((_lastLeftButtonState == PRESSED || _lastLeftButtonState == JUST_PRESSED)
-			&& (Record.button == RELEASED || Record.button == JUST_RELEASED))
+			&& (record.button == RELEASED || record.button == JUST_RELEASED))
 		{
-			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, Record.x, Record.y));
+			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, record.x, record.y));
 		}
-		_lastLeftButtonState = _leftButton.current = Record.button;
-		wheel = Record.wheel;
-		_globalScreenX = Record.x;
-		_globalScreenY = Record.y;
+		_lastLeftButtonState = _leftButton.current = record.button;
+		wheel = record.wheel;
+		_globalScreenX = record.x;
+		_globalScreenY = record.y;
 		updatePositions();
 	}
 }
