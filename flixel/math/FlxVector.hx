@@ -165,7 +165,6 @@ import openfl.geom.Point;
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	@:op(A *= B)
 	public inline function scale(k:Float):FlxVector
 	{
 		return this.scale(k);
@@ -177,7 +176,6 @@ import openfl.geom.Point;
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	@:op(A * B)
 	public inline function scaleNew(k:Float):FlxVector
 	{
 		return clone().scale(k);
@@ -189,7 +187,6 @@ import openfl.geom.Point;
 	 * @param	v	vector to add
 	 * @return	addition result
 	 */
-	@:op(A + B)
 	public inline function addNew(v:FlxVector):FlxVector
 	{
 		return clone().addPoint(v);
@@ -201,7 +198,6 @@ import openfl.geom.Point;
 	 * @param	v	vector to subtract
 	 * @return	subtraction result
 	 */
-	@:op(A - B)
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
 		return clone().subtractPoint(v);
