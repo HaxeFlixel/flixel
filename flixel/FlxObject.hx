@@ -4,6 +4,7 @@ import flash.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.math.FlxVector;
 import flixel.math.FlxVelocity;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
@@ -505,25 +506,25 @@ class FlxObject extends FlxBasic
 	/**
 	 * The basic speed of this object (in pixels per second).
 	 */
-	public var velocity(default, null):FlxPoint;
+	public var velocity(default, null):FlxVector;
 
 	/**
 	 * How fast the speed of this object is changing (in pixels per second).
 	 * Useful for smooth movement and gravity.
 	 */
-	public var acceleration(default, null):FlxPoint;
+	public var acceleration(default, null):FlxVector;
 
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when `acceleration` is not affecting the sprite.
 	 */
-	public var drag(default, null):FlxPoint;
+	public var drag(default, null):FlxVector;
 
 	/**
 	 * If you are using `acceleration`, you can use `maxVelocity` with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	public var maxVelocity(default, null):FlxPoint;
+	public var maxVelocity(default, null):FlxVector;
 
 	/**
 	 * Important variable for collision processing.
@@ -676,10 +677,10 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	inline function initMotionVars():Void
 	{
-		velocity = FlxPoint.get();
-		acceleration = FlxPoint.get();
-		drag = FlxPoint.get();
-		maxVelocity = FlxPoint.get(10000, 10000);
+		velocity = FlxVector.get();
+		acceleration = FlxVector.get();
+		drag = FlxVector.get();
+		maxVelocity = FlxVector.get(10000, 10000);
 	}
 
 	/**
