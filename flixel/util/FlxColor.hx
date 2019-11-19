@@ -469,7 +469,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha	How opaque the color should be, from 0 to 1
 	 * @return This color
 	 */
-	public function setRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
+	public inline function setRGBFloat(Red:Float, Green:Float, Blue:Float, Alpha:Float = 1):FlxColor
 	{
 		redFloat = Red;
 		greenFloat = Green;
