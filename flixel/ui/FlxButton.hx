@@ -389,12 +389,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		if (!overlapFound)
 			overlapFound = checkTouchOverlap();
 
-		#if FLX_TOUCH // there's only a mouse event listener for onUp
-		if (currentInput != null && currentInput.justReleased && Std.is(currentInput, FlxTouch) && overlapFound)
+		if (currentInput != null && currentInput.justReleased && overlapFound)
 		{
 			onUpHandler();
 		}
-		#end
 
 		if (status != FlxButton.NORMAL && (!overlapFound || (currentInput != null && currentInput.justReleased)))
 		{
@@ -404,6 +402,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	function checkMouseOverlap():Bool
 	{
+		var overlap = false;
 		#if FLX_MOUSE
 		for (camera in cameras)
 		{
@@ -412,17 +411,17 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 				var button = FlxMouseButton.getByID(buttonID);
 				if (button != null && checkInput(FlxG.mouse, button, button.justPressedPosition, camera))
 				{
-					return true;
+					overlap = true;
 				}
 			}
 		}
 		#end
-
-		return false;
+		return overlap;
 	}
 
 	function checkTouchOverlap():Bool
 	{
+		var overlap = false;
 		#if FLX_TOUCH
 		for (camera in cameras)
 		{
@@ -430,13 +429,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			{
 				if (checkInput(touch, touch, touch.justPressedPosition, camera))
 				{
-					return true;
+					overlap = true;
 				}
 			}
 		}
 		#end
-
-		return false;
+		return overlap;
 	}
 
 	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
@@ -445,7 +443,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			&& justPressedPosition.distanceTo(pointer.getScreenPosition(FlxPoint.weak())) > maxInputMovement
 			&& input == currentInput)
 		{
-			currentInput == null;
+			currentInput = null;
 		}
 		else if (overlapsPoint(pointer.getWorldPosition(camera, _point), true, camera))
 		{
