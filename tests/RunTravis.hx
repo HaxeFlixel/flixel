@@ -125,13 +125,11 @@ class RunTravis
 		if (target != Target.CPP)
 			return ExitCode.SUCCESS;
 
-		//var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
+		var hxcppDir = Sys.getEnv("HOME") + "/haxe/lib/hxcpp/git/";
 		return runAll([
-			haxelibInstall.bind("hxcpp")
-			/*haxelibGit.bind("HaxeFoundation", "hxcpp"),
+			haxelibGit.bind("HaxeFoundation", "hxcpp"),
 			runCommandInDir.bind(hxcppDir + "tools/run", "haxe", ["compile.hxml"]),
 			runCommandInDir.bind(hxcppDir + "tools/hxcpp", "haxe", ["compile.hxml"]),
-			runCommandInDir.bind(hxcppDir + "project", "neko", ["build.n"])*/
 		]);
 	}
 
