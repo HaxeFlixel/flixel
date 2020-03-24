@@ -15,28 +15,28 @@ class Reg
 	public static var PS:PlayState;
 	public static var colorArray:Array<Int> = [];
 
-	public static var lite(get, null):Int;
+	public static var lite(get, never):Int;
 
 	static function get_lite():Int
 	{
 		return colorArray[3];
 	}
 
-	public static var med_lite(get, null):Int;
+	public static var med_lite(get, never):Int;
 
 	static function get_med_lite():Int
 	{
 		return colorArray[2];
 	}
 
-	public static var med_dark(get, null):Int;
+	public static var med_dark(get, never):Int;
 
 	static function get_med_dark():Int
 	{
 		return colorArray[1];
 	}
 
-	public static var dark(get, null):Int;
+	public static var dark(get, never):Int;
 
 	static function get_dark():Int
 	{

@@ -70,7 +70,7 @@ class Tower extends FlxSprite
 	/**
 	 * Used to determine value of a tower when selling it. Equivalent to half its next upgrade costs plus half its base cost.
 	 */
-	public var value(get, null):Int;
+	public var value(get, never):Int;
 
 	function get_value():Int
 	{

@@ -64,28 +64,28 @@ class PongSprite extends FlxSprite
 		}
 	}
 
-	public var mx(get, null):Int;
+	public var mx(get, never):Int;
 
 	function get_mx():Int
 	{
 		return Std.int(x + width / 2);
 	}
 
-	public var my(get, null):Int;
+	public var my(get, never):Int;
 
 	function get_my():Int
 	{
 		return Std.int(y + height / 2);
 	}
 
-	public var fx(get, null):Int;
+	public var fx(get, never):Int;
 
 	function get_fx():Int
 	{
 		return Std.int(x + width);
 	}
 
-	public var fy(get, null):Int;
+	public var fy(get, never):Int;
 
 	function get_fy():Int
 	{
