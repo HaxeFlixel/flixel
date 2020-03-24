@@ -295,13 +295,14 @@ class FlxGraphic implements IFlxDestroyable
 	public var assetsClass(default, null):Class<BitmapData>;
 
 	/**
-	 * Whether this graphic object should stay in cache after state changes or not.
+	 * Whether this graphic object should stay in the cache after state changes or not.
+	 * `destroyOnNoUse` has no effect when this is set to `true`.
 	 */
 	public var persist:Bool = false;
 
 	/**
-	 * Whether this `FlxGraphic` should be destroyed object when `useCount` become zero.
-	 * Default is `true`.
+	 * Whether this `FlxGraphic` should be destroyed when `useCount` becomes zero (defaults to `true`).
+	 * Has no effect when `persist` is `true`.
 	 */
 	public var destroyOnNoUse(get, set):Bool;
 
