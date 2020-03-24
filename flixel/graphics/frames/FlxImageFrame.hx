@@ -20,7 +20,7 @@ class FlxImageFrame extends FlxFramesCollection
 	 * Single frame of this frame collection.
 	 * Added this var for faster access, so you don't need to type something like: `imageFrame.frames[0]`
 	 */
-	public var frame(get, null):FlxFrame;
+	public var frame(get, never):FlxFrame;
 
 	function new(parent:FlxGraphic, ?border:FlxPoint)
 	{
@@ -248,7 +248,7 @@ class FlxImageFrame extends FlxFramesCollection
 	override public function destroy():Void
 	{
 		super.destroy();
-		frame = FlxDestroyUtil.destroy(frame);
+		FlxDestroyUtil.destroy(frame);
 	}
 
 	function get_frame():FlxFrame

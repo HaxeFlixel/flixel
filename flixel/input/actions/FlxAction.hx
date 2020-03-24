@@ -159,12 +159,12 @@ class FlxActionAnalog extends FlxAction
 	/**
 	 * X axis value, or the value of a single-axis analog input.
 	 */
-	public var x(get, null):Float;
+	public var x(get, never):Float;
 
 	/**
 	 * Y axis value. (If action only has single-axis input this is always == 0)
 	 */
-	public var y(get, null):Float;
+	public var y(get, never):Float;
 
 	/**
 	 * Create a new analog action

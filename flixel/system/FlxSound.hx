@@ -86,7 +86,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not the sound is currently playing.
 	 */
-	public var playing(get, null):Bool;
+	public var playing(get, never):Bool;
 
 	/**
 	 * Set volume to a value between 0 and 1 to change how this sound is.

@@ -42,7 +42,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The total number of frames in this image.
 	 * WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var frames(get, null):Int;
+	public var frames(get, never):Int;
 
 	/**
 	 * If assigned, will be called each time the current animation's frame changes.

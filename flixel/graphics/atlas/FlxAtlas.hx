@@ -57,7 +57,7 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Graphic for this atlas.
 	 */
-	public var graphic(get, null):FlxGraphic;
+	public var graphic(get, never):FlxGraphic;
 
 	/**
 	 * Whether this atlas should stay in memory after state switch.

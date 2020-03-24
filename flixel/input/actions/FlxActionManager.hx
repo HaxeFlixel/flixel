@@ -46,7 +46,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	/**
 	 * The number of registered action sets
 	 */
-	public var numSets(get, null):Int;
+	public var numSets(get, never):Int;
 
 	/**
 	 * A signal fired when a device currently in use is suddenly disconnected. Returns the device type, handle/id, and a string identifier for the device model (if applicable)

@@ -97,17 +97,17 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Width of the text in this text field.
 	 */
-	public var textWidth(get, null):Int;
+	public var textWidth(get, never):Int;
 
 	/**
 	 * Height of the text in this text field.
 	 */
-	public var textHeight(get, null):Int;
+	public var textHeight(get, never):Int;
 
 	/**
 	 * Height of the single line of text (without lineSpacing).
 	 */
-	public var lineHeight(get, null):Int;
+	public var lineHeight(get, never):Int;
 
 	/**
 	 * Number of space characters in one tab.
@@ -171,7 +171,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Reflects how many lines have this text field.
 	 */
-	public var numLines(get, null):Int = 0;
+	public var numLines(get, never):Int;
 
 	/**
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
@@ -1791,11 +1791,6 @@ class FlxBitmapText extends FlxSprite
 		return _lines.length;
 	}
 
-	/**
-	 * Calculates maximum width of the text.
-	 *
-	 * @return	text width.
-	 */
 	function get_textWidth():Int
 	{
 		var max:Int = 0;

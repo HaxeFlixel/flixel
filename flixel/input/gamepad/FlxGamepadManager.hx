@@ -31,7 +31,7 @@ class FlxGamepadManager implements IFlxInputManager
 	/**
 	 * A counter for the number of active gamepads
 	 */
-	public var numActiveGamepads(get, null):Int;
+	public var numActiveGamepads(get, never):Int;
 
 	/**
 	 * Global Gamepad deadzone. The lower, the more sensitive the gamepad. Should be

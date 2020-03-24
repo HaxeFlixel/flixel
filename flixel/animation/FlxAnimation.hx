@@ -21,7 +21,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Accessor for `frames.length`
 	 */
-	public var numFrames(get, null):Int;
+	public var numFrames(get, never):Int;
 
 	/**
 	 * Seconds between frames (basically the framerate)

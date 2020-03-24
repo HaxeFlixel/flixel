@@ -27,12 +27,12 @@ class FlxSteamController
 	/**
 	 * The maximum number of controllers that can be connected
 	 */
-	public static var MAX_CONTROLLERS(get, null):Int;
+	public static var MAX_CONTROLLERS(get, never):Int;
 
 	/**
 	 * The maximum number of origins (input glyphs, basically) that can be assigned to an action
 	 */
-	public static var MAX_ORIGINS(get, null):Int;
+	public static var MAX_ORIGINS(get, never):Int;
 
 	/**
 	 * The wait time between polls for connected controllers
