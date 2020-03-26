@@ -15,8 +15,9 @@ class FlxAssetPaths
 		if (!directory.endsWith("/"))
 			directory += "/";
 
-		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
+		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
+		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
 		var fields:Array<Field> = Context.getBuildFields();
 
 		for (fileRef in fileReferences)
