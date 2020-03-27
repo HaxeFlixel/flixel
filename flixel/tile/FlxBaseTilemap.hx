@@ -283,6 +283,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		widthInTiles = WidthInTiles;
 		heightInTiles = HeightInTiles;
 		_data = MapData.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
+		for (i in 0..._data.length) if (_data[i] < 0) _data[i] = 0;
 
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
@@ -312,6 +313,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		widthInTiles = MapData[0].length;
 		heightInTiles = MapData.length;
 		_data = FlxArrayUtil.flatten2DArray(MapData);
+		for (i in 0..._data.length) if (_data[i] < 0) _data[i] = 0;
 
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
