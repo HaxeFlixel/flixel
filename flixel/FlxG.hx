@@ -389,7 +389,7 @@ class FlxG
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
-	 *       Use `FlxTilemap#overlaps()` if you don't want that.
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
 	 *
 	 * @param   ObjectOrGroup1    The first object or group you want to check.
 	 * @param   ObjectOrGroup2    The second object or group you want to check. If it is the same as the first,
