@@ -67,7 +67,7 @@ class MenuState extends FlxState
 	#if desktop
 	function clickExit()
 	{
-		System.exit(0);
+		Sys.exit(0);
 	}
 	#end
 }
