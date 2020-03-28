@@ -8,6 +8,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+#if mobile
+import flixel.ui.FlxVirtualPad;
+#end
 
 using flixel.util.FlxSpriteUtil;
 

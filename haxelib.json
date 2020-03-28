@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.7.1",
-    "releasenote": "Replaced nape with nape-haxe4.",
+    "version": "2.7.2",
+    "releasenote": "Modernized the TurnBasedRPG tutorial.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }

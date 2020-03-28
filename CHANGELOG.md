@@ -1,3 +1,7 @@
+2.7.2 (March 28, 2020)
+------------------------------
+* Modernized the TurnBasedRPG tutorial
+
 2.7.1 (May 1, 2019)
 ------------------------------
 * Replaced `nape` in `Project.xml` with `nape-haxe4`
