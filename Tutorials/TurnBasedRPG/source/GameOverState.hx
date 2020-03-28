@@ -11,28 +11,28 @@ import flixel.util.FlxSave;
 
 class GameOverState extends FlxState
 {
-	var _score:Int = 0; // number of coins we've collected
-	var _win:Bool; // if we won or lost
-	var _txtTitle:FlxText; // the title text
-	var _txtMessage:FlxText; // the final score message text
-	var _sprScore:FlxSprite; // sprite for a coin icon
-	var _txtScore:FlxText; // text of the score
-	var _txtHiScore:FlxText; // text to show the hi-score
-	var _btnMainMenu:FlxButton; // button to go to main menu
+	var score:Int = 0; // number of coins we've collected
+	var win:Bool; // if we won or lost
+	var titleText:FlxText; // the title text
+	var messageText:FlxText; // the final score message text
+	var scoreIcon:FlxSprite; // sprite for a coin icon
+	var scoreText:FlxText; // text of the score
+	var highscoreText:FlxText; // text to show the highscore
+	var mainMenuButton:FlxButton; // button to go to main menu
 
 	/**
 	 * Called from PlayState, this will set our win and score variables
-	 * @param	Win		true if the player beat the boss, false if they died
-	 * @param	Score	the number of coins collected
+	 * @param	win		true if the player beat the boss, false if they died
+	 * @param	score	the number of coins collected
 	 */
-	public function new(Win:Bool, Score:Int)
+	public function new(win:Bool, score:Int)
 	{
-		_win = Win;
-		_score = Score;
 		super();
+		this.win = win;
+		this.score = score;
 	}
 
-	override public function create():Void
+	override public function create()
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.visible = true;
@@ -40,74 +40,74 @@ class GameOverState extends FlxState
 
 		// create and add each of our items
 
-		_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
-		_txtTitle.alignment = CENTER;
-		_txtTitle.screenCenter(FlxAxes.X);
-		add(_txtTitle);
+		titleText = new FlxText(0, 20, 0, if (win) "You Win!" else "Game Over!", 22);
+		titleText.alignment = CENTER;
+		titleText.screenCenter(FlxAxes.X);
+		add(titleText);
 
-		_txtMessage = new FlxText(0, (FlxG.height / 2) - 18, 0, "Final Score:", 8);
-		_txtMessage.alignment = CENTER;
-		_txtMessage.screenCenter(FlxAxes.X);
-		add(_txtMessage);
+		messageText = new FlxText(0, (FlxG.height / 2) - 18, 0, "Final Score:", 8);
+		messageText.alignment = CENTER;
+		messageText.screenCenter(FlxAxes.X);
+		add(messageText);
 
-		_sprScore = new FlxSprite((FlxG.width / 2) - 8, 0, AssetPaths.coin__png);
-		_sprScore.screenCenter(FlxAxes.Y);
-		add(_sprScore);
+		scoreIcon = new FlxSprite((FlxG.width / 2) - 8, 0, AssetPaths.coin__png);
+		scoreIcon.screenCenter(FlxAxes.Y);
+		add(scoreIcon);
 
-		_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
-		_txtScore.screenCenter(FlxAxes.Y);
-		add(_txtScore);
+		scoreText = new FlxText((FlxG.width / 2), 0, 0, Std.string(score), 8);
+		scoreText.screenCenter(FlxAxes.Y);
+		add(scoreText);
 
-		// we want to see what the hi-score is
-		var _hiScore = checkHiScore(_score);
+		// we want to see what the highscore is
+		var highscore = checkHighscore(score);
 
-		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + _hiScore, 8);
-		_txtHiScore.alignment = CENTER;
-		_txtHiScore.screenCenter(FlxAxes.Y);
-		add(_txtHiScore);
+		highscoreText = new FlxText(0, (FlxG.height / 2) + 10, 0, "Highscore: " + highscore, 8);
+		highscoreText.alignment = CENTER;
+		highscoreText.screenCenter(FlxAxes.Y);
+		add(highscoreText);
 
-		_btnMainMenu = new FlxButton(0, FlxG.height - 32, "Main Menu", goMainMenu);
-		_btnMainMenu.screenCenter(FlxAxes.X);
-		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnMainMenu);
+		mainMenuButton = new FlxButton(0, FlxG.height - 32, "Main Menu", switchToMainMenu);
+		mainMenuButton.screenCenter(FlxAxes.X);
+		mainMenuButton.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		add(mainMenuButton);
 
-		FlxG.camera.fade(FlxColor.BLACK, .33, true);
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		super.create();
 	}
 
 	/**
-	 * This function will compare the new score with the saved hi-score.
-	 * If the new score is higher, it will save it as the new hi-score, otherwise, it will return the saved hi-score.
-	 * @param	Score	The new score
-	 * @return	the hi-score
+	 * This function will compare the new score with the saved highscore.
+	 * If the new score is higher, it will save it as the new highscore, otherwise, it will return the saved highscore.
+	 * @param	score	The new score
+	 * @return	the highscore
 	 */
-	function checkHiScore(Score:Int):Int
+	function checkHighscore(score:Int):Int
 	{
-		var _hi:Int = Score;
-		var _save:FlxSave = new FlxSave();
-		if (_save.bind("flixel-tutorial"))
+		var highscore:Int = score;
+		var save = new FlxSave();
+		if (save.bind("TurnBasedRPG"))
 		{
-			if (_save.data.hiscore != null && _save.data.hiscore > _hi)
+			if (save.data.highscore != null && save.data.highscore > highscore)
 			{
-				_hi = _save.data.hiscore;
+				highscore = save.data.highscore;
 			}
 			else
 			{
 				// data is less or there is no data; save current score
-				_save.data.hiscore = _hi;
+				save.data.highscore = highscore;
 			}
 		}
-		_save.close();
-		return _hi;
+		save.close();
+		return highscore;
 	}
 
 	/**
 	 * When the user hits the main menu button, it should fade out and then take them back to the MenuState
 	 */
-	function goMainMenu():Void
+	function switchToMainMenu():Void
 	{
-		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, false, function()
 		{
 			FlxG.switchState(new MenuState());
 		});

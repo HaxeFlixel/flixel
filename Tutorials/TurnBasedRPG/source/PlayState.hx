@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
@@ -11,190 +11,196 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxSpriteUtil;
 
-#if mobile
-import flixel.ui.FlxVirtualPad;
-#end
-
 class PlayState extends FlxState
 {
-	var _player:Player;
-	var _map:FlxOgmoLoader;
-	var _mWalls:FlxTilemap;
-	var _grpCoins:FlxTypedGroup<Coin>;
-	var _grpEnemies:FlxTypedGroup<Enemy>;
-	var _hud:HUD;
-	var _money:Int = 0;
-	var _health:Int = 3;
-	var _inCombat:Bool = false;
-	var _combatHud:CombatHUD;
-	var _ending:Bool;
-	var _won:Bool;
-	var _paused:Bool;
-	var _sndCoin:FlxSound;
+	var player:Player;
+	var map:FlxOgmo3Loader;
+	var walls:FlxTilemap;
+	var coins:FlxTypedGroup<Coin>;
+	var enemies:FlxTypedGroup<Enemy>;
+
+	var hud:HUD;
+	var money:Int = 0;
+	var health:Int = 3;
+
+	var inCombat:Bool = false;
+	var combatHud:CombatHUD;
+
+	var ending:Bool;
+	var won:Bool;
+
+	var coinSound:FlxSound;
 
 	#if mobile
 	public static var virtualPad:FlxVirtualPad;
 	#end
 
-	override public function create():Void
+	override public function create()
 	{
 		#if FLX_MOUSE
 		FlxG.mouse.visible = false;
 		#end
 
-		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
-		_mWalls.follow();
-		_mWalls.setTileProperties(1, FlxObject.NONE);
-		_mWalls.setTileProperties(2, FlxObject.ANY);
-		add(_mWalls);
+		map = new FlxOgmo3Loader(AssetPaths.turnBasedRPG__ogmo, AssetPaths.room_001__json);
+		walls = map.loadTilemap(AssetPaths.tiles__png, "walls");
+		walls.follow();
+		walls.setTileProperties(1, FlxObject.NONE);
+		walls.setTileProperties(2, FlxObject.ANY);
+		add(walls);
 
-		_grpCoins = new FlxTypedGroup<Coin>();
-		add(_grpCoins);
+		coins = new FlxTypedGroup<Coin>();
+		add(coins);
 
-		_grpEnemies = new FlxTypedGroup<Enemy>();
-		add(_grpEnemies);
+		enemies = new FlxTypedGroup<Enemy>();
+		add(enemies);
 
-		_player = new Player();
+		player = new Player();
+		map.loadEntities(placeEntities, "entities");
+		add(player);
 
-		_map.loadEntities(placeEntities, "entities");
+		FlxG.camera.follow(player, TOPDOWN, 1);
 
-		add(_player);
+		hud = new HUD();
+		add(hud);
 
-		FlxG.camera.follow(_player, TOPDOWN, 1);
+		combatHud = new CombatHUD();
+		add(combatHud);
 
-		_hud = new HUD();
-		add(_hud);
-
-		_combatHud = new CombatHUD();
-		add(_combatHud);
-
-		_sndCoin = FlxG.sound.load(AssetPaths.coin__wav);
+		coinSound = FlxG.sound.load(AssetPaths.coin__wav);
 
 		#if mobile
 		virtualPad = new FlxVirtualPad(FULL, NONE);
 		add(virtualPad);
 		#end
 
-		FlxG.camera.fade(FlxColor.BLACK, .33, true);
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		super.create();
 	}
 
-	function placeEntities(entityName:String, entityData:Xml):Void
+	function placeEntities(entity:EntityData)
 	{
-		var x:Int = Std.parseInt(entityData.get("x"));
-		var y:Int = Std.parseInt(entityData.get("y"));
-		if (entityName == "player")
+		var x = entity.x;
+		var y = entity.y;
+
+		switch (entity.name)
 		{
-			_player.x = x;
-			_player.y = y;
-		}
-		else if (entityName == "coin")
-		{
-			_grpCoins.add(new Coin(x + 4, y + 4));
-		}
-		else if (entityName == "enemy")
-		{
-			_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
+			case "player":
+				player.setPosition(x, y);
+
+			case "coin":
+				coins.add(new Coin(x + 4, y + 4));
+
+			case "enemy":
+				enemies.add(new Enemy(x + 4, y, REGULAR));
+
+			case "boss":
+				enemies.add(new Enemy(x + 4, y, BOSS));
 		}
 	}
 
-	override public function update(elapsed:Float):Void
+	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (_ending)
+		if (ending)
 		{
 			return;
 		}
 
-		if (!_inCombat)
+		if (inCombat)
 		{
-			FlxG.collide(_player, _mWalls);
-			FlxG.overlap(_player, _grpCoins, playerTouchCoin);
-			FlxG.collide(_grpEnemies, _mWalls);
-			_grpEnemies.forEachAlive(checkEnemyVision);
-			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
-		}
-		else if (!_combatHud.visible)
-		{
-			_health = _combatHud.playerHealth;
-			_hud.updateHUD(_health, _money);
-			if (_combatHud.outcome == DEFEAT)
+			if (!combatHud.visible)
 			{
-				_ending = true;
-				FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
-			}
-			else
-			{
-				if (_combatHud.outcome == VICTORY)
+				health = combatHud.playerHealth;
+				hud.updateHUD(health, money);
+				if (combatHud.outcome == DEFEAT)
 				{
-					_combatHud.e.kill();
-					if (_combatHud.e.etype == 1)
-					{
-						_won = true;
-						_ending = true;
-						FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
-					}
+					ending = true;
+					FlxG.camera.fade(FlxColor.BLACK, 0.33, false, doneFadeOut);
 				}
 				else
 				{
-					_combatHud.e.flicker();
+					if (combatHud.outcome == VICTORY)
+					{
+						combatHud.enemy.kill();
+						if (combatHud.enemy.type == BOSS)
+						{
+							won = true;
+							ending = true;
+							FlxG.camera.fade(FlxColor.BLACK, 0.33, false, doneFadeOut);
+						}
+					}
+					else
+					{
+						combatHud.enemy.flicker();
+					}
+					inCombat = false;
+					player.active = true;
+					enemies.active = true;
+
+					#if mobile
+					virtualPad.visible = true;
+					#end
 				}
-				#if mobile
-				virtualPad.visible = true;
-				#end
-				_inCombat = false;
-				_player.active = true;
-				_grpEnemies.active = true;
 			}
 		}
-	}
-
-	function doneFadeOut():Void
-	{
-		FlxG.switchState(new GameOverState(_won, _money));
-	}
-
-	function playerTouchEnemy(P:Player, E:Enemy):Void
-	{
-		if (P.alive && P.exists && E.alive && E.exists && !E.isFlickering())
+		else
 		{
-			startCombat(E);
+			FlxG.collide(player, walls);
+			FlxG.overlap(player, coins, playerTouchCoin);
+			FlxG.collide(enemies, walls);
+			enemies.forEachAlive(checkEnemyVision);
+			FlxG.overlap(player, enemies, playerTouchEnemy);
 		}
 	}
 
-	function startCombat(E:Enemy):Void
+	function doneFadeOut()
 	{
-		_inCombat = true;
-		_player.active = false;
-		_grpEnemies.active = false;
-		_combatHud.initCombat(_health, E);
+		FlxG.switchState(new GameOverState(won, money));
+	}
+
+	function playerTouchCoin(player:Player, coin:Coin)
+	{
+		if (player.alive && player.exists && coin.alive && coin.exists)
+		{
+			coin.kill();
+			money++;
+			hud.updateHUD(health, money);
+			coinSound.play(true);
+		}
+	}
+
+	function checkEnemyVision(enemy:Enemy)
+	{
+		if (walls.ray(enemy.getMidpoint(), player.getMidpoint()))
+		{
+			enemy.seesPlayer = true;
+			enemy.playerPosition = player.getMidpoint();
+		}
+		else
+		{
+			enemy.seesPlayer = false;
+		}
+	}
+
+	function playerTouchEnemy(player:Player, enemy:Enemy)
+	{
+		if (player.alive && player.exists && enemy.alive && enemy.exists && !enemy.isFlickering())
+		{
+			startCombat(enemy);
+		}
+	}
+
+	function startCombat(enemy:Enemy)
+	{
+		inCombat = true;
+		player.active = false;
+		enemies.active = false;
+		combatHud.initCombat(health, enemy);
+
 		#if mobile
 		virtualPad.visible = false;
 		#end
-	}
-
-	function checkEnemyVision(e:Enemy):Void
-	{
-		if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
-		{
-			e.seesPlayer = true;
-			e.playerPos.copyFrom(_player.getMidpoint());
-		}
-		else
-			e.seesPlayer = false;
-	}
-
-	function playerTouchCoin(P:Player, C:Coin):Void
-	{
-		if (P.alive && P.exists && C.alive && C.exists)
-		{
-			_sndCoin.play(true);
-			_money++;
-			_hud.updateHUD(_health, _money);
-			C.kill();
-		}
 	}
 }

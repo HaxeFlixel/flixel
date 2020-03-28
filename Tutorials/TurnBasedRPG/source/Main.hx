@@ -10,22 +10,22 @@ class Main extends Sprite
 	public function new()
 	{
 		var startFullscreen:Bool = false;
-		var _save:FlxSave = new FlxSave();
-		_save.bind("flixel-tutorial");
+		var save:FlxSave = new FlxSave();
+		save.bind("TurnBasedRPG");
 		#if desktop
-		if (_save.data.fullscreen != null)
+		if (save.data.fullscreen != null)
 		{
-			startFullscreen = _save.data.fullscreen;
+			startFullscreen = save.data.fullscreen;
 		}
 		#end
 
 		super();
 		addChild(new FlxGame(320, 240, MenuState, 1, 60, 60, false, startFullscreen));
 
-		if (_save.data.volume != null)
+		if (save.data.volume != null)
 		{
-			FlxG.sound.volume = _save.data.volume;
+			FlxG.sound.volume = save.data.volume;
 		}
-		_save.close();
+		save.close();
 	}
 }

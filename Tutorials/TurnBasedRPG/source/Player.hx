@@ -8,117 +8,111 @@ import flixel.system.FlxSound;
 
 class Player extends FlxSprite
 {
-	public var speed:Float = 200;
+	static inline var SPEED:Float = 200;
 
-	var _sndStep:FlxSound;
+	var stepSound:FlxSound;
 
-	public function new(X:Float = 0, Y:Float = 0)
+	public function new(x:Float = 0, y:Float = 0)
 	{
-		super(X, Y);
-
+		super(x, y);
 		loadGraphic(AssetPaths.player__png, true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
 		animation.add("lr", [3, 4, 3, 5], 6, false);
 		animation.add("u", [6, 7, 6, 8], 6, false);
-		drag.x = drag.y = 1600;
-		setSize(8, 14);
-		offset.set(4, 2);
+		animation.add("d", [0, 1, 0, 2], 6, false);
 
-		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
+		drag.x = drag.y = 1600;
+		setSize(8, 8);
+		offset.set(4, 4);
+
+		stepSound = FlxG.sound.load(AssetPaths.step__wav);
 	}
 
-	function movement():Void
+	override function update(elapsed:Float)
 	{
-		var _up:Bool = false;
-		var _down:Bool = false;
-		var _left:Bool = false;
-		var _right:Bool = false;
+		updateMovement();
+		super.update(elapsed);
+	}
+
+	function updateMovement()
+	{
+		var up:Bool = false;
+		var down:Bool = false;
+		var left:Bool = false;
+		var right:Bool = false;
 
 		#if FLX_KEYBOARD
-		_up = FlxG.keys.anyPressed([UP, W]);
-		_down = FlxG.keys.anyPressed([DOWN, S]);
-		_left = FlxG.keys.anyPressed([LEFT, A]);
-		_right = FlxG.keys.anyPressed([RIGHT, D]);
+		up = FlxG.keys.anyPressed([UP, W]);
+		down = FlxG.keys.anyPressed([DOWN, S]);
+		left = FlxG.keys.anyPressed([LEFT, A]);
+		right = FlxG.keys.anyPressed([RIGHT, D]);
 		#end
+
 		#if mobile
 		var virtualPad = PlayState.virtualPad;
-		_up = _up || virtualPad.buttonUp.pressed;
-		_down = _down || virtualPad.buttonDown.pressed;
-		_left = _left || virtualPad.buttonLeft.pressed;
-		_right = _right || virtualPad.buttonRight.pressed;
+		up = up || virtualPad.buttonUp.pressed;
+		down = down || virtualPad.buttonDown.pressed;
+		left = left || virtualPad.buttonLeft.pressed;
+		right = right || virtualPad.buttonRight.pressed;
 		#end
 
-		if (_up && _down)
-			_up = _down = false;
-		if (_left && _right)
-			_left = _right = false;
+		if (up && down)
+			up = down = false;
+		if (left && right)
+			left = right = false;
 
-		if (_up || _down || _left || _right)
+		if (up || down || left || right)
 		{
-			var mA:Float = 0;
-			if (_up)
+			var newAngle:Float = 0;
+			if (up)
 			{
-				mA = -90;
-				if (_left)
-					mA -= 45;
-				else if (_right)
-					mA += 45;
-
+				newAngle = -90;
+				if (left)
+					newAngle -= 45;
+				else if (right)
+					newAngle += 45;
 				facing = FlxObject.UP;
 			}
-			else if (_down)
+			else if (down)
 			{
-				mA = 90;
-				if (_left)
-					mA += 45;
-				else if (_right)
-					mA -= 45;
-
+				newAngle = 90;
+				if (left)
+					newAngle += 45;
+				else if (right)
+					newAngle -= 45;
 				facing = FlxObject.DOWN;
 			}
-			else if (_left)
+			else if (left)
 			{
-				mA = 180;
+				newAngle = 180;
 				facing = FlxObject.LEFT;
 			}
-			else if (_right)
+			else if (right)
 			{
-				mA = 0;
+				newAngle = 0;
 				facing = FlxObject.RIGHT;
 			}
 
-			velocity.set(speed, 0);
-			velocity.rotate(FlxPoint.weak(0, 0), mA);
+			// determine our velocity based on angle and speed
+			velocity.set(SPEED, 0);
+			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
 
+			// if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing
 			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 			{
-				_sndStep.play();
+				stepSound.play();
 
 				switch (facing)
 				{
 					case FlxObject.LEFT, FlxObject.RIGHT:
 						animation.play("lr");
-
 					case FlxObject.UP:
 						animation.play("u");
-
 					case FlxObject.DOWN:
 						animation.play("d");
 				}
 			}
 		}
-		else if (animation.curAnim != null)
-		{
-			animation.curAnim.curFrame = 0;
-			animation.curAnim.pause();
-		}
-	}
-
-	override public function update(elapsed:Float):Void
-	{
-		movement();
-		super.update(elapsed);
 	}
 }

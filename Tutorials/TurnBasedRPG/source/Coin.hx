@@ -6,20 +6,19 @@ import flixel.tweens.FlxTween;
 
 class Coin extends FlxSprite
 {
-	public function new(X:Float = 0, Y:Float = 0)
+	public function new(x:Float, y:Float)
 	{
-		super(X, Y);
+		super(x, y);
 		loadGraphic(AssetPaths.coin__png, false, 8, 8);
 	}
 
-	override public function kill():Void
+	override function kill()
 	{
 		alive = false;
-
-		FlxTween.tween(this, {alpha: 0, y: y - 16}, .66, {ease: FlxEase.circOut, onComplete: finishKill});
+		FlxTween.tween(this, {alpha: 0, y: y - 16}, 0.33, {ease: FlxEase.circOut, onComplete: finishKill});
 	}
 
-	function finishKill(_):Void
+	function finishKill(_)
 	{
 		exists = false;
 	}

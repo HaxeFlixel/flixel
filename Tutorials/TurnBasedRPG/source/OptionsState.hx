@@ -12,109 +12,109 @@ import flixel.util.FlxSave;
 class OptionsState extends FlxState
 {
 	// define our screen elements
-	var _txtTitle:FlxText;
-	var _barVolume:FlxBar;
-	var _txtVolume:FlxText;
-	var _txtVolumeAmt:FlxText;
-	var _btnVolumeDown:FlxButton;
-	var _btnVolumeUp:FlxButton;
-	var _btnClearData:FlxButton;
-	var _btnBack:FlxButton;
+	var titleText:FlxText;
+	var volumeBar:FlxBar;
+	var volumeText:FlxText;
+	var volumeAmountText:FlxText;
+	var volumeDownButton:FlxButton;
+	var volumeUpButton:FlxButton;
+	var clearDataButton:FlxButton;
+	var backButton:FlxButton;
 	#if desktop
-	var _btnFullScreen:FlxButton;
+	var fullscreenButton:FlxButton;
 	#end
 
 	// a save object for saving settings
-	var _save:FlxSave;
+	var save:FlxSave;
 
 	override public function create():Void
 	{
 		// setup and add our objects to the screen
-		_txtTitle = new FlxText(0, 20, 0, "Options", 22);
-		_txtTitle.alignment = CENTER;
-		_txtTitle.screenCenter(FlxAxes.X);
-		add(_txtTitle);
+		titleText = new FlxText(0, 20, 0, "Options", 22);
+		titleText.alignment = CENTER;
+		titleText.screenCenter(FlxAxes.X);
+		add(titleText);
 
-		_txtVolume = new FlxText(0, _txtTitle.y + _txtTitle.height + 10, 0, "Volume", 8);
-		_txtVolume.alignment = CENTER;
-		_txtVolume.screenCenter(FlxAxes.X);
-		add(_txtVolume);
+		volumeText = new FlxText(0, titleText.y + titleText.height + 10, 0, "Volume", 8);
+		volumeText.alignment = CENTER;
+		volumeText.screenCenter(FlxAxes.X);
+		add(volumeText);
 
 		// the volume buttons will be smaller than 'default' buttons
-		_btnVolumeDown = new FlxButton(8, _txtVolume.y + _txtVolume.height + 2, "-", clickVolumeDown);
-		_btnVolumeDown.loadGraphic(AssetPaths.button__png, true, 20, 20);
-		_btnVolumeDown.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnVolumeDown);
+		volumeDownButton = new FlxButton(8, volumeText.y + volumeText.height + 2, "-", clickVolumeDown);
+		volumeDownButton.loadGraphic(AssetPaths.button__png, true, 20, 20);
+		volumeDownButton.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		add(volumeDownButton);
 
-		_btnVolumeUp = new FlxButton(FlxG.width - 28, _btnVolumeDown.y, "+", clickVolumeUp);
-		_btnVolumeUp.loadGraphic(AssetPaths.button__png, true, 20, 20);
-		_btnVolumeUp.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnVolumeUp);
+		volumeUpButton = new FlxButton(FlxG.width - 28, volumeDownButton.y, "+", clickVolumeUp);
+		volumeUpButton.loadGraphic(AssetPaths.button__png, true, 20, 20);
+		volumeUpButton.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		add(volumeUpButton);
 
-		_barVolume = new FlxBar(_btnVolumeDown.x + _btnVolumeDown.width + 4, _btnVolumeDown.y, LEFT_TO_RIGHT, Std.int(FlxG.width - 64),
-			Std.int(_btnVolumeUp.height));
-		_barVolume.createFilledBar(0xff464646, FlxColor.WHITE, true, FlxColor.WHITE);
-		add(_barVolume);
+		volumeBar = new FlxBar(volumeDownButton.x + volumeDownButton.width + 4, volumeDownButton.y, LEFT_TO_RIGHT, Std.int(FlxG.width - 64),
+			Std.int(volumeUpButton.height));
+		volumeBar.createFilledBar(0xff464646, FlxColor.WHITE, true, FlxColor.WHITE);
+		add(volumeBar);
 
-		_txtVolumeAmt = new FlxText(0, 0, 200, (FlxG.sound.volume * 100) + "%", 8);
-		_txtVolumeAmt.alignment = CENTER;
-		_txtVolumeAmt.borderStyle = FlxTextBorderStyle.OUTLINE;
-		_txtVolumeAmt.borderColor = 0xff464646;
-		_txtVolumeAmt.y = _barVolume.y + (_barVolume.height / 2) - (_txtVolumeAmt.height / 2);
-		_txtVolumeAmt.screenCenter(FlxAxes.X);
-		add(_txtVolumeAmt);
+		volumeAmountText = new FlxText(0, 0, 200, (FlxG.sound.volume * 100) + "%", 8);
+		volumeAmountText.alignment = CENTER;
+		volumeAmountText.borderStyle = FlxTextBorderStyle.OUTLINE;
+		volumeAmountText.borderColor = 0xff464646;
+		volumeAmountText.y = volumeBar.y + (volumeBar.height / 2) - (volumeAmountText.height / 2);
+		volumeAmountText.screenCenter(FlxAxes.X);
+		add(volumeAmountText);
 
 		#if desktop
-		_btnFullScreen = new FlxButton(0, _barVolume.y + _barVolume.height + 8, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
-		_btnFullScreen.screenCenter(FlxAxes.X);
-		add(_btnFullScreen);
+		fullscreenButton = new FlxButton(0, volumeBar.y + volumeBar.height + 8, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
+		fullscreenButton.screenCenter(FlxAxes.X);
+		add(fullscreenButton);
 		#end
 
-		_btnClearData = new FlxButton((FlxG.width / 2) - 90, FlxG.height - 28, "Clear Data", clickClearData);
-		_btnClearData.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnClearData);
+		clearDataButton = new FlxButton((FlxG.width / 2) - 90, FlxG.height - 28, "Clear Data", clickClearData);
+		clearDataButton.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		add(clearDataButton);
 
-		_btnBack = new FlxButton((FlxG.width / 2) + 10, FlxG.height - 28, "Back", clickBack);
-		_btnBack.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnBack);
+		backButton = new FlxButton((FlxG.width / 2) + 10, FlxG.height - 28, "Back", clickBack);
+		backButton.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		add(backButton);
 
 		// create and bind our save object to "flixel-tutorial"
-		_save = new FlxSave();
-		_save.bind("flixel-tutorial");
+		save = new FlxSave();
+		save.bind("TurnBasedRPG");
 
 		// update our bar to show the current volume level
 		updateVolume();
 
-		FlxG.camera.fade(FlxColor.BLACK, .33, true);
+		FlxG.camera.fade(FlxColor.BLACK, 0.33, true);
 
 		super.create();
 	}
 
 	#if desktop
-	function clickFullscreen():Void
+	function clickFullscreen()
 	{
 		FlxG.fullscreen = !FlxG.fullscreen;
-		_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
-		_save.data.fullscreen = FlxG.fullscreen;
+		fullscreenButton.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
+		save.data.fullscreen = FlxG.fullscreen;
 	}
 	#end
 
 	/**
 	 * The user wants to clear the saved data - we just call erase on our save object and then reset the volume to .5
 	 */
-	function clickClearData():Void
+	function clickClearData()
 	{
-		_save.erase();
-		FlxG.sound.volume = .5;
+		save.erase();
+		FlxG.sound.volume = 0.5;
 		updateVolume();
 	}
 
 	/**
 	 * The user clicked the back button - close our save object, and go back to the MenuState
 	 */
-	function clickBack():Void
+	function clickBack()
 	{
-		_save.close();
+		save.close();
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
 		{
 			FlxG.switchState(new MenuState());
@@ -124,30 +124,30 @@ class OptionsState extends FlxState
 	/**
 	 * The user clicked the down button for volume - we reduce the volume by 10% and update the bar
 	 */
-	function clickVolumeDown():Void
+	function clickVolumeDown()
 	{
 		FlxG.sound.volume -= 0.1;
-		_save.data.volume = FlxG.sound.volume;
+		save.data.volume = FlxG.sound.volume;
 		updateVolume();
 	}
 
 	/**
 	 * The user clicked the up button for volume - we increase the volume by 10% and update the bar
 	 */
-	function clickVolumeUp():Void
+	function clickVolumeUp()
 	{
 		FlxG.sound.volume += 0.1;
-		_save.data.volume = FlxG.sound.volume;
+		save.data.volume = FlxG.sound.volume;
 		updateVolume();
 	}
 
 	/**
 	 * Whenever we want to show the value of volume, we call this to change the bar and the amount text
 	 */
-	function updateVolume():Void
+	function updateVolume()
 	{
-		var vol:Int = Math.round(FlxG.sound.volume * 100);
-		_barVolume.value = vol;
-		_txtVolumeAmt.text = vol + "%";
+		var volume:Int = Math.round(FlxG.sound.volume * 100);
+		volumeBar.value = volume;
+		volumeAmountText.text = volume + "%";
 	}
 }

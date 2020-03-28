@@ -1,17 +1,14 @@
-package;
-
 class FSM
 {
-	public var activeState:Void->Void;
+	public var activeState:Float->Void;
 
-	public function new(?InitState:Void->Void):Void
+	public function new(initialState:Float->Void)
 	{
-		activeState = InitState;
+		activeState = initialState;
 	}
 
-	public function update():Void
+	public function update(elapsed:Float)
 	{
-		if (activeState != null)
-			activeState();
+		activeState(elapsed);
 	}
 }
