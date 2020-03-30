@@ -48,13 +48,21 @@ class FlxAnimationController implements IFlxDestroyable
 	 * If assigned, will be called each time the current animation's frame changes.
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
+	#if haxe4
+	public var callback:(name:String, frameNumber:Int, frameIndex:Int) -> Void;
+	#else
 	public var callback:String->Int->Int->Void;
+	#end
 
 	/**
 	 * If assigned, will be called each time the current animation finishes.
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
+	#if haxe4
+	public var finishCallback:(name:String) -> Void;
+	#else
 	public var finishCallback:String->Void;
+	#end
 
 	/**
 	 * Internal, reference to owner sprite.
