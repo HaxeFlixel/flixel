@@ -283,7 +283,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		widthInTiles = WidthInTiles;
 		heightInTiles = HeightInTiles;
 		_data = MapData.copy(); // make a copy to make sure we don't mess with the original array, which might be used for something!
-		for (i in 0..._data.length) if (_data[i] < 0) _data[i] = 0;
 
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
@@ -313,7 +312,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		widthInTiles = MapData[0].length;
 		heightInTiles = MapData.length;
 		_data = FlxArrayUtil.flatten2DArray(MapData);
-		for (i in 0..._data.length) if (_data[i] < 0) _data[i] = 0;
 
 		loadMapHelper(TileGraphic, TileWidth, TileHeight, AutoTile, StartingIndex, DrawIndex, CollideIndex);
 		return this;
@@ -353,6 +351,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0,
 			DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
+		for (i in 0...data.length) if (data[i] < 0) data[i] = 0;
 		totalTiles = _data.length;
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
