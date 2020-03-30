@@ -348,10 +348,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
 		// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
-		for (i in 0...data.length)
+		for (i in 0..._data.length)
 		{
-			if (data[i] < 0)
-				data[i] = 0;
+			if (_data[i] < 0)
+				_data[i] = 0;
 		}
 
 		totalTiles = _data.length;
