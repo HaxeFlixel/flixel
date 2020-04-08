@@ -10,7 +10,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Animation frameRate - the speed in frames per second that the animation should play at.
 	 */
-	public var frameRate(default, set):Int;
+	public var frameRate(default, set):Float;
 
 	/**
 	 * Keeps track of the current frame of animation.
@@ -77,7 +77,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @param   FlipX       Whether or not the frames of this animation are horizontally flipped.
 	 * @param   FlipY       Whether or not the frames of this animation are vertically flipped.
 	 */
-	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Int = 0, Looped:Bool = true, FlipX:Bool = false,
+	public function new(Parent:FlxAnimationController, Name:String, Frames:Array<Int>, FrameRate:Float = 0, Looped:Bool = true, FlipX:Bool = false,
 			FlipY:Bool = false)
 	{
 		super(Parent, Name);
@@ -211,7 +211,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return new FlxAnimation(Parent, name, frames, frameRate, looped, flipX, flipY);
 	}
 
-	function set_frameRate(value:Int):Int
+	function set_frameRate(value:Float):Float
 	{
 		delay = 0;
 		frameRate = value;
