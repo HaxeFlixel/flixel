@@ -5,9 +5,9 @@ import flixel.input.FlxInput.FlxInputState;
 class CodeValuePair
 {
 	public var code:Int;
-	public var value:FlxInputState;
+	public var value:Bool;
 	
-	public function new(code:Int, value:FlxInputState)
+	public function new(code:Int, value:Bool)
 	{
 		this.code = code;
 		this.value = value;
@@ -15,7 +15,7 @@ class CodeValuePair
 	
 	public function toString():String
 	{
-		return code + ":" + value;
+		return code + ":" + (value ? "1" : "0");
 	}
 	
 	public static function fromString(data:String):Null<CodeValuePair>
@@ -23,7 +23,7 @@ class CodeValuePair
 		var keyPair = data.split(":");
 		if (keyPair.length == 2)
 		{
-			return new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1]));
+			return new CodeValuePair(Std.parseInt(keyPair[0]), keyPair[1] == "1");
 		}
 		return null;
 	}
