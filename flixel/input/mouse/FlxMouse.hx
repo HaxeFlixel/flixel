@@ -635,32 +635,49 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 	
 	@:allow(flixel.system.replay.FlxReplay)
+	@:access(flixel.system.replay.MouseRecord)
 	function record():MouseRecord
 	{
 		if (!_globalScreenX.changed
 			&& !_globalScreenY.changed
 			&& !_leftButton.changed
+			#if FLX_MOUSE_ADVANCED
+			&& !_middleButton.changed
+			&& !_rightButton.changed
+			#end
 			&& !_wheelInput.changed)
 		{
 			return null;
 		}
-		return new MouseRecord(_globalScreenX.currentValue, _globalScreenY.currentValue, _leftButton.current, _wheelInput.currentValue);
+		var record = new MouseRecord();
+		if (_globalScreenX.changed) record.x = _globalScreenX.currentValue;
+		if (_globalScreenY.changed) record.y = _globalScreenY.currentValue;
+		if (_leftButton.changed) record.leftButton = _leftButton.currentValue;
+		#if FLX_MOUSE_ADVANCED
+		if (_middleButton.changed) record.middleButton = _middleButton.currentValue;
+		if (_rightButton.changed) record.rightButton = _rightButton.currentValue;
+		#end
+		if (_wheelInput.changed) record.wheel = _wheelInput.currentValue;
+		return record;
 	}
-
+	
 	@:allow(flixel.system.replay.FlxReplay)
 	function playback(record:MouseRecord):Void
 	{
-		// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
-		// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
-		// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
-		if (_leftButton.lastValue == true && record.leftButton == false)
+		if (record.leftButton != null)
 		{
-			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, record.x, record.y));
+			// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
+			// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
+			// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
+			if (_leftButton.lastValue == true && record.leftButton == false)
+			{
+				_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, record.x, record.y));
+			}
+			_leftButton.change(record.leftButton);
 		}
-		_leftButton.change(record.leftButton);
-		_wheelInput.change(record.wheel);
-		_globalScreenX.change(record.x);
-		_globalScreenY.change(record.y);
+		if (record.wheel != null) _wheelInput.change(record.wheel);
+		if (record.x != null) _globalScreenX.change(record.x);
+		if (record.y != null) _globalScreenY.change(record.y);
 		updatePositions();
 	}
 }

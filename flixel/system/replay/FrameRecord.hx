@@ -65,24 +65,13 @@ class FrameRecord
 
 		if (keys != null)
 		{
-			var object:CodeValuePair;
-			var i:Int = 0;
-			var l:Int = keys.length;
-			while (i < l)
-			{
-				if (i > 0)
-				{
-					output += ",";
-				}
-				object = keys[i++];
-				output += object.code + ":" + object.value;
-			}
+			output += CodeValuePair.arrayToString(keys);
 		}
 
 		output += "m";
 		if (mouse != null)
 		{
-			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
+			output += mouse.toString();
 		}
 
 		return output;
@@ -99,47 +88,27 @@ class FrameRecord
 
 		// get frame number
 		var array:Array<String> = Data.split("k");
-		frame = Std.parseInt(array[0]);
+		frame = Std.parseInt(array.shift());
 
 		// split up keyboard and mouse data
-		array = array[1].split("m");
-		var keyData:String = array[0];
-		var mouseData:String = array[1];
+		array = array[0].split("m");
+		var keyData:String = array.shift();
+		array = array[0].split("t");
+		var mouseData:String = array.shift();
+		var touchData:String = array.shift();
 
 		// parse keyboard data
 		if (keyData.length > 0)
 		{
-			// get keystroke data pairs
-			array = keyData.split(",");
-
-			// go through each data pair and enter it into this frame's key state
-			var keyPair:Array<String>;
-			i = 0;
-			l = array.length;
-			while (i < l)
-			{
-				keyPair = array[i++].split(":");
-				if (keyPair.length == 2)
-				{
-					if (keys == null)
-					{
-						keys = new Array<CodeValuePair>();
-					}
-					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1])));
-				}
-			}
+			keys = CodeValuePair.arrayFromString(keyData);
 		}
 
-		// mouse data is just 4 integers, easy peezy
+		// parse mouse data
 		if (mouseData.length > 0)
 		{
-			array = mouseData.split(",");
-			if (array.length >= 4)
-			{
-				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
-			}
+			mouse = MouseRecord.fromString(mouseData);
 		}
-
+		
 		return this;
 	}
 }
