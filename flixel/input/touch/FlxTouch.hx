@@ -67,8 +67,10 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	/**
 	 * Called by the internal game loop to update the just pressed/just released flags.
 	 */
-	function update():Void
+	override function update():Void
 	{
+		super.update();
+		
 		input.update();
 
 		if (justPressed)
