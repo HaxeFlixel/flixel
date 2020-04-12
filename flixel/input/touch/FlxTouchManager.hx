@@ -7,7 +7,6 @@ import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxTouchManager implements IFlxInputManager
