@@ -1,6 +1,7 @@
 package flixel.input.touch;
 
 #if FLX_TOUCH
+import flash.events.TouchEvent;
 import flash.geom.Point;
 import flixel.FlxG;
 import flixel.input.FlxInput;
@@ -8,6 +9,7 @@ import flixel.input.FlxSwipe;
 import flixel.input.IFlxInput;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
+import flixel.system.replay.TouchRecord;
 
 /**
  * Helper class, contains and tracks touch points in your game.
@@ -123,6 +125,74 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	inline function get_justPressed():Bool
 	{
 		return input.justPressed;
+	}
+	
+	@:allow(flixel.system.replay.FlxReplay)
+	@:access(flixel.system.replay.TouchRecord)
+	function record():Null<TouchRecord>
+	{
+		if (!_globalScreenX.changed && !_globalScreenY.changed && !input.changed)
+		{
+			return null;
+		}
+
+		var record:TouchRecord = new TouchRecord(touchPointID);
+		if (input.justPressed)
+		{
+			// Always record x and y when starting a new touch
+			record.x = _globalScreenX.currentValue;
+			record.y = _globalScreenY.currentValue;
+			record.pressed = input.currentValue;
+		}
+		else 
+		{
+			if (_globalScreenX.changed)
+				record.x = _globalScreenX.currentValue;
+			if (_globalScreenY.changed)
+				record.y = _globalScreenY.currentValue;
+			if (input.changed)
+				record.pressed = input.currentValue;
+		}
+		return record;
+	}
+	
+	@:allow(flixel.system.replay.FlxReplay)
+	function playback(record:TouchRecord):Void
+	{
+		if (record.x != null || record.y != null)
+		{
+			if (record.x != null) _globalScreenX.change(record.x);
+			if (record.y != null) _globalScreenY.change(record.y);
+			updatePositions();
+		}
+
+		if (record.pressed != null)
+		{
+			// Manually dispatch a touch event so that, e.g., FlxButtons click correctly on playback.
+			// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
+			// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
+			if (input.lastValue == true && record.pressed == false)
+			{
+				FlxG.stage.dispatchEvent(
+					new TouchEvent(TouchEvent.TOUCH_END, true, false, record.id, false, _globalScreenX.currentValue, _globalScreenY.currentValue)
+				);
+			}
+
+			input.change(record.pressed);
+		}
+
+		// Copied from update()
+		if (justPressed)
+		{
+			justPressedPosition.set(screenX, screenY);
+			justPressedTimeInTicks = FlxG.game.ticks;
+		}
+		#if FLX_POINTER_INPUT
+		else if (justReleased)
+		{
+			FlxG.swipes.push(new FlxSwipe(touchPointID, justPressedPosition, getScreenPosition(), justPressedTimeInTicks));
+		}
+		#end
 	}
 }
 #else

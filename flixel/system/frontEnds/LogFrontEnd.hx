@@ -22,7 +22,7 @@ class LogFrontEnd
 		#end
 	}
 
-	public inline function warn(Data:Dynamic):Void
+	public function warn(Data:Dynamic):Void
 	{
 		#if FLX_DEBUG
 		advanced(Data, LogStyle.WARNING, true);

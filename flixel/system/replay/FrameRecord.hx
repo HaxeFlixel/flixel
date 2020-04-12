@@ -16,9 +16,14 @@ class FrameRecord
 	public var keys:Array<CodeValuePair>;
 
 	/**
-	 * A container for the 4 mouse state integers.
+	 * A container for the mouse state values.
 	 */
 	public var mouse:MouseRecord;
+
+	/**
+	 * An array of touch states.
+	 */
+	public var touches:TouchRecord;
 
 	/**
 	 * Instantiate array new frame record.
@@ -37,11 +42,12 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this FrameRecord object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
+	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord, ?Touch:TouchRecord):FrameRecord
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;
 		mouse = Mouse;
+		touches = Touch;
 
 		return this;
 	}
@@ -53,6 +59,7 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
+		touches = null;
 	}
 
 	/**
@@ -74,6 +81,11 @@ class FrameRecord
 			output += mouse.toString();
 		}
 
+		output += "t";
+		if (touches != null)
+		{
+			output += TouchRecord.arrayToString(touches);
+		}
 		return output;
 	}
 
@@ -107,6 +119,12 @@ class FrameRecord
 		if (mouseData.length > 0)
 		{
 			mouse = MouseRecord.fromString(mouseData);
+		}
+		
+		// Parse touch data
+		if (touchData.length > 0)
+		{
+			touches = TouchRecord.arrayFromString(touchData);
 		}
 		
 		return this;
