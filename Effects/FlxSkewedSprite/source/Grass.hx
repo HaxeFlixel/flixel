@@ -4,7 +4,6 @@ import flixel.addons.effects.FlxSkewedSprite;
 import flixel.FlxG;
 
 /**
- * ...
  * @author Zaphod
  */
 class Grass extends FlxSkewedSprite

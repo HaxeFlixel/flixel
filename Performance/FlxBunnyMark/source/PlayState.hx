@@ -18,7 +18,6 @@ import openfl3.*;
 #end
 
 /**
- * ...
  * @author Zaphod
  */
 class PlayState extends FlxState

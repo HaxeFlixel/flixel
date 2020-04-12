@@ -16,7 +16,6 @@ import openfl.Assets;
 using flixel.util.FlxSpriteUtil;
 
 /**
- * ...
  * @author Zaphod
  */
 class PlayState extends FlxState

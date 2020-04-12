@@ -5,7 +5,6 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 
 /**
- * ...
  * @author .:BuzzJeux:.
  */
 class PlayState extends FlxState

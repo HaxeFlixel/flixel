@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 
 /**
- * ...
  * @author David Bell
  */
 class Enemy extends EnemyTemplate

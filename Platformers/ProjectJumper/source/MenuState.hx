@@ -7,7 +7,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 
 /**
- * ...
  * @author David Bell
  */
 class MenuState extends FlxState

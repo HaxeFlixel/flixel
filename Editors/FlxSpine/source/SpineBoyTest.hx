@@ -5,7 +5,6 @@ import flixel.addons.editors.spine.FlxSpine;
 import spinehaxe.SkeletonData;
 
 /**
- * ...
  * @author Kris
  */
 class SpineBoyTest extends FlxSpine

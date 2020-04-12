@@ -6,7 +6,6 @@ import flixel.ui.FlxButton;
 import flixel.ui.FlxVirtualPad;
 
 /**
- * ...
  * @author .:BuzzJeux:.
  */
 enum MoveDirection

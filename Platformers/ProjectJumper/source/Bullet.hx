@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 
 /**
- * ...
  * @author David Bell
  */
 class Bullet extends FlxSprite

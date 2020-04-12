@@ -12,7 +12,6 @@ import haxe.Json;
 import openfl.Assets;
 
 /**
- * ...
  * @author MrCdK
  */
 class Character extends FlxExtendedSprite

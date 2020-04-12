@@ -6,7 +6,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * ...
  * @author Zaphod
  */
 class PlayerShip extends FlxSprite

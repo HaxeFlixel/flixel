@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.math.FlxVelocity;
 
 /**
- * ...
  * @author Zaphod
  */
 class Ship extends FlxSprite

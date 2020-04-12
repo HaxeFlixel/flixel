@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 
 /**
- * ...
  * @author David Bell
  */
 class Coin extends FlxSprite

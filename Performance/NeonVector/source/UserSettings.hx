@@ -3,7 +3,6 @@ package;
 import flixel.util.FlxSave;
 
 /**
- * ...
  * @author Masadow
  */
 class UserSettings

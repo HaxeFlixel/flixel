@@ -8,7 +8,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 
 /**
- * ...
  * @author David Bell
  */
 class Player extends FlxSprite

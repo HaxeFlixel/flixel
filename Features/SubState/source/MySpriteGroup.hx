@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 
 /**
- * ...
  * @author Zaphod
  */
 class MySpriteGroup extends FlxTypedGroup<FlxSprite>

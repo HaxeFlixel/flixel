@@ -17,7 +17,6 @@ import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
 
 /**
- * ...
  * @author larsiusprime
  */
 class DemoState extends FlxState

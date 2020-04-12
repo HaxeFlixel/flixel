@@ -24,7 +24,6 @@ import nape.phys.Material;
 import nape.shape.Polygon;
 
 /**
- * ...
  * @author Henry.T
  */
 class Cutup extends BaseState

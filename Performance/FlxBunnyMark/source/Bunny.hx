@@ -5,7 +5,6 @@ import flixel.FlxG;
 import flixel.system.FlxAssets.FlxShader;
 
 /**
- * ...
  * @author Zaphod
  */
 class Bunny extends FlxSprite

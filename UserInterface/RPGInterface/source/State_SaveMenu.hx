@@ -10,7 +10,6 @@ import haxe.xml.Fast as Access;
 #end
 
 /**
- * ...
  * @author Lars Doucet
  */
 class State_SaveMenu extends FlxUIState

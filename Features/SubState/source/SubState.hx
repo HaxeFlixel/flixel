@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.FlxSubState;
 
 /**
- * ...
  * @author Zaphod
  */
 class SubState extends FlxSubState

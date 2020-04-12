@@ -4,7 +4,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
 
 /**
- * ...
  * @author Masadow
  */
 class PointMass

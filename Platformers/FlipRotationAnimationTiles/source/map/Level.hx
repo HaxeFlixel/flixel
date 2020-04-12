@@ -17,7 +17,6 @@ import flixel.util.FlxSort;
 import flixel.group.FlxGroup;
 
 /**
- * ...
  * @author MrCdK
  */
 class Level extends TiledMap

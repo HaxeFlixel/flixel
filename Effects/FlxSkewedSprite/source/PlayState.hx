@@ -5,7 +5,6 @@ import flixel.FlxState;
 import flixel.util.FlxColor;
 
 /**
- * ...
  * @author Zaphod
  */
 class PlayState extends FlxState

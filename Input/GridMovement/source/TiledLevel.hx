@@ -13,7 +13,6 @@ import flixel.tile.FlxTilemap;
 import haxe.io.Path;
 
 /**
- * ...
  * @author Samuel Batista
  */
 class TiledLevel extends TiledMap

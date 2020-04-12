@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * ...
  * @author Zaphod
  */
 class Asteroid extends FlxSprite

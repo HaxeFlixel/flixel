@@ -6,7 +6,6 @@ import flixel.math.FlxAngle;
 import flixel.util.FlxColor;
 
 /**
- * ...
  * @author Masadow
  */
 class Enemy extends Entity

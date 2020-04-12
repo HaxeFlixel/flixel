@@ -11,7 +11,6 @@ import haxe.xml.Fast as Access;
 #end
 
 /**
- * ...
  * @author Lars Doucet
  */
 class SaveSlot extends FlxUI

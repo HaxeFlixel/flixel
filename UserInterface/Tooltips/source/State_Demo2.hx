@@ -5,7 +5,6 @@ import flixel.addons.ui.FlxUITypedButton;
 import flixel.FlxG;
 
 /**
- * ...
  * @author larsiusprime
  */
 class State_Demo2 extends FlxUIState

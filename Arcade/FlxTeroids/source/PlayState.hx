@@ -13,7 +13,6 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 
 /**
- * ...
  * @author Zaphod
  */
 class PlayState extends FlxState

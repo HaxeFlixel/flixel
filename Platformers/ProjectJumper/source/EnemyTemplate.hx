@@ -3,7 +3,6 @@ package;
 import flixel.FlxSprite;
 
 /**
- * ...
  * @author David Bell
  */
 class EnemyTemplate extends FlxSprite

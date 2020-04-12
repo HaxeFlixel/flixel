@@ -7,7 +7,6 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
 
 /**
- * ...
  * @author David Bell
  */
 class Lurker extends EnemyTemplate

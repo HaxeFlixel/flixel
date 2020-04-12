@@ -20,7 +20,6 @@ import nape.phys.Body;
 import nape.phys.Material;
 
 /**
- * ...
  * @author TiagoLr (~~~ ProG4mr ~~~)
  * @link https://github.com/ProG4mr
  */

@@ -5,7 +5,6 @@ import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
 
 /**
- * ...
  * @author larsiusprime
  */
 class MenuStateB extends MenuState

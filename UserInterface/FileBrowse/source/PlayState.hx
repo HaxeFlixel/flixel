@@ -22,7 +22,6 @@ import systools.Dialogs;
 #end
 
 /**
- * ...
  * @author Lars Doucet
  */
 class PlayState extends FlxState
