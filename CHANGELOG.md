@@ -1,3 +1,7 @@
+4.7.1 (to be released)
+------------------------------
+- `FlxSplash`: added `muted` (defaults to `true` on HTML5)
+
 4.7.0 (April 12, 2020)
 ------------------------------
 #### New features:
