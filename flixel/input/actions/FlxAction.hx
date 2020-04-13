@@ -31,6 +31,8 @@ using flixel.util.FlxArrayUtil;
  * FlxActions let you attach multiple inputs to a single in-game action,
  * so "jump" could be performed by a keyboard press, a mouse click,
  * or a gamepad button press.
+ *
+ * @since 4.6.0
  */
 class FlxActionDigital extends FlxAction
 {
@@ -148,6 +150,8 @@ class FlxActionDigital extends FlxAction
  *
  * FlxActions let you attach multiple inputs to a single in-game action,
  * so "move" could be performed by a gamepad joystick, a mouse movement, etc.
+ *
+ * @since 4.6.0
  */
 class FlxActionAnalog extends FlxAction
 {
@@ -284,6 +288,9 @@ class FlxActionAnalog extends FlxAction
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 @:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet)
 class FlxAction implements IFlxDestroyable
 {

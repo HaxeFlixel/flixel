@@ -10,6 +10,9 @@ import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigital extends FlxActionInput
 {
 	function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
@@ -19,6 +22,9 @@ class FlxActionInputDigital extends FlxActionInput
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 {
 	var input:FlxInput<Int>;
@@ -66,6 +72,9 @@ class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 {
 	var input:FlxInput<Int>;
@@ -165,6 +174,9 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 {
 	/**
@@ -192,6 +204,9 @@ class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalMouse extends FlxActionInputDigital
 {
 	/**
@@ -236,6 +251,9 @@ class FlxActionInputDigitalMouse extends FlxActionInputDigital
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalSteam extends FlxActionInputDigital
 {
 	var steamInput:FlxInput<Int>;
@@ -289,6 +307,9 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 {
 	var input:IFlxInput;

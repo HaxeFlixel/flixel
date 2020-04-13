@@ -18,8 +18,8 @@ class FlxSplash extends FlxState
 	public static var nextState:Class<FlxState>;
 
 	/**
-		@since 4.7.1
-	**/
+	 * @since 4.7.1
+	 */
 	public static var muted:Bool = #if html5 true #else false #end;
 
 	var _sprite:Sprite;
