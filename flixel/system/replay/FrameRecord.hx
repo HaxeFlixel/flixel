@@ -95,9 +95,6 @@ class FrameRecord
 	 */
 	public function load(Data:String):FrameRecord
 	{
-		var i:Int;
-		var l:Int;
-
 		// get frame number
 		var array:Array<String> = Data.split("k");
 		frame = Std.parseInt(array.shift());
