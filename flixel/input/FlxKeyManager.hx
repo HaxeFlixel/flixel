@@ -3,6 +3,7 @@ package flixel.input;
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.keyboard.FlxKey;
 
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
@@ -135,25 +136,29 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * @param	Status		The key state to check for.
 	 * @return	Whether the provided key has the specified status.
 	 */
-	public function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
+	public inline function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
 	{
-		var key:FlxInput<Key> = getKey(KeyCode);
-
-		if (key != null)
+		return switch (KeyCode)
 		{
-			if (key.hasState(Status))
-			{
-				return true;
-			}
+			case FlxKey.ANY:
+				switch (Status)
+				{
+					case PRESSED: pressed.ANY;
+					case JUST_PRESSED: justPressed.ANY;
+					case RELEASED: released.ANY;
+					case JUST_RELEASED: justReleased.ANY;
+				}
+			default:
+				var key = getKey(KeyCode);
+				if (key == null)
+				{
+					#if debug
+					throw 'Invalid key code: $KeyCode.';
+					#end
+					return false;
+				}
+				return key.hasState(Status);
 		}
-		#if FLX_DEBUG
-		else
-		{
-			throw 'Invalid key code: $KeyCode.';
-		}
-		#end
-
-		return false;
 	}
 
 	/**
@@ -238,15 +243,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 
 		for (code in KeyArray)
 		{
-			var key:FlxInput<Key> = getKey(code);
-
-			if (key != null)
-			{
-				if (key.hasState(State))
-				{
-					return true;
-				}
-			}
+			if (checkStatus(code, State))
+				return true;
 		}
 
 		return false;
