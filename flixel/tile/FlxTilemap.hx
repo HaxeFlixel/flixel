@@ -853,7 +853,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
 	 *
-	 * @link http://forums.flixel.org/index.php/topic,5398.0.html
 	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
 	 * @param	Y				The Y coordinate of the tile (in tiles, not pixels).
 	 * @param	NewTile			New tile for the map data. Use -1 if you dont want any changes. Default = 0 (empty)
