@@ -5,6 +5,7 @@ import flixel.input.FlxInput.FlxInputState;
 class FlxBaseKeyList
 {
 	public var ANY(get, never):Bool;
+	public var NONE(get, never):Bool;
 
 	var status:FlxInputState;
 	var keyManager:FlxKeyManager<Dynamic, Dynamic>;
@@ -31,5 +32,18 @@ class FlxBaseKeyList
 		}
 
 		return false;
+	}
+	
+	function get_NONE():Bool
+	{
+		for (key in keyManager._keyListArray)
+		{
+			if (key != null && check(key.ID))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
