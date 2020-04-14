@@ -17,6 +17,11 @@ class FlxSplash extends FlxState
 {
 	public static var nextState:Class<FlxState>;
 
+	/**
+	 * @since 4.7.1
+	 */
+	public static var muted:Bool = #if html5 true #else false #end;
+
 	var _sprite:Sprite;
 	var _gfx:Graphics;
 	var _text:TextField;
@@ -64,7 +69,7 @@ class FlxSplash extends FlxState
 		_text = new TextField();
 		_text.selectable = false;
 		_text.embedFonts = true;
-		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
+		var dtf = new TextFormat(FlxAssets.FONT_DEFAULT, 16, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
 		_text.defaultTextFormat = dtf;
 		_text.text = "HaxeFlixel";
@@ -73,7 +78,10 @@ class FlxSplash extends FlxState
 		onResize(stageWidth, stageHeight);
 
 		#if FLX_SOUND_SYSTEM
-		FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
+		if (!muted)
+		{
+			FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
+		}
 		#end
 	}
 

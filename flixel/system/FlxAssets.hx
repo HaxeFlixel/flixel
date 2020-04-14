@@ -230,7 +230,12 @@ class FlxAssets
 
 	public static function getVirtualInputFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
+		var bitmapData = new GraphicVirtualInput(0, 0);
+		#if html5 // dirty hack for openfl/openfl#682
+		Reflect.setProperty(bitmapData, "width", 399);
+		Reflect.setProperty(bitmapData, "height", 183);
+		#end
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmapData);
 		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
 	#end

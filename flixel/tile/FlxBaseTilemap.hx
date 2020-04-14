@@ -1373,6 +1373,7 @@ enum FlxTilemapAutoTiling
 
 	/**
 	 * Better for all, but need 47 tiles.
+	 * @since 4.6.0
 	 */
 	FULL;
 }

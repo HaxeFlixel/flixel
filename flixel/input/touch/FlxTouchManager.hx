@@ -8,7 +8,6 @@ import flash.ui.MultitouchInputMode;
 import flixel.system.replay.TouchRecord;
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxTouchManager implements IFlxInputManager

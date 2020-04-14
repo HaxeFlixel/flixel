@@ -20,6 +20,7 @@ import steamwrap.api.Controller.ControllerAnalogActionData;
  * FlxGamepadManager. If a user wants to use the Steam API directly
  * they should just be making naked calls to steamwrap themselves.
  *
+ * @since 4.6.0
  */
 @:allow(flixel.input.actions)
 class FlxSteamController

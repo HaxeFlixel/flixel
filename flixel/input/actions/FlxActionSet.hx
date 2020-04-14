@@ -19,6 +19,9 @@ import steamwrap.data.ControllerConfig.ControllerActionSet;
 
 using flixel.util.FlxArrayUtil;
 
+/**
+ * @since 4.6.0
+ */
 @:allow(flixel.input.actions.FlxActionManager)
 class FlxActionSet implements IFlxDestroyable
 {

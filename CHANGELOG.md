@@ -1,3 +1,24 @@
+4.7.1 (to be released)
+------------------------------
+- `FlxSplash`: added `muted` (defaults to `true` on HTML5)
+
+4.7.0 (April 12, 2020)
+------------------------------
+#### New features:
+
+- `FlxGroup`: added support for specifying `cameras` ([#2232](https://github.com/HaxeFlixel/flixel/pull/2232))
+
+#### Bugfixes:
+
+- `FlxButton`: fixed `mouseButtons` handling ([#2246](https://github.com/HaxeFlixel/flixel/issues/2246))
+- `FlxTilemap`: handle negative tile indices for all `load` methods, not just CSV ([#2250](https://github.com/HaxeFlixel/flixel/pull/2250))
+- `FlxVirtualPad`: fixed graphic not showing up on HTML5
+- `OUYAID`: fixed button mappings ([#2234](https://github.com/HaxeFlixel/flixel/pull/2234))
+
+#### Changes and improvements:
+
+- `FlxAnimation`: changed `frameRate` to a `Float` ([#2252](https://github.com/HaxeFlixel/flixel/pull/2252))
+
 4.6.3 (August 21, 2019)
 ------------------------------
 - Compatibility with Haxe 4.0.0-rc.3
