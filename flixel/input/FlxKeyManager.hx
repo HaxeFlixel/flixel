@@ -30,6 +30,11 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	public var justPressed(default, null):KeyList;
 
 	/**
+	 * Helper class to check if a key is released.
+	 */
+	public var released(default, null):KeyList;
+
+	/**
 	 * Helper class to check if a key was just released.
 	 */
 	public var justReleased(default, null):KeyList;
@@ -153,6 +158,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 				{
 					case PRESSED: pressed.NONE;
 					case JUST_PRESSED: justPressed.NONE;
+					case RELEASED: released.NONE;
 					case JUST_RELEASED: justReleased.NONE;
 				}
 			default:
@@ -216,6 +222,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
 		pressed = createKeyList(FlxInputState.PRESSED, this);
+		released = createKeyList(FlxInputState.RELEASED, this);
 		justPressed = createKeyList(FlxInputState.JUST_PRESSED, this);
 		justReleased = createKeyList(FlxInputState.JUST_RELEASED, this);
 	}
