@@ -344,7 +344,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 
 	/**
-	 * Helper function to check the status of an array of keys
+	 * Helper function to check the status of an array of buttons
 	 *
 	 * @param	IDArray	An array of button IDs
 	 * @param	State	The button state to check for
@@ -366,7 +366,7 @@ class FlxGamepad implements IFlxDestroyable
 		return false;
 	}
 	/**
-	 * Helper function to check the status of an array of keys
+	 * Helper function to check the status of an array of buttons
 	 *
 	 * @param	IDArray	An array of keys as Strings
 	 * @param	State	The key state to check for
