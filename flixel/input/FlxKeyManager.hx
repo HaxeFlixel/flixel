@@ -148,6 +148,13 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 					case RELEASED: released.ANY;
 					case JUST_RELEASED: justReleased.ANY;
 				}
+			case FlxKey.NONE:
+				switch (Status)
+				{
+					case PRESSED: pressed.NONE;
+					case JUST_PRESSED: justPressed.NONE;
+					case JUST_RELEASED: justReleased.NONE;
+				}
 			default:
 				var key = getKey(KeyCode);
 				if (key == null)
