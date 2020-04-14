@@ -365,6 +365,7 @@ class FlxGamepad implements IFlxDestroyable
 
 		return false;
 	}
+
 	/**
 	 * Helper function to check the status of an array of buttons
 	 *
@@ -384,10 +385,10 @@ class FlxGamepad implements IFlxDestroyable
 			if (checkStatusRaw(code, Status))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
 	 *
