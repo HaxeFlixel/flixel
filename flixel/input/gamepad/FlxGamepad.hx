@@ -326,20 +326,7 @@ class FlxGamepad implements IFlxDestroyable
 					case JUST_RELEASED: justReleased.NONE;
 				}
 			default:
-				var rawID = mapping.getRawID(ID);
-				var button = buttons[rawID];
-				if (button == null)
-				{
-					return false;
-				}
-				var value = button.current;
-				switch (Status)
-				{
-					case PRESSED: value == PRESSED;
-					case RELEASED: value == RELEASED;
-					case JUST_PRESSED: value == JUST_PRESSED;
-					case JUST_RELEASED: value == JUST_RELEASED;
-				}
+				checkStatusRaw(mapping.getRawID(ID), Status);
 		}
 	}
 
@@ -350,35 +337,66 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	Status	The key state to check for
 	 * @return	Whether the provided button has the specified status
 	 */
-	public function checkStatusRaw(RawID:Int, Status:FlxInputState):Bool
+	public inline function checkStatusRaw(RawID:Int, Status:FlxInputState):Bool
 	{
-		if (buttons[RawID] != null)
-		{
-			return buttons[RawID].current == Status;
-		}
-		return false;
+		var button = buttons[RawID];
+		return button != null && button.hasState(Status);
 	}
 
+	/**
+	 * Helper function to check the status of an array of keys
+	 *
+	 * @param	IDArray	An array of button IDs
+	 * @param	State	The button state to check for
+	 * @return	Whether at least one of the keys has the specified status
+	 */
+	function checkButtonArrayState(IDArray:Array<FlxGamepadInputID>, Status:FlxInputState):Bool
+	{
+		if (IDArray == null)
+		{
+			return false;
+		}
+
+		for (code in IDArray)
+		{
+			if (checkStatus(code, Status))
+				return true;
+		}
+
+		return false;
+	}
+	/**
+	 * Helper function to check the status of an array of keys
+	 *
+	 * @param	IDArray	An array of keys as Strings
+	 * @param	State	The key state to check for
+	 * @return	Whether at least one of the keys has the specified status
+	 */
+	function checkButtonArrayStateRaw(IDArray:Array<Int>, Status:FlxInputState):Bool
+	{
+		if (IDArray == null)
+		{
+			return false;
+		}
+
+		for (code in IDArray)
+		{
+			if (checkStatusRaw(code, Status))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
 	 *
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
-	public function anyPressed(IDArray:Array<FlxGamepadInputID>):Bool
+	public inline function anyPressed(IDArray:Array<FlxGamepadInputID>):Bool
 	{
-		for (id in IDArray)
-		{
-			var raw = mapping.getRawID(id);
-			if (buttons[raw] != null)
-			{
-				if (buttons[raw].pressed)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		return checkButtonArrayState(IDArray, PRESSED);
 	}
 
 	/**
@@ -387,18 +405,9 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	RawIDArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons is pressed
 	 */
-	public function anyPressedRaw(RawIDArray:Array<Int>):Bool
+	public inline function anyPressedRaw(RawIDArray:Array<Int>):Bool
 	{
-		for (b in RawIDArray)
-		{
-			if (buttons[b] != null)
-			{
-				if (buttons[b].pressed)
-					return true;
-			}
-		}
-
-		return false;
+		return checkButtonArrayStateRaw(RawIDArray, PRESSED);
 	}
 
 	/**
@@ -407,19 +416,9 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
-	public function anyJustPressed(IDArray:Array<FlxGamepadInputID>):Bool
+	public inline function anyJustPressed(IDArray:Array<FlxGamepadInputID>):Bool
 	{
-		for (b in IDArray)
-		{
-			var raw = mapping.getRawID(b);
-			if (buttons[raw] != null)
-			{
-				if (buttons[raw].justPressed)
-					return true;
-			}
-		}
-
-		return false;
+		return checkButtonArrayState(IDArray, JUST_PRESSED);
 	}
 
 	/**
@@ -428,18 +427,9 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	RawIDArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons was just pressed
 	 */
-	public function anyJustPressedRaw(RawIDArray:Array<Int>):Bool
+	public inline function anyJustPressedRaw(RawIDArray:Array<Int>):Bool
 	{
-		for (b in RawIDArray)
-		{
-			if (buttons[b] != null)
-			{
-				if (buttons[b].justPressed)
-					return true;
-			}
-		}
-
-		return false;
+		return checkButtonArrayStateRaw(RawIDArray, JUST_PRESSED);
 	}
 
 	/**
@@ -448,19 +438,9 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	IDArray	An array of "universal" gamepad input IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
-	public function anyJustReleased(IDArray:Array<FlxGamepadInputID>):Bool
+	public inline function anyJustReleased(IDArray:Array<FlxGamepadInputID>):Bool
 	{
-		for (b in IDArray)
-		{
-			var raw = mapping.getRawID(b);
-			if (buttons[raw] != null)
-			{
-				if (buttons[raw].justReleased)
-					return true;
-			}
-		}
-
-		return false;
+		return checkButtonArrayState(IDArray, JUST_RELEASED);
 	}
 
 	/**
@@ -469,18 +449,9 @@ class FlxGamepad implements IFlxDestroyable
 	 * @param	RawArray	An array of raw button IDs
 	 * @return	Whether at least one of the buttons was just released
 	 */
-	public function anyJustReleasedRaw(RawIDArray:Array<Int>):Bool
+	public inline function anyJustReleasedRaw(RawIDArray:Array<Int>):Bool
 	{
-		for (b in RawIDArray)
-		{
-			if (buttons[b] != null)
-			{
-				if (buttons[b].justReleased)
-					return true;
-			}
-		}
-
-		return false;
+		return checkButtonArrayStateRaw(RawIDArray, JUST_RELEASED);
 	}
 
 	/**
