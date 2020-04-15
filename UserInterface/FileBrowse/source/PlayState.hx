@@ -17,7 +17,7 @@ import flash.display.Loader;
 import flash.display.LoaderInfo;
 import flash.net.FileReference;
 import flash.net.FileFilter;
-#elseif sys
+#elseif (sys && !hl)
 import systools.Dialogs;
 #end
 
@@ -147,7 +147,7 @@ class PlayState extends FlxState
 		filters.push(new FileFilter("PNG Files", "*.png"));
 		filters.push(new FileFilter("JPEG Files", "*.jpg;*.jpeg"));
 		fr.browse();
-		#elseif sys
+		#elseif (sys && !hl)
 		var filters:FILEFILTERS = {
 			count: 2,
 			descriptions: ["PNG files", "JPEG files"],
@@ -185,7 +185,7 @@ class PlayState extends FlxState
 		var bmp:Bitmap = cast(loaderInfo.content, Bitmap);
 		_showImage(bmp.bitmapData);
 	}
-	#elseif sys
+	#elseif (sys && !hl)
 	function _onSelect(arr:Array<String>):Void
 	{
 		if (arr != null && arr.length > 0)
