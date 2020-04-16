@@ -143,7 +143,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		for (key in _keyListArray)
 		{
-			if (key == null || key.released)
+			if (key == null || !key.changed)
 			{
 				continue;
 			}

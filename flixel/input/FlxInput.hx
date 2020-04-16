@@ -105,22 +105,22 @@ class FlxInput<T> extends FlxTypedInput<T, Bool, FlxInputState> implements IFlxI
 	
 	inline function get_justReleased():Bool
 	{
-		return current == JUST_RELEASED;
+		return lastValue == true && currentValue == false;
 	}
 	
 	inline function get_released():Bool
 	{
-		return current == RELEASED || justReleased;
+		return currentValue == false;
 	}
 	
 	inline function get_pressed():Bool
 	{
-		return current == PRESSED || justPressed;
+		return currentValue == true;
 	}
 	
 	inline function get_justPressed():Bool
 	{
-		return current == JUST_PRESSED;
+		return lastValue == false && currentValue == true;
 	}
 }
 
@@ -132,20 +132,42 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 	public var justMoved(get, never):Bool;
 	public var delta(get, never):V;
 	
+	/**
+	 * Example: Mouse inputs stop at any value, however thumbsticks stop at 
+	 */
+	var stopsAtZero = false;
+	var resetValue(get, never):V;
+	
+	public function new(id:K, stopsAtZero:Bool)
+	{
+		super(id);
+		this.stopsAtZero = stopsAtZero;
+	}
+	
 	override function change(newValue:V)
 	{
 		last = current;
-		if (newValue == currentValue)
-			current = currentValue == lastValue ? STOPPED : JUST_STOPPED;
+		if (stopsAtZero)
+		{
+			if (newValue == resetValue)
+				current = lastValue == resetValue ? STOPPED : JUST_STOPPED;
+			else
+				current = lastValue != resetValue ? MOVED : JUST_MOVED;
+		}
 		else
-			current = currentValue != lastValue ? MOVED : JUST_MOVED;
+		{
+			if (newValue == currentValue)
+				current = currentValue == lastValue ? STOPPED : JUST_STOPPED;
+			else
+				current = currentValue != lastValue ? MOVED : JUST_MOVED;
+		}
 		super.change(newValue);
 	}
 	
 	override function reset()
 	{
-		currentValue = cast 0;
-		lastValue = cast 0;
+		currentValue = resetValue;
+		lastValue = resetValue;
 		current = STOPPED;
 		last = STOPPED;
 	}
@@ -159,6 +181,11 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 			case MOVED: moved;
 			case JUST_MOVED: justMoved;
 		}
+	}
+	
+	inline function get_resetValue():V
+	{
+		return cast 0;
 	}
 	
 	inline function get_justStopped():Bool
@@ -195,6 +222,9 @@ abstract FlxInputState(Int) from Int
 	var PRESSED = 1;
 	var JUST_PRESSED = 2;
 }
+
+typedef FlxDigitalState = FlxInputState;
+typedef FlxDigitalInput<T> = FlxInput<T>;
 
 @:enum
 abstract FlxAnalogState(Int) from Int

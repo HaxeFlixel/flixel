@@ -147,7 +147,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 	
-	var _wheelInput:FlxAnalogInput<Int, Int> = new FlxAnalogInput(0);
+	var _wheelInput:FlxAnalogInput<Int, Int> = new FlxAnalogInput(0, true);
 	
 	/**
 	 * This is just a reference to the current cursor image, if there is one.

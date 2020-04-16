@@ -127,7 +127,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		return input.justPressed;
 	}
 	
-	@:allow(flixel.system.replay.FlxReplay)
 	@:access(flixel.system.replay.TouchRecord)
 	function record():Null<TouchRecord>
 	{
@@ -156,7 +155,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		return record;
 	}
 	
-	@:allow(flixel.system.replay.FlxReplay)
 	function playback(record:TouchRecord):Void
 	{
 		if (record.x != null || record.y != null)
