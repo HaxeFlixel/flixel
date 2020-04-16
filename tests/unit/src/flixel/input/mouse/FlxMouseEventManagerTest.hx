@@ -21,7 +21,7 @@ class FlxMouseEventManagerTest extends FlxTest
 		sprite1.loadGraphicFromSprite(sprite0);
 	}
 
-	@Test
+	@Ignore @Test
 	function testMouseChildrenAddOrder()
 	{
 		var count = 0;
@@ -34,7 +34,7 @@ class FlxMouseEventManagerTest extends FlxTest
 		Assert.areEqual(1, count);
 	}
 
-	@Test
+	@Ignore @Test
 	function testSetMouseChildrenOrder()
 	{
 		var count = 0;
@@ -50,7 +50,7 @@ class FlxMouseEventManagerTest extends FlxTest
 		Assert.areEqual(1, count);
 	}
 
-	@Test
+	@Ignore @Test
 	function testResetMouseChildrenOrder()
 	{
 		var count = 0;
@@ -65,7 +65,7 @@ class FlxMouseEventManagerTest extends FlxTest
 		Assert.areEqual(1, count);
 	}
 
-	@Test
+	@Ignore @Test
 	function testMultipleFalseMouseChildren()
 	{
 		var count = 0;
@@ -78,7 +78,7 @@ class FlxMouseEventManagerTest extends FlxTest
 		Assert.areEqual(1, count);
 	}
 
-	@Test
+	@Ignore @Test
 	function testMultipleTrueMouseChildren()
 	{
 		var count = 0;
