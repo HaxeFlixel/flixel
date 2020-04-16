@@ -153,7 +153,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 				data = new Array<CodeValuePair>();
 			}
 
-			data.push(new CodeValuePair(key.ID, key.currentValue));
+			data.push(CodeValuePair.createBool(key.ID, key.currentValue));
 		}
 
 		return data;
@@ -174,7 +174,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		while (i < l)
 		{
 			var o = Record[i++];
-			getKey(o.code).change(o.value);
+			getKey(o.code).change(o.getBool());
 		}
 	}
 }
