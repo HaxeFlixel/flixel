@@ -2,24 +2,26 @@ package flixel.input.gamepad;
 
 import flixel.input.FlxInput;
 
+@:forward
+abstract FlxGamepadAxis(FlxAnalogInput<Int, Float>)
+{
+	inline public function new (id:Int)
+	{
+		this = new FlxAnalogInput<Int, Float>(id, true);
+	}
+}
+
 class FlxGamepadButton extends FlxInput<Int>
 {
-	/**
-	 * Optional analog value, so we can check when the value has changed from the last frame
-	 */
-	public var value:Float = 0;
-
 	#if flash
-	var _pressed:Bool = false;
 
 	override public function release():Void
 	{
 		// simulate button onUp event which does not exist on flash
-		if (!_pressed)
+		if (!currentValue)
 		{
 			return;
 		}
-		_pressed = false;
 
 		super.release();
 	}
@@ -27,11 +29,10 @@ class FlxGamepadButton extends FlxInput<Int>
 	override public function press():Void
 	{
 		// simulate button onDown event which does not exist on flash
-		if (_pressed)
+		if (currentValue)
 		{
 			return;
 		}
-		_pressed = true;
 
 		super.press();
 	}

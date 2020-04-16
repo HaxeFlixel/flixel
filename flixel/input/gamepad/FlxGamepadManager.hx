@@ -3,6 +3,7 @@ package flixel.input.gamepad;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
+import flixel.system.replay.GamepadRecord;
 import flixel.util.FlxDestroyUtil;
 #if FLX_JOYSTICK_API
 import flixel.FlxG;
@@ -491,14 +492,15 @@ class FlxGamepadManager implements IFlxInputManager
 				// in legacy this returns a (-1, 1) range, but in flash/next it
 				// returns (0,1) so we normalize to (0, 1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
+				var rawID = gamepad.mapping.axisIndexToRawID(i);
+				gamepad.handleAxisMove(rawID, newAxis[rawID]);
 			}
 			else if (isForStick)
 			{
-				gamepad.handleAxisMove(i, newAxis[i], (i >= 0 && i < oldAxis.length) ? oldAxis[i] : 0);
+				gamepad.handleAxisMove(i, newAxis[i]);
 			}
 		}
 
-		gamepad.axis = newAxis;
 		gamepad.axisActive = true;
 	}
 
@@ -583,5 +585,82 @@ class FlxGamepadManager implements IFlxInputManager
 			if (gamepad != null)
 				count++;
 		return count;
+	}
+	@:allow(flixel.system.replay.FlxReplay)
+	function record():Null<Array<GamepadRecord>>
+	{
+		var records:Null<Array<GamepadRecord>> = null;
+		
+		// var i:Int = _lastList.length;
+		// while (--i >= 0)
+		// {
+		// 	if (getByID(_lastList[i]) == null)
+		// 	{
+		// 		if (records == null)
+		// 		{
+		// 			records = [];
+		// 		}
+		// 		// Record the removal from the list
+		// 		records.push(new GamepadRecord(_lastList[i], false));
+		// 		_lastList.splice(i, 1);
+		// 	}
+		// }
+		
+		// i = list.length;
+		// while (--i >= 0)
+		// {
+		// 	var touch = list[i];
+		// 	var record = touch.record();
+		// 	if (record != null)
+		// 	{
+		// 		if (records == null)
+		// 		{
+		// 			records = [];
+		// 		}
+				
+		// 		records.push(record);
+		// 	}
+			
+		// 	Save last recorded
+		// 	if (_lastList.indexOf(touch.touchPointID) == -1)
+		// 	{
+		// 		_lastList.push(touch.touchPointID);
+		// 	}
+		// }
+		
+		return records;
+	}
+	
+	@:allow(flixel.system.replay.FlxReplay)
+	function playback(records:Array<GamepadRecord>):Void
+	{
+		var i:Int = records.length;
+		
+		while (--i >= 0)
+		{
+			var record = records[i];
+			if (!record.active)
+			{
+				// // remove inactive touch
+				// if (_touchesCache.exists(record.id))
+				// {
+				// 	var touch = getByID(record.id);
+				// 	// Copied from update
+				// 	touch.input.reset();
+				// 	_touchesCache.remove(touch.touchPointID);
+				// 	list.splice(i, 1);
+				// 	_inactiveTouches.push(touch);
+				// }
+			}
+			else
+			{
+				// if (!_touchesCache.exists(record.id))
+				// {
+				// 	recycle(0, 0, record.id);
+				// }
+				
+				// getByID(record.id).playback(record);
+			}
+		}
 	}
 }

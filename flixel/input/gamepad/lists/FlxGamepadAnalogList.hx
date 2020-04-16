@@ -1,5 +1,6 @@
 package flixel.input.gamepad.lists;
 
+import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
@@ -10,13 +11,17 @@ import flixel.input.gamepad.FlxGamepad;
 class FlxGamepadAnalogList
 {
 	public var value(default, null):FlxGamepadAnalogValueList;
+	public var moved(default, null):FlxGamepadAnalogStateList;
 	public var justMoved(default, null):FlxGamepadAnalogStateList;
+	public var released(default, null):FlxGamepadAnalogStateList;
 	public var justReleased(default, null):FlxGamepadAnalogStateList;
 
 	public function new(gamepad:FlxGamepad)
 	{
 		value = new FlxGamepadAnalogValueList(gamepad);
-		justMoved = new FlxGamepadAnalogStateList(JUST_PRESSED, gamepad);
-		justReleased = new FlxGamepadAnalogStateList(JUST_RELEASED, gamepad);
+		moved = new FlxGamepadAnalogStateList(MOVED, gamepad);
+		justMoved = new FlxGamepadAnalogStateList(JUST_MOVED, gamepad);
+		released = new FlxGamepadAnalogStateList(STOPPED, gamepad);
+		justReleased = new FlxGamepadAnalogStateList(JUST_STOPPED, gamepad);
 	}
 }

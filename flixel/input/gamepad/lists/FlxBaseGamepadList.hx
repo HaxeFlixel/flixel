@@ -29,44 +29,20 @@ class FlxBaseGamepadList
 
 	function get_ANY():Bool
 	{
-		for (button in gamepad.buttons)
-		{
-			if (button != null && checkRaw(button.ID))
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return gamepad.anyButton(status);
 	}
 
 	public var ALL(get, never):Bool;
 
 	function get_ALL():Bool
 	{
-		for (button in gamepad.buttons)
-		{
-			if (button != null && !checkRaw(button.ID))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return gamepad.anyButton(status);
 	}
 
 	public var NONE(get, never):Bool;
 
 	function get_NONE():Bool
 	{
-		for (button in gamepad.buttons)
-		{
-			if (button != null && checkRaw(button.ID))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return !ALL;
 	}
 }
