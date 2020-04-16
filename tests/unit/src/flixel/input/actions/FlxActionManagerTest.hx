@@ -18,7 +18,9 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.keyboard.FlxKey;
 import haxe.Json;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+#if FLX_STEAMWRAP
 import steamwrap.data.ControllerConfig;
+#end
 import massive.munit.Assert;
 
 class FlxActionManagerTest extends FlxTest
