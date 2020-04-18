@@ -13,6 +13,7 @@ import flixel.input.gamepad.mappings.OUYAMapping;
 import flixel.input.gamepad.mappings.PS4Mapping;
 import flixel.input.gamepad.mappings.PSVitaMapping;
 import flixel.input.gamepad.mappings.WiiRemoteMapping;
+import flixel.input.gamepad.mappings.SwitchProMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -837,6 +838,7 @@ class FlxGamepad implements IFlxDestroyable
 			case MAYFLASH_WII_REMOTE: new MayflashWiiRemoteMapping(attachment);
 			case WII_REMOTE: new WiiRemoteMapping(attachment);
 			case MFI: new MFiMapping(attachment);
+			case SWITCH_PRO: new SwitchProMapping(attachment);
 			// default to XInput if we don't have a mapping for this
 			case _: new XInputMapping(attachment);
 		}
@@ -911,6 +913,7 @@ enum FlxGamepadModel
 	MAYFLASH_WII_REMOTE;
 	WII_REMOTE;
 	MFI;
+	SWITCH_PRO;
 	UNKNOWN;
 }
 

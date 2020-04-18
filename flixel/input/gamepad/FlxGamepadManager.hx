@@ -401,20 +401,26 @@ class FlxGamepadManager implements IFlxInputManager
 		// and the most popular tools just turn it into a 360 controller
 
 		name = name.toLowerCase().remove("-").remove("_");
-		return if (name.contains("ouya")) OUYA; // "OUYA Game Controller"
-		else if (name.contains("wireless controller") || name.contains("ps4")) PS4; // "Wireless Controller" or "PS4 controller"
-		else if (name.contains("logitech")) LOGITECH; else if (name.contains("xbox") && name.contains("360")) XINPUT; else if (name.contains("xinput"))
-			XINPUT;
-		else if (name.contains("nintendo rvlcnt01tr"))
-			WII_REMOTE; // WiiRemote with motion plus
-		else if (name.contains("nintendo rvlcnt01"))
-			WII_REMOTE; // WiiRemote w/o  motion plus
-		else if (name.contains("mayflash wiimote pc adapter"))
-			MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-		else if (name.contains("mfi"))
-			MFI;
-		else
-			UNKNOWN;
+		return if (name.contains("ouya"))
+				OUYA; // "OUYA Game Controller"
+			else if (name.contains("wireless controller") || name.contains("ps4"))
+				PS4; // "Wireless Controller" or "PS4 controller"
+			else if (name.contains("logitech"))
+				LOGITECH;
+			else if ((name.contains("xbox") && name.contains("360")) || name.contains("xinput"))
+				XINPUT;
+			else if (name.contains("nintendo rvlcnt01tr"))
+				WII_REMOTE; // WiiRemote with motion plus
+			else if (name.contains("nintendo rvlcnt01"))
+				WII_REMOTE; // WiiRemote w/o  motion plus
+			else if (name.contains("mayflash wiimote pc adapter"))
+				MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
+			else if (name.contains("mfi"))
+				MFI;
+			else if (name.contains("pro controller"))
+				SWITCH_PRO;
+			else
+				UNKNOWN;
 	}
 
 	function removeGamepad(Device:GameInputDevice):Void
