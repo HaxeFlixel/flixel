@@ -15,7 +15,7 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
 	*
 	* MAC: Worked out of box for me when connected via microUSB cable or Bluetooth
  */
-class SWProID
+class SwitchProID
 {
 	#if flash
 	public static inline var DPAD_UP:Int = 4;

@@ -417,8 +417,12 @@ class FlxGamepadManager implements IFlxInputManager
 				MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
 			else if (name.contains("mfi"))
 				MFI;
-			else if (name.contains("pro controller"))
+			else if (name.contains("pro controller") || name.contains("joycon l+r"))
 				SWITCH_PRO;
+			else if (name.contains("joycon (l)"))
+				SWITCH_JOYCON_LEFT;
+			else if (name.contains("joycon (r)"))
+				SWITCH_JOYCON_RIGHT;
 			else
 				UNKNOWN;
 	}

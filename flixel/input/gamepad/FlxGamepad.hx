@@ -14,6 +14,8 @@ import flixel.input.gamepad.mappings.PS4Mapping;
 import flixel.input.gamepad.mappings.PSVitaMapping;
 import flixel.input.gamepad.mappings.WiiRemoteMapping;
 import flixel.input.gamepad.mappings.SwitchProMapping;
+import flixel.input.gamepad.mappings.SwitchJoyconLeftMapping;
+import flixel.input.gamepad.mappings.SwitchJoyconRightMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil;
@@ -839,6 +841,8 @@ class FlxGamepad implements IFlxDestroyable
 			case WII_REMOTE: new WiiRemoteMapping(attachment);
 			case MFI: new MFiMapping(attachment);
 			case SWITCH_PRO: new SwitchProMapping(attachment);
+			case SWITCH_JOYCON_LEFT: new SwitchJoyconLeftMapping(attachment);
+			case SWITCH_JOYCON_RIGHT: new SwitchJoyconRightMapping(attachment);
 			// default to XInput if we don't have a mapping for this
 			case _: new XInputMapping(attachment);
 		}
@@ -918,7 +922,9 @@ enum FlxGamepadModel
 	MAYFLASH_WII_REMOTE;
 	WII_REMOTE;
 	MFI;
-	SWITCH_PRO;
+	SWITCH_PRO;// also dual joycons
+	SWITCH_JOYCON_LEFT;
+	SWITCH_JOYCON_RIGHT;
 	UNKNOWN;
 }
 

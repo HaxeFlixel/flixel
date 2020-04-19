@@ -1,7 +1,7 @@
 package flixel.input.gamepad.mappings;
 
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.gamepad.id.SWProID;
+import flixel.input.gamepad.id.SwitchProID;
 
 class SwitchProMapping extends FlxGamepadMapping
 {
@@ -18,8 +18,8 @@ class SwitchProMapping extends FlxGamepadMapping
 
 	override function initValues():Void
 	{
-		leftStick = SWProID.LEFT_ANALOG_STICK;
-		rightStick = SWProID.RIGHT_ANALOG_STICK;
+		leftStick = SwitchProID.LEFT_ANALOG_STICK;
+		rightStick = SwitchProID.RIGHT_ANALOG_STICK;
 		supportsMotion = true;
 		supportsPointer = false;
 	}
@@ -28,24 +28,24 @@ class SwitchProMapping extends FlxGamepadMapping
 	{
 		return switch (rawID)
 		{
-			case SWProID.A: B;
-			case SWProID.B: A;
-			case SWProID.X: Y;
-			case SWProID.Y: X;
-			case SWProID.MINUS: BACK;
-			case SWProID.CAPTURE: EXTRA_0;//TODO: Define common Capture inputID?
-			case SWProID.HOME: GUIDE;
-			case SWProID.PLUS: START;
-			case SWProID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
-			case SWProID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
-			case SWProID.L: LEFT_SHOULDER;
-			case SWProID.R: RIGHT_SHOULDER;
-			case SWProID.ZL: LEFT_TRIGGER;
-			case SWProID.ZR: RIGHT_TRIGGER;
-			case SWProID.DPAD_DOWN: DPAD_DOWN;
-			case SWProID.DPAD_UP: DPAD_UP;
-			case SWProID.DPAD_LEFT: DPAD_LEFT;
-			case SWProID.DPAD_RIGHT: DPAD_RIGHT;
+			case SwitchProID.A: B;
+			case SwitchProID.B: A;
+			case SwitchProID.X: Y;
+			case SwitchProID.Y: X;
+			case SwitchProID.MINUS: BACK;
+			case SwitchProID.CAPTURE: EXTRA_0;//TODO: Define common Capture inputID?
+			case SwitchProID.HOME: GUIDE;
+			case SwitchProID.PLUS: START;
+			case SwitchProID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
+			case SwitchProID.RIGHT_STICK_CLICK: RIGHT_STICK_CLICK;
+			case SwitchProID.L: LEFT_SHOULDER;
+			case SwitchProID.R: RIGHT_SHOULDER;
+			case SwitchProID.ZL: LEFT_TRIGGER;
+			case SwitchProID.ZR: RIGHT_TRIGGER;
+			case SwitchProID.DPAD_DOWN: DPAD_DOWN;
+			case SwitchProID.DPAD_UP: DPAD_UP;
+			case SwitchProID.DPAD_LEFT: DPAD_LEFT;
+			case SwitchProID.DPAD_RIGHT: DPAD_RIGHT;
 			case id if (id == leftStick.rawUp): LEFT_STICK_DIGITAL_UP;
 			case id if (id == leftStick.rawDown): LEFT_STICK_DIGITAL_DOWN;
 			case id if (id == leftStick.rawLeft): LEFT_STICK_DIGITAL_LEFT;
@@ -62,32 +62,32 @@ class SwitchProMapping extends FlxGamepadMapping
 	{
 		return switch (ID)
 		{
-			case A: SWProID.B;
-			case B: SWProID.A;
-			case X: SWProID.Y;
-			case Y: SWProID.X;
-			case BACK: SWProID.MINUS;
-			case EXTRA_0: SWProID.CAPTURE;
-			case GUIDE: SWProID.HOME;
-			case START: SWProID.PLUS;
-			case LEFT_STICK_CLICK: SWProID.LEFT_STICK_CLICK;
-			case RIGHT_STICK_CLICK: SWProID.RIGHT_STICK_CLICK;
-			case LEFT_SHOULDER: SWProID.L;
-			case RIGHT_SHOULDER: SWProID.R;
-			case LEFT_TRIGGER: SWProID.ZL;
-			case RIGHT_TRIGGER: SWProID.ZR;
-			case DPAD_UP: SWProID.DPAD_UP;
-			case DPAD_DOWN: SWProID.DPAD_DOWN;
-			case DPAD_LEFT: SWProID.DPAD_LEFT;
-			case DPAD_RIGHT: SWProID.DPAD_RIGHT;
-			case LEFT_STICK_DIGITAL_UP: SWProID.LEFT_ANALOG_STICK.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: SWProID.LEFT_ANALOG_STICK.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: SWProID.LEFT_ANALOG_STICK.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: SWProID.LEFT_ANALOG_STICK.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: SWProID.RIGHT_ANALOG_STICK.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: SWProID.RIGHT_ANALOG_STICK.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: SWProID.RIGHT_ANALOG_STICK.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: SWProID.RIGHT_ANALOG_STICK.rawRight;
+			case A: SwitchProID.B;
+			case B: SwitchProID.A;
+			case X: SwitchProID.Y;
+			case Y: SwitchProID.X;
+			case BACK: SwitchProID.MINUS;
+			case EXTRA_0: SwitchProID.CAPTURE;
+			case GUIDE: SwitchProID.HOME;
+			case START: SwitchProID.PLUS;
+			case LEFT_STICK_CLICK: SwitchProID.LEFT_STICK_CLICK;
+			case RIGHT_STICK_CLICK: SwitchProID.RIGHT_STICK_CLICK;
+			case LEFT_SHOULDER: SwitchProID.L;
+			case RIGHT_SHOULDER: SwitchProID.R;
+			case LEFT_TRIGGER: SwitchProID.ZL;
+			case RIGHT_TRIGGER: SwitchProID.ZR;
+			case DPAD_UP: SwitchProID.DPAD_UP;
+			case DPAD_DOWN: SwitchProID.DPAD_DOWN;
+			case DPAD_LEFT: SwitchProID.DPAD_LEFT;
+			case DPAD_RIGHT: SwitchProID.DPAD_RIGHT;
+			case LEFT_STICK_DIGITAL_UP: SwitchProID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: SwitchProID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: SwitchProID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: SwitchProID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: SwitchProID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: SwitchProID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: SwitchProID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: SwitchProID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
@@ -128,9 +128,9 @@ class SwitchProMapping extends FlxGamepadMapping
 				RIGHT_ANALOG_STICK_FAKE_X;
 			else if (axisID == rightStick.y)
 				RIGHT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == SWProID.ZL)
+			else if (axisID == SwitchProID.ZL)
 				LEFT_TRIGGER_FAKE;
-			else if (axisID == SWProID.ZR)
+			else if (axisID == SwitchProID.ZR)
 				RIGHT_TRIGGER_FAKE;
 			else
 				axisID;
