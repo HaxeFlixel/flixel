@@ -312,24 +312,9 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return switch (ID)
 		{
-			case FlxGamepadInputID.ANY:
-				switch (Status)
-				{
-					case PRESSED: pressed.ANY;
-					case JUST_PRESSED: justPressed.ANY;
-					case RELEASED: released.ANY;
-					case JUST_RELEASED: justReleased.ANY;
-				}
-			case FlxGamepadInputID.NONE:
-				switch (Status)
-				{
-					case PRESSED: pressed.NONE;
-					case JUST_PRESSED: justPressed.NONE;
-					case RELEASED: released.NONE;
-					case JUST_RELEASED: justReleased.NONE;
-				}
-			default:
-				checkStatusRaw(mapping.getRawID(ID), Status);
+			case FlxGamepadInputID.ANY: anyButton(Status);
+			case FlxGamepadInputID.NONE: !anyButton(Status);
+			default: checkStatusRaw(mapping.getRawID(ID), Status);
 		}
 	}
 
