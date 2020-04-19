@@ -288,7 +288,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 		return label;
 	}
 	
-	static public function getWiiInputLabel(id:FlxGamepadInputID, attachment:FlxGamepadAttachment)
+	public static function getWiiInputLabel(id:FlxGamepadInputID, attachment:FlxGamepadAttachment)
 	{
 		switch (id)
 		{
