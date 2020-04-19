@@ -95,6 +95,26 @@ class SwitchProMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
+
+	override function getInputLabel(id:FlxGamepadInputID)
+	{
+		return switch (id)
+		{
+			case A: "b";
+			case B: "a";
+			case X: "y";
+			case Y: "x";
+			case BACK: "minus";
+			case GUIDE: "home";
+			case START: "plus";
+			case EXTRA_0: "capture";
+			case LEFT_SHOULDER: "l";
+			case RIGHT_SHOULDER: "r";
+			case LEFT_TRIGGER: "zl";
+			case RIGHT_TRIGGER: "zr";
+			case _: super.getInputLabel(id);
+		}
+	}
 	
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int

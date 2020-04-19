@@ -66,6 +66,23 @@ class PSVitaMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
+	
+	override function getInputLabel(id:FlxGamepadInputID)
+	{
+		return switch (id)
+		{
+			case A: "x";
+			case B: "circle";
+			case X: "square";
+			case Y: "triangle";
+			case BACK: "select";
+			case LEFT_SHOULDER: "l1";
+			case RIGHT_SHOULDER: "r1";
+			case LEFT_TRIGGER: "l2";
+			case RIGHT_TRIGGER: "r2";
+			case _: super.getInputLabel(id);
+		}
+	}
 
 	override public function isAxisFlipped(axisID:Int):Bool
 	{

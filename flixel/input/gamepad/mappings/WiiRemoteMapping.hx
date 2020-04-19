@@ -278,4 +278,74 @@ class WiiRemoteMapping extends FlxGamepadMapping
 
 		return super.set_attachment(attachment);
 	}
+	
+	override function getInputLabel(id:FlxGamepadInputID)
+	{
+		var label = WiiRemoteMapping.getWiiInputLabel(id, attachment);
+		if (label == null)
+			return super.getInputLabel(id);
+		
+		return label;
+	}
+	
+	static public function getWiiInputLabel(id:FlxGamepadInputID, attachment:FlxGamepadAttachment)
+	{
+		switch (id)
+		{
+			case BACK: return "minus";
+			case GUIDE: return "home";
+			case START: return"plus";
+			default:
+		}
+		
+		return switch (attachment)
+		{
+			case WII_CLASSIC_CONTROLLER: getLabelClassicController(id);
+			case WII_NUNCHUCK: getLabelNunchuk(id);
+			case NONE: getLabelDefault(id);
+		}
+	}
+
+	static inline function getLabelClassicController(ID:FlxGamepadInputID):Null<String>
+	{
+		return switch (ID)
+		{
+			case A: "b";
+			case B: "a";
+			case X: "y";
+			case Y: "x";
+			case LEFT_SHOULDER: "zl";
+			case RIGHT_SHOULDER: "zr";
+			case LEFT_TRIGGER: "l";
+			case RIGHT_TRIGGER: "r";
+			case EXTRA_0: "1";
+			case EXTRA_1: "2";
+			default: null;
+		}
+	}
+
+	static inline function getLabelNunchuk(ID:FlxGamepadInputID):Null<String>
+	{
+		return switch (ID)
+		{
+			case X: "1";
+			case Y: "2";
+			case LEFT_SHOULDER: "c";
+			case LEFT_TRIGGER: "z";
+			default: null;
+		}
+	}
+
+	static inline function getLabelDefault(ID:FlxGamepadInputID):Null<String>
+	{
+		return switch (ID)
+		{
+			case X: "1";
+			case Y: "2";
+			case BACK: "minus";
+			case GUIDE: "home";
+			case START: "plus";
+			default: null;
+		}
+	}
 }

@@ -877,6 +877,11 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return _deadZone = deadZone;
 	}
+	
+	public inline function getInputLabel(id:FlxGamepadInputID)
+	{
+		return mapping.getInputLabel(id);
+	}
 
 	public function toString():String
 	{
