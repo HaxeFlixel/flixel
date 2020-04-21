@@ -33,7 +33,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	@Before
 	function before() {}
 
-	@Test
+	@Ignore @Test
 	function testMousePosition()
 	{
 		var axes = [
@@ -95,7 +95,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		testInputStates(test, clear, move, [pos1, pos2, pos2, pos2], axis, a, b, c, d, callbacks);
 	}
 
-	@Test
+	@Ignore @Test
 	function testMouseMotion()
 	{
 		var axes = [
@@ -167,7 +167,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		testInputStates(test, clear, move, [pos1, pos2, pos3, pos4], axis, a, b, c, d, callbacks);
 	}
 
-	@Test
+	@Ignore @Test
 	function testClickAndDragMouseMotion()
 	{
 		var axes = [

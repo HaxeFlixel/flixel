@@ -14,6 +14,9 @@ import flixel.input.gamepad.mappings.OUYAMapping;
 import flixel.input.gamepad.mappings.PS4Mapping;
 import flixel.input.gamepad.mappings.PSVitaMapping;
 import flixel.input.gamepad.mappings.WiiRemoteMapping;
+import flixel.input.gamepad.mappings.SwitchProMapping;
+import flixel.input.gamepad.mappings.SwitchJoyconLeftMapping;
+import flixel.input.gamepad.mappings.SwitchJoyconRightMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
 import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -334,12 +337,9 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return switch (ID)
 		{
-			case FlxGamepadInputID.ANY:
-				anyButton(Status);
-			case FlxGamepadInputID.NONE:
-				!anyButton(Status);
-			default:
-				checkStatusRaw(mapping.getRawID(ID), Status);
+			case FlxGamepadInputID.ANY: anyButton(Status);
+			case FlxGamepadInputID.NONE: !anyButton(Status);
+			default: checkStatusRaw(mapping.getRawID(ID), Status);
 		}
 	}
 
@@ -389,6 +389,7 @@ class FlxGamepad implements IFlxDestroyable
 
 		return false;
 	}
+
 	/**
 	 * Helper function to check the status of an array of buttons
 	 *
@@ -408,10 +409,10 @@ class FlxGamepad implements IFlxDestroyable
 			if (checkStatusRaw(code, Status))
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if at least one button from an array of button IDs is pressed.
 	 *
@@ -841,6 +842,9 @@ class FlxGamepad implements IFlxDestroyable
 			case MAYFLASH_WII_REMOTE: new MayflashWiiRemoteMapping(attachment);
 			case WII_REMOTE: new WiiRemoteMapping(attachment);
 			case MFI: new MFiMapping(attachment);
+			case SWITCH_PRO: new SwitchProMapping(attachment);
+			case SWITCH_JOYCON_LEFT: new SwitchJoyconLeftMapping(attachment);
+			case SWITCH_JOYCON_RIGHT: new SwitchJoyconRightMapping(attachment);
 			// default to XInput if we don't have a mapping for this
 			case _: new XInputMapping(attachment);
 		}
@@ -878,6 +882,11 @@ class FlxGamepad implements IFlxDestroyable
 	inline function set_deadZone(deadZone:Float):Float
 	{
 		return _deadZone = deadZone;
+	}
+	
+	public inline function getInputLabel(id:FlxGamepadInputID)
+	{
+		return mapping.getInputLabel(id);
 	}
 
 	public function toString():String
@@ -985,6 +994,9 @@ enum FlxGamepadModel
 	MAYFLASH_WII_REMOTE;
 	WII_REMOTE;
 	MFI;
+	SWITCH_PRO;// also dual joycons
+	SWITCH_JOYCON_LEFT;
+	SWITCH_JOYCON_RIGHT;
 	UNKNOWN;
 }
 

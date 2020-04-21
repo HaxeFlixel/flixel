@@ -101,6 +101,51 @@ class FlxGamepadMapping
 	{
 		return this.attachment = attachment;
 	}
+	
+	public function getInputLabel(id:FlxGamepadInputID):Null<String>
+	{
+		if (getRawID(id) == -1)
+			return null;// return empty string, "unknown" or enum maybe?
+		
+		return switch (id)
+		{
+			case A: "a";
+			case B: "b";
+			case X: "x";
+			case Y: "y";
+			case BACK: "back";
+			case GUIDE: "guide";
+			case START: "start";
+			case LEFT_STICK_CLICK: "ls-click";
+			case RIGHT_STICK_CLICK: "rs-click";
+			case LEFT_SHOULDER: "lb";
+			case RIGHT_SHOULDER: "rb";
+			case LEFT_TRIGGER: "lt";
+			case RIGHT_TRIGGER: "rt";
+			case LEFT_TRIGGER_BUTTON: "l2-click";
+			case RIGHT_TRIGGER_BUTTON: "r2-click";
+			case DPAD: "dpad";
+			case DPAD_UP: "up";
+			case DPAD_DOWN: "down";
+			case DPAD_LEFT: "left";
+			case DPAD_RIGHT: "right";
+			case LEFT_ANALOG_STICK: "ls";
+			case RIGHT_ANALOG_STICK: "rs";
+			case LEFT_STICK_DIGITAL_UP: "ls-up";
+			case LEFT_STICK_DIGITAL_DOWN: "ls-down";
+			case LEFT_STICK_DIGITAL_LEFT: "ls-left";
+			case LEFT_STICK_DIGITAL_RIGHT: "ls-right";
+			case RIGHT_STICK_DIGITAL_UP: "rs-up";
+			case RIGHT_STICK_DIGITAL_DOWN: "rs-down";
+			case RIGHT_STICK_DIGITAL_LEFT: "rs-left";
+			case RIGHT_STICK_DIGITAL_RIGHT: "rs-right";
+			#if FLX_JOYSTICK_API
+			case LEFT_TRIGGER_FAKE: "l2";
+			case RIGHT_TRIGGER_FAKE: "r2";
+			#end
+			default: null;
+		}
+	}
 }
 
 @SuppressWarnings("checkstyle:MemberName")

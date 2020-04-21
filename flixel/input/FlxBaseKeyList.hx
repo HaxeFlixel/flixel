@@ -5,6 +5,10 @@ import flixel.input.FlxInput.FlxInputState;
 class FlxBaseKeyList
 {
 	public var ANY(get, never):Bool;
+
+	/**
+	 * @since 4.8.0
+	 */
 	public var NONE(get, never):Bool;
 
 	var status:FlxInputState;
@@ -30,10 +34,9 @@ class FlxBaseKeyList
 				return true;
 			}
 		}
-
 		return false;
 	}
-	
+
 	function get_NONE():Bool
 	{
 		for (key in keyManager._keyListArray)
@@ -43,7 +46,6 @@ class FlxBaseKeyList
 				return false;
 			}
 		}
-
 		return true;
 	}
 }

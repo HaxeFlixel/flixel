@@ -31,6 +31,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 
 	/**
 	 * Helper class to check if a key is released.
+	 * @since 4.8.0
 	 */
 	public var released(default, null):KeyList;
 
@@ -141,7 +142,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * @param	Status		The key state to check for.
 	 * @return	Whether the provided key has the specified status.
 	 */
-	public inline function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
+	public function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
 	{
 		return switch (KeyCode)
 		{
