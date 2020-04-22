@@ -61,7 +61,12 @@ class FlxGamepadManager implements IFlxInputManager
 	 * Stores all gamepads - no null entries, but index does *not* match event.device
 	 */
 	var _activeGamepads:Array<FlxGamepad> = [];
-
+	
+	/**
+	 * Helper for recording, a list of ids of the gamepads that were active in the previously recorded frame.
+	 */
+	var _lastList:Array<Int> = [];
+	
 	#if FLX_GAMEINPUT_API
 	/**
 	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
@@ -601,42 +606,42 @@ class FlxGamepadManager implements IFlxInputManager
 	{
 		var records:Null<Array<GamepadRecord>> = null;
 		
-		// var i:Int = _lastList.length;
-		// while (--i >= 0)
-		// {
-		// 	if (getByID(_lastList[i]) == null)
-		// 	{
-		// 		if (records == null)
-		// 		{
-		// 			records = [];
-		// 		}
-		// 		// Record the removal from the list
-		// 		records.push(new GamepadRecord(_lastList[i], false));
-		// 		_lastList.splice(i, 1);
-		// 	}
-		// }
+		var i:Int = _lastList.length;
+		while (--i >= 0)
+		{
+			if (getByID(_lastList[i]) == null)
+			{
+				if (records == null)
+				{
+					records = [];
+				}
+				// Record the removal from the list
+				records.push(new GamepadRecord(_lastList[i], false));
+				_lastList.splice(i, 1);
+			}
+		}
 		
-		// i = list.length;
-		// while (--i >= 0)
-		// {
-		// 	var touch = list[i];
-		// 	var record = touch.record();
-		// 	if (record != null)
-		// 	{
-		// 		if (records == null)
-		// 		{
-		// 			records = [];
-		// 		}
+		i = _activeGamepads.length;
+		while (--i >= 0)
+		{
+			var gamepad = _activeGamepads[i];
+			var record = gamepad.record();
+			if (record != null)
+			{
+				if (records == null)
+				{
+					records = [];
+				}
 				
-		// 		records.push(record);
-		// 	}
+				records.push(record);
+			}
 			
-		// 	Save last recorded
-		// 	if (_lastList.indexOf(touch.touchPointID) == -1)
-		// 	{
-		// 		_lastList.push(touch.touchPointID);
-		// 	}
-		// }
+			// Save last recorded
+			if (_lastList.indexOf(gamepad.id) == -1)
+			{
+				_lastList.push(gamepad.id);
+			}
+		}
 		
 		return records;
 	}

@@ -81,6 +81,27 @@ class FlxGamepadMapping
 		return false;
 	}
 
+	public function isAxisRaw(rawID:Int):Bool
+	{
+		var id = getID(rawID);
+		return id == LEFT_TRIGGER
+			|| id == RIGHT_TRIGGER
+			|| isAxisForAnalogStickRaw(rawID)
+			|| isAxisForMotion(id);
+	}
+
+	public inline function isAxisForAnalogStickRaw(rawID:Int):Bool
+	{
+		return (leftStick != null && (rawID == leftStick.x || rawID == leftStick.y))
+			|| (rightStick != null && (rawID == rightStick.x || rawID == rightStick.y));
+	}
+
+	public inline function isTriggerRaw(rawID:Int):Bool
+	{
+		var id = getID(rawID);
+		return id == LEFT_TRIGGER || id == RIGHT_TRIGGER;
+	}
+
 	#if FLX_JOYSTICK_API
 	/**
 	 * Given an axis index value like 0-6, figures out which input that

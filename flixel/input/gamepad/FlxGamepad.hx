@@ -221,41 +221,7 @@ class FlxGamepad implements IFlxDestroyable
 		
 		for (i in 0..._device.numControls)
 		{
-			var control = _device.getControlAt(i);
-			
-			// quick absolute value for analog sticks
-			if (control.id.indexOf("AXIS_") == 0)
-			{
-				if (isAxisForAnalogStick(i))
-				{
-					handleAxisMove(i, control.value);
-				}
-				else if (isTrigger(i))
-				{
-					updateTrigger(i, control.value, true);
-				}
-				else
-				{
-					getAxisInput(i).change(checkIndependentDeadZone(control.value));
-				}
-			}
-			else if (isTrigger(i))//Check for non-analog triggers, which will appear like a button
-			{
-				updateTrigger(i, control.value, false);
-			}
-			else
-			{
-				var button = getButton(i);
-				var pressed = Math.abs(control.value) > 0.5;
-				if (button.pressed && !pressed)
-				{
-					button.release();
-				}
-				else if (button.released && pressed)
-				{
-					button.press();
-				}
-			}
+			updateInput(i, _device.getControlAt(i).value);
 		}
 		#elseif FLX_JOYSTICK_API
 		axisActive = false;
@@ -271,24 +237,42 @@ class FlxGamepad implements IFlxDestroyable
 			axis.update();
 		}
 	}
+	
+	function updateInput(id:Int, value:Float):Void
+	{
+		if (mapping.isTriggerRaw(id))
+		{
+			var value = checkIndependentDeadZone(value);
+			getAxisInput(id).change(value);
+			getButton(id).change(value != 0);
+		}
+		if (mapping.isAxisForAnalogStickRaw(id))
+		{
+			handleStickAxisMove(id, value);
+		}
+		else if (mapping.isAxisRaw(id))
+		{
+			getAxisInput(id).change(checkIndependentDeadZone(value));
+		}
+		else
+		{
+			var button = getButton(id);
+			var pressed = value != 0;
+			if (button.pressed && !pressed)
+			{
+				button.release();
+			}
+			else if (button.released && pressed)
+			{
+				button.press();
+			}
+		}
+	}
 
 	function isTrigger(axis:Int):Bool
 	{
 		return axis == mapping.getRawID(LEFT_TRIGGER)
 			|| axis == mapping.getRawID(RIGHT_TRIGGER);
-	}
-	
-	function updateTrigger(axisID:Int, value:Float, isAnalog:Bool)
-	{
-		var axis = getAxisInput(axisID);
-		value = checkIndependentDeadZone(value);
-		axis.change(value);
-		getButton(axisID).change(value > 0);
-		if (!isAnalog)
-		{
-			var buttonId:FlxGamepadInputID = mapping.getID(axisID) == LEFT_TRIGGER ? LEFT_TRIGGER_BUTTON : RIGHT_TRIGGER_BUTTON;
-			getButton(buttonId).change(value > 0);
-		}
 	}
 	
 	public function reset():Void
@@ -583,24 +567,6 @@ class FlxGamepad implements IFlxDestroyable
 		#end
 	}
 
-	function isAxisForAnalogStick(AxisIndex:Int):Bool
-	{
-		var leftStick = mapping.leftStick;
-		var rightStick = mapping.rightStick;
-
-		if (leftStick != null)
-		{
-			if (AxisIndex == leftStick.x || AxisIndex == leftStick.y)
-				return true;
-		}
-		if (rightStick != null)
-		{
-			if (AxisIndex == rightStick.x || AxisIndex == rightStick.y)
-				return true;
-		}
-		return false;
-	}
-
 	inline function getAnalogStickByAxis(AxisIndex:Int):FlxGamepadAnalogStick
 	{
 		var leftStick = mapping.leftStick;
@@ -772,8 +738,13 @@ class FlxGamepad implements IFlxDestroyable
 			return value;
 		return 0;
 	}
-
-	function handleAxisMove(axis:Int, newValue:Float)
+	
+	/**
+	 * Moves the analog stick axis as well as the digital direction buttons tied to this stick.
+	 * @param axis		The raw id of the controller axis moving.
+	 * @param newValue	The raw value the axis is moving to.
+	 */
+	function handleStickAxisMove(axis:Int, newValue:Float):Void
 	{
 		var axisInput = getAxisInput(axis);
 		var oldValue = axisInput.currentValue;
@@ -783,8 +754,8 @@ class FlxGamepad implements IFlxDestroyable
 		var stick:FlxGamepadAnalogStick = getAnalogStickByAxis(axis);
 		if (stick.mode == ONLY_DIGITAL || stick.mode == BOTH)
 		{
-			handleAxisMoveSub(stick, axis, newValue, oldValue, 1.0);
-			handleAxisMoveSub(stick, axis, newValue, oldValue, -1.0);
+			setDigitalStickAxis(stick, axis, newValue, oldValue, 1.0);
+			setDigitalStickAxis(stick, axis, newValue, oldValue, -1.0);
 		}
 		
 		// still haven't figured out how to suppress the analog inputs properly. Oh well.
@@ -799,7 +770,7 @@ class FlxGamepad implements IFlxDestroyable
 		// }
 	}
 
-	function handleAxisMoveSub(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float = 1.0)
+	function setDigitalStickAxis(stick:FlxGamepadAnalogStick, axis:Int, value:Float, oldValue:Float, sign:Float = 1.0)
 	{
 		var digitalButton = -1;
 
@@ -899,11 +870,7 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * If any keys are not "released",
-	 * this function will return an array indicating
-	 * which keys are pressed and what state they are in.
-	 *
-	 * @return	An array of key state data. Null if there is no data.
+	 * @return	A record of everything that changed with this gamepad.
 	 */
 	function record():GamepadRecord
 	{
@@ -911,60 +878,44 @@ class FlxGamepad implements IFlxDestroyable
 
 		for (axis in axes)
 		{
-			if (!axis.changed)
+			if (axis.changed)
 			{
-				continue;
+				if (record == null)
+				{
+					record = new GamepadRecord(id);
+					record.states = [];
+				}
+				
+				record.addAnalog(axis.ID, axis.currentValue);
 			}
-
-			if (record == null)
-			{
-				record = new GamepadRecord(id);
-				record.states = [];
-			}
-
-			record.addAnalog(axis.ID, axis.currentValue);
 		}
 		
 		for (button in buttons)
 		{
-			if (!button.changed)
+			// Don't record both digital and analog versions. i.e. triggers
+			if (button.changed && axes.exists(button.ID))
 			{
-				continue;
+				if (record == null)
+				{
+					record = new GamepadRecord(id);
+					record.states = [];
+				}
+				
+				record.addDigital(button.ID, button.currentValue);
 			}
-
-			if (record == null)
-			{
-				record = new GamepadRecord(id);
-				record.states = [];
-			}
-
-			record.addDigital(button.ID, button.currentValue);
 		}
 
 		return record;
 	}
 
 	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
-	 *
-	 * @param	Record	Array of data about key states.
+	 * Recreates the changes specified in the given record.
 	 */
 	function playback(Record:GamepadRecord):Void
 	{
-		var i:Int = 0;
-		var l:Int = Record.states.length;
-
 		for (state in Record.states)
 		{
-			if (isAxisForAnalogStick(state.code))
-			{
-				getAxisInput(state.code).change(state.getFloat());
-			}
-			else
-			{
-				getButton(state.code).change(state.getBool());
-			}
+			updateInput(state.code, state.getFloat());
 		}
 	}
 }
