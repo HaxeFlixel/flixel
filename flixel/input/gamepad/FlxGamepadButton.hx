@@ -3,11 +3,11 @@ package flixel.input.gamepad;
 import flixel.input.FlxInput;
 
 @:forward
-abstract FlxGamepadAxis(FlxAnalogInput<Int, Float>)
+abstract FlxGamepadAxis(FlxAnalogInput<Int>)
 {
 	inline public function new (id:Int)
 	{
-		this = new FlxAnalogInput<Int, Float>(id, true);
+		this = new FlxAnalogInput<Int>(id, true);
 	}
 }
 

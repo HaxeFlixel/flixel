@@ -139,16 +139,16 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		if (input.justPressed)
 		{
 			// Always record x and y when starting a new touch
-			record.x = _globalScreenX.currentValue;
-			record.y = _globalScreenY.currentValue;
+			record.x = Std.int(_globalScreenX.currentValue);
+			record.y = Std.int(_globalScreenY.currentValue);
 			record.pressed = input.currentValue;
 		}
 		else 
 		{
 			if (_globalScreenX.changed)
-				record.x = _globalScreenX.currentValue;
+				record.x = Std.int(_globalScreenX.currentValue);
 			if (_globalScreenY.changed)
-				record.y = _globalScreenY.currentValue;
+				record.y = Std.int(_globalScreenY.currentValue);
 			if (input.changed)
 				record.pressed = input.currentValue;
 		}

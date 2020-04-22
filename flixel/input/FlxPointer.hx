@@ -27,8 +27,8 @@ class FlxPointer
 	public var justStopped(get, never):Bool;
 	public var stopped(get, never):Bool;
 	
-	var _globalScreenX:FlxAnalogInput<FlxAxes, Int> = new FlxAnalogInput(FlxAxes.X, false);
-	var _globalScreenY:FlxAnalogInput<FlxAxes, Int> = new FlxAnalogInput(FlxAxes.Y, false);
+	var _globalScreenX:FlxAnalogInput<FlxAxes> = new FlxAnalogInput(FlxAxes.X, false);
+	var _globalScreenY:FlxAnalogInput<FlxAxes> = new FlxAnalogInput(FlxAxes.Y, false);
 	
 	static var _cachedPoint:FlxPoint = new FlxPoint();
 	

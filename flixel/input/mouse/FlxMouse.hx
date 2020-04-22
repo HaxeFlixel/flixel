@@ -147,7 +147,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 	
-	var _wheelInput:FlxAnalogInput<Int, Int> = new FlxAnalogInput(0, true);
+	var _wheelInput:FlxAnalogInput<Int> = new FlxAnalogInput(0, true);
 	
 	/**
 	 * This is just a reference to the current cursor image, if there is one.
@@ -555,7 +555,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	#end
 	
 	inline function get_wheel():Int
-		return _wheelInput.currentValue;
+		return Std.int(_wheelInput.currentValue);
 	
 	function showSystemCursor():Void
 	{
@@ -650,14 +650,14 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			return null;
 		}
 		var record = new MouseRecord();
-		if (_globalScreenX.changed) record.x = _globalScreenX.currentValue;
-		if (_globalScreenY.changed) record.y = _globalScreenY.currentValue;
+		if (_globalScreenX.changed) record.x = Std.int(_globalScreenX.currentValue);
+		if (_globalScreenY.changed) record.y = Std.int(_globalScreenY.currentValue);
 		if (_leftButton.changed) record.leftButton = _leftButton.currentValue;
 		#if FLX_MOUSE_ADVANCED
 		if (_middleButton.changed) record.middleButton = _middleButton.currentValue;
 		if (_rightButton.changed) record.rightButton = _rightButton.currentValue;
 		#end
-		if (_wheelInput.changed) record.wheel = _wheelInput.currentValue;
+		if (_wheelInput.changed) record.wheel = Std.int(_wheelInput.currentValue);
 		return record;
 	}
 	

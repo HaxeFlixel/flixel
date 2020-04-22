@@ -124,19 +124,18 @@ class FlxInput<T> extends FlxTypedInput<T, Bool, FlxInputState> implements IFlxI
 	}
 }
 
-class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
+class FlxAnalogInput<K> extends FlxTypedInput<K, Float, FlxAnalogState>
 {
 	public var justStopped(get, never):Bool;
 	public var stopped(get, never):Bool;
 	public var moved(get, never):Bool;
 	public var justMoved(get, never):Bool;
-	public var delta(get, never):V;
+	public var delta(get, never):Float;
 	
 	/**
 	 * Example: Mouse inputs stop at any value, however thumbsticks stop at 
 	 */
 	var stopsAtZero = false;
-	var resetValue(get, never):V;
 	
 	public function new(id:K, stopsAtZero:Bool)
 	{
@@ -144,15 +143,15 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 		this.stopsAtZero = stopsAtZero;
 	}
 	
-	override function change(newValue:V)
+	override function change(newValue:Float)
 	{
 		last = current;
 		if (stopsAtZero)
 		{
-			if (newValue == resetValue)
-				current = lastValue == resetValue ? STOPPED : JUST_STOPPED;
+			if (newValue == 0)
+				current = lastValue == 0 ? STOPPED : JUST_STOPPED;
 			else
-				current = lastValue != resetValue ? MOVED : JUST_MOVED;
+				current = lastValue != 0 ? MOVED : JUST_MOVED;
 		}
 		else
 		{
@@ -166,8 +165,8 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 	
 	override function reset()
 	{
-		currentValue = resetValue;
-		lastValue = resetValue;
+		currentValue = 0;
+		lastValue = 0;
 		current = STOPPED;
 		last = STOPPED;
 	}
@@ -181,11 +180,6 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 			case MOVED: moved;
 			case JUST_MOVED: justMoved;
 		}
-	}
-	
-	inline function get_resetValue():V
-	{
-		return cast 0;
 	}
 	
 	inline function get_justStopped():Bool
@@ -208,7 +202,7 @@ class FlxAnalogInput<K, V:Float> extends FlxTypedInput<K, V, FlxAnalogState>
 		return current == JUST_MOVED;
 	}
 	
-	inline function get_delta():V
+	inline function get_delta():Float
 	{
 		return cast lastValue - currentValue;
 	}
