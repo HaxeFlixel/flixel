@@ -56,6 +56,8 @@ class PlayState extends FlxState
 
 		level.setSlopes(tempNW, tempNE, tempSW, tempSE);
 
+		level.setDownwardsGlue(true);
+
 		// set tiles steepness
 		level.setGentle([10, 11, 18, 19], [9, 12, 17, 20]);
 		level.setSteep([13, 14, 21, 22], [15, 16, 23, 24]);
