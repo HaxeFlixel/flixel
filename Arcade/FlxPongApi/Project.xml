@@ -80,7 +80,7 @@
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="assets/HaxeFlixel_Addons.svg" />
 	
-	<assets path="assets/sounds" if="flash">
+	<assets path="assets/sounds">
 		<sound path="plip.mp3" id="plip" />
 		<sound path="kaboom.mp3" id="kaboom" />
 	</assets>
