@@ -193,7 +193,8 @@ class BitmapFrontEnd
 	{
 		for (key in _cache.keys())
 		{
-			if (_cache.get(key).bitmap == bmd)
+			var obj = _cache.get(key);
+			if (obj != null && obj.bitmap == bmd)
 				return key;
 		}
 		return null;
