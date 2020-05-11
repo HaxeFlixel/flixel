@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        haxe-version: ["3.4.7", stable, nightly]
+        target: [html5, hl, neko, flash, cpp]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: lix-pm/setup-lix@master
+    - uses: actions/checkout@v2
+    - run: haxelib dev flixel .
+    - uses: HaxeFlixel/setup-flixel@master
+      with:
+        haxe-version: ${{matrix.haxe-version}}
+        flixel-versions: dev
+        target: ${{matrix.target}}
+        run-tests: true

@@ -9,7 +9,14 @@ import flixel.input.FlxBaseKeyList;
  */
 class FlxAndroidKeyList extends FlxBaseKeyList
 {
-	public var BACK(get, never):Bool; inline function get_BACK() return check(FlxAndroidKey.BACK);
-	public var MENU(get, never):Bool; inline function get_MENU() return check(FlxAndroidKey.MENU);
+	public var BACK(get, never):Bool;
+
+	inline function get_BACK()
+		return check(FlxAndroidKey.BACK);
+
+	public var MENU(get, never):Bool;
+
+	inline function get_MENU()
+		return check(FlxAndroidKey.MENU);
 }
 #end

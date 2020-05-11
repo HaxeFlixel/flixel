@@ -13,16 +13,13 @@ class FlxStringUtilTest
 		bitmapData.setPixel32(0, 0, FlxColor.BLACK);
 		bitmapData.setPixel32(1, 1, FlxColor.BLACK);
 		bitmapData.setPixel32(2, 2, FlxColor.BLACK);
-		
-		var expected =
-			"1, 0, 0\n" +
-			"0, 1, 0\n" +
-			"0, 0, 1";
+
+		var expected = "1, 0, 0\n" + "0, 1, 0\n" + "0, 0, 1";
 		var actual = FlxStringUtil.bitmapToCSV(bitmapData);
-		
+
 		Assert.areEqual(expected, actual);
 	}
-	
+
 	@Test
 	function testBitmapToCSVInverted()
 	{
@@ -30,33 +27,26 @@ class FlxStringUtilTest
 		bitmapData.setPixel32(0, 0, FlxColor.WHITE);
 		bitmapData.setPixel32(1, 1, FlxColor.WHITE);
 		bitmapData.setPixel32(2, 2, FlxColor.WHITE);
-		
-		var expected =
-			"1, 0, 0\n" +
-			"0, 1, 0\n" +
-			"0, 0, 1";
+
+		var expected = "1, 0, 0\n" + "0, 1, 0\n" + "0, 0, 1";
 		var actual = FlxStringUtil.bitmapToCSV(bitmapData, true);
-		
+
 		Assert.areEqual(expected, actual);
 	}
-	
+
 	@Test
 	function testBitmapToCSVWithScale()
 	{
 		var bitmapData = new BitmapData(2, 2);
 		bitmapData.setPixel32(0, 0, FlxColor.BLACK);
 		bitmapData.setPixel32(1, 1, FlxColor.BLACK);
-		
-		var expected =
-			"1, 1, 0, 0\n" +
-			"1, 1, 0, 0\n" +
-			"0, 0, 1, 1\n" +
-			"0, 0, 1, 1";
+
+		var expected = "1, 1, 0, 0\n" + "1, 1, 0, 0\n" + "0, 0, 1, 1\n" + "0, 0, 1, 1";
 		var actual = FlxStringUtil.bitmapToCSV(bitmapData, false, 2);
-		
+
 		Assert.areEqual(expected, actual);
 	}
-	
+
 	@Test
 	function testBitmapToCSVWithColorMap()
 	{
@@ -64,18 +54,15 @@ class FlxStringUtilTest
 		bitmapData.setPixel32(0, 0, FlxColor.BLACK);
 		bitmapData.setPixel32(1, 1, FlxColor.RED);
 		bitmapData.setPixel32(2, 2, FlxColor.YELLOW);
-		
-		var expected =
-			"1, 0, 0\n" +
-			"0, 2, 0\n" +
-			"0, 0, 3";
-			
+
+		var expected = "1, 0, 0\n" + "0, 2, 0\n" + "0, 0, 3";
+
 		var colorMap = [FlxColor.WHITE, FlxColor.BLACK, FlxColor.RED, FlxColor.YELLOW];
 		var actual = FlxStringUtil.bitmapToCSV(bitmapData, false, 1, colorMap);
-		
+
 		Assert.areEqual(expected, actual);
 	}
-	
+
 	@Test
 	function testFormatMoney()
 	{
@@ -93,7 +80,7 @@ class FlxStringUtilTest
 		Assert.areEqual("-110.20", FlxStringUtil.formatMoney(-110.2));
 		Assert.areEqual("-0.60", FlxStringUtil.formatMoney(-0.6));
 	}
-	
+
 	@Test
 	function testIsNullOrEmpty()
 	{
@@ -116,9 +103,11 @@ class FlxStringUtilTest
 		var authorities = ['$host', 'user@$host', '$host:1234'];
 		var paths = ["", "/", "/index.html", "/path/to/file.extension?query=42"];
 
-		for (protocol in protocols) for (authority in authorities) for (path in paths)
-			urls.push(mixedCase('$protocol$authority$path'));
-		
+		for (protocol in protocols)
+			for (authority in authorities)
+				for (path in paths)
+					urls.push(mixedCase('$protocol$authority$path'));
+
 		return urls;
 	}
 
@@ -159,10 +148,11 @@ class FlxStringUtilTest
 	function testGetHostValidURLs()
 	{
 		var hosts = ["123.45.67.89", "[1234:5678:9abc:def0::1]", "asdf.xn--eckwd4c7c.test"];
-		for (host in hosts) for (url in generateTestURLs(host))
-			Assert.areEqual(host, FlxStringUtil.getHost(url));
+		for (host in hosts)
+			for (url in generateTestURLs(host))
+				Assert.areEqual(host, FlxStringUtil.getHost(url));
 
-		Assert.areEqual("abc.test", FlxStringUtil.getHost("http://%41%42%43.test")); 
+		Assert.areEqual("abc.test", FlxStringUtil.getHost("http://%41%42%43.test"));
 	}
 
 	@Test
@@ -184,9 +174,10 @@ class FlxStringUtilTest
 	function testGetDomainLocal()
 	{
 		var hosts = ["localhost", "123.45.67.89", "[1234:5678:9abc:def0::1]"];
-		for (host in hosts) for (url in generateTestURLs(host))
-			Assert.areEqual("", FlxStringUtil.getDomain(url));
-		
+		for (host in hosts)
+			for (url in generateTestURLs(host))
+				Assert.areEqual("", FlxStringUtil.getDomain(url));
+
 		for (path in generateLocalPaths())
 			Assert.areEqual("", FlxStringUtil.getDomain(path));
 	}

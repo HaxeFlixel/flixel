@@ -11,7 +11,7 @@ class QuadMotion extends Motion
 	 * The distance of the entire curve.
 	 */
 	public var distance(get, never):Float;
-	
+
 	// Curve information.
 	var _distance:Float = -1;
 	var _fromX:Float = 0;
@@ -20,10 +20,10 @@ class QuadMotion extends Motion
 	var _toY:Float = 0;
 	var _controlX:Float = 0;
 	var _controlY:Float = 0;
-	
+
 	/**
 	 * Starts moving along the curve.
-	 * 
+	 *
 	 * @param	FromX			X start.
 	 * @param	FromY			Y start.
 	 * @param	ControlX		X control, used to determine the curve.
@@ -33,7 +33,8 @@ class QuadMotion extends Motion
 	 * @param	DurationOrSpeed	Duration or speed of the movement.
 	 * @param	UseDuration		Duration of the movement.
 	 */
-	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true):QuadMotion
+	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float,
+			UseDuration:Bool = true):QuadMotion
 	{
 		_distance = -1;
 		x = _fromX = FromX;
@@ -42,7 +43,7 @@ class QuadMotion extends Motion
 		_controlY = ControlY;
 		_toX = ToX;
 		_toY = ToY;
-		
+
 		if (UseDuration)
 		{
 			duration = DurationOrSpeed;
@@ -51,12 +52,12 @@ class QuadMotion extends Motion
 		{
 			duration = distance / DurationOrSpeed;
 		}
-		
+
 		start();
-		
+
 		return this;
 	}
-	
+
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
@@ -67,12 +68,12 @@ class QuadMotion extends Motion
 			postUpdate();
 		}
 	}
-	
+
 	function get_distance():Float
 	{
 		if (_distance >= 0)
 			return _distance;
-		
+
 		var p1 = FlxPoint.get();
 		var p2 = FlxPoint.get();
 		p1.x = x - 2 * _controlX + _toX;
@@ -87,11 +88,10 @@ class QuadMotion extends Motion
 			a32:Float = 2 * a * a2,
 			c2:Float = 2 * Math.sqrt(c),
 			ba:Float = b / a2;
-			
+
 		p1.put();
 		p2.put();
-		
-		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) *
-			Math.log((2 * a2 + ba + abc) / (ba + c2))) / (4 * a32);
+
+		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) * Math.log((2 * a2 + ba + abc) / (ba + c2))) / (4 * a32);
 	}
 }

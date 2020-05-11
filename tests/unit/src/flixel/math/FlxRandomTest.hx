@@ -7,14 +7,14 @@ import org.hamcrest.Matchers.*;
 class FlxRandomTest extends FlxTest
 {
 	var random:FlxRandom;
-	
+
 	@Before
 	function before()
 	{
 		// Use a constant seed for reproducible test results.
 		random = new FlxRandom(1);
 	}
-	
+
 	@Test // #1172
 	function testIntExcludes()
 	{
@@ -23,7 +23,7 @@ class FlxRandomTest extends FlxTest
 			Assert.areEqual(0, random.int(0, 1, [1]));
 		}
 	}
-	
+
 	@Test // #2009
 	function startIndexUsage()
 	{
@@ -35,17 +35,17 @@ class FlxRandomTest extends FlxTest
 			s1 += FlxG.random.getObject(data, null, 3, 4);
 			s2 += "e";
 		}
-		
+
 		Assert.isTrue(s1 == s2);
 	}
-	
+
 	@Test // #1536
 	function testColorNullException()
 	{
 		random.color(null, null);
 		random.color(FlxColor.GRAY, null);
 		random.color(null, FlxColor.GRAY);
-		
+
 		random.color(null, null, null);
 		random.color(FlxColor.GRAY, null, null);
 		random.color(null, FlxColor.GRAY, null);

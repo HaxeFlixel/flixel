@@ -10,36 +10,36 @@ class FlxFocusLostScreen extends Sprite
 	@:keep
 	public function new()
 	{
-		super();	
+		super();
 		draw();
-		
+
 		var logo:Sprite = new Sprite();
 		FlxAssets.drawLogo(logo.graphics);
 		logo.scaleX = logo.scaleY = 0.2;
 		logo.x = logo.y = 5;
 		logo.alpha = 0.35;
 		addChild(logo);
-		
+
 		visible = false;
 	}
-	
+
 	/**
 	 * Redraws the big arrow on the focus lost screen.
 	 */
 	public function draw():Void
 	{
 		var gfx:Graphics = graphics;
-		
+
 		var screenWidth:Int = Std.int(FlxG.stage.stageWidth);
 		var screenHeight:Int = Std.int(FlxG.stage.stageHeight);
-		
+
 		// Draw transparent black backdrop
 		gfx.clear();
 		gfx.moveTo(0, 0);
 		gfx.beginFill(0, 0.5);
 		gfx.drawRect(0, 0, screenWidth, screenHeight);
 		gfx.endFill();
-		
+
 		// Draw white arrow
 		var halfWidth:Int = Std.int(screenWidth / 2);
 		var halfHeight:Int = Std.int(screenHeight / 2);
@@ -50,7 +50,7 @@ class FlxFocusLostScreen extends Sprite
 		gfx.lineTo(halfWidth - helper, halfHeight + helper);
 		gfx.lineTo(halfWidth - helper, halfHeight - helper);
 		gfx.endFill();
-		
+
 		this.x = -FlxG.scaleMode.offset.x;
 		this.y = -FlxG.scaleMode.offset.y;
 	}

@@ -1,0 +1,27 @@
+{
+	"haxecheckstyle.sourceFolders": [
+		"flixel",
+		"script",
+		"tests"
+	],
+	"[haxe]": {
+		"editor.formatOnSave": true
+	},
+	"haxe.configurations": [
+		{
+			"label": "JS",
+			"args": [
+				"-lib",
+				"openfl",
+				"-lib",
+				"lime",
+				"--macro",
+				"flixel.system.macros.FlxDefines.run()",
+				"-js",
+				"foo.js",
+				"--remap",
+				"flash:openfl"
+			]
+		}
+	]
+}

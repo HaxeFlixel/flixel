@@ -1,5 +1,5 @@
 {
-    "haxe.displayConfigurations": [
-        ["bin/flash/haxe/debug.hxml"]
-    ]
+	"haxeTestExplorer.testCommand": [
+		"haxelib", "run", "lime", "test", "neko", "--haxelib=test-adapter"
+	]
 }

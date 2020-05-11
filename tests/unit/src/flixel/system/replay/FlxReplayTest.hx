@@ -37,7 +37,7 @@ class FlxReplayTest extends FlxTest
 		}
 		fgr += (frameCount++) + "km0,0,2,0\n"; // put everything back how it was for the next test
 	}
-	
+
 	@Test
 	function testReplayCreateSpecifyingSeed()
 	{
@@ -61,7 +61,7 @@ class FlxReplayTest extends FlxTest
 		replay.load(fgr);
 		Assert.areEqual(frameCount, replay.frameCount);
 	}
-	
+
 	@Test // #1739
 	function testReplayRecordSimultaneousKeydownAndMouseDown()
 	{
@@ -94,7 +94,7 @@ class FlxReplayTest extends FlxTest
 		FlxG.vcr.loadReplay(recording, state);
 
 		step(10);
-		
+
 		Assert.isTrue(state.called);
 	}
 

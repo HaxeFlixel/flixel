@@ -21,7 +21,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 
 	var defaultFormat:TextFormat;
 	var editFormat:TextFormat;
-	
+
 	public function new(allowEditing:Bool, defaultFormat:TextFormat, submitValue:Dynamic->Void, expectedType:ValueType)
 	{
 		super();
@@ -29,11 +29,11 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		this.submitValue = submitValue;
 		this.defaultFormat = defaultFormat;
 		this.expectedType = expectedType;
-		
+
 		if (allowEditing)
 		{
 			editFormat = new TextFormat(defaultFormat.font, defaultFormat.size, 0x000000);
-			
+
 			addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -41,7 +41,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 		}
 	}
 
-	public function destroy():Void 
+	public function destroy():Void
 	{
 		if (allowEditing)
 		{
@@ -51,12 +51,12 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			removeEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		}
 	}
-	
+
 	function onMouseUp(_):Void
 	{
 		setIsEditing(true);
 	}
-	
+
 	function onKeyUp(e:KeyboardEvent):Void
 	{
 		switch (e.keyCode)
@@ -78,8 +78,10 @@ class EditableTextField extends TextField implements IFlxDestroyable
 
 		switch (e.keyCode)
 		{
-			case Keyboard.UP: cycleValue(modifier, 0);
-			case Keyboard.DOWN: cycleValue(-modifier, text.length);
+			case Keyboard.UP:
+				cycleValue(modifier, 0);
+			case Keyboard.DOWN:
+				cycleValue(-modifier, text.length);
 		}
 	}
 
@@ -105,7 +107,7 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	{
 		setSelection(text.length, text.length);
 	}
-	
+
 	function cycleNumericValue(modifier:Float):Void
 	{
 		var value:Float = Std.parseFloat(text);
@@ -157,18 +159,18 @@ class EditableTextField extends TextField implements IFlxDestroyable
 			submitValue(value);
 		}
 		catch (e:Dynamic) {}
-		
+
 		setIsEditing(false);
 	}
-	
+
 	function setIsEditing(isEditing:Bool)
 	{
 		this.isEditing = isEditing;
-		
+
 		#if FLX_KEYBOARD
 		FlxG.keys.enabled = !isEditing;
 		#end
-		
+
 		type = isEditing ? TextFieldType.INPUT : TextFieldType.DYNAMIC;
 		background = isEditing;
 		defaultTextFormat = isEditing ? editFormat : defaultFormat;

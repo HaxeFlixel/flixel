@@ -11,7 +11,7 @@ class FlxFrameTest extends FlxTest
 		var indices = [3, 5, 8, 1, 6];
 		var prefix = "tiles-";
 		var postfix = ".png";
-		
+
 		var frames = [for (i in indices) createFrame(prefix + "00" + i + postfix)];
 		FlxFrame.sort(frames, prefix.length, postfix.length);
 

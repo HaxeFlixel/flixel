@@ -16,27 +16,27 @@ class CameraFrontEndTest extends FlxTest
 		});
 		FlxG.cameras.add(newCamera);
 		Assert.isTrue(success);
-		
+
 		FlxG.cameras.cameraAdded.removeAll();
 	}
-	
+
 	@Test
 	public function testCameraRemoved()
 	{
 		var success = false;
 		var cameraToRemove = new FlxCamera();
 		FlxG.cameras.add(cameraToRemove);
-		
+
 		FlxG.cameras.cameraRemoved.add(function(camera)
 		{
 			success = camera == cameraToRemove;
 		});
 		FlxG.cameras.remove(cameraToRemove);
 		Assert.isTrue(success);
-		
+
 		FlxG.cameras.cameraRemoved.removeAll();
 	}
-	
+
 	@Test
 	public function testCameraResized()
 	{
@@ -47,7 +47,7 @@ class CameraFrontEndTest extends FlxTest
 		});
 		FlxG.camera.width = 500;
 		Assert.isTrue(success);
-		
+
 		FlxG.cameras.cameraResized.removeAll();
 	}
 

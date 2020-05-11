@@ -12,14 +12,14 @@ class LogitechMapping extends FlxGamepadMapping
 	static inline var RIGHT_ANALOG_STICK_FAKE_X:Int = 22;
 	static inline var RIGHT_ANALOG_STICK_FAKE_Y:Int = 23;
 	#end
-	
-	override function initValues():Void 
+
+	override function initValues():Void
 	{
-		leftStick = LogitechID.LEFT_ANALOG_STICK; 
-		rightStick = LogitechID.RIGHT_ANALOG_STICK; 
+		leftStick = LogitechID.LEFT_ANALOG_STICK;
+		rightStick = LogitechID.RIGHT_ANALOG_STICK;
 	}
-	
-	override public function getID(rawID:Int):FlxGamepadInputID 
+
+	override public function getID(rawID:Int):FlxGamepadInputID
 	{
 		return switch (rawID)
 		{
@@ -52,7 +52,7 @@ class LogitechMapping extends FlxGamepadMapping
 		}
 	}
 
-	override public function getRawID(ID:FlxGamepadInputID):Int 
+	override public function getRawID(ID:FlxGamepadInputID):Int
 	{
 		return switch (ID)
 		{
@@ -88,15 +88,16 @@ class LogitechMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
+
 	#if FLX_JOYSTICK_API
-	override public function axisIndexToRawID(axisID:Int):Int 
+	override public function axisIndexToRawID(axisID:Int):Int
 	{
-		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X;
-			else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == rightStick.x) RIGHT_ANALOG_STICK_FAKE_X;
-			else if (axisID == rightStick.y) RIGHT_ANALOG_STICK_FAKE_Y;
-			else axisID;  // return what was passed in, no overlaps for other IDs
+		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X; else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y; else if (axisID == rightStick.x)
+			RIGHT_ANALOG_STICK_FAKE_X;
+		else if (axisID == rightStick.y)
+			RIGHT_ANALOG_STICK_FAKE_Y;
+		else
+			axisID; // return what was passed in, no overlaps for other IDs
 	}
 	#end
 }
