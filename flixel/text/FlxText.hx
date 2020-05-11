@@ -140,6 +140,7 @@ class FlxText extends FlxSprite
 	var _defaultFormat:TextFormat;
 	var _formatAdjusted:TextFormat;
 	var _formatRanges:Array<FlxTextFormatRange> = [];
+	var _toRemoveFormatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
 
 	/**
@@ -411,13 +412,43 @@ class FlxText extends FlxSprite
 			if (formatRange.format != Format)
 				continue;
 
-			if (Start != null && End != null && (Start > formatRange.range.end || End < formatRange.range.start))
-				continue;
-
+			if (Start != null && End != null)
+			{
+				if (Start >= formatRange.range.end || End <= formatRange.range.start)
+					continue;
+					
+				if (Start > formatRange.range.start && End < formatRange.range.end)
+				{
+					addFormat(formatRange.format, End + 1, formatRange.range.end);
+					formatRange.range.end = Start; 
+					continue;
+				}
+				
+				if (Start <= formatRange.range.start && End < formatRange.range.end)
+				{
+					formatRange.range.start = End;
+					continue;
+				}
+				
+				if (Start > formatRange.range.start && End >= formatRange.range.end)
+				{
+					formatRange.range.end = Start;
+					continue;
+				}
+			}
+			
+			_toRemoveFormatRanges.push(formatRange);
+		}
+		
+		for (formatRange in _toRemoveFormatRanges)
+		{
 			_formatRanges.remove(formatRange);
 		}
+		while (_toRemoveFormatRanges.length > 0)
+			_toRemoveFormatRanges.pop();
+		
 		_regen = true;
-
+		
 		return this;
 	}
 
