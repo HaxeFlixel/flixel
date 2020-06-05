@@ -140,7 +140,6 @@ class FlxText extends FlxSprite
 	var _defaultFormat:TextFormat;
 	var _formatAdjusted:TextFormat;
 	var _formatRanges:Array<FlxTextFormatRange> = [];
-	var _toRemoveFormatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
 
 	/**
@@ -407,8 +406,14 @@ class FlxText extends FlxSprite
 	 */
 	public inline function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):FlxText
 	{
-		for (formatRange in _formatRanges)
+	var i = _formatRanges.length;
+		while (i >= 0)
 		{
+			i--;
+			if (i < 0)
+				continue;
+				
+			var formatRange = _formatRanges[i];
 			if (formatRange.format != Format)
 				continue;
 
@@ -437,15 +442,8 @@ class FlxText extends FlxSprite
 				}
 			}
 			
-			_toRemoveFormatRanges.push(formatRange);
-		}
-		
-		for (formatRange in _toRemoveFormatRanges)
-		{
 			_formatRanges.remove(formatRange);
 		}
-		while (_toRemoveFormatRanges.length > 0)
-			_toRemoveFormatRanges.pop();
 		
 		_regen = true;
 		
