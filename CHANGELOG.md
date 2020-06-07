@@ -4,6 +4,10 @@
 - `FlxSplash`: added `muted` (defaults to `true` on HTML5)
 - `FlxBaseKeyList`: added `NONE` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
 - `FlxKeyManager`: added `released` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxGamepad`:
+	- added Switch Pro controller mappings ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+	- added `getInputLabel()` ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+- `FlxText`: added support for removing partial ranges in `removeFormat()` ([#2256](https://github.com/HaxeFlixel/flixel/pull/2256))
 
 #### Bugfixes:
 - `FlxGamepad`: fixed `pressed` not being `true` during the first `justPressed` frame ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
