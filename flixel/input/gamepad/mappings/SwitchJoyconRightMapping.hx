@@ -3,6 +3,9 @@ package flixel.input.gamepad.mappings;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.id.SwitchJoyconRightID;
 
+/**
+ * @since 4.8.0
+ */
 class SwitchJoyconRightMapping extends FlxGamepadMapping
 {
 	#if FLX_JOYSTICK_API
