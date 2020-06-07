@@ -9,9 +9,9 @@ import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -404,18 +404,44 @@ class FlxText extends FlxSprite
 	 * Removes a specific `FlxTextFormat` from this text.
 	 * If a range is specified, this only removes the format when it touches that range.
 	 */
-	public inline function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):FlxText
+	public function removeFormat(Format:FlxTextFormat, ?Start:Int, ?End:Int):FlxText
 	{
-		for (formatRange in _formatRanges)
+		var i = _formatRanges.length;
+		while (i-- > 0)
 		{
+			var formatRange = _formatRanges[i];
 			if (formatRange.format != Format)
 				continue;
 
-			if (Start != null && End != null && (Start > formatRange.range.end || End < formatRange.range.start))
-				continue;
+			if (Start != null && End != null)
+			{
+				var range = formatRange.range;
+				if (Start >= range.end || End <= range.start)
+					continue;
+
+				if (Start > range.start && End < range.end)
+				{
+					addFormat(formatRange.format, End + 1, range.end);
+					range.end = Start;
+					continue;
+				}
+
+				if (Start <= range.start && End < range.end)
+				{
+					range.start = End;
+					continue;
+				}
+
+				if (Start > range.start && End >= range.end)
+				{
+					range.end = Start;
+					continue;
+				}
+			}
 
 			_formatRanges.remove(formatRange);
 		}
+
 		_regen = true;
 
 		return this;
