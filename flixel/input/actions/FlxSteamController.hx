@@ -103,7 +103,7 @@ class FlxSteamController
 		var steamExists = false;
 		for (input in FlxG.inputs.list)
 		{
-			if (Std.is(input, FlxSteamUpdater))
+			if ((input is FlxSteamUpdater))
 			{
 				steamExists = true;
 				break;

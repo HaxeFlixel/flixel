@@ -345,12 +345,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		var space:String = "\t";
 		return Json.stringify({"actionSets": sets}, function(key:Dynamic, value:Dynamic):Dynamic
 		{
-			if (Std.is(value, FlxAction))
+			if ((value is FlxAction))
 			{
 				var fa:FlxAction = cast value;
 				return fa.name;
 			}
-			if (Std.is(value, FlxActionSet))
+			if ((value is FlxActionSet))
 			{
 				var fas:FlxActionSet = cast value;
 				return {

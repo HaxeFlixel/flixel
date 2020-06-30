@@ -263,7 +263,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	override function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
 	{
-		if (Std.is(TileGraphic, FlxFramesCollection))
+		if ((TileGraphic is FlxFramesCollection))
 		{
 			frames = cast TileGraphic;
 			return;
@@ -641,7 +641,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if (overlapFound)
 				{
-					if (tile.callbackFunction != null && (tile.filter == null || Std.is(Object, tile.filter)))
+					if (tile.callbackFunction != null
+						&& (tile.filter == null || #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (Object, tile.filter)))
 					{
 						tile.mapIndex = rowStart + column;
 						tile.callbackFunction(tile, Object);

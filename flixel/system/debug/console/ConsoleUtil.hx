@@ -102,9 +102,9 @@ class ConsoleUtil
 	public static function getFields(Object:Dynamic):Array<String>
 	{
 		var fields = [];
-		if (Std.is(Object, Class)) // passed a class -> get static fields
+		if ((Object is Class)) // passed a class -> get static fields
 			fields = Type.getClassFields(Object);
-		else if (Std.is(Object, Enum))
+		else if ((Object is Enum))
 			fields = Type.getEnumConstructs(Object);
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));

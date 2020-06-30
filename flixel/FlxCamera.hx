@@ -1128,7 +1128,7 @@ class FlxCamera extends FlxBasic
 				}
 			}
 
-			if (Std.is(target, FlxSprite))
+			if ((target is FlxSprite))
 			{
 				if (_lastTargetPosition == null)
 				{

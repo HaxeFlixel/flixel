@@ -148,11 +148,11 @@ class BitmapFrontEnd
 	 */
 	public function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
-		if (Std.is(Graphic, FlxGraphic))
+		if ((Graphic is FlxGraphic))
 		{
 			return FlxGraphic.fromGraphic(cast Graphic, Unique, Key);
 		}
-		else if (Std.is(Graphic, BitmapData))
+		else if ((Graphic is BitmapData))
 		{
 			return FlxGraphic.fromBitmapData(cast Graphic, Unique, Key);
 		}

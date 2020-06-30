@@ -100,7 +100,7 @@ class FlxArrayUtil
 			while (array.length > 0)
 			{
 				var thing:T = array.pop();
-				if (Std.is(thing, Array))
+				if ((thing is Array))
 					clearArray(array, recursive);
 			}
 		}

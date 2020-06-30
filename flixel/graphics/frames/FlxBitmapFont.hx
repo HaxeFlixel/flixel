@@ -169,7 +169,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(Source, FlxFrame))
+		if ((Source is FlxFrame))
 		{
 			frame = cast Source;
 			graphic = frame.parent;
@@ -188,7 +188,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		if (Data != null)
 		{
-			if (Std.is(Data, Xml))
+			if ((Data is Xml))
 			{
 				fontData = cast Data;
 			}
@@ -308,7 +308,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(source, FlxFrame))
+		if ((source is FlxFrame))
 		{
 			frame = cast source;
 			graphic = frame.parent;
@@ -480,7 +480,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(source, FlxFrame))
+		if ((source is FlxFrame))
 		{
 			frame = cast source;
 			graphic = frame.parent;

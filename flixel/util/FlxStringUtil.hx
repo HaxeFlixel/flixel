@@ -240,7 +240,7 @@ class FlxStringUtil
 	public static function getClassName(objectOrClass:Dynamic, simple:Bool = false):String
 	{
 		var cl:Class<Dynamic>;
-		if (Std.is(objectOrClass, Class))
+		if ((objectOrClass is Class))
 			cl = cast objectOrClass;
 		else
 			cl = Type.getClass(objectOrClass);
@@ -259,7 +259,7 @@ class FlxStringUtil
 	public static function getEnumName(enumValueOrEnum:OneOfTwo<EnumValue, Enum<Dynamic>>, simple:Bool = false):String
 	{
 		var e:Enum<Dynamic>;
-		if (Std.is(enumValueOrEnum, Enum))
+		if ((enumValueOrEnum is Enum))
 			e = cast enumValueOrEnum;
 		else
 			e = Type.getEnum(enumValueOrEnum);
@@ -566,7 +566,7 @@ class FlxStringUtil
 	{
 		var tempBitmapData:BitmapData;
 
-		if (Std.is(ImageFile, String))
+		if ((ImageFile is String))
 		{
 			tempBitmapData = FlxAssets.getBitmapData(ImageFile);
 		}
@@ -591,7 +591,7 @@ class FlxStringUtil
 		{
 			output += (pair.label + ": ");
 			var value:Dynamic = pair.value;
-			if (Std.is(value, Float))
+			if ((value is Float))
 			{
 				value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
 			}

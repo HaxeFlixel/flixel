@@ -90,7 +90,7 @@ class FlxMouseEventManager extends FlxBasic
 
 		var newReg = new ObjectMouseData<T>(Object, OnMouseDown, OnMouseUp, OnMouseOver, OnMouseOut, MouseChildren, MouseEnabled, PixelPerfect, MouseButtons);
 
-		if (Std.is(Object, FlxSprite))
+		if ((Object is FlxSprite))
 		{
 			newReg.sprite = cast Object;
 		}
@@ -401,7 +401,7 @@ class FlxMouseEventManager extends FlxBasic
 			{
 				traverseFlxGroup(group, OrderedObjects);
 			}
-			if (Std.is(basic, FlxObject))
+			if ((basic is FlxObject))
 			{
 				var reg = getRegister(cast basic);
 
