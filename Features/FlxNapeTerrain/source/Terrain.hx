@@ -175,7 +175,7 @@ class Terrain #if flash implements nape.geom.IsoFunction #end
 
 				for (shape in b.shapes)
 				{
-					if (Std.is(shape, Polygon))
+					if ((shape is Polygon))
 					{
 						var poly:Polygon = cast(shape, Polygon);
 

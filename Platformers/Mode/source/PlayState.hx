@@ -350,7 +350,7 @@ class PlayState extends FlxState
 	 */
 	function overlapped(Sprite1:FlxObject, Sprite2:FlxObject):Void
 	{
-		if (Std.is(Sprite1, EnemyBullet) || Std.is(Sprite1, Bullet))
+		if ((Sprite1 is EnemyBullet) || (Sprite1 is Bullet))
 			Sprite1.kill();
 
 		Sprite2.hurt(1);

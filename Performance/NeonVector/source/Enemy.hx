@@ -177,7 +177,7 @@ class Enemy extends Entity
 		var CombinedHitBoxRadius:Float = hitboxRadius + Object.hitboxRadius;
 		var IsHitBoxCollision:Bool = (CombinedHitBoxRadius * CombinedHitBoxRadius) >= DistanceSquared;
 		var AngleFromCenters:Float = FlxAngle.asRadians(position.angleBetween(Object.position));
-		if (Std.is(Object, Bullet))
+		if ((Object is Bullet))
 		{
 			if (IsHitBoxCollision)
 			{
@@ -193,7 +193,7 @@ class Enemy extends Entity
 				}
 			}
 		}
-		else if (Std.is(Object, Enemy))
+		else if ((Object is Enemy))
 		{
 			var enemy:Enemy = cast Object;
 			var IsBlackHole:Bool = (type == BLACK_HOLE);
@@ -222,7 +222,7 @@ class Enemy extends Entity
 				}
 			}
 		}
-		else if (Std.is(Object, PlayerShip))
+		else if ((Object is PlayerShip))
 		{
 			if (IsHitBoxCollision)
 				Object.kill();

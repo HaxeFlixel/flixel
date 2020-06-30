@@ -155,7 +155,7 @@ class PlayState extends FlxState
 
 	function hitPlayer(P:FlxObject, Monster:FlxObject):Void
 	{
-		if (Std.is(Monster, Bullet))
+		if ((Monster is Bullet))
 		{
 			Monster.kill();
 		}

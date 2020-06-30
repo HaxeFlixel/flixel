@@ -24,9 +24,9 @@ class State_SaveMenu extends FlxUIState
 	{
 		var xml:Access;
 		#if (haxe_ver < "4.0.0")
-		if (Std.is(data, Access))
+		if ((data is Access))
 		#else
-		if (Std.is(data, Xml))
+		if ((data is Xml))
 		#end
 		{
 			xml = cast data;

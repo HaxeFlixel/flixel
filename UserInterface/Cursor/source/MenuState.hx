@@ -57,7 +57,7 @@ class MenuState extends FlxUIState
 
 		if (click_text != null)
 		{
-			if (widget != null && Std.is(widget, FlxUIButton))
+			if (widget != null && (widget is FlxUIButton))
 			{
 				var fuib:FlxUIButton = cast widget;
 				if (name == "cursor_jump")

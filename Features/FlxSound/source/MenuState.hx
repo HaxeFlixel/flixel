@@ -60,7 +60,7 @@ class MenuState extends FlxUIState
 				}
 			}
 		}
-		else if (name == FlxUINumericStepper.CHANGE_EVENT && Std.is(sender, FlxUINumericStepper))
+		else if (name == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
 		{
 			var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
@@ -84,7 +84,7 @@ class MenuState extends FlxUIState
 				}
 			}
 		}
-		else if (name == FlxUITypedButton.CLICK_EVENT && Std.is(sender, FlxUIButton))
+		else if (name == FlxUITypedButton.CLICK_EVENT && (sender is FlxUIButton))
 		{
 			var fuib:FlxUIButton = cast sender;
 			var label = fuib.label.text;
