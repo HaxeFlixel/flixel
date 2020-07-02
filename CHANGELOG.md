@@ -1,3 +1,11 @@
+2.7.3 (July 2, 2020)
+------------------------------
+* FileBrowse: fixed compilation on HashLink
+* Updated some demos' sounds for compatibility with Apple devices (#276)
+* FlxTilemapExt: make use of the new `setDownwardsGlue()` method
+* GamepadTest: added a gamepad list and increased the window size
+* Fixed `Std.is()` deprecation warnings with Haxe 4.2
+
 2.7.2 (March 28, 2020)
 ------------------------------
 * Modernized the TurnBasedRPG tutorial

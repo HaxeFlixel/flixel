@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.7.2",
-    "releasenote": "Modernized the TurnBasedRPG tutorial.",
+    "version": "2.7.3",
+    "releasenote": "Improved the GamepadTest demo, minor fixes.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }
