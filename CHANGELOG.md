@@ -1,4 +1,4 @@
-4.8.0 (to be released)
+4.8.0 (July 2, 2020)
 ------------------------------
 #### New features:
 - `FlxSplash`: added `muted` (defaults to `true` on HTML5)
@@ -12,6 +12,9 @@
 #### Bugfixes:
 - `FlxGamepad`: fixed `pressed` not being `true` during the first `justPressed` frame ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
 - `FlxKeyManager`: fixed `anyPressed([ANY])` not working ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+
+#### Changes and improvements:
+- Fixed `Std.is()` deprecation warnings with Haxe 4.2
 
 4.7.0 (April 12, 2020)
 ------------------------------
