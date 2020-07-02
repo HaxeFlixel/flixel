@@ -48,10 +48,10 @@ class SwitchJoyconRightID
 	});
 	#else
 	public static inline var ZR:Int = 5;
-	public static inline var B:Int = 6;
-	public static inline var A:Int = 7;
-	public static inline var Y:Int = 8;
-	public static inline var X:Int = 9;
+	public static inline var A:Int = 6;
+	public static inline var X:Int = 7;
+	public static inline var B:Int = 8;
+	public static inline var Y:Int = 9;
 	public static inline var R:Int = 10;
 	public static inline var HOME:Int = 11;
 	public static inline var PLUS:Int = 12;
