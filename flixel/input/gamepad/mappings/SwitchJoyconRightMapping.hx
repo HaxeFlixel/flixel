@@ -53,10 +53,10 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 	{
 		return switch (ID)
 		{
-			case A: SwitchJoyconRightID.B;
-			case B: SwitchJoyconRightID.A;
-			case X: SwitchJoyconRightID.Y;
-			case Y: SwitchJoyconRightID.X;
+			case A: SwitchJoyconRightID.A;
+			case B: SwitchJoyconRightID.X;
+			case X: SwitchJoyconRightID.B;
+			case Y: SwitchJoyconRightID.Y;
 			case GUIDE: SwitchJoyconRightID.HOME;
 			case START: SwitchJoyconRightID.PLUS;
 			case LEFT_STICK_CLICK: SwitchJoyconRightID.LEFT_STICK_CLICK;
@@ -77,19 +77,19 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 	}
 
 	override function getInputLabel(id:FlxGamepadInputID)
-	{
+{
 		return switch (id)
 		{
-			case A: "b";
-			case B: "a";
-			case X: "y";
-			case Y: "x";
+			case A: "a";
+			case B: "x";
+			case X: "b";
+			case Y: "y";
 			case GUIDE: "home";
 			case START: "plus";
 			case LEFT_SHOULDER: "sl";
 			case RIGHT_SHOULDER: "sr";
-			case LEFT_TRIGGER: "zl";
-			case EXTRA_0: "l";
+			case RIGHT_TRIGGER: "zr";
+			case EXTRA_0: "r";
 			case _: super.getInputLabel(id);
 		}
 	}
