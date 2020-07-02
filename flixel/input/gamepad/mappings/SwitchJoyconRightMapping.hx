@@ -77,7 +77,7 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 	}
 
 	override function getInputLabel(id:FlxGamepadInputID)
-{
+	{
 		return switch (id)
 		{
 			case A: "a";
