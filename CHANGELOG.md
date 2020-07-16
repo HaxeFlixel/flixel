@@ -1,3 +1,7 @@
+4.8.1 (July 16, 2020)
+------------------------------
+- improved rendering performance on low-end devices
+
 4.8.0 (July 2, 2020)
 ------------------------------
 #### New features:
