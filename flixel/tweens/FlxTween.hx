@@ -640,7 +640,6 @@ class FlxTween implements IFlxDestroyable
 		var dly:Float = Math.abs(value);
 		if (executions == 0)
 		{
-			_secondsSinceStart = duration * percent + Math.max((dly - startDelay), 0);
 			_delayToUse = dly;
 		}
 		return startDelay = dly;
