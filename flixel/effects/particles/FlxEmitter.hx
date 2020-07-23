@@ -27,7 +27,7 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
 #if (haxe_ver >= "4.0.0")
 class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
 #else
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
+class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 #end
 {
 	/**
@@ -289,6 +289,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
 	 */
 	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
 	{
+		maxSize = Quantity;
+
 		for (i in 0...Quantity)
 		{
 			var particle:T = Type.createInstance(particleClass, []);
