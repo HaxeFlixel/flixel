@@ -64,7 +64,7 @@ class FlxRect implements IFlxPooled
 	/**
 	 * Whether width or height of this rectangle is equal to zero or not.
 	 */
-	public var isEmpty(get, null):Bool;
+	public var isEmpty(get, never):Bool;
 
 	var _weak:Bool = false;
 	var _inPool:Bool = false;

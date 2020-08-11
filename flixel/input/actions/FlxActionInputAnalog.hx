@@ -11,6 +11,9 @@ import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import steamwrap.api.Controller.ControllerAnalogActionData;
 #end
 
+/**
+ * @since 4.6.0
+ */
 @:enum
 abstract FlxAnalogState(Int) from Int
 {
@@ -20,6 +23,9 @@ abstract FlxAnalogState(Int) from Int
 	var JUST_MOVED = cast FlxInputState.JUST_PRESSED; // became !0 on this frame
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMouseMotion
 {
 	var button:FlxMouseButtonID;
@@ -62,6 +68,9 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 {
 	var lastX:Float = 0;
@@ -124,6 +133,9 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 {
 	/**
@@ -168,6 +180,9 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 {
 	/**
@@ -236,6 +251,9 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 {
 	/**
@@ -277,6 +295,9 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	#end
 }
 
+/**
+ * @since 4.6.0
+ */
 @:access(flixel.input.actions.FlxAction)
 class FlxActionInputAnalog extends FlxActionInput
 {
@@ -366,6 +387,9 @@ class FlxActionInputAnalog extends FlxActionInput
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 @:enum
 abstract FlxAnalogAxis(Int) from Int
 {

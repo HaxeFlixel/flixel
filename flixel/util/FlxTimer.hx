@@ -137,7 +137,7 @@ class FlxTimer implements IFlxDestroyable
 
 	/**
 	 * Restart the timer using the new duration
-	 * @param	NewDuration	The duration of this timer in ms.
+	 * @param	NewTime	The duration of this timer in seconds.
 	 */
 	public function reset(NewTime:Float = -1):FlxTimer
 	{

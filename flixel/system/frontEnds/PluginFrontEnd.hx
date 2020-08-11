@@ -44,7 +44,7 @@ class PluginFrontEnd
 	{
 		for (plugin in list)
 		{
-			if (Std.is(plugin, ClassType))
+			if ((plugin is ClassType))
 			{
 				return plugin;
 			}
@@ -91,7 +91,7 @@ class PluginFrontEnd
 
 		while (i >= 0)
 		{
-			if (Std.is(list[i], ClassType))
+			if ((list[i] is ClassType))
 			{
 				list.splice(i, 1);
 				results = true;

@@ -3,7 +3,6 @@ package flixel.animation;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxBaseAnimation implements IFlxDestroyable

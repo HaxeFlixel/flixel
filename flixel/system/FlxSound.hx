@@ -86,7 +86,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not the sound is currently playing.
 	 */
-	public var playing(get, null):Bool;
+	public var playing(get, never):Bool;
 
 	/**
 	 * Set volume to a value between 0 and 1 to change how this sound is.
@@ -344,15 +344,15 @@ class FlxSound extends FlxBasic
 
 		cleanup(true);
 
-		if (Std.is(EmbeddedSound, Sound))
+		if ((EmbeddedSound is Sound))
 		{
 			_sound = EmbeddedSound;
 		}
-		else if (Std.is(EmbeddedSound, Class))
+		else if ((EmbeddedSound is Class))
 		{
 			_sound = Type.createInstance(EmbeddedSound, []);
 		}
-		else if (Std.is(EmbeddedSound, String))
+		else if ((EmbeddedSound is String))
 		{
 			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
 				_sound = Assets.getSound(EmbeddedSound);

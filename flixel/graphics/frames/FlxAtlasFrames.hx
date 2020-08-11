@@ -56,7 +56,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		var data:TexturePackerObject;
 
-		if (Std.is(Description, String))
+		if ((Description is String))
 		{
 			var json:String = Description;
 
@@ -71,7 +71,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		}
 
 		// JSON-Array
-		if (Std.is(data.frames, Array))
+		if ((data.frames is Array))
 		{
 			for (frame in Lambda.array(data.frames))
 			{

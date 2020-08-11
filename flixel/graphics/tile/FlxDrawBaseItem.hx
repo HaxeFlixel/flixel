@@ -10,7 +10,6 @@ import openfl.display.Tilesheet;
 #end
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxDrawBaseItem<T>

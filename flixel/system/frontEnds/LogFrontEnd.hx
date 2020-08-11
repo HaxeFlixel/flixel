@@ -64,7 +64,7 @@ class LogFrontEnd
 			Style = LogStyle.NORMAL;
 		}
 
-		if (!Std.is(Data, Array))
+		if (!(Data is Array))
 		{
 			Data = [Data];
 		}

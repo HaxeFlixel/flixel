@@ -242,10 +242,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				if (curTile == null)
 					throw 'String in row $row, column $column is not a valid integer: "$columnString"';
 
-				// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
-				if (curTile < 0)
-					curTile = 0;
-
 				_data.push(curTile);
 				column++;
 			}
@@ -351,6 +347,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	function loadMapHelper(TileGraphic:FlxTilemapGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, ?AutoTile:FlxTilemapAutoTiling, StartingIndex:Int = 0,
 			DrawIndex:Int = 1, CollideIndex:Int = 1)
 	{
+		// anything < 0 should be treated as 0 for compatibility with certain map formats (ogmo)
+		for (i in 0..._data.length)
+		{
+			if (_data[i] < 0)
+				_data[i] = 0;
+		}
+
 		totalTiles = _data.length;
 		auto = (AutoTile == null) ? OFF : AutoTile;
 		_startingIndex = (StartingIndex <= 0) ? 0 : StartingIndex;
@@ -1370,6 +1373,7 @@ enum FlxTilemapAutoTiling
 
 	/**
 	 * Better for all, but need 47 tiles.
+	 * @since 4.6.0
 	 */
 	FULL;
 }

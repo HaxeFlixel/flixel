@@ -1128,7 +1128,7 @@ class FlxCamera extends FlxBasic
 				}
 			}
 
-			if (Std.is(target, FlxSprite))
+			if ((target is FlxSprite))
 			{
 				if (_lastTargetPosition == null)
 				{
@@ -1532,10 +1532,8 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			#if openfl_legacy // can't skip this on next, see #1793
 			if (FxAlpha == 0)
 				return;
-			#end
 
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
 

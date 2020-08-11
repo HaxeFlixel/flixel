@@ -30,7 +30,7 @@ class FlxStateTest extends FlxTest
 
 		resetState();
 		Assert.areNotEqual(state, FlxG.state);
-		Assert.isTrue(Std.is(FlxG.state, TestState));
+		Assert.isTrue((FlxG.state is TestState));
 	}
 
 	@Test // #1676

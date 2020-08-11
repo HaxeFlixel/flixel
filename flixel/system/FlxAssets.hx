@@ -167,15 +167,15 @@ class FlxAssets
 	 */
 	public static function resolveBitmapData(Graphic:FlxGraphicSource):BitmapData
 	{
-		if (Std.is(Graphic, BitmapData))
+		if ((Graphic is BitmapData))
 		{
 			return cast Graphic;
 		}
-		else if (Std.is(Graphic, Class))
+		else if ((Graphic is Class))
 		{
 			return FlxAssets.getBitmapFromClass(cast Graphic);
 		}
-		else if (Std.is(Graphic, String))
+		else if ((Graphic is String))
 		{
 			return FlxAssets.getBitmapData(Graphic);
 		}
@@ -201,15 +201,15 @@ class FlxAssets
 			return Key;
 		}
 
-		if (Std.is(Graphic, BitmapData))
+		if ((Graphic is BitmapData))
 		{
 			return Key;
 		}
-		else if (Std.is(Graphic, Class))
+		else if ((Graphic is Class))
 		{
 			return FlxG.bitmap.getKeyForClass(cast Graphic);
 		}
-		else if (Std.is(Graphic, String))
+		else if ((Graphic is String))
 		{
 			return Graphic;
 		}
@@ -230,7 +230,12 @@ class FlxAssets
 
 	public static function getVirtualInputFrames():FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxGraphic.fromClass(GraphicVirtualInput);
+		var bitmapData = new GraphicVirtualInput(0, 0);
+		#if html5 // dirty hack for openfl/openfl#682
+		Reflect.setProperty(bitmapData, "width", 399);
+		Reflect.setProperty(bitmapData, "height", 183);
+		#end
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmapData);
 		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
 	}
 	#end

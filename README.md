@@ -2,7 +2,12 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-[![Haxelib Version](https://img.shields.io/github/tag/HaxeFlixel/flixel.svg?label=haxelib)](http://lib.haxe.org/p/flixel) [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) [![](https://img.shields.io/discord/162395145352904705.svg?logo=discord)](https://discordapp.com/invite/rqEBAgF) [![Build Status](https://img.shields.io/travis/HaxeFlixel/flixel.svg)](https://travis-ci.org/HaxeFlixel/flixel)
+[![CI](https://img.shields.io/github/workflow/status/HaxeFlixel/flixel/CI.svg?logo=github)](https://github.com/HaxeFlixel/flixel/actions?query=workflow%3ACI)
+[![Discord](https://img.shields.io/discord/162395145352904705.svg?logo=discord)](https://discordapp.com/invite/rqEBAgF)
+[![Haxelib Version](https://badgen.net/haxelib/v/flixel)](https://lib.haxe.org/p/flixel)
+[![Haxelib Downloads](https://badgen.net/haxelib/d/flixel?color=blue)](https://lib.haxe.org/p/flixel)
+[![Haxelib License](https://badgen.net/haxelib/license/flixel)](LICENSE.md)
+[![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) 
 
 [![](images/showcase.png)](http://www.haxeflixel.com/showcase)
 

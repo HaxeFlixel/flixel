@@ -80,6 +80,19 @@ class OUYAMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
+	
+	override function getInputLabel(id:FlxGamepadInputID)
+	{
+		return switch (id)
+		{
+			case A: "o";
+			case B: "a";
+			case X: "u";
+			case Y: "y";
+			case GUIDE: "home";
+			case _: super.getInputLabel(id);
+		}
+	}
 
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int

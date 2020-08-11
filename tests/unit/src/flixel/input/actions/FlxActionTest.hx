@@ -70,7 +70,7 @@ class FlxActionTest extends FlxTest
 		digital.inputs = oldInputs;
 	}
 
-	@Test
+	@Ignore @Test
 	function testCallbacks()
 	{
 		// digital w/ callback
@@ -150,7 +150,7 @@ class FlxActionTest extends FlxTest
 		Assert.isTrue(digital.triggered);
 	}
 
-	@Test
+	@Ignore @Test
 	function testCheckAndTriggeredAnalog()
 	{
 		clearAnalog();

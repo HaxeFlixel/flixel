@@ -126,7 +126,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 	function getFormattedValue():String
 	{
 		var value:Dynamic = getValue();
-		if (Std.is(value, Float))
+		if ((value is Float))
 			value = FlxMath.roundDecimal(cast value, FlxG.debugger.precision);
 		return Std.string(value);
 	}

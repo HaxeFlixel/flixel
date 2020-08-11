@@ -48,12 +48,12 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * The x coordinate of the top-left corner of this node.
 	 */
-	public var x(get, null):Int;
+	public var x(get, never):Int;
 
 	/**
 	 * The y coordinate of the top-left corner of this node.
 	 */
-	public var y(get, null):Int;
+	public var y(get, never):Int;
 
 	/**
 	 * The width of this node.
@@ -68,7 +68,7 @@ class FlxNode implements IFlxDestroyable
 	/**
 	 * Logical flag, showing whether this node have any child nodes or image in it.
 	 */
-	public var isEmpty(get, null):Bool;
+	public var isEmpty(get, never):Bool;
 
 	public var rotated(default, null):Bool;
 

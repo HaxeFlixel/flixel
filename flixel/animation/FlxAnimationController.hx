@@ -42,19 +42,27 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The total number of frames in this image.
 	 * WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var frames(get, null):Int;
+	public var frames(get, never):Int;
 
 	/**
 	 * If assigned, will be called each time the current animation's frame changes.
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
+	#if haxe4
+	public var callback:(name:String, frameNumber:Int, frameIndex:Int) -> Void;
+	#else
 	public var callback:String->Int->Int->Void;
+	#end
 
 	/**
 	 * If assigned, will be called each time the current animation finishes.
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
+	#if haxe4
+	public var finishCallback:(name:String) -> Void;
+	#else
 	public var finishCallback:String->Void;
+	#end
 
 	/**
 	 * Internal, reference to owner sprite.
@@ -176,7 +184,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipX       Whether the frames should be flipped horizontally.
 	 * @param   FlipY       Whether the frames should be flipped vertically.
 	 */
-	public function add(Name:String, Frames:Array<Int>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
+	public function add(Name:String, Frames:Array<Int>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		// Check _animations frames
 		var framesToAdd:Array<Int> = Frames;

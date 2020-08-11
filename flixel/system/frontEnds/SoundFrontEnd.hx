@@ -189,7 +189,7 @@ class SoundFrontEnd
 	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
 			?OnComplete:Void->Void):FlxSound
 	{
-		if (Std.is(EmbeddedSound, String))
+		if ((EmbeddedSound is String))
 		{
 			EmbeddedSound = cache(EmbeddedSound);
 		}
