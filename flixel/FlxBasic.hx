@@ -21,10 +21,10 @@ class FlxBasic implements IFlxDestroyable
 	#end
 
 	/**
-	 * IDs seem like they could be pretty useful, huh?
-	 * They're not actually used for anything yet though.
-	 */
-	public var ID:Int = -1;
+		* A unique ID
+	*/
+	public var ID:Int = IDEnumerator++;
+	static var IDEnumerator:Int = 0;
 
 	/**
 	 * Controls whether `update()` is automatically called by `FlxState`/`FlxGroup`.
