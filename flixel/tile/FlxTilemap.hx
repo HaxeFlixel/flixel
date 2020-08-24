@@ -788,7 +788,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			tileX = Math.floor(curX / _scaledTileWidth);
 			tileY = Math.floor(curY / _scaledTileHeight);
 
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != FlxObject.NONE)
+			var tile = _tileObjects[_data[tileY * widthInTiles + tileX]];
+
+			if (tile != null && tile.allowCollisions != FlxObject.NONE)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(_scaledTileWidth);
