@@ -13,6 +13,8 @@ import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
+using flixel.util.FlxArrayUtil;
+
 /**
  * This is the base class for most of the display objects (`FlxSprite`, `FlxText`, etc).
  * It includes some basic attributes about game objects, basic state information,
