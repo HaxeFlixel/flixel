@@ -639,7 +639,7 @@ class FlxObject extends FlxBasic
 	var _rect:FlxRect = FlxRect.get();
 
 	@:noCompletion
-	var _tags:Null<Array<String>>;
+	var _tags:Array<String>;
 
 	/**
 	 * @param   X        The X-coordinate of the point in space.
