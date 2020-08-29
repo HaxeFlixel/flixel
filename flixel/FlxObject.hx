@@ -638,6 +638,9 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	var _rect:FlxRect = FlxRect.get();
 
+	@:noCompletion
+	var _tags:Null<Array<String>>;
+
 	/**
 	 * @param   X        The X-coordinate of the point in space.
 	 * @param   Y        The Y-coordinate of the point in space.
@@ -704,6 +707,7 @@ class FlxObject extends FlxBasic
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
+		_tags = null;
 	}
 
 	/**
@@ -1093,6 +1097,49 @@ class FlxObject extends FlxBasic
 	{
 		width = Width;
 		height = Height;
+	}
+
+	/**
+	 * Adds a tag to this object.
+	 *
+	 * @param		Tag 	The tag to add.
+	 */
+	public function addTag(Tag:String)
+	{
+		// Lazily initialize the `_tags` Array.
+		if (_tags == null)
+			_tags = [];
+
+		// Only add the Tag if this object doesn't already have it.
+		if (!_tags.contains(Tag))
+			_tags.push(Tag);
+	}
+
+	/**
+	 * Removes a tag from this object.
+	 *
+	 * @param		Tag 	The tag to remove.
+	 */
+	public function removeTag(Tag:String)
+	{
+		if (_tags == null)
+			return;
+
+		_tags.remove(Tag);
+	}
+
+	/**
+	 * Checks if this object has been tagged with the provided `String`.
+	 *
+	 * @param		Tag		The tag to check for on this object.
+	 * @return 	Whether this object has been tagged with the provided `String`.
+	 */
+	public function hasTag(Tag:String):Bool
+	{
+		if (_tags == null)
+			return false;
+
+		return _tags.contains(Tag);
 	}
 
 	#if FLX_DEBUG
