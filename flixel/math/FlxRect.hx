@@ -52,7 +52,7 @@ class FlxRect implements IFlxPooled
 	public var right(get, set):Float;
 
 	/**
-	 * The x coordinate of the top of the rectangle.
+	 * The y coordinate of the top of the rectangle.
 	 */
 	public var top(get, set):Float;
 
