@@ -308,14 +308,20 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
-	 * Kills all related tweens
+	 * Cancels all related tweens on the specified object.
 	 * 
-	 * @param Object The object with tweens to kill
-	 * @param Fields Optional list of the tween fields to kill. If empty, all tweens are killed
+	 * Note: Objects and Fields must match the values passed into the tween, if a tween was started via
+	 * `FlxTween.tween(myObj, {"pos.x":10})` you must cancel it with `cancelTweensOf(myObj, ["pos.x"])`
+	 * instead of `cancelTweensOf(myObj.pos, ["x"])`
+	 * 
+	 * @param Object The object with tweens to cancel.
+	 * @param Fields Optional list of the tween fields to cancel. If empty, all tweens are canceled.
+	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * will also be cancelled.
 	 */
-	public static function killTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	public static function cancelTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
 	{
-		globalManager.killTweensOf(Object, Fields);
+		globalManager.cancelTweensOf(Object, Fields);
 	}
 	
 	/**
@@ -1143,12 +1149,18 @@ class FlxTweenManager extends FlxBasic
 	}
 
 	/**
-	 * Kills all related tweens
+	 * Cancels all related tweens on the specified object.
 	 * 
-	 * @param Object The object with tweens to kill
-	 * @param Fields Optional list of the tween fields to kill. If empty, all tweens are killed
+	 * Note: Objects and Fields must match the values passed into the tween, if a tween was started via
+	 * `FlxTween.tween(myObj, {"pos.x":10})` you must cancel it with `cancelTweensOf(myObj, ["pos.x"])`
+	 * instead of `cancelTweensOf(myObj.pos, ["x"])`.
+	 * 
+	 * @param Object The object with tweens to cancel.
+	 * @param Fields Optional list of the tween fields to cancel. If empty, all tweens are canceled.
+	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * will also be cancelled.
 	 */
-	public function killTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	public function cancelTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
 	{
 		for (tween in _tweens)
 		{
