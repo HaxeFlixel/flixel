@@ -10,15 +10,15 @@ class VarTween extends FlxTween
 	var _object:Dynamic;
 	var _properties:Dynamic;
 	var _propertyInfos:Array<VarTweenProperty>;
-	
+
 	function new(options:TweenOptions, ?manager:FlxTweenManager)
 	{
 		super(options, manager);
 	}
-	
+
 	/**
 	 * Tweens multiple numeric public properties.
-	 * 
+	 *
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
@@ -31,7 +31,7 @@ class VarTween extends FlxTween
 		else if (properties == null)
 			throw "Cannot tween null properties.";
 		#end
-		
+
 		_object = object;
 		_properties = properties;
 		_propertyInfos = [];
@@ -39,11 +39,11 @@ class VarTween extends FlxTween
 		start();
 		return this;
 	}
-	
+
 	override function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
-		
+
 		// Leave properties alone until delay is over
 		if (_secondsSinceStart < delay)
 			super.update(elapsed);
@@ -53,14 +53,14 @@ class VarTween extends FlxTween
 			// will be inaccurate with delays
 			if (_propertyInfos.length == 0)
 				initializeVars();
-			
+
 			super.update(elapsed);
-			
+
 			for (info in _propertyInfos)
 				Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
 		}
 	}
-	
+
 	function initializeVars():Void
 	{
 		var fieldPaths:Array<String>;
@@ -68,7 +68,7 @@ class VarTween extends FlxTween
 			fieldPaths = Reflect.fields(_properties);
 		else
 			throw "Unsupported properties container - use an object containing key/value pairs.";
-		
+
 		for (fieldPath in fieldPaths)
 		{
 			var target = _object;
@@ -83,11 +83,11 @@ class VarTween extends FlxTween
 
 			if (Reflect.getProperty(target, field) == null)
 				throw 'The object does not have the property "$field"';
-			
+
 			var value:Dynamic = Reflect.getProperty(target, field);
 			if (Math.isNaN(value))
 				throw 'The property "$field" is not numeric.';
-			
+
 			var targetValue:Dynamic = Reflect.getProperty(_properties, fieldPath);
 			_propertyInfos.push({
 				object: target,

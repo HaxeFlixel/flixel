@@ -20,27 +20,27 @@ class FlxSubState extends FlxState
 	 * Callback method for state close event.
 	 */
 	public var closeCallback:Void->Void;
-	
+
 	/**
 	 * Helper sprite object for non-flash targets. Draws the background.
 	 */
 	@:noCompletion
 	var _bgSprite:FlxBGSprite;
-	
+
 	/**
 	 * Helper var for `close()` so `closeSubState()` can be called on the parent.
 	 */
 	@:noCompletion
 	@:allow(flixel.FlxState.resetSubState)
 	var _parentState:FlxState;
-	
+
 	@:noCompletion
 	var _bgColor:FlxColor;
 
 	@:noCompletion
 	@:allow(flixel.FlxState.resetSubState)
 	var _created:Bool = false;
-	
+
 	/**
 	 * @param   BGColor   background color for this substate
 	 */
@@ -49,15 +49,15 @@ class FlxSubState extends FlxState
 		super();
 		closeCallback = null;
 		openCallback = null;
-		
+
 		if (FlxG.renderTile)
 			_bgSprite = new FlxBGSprite();
 		bgColor = BGColor;
 	}
-	
+
 	override public function draw():Void
 	{
-		//Draw background
+		// Draw background
 		if (FlxG.renderBlit)
 		{
 			for (camera in cameras)
@@ -69,12 +69,12 @@ class FlxSubState extends FlxState
 		{
 			_bgSprite.draw();
 		}
-		
-		//Now draw all children
+
+		// Now draw all children
 		super.draw();
 	}
-	
-	override public function destroy():Void 
+
+	override public function destroy():Void
 	{
 		super.destroy();
 		closeCallback = null;
@@ -82,7 +82,7 @@ class FlxSubState extends FlxState
 		_parentState = null;
 		_bgSprite = null;
 	}
-	
+
 	/**
 	 * Closes this substate.
 	 */
@@ -91,19 +91,19 @@ class FlxSubState extends FlxState
 		if (_parentState != null && _parentState.subState == this)
 			_parentState.closeSubState();
 	}
-	
+
 	@:noCompletion
 	override inline function get_bgColor():FlxColor
 	{
 		return _bgColor;
 	}
-	
+
 	@:noCompletion
 	override function set_bgColor(Value:FlxColor):FlxColor
 	{
 		if (FlxG.renderTile && _bgSprite != null)
 			_bgSprite.pixels.setPixel32(0, 0, Value);
-		
+
 		return _bgColor = Value;
 	}
 }

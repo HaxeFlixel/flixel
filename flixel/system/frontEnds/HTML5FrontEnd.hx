@@ -3,19 +3,23 @@ package flixel.system.frontEnds;
 #if js
 import js.Browser;
 import flixel.math.FlxPoint;
+
 using flixel.util.FlxStringUtil;
 
 class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;
+
 	/** @since 4.2.0 */
 	public var platform(default, null):FlxPlatform;
+
 	/** @since 4.2.0 */
 	public var onMobile(default, null):Bool;
+
 	public var browserWidth(get, never):Int;
 	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
-	
+
 	@:allow(flixel.FlxG)
 	function new()
 	{
@@ -23,7 +27,7 @@ class HTML5FrontEnd
 		platform = getPlatform();
 		onMobile = getOnMobile();
 	}
-	
+
 	function getBrowser():FlxBrowser
 	{
 		if (userAgentContains(" OPR/"))
@@ -48,7 +52,7 @@ class HTML5FrontEnd
 		}
 		return FlxBrowser.UNKNOWN;
 	}
-	
+
 	function getPlatform():FlxPlatform
 	{
 		if (userAgentContains("Win"))
@@ -87,10 +91,11 @@ class HTML5FrontEnd
 		{
 			return MAC;
 		}
-		else return FlxPlatform.UNKNOWN;
+		else
+			return FlxPlatform.UNKNOWN;
 	}
-	
-	function getOnMobile():Bool 
+
+	function getOnMobile():Bool
 	{
 		return switch (platform)
 		{
@@ -100,7 +105,7 @@ class HTML5FrontEnd
 				false;
 		}
 	}
-	
+
 	function userAgentContains(substring:String, toLowerCase:Bool = false)
 	{
 		var userAgent = Browser.navigator.userAgent;
@@ -108,7 +113,7 @@ class HTML5FrontEnd
 			userAgent = userAgent.toLowerCase();
 		return userAgent.contains(substring);
 	}
-	
+
 	function get_browserPosition():FlxPoint
 	{
 		if (browserPosition == null)
@@ -118,12 +123,12 @@ class HTML5FrontEnd
 		browserPosition.set(Browser.window.screenX, Browser.window.screenY);
 		return browserPosition;
 	}
-	
+
 	inline function get_browserWidth():Int
 	{
 		return Browser.window.innerWidth;
 	}
-	
+
 	inline function get_browserHeight():Int
 	{
 		return Browser.window.innerHeight;

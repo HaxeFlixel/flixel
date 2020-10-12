@@ -5,24 +5,24 @@ import massive.munit.Assert;
 class FlxTimerTest extends FlxTest
 {
 	var timer:FlxTimer;
-	
+
 	@Before
 	function before()
 	{
 		timer = new FlxTimer();
 		destroyable = timer;
 	}
-	
+
 	@Test
 	function testZeroTimer()
 	{
 		var calledBack:Bool = false;
 		timer.start(0, function(_) calledBack = true);
 		step();
-		
+
 		Assert.isTrue(calledBack);
 	}
-	
+
 	@Test
 	function testCancelNoCallback()
 	{
@@ -30,7 +30,7 @@ class FlxTimerTest extends FlxTest
 		timer.cancel();
 		step();
 	}
-	
+
 	@Test
 	function testCompleteAllMultiLoop()
 	{
@@ -42,7 +42,7 @@ class FlxTimerTest extends FlxTest
 		Assert.areEqual(2, loopsCompleted);
 		Assert.isTrue(timer.finished);
 	}
-	
+
 	@Test
 	function testCompleteAllInactive()
 	{
@@ -57,9 +57,7 @@ class FlxTimerTest extends FlxTest
 	function testManipulateListInCallback()
 	{
 		var timer2 = new FlxTimer();
-		var timer1 = new FlxTimer().start(0.0001, function(_)
-			FlxTimer.globalManager.remove(timer2)
-		);
+		var timer1 = new FlxTimer().start(0.0001, function(_) FlxTimer.globalManager.remove(timer2));
 		timer2.start(0.2);
 		var timer3 = new FlxTimer().start(0.2);
 

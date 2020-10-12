@@ -7,35 +7,35 @@ import massive.munit.Assert;
 class FlxTweenTest extends FlxTest
 {
 	var value:Int;
-	
+
 	@Before
 	function before()
 	{
 		value = 0;
 	}
-	
+
 	@Test
 	function testIssue1104()
 	{
-		FlxTween.tween(this, { value:  1000 }, 1);
-		FlxTween.tween(this, { value: -1000 }, 1, { startDelay: 1 });
-		
+		FlxTween.tween(this, {value: 1000}, 1);
+		FlxTween.tween(this, {value: -1000}, 1, {startDelay: 1});
+
 		// check that there is actually some tweening going on
 		step(10);
 		var sampleValue = value;
-		
+
 		step(10);
 		Assert.areNotEqual(value, sampleValue);
 	}
-	
+
 	@Test
 	function testPauseLoopingTweenInOnComplete()
 	{
 		var tweenActive:Bool = false;
-		
-		var tween = FlxTween.tween(this, { value: 50 }, 0.05, {
+
+		var tween = FlxTween.tween(this, {value: 50}, 0.05, {
 			type: LOOPING,
-			onComplete: function (tween:FlxTween)
+			onComplete: function(tween:FlxTween)
 			{
 				tween.active = false;
 				new FlxTimer().start(0.05, function(_)
@@ -44,39 +44,38 @@ class FlxTweenTest extends FlxTest
 				});
 			}
 		});
-		
+
 		step(10);
 		Assert.isFalse(tweenActive);
-		
+
 		var resumeSuccessful:Bool = false;
-		
+
 		tween.active = true;
-		tween.onComplete = function (_)
+		tween.onComplete = function(_)
 		{
 			resumeSuccessful = true;
 		};
-		
+
 		step(10);
 		Assert.isTrue(resumeSuccessful);
 	}
-	
+
 	@Test
 	function testScaleIsValidWithStartDelay()
 	{
-		FlxTween.num(0, 1, 0.2, { startDelay: 0.1 }, function (f:Float)
+		FlxTween.num(0, 1, 0.2, {startDelay: 0.1}, function(f:Float)
 		{
 			Assert.isNotNaN(f);
 			Assert.isNotNull(f);
 		});
 		step();
 	}
-	
+
 	@Test
 	function testCancelNoCallback()
 	{
-		var tween = FlxTween.tween(this, { value: 100 }, 0.01, {
-			onComplete: function (_)
-				Assert.fail("Callback called")
+		var tween = FlxTween.tween(this, {value: 100}, 0.01, {
+			onComplete: function(_) Assert.fail("Callback called")
 		});
 		tween.cancel();
 		step();
@@ -89,7 +88,7 @@ class FlxTweenTest extends FlxTest
 
 		while (!chain.updated[0])
 			step();
-		
+
 		Assert.isFalse(chain.completed[0]);
 
 		chain.tweens[0].cancelChain();
@@ -105,18 +104,18 @@ class FlxTweenTest extends FlxTest
 	function testCancelChainFirstTweenFinished()
 	{
 		var chain = createChain(4);
-		
+
 		while (!chain.updated[1])
 			step();
-		
+
 		Assert.isTrue(chain.updated[0] && chain.completed[0]);
 		Assert.isFalse(chain.completed[1]);
-		
+
 		chain.tweens[0].cancelChain();
-		
+
 		for (i in 1...chain.count)
 			finishTween(chain.tweens[i]);
-		
+
 		for (i in 2...chain.count)
 			Assert.isFalse(chain.updated[i] || chain.completed[i]);
 	}
@@ -125,11 +124,10 @@ class FlxTweenTest extends FlxTest
 	{
 		var updated = [for (i in 0...count) false];
 		var completed = [for (i in 0...count) false];
-		var tweens = [for (i in 0...count)
-			makeTween(0.1,
-				function (_) completed[i] = true,
-				function (_) updated[i] = true
-		)];
+		var tweens = [
+			for (i in 0...count)
+				makeTween(0.1, function(_) completed[i] = true, function(_) updated[i] = true)
+		];
 
 		for (i in 1...count)
 			tweens[0].wait(0.1).then(tweens[i]);
@@ -162,29 +160,15 @@ class FlxTweenTest extends FlxTest
 	@Test
 	function testLinearChain()
 	{
-		testChain(4, function(tweens)
-			tweens[0]
-				.then(tweens[1])
-				.then(tweens[2])
-				.then(tweens[3])
-		);
+		testChain(4, function(tweens) tweens[0].then(tweens[1]).then(tweens[2]).then(tweens[3]));
 	}
 
 	@Test // #1871
 	function testNestedChain()
 	{
-		testChain(4, function(tweens)
-			tweens[0]
-				.then(tweens[1].then(tweens[2]))
-				.then(tweens[3])
-		);
+		testChain(4, function(tweens) tweens[0].then(tweens[1].then(tweens[2])).then(tweens[3]));
 
-		testChain(4, function(tweens)
-			tweens[0]
-				.then(tweens[1]
-					.then(tweens[2]
-						.then(tweens[3])))
-		);
+		testChain(4, function(tweens) tweens[0].then(tweens[1].then(tweens[2].then(tweens[3]))));
 	}
 
 	function testChain(numTweens:Int, createChain:Array<FlxTween>->Void)
@@ -200,7 +184,7 @@ class FlxTweenTest extends FlxTest
 		}
 
 		createChain(tweens);
-		
+
 		for (i in 0...tweens.length)
 		{
 			finishTween(tweens[i]);
@@ -219,11 +203,11 @@ class FlxTweenTest extends FlxTest
 					if (complete[i] != b)
 						Assert.fail('complete[$i] should be "$b" for tween $n');
 				}
-				
+
 				// all tweens before this one should be complete
 				shouldBe(i < n);
 			}
-			
+
 			complete[n] = true;
 		};
 	}
@@ -256,9 +240,7 @@ class FlxTweenTest extends FlxTest
 
 		var tween2:FlxTween = null;
 		// short duration, so finished after one step()
-		var tween1 = makeTween(0.0001, function(_)
-			FlxTween.globalManager.remove(tween2)
-		);
+		var tween1 = makeTween(0.0001, function(_) FlxTween.globalManager.remove(tween2));
 		tween2 = makeTween(0.2, null, function(_) tween2Updated = true);
 		makeTween(0.2, null, function(_) tween3Updated = true);
 
@@ -270,7 +252,7 @@ class FlxTweenTest extends FlxTest
 
 	function makeTween(duration:Float, onComplete:TweenCallback, ?onUpdate:TweenCallback):FlxTween
 	{
-		var foo = { f: 0 };
-		return FlxTween.tween(foo, { f: 1 }, duration, { onComplete: onComplete, onUpdate: onUpdate });
+		var foo = {f: 0};
+		return FlxTween.tween(foo, {f: 1}, duration, {onComplete: onComplete, onUpdate: onUpdate});
 	}
 }

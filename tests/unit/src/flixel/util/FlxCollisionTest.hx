@@ -9,9 +9,9 @@ class FlxCollisionTest extends FlxTest
 	var sprite:FlxSprite;
 	var sourceSprite:FlxSprite;
 	var animatedSprite:FlxSprite;
-	
+
 	@Before
-	function before():Void 
+	function before():Void
 	{
 		sprite = new FlxSprite(30, 0);
 		sprite.makeGraphic(100, 100, FlxColor.WHITE, true);
@@ -43,10 +43,10 @@ b/0
 		// add animations
 		for (name in ["a", "b"])
 			animatedSprite.animation.addByPrefix(name, name);
-		
+
 		destroyable = sprite;
 	}
-	
+
 	@Test
 	function pixelPerfectCheckWithAnim()
 	{

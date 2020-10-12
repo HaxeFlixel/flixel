@@ -11,18 +11,18 @@ import flixel.system.debug.FlxDebugger.GraphicLog;
 class Log extends Window
 {
 	public static inline var MAX_LOG_LINES:Int = 200;
-	static inline var LINE_BREAK:String = #if js "\n" #else "<br>"#end; 
+	static inline var LINE_BREAK:String = #if js "\n" #else "<br>" #end;
 
 	var _text:TextField;
 	var _lines:Array<String>;
-	
+
 	/**
 	 * Creates a log window object.
 	 */
 	public function new()
 	{
 		super("Log", new GraphicLog(0, 0));
-		
+
 		_text = new TextField();
 		_text.x = 2;
 		_text.y = 15;
@@ -32,10 +32,10 @@ class Log extends Window
 		_text.embedFonts = true;
 		_text.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		addChild(_text);
-		
+
 		_lines = new Array<String>();
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -46,11 +46,11 @@ class Log extends Window
 			removeChild(_text);
 			_text = null;
 		}
-		
+
 		_lines = null;
 		super.destroy();
 	}
-	
+
 	/**
 	 * Adds a new line to the log window.
 	 * @param 	Data		The data being logged.
@@ -59,29 +59,29 @@ class Log extends Window
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool
 	{
-		if (Data == null) 
+		if (Data == null)
 		{
 			return false;
 		}
-		
+
 		var texts:Array<String> = new Array<String>();
-		
+
 		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
-		for (i in 0...Data.length) 
+		for (i in 0...Data.length)
 		{
 			texts[i] = Std.string(Data[i]);
-			
+
 			// Make sure you can't insert html tags
 			texts[i] = StringTools.htmlEscape(texts[i]);
 		}
-		
+
 		var text:String = Style.prefix + texts.join(" ");
-		
+
 		// Apply text formatting
 		#if (!js && !lime_console)
 		text = flixel.util.FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
 		#end
-		
+
 		// Check if the text has been added yet already
 		if (FireOnce)
 		{
@@ -93,20 +93,20 @@ class Log extends Window
 				}
 			}
 		}
-		
+
 		// Actually add it to the textfield
 		if (_lines.length <= 0)
 		{
 			_text.text = "";
 		}
-		
+
 		_lines.push(text);
-		
+
 		if (_lines.length > MAX_LOG_LINES)
 		{
 			_lines.shift();
 			var newText:String = "";
-			for (i in 0..._lines.length) 
+			for (i in 0..._lines.length)
 			{
 				newText += _lines[i] + LINE_BREAK;
 			}
@@ -126,11 +126,11 @@ class Log extends Window
 			_text.text += text + LINE_BREAK;
 			#end
 		}
-		
+
 		_text.scrollV = Std.int(_text.maxScrollV);
 		return true;
 	}
-	
+
 	public function clear():Void
 	{
 		_text.text = "";
@@ -139,14 +139,14 @@ class Log extends Window
 		_text.scrollV = 0;
 		#end
 	}
-	
+
 	/**
 	 * Adjusts the width and height of the text field accordingly.
 	 */
 	override function updateSize():Void
 	{
 		super.updateSize();
-		
+
 		_text.width = _width - 10;
 		_text.height = _height - 15;
 	}

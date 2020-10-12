@@ -11,14 +11,17 @@ class FlxGamepadAnalogStick
 	 * a raw button input ID, for sending a digital event for "up" alongside the analog event
 	 */
 	public var rawUp(default, null):Int = -1;
+
 	/**
 	 * a raw button input ID, for sending a digital event for "down" alongside the analog event
 	 */
 	public var rawDown(default, null):Int = -1;
+
 	/**
 	 * a raw button input ID, for sending a digital event for "left" alongside the analog event
 	 */
 	public var rawLeft(default, null):Int = -1;
+
 	/**
 	 * a raw button input ID, for sending a digital event for "right" alongside the analog event
 	 */
@@ -60,7 +63,8 @@ class FlxGamepadAnalogStick
 			LabelValuePair.weak("rawLeft", rawLeft),
 			LabelValuePair.weak("rawRight", rawRight),
 			LabelValuePair.weak("digitalThreshold", digitalThreshold),
-			LabelValuePair.weak("mode", mode)]);
+			LabelValuePair.weak("mode", mode)
+		]);
 	}
 }
 
@@ -80,10 +84,12 @@ enum FlxAnalogToDigitalMode
 	 * Send both digital and analog events when the analog stick is moved
 	 */
 	BOTH;
+
 	/**
 	 * Send only digital events when the analog stick is moved
 	 */
 	ONLY_DIGITAL;
+
 	/**
 	 * Send only analog events when the analog stick is moved
 	 */

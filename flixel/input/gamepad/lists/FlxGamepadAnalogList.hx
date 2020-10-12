@@ -12,7 +12,7 @@ class FlxGamepadAnalogList
 	public var value(default, null):FlxGamepadAnalogValueList;
 	public var justMoved(default, null):FlxGamepadAnalogStateList;
 	public var justReleased(default, null):FlxGamepadAnalogStateList;
-	
+
 	public function new(gamepad:FlxGamepad)
 	{
 		value = new FlxGamepadAnalogValueList(gamepad);

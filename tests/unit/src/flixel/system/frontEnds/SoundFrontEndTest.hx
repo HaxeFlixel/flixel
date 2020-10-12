@@ -10,13 +10,13 @@ class SoundFrontEndTest
 	{
 		FlxG.sound.play("assets/invalid");
 	}
-	
+
 	@Test // #1511
 	function testPlayMusicInvalidSoundPathNoCrash()
 	{
 		FlxG.sound.playMusic("assets/invalid");
 	}
-	
+
 	@Test // #1511
 	function testLoadInvalidSoundPathNoCrash()
 	{

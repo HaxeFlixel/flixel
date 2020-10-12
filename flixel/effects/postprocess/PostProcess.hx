@@ -1,7 +1,6 @@
 package flixel.effects.postprocess;
 
 import flash.geom.Rectangle;
-
 #if FLX_POST_PROCESS
 import flixel.FlxG;
 import openfl.Assets;
@@ -17,7 +16,7 @@ private class Uniform
 {
 	public var id:Int;
 	public var value:Float;
-	
+
 	public function new(id, value)
 	{
 		this.id = id;
@@ -43,7 +42,7 @@ class PostProcess extends OpenGLView
 	{
 		super();
 		uniforms = new Map<String, Uniform>();
-		
+
 		// create and bind the framebuffer
 		framebuffer = GL.createFramebuffer();
 		rebuild();
@@ -51,7 +50,7 @@ class PostProcess extends OpenGLView
 		defaultFramebuffer = new GLFramebuffer(GL.version, 1); // faked framebuffer
 		#else
 		var status = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
-		
+
 		switch (status)
 		{
 			case GL.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -70,8 +69,8 @@ class PostProcess extends OpenGLView
 		GL.bindBuffer(GL.ARRAY_BUFFER, null);
 
 		postProcessShader = new Shader([
-			{ src: VERTEX_SHADER, fragment: false },
-			{ src: Assets.getText(fragmentShader), fragment: true }
+			{src: VERTEX_SHADER, fragment: false},
+			{src: Assets.getText(fragmentShader), fragment: true}
 		]);
 
 		// default shader variables
@@ -116,7 +115,7 @@ class PostProcess extends OpenGLView
 	 * Set to `null` to render to the screen.
 	 */
 	public var to(never, set):PostProcess;
-	
+
 	function set_to(value:PostProcess):PostProcess
 	{
 		renderTo = (value == null ? defaultFramebuffer : value.framebuffer);
@@ -130,14 +129,16 @@ class PostProcess extends OpenGLView
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 
-		if (texture != null) GL.deleteTexture(texture);
-		if (renderbuffer != null) GL.deleteRenderbuffer(renderbuffer);
+		if (texture != null)
+			GL.deleteTexture(texture);
+		if (renderbuffer != null)
+			GL.deleteRenderbuffer(renderbuffer);
 
 		this.screenWidth = FlxG.stage.stageWidth;
 		this.screenHeight = FlxG.stage.stageHeight;
 		createTexture(screenWidth, screenHeight);
 		createRenderbuffer(screenWidth, screenHeight);
-		
+
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 
@@ -145,7 +146,7 @@ class PostProcess extends OpenGLView
 	{
 		// Bind the renderbuffer and create a depth buffer
 		renderbuffer = GL.createRenderbuffer();
-		
+
 		GL.bindRenderbuffer(GL.RENDERBUFFER, renderbuffer);
 		GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, width, height);
 
@@ -156,13 +157,13 @@ class PostProcess extends OpenGLView
 	inline function createTexture(width:Int, height:Int)
 	{
 		texture = GL.createTexture();
-		
+
 		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB,  width, height,  0,  GL.RGB, GL.UNSIGNED_BYTE, null);
+		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, width, height, 0, GL.RGB, GL.UNSIGNED_BYTE, null);
 
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER , GL.LINEAR);
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
 
 		// specify texture as color attachment
@@ -177,7 +178,7 @@ class PostProcess extends OpenGLView
 		GL.bindFramebuffer(GL.FRAMEBUFFER, framebuffer);
 		GL.clear(GL.DEPTH_BUFFER_BIT | GL.COLOR_BUFFER_BIT);
 	}
-	
+
 	public function update(elapsed:Float)
 	{
 		time += elapsed;
@@ -191,7 +192,7 @@ class PostProcess extends OpenGLView
 	{
 		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
 		GL.viewport(0, 0, screenWidth, screenHeight);
-		
+
 		postProcessShader.bind();
 
 		GL.enableVertexAttribArray(vertexSlot);
@@ -224,9 +225,9 @@ class PostProcess extends OpenGLView
 		GL.disableVertexAttribArray(texCoordSlot);
 
 		GL.useProgram(null);
-		
+
 		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-		
+
 		// check gl error
 		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)
 		{
@@ -270,14 +271,15 @@ void main() {
 }";
 
 	static var vertices(get, never):Array<Float>;
+
 	static inline function get_vertices():Array<Float>
 	{
 		return [
 			-1.0, -1.0, 0, 0,
-			1.0, -1.0, 1, 0,
+			 1.0, -1.0, 1, 0,
 			-1.0,  1.0, 0, 1,
-			1.0, -1.0, 1, 0,
-			1.0,  1.0, 1, 1,
+			 1.0, -1.0, 1, 0,
+			 1.0,  1.0, 1, 1,
 			-1.0,  1.0, 0, 1
 		];
 	}
@@ -289,14 +291,22 @@ class PostProcess
 	{
 		FlxG.log.error("Post processing is only supported on the CPP and Neko targets of OpenFL legacy - for newer OpenFL versions, please use shader filters.");
 	}
-	
+
 	public function enable(?to:PostProcess) {}
+
 	public function capture() {}
+
 	public function rebuild() {}
+
 	public function update(elapsed:Float) {}
+
 	public function render(rect:Rectangle) {}
+
 	public function setUniform(uniform:String, value:Float) {}
+
 	public var to(never, set):PostProcess;
-	public function set_to(value:PostProcess):PostProcess return null;
+
+	public function set_to(value:PostProcess):PostProcess
+		return null;
 }
 #end

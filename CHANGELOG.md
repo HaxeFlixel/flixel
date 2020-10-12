@@ -1,10 +1,89 @@
-4.6.0 (to be released)
+4.8.1 (July 16, 2020)
+------------------------------
+- improved rendering performance on low-end devices
+
+4.8.0 (July 2, 2020)
+------------------------------
+#### New features:
+- `FlxSplash`: added `muted` (defaults to `true` on HTML5)
+- `FlxBaseKeyList`: added `NONE` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxKeyManager`: added `released` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxGamepad`:
+	- added Switch Pro controller mappings ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+	- added `getInputLabel()` ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+- `FlxText`: added support for removing partial ranges in `removeFormat()` ([#2256](https://github.com/HaxeFlixel/flixel/pull/2256))
+
+#### Bugfixes:
+- `FlxGamepad`: fixed `pressed` not being `true` during the first `justPressed` frame ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxKeyManager`: fixed `anyPressed([ANY])` not working ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+
+#### Changes and improvements:
+- Fixed `Std.is()` deprecation warnings with Haxe 4.2
+
+4.7.0 (April 12, 2020)
 ------------------------------
 #### New features:
 
-- Added a new `FlxAction` API ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
+- `FlxGroup`: added support for specifying `cameras` ([#2232](https://github.com/HaxeFlixel/flixel/pull/2232))
+
+#### Bugfixes:
+
+- `FlxButton`: fixed `mouseButtons` handling ([#2246](https://github.com/HaxeFlixel/flixel/issues/2246))
+- `FlxTilemap`: handle negative tile indices for all `load` methods, not just CSV ([#2250](https://github.com/HaxeFlixel/flixel/pull/2250))
+- `FlxVirtualPad`: fixed graphic not showing up on HTML5
+- `OUYAID`: fixed button mappings ([#2234](https://github.com/HaxeFlixel/flixel/pull/2234))
+
+#### Changes and improvements:
+
+- `FlxAnimation`: changed `frameRate` to a `Float` ([#2252](https://github.com/HaxeFlixel/flixel/pull/2252))
+
+4.6.3 (August 21, 2019)
+------------------------------
+- Compatibility with Haxe 4.0.0-rc.3
+- `FlxAssetPaths`: added support for custom renaming ([#2227](https://github.com/HaxeFlixel/flixel/issues/2227))
+
+4.6.2 (June 19, 2019)
+------------------------------
+- `FlxGraphicsShader`: fixed crashes on some old iOS devices ([#2219](https://github.com/HaxeFlixel/flixel/issues/2219))
+- `FlxG.android`:
+	- fixed `preventDefaultKeys` handling with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+	- fixed the key codes for `FlxAndroidKey.BACK` and `MENU` with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
+
+4.6.1 (April 2, 2019)
+------------------------------
+#### Bugfixes:
+
+- `FlxDebugger`:
+	- disabled mouse input when the debugger interaction tool is active ([#2209](https://github.com/HaxeFlixel/flixel/issues/2209))
+	- clear the transform tool target on state switches
+- `FlxBasePreloader`: fixed a crash on the HashLink target
+
+4.6.0 (February 4, 2019)
+------------------------------
+#### Dependencies:
+
+- Compatibility with Haxe 4.0.0-rc.1
+
+#### New features:
+
+- Added a new `FlxAction` API / `flixel.input.actions` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
 - `FlxGamepadManager`: added `deviceConnected` and `deviceDisconnected` ([#1805](https://github.com/HaxeFlixel/flixel/issues/1805))
 - `FlxBitmapText`: added `clipRect` support ([#2171](https://github.com/HaxeFlixel/flixel/issues/2171))
+- `FlxTilemap`: added 47 tile autotiling ([#2184](https://github.com/HaxeFlixel/flixel/issues/2184))
+- `FlxG.signals`:
+	- added `preGameStart` ([#2188](https://github.com/HaxeFlixel/flixel/issues/2188))
+	- added `postStateSwitch` ([#2207](https://github.com/HaxeFlixel/flixel/issues/2207))
+- `FlxSave`: added support for local storage paths ([#2202](https://github.com/HaxeFlixel/flixel/issues/2202))
+- `FlxVector`: added `weak()` support and turned it into an `abstract` ([#2191](https://github.com/HaxeFlixel/flixel/issues/2191))
+- Added blend mode support for `drawQuads()` rendering with OpenFL 8.8.0+ ([#2199](https://github.com/HaxeFlixel/flixel/issues/2199))
+
+#### Bugfixes:
+
+- `FlxFilterFrames`: fixed previous `offset` being ignored in `applyToSprite()` ([#2176](https://github.com/HaxeFlixel/flixel/issues/2176))
+- `FlxBitmapFont`: fixed background only being removed on Flash in `fromXNA()` ([#2187](https://github.com/HaxeFlixel/flixel/issues/2187))
+- Fixed `drawQuads()` rendering issues if there are color offsets, but no multipliers ([#2195](https://github.com/HaxeFlixel/flixel/issues/2195))
+- Fixed `FlxSubState` not being updated in the frame it is entered ([#2204](https://github.com/HaxeFlixel/flixel/issues/2204))
+- `FlxText`: fixed frame size not always being correct when `updateHitbox()` is called ([#2205](https://github.com/HaxeFlixel/flixel/issues/2205))
 
 4.5.1 (September 7, 2018)
 ------------------------------

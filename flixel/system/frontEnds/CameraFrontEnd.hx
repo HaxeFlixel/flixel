@@ -14,35 +14,36 @@ class CameraFrontEnd
 	 * By default flixel creates one camera the size of the screen.
 	 */
 	public var list(default, null):Array<FlxCamera> = [];
-	
+
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
 	public var bgColor(get, set):FlxColor;
-	
+
 	/** @since 4.2.0 */
 	public var cameraAdded(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
-	
+
 	/** @since 4.2.0 */
 	public var cameraRemoved(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
-	
+
 	/** @since 4.2.0 */
 	public var cameraResized(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
-	
+
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
 	 */
 	public var useBufferLocking:Bool = false;
+
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
 	 */
 	var _cameraRect:Rectangle = new Rectangle();
-	
+
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
-	 * 
+	 *
 	 * @param	NewCamera	The camera you want to add.
 	 * @return	This FlxCamera instance.
 	 */
@@ -54,10 +55,10 @@ class CameraFrontEnd
 		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
-	
+
 	/**
 	 * Remove a camera from the game.
-	 * 
+	 *
 	 * @param   Camera    The camera you want to remove.
 	 * @param   Destroy   Whether to call destroy() on the camera, default value is true.
 	 */
@@ -74,7 +75,7 @@ class CameraFrontEnd
 			FlxG.log.warn("FlxG.cameras.remove(): The camera you attempted to remove is not a part of the game.");
 			return;
 		}
-		
+
 		if (FlxG.renderTile)
 		{
 			for (i in 0...list.length)
@@ -82,17 +83,17 @@ class CameraFrontEnd
 				list[i].ID = i;
 			}
 		}
-		
+
 		if (Destroy)
 			Camera.destroy();
-		
+
 		cameraRemoved.dispatch(Camera);
 	}
-		
+
 	/**
 	 * Dumps all the current cameras and resets to just one camera.
 	 * Handy for doing split-screen especially.
-	 * 
+	 *
 	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
@@ -102,16 +103,16 @@ class CameraFrontEnd
 
 		if (NewCamera == null)
 			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		
+
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
-		
+
 		FlxCamera.defaultCameras = list;
 	}
-	
+
 	/**
 	 * All screens are filled with this color and gradually return to normal.
-	 * 
+	 *
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the flash to fade.
 	 * @param	OnComplete	A function you want to run when the flash finishes.
@@ -124,10 +125,10 @@ class CameraFrontEnd
 			camera.flash(Color, Duration, OnComplete, Force);
 		}
 	}
-	
+
 	/**
 	 * The screen is gradually filled with this color.
-	 * 
+	 *
 	 * @param	Color		The color you want to use.
 	 * @param	Duration	How long it takes for the fade to finish.
 	 * @param 	FadeIn 		True fades from a color, false fades to it.
@@ -141,10 +142,10 @@ class CameraFrontEnd
 			camera.fade(Color, Duration, FadeIn, OnComplete, Force);
 		}
 	}
-	
+
 	/**
 	 * A simple screen-shake effect.
-	 * 
+	 *
 	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
 	 * @param	Duration	The length in seconds that the shaking effect should last.
 	 * @param	OnComplete	A function you want to run when the shake effect finishes.
@@ -158,13 +159,13 @@ class CameraFrontEnd
 			camera.shake(Intensity, Duration, OnComplete, Force, Axes);
 		}
 	}
-	
+
 	@:allow(flixel.FlxG)
-	function new() 
+	function new()
 	{
 		FlxCamera.defaultCameras = list;
 	}
-	
+
 	/**
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
@@ -177,17 +178,17 @@ class CameraFrontEnd
 			{
 				continue;
 			}
-			
+
 			if (FlxG.renderBlit)
 			{
 				camera.checkResize();
-				
+
 				if (useBufferLocking)
 				{
 					camera.buffer.lock();
 				}
 			}
-			
+
 			if (FlxG.renderTile)
 			{
 				camera.clearDrawStack();
@@ -197,7 +198,7 @@ class CameraFrontEnd
 				camera.debugLayer.graphics.clear();
 				#end
 			}
-			
+
 			if (FlxG.renderBlit)
 			{
 				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
@@ -209,7 +210,7 @@ class CameraFrontEnd
 			}
 		}
 	}
-	
+
 	@:allow(flixel.FlxGame)
 	inline function render():Void
 	{
@@ -224,7 +225,7 @@ class CameraFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Called by the game object to draw the special FX and unlock all the camera buffers.
 	 */
@@ -237,21 +238,21 @@ class CameraFrontEnd
 			{
 				continue;
 			}
-			
+
 			camera.drawFX();
-			
+
 			if (FlxG.renderBlit)
 			{
 				if (useBufferLocking)
 				{
 					camera.buffer.unlock();
 				}
-				
+
 				camera.screen.dirty = true;
 			}
 		}
 	}
-	
+
 	/**
 	 * Called by the game object to update the cameras and their tracking/special effects logic.
 	 */
@@ -266,7 +267,7 @@ class CameraFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Resizes and moves cameras when the game resizes (onResize signal).
 	 */
@@ -278,19 +279,19 @@ class CameraFrontEnd
 			camera.onResize();
 		}
 	}
-	
+
 	function get_bgColor():FlxColor
 	{
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
-	} 
-	
+	}
+
 	function set_bgColor(Color:FlxColor):FlxColor
 	{
 		for (camera in list)
 		{
 			camera.bgColor = Color;
 		}
-		
+
 		return Color;
 	}
 }

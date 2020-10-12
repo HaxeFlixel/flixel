@@ -6,7 +6,7 @@ import massive.munit.Assert;
 class FlxCameraTest extends FlxTest
 {
 	var camera:FlxCamera;
-	
+
 	@Before
 	function before()
 	{
@@ -14,7 +14,7 @@ class FlxCameraTest extends FlxTest
 		destroyable = camera;
 		resetGame();
 	}
-	
+
 	@Test
 	function testDefaultBgColor():Void
 	{
@@ -33,55 +33,55 @@ class FlxCameraTest extends FlxTest
 	{
 		Assert.areEqual(1, FlxG.cameras.list.length);
 	}
-	
+
 	@Test
 	function testDefaultCameras():Void
 	{
 		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
 	}
-	
+
 	@Test
 	function testDefaultCamerasStateSwitch():Void
 	{
 		FlxCamera.defaultCameras = [FlxG.camera];
 		switchState(new FlxState());
-		
+
 		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
 	}
-	
+
 	@Test
 	function testAddAndRemoveCamera():Void
 	{
 		FlxG.cameras.add(camera);
 		Assert.areEqual(2, FlxG.cameras.list.length);
-		
+
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
 	}
-	
+
 	@Test // #1515
 	function testFollowNoLerpChange()
 	{
 		FlxG.updateFramerate = 30;
 		camera = new FlxCamera();
-		
+
 		var defaultLerp = camera.followLerp;
 		camera.follow(new FlxObject());
 		Assert.areEqual(defaultLerp, camera.followLerp);
 	}
-	
+
 	@Test
 	function testFadeInFadeOut()
 	{
 		testFadeCallback(true, false);
 	}
-	
+
 	@Test // #1666
 	function testFadeOutFadeIn()
 	{
 		testFadeCallback(false, true);
 	}
-	
+
 	function testFadeCallback(firstFade:Bool, secondFade:Bool)
 	{
 		var secondCallback = false;
@@ -92,35 +92,35 @@ class FlxCameraTest extends FlxTest
 				secondCallback = true;
 			});
 		});
-		
+
 		step(10);
 		Assert.isTrue(secondCallback);
 	}
-	
+
 	@Test
 	function testFadeAlreadyStarted()
 	{
 		testDoubleFade(true, false, false);
 	}
-	
+
 	@Test
 	function testFadeForce()
 	{
 		testDoubleFade(false, true, true);
 	}
-	
+
 	function testDoubleFade(firstResult:Bool, secondResult:Bool, force:Bool)
 	{
 		var callback1 = false;
 		var callback2 = false;
 		fade(false, function() callback1 = true);
 		fade(false, function() callback2 = true, force);
-		
+
 		step(20);
 		Assert.areEqual(firstResult, callback1);
 		Assert.areEqual(secondResult, callback2);
 	}
-	
+
 	function fade(fadeIn:Bool = false, ?onComplete:Void->Void, force:Bool = false)
 	{
 		FlxG.camera.fade(FlxColor.BLACK, 0.05, fadeIn, onComplete, force);
