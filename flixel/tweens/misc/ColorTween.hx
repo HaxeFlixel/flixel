@@ -60,7 +60,7 @@ class ColorTween extends FlxTween
 		}
 	}
 	
-	override function isTweenOf(object:Dynamic, fields:Array<String> = null):Bool
+	override function isTweenOf(object:Dynamic, ?fields:Array<String>):Bool
 	{
 		return sprite == object && (fields == null || fields.indexOf("color") != -1);
 	}

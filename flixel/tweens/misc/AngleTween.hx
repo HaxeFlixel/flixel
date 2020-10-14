@@ -60,7 +60,7 @@ class AngleTween extends FlxTween
 		}
 	}
 	
-	override function isTweenOf(object:Dynamic, fields:Array<String> = null):Bool
+	override function isTweenOf(object:Dynamic, ?fields:Array<String>):Bool
 	{
 		return sprite == object && (fields == null || fields.indexOf("angle") != -1);
 	}

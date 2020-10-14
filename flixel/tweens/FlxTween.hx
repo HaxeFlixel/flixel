@@ -319,7 +319,7 @@ class FlxTween implements IFlxDestroyable
 	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
 	 * will also be cancelled.
 	 */
-	public static function cancelTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	public static function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
 	{
 		globalManager.cancelTweensOf(Object, Fields);
 	}
@@ -645,7 +645,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param Object The object
 	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
 	 */
-	function isTweenOf(Object:Dynamic, fields:Array<String> = null):Bool
+	function isTweenOf(Object:Dynamic, ?fields:Array<String>):Bool
 	{
 		return false;
 	}
@@ -1160,7 +1160,7 @@ class FlxTweenManager extends FlxBasic
 	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
 	 * will also be cancelled.
 	 */
-	public function cancelTweensOf(Object:Dynamic, Fields:Array<String> = null):Void
+	public function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
 	{
 		for (tween in _tweens)
 		{
