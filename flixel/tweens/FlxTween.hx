@@ -1162,8 +1162,13 @@ class FlxTweenManager extends FlxBasic
 	 */
 	public function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
 	{
-		for (tween in _tweens)
+		if (Object == null)
+			throw "Cannot cancel tween variables of an object that is null.";
+		
+		var i = _tweens.length;
+		while (i-- > 0)
 		{
+			var tween = _tweens[i];
 			if (tween.isTweenOf(Object, Fields))
 			{
 				tween.cancel();
