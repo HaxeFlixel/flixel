@@ -645,7 +645,7 @@ class FlxTween implements IFlxDestroyable
 	 * @param Object The object
 	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
 	 */
-	function isTweenOf(Object:Dynamic, ?fields:Array<String>):Bool
+	function isTweenOf(Object:Dynamic, ?field:String):Bool
 	{
 		return false;
 	}
@@ -1151,27 +1151,66 @@ class FlxTweenManager extends FlxBasic
 	/**
 	 * Cancels all related tweens on the specified object.
 	 * 
-	 * Note: Objects and Fields must match the values passed into the tween, if a tween was started via
-	 * `FlxTween.tween(myObj, {"pos.x":10})` you must cancel it with `cancelTweensOf(myObj, ["pos.x"])`
-	 * instead of `cancelTweensOf(myObj.pos, ["x"])`.
-	 * 
 	 * @param Object The object with tweens to cancel.
-	 * @param Fields Optional list of the tween fields to cancel. If empty, all tweens are canceled.
+	 * @param Fields Optional list of the tween fields to search for. If empty, all tweens on the specified
+	 * object are canceled.
 	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
 	 * will also be cancelled.
 	 */
 	public function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
 	{
+		forEachTweensOf(Object, Fields, function (tween) tween.cancel());
+	}
+
+	/**
+	 * Internal helper for iterating tweens with specific parameters
+	 * Note: loops backwards to allow removals
+	 * @param Object The object with tweens you are searching for.
+	 * @param Fields Optional list of the tween fields to check. If empty, any tween of the specified
+	 * object will match.
+	 * @param Function The function to call on each matching tween
+	 */
+	function forEachTweensOf(Object:Dynamic, ?Fields:Array<String>, Function:FlxTween->Void)
+	{
 		if (Object == null)
 			throw "Cannot cancel tween variables of an object that is null.";
 		
-		var i = _tweens.length;
-		while (i-- > 0)
+		if (Fields == null)
 		{
-			var tween = _tweens[i];
-			if (tween.isTweenOf(Object, Fields))
+			var i = _tweens.length; // loop backwards so they can be removed
+			while (i-- > 0)
 			{
-				tween.cancel();
+				var tween = _tweens[i];
+				if (tween.isTweenOf(Object))
+					Function(tween);
+			}
+		}
+		else
+		{
+			var propertyInfos = new Array<TweenProperty>();
+			for (fieldPath in Fields)
+			{
+				var target = Object;
+				var path = fieldPath.split(".");
+				var field = path.pop();
+				for (component in path)
+				{
+					target = Reflect.getProperty(target, component);
+					if (!Reflect.isObject(target))
+						break;
+				}
+				
+				if (Reflect.isObject(target))
+					propertyInfos.push({ object:target, field:field });
+			}
+			
+			for (tween in _tweens)
+			{
+				for (info in propertyInfos)
+				{
+					if (tween.isTweenOf(info.object, info.field))
+						Function(tween);
+				}
 			}
 		}
 	}
@@ -1207,4 +1246,10 @@ class FlxTweenManager extends FlxBasic
 		for (tween in _tweens)
 			Function(tween);
 	}
+}
+
+private typedef TweenProperty =
+{
+	object:Dynamic,
+	field:String
 }

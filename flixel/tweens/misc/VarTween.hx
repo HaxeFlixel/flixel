@@ -112,22 +112,15 @@ class VarTween extends FlxTween
 	 * @param Object The object
 	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
 	 */
-	override function isTweenOf(object:Dynamic, ?fields:Array<String>):Bool
-		if (_object != object)
-			return false;
-		
-		if (fields != null){
-			
-			for (field in fields)
-			{
-				if (Reflect.hasField(_properties, field))
-					return true;
-			}
-			
-			return false;
+	override function isTweenOf(object:Dynamic, ?field:String):Bool
+	{
+		for (property in _propertyInfos)
+		{
+			if (object == property.object && (field == property.field || field == null))
+				return true;
 		}
 		
-		return true;
+		return false;
 	}
 }
 
