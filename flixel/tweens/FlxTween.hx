@@ -321,7 +321,22 @@ class FlxTween implements IFlxDestroyable
 	{
 		globalManager.cancelTweensOf(Object, FieldPaths);
 	}
-	
+
+	/**
+	 * completes all related tweens on the specified object.
+	 *
+	 * Note: Any tweens with the specified fields are completed, if the tween has other properties they
+	 * will also be completed.
+	 * 
+	 * @param Object The object with tweens to complete.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on the specified
+	 * object are completed. Allows dot paths to check child properties.
+	 */
+	public static function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		globalManager.completeTweensOf(Object, FieldPaths);
+	}
+
 	/**
 	 * The manager to which this tween belongs
 	 * @since 4.2.0
@@ -1159,6 +1174,36 @@ class FlxTweenManager extends FlxBasic
 	public function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
 		forEachTweensOf(Object, FieldPaths, function (tween) tween.cancel());
+	}
+
+	/**
+	 * Immediately updates all tweens on the specified object with the specified fields that
+	 * are not looping (type `FlxTween.LOOPING` or `FlxTween.PINGPONG`) and `active` through
+	 * their endings, triggering their `onComplete` callbacks.
+	 *
+	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
+	 *
+	 * Note: their `onComplete` callbacks are triggered in the next frame.
+	 * To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
+	 *
+	 * In no case should it trigger an `onUpdate` callback.
+	 *
+	 * Note: Any tweens with the specified fields are completed, if the tween has other properties they
+	 * will also be completed.
+	 *
+	 * @param Object The object with tweens to complete.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on
+	 * the specified object are completed. Allows dot paths to check child properties.
+	 */
+	public function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		forEachTweensOf(Object, FieldPaths,
+			function (tween)
+			{
+				if ((tween.type & FlxTweenType.LOOPING) == 0 && (tween.type & FlxTweenType.PINGPONG) == 0 && tween.active)
+					tween.update(FlxMath.MAX_VALUE_FLOAT);
+			}
+		);
 	}
 
 	/**
