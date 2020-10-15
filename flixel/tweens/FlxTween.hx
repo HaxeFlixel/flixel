@@ -310,18 +310,16 @@ class FlxTween implements IFlxDestroyable
 	/**
 	 * Cancels all related tweens on the specified object.
 	 * 
-	 * Note: Objects and Fields must match the values passed into the tween, if a tween was started via
-	 * `FlxTween.tween(myObj, {"pos.x":10})` you must cancel it with `cancelTweensOf(myObj, ["pos.x"])`
-	 * instead of `cancelTweensOf(myObj.pos, ["x"])`
-	 * 
 	 * @param Object The object with tweens to cancel.
-	 * @param Fields Optional list of the tween fields to cancel. If empty, all tweens are canceled.
-	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on the specified
+	 * object are canceled. Allows dot paths to check child properties.
+	 *
+	 * Note: Any tweens with the specified fields are cancelled, if the tween has other properties they
 	 * will also be cancelled.
 	 */
-	public static function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
+	public static function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
-		globalManager.cancelTweensOf(Object, Fields);
+		globalManager.cancelTweensOf(Object, FieldPaths);
 	}
 	
 	/**
