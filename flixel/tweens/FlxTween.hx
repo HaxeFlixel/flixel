@@ -1152,32 +1152,33 @@ class FlxTweenManager extends FlxBasic
 	 * Cancels all related tweens on the specified object.
 	 * 
 	 * @param Object The object with tweens to cancel.
-	 * @param Fields Optional list of the tween fields to search for. If empty, all tweens on the specified
-	 * object are canceled.
-	 * Note: any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on the specified
+	 * object are canceled. Allows dot paths to check child properties.
+	 *
+	 * Note: Any tweens with the specified fields are cancelled, if the tween has other properties they
 	 * will also be cancelled.
 	 */
-	public function cancelTweensOf(Object:Dynamic, ?Fields:Array<String>):Void
+	public function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
-		forEachTweensOf(Object, Fields, function (tween) tween.cancel());
+		forEachTweensOf(Object, FieldPaths, function (tween) tween.cancel());
 	}
 
 	/**
 	 * Internal helper for iterating tweens with specific parameters
 	 * Note: loops backwards to allow removals
 	 * @param Object The object with tweens you are searching for.
-	 * @param Fields Optional list of the tween fields to check. If empty, any tween of the specified
-	 * object will match.
-	 * @param Function The function to call on each matching tween
+	 * @param Fields Optional list of the tween field paths to check. If empty, any tween of the specified
+	 * object will match. Allows dot paths to check child properties.
+	 * @param Function The function to call on each matching tween.
 	 */
-	function forEachTweensOf(Object:Dynamic, ?Fields:Array<String>, Function:FlxTween->Void)
+	function forEachTweensOf(Object:Dynamic, ?FieldPaths:Array<String>, Function:FlxTween->Void)
 	{
 		if (Object == null)
 			throw "Cannot cancel tween variables of an object that is null.";
 		
-		if (Fields == null)
+		if (FieldPaths == null)
 		{
-			var i = _tweens.length; // loop backwards so they can be removed
+			var i = _tweens.length;
 			while (i-- > 0)
 			{
 				var tween = _tweens[i];
@@ -1187,8 +1188,9 @@ class FlxTweenManager extends FlxBasic
 		}
 		else
 		{
+			// check for dot paths and convert to object/field pairs
 			var propertyInfos = new Array<TweenProperty>();
-			for (fieldPath in Fields)
+			for (fieldPath in FieldPaths)
 			{
 				var target = Object;
 				var path = fieldPath.split(".");
@@ -1204,12 +1206,17 @@ class FlxTweenManager extends FlxBasic
 					propertyInfos.push({ object:target, field:field });
 			}
 			
-			for (tween in _tweens)
+			var i = _tweens.length;
+			while (i-- > 0)
 			{
+				var tween = _tweens[i];
 				for (info in propertyInfos)
 				{
 					if (tween.isTweenOf(info.object, info.field))
+					{
 						Function(tween);
+						break;
+					}
 				}
 			}
 		}
