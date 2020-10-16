@@ -15,10 +15,10 @@ class FlxStateTest extends FlxTest
 	function testSwitchState()
 	{
 		var state = new FlxState();
-
-		Assert.areNotEqual(state, FlxG.state);
+		
+		assertStatesAreNotEqual(state, FlxG.state);
 		switchState(state);
-		Assert.areEqual(state, FlxG.state);
+		assertStatesAreEqual(state, FlxG.state);
 	}
 
 	@Test
@@ -26,10 +26,10 @@ class FlxStateTest extends FlxTest
 	{
 		var state = new TestState();
 		switchState(state);
-		Assert.areEqual(state, FlxG.state);
+		assertStatesAreEqual(state, FlxG.state);
 
 		resetState();
-		Assert.areNotEqual(state, FlxG.state);
+		assertStatesAreNotEqual(state, FlxG.state);
 		Assert.isTrue((FlxG.state is TestState));
 	}
 
@@ -38,13 +38,24 @@ class FlxStateTest extends FlxTest
 	{
 		var finalState = new FinalState();
 		switchState(finalState);
-		Assert.areEqual(finalState, FlxG.state);
+		assertStatesAreEqual(finalState, FlxG.state);
 
 		switchState(new FlxState());
-		Assert.areEqual(finalState, FlxG.state);
+		assertStatesAreEqual(finalState, FlxG.state);
 
 		resetState();
-		Assert.areEqual(finalState, FlxG.state);
+		assertStatesAreEqual(finalState, FlxG.state);
+	}
+	
+	// Assert.areEqual seems to fail with states on neko and cpp so let's just avoid it
+	inline function assertStatesAreEqual(state1:FlxState, state2:FlxState)
+	{
+		Assert.isTrue(state1 == state2, 'Value [$state1] was not equal to value [$state2]');
+	}
+	
+	inline function assertStatesAreNotEqual(state1:FlxState, state2:FlxState)
+	{
+		Assert.isFalse(state1 == state2, 'Value [$state1] was equal to value [$state2]');
 	}
 }
 
