@@ -15,7 +15,7 @@ class FlxStateTest extends FlxTest
 	function testSwitchState()
 	{
 		var state = new FlxState();
-		
+
 		Assert.areNotEqual(state, FlxG.state);
 		switchState(state);
 		Assert.areEqual(state, FlxG.state);
