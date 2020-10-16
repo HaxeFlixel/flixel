@@ -231,6 +231,78 @@ class FlxTweenTest extends FlxTest
 		Assert.isFalse(tween.finished);
 	}
 
+	@Test // #2273
+	function testCancelTweensOf()
+	{
+		var foo1 = {a: 0, b: 0};
+		var tween1a = FlxTween.tween(foo1, {a: 1}, 0.1);
+		step();
+		var tween1b = FlxTween.tween(foo1, {b: 1}, 0.1);
+		FlxTween.cancelTweensOf(foo1);
+		Assert.isTrue(tween1a.finished);
+		Assert.isTrue(tween1b.finished);
+		
+		var foo2 = {a: 0, b: 0};
+		var tween2a = FlxTween.tween(foo2, {a: 1}, 0.1);
+		var tween2b = FlxTween.tween(foo2, {b: 1}, 0.1);
+		FlxTween.cancelTweensOf(foo2, ["a"]);
+		Assert.isTrue(tween2a.finished);
+		Assert.isFalse(tween2b.finished);
+		
+		var foo3 = {a: {f:0}, b: {f:0}, c: {f:0}};
+		var tween3a = FlxTween.tween(foo3, {"a.f": 1}, 0.1);
+		var tween3b = FlxTween.tween(foo3, {"b.f": 1}, 0.1);
+		var tween3c = FlxTween.tween(foo3, {"c.f": 1}, 0.1);
+		FlxTween.cancelTweensOf(foo3, ["a.f"]);
+		FlxTween.cancelTweensOf(foo3.b, ["f"]);
+		Assert.isTrue(tween3a.finished);
+		Assert.isTrue(tween3b.finished);
+		Assert.isFalse(tween3c.finished);
+	}
+
+	@Test // #2273
+	function testCompleteTweensOf()
+	{
+		var foo1 = {a: 0, b: 0};
+		var complete1a = false;
+		var complete1b = false;
+		var tween1a = FlxTween.tween(foo1, {a: 1}, 0.1, {onComplete: function(_) complete1a = true});
+		step();
+		var tween1b = FlxTween.tween(foo1, {b: 1}, 0.1, {onComplete: function(_) complete1b = true});
+		FlxTween.completeTweensOf(foo1);
+		FlxTween.globalManager.update(0);
+		Assert.isTrue(tween1a.finished);
+		Assert.isTrue(complete1a, "tween1a.onComplete was expected to fire but did not");
+		Assert.isTrue(tween1b.finished);
+		Assert.isTrue(complete1b, "tween1b.onComplete was expected to fire but did not");
+		
+		var foo2 = {a: 0, b: 0};
+		var complete2a = false;
+		var tween2a = FlxTween.tween(foo2, {a: 1}, 0.1, {onComplete: function(_) complete2a = true});
+		var tween2b = FlxTween.tween(foo2, {b: 1}, 0.1);
+		FlxTween.completeTweensOf(foo2, ["a"]);
+		FlxTween.globalManager.update(0);
+		Assert.isTrue(tween2a.finished);
+		Assert.isTrue(complete2a, "tween2a.onComplete was expected to fire but did not");
+		Assert.isFalse(tween2b.finished);
+		
+		// dot paths
+		var foo3 = {a: {f:0}, b: {f:0}, c: {f:0}};
+		var complete3a = false;
+		var complete3b = false;
+		var tween3a = FlxTween.tween(foo3, {"a.f": 1}, 0.1, {onComplete: function(_) complete3a = true});
+		var tween3b = FlxTween.tween(foo3, {"b.f": 1}, 0.1, {onComplete: function(_) complete3b = true});
+		var tween3c = FlxTween.tween(foo3, {"c.f": 1}, 0.1);
+		FlxTween.completeTweensOf(foo3, ["a.f"]);
+		FlxTween.completeTweensOf(foo3.b, ["f"]);
+		FlxTween.globalManager.update(0);
+		Assert.isTrue(tween3a.finished);
+		Assert.isTrue(complete3a, "tween3a.onComplete was expected to fire but did not");
+		Assert.isTrue(tween3b.finished);
+		Assert.isTrue(complete3b, "tween3b.onComplete was expected to fire but did not");
+		Assert.isFalse(tween3c.finished);
+	}
+
 	@Test // #665
 	@:access(flixel.tweens.FlxTweenManager.remove)
 	function testManipulateListInCallback()
