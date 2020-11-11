@@ -314,8 +314,10 @@ class FlxTween implements IFlxDestroyable
 	 * will also be cancelled.
 	 * 
 	 * @param Object The object with tweens to cancel.
-	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on the specified
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on the specified
 	 * object are canceled. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
 	 */
 	public static function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
@@ -338,8 +340,10 @@ class FlxTween implements IFlxDestroyable
 	 * will also be completed.
 	 *
 	 * @param Object The object with tweens to complete.
-	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on
 	 * the specified object are completed. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
 	 */
 	public static function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
@@ -662,12 +666,14 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
-	 * returns true if this is tweening any of the specified fields on the object
+	 * Returns true if this is tweening the specified field on the specified object.
 	 * 
-	 * @param Object The object
-	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
+	 * @param Object The object.
+	 * @param Field Optional tween field. Ignored if null.
+	 * 
+	 * @since 4.9.0
 	 */
-	function isTweenOf(Object:Dynamic, ?field:String):Bool
+	function isTweenOf(Object:Dynamic, ?Field:String):Bool
 	{
 		return false;
 	}
@@ -1177,8 +1183,10 @@ class FlxTweenManager extends FlxBasic
 	 * will also be cancelled.
 	 * 
 	 * @param Object The object with tweens to cancel.
-	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on the specified
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on the specified
 	 * object are canceled. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
 	 */
 	public function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
@@ -1201,8 +1209,10 @@ class FlxTweenManager extends FlxBasic
 	 * will also be completed.
 	 *
 	 * @param Object The object with tweens to complete.
-	 * @param FieldPaths Optional list of the tween field paths to search for. If empty, all tweens on
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on
 	 * the specified object are completed. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
 	 */
 	public function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
 	{
@@ -1221,16 +1231,18 @@ class FlxTweenManager extends FlxBasic
 	 * Note: loops backwards to allow removals.
 	 *
 	 * @param Object The object with tweens you are searching for.
-	 * @param Fields Optional list of the tween field paths to check. If empty, any tween of the specified
+	 * @param FieldPaths Optional list of the tween field paths to check. If null or empty, any tween of the specified
 	 * object will match. Allows dot paths to check child properties.
 	 * @param Function The function to call on each matching tween.
+	 * 
+	 * @since 4.9.0
 	 */
 	function forEachTweensOf(Object:Dynamic, ?FieldPaths:Array<String>, Function:FlxTween->Void)
 	{
 		if (Object == null)
 			throw "Cannot cancel tween variables of an object that is null.";
 		
-		if (FieldPaths == null)
+		if (FieldPaths == null || FieldPaths.length == 0)
 		{
 			var i = _tweens.length;
 			while (i-- > 0)
@@ -1271,7 +1283,7 @@ class FlxTweenManager extends FlxBasic
 						Function(tween);
 						break;
 					}
-				}
+				} 
 			}
 		}
 	}

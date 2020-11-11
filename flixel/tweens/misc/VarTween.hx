@@ -114,12 +114,6 @@ class VarTween extends FlxTween
 		_propertyInfos = null;
 	}
 
-	/**
-	 * returns true if this is tweening any of the specified fields on the object
-	 * 
-	 * @param Object The object
-	 * @param Fields Optional list of tween fields. If empty, any tween field is matched
-	 */
 	override function isTweenOf(object:Dynamic, ?field:String):Bool
 	{
 		for (property in _propertyInfos)
