@@ -37,6 +37,7 @@ class VarTween extends FlxTween
 		_propertyInfos = [];
 		this.duration = duration;
 		start();
+		initializeVars();
 		return this;
 	}
 
@@ -49,10 +50,9 @@ class VarTween extends FlxTween
 			super.update(elapsed);
 		else
 		{
-			// We don't initialize() in tween() because otherwise the start values
-			// will be inaccurate with delays
-			if (_propertyInfos.length == 0)
-				initializeVars();
+			// Wait until the delay is done to set the starting values of tweens
+			if (Math.isNaN(_propertyInfos[0].startValue))
+				setStartValues();
 
 			super.update(elapsed);
 
@@ -81,20 +81,28 @@ class VarTween extends FlxTween
 					throw 'The object does not have the property "$component" in "$fieldPath"';
 			}
 
-			if (Reflect.getProperty(target, field) == null)
-				throw 'The object does not have the property "$field"';
-
-			var value:Dynamic = Reflect.getProperty(target, field);
-			if (Math.isNaN(value))
-				throw 'The property "$field" is not numeric.';
-
-			var targetValue:Dynamic = Reflect.getProperty(_properties, fieldPath);
 			_propertyInfos.push({
 				object: target,
 				field: field,
-				startValue: value,
-				range: targetValue - value
+				startValue: Math.NaN, // gets set after delay
+				range: Reflect.getProperty(_properties, fieldPath)
 			});
+		}
+	}
+
+	function setStartValues()
+	{
+		for (info in _propertyInfos)
+		{
+			if (Reflect.getProperty(info.object, info.field) == null)
+				throw 'The object does not have the property "${info.field}"';
+
+			var value:Dynamic = Reflect.getProperty(info.object, info.field);
+			if (Math.isNaN(value))
+				throw 'The property "${info.field}" is not numeric.';
+
+			info.startValue = value;
+			info.range = info.range - value;
 		}
 	}
 
@@ -104,6 +112,17 @@ class VarTween extends FlxTween
 		_object = null;
 		_properties = null;
 		_propertyInfos = null;
+	}
+
+	override function isTweenOf(object:Dynamic, ?field:String):Bool
+	{
+		for (property in _propertyInfos)
+		{
+			if (object == property.object && (field == property.field || field == null))
+				return true;
+		}
+
+		return false;
 	}
 }
 
