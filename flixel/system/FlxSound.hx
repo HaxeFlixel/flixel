@@ -77,6 +77,11 @@ class FlxSound extends FlxBasic
 	 * each time when sound reaches its end.
 	 */
 	public var onComplete:Void->Void;
+	/**
+	 * Tracker for sound load complete callback. If assigned, will be called
+	 * when the sound finishes loading.
+	 */
+	public var onLoad:Void->Void;
 
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
@@ -267,10 +272,12 @@ class FlxSound extends FlxBasic
 		if (_sound != null)
 		{
 			_sound.removeEventListener(Event.ID3, gotID3);
+			_sound.removeEventListener(Event.COMPLETE, loaded);
 			_sound = null;
 		}
 
 		onComplete = null;
+		onLoad = null;
 
 		super.destroy();
 	}
@@ -335,6 +342,7 @@ class FlxSound extends FlxBasic
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
 	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
+	 * @param	OnComplete		Called when the sound finished playing
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -371,17 +379,26 @@ class FlxSound extends FlxBasic
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
 	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
+	 * @param	OnComplete		Called when the sound finished playing
+	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
+	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
 	{
 		cleanup(true);
 
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
+		_sound.addEventListener(Event.COMPLETE, loaded);
 		_sound.load(new URLRequest(SoundURL));
 
-		return init(Looped, AutoDestroy, OnComplete);
+		return init(Looped, AutoDestroy, OnComplete, OnLoad);
+	}
+
+	function loaded(e:Event)
+	{
+		if (onLoad != null)
+			onLoad();
 	}
 
 	#if flash11
@@ -406,13 +423,14 @@ class FlxSound extends FlxBasic
 	}
 	#end
 
-	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
+	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
 	{
 		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
+		onLoad = OnLoad;
 		_length = (_sound == null) ? 0 : _sound.length;
 		endTime = _length;
 		return this;
