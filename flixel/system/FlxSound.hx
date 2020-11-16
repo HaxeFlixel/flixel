@@ -23,6 +23,7 @@ import openfl.utils.AssetType;
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
  */
+ @:allow(flixel.system.frontEnds.SoundFrontEnd)
 class FlxSound extends FlxBasic
 {
 	/**

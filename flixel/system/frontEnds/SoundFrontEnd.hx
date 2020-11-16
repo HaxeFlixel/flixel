@@ -1,6 +1,8 @@
 package flixel.system.frontEnds;
 
 #if FLX_SOUND_SYSTEM
+import flash.events.Event;
+import flash.events.IEventDispatcher;
 import flash.media.Sound;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -115,10 +117,11 @@ class SoundFrontEnd
 	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
+	 * @param	OnLoad			Called when the sound finished loading.  Only used if EmbeddedSound = null
 	 * @return	A FlxSound object.
 	 */
 	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = false,
-			AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void):FlxSound
+			AutoPlay:Bool = false, ?URL:String, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{
@@ -127,16 +130,35 @@ class SoundFrontEnd
 		}
 
 		var sound:FlxSound = list.recycle(FlxSound);
-
+		
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+			loadHelper(sound, Volume, Group, AutoPlay);
 		}
 		else
 		{
-			sound.loadStream(URL, Looped, AutoDestroy, OnComplete);
+			sound.loadStream(URL, Looped, AutoDestroy, OnComplete, OnLoad);
+			loadHelper(sound, Volume, Group);
+			// Auto play the sound when it's done loading
+			if (AutoPlay)
+			{
+				var playStream:Event->Void = null;
+				playStream = function(e)
+				{
+					(e.target:IEventDispatcher).removeEventListener(e.type, playStream);
+					sound.play();
+				}
+				// Use weak reference in case this is destroyed before loading
+				sound._sound.addEventListener(Event.COMPLETE, playStream, false, 0, true);
+			}
 		}
+		
+		return sound;
+	}
 
+	function loadHelper(sound:FlxSound, Volume:Float, Group:FlxSoundGroup, AutoPlay:Bool = false):FlxSound
+	{
 		sound.volume = Volume;
 
 		if (AutoPlay)
@@ -193,10 +215,10 @@ class SoundFrontEnd
 		{
 			EmbeddedSound = cache(EmbeddedSound);
 		}
-		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
-		sound.volume = Volume;
-		sound.group = (Group == null) ? defaultSoundGroup : Group;
-		return sound.play();
+		
+		var sound:FlxSound = list.recycle(FlxSound);
+		sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+		return loadHelper(sound, Volume, Group, true);
 	}
 
 	/**
@@ -207,13 +229,13 @@ class SoundFrontEnd
 	 * @param	Volume	How loud to play it (0 to 1).
 	 * @param	Looped	Whether or not to loop this sound.
 	 * @param	Group			The group to add this sound to.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	A FlxSound object.
 	 */
-	public inline function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
-			?OnComplete:Void->Void):FlxSound
+	public function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
+			AutoDestroy:Bool = true, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
 	{
-		return load(null, Volume, Looped, AutoDestroy, true, URL, OnComplete);
+		return load(null, Volume, Looped, Group, AutoDestroy, true, URL, OnComplete, OnLoad);
 	}
 
 	/**
