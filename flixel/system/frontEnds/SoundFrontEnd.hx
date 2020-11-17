@@ -114,9 +114,11 @@ class SoundFrontEnd
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
 	 * @param	Group			The group to add this sound to.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.
+	 * 							Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
+	 * @param	OnComplete		Called when the sound finished playing
 	 * @param	OnLoad			Called when the sound finished loading.  Only used if EmbeddedSound = null
 	 * @return	A FlxSound object.
 	 */
@@ -125,7 +127,7 @@ class SoundFrontEnd
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{
-			FlxG.log.warn("FlxG.loadSound() requires either\nan embedded sound or a URL to work.");
+			FlxG.log.warn("FlxG.load() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
 
@@ -149,8 +151,10 @@ class SoundFrontEnd
 					(e.target:IEventDispatcher).removeEventListener(e.type, playStream);
 					sound.play();
 				}
+				// Don't use OnLoad for this, so it can be used for other things
 				// Use weak reference in case this is destroyed before loading
-				sound._sound.addEventListener(Event.COMPLETE, playStream, false, 0, true);
+				// Use priority 1 so it's playing before OnLoad is called
+				sound._sound.addEventListener(Event.COMPLETE, playStream, false, 1, true);
 			}
 		}
 		
@@ -201,15 +205,17 @@ class SoundFrontEnd
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
 	 *
-	 * @param	EmbeddedSound	The sound you want to play.
+	 * @param	EmbeddedSound	The embedded sound resource you want to play.
 	 * @param	Volume			How loud to play it (0 to 1).
 	 * @param	Looped			Whether to loop this sound.
 	 * @param	Group			The group to add this sound to.
-	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.  Leave this value set to "false" if you want to re-use this FlxSound instance.
-	 * @return	The FlxSound object.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.
+	 * 							Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param	OnComplete		Called when the sound finished playing
+	 * @return	A FlxSound object.
 	 */
-	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
-			?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
+			AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound is String))
 		{
@@ -222,13 +228,16 @@ class SoundFrontEnd
 	}
 
 	/**
-	 * Creates a new sound object from a URL.
-	 * NOTE: Just calls FlxG.loadSound() with AutoPlay == true.
+	 * Plays a sound from a URL. Tries to recycle a cached sound first.
+	 * NOTE: Just calls FlxG.load() with AutoPlay == true.
 	 *
-	 * @param	URL		The URL of the sound you want to play.
-	 * @param	Volume	How loud to play it (0 to 1).
-	 * @param	Looped	Whether or not to loop this sound.
+	 * @param	URL				Load a sound from an external web resource instead.
+	 * @param	Volume			How loud to play it (0 to 1).
+	 * @param	Looped			Whether to loop this sound.
 	 * @param	Group			The group to add this sound to.
+	 * @param	AutoDestroy		Whether to destroy this sound when it finishes playing.
+	 * 							Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param	OnComplete		Called when the sound finished playing
 	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	A FlxSound object.
 	 */
