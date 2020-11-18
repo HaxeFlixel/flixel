@@ -80,6 +80,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Tracker for sound load complete callback. If assigned, will be called
 	 * when the sound finishes loading.
+	 * @since 4.9.0
 	 */
 	public var onLoad:Void->Void;
 
