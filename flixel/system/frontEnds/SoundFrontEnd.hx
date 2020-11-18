@@ -132,7 +132,7 @@ class SoundFrontEnd
 		}
 
 		var sound:FlxSound = list.recycle(FlxSound);
-		
+
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
@@ -157,7 +157,7 @@ class SoundFrontEnd
 				sound._sound.addEventListener(Event.COMPLETE, playStream, false, 1, true);
 			}
 		}
-		
+
 		return sound;
 	}
 
@@ -221,9 +221,7 @@ class SoundFrontEnd
 		{
 			EmbeddedSound = cache(EmbeddedSound);
 		}
-		
-		var sound:FlxSound = list.recycle(FlxSound);
-		sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+		var sound = list.recycle(FlxSound).loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
 		return loadHelper(sound, Volume, Group, true);
 	}
 
