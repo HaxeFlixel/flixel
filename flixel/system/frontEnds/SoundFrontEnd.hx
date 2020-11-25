@@ -118,8 +118,8 @@ class SoundFrontEnd
 	 * 							Leave this value set to "false" if you want to re-use this FlxSound instance.
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
-	 * @param	OnComplete		Called when the sound finished playing
-	 * @param	OnLoad			Called when the sound finished loading.  Only used if EmbeddedSound = null
+	 * @param	OnComplete		Called when the sound finished playing.
+	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	A FlxSound object.
 	 */
 	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = false,
@@ -136,7 +136,11 @@ class SoundFrontEnd
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
+			sound.onLoad = OnLoad();
 			loadHelper(sound, Volume, Group, AutoPlay);
+			// Call OnlLoad() because the sound already loaded
+			if (OnLoad != null && sound._sound != null)
+				OnLoad();
 		}
 		else
 		{
