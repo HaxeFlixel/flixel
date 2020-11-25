@@ -127,7 +127,7 @@ class SoundFrontEnd
 	{
 		if ((EmbeddedSound == null) && (URL == null))
 		{
-			FlxG.log.warn("FlxG.load() requires either\nan embedded sound or a URL to work.");
+			FlxG.log.warn("FlxG.sound.load() requires either\nan embedded sound or a URL to work.");
 			return null;
 		}
 
@@ -227,7 +227,7 @@ class SoundFrontEnd
 
 	/**
 	 * Plays a sound from a URL. Tries to recycle a cached sound first.
-	 * NOTE: Just calls FlxG.load() with AutoPlay == true.
+	 * NOTE: Just calls FlxG.sound.load() with AutoPlay == true.
 	 *
 	 * @param	URL				Load a sound from an external web resource instead.
 	 * @param	Volume			How loud to play it (0 to 1).
