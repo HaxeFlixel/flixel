@@ -148,12 +148,12 @@ class SoundFrontEnd
 				loadCallback = function()
 				{
 					sound.play();
-					
+
 					if (OnLoad != null)
 						OnLoad();
 				}
 			}
-			
+
 			sound.loadStream(URL, Looped, AutoDestroy, OnComplete, loadCallback);
 			loadHelper(sound, Volume, Group);
 		}

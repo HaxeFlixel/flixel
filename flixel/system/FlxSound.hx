@@ -387,9 +387,9 @@ class FlxSound extends FlxBasic
 		if (OnLoad != null)
 		{
 			var loadCallback:Event->Void = null;
-			loadCallback = function (e:Event)
+			loadCallback = function(e:Event)
 			{
-				(e.target:IEventDispatcher).removeEventListener(e.type, loadCallback);
+				(e.target : IEventDispatcher).removeEventListener(e.type, loadCallback);
 				// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
 				if (_sound == e.target)
 					OnLoad();
