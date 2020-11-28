@@ -1,8 +1,6 @@
 package flixel.system.frontEnds;
 
 #if FLX_SOUND_SYSTEM
-import flash.events.Event;
-import flash.events.IEventDispatcher;
 import flash.media.Sound;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -119,7 +117,7 @@ class SoundFrontEnd
 	 * @param	AutoPlay		Whether to play the sound.
 	 * @param	URL				Load a sound from an external web resource instead.  Only used if EmbeddedSound = null.
 	 * @param	OnComplete		Called when the sound finished playing.
-	 * @param	OnLoad			Called when the sound finished loading.
+	 * @param	OnLoad			Called when the sound finished loading.  Called immediately for succesfully loaded embedded sounds.
 	 * @return	A FlxSound object.
 	 */
 	public function load(?EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = false,
@@ -136,7 +134,6 @@ class SoundFrontEnd
 		if (EmbeddedSound != null)
 		{
 			sound.loadEmbedded(EmbeddedSound, Looped, AutoDestroy, OnComplete);
-			sound.onLoad = OnLoad;
 			loadHelper(sound, Volume, Group, AutoPlay);
 			// Call OnlLoad() because the sound already loaded
 			if (OnLoad != null && sound._sound != null)
@@ -144,22 +141,21 @@ class SoundFrontEnd
 		}
 		else
 		{
-			sound.loadStream(URL, Looped, AutoDestroy, OnComplete, OnLoad);
-			loadHelper(sound, Volume, Group);
-			// Auto play the sound when it's done loading
+			var loadCallback = OnLoad;
 			if (AutoPlay)
 			{
-				var playStream:Event->Void = null;
-				playStream = function(e)
+				// Auto play the sound when it's done loading
+				loadCallback = function()
 				{
-					(e.target:IEventDispatcher).removeEventListener(e.type, playStream);
 					sound.play();
+					
+					if (OnLoad != null)
+						OnLoad();
 				}
-				// Don't use OnLoad for this, so it can be used for other things
-				// Use weak reference in case this is destroyed before loading
-				// Use priority 1 so it's playing before OnLoad is called
-				sound._sound.addEventListener(Event.COMPLETE, playStream, false, 1, true);
 			}
+			
+			sound.loadStream(URL, Looped, AutoDestroy, OnComplete, loadCallback);
+			loadHelper(sound, Volume, Group);
 		}
 
 		return sound;

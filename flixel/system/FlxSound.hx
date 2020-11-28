@@ -1,5 +1,6 @@
 package flixel.system;
 
+import flash.events.IEventDispatcher;
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -77,12 +78,6 @@ class FlxSound extends FlxBasic
 	 * each time when sound reaches its end.
 	 */
 	public var onComplete:Void->Void;
-	/**
-	 * Tracker for sound load complete callback. If assigned, will be called
-	 * when the sound finishes loading.
-	 * @since 4.9.0
-	 */
-	public var onLoad:Void->Void;
 
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
@@ -274,12 +269,10 @@ class FlxSound extends FlxBasic
 		if (_sound != null)
 		{
 			_sound.removeEventListener(Event.ID3, gotID3);
-			_sound.removeEventListener(Event.COMPLETE, loaded);
 			_sound = null;
 		}
 
 		onComplete = null;
-		onLoad = null;
 
 		super.destroy();
 	}
@@ -391,16 +384,22 @@ class FlxSound extends FlxBasic
 
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
-		_sound.addEventListener(Event.COMPLETE, loaded);
+		if (OnLoad != null)
+		{
+			var loadCallback:Event->Void = null;
+			loadCallback = function (e:Event)
+			{
+				(e.target:IEventDispatcher).removeEventListener(e.type, loadCallback);
+				// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
+				if (_sound == e.target)
+					OnLoad();
+			}
+			// Use a weak reference so this can be garbage collected if destroyed before loading.
+			_sound.addEventListener(Event.COMPLETE, loadCallback, false, 0, true);
+		}
 		_sound.load(new URLRequest(SoundURL));
 
-		return init(Looped, AutoDestroy, OnComplete, OnLoad);
-	}
-
-	function loaded(e:Event)
-	{
-		if (onLoad != null)
-			onLoad();
+		return init(Looped, AutoDestroy, OnComplete);
 	}
 
 	#if flash11
@@ -425,14 +424,13 @@ class FlxSound extends FlxBasic
 	}
 	#end
 
-	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
+	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
 		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
-		onLoad = OnLoad;
 		_length = (_sound == null) ? 0 : _sound.length;
 		endTime = _length;
 		return this;
