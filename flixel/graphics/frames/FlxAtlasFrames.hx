@@ -128,7 +128,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        Or you can just pass path to the description file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames {
+	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames
+	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
@@ -208,7 +209,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   line   `String` to extract info from.
 	 * @return  `Array` filled with dimensions info.
 	 */
-	static function getDimensions(line:String):Array<Int> {
+	static function getDimensions(line:String):Array<Int>
+	{
 		var colonPosition:Int = line.indexOf(":");
 		var comaPosition:Int = line.indexOf(",");
 
