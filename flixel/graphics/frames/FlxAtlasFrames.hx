@@ -157,7 +157,8 @@ class FlxAtlasFrames extends FlxFramesCollection
 		var numElementsPerImage:Int = 7;
 		var numImages:Int = Std.int(lines.length / numElementsPerImage);
 
-		for (i in 0...numImages) {
+		for (i in 0...numImages)
+		{
 			var curIndex = i * numElementsPerImage;
 
 			var name = lines[curIndex++];
