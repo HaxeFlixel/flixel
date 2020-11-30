@@ -168,21 +168,21 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var tempString = lines[curIndex++];
 			var size = getDimensions(tempString);
 
-			var imageX = size[0];
-			var imageY = size[1];
+			var imageX = size.x;
+			var imageY = size.y;
 
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString);
 
-			var imageWidth = size[0];
-			var imageHeight = size[1];
+			var imageWidth = size.x;
+			var imageHeight = size.y;
 
 			var rect = FlxRect.get(imageX, imageY, imageWidth, imageHeight);
 
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString);
 
-			var sourceSize = FlxPoint.get(size[0], size[1]);
+			var sourceSize = FlxPoint.get(size.x, size.y);
 
 			tempString = lines[curIndex++];
 			size = getDimensions(tempString);
@@ -195,9 +195,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			// this should be how it is, but libgdx's texture packer tool
 			// currently outputs the offset from the bottom left, instead:
-			// var offset = FlxPoint.get(size[0], size[1]);
+			// var offset = FlxPoint.get(size.x, size.y);
 			// workaround for https://github.com/libgdx/libgdx/issues/4288
-			var offset = FlxPoint.get(size[0], sourceSize.y - size[1] - imageHeight);
+			var offset = FlxPoint.get(size.x, sourceSize.y - size.y - imageHeight);
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle);
 		}
 
@@ -210,15 +210,15 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   line   `String` to extract info from.
 	 * @return  `Array` filled with dimensions info.
 	 */
-	static function getDimensions(line:String):Array<Int>
+	static function getDimensions(line:String):{x:Int, y:Int}
 	{
 		var colonPosition:Int = line.indexOf(":");
 		var comaPosition:Int = line.indexOf(",");
 
-		var x = Std.parseInt(line.substring(colonPosition + 1, comaPosition));
-		var y = Std.parseInt(line.substring(comaPosition + 1, line.length));
-
-		return [x, y];
+		return {
+			x: Std.parseInt(line.substring(colonPosition + 1, comaPosition)),
+			y: Std.parseInt(line.substring(comaPosition + 1, line.length))
+		};
 	}
 
 	/**
