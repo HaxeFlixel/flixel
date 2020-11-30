@@ -122,15 +122,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for LibGDX atlases.
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   Description   Contents of the file with atlas description.
+	 * @param   source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   description   Contents of the file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description/file)`.
 	 *                        Or you can just pass path to the description file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromLibGdx(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
-	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames {
+		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
 
@@ -139,15 +138,15 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if ((graphic == null) || (Description == null))
+		if ((graphic == null) || (description == null))
 			return null;
 
 		frames = new FlxAtlasFrames(graphic);
 
-		if (Assets.exists(Description))
-			Description = Assets.getText(Description);
+		if (Assets.exists(description))
+			description = Assets.getText(description);
 
-		var pack:String = StringTools.trim(Description);
+		var pack:String = StringTools.trim(description);
 		var lines:Array<String> = pack.split("\n");
 
 		// find the "repeat" option and skip unused data
@@ -156,46 +155,41 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		var numElementsPerImage:Int = 7;
 		var numImages:Int = Std.int(lines.length / numElementsPerImage);
-		var size = [];
 
-		for (i in 0...numImages)
-		{
+		for (i in 0...numImages) {
 			var curIndex = i * numElementsPerImage;
 
 			var name = lines[curIndex++];
 			var rotated = (lines[curIndex++].indexOf("true") >= 0);
-			var angle = FlxFrameAngle.ANGLE_0;
+			var angle = rotated ? FlxFrameAngle.ANGLE_90 : FlxFrameAngle.ANGLE_0;
 
 			var tempString = lines[curIndex++];
-			var size = getDimensions(tempString, size);
+			var size = getDimensions(tempString);
 
 			var imageX = size[0];
 			var imageY = size[1];
 
 			tempString = lines[curIndex++];
-			size = getDimensions(tempString, size);
+			size = getDimensions(tempString);
 
 			var imageWidth = size[0];
 			var imageHeight = size[1];
 
-			var rect = null;
-			if (rotated)
-			{
-				rect = FlxRect.get(imageX, imageY, imageHeight, imageWidth);
-				angle = FlxFrameAngle.ANGLE_90;
-			}
-			else
-			{
-				rect = FlxRect.get(imageX, imageY, imageWidth, imageHeight);
-			}
+			var rect = FlxRect.get(imageX, imageY, imageWidth, imageHeight);
 
 			tempString = lines[curIndex++];
-			size = getDimensions(tempString, size);
+			size = getDimensions(tempString);
 
 			var sourceSize = FlxPoint.get(size[0], size[1]);
 
 			tempString = lines[curIndex++];
-			size = getDimensions(tempString, size);
+			size = getDimensions(tempString);
+
+			tempString = lines[curIndex++];
+			var index = Std.parseInt(tempString.split(':')[1]);
+
+			if (index != -1)
+				name += '_$index';
 
 			// this should be how it is, but libgdx's texture packer tool
 			// currently outputs the offset from the bottom left, instead:
@@ -212,18 +206,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * Internal method for LibGDX atlas parsing. It tries to extract dimensions info from specified string.
 	 *
 	 * @param   line   `String` to extract info from.
-	 * @param   size   `Array` to store extracted info to.
 	 * @return  `Array` filled with dimensions info.
 	 */
-	static function getDimensions(line:String, size:Array<Int>):Array<Int>
-	{
+	static function getDimensions(line:String):Array<Int> {
 		var colonPosition:Int = line.indexOf(":");
 		var comaPosition:Int = line.indexOf(",");
 
-		size[0] = Std.parseInt(line.substring(colonPosition + 1, comaPosition));
-		size[1] = Std.parseInt(line.substring(comaPosition + 1, line.length));
+		var x = Std.parseInt(line.substring(colonPosition + 1, comaPosition));
+		var y = Std.parseInt(line.substring(comaPosition + 1, line.length));
 
-		return size;
+		return [x, y];
 	}
 
 	/**
