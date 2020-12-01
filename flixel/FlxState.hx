@@ -61,11 +61,13 @@ class FlxState extends FlxGroup
 
 	/**
 	 * A `FlxSignal` that dispatches when a sub state is opened from this state.
+	 * @since 4.9.0
 	 */
 	public var subStateOpened(get, never):FlxTypedSignal<FlxSubState->Void>;
 
 	/**
 	 * A `FlxSignal` that dispatches when a sub state is closed from this state.
+	 * @since 4.9.0
 	 */
 	public var subStateClosed(get, never):FlxTypedSignal<FlxSubState->Void>;
 
