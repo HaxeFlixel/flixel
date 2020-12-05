@@ -384,19 +384,20 @@ class FlxSound extends FlxBasic
 
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
-		if (OnLoad != null)
+		var loadCallback:Event->Void = null;
+		loadCallback = function(e:Event)
 		{
-			var loadCallback:Event->Void = null;
-			loadCallback = function(e:Event)
+			(e.target : IEventDispatcher).removeEventListener(e.type, loadCallback);
+			// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
+			if (_sound == e.target)
 			{
-				(e.target : IEventDispatcher).removeEventListener(e.type, loadCallback);
-				// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
-				if (_sound == e.target)
+				_length = _sound.length;
+				if (OnLoad != null)
 					OnLoad();
 			}
-			// Use a weak reference so this can be garbage collected if destroyed before loading.
-			_sound.addEventListener(Event.COMPLETE, loadCallback, false, 0, true);
 		}
+		// Use a weak reference so this can be garbage collected if destroyed before loading.
+		_sound.addEventListener(Event.COMPLETE, loadCallback, false, 0, true);
 		_sound.load(new URLRequest(SoundURL));
 
 		return init(Looped, AutoDestroy, OnComplete);
