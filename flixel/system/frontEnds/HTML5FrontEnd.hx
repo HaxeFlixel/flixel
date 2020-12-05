@@ -142,10 +142,10 @@ class HTML5FrontEnd
 		return Browser.window.innerHeight;
 	}
 
-	function isBrowserFarbling()
+	function checkImageFarbling()
 	{
 		var bmd = new openfl.display.BitmapData(10, 10, false, 0xFF00FF);
-		for(i in 0...bmd.width * bmd.height)
+		for (i in 0...bmd.width * bmd.height)
 		{
 			if (bmd.getPixel(i % 10, Std.int(i / 10)) != 0xFF00FF)
 				return true;
