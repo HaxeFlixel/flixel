@@ -16,6 +16,13 @@ class HTML5FrontEnd
 	/** @since 4.2.0 */
 	public var onMobile(default, null):Bool;
 
+	/**
+	 * Some browsers like Brave "farble" or manipulate image data to prevent user fingerprinting.
+	 * This can make image reading and editing difficult or even impossible.
+	 * @since 4.9.0
+	 */
+	public var farblesImages(default, null):Bool;
+
 	public var browserWidth(get, never):Int;
 	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
@@ -26,6 +33,7 @@ class HTML5FrontEnd
 		browser = getBrowser();
 		platform = getPlatform();
 		onMobile = getOnMobile();
+		farblesImages = checkImageFarbling();
 	}
 
 	function getBrowser():FlxBrowser
@@ -132,6 +140,18 @@ class HTML5FrontEnd
 	inline function get_browserHeight():Int
 	{
 		return Browser.window.innerHeight;
+	}
+
+	function isBrowserFarbling()
+	{
+		var bmd = new openfl.display.BitmapData(10, 10, false, 0xFF00FF);
+		for(i in 0...bmd.width * bmd.height)
+		{
+			if (bmd.getPixel(i % 10, Std.int(i / 10)) != 0xFF00FF)
+				return true;
+		}
+
+		return false;
 	}
 }
 
