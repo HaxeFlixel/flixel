@@ -98,7 +98,7 @@ class FlxRandom
 	}
 
 	/**
-	 * Returns a pseudorandom float value between Min and Max, inclusive.
+	 * Returns a pseudorandom float value between Min (inclusive) and Max (exclusive).
 	 * Will not return a number in the Excludes array, if provided.
 	 * Please note that large Excludes arrays can slow calculations.
 	 *
