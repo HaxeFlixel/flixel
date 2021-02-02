@@ -40,13 +40,13 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
-	public function get(ClassType:Class<FlxBasic>):FlxBasic
+	public function get<T:FlxBasic>(ClassType:Class<T>):T
 	{
 		for (plugin in list)
 		{
 			if ((plugin is ClassType))
 			{
-				return plugin;
+				return cast plugin;
 			}
 		}
 
@@ -59,7 +59,7 @@ class PluginFrontEnd
 	 * @param	Plugin	The plugin instance you want to remove.
 	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
-	public function remove(Plugin:FlxBasic):FlxBasic
+	public function remove<T:FlxBasic>(Plugin:T):T
 	{
 		// Don't add repeats
 		var i:Int = list.length - 1;
