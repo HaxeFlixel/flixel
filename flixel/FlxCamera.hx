@@ -57,6 +57,7 @@ class FlxCamera extends FlxBasic
 	 * This may be temporarily modified during a `draw` call.
 	 * 
 	 * Prior to 4.8.2 it was useful to change this value, but that is no longer recommended.
+	 * Instead use the `isDefualt` property on the FlxCamera.
 	 */
 	public static var defaultCameras:Array<FlxCamera>;
 
@@ -232,7 +233,7 @@ class FlxCamera extends FlxBasic
 	public var isDefault(default, set):Bool = true;
 
 	/**
-	 * Dispatches whenever isDefault is changed on a camera
+	 * Dispatches whenever isDefault is changed.
 	 * @since 4.8.2
 	 */
 	public var isDefaultChange(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();

@@ -293,7 +293,7 @@ class CameraFrontEnd
 			}
 		}
 	}
-	
+
 	/**
 	 * Resizes and moves cameras when the game resizes (onResize signal).
 	 */
