@@ -16,9 +16,9 @@ class CameraFrontEnd
 	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
-	 * Array listing all cameras marked as default, updated every `draw` call
+	 * Array listing all cameras marked as default, updated every `draw` call.
 	 */
-	var defaults:Array<FlxCamera> = [];
+	public var defaults(default, null):Array<FlxCamera> = [];
 
 	/**
 	 * The current (global, applies to all cameras) bgColor.
@@ -57,6 +57,7 @@ class CameraFrontEnd
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		
 		list.push(NewCamera);
+		NewCamera.isDefaultChange.remove(isDefaultChange);
 		if (NewCamera.isDefault)
 			defaults.push(NewCamera);
 		
@@ -79,6 +80,7 @@ class CameraFrontEnd
 			FlxG.game.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
 			defaults.remove(Camera);
+			Camera.isDefaultChange.remove(isDefaultChange);
 		}
 		else
 		{
@@ -99,6 +101,20 @@ class CameraFrontEnd
 
 		cameraRemoved.dispatch(Camera);
 	}
+	
+	/**
+	 * Adds or removes a camera from the `defaults` array depending on the value of 
+	 * @param camera 
+	 */
+	function isDefaultChange(camera:FlxCamera)
+	{
+		var index = defaults.indexOf(camera);
+		
+		if (camera.isDefault && index == -1)
+			defaults.push(camera);
+		else if (!camera.isDefault)
+			defaults.splice(index, 1);
+	}
 
 	/**
 	 * Dumps all the current cameras and resets to just one camera.
@@ -117,7 +133,7 @@ class CameraFrontEnd
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
 		
-		FlxCamera.defaultCameras = null;
+		FlxCamera.defaultCameras = defaults;
 	}
 
 	/**
@@ -173,6 +189,7 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	function new()
 	{
+		FlxCamera.defaultCameras = defaults;
 	}
 
 	/**
@@ -275,21 +292,6 @@ class CameraFrontEnd
 				camera.update(elapsed);
 			}
 		}
-	}
-	
-	/**
-	 * Finds all cameras where `isDefault == true` adds returns the Array.
-	 */
-	@:allow(flixel.FlxGame)
-	function getDefaults():Array<FlxCamera>
-	{
-		defaults.resize(0);
-		for (camera in list)
-		{
-			if (camera.isDefault)
-				defaults.push(camera);
-		}
-		return defaults;
 	}
 	
 	/**

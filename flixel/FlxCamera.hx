@@ -20,6 +20,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
@@ -52,10 +53,10 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * Which cameras a `FlxBasic` uses to be drawn on when nothing else has been specified.
-	 * Set to `null` to use all cameras where `camera.isDefault == true`.
+	 * By default, this is just a reference to `FlxG.cameras.defaults` / all default cameras.
 	 * This may be temporarily modified during a `draw` call.
-	 *
-	 * Note: starting 4.8.2 this is `null` by default instead of `FlxG.cameras.list`
+	 * 
+	 * Prior to 4.8.2 it was useful to change this value, but that is no longer recommended.
 	 */
 	public static var defaultCameras:Array<FlxCamera>;
 
@@ -228,8 +229,14 @@ class FlxCamera extends FlxBasic
 	 * Set this to false when adding additional cameras meant to display specific sprites
 	 * @since 4.8.2
 	 */
-	public var isDefault:Bool = true;
+	public var isDefault(default, set):Bool = true;
 
+	/**
+	 * Dispatches whenever isDefault is changed on a camera
+	 * @since 4.8.2
+	 */
+	public var isDefaultChange(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
+	
 	/**
 	 * Difference between native size of camera and zoomed size, divided in half
 	 * Needed to do occlusion of objects when zoom != initialZoom
@@ -1019,6 +1026,7 @@ class FlxCamera extends FlxBasic
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
+		isDefaultChange = null;
 
 		target = null;
 		flashSprite = null;
@@ -1875,6 +1883,15 @@ class FlxCamera extends FlxBasic
 			flashSprite.visible = visible;
 		}
 		return this.visible = visible;
+	}
+	
+	function set_isDefault(isDefault:Bool):Bool
+	{
+		if (isDefault != this.isDefault)
+		{
+			isDefaultChange.dispatch(this);
+		}
+		return this.isDefault = isDefault;
 	}
 
 	inline function calcOffsetX():Void
