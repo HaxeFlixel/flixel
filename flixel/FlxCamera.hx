@@ -1886,13 +1886,12 @@ class FlxCamera extends FlxBasic
 		return this.visible = visible;
 	}
 	
-	function set_isDefault(isDefault:Bool):Bool
+	function set_isDefault(value:Bool):Bool
 	{
-		if (isDefault != this.isDefault)
-		{
-			isDefaultChange.dispatch(this);
-		}
-		return this.isDefault = isDefault;
+		this.isDefault = value
+		isDefaultChange.dispatch(this);
+		
+		return this.isDefault;
 	}
 
 	inline function calcOffsetX():Void
