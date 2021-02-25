@@ -1888,7 +1888,7 @@ class FlxCamera extends FlxBasic
 	
 	function set_isDefault(value:Bool):Bool
 	{
-		this.isDefault = value
+		this.isDefault = value;
 		isDefaultChange.dispatch(this);
 		
 		return this.isDefault;
