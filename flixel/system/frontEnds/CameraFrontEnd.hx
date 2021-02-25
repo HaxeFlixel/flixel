@@ -57,7 +57,7 @@ class CameraFrontEnd
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		
 		list.push(NewCamera);
-		NewCamera.isDefaultChange.remove(isDefaultChange);
+		NewCamera.isDefaultChange.add(isDefaultChange);
 		if (NewCamera.isDefault)
 			defaults.push(NewCamera);
 		
