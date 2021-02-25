@@ -224,7 +224,7 @@ class FlxCamera extends FlxBasic
 	public var zoom(default, set):Float;
 
 	/**
-	 * Whether sprites use this object by default.
+	 * Whether sprites render to this camera by default.
 	 * Set this to false when adding additional cameras meant to display specific sprites
 	 * @since 4.8.2
 	 */

@@ -861,6 +861,7 @@ class FlxGame extends Sprite
 
 		FlxG.cameras.lock();
 
+		// if defaultCameras is null, find all cameras set as default
 		var autoDefaultCameras = FlxCamera.defaultCameras == null;
 		if (autoDefaultCameras)
 			FlxCamera.defaultCameras = FlxG.cameras.getDefaults();
