@@ -861,9 +861,16 @@ class FlxGame extends Sprite
 
 		FlxG.cameras.lock();
 
+		var autoDefaultCameras = FlxCamera.defaultCameras == null;
+		if (autoDefaultCameras)
+			FlxCamera.defaultCameras = FlxG.cameras.getDefaults();
+
 		FlxG.plugins.draw();
 
 		_state.draw();
+
+		if (autoDefaultCameras)
+			FlxCamera.defaultCameras = null;
 
 		if (FlxG.renderTile)
 		{

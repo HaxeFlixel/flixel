@@ -52,8 +52,10 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * Which cameras a `FlxBasic` uses to be drawn on when nothing else has been specified.
-	 * By default, this is just a reference to `FlxG.cameras.list` / all cameras, but it can be very useful to change.
+	 * Set to `null` to use all cameras where `camera.isDefault == true`.
 	 * This may be temporarily modified during a `draw` call.
+	 *
+	 * Note: starting 4.8.2 this is `null` by default instead of `FlxG.cameras.list`
 	 */
 	public static var defaultCameras:Array<FlxCamera>;
 
@@ -220,6 +222,13 @@ class FlxCamera extends FlxBasic
 	 * Indicates how far the camera is zoomed in.
 	 */
 	public var zoom(default, set):Float;
+
+	/**
+	 * Whether sprites use this object by default.
+	 * Set this to false when adding additional cameras meant to display specific sprites
+	 * @since 4.8.2
+	 */
+	public var isDefault:Bool = true;
 
 	/**
 	 * Difference between native size of camera and zoomed size, divided in half

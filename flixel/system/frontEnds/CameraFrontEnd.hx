@@ -14,6 +14,11 @@ class CameraFrontEnd
 	 * By default flixel creates one camera the size of the screen.
 	 */
 	public var list(default, null):Array<FlxCamera> = [];
+	
+	/**
+	 * Array listing all cameras marked as default, updated every `draw` call
+	 */
+	var defaults:Array<FlxCamera> = [];
 
 	/**
 	 * The current (global, applies to all cameras) bgColor.
@@ -50,8 +55,12 @@ class CameraFrontEnd
 	public function add<T:FlxCamera>(NewCamera:T):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
-		FlxG.cameras.list.push(NewCamera);
-		NewCamera.ID = FlxG.cameras.list.length - 1;
+		
+		list.push(NewCamera);
+		if (NewCamera.isDefault)
+			defaults.push(NewCamera);
+		
+		NewCamera.ID = list.length - 1;
 		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
@@ -69,6 +78,7 @@ class CameraFrontEnd
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
+			defaults.remove(Camera);
 		}
 		else
 		{
@@ -106,8 +116,8 @@ class CameraFrontEnd
 
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
-
-		FlxCamera.defaultCameras = list;
+		
+		FlxCamera.defaultCameras = null;
 	}
 
 	/**
@@ -163,7 +173,6 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	function new()
 	{
-		FlxCamera.defaultCameras = list;
 	}
 
 	/**
@@ -267,7 +276,22 @@ class CameraFrontEnd
 			}
 		}
 	}
-
+	
+	/**
+	 * Finds all cameras where `isDefault == true` adds returns the Array.
+	 */
+	@:allow(flixel.FlxGame)
+	function getDefaults():Array<FlxCamera>
+	{
+		defaults.resize(0);
+		for (camera in list)
+		{
+			if (camera.isDefault)
+				defaults.push(camera);
+		}
+		return defaults;
+	}
+	
 	/**
 	 * Resizes and moves cameras when the game resizes (onResize signal).
 	 */
