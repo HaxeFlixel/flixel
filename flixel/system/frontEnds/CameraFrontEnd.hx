@@ -16,7 +16,7 @@ class CameraFrontEnd
 	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
-	 * Array listing all cameras marked as default, updated every `draw` call.
+	 * Array listing all cameras marked as default, automatically updated when isDefault is changed.
 	 */
 	public var defaults(default, null):Array<FlxCamera> = [];
 
