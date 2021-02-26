@@ -133,7 +133,7 @@ class CameraFrontEnd
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
 		
-		FlxCamera.defaultCameras = defaults;
+		FlxCamera._defaultCameras = defaults;
 	}
 
 	/**
@@ -189,7 +189,7 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	function new()
 	{
-		FlxCamera.defaultCameras = defaults;
+		FlxCamera._defaultCameras = defaults;
 	}
 
 	/**

@@ -56,10 +56,18 @@ class FlxCamera extends FlxBasic
 	 * By default, this is just a reference to `FlxG.cameras.defaults` / all default cameras.
 	 * This may be temporarily modified during a `draw` call.
 	 * 
-	 * Prior to 4.8.2 it was useful to change this value, but that is no longer recommended.
-	 * Instead use the `isDefualt` property on the FlxCamera.
+	 * Prior to 4.8.2 it was useful to change this value, but that feature is deprecated.
+	 * Instead use the `isDefualt` property on `FlxCamera` instances.
 	 */
-	public static var defaultCameras:Array<FlxCamera>;
+	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `myFlxCamera.isDefault` instead")
+	public static var defaultCameras(get, set):Array<FlxCamera>;
+	
+	/**
+	 * The non-deprecated list of cameras that defaultCamera proxies. Allows flixel classes
+	 * to use it without warning.
+	 */
+	@:allow(flixel)
+	static var _defaultCameras:Array<FlxCamera>;
 
 	/**
 	 * The X position of this camera's display. `zoom` does NOT affect this number.
@@ -1906,6 +1914,16 @@ class FlxCamera extends FlxBasic
 		viewOffsetY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 		viewOffsetHeight = height - viewOffsetY;
 		viewHeight = height - 2 * viewOffsetY;
+	}
+	
+	static inline function get_defaultCameras():Array<FlxCamera>
+	{
+		return _defaultCameras;
+	}
+	
+	static inline function set_defaultCameras(value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		return _defaultCameras = value;
 	}
 }
 

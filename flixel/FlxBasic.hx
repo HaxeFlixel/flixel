@@ -166,7 +166,7 @@ class FlxBasic implements IFlxDestroyable
 	@:noCompletion
 	function get_camera():FlxCamera
 	{
-		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
+		return (_cameras == null || _cameras.length == 0) ? FlxCamera._defaultCameras[0] : _cameras[0];
 	}
 
 	@:noCompletion
@@ -182,7 +182,7 @@ class FlxBasic implements IFlxDestroyable
 	@:noCompletion
 	function get_cameras():Array<FlxCamera>
 	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
+		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
 	}
 
 	@:noCompletion
