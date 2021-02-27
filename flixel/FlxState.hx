@@ -2,6 +2,8 @@ package flixel;
 
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
@@ -58,6 +60,27 @@ class FlxState extends FlxGroup
 	var _requestSubStateReset:Bool = false;
 
 	/**
+	 * A `FlxSignal` that dispatches when a sub state is opened from this state.
+	 * @since 4.9.0
+	 */
+	public var subStateOpened(get, never):FlxTypedSignal<FlxSubState->Void>;
+
+	/**
+	 * A `FlxSignal` that dispatches when a sub state is closed from this state.
+	 * @since 4.9.0
+	 */
+	public var subStateClosed(get, never):FlxTypedSignal<FlxSubState->Void>;
+
+	/**
+	 * Internal variables for lazily creating `subStateOpened` and `subStateClosed` signals when needed.
+	 */
+	@:noCompletion
+	var _subStateOpened:FlxTypedSignal<FlxSubState->Void>;
+
+	@:noCompletion
+	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
+    
+	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
 	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
@@ -97,6 +120,8 @@ class FlxState extends FlxGroup
 		{
 			if (subState.closeCallback != null)
 				subState.closeCallback();
+			if (_subStateClosed != null)
+				_subStateClosed.dispatch(subState);
 
 			if (destroySubStates)
 				subState.destroy();
@@ -121,11 +146,16 @@ class FlxState extends FlxGroup
 			}
 			if (subState.openCallback != null)
 				subState.openCallback();
+			if (_subStateOpened != null)
+				_subStateOpened.dispatch(subState);
 		}
 	}
 
 	override public function destroy():Void
 	{
+		FlxDestroyUtil.destroy(_subStateOpened);
+		FlxDestroyUtil.destroy(_subStateClosed);
+        
 		if (subState != null)
 		{
 			subState.destroy();
@@ -192,5 +222,23 @@ class FlxState extends FlxGroup
 	function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
+	}
+    
+	@:noCompletion
+	function get_subStateOpened():FlxTypedSignal<FlxSubState->Void>
+	{
+		if (_subStateOpened == null)
+			_subStateOpened = new FlxTypedSignal<FlxSubState->Void>();
+
+		return _subStateOpened;
+	}
+
+	@:noCompletion
+	function get_subStateClosed():FlxTypedSignal<FlxSubState->Void>
+	{
+		if (_subStateClosed == null)
+			_subStateClosed = new FlxTypedSignal<FlxSubState->Void>();
+
+		return _subStateClosed;
 	}
 }
