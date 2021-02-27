@@ -205,10 +205,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 
 	/**
-	 * Internal method for LibGDX atlas parsing. It tries to extract dimensions info from specified string.
-	 *
-	 * @param   line   `String` to extract info from.
-	 * @return  `{x:Int, y:Int}` dimensions info.
+	 * Internal method for LibGDX atlas parsing. It tries to extract dimensions info from the specified string.
 	 */
 	static function getDimensions(line:String):{x:Int, y:Int}
 	{
