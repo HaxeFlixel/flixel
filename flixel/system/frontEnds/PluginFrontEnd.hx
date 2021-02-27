@@ -3,6 +3,11 @@ package flixel.system.frontEnds;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
 class PluginFrontEnd
 {
@@ -44,7 +49,7 @@ class PluginFrontEnd
 	{
 		for (plugin in list)
 		{
-			if ((plugin is ClassType))
+			if (isOfType(plugin, ClassType))
 			{
 				return cast plugin;
 			}
@@ -91,7 +96,7 @@ class PluginFrontEnd
 
 		while (i >= 0)
 		{
-			if ((list[i] is ClassType))
+			if (isOfType(list[i], ClassType))
 			{
 				list.splice(i, 1);
 				results = true;
