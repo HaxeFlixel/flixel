@@ -12,6 +12,7 @@ class CameraFrontEnd
 	/**
 	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
+	 * Do not edit directly, use `add` and `remove` instead.
 	 */
 	public var list(default, null):Array<FlxCamera> = [];
 	
@@ -107,7 +108,7 @@ class CameraFrontEnd
 	 * @param camera		The camera you wish to change
 	 * @param drawsDefault	If false, FlxBasics will not render to it unless you add it to their `cameras` list.
 	 */
-	function setDrawsDefault(camera:FlxCamera, drawsDefault:Bool)
+	public function setDrawsDefault(camera:FlxCamera, drawsDefault:Bool)
 	{
 		if (list.indexOf(camera) == -1)
 		{

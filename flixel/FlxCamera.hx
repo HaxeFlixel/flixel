@@ -57,7 +57,7 @@ class FlxCamera extends FlxBasic
 	 * This may be temporarily modified during a `draw` call.
 	 * 
 	 * Prior to 4.8.2 it was useful to change this value, but that feature is deprecated.
-	 * Instead use the `isDefualt` property on `FlxCamera` instances.
+	 * Instead use `FlxG.cameras.setDrawsDefault`.
 	 */
 	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDrawsDefault()` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;

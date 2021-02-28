@@ -32,12 +32,14 @@ class FlxCameraTest extends FlxTest
 	function testDefaultLength():Void
 	{
 		Assert.areEqual(1, FlxG.cameras.list.length);
+		@:privateAccess
 		Assert.areEqual(1, FlxG.cameras.defaults.length);
 	}
 
 	@Test
 	function testDefaultCameras():Void
 	{
+		@:privateAccess
 		Assert.areEqual(FlxG.cameras.defaults, FlxCamera.defaultCameras);
 	}
 
@@ -47,6 +49,7 @@ class FlxCameraTest extends FlxTest
 		FlxCamera.defaultCameras = [FlxG.camera];
 		switchState(new FlxState());
 
+		@:privateAccess
 		Assert.areEqual(FlxG.cameras.defaults, FlxCamera.defaultCameras);
 	}
 
@@ -55,26 +58,30 @@ class FlxCameraTest extends FlxTest
 	{
 		FlxG.cameras.add(camera);
 		Assert.areEqual(2, FlxG.cameras.list.length);
+		@:privateAccess
 		Assert.areEqual(2, FlxG.cameras.defaults.length);
 
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
+		@:privateAccess
 		Assert.areEqual(1, FlxG.cameras.defaults.length);
 	}
 
 	@Test // #2296
 	function testIsDefaultCamera():Void
 	{
-		camera.isDefault = false;
-		FlxG.cameras.add(camera);
+		FlxG.cameras.add(camera, false);
 		Assert.areEqual(2, FlxG.cameras.list.length);
+		@:privateAccess
 		Assert.areEqual(1, FlxG.cameras.defaults.length);
 
-		camera.isDefault = true;
+		FlxG.cameras.setDrawsDefault(camera, true);
+		@:privateAccess
 		Assert.areEqual(2, FlxG.cameras.defaults.length);
 
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
+		@:privateAccess
 		Assert.areEqual(1, FlxG.cameras.defaults.length);
 	}
 
