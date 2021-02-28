@@ -51,9 +51,8 @@ class FlxCamera extends FlxBasic
 	public static var defaultZoom:Float;
 
 	/**
-	 * Which cameras a `FlxBasic` uses to be drawn on when nothing else has been specified.
-	 * By default, this is just a reference to `FlxG.cameras.defaults` / all default cameras.
-	 * This may be temporarily modified during a `draw` call.
+	 * Used behind-the-scenes during the draw phase so that members use the same default
+	 * cameras as their parent.
 	 * 
 	 * Prior to 4.8.2 it was useful to change this value, but that feature is deprecated.
 	 * Instead use `FlxG.cameras.setDrawsDefault`.
@@ -62,7 +61,10 @@ class FlxCamera extends FlxBasic
 	public static var defaultCameras(get, set):Array<FlxCamera>;
 	
 	/**
-	 * The non-deprecated list of cameras that defaultCamera proxies. Allows flixel classes
+	 * Used behind-the-scenes during the draw phase so that members use the same default
+	 * cameras as their parent.
+	 * 
+	 * This is the non-deprecated list that the public `defaultCameras` proxies. Allows flixel classes
 	 * to use it without warning.
 	 */
 	@:allow(flixel)
