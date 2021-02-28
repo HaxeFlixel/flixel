@@ -59,7 +59,7 @@ class FlxCamera extends FlxBasic
 	 * Prior to 4.8.2 it was useful to change this value, but that feature is deprecated.
 	 * Instead use the `isDefualt` property on `FlxCamera` instances.
 	 */
-	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `myFlxCamera.isDefault` instead")
+	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDrawsDefault()` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;
 	
 	/**
@@ -233,19 +233,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public var zoom(default, set):Float;
 
-	/**
-	 * Whether sprites render to this camera by default.
-	 * Set this to false when adding additional cameras meant to display specific sprites
-	 * @since 4.8.2
-	 */
-	public var isDefault(default, set):Bool = true;
-
-	/**
-	 * Dispatches whenever isDefault is changed.
-	 * @since 4.8.2
-	 */
-	public var isDefaultChange(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
-	
 	/**
 	 * Difference between native size of camera and zoomed size, divided in half
 	 * Needed to do occlusion of objects when zoom != initialZoom
@@ -1035,7 +1022,6 @@ class FlxCamera extends FlxBasic
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
-		isDefaultChange = null;
 
 		target = null;
 		flashSprite = null;
@@ -1892,14 +1878,6 @@ class FlxCamera extends FlxBasic
 			flashSprite.visible = visible;
 		}
 		return this.visible = visible;
-	}
-	
-	function set_isDefault(value:Bool):Bool
-	{
-		this.isDefault = value;
-		isDefaultChange.dispatch(this);
-		
-		return this.isDefault;
 	}
 
 	inline function calcOffsetX():Void
