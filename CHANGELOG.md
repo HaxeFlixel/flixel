@@ -1,3 +1,26 @@
+4.9.0 (???, 2021)
+------------------------------
+#### Dependencies:
+
+- Compatibility with Haxe 4.2.x
+
+#### New features:
+
+- `FlxTween`: added `cancelTweensOf()` and `completeTweensOf()` ([#2273](https://github.com/HaxeFlixel/flixel/pull/2273))
+- `FlxSound`: added an `OnLoad` callback to `loadStream()` ([#2276](https://github.com/HaxeFlixel/flixel/pull/2276))
+- `FlxState`: added `subStateOpened` and `subStateClosed` signals ([#2280](https://github.com/HaxeFlixel/flixel/pull/2280))
+
+#### Bugfixes:
+
+- `FlxTween`: fixed an issue with setting `startDelay` after tween creation ([#2262](https://github.com/HaxeFlixel/flixel/pull/2262))
+- `FlxEmitter`: fixed `maxSize` not being set to `Quantity` in `makeParticles()` ([#2265](https://github.com/HaxeFlixel/flixel/pull/2265))
+
+#### Changes and improvements:
+
+- `FlxG.plugins`: improved type safety for `get()` and `remove()` ([#2292](https://github.com/HaxeFlixel/flixel/pull/2292))
+- `FlxAtlasFrames`: improved animation support in `fromLibGdx()` ([#2278](https://github.com/HaxeFlixel/flixel/pull/2278))
+- `FlxBasic`: assign an incremented `ID` for each created instance ([#2266](https://github.com/HaxeFlixel/flixel/pull/2266))
+
 4.8.1 (July 16, 2020)
 ------------------------------
 - improved rendering performance on low-end devices

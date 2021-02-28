@@ -25,6 +25,11 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -641,8 +646,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if (overlapFound)
 				{
-					if (tile.callbackFunction != null
-						&& (tile.filter == null || #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end (Object, tile.filter)))
+					if (tile.callbackFunction != null && (tile.filter == null || isOfType(Object, tile.filter)))
 					{
 						tile.mapIndex = rowStart + column;
 						tile.callbackFunction(tile, Object);
