@@ -140,7 +140,7 @@ class CameraFrontEnd
 
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
-		
+
 		FlxCamera._defaultCameras = defaults;
 	}
 
