@@ -19,7 +19,8 @@ class CameraFrontEnd
 	public var list(default, null):Array<FlxCamera> = [];
 	
 	/**
-	 * Array listing all cameras marked as default, `FlxBasics` with no `cameras` set will render to them.
+	 * Array listing all cameras marked as default draw targets, `FlxBasics` with no
+	 *`cameras` set will render to them.
 	 */
 	var defaults:Array<FlxCamera> = [];
 
@@ -53,8 +54,10 @@ class CameraFrontEnd
 	 * Handy for PiP, split-screen, etc.
 	 *
 	 * @param	NewCamera         The camera you want to add.
-	 * @param	DefaultDrawTarget If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
+	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
+	 * @see flixel.FlxBasic.cameras
 	 */
 	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
@@ -105,10 +108,12 @@ class CameraFrontEnd
 	}
 	
 	/**
-	 * If set to true, `FlxBasics` render to the specified camera if the `FlxBasic` has a null `cameras` value.
+	 * If set to true, the camera is listed as a default draw target, meaning `FlxBasics`
+	 * render to the specified camera if the `FlxBasic` has a null `cameras` value.
 	 * @see flixel.FlxBasic.cameras
 	 * @param camera The camera you wish to change.
 	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @see flixel.FlxBasic.cameras
 	 * @since 4.9.0
 	 */
 	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)

@@ -56,7 +56,8 @@ class FlxBasic implements IFlxDestroyable
 
 	/**
 	 * This determines on which `FlxCamera`s this object will be drawn. If it is `null` / has not been
-	 * set, it uses `FlxCamera.defaultCameras`, which is a reference to `FlxG.cameras.list` (all cameras) by default.
+	 * set, it uses the list of default draw targets, which is controlled via `FlxG.camera.setDefaultDrawTarget`
+	 * as well as the `DefaultDrawTarget` argument of `FlxG.camera.add`.
 	 */
 	public var cameras(get, set):Array<FlxCamera>;
 
