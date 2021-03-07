@@ -109,6 +109,7 @@ class CameraFrontEnd
 	 * @see flixel.FlxBasic.cameras
 	 * @param camera The camera you wish to change.
 	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @since 4.9.0
 	 */
 	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)
 	{
