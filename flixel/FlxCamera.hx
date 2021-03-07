@@ -54,8 +54,10 @@ class FlxCamera extends FlxBasic
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
 	 * 
-	 * Prior to 4.8.2 it was useful to change this value, but that feature is deprecated.
-	 * Instead use `FlxG.cameras.setDrawsDefault`.
+	 * Prior to 4.9.0 it was useful to change this value, but that feature is deprecated.
+	 * Instead use the `defaultDrawTarget` argument in `FlxG.cameras.add `.
+	 * or`FlxG.cameras.setDefaultDrawTarget` .
+	 * @see FlxG.cameras.setDefaultDrawTarget
 	 */
 	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDrawsDefault()` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;
@@ -67,7 +69,10 @@ class FlxCamera extends FlxBasic
 	 * This is the non-deprecated list that the public `defaultCameras` proxies. Allows flixel classes
 	 * to use it without warning.
 	 */
-	@:allow(flixel)
+	@:allow(flixel.FlxBasic.get_cameras)
+	@:allow(flixel.FlxBasic.get_camera)
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	@:allow(flixel.group.FlxTypedGroup.draw)
 	static var _defaultCameras:Array<FlxCamera>;
 
 	/**

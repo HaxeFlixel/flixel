@@ -70,7 +70,7 @@ class FlxCameraTest extends FlxTest
 		Assert.areEqual(2, FlxG.cameras.list.length);
 		Assert.areEqual(1, FlxG.cameras.defaults.length);
 
-		FlxG.cameras.setDrawsDefault(camera, true);
+		FlxG.cameras.setDefaultDrawTarget(camera, true);
 		Assert.areEqual(2, FlxG.cameras.defaults.length);
 
 		FlxG.cameras.remove(camera);

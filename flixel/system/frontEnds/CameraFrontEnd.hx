@@ -7,6 +7,8 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
+using flixel.util.FlxArrayUtil;
+
 class CameraFrontEnd
 {
 	/**
@@ -18,9 +20,8 @@ class CameraFrontEnd
 	
 	/**
 	 * Array listing all cameras marked as default, `FlxBasics` with no `cameras` set will render to them.
-	 * @since 4.8.2
 	 */
-	var defaults(default, null):Array<FlxCamera> = [];
+	var defaults:Array<FlxCamera> = [];
 
 	/**
 	 * The current (global, applies to all cameras) bgColor.
@@ -51,16 +52,16 @@ class CameraFrontEnd
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
 	 *
-	 * @param	NewCamera		The camera you want to add.
-	 * @param	DrawsDefault	If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @param	NewCamera         The camera you want to add.
+	 * @param	DefaultDrawTarget If false, FlxBasics will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
 	 */
-	public function add<T:FlxCamera>(NewCamera:T, DrawsDefault:Bool = true):T
+	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
 		
 		list.push(NewCamera);
-		if (DrawsDefault)
+		if (DefaultDrawTarget)
 			defaults.push(NewCamera);
 		
 		NewCamera.ID = list.length - 1;
@@ -104,23 +105,24 @@ class CameraFrontEnd
 	}
 	
 	/**
-	 * Changes whether the specified camera draws FlxBasics 
-	 * @param camera		The camera you wish to change
-	 * @param drawsDefault	If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * If set to true, `FlxBasics` render to the specified camera if the `FlxBasic` has a null `cameras` value.
+	 * @see flixel.FlxBasic.cameras
+	 * @param camera The camera you wish to change.
+	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
 	 */
-	public function setDrawsDefault(camera:FlxCamera, drawsDefault:Bool)
+	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)
 	{
-		if (list.indexOf(camera) == -1)
+		if (!list.contains(camera))
 		{
-			FlxG.log.warn("FlxG.cameras.setDrawsDefault(): The specified camera is not a part of the game.");
+			FlxG.log.warn("FlxG.cameras.setDefaultDrawTarget(): The specified camera is not a part of the game.");
 			return;
 		}
 		
 		var index = defaults.indexOf(camera);
 		
-		if (drawsDefault && index == -1)
+		if (value && index == -1)
 			defaults.push(camera);
-		else if (!drawsDefault)
+		else if (!value)
 			defaults.splice(index, 1);
 	}
 
