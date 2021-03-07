@@ -52,12 +52,12 @@ class CameraFrontEnd
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
+	 * @see flixel.FlxBasic.cameras
 	 *
 	 * @param	NewCamera         The camera you want to add.
 	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
 	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
-	 * @see flixel.FlxBasic.cameras
 	 */
 	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
@@ -111,9 +111,9 @@ class CameraFrontEnd
 	 * If set to true, the camera is listed as a default draw target, meaning `FlxBasics`
 	 * render to the specified camera if the `FlxBasic` has a null `cameras` value.
 	 * @see flixel.FlxBasic.cameras
+	 * 
 	 * @param camera The camera you wish to change.
 	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
-	 * @see flixel.FlxBasic.cameras
 	 * @since 4.9.0
 	 */
 	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)
