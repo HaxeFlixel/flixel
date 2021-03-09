@@ -7,8 +7,6 @@ class FlxRectTest extends FlxTest
 {
 	var rect1:FlxRect;
 	var rect2:FlxRect;
-	var expected:FlxRect;
-	var pivot:FlxPoint;
 
 	@Before
 	function before()
