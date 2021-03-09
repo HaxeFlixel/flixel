@@ -1074,6 +1074,41 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
+	 * Calculates the smallest globally aligned bounding box that encompasses this `FlxObject`'s width and height.
+	 * Note, if a `FlxSprite` is passed in, the origin is used, but scale and offset are ignored.
+	 * Use `calcGraphicBounds` to use these properties.
+	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 */
+	override function calcCollisionBounds(?newRect:FlxRect)
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		newRect.set(x, y, width, height);
+		return newRect.calcRotatedBounds(angle, origin, newRect);
+	}
+	
+	/**
+	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
+	 * would be displayed. Ignores scrollFactor, but honors rotation scale, offset and origin.
+	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
+	 */
+	public function calcGraphicBounds(?newRect:FlxRect):FlxRect
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
+		newRect.width  = frameWidth  * Math.abs(scale.x);
+		newRect.height = frameHeight * Math.abs(scale.y);
+		newRect.x = x - offset.x + origin.x - scaledOrigin.x;
+		newRect.y = y - offset.y + origin.y - scaledOrigin.y;
+		return newRect.calcRotatedBounds(angle, scaledOrigin, newRect);
+	}
+	
+	/**
 	 * Set how a sprite flips when facing in a particular direction.
 	 *
 	 * @param   Direction   Use constants from `FlxObject`: `LEFT`, `RIGHT`, `UP`, and `DOWN`.

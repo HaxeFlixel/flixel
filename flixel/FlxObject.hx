@@ -1183,6 +1183,21 @@ class FlxObject extends FlxBasic
 
 		return _rect;
 	}
+	
+	/**
+	 * Calculates the globally aligned bounding box of a `FlxObject`'s width and height. Note, if a FlxSprite is
+	 * passed in, the origin is used, but scale and offset are ignored. Use `calcGraphicBounds` to use these properties.
+	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 */
+	public function calcCollisionBounds(?newRect:FlxRect)
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		newRect.set(x, y, width, height);
+		return newRect.calcRotatedBounds(angle, null, newRect);
+	}
 
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.

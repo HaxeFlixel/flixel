@@ -3,9 +3,11 @@ package flixel;
 import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.graphics.atlas.FlxAtlas;
+import flixel.math.FlxRect;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
+import haxe.PosInfos;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -242,5 +244,106 @@ class FlxSpriteTest extends FlxTest
 				Assert.isTrue(color < 0xffffffff);
 			}
 		}
+	}
+	
+	@Test
+	function testCalcCollisionBounds()
+	{
+		var expected = FlxRect.get();
+		var rect = FlxRect.get();
+		
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(1, 1);
+		
+		
+		sprite.origin.set(0, 0);
+		sprite.angle = 45;
+		rect = sprite.calcCollisionBounds(rect);
+		var sqrt2 = Math.sqrt(2);
+		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
+		assertRectsNear(rect, expected);
+		
+		var w = sprite.width = 20;
+		var h = sprite.height = 15;
+		sprite.angle =  90;
+		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(-h, 0, h, w), 0.0001);
+		sprite.angle = 180;
+		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(-w, -h, w, h), 0.0001);
+		sprite.angle = 270;
+		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(0, -w, h, w), 0.0001);
+		sprite.angle = 360;
+		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		
+		sprite.width = sprite.height = 1;
+		sprite.origin.set(1, 1);
+		sprite.angle = 210;
+		rect = sprite.calcCollisionBounds(rect);
+		var sumSinCos30 = 0.5 + Math.cos(30/180*Math.PI);//sin30 = 0.5;
+		expected.set(0.5, 1, sumSinCos30, sumSinCos30);
+		assertRectsNear(rect, expected);
+		
+		expected.put();
+	}
+	
+	@Test
+	function testCalcGraphicBounds()
+	{
+		var expected = FlxRect.get();
+		var rect = FlxRect.get();
+		
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.setGraphicSize(1, 1);
+		
+		sprite.origin.set(0, 0);
+		sprite.angle = 45;
+		rect = sprite.calcGraphicBounds(rect);
+		var sqrt2 = Math.sqrt(2);
+		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
+		assertRectsNear(rect, expected);
+		
+		var w = 60;
+		var h = 100;
+		var halfDiff = Math.abs(h - w) / 2;
+		sprite.setGraphicSize(w, h);
+		sprite.updateHitbox();
+		sprite.angle =  90;
+		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
+		sprite.angle = 180;
+		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		sprite.angle = 270;
+		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
+		sprite.angle = 360;
+		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		
+		sprite.setGraphicSize(1, 1);
+		sprite.updateHitbox();
+		sprite.origin.set(10, 10);
+		sprite.angle = 210;
+		rect = sprite.calcGraphicBounds(rect);
+		var sumSinCos30 = 0.5 + Math.cos(30/180*Math.PI);//sin30 = 0.5;
+		expected.set(5, 5.5, sumSinCos30, sumSinCos30);
+		assertRectsNear(rect, expected);
+		
+		expected.put();
+	}
+	
+	static function isNear(actual:Float, expected:Float, margin:Float = 0.001):Bool
+	{
+		return actual >= expected - margin && actual <= expected + margin;
+	}
+	
+	static function assertRectsNear(actual:FlxRect, expected:FlxRect, margin:Float = 0.001, ?info:PosInfos):Void
+	{
+		var areNear = isNear(actual.x, expected.x, margin)
+			&& isNear(actual.y, expected.y, margin)
+			&& isNear(actual.width, expected.width, margin)
+			&& isNear(actual.height, expected.height, margin);
+		
+		if (areNear)
+			Assert.assertionCount++;
+		else
+			Assert.fail('\nExpected\n   ($expected (+/- $margin)\nbut was\n   $actual\n', info);
+		
 	}
 }

@@ -335,6 +335,62 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
+	 * Calculates the globally aligned bounding box of a `FlxRect` with the given angle and origin.
+	 * @param degrees The rotation, in degrees of the rect.
+	 * @param origin  The relative pivot point, or the point that the rectangle rotates around.
+	 *                if `null` , the top-left (or 0,0) is used.
+	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created. Note: If you like, you can
+	 *                pass in the input rect to manipulate it. ex: `rect.calcRotatedBounds(angle, null, rect)`
+	 * @return A globally aligned `FlxRect` that fully contains the input rectangle.
+	 */
+	public function calcRotatedBounds(degrees:Float, ?origin:FlxPoint, ?newRect:FlxRect):FlxRect
+	{
+		if (origin == null)
+			origin = FlxPoint.get(0, 0);
+		
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		var radians = FlxAngle.TO_RAD * degrees;
+		var cos = Math.cos(radians);
+		var sin = Math.sin(radians);
+		
+		degrees = (degrees + 360) % 360;
+		var left = -origin.x;
+		var top = -origin.y;
+		var right = -origin.x + width;
+		var bottom = -origin.y + height;
+		if (degrees < 90)
+		{
+			newRect.x = x + origin.x + cos * left - sin * bottom;
+			newRect.y = y + origin.y + sin * left + cos * top;
+		}
+		else if (degrees < 180)
+		{
+			newRect.x = x + origin.x + cos * right - sin * bottom;
+			newRect.y = y + origin.y + sin * left  + cos * bottom;
+		}
+		else if (degrees < 270)
+		{
+			newRect.x = x + origin.x + cos * right - sin * top;
+			newRect.y = y + origin.y + sin * right + cos * bottom;
+		}
+		else
+		{
+			newRect.x = x + origin.x + cos * left - sin * top;
+			newRect.y = y + origin.y + sin * right + cos * top;
+		}
+		// temp var, in case input rect is the output rect
+		var newHeight = Math.abs(cos * height) + Math.abs(sin * width );
+		newRect.width = Math.abs(cos * width ) + Math.abs(sin * height);
+		newRect.height = newHeight;
+		
+		putWeak();
+		origin.putWeak();
+		return newRect;
+	}
+
+	/**
 	 * Necessary for IFlxDestroyable.
 	 */
 	public function destroy() {}
@@ -446,102 +502,6 @@ class FlxRect implements IFlxPooled
 		return width == 0 || height == 0;
 	}
 
-	/**
-	 * Calculates the globally aligned bounding box of a `FlxObject`'s width and height.
-	 * @param object	The Object. Note, if a FlxSprite is passed in, the origin is used, but
-	 * 					scale and offset are ignored. Use `getRotatedGraphicBounds` to use these properties.
-	 * @param newRect	Optional output `FlxRect`, if `null`, a new one is created.
-	 * @return A globally aligned `FlxRect` that fully contains the input object.
-	 */
-	public static function getRotatedObjectBounds(object:FlxObject, ?newRect:FlxRect):FlxRect
-	{
-		var rect = FlxRect.weak(object.x, object.y, object.width, object.height);
-		var origin:FlxVector = null;
-		if (Std.is(object, FlxSprite))
-		{
-			var sprite = cast (object, FlxSprite);
-			origin = sprite.origin;
-			rect.x -= sprite.offset.x;
-			rect.y -= sprite.offset.y;
-		}
-		return getRotatedRectBounds(rect, object.angle, origin, newRect);
-	}
-	
-	/**
-	 * Calculates the globally aligned bounding box of a sprite's graphic as it would be displayed.
-	 * Ignores scrollFactor, but honors scale, offset and origin.
-	 * @param sprite	The sprite
-	 * @param newRect	Optional output `FlxRect`, if `null`, a new one is created.
-	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
-	 */
-	public static function getRotatedGraphicBounds(sprite:FlxSprite, ?newRect:FlxRect):FlxRect
-	{
-		var scale = sprite.scale;
-		var origin = FlxPoint.weak(sprite.origin.x * scale.x, sprite.origin.y * scale.y);
-		var rect = FlxRect.weak();
-		rect.width  = sprite.frameWidth  * Math.abs(scale.x);
-		rect.height = sprite.frameHeight * Math.abs(scale.y);
-		rect.x = sprite.x - sprite.offset.x + sprite.origin.x - origin.x;
-		rect.y = sprite.y - sprite.offset.y + sprite.origin.y - origin.y;
-		return getRotatedRectBounds(rect, sprite.angle, origin, newRect);
-	}
-	
-	/**
-	 * Calculates the globally aligned bounding box of a `FlxRect` with the given angle and origin.
-	 * @param rect		The rotated rect. its properties should describe its orientation and dimension at zero rotation.
-	 * @param degrees	The rotation, in degrees of the rect.
-	 * @param origin	The pivot point, or the point that the rectangle rotates around. if `null` the top-left is used.
-	 * @param newRect	Optional output `FlxRect`, if `null`, a new one is created.
-	 * @return A globally aligned `FlxRect` that fully contains the input rectangle.
-	 */
-	public static function getRotatedRectBounds(rect:FlxRect, degrees:Float, ?origin:FlxPoint, ?newRect:FlxRect):FlxRect
-	{
-		if (origin == null)
-			origin = FlxPoint.get(0, 0);
-		
-		if (newRect == null)
-			newRect = FlxRect.get();
-		
-		var radians = FlxAngle.TO_RAD * degrees;
-		var cos = Math.cos(radians);
-		var sin = Math.sin(radians);
-		
-		newRect.width  = Math.abs(cos * rect.width ) + Math.abs(sin * rect.height);
-		newRect.height = Math.abs(cos * rect.height) + Math.abs(sin * rect.width );
-		
-		degrees = (degrees + 360) % 360;
-		var left = -origin.x;
-		var top = -origin.y;
-		var right = -origin.x + rect.width;
-		var bottom = -origin.y + rect.height;
-		if (degrees < 90)
-		{
-			newRect.x = cos * left - sin * bottom;
-			newRect.y = sin * left + cos * top;
-		}
-		else if (degrees < 180)
-		{
-			newRect.x = cos * right - sin * bottom;
-			newRect.y = sin * left  + cos * bottom;
-		}
-		else if (degrees < 270)
-		{
-			newRect.x = cos * right - sin * top;
-			newRect.y = sin * right + cos * bottom;
-		}
-		else
-		{
-			newRect.x = cos * left - sin * top;
-			newRect.y = sin * right + cos * top;
-		}
-		newRect.x += rect.x + origin.x;
-		newRect.y += rect.y + origin.y;
-		
-		rect.putWeak();
-		origin.putWeak();
-		return newRect;
-	}
-	
 	static function get_pool():IFlxPool<FlxRect>
 	{
 		return _pool;
