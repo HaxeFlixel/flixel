@@ -7,13 +7,22 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
+using flixel.util.FlxArrayUtil;
+
 class CameraFrontEnd
 {
 	/**
 	 * An array listing FlxCamera objects that are used to draw stuff.
 	 * By default flixel creates one camera the size of the screen.
+	 * Do not edit directly, use `add` and `remove` instead.
 	 */
 	public var list(default, null):Array<FlxCamera> = [];
+	
+	/**
+	 * Array listing all cameras marked as default draw targets, `FlxBasics` with no
+	 *`cameras` set will render to them.
+	 */
+	var defaults:Array<FlxCamera> = [];
 
 	/**
 	 * The current (global, applies to all cameras) bgColor.
@@ -43,15 +52,22 @@ class CameraFrontEnd
 	/**
 	 * Add a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
+	 * @see flixel.FlxBasic.cameras
 	 *
-	 * @param	NewCamera	The camera you want to add.
+	 * @param	NewCamera         The camera you want to add.
+	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
+	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
 	 */
-	public function add<T:FlxCamera>(NewCamera:T):T
+	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
-		FlxG.cameras.list.push(NewCamera);
-		NewCamera.ID = FlxG.cameras.list.length - 1;
+		
+		list.push(NewCamera);
+		if (DefaultDrawTarget)
+			defaults.push(NewCamera);
+		
+		NewCamera.ID = list.length - 1;
 		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
@@ -69,6 +85,7 @@ class CameraFrontEnd
 		{
 			FlxG.game.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
+			defaults.remove(Camera);
 		}
 		else
 		{
@@ -89,6 +106,31 @@ class CameraFrontEnd
 
 		cameraRemoved.dispatch(Camera);
 	}
+	
+	/**
+	 * If set to true, the camera is listed as a default draw target, meaning `FlxBasics`
+	 * render to the specified camera if the `FlxBasic` has a null `cameras` value.
+	 * @see flixel.FlxBasic.cameras
+	 * 
+	 * @param camera The camera you wish to change.
+	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @since 4.9.0
+	 */
+	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)
+	{
+		if (!list.contains(camera))
+		{
+			FlxG.log.warn("FlxG.cameras.setDefaultDrawTarget(): The specified camera is not a part of the game.");
+			return;
+		}
+		
+		var index = defaults.indexOf(camera);
+		
+		if (value && index == -1)
+			defaults.push(camera);
+		else if (!value)
+			defaults.splice(index, 1);
+	}
 
 	/**
 	 * Dumps all the current cameras and resets to just one camera.
@@ -107,7 +149,7 @@ class CameraFrontEnd
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
 
-		FlxCamera.defaultCameras = list;
+		FlxCamera._defaultCameras = defaults;
 	}
 
 	/**
@@ -163,7 +205,7 @@ class CameraFrontEnd
 	@:allow(flixel.FlxG)
 	function new()
 	{
-		FlxCamera.defaultCameras = list;
+		FlxCamera._defaultCameras = defaults;
 	}
 
 	/**
