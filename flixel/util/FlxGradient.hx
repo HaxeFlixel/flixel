@@ -116,6 +116,9 @@ class FlxGradient
 		var shape = new Shape();
 		var interpolationMethod = interpolate ? InterpolationMethod.RGB : InterpolationMethod.LINEAR_RGB;
 
+		#if flash
+		var colors = colors.map(function(c):UInt return c);
+		#end
 		shape.graphics.beginGradientFill(GradientType.LINEAR, colors, gradient.alpha, gradient.ratio, gradient.matrix, SpreadMethod.PAD, interpolationMethod,
 			0);
 
