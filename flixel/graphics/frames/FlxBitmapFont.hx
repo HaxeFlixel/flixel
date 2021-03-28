@@ -354,11 +354,6 @@ class FlxBitmapFont extends FlxFramesCollection
 		var gw:Int;
 		var gh:Int;
 
-		#if js
-		if (FlxG.html5.farblesImages)
-			FlxG.log.error('Cannot reliably create font:${font.fontName} due to browser restrictions');
-		#end
-
 		while (cy < frameHeight && letterIdx < numLetters)
 		{
 			var rowHeight:Int = 0;
