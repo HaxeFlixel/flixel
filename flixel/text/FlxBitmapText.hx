@@ -196,6 +196,9 @@ class FlxBitmapText extends FlxSprite
 
 	/**
 	 * Constructs a new text field component.
+	 * Warning: The default font may work incorrectly on HTML5
+	 * and is utterly unreliable on Brave Browser with shields up.
+	 * 
 	 * @param 	font	Optional parameter for component's font prop
 	 */
 	public function new(?font:FlxBitmapFont)
