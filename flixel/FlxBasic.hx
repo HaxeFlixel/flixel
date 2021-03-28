@@ -21,10 +21,12 @@ class FlxBasic implements IFlxDestroyable
 	#end
 
 	/**
-	 * IDs seem like they could be pretty useful, huh?
-	 * They're not actually used for anything yet though.
+	 * A unique ID starting from 0 and increasing by 1 for each subsequent `FlxBasic` that is created.
 	 */
-	public var ID:Int = -1;
+	public var ID:Int = idEnumerator++;
+
+	@:noCompletion
+	static var idEnumerator:Int = 0;
 
 	/**
 	 * Controls whether `update()` is automatically called by `FlxState`/`FlxGroup`.
@@ -54,7 +56,8 @@ class FlxBasic implements IFlxDestroyable
 
 	/**
 	 * This determines on which `FlxCamera`s this object will be drawn. If it is `null` / has not been
-	 * set, it uses `FlxCamera.defaultCameras`, which is a reference to `FlxG.cameras.list` (all cameras) by default.
+	 * set, it uses the list of default draw targets, which is controlled via `FlxG.camera.setDefaultDrawTarget`
+	 * as well as the `DefaultDrawTarget` argument of `FlxG.camera.add`.
 	 */
 	public var cameras(get, set):Array<FlxCamera>;
 
@@ -166,7 +169,7 @@ class FlxBasic implements IFlxDestroyable
 	@:noCompletion
 	function get_camera():FlxCamera
 	{
-		return (_cameras == null || _cameras.length == 0) ? FlxCamera.defaultCameras[0] : _cameras[0];
+		return (_cameras == null || _cameras.length == 0) ? FlxCamera._defaultCameras[0] : _cameras[0];
 	}
 
 	@:noCompletion
@@ -182,7 +185,7 @@ class FlxBasic implements IFlxDestroyable
 	@:noCompletion
 	function get_cameras():Array<FlxCamera>
 	{
-		return (_cameras == null) ? FlxCamera.defaultCameras : _cameras;
+		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
 	}
 
 	@:noCompletion

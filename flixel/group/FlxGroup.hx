@@ -7,6 +7,11 @@ import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
 typedef FlxGroup = FlxTypedGroup<FlxBasic>;
 
@@ -179,13 +184,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
-		
-		var oldDefaultCameras = FlxCamera.defaultCameras;
+
+		var oldDefaultCameras = FlxCamera._defaultCameras;
 		if (cameras != null)
 		{
-			FlxCamera.defaultCameras = cameras;
+			FlxCamera._defaultCameras = cameras;
 		}
-		
+
 		while (i < length)
 		{
 			basic = members[i++];
@@ -195,8 +200,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 				basic.draw();
 			}
 		}
-		
-		FlxCamera.defaultCameras = oldDefaultCameras;
+
+		FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
 	/**
@@ -470,7 +475,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 
-			if ((basic != null) && !basic.exists && ((ObjectClass == null) || (basic is ObjectClass)))
+			if (basic != null && !basic.exists && (ObjectClass == null || isOfType(basic, ObjectClass)))
 			{
 				if (Force && Type.getClassName(Type.getClass(basic)) != Type.getClassName(ObjectClass))
 				{
@@ -849,7 +854,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 						group.forEachOfType(ObjectClass, cast Function, Recurse);
 				}
 
-				if ((basic is ObjectClass))
+				if (isOfType(basic, ObjectClass))
 					Function(cast basic);
 			}
 		}
