@@ -1,3 +1,7 @@
+2.7.4 (April 17, 2021)
+------------------------------
+* Added Lime XSD schema references to enable completion
+
 2.7.3 (July 2, 2020)
 ------------------------------
 * FileBrowse: fixed compilation on HashLink

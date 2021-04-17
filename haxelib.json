@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.7.3",
-    "releasenote": "Improved the GamepadTest demo, minor fixes.",
+    "version": "2.7.4",
+    "releasenote": "Added Lime XSD schema references to enable completion.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }
