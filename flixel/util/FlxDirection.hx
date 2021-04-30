@@ -38,10 +38,10 @@ package flixel.util;
 			return "NONE";
 		
 		var str = "";
-		if (has(LEFT )) str += " | " + dirs.push("L");
-		if (has(RIGHT)) str += " | " + dirs.push("R");
-		if (has(UP   )) str += " | " + dirs.push("U");
-		if (has(DOWN )) str += " | " + dirs.push("D");
+		if (has(LEFT )) str += " | L";
+		if (has(RIGHT)) str += " | R";
+		if (has(UP   )) str += " | U";
+		if (has(DOWN )) str += " | D";
 		
 		// remove the first " | "
 		return str.substr(3);
