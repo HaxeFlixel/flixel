@@ -9,6 +9,7 @@ import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirection;
 import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
@@ -35,47 +36,47 @@ class FlxObject extends FlxBasic
 	/**
 	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
 	 */
-	public static inline var LEFT:Int = 0x0001;
+	public static inline var LEFT = FlxDirection.LEFT;
 
 	/**
 	 * Generic value for "right". Used by `facing`, `allowCollisions`, and `touching`.
 	 */
-	public static inline var RIGHT:Int = 0x0010;
+	public static inline var RIGHT = FlxDirection.RIGHT;
 
 	/**
 	 * Generic value for "up". Used by `facing`, `allowCollisions`, and `touching`.
 	 */
-	public static inline var UP:Int = 0x0100;
+	public static inline var UP = FlxDirection.UP;
 
 	/**
 	 * Generic value for "down". Used by `facing`, `allowCollisions`, and `touching`.
 	 */
-	public static inline var DOWN:Int = 0x1000;
+	public static inline var DOWN = FlxDirection.DOWN;
 
 	/**
 	 * Special-case constant meaning no collisions, used mainly by `allowCollisions` and `touching`.
 	 */
-	public static inline var NONE:Int = 0x0000;
+	public static inline var NONE = FlxDirection.NONE;
 
 	/**
 	 * Special-case constant meaning up, used mainly by `allowCollisions` and `touching`.
 	 */
-	public static inline var CEILING:Int = UP;
+	public static inline var CEILING = FlxDirection.CEILING;
 
 	/**
 	 * Special-case constant meaning down, used mainly by `allowCollisions` and `touching`.
 	 */
-	public static inline var FLOOR:Int = DOWN;
+	public static inline var FLOOR = FlxDirection.FLOOR;
 
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by `allowCollisions` and `touching`.
 	 */
-	public static inline var WALL:Int = LEFT | RIGHT;
+	public static inline var WALL = FlxDirection.WALL;
 
 	/**
 	 * Special-case constant meaning any direction, used mainly by `allowCollisions` and `touching`.
 	 */
-	public static inline var ANY:Int = LEFT | RIGHT | UP | DOWN;
+	public static inline var ANY = FlxDirection.ANY;
 
 	@:noCompletion
 	static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
@@ -571,19 +572,19 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var touching:Int = NONE;
+	public var touching:FlxDirection = NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var wasTouching:Int = NONE;
+	public var wasTouching:FlxDirection = NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions(default, set):Int = ANY;
+	public var allowCollisions(default, set):FlxDirection = ANY;
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -599,13 +600,13 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColor:Null<FlxColor> = null;
 
 	/**
-	 * Color used for the debug rect if `allowCollisions == FlxObject.ANY`.
+	 * Color used for the debug rect if `allowCollisions == ANY`.
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorSolid(default, set):FlxColor = FlxColor.RED;
 
 	/**
-	 * Color used for the debug rect if `allowCollisions == FlxObject.NONE`.
+	 * Color used for the debug rect if `allowCollisions == NONE`.
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorNotSolid(default, set):FlxColor = FlxColor.BLUE;
@@ -613,7 +614,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Color used for the debug rect if this object collides partially
 	 * (`immovable` in the case of `FlxObject`, or `allowCollisions` not equal to
-	 * `FlxObject.ANY` or `FlxObject.NONE` in the case of tiles in `FlxTilemap`).
+	 * `ANY` or `NONE` in the case of tiles in `FlxTilemap`).
 	 * @since 4.2.0
 	 */
 	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;
@@ -1021,7 +1022,7 @@ class FlxObject extends FlxBasic
 	 * @param   Direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	public inline function isTouching(Direction:Int):Bool
+	public inline function isTouching(Direction:FlxDirection):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -1033,7 +1034,7 @@ class FlxObject extends FlxBasic
 	 * @param   Direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	public inline function justTouched(Direction:Int):Bool
+	public inline function justTouched(Direction:FlxDirection):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -1133,7 +1134,7 @@ class FlxObject extends FlxBasic
 		var color:Null<Int> = debugBoundingBoxColor;
 		if (color == null)
 		{
-			if (allowCollisions != FlxObject.NONE)
+			if (allowCollisions != NONE)
 			{
 				color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColorSolid;
 			}
@@ -1289,7 +1290,7 @@ class FlxObject extends FlxBasic
 	}
 
 	@:noCompletion
-	function set_allowCollisions(Value:Int):Int
+	function set_allowCollisions(Value:FlxDirection):FlxDirection
 	{
 		return allowCollisions = Value;
 	}
