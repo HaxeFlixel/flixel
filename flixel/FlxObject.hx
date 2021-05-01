@@ -9,7 +9,7 @@ import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDirection;
+import flixel.util.FlxDirections;
 import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
@@ -35,48 +35,57 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.LEFT` directly.
 	 */
-	public static inline var LEFT = FlxDirection.LEFT;
+	public static inline var LEFT = FlxDirections.LEFT;
 
 	/**
 	 * Generic value for "right". Used by `facing`, `allowCollisions`, and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.RIGHT` directly.
 	 */
-	public static inline var RIGHT = FlxDirection.RIGHT;
+	public static inline var RIGHT = FlxDirections.RIGHT;
 
 	/**
 	 * Generic value for "up". Used by `facing`, `allowCollisions`, and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.UP` directly.
 	 */
-	public static inline var UP = FlxDirection.UP;
+	public static inline var UP = FlxDirections.UP;
 
 	/**
 	 * Generic value for "down". Used by `facing`, `allowCollisions`, and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.DOWN` directly.
 	 */
-	public static inline var DOWN = FlxDirection.DOWN;
+	public static inline var DOWN = FlxDirections.DOWN;
 
 	/**
 	 * Special-case constant meaning no collisions, used mainly by `allowCollisions` and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.NONE` directly.
 	 */
-	public static inline var NONE = FlxDirection.NONE;
+	public static inline var NONE = FlxDirections.NONE;
 
 	/**
 	 * Special-case constant meaning up, used mainly by `allowCollisions` and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.CEILING` directly.
 	 */
-	public static inline var CEILING = FlxDirection.CEILING;
+	public static inline var CEILING = FlxDirections.CEILING;
 
 	/**
 	 * Special-case constant meaning down, used mainly by `allowCollisions` and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.FLOOR` directly.
 	 */
-	public static inline var FLOOR = FlxDirection.FLOOR;
+	public static inline var FLOOR = FlxDirections.FLOOR;
 
 	/**
 	 * Special-case constant meaning only the left and right sides, used mainly by `allowCollisions` and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.WALL` directly.
 	 */
-	public static inline var WALL = FlxDirection.WALL;
+	public static inline var WALL = FlxDirections.WALL;
 
 	/**
 	 * Special-case constant meaning any direction, used mainly by `allowCollisions` and `touching`.
+	 * Note: This exists for backwards compatibility, prefer using FlxDirections.LEFT directly.
 	 */
-	public static inline var ANY = FlxDirection.ANY;
+	public static inline var ANY = FlxDirections.ANY;
 
 	@:noCompletion
 	static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
@@ -572,19 +581,19 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var touching:FlxDirection = NONE;
+	public var touching:FlxDirections = NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var wasTouching:FlxDirection = NONE;
+	public var wasTouching:FlxDirections = NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions(default, set):FlxDirection = ANY;
+	public var allowCollisions(default, set):FlxDirections = ANY;
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -1022,7 +1031,7 @@ class FlxObject extends FlxBasic
 	 * @param   Direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object is touching an object in (any of) the specified direction(s) this frame.
 	 */
-	public inline function isTouching(Direction:FlxDirection):Bool
+	public inline function isTouching(Direction:FlxDirections):Bool
 	{
 		return (touching & Direction) > NONE;
 	}
@@ -1034,7 +1043,7 @@ class FlxObject extends FlxBasic
 	 * @param   Direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object just landed on (any of) the specified surface(s) this frame.
 	 */
-	public inline function justTouched(Direction:FlxDirection):Bool
+	public inline function justTouched(Direction:FlxDirections):Bool
 	{
 		return ((touching & Direction) > NONE) && ((wasTouching & Direction) <= NONE);
 	}
@@ -1290,7 +1299,7 @@ class FlxObject extends FlxBasic
 	}
 
 	@:noCompletion
-	function set_allowCollisions(Value:FlxDirection):FlxDirection
+	function set_allowCollisions(Value:FlxDirections):FlxDirections
 	{
 		return allowCollisions = Value;
 	}
