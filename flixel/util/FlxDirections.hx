@@ -17,6 +17,14 @@ package flixel.util;
 	var DOWN    = 0x1000;
 	/** Special-case constant meaning no directions. */
 	var NONE    = 0x0000;
+	
+	/**
+	 * Directions values can't be constructed from other direction values, due to a bug in haxe.
+	 * https://github.com/HaxeFoundation/haxe/issues/10237
+	 * We'll just define all these using literal hex values, otherwise they can't be used as
+	 * default values for function arguments.
+	 */
+	
 	/** Special-case constant meaning "up". */
 	var CEILING = 0x0100;// UP;
 	/** Special-case constant meaning "down" */
