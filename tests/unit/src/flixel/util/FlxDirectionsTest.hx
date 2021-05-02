@@ -20,10 +20,10 @@ class FlxDirectionsTest extends FlxTest
 	@Test
 	function isNullFunction()
 	{
-		var f = function(?c:FlxDirections)
+		function f (dirs:Null<FlxDirections>)
 		{
-			return c == null;
-		};
+			return dirs == null;
+		}
 		
 		Assert.isTrue(f(null));
 		Assert.isFalse(f(0));
