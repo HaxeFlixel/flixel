@@ -83,7 +83,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Special-case constant meaning any direction, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using FlxDirections.LEFT directly.
+	 * Note: This exists for backwards compatibility, prefer using `FlxDirections.ANY` directly.
 	 */
 	public static inline var ANY = FlxDirections.ANY;
 

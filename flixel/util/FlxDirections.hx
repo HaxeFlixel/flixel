@@ -7,13 +7,9 @@ package flixel.util;
  */
 @:enum abstract FlxDirections(Int) from Int to Int
 {
-	/** Generic value for "left". */
 	var LEFT    = 0x0001;
-	/** Generic value for "right". */
 	var RIGHT   = 0x0010;
-	/** Generic value for "up". */
 	var UP      = 0x0100;
-	/** Generic value for "down". */
 	var DOWN    = 0x1000;
 	/** Special-case constant meaning no directions. */
 	var NONE    = 0x0000;
