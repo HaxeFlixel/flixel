@@ -55,17 +55,17 @@ class FlxDirectionsTest extends FlxTest
 	}
 	
 	@Test
-	function addSame()
+	function withSame()
 	{
-		Assert.areEqual(LEFT, (LEFT + LEFT));
-		Assert.areEqual(RIGHT, (RIGHT + RIGHT));
+		Assert.areEqual(LEFT, LEFT.with(LEFT));
+		Assert.areEqual(RIGHT, RIGHT.with(RIGHT));
 	}
 	
 	@Test
-	function addNotSame()
+	function withNotSame()
 	{
-		Assert.areEqual(WALL, (LEFT + RIGHT));
-		Assert.areEqual(WALL, (RIGHT + LEFT));
+		Assert.areEqual(WALL, LEFT.with(RIGHT));
+		Assert.areEqual(WALL, RIGHT.with(LEFT));
 	}
 	
 	@Test
@@ -97,10 +97,17 @@ class FlxDirectionsTest extends FlxTest
 	}
 	
 	@Test
-	function subtractNotSame()
+	function withoutSame()
 	{
-		Assert.areEqual(LEFT , (LEFT - RIGHT));
-		Assert.areEqual(RIGHT, (RIGHT - LEFT));
+		Assert.areEqual(NONE, LEFT.without(LEFT));
+		Assert.areEqual(NONE, RIGHT.without(RIGHT));
+	}
+	
+	@Test
+	function withoutNotSame()
+	{
+		Assert.areEqual(LEFT , LEFT.without(RIGHT));
+		Assert.areEqual(RIGHT, RIGHT.without(LEFT));
 	}
 	
 	@Test
@@ -147,35 +154,13 @@ class FlxDirectionsTest extends FlxTest
 	}
 	
 	@Test
-	function addRemove()
+	function withWithoutNew()
 	{
 		dirs = WALL;
-		dirs.remove(LEFT);
-		Assert.areEqual(RIGHT, dirs);
-		dirs.add(UP);
-		Assert.areEqual(RIGHT | UP, dirs);
-		dirs -= UP;
-		Assert.areEqual(RIGHT, dirs);
-		dirs += LEFT;
-		Assert.areEqual(WALL, dirs);
-		dirs += NONE;
-		Assert.areEqual(WALL, dirs);
-		dirs += ANY;
-		Assert.areEqual(ANY, dirs);
-	}
-	
-	@Test
-	function addRemoveNew()
-	{
-		dirs = WALL;
-		Assert.areEqual(RIGHT, dirs.removeNew(LEFT));
-		Assert.areEqual(RIGHT, dirs - LEFT);
-		Assert.areEqual(0x0111, dirs.addNew(UP));
-		Assert.areEqual(0x0111, dirs + UP);
-		Assert.areEqual(WALL, dirs.add(NONE));
-		Assert.areEqual(WALL, dirs + NONE);
-		Assert.areEqual(ANY, dirs.add(ANY));
-		Assert.areEqual(ANY, dirs + ANY);
+		Assert.areEqual(RIGHT, dirs.without(LEFT));
+		Assert.areEqual(0x0111, dirs.with(UP));
+		Assert.areEqual(WALL, dirs.with(NONE));
+		Assert.areEqual(ANY, dirs.with(ANY));
 	}
 	
 	@Test

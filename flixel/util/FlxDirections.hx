@@ -46,41 +46,18 @@ package flixel.util;
 	}
 	
 	/**
-	 * Adds the supplied flags if this doesn't already have them.
-	 * This modifies this instance instead of creating a new one.
+	 * Creates a new `FlxDirections` that includes the supplied directions.
 	 */
-	@:op(A += B)
-	public inline function add(dir:FlxDirections):FlxDirections
-	{
-		return this = this | dir;
-	}
-	
-	/**
-	 * Removes the supplied directions if they are present, ignores directions this does not have.
-	 * This modifies this instance instead of creating a new one.
-	 */
-	@:op(A -= B)
-	public inline function remove(dir:FlxDirections):FlxDirections
-	{
-		return this = this & ~dir;
-	}
-	
-	/**
-	 * Adds the supplied flags if this doesn't already have them.
-	 * this creates a new instance without modifying this instance.
-	 */
-	@:op(A + B)
-	public inline function addNew(dir:FlxDirections):FlxDirections
+
+	public inline function with(dir:FlxDirections):FlxDirections
 	{
 		return this | dir;
 	}
 	
 	/**
-	 * Removes the supplied directions if they are present, ignores directions this does not have.
-	 * This creates a new instance without modifying this instance.
+	 * Creates a new `FlxDirections` that excludes the supplied directions.
 	 */
-	@:op(A - B)
-	public inline function removeNew(dir:FlxDirections):FlxDirections
+	public inline function without(dir:FlxDirections):FlxDirections
 	{
 		return this & ~dir;
 	}
@@ -91,10 +68,10 @@ package flixel.util;
 			return "NONE";
 		
 		var str = "";
-		if (hasAny(LEFT )) str += " | L";
-		if (hasAny(RIGHT)) str += " | R";
-		if (hasAny(UP   )) str += " | U";
-		if (hasAny(DOWN )) str += " | D";
+		if (hasAll(LEFT )) str += " | L";
+		if (hasAll(RIGHT)) str += " | R";
+		if (hasAll(UP   )) str += " | U";
+		if (hasAll(DOWN )) str += " | D";
 		
 		// remove the first " | "
 		return str.substr(3);
