@@ -22,7 +22,8 @@ using flixel.util.FlxUnicodeUtil;
  * Can tint, fade, rotate and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  */
-class FlxBitmapText extends FlxSprite {
+class FlxBitmapText extends FlxSprite
+{
 	/**
 	 * Font for text rendering.
 	 */
@@ -200,7 +201,8 @@ class FlxBitmapText extends FlxSprite {
 	 * 
 	 * @param 	font	Optional parameter for component's font prop
 	 */
-	public function new(?font:FlxBitmapFont) {
+	public function new(?font:FlxBitmapFont)
+	{
 		super();
 
 		width = fieldWidth = 2;
@@ -210,9 +212,12 @@ class FlxBitmapText extends FlxSprite {
 
 		shadowOffset = FlxPoint.get(1, 1);
 
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			pixels = new BitmapData(1, 1, true, FlxColor.TRANSPARENT);
-		} else {
+		}
+		else
+		{
 			textData = [];
 
 			textDrawData = [];
@@ -223,7 +228,8 @@ class FlxBitmapText extends FlxSprite {
 	/**
 	 * Clears all resources used.
 	 */
-	override public function destroy():Void {
+	override public function destroy():Void
+	{
 		font = null;
 		text = null;
 		_lines = null;
@@ -234,7 +240,8 @@ class FlxBitmapText extends FlxSprite {
 
 		_colorParams = null;
 
-		if (FlxG.renderTile) {
+		if (FlxG.renderTile)
+		{
 			textData = null;
 			textDrawData = null;
 			borderDrawData = null;
@@ -245,42 +252,54 @@ class FlxBitmapText extends FlxSprite {
 	/**
 	 * Forces graphic regeneration for this text field.
 	 */
-	override public function drawFrame(Force:Bool = false):Void {
-		if (FlxG.renderTile) {
+	override public function drawFrame(Force:Bool = false):Void
+	{
+		if (FlxG.renderTile)
+		{
 			Force = true;
 		}
 		pendingTextBitmapChange = pendingTextBitmapChange || Force;
 		checkPendingChanges(false);
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			super.drawFrame(Force);
 		}
 	}
 
-	inline function checkPendingChanges(useTiles:Bool = false):Void {
-		if (FlxG.renderBlit) {
+	inline function checkPendingChanges(useTiles:Bool = false):Void
+	{
+		if (FlxG.renderBlit)
+		{
 			useTiles = false;
 		}
 
-		if (pendingTextChange) {
+		if (pendingTextChange)
+		{
 			updateText();
 			pendingTextBitmapChange = true;
 		}
 
-		if (pendingTextBitmapChange) {
+		if (pendingTextBitmapChange)
+		{
 			updateTextBitmap(useTiles);
 			pendingPixelsChange = true;
 		}
 
-		if (pendingPixelsChange) {
+		if (pendingPixelsChange)
+		{
 			updatePixels(useTiles);
 		}
 	}
 
-	override public function draw():Void {
-		if (FlxG.renderBlit) {
+	override public function draw():Void
+	{
+		if (FlxG.renderBlit)
+		{
 			checkPendingChanges(false);
 			super.draw();
-		} else {
+		}
+		else
+		{
 			checkPendingChanges(true);
 
 			var textLength:Int = Std.int(textDrawData.length / 3);
@@ -302,7 +321,8 @@ class FlxBitmapText extends FlxSprite {
 			var textBlue:Float = cb;
 			var tAlpha:Float = alpha;
 
-			if (useTextColor) {
+			if (useTextColor)
+			{
 				textRed *= textColor.redFloat;
 				textGreen *= textColor.greenFloat;
 				textBlue *= textColor.blueFloat;
@@ -314,7 +334,8 @@ class FlxBitmapText extends FlxSprite {
 			var bgBlue:Float = cb;
 			var bgAlpha:Float = alpha;
 
-			if (background) {
+			if (background)
+			{
 				bgRed *= backgroundColor.redFloat;
 				bgGreen *= backgroundColor.greenFloat;
 				bgBlue *= backgroundColor.blueFloat;
@@ -331,39 +352,48 @@ class FlxBitmapText extends FlxSprite {
 			var ox:Float = origin.x;
 			var oy:Float = origin.y;
 
-			if (_facingHorizontalMult != 1) {
+			if (_facingHorizontalMult != 1)
+			{
 				ox = frameWidth - ox;
 			}
-			if (_facingVerticalMult != 1) {
+			if (_facingVerticalMult != 1)
+			{
 				oy = frameHeight - oy;
 			}
 
 			var clippedFrameRect;
 			var tmpFrameRect:FlxRect = FlxRect.get();
-
-			if (clipRect != null) {
+			
+			if (clipRect != null)
+			{
 				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
 
 				if (clippedFrameRect.isEmpty)
 					return;
-			} else {
+			}
+			else
+			{
 				clippedFrameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
 			}
 
-			for (camera in cameras) {
-				if (!camera.visible || !camera.exists || !isOnScreen(camera)) {
+			for (camera in cameras)
+			{
+				if (!camera.visible || !camera.exists || !isOnScreen(camera))
+				{
 					continue;
 				}
 
 				getScreenPosition(_point, camera).subtractPoint(offset);
 
-				if (isPixelPerfectRender(camera)) {
+				if (isPixelPerfectRender(camera))
+				{
 					_point.floor();
 				}
 
 				updateTrig();
 
-				if (background) {
+				if (background)
+				{
 					// backround tile transformations
 					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
@@ -371,7 +401,8 @@ class FlxBitmapText extends FlxSprite {
 					_matrix.translate(clippedFrameRect.x - ox, clippedFrameRect.y - oy);
 					_matrix.scale(sx, sy);
 
-					if (angle != 0) {
+					if (angle != 0)
+					{
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
 
@@ -384,7 +415,8 @@ class FlxBitmapText extends FlxSprite {
 
 				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 
-				for (j in 0...borderLength) {
+				for (j in 0...borderLength)
+				{
 					dataPos = j * 3;
 
 					currFrame = font.getCharFrame(Std.int(borderDrawData[dataPos]));
@@ -392,7 +424,8 @@ class FlxBitmapText extends FlxSprite {
 					currTileX = borderDrawData[dataPos + 1];
 					currTileY = borderDrawData[dataPos + 2];
 
-					if (clipRect != null) {
+					if (clipRect != null)
+					{
 						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
 						currFrame = currFrame.clipTo(clippedFrameRect);
 					}
@@ -400,7 +433,8 @@ class FlxBitmapText extends FlxSprite {
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
 					_matrix.scale(sx, sy);
-					if (angle != 0) {
+					if (angle != 0)
+					{
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
 
@@ -408,10 +442,11 @@ class FlxBitmapText extends FlxSprite {
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
-
+				
 				var prevAdv:Float = 0;
 
-				for (j in 0...textLength) {
+				for (j in 0...textLength)
+				{
 					dataPos = j * 3;
 
 					currFrame = font.getCharFrame(Std.int(textDrawData[dataPos])).copyTo();
@@ -419,25 +454,31 @@ class FlxBitmapText extends FlxSprite {
 					currTileX = textDrawData[dataPos + 1];
 					currTileY = textDrawData[dataPos + 2];
 
-					if (clipRect != null) {
+					if (clipRect != null)
+					{
 						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
 						currFrame = currFrame.clipTo(clippedFrameRect);
 					}
-
-					if (FlxBitmapFont.isUnicodeComboMark(Std.int(textDrawData[dataPos]))) {
+					
+					if (FlxBitmapFont.isUnicodeComboMark(Std.int(textDrawData[dataPos]))) 
+					{
 						tmpFrameRect.copyFrom(currFrame.frame);
 						tmpFrameRect.width = Math.min(currFrame.frame.width, prevAdv + letterSpacing);
 						currFrame.frame = tmpFrameRect;
-					} else {
+					} 
+					else 
+					{
 						prevAdv = font.getCharAdvance(Std.int(textDrawData[dataPos]));
 					}
 
 					currFrame.prepareMatrix(_matrix);
 					_matrix.translate(currTileX - ox, currTileY - oy);
 					_matrix.scale(sx, sy);
-					if (angle != 0) {
+					if (angle != 0)
+					{
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
+
 					_matrix.translate(_point.x + ox, _point.y + oy);
 					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
@@ -450,44 +491,53 @@ class FlxBitmapText extends FlxSprite {
 
 			// dispose clipRect helpers
 			clippedFrameRect.put();
-			tmpFrameRect.put();
 
 			#if FLX_DEBUG
-			if (FlxG.debugger.drawDebug) {
+			if (FlxG.debugger.drawDebug)
+			{
 				drawDebug();
 			}
 			#end
 		}
 	}
 
-	override function set_clipRect(Rect:FlxRect):FlxRect {
+	override function set_clipRect(Rect:FlxRect):FlxRect
+	{
 		super.set_clipRect(Rect);
-		if (!FlxG.renderBlit) {
+		if (!FlxG.renderBlit)
+		{
 			pendingTextBitmapChange = true;
 		}
 		return clipRect;
 	}
 
-	override function set_color(Color:FlxColor):FlxColor {
+	override function set_color(Color:FlxColor):FlxColor
+	{
 		super.set_color(Color);
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			pendingTextBitmapChange = true;
 		}
 		return color;
 	}
 
-	override function set_alpha(value:Float):Float {
+	override function set_alpha(value:Float):Float
+	{
 		super.set_alpha(value);
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			pendingTextBitmapChange = true;
 		}
 		return value;
 	}
 
-	function set_textColor(value:FlxColor):FlxColor {
-		if (textColor != value) {
+	function set_textColor(value:FlxColor):FlxColor
+	{
+		if (textColor != value)
+		{
 			textColor = value;
-			if (FlxG.renderBlit) {
+			if (FlxG.renderBlit)
+			{
 				pendingPixelsChange = true;
 			}
 		}
@@ -495,10 +545,13 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_useTextColor(value:Bool):Bool {
-		if (useTextColor != value) {
+	function set_useTextColor(value:Bool):Bool
+	{
+		if (useTextColor != value)
+		{
 			useTextColor = value;
-			if (FlxG.renderBlit) {
+			if (FlxG.renderBlit)
+			{
 				pendingPixelsChange = true;
 			}
 		}
@@ -506,16 +559,22 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	override function calcFrame(RunOnCpp:Bool = false):Void {
-		if (FlxG.renderTile) {
+	override function calcFrame(RunOnCpp:Bool = false):Void
+	{
+		if (FlxG.renderTile)
+		{
 			drawFrame(RunOnCpp);
-		} else {
+		}
+		else
+		{
 			super.calcFrame(RunOnCpp);
 		}
 	}
 
-	function set_text(value:String):String {
-		if (value != text) {
+	function set_text(value:String):String
+	{
+		if (value != text)
+		{
 			text = value;
 			pendingTextChange = true;
 		}
@@ -523,25 +582,32 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function updateText():Void {
+	function updateText():Void
+	{
 		var tmp:String = (autoUpperCase) ? text.toUpperCase() : text;
 
 		_lines = tmp.split("\n");
 
-		if (!autoSize) {
-			if (wordWrap) {
+		if (!autoSize)
+		{
+			if (wordWrap)
+			{
 				wrap();
-			} else {
+			}
+			else
+			{
 				cutLines();
 			}
 		}
 
-		if (!multiLine) {
+		if (!multiLine)
+		{
 			_lines = [_lines[0]];
 		}
 
 		var numLines:Int = _lines.length;
-		for (i in 0...numLines) {
+		for (i in 0...numLines)
+		{
 			_lines[i] = StringTools.rtrim(_lines[i]);
 		}
 
@@ -552,13 +618,17 @@ class FlxBitmapText extends FlxSprite {
 	/**
 	 * Calculates the size of text field.
 	 */
-	function computeTextSize():Void {
+	function computeTextSize():Void
+	{
 		var txtWidth:Int = textWidth + Std.int(borderSize) * 2;
 		var txtHeight:Int = textHeight + 2 * padding + Std.int(borderSize) * 2;
 
-		if (autoSize) {
+		if (autoSize)
+		{
 			txtWidth += 2 * padding;
-		} else {
+		}
+		else
+		{
 			txtWidth = fieldWidth;
 		}
 
@@ -572,8 +642,10 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	lineIndex	index of the line in _lines array
 	 * @return	The width of the line
 	 */
-	public function getLineWidth(lineIndex:Int):Int {
-		if (lineIndex < 0 || lineIndex >= _lines.length) {
+	public function getLineWidth(lineIndex:Int):Int
+	{
+		if (lineIndex < 0 || lineIndex >= _lines.length)
+		{
 			return 0;
 		}
 
@@ -586,7 +658,8 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	str	String to calculate width for
 	 * @return	The width of result bitmap text.
 	 */
-	public function getStringWidth(str:String):Int {
+	public function getStringWidth(str:String):Int
+	{
 		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
@@ -597,18 +670,25 @@ class FlxBitmapText extends FlxSprite {
 		var charWidth:Float; // the width of current character
 		var charFrame:FlxFrame;
 
-		for (c in 0...lineLength) {
+		for (c in 0...lineLength)
+		{
 			charCode = str.uCharCodeAt(c);
 			charWidth = 0;
 
-			if (charCode == FlxBitmapFont.SPACE_CODE) {
+			if (charCode == FlxBitmapFont.SPACE_CODE)
+			{
 				charWidth = spaceWidth;
-			} else if (charCode == FlxBitmapFont.TAB_CODE) {
+			}
+			else if (charCode == FlxBitmapFont.TAB_CODE)
+			{
 				charWidth = tabWidth;
-			} else if (font.charExists(charCode)) {
+			}
+			else if (font.charExists(charCode))
+			{
 				charWidth = font.getCharAdvance(charCode);
 
-				if (c == (lineLength - 1)) {
+				if (c == (lineLength - 1))
+				{
 					charFrame = font.getCharFrame(charCode);
 					charWidth = Std.int(charFrame.sourceSize.x);
 				}
@@ -617,7 +697,8 @@ class FlxBitmapText extends FlxSprite {
 			lineWidth += (charWidth + letterSpacing);
 		}
 
-		if (lineLength > 0) {
+		if (lineLength > 0)
+		{
 			lineWidth -= letterSpacing;
 		}
 
@@ -627,7 +708,8 @@ class FlxBitmapText extends FlxSprite {
 	/**
 	 * Just cuts the lines which are too long to fit in the field.
 	 */
-	function cutLines():Void {
+	function cutLines():Void
+	{
 		var newLines:Array<String> = [];
 
 		var lineLength:Int; // lenght of the current line
@@ -644,31 +726,41 @@ class FlxBitmapText extends FlxSprite {
 
 		var startX:Int = font.minOffsetX;
 
-		for (line in _lines) {
+		for (line in _lines)
+		{
 			lineLength = line.uLength();
 			subLine = new UnicodeBuffer();
 			subLineWidth = startX;
 
 			c = 0;
-			while (c < lineLength) {
+			while (c < lineLength)
+			{
 				charCode = line.uCharCodeAt(c);
 
-				if (charCode == FlxBitmapFont.SPACE_CODE) {
+				if (charCode == FlxBitmapFont.SPACE_CODE)
+				{
 					charWidth = spaceWidth;
-				} else if (charCode == FlxBitmapFont.TAB_CODE) {
+				}
+				else if (charCode == FlxBitmapFont.TAB_CODE)
+				{
 					charWidth = tabWidth;
-				} else {
+				}
+				else
+				{
 					charWidth = font.getCharAdvance(charCode);
 				}
 				charWidth += letterSpacing;
 
-				if (subLineWidth + charWidth > _fieldWidth - 2 * padding) {
+				if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
+				{
 					subLine = subLine.addChar(charCode);
 					newLines.push(subLine.toString());
 					subLine = new UnicodeBuffer();
 					subLineWidth = startX;
 					c = lineLength;
-				} else {
+				}
+				else
+				{
 					subLine = subLine.addChar(charCode);
 					subLineWidth += charWidth;
 				}
@@ -684,19 +776,24 @@ class FlxBitmapText extends FlxSprite {
 	 * Automatically wraps text by figuring out how many characters can fit on a
 	 * single line, and splitting the remainder onto a new line.
 	 */
-	function wrap():Void {
+	function wrap():Void
+	{
 		// subdivide lines
 		var newLines:Array<String> = [];
 		var words:Array<String>; // the array of words in the current line
 
-		for (line in _lines) {
+		for (line in _lines)
+		{
 			words = [];
 			// split this line into words
 			splitLineIntoWords(line, words);
 
-			if (wrapByWord) {
+			if (wrapByWord)
+			{
 				wrapLineByWord(words, newLines);
-			} else {
+			}
+			else
+			{
 				wrapLineByCharacter(words, newLines);
 			}
 		}
@@ -710,7 +807,8 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	line	line to split.
 	 * @param	words	result array to fill with words.
 	 */
-	function splitLineIntoWords(line:String, words:Array<String>):Void {
+	function splitLineIntoWords(line:String, words:Array<String>):Void
+	{
 		var word:String = ""; // current word to process
 		var wordUtf8 = new UnicodeBuffer();
 		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
@@ -720,35 +818,47 @@ class FlxBitmapText extends FlxSprite {
 		var charCode:Int; // code for the current character in word
 		var charUtf8:UnicodeBuffer;
 
-		while (c < lineLength) {
+		while (c < lineLength)
+		{
 			charCode = line.uCharCodeAt(c);
 			word = wordUtf8.toString();
 
-			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE) {
-				if (!isSpaceWord) {
+			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE)
+			{
+				if (!isSpaceWord)
+				{
 					isSpaceWord = true;
 
-					if (word != "") {
+					if (word != "")
+					{
 						words.push(word);
 						wordUtf8 = new UnicodeBuffer();
 					}
 				}
 
 				wordUtf8 = wordUtf8.addChar(charCode);
-			} else if (charCode == '-'.code) {
-				if (isSpaceWord && word != "") {
+			}
+			else if (charCode == '-'.code)
+			{
+				if (isSpaceWord && word != "")
+				{
 					isSpaceWord = false;
 					words.push(word);
 					words.push('-');
-				} else if (!isSpaceWord) {
+				}
+				else if (!isSpaceWord)
+				{
 					charUtf8 = new UnicodeBuffer();
 					charUtf8 = charUtf8.addChar(charCode);
 					words.push(word + charUtf8.toString());
 				}
 
 				wordUtf8 = new UnicodeBuffer();
-			} else {
-				if (isSpaceWord && word != "") {
+			}
+			else
+			{
+				if (isSpaceWord && word != "")
+				{
 					isSpaceWord = false;
 					words.push(word);
 					wordUtf8 = new UnicodeBuffer();
@@ -771,7 +881,8 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	words		The array of words in the line to process.
 	 * @param	newLines	Array to fill with result lines.
 	 */
-	function wrapLineByWord(words:Array<String>, newLines:Array<String>):Void {
+	function wrapLineByWord(words:Array<String>, newLines:Array<String>):Void
+	{
 		var numWords:Int = words.length; // number of words in the current line
 		var w:Int; // word index in the current line
 		var word:String; // current word to process
@@ -793,12 +904,14 @@ class FlxBitmapText extends FlxSprite {
 
 		var startX:Int = font.minOffsetX;
 
-		if (numWords > 0) {
+		if (numWords > 0)
+		{
 			w = 0;
 			subLineWidth = startX;
 			subLine = "";
 
-			while (w < numWords) {
+			while (w < numWords)
+			{
 				wordWidth = 0;
 				word = words[w];
 				wordLength = word.uLength();
@@ -806,14 +919,20 @@ class FlxBitmapText extends FlxSprite {
 				charCode = word.charCodeAt(0);
 				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 
-				for (c in 0...wordLength) {
+				for (c in 0...wordLength)
+				{
 					charCode = word.charCodeAt(c);
 
-					if (charCode == FlxBitmapFont.SPACE_CODE) {
+					if (charCode == FlxBitmapFont.SPACE_CODE)
+					{
 						charWidth = spaceWidth;
-					} else if (charCode == FlxBitmapFont.TAB_CODE) {
+					}
+					else if (charCode == FlxBitmapFont.TAB_CODE)
+					{
 						charWidth = tabWidth;
-					} else {
+					}
+					else
+					{
 						charWidth = font.getCharAdvance(charCode);
 					}
 
@@ -822,22 +941,28 @@ class FlxBitmapText extends FlxSprite {
 
 				wordWidth += (wordLength - 1) * letterSpacing;
 
-				if (subLineWidth + wordWidth > _fieldWidth - 2 * padding) {
-					if (isSpaceWord) {
+				if (subLineWidth + wordWidth > _fieldWidth - 2 * padding)
+				{
+					if (isSpaceWord)
+					{
 						subLines.push(subLine);
 						subLine = "";
 						subLineWidth = startX;
-					} else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
+					}
+					else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
 					{
 						subLines.push(subLine);
 						subLine = word;
 						subLineWidth = startX + wordWidth + letterSpacing;
-					} else // the line is too tight to hold even one word
+					}
+					else // the line is too tight to hold even one word
 					{
 						subLine = word;
 						subLineWidth = startX + wordWidth + letterSpacing;
 					}
-				} else {
+				}
+				else
+				{
 					subLine += word;
 					subLineWidth += wordWidth + letterSpacing;
 				}
@@ -845,12 +970,14 @@ class FlxBitmapText extends FlxSprite {
 				w++;
 			}
 
-			if (subLine != "") {
+			if (subLine != "")
+			{
 				subLines.push(subLine);
 			}
 		}
 
-		for (subline in subLines) {
+		for (subline in subLines)
+		{
 			newLines.push(subline);
 		}
 	}
@@ -861,7 +988,8 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	words		The array of words in the line to process.
 	 * @param	newLines	Array to fill with result lines.
 	 */
-	function wrapLineByCharacter(words:Array<String>, newLines:Array<String>):Void {
+	function wrapLineByCharacter(words:Array<String>, newLines:Array<String>):Void
+	{
 		var numWords:Int = words.length; // number of words in the current line
 		var w:Int; // word index in the current line
 		var word:String; // current word to process
@@ -884,12 +1012,14 @@ class FlxBitmapText extends FlxSprite {
 
 		var startX:Int = font.minOffsetX;
 
-		if (numWords > 0) {
+		if (numWords > 0)
+		{
 			w = 0;
 			subLineWidth = startX;
 			subLineUtf8 = new UnicodeBuffer();
 
-			while (w < numWords) {
+			while (w < numWords)
+			{
 				word = words[w];
 				wordLength = word.uLength();
 
@@ -898,18 +1028,25 @@ class FlxBitmapText extends FlxSprite {
 
 				c = 0;
 
-				while (c < wordLength) {
+				while (c < wordLength)
+				{
 					charCode = word.uCharCodeAt(c);
 
-					if (charCode == FlxBitmapFont.SPACE_CODE) {
+					if (charCode == FlxBitmapFont.SPACE_CODE)
+					{
 						charWidth = spaceWidth;
-					} else if (charCode == FlxBitmapFont.TAB_CODE) {
+					}
+					else if (charCode == FlxBitmapFont.TAB_CODE)
+					{
 						charWidth = tabWidth;
-					} else {
+					}
+					else
+					{
 						charWidth = font.getCharAdvance(charCode);
 					}
 
-					if (subLineWidth + charWidth > _fieldWidth - 2 * padding) {
+					if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
+					{
 						subLine = subLineUtf8.toString();
 
 						if (isSpaceWord) // new line ends with space / tab char, so we push it to sublines array, skip all the rest spaces and start another line
@@ -918,19 +1055,23 @@ class FlxBitmapText extends FlxSprite {
 							c = wordLength;
 							subLineUtf8 = new UnicodeBuffer();
 							subLineWidth = startX;
-						} else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
+						}
+						else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
 						{
 							subLines.push(subLine);
 							subLineUtf8 = new UnicodeBuffer();
 							subLineUtf8 = subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
-						} else // the line is too tight to hold even one character
+						}
+						else // the line is too tight to hold even one character
 						{
 							subLineUtf8 = new UnicodeBuffer();
 							subLineUtf8 = subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
-					} else {
+					}
+					else
+					{
 						subLineUtf8 = subLineUtf8.addChar(charCode);
 						subLineWidth += (charWidth + letterSpacing);
 					}
@@ -943,12 +1084,14 @@ class FlxBitmapText extends FlxSprite {
 
 			subLine = subLineUtf8.toString();
 
-			if (subLine != "") {
+			if (subLine != "")
+			{
 				subLines.push(subLine);
 			}
 		}
 
-		for (subline in subLines) {
+		for (subline in subLines)
+		{
 			newLines.push(subline);
 		}
 	}
@@ -956,24 +1099,32 @@ class FlxBitmapText extends FlxSprite {
 	/**
 	 * Internal method for updating helper data for text rendering
 	 */
-	function updateTextBitmap(useTiles:Bool = false):Void {
+	function updateTextBitmap(useTiles:Bool = false):Void
+	{
 		computeTextSize();
 
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			useTiles = false;
 		}
 
-		if (!useTiles) {
+		if (!useTiles)
+		{
 			textBitmap = FlxDestroyUtil.disposeIfNotEqual(textBitmap, frameWidth, frameHeight);
 
-			if (textBitmap == null) {
+			if (textBitmap == null)
+			{
 				textBitmap = new BitmapData(frameWidth, frameHeight, true, FlxColor.TRANSPARENT);
-			} else {
+			}
+			else
+			{
 				textBitmap.fillRect(textBitmap.rect, FlxColor.TRANSPARENT);
 			}
 
 			textBitmap.lock();
-		} else if (FlxG.renderTile) {
+		}
+		else if (FlxG.renderTile)
+		{
 			textData.splice(0, textData.length);
 		}
 
@@ -985,7 +1136,8 @@ class FlxBitmapText extends FlxSprite {
 
 		var ox:Int, oy:Int;
 
-		for (i in 0...numLines) {
+		for (i in 0...numLines)
+		{
 			line = _lines[i];
 			lineWidth = _linesWidth[i];
 
@@ -993,11 +1145,15 @@ class FlxBitmapText extends FlxSprite {
 			ox = font.minOffsetX;
 			oy = i * (font.lineHeight + lineSpacing) + padding;
 
-			if (alignment == FlxTextAlign.CENTER) {
+			if (alignment == FlxTextAlign.CENTER)
+			{
 				ox += Std.int((frameWidth - lineWidth) / 2);
-			} else if (alignment == FlxTextAlign.RIGHT) {
+			}
+			else if (alignment == FlxTextAlign.RIGHT)
+			{
 				ox += (frameWidth - lineWidth) - padding;
-			} else // LEFT OR JUSTIFY
+			}
+			else // LEFT OR JUSTIFY
 			{
 				ox += padding;
 			}
@@ -1005,26 +1161,33 @@ class FlxBitmapText extends FlxSprite {
 			drawLine(i, ox, oy, useTiles);
 		}
 
-		if (!useTiles) {
+		if (!useTiles)
+		{
 			textBitmap.unlock();
 		}
 
 		pendingTextBitmapChange = false;
 	}
 
-	function drawLine(lineIndex:Int, posX:Int, posY:Int, useTiles:Bool = false):Void {
-		if (FlxG.renderBlit) {
+	function drawLine(lineIndex:Int, posX:Int, posY:Int, useTiles:Bool = false):Void
+	{
+		if (FlxG.renderBlit)
+		{
 			useTiles = false;
 		}
 
-		if (useTiles) {
+		if (useTiles)
+		{
 			tileLine(lineIndex, posX, posY);
-		} else {
+		}
+		else
+		{
 			blitLine(lineIndex, posX, posY);
 		}
 	}
 
-	function blitLine(lineIndex:Int, startX:Int, startY:Int):Void {
+	function blitLine(lineIndex:Int, startX:Int, startY:Int):Void
+	{
 		var charFrame:FlxFrame;
 		var charCode:Int;
 		var curX:Float = startX;
@@ -1034,18 +1197,23 @@ class FlxBitmapText extends FlxSprite {
 		var spaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
-
+		
 		var charUt8;
 
-		if (alignment == FlxTextAlign.JUSTIFY) {
+		if (alignment == FlxTextAlign.JUSTIFY)
+		{
 			var numSpaces:Int = 0;
 
-			for (i in 0...lineLength) {
+			for (i in 0...lineLength)
+			{
 				charCode = line.uCharCodeAt(i);
 
-				if (charCode == FlxBitmapFont.SPACE_CODE) {
+				if (charCode == FlxBitmapFont.SPACE_CODE)
+				{
 					numSpaces++;
-				} else if (charCode == FlxBitmapFont.TAB_CODE) {
+				}
+				else if (charCode == FlxBitmapFont.TAB_CODE)
+				{
 					numSpaces += numSpacesInTab;
 				}
 			}
@@ -1056,24 +1224,35 @@ class FlxBitmapText extends FlxSprite {
 		}
 
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
-
+		
 		var prevAdv:Float = 0;
 
-		for (i in 0...lineLength) {
+		for (i in 0...lineLength)
+		{
 			charCode = line.uCharCodeAt(i);
 
-			if (charCode == FlxBitmapFont.SPACE_CODE) {
+			if (charCode == FlxBitmapFont.SPACE_CODE)
+			{
 				curX += spaceWidth + letterSpacing;
 				prevAdv = spaceWidth;
-			} else if (charCode == FlxBitmapFont.TAB_CODE) {
+			}
+			else if (charCode == FlxBitmapFont.TAB_CODE)
+			{
 				curX += tabWidth + letterSpacing;
 				prevAdv = tabWidth;
-			} else {
+			}
+			else
+			{
 				charFrame = font.getCharFrame(charCode);
-				if (charFrame != null) {
-					if (FlxBitmapFont.isUnicodeComboMark(charCode)) {
+				if (charFrame != null)
+				{
+					
+					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
+					{
 						_flashPoint.setTo(curX - prevAdv - letterSpacing, curY);
-					} else {
+					} 
+					else
+					{
 						_flashPoint.setTo(curX, curY);
 						curX += font.getCharAdvance(charCode) + letterSpacing;
 						prevAdv = font.getCharAdvance(charCode);
@@ -1086,7 +1265,8 @@ class FlxBitmapText extends FlxSprite {
 		}
 	}
 
-	function tileLine(lineIndex:Int, startX:Int, startY:Int):Void {
+	function tileLine(lineIndex:Int, startX:Int, startY:Int):Void
+	{
 		if (!FlxG.renderTile)
 			return;
 
@@ -1101,18 +1281,23 @@ class FlxBitmapText extends FlxSprite {
 		var spaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
-
+		
 		var prevAdv:Float = 0;
 
-		if (alignment == FlxTextAlign.JUSTIFY) {
+		if (alignment == FlxTextAlign.JUSTIFY)
+		{
 			var numSpaces:Int = 0;
 
-			for (i in 0...lineLength) {
+			for (i in 0...lineLength)
+			{
 				charCode = line.uCharCodeAt(i);
 
-				if (charCode == FlxBitmapFont.SPACE_CODE) {
+				if (charCode == FlxBitmapFont.SPACE_CODE)
+				{
 					numSpaces++;
-				} else if (charCode == FlxBitmapFont.TAB_CODE) {
+				}
+				else if (charCode == FlxBitmapFont.TAB_CODE)
+				{
 					numSpaces += numSpacesInTab;
 				}
 			}
@@ -1124,22 +1309,32 @@ class FlxBitmapText extends FlxSprite {
 
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
-		for (i in 0...lineLength) {
+		for (i in 0...lineLength)
+		{
 			charCode = line.uCharCodeAt(i);
 
-			if (charCode == FlxBitmapFont.SPACE_CODE) {
+			if (charCode == FlxBitmapFont.SPACE_CODE)
+			{
 				curX += spaceWidth + letterSpacing;
 				prevAdv = tabWidth;
-			} else if (charCode == FlxBitmapFont.TAB_CODE) {
+			}
+			else if (charCode == FlxBitmapFont.TAB_CODE)
+			{
 				curX += tabWidth + letterSpacing;
 				prevAdv = tabWidth;
-			} else {
+			}
+			else
+			{
 				charFrame = font.getCharFrame(charCode);
-				if (charFrame != null) {
+				if (charFrame != null) 
+				{
 					textData[pos++] = charCode;
-					if (FlxBitmapFont.isUnicodeComboMark(charCode)) {
+					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
+					{
 						textData[pos++] = curX - prevAdv - letterSpacing;
-					} else {
+					} 
+					else 
+					{
 						textData[pos++] = curX;
 						curX += font.getCharAdvance(charCode);
 						prevAdv = font.getCharAdvance(charCode);
@@ -1150,29 +1345,42 @@ class FlxBitmapText extends FlxSprite {
 		}
 	}
 
-	function updatePixels(useTiles:Bool = false):Void {
+	function updatePixels(useTiles:Bool = false):Void
+	{
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
 		var bitmap:BitmapData = null;
 
-		if (FlxG.renderBlit) {
-			if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height)) {
+		if (FlxG.renderBlit)
+		{
+			if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
+			{
 				pixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
-			} else {
+			}
+			else
+			{
 				pixels.fillRect(graphic.bitmap.rect, colorForFill);
 			}
 
 			bitmap = pixels;
-		} else {
-			if (!useTiles) {
-				if (framePixels == null || (frameWidth != framePixels.width || frameHeight != framePixels.height)) {
+		}
+		else
+		{
+			if (!useTiles)
+			{
+				if (framePixels == null || (frameWidth != framePixels.width || frameHeight != framePixels.height))
+				{
 					framePixels = FlxDestroyUtil.dispose(framePixels);
 					framePixels = new BitmapData(frameWidth, frameHeight, true, colorForFill);
-				} else {
+				}
+				else
+				{
 					framePixels.fillRect(framePixels.rect, colorForFill);
 				}
 
 				bitmap = framePixels;
-			} else {
+			}
+			else
+			{
 				textDrawData.splice(0, textDrawData.length);
 				borderDrawData.splice(0, borderDrawData.length);
 			}
@@ -1184,7 +1392,8 @@ class FlxBitmapText extends FlxSprite {
 			origin.y = frameHeight * 0.5;
 		}
 
-		if (!useTiles) {
+		if (!useTiles)
+		{
 			bitmap.lock();
 		}
 
@@ -1200,7 +1409,8 @@ class FlxBitmapText extends FlxSprite {
 		var deltaX:Int = 1;
 		var deltaY:Int = 1;
 
-		if (borderStyle == FlxTextBorderStyle.SHADOW) {
+		if (borderStyle == FlxTextBorderStyle.SHADOW)
+		{
 			iterationsX = Math.round(Math.abs(shadowOffset.x) * borderQuality);
 			iterationsX = (iterationsX <= 0) ? 1 : iterationsX;
 
@@ -1212,10 +1422,13 @@ class FlxBitmapText extends FlxSprite {
 		}
 
 		// render border
-		switch (borderStyle) {
+		switch (borderStyle)
+		{
 			case SHADOW:
-				for (iterY in 0...iterationsY) {
-					for (iterX in 0...iterationsX) {
+				for (iterY in 0...iterationsY)
+				{
+					for (iterX in 0...iterationsX)
+					{
 						drawText(deltaX * (iterX + 1), deltaY * (iterY + 1), isFront, bitmap, useTiles);
 					}
 				}
@@ -1223,7 +1436,8 @@ class FlxBitmapText extends FlxSprite {
 				// Render an outline around the text
 				// (do 8 offset draw calls)
 				var itd:Int = 0;
-				for (iter in 0...iterations) {
+				for (iter in 0...iterations)
+				{
 					itd = delta * (iter + 1);
 					// upper-left
 					drawText(-itd, -itd, isFront, bitmap, useTiles);
@@ -1247,7 +1461,8 @@ class FlxBitmapText extends FlxSprite {
 				// (do 4 diagonal offset draw calls)
 				// (this method might not work with certain narrow fonts)
 				var itd:Int = 0;
-				for (iter in 0...iterations) {
+				for (iter in 0...iterations)
+				{
 					itd = delta * (iter + 1);
 					// upper-left
 					drawText(-itd, -itd, isFront, bitmap, useTiles);
@@ -1264,52 +1479,67 @@ class FlxBitmapText extends FlxSprite {
 		isFront = true;
 		drawText(0, 0, isFront, bitmap, useTiles);
 
-		if (!useTiles) {
+		if (!useTiles)
+		{
 			bitmap.unlock();
 		}
 
-		if (FlxG.renderBlit) {
+		if (FlxG.renderBlit)
+		{
 			dirty = true;
 		}
 
 		pendingPixelsChange = false;
 	}
 
-	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void {
-		if (FlxG.renderBlit) {
+	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
+	{
+		if (FlxG.renderBlit)
+		{
 			useTiles = false;
 		}
 
-		if (useTiles) {
+		if (useTiles)
+		{
 			tileText(posX, posY, isFront);
-		} else {
+		}
+		else
+		{
 			blitText(posX, posY, isFront, bitmap);
 		}
 	}
 
-	function blitText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData):Void {
+	function blitText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData):Void
+	{
 		_matrix.identity();
 		_matrix.translate(posX, posY);
 
 		var colorToApply = FlxColor.WHITE;
 
-		if (isFront && useTextColor) {
+		if (isFront && useTextColor)
+		{
 			colorToApply = textColor;
-		} else if (!isFront) {
+		}
+		else if (!isFront)
+		{
 			colorToApply = borderColor;
 		}
 
 		_colorParams.setMultipliers(colorToApply.redFloat, colorToApply.greenFloat, colorToApply.blueFloat, colorToApply.alphaFloat);
 
-		if (isFront && !useTextColor) {
+		if (isFront && !useTextColor)
+		{
 			_flashRect.setTo(0, 0, textBitmap.width, textBitmap.height);
 			bitmap.copyPixels(textBitmap, _flashRect, _flashPointZero, null, null, true);
-		} else {
+		}
+		else
+		{
 			bitmap.draw(textBitmap, _matrix, _colorParams);
 		}
 	}
 
-	function tileText(posX:Int, posY:Int, isFront:Bool = true):Void {
+	function tileText(posX:Int, posY:Int, isFront:Bool = true):Void
+	{
 		if (!FlxG.renderTile)
 			return;
 
@@ -1322,17 +1552,20 @@ class FlxBitmapText extends FlxSprite {
 		var frameVisible;
 		var prevAdv:Float = 0;
 
-		for (i in 0...textLen) {
+		for (i in 0...textLen)
+		{
 			textPos = 3 * i;
 
 			frameVisible = true;
 
-			if (clipRect != null) {
+			if (clipRect != null)
+			{
 				rect.copyFrom(clipRect).offset(-textData[textPos + 1] - posX, -textData[textPos + 2] - posY);
 				frameVisible = font.getCharFrame(Std.int(textData[textPos])).clipTo(rect).type != FlxFrameType.EMPTY;
 			}
 
-			if (frameVisible) {
+			if (frameVisible)
+			{
 				data[pos++] = textData[textPos];
 				data[pos++] = textData[textPos + 1] + posX;
 				data[pos++] = textData[textPos + 2] + posY;
@@ -1350,29 +1583,35 @@ class FlxBitmapText extends FlxSprite {
 	 * @param	Size outline size in pixels
 	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void {
+	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void
+	{
 		borderStyle = Style;
 		borderColor = Color;
 		borderSize = Size;
 		borderQuality = Quality;
-		if (borderStyle == FlxTextBorderStyle.SHADOW) {
+		if (borderStyle == FlxTextBorderStyle.SHADOW)
+		{
 			shadowOffset.set(borderSize, borderSize);
 		}
 		pendingTextBitmapChange = true;
 	}
 
-	function get_fieldWidth():Int {
+	function get_fieldWidth():Int
+	{
 		return (autoSize) ? textWidth : _fieldWidth;
 	}
 
 	/**
 	 * Sets the width of the text field. If the text does not fit, it will spread on multiple lines.
 	 */
-	function set_fieldWidth(value:Int):Int {
+	function set_fieldWidth(value:Int):Int
+	{
 		value = (value > 1) ? value : 1;
 
-		if (value != _fieldWidth) {
-			if (value <= 0) {
+		if (value != _fieldWidth)
+		{
+			if (value <= 0)
+			{
 				autoSize = true;
 				wordWrap = false;
 			}
@@ -1383,8 +1622,10 @@ class FlxBitmapText extends FlxSprite {
 		return _fieldWidth = value;
 	}
 
-	function set_alignment(value:FlxTextAlign):FlxTextAlign {
-		if (alignment != value && alignment != FlxTextAlign.JUSTIFY) {
+	function set_alignment(value:FlxTextAlign):FlxTextAlign
+	{
+		if (alignment != value && alignment != FlxTextAlign.JUSTIFY)
+		{
 			alignment = value;
 			pendingTextBitmapChange = true;
 		}
@@ -1392,8 +1633,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_multiLine(value:Bool):Bool {
-		if (multiLine != value) {
+	function set_multiLine(value:Bool):Bool
+	{
+		if (multiLine != value)
+		{
 			multiLine = value;
 			pendingTextChange = true;
 		}
@@ -1401,8 +1644,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_font(value:FlxBitmapFont):FlxBitmapFont {
-		if (font != value) {
+	function set_font(value:FlxBitmapFont):FlxBitmapFont
+	{
+		if (font != value)
+		{
 			font = value;
 			pendingTextChange = true;
 		}
@@ -1410,8 +1655,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_lineSpacing(value:Int):Int {
-		if (lineSpacing != value) {
+	function set_lineSpacing(value:Int):Int
+	{
+		if (lineSpacing != value)
+		{
 			lineSpacing = value;
 			pendingTextBitmapChange = true;
 		}
@@ -1419,8 +1666,10 @@ class FlxBitmapText extends FlxSprite {
 		return lineSpacing;
 	}
 
-	function set_letterSpacing(value:Int):Int {
-		if (value != letterSpacing) {
+	function set_letterSpacing(value:Int):Int
+	{
+		if (value != letterSpacing)
+		{
 			letterSpacing = value;
 			pendingTextChange = true;
 		}
@@ -1428,8 +1677,10 @@ class FlxBitmapText extends FlxSprite {
 		return letterSpacing;
 	}
 
-	function set_autoUpperCase(value:Bool):Bool {
-		if (autoUpperCase != value) {
+	function set_autoUpperCase(value:Bool):Bool
+	{
+		if (autoUpperCase != value)
+		{
 			autoUpperCase = value;
 			pendingTextChange = true;
 		}
@@ -1437,8 +1688,10 @@ class FlxBitmapText extends FlxSprite {
 		return autoUpperCase;
 	}
 
-	function set_wordWrap(value:Bool):Bool {
-		if (wordWrap != value) {
+	function set_wordWrap(value:Bool):Bool
+	{
+		if (wordWrap != value)
+		{
 			wordWrap = value;
 			pendingTextChange = true;
 		}
@@ -1446,8 +1699,10 @@ class FlxBitmapText extends FlxSprite {
 		return wordWrap;
 	}
 
-	function set_wrapByWord(value:Bool):Bool {
-		if (wrapByWord != value) {
+	function set_wrapByWord(value:Bool):Bool
+	{
+		if (wrapByWord != value)
+		{
 			wrapByWord = value;
 			pendingTextChange = true;
 		}
@@ -1455,8 +1710,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_autoSize(value:Bool):Bool {
-		if (autoSize != value) {
+	function set_autoSize(value:Bool):Bool
+	{
+		if (autoSize != value)
+		{
 			autoSize = value;
 			pendingTextChange = true;
 		}
@@ -1464,8 +1721,10 @@ class FlxBitmapText extends FlxSprite {
 		return autoSize;
 	}
 
-	function set_padding(value:Int):Int {
-		if (value != padding) {
+	function set_padding(value:Int):Int
+	{
+		if (value != padding)
+		{
 			padding = value;
 			pendingTextChange = true;
 		}
@@ -1473,8 +1732,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_numSpacesInTab(value:Int):Int {
-		if (numSpacesInTab != value && value > 0) {
+	function set_numSpacesInTab(value:Int):Int
+	{
+		if (numSpacesInTab != value && value > 0)
+		{
 			numSpacesInTab = value;
 			pendingTextChange = true;
 		}
@@ -1482,10 +1743,13 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_background(value:Bool):Bool {
-		if (background != value) {
+	function set_background(value:Bool):Bool
+	{
+		if (background != value)
+		{
 			background = value;
-			if (FlxG.renderBlit) {
+			if (FlxG.renderBlit)
+			{
 				pendingPixelsChange = true;
 			}
 		}
@@ -1493,10 +1757,13 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_backgroundColor(value:Int):Int {
-		if (backgroundColor != value) {
+	function set_backgroundColor(value:Int):Int
+	{
+		if (backgroundColor != value)
+		{
 			backgroundColor = value;
-			if (FlxG.renderBlit) {
+			if (FlxG.renderBlit)
+			{
 				pendingPixelsChange = true;
 			}
 		}
@@ -1504,8 +1771,10 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle {
-		if (style != borderStyle) {
+	function set_borderStyle(style:FlxTextBorderStyle):FlxTextBorderStyle
+	{
+		if (style != borderStyle)
+		{
 			borderStyle = style;
 			pendingTextBitmapChange = true;
 		}
@@ -1513,10 +1782,13 @@ class FlxBitmapText extends FlxSprite {
 		return borderStyle;
 	}
 
-	function set_borderColor(value:Int):Int {
-		if (borderColor != value) {
+	function set_borderColor(value:Int):Int
+	{
+		if (borderColor != value)
+		{
 			borderColor = value;
-			if (FlxG.renderBlit) {
+			if (FlxG.renderBlit)
+			{
 				pendingPixelsChange = true;
 			}
 		}
@@ -1524,11 +1796,14 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_borderSize(value:Float):Float {
-		if (value != borderSize) {
+	function set_borderSize(value:Float):Float
+	{
+		if (value != borderSize)
+		{
 			borderSize = value;
 
-			if (borderStyle != FlxTextBorderStyle.NONE) {
+			if (borderStyle != FlxTextBorderStyle.NONE)
+			{
 				pendingTextBitmapChange = true;
 			}
 		}
@@ -1536,13 +1811,16 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function set_borderQuality(value:Float):Float {
+	function set_borderQuality(value:Float):Float
+	{
 		value = Math.min(1, Math.max(0, value));
 
-		if (value != borderQuality) {
+		if (value != borderQuality)
+		{
 			borderQuality = value;
 
-			if (borderStyle != FlxTextBorderStyle.NONE) {
+			if (borderStyle != FlxTextBorderStyle.NONE)
+			{
 				pendingTextBitmapChange = true;
 			}
 		}
@@ -1550,17 +1828,20 @@ class FlxBitmapText extends FlxSprite {
 		return value;
 	}
 
-	function get_numLines():Int {
+	function get_numLines():Int
+	{
 		return _lines.length;
 	}
 
-	function get_textWidth():Int {
+	function get_textWidth():Int
+	{
 		var max:Int = 0;
 		var numLines:Int = _lines.length;
 		var lineWidth:Int;
 		_linesWidth = [];
 
-		for (i in 0...numLines) {
+		for (i in 0...numLines)
+		{
 			lineWidth = getLineWidth(i);
 			_linesWidth[i] = lineWidth;
 			max = (max > lineWidth) ? max : lineWidth;
@@ -1569,20 +1850,24 @@ class FlxBitmapText extends FlxSprite {
 		return max;
 	}
 
-	function get_textHeight():Int {
+	function get_textHeight():Int
+	{
 		return (lineHeight + lineSpacing) * _lines.length - lineSpacing;
 	}
 
-	function get_lineHeight():Int {
+	function get_lineHeight():Int
+	{
 		return font.lineHeight;
 	}
 
-	override function get_width():Float {
+	override function get_width():Float
+	{
 		checkPendingChanges(true);
 		return super.get_width();
 	}
 
-	override function get_height():Float {
+	override function get_height():Float
+	{
 		checkPendingChanges(true);
 		return super.get_height();
 	}
