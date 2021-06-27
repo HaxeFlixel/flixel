@@ -12,10 +12,10 @@ import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-import flixel.effects.FlxFlicker;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
@@ -351,7 +351,6 @@ class FlxSpriteUtil
 		return sprite;
 	}
 
-	#if flash
 	/**
 	 * This function draws a rounded rectangle on a FlxSprite. Same as drawRoundRect,
 	 * except it allows you to determine the radius of each corner individually.
@@ -378,7 +377,6 @@ class FlxSpriteUtil
 		endDraw(sprite, drawStyle);
 		return sprite;
 	}
-	#end
 
 	/**
 	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
