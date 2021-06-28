@@ -55,6 +55,11 @@ class FlxText extends FlxSprite
 	public var size(get, set):Int;
 
 	/**
+	 * The leading (space between lines) of the text;
+	 */
+	public var leading(get, set):Int;
+
+	/**
 	 * The font used for this text (assuming that it's using embedded font).
 	 */
 	public var font(get, set):String;
@@ -583,6 +588,18 @@ class FlxText extends FlxSprite
 		_defaultFormat.size = Size;
 		updateDefaultFormat();
 		return Size;
+	}
+
+	inline function get_leading():Int
+	{
+		return Std.int(_defaultFormat.leading);
+	}
+
+	function set_leading(Leading:Int):Int
+	{
+		_defaultFormat.leading = Leading;
+		updateDefaultFormat();
+		return Leading;
 	}
 
 	override function set_color(Color:FlxColor):Int
