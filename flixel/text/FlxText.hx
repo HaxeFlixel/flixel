@@ -1040,6 +1040,7 @@ class FlxText extends FlxSprite
 		to.italic = from.italic;
 		to.size = from.size;
 		to.color = from.color;
+		to.leading = from.leading;
 		if (withAlign)
 			to.align = from.align;
 	}
@@ -1074,6 +1075,11 @@ class FlxText extends FlxSprite
 class FlxTextFormat
 {
 	/**
+	 * The leading (vertical space between lines) of the text.
+	 */
+	public var leading(default, set):Int;
+
+	/**
 	 * The border color if the text has a shadow or a border
 	 */
 	var borderColor:FlxColor;
@@ -1090,6 +1096,12 @@ class FlxTextFormat
 	{
 		format = new TextFormat(null, null, FontColor, Bold, Italic);
 		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+	}
+
+	function set_leading(value:Int):Int
+	{
+		format.leading = value;
+		return value;
 	}
 }
 
