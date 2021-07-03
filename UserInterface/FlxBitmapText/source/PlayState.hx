@@ -8,6 +8,7 @@ import flixel.text.FlxBitmapText;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import openfl.Assets;
+import flixel.util.FlxAxes;
 
 class PlayState extends FlxState
 {
@@ -36,8 +37,10 @@ class PlayState extends FlxState
 		var charSize = FlxPoint.get(48, 50);
 		var fontMonospace = FlxBitmapFont.fromMonospace("assets/260.png", monospaceLetters, charSize);
 
+		var fontDiacrit:FlxBitmapFont = FlxBitmapFont.fromAngelCode("assets/ucdm_font.png", "assets/ucdm_font.xml");
+
 		tf = new FlxBitmapText(fontXNA);
-		tf.text = "Hello World!\nand this is\nmultiline!!!";
+		tf.text = "Mouse X/Y";
 		tf.textColor = 0xff000000;
 		tf.useTextColor = true;
 		tf.autoSize = true;
@@ -63,13 +66,23 @@ class PlayState extends FlxState
 		tf2.autoUpperCase = true;
 		tf2.multiLine = true;
 		tf2.wordWrap = false;
+		tf2.screenCenter(FlxAxes.X);
 		add(tf2);
 
 		var tf3 = new FlxBitmapText(fontMonospace);
 		tf3.y = 300;
 		tf3.autoUpperCase = true;
 		tf3.text = "Robocop rules!!!";
+		tf3.screenCenter(FlxAxes.X);
 		add(tf3);
+
+		var tf4 = new FlxBitmapText(fontDiacrit);
+		tf4.y = tf3.y + tf3.height + 50;
+		tf4.alignment = FlxTextAlign.CENTER;
+		tf4.text = "!\u20e4 You can e\u0332v\u0332e\u0332n\u0332 define and use\nUnicode Combining Diacritical Marks!";
+		tf4.multiLine =  true;
+		tf4.screenCenter(FlxAxes.X);
+		add(tf4);
 	}
 
 	override public function update(elapsed:Float):Void
