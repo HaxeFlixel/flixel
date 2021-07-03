@@ -362,7 +362,6 @@ class FlxBitmapText extends FlxSprite
 			}
 
 			var clippedFrameRect;
-			var tmpFrameRect:FlxRect = FlxRect.get();
 			
 			if (clipRect != null)
 			{
@@ -442,8 +441,6 @@ class FlxBitmapText extends FlxSprite
 					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
 					drawItem.addQuad(currFrame, _matrix, _colorParams);
 				}
-				
-				var prevAdv:Float = 0;
 
 				for (j in 0...textLength)
 				{
@@ -458,17 +455,6 @@ class FlxBitmapText extends FlxSprite
 					{
 						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
 						currFrame = currFrame.clipTo(clippedFrameRect);
-					}
-					
-					if (FlxBitmapFont.isUnicodeComboMark(Std.int(textDrawData[dataPos]))) 
-					{
-						tmpFrameRect.copyFrom(currFrame.frame);
-						tmpFrameRect.width = Math.min(currFrame.frame.width, prevAdv + letterSpacing);
-						currFrame.frame = tmpFrameRect;
-					} 
-					else 
-					{
-						prevAdv = font.getCharAdvance(Std.int(textDrawData[dataPos]));
 					}
 
 					currFrame.prepareMatrix(_matrix);
@@ -1197,8 +1183,6 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
-		
-		var charUt8;
 
 		if (alignment == FlxTextAlign.JUSTIFY)
 		{
@@ -1224,9 +1208,9 @@ class FlxBitmapText extends FlxSprite
 		}
 
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
-		
-		var prevAdv:Float = 0;
 
+		var charUt8:UnicodeBuffer;
+		
 		for (i in 0...lineLength)
 		{
 			charCode = line.uCharCodeAt(i);
@@ -1234,12 +1218,10 @@ class FlxBitmapText extends FlxSprite
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth + letterSpacing;
-				prevAdv = spaceWidth;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth + letterSpacing;
-				prevAdv = tabWidth;
 			}
 			else
 			{
@@ -1249,13 +1231,12 @@ class FlxBitmapText extends FlxSprite
 					
 					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
 					{
-						_flashPoint.setTo(curX - prevAdv - letterSpacing, curY);
+						_flashPoint.setTo(curX - font.getCharAdvance(charCode) - letterSpacing, curY);
 					} 
 					else
 					{
 						_flashPoint.setTo(curX, curY);
 						curX += font.getCharAdvance(charCode) + letterSpacing;
-						prevAdv = font.getCharAdvance(charCode);
 					}
 					charFrame.paint(textBitmap, _flashPoint, true);
 					charUt8 = new UnicodeBuffer();
@@ -1282,8 +1263,6 @@ class FlxBitmapText extends FlxSprite
 		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
 		
-		var prevAdv:Float = 0;
-
 		if (alignment == FlxTextAlign.JUSTIFY)
 		{
 			var numSpaces:Int = 0;
@@ -1316,12 +1295,10 @@ class FlxBitmapText extends FlxSprite
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
 				curX += spaceWidth + letterSpacing;
-				prevAdv = tabWidth;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
 				curX += tabWidth + letterSpacing;
-				prevAdv = tabWidth;
 			}
 			else
 			{
@@ -1331,13 +1308,12 @@ class FlxBitmapText extends FlxSprite
 					textData[pos++] = charCode;
 					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
 					{
-						textData[pos++] = curX - prevAdv - letterSpacing;
+						textData[pos++] = curX - font.getCharAdvance(charCode) - letterSpacing;
 					} 
 					else 
 					{
 						textData[pos++] = curX;
-						curX += font.getCharAdvance(charCode);
-						prevAdv = font.getCharAdvance(charCode);
+						curX += font.getCharAdvance(charCode)+letterSpacing;
 					}
 					textData[pos++] = curY;
 				}
@@ -1550,7 +1526,6 @@ class FlxBitmapText extends FlxSprite
 		var textLen:Int = Std.int(textData.length / 3);
 		var rect = FlxRect.get();
 		var frameVisible;
-		var prevAdv:Float = 0;
 
 		for (i in 0...textLen)
 		{
