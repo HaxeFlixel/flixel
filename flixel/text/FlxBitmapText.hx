@@ -362,7 +362,7 @@ class FlxBitmapText extends FlxSprite
 			}
 
 			var clippedFrameRect;
-			
+
 			if (clipRect != null)
 			{
 				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
@@ -446,7 +446,7 @@ class FlxBitmapText extends FlxSprite
 				{
 					dataPos = j * 3;
 
-					currFrame = font.getCharFrame(Std.int(textDrawData[dataPos])).copyTo();
+					currFrame = font.getCharFrame(Std.int(textDrawData[dataPos]));
 
 					currTileX = textDrawData[dataPos + 1];
 					currTileY = textDrawData[dataPos + 2];
@@ -802,7 +802,6 @@ class FlxBitmapText extends FlxSprite
 
 		var c:Int = 0; // char index on the line
 		var charCode:Int; // code for the current character in word
-		var charUtf8:UnicodeBuffer;
 
 		while (c < lineLength)
 		{
@@ -834,7 +833,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else if (!isSpaceWord)
 				{
-					charUtf8 = new UnicodeBuffer();
+					var charUtf8 = new UnicodeBuffer();
 					charUtf8 = charUtf8.addChar(charCode);
 					words.push(word + charUtf8.toString());
 				}
@@ -1210,7 +1209,7 @@ class FlxBitmapText extends FlxSprite
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
 		var charUt8:UnicodeBuffer;
-		
+
 		for (i in 0...lineLength)
 		{
 			charCode = line.uCharCodeAt(i);
@@ -1228,11 +1227,10 @@ class FlxBitmapText extends FlxSprite
 				charFrame = font.getCharFrame(charCode);
 				if (charFrame != null)
 				{
-					
-					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
+					if (isUnicodeComboMark(charCode))
 					{
 						_flashPoint.setTo(curX - font.getCharAdvance(charCode) - letterSpacing, curY);
-					} 
+					}
 					else
 					{
 						_flashPoint.setTo(curX, curY);
@@ -1262,7 +1260,7 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
-		
+
 		if (alignment == FlxTextAlign.JUSTIFY)
 		{
 			var numSpaces:Int = 0;
@@ -1303,17 +1301,17 @@ class FlxBitmapText extends FlxSprite
 			else
 			{
 				charFrame = font.getCharFrame(charCode);
-				if (charFrame != null) 
+				if (charFrame != null)
 				{
 					textData[pos++] = charCode;
-					if (FlxBitmapFont.isUnicodeComboMark(charCode)) 
+					if (isUnicodeComboMark(charCode))
 					{
 						textData[pos++] = curX - font.getCharAdvance(charCode) - letterSpacing;
-					} 
-					else 
+					}
+					else
 					{
 						textData[pos++] = curX;
-						curX += font.getCharAdvance(charCode)+letterSpacing;
+						curX += font.getCharAdvance(charCode) + letterSpacing;
 					}
 					textData[pos++] = curY;
 				}
@@ -1845,5 +1843,16 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges(true);
 		return super.get_height();
+	}
+
+	/**
+	 * Checks if the specified code is one of the Unicode Combining Diacritical Marks
+	 * @param	Code	The charactercode we want to check
+	 * @return 	Bool	Returns true if the code is a Unicode Combining Diacritical Mark
+	 */
+	private function isUnicodeComboMark(Code:Int):Bool
+	{
+		return ((Code >= 768 && Code <= 879) || (Code >= 6832 && Code <= 6911) || (Code >= 7616 && Code <= 7679) || (Code >= 8400 && Code <= 8447)
+			|| (Code >= 65056 && Code <= 65071));
 	}
 }
