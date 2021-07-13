@@ -5,7 +5,9 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import flixel.math.FlxMath;
+import flixel.math.FlxRect;
 import massive.munit.Assert;
+import haxe.PosInfos;
 
 class FlxObjectTest extends FlxTest
 {
@@ -240,6 +242,62 @@ class FlxObjectTest extends FlxTest
 
 		assertOnScreen(0, FlxG.height - 1);
 		assertNotOnScreen(0, FlxG.height);
+	}
+	
+	@Test
+	function testCalcCollisionBounds()
+	{
+		var expected = FlxRect.get();
+		var rect = FlxRect.get();
+		
+		var object = new FlxObject(0, 0, 1, 1);
+		
+		object.angle = 45;
+		rect = object.calcCollisionBounds(rect);
+		var sqrt2 = Math.sqrt(2);
+		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
+		assertRectsNear(rect, expected);
+		
+		var w = object.width = 20;
+		var h = object.height = 15;
+		object.angle =  90;
+		assertRectsNear(object.calcCollisionBounds(rect), expected.set(-h, 0, h, w), 0.0001);
+		object.angle = 180;
+		assertRectsNear(object.calcCollisionBounds(rect), expected.set(-w, -h, w, h), 0.0001);
+		object.angle = 270;
+		assertRectsNear(object.calcCollisionBounds(rect), expected.set(0, -w, h, w), 0.0001);
+		object.angle = 360;
+		assertRectsNear(object.calcCollisionBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		
+		object.width = 1;
+		object.height = 1;
+		object.angle = 210;
+		rect = object.calcCollisionBounds(rect);
+		var cos30 = Math.cos(30/180*Math.PI);
+		var sumSinCos30 = 0.5 + cos30;//sin30 = 0.5
+		expected.set(-cos30, -sumSinCos30, sumSinCos30, sumSinCos30);
+		assertRectsNear(rect, expected);
+		
+		expected.put();
+	}
+	
+	static function isNear(actual:Float, expected:Float, margin:Float = 0.001):Bool
+	{
+		return actual >= expected - margin && actual <= expected + margin;
+	}
+	
+	static function assertRectsNear(actual:FlxRect, expected:FlxRect, margin:Float = 0.001, ?info:PosInfos):Void
+	{
+		var areNear = isNear(actual.x, expected.x, margin)
+			&& isNear(actual.y, expected.y, margin)
+			&& isNear(actual.width, expected.width, margin)
+			&& isNear(actual.height, expected.height, margin);
+		
+		if (areNear)
+			Assert.assertionCount++;
+		else
+			Assert.fail('\nExpected\n   ($expected (+/- $margin)\nbut was\n   $actual\n', info);
+		
 	}
 }
 
