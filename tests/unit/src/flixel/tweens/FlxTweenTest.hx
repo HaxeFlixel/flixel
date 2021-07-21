@@ -261,7 +261,7 @@ class FlxTweenTest extends FlxTest
 		Assert.isFalse(tween3c.finished);
 		Assert.isFalse(tween3d.finished);
 		// cancel called on child property, with grandchild field
-		FlxTween.cancelTweensOf(foo3.b);
+		FlxTween.cancelTweensOf(foo3.b, ["f"]);
 		Assert.isTrue(tween3b.finished);
 		Assert.isFalse(tween3c.finished);
 		Assert.isFalse(tween3d.finished);
