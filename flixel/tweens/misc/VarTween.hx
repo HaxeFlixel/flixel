@@ -56,7 +56,7 @@ class VarTween extends FlxTween
 
 			super.update(elapsed);
 
-			if(active)
+			if (active)
 				for (info in _propertyInfos)
 					Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
 		}
