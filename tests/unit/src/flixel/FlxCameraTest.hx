@@ -39,16 +39,19 @@ class FlxCameraTest extends FlxTest
 	@Test
 	function testDefaultCameras():Void
 	{
-		Assert.areEqual(FlxG.cameras.defaults, FlxCamera.defaultCameras);
+		@:privateAccess
+		Assert.areEqual(FlxG.cameras.defaults, FlxCamera._defaultCameras);
 	}
 
 	@Test
 	function testDefaultCamerasStateSwitch():Void
 	{
-		FlxCamera.defaultCameras = [FlxG.camera];
+		@:privateAccess
+		FlxCamera._defaultCameras = [FlxG.camera];
 		switchState(new FlxState());
 
-		Assert.areEqual(FlxG.cameras.defaults, FlxCamera.defaultCameras);
+		@:privateAccess
+		Assert.areEqual(FlxG.cameras.defaults, FlxCamera._defaultCameras);
 	}
 
 	@Test
