@@ -111,23 +111,13 @@ class FlxDirectionsTest extends FlxTest
 	}
 	
 	@Test
-	function hasAny()
-	{
-		Assert.isTrue(WALL.hasAny(LEFT));
-		Assert.isTrue(LEFT.hasAny(WALL));
-		Assert.isFalse(UP.hasAny(WALL));
-		Assert.isFalse(WALL.hasAny(UP));
-		Assert.isFalse(LEFT.hasAny(RIGHT));
-	}
-	
-	@Test
 	function hasAll()
 	{
-		Assert.isTrue(WALL.hasAll(LEFT));
-		Assert.isTrue(WALL.hasAll(LEFT | RIGHT));
-		Assert.isFalse(LEFT.hasAll(WALL));
-		Assert.isFalse(WALL.hasAll(UP));
-		Assert.isFalse(WALL.hasAll(LEFT | RIGHT | DOWN));
+		Assert.isTrue(WALL.has(LEFT));
+		Assert.isTrue(WALL.has(LEFT | RIGHT));
+		Assert.isFalse(LEFT.has(WALL));
+		Assert.isFalse(WALL.has(UP));
+		Assert.isFalse(WALL.has(LEFT | RIGHT | DOWN));
 	}
 	
 	@Test

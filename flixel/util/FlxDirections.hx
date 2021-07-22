@@ -32,17 +32,9 @@ package flixel.util;
 	/**
 	 * Returns true if this contains all of the supplied flags.
 	 */
-	public inline function hasAll(dir:FlxDirections):Bool
+	public inline function has(dir:FlxDirections):Bool
 	{
 		return this & dir == dir;
-	}
-	
-	/**
-	 * Returns true if this contains any one of the supplied flags.
-	 */
-	public inline function hasAny(dir:FlxDirections):Bool
-	{
-		return this & dir > NONE;
 	}
 	
 	/**
@@ -68,10 +60,10 @@ package flixel.util;
 			return "NONE";
 		
 		var str = "";
-		if (hasAll(LEFT )) str += " | L";
-		if (hasAll(RIGHT)) str += " | R";
-		if (hasAll(UP   )) str += " | U";
-		if (hasAll(DOWN )) str += " | D";
+		if (has(LEFT )) str += " | L";
+		if (has(RIGHT)) str += " | R";
+		if (has(UP   )) str += " | U";
+		if (has(DOWN )) str += " | D";
 		
 		// remove the first " | "
 		return str.substr(3);
