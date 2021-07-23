@@ -6,6 +6,9 @@ import flixel.system.FlxAssets;
 import haxe.Log;
 import haxe.PosInfos;
 
+/**
+ * Accessed via `FlxG.log`.
+ */
 class LogFrontEnd
 {
 	/**

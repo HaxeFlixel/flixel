@@ -2,6 +2,9 @@ package flixel.system.frontEnds;
 
 import flixel.FlxG;
 
+/**
+ * Accessed via `FlxG.console`.
+ */
 class ConsoleFrontEnd
 {
 	/**

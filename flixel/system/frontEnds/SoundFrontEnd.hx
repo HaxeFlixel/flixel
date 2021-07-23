@@ -14,6 +14,9 @@ import openfl.Assets;
 import openfl.utils.AssetType;
 #end
 
+/**
+ * Accessed via `FlxG.sound`.
+ */
 @:allow(flixel.FlxG)
 class SoundFrontEnd
 {

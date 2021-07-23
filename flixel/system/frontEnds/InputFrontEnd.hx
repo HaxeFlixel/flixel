@@ -4,6 +4,9 @@ import flixel.input.IFlxInputManager;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
+/**
+ * Accessed via `FlxG.inputs`.
+ */
 class InputFrontEnd
 {
 	/**

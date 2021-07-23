@@ -13,6 +13,9 @@ import flixel.util.FlxSignal;
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
 
+/**
+ * Accessed via `FlxG.debugger`.
+ */
 class DebuggerFrontEnd
 {
 	/**

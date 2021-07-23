@@ -9,6 +9,9 @@ import Std.isOfType;
 import Std.is as isOfType;
 #end
 
+/**
+ * Accessed via `FlxG.plugins`.
+ */
 class PluginFrontEnd
 {
 	/**
