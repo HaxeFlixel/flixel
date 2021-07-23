@@ -9,6 +9,9 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 
 using flixel.util.FlxArrayUtil;
 
+/**
+ * Accessed via `FlxG.cameras`.
+ */
 class CameraFrontEnd
 {
 	/**

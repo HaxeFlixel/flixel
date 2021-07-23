@@ -5,6 +5,9 @@ import flixel.FlxG;
 import flixel.system.debug.console.ConsoleUtil;
 #end
 
+/**
+ * Accessed via `FlxG.watch`.
+ */
 class WatchFrontEnd
 {
 	public function new() {}
