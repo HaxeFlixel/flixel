@@ -11,7 +11,7 @@ import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDirections;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.helpers.FlxBounds;
 import flixel.util.helpers.FlxPointRangeBounds;
 import flixel.util.helpers.FlxRangeBounds;
@@ -149,7 +149,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 	 * Sets the `allowCollisions` value for particles launched from this emitter.
 	 * Set to `NONE` by default. Don't forget to call `FlxG.collide()` in your update loop!
 	 */
-	public var allowCollisions:FlxDirections = NONE;
+	public var allowCollisions:FlxDirectionFlags = NONE;
 	/**
 	 * Shorthand for toggling `allowCollisions` between `ANY` (if `true`) and `NONE` (if `false`).
 	 * Don't forget to call `FlxG.collide()` in your update loop!
@@ -618,7 +618,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle)> extends FlxTypedGroup<T>
 
 	inline function get_solid():Bool
 	{
-		return (allowCollisions & ANY) > NONE;
+		return allowCollisions.has(ANY);
 	}
 
 	function set_solid(Solid:Bool):Bool

@@ -21,7 +21,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDirections;
+import flixel.util.FlxDirectionFlags;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -118,7 +118,7 @@ class FlxSprite extends FlxObject
 	 * Can be set to `LEFT`, `RIGHT`, `UP`, and `DOWN` to take advantage
 	 * of flipped sprites and/or just track player orientation more easily.
 	 */
-	public var facing(default, set):FlxDirections = RIGHT;
+	public var facing(default, set):FlxDirectionFlags = RIGHT;
 
 	/**
 	 * Whether this sprite is flipped on the X axis.
@@ -251,10 +251,10 @@ class FlxSprite extends FlxObject
 	var _angleChanged:Bool = true;
 
 	/**
-	 * Maps `FlxDirections` values to axis flips
+	 * Maps `FlxDirectionFlags` values to axis flips
 	 */
 	@:noCompletion
-	var _facingFlip:Map<FlxDirections, {x:Bool, y:Bool}> = new Map<FlxDirections, {x:Bool, y:Bool}>();
+	var _facingFlip:Map<FlxDirectionFlags, {x:Bool, y:Bool}> = new Map<FlxDirectionFlags, {x:Bool, y:Bool}>();
 
 	/**
 	 * Creates a `FlxSprite` at a specified position with a specified one-frame graphic.
@@ -1084,7 +1084,7 @@ class FlxSprite extends FlxObject
 	 * @param   FlipX       Whether to flip the sprite on the X axis.
 	 * @param   FlipY       Whether to flip the sprite on the Y axis.
 	 */
-	public inline function setFacingFlip(Direction:FlxDirections, FlipX:Bool, FlipY:Bool):Void
+	public inline function setFacingFlip(Direction:FlxDirectionFlags, FlipX:Bool, FlipY:Bool):Void
 	{
 		_facingFlip.set(Direction, {x: FlipX, y: FlipY});
 	}
@@ -1194,7 +1194,7 @@ class FlxSprite extends FlxObject
 	}
 
 	@:noCompletion
-	function set_facing(Direction:FlxDirections):FlxDirections
+	function set_facing(Direction:FlxDirectionFlags):FlxDirectionFlags
 	{
 		var flip = _facingFlip.get(Direction);
 		if (flip != null)
@@ -1415,7 +1415,7 @@ interface IFlxSprite extends IFlxBasic
 	var y(default, set):Float;
 	var alpha(default, set):Float;
 	var angle(default, set):Float;
-	var facing(default, set):FlxDirections;
+	var facing(default, set):FlxDirectionFlags;
 	var moves(default, set):Bool;
 	var immovable(default, set):Bool;
 
