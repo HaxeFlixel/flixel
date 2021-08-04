@@ -166,7 +166,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   Data     Font data.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource):FlxBitmapFont
+	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource, ?Unique:Bool = false):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -178,7 +178,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		else
 		{
-			graphic = FlxG.bitmap.add(cast Source);
+			graphic = FlxG.bitmap.add(cast Source, Unique);
 			frame = graphic.imageFrame.frame;
 		}
 
@@ -306,7 +306,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   charBGColor   An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT, ?Unique:Bool = false):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -318,7 +318,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		else
 		{
-			graphic = FlxG.bitmap.add(cast source);
+			graphic = FlxG.bitmap.add(cast source, Unique);
 			frame = graphic.imageFrame.frame;
 		}
 
@@ -478,7 +478,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @return  Generated bitmap font object.
 	 */
 	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, ?letters:String, charSize:FlxPoint, ?region:FlxRect,
-			?spacing:FlxPoint):FlxBitmapFont
+			?spacing:FlxPoint, ?unique:Bool = false):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -490,7 +490,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		}
 		else
 		{
-			graphic = FlxG.bitmap.add(cast source);
+			graphic = FlxG.bitmap.add(cast source, unique);
 			frame = graphic.imageFrame.frame;
 		}
 
