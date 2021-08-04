@@ -128,9 +128,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        Or you can just pass path to the description file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames
+	public static function fromLibGdx(source:FlxGraphicAsset, description:String, ?unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(source, unique);
 		if (graphic == null)
 			return null;
 
@@ -228,9 +228,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        Or you can just pass a path to the XML file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSparrow(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSparrow(Source:FlxGraphicAsset, Description:String, ?Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
@@ -293,9 +293,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        Or you can just pass a path to the XML file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String, ?Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
@@ -345,9 +345,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        Or you can just pass a path to the description file in the assets directory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String, ?Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
