@@ -164,9 +164,12 @@ class FlxBitmapFont extends FlxFramesCollection
 	 *
 	 * @param   Source   Font image source.
 	 * @param   Data     Font data.
+	 * @param	Unique   Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                   If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
+     *                   Default is `false`
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource, ?Unique:Bool = false):FlxBitmapFont
+	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource, Unique:Bool = false):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -304,9 +307,12 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   letters       `String` of characters contained in the source image,
 	 *                        in order (ex. `" abcdefghijklmnopqrstuvwxyz"`). Defaults to `DEFAULT_CHARS`.
 	 * @param   charBGColor   An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
+	 * @param	Unique   	  Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                        If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
+     *                        Default is `false`
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT, ?Unique:Bool = false):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT, Unique:Bool = false):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
