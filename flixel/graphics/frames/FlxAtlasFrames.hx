@@ -126,11 +126,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   description   Contents of the file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description/file)`.
 	 *                        Or you can just pass path to the description file in the assets directory.
+	 * @param   unique        Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                        If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames
+	public static function fromLibGdx(source:FlxGraphicAsset, description:String, unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(source, unique);
 		if (graphic == null)
 			return null;
 
@@ -226,11 +228,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   Description   Contents of the XML file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
 	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @param   Unique        Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                        If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSparrow(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSparrow(Source:FlxGraphicAsset, Description:String, Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
@@ -291,11 +295,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   Description   Contents of the XML file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
 	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @param   Unique        Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                        If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String, Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
@@ -343,11 +349,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   Description   Contents of the file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description/file)`.
 	 *                        Or you can just pass a path to the description file in the assets directory.
+	 * @param   Unique        Ensures that the `BitmapData` uses a new slot in the cache.
+	 *                        If `true`, then `BitmapData` for this `FlxGraphic` will be cloned, which means extra memory.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String, Unique:Bool = false):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(Source, Unique);
 		if (graphic == null)
 			return null;
 
