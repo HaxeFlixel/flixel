@@ -50,7 +50,7 @@ class FlxBasic implements IFlxDestroyable
 	public var exists(default, set):Bool = true;
 
 	/**
-	 * Gets ot sets the first camera of this object.
+	 * Gets or sets the first camera of this object.
 	 */
 	public var camera(get, set):FlxCamera;
 
