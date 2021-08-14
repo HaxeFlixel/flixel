@@ -4,11 +4,11 @@ package flixel.system.frontEnds;
 import flash.media.Sound;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.system.FlxSoundGroup;
-import flixel.system.FlxSound;
-import flixel.math.FlxMath;
 import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxMath;
+import flixel.system.FlxAssets.FlxSoundAsset;
+import flixel.system.FlxSound;
+import flixel.system.FlxSoundGroup;
 import openfl.Assets;
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
@@ -32,28 +32,88 @@ class SoundFrontEnd
 
 	/**
 	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form myVolumeHandler(volume:Float).
+	 * Function should take the form myVolumeHandler(volume:Float, WhichVolume:Int). 
+	 * Where `WhichVolume` will show which volume was changed:
+	 * 1 = Master, 2 = Sound, 3 = Music.
 	 */
-	public var volumeHandler:Float->Void;
+	public var volumeHandler:Float->Int->Void;
 
 	#if FLX_KEYBOARD
 	/**
-	 * The key codes used to increase volume (see FlxG.keys for the keys available).
+	 * The key codes used to increase Master volume (see FlxG.keys for the keys available).
 	 * Default keys: + (and numpad +). Set to null to deactivate.
 	 */
-	public var volumeUpKeys:Array<FlxKey> = [PLUS, NUMPADPLUS];
+	public var masterVolumeUpKeys:Array<FlxKey> = [PLUS, NUMPADPLUS];
 
 	/**
-	 * The keys to decrease volume (see FlxG.keys for the keys available).
+	 * The keys to decrease Master volume (see FlxG.keys for the keys available).
 	 * Default keys: - (and numpad -). Set to null to deactivate.
 	 */
-	public var volumeDownKeys:Array<FlxKey> = [MINUS, NUMPADMINUS];
+	public var masterVolumeDownKeys:Array<FlxKey> = [MINUS, NUMPADMINUS];
 
 	/**
-	 * The keys used to mute / unmute the game (see FlxG.keys for the keys available).
+	 * The keys used to mute / unmute the Master volume (see FlxG.keys for the keys available).
 	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
 	 */
-	public var muteKeys:Array<FlxKey> = [ZERO, NUMPADZERO];
+	public var masterMuteKeys:Array<FlxKey> = [ZERO, NUMPADZERO];
+
+	/**
+	 * The key modifiers to use for Master volume
+	 * Default key: SHIFT. Set to null to deactivate
+	 */
+	public var masterModifier:Array<FlxKey> = [SHIFT];
+
+	/**
+	 * The key codes used to increase Sound volume (see FlxG.keys for the keys available).
+	 * Default keys: + (and numpad +). Set to null to deactivate.
+	 */
+	public var soundVolumeUpKeys:Array<FlxKey> = [PLUS, NUMPADPLUS];
+
+	/**
+	 * The keys to decrease Sound volume (see FlxG.keys for the keys available).
+	 * Default keys: - (and numpad -). Set to null to deactivate.
+	 */
+	public var soundVolumeDownKeys:Array<FlxKey> = [MINUS, NUMPADMINUS];
+
+	/**
+	 * The keys used to mute / unmute the Sound volume (see FlxG.keys for the keys available).
+	 * Default keys: 0 (and numpad 0). Set to null to deactivate.
+	 */
+	public var soundMuteKeys:Array<FlxKey> = [ZERO, NUMPADZERO];
+
+	/**
+	 * The key modifier to use for Master volume
+	 * Default: deactivated. Set to a key like SHIFT or CONTROL to activate
+	 */
+	public var soundModifier:Array<FlxKey> = null;
+
+	/**
+	 * The key codes used to increase Music volume (see FlxG.keys for the keys available).
+	 * Default keys: PAGEUP (and numpad 9). Set to null to deactivate.
+	 */
+	public var musicVolumeUpKeys:Array<FlxKey> = [NUMPADMULTIPLY];
+
+	/**
+	 * The keys to decrease Music volume (see FlxG.keys for the keys available).
+	 * Default keys: PAGEDOWN (and numpad 3). Set to null to deactivate.
+	 */
+	public var musicVolumeDownKeys:Array<FlxKey> = [NUMPADDIVIDE];
+
+	/**
+	 * The keys used to mute / unmute the Music volume (see FlxG.keys for the keys available).
+	 * Default keys: DELETE (and numpad Period). Set to null to deactivate.
+	 */
+	public var musicMuteKeys:Array<FlxKey> = [DELETE, NUMPADPERIOD];
+
+	/**
+	 * The key modifier to use for Sound volume
+	 * Default: deactivated. Set to a key like SHIFT or CONTROL to activate
+	 */
+	public var musicModifier:Array<FlxKey> = null;
+
+	public static inline var VOL_MASTER:Int = 0;
+	public static inline var VOL_SOUND:Int = 1;
+	public static inline var VOL_MUSIC:Int = 2;
 	#end
 
 	/**
@@ -217,8 +277,8 @@ class SoundFrontEnd
 	 * @param	OnComplete		Called when the sound finished playing
 	 * @return	A FlxSound object.
 	 */
-	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
-			AutoDestroy:Bool = true, ?OnComplete:Void->Void):FlxSound
+	public function play(EmbeddedSound:FlxSoundAsset, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true,
+			?OnComplete:Void->Void):FlxSound
 	{
 		if ((EmbeddedSound is String))
 		{
@@ -242,8 +302,8 @@ class SoundFrontEnd
 	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	A FlxSound object.
 	 */
-	public function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup,
-			AutoDestroy:Bool = true, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
+	public function stream(URL:String, Volume:Float = 1, Looped:Bool = false, ?Group:FlxSoundGroup, AutoDestroy:Bool = true, ?OnComplete:Void->Void,
+			?OnLoad:Void->Void):FlxSound
 	{
 		return load(null, Volume, Looped, Group, AutoDestroy, true, URL, OnComplete, OnLoad);
 	}
@@ -318,37 +378,60 @@ class SoundFrontEnd
 	/**
 	 * Toggles muted, also activating the sound tray.
 	 */
-	public function toggleMuted():Void
+	public function toggleMuted(WhichVolume:Int = VOL_MASTER):Void
 	{
-		muted = !muted;
+		switch (WhichVolume)
+		{
+			case VOL_MASTER:
+				defaultSoundGroup.muted = defaultSoundGroup.muted = muted = !muted;
+
+			case VOL_SOUND:
+				defaultSoundGroup.muted = !defaultSoundGroup.muted;
+
+			case VOL_MUSIC:
+				defaultSoundGroup.muted = !defaultMusicGroup.muted;
+		}
 
 		if (volumeHandler != null)
 		{
-			volumeHandler(muted ? 0 : volume);
+			volumeHandler(muted ? 0 : volume, WhichVolume);
 		}
 
-		showSoundTray();
+		showSoundTray(WhichVolume == VOL_MUSIC);
 	}
 
 	/**
 	 * Changes the volume by a certain amount, also activating the sound tray.
 	 */
-	public function changeVolume(Amount:Float):Void
+	public function changeVolume(Amount:Float, WhichVolume:Int = VOL_MASTER):Void
 	{
-		muted = false;
-		volume += Amount;
-		showSoundTray();
+		switch (WhichVolume)
+		{
+			case VOL_MASTER:
+				muted = false;
+				volume += Amount;
+
+			case VOL_SOUND:
+				defaultSoundGroup.muted = false;
+				defaultSoundGroup.volume += Amount;
+
+			case VOL_MUSIC:
+				defaultMusicGroup.muted = false;
+				defaultMusicGroup.volume += Amount;
+		}
+
+		showSoundTray(WhichVolume == VOL_MUSIC);
 	}
 
 	/**
 	 * Shows the sound tray if it is enabled.
 	 */
-	public function showSoundTray():Void
+	public function showSoundTray(Silent:Bool = false):Void
 	{
 		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
-			FlxG.game.soundTray.show();
+			FlxG.game.soundTray.show(Silent);
 		}
 		#end
 	}
@@ -371,12 +454,33 @@ class SoundFrontEnd
 			list.update(elapsed);
 
 		#if FLX_KEYBOARD
-		if (FlxG.keys.anyJustReleased(muteKeys))
+		#if FLX_SPLIT_SOUND_TRAY
+		if (FlxG.keys.anyJustReleased(masterMuteKeys) && (masterModifier == null || FlxG.keys.anyPressed(masterModifier)))
+			toggleMuted(VOL_MASTER);
+		else if (FlxG.keys.anyJustReleased(masterVolumeUpKeys) && (masterModifier == null || FlxG.keys.anyPressed(masterModifier)))
+			changeVolume(0.1, VOL_MASTER);
+		else if (FlxG.keys.anyJustReleased(masterVolumeDownKeys) && (masterModifier == null || FlxG.keys.anyPressed(masterModifier)))
+			changeVolume(-0.1, VOL_MASTER);
+		else if (FlxG.keys.anyJustReleased(soundMuteKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			toggleMuted(VOL_SOUND);
+		else if (FlxG.keys.anyJustReleased(soundVolumeUpKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			changeVolume(0.1, VOL_SOUND);
+		else if (FlxG.keys.anyJustReleased(soundVolumeDownKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			changeVolume(-0.1, VOL_SOUND);
+		else if (FlxG.keys.anyJustReleased(musicMuteKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			toggleMuted(VOL_MUSIC);
+		else if (FlxG.keys.anyJustReleased(musicVolumeUpKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			changeVolume(0.1, VOL_MUSIC);
+		else if (FlxG.keys.anyJustReleased(musicVolumeDownKeys) && (soundModifier == null || FlxG.keys.anyPressed(soundModifier)))
+			changeVolume(-0.1, VOL_MUSIC);
+		#else
+		if (FlxG.keys.anyJustReleased(masterMuteKeys))
 			toggleMuted();
-		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
+		else if (FlxG.keys.anyJustReleased(masterVolumeUpKeys))
 			changeVolume(0.1);
-		else if (FlxG.keys.anyJustReleased(volumeDownKeys))
+		else if (FlxG.keys.anyJustReleased(masterVolumeDownKeys))
 			changeVolume(-0.1);
+		#end
 		#end
 	}
 
@@ -428,6 +532,28 @@ class SoundFrontEnd
 		{
 			muted = FlxG.save.data.mute;
 		}
+
+		#if FLX_SPLIT_SOUND_TRAY
+		if (FlxG.save.data.soundvolume != null)
+		{
+			defaultSoundGroup.volume = FlxG.save.data.soundvolume;
+		}
+
+		if (FlxG.save.data.soundmute != null)
+		{
+			defaultSoundGroup.muted = FlxG.save.data.soundmute;
+		}
+
+		if (FlxG.save.data.musicvolume != null)
+		{
+			defaultMusicGroup.volume = FlxG.save.data.musicvolume;
+		}
+
+		if (FlxG.save.data.musicmute != null)
+		{
+			defaultMusicGroup.muted = FlxG.save.data.musicmute;
+		}
+		#end
 	}
 
 	function set_volume(Volume:Float):Float
@@ -437,7 +563,7 @@ class SoundFrontEnd
 		if (volumeHandler != null)
 		{
 			var param:Float = muted ? 0 : Volume;
-			volumeHandler(param);
+			volumeHandler(param, VOL_MASTER);
 		}
 		return volume = Volume;
 	}

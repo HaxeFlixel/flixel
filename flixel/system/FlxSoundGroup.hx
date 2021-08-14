@@ -1,5 +1,7 @@
 package flixel.system;
 
+import flixel.math.FlxMath;
+
 /**
  * A way of grouping sounds for things such as collective volume control
  */
@@ -9,6 +11,11 @@ class FlxSoundGroup
 	 * The sounds in this group
 	 */
 	public var sounds:Array<FlxSound> = [];
+
+	/**
+	 * Whether or not this group's sounds are muted.
+	 */
+	public var muted:Bool = false;
 
 	/**
 	 * The volume of this group
@@ -21,7 +28,7 @@ class FlxSoundGroup
 	 */
 	public function new(volume:Float = 1)
 	{
-		this.volume = volume;
+		this.volume = FlxMath.bound(volume, 0, 1);
 	}
 
 	/**
@@ -77,7 +84,7 @@ class FlxSoundGroup
 
 	function set_volume(volume:Float):Float
 	{
-		this.volume = volume;
+		this.volume = FlxMath.bound(volume, 0, 1);
 		for (sound in sounds)
 		{
 			sound.updateTransform();

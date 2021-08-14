@@ -20,6 +20,7 @@ private enum UserDefines
 	FLX_NO_DEBUG;
 	FLX_RECORD;
 	FLX_UNIT_TEST;
+	FLX_SPLIT_SOUND_TRAY;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
 }
