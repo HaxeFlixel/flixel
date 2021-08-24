@@ -17,6 +17,7 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.android.FlxAndroidKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -124,6 +125,16 @@ class FlxActionDigital extends FlxAction
 	public function addMouseWheel(Positive:Bool, Trigger:FlxInputState):FlxActionDigital
 	{
 		return add(new FlxActionInputDigitalMouseWheel(Positive, Trigger));
+	}
+
+	/**
+	 * Android buttons action inputs
+	 * @param	Key	Android button key, BACK, or MENU probably (might need to set FlxG.android.preventDefaultKeys to disable the default behaviour and allow proper use!)
+	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 */
+	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital {
+		return add(new FlxActionInputDigitalAndroid(Key, Trigger));
 	}
 
 	override public function destroy():Void
