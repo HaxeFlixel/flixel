@@ -261,6 +261,10 @@ class Window extends Sprite
 	{
 		visible = Value;
 
+		if (FlxG.save.data.windowSettings == null) {
+			initSaveData();
+		}
+		
 		if (!_closable)
 		{
 			FlxG.save.data.windowSettings[_id] = visible;
