@@ -309,6 +309,9 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 }
 
 #if android
+/**
+ * @since 4.10.0
+ */
 class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 {
 	/**
