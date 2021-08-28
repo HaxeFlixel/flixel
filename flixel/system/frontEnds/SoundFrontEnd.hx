@@ -417,7 +417,7 @@ class SoundFrontEnd
 	/**
 	 * Loads saved sound preferences if they exist.
 	 */
-	function loadSavedPrefs():Void
+	public function loadSavedPrefs():Void
 	{
 		if (FlxG.save.data.volume != null)
 		{
