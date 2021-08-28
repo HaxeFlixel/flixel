@@ -133,7 +133,8 @@ class FlxActionDigital extends FlxAction
 	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @return	This action
 	 */
-	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital {
+	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital 
+	{
 		return add(new FlxActionInputDigitalAndroid(Key, Trigger));
 	}
 
