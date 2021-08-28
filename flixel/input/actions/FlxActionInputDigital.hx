@@ -317,7 +317,7 @@ class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 	 */
 	public function new(androidKeyID:FlxAndroidKey, Trigger:FlxInputState)
 	{
-		super(MOBILE, androidKeyID, Trigger);
+		super(ANDROID, androidKeyID, Trigger);
 	}
 
 	override public function check(Action:FlxAction):Bool
@@ -325,7 +325,7 @@ class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 		return switch (trigger)
 		{
 			#if android
-			case PRESSED: FlxG.android.checkStatus(inputID, PRESSED) || FlxG.android.checkStatus(inputID, PRESSED);
+			case PRESSED: FlxG.android.checkStatus(inputID, PRESSED) || FlxG.android.checkStatus(inputID, JUST_PRESSED);
 			case RELEASED: FlxG.android.checkStatus(inputID, RELEASED) || FlxG.android.checkStatus(inputID, JUST_RELEASED);
 			case JUST_PRESSED: FlxG.android.checkStatus(inputID, JUST_PRESSED);
 			case JUST_RELEASED: FlxG.android.checkStatus(inputID, JUST_RELEASED);
