@@ -127,16 +127,18 @@ class FlxActionDigital extends FlxAction
 		return add(new FlxActionInputDigitalMouseWheel(Positive, Trigger));
 	}
 
+	#if android
 	/**
 	 * Android buttons action inputs
 	 * @param	Key	Android button key, BACK, or MENU probably (might need to set FlxG.android.preventDefaultKeys to disable the default behaviour and allow proper use!)
 	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
 	 * @return	This action
 	 */
-	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital 
+	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital
 	{
 		return add(new FlxActionInputDigitalAndroid(Key, Trigger));
 	}
+	#end
 
 	override public function destroy():Void
 	{

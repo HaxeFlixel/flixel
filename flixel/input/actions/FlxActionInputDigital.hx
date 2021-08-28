@@ -308,6 +308,7 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	}
 }
 
+#if android
 class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 {
 	/**
@@ -324,17 +325,16 @@ class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 	{
 		return switch (trigger)
 		{
-			#if android
 			case PRESSED: FlxG.android.checkStatus(inputID, PRESSED) || FlxG.android.checkStatus(inputID, JUST_PRESSED);
 			case RELEASED: FlxG.android.checkStatus(inputID, RELEASED) || FlxG.android.checkStatus(inputID, JUST_RELEASED);
 			case JUST_PRESSED: FlxG.android.checkStatus(inputID, JUST_PRESSED);
 			case JUST_RELEASED: FlxG.android.checkStatus(inputID, JUST_RELEASED);
-			#end
 
 			default: false;
 		}
 	}
 }
+#end
 
 /**
  * @since 4.6.0
