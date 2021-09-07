@@ -59,22 +59,8 @@ class FlxCollision
 
 		if (considerRotation)
 		{
-			// find the center of both sprites
-			Contact.origin.copyTo(centerA);
-			Target.origin.copyTo(centerB);
-
-			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
-			var lengthA = centerA.length;
-			boundsA.x = (pointA.x + centerA.x - lengthA);
-			boundsA.y = (pointA.y + centerA.y - lengthA);
-			boundsA.width = lengthA * 2;
-			boundsA.height = boundsA.width;
-
-			var lengthB = centerB.length;
-			boundsB.x = (pointB.x + centerB.x - lengthB);
-			boundsB.y = (pointB.y + centerB.y - lengthB);
-			boundsB.width = lengthB * 2;
-			boundsB.height = boundsB.width;
+			Contact.calcRotatedGraphicBounds(boundsA);
+			Target.calcRotatedGraphicBounds(boundsB);
 		}
 		else
 		{
