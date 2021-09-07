@@ -247,7 +247,7 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function testCalcCollisionBounds()
+	function testCalcRotatedBounds()
 	{
 		var expected = FlxRect.get();
 		var rect = FlxRect.get();
@@ -258,7 +258,7 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite.origin.set(0, 0);
 		sprite.angle = 45;
-		rect = sprite.calcCollisionBounds(rect);
+		rect = sprite.calcRotatedBounds(rect);
 		var sqrt2 = Math.sqrt(2);
 		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
 		assertRectsNear(rect, expected);
@@ -266,18 +266,18 @@ class FlxSpriteTest extends FlxTest
 		var w = sprite.width = 20;
 		var h = sprite.height = 15;
 		sprite.angle =  90;
-		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(-h, 0, h, w), 0.0001);
+		assertRectsNear(sprite.calcRotatedBounds(rect), expected.set(-h, 0, h, w), 0.0001);
 		sprite.angle = 180;
-		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(-w, -h, w, h), 0.0001);
+		assertRectsNear(sprite.calcRotatedBounds(rect), expected.set(-w, -h, w, h), 0.0001);
 		sprite.angle = 270;
-		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(0, -w, h, w), 0.0001);
+		assertRectsNear(sprite.calcRotatedBounds(rect), expected.set(0, -w, h, w), 0.0001);
 		sprite.angle = 360;
-		assertRectsNear(sprite.calcCollisionBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		assertRectsNear(sprite.calcRotatedBounds(rect), expected.set(0, 0, w, h), 0.0001);
 		
 		sprite.width = sprite.height = 1;
 		sprite.origin.set(1, 1);
 		sprite.angle = 210;
-		rect = sprite.calcCollisionBounds(rect);
+		rect = sprite.calcRotatedBounds(rect);
 		var sumSinCos30 = 0.5 + Math.cos(30/180*Math.PI);//sin30 = 0.5;
 		expected.set(0.5, 1, sumSinCos30, sumSinCos30);
 		assertRectsNear(rect, expected);
@@ -286,7 +286,7 @@ class FlxSpriteTest extends FlxTest
 	}
 	
 	@Test
-	function testCalcGraphicBounds()
+	function testCalcRotatedGraphicBounds()
 	{
 		var expected = FlxRect.get();
 		var rect = FlxRect.get();
@@ -297,7 +297,7 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite.origin.set(0, 0);
 		sprite.angle = 45;
-		rect = sprite.calcGraphicBounds(rect);
+		rect = sprite.calcRotatedGraphicBounds(rect);
 		var sqrt2 = Math.sqrt(2);
 		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
 		assertRectsNear(rect, expected);
@@ -308,19 +308,19 @@ class FlxSpriteTest extends FlxTest
 		sprite.setGraphicSize(w, h);
 		sprite.updateHitbox();
 		sprite.angle =  90;
-		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
+		assertRectsNear(sprite.calcRotatedGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
 		sprite.angle = 180;
-		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		assertRectsNear(sprite.calcRotatedGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
 		sprite.angle = 270;
-		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
+		assertRectsNear(sprite.calcRotatedGraphicBounds(rect), expected.set(-halfDiff, halfDiff, h, w), 0.0001);
 		sprite.angle = 360;
-		assertRectsNear(sprite.calcGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		assertRectsNear(sprite.calcRotatedGraphicBounds(rect), expected.set(0, 0, w, h), 0.0001);
 		
 		sprite.setGraphicSize(1, 1);
 		sprite.updateHitbox();
 		sprite.origin.set(10, 10);
 		sprite.angle = 210;
-		rect = sprite.calcGraphicBounds(rect);
+		rect = sprite.calcRotatedGraphicBounds(rect);
 		var sumSinCos30 = 0.5 + Math.cos(30/180*Math.PI);//sin30 = 0.5;
 		expected.set(5, 5.5, sumSinCos30, sumSinCos30);
 		assertRectsNear(rect, expected);

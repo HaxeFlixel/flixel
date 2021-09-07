@@ -1074,13 +1074,14 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Calculates the smallest globally aligned bounding box that encompasses this `FlxObject`'s width and height.
+	 * Calculates the smallest globally aligned bounding box that encompasses this
+	 * `FlxObject`'s width and height, at its current rotation.
 	 * Note, if a `FlxSprite` is passed in, the origin is used, but scale and offset are ignored.
-	 * Use `calcGraphicBounds` to use these properties.
+	 * Use `calcRotatedGraphicBounds` to use these properties.
 	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
 	 */
-	override function calcCollisionBounds(?newRect:FlxRect)
+	override function calcRotatedBounds(?newRect:FlxRect)
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
@@ -1095,7 +1096,7 @@ class FlxSprite extends FlxObject
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
 	 */
-	public function calcGraphicBounds(?newRect:FlxRect):FlxRect
+	public function calcRotatedGraphicBounds(?newRect:FlxRect):FlxRect
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();

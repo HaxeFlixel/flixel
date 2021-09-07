@@ -245,7 +245,7 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
-	function testCalcCollisionBounds()
+	function testCalcRotatedBounds()
 	{
 		var expected = FlxRect.get();
 		var rect = FlxRect.get();
@@ -253,7 +253,7 @@ class FlxObjectTest extends FlxTest
 		var object = new FlxObject(0, 0, 1, 1);
 		
 		object.angle = 45;
-		rect = object.calcCollisionBounds(rect);
+		rect = object.calcRotatedBounds(rect);
 		var sqrt2 = Math.sqrt(2);
 		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
 		assertRectsNear(rect, expected);
@@ -261,18 +261,18 @@ class FlxObjectTest extends FlxTest
 		var w = object.width = 20;
 		var h = object.height = 15;
 		object.angle =  90;
-		assertRectsNear(object.calcCollisionBounds(rect), expected.set(-h, 0, h, w), 0.0001);
+		assertRectsNear(object.calcRotatedBounds(rect), expected.set(-h, 0, h, w), 0.0001);
 		object.angle = 180;
-		assertRectsNear(object.calcCollisionBounds(rect), expected.set(-w, -h, w, h), 0.0001);
+		assertRectsNear(object.calcRotatedBounds(rect), expected.set(-w, -h, w, h), 0.0001);
 		object.angle = 270;
-		assertRectsNear(object.calcCollisionBounds(rect), expected.set(0, -w, h, w), 0.0001);
+		assertRectsNear(object.calcRotatedBounds(rect), expected.set(0, -w, h, w), 0.0001);
 		object.angle = 360;
-		assertRectsNear(object.calcCollisionBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		assertRectsNear(object.calcRotatedBounds(rect), expected.set(0, 0, w, h), 0.0001);
 		
 		object.width = 1;
 		object.height = 1;
 		object.angle = 210;
-		rect = object.calcCollisionBounds(rect);
+		rect = object.calcRotatedBounds(rect);
 		var cos30 = Math.cos(30/180*Math.PI);
 		var sumSinCos30 = 0.5 + cos30;//sin30 = 0.5
 		expected.set(-cos30, -sumSinCos30, sumSinCos30, sumSinCos30);
