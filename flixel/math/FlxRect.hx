@@ -345,17 +345,23 @@ class FlxRect implements IFlxPooled
 	 */
 	public function calcRotatedBounds(degrees:Float, ?origin:FlxPoint, ?newRect:FlxRect):FlxRect
 	{
-		if (origin == null)
-			origin = FlxPoint.get(0, 0);
-		
 		if (newRect == null)
 			newRect = FlxRect.get();
+		
+		degrees = degrees % 360;
+		if (degrees == 0)
+			return newRect.set(x, y, width, height);
+		
+		if (degrees < 0)
+			degrees += 360;
+		
+		if (origin == null)
+			origin = FlxPoint.get(0, 0);
 		
 		var radians = FlxAngle.TO_RAD * degrees;
 		var cos = Math.cos(radians);
 		var sin = Math.sin(radians);
 		
-		degrees = (degrees + 360) % 360;
 		var left = -origin.x;
 		var top = -origin.y;
 		var right = -origin.x + width;
