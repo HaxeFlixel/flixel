@@ -15,9 +15,6 @@
 	<section unless="unit-test html5">
 		<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" />
 		<assets path="assets/images/logo/default.png" rename="flixel/images/logo/default.png" embed="true" />
-		<assets path="assets/images/tile/autotiles.png" rename="flixel/images/tile/autotiles.png" embed="true" />
-		<assets path="assets/images/tile/autotiles_alt.png" rename="flixel/images/tile/autotiles_alt.png" embed="true" />
-		<assets path="assets/images/tile/autotiles_full.png" rename="flixel/images/tile/autotiles_full.png" embed="true" />
 	</section>
 	
 	<set name="legacy" unless="next" />
