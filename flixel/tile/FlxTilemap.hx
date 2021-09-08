@@ -33,17 +33,17 @@ import Std.is as isOfType;
 
 using flixel.util.FlxColorTransformUtil;
 
+#if html5
 @:keep @:bitmap("assets/images/tile/autotiles.png")
 private class RawGraphicAuto extends BitmapData {}
 class GraphicAuto extends RawGraphicAuto
 {
 	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
 	{
-		// Use literals because `FlxGraphic.fromClass` passes in 0,0
-		super(128, 8, transparent, fillRGBA, onLoad);
+		super(width, height, transparent, fillRGBA, onLoad);
 		// Set properties because `@:bitmap` constructors ignore width/height
-		this.width = 128;
-		this.height = 8;
+		this.width = width;
+		this.height = height;
 	}
 }
 
@@ -53,11 +53,10 @@ class GraphicAutoAlt extends RawGraphicAutoAlt
 {
 	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
 	{
-		// Use literals because `FlxGraphic.fromClass` passes in 0,0
-		super(128, 8, transparent, fillRGBA, onLoad);
-		// Set properties because `@:bitmap` constructors ignore width/height
-		this.width = 128;
-		this.height = 8;
+		super(width, height, transparent, fillRGBA, onLoad);
+		// Set again because `@:bitmap` constructors ignore width/height
+		this.width = width;
+		this.height = height;
 	}
 }
 
@@ -67,13 +66,22 @@ class GraphicAutoFull extends RawGraphicAutoFull
 {
 	public function new (width = 256, height = 48, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
 	{
-		// Use literals because `FlxGraphic.fromClass` passes in 0,0
-		super(256, 48, transparent, fillRGBA, onLoad);
-		// Set properties because `@:bitmap` constructors ignore width/height
-		this.width = 256;
-		this.height = 48;
+		super(width, height, transparent, fillRGBA, onLoad);
+		// Set again because `@:bitmap` constructors ignore width/height
+		this.width = width;
+		this.height = height;
 	}
 }
+#else
+@:keep @:bitmap("assets/images/tile/autotiles.png")
+class GraphicAuto extends BitmapData {}
+
+@:keep @:bitmap("assets/images/tile/autotiles_alt.png")
+class GraphicAutoAlt extends BitmapData {}
+
+@:keep @:bitmap("assets/images/tile/autotiles_full.png")
+class GraphicAutoFull extends BitmapData {}
+#end
 
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
 
