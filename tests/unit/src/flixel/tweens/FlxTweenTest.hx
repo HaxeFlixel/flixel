@@ -249,15 +249,29 @@ class FlxTweenTest extends FlxTest
 		Assert.isTrue(tween2a.finished);
 		Assert.isFalse(tween2b.finished);
 		
-		var foo3 = {a: {f:0}, b: {f:0}, c: {f:0}};
+		var foo3 = {a: {f:0}, b: {f:0}, c: {f:0}, d: {f:0}};
 		var tween3a = FlxTween.tween(foo3, {"a.f": 1}, 0.1);
 		var tween3b = FlxTween.tween(foo3, {"b.f": 1}, 0.1);
 		var tween3c = FlxTween.tween(foo3, {"c.f": 1}, 0.1);
+		var tween3d = FlxTween.tween(foo3.d, {"f": 1}, 0.1);
+		// cancel call matches tween call
 		FlxTween.cancelTweensOf(foo3, ["a.f"]);
-		FlxTween.cancelTweensOf(foo3.b, ["f"]);
 		Assert.isTrue(tween3a.finished);
+		Assert.isFalse(tween3b.finished);
+		Assert.isFalse(tween3c.finished);
+		Assert.isFalse(tween3d.finished);
+		// cancel called on child property, with grandchild field
+		FlxTween.cancelTweensOf(foo3.b, ["f"]);
 		Assert.isTrue(tween3b.finished);
 		Assert.isFalse(tween3c.finished);
+		Assert.isFalse(tween3d.finished);
+		// cancel grandchild tweens when cancel target matches tween target
+		FlxTween.cancelTweensOf(foo3);
+		Assert.isTrue(tween3c.finished);
+		Assert.isFalse(tween3d.finished);// doesn't cancel all grandchildren
+		// cancel called on parent property, with dotted grandchild field
+		FlxTween.cancelTweensOf(foo3, ["d.f"]);
+		Assert.isTrue(tween3d.finished);
 	}
 
 	@Test // #2273

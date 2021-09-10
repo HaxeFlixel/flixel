@@ -140,6 +140,10 @@ class FlxGradient
 			sM.scale(tempBitmap.scaleX, tempBitmap.scaleY);
 
 			data.draw(tempBitmap, sM);
+
+			// The scaled bitmap might not have filled the data. Fill the remaining pixels with the last color.
+			var remainingRect = new openfl.geom.Rectangle(0, tempBitmap.height, width, height - tempBitmap.height);
+			data.fillRect(remainingRect, colors[colors.length - 1]);
 		}
 
 		return data;

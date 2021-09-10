@@ -3,6 +3,9 @@ package flixel.system.frontEnds;
 import flash.display.BitmapData;
 import flixel.FlxG;
 
+/**
+ * Accessed via `FlxG.bitmapLog`.
+ */
 class BitmapLogFrontEnd
 {
 	public inline function add(Data:BitmapData, Name:String = ""):Void
