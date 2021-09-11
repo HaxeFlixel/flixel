@@ -59,8 +59,8 @@ class FlxCollision
 
 		if (considerRotation)
 		{
-			Contact.calcRotatedGraphicBounds(boundsA);
-			Target.calcRotatedGraphicBounds(boundsB);
+			Contact.calcRotatedGraphicBounds(boundsA, true);
+			Target.calcRotatedGraphicBounds(boundsB, true);
 		}
 		else
 		{
