@@ -286,15 +286,10 @@ class Window extends Sprite
 
 	function loadSaveData():Void
 	{
-		if (FlxG.save.data.windowSettings != null)
-		{
-			visible = FlxG.save.data.windowSettings[_id];
-		}
-		else
-		{
+		if (FlxG.save.data.windowSettings == null)
 			initSaveData();
-			loadSaveData();
-		}
+
+		visible = FlxG.save.data.windowSettings[_id];
 	}
 
 	function initSaveData():Void
