@@ -10,6 +10,7 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxDirectionFlags;
 
 class PlayState extends FlxState
 {
