@@ -452,6 +452,32 @@ import openfl.geom.Point;
 		y = tempX * sin + y * cos;
 		return this;
 	}
+	
+	/**
+	 * Sets the polar coordinates of the vector
+	 *
+	 * @param	length	The length to set the vector
+	 * @param	radians	The angle to set the vector, in radians
+	 * @return	The rotated vector
+	 */
+	public function setPolarRadians(length:Float, radians:Float):FlxVector
+	{
+		x = length * Math.cos(radians);
+		y = length * Math.sin(radians);
+		return this;
+	}
+	
+	/**
+	 * Sets the polar coordinates of the vector
+	 *
+	 * @param	length	The length to set the vector
+	 * @param	degrees	The angle to set the vector, in degrees
+	 * @return	The rotated vector
+	 */
+	public inline function setPolarDegrees(length:Float, degrees:Float):FlxVector
+	{
+		return setPolarRadians(length, degrees * FlxAngle.TO_RAD);
+	}
 
 	/**
 	 * Right normal of the vector
