@@ -113,7 +113,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_player, _exit, onOverlap);
 
 		// If the player is on the floor and not walking and the last animation has not finished then be idle
-		if (_player.isTouching(FlxObject.FLOOR))
+		if (_player.isTouching(FLOOR))
 		{
 			if (!_flagWalking)
 			{
@@ -132,7 +132,7 @@ class PlayState extends FlxState
 			_player.flipX = true;
 
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
-			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL))
+			if (_player.isTouching(FLOOR) && !_player.isTouching(WALL))
 			{
 				_flagWalking = true;
 				_player.animation.play("walk");
@@ -145,7 +145,7 @@ class PlayState extends FlxState
 			_player.flipX = false;
 
 			// If the player is actually moving right and if he is not jumping/falling then you do the walk animaiton
-			if (_player.isTouching(FlxObject.FLOOR) && !_player.isTouching(FlxObject.WALL))
+			if (_player.isTouching(FLOOR) && !_player.isTouching(WALL))
 			{
 				_flagWalking = true;
 				_player.animation.play("walk");
@@ -158,7 +158,7 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.anyPressed([Z, SPACE, UP, W]))
 		{
-			if (_player.isTouching(FlxObject.FLOOR))
+			if (_player.isTouching(FLOOR))
 			{
 				_player.velocity.y = -_playerJump;
 				_player.animation.play("jump");

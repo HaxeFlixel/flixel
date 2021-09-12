@@ -4,7 +4,6 @@ import flash.filters.ColorMatrixFilter;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxWaveEffect;
@@ -96,14 +95,14 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		playerSprite = new Player(background.x + 36, background.y + 16);
 		playerSprite.animation.frameIndex = 3;
 		playerSprite.active = false;
-		playerSprite.facing = FlxObject.RIGHT;
+		playerSprite.facing = RIGHT;
 		add(playerSprite);
 
 		// do the same thing for an enemySprite. We'll just use enemySprite type REGULAR for now and change it later.
 		enemySprite = new Enemy(background.x + 76, background.y + 16, REGULAR);
 		enemySprite.animation.frameIndex = 3;
 		enemySprite.active = false;
-		enemySprite.facing = FlxObject.LEFT;
+		enemySprite.facing = LEFT;
 		add(enemySprite);
 
 		// setup the playerSprite's health display and add it to the group.

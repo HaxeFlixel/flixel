@@ -1,13 +1,12 @@
 package;
 
-import flixel.addons.display.FlxStarField.FlxStarField2D;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
+import flixel.addons.display.FlxStarField.FlxStarField2D;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.touch.FlxTouch;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;

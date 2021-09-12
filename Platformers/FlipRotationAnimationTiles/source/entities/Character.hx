@@ -1,14 +1,10 @@
 package entities;
 
-import flash.geom.Rectangle;
-import flixel.addons.display.FlxExtendedSprite;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
-import flixel.math.FlxRect;
 import flixel.FlxG;
-import haxe.io.Path;
+import flixel.addons.display.FlxExtendedSprite;
+import flixel.math.FlxRect;
 import haxe.Json;
+import haxe.io.Path;
 import openfl.Assets;
 
 /**
@@ -32,7 +28,7 @@ class Character extends FlxExtendedSprite
 
 		parseJson(JsonPath);
 
-		facing = FlxObject.DOWN;
+		facing = DOWN;
 
 		drag.x = maxVelocity.x * 4;
 		drag.y = maxVelocity.y * 4;
@@ -47,23 +43,23 @@ class Character extends FlxExtendedSprite
 			if (FlxG.keys.anyPressed([RIGHT, D]))
 			{
 				acceleration.x = drag.x;
-				facing = FlxObject.RIGHT;
+				facing = RIGHT;
 			}
 			else if (FlxG.keys.anyPressed([LEFT, A]))
 			{
 				acceleration.x = -drag.x;
-				facing = FlxObject.LEFT;
+				facing = LEFT;
 			}
 
 			if (FlxG.keys.anyPressed([UP, W]))
 			{
 				acceleration.y = -drag.y;
-				facing = FlxObject.UP;
+				facing = UP;
 			}
 			else if (FlxG.keys.anyPressed([DOWN, S]))
 			{
 				acceleration.y = drag.y;
-				facing = FlxObject.DOWN;
+				facing = DOWN;
 			}
 		}
 		checkBoundsMap();
@@ -118,37 +114,28 @@ class Character extends FlxExtendedSprite
 			anim = "walking_";
 			if (velocity.x > 0)
 			{
-				facing = FlxObject.RIGHT;
+				facing = RIGHT;
 			}
 			else if (velocity.x < 0)
 			{
-				facing = FlxObject.LEFT;
+				facing = LEFT;
 			}
 			if (velocity.y > 0)
 			{
-				facing = FlxObject.DOWN;
+				facing = DOWN;
 			}
 			else if (velocity.y < 0)
 			{
-				facing = FlxObject.UP;
+				facing = UP;
 			}
 		}
-		switch (facing)
+		anim += switch (facing)
 		{
-			case FlxObject.UP:
-				anim += "up";
-
-			case FlxObject.DOWN:
-				anim += "down";
-
-			case FlxObject.LEFT:
-				anim += "left";
-
-			case FlxObject.RIGHT:
-				anim += "right";
-
-			default:
-				anim += "down";
+			case UP: "up";
+			case DOWN: "down";
+			case LEFT: "left";
+			case RIGHT: "right";
+			default: "down";
 		}
 
 		if (animation.name != anim)
@@ -208,22 +195,13 @@ class Character extends FlxExtendedSprite
 			for (type in Reflect.fields(d))
 			{
 				var t = Reflect.field(d, type);
-				switch (type)
+				tmp = switch (type)
 				{
-					case "def":
-						tmp = v_def;
-
-					case "idle":
-						tmp = v_idl;
-
-					case "walking":
-						tmp = v_wal;
-
-					case "running":
-						tmp = v_run;
-
-					default:
-						tmp = v_def;
+					case "def": v_def;
+					case "idle": v_idl;
+					case "walking": v_wal;
+					case "running": v_run;
+					default: v_def;
 				}
 				animation.add(type + "_" + dir, t, tmp, true);
 			}

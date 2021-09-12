@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
@@ -16,8 +15,8 @@ class Player extends FlxSprite
 	{
 		super(x, y);
 		loadGraphic(AssetPaths.player__png, true, 16, 16);
-		setFacingFlip(FlxObject.LEFT, false, false);
-		setFacingFlip(FlxObject.RIGHT, true, false);
+		setFacingFlip(LEFT, false, false);
+		setFacingFlip(RIGHT, true, false);
 		animation.add("lr", [3, 4, 3, 5], 6, false);
 		animation.add("u", [6, 7, 6, 8], 6, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
@@ -72,7 +71,7 @@ class Player extends FlxSprite
 					newAngle -= 45;
 				else if (right)
 					newAngle += 45;
-				facing = FlxObject.UP;
+				facing = UP;
 			}
 			else if (down)
 			{
@@ -81,17 +80,17 @@ class Player extends FlxSprite
 					newAngle += 45;
 				else if (right)
 					newAngle -= 45;
-				facing = FlxObject.DOWN;
+				facing = DOWN;
 			}
 			else if (left)
 			{
 				newAngle = 180;
-				facing = FlxObject.LEFT;
+				facing = LEFT;
 			}
 			else if (right)
 			{
 				newAngle = 0;
-				facing = FlxObject.RIGHT;
+				facing = RIGHT;
 			}
 
 			// determine our velocity based on angle and speed
@@ -99,18 +98,19 @@ class Player extends FlxSprite
 			velocity.rotate(FlxPoint.weak(0, 0), newAngle);
 
 			// if the player is moving (velocity is not 0 for either axis), we need to change the animation to match their facing
-			if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
+			if ((velocity.x != 0 || velocity.y != 0) && touching == NONE)
 			{
 				stepSound.play();
 
 				switch (facing)
 				{
-					case FlxObject.LEFT, FlxObject.RIGHT:
+					case LEFT, RIGHT:
 						animation.play("lr");
-					case FlxObject.UP:
+					case UP:
 						animation.play("u");
-					case FlxObject.DOWN:
+					case DOWN:
 						animation.play("d");
+					case _:
 				}
 			}
 		}

@@ -2,14 +2,12 @@ package;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import openfl.Assets;
 
 class PlayState extends FlxState
 {
@@ -99,7 +97,7 @@ class PlayState extends FlxState
 			_player1.acceleration.x = _player1.maxVelocity.x * 4;
 		}
 
-		if (FlxG.keys.justPressed.UP && _player1.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.justPressed.UP && _player1.isTouching(FLOOR))
 		{
 			_player1.velocity.y -= _player1.maxVelocity.y / 1.5;
 		}
@@ -117,7 +115,7 @@ class PlayState extends FlxState
 			_player2.acceleration.x = _player2.maxVelocity.x * 4;
 		}
 
-		if (FlxG.keys.justPressed.W && _player2.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.justPressed.W && _player2.isTouching(FLOOR))
 		{
 			_player2.velocity.y -= _player2.maxVelocity.y / 1.5;
 		}

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -47,8 +46,8 @@ class PlayState extends FlxState
 		map = new FlxOgmo3Loader(AssetPaths.turnBasedRPG__ogmo, AssetPaths.room_001__json);
 		walls = map.loadTilemap(AssetPaths.tiles__png, "walls");
 		walls.follow();
-		walls.setTileProperties(1, FlxObject.NONE);
-		walls.setTileProperties(2, FlxObject.ANY);
+		walls.setTileProperties(1, NONE);
+		walls.setTileProperties(2, ANY);
 		add(walls);
 
 		coins = new FlxTypedGroup<Coin>();

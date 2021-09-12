@@ -1,13 +1,12 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
-import flixel.math.FlxPoint;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -173,8 +172,8 @@ class PlayState extends FlxState
 		var ty:Int = Std.int(FlxG.mouse.y / 16);
 		tilemap.setTile(tx, ty, value, true);
 
-		tilemap.setTileProperties(0, FlxObject.NONE);
-		tilemap.setTileProperties(1, FlxObject.ANY);
+		tilemap.setTileProperties(0, NONE);
+		tilemap.setTileProperties(1, ANY);
 
 		updateDistance();
 	}
@@ -191,9 +190,9 @@ class PlayState extends FlxState
 
 		var arr:Array<Int> = [];
 		var arr2:Array<Int> = [];
-		for (ww in 0...tw)
+		for (_ in 0...tw)
 		{
-			for (hh in 0...th)
+			for (_ in 0...th)
 			{
 				arr.push(0);
 				arr2.push(0);
@@ -204,8 +203,8 @@ class PlayState extends FlxState
 		distmap.loadMapFromArray(arr2, tw, th, "assets/images/heat.png", 1, 1);
 		add(distmap);
 
-		tilemap.setTileProperties(0, FlxObject.NONE);
-		tilemap.setTileProperties(1, FlxObject.ANY);
+		tilemap.setTileProperties(0, NONE);
+		tilemap.setTileProperties(1, ANY);
 
 		seekers = new FlxTypedGroup<Seeker>();
 		add(seekers);

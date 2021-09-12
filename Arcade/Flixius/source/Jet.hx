@@ -1,9 +1,7 @@
 package;
 
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Jet extends FlxSprite
 {
@@ -22,18 +20,18 @@ class Jet extends FlxSprite
 		_targetType = TargetType;
 
 		animation.add("thrust", [0, 1, 2], 12);
-		setFacingFlip(FlxObject.LEFT, true, false);
-		setFacingFlip(FlxObject.RIGHT, false, false);
+		setFacingFlip(LEFT, true, false);
+		setFacingFlip(RIGHT, false, false);
 
 		if (_targetType == 0)
 		{
-			facing = FlxObject.RIGHT;
+			facing = RIGHT;
 			_pos.x = -8;
 			_pos.y = _target.height - 8;
 		}
 		else
 		{
-			facing = FlxObject.LEFT;
+			facing = LEFT;
 			_pos.x = _target.width;
 			_pos.y = 0;
 		}

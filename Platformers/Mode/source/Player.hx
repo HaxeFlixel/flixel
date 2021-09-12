@@ -1,15 +1,15 @@
 package;
 
-import flixel.input.actions.FlxActionManager;
-import flixel.input.actions.FlxAction;
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.actions.FlxAction;
+import flixel.input.actions.FlxActionManager;
+import flixel.system.FlxAssets;
+import flixel.util.FlxDirection;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
-import flixel.system.FlxAssets;
 #if VIRTUAL_PAD
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
@@ -29,7 +29,7 @@ class Player extends FlxSprite
 
 	var _shootTimer = new FlxTimer();
 	var _jumpPower:Int = 200;
-	var _aim:Int = FlxObject.RIGHT;
+	var _aim = FlxDirection.RIGHT;
 	var _gibs:FlxEmitter;
 	var _bullets:FlxTypedGroup<Bullet>;
 
@@ -51,8 +51,8 @@ class Player extends FlxSprite
 
 		loadGraphic(AssetPaths.spaceman__png, true, 8);
 
-		setFacingFlip(FlxObject.LEFT, true, false);
-		setFacingFlip(FlxObject.RIGHT, false, false);
+		setFacingFlip(LEFT, true, false);
+		setFacingFlip(RIGHT, false, false);
 
 		// Bounding box tweaks
 		width = 6;
@@ -153,18 +153,18 @@ class Player extends FlxSprite
 		{
 			animation.play(switch (_aim)
 			{
-				case FlxObject.UP: Animation.JUMP_UP;
-				case FlxObject.DOWN: Animation.JUMP_DOWN;
+				case UP: Animation.JUMP_UP;
+				case DOWN: Animation.JUMP_DOWN;
 				default: Animation.JUMP;
 			});
 		}
 		else if (velocity.x == 0)
 		{
-			animation.play(if (_aim == FlxObject.UP) Animation.IDLE_UP else Animation.IDLE);
+			animation.play(if (_aim == UP) Animation.IDLE_UP else Animation.IDLE);
 		}
 		else
 		{
-			animation.play(if (_aim == FlxObject.UP) Animation.RUN_UP else Animation.RUN);
+			animation.play(if (_aim == UP) Animation.RUN_UP else Animation.RUN);
 		}
 	}
 
@@ -233,24 +233,24 @@ class Player extends FlxSprite
 
 	function moveLeft():Void
 	{
-		facing = _aim = FlxObject.LEFT;
+		facing = _aim = LEFT;
 		acceleration.x -= drag.x;
 	}
 
 	function moveRight():Void
 	{
-		facing = _aim = FlxObject.RIGHT;
+		facing = _aim = RIGHT;
 		acceleration.x += drag.x;
 	}
 
 	function moveUp():Void
 	{
-		_aim = FlxObject.UP;
+		_aim = UP;
 	}
 
 	function moveDown():Void
 	{
-		_aim = FlxObject.DOWN;
+		_aim = DOWN;
 	}
 
 	function jump():Void
@@ -277,7 +277,7 @@ class Player extends FlxSprite
 			getMidpoint(_point);
 			_bullets.recycle(Bullet.new).shoot(_point, _aim);
 
-			if (_aim == FlxObject.DOWN)
+			if (_aim == DOWN)
 			{
 				velocity.y -= 36;
 			}

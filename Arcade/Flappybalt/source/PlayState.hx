@@ -1,10 +1,9 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.effects.particles.FlxEmitter;
 import flixel.text.FlxText;
 import flixel.util.FlxSave;
 
@@ -88,12 +87,12 @@ class PlayState extends FlxState
 
 		// The left spiky paddle
 
-		_paddleLeft = new Paddle(6, FlxObject.RIGHT);
+		_paddleLeft = new Paddle(6, RIGHT);
 		add(_paddleLeft);
 
 		// The right spiky paddle
 
-		_paddleRight = new Paddle(FlxG.width - 15, FlxObject.LEFT);
+		_paddleRight = new Paddle(FlxG.width - 15, LEFT);
 		add(_paddleRight);
 
 		// Spikes at the bottom of the screen

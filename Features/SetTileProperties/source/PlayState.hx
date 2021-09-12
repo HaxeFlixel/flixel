@@ -39,9 +39,9 @@ class PlayState extends FlxState
 		_map.loadMapFromCSV(mapData, AssetPaths.tiles__png, 16, 16);
 
 		// Tile #1 will only collide on it's right-side, and will call 'leftHit' when it does.
-		_map.setTileProperties(1, FlxObject.RIGHT, leftHit);
+		_map.setTileProperties(1, RIGHT, leftHit);
 		// Tile #2 will only collide on it's left-side, and will call 'rightHit' when it does.
-		_map.setTileProperties(2, FlxObject.LEFT, rightHit);
+		_map.setTileProperties(2, LEFT, rightHit);
 
 		add(_map);
 
@@ -74,7 +74,7 @@ class PlayState extends FlxState
 		emitter.makeParticles(12, 12, Color, 50);
 		emitter.launchMode = FlxEmitterMode.CIRCLE;
 		emitter.speed.set(400, 900);
-		emitter.allowCollisions = FlxObject.ANY;
+		emitter.allowCollisions = ANY;
 		emitter.elasticity.set(.8, .8);
 		emitter.acceleration.set(0, 1200, 0, 1200);
 		emitter.start(false, .8);

@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 
 class Player extends FlxSprite
@@ -45,7 +44,7 @@ class Player extends FlxSprite
 			acceleration.x += drag.x;
 		}
 
-		if (isTouching(FlxObject.FLOOR))
+		if (isTouching(FLOOR))
 		{
 			// Jump controls
 			if (FlxG.keys.anyJustPressed([UP, W, SPACE]))

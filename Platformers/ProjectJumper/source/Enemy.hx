@@ -1,9 +1,8 @@
 package;
 
-import flixel.util.FlxSpriteUtil;
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.FlxObject;
+import flixel.effects.particles.FlxEmitter;
+import flixel.util.FlxSpriteUtil;
 
 /**
  * @author David Bell
@@ -72,12 +71,12 @@ class Enemy extends EnemyTemplate
 			if (_player.x < x)
 			{
 				// The sprite is facing the opposite direction than flixel is expecting, so hack it into the right direction
-				facing = FlxObject.RIGHT;
+				facing = RIGHT;
 				acceleration.x = -drag.x;
 			}
 			else if (_player.x > x)
 			{
-				facing = FlxObject.LEFT;
+				facing = LEFT;
 				acceleration.x = drag.x;
 			}
 
@@ -115,13 +114,13 @@ class Enemy extends EnemyTemplate
 	override public function hurt(Damage:Float):Void
 	{
 		// remember, right means facing left
-		if (facing == FlxObject.RIGHT)
+		if (facing == RIGHT)
 		{
 			// Knock him to the right
 			velocity.x = drag.x * 4;
 		}
 		// Don't really need the if part, but hey.
-		else if (facing == FlxObject.LEFT)
+		else if (facing == LEFT)
 		{
 			velocity.x = -drag.x * 4;
 		}

@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxDirection;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -35,8 +36,8 @@ class PlayState extends FlxState
 	var _movementInterval:Float = 8;
 	var _score:Int = 0;
 
-	var _currentDirection = FlxObject.LEFT;
-	var _nextDirection:Int = FlxObject.LEFT;
+	var _currentDirection = FlxDirection.LEFT;
+	var _nextDirection = FlxDirection.LEFT;
 
 	override public function create():Void
 	{
@@ -114,21 +115,21 @@ class PlayState extends FlxState
 		// WASD / arrow keys to control the snake
 		// Also make sure you can't travel in the opposite direction,
 		// because that causes quick and frustrating deaths!
-		if (FlxG.keys.anyPressed([UP, W]) && _currentDirection != FlxObject.DOWN)
+		if (FlxG.keys.anyPressed([UP, W]) && _currentDirection != DOWN)
 		{
-			_nextDirection = FlxObject.UP;
+			_nextDirection = UP;
 		}
-		else if (FlxG.keys.anyPressed([DOWN, S]) && _currentDirection != FlxObject.UP)
+		else if (FlxG.keys.anyPressed([DOWN, S]) && _currentDirection != UP)
 		{
-			_nextDirection = FlxObject.DOWN;
+			_nextDirection = DOWN;
 		}
-		else if (FlxG.keys.anyPressed([LEFT, A]) && _currentDirection != FlxObject.RIGHT)
+		else if (FlxG.keys.anyPressed([LEFT, A]) && _currentDirection != RIGHT)
 		{
-			_nextDirection = FlxObject.LEFT;
+			_nextDirection = LEFT;
 		}
-		else if (FlxG.keys.anyPressed([RIGHT, D]) && _currentDirection != FlxObject.LEFT)
+		else if (FlxG.keys.anyPressed([RIGHT, D]) && _currentDirection != LEFT)
 		{
-			_nextDirection = FlxObject.RIGHT;
+			_nextDirection = RIGHT;
 		}
 	}
 
@@ -217,13 +218,13 @@ class PlayState extends FlxState
 		// Update the position of the head
 		switch (_nextDirection)
 		{
-			case FlxObject.LEFT:
+			case LEFT:
 				_snakeHead.x -= BLOCK_SIZE;
-			case FlxObject.RIGHT:
+			case RIGHT:
 				_snakeHead.x += BLOCK_SIZE;
-			case FlxObject.UP:
+			case UP:
 				_snakeHead.y -= BLOCK_SIZE;
-			case FlxObject.DOWN:
+			case DOWN:
 				_snakeHead.y += BLOCK_SIZE;
 		}
 		_currentDirection = _nextDirection;

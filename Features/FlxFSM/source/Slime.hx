@@ -1,10 +1,8 @@
 package;
 
-import flixel.addons.util.FlxFSM;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.util.FlxColor;
+import flixel.addons.util.FlxFSM;
 
 class Slime extends FlxSprite
 {
@@ -17,9 +15,9 @@ class Slime extends FlxSprite
 		super(X, Y);
 
 		loadGraphic("assets/slime.png", true, 16, 16);
-		setFacingFlip(FlxObject.LEFT, true, false);
-		setFacingFlip(FlxObject.RIGHT, false, false);
-		facing = FlxObject.RIGHT;
+		setFacingFlip(LEFT, true, false);
+		setFacingFlip(RIGHT, false, false);
+		facing = RIGHT;
 
 		animation.add("standing", [0, 1], 3);
 		animation.add("walking", [0, 1], 12);
@@ -57,17 +55,17 @@ class Conditions
 {
 	public static function jump(Owner:FlxSprite):Bool
 	{
-		return (FlxG.keys.justPressed.UP && Owner.isTouching(FlxObject.DOWN));
+		return (FlxG.keys.justPressed.UP && Owner.isTouching(DOWN));
 	}
 
 	public static function grounded(Owner:FlxSprite):Bool
 	{
-		return Owner.isTouching(FlxObject.DOWN);
+		return Owner.isTouching(DOWN);
 	}
 
 	public static function groundSlam(Owner:FlxSprite):Bool
 	{
-		return FlxG.keys.justPressed.DOWN && !Owner.isTouching(FlxObject.DOWN);
+		return FlxG.keys.justPressed.DOWN && !Owner.isTouching(DOWN);
 	}
 
 	public static function animationFinished(Owner:FlxSprite):Bool
@@ -88,7 +86,7 @@ class Idle extends FlxFSMState<FlxSprite>
 		owner.acceleration.x = 0;
 		if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.RIGHT)
 		{
-			owner.facing = FlxG.keys.pressed.LEFT ? FlxObject.LEFT : FlxObject.RIGHT;
+			owner.facing = FlxG.keys.pressed.LEFT ? LEFT : RIGHT;
 			owner.animation.play("walking");
 			owner.acceleration.x = FlxG.keys.pressed.LEFT ? -300 : 300;
 		}

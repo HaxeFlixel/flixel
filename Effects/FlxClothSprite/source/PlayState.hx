@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.addons.effects.FlxClothSprite;
 import flixel.text.FlxText;
@@ -24,7 +23,7 @@ class PlayState extends FlxState
 
 		// This show how to load graphics with animation, set pinnedSide, setMesh and gravity
 		flag = new FlxClothSprite(0, 0, "assets/images/flag.png");
-		flag.pinnedSide = FlxObject.LEFT;
+		flag.pinnedSide = LEFT;
 		flag.setMesh(10, 10);
 		flag.maxVelocity.set(200, 200);
 		flag.meshVelocity.y = 40;
@@ -32,7 +31,7 @@ class PlayState extends FlxState
 
 		// This show how to set mesh scale, custom pinned points and set iterations
 		flag2 = new FlxClothSprite(FlxG.width / 2 - 105, 10, "assets/images/flag.png");
-		flag2.pinnedSide = FlxObject.NONE;
+		flag2.pinnedSide = NONE;
 		flag2.meshScale.set(1.5, 1);
 		flag2.setMesh(15, 10, 0, 0, [0, 14]);
 		flag2.iterations = 8;
@@ -41,12 +40,12 @@ class PlayState extends FlxState
 		add(flag2);
 
 		// This show how to load a simple graphic sprite with crossing constraints
-		rope = new FlxClothSprite(FlxG.width / 2 + 200, 10, "assets/images/rope.png", 2, 10, FlxObject.UP, true);
+		rope = new FlxClothSprite(FlxG.width / 2 + 200, 10, "assets/images/rope.png", 2, 10, UP, true);
 		rope.maxVelocity.set(40, 40);
 		rope.meshVelocity.y = 40;
 		add(rope);
 
-		rope2 = new FlxClothSprite(FlxG.width / 2 - 200, 10, "assets/images/rope.png", 2, 10, FlxObject.UP, true);
+		rope2 = new FlxClothSprite(FlxG.width / 2 - 200, 10, "assets/images/rope.png", 2, 10, UP, true);
 		rope2.maxVelocity.set(40, 40);
 		rope2.meshVelocity.y = 40;
 		add(rope2);

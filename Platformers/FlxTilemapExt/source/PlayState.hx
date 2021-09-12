@@ -63,7 +63,7 @@ class PlayState extends FlxState
 		level.setSteep([13, 14, 21, 22], [15, 16, 23, 24]);
 
 		// set cloud tiles
-		level.setTileProperties(4, FlxObject.NONE, fallInClouds);
+		level.setTileProperties(4, NONE, fallInClouds);
 		
 		// set wallJump tiles
 		level.setTileProperties(3, level.getTileCollisions(3), wallJump);
@@ -86,27 +86,27 @@ class PlayState extends FlxState
 	{
 		if (FlxG.keys.anyPressed([DOWN, S]))
 		{
-			Tile.allowCollisions = FlxObject.NONE;
+			Tile.allowCollisions = NONE;
 		}
 		else if (Object.y >= Tile.y)
 		{
-			Tile.allowCollisions = FlxObject.CEILING;
+			Tile.allowCollisions = CEILING;
 		}
 	}
 
 	function wallJump(Tile:FlxObject, Object:FlxObject):Void
 	{
 		Object.velocity.y *= 0.9;
-		Object.touching |= FlxObject.FLOOR | FlxObject.CEILING;
+		Object.touching |= FLOOR | CEILING;
 	}
 
 	function wallJumpReflect():Void
 	{
-		if (_player.isTouching(FlxObject.RIGHT))
+		if (_player.isTouching(RIGHT))
 		{
 			_player.velocity.x = -_player.maxVelocity.x;
 		}
-		else if (_player.isTouching(FlxObject.LEFT))
+		else if (_player.isTouching(LEFT))
 		{
 			_player.velocity.x = _player.maxVelocity.x;
 		}
@@ -118,21 +118,21 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			_player.acceleration.x = -_player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR)) ? 4 : 3);
+			_player.acceleration.x = -_player.maxVelocity.x * ((_player.isTouching(FLOOR)) ? 4 : 3);
 		}
 		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			_player.acceleration.x = _player.maxVelocity.x * ((_player.isTouching(FlxObject.FLOOR)) ? 4 : 3);
+			_player.acceleration.x = _player.maxVelocity.x * ((_player.isTouching(FLOOR)) ? 4 : 3);
 		}
 
 		// Jump
-		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FlxObject.FLOOR) && _player.acceleration.y > 0)
+		if (FlxG.keys.anyPressed([SPACE, W, UP]) && _player.isTouching(FLOOR) && _player.acceleration.y > 0)
 		{
 			_player.velocity.y = -_player.maxVelocity.y / 2;
 
 			wallJumpReflect();
 		}
-		else if (FlxG.keys.anyPressed([S, DOWN]) && _player.isTouching(FlxObject.CEILING) && _player.acceleration.y < 0)
+		else if (FlxG.keys.anyPressed([S, DOWN]) && _player.isTouching(CEILING) && _player.acceleration.y < 0)
 		{
 			_player.velocity.y = _player.maxVelocity.y / 2;
 

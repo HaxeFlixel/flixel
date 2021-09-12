@@ -1,9 +1,9 @@
 package;
 
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
@@ -30,7 +30,6 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		map = new FlxTilemap();
-		map.allowCollisions = FlxObject.ANY;
 		background = new FlxTilemap();
 		ladders = new FlxTilemap();
 

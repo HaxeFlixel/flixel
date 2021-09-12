@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -51,7 +50,7 @@ class MenuState extends FlxState
 		x3.animation.frameName = "super_element_50px_0.png";
 		x3.resetSizeFromFrame();
 		x3.centerOrigin();
-		x3.facing = FlxObject.LEFT;
+		x3.facing = LEFT;
 		add(x3);
 
 		// Animation samples:

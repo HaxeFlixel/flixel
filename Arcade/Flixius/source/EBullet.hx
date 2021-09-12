@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxSprite;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class EBullet extends FlxSprite
 {

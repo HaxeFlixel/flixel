@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxSpriteUtil;
 
@@ -106,7 +105,7 @@ class Asteroid extends FlxSprite
 
 	override public function update(elapsed:Float):Void
 	{
-		if (justTouched(FlxObject.ANY))
+		if (justTouched(ANY))
 		{
 			angularVelocity = (Math.abs(velocity.x) + Math.abs(velocity.y));
 		}

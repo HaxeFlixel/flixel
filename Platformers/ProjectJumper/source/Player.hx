@@ -1,11 +1,10 @@
 package;
 
-import flixel.input.keyboard.FlxKey;
-import flixel.effects.particles.FlxEmitter;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
-import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
+import flixel.group.FlxGroup;
+import flixel.input.keyboard.FlxKey;
 
 /**
  * @author David Bell
@@ -147,7 +146,7 @@ class Player extends FlxSprite
 			climbing = false;
 		}
 
-		if (isTouching(FlxObject.FLOOR) && !FlxG.keys.anyPressed(_jumpKeys))
+		if (isTouching(FLOOR) && !FlxG.keys.anyPressed(_jumpKeys))
 		{
 			_jumpTime = -1;
 			// Reset the double jump flag

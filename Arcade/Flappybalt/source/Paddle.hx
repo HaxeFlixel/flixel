@@ -1,8 +1,8 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.util.FlxDirection;
 
 class Paddle extends FlxSprite
 {
@@ -10,12 +10,12 @@ class Paddle extends FlxSprite
 
 	inline static public var SPEED:Int = 480;
 
-	public function new(X:Float = 0, Facing:Int = 0)
+	public function new(X:Float = 0, Facing:FlxDirection)
 	{
 		super(X, FlxG.height);
 		loadGraphic("assets/paddle.png", false);
 
-		if (Facing == FlxObject.LEFT)
+		if (Facing == LEFT)
 		{
 			flipX = true;
 		}

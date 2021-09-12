@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVelocity;
@@ -34,8 +33,8 @@ class Enemy extends FlxSprite
 		this.type = type;
 		var graphic = if (type == BOSS) AssetPaths.boss__png else AssetPaths.enemy__png;
 		loadGraphic(graphic, true, 16, 16);
-		setFacingFlip(FlxObject.LEFT, false, false);
-		setFacingFlip(FlxObject.RIGHT, true, false);
+		setFacingFlip(LEFT, false, false);
+		setFacingFlip(RIGHT, true, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
 		animation.add("lr", [3, 4, 3, 5], 6, false);
 		animation.add("u", [6, 7, 6, 8], 6, false);
@@ -59,37 +58,39 @@ class Enemy extends FlxSprite
 		if (this.isFlickering())
 			return;
 
-		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
+		if ((velocity.x != 0 || velocity.y != 0) && touching == NONE)
 		{
 			if (Math.abs(velocity.x) > Math.abs(velocity.y))
 			{
 				if (velocity.x < 0)
-					facing = FlxObject.LEFT;
+					facing = LEFT;
 				else
-					facing = FlxObject.RIGHT;
+					facing = RIGHT;
 			}
 			else
 			{
 				if (velocity.y < 0)
-					facing = FlxObject.UP;
+					facing = UP;
 				else
-					facing = FlxObject.DOWN;
+					facing = DOWN;
 			}
 
 			switch (facing)
 			{
-				case FlxObject.LEFT, FlxObject.RIGHT:
+				case LEFT, RIGHT:
 					animation.play("lr");
 
-				case FlxObject.UP:
+				case UP:
 					animation.play("u");
 
-				case FlxObject.DOWN:
+				case DOWN:
 					animation.play("d");
+
+				case _:
 			}
 		}
 
-		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
+		if ((velocity.x != 0 || velocity.y != 0) && touching == NONE)
 		{
 			stepSound.setPosition(x + frameWidth / 2, y + height);
 			stepSound.play();

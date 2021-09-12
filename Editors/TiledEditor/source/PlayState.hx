@@ -73,7 +73,7 @@ class PlayState extends FlxState
 		{
 			player.acceleration.x += player.maxVelocity.x * 4;
 		}
-		if (FlxG.keys.anyPressed([W, UP, SPACE]) && player.isTouching(FlxObject.FLOOR))
+		if (FlxG.keys.anyPressed([W, UP, SPACE]) && player.isTouching(FLOOR))
 		{
 			player.velocity.y = -player.maxVelocity.y / 2;
 		}
