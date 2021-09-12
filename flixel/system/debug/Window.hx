@@ -35,7 +35,7 @@ class Window extends Sprite
 	/**
 	 * How many windows there are currently in total.
 	 */
-	static var WINDOW_AMOUNT:Int = 0;
+	static var windowAmount:Int = 0;
 
 	public var minSize:Point;
 	public var maxSize:Point;
@@ -153,9 +153,9 @@ class Window extends Sprite
 		}
 		else
 		{
-			_id = WINDOW_AMOUNT;
+			_id = windowAmount;
 			loadSaveData();
-			WINDOW_AMOUNT++;
+			windowAmount++;
 		}
 
 		if ((_width != 0) || (_height != 0))
