@@ -4,8 +4,8 @@
     "license": "MIT",
     "tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "demo", "cross"],
     "description": "Demo Projects for HaxeFlixel",
-    "version": "2.7.4",
-    "releasenote": "Added Lime XSD schema references to enable completion.",
+    "version": "2.8.0",
+    "releasenote": "Compatibility with flixel 4.10.0, diacritical mark example for FlxBitmapText.",
     "contributors": ["haxeflixel", "Gama11"],
     "dependencies": {}
 }

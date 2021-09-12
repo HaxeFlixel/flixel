@@ -1,3 +1,8 @@
+2.8.0 (September 12, 2021)
+------------------------------
+* Compatibility with flixel 4.10.0
+* FlxBitmapText: added an example of unicode combining diacritical marks (#282)
+
 2.7.4 (April 17, 2021)
 ------------------------------
 * Added Lime XSD schema references to enable completion
