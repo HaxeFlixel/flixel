@@ -40,7 +40,7 @@ class Stats extends Window
 	/**
 	 * The minimal height of the window.
 	 */
-	static var MIN_HEIGHT:Int = 0;
+	static var minHeight:Int = 0;
 
 	static inline var FPS_COLOR:FlxColor = 0xff96ff00;
 	static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
@@ -99,28 +99,18 @@ class Stats extends Window
 	{
 		super("Stats", new GraphicStats(0, 0), 0, 0, false);
 
-		if (MIN_HEIGHT == 0)
+		if (minHeight == 0)
 		{
-			if (!FlxG.renderTile)
-				MIN_HEIGHT = 185;
+			if (FlxG.renderTile)
+				minHeight = 200;
 			else
-				MIN_HEIGHT = 200;
+				minHeight = 185;
 		}
 
-		minSize.y = MIN_HEIGHT;
-		resize(INITIAL_WIDTH, MIN_HEIGHT);
+		minSize.y = minHeight;
+		resize(INITIAL_WIDTH, minHeight);
 
 		start();
-
-		_update = [];
-		_draw = [];
-		_activeObject = [];
-		_visibleObject = [];
-
-		if (FlxG.renderTile)
-		{
-			_drawCalls = [];
-		}
 
 		var gutter:Int = 5;
 		var graphX:Int = gutter;
@@ -334,9 +324,7 @@ class Stats extends Window
 
 	function divide(f1:Float, f2:Float):Float
 	{
-		if (f2 == 0)
-			return 0;
-		return f1 / f2;
+		return if (f2 == 0) 0 else f1 / f2;
 	}
 
 	/**
