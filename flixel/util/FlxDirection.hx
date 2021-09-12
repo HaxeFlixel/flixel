@@ -6,19 +6,19 @@ package flixel.util;
  */
 @:enum abstract FlxDirection(Int) to Int
 {
-	var LEFT    = 0x0001;
-	var RIGHT   = 0x0010;
-	var UP      = 0x0100;
-	var DOWN    = 0x1000;
-	
+	var LEFT = 0x0001;
+	var RIGHT = 0x0010;
+	var UP = 0x0100;
+	var DOWN = 0x1000;
+
 	public function toString()
 	{
-		return switch((cast this:FlxDirection))
+		return switch ((cast this : FlxDirection))
 		{
-			case LEFT : "L";
+			case LEFT: "L";
 			case RIGHT: "R";
-			case UP   : "U";
-			case DOWN : "D";
+			case UP: "U";
+			case DOWN: "D";
 		}
 	}
 }
