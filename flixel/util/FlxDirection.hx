@@ -13,7 +13,7 @@ package flixel.util;
 
 	public function toString()
 	{
-		return switch ((cast this : FlxDirection))
+		return switch (cast this : FlxDirection)
 		{
 			case LEFT: "L";
 			case RIGHT: "R";
