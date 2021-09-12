@@ -22,6 +22,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
@@ -1024,11 +1025,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						#if FLX_DEBUG
 						if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
 						{
-							if (tile.allowCollisions <= FlxObject.NONE)
+							if (tile.allowCollisions <= NONE)
 							{
 								debugTile = _debugTileNotSolid;
 							}
-							else if (tile.allowCollisions != FlxObject.ANY)
+							else if (tile.allowCollisions != ANY)
 							{
 								debugTile = _debugTilePartial;
 							}
