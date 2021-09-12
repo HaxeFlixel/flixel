@@ -37,11 +37,6 @@ class Stats extends Window
 	 */
 	static inline var INITIAL_WIDTH:Int = 160;
 
-	/**
-	 * The minimal height of the window.
-	 */
-	static var minHeight:Int = 0;
-
 	static inline var FPS_COLOR:FlxColor = 0xff96ff00;
 	static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
 	static inline var DRAW_TIME_COLOR:FlxColor = 0xffA60004;
@@ -99,14 +94,7 @@ class Stats extends Window
 	{
 		super("Stats", new GraphicStats(0, 0), 0, 0, false);
 
-		if (minHeight == 0)
-		{
-			if (FlxG.renderTile)
-				minHeight = 200;
-			else
-				minHeight = 185;
-		}
-
+		var minHeight = if (FlxG.renderTile) 200 else 185;
 		minSize.y = minHeight;
 		resize(INITIAL_WIDTH, minHeight);
 
