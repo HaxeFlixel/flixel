@@ -59,8 +59,14 @@ class FlxCollision
 
 		if (considerRotation)
 		{
-			Contact.calcRotatedGraphicBounds(boundsA, true);
-			Target.calcRotatedGraphicBounds(boundsB, true);
+			Contact.calcRotatedGraphicBounds(boundsA);
+			Target.calcRotatedGraphicBounds(boundsB);
+			
+			// Inverse scale because pixelPerfectCheck ingores scale... for now
+			boundsA.width /= Contact.scale.x;
+			boundsA.height /= Contact.scale.y;
+			boundsB.width /= Target.scale.x;
+			boundsB.height /= Target.scale.y;
 		}
 		else
 		{

@@ -1096,22 +1096,14 @@ class FlxSprite extends FlxObject
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
 	 */
-	public function calcRotatedGraphicBounds(?newRect:FlxRect, ignoreScale:Bool = false):FlxRect
+	public function calcRotatedGraphicBounds(?newRect:FlxRect):FlxRect
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
 		
 		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
-		if (ignoreScale)
-		{
-			newRect.width  = frameWidth;
-			newRect.height = frameHeight;
-		}
-		else
-		{
-			newRect.width  = frameWidth  * Math.abs(scale.x);
-			newRect.height = frameHeight * Math.abs(scale.y);
-		}
+		newRect.width  = frameWidth  * Math.abs(scale.x);
+		newRect.height = frameHeight * Math.abs(scale.y);
 		newRect.x = x - offset.x + origin.x - scaledOrigin.x;
 		newRect.y = y - offset.y + origin.y - scaledOrigin.y;
 		return newRect.calcRotatedBounds(angle, scaledOrigin, newRect);
