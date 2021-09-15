@@ -15,7 +15,9 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
+#if android
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalAndroid;
+#end
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.input.android.FlxAndroidKey;
