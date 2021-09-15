@@ -51,8 +51,8 @@ class FlxCollision
 			|| Contact.scale.x != 1 || Contact.scale.y != 1
 			|| Target.scale.x != 1 || Target.scale.y != 1;
 
-		Contact.calcRotatedScreenBounds(boundsA, Camera);
-		Target.calcRotatedScreenBounds(boundsB, Camera);
+		Contact.getScreenBounds(boundsA, Camera);
+		Target.getScreenBounds(boundsB, Camera);
 
 		boundsA.intersection(boundsB, intersect.set());
 

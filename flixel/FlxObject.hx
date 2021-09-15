@@ -1186,19 +1186,19 @@ class FlxObject extends FlxBasic
 	
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this
-	 * `FlxObject`'s width and height, at its current rotation.
-	 * Note, if a `FlxSprite` is passed in, the origin is used, but scale and offset are ignored.
-	 * Use `calcRotatedGraphicBounds` to use these properties.
+	 * object's width and height, at its current rotation.
+	 * Note, if called on a `FlxSprite`, the origin is used, but scale and offset are ignored.
+	 * Use `getScreenBounds` to use these properties.
 	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
 	 */
-	public function calcRotatedBounds(?newRect:FlxRect)
+	public function getRotatedBounds(?newRect:FlxRect)
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
 		
 		newRect.set(x, y, width, height);
-		return newRect.calcRotatedBounds(angle, null, newRect);
+		return newRect.getRotatedBounds(angle, null, newRect);
 	}
 
 	/**
