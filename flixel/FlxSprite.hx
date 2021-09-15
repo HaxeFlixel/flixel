@@ -1092,20 +1092,24 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
-	 * would be displayed. Ignores scrollFactor, but honors rotation scale, offset and origin.
+	 * would be displayed. Honors scrollFactor, rotation, scale, offset and origin.
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
+	 * @param camera  Optional camera used for scrollFactor, if null `FlxG.camera` is used.
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
 	 */
-	public function calcRotatedGraphicBounds(?newRect:FlxRect):FlxRect
+	public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
 		
+		if (camera == null)
+			camera = FlxG.camera;
+		
 		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
 		newRect.width  = frameWidth  * Math.abs(scale.x);
 		newRect.height = frameHeight * Math.abs(scale.y);
-		newRect.x = x - offset.x + origin.x - scaledOrigin.x;
-		newRect.y = y - offset.y + origin.y - scaledOrigin.y;
+		newRect.x = x - Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - scaledOrigin.x;
+		newRect.y = y - Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - scaledOrigin.y;
 		return newRect.calcRotatedBounds(angle, scaledOrigin, newRect);
 	}
 	
