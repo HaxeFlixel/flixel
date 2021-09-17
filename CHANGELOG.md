@@ -1,4 +1,27 @@
-4.9.0 (???, 2021)
+4.10.0 (September 12, 2021)
+------------------------------
+#### New features:
+
+- Added `FlxDirectionFlags` and `FlxDirection` ([#2303](https://github.com/HaxeFlixel/flixel/pull/2303))
+- `FlxBitmapText`: added support for unicode combining diacritical marks ([#2309](https://github.com/HaxeFlixel/flixel/pull/2309))
+- `FlxTextFormat`: added `leading` ([#2334](https://github.com/HaxeFlixel/flixel/pull/2334))
+- `FlxAction`: added `addAndroidKey()` ([#2393](https://github.com/HaxeFlixel/flixel/pull/2393))
+- `FlxVector`: added `setPolarRadians()` and `setPolarDegrees()` ([#2401](https://github.com/HaxeFlixel/flixel/pull/2401))
+
+#### Bugfixes:
+
+- `FlxAssetPaths`: fixed paths for iOS ([#2345](https://github.com/HaxeFlixel/flixel/pull/2345))
+- `VarTween`: fixed an error if `cancel()` is called during `onUpdate` ([#2352](https://github.com/HaxeFlixel/flixel/pull/2352))
+- `FlxGradient`: fixed last pixels sometimes not being filled ([#2367](https://github.com/HaxeFlixel/flixel/pull/2367))
+- `FlxTilemap`: fixed built-in autotile assets for HTML5 ([#2402](https://github.com/HaxeFlixel/flixel/pull/2402))
+- `FlxDebugger`: fixed single-character vertical text in the stats window
+
+#### Changes and improvements:
+
+- `FlxSpriteUtil`: enabled `drawRoundRectComplex()` for non-Flash targets ([#2332](https://github.com/HaxeFlixel/flixel/pull/2332))
+- `FlxTween`: allowed `cancelTweensOf()` to cancel "grandchild" tweens ([#2354](https://github.com/HaxeFlixel/flixel/pull/2354))
+
+4.9.0 (April 11, 2021)
 ------------------------------
 #### Dependencies:
 
@@ -9,17 +32,20 @@
 - `FlxTween`: added `cancelTweensOf()` and `completeTweensOf()` ([#2273](https://github.com/HaxeFlixel/flixel/pull/2273))
 - `FlxSound`: added an `OnLoad` callback to `loadStream()` ([#2276](https://github.com/HaxeFlixel/flixel/pull/2276))
 - `FlxState`: added `subStateOpened` and `subStateClosed` signals ([#2280](https://github.com/HaxeFlixel/flixel/pull/2280))
+- `FlxG.cameras`: added a `DefaultDrawTarget` argument to `add()` and `setDefaultDrawTarget()` ([#2296](https://github.com/HaxeFlixel/flixel/pull/2296))
 
 #### Bugfixes:
 
 - `FlxTween`: fixed an issue with setting `startDelay` after tween creation ([#2262](https://github.com/HaxeFlixel/flixel/pull/2262))
 - `FlxEmitter`: fixed `maxSize` not being set to `Quantity` in `makeParticles()` ([#2265](https://github.com/HaxeFlixel/flixel/pull/2265))
+- `FlxBitmapFont`: fixed infinite loops caused by "farbling" in the Brave browser ([#2300](https://github.com/HaxeFlixel/flixel/pull/2300))
 
 #### Changes and improvements:
 
 - `FlxG.plugins`: improved type safety for `get()` and `remove()` ([#2292](https://github.com/HaxeFlixel/flixel/pull/2292))
 - `FlxAtlasFrames`: improved animation support in `fromLibGdx()` ([#2278](https://github.com/HaxeFlixel/flixel/pull/2278))
 - `FlxBasic`: assign an incremented `ID` for each created instance ([#2266](https://github.com/HaxeFlixel/flixel/pull/2266))
+- `FlxCamera`: deprecated `defaultCameras` in favor of default draw targets in `FlxG.cameras` ([#2296](https://github.com/HaxeFlixel/flixel/pull/2296))
 
 4.8.1 (July 16, 2020)
 ------------------------------

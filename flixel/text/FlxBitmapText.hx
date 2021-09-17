@@ -196,6 +196,9 @@ class FlxBitmapText extends FlxSprite
 
 	/**
 	 * Constructs a new text field component.
+	 * Warning: The default font may work incorrectly on HTML5
+	 * and is utterly unreliable on Brave Browser with shields up.
+	 * 
 	 * @param 	font	Optional parameter for component's font prop
 	 */
 	public function new(?font:FlxBitmapFont)
@@ -359,6 +362,7 @@ class FlxBitmapText extends FlxSprite
 			}
 
 			var clippedFrameRect;
+
 			if (clipRect != null)
 			{
 				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
@@ -798,7 +802,6 @@ class FlxBitmapText extends FlxSprite
 
 		var c:Int = 0; // char index on the line
 		var charCode:Int; // code for the current character in word
-		var charUtf8:UnicodeBuffer;
 
 		while (c < lineLength)
 		{
@@ -830,7 +833,7 @@ class FlxBitmapText extends FlxSprite
 				}
 				else if (!isSpaceWord)
 				{
-					charUtf8 = new UnicodeBuffer();
+					var charUtf8 = new UnicodeBuffer();
 					charUtf8 = charUtf8.addChar(charCode);
 					words.push(word + charUtf8.toString());
 				}
@@ -1205,32 +1208,39 @@ class FlxBitmapText extends FlxSprite
 
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
+		var charUt8:UnicodeBuffer;
+
 		for (i in 0...lineLength)
 		{
 			charCode = line.uCharCodeAt(i);
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
-				curX += spaceWidth;
+				curX += spaceWidth + letterSpacing;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
-				curX += tabWidth;
+				curX += tabWidth + letterSpacing;
 			}
 			else
 			{
 				charFrame = font.getCharFrame(charCode);
 				if (charFrame != null)
 				{
-					_flashPoint.setTo(curX, curY);
+					if (isUnicodeComboMark(charCode))
+					{
+						_flashPoint.setTo(curX - font.getCharAdvance(charCode) - letterSpacing, curY);
+					}
+					else
+					{
+						_flashPoint.setTo(curX, curY);
+						curX += font.getCharAdvance(charCode) + letterSpacing;
+					}
 					charFrame.paint(textBitmap, _flashPoint, true);
-					var charUt8 = new UnicodeBuffer();
+					charUt8 = new UnicodeBuffer();
 					charUt8 = charUt8.addChar(charCode);
-					curX += font.getCharAdvance(charCode);
 				}
 			}
-
-			curX += letterSpacing;
 		}
 	}
 
@@ -1282,11 +1292,11 @@ class FlxBitmapText extends FlxSprite
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
-				curX += spaceWidth;
+				curX += spaceWidth + letterSpacing;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
-				curX += tabWidth;
+				curX += tabWidth + letterSpacing;
 			}
 			else
 			{
@@ -1294,13 +1304,18 @@ class FlxBitmapText extends FlxSprite
 				if (charFrame != null)
 				{
 					textData[pos++] = charCode;
-					textData[pos++] = curX;
+					if (isUnicodeComboMark(charCode))
+					{
+						textData[pos++] = curX - font.getCharAdvance(charCode) - letterSpacing;
+					}
+					else
+					{
+						textData[pos++] = curX;
+						curX += font.getCharAdvance(charCode) + letterSpacing;
+					}
 					textData[pos++] = curY;
-					curX += font.getCharAdvance(charCode);
 				}
 			}
-
-			curX += letterSpacing;
 		}
 	}
 
@@ -1828,5 +1843,16 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges(true);
 		return super.get_height();
+	}
+
+	/**
+	 * Checks if the specified code is one of the Unicode Combining Diacritical Marks
+	 * @param	Code	The charactercode we want to check
+	 * @return 	Bool	Returns true if the code is a Unicode Combining Diacritical Mark
+	 */
+	private function isUnicodeComboMark(Code:Int):Bool
+	{
+		return ((Code >= 768 && Code <= 879) || (Code >= 6832 && Code <= 6911) || (Code >= 7616 && Code <= 7679) || (Code >= 8400 && Code <= 8447)
+			|| (Code >= 65056 && Code <= 65071));
 	}
 }

@@ -108,6 +108,8 @@ class FlxBitmapFont extends FlxFramesCollection
 
 	/**
 	 * Retrieves the default `FlxBitmapFont`.
+	 * May work incorrectly on HTML5.
+	 * Utterly unreliable on Brave Browser with shields up.
 	 */
 	public static function getDefaultFont():FlxBitmapFont
 	{
@@ -296,6 +298,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Load bitmap font in XNA/Pixelizer format.
 	 * May work incorrectly on HTML5.
+	 * Utterly unreliable on Brave Browser with shields up.
 	 *
 	 * @param   source        Source image for this font.
 	 * @param   letters       `String` of characters contained in the source image,
@@ -371,7 +374,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					transformPoint(p, frame);
 
 					// find width and height of char
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
+					while (gx < frameWidth && bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
 					{
 						gx++;
 						p.setTo(gx, cy);
@@ -381,7 +384,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					p.setTo(gx - 1, gy);
 					transformPoint(p, frame);
 
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
+					while (gy < frameHeight && bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
 					{
 						gy++;
 						p.setTo(cx, gy);

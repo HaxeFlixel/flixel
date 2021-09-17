@@ -152,7 +152,7 @@ class FlxAssets
 	 */
 	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
 	{
-		return Type.createInstance(source, [0, 0]);
+		return Type.createInstance(source, []);
 	}
 
 	/**

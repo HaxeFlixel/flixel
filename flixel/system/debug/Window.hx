@@ -35,7 +35,7 @@ class Window extends Sprite
 	/**
 	 * How many windows there are currently in total.
 	 */
-	static var WINDOW_AMOUNT:Int = 0;
+	static var windowAmount:Int = 0;
 
 	public var minSize:Point;
 	public var maxSize:Point;
@@ -145,7 +145,7 @@ class Window extends Sprite
 			addChild(_handle);
 		}
 
-		if (Closable)
+		if (_closable)
 		{
 			_closeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), close);
 			_closeButton.alpha = HEADER_ALPHA;
@@ -153,12 +153,12 @@ class Window extends Sprite
 		}
 		else
 		{
-			_id = WINDOW_AMOUNT;
+			_id = windowAmount;
 			loadSaveData();
-			WINDOW_AMOUNT++;
+			windowAmount++;
 		}
 
-		if ((_width != 0) || (_height != 0))
+		if (_width != 0 || _height != 0)
 		{
 			updateSize();
 		}
@@ -286,26 +286,13 @@ class Window extends Sprite
 
 	function loadSaveData():Void
 	{
-		if (FlxG.save.data.windowSettings != null)
+		if (FlxG.save.data.windowSettings == null)
 		{
-			visible = FlxG.save.data.windowSettings[_id];
+			var maxWindows = 10; // arbitrary
+			FlxG.save.data.windowSettings = [for (_ in 0...maxWindows) true];
+			FlxG.save.flush();
 		}
-		else
-		{
-			initSaveData();
-			loadSaveData();
-		}
-	}
-
-	function initSaveData():Void
-	{
-		var settings:Array<Bool> = [];
-		for (i in 0...10) // arbitrary max of windows
-		{
-			settings[i] = true;
-		}
-		FlxG.save.data.windowSettings = settings;
-		FlxG.save.flush();
+		visible = FlxG.save.data.windowSettings[_id];
 	}
 
 	public function update():Void {}
@@ -315,13 +302,9 @@ class Window extends Sprite
 	/**
 	 * Used to set up basic mouse listeners..
 	 */
-	function init(?E:Event):Void
+	function init(?_:Event):Void
 	{
-		#if flash
-		if (root == null)
-		#else
-		if (stage == null)
-		#end
+		if (#if flash root #else stage #end == null)
 		{
 			return;
 		}
@@ -337,7 +320,7 @@ class Window extends Sprite
 	/**
 	 * Mouse movement handler.  Figures out if mouse is over handle or header bar or what.
 	 */
-	function onMouseMove(?E:MouseEvent):Void
+	function onMouseMove(?_:MouseEvent):Void
 	{
 		// mouseX / Y can be negative, which messes with the resizing if dragging in the opposite direction
 		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
@@ -376,7 +359,7 @@ class Window extends Sprite
 	/**
 	 * Figure out if window is being repositioned (clicked on header) or resized (clicked on handle).
 	 */
-	function onMouseDown(?E:MouseEvent):Void
+	function onMouseDown(?_:MouseEvent):Void
 	{
 		if (_overHeader)
 		{
@@ -399,7 +382,7 @@ class Window extends Sprite
 	/**
 	 * User let go of header bar or handler (or nothing), so turn off drag and resize behaviors.
 	 */
-	function onMouseUp(?E:MouseEvent):Void
+	function onMouseUp(?_:MouseEvent):Void
 	{
 		_dragging = false;
 		_resizing = false;
