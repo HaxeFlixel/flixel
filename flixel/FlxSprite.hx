@@ -1013,38 +1013,8 @@ class FlxSprite extends FlxObject
 			_point.set(minX, minY);
 			return Camera.containsPoint(_point, frameWidth, frameHeight);
 		}
-
-		var radiusX:Float = _halfSize.x;
-		var radiusY:Float = _halfSize.y;
-
-		var ox:Float = origin.x;
-		if (ox != radiusX)
-		{
-			var x1:Float = Math.abs(ox);
-			var x2:Float = Math.abs(frameWidth - ox);
-			radiusX = Math.max(x2, x1);
-		}
-
-		var oy:Float = origin.y;
-		if (oy != radiusY)
-		{
-			var y1:Float = Math.abs(oy);
-			var y2:Float = Math.abs(frameHeight - oy);
-			radiusY = Math.max(y2, y1);
-		}
-
-		radiusX *= Math.abs(scale.x);
-		radiusY *= Math.abs(scale.y);
-		var radius:Float = Math.max(radiusX, radiusY);
-		radius *= FlxMath.SQUARE_ROOT_OF_TWO;
-
-		minX += ox - radius;
-		minY += oy - radius;
-
-		var doubleRadius:Float = 2 * radius;
-
-		_point.set(minX, minY);
-		return Camera.containsPoint(_point, doubleRadius, doubleRadius);
+		
+		return Camera.containsRect(getScreenBounds(_rect, Camera));
 	}
 
 	/**
