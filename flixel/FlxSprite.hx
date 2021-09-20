@@ -1000,21 +1000,12 @@ class FlxSprite extends FlxObject
 	 * @param   Camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
 	 * @return  Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(?Camera:FlxCamera):Bool
+	override public function isOnScreen(?camera:FlxCamera):Bool
 	{
-		if (Camera == null)
-			Camera = FlxG.camera;
-
-		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
-		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
-
-		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
-		{
-			_point.set(minX, minY);
-			return Camera.containsPoint(_point, frameWidth, frameHeight);
-		}
+		if (camera == null)
+			camera = FlxG.camera;
 		
-		return Camera.containsRect(getScreenBounds(_rect, Camera));
+		return camera.containsRect(getScreenBounds(_rect, camera));
 	}
 
 	/**
