@@ -342,6 +342,7 @@ class FlxRect implements IFlxPooled
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created. Note: If you like, you can
 	 *                pass in the input rect to manipulate it. ex: `rect.calcRotatedBounds(angle, null, rect)`
 	 * @return A globally aligned `FlxRect` that fully contains the input rectangle.
+	 * @since 4.11.0
 	 */
 	public function getRotatedBounds(degrees:Float, ?origin:FlxPoint, ?newRect:FlxRect):FlxRect
 	{

@@ -1051,6 +1051,7 @@ class FlxSprite extends FlxObject
 	 * Use `getScreenBounds` to use these properties.
 	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 * @since 4.11.0
 	 */
 	override function getRotatedBounds(?newRect:FlxRect)
 	{
@@ -1067,6 +1068,7 @@ class FlxSprite extends FlxObject
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
 	 * @param camera  Optional camera used for scrollFactor, if null `FlxG.camera` is used.
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
+	 * @since 4.11.0
 	 */
 	public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
 	{

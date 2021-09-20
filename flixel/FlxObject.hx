@@ -1201,6 +1201,7 @@ class FlxObject extends FlxBasic
 	 * Use `getScreenBounds` to use these properties.
 	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
 	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 * @since 4.11.0
 	 */
 	public function getRotatedBounds(?newRect:FlxRect)
 	{
