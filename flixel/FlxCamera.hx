@@ -1745,7 +1745,19 @@ class FlxCamera extends FlxBasic
 		updateFlashOffset();
 		setScale(scaleX, scaleY);
 	}
-
+	
+	/**
+	 * The size and position of this camera's screen
+	 * @since 4.11.0
+	 */
+	public function getViewRect(?rect:FlxRect)
+	{
+		if (rect == null)
+			rect = FlxRect.get();
+		
+		return rect.set(viewOffsetX, viewOffsetY, viewOffsetWidth - viewOffsetX, viewOffsetHeight - viewOffsetY);
+	}
+	
 	/**
 	 * Checks whether this camera contains a given point or rectangle, in
 	 * screen coordinates.
