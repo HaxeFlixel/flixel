@@ -7,7 +7,8 @@ import flixel.input.keyboard.FlxKey;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
- * Automatically instatiated by flixel via `FlxKeyboard` and accessed via `FlxG.keys`.
+ * Automatically instatiated by flixel as a `FlxKeyboard` and accessed via `FlxG.keys`
+ * or `FlxAndroidKeys` with `FlxG.android`.
  * Example: `FlxG.keys.justPressed.A`
  */
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
