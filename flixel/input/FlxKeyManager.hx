@@ -5,6 +5,11 @@ import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.keyboard.FlxKey;
 
+/**
+ * Keeps track of what keys are pressed and how with handy Bools or strings.
+ * Automatically instatiated by flixel via `FlxKeyboard` and accessed via `FlxG.keys`.
+ * Example: `FlxG.keys.justPressed.A`
+ */
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
 	/**
