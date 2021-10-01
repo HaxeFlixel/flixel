@@ -221,8 +221,10 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1.velocity.x;
-			var obj2v:Float = Object2.velocity.x;
+			var vel1 = Object1.velocity.x;
+			var vel2 = Object2.velocity.x;
+			var mass1 = Object1.mass;
+			var mass2 = Object2.mass;
 
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -230,23 +232,20 @@ class FlxObject extends FlxBasic
 				Object1.x = Object1.x - overlap;
 				Object2.x += overlap;
 
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-				var average:Float = (obj1velocity + obj2velocity) * 0.5;
-				obj1velocity -= average;
-				obj2velocity -= average;
-				Object1.velocity.x = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.x = average + obj2velocity * Object2.elasticity;
+				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
+				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+				Object1.velocity.x = newVel1;
+				Object2.velocity.x = newVel2;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.x = Object1.x - overlap;
-				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
+				Object1.velocity.x = vel2 - vel1 * Object1.elasticity;
 			}
 			else if (!obj2immovable)
 			{
 				Object2.x += overlap;
-				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
+				Object2.velocity.x = vel1 - vel2 * Object2.elasticity;
 			}
 			return true;
 		}
@@ -378,10 +377,12 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1delta:Float = Object1.y - Object1.last.y;
-			var obj2delta:Float = Object2.y - Object2.last.y;
-			var obj1v:Float = Object1.velocity.y;
-			var obj2v:Float = Object2.velocity.y;
+			var delta1:Float = Object1.y - Object1.last.y;
+			var delta2:Float = Object2.y - Object2.last.y;
+			var vel1:Float = Object1.velocity.y;
+			var vel2:Float = Object2.velocity.y;
+			var mass1:Float = Object1.mass;
+			var mass2:Float = Object2.mass;
 
 			if (!obj1immovable && !obj2immovable)
 			{
@@ -389,20 +390,17 @@ class FlxObject extends FlxBasic
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-				var average:Float = (obj1velocity + obj2velocity) * 0.5;
-				obj1velocity -= average;
-				obj2velocity -= average;
-				Object1.velocity.y = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.y = average + obj2velocity * Object2.elasticity;
+				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
+				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+				Object1.velocity.y = newVel1;
+				Object2.velocity.y = newVel2;
 			}
 			else if (!obj1immovable)
 			{
 				Object1.y = Object1.y - overlap;
-				Object1.velocity.y = obj2v - obj1v * Object1.elasticity;
+				Object1.velocity.y = vel2 - vel1 * Object1.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object1.collisonXDrag && Object2.active && Object2.moves && (obj1delta > obj2delta))
+				if (Object1.collisonXDrag && Object2.active && Object2.moves && (delta1 > delta2))
 				{
 					Object1.x += Object2.x - Object2.last.x;
 				}
@@ -410,9 +408,9 @@ class FlxObject extends FlxBasic
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
-				Object2.velocity.y = obj1v - obj2v * Object2.elasticity;
+				Object2.velocity.y = vel1 - vel2 * Object2.elasticity;
 				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object2.collisonXDrag && Object1.active && Object1.moves && (obj1delta < obj2delta))
+				if (Object2.collisonXDrag && Object1.active && Object1.moves && (delta1 < delta2))
 				{
 					Object2.x += Object1.x - Object1.last.x;
 				}
