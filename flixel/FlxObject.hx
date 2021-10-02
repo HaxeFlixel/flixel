@@ -121,6 +121,17 @@ class FlxObject extends FlxBasic
 		return touchingX || touchingY;
 	}
 
+	static function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
+	{
+		return object2.active && object2.moves && switch (type)
+		{
+			case NEVER: false;
+			case ALWAYS: true;
+			case IMMOVABLE: object2.immovable;
+			case HEAVIER: object2.mass > object1.mass;
+		}
+	}
+
 	/**
 	 * Internal function that computes overlap among two objects on the X axis. It also updates the `touching` variable.
 	 * `checkMaxOverlap` is used to determine whether we want to exclude (therefore check) overlaps which are
@@ -221,6 +232,8 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
+			var delta1 = Object1.x - Object1.last.x;
+			var delta2 = Object2.x - Object2.last.x;
 			var vel1 = Object1.velocity.x;
 			var vel2 = Object2.velocity.x;
 			var mass1 = Object1.mass;
@@ -247,6 +260,13 @@ class FlxObject extends FlxBasic
 				Object2.x += overlap;
 				Object2.velocity.x = vel1 - vel2 * Object2.elasticity;
 			}
+
+			// use collisionDrag properties to determine whether one object
+			if (allowCollisionDrag(Object1.collisonYDrag, Object1, Object2) && delta1 > delta2)
+				Object1.y += Object2.y - Object2.last.y;
+			else if (allowCollisionDrag(Object2.collisonYDrag, Object2, Object1) && delta2 > delta1)
+				Object2.y += Object1.y - Object1.last.y;
+
 			return true;
 		}
 
@@ -377,8 +397,8 @@ class FlxObject extends FlxBasic
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var delta1:Float = Object1.y - Object1.last.y;
-			var delta2:Float = Object2.y - Object2.last.y;
+			var delta1 = Object1.y - Object1.last.y;
+			var delta2 = Object2.y - Object2.last.y;
 			var vel1:Float = Object1.velocity.y;
 			var vel2:Float = Object2.velocity.y;
 			var mass1:Float = Object1.mass;
@@ -399,22 +419,19 @@ class FlxObject extends FlxBasic
 			{
 				Object1.y = Object1.y - overlap;
 				Object1.velocity.y = vel2 - vel1 * Object1.elasticity;
-				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object1.collisonXDrag && Object2.active && Object2.moves && (delta1 > delta2))
-				{
-					Object1.x += Object2.x - Object2.last.x;
-				}
 			}
 			else if (!obj2immovable)
 			{
 				Object2.y += overlap;
 				Object2.velocity.y = vel1 - vel2 * Object2.elasticity;
-				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object2.collisonXDrag && Object1.active && Object1.moves && (delta1 < delta2))
-				{
-					Object2.x += Object1.x - Object1.last.x;
-				}
 			}
+
+			// use collisionDrag properties to determine whether one object
+			if (allowCollisionDrag(Object1.collisonXDrag, Object1, Object2) && delta1 > delta2)
+				Object1.x += Object2.x - Object2.last.x;
+			else if (allowCollisionDrag(Object2.collisonXDrag, Object2, Object1) && delta2 > delta1)
+				Object2.x += Object1.x - Object1.last.x;
+
 			return true;
 		}
 
@@ -597,7 +614,13 @@ class FlxObject extends FlxBasic
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
 	 * (makes sense for horizontally-moving platforms in platformers for example).
 	 */
-	public var collisonXDrag:Bool = true;
+	public var collisonXDrag = CollisionDragType.IMMOVABLE;
+	
+	/**
+	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
+	 * (for sticking to vertically-moving platforms in platformers for example).
+	 */
+	public var collisonYDrag = CollisionDragType.NEVER;
 
 	#if FLX_DEBUG
 	/**
@@ -1335,4 +1358,22 @@ class FlxObject extends FlxBasic
 			path.object = this;
 		return this.path = path;
 	}
+}
+
+/**
+ * Determines when to apply collision drag to one object that collided with another.
+ */
+@:enum abstract CollisionDragType(Int)
+{
+	/** Never drags on colliding objects. */
+	var NEVER = 0;
+
+	/** Always drags on colliding objects. */
+	var ALWAYS = 1;
+
+	/** Drags when colliding with immovable objects. */
+	var IMMOVABLE = 2;
+
+	/** Drags when colliding with heavier objects. */
+	var HEAVIER = 3;
 }
