@@ -128,7 +128,7 @@ class FlxObject extends FlxBasic
 			case NEVER: false;
 			case ALWAYS: true;
 			case IMMOVABLE: object2.immovable;
-			case HEAVIER: object2.mass > object1.mass;
+			case HEAVIER: object2.immovable || object2.mass > object1.mass;
 		}
 	}
 
@@ -262,9 +262,9 @@ class FlxObject extends FlxBasic
 			}
 
 			// use collisionDrag properties to determine whether one object
-			if (allowCollisionDrag(Object1.collisonYDrag, Object1, Object2) && delta1 > delta2)
+			if (allowCollisionDrag(Object1.collisionYDrag, Object1, Object2) && delta1 > delta2)
 				Object1.y += Object2.y - Object2.last.y;
-			else if (allowCollisionDrag(Object2.collisonYDrag, Object2, Object1) && delta2 > delta1)
+			else if (allowCollisionDrag(Object2.collisionYDrag, Object2, Object1) && delta2 > delta1)
 				Object2.y += Object1.y - Object1.last.y;
 
 			return true;
@@ -427,9 +427,9 @@ class FlxObject extends FlxBasic
 			}
 
 			// use collisionDrag properties to determine whether one object
-			if (allowCollisionDrag(Object1.collisonXDrag, Object1, Object2) && delta1 > delta2)
+			if (allowCollisionDrag(Object1.collisionXDrag, Object1, Object2) && delta1 > delta2)
 				Object1.x += Object2.x - Object2.last.x;
-			else if (allowCollisionDrag(Object2.collisonXDrag, Object2, Object1) && delta2 > delta1)
+			else if (allowCollisionDrag(Object2.collisionXDrag, Object2, Object1) && delta2 > delta1)
 				Object2.x += Object1.x - Object1.last.x;
 
 			return true;
@@ -614,13 +614,14 @@ class FlxObject extends FlxBasic
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
 	 * (makes sense for horizontally-moving platforms in platformers for example).
 	 */
-	public var collisonXDrag = CollisionDragType.IMMOVABLE;
+	public var collisionXDrag = CollisionDragType.IMMOVABLE;
 	
 	/**
 	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
 	 * (for sticking to vertically-moving platforms in platformers for example).
+	 * @since 4.11.0
 	 */
-	public var collisonYDrag = CollisionDragType.NEVER;
+	public var collisionYDrag = CollisionDragType.NEVER;
 
 	#if FLX_DEBUG
 	/**
@@ -1374,6 +1375,6 @@ class FlxObject extends FlxBasic
 	/** Drags when colliding with immovable objects. */
 	var IMMOVABLE = 2;
 
-	/** Drags when colliding with heavier objects. */
+	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
 	var HEAVIER = 3;
 }
