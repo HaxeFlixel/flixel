@@ -555,23 +555,25 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override public function revive():Void
 	{
 		_skipTransformChildren = true;
-		super.revive();
+		super.revive(); // calls set_exists and set_alive
 		_skipTransformChildren = false;
 		group.revive();
 	}
 
 	override public function reset(X:Float, Y:Float):Void
 	{
-		revive();
-		setPosition(X, Y);
-
 		for (sprite in _sprites)
 		{
 			if (sprite != null)
-			{
-				sprite.reset(X, Y);
-			}
+				sprite.reset(sprite.x + X - x, sprite.y + Y - y);
 		}
+		
+		// prevent any transformations on children, mainly from setter overrides
+		_skipTransformChildren = true;
+		super.revive();
+		x = X;
+		y = Y;
+		_skipTransformChildren = false;
 	}
 
 	/**
