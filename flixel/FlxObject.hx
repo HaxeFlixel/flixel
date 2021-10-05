@@ -238,14 +238,15 @@ class FlxObject extends FlxBasic
 			var vel2 = Object2.velocity.x;
 			var mass1 = Object1.mass;
 			var mass2 = Object2.mass;
+			var massSum = mass1 + mass2;
 
 			if (!obj1immovable && !obj2immovable)
 			{
+				#if FLX_LEGACY_COLLISION
 				overlap *= 0.5;
 				Object1.x = Object1.x - overlap;
 				Object2.x += overlap;
 
-				#if FLX_LEGACY_COLLISION
 				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
 				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
 				var average = (newVel1 + newVel2) * 0.5;
@@ -254,15 +255,21 @@ class FlxObject extends FlxBasic
 				Object1.velocity.x = average + newVel1 * Object1.elasticity;
 				Object2.velocity.x = average + newVel2 * Object2.elasticity;
 				#else
-				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
-				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+				Object1.x -= overlap / 2;
+				Object2.x += overlap / 2;
+				// this causes stacking issues
+				// Object1.x -= overlap * mass2 / massSum;
+				// Object2.x += overlap * mass1 / massSum;
+				
+				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / massSum;
 				Object1.velocity.x = newVel1;
 				Object2.velocity.x = newVel2;
 				#end
 			}
 			else if (!obj1immovable)
 			{
-				Object1.x = Object1.x - overlap;
+				Object1.x -= overlap;
 				Object1.velocity.x = vel2 - vel1 * Object1.elasticity;
 			}
 			else if (!obj2immovable)
@@ -409,18 +416,19 @@ class FlxObject extends FlxBasic
 		{
 			var delta1 = Object1.y - Object1.last.y;
 			var delta2 = Object2.y - Object2.last.y;
-			var vel1:Float = Object1.velocity.y;
-			var vel2:Float = Object2.velocity.y;
-			var mass1:Float = Object1.mass;
-			var mass2:Float = Object2.mass;
+			var vel1 = Object1.velocity.y;
+			var vel2 = Object2.velocity.y;
+			var mass1 = Object1.mass;
+			var mass2 = Object2.mass;
+			var massSum = mass1 + mass2;
 
 			if (!obj1immovable && !obj2immovable)
 			{
+				#if FLX_LEGACY_COLLISION
 				overlap *= 0.5;
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
 
-				#if FLX_LEGACY_COLLISION
 				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
 				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
 				var average = (newVel1 + newVel2) * 0.5;
@@ -429,15 +437,21 @@ class FlxObject extends FlxBasic
 				Object1.velocity.y = average + newVel1 * Object1.elasticity;
 				Object2.velocity.y = average + newVel2 * Object2.elasticity;
 				#else
-				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
-				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+				Object1.y -= overlap / 2;
+				Object2.y += overlap / 2;
+				// this causes stacking issues
+				// Object1.y -= overlap * mass2 / massSum;
+				// Object2.y += overlap * mass1 / massSum;
+				
+				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / massSum;
 				Object1.velocity.y = newVel1;
 				Object2.velocity.y = newVel2;
 				#end
 			}
 			else if (!obj1immovable)
 			{
-				Object1.y = Object1.y - overlap;
+				Object1.y -= overlap;
 				Object1.velocity.y = vel2 - vel1 * Object1.elasticity;
 			}
 			else if (!obj2immovable)
