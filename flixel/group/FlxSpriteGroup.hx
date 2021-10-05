@@ -543,7 +543,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function kill():Void
 	{
+		_skipTransformChildren = true;
 		super.kill();
+		_skipTransformChildren = false;
 		group.kill();
 	}
 
@@ -552,7 +554,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function revive():Void
 	{
+		_skipTransformChildren = true;
 		super.revive();
+		_skipTransformChildren = false;
 		group.revive();
 	}
 
@@ -601,7 +605,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function transformChildren<V>(Function:T->V->Void, Value:V):Void
 	{
-		if (group == null)
+		if (_skipTransformChildren || group == null)
 			return;
 
 		for (sprite in _sprites)
@@ -620,7 +624,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
-		if (group == null)
+		if (_skipTransformChildren || group == null)
 			return;
 
 		var numProps:Int = FunctionArray.length;
@@ -687,7 +691,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	override function set_x(Value:Float):Float
 	{
-		if (!_skipTransformChildren && exists && x != Value)
+		if (exists && x != Value)
 		{
 			var offset:Float = Value - x;
 			transformChildren(xTransform, offset);
@@ -698,7 +702,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	override function set_y(Value:Float):Float
 	{
-		if (!_skipTransformChildren && exists && y != Value)
+		if (exists && y != Value)
 		{
 			var offset:Float = Value - y;
 			transformChildren(yTransform, offset);
