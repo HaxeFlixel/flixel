@@ -94,16 +94,29 @@ class FlxSpriteGroupTest extends FlxTest
 	 */
 	function testKillRevive2306()
 	{
-		var member = new Member();
-		Assert.isFalse(member.killed);
-		Assert.isFalse(member.revived);
-		group.add(member);
+		var member1 = new Member();
+		group.add(member1);
+		Assert.isFalse(member1.killed);
+		Assert.isFalse(member1.revived);
+		
+		var member2 = new Member();
+		Assert.isFalse(member1.killed);
+		Assert.isFalse(member1.revived);
+		group.add(member2);
+		
+		member2.exists = false;
 		group.kill();
-		Assert.isTrue(member.killed);
-		Assert.isFalse(member.revived);
+		Assert.isTrue(member1.killed);
+		Assert.isFalse(member1.revived);
+		Assert.isFalse(member2.killed);
+		Assert.isFalse(member2.revived);
+		
+		member2.exists = true;
 		group.revive();
-		Assert.isTrue(member.killed);
-		Assert.isTrue(member.revived);
+		Assert.isTrue(member1.killed);
+		Assert.isTrue(member1.revived);
+		Assert.isFalse(member2.killed);
+		Assert.isFalse(member2.revived);
 		return group;
 	}
 }
