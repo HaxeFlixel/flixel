@@ -204,7 +204,7 @@ class FlxText extends FlxSprite
 		textField.sharpness = 100;
 		textField.height = (Text.length <= 0) ? 1 : 10;
 
-		allowCollisions = FlxObject.NONE;
+		allowCollisions = NONE;
 		moves = false;
 
 		drawFrame();

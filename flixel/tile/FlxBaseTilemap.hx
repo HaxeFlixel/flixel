@@ -883,7 +883,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		while (i < mapSize)
 		{
-			if (_tileObjects[_data[i]].allowCollisions != FlxObject.NONE)
+			if (_tileObjects[_data[i]].allowCollisions != NONE)
 			{
 				distances[i] = -2;
 			}
