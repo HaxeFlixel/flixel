@@ -590,7 +590,7 @@ class FlxGame extends Sprite
 		}
 
 		#if FLX_DEBUG
-		if (Std.is(_requestedState, FlxSubState))
+		if ((_requestedState is FlxSubState))
 			throw "You can't set FlxSubState class instance as the state for you game";
 		#end
 

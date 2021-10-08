@@ -322,9 +322,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 *                          (by calling `revive()` on them).
 	 * @return  A reference to the object that was created.
 	 */
-	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false):T
+	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
-		return group.recycle(ObjectClass, ObjectFactory, Force);
+		return group.recycle(ObjectClass, ObjectFactory, Force, Revive);
 	}
 
 	/**

@@ -2,6 +2,9 @@ package flixel.system.frontEnds;
 
 import flixel.util.FlxSignal;
 
+/**
+ * Accessed via `FlxG.signals`.
+ */
 class SignalFrontEnd
 {
 	/**

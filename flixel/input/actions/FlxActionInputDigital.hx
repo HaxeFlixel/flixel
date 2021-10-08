@@ -9,6 +9,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
+import flixel.input.android.FlxAndroidKey;
 
 /**
  * @since 4.6.0
@@ -306,6 +307,37 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 		return (data.bActive && data.bState);
 	}
 }
+
+#if android
+/**
+ * @since 4.10.0
+ */
+class FlxActionInputDigitalAndroid extends FlxActionInputDigital
+{
+	/**
+	 * Android buttons action input for the BACK and MENU buttons on Android
+	 * @param	androidKeyID Key identifier (FlxAndroidKey.BACK, FlxAndroidKey.MENU... those are the only 2 android specific ones)
+	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 */
+	public function new(androidKeyID:FlxAndroidKey, Trigger:FlxInputState)
+	{
+		super(ANDROID, androidKeyID, Trigger);
+	}
+
+	override public function check(Action:FlxAction):Bool
+	{
+		return switch (trigger)
+		{
+			case PRESSED: FlxG.android.checkStatus(inputID, PRESSED) || FlxG.android.checkStatus(inputID, JUST_PRESSED);
+			case RELEASED: FlxG.android.checkStatus(inputID, RELEASED) || FlxG.android.checkStatus(inputID, JUST_RELEASED);
+			case JUST_PRESSED: FlxG.android.checkStatus(inputID, JUST_PRESSED);
+			case JUST_RELEASED: FlxG.android.checkStatus(inputID, JUST_RELEASED);
+
+			default: false;
+		}
+	}
+}
+#end
 
 /**
  * @since 4.6.0

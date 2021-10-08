@@ -172,7 +172,7 @@ class FlxActionSet implements IFlxDestroyable
 		var space:String = "\t";
 		return Json.stringify(this, function(key:Dynamic, value:Dynamic):Dynamic
 		{
-			if (Std.is(value, FlxAction))
+			if ((value is FlxAction))
 			{
 				var fa:FlxAction = cast value;
 				return {

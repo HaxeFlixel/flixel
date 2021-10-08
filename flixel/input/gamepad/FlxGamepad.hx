@@ -855,6 +855,9 @@ class FlxGamepad implements IFlxDestroyable
 		return _deadZone = deadZone;
 	}
 	
+	/** 
+	 * @since 4.8.0
+	 */
 	public inline function getInputLabel(id:FlxGamepadInputID)
 	{
 		return mapping.getInputLabel(id);
@@ -945,9 +948,22 @@ enum FlxGamepadModel
 	MAYFLASH_WII_REMOTE;
 	WII_REMOTE;
 	MFI;
-	SWITCH_PRO;// also dual joycons
+
+	/** 
+	 * @since 4.8.0
+	 */
+	SWITCH_PRO; // also dual joycons
+
+	/** 
+	 * @since 4.8.0
+	 */
 	SWITCH_JOYCON_LEFT;
+
+	/** 
+	 * @since 4.8.0
+	 */
 	SWITCH_JOYCON_RIGHT;
+
 	UNKNOWN;
 }
 

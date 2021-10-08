@@ -9,6 +9,7 @@ import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
 import openfl.display.BitmapData;
@@ -732,7 +733,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	CallbackFilter		If you only want the callback to go off for certain classes or objects based on a certain class, set that class here.
 	 * @param	Range				If you want this callback to work for a bunch of different tiles, input the range here. Default value is 1.
 	 */
-	public function setTileProperties(Tile:Int, AllowCollisions:Int = FlxObject.ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>,
+	public function setTileProperties(Tile:Int, AllowCollisions:FlxDirectionFlags = ANY, ?Callback:FlxObject->FlxObject->Void, ?CallbackFilter:Class<FlxObject>,
 			Range:Int = 1):Void
 	{
 		if (Range <= 0)
@@ -882,7 +883,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 		while (i < mapSize)
 		{
-			if (_tileObjects[_data[i]].allowCollisions != FlxObject.NONE)
+			if (_tileObjects[_data[i]].allowCollisions != NONE)
 			{
 				distances[i] = -2;
 			}

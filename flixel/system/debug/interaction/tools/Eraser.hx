@@ -55,7 +55,7 @@ class Eraser extends Tool
 			if (member == null)
 				continue;
 
-			if (Std.is(member, FlxTypedGroup))
+			if ((member is FlxTypedGroup))
 			{
 				// TODO: walk in the group, removing all members.
 			}
@@ -75,7 +75,7 @@ class Eraser extends Tool
 			if (member == null)
 				continue;
 
-			if (Std.is(member, FlxTypedGroup))
+			if ((member is FlxTypedGroup))
 				removeFromMemory(item, cast member);
 			else if (member == item)
 				parentGroup.remove(member);

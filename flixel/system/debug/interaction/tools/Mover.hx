@@ -64,7 +64,7 @@ class Mover extends Tool
 		// If we are not active, it means things are being moved around using
 		// the mover's shortcut key. If the pointer is the active tool, it should
 		// not do any selection of items while things are being moved/dragged.
-		if (!isActive() && Std.is(_brain.activeTool, Pointer))
+		if (!isActive() && (_brain.activeTool is Pointer))
 			(cast _brain.activeTool : Pointer).cancelSelection();
 	}
 
@@ -75,7 +75,7 @@ class Mover extends Tool
 
 		for (member in _brain.selectedItems.members)
 		{
-			if (!Std.is(member, FlxObject))
+			if (!(member is FlxObject))
 				continue;
 
 			var object:FlxObject = cast member;

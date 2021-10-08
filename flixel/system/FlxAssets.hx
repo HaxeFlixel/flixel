@@ -152,7 +152,7 @@ class FlxAssets
 	 */
 	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
 	{
-		return Type.createInstance(source, [0, 0]);
+		return Type.createInstance(source, []);
 	}
 
 	/**
@@ -167,15 +167,15 @@ class FlxAssets
 	 */
 	public static function resolveBitmapData(Graphic:FlxGraphicSource):BitmapData
 	{
-		if (Std.is(Graphic, BitmapData))
+		if ((Graphic is BitmapData))
 		{
 			return cast Graphic;
 		}
-		else if (Std.is(Graphic, Class))
+		else if ((Graphic is Class))
 		{
 			return FlxAssets.getBitmapFromClass(cast Graphic);
 		}
-		else if (Std.is(Graphic, String))
+		else if ((Graphic is String))
 		{
 			return FlxAssets.getBitmapData(Graphic);
 		}
@@ -201,15 +201,15 @@ class FlxAssets
 			return Key;
 		}
 
-		if (Std.is(Graphic, BitmapData))
+		if ((Graphic is BitmapData))
 		{
 			return Key;
 		}
-		else if (Std.is(Graphic, Class))
+		else if ((Graphic is Class))
 		{
 			return FlxG.bitmap.getKeyForClass(cast Graphic);
 		}
-		else if (Std.is(Graphic, String))
+		else if ((Graphic is String))
 		{
 			return Graphic;
 		}

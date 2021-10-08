@@ -421,14 +421,14 @@ class FlxGamepadManager implements IFlxInputManager
 				WII_REMOTE; // WiiRemote w/o  motion plus
 			else if (name.contains("mayflash wiimote pc adapter"))
 				MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-			else if (name.contains("mfi"))
-				MFI;
 			else if (name.contains("pro controller") || name.contains("joycon l+r"))
 				SWITCH_PRO;
 			else if (name.contains("joycon (l)"))
 				SWITCH_JOYCON_LEFT;
 			else if (name.contains("joycon (r)"))
 				SWITCH_JOYCON_RIGHT;
+			else if (name.contains("mfi"))
+				MFI;// Keep last. "mfi" may show up in brand names, words, serials or SKUs
 			else
 				UNKNOWN;
 	}

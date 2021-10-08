@@ -108,6 +108,8 @@ class FlxBitmapFont extends FlxFramesCollection
 
 	/**
 	 * Retrieves the default `FlxBitmapFont`.
+	 * May work incorrectly on HTML5.
+	 * Utterly unreliable on Brave Browser with shields up.
 	 */
 	public static function getDefaultFont():FlxBitmapFont
 	{
@@ -169,7 +171,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(Source, FlxFrame))
+		if ((Source is FlxFrame))
 		{
 			frame = cast Source;
 			graphic = frame.parent;
@@ -188,7 +190,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		if (Data != null)
 		{
-			if (Std.is(Data, Xml))
+			if ((Data is Xml))
 			{
 				fontData = cast Data;
 			}
@@ -296,6 +298,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Load bitmap font in XNA/Pixelizer format.
 	 * May work incorrectly on HTML5.
+	 * Utterly unreliable on Brave Browser with shields up.
 	 *
 	 * @param   source        Source image for this font.
 	 * @param   letters       `String` of characters contained in the source image,
@@ -308,7 +311,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(source, FlxFrame))
+		if ((source is FlxFrame))
 		{
 			frame = cast source;
 			graphic = frame.parent;
@@ -371,7 +374,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					transformPoint(p, frame);
 
 					// find width and height of char
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
+					while (gx < frameWidth && bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
 					{
 						gx++;
 						p.setTo(gx, cy);
@@ -381,7 +384,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					p.setTo(gx - 1, gy);
 					transformPoint(p, frame);
 
-					while (bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
+					while (gy < frameHeight && bmd.getPixel(Std.int(p.x), Std.int(p.y)) != cast globalBGColor)
 					{
 						gy++;
 						p.setTo(cx, gy);
@@ -466,6 +469,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * Loads a monospaced bitmap font.
 	 *
 	 * @param   source    Source image for this font.
+	 *                    Use white pixels if you intend to change the color.
 	 * @param   letters   The characters used in the font set, in display order.
 	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
 	 * @param   charSiz   The size of each character in the font set.
@@ -480,7 +484,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if (Std.is(source, FlxFrame))
+		if ((source is FlxFrame))
 		{
 			frame = cast source;
 			graphic = frame.parent;

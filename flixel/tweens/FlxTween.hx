@@ -308,6 +308,49 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
+	 * Cancels all related tweens on the specified object.
+	 *
+	 * Note: Any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * will also be cancelled.
+	 * 
+	 * @param Object The object with tweens to cancel.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on the specified
+	 * object are canceled. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
+	 */
+	public static function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		globalManager.cancelTweensOf(Object, FieldPaths);
+	}
+
+	/**
+	 * Immediately updates all tweens on the specified object with the specified fields that
+	 * are not looping (type `FlxTween.LOOPING` or `FlxTween.PINGPONG`) and `active` through
+	 * their endings, triggering their `onComplete` callbacks.
+	 *
+	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
+	 *
+	 * Note: their `onComplete` callbacks are triggered in the next frame.
+	 * To trigger them immediately, call `FlxTween.globalManager.update(0);` after this function.
+	 *
+	 * In no case should it trigger an `onUpdate` callback.
+	 *
+	 * Note: Any tweens with the specified fields are completed, if the tween has other properties they
+	 * will also be completed.
+	 *
+	 * @param Object The object with tweens to complete.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on
+	 * the specified object are completed. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
+	 */
+	public static function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		globalManager.completeTweensOf(Object, FieldPaths);
+	}
+
+	/**
 	 * The manager to which this tween belongs
 	 * @since 4.2.0
 	 */
@@ -623,6 +666,19 @@ class FlxTween implements IFlxDestroyable
 	}
 
 	/**
+	 * Returns true if this is tweening the specified field on the specified object.
+	 * 
+	 * @param Object The object.
+	 * @param Field Optional tween field. Ignored if null.
+	 * 
+	 * @since 4.9.0
+	 */
+	function isTweenOf(Object:Dynamic, ?Field:String):Bool
+	{
+		return false;
+	}
+	
+	/**
 	 * Set both type of delays for this tween.
 	 *
 	 * @param	startDelay	Seconds to wait until starting this tween, 0 by default.
@@ -640,7 +696,6 @@ class FlxTween implements IFlxDestroyable
 		var dly:Float = Math.abs(value);
 		if (executions == 0)
 		{
-			_secondsSinceStart = duration * percent + Math.max((dly - startDelay), 0);
 			_delayToUse = dly;
 		}
 		return startDelay = dly;
@@ -1122,13 +1177,125 @@ class FlxTweenManager extends FlxBasic
 	}
 
 	/**
+	 * Cancels all related tweens on the specified object.
+	 *
+	 * Note: Any tweens with the specified fields are cancelled, if the tween has other properties they
+	 * will also be cancelled.
+	 * 
+	 * @param Object The object with tweens to cancel.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on the specified
+	 * object are canceled. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
+	 */
+	public function cancelTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		forEachTweensOf(Object, FieldPaths, function (tween) tween.cancel());
+	}
+
+	/**
+	 * Immediately updates all tweens on the specified object with the specified fields that
+	 * are not looping (type `FlxTween.LOOPING` or `FlxTween.PINGPONG`) and `active` through
+	 * their endings, triggering their `onComplete` callbacks.
+	 *
+	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
+	 *
+	 * Note: their `onComplete` callbacks are triggered in the next frame.
+	 * To trigger them immediately, call `FlxTween.globalManager.update(0);` after this function.
+	 *
+	 * In no case should it trigger an `onUpdate` callback.
+	 *
+	 * Note: Any tweens with the specified fields are completed, if the tween has other properties they
+	 * will also be completed.
+	 *
+	 * @param Object The object with tweens to complete.
+	 * @param FieldPaths Optional list of the tween field paths to search for. If null or empty, all tweens on
+	 * the specified object are completed. Allows dot paths to check child properties.
+	 * 
+	 * @since 4.9.0
+	 */
+	public function completeTweensOf(Object:Dynamic, ?FieldPaths:Array<String>):Void
+	{
+		forEachTweensOf(Object, FieldPaths,
+			function (tween)
+			{
+				if ((tween.type & FlxTweenType.LOOPING) == 0 && (tween.type & FlxTweenType.PINGPONG) == 0 && tween.active)
+					tween.update(FlxMath.MAX_VALUE_FLOAT);
+			}
+		);
+	}
+
+	/**
+	 * Internal helper for iterating tweens with specific parameters.
+	 *
+	 * Note: loops backwards to allow removals.
+	 *
+	 * @param Object The object with tweens you are searching for.
+	 * @param FieldPaths Optional list of the tween field paths to check. If null or empty, any tween of the specified
+	 * object will match. Allows dot paths to check child properties.
+	 * @param Function The function to call on each matching tween.
+	 * 
+	 * @since 4.9.0
+	 */
+	function forEachTweensOf(Object:Dynamic, ?FieldPaths:Array<String>, Function:FlxTween->Void)
+	{
+		if (Object == null)
+			throw "Cannot cancel tween variables of an object that is null.";
+		
+		if (FieldPaths == null || FieldPaths.length == 0)
+		{
+			var i = _tweens.length;
+			while (i-- > 0)
+			{
+				var tween = _tweens[i];
+				if (tween.isTweenOf(Object))
+					Function(tween);
+			}
+		}
+		else
+		{
+			// check for dot paths and convert to object/field pairs
+			var propertyInfos = new Array<TweenProperty>();
+			for (fieldPath in FieldPaths)
+			{
+				var target = Object;
+				var path = fieldPath.split(".");
+				var field = path.pop();
+				for (component in path)
+				{
+					target = Reflect.getProperty(target, component);
+					if (!Reflect.isObject(target))
+						break;
+				}
+				
+				if (Reflect.isObject(target))
+					propertyInfos.push({ object:target, field:field });
+			}
+			
+			var i = _tweens.length;
+			while (i-- > 0)
+			{
+				var tween = _tweens[i];
+				for (info in propertyInfos)
+				{
+					if (tween.isTweenOf(info.object, info.field))
+					{
+						Function(tween);
+						break;
+					}
+				} 
+			}
+		}
+	}
+
+	/**
 	 * Immediately updates all tweens that are not looping (type `FlxTween.LOOPING` or `FlxTween.PINGPONG`)
 	 * and `active` through their endings, triggering their `onComplete` callbacks.
 	 *
 	 * Note: if they haven't yet begun, this will first trigger their `onStart` callback.
 	 *
 	 * Note: their `onComplete` callbacks are triggered in the next frame.
-	 * To trigger them immediately, call `FlxTween.manager.update(0);` after this function.
+	 * To trigger them immediately, call `FlxTween.globalManager.update(0);` after this function.
 	 *
 	 * In no case should it trigger an `onUpdate` callback.
 	 *
@@ -1152,4 +1319,10 @@ class FlxTweenManager extends FlxBasic
 		for (tween in _tweens)
 			Function(tween);
 	}
+}
+
+private typedef TweenProperty =
+{
+	object:Dynamic,
+	field:String
 }

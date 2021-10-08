@@ -22,12 +22,58 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
 using flixel.util.FlxColorTransformUtil;
 
+#if html5
+@:keep @:bitmap("assets/images/tile/autotiles.png")
+private class RawGraphicAuto extends BitmapData {}
+class GraphicAuto extends RawGraphicAuto
+{
+	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	{
+		super(width, height, transparent, fillRGBA, onLoad);
+		// Set properties because `@:bitmap` constructors ignore width/height
+		this.width = width;
+		this.height = height;
+	}
+}
+
+@:keep @:bitmap("assets/images/tile/autotiles_alt.png")
+private class RawGraphicAutoAlt extends BitmapData {}
+class GraphicAutoAlt extends RawGraphicAutoAlt
+{
+	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	{
+		super(width, height, transparent, fillRGBA, onLoad);
+		// Set again because `@:bitmap` constructors ignore width/height
+		this.width = width;
+		this.height = height;
+	}
+}
+
+@:keep @:bitmap("assets/images/tile/autotiles_full.png")
+private class RawGraphicAutoFull extends BitmapData {}
+class GraphicAutoFull extends RawGraphicAutoFull
+{
+	public function new (width = 256, height = 48, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	{
+		super(width, height, transparent, fillRGBA, onLoad);
+		// Set again because `@:bitmap` constructors ignore width/height
+		this.width = width;
+		this.height = height;
+	}
+}
+#else
 @:keep @:bitmap("assets/images/tile/autotiles.png")
 class GraphicAuto extends BitmapData {}
 
@@ -36,6 +82,7 @@ class GraphicAutoAlt extends BitmapData {}
 
 @:keep @:bitmap("assets/images/tile/autotiles_full.png")
 class GraphicAutoFull extends BitmapData {}
+#end
 
 // TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
 
@@ -263,7 +310,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	override function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
 	{
-		if (Std.is(TileGraphic, FlxFramesCollection))
+		if ((TileGraphic is FlxFramesCollection))
 		{
 			frames = cast TileGraphic;
 			return;
@@ -298,7 +345,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		length += _startingIndex;
 
 		for (i in 0...length)
-			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : FlxObject.NONE);
+			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
 
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
@@ -428,7 +475,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(Camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
+					drawDebugBoundingBox(Camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY);
 				}
 
 				columnIndex++;
@@ -624,7 +671,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					&& ((Object.y + Object.height) > tile.y)
 					&& (Object.y < (tile.y + tile.height));
 
-				if (tile.allowCollisions != FlxObject.NONE)
+				if (tile.allowCollisions != NONE)
 				{
 					if (Callback != null)
 					{
@@ -641,13 +688,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if (overlapFound)
 				{
-					if (tile.callbackFunction != null && (tile.filter == null || Std.is(Object, tile.filter)))
+					if (tile.callbackFunction != null && (tile.filter == null || isOfType(Object, tile.filter)))
 					{
 						tile.mapIndex = rowStart + column;
 						tile.callbackFunction(tile, Object);
 					}
 
-					if (tile.allowCollisions != FlxObject.NONE)
+					if (tile.allowCollisions != NONE)
 						results = true;
 				}
 
@@ -787,7 +834,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			tileX = Math.floor(curX / _scaledTileWidth);
 			tileY = Math.floor(curY / _scaledTileHeight);
 
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != FlxObject.NONE)
+			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != NONE)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(_scaledTileWidth);
@@ -978,11 +1025,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						#if FLX_DEBUG
 						if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
 						{
-							if (tile.allowCollisions <= FlxObject.NONE)
+							if (tile.allowCollisions <= NONE)
 							{
 								debugTile = _debugTileNotSolid;
 							}
-							else if (tile.allowCollisions != FlxObject.ANY)
+							else if (tile.allowCollisions != ANY)
 							{
 								debugTile = _debugTilePartial;
 							}

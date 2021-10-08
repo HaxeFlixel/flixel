@@ -14,7 +14,7 @@ class FlxPoint implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxPoint>;
 
-	static var _pool = new FlxPool<FlxPoint>(FlxPoint);
+	static var _pool:FlxPool<FlxPoint> = new FlxPool<FlxPoint>(FlxPoint);
 
 	/**
 	 * Recycle or create a new FlxPoint.
