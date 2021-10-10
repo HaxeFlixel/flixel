@@ -14,7 +14,7 @@ class LogFrontEnd
 	/**
 	 * Whether everything you trace() is being redirected into the log window.
 	 */
-	public var redirectTraces(default, set):Bool = false;
+	public var redirectTraces(default, set):Bool = true;
 
 	var _standardTraceFunction:Dynamic->?PosInfos->Void;
 
@@ -95,8 +95,6 @@ class LogFrontEnd
 				Style.callbackFunction();
 			}
 		}
-
-		redirectTraces = true;
 		#end
 	}
 
@@ -114,6 +112,7 @@ class LogFrontEnd
 	function new()
 	{
 		_standardTraceFunction = haxe.Log.trace;
+		Log.trace = processTraceData;
 	}
 
 	inline function set_redirectTraces(Redirect:Bool):Bool
