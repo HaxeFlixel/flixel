@@ -14,7 +14,7 @@ class LogFrontEnd
 	/**
 	 * Whether everything you trace() is being redirected into the log window.
 	 */
-	public var redirectTraces(default, set):Bool = false;
+	public var redirectTraces(default, set):Bool = true;
 
 	var _standardTraceFunction:Dynamic->?PosInfos->Void;
 
