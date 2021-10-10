@@ -14,7 +14,7 @@ class LogFrontEnd
 	/**
 	 * Whether everything you trace() is being redirected into the log window.
 	 */
-	public var redirectTraces(default, set):Bool = true;
+	public var redirectTraces(default, set):Bool = false;
 
 	var _standardTraceFunction:Dynamic->?PosInfos->Void;
 
@@ -95,6 +95,8 @@ class LogFrontEnd
 				Style.callbackFunction();
 			}
 		}
+
+		redirectTraces = true;
 		#end
 	}
 
