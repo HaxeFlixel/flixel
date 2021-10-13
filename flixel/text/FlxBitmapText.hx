@@ -265,6 +265,12 @@ class FlxBitmapText extends FlxSprite
 			super.drawFrame(Force);
 		}
 	}
+	
+	override function updateHitbox()
+	{
+		checkPendingChanges(true);
+		super.updateHitbox();
+	}
 
 	inline function checkPendingChanges(useTiles:Bool = false):Void
 	{

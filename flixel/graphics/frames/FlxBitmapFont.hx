@@ -469,6 +469,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * Loads a monospaced bitmap font.
 	 *
 	 * @param   source    Source image for this font.
+	 *                    Use white pixels if you intend to change the color.
 	 * @param   letters   The characters used in the font set, in display order.
 	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
 	 * @param   charSiz   The size of each character in the font set.

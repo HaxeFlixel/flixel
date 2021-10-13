@@ -30,6 +30,7 @@ private class GraphicCursor extends BitmapData {}
 /**
  * This class helps contain and track the mouse pointer in your game.
  * Automatically accounts for parallax scrolling, etc.
+ * Normally accessed via `FlxG.mouse`.
  */
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
