@@ -79,4 +79,96 @@ class FlxVectorTest extends FlxTest
 		var normalized = vector.normalize();
 		Assert.isTrue(normalized.equals(new FlxVector(0, 0)));
 	}
+
+	@Test
+	function testEqualityOperatorOverloading():Void
+	{
+		vector.set(1, 2);
+		vector2.set(1, 2);
+
+		Assert.isTrue(vector == vector2);
+		Assert.isFalse(vector != vector2);
+
+		vector2.set(1.1, 2);
+
+		Assert.isTrue(vector != vector2);
+		Assert.isFalse(vector == vector2);
+	}
+
+	@Test
+	function testAddNewOperatorOverloading()
+	{
+		vector.set(1, 2);
+		vector2.set(3, 5);
+
+		Assert.isTrue((vector + vector2) == new FlxVector(4, 7));
+		Assert.isTrue(vector == new FlxVector(1, 2));
+	}
+
+	@Test
+	function testSubtractNewOperatorOverloading():Void
+	{
+		vector.set(1, 2);
+		vector2.set(3, 5);
+
+		Assert.isTrue((vector - vector2) == new FlxVector(-2, -3));
+		Assert.isTrue(vector == new FlxVector(1, 2));
+	}
+
+	@Test
+	function testScaleNewOperatorOverloading():Void
+	{
+		vector.set(2, 3);
+
+		Assert.isTrue((vector * 3) == new FlxVector(6, 9));
+		Assert.isTrue(vector == new FlxVector(2, 3));
+		Assert.isTrue((3 * vector) == new FlxVector(6, 9));
+	}
+
+	@Test
+	function testScaleOperatorOverloading():Void
+	{
+		vector.set(2, 3);
+
+		Assert.isTrue((vector *= 3) == new FlxVector(6, 9));
+		Assert.isTrue(vector == new FlxVector(6, 9));
+	}
+
+	@Test
+	function testDotProductOperatorOverloading():Void
+	{
+		vector.set(1, 2);
+		vector2.set(2, 3);
+
+		Assert.areEqual(8, vector * vector2);
+	}
+
+	@Test
+	function testAddPointOperatorOverloading():Void
+	{
+		vector.set(1, 2);
+		vector2.set(3, 4);
+
+		Assert.isTrue((vector += vector2) == new FlxVector(4, 6));
+		Assert.isTrue(vector == new FlxVector(4, 6));
+	}
+
+	@Test
+	function testSubtractPointOperatorOverloading():Void
+	{
+		vector.set(1, 2);
+		vector2.set(3, 4);
+
+		Assert.isTrue((vector -= vector2) == new FlxVector(-2, -2));
+		Assert.isTrue(vector == new FlxVector(-2, -2));
+	}
+
+	@Test
+	function testNegateNewOperatorOverloading()
+	{
+		vector.set(-1, -2);
+
+		Assert.isTrue(-vector == new FlxVector(1, 2));
+		Assert.isTrue(vector == new FlxVector(-1, -2));
+	}
 }

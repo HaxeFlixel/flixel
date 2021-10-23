@@ -43,6 +43,20 @@ import openfl.geom.Point;
 		return FlxPoint.weak(x, y);
 	}
 
+	@:noCompletion
+	@:op(A == B)
+	public static inline function checkEquality(lhs:FlxVector, rhs:FlxVector):Bool
+	{
+		return lhs.equals(rhs);
+	}
+
+	@:noCompletion
+	@:op(A != B)
+	public static inline function notEqual(lhs:FlxVector, rhs:FlxVector):Bool
+	{
+		return !(lhs == rhs);
+	}
+
 	// Without these delegates we have to say `this.x` everywhere.
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -131,6 +145,7 @@ import openfl.geom.Point;
 	 * @param	point	The point to add to this point
 	 * @return	This point.
 	 */
+	@:op(A += B)
 	public inline function addPoint(point:FlxPoint):FlxVector
 	{
 		return this.addPoint(point);
@@ -154,6 +169,7 @@ import openfl.geom.Point;
 	 * @param	point	The point to subtract from this point
 	 * @return	This point.
 	 */
+	@:op(A -= B)
 	public inline function subtractPoint(point:FlxPoint):FlxVector
 	{
 		return this.subtractPoint(point);
@@ -165,6 +181,7 @@ import openfl.geom.Point;
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
+	@:op(A *= B)
 	public inline function scale(k:Float):FlxVector
 	{
 		return this.scale(k);
@@ -176,6 +193,7 @@ import openfl.geom.Point;
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
+	@:op(A * B) @:commutative
 	public inline function scaleNew(k:Float):FlxVector
 	{
 		return clone().scale(k);
@@ -187,6 +205,7 @@ import openfl.geom.Point;
 	 * @param	v	vector to add
 	 * @return	addition result
 	 */
+	@:op(A + B)
 	public inline function addNew(v:FlxVector):FlxVector
 	{
 		return clone().addPoint(v);
@@ -198,6 +217,7 @@ import openfl.geom.Point;
 	 * @param	v	vector to subtract
 	 * @return	subtraction result
 	 */
+	@:op(A - B)
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
 		return clone().subtractPoint(v);
@@ -277,6 +297,7 @@ import openfl.geom.Point;
 	 * @param	v	vector to multiply
 	 * @return	dot product of two vectors
 	 */
+	@:op(A * B)
 	public inline function dotProduct(v:FlxVector):Float
 	{
 		var dp = dotProductWeak(v);
@@ -519,6 +540,7 @@ import openfl.geom.Point;
 		return this;
 	}
 
+	@:op(-A)
 	public inline function negateNew():FlxVector
 	{
 		return clone().negate();
