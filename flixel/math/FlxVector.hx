@@ -44,17 +44,38 @@ import openfl.geom.Point;
 	}
 
 	@:noCompletion
-	@:op(A == B)
-	public static inline function checkEquality(lhs:FlxVector, rhs:FlxVector):Bool
+	@:op(A + B)
+	static inline function addPointNew(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
-		return lhs.equals(rhs);
+		var result = weak(lhs.x, lhs.y).addPoint(rhs);
+		lhs.putWeak();
+		return result;
 	}
 
 	@:noCompletion
-	@:op(A != B)
-	public static inline function notEqual(lhs:FlxVector, rhs:FlxVector):Bool
+	@:op(A - B)
+	static inline function subtractPointNew(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
-		return !(lhs == rhs);
+		var result = weak(lhs.x, lhs.y).subtractPoint(rhs);
+		lhs.putWeak();
+		return result;
+	}
+
+	@:noCompletion
+	@:op(A * B) @:commutative
+	static inline function scalePointNew(lhs:FlxVector, rhs:Float):FlxVector
+	{
+		var result = weak(lhs.x, lhs.y).scale(rhs);
+		lhs.putWeak();
+		return result;
+	}
+
+	@:noCompletion
+	@:op(-A) static inline function negatePointNew(lhs:FlxVector):FlxVector
+	{
+		var result = weak(lhs.x, lhs.y).negate();
+		lhs.putWeak();
+		return result;
 	}
 
 	// Without these delegates we have to say `this.x` everywhere.
@@ -193,7 +214,6 @@ import openfl.geom.Point;
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
-	@:op(A * B) @:commutative
 	public inline function scaleNew(k:Float):FlxVector
 	{
 		return clone().scale(k);
@@ -205,7 +225,6 @@ import openfl.geom.Point;
 	 * @param	v	vector to add
 	 * @return	addition result
 	 */
-	@:op(A + B)
 	public inline function addNew(v:FlxVector):FlxVector
 	{
 		return clone().addPoint(v);
@@ -217,7 +236,6 @@ import openfl.geom.Point;
 	 * @param	v	vector to subtract
 	 * @return	subtraction result
 	 */
-	@:op(A - B)
 	public inline function subtractNew(v:FlxVector):FlxVector
 	{
 		return clone().subtractPoint(v);
@@ -540,7 +558,6 @@ import openfl.geom.Point;
 		return this;
 	}
 
-	@:op(-A)
 	public inline function negateNew():FlxVector
 	{
 		return clone().negate();

@@ -2,6 +2,7 @@ package flixel.math;
 
 import massive.munit.Assert;
 
+@:access(flixel.math.FlxPoint)
 class FlxVectorTest extends FlxTest
 {
 	var vector:FlxVector;
@@ -81,48 +82,62 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testEqualityOperatorOverloading():Void
-	{
-		vector.set(1, 2);
-		vector2.set(1, 2);
-
-		Assert.isTrue(vector == vector2);
-		Assert.isFalse(vector != vector2);
-
-		vector2.set(1.1, 2);
-
-		Assert.isTrue(vector != vector2);
-		Assert.isFalse(vector == vector2);
-	}
-
-	@Test
-	function testAddNewOperatorOverloading()
+	function testAddPointNew()
 	{
 		vector.set(1, 2);
 		vector2.set(3, 5);
 
-		Assert.isTrue((vector + vector2) == new FlxVector(4, 7));
-		Assert.isTrue(vector == new FlxVector(1, 2));
+		var result = vector + vector2;
+
+		Assert.isTrue(result.equals(FlxVector.weak(4, 7)));
+		Assert.isTrue(vector.equals(FlxVector.weak(1, 2)));
+
+		var a = FlxVector.weak(1, 2);
+		var b = FlxVector.weak(3, 5);
+		result = a + b;
+
+		Assert.isTrue(a._inPool);
+		Assert.isTrue(b._inPool);
+		Assert.isTrue(result._weak);
 	}
 
 	@Test
-	function testSubtractNewOperatorOverloading():Void
+	function testSubtractPointNew():Void
 	{
 		vector.set(1, 2);
 		vector2.set(3, 5);
 
-		Assert.isTrue((vector - vector2) == new FlxVector(-2, -3));
-		Assert.isTrue(vector == new FlxVector(1, 2));
+		var result = vector - vector2;
+
+		Assert.isTrue(result.equals(FlxVector.weak(-2, -3)));
+		Assert.isTrue(vector.equals(FlxVector.weak(1, 2)));
+
+		var a = FlxVector.weak(1, 2);
+		var b = FlxVector.weak(3, 5);
+
+		result = a - b;
+
+		Assert.isTrue(a._inPool);
+		Assert.isTrue(b._inPool);
+		Assert.isTrue(result._weak);
 	}
 
 	@Test
-	function testScaleNewOperatorOverloading():Void
+	function testScalePointNew():Void
 	{
 		vector.set(2, 3);
 
-		Assert.isTrue((vector * 3) == new FlxVector(6, 9));
-		Assert.isTrue(vector == new FlxVector(2, 3));
-		Assert.isTrue((3 * vector) == new FlxVector(6, 9));
+		var result = vector * 3;
+
+		Assert.isTrue(result.equals(FlxVector.weak(6, 9)));
+		Assert.isTrue(vector.equals(FlxVector.weak(2, 3)));
+		Assert.isTrue((3 * vector).equals(FlxVector.weak(6, 9)));
+
+		var a = FlxVector.weak(1, 2);
+		result = 2 * a;
+
+		Assert.isTrue(a._inPool);
+		Assert.isTrue(result._weak);
 	}
 
 	@Test
@@ -130,8 +145,8 @@ class FlxVectorTest extends FlxTest
 	{
 		vector.set(2, 3);
 
-		Assert.isTrue((vector *= 3) == new FlxVector(6, 9));
-		Assert.isTrue(vector == new FlxVector(6, 9));
+		Assert.isTrue((vector *= 3).equals(FlxVector.weak(6, 9)));
+		Assert.isTrue(vector.equals(FlxVector.weak(6, 9)));
 	}
 
 	@Test
@@ -149,8 +164,8 @@ class FlxVectorTest extends FlxTest
 		vector.set(1, 2);
 		vector2.set(3, 4);
 
-		Assert.isTrue((vector += vector2) == new FlxVector(4, 6));
-		Assert.isTrue(vector == new FlxVector(4, 6));
+		Assert.isTrue((vector += vector2).equals(FlxVector.weak(4, 6)));
+		Assert.isTrue(vector.equals(FlxVector.weak(4, 6)));
 	}
 
 	@Test
@@ -159,16 +174,24 @@ class FlxVectorTest extends FlxTest
 		vector.set(1, 2);
 		vector2.set(3, 4);
 
-		Assert.isTrue((vector -= vector2) == new FlxVector(-2, -2));
-		Assert.isTrue(vector == new FlxVector(-2, -2));
+		Assert.isTrue((vector -= vector2).equals(FlxVector.weak(-2, -2)));
+		Assert.isTrue(vector.equals(FlxVector.weak(-2, -2)));
 	}
 
 	@Test
-	function testNegateNewOperatorOverloading()
+	function testNegatePointNew()
 	{
 		vector.set(-1, -2);
 
-		Assert.isTrue(-vector == new FlxVector(1, 2));
-		Assert.isTrue(vector == new FlxVector(-1, -2));
+		var result = -vector;
+
+		Assert.isTrue(result.equals(FlxVector.weak(1, 2)));
+		Assert.isTrue(vector.equals(FlxVector.weak(-1, -2)));
+
+		var a = FlxVector.weak(1, 2);
+		result = -a;
+
+		Assert.isTrue(a._inPool);
+		Assert.isTrue(result._weak);
 	}
 }
