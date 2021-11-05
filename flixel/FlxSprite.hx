@@ -21,6 +21,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -114,10 +115,10 @@ class FlxSprite extends FlxObject
 	public var alpha(default, set):Float = 1.0;
 
 	/**
-	 * Can be set to `FlxObject.LEFT`, `RIGHT`, `UP`, and `DOWN` to take advantage
+	 * Can be set to `LEFT`, `RIGHT`, `UP`, and `DOWN` to take advantage
 	 * of flipped sprites and/or just track player orientation more easily.
 	 */
-	public var facing(default, set):Int = FlxObject.RIGHT;
+	public var facing(default, set):FlxDirectionFlags = RIGHT;
 
 	/**
 	 * Whether this sprite is flipped on the X axis.
@@ -250,10 +251,10 @@ class FlxSprite extends FlxObject
 	var _angleChanged:Bool = true;
 
 	/**
-	 * Maps `FlxObject` direction constants to axis flips
+	 * Maps `FlxDirectionFlags` values to axis flips
 	 */
 	@:noCompletion
-	var _facingFlip:Map<Int, {x:Bool, y:Bool}> = new Map<Int, {x:Bool, y:Bool}>();
+	var _facingFlip:Map<FlxDirectionFlags, {x:Bool, y:Bool}> = new Map<FlxDirectionFlags, {x:Bool, y:Bool}>();
 
 	/**
 	 * Creates a `FlxSprite` at a specified position with a specified one-frame graphic.
@@ -1076,14 +1077,14 @@ class FlxSprite extends FlxObject
 	/**
 	 * Set how a sprite flips when facing in a particular direction.
 	 *
-	 * @param   Direction   Use constants from `FlxObject`: `LEFT`, `RIGHT`, `UP`, and `DOWN`.
+	 * @param   Direction   Use constants `LEFT`, `RIGHT`, `UP`, and `DOWN`.
 	 *                      These may be combined with the bitwise OR operator.
 	 *                      E.g. To make a sprite flip horizontally when it is facing both `UP` and `LEFT`,
-	 *                      use `setFacingFlip(FlxObject.LEFT | FlxObject.UP, true, false);`
+	 *                      use `setFacingFlip(LEFT | UP, true, false);`
 	 * @param   FlipX       Whether to flip the sprite on the X axis.
 	 * @param   FlipY       Whether to flip the sprite on the Y axis.
 	 */
-	public inline function setFacingFlip(Direction:Int, FlipX:Bool, FlipY:Bool):Void
+	public inline function setFacingFlip(Direction:FlxDirectionFlags, FlipX:Bool, FlipY:Bool):Void
 	{
 		_facingFlip.set(Direction, {x: FlipX, y: FlipY});
 	}
@@ -1193,7 +1194,7 @@ class FlxSprite extends FlxObject
 	}
 
 	@:noCompletion
-	function set_facing(Direction:Int):Int
+	function set_facing(Direction:FlxDirectionFlags):FlxDirectionFlags
 	{
 		var flip = _facingFlip.get(Direction);
 		if (flip != null)
@@ -1414,7 +1415,7 @@ interface IFlxSprite extends IFlxBasic
 	var y(default, set):Float;
 	var alpha(default, set):Float;
 	var angle(default, set):Float;
-	var facing(default, set):Int;
+	var facing(default, set):FlxDirectionFlags;
 	var moves(default, set):Bool;
 	var immovable(default, set):Bool;
 

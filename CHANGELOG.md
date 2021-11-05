@@ -1,3 +1,26 @@
+4.10.0 (September 12, 2021)
+------------------------------
+#### New features:
+
+- Added `FlxDirectionFlags` and `FlxDirection` ([#2303](https://github.com/HaxeFlixel/flixel/pull/2303))
+- `FlxBitmapText`: added support for unicode combining diacritical marks ([#2309](https://github.com/HaxeFlixel/flixel/pull/2309))
+- `FlxTextFormat`: added `leading` ([#2334](https://github.com/HaxeFlixel/flixel/pull/2334))
+- `FlxAction`: added `addAndroidKey()` ([#2393](https://github.com/HaxeFlixel/flixel/pull/2393))
+- `FlxVector`: added `setPolarRadians()` and `setPolarDegrees()` ([#2401](https://github.com/HaxeFlixel/flixel/pull/2401))
+
+#### Bugfixes:
+
+- `FlxAssetPaths`: fixed paths for iOS ([#2345](https://github.com/HaxeFlixel/flixel/pull/2345))
+- `VarTween`: fixed an error if `cancel()` is called during `onUpdate` ([#2352](https://github.com/HaxeFlixel/flixel/pull/2352))
+- `FlxGradient`: fixed last pixels sometimes not being filled ([#2367](https://github.com/HaxeFlixel/flixel/pull/2367))
+- `FlxTilemap`: fixed built-in autotile assets for HTML5 ([#2402](https://github.com/HaxeFlixel/flixel/pull/2402))
+- `FlxDebugger`: fixed single-character vertical text in the stats window
+
+#### Changes and improvements:
+
+- `FlxSpriteUtil`: enabled `drawRoundRectComplex()` for non-Flash targets ([#2332](https://github.com/HaxeFlixel/flixel/pull/2332))
+- `FlxTween`: allowed `cancelTweensOf()` to cancel "grandchild" tweens ([#2354](https://github.com/HaxeFlixel/flixel/pull/2354))
+
 4.9.0 (April 11, 2021)
 ------------------------------
 #### Dependencies:
