@@ -312,7 +312,7 @@ class FlxG
 	/**
 	 * Whether the game is running on HTML5.
 	 */
-	 public static var onHTML5(get, never):Bool = #if html5 true #else false; #end
+	 public static inline var onHTML5:Bool = #if html5 true #else false; #end
 	public static var initialWidth(default, null):Int = 0;
 	public static var initialHeight(default, null):Int = 0;
 	public static var initialZoom(default, null):Float = 0;
