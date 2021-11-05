@@ -309,6 +309,10 @@ class FlxG
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
 
+	/**
+	 * Whether the game is running on HTML5.
+	 */
+	 public static var onHTML5:Bool = #if html5 true #else false;
 	public static var initialWidth(default, null):Int = 0;
 	public static var initialHeight(default, null):Int = 0;
 	public static var initialZoom(default, null):Float = 0;
@@ -352,7 +356,7 @@ class FlxG
 		#end
 		#end
 	}
-
+		
 	/**
 	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
 	 */
@@ -558,11 +562,15 @@ class FlxG
 	 */
 	public static inline function openURL(URL:String, Target:String = "_blank"):Void
 	{
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [URL, "&"]);
+		#else
 		var prefix:String = "";
 		// if the URL does not already start with "http://" or "https://", add it.
 		if (!~/^https?:\/\//.match(URL))
 			prefix = "http://";
 		Lib.getURL(new URLRequest(prefix + URL), Target);
+		#end
 	}
 
 	/**
