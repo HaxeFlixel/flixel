@@ -78,6 +78,15 @@ import openfl.geom.Point;
 		return result;
 	}
 
+	@:noCompletion
+	@:op(A * B)
+	static inline function dotProductOp(lhs:FlxVector, rhs:FlxVector):Float
+	{
+		var result = lhs.dotProduct(rhs);
+		lhs.putWeak();
+		return result;
+	}
+
 	// Without these delegates we have to say `this.x` everywhere.
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -315,7 +324,6 @@ import openfl.geom.Point;
 	 * @param	v	vector to multiply
 	 * @return	dot product of two vectors
 	 */
-	@:op(A * B)
 	public inline function dotProduct(v:FlxVector):Float
 	{
 		var dp = dotProductWeak(v);

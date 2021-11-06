@@ -152,10 +152,14 @@ class FlxVectorTest extends FlxTest
 	@Test
 	function testDotProductOperatorOverloading():Void
 	{
-		vector.set(1, 2);
-		vector2.set(2, 3);
+		var a = FlxVector.weak(1, 2);
+		var b = FlxVector.weak(2, 3);
 
-		Assert.areEqual(8, vector * vector2);
+		var result = a * b;
+
+		Assert.areEqual(8, result);
+		Assert.isTrue(a._inPool);
+		Assert.isTrue(b._inPool);
 	}
 
 	@Test
