@@ -82,7 +82,7 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testAddPointNew()
+	function testSumVectorsOp()
 	{
 		vector.set(1, 2);
 		vector2.set(3, 5);
@@ -102,7 +102,7 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testSubtractPointNew():Void
+	function testSubtractVectorsOp():Void
 	{
 		vector.set(1, 2);
 		vector2.set(3, 5);
@@ -123,7 +123,7 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testScalePointNew():Void
+	function testScaleVectorOp():Void
 	{
 		vector.set(2, 3);
 
@@ -150,7 +150,7 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testDotProductOperatorOverloading():Void
+	function testDotProductOp():Void
 	{
 		var a = FlxVector.weak(1, 2);
 		var b = FlxVector.weak(2, 3);
@@ -183,7 +183,7 @@ class FlxVectorTest extends FlxTest
 	}
 
 	@Test
-	function testNegatePointNew()
+	function testNegateVectorOp()
 	{
 		vector.set(-1, -2);
 

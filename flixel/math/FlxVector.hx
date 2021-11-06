@@ -45,7 +45,7 @@ import openfl.geom.Point;
 
 	@:noCompletion
 	@:op(A + B)
-	static inline function addPointNew(lhs:FlxVector, rhs:FlxVector):FlxVector
+	static inline function sumVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
 		var result = weak(lhs.x, lhs.y).addPoint(rhs);
 		lhs.putWeak();
@@ -54,7 +54,7 @@ import openfl.geom.Point;
 
 	@:noCompletion
 	@:op(A - B)
-	static inline function subtractPointNew(lhs:FlxVector, rhs:FlxVector):FlxVector
+	static inline function subtractVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
 		var result = weak(lhs.x, lhs.y).subtractPoint(rhs);
 		lhs.putWeak();
@@ -63,7 +63,7 @@ import openfl.geom.Point;
 
 	@:noCompletion
 	@:op(A * B) @:commutative
-	static inline function scalePointNew(lhs:FlxVector, rhs:Float):FlxVector
+	static inline function scaleVectorOp(lhs:FlxVector, rhs:Float):FlxVector
 	{
 		var result = weak(lhs.x, lhs.y).scale(rhs);
 		lhs.putWeak();
@@ -71,7 +71,7 @@ import openfl.geom.Point;
 	}
 
 	@:noCompletion
-	@:op(-A) static inline function negatePointNew(lhs:FlxVector):FlxVector
+	@:op(-A) static inline function negateVectorOp(lhs:FlxVector):FlxVector
 	{
 		var result = weak(lhs.x, lhs.y).negate();
 		lhs.putWeak();
