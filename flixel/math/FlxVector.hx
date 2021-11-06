@@ -43,6 +43,17 @@ import openfl.geom.Point;
 		return FlxPoint.weak(x, y);
 	}
 
+	/**
+	 * Internal function that implements binary `+` operator on `FlxVector` instances.
+	 * 
+	 * Use it like this: `var vC = vA + vB`.
+	 * 
+	 * NOTE: any `weak` vector operand will be released to the pool.
+	 * 
+	 * @param	lhs		first vector
+	 * @param	rhs		second vector
+	 * @return	new *weak* `FlxVector` that is sum of `lhs` and `rhs` vectors
+	 */
 	@:noCompletion
 	@:op(A + B)
 	static inline function sumVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
@@ -52,6 +63,18 @@ import openfl.geom.Point;
 		return result;
 	}
 
+	/**
+	 * Internal function that implements binary `-` operator on `FlxVector` instances.
+	 * 
+	 * Use it like this: `var vC = vA - vB`.
+	 * 
+	 * NOTE: any `weak` vector operand will be released to the pool.
+	 * 
+	 * @param	lhs		first vector
+	 * @param	rhs		second vector
+	 * @return	new *weak* `FlxVector` that is result of subtraction `rhs` vector
+	 * from `lhs` vector
+	 */
 	@:noCompletion
 	@:op(A - B)
 	static inline function subtractVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
@@ -61,6 +84,18 @@ import openfl.geom.Point;
 		return result;
 	}
 
+	/**
+	 * Internal function that implements binary `*` operator on `FlxVector` instances.
+	 * 
+	 * Use it like this: `var vC = vA * k`.
+	 * 
+	 * NOTE: any `weak` vector operand will be released to the pool.
+	 * 
+	 * @param	lhs		vector
+	 * @param	rhs		scale coefficient
+	 * @return	new *weak* `FlxVector` that is result of scaling `lhs` vector
+	 * with `rhs` coefficient
+	 */
 	@:noCompletion
 	@:op(A * B) @:commutative
 	static inline function scaleVectorOp(lhs:FlxVector, rhs:Float):FlxVector
@@ -70,6 +105,16 @@ import openfl.geom.Point;
 		return result;
 	}
 
+	/**
+	 * Internal function that implements unary `-` operator on `FlxVector` instances.
+	 * 
+	 * Use it like this: `var vC = -vA`.
+	 * 
+	 * NOTE: any `weak` vector operand will be released to the pool.
+	 * 
+	 * @param	lhs		vector
+	 * @return	new *weak* `FlxVector` that is result of negation `lhs` vector
+	 */
 	@:noCompletion
 	@:op(-A) static inline function negateVectorOp(lhs:FlxVector):FlxVector
 	{
@@ -78,6 +123,18 @@ import openfl.geom.Point;
 		return result;
 	}
 
+	/**
+	 * Internal function that implements binary `*` operator on `FlxVector` instances
+	 * as dot product operation (do not confuse it with scaling operation).
+	 * 
+	 * Use it like this: `var dot = vA * vB`.
+	 * 
+	 * NOTE: any `weak` vector operand will be released to the pool.
+	 * 
+	 * @param	lhs		first vector
+	 * @param	rhs		second vector
+	 * @return	dot product of `lhs` and `rhs` vectors 
+	 */
 	@:noCompletion
 	@:op(A * B)
 	static inline function dotProductOp(lhs:FlxVector, rhs:FlxVector):Float
@@ -171,7 +228,10 @@ import openfl.geom.Point;
 
 	/**
 	 * Adds the coordinates of another point to the coordinates of this point.
-	 *
+	 * 
+	 * NOTE: You can do this operation with `+=` operator, i.e.
+	 * `vA += vB` is the same as `vA.addPoint(vB)`.
+	 * 
 	 * @param	point	The point to add to this point
 	 * @return	This point.
 	 */
@@ -195,7 +255,10 @@ import openfl.geom.Point;
 
 	/**
 	 * Subtracts the coordinates of another point from the coordinates of this point.
-	 *
+	 * 
+	 * NOTE: You can do this operation with `-=` operator, i.e.
+	 * `vA -= vB` is the same as `vA.subtractPoint(vB)`.
+	 * 
 	 * @param	point	The point to subtract from this point
 	 * @return	This point.
 	 */
@@ -207,7 +270,10 @@ import openfl.geom.Point;
 
 	/**
 	 * Scale this vector.
-	 *
+	 * 
+	 * NOTE: You can do this operation with `*=` operator, i.e.
+	 * `V *= k` is the same as `V.scale(k)`.
+	 * 
 	 * @param	k - scale coefficient
 	 * @return	scaled vector
 	 */
