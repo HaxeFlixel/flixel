@@ -6,6 +6,149 @@ import openfl.geom.Point;
 
 /**
  * 2-dimensional vector class
+ * 
+ * ## Overloaded operators
+ * 
+ * `FlxVector` is an abstract class and has overloaded operators.
+ * This means you can do some math operations the same way
+ * you do it with numbers, i.e. `40 += 2`. Available operators
+ * can be split into two groups:
+ * 
+ * 1. that is "syntax sugar" for existed methods (compound assignment operators)
+ * 2. that introduces new behavior (binary and unary operators)
+ * 
+ * ### Compound assignment operators
+ * 
+ * These operators do the same things as existed methods:
+ * 
+ * - `A += B` is a shorthand for `A.addPoint(B)`
+ * - `A -= B` is a shorthand for `A.subtractPoint(B)`
+ * - `A *= k` is a shorthand for `A.scale(k)`
+ * 
+ * ```haxe
+ * // Example 1
+ * 
+ * var A = FlxVector.get(1, 2);
+ * var B = FlxVector.weak(3, 4);
+ * 
+ * A -= B;		// it's the same as `A.subtractPoint(B)`
+ * 
+ * trace(A);	// (x: -2 | y: -2)
+ * ```
+ * 
+ * In the example above vector `A` updated with the result of difference
+ * with vector `B`, the same as it can be done with `A.subtractPoint(B)`.
+ * 
+ * Also note, if a right-hand-side vector operand is `weak`, it will be released 
+ * to the pool (standard behavior of `FlxVector` methods). In the example above,
+ * vector `B` is `weak` thus it returns to the pool. Be sure you do not reuse
+ * disposed vectors:
+ * 
+ * ```haxe
+ * // Example 1 continued
+ * 
+ * // vector B is in the pool, here we retrieve this vector
+ * // and assign it to new variable C
+ * var C = FlxVector.get(2, 2);
+ * 
+ * // B and C points to the same object in memory
+ * B.negate();
+ * 
+ * trace(C);	// (2, 2) expected, but it is (-2, -2)
+ * ```
+ * 
+ * This problem with `B` and `C` above is not specific to overloaded operators,
+ * you can fall into it using regular methods too.
+ * As of yet (4.10.0) Flixel does not warn you in any way if you use disposed vectors.
+ * In general, you should know what kind of vectors you are using and handle 
+ * them properly. You can also use non-weak vectors and dispose them manually
+ * when you are done with them:
+ * 
+ * ```haxe
+ * // Example 2
+ * 
+ * var A = FlxVector.get(1, 2);
+ * var B = FlxVector.get(3, 4);
+ * 
+ * A -= B;
+ * 
+ * var C = FlxVector.get(2, 2);
+ * B.negate();
+ * trace(C);	// (2, 2) - that is correct
+ * 
+ * A.put();		// utilize your vectors when they aren't needed anymore
+ * B.put();
+ * C.put();
+ * ```
+ * 
+ * ### Binary and unary operators
+ * 
+ * While operators from the first group is for modifying existing vectors, 
+ * second group operators are meant to return new vectors and *similar* to the methods
+ * like `addPointNew()`. Similar, but **not** the same.
+ * 
+ * - `A + B` returns a new `weak` vector that is sum of `A` and `B`
+ * - `A - B` returns a new `weak` vector that is difference of `A` and `B`
+ * - `A * k` returns a new `weak` vector that is `A` scaled with coefficient `k`
+ * - `-A` returns a new `weak` vector that is negated version of `A`
+ * - `A * B` returns dot product of `A` and `B`
+ * 
+ * Two peculiarities of these operators:
+ * 
+ * 1. They return new `weak` vector (except for dot product, its result cannot be
+ *    other than `Float`)
+ * 2. Any `weak` vector operand will be released to the pool
+ * 
+ * Charged with these features, it is possible to build complex expressions
+ * without worrying that intermediate results lost in memory waiting to be
+ * garbage-collected.
+ * 
+ * ```haxe
+ * // Example 3
+ * 
+ * var A = FlxVector.weak(1, 2);
+ * var B = FlxVector.weak(3, 4);
+ * 
+ * var D = -(A + B);
+ * 
+ * trace(D);	// (-4, -6)
+ * ```
+ * 
+ * Expression `-(A + B)` can be rewritten like this:
+ * 
+ * ```haxe
+ * // Example 4
+ * 
+ * var C = A + B;	// both A and B are weak, so they both return to the pool
+ * 
+ * // C is weak, it returns to the pool in negate operation:
+ * var D = -C;
+ * 
+ * // NOTE: D is weak too, since it is the result of `-C` negate operation
+ * ```
+ * 
+ * If you want to use a weak result of an expression more than once,
+ * you need to "unweak" it:
+ * 
+ * ```haxe
+ * // Example 5
+ * 
+ * var A = FlxVector.weak(1, 1);
+ * var B = FlxVector.weak(2, 2);
+ * 
+ * var C = (A + B);		// A and B return to pool, C is weak
+ * 
+ * // "unweak" vector C:
+ * // We create a new non weak vector and copy vector C into it. 
+ * // Original vector C returns to pool in `copyFrom()`
+ * C = FlxVector.get().copyFrom(C);
+ * 
+ * var D = -C;		// vector C is non weak, so
+ * var E = 2 * C;	// use it as many times
+ * var F = 3 * C;	// as you want
+ * 
+ * trace(F);		// (9, 9)
+ * ```
  */
 @:forward abstract FlxVector(FlxPoint) from FlxPoint to FlxPoint
 {
