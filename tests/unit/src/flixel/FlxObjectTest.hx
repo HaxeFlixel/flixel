@@ -267,6 +267,11 @@ class FlxObjectTest extends FlxTest
 		object1.screenCenter(XY);
 		Assert.areEqual(object1.x, center.x);
 		Assert.areEqual(object1.y, center.y);
+
+		object1.setPosition(offCenter.x, offCenter.y);
+		object1.screenCenter();
+		Assert.areEqual(object1.x, center.x);
+		Assert.areEqual(object1.y, center.y);
 		
 		offCenter.put();
 		center.put();
