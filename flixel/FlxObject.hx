@@ -1069,10 +1069,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes.match(X | XY))
+		if (axes != FlxAxes.Y) // X or XY
 			x = (FlxG.width - width) / 2;
 
-		if (axes.match(Y | XY))
+		if (axes != FlxAxes.X) // Y or XY
 			y = (FlxG.height - height) / 2;
 
 		return this;
