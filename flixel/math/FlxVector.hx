@@ -75,33 +75,25 @@ import openfl.geom.Point;
  * var C = FlxVector.get(2, 2);
  * B.negate();
  * trace(C);	// (2, 2) - that is correct
- * 
- * A.put();		// utilize your vectors when they aren't needed anymore
- * B.put();
- * C.put();
  * ```
  * 
  * ### Binary and unary operators
  * 
  * While operators from the first group is for modifying existing vectors, 
- * second group operators are meant to return new vectors and *similar* to the methods
- * like `addPointNew()`. Similar, but **not** the same.
+ * second group operators are meant to return new vectors. They are *similar*
+ * (but not the same) to the methods like `addPointNew()`.
  * 
- * - `A + B` returns a new `weak` vector that is sum of `A` and `B`
- * - `A - B` returns a new `weak` vector that is difference of `A` and `B`
- * - `A * k` returns a new `weak` vector that is `A` scaled with coefficient `k`
- * - `-A` returns a new `weak` vector that is negated version of `A`
+ * - `A + B` returns a new vector that is sum of `A` and `B`
+ * - `A - B` returns a new vector that is difference of `A` and `B`
+ * - `A * k` returns a new vector that is `A` scaled with coefficient `k`
+ * - `-A` returns a new vector that is negated version of `A`
  * - `A * B` returns dot product of `A` and `B`
  * 
  * Two peculiarities of these operators:
  * 
- * 1. They return new `weak` vector (except for dot product, its result cannot be
- *    other than `Float`)
+ * 1. They return new vectors (except for dot product, its result 
+ *    cannot be other than `Float`) and the vectors are *non weak*
  * 2. Any `weak` vector operand will be released to the pool
- * 
- * Charged with these features, it is possible to build complex expressions
- * without worrying that intermediate results lost in memory waiting to be
- * garbage-collected.
  * 
  * ```haxe
  * // Example 3
@@ -109,51 +101,115 @@ import openfl.geom.Point;
  * var A = FlxVector.weak(1, 2);
  * var B = FlxVector.weak(3, 4);
  * 
- * var D = -(A + B);
+ * var C = -(A + B);
  * 
- * trace(D);	// (-4, -6)
+ * trace(C);	// (-4, -6)
  * ```
  * 
- * Expression `-(A + B)` can be rewritten like this:
+ * Be aware, that intermediate results of complex expressions are not released
+ * to the pool (since such results are non-weak).
+ * Expression `-(A + B)` from the above example can be rewritten like this:
  * 
  * ```haxe
  * // Example 4
  * 
- * var C = A + B;	// both A and B are weak, so they both return to the pool
+ * var tmp = A + B;	// both A and B are weak, so they both return to the pool
  * 
- * // C is weak, it returns to the pool in negate operation:
- * var D = -C;
+ * // intermediate `tmp` is non-weak, it doesn't return to the pool...
+ * var C = -tmp;
  * 
- * // NOTE: D is weak too, since it is the result of `-C` negate operation
+ * // ...but actually get lost in memory waiting to be garbage collected
+ * tmp = null;
  * ```
  * 
- * If you want to use a weak result of an expression more than once,
- * you need to "unweak" it:
+ * You can use results of such expressions as many times you want 
+ * without worrying about will they be released to the pool 
+ * in some other expression or vector method:
  * 
  * ```haxe
- * // Example 5
+ * // Example 5 
  * 
  * var A = FlxVector.weak(1, 1);
  * var B = FlxVector.weak(2, 2);
  * 
- * var C = (A + B);		// A and B return to pool, C is weak
+ * var C = -(A + B);	// both A and B are weak, so they both return to the pool 
+ * var D = 2 * C;		// C is non-weak, it doesn't return to the pool
+ * var E = 3 * C;		// you can safely use C here
  * 
+ * trace(D);	// (-6, -6)
+ * trace(E);	// (-9, -9)
+ * trace(C);	// (-3, -3)
+ * ```
+ * 
+ * Loosing intermediate results in complex expressions may be a problem,
+ * if you use such expressions heavily in your game loop - lost vectors
+ * can occupy a lot of memory before they are consumed by GC. 
+ * You can control what kind of new vectors are returned with 
+ * `FlxVector.EXPRESSIONS_RETURN_WEAK` flag. By default it is `false`, so
+ * the new vectors are non-weak. But when you set it to `true`, expressions
+ * return **weak** vectors:
+ * 
+ * ```haxe
+ * // Example 6
+ * 
+ * var A = FlxVector.weak(1, 1);
+ * var B = FlxVector.weak(2, 2);
+ * 
+ * FlxVector.EXPRESSIONS_RETURN_WEAK = true;
+ * 
+ * var C = -(A + B);	// Both A and B are weak, so they both return to the pool.
+ *                      // Intermediate sum `A + B` is also weak and it returns
+ * 						// to the pool in negate operation `-sum`.
+ * var D = 2 * C;		// C is weak now, and it returns to the pool here,
+ * var E = 3 * C;		// you CANNOT use C anymore !
+ * 
+ * trace(D);	// (-6, -6)
+ * trace(E);	// (-9, -9)
+ * trace(C);	// (-9, -9) Oops!
+ * ```
+ * 
+ * The results above might seem unexpected, so if you want to use
+ * your weak vectors more than once, you have to "unweak" them first:
+ * 
+ * ```haxe
  * // "unweak" vector C:
- * // We create a new non weak vector and copy vector C into it. 
+ * // We create a new non-weak vector and copy vector C into it. 
  * // Original vector C returns to pool in `copyFrom()`
  * C = FlxVector.get().copyFrom(C);
+ * ```
  * 
- * var D = -C;		// vector C is non weak, so
- * var E = 2 * C;	// use it as many times
- * var F = 3 * C;	// as you want
+ * As a summary `FlxVector.EXPRESSIONS_RETURN_WEAK` flag proposes a trade-off:
  * 
- * trace(F);		// (9, 9)
+ * - results of expressions are non-weak, you can use them as many times
+ *   you want, but you unable to handle intermediate vectors in complex
+ *   expressions (this is the default behavior)
+ * - the results are weak, intermediate vectors in complex expression
+ *   return to the pool, but your final results (like vector `C` above)
+ *   can be used only once
+ * 
+ * No matter what operators or methods you are using, do not forget
+ * to put your vectors to the pool when you are done with them:
+ * 
+ * ```haxe
+ * var vector = FlxVector.get(1, 1);
+ * 
+ * ...
+ * 
+ * vector.put();
  * ```
  */
 @:forward abstract FlxVector(FlxPoint) from FlxPoint to FlxPoint
 {
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
+
+	/**
+	 * Controls the "weakness" of new vectors returned from expressions
+	 * with binary and unary arithmetic operators. It is `false`
+	 * by default (i.e. returned vectors are non-weak). 
+	 * See `FlxVector` class-level documentation for details.
+	 */
+	public static var EXPRESSIONS_RETURN_WEAK:Bool = false;
 
 	static var _vector1:FlxVector = new FlxVector();
 	static var _vector2:FlxVector = new FlxVector();
@@ -195,14 +251,15 @@ import openfl.geom.Point;
 	 * 
 	 * @param	lhs		first vector
 	 * @param	rhs		second vector
-	 * @return	new *weak* `FlxVector` that is sum of `lhs` and `rhs` vectors
+	 * @return	new `FlxVector` that is sum of `lhs` and `rhs` vectors
 	 */
 	@:noCompletion
 	@:op(A + B)
 	static inline function sumVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
-		var result = weak(lhs.x, lhs.y).addPoint(rhs);
+		var result = get(lhs.x, lhs.y).addPoint(rhs);
 		lhs.putWeak();
+		result._weak = EXPRESSIONS_RETURN_WEAK;
 		return result;
 	}
 
@@ -215,15 +272,16 @@ import openfl.geom.Point;
 	 * 
 	 * @param	lhs		first vector
 	 * @param	rhs		second vector
-	 * @return	new *weak* `FlxVector` that is result of subtraction `rhs` vector
+	 * @return	new `FlxVector` that is result of subtraction `rhs` vector
 	 * from `lhs` vector
 	 */
 	@:noCompletion
 	@:op(A - B)
 	static inline function subtractVectorsOp(lhs:FlxVector, rhs:FlxVector):FlxVector
 	{
-		var result = weak(lhs.x, lhs.y).subtractPoint(rhs);
+		var result = get(lhs.x, lhs.y).subtractPoint(rhs);
 		lhs.putWeak();
+		result._weak = EXPRESSIONS_RETURN_WEAK;
 		return result;
 	}
 
@@ -236,15 +294,16 @@ import openfl.geom.Point;
 	 * 
 	 * @param	lhs		vector
 	 * @param	rhs		scale coefficient
-	 * @return	new *weak* `FlxVector` that is result of scaling `lhs` vector
+	 * @return	new `FlxVector` that is result of scaling `lhs` vector
 	 * with `rhs` coefficient
 	 */
 	@:noCompletion
 	@:op(A * B) @:commutative
 	static inline function scaleVectorOp(lhs:FlxVector, rhs:Float):FlxVector
 	{
-		var result = weak(lhs.x, lhs.y).scale(rhs);
+		var result = get(lhs.x, lhs.y).scale(rhs);
 		lhs.putWeak();
+		result._weak = EXPRESSIONS_RETURN_WEAK;
 		return result;
 	}
 
@@ -256,13 +315,14 @@ import openfl.geom.Point;
 	 * NOTE: any `weak` vector operand will be released to the pool.
 	 * 
 	 * @param	lhs		vector
-	 * @return	new *weak* `FlxVector` that is result of negation `lhs` vector
+	 * @return	new `FlxVector` that is result of negation `lhs` vector
 	 */
 	@:noCompletion
 	@:op(-A) static inline function negateVectorOp(lhs:FlxVector):FlxVector
 	{
-		var result = weak(lhs.x, lhs.y).negate();
+		var result = get(lhs.x, lhs.y).negate();
 		lhs.putWeak();
+		result._weak = EXPRESSIONS_RETURN_WEAK;
 		return result;
 	}
 
