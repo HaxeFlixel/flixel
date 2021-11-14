@@ -1,6 +1,7 @@
 package flixel.math;
 
 import massive.munit.Assert;
+import flixel.util.FlxPool;
 
 @:access(flixel.math.FlxPoint)
 class FlxVectorTest extends FlxTest
@@ -98,7 +99,6 @@ class FlxVectorTest extends FlxTest
 
 		Assert.isTrue(a._inPool);
 		Assert.isTrue(b._inPool);
-		Assert.isTrue(result._weak);
 	}
 
 	@Test
@@ -119,7 +119,6 @@ class FlxVectorTest extends FlxTest
 
 		Assert.isTrue(a._inPool);
 		Assert.isTrue(b._inPool);
-		Assert.isTrue(result._weak);
 	}
 
 	@Test
@@ -137,7 +136,6 @@ class FlxVectorTest extends FlxTest
 		result = 2 * a;
 
 		Assert.isTrue(a._inPool);
-		Assert.isTrue(result._weak);
 	}
 
 	@Test
@@ -196,6 +194,42 @@ class FlxVectorTest extends FlxTest
 		result = -a;
 
 		Assert.isTrue(a._inPool);
-		Assert.isTrue(result._weak);
+	}
+
+	@Test
+	function testExpressionsReturnWeak(params)
+	{
+		FlxVector.EXPRESSIONS_RETURN_WEAK = false; // this is the default value
+
+		Assert.isFalse((vector + vector)._weak);
+		Assert.isFalse((vector - vector)._weak);
+		Assert.isFalse((vector * 2)._weak);
+		Assert.isFalse((-vector)._weak);
+
+		FlxVector.EXPRESSIONS_RETURN_WEAK = true;
+
+		Assert.isTrue((vector + vector)._weak);
+		Assert.isTrue((vector - vector)._weak);
+		Assert.isTrue((vector * 2)._weak);
+		Assert.isTrue((-vector)._weak);
+
+		FlxVector.EXPRESSIONS_RETURN_WEAK = false;
+	}
+
+	@Test
+	function testIntermediateResultsArePooled()
+	{
+		FlxVector.EXPRESSIONS_RETURN_WEAK = true;
+
+		var pool:FlxPool<FlxPoint> = cast FlxVector.pool;
+		pool.clear();
+
+		// complex expression, which intermediate sum `A + B`
+		// must return to the pool in negate
+		- (vector + vector2);
+
+		Assert.areEqual(1, pool.length);
+
+		FlxVector.EXPRESSIONS_RETURN_WEAK = false;
 	}
 }
