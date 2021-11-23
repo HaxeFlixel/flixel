@@ -22,7 +22,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public static inline var GRAY:FlxColor = 0xFF808080;
 	public static inline var BLACK:FlxColor = 0xFF000000;
 
-	public static inline var GREEN:FlxColor = 0xFF008000;
+	public static inline var GREEN:FlxColor = 0xFF00FF00;
 	public static inline var LIME:FlxColor = 0xFF00FF00;
 	public static inline var YELLOW:FlxColor = 0xFFFFFF00;
 	public static inline var ORANGE:FlxColor = 0xFFFFA500;
