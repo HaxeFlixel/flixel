@@ -5,6 +5,12 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxVerticalAlign;
 
+/**
+ * The base class from which all other scale modes extend from.
+ * You can implement your own scale mode by extending this class and overriding the appropriate methods.
+ * 
+ * The default behavior of `BaseScaleMode` matches that of `FillScaleMode`.
+ */
 class BaseScaleMode
 {
 	public var deviceSize(default, null):FlxPoint;
