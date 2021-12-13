@@ -2,7 +2,7 @@
 <project xmlns="http://lime.software/project/1.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
 
-	<icon path="assets/images/logo/HaxeFlixel.svg" unless="SUPPRESS_FLIXEL_ICON" />
+	<icon path="assets/images/logo/HaxeFlixel.svg" unless="FLX_SUPPRESS_ICON" />
 	
 	<section unless="unit-test">
 		<assets path="assets/sounds" rename="flixel/sounds" include="*.mp3" if="web || air" embed="true" />
