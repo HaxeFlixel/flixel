@@ -1856,7 +1856,7 @@ class FlxBitmapText extends FlxSprite
 	 * @param	Code	The charactercode we want to check
 	 * @return 	Bool	Returns true if the code is a Unicode Combining Diacritical Mark
 	 */
-	private function isUnicodeComboMark(Code:Int):Bool
+	function isUnicodeComboMark(Code:Int):Bool
 	{
 		return ((Code >= 768 && Code <= 879) || (Code >= 6832 && Code <= 6911) || (Code >= 7616 && Code <= 7679) || (Code >= 8400 && Code <= 8447)
 			|| (Code >= 65056 && Code <= 65071));
