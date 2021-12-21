@@ -5,6 +5,7 @@ import haxe.macro.Expr;
 #if !macro
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.util.FlxDirectionFlags;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -204,18 +205,18 @@ class FlxAngle
 	 * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
-	public static function angleFromFacing(FacingBitmask:Int, AsDegrees:Bool = false):Float
+	public static function angleFromFacing(Facing:FlxDirectionFlags, AsDegrees:Bool = false):Float
 	{
-		var degrees = switch (FacingBitmask)
+		var degrees = switch (Facing)
 		{
-			case FlxObject.LEFT: 180;
-			case FlxObject.RIGHT: 0;
-			case FlxObject.UP: -90;
-			case FlxObject.DOWN: 90;
-			case f if (f == FlxObject.UP | FlxObject.LEFT): -135;
-			case f if (f == FlxObject.UP | FlxObject.RIGHT): -45;
-			case f if (f == FlxObject.DOWN | FlxObject.LEFT): 135;
-			case f if (f == FlxObject.DOWN | FlxObject.RIGHT): 45;
+			case LEFT: 180;
+			case RIGHT: 0;
+			case UP: -90;
+			case DOWN: 90;
+			case f if (f == UP | LEFT): -135;
+			case f if (f == UP | RIGHT): -45;
+			case f if (f == DOWN | LEFT): 135;
+			case f if (f == DOWN | RIGHT): 45;
 			default: 0;
 		}
 		return AsDegrees ? degrees : asRadians(degrees);

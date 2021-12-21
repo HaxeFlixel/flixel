@@ -99,7 +99,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 9, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 10, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -172,7 +172,9 @@ class FlxG
 	public static var height(default, null):Int;
 
 	/**
-	 * The scale mode the game should use - available policies are found in `flixel.system.scaleModes`.
+	 * The scale mode the game should use.
+	 * HaxeFlixel includes several available scale modes, which are located in `flixel.system.scaleModes`.
+	 * However, you may also create a class which extends `BaseScaleMode`, and override its behavior according to your needs.
 	 */
 	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 

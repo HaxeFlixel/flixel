@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "html5", "neko", "cpp", "android", "ios", "cross"],
 	"description": "HaxeFlixel is a 2D game engine based on OpenFL that delivers cross-platform games.",
-	"version": "4.9.0",
-	"releasenote": "Compatibility with Haxe 4.2.x, tween and default camera handling improvements.",
+	"version": "4.10.0",
+	"releasenote": "Added FlxDirectionFlags, diacritical marks for FlxBitmapText, Android key support for FlxAction and more.",
 	"contributors": ["haxeflixel", "Gama11"],
 	"dependencies": {}
 }

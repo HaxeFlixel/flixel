@@ -56,8 +56,9 @@ class VarTween extends FlxTween
 
 			super.update(elapsed);
 
-			for (info in _propertyInfos)
-				Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
+			if (active)
+				for (info in _propertyInfos)
+					Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
 		}
 	}
 
@@ -116,6 +117,9 @@ class VarTween extends FlxTween
 
 	override function isTweenOf(object:Dynamic, ?field:String):Bool
 	{
+		if (object == _object && field == null)
+			return true;
+		
 		for (property in _propertyInfos)
 		{
 			if (object == property.object && (field == property.field || field == null))

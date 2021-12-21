@@ -18,6 +18,8 @@ import lime.graphics.opengl.GL;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
+ * 
+ * Accessed via `FlxG.bitmap`.
  */
 class BitmapFrontEnd
 {

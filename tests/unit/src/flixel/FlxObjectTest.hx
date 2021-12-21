@@ -3,8 +3,9 @@ package flixel;
 import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
-import flixel.tile.FlxTilemap;
 import flixel.math.FlxMath;
+import flixel.tile.FlxTilemap;
+import flixel.util.FlxDirectionFlags;
 import massive.munit.Assert;
 
 class FlxObjectTest extends FlxTest
@@ -92,33 +93,37 @@ class FlxObjectTest extends FlxTest
 	}
 
 	@Test
-	@Ignore("Failing on Travis right now for some reason")
+	// @Ignore("Failing on Travis right now for some reason")
 	function testUpdateTouchingFlagsHorizontal():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(20, 2, 10, 6);
+		var object1 = new FlxObject(5, 0, 10, 10);
+		var object2 = new FlxObject(20, 0, 10, 10);
+		object1.velocity.set(10, 0);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
-		object1.velocity.set(20, 0);
-		step(20);
+		step(60);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.RIGHT, object1.touching);
-		Assert.areEqual(FlxObject.LEFT, object2.touching);
+		Assert.isTrue (object1.touching.has(RIGHT));
+		Assert.isTrue (object2.touching.has(LEFT));
+		Assert.isFalse(object1.touching.has(DOWN));
+		Assert.isFalse(object2.touching.has(UP));
 	}
 
 	@Test // #1556
-	@Ignore("Failing on Travis right now for some reason")
+	// @Ignore("Failing on Travis right now for some reason")
 	function testUpdateTouchingFlagsVertical():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(2, 20, 10, 6);
+		var object1 = new FlxObject(0, 5, 10, 10);
+		var object2 = new FlxObject(0, 20, 10, 10);
+		object1.velocity.set(0, 10);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
-		object1.velocity.set(0, 20);
-		step(20);
+		step(60);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.DOWN, object1.touching);
-		Assert.areEqual(FlxObject.UP, object2.touching);
+		Assert.isTrue (object1.touching.has(DOWN));
+		Assert.isTrue (object2.touching.has(UP));
+		Assert.isFalse(object1.touching.has(RIGHT));
+		Assert.isFalse(object2.touching.has(LEFT));
 	}
 
 	@Test // #1556
@@ -132,8 +137,8 @@ class FlxObjectTest extends FlxTest
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.NONE, object1.touching);
-		Assert.areEqual(FlxObject.NONE, object2.touching);
+		Assert.areEqual(FlxDirectionFlags.NONE, object1.touching);
+		Assert.areEqual(FlxDirectionFlags.NONE, object2.touching);
 	}
 
 	@Test
