@@ -1,8 +1,10 @@
 package flixel.math;
 
+#if flash
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
+#end
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -174,6 +176,7 @@ class FlxMath
 		return false;
 	}
 
+	#if flash
 	/**
 	 * Returns true if the given x/y coordinate is within the given rectangular block
 	 *
@@ -226,6 +229,7 @@ class FlxMath
 	{
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
+	#end
 
 	/**
 	 * Adds the given amount to the value, but never lets the value
@@ -310,6 +314,7 @@ class FlxMath
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
+	#if flash
 	/**
 	 * Find the distance (in pixels, rounded) between two FlxSprites, taking their origin into account
 	 *
@@ -454,6 +459,7 @@ class FlxMath
 		else
 			return dx * dx + dy * dy < Distance * Distance;
 	}
+	#end
 	#end
 
 	/**
