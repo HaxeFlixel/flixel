@@ -24,7 +24,7 @@ class FlxAnimationController implements IFlxDestroyable
 	public var frameName(get, set):String;
 
 	/**
-	 * Gets or sets the currently playing animation (warning: can be `null`).
+	 * Gets the currently playing animation (warning: can be `null`).
 	 */
 	public var name(get, set):String;
 	
