@@ -27,7 +27,12 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Gets or sets the currently playing animation (warning: can be `null`).
 	 */
 	public var name(get, set):String;
-
+	
+	/**
+	 * Gets or sets a list with all the added animations (warning: can be `null`).
+	 */
+	public var list(get, never):Array<String>;
+	
 	/**
 	 * Pause or resume the current animation.
 	 */
@@ -79,7 +84,11 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
 	var _animations(default, null):Map<String, FlxAnimation>;
-
+	/**
+	 * Internal, list of all animations animations.
+	 */
+	var _list:Array<String>;
+	
 	var _prerotated:FlxPrerotatedAnimation;
 
 	public function new(Sprite:FlxSprite)
@@ -102,11 +111,13 @@ class FlxAnimationController implements IFlxDestroyable
 
 	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
+		_list = [];
 		destroyAnimations();
 
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim.frames, anim.frameRate, anim.looped, anim.flipX, anim.flipY);
+			_list.push(anim.name);
 		}
 
 		if (controller._prerotated != null)
@@ -186,6 +197,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
+		_list.push(Name);
+		
 		// Check _animations frames
 		var framesToAdd:Array<Int> = Frames;
 		var numFrames:Int = framesToAdd.length - 1;
@@ -380,6 +393,8 @@ class FlxAnimationController implements IFlxDestroyable
 	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false,
 			FlipY:Bool = false):Void
 	{
+		_list.push(Name);
+		
 		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
@@ -460,6 +475,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
+		_list.push(Name);
+		
 		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
@@ -776,6 +793,11 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		play(AnimName);
 		return AnimName;
+	}
+		
+	function get_list():Array<String>
+	{
+		return _list;
 	}
 
 	inline function get_curAnim():FlxAnimation
