@@ -163,10 +163,11 @@ class FlxArrayUtil
 	 * Pushes the element into the array (and if the array is null, creates it first) and returns the array.
 	 * @since 4.6.0
 	 */
-	public static function safePush<T>(array:Array<T>, element:T):Array<T>
+	public static function safePush<T>(array:Null<Array<T>>, element:T):Array<T>
 	{
 		if (array == null)
 			array = [];
+		
 		array.push(element);
 		return array;
 	}
@@ -174,5 +175,10 @@ class FlxArrayUtil
 	public static inline function contains<T>(array:Array<T>, element:T):Bool
 	{
 		return array.indexOf(element) != -1;
+	}
+
+	public static inline function safeContains<T>(array:Null<Array<T>>, element:T):Bool
+	{
+		return array != null && contains(array, element);
 	}
 }
