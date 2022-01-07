@@ -1,6 +1,5 @@
 package flixel.tile;
 
-import flixel.math.FlxMath;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -8,7 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicSource;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.system.FlxAssets;
-import flixel.tile.FlxTilemapPathPolicy;
+import flixel.tile.FlxPathfinder;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDirectionFlags;
@@ -44,9 +43,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		 0, 199, 0, 0,  0, 202, 0, 203, 0, 0, 0, 0,  0, 208, 0, 209
 	];
 	
-	static var diagonalPolicyNone(default, null) = new FlxTilemapDiagonalPathPolicy(NONE);
-	static var diagonalPolicyNormal(default, null) = new FlxTilemapDiagonalPathPolicy(NORMAL);
-	static var diagonalPolicyWide(default, null) = new FlxTilemapDiagonalPathPolicy(WIDE);
+	static var diagonalPolicyNone(default, null) = new FlxDiagonalPathfinder(NONE);
+	static var diagonalPolicyNormal(default, null) = new FlxDiagonalPathfinder(NORMAL);
+	static var diagonalPolicyWide(default, null) = new FlxDiagonalPathfinder(WIDE);
 
 	public var widthInTiles(default, null):Int = 0;
 
@@ -812,14 +811,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public inline function findPath(start:FlxPoint, end:FlxPoint, simplify:Bool = true, raySimplify:Bool = false,
 			diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
 	{
-		return getPolicyFromDiagonal(diagonalPolicy).findPath(cast this, start, end, simplify, raySimplify);
+		return getDiagonalPathfinder(diagonalPolicy).findPath(cast this, start, end, simplify, raySimplify);
 	}
 
 	/**
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
 	 *
-	 * @param	policy		Decides how to move and evaluate the paths for comparison.
+	 * @param	pathfinder	Decides how to move and evaluate the paths for comparison.
 	 * @param	start		The start point in world coordinates.
 	 * @param	end			The end point in world coordinates.
 	 * @param	simplify	Whether to run a basic simplification algorithm over the path data, removing
@@ -830,10 +829,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
 	 * 			then a null reference is returned.
 	 */
-	public inline function findPathCustom(policy:FlxTilemapPathPolicy, start:FlxPoint, end:FlxPoint,
+	public inline function findPathCustom(pathfinder:FlxPathfinder, start:FlxPoint, end:FlxPoint,
 		simplify:Bool = true, raySimplify:Bool = false):Array<FlxPoint>
 	{
-		return policy.findPath(cast this, start, end, simplify, raySimplify);
+		return pathfinder.findPath(cast this, start, end, simplify, raySimplify);
 	}
 
 	/**
@@ -866,12 +865,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):FlxTilemapPathData
+	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):FlxPathfinderData
 	{
-		return getPolicyFromDiagonal(diagonalPolicy).compute(cast this, startIndex, endIndex, stopOnEnd);
+		return getDiagonalPathfinder(diagonalPolicy).compute(cast this, startIndex, endIndex, stopOnEnd);
 	}
 
-	inline function getPolicyFromDiagonal(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxTilemapPathPolicy
+	inline function getDiagonalPathfinder(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxPathfinder
 	{
 		return switch(diagonalPolicy)
 		{

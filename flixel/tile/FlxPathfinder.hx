@@ -1,16 +1,17 @@
 package flixel.tile;
 
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxDirection;
 import flixel.util.FlxDirectionFlags;
-import flixel.FlxObject;
-import flixel.tile.FlxBaseTilemap;
-import flixel.util.FlxArrayUtil;
+
+using flixel.util.FlxArrayUtil;
 
 /** This typedef it easier to convert FlxTilemapPathPolicy to use type params later */
 private typedef Tilemap = FlxBaseTilemap<FlxObject>;
 
-class FlxTilemapPathPolicy
+class FlxPathfinder
 {
 	/**
 	 * Whether tiles can be excluded on their first successful traversal. 
@@ -151,10 +152,10 @@ class FlxTilemapPathPolicy
 	 * @param	stopOnEnd	Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function compute(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxTilemapPathData
+	public function compute(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxPathfinderData
 	{
 		/* the shortest distance it took to get to each index */
-		var data = new FlxTilemapPathData(map.widthInTiles * map.heightInTiles, startIndex, endIndex);
+		var data = new FlxPathfinderData(map.widthInTiles * map.heightInTiles, startIndex, endIndex);
 		
 		var neighbors:Array<Int> = [startIndex];
 		var foundEnd:Bool = false;
@@ -264,7 +265,7 @@ class FlxTilemapPathPolicy
 	}
 }
 
-class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
+class FlxDiagonalPathfinder extends FlxPathfinder
 {
 	var diagonalPolicy:FlxTilemapDiagonalPolicy;
 
@@ -286,7 +287,7 @@ class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
 
 		inline function canGoHelper(to:Int, dir:FlxDirectionFlags)
 		{
-			return !FlxArrayUtil.contains(excluded, to) && this.canGo(map, to, dir);
+			return !excluded.contains(to) && this.canGo(map, to, dir);
 		}
 
 		function addIf(condition:Bool, to:Int, dir:FlxDirectionFlags)
@@ -366,7 +367,7 @@ class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
 	}
 }
 
-class FlxTilemapPathData
+class FlxPathfinderData
 {
 	/** The distance of every tile from the starting position */
 	public var distances:Array<Int>;
