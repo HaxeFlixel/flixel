@@ -432,34 +432,39 @@ class FlxPathfinderData
 	}
 	
 	/**
-	 * If the desired path was successful, this returns the chain the tile indices used
-	 * to get there the fastest. If unsuccessful, null is returned.
+	 * If possible, this returns the tile indices used to get there the fastest.
+	 * If impossible, null is returned.
 	 */
-	public function getPathIndices():Null<Array<Int>>
+	public function getPathIndicesTo(index:Int):Null<Array<Int>>
 	{
-		if (endIndex == startIndex)
-			return [startIndex, endIndex];
+		if (index == startIndex)
+			return [startIndex, index];
 		
-		if (moves[endIndex] == -1)
-		{
-			FlxG.log.warn("Called `getPathIndices` when no valid path was found");
+		if (moves[index] == -1)
 			return null;
-		}
 		
 		var path = new Array<Int>();
 		
 		// Start at the end, check `moves` iteratively to see the neighbor that reached here first
-		var currentIndex = endIndex;
-		while(currentIndex != -1)
+		while(index != -1)
 		{
-			path.unshift(currentIndex);
-			currentIndex = moves[currentIndex];
+			path.unshift(index);
+			index = moves[index];
 		}
 		
 		if (path[0] != startIndex)
 			FlxG.log.error("getPathIndices ended up somewhere other than the start");
 		
 		return path;
+	}
+	
+	/**
+	 * If the desired start to end path was successful, this returns the tile indices used
+	 * to get there the fastest. If unsuccessful, null is returned.
+	 */
+	public inline function getPathIndices():Null<Array<Int>>
+	{
+		return getPathIndicesTo(endIndex);
 	}
 }
 
