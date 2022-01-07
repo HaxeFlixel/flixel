@@ -18,8 +18,6 @@ import openfl.display.BitmapData;
 
 using StringTools;
 
-private typedef PathPolicy<T:FlxObject> = FlxTilemapPathPolicy<T>;
-
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -800,14 +798,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
 	 *
-	 * @param	Start			The start point in world coordinates.
-	 * @param	End				The end point in world coordinates.
-	 * @param	Simplify		Whether to run a basic simplification algorithm over the path data, removing
+	 * @param	start			The start point in world coordinates.
+	 * @param	end				The end point in world coordinates.
+	 * @param	simplify		Whether to run a basic simplification algorithm over the path data, removing
 	 * 							extra points that are on the same line.  Default value is true.
-	 * @param	RaySimplify		Whether to run an extra raycasting simplification algorithm over the remaining
+	 * @param	raySimplify		Whether to run an extra raycasting simplification algorithm over the remaining
 	 * 							path data.  This can result in some close corners being cut, and should be
 	 * 							used with care if at all (yet).  Default value is false.
-	 * @param	DiagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
+	 * @param	diagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
 	 * 			then a null reference is returned.
 	 */
@@ -821,19 +819,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
 	 *
-	 * @param	Start		The start point in world coordinates.
-	 * @param	End			The end point in world coordinates.
-	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing
+	 * @param	start		The start point in world coordinates.
+	 * @param	end			The end point in world coordinates.
+	 * @param	simplify	Whether to run a basic simplification algorithm over the path data, removing
 	 * 						extra points that are on the same line.  Default value is true.
-	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining
+	 * @param	raySimplify	Whether to run an extra raycasting simplification algorithm over the remaining
 	 * 						path data.  This can result in some close corners being cut, and should be
 	 * 						used with care if at all (yet).  Default value is false.
-	 * @param	Policy		Decides how to move and evaluate the paths for comparison.
+	 * @param	policy		Decides how to move and evaluate the paths for comparison.
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
 	 * 			then a null reference is returned.
 	 */
 	public function findPathCustom(start:FlxPoint, end:FlxPoint, simplify:Bool = true, raySimplify:Bool = false,
-			?policy:PathPolicy<Tile>):Array<FlxPoint>
+			policy:FlxTilemapPathPolicy):Array<FlxPoint>
 	{
 		// Figure out what tile we are starting and ending on.
 		var startIndex:Int = getTileIndexByCoords(start);
@@ -850,21 +848,18 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		}
 
 		// Figure out how far each of the tiles is from the starting tile
-		var data = computePathDataCustom(startIndex, endIndex, policy);
+		var data = policy.compute(cast this, startIndex, endIndex);
 		if (data == null)
 		{
 			return null;
 		}
 
 		// Then count backward to find the shortest path.
-		var points = walkPath(data);
+		var points = data.getPathIndices().map(getTileCoordsByIndex.bind(_, true));
 
 		// Reset the start and end points to be exact
-		var node:FlxPoint;
-		node = points[points.length - 1];
-		node.copyFrom(start);
-		node = points[0];
-		node.copyFrom(end);
+		points[0].copyFrom(start);
+		points[points.length - 1].copyFrom(end);
 
 		// Some simple path cleanup options
 		if (simplify)
@@ -877,36 +872,26 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			raySimplifyPath(points);
 		}
 
-		// Finally load the remaining points into a new path object and return it
-		var path:Array<FlxPoint> = [];
-		var i:Int = points.length - 1;
-
-		while (i >= 0)
-		{
-			node = points[i--];
-
-			if (node != null)
-			{
-				path.push(node);
-			}
-		}
-
-		return path;
+		return points;
 	}
 
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 *
-	 * @param	StartIndex		The starting tile's map index.
-	 * @param	EndIndex		The ending tile's map index.
-	 * @param	DiagonalPolicy	How to treat diagonal movement.
-	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
+	 * @param	startIndex		The starting tile's map index.
+	 * @param	endIndex		The ending tile's map index.
+	 * @param	diagonalPolicy	How to treat diagonal movement.
+	 * @param	stopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):Array<Float>
+	public function computePathDistance(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):Array<Int>
 	{
-		return computePathData(startIndex, endIndex, diagonalPolicy, stopOnEnd).distances;
+		var data = computePathData(startIndex, endIndex, diagonalPolicy, stopOnEnd);
+		if (data != null)
+			return data.distances;
+		
+		return null;
 	}
 
 	
@@ -920,14 +905,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy, stopOnEnd:Bool = true):FlxTilemapPathData
+	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):FlxTilemapPathData
 	{
-		return computePathDataCustom(startIndex, endIndex, getPolicyFromDiagonal(diagonalPolicy), stopOnEnd);
+		return getPolicyFromDiagonal(diagonalPolicy).compute(cast this, startIndex, endIndex, stopOnEnd);
 	}
 
-	inline function getPolicyFromDiagonal(diagonalPolicy:FlxTilemapDiagonalPolicy):PathPolicy<Tile>
+	inline function getPolicyFromDiagonal(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxTilemapPathPolicy
 	{
-		return cast switch(diagonalPolicy)
+		return switch(diagonalPolicy)
 		{
 			case NONE: diagonalPolicyNone;
 			case NORMAL: diagonalPolicyNormal;
@@ -936,168 +921,61 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 
 	/**
-	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
-	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
-	 *
-	 * @param	StartIndex		The starting tile's map index.
-	 * @param	EndIndex		The ending tile's map index.
-	 * @param	Policy			Decides how to move and evaluate the paths for comparison.
-	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
-	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
-	 */
-	public function computePathDataCustom(startIndex:Int, endIndex:Int, policy:PathPolicy<Tile>, stopOnEnd:Bool = true):FlxTilemapPathData
-	{
-		/* the shortest distance it took to get to each index */
-		var data = new FlxTilemapPathData(widthInTiles * heightInTiles);
-		data.distances[startIndex] = 0;
-		
-		var neighbors:Array<Int> = [startIndex];
-		var foundEnd:Bool = false;
-		var excluded = neighbors.copy();
-
-		while (neighbors.length > 0)
-		{
-			var current = neighbors;
-			neighbors = [];
-
-			for (currentIndex in current)
-			{
-				if (policy.isFinished(this, currentIndex, endIndex))
-				{
-					data.end = currentIndex;
-					foundEnd = true;
-					if (stopOnEnd)
-					{
-						neighbors = [];
-						break;
-					}
-				}
-
-				var cellNeighbors = policy.getNeighbors(this, currentIndex, excluded);
-				var distanceSoFar = data.distances[currentIndex];
-				for (neighbor in cellNeighbors)
-				{
-					var oldDistance = data.distances[neighbor];
-					if (distanceSoFar >= oldDistance)
-					{
-						// Don't even calculate the new distance
-						continue;
-					}
-
-					var distance = distanceSoFar + policy.getDistance(this, currentIndex, neighbor);
-					if (distance < oldDistance)
-					{
-						data.distances[neighbor] = distance;
-						data.moves[neighbor] = currentIndex;
-						neighbors.push(neighbor);
-					}
-				}
-			}
-
-			// exclude to prevent further useless checks
-			if (policy.useSimpleExclusion && neighbors.length > 0)
-			{
-				excluded = excluded.concat(neighbors);
-			}
-		}
-		
-		if (!foundEnd)
-		{
-			data = null;
-		}
-
-		return data;
-	}
-
-	/**
-	 * Pathfinding helper function, recursively walks the grid and finds a shortest path back to the start.
-	 *
-	 * @param	Data	An array of distance information.
-	 * @param	Start	The tile we're on in our walk backward.
-	 * @param	Points	An array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
-	 */
-	function walkPath(data:FlxTilemapPathData)
-	{
-		var points = new Array<FlxPoint>();
-		
-		var current = data.moves[data.end];
-		while (current != -1)
-		{
-			points.push(getTileCoordsByIndex(current));
-			current = data.moves[current];
-		}
-		
-		return points;
-	}
-
-	/**
 	 * Pathfinding helper function, strips out extra points on the same line.
 	 *
-	 * @param	Points		An array of FlxPoint nodes.
+	 * @param	points		An array of FlxPoint nodes.
 	 */
 	function simplifyPath(points:Array<FlxPoint>):Void
 	{
-		var deltaPrevious:Float;
-		var deltaNext:Float;
-		var last:FlxPoint = points[0];
-		var node:FlxPoint;
-		var i:Int = 1;
-		var l:Int = points.length - 1;
-
-		while (i < l)
+		var last = points[0];
+		// loop backwards so we can remove indices
+		var i = points.length - 2; // skip last
+		while (i < 1) // also skip first
 		{
-			node = points[i];
-			deltaPrevious = (node.x - last.x) / (node.y - last.y);
-			deltaNext = (node.x - points[i + 1].x) / (node.y - points[i + 1].y);
+			var node = points[i];
+			var next = points[i - 1];
+			var deltaPrevious = (node.x - last.x) / (node.y - last.y);
+			var deltaNext = (node.x - next.x) / (node.y - next.y);
 
-			if ((last.x == points[i + 1].x) || (last.y == points[i + 1].y) || (deltaPrevious == deltaNext))
+			if ((last.x == next.x) || (last.y == next.y) || (deltaPrevious == deltaNext))
 			{
-				points[i] = null;
+				points.remove(node);
 			}
 			else
 			{
 				last = node;
 			}
 
-			i++;
+			i--;
 		}
 	}
 
 	/**
 	 * Pathfinding helper function, strips out even more points by raycasting from one point to the next and dropping unnecessary points.
 	 *
-	 * @param	Points		An array of FlxPoint nodes.
+	 * @param	points		An array of FlxPoint nodes.
 	 */
 	function raySimplifyPath(points:Array<FlxPoint>):Void
 	{
-		var source:FlxPoint = points[0];
-		var lastIndex:Int = -1;
-		var node:FlxPoint;
-		var i:Int = 1;
-		var l:Int = points.length;
-
-		while (i < l)
+		var source = points[0];
+		var lastIndex = -1;
+		var i = points.length - 1;
+		while (i > 1)// skip first
 		{
-			node = points[i++];
-
-			if (node == null)
-			{
-				continue;
-			}
+			var node = points[i];
 
 			if (ray(source, node, _point))
 			{
 				if (lastIndex >= 0)
-				{
-					points[lastIndex] = null;
-				}
+					points.remove(node);
 			}
 			else
 			{
 				source = points[lastIndex];
 			}
 
-			lastIndex = i - 1;
+			lastIndex = i;
+			i--;
 		}
 	}
 

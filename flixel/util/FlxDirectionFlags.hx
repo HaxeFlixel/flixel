@@ -74,6 +74,14 @@ package flixel.util;
 		return str.substr(3);
 	}
 
+	public static function fromBools(left:Bool, right:Bool, up:Bool, down:Bool):FlxDirectionFlags
+	{
+		return (left  ? LEFT  : NONE)
+			|  (right ? RIGHT : NONE)
+			|  (up    ? UP    : NONE)
+			|  (down  ? DOWN  : NONE);
+	}
+
 	// Expose int operators
 	@:op(A & B) static function and(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
 
