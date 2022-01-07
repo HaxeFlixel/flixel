@@ -58,9 +58,43 @@ class FlxPathfinder
 		var endIndex = map.getTileIndexByCoords(end);
 
 		// Check if any point given is outside the tilemap
-		if ((startIndex < 0) || (endIndex < 0))
+		if (startIndex < 0 || endIndex < 0)
 			return null;
 
+		var indices = findPathIndices(map, startIndex, endIndex);
+		if (indices == null)
+			return null;
+
+		// convert indices to world coordinates
+		var path = indices.map(map.getTileCoordsByIndex.bind(_, true));
+
+		// Reset the start and end points to be exact
+		path[0].copyFrom(start);
+		path[path.length - 1].copyFrom(end);
+
+		// Some simple path cleanup options
+		if (simplify)
+			simplifyPath(map, path);
+		
+		if (raySimplify)
+			raySimplifyPath(map, path);
+
+		return path;
+	}
+	
+	
+	/**
+	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered then a null reference is returned.
+	 *
+	 * @param	map			The map we're moving through.
+	 * @param	startIndex	The start point in world coordinates.
+	 * @param	endIndex	The end point in world coordinates.
+	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
+	 * 			then a null reference is returned.
+	 */
+	public function findPathIndices(map:Tilemap, startIndex:Int, endIndex:Int):Array<Int>
+	{
 		// Check that the start and end are clear.
 		if (getTileCollisionsByIndex(map, startIndex) != NONE || getTileCollisionsByIndex(map, endIndex) != NONE)
 			return null;
@@ -71,20 +105,7 @@ class FlxPathfinder
 			return null;
 
 		// Then backtrack on the shortest path.
-		var points = data.getPathIndices().map(map.getTileCoordsByIndex.bind(_, true));
-
-		// Reset the start and end points to be exact
-		points[0].copyFrom(start);
-		points[points.length - 1].copyFrom(end);
-
-		// Some simple path cleanup options
-		if (simplify)
-			simplifyPath(map, points);
-		
-		if (raySimplify)
-			raySimplifyPath(map, points);
-
-		return points;
+		return data.getPathIndices();
 	}
 	
 	/**
