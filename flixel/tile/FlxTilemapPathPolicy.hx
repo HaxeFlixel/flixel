@@ -7,6 +7,9 @@ import flixel.FlxObject;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxArrayUtil;
 
+/** This typedef it easier to convert FlxTilemapPathPolicy to use type params later */
+private typedef Tilemap = FlxBaseTilemap<FlxObject>;
+
 class FlxTilemapPathPolicy
 {
 	/**
@@ -25,6 +28,120 @@ class FlxTilemapPathPolicy
 	}
 
 	/**
+	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered then a null reference is returned.
+	 *
+	 * @param	map			The map we're moving through.
+	 * @param	start		The start point in world coordinates.
+	 * @param	end			The end point in world coordinates.
+	 * @param	simplify	Whether to run a basic simplification algorithm over the path data, removing
+	 * 						extra points that are on the same line.  Default value is true.
+	 * @param	raySimplify	Whether to run an extra raycasting simplification algorithm over the remaining
+	 * 						path data.  This can result in some close corners being cut, and should be
+	 * 						used with care if at all (yet).  Default value is false.
+	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
+	 * 			then a null reference is returned.
+	 */
+	public function findPath(map:Tilemap, start:FlxPoint, end:FlxPoint, simplify:Bool = true, raySimplify:Bool = false):Array<FlxPoint>
+	{
+		// Figure out what tile we are starting and ending on.
+		var startIndex = map.getTileIndexByCoords(start);
+		var endIndex = map.getTileIndexByCoords(end);
+
+		// Check if any point given is outside the tilemap
+		if ((startIndex < 0) || (endIndex < 0))
+			return null;
+
+		// Check that the start and end are clear.
+		if (getTileCollisionsByIndex(map, startIndex) != NONE || getTileCollisionsByIndex(map, endIndex) != NONE)
+			return null;
+
+		// Figure out how far each of the tiles is from the starting tile
+		var data = compute(map, startIndex, endIndex);
+		if (data == null)
+			return null;
+
+		// Then backtrack on the shortest path.
+		var points = data.getPathIndices().map(map.getTileCoordsByIndex.bind(_, true));
+
+		// Reset the start and end points to be exact
+		points[0].copyFrom(start);
+		points[points.length - 1].copyFrom(end);
+
+		// Some simple path cleanup options
+		if (simplify)
+			simplifyPath(map, points);
+		
+		if (raySimplify)
+			raySimplifyPath(map, points);
+
+		return points;
+	}
+	
+	/**
+	 * Pathfinding helper function, strips out extra points on the same line.
+	 *
+	 * @param	map		The map we're moving through.
+	 * @param	points	An array of FlxPoint nodes.
+	 */
+	function simplifyPath(map:Tilemap, points:Array<FlxPoint>):Void
+	{
+		var last = points[0];
+		// loop backwards so we can remove indices
+		var i = points.length - 2; // skip last
+		while (i < 1) // also skip first
+		{
+			var node = points[i];
+			var next = points[i - 1];
+			var deltaPrevious = (node.x - last.x) / (node.y - last.y);
+			var deltaNext = (node.x - next.x) / (node.y - next.y);
+
+			if ((last.x == next.x) || (last.y == next.y) || (deltaPrevious == deltaNext))
+			{
+				points.remove(node);
+			}
+			else
+			{
+				last = node;
+			}
+
+			i--;
+		}
+	}
+
+	/**
+	 * Pathfinding helper function, strips out even more points by raycasting from one
+	 * point to the next and dropping unnecessary points.
+	 *
+	 * @param	map		The map we're moving through.
+	 * @param	points	An array of FlxPoint nodes.
+	 */
+	function raySimplifyPath(map:Tilemap, points:Array<FlxPoint>):Void
+	{
+		var tempPoint = FlxPoint.get();
+		var source = points[0];
+		var lastIndex = -1;
+		var i = points.length - 1;
+		while (i > 1)// skip first
+		{
+			var node = points[i];
+
+			if (map.ray(source, node, tempPoint))
+			{
+				if (lastIndex >= 0)
+					points.remove(node);
+			}
+			else
+			{
+				source = points[lastIndex];
+			}
+
+			lastIndex = i;
+			i--;
+		}
+		tempPoint.put();
+	}
+	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 *
@@ -34,7 +151,7 @@ class FlxTilemapPathPolicy
 	 * @param	stopOnEnd	Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function compute(map:FlxBaseTilemap<FlxObject>, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxTilemapPathData
+	public function compute(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxTilemapPathData
 	{
 		/* the shortest distance it took to get to each index */
 		var data = new FlxTilemapPathData(map.widthInTiles * map.heightInTiles, startIndex, endIndex);
@@ -103,7 +220,7 @@ class FlxTilemapPathPolicy
 	 * @param exclude	Tiles that we should avoid
 	 * @return A list of tile indices
 	 */
-	function getNeighbors(map:FlxBaseTilemap<FlxObject>, from:Int, exclude:Array<Int>):Array<Int>
+	function getNeighbors(map:Tilemap, from:Int, exclude:Array<Int>):Array<Int>
 	{
 		throw "FlxTilemapPathPolicy.getNeighbors should not be called, It must be overriden in derived classes";
 	}
@@ -115,7 +232,7 @@ class FlxTilemapPathPolicy
 	 * @param to	The tile we moved to.
 	 * @return Float used for comparisons in finding the best route.
 	 */
-	function getDistance(map:FlxBaseTilemap<FlxObject>, from:Int, to:Int):Int
+	function getDistance(map:Tilemap, from:Int, to:Int):Int
 	{
 		throw "FlxTilemapPathPolicy.getDistance should not be called, It must be overriden in derived classes";
 	}
@@ -125,7 +242,7 @@ class FlxTilemapPathPolicy
 	/**
 	 * Helper for converting a tile index to a X index.
 	 */
-	inline function getX(map:FlxBaseTilemap<FlxObject>, tile:Int)
+	inline function getX(map:Tilemap, tile:Int)
 	{
 		return tile % map.widthInTiles;
 	}
@@ -133,7 +250,7 @@ class FlxTilemapPathPolicy
 	/**
 	 * Helper for converting a tile index to a Y index.
 	 */
-	inline function getY(map:FlxBaseTilemap<FlxObject>, tile:Int)
+	inline function getY(map:Tilemap, tile:Int)
 	{
 		return Std.int(tile / map.widthInTiles);
 	}
@@ -141,7 +258,7 @@ class FlxTilemapPathPolicy
 	/**
 	 * Helper that gets the collision properties of a tile by it's index.
 	 */
-	inline function getTileCollisionsByIndex(map:FlxBaseTilemap<FlxObject>, tile:Int)
+	inline function getTileCollisionsByIndex(map:Tilemap, tile:Int)
 	{
 		return map.getTileCollisions(map.getTileByIndex(tile));
 	}
@@ -158,7 +275,7 @@ class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
 		this.diagonalPolicy = diagonalPolicy;
 	}
 	
-	override function getNeighbors(map:FlxBaseTilemap<FlxObject>, from:Int, excluded:Array<Int>)
+	override function getNeighbors(map:Tilemap, from:Int, excluded:Array<Int>)
 	{
 		var neighbors = [];
 		var inBound = getInBoundDirections(map, from);
@@ -208,7 +325,7 @@ class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
 	 * @param from	The tile index we're moving from.
 	 * @return DirectionHelper use fields like u,r,d,l or dl
 	 */
-	function getInBoundDirections(map:FlxBaseTilemap<FlxObject>, from:Int)
+	function getInBoundDirections(map:Tilemap, from:Int)
 	{
 		var x = getX(map, from);
 		var y = getY(map, from);
@@ -227,13 +344,13 @@ class FlxTilemapDiagonalPathPolicy extends FlxTilemapPathPolicy
 	 * @param to	The tile index we're moving from.
 	 * @param dir	The direction we came from.
 	 */
-	function canGo(map:FlxBaseTilemap<FlxObject>, to:Int, dir:FlxDirectionFlags)
+	function canGo(map:Tilemap, to:Int, dir:FlxDirectionFlags)
 	{
 		//Todo: check direction flags individually
 		return getTileCollisionsByIndex(map, to) == NONE;
 	}
 
-	override function getDistance(map:FlxBaseTilemap<FlxObject>, from:Int, to:Int):Int
+	override function getDistance(map:Tilemap, from:Int, to:Int):Int
 	{
 		if (diagonalPolicy != NONE && (getX(map, from) != getX(map, to)) && (getY(map, from) != getY(map, to)))
 		{
@@ -300,12 +417,34 @@ class FlxTilemapPathData
 		
 		// Start at the end, check `moves` iteratively to see the neighbor that reached here first
 		var currentIndex = endIndex;
-		while(currentIndex != startIndex)
+		while(currentIndex != -1)
 		{
 			path.unshift(currentIndex);
 			currentIndex = moves[currentIndex];
 		}
 		
+		if (path[0] != startIndex)
+			FlxG.log.error("getPathIndices ended up somewhere other than the start");
+		
 		return path;
 	}
+}
+
+
+@:enum abstract FlxTilemapDiagonalPolicy(Int)
+{
+	/**
+	 * No diagonal movement allowed when calculating the path
+	 */
+	var NONE = 0;
+
+	/**
+	 * Diagonal movement costs the same as orthogonal movement
+	 */
+	var NORMAL = 1;
+
+	/**
+	 * Diagonal movement costs one more than orthogonal movement
+	 */
+	var WIDE = 2;
 }
