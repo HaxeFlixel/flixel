@@ -867,7 +867,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):FlxPathfinderData
 	{
-		return getDiagonalPathfinder(diagonalPolicy).compute(cast this, startIndex, endIndex, stopOnEnd);
+		return getDiagonalPathfinder(diagonalPolicy).computePathData(cast this, startIndex, endIndex, stopOnEnd);
 	}
 
 	inline function getDiagonalPathfinder(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxPathfinder

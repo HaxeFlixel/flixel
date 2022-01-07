@@ -11,6 +11,14 @@ using flixel.util.FlxArrayUtil;
 /** This typedef it easier to convert FlxTilemapPathPolicy to use type params later */
 private typedef Tilemap = FlxBaseTilemap<FlxObject>;
 
+/**
+ * Used to find paths in a FlxBaseTilemap. extend this class and override
+ * `getNeighbors` and `getDistance` to create you're own! For top-down maps, it may
+ * be wiser to extend FlxDiagonalPathfinder, as it already has a lot of basic helpers.
+ * 
+ * To use, either call `myPathfinder.findPath(myMap, start, end)` or
+ * `myMap.findPathCustom(myPathfinder, start, end)`
+ */
 class FlxPathfinder
 {
 	/**
@@ -58,7 +66,7 @@ class FlxPathfinder
 			return null;
 
 		// Figure out how far each of the tiles is from the starting tile
-		var data = compute(map, startIndex, endIndex);
+		var data = computePathData(map, startIndex, endIndex);
 		if (data == null)
 			return null;
 
@@ -152,7 +160,7 @@ class FlxPathfinder
 	 * @param	stopOnEnd	Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function compute(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxPathfinderData
+	public function computePathData(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):FlxPathfinderData
 	{
 		/* the shortest distance it took to get to each index */
 		var data = new FlxPathfinderData(map.widthInTiles * map.heightInTiles, startIndex, endIndex);
@@ -265,6 +273,9 @@ class FlxPathfinder
 	}
 }
 
+/**
+ * 
+ */
 class FlxDiagonalPathfinder extends FlxPathfinder
 {
 	var diagonalPolicy:FlxTilemapDiagonalPolicy;
