@@ -43,9 +43,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		 0, 199, 0, 0,  0, 202, 0, 203, 0, 0, 0, 0,  0, 208, 0, 209
 	];
 	
-	static var diagonalPolicyNone(default, null) = new FlxDiagonalPathfinder(NONE);
-	static var diagonalPolicyNormal(default, null) = new FlxDiagonalPathfinder(NORMAL);
-	static var diagonalPolicyWide(default, null) = new FlxDiagonalPathfinder(WIDE);
+	static var diagonalPathfinder = new FlxDiagonalPathfinder();
 
 	public var widthInTiles(default, null):Int = 0;
 
@@ -872,12 +870,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	inline function getDiagonalPathfinder(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxPathfinder
 	{
-		return switch(diagonalPolicy)
-		{
-			case NONE: diagonalPolicyNone;
-			case NORMAL: diagonalPolicyNormal;
-			case WIDE: diagonalPolicyWide;
-		}
+		diagonalPathfinder.diagonalPolicy = diagonalPolicy;
+		return diagonalPathfinder;
 	}
 
 	/**

@@ -313,9 +313,9 @@ class FlxTypedPathfinder<Data:FlxPathfinderData>
 	 */
 	function hasValidInitialData(data:Data):Bool
 	{
-		return data.getTileCollisionsByIndex(data.startIndex) == NONE
-			&& data.getTileCollisionsByIndex(data.endIndex) == NONE
-			&& data.hasValidStartEnd();
+		return data.hasValidStartEnd()
+			&& data.getTileCollisionsByIndex(data.startIndex) == NONE
+			&& data.getTileCollisionsByIndex(data.endIndex) == NONE;
 	}
 }
 
@@ -324,9 +324,9 @@ class FlxTypedPathfinder<Data:FlxPathfinderData>
  */
 class FlxDiagonalPathfinder extends FlxPathfinder
 {
-	var diagonalPolicy:FlxTilemapDiagonalPolicy;
+	public var diagonalPolicy:FlxTilemapDiagonalPolicy;
 
-	public function new(diagonalPolicy:FlxTilemapDiagonalPolicy)
+	public function new(diagonalPolicy:FlxTilemapDiagonalPolicy = NONE)
 	{
 		super();
 
