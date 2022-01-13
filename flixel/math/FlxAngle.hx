@@ -272,7 +272,7 @@ class FlxAngle
 	 * @param	X		x position
 	 * @param	Y		y position
 	 * @param	point	Optional FlxPoint if you don't want a new one created
-	 * @return	The point in polar coords (x = Radius (degrees), y = Angle)
+	 * @return	The point in polar coords (x = Radius, y = Angle (degrees))
 	 */
 	public static function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
 	{
@@ -281,7 +281,7 @@ class FlxAngle
 			p = FlxPoint.get();
 
 		p.x = Math.sqrt((X * X) + (Y * Y));
-		p.y = Math.atan2(Y, X) * TO_DEG;
+		p.y = degreesFromOrigin(X, Y);
 		return p;
 	}
 
