@@ -53,7 +53,7 @@ class FlxSwipe
 
 	inline function get_angle():Float
 	{
-		return startPosition.angleBetween(endPosition);
+		return startPosition.degreesTo(endPosition);
 	}
 
 	inline function get_duration():Float
