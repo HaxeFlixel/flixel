@@ -401,8 +401,7 @@ class FlxPath implements IFlxDestroyable
 		{
 			var velocity:FlxVector = object.velocity.copyFrom(node).subtractPoint(_point);
 			velocity.length = speed;
-			// rotate -90 so the sprite is upright when going straight right.
-			angle = velocity.degrees - 90;
+			angle = velocity.degrees;
 		}
 	}
 
