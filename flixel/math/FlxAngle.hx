@@ -54,6 +54,43 @@ class FlxAngle
 	public static var TO_RAD(get, never):Float;
 
 	/**
+	 * Calculates the angle from (0, 0) to (x, y), in radians
+	 * @param x The x distance from the origin
+	 * @param y The y distance from the origin
+	 * @return The angle in radians between -PI to PI
+	 */
+	public static inline function radiansFromOrigin(x:Float, y:Float)
+	{
+		return angleFromOrigin(x, y, false);
+	}
+
+	/**
+	 * Calculates the angle from (0, 0) to (x, y), in degrees
+	 * @param x The x distance from the origin
+	 * @param y The y distance from the origin
+	 * @return The angle in degrees between -180 to 180
+	 */
+	public static inline function degreesFromOrigin(x:Float, y:Float)
+	{
+		return angleFromOrigin(x, y, true);
+	}
+
+	/**
+	 * Calculates the angle from (0, 0) to (x, y)
+	 * @param x         The x distance from the origin
+	 * @param y         The y distance from the origin
+	 * @param asDegrees If true, it gives the value in degrees
+	 * @return The angle, either in degrees, between -180 and 180 or in radians, between -PI and PI
+	 */
+	public static inline function angleFromOrigin(x:Float, y:Float, asDegrees:Bool = false)
+	{
+		return if (asDegrees)
+				Math.atan2(y, x) * TO_DEG;
+			else
+				Math.atan2(y, x);
+	}
+
+	/**
 	 * Keeps an angle value between -180 and +180 by wrapping it
 	 * e.g an angle of +270 will be converted to -90
 	 * Should be called whenever the angle is updated on a FlxSprite to stop it from going insane.
@@ -114,10 +151,7 @@ class FlxAngle
 		var dx:Float = (SpriteB.x + SpriteB.origin.x) - (SpriteA.x + SpriteA.origin.x);
 		var dy:Float = (SpriteB.y + SpriteB.origin.y) - (SpriteA.y + SpriteA.origin.y);
 
-		if (AsDegrees)
-			return asDegrees(Math.atan2(dy, dx));
-		else
-			return Math.atan2(dy, dx);
+		return angleFromOrigin(dx, dy, AsDegrees);
 	}
 
 	/**
@@ -136,10 +170,7 @@ class FlxAngle
 
 		Target.putWeak();
 
-		if (AsDegrees)
-			return asDegrees(Math.atan2(dy, dx));
-		else
-			return Math.atan2(dy, dx);
+		return angleFromOrigin(dx, dy, AsDegrees);
 	}
 
 	#if FLX_MOUSE
@@ -164,10 +195,7 @@ class FlxAngle
 
 		p.put();
 
-		if (AsDegrees)
-			return asDegrees(Math.atan2(dy, dx));
-		else
-			return Math.atan2(dy, dx);
+		return angleFromOrigin(dx, dy, AsDegrees);
 	}
 	#end
 
@@ -191,10 +219,7 @@ class FlxAngle
 
 		p.put();
 
-		if (AsDegrees)
-			return asDegrees(Math.atan2(dy, dx));
-		else
-			return Math.atan2(dy, dx);
+		return angleFromOrigin(dx, dy, AsDegrees);
 	}
 	#end
 
