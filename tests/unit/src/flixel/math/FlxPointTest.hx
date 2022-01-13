@@ -21,6 +21,8 @@ class FlxPointTest extends FlxTest
 		point2.set(10, 10);
 
 		Assert.isTrue(point1.equals(point2));
+
+		FlxAssert.pointsEqual(point1, point2);
 	}
 
 	@Test
@@ -30,5 +32,7 @@ class FlxPointTest extends FlxTest
 		point2.set(10, 10);
 
 		Assert.isFalse(point1.equals(point2));
+
+		FlxAssert.pointsNotEqual(point1, point2);
 	}
 }
