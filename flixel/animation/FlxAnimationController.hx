@@ -196,9 +196,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipY       Whether the frames should be flipped vertically.
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
-	{
-		_list.push(Name);
-		
+	{	
 		// Check _animations frames
 		var framesToAdd:Array<Int> = Frames;
 		var numFrames:Int = framesToAdd.length - 1;
@@ -393,8 +391,6 @@ class FlxAnimationController implements IFlxDestroyable
 	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false,
 			FlipY:Bool = false):Void
 	{
-		_list.push(Name);
-		
 		if (_sprite.frames != null)
 		{
 			var frameIndices:Array<Int> = new Array<Int>();
@@ -475,8 +471,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
-		_list.push(Name);
-		
 		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
@@ -797,7 +791,14 @@ class FlxAnimationController implements IFlxDestroyable
 		
 	function get_list():Array<String>
 	{
-		return _list;
+		var arrayNames:Array<String> = [];
+		for (i in _animations)
+		{
+			if (!arrayNames.contains(i.name))
+				arrayNames.push(i.name);
+		}
+		
+		return _list = arrayNames;
 	}
 
 	inline function get_curAnim():FlxAnimation
