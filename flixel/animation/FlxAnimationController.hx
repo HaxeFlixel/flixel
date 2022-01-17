@@ -31,7 +31,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Gets or sets a list with all the added animations (warning: can be `null`).
 	 */
-	public var list(get, never):Array<String>;
+	public var list(get, set):Array<String>;
 	
 	/**
 	 * Pause or resume the current animation.
@@ -799,6 +799,29 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		
 		return _list = arrayNames;
+	}
+	
+	function set_list(value:Array<String>):Array<String>
+	{
+		if (value.length > _list.length)
+		{
+			FlxG.log.warn("value Exceeds the amount of names currently!");
+			return _list;
+		}
+		var savePrevAnims:Array<FlxAnimation> = [];
+		
+		for (i in _animations)
+		{
+			savePrevAnims.push(i);
+		}
+		_animations = new Map<String, FlxAnimation>();
+		for (i in 0...value.length)
+		{
+			savePrevAnims[i].name = value[i];
+			_animations.set(value[i], savePrevAnims[i]);
+		}
+
+		return _list = value;
 	}
 
 	inline function get_curAnim():FlxAnimation
