@@ -644,6 +644,15 @@ class FlxObject extends FlxBasic
 	 */
 	public var allowCollisions(default, set):FlxDirectionFlags = ANY;
 
+	/** DEPRECATED
+	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
+	 * (makes sense for horizontally-moving platforms in platformers for example).
+	 * 
+	 * Apart from having a weird typo, this has been deprecated for collisionXDrag, which allows more options.
+	 */
+	@:deprecated("Use `collisionXDrag`, instead. Note the corrected spelling: `collis(i)onXDrag")
+	public var collisonXDrag(get, set):Bool;
+
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
 	 * (makes sense for horizontally-moving platforms in platformers for example). Use values
@@ -1361,6 +1370,19 @@ class FlxObject extends FlxBasic
 	function set_allowCollisions(Value:FlxDirectionFlags):FlxDirectionFlags
 	{
 		return allowCollisions = Value;
+	}
+
+	@:noCompletion
+	function get_collisonXDrag():Bool
+	{
+		return collisionXDrag == IMMOVABLE;
+	}
+
+	@:noCompletion
+	function set_collisonXDrag(Value:Bool):Bool
+	{
+		collisionXDrag = Value ? IMMOVABLE : NEVER;
+		return Value;
 	}
 
 	#if FLX_DEBUG
