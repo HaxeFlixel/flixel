@@ -805,20 +805,30 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (value.length > _list.length)
 		{
-			FlxG.log.warn("value Exceeds the amount of names currently!");
+			FlxG.log.warn("value exceeds the amount of animation names!");
 			return _list;
 		}
+
 		var savePrevAnims:Array<FlxAnimation> = [];
 		
 		for (i in _animations)
 		{
 			savePrevAnims.push(i);
 		}
+
 		_animations = new Map<String, FlxAnimation>();
-		for (i in 0...value.length)
+
+		for (i in 0...savePrevAnims.length)
 		{
-			savePrevAnims[i].name = value[i];
-			_animations.set(value[i], savePrevAnims[i]);
+			if (value[i] != null)
+			{
+				savePrevAnims[i].name = value[i];
+				_animations.set(value[i], savePrevAnims[i]);
+			}
+			else
+			{
+				_animations.set(savePrevAnims[i].name, savePrevAnims[i]);
+			}
 		}
 
 		return _list = value;
