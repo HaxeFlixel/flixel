@@ -646,16 +646,19 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
-	 * (makes sense for horizontally-moving platforms in platformers for example).
-	 */
-	public var collisionXDrag = CollisionDragType.IMMOVABLE;
-	
-	/**
-	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
-	 * (for sticking to vertically-moving platforms in platformers for example).
+	 * (makes sense for horizontally-moving platforms in platformers for example). Use values
+	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
 	 * @since 4.11.0
 	 */
-	public var collisionYDrag = CollisionDragType.NEVER;
+	public var collisionXDrag:CollisionDragType = IMMOVABLE;
+
+	/**
+	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
+	 * (for sticking to vertically-moving platforms in platformers for example). Use values
+	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
+	 * @since 4.11.0
+	 */
+	public var collisionYDrag:CollisionDragType = NEVER;
 
 	#if FLX_DEBUG
 	/**
