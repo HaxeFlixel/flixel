@@ -113,6 +113,39 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.isFalse(anim.flipY);
 	}
 
+	@Test // #2473
+	function testExists()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim", [0, 1, 0], 15);
+
+		Assert.isTrue(sprite.animation.exists("anim"));
+		Assert.isFalse(sprite.animation.exists("fake"));
+	}
+
+	@Test // #2473
+	function testNameList()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim1", [0, 1, 0], 15);
+		sprite.animation.add("anim2", [0, 1, 0], 15);
+
+		var names = sprite.animation.getNameList();
+		Assert.isTrue(names.indexOf("anim1") != -1, 'Expected names to contain "anim1"');
+		Assert.isTrue(names.indexOf("anim2") != -1, 'Expected names to contain "anim2"');
+	}
+
+	@Test // #2473
+	function testAnimationList()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim1", [0, 1, 0], 15);
+		sprite.animation.add("anim2", [0, 1, 0], 15);
+
+		var list = sprite.animation.getAnimationList();
+		Assert.areEqual(2, list.length);
+	}
+
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);

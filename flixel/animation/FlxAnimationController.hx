@@ -27,7 +27,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Gets or sets the currently playing animation (warning: can be `null`).
 	 */
 	public var name(get, set):String;
-	
+
 	/**
 	 * Pause or resume the current animation.
 	 */
@@ -79,7 +79,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
 	var _animations(default, null):Map<String, FlxAnimation>;
-	
+
 	var _prerotated:FlxPrerotatedAnimation;
 
 	public function new(Sprite:FlxSprite)
@@ -185,7 +185,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipY       Whether the frames should be flipped vertically.
 	 */
 	public function add(Name:String, Frames:Array<Int>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
-	{	
+	{
 		// Check _animations frames
 		var framesToAdd:Array<Int> = Frames;
 		var numFrames:Int = framesToAdd.length - 1;
@@ -780,8 +780,9 @@ class FlxAnimationController implements IFlxDestroyable
 
 	/**
 	 * Gets a list with all the animations that are added in a sprite.
-	 * WARNING: Do not confuse with `getNameList`, this function gets the whole parameters
+	 * WARNING: Do not confuse with `getNameList`, this function returns the animation instances
 	 * @return an array with all the animations.
+	 * @since 4.11.0
 	 */
 	public function getAnimationList():Array<FlxAnimation>
 	{
@@ -797,8 +798,9 @@ class FlxAnimationController implements IFlxDestroyable
 
 	/**
 	 * Gets a list with all the name animations that are added in a sprite
-	 * WARNING: Do not confuse with `getList`, this function gets only the names of the anims.
+	 * WARNING: Do not confuse with `getAnimationList`, this function returns the animation names
 	 * @return an array with all the animation names in it.
+	 * @since 4.11.0
 	 */
 	public function getNameList():Array<String>
 	{
@@ -814,6 +816,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Checks if an animation exists by it's name.
 	 * @param name The animation name.
+	 * @since 4.11.0
 	 */
 	public function exists(name:String):Bool
 	{
@@ -824,6 +827,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Renames the animation with a new name.
 	 * @param oldName the name that is replaced.
 	 * @param newName the name that replaces the old one.
+	 * @since 4.11.0
 	 */
 	public function rename(oldName:String, newName:String)
 	{
