@@ -102,13 +102,11 @@ class FlxAnimationController implements IFlxDestroyable
 
 	public function copyFrom(controller:FlxAnimationController):FlxAnimationController
 	{
-		_list = [];
 		destroyAnimations();
 
 		for (anim in controller._animations)
 		{
 			add(anim.name, anim.frames, anim.frameRate, anim.looped, anim.flipX, anim.flipY);
-			_list.push(anim.name);
 		}
 
 		if (controller._prerotated != null)
