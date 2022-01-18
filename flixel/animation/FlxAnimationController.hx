@@ -804,7 +804,17 @@ class FlxAnimationController implements IFlxDestroyable
 
 	public function exists(name:String):Bool
 	{
+		#if (haxe > "4.0.5")
 		return nameList().contains(name);
+		#else
+		for (i in 0...nameList().length)
+		{
+			if (nameList[i] == name)
+				return true;
+		}
+
+		return false;
+		#end
 	}
 	
 	public function renameAnimation(name:String, value:String)
