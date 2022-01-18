@@ -261,18 +261,18 @@ class FlxObjectTest extends FlxTest
 		rect = object.getRotatedBounds(rect);
 		var sqrt2 = Math.sqrt(2);
 		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
-		assertRectsNear(rect, expected);
+		FlxAssert.rectsNear(expected, rect);
 		
 		var w = object.width = 20;
 		var h = object.height = 15;
 		object.angle =  90;
-		assertRectsNear(object.getRotatedBounds(rect), expected.set(-h, 0, h, w), 0.0001);
+		FlxAssert.rectsNear(expected.set(-h, 0, h, w), object.getRotatedBounds(rect), 0.0001);
 		object.angle = 180;
-		assertRectsNear(object.getRotatedBounds(rect), expected.set(-w, -h, w, h), 0.0001);
+		FlxAssert.rectsNear(expected.set(-w, -h, w, h), object.getRotatedBounds(rect), 0.0001);
 		object.angle = 270;
-		assertRectsNear(object.getRotatedBounds(rect), expected.set(0, -w, h, w), 0.0001);
+		FlxAssert.rectsNear(expected.set(0, -w, h, w), object.getRotatedBounds(rect), 0.0001);
 		object.angle = 360;
-		assertRectsNear(object.getRotatedBounds(rect), expected.set(0, 0, w, h), 0.0001);
+		FlxAssert.rectsNear(expected.set(0, 0, w, h), object.getRotatedBounds(rect), 0.0001);
 		
 		object.width = 1;
 		object.height = 1;
@@ -281,28 +281,9 @@ class FlxObjectTest extends FlxTest
 		var cos30 = Math.cos(30/180*Math.PI);
 		var sumSinCos30 = 0.5 + cos30;//sin30 = 0.5
 		expected.set(-cos30, -sumSinCos30, sumSinCos30, sumSinCos30);
-		assertRectsNear(rect, expected);
+		FlxAssert.rectsNear(expected, rect);
 		
 		expected.put();
-	}
-	
-	static function isNear(actual:Float, expected:Float, margin:Float = 0.001):Bool
-	{
-		return actual >= expected - margin && actual <= expected + margin;
-	}
-	
-	static function assertRectsNear(actual:FlxRect, expected:FlxRect, margin:Float = 0.001, ?info:PosInfos):Void
-	{
-		var areNear = isNear(actual.x, expected.x, margin)
-			&& isNear(actual.y, expected.y, margin)
-			&& isNear(actual.width, expected.width, margin)
-			&& isNear(actual.height, expected.height, margin);
-		
-		if (areNear)
-			Assert.assertionCount++;
-		else
-			Assert.fail('\nExpected\n   ($expected (+/- $margin)\nbut was\n   $actual\n', info);
-		
 	}
 }
 
