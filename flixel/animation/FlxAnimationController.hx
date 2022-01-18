@@ -29,11 +29,6 @@ class FlxAnimationController implements IFlxDestroyable
 	public var name(get, set):String;
 	
 	/**
-	 * Gets or sets a list with all the added animations (warning: can be `null`).
-	 */
-	public var list(get, set):Array<String>;
-	
-	/**
 	 * Pause or resume the current animation.
 	 */
 	public var paused(get, set):Bool;
@@ -84,10 +79,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
 	var _animations(default, null):Map<String, FlxAnimation>;
-	/**
-	 * Internal, list of all animations animations.
-	 */
-	var _list:Array<String>;
 	
 	var _prerotated:FlxPrerotatedAnimation;
 
@@ -789,49 +780,56 @@ class FlxAnimationController implements IFlxDestroyable
 		return AnimName;
 	}
 		
-	function get_list():Array<String>
+	public function animationList():Array<FlxAnimation>
 	{
-		var arrayNames:Array<String> = [];
+		var arrayNames:Array<FlxAnimation> = [];
+		
 		for (i in _animations)
 		{
-			if (!arrayNames.contains(i.name))
-				arrayNames.push(i.name);
-		}
-		
-		return _list = arrayNames;
-	}
-	
-	function set_list(value:Array<String>):Array<String>
-	{
-		if (value.length > _list.length)
-		{
-			FlxG.log.warn("value exceeds the amount of animation names!");
-			return _list;
+			arrayNames.push(i);
 		}
 
-		var savePrevAnims:Array<FlxAnimation> = [];
-		
-		for (i in _animations)
+		return arrayNames;
+	}
+
+	public function namesList():Array<String>
+	{
+		var anims = animationList();
+		var names:Array<String> = [];
+		for (i in 0...anims.length)
 		{
-			savePrevAnims.push(i);
+			names.push(anims[i].name);
 		}
+
+		return names;
+	}
+
+	public function exists(name:String):Bool
+	{
+		if (namesList().contains(name))
+			return true;
+		else
+			return false;
+	}
+	
+	public function renameName(name:String, value:String)
+	{
+		var prevAnims = animationList();
 
 		_animations = new Map<String, FlxAnimation>();
 
-		for (i in 0...savePrevAnims.length)
+		for (i in 0...prevAnims.length)
 		{
-			if (value[i] != null)
+			if (prevAnims[i].name == name)
 			{
-				savePrevAnims[i].name = value[i];
-				_animations.set(value[i], savePrevAnims[i]);
+				prevAnims[i].name = value;
+				_animations.set(value, prevAnims[i]);
 			}
 			else
 			{
-				_animations.set(savePrevAnims[i].name, savePrevAnims[i]);
+				_animations.set(prevAnims[i].name, prevAnims[i]);
 			}
 		}
-
-		return _list = value;
 	}
 
 	inline function get_curAnim():FlxAnimation
