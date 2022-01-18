@@ -792,7 +792,7 @@ class FlxAnimationController implements IFlxDestroyable
 		return arrayNames;
 	}
 
-	public function namesList():Array<String>
+	public function nameList():Array<String>
 	{
 		var anims = animationList();
 		var names:Array<String> = [];
@@ -806,13 +806,10 @@ class FlxAnimationController implements IFlxDestroyable
 
 	public function exists(name:String):Bool
 	{
-		if (namesList().contains(name))
-			return true;
-		else
-			return false;
+		return nameList().contains(name);
 	}
 	
-	public function renameName(name:String, value:String)
+	public function renameAnimation(name:String, value:String)
 	{
 		var prevAnims = animationList();
 
