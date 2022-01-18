@@ -9,7 +9,7 @@
 [![Haxelib License](https://badgen.net/haxelib/license/flixel)](LICENSE.md)
 [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) 
 
-[![](images/showcase.png)](http://www.haxeflixel.com/showcase)
+[![](images/showcase.png)](https://haxeflixel.com/showcase)
 
 ## Links
 
