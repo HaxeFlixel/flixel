@@ -777,64 +777,65 @@ class FlxAnimationController implements IFlxDestroyable
 		play(AnimName);
 		return AnimName;
 	}
-		
-	public function animationList():Array<FlxAnimation>
+
+	/**
+	 * Gets a list with all the animations that are added in a sprite.
+	 * WARNING: Do not confuse with `getNameList`, this function gets the whole parameters
+	 * @return an array with all the animations.
+	 */
+	public function getAnimationList():Array<FlxAnimation>
 	{
-		var arrayNames:Array<FlxAnimation> = [];
+		var animList:Array<FlxAnimation> = [];
 		
-		for (i in _animations)
+		for (anims in _animations)
 		{
-			arrayNames.push(i);
+			animList.push(anims);
 		}
 
-		return arrayNames;
+		return animList;
 	}
 
-	public function nameList():Array<String>
+	/**
+	 * Gets a list with all the name animations that are added in a sprite
+	 * WARNING: Do not confuse with `getList`, this function gets only the names of the anims.
+	 * @return an array with all the animation names in it.
+	 */
+	public function getNameList():Array<String>
 	{
-		var anims = animationList();
-		var names:Array<String> = [];
-		for (i in 0...anims.length)
+		var namesList:Array<String> = [];
+		for (names in _animations.keys())
 		{
-			names.push(anims[i].name);
+			namesList.push(names);
 		}
 
-		return names;
+		return namesList;
 	}
 
+	/**
+	 * Checks if an animation exists by it's name.
+	 * @param name The animation name.
+	 */
 	public function exists(name:String):Bool
 	{
-		#if (haxe > "4.0.5")
-		return nameList().contains(name);
-		#else
-		for (i in 0...nameList().length)
-		{
-			if (nameList[i] == name)
-				return true;
-		}
-
-		return false;
-		#end
+		return _animations.exists(name);
 	}
-	
-	public function renameAnimation(name:String, value:String)
+
+	/**
+	 * Renames the animation with a new name.
+	 * @param oldName the name that is replaced.
+	 * @param newName the name that replaces the old one.
+	 */
+	public function rename(oldName:String, newName:String)
 	{
-		var prevAnims = animationList();
-
-		_animations = new Map<String, FlxAnimation>();
-
-		for (i in 0...prevAnims.length)
+		var anim = _animations.get(oldName);
+		if (anim == null)
 		{
-			if (prevAnims[i].name == name)
-			{
-				prevAnims[i].name = value;
-				_animations.set(value, prevAnims[i]);
-			}
-			else
-			{
-				_animations.set(prevAnims[i].name, prevAnims[i]);
-			}
+			FlxG.log.warn('No animation called "$oldName"');
+			return;
 		}
+		_animations.set(newName, anim);
+		anim.name = newName;
+		_animations.remove(oldName);
 	}
 
 	inline function get_curAnim():FlxAnimation
