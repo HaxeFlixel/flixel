@@ -155,12 +155,10 @@ class FlxAnimationControllerTest extends FlxTest
 		sprite.animation.rename("anim1", "anim3");
 		sprite.animation.rename("anim2", "anim4");
 		
-		var names = sprite.animation.getNameList();
-		
-		Assert.isFalse(names.indexOf("anim1") != 1, 'Expected names to not contain "anim1"');
-		Assert.isFalse(names.indexOf("anim2") != 1, 'Expected names to not contain "anim2"');
-		Assert.isTrue(names.indexOf("anim3") != 1, 'Expected names to contain "anim3"');
-		Assert.isTrue(names.indexOf("anim4") != 1, 'Expected names to contain "anim4"');
+		Assert.isFalse(sprite.animation.exists("anim1"), 'found "anim1"');
+		Assert.isFalse(sprite.animation.exists("anim2"), 'found "anim2"');
+		Assert.isTrue (sprite.animation.exists("anim3"), 'missing "anim3"');
+		Assert.isTrue (sprite.animation.exists("anim4"), 'missing "anim4"');
 	}
 
 	function loadSpriteSheet():Void
