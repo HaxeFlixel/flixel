@@ -18,6 +18,7 @@ import flixel.FlxSprite;
 import flixel.effects.FlxFlicker;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.tweens.FlxTween;
 
@@ -122,7 +123,7 @@ class FlxSpriteUtil
 		}
 		return sprite;
 	}
-
+	
 	/**
 	 * Makes sure a FlxSprite doesn't leave the specified area - most common use case is to call this every frame in update().
 	 * If you call this without specifying an area, the game area (FlxG.width / height as max) will be used. Takes the graphic size into account.
@@ -154,6 +155,82 @@ class FlxSpriteUtil
 		return sprite;
 	}
 
+	/**
+	 * Checks the sprite's screen bounds of the FlxSprite and keeps them within the camera by wrapping it around.
+	 *
+	 * @param	sprite	The FlxSprite to wrap.
+	 * @param	camera	The camera to wrap around. If left null, `FlxG.camera` is used.
+	 * @param	edges	The edges FROM which to wrap. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
+	 * @return	The FlxSprite for chaining
+	 * @since 4.11.0
+	 */
+	public static function cameraWrap(sprite:FlxSprite, ?camera:FlxCamera, edges:FlxDirectionFlags = ANY):FlxSprite
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+		
+		var spriteBounds = sprite.getScreenBounds(camera);
+		var viewBounds = camera.getViewRect();
+		var offset = FlxPoint.get(
+			sprite.x - spriteBounds.x - camera.scroll.x,
+			sprite.y - spriteBounds.y - camera.scroll.y
+		);
+		
+		if (edges.has(LEFT) && spriteBounds.right < viewBounds.left)
+			sprite.x = camera.scroll.x + viewBounds.right + offset.x;
+		else if (edges.has(RIGHT) && spriteBounds.left > viewBounds.right)
+			sprite.x = camera.scroll.x + viewBounds.x + offset.x - spriteBounds.width;
+		
+		if (edges.has(UP) && spriteBounds.bottom < viewBounds.top)
+			sprite.y = camera.scroll.y + viewBounds.bottom + offset.y;
+		else if (edges.has(DOWN) && spriteBounds.top > viewBounds.bottom)
+			sprite.y = camera.scroll.y + viewBounds.y + offset.y - spriteBounds.height;
+		
+		spriteBounds.put();
+		viewBounds.put();
+		offset.put();
+		
+		return sprite;
+	}
+	
+	/**
+	 * Checks the sprite's screen bounds and keeps it entirely within the camera.
+	 *
+	 * @param	sprite	The FlxSprite to restrict.
+	 * @param	camera	The camera resitricting the sprite. If left null, `FlxG.camera` is used.
+	 * @param	edges	The edges to restrict. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
+	 * @return	The FlxSprite for chaining
+	 * @since 4.11.0
+	 */
+	public static function cameraBound(sprite:FlxSprite, ?camera:FlxCamera, edges:FlxDirectionFlags = ANY):FlxSprite
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+		
+		var spriteBounds = sprite.getScreenBounds(camera);
+		var viewBounds = camera.getViewRect();
+		var offset = FlxPoint.get(
+			sprite.x - spriteBounds.x - camera.scroll.x,
+			sprite.y - spriteBounds.y - camera.scroll.y
+		);
+		
+		if (edges.has(LEFT) && spriteBounds.left < viewBounds.left)
+			sprite.x = camera.scroll.x + viewBounds.x + offset.x;
+		else if (edges.has(RIGHT) && spriteBounds.right > viewBounds.right)
+			sprite.x = camera.scroll.x + viewBounds.right + offset.x - spriteBounds.width;
+		
+		if (edges.has(UP) && spriteBounds.top < viewBounds.top)
+			sprite.y = camera.scroll.y + viewBounds.y + offset.y;
+		else if (edges.has(DOWN) && spriteBounds.bottom > viewBounds.bottom)
+			sprite.y = camera.scroll.y + viewBounds.bottom + offset.y - spriteBounds.height;
+		
+		spriteBounds.put();
+		viewBounds.put();
+		offset.put();
+		
+		return sprite;
+	}
+	
 	/**
 	 * Aligns a set of FlxObjects so there is equal spacing between them
 	 *
