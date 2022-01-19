@@ -4,9 +4,11 @@ import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
+import flixel.math.FlxRect;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
 import massive.munit.Assert;
+import haxe.PosInfos;
 
 class FlxObjectTest extends FlxTest
 {
@@ -275,6 +277,43 @@ class FlxObjectTest extends FlxTest
 		
 		offCenter.put();
 		center.put();
+	}
+
+	@Test
+	function testgetRotatedBounds()
+	{
+		var expected = FlxRect.get();
+		var rect = FlxRect.get();
+		
+		var object = new FlxObject(0, 0, 1, 1);
+		
+		object.angle = 45;
+		rect = object.getRotatedBounds(rect);
+		var sqrt2 = Math.sqrt(2);
+		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
+		FlxAssert.rectsNear(expected, rect);
+		
+		var w = object.width = 20;
+		var h = object.height = 15;
+		object.angle =  90;
+		FlxAssert.rectsNear(expected.set(-h, 0, h, w), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 180;
+		FlxAssert.rectsNear(expected.set(-w, -h, w, h), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 270;
+		FlxAssert.rectsNear(expected.set(0, -w, h, w), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 360;
+		FlxAssert.rectsNear(expected.set(0, 0, w, h), object.getRotatedBounds(rect), 0.0001);
+		
+		object.width = 1;
+		object.height = 1;
+		object.angle = 210;
+		rect = object.getRotatedBounds(rect);
+		var cos30 = Math.cos(30/180*Math.PI);
+		var sumSinCos30 = 0.5 + cos30;//sin30 = 0.5
+		expected.set(-cos30, -sumSinCos30, sumSinCos30, sumSinCos30);
+		FlxAssert.rectsNear(expected, rect);
+		
+		expected.put();
 	}
 }
 

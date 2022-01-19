@@ -1069,10 +1069,10 @@ class FlxObject extends FlxBasic
 	 */
 	public function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes != FlxAxes.Y) // X or XY
+		if (axes.match(X | XY))
 			x = (FlxG.width - width) / 2;
 
-		if (axes != FlxAxes.X) // Y or XY
+		if (axes.match(Y | XY))
 			y = (FlxG.height - height) / 2;
 
 		return this;
@@ -1190,6 +1190,24 @@ class FlxObject extends FlxBasic
 		}
 
 		return _rect;
+	}
+	
+	/**
+	 * Calculates the smallest globally aligned bounding box that encompasses this
+	 * object's width and height, at its current rotation.
+	 * Note, if called on a `FlxSprite`, the origin is used, but scale and offset are ignored.
+	 * Use `getScreenBounds` to use these properties.
+	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 * @since 4.11.0
+	 */
+	public function getRotatedBounds(?newRect:FlxRect)
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		newRect.set(x, y, width, height);
+		return newRect.getRotatedBounds(angle, null, newRect);
 	}
 
 	/**

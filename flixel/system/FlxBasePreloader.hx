@@ -195,7 +195,7 @@ class FlxBasePreloader extends DefaultPreloader
 
 	/**
 	 * This function is called EXTERNALLY once the movie has actually finished being loaded.
-	 * Highly recommended you DO NO override.
+	 * Highly recommended you DO NOT override.
 	 */
 	override public function onLoaded()
 	{

@@ -47,47 +47,12 @@ class FlxCollision
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var considerRotation:Bool = (Contact.angle != 0) || (Target.angle != 0);
+		var advanced = (Contact.angle != 0) || (Target.angle != 0)
+			|| Contact.scale.x != 1 || Contact.scale.y != 1
+			|| Target.scale.x != 1 || Target.scale.y != 1;
 
-		Camera = (Camera != null) ? Camera : FlxG.camera;
-
-		pointA.x = Contact.x - Std.int(Camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
-		pointA.y = Contact.y - Std.int(Camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
-
-		pointB.x = Target.x - Std.int(Camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
-		pointB.y = Target.y - Std.int(Camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
-
-		if (considerRotation)
-		{
-			// find the center of both sprites
-			Contact.origin.copyTo(centerA);
-			Target.origin.copyTo(centerB);
-
-			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
-			var lengthA = centerA.length;
-			boundsA.x = (pointA.x + centerA.x - lengthA);
-			boundsA.y = (pointA.y + centerA.y - lengthA);
-			boundsA.width = lengthA * 2;
-			boundsA.height = boundsA.width;
-
-			var lengthB = centerB.length;
-			boundsB.x = (pointB.x + centerB.x - lengthB);
-			boundsB.y = (pointB.y + centerB.y - lengthB);
-			boundsB.width = lengthB * 2;
-			boundsB.height = boundsB.width;
-		}
-		else
-		{
-			boundsA.x = pointA.x;
-			boundsA.y = pointA.y;
-			boundsA.width = Contact.frameWidth;
-			boundsA.height = Contact.frameHeight;
-
-			boundsB.x = pointB.x;
-			boundsB.y = pointB.y;
-			boundsB.width = Target.frameWidth;
-			boundsB.height = Target.frameHeight;
-		}
+		Contact.getScreenBounds(boundsA, Camera);
+		Target.getScreenBounds(boundsB, Camera);
 
 		boundsA.intersection(boundsB, intersect.set());
 
@@ -113,7 +78,7 @@ class FlxCollision
 		var overlapHeight:Int = Std.int(intersect.height);
 
 		// More complicated case, if either of the sprites is rotated
-		if (considerRotation)
+		if (advanced)
 		{
 			testMatrix.identity();
 
@@ -122,9 +87,11 @@ class FlxCollision
 
 			// rotate the matrix according to angle
 			testMatrix.rotate(Contact.angle * FlxAngle.TO_RAD);
+			testMatrix.scale(Contact.scale.x, Contact.scale.y);
 
 			// translate it back!
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
+			
 
 			// prepare an empty canvas
 			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
@@ -137,6 +104,7 @@ class FlxCollision
 			testMatrix.identity();
 			testMatrix.translate(-Target.origin.x, -Target.origin.y);
 			testMatrix.rotate(Target.angle * FlxAngle.TO_RAD);
+			testMatrix.scale(Target.scale.x, Target.scale.y);
 			testMatrix.translate(boundsB.width / 2, boundsB.height / 2);
 
 			var testB2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsB.width), Math.floor(boundsB.height), true, FlxColor.TRANSPARENT, false);
@@ -201,7 +169,7 @@ class FlxCollision
 			}
 		}
 
-		if (considerRotation)
+		if (advanced)
 		{
 			FlxBitmapDataPool.put(testA);
 			FlxBitmapDataPool.put(testB);

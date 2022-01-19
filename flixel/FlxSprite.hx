@@ -1000,51 +1000,12 @@ class FlxSprite extends FlxObject
 	 * @param   Camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
 	 * @return  Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(?Camera:FlxCamera):Bool
+	override public function isOnScreen(?camera:FlxCamera):Bool
 	{
-		if (Camera == null)
-			Camera = FlxG.camera;
-
-		var minX:Float = x - offset.x - Camera.scroll.x * scrollFactor.x;
-		var minY:Float = y - offset.y - Camera.scroll.y * scrollFactor.y;
-
-		if ((angle == 0 || bakedRotationAngle > 0) && (scale.x == 1) && (scale.y == 1))
-		{
-			_point.set(minX, minY);
-			return Camera.containsPoint(_point, frameWidth, frameHeight);
-		}
-
-		var radiusX:Float = _halfSize.x;
-		var radiusY:Float = _halfSize.y;
-
-		var ox:Float = origin.x;
-		if (ox != radiusX)
-		{
-			var x1:Float = Math.abs(ox);
-			var x2:Float = Math.abs(frameWidth - ox);
-			radiusX = Math.max(x2, x1);
-		}
-
-		var oy:Float = origin.y;
-		if (oy != radiusY)
-		{
-			var y1:Float = Math.abs(oy);
-			var y2:Float = Math.abs(frameHeight - oy);
-			radiusY = Math.max(y2, y1);
-		}
-
-		radiusX *= Math.abs(scale.x);
-		radiusY *= Math.abs(scale.y);
-		var radius:Float = Math.max(radiusX, radiusY);
-		radius *= FlxMath.SQUARE_ROOT_OF_TWO;
-
-		minX += ox - radius;
-		minY += oy - radius;
-
-		var doubleRadius:Float = 2 * radius;
-
-		_point.set(minX, minY);
-		return Camera.containsPoint(_point, doubleRadius, doubleRadius);
+		if (camera == null)
+			camera = FlxG.camera;
+		
+		return camera.containsRect(getScreenBounds(_rect, camera));
 	}
 
 	/**
@@ -1074,6 +1035,52 @@ class FlxSprite extends FlxObject
 		return result;
 	}
 
+	/**
+	 * Calculates the smallest globally aligned bounding box that encompasses this
+	 * sprite's width and height, at its current rotation.
+	 * Note, if called on a `FlxSprite`, the origin is used, but scale and offset are ignored.
+	 * Use `getScreenBounds` to use these properties.
+	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 * @since 4.11.0
+	 */
+	override function getRotatedBounds(?newRect:FlxRect)
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		newRect.set(x, y, width, height);
+		return newRect.getRotatedBounds(angle, origin, newRect);
+	}
+	
+	/**
+	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
+	 * would be displayed. Honors scrollFactor, rotation, scale, offset and origin.
+	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
+	 * @param camera  Optional camera used for scrollFactor, if null `FlxG.camera` is used.
+	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
+	 * @since 4.11.0
+	 */
+	public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		if (newRect == null)
+			newRect = FlxRect.get();
+		
+		if (camera == null)
+			camera = FlxG.camera;
+		
+		newRect.setPosition(x, y);
+		if (pixelPerfectPosition)
+			newRect.floor();
+		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
+		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - scaledOrigin.x;
+		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - scaledOrigin.y;
+		if (isPixelPerfectRender(camera))
+			newRect.floor();
+		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
+		return newRect.getRotatedBounds(angle, scaledOrigin, newRect);
+	}
+	
 	/**
 	 * Set how a sprite flips when facing in a particular direction.
 	 *
