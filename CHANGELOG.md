@@ -1,3 +1,31 @@
+
+4.11.0 (TBD)
+------------------------------
+#### Dependencies:
+
+- Dropped support for haxe 3, use 4.0.5 or higher
+
+#### New features:
+
+- `FlxAnimationController`: added `getAnimationList`, `getNameList`, `exists` and `rename` ([#2473](https://github.com/HaxeFlixel/flixel/pull/2473))
+- `FlxRect`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: added `getScreenBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSpriteUtil`: added `cameraWrap` and `cameraBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `getViewRect` and `containsRect` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+
+#### Bugfixes:
+
+- 
+
+#### Changes and improvements:
+
+- `FlxCollision`: improved `pixelPerfectCheck` performance, now honors scale ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: improved `isOnScreen` accuracy ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `putWeak` call in `containsPoint` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: `screenCenter` defaults to `XY` rather than `null` ([#2441](https://github.com/HaxeFlixel/flixel/pull/2441))
+- `FlxState`: Clarify restrictions in state constructors ([#2479](https://github.com/HaxeFlixel/flixel/pull/2479))
+
 4.10.0 (September 12, 2021)
 ------------------------------
 #### New features:
