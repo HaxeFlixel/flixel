@@ -87,6 +87,24 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.areEqual(1, group.members[0].alpha);
 	}
 	
+	@Test // #2306
+	function testReset()
+	{
+		for (i in 0...group.length)
+		{
+			var member = group.members[i];
+			member.x = i * 5;
+		}
+		
+		group.reset(10, 0);
+		
+		for (i in 0...group.length)
+		{
+			var member = group.members[i];
+			FlxAssert.areNear(group.x + i * 5, member.x);
+		}
+	}
+	
 	@Test
 	/** #2306
 	 * Make sure members' kill() and revive() are actually called,

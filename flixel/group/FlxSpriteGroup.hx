@@ -570,9 +570,16 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		
 		// prevent any transformations on children, mainly from setter overrides
 		_skipTransformChildren = true;
-		super.revive();
+		
+		// recreate super.reset() but call super.revive instead of revive
+		touching = NONE;
+		wasTouching = NONE;
 		x = X;
 		y = Y;
+		// last.set(x, y); // null on sprite groups
+		velocity.set();
+		super.revive();
+		
 		_skipTransformChildren = false;
 	}
 
