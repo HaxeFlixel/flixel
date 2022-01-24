@@ -3,9 +3,12 @@ package flixel;
 import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
-import flixel.tile.FlxTilemap;
 import flixel.math.FlxMath;
+import flixel.math.FlxRect;
+import flixel.tile.FlxTilemap;
+import flixel.util.FlxDirectionFlags;
 import massive.munit.Assert;
+import haxe.PosInfos;
 
 class FlxObjectTest extends FlxTest
 {
@@ -92,33 +95,37 @@ class FlxObjectTest extends FlxTest
 	}
 
 	@Test
-	@Ignore("Failing on Travis right now for some reason")
+	// @Ignore("Failing on Travis right now for some reason")
 	function testUpdateTouchingFlagsHorizontal():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(20, 2, 10, 6);
+		var object1 = new FlxObject(5, 0, 10, 10);
+		var object2 = new FlxObject(20, 0, 10, 10);
+		object1.velocity.set(10, 0);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
-		object1.velocity.set(20, 0);
-		step(20);
+		step(60);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.RIGHT, object1.touching);
-		Assert.areEqual(FlxObject.LEFT, object2.touching);
+		Assert.isTrue (object1.touching.has(RIGHT));
+		Assert.isTrue (object2.touching.has(LEFT));
+		Assert.isFalse(object1.touching.has(DOWN));
+		Assert.isFalse(object2.touching.has(UP));
 	}
 
 	@Test // #1556
-	@Ignore("Failing on Travis right now for some reason")
+	// @Ignore("Failing on Travis right now for some reason")
 	function testUpdateTouchingFlagsVertical():Void
 	{
-		var object1 = new FlxObject(0, 0, 10, 10);
-		var object2 = new FlxObject(2, 20, 10, 6);
+		var object1 = new FlxObject(0, 5, 10, 10);
+		var object2 = new FlxObject(0, 20, 10, 10);
+		object1.velocity.set(0, 10);
 		FlxG.state.add(object1);
 		FlxG.state.add(object2);
-		object1.velocity.set(0, 20);
-		step(20);
+		step(60);
 		Assert.isTrue(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.DOWN, object1.touching);
-		Assert.areEqual(FlxObject.UP, object2.touching);
+		Assert.isTrue (object1.touching.has(DOWN));
+		Assert.isTrue (object2.touching.has(UP));
+		Assert.isFalse(object1.touching.has(RIGHT));
+		Assert.isFalse(object2.touching.has(LEFT));
 	}
 
 	@Test // #1556
@@ -132,8 +139,8 @@ class FlxObjectTest extends FlxTest
 		object1.velocity.set(0, 20);
 		step(20);
 		Assert.isFalse(FlxG.overlap(object1, object2, null, FlxObject.updateTouchingFlags));
-		Assert.areEqual(FlxObject.NONE, object1.touching);
-		Assert.areEqual(FlxObject.NONE, object2.touching);
+		Assert.areEqual(FlxDirectionFlags.NONE, object1.touching);
+		Assert.areEqual(FlxDirectionFlags.NONE, object2.touching);
 	}
 
 	@Test
@@ -240,6 +247,73 @@ class FlxObjectTest extends FlxTest
 
 		assertOnScreen(0, FlxG.height - 1);
 		assertNotOnScreen(0, FlxG.height);
+	}
+	
+	@Test
+	function testScreenCenter()
+	{
+		var center = FlxPoint.get((FlxG.width - object1.width) / 2, (FlxG.height - object1.height) / 2);
+		var offCenter = center.copyTo().add(1000, 1000);
+		
+		object1.setPosition(offCenter.x, offCenter.y);
+		object1.screenCenter(X);
+		Assert.areEqual(object1.x, center.x);
+		Assert.areEqual(object1.y, offCenter.y);
+
+		object1.setPosition(offCenter.x, offCenter.y);
+		object1.screenCenter(Y);
+		Assert.areEqual(object1.x, offCenter.x);
+		Assert.areEqual(object1.y, center.y);
+
+		object1.setPosition(offCenter.x, offCenter.y);
+		object1.screenCenter(XY);
+		Assert.areEqual(object1.x, center.x);
+		Assert.areEqual(object1.y, center.y);
+
+		object1.setPosition(offCenter.x, offCenter.y);
+		object1.screenCenter();
+		Assert.areEqual(object1.x, center.x);
+		Assert.areEqual(object1.y, center.y);
+		
+		offCenter.put();
+		center.put();
+	}
+
+	@Test
+	function testgetRotatedBounds()
+	{
+		var expected = FlxRect.get();
+		var rect = FlxRect.get();
+		
+		var object = new FlxObject(0, 0, 1, 1);
+		
+		object.angle = 45;
+		rect = object.getRotatedBounds(rect);
+		var sqrt2 = Math.sqrt(2);
+		expected.set(-0.5 * sqrt2, 0, sqrt2, sqrt2);
+		FlxAssert.rectsNear(expected, rect);
+		
+		var w = object.width = 20;
+		var h = object.height = 15;
+		object.angle =  90;
+		FlxAssert.rectsNear(expected.set(-h, 0, h, w), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 180;
+		FlxAssert.rectsNear(expected.set(-w, -h, w, h), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 270;
+		FlxAssert.rectsNear(expected.set(0, -w, h, w), object.getRotatedBounds(rect), 0.0001);
+		object.angle = 360;
+		FlxAssert.rectsNear(expected.set(0, 0, w, h), object.getRotatedBounds(rect), 0.0001);
+		
+		object.width = 1;
+		object.height = 1;
+		object.angle = 210;
+		rect = object.getRotatedBounds(rect);
+		var cos30 = Math.cos(30/180*Math.PI);
+		var sumSinCos30 = 0.5 + cos30;//sin30 = 0.5
+		expected.set(-cos30, -sumSinCos30, sumSinCos30, sumSinCos30);
+		FlxAssert.rectsNear(expected, rect);
+		
+		expected.put();
 	}
 }
 
