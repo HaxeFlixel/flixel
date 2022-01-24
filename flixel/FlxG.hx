@@ -172,7 +172,9 @@ class FlxG
 	public static var height(default, null):Int;
 
 	/**
-	 * The scale mode the game should use - available policies are found in `flixel.system.scaleModes`.
+	 * The scale mode the game should use.
+	 * HaxeFlixel includes several available scale modes, which are located in `flixel.system.scaleModes`.
+	 * However, you may also create a class which extends `BaseScaleMode`, and override its behavior according to your needs.
 	 */
 	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 

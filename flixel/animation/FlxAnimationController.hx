@@ -778,6 +778,70 @@ class FlxAnimationController implements IFlxDestroyable
 		return AnimName;
 	}
 
+	/**
+	 * Gets a list with all the animations that are added in a sprite.
+	 * WARNING: Do not confuse with `getNameList`, this function returns the animation instances
+	 * @return an array with all the animations.
+	 * @since 4.11.0
+	 */
+	public function getAnimationList():Array<FlxAnimation>
+	{
+		var animList:Array<FlxAnimation> = [];
+		
+		for (anims in _animations)
+		{
+			animList.push(anims);
+		}
+
+		return animList;
+	}
+
+	/**
+	 * Gets a list with all the name animations that are added in a sprite
+	 * WARNING: Do not confuse with `getAnimationList`, this function returns the animation names
+	 * @return an array with all the animation names in it.
+	 * @since 4.11.0
+	 */
+	public function getNameList():Array<String>
+	{
+		var namesList:Array<String> = [];
+		for (names in _animations.keys())
+		{
+			namesList.push(names);
+		}
+
+		return namesList;
+	}
+
+	/**
+	 * Checks if an animation exists by it's name.
+	 * @param name The animation name.
+	 * @since 4.11.0
+	 */
+	public function exists(name:String):Bool
+	{
+		return _animations.exists(name);
+	}
+
+	/**
+	 * Renames the animation with a new name.
+	 * @param oldName the name that is replaced.
+	 * @param newName the name that replaces the old one.
+	 * @since 4.11.0
+	 */
+	public function rename(oldName:String, newName:String)
+	{
+		var anim = _animations.get(oldName);
+		if (anim == null)
+		{
+			FlxG.log.warn('No animation called "$oldName"');
+			return;
+		}
+		_animations.set(newName, anim);
+		anim.name = newName;
+		_animations.remove(oldName);
+	}
+
 	inline function get_curAnim():FlxAnimation
 	{
 		return _curAnim;

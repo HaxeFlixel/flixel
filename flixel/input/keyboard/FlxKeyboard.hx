@@ -8,6 +8,7 @@ import flixel.system.replay.CodeValuePair;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
+ * Normally accessed via `FlxG.keys`. Example: `FlxG.keys.justPressed.A`
  */
 class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 {
