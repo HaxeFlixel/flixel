@@ -199,7 +199,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * @return Whether the provided key has the specified status.
 	 */
 	@:allow(flixel.input.FlxBaseKeyList)
-	inline function checkStatusUnsafe(KeyCode:Key, Status:FlxInputState)
+	function checkStatusUnsafe(KeyCode:Key, Status:FlxInputState)
 	{
 		return getKey(KeyCode).hasState(Status);
 	}
