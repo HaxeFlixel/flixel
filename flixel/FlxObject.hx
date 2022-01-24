@@ -1064,18 +1064,16 @@ class FlxObject extends FlxBasic
 	/**
 	 * Centers this `FlxObject` on the screen, either by the x axis, y axis, or both.
 	 *
-	 * @param   axes   On what axes to center the object - default is `FlxAxes.XY` / both.
+	 * @param   axes   On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both. 
 	 * @return  This FlxObject for chaining
 	 */
-	public function screenCenter(?axes:FlxAxes):FlxObject
+	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes == null)
-			axes = FlxAxes.XY;
+		if (axes.match(X | XY))
+			x = (FlxG.width - width) / 2;
 
-		if (axes != FlxAxes.Y)
-			x = (FlxG.width / 2) - (width / 2);
-		if (axes != FlxAxes.X)
-			y = (FlxG.height / 2) - (height / 2);
+		if (axes.match(Y | XY))
+			y = (FlxG.height - height) / 2;
 
 		return this;
 	}
