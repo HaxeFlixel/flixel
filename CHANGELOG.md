@@ -16,7 +16,7 @@
 
 #### Bugfixes:
 
-- 
+- Fixed segmentation faults on Hashlink for linux ([#2487](https://github.com/HaxeFlixel/flixel/pull/2487))
 
 #### Changes and improvements:
 
