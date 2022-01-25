@@ -83,7 +83,8 @@ class FlxState extends FlxGroup
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
-	 * We do NOT recommend overriding the constructor, unless you want some crazy unpredictable things to happen!
+	 * We do NOT recommend initializing any flixel objects or utilizing flixel features in
+	 * the constructor, unless you want some crazy unpredictable things to happen!
 	 */
 	public function create():Void {}
 

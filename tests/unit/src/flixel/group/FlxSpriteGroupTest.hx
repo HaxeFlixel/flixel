@@ -86,4 +86,73 @@ class FlxSpriteGroupTest extends FlxTest
 		group.alpha = 1;
 		Assert.areEqual(1, group.members[0].alpha);
 	}
+	
+	@Test // #2306
+	function testReset()
+	{
+		for (i in 0...group.length)
+		{
+			var member = group.members[i];
+			member.x = i * 5;
+		}
+		
+		group.reset(10, 0);
+		
+		for (i in 0...group.length)
+		{
+			var member = group.members[i];
+			FlxAssert.areNear(group.x + i * 5, member.x);
+		}
+	}
+	
+	@Test
+	/** #2306
+	 * Make sure members' kill() and revive() are actually called,
+	 * rather than just checking their exists/alive values.
+	 */
+	function testKillRevive2306()
+	{
+		var member1 = new Member();
+		group.add(member1);
+		Assert.isFalse(member1.killed);
+		Assert.isFalse(member1.revived);
+		
+		var member2 = new Member();
+		Assert.isFalse(member1.killed);
+		Assert.isFalse(member1.revived);
+		group.add(member2);
+		
+		member2.exists = false;
+		group.kill();
+		Assert.isTrue(member1.killed);
+		Assert.isFalse(member1.revived);
+		Assert.isFalse(member2.killed);
+		Assert.isFalse(member2.revived);
+		
+		member2.exists = true;
+		group.revive();
+		Assert.isTrue(member1.killed);
+		Assert.isTrue(member1.revived);
+		Assert.isFalse(member2.killed);
+		Assert.isFalse(member2.revived);
+		return group;
+	}
+}
+
+class Member extends FlxSprite
+{
+	public var killed = false;
+	public var revived = false;
+	
+	override function kill()
+	{
+		killed = true;
+		super.kill();
+	}
+	
+	override function revive()
+	{
+		revived = true;
+		super.revive();
+	}
 }
