@@ -17,7 +17,7 @@
 #### Bugfixes:
 
 - Fixed segmentation faults on Hashlink for linux ([#2487](https://github.com/HaxeFlixel/flixel/pull/2487))
-- `FlxSpriteGroup`: `kill` and `revive` call the respective function on members ([#2423](https://github.com/HaxeFlixel/flixel/pull/2423))
+- `FlxSpriteGroup`: `kill`, `revive` and `revive` call the respective function on members ([#2423](https://github.com/HaxeFlixel/flixel/pull/2423))
 
 #### Changes and improvements:
 
