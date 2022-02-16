@@ -84,6 +84,7 @@ class FlxSave implements IFlxDestroyable
 			return false;
 		}
 		data = _sharedObject.data;
+		@:privateAccess
 		if (FlxG.sound != null)
 			FlxG.sound.loadSavedPrefs();
 		return true;
