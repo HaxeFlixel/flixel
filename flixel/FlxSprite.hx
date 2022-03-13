@@ -158,7 +158,7 @@ class FlxSprite extends FlxObject
 	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
 	 * `0xAARRGGBB` colors, but the alpha value will simply be ignored. To change the opacity use `alpha`.
 	 */
-	public var color(default, set):FlxColor = 0xffffff;
+	public var color(default, set):FlxColor = 0x00000000;
 
 	public var colorTransform(default, null):ColorTransform;
 
@@ -866,7 +866,7 @@ class FlxSprite extends FlxObject
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 
-		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
+		useColorTransform = alpha != 1 || color != 0x00000000 || colorTransform.hasRGBOffsets();
 		dirty = true;
 	}
 
@@ -875,11 +875,17 @@ class FlxSprite extends FlxObject
 		if (colorTransform == null)
 			colorTransform = new ColorTransform();
 
-		useColorTransform = alpha != 1 || color != 0xffffff;
+		useColorTransform = alpha != 1 || color != 0x00000000;
 		if (useColorTransform)
-			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
+		{
+			colorTransform.setMultipliers(colorTransform.redMultiplier - color.alphaFloat, colorTransform.greenMultiplier - color.alphaFloat, colorTransform.blueMultiplier - color.alphaFloat, alpha);
+			colorTransform.setOffsets(Math.round(color.red * (color.alphaFloat - 0.01)), Math.round(color.green * (color.alphaFloat - 0.01)), Math.round(color.blue * (color.alphaFloat - 0.01)), 0);
+		}
 		else
+		{
 			colorTransform.setMultipliers(1, 1, 1, 1);
+			colorTransform.setOffsets(0, 0, 0, 0);
+		}
 
 		dirty = true;
 	}
