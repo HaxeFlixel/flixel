@@ -68,8 +68,8 @@ class FlxDefines
 
 	static function checkDependencyCompatibility()
 	{
-		#if (haxe_ver < "3.4")
-		abortVersion("Haxe", "3.4.0 or newer", "haxe_ver", (macro null).pos);
+		#if (haxe_ver < "4.0.5")
+		abortVersion("Haxe", "4.0.5 or newer", "haxe_ver", (macro null).pos);
 		#end
 
 		#if !nme

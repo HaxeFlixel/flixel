@@ -22,7 +22,7 @@ class FlxBaseKeyList
 
 	inline function check(keyCode:Int):Bool
 	{
-		return keyManager.checkStatus(keyCode, status);
+		return keyManager.checkStatusUnsafe(keyCode, status);
 	}
 
 	function get_ANY():Bool
