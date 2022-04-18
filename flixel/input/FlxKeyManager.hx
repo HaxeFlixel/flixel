@@ -150,35 +150,58 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
 	{
-		return switch (KeyCode)
+		/*
+		Note: switch(KeyCode) { case ANY: } causes seg faults with
+		hashlink on linux. This should use ifs, until it is fixed.
+		See: https://github.com/HaxeFlixel/flixel/issues/2318
+		*/
+		
+		if (KeyCode == FlxKey.ANY)
 		{
-			case FlxKey.ANY:
-				switch (Status)
-				{
-					case PRESSED: pressed.ANY;
-					case JUST_PRESSED: justPressed.ANY;
-					case RELEASED: released.ANY;
-					case JUST_RELEASED: justReleased.ANY;
-				}
-			case FlxKey.NONE:
-				switch (Status)
-				{
-					case PRESSED: pressed.NONE;
-					case JUST_PRESSED: justPressed.NONE;
-					case RELEASED: released.NONE;
-					case JUST_RELEASED: justReleased.NONE;
-				}
-			default:
-				var key = getKey(KeyCode);
-				if (key == null)
-				{
-					#if debug
-					throw 'Invalid key code: $KeyCode.';
-					#end
-					return false;
-				}
-				return key.hasState(Status);
+			return switch (Status)
+			{
+				case PRESSED: pressed.ANY;
+				case JUST_PRESSED: justPressed.ANY;
+				case RELEASED: released.ANY;
+				case JUST_RELEASED: justReleased.ANY;
+			}
 		}
+		
+		if (KeyCode == FlxKey.NONE)
+		{
+			return switch (Status)
+			{
+				case PRESSED: pressed.NONE;
+				case JUST_PRESSED: justPressed.NONE;
+				case RELEASED: released.NONE;
+				case JUST_RELEASED: justReleased.NONE;
+			}
+		}
+		
+		if (_keyListMap.exists(KeyCode))
+		{
+			return checkStatusUnsafe(KeyCode, Status);
+		}
+		
+		#if debug
+		throw 'Invalid key code: $KeyCode.';
+		#end
+		return false;
+	}
+
+	/**
+	 * Check the status of a single of key.
+	 * Throws errors on ANY, NONE or invalid keys.
+	 * Use `checkStatus`, for most cases.
+	 * 
+	 * @param KeyCode KeyCode to be checked.
+	 * @param Status  The key state to check for.
+	 * @return Whether the provided key has the specified status.
+	 */
+	@:allow(flixel.input.FlxBaseKeyList)
+	function checkStatusUnsafe(KeyCode:Key, Status:FlxInputState)
+	{
+		return getKey(KeyCode).hasState(Status);
 	}
 
 	/**

@@ -113,6 +113,54 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.isFalse(anim.flipY);
 	}
 
+	@Test // #2473
+	function testExists()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim", [0, 1, 0], 15);
+
+		Assert.isTrue(sprite.animation.exists("anim"));
+		Assert.isFalse(sprite.animation.exists("fake"));
+	}
+
+	@Test // #2473
+	function testNameList()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim1", [0, 1, 0], 15);
+		sprite.animation.add("anim2", [0, 1, 0], 15);
+
+		var names = sprite.animation.getNameList();
+		Assert.isTrue(names.indexOf("anim1") != -1, 'Expected names to contain "anim1"');
+		Assert.isTrue(names.indexOf("anim2") != -1, 'Expected names to contain "anim2"');
+	}
+
+	@Test // #2473
+	function testAnimationList()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim1", [0, 1, 0], 15);
+		sprite.animation.add("anim2", [0, 1, 0], 15);
+
+		var list = sprite.animation.getAnimationList();
+		Assert.areEqual(2, list.length);
+	}
+	@Test // #2473
+	function testRename()
+	{
+		loadSpriteSheet();
+		sprite.animation.add("anim1", [0, 1, 0], 15);
+		sprite.animation.add("anim2", [0, 1, 0], 15);
+		
+		sprite.animation.rename("anim1", "anim3");
+		sprite.animation.rename("anim2", "anim4");
+		
+		Assert.isFalse(sprite.animation.exists("anim1"), 'found "anim1"');
+		Assert.isFalse(sprite.animation.exists("anim2"), 'found "anim2"');
+		Assert.isTrue (sprite.animation.exists("anim3"), 'missing "anim3"');
+		Assert.isTrue (sprite.animation.exists("anim4"), 'missing "anim4"');
+	}
+
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);
