@@ -419,12 +419,12 @@ class SoundFrontEnd
 	 */
 	function loadSavedPrefs():Void
 	{
-		if (FlxG.save.data.volume != null)
+		if (FlxG.save.data.volume == null)
 		{
 			volume = FlxG.save.data.volume;
 		}
 
-		if (FlxG.save.data.mute != null)
+		if (FlxG.save.data.mute == null)
 		{
 			muted = FlxG.save.data.mute;
 		}
