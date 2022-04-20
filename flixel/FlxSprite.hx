@@ -438,7 +438,7 @@ class FlxSprite extends FlxObject
 			// we assume that source graphic has one row frame animation with equal width and height
 			var brushSize:Int = brush.height;
 			var framesNum:Int = Std.int(brush.width / brushSize);
-			Frame = (framesNum > Frame) ? Frame : (Frame % framesNum);
+			Frame = (framesNum > Frame || framesNum == 0) ? Frame : (Frame % framesNum);
 			key += ":" + Frame;
 
 			var full:BitmapData = brush;

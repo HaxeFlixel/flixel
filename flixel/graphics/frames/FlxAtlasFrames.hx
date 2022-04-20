@@ -9,13 +9,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxAssets.FlxTexturePackerSource;
-import haxe.Json;
 import openfl.Assets;
-#if haxe4
+import haxe.Json;
 import haxe.xml.Access;
-#else
-import haxe.xml.Fast as Access;
-#end
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
