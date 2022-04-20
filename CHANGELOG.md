@@ -1,3 +1,16 @@
+5.0.0 (TBD)
+------------------------------
+#### New features:
+
+- `FlxMouse`: added `released`, `releasedRight` and `releasedMiddle` ([#2496](https://github.com/HaxeFlixel/flixel/pull/2496))
+
+#### Bugfixes:
+
+- `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
+
+#### Changes and improvements:
+
+- `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
 
 4.11.0 (January 26, 2022)
 ------------------------------
