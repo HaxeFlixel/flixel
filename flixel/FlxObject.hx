@@ -242,7 +242,7 @@ class FlxObject extends FlxBasic
 
 			if (!obj1immovable && !obj2immovable)
 			{
-				#if FLX_LEGACY_COLLISION
+				#if FLX_LEGACY_COLLISION_4
 				overlap *= 0.5;
 				Object1.x = Object1.x - overlap;
 				Object2.x += overlap;
@@ -424,7 +424,7 @@ class FlxObject extends FlxBasic
 
 			if (!obj1immovable && !obj2immovable)
 			{
-				#if FLX_LEGACY_COLLISION
+				#if FLX_LEGACY_COLLISION_4
 				overlap *= 0.5;
 				Object1.y = Object1.y - overlap;
 				Object2.y += overlap;
