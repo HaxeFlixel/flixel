@@ -257,9 +257,6 @@ class FlxObject extends FlxBasic
 				#else
 				Object1.x -= overlap / 2;
 				Object2.x += overlap / 2;
-				// this causes stacking issues
-				// Object1.x -= overlap * mass2 / massSum;
-				// Object2.x += overlap * mass1 / massSum;
 				
 				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / massSum;
 				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / massSum;
@@ -439,9 +436,6 @@ class FlxObject extends FlxBasic
 				#else
 				Object1.y -= overlap / 2;
 				Object2.y += overlap / 2;
-				// this causes stacking issues
-				// Object1.y -= overlap * mass2 / massSum;
-				// Object2.y += overlap * mass1 / massSum;
 				
 				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / massSum;
 				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / massSum;
