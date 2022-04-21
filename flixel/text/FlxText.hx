@@ -7,7 +7,6 @@ import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.atlas.FlxAtlas;
@@ -204,7 +203,7 @@ class FlxText extends FlxSprite
 		textField.sharpness = 100;
 		textField.height = (Text.length <= 0) ? 1 : 10;
 
-		allowCollisions = FlxObject.NONE;
+		allowCollisions = NONE;
 		moves = false;
 
 		drawFrame();
@@ -872,6 +871,12 @@ class FlxText extends FlxSprite
 
 			return;
 		}
+		#elseif !web
+		// Fix to render desktop and mobile text in the same visual location as web
+		_matrix.translate(-1, -1); // left and up
+		graphic.draw(textField, _matrix);
+		_matrix.translate(1, 1); // return to center
+		return;
 		#end
 
 		graphic.draw(textField, _matrix);

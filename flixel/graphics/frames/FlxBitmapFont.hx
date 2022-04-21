@@ -13,11 +13,7 @@ import flixel.system.FlxAssets.FlxAngelCodeSource;
 import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
-#if haxe4
 import haxe.xml.Access;
-#else
-import haxe.xml.Fast as Access;
-#end
 
 using flixel.util.FlxUnicodeUtil;
 

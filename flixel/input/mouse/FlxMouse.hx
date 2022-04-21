@@ -80,6 +80,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var justPressed(get, never):Bool;
 
 	/**
+	 * Check to see if the left mouse button is currently not pressed.
+	 */
+	public var released(get, never):Bool;
+
+	/**
 	 * Check to see if the left mouse button has just been released.
 	 */
 	public var justReleased(get, never):Bool;
@@ -100,6 +105,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Check to see if the right mouse button has just been pressed.
 	 */
 	public var justPressedRight(get, never):Bool;
+	
+	/**
+	 * Check to see if the right mouse button is currently not pressed.
+	 */
+	public var releasedRight(get, never):Bool;
 
 	/**
 	 * Check to see if the right mouse button has just been released.
@@ -121,6 +131,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Check to see if the middle mouse button has just been pressed.
 	 */
 	public var justPressedMiddle(get, never):Bool;
+
+	/**
+	 * Check to see if the middle mouse button is currently not pressed.
+	 */
+	public var releasedMiddle(get, never):Bool;
 
 	/**
 	 * Check to see if the middle mouse button has just been released.
@@ -550,6 +565,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	inline function get_justPressed():Bool
 		return _leftButton.justPressed;
 
+	inline function get_released():Bool
+		return _leftButton.released;
+
 	inline function get_justReleased():Bool
 		return _leftButton.justReleased;
 
@@ -563,6 +581,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	inline function get_justPressedRight():Bool
 		return _rightButton.justPressed;
 
+	inline function get_releasedRight():Bool
+		return _rightButton.released;
+
 	inline function get_justReleasedRight():Bool
 		return _rightButton.justReleased;
 
@@ -574,6 +595,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	inline function get_justPressedMiddle():Bool
 		return _middleButton.justPressed;
+
+	inline function get_releasedMiddle():Bool
+		return _middleButton.released;
 
 	inline function get_justReleasedMiddle():Bool
 		return _middleButton.justReleased;

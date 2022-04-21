@@ -345,7 +345,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		length += _startingIndex;
 
 		for (i in 0...length)
-			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : FlxObject.NONE);
+			_tileObjects[i] = new FlxTile(this, i, _tileWidth, _tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
 
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
@@ -475,7 +475,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(Camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != FlxObject.ANY);
+					drawDebugBoundingBox(Camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY);
 				}
 
 				columnIndex++;
@@ -671,7 +671,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 					&& ((Object.y + Object.height) > tile.y)
 					&& (Object.y < (tile.y + tile.height));
 
-				if (tile.allowCollisions != FlxObject.NONE)
+				if (tile.allowCollisions != NONE)
 				{
 					if (Callback != null)
 					{
@@ -694,7 +694,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						tile.callbackFunction(tile, Object);
 					}
 
-					if (tile.allowCollisions != FlxObject.NONE)
+					if (tile.allowCollisions != NONE)
 						results = true;
 				}
 
@@ -834,7 +834,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			tileX = Math.floor(curX / _scaledTileWidth);
 			tileY = Math.floor(curY / _scaledTileHeight);
 
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != FlxObject.NONE)
+			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != NONE)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(_scaledTileWidth);
