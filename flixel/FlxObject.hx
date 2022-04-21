@@ -260,8 +260,9 @@ class FlxObject extends FlxBasic
 				Object1.x -= overlap / 2;
 				Object2.x += overlap / 2;
 				
-				var newVel1 = (mass1 * vel1 + mass2 * vel2 + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
-				var newVel2 = (mass2 * vel2 + mass1 * vel1 + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
+				var momentum = mass1 * vel1 + mass2 * vel2;
+				var newVel1 = (momentum + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (momentum + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
 				Object1.velocity.x = newVel1;
 				Object2.velocity.x = newVel2;
 				#end
@@ -441,8 +442,9 @@ class FlxObject extends FlxBasic
 				Object1.y -= overlap / 2;
 				Object2.y += overlap / 2;
 				
-				var newVel1 = (mass1 * vel1 + mass2 * vel2 + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
-				var newVel2 = (mass2 * vel2 + mass1 * vel1 + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
+				var momentum = mass1 * vel1 + mass2 * vel2;
+				var newVel1 = (momentum + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (momentum + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
 				Object1.velocity.y = newVel1;
 				Object2.velocity.y = newVel2;
 				#end
