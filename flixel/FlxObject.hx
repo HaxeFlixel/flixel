@@ -390,9 +390,9 @@ class FlxObject extends FlxBasic
 	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
 	{
 		// can't separate two immovable objects
-		var obj1immovable:Bool = Object1.immovable;
-		var obj2immovable:Bool = Object2.immovable;
-		if (obj1immovable && obj2immovable)
+		var immovable1:Bool = Object1.immovable;
+		var immovable2:Bool = Object2.immovable;
+		if (immovable1 && immovable2)
 		{
 			return false;
 		}
@@ -420,8 +420,10 @@ class FlxObject extends FlxBasic
 			var mass1 = Object1.mass;
 			var mass2 = Object2.mass;
 			var massSum = mass1 + mass2;
+			var elasticity1 = Object1.elasticity;
+			var elasticity2 = Object2.elasticity;
 
-			if (!obj1immovable && !obj2immovable)
+			if (!immovable1 && !immovable2)
 			{
 				#if FLX_LEGACY_COLLISION_4
 				overlap *= 0.5;
@@ -433,27 +435,27 @@ class FlxObject extends FlxBasic
 				var average = (newVel1 + newVel2) * 0.5;
 				newVel1 -= average;
 				newVel2 -= average;
-				Object1.velocity.y = average + newVel1 * Object1.elasticity;
-				Object2.velocity.y = average + newVel2 * Object2.elasticity;
+				Object1.velocity.y = average + newVel1 * elasticity1;
+				Object2.velocity.y = average + newVel2 * elasticity2;
 				#else
 				Object1.y -= overlap / 2;
 				Object2.y += overlap / 2;
 				
-				var newVel1 = (mass1 * vel1 + mass2 * vel2 + Object1.elasticity * mass2 * (vel2 - vel1)) / massSum;
-				var newVel2 = (mass2 * vel2 + mass1 * vel1 + Object2.elasticity * mass1 * (vel1 - vel2)) / massSum;
+				var newVel1 = (mass1 * vel1 + mass2 * vel2 + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (mass2 * vel2 + mass1 * vel1 + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
 				Object1.velocity.y = newVel1;
 				Object2.velocity.y = newVel2;
 				#end
 			}
-			else if (!obj1immovable)
+			else if (!immovable1)
 			{
 				Object1.y -= overlap;
-				Object1.velocity.y = vel2 - vel1 * Object1.elasticity;
+				Object1.velocity.y = vel2 - vel1 * elasticity1;
 			}
-			else if (!obj2immovable)
+			else if (!immovable2)
 			{
 				Object2.y += overlap;
-				Object2.velocity.y = vel1 - vel2 * Object2.elasticity;
+				Object2.velocity.y = vel1 - vel2 * elasticity2;
 			}
 
 			// use collisionDrag properties to determine whether one object
