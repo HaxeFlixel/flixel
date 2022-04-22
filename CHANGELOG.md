@@ -11,6 +11,7 @@
 #### Changes and improvements:
 
 - `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
+- Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
 
 4.11.0 (January 26, 2022)
 ------------------------------
