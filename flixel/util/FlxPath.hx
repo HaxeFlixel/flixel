@@ -380,7 +380,7 @@ class FlxPath implements IFlxDestroyable
 		if (horizontalOnly || _point.y == node.y)
 		{
 			object.velocity.x = (_point.x < node.x) ? speed : -speed;
-			angle = (object.velocity.x < 0) ? -90 : 90;
+			angle = (object.velocity.x < 0) ? 180 : 0;
 
 			if (!horizontalOnly)
 			{
@@ -390,7 +390,7 @@ class FlxPath implements IFlxDestroyable
 		else if (verticalOnly || _point.x == node.x)
 		{
 			object.velocity.y = (_point.y < node.y) ? speed : -speed;
-			angle = (object.velocity.y < 0) ? 0 : 180;
+			angle = (object.velocity.y < 0) ? -90 : 90;
 
 			if (!verticalOnly)
 			{
