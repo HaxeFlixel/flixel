@@ -22,6 +22,8 @@ private enum UserDefines
 	FLX_UNIT_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
+	/* Uses flixel 4.0 legacy collision */
+	FLX_4_LEGACY_COLLISION;
 }
 
 /**
