@@ -1,5 +1,7 @@
 package flixel.system.frontEnds;
 
+import flixel.input.mouse.FlxMouseEvent;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
@@ -115,6 +117,7 @@ class PluginFrontEnd
 	{
 		add(FlxTimer.globalManager = new FlxTimerManager());
 		add(FlxTween.globalManager = new FlxTweenManager());
+		add(FlxMouseEvent.globalManager = new FlxMouseEventManager());
 	}
 
 	/**
