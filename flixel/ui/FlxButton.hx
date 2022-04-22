@@ -57,7 +57,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 		super(X, Y, OnClick);
 
 		for (point in labelOffsets)
-			point.set(point.x - 1, point.y + 3);
+			point.set(point.x, point.y + 3);
 
 		initLabel(Text);
 	}
