@@ -911,10 +911,7 @@ import openfl.geom.Point;
 
 	function get_radians():Float
 	{
-		if (isZero())
-			return 0;
-
-		return Math.atan2(y, x);
+		return FlxAngle.radiansFromOrigin(x, y);
 	}
 
 	inline function set_radians(rads:Float):Float
