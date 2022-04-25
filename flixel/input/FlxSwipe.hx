@@ -44,7 +44,7 @@ class FlxSwipe
 			LabelValuePair.weak("start", startPosition),
 			LabelValuePair.weak("end", endPosition),
 			LabelValuePair.weak("distance", distance),
-			LabelValuePair.weak("angle", angle),
+			LabelValuePair.weak("degrees", degrees),
 			LabelValuePair.weak("duration", duration)
 		]);
 	}
