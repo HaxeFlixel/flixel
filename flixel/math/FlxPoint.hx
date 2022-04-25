@@ -374,11 +374,69 @@ class FlxPoint implements IFlxPooled
 	}
 
 	/**
+	 * Calculates the angle from this to another point.
+	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point   The other point.
+	 * @return  The angle, in radians, between -PI and PI
+	 */
+	public inline function radiansTo(point:FlxPoint):Float
+	{
+		return FlxAngle.radiansFromOrigin(point.x - x, point.y - y);
+	}
+
+	/**
+	 * Calculates the angle from another point to this.
+	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point     The other point.
+	 * @return  The angle, in radians, between -PI and PI
+	 */
+	public inline function radiansFrom(point:FlxPoint):Float
+	{
+		return point.radiansTo(this);
+	}
+
+	/**
+	 * Calculates the angle from this to another point.
+	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point   The other point.
+	 * @return  The angle, in degrees, between -180 and 180
+	 */
+	public inline function degreesTo(point:FlxPoint):Float
+	{
+		return FlxAngle.degreesFromOrigin(point.x - x, point.y - y);
+	}
+
+	/**
+	 * Calculates the angle from another point to this.
+	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point     The other point.
+	 * @return  The angle, in degrees, between -180 and 180
+	 */
+	public inline function degreesFrom(point:FlxPoint):Float
+	{
+		return point.degreesTo(this);
+	}
+
+	/** DEPRECATED
+	 * 
 	 * Calculates the angle between this and another point. 0 degrees points straight up.
+	 * 
+	 * Note: Every other flixel function treats straight right as 0 degrees.
+	 * 
+	 * Also Note: The result is very innacurate.
 	 *
 	 * @param   point   The other point.
 	 * @return  The angle in degrees, between -180 and 180.
 	 */
+	@:deprecated("Use FlxPoint.angleTo instead")
 	public function angleBetween(point:FlxPoint):Float
 	{
 		var x:Float = point.x - x;
