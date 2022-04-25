@@ -230,20 +230,10 @@ class FlxAngle
 	 * @param	AsDegrees		If you need the value in degrees instead of radians, set to true
 	 * @return	The angle (in radians unless AsDegrees is true)
 	 */
+	@:deprecated("FlxAngle.angleFromFacing is deprecated, use flags.degrees.")
 	public static function angleFromFacing(Facing:FlxDirectionFlags, AsDegrees:Bool = false):Float
 	{
-		var degrees = switch (Facing)
-		{
-			case LEFT: 180;
-			case RIGHT: 0;
-			case UP: -90;
-			case DOWN: 90;
-			case f if (f == UP | LEFT): -135;
-			case f if (f == UP | RIGHT): -45;
-			case f if (f == DOWN | LEFT): 135;
-			case f if (f == DOWN | RIGHT): 45;
-			default: 0;
-		}
+		var degrees = Facing.degrees;
 		return AsDegrees ? degrees : asRadians(degrees);
 	}
 
