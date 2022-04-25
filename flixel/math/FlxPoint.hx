@@ -376,6 +376,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Calculates the angle from this to another point.
 	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
 	 *
 	 * @param   point   The other point.
 	 * @return  The angle, in radians, between -PI and PI
@@ -388,6 +389,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Calculates the angle from another point to this.
 	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
 	 *
 	 * @param   point     The other point.
 	 * @return  The angle, in radians, between -PI and PI
@@ -400,6 +402,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Calculates the angle from this to another point.
 	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
 	 *
 	 * @param   point   The other point.
 	 * @return  The angle, in degrees, between -180 and 180
@@ -412,6 +415,7 @@ class FlxPoint implements IFlxPooled
 	/**
 	 * Calculates the angle from another point to this.
 	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
 	 *
 	 * @param   point     The other point.
 	 * @return  The angle, in degrees, between -180 and 180
