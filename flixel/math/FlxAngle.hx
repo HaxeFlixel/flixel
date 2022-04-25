@@ -13,6 +13,7 @@ import flixel.input.touch.FlxTouch;
 
 /**
  * A set of functions related to angle calculations.
+ * In degrees: (down = 90, right = 0, up = -90)
  */
 class FlxAngle
 {
@@ -138,8 +139,7 @@ class FlxAngle
 	}
 
 	/**
-	 * Find the angle (in radians) between the two FlxSprite, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * Find the angle between the two FlxSprite, taking their x/y and origin into account.
 	 *
 	 * @param	SpriteA		The FlxSprite to test from
 	 * @param	SpriteB		The FlxSprite to test to
@@ -155,8 +155,32 @@ class FlxAngle
 	}
 
 	/**
-	 * Find the angle (in radians) between an FlxSprite and an FlxPoint. The source sprite takes its x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * Find the angle (in degrees) between the two FlxSprite, taking their x/y and origin into account.
+	 *
+	 * @param	SpriteA		The FlxSprite to test from
+	 * @param	SpriteB		The FlxSprite to test to
+	 * @return	The angle in degrees
+	 */
+	public static inline function degreesBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Float
+	{
+		return angleBetween(SpriteA, SpriteB, true);
+	}
+
+	/**
+	 * Find the angle (in radians) between the two FlxSprite, taking their x/y and origin into account.
+	 *
+	 * @param	SpriteA		The FlxSprite to test from
+	 * @param	SpriteB		The FlxSprite to test to
+	 * @return	The angle in radians
+	 */
+	public static inline function radiansBetween(SpriteA:FlxSprite, SpriteB:FlxSprite):Float
+	{
+		return angleBetween(SpriteA, SpriteB, false);
+	}
+
+	/**
+	 * Find the angle between an FlxSprite and an FlxPoint.
+	 * The source sprite takes its x/y and origin into account.
 	 *
 	 * @param	Sprite		The FlxSprite to test from
 	 * @param	Target		The FlxPoint to angle the FlxSprite towards
@@ -173,10 +197,36 @@ class FlxAngle
 		return angleFromOrigin(dx, dy, AsDegrees);
 	}
 
+	/**
+	 * Find the angle (in degrees) between an FlxSprite and an FlxPoint.
+	 * The source sprite takes its x/y and origin into account.
+	 *
+	 * @param	Sprite		The FlxSprite to test from
+	 * @param	Target		The FlxPoint to angle the FlxSprite towards
+	 * @return	The angle in degrees
+	 */
+	public static inline function degreesBetweenPoint(Sprite:FlxSprite, Target:FlxPoint):Float
+	{
+		return angleBetweenPoint(Sprite, Target, true);
+	}
+
+	/**
+	 * Find the angle (in radians) between an FlxSprite and an FlxPoint.
+	 * The source sprite takes its x/y and origin into account.
+	 *
+	 * @param	Sprite		The FlxSprite to test from
+	 * @param	Target		The FlxPoint to angle the FlxSprite towards
+	 * @return	The angle in radians
+	 */
+	public static inline function radiansBetweenPoint(Sprite:FlxSprite, Target:FlxPoint):Float
+	{
+		return angleBetweenPoint(Sprite, Target, false);
+	}
+
 	#if FLX_MOUSE
 	/**
-	 * Find the angle (in radians) between an FlxSprite and the mouse, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * Find the angle between an FlxSprite and the mouse,
+	 * taking their **screen** x/y and origin into account.
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @param	AsDegrees	If you need the value in degrees instead of radians, set to true
@@ -184,7 +234,6 @@ class FlxAngle
 	 */
 	public static function angleBetweenMouse(Object:FlxObject, AsDegrees:Bool = false):Float
 	{
-		//	In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		if (Object == null)
 			return 0;
 
@@ -197,12 +246,36 @@ class FlxAngle
 
 		return angleFromOrigin(dx, dy, AsDegrees);
 	}
+
+	/**
+	 * Find the angle (in degrees) between an FlxSprite and the mouse,
+	 * taking their **screen** x/y and origin into account.
+	 *
+	 * @param	Object		The FlxObject to test from
+	 * @return	The angle in degrees
+	 */
+	public static inline function degreesBetweenMouse(Object:FlxObject):Float
+	{
+		return angleBetweenMouse(Object, true);
+	}
+
+	/**
+	 * Find the angle (in radians) between an FlxSprite and the mouse,
+	 * taking their **screen** x/y and origin into account.
+	 *
+	 * @param	Object		The FlxObject to test from
+	 * @return	The angle in radians
+	 */
+	public static inline function radiansBetweenMouse(Object:FlxObject):Float
+	{
+		return angleBetweenMouse(Object, false);
+	}
 	#end
 
 	#if FLX_TOUCH
 	/**
-	 * Find the angle (in radians) between an FlxSprite and a FlxTouch, taking their x/y and origin into account.
-	 * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+	 * Find the angle between an FlxSprite and a FlxTouch,
+	 taking their **screen** x/y and origin into account.
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @param	Touch		The FlxTouch to test to
@@ -220,6 +293,32 @@ class FlxAngle
 		p.put();
 
 		return angleFromOrigin(dx, dy, AsDegrees);
+	}
+
+	/**
+	 * Find the angle (in degrees) between an FlxSprite and a FlxTouch,
+	 taking their **screen** x/y and origin into account.
+	 *
+	 * @param	Object		The FlxObject to test from
+	 * @param	Touch		The FlxTouch to test to
+	 * @return	The angle in degrees
+	 */
+	public static inline function degreesBetweenTouch(Object:FlxObject, Touch:FlxTouch):Float
+	{
+		return angleBetweenTouch(Object, Touch, true);
+	}
+
+	/**
+	 * Find the angle (in radians) between an FlxSprite and a FlxTouch,
+	 taking their **screen** x/y and origin into account.
+	 *
+	 * @param	Object		The FlxObject to test from
+	 * @param	Touch		The FlxTouch to test to
+	 * @return	The angle in radians
+	 */
+	public static inline function radiansBetweenTouch(Object:FlxObject, Touch:FlxTouch):Float
+	{
+		return angleBetweenTouch(Object, Touch, false);
 	}
 	#end
 
@@ -245,6 +344,7 @@ class FlxAngle
 	 * @param	point	Optional FlxPoint if you don't want a new one created
 	 * @return	The point in cartesian coords
 	 */
+	@:deprecated("FlxAngle.getCartesianCoords is deprecated, use FlxVector.setPolarDegrees")
 	public static function getCartesianCoords(Radius:Float, Angle:Float, ?point:FlxPoint):FlxPoint
 	{
 		var p = point;
@@ -264,6 +364,7 @@ class FlxAngle
 	 * @param	point	Optional FlxPoint if you don't want a new one created
 	 * @return	The point in polar coords (x = Radius, y = Angle (degrees))
 	 */
+	@:deprecated("FlxAngle.getCartesianCoords is deprecated, use FlxVector")
 	public static function getPolarCoords(X:Float, Y:Float, ?point:FlxPoint):FlxPoint
 	{
 		var p = point;
