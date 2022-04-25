@@ -226,7 +226,7 @@ class FlxMouseEvent<T:FlxObject> implements IFlxDestroyable
 		this.pixelPerfect = pixelPerfect;
 		this.mouseButtons = (mouseButtons == null) ? [FlxMouseButtonID.LEFT] : mouseButtons;
 
-		if (object is FlxSprite)
+		if ((object is FlxSprite))
 		{
 			sprite = cast object;
 		}
