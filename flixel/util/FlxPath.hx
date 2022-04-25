@@ -4,6 +4,7 @@ import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
@@ -192,9 +193,10 @@ class FlxPath implements IFlxDestroyable
 	 *
 	 * @param	Speed			The speed at which the object is moving on the path.
 	 * @param	Mode			Path following behavior (like looping, horizontal only, etc).
-	 * @param	AutoRotate		Whether the object's angle should be adjusted to the path angle during path follow behavior.
+	 * @param	AutoRotate		Whether the object's angle should be adjusted to the path angle during
+	 * 							path follow behavior. Note that moving straight right is 0 degrees.
 	 * @return	This path object.
-	 * @since   4.2.0
+	 * @since	4.2.0
 	 */
 	public function setProperties(Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false):FlxPath
 	{
@@ -211,7 +213,7 @@ class FlxPath implements IFlxDestroyable
 	 * @param	Speed				The speed at which the object is moving on the path.
 	 * @param	Mode				Path following behavior (like looping, horizontal only, etc).
 	 * @param	AutoRotate			Whether the object's angle should be adjusted to the path angle during path follow behavior.
-	 * @param   NodesAsReference 	Whether to pass the input array as reference (true) or to copy the points (false). Default is false.
+	 * @param	NodesAsReference	Whether to pass the input array as reference (true) or to copy the points (false). Default is false.
 	 * @return	This path object.
 	 */
 	public function start(?Nodes:Array<FlxPoint>, Speed:Float = 100, Mode:Int = FlxPath.FORWARD, AutoRotate:Bool = false,
@@ -378,7 +380,7 @@ class FlxPath implements IFlxDestroyable
 		if (horizontalOnly || _point.y == node.y)
 		{
 			object.velocity.x = (_point.x < node.x) ? speed : -speed;
-			angle = (object.velocity.x < 0) ? -90 : 90;
+			angle = (object.velocity.x < 0) ? 180 : 0;
 
 			if (!horizontalOnly)
 			{
@@ -388,7 +390,7 @@ class FlxPath implements IFlxDestroyable
 		else if (verticalOnly || _point.x == node.x)
 		{
 			object.velocity.y = (_point.y < node.y) ? speed : -speed;
-			angle = (object.velocity.y < 0) ? 0 : 180;
+			angle = (object.velocity.y < 0) ? -90 : 90;
 
 			if (!verticalOnly)
 			{
@@ -397,13 +399,9 @@ class FlxPath implements IFlxDestroyable
 		}
 		else
 		{
-			object.velocity.x = (_point.x < node.x) ? speed : -speed;
-			object.velocity.y = (_point.y < node.y) ? speed : -speed;
-
-			angle = _point.angleBetween(node);
-
-			object.velocity.set(0, -speed);
-			object.velocity.rotate(FlxPoint.weak(0, 0), angle);
+			var velocity:FlxVector = object.velocity.copyFrom(node).subtractPoint(_point);
+			velocity.length = speed;
+			angle = velocity.degrees;
 		}
 	}
 
