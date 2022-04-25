@@ -156,6 +156,7 @@ class FlxAngle
 
 	/**
 	 * Find the angle (in degrees) between the two FlxSprite, taking their x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	SpriteA		The FlxSprite to test from
 	 * @param	SpriteB		The FlxSprite to test to
@@ -168,6 +169,7 @@ class FlxAngle
 
 	/**
 	 * Find the angle (in radians) between the two FlxSprite, taking their x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	SpriteA		The FlxSprite to test from
 	 * @param	SpriteB		The FlxSprite to test to
@@ -200,6 +202,7 @@ class FlxAngle
 	/**
 	 * Find the angle (in degrees) between an FlxSprite and an FlxPoint.
 	 * The source sprite takes its x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Sprite		The FlxSprite to test from
 	 * @param	Target		The FlxPoint to angle the FlxSprite towards
@@ -213,6 +216,7 @@ class FlxAngle
 	/**
 	 * Find the angle (in radians) between an FlxSprite and an FlxPoint.
 	 * The source sprite takes its x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Sprite		The FlxSprite to test from
 	 * @param	Target		The FlxPoint to angle the FlxSprite towards
@@ -250,6 +254,7 @@ class FlxAngle
 	/**
 	 * Find the angle (in degrees) between an FlxSprite and the mouse,
 	 * taking their **screen** x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @return	The angle in degrees
@@ -262,6 +267,7 @@ class FlxAngle
 	/**
 	 * Find the angle (in radians) between an FlxSprite and the mouse,
 	 * taking their **screen** x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @return	The angle in radians
@@ -275,7 +281,7 @@ class FlxAngle
 	#if FLX_TOUCH
 	/**
 	 * Find the angle between an FlxSprite and a FlxTouch,
-	 taking their **screen** x/y and origin into account.
+	 * taking their **screen** x/y and origin into account.
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @param	Touch		The FlxTouch to test to
@@ -297,7 +303,8 @@ class FlxAngle
 
 	/**
 	 * Find the angle (in degrees) between an FlxSprite and a FlxTouch,
-	 taking their **screen** x/y and origin into account.
+	 * taking their **screen** x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @param	Touch		The FlxTouch to test to
@@ -310,7 +317,8 @@ class FlxAngle
 
 	/**
 	 * Find the angle (in radians) between an FlxSprite and a FlxTouch,
-	 taking their **screen** x/y and origin into account.
+	 * taking their **screen** x/y and origin into account.
+	 * @since 5.0.0
 	 *
 	 * @param	Object		The FlxObject to test from
 	 * @param	Touch		The FlxTouch to test to

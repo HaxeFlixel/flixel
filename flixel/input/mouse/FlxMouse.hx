@@ -81,6 +81,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	/**
 	 * Check to see if the left mouse button is currently not pressed.
+	 * @since 5.0.0
 	 */
 	public var released(get, never):Bool;
 
@@ -108,6 +109,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	
 	/**
 	 * Check to see if the right mouse button is currently not pressed.
+	 * @since 5.0.0
 	 */
 	public var releasedRight(get, never):Bool;
 
@@ -134,6 +136,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	/**
 	 * Check to see if the middle mouse button is currently not pressed.
+	 * @since 5.0.0
 	 */
 	public var releasedMiddle(get, never):Bool;
 
