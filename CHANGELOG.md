@@ -1,3 +1,50 @@
+5.0.0 (TBD)
+------------------------------
+#### New features:
+
+- `FlxMouse`: Added `released`, `releasedRight` and `releasedMiddle` ([#2496](https://github.com/HaxeFlixel/flixel/pull/2496))
+- Angles: Added various degree/radian specific versions of existing angle helpers ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxDirectionFlags`: Added `degrees` and `radians` fields ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+
+#### Bugfixes:
+
+- `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
+- `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
+
+#### Changes and improvements:
+
+- Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
+- Angles: All angle utils treat right as 0 (affects `FlxSwipe` and `FlxPath`) ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+
+4.11.0 (January 26, 2022)
+------------------------------
+#### Dependencies:
+
+- Dropped support for haxe 3, use 4.0.5 or higher
+
+#### New features:
+
+- `FlxAnimationController`: added `getAnimationList`, `getNameList`, `exists` and `rename` ([#2473](https://github.com/HaxeFlixel/flixel/pull/2473))
+- `FlxRect`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: added `getScreenBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSpriteUtil`: added `cameraWrap` and `cameraBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `getViewRect` and `containsRect` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+
+#### Bugfixes:
+
+- Fixed segmentation faults on Hashlink for linux ([#2487](https://github.com/HaxeFlixel/flixel/pull/2487))
+- `FlxSpriteGroup`: `kill`, `revive` and `revive` call the respective function on members ([#2423](https://github.com/HaxeFlixel/flixel/pull/2423))
+
+#### Changes and improvements:
+
+- `FlxCollision`: improved `pixelPerfectCheck` performance, now honors scale ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: improved `isOnScreen` accuracy ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `putWeak` call in `containsPoint` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: `screenCenter` defaults to `XY` rather than `null` ([#2441](https://github.com/HaxeFlixel/flixel/pull/2441))
+- `FlxState`: Clarify restrictions in state constructors ([#2479](https://github.com/HaxeFlixel/flixel/pull/2479))
+
 4.10.0 (September 12, 2021)
 ------------------------------
 #### New features:

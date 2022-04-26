@@ -1,5 +1,7 @@
 package flixel.util;
 
+import flixel.math.FlxAngle;
+
 /**
  * Uses bit flags to create a list of orthogonal directions. useful for
  * many `FlxObject` features like `allowCollisions` and `touching`.
@@ -30,6 +32,38 @@ package flixel.util;
 
 	/** Special-case constant meaning any, or all directions. */
 	var ANY = 0x1111; // LEFT | RIGHT | UP | DOWN;
+
+	/**
+	 * Calculates the angle (in degrees) of the facing flags.
+	 * Returns 0 if two opposing flags are true.
+	 * @since 5.0.0
+	 */
+	public var degrees(get, never):Float;
+	function get_degrees():Float
+	{
+		return switch (this) {
+			case RIGHT: 0;
+			case DOWN: 90;
+			case UP: -90;
+			case LEFT: 180;
+			case f if (f == DOWN | RIGHT): 45;
+			case f if (f == DOWN | LEFT): 135;
+			case f if (f == UP | RIGHT): -45;
+			case f if (f == UP | LEFT): -135;
+			default: 0;
+		}
+	}
+
+	/**
+	 * Calculates the angle (in radians) of the facing flags.
+	 * Returns 0 if two opposing flags are true.
+	 * @since 5.0.0
+	 */
+	public var radians(get, never):Float;
+	inline function get_radians():Float
+	{
+		return degrees * FlxAngle.TO_RAD;
+	}
 
 	/**
 	 * Returns true if this contains all of the supplied flags.
