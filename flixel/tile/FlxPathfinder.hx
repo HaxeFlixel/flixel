@@ -9,42 +9,39 @@ import flixel.util.FlxDirectionFlags;
 using flixel.util.FlxArrayUtil;
 
 /**
- * Simple, conveneient typedef for `FlxBaseTilemap<FlxObject>`. Eventually, 
- * FlxPathfinderData will have type parameters, this should make that process easier.
- */
-private typedef Tilemap = FlxBaseTilemap<FlxObject>;
-
-/**
  * Used to find paths in a FlxBaseTilemap.  extend this class and override
  * `getNeighbors` and `getDistance` to create you're own! For top-down maps, it may
  * be wiser to extend FlxDiagonalPathfinder, as it already has a lot of basic helpers.
+ * @since 5.0.0
  * 
  * To use, either call `myPathfinder.findPath(myMap, start, end)` or
  * `myMap.findPathCustom(myPathfinder, start, end)`
  */
-class FlxPathfinder extends FlxTypedPathfinder<FlxPathfinderData>
-{
-	public function new ()
-	{
-		super(FlxPathfinderData.new);
-	}
-}
+typedef FlxPathfinder = FlxTypedPathfinder<FlxBaseTilemap<FlxObject>, FlxPathfinderData>;
 
 /**
- * Typed version of `FlxPathfinder` in case you need a different `FlxPathfinderData` type.
+ * The path data created whenever a `FlxPathfinderData` is used.
+ * @since 5.0.0
  */
-class FlxTypedPathfinder<Data:FlxPathfinderData>
+typedef FlxPathfinderData = FlxTypedPathfinderData<FlxBaseTilemap<FlxObject>>;
+
+/**
+ * Typed version of `FlxPathfinder` in case you're using
+ * a different `FlxPathfinderData` or FlxTilemap type.
+ * @since 5.0.0
+ */
+class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfinderData<Tilemap>>
 {
 	/** Data currently being processed by the pathfinder */
-	var createData:FlxPathfinderDataFactory<Data>;
+	var createData:FlxPathfinderDataFactory<Tilemap, Data>;
 
 	/**
 	 * Creates a FlxTilemapPathPolicy.
 	 * 
-	 * @param factory     A method to create `FlxPathfinderData` instances.
+	 * @param factory     A method to create `FlxTypedPathfinderData` instances.
 	 * Note: You don't need to create a new instances of the same policy for different maps.
 	 */
-	public function new (factory:FlxPathfinderDataFactory<Data>)
+	public function new (factory:FlxPathfinderDataFactory<Tilemap, Data>)
 	{
 		createData = factory;
 	}
@@ -320,7 +317,8 @@ class FlxTypedPathfinder<Data:FlxPathfinderData>
 }
 
 /**
- * 
+ * A basic implementation of FlxPathfinder that allows for different diagonal policies.
+ * @since 5.0.0
  */
 class FlxDiagonalPathfinder extends FlxPathfinder
 {
@@ -328,7 +326,7 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 
 	public function new(diagonalPolicy:FlxTilemapDiagonalPolicy = NONE)
 	{
-		super();
+		super(FlxPathfinderData.new);
 
 		this.diagonalPolicy = diagonalPolicy;
 	}
@@ -428,16 +426,19 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 /**
  * Usually just FlxPathfinderData.new, but can be any function that takes a map and 2
  * indices and returns whatever FlxPathfinderData you're looking for.
+ * @since 5.0.0
  */
-typedef FlxPathfinderDataFactory<Data:FlxPathfinderData> = (map:Tilemap, startIndex:Int, endIndex:Int)->Data;
+typedef FlxPathfinderDataFactory<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfinderData<Tilemap>>
+	= (map:Tilemap, startIndex:Int, endIndex:Int)->Data;
 
 /**
  * The data used by Pathfinders to "solve" a single pathfinding request. A new Instance
  * gets created whenever you request pathfinder computations. Extend this class if your
  * pathfinding needs require special iterative data.
+ * @since 5.0.0
  */
 @:allow(flixel.tile.FlxTypedPathfinder)
-class FlxPathfinderData
+class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 {
 	/** The start index of path */
 	public var startIndex(default, null):Int;
@@ -567,7 +568,10 @@ class FlxPathfinderData
 	}
 }
 
-
+/**
+ * The policy to use with `FlxDiagonalPathfinder`.
+ * @since 5.0.0
+ */
 @:enum abstract FlxTilemapDiagonalPolicy(Int)
 {
 	/**

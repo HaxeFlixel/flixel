@@ -815,6 +815,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
+	 * @since 5.0.0
 	 *
 	 * @param	pathfinder	Decides how to move and evaluate the paths for comparison.
 	 * @param	start		The start point in world coordinates.
@@ -856,6 +857,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 * @since 5.0.0
 	 *
 	 * @param	StartIndex		The starting tile's map index.
 	 * @param	EndIndex		The ending tile's map index.
