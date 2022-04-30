@@ -104,7 +104,7 @@ class FlxPath implements IFlxDestroyable
 	public var speed:Float = 0;
 
 	/**
-	 * The angle in degrees between this object and the next node, where 0 is directly upward, and 90 is to the right.
+	 * The angle in degrees between this object and the next node, where -90 is directly upward, and 0 is to the right.
 	 */
 	public var angle:Float = 0;
 
