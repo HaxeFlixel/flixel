@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.util.FlxAxes;
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.geom.ColorTransform;
@@ -255,6 +256,31 @@ class FlxSprite extends FlxObject
 	 */
 	@:noCompletion
 	var _facingFlip:Map<FlxDirectionFlags, {x:Bool, y:Bool}> = new Map<FlxDirectionFlags, {x:Bool, y:Bool}>();
+
+	/**
+	 * Internal, percentage representing the maximum distance that the object can move while shaking.
+	 */
+	var _shakeIntensity:Float = 0;
+
+	/**
+	 * Internal, duration of the `shake()` effect.
+	 */
+	var _shakeDuration:Float = 0;
+
+	/**
+	 * Internal, `shake()` effect complete callback.
+	 */
+	var _shakeComplete:Void->Void;
+
+	/**
+	 * Internal, defines on what axes to `shake()`. Default value is `XY` / both.
+	 */
+	var _shakeAxes:FlxAxes = XY;
+
+	/**
+	 * Internal, defines the initial position of the object at the beginning of the shake effect.
+	 */
+	var _shakeInitialXY:FlxPoint;
 
 	/**
 	 * Creates a `FlxSprite` at a specified position with a specified one-frame graphic.
@@ -641,6 +667,7 @@ class FlxSprite extends FlxObject
 	{
 		super.update(elapsed);
 		updateAnimation(elapsed);
+		updateShake(elapsed);
 	}
 
 	/**
@@ -1004,7 +1031,7 @@ class FlxSprite extends FlxObject
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-		
+
 		return camera.containsRect(getScreenBounds(_rect, camera));
 	}
 
@@ -1048,11 +1075,11 @@ class FlxSprite extends FlxObject
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
-		
+
 		newRect.set(x, y, width, height);
 		return newRect.getRotatedBounds(angle, origin, newRect);
 	}
-	
+
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
 	 * would be displayed. Honors scrollFactor, rotation, scale, offset and origin.
@@ -1065,10 +1092,10 @@ class FlxSprite extends FlxObject
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
-		
+
 		if (camera == null)
 			camera = FlxG.camera;
-		
+
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
 			newRect.floor();
@@ -1080,7 +1107,7 @@ class FlxSprite extends FlxObject
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
 		return newRect.getRotatedBounds(angle, scaledOrigin, newRect);
 	}
-	
+
 	/**
 	 * Set how a sprite flips when facing in a particular direction.
 	 *
@@ -1137,6 +1164,58 @@ class FlxSprite extends FlxObject
 		}
 
 		return this;
+	}
+
+	/**
+	 * A simple shake effect.
+	 *
+	 * @param   Intensity    Percentage representing the maximum distance
+	 *                       that the object can move while shaking.
+	 * @param   Duration     The length in seconds that the shaking effect should last.
+	 * @param   OnComplete   A function you want to run when the shake effect finishes.
+	 * @param   Force        Force the effect to reset (default = `true`).
+	 * @param   Axes         On what axes to shake. Default value is `FlxAxes.XY` / both.
+	 */
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
+	{
+		if (Axes == null)
+			Axes = XY;
+
+		if (!Force && _shakeDuration > 0)
+			return;
+
+		_shakeIntensity = Intensity;
+		_shakeDuration = Duration;
+		_shakeComplete = OnComplete;
+		_shakeAxes = Axes;
+		_shakeInitialXY = new FlxPoint(x, y);
+	}
+
+	@:noCompletion
+	function updateShake(elapsed:Float):Void
+	{
+		if (_shakeDuration > 0)
+		{
+			_shakeDuration -= elapsed;
+			if (_shakeDuration <= 0)
+			{
+				if (_shakeComplete != null)
+				{
+					_shakeComplete();
+				}
+			}
+			else
+			{
+				if (_shakeAxes != FlxAxes.Y)
+				{
+					x = _shakeInitialXY.x + FlxG.random.float(-_shakeIntensity * width, _shakeIntensity * width);
+				}
+				if (_shakeAxes != FlxAxes.X)
+				{
+					y = _shakeInitialXY.y + FlxG.random.float(-_shakeIntensity * height, _shakeIntensity * height);
+				}
+			}
+		}
 	}
 
 	@:noCompletion
