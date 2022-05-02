@@ -1,5 +1,7 @@
 package flixel.tweens;
 
+import flixel.tweens.misc.ShakeTween;
+import flixel.util.FlxAxes;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -128,6 +130,26 @@ class FlxTween implements IFlxDestroyable
 	public static function num(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):NumTween
 	{
 		return globalManager.num(FromValue, ToValue, Duration, Options, TweenFunction);
+	}
+
+	/**
+	 * A simple shake effect for FlxSprite. Shorthand for creating a ShakeTween, starting it and adding it to the TweenManager.
+	 *
+	 * ```haxe
+	 * FlxTween.shake(Sprite, 0.1, 2, FlxAxes.XY, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: ONESHOT });
+	 * ```
+	 * 
+	 * @param	Sprite       Sprite to shake.
+	 * @param   Intensity    Percentage representing the maximum distance
+	 *                       that the sprite can move while shaking.
+	 * @param   Duration     The length in seconds that the shaking effect should last.
+	 * @param   Axes         On what axes to shake. Default value is `FlxAxes.XY` / both.
+	 * @param	Options      A structure with tween options.
+	 * @return The added ShakeTween object.
+	 */
+	public static function shake(Sprite:FlxSprite, Intensity:Float = 0.05, Duration:Float = 1, ?Axes:FlxAxes, ?Options:TweenOptions):ShakeTween
+	{
+		return globalManager.shake(Sprite, Intensity, Duration, Axes, Options);
 	}
 
 	/**
@@ -854,6 +876,27 @@ class FlxTweenManager extends FlxBasic
 	{
 		var tween = new NumTween(Options, this);
 		tween.tween(FromValue, ToValue, Duration, TweenFunction);
+		return add(tween);
+	}
+
+	/**
+	 * A simple shake effect for FlxSprite. Shorthand for creating a ShakeTween, starting it and adding it to the TweenManager.
+	 *
+	 * ```haxe
+	 * FlxTween.shake(Sprite, 0.1, 2, FlxAxes.XY, { ease: easeFunction, onStart: onStart, onUpdate: onUpdate, onComplete: onComplete, type: ONESHOT });
+	 * ```
+	 * 
+	 * @param	Sprite       Sprite to shake.
+	 * @param   Intensity    Percentage representing the maximum distance
+	 *                       that the sprite can move while shaking.
+	 * @param   Duration     The length in seconds that the shaking effect should last.
+	 * @param   Axes         On what axes to shake. Default value is `FlxAxes.XY` / both.
+	 * @param	Options      A structure with tween options.
+	 */
+	public function shake(Sprite:FlxSprite, Intensity:Float = 0.05, Duration:Float = 1, ?Axes:FlxAxes = XY, ?Options:TweenOptions):ShakeTween
+	{
+		var tween = new ShakeTween(Options, this);
+		tween.tween(Sprite, Intensity, Duration, Axes);
 		return add(tween);
 	}
 
