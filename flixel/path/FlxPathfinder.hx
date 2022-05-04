@@ -1,4 +1,4 @@
-package flixel.tile;
+package flixel.path;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
@@ -437,7 +437,7 @@ typedef FlxPathfinderDataFactory<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxType
  * pathfinding needs require special iterative data.
  * @since 5.0.0
  */
-@:allow(flixel.tile.FlxTypedPathfinder)
+@:allow(flixel.path.FlxTypedPathfinder)
 class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 {
 	/** The start index of path */

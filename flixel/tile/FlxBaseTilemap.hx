@@ -1,13 +1,11 @@
 package flixel.tile;
 
 import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicSource;
-import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.system.FlxAssets;
-import flixel.tile.FlxPathfinder;
+import flixel.path.FlxPathfinder;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDirectionFlags;

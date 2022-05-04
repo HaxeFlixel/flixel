@@ -5,12 +5,12 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
+import flixel.path.FlxPath;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
-import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 

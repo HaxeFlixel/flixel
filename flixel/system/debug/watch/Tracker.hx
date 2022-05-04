@@ -17,14 +17,14 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.FlxSwipe;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.path.FlxPath;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxButton.FlxTypedButton;
-import flixel.util.FlxPath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
 #if FLX_TOUCH
