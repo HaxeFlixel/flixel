@@ -265,4 +265,123 @@ class FlxCollision
 
 		return result;
 	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, first enters the rect.
+	 * If the line starts inside the rect, a copy of start is returned.
+	 * If the line never enters the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being entered
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of entry of the line into the rect, if possible.
+	 */
+	public static function calcRectEntry(rect:FlxRect, start:FlxVector, end:FlxVector, ?result:FlxVector):Null<FlxVector>
+	{
+		// helper to create a new instance if needed, when neededs
+		var get = FlxVector.get;
+		if (result != null)
+			get = result.set;
+
+		// does the ray start inside the bounds
+		if (rect.containsPoint(start))
+			return start.copyTo();
+
+		// are both points above or below the bounds
+		if ((end.y < rect.top && start.y < rect.top) || (end.y > rect.bottom && start.y > rect.bottom))
+			return null;
+
+		// check for purely vertical, i.e. has infinite slope
+		if (start.x == end.x)
+		{
+			// determine if it exits top or bottom
+			if (start.y < rect.top)
+				return get(start.x, rect.top);
+
+			return get(start.x, rect.bottom);
+		}
+
+		// Use y = mx + b formula to define out line, m = slope, b is y when x = 0
+		var m = (start.y - end.y) / (start.x - end.x);
+		// y - mx = b
+		var b = start.y - m * start.x;
+		// y = mx + b
+		var leftY = m * rect.left + b;
+		var rightY = m * rect.right + b;
+
+		// if left and right intercepts are both above and below, there is no entry
+		if ((leftY < rect.top && rightY < rect.top) || (leftY > rect.bottom && rightY > rect.bottom))
+			return null;
+
+		// if ray moves right
+		if (start.x < end.x)
+		{
+			// are both points right of the bounds
+			if (start.x > rect.right || end.x < rect.left)
+				return null;
+
+			if (leftY < rect.top)
+			{
+				// ray exits on top
+				// x = (y - b)/m
+				return get((rect.top - b) / m, rect.top);
+			}
+			else if (leftY > rect.bottom)
+			{
+				// ray exits on bottom
+				// x = (y - b)/m
+				return get((rect.bottom - b) / m, rect.bottom);
+			}
+			// ray exits to the left
+			return get(rect.left, leftY);
+		}
+		// if ray moves left
+
+		// are both points left of the bounds
+		if (start.x < rect.left || end.x > rect.right)
+			return null;
+
+		if (rightY < rect.top)
+		{
+			// ray exits on top
+			// x = (y - b)/m
+			return get((rect.top - b) / m, rect.top);
+		}
+		else if (rightY > rect.bottom)
+		{
+			// ray exits on bottom
+			// x = (y - b)/m
+			return get((rect.bottom - b) / m, rect.bottom);
+		}
+
+		// ray exits to the right
+		return get(rect.right, rightY);
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, was last inside the rect.
+	 * If the line ends inside the rect, a copy of end is returned.
+	 * If the line is never inside the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being exited
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of exit of the line from the rect, if possible.
+	 */
+	public static inline function calcRectExit(rect, start, end, result)
+	{
+		return calcRectEntry(rect, end, start, result);
+	}
 }
