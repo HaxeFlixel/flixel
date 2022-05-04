@@ -226,6 +226,17 @@ import openfl.geom.Point;
 	}
 
 	/**
+	 * Helper function, just copies the values from this vector to the specified vector.
+	 *
+	 * @param   vec   optional vector to copy this vector to
+	 * @return  copy of this vector
+	 */
+	public inline function copyTo(?vec:FlxVector):FlxVector
+	{
+		return this.copyTo(vec);
+	}
+
+	/**
 	 * Rounds x and y using Math.floor()
 	 */
 	public inline function floor():FlxVector
@@ -832,28 +843,6 @@ import openfl.geom.Point;
 	public inline function clone(?vec:FlxVector):FlxVector
 	{
 		return this.copyTo(vec);
-	}
-	
-	/**
-	 * Helper function, just copies the values from this vector to the specified vector.
-	 *
-	 * @param   vec   optional vector to copy this vector to
-	 * @return  copy of this vector
-	 */
-	public inline function copyTo(?vec:FlxVector):FlxVector
-	{
-		return this.copyTo(vec);
-	}
-	
-	/**
-	 * Helper function, just copies the values from the specified vector.
-	 *
-	 * @param   vec   optional vector to copy this vector to
-	 * @return  copy of this vector
-	 */
-	public inline function copyfrom(?vec:FlxVector):FlxVector
-	{
-		return this.copyFrom(vec);
 	}
 
 	inline function get_x():Float
