@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.path;
 
 import flixel.FlxG;
 import flixel.FlxObject;

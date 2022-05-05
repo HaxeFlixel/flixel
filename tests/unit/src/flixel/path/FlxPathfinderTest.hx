@@ -1,8 +1,8 @@
-package flixel.tile;
+package flixel.path;
 
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
-import flixel.tile.FlxPathfinder;
+import flixel.path.FlxPathfinder;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
 import haxe.PosInfos;
@@ -39,22 +39,22 @@ class FlxPathfinderTest extends FlxTest
 	function testFindPath()
 	{
 		// no diagonal, no simplify
-		assertFindPath(map4x4, start(0, 0), end(2, 0), false, NONE, [0,4,8,12,13,14,15,11,7,3,2]);
+		assertFindPath(map4x4, start(0, 0), end(2, 0), NONE, NONE, [0,4,8,12,13,14,15,11,7,3,2]);
 
 		// simplify
-		assertFindPath(map4x4, start(0, 0), end(2, 0), NONE, [0,12,15,3,2]);
+		assertFindPath(map4x4, start(0, 0), end(2, 0), LINE, NONE, [0,12,15,3,2]);
 
 		// diagonal
-		assertFindPath(map4x4, start(0, 0), end(2, 0), false, [0,4,8,13,14,15,11,7,2]);
+		assertFindPath(map4x4, start(0, 0), end(2, 0), NONE, NORMAL, [0,4,8,13,14,15,11,7,2]);
 
 		// diagonal, simplify
-		assertFindPath(map4x4, start(0, 0), end(2, 0), [0,8,13,15,7,2]);
+		assertFindPath(map4x4, start(0, 0), end(2, 0), LINE, NORMAL, [0,8,13,15,7,2]);
 
 		// impossible to leave start
-		assertFindPath(map4x4, start(1, 0), end(2, 0), NORMAL, null);
+		assertFindPath(map4x4, start(1, 0), end(2, 0), LINE, NORMAL, null);
 
 		// impossible to reach end
-		assertFindPath(map4x4, start(0, 0), end(1, 0), NORMAL, null);
+		assertFindPath(map4x4, start(0, 0), end(1, 0), LINE, NORMAL, null);
 	}
 	
 	
@@ -62,36 +62,36 @@ class FlxPathfinderTest extends FlxTest
 	function testCustomPathfinder()
 	{
 		// no diagonal, no simplify
-		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), false, NONE, [0,6,12,18,19,20,21,22,16,10,4]);
+		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), NONE, NONE, [0,6,12,18,19,20,21,22,16,10,4]);
 
 		// simplify
-		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), NONE, [0,18,22,4]);
+		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), LINE, NONE, [0,18,22,4]);
 
 		// diagonal
-		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), false, [0,6,12,19,20,21,22,16,10,4]);
+		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), NONE, NORMAL, [0,6,12,19,20,21,22,16,10,4]);
 
 		// diagonal, simplify
-		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), [0,12,19,22,4]);
+		assertCustomFindPath(map6x5, start(0, 0), end(4, 0), LINE, NORMAL, [0,12,19,22,4]);
 
 		// impossible to leave start
-		assertCustomFindPath(map6x5, start(1, 0), end(4, 0), NORMAL, null);
+		assertCustomFindPath(map6x5, start(1, 0), end(4, 0), LINE, NORMAL, null);
 
 		// impossible to reach end
-		assertCustomFindPath(map6x5, start(0, 0), end(5, 0), NORMAL, null);
+		assertCustomFindPath(map6x5, start(0, 0), end(5, 0), LINE, NORMAL, null);
 	}
 
-	function assertFindPath(map:FlxTilemap, start:FlxPoint, end:FlxPoint, simplify = true, raySimplify = false,
+	function assertFindPath(map:FlxTilemap, start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE,
 		diagonal:FlxTilemapDiagonalPolicy = NORMAL, expected:Array<Int>, ?info:PosInfos)
 	{
-		var points = map.findPath(start, end, simplify, raySimplify, diagonal);
+		var points = map.findPath(start, end, simplify, diagonal);
 		FlxAssert.arraysEqual(expected, pointsToIndices(map, points), info);
 	}
 	
-	function assertCustomFindPath(map:FlxTilemap, start:FlxPoint, end:FlxPoint, simplify = true, raySimplify = false,
+	function assertCustomFindPath(map:FlxTilemap, start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE,
 		diagonal:FlxTilemapDiagonalPolicy = NORMAL, expected:Array<Int>, ?info:PosInfos)
 	{
 		bigMover.diagonalPolicy = diagonal;
-		var points = map.findPathCustom(bigMover, start, end, simplify, raySimplify);
+		var points = map.findPathCustom(bigMover, start, end, simplify);
 		FlxAssert.arraysEqual(expected, pointsToIndices(map, points), info);
 	}
 	
