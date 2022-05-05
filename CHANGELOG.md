@@ -6,6 +6,14 @@
 - Angles: Added various degree/radian specific versions of existing angle helpers ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
 - `FlxDirectionFlags`: Added `degrees` and `radians` fields ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
 - `FlxVector`: Added `copyTo` ([#2550](https://github.com/HaxeFlixel/flixel/pull/2550))
+- `FlxCollision`: Added `calcRectEntry` and `calcRectExit` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxTilemap`: Overhaul to pathfinding ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+	- `FlxPathfinder`: Allows customizable pathfinding algorithms for tilemap
+	- `FlxPathSimplifier`: Replace findPath simplify args with a new enum
+	- Expose previously private fields: `tileWidth`, `tileHeight`, `scaledTileWidth`, `scaledTileHeight`, `scaledWidth`, and `scaledHeight`
+	- `FlxBaseTilemap`: added `calcRayEntry` and `calcRayExit`
+- `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxDirectionFlags`: added `fromBools` static helper ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 
 #### Bugfixes:
 
@@ -17,6 +25,8 @@
 - Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
 - Angles: All angle utils treat right as 0 (affects `FlxSwipe` and `FlxPath`) ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
 - `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxTilemap`: Renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 
 4.11.0 (January 26, 2022)
 ------------------------------

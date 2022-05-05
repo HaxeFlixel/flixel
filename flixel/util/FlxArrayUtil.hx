@@ -177,6 +177,10 @@ class FlxArrayUtil
 		return array.indexOf(element) != -1;
 	}
 
+	/**
+	 * Returns true if the array is not null and contains the element.
+	 * @since 5.0.0
+	 */
 	public static inline function safeContains<T>(array:Null<Array<T>>, element:T):Bool
 	{
 		return array != null && contains(array, element);
