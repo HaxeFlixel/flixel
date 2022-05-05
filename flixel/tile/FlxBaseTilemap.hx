@@ -174,8 +174,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   start       The world coordinates of the start of the ray.
 	 * @param   end         The world coordinates of the end of the ray.
 	 * @param   result      Optional result vector, to avoid creating a new instance to be returned.
-	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
 	 *                      Only returned if the line enters the rect.
+	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
@@ -882,10 +882,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
 	 * 			then a null reference is returned.
 	 */
-	public inline function findPath(start:FlxPoint, end:FlxPoint, simplify:Bool = true, raySimplify:Bool = false,
+	public inline function findPath(start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE,
 			diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
 	{
-		return getDiagonalPathfinder(diagonalPolicy).findPath(cast this, start, end, simplify, raySimplify);
+		return getDiagonalPathfinder(diagonalPolicy).findPath(cast this, start, end, simplify);
 	}
 
 	/**
@@ -905,9 +905,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 			then a null reference is returned.
 	 */
 	public inline function findPathCustom(pathfinder:FlxPathfinder, start:FlxPoint, end:FlxPoint,
-		simplify:Bool = true, raySimplify:Bool = false):Array<FlxPoint>
+		simplify:FlxPathSimplifier = LINE):Array<FlxPoint>
 	{
-		return pathfinder.findPath(cast this, start, end, simplify, raySimplify);
+		return pathfinder.findPath(cast this, start, end, simplify);
 	}
 
 	/**

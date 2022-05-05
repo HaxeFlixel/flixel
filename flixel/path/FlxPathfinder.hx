@@ -53,15 +53,11 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 * @param map         The map we're moving through.
 	 * @param start       The start point in world coordinates.
 	 * @param end         The end point in world coordinates.
-	 * @param simplify    Whether to run a basic simplification algorithm over the path data, removing
-	 *                    extra points that are on the same line.  Default value is true.
-	 * @param raySimplify Whether to run an extra raycasting simplification algorithm over the remaining
-	 *                    path data.  This can result in some close corners being cut, and should be
-	 *                    used with care if at all (yet).  Default value is false.
+	 * @param simplify    The simplification method to run on the raw path.  Default value is LINE.
 	 * @return An Array of FlxPoints, containing all waypoints from the start to the end.  If no path
 	 * could be found, then a null reference is returned.
 	 */
-	public function findPath(map:Tilemap, start:FlxPoint, end:FlxPoint, simplify:Bool = true, raySimplify:Bool = false):Null<Array<FlxPoint>>
+	public function findPath(map:Tilemap, start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE):Null<Array<FlxPoint>>
 	{
 		// Figure out what tile we are starting and ending on.
 		var startIndex = map.getTileIndexByCoords(start);
@@ -80,11 +76,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 		path[path.length - 1].copyFrom(end);
 
 		// Some simple path cleanup options
-		if (simplify)
-			simplifyPath(data, path);
-		
-		if (raySimplify)
-			raySimplifyPath(data, path);
+		simplifyPath(data, path, simplify);
 
 		return path;
 	}
@@ -126,7 +118,25 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 * @param data   The pathfinder data for this current search.
 	 * @param points An array of FlxPoint nodes.
 	 */
-	function simplifyPath(data:Data, points:Array<FlxPoint>):Void
+	function simplifyPath(data:Data, points:Array<FlxPoint>, simplify:FlxPathSimplifier):Void
+	{
+		switch(simplify)
+		{
+			case NONE: points;
+			case LINE: simplifyLine(data, points);
+			case RAY: simplifyRay(data, points);
+			case RAY_STEP(resolution): simplifyRayStep(data, points, resolution);
+			case CUSTOM(method): method(cast data, points);
+		}
+	}
+
+	/**
+	 * Pathfinding helper function, strips out extra points on the same line.
+	 *
+	 * @param data   The pathfinder data for this current search.
+	 * @param points An array of FlxPoint nodes.
+	 */
+	function simplifyLine(data:Data, points:Array<FlxPoint>):Void
 	{
 		// Loop backwards so we can remove indices
 		var i = points.length - 1; // Skip last
@@ -150,7 +160,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 * @param data   The pathfinder data for this current search.
 	 * @param points An array of FlxPoint nodes.
 	 */
-	function raySimplifyPath(data:Data, points:Array<FlxPoint>):Void
+	function simplifyRay(data:Data, points:Array<FlxPoint>):Void
 	{
 		// A point used to calculate rays
 		var tempPoint = FlxPoint.get();
@@ -160,6 +170,36 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 		{
 			// If a ray can be drawn from the 2 adjacent points without hitting a wall
 			if (data.map.ray(points[i - 1], points[i + 1], tempPoint))
+			{
+				// Remove the point inbetween
+				points.remove(points[i]);
+			}
+			else
+				i++;
+		}
+
+		// Put our temp point back in the pool for reuse 
+		tempPoint.put();
+	}
+
+	/**
+	 * Pathfinding helper function, strips out even more points by rayStepping from one
+	 * point to the next and dropping unnecessary points.
+	 *
+	 * @param data       The pathfinder data for this current search.
+	 * @param points     An array of FlxPoint nodes.
+	 * @param reolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
+	 */
+	function simplifyRayStep(data:Data, points:Array<FlxPoint>, resolution:Float):Void
+	{
+		// A point used to calculate rays
+		var tempPoint = FlxPoint.get();
+
+		var i = 1; // Skip first
+		while (i < points.length - 1) // Skip last, too
+		{
+			// If a ray can be drawn from the 2 adjacent points without hitting a wall
+			if (data.map.rayStep(points[i - 1], points[i + 1], tempPoint, resolution))
 			{
 				// Remove the point inbetween
 				points.remove(points[i]);
@@ -566,6 +606,36 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 		#if debug numChecks++; #end
 		return map.getTileCollisions(map.getTileByIndex(tile));
 	}
+}
+
+enum FlxPathSimplifier
+{
+	/**
+	 * No simplification
+	 */
+	NONE;
+
+	/**
+	 * Removes nodes that are directly in line with it's neighbors
+	 */
+	LINE;
+
+	/**
+	 * Removes nodes who'with neighbors that have no walls directly blocking.
+	 * Uses `tilemap.ray`.
+	 */
+	RAY;
+
+	/**
+	 * Removes nodes who'with neighbors that have no walls directly blocking.
+	 * Uses `tilemap.rayStep`.
+	 */
+	RAY_STEP(resolution:Float);
+
+	/**
+	 * calls the method to simplify
+	 */
+	CUSTOM(method:(FlxPathfinderData, Array<FlxPoint>)->Void);
 }
 
 /**
