@@ -8,6 +8,7 @@ import flixel.system.FlxAssets;
 import flixel.path.FlxPathfinder;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxCollision;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
@@ -150,6 +151,51 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		throw "ray must be implemented";
 		return false;
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, first enters the tilemap.
+	 * If the line starts inside the tilemap, a copy of start is returned.
+	 * If the line never enters the tilemap, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the tilemap.
+	 * @return The point of entry of the line into the tilemap, if possible.
+	 */
+	public function calcRayEntry(start, end, ?result)
+	{
+		var bounds = getBounds();
+		// subtract 1 from size otherwise `getTileIndexByCoords` will have weird edge cases (literally)
+		bounds.width--;
+		bounds.height--;
+
+		return FlxCollision.calcRectEntry(bounds, start, end, result);
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, was last inside the tilemap.
+	 * If the line ends inside the tilemap, a copy of end is returned.
+	 * If the line is never inside the tilemap, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the tilemap.
+	 * @return The point of exit of the line from the tilemap, if possible.
+	 */
+	public inline function calcRayExit(start, end, ?result)
+	{
+		return calcRayEntry(end, start, result);
 	}
 
 	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool

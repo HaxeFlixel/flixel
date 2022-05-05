@@ -915,51 +915,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Calculates at which point where the given line, from start to end, first enters the tilemap.
-	 * If the line starts inside the tilemap, a copy of start is returned.
-	 * If the line never enters the tilemap, null is returned.
-	 *
-	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
-	 * and the supplied result is unchanged
-	 * @since 5.0.0
-	 *
-	 * @param start   The start of the line
-	 * @param end     The end of the line
-	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                Only returned if the line enters the tilemap.
-	 * @return The point of entry of the line into the tilemap, if possible.
-	 */
-	public function calcRayEntry(start, end, ?result)
-	{
-		var bounds = getBounds();
-		// subtract 1 from size otherwise `getTileIndexByCoords` will have weird edge cases (literally)
-		bounds.width--;
-		bounds.height--;
-
-		return FlxCollision.calcRectEntry(bounds, start, end, result);
-	}
-
-	/**
-	 * Calculates at which point where the given line, from start to end, was last inside the tilemap.
-	 * If the line ends inside the tilemap, a copy of end is returned.
-	 * If the line is never inside the tilemap, null is returned.
-	 *
-	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
-	 * and the supplied result is unchanged
-	 * @since 5.0.0
-	 *
-	 * @param start   The start of the line
-	 * @param end     The end of the line
-	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                Only returned if the line enters the tilemap.
-	 * @return The point of exit of the line from the tilemap, if possible.
-	 */
-	public inline function calcRayExit(start, end, ?result)
-	{
-		return calcRayEntry(end, start, result);
-	}
-
-	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
 	 *
 	 * @param	X				The X coordinate of the tile (in tiles, not pixels).
