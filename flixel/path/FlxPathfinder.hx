@@ -68,15 +68,14 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 		if (indices == null)
 			return null;
 
-		// convert indices to world coordinates
-		var path = indices.map(map.getTileCoordsByIndex.bind(_, true));
+		var path = getPathPointsFromIndices(data, indices);
 
 		// Reset the start and end points to be exact
 		path[0].copyFrom(start);
 		path[path.length - 1].copyFrom(end);
 
 		// Some simple path cleanup options
-		simplifyPath(data, path, simplify);
+		path = simplifyPath(data, path, simplify);
 
 		return path;
 	}
@@ -112,13 +111,19 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 		return data.getPathIndices();
 	}
 
+	function getPathPointsFromIndices(data:Data, indices:Array<Int>)
+	{
+		// convert indices to world coordinates
+		return indices.map(data.map.getTileCoordsByIndex.bind(_, true));
+	}
+
 	/**
 	 * Pathfinding helper function, strips out extra points on the same line.
 	 *
 	 * @param data   The pathfinder data for this current search.
 	 * @param points An array of FlxPoint nodes.
 	 */
-	function simplifyPath(data:Data, points:Array<FlxPoint>, simplify:FlxPathSimplifier):Void
+	function simplifyPath(data:Data, points:Array<FlxPoint>, simplify:FlxPathSimplifier):Array<FlxPoint>
 	{
 		switch(simplify)
 		{
@@ -126,8 +131,10 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 			case LINE: simplifyLine(data, points);
 			case RAY: simplifyRay(data, points);
 			case RAY_STEP(resolution): simplifyRayStep(data, points, resolution);
-			case CUSTOM(method): method(cast data, points);
+			case RAY_BOX(width, height): simplifyRayBox(data, points, width, height);
+			case CUSTOM(method): points = method(cast data, points);
 		}
+		return points;
 	}
 
 	/**
@@ -180,6 +187,46 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 
 		// Put our temp point back in the pool for reuse 
 		tempPoint.put();
+	}
+
+	/**
+	 * Pathfinding helper function, strips out even more points by raycasting from one
+	 * point to the next and dropping unnecessary points.
+	 *
+	 * @param data   The pathfinder data for this current search.
+	 * @param points An array of FlxPoint nodes.
+	 */
+	function simplifyRayBox(data:Data, points:Array<FlxPoint>, width:Float, height:Float):Void
+	{
+		// subtract from each side or else it's practically unuable in tight squeezes
+		width -= 1;
+		height -= 1;
+
+		// A point used to calculate rays
+		var p1 = FlxPoint.get();
+		var p2 = FlxPoint.get();
+
+		var i = 1; // Skip first
+		while (i < points.length - 1) // Skip last, too
+		{
+			p1.copyFrom(points[i - 1]).subtract(width / 2, height / 2);
+			p2.copyFrom(points[i + 1]).subtract(width / 2, height / 2);
+			// If a ray can be drawn from the 2 adjacent points without hitting a wall
+			if (data.map.ray(p1, p2)                               // top left
+			&&  data.map.ray(p1.add(width, 0), p2.add(width, 0))   // top right
+			&&  data.map.ray(p1.add(0, height), p2.add(0, height)) // bottom right
+			&&  data.map.ray(p1.add(-width, 0), p2.add(-width, 0)))// bottom left
+			{
+				// Remove the point inbetween
+				points.remove(points[i]);
+			}
+			else
+				i++;
+		}
+
+		// Put our temp point back in the pool for reuse 
+		p1.put();
+		p2.put();
 	}
 
 	/**
@@ -441,7 +488,7 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 	 * @param to   The tile index we're moving from.
 	 * @param dir  The direction we came from.
 	 */
-	function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags)
+	function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags = ANY)
 	{
 		//Todo: check direction flags individually
 		return data.getTileCollisionsByIndex(to) == NONE;
@@ -621,16 +668,23 @@ enum FlxPathSimplifier
 	LINE;
 
 	/**
-	 * Removes nodes who'with neighbors that have no walls directly blocking.
+	 * Removes nodes who'with neighbors that have no walls directly blocking
 	 * Uses `tilemap.ray`.
 	 */
 	RAY;
 
 	/**
-	 * Removes nodes who'with neighbors that have no walls directly blocking.
+	 * Removes nodes who'with neighbors that have no walls directly blocking
 	 * Uses `tilemap.rayStep`.
 	 */
 	RAY_STEP(resolution:Float);
+
+	/**
+	 * Removes nodes who'with neighbors that have no walls directly
+	 * blocking a box of the given size. Assumes centered origin
+	 * Uses `tilemap.ray`.
+	 */
+	RAY_BOX(width:Float, height:Float);
 
 	/**
 	 * calls the method to simplify
