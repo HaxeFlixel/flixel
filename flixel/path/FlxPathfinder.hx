@@ -77,6 +77,8 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 		// Some simple path cleanup options
 		path = simplifyPath(data, path, simplify);
 
+		data.destroy();
+
 		return path;
 	}
 
@@ -92,7 +94,10 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 */
 	public inline function findPathIndices(map:Tilemap, startIndex:Int, endIndex:Int)
 	{
-		return findPathIndicesHelper(createData(map, startIndex, endIndex));
+		final data = createData(map, startIndex, endIndex);
+		final indices = findPathIndicesHelper(data);
+		data.destroy();
+		return indices;
 	}
 
 	/**
@@ -617,7 +622,15 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 			&& startIndex < map.totalTiles
 			&& endIndex < map.totalTiles;
 	}
-	
+
+	public function destroy()
+	{
+		map = null;
+		distances = null;
+		moves = null;
+		excluded = null;
+	}
+
 	// --- --- helpers --- ---
 
 	/**
