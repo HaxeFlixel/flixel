@@ -108,6 +108,10 @@ import flixel.math.FlxAngle;
 		return str.substr(3);
 	}
 
+	/**
+	 * Generates a FlxDirectonFlags instance from 4 bools
+	 * @since 5.0.0
+	 */
 	public static function fromBools(left:Bool, right:Bool, up:Bool, down:Bool):FlxDirectionFlags
 	{
 		return (left  ? LEFT  : NONE)
