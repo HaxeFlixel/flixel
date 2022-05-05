@@ -807,35 +807,190 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Shoots a ray from the start point to the end point.
 	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Note: In flixel 5.0.0, this was redone, the old method is now `rayStep`
 	 *
-	 * @param	Start		The world coordinates of the start of the ray.
-	 * @param	End			The world coordinates of the end of the ray.
-	 * @param	Result		An optional point containing the first wall impact if there was one. Null otherwise.
-	 * @param	Resolution	Defaults to 1, meaning check every tile or so.  Higher means more checks!
-	 * @return	Returns true if the ray made it from Start to End without hitting anything. Returns false and fills Result if a tile was hit.
+	 * @param   start   The world coordinates of the start of the ray.
+	 * @param   end     The world coordinates of the end of the ray.
+	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                  Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
 	 */
-	override public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
+	override function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
+	{
+		// trim the line to the parts inside the map
+		final trimmedStart = calcRayEntry(start, end);
+		final trimmedEnd = calcRayExit(start, end);
+
+		start.putWeak();
+		end.putWeak();
+
+		if (trimmedStart == null || trimmedEnd == null)
+		{
+			FlxDestroyUtil.put(trimmedStart);
+			FlxDestroyUtil.put(trimmedEnd);
+			return true;
+		}
+
+		start = trimmedStart;
+		end = trimmedEnd;
+
+		inline function clearRefs()
+		{
+			trimmedStart.put();
+			trimmedEnd.put();
+		}
+
+		final startIndex = getTileIndexByCoords(start);
+		final endIndex = getTileIndexByCoords(end);
+
+		// If the starting tile is solid, return the starting position
+		if (getTileCollisions(getTileByIndex(startIndex)) != NONE)
+		{
+			if (result != null)
+				result.copyFrom(start);
+			
+			clearRefs();
+			return false;
+		}
+
+		final startTileX = startIndex % widthInTiles;
+		final startTileY = Std.int(startIndex / widthInTiles);
+		final endTileX = endIndex % widthInTiles;
+		final endTileY = Std.int(endIndex / widthInTiles);
+		var hitIndex = -1;
+
+		if (start.x == end.x)
+		{
+			hitIndex = checkColumn(startTileX, startTileY, endTileY);
+			if (hitIndex != -1 && result != null)
+			{
+				// check the bottom
+				result.copyFrom(getTileCoordsByIndex(hitIndex, false));
+				result.x = start.x;
+				if (start.y > end.y)
+					result.y += scaledTileHeight;
+			}
+		}
+		else
+		{
+			// Use y = mx + b formula
+			final m = (start.y - end.y) / (start.x - end.x);
+			// y - mx = b
+			final b = start.y - m * start.x;
+
+			final movesRight = start.x < end.x;
+			final inc = movesRight ? 1 : -1;
+			final offset = movesRight ? 1 : 0;
+			var tileX = startTileX;
+			var tileY = 0;
+			var xPos = 0.0;
+			var yPos = 0.0;
+			var lastTileY = startTileY;
+
+			while (tileX != endTileX)
+			{
+				xPos = x + (tileX + offset) * scaledTileWidth;
+				yPos = m * xPos + b;
+				tileY = Math.floor((yPos - y) / scaledTileHeight);
+				hitIndex = checkColumn(tileX, lastTileY, tileY);
+				if (hitIndex != -1)
+					break;
+				lastTileY = tileY;
+				tileX += inc;
+			}
+
+			if (hitIndex == -1)
+				hitIndex = checkColumn(endTileX, lastTileY, endTileY);
+
+			if (hitIndex != -1 && result != null)
+			{
+				result.copyFrom(getTileCoordsByIndex(hitIndex, false));
+				if (Std.int(hitIndex / widthInTiles) == lastTileY)
+				{
+					if (start.x > end.x)
+						result.x += scaledTileWidth;
+
+					// set result to left side
+					result.y = m * result.x + b;//mx + b
+				}
+				else
+				{
+					// if ascending
+					if (start.y > end.y)
+					{
+						// change result to bottom
+						result.y += scaledTileHeight;
+					}
+					// otherwise result is top
+
+					// x = (y - b)/m
+					result.x = (result.y - b) / m;
+				}
+			}
+		}
+
+		clearRefs();
+		return hitIndex == -1;
+	}
+
+	function checkColumn(x:Int, startY:Int, endY:Int):Int
+	{
+		if (startY > endY)
+			return checkColumn(x, endY, startY);
+		
+		if (startY < 0)
+			startY = 0;
+		
+		if (endY > heightInTiles - 1)
+			endY = heightInTiles - 1;
+		
+		for (y in startY...endY + 1)
+		{
+			var index = y * widthInTiles + x;
+			if (getTileCollisions(getTileByIndex(index)) != NONE)
+				return index;
+		}
+		
+		return -1;
+	}
+
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
+	 * This method checks at steps and can miss, for better results use `ray()`
+	 * @since 5.0.0
+	 *
+	 * @param   start       The world coordinates of the start of the ray.
+	 * @param   end         The world coordinates of the end of the ray.
+	 * @param   result      Optional result vector, to avoid creating a new instance to be returned.
+	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
+	 *                      Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	override function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		var step:Float = scaledTileWidth;
 
 		if (scaledTileHeight < scaledTileWidth)
 			step = scaledTileHeight;
 
-		step /= Resolution;
-		var deltaX:Float = End.x - Start.x;
-		var deltaY:Float = End.y - Start.y;
+		step /= resolution;
+		var deltaX:Float = end.x - start.x;
+		var deltaY:Float = end.y - start.y;
 		var distance:Float = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 		var steps:Int = Math.ceil(distance / step);
 		var stepX:Float = deltaX / steps;
 		var stepY:Float = deltaY / steps;
-		var curX:Float = Start.x - stepX - x;
-		var curY:Float = Start.y - stepY - y;
+		var curX:Float = start.x - stepX - x;
+		var curY:Float = start.y - stepY - y;
 		var tileX:Int;
 		var tileY:Int;
 		var i:Int = 0;
 
-		Start.putWeak();
-		End.putWeak();
+		start.putWeak();
+		end.putWeak();
 
 		while (i < steps)
 		{
@@ -875,12 +1030,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if ((ry >= tileY) && (ry <= tileY + scaledTileHeight))
 				{
-					if (Result == null)
+					if (result == null)
 					{
-						Result = FlxPoint.get();
+						result = FlxPoint.get();
 					}
 
-					Result.set(rx, ry);
+					result.set(rx + x, ry + y);
 					return false;
 				}
 
@@ -897,12 +1052,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if ((rx >= tileX) && (rx <= tileX + scaledTileWidth))
 				{
-					if (Result == null)
+					if (result == null)
 					{
-						Result = FlxPoint.get();
+						result = FlxPoint.get();
 					}
 
-					Result.set(rx, ry);
+					result.set(rx + x, ry + y);
 					return false;
 				}
 

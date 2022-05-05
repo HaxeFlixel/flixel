@@ -147,9 +147,41 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return null;
 	}
 
-	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Note: In flixel 5.0.0, this was redone, the old method is now `rayStep`
+	 *
+	 * @param   start   The world coordinates of the start of the ray.
+	 * @param   end     The world coordinates of the end of the ray.
+	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                  Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		throw "ray must be implemented";
+		return false;
+	}
+
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
+	 * This method checks at steps and can miss, for better results use `ray()`
+	 * @since 5.0.0
+	 *
+	 * @param   start       The world coordinates of the start of the ray.
+	 * @param   end         The world coordinates of the end of the ray.
+	 * @param   result      Optional result vector, to avoid creating a new instance to be returned.
+	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
+	 *                      Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
+	{
+		throw "rayStep must be implemented?";
 		return false;
 	}
 
