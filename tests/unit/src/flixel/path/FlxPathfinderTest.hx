@@ -167,11 +167,11 @@ class BigMoverPathfinder extends FlxDiagonalPathfinder
 			x > 0,
 			x < data.map.widthInTiles - widthInTiles,
 			y > 0,
-			y < data.map.heightInTiles - widthInTiles
+			y < data.map.heightInTiles - heightInTiles
 		);
 	}
 	
-	override function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags)
+	override function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags = ANY)
 	{
 		var cols = data.map.widthInTiles;
 		return super.canGo(data, to           , dir)

@@ -702,7 +702,7 @@ enum FlxPathSimplifier
 	/**
 	 * calls the method to simplify
 	 */
-	CUSTOM(method:(FlxPathfinderData, Array<FlxPoint>)->Void);
+	CUSTOM(method:(FlxPathfinderData, Array<FlxPoint>)->Array<FlxPoint>);
 }
 
 /**
