@@ -284,27 +284,55 @@ class FlxCollision
 	 */
 	public static function calcRectEntry(rect:FlxRect, start:FlxVector, end:FlxVector, ?result:FlxVector):Null<FlxVector>
 	{
-		// helper to create a new instance if needed, when neededs
-		var get = FlxVector.get;
-		if (result != null)
-			get = result.set;
+		// We must ensure that weak refs are placed back in the pool
+		inline function putWeakRefs()
+		{
+			start.putWeak();
+			end.putWeak();
+			rect.putWeak();
+		}
+
+		// helper to create a new instance if needed, when needed.
+		// this allows us to return a value at any point and still put weak refs.
+		// otherwise this would be a fragile mess of if-elses
+		function getResult(x:Float, y:Float)
+		{
+			if (result == null)
+				result = FlxVector.get(x, y);
+			else
+				result.set(x, y);
+			
+			putWeakRefs();
+			return result;
+		}
+
+		function nullResult()
+		{
+			putWeakRefs();
+			return null;
+		}
 
 		// does the ray start inside the bounds
 		if (rect.containsPoint(start))
-			return start.copyTo();
+			return getResult(start.x, start.y);
 
-		// are both points above or below the bounds
-		if ((end.y < rect.top && start.y < rect.top) || (end.y > rect.bottom && start.y > rect.bottom))
-			return null;
+		// are both points above, below, left or right of the bounds
+		if ((start.y < rect.top    && end.y < rect.top   )
+		||  (start.y > rect.bottom && end.y > rect.bottom)
+		||  (start.x > rect.right  && end.x > rect.right )
+		||  (start.x < rect.left   && end.x < rect.left) )
+		{
+			return nullResult();
+		}
 
 		// check for purely vertical, i.e. has infinite slope
 		if (start.x == end.x)
 		{
 			// determine if it exits top or bottom
 			if (start.y < rect.top)
-				return get(start.x, rect.top);
+				return getResult(start.x, rect.top);
 
-			return get(start.x, rect.bottom);
+			return getResult(start.x, rect.bottom);
 		}
 
 		// Use y = mx + b formula to define out line, m = slope, b is y when x = 0
@@ -317,51 +345,46 @@ class FlxCollision
 
 		// if left and right intercepts are both above and below, there is no entry
 		if ((leftY < rect.top && rightY < rect.top) || (leftY > rect.bottom && rightY > rect.bottom))
-			return null;
+			return nullResult();
 
 		// if ray moves right
-		if (start.x < end.x)
+		else if (start.x < end.x)
 		{
-			// are both points right of the bounds
-			if (start.x > rect.right || end.x < rect.left)
-				return null;
-
 			if (leftY < rect.top)
 			{
 				// ray exits on top
 				// x = (y - b)/m
-				return get((rect.top - b) / m, rect.top);
+				return getResult((rect.top - b) / m, rect.top);
 			}
-			else if (leftY > rect.bottom)
+
+			if (leftY > rect.bottom)
 			{
 				// ray exits on bottom
 				// x = (y - b)/m
-				return get((rect.bottom - b) / m, rect.bottom);
+				return getResult((rect.bottom - b) / m, rect.bottom);
 			}
+
 			// ray exits to the left
-			return get(rect.left, leftY);
+			return getResult(rect.left, leftY);
 		}
+
 		// if ray moves left
-
-		// are both points left of the bounds
-		if (start.x < rect.left || end.x > rect.right)
-			return null;
-
 		if (rightY < rect.top)
 		{
 			// ray exits on top
 			// x = (y - b)/m
-			return get((rect.top - b) / m, rect.top);
+			return getResult((rect.top - b) / m, rect.top);
 		}
-		else if (rightY > rect.bottom)
+
+		if (rightY > rect.bottom)
 		{
 			// ray exits on bottom
 			// x = (y - b)/m
-			return get((rect.bottom - b) / m, rect.bottom);
+			return getResult((rect.bottom - b) / m, rect.bottom);
 		}
 
 		// ray exits to the right
-		return get(rect.right, rightY);
+		return getResult(rect.right, rightY);
 	}
 
 	/**
