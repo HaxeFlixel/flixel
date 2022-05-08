@@ -24,9 +24,9 @@ class ShakeTween extends FlxTween
 	var sprite:FlxSprite;
 
 	/**
-	 * Defines the initial position of the sprite at the beginning of the shake effect.
+	 * Defines the initial offset of the sprite at the beginning of the shake effect.
 	 */
-	var initialXY:FlxPoint;
+	var initialOffset:FlxPoint;
 
 	/**
 	 * A simple shake effect for FlxSprite.
@@ -43,27 +43,29 @@ class ShakeTween extends FlxTween
 		sprite = Sprite;
 		duration = Duration;
 		axes = Axes;
-		initialXY = new FlxPoint(Sprite.x, Sprite.y);
+		initialOffset = new FlxPoint(Sprite.offset.x, Sprite.offset.y);
 		start();
 		return this;
 	}
 
-	override function destroy()
+	override function destroy():Void
 	{
 		super.destroy();
-		// Return the sprite to its initial position.
-		sprite.setPosition(initialXY.x, initialXY.y);
+		// Return the sprite to its initial offset.
+		if (sprite != null && !sprite.offset.equals(initialOffset))
+			sprite.offset.set(initialOffset.x, initialOffset.y);
 
 		sprite = null;
+		initialOffset = null;
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		if (axes != Y)
-			sprite.x = initialXY.x + FlxG.random.float(-intensity * sprite.width, intensity * sprite.width);
+			sprite.offset.x = initialOffset.x + FlxG.random.float(-intensity * sprite.width, intensity * sprite.width);
 		if (axes != X)
-			sprite.y = initialXY.y + FlxG.random.float(-intensity * sprite.height, intensity * sprite.height);
+			sprite.offset.y = initialOffset.y + FlxG.random.float(-intensity * sprite.height, intensity * sprite.height);
 	}
 
 	override function isTweenOf(Object:Dynamic, ?Field:String):Bool
