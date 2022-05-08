@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -46,48 +47,6 @@ import flixel.util.FlxSpriteUtil;
  */
 class FlxPath implements IFlxDestroyable
 {
-	/**
-	 * Path behavior controls: move from the start of the path to the end then stop.
-	 * Here for backwards compatibility, use `FlxPathType's` `FORWARD` instead.
-	 */
-	public static inline var FORWARD:Int = FlxPathType.FORWARD;
-
-	/**
-	 * Path behavior controls: move from the end of the path to the start then stop.
-	 * Here for backwards compatibility, use `FlxPathType's` `BACKWARD` instead.
-	 */
-	public static inline var BACKWARD:Int = FlxPathType.BACKWARD;
-
-	/**
-	 * Path behavior controls: move from the start of the path to the end then directly back to the start, and start over.
-	 * Here for backwards compatibility, use `FlxPathType's` `LOOP_FORWARD` instead.
-	 */
-	public static inline var LOOP_FORWARD:Int = FlxPathType.LOOP_FORWARD;
-
-	/**
-	 * Path behavior controls: move from the end of the path to the start then directly back to the end, and start over.
-	 * Here for backwards compatibility, use `FlxPathType's` `LOOP_BACKWARD` instead.
-	 */
-	public static inline var LOOP_BACKWARD:Int = FlxPathType.LOOP_BACKWARD;
-
-	/**
-	 * Path behavior controls: move from the start of the path to the end then turn around and go back to the start, over and over.
-	 * Here for backwards compatibility, use `FlxPathType's` `YOYO` instead.
-	 */
-	public static inline var YOYO:Int = FlxPathType.YOYO;
-
-	/**
-	 * Path behavior controls: ignores any vertical component to the path data, only follows side to side.
-	 * Here for backwards compatibility, use `FlxPathType's` `HORIZONTAL_ONLY` instead.
-	 */
-	public static inline var HORIZONTAL_ONLY:Int = FlxPathType.HORIZONTAL_ONLY;
-
-	/**
-	 * Path behavior controls: ignores any horizontal component to the path data, only follows up and down.
-	 * Here for backwards compatibility, use `FlxPathType's` `VERTICAL_ONLY` instead.
-	 */
-	public static inline var VERTICAL_ONLY:Int = FlxPathType.VERTICAL_ONLY;
-
 	/**
 	 * Internal helper for keeping new variable instantiations under control.
 	 */
@@ -160,7 +119,12 @@ class FlxPath implements IFlxDestroyable
 	public var finished(default, null):Bool = false;
 
 	/**
-	 * Internal tracker for path behavior flags (like looping, horizontal only, etc).
+	 * Whether to limit movement to certain axes.
+	 */
+	public var axes:FlxAxes = XY;
+
+	/**
+	 * Internal tracker for path behavior flags (like looping, yoyo, etc).
 	 */
 	var _mode:FlxPathType;
 
@@ -331,8 +295,8 @@ class FlxPath implements IFlxDestroyable
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
 
-		var horizontalOnly:Bool = (_mode & HORIZONTAL_ONLY) > 0;
-		var verticalOnly:Bool = (_mode & VERTICAL_ONLY) > 0;
+		var horizontalOnly:Bool = axes == X;
+		var verticalOnly:Bool = axes == Y;
 
 		if (horizontalOnly)
 		{
@@ -434,13 +398,13 @@ class FlxPath implements IFlxDestroyable
 			var oldNode:FlxPoint = _nodes[nodeIndex];
 			if (oldNode != null)
 			{
-				if ((_mode & VERTICAL_ONLY) == 0)
+				if (axes.x)
 				{
 					object.x = oldNode.x;
 					if (autoCenter)
 						object.x -= object.width * 0.5;
 				}
-				if ((_mode & HORIZONTAL_ONLY) == 0)
+				if (axes.y)
 				{
 					object.y = oldNode.y;
 					if (autoCenter)
@@ -452,7 +416,7 @@ class FlxPath implements IFlxDestroyable
 		var callComplete:Bool = false;
 		nodeIndex += _inc;
 
-		if ((_mode & BACKWARD) > 0)
+		if (_mode == BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -461,7 +425,7 @@ class FlxPath implements IFlxDestroyable
 				onEnd();
 			}
 		}
-		else if ((_mode & LOOP_FORWARD) > 0)
+		else if (_mode == LOOP_FORWARD)
 		{
 			if (nodeIndex >= _nodes.length)
 			{
@@ -469,7 +433,7 @@ class FlxPath implements IFlxDestroyable
 				nodeIndex = 0;
 			}
 		}
-		else if ((_mode & LOOP_BACKWARD) > 0)
+		else if (_mode == LOOP_BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -481,7 +445,7 @@ class FlxPath implements IFlxDestroyable
 				}
 			}
 		}
-		else if ((_mode & YOYO) > 0)
+		else if (_mode == YOYO)
 		{
 			if (_inc > 0)
 			{
@@ -883,16 +847,6 @@ enum abstract FlxPathType(Int) from Int to Int
 	 * Move from the start of the path to the end then turn around and go back to the start, over and over.
 	 */
 	var YOYO = 0x001000;
-
-	/**
-	 * Ignores any vertical component to the path data, only follows side to side.
-	 */
-	var HORIZONTAL_ONLY = 0x010000;
-
-	/**
-	 * Ignores any horizontal component to the path data, only follows up and down.
-	 */
-	var VERTICAL_ONLY = 0x100000;
 }
 
 @:structInit
