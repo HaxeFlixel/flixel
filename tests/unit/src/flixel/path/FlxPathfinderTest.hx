@@ -150,14 +150,14 @@ class BigMoverPathfinder extends FlxDiagonalPathfinder
 {
 	public var widthInTiles:Int;
 	public var heightInTiles:Int;
-	
+
 	public function new(widthInTiles:Int, heightInTiles:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = NONE)
 	{
 		this.widthInTiles = widthInTiles;
 		this.heightInTiles = heightInTiles;
 		super(diagonalPolicy);
 	}
-	
+
 	override function getInBoundDirections(data:FlxPathfinderData, from:Int)
 	{
 		var x = data.getX(from);
@@ -170,27 +170,34 @@ class BigMoverPathfinder extends FlxDiagonalPathfinder
 			y < data.map.heightInTiles - heightInTiles
 		);
 	}
-	
+
 	override function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags = ANY)
 	{
-		var cols = data.map.widthInTiles;
-		return super.canGo(data, to           , dir)
-			&& super.canGo(data, to + 1       , dir)
-			&& super.canGo(data, to + cols    , dir)
-			&& super.canGo(data, to + cols + 1, dir);
+		final cols = data.map.widthInTiles;
+
+		for (x in 0...widthInTiles)
+		{
+			for (y in 0...heightInTiles)
+			{
+				if (!super.canGo(data, to + x + (y * cols), dir))
+					return false;
+			}
+		}
+
+		return true;
 	}
-	
+
 	override function hasValidInitialData(data:FlxPathfinderData):Bool
 	{
-		var cols = data.map.widthInTiles;
+		final cols = data.map.widthInTiles;
+		final maxX = data.map.widthInTiles - widthInTiles;
+		final maxY = data.map.heightInTiles - heightInTiles;
 		return data.hasValidStartEnd()
-			&& data.getTileCollisionsByIndex(data.startIndex) == NONE
-			&& data.getTileCollisionsByIndex(data.startIndex + 1) == NONE
-			&& data.getTileCollisionsByIndex(data.startIndex + cols) == NONE
-			&& data.getTileCollisionsByIndex(data.startIndex + cols + 1) == NONE
-			&& data.getTileCollisionsByIndex(data.endIndex) == NONE
-			&& data.getTileCollisionsByIndex(data.endIndex + 1) == NONE
-			&& data.getTileCollisionsByIndex(data.endIndex + cols) == NONE
-			&& data.getTileCollisionsByIndex(data.endIndex + cols + 1) == NONE;
+			&& data.getX(data.startIndex) <= maxX
+			&& data.getY(data.startIndex) <= maxY
+			&& data.getX(data.endIndex) <= maxX
+			&& data.getY(data.endIndex) <= maxY
+			&& canGo(data, data.startIndex)
+			&& canGo(data, data.endIndex);
 	}
 }
