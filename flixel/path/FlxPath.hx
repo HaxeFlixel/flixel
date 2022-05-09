@@ -712,14 +712,11 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		// Then fill up the object with node and path graphics
-		var node:FlxPoint;
-		var nextNode:FlxPoint;
-		var i:Int = 0;
-		var l:Int = _nodes.length;
-		while (i < l)
+		var length = _nodes.length;
+		for (i in 0...length)
 		{
 			// get a reference to the current node
-			node = _nodes[i];
+			var node = _nodes[i];
 
 			// find the screen position of the node on this camera
 			_point.x = node.x - (camera.scroll.x * object.scrollFactor.x); // copied from getScreenPosition()
@@ -730,14 +727,14 @@ class FlxPath implements IFlxDestroyable
 			// decide what color this node should be
 			var nodeSize:Int = debugDrawData.nodeSize;
 			var nodeColor:FlxColor = debugDrawData.nodeColor;
-			if (l > 1)
+			if (length > 1)
 			{
 				if (i == 0)
 				{
 					nodeColor = debugDrawData.startColor;
 					nodeSize = debugDrawData.startSize;
 				}
-				else if (i == l - 1)
+				else if (i == length - 1)
 				{
 					nodeColor = debugDrawData.endColor;
 					nodeSize = debugDrawData.endSize;
@@ -752,7 +749,8 @@ class FlxPath implements IFlxDestroyable
 			gfx.endFill();
 
 			// then find the next node in the path
-			if (i < l - 1)
+			var nextNode:FlxPoint;
+			if (i < length - 1)
 			{
 				nextNode = _nodes[i + 1];
 			}
@@ -772,8 +770,6 @@ class FlxPath implements IFlxDestroyable
 				_point.subtract(camera.viewOffsetX, camera.viewOffsetY);
 
 			gfx.lineTo(_point.x + lineOffset, _point.y + lineOffset);
-
-			i++;
 		}
 
 		if (FlxG.renderBlit)
