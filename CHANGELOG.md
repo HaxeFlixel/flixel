@@ -13,6 +13,7 @@
 	- Expose previously private fields: `tileWidth`, `tileHeight`, `scaledTileWidth`, `scaledTileHeight`, `scaledWidth`, and `scaledHeight`
 	- `FlxBaseTilemap`: added `calcRayEntry` and `calcRayExit`
 - `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPathDrawData`: added `myFlxPath.debugDrawData` to allow custom colors and draw properties ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxDirectionFlags`: added `fromBools` static helper ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 #### Bugfixes:
