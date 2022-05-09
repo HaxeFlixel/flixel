@@ -70,7 +70,7 @@ class FlxPath implements IFlxDestroyable
 	 * to check if this object is currently following a path or not.
 	 */
 	public var speed:Float = 0;
-	
+
 	/**
 	 * Whether to make the object immovable while active.
 	 */
@@ -692,7 +692,7 @@ class FlxPath implements IFlxDestroyable
 		{
 			return;
 		}
-		
+
 		if (camera == null)
 		{
 			camera = FlxG.camera;
@@ -797,12 +797,12 @@ class FlxPath implements IFlxDestroyable
 		}
 		return _nodes;
 	}
-	
+
 	function set_immovable(value:Bool):Bool
 	{
 		if (_firstUpdate || finished || value == immovable)
 			return this.immovable = value;
-		
+
 		if (value)
 		{
 			_wasObjectImmovable = object.immovable;
@@ -813,7 +813,7 @@ class FlxPath implements IFlxDestroyable
 			object.immovable = _wasObjectImmovable;
 			_wasObjectImmovable = null;
 		}
-		
+
 		return this.immovable = value;
 	}
 }
