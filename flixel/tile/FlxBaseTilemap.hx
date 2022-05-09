@@ -1,14 +1,14 @@
 package flixel.tile;
 
 import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
-import flixel.system.FlxAssets.FlxGraphicSource;
-import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.path.FlxPathfinder;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxColor;
+import flixel.util.FlxCollision;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
@@ -41,6 +41,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		 0,   0, 0, 0,  0,   0, 0,   0, 0, 0, 0, 0,  0,   0, 0,   0,
 		 0, 199, 0, 0,  0, 202, 0, 203, 0, 0, 0, 0,  0, 208, 0, 209
 	];
+	
+	static var diagonalPathfinder = new FlxDiagonalPathfinder();
 
 	public var widthInTiles(default, null):Int = 0;
 
@@ -145,10 +147,87 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return null;
 	}
 
-	public function ray(Start:FlxPoint, End:FlxPoint, ?Result:FlxPoint, Resolution:Float = 1):Bool
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Note: In flixel 5.0.0, this was redone, the old method is now `rayStep`
+	 *
+	 * @param   start   The world coordinates of the start of the ray.
+	 * @param   end     The world coordinates of the end of the ray.
+	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                  Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		throw "ray must be implemented";
 		return false;
+	}
+
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
+	 * This method checks at steps and can miss, for better results use `ray()`
+	 * @since 5.0.0
+	 *
+	 * @param   start       The world coordinates of the start of the ray.
+	 * @param   end         The world coordinates of the end of the ray.
+	 * @param   result      Optional result vector, to avoid creating a new instance to be returned.
+	 *                      Only returned if the line enters the rect.
+	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
+	{
+		throw "rayStep must be implemented?";
+		return false;
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, first enters the tilemap.
+	 * If the line starts inside the tilemap, a copy of start is returned.
+	 * If the line never enters the tilemap, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the tilemap.
+	 * @return The point of entry of the line into the tilemap, if possible.
+	 */
+	public function calcRayEntry(start, end, ?result)
+	{
+		var bounds = getBounds();
+		// subtract 1 from size otherwise `getTileIndexByCoords` will have weird edge cases (literally)
+		bounds.width--;
+		bounds.height--;
+
+		return FlxCollision.calcRectEntry(bounds, start, end, result);
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, was last inside the tilemap.
+	 * If the line ends inside the tilemap, a copy of end is returned.
+	 * If the line is never inside the tilemap, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the tilemap.
+	 * @return The point of exit of the line from the tilemap, if possible.
+	 */
+	public inline function calcRayExit(start, end, ?result)
+	{
+		return calcRayEntry(end, start, result);
 	}
 
 	public function overlapsWithCallback(Object:FlxObject, ?Callback:FlxObject->FlxObject->Bool, FlipCallbackParams:Bool = false, ?Position:FlxPoint):Bool
@@ -613,7 +692,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param	Index	Tile index returned by getTile or getTileByIndex
 	 * @return	The internal collision flag for the requested tile.
 	 */
-	public function getTileCollisions(Index:Int):Int
+	public function getTileCollisions(Index:Int):FlxDirectionFlags
 	{
 		return _tileObjects[Index].allowCollisions;
 	}
@@ -792,448 +871,85 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
 	 * If no path is discovered then a null reference is returned.
 	 *
-	 * @param	Start		The start point in world coordinates.
-	 * @param	End			The end point in world coordinates.
-	 * @param	Simplify	Whether to run a basic simplification algorithm over the path data, removing extra points that are on the same line.  Default value is true.
-	 * @param	RaySimplify	Whether to run an extra raycasting simplification algorithm over the remaining path data.  This can result in some close corners being cut, and should be used with care if at all (yet).  Default value is false.
-	 * @param	DiagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
-	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found, then a null reference is returned.
+	 * @param	start			The start point in world coordinates.
+	 * @param	end				The end point in world coordinates.
+	 * @param	simplify		Whether to run a basic simplification algorithm over the path data, removing
+	 * 							extra points that are on the same line.  Default value is true.
+	 * @param	raySimplify		Whether to run an extra raycasting simplification algorithm over the remaining
+	 * 							path data.  This can result in some close corners being cut, and should be
+	 * 							used with care if at all (yet).  Default value is false.
+	 * @param	diagonalPolicy	How to treat diagonal movement. (Default is WIDE, count +1 tile for diagonal movement)
+	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
+	 * 			then a null reference is returned.
 	 */
-	public function findPath(Start:FlxPoint, End:FlxPoint, Simplify:Bool = true, RaySimplify:Bool = false,
-			DiagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
+	public inline function findPath(start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE,
+			diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE):Array<FlxPoint>
 	{
-		// Figure out what tile we are starting and ending on.
-		var startIndex:Int = getTileIndexByCoords(Start);
-		var endIndex:Int = getTileIndexByCoords(End);
+		return getDiagonalPathfinder(diagonalPolicy).findPath(cast this, start, end, simplify);
+	}
 
-		// Check if any point given is outside the tilemap
-		if ((startIndex < 0) || (endIndex < 0))
-			return null;
-
-		// Check that the start and end are clear.
-		if ((_tileObjects[_data[startIndex]].allowCollisions > 0) || (_tileObjects[_data[endIndex]].allowCollisions > 0))
-		{
-			return null;
-		}
-
-		// Figure out how far each of the tiles is from the starting tile
-		var distances:Array<Int> = computePathDistance(startIndex, endIndex, DiagonalPolicy);
-
-		if (distances == null)
-		{
-			return null;
-		}
-
-		// Then count backward to find the shortest path.
-		var points:Array<FlxPoint> = new Array<FlxPoint>();
-		walkPath(distances, endIndex, points);
-
-		// Reset the start and end points to be exact
-		var node:FlxPoint;
-		node = points[points.length - 1];
-		node.copyFrom(Start);
-		node = points[0];
-		node.copyFrom(End);
-
-		// Some simple path cleanup options
-		if (Simplify)
-		{
-			simplifyPath(points);
-		}
-		if (RaySimplify)
-		{
-			raySimplifyPath(points);
-		}
-
-		// Finally load the remaining points into a new path object and return it
-		var path:Array<FlxPoint> = [];
-		var i:Int = points.length - 1;
-
-		while (i >= 0)
-		{
-			node = points[i--];
-
-			if (node != null)
-			{
-				path.push(node);
-			}
-		}
-
-		return path;
+	/**
+	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered then a null reference is returned.
+	 * @since 5.0.0
+	 *
+	 * @param	pathfinder	Decides how to move and evaluate the paths for comparison.
+	 * @param	start		The start point in world coordinates.
+	 * @param	end			The end point in world coordinates.
+	 * @param	simplify	Whether to run a basic simplification algorithm over the path data, removing
+	 * 						extra points that are on the same line.  Default value is true.
+	 * @param	raySimplify	Whether to run an extra raycasting simplification algorithm over the remaining
+	 * 						path data.  This can result in some close corners being cut, and should be
+	 * 						used with care if at all (yet).  Default value is false.
+	 * @return	An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
+	 * 			then a null reference is returned.
+	 */
+	public inline function findPathCustom(pathfinder:FlxPathfinder, start:FlxPoint, end:FlxPoint,
+		simplify:FlxPathSimplifier = LINE):Array<FlxPoint>
+	{
+		return pathfinder.findPath(cast this, start, end, simplify);
 	}
 
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
 	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 *
+	 * @param	startIndex		The starting tile's map index.
+	 * @param	endIndex		The ending tile's map index.
+	 * @param	diagonalPolicy	How to treat diagonal movement.
+	 * @param	stopOnEnd		Whether to stop at the end or not (default true)
+	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
+	 */
+	public function computePathDistance(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):Array<Int>
+	{
+		var data = computePathData(startIndex, endIndex, diagonalPolicy, stopOnEnd);
+		if (data != null)
+			return data.distances;
+		
+		return null;
+	}
+
+	
+	/**
+	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
+	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 * @since 5.0.0
+	 *
 	 * @param	StartIndex		The starting tile's map index.
 	 * @param	EndIndex		The ending tile's map index.
-	 * @param	DiagonalPolicy	How to treat diagonal movement.
+	 * @param	Policy			Decides how to move and evaluate the paths for comparison.
 	 * @param	StopOnEnd		Whether to stop at the end or not (default true)
 	 * @return	An array of FlxPoint nodes. If the end tile could not be found, then a null Array is returned instead.
 	 */
-	public function computePathDistance(StartIndex:Int, EndIndex:Int, DiagonalPolicy:FlxTilemapDiagonalPolicy, StopOnEnd:Bool = true):Array<Int>
+	public function computePathData(startIndex:Int, endIndex:Int, diagonalPolicy:FlxTilemapDiagonalPolicy = WIDE, stopOnEnd:Bool = true):FlxPathfinderData
 	{
-		// Create a distance-based representation of the tilemap.
-		// All walls are flagged as -2, all open areas as -1.
-		var mapSize:Int = widthInTiles * heightInTiles;
-		var distances:Array<Int> = new Array<Int>( /*mapSize*/);
-		FlxArrayUtil.setLength(distances, mapSize);
-		var i:Int = 0;
-
-		while (i < mapSize)
-		{
-			if (_tileObjects[_data[i]].allowCollisions != NONE)
-			{
-				distances[i] = -2;
-			}
-			else
-			{
-				distances[i] = -1;
-			}
-			i++;
-		}
-
-		distances[StartIndex] = 0;
-		var distance:Int = 1;
-		var neighbors:Array<Int> = [StartIndex];
-		var current:Array<Int>;
-		var currentIndex:Int;
-		var left:Bool;
-		var right:Bool;
-		var up:Bool;
-		var down:Bool;
-		var currentLength:Int;
-		var foundEnd:Bool = false;
-
-		while (neighbors.length > 0)
-		{
-			current = neighbors;
-			neighbors = new Array<Int>();
-
-			i = 0;
-			currentLength = current.length;
-			while (i < currentLength)
-			{
-				currentIndex = current[i++];
-
-				if (currentIndex == Std.int(EndIndex))
-				{
-					foundEnd = true;
-					if (StopOnEnd)
-					{
-						neighbors = [];
-						break;
-					}
-				}
-
-				// Basic map bounds
-				left = currentIndex % widthInTiles > 0;
-				right = currentIndex % widthInTiles < widthInTiles - 1;
-				up = currentIndex / widthInTiles > 0;
-				down = currentIndex / widthInTiles < heightInTiles - 1;
-
-				var index:Int;
-
-				if (up)
-				{
-					index = currentIndex - widthInTiles;
-
-					if (distances[index] == -1)
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-				if (right)
-				{
-					index = currentIndex + 1;
-
-					if (distances[index] == -1)
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-				if (down)
-				{
-					index = currentIndex + widthInTiles;
-
-					if (distances[index] == -1)
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-				if (left)
-				{
-					index = currentIndex - 1;
-
-					if (distances[index] == -1)
-					{
-						distances[index] = distance;
-						neighbors.push(index);
-					}
-				}
-
-				if (DiagonalPolicy != NONE)
-				{
-					var wideDiagonal = DiagonalPolicy == WIDE;
-					if (up && right)
-					{
-						index = currentIndex - widthInTiles + 1;
-
-						if (wideDiagonal
-							&& (distances[index] == -1)
-							&& (distances[currentIndex - widthInTiles] >= -1)
-							&& (distances[currentIndex + 1] >= -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-						else if (!wideDiagonal && (distances[index] == -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-					}
-					if (right && down)
-					{
-						index = currentIndex + widthInTiles + 1;
-
-						if (wideDiagonal
-							&& (distances[index] == -1)
-							&& (distances[currentIndex + widthInTiles] >= -1)
-							&& (distances[currentIndex + 1] >= -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-						else if (!wideDiagonal && (distances[index] == -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-					}
-					if (left && down)
-					{
-						index = currentIndex + widthInTiles - 1;
-
-						if (wideDiagonal
-							&& (distances[index] == -1)
-							&& (distances[currentIndex + widthInTiles] >= -1)
-							&& (distances[currentIndex - 1] >= -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-						else if (!wideDiagonal && (distances[index] == -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-					}
-					if (up && left)
-					{
-						index = currentIndex - widthInTiles - 1;
-
-						if (wideDiagonal
-							&& (distances[index] == -1)
-							&& (distances[currentIndex - widthInTiles] >= -1)
-							&& (distances[currentIndex - 1] >= -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-						else if (!wideDiagonal && (distances[index] == -1))
-						{
-							distances[index] = distance;
-							neighbors.push(index);
-						}
-					}
-				}
-			}
-
-			distance++;
-		}
-		if (!foundEnd)
-		{
-			distances = null;
-		}
-
-		return distances;
+		return getDiagonalPathfinder(diagonalPolicy).computePathData(cast this, startIndex, endIndex, stopOnEnd);
 	}
 
-	/**
-	 * Pathfinding helper function, recursively walks the grid and finds a shortest path back to the start.
-	 *
-	 * @param	Data	An array of distance information.
-	 * @param	Start	The tile we're on in our walk backward.
-	 * @param	Points	An array of FlxPoint nodes composing the path from the start to the end, compiled in reverse order.
-	 */
-	function walkPath(Data:Array<Int>, Start:Int, Points:Array<FlxPoint>):Void
+	inline function getDiagonalPathfinder(diagonalPolicy:FlxTilemapDiagonalPolicy):FlxPathfinder
 	{
-		Points.push(getTileCoordsByIndex(Start));
-
-		if (Data[Start] == 0)
-		{
-			return;
-		}
-
-		// Basic map bounds
-		var left:Bool = (Start % widthInTiles) > 0;
-		var right:Bool = (Start % widthInTiles) < (widthInTiles - 1);
-		var up:Bool = (Start / widthInTiles) > 0;
-		var down:Bool = (Start / widthInTiles) < (heightInTiles - 1);
-
-		var current:Int = Data[Start];
-		var i:Int;
-
-		if (up)
-		{
-			i = Start - widthInTiles;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (right)
-		{
-			i = Start + 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (down)
-		{
-			i = Start + widthInTiles;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (left)
-		{
-			i = Start - 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (up && right)
-		{
-			i = Start - widthInTiles + 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (right && down)
-		{
-			i = Start + widthInTiles + 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (left && down)
-		{
-			i = Start + widthInTiles - 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-		if (up && left)
-		{
-			i = Start - widthInTiles - 1;
-
-			if (i >= 0 && (Data[i] >= 0) && (Data[i] < current))
-			{
-				return walkPath(Data, i, Points);
-			}
-		}
-
-		return;
-	}
-
-	/**
-	 * Pathfinding helper function, strips out extra points on the same line.
-	 *
-	 * @param	Points		An array of FlxPoint nodes.
-	 */
-	function simplifyPath(Points:Array<FlxPoint>):Void
-	{
-		var deltaPrevious:Float;
-		var deltaNext:Float;
-		var last:FlxPoint = Points[0];
-		var node:FlxPoint;
-		var i:Int = 1;
-		var l:Int = Points.length - 1;
-
-		while (i < l)
-		{
-			node = Points[i];
-			deltaPrevious = (node.x - last.x) / (node.y - last.y);
-			deltaNext = (node.x - Points[i + 1].x) / (node.y - Points[i + 1].y);
-
-			if ((last.x == Points[i + 1].x) || (last.y == Points[i + 1].y) || (deltaPrevious == deltaNext))
-			{
-				Points[i] = null;
-			}
-			else
-			{
-				last = node;
-			}
-
-			i++;
-		}
-	}
-
-	/**
-	 * Pathfinding helper function, strips out even more points by raycasting from one point to the next and dropping unnecessary points.
-	 *
-	 * @param	Points		An array of FlxPoint nodes.
-	 */
-	function raySimplifyPath(Points:Array<FlxPoint>):Void
-	{
-		var source:FlxPoint = Points[0];
-		var lastIndex:Int = -1;
-		var node:FlxPoint;
-		var i:Int = 1;
-		var l:Int = Points.length;
-
-		while (i < l)
-		{
-			node = Points[i++];
-
-			if (node == null)
-			{
-				continue;
-			}
-
-			if (ray(source, node, _point))
-			{
-				if (lastIndex >= 0)
-				{
-					Points[lastIndex] = null;
-				}
-			}
-			else
-			{
-				source = Points[lastIndex];
-			}
-
-			lastIndex = i - 1;
-		}
+		diagonalPathfinder.diagonalPolicy = diagonalPolicy;
+		return diagonalPathfinder;
 	}
 
 	/**
@@ -1377,23 +1093,4 @@ enum FlxTilemapAutoTiling
 	 * @since 4.6.0
 	 */
 	FULL;
-}
-
-@:enum
-abstract FlxTilemapDiagonalPolicy(Int)
-{
-	/**
-	 * No diagonal movement allowed when calculating the path
-	 */
-	var NONE = 0;
-
-	/**
-	 * Diagonal movement costs the same as orthogonal movement
-	 */
-	var NORMAL = 1;
-
-	/**
-	 * Diagonal movement costs one more than orthogonal movement
-	 */
-	var WIDE = 2;
 }

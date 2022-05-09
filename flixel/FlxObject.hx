@@ -5,12 +5,12 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
+import flixel.path.FlxPath;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
-import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
@@ -1137,10 +1137,10 @@ class FlxObject extends FlxBasic
 	 */
 	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes.match(X | XY))
+		if (axes.x)
 			x = (FlxG.width - width) / 2;
 
-		if (axes.match(Y | XY))
+		if (axes.y)
 			y = (FlxG.height - height) / 2;
 
 		return this;
