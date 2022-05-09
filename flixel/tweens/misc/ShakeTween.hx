@@ -62,9 +62,9 @@ class ShakeTween extends FlxTween
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (axes != Y)
+		if (axes.x)
 			sprite.offset.x = initialOffset.x + FlxG.random.float(-intensity * sprite.width, intensity * sprite.width);
-		if (axes != X)
+		if (axes.y)
 			sprite.offset.y = initialOffset.y + FlxG.random.float(-intensity * sprite.height, intensity * sprite.height);
 	}
 
