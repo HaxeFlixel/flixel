@@ -4,7 +4,9 @@
 
 - `FlxMouse`: Added `released`, `releasedRight` and `releasedMiddle` ([#2496](https://github.com/HaxeFlixel/flixel/pull/2496))
 - Angles: Added various degree/radian specific versions of existing angle helpers ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
-- `FlxDirectionFlags`: Added `degrees` and `radians` fields ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxDirectionFlags`: Various helpers
+	- Added `degrees` and `radians` fields ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+	- added `fromBools` static helper ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxVector`: Added `copyTo` ([#2550](https://github.com/HaxeFlixel/flixel/pull/2550))
 - `FlxCollision`: Added `calcRectEntry` and `calcRectExit` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxTilemap`: Overhaul to pathfinding ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
@@ -14,7 +16,6 @@
 	- `FlxBaseTilemap`: added `calcRayEntry` and `calcRayExit`
 - `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPathDrawData`: added `myFlxPath.debugDrawData` to allow custom colors and draw properties ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
-- `FlxDirectionFlags`: added `fromBools` static helper ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 #### Bugfixes:
 
