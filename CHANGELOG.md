@@ -17,6 +17,8 @@
 - `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPathDrawData`: added `myFlxPath.debugDrawData` to allow custom colors and draw properties ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxTween`: added `ShakeTween` and `FlxTween.shake()` helper ([#2549](https://github.com/HaxeFlixel/flixel/pull/2549)) 
+
 #### Bugfixes:
 
 - `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
