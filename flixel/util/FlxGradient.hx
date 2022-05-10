@@ -116,6 +116,9 @@ class FlxGradient
 		var shape = new Shape();
 		var interpolationMethod = interpolate ? InterpolationMethod.RGB : InterpolationMethod.LINEAR_RGB;
 
+		#if flash
+		var colors = colors.map(function(c):UInt return c);
+		#end
 		shape.graphics.beginGradientFill(GradientType.LINEAR, colors, gradient.alpha, gradient.ratio, gradient.matrix, SpreadMethod.PAD, interpolationMethod,
 			0);
 
@@ -137,6 +140,10 @@ class FlxGradient
 			sM.scale(tempBitmap.scaleX, tempBitmap.scaleY);
 
 			data.draw(tempBitmap, sM);
+
+			// The scaled bitmap might not have filled the data. Fill the remaining pixels with the last color.
+			var remainingRect = new openfl.geom.Rectangle(0, tempBitmap.height, width, height - tempBitmap.height);
+			data.fillRect(remainingRect, colors[colors.length - 1]);
 		}
 
 		return data;

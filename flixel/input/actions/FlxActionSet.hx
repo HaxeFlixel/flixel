@@ -19,6 +19,9 @@ import steamwrap.data.ControllerConfig.ControllerActionSet;
 
 using flixel.util.FlxArrayUtil;
 
+/**
+ * @since 4.6.0
+ */
 @:allow(flixel.input.actions.FlxActionManager)
 class FlxActionSet implements IFlxDestroyable
 {
@@ -169,7 +172,7 @@ class FlxActionSet implements IFlxDestroyable
 		var space:String = "\t";
 		return Json.stringify(this, function(key:Dynamic, value:Dynamic):Dynamic
 		{
-			if (Std.is(value, FlxAction))
+			if ((value is FlxAction))
 			{
 				var fa:FlxAction = cast value;
 				return {

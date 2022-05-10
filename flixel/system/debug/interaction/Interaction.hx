@@ -23,6 +23,11 @@ import flixel.util.FlxSpriteUtil;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
 import flash.display.Bitmap;
 #end
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
 /**
  * Adds a new functionality to Flixel debugger that allows any object
@@ -152,7 +157,7 @@ class Interaction extends Window
 	{
 		if (object == null)
 			return false;
-		else if (Std.is(object, FlxDebugger))
+		else if ((object is FlxDebugger))
 			return true;
 		return belongsToDebugger(object.parent);
 	}
@@ -342,7 +347,7 @@ class Interaction extends Window
 	public function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
-			if (Std.is(tool, className))
+			if (isOfType(tool, className))
 				return tool;
 		return null;
 	}
@@ -559,7 +564,7 @@ class Interaction extends Window
 			var group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
 				findItemsWithinArea(items, group.members, area);
-			else if (Std.is(member, FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()))
+			else if ((member is FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()))
 				items.push(cast member);
 		}
 	}

@@ -1,6 +1,161 @@
+5.0.0 (TBD)
+------------------------------
+#### New features:
+
+- `FlxMouse`: Added `released`, `releasedRight` and `releasedMiddle` ([#2496](https://github.com/HaxeFlixel/flixel/pull/2496))
+- Angles: Added various degree/radian specific versions of existing angle helpers ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxDirectionFlags`: Various helpers
+	- Added `degrees` and `radians` fields ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+	- added `fromBools` static helper ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxVector`: Added `copyTo` ([#2550](https://github.com/HaxeFlixel/flixel/pull/2550))
+- `FlxCollision`: Added `calcRectEntry` and `calcRectExit` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxTilemap`: Overhaul to pathfinding ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+	- `FlxPathfinder`: Allows customizable pathfinding algorithms for tilemap
+	- `FlxPathSimplifier`: Replace findPath simplify args with a new enum
+	- Expose previously private fields: `tileWidth`, `tileHeight`, `scaledTileWidth`, `scaledTileHeight`, `scaledWidth`, and `scaledHeight`
+	- `FlxBaseTilemap`: added `calcRayEntry` and `calcRayExit`
+- `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPathDrawData`: added `myFlxPath.debugDrawData` to allow custom colors and draw properties ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxTween`: added `ShakeTween` and `FlxTween.shake()` helper ([#2549](https://github.com/HaxeFlixel/flixel/pull/2549))
+- `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
+
+#### Bugfixes:
+
+- `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
+- `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
+
+#### Changes and improvements:
+
+- Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
+- Angles: All angle utils treat right as 0 (affects `FlxSwipe` and `FlxPath`) ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxTilemap`: Renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+
+4.11.0 (January 26, 2022)
+------------------------------
+#### Dependencies:
+
+- Dropped support for haxe 3, use 4.0.5 or higher
+
+#### New features:
+
+- `FlxAnimationController`: added `getAnimationList`, `getNameList`, `exists` and `rename` ([#2473](https://github.com/HaxeFlixel/flixel/pull/2473))
+- `FlxRect`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: added `getRotatedBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: added `getScreenBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSpriteUtil`: added `cameraWrap` and `cameraBounds` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `getViewRect` and `containsRect` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+
+#### Bugfixes:
+
+- Fixed segmentation faults on Hashlink for linux ([#2487](https://github.com/HaxeFlixel/flixel/pull/2487))
+- `FlxSpriteGroup`: `kill`, `revive` and `revive` call the respective function on members ([#2423](https://github.com/HaxeFlixel/flixel/pull/2423))
+
+#### Changes and improvements:
+
+- `FlxCollision`: improved `pixelPerfectCheck` performance, now honors scale ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxSprite`: improved `isOnScreen` accuracy ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxCamera`: added `putWeak` call in `containsPoint` ([#2298](https://github.com/HaxeFlixel/flixel/pull/2298))
+- `FlxObject`: `screenCenter` defaults to `XY` rather than `null` ([#2441](https://github.com/HaxeFlixel/flixel/pull/2441))
+- `FlxState`: Clarify restrictions in state constructors ([#2479](https://github.com/HaxeFlixel/flixel/pull/2479))
+
+4.10.0 (September 12, 2021)
+------------------------------
+#### New features:
+
+- Added `FlxDirectionFlags` and `FlxDirection` ([#2303](https://github.com/HaxeFlixel/flixel/pull/2303))
+- `FlxBitmapText`: added support for unicode combining diacritical marks ([#2309](https://github.com/HaxeFlixel/flixel/pull/2309))
+- `FlxTextFormat`: added `leading` ([#2334](https://github.com/HaxeFlixel/flixel/pull/2334))
+- `FlxAction`: added `addAndroidKey()` ([#2393](https://github.com/HaxeFlixel/flixel/pull/2393))
+- `FlxVector`: added `setPolarRadians()` and `setPolarDegrees()` ([#2401](https://github.com/HaxeFlixel/flixel/pull/2401))
+
+#### Bugfixes:
+
+- `FlxAssetPaths`: fixed paths for iOS ([#2345](https://github.com/HaxeFlixel/flixel/pull/2345))
+- `VarTween`: fixed an error if `cancel()` is called during `onUpdate` ([#2352](https://github.com/HaxeFlixel/flixel/pull/2352))
+- `FlxGradient`: fixed last pixels sometimes not being filled ([#2367](https://github.com/HaxeFlixel/flixel/pull/2367))
+- `FlxTilemap`: fixed built-in autotile assets for HTML5 ([#2402](https://github.com/HaxeFlixel/flixel/pull/2402))
+- `FlxDebugger`: fixed single-character vertical text in the stats window
+
+#### Changes and improvements:
+
+- `FlxSpriteUtil`: enabled `drawRoundRectComplex()` for non-Flash targets ([#2332](https://github.com/HaxeFlixel/flixel/pull/2332))
+- `FlxTween`: allowed `cancelTweensOf()` to cancel "grandchild" tweens ([#2354](https://github.com/HaxeFlixel/flixel/pull/2354))
+
+4.9.0 (April 11, 2021)
+------------------------------
+#### Dependencies:
+
+- Compatibility with Haxe 4.2.x
+
+#### New features:
+
+- `FlxTween`: added `cancelTweensOf()` and `completeTweensOf()` ([#2273](https://github.com/HaxeFlixel/flixel/pull/2273))
+- `FlxSound`: added an `OnLoad` callback to `loadStream()` ([#2276](https://github.com/HaxeFlixel/flixel/pull/2276))
+- `FlxState`: added `subStateOpened` and `subStateClosed` signals ([#2280](https://github.com/HaxeFlixel/flixel/pull/2280))
+- `FlxG.cameras`: added a `DefaultDrawTarget` argument to `add()` and `setDefaultDrawTarget()` ([#2296](https://github.com/HaxeFlixel/flixel/pull/2296))
+
+#### Bugfixes:
+
+- `FlxTween`: fixed an issue with setting `startDelay` after tween creation ([#2262](https://github.com/HaxeFlixel/flixel/pull/2262))
+- `FlxEmitter`: fixed `maxSize` not being set to `Quantity` in `makeParticles()` ([#2265](https://github.com/HaxeFlixel/flixel/pull/2265))
+- `FlxBitmapFont`: fixed infinite loops caused by "farbling" in the Brave browser ([#2300](https://github.com/HaxeFlixel/flixel/pull/2300))
+
+#### Changes and improvements:
+
+- `FlxG.plugins`: improved type safety for `get()` and `remove()` ([#2292](https://github.com/HaxeFlixel/flixel/pull/2292))
+- `FlxAtlasFrames`: improved animation support in `fromLibGdx()` ([#2278](https://github.com/HaxeFlixel/flixel/pull/2278))
+- `FlxBasic`: assign an incremented `ID` for each created instance ([#2266](https://github.com/HaxeFlixel/flixel/pull/2266))
+- `FlxCamera`: deprecated `defaultCameras` in favor of default draw targets in `FlxG.cameras` ([#2296](https://github.com/HaxeFlixel/flixel/pull/2296))
+
+4.8.1 (July 16, 2020)
+------------------------------
+- improved rendering performance on low-end devices
+
+4.8.0 (July 2, 2020)
+------------------------------
+#### New features:
+- `FlxSplash`: added `muted` (defaults to `true` on HTML5)
+- `FlxBaseKeyList`: added `NONE` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxKeyManager`: added `released` ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxGamepad`:
+	- added Switch Pro controller mappings ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+	- added `getInputLabel()` ([#2254](https://github.com/HaxeFlixel/flixel/pull/2254))
+- `FlxText`: added support for removing partial ranges in `removeFormat()` ([#2256](https://github.com/HaxeFlixel/flixel/pull/2256))
+
+#### Bugfixes:
+- `FlxGamepad`: fixed `pressed` not being `true` during the first `justPressed` frame ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+- `FlxKeyManager`: fixed `anyPressed([ANY])` not working ([#2253](https://github.com/HaxeFlixel/flixel/pull/2253))
+
+#### Changes and improvements:
+- Fixed `Std.is()` deprecation warnings with Haxe 4.2
+
+4.7.0 (April 12, 2020)
+------------------------------
+#### New features:
+
+- `FlxGroup`: added support for specifying `cameras` ([#2232](https://github.com/HaxeFlixel/flixel/pull/2232))
+
+#### Bugfixes:
+
+- `FlxButton`: fixed `mouseButtons` handling ([#2246](https://github.com/HaxeFlixel/flixel/issues/2246))
+- `FlxTilemap`: handle negative tile indices for all `load` methods, not just CSV ([#2250](https://github.com/HaxeFlixel/flixel/pull/2250))
+- `FlxVirtualPad`: fixed graphic not showing up on HTML5
+- `OUYAID`: fixed button mappings ([#2234](https://github.com/HaxeFlixel/flixel/pull/2234))
+
+#### Changes and improvements:
+
+- `FlxAnimation`: changed `frameRate` to a `Float` ([#2252](https://github.com/HaxeFlixel/flixel/pull/2252))
+
+4.6.3 (August 21, 2019)
+------------------------------
+- Compatibility with Haxe 4.0.0-rc.3
+- `FlxAssetPaths`: added support for custom renaming ([#2227](https://github.com/HaxeFlixel/flixel/issues/2227))
+
 4.6.2 (June 19, 2019)
 ------------------------------
-
 - `FlxGraphicsShader`: fixed crashes on some old iOS devices ([#2219](https://github.com/HaxeFlixel/flixel/issues/2219))
 - `FlxG.android`:
 	- fixed `preventDefaultKeys` handling with OpenFL 8+ ([#2218](https://github.com/HaxeFlixel/flixel/issues/2218))
@@ -8,7 +163,6 @@
 
 4.6.1 (April 2, 2019)
 ------------------------------
-
 #### Bugfixes:
 
 - `FlxDebugger`:

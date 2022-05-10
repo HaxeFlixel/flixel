@@ -3,7 +3,14 @@ package flixel.input;
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.keyboard.FlxKey;
 
+/**
+ * Keeps track of what keys are pressed and how with handy Bools or strings.
+ * Automatically instatiated by flixel as a `FlxKeyboard` and accessed via `FlxG.keys`
+ * or `FlxAndroidKeys` with `FlxG.android`.
+ * Example: `FlxG.keys.justPressed.A`
+ */
 class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 {
 	/**
@@ -27,6 +34,12 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 * Helper class to check if a key was just pressed.
 	 */
 	public var justPressed(default, null):KeyList;
+
+	/**
+	 * Helper class to check if a key is released.
+	 * @since 4.8.0
+	 */
+	public var released(default, null):KeyList;
 
 	/**
 	 * Helper class to check if a key was just released.
@@ -137,23 +150,58 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 */
 	public function checkStatus(KeyCode:Key, Status:FlxInputState):Bool
 	{
-		var key:FlxInput<Key> = getKey(KeyCode);
-
-		if (key != null)
+		/*
+		Note: switch(KeyCode) { case ANY: } causes seg faults with
+		hashlink on linux. This should use ifs, until it is fixed.
+		See: https://github.com/HaxeFlixel/flixel/issues/2318
+		*/
+		
+		if (KeyCode == FlxKey.ANY)
 		{
-			if (key.hasState(Status))
+			return switch (Status)
 			{
-				return true;
+				case PRESSED: pressed.ANY;
+				case JUST_PRESSED: justPressed.ANY;
+				case RELEASED: released.ANY;
+				case JUST_RELEASED: justReleased.ANY;
 			}
 		}
-		#if FLX_DEBUG
-		else
+		
+		if (KeyCode == FlxKey.NONE)
 		{
-			throw 'Invalid key code: $KeyCode.';
+			return switch (Status)
+			{
+				case PRESSED: pressed.NONE;
+				case JUST_PRESSED: justPressed.NONE;
+				case RELEASED: released.NONE;
+				case JUST_RELEASED: justReleased.NONE;
+			}
 		}
+		
+		if (_keyListMap.exists(KeyCode))
+		{
+			return checkStatusUnsafe(KeyCode, Status);
+		}
+		
+		#if debug
+		throw 'Invalid key code: $KeyCode.';
 		#end
-
 		return false;
+	}
+
+	/**
+	 * Check the status of a single of key.
+	 * Throws errors on ANY, NONE or invalid keys.
+	 * Use `checkStatus`, for most cases.
+	 * 
+	 * @param KeyCode KeyCode to be checked.
+	 * @param Status  The key state to check for.
+	 * @return Whether the provided key has the specified status.
+	 */
+	@:allow(flixel.input.FlxBaseKeyList)
+	function checkStatusUnsafe(KeyCode:Key, Status:FlxInputState)
+	{
+		return getKey(KeyCode).hasState(Status);
 	}
 
 	/**
@@ -204,6 +252,7 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 
 		pressed = createKeyList(FlxInputState.PRESSED, this);
+		released = createKeyList(FlxInputState.RELEASED, this);
 		justPressed = createKeyList(FlxInputState.JUST_PRESSED, this);
 		justReleased = createKeyList(FlxInputState.JUST_RELEASED, this);
 	}
@@ -238,15 +287,8 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 
 		for (code in KeyArray)
 		{
-			var key:FlxInput<Key> = getKey(code);
-
-			if (key != null)
-			{
-				if (key.hasState(State))
-				{
-					return true;
-				}
-			}
+			if (checkStatus(code, State))
+				return true;
 		}
 
 		return false;

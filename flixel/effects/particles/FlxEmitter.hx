@@ -11,6 +11,7 @@ import flixel.math.FlxVelocity;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.helpers.FlxBounds;
 import flixel.util.helpers.FlxPointRangeBounds;
 import flixel.util.helpers.FlxRangeBounds;
@@ -24,11 +25,7 @@ typedef FlxEmitter = FlxTypedEmitter<FlxParticle>;
  * at set intervals by setting their positions and velocities accordingly.
  * It is easy to use and relatively efficient, relying on `FlxGroup`'s RECYCLE POWERS.
  */
-#if (haxe_ver >= "4.0.0")
 class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
-#else
-class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
-#end
 {
 	/**
 	 * Set your own particle class type here. The custom class must extend `FlxParticle`. Default is `FlxParticle`.
@@ -148,7 +145,7 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
 	 * Sets the `allowCollisions` value for particles launched from this emitter.
 	 * Set to `NONE` by default. Don't forget to call `FlxG.collide()` in your update loop!
 	 */
-	public var allowCollisions:Int = FlxObject.NONE;
+	public var allowCollisions:FlxDirectionFlags = NONE;
 	/**
 	 * Shorthand for toggling `allowCollisions` between `ANY` (if `true`) and `NONE` (if `false`).
 	 * Don't forget to call `FlxG.collide()` in your update loop!
@@ -289,6 +286,8 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
 	 */
 	public function makeParticles(Width:Int = 2, Height:Int = 2, Color:FlxColor = FlxColor.WHITE, Quantity:Int = 50):FlxTypedEmitter<T>
 	{
+		maxSize = Quantity;
+
 		for (i in 0...Quantity)
 		{
 			var particle:T = Type.createInstance(particleClass, []);
@@ -615,18 +614,18 @@ class FlxTypedEmitter<T:(FlxSprite, IFlxParticle) > extends FlxTypedGroup<T>
 
 	inline function get_solid():Bool
 	{
-		return (allowCollisions & FlxObject.ANY) > FlxObject.NONE;
+		return allowCollisions.has(ANY);
 	}
 
 	function set_solid(Solid:Bool):Bool
 	{
 		if (Solid)
 		{
-			allowCollisions = FlxObject.ANY;
+			allowCollisions = ANY;
 		}
 		else
 		{
-			allowCollisions = FlxObject.NONE;
+			allowCollisions = NONE;
 		}
 		return Solid;
 	}

@@ -17,19 +17,24 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.FlxSwipe;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.path.FlxPath;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxButton.FlxTypedButton;
-import flixel.util.FlxPath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
+#end
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
 #end
 import flixel.util.FlxStringUtil;
 
@@ -65,7 +70,7 @@ class Tracker extends Watch
 
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-			if (Std.is(Object, profile.objectClass) || Object == profile.objectClass)
+			if (isOfType(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
 
 		return lastMatchingProfile;

@@ -20,6 +20,7 @@ import steamwrap.api.Controller.ControllerAnalogActionData;
  * FlxGamepadManager. If a user wants to use the Steam API directly
  * they should just be making naked calls to steamwrap themselves.
  *
+ * @since 4.6.0
  */
 @:allow(flixel.input.actions)
 class FlxSteamController
@@ -27,12 +28,12 @@ class FlxSteamController
 	/**
 	 * The maximum number of controllers that can be connected
 	 */
-	public static var MAX_CONTROLLERS(get, null):Int;
+	public static var MAX_CONTROLLERS(get, never):Int;
 
 	/**
 	 * The maximum number of origins (input glyphs, basically) that can be assigned to an action
 	 */
-	public static var MAX_ORIGINS(get, null):Int;
+	public static var MAX_ORIGINS(get, never):Int;
 
 	/**
 	 * The wait time between polls for connected controllers
@@ -102,7 +103,7 @@ class FlxSteamController
 		var steamExists = false;
 		for (input in FlxG.inputs.list)
 		{
-			if (Std.is(input, FlxSteamUpdater))
+			if ((input is FlxSteamUpdater))
 			{
 				steamExists = true;
 				break;

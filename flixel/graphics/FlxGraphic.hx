@@ -270,7 +270,7 @@ class FlxGraphic implements IFlxDestroyable
 	public var key(default, null):String;
 
 	/**
-	 * The Cached `BitmapData` object.
+	 * The cached `BitmapData` object.
 	 */
 	public var bitmap(default, set):BitmapData;
 
@@ -295,13 +295,14 @@ class FlxGraphic implements IFlxDestroyable
 	public var assetsClass(default, null):Class<BitmapData>;
 
 	/**
-	 * Whether this graphic object should stay in cache after state changes or not.
+	 * Whether this graphic object should stay in the cache after state changes or not.
+	 * `destroyOnNoUse` has no effect when this is set to `true`.
 	 */
 	public var persist:Bool = false;
 
 	/**
-	 * Whether this `FlxGraphic` should be destroyed object when `useCount` become zero.
-	 * Default is `true`.
+	 * Whether this `FlxGraphic` should be destroyed when `useCount` becomes zero (defaults to `true`).
+	 * Has no effect when `persist` is `true`.
 	 */
 	public var destroyOnNoUse(get, set):Bool;
 
@@ -324,7 +325,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Tilesheet for this graphic object. It is used only for `FlxG.renderTile` mode.
 	 */
-	public var tilesheet(get, null):Tilesheet;
+	public var tilesheet(get, never):Tilesheet;
 	#end
 
 	/**
@@ -335,14 +336,14 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * `FlxImageFrame` object for the whole bitmap.
 	 */
-	public var imageFrame(get, null):FlxImageFrame;
+	public var imageFrame(get, never):FlxImageFrame;
 
 	/**
 	 * Atlas frames for this graphic.
 	 * You should fill it yourself with one of `FlxAtlasFrames`'s static methods
 	 * (like `fromTexturePackerJson()`, `fromTexturePackerXml()`, etc).
 	 */
-	public var atlasFrames(get, null):FlxAtlasFrames;
+	public var atlasFrames(get, never):FlxAtlasFrames;
 
 	/**
 	 * Storage for all available frame collection of all types for this graphic object.

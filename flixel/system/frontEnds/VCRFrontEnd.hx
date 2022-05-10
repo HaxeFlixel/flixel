@@ -14,6 +14,10 @@ import flash.net.FileReference;
 import flash.net.FileFilter;
 #end
 #end
+
+/**
+ * Accessed via `FlxG.vcr`.
+ */
 class VCRFrontEnd
 {
 	#if FLX_RECORD

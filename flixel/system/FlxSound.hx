@@ -1,5 +1,6 @@
 package flixel.system;
 
+import flash.events.IEventDispatcher;
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
@@ -86,7 +87,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not the sound is currently playing.
 	 */
-	public var playing(get, null):Bool;
+	public var playing(get, never):Bool;
 
 	/**
 	 * Set volume to a value between 0 and 1 to change how this sound is.
@@ -144,6 +145,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Internal tracker for a Flash sound object.
 	 */
+	@:allow(flixel.system.frontEnds.SoundFrontEnd.load)
 	var _sound:Sound;
 
 	/**
@@ -335,6 +337,7 @@ class FlxSound extends FlxBasic
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
 	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
+	 * @param	OnComplete		Called when the sound finished playing
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
@@ -344,15 +347,15 @@ class FlxSound extends FlxBasic
 
 		cleanup(true);
 
-		if (Std.is(EmbeddedSound, Sound))
+		if ((EmbeddedSound is Sound))
 		{
 			_sound = EmbeddedSound;
 		}
-		else if (Std.is(EmbeddedSound, Class))
+		else if ((EmbeddedSound is Class))
 		{
 			_sound = Type.createInstance(EmbeddedSound, []);
 		}
-		else if (Std.is(EmbeddedSound, String))
+		else if ((EmbeddedSound is String))
 		{
 			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
 				_sound = Assets.getSound(EmbeddedSound);
@@ -371,14 +374,30 @@ class FlxSound extends FlxBasic
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
 	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
+	 * @param	OnComplete		Called when the sound finished playing
+	 * @param	OnLoad			Called when the sound finished loading.
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
+	public function loadStream(SoundURL:String, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void, ?OnLoad:Void->Void):FlxSound
 	{
 		cleanup(true);
 
 		_sound = new Sound();
 		_sound.addEventListener(Event.ID3, gotID3);
+		var loadCallback:Event->Void = null;
+		loadCallback = function(e:Event)
+		{
+			(e.target : IEventDispatcher).removeEventListener(e.type, loadCallback);
+			// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
+			if (_sound == e.target)
+			{
+				_length = _sound.length;
+				if (OnLoad != null)
+					OnLoad();
+			}
+		}
+		// Use a weak reference so this can be garbage collected if destroyed before loading.
+		_sound.addEventListener(Event.COMPLETE, loadCallback, false, 0, true);
 		_sound.load(new URLRequest(SoundURL));
 
 		return init(Looped, AutoDestroy, OnComplete);

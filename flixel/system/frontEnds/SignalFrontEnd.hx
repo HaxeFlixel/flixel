@@ -2,14 +2,22 @@ package flixel.system.frontEnds;
 
 import flixel.util.FlxSignal;
 
+/**
+ * Accessed via `FlxG.signals`.
+ */
 class SignalFrontEnd
 {
 	/**
 	 * Gets dispatched when a state change occurs.
+	 * @since 4.6.0
 	 */
 	public var preStateSwitch(default, null):FlxSignal = new FlxSignal();
 
+	/**
+	 * @since 4.6.0
+	 */
 	public var postStateSwitch(default, null):FlxSignal = new FlxSignal();
+
 	@:deprecated("Use preStateSwitch instead of stateSwitched")
 	public var stateSwitched(get, never):FlxSignal;
 	public var preStateCreate(default, null):FlxTypedSignal<FlxState->Void> = new FlxTypedSignal<FlxState->Void>();
@@ -25,11 +33,13 @@ class SignalFrontEnd
 
 	/**
 	 * Gets dispatched just before the game is started (before the first state after the splash screen is created)
+	 * @since 4.6.0
 	 */
 	public var preGameStart(default, null):FlxSignal = new FlxSignal();
 
 	/**
 	 * Gets dispatched when the game is started (first state after the splash screen).
+	 * @since 4.6.0
 	 */
 	public var postGameStart(default, null):FlxSignal = new FlxSignal();
 

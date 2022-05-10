@@ -51,11 +51,29 @@ class FlxCamera extends FlxBasic
 	public static var defaultZoom:Float;
 
 	/**
-	 * Which cameras a `FlxBasic` uses to be drawn on when nothing else has been specified.
-	 * By default, this is just a reference to `FlxG.cameras.list` / all cameras, but it can be very useful to change.
-	 * This may be temporarily modified during a `draw` call.
+	 * Used behind-the-scenes during the draw phase so that members use the same default
+	 * cameras as their parent.
+	 * 
+	 * Prior to 4.9.0 it was useful to change this value, but that feature is deprecated.
+	 * Instead use the `defaultDrawTarget` argument in `FlxG.cameras.add `.
+	 * or`FlxG.cameras.setDefaultDrawTarget` .
+	 * @see FlxG.cameras.setDefaultDrawTarget
 	 */
-	public static var defaultCameras:Array<FlxCamera>;
+	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDefaultDrawTarget` instead")
+	public static var defaultCameras(get, set):Array<FlxCamera>;
+	
+	/**
+	 * Used behind-the-scenes during the draw phase so that members use the same default
+	 * cameras as their parent.
+	 * 
+	 * This is the non-deprecated list that the public `defaultCameras` proxies. Allows flixel classes
+	 * to use it without warning.
+	 */
+	@:allow(flixel.FlxBasic.get_cameras)
+	@:allow(flixel.FlxBasic.get_camera)
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	@:allow(flixel.group.FlxTypedGroup.draw)
+	static var _defaultCameras:Array<FlxCamera>;
 
 	/**
 	 * The X position of this camera's display. `zoom` does NOT affect this number.
@@ -1128,7 +1146,7 @@ class FlxCamera extends FlxBasic
 				}
 			}
 
-			if (Std.is(target, FlxSprite))
+			if ((target is FlxSprite))
 			{
 				if (_lastTargetPosition == null)
 				{
@@ -1212,11 +1230,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if (_fxShakeAxes != FlxAxes.Y)
+				if (_fxShakeAxes.x)
 				{
 					flashSprite.x += FlxG.random.float(-_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
-				if (_fxShakeAxes != FlxAxes.X)
+				if (_fxShakeAxes.y)
 				{
 					flashSprite.y += FlxG.random.float(-_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
@@ -1532,10 +1550,8 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			#if openfl_legacy // can't skip this on next, see #1793
 			if (FxAlpha == 0)
 				return;
-			#end
 
 			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
 
@@ -1729,7 +1745,19 @@ class FlxCamera extends FlxBasic
 		updateFlashOffset();
 		setScale(scaleX, scaleY);
 	}
-
+	
+	/**
+	 * The size and position of this camera's screen
+	 * @since 4.11.0
+	 */
+	public function getViewRect(?rect:FlxRect)
+	{
+		if (rect == null)
+			rect = FlxRect.get();
+		
+		return rect.set(viewOffsetX, viewOffsetY, viewOffsetWidth - viewOffsetX, viewOffsetHeight - viewOffsetY);
+	}
+	
 	/**
 	 * Checks whether this camera contains a given point or rectangle, in
 	 * screen coordinates.
@@ -1737,7 +1765,22 @@ class FlxCamera extends FlxBasic
 	 */
 	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
-		return (point.x + width > viewOffsetX) && (point.x < viewOffsetWidth) && (point.y + height > viewOffsetY) && (point.y < viewOffsetHeight);
+		var contained = (point.x + width > viewOffsetX) && (point.x < viewOffsetWidth)
+			&& (point.y + height > viewOffsetY) && (point.y < viewOffsetHeight);
+		point.putWeak();
+		return contained;
+	}
+	
+	/**
+	 * Checks whether this camera contains a given rectangle, in screen coordinates.
+	 * @since 4.11.0
+	 */
+	public inline function containsRect(rect:FlxRect):Bool
+	{
+		var contained = (rect.right > viewOffsetX) && (rect.x < viewOffsetWidth)
+			&& (rect.bottom > viewOffsetY) && (rect.y < viewOffsetHeight);
+		rect.putWeak();
+		return contained;
 	}
 
 	function set_followLerp(Value:Float):Float
@@ -1882,6 +1925,16 @@ class FlxCamera extends FlxBasic
 		viewOffsetY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 		viewOffsetHeight = height - viewOffsetY;
 		viewHeight = height - 2 * viewOffsetY;
+	}
+	
+	static inline function get_defaultCameras():Array<FlxCamera>
+	{
+		return _defaultCameras;
+	}
+	
+	static inline function set_defaultCameras(value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		return _defaultCameras = value;
 	}
 }
 

@@ -15,8 +15,12 @@ import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
+#if android
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalAndroid;
+#end
 import flixel.input.keyboard.FlxKey;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.android.FlxAndroidKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
@@ -31,6 +35,8 @@ using flixel.util.FlxArrayUtil;
  * FlxActions let you attach multiple inputs to a single in-game action,
  * so "jump" could be performed by a keyboard press, a mouse click,
  * or a gamepad button press.
+ *
+ * @since 4.6.0
  */
 class FlxActionDigital extends FlxAction
 {
@@ -124,6 +130,21 @@ class FlxActionDigital extends FlxAction
 		return add(new FlxActionInputDigitalMouseWheel(Positive, Trigger));
 	}
 
+	#if android
+	/**
+	 * Android buttons action inputs
+	 * @param	Key	Android button key, BACK, or MENU probably (might need to set FlxG.android.preventDefaultKeys to disable the default behaviour and allow proper use!)
+	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @return	This action
+	 * 
+	 * @since 4.10.0
+	 */
+	public function addAndroidKey(Key:FlxAndroidKey, Trigger:FlxInputState):FlxActionDigital
+	{
+		return add(new FlxActionInputDigitalAndroid(Key, Trigger));
+	}
+	#end
+
 	override public function destroy():Void
 	{
 		callback = null;
@@ -148,6 +169,8 @@ class FlxActionDigital extends FlxAction
  *
  * FlxActions let you attach multiple inputs to a single in-game action,
  * so "move" could be performed by a gamepad joystick, a mouse movement, etc.
+ *
+ * @since 4.6.0
  */
 class FlxActionAnalog extends FlxAction
 {
@@ -159,12 +182,12 @@ class FlxActionAnalog extends FlxAction
 	/**
 	 * X axis value, or the value of a single-axis analog input.
 	 */
-	public var x(get, null):Float;
+	public var x(get, never):Float;
 
 	/**
 	 * Y axis value. (If action only has single-axis input this is always == 0)
 	 */
-	public var y(get, null):Float;
+	public var y(get, never):Float;
 
 	/**
 	 * Create a new analog action
@@ -284,6 +307,9 @@ class FlxActionAnalog extends FlxAction
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 @:allow(flixel.input.actions.FlxActionDigital, flixel.input.actions.FlxActionAnalog, flixel.input.actions.FlxActionSet)
 class FlxAction implements IFlxDestroyable
 {

@@ -333,9 +333,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 *                          (by calling `revive()` on them).
 	 * @return  A reference to the object that was created.
 	 */
-	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false):T
+	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
-		return group.recycle(ObjectClass, ObjectFactory, Force);
+		return group.recycle(ObjectClass, ObjectFactory, Force, Revive);
 	}
 
 	/**
@@ -554,7 +554,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function kill():Void
 	{
+		_skipTransformChildren = true;
 		super.kill();
+		_skipTransformChildren = false;
 		group.kill();
 	}
 
@@ -563,22 +565,33 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	override public function revive():Void
 	{
-		super.revive();
+		_skipTransformChildren = true;
+		super.revive(); // calls set_exists and set_alive
+		_skipTransformChildren = false;
 		group.revive();
 	}
 
 	override public function reset(X:Float, Y:Float):Void
 	{
-		revive();
-		setPosition(X, Y);
-
 		for (sprite in _sprites)
 		{
 			if (sprite != null)
-			{
-				sprite.reset(X, Y);
-			}
+				sprite.reset(sprite.x + X - x, sprite.y + Y - y);
 		}
+		
+		// prevent any transformations on children, mainly from setter overrides
+		_skipTransformChildren = true;
+		
+		// recreate super.reset() but call super.revive instead of revive
+		touching = NONE;
+		wasTouching = NONE;
+		x = X;
+		y = Y;
+		// last.set(x, y); // null on sprite groups
+		velocity.set();
+		super.revive();
+		
+		_skipTransformChildren = false;
 	}
 
 	/**
@@ -612,7 +625,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function transformChildren<V>(Function:T->V->Void, Value:V):Void
 	{
-		if (group == null)
+		if (_skipTransformChildren || group == null)
 			return;
 
 		for (sprite in _sprites)
@@ -631,7 +644,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
-		if (group == null)
+		if (_skipTransformChildren || group == null)
 			return;
 
 		var numProps:Int = FunctionArray.length;
@@ -653,7 +666,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	// PROPERTIES GETTERS/SETTERS
-	
+
+	override function set_camera(Value:FlxCamera):FlxCamera
+	{
+		if (camera != Value)
+			transformChildren(cameraTransform, Value);
+		return super.set_camera(Value);
+	}
+
+	override function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		if (cameras != Value)
+			transformChildren(camerasTransform, Value);
+		return super.set_cameras(Value);
+	}
+
 	override function set_exists(Value:Bool):Bool
 	{
 		if (exists != Value)
@@ -684,33 +711,22 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	override function set_x(Value:Float):Float
 	{
-		if (!_skipTransformChildren && exists && x != Value)
-		{
-			var offset:Float = Value - x;
-			transformChildren(xTransform, offset);
-		}
-
+		if (exists && x != Value)
+			transformChildren(xTransform, Value - x);// offset
 		return x = Value;
 	}
 
 	override function set_y(Value:Float):Float
 	{
-		if (!_skipTransformChildren && exists && y != Value)
-		{
-			var offset:Float = Value - y;
-			transformChildren(yTransform, offset);
-		}
-
+		if (exists && y != Value)
+			transformChildren(yTransform, Value - y);// offset
 		return y = Value;
 	}
 
 	override function set_angle(Value:Float):Float
 	{
 		if (exists && angle != Value)
-		{
-			var offset:Float = Value - angle;
-			transformChildren(angleTransform, offset);
-		}
+			transformChildren(angleTransform, Value - angle);// offset
 		return angle = Value;
 	}
 
@@ -797,18 +813,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		if (exists && pixelPerfectRender != Value)
 			transformChildren(pixelPerfectTransform, Value);
 		return super.set_pixelPerfectRender(Value);
-	}
-	
-	override function set_camera(camera:FlxCamera):FlxCamera
-	{
-		group.camera = camera;
-		return super.set_camera(camera);
-	}
-	
-	override function set_cameras(cameras:Array<FlxCamera>):Array<FlxCamera>
-	{
-		group.cameras = cameras;
-		return super.set_cameras(cameras);
 	}
 
 	/**
@@ -957,6 +961,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	inline function existsTransform(Sprite:FlxSprite, Exists:Bool)
 		Sprite.exists = Exists;
+
+	inline function cameraTransform(Sprite:FlxSprite, Camera:FlxCamera)
+		Sprite.camera = Camera;
+
+	inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)
+		Sprite.cameras = Cameras;
 
 	inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)
 		Sprite.offset.copyFrom(Offset);

@@ -426,7 +426,7 @@ class FlxQuadTree extends FlxRect
 					else
 					{
 						_object = cast basic;
-						if (_object.exists && _object.allowCollisions != FlxObject.NONE)
+						if (_object.exists && _object.allowCollisions != NONE)
 						{
 							_objectLeftEdge = _object.x;
 							_objectTopEdge = _object.y;
@@ -441,7 +441,7 @@ class FlxQuadTree extends FlxRect
 		else
 		{
 			_object = cast ObjectOrGroup;
-			if (_object.exists && _object.allowCollisions != FlxObject.NONE)
+			if (_object.exists && _object.allowCollisions != NONE)
 			{
 				_objectLeftEdge = _object.x;
 				_objectTopEdge = _object.y;

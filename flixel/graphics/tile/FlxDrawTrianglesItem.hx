@@ -14,7 +14,6 @@ import openfl.geom.ColorTransform;
 typedef DrawData<T> = #if (flash || openfl >= "4.0.0") openfl.Vector<T> #else Array<T> #end;
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>

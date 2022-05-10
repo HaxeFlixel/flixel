@@ -6,6 +6,11 @@ import flixel.math.FlxPoint;
 
 using flixel.util.FlxStringUtil;
 
+/**
+ * Tools and helpers relating to the js/html5 target.
+ *
+ * Accessed via `FlxG.html5`.
+ */
 class HTML5FrontEnd
 {
 	public var browser(default, null):FlxBrowser;

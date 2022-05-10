@@ -3,6 +3,8 @@ package flixel;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 
+@:access(flixel.system.frontEnds.CameraFrontEnd)
+@:access(flixel.FlxCamera)
 class FlxCameraTest extends FlxTest
 {
 	var camera:FlxCamera;
@@ -32,21 +34,22 @@ class FlxCameraTest extends FlxTest
 	function testDefaultLength():Void
 	{
 		Assert.areEqual(1, FlxG.cameras.list.length);
+		Assert.areEqual(1, FlxG.cameras.defaults.length);
 	}
 
 	@Test
 	function testDefaultCameras():Void
 	{
-		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+		Assert.areEqual(FlxG.cameras.defaults, FlxCamera._defaultCameras);
 	}
 
 	@Test
 	function testDefaultCamerasStateSwitch():Void
 	{
-		FlxCamera.defaultCameras = [FlxG.camera];
+		FlxCamera._defaultCameras = [FlxG.camera];
 		switchState(new FlxState());
 
-		Assert.areEqual(FlxG.cameras.list, FlxCamera.defaultCameras);
+		Assert.areEqual(FlxG.cameras.defaults, FlxCamera._defaultCameras);
 	}
 
 	@Test
@@ -54,9 +57,26 @@ class FlxCameraTest extends FlxTest
 	{
 		FlxG.cameras.add(camera);
 		Assert.areEqual(2, FlxG.cameras.list.length);
+		Assert.areEqual(2, FlxG.cameras.defaults.length);
 
 		FlxG.cameras.remove(camera);
 		Assert.areEqual(1, FlxG.cameras.list.length);
+		Assert.areEqual(1, FlxG.cameras.defaults.length);
+	}
+
+	@Test // #2296
+	function testIsDefaultCamera():Void
+	{
+		FlxG.cameras.add(camera, false);
+		Assert.areEqual(2, FlxG.cameras.list.length);
+		Assert.areEqual(1, FlxG.cameras.defaults.length);
+
+		FlxG.cameras.setDefaultDrawTarget(camera, true);
+		Assert.areEqual(2, FlxG.cameras.defaults.length);
+
+		FlxG.cameras.remove(camera);
+		Assert.areEqual(1, FlxG.cameras.list.length);
+		Assert.areEqual(1, FlxG.cameras.defaults.length);
 	}
 
 	@Test // #1515

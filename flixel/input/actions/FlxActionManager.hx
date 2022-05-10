@@ -4,7 +4,6 @@ import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.actions.FlxActionManager.ActionSetRegister;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
@@ -36,6 +35,7 @@ using flixel.util.FlxArrayUtil;
  * to the actions in the set. You can also add as many regular `FlxActionInput`s
  * as you like to any actions in the sets.
  *
+ * @since 4.6.0
  */
 class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 {
@@ -46,7 +46,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 	/**
 	 * The number of registered action sets
 	 */
-	public var numSets(get, null):Int;
+	public var numSets(get, never):Int;
 
 	/**
 	 * A signal fired when a device currently in use is suddenly disconnected. Returns the device type, handle/id, and a string identifier for the device model (if applicable)
@@ -345,12 +345,12 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
 		var space:String = "\t";
 		return Json.stringify({"actionSets": sets}, function(key:Dynamic, value:Dynamic):Dynamic
 		{
-			if (Std.is(value, FlxAction))
+			if ((value is FlxAction))
 			{
 				var fa:FlxAction = cast value;
 				return fa.name;
 			}
-			if (Std.is(value, FlxActionSet))
+			if ((value is FlxActionSet))
 			{
 				var fas:FlxActionSet = cast value;
 				return {
@@ -531,7 +531,7 @@ class FlxActionManager implements IFlxInputManager implements IFlxDestroyable
  * internal helper class
  */
 @:allow(flixel.input.actions.FlxActionManager)
-class ActionSetRegister implements IFlxDestroyable
+private class ActionSetRegister implements IFlxDestroyable
 {
 	/**
 	 * The current action set for the mouse
@@ -817,7 +817,6 @@ class ActionSetRegister implements IFlxDestroyable
 		return (sum2 << 8) | sum1;
 	}
 
-	/**********PRIVATE*********/
 	/**
 	 * Helper function to properly update the action sets with proper steam inputs
 	 */
@@ -945,11 +944,17 @@ class ActionSetRegister implements IFlxDestroyable
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 typedef ActionSetJsonArray =
 {
 	@:optional var actionSets:Array<ActionSetJson>;
 }
 
+/**
+ * @since 4.6.0
+ */
 typedef ActionSetJson =
 {
 	@:optional var name:String;
@@ -957,6 +962,9 @@ typedef ActionSetJson =
 	@:optional var digitalActions:Array<String>;
 }
 
+/**
+ * @since 4.6.0
+ */
 enum ResetPolicy
 {
 	/**

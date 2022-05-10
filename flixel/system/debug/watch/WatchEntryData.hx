@@ -20,4 +20,9 @@ enum WatchEntryData
 	 * Haxe expression evaluated with hscript.
 	 */
 	EXPRESSION(expression:String, parsedExpr:#if hscript Expr #else String #end);
+	
+	/**
+	 * A function that returns the value to display.
+	 */
+	FUNCTION(func:()->Dynamic);
 }

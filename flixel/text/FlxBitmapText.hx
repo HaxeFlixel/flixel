@@ -12,12 +12,10 @@ import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import haxe.Utf8;
 import openfl.geom.ColorTransform;
 
 using flixel.util.FlxColorTransformUtil;
-
-// TODO: use Utf8 util for converting text to upper/lower case
+using flixel.util.FlxUnicodeUtil;
 
 /**
  * Extends FlxSprite to support rendering text.
@@ -99,17 +97,17 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Width of the text in this text field.
 	 */
-	public var textWidth(get, null):Int;
+	public var textWidth(get, never):Int;
 
 	/**
 	 * Height of the text in this text field.
 	 */
-	public var textHeight(get, null):Int;
+	public var textHeight(get, never):Int;
 
 	/**
 	 * Height of the single line of text (without lineSpacing).
 	 */
-	public var lineHeight(get, null):Int;
+	public var lineHeight(get, never):Int;
 
 	/**
 	 * Number of space characters in one tab.
@@ -173,7 +171,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Reflects how many lines have this text field.
 	 */
-	public var numLines(get, null):Int = 0;
+	public var numLines(get, never):Int;
 
 	/**
 	 * The width of the TextField object used for bitmap generation for this FlxText object.
@@ -198,6 +196,9 @@ class FlxBitmapText extends FlxSprite
 
 	/**
 	 * Constructs a new text field component.
+	 * Warning: The default font may work incorrectly on HTML5
+	 * and is utterly unreliable on Brave Browser with shields up.
+	 * 
 	 * @param 	font	Optional parameter for component's font prop
 	 */
 	public function new(?font:FlxBitmapFont)
@@ -263,6 +264,12 @@ class FlxBitmapText extends FlxSprite
 		{
 			super.drawFrame(Force);
 		}
+	}
+	
+	override function updateHitbox()
+	{
+		checkPendingChanges(true);
+		super.updateHitbox();
 	}
 
 	inline function checkPendingChanges(useTiles:Bool = false):Void
@@ -361,6 +368,7 @@ class FlxBitmapText extends FlxSprite
 			}
 
 			var clippedFrameRect;
+
 			if (clipRect != null)
 			{
 				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
@@ -647,7 +655,7 @@ class FlxBitmapText extends FlxSprite
 		var spaceWidth:Int = font.spaceWidth;
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
-		var lineLength:Int = Utf8.length(str); // lenght of the current line
+		var lineLength:Int = str.uLength();
 		var lineWidth:Float = font.minOffsetX;
 
 		var charCode:Int; // current character in word
@@ -656,7 +664,7 @@ class FlxBitmapText extends FlxSprite
 
 		for (c in 0...lineLength)
 		{
-			charCode = Utf8.charCodeAt(str, c);
+			charCode = str.uCharCodeAt(c);
 			charWidth = 0;
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
@@ -702,7 +710,7 @@ class FlxBitmapText extends FlxSprite
 		var charCode:Int; // code for the current character in word
 		var charWidth:Float; // the width of current character
 
-		var subLine:Utf8; // current subline to assemble
+		var subLine = new UnicodeBuffer(); // current subline to assemble
 		var subLineWidth:Float; // the width of current subline
 
 		var spaceWidth:Int = font.spaceWidth;
@@ -712,14 +720,14 @@ class FlxBitmapText extends FlxSprite
 
 		for (line in _lines)
 		{
-			lineLength = Utf8.length(line);
-			subLine = new Utf8();
+			lineLength = line.uLength();
+			subLine = new UnicodeBuffer();
 			subLineWidth = startX;
 
 			c = 0;
 			while (c < lineLength)
 			{
-				charCode = Utf8.charCodeAt(line, c);
+				charCode = line.uCharCodeAt(c);
 
 				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
@@ -737,15 +745,15 @@ class FlxBitmapText extends FlxSprite
 
 				if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
 				{
-					subLine.addChar(charCode);
+					subLine = subLine.addChar(charCode);
 					newLines.push(subLine.toString());
-					subLine = new Utf8();
+					subLine = new UnicodeBuffer();
 					subLineWidth = startX;
 					c = lineLength;
 				}
 				else
 				{
-					subLine.addChar(charCode);
+					subLine = subLine.addChar(charCode);
 					subLineWidth += charWidth;
 				}
 
@@ -794,19 +802,16 @@ class FlxBitmapText extends FlxSprite
 	function splitLineIntoWords(line:String, words:Array<String>):Void
 	{
 		var word:String = ""; // current word to process
-		var wordUtf8:Utf8 = new Utf8();
+		var wordUtf8 = new UnicodeBuffer();
 		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
-		var lineLength:Int = Utf8.length(line); // lenght of the current line
-
-		var hyphenCode:Int = Utf8.charCodeAt('-', 0);
+		var lineLength:Int = line.uLength(); // lenght of the current line
 
 		var c:Int = 0; // char index on the line
 		var charCode:Int; // code for the current character in word
-		var charUtf8:Utf8;
 
 		while (c < lineLength)
 		{
-			charCode = Utf8.charCodeAt(line, c);
+			charCode = line.uCharCodeAt(c);
 			word = wordUtf8.toString();
 
 			if (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE)
@@ -818,13 +823,13 @@ class FlxBitmapText extends FlxSprite
 					if (word != "")
 					{
 						words.push(word);
-						wordUtf8 = new Utf8();
+						wordUtf8 = new UnicodeBuffer();
 					}
 				}
 
-				wordUtf8.addChar(charCode);
+				wordUtf8 = wordUtf8.addChar(charCode);
 			}
-			else if (charCode == hyphenCode)
+			else if (charCode == '-'.code)
 			{
 				if (isSpaceWord && word != "")
 				{
@@ -834,12 +839,12 @@ class FlxBitmapText extends FlxSprite
 				}
 				else if (!isSpaceWord)
 				{
-					charUtf8 = new Utf8();
-					charUtf8.addChar(charCode);
+					var charUtf8 = new UnicodeBuffer();
+					charUtf8 = charUtf8.addChar(charCode);
 					words.push(word + charUtf8.toString());
 				}
 
-				wordUtf8 = new Utf8();
+				wordUtf8 = new UnicodeBuffer();
 			}
 			else
 			{
@@ -847,10 +852,10 @@ class FlxBitmapText extends FlxSprite
 				{
 					isSpaceWord = false;
 					words.push(word);
-					wordUtf8 = new Utf8();
+					wordUtf8 = new UnicodeBuffer();
 				}
 
-				wordUtf8.addChar(charCode);
+				wordUtf8 = wordUtf8.addChar(charCode);
 			}
 
 			c++;
@@ -900,14 +905,14 @@ class FlxBitmapText extends FlxSprite
 			{
 				wordWidth = 0;
 				word = words[w];
-				wordLength = Utf8.length(word);
+				wordLength = word.uLength();
 
-				charCode = Utf8.charCodeAt(word, 0);
+				charCode = word.charCodeAt(0);
 				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 
 				for (c in 0...wordLength)
 				{
-					charCode = Utf8.charCodeAt(word, c);
+					charCode = word.charCodeAt(c);
 
 					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
@@ -990,7 +995,7 @@ class FlxBitmapText extends FlxSprite
 		var subLines:Array<String> = []; // helper array for subdividing lines
 
 		var subLine:String; // current subline to assemble
-		var subLineUtf8:Utf8;
+		var subLineUtf8:UnicodeBuffer;
 		var subLineWidth:Float; // the width of current subline
 
 		var spaceWidth:Int = font.spaceWidth;
@@ -1002,21 +1007,21 @@ class FlxBitmapText extends FlxSprite
 		{
 			w = 0;
 			subLineWidth = startX;
-			subLineUtf8 = new Utf8();
+			subLineUtf8 = new UnicodeBuffer();
 
 			while (w < numWords)
 			{
 				word = words[w];
-				wordLength = Utf8.length(word);
+				wordLength = word.uLength();
 
-				charCode = Utf8.charCodeAt(word, 0);
+				charCode = word.uCharCodeAt(0);
 				isSpaceWord = (charCode == FlxBitmapFont.SPACE_CODE || charCode == FlxBitmapFont.TAB_CODE);
 
 				c = 0;
 
 				while (c < wordLength)
 				{
-					charCode = Utf8.charCodeAt(word, c);
+					charCode = word.uCharCodeAt(c);
 
 					if (charCode == FlxBitmapFont.SPACE_CODE)
 					{
@@ -1039,26 +1044,26 @@ class FlxBitmapText extends FlxSprite
 						{
 							subLines.push(subLine);
 							c = wordLength;
-							subLineUtf8 = new Utf8();
+							subLineUtf8 = new UnicodeBuffer();
 							subLineWidth = startX;
 						}
 						else if (subLine != "") // new line isn't empty so we should add it to sublines array and start another one
 						{
 							subLines.push(subLine);
-							subLineUtf8 = new Utf8();
-							subLineUtf8.addChar(charCode);
+							subLineUtf8 = new UnicodeBuffer();
+							subLineUtf8 = subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
 						else // the line is too tight to hold even one character
 						{
-							subLineUtf8 = new Utf8();
-							subLineUtf8.addChar(charCode);
+							subLineUtf8 = new UnicodeBuffer();
+							subLineUtf8 = subLineUtf8.addChar(charCode);
 							subLineWidth = startX + charWidth + letterSpacing;
 						}
 					}
 					else
 					{
-						subLineUtf8.addChar(charCode);
+						subLineUtf8 = subLineUtf8.addChar(charCode);
 						subLineWidth += (charWidth + letterSpacing);
 					}
 
@@ -1181,7 +1186,7 @@ class FlxBitmapText extends FlxSprite
 
 		var line:String = _lines[lineIndex];
 		var spaceWidth:Int = font.spaceWidth;
-		var lineLength:Int = Utf8.length(line);
+		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
 
 		if (alignment == FlxTextAlign.JUSTIFY)
@@ -1190,7 +1195,7 @@ class FlxBitmapText extends FlxSprite
 
 			for (i in 0...lineLength)
 			{
-				charCode = Utf8.charCodeAt(line, i);
+				charCode = line.uCharCodeAt(i);
 
 				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
@@ -1209,32 +1214,39 @@ class FlxBitmapText extends FlxSprite
 
 		var tabWidth:Int = spaceWidth * numSpacesInTab;
 
+		var charUt8:UnicodeBuffer;
+
 		for (i in 0...lineLength)
 		{
-			charCode = Utf8.charCodeAt(line, i);
+			charCode = line.uCharCodeAt(i);
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
-				curX += spaceWidth;
+				curX += spaceWidth + letterSpacing;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
-				curX += tabWidth;
+				curX += tabWidth + letterSpacing;
 			}
 			else
 			{
 				charFrame = font.getCharFrame(charCode);
 				if (charFrame != null)
 				{
-					_flashPoint.setTo(curX, curY);
+					if (isUnicodeComboMark(charCode))
+					{
+						_flashPoint.setTo(curX - font.getCharAdvance(charCode) - letterSpacing, curY);
+					}
+					else
+					{
+						_flashPoint.setTo(curX, curY);
+						curX += font.getCharAdvance(charCode) + letterSpacing;
+					}
 					charFrame.paint(textBitmap, _flashPoint, true);
-					var charUt8 = new Utf8();
-					charUt8.addChar(charCode);
-					curX += font.getCharAdvance(charCode);
+					charUt8 = new UnicodeBuffer();
+					charUt8 = charUt8.addChar(charCode);
 				}
 			}
-
-			curX += letterSpacing;
 		}
 	}
 
@@ -1252,7 +1264,7 @@ class FlxBitmapText extends FlxSprite
 
 		var line:String = _lines[lineIndex];
 		var spaceWidth:Int = font.spaceWidth;
-		var lineLength:Int = Utf8.length(line);
+		var lineLength:Int = line.uLength();
 		var textWidth:Int = this.textWidth;
 
 		if (alignment == FlxTextAlign.JUSTIFY)
@@ -1261,7 +1273,7 @@ class FlxBitmapText extends FlxSprite
 
 			for (i in 0...lineLength)
 			{
-				charCode = Utf8.charCodeAt(line, i);
+				charCode = line.uCharCodeAt(i);
 
 				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
@@ -1282,15 +1294,15 @@ class FlxBitmapText extends FlxSprite
 
 		for (i in 0...lineLength)
 		{
-			charCode = Utf8.charCodeAt(line, i);
+			charCode = line.uCharCodeAt(i);
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
-				curX += spaceWidth;
+				curX += spaceWidth + letterSpacing;
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
-				curX += tabWidth;
+				curX += tabWidth + letterSpacing;
 			}
 			else
 			{
@@ -1298,13 +1310,18 @@ class FlxBitmapText extends FlxSprite
 				if (charFrame != null)
 				{
 					textData[pos++] = charCode;
-					textData[pos++] = curX;
+					if (isUnicodeComboMark(charCode))
+					{
+						textData[pos++] = curX - font.getCharAdvance(charCode) - letterSpacing;
+					}
+					else
+					{
+						textData[pos++] = curX;
+						curX += font.getCharAdvance(charCode) + letterSpacing;
+					}
 					textData[pos++] = curY;
-					curX += font.getCharAdvance(charCode);
 				}
 			}
-
-			curX += letterSpacing;
 		}
 	}
 
@@ -1795,11 +1812,6 @@ class FlxBitmapText extends FlxSprite
 		return _lines.length;
 	}
 
-	/**
-	 * Calculates maximum width of the text.
-	 *
-	 * @return	text width.
-	 */
 	function get_textWidth():Int
 	{
 		var max:Int = 0;
@@ -1837,5 +1849,16 @@ class FlxBitmapText extends FlxSprite
 	{
 		checkPendingChanges(true);
 		return super.get_height();
+	}
+
+	/**
+	 * Checks if the specified code is one of the Unicode Combining Diacritical Marks
+	 * @param	Code	The charactercode we want to check
+	 * @return 	Bool	Returns true if the code is a Unicode Combining Diacritical Mark
+	 */
+	function isUnicodeComboMark(Code:Int):Bool
+	{
+		return ((Code >= 768 && Code <= 879) || (Code >= 6832 && Code <= 6911) || (Code >= 7616 && Code <= 7679) || (Code >= 8400 && Code <= 8447)
+			|| (Code >= 65056 && Code <= 65071));
 	}
 }

@@ -1,7 +1,6 @@
 package flixel.animation;
 
 /**
- * ...
  * @author Zaphod
  */
 class FlxPrerotatedAnimation extends FlxBaseAnimation
