@@ -98,6 +98,20 @@ class WatchFrontEnd
 		FlxG.game.debugger.watch.remove(displayName, null);
 		#end
 	}
+	
+	public function addFunction(displayName:String, func:()->Dynamic):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.watch.add(displayName, FUNCTION(func));
+		#end
+	}
+	
+	public function removeFunction(displayName:String):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.watch.remove(displayName, null);
+		#end
+	}
 
 	/**
 	 * Add the mouse coords to the watch window. Useful for quickly
