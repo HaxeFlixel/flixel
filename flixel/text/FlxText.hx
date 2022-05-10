@@ -871,6 +871,12 @@ class FlxText extends FlxSprite
 
 			return;
 		}
+		#elseif !web
+		// Fix to render desktop and mobile text in the same visual location as web
+		_matrix.translate(-1, -1); // left and up
+		graphic.draw(textField, _matrix);
+		_matrix.translate(1, 1); // return to center
+		return;
 		#end
 
 		graphic.draw(textField, _matrix);

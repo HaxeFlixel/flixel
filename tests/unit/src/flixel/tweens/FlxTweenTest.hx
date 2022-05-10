@@ -1,5 +1,6 @@
 package flixel.tweens;
 
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween.TweenCallback;
 import flixel.util.FlxTimer;
 import massive.munit.Assert;
@@ -210,6 +211,29 @@ class FlxTweenTest extends FlxTest
 
 			complete[n] = true;
 		};
+	}
+
+	@Test
+	function testCancelShakeTween()
+	{
+		var spriteTest = new FlxSprite();
+		var initialOffset = new FlxPoint(0, 0);
+		var shakeTween = FlxTween.shake(spriteTest, 1, 0.1);
+		step();
+		shakeTween.cancel();
+		Assert.isTrue(shakeTween.finished);
+		Assert.isTrue(spriteTest.offset.equals(initialOffset));
+	}
+
+	@Test
+	function testCompleteShakeTween()
+	{
+		var spriteTest = new FlxSprite();
+		var initialOffset = new FlxPoint(0, 0);
+		var shakeTween = FlxTween.shake(spriteTest, 1, 0.01);
+		step(10);
+		Assert.isTrue(shakeTween.finished);
+		Assert.isTrue(spriteTest.offset.equals(initialOffset));
 	}
 
 	@Test

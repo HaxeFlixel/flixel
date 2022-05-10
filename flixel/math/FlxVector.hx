@@ -226,6 +226,17 @@ import openfl.geom.Point;
 	}
 
 	/**
+	 * Helper function, just copies the values from this vector to the specified vector.
+	 *
+	 * @param   vec   optional vector to copy this vector to
+	 * @return  copy of this vector
+	 */
+	public inline function copyTo(?vec:FlxVector):FlxVector
+	{
+		return this.copyTo(vec);
+	}
+
+	/**
 	 * Rounds x and y using Math.floor()
 	 */
 	public inline function floor():FlxVector
@@ -826,19 +837,12 @@ import openfl.geom.Point;
 	/**
 	 * Copies this vector.
 	 *
-	 * @param	vec		optional vector to copy this vector to
-	 * @return	copy	of this vector
+	 * @param   vec   optional vector to copy this vector to
+	 * @return  copy of this vector
 	 */
-	public function clone(?vec:FlxVector):FlxVector
+	public inline function clone(?vec:FlxVector):FlxVector
 	{
-		if (vec == null)
-		{
-			vec = FlxVector.get();
-		}
-
-		vec.x = x;
-		vec.y = y;
-		return vec;
+		return this.copyTo(vec);
 	}
 
 	inline function get_x():Float
@@ -911,10 +915,7 @@ import openfl.geom.Point;
 
 	function get_radians():Float
 	{
-		if (isZero())
-			return 0;
-
-		return Math.atan2(y, x);
+		return FlxAngle.radiansFromOrigin(x, y);
 	}
 
 	inline function set_radians(rads:Float):Float

@@ -5,12 +5,12 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
+import flixel.path.FlxPath;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
-import flixel.util.FlxPath;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
@@ -99,10 +99,10 @@ class FlxObject extends FlxBasic
 	 * @param   Object2   Any other `FlxObject`.
 	 * @return  Whether the objects in fact touched and were separated.
 	 */
-	public static function separate(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
-		var separatedX:Bool = separateX(Object1, Object2);
-		var separatedY:Bool = separateY(Object1, Object2);
+		var separatedX:Bool = separateX(object1, object2);
+		var separatedY:Bool = separateY(object1, object2);
 		return separatedX || separatedY;
 	}
 
@@ -121,18 +121,29 @@ class FlxObject extends FlxBasic
 		return touchingX || touchingY;
 	}
 
+	static function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
+	{
+		return object2.active && object2.moves && switch (type)
+		{
+			case NEVER: false;
+			case ALWAYS: true;
+			case IMMOVABLE: object2.immovable;
+			case HEAVIER: object2.immovable || object2.mass > object1.mass;
+		}
+	}
+
 	/**
 	 * Internal function that computes overlap among two objects on the X axis. It also updates the `touching` variable.
 	 * `checkMaxOverlap` is used to determine whether we want to exclude (therefore check) overlaps which are
 	 * greater than a certain maximum (linked to `SEPARATE_BIAS`). Default is `true`, handy for `separateX` code.
 	 */
 	@:noCompletion
-	static function computeOverlapX(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
+	static function computeOverlapX(object1:FlxObject, object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
 		// First, get the two object deltas
-		var obj1delta:Float = Object1.x - Object1.last.x;
-		var obj2delta:Float = Object2.x - Object2.last.x;
+		var obj1delta:Float = object1.x - object1.last.x;
+		var obj2delta:Float = object2.x - object2.last.x;
 
 		if (obj1delta != obj2delta)
 		{
@@ -140,10 +151,10 @@ class FlxObject extends FlxBasic
 			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x - ((obj1delta > 0) ? obj1delta : 0), Object1.last.y, Object1.width + obj1deltaAbs,
-				Object1.height);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x - ((obj2delta > 0) ? obj2delta : 0), Object2.last.y, Object2.width + obj2deltaAbs,
-				Object2.height);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(object1.x - ((obj1delta > 0) ? obj1delta : 0), object1.last.y, object1.width + obj1deltaAbs,
+				object1.height);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(object2.x - ((obj2delta > 0) ? obj2delta : 0), object2.last.y, object2.width + obj2deltaAbs,
+				object2.height);
 
 			if ((obj1rect.x + obj1rect.width > obj2rect.x)
 				&& (obj1rect.x < obj2rect.x + obj2rect.width)
@@ -155,32 +166,32 @@ class FlxObject extends FlxBasic
 				// If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if (obj1delta > obj2delta)
 				{
-					overlap = Object1.x + Object1.width - Object2.x;
+					overlap = object1.x + object1.width - object2.x;
 					if ((checkMaxOverlap && (overlap > maxOverlap))
-						|| ((Object1.allowCollisions & RIGHT) == 0)
-						|| ((Object2.allowCollisions & LEFT) == 0))
+						|| ((object1.allowCollisions & RIGHT) == 0)
+						|| ((object2.allowCollisions & LEFT) == 0))
 					{
 						overlap = 0;
 					}
 					else
 					{
-						Object1.touching |= RIGHT;
-						Object2.touching |= LEFT;
+						object1.touching |= RIGHT;
+						object2.touching |= LEFT;
 					}
 				}
 				else if (obj1delta < obj2delta)
 				{
-					overlap = Object1.x - Object2.width - Object2.x;
+					overlap = object1.x - object2.width - object2.x;
 					if ((checkMaxOverlap && (-overlap > maxOverlap))
-						|| ((Object1.allowCollisions & LEFT) == 0)
-						|| ((Object2.allowCollisions & RIGHT) == 0))
+						|| ((object1.allowCollisions & LEFT) == 0)
+						|| ((object2.allowCollisions & RIGHT) == 0))
 					{
 						overlap = 0;
 					}
 					else
 					{
-						Object1.touching |= LEFT;
-						Object2.touching |= RIGHT;
+						object1.touching |= LEFT;
+						object2.touching |= RIGHT;
 					}
 				}
 			}
@@ -195,59 +206,84 @@ class FlxObject extends FlxBasic
 	 * @param   Object2   Any other `FlxObject`.
 	 * @return  Whether the objects in fact touched and were separated along the X axis.
 	 */
-	public static function separateX(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateX(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// can't separate two immovable objects
-		var obj1immovable:Bool = Object1.immovable;
-		var obj2immovable:Bool = Object2.immovable;
-		if (obj1immovable && obj2immovable)
+		var immovable1 = object1.immovable;
+		var immovable2 = object2.immovable;
+		if (immovable1 && immovable2)
 		{
 			return false;
 		}
 
 		// If one of the objects is a tilemap, just pass it off.
-		if (Object1.flixelType == TILEMAP)
+		if (object1.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
-			return tilemap.overlapsWithCallback(Object2, separateX);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object1;
+			return tilemap.overlapsWithCallback(object2, separateX);
 		}
-		if (Object2.flixelType == TILEMAP)
+		if (object2.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
-			return tilemap.overlapsWithCallback(Object1, separateX, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object2;
+			return tilemap.overlapsWithCallback(object1, separateX, true);
 		}
 
-		var overlap:Float = computeOverlapX(Object1, Object2);
+		var overlap:Float = computeOverlapX(object1, object2);
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1v:Float = Object1.velocity.x;
-			var obj2v:Float = Object2.velocity.x;
+			var delta1 = object1.x - object1.last.x;
+			var delta2 = object2.x - object2.last.x;
+			var vel1 = object1.velocity.x;
+			var vel2 = object2.velocity.x;
+			var mass1 = object1.mass;
+			var mass2 = object2.mass;
+			var massSum = mass1 + mass2;
+			var elasticity1 = object1.elasticity;
+			var elasticity2 = object2.elasticity;
 
-			if (!obj1immovable && !obj2immovable)
+			if (!immovable1 && !immovable2)
 			{
+				#if FLX_4_LEGACY_COLLISION
 				overlap *= 0.5;
-				Object1.x = Object1.x - overlap;
-				Object2.x += overlap;
+				object1.x = object1.x - overlap;
+				object2.x += overlap;
 
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-				var average:Float = (obj1velocity + obj2velocity) * 0.5;
-				obj1velocity -= average;
-				obj2velocity -= average;
-				Object1.velocity.x = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.x = average + obj2velocity * Object2.elasticity;
+				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
+				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
+				var average = (newVel1 + newVel2) * 0.5;
+				newVel1 -= average;
+				newVel2 -= average;
+				object1.velocity.x = average + newVel1 * elasticity1;
+				object2.velocity.x = average + newVel2 * elasticity2;
+				#else
+				object1.x -= overlap / 2;
+				object2.x += overlap / 2;
+				
+				var momentum = mass1 * vel1 + mass2 * vel2;
+				var newVel1 = (momentum + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (momentum + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
+				object1.velocity.x = newVel1;
+				object2.velocity.x = newVel2;
+				#end
 			}
-			else if (!obj1immovable)
+			else if (!immovable1)
 			{
-				Object1.x = Object1.x - overlap;
-				Object1.velocity.x = obj2v - obj1v * Object1.elasticity;
+				object1.x -= overlap;
+				object1.velocity.x = vel2 - vel1 * elasticity1;
 			}
-			else if (!obj2immovable)
+			else if (!immovable2)
 			{
-				Object2.x += overlap;
-				Object2.velocity.x = obj1v - obj2v * Object2.elasticity;
+				object2.x += overlap;
+				object2.velocity.x = vel1 - vel2 * elasticity2;
 			}
+
+			// use collisionDrag properties to determine whether one object
+			if (allowCollisionDrag(object1.collisionYDrag, object1, object2) && delta1 > delta2)
+				object1.y += object2.y - object2.last.y;
+			else if (allowCollisionDrag(object2.collisionYDrag, object2, object1) && delta2 > delta1)
+				object2.y += object1.y - object1.last.y;
+
 			return true;
 		}
 
@@ -261,21 +297,21 @@ class FlxObject extends FlxBasic
 	 * @param   Object2   Any other `FlxObject`.
 	 * @return  Whether the objects in fact touched along the X axis.
 	 */
-	public static function updateTouchingFlagsX(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function updateTouchingFlagsX(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// If one of the objects is a tilemap, just pass it off.
-		if (Object1.flixelType == TILEMAP)
+		if (object1.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
-			return tilemap.overlapsWithCallback(Object2, updateTouchingFlagsX);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object1;
+			return tilemap.overlapsWithCallback(object2, updateTouchingFlagsX);
 		}
-		if (Object2.flixelType == TILEMAP)
+		if (object2.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
-			return tilemap.overlapsWithCallback(Object1, updateTouchingFlagsX, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object2;
+			return tilemap.overlapsWithCallback(object1, updateTouchingFlagsX, true);
 		}
 		// Since we are not separating, always return any amount of overlap => false as last parameter
-		return computeOverlapX(Object1, Object2, false) != 0;
+		return computeOverlapX(object1, object2, false) != 0;
 	}
 
 	/**
@@ -284,12 +320,12 @@ class FlxObject extends FlxBasic
 	 * greater than a certain maximum (linked to `SEPARATE_BIAS`). Default is `true`, handy for `separateY` code.
 	 */
 	@:noCompletion
-	static function computeOverlapY(Object1:FlxObject, Object2:FlxObject, checkMaxOverlap:Bool = true):Float
+	static function computeOverlapY(object1:FlxObject, object2:FlxObject, checkMaxOverlap:Bool = true):Float
 	{
 		var overlap:Float = 0;
 		// First, get the two object deltas
-		var obj1delta:Float = Object1.y - Object1.last.y;
-		var obj2delta:Float = Object2.y - Object2.last.y;
+		var obj1delta:Float = object1.y - object1.last.y;
+		var obj2delta:Float = object2.y - object2.last.y;
 
 		if (obj1delta != obj2delta)
 		{
@@ -297,10 +333,10 @@ class FlxObject extends FlxBasic
 			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
 			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
 
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(Object1.x, Object1.y - ((obj1delta > 0) ? obj1delta : 0), Object1.width,
-				Object1.height + obj1deltaAbs);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(Object2.x, Object2.y - ((obj2delta > 0) ? obj2delta : 0), Object2.width,
-				Object2.height + obj2deltaAbs);
+			var obj1rect:FlxRect = _firstSeparateFlxRect.set(object1.x, object1.y - ((obj1delta > 0) ? obj1delta : 0), object1.width,
+				object1.height + obj1deltaAbs);
+			var obj2rect:FlxRect = _secondSeparateFlxRect.set(object2.x, object2.y - ((obj2delta > 0) ? obj2delta : 0), object2.width,
+				object2.height + obj2deltaAbs);
 
 			if ((obj1rect.x + obj1rect.width > obj2rect.x)
 				&& (obj1rect.x < obj2rect.x + obj2rect.width)
@@ -312,32 +348,32 @@ class FlxObject extends FlxBasic
 				// If they did overlap (and can), figure out by how much and flip the corresponding flags
 				if (obj1delta > obj2delta)
 				{
-					overlap = Object1.y + Object1.height - Object2.y;
+					overlap = object1.y + object1.height - object2.y;
 					if ((checkMaxOverlap && (overlap > maxOverlap))
-						|| ((Object1.allowCollisions & DOWN) == 0)
-						|| ((Object2.allowCollisions & UP) == 0))
+						|| ((object1.allowCollisions & DOWN) == 0)
+						|| ((object2.allowCollisions & UP) == 0))
 					{
 						overlap = 0;
 					}
 					else
 					{
-						Object1.touching |= DOWN;
-						Object2.touching |= UP;
+						object1.touching |= DOWN;
+						object2.touching |= UP;
 					}
 				}
 				else if (obj1delta < obj2delta)
 				{
-					overlap = Object1.y - Object2.height - Object2.y;
+					overlap = object1.y - object2.height - object2.y;
 					if ((checkMaxOverlap && (-overlap > maxOverlap))
-						|| ((Object1.allowCollisions & UP) == 0)
-						|| ((Object2.allowCollisions & DOWN) == 0))
+						|| ((object1.allowCollisions & UP) == 0)
+						|| ((object2.allowCollisions & DOWN) == 0))
 					{
 						overlap = 0;
 					}
 					else
 					{
-						Object1.touching |= UP;
-						Object2.touching |= DOWN;
+						object1.touching |= UP;
+						object2.touching |= DOWN;
 					}
 				}
 			}
@@ -352,71 +388,84 @@ class FlxObject extends FlxBasic
 	 * @param   Object2   Any other `FlxObject`.
 	 * @return  Whether the objects in fact touched and were separated along the Y axis.
 	 */
-	public static function separateY(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function separateY(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// can't separate two immovable objects
-		var obj1immovable:Bool = Object1.immovable;
-		var obj2immovable:Bool = Object2.immovable;
-		if (obj1immovable && obj2immovable)
+		var immovable1:Bool = object1.immovable;
+		var immovable2:Bool = object2.immovable;
+		if (immovable1 && immovable2)
 		{
 			return false;
 		}
 
 		// If one of the objects is a tilemap, just pass it off.
-		if (Object1.flixelType == TILEMAP)
+		if (object1.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
-			return tilemap.overlapsWithCallback(Object2, separateY);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object1;
+			return tilemap.overlapsWithCallback(object2, separateY);
 		}
-		if (Object2.flixelType == TILEMAP)
+		if (object2.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
-			return tilemap.overlapsWithCallback(Object1, separateY, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object2;
+			return tilemap.overlapsWithCallback(object1, separateY, true);
 		}
 
-		var overlap:Float = computeOverlapY(Object1, Object2);
+		var overlap:Float = computeOverlapY(object1, object2);
 		// Then adjust their positions and velocities accordingly (if there was any overlap)
 		if (overlap != 0)
 		{
-			var obj1delta:Float = Object1.y - Object1.last.y;
-			var obj2delta:Float = Object2.y - Object2.last.y;
-			var obj1v:Float = Object1.velocity.y;
-			var obj2v:Float = Object2.velocity.y;
+			var delta1 = object1.y - object1.last.y;
+			var delta2 = object2.y - object2.last.y;
+			var vel1 = object1.velocity.y;
+			var vel2 = object2.velocity.y;
+			var mass1 = object1.mass;
+			var mass2 = object2.mass;
+			var massSum = mass1 + mass2;
+			var elasticity1 = object1.elasticity;
+			var elasticity2 = object2.elasticity;
 
-			if (!obj1immovable && !obj2immovable)
+			if (!immovable1 && !immovable2)
 			{
+				#if FLX_4_LEGACY_COLLISION
 				overlap *= 0.5;
-				Object1.y = Object1.y - overlap;
-				Object2.y += overlap;
+				object1.y = object1.y - overlap;
+				object2.y += overlap;
 
-				var obj1velocity:Float = Math.sqrt((obj2v * obj2v * Object2.mass) / Object1.mass) * ((obj2v > 0) ? 1 : -1);
-				var obj2velocity:Float = Math.sqrt((obj1v * obj1v * Object1.mass) / Object2.mass) * ((obj1v > 0) ? 1 : -1);
-				var average:Float = (obj1velocity + obj2velocity) * 0.5;
-				obj1velocity -= average;
-				obj2velocity -= average;
-				Object1.velocity.y = average + obj1velocity * Object1.elasticity;
-				Object2.velocity.y = average + obj2velocity * Object2.elasticity;
+				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
+				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
+				var average = (newVel1 + newVel2) * 0.5;
+				newVel1 -= average;
+				newVel2 -= average;
+				object1.velocity.y = average + newVel1 * elasticity1;
+				object2.velocity.y = average + newVel2 * elasticity2;
+				#else
+				object1.y -= overlap / 2;
+				object2.y += overlap / 2;
+				
+				var momentum = mass1 * vel1 + mass2 * vel2;
+				var newVel1 = (momentum + elasticity1 * mass2 * (vel2 - vel1)) / massSum;
+				var newVel2 = (momentum + elasticity2 * mass1 * (vel1 - vel2)) / massSum;
+				object1.velocity.y = newVel1;
+				object2.velocity.y = newVel2;
+				#end
 			}
-			else if (!obj1immovable)
+			else if (!immovable1)
 			{
-				Object1.y = Object1.y - overlap;
-				Object1.velocity.y = obj2v - obj1v * Object1.elasticity;
-				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object1.collisonXDrag && Object2.active && Object2.moves && (obj1delta > obj2delta))
-				{
-					Object1.x += Object2.x - Object2.last.x;
-				}
+				object1.y -= overlap;
+				object1.velocity.y = vel2 - vel1 * elasticity1;
 			}
-			else if (!obj2immovable)
+			else if (!immovable2)
 			{
-				Object2.y += overlap;
-				Object2.velocity.y = obj1v - obj2v * Object2.elasticity;
-				// This is special case code that handles cases like horizontal moving platforms you can ride
-				if (Object2.collisonXDrag && Object1.active && Object1.moves && (obj1delta < obj2delta))
-				{
-					Object2.x += Object1.x - Object1.last.x;
-				}
+				object2.y += overlap;
+				object2.velocity.y = vel1 - vel2 * elasticity2;
 			}
+
+			// use collisionDrag properties to determine whether one object
+			if (allowCollisionDrag(object1.collisionXDrag, object1, object2) && delta1 > delta2)
+				object1.x += object2.x - object2.last.x;
+			else if (allowCollisionDrag(object2.collisionXDrag, object2, object1) && delta2 > delta1)
+				object2.x += object1.x - object1.last.x;
+
 			return true;
 		}
 
@@ -430,21 +479,21 @@ class FlxObject extends FlxBasic
 	 * @param   Object2   Any other `FlxObject`.
 	 * @return  Whether the objects in fact touched along the Y axis.
 	 */
-	public static function updateTouchingFlagsY(Object1:FlxObject, Object2:FlxObject):Bool
+	public static function updateTouchingFlagsY(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// If one of the objects is a tilemap, just pass it off.
-		if (Object1.flixelType == TILEMAP)
+		if (object1.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object1;
-			return tilemap.overlapsWithCallback(Object2, updateTouchingFlagsY);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object1;
+			return tilemap.overlapsWithCallback(object2, updateTouchingFlagsY);
 		}
-		if (Object2.flixelType == TILEMAP)
+		if (object2.flixelType == TILEMAP)
 		{
-			var tilemap:FlxBaseTilemap<Dynamic> = cast Object2;
-			return tilemap.overlapsWithCallback(Object1, updateTouchingFlagsY, true);
+			var tilemap:FlxBaseTilemap<Dynamic> = cast object2;
+			return tilemap.overlapsWithCallback(object1, updateTouchingFlagsY, true);
 		}
 		// Since we are not separating, always return any amount of overlap => false as last parameter
-		return computeOverlapY(Object1, Object2, false) != 0;
+		return computeOverlapY(object1, object2, false) != 0;
 	}
 
 	/**
@@ -595,11 +644,30 @@ class FlxObject extends FlxBasic
 	 */
 	public var allowCollisions(default, set):FlxDirectionFlags = ANY;
 
-	/**
+	/** DEPRECATED
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
 	 * (makes sense for horizontally-moving platforms in platformers for example).
+	 * 
+	 * Apart from having a weird typo, this has been deprecated for collisionXDrag, which allows more options.
 	 */
-	public var collisonXDrag:Bool = true;
+	@:deprecated("Use `collisionXDrag`, instead. Note the corrected spelling: `collis(i)onXDrag")
+	public var collisonXDrag(get, set):Bool;
+
+	/**
+	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
+	 * (makes sense for horizontally-moving platforms in platformers for example). Use values
+	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
+	 * @since 4.11.0
+	 */
+	public var collisionXDrag:CollisionDragType = IMMOVABLE;
+
+	/**
+	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
+	 * (for sticking to vertically-moving platforms in platformers for example). Use values
+	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
+	 * @since 4.11.0
+	 */
+	public var collisionYDrag:CollisionDragType = NEVER;
 
 	#if FLX_DEBUG
 	/**
@@ -1069,10 +1137,10 @@ class FlxObject extends FlxBasic
 	 */
 	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes.match(X | XY))
+		if (axes.x)
 			x = (FlxG.width - width) / 2;
 
-		if (axes.match(Y | XY))
+		if (axes.y)
 			y = (FlxG.height - height) / 2;
 
 		return this;
@@ -1320,6 +1388,19 @@ class FlxObject extends FlxBasic
 		return allowCollisions = Value;
 	}
 
+	@:noCompletion
+	function get_collisonXDrag():Bool
+	{
+		return collisionXDrag == IMMOVABLE;
+	}
+
+	@:noCompletion
+	function set_collisonXDrag(Value:Bool):Bool
+	{
+		collisionXDrag = Value ? IMMOVABLE : NEVER;
+		return Value;
+	}
+
 	#if FLX_DEBUG
 	@:noCompletion
 	function set_debugBoundingBoxColorSolid(color:FlxColor)
@@ -1353,4 +1434,22 @@ class FlxObject extends FlxBasic
 			path.object = this;
 		return this.path = path;
 	}
+}
+
+/**
+ * Determines when to apply collision drag to one object that collided with another.
+ */
+@:enum abstract CollisionDragType(Int)
+{
+	/** Never drags on colliding objects. */
+	var NEVER = 0;
+
+	/** Always drags on colliding objects. */
+	var ALWAYS = 1;
+
+	/** Drags when colliding with immovable objects. */
+	var IMMOVABLE = 2;
+
+	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
+	var HEAVIER = 3;
 }
