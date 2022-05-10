@@ -401,31 +401,27 @@ class FlxQuadTree extends FlxRect
 	 * @param	ObjectOrGroup	FlxObjects are just added, FlxGroups are recursed and their applicable members added accordingly.
 	 * @param	List			A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
-	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	public function add(ObjectOrGroup:FlxBasic, list:Int):Void
+	@:access(flixel.group.FlxTypedGroup.resolveCollisionGroup)
+	public function add(basic:FlxBasic, list:Int):Void
 	{
 		_list = list;
 		
-		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup, true);
+		var group = FlxTypedGroup.resolveCollisionGroup(basic);
 		if (group != null)
 		{
 			var i:Int = 0;
-			var basic:FlxBasic;
-			var members:Array<FlxBasic> = group.members;
-			var l:Int = group.length;
-			while (i < l)
+			for (member in group.members)
 			{
-				basic = members[i++];
-				if (basic != null && basic.exists)
+				if (member != null && member.exists)
 				{
-					group = FlxTypedGroup.resolveGroup(basic, true);
+					group = FlxTypedGroup.resolveCollisionGroup(member);
 					if (group != null)
 					{
 						add(group, list);
 					}
 					else
 					{
-						_object = cast basic;
+						_object = cast member;
 						if (_object.exists && _object.allowCollisions != NONE)
 						{
 							_objectLeftEdge = _object.x;
@@ -440,7 +436,7 @@ class FlxQuadTree extends FlxRect
 		}
 		else
 		{
-			_object = cast ObjectOrGroup;
+			_object = cast basic;
 			if (_object.exists && _object.allowCollisions != NONE)
 			{
 				_objectLeftEdge = _object.x;

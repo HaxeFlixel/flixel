@@ -54,9 +54,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var maxSize(get, set):Int;
 
 	/**
-	 * Whether to be trated as a single collider instead of colliding with each member
+	 * Whether to be treated as a single collision object instead of a group of colliders
 	 */
-	public var collideAsSprite:Bool = false;
+	public var singleCollider:Bool = false;
 	
 	/**
 	 * Optimization to allow setting position of group without transforming children twice.
@@ -818,13 +818,19 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override function set_width(Value:Float):Float
+	override function set_width(value:Float):Float
 	{
-		return Value;
+		if (singleCollider)
+			return super.width = value;
+
+		return value;
 	}
 
 	override function get_width():Float
 	{
+		if (singleCollider)
+			return super.width;
+
 		if (length == 0)
 			return 0;
 
@@ -849,17 +855,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
-	override function set_height(Value:Float):Float
+	override function set_height(value:Float):Float
 	{
-		return Value;
+		if (singleCollider)
+			return super.height = value;
+
+		return value;
 	}
 
 	override function get_height():Float
 	{
+		if (singleCollider)
+			return super.width;
+
 		if (length == 0)
-		{
 			return 0;
-		}
 
 		var minY:Float = Math.POSITIVE_INFINITY;
 		var maxY:Float = Math.NEGATIVE_INFINITY;
