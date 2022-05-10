@@ -1,5 +1,6 @@
 package flixel.group;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import massive.munit.Assert;
@@ -136,6 +137,35 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.isFalse(member2.killed);
 		Assert.isFalse(member2.revived);
 		return group;
+	}
+	
+	@Test
+	function testSingleCollider()
+	{
+		final size = 10;
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(size, size);
+		
+		for (i in 0...group.length)
+		{
+			var member = group.members[i];
+			member.ID = i;
+			member.makeGraphic(size, size);
+			member.x = size * i;
+			member.last.x = size * i;
+		}
+
+		group.singleCollider = false;
+		var collider:FlxSprite = null;
+		FlxG.overlap(sprite, group, (_, member)->collider = member);
+		Assert.isNotNull(collider);
+		Assert.isTrue(collider == group.members[0], "Expected collider to be group.members[0]");
+
+		group.singleCollider = true;
+		group.width = group.length * size;
+		group.height = size;
+		FlxG.overlap(sprite, group, (_, member)->collider = member);
+		Assert.isTrue(collider == group, "Expected collider to be group.members[0]");
 	}
 }
 
