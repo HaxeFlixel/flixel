@@ -56,9 +56,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public var black(get, set):Float;
 
 	/**
-	 * 
+	 * The red, green and blue channels of this color as a 24 bit integer (from 0 to 0xFFFFFF)
 	 */
-	public var rgb(get, set):Int;
+	public var rgb(get, set):FlxColor;
 
 	/** 
 	 * The hue of the color in degrees (from 0 to 359)
@@ -778,8 +778,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	inline function set_rgb(value:FlxColor):FlxColor
 	{
 		validate();
-		this &= 0xff000000;
-		this |= value & 0x00ffffff;
+		this = (this & 0xff000000) | (value & 0x00ffffff);
 		return value;
 	}
 
