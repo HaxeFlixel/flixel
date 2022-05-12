@@ -55,6 +55,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public var yellow(get, set):Float;
 	public var black(get, set):Float;
 
+	/**
+	 * 
+	 */
+	public var rgb(get, set):Int;
+
 	/** 
 	 * The hue of the color in degrees (from 0 to 359)
 	 */
@@ -768,6 +773,19 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		setHSL(hue, saturation, Value, alphaFloat);
 		return Value;
+	}
+
+	inline function set_rgb(value:FlxColor):FlxColor
+	{
+		validate();
+		this &= 0xff000000;
+		this |= value & 0x00ffffff;
+		return value;
+	}
+
+	inline function get_rgb():FlxColor
+	{
+		return this & 0x00ffffff;
 	}
 
 	inline function maxColor():Float
