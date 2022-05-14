@@ -88,6 +88,29 @@ class LogitechMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
+	
+	override function getInputLabel(id:FlxGamepadInputID)
+	{
+		return switch (id)
+		{
+			case A: "2";
+			case B: "3";
+			case X: "1";
+			case Y: "4";
+			case BACK: "9";
+			case GUIDE: "logitech";
+			case START: "10";
+			case LEFT_SHOULDER: "5";
+			case RIGHT_SHOULDER: "6";
+			case LEFT_TRIGGER: "7";
+			case RIGHT_TRIGGER: "8";
+			#if FLX_JOYSTICK_API
+			case LEFT_TRIGGER_FAKE: "7";
+			case RIGHT_TRIGGER_FAKE: "8";
+			#end
+			default: super.getInputLabel(id);
+		}
+	}
 
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int

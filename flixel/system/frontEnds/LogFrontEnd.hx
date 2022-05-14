@@ -6,6 +6,9 @@ import flixel.system.FlxAssets;
 import haxe.Log;
 import haxe.PosInfos;
 
+/**
+ * Accessed via `FlxG.log`.
+ */
 class LogFrontEnd
 {
 	/**
@@ -64,7 +67,7 @@ class LogFrontEnd
 			Style = LogStyle.NORMAL;
 		}
 
-		if (!Std.is(Data, Array))
+		if (!(Data is Array))
 		{
 			Data = [Data];
 		}

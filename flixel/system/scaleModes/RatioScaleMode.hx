@@ -2,6 +2,13 @@ package flixel.system.scaleModes;
 
 import flixel.FlxG;
 
+/**
+ * `RatioScaleMode` is a scaling mode which maintains the game's aspect ratio.
+ * When you shrink or grow the window, the width and height of the game will adjust,
+ * either scaling the game or adding black bars as needed.
+ *
+ * This is the default scaling mode used by HaxeFlixel.
+ */
 class RatioScaleMode extends BaseScaleMode
 {
 	var fillScreen:Bool;

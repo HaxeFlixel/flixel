@@ -15,8 +15,9 @@ class FlxAssetPaths
 		if (!directory.endsWith("/"))
 			directory += "/";
 
-		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
+		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
+		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
 		var fields:Array<Field> = Context.getBuildFields();
 
 		for (fileRef in fileReferences)
@@ -37,7 +38,7 @@ class FlxAssetPaths
 			?rename:String->String):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
-		var resolvedPath = #if (ios || tvos) Context.resolvePath(directory) #else directory #end;
+		var resolvedPath = #if (ios || tvos) "../assets/" + directory #else directory #end;
 		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
 		{

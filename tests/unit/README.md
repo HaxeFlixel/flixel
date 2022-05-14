@@ -1,7 +1,7 @@
 Flixel Unit Tests
 -----------------
 
-This is a unit test project using [munit](https://github.com/massiveinteractive/MassiveUnit). It's good practice to add tests for fixed bugs or new features. The unit tests are automatically run on TravisCI.
+This is a unit test project using [munit](https://github.com/massiveinteractive/MassiveUnit). It's good practice to add tests for fixed bugs or new features. The unit tests are automatically run on GitHub Actions.
 
 There's a 1:1 mapping between `.hx` files in Flixel and the unit test project - tests for `flixel.ui.FlxButton` go into `flixel.ui.FlxButtonTest` etc.
 

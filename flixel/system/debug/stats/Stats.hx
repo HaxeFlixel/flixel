@@ -37,11 +37,6 @@ class Stats extends Window
 	 */
 	static inline var INITIAL_WIDTH:Int = 160;
 
-	/**
-	 * The minimal height of the window.
-	 */
-	static var MIN_HEIGHT:Int = 0;
-
 	static inline var FPS_COLOR:FlxColor = 0xff96ff00;
 	static inline var MEMORY_COLOR:FlxColor = 0xff009cff;
 	static inline var DRAW_TIME_COLOR:FlxColor = 0xffA60004;
@@ -99,28 +94,11 @@ class Stats extends Window
 	{
 		super("Stats", new GraphicStats(0, 0), 0, 0, false);
 
-		if (MIN_HEIGHT == 0)
-		{
-			if (!FlxG.renderTile)
-				MIN_HEIGHT = 185;
-			else
-				MIN_HEIGHT = 200;
-		}
-
-		minSize.y = MIN_HEIGHT;
-		resize(INITIAL_WIDTH, MIN_HEIGHT);
+		var minHeight = if (FlxG.renderTile) 200 else 185;
+		minSize.y = minHeight;
+		resize(INITIAL_WIDTH, minHeight);
 
 		start();
-
-		_update = [];
-		_draw = [];
-		_activeObject = [];
-		_visibleObject = [];
-
-		if (FlxG.renderTile)
-		{
-			_drawCalls = [];
-		}
 
 		var gutter:Int = 5;
 		var graphX:Int = gutter;
@@ -153,10 +131,9 @@ class Stats extends Window
 		addChild(drawTimeGraph);
 
 		addChild(_leftTextField = DebuggerUtil.createTextField(gutter, (graphHeight * 2) + 45, LABEL_COLOR, TEXT_SIZE));
-		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 70, (graphHeight * 2) + 45, FlxColor.WHITE, TEXT_SIZE));
+		addChild(_rightTextField = DebuggerUtil.createTextField(gutter + 75, (graphHeight * 2) + 45, FlxColor.WHITE, TEXT_SIZE));
 
 		_leftTextField.multiline = _rightTextField.multiline = true;
-		_leftTextField.wordWrap = _rightTextField.wordWrap = true;
 
 		var drawMethod = "";
 		if (FlxG.renderTile)
@@ -334,9 +311,7 @@ class Stats extends Window
 
 	function divide(f1:Float, f2:Float):Float
 	{
-		if (f2 == 0)
-			return 0;
-		return f1 / f2;
+		return if (f2 == 0) 0 else f1 / f2;
 	}
 
 	/**

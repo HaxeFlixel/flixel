@@ -99,7 +99,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(4, 6, 3);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 0, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -172,7 +172,9 @@ class FlxG
 	public static var height(default, null):Int;
 
 	/**
-	 * The scale mode the game should use - available policies are found in `flixel.system.scaleModes`.
+	 * The scale mode the game should use.
+	 * HaxeFlixel includes several available scale modes, which are located in `flixel.system.scaleModes`.
+	 * However, you may also create a class which extends `BaseScaleMode`, and override its behavior according to your needs.
 	 */
 	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 
@@ -389,7 +391,7 @@ class FlxG
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
-	 *       Use `FlxTilemap#overlaps()` if you don't want that.
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
 	 *
 	 * @param   ObjectOrGroup1    The first object or group you want to check.
 	 * @param   ObjectOrGroup2    The second object or group you want to check. If it is the same as the first,

@@ -47,47 +47,12 @@ class FlxCollision
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var considerRotation:Bool = (Contact.angle != 0) || (Target.angle != 0);
+		var advanced = (Contact.angle != 0) || (Target.angle != 0)
+			|| Contact.scale.x != 1 || Contact.scale.y != 1
+			|| Target.scale.x != 1 || Target.scale.y != 1;
 
-		Camera = (Camera != null) ? Camera : FlxG.camera;
-
-		pointA.x = Contact.x - Std.int(Camera.scroll.x * Contact.scrollFactor.x) - Contact.offset.x;
-		pointA.y = Contact.y - Std.int(Camera.scroll.y * Contact.scrollFactor.y) - Contact.offset.y;
-
-		pointB.x = Target.x - Std.int(Camera.scroll.x * Target.scrollFactor.x) - Target.offset.x;
-		pointB.y = Target.y - Std.int(Camera.scroll.y * Target.scrollFactor.y) - Target.offset.y;
-
-		if (considerRotation)
-		{
-			// find the center of both sprites
-			Contact.origin.copyTo(centerA);
-			Target.origin.copyTo(centerB);
-
-			// now make a bounding box that allows for the sprite to be rotated in 360 degrees
-			var lengthA = centerA.length;
-			boundsA.x = (pointA.x + centerA.x - lengthA);
-			boundsA.y = (pointA.y + centerA.y - lengthA);
-			boundsA.width = lengthA * 2;
-			boundsA.height = boundsA.width;
-
-			var lengthB = centerB.length;
-			boundsB.x = (pointB.x + centerB.x - lengthB);
-			boundsB.y = (pointB.y + centerB.y - lengthB);
-			boundsB.width = lengthB * 2;
-			boundsB.height = boundsB.width;
-		}
-		else
-		{
-			boundsA.x = pointA.x;
-			boundsA.y = pointA.y;
-			boundsA.width = Contact.frameWidth;
-			boundsA.height = Contact.frameHeight;
-
-			boundsB.x = pointB.x;
-			boundsB.y = pointB.y;
-			boundsB.width = Target.frameWidth;
-			boundsB.height = Target.frameHeight;
-		}
+		Contact.getScreenBounds(boundsA, Camera);
+		Target.getScreenBounds(boundsB, Camera);
 
 		boundsA.intersection(boundsB, intersect.set());
 
@@ -113,7 +78,7 @@ class FlxCollision
 		var overlapHeight:Int = Std.int(intersect.height);
 
 		// More complicated case, if either of the sprites is rotated
-		if (considerRotation)
+		if (advanced)
 		{
 			testMatrix.identity();
 
@@ -122,9 +87,11 @@ class FlxCollision
 
 			// rotate the matrix according to angle
 			testMatrix.rotate(Contact.angle * FlxAngle.TO_RAD);
+			testMatrix.scale(Contact.scale.x, Contact.scale.y);
 
 			// translate it back!
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
+			
 
 			// prepare an empty canvas
 			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
@@ -137,6 +104,7 @@ class FlxCollision
 			testMatrix.identity();
 			testMatrix.translate(-Target.origin.x, -Target.origin.y);
 			testMatrix.rotate(Target.angle * FlxAngle.TO_RAD);
+			testMatrix.scale(Target.scale.x, Target.scale.y);
 			testMatrix.translate(boundsB.width / 2, boundsB.height / 2);
 
 			var testB2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsB.width), Math.floor(boundsB.height), true, FlxColor.TRANSPARENT, false);
@@ -201,7 +169,7 @@ class FlxCollision
 			}
 		}
 
-		if (considerRotation)
+		if (advanced)
 		{
 			FlxBitmapDataPool.put(testA);
 			FlxBitmapDataPool.put(testB);
@@ -296,5 +264,147 @@ class FlxCollision
 		result.add(bottom);
 
 		return result;
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, first enters the rect.
+	 * If the line starts inside the rect, a copy of start is returned.
+	 * If the line never enters the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being entered
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of entry of the line into the rect, if possible.
+	 */
+	public static function calcRectEntry(rect:FlxRect, start:FlxVector, end:FlxVector, ?result:FlxVector):Null<FlxVector>
+	{
+		// We must ensure that weak refs are placed back in the pool
+		inline function putWeakRefs()
+		{
+			start.putWeak();
+			end.putWeak();
+			rect.putWeak();
+		}
+
+		// helper to create a new instance if needed, when needed.
+		// this allows us to return a value at any point and still put weak refs.
+		// otherwise this would be a fragile mess of if-elses
+		function getResult(x:Float, y:Float)
+		{
+			if (result == null)
+				result = FlxVector.get(x, y);
+			else
+				result.set(x, y);
+			
+			putWeakRefs();
+			return result;
+		}
+
+		function nullResult()
+		{
+			putWeakRefs();
+			return null;
+		}
+
+		// does the ray start inside the bounds
+		if (rect.containsPoint(start))
+			return getResult(start.x, start.y);
+
+		// are both points above, below, left or right of the bounds
+		if ((start.y < rect.top    && end.y < rect.top   )
+		||  (start.y > rect.bottom && end.y > rect.bottom)
+		||  (start.x > rect.right  && end.x > rect.right )
+		||  (start.x < rect.left   && end.x < rect.left) )
+		{
+			return nullResult();
+		}
+
+		// check for purely vertical, i.e. has infinite slope
+		if (start.x == end.x)
+		{
+			// determine if it exits top or bottom
+			if (start.y < rect.top)
+				return getResult(start.x, rect.top);
+
+			return getResult(start.x, rect.bottom);
+		}
+
+		// Use y = mx + b formula to define out line, m = slope, b is y when x = 0
+		var m = (start.y - end.y) / (start.x - end.x);
+		// y - mx = b
+		var b = start.y - m * start.x;
+		// y = mx + b
+		var leftY = m * rect.left + b;
+		var rightY = m * rect.right + b;
+
+		// if left and right intercepts are both above and below, there is no entry
+		if ((leftY < rect.top && rightY < rect.top) || (leftY > rect.bottom && rightY > rect.bottom))
+			return nullResult();
+
+		// if ray moves right
+		else if (start.x < end.x)
+		{
+			if (leftY < rect.top)
+			{
+				// ray exits on top
+				// x = (y - b)/m
+				return getResult((rect.top - b) / m, rect.top);
+			}
+
+			if (leftY > rect.bottom)
+			{
+				// ray exits on bottom
+				// x = (y - b)/m
+				return getResult((rect.bottom - b) / m, rect.bottom);
+			}
+
+			// ray exits to the left
+			return getResult(rect.left, leftY);
+		}
+
+		// if ray moves left
+		if (rightY < rect.top)
+		{
+			// ray exits on top
+			// x = (y - b)/m
+			return getResult((rect.top - b) / m, rect.top);
+		}
+
+		if (rightY > rect.bottom)
+		{
+			// ray exits on bottom
+			// x = (y - b)/m
+			return getResult((rect.bottom - b) / m, rect.bottom);
+		}
+
+		// ray exits to the right
+		return getResult(rect.right, rightY);
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, was last inside the rect.
+	 * If the line ends inside the rect, a copy of end is returned.
+	 * If the line is never inside the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being exited
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of exit of the line from the rect, if possible.
+	 */
+	public static inline function calcRectExit(rect, start, end, result)
+	{
+		return calcRectEntry(rect, end, start, result);
 	}
 }

@@ -5,6 +5,9 @@ import flixel.FlxG;
 import flixel.system.debug.console.ConsoleUtil;
 #end
 
+/**
+ * Accessed via `FlxG.watch`.
+ */
 class WatchFrontEnd
 {
 	public function new() {}
@@ -90,6 +93,20 @@ class WatchFrontEnd
 	 * @since   4.1.0
 	 */
 	public function removeExpression(displayName:String):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.watch.remove(displayName, null);
+		#end
+	}
+	
+	public function addFunction(displayName:String, func:()->Dynamic):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.watch.add(displayName, FUNCTION(func));
+		#end
+	}
+	
+	public function removeFunction(displayName:String):Void
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.watch.remove(displayName, null);

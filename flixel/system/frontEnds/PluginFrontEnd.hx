@@ -1,9 +1,19 @@
 package flixel.system.frontEnds;
 
+import flixel.input.mouse.FlxMouseEvent;
+import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+#if (haxe_ver >= 4.2)
+import Std.isOfType;
+#else
+import Std.is as isOfType;
+#end
 
+/**
+ * Accessed via `FlxG.plugins`.
+ */
 class PluginFrontEnd
 {
 	/**
@@ -40,13 +50,13 @@ class PluginFrontEnd
 	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
 	 * @return	The plugin object, or null if no matching plugin was found.
 	 */
-	public function get(ClassType:Class<FlxBasic>):FlxBasic
+	public function get<T:FlxBasic>(ClassType:Class<T>):T
 	{
 		for (plugin in list)
 		{
-			if (Std.is(plugin, ClassType))
+			if (isOfType(plugin, ClassType))
 			{
-				return plugin;
+				return cast plugin;
 			}
 		}
 
@@ -59,7 +69,7 @@ class PluginFrontEnd
 	 * @param	Plugin	The plugin instance you want to remove.
 	 * @return	The same FlxPlugin-based plugin you passed in.
 	 */
-	public function remove(Plugin:FlxBasic):FlxBasic
+	public function remove<T:FlxBasic>(Plugin:T):T
 	{
 		// Don't add repeats
 		var i:Int = list.length - 1;
@@ -91,7 +101,7 @@ class PluginFrontEnd
 
 		while (i >= 0)
 		{
-			if (Std.is(list[i], ClassType))
+			if (isOfType(list[i], ClassType))
 			{
 				list.splice(i, 1);
 				results = true;
@@ -107,6 +117,7 @@ class PluginFrontEnd
 	{
 		add(FlxTimer.globalManager = new FlxTimerManager());
 		add(FlxTween.globalManager = new FlxTweenManager());
+		add(FlxMouseEvent.globalManager = new FlxMouseEventManager());
 	}
 
 	/**

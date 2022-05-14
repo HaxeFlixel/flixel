@@ -3,6 +3,9 @@ package flixel.input.actions;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
+/**
+ * @since 4.6.0
+ */
 @:allow(flixel.input.actions.FlxActionInputDigital, flixel.input.actions.FlxActionInputAnalog)
 class FlxActionInput implements IFlxDestroyable
 {
@@ -76,12 +79,18 @@ class FlxActionInput implements IFlxDestroyable
 	}
 }
 
+/**
+ * @since 4.6.0
+ */
 enum FlxInputType
 {
 	DIGITAL;
 	ANALOG;
 }
 
+/**
+ * @since 4.6.0
+ */
 enum FlxInputDevice
 {
 	UNKNOWN;
@@ -92,12 +101,14 @@ enum FlxInputDevice
 	STEAM_CONTROLLER;
 	IFLXINPUT_OBJECT;
 	OTHER;
+	ANDROID;
 	ALL;
 	NONE;
 }
 
 /**
  * Just a bucket for some handy sentinel values.
+ * @since 4.6.0
  */
 class FlxInputDeviceID
 {
@@ -119,6 +130,7 @@ class FlxInputDeviceID
 
 /**
  * Just a bucket for being able to refer to a specific device by type & slot number
+ * @since 4.6.0
  */
 class FlxInputDeviceObject
 {

@@ -18,6 +18,8 @@ import lime.graphics.opengl.GL;
 
 /**
  * Internal storage system to prevent graphics from being used repeatedly in memory.
+ * 
+ * Accessed via `FlxG.bitmap`.
  */
 class BitmapFrontEnd
 {
@@ -148,11 +150,11 @@ class BitmapFrontEnd
 	 */
 	public function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
-		if (Std.is(Graphic, FlxGraphic))
+		if ((Graphic is FlxGraphic))
 		{
 			return FlxGraphic.fromGraphic(cast Graphic, Unique, Key);
 		}
-		else if (Std.is(Graphic, BitmapData))
+		else if ((Graphic is BitmapData))
 		{
 			return FlxGraphic.fromBitmapData(cast Graphic, Unique, Key);
 		}
@@ -193,7 +195,8 @@ class BitmapFrontEnd
 	{
 		for (key in _cache.keys())
 		{
-			if (_cache.get(key).bitmap == bmd)
+			var obj = _cache.get(key);
+			if (obj != null && obj.bitmap == bmd)
 				return key;
 		}
 		return null;
