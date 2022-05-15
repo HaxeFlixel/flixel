@@ -1,6 +1,5 @@
 package flixel.math;
 
-import haxe.PosInfos;
 import massive.munit.Assert;
 
 class FlxPointTest extends FlxTest
@@ -9,56 +8,75 @@ class FlxPointTest extends FlxTest
 	var point2:FlxPoint;
 
 	@Before
-	function before()
+	function before():Void
 	{
 		point1 = new FlxPoint();
 		point2 = new FlxPoint();
 	}
 
 	@Test
-	function testEqualsTrue()
+	function testZeroVectorSetLength():Void
 	{
-		point1.set(10, 10);
-		point2.set(10, 10);
+		point1.length = 10;
 
-		Assert.isTrue(point1.equals(point2));
-
-		FlxAssert.pointsEqual(point1, point2);
+		Assert.isTrue(point1.equals(new FlxPoint(0, 0)));
 	}
 
 	@Test
-	function testEqualsFalse()
+	function testSetLengthToZero():Void
 	{
-		point1.set(10, 10.1);
-		point2.set(10, 10);
+		point1.set(1, 1);
+		point1.length = 0;
 
-		Assert.isFalse(point1.equals(point2));
-
-		FlxAssert.pointsNotEqual(point1, point2);
+		Assert.isTrue(point1.equals(new FlxPoint(0, 0)));
 	}
 
 	@Test
-	function testAngleTo()
+	function testUnitVectorSetLength():Void
 	{
-		//              x1,  y1,  x2,  y2, expected angle
-		assertdegreesTo(   0,   0,   0,   0,   0);
-		assertdegreesTo(   0,   0, 100,   0,   0);
-		assertdegreesTo(   0,   0, 100, 100,  45);
-		assertdegreesTo(   0,   0,   0, 100,  90);
-		assertdegreesTo(   0,   0,-100, 100, 135);
-		assertdegreesTo( 100,   0,   0,   0, 180);
-		assertdegreesTo( 600,-200, 500,-300,-135);
-		assertdegreesTo( 600,-200, 600,-300, -90);
-		assertdegreesTo( 600,-200, 700,-300, -45);
+		point1.set(1, 1);
+		point1.length = Math.sqrt(2) * 2;
 
-		var sqrt3 = Math.sqrt(3);
-		assertdegreesTo(0, 0, sqrt3, 1, 30);
-		assertdegreesTo(0, 0, 1, sqrt3, 60);
+		var xIsInRange = (point1.x > 1.999 && point1.x < 2.001);
+		var yIsInRange = (point1.y > 1.999 && point1.y < 2.001);
+		Assert.isTrue(xIsInRange);
+		Assert.isTrue(yIsInRange);
 	}
 
-	function assertdegreesTo(x1, y1, x2, y2, expected:Float, precision = 0.0001, ?msg:String, ?info:PosInfos)
+	@Test
+	function testDegreesBetween():Void
 	{
-		var actual = point1.set(x1, y1).degreesTo(point2.set(x2, y2));
-		Assert.areEqual(expected, Math.round(actual / precision) * precision, msg, info);
+		point1.set(0, 1);
+		point2.set(1, 0);
+
+		Assert.areEqual(90, point1.degreesBetween(point2));
+	}
+
+	@Test
+	function testAddNew():Void
+	{
+		point1.set(1, 2);
+		point2.set(3, 5);
+
+		Assert.isTrue(point1.addNew(point2).equals(new FlxPoint(4, 7)));
+		Assert.isTrue(point1.equals(new FlxPoint(1, 2)));
+	}
+
+	@Test
+	function testSubtractNew():Void
+	{
+		point1.set(1, 2);
+		point2.set(3, 5);
+
+		Assert.isTrue(point1.subtractNew(point2).equals(new FlxPoint(-2, -3)));
+		Assert.isTrue(point1.equals(new FlxPoint(1, 2)));
+	}
+
+	@Test // #1959
+	function testNormalizeZero():Void
+	{
+		point1.set(0, 0);
+		var normalized = point1.normalize();
+		Assert.isTrue(normalized.equals(new FlxPoint(0, 0)));
 	}
 }

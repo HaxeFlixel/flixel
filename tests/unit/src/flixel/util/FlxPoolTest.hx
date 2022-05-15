@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flixel.math.FlxPoint;
+import flixel.math.FlxBasePoint;
 import massive.munit.Assert;
 
 class FlxPoolTest extends FlxTest
@@ -10,7 +11,7 @@ class FlxPoolTest extends FlxTest
 	@Before
 	function before():Void
 	{
-		ppool = new FlxPool<FlxPoint>(FlxPoint);
+		ppool = new FlxPool<FlxPoint>(FlxBasePoint);
 	}
 
 	@Test

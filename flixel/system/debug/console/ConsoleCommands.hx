@@ -6,7 +6,7 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
+import flixel.math.FlxBasePoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
@@ -68,7 +68,7 @@ class ConsoleCommands
 		console.registerClass(FlxMath);
 		console.registerClass(FlxTween);
 		console.registerClass(FlxCamera);
-		console.registerClass(FlxPoint);
+		console.registerObject("FlxPoint", FlxBasePoint);
 		console.registerClass(FlxRect);
 
 		console.registerEnum(FlxDebuggerLayout);
