@@ -1,7 +1,6 @@
 package flixel.util;
 
 import flixel.math.FlxPoint;
-import flixel.math.FlxBasePoint;
 import massive.munit.Assert;
 
 class FlxPoolTest extends FlxTest
