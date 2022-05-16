@@ -1,6 +1,7 @@
 package flixel.math;
 
-import flixel.util.FlxPool.IFlxPool;
+import flixel.util.FlxPool;
+import flixel.util.FlxStringUtil;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 
@@ -110,7 +111,9 @@ import openfl.geom.Point;
 	 */
 	public inline function set(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		return this.set(x, y);
+		this.x = x;
+		this.y = y;
+		return this;
 	}
 
 	/**
@@ -122,7 +125,9 @@ import openfl.geom.Point;
 	 */
 	public inline function add(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		return this.add(x, y);
+		this.x += x;
+		this.y += y;
+		return this;
 	}
 
 	/**
@@ -133,7 +138,9 @@ import openfl.geom.Point;
 	 */
 	public inline function addPoint(point:FlxPoint):FlxPoint
 	{
-		return this.addPoint(point);
+		add(point.x, point.y);
+		point.putWeak();
+		return this;
 	}
 
 	/**
@@ -145,7 +152,9 @@ import openfl.geom.Point;
 	 */
 	public inline function subtract(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		return this.subtract(x, y);
+		this.x -= x;
+		this.y -= y;
+		return this;
 	}
 
 	/**
@@ -156,7 +165,9 @@ import openfl.geom.Point;
 	 */
 	public inline function subtractPoint(point:FlxPoint):FlxPoint
 	{
-		return this.subtractPoint(point);
+		subtract(point.x, point.y);
+		point.putWeak();
+		return this;
 	}
 
 	/**
@@ -167,7 +178,9 @@ import openfl.geom.Point;
 	 */
 	public inline function scale(k:Float):FlxPoint
 	{
-		return this.scale(k);
+		x *= k;
+		y *= k;
+		return this;
 	}
 
 	/**
@@ -206,23 +219,25 @@ import openfl.geom.Point;
 	/**
 	 * Helper function, just copies the values from the specified point.
 	 *
-	 * @param   point  Any FlxPoint.
+	 * @param   p  Any FlxPoint.
 	 * @return  A reference to itself.
 	 */
-	public inline function copyFrom(point:FlxPoint):FlxPoint
+	public inline function copyFrom(p:FlxPoint):FlxPoint
 	{
-		return this.copyFrom(point);
+		set(p.x, p.y);
+		p.putWeak();
+		return this;
 	}
 
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
 	 *
-	 * @param   Point  Any Point.
+	 * @param   p  Any Point.
 	 * @return  A reference to itself.
 	 */
-	public inline function copyFromFlash(flashPoint:Point):FlxPoint
+	public inline function copyFromFlash(p:Point):FlxPoint
 	{
-		return this.copyFromFlash(flashPoint);
+		return this.set(p.x, p.y);
 	}
 
 	/**
@@ -233,7 +248,57 @@ import openfl.geom.Point;
 	 */
 	public inline function copyTo(?p:FlxPoint):FlxPoint
 	{
-		return this.copyTo(p);
+		if (p == null)
+		{
+			p = get();
+		}
+		return p.set(x, y);
+	}
+
+	/**
+	 * Helper function, just copies the values from this point to the specified Flash point.
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to the altered point parameter.
+	 */
+	public inline function copyToFlash(p:Point):Point
+	{
+		if (p == null)
+		{
+			p = new Point();
+		}
+
+		p.x = x;
+		p.y = y;
+		return p;
+	}
+
+	/**
+	 * Helper function, just increases the values of the specified Flash point by the values of this point.
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to the altered point parameter.
+	 */
+	public inline function addToFlash(p:Point):Point
+	{
+		p.x += x;
+		p.y += y;
+
+		return p;
+	}
+
+	/**
+	 * Helper function, just decreases the values of the specified Flash point by the values of this point.
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to the altered point parameter.
+	 */
+	public inline function subtractFromFlash(p:Point):Point
+	{
+		p.x -= x;
+		p.y -= y;
+
+		return p;
 	}
 
 	/**
@@ -241,7 +306,9 @@ import openfl.geom.Point;
 	 */
 	public inline function floor():FlxPoint
 	{
-		return this.floor();
+		x = Math.floor(x);
+		y = Math.floor(y);
+		return this;
 	}
 
 	/**
@@ -249,7 +316,9 @@ import openfl.geom.Point;
 	 */
 	public inline function ceil():FlxPoint
 	{
-		return this.ceil();
+		x = Math.ceil(x);
+		y = Math.ceil(y);
+		return this;
 	}
 
 	/**
@@ -257,19 +326,130 @@ import openfl.geom.Point;
 	 */
 	public inline function round():FlxPoint
 	{
-		return this.round();
+		x = Math.round(x);
+		y = Math.round(y);
+		return this;
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given angle.
+	 * Returns true if this point is within the given rectangular bounds
 	 *
-	 * @param   Pivot   The pivot you want to rotate this point around
-	 * @param   Angle   Rotate the point by this many degrees clockwise.
+	 * @param	x       The X value of the region to test within
+	 * @param	y       The Y value of the region to test within
+	 * @param	width   The width of the region to test within
+	 * @param	height  The height of the region to test within
+	 * @return	True if the point is within the region, otherwise false
+	 */
+	public inline function inCoords(x:Float, y:Float, width:Float, height:Float):Bool
+	{
+		return FlxMath.pointInCoordinates(this.x, this.y, x, y, width, height);
+	}
+
+	/**
+	 * Returns true if this point is within the given rectangular block
+	 *
+	 * @param	rect	The FlxRect to test within
+	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
+	 */
+	public inline function inRect(rect:FlxRect):Bool
+	{
+		return FlxMath.pointInFlxRect(x, y, rect);
+	}
+
+	/**
+	 * Rotates this point clockwise in 2D space around another point by the given degrees.
+	 *
+	 * @param   pivot    The pivot you want to rotate this point around
+	 * @param   degrees  Rotate the point by this many degrees clockwise.
 	 * @return  A FlxPoint containing the coordinates of the rotated point.
 	 */
-	public function rotate(pivot:FlxPoint, angle:Float):FlxPoint
+	@:deprecated("rotate is deprecated, use rotateAround")
+	public function rotate(pivot:FlxPoint, degrees:Float):FlxPoint
 	{
-		return this.rotate(pivot, angle);
+		return rotateAround(pivot, degrees);
+	}
+
+	/**
+	 * Rotates this point clockwise in 2D space around another point by the given degrees.
+	 * @since 5.0.0
+	 *
+	 * @param   pivot    The pivot you want to rotate this point around
+	 * @param   degrees  Rotate the point by this many degrees clockwise.
+	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 */
+	public function rotateAround(pivot:FlxPoint, degrees:Float):FlxPoint
+	{
+		_point1.copyFrom(pivot).subtractPoint(this);
+		_point1.degrees += degrees;
+		set(_point1.x + pivot.x, _point1.y + pivot.y);
+		pivot.putWeak();
+		return this;
+	}
+
+	/**
+	 * Calculate the distance to another point.
+	 *
+	 * @param   point  A FlxPoint object to calculate the distance to.
+	 * @return  The distance between the two points as a Float.
+	 */
+	public function distanceTo(point:FlxPoint):Float
+	{
+		var dx:Float = x - point.x;
+		var dy:Float = y - point.y;
+		point.putWeak();
+		return FlxMath.vectorLength(dx, dy);
+	}
+
+	/**
+	 * Calculates the angle from this to another point.
+	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point  The other point.
+	 * @return  The angle, in radians, between -PI and PI
+	 */
+	public inline function radiansTo(point:FlxPoint):Float
+	{
+		return FlxAngle.radiansFromOrigin(point.x - x, point.y - y);
+	}
+
+	/**
+	 * Calculates the angle from another point to this.
+	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point  The other point.
+	 * @return  The angle, in radians, between -PI and PI
+	 */
+	public inline function radiansFrom(point:FlxPoint):Float
+	{
+		return point.radiansTo(this);
+	}
+
+	/**
+	 * Calculates the angle from this to another point.
+	 * If the point is straight right of this, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point  The other point.
+	 * @return  The angle, in degrees, between -180 and 180
+	 */
+	public inline function degreesTo(point:FlxPoint):Float
+	{
+		return FlxAngle.degreesFromOrigin(point.x - x, point.y - y);
+	}
+
+	/**
+	 * Calculates the angle from another point to this.
+	 * If this is straight right of the point, 0 is returned.
+	 * @since 5.0.0
+	 *
+	 * @param   point  The other point.
+	 * @return  The angle, in degrees, between -180 and 180
+	 */
+	public inline function degreesFrom(point:FlxPoint):Float
+	{
+		return point.degreesTo(this);
 	}
 
 	/**
@@ -279,7 +459,10 @@ import openfl.geom.Point;
 	 */
 	public inline function transform(matrix:Matrix):FlxPoint
 	{
-		return this.transform(matrix);
+		var x1 = x * matrix.a + y * matrix.c + matrix.tx;
+		var y1 = x * matrix.b + y * matrix.d + matrix.ty;
+
+		return set(x1, y1);
 	}
 
 	/**
@@ -501,7 +684,7 @@ import openfl.geom.Point;
 	{
 		if (p == null)
 		{
-			p = FlxPoint.get();
+			p = get();
 		}
 		p.set(-y, x);
 		return p;
@@ -514,7 +697,7 @@ import openfl.geom.Point;
 	{
 		if (p == null)
 		{
-			p = FlxPoint.get();
+			p = get();
 		}
 		p.set(y, -x);
 		return p;
@@ -550,7 +733,7 @@ import openfl.geom.Point;
 
 		if (proj == null)
 		{
-			proj = FlxPoint.get();
+			proj = get();
 		}
 
 		proj.set(dp * p.x / lenSq, dp * p.y / lenSq);
@@ -586,7 +769,7 @@ import openfl.geom.Point;
 
 		if (proj == null)
 		{
-			proj = FlxPoint.get();
+			proj = get();
 		}
 
 		return proj.set(dp * p.x, dp * p.y);
@@ -645,7 +828,7 @@ import openfl.geom.Point;
 			return Math.NaN;
 
 		_point1 = b.clone(_point1);
-		_point1.subtractPointWeak(a);
+		_point1.subtract(a.x, a.y);
 
 		return _point1.perpProductWeak(p) / perpProductWeak(p);
 	}
@@ -664,7 +847,7 @@ import openfl.geom.Point;
 
 		if (intersection == null)
 		{
-			intersection = FlxPoint.get();
+			intersection = get();
 		}
 
 		if (Math.isNaN(t))
@@ -694,7 +877,7 @@ import openfl.geom.Point;
 	{
 		if (intersection == null)
 		{
-			intersection = FlxPoint.get();
+			intersection = get();
 		}
 
 		var t1:Float = ratioWeak(a, b, p);
@@ -842,7 +1025,7 @@ import openfl.geom.Point;
 	 */
 	public inline function clone(?p:FlxPoint):FlxPoint
 	{
-		return this.copyTo(p);
+		return copyTo(p);
 	}
 
 	inline function get_x():Float
@@ -951,4 +1134,207 @@ import openfl.geom.Point;
 	{
 		return FlxBasePoint.pool;
 	}
+}
+
+/**
+ * The base class of FlxPoint, just use FlxPoint instead.
+ */
+@:noCompletion
+@:noDoc
+@:allow(flixel.math.FlxPoint)
+@:allow(flixel.math.FlxCallbackPoint)
+class FlxBasePoint implements IFlxPooled
+{
+	static var pool = new FlxPool<FlxBasePoint>(FlxBasePoint);
+
+	/**
+	 * Recycle or create a new FlxBasePoint.
+	 * Be sure to put() them back into the pool after you're done with them!
+	 *
+	 * @param   x  The X-coordinate of the point in space.
+	 * @param   y  The Y-coordinate of the point in space.
+	 * @return  This point.
+	 */
+	public static inline function get(x:Float = 0, y:Float = 0):FlxBasePoint
+	{
+		var point = pool.get().set(x, y);
+		point._inPool = false;
+		return point;
+	}
+
+	/**
+	 * Recycle or create a new FlxBasePoint which will automatically be released
+	 * to the pool when passed into a flixel function.
+	 *
+	 * @param   x  The X-coordinate of the point in space.
+	 * @param   y  The Y-coordinate of the point in space.
+	 * @return  This point.
+	 */
+	public static inline function weak(x:Float = 0, y:Float = 0):FlxBasePoint
+	{
+		var point = get(x, y);
+		point._weak = true;
+		return point;
+	}
+
+	public var x(default, set):Float = 0;
+	public var y(default, set):Float = 0;
+
+	var _weak:Bool = false;
+	var _inPool:Bool = false;
+
+	@:keep
+	public function new(x:Float = 0, y:Float = 0)
+	{
+		set(x, y);
+	}
+
+	/**
+	 * Set the coordinates of this point object.
+	 *
+	 * @param   x  The X-coordinate of the point in space.
+	 * @param   y  The Y-coordinate of the point in space.
+	 */
+	public function set(x:Float = 0, y:Float = 0):FlxBasePoint
+	{
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
+	/**
+	 * Add this FlxBasePoint to the recycling pool.
+	 */
+	public function put():Void
+	{
+		if (!_inPool)
+		{
+			_inPool = true;
+			_weak = false;
+			pool.putUnsafe(this);
+		}
+	}
+
+	/**
+	 * Add this FlxBasePoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 */
+	public inline function putWeak():Void
+	{
+		if (_weak)
+		{
+			put();
+		}
+	}
+
+	/**
+	 * Function to compare this FlxBasePoint to another.
+	 *
+	 * @param   point  The other FlxBasePoint to compare to this one.
+	 * @return  True if the FlxBasePoints have the same x and y value, false otherwise.
+	 */
+	public inline function equals(point:FlxBasePoint):Bool
+	{
+		var result = FlxMath.equal(x, point.x) && FlxMath.equal(y, point.y);
+		point.putWeak();
+		return result;
+	}
+
+	/**
+	 * Necessary for IFlxDestroyable.
+	 */
+	public function destroy() {}
+
+	/**
+	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 */
+	public inline function toString():String
+	{
+		return FlxStringUtil.getDebugString([LabelValuePair.weak("x", x), LabelValuePair.weak("y", y)]);
+	}
+
+	/**
+	 * Necessary for FlxCallbackPoint.
+	 */
+	function set_x(Value:Float):Float
+	{
+		return x = Value;
+	}
+
+	/**
+	 * Necessary for FlxCallbackPoint.
+	 */
+	function set_y(Value:Float):Float
+	{
+		return y = Value;
+	}
+}
+
+
+/**
+ * A FlxPoint that calls a function when set_x(), set_y() or set() is called. Used in FlxSpriteGroup.
+ * IMPORTANT: Calling set(x, y); is MUCH FASTER than setting x and y separately. Needs to be destroyed unlike simple FlxPoints!
+ */
+class FlxCallbackPoint extends FlxBasePoint
+{
+	var _setXCallback:FlxPoint->Void;
+	var _setYCallback:FlxPoint->Void;
+	var _setXYCallback:FlxPoint->Void;
+
+	/**
+	 * If you only specify one callback function, then the remaining two will use the same.
+	 *
+	 * @param	setXCallback	Callback for set_x()
+	 * @param	setYCallback	Callback for set_y()
+	 * @param	setXYCallback	Callback for set()
+	 */
+	public function new(setXCallback:FlxPoint->Void, ?setYCallback:FlxPoint->Void, ?setXYCallback:FlxPoint->Void)
+	{
+		super();
+
+		_setXCallback = setXCallback;
+		_setYCallback = setXYCallback;
+		_setXYCallback = setXYCallback;
+
+		if (_setXCallback != null)
+		{
+			if (_setYCallback == null)
+				_setYCallback = setXCallback;
+			if (_setXYCallback == null)
+				_setXYCallback = setXCallback;
+		}
+	}
+
+	override public function set(x:Float = 0, y:Float = 0):FlxCallbackPoint
+	{
+		super.set(x, y);
+		if (_setXYCallback != null)
+			_setXYCallback(this);
+		return this;
+	}
+
+	override function set_x(value:Float):Float
+	{
+		super.set_x(value);
+		if (_setXCallback != null)
+			_setXCallback(this);
+		return value;
+	}
+
+	override function set_y(value:Float):Float
+	{
+		super.set_y(value);
+		if (_setYCallback != null)
+			_setYCallback(this);
+		return value;
+	}
+
+	override public function destroy():Void
+	{
+		super.destroy();
+		_setXCallback = null;
+		_setYCallback = null;
+		_setXYCallback = null;
+	}
+
+	override public function put():Void {} // don't pool FlxCallbackPoints
 }

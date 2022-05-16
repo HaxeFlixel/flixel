@@ -17,7 +17,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.FlxSwipe;
-import flixel.math.FlxBasePoint;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPath;
 import flixel.text.FlxText;
