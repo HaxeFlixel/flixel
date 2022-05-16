@@ -5,12 +5,12 @@ import massive.munit.Assert;
 
 class FlxPoolTest extends FlxTest
 {
-	var ppool:FlxPool<FlxPoint>;
+	var ppool:FlxPool<FlxBasePoint>;
 
 	@Before
 	function before():Void
 	{
-		ppool = new FlxPool<FlxPoint>(FlxBasePoint);
+		ppool = new FlxPool(FlxBasePoint);
 	}
 
 	@Test
