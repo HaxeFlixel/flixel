@@ -44,6 +44,88 @@ import openfl.geom.Point;
 		return FlxBasePoint.weak(x, y);
 	}
 
+	/**
+	 * Operator that adds two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A + B)
+	static inline function plusOp(a:FlxPoint, b:FlxPoint):FlxPoint
+	{
+		var result = get(a.x + b.x, a.y + b.y);
+		a.putWeak();
+		b.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that subtracts two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A - B)
+	static inline function minusOp(a:FlxPoint, b:FlxPoint):FlxPoint
+	{
+		var result = get(a.x - b.x, a.y - b.y);
+		a.putWeak();
+		b.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that scales a points by float, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A * B)
+	static inline function dotProductOp(a:FlxPoint, b:FlxPoint):Float
+	{
+		var result = a.dotProductWeak(b);
+		a.putWeak();
+		b.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that scales a points by float, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A * B)
+	@:commutative
+	static inline function scaleOp(a:FlxPoint, b:Float):FlxPoint
+	{
+		var result = get(a.x * b, a.y * b);
+		a.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that adds two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A += B)
+	static inline function plusEqualOp(a:FlxPoint, b:FlxPoint):FlxPoint
+	{
+		return a.addPoint(b);
+	}
+
+	/**
+	 * Operator that subtracts two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A -= B)
+	static inline function minusEqualOp(a:FlxPoint, b:FlxPoint):FlxPoint
+	{
+		return a.subtractPoint(b);
+	}
+
+	/**
+	 * Operator that scales a points by float, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A *= B)
+	static inline function scaleEqualOp(a:FlxPoint, b:Float):FlxPoint
+	{
+		return a.scale(b);
+	}
+
 	// Without these delegates we have to say `this.x` everywhere.
 	public var x(get, set):Float;
 	public var y(get, set):Float;
@@ -450,6 +532,54 @@ import openfl.geom.Point;
 	public inline function degreesFrom(point:FlxPoint):Float
 	{
 		return point.degreesTo(this);
+	}
+
+	/** DEPRECATED
+	 * 
+	 * Calculates the angle between this and another point. 0 degrees points straight up.
+	 * 
+	 * Note: Every other flixel function treats straight right as 0 degrees.
+	 * 
+	 * Also Note: The result is very innacurate.
+	 *
+	 * @param   point   The other point.
+	 * @return  The angle in degrees, between -180 and 180.
+	 */
+	@:deprecated("angleBetween is deprecated, use degreesTo instead")
+	public function angleBetween(point:FlxPoint):Float
+	{
+		var x:Float = point.x - x;
+		var y:Float = point.y - y;
+		var angle:Float = 0;
+
+		if ((x != 0) || (y != 0))
+		{
+			var c1:Float = Math.PI * 0.25;
+			var c2:Float = 3 * c1;
+			var ay:Float = (y < 0) ? -y : y;
+
+			if (x >= 0)
+			{
+				angle = c1 - c1 * ((x - ay) / (x + ay));
+			}
+			else
+			{
+				angle = c2 - c1 * ((x + ay) / (ay - x));
+			}
+			angle = ((y < 0) ? -angle : angle) * FlxAngle.TO_DEG;
+
+			if (angle > 90)
+			{
+				angle = angle - 270;
+			}
+			else
+			{
+				angle += 90;
+			}
+		}
+
+		point.putWeak();
+		return angle;
 	}
 
 	/**

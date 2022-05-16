@@ -127,4 +127,31 @@ class FlxPointTest extends FlxTest
 		var actual = point1.set(x1, y1).degreesTo(point2.set(x2, y2));
 		Assert.areEqual(expected, Math.round(actual / precision) * precision, msg, info);
 	}
+
+	@Test
+	function testOperators()
+	{
+		point1.set(1, 2);
+		point2.set(4, 8);
+
+		assertPointEquals(point1 + point2, 5, 10);
+		assertPointEquals(point2 - point1, 3, 6);
+		Assert.areEqual(point1 * point2, 20);
+		assertPointEquals(point1 * 2.0, 2, 4);
+		assertPointEquals(point1 * 2, 2, 4);
+		point1 += point2;
+		assertPointEquals(point1, 5, 10);
+		point1 -= point2;
+		assertPointEquals(point1, 1, 2);
+		point1 *= 10;
+		assertPointEquals(point1, 10, 20);
+	}
+
+	function assertPointEquals(p:FlxPoint, x:Float, y:Float, ?msg:String, ?info:PosInfos)
+	{
+		if (msg == null)
+			msg = 'Expected (x: $x | y: $y) but was $p';
+
+		Assert.isTrue(x == p.x && y == p.y, msg, info);
+	}
 }
