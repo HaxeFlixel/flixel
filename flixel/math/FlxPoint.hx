@@ -1275,7 +1275,7 @@ import openfl.geom.Point;
 @:allow(flixel.math.FlxCallbackPoint)
 class FlxBasePoint implements IFlxPooled
 {
-	static var pool = new FlxPool<FlxBasePoint>(FlxBasePoint);
+	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint);
 
 	/**
 	 * Recycle or create a new FlxBasePoint.
