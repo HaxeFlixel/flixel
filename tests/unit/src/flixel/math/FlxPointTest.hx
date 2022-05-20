@@ -135,8 +135,8 @@ class FlxPointTest extends FlxTest
 		point2.set(4, 8);
 
 		assertPointEquals(point1 + point2, 5, 10);
+		assertPointEquals(point1 - point2, -3, -6);
 		assertPointEquals(point2 - point1, 3, 6);
-		Assert.areEqual(point1 * point2, 20);
 		assertPointEquals(point1 * 2.0, 2, 4);
 		assertPointEquals(point1 * 2, 2, 4);
 		point1 += point2;
@@ -145,6 +145,18 @@ class FlxPointTest extends FlxTest
 		assertPointEquals(point1, 1, 2);
 		point1 *= 10;
 		assertPointEquals(point1, 10, 20);
+		point1 /= 10;
+		assertPointEquals(point1, 1, 2);
+
+		var pointF = point2.copyToFlash();
+
+		assertPointEquals(point1 + pointF, 5, 10);
+		assertPointEquals(point1 - pointF, -3, -6);
+		assertPointEquals(pointF - point1, 3, 6);
+		point1 += pointF;
+		assertPointEquals(point1, 5, 10);
+		point1 -= pointF;
+		assertPointEquals(point1, 1, 2);
 	}
 
 	function assertPointEquals(p:FlxPoint, x:Float, y:Float, ?msg:String, ?info:PosInfos)

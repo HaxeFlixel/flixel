@@ -19,7 +19,7 @@
 - `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxTween`: added `ShakeTween` and `FlxTween.shake()` helper ([#2549](https://github.com/HaxeFlixel/flixel/pull/2549))
 - `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
-- `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, dot product `*`, scaler `*`, and scaler `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
+- `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, `*`, and `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 
 #### Bugfixes:
 

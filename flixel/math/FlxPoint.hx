@@ -7,6 +7,17 @@ import openfl.geom.Point;
 
 /**
  * 2-dimensional point class
+ * 
+ * ## Overloaded Operators
+ * 
+ * - `A += B` adds the value of `B` to `A`
+ * - `A -= B` subtracts the value of `B` from `A`
+ * - `A *= k` scales `A` by float `k` in both x and y components
+ * - `A + B` returns a new point that is sum of `A` and `B`
+ * - `A - B` returns a new point that is difference of `A` and `B`
+ * - `A * k` returns a new point that is `A` scaled with coefficient `k`
+ *
+ * Note: also accepts `openfl.geom.Point`, but always returns a FlxPoint.
  */
 @:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint 
 {
@@ -71,20 +82,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that scales a points by float, returning a new point.
-	 */
-	@:noCompletion
-	@:op(A * B)
-	static inline function dotProductOp(a:FlxPoint, b:FlxPoint):Float
-	{
-		var result = a.dotProductWeak(b);
-		a.putWeak();
-		b.putWeak();
-		return result;
-	}
-
-	/**
-	 * Operator that scales a points by float, returning a new point.
+	 * Operator that scales a point by float, returning a new point.
 	 */
 	@:noCompletion
 	@:op(A * B)
@@ -92,6 +90,19 @@ import openfl.geom.Point;
 	static inline function scaleOp(a:FlxPoint, b:Float):FlxPoint
 	{
 		var result = get(a.x * b, a.y * b);
+		a.putWeak();
+		return result;
+	}
+
+	
+	/**
+	 * Operator that divides a point by float, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A / B)
+	static inline function divideOp(a:FlxPoint, b:Float):FlxPoint
+	{
+		var result = get(a.x / b, a.y / b);
 		a.putWeak();
 		return result;
 	}
@@ -124,6 +135,64 @@ import openfl.geom.Point;
 	static inline function scaleEqualOp(a:FlxPoint, b:Float):FlxPoint
 	{
 		return a.scale(b);
+	}
+
+	
+	/**
+	 * Operator that adds two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A + B)
+	@:commutative
+	static inline function plusFlashOp(a:FlxPoint, b:Point):FlxPoint
+	{
+		var result = get(a.x + b.x, a.y + b.y);
+		a.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that subtracts two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A - B)
+	static inline function minusFlashOp(a:FlxPoint, b:Point):FlxPoint
+	{
+		var result = get(a.x - b.x, a.y - b.y);
+		a.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that subtracts two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A - B)
+	static inline function minusFlashOp2(a:Point, b:FlxPoint):FlxPoint
+	{
+		var result = get(a.x - b.x, a.y - b.y);
+		b.putWeak();
+		return result;
+	}
+
+	/**
+	 * Operator that adds two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A += B)
+	static inline function plusEqualFlashOp(a:FlxPoint, b:Point):FlxPoint
+	{
+		return a.add(b.x, b.y);
+	}
+
+	/**
+	 * Operator that subtracts two points, returning a new point.
+	 */
+	@:noCompletion
+	@:op(A -= B)
+	static inline function minusEqualFlashOp(a:FlxPoint, b:Point):FlxPoint
+	{
+		return a.subtract(b.x, b.y);
 	}
 
 	// Without these delegates we have to say `this.x` everywhere.
@@ -343,7 +412,7 @@ import openfl.geom.Point;
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(p:Point):Point
+	public inline function copyToFlash(?p:Point):Point
 	{
 		if (p == null)
 		{
@@ -593,6 +662,17 @@ import openfl.geom.Point;
 		var y1 = x * matrix.b + y * matrix.d + matrix.ty;
 
 		return set(x1, y1);
+	}
+
+	/**
+	 * Short for dot product.
+	 *
+	 * @param   p  point to multiply
+	 * @return  dot product of two points
+	 */
+	public inline function dot(p:FlxPoint):Float
+	{
+		return dotProduct(p);
 	}
 
 	/**
@@ -1268,6 +1348,10 @@ import openfl.geom.Point;
 
 /**
  * The base class of FlxPoint, just use FlxPoint instead.
+ * 
+ * Note to contributors: don't worry about adding functionality to the base class.
+ * it's all mostly inlined anyway so there's no runtime definitions for
+ * reflection or anything.
  */
 @:noCompletion
 @:noDoc
