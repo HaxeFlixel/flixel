@@ -100,13 +100,11 @@ class FlxInputText extends FlxText
 
 	/**
 	 * callback that is triggered when this text field gets focus
-	 * @since 2.2.0
 	 */
 	public var focusGained:Void -> Void = () -> return;
 
 	/**
 	 * callback that is triggered when this text field loses focus
-	 * @since 2.2.0
 	 */
 	public var focusLost:Void -> Void = () -> return;
 
@@ -181,6 +179,8 @@ class FlxInputText extends FlxText
 	var lastScroll:Int;
 
 	/**
+	 * Creates a new text input field.
+	 * 
 	 * @param  X        The X position of the text.
 	 * @param  Y        The Y position of the text.
 	 * @param  Width      The width of the text object (height is determined automatically).
@@ -429,13 +429,19 @@ class FlxInputText extends FlxText
 		#end
 	}
 
-	// -------------------
-	// HAS BEEN CHANGED
-	// ----------------------
-
+	/**
+	 * Gets the bounding box of the character at the specified index.
+	 * 
+	 * This includes its `x` & `y` position, its `width`, and its `height`.
+	 * 
+	 * If the boundary is not found, or the charIndex is out of bounds, a default rectangle will be returned.
+	 * The default rectangle will have its `x` and `y` values set to `2` and its `width` and `height` values set to 0.
+	 * @param charIndex The character index to get the bounding box of.
+	 * @return an **openfl** rectangle instance, containing the bounding box of the character.
+	 */
 	public function getCharBoundaries(charIndex:Int):Rectangle
 	{
-		if (_charBoundaries == null || charIndex < 0 || _charBoundaries.length <= 0)
+		if (_charBoundaries == null || charIndex < 0 || _charBoundaries.length <= 0 || charIndex >= text.length)
 			return new Rectangle(2,2);
 
 		var charBoundaries:Rectangle = new Rectangle(),
@@ -519,10 +525,17 @@ class FlxInputText extends FlxText
 		return rText;
 	}
 
-	// ----------------------------------
-	// HAS BEEN CHANGED
-	// ----------------------------------
-
+	/**
+	 * Gets the index of the character present under the point `(X, Y)`.
+	 * 
+	 * It also counts pressing between lines, before and after the end of the text (as long as the point is in the same line as the character).
+	 * 
+	 * @param X The X position of the point. **Make sure its relative to the the textbox**.
+	 * you can get the relative X coordinate buy subtracting that value from the textbox's `x` value -  `xValue - textbox.x`
+	 * @param Y The X position of the point. **Make sure its relative to the the textbox**. 
+	 * you can get the relative Y coordinate buy subtracting that value from the textbox's `y` value -  `xValue - textbox.x`
+	 * @return The index of the character under the `(X, Y)` point. will return `0` if theres no character under that point
+	 */
 	public function getCharIndexAtPoint(X:Float, Y:Float):Int
 	{
 		var i:Int = 0;
@@ -537,14 +550,14 @@ class FlxInputText extends FlxText
 			for (i in 0...text.length)
 			{
 				var r = getCharBoundaries(i);
-				if ((X >= r.x && X <= r.right && Y >= r.y && Y <= r.bottom)) // <----------------- CHANGE HERE
+				if ((X >= r.x && X <= r.right && Y >= r.y && Y <= r.bottom))
 
 				{
 					return i;
 				}
 			}
 			// the mouse might have been pressed between the lines
-
+			// the code allows correct caret positioning when pressing between the lines
 			var i = 0;
 			while (i < text.length)
 			{
@@ -634,10 +647,6 @@ class FlxInputText extends FlxText
 			calcFrame();
 		}
 	}
-
-	// ----------------------------------
-	// HAS BEEN CHANGED
-	// ----------------------------------
 
 	/**
 	 * Draws the frame of animation for the input text.
