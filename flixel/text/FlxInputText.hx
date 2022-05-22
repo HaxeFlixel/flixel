@@ -170,9 +170,6 @@ class FlxInputText extends FlxText
 	 */
 	var _scrollBoundIndeces:{left:Int, right:Int} = {left: 0, right: 0};
 
-	// workaround to deal with non-availability of getCharIndexAtPoint or getCharBoundaries on cpp/neko targets
-	var _charBoundaries:Array<FlxRect>;
-
 	/**
 	 * Stores last input text scroll.
 	 */
@@ -441,7 +438,7 @@ class FlxInputText extends FlxText
 	 */
 	public function getCharBoundaries(charIndex:Int):Rectangle
 	{
-		if (_charBoundaries == null || charIndex < 0 || _charBoundaries.length <= 0 || charIndex >= text.length)
+		if (charIndex < 0 || charIndex >= text.length)
 			return new Rectangle(2,2);
 
 		var charBoundaries:Rectangle = new Rectangle(),
@@ -463,6 +460,7 @@ class FlxInputText extends FlxText
 			// if this is a spacebar, we cant use textField.getCharBoundaries() since itll return null
 
 			charBoundaries = getCharBoundaries(charIndex - 1);
+			charBoundaries.height = textField.getLineMetrics(textField.getLineIndexOfChar(charIndex - 1)).height;
 			charBoundaries.y += diff * charBoundaries.height;
 			if (alignment == RIGHT)
 				charBoundaries.x = x + width - 2
@@ -518,8 +516,6 @@ class FlxInputText extends FlxText
 			return rText;
 		}
 
-		var numChars:Int = Text.length;
-		prepareCharBoundaries(numChars);
 		textField.text = Text;
 		onSetTextCheck();
 		return rText;
@@ -582,31 +578,6 @@ class FlxInputText extends FlxText
 		// place caret at leftmost position
 
 		return 0;
-	}
-
-	function prepareCharBoundaries(numChars:Int):Void
-	{
-		if (_charBoundaries == null)
-		{
-			_charBoundaries = [];
-		}
-
-		if (_charBoundaries.length > numChars)
-		{
-			var diff:Int = _charBoundaries.length - numChars;
-			for (i in 0...diff)
-			{
-				_charBoundaries.pop();
-			}
-		}
-
-		for (i in 0...numChars)
-		{
-			if (_charBoundaries.length - 1 < i)
-			{
-				_charBoundaries.push(FlxRect.get(0, 0, 0, 0));
-			}
-		}
 	}
 
 	/**
