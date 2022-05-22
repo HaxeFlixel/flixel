@@ -496,19 +496,9 @@ class FlxInputText extends FlxText
 		return charBoundaries;
 	}
 
-	// ----------------------------------
-	// HAS BEEN CHANGED
-	// ----------------------------------
-
 	override function set_text(Text:String):String
 	{
 		if (Text == "") Text = "​";
-		#if !js
-		if (textField != null)
-		{
-			lastScroll = textField.scrollH;
-		}
-		#end
 		var rText:String = super.set_text(Text);
 
 		if (textField == null)
@@ -517,7 +507,7 @@ class FlxInputText extends FlxText
 		}
 
 		textField.text = Text;
-		onSetTextCheck();
+
 		return rText;
 	}
 
@@ -535,9 +525,6 @@ class FlxInputText extends FlxText
 	public function getCharIndexAtPoint(X:Float, Y:Float):Int
 	{
 		var i:Int = 0;
-		#if !js
-		X += textField.scrollH + 2;
-		#end
 
 		// place caret at matching char position
 
@@ -578,45 +565,6 @@ class FlxInputText extends FlxText
 		// place caret at leftmost position
 
 		return 0;
-	}
-
-	/**
-	 * Called every time the text is changed (for both flash/cpp) to update scrolling, etc
-	 */
-	function onSetTextCheck():Void
-	{
-		var boundary:Rectangle = null;
-		if (caretIndex == -1)
-		{
-			boundary = getCharBoundaries(text.length - 1);
-		}
-		else
-		{
-			boundary = getCharBoundaries(caretIndex);
-		}
-
-		if (boundary != null)
-		{
-			// Checks if caret is out of textfield bounds
-
-			// if it is update scroll, otherwise maintain the same scroll as last check.
-
-			var diffW:Int = 0;
-			if (boundary.right > lastScroll + textField.width - 2)
-			{
-				diffW = -Std.int((textField.width - 2) - boundary.right); // caret to the right of textfield.
-			}
-			else if (boundary.left < lastScroll)
-			{
-				diffW = Std.int(boundary.left) - 2; // caret to the left of textfield
-			}
-			else
-			{
-				diffW = lastScroll; // no scroll change
-			}
-			textField.scrollH = diffW;
-			calcFrame();
-		}
 	}
 
 	/**
@@ -823,7 +771,10 @@ class FlxInputText extends FlxText
 		return hasFocus = newFocus;
 	}
 
-	function getAlignStr():FlxTextAlign
+	/**
+	 * Gets the text's base alignment.
+	 */
+	public function getAlignment():FlxTextAlign
 	{
 		var alignStr:FlxTextAlign = LEFT;
 		if (_defaultFormat != null && _defaultFormat.align != null)
@@ -833,15 +784,11 @@ class FlxInputText extends FlxText
 		return alignStr;
 	}
 
-	// ----------------------------------
-	// HAS BEEN CHANGED
-	// ----------------------------------
-
 	function set_caretIndex(newCaretIndex:Int):Int
 	{
 		var offx:Float = 0;
 
-		var alignStr:FlxTextAlign = getAlignStr();
+		var alignStr:FlxTextAlign = getAlignment();
 
 		switch (alignStr)
 		{
@@ -903,7 +850,6 @@ class FlxInputText extends FlxText
 				}
 			}
 		}
-		caret.x -= textField.scrollH;
 
 		// Make sure the caret doesn't leave the textfield on single-line input texts
 
@@ -911,7 +857,7 @@ class FlxInputText extends FlxText
 		{
 			caret.x = x + width - 2;
 		}
-
+		textField.setSelection(caretIndex, caretIndex);
 		return caretIndex;
 	}
 
