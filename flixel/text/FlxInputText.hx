@@ -505,18 +505,18 @@ class FlxInputText extends FlxText
 			lastScroll = textField.scrollH;
 		}
 		#end
-		var return_text:String = super.set_text(Text);
+		var rText:String = super.set_text(Text);
 
 		if (textField == null)
 		{
-			return return_text;
+			return rText;
 		}
 
 		var numChars:Int = Text.length;
 		prepareCharBoundaries(numChars);
 		textField.text = Text;
 		onSetTextCheck();
-		return return_text;
+		return rText;
 	}
 
 	// ----------------------------------
