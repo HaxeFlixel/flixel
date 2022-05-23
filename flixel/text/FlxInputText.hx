@@ -211,7 +211,9 @@ class FlxInputText extends FlxText
 
 		if (Text == null) Text = "";
 		text = Text;
-
+		#if FLX_TOUCH
+		textField.needsSoftKeyboard = true;
+		#end
 		calcFrame();
 	}
 
