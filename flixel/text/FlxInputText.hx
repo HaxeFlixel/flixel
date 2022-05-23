@@ -54,6 +54,23 @@ class FlxInputText extends FlxText
 
 	/**
 	 * A function called whenever the value changes from user input, or enter is pressed
+	 * 
+	 * It is structured like this:
+	 *  
+	 *  - The first argument is the `FlxInputText`s `text` property.
+	 *  - The second argument is the currently pressed key. It might be easier for you to check equality to the `FlxInputText..._ACTION` string.
+	 * 
+	 * Usage example:
+	 * 
+	 * ```haxe
+	 * inputText.callback = function(text:String, key:String) {
+	 * 		if (key == FlxInputText.ENTER_ACTION) {
+	 * 			if (text.length < 4 || text.length > 16) {
+	 * 				trace("Your password must be between 4 and 16 characters long!");
+	 * 			}
+	 * 		}
+	 * };
+	 * ```
 	 */
 	public var callback:(String, String) -> Void;
 
@@ -74,6 +91,9 @@ class FlxInputText extends FlxText
 		return caretColor;
 	}
 
+	/**
+	 * The caret's sprite width. Default is 1
+	 */
 	public var caretWidth(default, set):Int = 1;
 
 	function set_caretWidth(i:Int):Int
@@ -164,16 +184,6 @@ class FlxInputText extends FlxText
 	 * A FlxSprite representing the fieldBorders.
 	 */
 	var fieldBorderSprite:FlxSprite;
-
-	/**
-	 * The left- and right- most fully visible character indeces
-	 */
-	var _scrollBoundIndeces:{left:Int, right:Int} = {left: 0, right: 0};
-
-	/**
-	 * Stores last input text scroll.
-	 */
-	var lastScroll:Int;
 
 	/**
 	 * Creates a new text input field.
