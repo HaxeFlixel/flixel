@@ -290,6 +290,23 @@ class FlxInputText extends FlxText
 					focusLost();
 			}
 		}
+		#else
+		if (FlxG.touches.getFirst() != null)
+		{
+			var hadFocus:Bool = hasFocus;
+			if (FlxG.touches.getFirst().overlaps(this)) {
+				caretIndex = getCaretIndexAtPointingDevice();
+				hasFocus = true;
+				if (!hadFocus && focusGained != null)
+					focusGained();
+			} 
+			else {
+				hasFocus = false;
+				if (hadFocus && focusLost != null)
+					focusLost();
+			}
+			
+		}
 		#end
 	}
 
@@ -418,7 +435,7 @@ class FlxInputText extends FlxText
 	 */
 	public function getCaretIndexAtPointingDevice():Int
 	{
-		#if false
+		#if FLX_MOUSE
 		var hit = FlxPoint.get(FlxG.mouse.x - x, FlxG.mouse.y - y);
 		return getCharIndexAtPoint(hit.x, hit.y);
 		#else
