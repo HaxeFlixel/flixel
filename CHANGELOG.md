@@ -19,6 +19,7 @@
 - `FlxAxes`: added `x` and `y` getters and `NONE` value ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxTween`: added `ShakeTween` and `FlxTween.shake()` helper ([#2549](https://github.com/HaxeFlixel/flixel/pull/2549))
 - `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
+- `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, `*`, and `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxColor`: added `rgb` getter and setter ([#2555](https://github.com/HaxeFlixel/flixel/pull/2555))
 
 #### Bugfixes:
@@ -33,6 +34,7 @@
 - `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
 - `FlxTilemap`: Renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPoint/FlxVector`: moved all `FlxVector` fields and methods into `FlxPoint` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 
 4.11.0 (January 26, 2022)
 ------------------------------

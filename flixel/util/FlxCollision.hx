@@ -8,9 +8,9 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
-import flixel.math.FlxRect;
-import flixel.math.FlxVector;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
 import flixel.tile.FlxTileblock;
 
 /**
@@ -22,10 +22,10 @@ import flixel.tile.FlxTileblock;
 class FlxCollision
 {
 	// Optimization: Local static vars to reduce allocations
-	static var pointA:FlxVector = new FlxVector();
-	static var pointB:FlxVector = new FlxVector();
-	static var centerA:FlxVector = new FlxVector();
-	static var centerB:FlxVector = new FlxVector();
+	static var pointA:FlxPoint = new FlxPoint();
+	static var pointB:FlxPoint = new FlxPoint();
+	static var centerA:FlxPoint = new FlxPoint();
+	static var centerB:FlxPoint = new FlxPoint();
 	static var matrixA:FlxMatrix = new FlxMatrix();
 	static var matrixB:FlxMatrix = new FlxMatrix();
 	static var testMatrix:FlxMatrix = new FlxMatrix();
@@ -282,7 +282,7 @@ class FlxCollision
 	 *                Only returned if the line enters the rect.
 	 * @return The point of entry of the line into the rect, if possible.
 	 */
-	public static function calcRectEntry(rect:FlxRect, start:FlxVector, end:FlxVector, ?result:FlxVector):Null<FlxVector>
+	public static function calcRectEntry(rect:FlxRect, start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Null<FlxPoint>
 	{
 		// We must ensure that weak refs are placed back in the pool
 		inline function putWeakRefs()
@@ -298,7 +298,7 @@ class FlxCollision
 		function getResult(x:Float, y:Float)
 		{
 			if (result == null)
-				result = FlxVector.get(x, y);
+				result = FlxPoint.get(x, y);
 			else
 				result.set(x, y);
 			

@@ -4,7 +4,6 @@ import flash.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.math.FlxVector;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -380,7 +379,7 @@ class FlxPath implements IFlxDestroyable
 		}
 		else
 		{
-			var velocity:FlxVector = object.velocity.copyFrom(node).subtractPoint(_point);
+			var velocity = object.velocity.copyFrom(node).subtractPoint(_point);
 			velocity.length = speed;
 			angle = velocity.degrees;
 		}
