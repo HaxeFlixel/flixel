@@ -94,12 +94,10 @@ class FlxSound extends FlxBasic
 	 */
 	public var volume(get, set):Float;
 
-	#if (sys && openfl_legacy)
 	/**
 	 * Set pitch, which also alters the playback speed. Default is 1.
 	 */
 	public var pitch(get, set):Float;
-	#end
 
 	/**
 	 * The position in runtime of the music playback in milliseconds.
@@ -178,12 +176,10 @@ class FlxSound extends FlxBasic
 	 */
 	var _length:Float = 0;
 
-	#if (sys && openfl_legacy)
 	/**
 	 * Internal tracker for pitch.
 	 */
 	var _pitch:Float = 1.0;
-	#end
 
 	/**
 	 * Internal tracker for total volume adjustment.
@@ -432,6 +428,7 @@ class FlxSound extends FlxBasic
 		updateTransform();
 		exists = true;
 		onComplete = OnComplete;
+		pitch = 1;
 		_length = (_sound == null) ? 0 : _sound.length;
 		endTime = _length;
 		return this;
@@ -610,9 +607,7 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(_time, 0, _transform);
 		if (_channel != null)
 		{
-			#if (sys && openfl_legacy)
 			pitch = _pitch;
-			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 			active = true;
 		}
@@ -737,7 +732,6 @@ class FlxSound extends FlxBasic
 		return Volume;
 	}
 
-	#if (sys && openfl_legacy)
 	inline function get_pitch():Float
 	{
 		return _pitch;
@@ -745,11 +739,48 @@ class FlxSound extends FlxBasic
 
 	function set_pitch(v:Float):Float
 	{
-		if (_channel != null)
-			_channel.pitch = v;
+		@:privateAccess
+		#if openfl_legacy
+			#if sys
+			@:privateAccess
+			if (_channel != null)
+				_channel.__source.pitch = v;
+			#else
+			FlxG.log.error("Pitch is supported only in sys systems while using openfl legacy!! switch the build into sys or upgrade your openfl!");
+			return 1;
+			#end
+		#else
+		#if flash
+		FlxG.log.error("Pitch is not supported on Flash!!!");
+		v = 1;
+		#elseif (html5 && lime_howlerjs)
+		_channel.__source.buffer.__srcHowl.rate(v);
+		#else
+		var backend = _channel.__source.__backend;
+		@:privateAccess
+		if (backend.playing && v != _pitch)
+		{
+			if (backend.timer != null)
+			{
+				backend.timer.stop();
+			}
+
+			var timeRemaining = Std.int((length - time) / v);
+			if (timeRemaining > 0)
+			{
+				backend.timer = new haxe.Timer(timeRemaining);
+				backend.timer.run = backend.timer_onRun;
+			}
+		}
+		@:privateAccess
+		if (backend.handle != null)
+		{
+			lime.media.openal.AL.sourcef(backend.handle, lime.media.openal.AL.PITCH, v);
+		}
+		#end
+		#end
 		return _pitch = v;
 	}
-	#end
 
 	inline function get_pan():Float
 	{
