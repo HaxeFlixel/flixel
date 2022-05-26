@@ -15,6 +15,8 @@ import openfl.geom.Point;
  * one exists, otherwise it will create a new instance. Similarly, when
  * you're done using a point, call `myPoint.put()` to place it back.
  * 
+ * You can disable point pooling entirely with `FLX_NO_POINT_POOL`.
+ * 
  * ## Weak points
  * Weak points are points meant for a singular use, rather than calling
  * `put` on every point you `get`, you can create a weak point, and have
@@ -75,8 +77,6 @@ import openfl.geom.Point;
 	static var _point1 = new FlxPoint();
 	static var _point2 = new FlxPoint();
 	static var _point3 = new FlxPoint();
-
-	static var pool(get, never):IFlxPool<FlxPoint>;
 
 	/**
 	 * Recycle or create new FlxPoint.
@@ -1402,11 +1402,6 @@ import openfl.geom.Point;
 	{
 		return -x;
 	}
-
-	static inline function get_pool():IFlxPool<FlxPoint>
-	{
-		return FlxBasePoint.pool;
-	}
 }
 
 /**
@@ -1419,10 +1414,11 @@ import openfl.geom.Point;
 @:noCompletion
 @:noDoc
 @:allow(flixel.math.FlxPoint)
-@:allow(flixel.math.FlxCallbackPoint)
 class FlxBasePoint implements IFlxPooled
 {
+	#if FLX_POINT_POOL
 	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint);
+	#end
 
 	/**
 	 * Recycle or create a new FlxBasePoint.
@@ -1434,9 +1430,13 @@ class FlxBasePoint implements IFlxPooled
 	 */
 	public static inline function get(x:Float = 0, y:Float = 0):FlxBasePoint
 	{
+		#if FLX_POINT_POOL
 		var point = pool.get().set(x, y);
 		point._inPool = false;
 		return point;
+		#else
+		return new FlxBasePoint(x, y);
+		#end
 	}
 
 	/**
@@ -1450,18 +1450,22 @@ class FlxBasePoint implements IFlxPooled
 	public static inline function weak(x:Float = 0, y:Float = 0):FlxBasePoint
 	{
 		var point = get(x, y);
+		#if FLX_POINT_POOL
 		point._weak = true;
+		#end
 		return point;
 	}
 
 	public var x(default, set):Float = 0;
 	public var y(default, set):Float = 0;
 
+	#if FLX_POINT_POOL
 	var _weak:Bool = false;
 	var _inPool:Bool = false;
+	#end
 
 	@:keep
-	public function new(x:Float = 0, y:Float = 0)
+	public inline function new(x:Float = 0, y:Float = 0)
 	{
 		set(x, y);
 	}
@@ -1484,12 +1488,14 @@ class FlxBasePoint implements IFlxPooled
 	 */
 	public function put():Void
 	{
+		#if FLX_POINT_POOL
 		if (!_inPool)
 		{
 			_inPool = true;
 			_weak = false;
 			pool.putUnsafe(this);
 		}
+		#end
 	}
 
 	/**
@@ -1497,10 +1503,12 @@ class FlxBasePoint implements IFlxPooled
 	 */
 	public inline function putWeak():Void
 	{
+		#if FLX_POINT_POOL
 		if (_weak)
 		{
 			put();
 		}
+		#end
 	}
 
 	/**
