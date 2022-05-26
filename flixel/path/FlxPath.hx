@@ -741,7 +741,7 @@ class FlxPath implements IFlxDestroyable
 			}
 
 			// draw a box for the node
-			gfx.beginFill(nodeColor & 0xFFFFFF, nodeColor.alphaFloat);
+			gfx.beginFill(nodeColor.rgb, nodeColor.alphaFloat);
 			gfx.lineStyle();
 			var nodeOffset = Math.floor(nodeSize * 0.5);
 			gfx.drawRect(_point.x - nodeOffset, _point.y - nodeOffset, nodeSize, nodeSize);
