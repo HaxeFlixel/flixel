@@ -8,6 +8,26 @@ import openfl.geom.Point;
 /**
  * 2-dimensional point class
  * 
+ * ## Pooling
+ * To avoid creating new instances, unnecessarily, used points can be
+ * for later use. Rather than creating a new instance directly, call
+ * `FlxPoint.get(x, y)` and it will retrieve a point from the pool, if
+ * one exists, otherwise it will create a new instance. Similarly, when
+ * you're done using a point, call `myPoint.put()` to place it back.
+ * 
+ * ## Weak points
+ * Weak points are points meant for a singular use, rather than calling
+ * `put` on every point you `get`, you can create a weak point, and have
+ * it placed back once used. All `FlxPoint` methods and Flixel utilities
+ * automatically call `putWeak()` on every point passed in.
+ * 
+ * In the following example, a weak point is created, and passed into
+ * `p.degreesTo` where `putWeak` is called on it, putting it back in the pool.
+ *
+ * ```haxe
+ * var angle = p.degreesTo(FlxPoint.weak(FlxG.mouse.x, FlxG.mouse.y));
+ * ```
+ * 
  * ## Overloaded Operators
  * 
  * - `A += B` adds the value of `B` to `A`
@@ -18,6 +38,34 @@ import openfl.geom.Point;
  * - `A * k` returns a new point that is `A` scaled with coefficient `k`
  *
  * Note: also accepts `openfl.geom.Point`, but always returns a FlxPoint.
+ *
+ * Note: that these operators get points from the pool, but do not put
+ * points back in the pool, unless they are weak.
+ * 
+ * Example: 4 total points are created, but only 3 are put into the pool
+ * ```haxe
+ * var a = FlxPoint.get(1, 1);
+ * var b = FlxPoint.get(1, 1);
+ * var c = (a * 2.0) + b;
+ * a.put();
+ * b.put();
+ * c.put();
+ * ```
+ * 
+ * To put all 4 back, it should look like this:
+ * ```haxe
+ * var a = FlxPoint.get(1, 1);
+ * var b = FlxPoint.get(1, 1);
+ * var c = a * 2.0;
+ * var d = c + b;
+ * a.put();
+ * b.put();
+ * c.put();
+ * d.put();
+ * ```
+ * 
+ * Otherwise, the remainging points will become garbage, adding to the
+ * heap, potentially triggering a garbage collection when you don't want.
  */
 @:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint 
 {
