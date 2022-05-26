@@ -816,7 +816,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * FlxSpriteGroups ignore this property unless `singleCollider` is set to true
 	 */
 	override function set_width(value:Float):Float
 	{
@@ -853,7 +853,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * FlxSpriteGroups ignore this property unless `singleCollider` is set to true
 	 */
 	override function set_height(value:Float):Float
 	{
