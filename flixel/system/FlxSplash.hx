@@ -199,7 +199,7 @@ class FlxSplash extends FlxState
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
-		FlxG.switchState(Type.createInstance(nextState, []));
+		FlxG.switchState(() -> Type.createInstance(nextState, []));
 		FlxG.game._gameJustStarted = true;
 	}
 }
