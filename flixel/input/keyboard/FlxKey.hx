@@ -106,6 +106,7 @@ abstract FlxKey(Int) from Int to Int
 	var NUMPADPLUS = 107;
 	var NUMPADPERIOD = 110;
 	var NUMPADMULTIPLY = 106;
+	var NUMPADDIVIDE = 111;
 
 	@:from
 	public static inline function fromString(s:String)
