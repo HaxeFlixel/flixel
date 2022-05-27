@@ -80,6 +80,8 @@ class FlxState extends FlxGroup
 	@:noCompletion
 	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
     
+	public function new() {super();}
+	
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
