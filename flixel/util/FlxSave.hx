@@ -85,6 +85,55 @@ class FlxSave implements IFlxDestroyable
 	}
 
 	/**
+	 * Binds to both the old and new save, migrates the data from old to new,
+	 * flushes the new save and then erases the old save.
+	 * 
+	 * @param   newName      The name of the new save.
+	 * @param   newPath      The full or partial path to the file that created the new save.
+	 * @param   oldName      The name of the old save.
+	 * @param   oldPath      The full or partial path to the file that created the old save.
+	 * @param   overwrite    Whether the old data should ovewrite
+	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
+	 * @param   onComplete   This callback will be triggered when the data is written successfully.
+	 * @return  Whether or not you successfully connected to the save data.
+	 */
+	public function bindAndMigrate(newName:String, ?newPath:String, oldName:String, ?oldPath:String, overwrite = false, minFileSize = 0,
+			?onComplete:Bool->Void):Bool
+	{
+		var oldData:Dynamic = null;
+		// check old save location
+		if (bind(oldName, oldPath))
+		{
+			oldData = data;
+			erase();
+		}
+
+		var successful = bind(newName, newPath);
+
+		// copy the old save data over to the new one
+		if (successful && oldData != null)
+		{
+			var hasAnyField = false;
+			for (field in Reflect.fields(oldData))
+			{
+				hasAnyField = true;
+				// Don't overwrite any existing data in the new save
+				if (!Reflect.hasField(data, field))
+					Reflect.setField(data, field, Reflect.field(oldData, field));
+			}
+
+			// save chanbges, if there are any
+			if (hasAnyField)
+				return flush(minFileSize, onComplete);
+		}
+
+		if (onComplete != null)
+			onComplete(successful);
+
+		return successful;
+	}
+
+	/**
 	 * A way to safely call flush() and destroy() on your save file.
 	 * Will correctly handle storage size popups and all that good stuff.
 	 * If you don't want to save your changes first, just call destroy() instead.

@@ -49,8 +49,8 @@ import flixel.input.FlxAccelerometer;
 import flixel.input.FlxSwipe;
 #end
 #if FLX_POST_PROCESS
-import openfl.display.OpenGLView;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.OpenGLView;
 
 using flixel.util.FlxArrayUtil;
 #end
@@ -609,7 +609,7 @@ class FlxG
 		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
-		save.bind("flixel");
+		initSave();
 
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
@@ -661,6 +661,25 @@ class FlxG
 		renderTile = renderMethod == DRAW_TILES;
 
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
+	}
+
+	static function initSave()
+	{
+		var meta = stage.application.meta;
+		var company = meta["company"];
+		if (company == null || company == "")
+			company = "HaxeFlixel";
+
+		var project = meta["file"];
+
+		// replace invalid characters with hyphens
+		var invalidChars = ~/[ ~%&\\;:"',<>?#]/;
+		company = invalidChars.split(company).join("-");
+		project = invalidChars.split(project).join("-");
+
+		// Create a save based on project metadata (since 5.0.0).
+		// look for the pre 5.0 save and convert it if it exists
+		save.bindAndMigrate(company, project, "flixel");
 	}
 
 	/**
