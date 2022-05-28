@@ -1,14 +1,22 @@
 package flixel.util;
 
-import flash.errors.Error;
-import flash.net.SharedObject;
-import flash.net.SharedObjectFlushStatus;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.errors.Error;
+import openfl.net.SharedObject;
+import openfl.net.SharedObjectFlushStatus;
 
 /**
- * A class to help automate and simplify save game functionality.
- * Basically a wrapper for the Flash SharedObject thing, but
- * handles some annoying storage request stuff too.
+ * A class to help automate and simplify save game functionality. A simple
+ * wrapper for the OpenFl's SharedObject, with a cople helpers. It's used
+ * automatically by various flixel utilities like the sound tray, as well as
+ * some debugging features.
+ * 
+ * ## Making your own
+ * It is not recommended to make you own instance of `FlxSave`, one is made
+ * for you when a FlxGame is created at `FlxG.save`. The default `name` and
+ * `path` is specified by your Project.xml's "file" and "company",
+ * respectively. That said, nothing is stopping you from instantiating
+ * your own instance.
  */
 class FlxSave implements IFlxDestroyable
 {
@@ -33,16 +41,6 @@ class FlxSave implements IFlxDestroyable
 	 */
 	var _sharedObject:SharedObject;
 
-	/**
-	 * Internal tracker for callback function in case save takes too long.
-	 */
-	var _onComplete:Bool->Void;
-
-	/**
-	 * Internal tracker for save object close request.
-	 */
-	var _closeRequested:Bool = false;
-
 	public function new() {}
 
 	/**
@@ -54,25 +52,24 @@ class FlxSave implements IFlxDestroyable
 		name = null;
 		path = null;
 		data = null;
-		_onComplete = null;
-		_closeRequested = false;
 	}
 
 	/**
 	 * Automatically creates or reconnects to locally saved data.
 	 *
-	 * @param	Name	The name of the object (should be the same each time to access old data).
-	 * 					May not contain spaces or any of the following characters: `~ % & \ ; : " ' , < > ? #`
-	 * @param	Path	The full or partial path to the file that created the shared object,
-	 * 					and that determines where the shared object will be stored locally.
-	 * 					If you do not specify this parameter, the full path is used.
-	 * @return	Whether or not you successfully connected to the save data.
+	 * @param   name  The name of the save (should be the same each time to access old data).
+	 *                May not contain spaces or any of the following characters:
+	 *                `~ % & \ ; : " ' , < > ? #`
+	 * @param   path  The full or partial path to the file that created the shared object.
+	 *                Mainly used to differentiate from other FlxSaves.
+	 *                If you do not specify this parameter, the full path is used.
+	 * @return  Whether or not you successfully connected to the save data.
 	 */
-	public function bind(Name:String, ?Path:String):Bool
+	public function bind(name:String, ?path:String):Bool
 	{
 		destroy();
-		name = Name;
-		path = Path;
+		this.name = name;
+		this.path = path;
 		try
 		{
 			_sharedObject = SharedObject.getLocal(name, path);
@@ -92,30 +89,29 @@ class FlxSave implements IFlxDestroyable
 	 * Will correctly handle storage size popups and all that good stuff.
 	 * If you don't want to save your changes first, just call destroy() instead.
 	 *
-	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
-	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
-	 * @return	The result of result of the flush() call (see below for more details).
+	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
+	 * @param   onComplete   This callback will be triggered when the data is written successfully.
+	 * @return  The result of result of the flush() call (see below for more details).
 	 */
-	public function close(MinFileSize:Int = 0, ?OnComplete:Bool->Void):Bool
+	public function close(minFileSize:Int = 0, ?onComplete:Bool->Void):Bool
 	{
-		_closeRequested = true;
-		return flush(MinFileSize, OnComplete);
+		var success = flush(minFileSize, onComplete);
+		destroy();
+		return success;
 	}
 
 	/**
 	 * Writes the local shared object to disk immediately. Leaves the object open in memory.
 	 *
-	 * @param	MinFileSize		If you need X amount of space for your save, specify it here.
-	 * @param	OnComplete		This callback will be triggered when the data is written successfully.
-	 * @return	Whether or not the data was written immediately. False could be an error OR a storage request popup.
+	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
+	 * @param   onComplete   This callback will be triggered when the data is written successfully.
+	 * @return  Whether or not the data was written immediately. False could be an error OR a storage request popup.
 	 */
-	public function flush(MinFileSize:Int = 0, ?OnComplete:Bool->Void):Bool
+	public function flush(minFileSize:Int = 0, ?onComplete:Bool->Void):Bool
 	{
 		if (!checkBinding())
-		{
 			return false;
-		}
-		_onComplete = OnComplete;
+
 		var result = null;
 		try
 		{
@@ -123,10 +119,10 @@ class FlxSave implements IFlxDestroyable
 		}
 		catch (_:Error)
 		{
-			return onDone(ERROR);
+			return onDone(ERROR, onComplete);
 		}
 
-		return onDone(result == SharedObjectFlushStatus.FLUSHED ? SUCCESS : PENDING);
+		return onDone(result == FLUSHED ? SUCCESS : PENDING, onComplete);
 	}
 
 	/**
@@ -151,27 +147,24 @@ class FlxSave implements IFlxDestroyable
 	 * Event handler for special case storage requests.
 	 * Handles logging of errors and calling of callback.
 	 *
-	 * @param	Result		One of the result codes (PENDING, ERROR, or SUCCESS).
-	 * @return	Whether the operation was a success or not.
+	 * @param   result  One of the result codes (PENDING, ERROR, or SUCCESS).
+	 * @return  Whether the operation was a success or not.
 	 */
-	function onDone(Result:FlxSaveStatus):Bool
+	function onDone(result:FlxSaveStatus, ?onComplete:Bool->Void):Bool
 	{
-		switch (Result)
+		switch (result)
 		{
-			case FlxSaveStatus.PENDING:
+			case PENDING:
 				FlxG.log.warn("FlxSave is requesting extra storage space.");
-			case FlxSaveStatus.ERROR:
+			case ERROR:
 				FlxG.log.error("There was a problem flushing\nthe shared object data from FlxSave.");
 			default:
 		}
 
-		if (_onComplete != null)
-			_onComplete(Result == SUCCESS);
+		if (onComplete != null)
+			onComplete(result == SUCCESS);
 
-		if (_closeRequested)
-			destroy();
-
-		return Result == SUCCESS;
+		return result == SUCCESS;
 	}
 
 	/**
