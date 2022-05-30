@@ -609,6 +609,7 @@ class FlxG
 		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
+
 		initSave();
 
 		plugins = new PluginFrontEnd();
@@ -672,6 +673,8 @@ class FlxG
 
 		var project = meta["file"];
 
+		trace('bind($company, $project)');
+
 		// replace invalid characters with hyphens
 		var invalidChars = ~/[ ~%&\\;:"',<>?#]/;
 		company = invalidChars.split(company).join("-");
@@ -679,7 +682,12 @@ class FlxG
 
 		// Create a save based on project metadata (since 5.0.0).
 		// look for the pre 5.0 save and convert it if it exists
+		#if flash
+		save.bind('$company-$project');
+		// save.bindAndMigrate('$company-$project', null, "flixel");
+		#else
 		save.bindAndMigrate(company, project, "flixel");
+		#end
 	}
 
 	/**
