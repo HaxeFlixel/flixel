@@ -224,7 +224,7 @@ class FlxSave implements IFlxDestroyable
 	{
 		return switch (status)
 		{
-			case BOUND(name, _): name;
+			case BOUND(n, _): n;
 			default: null;
 		}
 	}
@@ -233,7 +233,7 @@ class FlxSave implements IFlxDestroyable
 	{
 		return switch (status)
 		{
-			case BOUND(_, path): path;
+			case BOUND(_, p): p;
 			default: null;
 		}
 	}
