@@ -224,6 +224,7 @@ class FlxSave implements IFlxDestroyable
 	{
 		return switch (status)
 		{
+			// can't use the pattern var `name` or it will break in 4.0.5
 			case BOUND(n, _): n;
 			default: null;
 		}
@@ -233,6 +234,7 @@ class FlxSave implements IFlxDestroyable
 	{
 		return switch (status)
 		{
+			// can't use the pattern var `path` or it will break in 4.0.5
 			case BOUND(_, p): p;
 			default: null;
 		}
