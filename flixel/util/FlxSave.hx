@@ -28,14 +28,30 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * The name of the local shared object.
 	 */
-	public var name(default, null):String;
+	public var name(get, never):String;
 
 	/**
 	 * The path of the local shared object.
 	 * @since 4.6.0
 	 */
-	public var path(default, null):String;
+	public var path(get, never):String;
 
+	/**
+	 * The current status of the save.
+	 * @since 5.0.0
+	 */
+	public var status(default, null):FlxSaveStatus = EMPTY;
+
+	/**
+	 * Wether the save was successfully bound.
+	 * @since 5.0.0
+	 */
+	public var isBound(get, never):Bool;
+
+	/**
+	 * The current status of the save.
+	 * @since 5.0.0
+	 */
 	/**
 	 * The local shared object itself.
 	 */
@@ -49,8 +65,7 @@ class FlxSave implements IFlxDestroyable
 	public function destroy():Void
 	{
 		_sharedObject = null;
-		name = null;
-		path = null;
+		status = EMPTY;
 		data = null;
 	}
 
@@ -68,15 +83,14 @@ class FlxSave implements IFlxDestroyable
 	public function bind(name:String, ?path:String):Bool
 	{
 		destroy();
-		this.name = name;
-		this.path = path;
 		try
 		{
 			_sharedObject = SharedObject.getLocal(name, path);
+			status = BOUND(name, path);
 		}
 		catch (e:Error)
 		{
-			FlxG.log.error("There was a problem binding to\nthe shared object data from FlxSave.");
+			FlxG.log.error('Error:${e.message} name:"$name", path:"$path".');
 			destroy();
 			return false;
 		}
@@ -88,49 +102,43 @@ class FlxSave implements IFlxDestroyable
 	 * Binds to both the old and new save, migrates the data from old to new,
 	 * flushes the new save and then erases the old save.
 	 * 
-	 * @param   newName      The name of the new save.
-	 * @param   newPath      The full or partial path to the file that created the new save.
-	 * @param   oldName      The name of the old save.
-	 * @param   oldPath      The full or partial path to the file that created the old save.
-	 * @param   overwrite    Whether the old data should ovewrite
+	 * @param   name         The name of the save.
+	 * @param   path         The full or partial path to the file that created the save.
+	 * @param   overwrite    Whether the data should ovewrite, should the 2 saves share data fields. defaults to false.
+	 * @param   eraseSave    Whether to erase the save after successfully migrating the data. defaults to true.
 	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
-	 * @param   onComplete   This callback will be triggered when the data is written successfully.
 	 * @return  Whether or not you successfully connected to the save data.
 	 */
-	public function bindAndMigrate(newName:String, ?newPath:String, oldName:String, ?oldPath:String, overwrite = false, minFileSize = 0,
-			?onComplete:Bool->Void):Bool
+	public function migrateDataFrom(name:String, ?path:String, overwrite = false, eraseSave = true, minFileSize = 0):Bool
 	{
-		var oldData:Dynamic = null;
+		if (!checkStatus())
+			return false;
+
+		var oldSave = new FlxSave();
 		// check old save location
-		if (bind(oldName, oldPath))
+		if (oldSave.bind(name, path))
 		{
-			oldData = data;
-			erase();
-		}
-
-		var successful = bind(newName, newPath);
-
-		// copy the old save data over to the new one
-		if (successful && oldData != null)
-		{
+			var oldData = oldSave.data;
 			var hasAnyField = false;
 			for (field in Reflect.fields(oldData))
 			{
 				hasAnyField = true;
 				// Don't overwrite any existing data in the new save
-				if (!Reflect.hasField(data, field))
+				if (overwrite || !Reflect.hasField(data, field))
 					Reflect.setField(data, field, Reflect.field(oldData, field));
 			}
 
-			// save chanbges, if there are any
+			oldSave.erase();
+			oldSave.destroy();
+
+			// save changes, if there are any
 			if (hasAnyField)
-				return flush(minFileSize, onComplete);
+				return flush(minFileSize);
 		}
 
-		if (onComplete != null)
-			onComplete(successful);
+		oldSave.destroy();
 
-		return successful;
+		return false;
 	}
 
 	/**
@@ -139,12 +147,11 @@ class FlxSave implements IFlxDestroyable
 	 * If you don't want to save your changes first, just call destroy() instead.
 	 *
 	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
-	 * @param   onComplete   This callback will be triggered when the data is written successfully.
 	 * @return  The result of result of the flush() call (see below for more details).
 	 */
-	public function close(minFileSize:Int = 0, ?onComplete:Bool->Void):Bool
+	public function close(minFileSize:Int = 0):Bool
 	{
-		var success = flush(minFileSize, onComplete);
+		var success = flush(minFileSize);
 		destroy();
 		return success;
 	}
@@ -153,25 +160,28 @@ class FlxSave implements IFlxDestroyable
 	 * Writes the local shared object to disk immediately. Leaves the object open in memory.
 	 *
 	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
-	 * @param   onComplete   This callback will be triggered when the data is written successfully.
 	 * @return  Whether or not the data was written immediately. False could be an error OR a storage request popup.
 	 */
-	public function flush(minFileSize:Int = 0, ?onComplete:Bool->Void):Bool
+	public function flush(minFileSize:Int = 0):Bool
 	{
-		if (!checkBinding())
+		if (!checkStatus())
 			return false;
 
-		var result = null;
 		try
 		{
-			result = _sharedObject.flush();
+			var result = _sharedObject.flush();
+
+			if (result != FLUSHED)
+				status = ERROR("FlxSave is requesting extra storage space.");
 		}
-		catch (_:Error)
+		catch (e:Error)
 		{
-			return onDone(ERROR, onComplete);
+			status = ERROR("There was an problem flushing the save data.");
 		}
 
-		return onDone(result == FLUSHED ? SUCCESS : PENDING, onComplete);
+		checkStatus();
+
+		return isBound;
 	}
 
 	/**
@@ -183,37 +193,12 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public function erase():Bool
 	{
-		if (!checkBinding())
-		{
+		if (!checkStatus())
 			return false;
-		}
+
 		_sharedObject.clear();
 		data = {};
 		return true;
-	}
-
-	/**
-	 * Event handler for special case storage requests.
-	 * Handles logging of errors and calling of callback.
-	 *
-	 * @param   result  One of the result codes (PENDING, ERROR, or SUCCESS).
-	 * @return  Whether the operation was a success or not.
-	 */
-	function onDone(result:FlxSaveStatus, ?onComplete:Bool->Void):Bool
-	{
-		switch (result)
-		{
-			case PENDING:
-				FlxG.log.warn("FlxSave is requesting extra storage space.");
-			case ERROR:
-				FlxG.log.error("There was a problem flushing\nthe shared object data from FlxSave.");
-			default:
-		}
-
-		if (onComplete != null)
-			onComplete(result == SUCCESS);
-
-		return result == SUCCESS;
 	}
 
 	/**
@@ -221,20 +206,58 @@ class FlxSave implements IFlxDestroyable
 	 *
 	 * @return	Whether the shared object was bound yet.
 	 */
-	function checkBinding():Bool
+	function checkStatus():Bool
 	{
-		if (_sharedObject == null)
+		switch (status)
 		{
-			FlxG.log.warn("You must call FlxSave.bind()\nbefore you can read or write data.");
-			return false;
+			case EMPTY:
+				FlxG.log.warn("You must call FlxSave.bind() before you can read or write data.");
+			case ERROR(msg):
+				FlxG.log.error(msg);
+			default:
+				return true;
 		}
-		return true;
+		return false;
+	}
+
+	function get_name()
+	{
+		return switch (status)
+		{
+			case BOUND(name, _): name;
+			default: null;
+		}
+	}
+
+	function get_path()
+	{
+		return switch (status)
+		{
+			case BOUND(_, path): path;
+			default: null;
+		}
+	}
+
+	inline function get_isBound()
+	{
+		return status.match(BOUND(_, _));
 	}
 }
 
 enum FlxSaveStatus
 {
-	SUCCESS;
-	PENDING;
-	ERROR;
+	/**
+	 * The initial state, call bind() in order to use.
+	 */
+	EMPTY;
+
+	/**
+	 * The save is set up correctly.
+	 */
+	BOUND(name:String, ?path:String);
+
+	/**
+	 * There was an issue.
+	 */
+	ERROR(msg:String);
 }
