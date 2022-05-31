@@ -12,6 +12,12 @@ import openfl.net.SharedObjectFlushStatus;
  * some debugging features.
  * 
  * ## Making your own
+ * You can use a specific save name and path by calling the following,
+ * ```haxe
+ * FlxG.save.bind("myGameName", "myGameStudioName");
+ * ```
+ * It is recommended thatg you do so before creating an instance of FlxGame.
+ * 
  * It is not recommended to make you own instance of `FlxSave`, one is made
  * for you when a FlxGame is created at `FlxG.save`. The default `name` and
  * `path` is specified by your Project.xml's "file" and "company",
