@@ -134,7 +134,8 @@ class FlxSave implements IFlxDestroyable
 					Reflect.setField(data, field, Reflect.field(oldData, field));
 			}
 
-			oldSave.erase();
+			if (eraseSave)
+				oldSave.erase();
 			oldSave.destroy();
 
 			// save changes, if there are any
