@@ -86,19 +86,8 @@ class FlxAssets
 					return new EReg("^" + s + "$", "");
 				case EConst(CRegexp(r, opt)):
 					return new EReg(r, opt);
-				case EArrayDecl(values): // Backwards compatibility: accept an array of file extensions.
-					var extensions:Array<String> = [];
-					for(value in values)
-						switch(value.expr)
-						{
-							case EConst(CString(s, _)):
-								extensions.push(s);
-							default:
-								haxe.macro.Context.error("Value must be a string.", value.pos);
-						}
-					return new EReg("(?:\\." + extensions.join("|\\.") + ")$", "");
 				default:
-					haxe.macro.Context.error("Value should be a string or regular expression.", expr.pos);
+					haxe.macro.Context.error("Value must be a string or regular expression.", expr.pos);
 					return null;
 			}
 		}
