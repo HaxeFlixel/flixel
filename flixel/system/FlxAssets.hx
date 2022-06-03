@@ -62,15 +62,20 @@ class FlxAssets
 	 *
 	 * @param   directory          The directory to scan for files
 	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
+	 * @param   include            Regular expression for files to include.
+	 *                             Example: `"\.(jpg|png|gif)$"` will only add files with that extension.
+	 * @param   exclude            Regular expression for files to exclude.
+	 *                             Example: `"/exclude|.ogg$"` Will exclude .ogg files and everything in the exclude folder
 	 */
-	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false,
-			?filterExtensions:Array<String>, ?rename:String->String):Array<haxe.macro.Expr.Field>
+	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:String, ?exclude:String,
+			?rename:String->String):Array<haxe.macro.Expr.Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions, rename);
+		var includeReg = include != null ? new EReg(include, "") : null;
+		var excludeReg = exclude != null ? new EReg(exclude, "") : null;
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, includeReg, excludeReg, rename);
 		#end
 	}
 	#end

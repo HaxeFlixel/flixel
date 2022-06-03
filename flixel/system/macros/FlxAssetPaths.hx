@@ -2,14 +2,15 @@ package flixel.system.macros;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.PosInfos;
 import sys.FileSystem;
 
-using flixel.util.FlxArrayUtil;
 using StringTools;
+using flixel.util.FlxArrayUtil;
 
 class FlxAssetPaths
 {
-	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false, ?filterExtensions:Array<String>,
+	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:EReg, ?exclude:EReg,
 			?rename:String->String):Array<Field>
 	{
 		if (!directory.endsWith("/"))
@@ -17,24 +18,34 @@ class FlxAssetPaths
 
 		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
-		var fileReferences:Array<FileReference> = getFileReferences(directory, subDirectories, filterExtensions, rename);
-		var fields:Array<Field> = Context.getBuildFields();
+		var fileReferences = getFileReferences(directory, subDirectories, include, exclude, rename);
+		var fields = Context.getBuildFields();
+
+		var addedFields = new Array<String>();
 
 		for (fileRef in fileReferences)
 		{
-			// create new field based on file references!
-			fields.push({
-				name: fileRef.name,
-				doc: fileRef.documentation,
-				access: [Access.APublic, Access.AStatic, Access.AInline],
-				kind: FieldType.FVar(macro:String, macro $v{fileRef.value}),
-				pos: Context.currentPos()
-			});
+			if (addedFields.contains(fileRef.name))
+			{
+				warn('Duplicate files named "${fileRef.name}" ignoring ${fileRef.value}');
+			}
+			else
+			{
+				addedFields.push(fileRef.name);
+				// create new field based on file references!
+				fields.push({
+					name: fileRef.name,
+					doc: fileRef.documentation,
+					access: [Access.APublic, Access.AStatic, Access.AInline],
+					kind: FieldType.FVar(macro:String, macro $v{fileRef.value}),
+					pos: Context.currentPos()
+				});
+			}
 		}
 		return fields;
 	}
 
-	static function getFileReferences(directory:String, subDirectories:Bool = false, ?filterExtensions:Array<String>,
+	static function getFileReferences(directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg,
 			?rename:String->String):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
@@ -42,50 +53,65 @@ class FlxAssetPaths
 		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
 		{
-			if (!FileSystem.isDirectory(resolvedPath + name))
+			var path = resolvedPath + name;
+
+			if (include != null && !include.match(path))
+				continue;
+
+			if (exclude != null && exclude.match(path))
+				continue;
+
+			if (!FileSystem.isDirectory(path))
 			{
 				// ignore invisible files
 				if (name.startsWith("."))
 					continue;
 
-				if (filterExtensions != null)
-				{
-					var extension:String = name.split(".").last(); // get the last string with a dot before it
-					if (!filterExtensions.contains(extension))
-						continue;
-				}
-
-				var reference = FileReference.fromPath(directory + name, rename);
+				var reference = FileReference.fromPath(path, rename);
 				if (reference != null)
 					fileReferences.push(reference);
 			}
 			else if (subDirectories)
 			{
-				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, filterExtensions, rename));
+				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, include, exclude, rename));
 			}
 		}
 
 		return fileReferences;
 	}
+
+	static inline function warn(msg:String, ?info:PosInfos)
+	{
+		haxe.Log.trace("[Warning] " + msg, info);
+	}
 }
 
 private class FileReference
 {
-	private static var validIdentifierPattern = ~/^[_A-Za-z]\w*$/;
+	static var valid = ~/^[_A-Za-z]\w*$/;
 
 	public static function fromPath(value:String, ?rename:String->String):Null<FileReference>
 	{
-		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		var name = value.split("/").last();
+		var name = value;
 
 		if (rename != null)
 		{
 			name = rename(name);
+			// exclude null
+			if (name == null)
+				return null;
+		}
+		else
+			name = value.split("/").pop();
+
+		// replace some forbidden names to underscores, since variables cannot have these symbols.
+		name = name.split("-").join("_").split(".").join("__");
+		if (!valid.match(name)) // #1796
+		{
+			trace('[Warning] Invalid name: $name for file: $value');
+			return null;
 		}
 
-		name = name.split("-").join("_").split(".").join("__");
-		if (!validIdentifierPattern.match(name)) // #1796
-			return null;
 		return new FileReference(name, value);
 	}
 
