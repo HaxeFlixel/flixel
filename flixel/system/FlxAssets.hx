@@ -62,22 +62,41 @@ class FlxAssets
 	 *
 	 * @param   directory          The directory to scan for files
 	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   include            Regular expression for files to include.
-	 *                             Example: `"\.(jpg|png|gif)$"` will only add files with that extension.
-	 * @param   exclude            Regular expression for files to exclude.
-	 *                             Example: `"/exclude|.ogg$"` Will exclude .ogg files and everything in the exclude folder
+	 * @param   include            A string or `EReg` of files to include.
+	 *                             Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
+	 * @param   exclude            A string or `EReg` of files to exclude.
+	 *                             Example: `"/exclude/*|*.ogg"` will exclude .ogg files and everything in the exclude folder
 	 */
-	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:String, ?exclude:String,
+	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:haxe.macro.Expr, ?exclude:haxe.macro.Expr,
 			?rename:String->String):Array<haxe.macro.Expr.Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		var includeReg = include != null ? new EReg(include, "") : null;
-		var excludeReg = exclude != null ? new EReg(exclude, "") : null;
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, includeReg, excludeReg, rename);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
 		#end
 	}
+
+	#if !doc_gen
+	private function exprToRegex(expr:haxe.macro.Expr):EReg
+	{
+		switch(expr.expr)
+		{
+			case null | EConst(CIdent("null")):
+				return null;
+			case EConst(CString(s, _)):
+				s = EReg.escape(s);
+				s = StringTools.replace(s, "\\*", ".*");
+				s = StringTools.replace(s, "\\|", "|");
+				return new EReg("^" + s + "$", "");
+			case EConst(CRegexp(r, opt)):
+				return new EReg(r, opt);
+			default:
+				haxe.macro.Context.error("Value must be a string or regular expression.", expr.pos);
+				return null;
+		}
+	}
+	#end
 	#end
 
 	#if (!macro || doc_gen)
