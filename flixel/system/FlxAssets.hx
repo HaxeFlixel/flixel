@@ -73,27 +73,30 @@ class FlxAssets
 		#if doc_gen
 		return [];
 		#else
-		function toRegex(expr:haxe.macro.Expr):EReg
-		{
-			switch(expr.expr)
-			{
-				case null | EConst(CIdent("null")):
-					return null;
-				case EConst(CString(s, _)):
-					s = EReg.escape(s);
-					s = StringTools.replace(s, "\\*", ".*");
-					s = StringTools.replace(s, "\\|", "|");
-					return new EReg("^" + s + "$", "");
-				case EConst(CRegexp(r, opt)):
-					return new EReg(r, opt);
-				default:
-					haxe.macro.Context.error("Value must be a string or regular expression.", expr.pos);
-					return null;
-			}
-		}
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, toRegex(include), toRegex(exclude), rename);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
 		#end
 	}
+
+	#if !doc_gen
+	private function exprToRegex(expr:haxe.macro.Expr):EReg
+	{
+		switch(expr.expr)
+		{
+			case null | EConst(CIdent("null")):
+				return null;
+			case EConst(CString(s, _)):
+				s = EReg.escape(s);
+				s = StringTools.replace(s, "\\*", ".*");
+				s = StringTools.replace(s, "\\|", "|");
+				return new EReg("^" + s + "$", "");
+			case EConst(CRegexp(r, opt)):
+				return new EReg(r, opt);
+			default:
+				haxe.macro.Context.error("Value must be a string or regular expression.", expr.pos);
+				return null;
+		}
+	}
+	#end
 	#end
 
 	#if (!macro || doc_gen)
