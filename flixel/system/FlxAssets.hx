@@ -78,7 +78,7 @@ class FlxAssets
 	}
 
 	#if !doc_gen
-	private function exprToRegex(expr:haxe.macro.Expr):EReg
+	private static function exprToRegex(expr:haxe.macro.Expr):EReg
 	{
 		switch(expr.expr)
 		{
