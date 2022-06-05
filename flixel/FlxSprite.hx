@@ -888,47 +888,86 @@ class FlxSprite extends FlxObject
 	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's current displayed pixels.
 	 * This check is ALWAYS made in screen space, and always takes `scrollFactor` into account.
 	 *
-	 * @param   Point    The point in world space you want to check.
-	 * @param   Mask     Used in the pixel hit test to determine what counts as solid.
-	 * @param   Camera   Specify which game camera you want.  If `null`, it will just grab the first global camera.
+	 * @param   point    The point in world space you want to check.
+	 * @param   mask     Used in the pixel hit test to determine what counts as solid.
+	 * @param   camera   Specify which game camera you want.  If `null`, it will just grab the first global camera.
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
+	public function pixelsOverlapPoint(point:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
-		if (Camera == null)
-			Camera = FlxG.camera;
+		transformWorldToPixels(point, camera, _point);
 
-		getScreenPosition(_point, Camera);
-		_point.subtractPoint(offset);
-		_flashPoint.x = (point.x - Camera.scroll.x) - _point.x;
-		_flashPoint.y = (point.y - Camera.scroll.y) - _point.y;
+		// point is outside of the graphic
+		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
+		{
+			var frameData:BitmapData = updateFramePixels();
+			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
+			return pixelColor.alpha * alpha >= mask;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
+	 * is the top left of the graphic.
+	 * 
+	 * @param   point   The world coordinates
+	 * @param   camera  The camera, used to compare screen coordinates
+	 * @param   result  Optional arg for the returning point
+	 */
+	function transformWorldToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+
+		var screenPoint = FlxPoint.weak(point.x - camera.scroll.x, point.y - camera.scroll.y);
+		point.putWeak();
+		return transformScreenToPixels(screenPoint, camera, result);
+	}
+
+	/**
+	 * Converts the point from screen coordinates to this sprite's pixel coordinates where (0,0)
+	 * is the top left of the graphic.
+	 * 
+	 * @param   point   The screen coordinates
+	 * @param   camera  The camera
+	 * @param   result  Optional arg for the returning point
+	 */
+	function transformScreenToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+
+		result = getScreenPosition(result, camera);
+
+		FlxG.watch.addQuick("mouse", point);
+		FlxG.watch.addQuick("card", result);
+
+		result.subtract(point.x, point.y);
+		result.negate();
+		result.addPoint(offset);
+		result.subtractPoint(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.addPoint(origin);
 
 		point.putWeak();
 
-		// 1. Check to see if the point is outside of framePixels rectangle
-		if (_flashPoint.x < 0 || _flashPoint.x > frameWidth || _flashPoint.y < 0 || _flashPoint.y > frameHeight)
-		{
-			return false;
-		}
-		else // 2. Check pixel at (_flashPoint.x, _flashPoint.y)
-		{
-			var frameData:BitmapData = updateFramePixels();
-			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_flashPoint.x), Std.int(_flashPoint.y));
-			return pixelColor.alpha * alpha >= Mask;
-		}
+		return result;
 	}
 
 	/**
 	 * Internal function to update the current animation frame.
 	 *
-	 * @param   RunOnCpp   Whether the frame should also be recalculated if we're on a non-flash target
+	 * @param   force   Whether the frame should also be recalculated if we're on a non-flash target
 	 */
 	@:noCompletion
-	function calcFrame(RunOnCpp:Bool = false):Void
+	function calcFrame(force = false):Void
 	{
 		checkEmptyFrame();
 
-		if (FlxG.renderTile && !RunOnCpp)
+		if (FlxG.renderTile && !force)
 			return;
 
 		updateFramePixels();
