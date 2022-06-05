@@ -32,11 +32,13 @@
 
 - Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
 - Angles: All angle utils treat right as 0 (affects `FlxSwipe` and `FlxPath`) ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
-- `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
-- `FlxTilemap`: Renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxAngle`: deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxTilemap`: renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPoint/FlxVector`: moved all `FlxVector` fields and methods into `FlxPoint` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxSave`: changed the default save name and path to unique values based on Project.xml metadata ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+- `FlxSprite`: improved `pixelsOverlapPoint` with scaled or angled sprites ([#2576](https://github.com/HaxeFlixel/flixel/pull/2576))
+	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
 
 4.11.0 (January 26, 2022)
 ------------------------------
