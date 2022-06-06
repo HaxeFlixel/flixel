@@ -120,7 +120,7 @@ class VCRFrontEnd
 	 * @param	Timeout		Optional parameter: set a time limit for the replay. CancelKeys will override this if pressed.
 	 * @param	Callback	Optional parameter: if set, called when the replay finishes. Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
 	 */
-	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<FlxKey>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
+	public function loadReplay(Data:String, ?State:()->FlxState, ?CancelKeys:Array<FlxKey>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
 	{
 		FlxG.game._replay.load(Data);
 

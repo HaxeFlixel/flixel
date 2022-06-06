@@ -159,7 +159,7 @@ class FlxObjectTest extends FlxTest
 
 	function velocityCollidingWith(ground:FlxObject)
 	{
-		switchState(new CollisionState());
+		switchState(CollisionState.new);
 
 		ground.setPosition(0, 10);
 		object1.setSize(10, 10);

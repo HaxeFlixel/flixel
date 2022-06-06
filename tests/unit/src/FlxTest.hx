@@ -48,7 +48,7 @@ class FlxTest
 		step();
 	}
 
-	function switchState(nextState:FlxState)
+	function switchState(nextState:()->FlxState)
 	{
 		FlxG.switchState(nextState);
 		step();

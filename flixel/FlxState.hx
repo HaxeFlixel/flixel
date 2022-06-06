@@ -47,6 +47,10 @@ class FlxState extends FlxGroup
 	 */
 	public var subState(default, null):FlxSubState;
 
+	@:allow(flixel.FlxGame)
+	@:allow(flixel.FlxG)
+	var _constructor:()->FlxState;
+
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
@@ -79,7 +83,12 @@ class FlxState extends FlxGroup
 
 	@:noCompletion
 	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
-    
+
+	public function new ()
+	{
+		super(0);
+	}
+
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
@@ -88,7 +97,7 @@ class FlxState extends FlxGroup
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
+	override function draw():Void
 	{
 		if (persistentDraw || subState == null)
 			super.draw();
@@ -152,11 +161,12 @@ class FlxState extends FlxGroup
 		}
 	}
 
-	override public function destroy():Void
+	override function destroy():Void
 	{
+		_constructor = null;
 		FlxDestroyUtil.destroy(_subStateOpened);
 		FlxDestroyUtil.destroy(_subStateClosed);
-        
+
 		if (subState != null)
 		{
 			subState.destroy();
@@ -171,7 +181,7 @@ class FlxState extends FlxGroup
 	 *
 	 * Useful for customizing state switches, e.g. for transition effects.
 	 */
-	public function switchTo(nextState:FlxState):Bool
+	public function switchTo(nextState:()->FlxState):Bool
 	{
 		return true;
 	}

@@ -367,10 +367,10 @@ class FlxG
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState(nextState:FlxState):Void
+	public static inline function switchState<State:FlxState>(nextState:()->State):Void
 	{
 		if (state.switchTo(nextState))
-			game._requestedState = nextState;
+			game._nextState = nextState;
 	}
 
 	/**
@@ -379,7 +379,7 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		switchState(Type.createInstance(Type.getClass(state), []));
+		switchState(state._constructor);
 	}
 
 	/**
