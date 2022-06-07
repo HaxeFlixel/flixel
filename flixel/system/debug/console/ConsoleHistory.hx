@@ -12,15 +12,22 @@ class ConsoleHistory
 
 	public function new()
 	{
-		if (FlxG.save.data.history != null)
+		if (FlxG.save.isBound)
 		{
-			commands = FlxG.save.data.history;
-			index = commands.length;
+			if (FlxG.save.data.history != null)
+			{
+				commands = FlxG.save.data.history;
+				index = commands.length;
+			}
+			else
+			{
+				commands = [];
+				FlxG.save.data.history = commands;
+			}
 		}
 		else
 		{
 			commands = [];
-			FlxG.save.data.history = commands;
 		}
 	}
 
@@ -44,7 +51,8 @@ class ConsoleHistory
 		if (isEmpty || getPreviousCommand() != command)
 		{
 			commands.push(command);
-			FlxG.save.flush();
+			if (FlxG.save.isBound)
+				FlxG.save.flush();
 
 			if (commands.length > MAX_LENGTH)
 				commands.shift();

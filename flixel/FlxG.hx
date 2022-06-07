@@ -49,8 +49,8 @@ import flixel.input.FlxAccelerometer;
 import flixel.input.FlxSwipe;
 #end
 #if FLX_POST_PROCESS
-import openfl.display.OpenGLView;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.OpenGLView;
 
 using flixel.util.FlxArrayUtil;
 #end
@@ -609,7 +609,8 @@ class FlxG
 		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
-		save.bind("flixel");
+
+		initSave();
 
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
@@ -661,6 +662,38 @@ class FlxG
 		renderTile = renderMethod == DRAW_TILES;
 
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
+	}
+
+	static function initSave()
+	{
+		// Don't init if the FlxG.save.bind was manually called before the FlxGame was created
+		if (save.isBound)
+			return;
+
+		// Use Project.xml data to determine save id
+		var meta = stage.application.meta;
+		var name = meta["file"];
+		var path:String = null;
+
+		// replace invalid characters with hyphens
+		var invalidChars = ~/[ ~%&\\;:"',<>?#]/;
+		name = invalidChars.split(name).join("-");
+
+		#if !flash
+		// On most browsers using the full URL path often causes a new save path to be created
+		// every time a new version of the game is updated. Especially on portals like Newgrounds.
+		// just set the path to your company name, to ensure a unique storage id.
+		path = meta["company"];
+		if (path == null || path == "")
+			path = "HaxeFlixel";
+		else
+			path = invalidChars.split(path).join("-");
+		#end
+
+		// Create a save based on project metadata (since 5.0.0).
+		// look for the pre 5.0 save and convert it if it exists.
+		save.bind(name, path);
+		save.migrateDataFrom("flixel");
 	}
 
 	/**
