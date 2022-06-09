@@ -47,7 +47,37 @@ import flixel.util.FlxSpriteUtil;
 class FlxPath implements IFlxDestroyable
 {
 	/**
-	 * Internal helper for keeping new variable instantiations under control.
+	 * Move from the start of the path to the end then stop.
+	 */
+	@:deprecated("Use FORWARD or FlxPathType.FORWARD instead")
+	public static inline var FORWARD = FlxPathType.FORWARD;
+
+	/**
+	 * Move from the end of the path to the start then stop.
+	 */
+	@:deprecated("Use BACKWARD or FlxPathType.BACKWARD instead")
+	public static inline var BACKWARD = FlxPathType.BACKWARD;
+
+	/**
+	 * Move from the start of the path to the end then directly back to the start, and start over.
+	 */
+	@:deprecated("Use LOOP_FORWARD or FlxPathType.LOOP_FORWARD instead")
+	public static inline var LOOP_FORWARD = FlxPathType.LOOP_FORWARD;
+
+	/**
+	 * Move from the end of the path to the start then directly back to the end, and start over.
+	 */
+	@:deprecated("Use LOOP_BACKWARD or FlxPathType.LOOP_BACKWARD instead")
+	public static inline var LOOP_BACKWARD = FlxPathType.LOOP_BACKWARD;
+
+	/**
+	 * Move from the start of the path to the end then turn around and go back to the start, over and over.
+	 */
+	@:deprecated("Use YOYO or FlxPathType.YOYO instead")
+	public static inline var YOYO = FlxPathType.YOYO;
+
+	/**
+	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
 	static var _point:FlxPoint = FlxPoint.get();
 
@@ -175,7 +205,7 @@ class FlxPath implements IFlxDestroyable
 	 * @return This path object.
 	 * @since 4.2.0
 	 */
-	public function setProperties(speed:Float = 100, mode:FlxPathType = FORWARD, autoRotate:Bool = false):FlxPath
+	public function setProperties(speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false):FlxPath
 	{
 		this.speed = Math.abs(speed);
 		_mode = mode;
@@ -193,7 +223,7 @@ class FlxPath implements IFlxDestroyable
 	 * @param nodesAsReference   to pass the input array as reference (true) or to copy the points (false). Default is false.
 	 * @return This path object.
 	 */
-	public function start(?nodes:Array<FlxPoint>, speed:Float = 100, mode:FlxPathType = FORWARD, autoRotate:Bool = false,
+	public function start(?nodes:Array<FlxPoint>, speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false,
 			nodesAsReference:Bool = false):FlxPath
 	{
 		if (nodes != null)
@@ -232,7 +262,7 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		// get starting node
-		if ((_mode == BACKWARD) || (_mode == LOOP_BACKWARD))
+		if ((_mode == FlxPathType.BACKWARD) || (_mode == FlxPathType.LOOP_BACKWARD))
 		{
 			nodeIndex = _nodes.length - 1;
 			_inc = -1;
@@ -415,7 +445,7 @@ class FlxPath implements IFlxDestroyable
 		var callComplete:Bool = false;
 		nodeIndex += _inc;
 
-		if (_mode == BACKWARD)
+		if (_mode == FlxPathType.BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -424,7 +454,7 @@ class FlxPath implements IFlxDestroyable
 				onEnd();
 			}
 		}
-		else if (_mode == LOOP_FORWARD)
+		else if (_mode == FlxPathType.LOOP_FORWARD)
 		{
 			if (nodeIndex >= _nodes.length)
 			{
@@ -432,7 +462,7 @@ class FlxPath implements IFlxDestroyable
 				nodeIndex = 0;
 			}
 		}
-		else if (_mode == LOOP_BACKWARD)
+		else if (_mode == FlxPathType.LOOP_BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -444,7 +474,7 @@ class FlxPath implements IFlxDestroyable
 				}
 			}
 		}
-		else if (_mode == YOYO)
+		else if (_mode == FlxPathType.YOYO)
 		{
 			if (_inc > 0)
 			{
