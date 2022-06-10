@@ -15,9 +15,62 @@ import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
 
 /**
- * This is the base class for most of the display objects (`FlxSprite`, `FlxText`, etc).
- * It includes some basic attributes about game objects, basic state information,
- * sizes, scrolling, and basic physics and motion.
+ * At their core `FlxObjects` are just boxes with positions that can move and collide with other
+ * objects. Most games utilize `FlxObject's` features through [FlxSprite](https://api.haxeflixel.com/flixel/FlxSprite.html),
+ * which extends `FlxObject` directly and adds graphical capabilities.
+ * 
+ * ## Motion
+ * Whenever `update` is called, objects with `move` set to true will update their positions based
+ * on the following properties:
+ * - `velocity`: The speed of the object in pixels per second.
+ * - `acceleration`: The rate at which `velocity` will change in pixels per second.
+ * - `drag`: When `acceleration` is 0, `velocity` will slow by this amount, in pixels per second.
+ *           When less than or equal to 0, no drag is applied.
+ * - `maxVelocity`: The maximum `velocity` (or negative `velocity`) this object can have.
+ * - `angle`: The orientation, in degrees, of this `object`. Does not affect collision, mainly
+ *            used for `FlxSprite` graphics.
+ * - `angularVelocity`: The rotational speed of thiw object in degrees per second.
+ * 
+ * ## Overlaps
+ * If you're only checking an overlap between two objects you can use `player.overlaps(door)`
+ * or `player.overlaps(spikeGroup)`. You can check if two objects or groups of object overlap
+ * with [FlxG.overlap](https://api.haxeflixel.com/flixel/FlxG.html#overlap).
+ * 
+ * Example:
+ * ```haxe
+ * if (FlxG.overlap(playerGroup, spikeGroup)) trace("overlap!");
+ * ```
+ * 
+ * You can also specify a callback to handle which specific objects collided:
+ * ```haxe
+ * FlxG.overlap(playerGroup, medKitGroup
+ *     function onOverlap(player, medKit)
+ *     {
+ *         player.health = 100;
+ *         medKit.kill();
+ *     }
+ * );
+ * ```
+ * 
+ * Additional resources:
+ * - [Snippets - Simple Overlap](https://snippets.haxeflixel.com/overlap/simple-overlap/)
+ * - [Snippets - Overlap Callbacks](https://snippets.haxeflixel.com/overlap/overlap-callbacks/)
+ * 
+ * ## Collision
+ * `FlxG.collide` is similar to `FlxG.overlap` except it resolves the overlap by separating their
+ * positions before calling the callback. Typically collide is called on an update loop like so:
+ * ```haxe
+ * FlxG.collide(playerGroup, crateGroup);
+ * ```
+ * This takes the player's and crate's momentum and previous and current position in consideration
+ * when resolving overlaps between them. Like `overlap` collide will return true if any objects
+ * were overlapping, and you can specify a callback.
+ * 
+ * Additional resources:
+ * - [Snippets - 1 to 1 Collision](https://snippets.haxeflixel.com/collision/1-to-1-collision/)
+ * - [Demos - FlxCollisions](https://haxeflixel.com/demos/FlxCollisions/)
+ * - [Demos - Collision and Grouping](https://haxeflixel.com/demos/CollisionAndGrouping/)
+ * @see [Demos - EZPlatformer](https://haxeflixel.com/demos/EZPlatformer/)
  */
 class FlxObject extends FlxBasic
 {

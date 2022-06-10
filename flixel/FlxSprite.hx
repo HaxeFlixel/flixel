@@ -35,6 +35,14 @@ using flixel.util.FlxColorTransformUtil;
  * 
  * - [Handbook - FlxSprite](https://haxeflixel.com/documentation/flxsprite/)
  * 
+ * ## Collision and Motion
+ * Flixel handles many aspects of collision nad physics motions for you. This is all defined in the
+ * base class: [FlxObject](https://api.haxeflixel.com/flixel/FlxObject.html), check there for things
+ * like: `x`, `y`, `width`, `height`, `velocity`, `acceleration`, `maxVelocity`, `drag`, `angle`,
+ * and `angularVelocity`. All of these affect the movement and orientation of the sprite as well
+ * as [FlxG.collide](https://api.haxeflixel.com/flixel/FlxG.html#collide) and
+ * [FlxG.overlap](https://api.haxeflixel.com/flixel/FlxG.html#overlap)
+ * 
  * ## Graphics
  * `FlxSprites` are just `FlxObjects` with the ability to show graphics. There are various ways to do this.
  * ### `loadGraphic()`
