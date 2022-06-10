@@ -7,9 +7,13 @@ import openfl.net.SharedObjectFlushStatus;
 
 /**
  * A class to help automate and simplify save game functionality. A simple
- * wrapper for the OpenFl's SharedObject, with a cople helpers. It's used
+ * wrapper for the OpenFl's SharedObject, with a couple helpers. It's used
  * automatically by various flixel utilities like the sound tray, as well as
  * some debugging features.
+ * 
+ * ## Resources
+ * - [Handbook - FlxSave](https://haxeflixel.com/documentation/flxsave/)
+ * - [Demo - Save](https://haxeflixel.com/demos/Save/)
  * 
  * ## Making your own
  * You can use a specific save name and path by calling the following,
