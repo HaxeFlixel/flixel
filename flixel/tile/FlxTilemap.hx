@@ -84,22 +84,26 @@ class GraphicAutoAlt extends BitmapData {}
 class GraphicAutoFull extends BitmapData {}
 #end
 
-// TODO: try to solve "tile tearing problem" (1px gap between tile at certain conditions) on native targets
-
 /**
- * This is a traditional tilemap display and collision class. It takes a string of comma-separated numbers and then associates
- * those values with tiles from the sheet you pass in. It also includes some handy static parsers that can convert
- * arrays or images into strings that can be loaded.
+ * This is a traditional tilemap display and collision class. It takes a string of comma-separated
+ * numbers and then associates those values with tiles from the sheet you pass in. It also includes
+ * some handy static parsers that can convert arrays or images into strings that can be loaded.
  */
 class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
-	// TODO: remove this hack and add docs about how to avoid tearing problem by preparing assets and some code...
+	/**
+	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
+	 * number of pixels. Ignored if <= 0
+	 */
+	public static var defaultFramePadding = 2;
 
 	/**
-	 * Try to eliminate 1 px gap between tiles in tile render mode by increasing tile scale,
-	 * so the tile will look one pixel wider than it is.
+	 * DISABLED, the static var `defaultFramePadding` fixes the tearing issue in a more performant
+	 * and visually appealing way.
 	 */
-	public var useScaleHack:Bool = true;
+	@:deprecated("useScaleHaxe is no longer needed")
+	@:noCompletion
+	public var useScaleHack:Bool = false;
 
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1).
@@ -325,28 +329,42 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_checkBufferChanges = true;
 	}
 
-	override function cacheGraphics(TileWidth:Int, TileHeight:Int, TileGraphic:FlxTilemapGraphicAsset):Void
+	override function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
 	{
-		if ((TileGraphic is FlxFramesCollection))
+		if ((tileGraphic is FlxFramesCollection))
 		{
-			frames = cast TileGraphic;
+			frames = cast tileGraphic;
 			return;
 		}
 
-		var graph:FlxGraphic = FlxG.bitmap.add(cast TileGraphic);
+		var graph:FlxGraphic = FlxG.bitmap.add(cast tileGraphic);
 		if (graph == null)
 			return;
 
 		// Figure out the size of the tiles
-		tileWidth = TileWidth;
 		if (tileWidth <= 0)
 			tileWidth = graph.height;
 
-		tileHeight = TileHeight;
 		if (tileHeight <= 0)
 			tileHeight = tileWidth;
 
-		frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+
+		if (defaultFramePadding > 0)
+			frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+		else
+			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+	}
+
+	function padTileFrames(tileWidth:Int, tileHeight:Int, graphic:FlxGraphic, padding:Int)
+	{
+		return FlxTileFrames.fromBitmapAddSpacesAndBorders(
+			graphic,
+			FlxPoint.get(tileWidth, tileHeight),
+			FlxPoint.get(0, 0),
+			FlxPoint.get(padding, padding)
+		);
 	}
 
 	override function initTileObjects():Void
