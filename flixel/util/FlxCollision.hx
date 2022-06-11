@@ -44,10 +44,12 @@ class FlxCollision
 	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
 	 * @return	Whether the sprites collide
 	 */
+	@:access(flixel.animation.FlxAnimationController._prerotated)
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var advanced = (Contact.angle != 0) || (Target.angle != 0)
+		var advanced = (Contact.angle != 0 && Contact.animation._prerotated == null) 
+			|| (Target.angle != 0  && Target.animation._prerotated == null)
 			|| Contact.scale.x != 1 || Contact.scale.y != 1
 			|| Target.scale.x != 1 || Target.scale.y != 1;
 
