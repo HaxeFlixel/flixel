@@ -362,7 +362,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return FlxTileFrames.fromBitmapAddSpacesAndBorders(
 			graphic,
 			FlxPoint.get(tileWidth, tileHeight),
-			FlxPoint.get(0, 0),
+			null,
 			FlxPoint.get(padding, padding)
 		);
 	}
