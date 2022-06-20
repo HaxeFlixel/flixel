@@ -105,47 +105,64 @@ class FlxSave implements IFlxDestroyable
 	}
 
 	/**
-	 * Binds to both the old and new save, migrates the data from old to new,
-	 * flushes the new save and then erases the old save.
+	 * Creates a new FlxSave and copies the data from old to new,
+	 * flushes the new save (if changed) and then optionally erases the old save.
 	 * 
 	 * @param   name         The name of the save.
 	 * @param   path         The full or partial path to the file that created the save.
-	 * @param   overwrite    Whether the data should ovewrite, should the 2 saves share data fields. defaults to false.
+	 * @param   overwrite    Whether the data should overwrite, should the 2 saves share data fields. defaults to false.
 	 * @param   eraseSave    Whether to erase the save after successfully migrating the data. defaults to true.
 	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
-	 * @return  Whether or not you successfully connected to the save data.
+	 * @return  Whether or not you successfully found, merged and flushed data.
 	 */
-	public function migrateDataFrom(name:String, ?path:String, overwrite = false, eraseSave = true, minFileSize = 0):Bool
+	public function mergeDataFrom(name:String, ?path:String, overwrite = false, eraseSave = true, minFileSize = 0):Bool
 	{
 		if (!checkStatus())
 			return false;
-
-		var oldSave = new FlxSave();
+		
+		final oldSave = new FlxSave();
 		// check old save location
 		if (oldSave.bind(name, path))
 		{
-			var oldData = oldSave.data;
-			var hasAnyField = false;
-			for (field in Reflect.fields(oldData))
-			{
-				hasAnyField = true;
-				// Don't overwrite any existing data in the new save
-				if (overwrite || !Reflect.hasField(data, field))
-					Reflect.setField(data, field, Reflect.field(oldData, field));
-			}
+			final success = mergeData(oldSave.data);
 
 			if (eraseSave)
 				oldSave.erase();
 			oldSave.destroy();
 
 			// save changes, if there are any
-			if (hasAnyField)
-				return flush(minFileSize);
+			return success;
 		}
 
 		oldSave.destroy();
 
 		return false;
+	}
+
+	/**
+	 * Copies the given data over to this save and flushes (if changed).
+	 * 
+	 * @param   sourceData   The data to merge
+	 * @param   overwrite    Whether the data should overwrite, should the 2 saves share data fields. defaults to false.
+	 * @param   minFileSize  If you need X amount of space for your save, specify it here.
+	 * @return  Whether or not you successfully saved the data.
+	 */
+	public function mergeData(sourceData:Dynamic, overwrite = false, minFileSize = 0)
+	{
+		var hasAnyField = false;
+		for (field in Reflect.fields(sourceData))
+		{
+			hasAnyField = true;
+			// Don't overwrite any existing data in the new save
+			if (overwrite || !Reflect.hasField(data, field))
+				Reflect.setField(data, field, Reflect.field(sourceData, field));
+		}
+
+		// save changes, if there are any
+		if (hasAnyField)
+			return flush(minFileSize);
+
+		return true;
 	}
 
 	/**
@@ -250,6 +267,21 @@ class FlxSave implements IFlxDestroyable
 	inline function get_isBound()
 	{
 		return status.match(BOUND(_, _));
+	}
+
+	/**
+	 * Scans the data for any properties.
+	 * @since 5.0.0
+	 */
+	public function isEmpty()
+	{
+		if (data != null)
+		{
+			for (fields in Reflect.fields(data))
+				return false;
+		}
+		
+		return true;
 	}
 }
 
