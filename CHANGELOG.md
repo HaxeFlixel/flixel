@@ -21,7 +21,9 @@
 - `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
 - `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, `*`, and `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxColor`: added `rgb` getter and setter ([#2555](https://github.com/HaxeFlixel/flixel/pull/2555))
-- `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty` ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+- `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty` 
+([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+([#2584](https://github.com/HaxeFlixel/flixel/pull/2584))
 
 #### Bugfixes:
 

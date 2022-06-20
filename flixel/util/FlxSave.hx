@@ -296,7 +296,7 @@ class FlxSave implements IFlxDestroyable
  * calls will save to the new path.
  * 
  * ## Paths
- * - Windows: ```"C:\Users\<username>\AppData\Roaming\<localPath>/<name>.sol"```
+ * - Windows: ```"C:\Users\<username>\AppData\Roaming\<localPath>\<name>.sol"```
  * - Mac: ```"/Users/<username>/Library/Application Support/<localPath>/<name>.sol"```
  * 
  * If localPath is null, the Project.xml's app company metadata is used. FlxG.save's default
