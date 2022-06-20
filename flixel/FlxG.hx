@@ -693,7 +693,8 @@ class FlxG
 		// Create a save based on project metadata (since 5.0.0).
 		// look for the pre 5.0 save and convert it if it exists.
 		save.bind(name, path);
-		save.migrateDataFrom("flixel");
+		if (save.isEmpty())
+			save.mergeDataFrom("flixel", null, false, false);
 	}
 
 	/**
