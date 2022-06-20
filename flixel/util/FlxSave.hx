@@ -23,6 +23,11 @@ import openfl.net.SharedObjectFlushStatus;
  * `path` is specified by your Project.xml's "file" and "company",
  * respectively. That said, nothing is stopping you from instantiating
  * your own instance.
+ * ## Default Paths
+ * - Windows: ```"C:\Users\<username>\AppData\Roaming\<localPath>/<name>.sol"```
+ * - Mac: ```"/Users/<username>/Library/Application Support/<localPath>/<name>.sol"```
+ * - Chrome: In the developer tools, go to the Application tab, and under
+ *     `Storage->Local Storage->https://<url>.com` with the key:`<localPath>:<name>"`
  */
 class FlxSave implements IFlxDestroyable
 {
@@ -53,11 +58,7 @@ class FlxSave implements IFlxDestroyable
 	 * @since 5.0.0
 	 */
 	public var isBound(get, never):Bool;
-
-	/**
-	 * The current status of the save.
-	 * @since 5.0.0
-	 */
+	
 	/**
 	 * The local shared object itself.
 	 */
