@@ -176,7 +176,7 @@ class FlxSave implements IFlxDestroyable
 
 		try
 		{
-			var result = _sharedObject.flush();
+			var result = _sharedObject.flush(minFileSize);
 
 			if (result != FLUSHED)
 				status = ERROR("FlxSave is requesting extra storage space.");
