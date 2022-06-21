@@ -380,6 +380,11 @@ private class FlxSharedObject extends SharedObject
 	{
 		return SharedObject.getLocal(name, localPath);
 	}
+	
+	public static inline function exists(name:String, ?path:String)
+	{
+		return true;
+	}
 	#else
 	static var all:Map<String, FlxSharedObject>;
 	
@@ -391,14 +396,14 @@ private class FlxSharedObject extends SharedObject
 			
 			var app = lime.app.Application.current;
 			if (app != null)
-			{
-				app.onExit.add((_) ->
-				{
-					for (sharedObject in all)
-						sharedObject.flush();
-				});
-			}
+				app.onExit.add(onExit);
 		}
+	}
+	
+	static function onExit(_)
+	{
+		for (sharedObject in all)
+			sharedObject.flush();
 	}
 	
 	/**
@@ -470,7 +475,7 @@ private class FlxSharedObject extends SharedObject
 	#if (js && html5)
 	static function getData(name:String, ?localPath:String)
 	{
-		var storage = js.Browser.getLocalStorage();
+		final storage = js.Browser.getLocalStorage();
 		if (storage == null)
 			return null;
 		
@@ -496,6 +501,24 @@ private class FlxSharedObject extends SharedObject
 		
 		// check pre-4.6.0 default local path
 		return get(js.Browser.window.location.href);
+	}
+	
+	public static function exists(name:String, ?localPath:String)
+	{
+		final storage = js.Browser.getLocalStorage();
+		
+		if (storage == null)
+			return false;
+		
+		inline function has(path:String)
+		{
+			return storage.getItem(path + ":" + name) != null;
+		}
+		
+		return has(localPath)
+			|| has(getDefaultLocalPath())
+			|| has(js.Browser.window.location.pathname)
+			|| has(js.Browser.window.location.href);
 	}
 	
 	// should include every sys target
@@ -554,9 +577,18 @@ private class FlxSharedObject extends SharedObject
 	}
 	
 	/**
+	 * Whether the save exists, checks both the old and new path.
+	 */
+	public static inline function exists(name:String, ?localPath:String)
+	{
+		return newExists(localPath, name)
+			|| legacyExists(localPath, name);
+	}
+	
+	/**
 	 * Whether the save exists, checks the NEW location
 	 */
-	static inline function exists(name:String, ?localPath:String)
+	static inline function newExists(name:String, ?localPath:String)
 	{
 		return sys.FileSystem.exists(getPath(localPath, name));
 	}
