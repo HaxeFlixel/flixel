@@ -43,6 +43,9 @@ class FlxSoundTray extends Sprite
 
 	var _defaultScale:Float = 2.0;
 
+	/**The sound used when changing the volume. If you want separate UP and DOWN sounds, add `-up` and `-down` to your filenames, but not here.**/
+	public var volumeSound:String = "flixel/sounds/beep";
+
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
@@ -132,13 +135,19 @@ class FlxSoundTray extends Sprite
 	 *
 	 * @param	Silent	Whether or not it should beep.
 	 */
-	public function show(Silent:Bool = false):Void
+	public function show(Silent:Bool = false, ?pos:Null<Bool>):Void
 	{
 		if (!Silent)
 		{
-			var sound = FlxAssets.getSound("flixel/sounds/beep");
+			var sound = FlxAssets.getSound(volumeSound + ((pos == true) ? '-up' : '-down'));
 			if (sound != null)
 				FlxG.sound.load(sound).play();
+			else
+			{
+				sound = FlxAssets.getSound(volumeSound);
+				if (sound != null)
+					FlxG.sound.load(sound).play();
+			}
 		}
 
 		_timer = 1;
