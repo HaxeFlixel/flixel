@@ -348,13 +348,7 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public function isEmpty()
 	{
-		if (data != null)
-		{
-			for (fields in Reflect.fields(data))
-				return false;
-		}
-		
-		return true;
+		return data == null || Reflect.fields(data).length == 0;
 	}
 }
 
