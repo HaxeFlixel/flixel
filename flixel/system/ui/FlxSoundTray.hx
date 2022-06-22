@@ -46,7 +46,7 @@ class FlxSoundTray extends Sprite
 	/**The sound used when increasing the volume.**/
 	public var volumeUpSound:String = "flixel/sounds/beep";
 
-	/**The sound used when decreaing the volume.**/
+	/**The sound used when decreasing the volume.**/
 	public var volumeDownSound:String = 'flixel/sounds/beep';
 
 	/**Whether or not changing the volume should make noise.**/
