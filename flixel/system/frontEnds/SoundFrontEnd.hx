@@ -336,7 +336,7 @@ class SoundFrontEnd
 	{
 		muted = false;
 		volume += Amount;
-		showSoundTray((Amount > 0));
+		showSoundTray(Amount > 0);
 	}
 
 	/**
