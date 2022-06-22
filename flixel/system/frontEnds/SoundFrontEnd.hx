@@ -326,7 +326,7 @@ class SoundFrontEnd
 			volumeHandler(muted ? 0 : volume);
 		}
 
-		showSoundTray();
+		showSoundTray(true);
 	}
 
 	/**
@@ -341,13 +341,14 @@ class SoundFrontEnd
 
 	/**
 	 * Shows the sound tray if it is enabled.
+	 * @param up Whether or not the volume is increasing.
 	 */
-	public function showSoundTray(?pos:Null<Bool>):Void
+	public function showSoundTray(up:Bool = false):Void
 	{
 		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
-			FlxG.game.soundTray.show(false, pos);
+			FlxG.game.soundTray.show(up);
 		}
 		#end
 	}
