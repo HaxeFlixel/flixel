@@ -332,6 +332,12 @@ class FlxSprite extends FlxObject
 	 */
 	@:noCompletion
 	var _halfSize:FlxPoint;
+	
+	/**
+	 *  Helper variable
+	 */
+	@:noCompletion
+	var _scaledOrigin:FlxPoint;
 
 	/**
 	 * These vars are being used for rendering in some of `FlxSprite` subclasses (`FlxTileblock`, `FlxBar`,
@@ -386,6 +392,7 @@ class FlxSprite extends FlxObject
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
+		_scaledOrigin = new FlxPoint();
 	}
 
 	/**
@@ -408,6 +415,7 @@ class FlxSprite extends FlxObject
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
+		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -1167,13 +1175,13 @@ class FlxSprite extends FlxObject
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
 			newRect.floor();
-		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
-		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - scaledOrigin.x;
-		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - scaledOrigin.y;
+		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
+		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - _scaledOrigin.x;
+		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - _scaledOrigin.y;
 		if (isPixelPerfectRender(camera))
 			newRect.floor();
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
-		return newRect.getRotatedBounds(angle, scaledOrigin, newRect);
+		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
 	
 	/**
