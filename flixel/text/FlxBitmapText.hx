@@ -756,6 +756,11 @@ class FlxBitmapText extends FlxSprite
 					subLine = subLine.addChar(charCode);
 					subLineWidth += charWidth;
 				}
+				
+				if (subLineWidth > 0)
+				{
+					newLines.push(subLine.toString());
+				}
 
 				c++;
 			}
