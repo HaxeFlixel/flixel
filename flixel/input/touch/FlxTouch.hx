@@ -26,7 +26,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	/**
 	 * A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
 	 */
-	public var pressure(get, null):Float;
+	public var pressure(default, null):Float;
 
 	public var justReleased(get, never):Bool;
 	public var released(get, never):Bool;
@@ -104,20 +104,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		flashPoint = FlxG.game.globalToLocal(flashPoint);
 
 		setGlobalScreenPositionUnsafe(flashPoint.x, flashPoint.y);
-	}
-
-	/**
-	 * Workaround for browsers treating non-pen touches as 0 pressure.
-	 * 
-	 * If the touch starts off with pressure > 0, it's very likely to be a pen input,
-	 * but it's easier to deal with pressure for regular touches if it's assumed to be 1.0
-	 * as OpenFL claims it should be (possibly a bug?).
-	 *
-	 * If it's a pen, supply regular pressure value.
-	 */
-	inline function get_pressure():Float
-	{
-		return pressure;
 	}
 
 	inline function get_touchPointID():Int
