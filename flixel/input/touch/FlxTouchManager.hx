@@ -178,7 +178,7 @@ class FlxTouchManager implements IFlxInputManager
 		if (touch != null)
 		{
 			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY));
-			touch.setPressure(FlashEvent.pressure);
+			touch.pressure = FlashEvent.pressure;
 		}
 		else
 		{
@@ -210,7 +210,7 @@ class FlxTouchManager implements IFlxInputManager
 		if (touch != null)
 		{
 			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY));
-			touch.setPressure(FlashEvent.pressure);
+			touch.pressure = FlashEvent.pressure;
 		}
 	}
 

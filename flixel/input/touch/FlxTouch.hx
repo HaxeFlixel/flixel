@@ -26,12 +26,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	/**
 	 * A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
 	 */
-	public var pressure(get, never):Float;
-
-	/**
-	 * Returns `true` if the touch event is caused by a stylus/pen device, rather than a finger touch.
-	 */
-	public var isPen(get, never):Bool;
+	public var pressure(get, null):Float;
 
 	public var justReleased(get, never):Bool;
 	public var released(get, never):Bool;
@@ -40,8 +35,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 
 	var input:FlxInput<Int>;
 	var flashPoint = new Point();
-	var _pressure:Float;
-	var _isPen:Bool;
 
 	public var justPressedPosition(default, null) = FlxPoint.get();
 	public var justPressedTimeInTicks(default, null):Int = -1;
@@ -50,7 +43,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	{
 		input = null;
 		justPressedPosition = FlxDestroyUtil.put(justPressedPosition);
-		_pressure = null;
 		flashPoint = null;
 	}
 
@@ -62,11 +54,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		setXY(x, y);
 		input.ID = pointID;
 		input.reset();
-		setPressure(pressure);
-		if (pressure > 0)
-			setIsPen(true);
-		else
-			setIsPen(false);
+		this.pressure = pressure;
 	}
 
 	/**
@@ -75,17 +63,13 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 * @param	PointID		touchPointID of the touch
 	 * @param	pressure	A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
 	 */
-	function new(x:Int = 0, y:Int = 0, pointID:Int = 0, pressure:Float = 1.0)
+	function new(x:Int = 0, y:Int = 0, pointID:Int = 0, pressure:Float = 0)
 	{
 		super();
 
 		input = new FlxInput(pointID);
 		setXY(x, y);
-		setPressure(pressure);
-		if (pressure > 0)
-			setIsPen(true);
-		else
-			setIsPen(false);
+		this.pressure = pressure;
 	}
 
 	/**
@@ -122,11 +106,6 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 		setGlobalScreenPositionUnsafe(flashPoint.x, flashPoint.y);
 	}
 
-	function setPressure(pressure:Float)
-	{
-		_pressure = pressure;
-	}
-
 	/**
 	 * Workaround for browsers treating non-pen touches as 0 pressure.
 	 * 
@@ -138,20 +117,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 */
 	inline function get_pressure():Float
 	{
-		if (isPen && _pressure > 0)
-			return _pressure;
-		else
-			return 1;
-	}
-
-	function setIsPen(pen:Bool)
-	{
-		_isPen = pen;
-	}
-
-	inline function get_isPen():Bool
-	{
-		return _isPen;
+		return pressure;
 	}
 
 	inline function get_touchPointID():Int
