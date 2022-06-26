@@ -37,6 +37,7 @@
 - `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPoint/FlxVector`: moved all `FlxVector` fields and methods into `FlxPoint` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxSave`: changed the default save name and path to unique values based on Project.xml metadata ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+- `FlxTilemap`: Replaced `useScaleHack` with static `defaultFramePadding` to fix tile tearing ([#2581]https://github.com/HaxeFlixel/flixel/issues/2581)
 - `FlxSprite`: improved `pixelsOverlapPoint` with scaled or angled sprites ([#2576](https://github.com/HaxeFlixel/flixel/pull/2576))
 	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
 

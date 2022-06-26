@@ -25,22 +25,112 @@ import flixel.util.FlxDirectionFlags;
 
 using flixel.util.FlxColorTransformUtil;
 
-// TODO: add updateSizeFromFrame bool which will tell sprite whether to update it's size to frame's size (when frame setter is called) or not (useful for sprites with adjusted hitbox)
-// And don't forget about sprites with clipped frames: what i should do with their size in this case?
-// TODO: add option to "center origin" or create special subclass for it
-
 /**
- * The main "game object" class, the sprite is a `FlxObject`
- * with a bunch of graphics options and abilities, like animation and stamping.
- *
- * Load an image onto a sprite using the `loadGraphic*()` functions,
- * or create a base monochromatic rectangle using `makeGraphic()`.
- * The image `BitmapData` is stored in the `pixels` field.
+ * The core building blocks of all Flixel games. With helpful tools for animation, movement and
+ * features for the needs of most games.
+ * 
+ * It is pretty common place to extend `FlxSprite` for your own game's needs; for example a `SpaceShip`
+ * class may extend `FlxSprite` but could have additional variables for the game like `shieldStrength`
+ * or `shieldPower`.
+ * 
+ * - [Handbook - FlxSprite](https://haxeflixel.com/documentation/flxsprite/)
+ * 
+ * ## Collision and Motion
+ * Flixel handles many aspects of collision nad physics motions for you. This is all defined in the
+ * base class: [FlxObject](https://api.haxeflixel.com/flixel/FlxObject.html), check there for things
+ * like: `x`, `y`, `width`, `height`, `velocity`, `acceleration`, `maxVelocity`, `drag`, `angle`,
+ * and `angularVelocity`. All of these affect the movement and orientation of the sprite as well
+ * as [FlxG.collide](https://api.haxeflixel.com/flixel/FlxG.html#collide) and
+ * [FlxG.overlap](https://api.haxeflixel.com/flixel/FlxG.html#overlap)
+ * 
+ * ## Graphics
+ * `FlxSprites` are just `FlxObjects` with the ability to show graphics. There are various ways to do this.
+ * ### `loadGraphic()`
+ * [Snippets - Loading Sprites](https://snippets.haxeflixel.com/sprites/loading-sprites/)
+ * The easiest way to use a single image for your FlxSprite. Using the OpenFL asset system defined
+ * in the project xml file you simply have to define a path to your image and the compiler will do
+ * the rest.
+ * ```haxe
+ * var player = new FlxSprite();
+ * player.loadGraphic("assets/player.png");
+ * add(player);
+ * ```
+ * 
+ * ####Animations
+ * [Snippets - Animations](https://snippets.haxeflixel.com/sprites/animation/)
+ * When loading a graphic for a `FlxSprite`, you can specify is as an animated graphic. Then, using
+ * animation, you can setup animations and play them.
+ * ```haxe
+ *  // sprite's graphic will be loaded from 'path/to/image.png' and is set to allow animations.
+ * sprite.loadGraphic('path/to/image/png', true);
+ * 
+ * // add an animation named 'run' to sprite, using the specified frames
+ * sprite.animation.add('run', [0, 1, 2, 1]);
+ * 
+ * // play the 'run' animation
+ * sprite.animation.play('run');
+ * ```
+ * 
+ * ### `makeGraphic()`
+ * [Snippets - Loading Sprites](https://snippets.haxeflixel.com/sprites/making-sprites/)
+ * This method is a handy way to make a simple color fill to quickly test a feature or have the basic shape.
+ * ```haxe
+ * var whiteSquare = new FlxSprite();
+ * whiteSquare.makeGraphic(200, 200, FlxColor.WHITE);
+ * add(whiteSquare);
+ * ```
+ * ## Properties
+ * ### Position: x, y
+ * ```haxe
+ * whiteSquare.x = 100;
+ * whiteSquare.y = 300;
+ * ```
+ * 
+ * ### Size: width, height
+ * Automatically set in loadGraphic() or makeGraphic(), changing this will only affect the hitbox
+ * of this sprite, use scale to change the graphic's size.
+ * ```haxe
+ * // get
+ * var getWidth = whiteSquare.width;
+ * 
+ * // set
+ * whiteSquare.width = 100;
+ * whiteSquare.height = 100;
+ * ```
+ * 
+ * ### Scale
+ * [Snippets - Scale](https://snippets.haxeflixel.com/sprites/scale/)
+ * (FlxPoint) Change the size of your sprite's graphic. NOTE: The hitbox is not automatically
+ * adjusted, use updateHitbox() for that (or setGraphicSize()).
+ * ```haxe
+ * // twice as big
+ * whiteSquare.scale.set(2, 2);
+ * 
+ * // 50%
+ * whiteSquare.scale.set(0.5, 0.5);
+ * ```
+ * 
+ * ### Offset
+ * (FlxPoint) Controls the position of the sprite's hitbox. Likely needs to be adjusted after changing a sprite's width, height or scale.
+ * ```haxe
+ * whiteSquare.offset.set(50, 50);
+ * ```
+ * 
+ * ### Origin
+ * (FlxPoint) Rotation axis. Default: center.
+ * 
+ * WARNING: If you change this, the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
+ * ```haxe
+ * // rotate from top-left corner instead of center
+ * whiteSquare.origin.set(0, 0);
+ * ```
+ * 
  */
 class FlxSprite extends FlxObject
 {
 	/**
 	 * Class that handles adding and playing animations on this sprite.
+	 * @see https://snippets.haxeflixel.com/sprites/animation/
 	 */
 	public var animation:FlxAnimationController;
 
@@ -106,17 +196,20 @@ class FlxSprite extends FlxObject
 	/**
 	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: `90` means there
 	 * are 4 baked rotations in the spritesheet. `0` if this sprite does not have any baked rotations.
+	 * @see https://snippets.haxeflixel.com/sprites/baked-rotations/
 	 */
 	public var bakedRotationAngle(default, null):Float = 0;
 
 	/**
 	 * Set alpha to a number between `0` and `1` to change the opacity of the sprite.
+	 @see https://snippets.haxeflixel.com/sprites/alpha/
 	 */
 	public var alpha(default, set):Float = 1.0;
 
 	/**
 	 * Can be set to `LEFT`, `RIGHT`, `UP`, and `DOWN` to take advantage
 	 * of flipped sprites and/or just track player orientation more easily.
+	 * @see https://snippets.haxeflixel.com/sprites/facing/
 	 */
 	public var facing(default, set):FlxDirectionFlags = RIGHT;
 
@@ -146,6 +239,7 @@ class FlxSprite extends FlxObject
 	 * Change the size of your sprite's graphic.
 	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that (or `setGraphicSize()`).
 	 * WARNING: With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
+	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
 	public var scale(default, null):FlxPoint;
 
@@ -157,6 +251,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
 	 * `0xAARRGGBB` colors, but the alpha value will simply be ignored. To change the opacity use `alpha`.
+	 * @see https://snippets.haxeflixel.com/sprites/color/
 	 */
 	public var color(default, set):FlxColor = 0xffffff;
 
@@ -237,6 +332,12 @@ class FlxSprite extends FlxObject
 	 */
 	@:noCompletion
 	var _halfSize:FlxPoint;
+	
+	/**
+	 *  Helper variable
+	 */
+	@:noCompletion
+	var _scaledOrigin:FlxPoint;
 
 	/**
 	 * These vars are being used for rendering in some of `FlxSprite` subclasses (`FlxTileblock`, `FlxBar`,
@@ -291,6 +392,7 @@ class FlxSprite extends FlxObject
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
+		_scaledOrigin = new FlxPoint();
 	}
 
 	/**
@@ -313,6 +415,7 @@ class FlxSprite extends FlxObject
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
+		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -1111,13 +1214,13 @@ class FlxSprite extends FlxObject
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
 			newRect.floor();
-		var scaledOrigin = FlxPoint.weak(origin.x * scale.x, origin.y * scale.y);
-		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - scaledOrigin.x;
-		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - scaledOrigin.y;
+		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
+		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - _scaledOrigin.x;
+		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - _scaledOrigin.y;
 		if (isPixelPerfectRender(camera))
 			newRect.floor();
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
-		return newRect.getRotatedBounds(angle, scaledOrigin, newRect);
+		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
 	
 	/**
