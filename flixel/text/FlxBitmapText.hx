@@ -704,25 +704,24 @@ class FlxBitmapText extends FlxSprite
 	{
 		for (i in 0..._lines.length)
 		{
-			var subLineWidth = font.minOffsetX;
+			var lineWidth = font.minOffsetX;
 
 			for (c in 0..._lines[i].uLength())
 			{
-				var charCode = _lines[i].uCharCodeAt(c);
-
-				switch (charCode)
+				switch (_lines[i].uCharCodeAt(c))
 				{
 					case FlxBitmapFont.SPACE_CODE:
-						subLineWidth += font.spaceWidth;
+						lineWidth += font.spaceWidth;
 					case FlxBitmapFont.TAB_CODE:
-						subLineWidth += font.spaceWidth * numSpacesInTab;
-					default:
-						subLineWidth += font.getCharAdvance(charCode);
+						lineWidth += font.spaceWidth * numSpacesInTab;
+					case charCode:
+						lineWidth += font.getCharAdvance(charCode);
 				}
 
-				subLineWidth += letterSpacing;
-				if (subLineWidth > _fieldWidth - 2 * padding)
+				lineWidth += letterSpacing;
+				if (lineWidth > _fieldWidth - 2 * padding)
 				{
+					// cut every character after this
 					_lines[i] = _lines[i].uSub(0, c);
 					break;
 				}
