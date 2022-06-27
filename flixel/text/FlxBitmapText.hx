@@ -702,66 +702,32 @@ class FlxBitmapText extends FlxSprite
 	 */
 	function cutLines():Void
 	{
-		var newLines:Array<String> = [];
-
-		var lineLength:Int; // lenght of the current line
-
-		var c:Int; // char index
-		var charCode:Int; // code for the current character in word
-		var charWidth:Float; // the width of current character
-
-		var subLine = new UnicodeBuffer(); // current subline to assemble
-		var subLineWidth:Float; // the width of current subline
-
-		var spaceWidth:Int = font.spaceWidth;
-		var tabWidth:Int = spaceWidth * numSpacesInTab;
-
-		var startX:Int = font.minOffsetX;
-
-		for (line in _lines)
+		for (i in 0..._lines.length)
 		{
-			lineLength = line.uLength();
-			subLine = new UnicodeBuffer();
-			subLineWidth = startX;
+			var subLineWidth = font.minOffsetX;
 
-			c = 0;
-			while (c < lineLength)
+			for (c in 0..._lines[i].uLength())
 			{
-				charCode = line.uCharCodeAt(c);
+				var charCode = _lines[i].uCharCodeAt(c);
 
-				if (charCode == FlxBitmapFont.SPACE_CODE)
+				switch (charCode)
 				{
-					charWidth = spaceWidth;
-				}
-				else if (charCode == FlxBitmapFont.TAB_CODE)
-				{
-					charWidth = tabWidth;
-				}
-				else
-				{
-					charWidth = font.getCharAdvance(charCode);
-				}
-				charWidth += letterSpacing;
-
-				if (subLineWidth + charWidth > _fieldWidth - 2 * padding)
-				{
-					subLine = subLine.addChar(charCode);
-					newLines.push(subLine.toString());
-					subLine = new UnicodeBuffer();
-					subLineWidth = startX;
-					c = lineLength;
-				}
-				else
-				{
-					subLine = subLine.addChar(charCode);
-					subLineWidth += charWidth;
+					case FlxBitmapFont.SPACE_CODE:
+						subLineWidth += font.spaceWidth;
+					case FlxBitmapFont.TAB_CODE:
+						subLineWidth += font.spaceWidth * numSpacesInTab;
+					default:
+						subLineWidth += font.getCharAdvance(charCode);
 				}
 
-				c++;
+				subLineWidth += letterSpacing;
+				if (subLineWidth > _fieldWidth - 2 * padding)
+				{
+					_lines[i] = _lines[i].uSub(0, c);
+					break;
+				}
 			}
 		}
-
-		_lines = newLines;
 	}
 
 	/**
