@@ -40,6 +40,7 @@
 - `FlxTilemap`: Replaced `useScaleHack` with static `defaultFramePadding` to fix tile tearing ([#2581]https://github.com/HaxeFlixel/flixel/issues/2581)
 - `FlxSprite`: improved `pixelsOverlapPoint` with scaled or angled sprites ([#2576](https://github.com/HaxeFlixel/flixel/pull/2576))
 	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
+- `FlxGame`: removed misleading `zoom` arg from constructor ([#2591](https://github.com/HaxeFlixel/flixel/pull/2591))
 
 4.11.0 (January 26, 2022)
 ------------------------------
