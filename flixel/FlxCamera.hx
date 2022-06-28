@@ -45,10 +45,9 @@ private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQua
 class FlxCamera extends FlxBasic
 {
 	/**
-	 * While you can alter the zoom of each camera after the fact,
-	 * this variable determines what value the camera will start at when created.
+	 * Any `FlxCamera` with a zoom of 0 (the default value) will have this zoom value.
 	 */
-	public static var defaultZoom:Float;
+	public static var defaultZoom:Float = 1.0;
 
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
@@ -1068,9 +1067,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		// Adjust bounds to account for zoom
-		var zoom = this.zoom / FlxG.initialZoom;
-
 		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
 		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
 		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);

@@ -243,48 +243,53 @@ class FlxGame extends Sprite
 	/**
 	 * Instantiate a new game object.
 	 *
-	 * @param GameWidth       The width of your game in game pixels, not necessarily final display pixels (see `Zoom`).
-	 *                        If equal to `0`, the window width specified in the `Project.xml` is used.
-	 * @param GameHeight      The height of your game in game pixels, not necessarily final display pixels (see `Zoom`).
-	 *                        If equal to `0`, the window height specified in the `Project.xml` is used.
-	 * @param InitialState    The class name of the state you want to create and switch to first (e.g. `MenuState`).
-	 * @param Zoom            The default level of zoom for the game's cameras (e.g. `2` = all pixels are now drawn at 2x).
-	 * @param UpdateFramerate How frequently the game should update (default is `60` times per second).
-	 * @param DrawFramerate   Sets the actual display / draw framerate for the game (default is `60` times per second).
-	 * @param SkipSplash      Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
-	 * @param StartFullscreen Whether to start the game in fullscreen mode (desktop targets only).
+	 * @param gameWidth        The width of your game in pixels. If `0`, the `Project.xml` width is used.
+	 *                         If the demensions don't match the `Project.xml`, 
+	 *                         [`scaleMode`](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
+	 *                         will determine the actual display size of the game.
+	 * @param gameHeight       The height of your game in pixels. If `0`, the `Project.xml` height is used.
+	 *                         If the demensions don't match the `Project.xml`, 
+	 *                         [`scaleMode`](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
+	 *                         will determine the actual display size of the game.
+	 * @param initialState     The class name of the state you want to create and switch to first (e.g. `MenuState`).
+	 * @param updateFramerate  How frequently the game should update. Default is 60 fps.
+	 * @param drawFramerate    Sets the actual display / draw framerate for the game. Default is 60 fps.
+	 * @param skipSplash       Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
+	 * @param startFullscreen  Whether to start the game in fullscreen mode (desktop targets only).
+	 *
+	 * @see [scale modes](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
 	 */
-	public function new(GameWidth:Int = 0, GameHeight:Int = 0, ?InitialState:Class<FlxState>, Zoom:Float = 1, UpdateFramerate:Int = 60,
-			DrawFramerate:Int = 60, SkipSplash:Bool = false, StartFullscreen:Bool = false)
+	public function new(gameWidth = 0, gameHeight = 0, ?initialState:Class<FlxState>, updateFramerate = 60, drawFramerate = 60, skipSplash = false,
+			startFullscreen = false)
 	{
 		super();
 
 		#if desktop
-		_startFullscreen = StartFullscreen;
+		_startFullscreen = startFullscreen;
 		#end
 
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
 
-		if (GameWidth == 0)
-			GameWidth = FlxG.stage.stageWidth;
-		if (GameHeight == 0)
-			GameHeight = FlxG.stage.stageHeight;
+		if (gameWidth == 0)
+			gameWidth = FlxG.stage.stageWidth;
+		if (gameHeight == 0)
+			gameHeight = FlxG.stage.stageHeight;
 
 		// Basic display and update setup stuff
-		FlxG.init(this, GameWidth, GameHeight, Zoom);
+		FlxG.init(this, gameWidth, gameHeight);
 
-		FlxG.updateFramerate = UpdateFramerate;
-		FlxG.drawFramerate = DrawFramerate;
+		FlxG.updateFramerate = updateFramerate;
+		FlxG.drawFramerate = drawFramerate;
 		_accumulator = _stepMS;
-		_skipSplash = SkipSplash;
+		_skipSplash = skipSplash;
 
 		#if FLX_RECORD
 		_replay = new FlxReplay();
 		#end
 
 		// Then get ready to create the game object for real
-		_initialState = (InitialState == null) ? FlxState : InitialState;
+		_initialState = (initialState == null) ? FlxState : initialState;
 
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
