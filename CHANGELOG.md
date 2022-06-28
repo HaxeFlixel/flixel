@@ -27,6 +27,7 @@
 
 - `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
 - `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
+- `FlxBitmapText`: Fixed issue on non-multiline text with wordWrap disabled ([#2590](https://github.com/HaxeFlixel/flixel/pull/2590))
 
 #### Changes and improvements:
 
