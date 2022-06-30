@@ -668,30 +668,12 @@ class FlxG
 		if (save.isBound)
 			return;
 
-		// Use Project.xml data to determine save id
-		var meta = stage.application.meta;
-		var name = meta["file"];
-		var path:String = null;
-
-		// replace invalid characters with hyphens
-		var invalidChars = ~/[ ~%&\\;:"',<>?#]/;
-		name = invalidChars.split(name).join("-");
-
-		#if !flash
-		// On most browsers using the full URL path often causes a new save path to be created
-		// every time a new version of the game is updated. Especially on portals like Newgrounds.
-		// just set the path to your company name, to ensure a unique storage id.
-		path = meta["company"];
-		if (path == null || path == "")
-			path = "HaxeFlixel";
-		else
-			path = invalidChars.split(path).join("-");
-		#end
-
-		// Create a save based on project metadata (since 5.0.0).
+		// Use Project.xml data to determine save id (since 5.0.0).
+		final name = stage.application.meta["file"];
+		save.bind(FlxSave.validate(name));
 		// look for the pre 5.0 save and convert it if it exists.
-		save.bind(name, path);
-		save.migrateDataFrom("flixel");
+		if (save.isEmpty())
+			save.mergeDataFrom("flixel", null, false, false);
 	}
 
 	/**
