@@ -5,6 +5,7 @@ import flash.Lib;
 import flash.events.TouchEvent;
 import flash.ui.Multitouch;
 import flash.ui.MultitouchInputMode;
+import flixel.system.replay.TouchRecord;
 
 /**
  * @author Zaphod
@@ -20,6 +21,11 @@ class FlxTouchManager implements IFlxInputManager
 	 * All active touches including just created, moving and just released.
 	 */
 	public var list:Array<FlxTouch>;
+	
+	/**
+	 * Helper for recording, a list of ids the touches that were active in the previously recorded frame.
+	 */
+	var _lastList:Array<Int>;
 
 	/**
 	 * Storage for inactive touches (some sort of cache for them).
@@ -65,6 +71,7 @@ class FlxTouchManager implements IFlxInputManager
 			touch.destroy();
 		}
 		list = null;
+		_lastList = null;
 
 		for (touch in _inactiveTouches)
 		{
@@ -159,6 +166,7 @@ class FlxTouchManager implements IFlxInputManager
 	function new()
 	{
 		list = new Array<FlxTouch>();
+		_lastList = new Array<Int>();
 		_inactiveTouches = new Array<FlxTouch>();
 		_touchesCache = new Map<Int, FlxTouch>();
 		maxTouchPoints = Multitouch.maxTouchPoints;
@@ -177,8 +185,7 @@ class FlxTouchManager implements IFlxInputManager
 		var touch:FlxTouch = _touchesCache.get(FlashEvent.touchPointID);
 		if (touch != null)
 		{
-			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY));
-			touch.pressure = FlashEvent.pressure;
+			touch.setData(FlashEvent.stageX, FlashEvent.stageY, FlashEvent.pressure);
 		}
 		else
 		{
@@ -209,8 +216,7 @@ class FlxTouchManager implements IFlxInputManager
 
 		if (touch != null)
 		{
-			touch.setXY(Std.int(FlashEvent.stageX), Std.int(FlashEvent.stageY));
-			touch.pressure = FlashEvent.pressure;
+			touch.setData(FlashEvent.stageX, FlashEvent.stageY, FlashEvent.pressure);
 		}
 	}
 
@@ -230,20 +236,20 @@ class FlxTouchManager implements IFlxInputManager
 	/**
 	 * Internal function for touch reuse
 	 *
-	 * @param	X			stageX touch coordinate
-	 * @param	Y			stageY touch coordinate
-	 * @param	PointID		id of the touch
+	 * @param	x			stageX touch coordinate
+	 * @param	y			stageY touch coordinate
+	 * @param	pointID		id of the touch
 	 * @return	A recycled touch object
 	 */
-	function recycle(X:Int, Y:Int, PointID:Int, pressure:Float):FlxTouch
+	function recycle(x:Int, y:Int, pointID:Int, pressure:Float):FlxTouch
 	{
 		if (_inactiveTouches.length > 0)
 		{
-			var touch:FlxTouch = _inactiveTouches.pop();
-			touch.recycle(X, Y, PointID, pressure);
+			var touch = _inactiveTouches.pop();
+			touch.recycle(x, y, pointID, pressure);
 			return add(touch);
 		}
-		return add(new FlxTouch(X, Y, PointID, pressure));
+		return add(new FlxTouch(x, y, pointID, pressure));
 	}
 
 	/**
@@ -281,6 +287,84 @@ class FlxTouchManager implements IFlxInputManager
 	function onFocusLost():Void
 	{
 		reset();
+	}
+	
+	@:allow(flixel.system.replay.FlxReplay)
+	function record():Null<Array<TouchRecord>>
+	{
+		var records:Null<Array<TouchRecord>> = null;
+		
+		var i:Int = _lastList.length;
+		while (--i >= 0)
+		{
+			if (getByID(_lastList[i]) == null)
+			{
+				if (records == null)
+				{
+					records = [];
+				}
+				// Record the removal from the list
+				records.push(new TouchRecord(_lastList[i], false));
+				_lastList.splice(i, 1);
+			}
+		}
+		
+		i = list.length;
+		while (--i >= 0)
+		{
+			var touch = list[i];
+			var record = touch.record();
+			if (record != null)
+			{
+				if (records == null)
+				{
+					records = [];
+				}
+				
+				records.push(record);
+			}
+			
+			// Save last recorded
+			if (_lastList.indexOf(touch.touchPointID) == -1)
+			{
+				_lastList.push(touch.touchPointID);
+			}
+		}
+		
+		return records;
+	}
+	
+	@:allow(flixel.system.replay.FlxReplay)
+	function playback(records:Array<TouchRecord>):Void
+	{
+		var i:Int = records.length;
+		
+		while (--i >= 0)
+		{
+			var record = records[i];
+			if (!record.active)
+			{
+				// remove inactive touch
+				if (_touchesCache.exists(record.id))
+				{
+					var touch = getByID(record.id);
+					// Copied from update
+					touch.input.reset();
+					_touchesCache.remove(touch.touchPointID);
+					list.splice(i, 1);
+					_inactiveTouches.push(touch);
+				}
+			}
+			else
+			{
+				if (!_touchesCache.exists(record.id))
+				{
+					recycle(0, 0, record.id, record.pressure);
+				}
+				
+				getByID(record.id).playback(record);
+			}
+		}
 	}
 }
 #end

@@ -11,8 +11,9 @@ import flash.Lib;
 import flash.ui.Mouse;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
-import flixel.input.FlxInput.FlxInputState;
-import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.FlxInput;
+import flixel.input.FlxAnalogInput;
+import flixel.input.mouse.FlxMouseButton;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
@@ -44,7 +45,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up,
 	 * it will have a positive value and vice versa. Otherwise the value will be 0.
 	 */
-	public var wheel(default, null):Int = 0;
+	public var wheel(get, null):Int;
 
 	/**
 	 * A display container for the mouse cursor. It is a child of FlxGame and
@@ -62,12 +63,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 */
 	public var useSystemCursor(default, set):Bool = false;
-
-	/**
-	 * Check to see if the mouse has just been moved.
-	 * @since 4.4.0
-	 */
-	public var justMoved(get, never):Bool;
 
 	/**
 	 * Check to see if the left mouse button is currently pressed.
@@ -171,31 +166,16 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	@:allow(flixel.input.mouse.FlxMouseButton)
 	var _rightButton:FlxMouseButton;
 	#end
-
+	
+	var _wheelInput = new FlxAnalogInput(0, true);
+	
 	/**
 	 * This is just a reference to the current cursor image, if there is one.
 	 */
 	var _cursor:Bitmap = null;
 
 	var _cursorBitmapData:BitmapData;
-	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
-
-	/**
-	 * Helper variables for recording purposes.
-	 */
-	var _lastX:Int = 0;
-
-	var _lastY:Int = 0;
-	var _lastWheel:Int = 0;
-	var _lastLeftButtonState:FlxInputState;
-
-	/**
-	 * Helper variables to see if the mouse has moved since the last update.
-	 */
-	var _prevX:Int = 0;
-
-	var _prevY:Int = 0;
 
 	// Helper variable for cleaning up memory
 	var _stage:Stage;
@@ -466,10 +446,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Called by the internal game loop to update the mouse pointer's position in the game world.
 	 * Also updates the just pressed/just released flags.
 	 */
-	function update():Void
+	override function update()
 	{
-		_prevX = x;
-		_prevY = y;
+		super.update();
 
 		#if !FLX_UNIT_TEST // Travis segfaults when game.mouseX / Y is accessed
 		setGlobalScreenPositionUnsafe(FlxG.game.mouseX, FlxG.game.mouseY);
@@ -488,13 +467,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_middleButton.update();
 		_rightButton.update();
 		#end
-
-		// Update the wheel
-		if (!_wheelUsed)
-		{
-			wheel = 0;
-		}
-		_wheelUsed = false;
+		
+		if (!_wheelInput.changed)
+			_wheelInput.change(0);
+		
+		_wheelInput.update();
 	}
 
 	/**
@@ -541,10 +518,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	function onMouseWheel(flashEvent:MouseEvent):Void
 	{
 		if (enabled)
-		{
-			_wheelUsed = true;
-			wheel = flashEvent.delta;
-		}
+			_wheelInput.change(flashEvent.delta);
 	}
 
 	#if FLX_MOUSE_ADVANCED
@@ -558,9 +532,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_middleButton.onUp();
 	}
 	#end
-
-	inline function get_justMoved():Bool
-		return _prevX != x || _prevY != y;
 
 	inline function get_pressed():Bool
 		return _leftButton.pressed;
@@ -608,7 +579,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	inline function get_justPressedTimeInTicksMiddle():Int
 		return _middleButton.justPressedTimeInTicks;
 	#end
-
+	
+	inline function get_wheel():Int
+		return Std.int(_wheelInput.currentValue);
+	
 	function showSystemCursor():Void
 	{
 		#if FLX_NATIVE_CURSOR
@@ -687,38 +661,70 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	@:allow(flixel.system.replay.FlxReplay)
+	@:access(flixel.system.replay.MouseRecord)
 	function record():MouseRecord
 	{
-		if ((_lastX == _globalScreenX)
-			&& (_lastY == _globalScreenY)
-			&& (_lastLeftButtonState == _leftButton.current)
-			&& (_lastWheel == wheel))
+		if (!inputX.changed
+		&&  !inputY.changed
+		&&  !_leftButton.changed
+		#if FLX_MOUSE_ADVANCED
+		&&  !_middleButton.changed
+		&&  !_rightButton.changed
+		#end
+		&&  !_wheelInput.changed)
 		{
 			return null;
 		}
-
-		_lastX = _globalScreenX;
-		_lastY = _globalScreenY;
-		_lastLeftButtonState = _leftButton.current;
-		_lastWheel = wheel;
-		return new MouseRecord(_lastX, _lastY, _leftButton.current, _lastWheel);
+		
+		var record = new MouseRecord();
+		if (inputX.changed)
+			record.x = Std.int(inputX.currentValue);
+		
+		if (inputY.changed)
+			record.y = Std.int(inputY.currentValue);
+		
+		if (_leftButton.changed)
+			record.leftButton = _leftButton.currentValue;
+		
+		#if FLX_MOUSE_ADVANCED
+		if (_middleButton.changed)
+			record.middleButton = _middleButton.currentValue;
+		
+		if (_rightButton.changed)
+			record.rightButton = _rightButton.currentValue;
+		#end
+		
+		if (_wheelInput.changed)
+			record.wheel = Std.int(_wheelInput.currentValue);
+		
+		return record;
 	}
 
 	@:allow(flixel.system.replay.FlxReplay)
 	function playback(record:MouseRecord):Void
 	{
-		// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
-		// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
-		// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
-		if ((_lastLeftButtonState == PRESSED || _lastLeftButtonState == JUST_PRESSED)
-			&& (record.button == RELEASED || record.button == JUST_RELEASED))
+		if (record.leftButton != null)
 		{
-			_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, record.x, record.y));
+			// Manually dispatch a MOUSE_UP event so that, e.g., FlxButtons click correctly on playback.
+			// Note: some clicks are fast enough to not pass through a frame where they are PRESSED
+			// and JUST_RELEASED is swallowed by FlxButton and others, but not third-party code
+			if (_leftButton.lastValue && !record.leftButton)
+			{
+				_stage.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP, true, false, record.x, record.y));
+			}
+			
+			_leftButton.change(record.leftButton);
 		}
-		_lastLeftButtonState = _leftButton.current = record.button;
-		wheel = record.wheel;
-		_globalScreenX = record.x;
-		_globalScreenY = record.y;
+		
+		if (record.wheel != null)
+			_wheelInput.change(record.wheel);
+		
+		if (record.x != null)
+			inputX.change(record.x);
+		
+		if (record.y != null)
+			inputY.change(record.y);
+		
 		updatePositions();
 	}
 }

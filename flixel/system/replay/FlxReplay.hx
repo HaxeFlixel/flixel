@@ -1,7 +1,9 @@
 package flixel.system.replay;
 
 import flixel.FlxG;
+import flixel.input.FlxInput;
 import flixel.util.FlxArrayUtil;
+import flixel.system.FlxVersion;
 
 /**
  * The replay object both records and replays game recordings,
@@ -12,6 +14,8 @@ import flixel.util.FlxArrayUtil;
  */
 class FlxReplay
 {
+	static inline var VERSION = 1;
+	
 	/**
 	 * The random number generator seed value for this recording.
 	 */
@@ -25,7 +29,7 @@ class FlxReplay
 	/**
 	 * The number of frames in this recording.
 	 */
-	public var frameCount:Int;
+	public var frameCount(get, never):Int;
 
 	/**
 	 * Whether the replay has finished playing or not.
@@ -35,17 +39,12 @@ class FlxReplay
 	/**
 	 * Internal container for all the frames in this replay.
 	 */
-	var _frames:Array<FrameRecord>;
+	var frames:Array<FrameRecord>;
 
 	/**
-	 * Internal tracker for max number of frames we can fit before growing the _frames again.
+	 * Internal helper variable for keeping track of where we are in frames during recording or replay.
 	 */
-	var _capacity:Int;
-
-	/**
-	 * Internal helper variable for keeping track of where we are in _frames during recording or replay.
-	 */
-	var _marker:Int;
+	var marker:Int;
 
 	/**
 	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
@@ -54,11 +53,9 @@ class FlxReplay
 	{
 		seed = 0;
 		frame = 0;
-		frameCount = 0;
 		finished = false;
-		_frames = null;
-		_capacity = 0;
-		_marker = 0;
+		frames = null;
+		marker = 0;
 	}
 
 	/**
@@ -66,16 +63,13 @@ class FlxReplay
 	 */
 	public function destroy():Void
 	{
-		if (_frames == null)
-		{
+		if (frames == null)
 			return;
-		}
-		var i:Int = frameCount - 1;
-		while (i >= 0)
-		{
-			_frames[i--].destroy();
-		}
-		_frames = null;
+		
+		for (frame in frames)
+			frame.destroy();
+		
+		frames = null;
 	}
 
 	/**
@@ -92,57 +86,58 @@ class FlxReplay
 	}
 
 	/**
-	 * Load replay data from a String object.
-	 * Strings can come from embedded assets or external
+	 * Load replay data from a String object.  Strings can come from embedded assets or external
 	 * files loaded through the debugger overlay.
-	 * @param	FileContents	A String object containing a gameplay recording.
+	 * 
+	 * @param   data  A String object containing a gameplay recording.
 	 */
-	public function load(FileContents:String):Void
+	public function load(data:String):Void
 	{
 		init();
-
-		var lines:Array<String> = FileContents.split("\n");
-
-		seed = Std.parseInt(lines[0]);
-
-		var line:String;
-		var i:Int = 1;
-		var l:Int = lines.length;
-		while (i < l)
+		
+		var lines = data.split("\n");
+		var headerData = lines.shift();
+		var validator = ~/v(\d+)s(\d+)/;
+		var version = 0;
+		if (!validator.match(headerData))
+			seed = Std.parseInt(headerData);
+		else
 		{
-			line = lines[i++];
-			if (line.length > 3)
-			{
-				_frames[frameCount++] = new FrameRecord().load(line);
-				if (frameCount >= _capacity)
-				{
-					_capacity *= 2;
-					FlxArrayUtil.setLength(_frames, _capacity);
-				}
-			}
+			version = Std.parseInt(validator.matched(1));
+			seed = Std.parseInt(validator.matched(2));
 		}
-
+		
+		if(version == 0)
+			lines = FrameConvertor.convert(lines, version);
+		
+		for (line in lines)
+			frames.push(new FrameRecord().load(line));
+		
 		rewind();
+	}
+	
+	function convertLegacy0(lines:Array<String>)
+	{
+		
 	}
 
 	/**
 	 * Save the current recording data off to a String object.
 	 * Basically goes through and calls FrameRecord.save() on each frame in the replay.
-	 * return	The gameplay recording in simple ASCII format.
+	 * 
+	 * @return  The gameplay recording in simple ASCII format.
 	 */
 	public function save():String
 	{
 		if (frameCount <= 0)
-		{
 			return null;
-		}
-		var output:String = seed + "\n";
-		var i:Int = 0;
-		while (i < frameCount)
-		{
-			output += _frames[i++].save() + "\n";
-		}
-		return output;
+		
+		var output = 'v${VERSION}s$seed\n';
+		for (frame in frames)
+			output += frame.save() + "\n";
+		
+		// remove the final new line
+		return output.substr(0, -1);
 	}
 
 	/**
@@ -153,14 +148,20 @@ class FlxReplay
 		var continueFrame = true;
 
 		#if FLX_KEYBOARD
-		var keysRecord:Array<CodeValuePair> = FlxG.keys.record();
+		var keysRecord = FlxG.keys.record();
 		if (keysRecord != null)
 			continueFrame = false;
 		#end
 
 		#if FLX_MOUSE
-		var mouseRecord:MouseRecord = FlxG.mouse.record();
+		var mouseRecord = FlxG.mouse.record();
 		if (mouseRecord != null)
+			continueFrame = false;
+		#end
+
+		#if FLX_TOUCH
+		var touchesRecord = FlxG.touches.record();
+		if (touchesRecord != null)
 			continueFrame = false;
 		#end
 
@@ -170,21 +171,21 @@ class FlxReplay
 			return;
 		}
 
-		var frameRecorded = new FrameRecord().create(frame++);
+		var record = new FrameRecord().create(frame++);
+		
 		#if FLX_MOUSE
-		frameRecorded.mouse = mouseRecord;
+		record.mouse = mouseRecord;
 		#end
+		
 		#if FLX_KEYBOARD
-		frameRecorded.keys = keysRecord;
+		record.keys = keysRecord;
+		#end
+		
+		#if FLX_KEYBOARD
+		record.touches = touchesRecord;
 		#end
 
-		_frames[frameCount++] = frameRecorded;
-
-		if (frameCount >= _capacity)
-		{
-			_capacity *= 2;
-			FlxArrayUtil.setLength(_frames, _capacity);
-		}
+		frames.push(record);
 	}
 
 	/**
@@ -194,29 +195,35 @@ class FlxReplay
 	{
 		FlxG.inputs.reset();
 
-		if (_marker >= frameCount)
+		if (marker >= frameCount)
 		{
 			finished = true;
 			return;
 		}
-		if (_frames[_marker].frame != frame++)
-		{
+		
+		if (frames[marker].frame != frame++)
 			return;
-		}
 
-		var fr:FrameRecord = _frames[_marker++];
+		var record = frames[marker++];
 
 		#if FLX_KEYBOARD
-		if (fr.keys != null)
+		if (record.keys != null)
 		{
-			FlxG.keys.playback(fr.keys);
+			FlxG.keys.playback(record.keys);
 		}
 		#end
 
 		#if FLX_MOUSE
-		if (fr.mouse != null)
+		if (record.mouse != null)
 		{
-			FlxG.mouse.playback(fr.mouse);
+			FlxG.mouse.playback(record.mouse);
+		}
+		#end
+
+		#if FLX_TOUCH
+		if (record.touches != null)
+		{
+			FlxG.touches.playback(record.touches);
 		}
 		#end
 	}
@@ -226,7 +233,7 @@ class FlxReplay
 	 */
 	public function rewind():Void
 	{
-		_marker = 0;
+		marker = 0;
 		frame = 0;
 		finished = false;
 	}
@@ -236,9 +243,66 @@ class FlxReplay
 	 */
 	function init():Void
 	{
-		_capacity = 100;
-		_frames = new Array<FrameRecord>( /*_capacity*/);
-		FlxArrayUtil.setLength(_frames, _capacity);
-		frameCount = 0;
+		frames = new Array<FrameRecord>();
+	}
+	
+	public function get_frameCount()
+	{
+		return frames.length;
+	}
+}
+
+@:access(flixel.system.replay.FlxReplay)
+private class FrameConvertor
+{
+	public static function convert(lines:Array<String>, version:Int)
+	{
+		return switch (version)
+		{
+			case 0: convert0(lines);
+			case FlxReplay.VERSION: lines;
+			default: throw "Unexpected version: " + version;
+		}
+	}
+	
+	static var keysExtractor = ~/^(\d+)k(.+?)(m.+$)/;
+	public static function convert0(lines:Array<String>)
+	{
+		var i = 0;
+		
+		var pressedKeys = new Map<String, Bool>();
+		function wasPressed(key:String)
+		{
+			return pressedKeys.exists(key) && pressedKeys[key];
+		}
+		
+		while (i < lines.length)
+		{
+			final line = lines[i];
+			
+			// check if the frame has key data
+			if (keysExtractor.match(line))
+			{
+				final frame = Std.parseInt(keysExtractor.matched(1));
+				final newKeys = new Array<String>();
+				final keys = keysExtractor.matched(2).split(",");
+				for (key in keys)
+				{
+					// remove all key data that hasn't changed from the previous
+					final data = key.split(":");
+					final isPressed = (cast data[1]:FlxInputState).pressed;
+					if (wasPressed(data[0]) != isPressed)
+					{
+						newKeys.push(data[0] + ":" + (isPressed ? "1" : "0"));
+					}
+					pressedKeys[data[0]] = isPressed;
+				}
+				
+				lines[i] = line;
+				i++;
+			}
+		}
+		
+		return lines;
 	}
 }

@@ -1,6 +1,6 @@
 package flixel.util;
 
-enum abstract FlxAxes(Int)
+enum abstract FlxAxes(Int) to Int
 {
 	var X    = 0x01;
 	var Y    = 0x10;

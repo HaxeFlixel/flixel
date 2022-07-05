@@ -1,5 +1,8 @@
 package flixel.system.replay;
 
+import flixel.FlxG;
+import flixel.system.debug.log.LogStyle;
+
 /**
  * Helper class for the new replay system.  Represents all the game inputs for one "frame" or "step" of the game loop.
  */
@@ -13,12 +16,17 @@ class FrameRecord
 	/**
 	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
 	 */
-	public var keys:Array<CodeValuePair>;
+	public var keys:Array<KeyRecord>;
 
 	/**
-	 * A container for the 4 mouse state integers.
+	 * A container for the mouse state values.
 	 */
 	public var mouse:MouseRecord;
+
+	/**
+	 * An array of touch states.
+	 */
+	public var touches:Array<TouchRecord>;
 
 	/**
 	 * Instantiate array new frame record.
@@ -32,16 +40,17 @@ class FrameRecord
 
 	/**
 	 * Load this frame record with input data from the input managers.
-	 * @param Frame		What frame it is.
-	 * @param Keys		Keyboard data from the keyboard manager.
-	 * @param Mouse		Mouse data from the mouse manager.
-	 * @return A reference to this FrameRecord object.
+	 * @param   frame  What frame it is.
+	 * @param   keys   Keyboard data from the keyboard manager.
+	 * @param   mouse  Mouse data from the mouse manager.
+	 * @return  A reference to this FrameRecord object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
+	public function create(frame:Float, ?keys:Array<KeyRecord>, ?mouse:MouseRecord, ?touches:Array<TouchRecord>):FrameRecord
 	{
-		frame = Math.floor(Frame);
-		keys = Keys;
-		mouse = Mouse;
+		this.frame = Math.floor(frame);
+		this.keys = keys;
+		this.mouse = mouse;
+		this.touches = touches;
 
 		return this;
 	}
@@ -53,6 +62,7 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
+		touches = null;
 	}
 
 	/**
@@ -65,81 +75,75 @@ class FrameRecord
 
 		if (keys != null)
 		{
-			var object:CodeValuePair;
-			var i:Int = 0;
-			var l:Int = keys.length;
-			while (i < l)
-			{
-				if (i > 0)
-				{
-					output += ",";
-				}
-				object = keys[i++];
-				output += object.code + ":" + object.value;
-			}
+			output += KeyRecord.arrayToString(keys);
 		}
 
 		output += "m";
 		if (mouse != null)
 		{
-			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
+			output += mouse.toString();
 		}
 
-		return output;
+		output += "t";
+		if (touches != null)
+		{
+			output += TouchRecord.arrayToString(touches);
+		}
+		return output; 
 	}
 
+	static var validRecord = ~/^(\d+)k(.*?)m(.*?)(?:t(.*?))?$/;
+	
 	/**
 	 * Load the frame record data from array simple ASCII string.
-	 * @param	Data	A String object containing the relevant frame record data.
+	 * @param   data  A String object containing the relevant frame record data.
 	 */
-	public function load(Data:String):FrameRecord
+	public function load(data:String):FrameRecord
 	{
-		var i:Int;
-		var l:Int;
-
+		if (!validRecord.match(data))
+		{
+			trace(data);
+			FlxG.log.advanced('Invalid FrameRecord format:$data', LogStyle.WARNING, true);
+			return this;
+		}
 		// get frame number
-		var array:Array<String> = Data.split("k");
-		frame = Std.parseInt(array[0]);
-
-		// split up keyboard and mouse data
-		array = array[1].split("m");
-		var keyData:String = array[0];
-		var mouseData:String = array[1];
+		frame = Std.parseInt(validRecord.matched(1));
+		var keyData = validRecord.matched(2);
+		var mouseData = validRecord.matched(3);
+		var touchData = validRecord.matched(4);
 
 		// parse keyboard data
 		if (keyData.length > 0)
 		{
-			// get keystroke data pairs
-			array = keyData.split(",");
-
-			// go through each data pair and enter it into this frame's key state
-			var keyPair:Array<String>;
-			i = 0;
-			l = array.length;
-			while (i < l)
-			{
-				keyPair = array[i++].split(":");
-				if (keyPair.length == 2)
-				{
-					if (keys == null)
-					{
-						keys = new Array<CodeValuePair>();
-					}
-					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1])));
-				}
-			}
+			keys = KeyRecord.arrayFromString(keyData);
 		}
 
-		// mouse data is just 4 integers, easy peezy
+		// parse mouse data
 		if (mouseData.length > 0)
 		{
-			array = mouseData.split(",");
-			if (array.length >= 4)
+			mouse = MouseRecord.fromString(mouseData);
+		}
+		
+		// Parse touch data
+		if (touchData.length > 0)
+		{
+			touches = TouchRecord.arrayFromString(touchData);
+		}
+		
+		return this;
+	}
+	
+	public function merge(record:FrameRecord)
+	{
+		if (record.keys != null)
+		{
+			if (keys == null)
+				keys = [];
+			
+			for (key in record.keys)
 			{
-				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
 			}
 		}
-
-		return this;
+		
 	}
 }
