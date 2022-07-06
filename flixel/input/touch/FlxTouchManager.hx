@@ -290,9 +290,9 @@ class FlxTouchManager implements IFlxInputManager
 	}
 	
 	@:allow(flixel.system.replay.FlxReplay)
-	function record():Null<Array<TouchRecord>>
+	function record():Null<TouchRecordList>
 	{
-		var records:Null<Array<TouchRecord>> = null;
+		var records:Null<TouchRecordList> = null;
 		
 		var i:Int = _lastList.length;
 		while (--i >= 0)
@@ -301,10 +301,11 @@ class FlxTouchManager implements IFlxInputManager
 			{
 				if (records == null)
 				{
-					records = [];
+					records = new TouchRecordList();
 				}
 				// Record the removal from the list
-				records.push(new TouchRecord(_lastList[i], false));
+				var record = new TouchRecord(_lastList[i], false);
+				records[record.id] = record;
 				_lastList.splice(i, 1);
 			}
 		}
@@ -318,10 +319,10 @@ class FlxTouchManager implements IFlxInputManager
 			{
 				if (records == null)
 				{
-					records = [];
+					records = new TouchRecordList();
 				}
 				
-				records.push(record);
+				records[record.id] = record;
 			}
 			
 			// Save last recorded
@@ -335,23 +336,21 @@ class FlxTouchManager implements IFlxInputManager
 	}
 	
 	@:allow(flixel.system.replay.FlxReplay)
-	function playback(records:Array<TouchRecord>):Void
+	function playback(records:TouchRecordList):Void
 	{
-		var i:Int = records.length;
-		
-		while (--i >= 0)
+		for (id in records.keys())
 		{
-			var record = records[i];
+			var record = records[id];
 			if (!record.active)
 			{
 				// remove inactive touch
-				if (_touchesCache.exists(record.id))
+				if (_touchesCache.exists(id))
 				{
-					var touch = getByID(record.id);
+					var touch = getByID(id);
 					// Copied from update
 					touch.input.reset();
 					_touchesCache.remove(touch.touchPointID);
-					list.splice(i, 1);
+					list.remove(touch);
 					_inactiveTouches.push(touch);
 				}
 			}

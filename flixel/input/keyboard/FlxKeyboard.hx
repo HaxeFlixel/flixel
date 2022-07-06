@@ -138,9 +138,9 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @return	An array of key state data. Null if there is no data.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	function record():Array<KeyRecord>
+	function record():KeyRecordList
 	{
-		var data:Array<KeyRecord> = null;
+		var data:KeyRecordList = null;
 
 		for (key in _keyListArray)
 		{
@@ -151,10 +151,10 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 			if (data == null)
 			{
-				data = new Array<KeyRecord>();
+				data = new KeyRecordList();
 			}
 
-			data.push(KeyRecord.fromBool(key.ID, key.currentValue));
+			data[key.ID] = KeyRecord.fromBool(key.ID, key.currentValue);
 		}
 
 		return data;
@@ -167,7 +167,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @param   record  Array of data about key states.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	function playback(record:Array<KeyRecord>):Void
+	function playback(record:KeyRecordList):Void
 	{
 		for (data in record)
 		{

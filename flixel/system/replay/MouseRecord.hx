@@ -7,22 +7,46 @@ import flixel.input.FlxInput;
  */
 class MouseRecord
 {
-	public var x(default, null):Null<Int>;
-	public var y(default, null):Null<Int>;
+	public var x:Null<Int>;
+	public var y:Null<Int>;
 	
 	/** The state of the left mouse button. */
-	public var leftButton(default, null):Null<Bool>;
+	public var leftButton:Null<Bool>;
 	
 	#if FLX_MOUSE_ADVANCED
 	/** The state of the middle mouse button. */
-	public var middleButton(default, null):Null<Bool>;
+	public var middleButton:Null<Bool>;
 	/** The state of the right mouse button. */
-	public var rightButton(default, null):Null<Bool>;
+	public var rightButton:Null<Bool>;
 	#end
 	/** The state of the mouse wheel. */
-	public var wheel(default, null):Null<Int>;
+	public var wheel:Null<Int>;
 	
 	public function new() {}
+	
+	function copyTo(record:MouseRecord)
+	{
+		if (x            != null) record.x            = x;
+		if (y            != null) record.y            = y;
+		if (leftButton   != null) record.leftButton   = leftButton;
+		#if FLX_MOUSE_ADVANCED
+		if (middleButton != null) record.middleButton = middleButton;
+		if (rightButton  != null) record.rightButton  = rightButton;
+		#end
+		if (wheel        != null) record.wheel        = wheel;
+	}
+	
+	function reset()
+	{
+		x            = null;
+		y            = null;
+		leftButton   = null;
+		#if FLX_MOUSE_ADVANCED
+		middleButton = null;
+		rightButton  = null;
+		#end
+		wheel        = null;
+	}
 	
 	public function toString():String
 	{

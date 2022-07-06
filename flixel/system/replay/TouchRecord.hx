@@ -2,6 +2,7 @@ package flixel.system.replay;
 
 import flixel.input.FlxInput;
 import flixel.input.touch.FlxTouch;
+import flixel.system.debug.log.LogStyle;
 
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.
@@ -9,18 +10,21 @@ import flixel.input.touch.FlxTouch;
 @:allow(flixel.input.touch.FlxTouch)
 class TouchRecord
 {
-	public var id(default, null):Int;
-	public var x(default, null):Null<Int>;
-	public var y(default, null):Null<Int>;
-	public var pressure(default, null):Null<Float>;
+	public var id:Int;
+	public var x:Null<Int>;
+	public var y:Null<Int>;
+	public var pressure:Null<Float>;
+	
 	/**
 	 * The state of the touch.
 	 */
-	public var pressed(default, null):Null<Bool>;
+	public var pressed:Null<Bool>;
+	
 	/**
 	 * Usd to tell if a touch was removed from the FlxTouchManager
 	 */
-	public var active(default, null):Bool = true;
+	public var active:Bool = true;
+	
 	/**
 	 * Instantiate a new mouse input record.
 	 * 
@@ -30,6 +34,24 @@ class TouchRecord
 	{
 		this.id = id;
 		this.active = active;
+	}
+	
+	function copy()
+	{
+		return copyTo(new TouchRecord(id, active));
+	}
+	
+	function copyTo(record:TouchRecord)
+	{
+		record.id = id;
+		record.active = active;
+		
+		if (x        != null) record.x        = x;
+		if (y        != null) record.y        = y;
+		if (pressure != null) record.pressure = pressure;
+		if (pressed  != null) record.pressed  = pressed;
+		
+		return record;
 	}
 	
 	public function toString():String
@@ -63,7 +85,7 @@ class TouchRecord
 			record = new TouchRecord(Std.parseInt(data));
 			record.active = false;
 		}
-		else if (touch.length == 4)
+		else if (touch.length == 5)
 		{
 			record = new TouchRecord(parseInt(touch[0]));
 			record.x = parseInt(touch[1]);
@@ -88,41 +110,60 @@ class TouchRecord
 	{
 		return data == "" ? null : data == "1";
 	}
+}
+
+@:access(flixel.system.replay.TouchRecord)
+@:forward(keys, keyValueIterator, iterator, get, set, exists, clear)
+abstract TouchRecordList(Map<Int, TouchRecord>)
+{
+	public inline function new ()
+	{
+		this = [];
+	}
 	
-	public static function arrayFromString(data:String):Null<Array<TouchRecord>>
+	@:arrayAccess
+	public inline function get(key:Int)
+	{
+		return this.get(key);
+	}
+	
+	@:arrayAccess
+	public inline function arrayWrite(key:Int, value:TouchRecord):TouchRecord
+	{
+		this.set(key, value);
+		return value;
+	}
+	
+	public function toString():String
+	{
+		var output = "";
+		
+		for (touch in this)
+			output += touch.toString() + ",";
+		
+		return output.substr(0, -1);
+	}
+	
+	public static function fromString(data:String):Null<TouchRecordList>
 	{
 		var array = data.split(",");
-		var list:Null<Array<TouchRecord>> = null;
-		var i = 0;
-		var l = array.length;
-		while (i < l)
+		var list:TouchRecordList = null;
+		
+		for (record in array)
 		{
-			var touch = fromString(array[i++]);
-			if (touch != null)
+			var touch = TouchRecord.fromString(record);
+			if (touch == null)
+			{
+				FlxG.log.advanced('Invalid TouchRecords:"$data"', LogStyle.WARNING, true);
+			}
+			else
 			{
 				if (list == null)
-				{
-					list = [];
-				}
-				list.push(touch);
+					list = new TouchRecordList();
+				
+				list[touch.id] = touch;
 			}
 		}
 		return list;
-	}
-	
-	public static function arrayToString(touches:Array<TouchRecord>):String
-	{
-		var output = "";
-		var i:Int = 0;
-		var l:Int = touches.length;
-		while (i < l)
-		{
-			if (i > 0)
-			{
-				output += ",";
-			}
-			output += touches[i++].toString();
-		}
-		return output;
 	}
 }

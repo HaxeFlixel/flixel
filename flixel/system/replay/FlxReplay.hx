@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.util.FlxArrayUtil;
 import flixel.system.FlxVersion;
+import flixel.system.replay.FrameRecord;
 
 /**
  * The replay object both records and replays game recordings,
@@ -45,6 +46,12 @@ class FlxReplay
 	 * Internal helper variable for keeping track of where we are in frames during recording or replay.
 	 */
 	var marker:Int;
+	
+	/** */
+	var iterator:FrameRecordIterator;
+	
+	/** */
+	var prev:FrameRecordIterator;
 
 	/**
 	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
@@ -75,13 +82,13 @@ class FlxReplay
 	/**
 	 * Create a new gameplay recording.  Requires the current random number generator seed.
 	 *
-	 * @param	Seed	The current seed from the random number generator.
+	 * @param   seed  The current seed from the random number generator.
 	 */
-	public function create(Seed:Int):Void
+	public function create(seed:Int):Void
 	{
 		destroy();
 		init();
-		seed = Seed;
+		this.seed = seed;
 		rewind();
 	}
 
@@ -129,7 +136,7 @@ class FlxReplay
 	 */
 	public function save():String
 	{
-		if (frameCount <= 0)
+		if (frames.length <= 0)
 			return null;
 		
 		var output = 'v${VERSION}s$seed\n';
@@ -193,37 +200,40 @@ class FlxReplay
 	 */
 	public function playNextFrame():Void
 	{
-		if (marker >= frameCount)
+		FlxG.inputs.reset();
+		
+		if (marker >= frames.length)
 		{
 			finished = true;
 			return;
 		}
 		
-		if (frames[marker].frame != frame++)
-			return;
-
-		var record = frames[marker++];
+		var newFrame = false;
+		if (frame == frames[marker].frame)
+		{
+			var record = frames[marker++];
+			iterator.merge(record);
+			newFrame = true;
+		}
+		++frame;
 
 		#if FLX_KEYBOARD
-		if (record.keys != null)
-		{
-			FlxG.keys.playback(record.keys);
-		}
+		FlxG.keys.playback(prev.keys);
+		FlxG.keys.playback(iterator.keys);
 		#end
 
 		#if FLX_MOUSE
-		if (record.mouse != null)
-		{
-			FlxG.mouse.playback(record.mouse);
-		}
+		FlxG.mouse.playback(prev.mouse);
+		FlxG.mouse.playback(iterator.mouse);
 		#end
 
 		#if FLX_TOUCH
-		if (record.touches != null)
-		{
-			FlxG.touches.playback(record.touches);
-		}
+		FlxG.touches.playback(prev.touches);
+		FlxG.touches.playback(iterator.touches);
 		#end
+		
+		if (newFrame)
+			prev.merge(iterator);
 	}
 
 	/**
@@ -234,6 +244,8 @@ class FlxReplay
 		marker = 0;
 		frame = 0;
 		finished = false;
+		iterator.rewind();
+		prev.rewind();
 	}
 
 	/**
@@ -242,6 +254,8 @@ class FlxReplay
 	function init():Void
 	{
 		frames = new Array<FrameRecord>();
+		iterator = new FrameRecordIterator();
+		prev = new FrameRecordIterator();
 	}
 	
 	public function get_frameCount()

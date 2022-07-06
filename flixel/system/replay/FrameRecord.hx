@@ -1,6 +1,10 @@
 package flixel.system.replay;
 
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
+import flixel.system.replay.KeyRecord;
+import flixel.system.replay.MouseRecord;
+import flixel.system.replay.TouchRecord;
 import flixel.system.debug.log.LogStyle;
 
 /**
@@ -16,7 +20,7 @@ class FrameRecord
 	/**
 	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
 	 */
-	public var keys:Array<KeyRecord>;
+	public var keys:KeyRecordList;
 
 	/**
 	 * A container for the mouse state values.
@@ -26,7 +30,7 @@ class FrameRecord
 	/**
 	 * An array of touch states.
 	 */
-	public var touches:Array<TouchRecord>;
+	public var touches:TouchRecordList;
 
 	/**
 	 * Instantiate array new frame record.
@@ -45,7 +49,7 @@ class FrameRecord
 	 * @param   mouse  Mouse data from the mouse manager.
 	 * @return  A reference to this FrameRecord object.
 	 */
-	public function create(frame:Float, ?keys:Array<KeyRecord>, ?mouse:MouseRecord, ?touches:Array<TouchRecord>):FrameRecord
+	public function create(frame:Float, ?keys:KeyRecordList, ?mouse:MouseRecord, ?touches:TouchRecordList):FrameRecord
 	{
 		this.frame = Math.floor(frame);
 		this.keys = keys;
@@ -75,7 +79,7 @@ class FrameRecord
 
 		if (keys != null)
 		{
-			output += KeyRecord.arrayToString(keys);
+			output += keys.toString();
 		}
 
 		output += "m";
@@ -87,7 +91,7 @@ class FrameRecord
 		output += "t";
 		if (touches != null)
 		{
-			output += TouchRecord.arrayToString(touches);
+			output += touches.toString();
 		}
 		return output; 
 	}
@@ -102,8 +106,7 @@ class FrameRecord
 	{
 		if (!validRecord.match(data))
 		{
-			trace(data);
-			FlxG.log.advanced('Invalid FrameRecord format:$data', LogStyle.WARNING, true);
+			FlxG.log.advanced('Invalid FrameRecord format:"$data"', LogStyle.WARNING, true);
 			return this;
 		}
 		// get frame number
@@ -115,7 +118,7 @@ class FrameRecord
 		// parse keyboard data
 		if (keyData.length > 0)
 		{
-			keys = KeyRecord.arrayFromString(keyData);
+			keys = KeyRecordList.fromString(keyData);
 		}
 
 		// parse mouse data
@@ -127,9 +130,130 @@ class FrameRecord
 		// Parse touch data
 		if (touchData.length > 0)
 		{
-			touches = TouchRecord.arrayFromString(touchData);
+			touches = TouchRecordList.fromString(touchData);
 		}
 		
 		return this;
+	}
+}
+
+@:forward
+abstract FrameRecordIterator(FrameRecord) to FrameRecord
+{
+	var _keys(get, never):KeyRecordListIterator;
+	var _mouse(get, never):MouseRecordIterator;
+	var _touches(get, never):TouchRecordListIterator;
+	
+	public inline function new()
+	{
+		this = new FrameRecord();
+		this.keys = new KeyRecordListIterator();
+		this.mouse = new MouseRecordIterator();
+		this.touches = new TouchRecordListIterator();
+	}
+	
+	public function merge(record:FrameRecord)
+	{
+		this.frame = record.frame;
+		_keys.merge(record.keys);
+		_mouse.merge(record.mouse);
+		_touches.merge(record.touches);
+	}
+	
+	public function rewind()
+	{
+		_keys.rewind();
+		_mouse.rewind();
+		_touches.rewind();
+	}
+	
+	inline function get__keys() return this.keys;
+	inline function get__mouse() return this.mouse;
+	inline function get__touches() return this.touches;
+}
+
+@:access(flixel.system.replay.KeyRecord)
+private abstract KeyRecordListIterator(KeyRecordList) to KeyRecordList from KeyRecordList
+{
+	inline public function new()
+	{
+		this = new KeyRecordList();
+	}
+	
+	inline public function rewind()
+	{
+		this.clear();
+	}
+	
+	inline public function merge(record:KeyRecordList)
+	{
+		if (record == null)
+			return;
+		
+		for (key in record.keys())
+		{
+			if (this.exists(key))
+			{
+				record[key].copyTo(this[key]);
+			}
+			else
+			{
+				this[key] = record[key].copy();
+			}
+		}
+	}
+}
+
+@:access(flixel.system.replay.MouseRecord)
+private abstract MouseRecordIterator(MouseRecord) to MouseRecord from MouseRecord
+{
+	inline public function new()
+	{
+		this = new MouseRecord();
+	}
+	
+	inline public function rewind()
+	{
+		this.reset();
+	}
+	
+	inline public function merge(record:MouseRecord)
+	{
+		if (record == null)
+			return;
+		
+		record.copyTo(this);
+	}
+}
+
+@:access(flixel.system.replay.TouchRecord)
+private abstract TouchRecordListIterator(TouchRecordList) to TouchRecordList from TouchRecordList
+{
+	inline public function new()
+	{
+		this = new TouchRecordList();
+	}
+	
+	inline public function rewind()
+	{
+		this.clear();
+	}
+	
+	inline public function merge(record:TouchRecordList)
+	{
+		if (record == null)
+			return;
+		
+		for (id in record.keys())
+		{
+			if (this.exists(id))
+			{
+				record[id].copyTo(this[id]);
+			}
+			else
+			{
+				this[id] = record[id].copy();
+			}
+		}
 	}
 }

@@ -1,6 +1,9 @@
 package flixel.system.replay;
 
-import flixel.input.FlxInput.FlxInputState;
+import flixel.FlxG;
+import flixel.input.FlxInput;
+import flixel.input.keyboard.FlxKey;
+import flixel.system.debug.log.LogStyle;
 
 class KeyRecord
 {
@@ -11,6 +14,19 @@ class KeyRecord
 	{
 		this.code = code;
 		this.value = value;
+	}
+	
+	function copy()
+	{
+		return new KeyRecord(code, value);
+	}
+	
+	function copyTo(record:KeyRecord)
+	{
+		record.code = code;
+		record.value = value;
+		
+		return record;
 	}
 	
 	public inline function getBool()
@@ -36,43 +52,60 @@ class KeyRecord
 		
 		return null;
 	}
-	
-	public static inline function arrayFromString(data:String, delimiter:String = ","):Null<Array<KeyRecord>>
+}
+
+@:access(flixel.system.replay.KeyRecord)
+@:forward(keys, keyValueIterator, iterator, get, set, exists, clear)
+abstract KeyRecordList(Map<FlxKey, KeyRecord>)
+{
+	inline public function new()
 	{
-		var keys:Null<Array<KeyRecord>> = null;
-		var list = data.split(delimiter);
-		
-		var i = 0;
-		var l = list.length;
-		while (i < l)
+		this = [];
+	}
+	
+	@:arrayAccess
+	public inline function get(key:FlxKey)
+	{
+		return this.get(key);
+	}
+	
+	@:arrayAccess
+	public inline function arrayWrite(key:FlxKey, value:KeyRecord):KeyRecord
+	{
+		this.set(key, value);
+		return value;
+	}
+	
+	public function toString():String
+	{
+		var output = "";
+		for (record in this)
 		{
-			var key = KeyRecord.fromString(list[i++]);
-			if (key != null)
+			output += record.toString() + ",";
+		}
+		
+		// remove the last delimiter
+		return output.substr(0, -1);
+	}
+	
+	public static inline function fromString(data:String):Null<KeyRecordList>
+	{
+		var keys:KeyRecordList = null;
+		var list = data.split(",");
+		
+		for (record in list)
+		{
+			var key = KeyRecord.fromString(record);
+			if (key == null)
+				FlxG.log.advanced('Invalid KeyRecords:"$data"', LogStyle.WARNING, true);
+			else
 			{
 				if (keys == null)
-				{
-					keys = [];
-				}
-				keys.push(key);
+					keys = new KeyRecordList();
+				
+				keys[key.code] = key;
 			}
 		}
 		return keys;
-	}
-	
-	public static function arrayToString(states:Array<KeyRecord>, delimiter:String = ","):String
-	{
-		var output = "";
-		var i:Int = 0;
-		var l:Int = states.length;
-		while (i < l)
-		{
-			if (i > 0)
-			{
-				output += delimiter;
-			}
-			output += states[i++].toString();
-		}
-		
-		return output;
 	}
 }
