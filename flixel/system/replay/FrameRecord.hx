@@ -132,18 +132,4 @@ class FrameRecord
 		
 		return this;
 	}
-	
-	public function merge(record:FrameRecord)
-	{
-		if (record.keys != null)
-		{
-			if (keys == null)
-				keys = [];
-			
-			for (key in record.keys)
-			{
-			}
-		}
-		
-	}
 }

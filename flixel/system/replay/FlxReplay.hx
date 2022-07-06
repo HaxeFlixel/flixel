@@ -193,8 +193,6 @@ class FlxReplay
 	 */
 	public function playNextFrame():Void
 	{
-		FlxG.inputs.reset();
-
 		if (marker >= frameCount)
 		{
 			finished = true;
