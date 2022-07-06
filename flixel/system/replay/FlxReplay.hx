@@ -47,11 +47,15 @@ class FlxReplay
 	 */
 	var marker:Int;
 	
-	/** */
-	var iterator:FrameRecordIterator;
+	/**
+	 * The value of all inputs for the current frame.
+	 */
+	var current:FrameRecordIterator;
 	
-	/** */
-	var prev:FrameRecordIterator;
+	/**
+	 * The value of all inputs for the previous frame.
+	 */
+	var last:FrameRecordIterator;
 
 	/**
 	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
@@ -212,28 +216,28 @@ class FlxReplay
 		if (frame == frames[marker].frame)
 		{
 			var record = frames[marker++];
-			iterator.merge(record);
+			current.merge(record);
 			newFrame = true;
 		}
 		++frame;
 
 		#if FLX_KEYBOARD
-		FlxG.keys.playback(prev.keys);
-		FlxG.keys.playback(iterator.keys);
+		FlxG.keys.playback(last.keys);
+		FlxG.keys.playback(current.keys);
 		#end
 
 		#if FLX_MOUSE
-		FlxG.mouse.playback(prev.mouse);
-		FlxG.mouse.playback(iterator.mouse);
+		FlxG.mouse.playback(last.mouse);
+		FlxG.mouse.playback(current.mouse);
 		#end
 
 		#if FLX_TOUCH
-		FlxG.touches.playback(prev.touches);
-		FlxG.touches.playback(iterator.touches);
+		FlxG.touches.playback(last.touches);
+		FlxG.touches.playback(current.touches);
 		#end
 		
 		if (newFrame)
-			prev.merge(iterator);
+			last.merge(current);
 	}
 
 	/**
@@ -244,8 +248,8 @@ class FlxReplay
 		marker = 0;
 		frame = 0;
 		finished = false;
-		iterator.rewind();
-		prev.rewind();
+		current.rewind();
+		last.rewind();
 	}
 
 	/**
@@ -254,8 +258,8 @@ class FlxReplay
 	function init():Void
 	{
 		frames = new Array<FrameRecord>();
-		iterator = new FrameRecordIterator();
-		prev = new FrameRecordIterator();
+		current = new FrameRecordIterator();
+		last = new FrameRecordIterator();
 	}
 	
 	public function get_frameCount()
