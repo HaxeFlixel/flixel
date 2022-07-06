@@ -265,28 +265,56 @@ private class FrameConvertor
 		}
 	}
 	
-	static var keysExtractor = ~/^(\d+)k(.+?)(m.+$)/;
+	static var keysExtractor = ~/^(\d+)k(.*?)(m.*$)/;
 	public static function convert0(lines:Array<String>)
 	{
-		var i = 0;
-		
 		var pressedKeys = new Map<String, Bool>();
+		var totalPressedKeys = 0;
 		function wasPressed(key:String)
 		{
-			return pressedKeys.exists(key) && pressedKeys[key];
+			return pressedKeys.exists(key);
 		}
 		
+		function setPressed(key:String, pressed:Bool)
+		{
+			if (!wasPressed(key) && pressed)
+			{
+				pressedKeys[key] = pressed;
+				++totalPressedKeys;
+			}
+			else if (wasPressed(key) && !pressed)
+			{
+				pressedKeys.remove(key);
+				--totalPressedKeys;
+			}
+		}
+		
+		var i = 0;
+		var prevFrame = i;
 		while (i < lines.length)
 		{
-			final line = lines[i];
+			var line = lines[i];
+			var frame = Std.parseInt(line.split("k")[0]);
+			// if keys are pressed but frames are skip we need to add release frames
+			if (totalPressedKeys > 0 && frame > prevFrame + 1)
+			{
+				// insert an empty frame before this one to release the keys
+				frame = prevFrame + 1;
+				line = '${frame}km';
+				lines.insert(i, line);
+			}
 			
 			// check if the frame has key data
-			if (keysExtractor.match(line))
+			if (!keysExtractor.match(line))
+				throw "invalid frameRecord";
+			
+			final newKeys = new Array<String>();
+			final newKeyMap = new Map<String, Bool>();
+			var keys = keysExtractor.matched(2);
+			if (keys != "")
 			{
-				final frame = Std.parseInt(keysExtractor.matched(1));
-				final newKeys = new Array<String>();
-				final keys = keysExtractor.matched(2).split(",");
-				for (key in keys)
+				final keyList = keysExtractor.matched(2).split(",");
+				for (key in keyList)
 				{
 					// remove all key data that hasn't changed from the previous
 					final data = key.split(":");
@@ -294,13 +322,35 @@ private class FrameConvertor
 					if (wasPressed(data[0]) != isPressed)
 					{
 						newKeys.push(data[0] + ":" + (isPressed ? "1" : "0"));
+						setPressed(data[0], isPressed);
 					}
-					pressedKeys[data[0]] = isPressed;
+					newKeyMap[data[0]] = true;
 				}
-				
-				lines[i] = line;
-				i++;
 			}
+			
+			// add key releases
+			for (key in pressedKeys.keys())
+			{
+				if(!newKeyMap.exists(key))
+				{
+					newKeys.push('$key:0');
+					setPressed(key, false);
+				}
+			}
+			
+			prevFrame = frame;
+			final miscData = keysExtractor.matched(3);
+			// check if the new frame contains any data
+			if (newKeys.length == 0 && miscData == "m")
+			{
+				// remove the frame entirely
+				lines.splice(i, 1);
+				continue;
+			}
+			
+			// replace the frame with new data, and add an empty touch record
+			lines[i] = '${frame}k${newKeys.join(",")}${miscData}t';
+			++i;
 		}
 		
 		return lines;
