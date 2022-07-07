@@ -56,11 +56,19 @@ class FlxPointer
 	/** Helper for the previous position */
 	var lastY(get, never):Float;
 	
+	/** For backwards compatibility */
+	@:deprecated("Use currentX and inputX.change()")
+	var _globalScreenX(get, set):Int;
+	
+	/** For backwards compatibility */
+	@:deprecated("Use currentY and inputY.change()")
+	var _globalScreenY(get, set):Int;
+	
 	static var _cachedPoint:FlxPoint = new FlxPoint();
 	
 	public function new() {}
 	
-	public function update():Void
+	function update():Void
 	{
 		inputX.update();
 		inputY.update();
@@ -253,5 +261,27 @@ class FlxPointer
 	inline function get_justStopped():Bool
 	{
 		return stopped && (inputX.justStopped || inputY.justStopped);
+	}
+	
+	inline function get__globalScreenX()
+	{
+		return Std.int(currentX);
+	}
+	
+	inline function set__globalScreenX(value:Int)
+	{
+		inputX.change(value);
+		return value;
+	}
+	
+	inline function get__globalScreenY()
+	{
+		return Std.int(currentY);
+	}
+	
+	inline function set__globalScreenY(value:Int)
+	{
+		inputY.change(value);
+		return value;
 	}
 }
