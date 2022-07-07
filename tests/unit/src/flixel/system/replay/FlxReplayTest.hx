@@ -17,7 +17,7 @@ class FlxReplayTest extends FlxTest
 	{
 		seed = 123456789;
 		frameCount = 300;
-		fgr = seed + "\n";
+		fgr = 'v1s$seed\n';
 		var key:Int;
 		var x:Int;
 		var y:Int;
@@ -28,14 +28,20 @@ class FlxReplayTest extends FlxTest
 		 */
 		for (key in [ANY, NONE, BACKSLASH, GRAVEACCENT])
 			possibleKeys.remove(key);
+		
+		var lastKey:Int = -1;
 		for (i in 0...frameCount)
 		{
 			key = possibleKeys[i % possibleKeys.length];
+			var keys = '$key:1';
+			if (lastKey != -1)
+				keys += ',$lastKey:0';
 			x = i % FlxG.width;
 			y = FlxG.height - (i % FlxG.height);
-			fgr += i + "k" + key + ":1m" + x + "," + y + ",2,0\n"; // each frame has a simultaneous key-already-down and mouse-just-down
+			fgr += '${i}k${keys}m$x,$y,${i == 0 ? "1" : ""},,,t\n'; // each frame has a simultaneous key-already-down and mouse-just-down
+			lastKey = key;
 		}
-		fgr += (frameCount++) + "km0,0,2,0\n"; // put everything back how it was for the next test
+		fgr += (frameCount++) + 'k$lastKey:0m0,0,0,,,t'; // put everything back how it was for the next test
 	}
 
 	@Test
@@ -84,10 +90,10 @@ class FlxReplayTest extends FlxTest
 	function testButtonTrigger()
 	{
 		var frames = [
-			createFrameRecord(0, RELEASED),
-			createFrameRecord(1, JUST_PRESSED),
-			createFrameRecord(2, PRESSED),
-			createFrameRecord(3, JUST_RELEASED)
+			createFrameRecord(0, false),
+			createFrameRecord(1, true),
+			createFrameRecord(2, true),
+			createFrameRecord(3, false)
 		];
 		var recording = frames.map(function(r) return r.save()).join("\n");
 		var state = new ReplayState();
@@ -98,9 +104,11 @@ class FlxReplayTest extends FlxTest
 		Assert.isTrue(state.called);
 	}
 
-	function createFrameRecord(i:Int, mouseState:FlxInputState):FrameRecord
+	function createFrameRecord(frame:Int, pressed:Bool):FrameRecord
 	{
-		return new FrameRecord().create(i, null, new MouseRecord(0, 0, mouseState, 0));
+		var mouse = new MouseRecord();
+		mouse.leftButton = pressed;
+		return new FrameRecord().create(frame, null, mouse);
 	}
 }
 

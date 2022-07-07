@@ -15,7 +15,7 @@ class FrameRecord
 	/**
 	 * Which frame of the game loop this record is from or for.
 	 */
-	public var frame:Int;
+	public var frame:Int = 0;
 
 	/**
 	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
@@ -37,9 +37,6 @@ class FrameRecord
 	 */
 	public function new()
 	{
-		frame = 0;
-		keys = null;
-		mouse = null;
 	}
 
 	/**

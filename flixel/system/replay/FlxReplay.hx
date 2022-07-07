@@ -106,7 +106,8 @@ class FlxReplay
 	{
 		init();
 		
-		var lines = data.split("\n");
+		// split lines and trim empty
+		var lines = data.split("\n").filter((s)->s!="");
 		var headerData = lines.shift();
 		var validator = ~/v(\d+)s(\d+)/;
 		var version = 0;
@@ -125,11 +126,6 @@ class FlxReplay
 			frames.push(new FrameRecord().load(line));
 		
 		rewind();
-	}
-	
-	function convertLegacy0(lines:Array<String>)
-	{
-		
 	}
 
 	/**
@@ -192,7 +188,7 @@ class FlxReplay
 		record.keys = keysRecord;
 		#end
 		
-		#if FLX_KEYBOARD
+		#if FLX_TOUCH
 		record.touches = touchesRecord;
 		#end
 
@@ -322,7 +318,7 @@ private class FrameConvertor
 			
 			// check if the frame has key data
 			if (!keysExtractor.match(line))
-				throw "invalid frameRecord";
+				throw 'invalid frameRecord:"$line" (${lines[i]})';
 			
 			final newKeys = new Array<String>();
 			final newKeyMap = new Map<String, Bool>();
@@ -334,7 +330,7 @@ private class FrameConvertor
 				{
 					// remove all key data that hasn't changed from the previous
 					final data = key.split(":");
-					final isPressed = (cast data[1]:FlxInputState).pressed;
+					final isPressed = (Std.parseInt(data[1]):FlxInputState).pressed;
 					if (wasPressed(data[0]) != isPressed)
 					{
 						newKeys.push(data[0] + ":" + (isPressed ? "1" : "0"));

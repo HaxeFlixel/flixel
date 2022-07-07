@@ -78,11 +78,23 @@ abstract KeyRecordList(Map<FlxKey, KeyRecord>)
 	
 	public function toString():String
 	{
-		var output = "";
+		var list = new Array<KeyRecord>();
 		for (record in this)
-		{
+			list.push(record);
+		
+		// Sort keys for deterministic output (for unit tests)
+		list.sort(function (a, b)
+			{
+				if (a.value == b.value)
+					return a.code - b.code;
+				
+				return a.value == "1" ? -1 : 1;
+			}
+		);
+		
+		var output = "";
+		for (record in list)
 			output += record.toString() + ",";
-		}
 		
 		// remove the last delimiter
 		return output.substr(0, -1);
