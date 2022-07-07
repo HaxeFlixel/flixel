@@ -58,7 +58,7 @@ class KeyRecord
 @:forward(keys, keyValueIterator, iterator, get, set, exists, clear)
 abstract KeyRecordList(Map<FlxKey, KeyRecord>)
 {
-	inline public function new()
+	public inline function new()
 	{
 		this = [];
 	}

@@ -172,17 +172,17 @@ abstract FrameRecordIterator(FrameRecord) to FrameRecord
 @:access(flixel.system.replay.KeyRecord)
 private abstract KeyRecordListIterator(KeyRecordList) to KeyRecordList from KeyRecordList
 {
-	inline public function new()
+	public inline function new()
 	{
 		this = new KeyRecordList();
 	}
 	
-	inline public function rewind()
+	public inline function rewind()
 	{
 		this.clear();
 	}
 	
-	inline public function merge(record:KeyRecordList)
+	public inline function merge(record:KeyRecordList)
 	{
 		if (record == null)
 			return;
@@ -204,17 +204,17 @@ private abstract KeyRecordListIterator(KeyRecordList) to KeyRecordList from KeyR
 @:access(flixel.system.replay.MouseRecord)
 private abstract MouseRecordIterator(MouseRecord) to MouseRecord from MouseRecord
 {
-	inline public function new()
+	public inline function new()
 	{
 		this = new MouseRecord();
 	}
 	
-	inline public function rewind()
+	public inline function rewind()
 	{
 		this.reset();
 	}
 	
-	inline public function merge(record:MouseRecord)
+	public inline function merge(record:MouseRecord)
 	{
 		if (record == null)
 			return;
@@ -226,17 +226,17 @@ private abstract MouseRecordIterator(MouseRecord) to MouseRecord from MouseRecor
 @:access(flixel.system.replay.TouchRecord)
 private abstract TouchRecordListIterator(TouchRecordList) to TouchRecordList from TouchRecordList
 {
-	inline public function new()
+	public inline function new()
 	{
 		this = new TouchRecordList();
 	}
 	
-	inline public function rewind()
+	public inline function rewind()
 	{
 		this.clear();
 	}
 	
-	inline public function merge(record:TouchRecordList)
+	public inline function merge(record:TouchRecordList)
 	{
 		if (record == null)
 			return;

@@ -93,9 +93,6 @@
 			}
 		},
 		{
-			"type": "SimplifyBooleanExpression"
-		},
-		{
 			"type": "SimplifyBooleanReturn"
 		},
 		{

@@ -65,12 +65,12 @@ class TouchRecord
 		return id + ";" + numToString(x) + ";" + numToString(y) + ";" + boolToString(pressed) + ";" + numToString(pressure);
 	}
 	
-	inline static function numToString(value:Null<Float>):String
+	static inline function numToString(value:Null<Float>):String
 	{
 		return value == null ? "" : Std.string(value);
 	}
 	
-	inline static function boolToString(value:Null<Bool>):String
+	static inline function boolToString(value:Null<Bool>):String
 	{
 		
 		return value == null ? "" : (value ? "1" : "0");
@@ -96,17 +96,17 @@ class TouchRecord
 		return record;
 	}
 	
-	inline static function parseInt(data:String):Null<Int>
+	static inline function parseInt(data:String):Null<Int>
 	{
 		return data == "" ? null : Std.parseInt(data);
 	}
 	
-	inline static function parseFloat(data:String):Null<Float>
+	static inline function parseFloat(data:String):Null<Float>
 	{
 		return data == "" ? null : Std.parseFloat(data);
 	}
 	
-	inline static function parseBool(data:String):Null<Bool>
+	static inline function parseBool(data:String):Null<Bool>
 	{
 		return data == "" ? null : data == "1";
 	}

@@ -258,7 +258,7 @@ class FlxReplay
 		last = new FrameRecordIterator();
 	}
 	
-	public function get_frameCount()
+	function get_frameCount()
 	{
 		return frames.length;
 	}

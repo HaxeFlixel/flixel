@@ -61,12 +61,12 @@ class MouseRecord
 			;
 	}
 	
-	inline static function intToString(value:Null<Int>):String
+	static inline function intToString(value:Null<Int>):String
 	{
 		return value == null ? "" : Std.string(value);
 	}
 	
-	inline static function boolToString(value:Null<Bool>):String
+	static inline function boolToString(value:Null<Bool>):String
 	{
 		
 		return value == null ? "" : (value ? "1" : "0");
@@ -99,12 +99,12 @@ class MouseRecord
 		return record;
 	}
 	
-	inline static function parseInt(data:String):Null<Int> 
+	static inline function parseInt(data:String):Null<Int> 
 	{
 		return data == "" ? null : Std.parseInt(data);
 	}
 	
-	inline static function parseBool(data:String):Null<Bool> 
+	static inline function parseBool(data:String):Null<Bool> 
 	{
 		return data == "" ? null : data == "1";
 	}
