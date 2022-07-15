@@ -1484,6 +1484,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeAlpha = 0.0;
 		_fxShakeDuration = 0;
 		updateFlashSpritePosition();
+		completeFade();
 	}
 
 	/**
