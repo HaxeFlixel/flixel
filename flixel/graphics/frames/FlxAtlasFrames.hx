@@ -512,89 +512,90 @@ typedef TexturePackerObject =
 
 typedef AsepriteData =
 {
-	var frames:Dynamic;
+	var frames:Dynamic,
 	var meta:
 		{
-			app:String;
-			version:String;
-			image:String;
-			format:String;
+			app:String,
+			version:String,
+			image:String,
+			format:String,
 			size:
 				{
-					w:Float;
-					h:Float;
+					w:Float,
+					h:Float,
 				};
-			scale:String;
-			frameTags:Array<AsepriteFrameTag>;
-			layers:Array<AsepriteLayers>;
-			slices:Array<AsepriteSlices>;
-		};
+			scale:String,
+			frameTags:Array<AsepriteFrameTag>,
+			layers:Array<AsepriteLayers>,
+			slices:Array<AsepriteSlices>
+		}
 }
 
 typedef AsepriteFrame =
 {
 	var frame:
 		{
-			x:Float;
-			y:Float;
-			w:Float;
-			h:Float;
-		};
-	var rotated:Bool;
-	var trimmed:Bool;
+			x:Float,
+			y:Float,
+			w:Float,
+			h:Float
+		},
+	var rotated:Bool,
+	var trimmed:Bool,
 	var spriteSourceSize:
 		{
-			x:Float;
-			y:Float;
-			w:Float;
-			h:Float;
-		};
+			x:Float,
+			y:Float,
+			w:Float,
+			h:Float
+		},
 	var sourceSize:
 		{
-			x:Float;
-			y:Float;
-		};
-	var duration:Float;
+			x:Float,
+			y:Float
+		},
+	var duration:Float
 }
 
 typedef AsepriteFrameTag =
 {
-	var name:String;
-	var from:Float;
-	var to:Float;
-	var direction:String;
+	var name:String,
+	var from:Float,
+	var to:Float,
+	var direction:String
 }
 
 typedef AsepriteLayers =
 {
-	var name:String;
-	var opacity:Float;
-	var blendMode:String;
+	var name:String,
+	var opacity:Float,
+	var blendMode:String
 }
 
 typedef AsepriteSlices =
 {
-	var name:String;
-	var color:String;
-	var keys:Array<AsepriteSlicesKeys>;
+	var name:String,
+	var color:String,
+	var keys:Array<AsepriteSlicesKeys>
 }
 
 typedef AsepriteSlicesKeys =
 {
-	var frame:Float, var bounds:
+	var frame:Float,
+	var bounds:
 		{
-			x:Float;
-			y:Float;
-			w:Float;
-			h:Float;
-		};
+			x:Float,
+			y:Float,
+			w:Float,
+			h:Float
+		},
 	var center:
 		{
-			x:Float;
-			y:Float;
-			w:Float;
-			h:Float;
-		};
+			x:Float,
+			y:Float,
+			w:Float,
+			h:Float
+		}
 }
 
 typedef FlxAsepriteSource = OneOfTwo<String, AsepriteData>;
