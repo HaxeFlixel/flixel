@@ -144,7 +144,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		var data:AsepriteData;
 
-		if (Description is String)
+		if ((Description is String))
 		{
 			var json:String = Description;
 
