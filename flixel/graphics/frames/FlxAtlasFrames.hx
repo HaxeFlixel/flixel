@@ -512,90 +512,83 @@ typedef TexturePackerObject =
 
 typedef AsepriteData =
 {
-	var frames:Dynamic,
-	var meta:
-		{
-			app:String,
-			version:String,
-			image:String,
-			format:String,
-			size:
-				{
-					w:Float,
-					h:Float,
-				};
-			scale:String,
-			frameTags:Array<AsepriteFrameTag>,
-			layers:Array<AsepriteLayers>,
-			slices:Array<AsepriteSlices>
-		}
+	frames:Dynamic,
+	meta:{
+		app:String,
+		version:String,
+		image:String,
+		format:String,
+		size:{
+			w:Float,
+			h:Float,
+		},
+		scale:String,
+		frameTags:Array<AsepriteFrameTag>,
+		layers:Array<AsepriteLayers>,
+		slices:Array<AsepriteSlices>
+	}
 }
 
 typedef AsepriteFrame =
 {
-	var frame:
-		{
-			x:Float,
-			y:Float,
-			w:Float,
-			h:Float
-		},
-	var rotated:Bool,
-	var trimmed:Bool,
-	var spriteSourceSize:
-		{
-			x:Float,
-			y:Float,
-			w:Float,
-			h:Float
-		},
-	var sourceSize:
-		{
-			x:Float,
-			y:Float
-		},
-	var duration:Float
+	frame:{
+		x:Float,
+		y:Float,
+		w:Float,
+		h:Float
+	},
+	rotated:Bool,
+	trimmed:Bool,
+	spriteSourceSize:{
+		x:Float,
+		y:Float,
+		w:Float,
+		h:Float
+	},
+	sourceSize:{
+		x:Float,
+		y:Float
+	},
+	duration:Float
 }
 
 typedef AsepriteFrameTag =
 {
-	var name:String,
-	var from:Float,
-	var to:Float,
-	var direction:String
+	name:String,
+	from:Float,
+	to:Float,
+	direction:String
 }
 
 typedef AsepriteLayers =
 {
-	var name:String,
-	var opacity:Float,
-	var blendMode:String
+	name:String,
+	opacity:Float,
+	blendMode:String
 }
 
 typedef AsepriteSlices =
 {
-	var name:String,
-	var color:String,
-	var keys:Array<AsepriteSlicesKeys>
+	name:String,
+	color:String,
+	keys:Array<AsepriteSlicesKeys>
 }
 
 typedef AsepriteSlicesKeys =
 {
-	var frame:Float,
-	var bounds:
-		{
-			x:Float,
-			y:Float,
-			w:Float,
-			h:Float
-		},
-	var center:
-		{
-			x:Float,
-			y:Float,
-			w:Float,
-			h:Float
-		}
+	frame:Float,
+	bounds:{
+		x:Float,
+		y:Float,
+		w:Float,
+		h:Float
+	},
+	center:{
+		x:Float,
+		y:Float,
+		w:Float,
+		h:Float
+	}
 }
 
 typedef FlxAsepriteSource = OneOfTwo<String, AsepriteData>;
