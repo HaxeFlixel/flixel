@@ -758,14 +758,14 @@ class FlxSound extends FlxBasic
 		#else
 		var backend = _channel.__source.__backend;
 		@:privateAccess
-		if (backend.playing && v != _pitch)
+		if (true)
 		{
 			if (backend.timer != null)
 			{
 				backend.timer.stop();
 			}
 
-			var timeRemaining = Std.int((length - time) / v);
+			var timeRemaining = (backend.getLength() - backend.getCurrentTime()) / v;
 			if (timeRemaining > 0)
 			{
 				backend.timer = new haxe.Timer(timeRemaining);
