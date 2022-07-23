@@ -48,30 +48,4 @@ class FlxSaveTest extends FlxTest
 		Assert.isNotNull(save.data);
 		Assert.isNull(save.data.int);
 	}
-
-	@Test
-	function testFlushCallback()
-	{
-		var success = false;
-		save.flush(0, function(s)
-		{
-			success = s;
-		});
-		step();
-
-		Assert.isTrue(success);
-	}
-
-	@Test
-	function testCloseCallback()
-	{
-		var success = false;
-		save.close(0, function(s)
-		{
-			success = s;
-		});
-		step();
-
-		Assert.isTrue(success);
-	}
 }

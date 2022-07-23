@@ -17,7 +17,7 @@ import flixel.input.gamepad.mappings.SwitchProMapping;
 import flixel.input.gamepad.mappings.SwitchJoyconLeftMapping;
 import flixel.input.gamepad.mappings.SwitchJoyconRightMapping;
 import flixel.input.gamepad.mappings.XInputMapping;
-import flixel.math.FlxVector;
+import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 #if FLX_GAMEINPUT_API
@@ -629,14 +629,14 @@ class FlxGamepad implements IFlxDestroyable
 	}
 
 	/**
-	 * Convenience method that wraps `getXAxis()` and `getYAxis()` into a `FlxVector`.
+	 * Convenience method that wraps `getXAxis()` and `getYAxis()` into a `FlxPoint`.
 	 *
 	 * @param	AxesButtonID an analog stick like `FlxGamepadButtonID.LEFT_STICK`
 	 * @since	4.3.0
 	 */
-	public function getAnalogAxes(AxesButtonID:FlxGamepadInputID):FlxVector
+	public function getAnalogAxes(AxesButtonID:FlxGamepadInputID):FlxPoint
 	{
-		return FlxVector.get(getXAxis(AxesButtonID), getYAxis(AxesButtonID));
+		return FlxPoint.get(getXAxis(AxesButtonID), getYAxis(AxesButtonID));
 	}
 
 	/**
@@ -744,7 +744,7 @@ class FlxGamepad implements IFlxDestroyable
 		var xAxis = getAxisValue(stick.x);
 		var yAxis = getAxisValue(stick.y);
 
-		var vector = FlxVector.get(xAxis, yAxis);
+		var vector = FlxPoint.get(xAxis, yAxis);
 		var length = vector.length;
 		vector.put();
 

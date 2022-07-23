@@ -216,7 +216,7 @@ class FlxVelocity
 	 */
 	public static function velocityFromFacing(Parent:FlxSprite, Speed:Float):FlxPoint
 	{
-		return FlxVector.get().setPolarDegrees(Speed, Parent.facing.degrees);
+		return FlxPoint.get().setPolarDegrees(Speed, Parent.facing.degrees);
 	}
 
 	/**
