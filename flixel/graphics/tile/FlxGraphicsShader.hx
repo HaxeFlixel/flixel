@@ -4,7 +4,9 @@ package flixel.graphics.tile;
 import openfl.display.GraphicsShader;
 
 class FlxGraphicsShader extends GraphicsShader
-{
+{ 
+	
+	@:glVersion(120)
 	@:glVertexSource("
 		#pragma header
 		
