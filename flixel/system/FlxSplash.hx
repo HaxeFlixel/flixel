@@ -15,7 +15,7 @@ import flixel.util.FlxTimer;
 
 class FlxSplash extends FlxState
 {
-	public static var nextState:Class<FlxState>;
+	public static var nextState:()->FlxState;
 
 	/**
 	 * @since 4.8.0
@@ -199,7 +199,7 @@ class FlxSplash extends FlxState
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
-		FlxG.switchState(() -> Type.createInstance(nextState, []));
+		FlxG.switchState(nextState);
 		FlxG.game._gameJustStarted = true;
 	}
 }
