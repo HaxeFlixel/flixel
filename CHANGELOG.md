@@ -21,20 +21,29 @@
 - `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
 - `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, `*`, and `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxColor`: added `rgb` getter and setter ([#2555](https://github.com/HaxeFlixel/flixel/pull/2555))
+- `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty` 
+([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+([#2584](https://github.com/HaxeFlixel/flixel/pull/2584))
 
 #### Bugfixes:
 
 - `FlxSprite`: Fixed `loadRotatedGraphic` to solve Mod by 0 ([#2518](https://github.com/HaxeFlixel/flixel/pull/2518))
 - `FlxText`: Fixed alignment issues across platforms ([#2536](https://github.com/HaxeFlixel/flixel/pull/2536))
+- `FlxBitmapText`: Fixed issue on non-multiline text with wordWrap disabled ([#2590](https://github.com/HaxeFlixel/flixel/pull/2590))
 
 #### Changes and improvements:
 
 - Collision: preserve momentum in `FlxG.collide` ([#2422](https://github.com/HaxeFlixel/flixel/pull/2422))
 - Angles: All angle utils treat right as 0 (affects `FlxSwipe` and `FlxPath`) ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
-- `FlxAngle`: Deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
-- `FlxTilemap`: Renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxAngle`: deprecated: `getCartesianCoords`, `getPolarCoords`, `angleFromFacing` and `FlxPoint.angleBetween` ([#2482](https://github.com/HaxeFlixel/flixel/pull/2482))
+- `FlxTilemap`: renamed `ray` to `rayStep` added new `ray` with no `resolution` arg ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPoint/FlxVector`: moved all `FlxVector` fields and methods into `FlxPoint` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
+- `FlxSave`: changed the default save name and path to unique values based on Project.xml metadata ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
+- `FlxTilemap`: Replaced `useScaleHack` with static `defaultFramePadding` to fix tile tearing ([#2581]https://github.com/HaxeFlixel/flixel/issues/2581)
+- `FlxSprite`: improved `pixelsOverlapPoint` with scaled or angled sprites ([#2576](https://github.com/HaxeFlixel/flixel/pull/2576))
+	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
+- `FlxGame`: removed misleading `zoom` arg from constructor ([#2591](https://github.com/HaxeFlixel/flixel/pull/2591))
 
 4.11.0 (January 26, 2022)
 ------------------------------

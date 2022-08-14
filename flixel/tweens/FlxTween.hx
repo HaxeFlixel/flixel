@@ -51,6 +51,127 @@ import flixel.math.FlxPoint;
 	var BACKWARD = 16;
 }
 
+/**
+ * Allows you to create smooth interpolations and animations easily. "Tweening" is short
+ * for inbetweening: you only have to specify start and end values and `FlxTween` will
+ * generate all values between those two.
+ * 
+ * ## Resources
+ * - [Handbook - FlxTween](https://haxeflixel.com/documentation/flxtween/)
+ * - [Demo - FlxTween](https://haxeflixel.com/demos/FlxTween/)
+ * - [Snippets - FlxTween](https://snippets.haxeflixel.com/tweens/tween/)
+ * 
+ * ## Example
+ * If you want to move a `FlxSprite` across the screen:
+ * ```haxe
+ * sprite.x = 200;
+ * sprite.y = 200;
+ * 
+ * FlxTween.tween(sprite, { x: 600, y: 800 }, 2.0);
+ * ```
+ * The first two lines specify the start position of the sprite, because the `tween()` method
+ * assumes the current position is the starting position.
+ * 
+ * ## Cancelling a Tween
+ * If you start a tween using the code above, it will run until the desired values are reached,
+ * then stop. As the `tween()` method returns an object of type `FlxTween`, keeping this object
+ * in a variable allows you to access the current tween running if you wish to control it.
+ * 
+ * This code stops the translation of the sprite if the player presses the spacebar of their keyboard:
+ * ```haxe
+ * var tween:FlxTween;
+ * 
+ * public function new()
+ * {
+ *     super();
+ *     // set up sprite
+ *     tween = FlxTween.tween(sprite, { x:600, y:800 }, 2);
+ * }
+ * 
+ * override public function update(elapsed:Float)
+ * {
+ *     super.update(elapsed);
+ *     
+ *     if (FlxG.keys.justPressed.SPACE)
+ *         tween.cancel();
+ * }
+ * ```
+ * ## Tweening Options
+ * The `tween()` method takes an optional fourth parameter which is a map of options.
+ * 
+ * Possible values are:
+ * - `type`:
+ *     - *ONESHOT*: Stops and removes itself from its core container when it finishes
+ *     - *PERSIST*: Like *ONESHOT*, but after it finishes you may call `start()` again
+ *     - *BACKWARD*: Like *ONESHOT*, but plays in the reverse direction
+ *     - *LOOPING*: Restarts immediately when it finishes
+ *     - *PINGPONG*: Like *LOOPING*, but every second execution is in reverse direction
+ * - `onComplete`: Called once the tween has finished. For looping tweens it is called every execution.
+ * - `ease`: The method of interpolating the start and end points. Usually used to make the start and/or
+ *           end of the tween smoother. `FlxEase` has various easing methods to choose from.
+ * - `startDelay`: Time to wait before starting this tween, in seconds.
+ * - `loopDelay`: Time to wait before this tween is repeated, in seconds
+ * 
+ * Example:
+ * ```haxe
+ * public function new()
+ * {
+ *     super();
+ *     // set up sprite
+ *     sprite.x = 200;
+ *     sprite.y = 200;
+ *     FlxTween.tween(sprite, { x: 600, y: 800 }, 2, 
+ *         { 
+ *             type:       PINGPONG,
+ *             ease:       FlxEase.quadInOut,
+ *             onComplete: changeColor,
+ *             startDelay: 1,
+ *             loopDelay:  2
+ *         }
+ *     );
+ * }
+ * 
+ * function changeColor(tween:FlxTween):Void
+ * {
+ *     sprite.color = tween.executions % 2 == 0 ? FlxColor.RED : FlxColor.BLUE;
+ * }
+ * ```
+ * 
+ * This code moves the sprite constantly between the two points (200|200) and (600|800), smoothly
+ * accelerating and decelerating. Each time the sprite arrives at one of those two points, its color
+ * changes. The animation starts after 1 second and then the sprite pauses at each point for 2 seconds.
+ * 
+ * ## Special Tweens
+ * There are many more tweening methods in `FlxTween`, which are used for special cases:
+ * 
+ * ### Color
+ * Tweens the rgb components of a color independently, where normal tweening would screw up the colors.
+ * 
+ * ```haxe
+ * FlxTween.color(sprite, 3.0, FlxColor.RED, FlxColor.GREEN, { onComplete:onTweenComplete } );
+ * ```
+ * 
+ * ### Angle
+ * Tweens the angle of a sprite, normal tweening would have trouble going from negative to positive angles.
+ * 
+ * ```haxe
+ * FlxTween.angle(sprite, -90, 180, 3.0, { onComplete:onTweenComplete } );
+ * ```
+ * ### Num
+ * Calls a function with the tweened value over time, no parent object involved.
+ * 
+ * ```haxe
+ * FlxTween.num(0, totalWinnings, 3.0, function(num) { field.text = addCommas(num); });
+ * ```
+ * 
+ * ### Motion
+ * The FlxTween class also contains the methods `linearMotion()`, `quadMotion()`, `cubicMotion()` and `circularMotion()`,
+ * which make objects follow straight lines, smooth paths or circles.
+ * 
+ * ### Paths
+ * The methods `linearPath()` and `quadPath()` can be used for longer paths defined through an array of points,
+ * instead of a fixed number of points.
+ */
 class FlxTween implements IFlxDestroyable
 {
 	/**

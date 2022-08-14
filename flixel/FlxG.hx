@@ -49,8 +49,8 @@ import flixel.input.FlxAccelerometer;
 import flixel.input.FlxSwipe;
 #end
 #if FLX_POST_PROCESS
-import openfl.display.OpenGLView;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.OpenGLView;
 
 using flixel.util.FlxArrayUtil;
 #end
@@ -313,7 +313,6 @@ class FlxG
 
 	public static var initialWidth(default, null):Int = 0;
 	public static var initialHeight(default, null):Int = 0;
-	public static var initialZoom(default, null):Float = 0;
 
 	#if FLX_SOUND_SYSTEM
 	/**
@@ -571,7 +570,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
-	static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static function init(Game:FlxGame, Width:Int, Height:Int):Void
 	{
 		game = Game;
 		width = Std.int(Math.abs(Width));
@@ -581,7 +580,6 @@ class FlxG
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
-		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 
 		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 
@@ -609,7 +607,8 @@ class FlxG
 		#if FLX_ACCELEROMETER
 		accelerometer = new FlxAccelerometer();
 		#end
-		save.bind("flixel");
+
+		initSave();
 
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
@@ -661,6 +660,20 @@ class FlxG
 		renderTile = renderMethod == DRAW_TILES;
 
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
+	}
+
+	static function initSave()
+	{
+		// Don't init if the FlxG.save.bind was manually called before the FlxGame was created
+		if (save.isBound)
+			return;
+
+		// Use Project.xml data to determine save id (since 5.0.0).
+		final name = stage.application.meta["file"];
+		save.bind(FlxSave.validate(name));
+		// look for the pre 5.0 save and convert it if it exists.
+		if (save.isEmpty())
+			save.mergeDataFrom("flixel", null, false, false);
 	}
 
 	/**

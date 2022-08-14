@@ -24,13 +24,13 @@ class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 		this.fixedWidth = fixedWidth;
 		this.fixedHeight = fixedHeight;
 
-		gameSize.set(FlxG.width * FlxG.initialZoom, FlxG.height * FlxG.initialZoom);
+		gameSize.set(FlxG.width, FlxG.height);
 	}
 
 	override public function onMeasure(Width:Int, Height:Int):Void
 	{
-		FlxG.width = fixedWidth ? FlxG.initialWidth : Math.ceil(Width / FlxG.initialZoom);
-		FlxG.height = fixedHeight ? FlxG.initialHeight : Math.ceil(Height / FlxG.initialZoom);
+		FlxG.width = fixedWidth ? FlxG.initialWidth : Math.ceil(Width);
+		FlxG.height = fixedHeight ? FlxG.initialHeight : Math.ceil(Height);
 
 		updateGameSize(Width, Height);
 		updateDeviceSize(Width, Height);
@@ -40,8 +40,8 @@ class FixedScaleAdjustSizeScaleMode extends BaseScaleMode
 
 	override function updateGameSize(Width:Int, Height:Int):Void
 	{
-		gameSize.x = FlxG.width * FlxG.initialZoom;
-		gameSize.y = FlxG.height * FlxG.initialZoom;
+		gameSize.x = FlxG.width;
+		gameSize.y = FlxG.height;
 
 		if (FlxG.camera != null)
 		{
