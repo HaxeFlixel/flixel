@@ -427,7 +427,6 @@ class FlxGame extends Sprite
 		var curState = State();
 		if (_requestState && _state != curState)
 		{
-			trace("I'm different :D " + curState);
 			switchState(curState);
 		}
 		return State;
