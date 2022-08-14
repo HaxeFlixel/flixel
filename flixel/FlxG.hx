@@ -369,7 +369,7 @@ class FlxG
 	public static inline function switchState(nextState:() -> FlxState):Void
 	{
 		if (state.switchTo(nextState()))
-			game._requestedState = nextState();
+			game._requestedState = nextState;
 	}
 
 	/**
@@ -378,7 +378,7 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		switchState(() -> Type.createInstance(Type.getClass(state), []));
+		switchState(game._requestedState);
 	}
 
 	/**
