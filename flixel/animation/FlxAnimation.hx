@@ -44,6 +44,12 @@ class FlxAnimation extends FlxBaseAnimation
 	public var looped(default, null):Bool = true;
 
 	/**
+	 * The custom loop point for this animation.
+	 * This allows you to skip the first few frames of an animation when looping.
+	 */
+	public var loopPoint:Int = 0;
+
+	/**
 	 * Whether or not this animation is being played backwards.
 	 */
 	public var reversed(default, null):Bool = false;
@@ -191,7 +197,7 @@ class FlxAnimation extends FlxBaseAnimation
 			_frameTimer -= delay;
 			if (reversed)
 			{
-				if (looped && curFrame == 0)
+				if (looped && curFrame == loopPoint)
 					curFrame = numFrames - 1;
 				else
 					curFrame--;
@@ -199,7 +205,7 @@ class FlxAnimation extends FlxBaseAnimation
 			else
 			{
 				if (looped && curFrame == numFrames - 1)
-					curFrame = 0;
+					curFrame = loopPoint;
 				else
 					curFrame++;
 			}
