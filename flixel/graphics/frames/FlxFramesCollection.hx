@@ -68,10 +68,14 @@ class FlxFramesCollection implements IFlxDestroyable
 	**/
 	public static function mergeSheets(sheets:Array<FlxFramesCollection>):FlxFramesCollection
 	{
-		var tex:FlxFramesCollection = null;
+		var tex:FlxFramesCollection;
 		for (i in 0...sheets.length)
 		{
 			tex = tex.frames.concat(i.frames);
+		}
+		if (tex == null)
+		{
+			throw "Error occurred!"; 
 		}
 		return tex;
 	}
