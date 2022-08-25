@@ -681,20 +681,6 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Merges multiple `FlxFramesCollection` and returns the result of the concatenation.
-	 * @param	FrameList	An array that contains various instances of `FlxFramesCollection` (they must contain a spritesheet, see the API for how to initialize using a spritesheet)
-	**/
-	public function addMultipleSpritesheet(sheets:Array<FlxFramesCollection>):FlxFramesCollection
-	{
-		var tex:FlxFramesCollection = null;
-		for (i in 0...sheets.len)
-		{
-			tex = tex.frames.concat(i.frames);
-		}
-		return tex;
-	}
-
-	/**
 	 * Helper function to set the graphic's dimensions by using `scale`, allowing you to keep the current aspect ratio
 	 * should one of the Integers be `<= 0`. It might make sense to call `updateHitbox()` afterwards!
 	 *

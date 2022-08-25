@@ -63,6 +63,20 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
+	 * Merges multiple `FlxFramesCollection` and returns the result of the concatenation.
+	 * @param	FrameList	An array that contains various instances of `FlxFramesCollection` (they must contain a spritesheet, see the API for how to initialize using a spritesheet)
+	**/
+	public static function mergeSheets(sheets:Array<FlxFramesCollection>):FlxFramesCollection
+	{
+		var tex:FlxFramesCollection = null;
+		for (i in 0...sheets.len)
+		{
+			tex = tex.frames.concat(i.frames);
+		}
+		return tex;
+	}
+
+	/**
 	 * Finds a frame in `framesHash` by its name.
 	 *
 	 * @param   name   The name of the frame to find.
