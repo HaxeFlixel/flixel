@@ -24,6 +24,7 @@
 - `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty` 
 ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
 ([#2584](https://github.com/HaxeFlixel/flixel/pull/2584))
+- `FlxAnimation` - added `loopPoint` to allow looping to a frame other than the starting frame ([#2621](https://github.com/HaxeFlixel/flixel/pull/2621))
 
 #### Bugfixes:
 
