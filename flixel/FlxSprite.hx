@@ -988,29 +988,73 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's current displayed pixels.
-	 * This check is ALWAYS made in screen space, and always takes `scrollFactor` into account.
+	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's current
+	 * displayed pixels. This check is ALWAYS made in screen space, and always takes `scrollFactor`
+	 * into account.
 	 *
 	 * @param   point    The point in world space you want to check.
 	 * @param   mask     Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera   Specify which game camera you want.  If `null`, it will just grab the first global camera.
+	 * @param   camera   Specify which game camera you want.  If `null`, it will just grab the
+	 *                   first global camera.
 	 * @return  Whether or not the point overlaps this object.
 	 */
 	public function pixelsOverlapPoint(point:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
-		transformWorldToPixels(point, camera, _point);
-
+		var pixelColor = getPixelAt(point);
+		
+		if (pixelColor != null)
+			return pixelColor.alpha * alpha >= mask;
+		
 		// point is outside of the graphic
+		return false;
+	}
+	
+	/**
+	 * Determines which of this sprite's pixels are at the specified world coordinate, if any.
+	 * 
+	 * @param  worldPoint  The point in world space
+	 * @param  camera      Specify which game camera you want.  If `null`, it will just grab the
+	 *                     first global camera.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @since 5.0.0
+	 */
+	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
+	{
+		transformWorldToPixels(worldPoint, camera, _point);
+		
+		// point is inside the graphic
 		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
 		{
 			var frameData:BitmapData = updateFramePixels();
-			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
-			return pixelColor.alpha * alpha >= mask;
+			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
 		}
-
-		return false;
+		
+		return null;
 	}
-
+	
+	/**
+	 * Determines which of this sprite's pixels are at the specified screen coordinate, if any.
+	 * 
+	 * @param  screenPoint  The point in screen space
+	 * @param  camera       Specify which game camera you want.  If `null`, it will just grab the
+	 *                      first global camera.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @since 5.0.0
+	 */
+	public function getPixelAtScreen(screenPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
+	{
+		transformWorldToPixels(screenPoint, camera, _point);
+		
+		// point is inside the graphic
+		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
+		{
+			var frameData:BitmapData = updateFramePixels();
+			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
 	 * is the top left of the graphic.
