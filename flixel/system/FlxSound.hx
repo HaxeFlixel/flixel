@@ -609,7 +609,7 @@ class FlxSound extends FlxBasic
 		_channel = _sound.play(_time, 0, _transform);
 		if (_channel != null)
 		{
-			#if FLX_PITCH;
+			#if FLX_PITCH
 			pitch = _pitch;
 			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
