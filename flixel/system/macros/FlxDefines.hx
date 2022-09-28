@@ -26,6 +26,7 @@ private enum UserDefines
 	FLX_4_LEGACY_COLLISION;
 	/* Simplifies FlxPoint but can increase GC frequency */
 	FLX_NO_POINT_POOL;
+	FLX_NO_PITCH;
 }
 
 /**
@@ -54,6 +55,7 @@ private enum HelperDefines
 	FLX_ACCELEROMETER;
 	FLX_DRAW_QUADS;
 	FLX_POINT_POOL;
+	FLX_PITCH;
 }
 
 class FlxDefines
@@ -129,6 +131,9 @@ class FlxDefines
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
+		#if (openfl_legacy && sys || lime >= "8.0.0" && !flash)
+		defineInversion(FLX_NO_PITCH, FLX_PITCH);
+		#end
 	}
 
 	static function defineHelperDefines()
