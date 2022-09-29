@@ -131,9 +131,6 @@ class FlxDefines
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
-		#if (openfl_legacy && sys || lime >= "8.0.0" && !flash)
-		defineInversion(FLX_NO_PITCH, FLX_PITCH);
-		#end
 	}
 
 	static function defineHelperDefines()
@@ -146,7 +143,10 @@ class FlxDefines
 
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
-
+		
+		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_PITCH) && #if openfl_legacy defined("sys") #elseif (lime >= "8.0.0") !defined("flash") #end)
+			define(FLX_PITCH);
+		
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
