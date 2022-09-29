@@ -145,7 +145,7 @@ class FlxDefines
 			define(FLX_SOUND_TRAY);
 		
 		if (defined(FLX_NO_SOUND_SYSTEM) || #if openfl_legacy !defined("sys") #elseif (lime >= "8.0.0") defined("flash") #end)
-			define(FLX_NO_PITCH)
+			define(FLX_NO_PITCH);
 			
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
