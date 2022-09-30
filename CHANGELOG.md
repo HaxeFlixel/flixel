@@ -25,6 +25,7 @@
 ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
 ([#2584](https://github.com/HaxeFlixel/flixel/pull/2584))
 - `FlxAnimation` - added `loopPoint` to allow looping to a frame other than the starting frame ([#2621](https://github.com/HaxeFlixel/flixel/pull/2621))
+- `FlxSound` - added `pitch` to alter the playback speed ([#2564](https://github.com/HaxeFlixel/flixel/pull/2564))
 - `FlxSprite` - added `getPixelAt` and `getPixelAtScreen` ([#2640](https://github.com/HaxeFlixel/flixel/pull/2640))
 
 #### Bugfixes:
