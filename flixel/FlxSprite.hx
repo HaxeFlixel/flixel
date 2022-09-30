@@ -1063,7 +1063,7 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The camera, used to compare screen coordinates
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformWorldToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
@@ -1081,7 +1081,7 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The camera
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformScreenToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
