@@ -988,75 +988,139 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's current displayed pixels.
-	 * This check is ALWAYS made in screen space, and always takes `scrollFactor` into account.
+	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's
+	 * current displayed pixels. This check is ALWAYS made in screen space, and
+	 * factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 *
-	 * @param   point    The point in world space you want to check.
-	 * @param   mask     Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera   Specify which game camera you want.  If `null`, it will just grab the first global camera.
+	 * @param   worldPoint  point in world space you want to check.
+	 * @param   mask        Used in the pixel hit test to determine what counts as solid.
+	 * @param   camera      The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(point:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
+	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
-		transformWorldToPixels(point, camera, _point);
-
+		var pixelColor = getPixelAt(worldPoint);
+		
+		if (pixelColor != null)
+			return pixelColor.alpha * alpha >= mask;
+		
 		// point is outside of the graphic
+		return false;
+	}
+	
+	/**
+	 * Determines which of this sprite's pixels are at the specified world coordinate, if any.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * 
+	 * @param  worldPoint  The point in world space
+	 * @param  camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @since 5.0.0
+	 */
+	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
+	{
+		transformWorldToPixels(worldPoint, camera, _point);
+		
+		// point is inside the graphic
 		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
 		{
 			var frameData:BitmapData = updateFramePixels();
-			var pixelColor:FlxColor = frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
-			return pixelColor.alpha * alpha >= mask;
+			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
 		}
-
-		return false;
+		
+		return null;
 	}
-
+	
+	/**
+	 * Determines which of this sprite's pixels are at the specified screen coordinate, if any.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * 
+	 * @param  screenPoint  The point in screen space
+	 * @param  camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @since 5.0.0
+	 */
+	public function getPixelAtScreen(screenPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
+	{
+		transformScreenToPixels(screenPoint, camera, _point);
+		
+		// point is inside the graphic
+		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
+		{
+			var frameData:BitmapData = updateFramePixels();
+			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
 	 * is the top left of the graphic.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   point   The world coordinates
-	 * @param   camera  The camera, used to compare screen coordinates
-	 * @param   result  Optional arg for the returning point
+	 * @param   worldPoint  The world coordinates.
+	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @param   result      Optional arg for the returning point
 	 */
-	function transformWorldToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-
-		var screenPoint = FlxPoint.weak(point.x - camera.scroll.x, point.y - camera.scroll.y);
-		point.putWeak();
+		
+		var screenPoint = FlxPoint.weak(worldPoint.x - camera.scroll.x, worldPoint.y - camera.scroll.y);
+		worldPoint.putWeak();
 		return transformScreenToPixels(screenPoint, camera, result);
 	}
-
+	
 	/**
-	 * Converts the point from screen coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic.
+	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
+	 * is the top left of the graphic. Same as `worldToPixels` but never uses a camera,
+	 * therefore `scrollFactor` is ignored
 	 * 
-	 * @param   point   The screen coordinates
-	 * @param   camera  The camera
-	 * @param   result  Optional arg for the returning point
+	 * @param   worldPoint  The world coordinates.
+	 * @param   result      Optional arg for the returning point
 	 */
-	function transformScreenToPixels(point:FlxPoint, camera:FlxCamera, result:FlxPoint):FlxPoint
+	public function transformWorldToPixelsSimple(worldPoint:FlxPoint, ?result:FlxPoint):FlxPoint
 	{
-		if (camera == null)
-			camera = FlxG.camera;
-
-		result = getScreenPosition(result, camera);
-
-		FlxG.watch.addQuick("mouse", point);
-		FlxG.watch.addQuick("card", result);
-
-		result.subtract(point.x, point.y);
+		result = getPosition(result);
+		
+		result.subtract(worldPoint.x, worldPoint.y);
 		result.negate();
 		result.addPoint(offset);
 		result.subtractPoint(origin);
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
 		result.addPoint(origin);
+		
+		worldPoint.putWeak();
+		
+		return result;
+	}
 
-		point.putWeak();
-
+	/**
+	 * Converts the point from screen coordinates to this sprite's pixel coordinates where (0,0)
+	 * is the top left of the graphic.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * 
+	 * @param   screenPoint  The screen coordinates
+	 * @param   camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   result       Optional arg for the returning point
+	 */
+	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		result = getScreenPosition(result, camera);
+		
+		result.subtract(screenPoint.x, screenPoint.y);
+		result.negate();
+		result.addPoint(offset);
+		result.subtractPoint(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.addPoint(origin);
+		
+		screenPoint.putWeak();
+		
 		return result;
 	}
 
@@ -1139,7 +1203,7 @@ class FlxSprite extends FlxObject
 	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 *
-	 * @param   Camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
+	 * @param   Camera  Specify which game camera you want. If `null`, `FlxG.camera` is used.
 	 * @return  Whether the object is on screen or not.
 	 */
 	override public function isOnScreen(?camera:FlxCamera):Bool
