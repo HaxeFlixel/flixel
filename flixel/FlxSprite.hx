@@ -992,14 +992,14 @@ class FlxSprite extends FlxObject
 	 * current displayed pixels. This check is ALWAYS made in screen space, and
 	 * factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 *
-	 * @param   point    The point in world space you want to check.
-	 * @param   mask     Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera   The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   worldPoint  point in world space you want to check.
+	 * @param   mask        Used in the pixel hit test to determine what counts as solid.
+	 * @param   camera      The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(point:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
+	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
-		var pixelColor = getPixelAt(point);
+		var pixelColor = getPixelAt(worldPoint);
 		
 		if (pixelColor != null)
 			return pixelColor.alpha * alpha >= mask;
@@ -1059,9 +1059,9 @@ class FlxSprite extends FlxObject
 	 * is the top left of the graphic.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   point   The world coordinates.
-	 * @param   camera  The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
-	 * @param   result  Optional arg for the returning point
+	 * @param   worldPoint  The world coordinates.
+	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @param   result      Optional arg for the returning point
 	 */
 	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
@@ -1078,8 +1078,8 @@ class FlxSprite extends FlxObject
 	 * is the top left of the graphic. Same as `worldToPixels` but never uses a camera,
 	 * therefore `scrollFactor` is ignored
 	 * 
-	 * @param   point   The world coordinates.
-	 * @param   result  Optional arg for the returning point
+	 * @param   worldPoint  The world coordinates.
+	 * @param   result      Optional arg for the returning point
 	 */
 	public function transformWorldToPixelsSimple(worldPoint:FlxPoint, ?result:FlxPoint):FlxPoint
 	{
@@ -1103,9 +1103,9 @@ class FlxSprite extends FlxObject
 	 * is the top left of the graphic.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   point   The screen coordinates
-	 * @param   camera  The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
-	 * @param   result  Optional arg for the returning point
+	 * @param   screenPoint  The screen coordinates
+	 * @param   camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   result       Optional arg for the returning point
 	 */
 	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
