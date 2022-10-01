@@ -1042,7 +1042,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function getPixelAtScreen(screenPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
-		transformWorldToPixels(screenPoint, camera, _point);
+		transformScreenToPixels(screenPoint, camera, _point);
 		
 		// point is inside the graphic
 		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
