@@ -1065,9 +1065,6 @@ class FlxSprite extends FlxObject
 	 */
 	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
-		if (camera == null)
-			camera = FlxG.camera;
-
 		var screenPoint = FlxPoint.weak(point.x - camera.scroll.x, point.y - camera.scroll.y);
 		point.putWeak();
 		return transformScreenToPixels(screenPoint, camera, result);
@@ -1083,9 +1080,6 @@ class FlxSprite extends FlxObject
 	 */
 	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
-		if (camera == null)
-			camera = FlxG.camera;
-		
 		getScreenPosition(result, camera);
 		
 		result.subtract(point.x, point.y);
