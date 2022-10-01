@@ -269,7 +269,11 @@ class FlxSprite extends FlxObject
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
-
+	public var clipRectWorldCoords = true;
+	
+	@:noCompletion
+	var _clipRect:FlxRect = FlxRect.get();
+	
 	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
 	 * Avoid changing it frequently as this is a costly operation.
@@ -1376,7 +1380,31 @@ class FlxSprite extends FlxObject
 
 		if (clipRect != null)
 		{
-			_frame = frame.clipTo(clipRect, _frame);
+			if (clipRectWorldCoords)
+			{
+				var world = FlxPoint.get();
+				var local = FlxPoint.get();
+				
+				world.set(x + clipRect.x, y + clipRect.y);
+				transformWorldToPixels(world, local);//TODO: make new util that ignores camera
+				_clipRect.x = local.x;
+				_clipRect.y = local.y;
+				_clipRect.setPosition(local.x, local.y);
+				
+				world.set(x + clipRect.right, y + clipRect.bottom);
+				transformWorldToPixels(world, local);
+				_clipRect.right = local.x;
+				_clipRect.bottom = local.y;
+				
+				world.put();
+				local.put();
+			}
+			else
+			{
+				_clipRect.copyFrom(clipRect);
+			}
+			
+			_frame = frame.clipTo(_clipRect, _frame);
 		}
 		else
 		{
