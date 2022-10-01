@@ -1405,13 +1405,13 @@ class FlxSprite extends FlxObject
 				var local = FlxPoint.get();
 				
 				world.set(x + clipRect.x, y + clipRect.y);
-				transformWorldToPixels(world, local);//TODO: make new util that ignores camera
+				transformClipRectPoint(world, local);
 				_clipRect.x = local.x;
 				_clipRect.y = local.y;
 				_clipRect.setPosition(local.x, local.y);
 				
 				world.set(x + clipRect.right, y + clipRect.bottom);
-				transformWorldToPixels(world, local);
+				transformClipRectPoint(world, local);
 				_clipRect.right = local.x;
 				_clipRect.bottom = local.y;
 				
@@ -1431,6 +1431,26 @@ class FlxSprite extends FlxObject
 		}
 
 		return frame;
+	}
+	
+	/**
+	 * Copied from transformWorldToPixelsSimple with angle removed
+	 */
+	function transformClipRectPoint(worldPoint:FlxPoint, ?result:FlxPoint)
+	{
+		result = getPosition(result);
+		
+		result.subtract(worldPoint.x, worldPoint.y);
+		result.negate();
+		result.addPoint(offset);
+		result.subtractPoint(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		// result.degrees -= angle;
+		result.addPoint(origin);
+		
+		worldPoint.putWeak();
+		
+		return result;
 	}
 
 	@:noCompletion
