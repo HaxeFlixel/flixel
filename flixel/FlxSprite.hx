@@ -1059,8 +1059,8 @@ class FlxSprite extends FlxObject
 	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
 	 * is the top left of the graphic.
 	 * 
-	 * @param   point   The world coordinates
-	 * @param   camera  The camera, used to compare screen coordinates
+	 * @param   point   The world coordinates.
+	 * @param   camera  The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
 	 * @param   result  Optional arg for the returning point
 	 */
 	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
@@ -1078,7 +1078,7 @@ class FlxSprite extends FlxObject
 	 * is the top left of the graphic.
 	 * 
 	 * @param   point   The screen coordinates
-	 * @param   camera  The camera
+	 * @param   camera  The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @param   result  Optional arg for the returning point
 	 */
 	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
