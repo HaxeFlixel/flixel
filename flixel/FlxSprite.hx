@@ -1063,7 +1063,7 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The camera, used to compare screen coordinates
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, result:FlxPoint):FlxPoint
+	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
@@ -1081,16 +1081,13 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The camera
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, result:FlxPoint):FlxPoint
+	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-
-		result = getScreenPosition(result, camera);
-
-		FlxG.watch.addQuick("mouse", point);
-		FlxG.watch.addQuick("card", result);
-
+		
+		getScreenPosition(result, camera);
+		
 		result.subtract(point.x, point.y);
 		result.negate();
 		result.addPoint(offset);
@@ -1098,9 +1095,9 @@ class FlxSprite extends FlxObject
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
 		result.addPoint(origin);
-
+		
 		point.putWeak();
-
+		
 		return result;
 	}
 
