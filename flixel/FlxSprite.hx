@@ -1063,14 +1063,39 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformWorldToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
 		
-		var screenPoint = FlxPoint.weak(point.x - camera.scroll.x, point.y - camera.scroll.y);
-		point.putWeak();
+		var screenPoint = FlxPoint.weak(worldPoint.x - camera.scroll.x, worldPoint.y - camera.scroll.y);
+		worldPoint.putWeak();
 		return transformScreenToPixels(screenPoint, camera, result);
+	}
+	
+	/**
+	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
+	 * is the top left of the graphic. Same as `worldToPixels` but never uses a camera,
+	 * therefore `scrollFactor` is ignored
+	 * 
+	 * @param   point   The world coordinates.
+	 * @param   result  Optional arg for the returning point
+	 */
+	public function transformWorldToPixelsSimple(worldPoint:FlxPoint, ?result:FlxPoint):FlxPoint
+	{
+		result = getPosition(result);
+		
+		result.subtract(worldPoint.x, worldPoint.y);
+		result.negate();
+		result.addPoint(offset);
+		result.subtractPoint(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.addPoint(origin);
+		
+		worldPoint.putWeak();
+		
+		return result;
 	}
 
 	/**
@@ -1081,11 +1106,11 @@ class FlxSprite extends FlxObject
 	 * @param   camera  The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @param   result  Optional arg for the returning point
 	 */
-	function transformScreenToPixels(point:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
-		getScreenPosition(result, camera);
+		result = getScreenPosition(result, camera);
 		
-		result.subtract(point.x, point.y);
+		result.subtract(screenPoint.x, screenPoint.y);
 		result.negate();
 		result.addPoint(offset);
 		result.subtractPoint(origin);
@@ -1093,7 +1118,7 @@ class FlxSprite extends FlxObject
 		result.degrees -= angle;
 		result.addPoint(origin);
 		
-		point.putWeak();
+		screenPoint.putWeak();
 		
 		return result;
 	}
