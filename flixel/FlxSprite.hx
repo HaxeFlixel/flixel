@@ -1407,6 +1407,7 @@ class FlxSprite extends FlxObject
 				_frame = frame.clipTo(clipRect, _frame);
 			else
 			{
+				//translate clipRect's world coorinates to graphical cooridinates
 				var rect = FlxRect.get();
 				var world = FlxPoint.get();
 				var local = FlxPoint.get();
@@ -1438,7 +1439,8 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Copied from transformWorldToPixelsSimple with angle removed
+	 * Copied from transformWorldToPixelsSimple with angle ignored,
+	 * because we can't clip an angled rect.
 	 */
 	function transformClipRectPoint(worldPoint:FlxPoint, ?result:FlxPoint)
 	{
