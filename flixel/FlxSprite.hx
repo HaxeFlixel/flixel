@@ -269,10 +269,13 @@ class FlxSprite extends FlxObject
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
-	public var clipRectWorldCoords = true;
 	
-	@:noCompletion
-	var _clipRect:FlxRect = FlxRect.get();
+	/**
+	 * If true, clipRect will behave as it did in flixel 4 and earlier.
+	 * Where the clipRect will scale up proportionally with the sprite.
+	 * @since 5.0.0
+	 */
+	public var legacyClipRectMode = false;
 	
 	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
@@ -1399,31 +1402,31 @@ class FlxSprite extends FlxObject
 
 		if (clipRect != null)
 		{
-			if (clipRectWorldCoords)
+			if (legacyClipRectMode)
+				_frame = frame.clipTo(clipRect, _frame);
+			else
 			{
+				var rect = FlxRect.get();
 				var world = FlxPoint.get();
 				var local = FlxPoint.get();
 				
 				world.set(x + clipRect.x, y + clipRect.y);
 				transformClipRectPoint(world, local);
-				_clipRect.x = local.x;
-				_clipRect.y = local.y;
-				_clipRect.setPosition(local.x, local.y);
+				rect.x = local.x;
+				rect.y = local.y;
+				rect.setPosition(local.x, local.y);
 				
 				world.set(x + clipRect.right, y + clipRect.bottom);
 				transformClipRectPoint(world, local);
-				_clipRect.right = local.x;
-				_clipRect.bottom = local.y;
+				rect.right = local.x;
+				rect.bottom = local.y;
+				
+				_frame = frame.clipTo(rect, _frame);
 				
 				world.put();
 				local.put();
+				rect.put();
 			}
-			else
-			{
-				_clipRect.copyFrom(clipRect);
-			}
-			
-			_frame = frame.clipTo(_clipRect, _frame);
 		}
 		else
 		{
