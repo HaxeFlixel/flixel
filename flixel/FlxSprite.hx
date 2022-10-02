@@ -275,7 +275,7 @@ class FlxSprite extends FlxObject
 	 * Where the clipRect will scale up proportionally with the sprite.
 	 * @since 5.0.0
 	 */
-	public var legacyClipRectMode = false;
+	public var clipRectIgnoreScale = false;
 	
 	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
@@ -1403,30 +1403,27 @@ class FlxSprite extends FlxObject
 
 		if (clipRect != null)
 		{
-			if (legacyClipRectMode)
+			if (clipRectIgnoreScale)
 				_frame = frame.clipTo(clipRect, _frame);
 			else
 			{
 				//translate clipRect's world coorinates to graphical cooridinates
 				var rect = FlxRect.get();
-				var world = FlxPoint.get();
-				var local = FlxPoint.get();
+				var point = FlxPoint.get();
 				
-				world.set(x + clipRect.x, y + clipRect.y);
-				transformClipRectPoint(world, local);
-				rect.x = local.x;
-				rect.y = local.y;
-				rect.setPosition(local.x, local.y);
+				point.set(x + clipRect.x, y + clipRect.y);
+				transformClipRectPoint(point);
+				rect.x = point.x;
+				rect.y = point.y;
 				
-				world.set(x + clipRect.right, y + clipRect.bottom);
-				transformClipRectPoint(world, local);
-				rect.right = local.x;
-				rect.bottom = local.y;
+				point.set(x + clipRect.right, y + clipRect.bottom);
+				transformClipRectPoint(point);
+				rect.right = point.x;
+				rect.bottom = point.y;
 				
 				_frame = frame.clipTo(rect, _frame);
 				
-				world.put();
-				local.put();
+				point.put();
 				rect.put();
 			}
 		}
@@ -1439,24 +1436,17 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Copied from transformWorldToPixelsSimple with angle ignored,
-	 * because we can't clip an angled rect.
+	 * Copied from transformWorldToPixelsSimple with angle and offset ignored.
 	 */
-	function transformClipRectPoint(worldPoint:FlxPoint, ?result:FlxPoint)
+	function transformClipRectPoint(worldPoint:FlxPoint)
 	{
-		result = getPosition(result);
-		
-		result.subtract(worldPoint.x, worldPoint.y);
-		result.negate();
-		result.addPoint(offset);
-		result.subtractPoint(origin);
-		result.scale(1 / scale.x, 1 / scale.y);
+		worldPoint.subtract(x, y);
+		// result.addPoint(offset);
+		worldPoint.subtractPoint(origin);
+		worldPoint.scale(1 / scale.x, 1 / scale.y);
+		// can't clip an angled rect.
 		// result.degrees -= angle;
-		result.addPoint(origin);
-		
-		worldPoint.putWeak();
-		
-		return result;
+		worldPoint.addPoint(origin);
 	}
 
 	@:noCompletion
