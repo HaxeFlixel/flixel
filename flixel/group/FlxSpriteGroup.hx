@@ -838,7 +838,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				continue;
 			
 			var minX:Float;
-			if (Std.isOfType(member, FlxSpriteGroup))
+			if (member.flixelType == SPRITEGROUP)
 				minX = (cast member:FlxSpriteGroup).findMinX();
 			else
 				minX = member.x;
@@ -867,7 +867,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				continue;
 			
 			var maxX:Float;
-			if (Std.isOfType(member, FlxSpriteGroup))
+			if (member.flixelType == SPRITEGROUP)
 				maxX = (cast member:FlxSpriteGroup).findMaxX();
 			else
 				maxX = member.x + member.width;
@@ -912,7 +912,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				continue;
 			
 			var minY:Float;
-			if (Std.isOfType(member, FlxSpriteGroup))
+			if (member.flixelType == SPRITEGROUP)
 				minY = (cast member:FlxSpriteGroup).findMinY();
 			else
 				minY = member.y;
@@ -941,7 +941,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 				continue;
 			
 			var maxY:Float;
-			if (Std.isOfType(member, FlxSpriteGroup))
+			if (member.flixelType == SPRITEGROUP)
 				maxY = (cast member:FlxSpriteGroup).findMaxY();
 			else
 				maxY = member.y + member.height;
