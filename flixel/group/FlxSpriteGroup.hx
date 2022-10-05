@@ -820,15 +820,17 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return findMaxXHelper() - findMinXHelper();
 	}
 
+	/**
+	 * Returns the left-most position of the left-most member.
+	 * If there are no members, x is returned.
+	 * 
+	 * @since 5.0.0
+	 */
 	public function findMinX()
 	{
 		return length == 0 ? x : findMinXHelper();
 	}
 	
-	/**
-	 * Returns the left-most position of the left-most member.
-	 * If there are no members, x is returned.
-	 */
 	function findMinXHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
@@ -852,6 +854,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Returns the right-most position of the right-most member.
 	 * If there are no members, x is returned.
+	 * 
+	 * @since 5.0.0
 	 */
 	public function findMaxX()
 	{
@@ -897,6 +901,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Returns the top-most position of the top-most member.
 	 * If there are no members, y is returned.
+	 * 
+	 * @since 5.0.0
 	 */
 	public function findMinY()
 	{
@@ -926,6 +932,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Returns the top-most position of the top-most member.
 	 * If there are no members, y is returned.
+	 * 
+	 * @since 5.0.0
 	 */
 	public function findMaxY()
 	{
