@@ -955,20 +955,30 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	function checkColumn(x:Int, startY:Int, endY:Int):Int
 	{
-		if (startY > endY)
-			return checkColumn(x, endY, startY);
-		
 		if (startY < 0)
 			startY = 0;
+		
+		if (endY < 0)
+			endY = 0;
+		
+		if (startY > heightInTiles - 1)
+			startY = heightInTiles - 1;
 		
 		if (endY > heightInTiles - 1)
 			endY = heightInTiles - 1;
 		
-		for (y in startY...endY + 1)
+		var y = startY;
+		final step = startY <= endY ? 1 : -1;
+		while (true)
 		{
 			var index = y * widthInTiles + x;
 			if (getTileCollisions(getTileByIndex(index)) != NONE)
 				return index;
+			
+			if (y == endY)
+				break;
+			
+			y += step;
 		}
 		
 		return -1;
