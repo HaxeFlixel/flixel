@@ -831,12 +831,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return length == 0 ? x : findMinXHelper();
 	}
 	
-	/**
-	 * Returns the left-most position of the left-most member.
-	 * If there are no members, x is returned.
-	 * 
-	 * @since 5.0.0
-	 */
 	function findMinXHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
