@@ -275,7 +275,7 @@ class FlxSprite extends FlxObject
 	 * Where the clipRect will scale up proportionally with the sprite.
 	 * @since 5.0.0
 	 */
-	public var clipRectIgnoreScale = false;
+	public var clipRectIgnoreScale(default, set):Bool = false;
 	
 	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
@@ -1551,6 +1551,12 @@ class FlxSprite extends FlxObject
 			frame = frames.frames[animation.frameIndex];
 
 		return rect;
+	}
+
+	@:noCompletion
+	function set_clipRectIgnoreScale(value:Bool):Bool
+	{
+		return this.clipRectIgnoreScale = value;
 	}
 
 	/**
