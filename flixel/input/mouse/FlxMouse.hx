@@ -72,22 +72,22 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	/**
 	 * Distance in pixels the mouse has moved since the last frame in the X direction.
 	 */
-	public var diffX(get, never):Int;
+	public var deltaX(get, never):Int;
 
 	/**
 	 * Distance in pixels the mouse has moved since the last frame in the Y direction.
 	 */
-	public var diffY(get, never):Int;
+	public var deltaY(get, never):Int;
 
 	/**
 	 * Distance in pixels the mouse has moved in screen space since the last frame in the X direction.
 	 */
-	public var diffScreenX(get, never):Int;
+	public var deltaScreenX(get, never):Int;
 
 	/**
 	 * Distance in pixels the mouse has moved in screen space since the last frame in the Y direction.
 	 */
-	public var diffScreenY(get, never):Int;
+	public var deltaScreenY(get, never):Int;
 
 	/**
 	 * Check to see if the left mouse button is currently pressed.
@@ -588,16 +588,16 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	inline function get_justMoved():Bool
 		return _prevX != x || _prevY != y;
 
-	inline function get_diffX():Int
+	inline function get_deltaX():Int
 		return x - _prevX;
 
-	inline function get_diffY():Int
+	inline function get_deltaY():Int
 		return y - _prevY;
 
-	inline function get_diffScreenX():Int
+	inline function get_deltaScreenX():Int
 		return screenX - _prevScreenX;
 
-	inline function get_diffScreenY():Int
+	inline function get_deltaScreenY():Int
 		return screenY - _prevScreenY;
 
 	inline function get_pressed():Bool
