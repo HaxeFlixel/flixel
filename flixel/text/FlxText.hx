@@ -795,7 +795,7 @@ class FlxText extends FlxSprite
 			newHeight = oldHeight;
 		}
 
-		if (oldWidth != newWidth || oldHeight != newHeight)
+		if (oldWidth != Std.int(newWidth) || oldHeight != Std.int(newHeight))
 		{
 			// Need to generate a new buffer to store the text graphic
 			height = newHeight;
