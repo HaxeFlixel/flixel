@@ -154,7 +154,7 @@ class FlxBasic implements IFlxDestroyable
 	}
 
 	@:noCompletion
-	function set_canToggleVisible(Value:Bool):
+	function set_canToggleVisible(Value:Bool):Bool
 	{
 		return canToggleVisible = Value;
 	}
