@@ -1028,8 +1028,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)
 		Sprite.immovable = Immovable;
 
-	inline function visibleTransform(Sprite:FlxSprite, Visible:Bool)
-		Sprite.visible = Visible;
+	inline function visibleTransform(Sprite:FlxSprite, Visible:Bool) {
+		if(Sprite.canToggleVisible)
+			Sprite.visible = Visible;
+	}
 
 	inline function activeTransform(Sprite:FlxSprite, Active:Bool)
 		Sprite.active = Active;
