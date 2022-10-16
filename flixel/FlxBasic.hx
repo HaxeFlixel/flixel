@@ -39,6 +39,11 @@ class FlxBasic implements IFlxDestroyable
 	public var visible(default, set):Bool = true;
 
 	/**
+	 * Controls if the visibility of this object can be toggled by the FlxGroup of this object
+	 */
+	public var canToggleVisible(default, set):Bool = true;
+
+	/**
 	 * Useful state for many game objects - "dead" (`!alive`) vs `alive`. `kill()` and
 	 * `revive()` both flip this switch (along with `exists`, but you can override that).
 	 */
@@ -149,6 +154,12 @@ class FlxBasic implements IFlxDestroyable
 	}
 
 	@:noCompletion
+	function set_canToggleVisible(Value:Bool):
+	{
+		return canToggleVisible = Value;
+	}
+
+	@:noCompletion
 	function set_active(Value:Bool):Bool
 	{
 		return active = Value;
@@ -213,6 +224,7 @@ interface IFlxBasic
 	var ID:Int;
 	var active(default, set):Bool;
 	var visible(default, set):Bool;
+	var canToggleVisible(default, set):Bool;
 	var alive(default, set):Bool;
 	var exists(default, set):Bool;
 
