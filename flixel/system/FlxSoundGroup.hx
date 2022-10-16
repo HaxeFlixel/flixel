@@ -57,22 +57,28 @@ class FlxSoundGroup
 
 	/**
 	 * Call this function to pause all sounds in this group.
+	 * @param excludes The sounds that should not be paused
 	 * @since 4.3.0
 	 */
-	public function pause():Void
+	public function pause(?excludes:Array<FlxSound>):Void
 	{
+		if(excludes == null) excludes = [];
 		for (sound in sounds)
-			sound.pause();
+			if(!excludes.contains(sound))
+				sound.pause();
 	}
 
 	/**
 	 * Unpauses all sounds in this group. Only works on sounds that have been paused.
+	 * @param excludes The sounds that should not be paused.
 	 * @since 4.3.0
 	 */
-	public function resume():Void
+	public function resume(?excludes:Array<FlxSound>):Void
 	{
+		if(excludes = null) excludes = [];
 		for (sound in sounds)
-			sound.resume();
+			if(!excludes.contains(sound))
+				sound.resume();
 	}
 
 	function set_volume(volume:Float):Float
