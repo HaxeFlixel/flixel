@@ -129,9 +129,10 @@ using flixel.util.FlxColorTransformUtil;
 class FlxSprite extends FlxObject
 {
 	/**
-	 * The default value for `antialiasing` across all `FlxSprite`s.
+	 * The default value for `antialiasing` across all `FlxSprites`,
+	 * defaults to `false`.
 	 */
-	public static var defaultAntialiasing:Bool = true;
+	public static var defaultAntialiasing:Bool = false;
 	
 	/**
 	 * Class that handles adding and playing animations on this sprite.
