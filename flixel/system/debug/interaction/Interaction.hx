@@ -565,7 +565,7 @@ class Interaction extends Window
 			if (group != null)
 				findItemsWithinArea(items, group.members, area);
 			else if ((member is FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()) 
-				&& !cast(member, FlxSprite).debugImmovable)
+				#if FLX_DEBUG && !cast(member, FlxSprite).debugImmovable #end)
 				items.push(cast member);
 		}
 	}
