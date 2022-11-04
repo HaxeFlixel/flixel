@@ -772,6 +772,11 @@ class FlxObject extends FlxBasic
 	 * when `FlxG.debugger.drawDebug` is `true`.
 	 */
 	public var ignoreDrawDebug:Bool = false;
+
+	/**
+	 * Whether this sprite can be moved with the interaction tool in the debugger.
+	 */
+	public var debugImmovable:Bool = false;
 	#end
 
 	/**

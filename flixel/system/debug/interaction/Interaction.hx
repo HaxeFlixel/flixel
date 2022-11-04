@@ -564,7 +564,8 @@ class Interaction extends Window
 			var group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
 				findItemsWithinArea(items, group.members, area);
-			else if ((member is FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()))
+			else if ((member is FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()) 
+				&& !cast(member, FlxSprite).debugImmovable)
 				items.push(cast member);
 		}
 	}
