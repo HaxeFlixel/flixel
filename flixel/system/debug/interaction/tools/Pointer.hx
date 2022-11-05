@@ -26,6 +26,7 @@ class Pointer extends Tool
 	var _selectionHappening:Bool = false;
 	var _selectionCancelled:Bool = false;
 	var _selectionArea:FlxRect = new FlxRect();
+	var _selectedItem:FlxBasic;
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
 	override public function init(brain:Interaction):Tool
@@ -45,7 +46,10 @@ class Pointer extends Tool
 		if (!isActive())
 			return;
 
-		if (_brain.pointerJustPressed && !_selectionHappening)
+		//if (_brain.pointerJustPressed && !_gotTopmostSprite)
+		//	getTopmostSprite();
+
+		if (_brain.pointerPressed && !_selectionHappening)
 			startSelection();
 
 		if (_selectionHappening)
@@ -62,6 +66,9 @@ class Pointer extends Tool
 		// If we had a selection happening, it's time to end it.
 		if (_selectionHappening)
 			stopSelection();
+
+		if (!_selectionHappening)
+			getTopmostSprite();
 
 		// If we have items in the selection area, handle them
 		if (_itemsInSelectionArea.length > 0)
@@ -92,6 +99,24 @@ class Pointer extends Tool
 			_selectionArea.height *= -1;
 			_selectionArea.y = _selectionArea.y - _selectionArea.height;
 		}
+	}
+
+	/**
+	 * Gets the top-most sprite that's overlapping the pointer.
+	 */
+	public function getTopmostSprite():Void
+	{
+		var pointerRect:FlxRect = new FlxRect(_brain.flixelPointer.x, _brain.flixelPointer.y, 1, 1);
+		_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, pointerRect);
+
+		if (_itemsInSelectionArea.length > 0)
+			_itemsInSelectionArea.splice(1, _itemsInSelectionArea.length - 1);
+
+		_selectedItem = _itemsInSelectionArea[0];
+
+		updateConsoleSelection();
+		pointerRect.put();
+		//_gotTopmostSprite = true;
 	}
 
 	/**

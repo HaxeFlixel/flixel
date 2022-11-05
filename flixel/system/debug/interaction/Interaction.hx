@@ -128,7 +128,8 @@ class Interaction extends Window
 
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
-		_flixelPointer.setGlobalScreenPositionUnsafe(event.stageX, event.stageY);
+		// The stuff in the position fix a bug where the rect is offset after resizing.
+		_flixelPointer.setGlobalScreenPositionUnsafe(event.stageX - (FlxG.stage.stageWidth / 2 - FlxG.scaleMode.gameSize.x / 2), event.stageY - (FlxG.stage.stageHeight / 2 - FlxG.scaleMode.gameSize.y / 2));
 
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
@@ -389,7 +390,7 @@ class Interaction extends Window
 		if (activeTool != null && !_debuggerInteraction)
 		{
 			// Yes, there is an active tool. Does it has a cursor of its own?
-			if (activeTool.cursor != null)
+			if (activeTool.cursor != null && false)
 			{
 				// Yep. Let's show it then
 				var cursorInUse = activeTool.cursorInUse == "" ? activeTool.getName() : activeTool.cursorInUse;
