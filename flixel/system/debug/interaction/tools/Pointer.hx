@@ -29,6 +29,8 @@ class Pointer extends Tool
 	var _selectedItem:FlxBasic;
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
+	var _deselectTopSprite:Bool = false;
+
 	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
@@ -67,9 +69,7 @@ class Pointer extends Tool
 		if (_selectionHappening)
 			stopSelection();
 
-		if (!_selectionHappening)
-			getTopmostSprite();
-
+		//trace('${false} | ${_brain.pointerPressed}');
 		// If we have items in the selection area, handle them
 		if (_itemsInSelectionArea.length > 0)
 		{
@@ -99,6 +99,8 @@ class Pointer extends Tool
 			_selectionArea.height *= -1;
 			_selectionArea.y = _selectionArea.y - _selectionArea.height;
 		}
+
+		//trace(_selectionArea);
 	}
 
 	/**
@@ -106,6 +108,7 @@ class Pointer extends Tool
 	 */
 	public function getTopmostSprite():Void
 	{
+		trace("I get aclled bruh");
 		var pointerRect:FlxRect = new FlxRect(_brain.flixelPointer.x, _brain.flixelPointer.y, 1, 1);
 		_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, pointerRect);
 
@@ -161,6 +164,18 @@ class Pointer extends Tool
 
 		if (findItems)
 		{
+			// The selection area is 0 so it's probably a single click, let's get the top-most sprite.
+			/*
+			if (_selectionArea.width == 0 && _selectionArea.height == 0)
+			{
+				_selectionHappening = false;
+				_selectionArea.set(0, 0, 0, 0);
+				getTopmostSprite();
+
+				return;
+			}
+			*/
+
 			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
 			updateConsoleSelection();
 		}

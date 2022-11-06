@@ -390,7 +390,7 @@ class Interaction extends Window
 		if (activeTool != null && !_debuggerInteraction)
 		{
 			// Yes, there is an active tool. Does it has a cursor of its own?
-			if (activeTool.cursor != null && false)
+			if (activeTool.cursor != null)
 			{
 				// Yep. Let's show it then
 				var cursorInUse = activeTool.cursorInUse == "" ? activeTool.getName() : activeTool.cursorInUse;
