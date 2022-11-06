@@ -51,7 +51,7 @@ class Pointer extends Tool
 		//if (_brain.pointerJustPressed && !_gotTopmostSprite)
 		//	getTopmostSprite();
 
-		if (_brain.pointerPressed && !_selectionHappening)
+		if (_brain.pointerJustPressed && !_selectionHappening)
 			startSelection();
 
 		if (_selectionHappening)
@@ -165,16 +165,34 @@ class Pointer extends Tool
 		if (findItems)
 		{
 			// The selection area is 0 so it's probably a single click, let's get the top-most sprite.
-			/*
 			if (_selectionArea.width == 0 && _selectionArea.height == 0)
 			{
 				_selectionHappening = false;
 				_selectionArea.set(0, 0, 0, 0);
-				getTopmostSprite();
+				
+				if (_brain.keyPressed(Keyboard.ALTERNATE))
+				{
+					_deselectTopSprite = !_deselectTopSprite;
+					trace(_deselectTopSprite);
 
+					if (_deselectTopSprite)
+					{
+						_itemsInSelectionArea.clearArray();
+						updateConsoleSelection();
+					}
+					else
+					{
+						getTopmostSprite();
+					}
+				}
+				else
+				{
+					getTopmostSprite();
+				}
+
+				
 				return;
 			}
-			*/
 
 			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
 			updateConsoleSelection();
