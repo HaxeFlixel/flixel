@@ -31,7 +31,6 @@ class Pointer extends Tool
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
 	var _deselectTopSprite:Bool = false;
-	var _togglingTopSprite:Bool = false;
 
 	override public function init(brain:Interaction):Tool
 	{
@@ -164,9 +163,8 @@ class Pointer extends Tool
 				_selectionHappening = false;
 				_selectionArea.set(0, 0, 0, 0);
 				
-				if (_brain.keyPressed(Keyboard.SHIFT))
+				if (_brain.keyPressed(Keyboard.ALTERNATE))
 				{
-					_togglingTopSprite = true;
 					_deselectTopSprite = !_deselectTopSprite;
 
 					if (_deselectTopSprite)

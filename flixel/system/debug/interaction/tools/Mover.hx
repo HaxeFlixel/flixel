@@ -65,13 +65,7 @@ class Mover extends Tool
 		// the mover's shortcut key. If the pointer is the active tool, it should
 		// not do any selection of items while things are being moved/dragged.
 		if (!isActive() && (_brain.activeTool is Pointer)) 
-		{
-			var pointer:Pointer = cast(_brain.activeTool, Pointer);
-
-			// Cancel the selection only if the selection area isn't (0, 0) to avoid messing up toggling
-			if (pointer._selectionArea.width != 0 && pointer._selectionArea.height != 0)
-				pointer.cancelSelection();
-		}
+			cast(_brain.activeTool, Pointer).cancelSelection();
 	}
 
 	function doDragging():Void
