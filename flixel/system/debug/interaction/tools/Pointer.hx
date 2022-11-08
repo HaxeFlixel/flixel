@@ -30,6 +30,7 @@ class Pointer extends Tool
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
 	var _deselectTopSprite:Bool = false;
+	var _togglingTopSprite:Bool = false;
 
 	override public function init(brain:Interaction):Tool
 	{
@@ -167,13 +168,14 @@ class Pointer extends Tool
 			// The selection area is 0 so it's probably a single click, let's get the top-most sprite.
 			if (_selectionArea.width == 0 && _selectionArea.height == 0)
 			{
+
 				_selectionHappening = false;
 				_selectionArea.set(0, 0, 0, 0);
 				
-				if (_brain.keyPressed(Keyboard.ALTERNATE))
+				if (_brain.keyPressed(Keyboard.SHIFT))
 				{
+					_togglingTopSprite = true;
 					_deselectTopSprite = !_deselectTopSprite;
-					trace(_deselectTopSprite);
 
 					if (_deselectTopSprite)
 					{

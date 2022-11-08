@@ -64,8 +64,16 @@ class Mover extends Tool
 		// If we are not active, it means things are being moved around using
 		// the mover's shortcut key. If the pointer is the active tool, it should
 		// not do any selection of items while things are being moved/dragged.
-		if (!isActive() && (_brain.activeTool is Pointer))
-			(cast _brain.activeTool : Pointer).cancelSelection();
+		if (!isActive() && (_brain.activeTool is Pointer)) 
+		{
+			var pointer:Pointer = cast(_brain.activeTool, Pointer);
+
+			// todo: Make public?
+			@:privateAccess
+			if (pointer._selectionArea.width != 0 && pointer._selectionArea.height != 0)
+				pointer.cancelSelection();
+			// //(cast _brain.activeTool : Pointer).cancelSelection();
+		}
 	}
 
 	function doDragging():Void
