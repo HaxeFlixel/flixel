@@ -68,11 +68,9 @@ class Mover extends Tool
 		{
 			var pointer:Pointer = cast(_brain.activeTool, Pointer);
 
-			// todo: Make public?
-			@:privateAccess
+			// Cancel the selection only if the selection area isn't (0, 0) to avoid messing up toggling
 			if (pointer._selectionArea.width != 0 && pointer._selectionArea.height != 0)
 				pointer.cancelSelection();
-			// //(cast _brain.activeTool : Pointer).cancelSelection();
 		}
 	}
 
