@@ -711,14 +711,17 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Updates the sprite's hitbox (`width`, `height`, `offset`) according to the current `scale`.
-	 * Also calls `centerOrigin()`.
+	 * Also calls `centerOrigin()` when callCenterOrigin is true.
 	 */
-	public function updateHitbox():Void
+	public function updateHitbox(callCenterOrigin:Bool = true):Void
 	{
 		width = Math.abs(scale.x) * frameWidth;
 		height = Math.abs(scale.y) * frameHeight;
 		offset.set(-0.5 * (width - frameWidth), -0.5 * (height - frameHeight));
-		centerOrigin();
+		if(callCenterOrigin)
+		{
+			centerOrigin();
+		}
 	}
 
 	/**
