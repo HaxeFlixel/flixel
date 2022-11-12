@@ -129,6 +129,12 @@ using flixel.util.FlxColorTransformUtil;
 class FlxSprite extends FlxObject
 {
 	/**
+	 * The default value for `antialiasing` across all `FlxSprites`,
+	 * defaults to `false`.
+	 */
+	public static var defaultAntialiasing:Bool = false;
+	
+	/**
 	 * Class that handles adding and playing animations on this sprite.
 	 * @see https://snippets.haxeflixel.com/sprites/animation/
 	 */
@@ -378,6 +384,7 @@ class FlxSprite extends FlxObject
 		super(X, Y);
 
 		useFramePixels = FlxG.renderBlit;
+		antialiasing = defaultAntialiasing;
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
@@ -786,8 +793,6 @@ class FlxSprite extends FlxObject
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
 
-			getScreenPosition(_point, camera).subtractPoint(offset);
-
 			if (isSimpleRender(camera))
 				drawSimple(camera);
 			else
@@ -807,6 +812,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function drawSimple(camera:FlxCamera):Void
 	{
+		getScreenPosition(_point, camera).subtractPoint(offset);
 		if (isPixelPerfectRender(camera))
 			_point.floor();
 
@@ -829,6 +835,7 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
+		getScreenPosition(_point, camera).subtractPoint(offset);
 		_point.add(origin.x, origin.y);
 		_matrix.translate(_point.x, _point.y);
 

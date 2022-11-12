@@ -379,11 +379,6 @@ class FlxCamera extends FlxBasic
 	var _fxFadeComplete:Void->Void = null;
 
 	/**
-	 * Internal, tracks whether fade effect is running or not.
-	 */
-	var _fxFadeCompleted:Bool = true;
-
-	/**
 	 * Internal, alpha component of fade color.
 	 * Changes from 0 to 1 or from 1 to 0 as the effect continues.
 	 */
@@ -1182,7 +1177,7 @@ class FlxCamera extends FlxBasic
 
 	function updateFade(elapsed:Float):Void
 	{
-		if (_fxFadeCompleted)
+		if (_fxFadeDuration == 0.0)
 			return;
 
 		if (_fxFadeIn)
@@ -1207,7 +1202,7 @@ class FlxCamera extends FlxBasic
 
 	function completeFade()
 	{
-		_fxFadeCompleted = true;
+		_fxFadeDuration = 0.0;
 		if (_fxFadeComplete != null)
 			_fxFadeComplete();
 	}
@@ -1436,7 +1431,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
-		if (!_fxFadeCompleted && !Force)
+		if (_fxFadeDuration > 0 && !Force)
 			return;
 
 		_fxFadeColor = Color;
@@ -1448,7 +1443,6 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = OnComplete;
 
 		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
-		_fxFadeCompleted = false;
 	}
 
 	/**
@@ -1482,7 +1476,8 @@ class FlxCamera extends FlxBasic
 	{
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
-		_fxShakeDuration = 0;
+		_fxFadeDuration = 0.0;
+		_fxShakeDuration = 0.0;
 		updateFlashSpritePosition();
 	}
 
