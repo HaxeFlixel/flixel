@@ -280,7 +280,7 @@ class FlxSprite extends FlxObject
 	 * Gets the new width of the sprite.
 	 * @see `https://github.com/HaxeFlixel/flixel/issues/2667`
 	 */
-	public var graphicWidth(get, never):Dynamic;
+	public var graphicWidth(get, never):Float;
 
 	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
@@ -1635,7 +1635,7 @@ class FlxSprite extends FlxObject
 	}
 
 	@:noCompletion
-	inline function get_graphicWidth():Dynamic
+	inline function get_graphicWidth():Float
 	{
 		return width = Math.abs(scale.x) * frameWidth;
 	}
