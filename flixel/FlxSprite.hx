@@ -283,6 +283,12 @@ class FlxSprite extends FlxObject
 	public var graphicWidth(get, never):Float;
 
 	/**
+	 * Gets the new height of the sprite.
+	 * @see `https://github.com/HaxeFlixel/flixel/issues/2667`
+	 */
+	public var graphicHeight(get, never):Float;
+
+	/**
 	 * GLSL shader for this sprite. Only works with OpenFL Next or WebGL.
 	 * Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
@@ -1638,6 +1644,12 @@ class FlxSprite extends FlxObject
 	inline function get_graphicWidth():Float
 	{
 		return width = Math.abs(scale.x) * frameWidth;
+	}
+
+	@:noCompletion
+	inline function get_graphicHeight():Float
+	{
+		return height = Math.abs(scale.y) * frameHeight;
 	}
 }
 
