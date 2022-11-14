@@ -207,8 +207,8 @@ class FlxSprite extends FlxObject
 	public var bakedRotationAngle(default, null):Float = 0;
 
 	/**
-		* Set alpha to a number between `0` and `1` to change the opacity of the sprite.
-		@see https://snippets.haxeflixel.com/sprites/alpha/
+	 * Set alpha to a number between `0` and `1` to change the opacity of the sprite.
+	 * @see https://snippets.haxeflixel.com/sprites/alpha/
 	 */
 	public var alpha(default, set):Float = 1.0;
 
@@ -277,14 +277,14 @@ class FlxSprite extends FlxObject
 	public var clipRect(default, set):FlxRect;
 
 	/**
-	 * Gets the new width of the sprite.
-	 * @see `https://github.com/HaxeFlixel/flixel/issues/2667`
+	 * The scaled width of the sprite.
+	 * @since 5.0.0
 	 */
 	public var graphicWidth(get, never):Float;
 
 	/**
-	 * Gets the new height of the sprite.
-	 * @see `https://github.com/HaxeFlixel/flixel/issues/2667`
+	 * The scaled height of the sprite.
+	 * @since 5.0.0
 	 */
 	public var graphicHeight(get, never):Float;
 
@@ -1640,14 +1640,12 @@ class FlxSprite extends FlxObject
 		return doFlipY;
 	}
 
-	@:noCompletion
-	inline function get_graphicWidth():Float
+	function get_graphicWidth():Float
 	{
 		return width = Math.abs(scale.x) * frameWidth;
 	}
 
-	@:noCompletion
-	inline function get_graphicHeight():Float
+	function get_graphicHeight():Float
 	{
 		return height = Math.abs(scale.y) * frameHeight;
 	}
