@@ -236,8 +236,9 @@ class FlxSprite extends FlxObject
 	public var origin(default, null):FlxPoint;
 
 	/**
-	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's `width`, `height` or `scale`.
+	 * The position of the sprite's graphic relative to its hitbox. For example, `offset.x = 10;` will
+	 * show the graphic 10 pixels left of the hitbox. Likely needs to be adjusted after changing a sprite's
+	 * `width`, `height` or `scale`.
 	 */
 	public var offset(default, null):FlxPoint;
 
