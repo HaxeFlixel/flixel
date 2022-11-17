@@ -649,10 +649,10 @@ class FlxStringUtil
 	}
 	
 	/**
-	 * Returns a slugified string
+	 * Returns an Underscored, or "slugified" string
 	 * Example: `"A Tale of Two Cities, Part II"` becomes `"a_tale_of_two_cities__part_ii"`
 	 */
-	public static function slugify(str:String):String 
+	public static function toUnderscoreCase(str:String):String 
 	{
 		var regex = ~/[^a-z0-9]+/g;
 		return regex.replace(str.toLowerCase(), '_');
