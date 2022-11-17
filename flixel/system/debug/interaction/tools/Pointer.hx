@@ -21,13 +21,11 @@ class GraphicCursorCross extends BitmapData {}
  */
 class Pointer extends Tool
 {
-	public var _selectionArea:FlxRect = new FlxRect();
-
 	var _selectionStartPoint:FlxPoint = new FlxPoint();
 	var _selectionEndPoint:FlxPoint = new FlxPoint();
 	var _selectionHappening:Bool = false;
 	var _selectionCancelled:Bool = false;
-	var _selectedItem:FlxBasic;
+	var _selectionArea:FlxRect = new FlxRect();
 	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
 	var _deselectTopSprite:Bool = false;
