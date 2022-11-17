@@ -3,7 +3,7 @@ package flixel.math;
 import flixel.util.FlxColor;
 
 /**
- * A class containing a set of functions for random generation.
+ * A class containing a set of functions for random generation. Should be accessed via `FlxG.random`.
  */
 class FlxRandom
 {
