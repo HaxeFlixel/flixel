@@ -883,6 +883,35 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
+	 * Returns the width of the right-most member.
+	 * If there are no members, graphicWidth is returned.
+	 */
+	public function findMaxWidth():Float
+	{
+		return length == 0 ? graphicWidth : findMaxWidthHelper();
+	}
+
+	function findMaxWidthHelper():Float
+	{
+		var value = Math.NEGATIVE_INFINITY;
+		for (member in _sprites)
+		{
+			if (member == null)
+				continue;
+
+			var maxWidth:Float;
+			if (member.flixelType == SPRITEGROUP)
+				maxWidth = (cast member : FlxSpriteGroup).findMaxWidth();
+			else
+				maxWidth = member.width + offset;
+
+			if (maxWidth > value)
+				value = maxX;
+		}
+		return value;
+	}
+
+	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
 	override function set_height(Value:Float):Float
@@ -1174,12 +1203,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	override function get_graphicWidth():Float
 	{
-		return length == 0 ? width : findMaxXHelper() - findMinXHelper();
+		return length == 0 ? width : findMaxXHelper() - findMinXHelper() * offset;
 	}
 
 	override function get_graphicHeight():Float
 	{
-		return length == 0 ? height : findMaxYHelper() - findMinYHelper();
+		return length == 0 ? height : findMaxYHelper() - findMinYHelper() * offset;
 	}
 
 	/**
