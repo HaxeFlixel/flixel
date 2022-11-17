@@ -2,7 +2,6 @@ package flixel.system.macros;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
-import haxe.PosInfos;
 import sys.FileSystem;
 
 using StringTools;
@@ -11,7 +10,7 @@ using flixel.util.FlxArrayUtil;
 class FlxAssetPaths
 {
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:EReg, ?exclude:EReg,
-			?rename:String->String):Array<Field>
+			?rename:String->Null<String>):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
@@ -21,32 +20,15 @@ class FlxAssetPaths
 		var fileReferences = getFileReferences(directory, subDirectories, include, exclude, rename);
 		var fields = Context.getBuildFields();
 
-		var addedFields = new Array<String>();
-
+		// create new fields based on file references!
 		for (fileRef in fileReferences)
-		{
-			if (addedFields.contains(fileRef.name))
-			{
-				warn('Duplicate files named "${fileRef.name}" ignoring ${fileRef.value}');
-			}
-			else
-			{
-				addedFields.push(fileRef.name);
-				// create new field based on file references!
-				fields.push({
-					name: fileRef.name,
-					doc: fileRef.documentation,
-					access: [Access.APublic, Access.AStatic, Access.AInline],
-					kind: FieldType.FVar(macro:String, macro $v{fileRef.value}),
-					pos: Context.currentPos()
-				});
-			}
-		}
+			fields.push(fileRef.createField());
+		
 		return fields;
 	}
 
 	static function getFileReferences(directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg,
-			?rename:String->String):Array<FileReference>
+			?rename:String->Null<String>):Array<FileReference>
 	{
 		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) "../assets/" + directory #else directory #end;
@@ -69,7 +51,7 @@ class FlxAssetPaths
 
 				var reference = FileReference.fromPath(path, rename);
 				if (reference != null)
-					fileReferences.push(reference);
+					addIfUnique(fileReferences, reference);
 			}
 			else if (subDirectories)
 			{
@@ -79,10 +61,30 @@ class FlxAssetPaths
 
 		return fileReferences;
 	}
-
-	static inline function warn(msg:String, ?info:PosInfos)
+	
+	static function addIfUnique(fileReferences:Array<FileReference>, file:FileReference)
 	{
-		haxe.Log.trace("[Warning] " + msg, info);
+		for (i in 0...fileReferences.length)
+		{
+			if (fileReferences[i].name == file.name)
+			{
+				var oldValue = fileReferences[i].value;
+				// if the old file is nested deeper in the folder structure
+				if (oldValue.split("/").length > file.value.split("/").length)
+				{
+					// replace it with the new one
+					fileReferences[i] = file;
+					Context.warning('Duplicate files named "${file.name}" ignoring $oldValue', Context.currentPos());
+				}
+				else
+				{
+					Context.warning('Duplicate files named "${file.name}" ignoring ${file.value}', Context.currentPos());
+				}
+				return;
+			}
+		}
+		
+		fileReferences.push(file);
 	}
 }
 
@@ -90,7 +92,7 @@ private class FileReference
 {
 	static var valid = ~/^[_A-Za-z]\w*$/;
 
-	public static function fromPath(value:String, ?rename:String->String):Null<FileReference>
+	public static function fromPath(value:String, ?library:String, ?rename:String->Null<String>):Null<FileReference>
 	{
 		var name = value;
 
@@ -108,10 +110,13 @@ private class FileReference
 		name = name.split("-").join("_").split(".").join("__");
 		if (!valid.match(name)) // #1796
 		{
-			trace('[Warning] Invalid name: $name for file: $value');
+			Context.warning('Invalid name: $name for file: $value', Context.currentPos());
 			return null;
 		}
-
+		
+		if (library != "default" && library != "" && library != null)
+			value = '$library:$value';
+		
 		return new FileReference(name, value);
 	}
 
@@ -124,5 +129,16 @@ private class FileReference
 		this.name = name;
 		this.value = value;
 		this.documentation = "`\"" + value + "\"` (auto generated).";
+	}
+	
+	public function createField():Field
+	{
+		return {
+			name: name,
+			doc: documentation,
+			access: [Access.APublic, Access.AStatic, Access.AInline],
+			kind: FieldType.FVar(macro:String, macro $v{value}),
+			pos: Context.currentPos()
+		};
 	}
 }
