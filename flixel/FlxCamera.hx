@@ -45,9 +45,10 @@ private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQua
 class FlxCamera extends FlxBasic
 {
 	/**
-	 * Any `FlxCamera` with a zoom of 0 (the default value) will have this zoom value.
+	 * While you can alter the zoom of each camera after the fact,
+	 * this variable determines what value the camera will start at when created.
 	 */
-	public static var defaultZoom:Float = 1.0;
+	public static var defaultZoom:Float;
 
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
@@ -577,7 +578,7 @@ class FlxCamera extends FlxBasic
 	}
 
 	@:noCompletion
-	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
+	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 
@@ -586,16 +587,18 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.graphics == graphic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
-			&& _headTriangles.blending == blendInt)
+			&& _headTriangles.blending == blendInt
+			&& _headTriangles.hasColorOffsets == hasColorOffsets
+            && _headTriangles.shader == shader)
 		{
 			return _headTriangles;
 		}
 
-		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend);
+		return getNewDrawTrianglesItem(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 	}
 
 	@:noCompletion
-	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode):FlxDrawTrianglesItem
+	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
 		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
@@ -616,6 +619,8 @@ class FlxCamera extends FlxBasic
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
 		itemToReturn.blending = blendInt;
+		itemToReturn.hasColorOffsets = hasColorOffsets;
+        itemToReturn.shader = shader;
 
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
@@ -756,7 +761,7 @@ class FlxCamera extends FlxBasic
 	}
 
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
-			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false):Void
+			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -834,9 +839,12 @@ class FlxCamera extends FlxBasic
 		else
 		{
 			_bounds.set(0, 0, width, height);
-			var isColored:Bool = (colors != null && colors.length != 0);
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+			var isColored:Bool = (transform != null && transform.hasRGBMultipliers());
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			
+			isColored = isColored || (colors != null && colors.length != 0);
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds, transform);
 		}
 	}
 
