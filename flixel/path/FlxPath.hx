@@ -126,6 +126,13 @@ class FlxPath implements IFlxDestroyable
 	public var autoRotate:Bool = false;
 
 	/**
+	 * The amount of degrees to offset from the path's angle, when `autoRotate` is `true`. To use
+	 * flixel 4.11's autoRotate behavior, set this to `90`, so there is no rotation at 0 degrees.
+	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
+	 */
+	public var degreesOffset:Float = 0;
+
+	/**
 	 * Pauses or checks the pause state of the path.
 	 */
 	public var active:Bool = false;
@@ -203,18 +210,20 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Sets the following properties: `speed`, `mode` and auto rotation.
 	 *
-	 * @param speed        The speed at which the object is moving on the path.
-	 * @param mode         Path following behavior (like looping, horizontal only, etc).
-	 * @param autoRotate   Whether the object's angle should be adjusted to the path angle during
-	 *                     path follow behavior. Note that moving straight right is 0 degrees.
+	 * @param speed          The speed at which the object is moving on the path.
+	 * @param mode           Path following behavior (like looping, horizontal only, etc).
+	 * @param autoRotate     Whether the object's angle should be adjusted to the path angle during
+	 *                       path follow behavior. Note that moving straight right is 0 degrees.
+	 * @param degreesOffset  A degree offset applied to the auto-rotater.
 	 * @return This path object.
 	 * @since 4.2.0
 	 */
-	public function setProperties(speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false):FlxPath
+	public function setProperties(speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false, degreesOffset = 0.0):FlxPath
 	{
 		this.speed = Math.abs(speed);
 		_mode = mode;
 		this.autoRotate = autoRotate;
+		this.degreesOffset = degreesOffset;
 		return this;
 	}
 
@@ -224,12 +233,13 @@ class FlxPath implements IFlxDestroyable
 	 * @param nodes              An optional array of path waypoints. If null then previously added points will be used. Movement is not started if the resulting array has no points.
 	 * @param speed              The speed at which the object is moving on the path.
 	 * @param mode               Path following behavior (like looping, horizontal only, etc).
-	 * @param autoRotate         the object's angle should be adjusted to the path angle during path follow behavior.
-	 * @param nodesAsReference   to pass the input array as reference (true) or to copy the points (false). Default is false.
+	 * @param autoRotate         The object's angle should be adjusted to the path angle during path follow behavior.
+	 * @param degreesOffset      A degree offset applied to the auto-rotater.
+	 * @param nodesAsReference   To pass the input array as reference (true) or to copy the points (false). Default is false.
 	 * @return This path object.
 	 */
 	public function start(?nodes:Array<FlxPoint>, speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false,
-			nodesAsReference:Bool = false):FlxPath
+			degreesOffset = 0.0, nodesAsReference:Bool = false):FlxPath
 	{
 		if (nodes != null)
 		{
@@ -242,7 +252,7 @@ class FlxPath implements IFlxDestroyable
 				_nodes = nodes.copy();
 			}
 		}
-		setProperties(speed, mode, autoRotate);
+		setProperties(speed, mode, autoRotate, degreesOffset);
 		if (_nodes.length > 0)
 		{
 			restart();
@@ -380,7 +390,7 @@ class FlxPath implements IFlxDestroyable
 			{
 				object.angularVelocity = 0;
 				object.angularAcceleration = 0;
-				object.angle = angle;
+				object.angle = angle + degreesOffset;
 			}
 
 			if (finished)
