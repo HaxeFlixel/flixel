@@ -69,13 +69,14 @@ class FlxAssets
 	 *                          Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the exclude folder
 	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
 	 */
-	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
-			?rename:String->Null<String>):Array<Field>
+	public static function buildFileReferences(directory = "assets/", subDirectories = false,
+			?include:Expr, ?exclude:Expr, ?rename:String->Null<String>):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories,
+			exprToRegex(include), exprToRegex(exclude), rename);
 		#end
 	}
 
