@@ -17,7 +17,7 @@ class FlxAssetPaths
 
 		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
-		var fileReferences = getFileReferences(directory, subDirectories, include, exclude, rename);
+		var fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
 		var fields = Context.getBuildFields();
 
 		// create new fields based on file references!
@@ -27,10 +27,9 @@ class FlxAssetPaths
 		return fields;
 	}
 
-	static function getFileReferences(directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg,
+	static function addFileReferences(fileReferences:Array<FileReference>, directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg,
 			?rename:String->Null<String>):Array<FileReference>
 	{
-		var fileReferences:Array<FileReference> = [];
 		var resolvedPath = #if (ios || tvos) "../assets/" + directory #else directory #end;
 		var directoryInfo = FileSystem.readDirectory(resolvedPath);
 		for (name in directoryInfo)
@@ -55,7 +54,7 @@ class FlxAssetPaths
 			}
 			else if (subDirectories)
 			{
-				fileReferences = fileReferences.concat(getFileReferences(directory + name + "/", true, include, exclude, rename));
+				addFileReferences(fileReferences, directory + name + "/", true, include, exclude, rename);
 			}
 		}
 
