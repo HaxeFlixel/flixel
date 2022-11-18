@@ -1,5 +1,6 @@
 package flixel.system;
 
+import haxe.macro.Expr;
 #if !macro
 import flash.display.BitmapData;
 import flash.display.Graphics;
@@ -52,7 +53,7 @@ class FlxAssets
 	 * Example usage:
 	 *
 	 * ```haxe
-	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets/images"))
+	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets/images/"))
 	 * class Images {}
 	 * ```
 	 *
@@ -60,19 +61,45 @@ class FlxAssets
 	 * @author Mark Knol
 	 * @see http://blog.stroep.nl/2014/01/haxe-macros/
 	 *
-	 * @param   directory          The directory to scan for files
-	 * @param   subDirectories     Whether to include subdirectories
-	 * @param   filterExtensions   Example: `["jpg", "png", "gif"]` will only add files with that extension.
+	 * @param   directory       The directory to scan for files
+	 * @param   subDirectories  Whether to include subdirectories
+	 * @param   include         A string or `EReg` of files to include.
+	 *                          Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
+	 * @param   exclude         A string or `EReg` of files to exclude.
+	 *                          Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the exclude folder
+	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
 	 */
-	public static function buildFileReferences(directory:String = "assets/", subDirectories:Bool = false,
-			?filterExtensions:Array<String>, ?rename:String->String):Array<haxe.macro.Expr.Field>
+	public static function buildFileReferences(directory = "assets/", subDirectories = false,
+			?include:Expr, ?exclude:Expr, ?rename:String->Null<String>):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, filterExtensions, rename);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories,
+			exprToRegex(include), exprToRegex(exclude), rename);
 		#end
 	}
+
+	#if !doc_gen
+	private static function exprToRegex(expr:Expr):EReg
+	{
+		switch(expr.expr)
+		{
+			case null | EConst(CIdent("null")):
+				return null;
+			case EConst(CString(s, _)):
+				s = EReg.escape(s);
+				s = StringTools.replace(s, "\\*", ".*");
+				s = StringTools.replace(s, "\\|", "|");
+				return new EReg("^" + s + "$", "");
+			case EConst(CRegexp(r, opt)):
+				return new EReg(r, opt);
+			default:
+				haxe.macro.Context.error("Value must be a string or regular expression.", expr.pos);
+				return null;
+		}
+	}
+	#end
 	#end
 
 	#if (!macro || doc_gen)
