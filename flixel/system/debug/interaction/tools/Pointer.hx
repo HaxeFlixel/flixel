@@ -107,8 +107,6 @@ class Pointer extends Tool
 		if (_itemsInSelectionArea.length > 0)
 			_itemsInSelectionArea.splice(1, _itemsInSelectionArea.length - 1);
 
-		_selectedItem = _itemsInSelectionArea[0];
-
 		updateConsoleSelection();
 		pointerRect.put();
 	}
@@ -161,7 +159,7 @@ class Pointer extends Tool
 				_selectionHappening = false;
 				_selectionArea.set(0, 0, 0, 0);
 				
-				if (_brain.keyPressed(Keyboard.ALTERNATE))
+				if (_brain.keyPressed(Keyboard.SHIFT))
 				{
 					_deselectTopSprite = !_deselectTopSprite;
 

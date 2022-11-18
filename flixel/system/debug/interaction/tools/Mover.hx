@@ -25,7 +25,7 @@ class Mover extends Tool
 		_lastCursorPosition = new FlxPoint(brain.flixelPointer.x, brain.flixelPointer.x);
 
 		_name = "Mover";
-		_shortcut = "Shift";
+		_shortcut = "Alt";
 		setButton(GraphicMoverTool);
 		setCursor(new GraphicMoverTool(0, 0));
 
@@ -35,7 +35,7 @@ class Mover extends Tool
 	override public function update():Void
 	{
 		// Is the tool active or its hotkey pressed?
-		if (!isActive() && !_brain.keyPressed(Keyboard.SHIFT))
+		if (!isActive() && !_brain.keyPressed(Keyboard.ALTERNATE))
 			return;
 
 		if (_brain.pointerPressed && !_dragging)
