@@ -1,4 +1,4 @@
-5.0.0-alpha (TBD)
+5.0.0-alpha (November 18, 2022)
 ------------------------------
 #### New features:
 
@@ -28,6 +28,9 @@
 - `FlxSound` - added `pitch` to alter the playback speed ([#2564](https://github.com/HaxeFlixel/flixel/pull/2564))
 - `FlxSprite` - added `getPixelAt`, `getPixelAtScreen`, `transformWorldToPixels` and `transformScreenToPixels` ([#2640](https://github.com/HaxeFlixel/flixel/pull/2640))
 - `FlxStringUtil` - added `toTitleCase` and `toUnderscoreCase` ([#2670](https://github.com/HaxeFlixel/flixel/pull/2670))
+- `FlxAssets` - changed parameters to `buildFileReferences` (Affects `AssetPaths`) ([#2575](https://github.com/HaxeFlixel/flixel/pull/2575))
+	- replaced `filterExtensions` arg with `include` and `exclude` args
+	- changed `rename` arg to take the full filepath, can return `null` to exclude
 
 #### Bugfixes:
 
