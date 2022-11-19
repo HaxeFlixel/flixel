@@ -22,6 +22,11 @@ private enum UserDefines
 	FLX_UNIT_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
+	/* Uses flixel 4.0 legacy collision */
+	FLX_4_LEGACY_COLLISION;
+	/* Simplifies FlxPoint but can increase GC frequency */
+	FLX_NO_POINT_POOL;
+	FLX_NO_PITCH;
 }
 
 /**
@@ -49,6 +54,8 @@ private enum HelperDefines
 	FLX_GAMEINPUT_API;
 	FLX_ACCELEROMETER;
 	FLX_DRAW_QUADS;
+	FLX_POINT_POOL;
+	FLX_PITCH;
 }
 
 class FlxDefines
@@ -123,6 +130,7 @@ class FlxDefines
 		defineInversion(FLX_NO_SOUND_SYSTEM, FLX_SOUND_SYSTEM);
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
+		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
 	}
 
 	static function defineHelperDefines()
@@ -135,7 +143,13 @@ class FlxDefines
 
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
-
+		
+		if (defined(FLX_NO_SOUND_SYSTEM) || #if openfl_legacy !defined("sys") #elseif (lime >= "8.0.0") defined("flash") #end)
+			define(FLX_NO_PITCH);
+			
+		if (!defined(FLX_NO_PITCH))
+			define(FLX_PITCH);
+		
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))

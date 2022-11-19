@@ -17,14 +17,14 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
 import flixel.input.FlxSwipe;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.path.FlxPath;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxButton.FlxTypedButton;
-import flixel.util.FlxPath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.animation.FlxAnimationController;
 #if FLX_TOUCH
@@ -92,8 +92,8 @@ class Tracker extends Watch
 				"drawFramerate", "elapsed", "maxElapsed", "autoPause", "fixedTimestep", "timeScale"
 			]));
 
-			addProfile(new TrackerProfile(FlxPoint, ["x", "y"]));
-			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxPoint]));
+			addProfile(new TrackerProfile(FlxBasePoint, ["x", "y"]));
+			addProfile(new TrackerProfile(FlxRect, ["width", "height"], [FlxBasePoint]));
 
 			addProfile(new TrackerProfile(FlxBasic, ["active", "visible", "alive", "exists"]));
 			addProfile(new TrackerProfile(FlxObject, ["velocity", "acceleration", "drag", "angle", "immovable"], [FlxRect, FlxBasic]));
@@ -162,7 +162,7 @@ class Tracker extends Watch
 				"justReleased"
 				#if FLX_MOUSE_ADVANCED, "pressedMiddle", "justPressedMiddle", "justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight"
 				#end
-			], [FlxPoint]));
+			], [FlxBasePoint]));
 			#end
 			#if FLX_TOUCH
 			addProfile(new TrackerProfile(FlxTouch, [
@@ -173,7 +173,7 @@ class Tracker extends Watch
 				"justPressed",
 				"justReleased",
 				"isActive"
-			], [FlxPoint]));
+			], [FlxBasePoint]));
 			#end
 			#if FLX_GAMEPAD
 			addProfile(new TrackerProfile(FlxGamepad, ["id", "deadZone", "hat", "ball", "dpadUp", "dpadDown", "dpadLeft", "dpadRight"]));
@@ -184,7 +184,7 @@ class Tracker extends Watch
 			#end
 
 			addProfile(new TrackerProfile(DisplayObject, ["z", "scaleX", "scaleY", "mouseX", "mouseY", "rotationX", "rotationY", "visible"], [FlxRect]));
-			addProfile(new TrackerProfile(Point, null, [FlxPoint]));
+			addProfile(new TrackerProfile(Point, null, [FlxBasePoint]));
 			addProfile(new TrackerProfile(Rectangle, null, [FlxRect]));
 			addProfile(new TrackerProfile(Matrix, ["a", "b", "c", "d", "tx", "ty"]));
 		}

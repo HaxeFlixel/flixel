@@ -68,7 +68,8 @@ class ConsoleCommands
 		console.registerClass(FlxMath);
 		console.registerClass(FlxTween);
 		console.registerClass(FlxCamera);
-		console.registerClass(FlxPoint);
+		@:access(flixel.math.FlxPoint.FlxBasePoint)
+		console.registerObject("FlxPoint", FlxBasePoint);
 		console.registerClass(FlxRect);
 
 		console.registerEnum(FlxDebuggerLayout);

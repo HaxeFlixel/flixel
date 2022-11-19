@@ -194,4 +194,23 @@ class FlxDirectionFlagsTest extends FlxTest
 		Assert.isFalse((dirs | 0x0001) <= 0);
 		Assert.isFalse((dirs | 0x0001) <= NONE);
 	}
+
+	@Test
+	function testAngles()
+	{
+		function assertDegrees(flags:FlxDirectionFlags, degrees:Float)
+		{
+			FlxAssert.areNear(flags.degrees, degrees);
+			FlxAssert.areNear(flags.radians, degrees / 180 * Math.PI);
+		}
+		
+		assertDegrees(RIGHT       , 0  );
+		assertDegrees(RIGHT | DOWN, 45 );
+		assertDegrees(DOWN        , 90 );
+		assertDegrees(DOWN | LEFT , 135);
+		assertDegrees(LEFT        , 180);
+		assertDegrees(LEFT | UP   ,-135);
+		assertDegrees(UP          ,-90 );
+		assertDegrees(UP | RIGHT  ,-45 );
+	}
 }

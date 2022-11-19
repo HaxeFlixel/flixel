@@ -1,4 +1,4 @@
-package flixel.util;
+package flixel.path;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -151,7 +151,7 @@ class FlxPathTest extends FlxTest
 	function testStartNodesAsReference()
 	{
 		var points:Array<FlxPoint> = [new FlxPoint(0, 0), new FlxPoint(1, 1), new FlxPoint(2, 2), new FlxPoint(3, 3)];
-		object.path = path.start(points, 100, FlxPath.FORWARD, false, true);
+		object.path = path.start(points, 100, FORWARD, false, true);
 		Assert.areEqual(object.path.nodes.length, points.length);
 		for (i in 0...points.length)
 		{
@@ -167,7 +167,7 @@ class FlxPathTest extends FlxTest
 			Assert.areEqual(i + 1, path.nodes[i].y);
 		}
 
-		object.path = path.start(points, 100, FlxPath.FORWARD, false, false);
+		object.path = path.start(points, 100, FORWARD, false, false);
 		Assert.areEqual(object.path.nodes.length, points.length);
 		object.path.removeAt(0);
 		Assert.areEqual(object.path.nodes.length + 1, points.length);

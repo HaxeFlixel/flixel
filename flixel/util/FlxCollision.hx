@@ -8,9 +8,9 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
-import flixel.math.FlxRect;
-import flixel.math.FlxVector;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
 import flixel.tile.FlxTileblock;
 
 /**
@@ -22,10 +22,10 @@ import flixel.tile.FlxTileblock;
 class FlxCollision
 {
 	// Optimization: Local static vars to reduce allocations
-	static var pointA:FlxVector = new FlxVector();
-	static var pointB:FlxVector = new FlxVector();
-	static var centerA:FlxVector = new FlxVector();
-	static var centerB:FlxVector = new FlxVector();
+	static var pointA:FlxPoint = new FlxPoint();
+	static var pointB:FlxPoint = new FlxPoint();
+	static var centerA:FlxPoint = new FlxPoint();
+	static var centerB:FlxPoint = new FlxPoint();
 	static var matrixA:FlxMatrix = new FlxMatrix();
 	static var matrixB:FlxMatrix = new FlxMatrix();
 	static var testMatrix:FlxMatrix = new FlxMatrix();
@@ -264,5 +264,147 @@ class FlxCollision
 		result.add(bottom);
 
 		return result;
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, first enters the rect.
+	 * If the line starts inside the rect, a copy of start is returned.
+	 * If the line never enters the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being entered
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of entry of the line into the rect, if possible.
+	 */
+	public static function calcRectEntry(rect:FlxRect, start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Null<FlxPoint>
+	{
+		// We must ensure that weak refs are placed back in the pool
+		inline function putWeakRefs()
+		{
+			start.putWeak();
+			end.putWeak();
+			rect.putWeak();
+		}
+
+		// helper to create a new instance if needed, when needed.
+		// this allows us to return a value at any point and still put weak refs.
+		// otherwise this would be a fragile mess of if-elses
+		function getResult(x:Float, y:Float)
+		{
+			if (result == null)
+				result = FlxPoint.get(x, y);
+			else
+				result.set(x, y);
+			
+			putWeakRefs();
+			return result;
+		}
+
+		function nullResult()
+		{
+			putWeakRefs();
+			return null;
+		}
+
+		// does the ray start inside the bounds
+		if (rect.containsPoint(start))
+			return getResult(start.x, start.y);
+
+		// are both points above, below, left or right of the bounds
+		if ((start.y < rect.top    && end.y < rect.top   )
+		||  (start.y > rect.bottom && end.y > rect.bottom)
+		||  (start.x > rect.right  && end.x > rect.right )
+		||  (start.x < rect.left   && end.x < rect.left) )
+		{
+			return nullResult();
+		}
+
+		// check for purely vertical, i.e. has infinite slope
+		if (start.x == end.x)
+		{
+			// determine if it exits top or bottom
+			if (start.y < rect.top)
+				return getResult(start.x, rect.top);
+
+			return getResult(start.x, rect.bottom);
+		}
+
+		// Use y = mx + b formula to define out line, m = slope, b is y when x = 0
+		var m = (start.y - end.y) / (start.x - end.x);
+		// y - mx = b
+		var b = start.y - m * start.x;
+		// y = mx + b
+		var leftY = m * rect.left + b;
+		var rightY = m * rect.right + b;
+
+		// if left and right intercepts are both above and below, there is no entry
+		if ((leftY < rect.top && rightY < rect.top) || (leftY > rect.bottom && rightY > rect.bottom))
+			return nullResult();
+
+		// if ray moves right
+		else if (start.x < end.x)
+		{
+			if (leftY < rect.top)
+			{
+				// ray exits on top
+				// x = (y - b)/m
+				return getResult((rect.top - b) / m, rect.top);
+			}
+
+			if (leftY > rect.bottom)
+			{
+				// ray exits on bottom
+				// x = (y - b)/m
+				return getResult((rect.bottom - b) / m, rect.bottom);
+			}
+
+			// ray exits to the left
+			return getResult(rect.left, leftY);
+		}
+
+		// if ray moves left
+		if (rightY < rect.top)
+		{
+			// ray exits on top
+			// x = (y - b)/m
+			return getResult((rect.top - b) / m, rect.top);
+		}
+
+		if (rightY > rect.bottom)
+		{
+			// ray exits on bottom
+			// x = (y - b)/m
+			return getResult((rect.bottom - b) / m, rect.bottom);
+		}
+
+		// ray exits to the right
+		return getResult(rect.right, rightY);
+	}
+
+	/**
+	 * Calculates at which point where the given line, from start to end, was last inside the rect.
+	 * If the line ends inside the rect, a copy of end is returned.
+	 * If the line is never inside the rect, null is returned.
+	 *
+	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
+	 * and the supplied result is unchanged
+	 * @since 5.0.0
+	 *
+	 * @param rect    The rect being exited
+	 * @param start   The start of the line
+	 * @param end     The end of the line
+	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                Only returned if the line enters the rect.
+	 * @return The point of exit of the line from the rect, if possible.
+	 */
+	public static inline function calcRectExit(rect, start, end, result)
+	{
+		return calcRectEntry(rect, end, start, result);
 	}
 }

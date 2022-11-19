@@ -45,10 +45,9 @@ private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQua
 class FlxCamera extends FlxBasic
 {
 	/**
-	 * While you can alter the zoom of each camera after the fact,
-	 * this variable determines what value the camera will start at when created.
+	 * Any `FlxCamera` with a zoom of 0 (the default value) will have this zoom value.
 	 */
-	public static var defaultZoom:Float;
+	public static var defaultZoom:Float = 1.0;
 
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
@@ -378,11 +377,6 @@ class FlxCamera extends FlxBasic
 	 * Internal, used to control the `fade()` special effect complete callback.
 	 */
 	var _fxFadeComplete:Void->Void = null;
-
-	/**
-	 * Internal, tracks whether fade effect is running or not.
-	 */
-	var _fxFadeCompleted:Bool = true;
 
 	/**
 	 * Internal, alpha component of fade color.
@@ -1068,9 +1062,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		// Adjust bounds to account for zoom
-		var zoom = this.zoom / FlxG.initialZoom;
-
 		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
 		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
 		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);
@@ -1186,7 +1177,7 @@ class FlxCamera extends FlxBasic
 
 	function updateFade(elapsed:Float):Void
 	{
-		if (_fxFadeCompleted)
+		if (_fxFadeDuration == 0.0)
 			return;
 
 		if (_fxFadeIn)
@@ -1211,7 +1202,7 @@ class FlxCamera extends FlxBasic
 
 	function completeFade()
 	{
-		_fxFadeCompleted = true;
+		_fxFadeDuration = 0.0;
 		if (_fxFadeComplete != null)
 			_fxFadeComplete();
 	}
@@ -1230,11 +1221,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if (_fxShakeAxes != FlxAxes.Y)
+				if (_fxShakeAxes.x)
 				{
 					flashSprite.x += FlxG.random.float(-_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
-				if (_fxShakeAxes != FlxAxes.X)
+				if (_fxShakeAxes.y)
 				{
 					flashSprite.y += FlxG.random.float(-_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
@@ -1440,7 +1431,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
-		if (!_fxFadeCompleted && !Force)
+		if (_fxFadeDuration > 0 && !Force)
 			return;
 
 		_fxFadeColor = Color;
@@ -1452,7 +1443,6 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = OnComplete;
 
 		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
-		_fxFadeCompleted = false;
 	}
 
 	/**
@@ -1486,7 +1476,8 @@ class FlxCamera extends FlxBasic
 	{
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
-		_fxShakeDuration = 0;
+		_fxFadeDuration = 0.0;
+		_fxShakeDuration = 0.0;
 		updateFlashSpritePosition();
 	}
 

@@ -30,7 +30,6 @@ class FlxSubState extends FlxState
 	/**
 	 * Helper var for `close()` so `closeSubState()` can be called on the parent.
 	 */
-	@:noCompletion
 	@:allow(flixel.FlxState.resetSubState)
 	var _parentState:FlxState;
 

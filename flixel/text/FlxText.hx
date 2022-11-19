@@ -785,9 +785,9 @@ class FlxText extends FlxSprite
 			oldHeight = graphic.height;
 		}
 
-		var newWidth:Float = textField.width;
+		var newWidth:Int = Math.ceil(textField.width);
 		// Account for gutter
-		var newHeight:Float = textField.textHeight + VERTICAL_GUTTER;
+		var newHeight:Int = Math.ceil(textField.textHeight) + VERTICAL_GUTTER;
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
@@ -800,11 +800,11 @@ class FlxText extends FlxSprite
 			// Need to generate a new buffer to store the text graphic
 			height = newHeight;
 			var key:String = FlxG.bitmap.getUniqueKey("text");
-			makeGraphic(Std.int(newWidth), Std.int(newHeight), FlxColor.TRANSPARENT, false, key);
+			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
 
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
-			frameHeight = Std.int(height);
+			frameHeight = newHeight;
 			textField.height = height * 1.2;
 			_flashRect.x = 0;
 			_flashRect.y = 0;
@@ -871,6 +871,12 @@ class FlxText extends FlxSprite
 
 			return;
 		}
+		#elseif !web
+		// Fix to render desktop and mobile text in the same visual location as web
+		_matrix.translate(-1, -1); // left and up
+		graphic.draw(textField, _matrix);
+		_matrix.translate(1, 1); // return to center
+		return;
 		#end
 
 		graphic.draw(textField, _matrix);

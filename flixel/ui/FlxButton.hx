@@ -57,7 +57,7 @@ class FlxButton extends FlxTypedButton<FlxText>
 		super(X, Y, OnClick);
 
 		for (point in labelOffsets)
-			point.set(point.x - 1, point.y + 3);
+			point.set(point.x, point.y + 3);
 
 		initLabel(Text);
 	}
@@ -514,7 +514,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	function onUpHandler():Void
 	{
-		status = FlxButton.NORMAL;
+		status = FlxButton.HIGHLIGHT;
 		input.release();
 		currentInput = null;
 		// Order matters here, because onUp.fire() could cause a state change and destroy this object.
