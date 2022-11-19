@@ -22,5 +22,5 @@ class FlxAssetPathsTest extends FlxTest
 @:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/invisibleFile"))
 class InvisibleFile {}
 
-@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/fileWithMultipleDots", false, ["txt"]))
+@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/fileWithMultipleDots", false, "*.txt"))
 class ExtensionFilterWithMultiDotFile {}

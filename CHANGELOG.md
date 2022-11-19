@@ -1,4 +1,4 @@
-5.0.0-alpha (TBD)
+5.0.0-alpha (November 19, 2022)
 ------------------------------
 #### New features:
 
@@ -14,7 +14,9 @@
 	- `FlxPathSimplifier`: Replace findPath simplify args with a new enum
 	- Expose previously private fields: `tileWidth`, `tileHeight`, `scaledTileWidth`, `scaledTileHeight`, `scaledWidth`, and `scaledHeight`
 	- `FlxBaseTilemap`: added `calcRayEntry` and `calcRayExit`
-- `FlxPath`: added `immovable` bool (previously object were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+- `FlxPath`: various new features
+	- added `immovable` bool (previously, objects were always immovable when following paths) ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
+	- added `angleOffset` to augment the angle of sprites following paths ([2674](https://github.com/HaxeFlixel/flixel/pull/2674))
 - `FlxPathDrawData`: added `myFlxPath.debugDrawData` to allow custom colors and draw properties ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxAxes`: added `x` and `y` getters, `NONE` value, `toString`, `fromString`and `fromBools` methods ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480), [#2659](https://github.com/HaxeFlixel/flixel/pull/2659))
 - `FlxTween`: added `ShakeTween` and `FlxTween.shake()` helper ([#2549](https://github.com/HaxeFlixel/flixel/pull/2549))
@@ -27,6 +29,10 @@
 - `FlxAnimation` - added `loopPoint` to allow looping to a frame other than the starting frame ([#2621](https://github.com/HaxeFlixel/flixel/pull/2621))
 - `FlxSound` - added `pitch` to alter the playback speed ([#2564](https://github.com/HaxeFlixel/flixel/pull/2564))
 - `FlxSprite` - added `getPixelAt`, `getPixelAtScreen`, `transformWorldToPixels` and `transformScreenToPixels` ([#2640](https://github.com/HaxeFlixel/flixel/pull/2640))
+- `FlxStringUtil` - added `toTitleCase` and `toUnderscoreCase` ([#2670](https://github.com/HaxeFlixel/flixel/pull/2670))
+- `FlxAssets` - changed parameters to `buildFileReferences` (Affects `AssetPaths`) ([#2575](https://github.com/HaxeFlixel/flixel/pull/2575))
+	- replaced `filterExtensions` arg with `include` and `exclude` args
+	- changed `rename` arg to take the full filepath, can return `null` to exclude
 
 #### Bugfixes:
 
@@ -44,7 +50,7 @@
 - `FlxPath`: move to `flixel.path.FlxPath` ([#2480](https://github.com/HaxeFlixel/flixel/pull/2480))
 - `FlxPoint/FlxVector`: moved all `FlxVector` fields and methods into `FlxPoint` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxSave`: changed the default save name and path to unique values based on Project.xml metadata ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
-- `FlxTilemap`: Replaced `useScaleHack` with static `defaultFramePadding` to fix tile tearing ([#2581]https://github.com/HaxeFlixel/flixel/issues/2581)
+- `FlxTilemap`: Replaced `useScaleHack` with static `defaultFramePadding` to fix tile tearing ([#2581](https://github.com/HaxeFlixel/flixel/issues/2581))
 - `FlxSprite`: various improvements.
 	- improved `pixelsOverlapPoint` with scaled or angled sprites ([#2576](https://github.com/HaxeFlixel/flixel/pull/2576))
 	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
