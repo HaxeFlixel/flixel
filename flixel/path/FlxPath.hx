@@ -128,7 +128,9 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * The amount of degrees to offset from the path's angle, when `autoRotate` is `true`. To use
 	 * flixel 4.11's autoRotate behavior, set this to `90`, so there is no rotation at 0 degrees.
+	 * 
 	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
+	 * @since 5.0.0
 	 */
 	public var angleOffset:Float = 0;
 
@@ -210,10 +212,11 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Sets the following properties: `speed`, `mode` and auto rotation.
 	 *
-	 * @param speed          The speed at which the object is moving on the path.
-	 * @param mode           Path following behavior (like looping, horizontal only, etc).
-	 * @param autoRotate     Whether the object's angle should be adjusted to the path angle during
-	 *                       path follow behavior. Note that moving straight right is 0 degrees.
+	 * @param speed        The speed at which the object is moving on the path.
+	 * @param mode         Path following behavior (like looping, horizontal only, etc).
+	 * @param autoRotate   Whether the object's angle should be adjusted to the path angle during
+	 *                     path follow behavior. Note that moving straight right is 0 degrees, when angle
+	 *                     angleOffset is 0.
 	 * @return This path object.
 	 * @since 4.2.0
 	 */
