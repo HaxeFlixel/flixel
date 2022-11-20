@@ -312,6 +312,11 @@ class FlxGraphic implements IFlxDestroyable
 	public var isDumped(default, null):Bool = false;
 
 	/**
+	 * Whether the `BitmapData` of this graphic object has been loaded or not.
+	 */
+	public var isLoaded(get, never):Bool;
+
+	/**
 	 * Whether the `BitmapData` of this graphic object can be dumped for decreased memory usage,
 	 * but may cause some issues (when you need direct access to pixels of this graphic.
 	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
@@ -578,6 +583,11 @@ class FlxGraphic implements IFlxDestroyable
 			return FlxGraphic.getBitmap(newBitmap, unique);
 
 		return null;
+	}
+	
+	inline function get_isLoaded()
+	{
+		return bitmap != null && !bitmap.rect.isEmpty();
 	}
 
 	inline function get_canBeDumped():Bool

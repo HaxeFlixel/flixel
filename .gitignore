@@ -8,3 +8,4 @@ dump
 *.diff
 *.hxproj
 .unittest
+flixel.zip
