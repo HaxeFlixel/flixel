@@ -1,3 +1,8 @@
+5.0.0-alpha.2 (November 19, 2022)
+------------------------------
+#### Bugfixes:
+* `FlxDefines` prevent compile error when targeting lime 7 on non-sys targets (#2676)
+
 5.0.0-alpha (November 19, 2022)
 ------------------------------
 #### New features:
