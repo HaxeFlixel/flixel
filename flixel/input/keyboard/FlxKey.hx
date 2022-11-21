@@ -81,7 +81,7 @@ abstract FlxKey(Int) from Int to Int
 	var LEFT = 37;
 	var RIGHT = 39;
 	var TAB = 9;
-	var START = 15;
+	var WINDOWS = 15;
 	var MENU = 302;
 	var PRINTSCREEN = 301;
 	var BREAK = 19;
