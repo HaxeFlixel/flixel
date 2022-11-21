@@ -348,10 +348,10 @@ class FlxKeyList extends FlxBaseKeyList
 	inline function get_TAB()
 		return check(FlxKey.TAB);
 
-	public var START(get, never):Bool;
+	public var WINDOWS(get, never):Bool;
 
-	inline function get_START()
-		return check(FlxKey.START);
+	inline function get_WINDOWS()
+		return check(FlxKey.WINDOWS);
 
 	public var MENU(get, never):Bool;
 
