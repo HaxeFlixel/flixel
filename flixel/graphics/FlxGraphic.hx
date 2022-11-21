@@ -22,8 +22,8 @@ import openfl.display.Tilesheet;
 class FlxGraphic implements IFlxDestroyable
 {
 	/**
-	 * The default value for the `persist` variable
-	 * at creation if none is specified in the constructor.
+	 * The default value for the `persist` variable at creation if none is specified in the constructor.
+	 * @see [FlxGraphic.persist](https://api.haxeflixel.com/flixel/graphics/FlxGraphic.html#persist)
 	 */
 	public static var defaultPersist:Bool = false;
 
