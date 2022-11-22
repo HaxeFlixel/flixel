@@ -1,3 +1,20 @@
+5.0.1 November 21, 2022
+------------------------------
+#### Bugfixes:
+- Fix lime < 8 not being properly defined to FLX_NO_PITCH ([#2678](https://github.com/HaxeFlixel/flixel/pull/2678))
+ 
+#### New features:
+- `FlxKeys`: Added `SCROLL_LOCK`, `NUMLOCK`, `WINDOWS`, `MENU`, `BREAK` and `NUMPADSLASH` keys ([#2638](https://github.com/HaxeFlixel/flixel/pull/2638))
+
+5.0.0 (November 20, 2022)
+------------------------------
+The alpha was causing issues with CI due to haxelib issues. We're foregoing the alpha, since the new features are considiered "stable".
+
+5.0.0-alpha.2 (November 19, 2022)
+------------------------------
+#### Bugfixes:
+- `FlxDefines` prevent compile error when targeting lime 7 on non-sys targets ([#2676](https://github.com/HaxeFlixel/flixel/pull/2676))
+
 5.0.0-alpha (November 19, 2022)
 ------------------------------
 #### New features:
