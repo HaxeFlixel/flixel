@@ -23,10 +23,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
 
+	#if !flash
     public var shader:FlxShader;
 	var alphas:Array<Float>;
     var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
+	#end
 
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
@@ -43,7 +45,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
+		#if !flash
 		alphas = [];
+		#end
 	}
 
 	override public function render(camera:FlxCamera):Void
@@ -54,6 +58,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 
+		#if !flash
         var shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
@@ -72,6 +77,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.overrideBlendMode(blend);
 		#end
 		camera.canvas.graphics.beginShaderFill(shader);
+		#else
+		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		#end
 
 		#if !openfl_legacy
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
@@ -102,11 +110,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		verticesPosition = 0;
 		indicesPosition = 0;
 		colorsPosition = 0;
+		#if !flash
 		alphas.splice(0, alphas.length);
         if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
 		if (colorOffsets != null)
 			colorOffsets.splice(0, colorOffsets.length);
+		#end
 	}
 
 	override public function dispose():Void
@@ -118,13 +128,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData = null;
 		colors = null;
 		bounds = null;
+		#if !flash
 		alphas = null;
         colorMultipliers = null;
 		colorOffsets = null;
+		#end
 	}
 
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
-			?cameraBounds:FlxRect, ?transform:ColorTransform):Void
+			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
 	{
 		if (position == null)
 			position = point.set();
@@ -199,6 +211,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		position.putWeak();
 		cameraBounds.putWeak();
 
+		#if !flash
         for (_ in 0...numVertices)
         {
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
@@ -242,6 +255,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
                 colorMultipliers.push(1);
             }
         }
+		#end
 	}
 
     inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
