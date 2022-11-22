@@ -12,6 +12,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -52,7 +53,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
-	 * 
+	 *
 	 * Prior to 4.9.0 it was useful to change this value, but that feature is deprecated.
 	 * Instead use the `defaultDrawTarget` argument in `FlxG.cameras.add `.
 	 * or`FlxG.cameras.setDefaultDrawTarget` .
@@ -60,11 +61,11 @@ class FlxCamera extends FlxBasic
 	 */
 	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDefaultDrawTarget` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;
-	
+
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
-	 * 
+	 *
 	 * This is the non-deprecated list that the public `defaultCameras` proxies. Allows flixel classes
 	 * to use it without warning.
 	 */
@@ -467,6 +468,12 @@ class FlxCamera extends FlxBasic
 
 	var _helperPoint:Point = new Point();
 
+	@:noCompletion
+	var _sinAngle:Float = 0;
+
+	@:noCompletion
+	var _cosAngle:Float = 1;
+
 	/**
 	 * Currently used draw stack item
 	 */
@@ -689,11 +696,27 @@ class FlxCamera extends FlxBasic
 			if (_useBlitMatrix)
 			{
 				_helperMatrix.concat(_blitMatrix);
+
+				if (angle != 0)
+				{
+					_helperMatrix.translate(-width / 2, -height / 2);
+					_helperMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+					_helperMatrix.translate(width / 2, height / 2);
+				}
+
 				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
 			}
 			else
 			{
 				_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
+
+				if (angle != 0)
+				{
+					_helperMatrix.translate(-width / 2, -height / 2);
+					_helperMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+					_helperMatrix.translate(width / 2, height / 2);
+				}
+
 				buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || antialiasing));
 			}
 		}
@@ -701,6 +724,13 @@ class FlxCamera extends FlxBasic
 		{
 			var isColored = (transform != null && transform.hasRGBMultipliers());
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+
+			if (angle != 0)
+			{
+				matrix.translate(-width / 2, -height / 2);
+				matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				matrix.translate(width / 2, height / 2);
+			}
 
 			#if FLX_RENDER_TRIANGLE
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
@@ -723,6 +753,14 @@ class FlxCamera extends FlxBasic
 					_helperMatrix.identity();
 					_helperMatrix.translate(destPoint.x, destPoint.y);
 					_helperMatrix.concat(_blitMatrix);
+
+					if (angle != 0)
+					{
+						_helperMatrix.translate(-width / 2, -height / 2);
+						_helperMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+						_helperMatrix.translate(width / 2, height / 2);
+					}
+
 					buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || antialiasing));
 				}
 				else
@@ -742,6 +780,13 @@ class FlxCamera extends FlxBasic
 		{
 			_helperMatrix.identity();
 			_helperMatrix.translate(destPoint.x + frame.offset.x, destPoint.y + frame.offset.y);
+
+			if (angle != 0)
+			{
+				_helperMatrix.translate(-width / 2, -height / 2);
+				_helperMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+				_helperMatrix.translate(width / 2, height / 2);
+			}
 
 			var isColored = (transform != null && transform.hasRGBMultipliers());
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
@@ -813,6 +858,13 @@ class FlxCamera extends FlxBasic
 				{
 					_helperMatrix.identity();
 					_helperMatrix.translate(-viewOffsetX, -viewOffsetY);
+				}
+
+				if (angle != 0)
+				{
+					_helperMatrix.translate(-width / 2, -height / 2);
+					_helperMatrix.rotateWithTrig(_cosAngle, _sinAngle);
+					_helperMatrix.translate(width / 2, height / 2);
 				}
 
 				buffer.draw(trianglesSprite, _helperMatrix);
@@ -1736,7 +1788,7 @@ class FlxCamera extends FlxBasic
 		updateFlashOffset();
 		setScale(scaleX, scaleY);
 	}
-	
+
 	/**
 	 * The size and position of this camera's screen
 	 * @since 4.11.0
@@ -1745,10 +1797,10 @@ class FlxCamera extends FlxBasic
 	{
 		if (rect == null)
 			rect = FlxRect.get();
-		
+
 		return rect.set(viewOffsetX, viewOffsetY, viewOffsetWidth - viewOffsetX, viewOffsetHeight - viewOffsetY);
 	}
-	
+
 	/**
 	 * Checks whether this camera contains a given point or rectangle, in
 	 * screen coordinates.
@@ -1756,20 +1808,18 @@ class FlxCamera extends FlxBasic
 	 */
 	public inline function containsPoint(point:FlxPoint, width:Float = 0, height:Float = 0):Bool
 	{
-		var contained = (point.x + width > viewOffsetX) && (point.x < viewOffsetWidth)
-			&& (point.y + height > viewOffsetY) && (point.y < viewOffsetHeight);
+		var contained = (point.x + width > viewOffsetX) && (point.x < viewOffsetWidth) && (point.y + height > viewOffsetY) && (point.y < viewOffsetHeight);
 		point.putWeak();
 		return contained;
 	}
-	
+
 	/**
 	 * Checks whether this camera contains a given rectangle, in screen coordinates.
 	 * @since 4.11.0
 	 */
 	public inline function containsRect(rect:FlxRect):Bool
 	{
-		var contained = (rect.right > viewOffsetX) && (rect.x < viewOffsetWidth)
-			&& (rect.bottom > viewOffsetY) && (rect.y < viewOffsetHeight);
+		var contained = (rect.right > viewOffsetX) && (rect.x < viewOffsetWidth) && (rect.bottom > viewOffsetY) && (rect.y < viewOffsetHeight);
 		rect.putWeak();
 		return contained;
 	}
@@ -1833,7 +1883,11 @@ class FlxCamera extends FlxBasic
 	function set_angle(Angle:Float):Float
 	{
 		angle = Angle;
-		flashSprite.rotation = Angle;
+
+		var radians:Float = angle * FlxAngle.TO_RAD;
+		_sinAngle = Math.sin(radians);
+		_cosAngle = Math.cos(radians);
+
 		return Angle;
 	}
 
@@ -1917,12 +1971,12 @@ class FlxCamera extends FlxBasic
 		viewOffsetHeight = height - viewOffsetY;
 		viewHeight = height - 2 * viewOffsetY;
 	}
-	
+
 	static inline function get_defaultCameras():Array<FlxCamera>
 	{
 		return _defaultCameras;
 	}
-	
+
 	static inline function set_defaultCameras(value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _defaultCameras = value;
