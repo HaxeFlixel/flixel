@@ -1,6 +1,9 @@
 package flixel.util;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+#if haxe_concurrent
+import hx.concurrent.lock.RLock;
+#end
 
 /**
  * A generic container that facilitates pooling and recycling of objects.
@@ -16,6 +19,10 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	var _pool:Array<T> = [];
 	var _class:Class<T>;
 
+	#if haxe_concurrent
+	var _lock:RLock;
+	#end
+
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
 	 * _count keeps track of the valid, accessible pool objects.
@@ -25,19 +32,34 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	public function new(classObj:Class<T>)
 	{
 		_class = classObj;
+		#if haxe_concurrent
+		_lock = new RLock();
+		#end
 	}
 
 	public function get():T
 	{
+		#if haxe_concurrent
+		_lock.acquire();
+		#end
+		var result:T;
 		if (_count == 0)
 		{
-			return Type.createInstance(_class, []);
+			result = Type.createInstance(_class, []);
+		} else {
+			result = _pool[--_count];
 		}
-		return _pool[--_count];
+		#if haxe_concurrent
+		_lock.release();
+		#end
+		return result;
 	}
 
 	public function put(obj:T):Void
 	{
+		#if haxe_concurrent
+		_lock.acquire();
+		#end
 		// we don't want to have the same object in the accessible pool twice (ok to have multiple in the inaccessible zone)
 		if (obj != null)
 		{
@@ -49,30 +71,51 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 				_pool[_count++] = obj;
 			}
 		}
+		#if haxe_concurrent
+		_lock.release();
+		#end
 	}
 
 	public function putUnsafe(obj:T):Void
 	{
+		#if haxe_concurrent
+		_lock.acquire();
+		#end
 		if (obj != null)
 		{
 			obj.destroy();
 			_pool[_count++] = obj;
 		}
+		#if haxe_concurrent
+		_lock.release();
+		#end
 	}
 
 	public function preAllocate(numObjects:Int):Void
 	{
+		#if haxe_concurrent
+		_lock.acquire();
+		#end
 		while (numObjects-- > 0)
 		{
 			_pool[_count++] = Type.createInstance(_class, []);
 		}
+		#if haxe_concurrent
+		_lock.release();
+		#end
 	}
 
 	public function clear():Array<T>
 	{
+		#if haxe_concurrent
+		_lock.acquire();
+		#end
 		_count = 0;
 		var oldPool = _pool;
 		_pool = [];
+		#if haxe_concurrent
+		_lock.release();
+		#end
 		return oldPool;
 	}
 
