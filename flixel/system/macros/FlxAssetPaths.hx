@@ -106,7 +106,7 @@ private class FileReference
 			name = value.split("/").pop();
 
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		name = name.split("-").join("_").split(".").join("__");
+		name = name.split("-").join("_").split(" ").join("_").split(".").join("__");
 		if (!valid.match(name)) // #1796
 		{
 			Context.warning('Invalid name: $name for file: $value', Context.currentPos());
