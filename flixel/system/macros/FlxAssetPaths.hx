@@ -36,16 +36,16 @@ class FlxAssetPaths
 		{
 			var path = resolvedPath + name;
 
-			if (include != null && !include.match(path))
-				continue;
-
-			if (exclude != null && exclude.match(path))
-				continue;
-
 			if (!FileSystem.isDirectory(path))
 			{
 				// ignore invisible files
 				if (name.startsWith("."))
+					continue;
+
+				if (include != null && !include.match(path))
+					continue;
+
+				if (exclude != null && exclude.match(path))
 					continue;
 
 				var reference = FileReference.fromPath(path, rename);
