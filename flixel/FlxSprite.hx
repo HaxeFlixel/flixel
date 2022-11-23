@@ -129,6 +129,12 @@ using flixel.util.FlxColorTransformUtil;
 class FlxSprite extends FlxObject
 {
 	/**
+	 * The default value for `antialiasing` across all `FlxSprites`,
+	 * defaults to `false`.
+	 */
+	public static var defaultAntialiasing:Bool = false;
+	
+	/**
 	 * Class that handles adding and playing animations on this sprite.
 	 * @see https://snippets.haxeflixel.com/sprites/animation/
 	 */
@@ -230,8 +236,9 @@ class FlxSprite extends FlxObject
 	public var origin(default, null):FlxPoint;
 
 	/**
-	 * Controls the position of the sprite's hitbox. Likely needs to be adjusted after
-	 * changing a sprite's `width`, `height` or `scale`.
+	 * The position of the sprite's graphic relative to its hitbox. For example, `offset.x = 10;` will
+	 * show the graphic 10 pixels left of the hitbox. Likely needs to be adjusted after changing a sprite's
+	 * `width`, `height` or `scale`.
 	 */
 	public var offset(default, null):FlxPoint;
 
@@ -371,6 +378,7 @@ class FlxSprite extends FlxObject
 		super(X, Y);
 
 		useFramePixels = FlxG.renderBlit;
+		antialiasing = defaultAntialiasing;
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
@@ -779,8 +787,6 @@ class FlxSprite extends FlxObject
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
 
-			getScreenPosition(_point, camera).subtractPoint(offset);
-
 			if (isSimpleRender(camera))
 				drawSimple(camera);
 			else
@@ -800,6 +806,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function drawSimple(camera:FlxCamera):Void
 	{
+		getScreenPosition(_point, camera).subtractPoint(offset);
 		if (isPixelPerfectRender(camera))
 			_point.floor();
 
@@ -822,6 +829,7 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
+		getScreenPosition(_point, camera).subtractPoint(offset);
 		_point.add(origin.x, origin.y);
 		_matrix.translate(_point.x, _point.y);
 

@@ -35,42 +35,63 @@ import Std.is as isOfType;
 using flixel.util.FlxColorTransformUtil;
 
 #if html5
+/**
+ * BitmapData loaded via @:bitmap is loaded asynchronously, this allows us to apply frame
+ * padding to the bitmap once it's loaded rather
+ */
+private interface IEmbeddedBitmapData
+{
+	var onLoad:()->Void;
+}
+
 @:keep @:bitmap("assets/images/tile/autotiles.png")
 private class RawGraphicAuto extends BitmapData {}
-class GraphicAuto extends RawGraphicAuto
+class GraphicAuto extends RawGraphicAuto implements IEmbeddedBitmapData
 {
-	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	static inline var WIDTH = 128;
+	static inline var HEIGHT = 8;
+
+	public var onLoad:()->Void;
+	public function new ()
 	{
-		super(width, height, transparent, fillRGBA, onLoad);
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
 		// Set properties because `@:bitmap` constructors ignore width/height
-		this.width = width;
-		this.height = height;
+		this.width = WIDTH;
+		this.height = HEIGHT;
 	}
 }
 
 @:keep @:bitmap("assets/images/tile/autotiles_alt.png")
 private class RawGraphicAutoAlt extends BitmapData {}
-class GraphicAutoAlt extends RawGraphicAutoAlt
+class GraphicAutoAlt extends RawGraphicAutoAlt implements IEmbeddedBitmapData
 {
-	public function new (width = 128, height = 8, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	static inline var WIDTH = 128;
+	static inline var HEIGHT = 8;
+
+	public var onLoad:()->Void;
+	public function new ()
 	{
-		super(width, height, transparent, fillRGBA, onLoad);
-		// Set again because `@:bitmap` constructors ignore width/height
-		this.width = width;
-		this.height = height;
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
+		// Set properties because `@:bitmap` constructors ignore width/height
+		this.width = WIDTH;
+		this.height = HEIGHT;
 	}
 }
 
 @:keep @:bitmap("assets/images/tile/autotiles_full.png")
 private class RawGraphicAutoFull extends BitmapData {}
-class GraphicAutoFull extends RawGraphicAutoFull
+class GraphicAutoFull extends RawGraphicAutoFull implements IEmbeddedBitmapData
 {
-	public function new (width = 256, height = 48, transparent = true, fillRGBA = 0xFFffffff, ?onLoad:Dynamic)
+	static inline var WIDTH = 256;
+	static inline var HEIGHT = 48;
+
+	public var onLoad:()->Void;
+	public function new ()
 	{
-		super(width, height, transparent, fillRGBA, onLoad);
-		// Set again because `@:bitmap` constructors ignore width/height
-		this.width = width;
-		this.height = height;
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
+		// Set properties because `@:bitmap` constructors ignore width/height
+		this.width = WIDTH;
+		this.height = HEIGHT;
 	}
 }
 #else
@@ -351,10 +372,30 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 
-		if (defaultFramePadding > 0)
+		if (defaultFramePadding > 0 && graph.isLoaded)
 			frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
 		else
+		{
+			#if html5
+			/* if Using tile graphics like GraphicAuto or others defined above, they will not
+			 * load immediately. Track their loading and apply frame padding after.
+			**/
+			if (!graph.isLoaded && isOfType(graph.bitmap, IEmbeddedBitmapData))
+			{
+				var futureBitmap:IEmbeddedBitmapData = cast graph.bitmap;
+				futureBitmap.onLoad = function()
+				{
+					frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+				}
+			}
+			else if (defaultFramePadding > 0 && !graph.isLoaded)
+			{
+				FlxG.log.warn('defaultFramePadding not applied to "${graph.key}" because it is loading asynchronously.'
+					+ "using `@:bitmap` assets on html5 is not recommended");
+			}
+			#end
 			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+		}
 	}
 
 	function padTileFrames(tileWidth:Int, tileHeight:Int, graphic:FlxGraphic, padding:Int)
