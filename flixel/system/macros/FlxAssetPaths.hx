@@ -36,16 +36,16 @@ class FlxAssetPaths
 		{
 			var path = resolvedPath + name;
 
-			if (include != null && !include.match(path))
-				continue;
-
-			if (exclude != null && exclude.match(path))
-				continue;
-
 			if (!FileSystem.isDirectory(path))
 			{
 				// ignore invisible files
 				if (name.startsWith("."))
+					continue;
+
+				if (include != null && !include.match(path))
+					continue;
+
+				if (exclude != null && exclude.match(path))
 					continue;
 
 				var reference = FileReference.fromPath(path, rename);
@@ -106,7 +106,7 @@ private class FileReference
 			name = value.split("/").pop();
 
 		// replace some forbidden names to underscores, since variables cannot have these symbols.
-		name = name.split("-").join("_").split(".").join("__");
+		name = name.split("-").join("_").split(" ").join("_").split(".").join("__");
 		if (!valid.match(name)) // #1796
 		{
 			Context.warning('Invalid name: $name for file: $value', Context.currentPos());
