@@ -1,7 +1,10 @@
-5.0.1 November 21, 2022
+5.0.1 November 23, 2022
 ------------------------------
 #### Bugfixes:
 - Fix lime < 8 not being properly defined to FLX_NO_PITCH ([#2678](https://github.com/HaxeFlixel/flixel/pull/2678))
+- `AssetPaths`: various fixes ([#2680](https://github.com/HaxeFlixel/flixel/pull/2680))
+	- apply `include`/`exclude` args to files, not directories
+	- default file renamer will replace spaces with underscore
  
 #### New features:
 - `FlxKeys`: Added `SCROLL_LOCK`, `NUMLOCK`, `WINDOWS`, `MENU`, `BREAK` and `NUMPADSLASH` keys ([#2638](https://github.com/HaxeFlixel/flixel/pull/2638))
@@ -73,6 +76,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 	- this also improves `FlxMouseEvents` with the `pixelPerfect` arg enabled
 	- added `defaultAntialiasing` ([#2658](https://github.com/HaxeFlixel/flixel/pull/2658))
 - `FlxGame`: removed misleading `zoom` arg from constructor ([#2591](https://github.com/HaxeFlixel/flixel/pull/2591))
+- `FlxMouseEventManager`: Changed from a static manager to an instance. Use `FlxMouseEvent` for the default manager ([#2540](https://github.com/HaxeFlixel/flixel/pull/2540))
 
 4.11.0 (January 26, 2022)
 ------------------------------
