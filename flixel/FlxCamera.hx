@@ -45,9 +45,10 @@ private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQua
 class FlxCamera extends FlxBasic
 {
 	/**
-	 * Any `FlxCamera` with a zoom of 0 (the default value) will have this zoom value.
+	 * While you can alter the zoom of each camera after the fact,
+	 * this variable determines what value the camera will start at when created.
 	 */
-	public static var defaultZoom:Float = 1.0;
+	public static var defaultZoom:Float;
 
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
@@ -60,7 +61,7 @@ class FlxCamera extends FlxBasic
 	 */
 	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDefaultDrawTarget` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;
-	
+	public static var defaultHUD(get, set):Array<FlxCamera>;
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
@@ -73,7 +74,7 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	@:allow(flixel.group.FlxTypedGroup.draw)
 	static var _defaultCameras:Array<FlxCamera>;
-
+	static var _defaultHUD:Array<FlxCamera>;
 	/**
 	 * The X position of this camera's display. `zoom` does NOT affect this number.
 	 * Measured in pixels from the left side of the window.
@@ -379,6 +380,11 @@ class FlxCamera extends FlxBasic
 	var _fxFadeComplete:Void->Void = null;
 
 	/**
+	 * Internal, tracks whether fade effect is running or not.
+	 */
+	var _fxFadeCompleted:Bool = true;
+
+	/**
 	 * Internal, alpha component of fade color.
 	 * Changes from 0 to 1 or from 1 to 0 as the effect continues.
 	 */
@@ -412,7 +418,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, the filters array to be applied to the camera.
 	 */
-	var _filters:Array<BitmapFilter>;
+	var _filters:Array<BitmapFilter> = [];
 
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -1062,6 +1068,9 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
+		// Adjust bounds to account for zoom
+		var zoom = this.zoom / FlxG.initialZoom;
+
 		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
 		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
 		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);
@@ -1177,7 +1186,7 @@ class FlxCamera extends FlxBasic
 
 	function updateFade(elapsed:Float):Void
 	{
-		if (_fxFadeDuration == 0.0)
+		if (_fxFadeCompleted)
 			return;
 
 		if (_fxFadeIn)
@@ -1202,7 +1211,7 @@ class FlxCamera extends FlxBasic
 
 	function completeFade()
 	{
-		_fxFadeDuration = 0.0;
+		_fxFadeCompleted = true;
 		if (_fxFadeComplete != null)
 			_fxFadeComplete();
 	}
@@ -1221,11 +1230,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				if (_fxShakeAxes.x)
+				if (_fxShakeAxes != FlxAxes.Y)
 				{
 					flashSprite.x += FlxG.random.float(-_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
-				if (_fxShakeAxes.y)
+				if (_fxShakeAxes != FlxAxes.X)
 				{
 					flashSprite.y += FlxG.random.float(-_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
@@ -1431,7 +1440,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
-		if (_fxFadeDuration > 0 && !Force)
+		if (!_fxFadeCompleted && !Force)
 			return;
 
 		_fxFadeColor = Color;
@@ -1443,6 +1452,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = OnComplete;
 
 		_fxFadeAlpha = _fxFadeIn ? 0.999999 : 0.000001;
+		_fxFadeCompleted = false;
 	}
 
 	/**
@@ -1476,8 +1486,7 @@ class FlxCamera extends FlxBasic
 	{
 		_fxFlashAlpha = 0.0;
 		_fxFadeAlpha = 0.0;
-		_fxFadeDuration = 0.0;
-		_fxShakeDuration = 0.0;
+		_fxShakeDuration = 0;
 		updateFlashSpritePosition();
 	}
 
@@ -1486,7 +1495,18 @@ class FlxCamera extends FlxBasic
 	 */
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
-		_filters = filters;
+			_filters = filters;
+	}
+
+	public function removeFilter(filter:BitmapFilter):Void
+	{
+			_filters.remove(filter);
+	}
+	public function addFilter(filter:BitmapFilter):Void
+	{
+		if(!_filters.contains(filter)){
+			_filters.push(filter);
+		}
 	}
 
 	/**
@@ -1926,6 +1946,16 @@ class FlxCamera extends FlxBasic
 	static inline function set_defaultCameras(value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _defaultCameras = value;
+	}
+
+	static inline function get_defaultHUD():Array<FlxCamera>
+	{
+		return _defaultHUD;
+	}
+	
+	static inline function set_defaultHUD(value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		return _defaultHUD = value;
 	}
 }
 
