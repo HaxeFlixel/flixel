@@ -83,6 +83,25 @@ class FlxArrayUtil
 	}
 
 	/**
+	 * Swaps two elements of an array, which are located at indices `index1` and `index2`
+	 * @param array The array whose elements need to be swapped
+	 * @param index1 The index of one of the elements to be swapped
+	 * @param index2 The index of the other element to be swapped
+	 * @return The array
+	 */
+	@:generic
+	public static inline function swap<T>(array:Array<T>, index1:Int, index2:Int):Array<T>
+	{
+		if(index1 >= 0 && index1 < array.length && index2 >= 0 && index2 < array.length)
+		{
+			var temp = array[index1];
+			array[index1] = array[index2];
+			array[index2] = temp;
+		}
+		return array;
+	}
+
+	/**
 	 * Clears an array structure, but leaves the object data untouched
 	 * Useful for cleaning up temporary references to data you want to preserve.
 	 * WARNING: Can lead to memory leaks.
