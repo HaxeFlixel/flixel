@@ -3,7 +3,6 @@ package flixel.system.macros;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import sys.FileSystem;
-
 using StringTools;
 using flixel.util.FlxArrayUtil;
 
@@ -73,11 +72,11 @@ class FlxAssetPaths
 				{
 					// replace it with the new one
 					fileReferences[i] = file;
-					Context.warning('Duplicate files named "${file.name}" ignoring $oldValue', Context.currentPos());
+					file.warn('Duplicate files named "${file.name}" ignoring $oldValue');
 				}
 				else
 				{
-					Context.warning('Duplicate files named "${file.name}" ignoring ${file.value}', Context.currentPos());
+					file.warn('Duplicate files named "${file.name}" ignoring ${file.value}');
 				}
 				return;
 			}
@@ -109,7 +108,7 @@ private class FileReference
 		name = name.split("-").join("_").split(" ").join("_").split(".").join("__");
 		if (!valid.match(name)) // #1796
 		{
-			Context.warning('Invalid name: $name for file: $value', Context.currentPos());
+			warnAsset('Invalid name: $name for file: $value', value);
 			return null;
 		}
 		
@@ -139,5 +138,15 @@ private class FileReference
 			kind: FieldType.FVar(macro:String, macro $v{value}),
 			pos: Context.currentPos()
 		};
+	}
+	
+	public inline function warn(msg:String)
+	{
+		warnAsset(msg, value);
+	}
+	
+	public static inline function warnAsset(msg:String, filePath:String)
+	{
+		Context.warning(msg, Context.makePosition({min: 0, max: 0, file: filePath}));
 	}
 }
