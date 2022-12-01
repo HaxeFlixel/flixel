@@ -1,3 +1,9 @@
+5.0.2 November 30, 2022
+------------------------------
+#### Changes and improvements:
+- `FlxAssetPaths`: Warnings involving assets will point to that asset instead of the build macro. ([#2684](https://github.com/HaxeFlixel/flixel/pull/2684))
+- `FlxTilemap`: Honors `FlxSprite.defaultAntialiasing` ([#2688](https://github.com/HaxeFlixel/flixel/pull/2688))
+
 5.0.1 November 23, 2022
 ------------------------------
 #### Bugfixes:
