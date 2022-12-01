@@ -589,7 +589,7 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.blending == blendInt
 			#if !flash
 			&& _headTriangles.hasColorOffsets == hasColorOffsets
-            && _headTriangles.shader == shader
+			&& _headTriangles.shader == shader
 			#end
 			)
 		{
@@ -623,7 +623,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.blending = blendInt;
 		#if !flash
 		itemToReturn.hasColorOffsets = hasColorOffsets;
-        itemToReturn.shader = shader;
+		itemToReturn.shader = shader;
 		#end
 
 		itemToReturn.nextTyped = _headTriangles;
