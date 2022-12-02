@@ -75,4 +75,31 @@ class FlxArrayUtilTest
 		Assert.areEqual(1, [1].last());
 		Assert.areEqual(3, [1, 2, 3].last());
 	}
+
+	@Test
+	function testSwapByIndex()
+	{
+		Assert.isTrue([0, 1, 2, 3, 4, 5].swapByIndex(2, 4).equals([0, 1, 4, 3, 2, 5]));
+	}
+
+	@Test
+	function testSafeSwapByIndex()
+	{
+		Assert.isTrue([0, 1, 2, 3].safeSwapByIndex(0, 3).equals([3, 1, 2, 0]));
+		Assert.isTrue([0, 1, 2, 3].safeSwapByIndex(2, 4).equals([0, 1, 2, 3]));
+		Assert.isTrue([0, 1, 2, 3].safeSwapByIndex(-1, 2).equals([0, 1, 2, 3]));
+	}
+
+	@Test
+	function testSwap()
+	{
+		Assert.isTrue([0, 1, 2, 3, 4, 5].swap(1, 3).equals([0, 3, 2, 1, 4, 5]));
+	}
+
+	@Test
+	function testSafeSwap()
+	{
+		Assert.isTrue([0, 1, 2, 3, 4, 5].safeSwap(0, 2).equals([2, 1, 0, 3, 4, 5]));
+		Assert.isTrue([0, 1, 2, 3, 4, 5].safeSwap(1, 6).equals([0, 1, 2, 3, 4, 5]));
+	}
 }
