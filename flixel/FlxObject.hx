@@ -1211,7 +1211,7 @@ class FlxObject extends FlxBasic
 	 * @param   axes   On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both. 
 	 * @return  This FlxObject for chaining
 	 */
-	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
+	public inline function screenCenter<T:FlxObject>(axes:FlxAxes = XY):T
 	{
 		if (axes.x)
 			x = (FlxG.width - width) / 2;
@@ -1219,7 +1219,7 @@ class FlxObject extends FlxBasic
 		if (axes.y)
 			y = (FlxG.height - height) / 2;
 
-		return this;
+		return cast this;
 	}
 
 	/**
