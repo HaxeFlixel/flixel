@@ -131,6 +131,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * The default value for `antialiasing` across all `FlxSprites`,
 	 * defaults to `false`.
+	 * @since 5.0.0
 	 */
 	public static var defaultAntialiasing:Bool = false;
 
@@ -157,7 +158,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Controls whether the object is smoothed when rotated, affects performance.
 	 */
-	public var antialiasing(default, set):Bool = false;
+	public var antialiasing(default, set):Bool = defaultAntialiasing;
 
 	/**
 	 * Set this flag to true to force the sprite to update during the `draw()` call.
@@ -390,7 +391,6 @@ class FlxSprite extends FlxObject
 		super(X, Y);
 
 		useFramePixels = FlxG.renderBlit;
-		antialiasing = defaultAntialiasing;
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
