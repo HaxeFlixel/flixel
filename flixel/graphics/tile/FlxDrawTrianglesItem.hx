@@ -28,6 +28,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	var alphas:Array<Float>;
     var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
+	public var repeat:Bool;
 	#end
 
 	public var vertices:DrawData<Float> = new DrawData<Float>();
@@ -62,6 +63,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
         var shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
+		shader.bitmap.wrap = (repeat) ? REPEAT : CLAMP;
 		shader.alpha.value = alphas;
 
         if (colored || hasColorOffsets)
@@ -76,7 +78,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#if (openfl > "8.7.0")
 		camera.canvas.graphics.overrideBlendMode(blend);
 		#end
-		camera.canvas.graphics.beginShaderFill(shader);
+		if(!repeat && shader != null)
+		{
+			camera.canvas.graphics.beginShaderFill(shader);
+		}
+		else
+			camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#else
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#end
