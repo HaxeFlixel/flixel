@@ -217,7 +217,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
         {
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
-			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);			
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
         }
 
         if (colored || hasColorOffsets)
