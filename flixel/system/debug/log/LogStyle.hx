@@ -60,8 +60,8 @@ class LogStyle
 		bold = Bold;
 		italic = Italic;
 		underlined = Underlined;
-		errorSound = ErrorSound;
-		openConsole = OpenConsole;
+		errorSound = #if FLX_NO_ERROR_SOUND null #else ErrorSound #end;
+		openConsole = #if FLX_NO_ERROR_CONSOLE false #else OpenConsole #end;
 		callbackFunction = CallbackFunction;
 	}
 }

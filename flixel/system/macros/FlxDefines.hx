@@ -27,6 +27,8 @@ private enum UserDefines
 	/* Simplifies FlxPoint but can increase GC frequency */
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
+	FLX_NO_ERROR_SOUND;
+	FLX_NO_ERROR_CONSOLE;
 }
 
 /**
