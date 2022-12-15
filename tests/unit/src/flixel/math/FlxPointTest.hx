@@ -182,11 +182,11 @@ class FlxPointTest extends FlxTest
 		assertPointNearlyEquals(p, x, y, 0.0, msg, info);
 	}
 
-	function assertPointNearlyEquals(p:FlxPoint, x:Float, y:Float, tollerance:Float = .01, ?msg:String, ?info:PosInfos)
+	function assertPointNearlyEquals(p:FlxPoint, x:Float, y:Float, tolerance:Float = .01, ?msg:String, ?info:PosInfos)
 		{
 			if (msg == null)
 				msg = 'Expected (x: $x | y: $y) but was $p';
 
-			Assert.isTrue(Math.abs(x - p.x) <= tollerance && Math.abs(y -p.y) <= tollerance, msg, info);
+			Assert.isTrue(Math.abs(x - p.x) <= tolerance && Math.abs(y -p.y) <= tolerance, msg, info);
 		}
 }
