@@ -3,8 +3,8 @@
 #### New features:
 - `FlxArrayUtil`: Added `swap`, `swapByIndex`, `safeSwap` and `safeSwapByIndex` ([#2685](https://github.com/HaxeFlixel/flixel/pull/2685))
 
-#### Changes and improvements:
-- `FlxStrip`: Added support for `color`, `colorTransform` and `shader` ([#2671](https://github.com/HaxeFlixel/flixel/pull/2671))
+#### Bugfixes:
+- `FlxPoint` fixed math error in `rotate`, `pivotDegrees` and `pivotRadians` ([#2700](https://github.com/HaxeFlixel/flixel/pull/2700))
 
 5.0.2 November 30, 2022
 ------------------------------
