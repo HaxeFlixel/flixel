@@ -573,10 +573,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point counter-clockwise in 2D space around another point by the given degrees.
+	 * Rotates this point clockwise in 2D space around another point by the given degrees.
 	 *
 	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   degrees  Rotate the point by this many degrees counter-clockwise.
+	 * @param   degrees  Rotate the point by this many degrees clockwise.
 	 * @return  A FlxPoint containing the coordinates of the rotated point.
 	 */
 	@:deprecated("rotate is deprecated, use pivotDegrees")
@@ -586,12 +586,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point counter-clockwise in 2D space around another point by the given radians.
+	 * Rotates this point clockwise in 2D space around another point by the given radians.
 	 * Note: To rotate a point around 0,0 you can use `p.radians += angle`
 	 * @since 5.0.0
 	 *
 	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   radians  Rotate the point by this many radians counter-clockwise.
+	 * @param   radians  Rotate the point by this many radians clockwise.
 	 * @return  A FlxPoint containing the coordinates of the rotated point.
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
@@ -604,7 +604,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point counter-clockwise in 2D space around another point by the given degrees.
+	 * Rotates this point clockwise in 2D space around another point by the given degrees.
 	 * Note: To rotate a point around 0,0 you can use `p.degrees += angle`
 	 * @since 5.0.0
 	 *
