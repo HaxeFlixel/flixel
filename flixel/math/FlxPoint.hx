@@ -7,31 +7,31 @@ import openfl.geom.Point;
 
 /**
  * 2-dimensional point class
- * 
+ *
  * ## Pooling
  * To avoid creating new instances, unnecessarily, used points can be
  * for later use. Rather than creating a new instance directly, call
  * `FlxPoint.get(x, y)` and it will retrieve a point from the pool, if
  * one exists, otherwise it will create a new instance. Similarly, when
  * you're done using a point, call `myPoint.put()` to place it back.
- * 
+ *
  * You can disable point pooling entirely with `FLX_NO_POINT_POOL`.
- * 
+ *
  * ## Weak points
  * Weak points are points meant for a singular use, rather than calling
  * `put` on every point you `get`, you can create a weak point, and have
  * it placed back once used. All `FlxPoint` methods and Flixel utilities
  * automatically call `putWeak()` on every point passed in.
- * 
+ *
  * In the following example, a weak point is created, and passed into
  * `p.degreesTo` where `putWeak` is called on it, putting it back in the pool.
  *
  * ```haxe
  * var angle = p.degreesTo(FlxPoint.weak(FlxG.mouse.x, FlxG.mouse.y));
  * ```
- * 
+ *
  * ## Overloaded Operators
- * 
+ *
  * - `A += B` adds the value of `B` to `A`
  * - `A -= B` subtracts the value of `B` from `A`
  * - `A *= k` scales `A` by float `k` in both x and y components
@@ -43,7 +43,7 @@ import openfl.geom.Point;
  *
  * Note: that these operators get points from the pool, but do not put
  * points back in the pool, unless they are weak.
- * 
+ *
  * Example: 4 total points are created, but only 3 are put into the pool
  * ```haxe
  * var a = FlxPoint.get(1, 1);
@@ -53,7 +53,7 @@ import openfl.geom.Point;
  * b.put();
  * c.put();
  * ```
- * 
+ *
  * To put all 4 back, it should look like this:
  * ```haxe
  * var a = FlxPoint.get(1, 1);
@@ -65,11 +65,11 @@ import openfl.geom.Point;
  * c.put();
  * d.put();
  * ```
- * 
+ *
  * Otherwise, the remainging points will become garbage, adding to the
  * heap, potentially triggering a garbage collection when you don't want.
  */
-@:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint 
+@:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint
 {
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
@@ -142,7 +142,7 @@ import openfl.geom.Point;
 		return result;
 	}
 
-	
+
 	/**
 	 * Operator that divides a point by float, returning a new point.
 	 */
@@ -185,7 +185,7 @@ import openfl.geom.Point;
 		return a.scale(b);
 	}
 
-	
+
 	/**
 	 * Operator that adds two points, returning a new point.
 	 */
@@ -586,7 +586,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given radians.
+	 * Rotates this point counter-clockwise in 2D space around another point by the given radians.
 	 * Note: To rotate a point around 0,0 you can use `p.radians += angle`
 	 * @since 5.0.0
 	 *
@@ -596,7 +596,7 @@ import openfl.geom.Point;
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
 	{
-		_point1.copyFrom(pivot).subtractPoint(this);
+		_point1.copyFrom(this).subtractPoint(pivot);
 		_point1.radians += radians;
 		set(_point1.x + pivot.x, _point1.y + pivot.y);
 		pivot.putWeak();
@@ -604,7 +604,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given degrees.
+	 * Rotates this point counter-clockwise in 2D space around another point by the given degrees.
 	 * Note: To rotate a point around 0,0 you can use `p.degrees += angle`
 	 * @since 5.0.0
 	 *
@@ -684,16 +684,16 @@ import openfl.geom.Point;
 	}
 
 	/** DEPRECATED
-	 * 
+	 *
 	 * Calculates the angle between this and another point. 0 degrees points straight up.
-	 * 
+	 *
 	 * Note: Every other flixel function treats straight right as 0 degrees.
-	 * 
+	 *
 	 * Also Note: The result is very innacurate.
 	 *
 	 * @param   point   The other point.
 	 * @return  The angle in degrees, between -180 and 180.
-	 * 
+	 *
 	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
 	 */
 	@:deprecated("angleBetween is deprecated, use degreesTo instead")
@@ -945,7 +945,7 @@ import openfl.geom.Point;
 	 * @param   length   The length to set the point
 	 * @param   radians  The angle to set the point, in radians
 	 * @return  The rotated point
-	 * 
+	 *
 	 * @since 4.10.0
 	 */
 	public function setPolarRadians(length:Float, radians:Float):FlxPoint
@@ -961,7 +961,7 @@ import openfl.geom.Point;
 	 * @param   length  The length to set the point
 	 * @param   degrees The angle to set the point, in degrees
 	 * @return  The rotated point
-	 * 
+	 *
 	 * @since 4.10.0
 	 */
 	public inline function setPolarDegrees(length:Float, degrees:Float):FlxPoint
@@ -1425,7 +1425,7 @@ import openfl.geom.Point;
 
 /**
  * The base class of FlxPoint, just use FlxPoint instead.
- * 
+ *
  * Note to contributors: don't worry about adding functionality to the base class.
  * it's all mostly inlined anyway so there's no runtime definitions for
  * reflection or anything.
