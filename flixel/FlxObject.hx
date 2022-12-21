@@ -645,16 +645,19 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Determines when `drag.x/y` is applied to `velocity.x/y`.
+	 * @since 5.1.0
 	 */
 	public var dragMode(default, null):DragMode2D;
 	
 	/**
 	 * Determines when `angularDrag` is applied to `angularVelocity`.
+	 * @since 5.1.0
 	 */
 	public var angularDragMode:DragMode = INERTIAL;
 	
 	/**
 	 * Determines when `linearDrag` is applied to `velocity`.
+	 * @since 5.1.0
 	 */
 	public var linearDragMode:DragMode = ALWAYS;
 
@@ -677,12 +680,14 @@ class FlxObject extends FlxBasic
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when `acceleration` is not affecting the sprite.
 	 * Use `drag` to apply drag on each axis.
+	 * @since 5.1.0
 	 */
 	public var linearDrag(default, null):Float = 0;
 
 	/**
 	 * The maximum velocity of this object, in terms of overall magnitude.
 	 * Use `maxVelocity` to limit velocity on each axis.
+	 * @since 5.1.0
 	 */
 	public var maxLinearVelocity(default, null):Float = 10000;
 
