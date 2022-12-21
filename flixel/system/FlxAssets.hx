@@ -52,7 +52,7 @@ class FlxAssets
 	 * `FlxAssets.getSound` which are not common. Currently set to ".ogg" on non-flash targets
 	 * for backwards compatibility reasons.
 	 */
-	public static var defaultSoundExtension = #if flash ".mp3" #else ".ogg" #end;
+	public static var defaultSoundExtension = #if flash "mp3" #else "ogg" #end;
 	
 	#if (macro || doc_gen)
 	/**
@@ -256,7 +256,7 @@ class FlxAssets
 	public static function getSound(id:String):Sound
 	{
 		if (id.endsWith(".mp3") && id.endsWith(".ogg") && id.endsWith(".wav"))
-			id += defaultSoundExtension;
+			id += "." + defaultSoundExtension;
 
 		return Assets.getSound(id);
 	}
