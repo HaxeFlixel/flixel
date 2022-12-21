@@ -253,6 +253,13 @@ class FlxAssets
 		return null;
 	}
 
+	/**
+	 * Loads an OpenFL sound asset from the given asset id. If an extension not provided the 
+	 * `defaultSoundExtension` is used (defaults to "ogg" on non-flash targets).
+	 * 
+	 * @param   id  The asset id of the local sound file.
+	 * @return  The sound file.
+	 */
 	public static function getSound(id:String):Sound
 	{
 		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
