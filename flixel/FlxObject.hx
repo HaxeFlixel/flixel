@@ -647,19 +647,19 @@ class FlxObject extends FlxBasic
 	 * Determines when `drag.x/y` is applied to `velocity.x/y`.
 	 * @since 5.1.0
 	 */
-	public var dragMode(default, null):DragMode2D;
+	public var dragMode(default, null):FlxDragMode2D;
 	
 	/**
 	 * Determines when `angularDrag` is applied to `angularVelocity`.
 	 * @since 5.1.0
 	 */
-	public var angularDragMode:DragMode = INERTIAL;
+	public var angularDragMode:FlxDragMode = INERTIAL;
 	
 	/**
 	 * Determines when `linearDrag` is applied to `velocity`.
 	 * @since 5.1.0
 	 */
-	public var linearDragMode:DragMode = ALWAYS;
+	public var linearDragMode:FlxDragMode = ALWAYS;
 
 	/**
 	 * Not conventional drag, more like conditional deceleration. When applied, velocity will
@@ -864,7 +864,7 @@ class FlxObject extends FlxBasic
 		velocity = FlxPoint.get();
 		acceleration = FlxPoint.get();
 		drag = FlxPoint.get();
-		dragMode = new DragMode2D(INERTIAL, INERTIAL);
+		dragMode = new FlxDragMode2D(INERTIAL, INERTIAL);
 		linearDragMode = ALWAYS;
 		angularDragMode = INERTIAL;
 		maxVelocity = FlxPoint.get(10000, 10000);
@@ -951,7 +951,7 @@ class FlxObject extends FlxBasic
 		velocity.y += velocityDelta;
 	}
 
-	function computeLinearVelocity(velocity:FlxPoint, acceleration:FlxPoint, drag:Float, dragMode:DragMode, max:Float, elapsed:Float)
+	function computeLinearVelocity(velocity:FlxPoint, acceleration:FlxPoint, drag:Float, dragMode:FlxDragMode, max:Float, elapsed:Float)
 	{
 		// apply linearDrag
 		if (drag > 0 && !velocity.isZero())
@@ -1600,10 +1600,10 @@ class FlxObject extends FlxBasic
 	}
 }
 
-class DragMode2D
+class FlxDragMode2D
 {
-	public var x:DragMode;
-	public var y:DragMode;
+	public var x:FlxDragMode;
+	public var y:FlxDragMode;
 	
 	public inline function new (x = INERTIAL, y = INERTIAL)
 	{
@@ -1615,7 +1615,7 @@ class DragMode2D
 /**
  * Determines when drag is applied to an object on a single x or y axis.
  */
-enum DragMode
+enum FlxDragMode
 {
 	/**
 	 * Drag is always applied to the object's velocity.
