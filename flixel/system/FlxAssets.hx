@@ -255,7 +255,7 @@ class FlxAssets
 
 	public static function getSound(id:String):Sound
 	{
-		if (id.endsWith(".mp3") && id.endsWith(".ogg") && id.endsWith(".wav"))
+		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
 			id += "." + defaultSoundExtension;
 
 		return Assets.getSound(id);
