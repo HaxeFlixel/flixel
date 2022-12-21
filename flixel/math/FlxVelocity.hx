@@ -231,7 +231,7 @@ class FlxVelocity
 	 * @param   elapsed       The amount of time passed in to the latest update cycle
 	 * @return  The altered velocity value.
 	 */
-	public static function computeVelocity(velocity:Float, acceleration:Float, drag:Float, dragMode:DragMode, max:Float, elapsed:Float):Float
+	public static function computeVelocity(velocity:Float, acceleration:Float, drag:Float, dragMode:FlxDragMode, max:Float, elapsed:Float):Float
 	{
 		if (acceleration != 0)
 		{
