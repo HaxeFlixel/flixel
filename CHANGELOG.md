@@ -1,10 +1,15 @@
-5.1.0 (TBD)
+5.1.0 December 22, 2022
 ------------------------------
+#### Changes and improvements:
+- `SoundFrontEnd` - added `soundTray` getter for `FlxG.game.soundTray` ([#2706](https://github.com/HaxeFlixel/flixel/pull/2706))
+
 #### New features:
 - `FlxArrayUtil`: Added `swap`, `swapByIndex`, `safeSwap` and `safeSwapByIndex` ([#2685](https://github.com/HaxeFlixel/flixel/pull/2685))
+- `FlxDirectionFlags`: Added `hasAny` ([#2705](https://github.com/HaxeFlixel/flixel/pull/2705))
 
 #### Bugfixes:
 - `FlxPoint` fixed math error in `rotate`, `pivotDegrees` and `pivotRadians` ([#2700](https://github.com/HaxeFlixel/flixel/pull/2700))
+- `FlxObject` fixed `isTouching` and `wasTouching` to check **any** given instead of **all** ([#2705](https://github.com/HaxeFlixel/flixel/pull/2705))
 
 5.0.2 November 30, 2022
 ------------------------------
