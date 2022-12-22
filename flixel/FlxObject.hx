@@ -1177,7 +1177,7 @@ class FlxObject extends FlxBasic
 	 */
 	public inline function isTouching(direction:FlxDirectionFlags):Bool
 	{
-		return touching.has(direction);
+		return touching.hasAny(direction);
 	}
 
 	/**
@@ -1189,7 +1189,7 @@ class FlxObject extends FlxBasic
 	 */
 	public inline function justTouched(direction:FlxDirectionFlags):Bool
 	{
-		return touching.has(direction) && !wasTouching.has(direction);
+		return touching.hasAny(direction) && !wasTouching.hasAny(direction);
 	}
 
 	/**
