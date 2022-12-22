@@ -18,6 +18,7 @@ import flash.text.GridFitType;
 
 /**
  * The flixel sound tray, the little volume meter that pops down sometimes.
+ * Accessed via `FlxG.game.soundTray` or `FlxG.sound.soundTray`.
  */
 class FlxSoundTray extends Sprite
 {

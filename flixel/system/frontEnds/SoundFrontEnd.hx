@@ -8,6 +8,7 @@ import flixel.math.FlxMath;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import flixel.system.FlxSoundGroup;
+import flixel.system.ui.FlxSoundTray;
 import openfl.Assets;
 import openfl.media.Sound;
 #if (openfl >= "8.0.0")
@@ -61,6 +62,12 @@ class SoundFrontEnd
 	 * volumeUp-, volumeDown- or muteKeys is pressed.
 	 */
 	public var soundTrayEnabled:Bool = true;
+	
+	/**
+	 * The sound tray display container.
+	 * A getter for `FlxG.game.soundTray`.
+	 */
+	public var soundTray(get, never):FlxSoundTray;
 
 	/**
 	 * The group sounds played via playMusic() are added to unless specified otherwise.
@@ -443,6 +450,11 @@ class SoundFrontEnd
 			volumeHandler(param);
 		}
 		return volume = Volume;
+	}
+	
+	inline function get_soundTray()
+	{
+		return FlxG.game.soundTray;
 	}
 }
 #end
