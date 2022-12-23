@@ -1,5 +1,12 @@
 package flixel.system.replay;
 
+import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
+import flixel.system.replay.KeyRecord;
+import flixel.system.replay.MouseRecord;
+import flixel.system.replay.TouchRecord;
+import flixel.system.debug.log.LogStyle;
+
 /**
  * Helper class for the new replay system.  Represents all the game inputs for one "frame" or "step" of the game loop.
  */
@@ -8,40 +15,43 @@ class FrameRecord
 	/**
 	 * Which frame of the game loop this record is from or for.
 	 */
-	public var frame:Int;
+	public var frame:Int = 0;
 
 	/**
 	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
 	 */
-	public var keys:Array<CodeValuePair>;
+	public var keys:KeyRecordList;
 
 	/**
-	 * A container for the 4 mouse state integers.
+	 * A container for the mouse state values.
 	 */
 	public var mouse:MouseRecord;
+
+	/**
+	 * An array of touch states.
+	 */
+	public var touches:TouchRecordList;
 
 	/**
 	 * Instantiate array new frame record.
 	 */
 	public function new()
 	{
-		frame = 0;
-		keys = null;
-		mouse = null;
 	}
 
 	/**
 	 * Load this frame record with input data from the input managers.
-	 * @param Frame		What frame it is.
-	 * @param Keys		Keyboard data from the keyboard manager.
-	 * @param Mouse		Mouse data from the mouse manager.
-	 * @return A reference to this FrameRecord object.
+	 * @param   frame  What frame it is.
+	 * @param   keys   Keyboard data from the keyboard manager.
+	 * @param   mouse  Mouse data from the mouse manager.
+	 * @return  A reference to this FrameRecord object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
+	public function create(frame:Float, ?keys:KeyRecordList, ?mouse:MouseRecord, ?touches:TouchRecordList):FrameRecord
 	{
-		frame = Math.floor(Frame);
-		keys = Keys;
-		mouse = Mouse;
+		this.frame = Math.floor(frame);
+		this.keys = keys;
+		this.mouse = mouse;
+		this.touches = touches;
 
 		return this;
 	}
@@ -53,6 +63,7 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
+		touches = null;
 	}
 
 	/**
@@ -65,81 +76,181 @@ class FrameRecord
 
 		if (keys != null)
 		{
-			var object:CodeValuePair;
-			var i:Int = 0;
-			var l:Int = keys.length;
-			while (i < l)
-			{
-				if (i > 0)
-				{
-					output += ",";
-				}
-				object = keys[i++];
-				output += object.code + ":" + object.value;
-			}
+			output += keys.toString();
 		}
 
 		output += "m";
 		if (mouse != null)
 		{
-			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
+			output += mouse.toString();
 		}
 
-		return output;
+		output += "t";
+		if (touches != null)
+		{
+			output += touches.toString();
+		}
+		return output; 
 	}
 
+	static var validRecord = ~/^(\d+)k(.*?)m(.*?)(?:t(.*?))?$/;
+	
 	/**
 	 * Load the frame record data from array simple ASCII string.
-	 * @param	Data	A String object containing the relevant frame record data.
+	 * @param   data  A String object containing the relevant frame record data.
 	 */
-	public function load(Data:String):FrameRecord
+	public function load(data:String):FrameRecord
 	{
-		var i:Int;
-		var l:Int;
-
+		if (!validRecord.match(data))
+		{
+			FlxG.log.advanced('Invalid FrameRecord format:"$data"', LogStyle.WARNING, true);
+			return this;
+		}
 		// get frame number
-		var array:Array<String> = Data.split("k");
-		frame = Std.parseInt(array[0]);
-
-		// split up keyboard and mouse data
-		array = array[1].split("m");
-		var keyData:String = array[0];
-		var mouseData:String = array[1];
+		frame = Std.parseInt(validRecord.matched(1));
+		var keyData = validRecord.matched(2);
+		var mouseData = validRecord.matched(3);
+		var touchData = validRecord.matched(4);
 
 		// parse keyboard data
 		if (keyData.length > 0)
 		{
-			// get keystroke data pairs
-			array = keyData.split(",");
-
-			// go through each data pair and enter it into this frame's key state
-			var keyPair:Array<String>;
-			i = 0;
-			l = array.length;
-			while (i < l)
-			{
-				keyPair = array[i++].split(":");
-				if (keyPair.length == 2)
-				{
-					if (keys == null)
-					{
-						keys = new Array<CodeValuePair>();
-					}
-					keys.push(new CodeValuePair(Std.parseInt(keyPair[0]), Std.parseInt(keyPair[1])));
-				}
-			}
+			keys = KeyRecordList.fromString(keyData);
 		}
 
-		// mouse data is just 4 integers, easy peezy
+		// parse mouse data
 		if (mouseData.length > 0)
 		{
-			array = mouseData.split(",");
-			if (array.length >= 4)
+			mouse = MouseRecord.fromString(mouseData);
+		}
+		
+		// Parse touch data
+		if (touchData.length > 0)
+		{
+			touches = TouchRecordList.fromString(touchData);
+		}
+		
+		return this;
+	}
+}
+
+@:forward
+abstract FrameRecordIterator(FrameRecord) to FrameRecord
+{
+	var _keys(get, never):KeyRecordListIterator;
+	var _mouse(get, never):MouseRecordIterator;
+	var _touches(get, never):TouchRecordListIterator;
+	
+	public inline function new()
+	{
+		this = new FrameRecord();
+		this.keys = new KeyRecordListIterator();
+		this.mouse = new MouseRecordIterator();
+		this.touches = new TouchRecordListIterator();
+	}
+	
+	public function merge(record:FrameRecord)
+	{
+		this.frame = record.frame;
+		_keys.merge(record.keys);
+		_mouse.merge(record.mouse);
+		_touches.merge(record.touches);
+	}
+	
+	public function rewind()
+	{
+		_keys.rewind();
+		_mouse.rewind();
+		_touches.rewind();
+	}
+	
+	inline function get__keys() return this.keys;
+	inline function get__mouse() return this.mouse;
+	inline function get__touches() return this.touches;
+}
+
+@:access(flixel.system.replay.KeyRecord)
+private abstract KeyRecordListIterator(KeyRecordList) to KeyRecordList from KeyRecordList
+{
+	public inline function new()
+	{
+		this = new KeyRecordList();
+	}
+	
+	public inline function rewind()
+	{
+		this.clear();
+	}
+	
+	public inline function merge(record:KeyRecordList)
+	{
+		if (record == null)
+			return;
+		
+		for (key in record.keys())
+		{
+			if (this.exists(key))
 			{
-				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
+				record[key].copyTo(this[key]);
+			}
+			else
+			{
+				this[key] = record[key].copy();
 			}
 		}
+	}
+}
 
-		return this;
+@:access(flixel.system.replay.MouseRecord)
+private abstract MouseRecordIterator(MouseRecord) to MouseRecord from MouseRecord
+{
+	public inline function new()
+	{
+		this = new MouseRecord();
+	}
+	
+	public inline function rewind()
+	{
+		this.reset();
+	}
+	
+	public inline function merge(record:MouseRecord)
+	{
+		if (record == null)
+			return;
+		
+		record.copyTo(this);
+	}
+}
+
+@:access(flixel.system.replay.TouchRecord)
+private abstract TouchRecordListIterator(TouchRecordList) to TouchRecordList from TouchRecordList
+{
+	public inline function new()
+	{
+		this = new TouchRecordList();
+	}
+	
+	public inline function rewind()
+	{
+		this.clear();
+	}
+	
+	public inline function merge(record:TouchRecordList)
+	{
+		if (record == null)
+			return;
+		
+		for (id in record.keys())
+		{
+			if (this.exists(id))
+			{
+				record[id].copyTo(this[id]);
+			}
+			else
+			{
+				this[id] = record[id].copy();
+			}
+		}
 	}
 }

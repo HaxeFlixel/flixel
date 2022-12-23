@@ -1,55 +1,47 @@
 package flixel.input;
 
-class FlxInput<T> implements IFlxInput
+class FlxInput<T> extends FlxTypedInput<T, Bool, FlxInputState> implements IFlxInput
 {
-	public var ID:T;
-
 	public var justReleased(get, never):Bool;
 	public var released(get, never):Bool;
 	public var pressed(get, never):Bool;
 	public var justPressed(get, never):Bool;
 
-	public var current:FlxInputState = RELEASED;
-	public var last:FlxInputState = RELEASED;
-
-	public function new(ID:T)
+	public function new(id:T)
 	{
-		this.ID = ID;
+		super(id);
 	}
 
 	public function press():Void
 	{
-		last = current;
-		current = pressed ? PRESSED : JUST_PRESSED;
+		change(true);
 	}
 
 	public function release():Void
 	{
-		last = current;
-		current = pressed ? JUST_RELEASED : RELEASED;
+		change(false);
 	}
 
-	public function update():Void
+	override function change(newValue:Bool)
 	{
-		if (last == JUST_RELEASED && current == JUST_RELEASED)
-		{
-			current = RELEASED;
-		}
-		else if (last == JUST_PRESSED && current == JUST_PRESSED)
-		{
-			current = PRESSED;
-		}
-
 		last = current;
+		if (newValue)
+			current = currentValue ? PRESSED : JUST_PRESSED;
+		else
+			current = !currentValue ? RELEASED : JUST_RELEASED;
+		
+		return super.change(newValue);
 	}
 
-	public function reset():Void
+	override function reset()
 	{
+		currentValue = false;
+		lastValue = false;
 		current = RELEASED;
 		last = RELEASED;
 	}
 
-	public function hasState(state:FlxInputState):Bool
+	override function hasState(state:FlxInputState)
 	{
 		return switch (state)
 		{
@@ -62,22 +54,22 @@ class FlxInput<T> implements IFlxInput
 
 	inline function get_justReleased():Bool
 	{
-		return current == JUST_RELEASED;
+		return lastValue == true && currentValue == false;
 	}
 
 	inline function get_released():Bool
 	{
-		return current == RELEASED || justReleased;
+		return !currentValue;
 	}
 
 	inline function get_pressed():Bool
 	{
-		return current == PRESSED || justPressed;
+		return currentValue;
 	}
 
 	inline function get_justPressed():Bool
 	{
-		return current == JUST_PRESSED;
+		return lastValue == false && currentValue == true;
 	}
 }
 
@@ -88,4 +80,12 @@ abstract FlxInputState(Int) from Int
 	var RELEASED = 0;
 	var PRESSED = 1;
 	var JUST_PRESSED = 2;
+	
+	public var pressed(get, never):Bool;
+	function get_pressed() return this > 0;
+	
+	public var released(get, never):Bool;
+	function get_released() return !pressed;
 }
+
+typedef FlxDigitalState = FlxInputState;

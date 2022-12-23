@@ -1,38 +1,111 @@
 package flixel.system.replay;
 
-import flixel.input.FlxInput.FlxInputState;
+import flixel.input.FlxInput;
 
 /**
  * A helper class for the frame records, part of the replay/demo/recording system.
  */
 class MouseRecord
 {
-	public var x(default, null):Int;
-	public var y(default, null):Int;
-
-	/**
-	 * The state of the left mouse button.
-	 */
-	public var button(default, null):FlxInputState;
-
-	/**
-	 * The state of the mouse wheel.
-	 */
-	public var wheel(default, null):Int;
-
-	/**
-	 * Instantiate a new mouse input record.
-	 *
-	 * @param   X        The main X value of the mouse in screen space.
-	 * @param   Y        The main Y value of the mouse in screen space.
-	 * @param   Button   The state of the left mouse button.
-	 * @param   Wheel    The state of the mouse wheel.
-	 */
-	public function new(x:Int, y:Int, button:FlxInputState, wheel:Int)
+	public var x:Null<Int>;
+	public var y:Null<Int>;
+	
+	/** The state of the left mouse button. */
+	public var leftButton:Null<Bool>;
+	
+	#if FLX_MOUSE_ADVANCED
+	/** The state of the middle mouse button. */
+	public var middleButton:Null<Bool>;
+	/** The state of the right mouse button. */
+	public var rightButton:Null<Bool>;
+	#end
+	/** The state of the mouse wheel. */
+	public var wheel:Null<Int>;
+	
+	public function new() {}
+	
+	function copyTo(record:MouseRecord)
 	{
-		this.x = x;
-		this.y = y;
-		this.button = button;
-		this.wheel = wheel;
+		if (x            != null) record.x            = x;
+		if (y            != null) record.y            = y;
+		if (leftButton   != null) record.leftButton   = leftButton;
+		#if FLX_MOUSE_ADVANCED
+		if (middleButton != null) record.middleButton = middleButton;
+		if (rightButton  != null) record.rightButton  = rightButton;
+		#end
+		if (wheel        != null) record.wheel        = wheel;
+	}
+	
+	function reset()
+	{
+		x            = null;
+		y            = null;
+		leftButton   = null;
+		#if FLX_MOUSE_ADVANCED
+		middleButton = null;
+		rightButton  = null;
+		#end
+		wheel        = null;
+	}
+	
+	public function toString():String
+	{
+		return intToString(x)
+			+ "," + intToString(y)
+			+ "," + boolToString(leftButton)
+			#if FLX_MOUSE_ADVANCED
+			+ "," + boolToString(middleButton)
+			+ "," + boolToString(rightButton)
+			#end
+			+ "," + intToString(wheel)
+			;
+	}
+	
+	static inline function intToString(value:Null<Int>):String
+	{
+		return value == null ? "" : Std.string(value);
+	}
+	
+	static inline function boolToString(value:Null<Bool>):String
+	{
+		
+		return value == null ? "" : (value ? "1" : "0");
+	}
+	
+	public static function fromString(data:String):Null<MouseRecord>
+	{
+		var record:MouseRecord = null;
+		var mouse = data.split(",");
+		if (mouse.length == 6)
+		{
+			record = new MouseRecord();
+			record.x = parseInt(mouse[0]);
+			record.y = parseInt(mouse[1]);
+			record.leftButton = parseBool(mouse[2]);
+			#if FLX_MOUSE_ADVANCED
+			record.middleButton = parseBool(mouse[3]);
+			record.rightButton = parseBool(mouse[4]);
+			#end
+			record.wheel = parseInt(mouse[5]);
+		}
+		if (mouse.length == 4)
+		{
+			record = new MouseRecord();
+			record.x = parseInt(mouse[0]);
+			record.y = parseInt(mouse[1]);
+			record.leftButton = parseBool(mouse[2]);
+			record.wheel = parseInt(mouse[3]);
+		}
+		return record;
+	}
+	
+	static inline function parseInt(data:String):Null<Int> 
+	{
+		return data == "" ? null : Std.parseInt(data);
+	}
+	
+	static inline function parseBool(data:String):Null<Bool> 
+	{
+		return data == "" ? null : data == "1";
 	}
 }

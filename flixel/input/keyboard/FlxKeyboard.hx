@@ -4,7 +4,7 @@ package flixel.input.keyboard;
 import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
-import flixel.system.replay.CodeValuePair;
+import flixel.system.replay.KeyRecord;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -138,23 +138,23 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @return	An array of key state data. Null if there is no data.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	function record():Array<CodeValuePair>
+	function record():KeyRecordList
 	{
-		var data:Array<CodeValuePair> = null;
+		var data:KeyRecordList = null;
 
 		for (key in _keyListArray)
 		{
-			if (key == null || key.released)
+			if (key == null || !key.changed)
 			{
 				continue;
 			}
 
 			if (data == null)
 			{
-				data = new Array<CodeValuePair>();
+				data = new KeyRecordList();
 			}
 
-			data.push(new CodeValuePair(key.ID, key.current));
+			data[key.ID] = KeyRecord.fromBool(key.ID, key.currentValue);
 		}
 
 		return data;
@@ -164,19 +164,14 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * Part of the keystroke recording system.
 	 * Takes data about key presses and sets it into array.
 	 *
-	 * @param	Record	Array of data about key states.
+	 * @param   record  Array of data about key states.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	function playback(Record:Array<CodeValuePair>):Void
+	function playback(record:KeyRecordList):Void
 	{
-		var i:Int = 0;
-		var l:Int = Record.length;
-
-		while (i < l)
+		for (data in record)
 		{
-			var o = Record[i++];
-			var o2 = getKey(o.code);
-			o2.current = o.value;
+			getKey(data.code).change(data.getBool());
 		}
 	}
 }

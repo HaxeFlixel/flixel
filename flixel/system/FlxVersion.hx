@@ -11,11 +11,11 @@ class FlxVersion
 	public var minor(default, null):Int;
 	public var patch(default, null):Int;
 
-	public function new(Major:Int, Minor:Int, Patch:Int)
+	public function new(major:Int, minor:Int, patch:Int)
 	{
-		major = Major;
-		minor = Minor;
-		patch = Patch;
+		this.major = major;
+		this.minor = minor;
+		this.patch = patch;
 	}
 
 	/**
