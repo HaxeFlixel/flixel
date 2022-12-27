@@ -540,6 +540,10 @@ private class FlxSharedObject extends SharedObject
 	
 	static function getPath(localPath:String, name:String):String
 	{
+		#if android
+		return getLegacyPath(localPath, name);
+		#end
+		
 		// Avoid ever putting .sol files directly in AppData
 		if (localPath == "")
 			localPath = getDefaultLocalPath();
