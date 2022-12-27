@@ -596,7 +596,7 @@ import openfl.geom.Point;
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
 	{
-		_point1.copyFrom(pivot).subtractPoint(this);
+		_point1.copyFrom(this).subtractPoint(pivot);
 		_point1.radians += radians;
 		set(_point1.x + pivot.x, _point1.y + pivot.y);
 		pivot.putWeak();

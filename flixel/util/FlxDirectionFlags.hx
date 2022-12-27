@@ -66,11 +66,19 @@ import flixel.math.FlxAngle;
 	}
 
 	/**
-	 * Returns true if this contains all of the supplied flags.
+	 * Returns true if this contains **all** of the supplied flags.
 	 */
 	public inline function has(dir:FlxDirectionFlags):Bool
 	{
 		return this & dir == dir;
+	}
+
+	/**
+	 * Returns true if this contains **any** of the supplied flags.
+	 */
+	public inline function hasAny(dir:FlxDirectionFlags):Bool
+	{
+		return this & dir > 0;
 	}
 
 	/**
