@@ -24,9 +24,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	static var rect:FlxRect = FlxRect.get();
 
 	#if !flash
-    public var shader:FlxShader;
+	public var shader:FlxShader;
 	var alphas:Array<Float>;
-    var colorMultipliers:Array<Float>;
+	var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
 	#end
 
@@ -74,9 +74,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
-		#if (openfl > "8.7.0")
-		camera.canvas.graphics.overrideBlendMode(blend);
-		#end
+			#if (openfl > "8.7.0")
+			camera.canvas.graphics.overrideBlendMode(blend);
+			#end
 		camera.canvas.graphics.beginShaderFill(shader);
 		#else
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
@@ -113,7 +113,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		colorsPosition = 0;
 		#if !flash
 		alphas.splice(0, alphas.length);
-        if (colorMultipliers != null)
+		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
 		if (colorOffsets != null)
 			colorOffsets.splice(0, colorOffsets.length);
@@ -131,7 +131,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		bounds = null;
 		#if !flash
 		alphas = null;
-        colorMultipliers = null;
+		colorMultipliers = null;
 		colorOffsets = null;
 		#end
 	}
@@ -213,23 +213,23 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		cameraBounds.putWeak();
 
 		#if !flash
-        for (_ in 0...numTriangles)
-        {
+		for (_ in 0...numTriangles)
+		{
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
-        }
+		}
 
-        if (colored || hasColorOffsets)
-        {
-            if (colorMultipliers == null)
-                colorMultipliers = [];
+		if (colored || hasColorOffsets)
+		{
+			if (colorMultipliers == null)
+				colorMultipliers = [];
 
-            if (colorOffsets == null)
-                colorOffsets = [];
+			if (colorOffsets == null)
+				colorOffsets = [];
 
-            for (_ in 0...(numTriangles * 3))
-            {
+			for (_ in 0...(numTriangles * 3))
+			{
 				if(transform != null)
 				{
 					colorMultipliers.push(transform.redMultiplier);
@@ -253,18 +253,18 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 					colorOffsets.push(0);
 				}
 
-                colorMultipliers.push(1);
-            }
-        }
+				colorMultipliers.push(1);
+			}
+		}
 		#end
 	}
 
-    inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
-    {
-        if (parameter.value == null)
-            parameter.value = [];
-        parameter.value[0] = value;
-    }
+	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
+	{
+		if (parameter.value == null)
+			parameter.value = [];
+		parameter.value[0] = value;
+	}
 
 	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
 	{
