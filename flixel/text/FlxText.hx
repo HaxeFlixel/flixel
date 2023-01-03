@@ -1135,25 +1135,26 @@ class FlxTextFormatMarkerPair
 	}
 }
 
-enum FlxTextBorderStyle
+@:enum
+abstract FlxTextBorderStyle (String) from String
 {
-	NONE;
+	var NONE = "none";
 
 	/**
 	 * A simple shadow to the lower-right.
 	 * Use `FlxText.shadowOffset` for custom placement.
 	 */
-	SHADOW;
+	var SHADOW = "shadow";
 
 	/**
 	 * Outline on all 8 sides
 	 */
-	OUTLINE;
+	var OUTLINE = "outline";
 
 	/**
 	 * Outline, optimized using only 4 draw calls (might not work for narrow and/or 1-pixel fonts)
 	 */
-	OUTLINE_FAST;
+	var OUTLINE_FAST = "outline_fast";
 }
 
 @:enum
