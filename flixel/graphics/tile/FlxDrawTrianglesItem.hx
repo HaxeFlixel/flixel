@@ -6,8 +6,10 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
+import openfl.display.ShaderParameter;
 import openfl.display.TriangleCulling;
 import openfl.geom.ColorTransform;
 
@@ -20,6 +22,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
+
+	#if !flash
+	public var shader:FlxShader;
+	var alphas:Array<Float>;
+	var colorMultipliers:Array<Float>;
+	var colorOffsets:Array<Float>;
+	#end
 
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
@@ -36,6 +45,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
+		#if !flash
+		alphas = [];
+		#end
 	}
 
 	override public function render(camera:FlxCamera):Void
@@ -46,7 +58,30 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		if (numTriangles <= 0)
 			return;
 
+		#if !flash
+		var shader = shader != null ? shader : graphics.shader;
+		shader.bitmap.input = graphics.bitmap;
+		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
+		shader.bitmap.wrap = REPEAT; // in order to prevent breaking tiling behaviour in classes that use drawTriangles
+		shader.alpha.value = alphas;
+
+		if (colored || hasColorOffsets)
+		{
+			shader.colorMultiplier.value = colorMultipliers;
+			shader.colorOffset.value = colorOffsets;
+		}
+
+		setParameterValue(shader.hasTransform, true);
+		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
+
+			#if (openfl > "8.7.0")
+			camera.canvas.graphics.overrideBlendMode(blend);
+			#end
+		camera.canvas.graphics.beginShaderFill(shader);
+		#else
 		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		#end
+
 		#if !openfl_legacy
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
 		#else
@@ -76,6 +111,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		verticesPosition = 0;
 		indicesPosition = 0;
 		colorsPosition = 0;
+		#if !flash
+		alphas.splice(0, alphas.length);
+		if (colorMultipliers != null)
+			colorMultipliers.splice(0, colorMultipliers.length);
+		if (colorOffsets != null)
+			colorOffsets.splice(0, colorOffsets.length);
+		#end
 	}
 
 	override public function dispose():Void
@@ -87,10 +129,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData = null;
 		colors = null;
 		bounds = null;
+		#if !flash
+		alphas = null;
+		colorMultipliers = null;
+		colorOffsets = null;
+		#end
 	}
 
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
-			?cameraBounds:FlxRect):Void
+			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
 	{
 		if (position == null)
 			position = point.set();
@@ -164,6 +211,59 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		position.putWeak();
 		cameraBounds.putWeak();
+
+		#if !flash
+		for (_ in 0...numTriangles)
+		{
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+		}
+
+		if (colored || hasColorOffsets)
+		{
+			if (colorMultipliers == null)
+				colorMultipliers = [];
+
+			if (colorOffsets == null)
+				colorOffsets = [];
+
+			for (_ in 0...(numTriangles * 3))
+			{
+				if(transform != null)
+				{
+					colorMultipliers.push(transform.redMultiplier);
+					colorMultipliers.push(transform.greenMultiplier);
+					colorMultipliers.push(transform.blueMultiplier);
+
+					colorOffsets.push(transform.redOffset);
+					colorOffsets.push(transform.greenOffset);
+					colorOffsets.push(transform.blueOffset);
+					colorOffsets.push(transform.alphaOffset);
+				}
+				else
+				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+	
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+				}
+
+				colorMultipliers.push(1);
+			}
+		}
+		#end
+	}
+
+	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
+	{
+		if (parameter.value == null)
+			parameter.value = [];
+		parameter.value[0] = value;
 	}
 
 	public static inline function inflateBounds(bounds:FlxRect, x:Float, y:Float):FlxRect
