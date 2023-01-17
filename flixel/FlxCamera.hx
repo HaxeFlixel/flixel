@@ -241,10 +241,10 @@ class FlxCamera extends FlxBasic
 	 */
 	public var zoom(default, set):Float;
 
-	/** The difference between `scroll.x` and `viewLeft`, in world space. */
+	/** The margin cut off on the left and right by the camera zooming in (or out), in world space */
 	public var viewMarginX(default, null):Float;
 
-	/** The difference between `scroll.y` and `viewTop`, in world space. */
+	/** The margin cut off on the top and bottom by the camera zooming in (or out), in world space */
 	public var viewMarginY(default, null):Float;
 
 	// deprecated vars
@@ -260,16 +260,16 @@ class FlxCamera extends FlxBasic
 
 	// delegates
 
-	/** The difference between `scroll.x` and `viewLeft`, in world space. */
+	/** The margin cut off on the left by the camera zooming in (or out), in world space */
 	public var viewMarginLeft(get, never):Float;
 
-	/** The difference between `scroll.y` and `viewTop`, in world space. */
+	/** The margin cut off on the top by the camera zooming in (or out), in world space */
 	public var viewMarginTop(get, never):Float;
 
-	/** The difference between `scroll.x` and `viewRight`, in world space. */
+	/** The margin cut off on the right by the camera zooming in (or out), in world space */
 	public var viewMarginRight(get, never):Float;
 
-	/** The difference between `scroll.y` and `viewBottom`, in world space. */
+	/** The margin cut off on the bottom by the camera zooming in (or out), in world space */
 	public var viewMarginBottom(get, never):Float;
 
 	/** The size of the camera's view, in world space. */
@@ -1794,7 +1794,8 @@ class FlxCamera extends FlxBasic
 	 * and `viewHeight`.
 	 * 
 	 * Notes: Deprecated, in 4.11.0 this was made public, but the wording is confusing.
-	 * In flixel 6.0.0 this will be changed to use `viewX`, `viewY`, `viewWidth` and `viewHeight`.
+	 * In flixel 6.0.0 this will be changed to use `viewX`, `viewY`, `viewWidth` and `viewHeight`,
+	 * meaning, this will return the world coordinates of the camera.
 	 * @since 4.11.0
 	 */
 	@deprecated("getViewMarginRect")
@@ -1809,9 +1810,8 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The size and position of this camera's margins, via `viewMarginLeft`, `viewMarginTop`, `viewWidth`
 	 * and `viewHeight`.
-	 * @since 5.0.0
+	 * @since 5.2.0
 	 */
-	@:deprecated()
 	public function getViewMarginRect(?rect:FlxRect)
 	{
 		if (rect == null)
