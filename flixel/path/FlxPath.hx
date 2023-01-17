@@ -811,7 +811,7 @@ class FlxPath implements IFlxDestroyable
 			_point.y = nextNode.y - (camera.scroll.y * object.scrollFactor.y);
 
 			if (FlxG.renderBlit)
-				_point.subtract(camera.viewOffsetX, camera.viewOffsetY);
+				_point.subtract(camera.viewMarginX, camera.viewMarginY);
 
 			gfx.lineTo(_point.x + lineOffset, _point.y + lineOffset);
 		}

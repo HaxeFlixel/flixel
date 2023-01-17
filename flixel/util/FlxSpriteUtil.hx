@@ -170,24 +170,22 @@ class FlxSpriteUtil
 			camera = FlxG.camera;
 		
 		var spriteBounds = sprite.getScreenBounds(camera);
-		var viewBounds = camera.getViewRect();
 		var offset = FlxPoint.get(
 			sprite.x - spriteBounds.x - camera.scroll.x,
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.right < viewBounds.left)
-			sprite.x = camera.scroll.x + viewBounds.right + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.left > viewBounds.right)
-			sprite.x = camera.scroll.x + viewBounds.x + offset.x - spriteBounds.width;
+		if (edges.has(LEFT) && spriteBounds.right < camera.viewLeft)
+			sprite.x = camera.viewRight + offset.x;
+		else if (edges.has(RIGHT) && spriteBounds.left > camera.viewRight)
+			sprite.x = camera.viewLeft + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.bottom < viewBounds.top)
-			sprite.y = camera.scroll.y + viewBounds.bottom + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.top > viewBounds.bottom)
-			sprite.y = camera.scroll.y + viewBounds.y + offset.y - spriteBounds.height;
+		if (edges.has(UP) && spriteBounds.bottom < camera.viewTop)
+			sprite.y = camera.viewBottom + offset.y;
+		else if (edges.has(DOWN) && spriteBounds.top > camera.viewBottom)
+			sprite.y = camera.viewTop + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();
-		viewBounds.put();
 		offset.put();
 		
 		return sprite;
@@ -208,24 +206,22 @@ class FlxSpriteUtil
 			camera = FlxG.camera;
 		
 		var spriteBounds = sprite.getScreenBounds(camera);
-		var viewBounds = camera.getViewRect();
 		var offset = FlxPoint.get(
 			sprite.x - spriteBounds.x - camera.scroll.x,
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.left < viewBounds.left)
-			sprite.x = camera.scroll.x + viewBounds.x + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.right > viewBounds.right)
-			sprite.x = camera.scroll.x + viewBounds.right + offset.x - spriteBounds.width;
+		if (edges.has(LEFT) && spriteBounds.left < camera.viewLeft)
+			sprite.x = camera.viewLeft + offset.x;
+		else if (edges.has(RIGHT) && spriteBounds.right > camera.viewRight)
+			sprite.x = camera.viewRight + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.top < viewBounds.top)
-			sprite.y = camera.scroll.y + viewBounds.y + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.bottom > viewBounds.bottom)
-			sprite.y = camera.scroll.y + viewBounds.bottom + offset.y - spriteBounds.height;
+		if (edges.has(UP) && spriteBounds.top < camera.viewTop)
+			sprite.y = camera.viewTop + offset.y;
+		else if (edges.has(DOWN) && spriteBounds.bottom > camera.viewBottom)
+			sprite.y = camera.viewBottom + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();
-		viewBounds.put();
 		offset.put();
 		
 		return sprite;
