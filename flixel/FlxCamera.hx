@@ -241,10 +241,16 @@ class FlxCamera extends FlxBasic
 	 */
 	public var zoom(default, set):Float;
 
-	/** The margin cut off on the left and right by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the left and right by the camera zooming in (or out), in world space.
+	 * @since 5.2.0
+	 */
 	public var viewMarginX(default, null):Float;
 
-	/** The margin cut off on the top and bottom by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the top and bottom by the camera zooming in (or out), in world space.
+	 * @since 5.2.0
+	 */
 	public var viewMarginY(default, null):Float;
 
 	// deprecated vars
@@ -260,40 +266,76 @@ class FlxCamera extends FlxBasic
 
 	// delegates
 
-	/** The margin cut off on the left by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the left by the camera zooming in (or out), in world space.
+	 * @since 5.2.0
+	 */
 	public var viewMarginLeft(get, never):Float;
 
-	/** The margin cut off on the top by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the top by the camera zooming in (or out), in world space
+	 * @since 5.2.0
+	 */
 	public var viewMarginTop(get, never):Float;
 
-	/** The margin cut off on the right by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the right by the camera zooming in (or out), in world space
+	 * @since 5.2.0
+	 */
 	public var viewMarginRight(get, never):Float;
 
-	/** The margin cut off on the bottom by the camera zooming in (or out), in world space */
+	/**
+	 * The margin cut off on the bottom by the camera zooming in (or out), in world space
+	 * @since 5.2.0
+	 */
 	public var viewMarginBottom(get, never):Float;
 
-	/** The size of the camera's view, in world space. */
+	/**
+	 * The size of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewWidth(get, never):Float;
 
-	/** The size of the camera's view, in world space. */
+	/**
+	 * The size of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewHeight(get, never):Float;
 
-	/** The left of the camera's view, in world space. */
+	/**
+	 * The left of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewX(get, never):Float;
 
-	/** The top of the camera's view, in world space. */
+	/**
+	 * The top of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewY(get, never):Float;
 
-	/** The left of the camera's view, in world space. */
+	/**
+	 * The left of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewLeft(get, never):Float;
 
-	/** The top of the camera's view, in world space. */
+	/**
+	 * The top of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewTop(get, never):Float;
 
-	/** The right side of the camera's view, in world space. */
+	/**
+	 * The right side of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewRight(get, never):Float;
 
-	/** The bottom side of the camera's view, in world space. */
+	/**
+	 * The bottom side of the camera's view, in world space.
+	 * @since 5.2.0
+	 */
 	public var viewBottom(get, never):Float;
 
 	/**
