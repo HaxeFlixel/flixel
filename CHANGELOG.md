@@ -1,4 +1,4 @@
-5.2.0 (Unreleased)
+5.2.0 January 17, 2023
 ------------------------------
 #### New features:
 - `FlxMouse`: added `deltaX`, `deltaY`, `deltaScreenX` and `deltaScreenY` ([#2709](https://github.com/HaxeFlixel/flixel/pull/2709))
