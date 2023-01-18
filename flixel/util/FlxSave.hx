@@ -374,7 +374,7 @@ class FlxSave implements IFlxDestroyable
 @:access(openfl.net.SharedObject)
 private class FlxSharedObject extends SharedObject
 {
-	#if flash
+	#if (flash || android || ios)
 	/** Use SharedObject as usual */
 	public static inline function getLocal(name:String, ?localPath:String):SharedObject
 	{
@@ -540,10 +540,6 @@ private class FlxSharedObject extends SharedObject
 	
 	static function getPath(localPath:String, name:String):String
 	{
-		#if android
-		return getLegacyPath(localPath, name);
-		#end
-		
 		// Avoid ever putting .sol files directly in AppData
 		if (localPath == "")
 			localPath = getDefaultLocalPath();
