@@ -4,6 +4,9 @@
 - `FlxMouse`: added `deltaX`, `deltaY`, `deltaScreenX` and `deltaScreenY` ([#2709](https://github.com/HaxeFlixel/flixel/pull/2709))
 - `FlxCamera`: added public `view` and `viewMargin` properties, deprecated old, private viewOffset fields([2714](https://github.com/HaxeFlixel/flixel/pull/2714))
 
+#### Changes and improvements:
+- `FlxStrip`: allows shaders and color transforms ([2696](https://github.com/HaxeFlixel/flixel/pull/2696))
+
 #### Bugfixes:
 - `FlxSpriteGroup`: Fix `findMinY()` and `findMaxY()` returning `x` instead of `y` ([2713](https://github.com/HaxeFlixel/flixel/pull/2713))
 
