@@ -906,7 +906,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function findMinY()
 	{
-		return length == 0 ? x : findMinYHelper();
+		return length == 0 ? y : findMinYHelper();
 	}
 	
 	function findMinYHelper()
@@ -937,7 +937,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function findMaxY()
 	{
-		return length == 0 ? x : findMaxYHelper();
+		return length == 0 ? y : findMaxYHelper();
 	}
 	
 	function findMaxYHelper()
