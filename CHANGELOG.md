@@ -1,8 +1,7 @@
-5.2.1 (Unreleased)
+5.2.1 (January 20, 2023)
 ------------------------------
 #### Bugfixes:
 - `FlxSave`: Fix save location on android and ios ([#2718](https://github.com/HaxeFlixel/flixel/pull/2718))
-
 
 5.2.0 January 17, 2023
 ------------------------------
