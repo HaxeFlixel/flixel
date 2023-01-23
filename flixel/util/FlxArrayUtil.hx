@@ -106,7 +106,7 @@ class FlxArrayUtil
 	 */
 	public static inline function safeSwapByIndex<T>(array:Array<T>, index1:Int, index2:Int):Array<T>
 	{
-		if(index1 >= 0 && index1 < array.length && index2 >= 0 && index2 < array.length)
+		if (index1 >= 0 && index1 < array.length && index2 >= 0 && index2 < array.length)
 		{
 			swapByIndex(array, index1, index2);
 		}
@@ -135,6 +135,28 @@ class FlxArrayUtil
 	public static inline function safeSwap<T>(array:Array<T>, item1:T, item2:T):Array<T>
 	{
 		return safeSwapByIndex(array, array.indexOf(item1), array.indexOf(item2));
+	}
+
+	/**
+	 * Reverses all elements in the array. If the array is `null` or the length of the array is less than 2, the inversion won't do anything.
+	 * @param array The array to reverse. (Example: [1, 3, 5] -> [5, 3, 1])
+	 * @return The reversed array.
+	 */
+	public static function reverse<T>(array:Array<T>):Array<T>
+	{
+		if (array == null || array.length < 2)
+			return array;
+
+		var empty:Array<T> = [];
+		var length:Int = array.length - 1;
+
+		while (length >= 0)
+		{
+			empty.push(array[length]);
+			length--;
+		}
+
+		return empty;
 	}
 
 	/**
@@ -222,7 +244,7 @@ class FlxArrayUtil
 	{
 		if (array == null)
 			array = [];
-		
+
 		array.push(element);
 		return array;
 	}
