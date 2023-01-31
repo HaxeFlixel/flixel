@@ -293,6 +293,64 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 
 		return false;
 	}
+	
+	/**
+	 * Check if every key of an array if keys has been just pressed.
+	 * @param KeyArray an Array of keys.
+	 */
+	public function allJustPressed(KeyArray:Array<Key>)
+	{
+		return checkConsecutiveKeyArrayState(KeyArray, JUST_PRESSED);
+	}
+	/**
+	 * Check if every key of an array if keys are being pressed.
+	 * @param KeyArray an Array of keys.
+	 */
+	public function allPressed(KeyArray:Array<Key>)
+	{
+		return checkConsecutiveKeyArrayState(KeyArray, PRESSED);
+	}
+	/**
+	 * Check if every key of an array if keys has been just released.
+	 * @param KeyArray an Array of keys.
+	 */
+	public function allJustReleased(KeyArray:Array<Key>)
+	{
+		return checkConsecutiveKeyArrayState(KeyArray, JUST_RELEASED);
+	}
+	/**
+	 * Check if every key of an array if keys are released.
+	 * @param KeyArray an Array of keys.
+	 */
+	public function allReleased(KeyArray:Array<Key>)
+	{
+		return checkConsecutiveKeyArrayState(KeyArray, RELEASED);
+	}
+
+	/**
+	 * Helper function to check the status of an array of keys
+	 *
+	 * @param	KeyArray	An array of keys as Strings
+	 * @param	State		The key state to check for
+	 * @return	Whether at least one of the keys has the specified status 
+	 */
+	function checkConsecutiveKeyArrayState(KeyArray:Array<Key>, State:FlxInputState)
+	{
+		if (KeyArray == null)
+		{
+			return false;
+		}
+
+		for (code in KeyArray)
+		{
+			if (checkStatus(code, State))
+				continue;
+			else
+				return false;
+		}
+	
+		return true;
+	}
 
 	/**
 	 * Event handler so FlxGame can toggle keys.
