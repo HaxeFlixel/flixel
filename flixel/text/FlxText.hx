@@ -752,6 +752,11 @@ class FlxText extends FlxSprite
 		return super.get_height();
 	}
 
+	override function set_width(value:Float):Float {
+		fieldWidth = value;
+		return super.set_width(value);
+	}
+
 	override function updateColorTransform():Void
 	{
 		if (colorTransform == null)
