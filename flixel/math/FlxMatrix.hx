@@ -18,17 +18,19 @@ class FlxMatrix extends Matrix
 	 */
 	public inline function rotateWithTrig(cos:Float, sin:Float):FlxMatrix
 	{
-		var a1:Float = a * cos - b * sin;
+		var temp1:Float;
+
+		temp1 = a * cos - b * sin;
 		b = a * sin + b * cos;
-		a = a1;
+		a = temp1;
 
-		var c1:Float = c * cos - d * sin;
+		temp1 = c * cos - d * sin;
 		d = c * sin + d * cos;
-		c = c1;
+		c = temp1;
 
-		var tx1:Float = tx * cos - ty * sin;
+		temp1 = tx * cos - ty * sin;
 		ty = tx * sin + ty * cos;
-		tx = tx1;
+		tx = temp1;
 
 		return this;
 	}
