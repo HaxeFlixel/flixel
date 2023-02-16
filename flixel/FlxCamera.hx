@@ -2033,6 +2033,22 @@ class FlxCamera extends FlxBasic
 		viewMarginY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 	}
 	
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function get_camera():FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function set_camera(value:FlxCamera):FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function get_cameras():Array<FlxCamera> throw "don't reference camera.cameras";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function set_cameras(value:Array<FlxCamera>):Array<FlxCamera> throw "don't reference camera.cameras";
+	
 	static inline function get_defaultCameras():Array<FlxCamera>
 	{
 		return _defaultCameras;
