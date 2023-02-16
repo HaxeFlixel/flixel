@@ -258,6 +258,16 @@ class FlxKeyList extends FlxBaseKeyList
 	inline function get_CAPSLOCK()
 		return check(FlxKey.CAPSLOCK);
 
+	public var SCROLL_LOCK(get, never):Bool;
+
+	inline function get_SCROLL_LOCK()
+		return check(FlxKey.SCROLL_LOCK);
+
+	public var NUMLOCK(get, never):Bool;
+
+	inline function get_NUMLOCK()
+		return check(FlxKey.NUMLOCK);
+
 	public var SEMICOLON(get, never):Bool;
 
 	inline function get_SEMICOLON()
@@ -338,10 +348,25 @@ class FlxKeyList extends FlxBaseKeyList
 	inline function get_TAB()
 		return check(FlxKey.TAB);
 
+	public var WINDOWS(get, never):Bool;
+
+	inline function get_WINDOWS()
+		return check(FlxKey.WINDOWS);
+
+	public var MENU(get, never):Bool;
+
+	inline function get_MENU()
+		return check(FlxKey.MENU);
+
 	public var PRINTSCREEN(get, never):Bool;
 
 	inline function get_PRINTSCREEN()
 		return check(FlxKey.PRINTSCREEN);
+
+	public var BREAK(get, never):Bool;
+
+	inline function get_BREAK()
+		return check(FlxKey.BREAK);
 
 	public var F1(get, never):Bool;
 
@@ -472,4 +497,9 @@ class FlxKeyList extends FlxBaseKeyList
 
 	inline function get_NUMPADMULTIPLY()
 		return check(FlxKey.NUMPADMULTIPLY);
+
+	public var NUMPADSLASH(get, never):Bool;
+
+	inline function get_NUMPADSLASH()
+		return check(FlxKey.NUMPADSLASH);
 }

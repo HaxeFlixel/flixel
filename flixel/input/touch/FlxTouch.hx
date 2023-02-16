@@ -23,6 +23,11 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	 */
 	public var touchPointID(get, never):Int;
 
+	/**
+	 * A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
+	 */
+	public var pressure(default, null):Float;
+
 	public var justReleased(get, never):Bool;
 	public var released(get, never):Bool;
 	public var pressed(get, never):Bool;
@@ -42,26 +47,29 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	}
 
 	/**
-	 * Resets the justPressed/justReleased flags and sets touch to not pressed.
+	 * Resets the justPressed/justReleased flags, sets touch to not pressed and sets touch pressure to 0.
 	 */
-	public function recycle(x:Int, y:Int, pointID:Int):Void
+	public function recycle(x:Int, y:Int, pointID:Int, pressure:Float):Void
 	{
 		setXY(x, y);
 		input.ID = pointID;
 		input.reset();
+		this.pressure = pressure;
 	}
 
 	/**
 	 * @param	X			stageX touch coordinate
 	 * @param	Y			stageX touch coordinate
 	 * @param	PointID		touchPointID of the touch
+	 * @param	pressure	A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
 	 */
-	function new(x:Int = 0, y:Int = 0, pointID:Int = 0)
+	function new(x:Int = 0, y:Int = 0, pointID:Int = 0, pressure:Float = 0)
 	{
 		super();
 
 		input = new FlxInput(pointID);
 		setXY(x, y);
+		this.pressure = pressure;
 	}
 
 	/**

@@ -18,6 +18,7 @@ import flash.text.GridFitType;
 
 /**
  * The flixel sound tray, the little volume meter that pops down sometimes.
+ * Accessed via `FlxG.game.soundTray` or `FlxG.sound.soundTray`.
  */
 class FlxSoundTray extends Sprite
 {
@@ -42,6 +43,15 @@ class FlxSoundTray extends Sprite
 	var _width:Int = 80;
 
 	var _defaultScale:Float = 2.0;
+
+	/**The sound used when increasing the volume.**/
+	public var volumeUpSound:String = "flixel/sounds/beep";
+
+	/**The sound used when decreasing the volume.**/
+	public var volumeDownSound:String = 'flixel/sounds/beep';
+
+	/**Whether or not changing the volume should make noise.**/
+	public var silent:Bool = false;
 
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
@@ -130,13 +140,13 @@ class FlxSoundTray extends Sprite
 	/**
 	 * Makes the little volume tray slide out.
 	 *
-	 * @param	Silent	Whether or not it should beep.
+	 * @param	up Whether the volume is increasing.
 	 */
-	public function show(Silent:Bool = false):Void
+	public function show(up:Bool = false):Void
 	{
-		if (!Silent)
+		if (!silent)
 		{
-			var sound = FlxAssets.getSound("flixel/sounds/beep");
+			var sound = FlxAssets.getSound(up ? volumeUpSound : volumeDownSound);
 			if (sound != null)
 				FlxG.sound.load(sound).play();
 		}

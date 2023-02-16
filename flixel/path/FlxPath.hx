@@ -47,7 +47,42 @@ import flixel.util.FlxSpriteUtil;
 class FlxPath implements IFlxDestroyable
 {
 	/**
-	 * Internal helper for keeping new variable instantiations under control.
+	 * Move from the start of the path to the end then stop.
+	 */
+	@:deprecated("Use FORWARD or FlxPathType.FORWARD instead")
+	@:noCompletion
+	public static inline var FORWARD = FlxPathType.FORWARD;
+
+	/**
+	 * Move from the end of the path to the start then stop.
+	 */
+	@:deprecated("Use BACKWARD or FlxPathType.BACKWARD instead")
+	@:noCompletion
+	public static inline var BACKWARD = FlxPathType.BACKWARD;
+
+	/**
+	 * Move from the start of the path to the end then directly back to the start, and start over.
+	 */
+	@:deprecated("Use LOOP_FORWARD or FlxPathType.LOOP_FORWARD instead")
+	@:noCompletion
+	public static inline var LOOP_FORWARD = FlxPathType.LOOP_FORWARD;
+
+	/**
+	 * Move from the end of the path to the start then directly back to the end, and start over.
+	 */
+	@:deprecated("Use LOOP_BACKWARD or FlxPathType.LOOP_BACKWARD instead")
+	@:noCompletion
+	public static inline var LOOP_BACKWARD = FlxPathType.LOOP_BACKWARD;
+
+	/**
+	 * Move from the start of the path to the end then turn around and go back to the start, over and over.
+	 */
+	@:deprecated("Use YOYO or FlxPathType.YOYO instead")
+	@:noCompletion
+	public static inline var YOYO = FlxPathType.YOYO;
+
+	/**
+	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
 	static var _point:FlxPoint = FlxPoint.get();
 
@@ -89,6 +124,15 @@ class FlxPath implements IFlxDestroyable
 	 * Whether the object's angle should be adjusted to the path angle during path follow behavior.
 	 */
 	public var autoRotate:Bool = false;
+
+	/**
+	 * The amount of degrees to offset from the path's angle, when `autoRotate` is `true`. To use
+	 * flixel 4.11's autoRotate behavior, set this to `90`, so there is no rotation at 0 degrees.
+	 * 
+	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
+	 * @since 5.0.0
+	 */
+	public var angleOffset:Float = 0;
 
 	/**
 	 * Pauses or checks the pause state of the path.
@@ -171,11 +215,12 @@ class FlxPath implements IFlxDestroyable
 	 * @param speed        The speed at which the object is moving on the path.
 	 * @param mode         Path following behavior (like looping, horizontal only, etc).
 	 * @param autoRotate   Whether the object's angle should be adjusted to the path angle during
-	 *                     path follow behavior. Note that moving straight right is 0 degrees.
+	 *                     path follow behavior. Note that moving straight right is 0 degrees, when angle
+	 *                     angleOffset is 0.
 	 * @return This path object.
 	 * @since 4.2.0
 	 */
-	public function setProperties(speed:Float = 100, mode:FlxPathType = FORWARD, autoRotate:Bool = false):FlxPath
+	public function setProperties(speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false):FlxPath
 	{
 		this.speed = Math.abs(speed);
 		_mode = mode;
@@ -189,11 +234,11 @@ class FlxPath implements IFlxDestroyable
 	 * @param nodes              An optional array of path waypoints. If null then previously added points will be used. Movement is not started if the resulting array has no points.
 	 * @param speed              The speed at which the object is moving on the path.
 	 * @param mode               Path following behavior (like looping, horizontal only, etc).
-	 * @param autoRotate         the object's angle should be adjusted to the path angle during path follow behavior.
-	 * @param nodesAsReference   to pass the input array as reference (true) or to copy the points (false). Default is false.
+	 * @param autoRotate         The object's angle should be adjusted to the path angle during path follow behavior.
+	 * @param nodesAsReference   To pass the input array as reference (true) or to copy the points (false). Default is false.
 	 * @return This path object.
 	 */
-	public function start(?nodes:Array<FlxPoint>, speed:Float = 100, mode:FlxPathType = FORWARD, autoRotate:Bool = false,
+	public function start(?nodes:Array<FlxPoint>, speed = 100.0, mode = FlxPathType.FORWARD, autoRotate = false,
 			nodesAsReference:Bool = false):FlxPath
 	{
 		if (nodes != null)
@@ -232,7 +277,7 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		// get starting node
-		if ((_mode == BACKWARD) || (_mode == LOOP_BACKWARD))
+		if ((_mode == FlxPathType.BACKWARD) || (_mode == FlxPathType.LOOP_BACKWARD))
 		{
 			nodeIndex = _nodes.length - 1;
 			_inc = -1;
@@ -345,7 +390,7 @@ class FlxPath implements IFlxDestroyable
 			{
 				object.angularVelocity = 0;
 				object.angularAcceleration = 0;
-				object.angle = angle;
+				object.angle = angle + angleOffset;
 			}
 
 			if (finished)
@@ -415,7 +460,7 @@ class FlxPath implements IFlxDestroyable
 		var callComplete:Bool = false;
 		nodeIndex += _inc;
 
-		if (_mode == BACKWARD)
+		if (_mode == FlxPathType.BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -424,7 +469,7 @@ class FlxPath implements IFlxDestroyable
 				onEnd();
 			}
 		}
-		else if (_mode == LOOP_FORWARD)
+		else if (_mode == FlxPathType.LOOP_FORWARD)
 		{
 			if (nodeIndex >= _nodes.length)
 			{
@@ -432,7 +477,7 @@ class FlxPath implements IFlxDestroyable
 				nodeIndex = 0;
 			}
 		}
-		else if (_mode == LOOP_BACKWARD)
+		else if (_mode == FlxPathType.LOOP_BACKWARD)
 		{
 			if (nodeIndex < 0)
 			{
@@ -444,7 +489,7 @@ class FlxPath implements IFlxDestroyable
 				}
 			}
 		}
-		else if (_mode == YOYO)
+		else if (_mode == FlxPathType.YOYO)
 		{
 			if (_inc > 0)
 			{
@@ -766,7 +811,7 @@ class FlxPath implements IFlxDestroyable
 			_point.y = nextNode.y - (camera.scroll.y * object.scrollFactor.y);
 
 			if (FlxG.renderBlit)
-				_point.subtract(camera.viewOffsetX, camera.viewOffsetY);
+				_point.subtract(camera.viewMarginX, camera.viewMarginY);
 
 			gfx.lineTo(_point.x + lineOffset, _point.y + lineOffset);
 		}

@@ -63,6 +63,8 @@ abstract FlxKey(Int) from Int to Int
 	var RBRACKET = 221;
 	var BACKSLASH = 220;
 	var CAPSLOCK = 20;
+	var SCROLL_LOCK = 145;
+	var NUMLOCK = 144;
 	var SEMICOLON = 186;
 	var QUOTE = 222;
 	var ENTER = 13;
@@ -79,7 +81,10 @@ abstract FlxKey(Int) from Int to Int
 	var LEFT = 37;
 	var RIGHT = 39;
 	var TAB = 9;
+	var WINDOWS = 15;
+	var MENU = 302;
 	var PRINTSCREEN = 301;
+	var BREAK = 19;
 	var F1 = 112;
 	var F2 = 113;
 	var F3 = 114;
@@ -106,6 +111,7 @@ abstract FlxKey(Int) from Int to Int
 	var NUMPADPLUS = 107;
 	var NUMPADPERIOD = 110;
 	var NUMPADMULTIPLY = 106;
+	var NUMPADSLASH = 111;
 
 	@:from
 	public static inline function fromString(s:String)

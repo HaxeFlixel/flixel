@@ -99,7 +99,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 0, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 2, 2);
 
 	/**
 	 * Internal tracker for game object.
@@ -313,7 +313,6 @@ class FlxG
 
 	public static var initialWidth(default, null):Int = 0;
 	public static var initialHeight(default, null):Int = 0;
-	public static var initialZoom(default, null):Float = 0;
 
 	#if FLX_SOUND_SYSTEM
 	/**
@@ -571,7 +570,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
-	static function init(Game:FlxGame, Width:Int, Height:Int, Zoom:Float):Void
+	static function init(Game:FlxGame, Width:Int, Height:Int):Void
 	{
 		game = Game;
 		width = Std.int(Math.abs(Width));
@@ -581,7 +580,6 @@ class FlxG
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
-		FlxG.initialZoom = FlxCamera.defaultZoom = Zoom;
 
 		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
 
@@ -670,30 +668,12 @@ class FlxG
 		if (save.isBound)
 			return;
 
-		// Use Project.xml data to determine save id
-		var meta = stage.application.meta;
-		var name = meta["file"];
-		var path:String = null;
-
-		// replace invalid characters with hyphens
-		var invalidChars = ~/[ ~%&\\;:"',<>?#]/;
-		name = invalidChars.split(name).join("-");
-
-		#if !flash
-		// On most browsers using the full URL path often causes a new save path to be created
-		// every time a new version of the game is updated. Especially on portals like Newgrounds.
-		// just set the path to your company name, to ensure a unique storage id.
-		path = meta["company"];
-		if (path == null || path == "")
-			path = "HaxeFlixel";
-		else
-			path = invalidChars.split(path).join("-");
-		#end
-
-		// Create a save based on project metadata (since 5.0.0).
+		// Use Project.xml data to determine save id (since 5.0.0).
+		final name = stage.application.meta["file"];
+		save.bind(FlxSave.validate(name));
 		// look for the pre 5.0 save and convert it if it exists.
-		save.bind(name, path);
-		save.migrateDataFrom("flixel");
+		if (save.isEmpty())
+			save.mergeDataFrom("flixel", null, false, false);
 	}
 
 	/**

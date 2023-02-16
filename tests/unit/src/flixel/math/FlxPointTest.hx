@@ -159,11 +159,34 @@ class FlxPointTest extends FlxTest
 		assertPointEquals(point1, 1, 2);
 	}
 
+	@Test
+	function testPivotDegrees() {
+		// Pivot around point in same quadrant
+		point1.set(10, 10);
+		point2.set(5, 5);
+		assertPointNearlyEquals(point1.pivotDegrees(point2, 180), 0, 0);
+
+		// pivot around origin
+		point1.set(1, 10);
+		point2.set();
+		assertPointNearlyEquals(point1.pivotDegrees(point2, 90), -10, 1);
+
+		// pivot around point in different quadrant
+		point1.set(10, 10);
+		point2.set(-1, -1);
+		assertPointNearlyEquals(point1.pivotDegrees(point2, 45), -1, 14.55);
+	}
+
 	function assertPointEquals(p:FlxPoint, x:Float, y:Float, ?msg:String, ?info:PosInfos)
 	{
-		if (msg == null)
-			msg = 'Expected (x: $x | y: $y) but was $p';
-
-		Assert.isTrue(x == p.x && y == p.y, msg, info);
+		assertPointNearlyEquals(p, x, y, 0.0, msg, info);
 	}
+
+	function assertPointNearlyEquals(p:FlxPoint, x:Float, y:Float, tolerance:Float = .01, ?msg:String, ?info:PosInfos)
+		{
+			if (msg == null)
+				msg = 'Expected (x: $x | y: $y) but was $p';
+
+			Assert.isTrue(Math.abs(x - p.x) <= tolerance && Math.abs(y -p.y) <= tolerance, msg, info);
+		}
 }

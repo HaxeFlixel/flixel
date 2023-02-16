@@ -372,13 +372,30 @@ import openfl.geom.Point;
 	/**
 	 * Scale this point.
 	 *
-	 * @param   k - scale coefficient
+	 * @param   x - scale x coefficient
+	 * @param   y - scale y coefficient, if omitted, x is used
 	 * @return  scaled point
 	 */
-	public inline function scale(k:Float):FlxPoint
+	public inline function scale(x:Float, ?y:Float):FlxPoint
 	{
-		x *= k;
-		y *= k;
+		if (y == null)
+			y = x;
+
+		this.x *= x;
+		this.y *= y;
+		return this;
+	}
+
+	/**
+	 * Scale this point by another point.
+	 *
+	 * @param   point - The x and y scale coefficient
+	 * @return  scaled point
+	 */
+	public inline function scalePoint(point:FlxPoint):FlxPoint
+	{
+		scale(point.x, point.y);
+		point.putWeak();
 		return this;
 	}
 
@@ -579,7 +596,7 @@ import openfl.geom.Point;
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
 	{
-		_point1.copyFrom(pivot).subtractPoint(this);
+		_point1.copyFrom(this).subtractPoint(pivot);
 		_point1.radians += radians;
 		set(_point1.x + pivot.x, _point1.y + pivot.y);
 		pivot.putWeak();
@@ -676,6 +693,8 @@ import openfl.geom.Point;
 	 *
 	 * @param   point   The other point.
 	 * @return  The angle in degrees, between -180 and 180.
+	 * 
+	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
 	 */
 	@:deprecated("angleBetween is deprecated, use degreesTo instead")
 	public function angleBetween(point:FlxPoint):Float

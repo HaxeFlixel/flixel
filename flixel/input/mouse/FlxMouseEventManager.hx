@@ -689,21 +689,11 @@ class FlxMouseEventManager extends FlxBasic
 	{
 		if (event.pixelPerfect && (event.sprite != null))
 		{
-			return checkPixelPerfectOverlap(point, event.sprite, camera);
+			return event.sprite.pixelsOverlapPoint(point, 0x01, camera);
 		}
 		else
 		{
 			return event.object.overlapsPoint(point, true, camera);
 		}
-	}
-
-	inline function checkPixelPerfectOverlap(point:FlxPoint, sprite:FlxSprite, camera:FlxCamera):Bool
-	{
-		if (sprite.angle != 0)
-		{
-			var pivot = FlxPoint.weak(sprite.x + sprite.origin.x - sprite.offset.x, sprite.y + sprite.origin.y - sprite.offset.y);
-			point.pivotDegrees(pivot, -sprite.angle);
-		}
-		return sprite.pixelsOverlapPoint(point, 0x01, camera);
 	}
 }
