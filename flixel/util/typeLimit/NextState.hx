@@ -19,7 +19,7 @@ abstract NextState(Dynamic)
 	
 	public function create():FlxState
 	{
-		if (this is FlxState)
+		if (Std.isOfType(this, FlxState))
 			return cast this;
 		else
 			return cast this();
@@ -27,7 +27,7 @@ abstract NextState(Dynamic)
 	
 	public function getConstructor():()->FlxState
 	{
-		if (this is FlxState)
+		if (Std.isOfType(this, FlxState))
 		{
 			return function ():FlxState
 			{
@@ -64,7 +64,7 @@ abstract InitialState(Dynamic) to NextState
 	@:to
 	public function toNextState():NextState
 	{
-		if (this is Class)
+		if (Std.isOfType(this, Class))
 		{
 			return function ():FlxState
 			{
