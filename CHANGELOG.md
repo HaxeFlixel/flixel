@@ -3,6 +3,7 @@
 #### Bugfixes:
 - `FlxGamePad`: Fix various "firstPressed" functions ([#2728](https://github.com/HaxeFlixel/flixel/pull/2728))
 - `FlxSave`: Prevent crash when hiding debug windows, after `FlxG.save.bind` is called ([#2725](https://github.com/HaxeFlixel/flixel/pull/2725))
+- `FlxCamera`: remove uses of camera.camera ((2731)[https://github.com/HaxeFlixel/flixel/pull/2731])
 
 5.2.1 (January 20, 2023)
 ------------------------------
