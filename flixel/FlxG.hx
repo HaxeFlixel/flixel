@@ -27,6 +27,7 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
+import flixel.util.typeLimit.NextState;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -366,7 +367,7 @@ class FlxG
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState<State:FlxState>(nextState:()->State):Void
+	public static inline function switchState(nextState:NextState):Void
 	{
 		if (state.switchTo(nextState))
 			game._nextState = nextState;

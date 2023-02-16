@@ -8,6 +8,7 @@ import flash.events.Event;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
+import flixel.util.typeLimit.NextState;
 import openfl.Assets;
 import openfl.filters.BitmapFilter;
 #if desktop
@@ -92,7 +93,7 @@ class FlxGame extends Sprite
 	/**
 	 * Class type of the initial/first game state for the game, usually `MenuState` or something like that.
 	 */
-	var _initialState:()->FlxState;
+	var _initialState:NextState;
 
 	/**
 	 * Current game state.
@@ -201,7 +202,7 @@ class FlxGame extends Sprite
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
 	 */
-	var _nextState:()->FlxState;
+	var _nextState:NextState;
 
 	/**
 	 * A flag for keeping track of whether a game reset was requested or not.
@@ -259,7 +260,7 @@ class FlxGame extends Sprite
 	 *
 	 * @see [scale modes](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
 	 */
-	public function new(gameWidth = 0, gameHeight = 0, ?initialState:Class<FlxState>, updateFramerate = 60, drawFramerate = 60, skipSplash = false,
+	public function new(gameWidth = 0, gameHeight = 0, ?initialState:InitialState, updateFramerate = 60, drawFramerate = 60, skipSplash = false,
 			startFullscreen = false)
 	{
 		super();
@@ -289,7 +290,7 @@ class FlxGame extends Sprite
 		#end
 
 		// Then get ready to create the game object for real
-		_initialState = (initialState == null) ? FlxState.new : initialState;
+		_initialState = (initialState == null) ? FlxState.new : initialState.toNextState();
 
 		addEventListener(Event.ADDED_TO_STAGE, create);
 	}
@@ -627,8 +628,8 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 
 		// Finally assign and create the new state
-		_state = _nextState();
-		_state._constructor = _nextState;
+		_state = _nextState.create();
+		_state._constructor = _nextState.getConstructor();
 		_nextState = null;
 
 		if (_gameJustStarted)

@@ -4,6 +4,7 @@ import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.typeLimit.NextState;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
@@ -181,7 +182,7 @@ class FlxState extends FlxGroup
 	 *
 	 * Useful for customizing state switches, e.g. for transition effects.
 	 */
-	public function switchTo(nextState:()->FlxState):Bool
+	public function switchTo(nextState:NextState):Bool
 	{
 		return true;
 	}

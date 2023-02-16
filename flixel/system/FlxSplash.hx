@@ -12,10 +12,11 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.util.typeLimit.NextState;
 
 class FlxSplash extends FlxState
 {
-	public static var nextState:()->FlxState;
+	public static var nextState:NextState;
 
 	/**
 	 * @since 4.8.0
