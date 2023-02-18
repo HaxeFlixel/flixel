@@ -6,9 +6,9 @@ import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMatrix;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
 
@@ -245,7 +245,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 * @param	Camera	Camera to check against. It's a camera this buffer is used for drawing on.
 	 * @return	The value of dirty flag.
 	 */
-	public function isDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
+	public function isDirty<Tile:FlxTile>(Tilemap:FlxTypedTilemap<Tile>, Camera:FlxCamera):Bool
 	{
 		dirty = dirty
 			|| (Tilemap.x != _prevTilemapX)
