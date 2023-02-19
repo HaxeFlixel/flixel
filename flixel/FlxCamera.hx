@@ -909,7 +909,7 @@ class FlxCamera extends FlxBasic
 					gfx.clear();
 					gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 					gfx.drawTriangles(drawVertices, indices);
-					camera.buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
+					buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
 				}
 				#end
 				// End of TODO...
@@ -2075,12 +2075,12 @@ class FlxCamera extends FlxBasic
 	
 	inline function get_viewX():Float
 	{
-		return camera.scroll.x + viewMarginX;
+		return scroll.x + viewMarginX;
 	}
 	
 	inline function get_viewY():Float
 	{
-		return camera.scroll.y + viewMarginY;
+		return scroll.y + viewMarginY;
 	}
 	
 	inline function get_viewLeft():Float
@@ -2095,12 +2095,12 @@ class FlxCamera extends FlxBasic
 	
 	inline function get_viewRight():Float
 	{
-		return camera.scroll.x + viewMarginRight;
+		return scroll.x + viewMarginRight;
 	}
 	
 	inline function get_viewBottom():Float
 	{
-		return camera.scroll.x + viewMarginBottom;
+		return scroll.x + viewMarginBottom;
 	}
 	
 	// deprecated vars
@@ -2134,6 +2134,26 @@ class FlxCamera extends FlxBasic
 	{
 		return viewMarginBottom;
 	}
+	
+	/**
+	 * Do not use the following fields! They only exists because FlxCamera extends FlxBasic,
+	 * we're hiding them because they've only caused confusion.
+	 */
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function get_camera():FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function set_camera(value:FlxCamera):FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function get_cameras():Array<FlxCamera> throw "don't reference camera.cameras";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function set_cameras(value:Array<FlxCamera>):Array<FlxCamera> throw "don't reference camera.cameras";
 	
 }
 

@@ -7,6 +7,9 @@ import flixel.util.FlxColor;
  * A `FlxSubState` can be opened inside of a `FlxState`.
  * By default, it also stops the parent state from updating,
  * making it convenient for pause screens or menus.
+ * 
+ * @see [FlxSubstate snippet](https://snippets.haxeflixel.com/states/flxsubstate/)
+ * @see [Substate demo](https://haxeflixel.com/demos/SubState/)
  */
 class FlxSubState extends FlxState
 {
