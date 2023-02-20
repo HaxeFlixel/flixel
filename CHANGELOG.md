@@ -1,3 +1,8 @@
+5.3.0 (TBD)
+------------------------------
+#### Changes and improvements:
+- `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
+
 5.2.2 (February 15, 2023)
 ------------------------------
 #### Bugfixes:
