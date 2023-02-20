@@ -2,12 +2,12 @@ package flixel.system.frontEnds;
 
 #if FLX_SOUND_SYSTEM
 import flixel.FlxG;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
-import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.system.FlxSound;
-import flixel.system.FlxSoundGroup;
+import flixel.system.FlxAssets;
+import flixel.sound.FlxSound;
+import flixel.sound.FlxSoundGroup;
 import flixel.system.ui.FlxSoundTray;
 import openfl.Assets;
 import openfl.media.Sound;
