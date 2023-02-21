@@ -197,7 +197,7 @@ class FlxSave implements IFlxDestroyable
 		// check old save location
 		if (oldSave.bind(name, path))
 		{
-			final success = mergeData(oldSave.data);
+			final success = mergeData(oldSave.data, overwrite, minFileSize);
 
 			if (eraseSave)
 				oldSave.erase();
