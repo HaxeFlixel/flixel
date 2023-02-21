@@ -29,7 +29,7 @@ import flixel.util.FlxStringUtil;
  * - `maxVelocity`: The maximum `velocity` (or negative `velocity`) this object can have.
  * - `angle`: The orientation, in degrees, of this `object`. Does not affect collision, mainly
  *            used for `FlxSprite` graphics.
- * - `angularVelocity`: The rotational speed of thiw object in degrees per second.
+ * - `angularVelocity`: The rotational speed of the object in degrees per second.
  * 
  * ## Overlaps
  * If you're only checking an overlap between two objects you can use `player.overlaps(door)`
