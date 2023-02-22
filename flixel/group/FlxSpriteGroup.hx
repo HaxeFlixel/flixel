@@ -51,11 +51,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Whether getters like findMinX, width and height will only count sprites with exist = true.
 	 * Defaults to false for backwards compatibility.
+	 * 
+	 * @since 5.3.0
 	 */
 	public var checkExistsInBounds:Bool = false;
 	
 	/**
 	 * Whether getters like findMinX, width and height will only count visible sprites.
+	 * 
+	 * @since 5.3.0
 	 */
 	public var checkVisibleInBounds:Bool = false;
 
