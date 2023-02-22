@@ -837,9 +837,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	inline function ignoreBounds(sprite:Null<FlxSprite>)
 	{
-		return member == null
-			|| (checkExistsInBounds && !member.exists)
-			|| (checkVisibleInBounds && !member.visible);
+		return sprite == null
+			|| (checkExistsInBounds && !sprite.exists)
+			|| (checkVisibleInBounds && !sprite.visible);
 	}
 
 	/**
