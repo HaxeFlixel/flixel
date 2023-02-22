@@ -836,7 +836,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.POSITIVE_INFINITY;
 		for (member in _sprites)
 		{
-			if (member == null)
+			if (member == null || !member.exists)
 				continue;
 			
 			var minX:Float;
@@ -867,7 +867,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in _sprites)
 		{
-			if (member == null)
+			if (member == null || !member.exists)
 				continue;
 			
 			var maxX:Float;
@@ -914,7 +914,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.POSITIVE_INFINITY;
 		for (member in _sprites)
 		{
-			if (member == null)
+			if (member == null || !member.exists)
 				continue;
 			
 			var minY:Float;
@@ -945,7 +945,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in _sprites)
 		{
-			if (member == null)
+			if (member == null || !member.exists)
 				continue;
 			
 			var maxY:Float;
