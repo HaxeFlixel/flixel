@@ -3,6 +3,9 @@
 #### Changes and improvements:
 - `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
 
+#### Bugfixes:
+- `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([2738](https://github.com/HaxeFlixel/flixel/pull/2738))
+
 5.2.2 (February 15, 2023)
 ------------------------------
 #### Bugfixes:
