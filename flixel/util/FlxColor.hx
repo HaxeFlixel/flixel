@@ -82,8 +82,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public var lightness(get, set):Float;
 
-	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
-	static var RGB_REGEX = ~/^rgba?\s*\((\s*\d{1,3}\s*,?){3,4}\)/i;
+	static var HEX_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	static var RGB_REGEX = ~/^rgba?\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,?\s*(\d{1,3})?\s*\)/i;
 
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -194,9 +194,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		var result:Null<FlxColor> = null;
 		str = StringTools.trim(str);
 
-		if (COLOR_REGEX.match(str))
+		if (HEX_REGEX.match(str))
 		{
-			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + HEX_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8)
 			{
@@ -205,11 +205,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		}
 		else if (RGB_REGEX.match(str))
 		{
-			var splittedColors = [
-				for (strNum in str.remove("rgba").remove("rgb").remove("(").remove(")").split(","))
-					Std.parseInt(strNum)
-			];
-			result = fromRGB(splittedColors[0], splittedColors[1], splittedColors[2], splittedColors[3] == null ? 255 : splittedColors[3]);
+			result = fromRGB(Std.parseInt(RGB_REGEX.matched(1)), Std.parseInt(RGB_REGEX.matched(2)), Std.parseInt(RGB_REGEX.matched(3)),
+				RGB_REGEX.matched(4) == null ? 255 : Std.parseInt(RGB_REGEX.matched(4)));
 		}
 		else
 		{
