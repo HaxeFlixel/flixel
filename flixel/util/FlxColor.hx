@@ -83,7 +83,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public var lightness(get, set):Float;
 
 	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
-	static var RGB_REGEX = ~/^rgb\s*\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)/i;
+	static var RGB_REGEX = ~/^rgb\s*\((\s*\d{1,3}\s*,?){3,4}\)/i;
 
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -208,7 +208,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 				for (strNum in str.remove("rgb").remove("(").remove(")").split(","))
 					Std.parseInt(strNum)
 			];
-			result = FlxColor.fromRGB(splittedColors[0], splittedColors[1], splittedColors[2]);
+			result = fromRGB(splittedColors[0], splittedColors[1], splittedColors[2], splittedColors[3]);
 		}
 		else
 		{
