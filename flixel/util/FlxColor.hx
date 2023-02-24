@@ -392,6 +392,17 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 
 	/**
+	 * Return a String representation of the color in the format rgba(R, G, B, A)
+	 *
+	 * @param Alpha Whether to include the alpha value in the RGB string
+	 * @return	A string in the format rgba(R, G, B, A)
+	 */
+	public inline function toRGBString(Alpha:Bool = false):String
+	{
+		return (Alpha ? "rgba" : "rgb") + '($red, $green, $blue' + (Alpha ? ', $alpha' : "") + ")";
+	}
+
+	/**
 	 * Return a String representation of the color in the format #RRGGBB
 	 *
 	 * @return	A string of length 7 in the format #RRGGBB
