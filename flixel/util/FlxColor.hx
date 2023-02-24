@@ -3,6 +3,8 @@ package flixel.util;
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
 
+using flixel.util.FlxStringUtil;
+
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  *
@@ -81,6 +83,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public var lightness(get, set):Float;
 
 	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	static var RGB_REGEX = ~/^rgb\s*\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)/i;
 
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -180,6 +183,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * - `#3F000011`   -> `0x3F000011`
 	 * - `GRAY`        -> `0xFF808080`
 	 * - `blue`        -> `0xFF0000FF`
+	 * - `rgb(184, 76, 217)`  -> `0xFFB84CD9`
 	 *
 	 * @param	str 	The string to be parsed
 	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
@@ -197,6 +201,14 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 			{
 				result.alphaFloat = 1;
 			}
+		}
+		else if (RGB_REGEX.match(str))
+		{
+			var splittedColors = [
+				for (strNum in str.remove("rgb").remove("(").remove(")").split(","))
+					Std.parseInt(strNum)
+			];
+			result = FlxColor.fromRGB(splittedColors[0], splittedColors[1], splittedColors[2]);
 		}
 		else
 		{
