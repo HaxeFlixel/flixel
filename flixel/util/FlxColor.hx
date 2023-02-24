@@ -209,7 +209,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 				for (strNum in str.remove("rgb").remove("(").remove(")").split(","))
 					Std.parseInt(strNum)
 			];
-			result = fromRGB(splittedColors[0], splittedColors[1], splittedColors[2], splittedColors[3]);
+			result = fromRGB(splittedColors[0], splittedColors[1], splittedColors[2], splittedColors[3] == null ? 255 : splittedColors[3]);
 		}
 		else
 		{
