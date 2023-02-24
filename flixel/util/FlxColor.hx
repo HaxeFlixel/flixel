@@ -83,7 +83,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	public var lightness(get, set):Float;
 
 	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
-	static var RGB_REGEX = ~/^rgb\s*\((\s*\d{1,3}\s*,?){3,4}\)/i;
+	static var RGB_REGEX = ~/^rgba?\s*\((\s*\d{1,3}\s*,?){3,4}\)/i;
 
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -184,6 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * - `GRAY`        -> `0xFF808080`
 	 * - `blue`        -> `0xFF0000FF`
 	 * - `rgb(184, 76, 217)`  -> `0xFFB84CD9`
+	 * - `rgba(184, 76, 217, 127)`  -> `0x7FB84CD9`
 	 *
 	 * @param	str 	The string to be parsed
 	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
