@@ -379,7 +379,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 
 	/**
-	 * Return a String representation of the color in the format
+	 * Return a String representation of the color in the format 0xAARRGGBB
 	 *
 	 * @param Alpha Whether to include the alpha value in the hes string
 	 * @param Prefix Whether to include "0x" prefix at start of string
