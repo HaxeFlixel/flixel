@@ -206,7 +206,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		else if (RGB_REGEX.match(str))
 		{
 			var splittedColors = [
-				for (strNum in str.remove("rgb").remove("(").remove(")").split(","))
+				for (strNum in str.remove("rgba").remove("rgb").remove("(").remove(")").split(","))
 					Std.parseInt(strNum)
 			];
 			result = fromRGB(splittedColors[0], splittedColors[1], splittedColors[2], splittedColors[3] == null ? 255 : splittedColors[3]);
