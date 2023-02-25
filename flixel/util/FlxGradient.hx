@@ -111,6 +111,10 @@ class FlxGradient
 		{
 			height = 1;
 		}
+		
+		var cacheName = 'gradient:$width:$height:$colors:$chunkSize:$rotation:$interpolate';
+		if (FlxG.bitmap.checkCache(cacheName))
+			return FlxG.bitmap.get(cacheName).bitmap;
 
 		var gradient:GradientMatrix = createGradientMatrix(width, height, colors, chunkSize, rotation);
 		var shape = new Shape();
@@ -145,7 +149,8 @@ class FlxGradient
 			var remainingRect = new openfl.geom.Rectangle(0, tempBitmap.height, width, height - tempBitmap.height);
 			data.fillRect(remainingRect, colors[colors.length - 1]);
 		}
-
+		
+		FlxG.bitmap.add(data, false, cacheName);
 		return data;
 	}
 
