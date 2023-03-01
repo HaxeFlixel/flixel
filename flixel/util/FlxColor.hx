@@ -3,6 +3,8 @@ package flixel.util;
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
 
+using flixel.util.FlxStringUtil;
+
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
  *
@@ -80,7 +82,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public var lightness(get, set):Float;
 
-	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	static var HEX_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
+	static var RGB_REGEX = ~/^rgba?\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,?\s*(\d{1,3})?\s*\)/i;
 
 	/**
 	 * Create a color from the least significant four bytes of an Int
@@ -180,6 +183,8 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * - `#3F000011`   -> `0x3F000011`
 	 * - `GRAY`        -> `0xFF808080`
 	 * - `blue`        -> `0xFF0000FF`
+	 * - `rgb(184, 76, 217)`  -> `0xFFB84CD9`
+	 * - `rgba(184, 76, 217, 127)`  -> `0x7FB84CD9`
 	 *
 	 * @param	str 	The string to be parsed
 	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
@@ -189,14 +194,19 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		var result:Null<FlxColor> = null;
 		str = StringTools.trim(str);
 
-		if (COLOR_REGEX.match(str))
+		if (HEX_REGEX.match(str))
 		{
-			var hexColor:String = "0x" + COLOR_REGEX.matched(2);
+			var hexColor:String = "0x" + HEX_REGEX.matched(2);
 			result = new FlxColor(Std.parseInt(hexColor));
 			if (hexColor.length == 8)
 			{
 				result.alphaFloat = 1;
 			}
+		}
+		else if (RGB_REGEX.match(str))
+		{
+			result = fromRGB(Std.parseInt(RGB_REGEX.matched(1)), Std.parseInt(RGB_REGEX.matched(2)), Std.parseInt(RGB_REGEX.matched(3)),
+				RGB_REGEX.matched(4) == null ? 255 : Std.parseInt(RGB_REGEX.matched(4)));
 		}
 		else
 		{
@@ -366,9 +376,9 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	}
 
 	/**
-	 * Return a String representation of the color in the format
+	 * Return a String representation of the color in the format 0xAARRGGBB
 	 *
-	 * @param Alpha Whether to include the alpha value in the hes string
+	 * @param Alpha Whether to include the alpha value in the hex string
 	 * @param Prefix Whether to include "0x" prefix at start of string
 	 * @return	A string of length 10 in the format 0xAARRGGBB
 	 */
@@ -376,6 +386,17 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return (Prefix ? "0x" : "") + (Alpha ? StringTools.hex(alpha,
 			2) : "") + StringTools.hex(red, 2) + StringTools.hex(green, 2) + StringTools.hex(blue, 2);
+	}
+
+	/**
+	 * Return a String representation of the color in the format rgba(R, G, B, A)
+	 *
+	 * @param Alpha Whether to include the alpha value in the RGB string
+	 * @return	A string in the format rgba(R, G, B, A)
+	 */
+	public inline function toRGBString(Alpha:Bool = false):String
+	{
+		return (Alpha ? "rgba" : "rgb") + '($red, $green, $blue' + (Alpha ? ', $alpha' : "") + ")";
 	}
 
 	/**
