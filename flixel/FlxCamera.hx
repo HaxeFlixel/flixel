@@ -2100,7 +2100,7 @@ class FlxCamera extends FlxBasic
 	
 	inline function get_viewBottom():Float
 	{
-		return scroll.x + viewMarginBottom;
+		return scroll.y + viewMarginBottom;
 	}
 	
 	// deprecated vars
