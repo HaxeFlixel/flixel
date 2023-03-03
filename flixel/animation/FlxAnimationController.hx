@@ -57,6 +57,11 @@ class FlxAnimationController implements IFlxDestroyable
 	public var finishCallback:(name:String) -> Void;
 
 	/**
+	 * Stores all the animation offsets that were added to this sprite.
+	 */
+	public var offsets:Map<String, Array<Float>>;
+
+	/**
 	 * Internal, reference to owner sprite.
 	 */
 	var _sprite:FlxSprite;
@@ -78,6 +83,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		_sprite = Sprite;
 		_animations = new Map<String, FlxAnimation>();
+		offsets = new Map<String, Array<Float>>();
 	}
 
 	public function update(elapsed:Float):Void
@@ -504,6 +510,25 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	/**
+	 * Adds an offset to an existing animation
+	 * 
+	 * @param   AnimName   The string name of the animation.
+	 * @param   OffsetX    The horizontal position (X) for the animation.
+	 * @param   OffsetY    The vertical position (Y) for the animation.
+	 */
+	public function appendOffset(AnimName:String, OffsetX:Float = 0, OffsetY:Float):Void
+	{
+		if (AnimName == null || _animations.get(AnimName) == null)
+		{
+			FlxG.log.warn("No animation called \"" + AnimName + "\"");
+			return;
+		}
+
+		var AnimOffsets:Array<Float> = [OffsetX, OffsetY];
+		offsets.set(AnimName, AnimOffsets);
+	}
+
+	/**
 	 * Plays an existing animation (e.g. `"run"`).
 	 * If you call an animation that is already playing, it will be ignored.
 	 *
@@ -541,6 +566,12 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		_curAnim = _animations.get(AnimName);
 		_curAnim.play(Force, Reversed, Frame);
+
+		if (offsets.exists(AnimName))
+		{
+			var _curOffset:Array<Float> = offsets.get(AnimName);
+			_sprite.offset.set(_curOffset[0], _curOffset[1]);
+		}
 
 		if (oldFlipX != _curAnim.flipX || oldFlipY != _curAnim.flipY)
 		{
