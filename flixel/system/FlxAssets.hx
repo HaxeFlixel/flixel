@@ -99,9 +99,9 @@ class FlxAssets
 	 * @param   directory       The directory to scan for files
 	 * @param   subDirectories  Whether to include subdirectories
 	 * @param   include         A string or `EReg` of files to include.
-	 *                          Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
-	 * @param   exclude         A string or `EReg` of files to exclude.
-	 *                          Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the exclude folder
+	 *                          Example: `"*.jpg\|*.png\|*.gif"` will only add files with that extension
+	 * @param   exclude         A string or `EReg` of files to exclude. Example: `"*exclude/*\|*.ogg"`
+	 *                          will exclude .ogg files and everything in the exclude folder
 	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
 	 *
 	 * @see [AssetPaths](https://api.haxeflixel.com/AssetPaths.html) for more examples
