@@ -524,8 +524,8 @@ class FlxAnimationController implements IFlxDestroyable
 			return;
 		}
 
-		var AnimOffsets:Array<Float> = [OffsetX, OffsetY];
-		offsets.set(AnimName, AnimOffsets);
+		var animOffsets:Array<Float> = [OffsetX, OffsetY];
+		offsets.set(AnimName, animOffsets);
 	}
 
 	/**
@@ -569,8 +569,8 @@ class FlxAnimationController implements IFlxDestroyable
 
 		if (offsets.exists(AnimName))
 		{
-			var _curOffset:Array<Float> = offsets.get(AnimName);
-			_sprite.offset.set(_curOffset[0], _curOffset[1]);
+			var currentOffset:Array<Float> = offsets.get(AnimName);
+			_sprite.offset.set(currentOffset[0], currentOffset[1]);
 		}
 
 		if (oldFlipX != _curAnim.flipX || oldFlipY != _curAnim.flipY)
