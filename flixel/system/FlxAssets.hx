@@ -56,54 +56,54 @@ class FlxAssets
 	
 	#if (macro || doc_gen)
 	/**
-		Reads files from a directory relative to this project and generates `public static inline`
-		variables containing the string paths to the files in it.
-
-		**Example usage:**
-
-		```haxe
-		@:build(flixel.system.FlxAssets.buildFileReferences("assets/images/"))
-		class Images {}
-		```
-
-		**Renaming Duplicates**
-
-		If you have files with the same names, whichever file is nested deeper or found later 
-		will be ignored. You can provide `rename` function to deal with this case. The function takes a filepath 
-		(a relative filepath from the `Project.xml`) and returns a field name used to access that path. 
-		Returning `null` means "ignore the file".
-
-		```haxe
-		// assets structure:
-		// assets/music/hero.ogg
-		// assets/sounds/hero.ogg
-
-		// AssetPaths.hx
-		@:build(flixel.system.FlxAssets.buildFileReferences("assets", true, null, null, function(name:String):Null<String> {
-			return name.toLowerCase()
-							.split("/").join("_")
-							.split("-").join("_")
-							.split(" ").join("_")
-							.split(".").join("__");
-			}))
-		class AssetPaths {}
-
-		// somewhere in your code
-		FlxG.sound.play(AssetPaths.assets_music_hero__ogg);
-		FlxG.sound.play(AssetPaths.assets_sounds_hero__ogg);
-		```
-
-		@param	directory				The directory to scan for files
-		@param	subDirectories	Whether to include subdirectories
-		@param	include					A string or `EReg` of files to include. 
-														Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
-		@param	exclude					A string or `EReg` of files to exclude.
-														Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the *exclude* folder
-		@param	rename					A function that takes the file path and returns a valid haxe field name.
-
-		@see [AssetPaths](https://api.haxeflixel.com/AssetPaths.html) for more examples
-		@see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
-		@see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
+	 * Reads files from a directory relative to this project and generates `public static inline`
+	 * variables containing the string paths to the files in it.
+	 * 
+	 * **Example usage:**
+	 * 
+	 * ```haxe
+	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets/images/"))
+	 * class Images {}
+	 * ```
+	 * 
+	 * **Renaming Duplicates**
+	 * 
+	 * If you have files with the same names, whichever file is nested deeper or found later 
+	 * will be ignored. You can provide `rename` function to deal with this case. The function takes a filepath 
+	 * (a relative filepath from the `Project.xml`) and returns a field name used to access that path. 
+	 * Returning `null` means "ignore the file".
+	 * 
+	 * ```haxe
+	 * // assets structure:
+	 * // assets/music/hero.ogg
+	 * // assets/sounds/hero.ogg
+	 * 
+	 * // AssetPaths.hx
+	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets", true, null, null, function(name:String):Null<String> {
+	 * 	return name.toLowerCase()
+	 * 					.split("/").join("_")
+	 * 					.split("-").join("_")
+	 * 					.split(" ").join("_")
+	 * 					.split(".").join("__");
+	 * 	}))
+	 * class AssetPaths {}
+	 * 
+	 * // somewhere in your code
+	 * FlxG.sound.play(AssetPaths.assets_music_hero__ogg);
+	 * FlxG.sound.play(AssetPaths.assets_sounds_hero__ogg);
+	 * ```
+	 * 
+	 * @param	directory				The directory to scan for files
+	 * @param	subDirectories	Whether to include subdirectories
+	 * @param	include					A string or `EReg` of files to include. 
+	 * 												Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
+	 * @param	exclude					A string or `EReg` of files to exclude.
+	 * 												Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the *exclude* folder
+	 * @param	rename					A function that takes the file path and returns a valid haxe field name.
+	 *
+	 * @see [AssetPaths](https://api.haxeflixel.com/AssetPaths.html) for more examples
+	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
+	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
 	public static function buildFileReferences(directory = "assets/", subDirectories = false,
 			?include:Expr, ?exclude:Expr, ?rename:String->Null<String>):Array<Field>
