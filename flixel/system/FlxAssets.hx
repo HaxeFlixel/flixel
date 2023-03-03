@@ -104,7 +104,6 @@ class FlxAssets
 	 *                          will exclude .ogg files and everything in the exclude folder
 	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
 	 *
-	 * @see [AssetPaths](https://api.haxeflixel.com/AssetPaths.html) for more examples
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
 	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
