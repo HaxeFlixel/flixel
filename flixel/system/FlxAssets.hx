@@ -93,13 +93,13 @@ class FlxAssets
 	 * FlxG.sound.play(AssetPaths.assets_sounds_hero__ogg);
 	 * ```
 	 * 
-	 * @param	directory				The directory to scan for files
-	 * @param	subDirectories	Whether to include subdirectories
-	 * @param	include					A string or `EReg` of files to include. 
-	 * 												Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
-	 * @param	exclude					A string or `EReg` of files to exclude.
-	 * 												Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the *exclude* folder
-	 * @param	rename					A function that takes the file path and returns a valid haxe field name.
+	 * @param   directory       The directory to scan for files
+	 * @param   subDirectories  Whether to include subdirectories
+	 * @param   include         A string or `EReg` of files to include.
+	 *                          Example: `"*.jpg|*.png|*.gif"` will only add files with that extension
+	 * @param   exclude         A string or `EReg` of files to exclude.
+	 *                          Example: `"*exclude/*|*.ogg"` will exclude .ogg files and everything in the exclude folder
+	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
 	 *
 	 * @see [AssetPaths](https://api.haxeflixel.com/AssetPaths.html) for more examples
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
