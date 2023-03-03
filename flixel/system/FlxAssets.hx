@@ -79,13 +79,16 @@ class FlxAssets
 	 * // assets/sounds/hero.ogg
 	 * 
 	 * // AssetPaths.hx
-	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets", true, null, null, function(name:String):Null<String> {
-	 * 	return name.toLowerCase()
-	 * 					.split("/").join("_")
-	 * 					.split("-").join("_")
-	 * 					.split(" ").join("_")
-	 * 					.split(".").join("__");
-	 * 	}))
+	 * @:build(flixel.system.FlxAssets.buildFileReferences("assets", true, null, null,
+	 * 	function renameFileName(name:String):Null<String>
+	 * 	{
+	 * 		return name.toLowerCase()
+	 * 			.split("/").join("_")
+	 * 			.split("-").join("_")
+	 * 			.split(" ").join("_")
+	 * 			.split(".").join("__");
+	 * 	}
+	 * ))
 	 * class AssetPaths {}
 	 * 
 	 * // somewhere in your code
