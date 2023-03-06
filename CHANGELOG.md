@@ -5,6 +5,7 @@
 
 #### Bugfixes:
 - `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([2738](https://github.com/HaxeFlixel/flixel/pull/2738))
+- `FlxText`: Fix `embedFonts` getter ([2749](https://github.com/HaxeFlixel/flixel/pull/2749))
 
 5.2.2 (February 15, 2023)
 ------------------------------
