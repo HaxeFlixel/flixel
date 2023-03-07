@@ -3,6 +3,7 @@ package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxAnimationController implements IFlxDestroyable
@@ -59,7 +60,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Stores all the animation offsets that were added to this sprite.
 	 */
-	public var offsets:Map<String, Array<Float>>;
+	public var offsets = new Map<String, FlxPoint>();
 
 	/**
 	 * Internal, reference to owner sprite.
@@ -83,7 +84,6 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		_sprite = Sprite;
 		_animations = new Map<String, FlxAnimation>();
-		offsets = new Map<String, Array<Float>>();
 	}
 
 	public function update(elapsed:Float):Void
@@ -510,22 +510,36 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	/**
-	 * Adds an offset to an existing animation
+	 * Set's the positional offset that is applied when playing the specific animation.
 	 * 
-	 * @param   AnimName   The string name of the animation.
-	 * @param   OffsetX    The horizontal position (X) for the animation.
-	 * @param   OffsetY    The vertical position (Y) for the animation.
+	 * @param   animName  The string name of the animation.
+	 * @param   offset    The offset applied for the animation.
 	 */
-	public function appendOffset(AnimName:String, OffsetX:Float = 0, OffsetY:Float):Void
+	public function setAnimOffset(animName:String, offset:FlxPoint):Void
 	{
-		if (AnimName == null || _animations.get(AnimName) == null)
+		if (animName == null || _animations.get(animName) == null)
 		{
-			FlxG.log.warn("No animation called \"" + AnimName + "\"");
+			FlxG.log.warn('No animation called "$animName"');
 			return;
 		}
+		
+		// clear memory of old offset`
+		if (offsets.exists(animName))
+			offsets[animName].put();
+		
+		offsets[animName] = offset;
+	}
 
-		var animOffsets:Array<Float> = [OffsetX, OffsetY];
-		offsets.set(AnimName, animOffsets);
+	/**
+	 * Set's the positional offset that is applied when playing the specific animation.
+	 * 
+	 * @param   animName  The string name of the animation.
+	 * @param   offsetX   The horizontal offset for the animation.
+	 * @param   offsetY   The vertical offset for the animation.
+	 */
+	public inline function setAnimOffsetXY(animName:String, offsetX:Float, offsetY:Float):Void
+	{
+		setAnimOffset(animName, FlxPoint.get(offsetX, offsetY));
 	}
 
 	/**
@@ -568,10 +582,7 @@ class FlxAnimationController implements IFlxDestroyable
 		_curAnim.play(Force, Reversed, Frame);
 
 		if (offsets.exists(AnimName))
-		{
-			var currentOffset:Array<Float> = offsets.get(AnimName);
-			_sprite.offset.set(currentOffset[0], currentOffset[1]);
-		}
+			_sprite.offset.copyFrom(offsets[AnimName]);
 
 		if (oldFlipX != _curAnim.flipX || oldFlipY != _curAnim.flipY)
 		{
