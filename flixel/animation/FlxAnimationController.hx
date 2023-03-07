@@ -3,7 +3,6 @@ package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxAnimationController implements IFlxDestroyable
@@ -56,11 +55,6 @@ class FlxAnimationController implements IFlxDestroyable
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
 	public var finishCallback:(name:String) -> Void;
-
-	/**
-	 * Stores all the animation offsets that were added to this sprite.
-	 */
-	public var offsets = new Map<String, FlxPoint>();
 
 	/**
 	 * Internal, reference to owner sprite.
@@ -510,39 +504,6 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	/**
-	 * Set's the positional offset that is applied when playing the specific animation.
-	 * 
-	 * @param   animName  The string name of the animation.
-	 * @param   offset    The offset applied for the animation.
-	 */
-	public function setAnimOffset(animName:String, offset:FlxPoint):Void
-	{
-		if (animName == null || _animations.get(animName) == null)
-		{
-			FlxG.log.warn('No animation called "$animName"');
-			return;
-		}
-		
-		// clear memory of old offset`
-		if (offsets.exists(animName))
-			offsets[animName].put();
-		
-		offsets[animName] = offset;
-	}
-
-	/**
-	 * Set's the positional offset that is applied when playing the specific animation.
-	 * 
-	 * @param   animName  The string name of the animation.
-	 * @param   offsetX   The horizontal offset for the animation.
-	 * @param   offsetY   The vertical offset for the animation.
-	 */
-	public inline function setAnimOffsetXY(animName:String, offsetX:Float, offsetY:Float):Void
-	{
-		setAnimOffset(animName, FlxPoint.get(offsetX, offsetY));
-	}
-
-	/**
 	 * Plays an existing animation (e.g. `"run"`).
 	 * If you call an animation that is already playing, it will be ignored.
 	 *
@@ -580,9 +541,6 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		_curAnim = _animations.get(AnimName);
 		_curAnim.play(Force, Reversed, Frame);
-
-		if (offsets.exists(AnimName))
-			_sprite.offset.copyFrom(offsets[AnimName]);
 
 		if (oldFlipX != _curAnim.flipX || oldFlipY != _curAnim.flipY)
 		{
