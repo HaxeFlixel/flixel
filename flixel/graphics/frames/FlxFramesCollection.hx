@@ -189,19 +189,17 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function setFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
 		if (framesHash.exists(name))
-		{
-			final frame = framesHash[name];
-			frame.offset.set(offsetX, offsetY);
-		}
+			framesHash[name].offset.set(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
 	}
 	
 	public function addFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
 		if (framesHash.exists(name))
-		{
-			final frame = framesHash[name];
-			frame.offset.add(offsetX, offsetY);
-		}
+			framesHash[name].offset.add(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
 	}
 	
 	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
