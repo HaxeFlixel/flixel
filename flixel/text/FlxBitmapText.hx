@@ -199,11 +199,14 @@ class FlxBitmapText extends FlxSprite
 	 * Warning: The default font may work incorrectly on HTML5
 	 * and is utterly unreliable on Brave Browser with shields up.
 	 * 
-	 * @param 	font	Optional parameter for component's font prop
+	 * @param   x     The initial X position of the text.
+	 * @param   y     The initial Y position of the text.
+	 * @param   text  The text to display.
+	 * @param   font  Optional parameter for component's font prop
 	 */
-	public function new(?font:FlxBitmapFont)
+	public function new(?x = 0.0, ?y = 0.0, ?text:String, ?font:FlxBitmapFont)
 	{
-		super();
+		super(x, y);
 
 		width = fieldWidth = 2;
 		alpha = 1;
@@ -223,6 +226,8 @@ class FlxBitmapText extends FlxSprite
 			textDrawData = [];
 			borderDrawData = [];
 		}
+		
+		this.text = text;
 	}
 
 	/**
