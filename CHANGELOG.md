@@ -1,11 +1,12 @@
 5.3.0 (TBD)
 ------------------------------
 #### New features:
-- `FlxAtlasFrames`: add `addFrameOffset` and `addFrameOffsetsByPrefix` ([#2746](https://github.com/HaxeFlixel/flixel/pull/2746))
+- `FlxAtlasFrames`: Add `addFrameOffset` and `addFrameOffsetsByPrefix` ([#2746](https://github.com/HaxeFlixel/flixel/pull/2746))
 
 #### Changes and improvements:
 - `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
-- `FlxBitmapText`: add `x`, `y` and `text` args to constructor ([#2750](https://github.com/HaxeFlixel/flixel/pull/2750))
+- `FlxBitmapText`: Add `x`, `y` and `text` args to constructor ([#2750](https://github.com/HaxeFlixel/flixel/pull/2750))
+- `FlxAtlasFrames`: Take `Xml`in `fromSparrow` ([#2751](https://github.com/HaxeFlixel/flixel/pull/2751))
 
 #### Bugfixes:
 - `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([#2738](https://github.com/HaxeFlixel/flixel/pull/2738))
