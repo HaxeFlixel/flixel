@@ -1,5 +1,7 @@
 5.3.0 (TBD)
 ------------------------------
+- `FlxAtlasFrames`: add `addFrameOffset` and `addFrameOffsetsByPrefix` ([2746](https://github.com/HaxeFlixel/flixel/pull/2746))
+
 #### Changes and improvements:
 - `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
 
