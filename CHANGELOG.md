@@ -8,15 +8,15 @@
 - `FlxBitmapText` - add `x`, `y` and `text` args to constructor ([#2750](https://github.com/HaxeFlixel/flixel/pull/2750))
 
 #### Bugfixes:
-- `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([2738](https://github.com/HaxeFlixel/flixel/pull/2738))
-- `FlxText`: Fix `embedFonts` getter ([2749](https://github.com/HaxeFlixel/flixel/pull/2749))
+- `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([#2738](https://github.com/HaxeFlixel/flixel/pull/2738))
+- `FlxText`: Fix `embedFonts` getter ([#2749](https://github.com/HaxeFlixel/flixel/pull/2749))
 
 5.2.2 (February 15, 2023)
 ------------------------------
 #### Bugfixes:
 - `FlxGamePad`: Fix various "firstPressed" functions ([#2728](https://github.com/HaxeFlixel/flixel/pull/2728))
 - `FlxSave`: Prevent crash when hiding debug windows, after `FlxG.save.bind` is called ([#2725](https://github.com/HaxeFlixel/flixel/pull/2725))
-- `FlxCamera`: remove uses of camera.camera ([2731](https://github.com/HaxeFlixel/flixel/pull/2731))
+- `FlxCamera`: remove uses of camera.camera ([#2731](https://github.com/HaxeFlixel/flixel/pull/2731))
 
 5.2.1 (January 20, 2023)
 ------------------------------
@@ -27,7 +27,7 @@
 ------------------------------
 #### New features:
 - `FlxMouse`: added `deltaX`, `deltaY`, `deltaScreenX` and `deltaScreenY` ([#2709](https://github.com/HaxeFlixel/flixel/pull/2709))
-- `FlxCamera`: added public `view` and `viewMargin` properties, deprecated old, private viewOffset fields([2714](https://github.com/HaxeFlixel/flixel/pull/2714))
+- `FlxCamera`: added public `view` and `viewMargin` properties, deprecated old, private viewOffset fields([#2714](https://github.com/HaxeFlixel/flixel/pull/2714))
 
 #### Changes and improvements:
 - `FlxStrip`: allows shaders and color transforms ([#2696](https://github.com/HaxeFlixel/flixel/pull/2696))
