@@ -186,6 +186,17 @@ class FlxFramesCollection implements IFlxDestroyable
 		return pushFrame(texFrame);
 	}
 	
+	/**
+	 * Sets the target frame's offset to the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   name     The name of the frame.
+	 * @param   offsetX  The new horizontal offset of the frame.
+	 * @param   offsetY  The new vertical offset of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
 	public function setFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
 		if (framesHash.exists(name))
@@ -194,6 +205,17 @@ class FlxFramesCollection implements IFlxDestroyable
 			FlxG.log.warn('No frame called $name');
 	}
 	
+	/**
+	 * Adjusts the target frame's offset by the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   name     The name of the frame.
+	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
+	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * 
+	 * @since 5.3.0
+	 */
 	public function addFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
 		if (framesHash.exists(name))
@@ -202,6 +224,16 @@ class FlxFramesCollection implements IFlxDestroyable
 			FlxG.log.warn('No frame called $name');
 	}
 	
+	/**
+	 * Sets all frames with the specified name prefix to the specified offset. This mainly
+	 * exists because certain atlas exporters don't give the correct offset.
+	 * 
+	 * @param   prefix   The prefix used to determine which frames are affected.
+	 * @param   offsetX  The new horizontal offset of the frame.
+	 * @param   offsetY  The new vertical offset of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
 	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
 	{
 		for (name=>frame in framesHash)
@@ -211,6 +243,16 @@ class FlxFramesCollection implements IFlxDestroyable
 		}
 	}
 	
+	/**
+	 * Adjusts all frames with the specified name prefix by the specified offset. This mainly
+	 * exists because certain atlas exporters don't give the correct offset.
+	 * 
+	 * @param   prefix   The prefix used to determine which frames are affected.
+	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
+	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * 
+	 * @since 5.3.0
+	 */
 	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
 	{
 		for (name=>frame in framesHash)
