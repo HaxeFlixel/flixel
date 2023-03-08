@@ -2,6 +2,7 @@ package flixel.text;
 
 import flixel.text.FlxBitmapText;
 import flixel.graphics.frames.FlxBitmapFont;
+import massive.munit.Assert;
 
 class FlxBitmapTextTest extends FlxTest
 {
