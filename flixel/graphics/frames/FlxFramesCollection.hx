@@ -185,6 +185,40 @@ class FlxFramesCollection implements IFlxDestroyable
 
 		return pushFrame(texFrame);
 	}
+	
+	public function setFrameOffset(name:String, offsetX:Float, offsetY:Float)
+	{
+		if (framesHash.exists(name))
+			framesHash[name].offset.set(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
+	}
+	
+	public function addFrameOffset(name:String, offsetX:Float, offsetY:Float)
+	{
+		if (framesHash.exists(name))
+			framesHash[name].offset.add(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
+	}
+	
+	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	{
+		for (name=>frame in framesHash)
+		{
+			if (name.indexOf(prefix) == 0)
+				frame.offset.set(offsetX, offsetY);
+		}
+	}
+	
+	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	{
+		for (name=>frame in framesHash)
+		{
+			if (name.indexOf(prefix) == 0)
+				frame.offset.add(offsetX, offsetY);
+		}
+	}
 
 	/**
 	 * Checks if frame's area fits into atlas image, and trims if it's out of atlas image bounds.
