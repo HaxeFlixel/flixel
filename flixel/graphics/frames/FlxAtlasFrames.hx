@@ -2,13 +2,12 @@ package flixel.graphics.frames;
 
 import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames.TexturePackerObject;
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxTexturePackerSource;
+import flixel.system.FlxAssets;
 import openfl.Assets;
 import haxe.Json;
 import haxe.xml.Access;
@@ -27,16 +26,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in JSON format.
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
-	 * @param   Description   Contents of JSON file with atlas description.
+	 * @param   source        The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param   description   Contents of JSON file with atlas description.
 	 *                        You can get it with `Assets.getText(path/to/description.json)`.
 	 *                        Or you can just a pass path to the JSON file in the assets directory.
 	 *                        You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerJson(Source:FlxGraphicAsset, Description:FlxTexturePackerSource):FlxAtlasFrames
+	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerSource):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)
 			return null;
 
@@ -45,33 +44,19 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || Description == null)
+		if (graphic == null || description == null)
 			return null;
 
 		frames = new FlxAtlasFrames(graphic);
 
-		var data:TexturePackerObject;
-
-		if ((Description is String))
-		{
-			var json:String = Description;
-
-			if (Assets.exists(json))
-				json = Assets.getText(json);
-
-			data = Json.parse(json);
-		}
-		else
-		{
-			data = Description;
-		}
+		var data:TexturePackerObject = description.getData();
 
 		// JSON-Array
 		if ((data.frames is Array))
 		{
 			for (frame in Lambda.array(data.frames))
 			{
-				texturePackerHelper(frame.filename, frame, frames);
+				texturePackerHelper(frame.filename, cast frame, frames);
 			}
 		}
 		// JSON-Hash
@@ -89,30 +74,30 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Internal method for TexturePacker parsing. Parses the actual frame data.
 	 *
-	 * @param   FrameName   Name of the frame (file name of the original source image).
-	 * @param   FrameData   The TexturePacker data excluding "filename".
-	 * @param   Frames      The `FlxAtlasFrames` to add this frame to.
+	 * @param   frameName   Name of the frame (file name of the original source image).
+	 * @param   frameData   The TexturePacker data excluding "filename".
+	 * @param   frames      The `FlxAtlasFrames` to add this frame to.
 	 */
-	static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
+	static function texturePackerHelper(frameName:String, frameData:TexturePackerFrameData, frames:FlxAtlasFrames):Void
 	{
-		var rotated:Bool = FrameData.rotated;
-		var name:String = FrameName;
-		var sourceSize:FlxPoint = FlxPoint.get(FrameData.sourceSize.w, FrameData.sourceSize.h);
-		var offset:FlxPoint = FlxPoint.get(FrameData.spriteSourceSize.x, FrameData.spriteSourceSize.y);
+		final rotated:Bool = frameData.rotated;
 		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
 		var frameRect:FlxRect = null;
 
+		final frame = frameData.frame;
 		if (rotated)
 		{
-			frameRect = FlxRect.get(FrameData.frame.x, FrameData.frame.y, FrameData.frame.h, FrameData.frame.w);
+			frameRect = FlxRect.get(frame.x, frame.y, frame.h, frame.w);
 			angle = FlxFrameAngle.ANGLE_NEG_90;
 		}
 		else
 		{
-			frameRect = FlxRect.get(FrameData.frame.x, FrameData.frame.y, FrameData.frame.w, FrameData.frame.h);
+			frameRect = FlxRect.get(frame.x, frame.y, frame.w, frame.h);
 		}
 
-		Frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
+		final sourceSize:FlxPoint = FlxPoint.get(frameData.sourceSize.w, frameData.sourceSize.h);
+		final offset:FlxPoint = FlxPoint.get(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
+		frames.addAtlasFrame(frameRect, sourceSize, offset, frameName, angle);
 	}
 
 	/**
@@ -218,32 +203,27 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * Parsing method for Sparrow texture atlases
 	 * (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   Description   Contents of the XML file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
-	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @param   source  The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   xml     Contents of the XML file with atlas description.
+	 *                  Can be a path to the XML asset, an XML string, or an `Xml` object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromSparrow(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromSparrow(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source);
+		var graphic:FlxGraphic = FlxG.bitmap.add(source);
 		if (graphic == null)
 			return null;
-
 		// No need to parse data again
 		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic);
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || Description == null)
+		if (graphic == null || xml == null)
 			return null;
 
 		frames = new FlxAtlasFrames(graphic);
 
-		if (Assets.exists(Description))
-			Description = Assets.getText(Description);
-
-		var data:Access = new Access(Xml.parse(Description).firstElement());
+		var data:Access = new Access(xml.getXml().firstElement());
 
 		for (texture in data.nodes.SubTexture)
 		{
@@ -283,15 +263,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in generic XML format.
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   Description   Contents of the XML file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description.xml)`.
-	 *                        Or you can just pass a path to the XML file in the assets directory.
+	 * @param   source  The image source (can be `FlxGraphic`, `String` or `BitmapData`).
+	 * @param   xml     Contents of the XML file with atlas description.
+	 *                  Can be a path to the XML asset, an XML string, or an `Xml` object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerXml(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
+	public static function fromTexturePackerXml(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
-		var graphic:FlxGraphic = FlxG.bitmap.add(Source, false);
+		final graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)
 			return null;
 
@@ -300,17 +279,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 		if (frames != null)
 			return frames;
 
-		if (graphic == null || Description == null)
+		if (graphic == null || xml == null)
 			return null;
 
 		frames = new FlxAtlasFrames(graphic);
 
-		if (Assets.exists(Description))
-			Description = Assets.getText(Description);
+		final data = xml.getXml();
 
-		var xml = Xml.parse(Description);
-
-		for (sprite in xml.firstElement().elements())
+		for (sprite in data.firstElement().elements())
 		{
 			var trimmed = (sprite.exists("oX") || sprite.exists("oY"));
 			var rotated = (sprite.exists("r") && sprite.get("r") == "y");
@@ -420,4 +396,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 typedef TexturePackerObject =
 {
 	frames:Dynamic
+}
+
+typedef TexturePackerFrameData =
+{
+	var rotated:Bool;
+	var frame:{ x:Float, y:Float, w:Float, h:Float };
+	var sourceSize:{ w:Float, h:Float };
+	var spriteSourceSize:{ x:Float, y:Float };
+	
 }
