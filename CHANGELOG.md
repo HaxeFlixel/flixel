@@ -1,5 +1,6 @@
 5.3.0 (TBD)
 ------------------------------
+#### New features:
 - `FlxAtlasFrames`: add `addFrameOffset` and `addFrameOffsetsByPrefix` ([2746](https://github.com/HaxeFlixel/flixel/pull/2746))
 
 #### Changes and improvements:
