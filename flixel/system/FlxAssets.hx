@@ -15,6 +15,8 @@ import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
 import openfl.Assets;
 import openfl.utils.ByteArray;
+import haxe.xml.Access;
+import haxe.Json;
 
 using StringTools;
 
@@ -27,13 +29,67 @@ class GraphicVirtualInput extends BitmapData {}
 @:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
-typedef FlxAngelCodeSource = OneOfTwo<Xml, String>;
-typedef FlxTexturePackerSource = OneOfTwo<String, TexturePackerObject>;
+typedef FlxAngelCodeSource = FlxXmlAsset;
+typedef FlxTexturePackerSource = FlxJsonAsset<TexturePackerObject>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+
+abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
+{
+	public function getXml()
+	{
+		if ((this is String))
+		{
+			final str:String = cast this;
+			if (Assets.exists(str))
+				return fromPath(str);
+			
+			return fromXmlString(str);
+		}
+		
+		return cast (this, Xml);
+	}
+	
+	static inline function fromPath<T>(path:String):Xml
+	{
+		return fromXmlString(Assets.getText(path));
+	}
+	
+	static inline function fromXmlString<T>(data:String):Xml
+	{
+		return Xml.parse(data);
+	}
+}
+
+abstract FlxJsonAsset<T>(OneOfTwo<T, String>) from T from String
+{
+	public function getData():T
+	{
+		if ((this is String))
+		{
+			final str:String = cast this;
+			if (Assets.exists(str))
+				return fromPath(str);
+			
+			return fromDataString(str);
+		}
+		
+		return cast this;
+	}
+	
+	static inline function fromPath<T>(path:String):T
+	{
+		return fromDataString(Assets.getText(path));
+	}
+	
+	static inline function fromDataString<T>(data:String):T
+	{
+		return cast Json.parse(data);
+	}
+}
 
 typedef FlxShader =
 	#if (openfl_legacy || nme)

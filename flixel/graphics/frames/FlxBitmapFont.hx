@@ -158,23 +158,23 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Loads font data in AngelCode's format.
 	 *
-	 * @param   Source   Font image source.
-	 * @param   Data     Font data.
+	 * @param   source  Font image source.
+	 * @param   data    Font data.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromAngelCode(Source:FlxBitmapFontGraphicAsset, Data:FlxAngelCodeSource):FlxBitmapFont
+	public static function fromAngelCode(source:FlxBitmapFontGraphicAsset, data:FlxAngelCodeSource):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
-		if ((Source is FlxFrame))
+		if ((source is FlxFrame))
 		{
-			frame = cast Source;
+			frame = cast source;
 			graphic = frame.parent;
 		}
 		else
 		{
-			graphic = FlxG.bitmap.add(cast Source);
+			graphic = FlxG.bitmap.add(cast source);
 			frame = graphic.imageFrame.frame;
 		}
 
@@ -182,30 +182,9 @@ class FlxBitmapFont extends FlxFramesCollection
 		if (font != null)
 			return font;
 
-		var fontData:Xml = null;
-
-		if (Data != null)
-		{
-			if ((Data is Xml))
-			{
-				fontData = cast Data;
-			}
-			else // Data is String
-			{
-				var data:String = Std.string(Data);
-
-				if (Assets.exists(data))
-				{
-					data = Assets.getText(data);
-				}
-
-				fontData = Xml.parse(data);
-			}
-		}
-
 		font = new FlxBitmapFont(frame);
 
-		var fast:Access = new Access(fontData.firstElement());
+		final fast = new Access(data.getXml().firstElement());
 
 		// how much to move the cursor when going to the next line.
 		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight);
