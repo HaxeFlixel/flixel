@@ -113,7 +113,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		final sourceSize = FlxPoint.get(frameData.sourceSize.w, frameData.sourceSize.h);
 		final offset = FlxPoint.get(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
 		final duration = (useFrameDuration && frameData.duration != null) ? frameData.duration / 1000 : 0;
-		frames.addAtlasFrame(frameRect, sourceSize, offset, frameName, angle, duration);
+		frames.addAtlasFrame(frameRect, sourceSize, offset, frameName, angle, false, false, duration);
 	}
 
 	/**
