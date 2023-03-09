@@ -8,9 +8,9 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
-import openfl.Assets;
 import haxe.Json;
 import haxe.xml.Access;
+import openfl.Assets;
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
@@ -33,9 +33,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static inline function fromAseprite(source:FlxGraphicAsset, description:FlxTexturePackerSource):FlxAtlasFrames
+	public static inline function fromAseprite(source:FlxGraphicAsset, description:FlxTexturePackerSource, ignoreFrameDuration = false):FlxAtlasFrames
 	{
-		return fromTexturePackerJson(source, description);
+		return fromTexturePackerJson(source, description, !ignoreFrameDuration);
 	}
 
 	/**
@@ -48,7 +48,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 *                        You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
-	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerSource):FlxAtlasFrames
+	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerSource, useFrameDuration = false):FlxAtlasFrames
 	{
 		var graphic:FlxGraphic = FlxG.bitmap.add(source, false);
 		if (graphic == null)
@@ -71,7 +71,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		{
 			for (frame in Lambda.array(data.frames))
 			{
-				texturePackerHelper(frame.filename, cast frame, frames);
+				texturePackerHelper(frame.filename, cast frame, frames, useFrameDuration);
 			}
 		}
 		// JSON-Hash
@@ -79,7 +79,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		{
 			for (frameName in Reflect.fields(data.frames))
 			{
-				texturePackerHelper(frameName, Reflect.field(data.frames, frameName), frames);
+				texturePackerHelper(frameName, Reflect.field(data.frames, frameName), frames, useFrameDuration);
 			}
 		}
 
@@ -93,7 +93,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   frameData   The TexturePacker data excluding "filename".
 	 * @param   frames      The `FlxAtlasFrames` to add this frame to.
 	 */
-	static function texturePackerHelper(frameName:String, frameData:TexturePackerFrameData, frames:FlxAtlasFrames):Void
+	static function texturePackerHelper(frameName:String, frameData:TexturePackerFrameData, frames:FlxAtlasFrames, useFrameDuration = false):Void
 	{
 		final rotated:Bool = frameData.rotated;
 		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
@@ -110,9 +110,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 			frameRect = FlxRect.get(frame.x, frame.y, frame.w, frame.h);
 		}
 
-		final sourceSize:FlxPoint = FlxPoint.get(frameData.sourceSize.w, frameData.sourceSize.h);
-		final offset:FlxPoint = FlxPoint.get(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
-		frames.addAtlasFrame(frameRect, sourceSize, offset, frameName, angle);
+		final sourceSize = FlxPoint.get(frameData.sourceSize.w, frameData.sourceSize.h);
+		final offset = FlxPoint.get(frameData.spriteSourceSize.x, frameData.spriteSourceSize.y);
+		final duration = (useFrameDuration && frameData.duration != null) ? frameData.duration / 1000 : 0;
+		frames.addAtlasFrame(frameRect, sourceSize, offset, frameName, angle, duration);
 	}
 
 	/**
@@ -413,11 +414,19 @@ typedef TexturePackerObject =
 	frames:Dynamic
 }
 
+typedef TexturePackerFrameRect =
+{
+	x:Float,
+	y:Float,
+	w:Float,
+	h:Float
+};
+
 typedef TexturePackerFrameData =
 {
 	var rotated:Bool;
-	var frame:{ x:Float, y:Float, w:Float, h:Float };
-	var sourceSize:{ w:Float, h:Float };
-	var spriteSourceSize:{ x:Float, y:Float };
-	
+	var frame:TexturePackerFrameRect;
+	var sourceSize:{w:Float, h:Float};
+	var spriteSourceSize:{x:Float, y:Float};
+	var duration:Null<Int>;
 }
