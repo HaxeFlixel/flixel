@@ -26,11 +26,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for Aseprite atlases.
 	 *
-	 * @param   source        The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
-	 * @param   description   Contents of JSON file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description.json)`.
-	 *                        Or you can just a pass path to the JSON file in the assets directory.
-	 *                        You can also directly pass in the parsed object.
+	 * @param   source               The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param   description          Contents of JSON file with atlas description.
+	 *                               You can get it with `Assets.getText(path/to/description.json)`.
+	 *                               Or you can just a pass path to the JSON file in the assets directory.
+	 *                               You can also directly pass in the parsed object.
+	 * @param   ignoreFrameDuration  If false, any frame durations defined in the json will override the
+	 *                               frameRate set in you `FlxAnimationController`.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static inline function fromAseprite(source:FlxGraphicAsset, description:FlxTexturePackerSource, ignoreFrameDuration = false):FlxAtlasFrames
@@ -41,11 +43,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in JSON format.
 	 *
-	 * @param   source        The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
-	 * @param   description   Contents of JSON file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description.json)`.
-	 *                        Or you can just a pass path to the JSON file in the assets directory.
-	 *                        You can also directly pass in the parsed object.
+	 * @param   source            The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param   description       Contents of JSON file with atlas description.
+	 *                            You can get it with `Assets.getText(path/to/description.json)`.
+	 *                            Or you can just a pass path to the JSON file in the assets directory.
+	 *                            You can also directly pass in the parsed object.
+	 * @param   useFrameDuration  If true, any frame durations defined in the json will override the
+	 *                            frameRate set in you `FlxAnimationController`.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerSource, useFrameDuration = false):FlxAtlasFrames
