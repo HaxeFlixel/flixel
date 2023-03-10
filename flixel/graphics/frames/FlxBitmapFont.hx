@@ -9,8 +9,7 @@ import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxAngelCodeSource;
-import flixel.system.FlxAssets.FlxBitmapFontGraphicAsset;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
 import haxe.xml.Access;
@@ -162,7 +161,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   data    Font data.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromAngelCode(source:FlxBitmapFontGraphicAsset, data:FlxAngelCodeSource):FlxBitmapFont
+	public static function fromAngelCode(source:FlxBitmapFontGraphicAsset, data:FlxAngelCodeXmlAsset):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;

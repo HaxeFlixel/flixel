@@ -13,10 +13,10 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
+import haxe.Json;
+import haxe.xml.Access;
 import openfl.Assets;
 import openfl.utils.ByteArray;
-import haxe.xml.Access;
-import haxe.Json;
 
 using StringTools;
 
@@ -29,13 +29,20 @@ class GraphicVirtualInput extends BitmapData {}
 @:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
-typedef FlxAngelCodeSource = FlxXmlAsset;
-typedef FlxTexturePackerSource = FlxJsonAsset<TexturePackerObject>;
+typedef FlxAngelCodeXmlAsset = FlxXmlAsset;
+typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerObject>;
+typedef FlxAsepriteJsonAsset = FlxTexturePackerJsonAsset;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+
+@:deprecated("`FlxAngelCodeSource` is deprecated, use `FlxAngelCodeAsset` instead")
+typedef FlxAngelCodeSource = FlxAngelCodeXmlAsset;
+
+@:deprecated("`FlxTexturePackerSource` is deprecated, use `FlxAtlasDataAsset` instead")
+typedef FlxTexturePackerSource = FlxTexturePackerJsonAsset;
 
 abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 {
@@ -46,18 +53,18 @@ abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 			final str:String = cast this;
 			if (Assets.exists(str))
 				return fromPath(str);
-			
+
 			return fromXmlString(str);
 		}
-		
-		return cast (this, Xml);
+
+		return cast(this, Xml);
 	}
-	
+
 	static inline function fromPath<T>(path:String):Xml
 	{
 		return fromXmlString(Assets.getText(path));
 	}
-	
+
 	static inline function fromXmlString<T>(data:String):Xml
 	{
 		return Xml.parse(data);
@@ -73,18 +80,18 @@ abstract FlxJsonAsset<T>(OneOfTwo<T, String>) from T from String
 			final str:String = cast this;
 			if (Assets.exists(str))
 				return fromPath(str);
-			
+
 			return fromDataString(str);
 		}
-		
+
 		return cast this;
 	}
-	
+
 	static inline function fromPath<T>(path:String):T
 	{
 		return fromDataString(Assets.getText(path));
 	}
-	
+
 	static inline function fromDataString<T>(data:String):T
 	{
 		return cast Json.parse(data);
@@ -109,7 +116,7 @@ class FlxAssets
 	 * for backwards compatibility reasons.
 	 */
 	public static var defaultSoundExtension = #if flash "mp3" #else "ogg" #end;
-	
+
 	#if (macro || doc_gen)
 	/**
 	 * Reads files from a directory relative to this project and generates `public static inline`
@@ -163,21 +170,20 @@ class FlxAssets
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
 	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
-	public static function buildFileReferences(directory = "assets/", subDirectories = false,
-			?include:Expr, ?exclude:Expr, ?rename:String->Null<String>):Array<Field>
+	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
+			?rename:String->Null<String>):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories,
-			exprToRegex(include), exprToRegex(exclude), rename);
+		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
 		#end
 	}
 
 	#if !doc_gen
 	private static function exprToRegex(expr:Expr):EReg
 	{
-		switch(expr.expr)
+		switch (expr.expr)
 		{
 			case null | EConst(CIdent("null")):
 				return null;
@@ -195,7 +201,6 @@ class FlxAssets
 	}
 	#end
 	#end
-
 	#if (!macro || doc_gen)
 	// fonts
 	public static var FONT_DEFAULT:String = "Nokia Cellphone FC Small";
