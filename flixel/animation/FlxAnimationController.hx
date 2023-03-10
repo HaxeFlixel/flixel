@@ -70,14 +70,13 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
-	var _animations(default, null):Map<String, FlxAnimation>;
+	var _animations(default, null) = new Map<String, FlxAnimation>();
 
 	var _prerotated:FlxPrerotatedAnimation;
 
-	public function new(Sprite:FlxSprite)
+	public function new(sprite:FlxSprite)
 	{
-		_sprite = Sprite;
-		_animations = new Map<String, FlxAnimation>();
+		_sprite = sprite;
 	}
 
 	public function update(elapsed:Float):Void
@@ -136,6 +135,12 @@ class FlxAnimationController implements IFlxDestroyable
 		_animations = null;
 		callback = null;
 		_sprite = null;
+	}
+
+	@:allow(flixel.animation.FlxAnimation)
+	function getFrameDuration(index:Int)
+	{
+		return _sprite.frames.frames[index].duration;
 	}
 
 	function clearPrerotated():Void
@@ -443,29 +448,30 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds a new animation to the sprite.
 	 *
-	 * @param   Name        What this animation should be called (e.g. `"run"`).
-	 * @param   Prefix      Common beginning of image names in atlas (e.g. `"tiles-"`).
-	 * @param   FrameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
-	 * @param   Looped      Whether or not the animation is looped or just plays once.
-	 * @param   FlipX       Whether the frames should be flipped horizontally.
-	 * @param   FlipY       Whether the frames should be flipped vertically.
+	 * @param   name        What this animation should be called (e.g. `"run"`).
+	 * @param   prefix      Common beginning of image names in atlas (e.g. `"tiles-"`).
+	 * @param   frameRate   The animation speed in frames per second.
+	 *                      Note: individual frames have their own duration, which overides this value.
+	 * @param   looped      Whether or not the animation is looped or just plays once.
+	 * @param   flipX       Whether the frames should be flipped horizontally.
+	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByPrefix(Name:String, Prefix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
+	public function addByPrefix(name:String, prefix:String, frameRate = 30, looped = true, flipX = false, flipY = false):Void
 	{
 		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
+			findByPrefix(animFrames, prefix); // adds valid frames to animFrames
 
 			if (animFrames.length > 0)
 			{
 				var frameIndices:Array<Int> = new Array<Int>();
-				byPrefixHelper(frameIndices, animFrames, Prefix); // finds frames and appends them to the blank array
+				byPrefixHelper(frameIndices, animFrames, prefix); // finds frames and appends them to the blank array
 
 				if (frameIndices.length > 0)
 				{
-					var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped, FlipX, FlipY);
-					_animations.set(Name, anim);
+					var anim:FlxAnimation = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
+					_animations.set(name, anim);
 				}
 			}
 		}
@@ -478,27 +484,27 @@ class FlxAnimationController implements IFlxDestroyable
 	 * Frames are sorted numerically while ignoring postfixes (e.g. `".png"`, `".gif"`).
 	 * The animation must already exist in order to append frames to it.
 	 *
-	 * @param   Name     What the existing animation is called (e.g. `"run"`).
-	 * @param   Prefix   Common beginning of image names in atlas (e.g. `"tiles-"`)
+	 * @param   name     What the existing animation is called (e.g. `"run"`).
+	 * @param   prefix   Common beginning of image names in atlas (e.g. `"tiles-"`)
 	 */
-	public function appendByPrefix(Name:String, Prefix:String):Void
+	public function appendByPrefix(name:String, prefix:String):Void
 	{
-		var anim:FlxAnimation = _animations.get(Name);
+		var anim:FlxAnimation = _animations.get(name);
 		if (anim == null)
 		{
-			FlxG.log.warn("No animation called \"" + Name + "\"");
+			FlxG.log.warn("No animation called \"" + name + "\"");
 			return;
 		}
 
 		if (_sprite.frames != null)
 		{
 			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
-			findByPrefix(animFrames, Prefix); // adds valid frames to animFrames
+			findByPrefix(animFrames, prefix); // adds valid frames to animFrames
 
 			if (animFrames.length > 0)
 			{
 				// finds frames and appends them to the existing array
-				byPrefixHelper(anim.frames, animFrames, Prefix);
+				byPrefixHelper(anim.frames, animFrames, prefix);
 			}
 		}
 	}
@@ -617,9 +623,9 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Gets the FlxAnimation object with the specified name.
 	 */
-	public inline function getByName(Name:String):FlxAnimation
+	public inline function getByName(name:String):FlxAnimation
 	{
-		return _animations.get(Name);
+		return _animations.get(name);
 	}
 
 	/**
@@ -779,7 +785,7 @@ class FlxAnimationController implements IFlxDestroyable
 	public function getAnimationList():Array<FlxAnimation>
 	{
 		var animList:Array<FlxAnimation> = [];
-		
+
 		for (anims in _animations)
 		{
 			animList.push(anims);
@@ -839,26 +845,26 @@ class FlxAnimationController implements IFlxDestroyable
 		return _curAnim;
 	}
 
-	inline function set_curAnim(Anim:FlxAnimation):FlxAnimation
+	inline function set_curAnim(anim:FlxAnimation):FlxAnimation
 	{
-		if (Anim != _curAnim)
+		if (anim != _curAnim)
 		{
 			if (_curAnim != null)
 			{
 				_curAnim.stop();
 			}
 
-			if (Anim != null)
+			if (anim != null)
 			{
-				Anim.play();
+				anim.play();
 			}
 		}
-		return _curAnim = Anim;
+		return _curAnim = anim;
 	}
 
 	inline function get_paused():Bool
 	{
-		var paused:Bool = false;
+		var paused = false;
 		if (_curAnim != null)
 		{
 			paused = _curAnim.paused;
@@ -866,11 +872,11 @@ class FlxAnimationController implements IFlxDestroyable
 		return paused;
 	}
 
-	inline function set_paused(Value:Bool):Bool
+	inline function set_paused(value:Bool):Bool
 	{
 		if (_curAnim != null)
 		{
-			if (Value)
+			if (value)
 			{
 				_curAnim.pause();
 			}
@@ -879,12 +885,12 @@ class FlxAnimationController implements IFlxDestroyable
 				_curAnim.resume();
 			}
 		}
-		return Value;
+		return value;
 	}
 
 	function get_finished():Bool
 	{
-		var finished:Bool = true;
+		var finished = true;
 		if (_curAnim != null)
 		{
 			finished = _curAnim.finished;
@@ -892,13 +898,13 @@ class FlxAnimationController implements IFlxDestroyable
 		return finished;
 	}
 
-	inline function set_finished(Value:Bool):Bool
+	inline function set_finished(value:Bool):Bool
 	{
-		if (Value && _curAnim != null)
+		if (value && _curAnim != null)
 		{
 			_curAnim.finish();
 		}
-		return Value;
+		return value;
 	}
 
 	inline function get_frames():Int
@@ -912,8 +918,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   Frame   `FlxFrame` to find
 	 * @return  position of specified `FlxFrame` object.
 	 */
-	public inline function getFrameIndex(Frame:FlxFrame):Int
+	public inline function getFrameIndex(frame:FlxFrame):Int
 	{
-		return _sprite.frames.frames.indexOf(Frame);
+		return _sprite.frames.frames.indexOf(frame);
 	}
 }
