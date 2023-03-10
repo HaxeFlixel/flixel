@@ -272,7 +272,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * 
 	 * @since 5.3.0
 	 */
-	public function setFrameDuration(name:String, duration:Float)
+	public function setFramesDuration(name:String, duration:Float)
 	{
 		if (framesHash.exists(name))
 			framesHash[name].duration = duration;
