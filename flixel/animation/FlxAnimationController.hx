@@ -208,6 +208,10 @@ class FlxAnimationController implements IFlxDestroyable
 			var anim = new FlxAnimation(this, Name, framesToAdd, FrameRate, Looped, FlipX, FlipY);
 			_animations.set(Name, anim);
 		}
+		else
+		{
+			FlxG.log.warn("Could not find any frames with indices: " + Frames);
+		}
 	}
 
 	/**
@@ -279,6 +283,10 @@ class FlxAnimationController implements IFlxDestroyable
 				var anim = new FlxAnimation(this, Name, indices, FrameRate, Looped, FlipX, FlipY);
 				_animations.set(Name, anim);
 			}
+			else
+			{
+				FlxG.log.warn("Could not find any frames for the frame names: " + FrameNames);
+			}
 		}
 	}
 
@@ -331,6 +339,10 @@ class FlxAnimationController implements IFlxDestroyable
 			{
 				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped, FlipX, FlipY);
 				_animations.set(Name, anim);
+			}
+			else
+			{
+				FlxG.log.warn("No frames found for prefix \"" + Prefix + "\" with indices: " + Indices + " and postfix \"" + Postfix + "\"");
 			}
 		}
 	}
@@ -387,6 +399,10 @@ class FlxAnimationController implements IFlxDestroyable
 			{
 				var anim:FlxAnimation = new FlxAnimation(this, Name, frameIndices, FrameRate, Looped, FlipX, FlipY);
 				_animations.set(Name, anim);
+			}
+			else
+			{
+				FlxG.log.warn("No frames found for prefix \"" + Prefix + "\" with indices: " + Indices + " and postfix \"" + Postfix + "\"");
 			}
 		}
 	}
@@ -473,6 +489,10 @@ class FlxAnimationController implements IFlxDestroyable
 					var anim:FlxAnimation = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
 					_animations.set(name, anim);
 				}
+			}
+			else
+			{
+				FlxG.log.warn("No frames found for prefix \"" + prefix + "\"");
 			}
 		}
 	}
