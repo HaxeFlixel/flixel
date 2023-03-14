@@ -515,7 +515,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
-		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
+		return setHueChromaMatch(Hue, chroma, match, Alpha);
 	}
 
 	/**
@@ -531,13 +531,13 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
-		return setHSChromaMatch(Hue, Saturation, chroma, match, Alpha);
+		return setHueChromaMatch(Hue, chroma, match, Alpha);
 	}
 
 	/**
 	 * Private utility function to perform common operations between setHSB and setHSL
 	 */
-	inline function setHSChromaMatch(Hue:Float, Saturation:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
+	inline function setHueChromaMatch(Hue:Float, Chroma:Float, Match:Float, Alpha:Float):FlxColor
 	{
 		Hue %= 360;
 		var hueD = Hue / 60;
