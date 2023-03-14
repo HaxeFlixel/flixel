@@ -129,7 +129,6 @@ class FlxAnimation extends FlxBaseAnimation
 		if (!Force && !finished && reversed == Reversed)
 		{
 			paused = false;
-			finished = false;
 			return;
 		}
 
