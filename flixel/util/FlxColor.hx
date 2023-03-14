@@ -730,7 +730,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		var hue:Float = 0;
 		if (hueRad != 0)
 		{
-			hue = 180 / Math.PI * Math.atan2(Math.sqrt(3) * (greenFloat - blueFloat), 2 * redFloat - greenFloat - blueFloat);
+			hue = 180 / Math.PI * hueRad;
 		}
 
 		return hue < 0 ? hue + 360 : hue;
