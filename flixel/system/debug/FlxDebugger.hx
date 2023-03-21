@@ -186,6 +186,13 @@ class FlxDebugger extends Sprite
 		FlxG.signals.preStateSwitch.add(Tracker.onStateSwitch);
 	}
 
+	override function set_visible(v:Bool)
+	{
+		super.set_visible(v);
+		tabChildren = visible;
+		return visible;
+	}
+
 	/**
 	 * Clean up memory.
 	 */
