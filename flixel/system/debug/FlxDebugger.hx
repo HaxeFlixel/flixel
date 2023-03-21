@@ -124,6 +124,7 @@ class FlxDebugger extends Sprite
 		super();
 
 		visible = false;
+		tabChildren = false;
 
 		Tooltip.init(this);
 
@@ -184,13 +185,6 @@ class FlxDebugger extends Sprite
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 
 		FlxG.signals.preStateSwitch.add(Tracker.onStateSwitch);
-	}
-
-	override function set_visible(v:Bool)
-	{
-		super.set_visible(v);
-		tabChildren = visible;
-		return visible;
 	}
 
 	/**
