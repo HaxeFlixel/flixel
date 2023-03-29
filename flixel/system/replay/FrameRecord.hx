@@ -130,7 +130,7 @@ class FrameRecord
 			}
 		}
 
-		// mouse data is just 4 integers, easy peezy
+		// mouse data is just 4 integers, easy peasy
 		if (mouseData.length > 0)
 		{
 			array = mouseData.split(",");

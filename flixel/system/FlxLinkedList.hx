@@ -90,7 +90,7 @@ class FlxLinkedList implements IFlxDestroyable
 		}
 		exists = false;
 
-		// Deposit this list into the linked list for reusal.
+		// Deposit this list into the linked list for reuse.
 		next = _cachedListsHead;
 		_cachedListsHead = this;
 		_NUM_CACHED_FLX_LIST++;

@@ -90,7 +90,7 @@ class CompletionHandler
 		}
 		catch (e:Dynamic)
 		{
-			if (isPeriod) // special case for cases like 'flxg.'
+			if (isPeriod) // special case for cases like 'FlxG.'
 			{
 				completionList.close();
 				return;

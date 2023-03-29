@@ -455,7 +455,7 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 
 		var columns = data.map.widthInTiles;
 
-		// orthoginals
+		// orthogonals
 		up = addIf(up, from - columns, UP);
 		down = addIf(down, from + columns, DOWN);
 		left = addIf(left, from - 1, LEFT);
@@ -464,7 +464,7 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 		// diagonals
 		if (diagonalPolicy != NONE)
 		{
-			// only allow diagonal when 2 orthoginals is possible
+			// only allow diagonal when 2 orthogonals is possible
 			addIf(up && left, from - columns - 1, UP | LEFT);
 			addIf(up && right, from - columns + 1, UP | RIGHT);
 			addIf(down && left, from + columns - 1, DOWN | LEFT);

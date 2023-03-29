@@ -404,7 +404,7 @@ class FlxBitmapText extends FlxSprite
 
 				if (background)
 				{
-					// backround tile transformations
+					// background tile transformations
 					currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
 					_matrix.scale(0.1 * clippedFrameRect.width, 0.1 * clippedFrameRect.height);

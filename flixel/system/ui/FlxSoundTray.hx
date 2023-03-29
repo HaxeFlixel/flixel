@@ -114,7 +114,7 @@ class FlxSoundTray extends Sprite
 	}
 
 	/**
-	 * Updates the soundtray object.
+	 * Updates the sound tray object.
 	 */
 	public function update(MS:Float):Void
 	{
