@@ -1,8 +1,8 @@
 package flixel.animation;
 
-import flash.display.BitmapData;
 import flixel.FlxSprite;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxAnimationControllerTest extends FlxTest
 {

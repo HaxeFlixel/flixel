@@ -1,20 +1,20 @@
 package flixel.math;
 
-import flash.geom.Matrix;
+import openfl.geom.Matrix;
 
 /**
  * Helper class for making fast matrix calculations for rendering.
- * It mostly copies Matrix class, but with some additions for
+ * It mostly copies `Matrix` class, but with some additions for
  * faster rotation by 90 degrees.
  */
 class FlxMatrix extends Matrix
 {
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
-	 * so it might be useful when you rotate multiple matrices by the same angle
-	 * @param	cos	The cosine value for rotation angle
-	 * @param	sin	The sine value for rotation angle
-	 * @return	this transformed matrix
+	 * so it might be useful when you rotate multiple matrices by the same angle.
+	 * @param cos The cosine value for rotation angle.
+	 * @param sin The sine value for rotation angle.
+	 * @return This transformed matrix.
 	 */
 	public inline function rotateWithTrig(cos:Float, sin:Float):FlxMatrix
 	{
@@ -34,8 +34,8 @@ class FlxMatrix extends Matrix
 	}
 
 	/**
-	 * Adds 180 degrees to rotation of this matrix
-	 * @return	rotated matrix
+	 * Adds 180 degrees to rotation of this matrix.
+	 * @return Rotated matrix.
 	 */
 	public inline function rotateBy180():FlxMatrix
 	{
@@ -44,8 +44,8 @@ class FlxMatrix extends Matrix
 	}
 
 	/**
-	 * Adds 90 degrees to rotation of this matrix
-	 * @return	rotated matrix
+	 * Adds 90 degrees to rotation of this matrix.
+	 * @return Rotated matrix.
 	 */
 	public inline function rotateByPositive90():FlxMatrix
 	{
@@ -54,8 +54,8 @@ class FlxMatrix extends Matrix
 	}
 
 	/**
-	 * Subtract 90 degrees from rotation of this matrix
-	 * @return	rotated matrix
+	 * Subtract 90 degrees from rotation of this matrix.
+	 * @return Rotated matrix.
 	 */
 	public inline function rotateByNegative90():FlxMatrix
 	{
@@ -64,12 +64,12 @@ class FlxMatrix extends Matrix
 	}
 
 	/**
-	 * Transforms x coordinate of the point.
-	 * Took original code from openfl.geom.Matrix (which isn't available on flash target).
+	 * Transforms x-coordinate of the point.
+	 * Took original code from `openfl.geom.Matrix` (which isn't available on Flash target).
 	 *
-	 * @param	px	x coordinate of the point
-	 * @param	py	y coordinate of the point
-	 * @return	transformed x coordinate of the point
+	 * @param px The x-coordinate of the point.
+	 * @param py The y-coordinate of the point.
+	 * @return Transformed x-coordinate of the point.
 	 *
 	 * @since 4.3.0
 	 */
@@ -79,12 +79,12 @@ class FlxMatrix extends Matrix
 	}
 
 	/**
-	 * Transforms y coordinate of the point.
-	 * Took original code from openfl.geom.Matrix (which isn't available on flash target).
+	 * Transforms y-coordinate of the point.
+	 * Took original code from `openfl.geom.Matrix` (which isn't available on Flash target).
 	 *
-	 * @param	px	x coordinate of the point
-	 * @param	py	y coordinate of the point
-	 * @return	transformed y coordinate of the point
+	 * @param px The x-coordinate of the point.
+	 * @param py The y-coordinate of the point.
+	 * @return Transformed y-coordinate of the point.
 	 *
 	 * @since 4.3.0
 	 */

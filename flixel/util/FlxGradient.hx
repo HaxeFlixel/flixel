@@ -1,23 +1,23 @@
 package flixel.util;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.GradientType;
-import flash.display.InterpolationMethod;
-import flash.display.Shape;
-import flash.display.SpreadMethod;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.math.FlxAngle;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.GradientType;
+import openfl.display.InterpolationMethod;
+import openfl.display.Shape;
+import openfl.display.SpreadMethod;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
- * Adds a set of color gradient creation / rendering functions
+ * Adds a set of color gradient creation / rendering functions.
  *
  * @version 1.6 - May 9th 2011
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
- * @see Requires FlxMath
+ * @see `FlxMath`
  */
 class FlxGradient
 {
@@ -79,15 +79,15 @@ class FlxGradient
 	}
 
 	/**
-	 * Creates a FlxSprite of the given width/height with a colour gradient flowing through it.
+	 * Creates a `FlxSprite` of the given width/height with a color gradient flowing through it.
 	 *
-	 * @param   width         The width of the FlxSprite (and therefore gradient)
-	 * @param   height        The height of the FlxSprite (and therefore gradient)
-	 * @param   colors        An array of colour values for the gradient to cycle through
-	 * @param   chunkSize     If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param   rotation      Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param   interpolate   Interpolate the colours? True uses RGB interpolation, false uses linear RGB
-	 * @return  A FlxSprite containing your gradient (if valid parameters given!)
+	 * @param width The width of the `FlxSprite` (and therefore gradient).
+	 * @param height The height of the `FlxSprite` (and therefore gradient).
+	 * @param colors An array of color values for the gradient to cycle through.
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param interpolate Whether to interpolate the colors. `true` uses RGB interpolation, `false` uses linear RGB.
+	 * @return A `FlxSprite` containing your gradient (if valid parameters given!).
 	 */
 	public static function createGradientFlxSprite(width:Int, height:Int, colors:Array<FlxColor>, chunkSize:UInt = 1, rotation:Int = 90,
 			interpolate:Bool = true):FlxSprite
@@ -150,19 +150,19 @@ class FlxGradient
 	}
 
 	/**
-	 * Creates a new gradient and overlays that on-top of the given FlxSprite at the destX/destY coordinates (default 0,0)
-	 * Use low alpha values in the colours to have the gradient overlay and not destroy the image below
+	 * Creates a new gradient and overlays that on top of the given `FlxSprite` at the `destX`/`destY` coordinates (default `(0,0)`).
+	 * Use low alpha values in the colors to have the gradient overlay and not destroy the image below.
 	 *
-	 * @param   dest          The FlxSprite to overlay the gradient onto
-	 * @param   width         The width of the FlxSprite (and therefore gradient)
-	 * @param   height        The height of the FlxSprite (and therefore gradient)
-	 * @param   colors        An array of colour values for the gradient to cycle through
-	 * @param   destX         The X offset the gradient is drawn at (default 0)
-	 * @param   destY         The Y offset the gradient is drawn at (default 0)
-	 * @param   chunkSize     If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param   rotation      Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param   interpolate   Interpolate the colours? True uses RGB interpolation, false uses linear RGB
-	 * @return  The composited FlxSprite (for chaining, if you need)
+	 * @param dest The `FlxSprite` to overlay the gradient onto.
+	 * @param width The width of the `FlxSprite` (and therefore gradient).
+	 * @param height The height of the `FlxSprite` (and therefore gradient).
+	 * @param colors An array of color values for the gradient to cycle through.
+	 * @param destX The x-offset the gradient is drawn at (default `0`).
+	 * @param destY The y-offset the gradient is drawn at (default `0`).
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param interpolate Whether to interpolate the colors.
+	 * @return The composited `FlxSprite` (for chaining, if you need).
 	 */
 	public static function overlayGradientOnFlxSprite(dest:FlxSprite, width:Int, height:Int, colors:Array<FlxColor>, destX:Int = 0, destY:Int = 0,
 			chunkSize:UInt = 1, rotation:Int = 90, interpolate:Bool = true):FlxSprite
@@ -184,19 +184,19 @@ class FlxGradient
 	}
 
 	/**
-	 * Creates a new gradient and overlays that on-top of the given BitmapData at the destX/destY coordinates (default 0,0)
-	 * Use low alpha values in the colours to have the gradient overlay and not destroy the image below
+	 * Creates a new gradient and overlays that on-top of the given `BitmapData` at the `destX`/`destY` coordinates (default `(0,0)`).
+	 * Use low alpha values in the colors to have the gradient overlay and not destroy the image below.
 	 *
-	 * @param   dest          The BitmapData to overlay the gradient onto
-	 * @param   width         The width of the FlxSprite (and therefore gradient)
-	 * @param   height        The height of the FlxSprite (and therefore gradient)
-	 * @param   colors        An array of colour values for the gradient to cycle through
-	 * @param   destX         The X offset the gradient is drawn at (default 0)
-	 * @param   destY         The Y offset the gradient is drawn at (default 0)
-	 * @param   chunkSize     If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param   rotation      Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param   interpolate   Interpolate the colours? True uses RGB interpolation, false uses linear RGB
-	 * @return  The composited BitmapData
+	 * @param dest The `BitmapData` to overlay the gradient onto.
+	 * @param width The width of the `BitmapData` (and therefore gradient).
+	 * @param height The height of the `BitmapData` (and therefore gradient).
+	 * @param colors An array of color values for the gradient to cycle through.
+	 * @param destX The x-offset the gradient is drawn at (default `0`).
+	 * @param destY The y-offset the gradient is drawn at (default `0`).
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param interpolate Whether to interpolate the colors.
+	 * @return The composited `BitmapData`.
 	 */
 	public static function overlayGradientOnBitmapData(dest:BitmapData, width:Int, height:Int, colors:Array<FlxColor>, destX:Int = 0, destY:Int = 0,
 			chunkSize:UInt = 1, rotation:Int = 90, interpolate:Bool = true):BitmapData
@@ -223,4 +223,4 @@ typedef GradientMatrix =
 	matrix:Matrix,
 	alpha:Array<Float>,
 	ratio:Array<Int>
-}
+};

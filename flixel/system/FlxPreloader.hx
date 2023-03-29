@@ -1,13 +1,13 @@
 package flixel.system;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.display.Sprite;
-import flash.Lib;
-import flash.text.TextField;
-import flash.text.TextFormat;
 import flixel.FlxG;
+import openfl.Lib;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.display.Sprite;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 @:keep @:bitmap("assets/images/preloader/light.png")
 private class GraphicLogoLight extends BitmapData {}
@@ -16,9 +16,9 @@ private class GraphicLogoLight extends BitmapData {}
 private class GraphicLogoCorners extends BitmapData {}
 
 /**
- * This is the Default HaxeFlixel Themed Preloader
+ * This is the Default HaxeFlixel-Themed Preloader.
  * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
- * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
+ * To use your Preloader, simply change `Project.xml` to include: `<app preloader="class.path.MyPreloader" />`.
  */
 class FlxPreloader extends FlxBasePreloader
 {
@@ -42,9 +42,9 @@ class FlxPreloader extends FlxBasePreloader
 	}
 
 	/**
-	 * This class is called as soon as the FlxPreloaderBase has finished initializing.
-	 * Override it to draw all your graphics and things - make sure you also override update
-	 * Make sure you call super.create()
+	 * This function is called as soon as the `FlxPreloaderBase` has finished initializing.
+	 * Override it to draw all your graphics and things. Make sure you also override `update()`.
+	 * Make sure you call `super.create()`!
 	 */
 	override function create():Void
 	{
@@ -119,7 +119,7 @@ class FlxPreloader extends FlxBasePreloader
 
 	/**
 	 * Cleanup your objects!
-	 * Make sure you call super.destroy()!
+	 * Make sure you call `super.destroy()`!
 	 */
 	override function destroy():Void
 	{
@@ -136,8 +136,8 @@ class FlxPreloader extends FlxBasePreloader
 	}
 
 	/**
-	 * Update is called every frame, passing the current percent loaded. Use this to change your loading bar or whatever.
-	 * @param	Percent	The percentage that the project is loaded
+	 * Called every frame, passing the current percent loaded. Use this to change your loading bar or whatever.
+	 * @param Percent The percentage that the project is loaded.
 	 */
 	override public function update(Percent:Float):Void
 	{

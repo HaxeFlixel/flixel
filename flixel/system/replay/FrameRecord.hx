@@ -1,7 +1,7 @@
 package flixel.system.replay;
 
 /**
- * Helper class for the new replay system.  Represents all the game inputs for one "frame" or "step" of the game loop.
+ * Helper class for the new replay system. Represents all the game inputs for one "frame" or "step" of the game loop.
  */
 class FrameRecord
 {
@@ -11,7 +11,7 @@ class FrameRecord
 	public var frame:Int;
 
 	/**
-	 * An array of simple integer pairs referring to what key is pressed, and what state its in.
+	 * An array of simple integer pairs referring to what key is pressed, and what state it's in.
 	 */
 	public var keys:Array<CodeValuePair>;
 
@@ -21,7 +21,7 @@ class FrameRecord
 	public var mouse:MouseRecord;
 
 	/**
-	 * Instantiate array new frame record.
+	 * Instantiates a new frame record.
 	 */
 	public function new()
 	{
@@ -31,11 +31,11 @@ class FrameRecord
 	}
 
 	/**
-	 * Load this frame record with input data from the input managers.
-	 * @param Frame		What frame it is.
-	 * @param Keys		Keyboard data from the keyboard manager.
-	 * @param Mouse		Mouse data from the mouse manager.
-	 * @return A reference to this FrameRecord object.
+	 * Loads this frame record with input data from the input managers.
+	 * @param Frame What frame it is.
+	 * @param Keys Keyboard data from the keyboard manager.
+	 * @param Mouse Mouse data from the mouse manager.
+	 * @return A reference to this `FrameRecord` object.
 	 */
 	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
 	{
@@ -47,7 +47,7 @@ class FrameRecord
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -56,8 +56,8 @@ class FrameRecord
 	}
 
 	/**
-	 * Save the frame record data to array simple ASCII string.
-	 * @return	A String object containing the relevant frame record data.
+	 * Saves the frame record data to array simple ASCII string.
+	 * @return A `String` object containing the relevant frame record data.
 	 */
 	public function save():String
 	{
@@ -89,8 +89,8 @@ class FrameRecord
 	}
 
 	/**
-	 * Load the frame record data from array simple ASCII string.
-	 * @param	Data	A String object containing the relevant frame record data.
+	 * Loads the frame record data from array simple ASCII string.
+	 * @param Data A `String` object containing the relevant frame record data.
 	 */
 	public function load(Data:String):FrameRecord
 	{

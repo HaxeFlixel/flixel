@@ -10,7 +10,7 @@ class FlxMacroUtil
 	/**
 	 * Builds a map from static uppercase inline variables in an abstract type.
 	 *
-	 * @param	invert	Use the field value as the key and the name as the value
+	 * @param invert Whether to use the field's value as the key and the field's name as the value.
 	 */
 	public static macro function buildMap(typePath:String, invert:Bool = false, ?exclude:Array<String>):Expr
 	{

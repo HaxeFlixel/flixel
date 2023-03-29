@@ -1,25 +1,25 @@
 package flixel.system.debug;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.text.TextField;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}
 
 /**
- * A generic, Flash-based window class, created for use in FlxDebugger.
+ * A generic, Flash-based window class, created for use in `FlxDebugger`.
  */
 class Window extends Sprite
 {
@@ -42,12 +42,12 @@ class Window extends Sprite
 	public var toggleButton:FlxSystemButton;
 
 	/**
-	 * Width of the window. Using Sprite.width is super unreliable for some reason!
+	 * Width of the window. Using `Sprite#width` is super unreliable for some reason!
 	 */
 	var _width:Int;
 
 	/**
-	 * Height of the window. Using Sprite.height is super unreliable for some reason!
+	 * Height of the window. Using `Sprite#height` is super unreliable for some reason!
 	 */
 	var _height:Int;
 
@@ -88,16 +88,16 @@ class Window extends Sprite
 	var _id:Int;
 
 	/**
-	 * Creates a new window object.  This Flash-based class is mainly (only?) used by FlxDebugger.
+	 * Creates a new window object. This Flash-based class is mainly (only?) used by `FlxDebugger`.
 	 *
-	 * @param   Title       The name of the window, displayed in the header bar.
-	 * @param   Icon	    The icon to use for the window header.
-	 * @param   Width       The initial width of the window.
-	 * @param   Height      The initial height of the window.
-	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
-	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
-	 * @param   Closable    Whether this window has a close button that removes the window.
-	 * @param   AlwaysOnTop Whether this window should be forcibly put in front of any other window when clicked.
+	 * @param Title The name of the window, displayed in the header bar.
+	 * @param Icon The icon to use for the window header.
+	 * @param Width The initial width of the window.
+	 * @param Height The initial height of the window.
+	 * @param Resizable Whether you can change the size of the window with a drag handle.
+	 * @param Bounds A rectangle indicating the valid screen area for the window.
+	 * @param Closable Whether this window has a close button that removes the window.
+	 * @param AlwaysOnTop Whether this window should be forcibly put in front of any other window when clicked.
 	 */
 	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle, Closable:Bool = false,
 			AlwaysOnTop:Bool = true)
@@ -168,7 +168,7 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -219,10 +219,10 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 * Resizes the window. Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
-	 * @param 	Width	How wide to make the window.
-	 * @param 	Height	How tall to make the window.
+	 * @param Width How wide to make the window.
+	 * @param Height How high to make the window.
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
@@ -232,10 +232,10 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
+	 * Changes the position of the window. Subject to pre-specified bounding rectangles.
 	 *
-	 * @param 	X	Desired X position of top left corner of the window.
-	 * @param 	Y	Desired Y position of top left corner of the window.
+	 * @param X Desired x-position of top left corner of the window.
+	 * @param Y Desired y-position of top left corner of the window.
 	 */
 	public function reposition(X:Float, Y:Float):Void
 	{
@@ -293,18 +293,18 @@ class Window extends Sprite
 		}
 		visible = FlxG.save.data.windowSettings[_id];
 	}
-	
+
 	function initWindowsSave()
 	{
 		var maxWindows = 10; // arbitrary
 		FlxG.save.data.windowSettings = [for (_ in 0...maxWindows) true];
 	}
-	
+
 	function saveWindowVisibility()
 	{
 		if (FlxG.save.data.windowSettings == null)
 			initWindowsSave();
-		
+
 		FlxG.save.data.windowSettings[_id] = visible;
 		FlxG.save.flush();
 	}
@@ -314,7 +314,7 @@ class Window extends Sprite
 	//***EVENT HANDLERS***//
 
 	/**
-	 * Used to set up basic mouse listeners..
+	 * Used to set up basic mouse listeners.
 	 */
 	function init(?_:Event):Void
 	{
@@ -332,11 +332,11 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Mouse movement handler.  Figures out if mouse is over handle or header bar or what.
+	 * Mouse movement handler. Figures out whether mouse is over handle or header bar or what.
 	 */
 	function onMouseMove(?_:MouseEvent):Void
 	{
-		// mouseX / Y can be negative, which messes with the resizing if dragging in the opposite direction
+		// mouseX / mouseY can be negative, which messes with the resizing if dragging in the opposite direction
 		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
 		var mouseY:Float = (this.mouseY < 0) ? 0 : this.mouseY;
 
@@ -371,7 +371,7 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Figure out if window is being repositioned (clicked on header) or resized (clicked on handle).
+	 * Figures out whether window is being repositioned (clicked on header) or resized (clicked on handle).
 	 */
 	function onMouseDown(?_:MouseEvent):Void
 	{
@@ -403,7 +403,7 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Keep the window within the pre-specified bounding rectangle.
+	 * Keeps the window within the pre-specified bounding rectangle.
 	 */
 	public function bound():Void
 	{
@@ -415,7 +415,7 @@ class Window extends Sprite
 	}
 
 	/**
-	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
+	 * Updates the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 */
 	function updateSize():Void
 	{

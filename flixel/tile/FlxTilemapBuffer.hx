@@ -1,16 +1,15 @@
 package flixel.tile;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.math.FlxMatrix;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * A helper object to keep tilemap drawing performance decent across the new multi-camera system.
@@ -19,12 +18,12 @@ import openfl.geom.ColorTransform;
 class FlxTilemapBuffer implements IFlxDestroyable
 {
 	/**
-	 * The current X position of the buffer.
+	 * The current x-position of the buffer.
 	 */
 	public var x:Float = 0;
 
 	/**
-	 * The current Y position of the buffer.
+	 * The current y-position of the buffer.
 	 */
 	public var y:Float = 0;
 
@@ -54,14 +53,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var columns:Int = 0;
 
 	/**
-	 * Whether or not the coordinates should be rounded during draw(), true by default (recommended for pixel art).
-	 * Only affects tilesheet rendering and rendering using BitmapData.draw() in blitting.
-	 * (copyPixels() only renders on whole pixels by nature). Causes draw() to be used if false, which is more expensive.
+	 * Whether the coordinates should be rounded during `draw()`. `true` by default (recommended for pixel art).
+	 * Only affects tilesheet rendering and rendering using `BitmapData#draw()` in blitting
+	 * (`copyPixels()` only renders on whole pixels by nature). Causes `draw()` to be used if `false`, which is more expensive.
 	 */
 	public var pixelPerfectRender:Null<Bool>;
 
 	/**
-	 * The actual buffer BitmapData. (Only used if FlxG.renderBlit == true)
+	 * The actual buffer `BitmapData` (Only used if `FlxG.renderBlit == true`).
 	 */
 	public var pixels(default, null):BitmapData;
 
@@ -72,7 +71,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	var _matrix:FlxMatrix;
 
 	/**
-	 * Variables related to calculation of dirty value
+	 * Variables related to calculation of `dirty` value.
 	 */
 	var _prevTilemapX:Float;
 
@@ -91,11 +90,11 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	/**
 	 * Instantiates a new camera-specific buffer for storing the visual tilemap data.
 	 *
-	 * @param   TileWidth       The width of the tiles in this tilemap.
-	 * @param   TileHeight      The height of the tiles in this tilemap.
-	 * @param   WidthInTiles    How many tiles wide the tilemap is.
-	 * @param   HeightInTiles   How many tiles tall the tilemap is.
-	 * @param   Camera          Which camera this buffer relates to.
+	 * @param TileWidth The width of the tiles in this tilemap.
+	 * @param TileHeight The height of the tiles in this tilemap.
+	 * @param WidthInTiles How many tiles wide the tilemap is.
+	 * @param HeightInTiles How many tiles high the tilemap is.
+	 * @param Camera Which camera this buffer relates to.
 	 */
 	public function new(TileWidth:Int, TileHeight:Int, WidthInTiles:Int, HeightInTiles:Int, ?Camera:FlxCamera, ScaleX:Float = 1.0, ScaleY:Float = 1.0)
 	{
@@ -130,7 +129,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -144,10 +143,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	}
 
 	/**
-	 * Fill the buffer with the specified color.
+	 * Fills the buffer with the specified color.
 	 * Default value is transparent.
 	 *
-	 * @param	Color	What color to fill with, in 0xAARRGGBB hex format.
+	 * @param Color What color to fill with, in ARGB format.
 	 */
 	public function fill(Color:FlxColor = FlxColor.TRANSPARENT):Void
 	{
@@ -158,10 +157,10 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	}
 
 	/**
-	 * Just stamps this buffer onto the specified camera at the specified location.
+	 * Stamps this buffer onto the specified camera at the specified location.
 	 *
-	 * @param	Camera		Which camera to draw the buffer onto.
-	 * @param	FlashPoint	Where to draw the buffer at in camera coordinates.
+	 * @param Camera Which camera to draw the buffer onto.
+	 * @param FlashPoint Where to draw the buffer at in camera coordinates.
 	 */
 	public function draw(Camera:FlxCamera, FlashPoint:Point, ScaleX:Float = 1.0, ScaleY:Float = 1.0):Void
 	{
@@ -228,7 +227,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	}
 
 	/**
-	 * Check if object is rendered pixel perfect on a specific camera.
+	 * Checks whether object is rendered pixel-perfect on a specific camera.
 	 */
 	public function isPixelPerfectRender(?Camera:FlxCamera):Bool
 	{
@@ -239,11 +238,11 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	}
 
 	/**
-	 * Check if tilemap or camera has changed (scrolled, moved, resized or scaled) since the previous frame.
+	 * Checks whether tilemap or camera has changed (scrolled, moved, resized or scaled) since the previous frame.
 	 * If so, then it means that we need to redraw this buffer.
-	 * @param	Tilemap	Tilemap to check against. It's a tilemap this buffer belongs to.
-	 * @param	Camera	Camera to check against. It's a camera this buffer is used for drawing on.
-	 * @return	The value of dirty flag.
+	 * @param Tilemap Tilemap to check against. It's a tilemap this buffer belongs to.
+	 * @param Camera Camera to check against. It's a camera this buffer is used for drawing on.
+	 * @return The value of `dirty` flag.
 	 */
 	public function isDirty(Tilemap:FlxTilemap, Camera:FlxCamera):Bool
 	{

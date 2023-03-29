@@ -2,7 +2,7 @@ package flixel.system;
 
 /**
  * Helper object for semantic versioning.
- * @see   http://semver.org/
+ * @see https://semver.org/
  */
 @:build(flixel.system.macros.FlxGitSHA.buildGitSHA("flixel"))
 class FlxVersion
@@ -19,8 +19,8 @@ class FlxVersion
 	}
 
 	/**
-	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA",
-	 * e.g. HaxeFlixel 3.0.4.
+	 * Formats the version in the format "HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"
+	 * (e.g., HaxeFlixel 3.0.4).
 	 * If this is a dev version, the git sha is included.
 	 */
 	public function toString():String

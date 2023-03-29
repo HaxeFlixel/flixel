@@ -53,7 +53,7 @@ class FlxGamepadMapping
 	}
 
 	/**
-	 * Given a raw hardware code, return the "universal" ID
+	 * Given a raw hardware code, returns the "universal" ID.
 	 */
 	public function getID(rawID:Int):FlxGamepadInputID
 	{
@@ -61,7 +61,7 @@ class FlxGamepadMapping
 	}
 
 	/**
-	 * Given an ID, return the raw hardware code
+	 * Given an ID, returns the raw hardware code.
 	 */
 	public function getRawID(ID:FlxGamepadInputID):Int
 	{
@@ -69,7 +69,7 @@ class FlxGamepadMapping
 	}
 
 	/**
-	 * Whether this axis needs to be flipped
+	 * Checks whether this axis needs to be flipped.
 	 */
 	public function isAxisFlipped(axisID:Int):Bool
 	{
@@ -83,8 +83,8 @@ class FlxGamepadMapping
 
 	#if FLX_JOYSTICK_API
 	/**
-	 * Given an axis index value like 0-6, figures out which input that
-	 * corresponds to and returns a "fake" ButtonID for that input
+	 * Given an axis index value like 0-6, figures out which input it
+	 * corresponds to and returns a "fake" ButtonID for that input.
 	 */
 	public function axisIndexToRawID(axisID:Int):Int
 	{
@@ -101,12 +101,12 @@ class FlxGamepadMapping
 	{
 		return this.attachment = attachment;
 	}
-	
+
 	public function getInputLabel(id:FlxGamepadInputID):Null<String>
 	{
 		if (getRawID(id) == -1)
-			return null;// return empty string, "unknown" or enum maybe?
-		
+			return null; // return empty string, "unknown" or enum maybe?
+
 		return switch (id)
 		{
 			case A: "a";

@@ -18,7 +18,7 @@ class SignalFrontEnd
 	 */
 	public var postStateSwitch(default, null):FlxSignal = new FlxSignal();
 
-	@:deprecated("Use preStateSwitch instead of stateSwitched")
+	@:deprecated("stateSwitched is deprecated; use preStateSwitch instead")
 	public var stateSwitched(get, never):FlxSignal;
 	public var preStateCreate(default, null):FlxTypedSignal<FlxState->Void> = new FlxTypedSignal<FlxState->Void>();
 
@@ -32,7 +32,7 @@ class SignalFrontEnd
 	public var postGameReset(default, null):FlxSignal = new FlxSignal();
 
 	/**
-	 * Gets dispatched just before the game is started (before the first state after the splash screen is created)
+	 * Gets dispatched just before the game is started (after the splash screen is created, but before the first state).
 	 * @since 4.6.0
 	 */
 	public var preGameStart(default, null):FlxSignal = new FlxSignal();
@@ -43,7 +43,7 @@ class SignalFrontEnd
 	 */
 	public var postGameStart(default, null):FlxSignal = new FlxSignal();
 
-	@:deprecated("Use postGameStart instead of gameStarted")
+	@:deprecated("gameStarted is deprecated; use postGameStart instead")
 	public var gameStarted(get, never):FlxSignal;
 	public var preUpdate(default, null):FlxSignal = new FlxSignal();
 	public var postUpdate(default, null):FlxSignal = new FlxSignal();

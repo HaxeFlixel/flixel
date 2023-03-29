@@ -21,10 +21,10 @@ class InputFrontEnd
 	public var resetOnStateSwitch:Bool = true;
 
 	/**
-	 * Add an input to the system
+	 * Adds an input to the system.
 	 *
-	 * @param	Input 	The input to add
-	 * @return	The input
+	 * @param Input The input to add.
+	 * @return The input.
 	 */
 	@:generic
 	public function add<T:IFlxInputManager>(Input:T):T
@@ -43,10 +43,10 @@ class InputFrontEnd
 	}
 
 	/**
-	 * Removes an input from the system
+	 * Removes an input from the system.
 	 *
-	 * @param	Input	The input to remove
-	 * @return	Bool indicating whether it was removed or not
+	 * @param Input The input to remove.
+	 * @return Whether the input was removed.
 	 */
 	@:generic
 	public function remove<T:IFlxInputManager>(Input:T):Bool
@@ -65,11 +65,11 @@ class InputFrontEnd
 	}
 
 	/**
-	 * Replace an existing input in the system with a new one
+	 * Replaces an existing input in the system with a new one.
 	 *
-	 * @param	Old 	The old input to replace
-	 * @param	New 	The new input to put in its place
-	 * @return	If successful returns New. Otherwise returns null.
+	 * @param Old The old input to replace.
+	 * @param New The new input to put in its place.
+	 * @return If successful, returns `New`. Otherwise, returns `null`.
 	 */
 	@:generic
 	public function replace<T:IFlxInputManager>(Old:T, New:T):T

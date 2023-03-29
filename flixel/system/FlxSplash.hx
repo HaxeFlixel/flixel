@@ -1,17 +1,17 @@
 package flixel.system;
 
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.Lib;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import openfl.Lib;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 class FlxSplash extends FlxState
 {

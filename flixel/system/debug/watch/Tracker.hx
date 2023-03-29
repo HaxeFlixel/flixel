@@ -1,22 +1,19 @@
 package flixel.system.debug.watch;
 
 #if FLX_DEBUG
-import flash.display.DisplayObject;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.animation.FlxAnimationController;
 import flixel.effects.particles.FlxEmitter.FlxTypedEmitter;
-import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
+import flixel.input.FlxSwipe;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.mouse.FlxMouse;
-import flixel.input.FlxSwipe;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPath;
@@ -26,7 +23,10 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxButton.FlxTypedButton;
 import flixel.util.FlxTimer;
-import flixel.animation.FlxAnimationController;
+import openfl.display.DisplayObject;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -42,13 +42,13 @@ class Tracker extends Watch
 {
 	#if FLX_DEBUG
 	/**
-	 * Order matters here, as the last profile is the most relevant - i.e., if the
-	 * FlxSprite profile were added before the one for FlxObject, it would never be selected.
+	 * Order matters here, as the last profile is the most relevant (i.e., if the
+	 * `FlxSprite` profile were added before the one for `FlxObject`, it would never be selected).
 	 */
 	public static var profiles:Array<TrackerProfile>;
 
 	/**
-	 * Stores a reference to all objects for a which a tracker window exists
+	 * Stores a reference to all objects for which a tracker window exists
 	 * to prevent the creation of two windows for the same object.
 	 */
 	public static var objectsBeingTracked:Array<Dynamic> = [];
@@ -160,8 +160,7 @@ class Tracker extends Watch
 				"pressed",
 				"justPressed",
 				"justReleased"
-				#if FLX_MOUSE_ADVANCED, "pressedMiddle", "justPressedMiddle", "justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight"
-				#end
+				#if FLX_MOUSE_ADVANCED, "pressedMiddle", "justPressedMiddle", "justReleasedMiddle", "pressedRight", "justPressedRight", "justReleasedRight" #end
 			], [FlxBasePoint]));
 			#end
 			#if FLX_TOUCH

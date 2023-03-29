@@ -8,12 +8,12 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class FlxBaseAnimation implements IFlxDestroyable
 {
 	/**
-	 * Animation controller this animation belongs to
+	 * Animation controller this animation belongs to.
 	 */
 	public var parent:FlxAnimationController;
 
 	/**
-	 * String name of the animation (e.g. `"walk"`)
+	 * String name of the animation (e.g. `"walk"`).
 	 */
 	public var name:String;
 

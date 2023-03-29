@@ -111,4 +111,4 @@ typedef TestShellResult =
 	testedNull:Bool,
 	testedNotNull:Bool,
 	strValue:String
-}
+};

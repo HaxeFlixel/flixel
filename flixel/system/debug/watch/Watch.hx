@@ -5,8 +5,8 @@ import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicWatch;
 import openfl.display.Sprite;
 
-using flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 /**
  * A Visual Studio-style "watch" window, for use in the debugger overlay.

@@ -23,10 +23,10 @@ class FlxBounds<T>
 	public var active:Bool = true;
 
 	/**
-	 * Create a new Bounds object. Must be typed, e.g. `var bounds = new FlxBounds<Float>(0, 0)`;
+	 * Create a new `FlxBounds` object. Must be typed (e.g., `var bounds = new FlxBounds<Float>(0, 0);`).
 	 *
-	 * @param	min  The minimum value of the property.
-	 * @param	max  The maximum value of the property. Optional, will be set equal to min if ignored.
+	 * @param min The minimum value of the property.
+	 * @param max The maximum value of the property. Will be set to `min` if ignored.
 	 */
 	public function new(min:T, ?max:T)
 	{
@@ -35,11 +35,11 @@ class FlxBounds<T>
 	}
 
 	/**
-	 * Handy function to set the minimum and maximum values of this Bounds object in one line.
+	 * Handy function to set the minimum and maximum values of this `FlxBounds` object in one line.
 	 *
-	 * @param	min  The new minimum value of the property.
-	 * @param	max  The new maximum value of the property. Optional, will be set equal to min if ignored.
-	 * @return  This Bounds instance (nice for chaining stuff together).
+	 * @param min The new minimum value of the property.
+	 * @param max The new maximum value of the property. Will be set equal to `min` if ignored.
+	 * @return This `FlxBounds` instance (nice for chaining stuff together).
 	 */
 	public function set(min:T, ?max:T):FlxBounds<T>
 	{
@@ -49,10 +49,10 @@ class FlxBounds<T>
 	}
 
 	/**
-	 * Function to compare this FlxBounds to another.
+	 * Compares this `FlxBounds` to another.
 	 *
-	 * @param	OtherFlxBounds  The other FlxBounds to compare to this one.
-	 * @return	True if the FlxBounds have the same min and max value, false otherwise.
+	 * @param otherBounds The other `FlxBounds` to compare to this one.
+	 * @return Whether the `FlxBounds` instances have the same `min` and `max` values.
 	 */
 	public inline function equals(otherBounds:FlxBounds<T>):Bool
 	{
@@ -60,7 +60,7 @@ class FlxBounds<T>
 	}
 
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 * Converts the object to a readable string. Useful for debugging, save games, etc.
 	 */
 	public function toString():String
 	{

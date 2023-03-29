@@ -19,12 +19,12 @@ class FlxTileblock extends FlxSprite
 	var tileSprite:FlxSprite;
 
 	/**
-	 * Creates a new FlxBlock object with the specified position and size.
+	 * Creates a new `FlxBlock` object with the specified position and size.
 	 *
-	 * @param	X			The X position of the block.
-	 * @param	Y			The Y position of the block.
-	 * @param	Width		The width of the block.
-	 * @param	Height		The height of the block.
+	 * @param X The x-position of the block.
+	 * @param Y The y-position of the block.
+	 * @param Width The width of the block.
+	 * @param Height The height of the block.
 	 */
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
@@ -44,9 +44,9 @@ class FlxTileblock extends FlxSprite
 	/**
 	 * Fills the block with a randomly arranged selection of frames.
 	 *
-	 * @param	TileFrames		The frames that should fill this block.
-	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
-	 * @return	This tile block.
+	 * @param tileFrames The frames that should fill this block.
+	 * @param empties The number of "empty" tiles to add to the auto-fill algorithm (e.g., 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return This tile block.
 	 */
 	public function loadFrames(tileFrames:FlxTileFrames, empties:Int = 0):FlxTileblock
 	{
@@ -123,11 +123,11 @@ class FlxTileblock extends FlxSprite
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
 	 *
-	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
-	 * @param	TileWidth		The width of a single tile in the graphic.
-	 * @param	TileHeight		The height of a single tile in the graphic.
-	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
-	 * @return	This tile block.
+	 * @param TileGraphic The graphic class that contains the tiles that should fill this block.
+	 * @param TileWidth The width of a single tile in the graphic.
+	 * @param TileHeight The height of a single tile in the graphic.
+	 * @param Empties The number of "empty" tiles to add to the auto-fill algorithm (e.g., 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return This tile block.
 	 */
 	public function loadTiles(TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
 	{

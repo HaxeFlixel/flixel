@@ -1,26 +1,26 @@
 package flixel.system.debug;
 
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
-import openfl.display.DisplayObject;
 import flixel.FlxG;
+import flixel.system.FlxAssets;
+import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.console.Console;
+import flixel.system.debug.interaction.Interaction;
+import flixel.system.debug.log.BitmapLog;
 import flixel.system.debug.log.Log;
 import flixel.system.debug.stats.Stats;
-import flixel.system.debug.watch.Watch;
 import flixel.system.debug.watch.Tracker;
-import flixel.system.debug.completion.CompletionList;
-import flixel.system.debug.log.BitmapLog;
-import flixel.system.debug.interaction.Interaction;
-import flixel.system.FlxAssets;
+import flixel.system.debug.watch.Watch;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
 
 using flixel.util.FlxArrayUtil;
 
@@ -65,12 +65,12 @@ class FlxDebugger extends Sprite
 {
 	#if FLX_DEBUG
 	/**
-	 * Internal, used to space out windows from the edges.
+	 * Internal. Used to space out windows from the edges.
 	 */
 	public static inline var GUTTER:Int = 2;
 
 	/**
-	 * Internal, used to space out windows from the edges.
+	 * Internal. Used to space out windows from the edges.
 	 */
 	public static inline var TOP_HEIGHT:Int = 20;
 
@@ -85,12 +85,12 @@ class FlxDebugger extends Sprite
 	var completionList:CompletionList;
 
 	/**
-	 * Internal, tracks what debugger window layout user has currently selected.
+	 * Internal. Tracks what debugger window layout user has currently selected.
 	 */
 	var _layout:FlxDebuggerLayout = FlxDebuggerLayout.STANDARD;
 
 	/**
-	 * Internal, stores width and height of the game.
+	 * Internal. Stores width and height of the game.
 	 */
 	var _screen:Point = new Point();
 
@@ -102,8 +102,8 @@ class FlxDebugger extends Sprite
 	var _buttons:Map<FlxHorizontalAlign, Array<FlxSystemButton>> = [LEFT => [], CENTER => [], RIGHT => []];
 
 	/**
-	 * The flash Sprite used for the top bar of the debugger ui
-	**/
+	 * The Flash `Sprite` used for the top bar of the debugger UI.
+	 */
 	var _topBar:Sprite;
 
 	var _windows:Array<Window> = [];
@@ -115,8 +115,8 @@ class FlxDebugger extends Sprite
 	/**
 	 * Instantiates the debugger overlay.
 	 *
-	 * @param   Width    The width of the screen.
-	 * @param   Height   The height of the screen.
+	 * @param Width The width of the screen.
+	 * @param Height The height of the screen.
 	 */
 	@:allow(flixel.FlxGame)
 	function new(Width:Float, Height:Float)
@@ -188,7 +188,7 @@ class FlxDebugger extends Sprite
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -242,9 +242,9 @@ class FlxDebugger extends Sprite
 	}
 
 	/**
-	 * Change the way the debugger's windows are laid out.
+	 * Changes the way the debugger's windows are laid out.
 	 *
-	 * @param   Layout   The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
+	 * @param Layout The layout type to use.
 	 */
 	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
@@ -254,7 +254,7 @@ class FlxDebugger extends Sprite
 
 	/**
 	 * Forces the debugger windows to reset to the last specified layout.
-	 * The default layout is STANDARD.
+	 * The default layout is `STANDARD`.
 	 */
 	public function resetLayout():Void
 	{
@@ -347,7 +347,7 @@ class FlxDebugger extends Sprite
 	}
 
 	/**
-	 * Align an array of debugger buttons, used for the middle and right layouts
+	 * Aligns an array of debugger buttons. Used for the middle and right layouts.
 	 */
 	function hAlignButtons(Sprites:Array<FlxSystemButton>, Padding:Float = 0, Set:Bool = true, LeftOffset:Float = 0):Float
 	{
@@ -367,7 +367,7 @@ class FlxDebugger extends Sprite
 	}
 
 	/**
-	 * Position the debugger buttons
+	 * Positions the debugger buttons.
 	 */
 	function resetButtonLayout():Void
 	{
@@ -381,14 +381,14 @@ class FlxDebugger extends Sprite
 	}
 
 	/**
-	 * Create and add a new debugger button.
+	 * Creates and add a new debugger button.
 	 *
-	 * @param   Position       Either LEFT, CENTER or RIGHT.
-	 * @param   Icon           The icon to use for the button
-	 * @param   UpHandler      The function to be called when the button is pressed.
-	 * @param   ToggleMode     Whether this is a toggle button or not.
-	 * @param   UpdateLayout   Whether to update the button layout.
-	 * @return  The added button.
+	 * @param Position Either `LEFT`, `CENTER`, or `RIGHT`.
+	 * @param Icon The icon to use for the button.
+	 * @param UpHandler The function to be called when the button is pressed.
+	 * @param ToggleMode Whether this is a toggle button.
+	 * @param UpdateLayout Whether to update the button layout.
+	 * @return The added button.
 	 */
 	public function addButton(Position:FlxHorizontalAlign, ?Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false,
 			UpdateLayout:Bool = false):FlxSystemButton
@@ -407,8 +407,8 @@ class FlxDebugger extends Sprite
 	/**
 	 * Removes and destroys a button from the debugger.
 	 *
-	 * @param   Button         The FlxSystemButton instance to remove.
-	 * @param   UpdateLayout   Whether to update the button layout.
+	 * @param Button The `FlxSystemButton` instance to remove.
+	 * @param UpdateLayout Whether to update the button layout.
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{
@@ -508,7 +508,7 @@ class FlxDebugger extends Sprite
 
 	inline function openHomepage():Void
 	{
-		FlxG.openURL("http://www.haxeflixel.com");
+		FlxG.openURL("https://haxeflixel.com");
 	}
 
 	inline function openGitHub():Void

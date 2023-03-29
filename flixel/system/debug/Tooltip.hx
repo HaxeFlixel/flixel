@@ -1,14 +1,14 @@
 package flixel.system.debug;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.text.TextField;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.text.TextField;
 
 /**
  * Manages tooltips to be used within the debugger.
@@ -52,7 +52,7 @@ class Tooltip
 }
 
 /**
- * A generic, Flash-based tooltip class, created for use in FlxDebugger.
+ * A generic, Flash-based tooltip class, created for use in `FlxDebugger`.
  */
 class TooltipOverlay extends Sprite
 {
@@ -67,34 +67,34 @@ class TooltipOverlay extends Sprite
 	static inline var TEXT_ALPHA:Float = 0.8;
 
 	/**
-	 * How many pixels the tooltip should be away from the target in the x axis.
+	 * How many pixels the tooltip should be away from the target in the x-axis.
 	 */
 	static inline var MARGIN_X:Int = 10;
 
 	/**
-	 * How many pixels the tooltip should be away from the target in the y axis.
+	 * How many pixels the tooltip should be away from the target in the y-axis.
 	 */
 	static inline var MARGIN_Y:Float = 10;
 
 	/**
-	 * Width of the tooltip. Using Sprite.width is super unreliable for some reason!
+	 * Width of the tooltip. Using `Sprite#width` is super unreliable for some reason!
 	 */
 	var _width:Int;
 
 	/**
-	 * Height of the tooltip. Using Sprite.height is super unreliable for some reason!
+	 * Height of the tooltip. Using `Sprite#height` is super unreliable for some reason!
 	 */
 	var _height:Int;
 
 	/**
-	 * Main elements
+	 * Main elements.
 	 */
 	var _background:Bitmap;
 
 	var _shadow:Bitmap;
 
 	/**
-	 * Texfield used by the tooltip to display text. If you change anything in the textfield,
+	 * `TextField` used by the tooltip to display text. If you change anything in the textfield,
 	 * be sure to call the proper methods of the tooltip to ensure it keeps a correct size, etc.
 	 * If you just want to change the text of the tooltip, use the method `setText()` instead, since
 	 * it takes care of properly resizing and positioning the tooltip after the text changes.
@@ -107,7 +107,7 @@ class TooltipOverlay extends Sprite
 	public var owner(default, null):Sprite;
 
 	/**
-	 * Maximum size allowed for the tooltip. A negative value (or zero) makes
+	 * Maximum size allowed for the tooltip. A negative value (or `0`) makes
 	 * the tooltip auto-adjust its size to properly house its text.
 	 */
 	public var maxSize:Point;
@@ -115,10 +115,10 @@ class TooltipOverlay extends Sprite
 	/**
 	 * Creates a new tooltip.
 	 *
-	 * @param	target	Element the tooltip will monitor. If the tooltip is being used in "stand alone" fashion, i.e. not monitoring any element, then use `null` as the target.
-	 * @param	text	Text displayed with this tooltip.
-	 * @param	width	Width of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its width to properly accommodate the text.
-	 * @param	height	Height of the tooltip.  If a negative value (or zero) is specified, the tooltip will adjust its height to properly accommodate the text.
+	 * @param target Element the tooltip will monitor. If the tooltip is being used in "stand alone" fashion (i.e., not monitoring any element), then use `null` as the target.
+	 * @param text Text displayed with this tooltip.
+	 * @param width Width of the tooltip. If a negative value (or `0`) is specified, the tooltip will adjust its width to properly accommodate the text.
+	 * @param height Height of the tooltip. If a negative value (or `0`) is specified, the tooltip will adjust its height to properly accommodate the text.
 	 */
 	public function new(target:Sprite, text:String, width:Float = 0, height:Float = 0)
 	{
@@ -151,7 +151,7 @@ class TooltipOverlay extends Sprite
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -169,10 +169,10 @@ class TooltipOverlay extends Sprite
 	}
 
 	/**
-	 * Resize the tooltip. Subject to pre-specified minimums, maximums, and bounding rectangles.
+	 * Resizes the tooltip. Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
-	 * @param 	Width	How wide to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accommodate the text.
-	 * @param 	Height	How tall to make the tooltip. If zero is specified, the tooltip will adjust its size to properly accommodate the text.
+	 * @param Width How wide to make the tooltip. If `0` is specified, the tooltip will adjust its size to properly accommodate the text.
+	 * @param Height How high to make the tooltip. If `0` is specified, the tooltip will adjust its size to properly accommodate the text.
 	 */
 	public function resize(Width:Float, Height:Float):Void
 	{
@@ -182,10 +182,10 @@ class TooltipOverlay extends Sprite
 	}
 
 	/**
-	 * Change the position of the tooltip.
+	 * Changes the position of the tooltip.
 	 *
-	 * @param 	X	Desired X position of top left corner of the tooltip.
-	 * @param 	Y	Desired Y position of top left corner of the tooltip.
+	 * @param X Desired x-position of top left corner of the tooltip.
+	 * @param Y Desired y-position of top left corner of the tooltip.
 	 */
 	public function reposition(X:Float, Y:Float):Void
 	{
@@ -206,9 +206,9 @@ class TooltipOverlay extends Sprite
 	}
 
 	/**
-	 * Change the text of the tooltip.
+	 * Changes the text of the tooltip.
 	 *
-	 * @param 	Text	Text to be used in the tooltip.
+	 * @param Text Text to be used in the tooltip.
 	 */
 	public function setText(Text:String):Void
 	{
@@ -230,7 +230,7 @@ class TooltipOverlay extends Sprite
 	public function update():Void {}
 
 	/**
-	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
+	 * Updates the Flash shapes to match the new size, and repositions the header, shadow, and handle accordingly.
 	 */
 	function updateSize():Void
 	{

@@ -7,7 +7,7 @@ import sys.io.Process;
 using StringTools;
 
 /**
- * Heavily inspired by HaxePunk's HaxeLibInfo.hx
+ * Heavily inspired by HaxePunk's `HaxeLibInfo.hx`.
  */
 class FlxGitSHA
 {
@@ -36,7 +36,7 @@ class FlxGitSHA
 			doc: null,
 			meta: [],
 			access: [Access.APublic, Access.AStatic],
-			kind: FieldType.FProp("default", "null", macro:Dynamic, macro $v{sha}),
+			kind: FieldType.FProp("default", "null", macro :Dynamic, macro $v{sha}),
 			pos: Context.currentPos()
 		});
 

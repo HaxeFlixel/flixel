@@ -1,6 +1,5 @@
 package flixel.text;
 
-import flash.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -12,14 +11,15 @@ import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 
 using flixel.util.FlxColorTransformUtil;
 using flixel.util.FlxUnicodeUtil;
 
 /**
- * Extends FlxSprite to support rendering text.
- * Can tint, fade, rotate and scale just like a sprite.
+ * Extends `FlxSprite` to support rendering text.
+ * Can tint, fade, rotate, and scale just like a sprite.
  * Doesn't really animate though, as far as I know.
  */
 class FlxBitmapText extends FlxSprite
@@ -35,14 +35,14 @@ class FlxBitmapText extends FlxSprite
 	public var text(default, set):String = "";
 
 	/**
-	 * Helper object to avoid many ColorTransform allocations
+	 * Helper object to avoid many `ColorTransform` allocations.
 	 */
 	var _colorParams:ColorTransform = new ColorTransform();
 
 	/**
 	 * Helper array which contains actual strings for rendering.
 	 */
-	// TODO: switch it to Array<Array<Int>> (for optimizations - i.e. less Utf8 usage)
+	// TODO: switch it to `Array<Array<Int>>` (for optimizations - i.e. less Utf8 usage)
 	var _lines:Array<String> = [];
 
 	/**
@@ -52,8 +52,8 @@ class FlxBitmapText extends FlxSprite
 
 	/**
 	 * Specifies how the text field should align text.
-	 * JUSTIFY alignment isn't supported.
-	 * Note: 'autoSize' must be set to false or alignment won't show any visual differences.
+	 * `JUSTIFY` alignment isn't supported.
+	 * Note: `autoSize` must be set to `false`, or alignment won't show any visual differences.
 	 */
 	public var alignment(default, set):FlxTextAlign = FlxTextAlign.LEFT;
 
@@ -68,29 +68,29 @@ class FlxBitmapText extends FlxSprite
 	public var letterSpacing(default, set):Int = 0;
 
 	/**
-	 * Whether to convert text to upper case or not.
+	 * Whether to convert text to upper case.
 	 */
 	public var autoUpperCase(default, set):Bool = false;
 
 	/**
-	 * A Boolean value that indicates whether the text field has word wrap.
+	 * Whether the text field has word wrap.
 	 */
 	public var wordWrap(default, set):Bool = true;
 
 	/**
 	 * Whether word wrapping algorithm should wrap lines by words or by single character.
-	 * Default value is true.
+	 * Default value is `true`.
 	 */
 	public var wrapByWord(default, set):Bool = true;
 
 	/**
-	 * Whether this text field have fixed width or not.
-	 * Default value if true.
+	 * Whether this text field should have fixed width.
+	 * Default value is `true`.
 	 */
 	public var autoSize(default, set):Bool = true;
 
 	/**
-	 * Number of pixels between text and text field border
+	 * Number of pixels between text and text field border.
 	 */
 	public var padding(default, set):Int = 0;
 
@@ -105,7 +105,7 @@ class FlxBitmapText extends FlxSprite
 	public var textHeight(get, never):Int;
 
 	/**
-	 * Height of the single line of text (without lineSpacing).
+	 * Height of a single line of text (without `lineSpacing`).
 	 */
 	public var lineHeight(get, never):Int;
 
@@ -115,13 +115,13 @@ class FlxBitmapText extends FlxSprite
 	public var numSpacesInTab(default, set):Int = 4;
 
 	/**
-	 * The color of the text in 0xAARRGGBB format.
-	 * Result color of text will be multiplication of textColor and color.
+	 * The color of the text in ARGB format.
+	 * Result color of text will be multiplication of `textColor` and `color`.
 	 */
 	public var textColor(default, set):FlxColor = FlxColor.WHITE;
 
 	/**
-	 * Whether to use textColor while rendering or not.
+	 * Whether to use `textColor` while rendering.
 	 */
 	public var useTextColor(default, set):Bool = false;
 
@@ -131,7 +131,7 @@ class FlxBitmapText extends FlxSprite
 	public var borderStyle(default, set):FlxTextBorderStyle = NONE;
 
 	/**
-	 * The color of the border in 0xAARRGGBB format
+	 * The color of the border in ARGB format.
 	 */
 	public var borderColor(default, set):FlxColor = FlxColor.BLACK;
 
@@ -141,30 +141,30 @@ class FlxBitmapText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 
 	/**
-	 * How many iterations do use when drawing the border. 0: only 1 iteration, 1: one iteration for every pixel in borderSize
-	 * A value of 1 will have the best quality for large border sizes, but might reduce performance when changing text.
-	 * NOTE: If the borderSize is 1, borderQuality of 0 or 1 will have the exact same effect (and performance).
+	 * How many iterations do use when drawing the border. `0`: only 1 iteration; `1`: one iteration for every pixel in `borderSize`.
+	 * A value of `1` will have the best quality for large border sizes, but might reduce performance when changing text.
+	 * NOTE: If `borderSize == 1`, `borderQuality` of `0` or `1` will have the exact same effect (and performance).
 	 */
 	public var borderQuality(default, set):Float = 0;
 
 	/**
 	 * Offset that is applied to the shadow border style, if active.
-	 * x and y are multiplied by borderSize. Default is (1, 1), or lower-right corner.
+	 * `x` and `y` are multiplied by `borderSize`. Default is `(1, 1)`, or lower-right corner.
 	 */
 	public var shadowOffset(default, null):FlxPoint;
 
 	/**
-	 * Specifies whether the text should have background
+	 * Specifies whether the text should have background.
 	 */
 	public var background(default, set):Bool = false;
 
 	/**
-	 * Specifies the color of background
+	 * Specifies the color of background.
 	 */
 	public var backgroundColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 
 	/**
-	 * Specifies whether the text field will break into multiple lines or not on overflow.
+	 * Specifies whether the text field will break into multiple lines on overflow.
 	 */
 	public var multiLine(default, set):Bool = true;
 
@@ -174,8 +174,8 @@ class FlxBitmapText extends FlxSprite
 	public var numLines(get, never):Int;
 
 	/**
-	 * The width of the TextField object used for bitmap generation for this FlxText object.
-	 * Use it when you want to change the visible width of text. Enables autoSize if <= 0.
+	 * The width of the `TextField` object used for bitmap generation for this `FlxText` object.
+	 * Use it when you want to change the visible width of text. Enables autoSize if `<= 0`.
 	 */
 	public var fieldWidth(get, set):Int;
 
@@ -190,7 +190,7 @@ class FlxBitmapText extends FlxSprite
 	var borderDrawData:Array<Float>;
 
 	/**
-	 * Helper bitmap buffer for text pixels but without any color transformations
+	 * Helper bitmap buffer for text pixels but without any color transformations.
 	 */
 	var textBitmap:BitmapData;
 
@@ -199,10 +199,10 @@ class FlxBitmapText extends FlxSprite
 	 * Warning: The default font may work incorrectly on HTML5
 	 * and is utterly unreliable on Brave Browser with shields up.
 	 * 
-	 * @param   x     The initial X position of the text.
-	 * @param   y     The initial Y position of the text.
-	 * @param   text  The text to display.
-	 * @param   font  Optional parameter for component's font prop
+	 * @param x The initial x-position of the text.
+	 * @param y The initial y-position of the text.
+	 * @param text The text to display.
+	 * @param font Optional parameter for component's font property.
 	 */
 	public function new(?x = 0.0, ?y = 0.0, ?text:String, ?font:FlxBitmapFont)
 	{
@@ -226,7 +226,7 @@ class FlxBitmapText extends FlxSprite
 			textDrawData = [];
 			borderDrawData = [];
 		}
-		
+
 		this.text = text;
 	}
 
@@ -270,7 +270,7 @@ class FlxBitmapText extends FlxSprite
 			super.drawFrame(Force);
 		}
 	}
-	
+
 	override function updateHitbox()
 	{
 		checkPendingChanges(true);
@@ -556,15 +556,15 @@ class FlxBitmapText extends FlxSprite
 		return value;
 	}
 
-	override function calcFrame(RunOnCpp:Bool = false):Void
+	override function calcFrame(force:Bool = false):Void
 	{
 		if (FlxG.renderTile)
 		{
-			drawFrame(RunOnCpp);
+			drawFrame(force);
 		}
 		else
 		{
-			super.calcFrame(RunOnCpp);
+			super.calcFrame(force);
 		}
 	}
 
@@ -634,10 +634,10 @@ class FlxBitmapText extends FlxSprite
 	}
 
 	/**
-	 * Calculates width of the line with provided index
+	 * Calculates width of the line with provided index.
 	 *
-	 * @param	lineIndex	index of the line in _lines array
-	 * @return	The width of the line
+	 * @param lineIndex Index of the line in `_lines` array.
+	 * @return The width of the line.
 	 */
 	public function getLineWidth(lineIndex:Int):Int
 	{
@@ -652,8 +652,8 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Calculates width of provided string (for current font).
 	 *
-	 * @param	str	String to calculate width for
-	 * @return	The width of result bitmap text.
+	 * @param str String to calculate width for.
+	 * @return The width of result bitmap text.
 	 */
 	public function getStringWidth(str:String):Int
 	{
@@ -766,15 +766,15 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Helper function for splitting line of text into separate words.
 	 *
-	 * @param	line	line to split.
-	 * @param	words	result array to fill with words.
+	 * @param line Line to split.
+	 * @param words Result array to fill with words.
 	 */
 	function splitLineIntoWords(line:String, words:Array<String>):Void
 	{
 		var word:String = ""; // current word to process
 		var wordUtf8 = new UnicodeBuffer();
-		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
-		var lineLength:Int = line.uLength(); // lenght of the current line
+		var isSpaceWord:Bool = false; // whether current word consists of spaces
+		var lineLength:Int = line.uLength(); // length of the current line
 
 		var c:Int = 0; // char index on the line
 		var charCode:Int; // code for the current character in word
@@ -839,8 +839,8 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Wraps provided line by words.
 	 *
-	 * @param	words		The array of words in the line to process.
-	 * @param	newLines	Array to fill with result lines.
+	 * @param words The array of words in the line to process.
+	 * @param newLines Array to fill with result lines.
 	 */
 	function wrapLineByWord(words:Array<String>, newLines:Array<String>):Void
 	{
@@ -850,7 +850,7 @@ class FlxBitmapText extends FlxSprite
 		var wordWidth:Float; // total width of current word
 		var wordLength:Int; // number of letters in current word
 
-		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
+		var isSpaceWord:Bool = false; // whether current word consists of spaces
 
 		var charCode:Int;
 		var charWidth:Float = 0; // the width of current character
@@ -944,10 +944,10 @@ class FlxBitmapText extends FlxSprite
 	}
 
 	/**
-	 * Wraps provided line by characters (as in standart flash text fields).
+	 * Wraps provided line by characters (as in standard Flash text fields).
 	 *
-	 * @param	words		The array of words in the line to process.
-	 * @param	newLines	Array to fill with result lines.
+	 * @param words The array of words in the line to process.
+	 * @param newLines Array to fill with result lines.
 	 */
 	function wrapLineByCharacter(words:Array<String>, newLines:Array<String>):Void
 	{
@@ -956,7 +956,7 @@ class FlxBitmapText extends FlxSprite
 		var word:String; // current word to process
 		var wordLength:Int; // number of letters in current word
 
-		var isSpaceWord:Bool = false; // whether current word consists of spaces or not
+		var isSpaceWord:Bool = false; // whether current word consists of spaces
 
 		var charCode:Int;
 		var c:Int; // char index
@@ -1058,7 +1058,7 @@ class FlxBitmapText extends FlxSprite
 	}
 
 	/**
-	 * Internal method for updating helper data for text rendering
+	 * Internal method for updating helper data for text rendering.
 	 */
 	function updateTextBitmap(useTiles:Bool = false):Void
 	{
@@ -1525,12 +1525,12 @@ class FlxBitmapText extends FlxSprite
 	}
 
 	/**
-	 * Set border's style (shadow, outline, etc), color, and size all in one go!
+	 * Sets border's style (shadow, outline, etc.), color, and size all in one go!
 	 *
-	 * @param	Style outline style
-	 * @param	Color outline color in flash 0xAARRGGBB format
-	 * @param	Size outline size in pixels
-	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
+	 * @param Style Outline style.
+	 * @param Color Outline color in Flash ARGB format.
+	 * @param Size Outline size in pixels.
+	 * @param Quality Number of iterations to use when drawing. `0` :just 1; `1` :equal number to `Size`.
 	 */
 	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void
 	{
@@ -1822,9 +1822,9 @@ class FlxBitmapText extends FlxSprite
 	}
 
 	/**
-	 * Checks if the specified code is one of the Unicode Combining Diacritical Marks
-	 * @param	Code	The charactercode we want to check
-	 * @return 	Bool	Returns true if the code is a Unicode Combining Diacritical Mark
+	 * Checks whether the specified code is one of the Unicode Combining Diacritical Marks.
+	 * @param Code The character code we want to check.
+	 * @return Whether the code is a Unicode Combining Diacritical Mark.
 	 */
 	function isUnicodeComboMark(Code:Int):Bool
 	{

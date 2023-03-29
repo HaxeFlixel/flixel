@@ -1,7 +1,7 @@
 package flixel.input.gamepad.id;
 
 /**
- * IDs for MFi controllers
+ * IDs for MFi controllers.
  */
 class MFiID
 {

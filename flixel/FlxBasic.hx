@@ -5,7 +5,7 @@ import flixel.util.FlxStringUtil;
 
 /**
  * This is a useful "generic" Flixel object. Both `FlxObject` and
- * `FlxGroup` extend this class. Has no size, position or graphical data.
+ * `FlxGroup` extend this class. Has no size, position, or graphical data.
  */
 class FlxBasic implements IFlxDestroyable
 {
@@ -21,7 +21,7 @@ class FlxBasic implements IFlxDestroyable
 	#end
 
 	/**
-	 * A unique ID starting from 0 and increasing by 1 for each subsequent `FlxBasic` that is created.
+	 * A unique ID starting from `0` and increasing by `1` for each subsequent `FlxBasic` that is created.
 	 */
 	public var ID:Int = idEnumerator++;
 
@@ -39,7 +39,7 @@ class FlxBasic implements IFlxDestroyable
 	public var visible(default, set):Bool = true;
 
 	/**
-	 * Useful state for many game objects - "dead" (`!alive`) vs `alive`. `kill()` and
+	 * Useful state for many game objects - "dead" (`!alive`) vs. `alive`. `kill()` and
 	 * `revive()` both flip this switch (along with `exists`, but you can override that).
 	 */
 	public var alive(default, set):Bool = true;
@@ -56,8 +56,8 @@ class FlxBasic implements IFlxDestroyable
 
 	/**
 	 * This determines on which `FlxCamera`s this object will be drawn. If it is `null` / has not been
-	 * set, it uses the list of default draw targets, which is controlled via `FlxG.camera.setDefaultDrawTarget`
-	 * as well as the `DefaultDrawTarget` argument of `FlxG.camera.add`.
+	 * set, it uses the list of default draw targets, which is controlled via `FlxG.camera.setDefaultDrawTarget()`
+	 * as well as the `DefaultDrawTarget` argument of `FlxG.camera.add()`.
 	 */
 	public var cameras(get, set):Array<FlxCamera>;
 
@@ -73,6 +73,8 @@ class FlxBasic implements IFlxDestroyable
 	public function new() {}
 
 	/**
+	 * Cleans up memory used by the object.
+	 * 
 	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
 	 * It may even cause crashes if it is still part of a group or state.
 	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
@@ -89,10 +91,10 @@ class FlxBasic implements IFlxDestroyable
 	}
 
 	/**
-	 * Handy function for "killing" game objects. Use `reset()` to revive them.
+	 * Handy function for "killing" game objects. Use `revive()` to revive them.
 	 * Default behavior is to flag them as nonexistent AND dead.
 	 * However, if you want the "corpse" to remain in the game, like to animate an effect or whatever,
-	 * you should `override` this, setting only `alive` to `false`, and leaving `exists` `true`.
+	 * you should override this, setting only `alive` to `false`, and leaving `exists` as `true`.
 	 */
 	public function kill():Void
 	{
@@ -101,7 +103,7 @@ class FlxBasic implements IFlxDestroyable
 	}
 
 	/**
-	 * Handy function for bringing game objects "back to life". Just sets `alive` and `exists` back to `true`.
+	 * Handy function for "reviving" game objects. Sets `alive` and `exists` back to `true`.
 	 * In practice, this function is most often called by `FlxObject#reset()`.
 	 */
 	public function revive():Void
@@ -113,6 +115,8 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * Override this function to update your class's position and appearance.
 	 * This is where most of your game rules and behavioral code will go.
+	 * 
+	 * @param elapsed The amount of time in seconds that have passed since the last frame.
 	 */
 	public function update(elapsed:Float):Void
 	{
@@ -132,6 +136,9 @@ class FlxBasic implements IFlxDestroyable
 		#end
 	}
 
+	/**
+	 * Converts the object to a readable string. Useful for debugging, save games, etc.
+	 */
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([
@@ -196,7 +203,7 @@ class FlxBasic implements IFlxDestroyable
 }
 
 /**
- * Types of flixel objects - mainly for collisions.
+ * Types of Flixel objects. Mainly used for collisions.
  */
 @:enum
 abstract FlxType(Int)

@@ -1,27 +1,27 @@
 package flixel.system.debug.interaction;
 
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.display.DisplayObject;
-import flash.events.KeyboardEvent;
 import flixel.FlxObject;
-import flash.events.MouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
-import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
+import flixel.system.debug.interaction.tools.Transform;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
-import flash.display.Bitmap;
+import openfl.display.Bitmap;
 #end
 #if (haxe_ver >= 4.2)
 import Std.isOfType;
@@ -34,7 +34,7 @@ import Std.is as isOfType;
  * on the screen to be dragged, moved or deleted while the game is
  * still running.
  *
- * @author	Fernando Bevilacqua (dovyski@gmail.com)
+ * @author Fernando Bevilacqua (dovyski@gmail.com)
  */
 class Interaction extends Window
 {
@@ -47,7 +47,7 @@ class Interaction extends Window
 	public var pointerPressed:Bool = false;
 
 	/**
-	 * Control if an outline should be drawn on selected elements.
+	 * Whether an outline should be drawn on selected elements.
 	 * Tools can set this property to `false` if they want to draw custom
 	 * selection marks, for instance.
 	 */
@@ -198,16 +198,16 @@ class Interaction extends Window
 	}
 
 	/**
-	 * Add a new tool to the interaction system.
+	 * Adds a new tool to the interaction system.
 	 *
 	 * Any tool added to the interaction system must extend the class
 	 * `flixel.system.debug.interaction.tools.Tool`. The class contains several methods
-	 * that can be used to provide new funcionalities to the interaction, or they can be
+	 * that can be used to provide new functionalities to the interaction, or they can be
 	 * overridden to alter existing behavior. For instance, tools can draw things on the
 	 * screen, they can be activated when the user clicks a button, and so on. Check
 	 * the classes in the package `flixel.system.debug.interaction.tools` for examples.
 	 *
-	 * @param tool instance of a tool that will be added to the interaction system.
+	 * @param tool Instance of a tool that will be added to the interaction system.
 	 */
 	public function addTool(tool:Tool):Void
 	{
@@ -232,7 +232,7 @@ class Interaction extends Window
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -337,12 +337,12 @@ class Interaction extends Window
 	}
 
 	/**
-	 * Obtain a reference to a tool that has been added to the interaction system and is
+	 * Obtains a reference to a tool that has been added to the interaction system and is
 	 * available for use. This method can be used to access information provided by any
 	 * tool in the system, or to change their behavior.
 	 *
-	 * @param className name of the class to be fetched, e.g. `flixel.system.debug.interaction.tools.Pointer`.
-	 * @return Tool reference to the first tool found whose type matches the class name provided. If no tool is found, `null` is returned.
+	 * @param className Name of the class to be fetched, e.g. `flixel.system.debug.interaction.tools.Pointer`.
+	 * @return Reference to the first tool found whose type matches the class name provided. If no tool is found, `null` is returned.
 	 */
 	public function getTool(className:Class<Tool>):Tool
 	{
@@ -451,7 +451,7 @@ class Interaction extends Window
 		}
 
 		// If the requested new tool is the same as the already active one,
-		// we deactive it (toggle behavior).
+		// we deactivate it (toggle behavior).
 		if (activeTool == value)
 			value = null;
 
@@ -522,10 +522,10 @@ class Interaction extends Window
 	}
 
 	/**
-	 * Informs whether the interactive debug is in use or not. Usage is defined
+	 * Checks whether the interactive debug is in use. Usage is defined
 	 * as the interactive debug being visible and one of its tools is selected/active.
 	 *
-	 * @return `true` if the interactive debug is visible and one of its tools is selected/active.
+	 * @return Whether the interactive debug is visible and one of its tools is selected/active.
 	 */
 	public function isInUse():Bool
 	{
@@ -540,14 +540,14 @@ class Interaction extends Window
 	}
 
 	/**
-	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
-	 * the method has no return, you must pass an array where items will be placed. The method decides
-	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
+	 * Finds all items within an area. In order to improve performance and reduce temporary allocations,
+	 * the method has no return; you must pass an array where items will be placed. The method determines
+	 * whether an item is within the searching area by checking if the item's hitbox (obtained from
 	 * `getHitbox()`) overlaps the area parameter.
 	 *
-	 * @param	items		array where the method will place all found items. Any previous content in the array will be preserved.
-	 * @param	members		array where the method will recursively search for items.
-	 * @param	area		a rectangle that describes the area where the method should search within.
+	 * @param items Array where the method will place all found items. Any previous content in the array will be preserved.
+	 * @param members Array where the method will recursively search for items.
+	 * @param area A rectangle that describes the area where the method should search within.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
 	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void

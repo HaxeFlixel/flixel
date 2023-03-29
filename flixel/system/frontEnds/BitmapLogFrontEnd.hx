@@ -1,7 +1,7 @@
 package flixel.system.frontEnds;
 
-import flash.display.BitmapData;
 import flixel.FlxG;
+import openfl.display.BitmapData;
 
 /**
  * Accessed via `FlxG.bitmapLog`.
@@ -16,7 +16,7 @@ class BitmapLogFrontEnd
 	}
 
 	/**
-	 * Clears all bitmaps
+	 * Clears all bitmaps.
 	 */
 	public inline function clear():Void
 	{
@@ -26,8 +26,8 @@ class BitmapLogFrontEnd
 	}
 
 	/**
-	 * Clear one bitmap object from the log -- the last one, by default
-	 * @param	Index
+	 * Clears one bitmap object from the log. Clears the last one, by default.
+	 * @param Index
 	 */
 	public inline function clearAt(Index:Int = -1):Void
 	{

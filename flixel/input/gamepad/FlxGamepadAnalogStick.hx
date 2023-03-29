@@ -8,32 +8,32 @@ class FlxGamepadAnalogStick
 	public var y(default, null):Int;
 
 	/**
-	 * a raw button input ID, for sending a digital event for "up" alongside the analog event
+	 * A raw button input ID, for sending a digital event for "up" alongside the analog event.
 	 */
 	public var rawUp(default, null):Int = -1;
 
 	/**
-	 * a raw button input ID, for sending a digital event for "down" alongside the analog event
+	 * A raw button input ID, for sending a digital event for "down" alongside the analog event.
 	 */
 	public var rawDown(default, null):Int = -1;
 
 	/**
-	 * a raw button input ID, for sending a digital event for "left" alongside the analog event
+	 * A raw button input ID, for sending a digital event for "left" alongside the analog event.
 	 */
 	public var rawLeft(default, null):Int = -1;
 
 	/**
-	 * a raw button input ID, for sending a digital event for "right" alongside the analog event
+	 * A raw button input ID, for sending a digital event for "right" alongside the analog event.
 	 */
 	public var rawRight(default, null):Int = -1;
 
 	/**
-	 * the absolute value the dpad must be greater than before digital inputs are sent
+	 * Ahe absolute value the D-pad must be greater than before digital inputs are sent.
 	 */
 	public var digitalThreshold(default, null):Float = 0.5;
 
 	/**
-	 * when analog inputs are received, how to process them digitally
+	 * How to process analog inputs digitally when they are received.
 	 */
 	public var mode(default, null):FlxAnalogToDigitalMode = BOTH;
 
@@ -76,22 +76,22 @@ typedef FlxGamepadAnalogStickSettings =
 	?right:Int,
 	?threshold:Float,
 	?mode:FlxAnalogToDigitalMode
-}
+};
 
 enum FlxAnalogToDigitalMode
 {
 	/**
-	 * Send both digital and analog events when the analog stick is moved
+	 * Send both digital and analog events when the analog stick is moved.
 	 */
 	BOTH;
 
 	/**
-	 * Send only digital events when the analog stick is moved
+	 * Send only digital events when the analog stick is moved.
 	 */
 	ONLY_DIGITAL;
 
 	/**
-	 * Send only analog events when the analog stick is moved
+	 * Send only analog events when the analog stick is moved.
 	 */
 	ONLY_ANALOG;
 }

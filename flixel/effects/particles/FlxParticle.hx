@@ -17,13 +17,13 @@ import flixel.util.helpers.FlxRange;
 class FlxParticle extends FlxSprite implements IFlxParticle
 {
 	/**
-	 * How long this particle lives before it disappears. Set to `0` to never `kill()` the particle automatically.
-	 * NOTE: this is a maximum, not a minimum; the object could get recycled before its `lifespan` is up.
+	 * How long this particle lives before it disappears, in seconds. Set to `0` to never `kill()` the particle automatically.
+	 * NOTE: This is a maximum, not a minimum; the object could get recycled before its `lifespan` is up.
 	 */
 	public var lifespan:Float = 0;
 
 	/**
-	 * How long this particle has lived so far.
+	 * How long this particle has lived so far, in seconds.
 	 */
 	public var age(default, null):Float = 0;
 
@@ -34,7 +34,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	public var percent(default, null):Float = 0;
 
 	/**
-	 * Whether or not the hitbox should be updated each frame when scaling.
+	 * Whether the hitbox should be updated each frame when scaling.
 	 */
 	public var autoUpdateHitbox:Bool = false;
 
@@ -84,7 +84,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	var _delta:Float = 0;
 
 	/**
-	 * Instantiate a new particle. Like `FlxSprite`, all meaningful creation
+	 * Instantiates a new particle. Like `FlxSprite`, all meaningful creation
 	 * happens during `loadGraphic()` or `makeGraphic()` or whatever.
 	 */
 	@:keep
@@ -105,7 +105,7 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -143,7 +143,9 @@ class FlxParticle extends FlxSprite implements IFlxParticle
 	}
 
 	/**
-	 * The particle's main update logic. Basically updates properties if alive, based on ranged properties.
+	 * The particle's main update logic. Updates properties if the particle is alive, based on ranged properties.
+	 * 
+	 * @param elapsed The amount of time in seconds that have passed since the last frame.
 	 */
 	override public function update(elapsed:Float):Void
 	{

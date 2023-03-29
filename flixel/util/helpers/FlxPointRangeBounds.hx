@@ -5,18 +5,18 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 /**
- * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of FlxPoints, which have both an x and y component.
- * This would extends Range<Bounds<FlxPoint>> but this allows a more practical use of set().
+ * Helper object for holding beginning minimum/maximum and ending minimum/maximum values of `FlxPoint`s, which have both an `x` and `y` component.
+ * This would extend `FlxRange<FlxBounds<FlxPoint>>`, but this allows a more practical use of `set()`.
  */
 class FlxPointRangeBounds implements IFlxDestroyable
 {
 	/**
-	 * The beginning X and Y values of this property.
+	 * The beginning x- and y-values of this property.
 	 */
 	public var start:FlxBounds<FlxPoint>;
 
 	/**
-	 * The ending X and Y values of this property.
+	 * The ending x- and y-values of this property.
 	 */
 	public var end:FlxBounds<FlxPoint>;
 
@@ -26,17 +26,16 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	public var active:Bool = true;
 
 	/**
-	 * Create a new FlxPointRangeBounds object.
+	 * Creates a new `FlxPointRangeBounds` object.
 	 *
-	 * @param   startMinX  The minimum possible initial value of X for this property for particles launched from this emitter.
-	 * @param   startMinY  The minimum possible initial value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   startMaxX  The maximum possible initial value of X for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   startMaxY  The maximum possible initial value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinY if ignored.
-	 * @param   endMinX    The minimum possible final value of X for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   endMinY    The minimum possible final value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinY if ignored.
-	 * @param   endMaxX    The maximum possible final value of X for this property for particles launched from this emitter. Optional, will be set equal to endMinX if ignored.
-	 * @param   endMaxY    The maximum possible final value of Y for this property for particles launched from this emitter. Optional, will be set equal to endMinY if ignored.
-	 * @return  This FlxPointRangeBounds instance (nice for chaining stuff together).
+	 * @param startMinX The minimum possible initial x-value for this property.
+	 * @param startMinY The minimum possible initial y-value for this property. Will be set to `startMinX` if ignored.
+	 * @param startMaxX The maximum possible initial x-value for this property. Will be set to `startMinX` if ignored.
+	 * @param startMaxY The maximum possible initial y-value for this property. Will be set to `startMinY` if ignored.
+	 * @param endMinX The minimum possible final x-value for this property. Will be set to `startMinX` if ignored.
+	 * @param endMinY The minimum possible final y-value for this property. Will be set to `startMinY` if ignored.
+	 * @param endMaxX The maximum possible final x-value for this property. Will be set to `endMinX` if ignored.
+	 * @param endMaxY The maximum possible final y-value for this property. Will be set to `endMinY` if ignored.
 	 */
 	public function new(startMinX:Float, ?startMinY:Float, ?startMaxX:Float, ?startMaxY:Float, ?endMinX:Float, ?endMinY:Float, ?endMaxX:Float, ?endMaxY:Float)
 	{
@@ -47,17 +46,17 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	}
 
 	/**
-	 * Handy function to set the the beginning and ending range of values for a FlxPoint in one line.
+	 * Handy function to set the the beginning and ending range of values of this `FlxPointRangeBounds` object in one line.
 	 *
-	 * @param   startMinX  The minimum possible initial value of X for this property for particles launched from this emitter.
-	 * @param   startMinY  The minimum possible initial value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   startMaxX  The maximum possible initial value of X for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   startMaxY  The maximum possible initial value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinY if ignored.
-	 * @param   endMinX    The minimum possible final value of X for this property for particles launched from this emitter. Optional, will be set equal to startMinX if ignored.
-	 * @param   endMinY    The minimum possible final value of Y for this property for particles launched from this emitter. Optional, will be set equal to startMinY if ignored.
-	 * @param   endMaxX    The maximum possible final value of X for this property for particles launched from this emitter. Optional, will be set equal to endMinX if ignored.
-	 * @param   endMaxY    The maximum possible final value of Y for this property for particles launched from this emitter. Optional, will be set equal to endMinY if ignored.
-	 * @return  This FlxPointRangeBounds instance (nice for chaining stuff together).
+	 * @param startMinX The minimum possible initial x-value for this property.
+	 * @param startMinY The minimum possible initial y-value for this property. Will be set to `startMinX` if ignored.
+	 * @param startMaxX The maximum possible initial x-value for this property. Will be set to `startMinX` if ignored.
+	 * @param startMaxY The maximum possible initial y-value for this property. Will be set to `startMinY` if ignored.
+	 * @param endMinX The minimum possible final x-value for this property. Will be set to `startMinX` if ignored.
+	 * @param endMinY The minimum possible final y-value for this property. Will be set to `startMinY` if ignored.
+	 * @param endMaxX The maximum possible final x-value for this property. Will be set to `endMinX` if ignored.
+	 * @param endMaxY The maximum possible final y-value for this property. Will be set to `endMinY` if ignored.
+	 * @return This `FlxPointRangeBounds` instance (nice for chaining stuff together).
 	 */
 	public function set(startMinX:Float, ?startMinY:Float, ?startMaxX:Float, ?startMaxY:Float, ?endMinX:Float, ?endMinY:Float, ?endMaxX:Float,
 			?endMaxY:Float):FlxPointRangeBounds
@@ -75,10 +74,10 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	}
 
 	/**
-	 * Function to compare this FlxPointRangeBounds to another.
+	 * Compares this `FlxPointRangeBounds` to another.
 	 *
-	 * @param	OtherFlxPointRangeBounds  The other FlxPointRangeBounds to compare to this one.
-	 * @return	True if the FlxPointRangeBounds have the same min and max value, false otherwise.
+	 * @param OtherFlxPointRangeBounds The other `FlxPointRangeBounds` to compare to this one.
+	 * @return Whether the `FlxPointRangeBounds` instances have the same `min` and `max` values.
 	 */
 	public inline function equals(OtherFlxPointRangeBounds:FlxPointRangeBounds):Bool
 	{
@@ -89,7 +88,7 @@ class FlxPointRangeBounds implements IFlxDestroyable
 	}
 
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 * Converts the object to readable a string. Useful for debugging, save games, etc.
 	 */
 	public function toString():String
 	{

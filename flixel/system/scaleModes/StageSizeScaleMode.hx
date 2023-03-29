@@ -8,8 +8,8 @@ import flixel.FlxG;
  * However, unlike `FixedScaleMode`, this mode will extend the width of the current scene to match the window scale.
  * The result is that objects that would be offscreen on smaller window sizes will be visible in larger ones.
  * 
- * Note that compared with `FixedScaleAdjustSizeScaleMode`, this scale mode aligns with the top left of the game's screen.
- * The coordinates 0,0 are always located at the top left of your game window.
+ * Note that, compared with `FixedScaleAdjustSizeScaleMode`, this scale mode aligns with the top left of the game's screen.
+ * The coordinates `(0, 0)` are always located at the top left of your game window.
  * 
  * To enable it in your project, use `FlxG.scaleMode = new StageSizeScaleMode();`.
  */

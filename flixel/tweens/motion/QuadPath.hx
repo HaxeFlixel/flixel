@@ -53,8 +53,8 @@ class QuadPath extends Motion
 	/**
 	 * Starts moving along the path.
 	 *
-	 * @param	DurationOrSpeed		Duration or speed of the movement.
-	 * @param	UseDuration			Whether to use the previous param as duration or speed.
+	 * @param DurationOrSpeed Duration or speed of the movement.
+	 * @param UseDuration Whether to use the previous param as duration or speed.
 	 */
 	public function setMotion(DurationOrSpeed:Float, UseDuration:Bool = true):QuadPath
 	{

@@ -1,11 +1,5 @@
 package flixel.text;
 
-import flash.display.BitmapData;
-import flash.geom.ColorTransform;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -19,6 +13,12 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxUnicodeUtil;
@@ -33,13 +33,13 @@ import openfl.utils.AssetType;
 // TODO: think about filters and text
 
 /**
- * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate
+ * Extends `FlxSprite` to support rendering text. Can tint, fade, rotate, and scale just like a sprite. Doesn't really animate
  * though. Also does nice pixel-perfect centering on pixel fonts as long as they are only one-liners.
  */
 class FlxText extends FlxSprite
 {
 	/**
-	 * 2px gutter on both top and bottom
+	 * 2px gutter on both top and bottom.
 	 */
 	static inline var VERTICAL_GUTTER:Int = 4;
 
@@ -59,8 +59,8 @@ class FlxText extends FlxSprite
 	public var font(get, set):String;
 
 	/**
-	 * Whether this text field uses an embedded font (by default) or not.
-	 * Read-only - use `systemFont` to specify a system font to use, which then automatically sets this to `false`.
+	 * Whether this text field uses an embedded font (by default).
+	 * Read-only. Use `systemFont` to specify a system font to use, which then automatically sets this to `false`.
 	 */
 	public var embedded(get, never):Bool;
 
@@ -71,33 +71,33 @@ class FlxText extends FlxSprite
 	public var systemFont(get, set):String;
 
 	/**
-	 * Whether to use bold text or not (`false` by default).
+	 * Whether to use bold text (`false` by default).
 	 */
 	public var bold(get, set):Bool;
 
 	/**
-	 * Whether to use italic text or not (`false` by default). Only works on Flash.
+	 * Whether to use italic text (`false` by default). Only works on Flash.
 	 */
 	public var italic(get, set):Bool;
 
 	/**
-	 * Whether to use word wrapping and multiline or not (`true` by default).
+	 * Whether to use word wrapping and multiline (`true` by default).
 	 */
 	public var wordWrap(get, set):Bool;
 
 	/**
 	 * The alignment of the font. Note: `autoSize` must be set to
-	 * `false` or `alignment` won't show any visual differences.
+	 * `false`, or `alignment` won't show any visual differences.
 	 */
 	public var alignment(get, set):FlxTextAlign;
 
 	/**
-	 * The border style to use
+	 * The border style to use.
 	 */
 	public var borderStyle(default, set):FlxTextBorderStyle = NONE;
 
 	/**
-	 * The color of the border in `0xAARRGGBB` format
+	 * The color of the border in ARGB format.
 	 */
 	public var borderColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 
@@ -107,15 +107,15 @@ class FlxText extends FlxSprite
 	public var borderSize(default, set):Float = 1;
 
 	/**
-	 * How many iterations do use when drawing the border. `0`: only 1 iteration, `1`: one iteration for every pixel in `borderSize`
+	 * How many iterations to use when drawing the border. `0`: only 1 iteration; `1`: one iteration for every pixel in `borderSize`.
 	 * A value of `1` will have the best quality for large border sizes, but might reduce performance when changing text.
-	 * NOTE: If the `borderSize` is `1`, `borderQuality` of `0` or `1` will have the exact same effect (and performance).
+	 * NOTE: If `borderSize == 1`, `borderQuality` of `0` or `1` will have the exact same effect (and performance).
 	 */
 	public var borderQuality(default, set):Float = 1;
 
 	/**
-	 * Reference to a `TextField` object used internally for rendering -
-	 * be sure to know what you're doing if messing with its properties!
+	 * Reference to a `TextField` object used internally for rendering.
+	 * Be sure to know what you're doing if messing with its properties!
 	 */
 	public var textField(default, null):TextField;
 
@@ -142,7 +142,7 @@ class FlxText extends FlxSprite
 	var _font:String;
 
 	/**
-	 * Helper boolean which tells whether to update graphic of this text object or not.
+	 * Whether to update graphic of this text object.
 	 */
 	var _regen:Bool = true;
 
@@ -165,13 +165,13 @@ class FlxText extends FlxSprite
 	/**
 	 * Creates a new `FlxText` object at the specified position.
 	 *
-	 * @param   X              The x position of the text.
-	 * @param   Y              The y position of the text.
-	 * @param   FieldWidth     The `width` of the text object. Enables `autoSize` if `<= 0`.
-	 *                         (`height` is determined automatically).
-	 * @param   Text           The actual text you would like to display initially.
-	 * @param   Size           The font size for this text object.
-	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
+	 * @param X The x-position of the text.
+	 * @param Y The y-position of the text.
+	 * @param FieldWidth The `width` of the text object. Enables `autoSize` if `<= 0`.
+	 * (`height` is determined automatically).
+	 * @param Text The actual text you would like to display initially.
+	 * @param Size The font size for this text object.
+	 * @param EmbeddedFont Whether this text field uses embedded fonts.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
 	{
@@ -212,7 +212,7 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -233,10 +233,10 @@ class FlxText extends FlxSprite
 	/**
 	 * Stamps text onto specified atlas object and loads graphic from this atlas.
 	 * WARNING: Changing text after stamping it on the atlas will break the atlas, so do it only for
-	 * static texts and only after making all the text customizing (like `size`, `alignment`, `color`, etc.)
+	 * static texts and only after making all the text customizing (like `size`, `alignment`, `color`, etc.).
 	 *
-	 * @param	atlas	atlas to stamp graphic to.
-	 * @return	whether the graphic was stamped on the atlas successfully
+	 * @param atlas Atlas to stamp graphic to.
+	 * @return Whether the graphic was stamped on the atlas successfully.
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
@@ -255,7 +255,7 @@ class FlxText extends FlxSprite
 
 	/**
 	 * Applies formats to text between marker characters, then removes those markers.
-	 * NOTE: this will clear all `FlxTextFormat`s and return to the default format.
+	 * NOTE: This will clear all `FlxTextFormat`s and return to the default format.
 	 *
 	 * Usage:
 	 *
@@ -274,8 +274,8 @@ class FlxText extends FlxSprite
 	 * text.applyMarkup("Hey @Buddy@, what <g>is<g> going @on<g>?<g>@", [yellow, green]);
 	 * ```
 	 *
-	 * @param   input   The text you want to format
-	 * @param   rules   `FlxTextFormat`s to selectively apply, paired with marker strings
+	 * @param input The text you want to format.
+	 * @param rules `FlxTextFormat`s to selectively apply, paired with marker strings.
 	 */
 	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
@@ -380,11 +380,11 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Adds another format to this `FlxText`
+	 * Adds another format to this `FlxText`.
 	 *
-	 * @param	Format	The format to be added.
-	 * @param	Start	The start index of the string where the format will be applied.
-	 * @param	End		The end index of the string where the format will be applied.
+	 * @param Format The format to be added.
+	 * @param Start The start index of the string where the format will be applied.
+	 * @param End The end index of the string where the format will be applied.
 	 */
 	public function addFormat(Format:FlxTextFormat, Start:Int = -1, End:Int = -1):FlxText
 	{
@@ -460,14 +460,14 @@ class FlxText extends FlxSprite
 	/**
 	 * You can use this if you have a lot of text parameters to set instead of the individual properties.
 	 *
-	 * @param	Font			The name of the font face for the text display.
-	 * @param	Size			The size of the font (in pixels essentially).
-	 * @param	Color			The color of the text in `0xRRGGBB` format.
-	 * @param	Alignment		The desired alignment
-	 * @param	BorderStyle		Which border style to use
-	 * @param	BorderColor 	Color for the border, `0xAARRGGBB` format
-	 * @param	EmbeddedFont	Whether this text field uses embedded fonts or not
-	 * @return	This `FlxText` instance (nice for chaining stuff together, if you're into that).
+	 * @param Font The name of the font face for the text display.
+	 * @param Size The size of the font (in pixels essentially).
+	 * @param Color The color of the text in `0xRRGGBB` format.
+	 * @param Alignment The desired alignment.
+	 * @param BorderStyle Which border style to use.
+	 * @param BorderColor Color for the border, in ARGB format.
+	 * @param EmbeddedFont Whether this text field uses embedded fonts.
+	 * @return This `FlxText` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function setFormat(?Font:String, Size:Int = 8, Color:FlxColor = FlxColor.WHITE, ?Alignment:FlxTextAlign, ?BorderStyle:FlxTextBorderStyle,
 			BorderColor:FlxColor = FlxColor.TRANSPARENT, EmbeddedFont:Bool = true):FlxText
@@ -495,12 +495,12 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Set border's style (shadow, outline, etc), color, and size all in one go!
+	 * Sets border's style (shadow, outline, etc.), color, and size all in one go!
 	 *
-	 * @param	Style outline style
-	 * @param	Color outline color in `0xAARRGGBB` format
-	 * @param	Size outline size in pixels
-	 * @param	Quality outline quality - # of iterations to use when drawing. `0`: just 1, `1`: equal number to `Size`
+	 * @param Style Outline style.
+	 * @param Color Outline color in ARGB format.
+	 * @param Size Outline size in pixels.
+	 * @param Quality Number of iterations to use when drawing. `0`: just 1; `1`: equal number to `Size`.
 	 */
 	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):FlxText
 	{
@@ -789,7 +789,7 @@ class FlxText extends FlxSprite
 		// Account for gutter
 		var newHeight:Int = Math.ceil(textField.textHeight) + VERTICAL_GUTTER;
 
-		// prevent text height from shrinking on flash if text == ""
+		// prevent text height from shrinking on Flash if text == ""
 		if (textField.textHeight == 0)
 		{
 			newHeight = oldHeight;
@@ -842,7 +842,7 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Internal function to draw textField to a BitmapData, if flash it calculates every line x to avoid blurry lines.
+	 * Internal function to draw `textField` to a `BitmapData`. If Flash, it calculates every line x to avoid blurry lines.
 	 */
 	function drawTextFieldTo(graphic:BitmapData):Void
 	{
@@ -855,7 +855,7 @@ class FlxText extends FlxSprite
 			{
 				var lineMetrics = textField.getLineMetrics(i);
 
-				// Workaround for blurry lines caused by non-integer x positions on flash
+				// Workaround for blurry lines caused by non-integer x positions on Flash
 				var diff:Float = lineMetrics.x - Std.int(lineMetrics.x);
 				if (diff != 0)
 				{
@@ -884,7 +884,7 @@ class FlxText extends FlxSprite
 
 	#if flash
 	/**
-	 * Helper function for `drawTextFieldTo()`, this checks if thw workaround is needed to prevent blurry lines.
+	 * Helper function for `drawTextFieldTo()`. Checks whether the workaround is needed to prevent blurry lines.
 	 */
 	function isTextBlurry():Bool
 	{
@@ -909,18 +909,18 @@ class FlxText extends FlxSprite
 	/**
 	 * Internal function to update the current animation frame.
 	 *
-	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
+	 * @param force Whether the frame should also be recalculated if we're on a non-Flash target.
 	 */
-	override function calcFrame(RunOnCpp:Bool = false):Void
+	override function calcFrame(force:Bool = false):Void
 	{
 		if (textField == null)
 			return;
 
-		if (FlxG.renderTile && !RunOnCpp)
+		if (FlxG.renderTile && !force)
 			return;
 
 		regenGraphic();
-		super.calcFrame(RunOnCpp);
+		super.calcFrame(force);
 	}
 
 	function applyBorderStyle():Void
@@ -1003,7 +1003,7 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Helper function for `applyBorderStyle()`
+	 * Helper function for `applyBorderStyle()`.
 	 */
 	inline function copyTextWithOffset(x:Float, y:Float)
 	{
@@ -1051,9 +1051,9 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * A helper function for updating the TextField that we use for rendering.
+	 * A helper function for updating the `TextField` that we use for rendering.
 	 *
-	 * @return	A writable copy of `TextField.defaultTextFormat`.
+	 * @return A writable copy of `TextField.defaultTextFormat`.
 	 */
 	function dtfCopy():TextFormat
 	{
@@ -1086,17 +1086,17 @@ class FlxTextFormat
 	public var leading(default, set):Int;
 
 	/**
-	 * The border color if the text has a shadow or a border
+	 * The border color if the text has a shadow or a border.
 	 */
 	var borderColor:FlxColor;
 
 	var format(default, null):TextFormat;
 
 	/**
-	 * @param   FontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
-	 * @param   Bold          Whether the text should be bold (must be supported by the font). `false` by default.
-	 * @param   Italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
-	 * @param   BorderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
+	 * @param FontColor Font color, in RGB format. Inherits from the default format by default.
+	 * @param Bold Whether the text should be bold (must be supported by the font). `false` by default.
+	 * @param Italic Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
+	 * @param BorderColor Border color, in ARGB format. By default, no border (`null` / transparent).
 	 */
 	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)
 	{
@@ -1146,12 +1146,12 @@ enum FlxTextBorderStyle
 	SHADOW;
 
 	/**
-	 * Outline on all 8 sides
+	 * Outline on all 8 sides.
 	 */
 	OUTLINE;
 
 	/**
-	 * Outline, optimized using only 4 draw calls (might not work for narrow and/or 1-pixel fonts)
+	 * Outline, optimized using only 4 draw calls (might not work for narrow and/or 1-pixel fonts).
 	 */
 	OUTLINE_FAST;
 }
@@ -1162,7 +1162,7 @@ abstract FlxTextAlign(String) from String
 	var LEFT = "left";
 
 	/**
-	 * Warning: on Flash, this can have a negative impact on performance
+	 * Warning: On Flash, this can have a negative impact on performance
 	 * of multiline texts that are frequently regenerated (especially with
 	 * `borderStyle == OUTLINE`) due to a workaround for blurry rendering.
 	 */

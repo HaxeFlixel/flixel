@@ -13,12 +13,12 @@ class WatchFrontEnd
 	public function new() {}
 
 	/**
-	 * Add a variable to the watch list in the debugger.
+	 * Adds a variable to the watch list in the debugger.
 	 * This lets you see the value of the variable all the time.
 	 *
-	 * @param	object		A reference to any object in your game, e.g. Player or Robot or this.
-	 * @param	field		The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
-	 * @param	displayName	Optional, display your own string instead of the class name + variable name: e.g. "enemy count".
+	 * @param object A reference to any object in your game (e.g., `Player` or `Robot` or `this`).
+	 * @param field The name of the variable you want to watch, in quotes, as a string (e.g., `"speed"` or `"health"`).
+	 * @param displayName An optional custom string to display instead of the class name + variable name (e.g., `"enemy count"`).
 	 */
 	public inline function add(object:Dynamic, field:String, ?displayName:String):Void
 	{
@@ -28,10 +28,10 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Remove a variable from the watch list in the debugger.
+	 * Removes a variable from the watch list in the debugger.
 	 *
-	 * @param	object	A reference to any object in your game, e.g. Player or Robot or this.
-	 * @param	field	The name of the variable you want to watch, in quotes, as a string: e.g. "speed" or "health".
+	 * @param object A reference to any object in your game (e.g., `Player` or `Robot` or `this`).
+	 * @param field The name of the variable you want to watch, in quotes, as a string (e.g., `"speed"` or `"health"`).
 	 */
 	public inline function remove(object:Dynamic, field:String):Void
 	{
@@ -41,12 +41,12 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Add or update a quickWatch entry to the watch list in the debugger.
-	 * Extremely useful when called in update() functions when there
+	 * Adds or updates a quickWatch entry to the watch list in the debugger.
+	 * Extremely useful when called in `update()` functions when there
 	 * doesn't exist a variable for a value you want to watch - so you won't have to create one.
 	 *
-	 * @param	displayName	The name of the quickWatch entry, for example `"mousePressed"`.
-	 * @param	value		The new value for this entry, for example `FlxG.mouse.pressed`.
+	 * @param displayName The name of the quickWatch entry (e.g., `"mousePressed"`).
+	 * @param value The new value for this entry (e.g., `FlxG.mouse.pressed`).
 	 */
 	public inline function addQuick(displayName:String, value:Dynamic):Void
 	{
@@ -56,9 +56,9 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Remove a quickWatch entry from the watch list of the debugger.
+	 * Removes a quickWatch entry from the watch list of the debugger.
 	 *
-	 * @param	displayName	The name of the quickWatch entry you want to remove.
+	 * @param displayName The name of the quickWatch entry you want to remove.
 	 */
 	public inline function removeQuick(displayName:String):Void
 	{
@@ -68,12 +68,12 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Add an expression to the watch list in the debugger.
+	 * Adds an expression to the watch list in the debugger.
 	 * The expression gets evaluated with hscript, and you can see its current value all the time.
 	 *
-	 * @param   expression    A Haxe expression written as a string that will be evaluated and watched.
-	 * @param   displayName   Optional, display your own string instead of the expression string: e.g. "enemy count".
-	 * @since   4.1.0
+	 * @param expression A Haxe expression written as a string that will be evaluated and watched.
+	 * @param displayName A custom string to display instead of the expression string (e.g., `"enemy count"`).
+	 * @since 4.1.0
 	 */
 	public function addExpression(expression:String, ?displayName:String):Void
 	{
@@ -87,10 +87,10 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Remove an expression from the watch list in the debugger.
+	 * Removes an expression from the watch list in the debugger.
 	 *
-	 * @param   displayName   The display name of the registered expression, if you supplied one, or the Haxe expression that you want to remove, in string form.
-	 * @since   4.1.0
+	 * @param displayName The display name of the registered expression, if you supplied one, or the Haxe expression that you want to remove, in string form.
+	 * @since 4.1.0
 	 */
 	public function removeExpression(displayName:String):Void
 	{
@@ -98,14 +98,14 @@ class WatchFrontEnd
 		FlxG.game.debugger.watch.remove(displayName, null);
 		#end
 	}
-	
-	public function addFunction(displayName:String, func:()->Dynamic):Void
+
+	public function addFunction(displayName:String, func:() -> Dynamic):Void
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.watch.add(displayName, FUNCTION(func));
 		#end
 	}
-	
+
 	public function removeFunction(displayName:String):Void
 	{
 		#if FLX_DEBUG
@@ -114,7 +114,7 @@ class WatchFrontEnd
 	}
 
 	/**
-	 * Add the mouse coords to the watch window. Useful for quickly
+	 * Adds the mouse coords to the watch window. Useful for quickly
 	 * getting coordinates for object placement during prototyping!
 	 */
 	public inline function addMouse():Void

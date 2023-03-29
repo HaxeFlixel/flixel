@@ -1,5 +1,6 @@
 package flixel.system.debug.watch;
 
+import Type.ValueType;
 import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.events.FocusEvent;
@@ -9,7 +10,6 @@ import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
-import Type.ValueType;
 
 class EditableTextField extends TextField implements IFlxDestroyable
 {

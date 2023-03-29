@@ -1,10 +1,10 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.display.Sprite;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
 
 /**
  * The base class of all tools in the interactive debug.
@@ -54,10 +54,10 @@ class Tool extends Sprite implements IFlxDestroyable
 	}
 
 	/**
-	 * Set the default icon for the tool. The default icon is used when
+	 * Sets the default icon for the tool. The default icon is used when
 	 * the tool is selected in the interaction window toolbar. Tools
-	 * can have more than one cursor, e.g. a custom cursor to indicate
-	 * that a specific action is happening. Use `setCursorInUse()` to
+	 * can have more than one cursor (e.g., a custom cursor to indicate
+	 * that a specific action is happening). See `setCursorInUse()` to
 	 * learn more about custom cursors.
 	 */
 	function setCursor(Icon:BitmapData):Void
@@ -67,13 +67,13 @@ class Tool extends Sprite implements IFlxDestroyable
 	}
 
 	/**
-	 * Make the tool use a custom cursor that it is not its default one.
-	 * This is  particularly useful to indicate to users that a particular
-	 * action of the tool is happening, e.g. rotating something.
-	 * Any custom cursor to be used must be previously registed via
+	 * Makes the tool use a custom cursor that it is not its default one.
+	 * This is particularly useful to indicate to users that a particular
+	 * action of the tool is happening (e.g., rotating something).
+	 * Any custom cursor to be used must be previously registered via
 	 * `Interaction#registerCustomCursor()`.
 	 *
-	 * @param	customCursorName	Name of the custom cursor that will be used from now on for the tool. If an empty string is informed, the tool's default icon (informed via `setCursor()`) will be used.
+	 * @param customCursorName Name of the custom cursor that will be used from now on for the tool. If `""`, the tool's default icon (set via `setCursor()`) will be used.
 	 */
 	function setCursorInUse(customCursorName:String):Void
 	{
@@ -81,7 +81,7 @@ class Tool extends Sprite implements IFlxDestroyable
 	}
 
 	/**
-	 * Make the tool use its default cursor, which was informed via `setCursor()`.
+	 * Makes the tool use its default cursor, which was set via `setCursor()`.
 	 */
 	function useDefaultCursor():Void
 	{

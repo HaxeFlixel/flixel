@@ -1,17 +1,17 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
-import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal.FlxTypedSignal;
 #if FLX_JOYSTICK_API
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import openfl.events.JoystickEvent;
 #elseif FLX_GAMEINPUT_API
-import flash.ui.GameInput;
-import flash.ui.GameInputDevice;
-import flash.events.GameInputEvent;
+import openfl.events.GameInputEvent;
+import openfl.ui.GameInput;
+import openfl.ui.GameInputDevice;
 
 using flixel.util.FlxStringUtil;
 #end
@@ -19,57 +19,57 @@ using flixel.util.FlxStringUtil;
 class FlxGamepadManager implements IFlxInputManager
 {
 	/**
-	 * The first accessed gamepad - can be `null`!
+	 * The first accessed gamepad. Can be `null`!
 	 */
 	public var firstActive:FlxGamepad;
 
 	/**
-	 * The last accessed gamepad - can be `null`!
+	 * The last accessed gamepad. Can be `null`!
 	 */
 	public var lastActive:FlxGamepad;
 
 	/**
-	 * A counter for the number of active gamepads
+	 * A counter for the number of active gamepads.
 	 */
 	public var numActiveGamepads(get, never):Int;
 
 	/**
 	 * Global Gamepad deadzone. The lower, the more sensitive the gamepad. Should be
-	 * between 0.0 and 1.0. Null by default, overrides the deadzone of gamepads if non-null.
+	 * between `0.0` and `1.0`. `null` by default. Overrides the deadzone of gamepads if non-`null`.
 	 */
 	public var globalDeadZone:Null<Float>;
 
 	/**
-	 * Signal for when a device is connected; returns the connected gamepad object to the attached listener
+	 * Signal for when a device is connected. Returns the connected gamepad object to the attached listener.
 	 * @since 4.6.0
 	 */
 	public var deviceConnected(default, null):FlxTypedSignal<FlxGamepad->Void>;
 
 	/**
-	 * Signal for when a device is disconnected; returns the id of the disconnected gamepad to the attached listener
+	 * Signal for when a device is disconnected. Returns the ID of the disconnected gamepad to the attached listener.
 	 * @since 4.6.0
 	 */
 	public var deviceDisconnected(default, null):FlxTypedSignal<FlxGamepad->Void>;
 
 	/**
-	 * Stores all gamepads - can have null entries, but index matches event.device
+	 * Stores all gamepads. Can have `null` entries, but index matches `event.device`.
 	 */
 	var _gamepads:Array<FlxGamepad> = [];
 
 	/**
-	 * Stores all gamepads - no null entries, but index does *not* match event.device
+	 * Stores all active gamepads. Cannot have `null` entries, but index does *not* match `event.device`.
 	 */
 	var _activeGamepads:Array<FlxGamepad> = [];
 
 	#if FLX_GAMEINPUT_API
 	/**
-	 * GameInput needs to be statically created, otherwise GameInput.numDevices will be zero during construction.
+	 * `GameInput` needs to be statically created, otherwise `GameInput.numDevices` will be `0` during construction.
 	 */
 	static var _gameInput:GameInput = new GameInput();
 	#end
 
 	/**
-	 * Returns a FlxGamepad with the specified ID or null if none was found.
+	 * Returns a `FlxGamepad` with the specified ID, or `null` if none were found.
 	 * For example, if there are 4 gamepads connected, they will have the IDs 0-3.
 	 */
 	public inline function getByID(GamepadID:Int):FlxGamepad
@@ -134,10 +134,10 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Get array of ids for gamepads with any pressed buttons or moved Axis, Ball and Hat.
+	 * Gets array of IDs for gamepads with any pressed buttons or moved Axis, Ball and Hat.
 	 *
-	 * @param	IDsArray	optional array to fill with ids
-	 * @return	array filled with active gamepad ids
+	 * @param IDsArray Optional array to fill with IDs.
+	 * @return Array filled with active gamepad IDs.
 	 */
 	public function getActiveGamepadIDs(?IDsArray:Array<Int>):Array<Int>
 	{
@@ -152,10 +152,10 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Get array of gamepads with any pressed buttons or moved Axis, Ball and Hat.
+	 * Gets array of gamepads with any pressed buttons or moved Axis, Ball and Hat.
 	 *
-	 * @param	GamepadArray	optional array to fill with active gamepads
-	 * @return	array filled with active gamepads
+	 * @param GamepadArray Optional array to fill with active gamepads.
+	 * @return Array filled with active gamepads.
 	 */
 	public function getActiveGamepads(?GamepadArray:Array<FlxGamepad>):Array<FlxGamepad>
 	{
@@ -170,8 +170,8 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Get first found active gamepad id (with any pressed buttons or moved Axis, Ball and Hat).
-	 * Returns "-1" if no active gamepad has been found.
+	 * Gets first found active gamepad ID (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns `-1` if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepadID():Int
 	{
@@ -180,8 +180,8 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Get first found active gamepad (with any pressed buttons or moved Axis, Ball and Hat).
-	 * Returns null if no active gamepad has been found.
+	 * Gets first found active gamepad (with any pressed buttons or moved Axis, Ball and Hat).
+	 * Returns `null` if no active gamepad has been found.
 	 */
 	public function getFirstActiveGamepad():FlxGamepad
 	{
@@ -193,7 +193,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Whether any buttons have the specified input state on any gamepad.
+	 * Checks whether any buttons have the specified input state on any gamepad.
 	 */
 	public function anyButton(state:FlxInputState = PRESSED):Bool
 	{
@@ -205,7 +205,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Whether there's any input at all on any gamepad.
+	 * Checks whether there's any input at all on any gamepad.
 	 */
 	public function anyInput():Bool
 	{
@@ -217,7 +217,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Whether this button is pressed on any gamepad.
+	 * Checks whether this button is pressed on any gamepad.
 	 */
 	public inline function anyPressed(buttonID:FlxGamepadInputID):Bool
 	{
@@ -225,7 +225,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Whether this button was just pressed on any gamepad.
+	 * Checks whether this button was just pressed on any gamepad.
 	 */
 	public inline function anyJustPressed(buttonID:FlxGamepadInputID):Bool
 	{
@@ -233,7 +233,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Whether this button was just released on any gamepad.
+	 * Checks whether this button was just released on any gamepad.
 	 */
 	public inline function anyJustReleased(buttonID:FlxGamepadInputID):Bool
 	{
@@ -250,10 +250,10 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Check to see if the X axis is moved on any Gamepad.
+	 * Checks whether the x-axis is moved on any Gamepad.
 	 *
-	 * @param AxisID The axis id
-	 * @return Float Value from -1 to 1 or 0 if no X axes were moved
+	 * @param RawAxisID The axis ID.
+	 * @return `Float` Value from `-1` to `1`, or `0` if no x-axes were moved.
 	 */
 	public function anyMovedXAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
@@ -271,10 +271,10 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Check to see if the Y axis is moved on any Gamepad.
+	 * Checks whether the y-axis is moved on any Gamepad.
 	 *
-	 * @param AxisID The axis id
-	 * @return Float Value from -1 to 1 or 0 if no Y axes were moved
+	 * @param RawAxisID The axis ID.
+	 * @return `Float` Value from `-1` to `1`, or `0` if no y-axes were moved.
 	 */
 	public function anyMovedYAxis(RawAxisID:FlxGamepadAnalogStick):Float
 	{
@@ -292,7 +292,7 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 
 	/**
-	 * Clean up memory. Internal use only.
+	 * Cleans up memory. Internal use only.
 	 */
 	@:noCompletion
 	public function destroy():Void
@@ -401,30 +401,16 @@ class FlxGamepadManager implements IFlxInputManager
 		// and the most popular tools just turn it into a 360 controller
 
 		name = name.toLowerCase().remove("-").remove("_");
-		return if (name.contains("ouya"))
-				OUYA; // "OUYA Game Controller"
-			else if (name.contains("wireless controller") || name.contains("ps4"))
-				PS4; // "Wireless Controller" or "PS4 controller"
-			else if (name.contains("logitech"))
-				LOGITECH;
-			else if ((name.contains("xbox") && name.contains("360")) || name.contains("xinput"))
-				XINPUT;
-			else if (name.contains("nintendo rvlcnt01tr"))
-				WII_REMOTE; // WiiRemote with motion plus
-			else if (name.contains("nintendo rvlcnt01"))
-				WII_REMOTE; // WiiRemote w/o  motion plus
-			else if (name.contains("mayflash wiimote pc adapter"))
-				MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
-			else if (name.contains("pro controller") || name.contains("joycon l+r"))
-				SWITCH_PRO;
-			else if (name.contains("joycon (l)"))
-				SWITCH_JOYCON_LEFT;
-			else if (name.contains("joycon (r)"))
-				SWITCH_JOYCON_RIGHT;
-			else if (name.contains("mfi"))
-				MFI;// Keep last. "mfi" may show up in brand names, words, serials or SKUs
-			else
-				UNKNOWN;
+		return if (name.contains("ouya")) OUYA; // "OUYA Game Controller"
+		else if (name.contains("wireless controller") || name.contains("ps4")) PS4; // "Wireless Controller" or "PS4 controller"
+		else if (name.contains("logitech")) LOGITECH; else if ((name.contains("xbox") && name.contains("360"))
+			|| name.contains("xinput")) XINPUT; else if (name.contains("nintendo rvlcnt01tr")) WII_REMOTE; // WiiRemote with motion plus
+		else if (name.contains("nintendo rvlcnt01")) WII_REMOTE; // WiiRemote w/o motion plus
+		else if (name.contains("mayflash wiimote pc adapter")) MAYFLASH_WII_REMOTE; // WiiRemote paired to MayFlash DolphinBar (with or w/o motion plus)
+		else if (name.contains("pro controller") || name.contains("joycon l+r")) SWITCH_PRO; else if (name.contains("joycon (l)")) SWITCH_JOYCON_LEFT; else
+			if (name.contains("joycon (r)")) SWITCH_JOYCON_RIGHT; else if (name.contains("mfi"))
+				MFI; // Keep last. "mfi" may show up in brand names, words, serials or SKUs
+		else UNKNOWN;
 	}
 
 	function removeGamepad(Device:GameInputDevice):Void
@@ -498,7 +484,7 @@ class FlxGamepadManager implements IFlxInputManager
 
 			if (!isForStick && !isForMotion)
 			{
-				// in legacy this returns a (-1, 1) range, but in flash/next it
+				// in legacy this returns a (-1, 1) range, but in Flash/Next it
 				// returns (0,1) so we normalize to (0, 1) for legacy target only
 				newAxis[i] = (newAxis[i] + 1) / 2;
 			}
@@ -570,7 +556,7 @@ class FlxGamepadManager implements IFlxInputManager
 	#end
 
 	/**
-	 * Updates the key states (for tracking just pressed, just released, etc).
+	 * Updates the key states (for tracking just pressed, just released, etc.).
 	 */
 	function update():Void
 	{

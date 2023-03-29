@@ -1,9 +1,9 @@
 package flixel.system.ui;
 
-import flash.display.Graphics;
-import flash.display.Sprite;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
 
 class FlxFocusLostScreen extends Sprite
 {

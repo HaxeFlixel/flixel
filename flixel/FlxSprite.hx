@@ -1,10 +1,5 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.geom.ColorTransform;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
@@ -22,6 +17,11 @@ import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -29,26 +29,26 @@ using flixel.util.FlxColorTransformUtil;
  * The core building blocks of all Flixel games. With helpful tools for animation, movement and
  * features for the needs of most games.
  * 
- * It is pretty common place to extend `FlxSprite` for your own game's needs; for example a `SpaceShip`
+ * It is pretty commonplace to extend `FlxSprite` for your own game's needs; for example, a `SpaceShip`
  * class may extend `FlxSprite` but could have additional variables for the game like `shieldStrength`
  * or `shieldPower`.
  * 
  * - [Handbook - FlxSprite](https://haxeflixel.com/documentation/flxsprite/)
  * 
  * ## Collision and Motion
- * Flixel handles many aspects of collision nad physics motions for you. This is all defined in the
+ * Flixel handles many aspects of collision and physics motions for you. This is all defined in the
  * base class: [FlxObject](https://api.haxeflixel.com/flixel/FlxObject.html), check there for things
  * like: `x`, `y`, `width`, `height`, `velocity`, `acceleration`, `maxVelocity`, `drag`, `angle`,
- * and `angularVelocity`. All of these affect the movement and orientation of the sprite as well
- * as [FlxG.collide](https://api.haxeflixel.com/flixel/FlxG.html#collide) and
- * [FlxG.overlap](https://api.haxeflixel.com/flixel/FlxG.html#overlap)
+ * and `angularVelocity`. All of these affect the movement and orientation of the sprite, as do
+ * [FlxG.collide](https://api.haxeflixel.com/flixel/FlxG.html#collide) and
+ * [FlxG.overlap](https://api.haxeflixel.com/flixel/FlxG.html#overlap).
  * 
  * ## Graphics
- * `FlxSprites` are just `FlxObjects` with the ability to show graphics. There are various ways to do this.
+ * `FlxSprite`s are just `FlxObject`s with the ability to show graphics. There are various ways to do this.
  * ### `loadGraphic()`
  * [Snippets - Loading Sprites](https://snippets.haxeflixel.com/sprites/loading-sprites/)
- * The easiest way to use a single image for your FlxSprite. Using the OpenFL asset system defined
- * in the project xml file you simply have to define a path to your image and the compiler will do
+ * The easiest way to use a single image for your `FlxSprite`. Using the OpenFL asset system defined
+ * in the `Project.xml` file, you simply have to define a path to your image and the compiler will do
  * the rest.
  * ```haxe
  * var player = new FlxSprite();
@@ -56,12 +56,12 @@ using flixel.util.FlxColorTransformUtil;
  * add(player);
  * ```
  * 
- * ####Animations
+ * #### Animations
  * [Snippets - Animations](https://snippets.haxeflixel.com/sprites/animation/)
- * When loading a graphic for a `FlxSprite`, you can specify is as an animated graphic. Then, using
+ * When loading a graphic for a `FlxSprite`, you can specify it as an animated graphic. Then, using
  * animation, you can setup animations and play them.
  * ```haxe
- *  // sprite's graphic will be loaded from 'path/to/image.png' and is set to allow animations.
+ * // sprite's graphic will be loaded from 'path/to/image.png' and is set to allow animations.
  * sprite.loadGraphic('path/to/image/png', true);
  * 
  * // add an animation named 'run' to sprite, using the specified frames
@@ -80,15 +80,15 @@ using flixel.util.FlxColorTransformUtil;
  * add(whiteSquare);
  * ```
  * ## Properties
- * ### Position: x, y
+ * ### Position: `x`, `y`
  * ```haxe
  * whiteSquare.x = 100;
  * whiteSquare.y = 300;
  * ```
  * 
- * ### Size: width, height
- * Automatically set in loadGraphic() or makeGraphic(), changing this will only affect the hitbox
- * of this sprite, use scale to change the graphic's size.
+ * ### Size: `width`, `height`
+ * Automatically set in `loadGraphic()` or `makeGraphic()`. Changing these will only affect the hitbox
+ * of this sprite; use `scale` to change the graphic's size.
  * ```haxe
  * // get
  * var getWidth = whiteSquare.width;
@@ -100,8 +100,8 @@ using flixel.util.FlxColorTransformUtil;
  * 
  * ### Scale
  * [Snippets - Scale](https://snippets.haxeflixel.com/sprites/scale/)
- * (FlxPoint) Change the size of your sprite's graphic. NOTE: The hitbox is not automatically
- * adjusted, use updateHitbox() for that (or setGraphicSize()).
+ * (`FlxPoint`) Changes the size of your sprite's graphic. NOTE: The hitbox is not automatically
+ * adjusted; use `updateHitbox()` for that (or `setGraphicSize()`).
  * ```haxe
  * // twice as big
  * whiteSquare.scale.set(2, 2);
@@ -111,13 +111,13 @@ using flixel.util.FlxColorTransformUtil;
  * ```
  * 
  * ### Offset
- * (FlxPoint) Controls the position of the sprite's hitbox. Likely needs to be adjusted after changing a sprite's width, height or scale.
+ * (`FlxPoint`) Controls the position of the sprite's hitbox. Will likely need to be adjusted after changing a sprite's `width`, `height`, or `scale`.
  * ```haxe
  * whiteSquare.offset.set(50, 50);
  * ```
  * 
  * ### Origin
- * (FlxPoint) Rotation axis. Default: center.
+ * (`FlxPoint`) Rotation axis. Default: center.
  * 
  * WARNING: If you change this, the visuals and the collisions will likely be pretty out-of-sync if you do any rotation.
  * ```haxe
@@ -129,14 +129,14 @@ using flixel.util.FlxColorTransformUtil;
 class FlxSprite extends FlxObject
 {
 	/**
-	 * The default value for `antialiasing` across all `FlxSprites`,
-	 * defaults to `false`.
+	 * The default value for `antialiasing` across all `FlxSprite`s.
+	 * Defaults to `false`.
 	 * @since 5.0.0
 	 */
 	public static var defaultAntialiasing:Bool = false;
-	
+
 	/**
-	 * Class that handles adding and playing animations on this sprite.
+	 * Handles adding and playing animations on this sprite.
 	 * @see https://snippets.haxeflixel.com/sprites/animation/
 	 */
 	public var animation:FlxAnimationController;
@@ -145,23 +145,24 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * The current display state of the sprite including current animation frame,
-	 * tint, flip etc... may be `null` unless `useFramePixels` is `true`.
+	 * tint, flip, etc.
+	 * May be `null` unless `useFramePixels == true`.
 	 */
 	public var framePixels:BitmapData;
 
 	/**
-	 * Always `true` on `FlxG.renderBlit`. On `FlxG.renderTile` it determines whether
+	 * Always `true` on `FlxG.renderBlit`. On `FlxG.renderTile`, it determines whether
 	 * `framePixels` is used and defaults to `false` for performance reasons.
 	 */
 	public var useFramePixels(default, set):Bool = true;
 
 	/**
-	 * Controls whether the object is smoothed when rotated, affects performance.
+	 * Whether the object is smoothed when rotated. Affects performance.
 	 */
 	public var antialiasing(default, set):Bool = defaultAntialiasing;
 
 	/**
-	 * Set this flag to true to force the sprite to update during the `draw()` call.
+	 * Whether this sprite should update on the next `draw()` call.
 	 * NOTE: Rarely if ever necessary, most sprite operations will flip this flag automatically.
 	 */
 	public var dirty:Bool = true;
@@ -173,7 +174,7 @@ class FlxSprite extends FlxObject
 	public var pixels(get, set):BitmapData;
 
 	/**
-	 * Link to current `FlxFrame` from loaded atlas
+	 * Link to current `FlxFrame` from the loaded atlas.
 	 */
 	public var frame(default, set):FlxFrame;
 
@@ -189,44 +190,45 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * The total number of frames in this image.
-	 * WARNING: assumes each row in the sprite sheet is full!
+	 * WARNING: Assumes each row in the sprite sheet is full!
 	 */
 	public var numFrames(default, null):Int = 0;
 
 	/**
-	 * Rendering variables.
+	 * A collection of all frames in the current graphic.
 	 */
 	public var frames(default, set):FlxFramesCollection;
 
 	public var graphic(default, set):FlxGraphic;
 
 	/**
-	 * The minimum angle (out of 360°) for which a new baked rotation exists. Example: `90` means there
-	 * are 4 baked rotations in the spritesheet. `0` if this sprite does not have any baked rotations.
+	 * The minimum angle (out of `360`°) for which a new baked rotation exists.
+	 * `0` if this sprite does not have any baked rotations.
+	 * E.g. `90` means there are 4 baked rotations in the spritesheet.
 	 * @see https://snippets.haxeflixel.com/sprites/baked-rotations/
 	 */
 	public var bakedRotationAngle(default, null):Float = 0;
 
 	/**
-	 * Set alpha to a number between `0` and `1` to change the opacity of the sprite.
-	 @see https://snippets.haxeflixel.com/sprites/alpha/
+	 * The opacity of the sprite. Must be between `0.0` and `1.0`.
+	 * @see https://snippets.haxeflixel.com/sprites/alpha/
 	 */
 	public var alpha(default, set):Float = 1.0;
 
 	/**
-	 * Can be set to `LEFT`, `RIGHT`, `UP`, and `DOWN` to take advantage
-	 * of flipped sprites and/or just track player orientation more easily.
+	 * The orientation of the sprite. Can be used in conjunction with `setFacingFlip()`
+	 * to flip the sprite across the x- and/or y-axes when facing in certain directions.
 	 * @see https://snippets.haxeflixel.com/sprites/facing/
 	 */
 	public var facing(default, set):FlxDirectionFlags = RIGHT;
 
 	/**
-	 * Whether this sprite is flipped on the X axis.
+	 * Whether this sprite is flipped on the x-axis.
 	 */
 	public var flipX(default, set):Bool = false;
 
 	/**
-	 * Whether this sprite is flipped on the Y axis.
+	 * Whether this sprite is flipped on the y-axis.
 	 */
 	public var flipY(default, set):Bool = false;
 
@@ -238,27 +240,28 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * The position of the sprite's graphic relative to its hitbox. For example, `offset.x = 10;` will
-	 * show the graphic 10 pixels left of the hitbox. Likely needs to be adjusted after changing a sprite's
+	 * show the graphic 10 pixels left of the hitbox. Will likely need to be adjusted after changing a sprite's
 	 * `width`, `height` or `scale`.
 	 */
 	public var offset(default, null):FlxPoint;
 
 	/**
-	 * Change the size of your sprite's graphic.
-	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that (or `setGraphicSize()`).
+	 * The scale of the sprite's graphic.
+	 * NOTE: The hitbox is not automatically adjusted; use `updateHitbox()` for that (or `setGraphicSize()`).
 	 * WARNING: With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
 	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
 	public var scale(default, null):FlxPoint;
 
 	/**
-	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
+	 * The blending mode to use for drawing.
+	 * E.g. `MULTIPLY`, `SCREEN`, etc.
 	 */
 	public var blend(default, set):BlendMode;
 
 	/**
-	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
-	 * `0xAARRGGBB` colors, but the alpha value will simply be ignored. To change the opacity use `alpha`.
+	 * Tints the whole sprite to a color (RGB format). Similar to OpenGL vertex colors. You can use
+	 * ARGB colors, but the alpha value will simply be ignored. To change the opacity, use `alpha`.
 	 * @see https://snippets.haxeflixel.com/sprites/color/
 	 */
 	public var color(default, set):FlxColor = 0xffffff;
@@ -266,13 +269,13 @@ class FlxSprite extends FlxObject
 	public var colorTransform(default, null):ColorTransform;
 
 	/**
-	 * Whether or not to use a `ColorTransform` set via `setColorTransform()`.
+	 * Whether to use a `ColorTransform` set via `setColorTransform()`.
 	 */
 	public var useColorTransform(default, null):Bool = false;
 
 	/**
-	 * Clipping rectangle for this sprite.
-	 * Changing the rect's properties directly doesn't have any effect,
+	 * The clipping rectangle for this sprite.
+	 * Changing the rect's properties directly doesn't have any effect;
 	 * reassign the property to update it (`sprite.clipRect = sprite.clipRect;`).
 	 * Set to `null` to discard graphic frame clipping.
 	 */
@@ -289,13 +292,13 @@ class FlxSprite extends FlxObject
 	public var shader:FlxShader;
 
 	/**
-	 * The actual frame used for sprite rendering
+	 * The actual frame used for sprite rendering.
 	 */
 	@:noCompletion
 	var _frame:FlxFrame;
 
 	/**
-	 * Graphic of `_frame`. Used in tile render mode, when `useFramePixels` is `true`.
+	 * Graphic of `_frame`. Used in tile render mode, when `useFramePixels == true`.
 	 */
 	@:noCompletion
 	var _frameGraphic:FlxGraphic;
@@ -306,50 +309,50 @@ class FlxSprite extends FlxObject
 	var _facingVerticalMult:Int = 1;
 
 	/**
-	 * Internal, reused frequently during drawing and animating.
+	 * Internal. Reused frequently during drawing and animating.
 	 */
 	@:noCompletion
 	var _flashPoint:Point;
 
 	/**
-	 * Internal, reused frequently during drawing and animating.
+	 * Internal. Reused frequently during drawing and animating.
 	 */
 	@:noCompletion
 	var _flashRect:Rectangle;
 
 	/**
-	 * Internal, reused frequently during drawing and animating.
+	 * Internal. Reused frequently during drawing and animating.
 	 */
 	@:noCompletion
 	var _flashRect2:Rectangle;
 
 	/**
-	 * Internal, reused frequently during drawing and animating. Always contains `(0,0)`.
+	 * Internal. Reused frequently during drawing and animating. Always contains `(0,0)`.
 	 */
 	@:noCompletion
 	var _flashPointZero:Point;
 
 	/**
-	 * Internal, helps with animation, caching and drawing.
+	 * Internal. Helps with animation, caching, and drawing.
 	 */
 	@:noCompletion
 	var _matrix:FlxMatrix;
 
 	/**
-	 * Rendering helper variable
+	 * Rendering helper variable.
 	 */
 	@:noCompletion
 	var _halfSize:FlxPoint;
-	
+
 	/**
-	 *  Helper variable
+	 * Helper variable.
 	 */
 	@:noCompletion
 	var _scaledOrigin:FlxPoint;
 
 	/**
-	 * These vars are being used for rendering in some of `FlxSprite` subclasses (`FlxTileblock`, `FlxBar`,
-	 * and `FlxBitmapText`) and for checks if the sprite is in camera's view.
+	 * These vars are used for rendering in some of `FlxSprite`'s subclasses (`FlxTileblock`, `FlxBar`,
+	 * and `FlxBitmapText`) and for checking whether the sprite is in camera's view.
 	 */
 	@:noCompletion
 	var _sinAngle:Float = 0;
@@ -360,7 +363,7 @@ class FlxSprite extends FlxObject
 	var _angleChanged:Bool = true;
 
 	/**
-	 * Maps `FlxDirectionFlags` values to axis flips
+	 * Maps `FlxDirectionFlags` values to axis flips.
 	 */
 	@:noCompletion
 	var _facingFlip:Map<FlxDirectionFlags, {x:Bool, y:Bool}> = new Map<FlxDirectionFlags, {x:Bool, y:Bool}>();
@@ -369,10 +372,10 @@ class FlxSprite extends FlxObject
 	 * Creates a `FlxSprite` at a specified position with a specified one-frame graphic.
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
 	 *
-	 * @param   X               The initial X position of the sprite.
-	 * @param   Y               The initial Y position of the sprite.
-	 * @param   SimpleGraphic   The graphic you want to display
-	 *                          (OPTIONAL - for simple stuff only, do NOT use for animated images!).
+	 * @param X The initial x-position of the sprite.
+	 * @param Y The initial y-position of the sprite.
+	 * @param SimpleGraphic The graphic to display
+	 * (OPTIONAL - for simple stuff only, do NOT use for animated images!).
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
 	{
@@ -403,16 +406,6 @@ class FlxSprite extends FlxObject
 		_scaledOrigin = new FlxPoint();
 	}
 
-	/**
-	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
-	 * It may even cause crashes if it is still part of a group or state.
-	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
-	 *
-	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
-	 *
-	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
-	 * Don't forget to call `super.destroy()`!
-	 */
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -445,15 +438,15 @@ class FlxSprite extends FlxObject
 
 	public function clone():FlxSprite
 	{
-		return (new FlxSprite()).loadGraphicFromSprite(this);
+		return new FlxSprite().loadGraphicFromSprite(this);
 	}
 
 	/**
-	 * Load graphic from another `FlxSprite` and copy its tile sheet data.
-	 * This method can useful for non-flash targets.
+	 * Loads a graphic from another `FlxSprite` and copies its tile sheet data.
+	 * This method can be useful for non-Flash targets.
 	 *
-	 * @param   Sprite   The `FlxSprite` from which you want to load graphic data.
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @param Sprite The `FlxSprite` from which you want to load graphic data.
+	 * @return This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
@@ -473,24 +466,27 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Load an image from an embedded graphic file.
+	 * Loads an image from an embedded graphic file.
 	 *
 	 * HaxeFlixel's graphic caching system keeps track of loaded image data.
 	 * When you load an identical copy of a previously used image, by default
 	 * HaxeFlixel copies the previous reference onto the `pixels` field instead
 	 * of creating another copy of the image data, to save memory.
 	 *
-	 * @param   Graphic    The image you want to use.
-	 * @param   Animated   Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
-	 * @param   Width      Specify the width of your sprite
-	 *                     (helps figure out what to do with non-square sprites or sprite sheets).
-	 * @param   Height     Specify the height of your sprite
-	 *                     (helps figure out what to do with non-square sprites or sprite sheets).
-	 * @param   Unique     Whether the graphic should be a unique instance in the graphics cache.
-	 *                     Set this to `true` if you want to modify the `pixels` field without changing
-	 *                     the `pixels` of other sprites with the same `BitmapData`.
-	 * @param   Key        Set this parameter if you're loading `BitmapData`.
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @param Graphic The image to load.
+	 * @param Animated Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
+	 * @param Width The width of the sprite
+	 * (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param Height The height of the sprite
+	 * (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param Unique Whether the graphic should be a unique instance in the graphics cache.
+	 * Set this to `true` if you want to modify the `pixels` field without changing
+	 * the `pixels` of other sprites with the same `BitmapData`.
+	 * @param Key An optional `String` key to identify this graphic in the cache.
+	 * If `null`, the key is determined by `Width`, `Height`, and `Color`.
+	 * If `Unique == true` and a graphic with this `Key` already exists,
+	 * it is used as a prefix to find a new unique name like `"Key3"`.
+	 * @return This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
 	{
@@ -519,20 +515,23 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Create a pre-rotated sprite sheet from a simple sprite.
+	 * Creates a pre-rotated sprite sheet from a simple sprite.
 	 * This can make a huge difference in graphical performance on blitting targets!
 	 *
-	 * @param   Graphic        The image you want to rotate and stamp.
-	 * @param   Rotations      The number of rotation frames the final sprite should have.
-	 *                         For small sprites this can be quite a large number (`360` even) without any problems.
-	 * @param   Frame          If the `Graphic` has a single row of square animation frames on it,
-	 *                         you can specify which of the frames you want to use here.
-	 *                         Default is `-1`, or "use whole graphic."
-	 * @param   AntiAliasing   Whether to use high quality rotations when creating the graphic. Default is `false`.
-	 * @param   AutoBuffer     Whether to automatically increase the image size to accommodate rotated corners.
-	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @param   Key            Optional, set this parameter if you're loading `BitmapData`.
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @param Graphic The image to rotate and stamp.
+	 * @param Rotations The number of rotation frames the final sprite should have.
+	 * For small sprites this can be quite a large number (`360` even) without any problems.
+	 * @param Frame If the `Graphic` has a single row of square animation frames on it,
+	 * you can specify which of the frames you want to use here.
+	 * Default is `-1`, or "use whole graphic."
+	 * @param AntiAliasing Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param AutoBuffer Whether to automatically increase the image size to accommodate rotated corners.
+	 * Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @param Key An optional `String` key to identify this graphic in the cache.
+	 * If `null`, the key is determined by `Width`, `Height`, and `Color`.
+	 * If `Unique == true` and a graphic with this `Key` already exists,
+	 * it is used as a prefix to find a new unique name like `"Key3"`.
+	 * @return This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false, AutoBuffer:Bool = false,
 			?Key:String):FlxSprite
@@ -588,13 +587,13 @@ class FlxSprite extends FlxObject
 	/**
 	 * Helper method which allows using `FlxFrame` as graphic source for sprite's `loadRotatedGraphic()` method.
 	 *
-	 * @param   frame          Frame to load into this sprite.
-	 * @param   rotations      The number of rotation frames the final sprite should have.
-	 *                         For small sprites this can be quite a large number (`360` even) without any problems.
-	 * @param   antiAliasing   Whether to use high quality rotations when creating the graphic. Default is `false`.
-	 * @param   autoBuffer     Whether to automatically increase the image size to accommodate rotated corners.
-	 *                         Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @return  this FlxSprite with loaded rotated graphic in it.
+	 * @param Frame Frame to load into this sprite.
+	 * @param Rotations The number of rotation frames the final sprite should have.
+	 * For small sprites this can be quite a large number (`360` even) without any problems.
+	 * @param AntiAliasing Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param AutoBuffer Whether to automatically increase the image size to accommodate rotated corners.
+	 * Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @return This `FlxSprite` with loaded rotated graphic in it.
 	 */
 	public function loadRotatedFrame(Frame:FlxFrame, Rotations:Int = 16, AntiAliasing:Bool = false, AutoBuffer:Bool = false):FlxSprite
 	{
@@ -612,24 +611,24 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * This function creates a flat colored rectangular image dynamically.
+	 * Creates a flat colored rectangular image dynamically.
 	 *
 	 * HaxeFlixel's graphic caching system keeps track of loaded image data.
 	 * When you make an identical copy of a previously used image, by default
 	 * HaxeFlixel copies the previous reference onto the pixels field instead
 	 * of creating another copy of the image data, to save memory.
 	 *
-	 * @param   Width    The width of the sprite you want to generate.
-	 * @param   Height   The height of the sprite you want to generate.
-	 * @param   Color    Specifies the color of the generated block (ARGB format).
-	 * @param   Unique   Whether the graphic should be a unique instance in the graphics cache. Default is `false`.
-	 *                   Set this to `true` if you want to modify the `pixels` field without changing the
-	 *                   `pixels` of other sprites with the same `BitmapData`.
-	 * @param   Key      An optional `String` key to identify this graphic in the cache.
-	 *                   If `null`, the key is determined by `Width`, `Height` and `Color`.
-	 *                   If `Unique` is `true` and a graphic with this `Key` already exists,
-	 *                   it is used as a prefix to find a new unique name like `"Key3"`.
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @param Width The width of the sprite you want to generate.
+	 * @param Height The height of the sprite you want to generate.
+	 * @param Color Specifies the color of the generated block (ARGB format).
+	 * @param Unique Whether the graphic should be a unique instance in the graphics cache. Default is `false`.
+	 * Set this to `true` if you want to modify the `pixels` field without changing the
+	 * `pixels` of other sprites with the same `BitmapData`.
+	 * @param Key An optional `String` key to identify this graphic in the cache.
+	 * If `null`, the key is determined by `Width`, `Height`, and `Color`.
+	 * If `Unique == true` and a graphic with this `Key` already exists,
+	 * it is used as a prefix to find a new unique name like `"Key3"`.
+	 * @return This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function makeGraphic(Width:Int, Height:Int, Color:FlxColor = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
 	{
@@ -692,8 +691,8 @@ class FlxSprite extends FlxObject
 	 * Helper function to set the graphic's dimensions by using `scale`, allowing you to keep the current aspect ratio
 	 * should one of the Integers be `<= 0`. It might make sense to call `updateHitbox()` afterwards!
 	 *
-	 * @param   Width    How wide the graphic should be. If `<= 0`, and `Height` is set, the aspect ratio will be kept.
-	 * @param   Height   How high the graphic should be. If `<= 0`, and `Width` is set, the aspect ratio will be kept.
+	 * @param Width How wide the graphic should be. If `<= 0`, and `Height` is set, the aspect ratio will be kept.
+	 * @param Height How high the graphic should be. If `<= 0`, and `Width` is set, the aspect ratio will be kept.
 	 */
 	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
 	{
@@ -770,7 +769,7 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Called by game loop, updates then blits or renders current frame of animation to the screen.
+	 * Called by game loop. Updates, then blits or renders the current frame of animation to the screen.
 	 */
 	override public function draw():Void
 	{
@@ -846,9 +845,9 @@ class FlxSprite extends FlxObject
 	 * Stamps / draws another `FlxSprite` onto this `FlxSprite`.
 	 * This function is NOT intended to replace `draw()`!
 	 *
-	 * @param   Brush   The sprite you want to use as a brush or stamp or pen or whatever.
-	 * @param   X       The X coordinate of the brush's top left corner on this sprite.
-	 * @param   Y       They Y coordinate of the brush's top left corner on this sprite.
+	 * @param Brush The sprite to use as a brush/stamp.
+	 * @param X The x-coordinate of the brush's top left corner on this sprite.
+	 * @param Y The y-coordinate of the brush's top left corner on this sprite.
 	 */
 	public function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void
 	{
@@ -891,10 +890,10 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Request (or force) that the sprite update the frame before rendering.
+	 * Requests (or forces) that the sprite update the frame before rendering.
 	 * Useful if you are doing procedural generation or other weirdness!
 	 *
-	 * @param   Force   Force the frame to redraw, even if its not flagged as necessary.
+	 * @param Force Whether to force the frame to be redrawn, even if it's not flagged as necessary.
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
@@ -914,9 +913,9 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Helper function that adjusts the offset automatically to center the bounding box within the graphic.
+	 * Helper function that adjusts the `offset` automatically to center the bounding box within the graphic.
 	 *
-	 * @param   AdjustPosition   Adjusts the actual X and Y position just once to match the offset change.
+	 * @param AdjustPosition Adjusts the actual x- and y-positions once to match the `offset` change.
 	 */
 	public function centerOffsets(AdjustPosition:Bool = false):Void
 	{
@@ -930,7 +929,7 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Sets the sprite's origin to its center - useful after adjusting
+	 * Sets the sprite's `origin` to its center. Useful after adjusting
 	 * `scale` to make sure rotations work as expected.
 	 */
 	public inline function centerOrigin():Void
@@ -939,13 +938,13 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Replaces all pixels with specified `Color` with `NewColor` pixels.
-	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
+	 * Replaces all pixels of specified `Color` with `NewColor` pixels.
+	 * WARNING: Very expensive (especially on big graphics), as it iterates over every single pixel.
 	 *
-	 * @param   Color            Color to replace
-	 * @param   NewColor         New color
-	 * @param   FetchPositions   Whether we need to store positions of pixels which colors were replaced.
-	 * @return  `Array` with replaced pixels positions
+	 * @param Color Color to replace.
+	 * @param NewColor New color.
+	 * @param FetchPositions Whether we need to store positions of pixels which colors were replaced.
+	 * @return `Array` with replaced pixels' positions.
 	 */
 	public function replaceColor(Color:FlxColor, NewColor:FlxColor, FetchPositions:Bool = false):Array<FlxPoint>
 	{
@@ -959,14 +958,14 @@ class FlxSprite extends FlxObject
 	 * Sets the sprite's color transformation with control over color offsets.
 	 * With `FlxG.renderTile`, offsets are only supported on OpenFL Next version 3.6.0 or higher.
 	 *
-	 * @param   redMultiplier     The value for the red multiplier, in the range from `0` to `1`.
-	 * @param   greenMultiplier   The value for the green multiplier, in the range from `0` to `1`.
-	 * @param   blueMultiplier    The value for the blue multiplier, in the range from `0` to `1`.
-	 * @param   alphaMultiplier   The value for the alpha transparency multiplier, in the range from `0` to `1`.
-	 * @param   redOffset         The offset value for the red color channel, in the range from `-255` to `255`.
-	 * @param   greenOffset       The offset value for the green color channel, in the range from `-255` to `255`.
-	 * @param   blueOffset        The offset for the blue color channel value, in the range from `-255` to `255`.
-	 * @param   alphaOffset       The offset for alpha transparency channel value, in the range from `-255` to `255`.
+	 * @param redMultiplier The value for the red multiplier, in the range from `0` to `1`.
+	 * @param greenMultiplier The value for the green multiplier, in the range from `0` to `1`.
+	 * @param blueMultiplier The value for the blue multiplier, in the range from `0` to `1`.
+	 * @param alphaMultiplier The value for the alpha transparency multiplier, in the range from `0` to `1`.
+	 * @param redOffset The offset value for the red color channel, in the range from `-255` to `255`.
+	 * @param greenOffset The offset value for the green color channel, in the range from `-255` to `255`.
+	 * @param blueOffset The offset for the blue color channel value, in the range from `-255` to `255`.
+	 * @param alphaOffset The offset for alpha transparency channel value, in the range from `-255` to `255`.
 	 */
 	public function setColorTransform(redMultiplier:Float = 1.0, greenMultiplier:Float = 1.0, blueMultiplier:Float = 1.0, alphaMultiplier:Float = 1.0,
 			redOffset:Int = 0, greenOffset:Int = 0, blueOffset:Int = 0, alphaOffset:Int = 0):Void
@@ -996,103 +995,103 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's
+	 * Checks whether a point in 2D world space overlaps this `FlxSprite` object's
 	 * current displayed pixels. This check is ALWAYS made in screen space, and
 	 * factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 *
-	 * @param   worldPoint  point in world space you want to check.
-	 * @param   mask        Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera      The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
-	 * @return  Whether or not the point overlaps this object.
+	 * @param worldPoint The point in world space you want to check.
+	 * @param mask Used in the pixel hit test to determine what counts as solid.
+	 * @param camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the point overlaps this object.
 	 */
 	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
 		var pixelColor = getPixelAt(worldPoint);
-		
+
 		if (pixelColor != null)
 			return pixelColor.alpha * alpha >= mask;
-		
+
 		// point is outside of the graphic
 		return false;
 	}
-	
+
 	/**
 	 * Determines which of this sprite's pixels are at the specified world coordinate, if any.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param  worldPoint  The point in world space
-	 * @param  camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
-	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @param worldPoint The point in world space.
+	 * @param camera The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic. Otherwise, `null` is returned.
 	 * @since 5.0.0
 	 */
 	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
 		transformWorldToPixels(worldPoint, camera, _point);
-		
+
 		// point is inside the graphic
 		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
 		{
 			var frameData:BitmapData = updateFramePixels();
 			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Determines which of this sprite's pixels are at the specified screen coordinate, if any.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param  screenPoint  The point in screen space
-	 * @param  camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
-	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
+	 * @param screenPoint The point in screen space.
+	 * @param camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @return a `FlxColor`, if the point is in the sprite's graphic. Otherwise, `null` is returned.
 	 * @since 5.0.0
 	 */
 	public function getPixelAtScreen(screenPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
 		transformScreenToPixels(screenPoint, camera, _point);
-		
+
 		// point is inside the graphic
 		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
 		{
 			var frameData:BitmapData = updateFramePixels();
 			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic.
+	 * Converts the point from world coordinates to this sprite's pixel coordinates where `(0,0)`
+	 * is the top left corner of the graphic.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   worldPoint  The world coordinates.
-	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
-	 * @param   result      Optional arg for the returning point
+	 * @param worldPoint The world coordinates.
+	 * @param camera The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @param result Optional arg for the returning point.
 	 */
 	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-		
+
 		var screenPoint = FlxPoint.weak(worldPoint.x - camera.scroll.x, worldPoint.y - camera.scroll.y);
 		worldPoint.putWeak();
 		return transformScreenToPixels(screenPoint, camera, result);
 	}
-	
+
 	/**
-	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic. Same as `worldToPixels` but never uses a camera,
-	 * therefore `scrollFactor` is ignored
+	 * Converts the point from world coordinates to this sprite's pixel coordinates where `(0,0)`
+	 * is the top left corner of the graphic. Same as `worldToPixels` but never uses a camera,
+	 * therefore `scrollFactor` is ignored.
 	 * 
-	 * @param   worldPoint  The world coordinates.
-	 * @param   result      Optional arg for the returning point
+	 * @param worldPoint The world coordinates.
+	 * @param result Optional arg for the returning point.
 	 */
 	public function transformWorldToPixelsSimple(worldPoint:FlxPoint, ?result:FlxPoint):FlxPoint
 	{
 		result = getPosition(result);
-		
+
 		result.subtract(worldPoint.x, worldPoint.y);
 		result.negate();
 		result.addPoint(offset);
@@ -1100,25 +1099,25 @@ class FlxSprite extends FlxObject
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
 		result.addPoint(origin);
-		
+
 		worldPoint.putWeak();
-		
+
 		return result;
 	}
 
 	/**
-	 * Converts the point from screen coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic.
+	 * Converts the point from screen coordinates to this sprite's pixel coordinates where `(0,0)`
+	 * is the top left corner of the graphic.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   screenPoint  The screen coordinates
-	 * @param   camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
-	 * @param   result       Optional arg for the returning point
+	 * @param screenPoint The screen coordinates.
+	 * @param camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @param result Optional arg for the returning point.
 	 */
 	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		result = getScreenPosition(result, camera);
-		
+
 		result.subtract(screenPoint.x, screenPoint.y);
 		result.negate();
 		result.addPoint(offset);
@@ -1126,16 +1125,16 @@ class FlxSprite extends FlxObject
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
 		result.addPoint(origin);
-		
+
 		screenPoint.putWeak();
-		
+
 		return result;
 	}
 
 	/**
 	 * Internal function to update the current animation frame.
 	 *
-	 * @param   force   Whether the frame should also be recalculated if we're on a non-flash target
+	 * @param force Whether the frame should also be recalculated if we're on a non-Flash target.
 	 */
 	@:noCompletion
 	function calcFrame(force = false):Void
@@ -1194,11 +1193,11 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
+	 * Retrieves the midpoint of this sprite's graphic in world coordinates.
 	 *
-	 * @param   point   Allows you to pass in an existing `FlxPoint` if you're so inclined.
-	 *                  Otherwise a new one is created.
-	 * @return  A `FlxPoint` containing the midpoint of this sprite's graphic in world coordinates.
+	 * @param point Allows you to pass in an existing `FlxPoint` if you're so inclined.
+	 * Otherwise, a new one is created.
+	 * @return A `FlxPoint` containing the midpoint of this sprite's graphic in world coordinates.
 	 */
 	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
 	{
@@ -1208,23 +1207,23 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
-	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * Checks whether this object is currently on screen. Differs from `FlxObject`'s implementation
+	 * in that it takes the actual graphic into account, and not just the hitbox.
 	 *
-	 * @param   Camera  Specify which game camera you want. If `null`, `FlxG.camera` is used.
-	 * @return  Whether the object is on screen or not.
+	 * @param camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the object is on screen.
 	 */
 	override public function isOnScreen(?camera:FlxCamera):Bool
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-		
+
 		return camera.containsRect(getScreenBounds(_rect, camera));
 	}
 
 	/**
-	 * Returns the result of `isSimpleRenderBlit()` if `FlxG.renderBlit` is
-	 * `true`, or `false` if `FlxG.renderTile` is `true`.
+	 * Returns the result of `isSimpleRenderBlit()` if `FlxG.renderBlit == true`,
+	 * or `false` if `FlxG.renderTile == true`.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{
@@ -1238,9 +1237,9 @@ class FlxSprite extends FlxObject
 	 * Determines the function used for rendering in blitting:
 	 * `copyPixels()` for simple sprites, `draw()` for complex ones.
 	 * Sprites are considered simple when they have an `angle` of `0`, a `scale` of `1`,
-	 * don't use `blend` and `pixelPerfectRender` is `true`.
+	 * they don't use `blend`, and `pixelPerfectRender == true`.
 	 *
-	 * @param   camera   If a camera is passed its `pixelPerfectRender` flag is taken into account
+	 * @param camera If a camera is passed, its `pixelPerfectRender` flag is taken into account.
 	 */
 	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
@@ -1251,27 +1250,27 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this
-	 * sprite's width and height, at its current rotation.
-	 * Note, if called on a `FlxSprite`, the origin is used, but scale and offset are ignored.
-	 * Use `getScreenBounds` to use these properties.
-	 * @param newRect The optional output `FlxRect` to be returned, if `null`, a new one is created.
-	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
+	 * sprite's `width` and `height`, at its current rotation.
+	 * Note: If called on a `FlxSprite`, `origin` is used, but `scale` and `offset` are ignored.
+	 * Use `FlxSprite#getScreenBounds()` to use these properties.
+	 * @param newRect The optional output `FlxRect` to be returned. If `null`, a new one is created.
+	 * @return A globally aligned `FlxRect` that fully contains the input object's `width` and `height`.
 	 * @since 4.11.0
 	 */
 	override function getRotatedBounds(?newRect:FlxRect)
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
-		
+
 		newRect.set(x, y, width, height);
 		return newRect.getRotatedBounds(angle, origin, newRect);
 	}
-	
+
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
-	 * would be displayed. Honors scrollFactor, rotation, scale, offset and origin.
+	 * would be displayed. Honors `scrollFactor`, `angle`, `scale`, `offset` and `origin`.
 	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
-	 * @param camera  Optional camera used for scrollFactor, if null `FlxG.camera` is used.
+	 * @param camera Optional camera used for `scrollFactor`. If `null`, `FlxG.camera` is used.
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
 	 * @since 4.11.0
 	 */
@@ -1279,10 +1278,10 @@ class FlxSprite extends FlxObject
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
-		
+
 		if (camera == null)
 			camera = FlxG.camera;
-		
+
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
 			newRect.floor();
@@ -1294,16 +1293,16 @@ class FlxSprite extends FlxObject
 		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
 		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
-	
+
 	/**
-	 * Set how a sprite flips when facing in a particular direction.
+	 * Sets how a sprite flips when `facing` in a particular direction.
 	 *
-	 * @param   Direction   Use constants `LEFT`, `RIGHT`, `UP`, and `DOWN`.
-	 *                      These may be combined with the bitwise OR operator.
-	 *                      E.g. To make a sprite flip horizontally when it is facing both `UP` and `LEFT`,
-	 *                      use `setFacingFlip(LEFT | UP, true, false);`
-	 * @param   FlipX       Whether to flip the sprite on the X axis.
-	 * @param   FlipY       Whether to flip the sprite on the Y axis.
+	 * @param Direction Use flags `LEFT`, `RIGHT`, `UP`, and `DOWN`.
+	 * These may be combined with the bitwise OR operator.
+	 * E.g. To make a sprite flip horizontally when it is facing both `UP` and `LEFT`,
+	 * use `setFacingFlip(LEFT | UP, true, false);`
+	 * @param FlipX Whether to flip the sprite on the x-axis.
+	 * @param FlipY Whether to flip the sprite on the y-axis.
 	 */
 	public inline function setFacingFlip(Direction:FlxDirectionFlags, FlipX:Bool, FlipY:Bool):Void
 	{
@@ -1311,11 +1310,11 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Sets frames and allows you to save animations in sprite's animation controller
+	 * Sets frames and allows you to save animations in sprite's animation controller.
 	 *
-	 * @param   Frames           Frames collection to set for this sprite.
-	 * @param   saveAnimations   Whether to save animations in animation controller or not.
-	 * @return  This sprite with loaded frames
+	 * @param Frames Frames collection to set for this sprite.
+	 * @param saveAnimations Whether to save animations in animation controller.
+	 * @return This sprite with loaded frames.
 	 */
 	@:access(flixel.animation.FlxAnimationController)
 	public function setFrames(Frames:FlxFramesCollection, saveAnimations:Bool = true):FlxSprite
@@ -1484,7 +1483,7 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Internal function for setting graphic property for this object.
-	 * It changes graphics' `useCount` also for better memory tracking.
+	 * It changes the previous graphic's `useCount` also for better memory tracking.
 	 */
 	@:noCompletion
 	function set_graphic(Value:FlxGraphic):FlxGraphic
@@ -1519,11 +1518,11 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Frames setter. Used by `loadGraphic` methods, but you can load generated frames yourself
+	 * Frames setter. Used by `loadGraphic()` methods, but you can load generated frames yourself
 	 * (this should be even faster since engine doesn't need to do bunch of additional stuff).
 	 *
-	 * @param   Frames   frames to load into this sprite.
-	 * @return  loaded frames.
+	 * @param Frames frames to load into this sprite.
+	 * @return loaded frames.
 	 */
 	@:noCompletion
 	function set_frames(Frames:FlxFramesCollection):FlxFramesCollection

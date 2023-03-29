@@ -1,9 +1,9 @@
 package flixel.system.debug.log;
 
 #if FLX_DEBUG
-import flash.text.TextField;
-import flash.text.TextFormat;
 import flixel.system.debug.FlxDebugger.GraphicLog;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -37,7 +37,7 @@ class Log extends Window
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -53,9 +53,9 @@ class Log extends Window
 
 	/**
 	 * Adds a new line to the log window.
-	 * @param 	Data		The data being logged.
-	 * @param 	Style		The LogStyle to be used for the log
-	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
+	 * @param Data The data being logged.
+	 * @param Style The `LogStyle` to be used for the log.
+	 * @param FireOnce Whether to only log the data if it hasn't been added already.
 	 */
 	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool
 	{

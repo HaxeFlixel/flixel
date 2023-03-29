@@ -30,10 +30,10 @@ class FlxImageFrame extends FlxFramesCollection
 	/**
 	 * Generates a `FlxImageFrame` object with empty frame of specified size.
 	 *
-	 * @param   graphic     Graphic for the `FlxImageFrame`.
-	 * @param   frameRect   The size of the empty frame to generate
-	 *                      (only `width` and `height` of the `frameRect` need to be set properly).
-	 * @return  Newly created `FlxImageFrame` object with empty frame of specified size.
+	 * @param graphic Graphic for the `FlxImageFrame`.
+	 * @param frameRect The size of the empty frame to generate
+	 * (only `width` and `height` of the `frameRect` need to be set properly).
+	 * @return Newly created `FlxImageFrame` object with empty frame of specified size.
 	 */
 	public static function fromEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{
@@ -54,8 +54,8 @@ class FlxImageFrame extends FlxFramesCollection
 	/**
 	 * Generates a `FlxImageFrame` object from the specified `FlxFrame`.
 	 *
-	 * @param   source   `FlxFrame` to generate `FlxImageFrame` from.
-	 * @return  Created `FlxImageFrame` object.
+	 * @param source `FlxFrame` to generate `FlxImageFrame` from.
+	 * @return Created `FlxImageFrame` object.
 	 */
 	public static function fromFrame(source:FlxFrame):FlxImageFrame
 	{
@@ -72,10 +72,10 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Creates a `FlxImageFrame` object for the whole image.
+	 * Creates a `FlxImageFrame` object from a whole image.
 	 *
-	 * @param   source   image graphic for the `FlxImageFrame`.
-	 * @return  Newly created `FlxImageFrame` object for specified graphic.
+	 * @param source Image graphic for the `FlxImageFrame`.
+	 * @return Newly created `FlxImageFrame` object from specified graphic.
 	 */
 	public static function fromImage(source:FlxGraphicAsset):FlxImageFrame
 	{
@@ -83,11 +83,11 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Creates `FlxImageFrame` for the specified region of `FlxGraphic`.
+	 * Creates `FlxImageFrame` from the specified region of `FlxGraphic`.
 	 *
-	 * @param   graphic   Graphic for `FlxImageFrame`.
-	 * @param   region    Region of image to create the `FlxImageFrame` for.
-	 * @return  Newly created `FlxImageFrame` object for the specified region of `FlxGraphic` object.
+	 * @param graphic Graphic for `FlxImageFrame`.
+	 * @param region Region of image to create the `FlxImageFrame` from.
+	 * @return Newly created `FlxImageFrame` object from the specified region of `FlxGraphic` object.
 	 */
 	public static function fromGraphic(graphic:FlxGraphic, ?region:FlxRect):FlxImageFrame
 	{
@@ -125,11 +125,11 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Creates a `FlxImageFrame` object for specified region of the image.
+	 * Creates a `FlxImageFrame` object from specified region of the image.
 	 *
-	 * @param   source   Image graphic for `FlxImageFrame`.
-	 * @param   region   Region of the image to create the `FlxImageFrame` for.
-	 * @return  Newly created `FlxImageFrame` object for specified region of image.
+	 * @param source Image graphic for `FlxImageFrame`.
+	 * @param region Region of the image to create the `FlxImageFrame` from.
+	 * @return Newly created `FlxImageFrame` object from specified region of image.
 	 */
 	public static function fromRectangle(source:FlxGraphicAsset, ?region:FlxRect):FlxImageFrame
 	{
@@ -138,14 +138,14 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Gets source BitmapData, generates new BitmapData (if there is no such BitmapData in the cache already)
-	 * and creates FlxImageFrame collection.
+	 * Gets source `BitmapData`, generates new `BitmapData` (if there is no such `BitmapData` in the cache already)
+	 * and creates `FlxImageFrame` collection.
 	 *
-	 * @param   source   The source of graphic for frame collection.
-	 * @param   border   Border to add around tiles (helps to avoid "tearing" problem).
-	 * @param   region   Region of image to generate image frame from. Default value is `null`, which means that
-	 *                   whole image will be used for it.
-	 * @return  Newly created image frame collection.
+	 * @param source The source of graphic for frame collection.
+	 * @param border Border to add around tiles (helps to avoid "tearing" problem).
+	 * @param region Region of image to generate image frame from. Default value is `null`, which means that
+	 * whole image will be used for it.
+	 * @return Newly created image frame collection.
 	 */
 	public static function fromBitmapAddSpacesAndBorders(source:FlxGraphicAsset, border:FlxPoint, ?region:FlxRect):FlxImageFrame
 	{
@@ -167,11 +167,11 @@ class FlxImageFrame extends FlxFramesCollection
 
 	/**
 	 * Gets `FlxFrame` object, generates new `BitmapData` with border pixels around
-	 * (if there is no such BitmapData in the cache already) and creates image frame collection.
+	 * (if there is no such BitmapData in the cache already), and creates image frame collection.
 	 *
-	 * @param   frame    Frame to generate tiles from.
-	 * @param   border   Border to add around frame image (helps to avoid "tearing" problem).
-	 * @return  Newly created image frame collection.
+	 * @param frame Frame to generate tiles from.
+	 * @param border Border to add around frame image (helps to avoid "tearing" problem).
+	 * @return Newly created image frame collection.
 	 */
 	public static function fromFrameAddSpacesAndBorders(frame:FlxFrame, border:FlxPoint):FlxImageFrame
 	{
@@ -180,13 +180,13 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Searches `FlxImageFrame` object for specified `FlxGraphic` object which have the same frame rectangle.
+	 * Searches `FlxImageFrame` object for specified `FlxGraphic` object which has the same frame rectangle.
 	 *
-	 * @param    graphic     `FlxGraphic` object to search the `FlxImageFrame` for.
-	 * @param    frameRect   `FlxImageFrame` object should have frame with
-	 *                        the same position and dimensions as specified with this argument.
-	 * @return   `FlxImageFrame` object which corresponds to specified rectangle.
-	 *           Could be `null` if there is no such `FlxImageFrame`.
+	 * @param graphic `FlxGraphic` object to search the `FlxImageFrame` for.
+	 * @param frameRect `FlxImageFrame` object should have frame with
+	 * the same position and dimensions as specified with this argument.
+	 * @return `FlxImageFrame` object which corresponds to specified rectangle.
+	 * Could be `null` if there is no such `FlxImageFrame`.
 	 */
 	public static function findFrame(graphic:FlxGraphic, frameRect:FlxRect, ?frameBorder:FlxPoint):FlxImageFrame
 	{
@@ -212,11 +212,11 @@ class FlxImageFrame extends FlxFramesCollection
 	}
 
 	/**
-	 * Searches `FlxImageFrame` object with the empty frame which have specified size.
+	 * Searches `FlxImageFrame` object for the empty frame which has the specified size.
 	 *
-	 * @param   graphic     `FlxGraphic` object to search `FlxImageFrame` for.
-	 * @param   frameRect   The size of empty frame to search for.
-	 * @return  `FlxImageFrame` with empty frame.
+	 * @param graphic `FlxGraphic` object to search `FlxImageFrame` for.
+	 * @param frameRect The size of empty frame to search for.
+	 * @return `FlxImageFrame` with empty frame.
 	 */
 	public static function findEmptyFrame(graphic:FlxGraphic, frameRect:FlxRect):FlxImageFrame
 	{

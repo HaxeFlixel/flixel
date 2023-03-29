@@ -81,10 +81,14 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
 			default:
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp) LEFT_STICK_DIGITAL_UP;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown) LEFT_STICK_DIGITAL_DOWN;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft) LEFT_STICK_DIGITAL_LEFT;
-				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp)
+					LEFT_STICK_DIGITAL_UP;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown)
+					LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft)
+					LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight)
+					LEFT_STICK_DIGITAL_RIGHT;
 				NONE;
 		}
 	}
@@ -257,13 +261,13 @@ class MayflashWiiRemoteMapping extends FlxGamepadMapping
 
 		return super.set_attachment(attachment);
 	}
-	
+
 	override function getInputLabel(id:FlxGamepadInputID)
 	{
 		var label = WiiRemoteMapping.getWiiInputLabel(id, attachment);
 		if (label == null)
 			return super.getInputLabel(id);
-		
+
 		return label;
 	}
 }

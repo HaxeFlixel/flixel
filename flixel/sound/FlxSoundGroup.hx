@@ -1,23 +1,23 @@
 package flixel.sound;
 
 /**
- * A way of grouping sounds for things such as collective volume control
+ * A way of grouping sounds for things such as collective volume control.
  */
 class FlxSoundGroup
 {
 	/**
-	 * The sounds in this group
+	 * The sounds in this group.
 	 */
 	public var sounds:Array<FlxSound> = [];
 
 	/**
-	 * The volume of this group
+	 * The volume of this group.
 	 */
 	public var volume(default, set):Float;
 
 	/**
-	 * Create a new sound group
-	 * @param	volume  The initial volume of this group
+	 * Creates a new sound group.
+	 * @param volume The initial volume of this group.
 	 */
 	public function new(volume:Float = 1)
 	{
@@ -25,9 +25,9 @@ class FlxSoundGroup
 	}
 
 	/**
-	 * Add a sound to this group
-	 * @param	sound The sound to add to this group
-	 * @return True if sound was successfully added, false otherwise
+	 * Adds a sound to this group.
+	 * @param sound The sound to add to this group.
+	 * @return Whether the sound was successfully added.
 	 */
 	public function add(sound:FlxSound):Bool
 	{
@@ -41,9 +41,9 @@ class FlxSoundGroup
 	}
 
 	/**
-	 * Remove a sound from this group
-	 * @param	sound The sound to remove
-	 * @return True if sound was successfully removed, false otherwise
+	 * Removes a sound from this group.
+	 * @param sound The sound to remove.
+	 * @return Whether the sound was successfully removed.
 	 */
 	public function remove(sound:FlxSound):Bool
 	{
@@ -56,7 +56,7 @@ class FlxSoundGroup
 	}
 
 	/**
-	 * Call this function to pause all sounds in this group.
+	 * Pauses all sounds in this group.
 	 * @since 4.3.0
 	 */
 	public function pause():Void

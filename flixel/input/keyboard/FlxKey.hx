@@ -3,14 +3,14 @@ package flixel.input.keyboard;
 import flixel.system.macros.FlxMacroUtil;
 
 /**
- * Maps enum values and strings to integer keycodes.
+ * Maps enum values and strings to integer key codes.
  */
 @:enum
 abstract FlxKey(Int) from Int to Int
 {
 	public static var fromStringMap(default, null):Map<String, FlxKey> = FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey");
 	public static var toStringMap(default, null):Map<FlxKey, String> = FlxMacroUtil.buildMap("flixel.input.keyboard.FlxKey", true);
-	// Key Indicies
+	// Key Indices
 	var ANY = -2;
 	var NONE = -1;
 	var A = 65;

@@ -50,7 +50,7 @@ class FlxGamepadAnalogStateList
 	}
 
 	/**
-	 * Checks if the entire stick itself is in the given state
+	 * Checks whether the entire stick itself is in the given state.
 	 */
 	function checkXY(id:FlxGamepadInputID):Bool
 	{
@@ -62,8 +62,8 @@ class FlxGamepadAnalogStateList
 		// easy : both values are exactly the same (both JUST_PRESSED, both JUST_RELEASED)
 		// !easy: one axis == status, other axis == RELEASED || JUST_RELEASED
 
-		// if we're checking for JUST_RELEASED: one axis must be released and the other not pressed  (you just released one axis, and the other one is not pressed either)
-		// if we're checking for JUST_PRESSED:  one axis must be pressed  and the other not pressed  (it was released before, but now you have just moved it)
+		// if we're checking for JUST_RELEASED: one axis must be released and the other not pressed (you just released one axis, and the other one is not pressed either)
+		// if we're checking for JUST_PRESSED: one axis must be pressed and the other not pressed (it was released before, but now you have just moved it)
 
 		var xVal = checkRaw(stick.x, status);
 		var yVal = checkRaw(stick.y, status);

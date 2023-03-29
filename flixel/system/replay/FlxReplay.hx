@@ -5,9 +5,9 @@ import flixel.util.FlxArrayUtil;
 
 /**
  * The replay object both records and replays game recordings,
- * as well as handle saving and loading replays to and from files.
+ * as well as handling saving and loading replays to and from files.
  * Gameplay recordings are essentially a list of keyboard and mouse inputs,
- * but since Flixel is fairly deterministic, we can use these to play back
+ * but, since Flixel is fairly deterministic, we can use these to play back
  * recordings of gameplay with a decent amount of fidelity.
  */
 class FlxReplay
@@ -28,7 +28,7 @@ class FlxReplay
 	public var frameCount:Int;
 
 	/**
-	 * Whether the replay has finished playing or not.
+	 * Whether the replay has finished playing.
 	 */
 	public var finished:Bool;
 
@@ -38,17 +38,17 @@ class FlxReplay
 	var _frames:Array<FrameRecord>;
 
 	/**
-	 * Internal tracker for max number of frames we can fit before growing the _frames again.
+	 * Internal tracker for max number of frames we can fit before growing the `_frames` again.
 	 */
 	var _capacity:Int;
 
 	/**
-	 * Internal helper variable for keeping track of where we are in _frames during recording or replay.
+	 * Internal helper variable for keeping track of where we are in `_frames` during recording or replay.
 	 */
 	var _marker:Int;
 
 	/**
-	 * Instantiate a new replay object.  Doesn't actually do much until you call create() or load().
+	 * Instantiates a new replay object. Doesn't actually do much until you call `create()` or `load()`.
 	 */
 	public function new()
 	{
@@ -62,7 +62,7 @@ class FlxReplay
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{
@@ -79,9 +79,9 @@ class FlxReplay
 	}
 
 	/**
-	 * Create a new gameplay recording.  Requires the current random number generator seed.
+	 * Creates a new gameplay recording. Requires the current random number generator seed.
 	 *
-	 * @param	Seed	The current seed from the random number generator.
+	 * @param Seed The current seed from the random number generator.
 	 */
 	public function create(Seed:Int):Void
 	{
@@ -92,10 +92,10 @@ class FlxReplay
 	}
 
 	/**
-	 * Load replay data from a String object.
+	 * Loads replay data from a `String` object.
 	 * Strings can come from embedded assets or external
 	 * files loaded through the debugger overlay.
-	 * @param	FileContents	A String object containing a gameplay recording.
+	 * @param FileContents A `String` object containing a gameplay recording.
 	 */
 	public function load(FileContents:String):Void
 	{
@@ -126,9 +126,9 @@ class FlxReplay
 	}
 
 	/**
-	 * Save the current recording data off to a String object.
-	 * Basically goes through and calls FrameRecord.save() on each frame in the replay.
-	 * return	The gameplay recording in simple ASCII format.
+	 * Saves the current recording data off to a `String` object.
+	 * Basically goes through and calls `FrameRecord#save()` on each frame in the replay.
+	 * @return The gameplay recording in simple ASCII format.
 	 */
 	public function save():String
 	{
@@ -146,7 +146,7 @@ class FlxReplay
 	}
 
 	/**
-	 * Get the current input data from the input managers and store it in a new frame record.
+	 * Gets the current input data from the input managers and store it in a new frame record.
 	 */
 	public function recordFrame():Void
 	{
@@ -188,7 +188,7 @@ class FlxReplay
 	}
 
 	/**
-	 * Get the current frame record data and load it into the input managers.
+	 * Gets the current frame record data and load it into the input managers.
 	 */
 	public function playNextFrame():Void
 	{
@@ -222,7 +222,7 @@ class FlxReplay
 	}
 
 	/**
-	 * Reset the replay back to the first frame.
+	 * Resets the replay back to the first frame.
 	 */
 	public function rewind():Void
 	{
@@ -232,12 +232,12 @@ class FlxReplay
 	}
 
 	/**
-	 * Common initialization terms used by both create() and load() to set up the replay object.
+	 * Common initialization terms used by both `create()` and `load()` to set up the replay object.
 	 */
 	function init():Void
 	{
 		_capacity = 100;
-		_frames = new Array<FrameRecord>( /*_capacity*/);
+		_frames = new Array<FrameRecord>(/*_capacity*/);
 		FlxArrayUtil.setLength(_frames, _capacity);
 		frameCount = 0;
 	}

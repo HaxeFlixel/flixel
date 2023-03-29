@@ -1,24 +1,24 @@
 package flixel.input.actions;
 
 import flixel.input.IFlxInputManager;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 #if FLX_STEAMWRAP
-import steamwrap.api.Steam;
-import steamwrap.api.Controller.ControllerDigitalActionData;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import steamwrap.api.Controller.ControllerAnalogActionData;
+import steamwrap.api.Controller.ControllerDigitalActionData;
+import steamwrap.api.Steam;
 #end
 
 /**
- * Helper class that wraps steam API so that flixel can do some basic
- * book-keeping on top of it
+ * Helper class that wraps Steam API so that Flixel can do some basic
+ * book-keeping on top of it.
  *
- * Also cuts down a bit on the (cpp && steamwrap) clutter by letting me stuff
+ * Also cuts down a bit on the (CPP && SteamWrap) clutter by letting me stuff
  * all those conditionals and imports over here and just letting them
- * resolve to no-ops if steamwrap isn't detected.
+ * resolve to no-ops if SteamWrap isn't detected.
  *
- * Not meant to be exposed to end users, just for internal use by
- * FlxGamepadManager. If a user wants to use the Steam API directly
- * they should just be making naked calls to steamwrap themselves.
+ * Not meant to be exposed to end users; just for internal use by
+ * `FlxGamepadManager`. If a user wants to use the Steam API directly,
+ * they should just be making naked calls to SteamWrap themselves.
  *
  * @since 4.6.0
  */
@@ -26,22 +26,22 @@ import steamwrap.api.Controller.ControllerAnalogActionData;
 class FlxSteamController
 {
 	/**
-	 * The maximum number of controllers that can be connected
+	 * The maximum number of controllers that can be connected.
 	 */
 	public static var MAX_CONTROLLERS(get, never):Int;
 
 	/**
-	 * The maximum number of origins (input glyphs, basically) that can be assigned to an action
+	 * The maximum number of origins (input glyphs, basically) that can be assigned to an action.
 	 */
 	public static var MAX_ORIGINS(get, never):Int;
 
 	/**
-	 * The wait time between polls for connected controllers
+	 * The wait time between polls for connected controllers.
 	 */
 	public static var CONTROLLER_CONNECT_POLL_TIME(default, null):Float = 0.25;
 
 	/**
-	 * The wait time between polls for action origins (checking which input glyphs are associated with an action, in case the player has re-configured them)
+	 * The wait time between polls for action origins (checking which input glyphs are associated with an action, in case the player has re-configured them).
 	 */
 	public static var ORIGIN_DATA_POLL_TIME(default, null):Float = 1.0;
 
@@ -98,7 +98,7 @@ class FlxSteamController
 		}
 
 		// If the FlxSteamUpdater hasn't been added to FlxG.inputs yet,
-		// we need to do so now to ensure that steam controllers will
+		// we need to do so now to ensure that Steam controllers will
 		// be properly updated every frame
 		var steamExists = false;
 		for (input in FlxG.inputs.list)
@@ -156,7 +156,7 @@ class FlxSteamController
 		}
 		else if (SteamControllerHandle == FlxInputDeviceID.FIRST_ACTIVE)
 		{
-			// TODO: not sure FIRST_ACTIVE will be very reliable in a steam controller context... I might consider dropping support for this handle in the future
+			// TODO: not sure FIRST_ACTIVE will be very reliable in a Steam controller context... I might consider dropping support for this handle in the future
 			for (i in 0...controllers.length)
 			{
 				if (controllers[i].active)
@@ -324,7 +324,7 @@ private class FlxSteamUpdater implements IFlxInputManager
 
 	public function reset():Void {}
 
-	// run the steam API every frame if steam is detected
+	// run the Steam API every frame if Steam is detected
 	function update():Void
 	{
 		#if FLX_STEAMWRAP

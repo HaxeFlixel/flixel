@@ -14,13 +14,13 @@ import openfl.display.BitmapData;
 class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 {
 	/**
-	 * Creates a new FlxButton object with a gray background
+	 * Creates a new `FlxSpriteButton` object with a gray background
 	 * and a callback function on the UI thread.
 	 *
-	 * @param   X         The x position of the button.
-	 * @param   Y         The y position of the button.
-	 * @param   Text      The text that you want to appear on the button.
-	 * @param   OnClick   The function to call whenever the button is clicked.
+	 * @param X The x-position of the button.
+	 * @param Y The y-position of the button.
+	 * @param Text The text that you want to appear on the button.
+	 * @param OnClick The function to call whenever the button is clicked.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?Label:FlxSprite, ?OnClick:Void->Void)
 	{
@@ -35,12 +35,12 @@ class FlxSpriteButton extends FlxTypedButton<FlxSprite> implements IFlxInput
 	/**
 	 * Generates text graphic for button's label.
 	 *
-	 * @param   Text    text for button's label
-	 * @param   font    font name for button's label
-	 * @param   size    font size for button's label
-	 * @param   color   text color for button's label
-	 * @param   align   text align for button's label
-	 * @return  this button with generated text graphic.
+	 * @param Text Text for button's label.
+	 * @param font Font name for button's label.
+	 * @param size Font size for button's label.
+	 * @param color Text color for button's label.
+	 * @param align Text align for button's label.
+	 * @return This button with generated text graphic.
 	 */
 	public function createTextLabel(Text:String, ?font:String, size:Int = 8, color:Int = 0x333333, align:String = "center"):FlxSpriteButton
 	{

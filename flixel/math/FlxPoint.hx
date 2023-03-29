@@ -6,25 +6,25 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 
 /**
- * 2-dimensional point class
+ * 2-dimensional point class.
  * 
  * ## Pooling
  * To avoid creating new instances, unnecessarily, used points can be
- * for later use. Rather than creating a new instance directly, call
+ * pooled for later use. Rather than creating a new instance directly, call
  * `FlxPoint.get(x, y)` and it will retrieve a point from the pool, if
- * one exists, otherwise it will create a new instance. Similarly, when
+ * one exists. Otherwise, it will create a new instance. Similarly, when
  * you're done using a point, call `myPoint.put()` to place it back.
  * 
  * You can disable point pooling entirely with `FLX_NO_POINT_POOL`.
  * 
  * ## Weak points
- * Weak points are points meant for a singular use, rather than calling
- * `put` on every point you `get`, you can create a weak point, and have
+ * Weak points are points meant for a singular use. Rather than calling
+ * `put()` on every point you `get()`, you can create a weak point, and have
  * it placed back once used. All `FlxPoint` methods and Flixel utilities
  * automatically call `putWeak()` on every point passed in.
  * 
  * In the following example, a weak point is created, and passed into
- * `p.degreesTo` where `putWeak` is called on it, putting it back in the pool.
+ * `p.degreesTo` where `putWeak()` is called on it, putting it back in the pool.
  *
  * ```haxe
  * var angle = p.degreesTo(FlxPoint.weak(FlxG.mouse.x, FlxG.mouse.y));
@@ -39,12 +39,12 @@ import openfl.geom.Point;
  * - `A - B` returns a new point that is difference of `A` and `B`
  * - `A * k` returns a new point that is `A` scaled with coefficient `k`
  *
- * Note: also accepts `openfl.geom.Point`, but always returns a FlxPoint.
+ * Note: Also accepts `openfl.geom.Point`, but always returns a `FlxPoint`.
  *
- * Note: that these operators get points from the pool, but do not put
+ * Note: These operators get points from the pool, but do not put
  * points back in the pool, unless they are weak.
  * 
- * Example: 4 total points are created, but only 3 are put into the pool
+ * Example: 4 total points are created, but only 3 are put into the pool.
  * ```haxe
  * var a = FlxPoint.get(1, 1);
  * var b = FlxPoint.get(1, 1);
@@ -66,10 +66,10 @@ import openfl.geom.Point;
  * d.put();
  * ```
  * 
- * Otherwise, the remainging points will become garbage, adding to the
- * heap, potentially triggering a garbage collection when you don't want.
+ * Otherwise, the remaining points will become garbage, adding to the
+ * heap, potentially triggering a garbage collection when you don't want one.
  */
-@:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint 
+@:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint
 {
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
@@ -79,11 +79,11 @@ import openfl.geom.Point;
 	static var _point3 = new FlxPoint();
 
 	/**
-	 * Recycle or create new FlxPoint.
-	 * Be sure to put() them back into the pool after you're done with them!
+	 * Recycles or create a new `FlxPoint`.
+	 * Be sure to `put()` them back into the pool after you're done with them!
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 */
 	public static inline function get(x:Float = 0, y:Float = 0):FlxPoint
 	{
@@ -91,11 +91,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Recycle or create a new FlxPoint which will automatically be released
-	 * to the pool when passed into a flixel function.
+	 * Recycles or creates a new `FlxPoint` which will automatically be released
+	 * to the pool when passed into a Flixel function.
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 * @since 4.6.0
 	 */
 	public static inline function weak(x:Float = 0, y:Float = 0):FlxPoint
@@ -142,7 +142,6 @@ import openfl.geom.Point;
 		return result;
 	}
 
-	
 	/**
 	 * Operator that divides a point by float, returning a new point.
 	 */
@@ -185,7 +184,6 @@ import openfl.geom.Point;
 		return a.scale(b);
 	}
 
-	
 	/**
 	 * Operator that adds two points, returning a new point.
 	 */
@@ -243,57 +241,57 @@ import openfl.geom.Point;
 		return a.subtract(b.x, b.y);
 	}
 
-	// Without these delegates we have to say `this.x` everywhere.
+	// Without these delegates, we have to say `this.x` everywhere.
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 
 	/**
-	 * The horizontal component of the unit point
+	 * The horizontal component of the unit point.
 	 */
 	public var dx(get, never):Float;
 
 	/**
-	 * The vertical component of the unit point
+	 * The vertical component of the unit point.
 	 */
 	public var dy(get, never):Float;
 
 	/**
-	 * Length of the point
+	 * Length of the point.
 	 */
 	public var length(get, set):Float;
 
 	/**
-	 * length of the point squared
+	 * Length of the point, squared.
 	 */
 	public var lengthSquared(get, never):Float;
 
 	/**
-	 * The angle formed by the point with the horizontal axis (in degrees)
+	 * The angle formed by the point with the horizontal axis (in degrees).
 	 */
 	public var degrees(get, set):Float;
 
 	/**
-	 * The angle formed by the point with the horizontal axis (in radians)
+	 * The angle formed by the point with the horizontal axis (in radians).
 	 */
 	public var radians(get, set):Float;
 
 	/**
-	 * The horizontal component of the right normal of the point
+	 * The horizontal component of the right normal of the point.
 	 */
 	public var rx(get, never):Float;
 
 	/**
-	 * The vertical component of the right normal of the point
+	 * The vertical component of the right normal of the point.
 	 */
 	public var ry(get, never):Float;
 
 	/**
-	 * The horizontal component of the left normal of the point
+	 * The horizontal component of the left normal of the point.
 	 */
 	public var lx(get, never):Float;
 
 	/**
-	 * The vertical component of the left normal of the point
+	 * The vertical component of the left normal of the point.
 	 */
 	public var ly(get, never):Float;
 
@@ -303,10 +301,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Set the coordinates of this point object.
+	 * Sets the coordinates of this point object.
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 */
 	public inline function set(x:Float = 0, y:Float = 0):FlxPoint
 	{
@@ -318,9 +316,9 @@ import openfl.geom.Point;
 	/**
 	 * Adds to the coordinates of this point.
 	 *
-	 * @param   x  Amount to add to x
-	 * @param   y  Amount to add to y
-	 * @return  This point.
+	 * @param x Amount to add to the x-coordinate.
+	 * @param y Amount to add to the y-coordinate.
+	 * @return This point.
 	 */
 	public inline function add(x:Float = 0, y:Float = 0):FlxPoint
 	{
@@ -332,8 +330,8 @@ import openfl.geom.Point;
 	/**
 	 * Adds the coordinates of another point to the coordinates of this point.
 	 *
-	 * @param   point  The point to add to this point
-	 * @return  This point.
+	 * @param point The point to add to this point.
+	 * @return This point.
 	 */
 	public inline function addPoint(point:FlxPoint):FlxPoint
 	{
@@ -345,9 +343,9 @@ import openfl.geom.Point;
 	/**
 	 * Subtracts from the coordinates of this point.
 	 *
-	 * @param   x  Amount to subtract from x
-	 * @param   y  Amount to subtract from y
-	 * @return  This point.
+	 * @param x Amount to subtract from the x-coordinate.
+	 * @param y Amount to subtract from the y-coordinate.
+	 * @return This point.
 	 */
 	public inline function subtract(x:Float = 0, y:Float = 0):FlxPoint
 	{
@@ -359,8 +357,8 @@ import openfl.geom.Point;
 	/**
 	 * Subtracts the coordinates of another point from the coordinates of this point.
 	 *
-	 * @param   point  The point to subtract from this point
-	 * @return  This point.
+	 * @param point The point to subtract from this point.
+	 * @return This point.
 	 */
 	public inline function subtractPoint(point:FlxPoint):FlxPoint
 	{
@@ -370,11 +368,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Scale this point.
+	 * Scales this point.
 	 *
-	 * @param   x - scale x coefficient
-	 * @param   y - scale y coefficient, if omitted, x is used
-	 * @return  scaled point
+	 * @param x The x-scale coefficient.
+	 * @param y The y-scale coefficient. If omitted, `x` is used.
+	 * @return This point.
 	 */
 	public inline function scale(x:Float, ?y:Float):FlxPoint
 	{
@@ -387,10 +385,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Scale this point by another point.
+	 * Scales this point by another point.
 	 *
-	 * @param   point - The x and y scale coefficient
-	 * @return  scaled point
+	 * @param point The x-/y-scale coefficients as a point.
+	 * @return This point.
 	 */
 	public inline function scalePoint(point:FlxPoint):FlxPoint
 	{
@@ -400,10 +398,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Returns scaled copy of this point.
+	 * Returns a scaled copy of this point.
 	 *
-	 * @param   k - scale coefficient
-	 * @return  scaled point
+	 * @param k Scale coefficient.
+	 * @return New scaled point.
 	 */
 	public inline function scaleNew(k:Float):FlxPoint
 	{
@@ -411,10 +409,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Return new point which equals to sum of this point and passed p point.
+	 * Returns a new point which equals the sum of this point and passed `p` point.
 	 *
-	 * @param   p  point to add
-	 * @return  addition result
+	 * @param p Point to add.
+	 * @return Addition result.
 	 */
 	public inline function addNew(p:FlxPoint):FlxPoint
 	{
@@ -422,10 +420,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Returns new point which is result of subtraction of p point from this point.
+	 * Returns a new point which is result of subtraction of `p` point from this point.
 	 *
-	 * @param   p  point to subtract
-	 * @return  subtraction result
+	 * @param p Point to subtract.
+	 * @return Subtraction result.
 	 */
 	public inline function subtractNew(p:FlxPoint):FlxPoint
 	{
@@ -433,10 +431,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just copies the values from the specified point.
+	 * Helper function. Copies the values from the specified point.
 	 *
-	 * @param   p  Any FlxPoint.
-	 * @return  A reference to itself.
+	 * @param p Any `FlxPoint`.
+	 * @return This point.
 	 */
 	public inline function copyFrom(p:FlxPoint):FlxPoint
 	{
@@ -446,10 +444,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just copies the values from the specified Flash point.
+	 * Helper function. Copies the values from the specified Flash point.
 	 *
-	 * @param   p  Any Point.
-	 * @return  A reference to itself.
+	 * @param p Any `Point`.
+	 * @return This point.
 	 */
 	public inline function copyFromFlash(p:Point):FlxPoint
 	{
@@ -457,10 +455,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just copies the values from this point to the specified point.
+	 * Helper function. Copies the values from this point to the specified point.
 	 *
-	 * @param   p   optional point to copy this point to
-	 * @return  copy of this point
+	 * @param p Optional point to copy this point to.
+	 * @return Copy of this point.
 	 */
 	public inline function copyTo(?p:FlxPoint):FlxPoint
 	{
@@ -472,10 +470,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just copies the values from this point to the specified Flash point.
+	 * Helper function. Copies the values from this point to the specified Flash point.
 	 *
-	 * @param   p  Any Point.
-	 * @return  A reference to the altered point parameter.
+	 * @param p Any `Point`.
+	 * @return A reference to the altered point parameter.
 	 */
 	public inline function copyToFlash(?p:Point):Point
 	{
@@ -490,10 +488,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just increases the values of the specified Flash point by the values of this point.
+	 * Helper function. Increases the values of the specified Flash point by the values of this point.
 	 *
-	 * @param   p  Any Point.
-	 * @return  A reference to the altered point parameter.
+	 * @param p Any `Point`.
+	 * @return A reference to the altered point parameter.
 	 */
 	public inline function addToFlash(p:Point):Point
 	{
@@ -504,10 +502,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Helper function, just decreases the values of the specified Flash point by the values of this point.
+	 * Helper function. Decreases the values of the specified Flash point by the values of this point.
 	 *
-	 * @param   p  Any Point.
-	 * @return  A reference to the altered point parameter.
+	 * @param p Any `Point`.
+	 * @return A reference to the altered point parameter.
 	 */
 	public inline function subtractFromFlash(p:Point):Point
 	{
@@ -518,7 +516,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rounds x and y using Math.floor()
+	 * Rounds `x` and `y` using `Math.floor()`.
 	 */
 	public inline function floor():FlxPoint
 	{
@@ -528,7 +526,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rounds x and y using Math.ceil()
+	 * Rounds `x` and `y` using `Math.ceil()`.
 	 */
 	public inline function ceil():FlxPoint
 	{
@@ -538,7 +536,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rounds x and y using Math.round()
+	 * Rounds `x` and `y` using `Math.round()`.
 	 */
 	public inline function round():FlxPoint
 	{
@@ -548,13 +546,13 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Returns true if this point is within the given rectangular bounds
+	 * Checks whether this point is within the given rectangular bounds.
 	 *
-	 * @param	x       The X value of the region to test within
-	 * @param	y       The Y value of the region to test within
-	 * @param	width   The width of the region to test within
-	 * @param	height  The height of the region to test within
-	 * @return	True if the point is within the region, otherwise false
+	 * @param x The x-value of the region to test within.
+	 * @param y The y-value of the region to test within.
+	 * @param width The width of the region to test within.
+	 * @param height The height of the region to test within.
+	 * @return Whether the point is within the region.
 	 */
 	public inline function inCoords(x:Float, y:Float, width:Float, height:Float):Bool
 	{
@@ -562,10 +560,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Returns true if this point is within the given rectangular block
+	 * Checks whether this point is within the given rectangular block.
 	 *
-	 * @param	rect	The FlxRect to test within
-	 * @return	True if pointX/pointY is within the FlxRect, otherwise false
+	 * @param rect The `FlxRect` to test within.
+	 * @return Whether this point is within `rect`.
 	 */
 	public inline function inRect(rect:FlxRect):Bool
 	{
@@ -573,26 +571,26 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given degrees.
+	 * Rotates this point clockwise in 2D space around another point by the given angle in degrees.
 	 *
-	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   degrees  Rotate the point by this many degrees clockwise.
-	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 * @param pivot The pivot you want to rotate this point around.
+	 * @param degrees The angle in degrees by which to rotate this point.
+	 * @return A `FlxPoint` containing the coordinates of the rotated point.
 	 */
-	@:deprecated("rotate is deprecated, use pivotDegrees")
+	@:deprecated("rotate() is deprecated; use pivotDegrees() instead")
 	public function rotate(pivot:FlxPoint, degrees:Float):FlxPoint
 	{
 		return pivotDegrees(pivot, degrees);
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given radians.
-	 * Note: To rotate a point around 0,0 you can use `p.radians += angle`
-	 * @since 5.0.0
+	 * Rotates this point clockwise in 2D space around another point by the given angle in radians.
+	 * Note: To rotate a point around (0,0), you can use `p.radians += angle`.
 	 *
-	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   radians  Rotate the point by this many radians clockwise.
-	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 * @param pivot The pivot you want to rotate this point around.
+	 * @param radians The angle in radians by which to rotate this point.
+	 * @return A `FlxPoint` containing the coordinates of the rotated point.
+	 * @since 5.0.0
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
 	{
@@ -605,12 +603,12 @@ import openfl.geom.Point;
 
 	/**
 	 * Rotates this point clockwise in 2D space around another point by the given degrees.
-	 * Note: To rotate a point around 0,0 you can use `p.degrees += angle`
-	 * @since 5.0.0
+	 * Note: To rotate a point around (0,0), you can use `p.degrees += angle`.
 	 *
-	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   degrees  Rotate the point by this many degrees clockwise.
-	 * @return  A FlxPoint containing the coordinates of the rotated point.
+	 * @param pivot The pivot you want to rotate this point around.
+	 * @param degrees The angle in degrees by which to rotate this point.
+	 * @return A FlxPoint containing the coordinates of the rotated point.
+	 * @since 5.0.0
 	 */
 	public inline function pivotDegrees(pivot:FlxPoint, degrees:Float):FlxPoint
 	{
@@ -618,10 +616,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Calculate the distance to another point.
+	 * Calculates the distance to another point.
 	 *
-	 * @param   point  A FlxPoint object to calculate the distance to.
-	 * @return  The distance between the two points as a Float.
+	 * @param point A `FlxPoint` object to calculate the distance to.
+	 * @return The distance between the two points as a `Float`.
 	 */
 	public function distanceTo(point:FlxPoint):Float
 	{
@@ -633,11 +631,11 @@ import openfl.geom.Point;
 
 	/**
 	 * Calculates the angle from this to another point.
-	 * If the point is straight right of this, 0 is returned.
+	 * If the point is straight right of this, `0` is returned.
 	 * @since 5.0.0
 	 *
-	 * @param   point  The other point.
-	 * @return  The angle, in radians, between -PI and PI
+	 * @param point The other point.
+	 * @return The angle, in radians, between `-PI` and `PI`.
 	 */
 	public inline function radiansTo(point:FlxPoint):Float
 	{
@@ -646,11 +644,11 @@ import openfl.geom.Point;
 
 	/**
 	 * Calculates the angle from another point to this.
-	 * If this is straight right of the point, 0 is returned.
+	 * If this is straight right of the point, `0` is returned.
 	 * @since 5.0.0
 	 *
-	 * @param   point  The other point.
-	 * @return  The angle, in radians, between -PI and PI
+	 * @param point The other point.
+	 * @return The angle, in radians, between `-PI` and `PI`.
 	 */
 	public inline function radiansFrom(point:FlxPoint):Float
 	{
@@ -659,11 +657,11 @@ import openfl.geom.Point;
 
 	/**
 	 * Calculates the angle from this to another point.
-	 * If the point is straight right of this, 0 is returned.
+	 * If the point is straight right of this, `0` is returned.
 	 * @since 5.0.0
 	 *
-	 * @param   point  The other point.
-	 * @return  The angle, in degrees, between -180 and 180
+	 * @param point The other point.
+	 * @return The angle, in degrees, between `-180` and `180`.
 	 */
 	public inline function degreesTo(point:FlxPoint):Float
 	{
@@ -672,11 +670,11 @@ import openfl.geom.Point;
 
 	/**
 	 * Calculates the angle from another point to this.
-	 * If this is straight right of the point, 0 is returned.
+	 * If this is straight right of the point, `0` is returned.
 	 * @since 5.0.0
 	 *
-	 * @param   point  The other point.
-	 * @return  The angle, in degrees, between -180 and 180
+	 * @param point The other point.
+	 * @return The angle, in degrees, between `-180` and `180`.
 	 */
 	public inline function degreesFrom(point:FlxPoint):Float
 	{
@@ -685,18 +683,18 @@ import openfl.geom.Point;
 
 	/** DEPRECATED
 	 * 
-	 * Calculates the angle between this and another point. 0 degrees points straight up.
+	 * Calculates the angle between this and another point. `0` degrees points straight up.
 	 * 
-	 * Note: Every other flixel function treats straight right as 0 degrees.
+	 * Note: Every other Flixel function treats straight right as `0` degrees.
 	 * 
-	 * Also Note: The result is very innacurate.
+	 * Also Note: The result is very inaccurate.
 	 *
-	 * @param   point   The other point.
-	 * @return  The angle in degrees, between -180 and 180.
+	 * @param point The other point.
+	 * @return The angle in degrees, between `-180` and `180`.
 	 * 
 	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
 	 */
-	@:deprecated("angleBetween is deprecated, use degreesTo instead")
+	@:deprecated("angleBetween() is deprecated; use degreesTo() instead")
 	public function angleBetween(point:FlxPoint):Float
 	{
 		var x:Float = point.x - x;
@@ -734,9 +732,9 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Applies transformation matrix to this point
-	 * @param   matrix  transformation matrix
-	 * @return  transformed point
+	 * Applies a transformation matrix to this point.
+	 * @param matrix A transformation matrix.
+	 * @return Transformed point.
 	 */
 	public inline function transform(matrix:Matrix):FlxPoint
 	{
@@ -747,10 +745,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Short for dot product.
+	 * Shortcut for `dotProduct()`.
 	 *
-	 * @param   p  point to multiply
-	 * @return  dot product of two points
+	 * @param p Point to multiply.
+	 * @return Dot product of two points.
 	 */
 	public inline function dot(p:FlxPoint):Float
 	{
@@ -758,10 +756,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Dot product between two points.
+	 * Calculates the dot product between two points.
 	 *
-	 * @param   p  point to multiply
-	 * @return  dot product of two points
+	 * @param p Point to multiply
+	 * @return Dot product of two points.
 	 */
 	public inline function dotProduct(p:FlxPoint):Float
 	{
@@ -771,11 +769,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Dot product between two points.
-	 * Meant for internal use, does not call putWeak.
+	 * Calculates the dot product between two points.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 *
-	 * @param   p  point to multiply
-	 * @return  dot product of two points
+	 * @param p Point to multiply.
+	 * @return Dot product of two points.
 	 */
 	inline function dotProductWeak(p:FlxPoint):Float
 	{
@@ -783,10 +781,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Dot product of points with normalization of the second point.
+	 * Calculates the dot product of points with normalization of the second point.
 	 *
-	 * @param   p  point to multiply
-	 * @return  dot product of two points
+	 * @param p Point to multiply.
+	 * @return Dot product of two points.
 	 */
 	public inline function dotProdWithNormalizing(p:FlxPoint):Float
 	{
@@ -796,10 +794,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Check the perpendicularity of two points.
+	 * Checks the perpendicularity of two points.
 	 *
-	 * @param   p  point to check
-	 * @return  true - if they are perpendicular
+	 * @param p Point to check
+	 * @return Whether the points are perpendicular.
 	 */
 	public inline function isPerpendicular(p:FlxPoint):Bool
 	{
@@ -807,10 +805,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Find the length of cross product between two points.
+	 * Finds the length of cross product between two points.
 	 *
-	 * @param   p  point to multiply
-	 * @return  the length of cross product of two points
+	 * @param p Point to multiply.
+	 * @return The length of cross product of two points.
 	 */
 	public inline function crossProductLength(p:FlxPoint):Float
 	{
@@ -820,11 +818,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Find the length of cross product between two points.
-	 * Meant for internal use, does not call putWeak.
+	 * Finds the length of cross product between two points.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 *
-	 * @param   p  point to multiply
-	 * @return  the length of cross product of two points
+	 * @param p Point to multiply.
+	 * @return The length of cross product of two points.
 	 */
 	inline function crossProductLengthWeak(p:FlxPoint):Float
 	{
@@ -832,10 +830,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Check for parallelism of two points.
+	 * Checks for parallelism of two points.
 	 *
-	 * @param   p  point to check
-	 * @return  true - if they are parallel
+	 * @param p Point to check.
+	 * @return Whether the points are parallel.
 	 */
 	public inline function isParallel(p:FlxPoint):Bool
 	{
@@ -845,11 +843,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Check for parallelism of two points.
-	 * Meant for internal use, does not call putWeak.
+	 * Checks for parallelism of two points.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 *
-	 * @param   p  point to check
-	 * @return  true - if they are parallel
+	 * @param p Point to check.
+	 * @return Whether the points are parallel.
 	 */
 	inline function isParallelWeak(p:FlxPoint):Bool
 	{
@@ -857,9 +855,9 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Check if this point has zero length.
+	 * Checks whether this point has `0` length.
 	 *
-	 * @return  true - if the point is zero
+	 * @return Whether the point is zero.
 	 */
 	public inline function isZero():Bool
 	{
@@ -867,7 +865,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * point reset
+	 * Resets the point.
 	 */
 	public inline function zero():FlxPoint
 	{
@@ -876,7 +874,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Normalization of the point (reduction to unit length)
+	 * Normalizes of the point (reduction to unit length).
 	 */
 	public function normalize():FlxPoint
 	{
@@ -888,7 +886,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Check the point for unit length
+	 * Checks the point for unit length.
 	 */
 	public inline function isNormalized():Bool
 	{
@@ -896,10 +894,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotate the point for a given angle.
+	 * Rotates the point by a given angle.
 	 *
-	 * @param   rads  angle to rotate
-	 * @return  rotated point
+	 * @param rads Angle to rotate.
+	 * @return Rotated point.
 	 */
 	public inline function rotateByRadians(rads:Float):FlxPoint
 	{
@@ -914,10 +912,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotate the point for a given angle.
+	 * Rotates the point by a given angle.
 	 *
-	 * @param   degs  angle to rotate
-	 * @return  rotated point
+	 * @param degs Angle to rotate.
+	 * @return Rotated point.
 	 */
 	public inline function rotateByDegrees(degs:Float):FlxPoint
 	{
@@ -925,11 +923,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotate the point with the values of sine and cosine of the angle of rotation.
+	 * Rotates the point with the values of sine and cosine of the angle of rotation.
 	 *
-	 * @param   sin  the value of sine of the angle of rotation
-	 * @param   cos  the value of cosine of the angle of rotation
-	 * @return  rotated point
+	 * @param sin The value of sine of the angle of rotation.
+	 * @param cos The value of cosine of the angle of rotation.
+	 * @return Rotated point.
 	 */
 	public inline function rotateWithTrig(sin:Float, cos:Float):FlxPoint
 	{
@@ -940,11 +938,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Sets the polar coordinates of the point
+	 * Sets the polar coordinates of the point.
 	 *
-	 * @param   length   The length to set the point
-	 * @param   radians  The angle to set the point, in radians
-	 * @return  The rotated point
+	 * @param length The length to set the point.
+	 * @param radians The angle to set the point, in radians.
+	 * @return This point.
 	 * 
 	 * @since 4.10.0
 	 */
@@ -956,11 +954,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Sets the polar coordinates of the point
+	 * Sets the polar coordinates of the point.
 	 *
-	 * @param   length  The length to set the point
-	 * @param   degrees The angle to set the point, in degrees
-	 * @return  The rotated point
+	 * @param length The length to set the point.
+	 * @param degrees The angle to set the point, in degrees.
+	 * @return This point.
 	 * 
 	 * @since 4.10.0
 	 */
@@ -970,7 +968,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Right normal of the point
+	 * Right normal of the point.
 	 */
 	public function rightNormal(?p:FlxPoint):FlxPoint
 	{
@@ -983,7 +981,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Left normal of the point
+	 * Left normal of the point.
 	 */
 	public function leftNormal(?p:FlxPoint):FlxPoint
 	{
@@ -996,7 +994,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Change direction of the point to opposite
+	 * Changes direction of the point to opposite.
 	 */
 	public inline function negate():FlxPoint
 	{
@@ -1005,18 +1003,21 @@ import openfl.geom.Point;
 		return this;
 	}
 
+	/**
+	 * Clones the point and changes direction of the clone to opposite.
+	 */
 	public inline function negateNew():FlxPoint
 	{
 		return clone().negate();
 	}
 
 	/**
-	 * The projection of this point to point that is passed as an argument
+	 * Calculates the projection of this point to the point that is passed as an argument
 	 * (without modifying the original point!).
 	 *
-	 * @param   p     point to project
-	 * @param   proj  optional argument - result point
-	 * @return  projection of the point
+	 * @param p Point to project.
+	 * @param proj Optional result point.
+	 * @return Projection of the point.
 	 */
 	public function projectTo(p:FlxPoint, ?proj:FlxPoint):FlxPoint
 	{
@@ -1034,11 +1035,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Projecting this point on the normalized point p.
+	 * Projects this point on the normalized point `p`.
 	 *
-	 * @param   p     this point has to be normalized, ie have unit length
-	 * @param   proj  optional argument - result point
-	 * @return  projection of the point
+	 * @param p The point to project onto. Must be normalized.
+	 * @param proj Optional result point.
+	 * @return Projection of the point.
 	 */
 	public function projectToNormalized(p:FlxPoint, ?proj:FlxPoint):FlxPoint
 	{
@@ -1048,12 +1049,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Projecting this point on the normalized point p.
-	 * Meant for internal use, does not call putWeak.
+	 * Projects this point on the normalized point `p`.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 *
-	 * @param   p     this point has to be normalized, ie have unit length
-	 * @param   proj  optional argument - result point
-	 * @return  projection of the point
+	 * @param p The point to project onto. Must be normalized.
+	 * @param proj Optional result point.
+	 * @return Projection of the point.
 	 */
 	inline function projectToNormalizedWeak(p:FlxPoint, ?proj:FlxPoint):FlxPoint
 	{
@@ -1068,7 +1069,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Dot product of left the normal point and point p.
+	 * Dot product of left the normal point and point `p`.
 	 */
 	public inline function perpProduct(p:FlxPoint):Float
 	{
@@ -1078,8 +1079,8 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Dot product of left the normal point and point p.
-	 * Meant for internal use, does not call putWeak.
+	 * Dot product of left the normal point and point `p`.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 */
 	inline function perpProductWeak(p:FlxPoint):Float
 	{
@@ -1087,12 +1088,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Find the ratio between the perpProducts of this point and p point. This helps to find the intersection point.
+	 * Finds the ratio between the perpProducts of this point and `p` point. This helps to find the intersection point.
 	 *
-	 * @param   a  start point of the point
-	 * @param   b  start point of the p point
-	 * @param   p  the second point
-	 * @return  the ratio between the perpProducts of this point and p point
+	 * @param a Start point of the point.
+	 * @param b Start point of the `p` point.
+	 * @param p The second point.
+	 * @return The ratio between the perpProducts of this point and `p` point.
 	 */
 	public inline function ratio(a:FlxPoint, b:FlxPoint, p:FlxPoint):Float
 	{
@@ -1104,13 +1105,13 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Find the ratio between the perpProducts of this point and p point. This helps to find the intersection point.
-	 * Meant for internal use, does not call putWeak.
+	 * Finds the ratio between the perpProducts of this point and `p` point. This helps to find the intersection point.
+	 * Meant for internal use. Does not call `putWeak()`.
 	 *
-	 * @param   a  start point of the point
-	 * @param   b  start point of the p point
-	 * @param   p  the second point
-	 * @return  the ratio between the perpProducts of this point and p point
+	 * @param a Start point of the point.
+	 * @param b Start point of the `p` point.
+	 * @param p The second point.
+	 * @return The ratio between the perpProducts of this point and `p` point.
 	 */
 	inline function ratioWeak(a:FlxPoint, b:FlxPoint, p:FlxPoint):Float
 	{
@@ -1126,12 +1127,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Finding the point of intersection of points.
+	 * Finds the point of intersection of points.
 	 *
-	 * @param   a  start point of the point
-	 * @param   b  start point of the p point
-	 * @param   p  the second point
-	 * @return the point of intersection of points
+	 * @param a Start point of the point.
+	 * @param b Start point of the `p` point.
+	 * @param p The second point.
+	 * @return The point of intersection of points.
 	 */
 	public function findIntersection(a:FlxPoint, b:FlxPoint, p:FlxPoint, ?intersection:FlxPoint):FlxPoint
 	{
@@ -1158,12 +1159,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Finding the point of intersection of points if it is in the "bounds" of the points.
+	 * Finds the point of intersection of points if it is in the "bounds" of the points.
 	 *
-	 * @param   a   start point of the point
-	 * @param   b   start point of the p point
-	 * @param   p   the second point
-	 * @return the point of intersection of points if it is in the "bounds" of the points
+	 * @param a Start point of the point.
+	 * @param b Start point of the p point.
+	 * @param p The second point.
+	 * @return The point of intersection of points if it is in the "bounds" of the points.
 	 */
 	public function findIntersectionInBounds(a:FlxPoint, b:FlxPoint, p:FlxPoint, ?intersection:FlxPoint):FlxPoint
 	{
@@ -1190,9 +1191,9 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Limit the length of this point.
+	 * Limits the length of this point.
 	 *
-	 * @param   max  maximum length of this point
+	 * @param max Maximum length of this point.
 	 */
 	public inline function truncate(max:Float):FlxPoint
 	{
@@ -1201,10 +1202,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Get the angle between points (in radians).
+	 * Gets the angle between points (in radians).
 	 *
-	 * @param   p   second point, which we find the angle
-	 * @return  the angle in radians
+	 * @param p Second point, which is used to find the angle.
+	 * @return The angle in radians.
 	 */
 	public inline function radiansBetween(p:FlxPoint):Float
 	{
@@ -1214,10 +1215,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * The angle between points (in degrees).
+	 * Gets the angle between points (in degrees).
 	 *
-	 * @param   p   second point, which we find the angle
-	 * @return  the angle in radians
+	 * @param p Second point, which is used to find the angle.
+	 * @return The angle in degrees.
 	 */
 	public inline function degreesBetween(p:FlxPoint):Float
 	{
@@ -1225,10 +1226,10 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * The sign of half-plane of point with respect to the point through the a and b points.
+	 * Calgulates the sign of half-plane of point with respect to the point through the `a` and `b` points.
 	 *
-	 * @param   a  start point of the wall-point
-	 * @param   b  end point of the wall-point
+	 * @param a Start point of the wall-point.
+	 * @param b End point of the wall-point.
 	 */
 	public function sign(a:FlxPoint, b:FlxPoint):Int
 	{
@@ -1243,7 +1244,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * The distance between points
+	 * Calculates the distance between points.
 	 */
 	public inline function dist(p:FlxPoint):Float
 	{
@@ -1251,7 +1252,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * The squared distance between points
+	 * Calculates the squared distance between points.
 	 */
 	public inline function distSquared(p:FlxPoint):Float
 	{
@@ -1262,11 +1263,11 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Reflect the point with respect to the normal of the "wall".
+	 * Reflects the point with respect to the normal of the "wall".
 	 *
-	 * @param   normal      left normal of the "wall". It must be normalized (no checks)
-	 * @param   bounceCoeff bounce coefficient (0 <= bounceCoeff <= 1)
-	 * @return  reflected point (angle of incidence equals to angle of reflection)
+	 * @param normal Left normal of the "wall". It must be normalized (no checks).
+	 * @param bounceCoeff Bounce coefficient (`0 <= bounceCoeff <= 1`).
+	 * @return Reflected point (angle of incidence equals angle of reflection).
 	 */
 	public inline function bounce(normal:FlxPoint, bounceCoeff:Float = 1):FlxPoint
 	{
@@ -1278,12 +1279,12 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Reflect the point with respect to the normal. This operation takes "friction" into account.
+	 * Reflects the point with respect to the normal. This operation takes "friction" into account.
 	 *
-	 * @param   normal      left normal of the "wall". It must be normalized (no checks)
-	 * @param   bounceCoeff bounce coefficient (0 <= bounceCoeff <= 1)
-	 * @param   friction    friction coefficient
-	 * @return  reflected point
+	 * @param normal Left normal of the "wall". It must be normalized (no checks).
+	 * @param bounceCoeff Bounce coefficient (`0 <= bounceCoeff <= 1`).
+	 * @param friction Friction coefficient.
+	 * @return Reflected point.
 	 */
 	public inline function bounceWithFriction(normal:FlxPoint, bounceCoeff:Float = 1, friction:Float = 0):FlxPoint
 	{
@@ -1300,9 +1301,9 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Checking if this is a valid point.
+	 * Checks whether this is a valid point.
 	 *
-	 * @return  true - if the point is valid
+	 * @return Whether the point is valid.
 	 */
 	public inline function isValid():Bool
 	{
@@ -1312,8 +1313,8 @@ import openfl.geom.Point;
 	/**
 	 * Copies this point.
 	 *
-	 * @param   p   optional point to copy this point to
-	 * @return  copy of this point
+	 * @param p Optional point to copy this point to.
+	 * @return Copy of this point.
 	 */
 	public inline function clone(?p:FlxPoint):FlxPoint
 	{
@@ -1424,10 +1425,10 @@ import openfl.geom.Point;
 }
 
 /**
- * The base class of FlxPoint, just use FlxPoint instead.
+ * The base class of `FlxPoint`. Use `FlxPoint` instead.
  * 
- * Note to contributors: don't worry about adding functionality to the base class.
- * it's all mostly inlined anyway so there's no runtime definitions for
+ * Note to contributors: Don't worry about adding functionality to the base class.
+ * It's all mostly inlined anyway so there's no runtime definitions for
  * reflection or anything.
  */
 @:noCompletion
@@ -1440,12 +1441,11 @@ class FlxBasePoint implements IFlxPooled
 	#end
 
 	/**
-	 * Recycle or create a new FlxBasePoint.
-	 * Be sure to put() them back into the pool after you're done with them!
+	 * Recycles or creates a new `FlxBasePoint`.
+	 * Be sure to `put()` them back into the pool after you're done with them!
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
-	 * @return  This point.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 */
 	public static inline function get(x:Float = 0, y:Float = 0):FlxBasePoint
 	{
@@ -1459,12 +1459,11 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Recycle or create a new FlxBasePoint which will automatically be released
-	 * to the pool when passed into a flixel function.
+	 * Recycles or creates a new `FlxBasePoint` which will automatically be released
+	 * to the pool when passed into a Flixel function.
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
-	 * @return  This point.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 */
 	public static inline function weak(x:Float = 0, y:Float = 0):FlxBasePoint
 	{
@@ -1490,10 +1489,10 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Set the coordinates of this point object.
+	 * Sets the coordinates of this point object.
 	 *
-	 * @param   x  The X-coordinate of the point in space.
-	 * @param   y  The Y-coordinate of the point in space.
+	 * @param x The x-coordinate of the point in space.
+	 * @param y The y-coordinate of the point in space.
 	 */
 	public function set(x:Float = 0, y:Float = 0):FlxBasePoint
 	{
@@ -1503,7 +1502,7 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Add this FlxBasePoint to the recycling pool.
+	 * Adds this `FlxBasePoint` to the recycling pool.
 	 */
 	public function put():Void
 	{
@@ -1518,7 +1517,7 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Add this FlxBasePoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 * Adds this `FlxBasePoint` to the recycling pool if it's a weak reference (allocated via `weak()`).
 	 */
 	public inline function putWeak():Void
 	{
@@ -1531,10 +1530,10 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Function to compare this FlxBasePoint to another.
+	 * Compares this `FlxBasePoint` to another.
 	 *
-	 * @param   point  The other FlxBasePoint to compare to this one.
-	 * @return  True if the FlxBasePoints have the same x and y value, false otherwise.
+	 * @param point The other `FlxBasePoint` to compare to this one.
+	 * @return Whether the `FlxBasePoints` have the same x- and y-values.
 	 */
 	public inline function equals(point:FlxBasePoint):Bool
 	{
@@ -1544,12 +1543,12 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Necessary for IFlxDestroyable.
+	 * Necessary for `IFlxDestroyable`.
 	 */
 	public function destroy() {}
 
 	/**
-	 * Convert object to readable string name. Useful for debugging, save games, etc.
+	 * Converts the object to a readable string. Useful for debugging, save games, etc.
 	 */
 	public inline function toString():String
 	{
@@ -1557,7 +1556,7 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Necessary for FlxCallbackPoint.
+	 * Necessary for `FlxCallbackPoint`.
 	 */
 	function set_x(Value:Float):Float
 	{
@@ -1565,7 +1564,7 @@ class FlxBasePoint implements IFlxPooled
 	}
 
 	/**
-	 * Necessary for FlxCallbackPoint.
+	 * Necessary for `FlxCallbackPoint`.
 	 */
 	function set_y(Value:Float):Float
 	{
@@ -1573,10 +1572,9 @@ class FlxBasePoint implements IFlxPooled
 	}
 }
 
-
 /**
- * A FlxPoint that calls a function when set_x(), set_y() or set() is called. Used in FlxSpriteGroup.
- * IMPORTANT: Calling set(x, y); is MUCH FASTER than setting x and y separately. Needs to be destroyed unlike simple FlxPoints!
+ * A `FlxPoint` that calls a function when `set_x()`, `set_y()`, or `set()` are called. Used in `FlxSpriteGroup`.
+ * IMPORTANT: Calling `set(x, y);` is MUCH FASTER than setting `x` and `y` separately. Needs to be destroyed unlike simple `FlxPoint`s!
  */
 class FlxCallbackPoint extends FlxBasePoint
 {
@@ -1587,9 +1585,9 @@ class FlxCallbackPoint extends FlxBasePoint
 	/**
 	 * If you only specify one callback function, then the remaining two will use the same.
 	 *
-	 * @param	setXCallback	Callback for set_x()
-	 * @param	setYCallback	Callback for set_y()
-	 * @param	setXYCallback	Callback for set()
+	 * @param setXCallback Callback for `set_x()`.
+	 * @param setYCallback Callback for `set_y()`.
+	 * @param setXYCallback Callback for `set()`.
 	 */
 	public function new(setXCallback:FlxPoint->Void, ?setYCallback:FlxPoint->Void, ?setXYCallback:FlxPoint->Void)
 	{

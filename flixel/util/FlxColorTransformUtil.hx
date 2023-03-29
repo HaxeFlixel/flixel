@@ -25,7 +25,7 @@ class FlxColorTransformUtil
 	}
 
 	/**
-	 * Returns whether red, green, or blue multipliers are set to anything other than 1.
+	 * Returns whether red, green, or blue multipliers are set to anything other than `1`.
 	 */
 	public static function hasRGBMultipliers(transform:ColorTransform):Bool
 	{
@@ -33,7 +33,7 @@ class FlxColorTransformUtil
 	}
 
 	/**
-	 * Returns whether red, green, blue, or alpha multipliers are set to anything other than 1.
+	 * Returns whether red, green, blue, or alpha multipliers are set to anything other than `1`.
 	 */
 	public static function hasRGBAMultipliers(transform:ColorTransform):Bool
 	{
@@ -41,7 +41,7 @@ class FlxColorTransformUtil
 	}
 
 	/**
-	 * Returns whether red, green, or blue offsets are set to anything other than 0.
+	 * Returns whether red, green, or blue offsets are set to anything other than `0`.
 	 */
 	public static function hasRGBOffsets(transform:ColorTransform):Bool
 	{
@@ -49,7 +49,7 @@ class FlxColorTransformUtil
 	}
 
 	/**
-	 * Returns whether red, green, blue, or alpha offsets are set to anything other than 0.
+	 * Returns whether red, green, blue, or alpha offsets are set to anything other than `0`.
 	 */
 	public static function hasRGBAOffsets(transform:ColorTransform):Bool
 	{

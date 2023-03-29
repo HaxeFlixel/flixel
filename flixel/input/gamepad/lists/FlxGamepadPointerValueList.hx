@@ -3,7 +3,7 @@ package flixel.input.gamepad.lists;
 import flixel.input.gamepad.FlxGamepad;
 
 /**
- * A helper class for gamepad input -- returns X/Y analog coordinate values between 0.0 and 1.0
+ * A helper class for gamepad input. Returns X/Y analog coordinate values between `0.0` and `1.0`
  * Provides optimized gamepad button checking using direct array access.
  */
 @:keep
@@ -12,13 +12,13 @@ class FlxGamepadPointerValueList
 	var gamepad:FlxGamepad;
 
 	/**
-	 * whether or not the current gamepad model supports any pointer features (IR Camera, touch surface, etc)
+	 * Whether the current gamepad model supports any pointer features (IR Camera, touch surface, etc.).
 	 */
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	public var isSupported(get, never):Bool;
 
 	/**
-	 * horizontal position (0.0-1.0) on the touch-surface or pointer-space
+	 * Horizontal position (`0.0` to `1.0`) on the touch-surface or pointer-space.
 	 */
 	public var X(get, never):Float;
 
@@ -26,7 +26,7 @@ class FlxGamepadPointerValueList
 		return getAxis(FlxGamepadInputID.POINTER_X);
 
 	/**
-	 * vertical position (0.0-1.0) on the touch-surface or pointer-space
+	 * Vertical position (`0.0` to `1.0`) on the touch-surface or pointer-space.
 	 */
 	public var Y(get, never):Float;
 

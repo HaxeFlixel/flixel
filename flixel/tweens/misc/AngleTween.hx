@@ -11,16 +11,13 @@ class AngleTween extends FlxTween
 	public var angle(default, null):Float;
 
 	/**
-	 * Optional sprite object whose angle to tween
+	 * Optional sprite object whose angle to tween.
 	 */
 	public var sprite(default, null):FlxSprite;
 
 	var _start:Float;
 	var _range:Float;
 
-	/**
-	 * Clean up references
-	 */
 	override public function destroy()
 	{
 		super.destroy();
@@ -30,9 +27,9 @@ class AngleTween extends FlxTween
 	/**
 	 * Tweens the value from one angle to another.
 	 *
-	 * @param	FromAngle		Start angle.
-	 * @param	ToAngle			End angle.
-	 * @param	Duration		Duration of the tween.
+	 * @param FromAngle Start angle.
+	 * @param ToAngle End angle.
+	 * @param Duration Duration of the tween.
 	 */
 	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Sprite:FlxSprite):AngleTween
 	{
@@ -59,7 +56,7 @@ class AngleTween extends FlxTween
 			sprite.angle = spriteAngle;
 		}
 	}
-	
+
 	override function isTweenOf(object:Dynamic, ?field:String):Bool
 	{
 		return sprite == object && (field == null || field == "angle");

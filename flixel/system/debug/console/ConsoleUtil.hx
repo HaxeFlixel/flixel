@@ -3,9 +3,9 @@ package flixel.system.debug.console;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 
-using flixel.util.FlxStringUtil;
-using flixel.util.FlxArrayUtil;
 using StringTools;
+using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 #if hscript
 import hscript.Expr;
@@ -19,12 +19,12 @@ class ConsoleUtil
 {
 	#if hscript
 	/**
-	 * The hscript parser to make strings into haxe code.
+	 * The hscript parser to make strings into Haxe code.
 	 */
 	static var parser:Parser;
 
 	/**
-	 * The custom hscript interpreter to run the haxe code from the parser.
+	 * The custom hscript interpreter to run the Haxe code from the parser.
 	 */
 	public static var interp:Interp;
 
@@ -43,8 +43,8 @@ class ConsoleUtil
 	/**
 	 * Converts the input string into its AST form to be executed.
 	 *
-	 * @param	Input	The user's input command.
-	 * @return	The parsed out AST.
+	 * @param Input The user's input command.
+	 * @return The parsed out AST.
 	 */
 	public static function parseCommand(Input:String):Expr
 	{
@@ -56,8 +56,8 @@ class ConsoleUtil
 	/**
 	 * Parses and runs the input command.
 	 *
-	 * @param	Input	The user's input command.
-	 * @return	Whatever the input code evaluates to.
+	 * @param Input The user's input command.
+	 * @return Whatever the input code evaluates to.
 	 */
 	public static function runCommand(Input:String):Dynamic
 	{
@@ -66,8 +66,8 @@ class ConsoleUtil
 
 	/**
 	 * Runs the input expression.
-	 * @param	Parsed	The parsed form of the user's input command.
-	 * @return	Whatever the input code evaluates to.
+	 * @param expr The parsed form of the user's input command.
+	 * @return Whatever the input code evaluates to.
 	 */
 	public static function runExpr(expr:Expr):Dynamic
 	{
@@ -75,10 +75,10 @@ class ConsoleUtil
 	}
 
 	/**
-	 * Register a new object to use in any command.
+	 * Registers a new object to use in any command.
 	 *
-	 * @param	ObjectAlias	The name with which you want to access the object.
-	 * @param	AnyObject	The object to register.
+	 * @param ObjectAlias The name with which you want to access the object.
+	 * @param AnyObject The object to register.
 	 */
 	public static function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
@@ -87,10 +87,10 @@ class ConsoleUtil
 	}
 
 	/**
-	 * Register a new function to use in any command.
+	 * Registers a new function to use in any command.
 	 *
-	 * @param 	FunctionAlias	The name with which you want to access the function.
-	 * @param 	Function		The function to register.
+	 * @param FunctionAlias The name with which you want to access the function.
+	 * @param Function The function to register.
 	 */
 	public static function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
@@ -151,9 +151,9 @@ class ConsoleUtil
 	}
 
 	/**
-	 * Shortcut to log a text with the Console LogStyle.
+	 * Shortcut to log a text with the Console `LogStyle`.
 	 *
-	 * @param	Text	The text to log.
+	 * @param Text The text to log.
 	 */
 	public static inline function log(Text:Dynamic):Void
 	{
@@ -161,10 +161,10 @@ class ConsoleUtil
 	}
 }
 
+#if hscript
 /**
  * hscript doesn't use property access by default... have to make our own.
  */
-#if hscript
 private class Interp extends hscript.Interp
 {
 	public function getGlobals():Array<String>

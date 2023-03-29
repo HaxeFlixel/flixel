@@ -5,8 +5,8 @@ import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Keyboard;
 
-using flixel.util.FlxStringUtil;
 using StringTools;
+using flixel.util.FlxStringUtil;
 
 class CompletionList extends Sprite
 {
@@ -190,9 +190,9 @@ class CompletionList extends Sprite
 	}
 
 	/**
-	 * sort items so that:
-	 *   - strings starting with the filter have a higher priority than those only containing it
-	 *   - of those, shorter items (-> closer to the filter) have a higher priority
+	 * Sorts items so that:
+	 *   - strings starting with the filter have a higher priority than those only containing it.
+	 *   - of those, shorter items (-> closer to the filter) have a higher priority.
 	 */
 	function sortItems(filter:String, items:Array<String>):Array<String>
 	{
@@ -216,7 +216,7 @@ class CompletionList extends Sprite
 	}
 
 	/**
-	 * Custom startsWith() that ignores leading underscores.
+	 * Custom `String#startsWith()` that ignores leading underscores.
 	 */
 	function startsWithExt(s:String, start:String):Int
 	{

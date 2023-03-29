@@ -2,9 +2,6 @@ package flixel.system;
 
 import haxe.macro.Expr;
 #if !macro
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.media.Sound;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -14,8 +11,10 @@ import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
 import haxe.Json;
-import haxe.xml.Access;
 import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.media.Sound;
 import openfl.utils.ByteArray;
 
 using StringTools;
@@ -38,10 +37,10 @@ typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 
-@:deprecated("`FlxAngelCodeSource` is deprecated, use `FlxAngelCodeAsset` instead")
+@:deprecated("FlxAngelCodeSource is deprecated; use FlxAngelCodeXmlAsset instead")
 typedef FlxAngelCodeSource = FlxAngelCodeXmlAsset;
 
-@:deprecated("`FlxTexturePackerSource` is deprecated, use `FlxAtlasDataAsset` instead")
+@:deprecated("FlxTexturePackerSource is deprecated; use FlxTexturePackerJsonAsset instead")
 typedef FlxTexturePackerSource = FlxTexturePackerJsonAsset;
 
 abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
@@ -111,8 +110,8 @@ typedef FlxShader =
 class FlxAssets
 {
 	/**
-	 * The default sound format to be assumed when unspecified, only affects calls to
-	 * `FlxAssets.getSound` which are not common. Currently set to ".ogg" on non-flash targets
+	 * The default sound format to be assumed when unspecified. Only affects calls to
+	 * `FlxAssets.getSound()` which are not common. Currently set to "ogg" on non-Flash targets
 	 * for backwards compatibility reasons.
 	 */
 	public static var defaultSoundExtension = #if flash "mp3" #else "ogg" #end;
@@ -159,17 +158,17 @@ class FlxAssets
 	 * FlxG.sound.play(AssetPaths.assets_sounds_hero__ogg);
 	 * ```
 	 * 
-	 * @param   directory       The directory to scan for files
-	 * @param   subDirectories  Whether to include subdirectories
-	 * @param   include         A string or `EReg` of files to include.
-	 *                          Example: `"*.jpg\|*.png\|*.gif"` will only add files with that extension
-	 * @param   exclude         A string or `EReg` of files to exclude. Example: `"*exclude/*\|*.ogg"`
-	 *                          will exclude .ogg files and everything in the exclude folder
-	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
+	 * @param directory The directory to scan for files.
+	 * @param subDirectories Whether to include subdirectories.
+	 * @param include A string or `EReg` of files to include.
+	 * Example: `"*.jpg\|*.png\|*.gif"` will only add files with that extension.
+	 * @param exclude A string or `EReg` of files to exclude. Example: `"*exclude/*\|*.ogg"`
+	 * will exclude .ogg files and everything in the exclude folder.
+	 * @param rename A function that takes the file path and returns a valid Haxe field name.
 	 *
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
-	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
-	**/
+	 * @see [Haxe Macros: Code completion for everything](https://blog.stroep.nl/2014/01/haxe-macros/)
+	 */
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
 			?rename:String->Null<String>):Array<Field>
 	{
@@ -271,10 +270,10 @@ class FlxAssets
 	}
 
 	/**
-	 * Generates BitmapData from specified class. Less typing.
+	 * Generates `BitmapData` from specified class. Less typing.
 	 *
-	 * @param	source	BitmapData class to generate BitmapData object from.
-	 * @return	Newly instantiated BitmapData object.
+	 * @param source `BitmapData` class to generate `BitmapData` object from.
+	 * @return Newly instantiated `BitmapData` object.
 	 */
 	public static inline function getBitmapFromClass(source:Class<Dynamic>):BitmapData
 	{
@@ -282,14 +281,14 @@ class FlxAssets
 	}
 
 	/**
-	 * Takes Dynamic object as a input and tries to convert it to BitmapData:
-	 * 1) if the input is BitmapData, then it will return this BitmapData;
-	 * 2) if the input is Class<BitmapData>, then it will create BitmapData from this class;
-	 * 3) if the input is String, then it will get BitmapData from openfl.Assets;
-	 * 4) it will return null in any other case.
+	 * Takes a `FlxGraphicSource` object as a input and tries to convert it to `BitmapData`:
+	 * 1) If the input is `BitmapData`, then it will return this `BitmapData`;
+	 * 2) If the input is `Class<BitmapData>`, then it will create `BitmapData` from this class;
+	 * 3) If the input is `String`, then it will get `BitmapData` from `openfl.Assets`;
+	 * 4) It will return `null` in any other case.
 	 *
-	 * @param	Graphic	input data to get BitmapData object for.
-	 * @return	BitmapData for specified Dynamic object.
+	 * @param Graphic Input data to get `BitmapData` object for.
+	 * @return `BitmapData` for specified `FlxGraphicSource` object.
 	 */
 	public static function resolveBitmapData(Graphic:FlxGraphicSource):BitmapData
 	{
@@ -310,15 +309,15 @@ class FlxAssets
 	}
 
 	/**
-	 * Takes Dynamic object as a input and tries to find appropriate key String for its BitmapData:
-	 * 1) if the input is BitmapData, then it will return second (optional) argument (the Key);
-	 * 2) if the input is Class<BitmapData>, then it will return the name of this class;
-	 * 3) if the input is String, then it will return it;
-	 * 4) it will return null in any other case.
+	 * Takes a `FlxGraphicSource` object as a input and tries to find appropriate key `String` for its `BitmapData`:
+	 * 1) If the input is `BitmapData`, then it will return second (optional) argument (the `Key`);
+	 * 2) If the input is `Class<BitmapData>`, then it will return the name of this class;
+	 * 3) If the input is `String`, then it will return it;
+	 * 4) It will return `null` in any other case.
 	 *
-	 * @param	Graphic	input data to get string key for.
-	 * @param	Key	optional key string.
-	 * @return	Key String for specified Graphic object.
+	 * @param Graphic Input data to get string key for.
+	 * @param Key Optional key string.
+	 * @return Key `String` for specified `FlxGraphicSource` object.
 	 */
 	public static function resolveKey(Graphic:FlxGraphicSource, ?Key:String):String
 	{
@@ -344,11 +343,11 @@ class FlxAssets
 	}
 
 	/**
-	 * Loads an OpenFL sound asset from the given asset id. If an extension not provided the 
-	 * `defaultSoundExtension` is used (defaults to "ogg" on non-flash targets).
+	 * Loads an OpenFL sound asset from the given asset ID. If an extension is not provided, the 
+	 * `defaultSoundExtension` is used (defaults to "ogg" on non-Flash targets).
 	 * 
-	 * @param   id  The asset id of the local sound file.
-	 * @return  The sound file.
+	 * @param id The asset ID of the local sound file.
+	 * @return The sound file.
 	 */
 	public static function getSound(id:String):Sound
 	{

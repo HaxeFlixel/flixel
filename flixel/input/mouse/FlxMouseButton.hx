@@ -3,8 +3,8 @@ package flixel.input.mouse;
 #if FLX_MOUSE
 import flixel.FlxG;
 import flixel.input.FlxSwipe;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 
 class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 {

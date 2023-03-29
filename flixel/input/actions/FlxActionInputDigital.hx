@@ -2,14 +2,13 @@ package flixel.input.actions;
 
 import flixel.input.FlxInput;
 import flixel.input.IFlxInput;
-import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
-import flixel.input.keyboard.FlxKey;
-import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.android.FlxAndroidKey;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 
 /**
  * @since 4.6.0
@@ -32,9 +31,9 @@ class FlxActionInputDigitalMouseWheel extends FlxActionInputDigital
 	var sign:Int = 0;
 
 	/**
-	 * Action for mouse wheel events
-	 * @param	Positive	True: respond to mouse wheel values > 0; False: respond to mouse wheel values < 0
-	 * @param	Trigger		What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * Creates a mouse wheel input.
+	 * @param Positive `true`: respond to mouse wheel values `> 0`; `false`: respond to mouse wheel values `< 0`.
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public function new(Positive:Bool, Trigger:FlxInputState)
 	{
@@ -81,10 +80,10 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 	var input:FlxInput<Int>;
 
 	/**
-	 * Gamepad action input for digital (button-like) events
-	 * @param	InputID "universal" gamepad input ID (A, X, DPAD_LEFT, etc)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
-	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.ALL / FIRST_ACTIVE
+	 * Creates a gamepad input for digital (button-like) events.
+	 * @param InputID "Universal" gamepad input ID (`A`, `X`, `DPAD_LEFT`, etc.).
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
+	 * @param GamepadID Specific gamepad ID, or `FlxInputDeviceID.ALL` / `FIRST_ACTIVE`.
 	 */
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxInputState, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
@@ -181,9 +180,9 @@ class FlxActionInputDigitalGamepad extends FlxActionInputDigital
 class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 {
 	/**
-	 * Keyboard action input
-	 * @param	Key Key identifier (FlxKey.SPACE, FlxKey.Z, etc)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * Creates a keyboard input.
+	 * @param Key Key identifier (`FlxKey.SPACE`, `FlxKey.Z`, etc.).
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public function new(Key:FlxKey, Trigger:FlxInputState)
 	{
@@ -211,9 +210,9 @@ class FlxActionInputDigitalKeyboard extends FlxActionInputDigital
 class FlxActionInputDigitalMouse extends FlxActionInputDigital
 {
 	/**
-	 * Mouse button action input
-	 * @param	ButtonID Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * Creates a mouse button input.
+	 * @param ButtonID Button identifier (`FlxMouseButtonID.LEFT` / `MIDDLE` / `RIGHT`).
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxInputState)
 	{
@@ -260,10 +259,10 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 	var steamInput:FlxInput<Int>;
 
 	/**
-	 * Steam Controller action input for digital (button-like) events
-	 * @param	ActionHandle handle received from FlxSteamController.getDigitalActionHandle()
-	 * @param	Trigger what state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
-	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FIRST_ACTIVE
+	 * Creates a Steam Controller input for digital (button-like) events.
+	 * @param ActionHandle Handle received from `FlxSteamController.getDigitalActionHandle()`.
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
+	 * @param DeviceHandle Handle received from `FlxSteamController.getConnectedControllers()`, or `FlxInputDeviceID.ALL` / `FIRST_ACTIVE`.
 	 */
 	@:allow(flixel.input.actions.FlxActionSet)
 	function new(ActionHandle:Int, Trigger:FlxInputState, ?DeviceHandle:Int = FlxInputDeviceID.FIRST_ACTIVE)
@@ -272,7 +271,7 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 		#if FLX_STEAMWRAP
 		steamInput = new FlxInput<Int>(ActionHandle);
 		#else
-		FlxG.log.warn("steamwrap library not installed; steam inputs will be ignored.");
+		FlxG.log.warn("SteamWrap library not installed; Steam inputs will be ignored.");
 		#end
 	}
 
@@ -315,9 +314,9 @@ class FlxActionInputDigitalSteam extends FlxActionInputDigital
 class FlxActionInputDigitalAndroid extends FlxActionInputDigital
 {
 	/**
-	 * Android buttons action input for the BACK and MENU buttons on Android
-	 * @param	androidKeyID Key identifier (FlxAndroidKey.BACK, FlxAndroidKey.MENU... those are the only 2 android specific ones)
-	 * @param	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * Creates an Android buttons input for the `BACK` and `MENU` buttons on Android.
+	 * @param androidKeyID Key identifier (`FlxAndroidKey.BACK`, `FlxAndroidKey.MENU`... those are the only 2 Android-specific ones).
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public function new(androidKeyID:FlxAndroidKey, Trigger:FlxInputState)
 	{
@@ -347,16 +346,16 @@ class FlxActionInputDigitalIFlxInput extends FlxActionInputDigital
 	var input:IFlxInput;
 
 	/**
-	 * Generic IFlxInput action input
+	 * Creates a generic `IFlxInput` input.
 	 *
-	 * WARNING: IFlxInput objects are often member variables of some other
-	 * object that is often destructed at the end of a state. If you don't
-	 * destroy() this input (or the action you assign it to), the IFlxInput
+	 * WARNING: `IFlxInput` objects are often member variables of some other
+	 * object that is often destroyed at the end of a state. If you don't
+	 * `destroy()` this input (or the action you assign it to), the `IFlxInput`
 	 * reference will persist forever even after its parent object has been
 	 * destroyed!
 	 *
-	 * @param	Input	A generic IFlxInput object (ex: FlxButton.input)
-	 * @param	Trigger	Trigger What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * @param Input A generic `IFlxInput` object (e.g., `FlxButton.input`).
+	 * @param Trigger The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public function new(Input:IFlxInput, Trigger:FlxInputState)
 	{

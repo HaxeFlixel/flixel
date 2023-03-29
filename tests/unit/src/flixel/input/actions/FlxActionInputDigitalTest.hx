@@ -5,19 +5,19 @@ import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
+import flixel.input.FlxInput.FlxInputState;
+import flixel.input.FlxInput;
 import flixel.input.actions.FlxAction.FlxActionDigital;
-import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalGamepad;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalIFlxInput;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouse;
-import flixel.input.FlxInput;
-import flixel.input.FlxInput.FlxInputState;
+import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalMouseWheel;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-import flixel.input.mouse.FlxMouseButton;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
+import flixel.input.mouse.FlxMouseButton;
 #if (!flash && FLX_GAMEINPUT_API)
 import lime.ui.Gamepad;
 import openfl.ui.GameInput;
@@ -188,9 +188,18 @@ class FlxActionInputDigitalTest extends FlxTest
 	function getGamepadButtons():Array<FlxGamepadInputID>
 	{
 		return [
-			FlxGamepadInputID.A, FlxGamepadInputID.B, FlxGamepadInputID.X, FlxGamepadInputID.Y, FlxGamepadInputID.LEFT_SHOULDER,
-			FlxGamepadInputID.RIGHT_SHOULDER, FlxGamepadInputID.BACK, FlxGamepadInputID.START, FlxGamepadInputID.DPAD_UP, FlxGamepadInputID.DPAD_DOWN,
-			FlxGamepadInputID.DPAD_LEFT, FlxGamepadInputID.DPAD_RIGHT
+			FlxGamepadInputID.A,
+			FlxGamepadInputID.B,
+			FlxGamepadInputID.X,
+			FlxGamepadInputID.Y,
+			FlxGamepadInputID.LEFT_SHOULDER,
+			FlxGamepadInputID.RIGHT_SHOULDER,
+			FlxGamepadInputID.BACK,
+			FlxGamepadInputID.START,
+			FlxGamepadInputID.DPAD_UP,
+			FlxGamepadInputID.DPAD_DOWN,
+			FlxGamepadInputID.DPAD_LEFT,
+			FlxGamepadInputID.DPAD_RIGHT
 		];
 
 		// Things that have to be tested separately:
@@ -932,4 +941,4 @@ typedef InputStateGrid =
 	press2:Array<Int>,
 	release1:Array<Int>,
 	release2:Array<Int>
-}
+};

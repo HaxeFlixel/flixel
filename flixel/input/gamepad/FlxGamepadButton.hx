@@ -5,7 +5,7 @@ import flixel.input.FlxInput;
 class FlxGamepadButton extends FlxInput<Int>
 {
 	/**
-	 * Optional analog value, so we can check when the value has changed from the last frame
+	 * Optional analog value, so we can check when the value has changed from the last frame.
 	 */
 	public var value:Float = 0;
 
@@ -14,7 +14,7 @@ class FlxGamepadButton extends FlxInput<Int>
 
 	override public function release():Void
 	{
-		// simulate button onUp event which does not exist on flash
+		// simulate button onUp event which does not exist on Flash
 		if (!_pressed)
 		{
 			return;
@@ -26,7 +26,7 @@ class FlxGamepadButton extends FlxInput<Int>
 
 	override public function press():Void
 	{
-		// simulate button onDown event which does not exist on flash
+		// simulate button onDown event which does not exist on Flash
 		if (_pressed)
 		{
 			return;

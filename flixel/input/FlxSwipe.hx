@@ -10,8 +10,8 @@ import flixel.util.FlxStringUtil;
 class FlxSwipe
 {
 	/**
-	 * Either LEFT_MOUSE, MIDDLE_MOUSE or RIGHT_MOUSE,
-	 * or the touchPointID of a FlxTouch.
+	 * Either `LEFT_MOUSE`, `MIDDLE_MOUSE`, or `RIGHT_MOUSE`,
+	 * or a `FlxTouch#touchPointID`.
 	 */
 	public var ID(default, null):Int;
 
@@ -19,7 +19,7 @@ class FlxSwipe
 	public var endPosition(default, null):FlxPoint;
 
 	public var distance(get, never):Float;
-	@:deprecated("FlxSwipe.angle is deprecated, use degrees")
+	@:deprecated("FlxSwipe#angle is deprecated; use degrees instead")
 	public var angle(get, never):Float;
 	public var degrees(get, never):Float;
 	public var radians(get, never):Float;

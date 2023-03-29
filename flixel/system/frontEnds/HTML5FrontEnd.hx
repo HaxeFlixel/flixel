@@ -1,13 +1,13 @@
 package flixel.system.frontEnds;
 
 #if js
-import js.Browser;
 import flixel.math.FlxPoint;
+import js.Browser;
 
 using flixel.util.FlxStringUtil;
 
 /**
- * Tools and helpers relating to the js/html5 target.
+ * Tools and helpers relating to the JS/HTML5 target.
  *
  * Accessed via `FlxG.html5`.
  */

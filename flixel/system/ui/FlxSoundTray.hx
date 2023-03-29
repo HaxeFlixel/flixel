@@ -12,18 +12,18 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 #if flash
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 #end
 
 /**
- * The flixel sound tray, the little volume meter that pops down sometimes.
+ * The Flixel sound tray, the little volume meter that pops down sometimes.
  * Accessed via `FlxG.game.soundTray` or `FlxG.sound.soundTray`.
  */
 class FlxSoundTray extends Sprite
 {
 	/**
-	 * Because reading any data from DisplayObject is insanely expensive in hxcpp, keep track of whether we need to update it or not.
+	 * Because reading any data from `DisplayObject` is insanely expensive in hxcpp, keep track of whether we need to update it.
 	 */
 	public var active:Bool;
 
@@ -44,13 +44,19 @@ class FlxSoundTray extends Sprite
 
 	var _defaultScale:Float = 2.0;
 
-	/**The sound used when increasing the volume.**/
+	/**
+	 * The sound used when increasing the volume.
+	 */
 	public var volumeUpSound:String = "flixel/sounds/beep";
 
-	/**The sound used when decreasing the volume.**/
+	/**
+	 * The sound used when decreasing the volume.
+	 */
 	public var volumeDownSound:String = 'flixel/sounds/beep';
 
-	/**Whether or not changing the volume should make noise.**/
+	/**
+	 * Whether changing the volume should make noise.
+	 */
 	public var silent:Bool = false;
 
 	/**
@@ -108,7 +114,7 @@ class FlxSoundTray extends Sprite
 	}
 
 	/**
-	 * This function just updates the soundtray object.
+	 * Updates the soundtray object.
 	 */
 	public function update(MS:Float):Void
 	{
@@ -140,7 +146,7 @@ class FlxSoundTray extends Sprite
 	/**
 	 * Makes the little volume tray slide out.
 	 *
-	 * @param	up Whether the volume is increasing.
+	 * @param up Whether the volume is increasing.
 	 */
 	public function show(up:Bool = false):Void
 	{

@@ -1,8 +1,6 @@
 package flixel.system.debug.stats;
 
-import flash.display.BitmapData;
-import flash.system.System;
-import flash.text.TextField;
+#if FLX_DEBUG
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxLinkedList;
@@ -11,6 +9,9 @@ import flixel.system.debug.DebuggerUtil;
 import flixel.system.debug.FlxDebugger.GraphicStats;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
@@ -24,11 +25,10 @@ private class GraphicMaximizeButton extends BitmapData {}
  * @author Adam "Atomic" Saltsman
  * @author Anton Karlov
  */
-#if FLX_DEBUG
 class Stats extends Window
 {
 	/**
-	 * How often to update the stats, in ms. The lower, the more performance-intense!
+	 * How often to update the stats, in ms. The lower, the more performance-intensive!
 	 */
 	static inline var UPDATE_DELAY:Int = 250;
 
@@ -88,7 +88,7 @@ class Stats extends Window
 	var _toggleSizeButton:FlxSystemButton;
 
 	/**
-	 * Creates a new window with fps and memory graphs, as well as other useful stats for debugging.
+	 * Creates a new window with FPS and memory graphs, as well as other useful stats for debugging.
 	 */
 	public function new()
 	{
@@ -159,7 +159,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Starts Stats window update logic
+	 * Starts Stats window update logic.
 	 */
 	public function start():Void
 	{
@@ -172,7 +172,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Stops Stats window
+	 * Stops Stats window.
 	 */
 	public function stop():Void
 	{
@@ -180,7 +180,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -315,7 +315,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Calculates current game fps.
+	 * Calculates the current game framerate.
 	 */
 	public inline function currentFps():Float
 	{
@@ -323,7 +323,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Time since performance monitoring started.
+	 * Calculates the time since performance monitoring started.
 	 */
 	public inline function intervalTime():Float
 	{
@@ -331,7 +331,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Current RAM consumption.
+	 * Calculates the current RAM consumption.
 	 */
 	public inline function currentMem():Float
 	{
@@ -339,9 +339,9 @@ class Stats extends Window
 	}
 
 	/**
-	 * How long updates took.
+	 * Updates the stat of how long updates took.
 	 *
-	 * @param 	Time	How long this update took.
+	 * @param Time How long this update took.
 	 */
 	public function flixelUpdate(Time:Int):Void
 	{
@@ -351,9 +351,9 @@ class Stats extends Window
 	}
 
 	/**
-	 * How long rendering took.
+	 * Updates the stat of how long rendering took.
 	 *
-	 * @param	Time	How long this render took.
+	 * @param Time How long this render took.
 	 */
 	public function flixelDraw(Time:Int):Void
 	{
@@ -363,9 +363,9 @@ class Stats extends Window
 	}
 
 	/**
-	 * How many objects were updated.
+	 * Updates the stat of how many objects were updated.
 	 *
-	 * @param 	Count	How many objects were updated.
+	 * @param Count How many objects were updated.
 	 */
 	public function activeObjects(Count:Int):Void
 	{
@@ -375,9 +375,9 @@ class Stats extends Window
 	}
 
 	/**
-	 * How many objects were rendered.
+	 * Updates the stat of how many objects were rendered.
 	 *
-	 * @param 	Count	How many objects were rendered.
+	 * @param Count How many objects were rendered.
 	 */
 	public function visibleObjects(Count:Int):Void
 	{
@@ -387,9 +387,9 @@ class Stats extends Window
 	}
 
 	/**
-	 * How many times drawTiles() method was called.
+	 * Updates the stat of how many times `drawTiles()` method was called.
 	 *
-	 * @param 	Count	How many times drawTiles() method was called.
+	 * @param Drawcalls How many times `drawTiles()` method was called.
 	 */
 	public function drawCalls(Drawcalls:Int):Void
 	{
@@ -399,7 +399,7 @@ class Stats extends Window
 	}
 
 	/**
-	 * Re-enables tracking of the stats.
+	 * Resumes tracking of the stats.
 	 */
 	public function onFocus():Void
 	{

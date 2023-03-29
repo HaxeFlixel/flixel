@@ -65,8 +65,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Finds a frame in `framesHash` by its name.
 	 *
-	 * @param   name   The name of the frame to find.
-	 * @return  Frame with specified name (if there is one).
+	 * @param name The name of the frame to find.
+	 * @return Frame with specified name (if there is one).
 	 */
 	public inline function getByName(name:String):FlxFrame
 	{
@@ -76,8 +76,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Finds frame in frames array by its index.
 	 *
-	 * @param   index   Index of the frame in the frames array.
-	 * @return  Frame with specified index in this frames collection (if there is one).
+	 * @param index Index of the frame in the frames array.
+	 * @return Frame with specified index in this frames collection (if there is one).
 	 */
 	public inline function getByIndex(index:Int):FlxFrame
 	{
@@ -87,8 +87,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Finds frame index by its name.
 	 *
-	 * @param   name  Name of the frame.
-	 * @return  Index of the frame with specified name.
+	 * @param name Name of the frame.
+	 * @return Index of the frame with specified name.
 	 */
 	public function getIndexByName(name:String):Int
 	{
@@ -104,8 +104,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Finds the index of the specified frame in the frames array.
 	 *
-	 * @param   frame   Frame to find.
-	 * @return  Index of the specified frame.
+	 * @param frame Frame to find.
+	 * @return Index of the specified frame.
 	 */
 	public inline function getFrameIndex(frame:FlxFrame):Int
 	{
@@ -122,11 +122,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
-	 * Adds empty frame into this frame collection.
-	 * An empty frame is doing almost nothing for all the time.
+	 * Adds an empty frame into this frame collection.
 	 *
-	 * @param   size   Dimensions of the frame to add.
-	 * @return  Newly added empty frame.
+	 * @param size Dimensions of the frame to add.
+	 * @return Newly added empty frame.
 	 */
 	public function addEmptyFrame(size:FlxRect):FlxFrame
 	{
@@ -141,8 +140,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Adds new regular (not rotated) `FlxFrame` to this frame collection.
 	 *
-	 * @param   region   Region of image which new frame will display.
-	 * @return  Newly created `FlxFrame` object for specified region of image.
+	 * @param region Region of image which new frame will display.
+	 * @return Newly created `FlxFrame` object from specified region of image.
 	 */
 	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
 	{
@@ -155,18 +154,19 @@ class FlxFramesCollection implements IFlxDestroyable
 
 	/**
 	 * Adds new frame to this frame collection.
-	 * This method runs additional check, and can add rotated frames (from texture atlases).
+	 * This method runs an additional check, and can add rotated frames (from texture atlases).
 	 *
-	 * @param   frame        Region of image.
-	 * @param   sourceSize   Original size of packed image
-	 *                       (if image had been cropped, then original size will be bigger than frame size).
-	 * @param   offset       How frame region is located on original frame image
-	 *                       (offset from top left corner of original image).
-	 * @param   name         Name for this frame (name of packed image file).
-	 * @param   angle        Rotation of packed image (can be `0`, `90` or `-90`).
-	 * @param   flipX        If packed image should be horizontally flipped.
-	 * @param   flipY        If packed image should be vertically flipped.
-	 * @return  Newly created and added frame object.
+	 * @param frame Region of image.
+	 * @param sourceSize Original size of packed image
+	 * (if image has been cropped, then original size will be bigger than frame size).
+	 * @param offset How frame region is located on original frame image
+	 * (offset from top left corner of original image).
+	 * @param name Name for this frame (name of packed image file).
+	 * @param angle Rotation of packed image (can be `0`, `90` or `-90`).
+	 * @param flipX Whether packed image should be horizontally flipped.
+	 * @param flipY Whether packed image should be vertically flipped.
+	 * @param duration The duration of the frame in seconds. If `0`, the anim controller will decide the duration.
+	 * @return Newly created and added frame object.
 	 */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX = false, flipY = false,
 			duration = 0.0):FlxFrame
@@ -191,9 +191,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
 	 * 
-	 * @param   name     The name of the frame.
-	 * @param   offsetX  The new horizontal offset of the frame.
-	 * @param   offsetY  The new vertical offset of the frame.
+	 * @param name The name of the frame.
+	 * @param offsetX The new horizontal offset of the frame.
+	 * @param offsetY The new vertical offset of the frame.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -210,9 +210,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
 	 * 
-	 * @param   name     The name of the frame.
-	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
-	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * @param name The name of the frame.
+	 * @param offsetX The horizontal adjustment added to the frame's current offset.
+	 * @param offsetY The vertical adjustment added to the frame's current offset.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -228,9 +228,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Sets all frames with the specified name prefix to the specified offset. This mainly
 	 * exists because certain atlas exporters don't give the correct offset.
 	 * 
-	 * @param   prefix   The prefix used to determine which frames are affected.
-	 * @param   offsetX  The new horizontal offset of the frame.
-	 * @param   offsetY  The new vertical offset of the frame.
+	 * @param prefix The prefix used to determine which frames are affected.
+	 * @param offsetX The new horizontal offset of the frame.
+	 * @param offsetY The new vertical offset of the frame.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -247,9 +247,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Adjusts all frames with the specified name prefix by the specified offset. This mainly
 	 * exists because certain atlas exporters don't give the correct offset.
 	 * 
-	 * @param   prefix   The prefix used to determine which frames are affected.
-	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
-	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * @param prefix The prefix used to determine which frames are affected.
+	 * @param offsetX The horizontal adjustment added to the frame's current offset.
+	 * @param offsetY The vertical adjustment added to the frame's current offset.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -267,8 +267,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
 	 * 
-	 * @param   name      The name of the frame.
-	 * @param   duration  The new duration of the frame.
+	 * @param name The name of the frame.
+	 * @param duration The new duration of the frame.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -285,8 +285,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
 	 * 
-	 * @param   prefix    The prefix used to determine which frames are affected.
-	 * @param   duration  The new duration of the frame.
+	 * @param prefix The prefix used to determine which frames are affected.
+	 * @param duration The new duration of the frame.
 	 * 
 	 * @since 5.3.0
 	 */
@@ -300,11 +300,11 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
-	 * Checks if frame's area fits into atlas image, and trims if it's out of atlas image bounds.
+	 * Checks whether frame's area fits into atlas image, and trims if it's out of atlas image bounds.
 	 *
-	 * @param   frame   Frame area to check.
-	 * @param   name    Optional frame name for debugging info.
-	 * @return  Checked and trimmed frame rectangle.
+	 * @param frame Frame area to check.
+	 * @param name Optional frame name for debugging info.
+	 * @return Checked and trimmed frame rectangle.
 	 */
 	function checkFrame(frame:FlxRect, ?name:String):FlxRect
 	{
@@ -323,10 +323,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
-	 * Helper method for a adding frame to the collection.
+	 * Helper method for adding a frame to the collection.
 	 *
-	 * @param   frameObj   Frame to add.
-	 * @return  Added frame.
+	 * @param frameObj Frame to add.
+	 * @return Added frame.
 	 */
 	public function pushFrame(frameObj:FlxFrame):FlxFrame
 	{
@@ -346,12 +346,12 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Generates new frames collection from this collection but trims frames by specified borders.
 	 *
-	 * @param   border   How much space trim around the frames.
-	 * @return  Generated frames collection.
+	 * @param border How much space to trim around the frames.
+	 * @return Generated frames collection.
 	 */
 	public function addBorder(border:FlxPoint):FlxFramesCollection
 	{
-		throw "To be overriden in subclasses";
+		throw "To be overridden in subclasses";
 		return null;
 	}
 

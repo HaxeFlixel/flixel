@@ -1,16 +1,16 @@
 package flixel.input.touch;
 
 #if FLX_TOUCH
-import flash.geom.Point;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.input.FlxSwipe;
 import flixel.input.IFlxInput;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
+import openfl.geom.Point;
 
 /**
- * Helper class, contains and tracks touch points in your game.
+ * Helper class. Contains and tracks touch points in your game.
  * Automatically accounts for parallax scrolling, etc.
  */
 @:allow(flixel.input.touch.FlxTouchManager)
@@ -18,13 +18,13 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 {
 	/**
 	 * The _unique_ ID of this touch. You should not make not any further assumptions
-	 * about this value - IDs are not guaranteed to start from 0 or ascend in order.
+	 * about this value; IDs are not guaranteed to start from `0` or ascend in order.
 	 * The behavior may vary from device to device.
 	 */
 	public var touchPointID(get, never):Int;
 
 	/**
-	 * A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
+	 * A value between `0.0` and `1.0` indicating force of the contact with the device. If the device does not support detecting the pressure, the value is `1.0`.
 	 */
 	public var pressure(default, null):Float;
 
@@ -47,7 +47,7 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	}
 
 	/**
-	 * Resets the justPressed/justReleased flags, sets touch to not pressed and sets touch pressure to 0.
+	 * Resets the `justPressed`/`justReleased` flags, sets touch to not pressed, and sets touch pressure to `0`.
 	 */
 	public function recycle(x:Int, y:Int, pointID:Int, pressure:Float):Void
 	{
@@ -58,10 +58,10 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	}
 
 	/**
-	 * @param	X			stageX touch coordinate
-	 * @param	Y			stageX touch coordinate
-	 * @param	PointID		touchPointID of the touch
-	 * @param	pressure	A value between 0.0 and 1.0 indicating force of the contact with the device. If the device does not support detecting the pressure, the value is 1.0.
+	 * @param x `stageX` touch coordinate.
+	 * @param y `stageY` touch coordinate.
+	 * @param pointID `touchPointID` of the touch.
+	 * @param pressure A value between `0.0` and `1.0` indicating force of the contact with the device. If the device does not support detecting the pressure, the value is `1.0`.
 	 */
 	function new(x:Int = 0, y:Int = 0, pointID:Int = 0, pressure:Float = 0)
 	{
@@ -95,8 +95,8 @@ class FlxTouch extends FlxPointer implements IFlxDestroyable implements IFlxInpu
 	/**
 	 * Function for updating touch coordinates. Called by the TouchManager.
 	 *
-	 * @param	X	stageX touch coordinate
-	 * @param	Y	stageY touch coordinate
+	 * @param X `stageX` touch coordinate.
+	 * @param Y `stageY` touch coordinate.
 	 */
 	function setXY(X:Int, Y:Int):Void
 	{

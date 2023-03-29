@@ -3,20 +3,20 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
-	* IDs for PlayStation 4 controllers
-	*
-	*-------
-	* NOTES
-	*-------
-	*
-	* WINDOWS: seems to work fine without any special drivers on Windows 10 (and I seem to recall the same on Windows 7).
-	* DS4Windows is the popular 3rd-party utility here, but it will make the PS4 controller look like a 360 controller, which
-	* means that it will be indistinguishable from an XInput device to flixel (DS4Windows: http://ds4windows.com).
-	*
-	* LINUX: the PS4 controller will be detected as an XInput device when using xpad (see notes in XInputID.hx)
-	*
-	* MAC: the PS4 controller seemed to work perfectly without anything special installed, and was not detected in the 360Controller
-	* control panel, so it might just work right out of the box!
+ * IDs for PlayStation 4 controllers.
+ *
+ * -----
+ * NOTES
+ * -----
+ *
+ * WINDOWS: Seems to work fine without any special drivers on Windows 10 (and I seem to recall the same on Windows 7).
+ * [DS4Windows](https://ds4-windows.com) is the popular 3rd-party utility here, but it will make the PS4 controller look like a 360 controller, which
+ * means that it will be indistinguishable from an XInput device to Flixel.
+ *
+ * LINUX: The PS4 controller will be detected as an XInput device when using Xpad (see notes in `XInputID.hx`).
+ *
+ * MAC: The PS4 controller seemed to work perfectly without anything special installed, and was not detected in the 360Controller
+ * control panel, so it might just work right out of the box!
  */
 class PS4ID
 {
@@ -110,8 +110,8 @@ class PS4ID
 	public static inline var DPAD_LEFT:Int = 19;
 	public static inline var DPAD_RIGHT:Int = 20;
 
-	// On linux the drivers we're testing with just make the PS4 controller look like an XInput device,
-	// So strictly speaking these ID's will probably not be used, but the compiler needs something or
+	// On Linux the drivers we're testing with just make the PS4 controller look like an XInput device,
+	// So strictly speaking these IDs will probably not be used, but the compiler needs something or
 	// else it will not compile on Linux
 	#else // "legacy"
 	public static inline var SQUARE:Int = 0;

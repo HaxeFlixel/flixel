@@ -81,10 +81,14 @@ class WiiRemoteMapping extends FlxGamepadMapping
 			case WiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case WiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
 			default:
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawUp) LEFT_STICK_DIGITAL_UP;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawDown) LEFT_STICK_DIGITAL_DOWN;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawLeft) LEFT_STICK_DIGITAL_LEFT;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
+				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawUp)
+					LEFT_STICK_DIGITAL_UP;
+				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawDown)
+					LEFT_STICK_DIGITAL_DOWN;
+				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawLeft)
+					LEFT_STICK_DIGITAL_LEFT;
+				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawRight)
+					LEFT_STICK_DIGITAL_RIGHT;
 				NONE;
 		}
 	}
@@ -220,7 +224,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 	}
 
 	#if FLX_JOYSTICK_API
-	// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
+	// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button IDs
 	override public function axisIndexToRawID(axisID:Int):Int
 	{
 		// return null for this unused access so it doesn't overlap a button input
@@ -278,26 +282,29 @@ class WiiRemoteMapping extends FlxGamepadMapping
 
 		return super.set_attachment(attachment);
 	}
-	
+
 	override function getInputLabel(id:FlxGamepadInputID)
 	{
 		var label = WiiRemoteMapping.getWiiInputLabel(id, attachment);
 		if (label == null)
 			return super.getInputLabel(id);
-		
+
 		return label;
 	}
-	
+
 	public static function getWiiInputLabel(id:FlxGamepadInputID, attachment:FlxGamepadAttachment)
 	{
 		switch (id)
 		{
-			case BACK: return "minus";
-			case GUIDE: return "home";
-			case START: return"plus";
+			case BACK:
+				return "minus";
+			case GUIDE:
+				return "home";
+			case START:
+				return "plus";
 			default:
 		}
-		
+
 		return switch (attachment)
 		{
 			case WII_CLASSIC_CONTROLLER: getLabelClassicController(id);

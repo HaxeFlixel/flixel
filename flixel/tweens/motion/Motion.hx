@@ -9,12 +9,12 @@ import flixel.tweens.FlxTween;
 class Motion extends FlxTween
 {
 	/**
-	 * Current x position of the Tween.
+	 * Current x-position of the Tween.
 	 */
 	public var x:Float = 0;
 
 	/**
-	 * Current y position of the Tween.
+	 * Current y-position of the Tween.
 	 */
 	public var y:Float = 0;
 
@@ -54,9 +54,9 @@ class Motion extends FlxTween
 			_object.setPosition(x, y);
 		}
 	}
-	
-	override function isTweenOf(object:Dynamic, ?field:String):Bool {
-		return _object == object
-			&& (field == null || field == "x" || field == "y");
+
+	override function isTweenOf(object:Dynamic, ?field:String):Bool
+	{
+		return _object == object && (field == null || field == "x" || field == "y");
 	}
 }

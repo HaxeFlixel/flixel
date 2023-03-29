@@ -9,7 +9,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * Atlas node holds information about image on Atlas.
- * Plus it have few methods for easy frame data generation,
+ * It has a few methods for easy frame data generation,
  * which can be loaded in sprites and in tilemaps.
  */
 class FlxNode implements IFlxDestroyable
@@ -25,7 +25,7 @@ class FlxNode implements IFlxDestroyable
 	public var right:FlxNode;
 
 	/**
-	 * Region of the atlas which this node holds, includes spacings between nodes.
+	 * Region of the atlas which this node holds. Includes spacings between nodes.
 	 */
 	public var rect:FlxRect;
 
@@ -36,7 +36,7 @@ class FlxNode implements IFlxDestroyable
 	public var key:String;
 
 	/**
-	 * Logical flag showing whether this node has an image in it or not.
+	 * Whether this node has an image in it.
 	 */
 	public var filled(default, null):Bool;
 
@@ -46,12 +46,12 @@ class FlxNode implements IFlxDestroyable
 	public var atlas:FlxAtlas;
 
 	/**
-	 * The x coordinate of the top-left corner of this node.
+	 * The x-coordinate of the top-left corner of this node.
 	 */
 	public var x(get, never):Int;
 
 	/**
-	 * The y coordinate of the top-left corner of this node.
+	 * The y-coordinate of the top-left corner of this node.
 	 */
 	public var y(get, never):Int;
 
@@ -66,19 +66,19 @@ class FlxNode implements IFlxDestroyable
 	public var height(get, set):Int;
 
 	/**
-	 * Logical flag, showing whether this node have any child nodes or image in it.
+	 * Whether this node has any child nodes or an image in it.
 	 */
 	public var isEmpty(get, never):Bool;
 
 	public var rotated(default, null):Bool;
 
 	/**
-	 * Node constructor
+	 * Node constructor.
 	 *
-	 * @param   rect     Region of atlas this node holds.
-	 * @param   atlas    Atlas this node belongs to.
-	 * @param   filled   Whether this node contains image or not.
-	 * @param   key      The name of image in this node, and the name of this node.
+	 * @param rect Region of atlas this node holds.
+	 * @param atlas Atlas this node belongs to.
+	 * @param filled Whether this node contains image.
+	 * @param key The name of image in this node, and the name of this node.
 	 */
 	public function new(rect:FlxRect, atlas:FlxAtlas, filled:Bool = false, key:String = "", rotated:Bool = false)
 	{
@@ -101,7 +101,7 @@ class FlxNode implements IFlxDestroyable
 	}
 
 	/**
-	 * Whether we place node with specified width and height in this node.
+	 * Checks whether a node with specified width and height can be placed in this node.
 	 */
 	public inline function canPlace(width:Int, height:Int):Bool
 	{
@@ -109,12 +109,12 @@ class FlxNode implements IFlxDestroyable
 	}
 
 	/**
-	 * Generates TileFrames object for this node
+	 * Generates TileFrames object from this node.
 	 *
-	 * @param   tileSize      The size of tile in spritesheet.
-	 * @param   tileSpacing   Offsets between tiles in spritesheet.
-	 * @param   tileBorder    Border to add around tiles (helps to avoid "tearing" problem).
-	 * @return  Created TileFrames object for this node.
+	 * @param tileSize The size of tile in spritesheet.
+	 * @param tileSpacing Offsets between tiles in spritesheet.
+	 * @param tileBorder Border to add around tiles (helps to avoid "tearing" problem).
+	 * @return Created TileFrames object from this node.
 	 */
 	public function getTileFrames(tileSize:FlxPoint, ?tileSpacing:FlxPoint, ?tileBorder:FlxPoint):FlxTileFrames
 	{
@@ -133,9 +133,9 @@ class FlxNode implements IFlxDestroyable
 	}
 
 	/**
-	 * Generates a `FlxImageFrame` object for this node.
+	 * Generates a `FlxImageFrame` object from this node.
 	 *
-	 * @return  `FlxImageFrame` for the whole node
+	 * @return `FlxImageFrame` from the whole node.
 	 */
 	public function getImageFrame():FlxImageFrame
 	{

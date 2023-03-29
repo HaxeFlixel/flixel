@@ -1,7 +1,5 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,12 +7,14 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.tile.FlxTileblock;
+import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 
 /**
- * FlxCollision
+ * `FlxCollision`
  *
  * @link http://www.photonstorm.com
  * @author Richard Davey / Photon Storm
@@ -35,21 +35,20 @@ class FlxCollision
 	static var flashRect:Rectangle = new Rectangle();
 
 	/**
-	 * A Pixel Perfect Collision check between two FlxSprites. It will do a bounds check first, and if that passes it will run a
-	 * pixel perfect match on the intersecting area. Works with rotated and animated sprites. May be slow, so use it sparingly.
+	 * A pixel-perfect collision check between two `FlxSprite`s. It will do a bounds check first, and, if that passes, it will run a
+	 * pixel-perfect match on the intersecting area. Works with rotated and animated sprites. May be slow, so use it sparingly.
 	 *
-	 * @param	Contact			The first FlxSprite to test against
-	 * @param	Target			The second FlxSprite to test again, sprite order is irrelevant
-	 * @param	AlphaTolerance	The tolerance value above which alpha pixels are included. Default to 1 (anything that is not fully invisible).
-	 * @param	Camera			If the collision is taking place in a camera other than FlxG.camera (the default/current) then pass it here
-	 * @return	Whether the sprites collide
+	 * @param Contact The first `FlxSprite` to test against.
+	 * @param Target The second `FlxSprite` to test against. Sprite order is irrelevant.
+	 * @param AlphaTolerance The tolerance value above which alpha pixels are included. Defaults to `1` (i.e., anything that is not fully invisible).
+	 * @param Camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the sprites collide.
 	 */
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var advanced = (Contact.angle != 0) || (Target.angle != 0)
-			|| Contact.scale.x != 1 || Contact.scale.y != 1
-			|| Target.scale.x != 1 || Target.scale.y != 1;
+		var advanced = (Contact.angle != 0) || (Target.angle != 0) || Contact.scale.x != 1 || Contact.scale.y != 1 || Target.scale.x != 1
+			|| Target.scale.y != 1;
 
 		Contact.getScreenBounds(boundsA, Camera);
 		Target.getScreenBounds(boundsB, Camera);
@@ -91,7 +90,6 @@ class FlxCollision
 
 			// translate it back!
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
-			
 
 			// prepare an empty canvas
 			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
@@ -179,13 +177,13 @@ class FlxCollision
 	}
 
 	/**
-	 * A Pixel Perfect Collision check between a given x/y coordinate and an FlxSprite
+	 * A pixel-perfect collision check between a given x-/y-coordinate and an `FlxSprite`.
 	 *
-	 * @param	PointX			The x coordinate of the point given in local space (relative to the FlxSprite, not game world coordinates)
-	 * @param	PointY			The y coordinate of the point given in local space (relative to the FlxSprite, not game world coordinates)
-	 * @param	Target			The FlxSprite to check the point against
-	 * @param	AlphaTolerance	The alpha tolerance level above which pixels are counted as colliding. Default to 1 (anything that is not fully invisible).
-	 * @return	Boolean True if the x/y point collides with the FlxSprite, false if not
+	 * @param PointX The x-coordinate of the point given in local space (relative to the `FlxSprite`, not game world coordinates).
+	 * @param PointY The y-coordinate of the point given in local space (relative to the `FlxSprite`, not game world coordinates).
+	 * @param Target The `FlxSprite` to check the point against.
+	 * @param AlphaTolerance The alpha tolerance level above which pixels are counted as colliding. Defaults to `1` (i.e., anything that is not fully invisible).
+	 * @return Whether the point collides with the `FlxSprite`.
 	 */
 	public static function pixelPerfectPointCheck(PointX:Int, PointY:Int, Target:FlxSprite, AlphaTolerance:Int = 1):Bool
 	{
@@ -215,13 +213,13 @@ class FlxCollision
 	}
 
 	/**
-	 * Creates a "wall" around the given camera which can be used for FlxSprite collision
+	 * Creates a "wall" around the given camera which can be used for `FlxSprite` collision.
 	 *
-	 * @param	Camera				The FlxCamera to use for the wall bounds (can be FlxG.camera for the current one)
-	 * @param	Placement			Whether to place the camera wall outside or inside
-	 * @param	Thickness			The thickness of the wall in pixels
-	 * @param	AdjustWorldBounds	Adjust the FlxG.worldBounds based on the wall (true) or leave alone (false)
-	 * @return	FlxGroup The 4 FlxTileblocks that are created are placed into this FlxGroup which should be added to your State
+	 * @param Camera The `FlxCamera` to use for the wall bounds (can be `FlxG.camera` for the current one).
+	 * @param PlaceOutside Whether to place the camera wall outside or inside.
+	 * @param Thickness The thickness of the wall in pixels.
+	 * @param AdjustWorldBounds Whether to adjust `FlxG.worldBounds` based on the wall.
+	 * @return An `FlxGroup` containing the 4 `FlxTileblocks` that were created.
 	 */
 	public static function createCameraWall(Camera:FlxCamera, PlaceOutside:Bool = true, Thickness:Int, AdjustWorldBounds:Bool = false):FlxGroup
 	{
@@ -267,20 +265,20 @@ class FlxCollision
 	}
 
 	/**
-	 * Calculates at which point where the given line, from start to end, first enters the rect.
-	 * If the line starts inside the rect, a copy of start is returned.
-	 * If the line never enters the rect, null is returned.
+	 * Calculates the point at which the given line, from start to end, first enters the rect.
+	 * If the line starts inside the rect, a copy of `start` is returned.
+	 * If the line never enters the rect, `null` is returned.
 	 *
-	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
-	 * and the supplied result is unchanged
-	 * @since 5.0.0
+	 * Note: If a result vector is supplied and the line is outside the rect, `null` is returned
+	 * and the supplied result is unchanged,
 	 *
-	 * @param rect    The rect being entered
-	 * @param start   The start of the line
-	 * @param end     The end of the line
-	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                Only returned if the line enters the rect.
+	 * @param rect The rect being entered.
+	 * @param start The start of the line.
+	 * @param end The end of the line.
+	 * @param result Optional result vector, to avoid creating a new instance to be returned.
+	 * Only returned if the line enters the rect.
 	 * @return The point of entry of the line into the rect, if possible.
+	 * @since 5.0.0
 	 */
 	public static function calcRectEntry(rect:FlxRect, start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Null<FlxPoint>
 	{
@@ -301,7 +299,7 @@ class FlxCollision
 				result = FlxPoint.get(x, y);
 			else
 				result.set(x, y);
-			
+
 			putWeakRefs();
 			return result;
 		}
@@ -317,10 +315,10 @@ class FlxCollision
 			return getResult(start.x, start.y);
 
 		// are both points above, below, left or right of the bounds
-		if ((start.y < rect.top    && end.y < rect.top   )
-		||  (start.y > rect.bottom && end.y > rect.bottom)
-		||  (start.x > rect.right  && end.x > rect.right )
-		||  (start.x < rect.left   && end.x < rect.left) )
+		if ((start.y < rect.top && end.y < rect.top)
+			|| (start.y > rect.bottom && end.y > rect.bottom)
+			|| (start.x > rect.right && end.x > rect.right)
+			|| (start.x < rect.left && end.x < rect.left))
 		{
 			return nullResult();
 		}
@@ -388,20 +386,20 @@ class FlxCollision
 	}
 
 	/**
-	 * Calculates at which point where the given line, from start to end, was last inside the rect.
-	 * If the line ends inside the rect, a copy of end is returned.
-	 * If the line is never inside the rect, null is returned.
+	 * Calculates the point at which the given line, from start to end, was last inside the rect.
+	 * If the line ends inside the rect, a copy of `end` is returned.
+	 * If the line is never inside the rect, `null` is returned.
 	 *
-	 * Note: If a result vector is supplied and the line is outside the rect, null is returned
-	 * and the supplied result is unchanged
-	 * @since 5.0.0
+	 * Note: If a result vector is supplied and the line is outside the rect, `null` is returned
+	 * and the supplied result is unchanged.
 	 *
-	 * @param rect    The rect being exited
-	 * @param start   The start of the line
-	 * @param end     The end of the line
-	 * @param result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                Only returned if the line enters the rect.
+	 * @param rect The rect being exited.
+	 * @param start The start of the line.
+	 * @param end The end of the line.
+	 * @param result Optional result vector, to avoid creating a new instance to be returned.
+	 * Only returned if the line enters the rect.
 	 * @return The point of exit of the line from the rect, if possible.
+	 * @since 5.0.0
 	 */
 	public static inline function calcRectExit(rect, start, end, result)
 	{

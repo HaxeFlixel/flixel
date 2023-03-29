@@ -3,7 +3,8 @@ package flixel.tweens.misc;
 import flixel.tweens.FlxTween;
 
 /**
- * Tweens a numeric value. See FlxTween.num()
+ * Tweens a numeric value.
+ * @see `FlxTween.num()`
  */
 class NumTween extends FlxTween
 {
@@ -17,9 +18,6 @@ class NumTween extends FlxTween
 	var _start:Float;
 	var _range:Float;
 
-	/**
-	 * Clean up references
-	 */
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -29,10 +27,10 @@ class NumTween extends FlxTween
 	/**
 	 * Tweens the value from one value to another.
 	 *
-	 * @param	fromValue		Start value.
-	 * @param	toValue			End value.
-	 * @param	duration		Duration of the tween.
-	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
+	 * @param fromValue Start value.
+	 * @param toValue End value.
+	 * @param duration Duration of the tween.
+	 * @param tweenFunction Optional tween function. See `FlxTween.num()`.
 	 */
 	public function tween(fromValue:Float, toValue:Float, duration:Float, ?tweenFunction:Float->Void):NumTween
 	{

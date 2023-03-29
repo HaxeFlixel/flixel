@@ -1,17 +1,17 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.display.DisplayObject;
-import flash.display.DisplayObjectContainer;
 import flixel.util.FlxPool.IFlxPooled;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 
 class FlxDestroyUtil
 {
 	/**
-	 * Checks if an object is not null before calling destroy(), always returns null.
+	 * Checks whether an object is not `null` before calling `destroy()`. Always returns `null`.
 	 *
-	 * @param	object	An IFlxDestroyable object that will be destroyed if it's not null.
-	 * @return	null
+	 * @param object An `IFlxDestroyable` object that will be destroyed if it's not `null`.
+	 * @return `null`.
 	 */
 	public static function destroy<T:IFlxDestroyable>(object:Null<IFlxDestroyable>):T
 	{
@@ -23,10 +23,10 @@ class FlxDestroyUtil
 	}
 
 	/**
-	 * Destroy every element of an array of IFlxDestroyables
+	 * Destroys every element of an array of `IFlxDestroyable`s.
 	 *
-	 * @param	array	An Array of IFlxDestroyable objects
-	 * @return	null
+	 * @param array An `Array` of `IFlxDestroyable` objects.
+	 * @return `null`.
 	 */
 	public static function destroyArray<T:IFlxDestroyable>(array:Array<T>):Array<T>
 	{
@@ -40,10 +40,10 @@ class FlxDestroyUtil
 	}
 
 	/**
-	 * Checks if an object is not null before putting it back into the pool, always returns null.
+	 * Checks whether an object is not `null` before putting it back into the pool. Always returns `null`.
 	 *
-	 * @param	object	An IFlxPooled object that will be put back into the pool if it's not null
-	 * @return	null
+	 * @param object An `IFlxPooled` object that will be put back into the pool if it's not `null`.
+	 * @return `null`.
 	 */
 	public static function put<T:IFlxPooled>(object:IFlxPooled):T
 	{
@@ -55,11 +55,11 @@ class FlxDestroyUtil
 	}
 
 	/**
-	 * Puts all objects in an Array of IFlxPooled objects back into
-	 * the pool by calling FlxDestroyUtil.put() on them
+	 * Puts all objects in an `Array` of `IFlxPooled` objects back into
+	 * the pool by calling `FlxDestroyUtil.put()` on them.
 	 *
-	 * @param	array	An Array of IFlxPooled objects
-	 * @return	null
+	 * @param array An `Array` of `IFlxPooled` objects.
+	 * @return `null`.
 	 */
 	public static function putArray<T:IFlxPooled>(array:Array<T>):Array<T>
 	{
@@ -74,10 +74,10 @@ class FlxDestroyUtil
 
 	#if !macro
 	/**
-	 * Checks if a BitmapData object is not null before calling dispose() on it, always returns null.
+	 * Checks whether a `BitmapData` object is not `null` before calling `dispose()` on it. Always returns `null`.
 	 *
-	 * @param	Bitmap	A BitmapData to be disposed if not null
-	 * @return 	null
+	 * @param bitmapData A `BitmapData` to be disposed if not `null`.
+	 * @return `null`.
 	 */
 	public static function dispose(bitmapData:BitmapData):BitmapData
 	{
@@ -89,7 +89,7 @@ class FlxDestroyUtil
 	}
 
 	/**
-	 * Checks if a BitmapData object is not null and it's size isn't equal to specified one before calling dispose() on it.
+	 * Checks whether a `BitmapData` object is not `null` and its size isn't equal to specified one before calling `dispose()` on it.
 	 */
 	public static function disposeIfNotEqual(bitmapData:BitmapData, width:Float, height:Float):BitmapData
 	{

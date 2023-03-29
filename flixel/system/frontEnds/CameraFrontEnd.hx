@@ -1,11 +1,11 @@
 package flixel.system.frontEnds;
 
-import flash.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxArrayUtil;
 
@@ -15,20 +15,20 @@ using flixel.util.FlxArrayUtil;
 class CameraFrontEnd
 {
 	/**
-	 * An array listing FlxCamera objects that are used to draw stuff.
-	 * By default flixel creates one camera the size of the screen.
-	 * Do not edit directly, use `add` and `remove` instead.
+	 * An array listing `FlxCamera` objects that are used to draw stuff.
+	 * By default, Flixel creates one camera the size of the screen.
+	 * Do not edit directly; use `add()` and `remove()` instead.
 	 */
 	public var list(default, null):Array<FlxCamera> = [];
-	
+
 	/**
-	 * Array listing all cameras marked as default draw targets, `FlxBasics` with no
-	 *`cameras` set will render to them.
+	 * Array listing all cameras marked as default draw targets. `FlxBasic`s with no
+	 * `cameras` set will render to these.
 	 */
 	var defaults:Array<FlxCamera> = [];
 
 	/**
-	 * The current (global, applies to all cameras) bgColor.
+	 * The current (global, applies to all cameras) background color.
 	 */
 	public var bgColor(get, set):FlxColor;
 
@@ -42,8 +42,8 @@ class CameraFrontEnd
 	public var cameraResized(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
 
 	/**
-	 * Allows you to possibly slightly optimize the rendering process IF
-	 * you are not doing any pre-processing in your game state's draw() call.
+	 * Allows you to possibly slightly optimize the rendering process if
+	 * you are not doing any pre-processing in your game state's `draw()` call.
 	 */
 	public var useBufferLocking:Bool = false;
 
@@ -53,33 +53,33 @@ class CameraFrontEnd
 	var _cameraRect:Rectangle = new Rectangle();
 
 	/**
-	 * Add a new camera object to the game.
+	 * Adds a new camera object to the game.
 	 * Handy for PiP, split-screen, etc.
-	 * @see flixel.FlxBasic.cameras
+	 * @see `flixel.FlxBasic#cameras`
 	 *
-	 * @param	NewCamera         The camera you want to add.
-	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
-	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
-	 * @return	This FlxCamera instance.
+	 * @param NewCamera The camera you want to add.
+	 * @param DefaultDrawTarget Whether to add the camera to the list of default draw targets. If `false`, 
+	 * `FlxBasic`s will not render to it unless you add it to their `cameras` list.
+	 * @return This `FlxCamera` instance.
 	 */
 	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(FlxG.game._inputContainer));
-		
+
 		list.push(NewCamera);
 		if (DefaultDrawTarget)
 			defaults.push(NewCamera);
-		
+
 		NewCamera.ID = list.length - 1;
 		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
 
 	/**
-	 * Remove a camera from the game.
+	 * Removes a camera from the game.
 	 *
-	 * @param   Camera    The camera you want to remove.
-	 * @param   Destroy   Whether to call destroy() on the camera, default value is true.
+	 * @param Camera The camera to remove.
+	 * @param Destroy Whether to call `destroy()` on the camera. Default value is `true`.
 	 */
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
@@ -109,14 +109,14 @@ class CameraFrontEnd
 
 		cameraRemoved.dispatch(Camera);
 	}
-	
+
 	/**
-	 * If set to true, the camera is listed as a default draw target, meaning `FlxBasics`
-	 * render to the specified camera if the `FlxBasic` has a null `cameras` value.
-	 * @see flixel.FlxBasic.cameras
+	 * If set to `true`, the camera is listed as a default draw target, meaning `FlxBasic`s
+	 * render to the specified camera if the `FlxBasic` has a `null` `cameras` value.
+	 * @see `flixel.FlxBasic.cameras`
 	 * 
 	 * @param camera The camera you wish to change.
-	 * @param value  If false, FlxBasics will not render to it unless you add it to their `cameras` list.
+	 * @param value If `false`, `FlxBasic`s will not render to it unless you add it to their `cameras` list.
 	 * @since 4.9.0
 	 */
 	public function setDefaultDrawTarget(camera:FlxCamera, value:Bool)
@@ -126,9 +126,9 @@ class CameraFrontEnd
 			FlxG.log.warn("FlxG.cameras.setDefaultDrawTarget(): The specified camera is not a part of the game.");
 			return;
 		}
-		
+
 		var index = defaults.indexOf(camera);
-		
+
 		if (value && index == -1)
 			defaults.push(camera);
 		else if (!value)
@@ -139,7 +139,7 @@ class CameraFrontEnd
 	 * Dumps all the current cameras and resets to just one camera.
 	 * Handy for doing split-screen especially.
 	 *
-	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
+	 * @param NewCamera Optional camera object to be the new main camera.
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
@@ -158,10 +158,10 @@ class CameraFrontEnd
 	/**
 	 * All screens are filled with this color and gradually return to normal.
 	 *
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the flash to fade.
-	 * @param	OnComplete	A function you want to run when the flash finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param Color The color to use.
+	 * @param Duration How long it takes for the flash to fade.
+	 * @param OnComplete A function to run when the flash finishes.
+	 * @param Force Whether to force the effect to reset.
 	 */
 	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
@@ -174,11 +174,11 @@ class CameraFrontEnd
 	/**
 	 * The screen is gradually filled with this color.
 	 *
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the fade to finish.
-	 * @param 	FadeIn 		True fades from a color, false fades to it.
-	 * @param	OnComplete	A function you want to run when the fade finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param Color The color to use.
+	 * @param Duration How long it takes for the fade to finish.
+	 * @param FadeIn `true` fades from a color, `false` fades to it.
+	 * @param OnComplete A function to run when the fade finishes.
+	 * @param Force Whether to force the effect to reset.
 	 */
 	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
@@ -191,11 +191,11 @@ class CameraFrontEnd
 	/**
 	 * A simple screen-shake effect.
 	 *
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
-	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Axes		On what axes to shake. Default value is XY / both.
+	 * @param Intensity Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param Duration The length in seconds that the shaking effect should last.
+	 * @param OnComplete A function you want to run when the shake effect finishes.
+	 * @param Force Whether to force the effect to reset (default = `true`, unlike `flash()` and `fade()`!).
+	 * @param Axes On what axes to shake. Default value is `XY` / both.
 	 */
 	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
 	{
@@ -272,7 +272,7 @@ class CameraFrontEnd
 	}
 
 	/**
-	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 * Called by the game object to draw the special effects and unlock all the camera buffers.
 	 */
 	@:allow(flixel.FlxGame)
 	inline function unlock():Void
@@ -314,7 +314,7 @@ class CameraFrontEnd
 	}
 
 	/**
-	 * Resizes and moves cameras when the game resizes (onResize signal).
+	 * Resizes and moves cameras when the game resizes (`onResize` signal).
 	 */
 	@:allow(flixel.FlxGame)
 	function resize():Void

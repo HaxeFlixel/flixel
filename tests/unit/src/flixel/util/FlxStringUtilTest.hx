@@ -1,8 +1,8 @@
 package flixel.util;
 
-import flash.display.BitmapData;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxStringUtilTest
 {
@@ -93,7 +93,7 @@ class FlxStringUtilTest
 	/**
 	 * Returns an array of valid URLs for testing.
 	 *
-	 * @param	host	The host to insert into the generated URLs.
+	 * @param host The host to insert into the generated URLs.
 	 */
 	function generateTestURLs(host:String):Array<String>
 	{

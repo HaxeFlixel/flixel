@@ -6,7 +6,6 @@ import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;

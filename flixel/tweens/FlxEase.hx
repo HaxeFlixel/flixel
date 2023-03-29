@@ -7,15 +7,21 @@ package flixel.tweens;
  *
  * - **in(t)**:
  *
- *       return t;
+ * ```haxe
+ * return t;
+ * ```
  *
  * - **out(t)**
  *
- *       return 1 - in(1 - t);
+ * ```haxe
+ * return 1 - in(1 - t);
+ * ```
  *
  * - **inOut(t)**
  *
- *       return (t <= .5) ? in(t * 2) / 2 : out(t * 2 - 1) / 2 + .5;
+ * ```haxe
+ * return (t <= .5) ? in(t * 2) / 2 : out(t * 2 - 1) / 2 + .5;
+ * ```
  */
 class FlxEase
 {

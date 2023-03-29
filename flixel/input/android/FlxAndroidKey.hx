@@ -4,7 +4,7 @@ package flixel.input.android;
 import flixel.system.macros.FlxMacroUtil;
 
 /**
- * Maps enum values and strings to integer keycodes.
+ * Maps enum values and strings to integer key codes.
  */
 @:enum
 abstract FlxAndroidKey(Int) from Int to Int

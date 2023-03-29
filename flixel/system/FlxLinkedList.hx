@@ -6,20 +6,23 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 /**
  * A miniature linked list class.
  * Useful for optimizing time-critical or highly repetitive tasks!
- * See FlxQuadTree for how to use it, IF YOU DARE.
+ * See `FlxQuadTree` for how to use it, IF YOU DARE.
  */
 class FlxLinkedList implements IFlxDestroyable
 {
 	/**
-	 * Pooling mechanism, when FlxLinkedLists are destroyed, they get added
-	 * to this collection, and when they get recycled they get removed.
+	 * The current size of the `FlxLinkedList` pool.
 	 */
 	public static var _NUM_CACHED_FLX_LIST:Int = 0;
 
+	/**
+	 * Pooling mechanism. When `FlxLinkedList`s are destroyed, they get added
+	 * to this collection, and, when they get recycled, they get removed.
+	 */
 	static var _cachedListsHead:FlxLinkedList;
 
 	/**
-	 * Recycle a cached Linked List, or creates a new one if needed.
+	 * Recycles a cached linked list, or creates a new one if needed.
 	 */
 	public static function recycle():FlxLinkedList
 	{
@@ -38,8 +41,8 @@ class FlxLinkedList implements IFlxDestroyable
 	}
 
 	/**
-	 * Clear cached List nodes. You might want to do this when loading new levels
-	 * (probably not though, no need to clear cache unless you run into memory problems).
+	 * Clears cached list nodes. You might want to do this when loading new levels
+	 * (probably not though; no need to clear cache unless you run into memory problems).
 	 */
 	public static function clearCache():Void
 	{
@@ -55,7 +58,7 @@ class FlxLinkedList implements IFlxDestroyable
 	}
 
 	/**
-	 * Stores a reference to a FlxObject.
+	 * Stores a reference to a `FlxObject`.
 	 */
 	public var object:FlxObject;
 
@@ -67,12 +70,12 @@ class FlxLinkedList implements IFlxDestroyable
 	public var exists:Bool = true;
 
 	/**
-	 * Private, use recycle instead.
+	 * Private. Use `recycle()` instead.
 	 */
 	function new() {}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	public function destroy():Void
 	{

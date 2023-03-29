@@ -20,12 +20,12 @@ class LinearMotion extends Motion
 	/**
 	 * Starts moving along a line.
 	 *
-	 * @param	FromX			X start.
-	 * @param	FromY			Y start.
-	 * @param	ToX				X finish.
-	 * @param	ToY				Y finish.
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
-	 * @param	UseDuration		Whether to use the previous param as duration or speed.
+	 * @param FromX The initial x-value.
+	 * @param FromY The initial y-value.
+	 * @param ToX The final x-value.
+	 * @param ToY The final y-value.
+	 * @param DurationOrSpeed Duration or speed of the movement.
+	 * @param UseDuration Whether to use the previous param as duration or speed.
 	 */
 	public function setMotion(FromX:Float, FromY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float, UseDuration:Bool = true):LinearMotion
 	{

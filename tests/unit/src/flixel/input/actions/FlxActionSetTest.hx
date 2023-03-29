@@ -253,7 +253,7 @@ class FlxActionSetTest extends FlxTest
 	#if FLX_STEAMWRAP
 	@Test
 	#if travis
-	@Ignore("Fails on Travis b/c of CFFI errors with Steamwrap, but works when tested locally")
+	@Ignore("Fails on Travis b/c of CFFI errors with SteamWrap, but works when tested locally")
 	#end
 	function testAttachSteamController()
 	{

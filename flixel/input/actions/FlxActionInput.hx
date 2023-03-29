@@ -10,29 +10,29 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class FlxActionInput implements IFlxDestroyable
 {
 	/**
-	 * Digital or Analog
+	 * The type of the action (`DIGITAL`, `ANALOG`).
 	 */
 	public var type:FlxInputType;
 
 	/**
-	 * Mouse, Keyboard, Gamepad, SteamController, etc.
+	 * The device for this action (Mouse, Keyboard, Gamepad, SteamController, etc.).
 	 */
 	public var device:FlxInputDevice;
 
 	/**
-	 * Gamepad ID or Steam Controller handle (ignored for Mouse & Keyboard)
+	 * Gamepad ID or Steam Controller handle (ignored for Mouse and Keyboard).
 	 */
 	public var deviceID:Int;
 
 	public var destroyed(default, null):Bool = false;
 
 	/**
-	 * Input code (FlxMouseButtonID, FlxKey, FlxGamepadInputID, or Steam Controller action handle)
+	 * Input code (`FlxMouseButtonID`, `FlxKey`, `FlxGamepadInputID`, or Steam Controller action handle).
 	 */
 	public var inputID(default, null):Int;
 
 	/**
-	 * What state triggers this action (PRESSED, JUST_PRESSED, RELEASED, JUST_RELEASED)
+	 * The state that triggers this action (`PRESSED`, `JUST_PRESSED`, `RELEASED`, `JUST_RELEASED`).
 	 */
 	public var trigger(default, null):FlxInputState;
 
@@ -53,7 +53,7 @@ class FlxActionInput implements IFlxDestroyable
 	}
 
 	/**
-	 * Check whether this action has just been triggered
+	 * Checks whether this action has just been triggered.
 	 */
 	public function check(action:FlxAction):Bool
 	{
@@ -61,10 +61,10 @@ class FlxActionInput implements IFlxDestroyable
 	}
 
 	/**
-	 * Check whether `state` fulfills `condition`. Note: order of operations is
+	 * Checks whether `state` fulfills `condition`. Note: Order of operations is
 	 * important here. `compareState(JUST_PRESSED, PRESSED) == false`, while
 	 * `compareState(PRESSED, JUST_PRESSED) == true`.
-	 * @return Whether or not the condition is satisfied by state.
+	 * @return Whether the condition is satisfied by state.
 	 */
 	inline function compareState(condition:FlxInputState, state:FlxInputState):Bool
 	{
@@ -113,23 +113,23 @@ enum FlxInputDevice
 class FlxInputDeviceID
 {
 	/**
-	 * Means "every connected device of the given type" (ie all gamepads, all steam controllers, etc)
+	 * Means "every connected device of the given type" (e.g., all gamepads, all Steam controllers).
 	 */
 	public static inline var ALL:Int = -1;
 
 	/**
-	 * Means "the first connected device that has an active input" (ie a pressed button or moved analog stick/trigger/etc)
+	 * Means "the first connected device that has an active input" (e.g., a pressed button or moved analog stick/trigger/etc.).
 	 */
 	public static inline var FIRST_ACTIVE:Int = -2;
 
 	/**
-	 * Means "no device"
+	 * Means "no device".
 	 */
 	public static inline var NONE:Int = -3;
 }
 
 /**
- * Just a bucket for being able to refer to a specific device by type & slot number
+ * Just a bucket for being able to refer to a specific device by type and slot number.
  * @since 4.6.0
  */
 class FlxInputDeviceObject

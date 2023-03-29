@@ -1,14 +1,14 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
-import openfl.text.TextField;
-import openfl.text.TextFormat;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.system.debug.FlxDebugger.GraphicConsole;
-import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
+import flixel.system.debug.completion.CompletionList;
 import flixel.util.FlxStringUtil;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 #if (!next && sys)
 import openfl.events.MouseEvent;
 #end
@@ -22,9 +22,9 @@ using StringTools;
 #end
 
 /**
- * A powerful console for the flixel debugger screen with supports custom commands, registering
- * objects and functions and saves the last 25 commands used. Inspired by Eric Smith's "CoolConsole".
- * @see http://www.youtube.com/watch?v=QWfpw7elWk8
+ * A powerful console for the Flixel debugger screen which supports custom commands, registering
+ * objects, and functions, and saves the last 25 commands used. Inspired by Eric Smith's "CoolConsole".
+ * @see https://www.youtube.com/watch?v=QWfpw7elWk8
  */
 class Console extends Window
 {
@@ -34,22 +34,22 @@ class Console extends Window
 	static inline var DEFAULT_TEXT:String = #if hscript "(Click here / press [Tab] to enter command. Type 'help' for help.)" #else "Using the console requires hscript - please run 'haxelib install hscript'." #end;
 
 	/**
-	 * Map containing all registered Objects. You can use registerObject() or add them directly to this map.
+	 * Map containing all registered Objects. You can use `registerObject()` or add them directly to this map.
 	 */
 	public var registeredObjects:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	/**
-	 * Map containing all registered Functions. You can use registerFunction() or add them directly to this map.
+	 * Map containing all registered Functions. You can use `registerFunction()` or add them directly to this map.
 	 */
 	public var registeredFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	/**
-	 * Map containing all registered help text. Set these values from registerObject() or registerFunction().
+	 * Map containing all registered help text. Set these values from `registerObject()` or `registerFunction()`.
 	 */
 	public var registeredHelp:Map<String, String> = new Map<String, String>();
 
 	/**
-	 * Internal helper var containing all the FlxObjects created via the create command.
+	 * Internal helper var containing all the `FlxObject`s created via the create command.
 	 */
 	public var objectStack:Array<FlxObject> = [];
 
@@ -269,11 +269,11 @@ class Console extends Window
 	#end
 
 	/**
-	 * Register a new function to use in any command.
+	 * Registers a new function to use in any command.
 	 *
-	 * @param 	FunctionAlias	The name with which you want to access the function.
-	 * @param 	Function		The function to register.
-	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
+	 * @param functionAlias The name with which you want to access the function.
+	 * @param func The function to register.
+	 * @param helpText An optional string to trace to the console using the "help" command.
 	 */
 	public function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
 	{
@@ -287,10 +287,10 @@ class Console extends Window
 	}
 
 	/**
-	 * Register a new object to use in any command.
+	 * Registers a new object to use in any command.
 	 *
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
+	 * @param objectAlias The name with which you want to access the object.
+	 * @param anyObject The object to register.
 	 */
 	public function registerObject(objectAlias:String, anyObject:Dynamic)
 	{
@@ -301,9 +301,9 @@ class Console extends Window
 	}
 
 	/**
-	 * Register a new class to use in any command.
+	 * Registers a new class to use in any command.
 	 *
-	 * @param	cl	The class to register.
+	 * @param cl The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>)
 	{
@@ -311,9 +311,9 @@ class Console extends Window
 	}
 
 	/**
-	 * Register a new enum to use in any command.
+	 * Registers a new enum to use in any command.
 	 *
-	 * @param	e	The enum to register.
+	 * @param e The enum to register.
 	 * @since 4.4.0
 	 */
 	public inline function registerEnum(e:Enum<Dynamic>)

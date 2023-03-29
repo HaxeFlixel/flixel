@@ -2,7 +2,7 @@ package flixel.input.android;
 
 #if android
 /**
- * Keeps track of Android system key presses (Back/Menu)
+ * Keeps track of Android system key presses (Back/Menu).
  */
 class FlxAndroidKeys extends FlxKeyManager<FlxAndroidKey, FlxAndroidKeyList>
 {

@@ -1,50 +1,50 @@
 package flixel.system;
 
-import flash.Lib;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.GradientType;
-import flash.display.GraphicsPathWinding;
-import flash.display.Shape;
-import flash.display.Sprite;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
-import flash.events.Event;
-import flash.events.ProgressEvent;
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.geom.Rectangle;
-import flash.net.URLRequest;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import openfl.Lib;
 import openfl.Vector;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.GradientType;
+import openfl.display.GraphicsPathWinding;
+import openfl.display.Shape;
+import openfl.display.Sprite;
+import openfl.display.StageAlign;
+import openfl.display.StageScaleMode;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.events.ProgressEvent;
+import openfl.geom.Matrix;
+import openfl.geom.Rectangle;
+import openfl.net.URLRequest;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 class FlxBasePreloader extends DefaultPreloader
 {
 	/**
-	 * Add this string to allowedURLs array if you want to be able to test game with enabled site-locking on local machine
+	 * Add this string to `allowedURLs` array if you want to be able to test game with enabled site-locking on the local machine.
 	 */
 	public static inline var LOCAL:String = "localhost";
 
 	/**
-	 * Change this if you want the flixel logo to show for more or less time.  Default value is 0 seconds (no delay).
+	 * Change this if you want the Flixel logo to show for more or less time. Default value is `0` seconds (no delay).
 	 */
 	public var minDisplayTime:Float = 0;
 
 	/**
 	 * List of allowed URLs for built-in site-locking.
-	 * Set it in FlxPreloader's constructor as: `['http://adamatomic.com/canabalt/', FlxPreloader.LOCAL]`;
+	 * Set it in `FlxPreloader`'s constructor as: `['https://adamatomic.com/canabalt/', FlxPreloader.LOCAL]`;
 	 */
 	public var allowedURLs:Array<String>;
 
 	/**
-	 * The index of which URL in allowedURLs will be triggered when a user clicks on the Site-lock Message.
+	 * The index of which URL in `allowedURLs` will be triggered when a user clicks on the Site-lock Message.
 	 * For example, if allowedURLs is `['mysite.com', 'othersite.com']`, and `siteLockURLIndex = 1`, then
 	 * the user will go to 'othersite.com' when they click the message, but sitelocking will allow either of those URLs to work.
-	 * Defaults to 0.
+	 * Defaults to `0`.
 	 */
 	public var siteLockURLIndex:Int = 0;
 
@@ -93,9 +93,9 @@ class FlxBasePreloader extends DefaultPreloader
 	var _startTime:Float;
 
 	/**
-	 * FlxBasePreloader Constructor.
-	 * @param	MinDisplayTime	Minimum time (in seconds) the preloader should be shown. (Default = 0)
-	 * @param	AllowedURLs		Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = [])
+	 * `FlxBasePreloader` constructor.
+	 * @param MinDisplayTime Minimum time (in seconds) the preloader should be shown (Default = `0`).
+	 * @param AllowedURLs Allowed URLs used for Site-locking. If the game is run anywhere else, a message will be displayed on the screen (Default = `[]`).
 	 */
 	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>)
 	{
@@ -187,9 +187,9 @@ class FlxBasePreloader extends DefaultPreloader
 	function destroy():Void {}
 
 	/**
-	 * Override to draw your preloader objects in response to the Percent
+	 * Override to draw your preloader objects in response to the `Percent`.
 	 *
-	 * @param	Percent		How much of the program has loaded.
+	 * @param Percent How much of the program has loaded.
 	 */
 	function update(Percent:Float):Void {}
 
@@ -204,14 +204,14 @@ class FlxBasePreloader extends DefaultPreloader
 	}
 
 	/**
-	 * This should be used whenever you want to create a Bitmap that uses BitmapData embedded with the
-	 * @:bitmap metadata, if you want to support both Flash and HTML5. Because the embedded data is loaded
+	 * This should be used whenever you want to create a `Bitmap` that uses `BitmapData` embedded with the
+	 * `@:bitmap` metadata, if you want to support both Flash and HTML5. Because the embedded data is loaded
 	 * asynchronously in HTML5, any code that depends on the pixel data or size of the bitmap should be
-	 * in the onLoad function; any such code executed before it is called will fail on the HTML5 target.
+	 * in the `onLoad` function; any such code executed before it is called will fail on the HTML5 target.
 	 *
-	 * @param	bitmapDataClass		A reference to the BitmapData child class that contains the embedded data which is to be used.
-	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new Bitmap instance is passed as an argument.
-	 * @return  The Bitmap instance that was created.
+	 * @param bitmapDataClass A reference to the `BitmapData` child class that contains the embedded data which is to be used.
+	 * @param onLoad Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new `Bitmap` instance is passed as an argument.
+	 * @return The `Bitmap` instance that was created.
 	 */
 	function createBitmap(bitmapDataClass:Class<BitmapData>, onLoad:Bitmap->Void):Bitmap
 	{
@@ -227,15 +227,15 @@ class FlxBasePreloader extends DefaultPreloader
 	}
 
 	/**
-	 * This should be used whenever you want to create a BitmapData object from a class containing data embedded with
-	 * the @:bitmap metadata. Often, you'll want to use the BitmapData in a Bitmap object; in this case, createBitmap()
-	 * can should be used instead. Because the embedded data is loaded asynchronously in HTML5, any code that depends on
+	 * This should be used whenever you want to create a `BitmapData` object from a class containing data embedded with
+	 * the `@:bitmap` metadata. Often, you'll want to use the `BitmapData` in a `Bitmap` object; in this case, `createBitmap()`
+	 * should be used instead. Because the embedded data is loaded asynchronously in HTML5, any code that depends on
 	 * the pixel data or size of the bitmap should be in the onLoad function; any such code executed before it is called
 	 * will fail on the HTML5 target.
 	 *
-	 * @param	bitmapDataClass		A reference to the BitmapData child class that contains the embedded data which is to be used.
-	 * @param	onLoad				Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new BitmapData instance is passed as an argument.
-	 * @return  The BitmapData instance that was created.
+	 * @param bitmapDataClass A reference to the `BitmapData` child class that contains the embedded data which is to be used.
+	 * @param onLoad Executed once the bitmap data is finished loading in HTML5, and immediately in Flash. The new `BitmapData` instance is passed as an argument.
+	 * @return The `BitmapData` instance that was created.
 	 */
 	function loadBitmapData(bitmapDataClass:Class<BitmapData>, onLoad:BitmapData->Void):BitmapData
 	{
@@ -249,7 +249,7 @@ class FlxBasePreloader extends DefaultPreloader
 	}
 
 	/**
-	 * Site-locking Functionality
+	 * Site-locking functionality.
 	 */
 	function checkSiteLock():Void
 	{

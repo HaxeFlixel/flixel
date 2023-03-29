@@ -1,10 +1,10 @@
 package flixel.input.touch;
 
 #if FLX_TOUCH
-import flash.Lib;
-import flash.events.TouchEvent;
-import flash.ui.Multitouch;
-import flash.ui.MultitouchInputMode;
+import openfl.Lib;
+import openfl.events.TouchEvent;
+import openfl.ui.Multitouch;
+import openfl.ui.MultitouchInputMode;
 
 /**
  * @author Zaphod
@@ -17,7 +17,7 @@ class FlxTouchManager implements IFlxInputManager
 	public static var maxTouchPoints:Int = 0;
 
 	/**
-	 * All active touches including just created, moving and just released.
+	 * All active touches including just created, moving, and just released.
 	 */
 	public var list:Array<FlxTouch>;
 
@@ -27,12 +27,12 @@ class FlxTouchManager implements IFlxInputManager
 	var _inactiveTouches:Array<FlxTouch>;
 
 	/**
-	 * Helper storage for active touches (for faster access)
+	 * Helper storage for active touches (for faster access).
 	 */
 	var _touchesCache:Map<Int, FlxTouch>;
 
 	/**
-	 * WARNING: can be null if no active touch with the provided ID could be found
+	 * WARNING: Can be `null` if no active touch with the provided ID could be found.
 	 */
 	public inline function getByID(TouchPointID:Int):FlxTouch
 	{
@@ -40,7 +40,7 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Return the first touch if there is one, beware of null
+	 * Returns the first touch if there is one, or `null` otherwise.
 	 */
 	public function getFirst():FlxTouch
 	{
@@ -55,7 +55,7 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Clean up memory. Internal use only.
+	 * Cleans up memory. Internal use only.
 	 */
 	@:noCompletion
 	public function destroy():Void
@@ -76,10 +76,10 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Gets all touches which were just started
+	 * Gets all touches which were just started.
 	 *
-	 * @param	TouchArray	Optional array to fill with touch objects
-	 * @return	Array with touches
+	 * @param TouchArray Optional array to fill with touch objects.
+	 * @return Array with touches.
 	 */
 	public function justStarted(?TouchArray:Array<FlxTouch>):Array<FlxTouch>
 	{
@@ -107,10 +107,10 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Gets all touches which were just ended
+	 * Gets all touches which were just ended.
 	 *
-	 * @param	TouchArray	Optional array to fill with touch objects
-	 * @return	Array with touches
+	 * @param TouchArray Optional array to fill with touch objects.
+	 * @return Array with touches.
 	 */
 	public function justReleased(?TouchArray:Array<FlxTouch>):Array<FlxTouch>
 	{
@@ -170,7 +170,7 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Event handler so FlxGame can update touches.
+	 * Event handler so `FlxGame` can update touches.
 	 */
 	function handleTouchBegin(FlashEvent:TouchEvent):Void
 	{
@@ -188,7 +188,7 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Event handler so FlxGame can update touches.
+	 * Event handler so `FlxGame` can update touches.
 	 */
 	function handleTouchEnd(FlashEvent:TouchEvent):Void
 	{
@@ -201,7 +201,7 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Event handler so FlxGame can update touches.
+	 * Event handler so `FlxGame` can update touches.
 	 */
 	function handleTouchMove(FlashEvent:TouchEvent):Void
 	{
@@ -215,10 +215,10 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Internal function for adding new touches to the manager
+	 * Internal function for adding new touches to the manager.
 	 *
-	 * @param	Touch	A new FlxTouch object
-	 * @return	The added FlxTouch object
+	 * @param Touch A new `FlxTouch` object.
+	 * @return The added `FlxTouch` object.
 	 */
 	function add(Touch:FlxTouch):FlxTouch
 	{
@@ -228,12 +228,12 @@ class FlxTouchManager implements IFlxInputManager
 	}
 
 	/**
-	 * Internal function for touch reuse
+	 * Internal function for touch reuse.
 	 *
-	 * @param	X			stageX touch coordinate
-	 * @param	Y			stageY touch coordinate
-	 * @param	PointID		id of the touch
-	 * @return	A recycled touch object
+	 * @param X `stageX` touch coordinate.
+	 * @param Y `stageY` touch coordinate.
+	 * @param PointID ID of the touch.
+	 * @return A recycled touch object.
 	 */
 	function recycle(X:Int, Y:Int, PointID:Int, pressure:Float):FlxTouch
 	{

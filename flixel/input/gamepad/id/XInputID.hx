@@ -3,22 +3,22 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
-	* IDs for generic XInput controllers
-	*
-	* Compatible with the Xbox 360 controller, the Xbox One controller, and anything that masquerades as either of those.
-	*
-	*-------
-	* NOTES
-	*-------
-	*
-	* WINDOWS: we assume the user is using the default drivers that ship with windows.
-	*
-	* LINUX: we assume the user is using the xpad driver, specifically Valve's version, steamos-xpad-dkms
-	* (we got weird errors when using xboxdrv). For full instructions on installation, see:
-	* http://askubuntu.com/questions/165210/how-do-i-get-an-xbox-360-controller-working/441548#441548
-	*
-	* MAC: we assume the user is using the 360 Controller driver, specifically this one:
-	* https://github.com/360Controller/360Controller/releases
+ * IDs for generic XInput controllers.
+ *
+ * Compatible with the Xbox 360 controller, the Xbox One controller, and anything that masquerades as either of those.
+ *
+ * -----
+ * NOTES
+ * -----
+ *
+ * WINDOWS: We assume the user is using the default drivers that ship with Windows.
+ *
+ * LINUX: We assume the user is using the Xpad driver, specifically Valve's version, `steamos-xpad-dkms`
+ * (we got weird errors when using xboxdrv). For full instructions on installation, see:
+ * https://askubuntu.com/questions/165210/how-do-i-get-an-xbox-360-controller-working/441548#441548
+ *
+ * MAC: We assume the user is using the 360 Controller driver, specifically this one:
+ * https://github.com/360Controller/360Controller/releases
  */
 class XInputID
 {

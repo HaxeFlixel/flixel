@@ -1,9 +1,10 @@
 package flixel.util;
 
 /**
- * Just an internal helper to deal with the deprecation of `haxe.Utf8` - not considered public API.
- * Todo: Remove and use Unicode strings
+ * An internal helper to deal with the deprecation of `haxe.Utf8`. Not considered public API.
  */
+// TODO: Remove and use Unicode strings.
+
 @:dox(hide)
 @:noCompletion
 class FlxUnicodeUtil

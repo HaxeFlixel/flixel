@@ -1,8 +1,8 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
+import flixel.system.debug.log.LogStyle;
 import haxe.Log;
 import haxe.PosInfos;
 
@@ -12,7 +12,7 @@ import haxe.PosInfos;
 class LogFrontEnd
 {
 	/**
-	 * Whether everything you trace() is being redirected into the log window.
+	 * Whether everything you `trace()` is being redirected into the log window.
 	 */
 	public var redirectTraces(default, set):Bool = false;
 
@@ -47,11 +47,11 @@ class LogFrontEnd
 	}
 
 	/**
-	 * Add an advanced log message to the debugger by also specifying a LogStyle. Backend to FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice().
+	 * Adds an advanced log message to the debugger by also specifying a `LogStyle`. Backend to `FlxG.log.add()`, `FlxG.log.warn()`, `FlxG.log.error()`, and `FlxG.log.notice()`.
 	 *
-	 * @param	Data  		Any Data to log.
-	 * @param  	Style   	The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
-	 * @param  	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
+	 * @param Data Any data to log.
+	 * @param Style The `LogStyle` to use (e.g., `LogStyle.WARNING`). You can also create your own by importing the `LogStyle` class.
+	 * @param FireOnce Whether to only log the data if it hasn't been added already.
 	 */
 	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
 	{
@@ -121,10 +121,10 @@ class LogFrontEnd
 	}
 
 	/**
-	 * Internal function used as a interface between trace() and add().
+	 * Internal function used as a interface between `trace()` and `add()`.
 	 *
-	 * @param	Data	The data that has been traced
-	 * @param	Inf		Information about the position at which trace() was called
+	 * @param Data The data that has been traced.
+	 * @param Info Information about the position at which `trace()` was called.
 	 */
 	function processTraceData(Data:Dynamic, ?Info:PosInfos):Void
 	{

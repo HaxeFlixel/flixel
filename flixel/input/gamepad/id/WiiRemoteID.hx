@@ -3,11 +3,10 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
- * WiiRemote hardware input ID's when using the device directly
- * Hardware ID's: "Nintendo RVL-CNT-01-TR" and "Nintendo RVL-CNT-01" -- the latter does not have the Motion-Plus attachment
+ * WiiRemote hardware input IDs when using the device directly.
+ * Hardware IDs: "Nintendo RVL-CNT-01-TR" and "Nintendo RVL-CNT-01" -- the latter does not have the Motion-Plus attachment.
  *
- * NOTE: On Windows this requires the HID-Wiimote driver by Julian Löhr, available here:
- * https://github.com/jloehr/HID-Wiimote
+ * NOTE: On Windows, this requires the [HID-Wiimote driver by Julian Löhr](https://github.com/jloehr/HID-Wiimote).
  *
  * @author larsiusprime
  */
@@ -67,7 +66,7 @@ class WiiRemoteID
 	public static inline var NUNCHUK_NULL_AXIS:Int = 4;
 
 	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
-	// so we have to pass in some "fake" ID's to get simulated digital inputs
+	// so we have to pass in some "fake" IDs to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,
@@ -96,7 +95,7 @@ class WiiRemoteID
 	public static inline var LEFT_TRIGGER_FAKE:Int = 4;
 	public static inline var RIGHT_TRIGGER_FAKE:Int = 5;
 
-	// "fake" ID's
+	// "fake" IDs
 	public static inline var REMOTE_DPAD_UP:Int = 14;
 	public static inline var REMOTE_DPAD_DOWN:Int = 15;
 	public static inline var REMOTE_DPAD_LEFT:Int = 16;
@@ -169,7 +168,7 @@ class WiiRemoteID
 	public static inline var REMOTE_NULL_AXIS:Int = 4;
 	public static inline var NUNCHUK_NULL_AXIS:Int = 4;
 
-	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
+	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" IDs to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,
@@ -180,7 +179,7 @@ class WiiRemoteID
 	});
 
 	/**
-	 * the nunchuk only has the "left" analog stick
+	 * The nunchuk only has the "left" analog stick.
 	 */
 	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
 		up: 28,
@@ -190,7 +189,7 @@ class WiiRemoteID
 	});
 
 	/**
-	 * the classic controller has both the "left" and "right" analog sticks
+	 * The classic controller has both the "left" and "right" analog sticks.
 	 */
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
 		up: 32,
@@ -203,7 +202,7 @@ class WiiRemoteID
 	public static inline var LEFT_TRIGGER_FAKE:Int = 4;
 	public static inline var RIGHT_TRIGGER_FAKE:Int = 5;
 
-	// "fake" ID's
+	// "fake" IDs
 	public static inline var REMOTE_DPAD_UP:Int = 22;
 	public static inline var REMOTE_DPAD_DOWN:Int = 23;
 	public static inline var REMOTE_DPAD_LEFT:Int = 24;

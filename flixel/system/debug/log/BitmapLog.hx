@@ -1,29 +1,29 @@
 package flixel.system.debug.log;
 
 #if FLX_DEBUG
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.text.TextField;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
+import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
-import flixel.system.debug.FlxDebugger.GraphicArrowRight;
-import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.geom.Matrix;
+import openfl.text.TextField;
 
 using flixel.util.FlxBitmapDataUtil;
 
 /**
- * An output window that lets you paste BitmapData in the debugger overlay.
+ * An output window that lets you paste `BitmapData` in the debugger overlay.
  */
 class BitmapLog extends Window
 {
@@ -125,7 +125,7 @@ class BitmapLog extends Window
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -206,7 +206,7 @@ class BitmapLog extends Window
 	}
 
 	/**
-	 * Show the next logged BitmapData in memory
+	 * Shows the next logged `BitmapData` in memory.
 	 */
 	inline function next():Void
 	{
@@ -215,7 +215,7 @@ class BitmapLog extends Window
 	}
 
 	/**
-	 * Show the previous logged BitmapData in memory
+	 * Shows the previous logged `BitmapData` in memory.
 	 */
 	inline function previous():Void
 	{
@@ -230,7 +230,7 @@ class BitmapLog extends Window
 	}
 
 	/**
-	 * Add a BitmapData to the log
+	 * Adds a `BitmapData` to the log.
 	 */
 	public function add(bmp:BitmapData, name:String = ""):Bool
 	{
@@ -244,7 +244,7 @@ class BitmapLog extends Window
 	}
 
 	/**
-	 * Clear one bitmap object from the log -- the last one, by default
+	 * Clears one bitmap object from the log. Clears the last one by default.
 	 */
 	public function clearAt(Index:Int = -1):Void
 	{
@@ -392,5 +392,5 @@ typedef BitmapLogEntry =
 {
 	bitmap:BitmapData,
 	name:String
-}
+};
 #end

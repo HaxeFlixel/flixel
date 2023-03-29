@@ -4,9 +4,9 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
  * Native PSVita input values.
- * (The only way to use these is to actually be using a PSVita with the upcoming openfl vita target!)
+ * (The only way to use these is to actually be using a PSVita with the upcoming OpenFL vita target!)
  *
- * This will ONLY work with the gamepad API (available only in OpenFL "next", not "legacy") and will NOT work with the joystick API
+ * This will ONLY work with the gamepad API (available only in OpenFL "next", not "legacy") and will NOT work with the joystick API.
  */
 class PSVitaID
 {

@@ -4,7 +4,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
  * A generic container that facilitates pooling and recycling of objects.
- * WARNING: Pooled objects must have parameter-less constructors: function new()
+ * WARNING: Pooled objects must have parameter-less constructors (i.e., `function new()`).
  */
 #if !display
 @:generic

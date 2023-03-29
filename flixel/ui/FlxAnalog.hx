@@ -12,14 +12,14 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil;
 
 /**
- * A virtual thumbstick - useful for input on mobile devices.
+ * A virtual thumbstick. Useful for input on mobile devices.
  *
  * @author Ka Wing Chin
  */
 class FlxAnalog extends FlxSpriteGroup
 {
 	/**
-	 * Shows the current state of the button.
+	 * The current state of the button.
 	 */
 	public var status:Int = NORMAL;
 
@@ -31,37 +31,37 @@ class FlxAnalog extends FlxSpriteGroup
 	public var base:FlxSprite;
 
 	/**
-	 * This function is called when the button is released.
+	 * A function that is called when the button is released.
 	 */
 	public var onUp:Void->Void;
 
 	/**
-	 * This function is called when the button is pressed down.
+	 * A function that is called when the button is pressed down.
 	 */
 	public var onDown:Void->Void;
 
 	/**
-	 * This function is called when the mouse goes over the button.
+	 * A function that is called when the mouse goes over the button.
 	 */
 	public var onOver:Void->Void;
 
 	/**
-	 * This function is called when the button is hold down.
+	 * A function that is called when the button is hold down.
 	 */
 	public var onPressed:Void->Void;
 
 	/**
-	 * Used with public variable status, means not highlighted or pressed.
+	 * Used with public variable status. Means not highlighted or pressed.
 	 */
 	static inline var NORMAL:Int = 0;
 
 	/**
-	 * Used with public variable status, means highlighted (usually from mouse over).
+	 * Used with public variable status. Means highlighted (usually from mouse over).
 	 */
 	static inline var HIGHLIGHT:Int = 1;
 
 	/**
-	 * Used with public variable status, means pressed (usually from mouse click).
+	 * Used with public variable status. Means pressed (usually from mouse click).
 	 */
 	static inline var PRESSED:Int = 2;
 
@@ -77,13 +77,13 @@ class FlxAnalog extends FlxSpriteGroup
 	var _currentTouch:FlxTouch;
 
 	/**
-	 * Helper array for checking touches
+	 * Helper array for checking touches.
 	 */
 	var _tempTouches:Array<FlxTouch> = [];
 	#end
 
 	/**
-	 * The area which the joystick will react.
+	 * The area in which the joystick will react.
 	 */
 	var _zone:FlxRect = FlxRect.get();
 
@@ -101,14 +101,14 @@ class FlxAnalog extends FlxSpriteGroup
 	var _ease:Float;
 
 	/**
-	 * Create a virtual thumbstick - useful for input on mobile devices.
+	 * Creates a virtual thumbstick. Useful for input on mobile devices.
 	 *
-	 * @param   X            The X-coordinate of the point in space.
-	 * @param   Y            The Y-coordinate of the point in space.
-	 * @param   Radius       The radius where the thumb can move. If 0, half the base's width will be used.
-	 * @param   Ease         Used to smoothly back thumb to center. Must be between 0 and (FlxG.updateFrameRate / 60).
-	 * @param   BaseGraphic  The graphic you want to display as base of the joystick.
-	 * @param   ThumbGraphic The graphic you want to display as thumb of the joystick.
+	 * @param X The x-coordinate of the point in space.
+	 * @param Y The y-coordinate of the point in space.
+	 * @param Radius The radius where the thumb can move. If `0`, half the base's width will be used.
+	 * @param Ease Used to smoothly back thumb to center. Must be between `0` and `(FlxG.updateFrameRate / 60)`.
+	 * @param BaseGraphic The graphic you want to display as base of the joystick.
+	 * @param ThumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, Radius:Float = 0, Ease:Float = 0.25, ?BaseGraphic:FlxGraphicAsset, ?ThumbGraphic:FlxGraphicAsset)
 	{
@@ -190,7 +190,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -213,7 +213,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 
 	/**
-	 * Update the behavior.
+	 * Updates the behavior.
 	 */
 	override public function update(elapsed:Float):Void
 	{
@@ -390,7 +390,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 
 	/**
-	 * Whether the thumb is pressed or not.
+	 * Whether the thumb is pressed.
 	 */
 	public var pressed(get, never):Bool;
 
@@ -400,7 +400,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 
 	/**
-	 * Whether the thumb is just pressed or not.
+	 * Whether the thumb is just pressed.
 	 */
 	public var justPressed(get, never):Bool;
 
@@ -421,7 +421,7 @@ class FlxAnalog extends FlxSpriteGroup
 	}
 
 	/**
-	 * Whether the thumb is just released or not.
+	 * Whether the thumb is just released.
 	 */
 	public var justReleased(get, never):Bool;
 

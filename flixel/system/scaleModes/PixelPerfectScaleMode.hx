@@ -7,7 +7,7 @@ import flixel.FlxG;
  * When you shrink or grow the window, the width and height of the game will adjust,
  * either scaling the game or adding black bars as needed.
  * 
- * However, it will only scale the game by integer factors, to maintain pixel perfect rendering.
+ * However, it will only scale the game by integer factors, to maintain pixel-perfect rendering.
  * This may cause the game window to be windowboxed on all sides, scaling the game up only when there is
  * enough room to exactly double the render scale.
  * 

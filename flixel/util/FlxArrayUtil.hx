@@ -8,8 +8,8 @@ class FlxArrayUtil
 	/**
 	 * Sets the length of an array.
 	 *
-	 * @param	array		The array.
-	 * @param	newLength	The length you want the array to have.
+	 * @param array The array.
+	 * @param newLength The new length of the array.
 	 */
 	@:generic
 	public static function setLength<T>(array:Array<T>, newLength:Int):Array<T>
@@ -38,9 +38,9 @@ class FlxArrayUtil
 	 * (won't do anything if the element is not in the array). This is a lot faster than regular `splice()`,
 	 * but it can only be used on arrays where order doesn't matter.
 	 *
-	 * @param	array	The array to remove the element from
-	 * @param 	element	The element to remove from the array
-	 * @return	The array
+	 * @param array The array to remove the element from.
+	 * @param element The element to remove from the array.
+	 * @return The array.
 	 */
 	@:generic
 	public static inline function fastSplice<T>(array:Array<T>, element:T):Array<T>
@@ -55,7 +55,7 @@ class FlxArrayUtil
 	 * Removes an element from an array by swapping it with the last element and calling `pop()`.
 	 * This is a lot faster than regular `splice()`, but it can only be used on arrays where order doesn't matter.
 	 *
-	 * IMPORTANT: always count down from length to zero if removing elements from within a loop
+	 * IMPORTANT: Always count down from `length` to `0` if removing elements from within a loop.
 	 *
 	 * ```haxe
 	 * using flixel.util.FlxArrayUtil;
@@ -70,9 +70,9 @@ class FlxArrayUtil
 	 * }
 	 * ```
 	 *
-	 * @param	array	The array to remove the element from
-	 * @param 	index	The index of the element to be removed from the array
-	 * @return	The array
+	 * @param array The array to remove the element from.
+	 * @param index The index of the element to be removed from the array.
+	 * @return The array.
 	 */
 	@:generic
 	public static inline function swapAndPop<T>(array:Array<T>, index:Int):Array<T>
@@ -83,11 +83,11 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Swaps two elements of an array, which are located at indices `index1` and `index2`
-	 * @param array The array whose elements need to be swapped
-	 * @param index1 The index of one of the elements to be swapped
-	 * @param index2 The index of the other element to be swapped
-	 * @return The array
+	 * Swaps two elements of an array by their indices.
+	 * @param array The array whose elements need to be swapped.
+	 * @param index1 The index of one of the elements to be swapped.
+	 * @param index2 The index of the other element to be swapped.
+	 * @return The array.
 	 */
 	public static inline function swapByIndex<T>(array:Array<T>, index1:Int, index2:Int):Array<T>
 	{
@@ -98,15 +98,15 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Swaps two elements of an array, which are located at indices `index1` and `index2` and also checks if the indices are valid before swapping
-	 * @param array The array whose elements need to be swapped
-	 * @param index1 The index of one of the elements to be swapped
-	 * @param index2 The index of the other element to be swapped
-	 * @return The array
+	 * Swaps two elements of an array by their indices. Checks whether the indices are valid before swapping.
+	 * @param array The array whose elements need to be swapped.
+	 * @param index1 The index of one of the elements to be swapped.
+	 * @param index2 The index of the other element to be swapped.
+	 * @return The array.
 	 */
 	public static inline function safeSwapByIndex<T>(array:Array<T>, index1:Int, index2:Int):Array<T>
 	{
-		if(index1 >= 0 && index1 < array.length && index2 >= 0 && index2 < array.length)
+		if (index1 >= 0 && index1 < array.length && index2 >= 0 && index2 < array.length)
 		{
 			swapByIndex(array, index1, index2);
 		}
@@ -114,11 +114,11 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Swaps two items, `item1` and `item2` which are in the array
-	 * @param array The array whose elements need to be swapped
-	 * @param item1 One of the elements of the array which needs to be swapped
-	 * @param item2 The other element of the array which needs to be swapped
-	 * @return The array
+	 * Swaps two elements of an array.
+	 * @param array The array whose elements need to be swapped.
+	 * @param item1 One of the elements of the array which needs to be swapped.
+	 * @param item2 The other element of the array which needs to be swapped.
+	 * @return The array.
 	 */
 	public static inline function swap<T>(array:Array<T>, item1:T, item2:T):Array<T>
 	{
@@ -126,11 +126,11 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Swaps two items, `item1` and `item2` which are in the array, but only if both elements are present in the array
-	 * @param array The array whose elements need to be swapped
-	 * @param item1 One of the elements of the array which needs to be swapped
-	 * @param item2 The other element of the array which needs to be swapped
-	 * @return The array
+	 * Swaps two elements of an array. Only swaps if both elements are present in the array.
+	 * @param array The array whose elements need to be swapped.
+	 * @param item1 One of the elements of the array which needs to be swapped.
+	 * @param item2 The other element of the array which needs to be swapped.
+	 * @return The array.
 	 */
 	public static inline function safeSwap<T>(array:Array<T>, item1:T, item2:T):Array<T>
 	{
@@ -138,12 +138,12 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Clears an array structure, but leaves the object data untouched
+	 * Clears an array structure, but leaves the object data untouched.
 	 * Useful for cleaning up temporary references to data you want to preserve.
 	 * WARNING: Can lead to memory leaks.
 	 *
-	 * @param	array		The array to clear out
-	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too
+	 * @param array The array to clear.
+	 * @param recursive Whether to search for arrays inside of the array and clear them, too.
 	 */
 	public static function clearArray<T>(array:Array<T>, recursive:Bool = false):Array<T>
 	{
@@ -169,8 +169,8 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Flattens 2D arrays into 1D arrays.
-	 * Example: `[[1, 2], [3, 2], [1, 1]]` -> `[1, 2, 3, 2, 1, 1]`
+	 * Flattens a 2D array into a 1D array.
+	 * Example: `[[1, 2], [3, 2], [1, 1]]` -> `[1, 2, 3, 2, 1, 1]`.
 	 */
 	@:generic
 	public static function flatten2DArray<T>(array:Array<Array<T>>):Array<T>
@@ -183,8 +183,8 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Compares the contents with `==` to see if the two arrays are the same.
-	 * Also takes null arrays and the length of the arrays into account.
+	 * Compares the contents with `==` to see whether the two arrays are the same.
+	 * Also takes `null` arrays and the `length`s of the arrays into account.
 	 */
 	public static function equals<T>(array1:Array<T>, array2:Array<T>):Bool
 	{
@@ -205,7 +205,7 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Returns the last element of an array or `null` if the array is `null` / empty.
+	 * Returns the last element of an array, or `null` if the array is `null` / empty.
 	 */
 	public static function last<T>(array:Array<T>):Null<T>
 	{
@@ -215,14 +215,14 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Pushes the element into the array (and if the array is null, creates it first) and returns the array.
+	 * Pushes the element into the array (and, if the array is `null`, creates it first) and returns the array.
 	 * @since 4.6.0
 	 */
 	public static function safePush<T>(array:Null<Array<T>>, element:T):Array<T>
 	{
 		if (array == null)
 			array = [];
-		
+
 		array.push(element);
 		return array;
 	}
@@ -233,7 +233,7 @@ class FlxArrayUtil
 	}
 
 	/**
-	 * Returns true if the array is not null and contains the element.
+	 * Checks whether the array is not `null` and contains the element.
 	 * @since 5.0.0
 	 */
 	public static inline function safeContains<T>(array:Null<Array<T>>, element:T):Bool

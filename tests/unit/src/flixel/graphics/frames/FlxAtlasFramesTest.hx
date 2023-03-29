@@ -1,8 +1,8 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
 import haxe.Json;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxAtlasFramesTest extends FlxTest
 {

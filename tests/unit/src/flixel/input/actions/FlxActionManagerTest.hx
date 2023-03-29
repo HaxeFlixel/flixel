@@ -1,10 +1,10 @@
 package flixel.input.actions;
 
 #if FLX_GAMEINPUT_API
-import openfl.ui.GameInput;
-import openfl.ui.GameInputDevice;
-import openfl.ui.GameInputControl;
 import lime.ui.Gamepad;
+import openfl.ui.GameInput;
+import openfl.ui.GameInputControl;
+import openfl.ui.GameInputDevice;
 #elseif FLX_JOYSTICK_API
 import openfl.events.JoystickEvent;
 #end
@@ -12,16 +12,16 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxAction.FlxActionAnalog;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
+import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogMouseMotion;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalKeyboard;
 import flixel.input.gamepad.FlxGamepad.FlxGamepadModel;
 import flixel.input.keyboard.FlxKey;
 import haxe.Json;
-import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+import massive.munit.Assert;
 #if FLX_STEAMWRAP
 import steamwrap.data.ControllerConfig;
 #end
-import massive.munit.Assert;
 
 class FlxActionManagerTest extends FlxTest
 {
@@ -619,7 +619,7 @@ class FlxActionManagerTest extends FlxTest
 			var setIndex = steamManager.getSetIndex(setName);
 			var set:FlxActionSet = steamManager.getSet(setIndex);
 
-			//Set up fake steam handles since we don't have Steam to do it automatically
+			//Set up fake Steam handles since we don't have Steam to do it automatically
 			for (i in 0...set.digitalActions.length)
 			{
 				var d:FlxActionDigital = set.digitalActions[i];
@@ -680,7 +680,7 @@ class FlxActionManagerTest extends FlxTest
 				}
 			);
 
-			//Activate this action set for Steam Controller 1 (handle 0), which should attach steam inputs to the actions under the hood, and trigger our signal
+			//Activate this action set for Steam Controller 1 (handle 0), which should attach Steam inputs to the actions under the hood, and trigger our signal
 			steamManager.activateSet(setIndex, FlxInputDevice.STEAM_CONTROLLER, controller);
 
 			step();
@@ -698,7 +698,7 @@ class FlxActionManagerTest extends FlxTest
 		 */
 	}
 
-	@Ignore("Failing on CPP / haxe stable?") @Test
+	@Ignore("Failing on CPP / Haxe stable?") @Test
 	function testUpdateAndCallbacks()
 	{
 		var managerText = '{"actionSets":[{"name":"MenuControls","analogActions":["menu_move"],"digitalActions":["menu_up","menu_down","menu_left","menu_right","menu_select","menu_menu","menu_cancel","menu_thing_1","menu_thing_2","menu_thing_3"]},{"name":"MapControls","analogActions":["scroll_map","move_map"],"digitalActions":["map_select","map_exit","map_menu","map_journal"]},{"name":"BattleControls","analogActions":["move"],"digitalActions":["punch","kick","jump"]}]}';

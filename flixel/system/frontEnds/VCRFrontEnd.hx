@@ -1,17 +1,17 @@
 package flixel.system.frontEnds;
 
-import flash.ui.Mouse;
 import flixel.FlxG;
+import openfl.ui.Mouse;
 #if FLX_RECORD
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.utils.ByteArray;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxRandom;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.utils.ByteArray;
 #if flash
-import flash.net.FileReference;
-import flash.net.FileFilter;
+import openfl.net.FileFilter;
+import openfl.net.FileReference;
 #end
 #end
 
@@ -33,7 +33,7 @@ class VCRFrontEnd
 	public var replayCallback:Void->Void;
 
 	/**
-	 * The keys used to toggle the debugger. "MOUSE" to cancel with the mouse.
+	 * The keys used to toggle the debugger. `MOUSE` to cancel with the mouse.
 	 * Handy for skipping cutscenes or getting out of attract modes!
 	 */
 	public var cancelKeys:Array<FlxKey>;
@@ -59,8 +59,8 @@ class VCRFrontEnd
 	public var stepRequested:Bool = false;
 
 	/**
-	 * Pause the main game loop
-	**/
+	 * Pauses the main game loop.
+	 */
 	public function pause():Void
 	{
 		if (!paused)
@@ -79,8 +79,8 @@ class VCRFrontEnd
 	}
 
 	/**
-	 * Resume the main game loop from FlxG.vcr.pause();
-	**/
+	 * Resumes the main game loop from `FlxG.vcr.pause()`.
+	 */
 	public function resume():Void
 	{
 		if (paused)
@@ -103,7 +103,7 @@ class VCRFrontEnd
 	 * Called when the user presses the Rewind-looking button. If Alt is pressed, the entire game is reset.
 	 * If Alt is NOT pressed, only the current state is reset. The GUI is updated accordingly.
 	 *
-	 * @param	StandardMode	Whether to reset the current game (== true), or just the current state.  Just resetting the current state can be very handy for debugging.
+	 * @param StandardMode Whether to reset the current game (`== true`), or just the current state. Just resetting the current state can be very handy for debugging.
 	 */
 	public function restartReplay(StandardMode:Bool = false):Void
 	{
@@ -112,13 +112,13 @@ class VCRFrontEnd
 	}
 
 	/**
-	 * Load replay data from a string and play it back.
+	 * Loads replay data from a string and plays it back.
 	 *
-	 * @param	Data		The replay that you want to load.
-	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
-	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
-	 * @param	Timeout		Optional parameter: set a time limit for the replay. CancelKeys will override this if pressed.
-	 * @param	Callback	Optional parameter: if set, called when the replay finishes. Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
+	 * @param Data The replay that you want to load.
+	 * @param State Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
+	 * @param CancelKeys Optional array of string names of keys (see `FlxKeyboard`) that can be pressed to cancel the playback (e.g., `[ESCAPE, ENTER]`). Also accepts 2 custom key names: `ANY` and `MOUSE` (fairly self-explanatory, I hope!).
+	 * @param Timeout Optional time limit for the replay. `CancelKeys` will override this if pressed.
+	 * @param Callback Optional callback that is called when the replay finishes. Running to the end, `CancelKeys`, and `Timeout` will all trigger `Callback()`, but only once, and `CancelKeys` and `Timeout` will NOT call `FlxG.stopReplay()` if `Callback` is set!
 	 */
 	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<FlxKey>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
 	{
@@ -155,7 +155,7 @@ class VCRFrontEnd
 	/**
 	 * Resets the game or state and replay requested flag.
 	 *
-	 * @param	StandardMode	If true, reload entire game, else just reload current game state.
+	 * @param StandardMode If `true`, reloads the entire game; else, just reloads the current game state.
 	 */
 	public function reloadReplay(StandardMode:Bool = true):Void
 	{
@@ -211,7 +211,7 @@ class VCRFrontEnd
 	/**
 	 * Resets the game or state and requests a new recording.
 	 *
-	 * @param	StandardMode	If true, reset the entire game, else just reset the current state.
+	 * @param StandardMode If `true`, resets the entire game; else, just resets the current state.
 	 */
 	public function startRecording(StandardMode:Bool = true):Void
 	{
@@ -233,11 +233,10 @@ class VCRFrontEnd
 	}
 
 	/**
-	 * Stop recording the current replay and return the replay data.
+	 * Stops recording the current replay and returns the replay data.
 	 *
-	 * @param	OpenSaveDialog	If true, and targeting flash, open an OS-native save dialog for the user to choose where to save the data, and save it there.
-	 *
-	 * @return	The replay data in simple ASCII format (see FlxReplay.save()).
+	 * @param OpenSaveDialog If `true`, and targeting Flash, open an OS-native save dialog for the user to choose where to save the data, and save it there.
+	 * @return The replay data in simple ASCII format (see `FlxReplay#save()`).
 	 */
 	public inline function stopRecording(OpenSaveDialog:Bool = true):String
 	{
@@ -278,7 +277,7 @@ class VCRFrontEnd
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	function destroy():Void
 	{
@@ -326,7 +325,7 @@ class VCRFrontEnd
 		_file = null;
 		if ((fileContents == null) || (fileContents.length <= 0))
 		{
-			FlxG.log.error("Empty flixel gameplay record.");
+			FlxG.log.error("Empty Flixel gameplay record.");
 			return;
 		}
 
@@ -335,7 +334,7 @@ class VCRFrontEnd
 	}
 
 	/**
-	 * Called if the open file dialog is canceled.
+	 * Called if the open file dialog is cancelled.
 	 */
 	function onOpenCancel(_):Void
 	{
@@ -355,7 +354,7 @@ class VCRFrontEnd
 		_file.removeEventListener(Event.COMPLETE, onOpenComplete);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onOpenError);
 		_file = null;
-		FlxG.log.error("Unable to open flixel gameplay record.");
+		FlxG.log.error("Unable to open Flixel gameplay record.");
 		#end
 	}
 
@@ -369,7 +368,7 @@ class VCRFrontEnd
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log.notice("Successfully saved flixel gameplay record.");
+		FlxG.log.notice("Successfully saved Flixel gameplay record.");
 		#end
 	}
 
@@ -396,7 +395,7 @@ class VCRFrontEnd
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log.error("Problem saving flixel gameplay record.");
+		FlxG.log.error("Problem saving Flixel gameplay record.");
 		#end
 	}
 	#end

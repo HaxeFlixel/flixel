@@ -80,7 +80,7 @@ class OUYAMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
+
 	override function getInputLabel(id:FlxGamepadInputID)
 	{
 		return switch (id)
@@ -98,11 +98,7 @@ class OUYAMapping extends FlxGamepadMapping
 	override public function axisIndexToRawID(axisID:Int):Int
 	{
 		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X; else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y; else if (axisID == rightStick.x)
-			RIGHT_ANALOG_STICK_FAKE_X;
-		else if (axisID == rightStick.y)
-			RIGHT_ANALOG_STICK_FAKE_Y;
-		else
-			axisID;
+			RIGHT_ANALOG_STICK_FAKE_X; else if (axisID == rightStick.y) RIGHT_ANALOG_STICK_FAKE_Y; else axisID;
 	}
 	#end
 }

@@ -1,9 +1,5 @@
 package flixel.tile;
 
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -24,37 +20,44 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.Graphics;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+
+using flixel.util.FlxColorTransformUtil;
+
 #if (haxe_ver >= 4.2)
 import Std.isOfType;
 #else
 import Std.is as isOfType;
 #end
 
-using flixel.util.FlxColorTransformUtil;
-
 #if html5
 /**
- * BitmapData loaded via @:bitmap is loaded asynchronously, this allows us to apply frame
- * padding to the bitmap once it's loaded rather
+ * `BitmapData` loaded via `@:bitmap` is loaded asynchronously. This allows us to apply frame
+ * padding to the bitmap once it's loaded.
  */
 private interface IEmbeddedBitmapData
 {
-	var onLoad:()->Void;
+	var onLoad:() -> Void;
 }
 
 @:keep @:bitmap("assets/images/tile/autotiles.png")
 private class RawGraphicAuto extends BitmapData {}
+
 class GraphicAuto extends RawGraphicAuto implements IEmbeddedBitmapData
 {
 	static inline var WIDTH = 128;
 	static inline var HEIGHT = 8;
 
-	public var onLoad:()->Void;
-	public function new ()
+	public var onLoad:() -> Void;
+
+	public function new()
 	{
-		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_) -> if (onLoad != null) onLoad());
 		// Set properties because `@:bitmap` constructors ignore width/height
 		this.width = WIDTH;
 		this.height = HEIGHT;
@@ -63,15 +66,17 @@ class GraphicAuto extends RawGraphicAuto implements IEmbeddedBitmapData
 
 @:keep @:bitmap("assets/images/tile/autotiles_alt.png")
 private class RawGraphicAutoAlt extends BitmapData {}
+
 class GraphicAutoAlt extends RawGraphicAutoAlt implements IEmbeddedBitmapData
 {
 	static inline var WIDTH = 128;
 	static inline var HEIGHT = 8;
 
-	public var onLoad:()->Void;
-	public function new ()
+	public var onLoad:() -> Void;
+
+	public function new()
 	{
-		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_) -> if (onLoad != null) onLoad());
 		// Set properties because `@:bitmap` constructors ignore width/height
 		this.width = WIDTH;
 		this.height = HEIGHT;
@@ -80,15 +85,17 @@ class GraphicAutoAlt extends RawGraphicAutoAlt implements IEmbeddedBitmapData
 
 @:keep @:bitmap("assets/images/tile/autotiles_full.png")
 private class RawGraphicAutoFull extends BitmapData {}
+
 class GraphicAutoFull extends RawGraphicAutoFull implements IEmbeddedBitmapData
 {
 	static inline var WIDTH = 256;
 	static inline var HEIGHT = 48;
 
-	public var onLoad:()->Void;
-	public function new ()
+	public var onLoad:() -> Void;
+
+	public function new()
 	{
-		super(WIDTH, HEIGHT, true, 0xFFffffff, (_)-> if (onLoad != null) onLoad());
+		super(WIDTH, HEIGHT, true, 0xFFffffff, (_) -> if (onLoad != null) onLoad());
 		// Set properties because `@:bitmap` constructors ignore width/height
 		this.width = WIDTH;
 		this.height = HEIGHT;
@@ -114,60 +121,61 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 {
 	/**
 	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
-	 * number of pixels. Ignored if <= 0
+	 * number of pixels. Ignored if `<= 0`.
 	 */
 	public static var defaultFramePadding = 2;
 
 	/**
-	 * DISABLED, the static var `defaultFramePadding` fixes the tearing issue in a more performant
+	 * DISABLED. The static var `defaultFramePadding` fixes the tearing issue in a more performant
 	 * and visually appealing way.
 	 */
-	@:deprecated("useScaleHaxe is no longer needed")
+	@:deprecated("useScaleHack is no longer needed nor used")
 	@:noCompletion
 	public var useScaleHack:Bool = false;
 
 	/**
-	 * Changes the size of this tilemap. Default is (1, 1).
+	 * Changes the size of this tilemap. Default is `(1, 1)`.
 	 * Anything other than the default is very slow with blitting!
 	 */
 	public var scale(default, null):FlxPoint;
 
 	/**
-	 * Controls whether the object is smoothed when rotated, affects performance.
-	 * @since 4.1.0
+	 * Whether the object is smoothed when rotated. Affects performance.
 	 * 
-	 * @see FlxSprite.defaultAntialiasing
+	 * @since 4.1.0
+	 * @see `FlxSprite.defaultAntialiasing`
 	 */
 	public var antialiasing(default, set):Bool = FlxSprite.defaultAntialiasing;
 
 	/**
-	 * Use to offset the drawing position of the tilemap,
-	 * just like FlxSprite.
+	 * The offset of the drawing position of the tilemap,
+	 * just like `FlxSprite`.
 	 */
 	public var offset(default, null):FlxPoint = FlxPoint.get();
 
 	/**
-	 * Rendering variables.
+	 * A collection of all frames in the current graphic.
 	 */
 	public var frames(default, set):FlxFramesCollection;
 
 	public var graphic(default, set):FlxGraphic;
 
 	/**
-	 * Tints the whole sprite to a color (0xRRGGBB format) - similar to OpenGL vertex colors. You can use
-	 * 0xAARRGGBB colors, but the alpha value will simply be ignored. To change the opacity use alpha.
+	 * Tints the whole tilemap to a color (RGB format). Similar to OpenGL vertex colors. You can use
+	 * ARGB colors, but the alpha value will simply be ignored. To change the opacity, use `alpha`.
 	 */
 	public var color(default, set):FlxColor = 0xffffff;
 
 	/**
-	 * Set alpha to a number between 0 and 1 to change the opacity of the sprite.
+	 * The opacity of the tilemap. Must be between `0.0` and `1.0`.
 	 */
 	public var alpha(default, set):Float = 1.0;
 
 	public var colorTransform(default, null):ColorTransform = new ColorTransform();
 
 	/**
-	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
+	 * The blending mode to use for drawing.
+	 * E.g. `MULTIPLY`, `SCREEN`, etc.
 	 */
 	public var blend(default, set):BlendMode = null;
 
@@ -190,7 +198,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * The scaled height of a single tile.
 	 */
 	public var scaledTileHeight(default, null):Float = 0;
-	
+
 	/**
 	 * The scaled width of the entire map.
 	 */
@@ -212,12 +220,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	public var shader:FlxShader;
 
 	/**
-	 * Rendering helper, minimize new object instantiation on repetitive methods.
+	 * Rendering helper. Minimizes new object instantiation on repetitive methods.
 	 */
 	var _flashPoint:Point = new Point();
 
 	/**
-	 * Rendering helper, minimize new object instantiation on repetitive methods.
+	 * Rendering helper. Minimizes new object instantiation on repetitive methods.
 	 */
 	var _flashRect:Rectangle = new Rectangle();
 
@@ -234,17 +242,17 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#end
 
 	/**
-	 * Rendering helper, minimize new object instantiation on repetitive methods. Used only in tile rendering mode
+	 * Rendering helper. Minimizes new object instantiation on repetitive methods. Used only in tile rendering mode.
 	 */
 	var _helperPoint:Point;
 
 	/**
-	 * Rendering helper, used for tile's frame transformations (only in tile rendering mode).
+	 * Rendering helper. Used for tile's frame transformations (only in tile rendering mode).
 	 */
 	var _matrix:FlxMatrix;
 
 	/**
-	 * Whether buffers need to be checked again next draw().
+	 * Whether buffers need to be checked again on the next `draw()` call.
 	 */
 	var _checkBufferChanges:Bool = false;
 
@@ -277,7 +285,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{
@@ -379,9 +387,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		else
 		{
 			#if html5
-			/* if Using tile graphics like GraphicAuto or others defined above, they will not
+			/*
+			 * If using tile graphics like `GraphicAuto` or others defined above, they will not
 			 * load immediately. Track their loading and apply frame padding after.
-			**/
+			 */
 			if (!graph.isLoaded && isOfType(graph.bitmap, IEmbeddedBitmapData))
 			{
 				var futureBitmap:IEmbeddedBitmapData = cast graph.bitmap;
@@ -402,12 +411,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	function padTileFrames(tileWidth:Int, tileHeight:Int, graphic:FlxGraphic, padding:Int)
 	{
-		return FlxTileFrames.fromBitmapAddSpacesAndBorders(
-			graphic,
-			FlxPoint.get(tileWidth, tileHeight),
-			null,
-			FlxPoint.get(padding, padding)
-		);
+		return FlxTileFrames.fromBitmapAddSpacesAndBorders(graphic, FlxPoint.get(tileWidth, tileHeight), null, FlxPoint.get(padding, padding));
 	}
 
 	override function initTileObjects():Void
@@ -566,11 +570,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#end
 
 	/**
-	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
-	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
+	 * Checks whether this object is currently on screen. Differs from `FlxObject`'s implementation
+	 * in that it takes the actual graphic into account, and not just the hitbox.
 	 *
-	 * @param   camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
-	 * @return  Whether the object is on screen or not.
+	 * @param camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the object is on screen.
 	 */
 	override public function isOnScreen(?camera:FlxCamera):Bool
 	{
@@ -655,10 +659,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Set the dirty flag on all the tilemap buffers.
+	 * Sets the `dirty` flag on all the tilemap buffers.
 	 * Basically forces a reset of the drawn tilemaps, even if it wasn't necessary.
 	 *
-	 * @param   dirty  Whether to flag the tilemap buffers as dirty or not.
+	 * @param dirty Whether to flag the tilemap buffers as dirty.
 	 */
 	override public function setDirty(dirty:Bool = true):Void
 	{
@@ -671,15 +675,15 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Checks if the Object overlaps any tiles with any collision flags set,
+	 * Checks if the object overlaps any tiles with any collision flags set,
 	 * and calls the specified callback function (if there is one).
 	 * Also calls the tile's registered callback if the filter matches.
 	 *
-	 * @param   object              The FlxObject you are checking for overlaps against.
-	 * @param   callback            An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
-	 * @param   flipCallbackParams  Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
-	 * @param   position            Optional, specify a custom position for the tilemap (useful for overlapsAt()-type functionality).
-	 * @return  Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
+	 * @param object The `FlxObject` you are checking for overlaps against.
+	 * @param callback An optional function that takes the form `myCallback(object1:FlxObject, object2:FlxObject)`, where `object1` is a `FlxTile` object, and `object2` is the object passed in in the first parameter of this method.
+	 * @param flipCallbackParams Used to preserve A-B list ordering from `FlxObject.separate()`. Returns the `FlxTile` object as the second parameter instead.
+	 * @param position Optional custom position for the tilemap (useful for `overlapsAt()`-type functionality).
+	 * @return Whether there were overlaps, or, if a callback was specified, whatever the return value of the callback was.
 	 */
 	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
@@ -811,9 +815,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Returns a new array full of every coordinate of the requested tile type.
 	 *
-	 * @param   index     The requested tile type.
-	 * @param   midpoint  Whether to return the coordinates of the tile midpoint, or upper left corner. Default is true, return midpoint.
-	 * @return  An Array with a list of all the coordinates of that tile type.
+	 * @param index The requested tile type.
+	 * @param midpoint Whether to return the coordinates of the tile midpoint, or upper-left corner. Default is `true`.
+	 * @return An `Array` with a list of all the coordinates of that tile type.
 	 */
 	public function getTileCoords(index:Int, midpoint = true):Array<FlxPoint>
 	{
@@ -846,38 +850,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Call this function to lock the automatic camera to the map's edges.
+	 * Locks the automatic camera to the map's edges.
 	 *
-	 * @param   camera       Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
-	 * @param   border       Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
-	 * @param   updateWorld  Whether to update the collision system's world size, default value is true.
+	 * @param camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @param border Adjusts the camera follow boundary by whatever number of tiles you specify here. Handy for blocking off dead-ends that are offscreen, etc. Use a negative number to add padding instead of hiding the edges.
+	 * @param updateWorld Whether to update the collision system's world size. Default value is `true`.
 	 */
 	public function follow(?camera:FlxCamera, border = 0, updateWorld = true):Void
 	{
 		if (camera == null)
 			camera = FlxG.camera;
 
-		camera.setScrollBoundsRect(
-			x + border * scaledTileWidth,
-			y + border * scaledTileHeight,
-			scaledWidth - border * scaledTileWidth * 2,
-			scaledHeight - border * scaledTileHeight * 2,
-			updateWorld
-		);
+		camera.setScrollBoundsRect(x
+			+ border * scaledTileWidth, y
+			+ border * scaledTileHeight, scaledWidth
+			- border * scaledTileWidth * 2,
+			scaledHeight
+			- border * scaledTileHeight * 2, updateWorld);
 	}
 
-	/**
-	 * Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it stores that point and returns false.
-	 * Note: In flixel 5.0.0, this was redone, the old method is now `rayStep`
-	 *
-	 * @param   start   The world coordinates of the start of the ray.
-	 * @param   end     The world coordinates of the end of the ray.
-	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                  Only returned if the line enters the rect.
-	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills Result if a tile was hit.
-	 */
 	override function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		// trim the line to the parts inside the map
@@ -911,7 +902,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		{
 			if (result != null)
 				result.copyFrom(start);
-			
+
 			clearRefs();
 			return false;
 		}
@@ -974,7 +965,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 						result.x += scaledTileWidth;
 
 					// set result to left side
-					result.y = m * result.x + b;//mx + b
+					result.y = m * result.x + b; // mx + b
 				}
 				else
 				{
@@ -1000,16 +991,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		if (startY < 0)
 			startY = 0;
-		
+
 		if (endY < 0)
 			endY = 0;
-		
+
 		if (startY > heightInTiles - 1)
 			startY = heightInTiles - 1;
-		
+
 		if (endY > heightInTiles - 1)
 			endY = heightInTiles - 1;
-		
+
 		var y = startY;
 		final step = startY <= endY ? 1 : -1;
 		while (true)
@@ -1017,30 +1008,16 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			var index = y * widthInTiles + x;
 			if (getTileCollisions(getTileByIndex(index)) != NONE)
 				return index;
-			
+
 			if (y == endY)
 				break;
-			
+
 			y += step;
 		}
-		
+
 		return -1;
 	}
 
-	/**
-	 * Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it stores that point and returns false.
-	 * This method checks at steps and can miss, for better results use `ray()`
-	 * @since 5.0.0
-	 *
-	 * @param   start       The world coordinates of the start of the ray.
-	 * @param   end         The world coordinates of the end of the ray.
-	 * @param   result      Optional result vector, to avoid creating a new instance to be returned.
-	 * @param   resolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
-	 *                      Only returned if the line enters the rect.
-	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills Result if a tile was hit.
-	 */
 	override function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		var step:Float = scaledTileWidth;
@@ -1142,13 +1119,13 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
+	 * Changes a particular tile to `FlxSprite`, or just copies the graphic if you don't want any changes to map data itself.
 	 *
-	 * @param   x              The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y              The Y coordinate of the tile (in tiles, not pixels).
-	 * @param   newTile        New tile for the map data. Use -1 if you dont want any changes. Default = 0 (empty)
-	 * @param   spriteFactory  Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
-	 * @return FlxSprite.
+	 * @param X The x-coordinate of the tile (in tiles, not pixels).
+	 * @param Y The y-coordinate of the tile (in tiles, not pixels).
+	 * @param NewTile New tile for the map data. Use `-1` if you don't want any changes. Default = `0` (empty).
+	 * @param SpriteFactory Method for converting `FlxTile` to `FlxSprite`. If `null`, then `defaultTileToSprite()` will be used.
+	 * @return `FlxSprite`.
 	 */
 	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, ?SpriteFactory:FlxTileProperties->FlxSprite):FlxSprite
 	{
@@ -1182,7 +1159,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Use this method so the tilemap buffers are updated, e.g. when resizing your game
+	 * Updates the tilemap buffers.
+	 * Use this method so the tilemap buffers are updated (e.g., when resizing the game).
 	 */
 	public function updateBuffers():Void
 	{
@@ -1191,10 +1169,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Internal function that actually renders the tilemap to the tilemap buffer. Called by draw().
+	 * Internal function that renders the tilemap to the tilemap buffer. Called by `draw()`.
 	 *
-	 * @param   buffer  The FlxTilemapBuffer you are rendering to.
-	 * @param   camera  The related FlxCamera, mainly for scroll values.
+	 * @param buffer The `FlxTilemapBuffer` you are rendering to.
+	 * @param camera The related `FlxCamera`, mainly for scroll values.
 	 */
 	@:access(flixel.FlxCamera)
 	function drawTilemap(buffer:FlxTilemapBuffer, camera:FlxCamera):Void
@@ -1336,7 +1314,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Internal function to clean up the map loading code.
-	 * Just generates a wireframe box the size of a tile with the specified color.
+	 * Generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if FLX_DEBUG
 	function makeDebugTile(color:FlxColor):BitmapData
@@ -1373,9 +1351,9 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#end
 
 	/**
-	 * Internal function used in setTileByIndex() and the constructor to update the map.
+	 * Internal function used in `setTileByIndex()` and the constructor to update the map.
 	 *
-	 * @param   index  The index of the tile object in _tileObjects internal array you want to update.
+	 * @param index The index of the tile object in `_tileObjects` internal array you want to update.
 	 */
 	override function updateTile(index:Int):Void
 	{
@@ -1403,7 +1381,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Internal function for setting graphic property for this object.
-	 * It changes graphic' useCount also for better memory tracking.
+	 * It changes graphic's `useCount` also for better memory tracking.
 	 */
 	function set_graphic(value:FlxGraphic):FlxGraphic
 	{
@@ -1500,10 +1478,10 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 
 	/**
-	 * Default method for generating FlxSprite from FlxTile
+	 * Default method for generating `FlxSprite` from `FlxTile`.
 	 *
-	 * @param   tileProperties  properties for new sprite
-	 * @return  New FlxSprite with specified graphic
+	 * @param tileProperties Properties for new sprite.
+	 * @return New `FlxSprite` with specified graphic.
 	 */
 	function defaultTileToSprite(tileProperties:FlxTileProperties):FlxSprite
 	{
@@ -1535,12 +1513,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return heightInTiles * scaledTileHeight;
 	}
 
-	/**
-	 * Get the world coordinates and size of the entire tilemap as a FlxRect.
-	 *
-	 * @param   bounds  Optional, pass in a pre-existing FlxRect to prevent instantiation of a new object.
-	 * @return  A FlxRect containing the world coordinates and size of the entire tilemap.
-	 */
 	override function getBounds(?bounds:FlxRect):FlxRect
 	{
 		if (bounds == null)
@@ -1581,4 +1553,4 @@ typedef FlxTileProperties =
 	scale:FlxPoint,
 	alpha:Float,
 	blend:BlendMode
-}
+};

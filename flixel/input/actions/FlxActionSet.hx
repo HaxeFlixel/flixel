@@ -6,18 +6,18 @@ import flixel.input.actions.FlxAction.FlxActionDigital;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogSteam;
-import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
 import flixel.input.actions.FlxActionInputAnalog.FlxAnalogAxis;
+import flixel.input.actions.FlxActionInputAnalog.FlxAnalogState;
 import flixel.input.actions.FlxActionInputDigital.FlxActionInputDigitalSteam;
 import flixel.input.actions.FlxActionManager.ActionSetJson;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.Json;
+
+using flixel.util.FlxArrayUtil;
+
 #if FLX_STEAMWRAP
 import steamwrap.data.ControllerConfig.ControllerActionSet;
 #end
-
-using flixel.util.FlxArrayUtil;
 
 /**
  * @since 4.6.0
@@ -26,47 +26,47 @@ using flixel.util.FlxArrayUtil;
 class FlxActionSet implements IFlxDestroyable
 {
 	/**
-	 * Name of the action set
+	 * Name of the action set.
 	 */
 	public var name(default, null):String = "";
 
 	#if FLX_STEAMWRAP
 	/**
-	 * This action set's numeric handle for the Steam API (ignored if not using Steam)
+	 * This action set's numeric handle for the Steam API (ignored if not using Steam).
 	 */
 	public var steamHandle(default, null):Int = -1;
 	#end
 
 	/**
-	 * Digital actions in this set
+	 * Digital actions in this set.
 	 */
 	public var digitalActions(default, null):Array<FlxActionDigital>;
 
 	/**
-	 * Analog actions in this set
+	 * Analog actions in this set.
 	 */
 	public var analogActions(default, null):Array<FlxActionAnalog>;
 
 	/**
-	 * Whether this action set runs when update() is called
+	 * Whether this action set runs when `update()` is called.
 	 */
 	public var active:Bool = true;
 
 	#if FLX_STEAMWRAP
 	/**
-	 * Create an action set from a steamwrap configuration file.
+	 * Creates an action set from a SteamWrap configuration file.
 	 *
-	 * NOTE: no steam inputs will be attached to the created actions; you must call
-	 * attachSteamController() which will automatically add or remove steam
+	 * NOTE: No Steam inputs will be attached to the created actions; you must call
+	 * `attachSteamController()` which will automatically add or remove Steam
 	 * inputs for a particular controller.
 	 *
-	 * This is unique to steam inputs, which cannot be constructed directly.
-	 * Non-steam inputs can be constructed and added to the actions normally.
+	 * This is unique to Steam inputs, which cannot be constructed directly.
+	 * Non-Steam inputs can be constructed and added to the actions normally.
 	 *
-	 * @param	SteamSet	A steamwrap ControllerActionSet file (found in ControllerConfig)
-	 * @param	CallbackDigital	A function to call when digital actions fire
-	 * @param	CallbackAnalog	A function to call when analog actions fire
-	 * @return	An action set
+	 * @param SteamSet A SteamWrap `ControllerActionSet` file (found in `ControllerConfig`)
+	 * @param CallbackDigital A function to call when digital actions fire.
+	 * @param CallbackAnalog A function to call when analog actions fire.
+	 * @return An action set.
 	 */
 	@:access(flixel.input.actions.FlxActionManager)
 	private static function fromSteam(SteamSet:ControllerActionSet, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
@@ -119,12 +119,12 @@ class FlxActionSet implements IFlxDestroyable
 	#end
 
 	/**
-	 * Create an action set from a parsed Json object
+	 * Creates an action set from a parsed Json object.
 	 *
-	 * @param	Data	A parsed Json object
-	 * @param	CallbackDigital	A function to call when digital actions fire
-	 * @param	CallbackAnalog	A function to call when analog actions fire
-	 * @return	An action set
+	 * @param Data A parsed Json object.
+	 * @param CallbackDigital A function to call when digital actions fire.
+	 * @param CallbackAnalog A function to call when analog actions fire.
+	 * @return An action set.
 	 */
 	@:access(flixel.input.actions.FlxActionManager)
 	static function fromJson(Data:ActionSetJson, CallbackDigital:FlxActionDigital->Void, CallbackAnalog:FlxActionAnalog->Void):FlxActionSet
@@ -197,10 +197,9 @@ class FlxActionSet implements IFlxDestroyable
 	}
 
 	/**
-	 * Automatically adds or removes inputs for a steam controller
-	 * to any steam-affiliated actions
-	 * @param	Handle	steam controller handle from FlxSteam.getConnectedControllers(), or FlxInputDeviceID.FIRST_ACTIVE / ALL
-	 * @param	Attach	true: adds inputs, false: removes inputs
+	 * Automatically adds/removes Steam controller inputs to/from any Steam-affiliated actions.
+	 * @param Handle Steam controller handle from `FlxSteamController.getConnectedControllers()`, or `FlxInputDeviceID.FIRST_ACTIVE` / `ALL`.
+	 * @param Attach `true`: adds inputs; `false`: removes inputs.
 	 */
 	public function attachSteamController(Handle:Int, Attach:Bool = true):Void
 	{
@@ -236,10 +235,10 @@ class FlxActionSet implements IFlxDestroyable
 	}
 
 	/**
-	 * Remove an action from this set
-	 * @param	Action a FlxAction
-	 * @param	Destroy whether to destroy it as well
-	 * @return	whether it was found and removed
+	 * Removes an action from this set.
+	 * @param Action A `FlxAction`.
+	 * @param Destroy Whether to destroy the action after removing it.
+	 * @return Whether the action was found and removed.
 	 */
 	public function remove(Action:FlxAction, Destroy:Bool = true):Bool
 	{
@@ -264,7 +263,7 @@ class FlxActionSet implements IFlxDestroyable
 	}
 
 	/**
-	 * Update all the actions in this set (each will check inputs & potentially trigger)
+	 * Updates all the actions in this set (each will check inputs and potentially trigger).
 	 */
 	public function update():Void
 	{
@@ -289,12 +288,12 @@ class FlxActionSet implements IFlxDestroyable
 		{
 			var action = InputType == FlxInputType.DIGITAL ? DigitalActions[i] : AnalogActions[i];
 
-			if (action.steamHandle != -1) // all steam-affiliated actions will have this numeric ID assigned
+			if (action.steamHandle != -1) // all Steam-affiliated actions will have this numeric ID assigned
 			{
 				var inputExists = false;
 				var theInput:FlxActionInput = null;
 
-				// check if any of the steam controller inputs match this handle
+				// check whether any of the Steam controller inputs match this handle
 				if (action.inputs != null)
 				{
 					for (input in action.inputs)

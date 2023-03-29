@@ -93,25 +93,14 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 			case _: super.getInputLabel(id);
 		}
 	}
-	
+
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int
 	{
-		// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
-		return if (axisID == leftStick.x)
-				LEFT_ANALOG_STICK_FAKE_X;
-			else if (axisID == leftStick.y)
-				LEFT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == rightStick.x)
-				RIGHT_ANALOG_STICK_FAKE_X;
-			else if (axisID == rightStick.y)
-				RIGHT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == SwitchJoyconRightID.ZL)
-				LEFT_TRIGGER_FAKE;
-			else if (axisID == SwitchJoyconRightID.ZR)
-				RIGHT_TRIGGER_FAKE;
-			else
-				axisID;
+		// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button IDs
+		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X; else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y; else if (axisID == rightStick.x)
+			RIGHT_ANALOG_STICK_FAKE_X; else if (axisID == rightStick.y) RIGHT_ANALOG_STICK_FAKE_Y; else if (axisID == SwitchJoyconRightID.ZL)
+			LEFT_TRIGGER_FAKE; else if (axisID == SwitchJoyconRightID.ZR) RIGHT_TRIGGER_FAKE; else axisID;
 	}
 	#end
 }

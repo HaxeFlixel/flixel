@@ -5,16 +5,16 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxDirectionFlags;
 
 /**
- * A simple helper object for FlxTilemap that helps expand collision opportunities and control.
- * You can use FlxTilemap.setTileProperties() to alter the collision properties and
+ * A simple helper object for `FlxTilemap` that helps expand collision opportunities and control.
+ * You can use `FlxTilemap#setTileProperties()` to alter the collision properties and
  * callback functions and filters for this object to do things like one-way tiles or whatever.
  */
 class FlxTile extends FlxObject
 {
 	/**
 	 * This function is called whenever an object hits a tile of this type.
-	 * This function should take the form myFunction(Tile:FlxTile,Object:FlxObject):void.
-	 * Defaults to null, set through FlxTilemap.setTileProperties().
+	 * This function should take the form `myFunction(tile:FlxTile, object:FlxObject):Void`.
+	 * Defaults to `null`. Set through `FlxTilemap#setTileProperties()`.
 	 */
 	public var callbackFunction:FlxObject->FlxObject->Void = null;
 
@@ -22,7 +22,7 @@ class FlxTile extends FlxObject
 	 * Each tile can store its own filter class for their callback functions.
 	 * That is, the callback will only be triggered if an object with a class
 	 * type matching the filter touched it.
-	 * Defaults to null, set through FlxTilemap.setTileProperties().
+	 * Defaults to `null`. Set through `FlxTilemap#setTileProperties()`.
 	 */
 	public var filter:Class<FlxObject>;
 
@@ -51,14 +51,15 @@ class FlxTile extends FlxObject
 	public var frame:FlxFrame;
 
 	/**
-	 * Instantiate this new tile object.  This is usually called from FlxTilemap.loadMap().
+	 * Instantiates a new tile object. This is usually called from `FlxTilemap#loadMapFromCSV()`, `FlxTilemap#loadMapFromArray()`, etc.
 	 *
-	 * @param 	Tilemap			A reference to the tilemap object creating the tile.
-	 * @param 	Index			The actual core map data index for this tile type.
-	 * @param 	Width			The width of the tile.
-	 * @param 	Height			The height of the tile.
-	 * @param 	Visible			Whether the tile is visible or not.
-	 * @param 	AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
+	 * @param Tilemap A reference to the tilemap object creating the tile.
+	 * @param Index The actual core map data index for this tile type.
+	 * @param Width The width of the tile.
+	 * @param Height The height of the tile.
+	 * @param Visible Whether the tile is visible.
+	 * @param AllowCollisions The collision flags for the object.
+	 * By default, this value is `ANY` or `NONE`, depending on the parameters sent to whichever `FlxTilemap#loadMap()` function was used.
 	 */
 	public function new(Tilemap:FlxTilemap, Index:Int, Width:Float, Height:Float, Visible:Bool, AllowCollisions:FlxDirectionFlags)
 	{
@@ -74,7 +75,7 @@ class FlxTile extends FlxObject
 	}
 
 	/**
-	 * Clean up memory.
+	 * Cleans up memory.
 	 */
 	override public function destroy():Void
 	{

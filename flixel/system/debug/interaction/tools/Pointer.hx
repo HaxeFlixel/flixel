@@ -1,13 +1,13 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.ui.Keyboard;
 
 using flixel.util.FlxArrayUtil;
 
@@ -108,8 +108,8 @@ class Pointer extends Tool
 	}
 
 	/**
-	 * Cancel any selection activity that is happening, removing the selection rectangle from the screen.
-	 * Any item within the (canceled) selection area will be ignored. If you want to stop the selection
+	 * Cancels any selection activity that is happening, removing the selection rectangle from the screen.
+	 * Any item within the (cancelled) selection area will be ignored. If you want to stop the selection
 	 * and actually process the action/items, use `stopSelection()`.
 	 */
 	public function cancelSelection():Void
@@ -122,9 +122,9 @@ class Pointer extends Tool
 	}
 
 	/**
-	 * Stop any selection activity that is happening.
+	 * Stops any selection activity that is happening.
 	 *
-	 * @param	findItems	If `true` (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
+	 * @param findItems Whether all items within the (stopped) selection area will be included in the list of selected items of the tool. Default is `true`.
 	 */
 	public function stopSelection(findItems:Bool = true):Void
 	{
@@ -146,7 +146,7 @@ class Pointer extends Tool
 	}
 
 	/**
-	 * We register the current selection to the console for easy interaction.
+	 * Registers the current selection to the console for easy interaction.
 	 */
 	function updateConsoleSelection()
 	{

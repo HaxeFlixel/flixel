@@ -1,8 +1,8 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
 import flixel.FlxSprite;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxButtonTest extends FlxTest
 {

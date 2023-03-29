@@ -6,16 +6,16 @@ import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
 
 /**
- * GLSL Shader object
+ * GLSL `Shader` object.
  */
 class Shader
 {
 	var program:GLProgram;
 
 	/**
-	 * Creates a new Shader
+	 * Creates a new `Shader`.
 	 *
-	 * @param  sources   A list of GLSL shader sources to compile and link into a program
+	 * @param sources A list of GLSL shader sources to compile and link into a program.
 	 */
 	public function new(sources:Array<ShaderSource>)
 	{
@@ -42,10 +42,10 @@ class Shader
 	}
 
 	/**
-	 * Compiles the shader source into a GlShader object and prints any errors
+	 * Compiles the shader source into a `GLShader` object and prints any errors.
 	 *
-	 * @param   source   The shader source code
-	 * @param   type     The type of shader to compile (fragment, vertex)
+	 * @param source The shader source code.
+	 * @param type The type of shader to compile (fragment, vertex).
 	 */
 	function compile(source:String, type:Int):GLShader
 	{
@@ -63,9 +63,9 @@ class Shader
 	}
 
 	/**
-	 * Return the attribute location in this shader
+	 * Returns the attribute location in this shader.
 	 *
-	 * @param   a   The attribute name to find
+	 * @param a The attribute name to find.
 	 */
 	public inline function attribute(a:String):Int
 	{
@@ -73,9 +73,9 @@ class Shader
 	}
 
 	/**
-	 * Return the uniform location in this shader
+	 * Returns the uniform location in this shader.
 	 *
-	 * @param   a   The uniform name to find
+	 * @param u The uniform name to find.
 	 */
 	public inline function uniform(u:String):Int
 	{
@@ -83,7 +83,7 @@ class Shader
 	}
 
 	/**
-	 * Bind the program for rendering
+	 * Binds the program for rendering.
 	 */
 	public inline function bind()
 	{
@@ -95,5 +95,5 @@ typedef ShaderSource =
 {
 	var src:String;
 	var fragment:Bool;
-}
+};
 #end

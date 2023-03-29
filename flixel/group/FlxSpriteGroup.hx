@@ -1,7 +1,5 @@
 package flixel.group;
 
-import flash.display.BitmapData;
-import flash.display.BlendMode;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
@@ -15,6 +13,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
 
 typedef FlxSpriteGroup = FlxTypedSpriteGroup<FlxSprite>;
 
@@ -36,7 +36,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var members(get, never):Array<T>;
 
 	/**
-	 * The number of entries in the members array. For performance and safety you should check this
+	 * The number of entries in the members array. For performance and safety, you should check this
 	 * variable instead of `members.length` unless you really know what you're doing!
 	 */
 	public var length(get, never):Int;
@@ -49,7 +49,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	public var directAlpha:Bool = false;
 
 	/**
-	 * The maximum capacity of this group. Default is `0`, meaning no max capacity, and the group can just grow.
+	 * The maximum capacity of this group.
+	 * Default is `0`, meaning no max capacity, and the group can just grow indefinitely.
 	 */
 	public var maxSize(get, set):Int;
 
@@ -60,14 +61,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	/**
 	 * Array of all the `FlxSprite`s that exist in this group for
-	 * optimization purposes / static typing on cpp targets.
+	 * optimization purposes / static typing on CPP targets.
 	 */
 	var _sprites:Array<FlxSprite>;
 
 	/**
-	 * @param   X         The initial X position of the group.
-	 * @param   Y         The initial Y position of the group.
-	 * @param   MaxSize   Maximum amount of members allowed.
+	 * @param X The initial x-position of the group.
+	 * @param Y The initial y-position of the group.
+	 * @param MaxSize Maximum amount of members allowed.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0)
 	{
@@ -78,7 +79,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	/**
 	 * This method is used for initialization of variables of complex types.
-	 * Don't forget to call `super.initVars()` if you'll override this method,
+	 * Don't forget to call `super.initVars()` if you override this method,
 	 * or you'll get `null` object error and app will crash.
 	 */
 	override function initVars():Void
@@ -96,16 +97,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		initMotionVars();
 	}
 
-	/**
-	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
-	 * It may even cause crashes if it is still part of a group or state.
-	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
-	 *
-	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
-	 *
-	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
-	 * Don't forget to call `super.destroy()`!
-	 */
 	override public function destroy():Void
 	{
 		// normally don't have to destroy FlxPoints, but these are FlxCallbackPoints!
@@ -121,9 +112,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Recursive cloning method: it will create a copy of this group which will hold copies of all sprites
+	 * Recursive cloning method: it will create a copy of this group which will hold copies of all sprites.
 	 *
-	 * @return  copy of this sprite group
+	 * @return copy of this sprite group.
 	 */
 	override public function clone():FlxTypedSpriteGroup<T>
 	{
@@ -139,10 +130,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Check and see if any sprite in this group is currently on screen.
+	 * Checks whether any sprite in this group is currently on screen.
 	 *
-	 * @param   Camera   Specify which game camera you want. If `null`, it will just grab the first global camera.
-	 * @return  Whether the object is on screen or not.
+	 * @param Camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the object is on screen.
 	 */
 	override public function isOnScreen(?Camera:FlxCamera):Bool
 	{
@@ -156,12 +147,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Checks to see if a point in 2D world space overlaps any `FlxSprite` object from this group.
+	 * Checks whether a point in 2D world space overlaps any `FlxSprite` object from this group.
 	 *
-	 * @param   Point           The point in world space you want to check.
-	 * @param   InScreenSpace   Whether to take scroll factors into account when checking for overlap.
-	 * @param   Camera          Specify which game camera you want. If `null`, it will just grab the first global camera.
-	 * @return  Whether or not the point overlaps this group.
+	 * @param point The point in world space to check.
+	 * @param InScreenSpace Whether to take scroll factors into account when checking for overlap.
+	 * @param Camera The game camera to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the point overlaps this group.
 	 */
 	override public function overlapsPoint(point:FlxPoint, InScreenSpace:Bool = false, ?Camera:FlxCamera):Bool
 	{
@@ -177,15 +168,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return result;
 	}
 
-	/**
-	 * Checks to see if a point in 2D world space overlaps any of FlxSprite object's current displayed pixels.
-	 * This check is ALWAYS made in screen space, and always takes scroll factors into account.
-	 *
-	 * @param   Point    The point in world space you want to check.
-	 * @param   Mask     Used in the pixel hit test to determine what counts as solid.
-	 * @param   Camera   Specify which game camera you want.  If `null`, it will just grab the first global camera.
-	 * @return  Whether or not the point overlaps this object.
-	 */
 	override public function pixelsOverlapPoint(point:FlxPoint, Mask:Int = 0xFF, ?Camera:FlxCamera):Bool
 	{
 		var result:Bool = false;
@@ -218,15 +200,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		#end
 	}
 
-	/**
-	 * Replaces all pixels with specified `Color` with `NewColor` pixels.
-	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
-	 *
-	 * @param   Color            Color to replace
-	 * @param   NewColor         New color
-	 * @param   FetchPositions   Whether we need to store positions of pixels which colors were replaced.
-	 * @return  `Array` with replaced pixels positions
-	 */
 	override public function replaceColor(Color:Int, NewColor:Int, FetchPositions:Bool = false):Array<FlxPoint>
 	{
 		var positions:Array<FlxPoint> = null;
@@ -254,8 +227,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Adds a new `FlxSprite` subclass to the group.
 	 *
-	 * @param   Sprite   The sprite or sprite group you want to add to the group.
-	 * @return  The same object that was passed in.
+	 * @param Sprite The sprite or sprite group you want to add to the group.
+	 * @return The same object that was passed in.
 	 */
 	public function add(Sprite:T):T
 	{
@@ -266,9 +239,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Inserts a new `FlxSprite` subclass to the group at the specified position.
 	 *
-	 * @param   Position The position that the new sprite or sprite group should be inserted at.
-	 * @param   Sprite   The sprite or sprite group you want to insert into the group.
-	 * @return  The same object that was passed in.
+	 * @param Position The position that the new sprite or sprite group should be inserted at.
+	 * @param Sprite The sprite or sprite group you want to insert into the group.
+	 * @return The same object that was passed in.
 	 *
 	 * @since 4.3.0
 	 */
@@ -282,7 +255,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * Adjusts the position and other properties of the soon-to-be child of this sprite group.
 	 * Private helper to avoid duplicate code in `add()` and `insert()`.
 	 *
-	 * @param	Sprite	The sprite or sprite group that is about to be added or inserted into the group.
+	 * @param Sprite The sprite or sprite group that is about to be added or inserted into the group.
 	 */
 	function preAdd(Sprite:T):Void
 	{
@@ -298,7 +271,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
+	 * Recycling is designed to help you reuse game objects without always re-allocating or instantiating them.
 	 * It behaves differently depending on whether `maxSize` equals `0` or is bigger than `0`.
 	 *
 	 * `maxSize > 0` / "rotating-recycling" (used by `FlxEmitter`):
@@ -312,15 +285,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * WARNING: If this function needs to create a new object, and no object class was provided,
 	 * it will return `null` instead of a valid object!
 	 *
-	 * @param   ObjectClass     The class type you want to recycle (e.g. `FlxSprite`, `EvilRobot`, etc).
-	 * @param   ObjectFactory   Optional factory function to create a new object
-	 *                          if there aren't any dead members to recycle.
-	 *                          If `null`, `Type.createInstance()` is used,
-	 *                          which requires the class to have no constructor parameters.
-	 * @param   Force           Force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
-	 * @param   Revive          Whether recycled members should automatically be revived
-	 *                          (by calling `revive()` on them).
-	 * @return  A reference to the object that was created.
+	 * @param ObjectClass The class type you want to recycle (e.g. `FlxSprite`, `EvilRobot`, etc.).
+	 * @param ObjectFactory Optional factory function to create a new object
+	 * if there aren't any dead members to recycle.
+	 * If `null`, `Type.createInstance()` is used,
+	 * which requires the class to have no constructor parameters.
+	 * @param Force Whether to force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
+	 * @param Revive Whether recycled members should automatically be revived
+	 * (by calling `revive()` on them).
+	 * @return A reference to the object that was created.
 	 */
 	public inline function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
@@ -330,9 +303,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Removes the specified sprite from the group.
 	 *
-	 * @param   Sprite   The `FlxSprite` you want to remove.
-	 * @param   Splice   Whether the object should be cut from the array entirely or not.
-	 * @return  The removed sprite.
+	 * @param Sprite The `FlxSprite` you want to remove.
+	 * @param Splice Whether the object should be cut from the array entirely.
+	 * @return The removed sprite.
 	 */
 	public function remove(Sprite:T, Splice:Bool = false):T
 	{
@@ -347,9 +320,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Replaces an existing `FlxSprite` with a new one.
 	 *
-	 * @param   OldObject   The sprite you want to replace.
-	 * @param   NewObject   The new object you want to use instead.
-	 * @return  The new sprite.
+	 * @param OldObject The sprite you want to replace.
+	 * @param NewObject The new object you want to use instead.
+	 * @return The new sprite.
 	 */
 	public inline function replace(OldObject:T, NewObject:T):T
 	{
@@ -357,14 +330,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to sort the group according to a particular value and order.
-	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * Sorts the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps, you might call
 	 * `group.sort(FlxSort.byY, FlxSort.ASCENDING)` at the bottom of your `FlxState#update()` override.
 	 *
-	 * @param   Function   The sorting function to use - you can use one of the premade ones in
-	 *                     `FlxSort` or write your own using `FlxSort.byValues()` as a "backend".
-	 * @param   Order      A constant that defines the sort order.
-	 *                     Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
+	 * @param Function The sorting function to use. You can use one of the premade ones in
+	 * `FlxSort` or write your own using `FlxSort.byValues()` as a "backend".
+	 * @param Order A constant that defines the sort order.
+	 * Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
 	 */
 	public inline function sort(Function:Int->T->T->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
@@ -372,13 +345,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `exists == false` in the group.
-	 * This is handy for recycling in general, e.g. respawning enemies.
+	 * Retrieves the first object with `exists == false` in the group.
+	 * This is handy for recycling in general (e.g., respawning enemies).
 	 *
-	 * @param   ObjectClass   An optional parameter that lets you narrow the
-	 *                        results to instances of this particular class.
-	 * @param   Force         Force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
-	 * @return  A `FlxSprite` currently flagged as not existing.
+	 * @param ObjectClass An optional parameter that lets you narrow the
+	 * results to instances of this particular class.
+	 * @param Force Whether to force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
+	 * @return A `FlxSprite` currently flagged as nonexistent.
 	 */
 	public inline function getFirstAvailable(?ObjectClass:Class<T>, Force:Bool = false):T
 	{
@@ -386,10 +359,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to retrieve the first index set to `null`.
+	 * Retrieves the first index set to `null`.
 	 * Returns `-1` if no index stores a `null` object.
 	 *
-	 * @return  An `Int` indicating the first `null` slot in the group.
+	 * @return An `Int` indicating the index of the first `null` slot in the group.
 	 */
 	public inline function getFirstNull():Int
 	{
@@ -397,10 +370,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `exists == true` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `exists == true` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxSprite` currently flagged as existing.
+	 * @return A `FlxSprite` currently flagged as existent.
 	 */
 	public inline function getFirstExisting():T
 	{
@@ -408,10 +381,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `dead == false` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `alive == true` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxSprite` currently flagged as not dead.
+	 * @return A `FlxSprite` currently flagged as alive.
 	 */
 	public inline function getFirstAlive():T
 	{
@@ -419,10 +392,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `dead == true` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `alive == false` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxSprite` currently flagged as dead.
+	 * @return A `FlxSprite` currently flagged as dead.
 	 */
 	public inline function getFirstDead():T
 	{
@@ -430,9 +403,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to find out how many members of the group are not dead.
+	 * Counts how many members of the group are `alive`.
 	 *
-	 * @return  The number of `FlxSprite`s flagged as not dead. Returns `-1` if group is empty.
+	 * @return The number of `FlxSprite`s flagged as dead. Returns `-1` if group is empty.
 	 */
 	public inline function countLiving():Int
 	{
@@ -440,9 +413,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Call this function to find out how many members of the group are dead.
+	 * Counts how many members of the group are not `alive`.
 	 *
-	 * @return  The number of `FlxSprite`s flagged as dead. Returns `-1` if group is empty.
+	 * @return The number of `FlxSprite`s flagged as dead. Returns `-1` if group is empty.
 	 */
 	public inline function countDead():Int
 	{
@@ -452,10 +425,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Returns a member at random from the group.
 	 *
-	 * @param   StartIndex  Optional offset off the front of the array.
-	 *                      Default value is `0`, or the beginning of the array.
-	 * @param   Length      Optional restriction on the number of values you want to randomly select from.
-	 * @return  A `FlxSprite` from the `members` list.
+	 * @param StartIndex Optional offset off the front of the array.
+	 * Default value is `0`, or the beginning of the array.
+	 * @param Length Optional restriction on the number of values you want to randomly select from.
+	 * @return A `FlxSprite` from the `members` list.
 	 */
 	public inline function getRandom(StartIndex:Int = 0, Length:Int = 0):T
 	{
@@ -463,9 +436,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Iterate through every member
+	 * Returns an iterator for iterating through every member.
 	 *
-	 * @return An iterator
+	 * @return An iterator.
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
@@ -475,8 +448,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Applies a function to all members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public inline function forEach(Function:T->Void, Recurse:Bool = false):Void
 	{
@@ -486,8 +459,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Applies a function to all `alive` members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public inline function forEachAlive(Function:T->Void, Recurse:Bool = false):Void
 	{
@@ -497,8 +470,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Applies a function to all dead members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public inline function forEachDead(Function:T->Void, Recurse:Bool = false):Void
 	{
@@ -506,10 +479,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Applies a function to all existing members.
+	 * Applies a function to all existent members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public inline function forEachExists(Function:T->Void, Recurse:Bool = false):Void
 	{
@@ -519,9 +492,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Applies a function to all members of type `Class<K>`.
 	 *
-	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: `FlxSprite`.
-	 * @param   Function      A function that modifies one element at a time.
-	 * @param   Recurse       Whether or not to apply the function to members of subgroups as well.
+	 * @param ObjectClass A class that objects will be checked against before Function is applied (e.g., `FlxSprite`).
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public inline function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void, Recurse:Bool = false)
 	{
@@ -529,8 +502,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Remove all instances of `FlxSprite` from the list.
-	 * WARNING: does not `destroy()` or `kill()` any of these objects!
+	 * Removes all instances of `FlxSprite` from the list.
+	 * WARNING: Does not `destroy()` or `kill()` any of these objects!
 	 */
 	public inline function clear():Void
 	{
@@ -538,7 +511,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Calls `kill()` on the group's members and then on the group itself.
+	 * Calls `kill()` on the group's `members` and then on the group itself.
 	 * You can revive this group later via `revive()` after this.
 	 */
 	override public function kill():Void
@@ -550,7 +523,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Revives the group.
+	 * Calls `revive()` on the group's members and then on the group itself.
 	 */
 	override public function revive():Void
 	{
@@ -567,10 +540,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			if (sprite != null)
 				sprite.reset(sprite.x + X - x, sprite.y + Y - y);
 		}
-		
+
 		// prevent any transformations on children, mainly from setter overrides
 		_skipTransformChildren = true;
-		
+
 		// recreate super.reset() but call super.revive instead of revive
 		touching = NONE;
 		wasTouching = NONE;
@@ -579,17 +552,10 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		// last.set(x, y); // null on sprite groups
 		velocity.set();
 		super.revive();
-		
+
 		_skipTransformChildren = false;
 	}
 
-	/**
-	 * Helper function to set the coordinates of this object.
-	 * Handy since it only requires one line of code.
-	 *
-	 * @param   X   The new x position
-	 * @param   Y   The new y position
-	 */
 	override public function setPosition(X:Float = 0, Y:Float = 0):Void
 	{
 		// Transform children by the movement delta
@@ -607,9 +573,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Handy function that allows you to quickly transform one property of sprites in this group at a time.
 	 *
-	 * @param   Function   Function to transform the sprites. Example:
-	 *                     `function(sprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }`
-	 * @param   Value      Value which will passed to lambda function.
+	 * @param Function Function to transform the sprites. Example:
+	 * `function(sprite, v:Dynamic) { s.acceleration.x = v; s.makeGraphic(10,10,0xFF000000); }`
+	 * @param Value Value which will passed to lambda function.
 	 */
 	@:generic
 	public function transformChildren<V>(Function:T->V->Void, Value:V):Void
@@ -627,8 +593,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	/**
 	 * Handy function that allows you to quickly transform multiple properties of sprites in this group at a time.
 	 *
-	 * @param   FunctionArray   `Array` of functions to transform sprites in this group.
-	 * @param   ValueArray      `Array` of values which will be passed to lambda functions
+	 * @param FunctionArray `Array` of functions to transform sprites in this group.
+	 * @param ValueArray `Array` of values which will be passed to lambda functions
 	 */
 	@:generic
 	public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
@@ -701,21 +667,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	override function set_x(Value:Float):Float
 	{
 		if (exists && x != Value)
-			transformChildren(xTransform, Value - x);// offset
+			transformChildren(xTransform, Value - x); // offset
 		return x = Value;
 	}
 
 	override function set_y(Value:Float):Float
 	{
 		if (exists && y != Value)
-			transformChildren(yTransform, Value - y);// offset
+			transformChildren(yTransform, Value - y); // offset
 		return y = Value;
 	}
 
 	override function set_angle(Value:Float):Float
 	{
 		if (exists && angle != Value)
-			transformChildren(angleTransform, Value - angle);// offset
+			transformChildren(angleTransform, Value - angle); // offset
 		return angle = Value;
 	}
 
@@ -805,7 +771,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * This functionality isn't supported in SpriteGroup.
 	 */
 	override function set_width(Value:Float):Float
 	{
@@ -816,13 +782,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (length == 0)
 			return 0;
-		
+
 		return findMaxXHelper() - findMinXHelper();
 	}
 
 	/**
 	 * Returns the left-most position of the left-most member.
-	 * If there are no members, x is returned.
+	 * If there are no members, `x` is returned.
 	 * 
 	 * @since 5.0.0
 	 */
@@ -830,7 +796,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return length == 0 ? x : findMinXHelper();
 	}
-	
+
 	function findMinXHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
@@ -838,22 +804,22 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		{
 			if (member == null)
 				continue;
-			
+
 			var minX:Float;
 			if (member.flixelType == SPRITEGROUP)
-				minX = (cast member:FlxSpriteGroup).findMinX();
+				minX = (cast member : FlxSpriteGroup).findMinX();
 			else
 				minX = member.x;
-			
+
 			if (minX < value)
 				value = minX;
 		}
 		return value;
 	}
-	
+
 	/**
 	 * Returns the right-most position of the right-most member.
-	 * If there are no members, x is returned.
+	 * If there are no members, `x` is returned.
 	 * 
 	 * @since 5.0.0
 	 */
@@ -861,7 +827,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return length == 0 ? x : findMaxXHelper();
 	}
-	
+
 	function findMaxXHelper()
 	{
 		var value = Math.NEGATIVE_INFINITY;
@@ -869,21 +835,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		{
 			if (member == null)
 				continue;
-			
+
 			var maxX:Float;
 			if (member.flixelType == SPRITEGROUP)
-				maxX = (cast member:FlxSpriteGroup).findMaxX();
+				maxX = (cast member : FlxSpriteGroup).findMaxX();
 			else
 				maxX = member.x + member.width;
-			
+
 			if (maxX > value)
 				value = maxX;
 		}
 		return value;
 	}
-	
+
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * This functionality isn't supported in SpriteGroup.
 	 */
 	override function set_height(Value:Float):Float
 	{
@@ -894,13 +860,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (length == 0)
 			return 0;
-		
+
 		return findMaxYHelper() - findMinYHelper();
 	}
-	
+
 	/**
 	 * Returns the top-most position of the top-most member.
-	 * If there are no members, y is returned.
+	 * If there are no members, `y` is returned.
 	 * 
 	 * @since 5.0.0
 	 */
@@ -908,7 +874,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return length == 0 ? y : findMinYHelper();
 	}
-	
+
 	function findMinYHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
@@ -916,22 +882,22 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		{
 			if (member == null)
 				continue;
-			
+
 			var minY:Float;
 			if (member.flixelType == SPRITEGROUP)
-				minY = (cast member:FlxSpriteGroup).findMinY();
+				minY = (cast member : FlxSpriteGroup).findMinY();
 			else
 				minY = member.y;
-			
+
 			if (minY < value)
 				value = minY;
 		}
 		return value;
 	}
-	
+
 	/**
-	 * Returns the top-most position of the top-most member.
-	 * If there are no members, y is returned.
+	 * Returns the bottom-most position of the bottom-most member.
+	 * If there are no members, `y` is returned.
 	 * 
 	 * @since 5.0.0
 	 */
@@ -939,7 +905,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return length == 0 ? y : findMaxYHelper();
 	}
-	
+
 	function findMaxYHelper()
 	{
 		var value = Math.NEGATIVE_INFINITY;
@@ -947,13 +913,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		{
 			if (member == null)
 				continue;
-			
+
 			var maxY:Float;
 			if (member.flixelType == SPRITEGROUP)
-				maxY = (cast member:FlxSpriteGroup).findMaxY();
+				maxY = (cast member : FlxSpriteGroup).findMaxY();
 			else
 				maxY = member.y + member.height;
-			
+
 			if (maxY > value)
 				value = maxY;
 		}
@@ -1086,8 +1052,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	// THESE METHODS ARE OVERRIDDEN FOR SAFETY PURPOSES
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
+	 * This functionality isn't supported in SpriteGroup.
+	 * @return this sprite group.
 	 */
 	override public function loadGraphicFromSprite(Sprite:FlxSprite):FlxSprite
 	{
@@ -1098,18 +1064,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
+	 * This functionality isn't supported in SpriteGroup.
+	 * @return this sprite group.
 	 */
 	override public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false,
 			?Key:String):FlxSprite
 	{
+		#if FLX_DEBUG
+		throw "This function is not supported in FlxSpriteGroup";
+		#end
 		return this;
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
+	 * This functionality isn't supported in SpriteGroup.
+	 * @return this sprite group.
 	 */
 	override public function loadRotatedGraphic(Graphic:FlxGraphicAsset, Rotations:Int = 16, Frame:Int = -1, AntiAliasing:Bool = false,
 			AutoBuffer:Bool = false, ?Key:String):FlxSprite
@@ -1121,8 +1090,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
-	 * @return this sprite group
+	 * This functionality isn't supported in SpriteGroup.
+	 * @return this sprite group.
 	 */
 	override public function makeGraphic(Width:Int, Height:Int, Color:Int = FlxColor.WHITE, Unique:Bool = false, ?Key:String):FlxSprite
 	{
@@ -1148,22 +1117,20 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * Internal function to update the current animation frame.
-	 *
-	 * @param	RunOnCpp	Whether the frame should also be recalculated if we're on a non-flash target
+	 * This functionality isn't supported in SpriteGroup.
 	 */
-	override inline function calcFrame(RunOnCpp:Bool = false):Void
+	override inline function calcFrame(force:Bool = false):Void
 	{
 		// Nothing to do here
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * This functionality isn't supported in SpriteGroup.
 	 */
 	override inline function resetHelpers():Void {}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * This functionality isn't supported in SpriteGroup.
 	 */
 	override public inline function stamp(Brush:FlxSprite, X:Int = 0, Y:Int = 0):Void {}
 
@@ -1173,7 +1140,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	}
 
 	/**
-	 * This functionality isn't supported in SpriteGroup
+	 * This functionality isn't supported in SpriteGroup.
 	 */
 	override inline function updateColorTransform():Void {}
 }

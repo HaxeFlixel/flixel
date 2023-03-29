@@ -1,15 +1,15 @@
 package;
 
-import flash.errors.Error;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import massive.munit.Assert;
+import openfl.errors.Error;
 
 class FlxTest
 {
-	// approx. amount of ticks at 60 fps
+	// approx. amount of ticks at 60 FPS
 	static inline var TICKS_PER_FRAME:UInt = 25;
 	static var totalSteps:UInt = 0;
 

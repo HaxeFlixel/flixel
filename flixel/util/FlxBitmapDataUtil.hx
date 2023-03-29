@@ -1,16 +1,16 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
- * Just a collection of BitmapData utility methods.
- * Just for cross-platform stuff, since not all methods are implemented across all targets.
+ * A collection of `BitmapData` utility methods.
+ * For cross-platform stuff, since not all methods are implemented across all targets.
  */
 class FlxBitmapDataUtil
 {
@@ -19,14 +19,14 @@ class FlxBitmapDataUtil
 	/**
 	 * Performs per-channel blending from a source image to a destination image.
 	 *
-	 * @param	sourceBitmapData	The input bitmap image to use. The source image can be a different BitmapData object, or it can refer to the current BitmapData object.
-	 * @param	sourceRect			A rectangle that defines the area of the source image to use as input.
-	 * @param	destBitmapData		The output bitmap image to use.
-	 * @param	destPoint			The point within the destination image (the current BitmapData instance) that corresponds to the upper-left corner of the source rectangle.
-	 * @param	redMultiplier		A hexadecimal uint value by which to multiply the red channel value.
-	 * @param	greenMultiplier		A hexadecimal uint value by which to multiply the green channel value.
-	 * @param	blueMultiplier		A hexadecimal uint value by which to multiply the blue channel value.
-	 * @param	alphaMultiplier		A hexadecimal uint value by which to multiply the alpha transparency value.
+	 * @param sourceBitmapData The input bitmap image to use. The source image can be a different `BitmapData` object, or it can refer to the current `BitmapData` object.
+	 * @param sourceRect A rectangle that defines the area of the source image to use as input.
+	 * @param destBitmapData The output bitmap image to use.
+	 * @param destPoint The point within the destination image (the current `BitmapData` instance) that corresponds to the upper-left corner of the source rectangle.
+	 * @param redMultiplier A hexadecimal uint value by which to multiply the red channel value.
+	 * @param greenMultiplier A hexadecimal uint value by which to multiply the green channel value.
+	 * @param blueMultiplier A hexadecimal uint value by which to multiply the blue channel value.
+	 * @param alphaMultiplier A hexadecimal uint value by which to multiply the alpha transparency value.
 	 */
 	public static function merge(sourceBitmapData:BitmapData, sourceRect:Rectangle, destBitmapData:BitmapData, destPoint:Point, redMultiplier:Int,
 			greenMultiplier:Int, blueMultiplier:Int, alphaMultiplier:Int):Void
@@ -155,15 +155,15 @@ class FlxBitmapDataUtil
 	}
 
 	/**
-	 * Compares two BitmapData objects.
+	 * Compares two `BitmapData` objects.
 	 *
-	 * @param	Bitmap1		The source BitmapData object to compare with.
-	 * @param	Bitmap2		The BitmapData object to compare with the source BitmapData object.
-	 * @return	If the two BitmapData objects have the same dimensions (width and height),
-	 * the method returns a new BitmapData object that has the difference between the two objects.
-	 * If the BitmapData objects are equivalent, the method returns the number 0.
-	 * If the widths of the BitmapData objects are not equal, the method returns the number -3.
-	 * If the heights of the BitmapData objects are not equal, the method returns the number -4.
+	 * @param Bitmap1 The source `BitmapData` object to compare with.
+	 * @param Bitmap2 The `BitmapData` object to compare with the source `BitmapData` object.
+	 * @return If the two `BitmapData` objects have the same dimensions (width and height),
+	 * the method returns a new `BitmapData` object that has the difference between the two objects.
+	 * If the `BitmapData` objects are equivalent, the method returns the number `0`.
+	 * If the widths of the `BitmapData` objects are not equal, the method returns the number `-3`.
+	 * If the heights of the `BitmapData` objects are not equal, the method returns the number `-4`.
 	 */
 	public static function compare(Bitmap1:BitmapData, Bitmap2:BitmapData):Dynamic
 	{
@@ -236,7 +236,7 @@ class FlxBitmapDataUtil
 	}
 
 	/**
-	 * Returns the amount of bytes a bitmapData occupies in memory.
+	 * Returns the amount of bytes a `BitmapData` occupies in memory.
 	 */
 	public static inline function getMemorySize(bitmapData:BitmapData):Float
 	{
@@ -244,15 +244,15 @@ class FlxBitmapDataUtil
 	}
 
 	/**
-	 * Replaces all BitmapData's pixels with specified color with newColor pixels.
-	 * WARNING: very expensive (especially on big graphics) as it iterates over every single pixel.
+	 * Replaces all `BitmapData`'s pixels with specified color with `newColor` pixels.
+	 * WARNING: Very expensive (especially on big graphics), as it iterates over every single pixel.
 	 *
-	 * @param	bitmapData			BitmapData to change
-	 * @param	color				Color to replace
-	 * @param	newColor			New color
-	 * @param	fetchPositions		Whether we need to store positions of pixels which colors were replaced
-	 * @param	rect				area to apply color replacement. Optional, uses whole image area if the rect is null
-	 * @return	Array replaced pixels positions
+	 * @param bitmapData `BitmapData` to change.
+	 * @param color Color to replace.
+	 * @param newColor New color.
+	 * @param fetchPositions Whether to store the positions of pixels which were replaced.
+	 * @param rect Optional area to apply color replacement. Uses whole image area if `null`.
+	 * @return Array of replaced pixels positions.
 	 */
 	public static function replaceColor(bitmapData:BitmapData, color:FlxColor, newColor:FlxColor, fetchPositions:Bool = false, ?rect:FlxRect):Array<FlxPoint>
 	{
@@ -316,12 +316,12 @@ class FlxBitmapDataUtil
 
 	/**
 	 * Gets image without spaces between tiles and generates new one with spaces and adds borders around them.
-	 * @param	bitmapData	original image without spaces between tiles.
-	 * @param	frameSize	the size of tile in spritesheet.
-	 * @param	spacing		spaces between tiles to add.
-	 * @param	border		how many times to copy border of tiles.
-	 * @param	region		region of image to use as a source graphics for spritesheet. Default value is null, which means that whole image will be used.
-	 * @return	Image for spritesheet with inserted spaces between tiles.
+	 * @param bitmapData Original image without spaces between tiles.
+	 * @param frameSize The size of tile in spritesheet.
+	 * @param spacing Spaces between tiles to add.
+	 * @param border How many times to copy border of tiles.
+	 * @param region Region of image to use as a source graphics for spritesheet. Default value is `null`, which means that whole image will be used.
+	 * @return Image for spritesheet with inserted spaces between tiles.
 	 */
 	public static function addSpacesAndBorders(bitmapData:BitmapData, ?frameSize:FlxPoint, ?spacing:FlxPoint, ?border:FlxPoint, ?region:FlxRect):BitmapData
 	{
@@ -389,19 +389,19 @@ class FlxBitmapDataUtil
 
 	/**
 	 * Helper method for copying border pixels around tiles.
-	 * It modifies provided image, and assumes that there are spaces between tile images already.
+	 * It modifies the provided image, and assumes that there are spaces between tile images already.
 	 *
-	 * @param	bitmapData 			image with spaces between tiles to fill with border pixels
-	 * @param	frameWidth			tile width
-	 * @param	frameHeight			tile height
-	 * @param	spaceX				horizontal spacing between tiles
-	 * @param	spaceY				vertical spacing between tiles
-	 * @param	borderX				how many times to copy border of tiles on horizontal axis.
-	 * @param	borderY				how many times to copy border of tiles on vertical axis.
-	 * @param	horizontalFrames	how many columns of tiles on provided image.
-	 * @param	verticalFrames		how many rows of tiles on provided image.
-	 * @return	Modified spritesheet with copied pixels around tile images.
-	 * @since   4.1.0
+	 * @param bitmapData Image with spaces between tiles to fill with border pixels.
+	 * @param frameWidth Tile width.
+	 * @param frameHeight Tile height.
+	 * @param spaceX Horizontal spacing between tiles.
+	 * @param spaceY Vertical spacing between tiles.
+	 * @param borderX How many times to copy border of tiles on horizontal axis.
+	 * @param borderY How many times to copy border of tiles on vertical axis.
+	 * @param horizontalFrames How many columns of tiles on provided image.
+	 * @param verticalFrames How many rows of tiles on provided image.
+	 * @return Modified spritesheet with copied pixels around tile images.
+	 * @since 4.1.0
 	 */
 	public static function copyBorderPixels(bitmapData:BitmapData, frameWidth:Int, frameHeight:Int, spaceX:Int, spaceY:Int, borderX:Int, borderY:Int,
 			horizontalFrames:Int, verticalFrames:Int):BitmapData
@@ -456,13 +456,13 @@ class FlxBitmapDataUtil
 	}
 
 	/**
-	 * Generates BitmapData with prerotated brush stamped on it
+	 * Generates `BitmapData` with prerotated brush stamped on it.
 	 *
-	 * @param	brush			The image you want to rotate and stamp.
-	 * @param	rotations		The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
-	 * @param	antiAliasing	Whether to use high quality rotations when creating the graphic.  Default is false.
-	 * @param	autoBuffer		Whether to automatically increase the image size to accommodate rotated corners.  Default is false.  Will create frames that are 150% larger on each axis than the original frame or graphic.
-	 * @return	Created BitmapData with stamped prerotations on it.
+	 * @param brush The image to rotate and stamp.
+	 * @param rotations The number of rotation frames the final sprite should have. For small sprites this can be quite a large number (360 even) without any problems.
+	 * @param antiAliasing Whether to use high quality rotations when creating the graphic. Default is `false`.
+	 * @param autoBuffer Whether to automatically increase the image size to accommodate rotated corners. Default is `false`. Will create frames that are 150% larger on each axis than the original frame or graphic.
+	 * @return Created `BitmapData` with stamped prerotations on it.
 	 */
 	public static function generateRotations(brush:BitmapData, rotations:Int = 16, antiAliasing:Bool = false, autoBuffer:Bool = false):BitmapData
 	{

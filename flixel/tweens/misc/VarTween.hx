@@ -19,9 +19,9 @@ class VarTween extends FlxTween
 	/**
 	 * Tweens multiple numeric public properties.
 	 *
-	 * @param	object		The object containing the properties.
-	 * @param	properties	An object containing key/value pairs of properties and target values.
-	 * @param	duration	Duration of the tween.
+	 * @param object The object containing the properties.
+	 * @param properties An object containing key/value pairs of properties and target values.
+	 * @param duration Duration of the tween.
 	 */
 	public function tween(object:Dynamic, properties:Dynamic, duration:Float):VarTween
 	{
@@ -119,7 +119,7 @@ class VarTween extends FlxTween
 	{
 		if (object == _object && field == null)
 			return true;
-		
+
 		for (property in _propertyInfos)
 		{
 			if (object == property.object && (field == property.field || field == null))
@@ -136,4 +136,4 @@ private typedef VarTweenProperty =
 	field:String,
 	startValue:Float,
 	range:Float
-}
+};

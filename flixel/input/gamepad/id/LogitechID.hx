@@ -3,7 +3,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
- * IDs for Logitech controllers (key codes based on Cordless Rumblepad 2)
+ * IDs for Logitech controllers (key codes based on Cordless Rumblepad 2).
  */
 class LogitechID
 {
@@ -26,7 +26,7 @@ class LogitechID
 	public static inline var DPAD_LEFT:Int = 6;
 	public static inline var DPAD_RIGHT:Int = 7;
 
-	// TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
+	// TODO: Someone needs to look this up and define it! (NOTE: not all Logitech controllers have this)
 	public static inline var LOGITECH:Int = -1;
 	#else // native and html5
 	public static inline var ONE:Int = 0;
@@ -48,7 +48,7 @@ class LogitechID
 	public static inline var DPAD_LEFT:Int = 18;
 	public static inline var DPAD_RIGHT:Int = 19;
 
-	// TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
+	// TODO: Someone needs to look this up and define it! (NOTE: not all Logitech controllers have this)
 	public static inline var LOGITECH:Int = -5;
 	#end
 

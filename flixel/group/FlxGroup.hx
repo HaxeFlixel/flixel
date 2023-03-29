@@ -18,7 +18,7 @@ typedef FlxGroup = FlxTypedGroup<FlxBasic>;
 /**
  * This is an organizational class that can update and render a bunch of `FlxBasic`s.
  * NOTE: Although `FlxGroup` extends `FlxBasic`, it will not automatically
- * add itself to the global collisions quad tree, it will only add its members.
+ * add itself to the global collisions quad tree; it will only add its members.
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
@@ -75,7 +75,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	public var members(default, null):Array<T>;
 
 	/**
-	 * The maximum capacity of this group. Default is `0`, meaning no max capacity, and the group can just grow.
+	 * The maximum capacity of this group.
+	 * Default is `0`, meaning no max capacity, and the group can just grow indefinitely.
 	 */
 	public var maxSize(default, set):Int;
 
@@ -113,7 +114,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	var _marker:Int = 0;
 
 	/**
-	 * @param   MaxSize   Maximum amount of members allowed.
+	 * @param MaxSize Maximum amount of members allowed.
 	 */
 	public function new(MaxSize:Int = 0)
 	{
@@ -124,16 +125,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		flixelType = GROUP;
 	}
 
-	/**
-	 * **WARNING:** A destroyed `FlxBasic` can't be used anymore.
-	 * It may even cause crashes if it is still part of a group or state.
-	 * You may want to use `kill()` instead if you want to disable the object temporarily only and `revive()` it later.
-	 *
-	 * This function is usually not called manually (Flixel calls it automatically during state switches for all `add()`ed objects).
-	 *
-	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
-	 * Don't forget to call `super.destroy()`!
-	 */
 	override public function destroy():Void
 	{
 		super.destroy();
@@ -159,7 +150,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Automatically goes through and calls update on everything you added.
+	 * Automatically goes through and calls `update()` on everything you added.
+	 * 
+	 * @param elapsed The amount of time in seconds that have passed since the last frame.
 	 */
 	override public function update(elapsed:Float):Void
 	{
@@ -178,7 +171,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Automatically goes through and calls render on everything you added.
+	 * Automatically goes through and calls `draw()` on everything you added.
 	 */
 	override public function draw():Void
 	{
@@ -205,14 +198,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Adds a new `FlxBasic` subclass (`FlxBasic`, `FlxSprite`, `Enemy`, etc) to the group.
+	 * Adds a new `FlxBasic` subclass (`FlxBasic`, `FlxSprite`, `Enemy`, etc.) to the group.
 	 * `FlxGroup` will try to replace a `null` member of the array first.
 	 * Failing that, `FlxGroup` will add it to the end of the member array.
 	 * WARNING: If the group has a `maxSize` that has already been met,
 	 * the object will NOT be added to the group!
 	 *
-	 * @param   Object   The object you want to add to the group.
-	 * @return  The same `FlxBasic` object that was passed in.
+	 * @param Object The object you want to add to the group.
+	 * @return The same `FlxBasic` object that was passed in.
 	 */
 	public function add(Object:T):T
 	{
@@ -258,22 +251,22 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Inserts a new `FlxBasic` subclass (`FlxBasic`, `FlxSprite`, `Enemy`, etc)
+	 * Inserts a new `FlxBasic` subclass (`FlxBasic`, `FlxSprite`, `Enemy`, etc.)
 	 * into the group at the specified position.
 	 * `FlxGroup` will try to replace a `null` member at the specified position of the array first.
 	 * Failing that, `FlxGroup` will insert it at the position of the member array.
 	 * WARNING: If the group has a `maxSize` that has already been met,
 	 * the object will NOT be inserted to the group!
 	 *
-	 * @param   Position   The position in the group where you want to insert the object.
-	 * @param   Object     The object you want to insert into the group.
-	 * @return  The same `FlxBasic` object that was passed in.
+	 * @param position The position in the group where you want to insert the object.
+	 * @param object The object you want to insert into the group.
+	 * @return The same `FlxBasic` object that was passed in.
 	 */
 	public function insert(position:Int, object:T):T
 	{
 		if (object == null)
 		{
-			FlxG.log.warn("Cannot insert a `null` object into a FlxGroup.");
+			FlxG.log.warn("Cannot insert a null object into a FlxGroup.");
 			return null;
 		}
 
@@ -307,7 +300,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Recycling is designed to help you reuse game objects without always re-allocating or "newing" them.
+	 * Recycling is designed to help you reuse game objects without always re-allocating or instantiating them.
 	 * It behaves differently depending on whether `maxSize` equals `0` or is bigger than `0`.
 	 *
 	 * `maxSize > 0` / "rotating-recycling" (used by `FlxEmitter`):
@@ -315,21 +308,21 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 *   - otherwise:    returns a new object.
 	 *
 	 * `maxSize == 0` / "grow-style-recycling"
-	 *   - tries to find the first object with `exists == false`
-	 *   - otherwise: adds a new object to the `members` array
+	 *   - tries to find the first object with `exists == false`.
+	 *   - otherwise: adds a new object to the `members` array.
 	 *
 	 * WARNING: If this function needs to create a new object, and no object class was provided,
 	 * it will return `null` instead of a valid object!
 	 *
-	 * @param   ObjectClass     The class type you want to recycle (e.g. `FlxSprite`, `EvilRobot`, etc).
-	 * @param   ObjectFactory   Optional factory function to create a new object
-	 *                          if there aren't any dead members to recycle.
-	 *                          If `null`, `Type.createInstance()` is used,
-	 *                          which requires the class to have no constructor parameters.
-	 * @param   Force           Force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
-	 * @param   Revive          Whether recycled members should automatically be revived
-	 *                          (by calling `revive()` on them).
-	 * @return  A reference to the object that was created.
+	 * @param ObjectClass The class type you want to recycle (e.g. `FlxSprite`, `EvilRobot`, etc.).
+	 * @param ObjectFactory Optional factory function to create a new object
+	 * if there aren't any dead members to recycle.
+	 * If `null`, `Type.createInstance()` is used,
+	 * which requires the class to have no constructor parameters.
+	 * @param Force Whether to force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
+	 * @param Revive Whether recycled members should automatically be revived
+	 * (by calling `revive()` on them).
+	 * @return A reference to the object that was created.
 	 */
 	public function recycle(?ObjectClass:Class<T>, ?ObjectFactory:Void->T, Force:Bool = false, Revive:Bool = true):T
 	{
@@ -389,9 +382,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Removes an object from the group.
 	 *
-	 * @param   Object   The `FlxBasic` you want to remove.
-	 * @param   Splice   Whether the object should be cut from the array entirely or not.
-	 * @return  The removed object.
+	 * @param Object The `FlxBasic` you want to remove.
+	 * @param Splice Whether the object should be cut from the array entirely.
+	 * @return The removed object.
 	 */
 	public function remove(Object:T, Splice:Bool = false):T
 	{
@@ -421,9 +414,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Replaces an existing `FlxBasic` with a new one.
 	 * Does not do anything and returns `null` if the old object is not part of the group.
 	 *
-	 * @param   OldObject   The object you want to replace.
-	 * @param   NewObject   The new object you want to use instead.
-	 * @return  The new object.
+	 * @param OldObject The object you want to replace.
+	 * @param NewObject The new object you want to use instead.
+	 * @return The new object.
 	 */
 	public function replace(OldObject:T, NewObject:T):T
 	{
@@ -443,14 +436,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to sort the group according to a particular value and order.
-	 * For example, to sort game objects for Zelda-style overlaps you might call
+	 * Sorts the group according to a particular value and order.
+	 * For example, to sort game objects for Zelda-style overlaps, you might call
 	 * `group.sort(FlxSort.byY, FlxSort.ASCENDING)` at the bottom of your `FlxState#update()` override.
 	 *
-	 * @param   Function   The sorting function to use - you can use one of the premade ones in
-	 *                     `FlxSort` or write your own using `FlxSort.byValues()` as a "backend".
-	 * @param   Order      A constant that defines the sort order.
-	 *                     Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
+	 * @param Function The sorting function to use. You can use one of the premade ones in
+	 * `FlxSort` or write your own using `FlxSort.byValues()` as a "backend".
+	 * @param Order A constant that defines the sort order.
+	 * Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
 	 */
 	public inline function sort(Function:Int->T->T->Int, Order:Int = FlxSort.ASCENDING):Void
 	{
@@ -458,13 +451,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `exists == false` in the group.
-	 * This is handy for recycling in general, e.g. respawning enemies.
+	 * Retrieves the first object with `exists == false` in the group.
+	 * This is handy for recycling in general (e.g., respawning enemies).
 	 *
-	 * @param   ObjectClass   An optional parameter that lets you narrow the
-	 *                        results to instances of this particular class.
-	 * @param   Force         Force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
-	 * @return  A `FlxBasic` currently flagged as not existing.
+	 * @param ObjectClass An optional parameter that lets you narrow the
+	 * results to instances of this particular class.
+	 * @param Force Whether to force the object to be an `ObjectClass` and not a super class of `ObjectClass`.
+	 * @return A `FlxBasic` currently flagged as nonexistent.
 	 */
 	public function getFirstAvailable(?ObjectClass:Class<T>, Force:Bool = false):T
 	{
@@ -489,10 +482,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first index set to `null`.
+	 * Retrieves the first index set to `null`.
 	 * Returns `-1` if no index stores a `null` object.
 	 *
-	 * @return  An `Int` indicating the first `null` slot in the group.
+	 * @return An `Int` indicating the index of the first `null` slot in the group.
 	 */
 	public function getFirstNull():Int
 	{
@@ -509,10 +502,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `exists == true` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `exists == true` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxBasic` currently flagged as existing.
+	 * @return A `FlxBasic` currently flagged as existent.
 	 */
 	public function getFirstExisting():T
 	{
@@ -531,10 +524,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `dead == false` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `alive == true` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxBasic` currently flagged as not dead.
+	 * @return A `FlxBasic` currently flagged as alive.
 	 */
 	public function getFirstAlive():T
 	{
@@ -553,10 +546,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to retrieve the first object with `dead == true` in the group.
-	 * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+	 * Retrieves the first object with `alive == false` in the group.
+	 * This is handy for checking whether everything's wiped out, choosing a squad leader, etc.
 	 *
-	 * @return  A `FlxBasic` currently flagged as dead.
+	 * @return A `FlxBasic` currently flagged as dead.
 	 */
 	public function getFirstDead():T
 	{
@@ -575,9 +568,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to find out how many members of the group are not dead.
+	 * Counts how many members of the group are `alive`.
 	 *
-	 * @return  The number of `FlxBasic`s flagged as not dead. Returns `-1` if group is empty.
+	 * @return The number of `FlxBasic`s flagged as dead. Returns `-1` if group is empty.
 	 */
 	public function countLiving():Int
 	{
@@ -602,9 +595,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Call this function to find out how many members of the group are dead.
+	 * Counts how many members of the group are not `alive`.
 	 *
-	 * @return  The number of `FlxBasic`s flagged as dead. Returns `-1` if group is empty.
+	 * @return The number of `FlxBasic`s flagged as dead. Returns `-1` if group is empty.
 	 */
 	public function countDead():Int
 	{
@@ -631,10 +624,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Returns a member at random from the group.
 	 *
-	 * @param   StartIndex  Optional offset off the front of the array.
-	 *                      Default value is `0`, or the beginning of the array.
-	 * @param   Length      Optional restriction on the number of values you want to randomly select from.
-	 * @return  A `FlxBasic` from the `members` list.
+	 * @param StartIndex Optional offset off the front of the array.
+	 * Default value is `0`, or the beginning of the array.
+	 * @param Length Optional restriction on the number of values you want to randomly select from.
+	 * @return A `FlxBasic` from the `members` list.
 	 */
 	public function getRandom(StartIndex:Int = 0, Length:Int = 0):T
 	{
@@ -647,8 +640,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Remove all instances of `FlxBasic` subclasses (`FlxSprite`, `FlxTileblock`, etc) from the list.
-	 * WARNING: does not `destroy()` or `kill()` any of these objects!
+	 * Removes all instances of `FlxBasic` subclasses (`FlxSprite`, `FlxTileblock`, etc.) from the list.
+	 * WARNING: Does not `destroy()` or `kill()` any of these objects!
 	 */
 	public function clear():Void
 	{
@@ -706,7 +699,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Iterates through every member.
+	 * Returns an iterator for iterating through every member.
+	 *
+	 * @return An iterator.
 	 */
 	public inline function iterator(?filter:T->Bool):FlxTypedGroupIterator<T>
 	{
@@ -716,8 +711,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Applies a function to all members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public function forEach(Function:T->Void, Recurse:Bool = false)
 	{
@@ -745,8 +740,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Applies a function to all `alive` members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public function forEachAlive(Function:T->Void, Recurse:Bool = false)
 	{
@@ -774,8 +769,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Applies a function to all dead members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public function forEachDead(Function:T->Void, Recurse:Bool = false)
 	{
@@ -801,10 +796,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Applies a function to all existing members.
+	 * Applies a function to all existent members.
 	 *
-	 * @param   Function   A function that modifies one element at a time.
-	 * @param   Recurse    Whether or not to apply the function to members of subgroups as well.
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public function forEachExists(Function:T->Void, Recurse:Bool = false)
 	{
@@ -832,9 +827,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Applies a function to all members of type `Class<K>`.
 	 *
-	 * @param   ObjectClass   A class that objects will be checked against before Function is applied, ex: `FlxSprite`.
-	 * @param   Function      A function that modifies one element at a time.
-	 * @param   Recurse       Whether or not to apply the function to members of subgroups as well.
+	 * @param ObjectClass A class that objects will be checked against before Function is applied (e.g., `FlxSprite`).
+	 * @param Function A function that modifies one element at a time.
+	 * @param Recurse Whether to apply the function to members of subgroups as well.
 	 */
 	public function forEachOfType<K>(ObjectClass:Class<K>, Function:K->Void, Recurse:Bool = false)
 	{
@@ -915,8 +910,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 }
 
 /**
- * Iterator implementation for groups
- * Support a filter method (used for iteratorAlive, iteratorDead and iteratorExists)
+ * Iterator implementation for groups.
+ * Supports a filter method (used for `forEachAlive()`, `forEachDead()`, and `forEachExists()`).
  * @author Masadow
  */
 class FlxTypedGroupIterator<T>

@@ -1,11 +1,11 @@
 package flixel.system.debug;
 
 #if FLX_DEBUG
-import flash.display.BitmapData;
-import flash.text.TextField;
 import flixel.FlxG;
-import flixel.system.ui.FlxSystemButton;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
+import flixel.system.ui.FlxSystemButton;
+import openfl.display.BitmapData;
+import openfl.text.TextField;
 #if FLX_RECORD
 import flixel.util.FlxStringUtil;
 #end
@@ -37,7 +37,7 @@ private class GraphicStop extends BitmapData {}
 class VCR
 {
 	/**
-	 * Texfield that displays the runtime display data for a game replay
+	 * `TextField` that displays the runtime display data for a game replay.
 	 */
 	public var runtimeDisplay:TextField;
 
@@ -83,8 +83,8 @@ class VCR
 
 	#if FLX_RECORD
 	/**
-	 * Usually called by FlxGame when a requested recording has begun.
-	 * Just updates the VCR GUI so the buttons are in the right state.
+	 * Usually called by `FlxGame` when a requested recording has begun.
+	 * Updates the VCR GUI so the buttons are in the right state.
 	 */
 	public inline function recording():Void
 	{
@@ -93,8 +93,8 @@ class VCR
 	}
 
 	/**
-	 * Usually called by FlxGame when a requested recording has stopped.
-	 * Just updates the VCR GUI so the buttons are in the right state.
+	 * Usually called by `FlxGame` when a requested recording has stopped.
+	 * Updates the VCR GUI so the buttons are in the right state.
 	 */
 	public inline function stoppedRecording():Void
 	{
@@ -103,8 +103,8 @@ class VCR
 	}
 
 	/**
-	 * Usually called by FlxGame when a replay has been stopped.
-	 * Just updates the VCR GUI so the buttons are in the right state.
+	 * Usually called by `FlxGame` when a replay has been stopped.
+	 * Updates the VCR GUI so the buttons are in the right state.
 	 */
 	public inline function stoppedReplay():Void
 	{
@@ -113,8 +113,8 @@ class VCR
 	}
 
 	/**
-	 * Usually called by FlxGame when a requested replay has begun.
-	 * Just updates the VCR GUI so the buttons are in the right state.
+	 * Usually called by `FlxGame` when a requested replay has begun.
+	 * Updates the VCR GUI so the buttons are in the right state.
 	 */
 	public inline function playingReplay():Void
 	{
@@ -123,7 +123,7 @@ class VCR
 	}
 
 	/**
-	 * Just updates the VCR GUI so the runtime displays roughly the right thing.
+	 * Updates the VCR GUI so the runtime displays roughly the right thing.
 	 */
 	public function updateRuntime(Time:Float):Void
 	{
@@ -145,7 +145,7 @@ class VCR
 	/**
 	 * Called when the user presses the Pause button.
 	 * This is different from user-defined pause behavior, or focus lost behavior.
-	 * Does NOT pause music playback!!
+	 * Does NOT pause music playback!
 	 */
 	public function onPause():Void
 	{

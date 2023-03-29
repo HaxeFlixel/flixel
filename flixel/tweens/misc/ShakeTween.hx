@@ -4,7 +4,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxAxes;
 
 /**
- * Shake effect for a FlxSprite
+ * Shake effect for a `FlxSprite`.
  */
 class ShakeTween extends FlxTween
 {
@@ -14,7 +14,7 @@ class ShakeTween extends FlxTween
 	var intensity:Float;
 
 	/**
-	 * Defines on what axes to `shake()`. Default value is `XY` / both.
+	 * Defines on what axes to shake. Default value is `XY` / both.
 	 */
 	var axes:FlxAxes;
 
@@ -29,13 +29,13 @@ class ShakeTween extends FlxTween
 	var initialOffset:FlxPoint;
 
 	/**
-	 * A simple shake effect for FlxSprite.
+	 * A simple shake effect for `FlxSprite`.
 	 *
-	 * @param	Sprite       Sprite to shake.
-	 * @param   Intensity    Percentage representing the maximum distance
-	 *                       that the sprite can move while shaking.
-	 * @param   Duration     The length in seconds that the shaking effect should last.
-	 * @param   Axes         On what axes to shake. Default value is `FlxAxes.XY` / both.
+	 * @param Sprite Sprite to shake.
+	 * @param Intensity Percentage representing the maximum distance
+	 * that the sprite can move while shaking.
+	 * @param Duration The length in seconds that the shaking effect should last.
+	 * @param Axes On what axes to shake. Default value is `FlxAxes.XY` / both.
 	 */
 	public function tween(Sprite:FlxSprite, Intensity:Float = 0.05, Duration:Float = 1, Axes:FlxAxes = XY):ShakeTween
 	{

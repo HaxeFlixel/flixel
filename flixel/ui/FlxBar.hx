@@ -1,8 +1,5 @@
 package flixel.ui;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -15,11 +12,14 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxGradient;
 import flixel.util.FlxStringUtil;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 // TODO: better handling bars with borders (don't take border into account while drawing its front).
 
 /**
- * FlxBar is a quick and easy way to create a graphical bar which can
+ * `FlxBar` is a quick and easy way to create a graphical bar which can
  * be used as part of your UI/HUD, or positioned next to a sprite.
  * It could represent a loader, progress or health bar.
  *
@@ -29,76 +29,76 @@ import flixel.util.FlxStringUtil;
 class FlxBar extends FlxSprite
 {
 	/**
-	 * If false, the bar is tracking its parent
-	 * (the position is synchronized with the parent's position).
+	 * Whether the bar stays at a fixed position rather than tracking its parent.
+	 * Default is `true`.
 	 */
 	public var fixedPosition:Bool = true;
 
 	/**
-	 * How many pixels = 1% of the bar (barWidth (or barHeight) / 100)
+	 * How many pixels = 1% of the bar (`barWidth` (or `barHeight`) / 100).
 	 */
 	public var pxPerPercent(default, null):Float;
 
 	/**
-	 * The positionOffset controls how far offset the FlxBar is from the parent sprite (if at all)
+	 * How far offset the `FlxBar` is from the parent sprite (if at all).
 	 */
 	public var positionOffset(default, null):FlxPoint;
 
 	/**
-	 * If this FlxBar should be killed when its empty
+	 * Whether this `FlxBar` should be killed when it's empty.
 	 */
 	public var killOnEmpty:Bool = false;
 
 	/**
-	 * The percentage of how full the bar is (a value between 0 and 100)
+	 * The percentage of how full the bar is (a value between `0` and `100`).
 	 */
 	public var percent(get, set):Float;
 
 	/**
-	 * The current value - must always be between min and max
+	 * The current value. Must always be between `min` and `max`.
 	 */
 	@:isVar
 	public var value(get, set):Float;
 
 	/**
-	 * The minimum value the bar can be (can never be >= max)
+	 * The minimum value the bar can be (can never be `>= max`).
 	 */
 	public var min(default, null):Float;
 
 	/**
-	 * The maximum value the bar can be (can never be <= min)
+	 * The maximum value the bar can be (can never be `<= min`).
 	 */
 	public var max(default, null):Float;
 
 	/**
-	 * How wide is the range of this bar? (max - min)
+	 * The range of this bar (`max - min`).
 	 */
 	public var range(default, null):Float;
 
 	/**
-	 * What 1% of the bar is equal to in terms of value (range / 100)
+	 * What 1% of the bar is equal to in terms of value (`range / 100`).
 	 */
 	public var pct(default, null):Float;
 
 	/**
-	 * Number of frames FlxBar will have. Default value is 100.
-	 * The bigger value you set then visual will change smoother.
+	 * Number of frames this `FlxBar` will have. Default value is `100`.
+	 * The bigger the value, the smoother the visual change.
 	 * @since 4.1.0
 	 */
 	public var numDivisions(default, set):Int = 100;
 
 	/**
-	 * This function will be called when value will hit it's minimum
+	 * A function that is called when `value` hits its minimum.
 	 */
 	public var emptyCallback:Void->Void;
 
 	/**
-	 * This function will be called when value will hit it's maximum
+	 * A function that is called when `value` hits its maximum.
 	 */
 	public var filledCallback:Void->Void;
 
 	/**
-	 * Object to track value from/
+	 * Object to track value from.
 	 */
 	public var parent:Dynamic;
 
@@ -111,7 +111,7 @@ class FlxBar extends FlxSprite
 	public var barHeight(default, null):Int;
 
 	/**
-	 * BarFrames which will be used for filled bar rendering.
+	 * `FlxImageFrame` which will be used for filled bar rendering.
 	 * It is recommended to use this property in tile render mode
 	 * (although it will work in blit render mode also).
 	 */
@@ -121,14 +121,14 @@ class FlxBar extends FlxSprite
 	public var backFrames(get, set):FlxImageFrame;
 
 	/**
-	 * The direction from which the health bar will fill-up. Default is from left to right. Change takes effect immediately.
+	 * The direction from which the bar will fill up. Default is from left to right. Change takes effect immediately.
 	 */
 	public var fillDirection(default, set):FlxBarFillDirection;
 
 	var _fillHorizontal:Bool;
 
 	/**
-	 * FlxSprite which is used for rendering front graphics of bar (showing value) in tile render mode.
+	 * `FlxFrame` which is used for rendering front graphics of the bar (showing value) in tile render mode.
 	 */
 	var _frontFrame:FlxFrame;
 
@@ -147,18 +147,18 @@ class FlxBar extends FlxSprite
 	var _maxPercent:Int = 100;
 
 	/**
-	 * Create a new FlxBar Object
+	 * Creates a new `FlxBar` object.
 	 *
-	 * @param	x			The x coordinate location of the resulting bar (in world pixels)
-	 * @param	y			The y coordinate location of the resulting bar (in world pixels)
-	 * @param	direction 	The fill direction, LEFT_TO_RIGHT by default
-	 * @param	width		The width of the bar in pixels
-	 * @param	height		The height of the bar in pixels
-	 * @param	parentRef	A reference to an object in your game that you wish the bar to track
-	 * @param	variable	The variable of the object that is used to determine the bar position. For example if the parent was an FlxSprite this could be "health" to track the health value
-	 * @param	min			The minimum value. I.e. for a progress bar this would be zero (nothing loaded yet)
-	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
-	 * @param	showBorder	Include a 1px border around the bar? (if true it adds +2 to width and height to accommodate it)
+	 * @param x The x-coordinate of the resulting bar (in world pixels).
+	 * @param y The y-coordinate of the resulting bar (in world pixels).
+	 * @param direction The fill direction. `LEFT_TO_RIGHT` by default.
+	 * @param width The width of the bar in pixels.
+	 * @param height The height of the bar in pixels.
+	 * @param parentRef A reference to the object that the bar should track.
+	 * @param variable The variable of the object that is used to determine the bar position. For example, if the parent was an `FlxObject`, this could be `"health"` to track the `health` value.
+	 * @param min The minimum value (e.g., For a progress bar, this would be `0`).
+	 * @param max The maximum value the bar can reach (e.g., For a progress bar, this would typically be `100`).
+	 * @param showBorder Whether to include a 1px border around the bar (if `true`, it adds +2 to width and height to accommodate it).
 	 */
 	public function new(x:Float = 0, y:Float = 0, ?direction:FlxBarFillDirection, width:Int = 100, height:Int = 10, ?parentRef:Dynamic, variable:String = "",
 			min:Float = 0, max:Float = 100, showBorder:Bool = false)
@@ -222,13 +222,13 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Track the parent FlxSprites x/y coordinates. For example if you wanted your sprite to have a floating health-bar above their head.
-	 * If your health bar is 10px tall and you wanted it to appear above your sprite, then set offsetY to be -10
-	 * If you wanted it to appear below your sprite, and your sprite was 32px tall, then set offsetY to be 32. Same applies to offsetX.
+	 * Tracks the parent `FlxSprite`s x-/y-coordinates. Could be used if you wanted your sprite to have a floating health bar above its head.
+	 * If the bar is 10px tall and you wanted it to appear above your sprite, then set `offsetY` to be `-10`.
+	 * If you wanted it to appear below your sprite, and your sprite was 32px tall, then set `offsetY` to be `32`. Same applies to `offsetX`.
 	 *
-	 * @param	offsetX		The offset on X in relation to the origin x/y of the parent
-	 * @param	offsetY		The offset on Y in relation to the origin x/y of the parent
-	 * @see		stopTrackingParent
+	 * @param offsetX The x-offset in relation to the origin of the parent.
+	 * @param offsetY The y-offset in relation to the origin of the parent.
+	 * @see `stopTrackingParent()`
 	 */
 	public function trackParent(offsetX:Int, offsetY:Int):Void
 	{
@@ -243,13 +243,13 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Sets a parent for this FlxBar. Instantly replaces any previously set parent and refreshes the bar.
+	 * Sets a parent for this `FlxBar`. Instantly replaces any previously set parent and refreshes the bar.
 	 *
-	 * @param	parentRef	A reference to an object in your game that you wish the bar to track
-	 * @param	variable	The variable of the object that is used to determine the bar position. For example if the parent was an FlxSprite this could be "health" to track the health value
-	 * @param	track		If you wish the FlxBar to track the x/y coordinates of parent set to true (default false)
-	 * @param	offsetX		The offset on X in relation to the origin x/y of the parent
-	 * @param	offsetY		The offset on Y in relation to the origin x/y of the parent
+	 * @param parentRef A reference to the object that the bar should track.
+	 * @param variable The variable of the object that is used to determine the bar position. For example, if the parent was an `FlxObject`, this could be `"health"` to track the `health` value.
+	 * @param track Whether this `FlxBar` should track its parent's position. Default is `false`.
+	 * @param offsetX The x-offset in relation to the origin of the parent.
+	 * @param offsetY The y-offset in relation to the origin of the parent.
 	 */
 	public function setParent(parentRef:Dynamic, variable:String, track:Bool = false, offsetX:Int = 0, offsetY:Int = 0):Void
 	{
@@ -265,10 +265,10 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Tells the health bar to stop following the parent sprite. The given posX and posY values are where it will remain on-screen.
+	 * Tells the bar to stop following the parent sprite. The given `posX` and `posY` values are where it will remain on-screen.
 	 *
-	 * @param	posX	X coordinate of the health bar now it's no longer tracking the parent sprite
-	 * @param	posY	Y coordinate of the health bar now it's no longer tracking the parent sprite
+	 * @param posX The x-coordinate of the bar, now that it's no longer tracking the parent sprite.
+	 * @param posY The y-coordinate of the bar, now that it's no longer tracking the parent sprite.
 	 */
 	public function stopTrackingParent(posX:Int, posY:Int):Void
 	{
@@ -278,13 +278,13 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Sets callbacks which will be triggered when the value of this FlxBar reaches min or max.
+	 * Sets callbacks which will be triggered when the value of this `FlxBar` reaches `min` or `max`.
 	 * Functions will only be called once and not again until the value changes.
-	 * Optionally the FlxBar can be killed if it reaches min, but if will fire the empty callback first (if set)
+	 * Optionally the FlxBar can be killed if it reaches `min`, but if will fire the empty callback first (if set)
 	 *
-	 * @param	onEmpty			The function that is called if the value of this FlxBar reaches min
-	 * @param	onFilled		The function that is called if the value of this FlxBar reaches max
-	 * @param	killOnEmpty		If set it will call FlxBar.kill() if the value reaches min
+	 * @param onEmpty The function that is called if the value of this `FlxBar` reaches `min`.
+	 * @param onFilled The function that is called if the value of this `FlxBar` reaches `max`.
+	 * @param killOnEmpty Whether `kill()` will be called if the value reaches `min`. Defaults to `false`.
 	 */
 	public function setCallbacks(onEmpty:Void->Void, onFilled:Void->Void, killOnEmpty:Bool = false):Void
 	{
@@ -294,10 +294,10 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Set the minimum and maximum allowed values for the FlxBar
+	 * Sets the minimum and maximum allowed values for this `FlxBar`.
 	 *
-	 * @param	min			The minimum value. I.e. for a progress bar this would be zero (nothing loaded yet)
-	 * @param	max			The maximum value the bar can reach. I.e. for a progress bar this would typically be 100.
+	 * @param min The minimum value (e.g., For a progress bar, this would be `0`).
+	 * @param max The maximum value the bar can reach (e.g., For a progress bar, this would typically be `100`).
 	 */
 	public function setRange(min:Float, max:Float):Void
 	{
@@ -325,14 +325,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled health bar in the given colours, with optional 1px thick border.
-	 * All colour values are in 0xAARRGGBB format, so if you want a slightly transparent health bar give it lower AA values.
+	 * Creates a solid-color filled bar in the given colors, with optional 1px thick border.
+	 * All color values are in ARGB format, so, if you want a slightly transparent bar, give it lower AA values.
 	 *
-	 * @param	empty		The color of the bar when empty in 0xAARRGGBB format (the background colour)
-	 * @param	fill		The color of the bar when full in 0xAARRGGBB format (the foreground colour)
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
-	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return	This FlxBar object with generated images for front and background.
+	 * @param empty The color of the bar when empty in ARGB format (the background color).
+	 * @param fill The color of the bar when full in ARGB format (the foreground color).
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated images for front and background.
 	 */
 	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -342,12 +342,12 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled background for health bar in the given colour, with optional 1px thick border.
+	 * Creates a solid-color filled background for the bar in the given color, with optional 1px thick border.
 	 *
-	 * @param	empty			The color of the bar when empty in 0xAARRGGBB format (the background colour)
-	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
-	 * @param	border			The border colour in 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for rendering health bar background.
+	 * @param empty The color of the bar when empty in ARGB format (the background color).
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated image for rendering the bar's background.
 	 */
 	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -396,11 +396,11 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled foreground for health bar in the given colour, with optional 1px thick border.
-	 * @param	fill		The color of the bar when full in 0xAARRGGBB format (the foreground colour)
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
-	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for rendering actual values.
+	 * Creates a solid-color filled foreground for the bar in the given color, with optional 1px thick border.
+	 * @param fill The color of the bar when full in ARGB format (the foreground color).
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated image for rendering actual values.
 	 */
 	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
 	{
@@ -448,16 +448,16 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled health bar using the given colour ranges, with optional 1px thick border.
-	 * All colour values are in 0xAARRGGBB format, so if you want a slightly transparent health bar give it lower AA values.
+	 * Creates a gradient filled bar using the given color ranges, with optional 1px thick border.
+	 * All color values are in ARGB format, so, if you want a slightly transparent bar, give it lower AA values.
 	 *
-	 * @param	empty		Array of colour values used to create the gradient of the health bar when empty, each colour must be in 0xAARRGGBB format (the background colour)
-	 * @param	fill		Array of colour values used to create the gradient of the health bar when full, each colour must be in 0xAARRGGBB format (the foreground colour)
-	 * @param	chunkSize	If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
-	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return 	This FlxBar object with generated images for front and background.
+	 * @param empty Array of color values used to create the gradient of the bar when empty (the background color). Each color must be in ARGB format.
+	 * @param fill Array of color values used to create the gradient of the bar when full (the foreground color). Each color must be in ARGB format.
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated images for front and background.
 	 */
 	public function createGradientBar(empty:Array<FlxColor>, fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
 			border:FlxColor = FlxColor.WHITE):FlxBar
@@ -468,14 +468,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled background for health bar using the given colour range, with optional 1px thick border.
+	 * Creates a gradient filled background for the bar using the given color range, with optional 1px thick border.
 	 *
-	 * @param	empty			Array of colour values used to create the gradient of the health bar when empty, each colour must be in 0xAARRGGBB format (the background colour)
-	 * @param	chunkSize		If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param	rotation		Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
-	 * @param	border			The border colour in 0xAARRGGBB format
-	 * @return 	This FlxBar object with generated image for background rendering.
+	 * @param empty Array of color values used to create the gradient of the bar when empty (the background color). Each color must be in ARGB format.
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated image for background rendering.
 	 */
 	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
 			border:FlxColor = FlxColor.WHITE):FlxBar
@@ -533,14 +533,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled foreground for health bar using the given colour range, with optional 1px thick border.
+	 * Creates a gradient filled foreground for the bar using the given color range, with optional 1px thick border.
 	 *
-	 * @param	fill		Array of colour values used to create the gradient of the health bar when full, each colour must be in 0xAARRGGBB format (the foreground colour)
-	 * @param	chunkSize	If you want a more old-skool looking chunky gradient, increase this value!
-	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
-	 * @param	border		The border colour in 0xAARRGGBB format
-	 * @return 	This FlxBar object with generated image for rendering actual values.
+	 * @param fill Array of color values used to create the gradient of the bar when full (the foreground color). Each color must be in ARGB format.
+	 * @param chunkSize If you want a more old-school looking chunky gradient, increase this value!
+	 * @param rotation Angle of the gradient in degrees. 90 = top to bottom; 180 = left to right. Any angle is valid.
+	 * @param showBorder Whether to include a 1px border around the bar.
+	 * @param border The border color in ARGB format.
+	 * @return This `FlxBar` object with generated image for rendering actual values.
 	 */
 	public function createGradientFilledBar(fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
 			border:FlxColor = FlxColor.WHITE):FlxBar
@@ -598,16 +598,16 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a health bar filled using the given bitmap images.
-	 * You can provide "empty" (background) and "fill" (foreground) images. either one or both images (empty / fill), and use the optional empty/fill colour values
-	 * All colour values are in 0xAARRGGBB format, so if you want a slightly transparent health bar give it lower AA values.
-	 * NOTE: This method doesn't check if the empty image doesn't have the same size as fill image.
+	 * Creates a bar filled using the given graphics.
+	 * You can provide "empty" (background) and "fill" (foreground) images. either one or both images (empty / fill), and use the optional empty/fill color values
+	 * All color values are in ARGB format, so, if you want a slightly transparent bar, give it lower AA values.
+	 * NOTE: This method doesn't check whether the empty image has the same size as fill image.
 	 *
-	 * @param	empty				Bitmap image used as the background (empty part) of the health bar, if null the emptyBackground colour is used
-	 * @param	fill				Bitmap image used as the foreground (filled part) of the health bar, if null the fillBackground colour is used
-	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @return	This FlxBar object with generated images for front and background.
+	 * @param empty Graphic used as the background (empty part) of the bar. If `null`, the `emptyBackground` color is used.
+	 * @param fill Graphic used as the foreground (filled part) of the bar. If `null`, the `fillBackground` color is used.
+	 * @param emptyBackground If no background (empty) image is given, use this color value instead. ARGB format.
+	 * @param fillBackground If no foreground (fill) image is given, use this color value instead. ARGB format.
+	 * @return This `FlxBar` object with generated images for front and background.
 	 */
 	public function createImageBar(?empty:FlxGraphicAsset, ?fill:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK,
 			fillBackground:FlxColor = FlxColor.LIME):FlxBar
@@ -618,11 +618,11 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Loads given bitmap image for health bar background.
+	 * Loads given graphic for the bar's background.
 	 *
-	 * @param	empty				Bitmap image used as the background (empty part) of the health bar, if null the emptyBackground colour is used
-	 * @param	emptyBackground		If no background (empty) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for background rendering.
+	 * @param empty Graphic used as the background (empty part) of the bar. If `null`, the `emptyBackground` color is used.
+	 * @param emptyBackground If no background (empty) image is given, use this color value instead. ARGB format.
+	 * @return This `FlxBar` object with generated image for background rendering.
 	 */
 	public function createImageEmptyBar(?empty:FlxGraphicAsset, emptyBackground:FlxColor = FlxColor.BLACK):FlxBar
 	{
@@ -660,11 +660,11 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Loads given bitmap image for health bar foreground.
+	 * Loads given graphic for the bar's foreground.
 	 *
-	 * @param	fill				Bitmap image used as the foreground (filled part) of the health bar, if null the fillBackground colour is used
-	 * @param	fillBackground		If no foreground (fill) image is given, use this colour value instead. 0xAARRGGBB format
-	 * @return	This FlxBar object with generated image for rendering actual values.
+	 * @param fill Graphic used as the foreground (filled part) of the bar. If `null`, the `fillBackground` color is used.
+	 * @param fillBackground If no foreground (fill) image is given, use this color value instead. ARGB format.
+	 * @return This `FlxBar` object with generated image for rendering actual values.
 	 */
 	public function createImageFilledBar(?fill:FlxGraphicAsset, fillBackground:FlxColor = FlxColor.LIME):FlxBar
 	{
@@ -721,8 +721,8 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Updates health bar view according its current value.
-	 * Called when the health bar detects a change in the health of the parent.
+	 * Updates the bar view according its current value.
+	 * Called when the bar detects a change in the variable of its parent.
 	 */
 	public function updateBar():Void
 	{
@@ -731,7 +731,7 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Stamps health bar background on its pixels
+	 * Stamps the bar's background on its pixels.
 	 */
 	public function updateEmptyBar():Void
 	{
@@ -743,7 +743,7 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Stamps health bar foreground on its pixels
+	 * Stamps the bar's foreground on its pixels.
 	 */
 	public function updateFilledBar():Void
 	{

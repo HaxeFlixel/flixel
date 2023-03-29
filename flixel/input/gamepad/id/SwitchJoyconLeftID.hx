@@ -3,19 +3,19 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
- * IDs for Switch's Left JoyCon controllers
+ * IDs for Switch's Left JoyCon controllers.
  *
- *-------
+ * -----
  * NOTES
- *-------
+ * -----
  *
- * WINDOWS: untested.
+ * WINDOWS: Untested.
  *
- * LINUX: untested.
+ * LINUX: Untested.
  *
- * MAC: Worked on html out of box for me when connected via microUSB cable or Bluetooth.
- * Flash and neko couldn't detect the controller via bluetooth,
- * which is weird because The pro worked wirelessly.
+ * MAC: Worked on HTML5 out of box for me when connected via microUSB cable or Bluetooth.
+ * Flash and Neko couldn't detect the controller via Bluetooth,
+ * which is weird because the pro worked wirelessly.
  * 
  * @since 4.8.0
  */
@@ -58,5 +58,4 @@ class SwitchJoyconLeftID
 		right: 25
 	});
 	#end
-	
 }

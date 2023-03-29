@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
@@ -9,9 +8,10 @@ import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
+import openfl.display.BitmapData;
 
-using flixel.util.FlxStringUtil;
 using flixel.util.FlxArrayUtil;
+using flixel.util.FlxStringUtil;
 
 /**
  * Accessed via `FlxG.debugger`.
@@ -19,20 +19,20 @@ using flixel.util.FlxArrayUtil;
 class DebuggerFrontEnd
 {
 	/**
-	 * The amount of decimals Floats are rounded to in the debugger.
+	 * The amount of decimals `Float`s are rounded to in the debugger.
 	 */
 	public var precision:Int = 3;
 
 	#if FLX_KEYBOARD
 	/**
-	 * The key codes used to toggle the debugger (see FlxG.keys for the keys available).
-	 * Default keys: F2, ` and \. Set to null to deactivate.
+	 * The key codes used to toggle the debugger (see `FlxG.keys` for the keys available).
+	 * Default keys: F2, \`, and \\. Set to `null` to deactivate.
 	 */
 	public var toggleKeys:Array<FlxKey> = [F2, GRAVEACCENT, BACKSLASH];
 	#end
 
 	/**
-	 * Whether to draw the hitboxes of FlxObjects.
+	 * Whether to draw the hitboxes of `FlxObject`s.
 	 */
 	public var drawDebug(default, set):Bool = false;
 
@@ -50,9 +50,9 @@ class DebuggerFrontEnd
 	public var visible(default, set):Bool = false;
 
 	/**
-	 * Change the way the debugger's windows are laid out.
+	 * Changes the way the debugger's windows are laid out.
 	 *
-	 * @param	Layout	The layout codes can be found in FlxDebugger, for example FlxDebugger.MICRO
+	 * @param Layout The layout type to use.
 	 */
 	public inline function setLayout(Layout:FlxDebuggerLayout):Void
 	{
@@ -62,7 +62,7 @@ class DebuggerFrontEnd
 	}
 
 	/**
-	 * Just resets the debugger windows to whatever the last selected layout was (STANDARD by default).
+	 * Resets the debugger windows to whatever the last selected layout was (`STANDARD` by default).
 	 */
 	public inline function resetLayout():Void
 	{
@@ -72,14 +72,14 @@ class DebuggerFrontEnd
 	}
 
 	/**
-	 * Create and add a new debugger button.
+	 * Creates and adds a new debugger button.
 	 *
-	 * @param   Position       Either LEFT, CENTER or RIGHT.
-	 * @param   Icon           The icon to use for the button
-	 * @param   UpHandler      The function to be called when the button is pressed.
-	 * @param   ToggleMode     Whether this is a toggle button or not.
-	 * @param   UpdateLayout   Whether to update the button layout.
-	 * @return  The added button.
+	 * @param Alignment Either `LEFT`, `CENTER`, or `RIGHT`.
+	 * @param Icon The icon to use for the button.
+	 * @param UpHandler The function to be called when the button is pressed.
+	 * @param ToggleMode Whether this is a toggle button.
+	 * @param UpdateLayout Whether to update the button layout.
+	 * @return The added button.
 	 */
 	public function addButton(Alignment:FlxHorizontalAlign, Icon:BitmapData, UpHandler:Void->Void, ToggleMode:Bool = false,
 			UpdateLayout:Bool = true):FlxSystemButton
@@ -92,11 +92,11 @@ class DebuggerFrontEnd
 	}
 
 	/**
-	 * Creates a new tracker window if there exists a tracking profile for the class / class of the object.
-	 * By default, flixel classes like FlxBasic, FlxRect and FlxPoint are supported.
+	 * Creates a new tracker window if there exists a tracking profile for the class/object.
+	 * By default, Flixel classes like `FlxBasic`, `FlxRect`, and `FlxPoint` are supported.
 	 *
-	 * @param	ObjectOrClass	The object or class to track
-	 * @param	WindowTitle	Title of the tracker window, uses the class name by default
+	 * @param ObjectOrClass The object or class to track.
+	 * @param WindowTitle Title of the tracker window. Uses the class name by default.
 	 */
 	public function track(ObjectOrClass:Dynamic, ?WindowTitle:String):Window
 	{
@@ -117,9 +117,9 @@ class DebuggerFrontEnd
 	}
 
 	/**
-	 * Adds a new TrackerProfile for track(). This also overrides existing profiles.
+	 * Adds a new `TrackerProfile` for `track()`. This also overrides existing profiles.
 	 *
-	 * @param	Profile	The TrackerProfile
+	 * @param Profile The `TrackerProfile`.
 	 */
 	public inline function addTrackerProfile(Profile:TrackerProfile):Void
 	{
@@ -131,8 +131,8 @@ class DebuggerFrontEnd
 	/**
 	 * Removes and destroys a button from the debugger.
 	 *
-	 * @param	Button			The FlxSystemButton instance to remove.
-	 * @param	UpdateLayout	Whether to update the button layout.
+	 * @param Button The `FlxSystemButton` instance to remove.
+	 * @param UpdateLayout Whether to update the button layout.
 	 */
 	public function removeButton(Button:FlxSystemButton, UpdateLayout:Bool = true):Void
 	{

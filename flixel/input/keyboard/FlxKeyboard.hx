@@ -1,21 +1,21 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import flash.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;
+import openfl.events.KeyboardEvent;
 
 /**
- * Keeps track of what keys are pressed and how with handy Bools or strings.
- * Normally accessed via `FlxG.keys`. Example: `FlxG.keys.justPressed.A`
+ * Keeps track of what keys are pressed and how with handy `Bool`s or `String`s.
+ * Normally accessed via `FlxG.keys` (e.g., `FlxG.keys.justPressed.A`).
  */
 class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 {
 	#if !web
 	/**
-	 * Function and numpad keycodes on native targets are incorrect,
-	 * this workaround fixes that. Thanks @HaxePunk!
+	 * Function and numpad key codes on native targets are incorrect.
+	 * This workaround fixes that. Thanks, @HaxePunk!
 	 * @see https://github.com/openfl/openfl-native/issues/193
 	 */
 	var _nativeCorrection:Map<String, Int>;
@@ -135,7 +135,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * this function will return an array indicating
 	 * which keys are pressed and what state they are in.
 	 *
-	 * @return	An array of key state data. Null if there is no data.
+	 * @return An array of key state data. `null` if there is no data.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
 	function record():Array<CodeValuePair>
@@ -164,7 +164,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * Part of the keystroke recording system.
 	 * Takes data about key presses and sets it into array.
 	 *
-	 * @param	Record	Array of data about key states.
+	 * @param Record Array of data about key states.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
 	function playback(Record:Array<CodeValuePair>):Void

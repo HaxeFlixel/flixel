@@ -3,19 +3,18 @@ package flixel.path;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxBaseTilemap;
-import flixel.util.FlxDirection;
 import flixel.util.FlxDirectionFlags;
 
 using flixel.util.FlxArrayUtil;
 
 /**
- * Used to find paths in a FlxBaseTilemap.  extend this class and override
- * `getNeighbors` and `getDistance` to create you're own! For top-down maps, it may
- * be wiser to extend FlxDiagonalPathfinder, as it already has a lot of basic helpers.
+ * Used to find paths in a `FlxBaseTilemap`. Extend this class and override
+ * `getNeighbors()` and `getDistance()` to create your own! For top-down maps, it may
+ * be wiser to extend `FlxDiagonalPathfinder`, as it already has a lot of basic helpers.
  * @since 5.0.0
  * 
  * To use, either call `myPathfinder.findPath(myMap, start, end)` or
- * `myMap.findPathCustom(myPathfinder, start, end)`
+ * `myMap.findPathCustom(myPathfinder, start, end)`.
  */
 typedef FlxPathfinder = FlxTypedPathfinder<FlxBaseTilemap<FlxObject>, FlxPathfinderData>;
 
@@ -27,35 +26,37 @@ typedef FlxPathfinderData = FlxTypedPathfinderData<FlxBaseTilemap<FlxObject>>;
 
 /**
  * Typed version of `FlxPathfinder` in case you're using
- * a different `FlxPathfinderData` or FlxTilemap type.
+ * a different `FlxPathfinderData` or `FlxTilemap` type.
  * @since 5.0.0
  */
 class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfinderData<Tilemap>>
 {
-	/** Data currently being processed by the pathfinder */
+	/**
+	 * Data currently being processed by the pathfinder.
+	 */
 	var createData:FlxPathfinderDataFactory<Tilemap, Data>;
 
 	/**
-	 * Creates a FlxTilemapPathPolicy.
+	 * Creates a `FlxTilemapPathPolicy`.
 	 * 
-	 * @param factory     A method to create `FlxTypedPathfinderData` instances.
+	 * @param factory A method to create `FlxTypedPathfinderData` instances.
 	 * Note: You don't need to create a new instances of the same policy for different maps.
 	 */
-	public function new (factory:FlxPathfinderDataFactory<Tilemap, Data>)
+	public function new(factory:FlxPathfinderDataFactory<Tilemap, Data>)
 	{
 		createData = factory;
 	}
 
 	/**
-	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
-	 * If no path is discovered then a null reference is returned.
+	 * Find a path through the tilemap. Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered, then a `null` reference is returned.
 	 *
-	 * @param map         The map we're moving through.
-	 * @param start       The start point in world coordinates.
-	 * @param end         The end point in world coordinates.
-	 * @param simplify    The simplification method to run on the raw path.  Default value is LINE.
-	 * @return An Array of FlxPoints, containing all waypoints from the start to the end.  If no path
-	 * could be found, then a null reference is returned.
+	 * @param map The map we're moving through.
+	 * @param start The start point in world coordinates.
+	 * @param end The end point in world coordinates.
+	 * @param simplify The simplification method to run on the raw path. Default value is `LINE`.
+	 * @return An `Array` of `FlxPoint`s, containing all waypoints from the start to the end. If no path
+	 * could be found, then a `null` reference is returned.
 	 */
 	public function findPath(map:Tilemap, start:FlxPoint, end:FlxPoint, simplify:FlxPathSimplifier = LINE):Null<Array<FlxPoint>>
 	{
@@ -83,14 +84,14 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Find a path through the tilemap.  Any tile with any collision flags set is treated as impassable.
-	 * If no path is discovered then a null reference is returned.
+	 * Finds a path through the tilemap. Any tile with any collision flags set is treated as impassable.
+	 * If no path is discovered, then a `null` reference is returned.
 	 *
-	 * @param map        The map we're moving through.
+	 * @param map The map we're moving through.
 	 * @param startIndex The start point in world coordinates.
-	 * @param endIndex   The end point in world coordinates.
-	 * @return An Array of FlxPoints, containing all waypoints from the start to the end.  If no path could be found,
-	 * then a null reference is returned.
+	 * @param endIndex The end point in world coordinates.
+	 * @return An `Array` of `FlxPoint`s, containing all waypoints from the start to the end. If no path could be found,
+	 * then a `null` reference is returned.
 	 */
 	public inline function findPathIndices(map:Tilemap, startIndex:Int, endIndex:Int)
 	{
@@ -101,9 +102,9 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Helper for findPathIndices, after a data instance is already created.
+	 * Helper for `findPathIndices()`, after a data instance is already created.
 	 * 
-	 * @param data   The pathfinder data for this current search.
+	 * @param data The pathfinder data for this current search.
 	 */
 	function findPathIndicesHelper(data:Data)
 	{
@@ -123,30 +124,36 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Pathfinding helper function, strips out extra points on the same line.
+	 * Pathfinding helper function. Strips out extra points on the same line.
 	 *
-	 * @param data   The pathfinder data for this current search.
-	 * @param points An array of FlxPoint nodes.
+	 * @param data The pathfinder data for this current search.
+	 * @param points An array of `FlxPoint` nodes.
 	 */
 	function simplifyPath(data:Data, points:Array<FlxPoint>, simplify:FlxPathSimplifier):Array<FlxPoint>
 	{
-		switch(simplify)
+		switch (simplify)
 		{
-			case NONE: points;
-			case LINE: simplifyLine(data, points);
-			case RAY: simplifyRay(data, points);
-			case RAY_STEP(resolution): simplifyRayStep(data, points, resolution);
-			case RAY_BOX(width, height): simplifyRayBox(data, points, width, height);
-			case CUSTOM(method): points = method(cast data, points);
+			case NONE:
+				points;
+			case LINE:
+				simplifyLine(data, points);
+			case RAY:
+				simplifyRay(data, points);
+			case RAY_STEP(resolution):
+				simplifyRayStep(data, points, resolution);
+			case RAY_BOX(width, height):
+				simplifyRayBox(data, points, width, height);
+			case CUSTOM(method):
+				points = method(cast data, points);
 		}
 		return points;
 	}
 
 	/**
-	 * Pathfinding helper function, strips out extra points on the same line.
+	 * Pathfinding helper function. Strips out extra points on the same line.
 	 *
-	 * @param data   The pathfinder data for this current search.
-	 * @param points An array of FlxPoint nodes.
+	 * @param data The pathfinder data for this current search.
+	 * @param points An array of `FlxPoint` nodes.
 	 */
 	function simplifyLine(data:Data, points:Array<FlxPoint>):Void
 	{
@@ -166,11 +173,11 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Pathfinding helper function, strips out even more points by raycasting from one
+	 * Pathfinding helper function. Strips out even more points by raycasting from one
 	 * point to the next and dropping unnecessary points.
 	 *
-	 * @param data   The pathfinder data for this current search.
-	 * @param points An array of FlxPoint nodes.
+	 * @param data The pathfinder data for this current search.
+	 * @param points An array of `FlxPoint` nodes.
 	 */
 	function simplifyRay(data:Data, points:Array<FlxPoint>):Void
 	{
@@ -190,20 +197,20 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 				i++;
 		}
 
-		// Put our temp point back in the pool for reuse 
+		// Put our temp point back in the pool for reuse
 		tempPoint.put();
 	}
 
 	/**
-	 * Pathfinding helper function, strips out even more points by raycasting from one
+	 * Pathfinding helper function. Strips out even more points by raycasting from one
 	 * point to the next and dropping unnecessary points.
 	 *
-	 * @param data   The pathfinder data for this current search.
-	 * @param points An array of FlxPoint nodes.
+	 * @param data The pathfinder data for this current search.
+	 * @param points An array of `FlxPoint` nodes.
 	 */
 	function simplifyRayBox(data:Data, points:Array<FlxPoint>, width:Float, height:Float):Void
 	{
-		// subtract from each side or else it's practically unuable in tight squeezes
+		// subtract from each side or else it's practically unusable in tight squeezes
 		width -= 1;
 		height -= 1;
 
@@ -217,10 +224,10 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 			p1.copyFrom(points[i - 1]).subtract(width / 2, height / 2);
 			p2.copyFrom(points[i + 1]).subtract(width / 2, height / 2);
 			// If a ray can be drawn from the 2 adjacent points without hitting a wall
-			if (data.map.ray(p1, p2)                               // top left
-			&&  data.map.ray(p1.add(width, 0), p2.add(width, 0))   // top right
-			&&  data.map.ray(p1.add(0, height), p2.add(0, height)) // bottom right
-			&&  data.map.ray(p1.add(-width, 0), p2.add(-width, 0)))// bottom left
+			if (data.map.ray(p1, p2) // top left
+				&& data.map.ray(p1.add(width, 0), p2.add(width, 0)) // top right
+				&& data.map.ray(p1.add(0, height), p2.add(0, height)) // bottom right
+				&& data.map.ray(p1.add(-width, 0), p2.add(-width, 0))) // bottom left
 			{
 				// Remove the point inbetween
 				points.remove(points[i]);
@@ -229,18 +236,18 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 				i++;
 		}
 
-		// Put our temp point back in the pool for reuse 
+		// Put our temp point back in the pool for reuse
 		p1.put();
 		p2.put();
 	}
 
 	/**
-	 * Pathfinding helper function, strips out even more points by rayStepping from one
+	 * Pathfinding helper function. Strips out even more points by rayStepping from one
 	 * point to the next and dropping unnecessary points.
 	 *
-	 * @param data       The pathfinder data for this current search.
-	 * @param points     An array of FlxPoint nodes.
-	 * @param reolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
+	 * @param data The pathfinder data for this current search.
+	 * @param points An array of `FlxPoint` nodes.
+	 * @param resolution Defaults to `1`, meaning check every tile or so. Higher means more checks!
 	 */
 	function simplifyRayStep(data:Data, points:Array<FlxPoint>, resolution:Float):Void
 	{
@@ -260,30 +267,30 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 				i++;
 		}
 
-		// Put our temp point back in the pool for reuse 
+		// Put our temp point back in the pool for reuse
 		tempPoint.put();
 	}
-	
+
 	/**
-	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
-	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 * Pathfinding helper function. Floods a grid with distance information until it finds the end point.
+	 * NOTE: Currently, this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 *
-	 * @param map        The map we're moving through.
+	 * @param map The map we're moving through.
 	 * @param startIndex The starting tile's map index.
-	 * @param endIndex   The ending tile's map index.
-	 * @param stopOnEnd  Whether to stop at the end or not. default true.
-	 * @return An array of FlxPoint nodes.  If the end tile could not be found, then a null Array is returned instead.
+	 * @param endIndex The ending tile's map index.
+	 * @param stopOnEnd Whether to stop at the end. Defaults to `true`.
+	 * @return An array of `FlxPoint` nodes. If the end tile could not be found, then a `null` `Array` is returned instead.
 	 */
 	public inline function computePathData(map:Tilemap, startIndex:Int, endIndex:Int, stopOnEnd:Bool = true):Data
 	{
 		return compute(createData(map, startIndex, endIndex), stopOnEnd);
 	}
-	
+
 	/**
 	 * Actually begins the brute pathfinding process.
 	 * 
-	 * @param data      The pathfinder data for this current search.
-	 * @param stopOnEnd Whether to stop at the end or not. default true.
+	 * @param data The pathfinder data for this current search.
+	 * @param stopOnEnd Whether to stop at the end. Defaults to `true`.
 	 * @return The pathfinder data that was passed in.
 	 */
 	function compute(data:Data, stopOnEnd:Bool = true):Data
@@ -301,7 +308,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 			{
 				// Get all traversible neighbors
 				var cellNeighbors = getNeighbors(data, currentIndex);
-				
+
 				// Compare the distance travelled to get there compared to previous paths
 				var distanceSoFar = data.distances[currentIndex];
 				for (neighbor in cellNeighbors)
@@ -340,12 +347,12 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 			// do this again with all the new neighbors
 			current = neighbors;
 		}
-		
+
 		return data;
 	}
 
 	/**
-	 * Intended to be overriden according to your pathfinder extension's needs.
+	 * Intended to be overridden according to your pathfinder extension's needs.
 	 * Returns all neighbors this tile can travel to in a single "move".
 	 * 
 	 * @param from The tile we're moving from.
@@ -353,30 +360,30 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 */
 	function getNeighbors(data:Data, from:Int):Array<Int>
 	{
-		throw "FlxTilemapPathPolicy.getNeighbors should not be called, It must be overriden in derived classes";
+		throw "FlxTilemapPathPolicy.getNeighbors should not be called, It must be overridden in derived classes";
 	}
 
 	/**
-	 * Intended to be overriden according to your pathfinder extension's needs.  Otherwise throws an error
+	 * Intended to be overridden according to your pathfinder extension's needs. Otherwise, throws an error.
 	 * 
 	 * Determines the weight or value of moving from one tile to another (lower being more valuable).
 	 * 
 	 * @param from The tile we moved from.
-	 * @param to   The tile we moved to.
-	 * @return Float used for comparisons in finding the best route.
+	 * @param to The tile we moved to.
+	 * @return `Float` used for comparisons in finding the best route.
 	 */
 	function getDistance(data:Data, from:Int, to:Int):Int
 	{
-		throw "FlxTilemapPathPolicy.getDistance should not be called, It must be overriden in derived classes";
+		throw "FlxTilemapPathPolicy.getDistance should not be called, It must be overridden in derived classes";
 	}
 
 	/**
-	 * Intended to be overriden according to your pathfinder extension's needs.
+	 * Intended to be overridden according to your pathfinder extension's needs.
 	 * 
-	 * Determines whether the path has found the solution and can stop.  By default it
-	 * checks if there is any valid move to the end posiion.  
+	 * Determines whether the path has found the solution and can stop. By default, it
+	 * checks if there is any valid move to the end position. 
 	 * 
-	 * Note: The pathfinder will still continue computing paths if `stopOnEnd` is false.
+	 * Note: The pathfinder will still continue computing paths if `stopOnEnd == false`.
 	 */
 	function isComplete(data:Data):Bool
 	{
@@ -384,10 +391,10 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Intended to be overriden according to your pathfinder extension's needs.
+	 * Intended to be overridden according to your pathfinder extension's needs.
 	 * 
 	 * Determines whether the tile has found the shortest path and can be avoided.
-	 * By default it returns true.
+	 * By default, it returns `true`.
 	 */
 	function isTileSolved(data:Data, tile:Int):Bool
 	{
@@ -395,10 +402,10 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	}
 
 	/**
-	 * Intended to be overriden according to your pathfinder extension's needs.
+	 * Intended to be overridden according to your pathfinder extension's needs.
 	 * 
-	 * Determines whether the pathfinder should even bother computing paths.  By default it
-	 * makes sure the supplied start and end positions are valid and have collision:NONE.
+	 * Determines whether the pathfinder should even bother computing paths. By default, it
+	 * makes sure the supplied start and end positions are valid and have `collision == NONE`.
 	 */
 	function hasValidInitialData(data:Data):Bool
 	{
@@ -409,7 +416,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 }
 
 /**
- * A basic implementation of FlxPathfinder that allows for different diagonal policies.
+ * A basic implementation of `FlxPathfinder` that allows for different diagonal policies.
  * @since 5.0.0
  */
 class FlxDiagonalPathfinder extends FlxPathfinder
@@ -422,14 +429,14 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 
 		this.diagonalPolicy = diagonalPolicy;
 	}
-	
+
 	override function getNeighbors(data:FlxPathfinderData, from:Int)
 	{
 		var neighbors = [];
 		var inBound = getInBoundDirections(data, from);
-		var up    = inBound.has(UP   );
-		var down  = inBound.has(DOWN );
-		var left  = inBound.has(LEFT );
+		var up = inBound.has(UP);
+		var down = inBound.has(DOWN);
+		var left = inBound.has(LEFT);
 		var right = inBound.has(RIGHT);
 
 		inline function canGoHelper(to:Int, dir:FlxDirectionFlags)
@@ -442,31 +449,31 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 			var condition = condition && canGoHelper(to, dir);
 			if (condition)
 				neighbors.push(to);
-			
+
 			return condition;
 		}
 
 		var columns = data.map.widthInTiles;
 
 		// orthoginals
-		up    = addIf(up   , from - columns, UP   );
-		down  = addIf(down , from + columns, DOWN );
-		left  = addIf(left , from - 1      , LEFT );
-		right = addIf(right, from + 1      , RIGHT);
+		up = addIf(up, from - columns, UP);
+		down = addIf(down, from + columns, DOWN);
+		left = addIf(left, from - 1, LEFT);
+		right = addIf(right, from + 1, RIGHT);
 
 		// diagonals
 		if (diagonalPolicy != NONE)
 		{
 			// only allow diagonal when 2 orthoginals is possible
-			addIf(up    && left , from - columns - 1, UP   | LEFT );
-			addIf(up    && right, from - columns + 1, UP   | RIGHT);
-			addIf(down  && left , from + columns - 1, DOWN | LEFT );
-			addIf(down  && right, from + columns + 1, DOWN | RIGHT);
+			addIf(up && left, from - columns - 1, UP | LEFT);
+			addIf(up && right, from - columns + 1, UP | RIGHT);
+			addIf(down && left, from + columns - 1, DOWN | LEFT);
+			addIf(down && right, from + columns + 1, DOWN | RIGHT);
 		}
 
 		return neighbors;
 	}
-	
+
 	/**
 	 * Determines which neighbors are inside the maps bounds.
 	 * 
@@ -477,25 +484,19 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 	{
 		var x = data.getX(from);
 		var y = data.getY(from);
-		return FlxDirectionFlags.fromBools
-		(
-			x > 0,
-			x < data.map.widthInTiles - 1,
-			y > 0,
-			y < data.map.heightInTiles - 1
-		);
+		return FlxDirectionFlags.fromBools(x > 0, x < data.map.widthInTiles - 1, y > 0, y < data.map.heightInTiles - 1);
 	}
-	
+
 	/**
 	 * Useful If you want to extend this with slight changes.
 	 * 
 	 * @param data The pathfinder data for this current search.
-	 * @param to   The tile index we're moving from.
-	 * @param dir  The direction we came from.
+	 * @param to The tile index we're moving from.
+	 * @param dir The direction we came from.
 	 */
 	function canGo(data:FlxPathfinderData, to:Int, dir:FlxDirectionFlags = ANY)
 	{
-		//Todo: check direction flags individually
+		// TODO: Check direction flags individually
 		return data.getTileCollisionsByIndex(to) == NONE;
 	}
 
@@ -516,15 +517,15 @@ class FlxDiagonalPathfinder extends FlxPathfinder
 }
 
 /**
- * Usually just FlxPathfinderData.new, but can be any function that takes a map and 2
- * indices and returns whatever FlxPathfinderData you're looking for.
+ * Usually just `FlxPathfinderData.new()`, but can be any function that takes a map and 2
+ * indices and returns whatever `FlxPathfinderData` you're looking for.
  * @since 5.0.0
  */
-typedef FlxPathfinderDataFactory<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfinderData<Tilemap>>
-	= (map:Tilemap, startIndex:Int, endIndex:Int)->Data;
+typedef FlxPathfinderDataFactory<Tilemap:FlxBaseTilemap<FlxObject>, Data
+	:FlxTypedPathfinderData<Tilemap>> = (map:Tilemap, startIndex:Int, endIndex:Int) -> Data;
 
 /**
- * The data used by Pathfinders to "solve" a single pathfinding request. A new Instance
+ * The data used by Pathfinders to "solve" a single pathfinding request. A new instance
  * gets created whenever you request pathfinder computations. Extend this class if your
  * pathfinding needs require special iterative data.
  * @since 5.0.0
@@ -532,25 +533,25 @@ typedef FlxPathfinderDataFactory<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxType
 @:allow(flixel.path.FlxTypedPathfinder)
 class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 {
-	/** The start index of path */
+	/** The start index of path. */
 	public var startIndex(default, null):Int;
 
-	/** The end index of path */
+	/** The end index of path. */
 	public var endIndex(default, null):Int;
 
-	/** The end index of path */
+	/** The end index of path. */
 	public var map(default, null):Tilemap;
 
-	/** The distance of every tile from the starting position */
+	/** The distance of every tile from the starting position. */
 	public var distances(default, null):Array<Int>;
 
-	/** Every index has the tileIndex that reached it first while computing the path */
+	/** Every index has the tileIndex that reached it first while computing the path. */
 	public var moves(default, null):Array<Int>;
 
-	/** Every index has the tileIndex that reached it first while computing the path */
+	/** Every index has the tileIndex that reached it first while computing the path. */
 	public var excluded(default, null):Array<Int>;
 
-	/** Whether a path from startIndex to endIndex was found */
+	/** Whether a path from startIndex to endIndex was found. */
 	public var foundEnd(default, null):Bool;
 
 	#if debug
@@ -558,57 +559,57 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 	#end
 
 	/**
-	 * Mainly a helper class for FlxTilemapPathPolicy.  Used to store data while the paths
-	 * are computed, but also useful for analyzing the data once it's done somputing.
+	 * Mainly a helper class for `FlxTilemapPathPolicy`. Used to store data while the paths
+	 * are computed, but also useful for analyzing the data once it's done computing.
 	 * 
-	 * @param mapSize    The total number of tiles in the map
-	 * @param startIndex The start index of the path
-	 * @param endIndex   The end index of the path
+	 * @param map The map.
+	 * @param startIndex The start index of the path.
+	 * @param endIndex The end index of the path.
 	 */
-	public function new (map:Tilemap, startIndex:Int, endIndex:Int)
+	public function new(map:Tilemap, startIndex:Int, endIndex:Int)
 	{
 		this.map = map;
-		distances = [ for (i in 0...map.totalTiles) -1 ];
+		distances = [for (i in 0...map.totalTiles) -1];
 		distances[startIndex] = 0;
-		
-		moves = [ for (i in 0...map.totalTiles) -1 ];
-		
+
+		moves = [for (i in 0...map.totalTiles) -1];
+
 		excluded = [startIndex];
-		
+
 		this.startIndex = startIndex;
 		this.endIndex = endIndex;
 	}
-	
+
 	/**
 	 * If possible, this returns the tile indices used to get there the fastest.
-	 * If impossible, null is returned.
+	 * If impossible, `null` is returned.
 	 */
 	public function getPathIndicesTo(index:Int):Null<Array<Int>>
 	{
 		if (index == startIndex)
 			return [startIndex, index];
-		
+
 		if (moves[index] == -1)
 			return null;
-		
+
 		var path = new Array<Int>();
-		
+
 		// Start at the end, check `moves` iteratively to see the neighbor that reached here first
-		while(index != -1)
+		while (index != -1)
 		{
 			path.unshift(index);
 			index = moves[index];
 		}
-		
+
 		if (path[0] != startIndex)
 			FlxG.log.error("getPathIndices ended up somewhere other than the start");
-		
+
 		return path;
 	}
-	
+
 	/**
 	 * If the desired start to end path was successful, this returns the tile indices used
-	 * to get there the fastest.  If unsuccessful, null is returned.
+	 * to get there the fastest. If unsuccessful, `null` is returned.
 	 */
 	public inline function getPathIndices():Null<Array<Int>>
 	{
@@ -617,10 +618,7 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 
 	public function hasValidStartEnd()
 	{
-		return startIndex >= 0
-			&& endIndex >= 0
-			&& startIndex < map.totalTiles
-			&& endIndex < map.totalTiles;
+		return startIndex >= 0 && endIndex >= 0 && startIndex < map.totalTiles && endIndex < map.totalTiles;
 	}
 
 	public function destroy()
@@ -631,37 +629,37 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 		excluded = null;
 	}
 
-	// --- --- helpers --- ---
+	// --- --- Helpers --- ---
 
 	/**
-	 * Whether the specified index is excluded as a possible path.
+	 * Checks whether the specified index is excluded as a possible path.
 	 * Meaning no shorter paths to it can be found.
 	 */
-	inline function isExcluded(index:Int)
+	inline function isExcluded(index:Int):Bool
 	{
 		return excluded.contains(index);
 	}
 
 	/**
-	 * Helper for converting a tile index to a X index.
+	 * Helper for converting a tile index to a x-index.
 	 */
-	inline function getX(tile:Int)
+	inline function getX(tile:Int):Int
 	{
 		return tile % map.widthInTiles;
 	}
 
 	/**
-	 * Helper for converting a tile index to a Y index.
+	 * Helper for converting a tile index to a y-index.
 	 */
-	inline function getY(tile:Int)
+	inline function getY(tile:Int):Int
 	{
 		return Std.int(tile / map.widthInTiles);
 	}
 
 	/**
-	 * Helper that gets the collision properties of a tile by it's index.
+	 * Helper that gets the collision properties of a tile by its index.
 	 */
-	inline function getTileCollisionsByIndex(tile:Int)
+	inline function getTileCollisionsByIndex(tile:Int):FlxDirectionFlags
 	{
 		#if debug numChecks++; #end
 		return map.getTileCollisions(map.getTileByIndex(tile));
@@ -671,38 +669,38 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 enum FlxPathSimplifier
 {
 	/**
-	 * No simplification
+	 * No simplification.
 	 */
 	NONE;
 
 	/**
-	 * Removes nodes that are directly in line with it's neighbors
+	 * Removes nodes that are directly in line with its neighbors.
 	 */
 	LINE;
 
 	/**
-	 * Removes nodes who'with neighbors that have no walls directly blocking
+	 * Removes nodes with neighbors that have no walls directly blocking.
 	 * Uses `tilemap.ray`.
 	 */
 	RAY;
 
 	/**
-	 * Removes nodes who'with neighbors that have no walls directly blocking
+	 * Removes nodes with neighbors that have no walls directly blocking.
 	 * Uses `tilemap.rayStep`.
 	 */
 	RAY_STEP(resolution:Float);
 
 	/**
-	 * Removes nodes who'with neighbors that have no walls directly
+	 * Removes nodes with neighbors that have no walls directly
 	 * blocking a box of the given size. Assumes centered origin
 	 * Uses `tilemap.ray`.
 	 */
 	RAY_BOX(width:Float, height:Float);
 
 	/**
-	 * calls the method to simplify
+	 * Calls the given method to simplify.
 	 */
-	CUSTOM(method:(FlxPathfinderData, Array<FlxPoint>)->Array<FlxPoint>);
+	CUSTOM(method:(FlxPathfinderData, Array<FlxPoint>) -> Array<FlxPoint>);
 }
 
 /**
@@ -712,17 +710,17 @@ enum FlxPathSimplifier
 @:enum abstract FlxTilemapDiagonalPolicy(Int)
 {
 	/**
-	 * No diagonal movement allowed when calculating the path
+	 * No diagonal movement allowed when calculating the path.
 	 */
 	var NONE = 0;
 
 	/**
-	 * Diagonal movement costs the same as orthogonal movement
+	 * Diagonal movement costs the same as orthogonal movement.
 	 */
 	var NORMAL = 1;
 
 	/**
-	 * Diagonal movement costs one more than orthogonal movement
+	 * Diagonal movement costs one more than orthogonal movement.
 	 */
 	var WIDE = 2;
 }

@@ -11,15 +11,14 @@ class FlxGamepadMotionValueList
 {
 	var gamepad:FlxGamepad;
 
-	@:allow(flixel.input.gamepad.FlxGamepad)
-
 	/**
-	 * whether or not the current gamepad model supports any motion features
+	 * Whether the current gamepad model supports any motion features.
 	 */
+	@:allow(flixel.input.gamepad.FlxGamepad)
 	public var isSupported(get, never):Bool;
 
 	/**
-	 * analog value (-1.0 to +1.0) tilting towards or away from the ceiling (think "look up", "look down")
+	 * Analog value (`-1.0` to `+1.0`) tilting towards or away from the ceiling (think "look up", "look down").
 	 */
 	public var TILT_PITCH(get, never):Float;
 
@@ -27,7 +26,7 @@ class FlxGamepadMotionValueList
 		return getAxis(FlxGamepadInputID.TILT_PITCH);
 
 	/**
-	 * analog value (-1.0 to +1.0) tilting side-to-side (think "twisting", or "do a barrel roll!")
+	 * Analog value (`-1.0` to `+1.0`) tilting side-to-side (think "twisting", or "do a barrel roll!").
 	 */
 	public var TILT_ROLL(get, never):Float;
 

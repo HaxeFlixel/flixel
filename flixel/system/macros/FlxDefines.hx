@@ -22,15 +22,15 @@ private enum UserDefines
 	FLX_UNIT_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
-	/* Uses flixel 4.0 legacy collision */
+	/* Uses Flixel 4.0 legacy collision */
 	FLX_4_LEGACY_COLLISION;
-	/* Simplifies FlxPoint but can increase GC frequency */
+	/* Simplifies `FlxPoint` but can increase GC frequency */
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
 }
 
 /**
- * These are "typedef defines" - complex #if / #elseif conditions
+ * These are "`typedef` defines". Complex `#if` / `#elseif` conditions
  * are shortened into a single define to avoid the redundancy
  * that comes with using them frequently.
  */
@@ -110,7 +110,7 @@ class FlxDefines
 		{
 			if (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
 			{
-				Context.warning('"$define" is not a valid flixel define.', (macro null).pos);
+				Context.warning('"$define" is not a valid Flixel define.', (macro null).pos);
 			}
 		}
 	}
@@ -118,7 +118,7 @@ class FlxDefines
 	static function abortIfDefined(define:String)
 	{
 		if (defined(define))
-			abort('$define can only be defined by flixel.', (macro null).pos);
+			abort('$define can only be defined by Flixel.', (macro null).pos);
 	}
 
 	static function defineInversions()
@@ -151,7 +151,7 @@ class FlxDefines
 		#end
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
-		
+
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))

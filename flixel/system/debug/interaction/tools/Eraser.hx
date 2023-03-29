@@ -1,11 +1,11 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.ui.Keyboard;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.system.debug.interaction.Interaction;
+import openfl.display.BitmapData;
+import openfl.ui.Keyboard;
 
 @:bitmap("assets/images/debugger/buttons/eraser.png")
 private class GraphicEraserTool extends BitmapData {}

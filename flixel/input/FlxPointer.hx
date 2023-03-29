@@ -21,12 +21,12 @@ class FlxPointer
 	public function new() {}
 
 	/**
-	 * Fetch the world position of the pointer on any given camera.
-	 * NOTE: x and y also store the world position of the pointer on the main camera.
+	 * Fetches the world position of the pointer on any given camera.
+	 * NOTE: `x` and `y` also store the world position of the pointer on the main camera.
 	 *
-	 * @param 	Camera	If unspecified, first/main global camera is used instead.
-	 * @param 	point	An existing point object to store the results (if you don't want a new one created).
-	 * @return 	The touch point's location in world space.
+	 * @param Camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @param point An existing point object to store the results (if you don't want a new one created).
+	 * @return The touch point's location in world space.
 	 */
 	public function getWorldPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
@@ -45,12 +45,12 @@ class FlxPointer
 	}
 
 	/**
-	 * Fetch the screen position of the pointer on any given camera.
-	 * NOTE: screenX and screenY also store the screen position of the pointer on the main camera.
+	 * Fetches the screen position of the pointer on any given camera.
+	 * NOTE: `screenX` and `screenY` also store the screen position of the pointer on the main camera.
 	 *
-	 * @param 	Camera	If unspecified, first/main global camera is used instead.
-	 * @param 	point		An existing point object to store the results (if you don't want a new one created).
-	 * @return 	The touch point's location in screen space.
+	 * @param Camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @param point An existing point object to store the results (if you don't want a new one created).
+	 * @return The touch point's location in screen space.
 	 */
 	public function getScreenPosition(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
 	{
@@ -70,11 +70,11 @@ class FlxPointer
 	}
 
 	/**
-	 * Fetch the screen position of the pointer relative to given camera's viewport.
+	 * Fetches the screen position of the pointer relative to given camera's viewport.
 	 *
-	 * @param 	Camera		If unspecified, first/main global camera is used instead.
-	 * @param 	point		An existing point object to store the results (if you don't want a new one created).
-	 * @return 	The touch point's location relative to camera's viewport.
+	 * @param Camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @param point An existing point object to store the results (if you don't want a new one created).
+	 * @return The touch point's location relative to camera's viewport.
 	 */
 	@:access(flixel.FlxCamera)
 	public function getPositionInCameraView(?Camera:FlxCamera, ?point:FlxPoint):FlxPoint
@@ -92,7 +92,7 @@ class FlxPointer
 	}
 
 	/**
-	 * Returns a FlxPoint with this input's x and y.
+	 * Returns a `FlxPoint` with this input's `x` and `y`.
 	 */
 	public function getPosition(?point:FlxPoint):FlxPoint
 	{
@@ -102,13 +102,13 @@ class FlxPointer
 	}
 
 	/**
-	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup.
-	 * If the group has a LOT of things in it, it might be faster to use FlxG.overlaps().
-	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * Checks whether some `FlxObject` overlaps this `FlxObject` or `FlxGroup`.
+	 * If the group has a LOT of things in it, it might be faster to use `FlxG.overlap()`.
+	 * WARNING: Currently, tilemaps do NOT support screen space overlap checks!
 	 *
-	 * @param 	ObjectOrGroup The object or group being tested.
-	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
-	 * @return 	Whether or not the two objects overlap.
+	 * @param ObjectOrGroup The object or group being tested.
+	 * @param Camera The screen coordinate space to use. If `null`, `FlxG.camera` is used.
+	 * @return Whether the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
@@ -138,7 +138,7 @@ class FlxPointer
 	}
 
 	/**
-	 * Directly set the underyling screen position variable. WARNING! You should never use
+	 * Directly sets the underlying screen position variable. WARNING! You should never use
 	 * this unless you are trying to manually dispatch low-level mouse / touch events to the stage.
 	 */
 	public inline function setGlobalScreenPositionUnsafe(newX:Float, newY:Float):Void
@@ -155,8 +155,8 @@ class FlxPointer
 	}
 
 	/**
-	 * Helper function to update the cursor used by update() and playback().
-	 * Updates the x, y, screenX, and screenY variables based on the default camera.
+	 * Helper function to update the cursor used by `update()` and `playback()`.
+	 * Updates the `x`, `y`, `screenX`, and `screenY` variables based on the default camera.
 	 */
 	function updatePositions():Void
 	{

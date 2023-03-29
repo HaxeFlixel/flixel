@@ -36,10 +36,10 @@ class FlxVirtualPad extends FlxSpriteGroup
 	public var actions:FlxSpriteGroup;
 
 	/**
-	 * Create a gamepad which contains 4 directional buttons and 4 action buttons.
+	 * Creates a gamepad which contains 4 directional buttons and 4 action buttons.
 	 *
-	 * @param   DPadMode     The D-Pad mode. `FULL` for example.
-	 * @param   ActionMode   The action buttons mode. `A_B_C` for example.
+	 * @param DPad The D-pad mode (e.g., `FULL`).
+	 * @param Action The action buttons mode (e.g., `A_B_C`).
 	 */
 	public function new(?DPad:FlxDPadMode, ?Action:FlxActionMode)
 	{
@@ -118,13 +118,13 @@ class FlxVirtualPad extends FlxSpriteGroup
 	}
 
 	/**
-	 * @param   X          The x-position of the button.
-	 * @param   Y          The y-position of the button.
-	 * @param   Width      The width of the button.
-	 * @param   Height     The height of the button.
-	 * @param   Graphic    The image of the button. It must contains 3 frames (`NORMAL`, `HIGHLIGHT`, `PRESSED`).
-	 * @param   Callback   The callback for the button.
-	 * @return  The button
+	 * @param X The x-position of the button.
+	 * @param Y The y-position of the button.
+	 * @param Width The width of the button.
+	 * @param Height The height of the button.
+	 * @param Graphic The image of the button. It must contains 3 frames (`NORMAL`, `HIGHLIGHT`, `PRESSED`).
+	 * @param OnClick The callback for the button.
+	 * @return The button.
 	 */
 	public function createButton(X:Float, Y:Float, Width:Int, Height:Int, Graphic:String, ?OnClick:Void->Void):FlxButton
 	{

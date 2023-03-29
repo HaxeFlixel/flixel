@@ -1,17 +1,17 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
 import openfl.filters.BitmapFilter;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * Frames collection which you can apply bitmap filters to.
- * WARNING: this frame collection doesn't use caching, so be careful or you will "leak" out memory very fast.
+ * WARNING: This frame collection doesn't use caching, so be careful or you will "leak" out memory very fast.
  * You should destroy frames collections of this type manually.
  */
 class FlxFilterFrames extends FlxFramesCollection
@@ -22,11 +22,11 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Generates new frames collection from specified frames.
 	 *
-	 * @param   frames      Frames collection to generate filters for.
-	 * @param   widthInc    How much frames should expand horizontally.
-	 * @param   heightInc   How much frames should expend vertically.
-	 * @param   filters     Optional filters array to apply.
-	 * @return  New frames collection which you can apply filters to.
+	 * @param frames Frames collection to generate filters for.
+	 * @param widthInc How much frames should expand horizontally.
+	 * @param heightInc How much frames should expend vertically.
+	 * @param filters Optional filters array to apply.
+	 * @return New frames collection which you can apply filters to.
 	 */
 	public static inline function fromFrames(frames:FlxFramesCollection, widthInc:Int = 0, heightInc:Int = 0, ?filters:Array<BitmapFilter>):FlxFilterFrames
 	{
@@ -34,22 +34,22 @@ class FlxFilterFrames extends FlxFramesCollection
 	}
 
 	/**
-	 * Original frames collection
+	 * Original frames collection.
 	 */
 	public var sourceFrames(default, null):FlxFramesCollection;
 
 	/**
-	 * How much frames should expand horizontally
+	 * How much frames should expand horizontally.
 	 */
 	public var widthInc(default, null):Int = 0;
 
 	/**
-	 * How much frames should expand vertically
+	 * How much frames should expand vertically.
 	 */
 	public var heightInc(default, null):Int = 0;
 
 	/**
-	 * Filters applied to these frames
+	 * Filters applied to these frames.
 	 */
 	public var filters(default, set):Array<BitmapFilter>;
 
@@ -75,11 +75,11 @@ class FlxFilterFrames extends FlxFramesCollection
 	}
 
 	/**
-	 * Just helper method which "centers" sprite offsets
+	 * Helper method which "centers" sprite offsets.
 	 *
-	 * @param   spr              Sprite to apply this frame collection.
-	 * @param   saveAnimations   Whether to save sprite's animations or not.
-	 * @param   updateFrames     Whether to regenerate frame `BitmapData`s or not.
+	 * @param spr Sprite to apply this frame collection.
+	 * @param saveAnimations Whether to save sprite's animations.
+	 * @param updateFrames Whether to regenerate frame `BitmapData`s.
 	 */
 	public function applyToSprite(spr:FlxSprite, saveAnimations:Bool = false, updateFrames:Bool = false):Void
 	{
@@ -120,7 +120,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Adds a filter to this frames collection.
 	 *
-	 * @param   filter   The filter to be added.
+	 * @param filter The filter to be added.
 	 */
 	public inline function addFilter(filter:BitmapFilter):Void
 	{
@@ -134,7 +134,7 @@ class FlxFilterFrames extends FlxFramesCollection
 	/**
 	 * Removes a filter from this frames collection.
 	 *
-	 * @param   filter   The filter to be removed.
+	 * @param filter The filter to be removed.
 	 */
 	public function removeFilter(filter:BitmapFilter):Void
 	{

@@ -1,8 +1,5 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
@@ -11,8 +8,10 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
-import openfl.Assets;
 import haxe.xml.Access;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxUnicodeUtil;
 
@@ -54,23 +53,23 @@ class FlxBitmapFont extends FlxFramesCollection
 	public var numLetters(default, null):Int = 0;
 
 	/**
-	 * Minimum x offset in this font.
+	 * Minimum x-offset in this font.
 	 * This is a helper variable for rendering purposes.
 	 */
 	public var minOffsetX:Int = 0;
 
 	/**
-	 * The width of space character.
+	 * The width of the space character.
 	 */
 	public var spaceWidth:Int = 0;
 
 	/**
-	 * Helper map where character's frames are stored by char codes.
+	 * Helper map where characters' frames are stored by char codes.
 	 */
 	var charMap:Map<Int, FlxFrame>;
 
 	/**
-	 * Helper map where character's xAdvance are stored by char codes.
+	 * Helper map where characters' xAdvance values are stored by char codes.
 	 */
 	var charAdvance:Map<Int, Int>;
 
@@ -157,9 +156,9 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Loads font data in AngelCode's format.
 	 *
-	 * @param   source  Font image source.
-	 * @param   data    Font data.
-	 * @return  Generated bitmap font object.
+	 * @param source Font image source.
+	 * @param data Font data.
+	 * @return Generated bitmap font object.
 	 */
 	public static function fromAngelCode(source:FlxBitmapFontGraphicAsset, data:FlxAngelCodeXmlAsset):FlxBitmapFont
 	{
@@ -212,9 +211,9 @@ class FlxBitmapFont extends FlxFramesCollection
 
 			// Number of pixels to move right before drawing this character.
 			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0;
-			//  Number of pixels to move down before drawing this character.
+			// Number of pixels to move down before drawing this character.
 			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
-			//  Number of pixels to jump right after drawing this character.
+			// Number of pixels to jump right after drawing this character.
 			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
 
 			offset = FlxPoint.get(xOffset, yOffset);
@@ -274,11 +273,11 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * May work incorrectly on HTML5.
 	 * Utterly unreliable on Brave Browser with shields up.
 	 *
-	 * @param   source        Source image for this font.
-	 * @param   letters       `String` of characters contained in the source image,
-	 *                        in order (ex. `" abcdefghijklmnopqrstuvwxyz"`). Defaults to `DEFAULT_CHARS`.
-	 * @param   charBGColor   An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
-	 * @return  Generated bitmap font object.
+	 * @param source Source image for this font.
+	 * @param letters `String` of characters contained in the source image,
+	 * in order (e.g., `" abcdefghijklmnopqrstuvwxyz"`). Defaults to `DEFAULT_CHARS`.
+	 * @param charBGColor An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
+	 * @return Generated bitmap font object.
 	 */
 	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
@@ -442,15 +441,14 @@ class FlxBitmapFont extends FlxFramesCollection
 	/**
 	 * Loads a monospaced bitmap font.
 	 *
-	 * @param   source    Source image for this font.
-	 *                    Use white pixels if you intend to change the color.
-	 * @param   letters   The characters used in the font set, in display order.
-	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
-	 * @param   charSiz   The size of each character in the font set.
-	 * @param   region    The region of image to use for the font.
-	 *                    Default is null which means that the whole image will be used.
-	 * @param   spacing   Spaces between characters in the font set. Default is `null` which means no spaces.
-	 * @return  Generated bitmap font object.
+	 * @param source Source image for this font.
+	 * Use white pixels if you intend to change the color.
+	 * @param letters The characters used in the font set, in display order.
+	 * @param charSize The size of each character in the font set.
+	 * @param region The region of image to use for the font.
+	 * Default is `null`, which means that the whole image will be used.
+	 * @param spacing Spaces between characters in the font set. Default is `null`, which means no spaces.
+	 * @return Generated bitmap font object.
 	 */
 	public static function fromMonospace(source:FlxBitmapFontGraphicAsset, ?letters:String, charSize:FlxPoint, ?region:FlxRect,
 			?spacing:FlxPoint):FlxBitmapFont
@@ -529,12 +527,12 @@ class FlxBitmapFont extends FlxFramesCollection
 	}
 
 	/**
-	 * Internal method which creates and add char frames into this font.
+	 * Internal method which creates and adds char frames into this font.
 	 *
-	 * @param   charCode   Char code for char frame.
-	 * @param   frame      Character region from source image.
-	 * @param   offset     Offset before rendering this char.
-	 * @param   xAdvance   How much cursor will jump after this char.
+	 * @param charCode Char code for char frame.
+	 * @param frame Character region from source image.
+	 * @param offset Offset before rendering this char.
+	 * @param xAdvance How much cursor will jump after this char.
 	 */
 	function addCharFrame(charCode:Int, frame:FlxRect, offset:FlxPoint, xAdvance:Int):Void
 	{

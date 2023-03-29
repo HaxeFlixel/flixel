@@ -1,7 +1,5 @@
 package flixel.graphics.atlas;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -13,14 +11,15 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
 
-// TODO: rewrite this class again, since it's a total mess again.
-// It needs better resize handling.
+// TODO: Rewrite this class again, since it's a total mess again. It needs better resize handling.
 
 /**
- * Class for packing multiple images in big one and generating frame data for each of them
- * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic
+ * Class for packing multiple images into one big image and generating frame data for each of them
+ * so you can easily load regions of atlas in sprites and tilemaps as a source of graphic.
  */
 class FlxAtlas implements IFlxDestroyable
 {
@@ -43,14 +42,14 @@ class FlxAtlas implements IFlxDestroyable
 	public var root(default, null):FlxNode;
 
 	/**
-	 * Name of this atlas, used as a key in the bitmap cache.
+	 * Name of this atlas. Used as a key in the bitmap cache.
 	 */
 	public var name(default, null):String;
 
 	public var nodes(default, null):Map<String, FlxNode>;
 
 	/**
-	 * `BitmapData` of this atlas, combines all images into a big one.
+	 * `BitmapData` of this atlas. Combines all images into one big image.
 	 */
 	public var bitmapData(default, set):BitmapData;
 
@@ -61,7 +60,7 @@ class FlxAtlas implements IFlxDestroyable
 
 	/**
 	 * Whether this atlas should stay in memory after state switch.
-	 * Default value if `false`.
+	 * Default value is `false`.
 	 */
 	public var persist(default, set):Bool = false;
 
@@ -88,7 +87,7 @@ class FlxAtlas implements IFlxDestroyable
 	public var minWidth(default, set):Int = 128;
 
 	/**
-	 * Minimum height for this atlas
+	 * Minimum height for this atlas.
 	 */
 	public var minHeight(default, set):Int = 128;
 
@@ -108,26 +107,26 @@ class FlxAtlas implements IFlxDestroyable
 	public var allowRotation(default, null):Bool = false;
 
 	/**
-	 * Whether the size of this atlas should be the power of 2 or not.
+	 * Whether the size of this atlas should be a power of `2`.
 	 */
 	public var powerOfTwo(default, set):Bool = false;
 
 	var _graphic:FlxGraphic;
 
 	/**
-	 * Internal storage for building atlas from queue
+	 * Internal storage for building atlas from queue.
 	 */
 	var _tempStorage:Array<TempAtlasObj>;
 
 	/**
-	 * Atlas constructor
+	 * Atlas constructor.
 	 *
-	 * @param   name         The name of this atlas. It will be used for caching `BitmapData` of this atlas.
-	 * @param   powerOfTwo   Whether the size of this atlas should be the power of 2 or not.
-	 * @param   border       Gap between nodes to insert.
-	 * @param   rotate       Whether to rotate added images for less atlas size.
-	 * @param   minSize      Min size of atlas.
-	 * @param   maxSize      Max size of atlas.
+	 * @param name The name of this atlas. It will be used for caching `BitmapData` of this atlas.
+	 * @param powerOfTwo Whether the size of this atlas should be a power of `2`.
+	 * @param border Gap between nodes to insert.
+	 * @param rotate Whether to rotate added images for less atlas size.
+	 * @param minSize Min size of atlas.
+	 * @param maxSize Max size of atlas.
 	 */
 	public function new(name:String, powerOfTwo:Bool = false, border:Int = 1, rotate:Bool = false, ?minSize:FlxPoint, ?maxSize:FlxPoint)
 	{
@@ -167,11 +166,11 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Adds a new node to the atlas.
 	 *
-	 * @param   Graphic   Image to store. Could be a `BitmapData`, `String`
-	 *                    (key from OpenFL's asset cache) or a `Class<Dynamic>`.
-	 * @param   Key       Image name, optional.
-	 *                    You can omit it if you pass `String` or `Class<Dynamic>` as a `Graphic` source.
-	 * @return  Newly created and added node, or `null` if there is no space for it.
+	 * @param Graphic Image to store. Could be a `BitmapData`, `String`
+	 * (key from OpenFL's asset cache) or a `Class<Dynamic>`.
+	 * @param Key Optional image name.
+	 * You can omit it if you pass `String` or `Class<Dynamic>` as a `Graphic` source.
+	 * @return Newly created and added node, or `null` if there is no space for it.
 	 */
 	public function addNode(Graphic:FlxGraphicSource, ?Key:String):FlxNode
 	{
@@ -580,7 +579,7 @@ class FlxAtlas implements IFlxDestroyable
 	function getNextPowerOfTwo(number:Float):Int
 	{
 		var n:Int = Std.int(number);
-		if (n > 0 && (n & (n - 1)) == 0) // see: http://goo.gl/D9kPj
+		if (n > 0 && (n & (n - 1)) == 0) // see: https://goo.gl/D9kPj
 			return n;
 
 		var result:Int = 1;
@@ -591,16 +590,16 @@ class FlxAtlas implements IFlxDestroyable
 
 	/**
 	 * Generates a new `BitmapData` with spaces between tiles, adds this `BitmapData` to this atlas,
-	 * generates a `FlxTileFrames` object for the added node and returns it. Can be useful for tilemaps.
+	 * generates a `FlxTileFrames` object for the added node, and returns it. Can be useful for tilemaps.
 	 *
-	 * @param   Graphic        Source image for node, where spaces will be inserted
-	 *                        (could be a `BitmapData`, `String` or `Class<Dynamic>`).
-	 * @param   Key           Optional key for image
-	 * @param   tileSize      The size of tile in spritesheet
-	 * @param   tileSpacing   Offsets to add in spritesheet between tiles
-	 * @param   tileBorder    Border to add around tiles (helps to avoid "tearing" problem)
-	 * @param   region        Region of source image to use as a source graphic
-	 * @return  Generated `FlxTileFrames` for the added node
+	 * @param Graphic Source image for node, where spaces will be inserted
+	 * (could be a `BitmapData`, `String` or `Class<Dynamic>`).
+	 * @param Key Optional key for image.
+	 * @param tileSize The size of each tile in the spritesheet.
+	 * @param tileSpacing Offsets to add in the spritesheet between tiles.
+	 * @param tileBorder Border to add around tiles (helps to avoid "tearing" problem).
+	 * @param region Region of source image to use as a source graphic.
+	 * @return Generated `FlxTileFrames` for the added node.
 	 */
 	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint,
 			?region:FlxRect):FlxTileFrames
@@ -610,7 +609,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (key == null)
 		{
 			#if FLX_DEBUG
-			throw "addNodeWithSpacings can't find the key for specified BitmapData." + " Please provide not null value as a Key argument.";
+			throw "addNodeWithSpacings can't find the key for specified BitmapData." + " Please provide a non-null value as a Key argument.";
 			#end
 			return null;
 		}
@@ -636,7 +635,7 @@ class FlxAtlas implements IFlxDestroyable
 		if (node == null)
 		{
 			#if FLX_DEBUG
-			throw "addNodeWithSpacings can't insert provided image: " + Graphic + ") in atlas. It's probably too big.";
+			throw "addNodeWithSpacings can't insert provided image: " + Graphic + " in atlas. It's probably too big.";
 			#end
 			return null;
 		}
@@ -651,7 +650,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * Gets the `FlxAtlasFrames` object for this atlas.
 	 * It caches graphic of this atlas and generates `FlxAtlasFrames` if it doesn't exist yet.
 	 *
-	 * @return `FlxAtlasFrames` for this atlas
+	 * @return `FlxAtlasFrames` for this atlas.
 	 */
 	public function getAtlasFrames():FlxAtlasFrames
 	{
@@ -688,10 +687,10 @@ class FlxAtlas implements IFlxDestroyable
 	}
 
 	/**
-	 * Checks if the atlas already contains node with the same name.
+	 * Checks whether the atlas already contains node with the same name.
 	 *
-	 * @param   nodeName   Node name to check.
-	 * @return  `true` if atlas already contains node with the name.
+	 * @param nodeName Node name to check.
+	 * @return Whether the atlas already contains node with the name.
 	 */
 	public function hasNodeWithName(nodeName:String):Bool
 	{
@@ -699,10 +698,10 @@ class FlxAtlas implements IFlxDestroyable
 	}
 
 	/**
-	 * Gets a node by it's name.
+	 * Gets a node by its name.
 	 *
-	 * @param   key   Node name to search for.
-	 * @return  node with searched name. `null` if atlas doesn't contain any node with that name.
+	 * @param key Node name to search for.
+	 * @return Node with searched name. `null` if atlas doesn't contain any node with that name.
 	 */
 	public function getNode(key:String):FlxNode
 	{
@@ -711,11 +710,11 @@ class FlxAtlas implements IFlxDestroyable
 
 	/**
 	 * Optimized version of method for adding multiple nodes to atlas.
-	 * Uses less of the atlas' area (it sorts images by the size before adding them to atlas).
+	 * Uses less of the atlas's area (it sorts images by their sizes before adding them to atlas).
 	 *
-	 * @param   bitmaps   `BitmapData`'s to insert
-	 * @param   keys      Names of these `BitmapData` objects.
-	 * @return  `this` `FlxAtlas`
+	 * @param bitmaps `BitmapData`s to insert.
+	 * @param keys Names of these `BitmapData` objects.
+	 * @return This `FlxAtlas`.
 	 */
 	public function addNodes(bitmaps:Array<BitmapData>, keys:Array<String>):FlxAtlas
 	{
@@ -752,7 +751,7 @@ class FlxAtlas implements IFlxDestroyable
 	}
 
 	/**
-	 * Internal method for sorting bitmaps
+	 * Internal method for sorting bitmaps.
 	 */
 	function bitmapSorter(obj1:TempAtlasObj, obj2:TempAtlasObj):Int
 	{
@@ -772,9 +771,9 @@ class FlxAtlas implements IFlxDestroyable
 	/**
 	 * Creates a new "queue" for adding new nodes.
 	 * This method should be used with the `addToQueue()` and `generateFromQueue()` methods:
-	 * - first, you create queue, like `atlas.createQueue()`;
-	 * - second, you add several bitmaps to the queue: `atlas.addToQueue(bmd1, "key1").addToQueue(bmd2, "key2");`
-	 * - third, you actually bake those bitmaps onto the atlas: `atlas.generateFromQueue();`
+	 * 1. Create a queue: `atlas.createQueue();`
+	 * 2. Add several bitmaps to the queue: `atlas.addToQueue(bmd1, "key1").addToQueue(bmd2, "key2");`
+	 * 3. Bake those bitmaps onto the atlas: `atlas.generateFromQueue();`
 	 */
 	public function createQueue():FlxAtlas
 	{
@@ -783,10 +782,10 @@ class FlxAtlas implements IFlxDestroyable
 	}
 
 	/**
-	 * Adds new object to queue for later creation of new node
+	 * Adds a new object to queue for later creation of a new node.
 	 *
-	 * @param   data   `BitmapData` to bake on atlas
-	 * @param   key    "name" of the `BitmapData`. You'll use it as a key for accessing the created node.
+	 * @param data `BitmapData` to bake on atlas.
+	 * @param key "Name" of the `BitmapData`. You'll use it as a key for accessing the created node.
 	 */
 	public function addToQueue(data:BitmapData, key:String):FlxAtlas
 	{
@@ -833,7 +832,7 @@ class FlxAtlas implements IFlxDestroyable
 
 	/**
 	 * Clears all data in atlas. Use it when you want reuse this atlas.
-	 * WARNING: it will destroy the graphic of this image, so you can get
+	 * WARNING: This will destroy the graphic of this image, so you can get
 	 * null pointer exceptions if you're still using it for your sprites.
 	 */
 	public function clear():Void
@@ -847,7 +846,7 @@ class FlxAtlas implements IFlxDestroyable
 	}
 
 	/**
-	 * Returns atlas data in LibGdx packer format.
+	 * Returns atlas data in LibGDX packer format.
 	 */
 	public function getLibGdxData():String
 	{
@@ -893,7 +892,9 @@ class FlxAtlas implements IFlxDestroyable
 		}
 	}
 
-	// Internal iteration method
+	/**
+	 * Internal iteration method.
+	 */
 	function findNodeToInsert(insertWidth:Int, insertHeight:Int):FlxNode
 	{
 		// Node stack
@@ -1101,7 +1102,7 @@ class FlxAtlas implements IFlxDestroyable
 				var temp:FlxNode = root;
 				root = new FlxNode(FlxRect.get(0, 0, nextWidth, nextHeight), this);
 
-				if (temp.left != null) // this means that atlas isn't empty and we need to resize it's BitmapData
+				if (temp.left != null) // this means that atlas isn't empty and we need to resize its BitmapData
 				{
 					divideNode(root, temp.width, temp.height, needToDivideHorizontally(root, temp.width, temp.height));
 					root.left.left = temp;
@@ -1117,4 +1118,4 @@ private typedef TempAtlasObj =
 {
 	public var bmd:BitmapData;
 	public var keyStr:String;
-}
+};

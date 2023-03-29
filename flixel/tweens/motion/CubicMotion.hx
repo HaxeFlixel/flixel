@@ -20,15 +20,15 @@ class CubicMotion extends Motion
 	/**
 	 * Starts moving along the curve.
 	 *
-	 * @param	fromX		X start.
-	 * @param	fromY		Y start.
-	 * @param	aX			First control x.
-	 * @param	aY			First control y.
-	 * @param	bX			Second control x.
-	 * @param	bY			Second control y.
-	 * @param	toX			X finish.
-	 * @param	toY			Y finish.
-	 * @param	duration	Duration of the movement.
+	 * @param fromX The initial x-value.
+	 * @param fromY The initial y-value.
+	 * @param aX First control x.
+	 * @param aY First control y.
+	 * @param bX Second control x.
+	 * @param bY Second control y.
+	 * @param toX The final x-value.
+	 * @param toY The final y-value.
+	 * @param duration Duration of the movement.
 	 */
 	public function setMotion(fromX:Float, fromY:Float, aX:Float, aY:Float, bX:Float, bY:Float, toX:Float, toY:Float, duration:Float):CubicMotion
 	{

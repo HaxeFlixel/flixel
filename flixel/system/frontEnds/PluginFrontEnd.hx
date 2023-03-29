@@ -24,8 +24,8 @@ class PluginFrontEnd
 	/**
 	 * Adds a new plugin to the global plugin array.
 	 *
-	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
-	 * @return	The same FlxPlugin-based plugin you passed in.
+	 * @param Plugin Any object that extends `FlxBasic`. Useful for managers and other things.
+	 * @return The same `FlxBasic`-based plugin you passed in.
 	 */
 	@:generic
 	public function add<T:FlxBasic>(Plugin:T):T
@@ -47,8 +47,8 @@ class PluginFrontEnd
 	/**
 	 * Retrieves a plugin based on its class name from the global plugin array.
 	 *
-	 * @param	ClassType	The class name of the plugin you want to retrieve. See the FlxPath or FlxTimer constructors for example usage.
-	 * @return	The plugin object, or null if no matching plugin was found.
+	 * @param ClassType The class name of the plugin you want to retrieve.
+	 * @return The plugin object, or `null` if no matching plugin was found.
 	 */
 	public function get<T:FlxBasic>(ClassType:Class<T>):T
 	{
@@ -66,8 +66,8 @@ class PluginFrontEnd
 	/**
 	 * Removes an instance of a plugin from the global plugin array.
 	 *
-	 * @param	Plugin	The plugin instance you want to remove.
-	 * @return	The same FlxPlugin-based plugin you passed in.
+	 * @param Plugin The plugin instance you want to remove.
+	 * @return The same `FlxBasic`-based plugin you passed in.
 	 */
 	public function remove<T:FlxBasic>(Plugin:T):T
 	{
@@ -90,8 +90,8 @@ class PluginFrontEnd
 	/**
 	 * Removes all instances of a plugin from the global plugin array.
 	 *
-	 * @param	ClassType	The class name of the plugin type you want removed from the array.
-	 * @return	Whether or not at least one instance of this plugin type was removed.
+	 * @param ClassType The class name of the plugin type you want removed from the array.
+	 * @return Whether at least one instance of this plugin type was removed.
 	 */
 	public function removeType(ClassType:Class<FlxBasic>):Bool
 	{
@@ -121,7 +121,7 @@ class PluginFrontEnd
 	}
 
 	/**
-	 * Used by the game object to call update() on all the plugins.
+	 * Used by the game object to call `update()` on all the plugins.
 	 */
 	@:allow(flixel.FlxGame)
 	inline function update(elapsed:Float):Void
@@ -136,7 +136,7 @@ class PluginFrontEnd
 	}
 
 	/**
-	 * Used by the game object to call draw() on all the plugins.
+	 * Used by the game object to call `draw()` on all the plugins.
 	 */
 	@:allow(flixel.FlxGame)
 	inline function draw():Void

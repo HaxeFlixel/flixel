@@ -66,7 +66,7 @@ class PSVitaMapping extends FlxGamepadMapping
 			default: -1;
 		}
 	}
-	
+
 	override function getInputLabel(id:FlxGamepadInputID)
 	{
 		return switch (id)

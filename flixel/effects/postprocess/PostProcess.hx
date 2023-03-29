@@ -1,15 +1,15 @@
 package flixel.effects.postprocess;
 
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 #if FLX_POST_PROCESS
 import flixel.FlxG;
 import openfl.Assets;
 import openfl.display.OpenGLView;
 import openfl.gl.GL;
+import openfl.gl.GLBuffer;
 import openfl.gl.GLFramebuffer;
 import openfl.gl.GLRenderbuffer;
 import openfl.gl.GLTexture;
-import openfl.gl.GLBuffer;
 import openfl.utils.Float32Array;
 
 private class Uniform
@@ -25,8 +25,8 @@ private class Uniform
 }
 
 /**
- * Fullscreen post processing class.
- * Uses GLSL shaders to produce post processing effects.
+ * Fullscreen post-processing class.
+ * Uses GLSL shaders to produce post-processing effects.
  */
 class PostProcess extends OpenGLView
 {
@@ -34,9 +34,9 @@ class PostProcess extends OpenGLView
 	var screenHeight:Int;
 
 	/**
-	 * Create a new PostProcess object
+	 * Creates a new `PostProcess` object.
 	 *
-	 * @param  fragmentShader  A GLSL file in your assets path
+	 * @param fragmentShader A GLSL file in your assets path
 	 */
 	public function new(fragmentShader:String)
 	{
@@ -83,10 +83,10 @@ class PostProcess extends OpenGLView
 	}
 
 	/**
-	 * Set a uniform value in the shader
+	 * Sets a uniform value in the shader.
 	 *
-	 * @param   uniform   The uniform name within the shader source
-	 * @param   value     Value to set the uniform to
+	 * @param uniform The uniform name within the shader source.
+	 * @param value Value to set the uniform to.
 	 */
 	public function setUniform(uniform:String, value:Float):Void
 	{
@@ -110,7 +110,7 @@ class PostProcess extends OpenGLView
 	}
 
 	/**
-	 * Allows multi pass rendering by passing the framebuffer to another post processing class.
+	 * Allows multi-pass rendering by passing the framebuffer to another post-processing class.
 	 * Renders to a `PostProcess` framebuffer instead of the screen, if set.
 	 * Set to `null` to render to the screen.
 	 */
@@ -171,7 +171,7 @@ class PostProcess extends OpenGLView
 	}
 
 	/**
-	 * Capture what is subsequently rendered to this framebuffer.
+	 * Captures what is subsequently rendered to this framebuffer.
 	 */
 	public function capture()
 	{
@@ -289,7 +289,7 @@ class PostProcess
 {
 	public function new(shader:String)
 	{
-		FlxG.log.error("Post processing is only supported on the CPP and Neko targets of OpenFL legacy - for newer OpenFL versions, please use shader filters.");
+		FlxG.log.error("Post-processing is only supported on the CPP and Neko targets of OpenFL legacy. For newer OpenFL versions, please use shader filters.");
 	}
 
 	public function enable(?to:PostProcess) {}

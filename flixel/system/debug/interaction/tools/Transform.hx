@@ -1,17 +1,17 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.LineScaleMode;
-import flash.display.CapsStyle;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
-import flixel.system.debug.interaction.Interaction;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.debug.Tooltip;
-import flixel.util.FlxSpriteUtil;
+import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.CapsStyle;
+import openfl.display.Graphics;
+import openfl.display.LineScaleMode;
 
 using flixel.util.FlxArrayUtil;
 
@@ -107,7 +107,7 @@ class Transform extends Tool
 	}
 
 	/**
-	 * Start an interaction with a marker. Depending on the marker being used, the interaction
+	 * Starts an interaction with a marker. Depending on the marker being used, the interaction
 	 * can be to resize or rotate something.
 	 */
 	function startAction(whichMarker:Int):Void
@@ -123,7 +123,7 @@ class Transform extends Tool
 	}
 
 	/**
-	 * Stop any interaction activity that is happening with any marker.
+	 * Stops any interaction activity that is happening with any marker.
 	 */
 	function stopAction():Void
 	{

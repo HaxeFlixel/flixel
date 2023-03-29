@@ -7,7 +7,7 @@ import flixel.system.macros.FlxMacroUtil;
  * These do NOT correspond to any actual hardware values but
  * are the basis for all hardware-specific lookups.
  *
- * Maps enum values and strings to unique integer codes
+ * Maps enum values and strings to unique integer codes.
  */
 @:enum
 abstract FlxGamepadInputID(Int) from Int to Int
@@ -65,13 +65,13 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var LEFT_TRIGGER = 17;
 	var RIGHT_TRIGGER = 18;
 
-	/**identifier for the entire LEFT_ANALOG_STICK itself, not just any particular direction**/
+	/**identifier for the entire LEFT_ANALOG_STICK itself, not just any particular direction*/
 	var LEFT_ANALOG_STICK = 19;
 
-	/**identifier for the entire RIGHT_ANALOG_STICK itself, not just any particular direction**/
+	/**identifier for the entire RIGHT_ANALOG_STICK itself, not just any particular direction*/
 	var RIGHT_ANALOG_STICK = 20;
 
-	/**identifier for the entire DPAD itself, not just any particular button**/
+	/**identifier for the entire DPAD itself, not just any particular button*/
 	var DPAD = 21;
 
 	#if FLX_JOYSTICK_API
@@ -81,52 +81,52 @@ abstract FlxGamepadInputID(Int) from Int to Int
 	var RIGHT_STICK_FAKE = 25;
 	#end
 
-	/**tilting towards or away from the ceiling (think "look up", "look down")**/
+	/**tilting towards or away from the ceiling (think "look up", "look down")*/
 	var TILT_PITCH = 26;
 
-	/**tilting side-to-side (think "twisting", or "do a barrel roll!")**/
+	/**tilting side-to-side (think "twisting", or "do a barrel roll!")*/
 	var TILT_ROLL = 27;
 
-	/**for a mouse-like input such as touch or IR camera. Horizontal axis.**/
+	/**for a mouse-like input such as touch or IR camera. Horizontal axis.*/
 	var POINTER_X = 28;
 
-	/**for a mouse-like input such as touch or IR camera. Vertical axis.**/
+	/**for a mouse-like input such as touch or IR camera. Vertical axis.*/
 	var POINTER_Y = 29;
 
-	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template*/
 	var EXTRA_0 = 30;
 
-	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template*/
 	var EXTRA_1 = 31;
 
-	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template*/
 	var EXTRA_2 = 32;
 
-	/**an extra digital button that doesn't fit cleanly into the universal template**/
+	/**an extra digital button that doesn't fit cleanly into the universal template*/
 	var EXTRA_3 = 33;
 
-	/**left analog stick as a dpad, pushed up**/
+	/**left analog stick as a d-pad, pushed up*/
 	var LEFT_STICK_DIGITAL_UP = 34;
 
-	/**left analog stick as a dpad, pushed right**/
+	/**left analog stick as a d-pad, pushed right*/
 	var LEFT_STICK_DIGITAL_RIGHT = 35;
 
-	/**left analog stick as a dpad, pushed down**/
+	/**left analog stick as a d-pad, pushed down*/
 	var LEFT_STICK_DIGITAL_DOWN = 36;
 
-	/**left analog stick as a dpad, pushed left**/
+	/**left analog stick as a d-pad, pushed left*/
 	var LEFT_STICK_DIGITAL_LEFT = 37;
 
-	/**left analog stick as a dpad, pushed up**/
+	/**left analog stick as a d-pad, pushed up*/
 	var RIGHT_STICK_DIGITAL_UP = 38;
 
-	/**left analog stick as a dpad, pushed right**/
+	/**left analog stick as a d-pad, pushed right*/
 	var RIGHT_STICK_DIGITAL_RIGHT = 39;
 
-	/**left analog stick as a dpad, pushed down**/
+	/**left analog stick as a d-pad, pushed down*/
 	var RIGHT_STICK_DIGITAL_DOWN = 40;
 
-	/**left analog stick as a dpad, pushed left**/
+	/**left analog stick as a d-pad, pushed left*/
 	var RIGHT_STICK_DIGITAL_LEFT = 41;
 
 	@:from

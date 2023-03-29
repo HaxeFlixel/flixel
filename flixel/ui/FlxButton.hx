@@ -1,6 +1,5 @@
 package flixel.ui;
 
-import flash.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;
@@ -14,9 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
-#if FLX_TOUCH
-import flixel.input.touch.FlxTouch;
-#end
+import openfl.events.MouseEvent;
 
 /**
  * A simple button class that calls a function when clicked by the mouse.
@@ -24,22 +21,22 @@ import flixel.input.touch.FlxTouch;
 class FlxButton extends FlxTypedButton<FlxText>
 {
 	/**
-	 * Used with public variable status, means not highlighted or pressed.
+	 * Used with public variable status. Means not highlighted or pressed.
 	 */
 	public static inline var NORMAL:Int = 0;
 
 	/**
-	 * Used with public variable status, means highlighted (usually from mouse over).
+	 * Used with public variable status. Means highlighted (usually from mouse over).
 	 */
 	public static inline var HIGHLIGHT:Int = 1;
 
 	/**
-	 * Used with public variable status, means pressed (usually from mouse click).
+	 * Used with public variable status. Means pressed (usually from mouse click).
 	 */
 	public static inline var PRESSED:Int = 2;
 
 	/**
-	 * Shortcut to setting label.text
+	 * Shortcut to setting `label.text`.
 	 */
 	public var text(get, set):String;
 
@@ -47,10 +44,10 @@ class FlxButton extends FlxTypedButton<FlxText>
 	 * Creates a new `FlxButton` object with a gray background
 	 * and a callback function on the UI thread.
 	 *
-	 * @param   X         The x position of the button.
-	 * @param   Y         The y position of the button.
-	 * @param   Text      The text that you want to appear on the button.
-	 * @param   OnClick   The function to call whenever the button is clicked.
+	 * @param X The x-position of the button.
+	 * @param Y The y-position of the button.
+	 * @param Text The text that you want to appear on the button.
+	 * @param OnClick The function to call whenever the button is clicked.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?Text:String, ?OnClick:Void->Void)
 	{
@@ -125,40 +122,40 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
 
 	/**
-	 * What alpha value the label should have for each status. Default is `[0.8, 1.0, 0.5]`.
+	 * What `alpha` value the label should have for each status. Default is `[0.8, 1.0, 0.5]`.
 	 * Multiplied with the button's `alpha`.
 	 */
 	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5];
 
 	/**
 	 * What animation should be played for each status.
-	 * Default is ["normal", "highlight", "pressed"].
+	 * Default is `["normal", "highlight", "pressed"]`.
 	 */
 	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed"];
 
 	/**
-	 * Whether you can press the button simply by releasing the touch / mouse button over it (default).
-	 * If false, the input has to be pressed while hovering over the button.
+	 * Whether you can press the button simply by releasing the touch/mouse button over it (default).
+	 * If `false`, the input has to be pressed while hovering over the button.
 	 */
 	public var allowSwiping:Bool = true;
 
 	#if FLX_MOUSE
 	/**
-	 * Which mouse buttons can trigger the button - by default only the left mouse button.
+	 * Which mouse buttons can trigger the button. By default, only the left mouse button.
 	 */
 	public var mouseButtons:Array<FlxMouseButtonID> = [FlxMouseButtonID.LEFT];
 	#end
 
 	/**
 	 * Maximum distance a pointer can move to still trigger event handlers.
-	 * If it moves beyond this limit, onOut is triggered.
+	 * If it moves beyond this limit, `onOut` is triggered.
 	 * Defaults to `Math.POSITIVE_INFINITY` (i.e. no limit).
 	 */
 	public var maxInputMovement:Float = Math.POSITIVE_INFINITY;
 
 	/**
-	 * Shows the current state of the button, either `FlxButton.NORMAL`,
-	 * `FlxButton.HIGHLIGHT` or `FlxButton.PRESSED`.
+	 * The current state of the button. Either `FlxButton.NORMAL`,
+	 * `FlxButton.HIGHLIGHT`, or `FlxButton.PRESSED`.
 	 */
 	public var status(default, set):Int;
 
@@ -188,7 +185,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	public var justPressed(get, never):Bool;
 
 	/**
-	 * We cast label to a `FlxSprite` for internal operations to avoid Dynamic casts in C++
+	 * We cast label to a `FlxSprite` for internal operations to avoid `Dynamic` casts in C++.
 	 */
 	var _spriteLabel:FlxSprite;
 
@@ -198,7 +195,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	var input:FlxInput<Int>;
 
 	/**
-	 * The input currently pressing this button, if none, it's `null`. Needed to check for its release.
+	 * The input currently pressing this button. If none, it's `null`. Needed to check for its release.
 	 */
 	var currentInput:IFlxInput;
 
@@ -207,9 +204,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * Creates a new `FlxTypedButton` object with a gray background.
 	 *
-	 * @param   X         The x position of the button.
-	 * @param   Y         The y position of the button.
-	 * @param   OnClick   The function to call whenever the button is clicked.
+	 * @param X The x-position of the button.
+	 * @param Y The y-position of the button.
+	 * @param OnClick The function to call whenever the button is clicked.
 	 */
 	public function new(X:Float = 0, Y:Float = 0, ?OnClick:Void->Void)
 	{
@@ -261,7 +258,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Called by the game state when state is changed (if this object belongs to the state)
+	 * Called by the game state when state is changed (if this object belongs to the state).
 	 */
 	override public function destroy():Void
 	{
@@ -287,7 +284,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Called by the game loop automatically, handles mouseover and click detection.
+	 * Called by the game loop automatically. Handles mouseover and click detection.
+	 * 
+	 * @param elapsed The amount of time in seconds that have passed since the last frame.
 	 */
 	override public function update(elapsed:Float):Void
 	{
@@ -317,7 +316,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Just draws the button graphic and text label to the screen.
+	 * Draws the button graphic and text label to the screen.
 	 */
 	override public function draw():Void
 	{
@@ -350,8 +349,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * This method assumes that you're using whole image for button's graphic and image has no spaces between frames.
 	 * And it assumes that label is a single frame sprite.
 	 *
-	 * @param   atlas   Atlas to stamp graphic to.
-	 * @return  Whether the button's graphic and label's graphic were stamped on the atlas successfully.
+	 * @param atlas Atlas to stamp graphic to.
+	 * @return Whether the button's graphic and label's graphic were stamped on the atlas successfully.
 	 */
 	public function stampOnAtlas(atlas:FlxAtlas):Bool
 	{
@@ -379,8 +378,8 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Basic button update logic - searches for overlaps with touches and
-	 * the mouse cursor and calls `updateStatus()`.
+	 * Basic button update logic. Searches for overlaps with touches and
+	 * the mouse cursor, and calls `updateStatus()`.
 	 */
 	function updateButton():Void
 	{
@@ -496,7 +495,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Using an event listener is necessary for security reasons on flash -
+	 * Using an event listener is necessary for security reasons on Flash;
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
 	#if FLX_MOUSE
@@ -510,7 +509,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	#end
 
 	/**
-	 * Internal function that handles the onUp event.
+	 * Internal function that handles the `onUp` event.
 	 */
 	function onUpHandler():Void
 	{
@@ -522,7 +521,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Internal function that handles the onDown event.
+	 * Internal function that handles the `onDown` event.
 	 */
 	function onDownHandler():Void
 	{
@@ -533,7 +532,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Internal function that handles the onOver event.
+	 * Internal function that handles the `onOver` event.
 	 */
 	function onOverHandler():Void
 	{
@@ -552,7 +551,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	}
 
 	/**
-	 * Internal function that handles the onOut event.
+	 * Internal function that handles the `onOut` event.
 	 */
 	function onOutHandler():Void
 	{
@@ -629,12 +628,12 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 }
 
 /** 
- * Helper function for `FlxButton` which handles its events.
+ * Helper class for `FlxButton` that handles its events.
  */
 private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
-	 * The callback function to call when this even fires.
+	 * The callback function to call when this event fires.
 	 */
 	public var callback:Void->Void;
 
@@ -646,8 +645,8 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 
 	/**
-	 * @param   Callback   The callback function to call when this even fires.
-	 * @param   sound      The sound to play when this event fires.
+	 * @param Callback The callback function to call when this event fires.
+	 * @param sound The sound to play when this event fires.
 	 */
 	public function new(?Callback:Void->Void, ?sound:FlxSound)
 	{
@@ -671,7 +670,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	}
 
 	/**
-	 * Fires this event (calls the callback and plays the sound)
+	 * Fires this event (calls the callback and plays the sound).
 	 */
 	public inline function fire():Void
 	{

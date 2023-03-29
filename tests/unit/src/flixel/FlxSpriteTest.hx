@@ -1,13 +1,13 @@
 package flixel;
 
-import flash.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.math.FlxRect;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -265,7 +265,7 @@ class FlxSpriteTest extends FlxTest
 		
 		var w = sprite.width = 20;
 		var h = sprite.height = 15;
-		sprite.angle =  90;
+		sprite.angle = 90;
 		FlxAssert.rectsNear(expected.set(-h, 0, h, w), sprite.getRotatedBounds(rect), 0.0001);
 		sprite.angle = 180;
 		FlxAssert.rectsNear(expected.set(-w, -h, w, h), sprite.getRotatedBounds(rect), 0.0001);
@@ -307,7 +307,7 @@ class FlxSpriteTest extends FlxTest
 		var halfDiff = Math.abs(h - w) / 2;
 		sprite.setGraphicSize(w, h);
 		sprite.updateHitbox();
-		sprite.angle =  90;
+		sprite.angle = 90;
 		FlxAssert.rectsNear(expected.set(-halfDiff, halfDiff, h, w), sprite.getScreenBounds(rect), 0.0001);
 		sprite.angle = 180;
 		FlxAssert.rectsNear(expected.set(0, 0, w, h), sprite.getScreenBounds(rect), 0.0001);

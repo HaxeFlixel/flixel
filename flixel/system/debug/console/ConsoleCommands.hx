@@ -1,15 +1,15 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxCamera;
-import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxStringUtil;
 
 using StringTools;
 

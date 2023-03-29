@@ -8,8 +8,8 @@ import flixel.util.FlxColor;
  * By default, it also stops the parent state from updating,
  * making it convenient for pause screens or menus.
  * 
- * @see [FlxSubstate snippet](https://snippets.haxeflixel.com/states/flxsubstate/)
- * @see [Substate demo](https://haxeflixel.com/demos/SubState/)
+ * @see [FlxSubState snippet](https://snippets.haxeflixel.com/states/flxsubstate/)
+ * @see [SubState demo](https://haxeflixel.com/demos/SubState/)
  */
 class FlxSubState extends FlxState
 {
@@ -25,7 +25,7 @@ class FlxSubState extends FlxState
 	public var closeCallback:Void->Void;
 
 	/**
-	 * Helper sprite object for non-flash targets. Draws the background.
+	 * Helper sprite object for non-Flash targets. Draws the background.
 	 */
 	@:noCompletion
 	var _bgSprite:FlxBGSprite;
@@ -44,7 +44,7 @@ class FlxSubState extends FlxState
 	var _created:Bool = false;
 
 	/**
-	 * @param   BGColor   background color for this substate
+	 * @param BGColor background color for this substate
 	 */
 	public function new(BGColor:FlxColor = FlxColor.TRANSPARENT)
 	{

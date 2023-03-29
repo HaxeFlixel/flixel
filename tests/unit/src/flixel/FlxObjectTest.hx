@@ -1,14 +1,14 @@
 package flixel;
 
-import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxObjectTest extends FlxTest
 {
@@ -295,7 +295,7 @@ class FlxObjectTest extends FlxTest
 		
 		var w = object.width = 20;
 		var h = object.height = 15;
-		object.angle =  90;
+		object.angle = 90;
 		FlxAssert.rectsNear(expected.set(-h, 0, h, w), object.getRotatedBounds(rect), 0.0001);
 		object.angle = 180;
 		FlxAssert.rectsNear(expected.set(-w, -h, w, h), object.getRotatedBounds(rect), 0.0001);

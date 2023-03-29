@@ -3,7 +3,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
- * WiiRemote hardware input ID's when using "Mode 3" of the MayFlash DolphinBar accessory
+ * WiiRemote hardware input IDs when using "Mode 3" of the MayFlash DolphinBar accessory.
  *
  * @author larsiusprime
  */
@@ -76,7 +76,7 @@ class MayflashWiiRemoteID
 	public static inline var NUNCHUK_POINTER_X:Int = 2;
 	public static inline var NUNCHUK_POINTER_Y:Int = 3;
 
-	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
+	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" IDs to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,
@@ -169,7 +169,7 @@ class MayflashWiiRemoteID
 	public static inline var NUNCHUK_POINTER_X:Int = 2;
 	public static inline var NUNCHUK_POINTER_Y:Int = 3;
 
-	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
+	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" IDs to get simulated digital inputs
 	public static var REMOTE_DPAD(default, null) = new FlxGamepadAnalogStick(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,

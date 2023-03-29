@@ -1,15 +1,15 @@
 package flixel.system.ui;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
 import flixel.system.debug.DebuggerUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
 
 /**
- * A basic button for the debugger, extends flash.display.Sprite.
- * Cannot be used in a FlxState.
+ * A basic button for the debugger. Extends `openfl.display.Sprite`.
+ * Cannot be used in a `FlxState`.
  */
 class FlxSystemButton extends Sprite implements IFlxDestroyable
 {
@@ -19,19 +19,19 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	public var upHandler:Void->Void;
 
 	/**
-	 * Whether or not the downHandler function will be called when
+	 * Whether the `upHandler` function will be called when
 	 * the button is clicked.
 	 */
 	public var enabled:Bool = true;
 
 	/**
-	 * Whether this is a toggle button or not. If so, a Boolean representing the current
-	 * state will be passed to the callback function, and the alpha value will be lowered when toggled.
+	 * Whether this is a toggle button. If so, a Boolean representing the current
+	 * state will be passed to the callback function, and the `alpha` value will be lowered when toggled.
 	 */
 	public var toggleMode:Bool = false;
 
 	/**
-	 * Whether the button has been toggled in toggleMode.
+	 * Whether the button has been toggled in `toggleMode`.
 	 */
 	public var toggled(default, set):Bool = false;
 
@@ -46,11 +46,11 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	var _mouseDown:Bool = false;
 
 	/**
-	 * Create a new FlxSystemButton
+	 * Creates a new `FlxSystemButton`.
 	 *
-	 * @param	Icon		The icon to use for the button.
-	 * @param	UpHandler	The function to be called when the button is pressed.
-	 * @param	ToggleMode	Whether this is a toggle button or not.
+	 * @param Icon The icon to use for the button.
+	 * @param UpHandler The function to be called when the button is pressed.
+	 * @param ToggleMode Whether this is a toggle button.
 	 */
 	public function new(Icon:BitmapData, ?UpHandler:Void->Void, ToggleMode:Bool = false)
 	{
@@ -73,9 +73,9 @@ class FlxSystemButton extends Sprite implements IFlxDestroyable
 	}
 
 	/**
-	 * Change the Icon of the button
+	 * Changes the icon of the button.
 	 *
-	 * @param	Icon	The new icon to use for the button.
+	 * @param Icon The new icon to use for the button.
 	 */
 	public function changeIcon(Icon:BitmapData):Void
 	{

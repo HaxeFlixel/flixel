@@ -24,14 +24,14 @@ class QuadMotion extends Motion
 	/**
 	 * Starts moving along the curve.
 	 *
-	 * @param	FromX			X start.
-	 * @param	FromY			Y start.
-	 * @param	ControlX		X control, used to determine the curve.
-	 * @param	ControlY		Y control, used to determine the curve.
-	 * @param	ToX				X finish.
-	 * @param	ToY				Y finish.
-	 * @param	DurationOrSpeed	Duration or speed of the movement.
-	 * @param	UseDuration		Duration of the movement.
+	 * @param FromX The initial x-value.
+	 * @param FromY The initial y-value.
+	 * @param ControlX Control for the x-value. Used to determine the curve.
+	 * @param ControlY Control for the y-value. Used to determine the curve.
+	 * @param ToX The final x-value.
+	 * @param ToY The final y-value.
+	 * @param DurationOrSpeed Duration or speed of the movement.
+	 * @param UseDuration Whether to use the previous param as duration or speed.
 	 */
 	public function setMotion(FromX:Float, FromY:Float, ControlX:Float, ControlY:Float, ToX:Float, ToY:Float, DurationOrSpeed:Float,
 			UseDuration:Bool = true):QuadMotion

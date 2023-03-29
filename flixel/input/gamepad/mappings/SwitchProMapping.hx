@@ -36,7 +36,7 @@ class SwitchProMapping extends FlxGamepadMapping
 			case SwitchProID.X: Y;
 			case SwitchProID.Y: X;
 			case SwitchProID.MINUS: BACK;
-			case SwitchProID.CAPTURE: EXTRA_0;//TODO: Define common Capture inputID?
+			case SwitchProID.CAPTURE: EXTRA_0; // TODO: Define common Capture inputID?
 			case SwitchProID.HOME: GUIDE;
 			case SwitchProID.PLUS: START;
 			case SwitchProID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
@@ -118,25 +118,14 @@ class SwitchProMapping extends FlxGamepadMapping
 			case _: super.getInputLabel(id);
 		}
 	}
-	
+
 	#if FLX_JOYSTICK_API
 	override public function axisIndexToRawID(axisID:Int):Int
 	{
-		// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button ID's
-		return if (axisID == leftStick.x)
-				LEFT_ANALOG_STICK_FAKE_X;
-			else if (axisID == leftStick.y)
-				LEFT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == rightStick.x)
-				RIGHT_ANALOG_STICK_FAKE_X;
-			else if (axisID == rightStick.y)
-				RIGHT_ANALOG_STICK_FAKE_Y;
-			else if (axisID == SwitchProID.ZL)
-				LEFT_TRIGGER_FAKE;
-			else if (axisID == SwitchProID.ZR)
-				RIGHT_TRIGGER_FAKE;
-			else
-				axisID;
+		// Analog stick and trigger values overlap with regular buttons so we remap to "fake" button IDs
+		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X; else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y; else if (axisID == rightStick.x)
+			RIGHT_ANALOG_STICK_FAKE_X; else if (axisID == rightStick.y) RIGHT_ANALOG_STICK_FAKE_Y; else if (axisID == SwitchProID.ZL) LEFT_TRIGGER_FAKE; else
+			if (axisID == SwitchProID.ZR) RIGHT_TRIGGER_FAKE; else axisID;
 	}
 	#end
 }

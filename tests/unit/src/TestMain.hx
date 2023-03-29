@@ -1,11 +1,11 @@
 package;
 
-import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
 import massive.munit.TestRunner;
 import massive.munit.client.HTTPClient;
 import massive.munit.client.SummaryReportClient;
+import openfl.Lib;
 
 /**
  * Auto generated Test Application.
@@ -42,15 +42,15 @@ class TestMain
 	}
 
 	/**
-	 * updates the background color and closes the current browser
-	 * for flash and html targets (useful for continuos integration servers)
+	 * Updates the background color and closes the current browser
+	 * for Flash and HTML5 targets (useful for continuous integration servers)
 	 */
 	function completionHandler(successful:Bool):Void
 	{
 		try
 		{
 			#if flash
-			flash.external.ExternalInterface.call("testResult", successful);
+			openfl.external.ExternalInterface.call("testResult", successful);
 			#elseif js
 			js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys

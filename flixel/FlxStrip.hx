@@ -7,21 +7,20 @@ import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
  * You have access to `vertices`, `indices` and `uvtData` vectors which are used as data storages for rendering.
  * The whole `FlxGraphic` object is used as a texture for this sprite.
  * Use these links for more info about `drawTriangles()`:
- * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
- * @see http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
- * @see http://www.flashandmath.com/advanced/p10triangles/index.html
+ * @see https://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
+ * @see https://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
  *
  * WARNING: This class is EXTREMELY slow on Flash!
  */
 class FlxStrip extends FlxSprite
 {
 	/**
-	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
+	 * A `Vector` of floats, where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 
 	/**
-	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
+	 * A `Vector` of integers or indices, where every three indices define a triangle.
 	 */
 	public var indices:DrawData<Int> = new DrawData<Int>();
 

@@ -3,7 +3,7 @@ package flixel.input.gamepad.id;
 import flixel.input.gamepad.FlxGamepadAnalogStick;
 
 /**
- * IDs for OUYA controllers
+ * IDs for OUYA controllers.
  */
 class OUYAID
 {
@@ -15,7 +15,7 @@ class OUYAID
 	public static inline var RB:Int = 16;
 	public static inline var LEFT_STICK_CLICK:Int = 13;
 	public static inline var RIGHT_STICK_CLICK:Int = 14;
-	public static inline var HOME:Int = 0x01000012;	// Not sure if press HOME is taken in account on OUYA
+	public static inline var HOME:Int = 0x01000012; // Not sure if press HOME is taken in account on OUYA
 	public static inline var LEFT_TRIGGER:Int = 4;
 	public static inline var RIGHT_TRIGGER:Int = 5;
 

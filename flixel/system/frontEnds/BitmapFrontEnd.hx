@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
@@ -8,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
+import openfl.display.BitmapData;
 #if !flash
 #if openfl_legacy
 import openfl.gl.GL;
@@ -31,8 +31,8 @@ class BitmapFrontEnd
 	#end
 
 	/**
-	 * Helper FlxFrame object. Containing only one frame.
-	 * Useful for drawing colored rectangles of all sizes in FlxG.renderTile mode.
+	 * Helper `FlxFrame` object. Containing only one frame.
+	 * Useful for drawing colored rectangles of all sizes in `FlxG.renderTile` mode.
 	 */
 	public var whitePixel(get, never):FlxFrame;
 
@@ -78,7 +78,7 @@ class BitmapFrontEnd
 
 	/**
 	 * Dumps bits of all graphics in the cache. This frees some memory, but you can't read/write pixels on those graphics anymore.
-	 * You can call undump() method for each FlxGraphic (or undumpCache()) object which will restore it again.
+	 * You can call `undumpCache()` to restore each graphic again.
 	 */
 	public function dumpCache():Void
 	{
@@ -112,10 +112,10 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
+	 * Checks the local bitmap cache to see whether a bitmap with this key has been loaded already.
 	 *
-	 * @param	Key		The string key identifying the bitmap.
-	 * @return	Whether or not this file can be found in the cache.
+	 * @param Key The string key identifying the bitmap.
+	 * @return Whether this file can be found in the cache.
 	 */
 	public inline function checkCache(Key:String):Bool
 	{
@@ -123,14 +123,14 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Generates a new BitmapData object (a colored rectangle) and caches it.
+	 * Generates a new `BitmapData` object (a colored rectangle) and caches it.
 	 *
-	 * @param	Width	How wide the rectangle should be.
-	 * @param	Height	How high the rectangle should be.
-	 * @param	Color	What color the rectangle should be (0xAARRGGBB)
-	 * @param	Unique	Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	Key		Force the cache to use a specific Key to index the bitmap.
-	 * @return	The BitmapData we just created.
+	 * @param Width How wide the rectangle should be.
+	 * @param Height How high the rectangle should be.
+	 * @param Color What color the rectangle should be, in ARGB format.
+	 * @param Unique Ensures that the bitmap data uses a new slot in the cache.
+	 * @param Key Force the cache to use a specific Key to index the bitmap.
+	 * @return The `BitmapData` we just created.
 	 */
 	public function create(Width:Int, Height:Int, Color:FlxColor, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
@@ -138,15 +138,11 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Loads a bitmap from a file, clones it if necessary and caches it.
-	 * @param	Graphic		Optional FlxGraphics object to create FlxGraphic from.
-	 * @param	Frames			Optional FlxFramesCollection object to create FlxGraphic from.
-	 * @param	Bitmap			Optional BitmapData object to create FlxGraphic from.
-	 * @param	BitmapClass	Optional Class for BitmapData to create FlxGraphic from.
-	 * @param	Str			Optional String key to use for FlxGraphic instantiation.
-	 * @param	Unique			Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
-	 * @return	The FlxGraphic we just created.
+	 * Loads a bitmap from a file, clones it if necessary, and caches it.
+	 * @param Graphic `FlxGraphicAsset` object to create `FlxGraphic` from.
+	 * @param Unique Ensures that the bitmap data uses a new slot in the cache.
+	 * @param Key Force the cache to use a specific Key to index the bitmap.
+	 * @return The `FlxGraphic` we just created.
 	 */
 	public function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):FlxGraphic
 	{
@@ -164,10 +160,10 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Caches specified FlxGraphic object.
+	 * Caches specified `FlxGraphic` object.
 	 *
-	 * @param	graphic	FlxGraphic to store in the cache.
-	 * @return	cached FlxGraphic object.
+	 * @param graphic `FlxGraphic` to store in the cache.
+	 * @return cached `FlxGraphic` object.
 	 */
 	public inline function addGraphic(graphic:FlxGraphic):FlxGraphic
 	{
@@ -176,9 +172,9 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Gets FlxGraphic object from this storage by specified key.
-	 * @param	key	Key for FlxGraphic object (its name)
-	 * @return	FlxGraphic with the key name, or null if there is no such object
+	 * Gets `FlxGraphic` object from this storage by specified key.
+	 * @param key Key for `FlxGraphic` object (its name).
+	 * @return `FlxGraphic` with the key name, or `null` if there is no such object.
 	 */
 	public inline function get(key:String):FlxGraphic
 	{
@@ -186,10 +182,10 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Gets key from bitmap cache for specified BitmapData
+	 * Gets key from bitmap cache for specified `BitmapData`.
 	 *
-	 * @param	bmd	BitmapData to find in cache
-	 * @return	BitmapData's key or null if there isn't such BitmapData in cache
+	 * @param bmd `BitmapData` to find in cache.
+	 * @return `BitmapData`'s key, or `null` if there is no such `BitmapData` in cache.
 	 */
 	public function findKeyForBitmap(bmd:BitmapData):String
 	{
@@ -203,10 +199,10 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Helper method for getting cache key for FlxGraphic objects created from the class.
+	 * Helper method for getting cache key for `FlxGraphic` objects created from the class.
 	 *
-	 * @param	source	BitmapData source class.
-	 * @return	Full name for provided class.
+	 * @param source `BitmapData` source class.
+	 * @return Full name for provided class.
 	 */
 	public inline function getKeyForClass(source:Class<Dynamic>):String
 	{
@@ -216,10 +212,10 @@ class BitmapFrontEnd
 	/**
 	 * Creates string key for further caching.
 	 *
-	 * @param	systemKey	The first string key to use as a base for a new key. It's usually a key from openfl.Assets ("assets/image.png").
-	 * @param	userKey		The second string key to use as a base for a new key. It's usually a key provided by the user
-	 * @param	unique		Whether generated key should be unique or not.
-	 * @return	Created key.
+	 * @param systemKey The first string key to use as a base for a new key. It's usually a key from `openfl.Assets` (e.g., `"assets/image.png"`).
+	 * @param userKey The second string key to use as a base for a new key. It's usually a key provided by the user.
+	 * @param unique Whether generated key should be unique.
+	 * @return Created key.
 	 */
 	public function generateKey(systemKey:String, userKey:String, unique:Bool = false):String
 	{
@@ -234,10 +230,10 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Gets unique key for bitmap cache
+	 * Gets unique key for bitmap cache.
 	 *
-	 * @param	baseKey	key's prefix
-	 * @return	unique key
+	 * @param baseKey Key's prefix.
+	 * @return Unique key.
 	 */
 	public function getUniqueKey(?baseKey:String):String
 	{
@@ -264,11 +260,11 @@ class BitmapFrontEnd
 	 * Generates key from provided base key and information about tile size and offsets in spritesheet
 	 * and the region of image to use as spritesheet graphics source.
 	 *
-	 * @param	baseKey			Beginning of the key. Usually it is the key for original spritesheet graphics (like "assets/tile.png")
-	 * @param	frameSize		the size of tile in spritesheet
-	 * @param	frameSpacing	offsets between tiles in offsets
-	 * @param	region			region of image to use as spritesheet graphics source
-	 * @return	Generated key for spritesheet with inserted spaces between tiles
+	 * @param baseKey Beginning of the key. Usually it is the key for original spritesheet graphics (e.g., `"assets/tile.png"`).
+	 * @param frameSize The size of tile in spritesheet.
+	 * @param frameSpacing Offsets between tiles in offsets.
+	 * @param region Region of image to use as spritesheet graphics source.
+	 * @return Generated key for spritesheet with inserted spaces between tiles.
 	 */
 	public function getKeyWithSpacesAndBorders(baseKey:String, ?frameSize:FlxPoint, ?frameSpacing:FlxPoint, ?frameBorder:FlxPoint, ?region:FlxRect):String
 	{
@@ -290,8 +286,8 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Totally removes specified FlxGraphic object.
-	 * @param	FlxGraphic object you want to remove and destroy.
+	 * Totally removes specified `FlxGraphic` object.
+	 * @param graphic `FlxGraphic` object to remove and destroy.
 	 */
 	public function remove(graphic:FlxGraphic):Void
 	{
@@ -303,8 +299,8 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Totally removes FlxGraphic object with specified key.
-	 * @param	key	the key for cached FlxGraphic object.
+	 * Totally removes `FlxGraphic` object with specified key.
+	 * @param key The key for cached `FlxGraphic` object.
 	 */
 	public function removeByKey(key:String):Void
 	{
@@ -326,7 +322,7 @@ class BitmapFrontEnd
 
 	/**
 	 * Clears image cache (and destroys those images).
-	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache and its useCount is 0.
+	 * Graphics object will be removed and destroyed only if it shouldn't persist in the cache and its useCount is `0`.
 	 */
 	public function clearCache():Void
 	{
@@ -357,7 +353,7 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Completely resets bitmap cache, which means destroying ALL of the cached FlxGraphic objects.
+	 * Completely resets bitmap cache, which means destroying ALL of the cached `FlxGraphic` objects.
 	 */
 	public function reset():Void
 	{

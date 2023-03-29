@@ -16,13 +16,10 @@ class ColorTween extends FlxTween
 	var endColor:FlxColor;
 
 	/**
-	 * Optional sprite object whose color to tween
+	 * Optional sprite object whose color to tween.
 	 */
 	public var sprite(default, null):FlxSprite;
 
-	/**
-	 * Clean up references
-	 */
 	override public function destroy()
 	{
 		super.destroy();
@@ -32,11 +29,11 @@ class ColorTween extends FlxTween
 	/**
 	 * Tweens the color to a new color and an alpha to a new alpha.
 	 *
-	 * @param	Duration		Duration of the tween.
-	 * @param	FromColor		Start color.
-	 * @param	ToColor			End color.
-	 * @param	Sprite			Optional sprite object whose color to tween.
-	 * @return	The ColorTween.
+	 * @param Duration Duration of the tween.
+	 * @param FromColor Start color.
+	 * @param ToColor End color.
+	 * @param Sprite Optional sprite object whose color to tween.
+	 * @return This `ColorTween`.
 	 */
 	public function tween(Duration:Float, FromColor:FlxColor, ToColor:FlxColor, ?Sprite:FlxSprite):ColorTween
 	{
@@ -59,7 +56,7 @@ class ColorTween extends FlxTween
 			sprite.alpha = color.alphaFloat;
 		}
 	}
-	
+
 	override function isTweenOf(object:Dynamic, ?field:String):Bool
 	{
 		return sprite == object && (field == null || field == "color");

@@ -8,7 +8,7 @@ import flixel.FlxG;
 class ConsoleFrontEnd
 {
 	/**
-	 * Whether the console should auto-pause or not when it's focused.
+	 * Whether the console should auto-pause when it's focused.
 	 */
 	public var autoPause:Bool = true;
 
@@ -21,10 +21,10 @@ class ConsoleFrontEnd
 	public var stepAfterCommand:Bool = true;
 
 	/**
-	 * Register a new function to use in any command.
+	 * Registers a new function to use in any command.
 	 *
-	 * @param 	FunctionAlias		The name with which you want to access the function.
-	 * @param 	Function			The function to register.
+	 * @param FunctionAlias The name with which you want to access the function.
+	 * @param Function The function to register.
 	 */
 	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
 	{
@@ -34,10 +34,10 @@ class ConsoleFrontEnd
 	}
 
 	/**
-	 * Register a new object to use in any command.
+	 * Registers a new object to use in any command.
 	 *
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
+	 * @param ObjectAlias The name with which you want to access the object.
+	 * @param AnyObject The object to register.
 	 */
 	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
 	{
@@ -47,9 +47,9 @@ class ConsoleFrontEnd
 	}
 
 	/**
-	 * Register a new class to use in any command.
+	 * Registers a new class to use in any command.
 	 *
-	 * @param	cl	The class to register.
+	 * @param cl The class to register.
 	 */
 	public inline function registerClass(cl:Class<Dynamic>):Void
 	{
@@ -59,9 +59,9 @@ class ConsoleFrontEnd
 	}
 
 	/**
-	 * Register a new enum to use in any command.
+	 * Registers a new enum to use in any command.
 	 *
-	 * @param	e	The enum to register.
+	 * @param e The enum to register.
 	 * @since 4.4.0
 	 */
 	public inline function registerEnum(e:Enum<Dynamic>):Void

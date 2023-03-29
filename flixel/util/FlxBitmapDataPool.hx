@@ -1,14 +1,14 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 
 /**
- * BitmapData pool class.
+ * `BitmapData` pool class.
  *
  * Notes on implementation:
- *     get() starts searching for a suitable BitmapData from the start of the pool list
- *     put() adds the BitmapData to the start of the pool list (removing the last one if the pool exceeds maxLength)
+ *     `get()` starts searching for a suitable `BitmapData` from the start of the pool list.
+ *     `put()` adds the `BitmapData` to the start of the pool list (removing the last one if the pool exceeds `maxLength`).
  *
  * @author azrafe7
  */
@@ -16,12 +16,12 @@ import flash.geom.Rectangle;
 class FlxBitmapDataPool
 {
 	/**
-	 * Maximum number of BitmapData to hold in the pool.
+	 * Maximum number of `BitmapData` to hold in the pool.
 	 */
 	public static var maxLength(default, set):Int = 8;
 
 	/** 
-	 * Current number of BitmapData present in the pool.
+	 * Current number of `BitmapData` present in the pool.
 	 */
 	public static var length(default, null):Int = 0;
 
@@ -31,11 +31,11 @@ class FlxBitmapDataPool
 	static var _rect:Rectangle = new Rectangle();
 
 	/** 
-	 * Returns a BitmapData with the specified parameters.
-	 * If a suitable BitmapData cannot be found in the pool a new one will be created.
-	 * If fillColor is specified the returned BitmapData will also be cleared with it.
-	 *
-	 * @param exactSize	If false a BitmapData with size >= [w, h] may be returned.
+	 * Returns a `BitmapData` with the specified parameters.
+	 * If a suitable `BitmapData` cannot be found in the pool, a new one will be created.
+	 * 
+	 * @param fillColor If specified, the returned `BitmapData` will also be cleared with this color.
+	 * @param exactSize If `false`, a `BitmapData` with size >= [w, h] may be returned.
 	 */
 	public static function get(w:Int, h:Int, transparent:Bool = true, ?fillColor:FlxColor, ?exactSize:Bool = false):BitmapData
 	{
@@ -87,7 +87,7 @@ class FlxBitmapDataPool
 	}
 
 	/** 
-	 * Adds bmd to the pool for future use.
+	 * Adds `bmd` to the pool for future use.
 	 */
 	public static function put(bmd:BitmapData):Void
 	{
@@ -119,7 +119,7 @@ class FlxBitmapDataPool
 	}
 
 	/**
-	 * Disposes of all the BitmapData in the pool.
+	 * Disposes of all the `BitmapData` in the pool.
 	 */
 	public static function clear():Void
 	{

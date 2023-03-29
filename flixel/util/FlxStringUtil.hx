@@ -1,16 +1,16 @@
 package flixel.util;
 
-import flash.display.BitmapData;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.typeLimit.OneOfTwo;
+import openfl.display.BitmapData;
 
 using StringTools;
 
 #if flash
-import flash.geom.Matrix;
+import openfl.geom.Matrix;
 #end
 
 /**
@@ -20,12 +20,12 @@ import flash.geom.Matrix;
 class FlxStringUtil
 {
 	/**
-	 * Takes two "ticks" timestamps and formats them into the number of seconds that passed as a String.
-	 * Useful for logging, debugging, the watch window, or whatever else.
+	 * Takes two "ticks" timestamps and formats them into the number of seconds that passed as a `String`.
+	 * Useful for logging, debugging, the watch window, etc.
 	 *
-	 * @param	StartTicks	The first timestamp from the system.
-	 * @param	EndTicks	The second timestamp from the system.
-	 * @return	A String containing the formatted time elapsed information.
+	 * @param StartTicks The first timestamp from the system.
+	 * @param EndTicks The second timestamp from the system.
+	 * @return A `String` containing the formatted time elapsed information.
 	 */
 	public static inline function formatTicks(StartTicks:Int, EndTicks:Int):String
 	{
@@ -33,11 +33,11 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Format seconds as minutes with a colon, an optionally with milliseconds too.
+	 * Formats seconds as minutes with a colon, and optionally with milliseconds too.
 	 *
-	 * @param	Seconds		The number of seconds (for example, time remaining, time spent, etc).
-	 * @param	ShowMS		Whether to show milliseconds after a "." as well.  Default value is false.
-	 * @return	A nicely formatted String, like "1:03".
+	 * @param Seconds The number of seconds (for example, time remaining, time spent, etc.).
+	 * @param ShowMS Whether to show milliseconds after a "." as well. Default value is `false`.
+	 * @return A nicely formatted `String`, like "1:03".
 	 */
 	public static function formatTime(Seconds:Float, ShowMS:Bool = false):String
 	{
@@ -63,11 +63,11 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Generate a comma-separated string from an array.
+	 * Generates a comma-separated string from an array.
 	 * Especially useful for tracing or other debug output.
 	 *
-	 * @param	AnyArray	Any Array object.
-	 * @return	A comma-separated String containing the .toString() output of each element in the array.
+	 * @param AnyArray Any `Array` object.
+	 * @return A comma-separated `String` containing the `toString()` output of each element in the array.
 	 */
 	public static function formatArray(AnyArray:Array<Dynamic>):String
 	{
@@ -86,10 +86,10 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Generate a comma-separated string representation of the keys of a StringMap.
+	 * Generates a comma-separated string representation of the keys of a `StringMap`.
 	 *
-	 * @param  AnyMap    A StringMap object.
-	 * @return  A String formatted like this: key1, key2, ..., keyX
+	 * @param AnyMap A `StringMap` object.
+	 * @return A `String` formatted like this: `"key1, key2, ..., keyX"`.
 	 */
 	public static function formatStringMap(AnyMap:Map<String, Dynamic>):String
 	{
@@ -104,15 +104,15 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Automatically commas and decimals in the right places for displaying money amounts.
+	 * Automatically inserts commas and decimals in the right places for displaying money amounts.
 	 * Does not include a dollar sign or anything, so doesn't really do much
-	 * if you call say `FlxString.formatMoney(10, false)`.
+	 * if you call, say, `FlxStringUtil.formatMoney(10, false)`.
 	 * However, very handy for displaying large sums or decimal money values.
 	 *
-	 * @param	Amount			How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
-	 * @param	ShowDecimal		Whether to show the decimals/cents component.
-	 * @param	EnglishStyle	Major quantities (thousands, millions, etc) separated by commas, and decimal by a period.
-	 * @return	A nicely formatted String. Does not include a dollar sign or anything!
+	 * @param Amount How much moneys (in dollars, or the equivalent "main" currency - i.e. not cents).
+	 * @param ShowDecimal Whether to show the decimals/cents component.
+	 * @param EnglishStyle Whether to separate major quantities (thousands, millions, etc.) with commas, and decimals with a period.
+	 * @return A nicely formatted `String`. Does not include a dollar sign or anything!
 	 */
 	public static function formatMoney(Amount:Float, ShowDecimal:Bool = true, EnglishStyle:Bool = true):String
 	{
@@ -159,7 +159,8 @@ class FlxStringUtil
 
 	/**
 	 * Takes an amount of bytes and finds the fitting unit. Makes sure that the
-	 * value is below 1024. Example: formatBytes(123456789); -> 117.74MB
+	 * value is below `1024`.
+	 * Example: `formatBytes(123456789);` -> `"117.74 MB"`
 	 */
 	public static function formatBytes(Bytes:Float, Precision:Int = 2):String
 	{
@@ -170,14 +171,14 @@ class FlxStringUtil
 			Bytes /= 1024;
 			curUnit++;
 		}
-		return FlxMath.roundDecimal(Bytes, Precision) + units[curUnit];
+		return FlxMath.roundDecimal(Bytes, Precision) + " " + units[curUnit];
 	}
 
 	/** 
 	 * Takes a string and filters out everything but the digits.
 	 *
-	 * @param 	Input	The input string
-	 * @return 	The output string, digits-only
+	 * @param Input The input string.
+	 * @return The output string, digits-only.
 	 */
 	public static function filterDigits(Input:String):String
 	{
@@ -194,16 +195,16 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Format a text with html tags - useful for TextField.htmlText.
+	 * Formats a text with HTML tags. Useful for `TextField#htmlText`.
 	 * Used by the log window of the debugger.
 	 *
-	 * @param	Text		The text to format
-	 * @param	Size		The text size, using the font-size-tag
-	 * @param	Color		The text color, using font-color-tag
-	 * @param	Bold		Whether the text should be bold (b-tag)
-	 * @param	Italic		Whether the text should be italic (i-tag)
-	 * @param	Underlined 	Whether the text should be underlined (u-tag)
-	 * @return	The html-formatted text.
+	 * @param Text The text to format.
+	 * @param Size The text size, using the `font-size` tag.
+	 * @param Color The text color, using `font-color` tag.
+	 * @param Bold Whether the text should be bold (`b` tag).
+	 * @param Italic Whether the text should be italic (`i` tag).
+	 * @param Underlined Whether the text should be underlined (`u` tag).
+	 * @return The HTML-formatted text.
 	 */
 	public static function htmlFormat(Text:String, Size:Int = 12, Color:String = "FFFFFF", Bold:Bool = false, Italic:Bool = false,
 			Underlined:Bool = false):String
@@ -231,11 +232,11 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Get the string name of any class or class instance. Wraps `Type.getClassName()`.
+	 * Gets the string name of any class or class instance. Wraps `Type.getClassName()`.
 	 *
-	 * @param	objectOrClass	The class or class instance in question.
-	 * @param	simple	Returns only the type name, without package(s).
-	 * @return	The name of the class as a string.
+	 * @param objectOrClass The class or class instance in question.
+	 * @param simple Whether to return only the type name, without package(s).
+	 * @return The name of the class as a string.
 	 */
 	public static function getClassName(objectOrClass:Dynamic, simple:Bool = false):String
 	{
@@ -249,11 +250,11 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Get the string name of any enum or enum value. Wraps `Type.getEnumName()`.
+	 * Gets the string name of any enum or enum value. Wraps `Type.getEnumName()`.
 	 *
-	 * @param	enumValueOrEnum	The enum value or enum in question.
-	 * @param	simple	Returns only the type name, without package(s).
-	 * @return	The name of the enum as a string.
+	 * @param enumValueOrEnum The enum value or enum in question.
+	 * @param simple Whether to return only the type name, without package(s).
+	 * @return The name of the enum as a string.
 	 * @since 4.4.0
 	 */
 	public static function getEnumName(enumValueOrEnum:OneOfTwo<EnumValue, Enum<Dynamic>>, simple:Bool = false):String
@@ -280,10 +281,10 @@ class FlxStringUtil
 
 	/**
 	 * Returns the host from the specified URL.
-	 * The host is one of three parts that comprise the authority.  (User and port are the other two parts.)
-	 * For example, the host for "ftp://anonymous@ftp.domain.test:990/" is "ftp.domain.test".
+	 * The host is one of three parts that comprise the authority (User and port are the other two parts).
+	 * For example, the host for `ftp://anonymous@ftp.domain.test:990/` is `ftp.domain.test`.
 	 *
-	 * @return	The host from the URL; or the empty string ("") upon failure.
+	 * @return The host from the URL, or the empty string (`""`) upon failure.
 	 * @since 4.3.0
 	 */
 	public static function getHost(url:String):String
@@ -301,9 +302,9 @@ class FlxStringUtil
 	/**
 	 * Returns the domain from the specified URL.
 	 * The domain, in this case, refers specifically to the first and second levels only.
-	 * For example, the domain for "api.haxe.org" is "haxe.org".
+	 * For example, the domain for `api.haxe.org` is `haxe.org`.
 	 *
-	 * @return	The domain from the URL; or the empty string ("") upon failure.
+	 * @return The domain from the URL, or the empty string (`""`) upon failure.
 	 */
 	public static function getDomain(url:String):String
 	{
@@ -321,12 +322,12 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Helper function that uses getClassName to compare two objects' class names.
+	 * Helper function that uses `getClassName()` to compare two objects' class names.
 	 *
-	 * @param	Obj1	The first object
-	 * @param	Obj2	The second object
-	 * @param	Simple 	Only uses the class name, not the package or packages.
-	 * @return	Whether they have the same class name or not
+	 * @param Obj1 The first object.
+	 * @param Obj2 The second object.
+	 * @param Simple Whether to only use the class name, and not the package(s).
+	 * @return Whether the objects have the same class name.
 	 */
 	public static inline function sameClassName(Obj1:Dynamic, Obj2:Dynamic, Simple:Bool = true):Bool
 	{
@@ -334,10 +335,10 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Split a comma-separated string into an array of ints
+	 * Splits a comma-separated string into an array of `Int`s.
 	 *
-	 * @param	Data 	String formatted like this: "1, 2, 5, -10, 120, 27"
-	 * @return	An array of ints
+	 * @param Data `String` formatted like this: `"1, 2, 5, -10, 120, 27"`.
+	 * @return An array of `Int`s.
 	 */
 	public static function toIntArray(Data:String):Array<Int>
 	{
@@ -355,10 +356,10 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Split a comma-separated string into an array of floats
+	 * Splits a comma-separated string into an array of `Float`s.
 	 *
-	 * @param	Data string formatted like this: "1.0,2.1,5.6,1245587.9, -0.00354"
-	 * @return	An array of floats
+	 * @param Data string formatted like this: `"1.0,2.1,5.6,1245587.9, -0.00354"`.
+	 * @return An array of `Float`s.
 	 */
 	public static function toFloatArray(Data:String):Array<Float>
 	{
@@ -378,10 +379,10 @@ class FlxStringUtil
 	/**
 	 * Converts a one-dimensional array of tile data to a comma-separated string.
 	 *
-	 * @param	Data		An array full of integer tile references.
-	 * @param	Width		The number of tiles in each row.
-	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param Data An array full of integer tile references.
+	 * @param Width The number of tiles in each row.
+	 * @param Invert Whether to change `0`s to `1`s and vice versa. Recommended only for 1-bit arrays.
+	 * @return A comma-separated string containing the level data in a `FlxTilemap`-friendly format.
 	 */
 	public static function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
 	{
@@ -439,14 +440,14 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Converts a BitmapData object to a comma-separated string. Black pixels are flagged as 'solid' by default,
+	 * Converts a `BitmapData` object to a comma-separated string. Black pixels are flagged as 'solid' by default;
 	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
 	 *
-	 * @param	Bitmap		A Flash BitmapData object, preferably black and white.
-	 * @param	Invert		Load white pixels as solid instead.
-	 * @param	Scale		Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param Bitmap A Flash `BitmapData` object, preferably black and white.
+	 * @param Invert Whether to load white pixels as solid instead.
+	 * @param Scale The scale of each tile. Default is `1`. Scale of `2` means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param ColorMap An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices.
+	 * @return A comma-separated string containing the level data in a `FlxTilemap`-friendly format.
 	 */
 	public static function bitmapToCSV(Bitmap:BitmapData, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
@@ -510,7 +511,7 @@ class FlxStringUtil
 
 			while (column < bitmapWidth)
 			{
-				// Decide if this pixel/tile is solid (1) or not (0)
+				// Determine whether this pixel/tile is solid (1) or not (0)
 				pixel = Bitmap.getPixel(column, row);
 
 				if (ColorMap != null)
@@ -553,14 +554,14 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Converts a resource image file to a comma-separated string. Black pixels are flagged as 'solid' by default,
+	 * Converts a resource image file to a comma-separated string. Black pixels are flagged as 'solid' by default;
 	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
 	 *
-	 * @param	ImageFile	An embedded graphic, preferably black and white.
-	 * @param	Invert		Load white pixels as solid instead.
-	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param ImageFile An embedded graphic, preferably black and white.
+	 * @param Invert Whether to load white pixels as solid instead.
+	 * @param Scale The scale of each tile. Default is `1`. Scale of `2` means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param ColorMap An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices.
+	 * @return A comma-separated string containing the level data in a `FlxTilemap`-friendly format.
 	 */
 	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
 	{
@@ -579,10 +580,10 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Helper function to create a string for toString() functions. Automatically rounds values according to FlxG.debugger.precision.
-	 * Strings are formatted in the format: (x: 50 | y: 60 | visible: false)
+	 * Helper function to create a string for `toString()` functions. Automatically rounds values according to `FlxG.debugger.precision`.
+	 * Strings are formatted in the format: `(x: 50 | y: 60 | visible: false)`.
 	 *
-	 * @param	LabelValuePairs		Array with the data for the string
+	 * @param LabelValuePairs Array with the data for the string.
 	 */
 	public static function getDebugString(LabelValuePairs:Array<LabelValuePair>):String
 	{
@@ -640,35 +641,37 @@ class FlxStringUtil
 	}
 
 	/**
-	 * Returns true if `s` equals `null` or is empty.
+	 * Checks whether `s` equals `null` or is empty.
 	 * @since 4.1.0
 	 */
 	public static inline function isNullOrEmpty(s:String):Bool
 	{
 		return s == null || s.length == 0;
 	}
-	
+
 	/**
-	 * Returns an Underscored, or "slugified" string
-	 * Example: `"A Tale of Two Cities, Part II"` becomes `"a_tale_of_two_cities__part_ii"`
+	 * Returns an underscored, or "slugified" string.
+	 * Example: `"A Tale of Two Cities, Part II"` becomes `"a_tale_of_two_cities__part_ii"`.
 	 */
-	public static function toUnderscoreCase(str:String):String 
+	public static function toUnderscoreCase(str:String):String
 	{
 		var regex = ~/[^a-z0-9]+/g;
 		return regex.replace(str.toLowerCase(), '_');
 	}
-	
+
 	/**
-	 * Returns a string formatted to 'Title Case'. 
-	 * Example: `"a tale of two cities, pt ii" returns `"A Tale of Two Cities, Part II"`
+	 * Returns a string formatted to "Title Case". 
+	 * Example: `"a tale of two cities, pt ii"` returns `"A Tale of Two Cities, Part II"`.
 	 */
-	public static function toTitleCase(str:String):String 
+	public static function toTitleCase(str:String):String
 	{
-		var exempt:Array<String> = ["a", "an", "the", "at", "by", "for", "in", "of", "on", "to", "up", "and", "as", "but", "or", "nor"];
+		var exempt:Array<String> = [
+			"a", "an", "the", "at", "by", "for", "in", "of", "on", "to", "up", "and", "as", "but", "or", "nor"
+		];
 		var roman = ~/^(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)$/i;
 		var words:Array<String> = str.toLowerCase().split(" ");
-		
-		for (i in 0...words.length) 
+
+		for (i in 0...words.length)
 		{
 			if (roman.match(words[i]))
 				words[i] = words[i].toUpperCase();
@@ -677,7 +680,6 @@ class FlxStringUtil
 		}
 
 		return words.join(" ");
-		
 	}
 }
 

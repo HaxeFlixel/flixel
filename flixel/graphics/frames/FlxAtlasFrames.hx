@@ -1,20 +1,18 @@
 package flixel.graphics.frames;
 
-import flash.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
-import haxe.Json;
 import haxe.xml.Access;
 import openfl.Assets;
+import openfl.geom.Rectangle;
 
 /**
- * Atlas frames collection. It makes possible to use texture atlases in Flixel.
- * Plus it contains few packer parser methods for most commonly used atlas formats.
+ * Atlas frames collection. It makes it possible to use texture atlases in Flixel.
+ * It contains a few packer parser methods for the most commonly used atlas formats.
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
@@ -26,14 +24,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for atlases generated from Aseprite's JSON export options. Note that Aseprite
 	 * and Texture Packer use the same JSON format, however this method honors frames' `duration`
-	 * whereas `fromTexturePackerJson` ignores it by default (for backwrds compatibility reasons).
+	 * whereas `fromTexturePackerJson()` ignores it by default (for backwards compatibility reasons).
 	 *
-	 * @param   source       The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
-	 * @param   description  Contents of JSON file with atlas description.
-	 *                       You can get it with `Assets.getText(path/to/description.json)`.
-	 *                       Or you can just a pass path to the JSON file in the assets directory.
-	 *                       You can also directly pass in the parsed object.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param description Contents of JSON file with atlas description.
+	 * You can get it with `Assets.getText(path/to/description.json)`,
+	 * or you can pass a path to the JSON file in the assets directory.
+	 * You can also directly pass in the parsed object.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 * @see [Exporting texture atlases with Aseprite](https://www.aseprite.org/docs/sprite-sheet/#texture-atlases)
 	 */
 	public static inline function fromAseprite(source:FlxGraphicAsset, description:FlxAsepriteJsonAsset):FlxAtlasFrames
@@ -44,14 +42,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in JSON format.
 	 *
-	 * @param   source            The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
-	 * @param   description       Contents of JSON file with atlas description.
-	 *                            You can get it with `Assets.getText(path/to/description.json)`.
-	 *                            Or you can just a pass path to the JSON file in the assets directory.
-	 *                            You can also directly pass in the parsed object.
-	 * @param   useFrameDuration  If true, any frame durations defined in the JSON will override the
-	 *                            frameRate set in you `FlxAnimationController`.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param description Contents of JSON file with atlas description.
+	 * You can get it with `Assets.getText(path/to/description.json)`,
+	 * or you can pass a path to the JSON file in the assets directory.
+	 * You can also directly pass in the parsed object.
+	 * @param useFrameDuration If `true`, any frame durations defined in the JSON will override the
+	 * `frameRate` set in your `FlxAnimationController`.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromTexturePackerJson(source:FlxGraphicAsset, description:FlxTexturePackerJsonAsset, useFrameDuration = false):FlxAtlasFrames
 	{
@@ -94,9 +92,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Internal method for TexturePacker parsing. Parses the actual frame data.
 	 *
-	 * @param   frameName   Name of the frame (file name of the original source image).
-	 * @param   frameData   The TexturePacker data excluding "filename".
-	 * @param   frames      The `FlxAtlasFrames` to add this frame to.
+	 * @param frameName Name of the frame (file name of the original source image).
+	 * @param frameData The TexturePacker data excluding "filename".
+	 * @param frames The `FlxAtlasFrames` to add this frame to.
+	 * @param useFrameDuration If `true`, any frame durations defined in the JSON will override the
+	 * `frameRate` set in your `FlxAnimationController`.
 	 */
 	static function texturePackerHelper(frameName:String, frameData:TexturePackerFrameData, frames:FlxAtlasFrames, useFrameDuration = false):Void
 	{
@@ -124,11 +124,11 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for LibGDX atlases.
 	 *
-	 * @param   source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   description   Contents of the file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description/file)`.
-	 *                        Or you can just pass path to the description file in the assets directory.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param description Contents of the file with atlas description.
+	 * You can get it with `Assets.getText(path/to/description/file)`,
+	 * or you can pass a path to the description file in the assets directory.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromLibGdx(source:FlxGraphicAsset, description:String):FlxAtlasFrames
 	{
@@ -195,7 +195,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			if (index != -1)
 				name += '_$index';
 
-			// this should be how it is, but libgdx's texture packer tool
+			// this should be how it is, but LibGDX's texture packer tool
 			// currently outputs the offset from the bottom left, instead:
 			// var offset = FlxPoint.get(size.x, size.y);
 			// workaround for https://github.com/libgdx/libgdx/issues/4288
@@ -222,12 +222,12 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 	/**
 	 * Parsing method for Sparrow texture atlases
-	 * (they can be generated with Shoebox http://renderhjs.net/shoebox/ for example).
+	 * (they can be generated with [Shoebox](https://renderhjs.net/shoebox/) for example).
 	 *
-	 * @param   source  The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   xml     Contents of the XML file with atlas description.
-	 *                  Can be a path to the XML asset, an XML string, or an `Xml` object.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param xml Contents of the XML file with atlas description.
+	 * Can be a path to the XML asset, an XML string, or an `Xml` object.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromSparrow(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
@@ -284,10 +284,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for TexturePacker atlases in generic XML format.
 	 *
-	 * @param   source  The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   xml     Contents of the XML file with atlas description.
-	 *                  Can be a path to the XML asset, an XML string, or an `Xml` object.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param xml Contents of the XML file with atlas description.
+	 * Can be a path to the XML asset, an XML string, or an `Xml` object.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromTexturePackerXml(source:FlxGraphicAsset, xml:FlxXmlAsset):FlxAtlasFrames
 	{
@@ -330,13 +330,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 
 	/**
-	 * Parsing method for Sprite Sheet Packer atlases (http://spritesheetpacker.codeplex.com/).
+	 * Parsing method for Sprite Sheet Packer atlases.
 	 *
-	 * @param   Source        The image source (can be `FlxGraphic`, `String` or `BitmapData`).
-	 * @param   Description   Contents of the file with atlas description.
-	 *                        You can get it with `Assets.getText(path/to/description/file)`.
-	 *                        Or you can just pass a path to the description file in the assets directory.
-	 * @return  Newly created `FlxAtlasFrames` collection.
+	 * @param Source The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
+	 * @param Description Contents of the file with atlas description.
+	 * You can get it with `Assets.getText(path/to/description/file)`,
+	 * or you can pass a path to the description file in the assets directory.
+	 * @return Newly created `FlxAtlasFrames` collection.
 	 */
 	public static function fromSpriteSheetPacker(Source:FlxGraphicAsset, Description:String):FlxAtlasFrames
 	{
@@ -380,9 +380,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Returns the `FlxAtlasFrame` of the specified `FlxGraphic` object.
 	 *
-	 * @param   graphic   `FlxGraphic` object to find the `FlxAtlasFrames` collection for.
-	 * @return  `FlxAtlasFrames` collection for the specified `FlxGraphic` object
-	 *          Could be `null` if `FlxGraphic` doesn't have it yet.
+	 * @param graphic `FlxGraphic` object to find the `FlxAtlasFrames` collection for.
+	 * @return `FlxAtlasFrames` collection for the specified `FlxGraphic` object.
+	 * Could be `null` if `FlxGraphic` doesn't have it yet.
 	 */
 	public static function findFrame(graphic:FlxGraphic, ?border:FlxPoint):FlxAtlasFrames
 	{
@@ -417,7 +417,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 typedef TexturePackerObject =
 {
 	frames:Dynamic
-}
+};
 
 typedef TexturePackerFrameRect =
 {
@@ -434,4 +434,4 @@ typedef TexturePackerFrameData =
 	var sourceSize:{w:Float, h:Float};
 	var spriteSourceSize:{x:Float, y:Float};
 	var duration:Null<Int>;
-}
+};

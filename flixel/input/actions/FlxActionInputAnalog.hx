@@ -1,9 +1,9 @@
 package flixel.input.actions;
 
 import flixel.input.FlxInput;
-import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.input.actions.FlxActionInput.FlxInputDeviceID;
+import flixel.input.actions.FlxActionInput.FlxInputType;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
@@ -31,15 +31,15 @@ class FlxActionInputAnalogClickAndDragMouseMotion extends FlxActionInputAnalogMo
 	var button:FlxMouseButtonID;
 
 	/**
-	 * Mouse input -- same as FlxActionInputAnalogMouseMotion, but requires a particular mouse button to be PRESSED
-	 * Very useful for e.g. panning a map or canvas around
-	 * @param	ButtonID	Button identifier (FlxMouseButtonID.LEFT / MIDDLE / RIGHT)
-	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
-	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
-	 * @param	DeadZone	Minimum analog value before motion will be reported
-	 * @param	InvertY	Invert the Y axis
-	 * @param	InvertX	Invert the X axis
+	 * Creates a mouse drag input. Same as `FlxActionInputAnalogMouseMotion`, but requires a particular mouse button to be `PRESSED`.
+	 * Very useful for e.g. panning a map or canvas around.
+	 * @param ButtonID Button identifier (`FlxMouseButtonID.LEFT` / `MIDDLE` / `RIGHT`).
+	 * @param Trigger The state that triggers this action (`MOVED`, `JUST_MOVED`, `STOPPED`, `JUST_STOPPED`).
+	 * @param Axis The axes to monitor for triggering (`X`, `Y`, `EITHER`, `BOTH`).
+	 * @param PixelsPerUnit How many pixels of movement = `1.0` in analog motion (lower: more sensitive; higher: less sensitive).
+	 * @param DeadZone Minimum analog value before motion will be reported.
+	 * @param InvertY Whether to invert the y-axis.
+	 * @param InvertX Whether to invert the x-axis.
 	 */
 	public function new(ButtonID:FlxMouseButtonID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = FlxAnalogAxis.EITHER, PixelsPerUnit:Int = 10,
 			DeadZone:Float = 0.1, InvertY:Bool = false, InvertX:Bool = false)
@@ -81,13 +81,13 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 	var invertY:Bool;
 
 	/**
-	 * Mouse input -- X/Y is the RELATIVE motion of the mouse since the last frame
-	 * @param	Trigger	What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis	which axes to monitor for triggering: X, Y, EITHER, or BOTH
-	 * @param	PixelsPerUnit	How many pixels of movement = 1.0 in analog motion (lower: more sensitive, higher: less sensitive)
-	 * @param	DeadZone	Minimum analog value before motion will be reported
-	 * @param	InvertY	Invert the Y axis
-	 * @param	InvertX	Invert the X axis
+	 * Creates a mouse motion input. X/Y is the RELATIVE motion of the mouse since the last frame.
+	 * @param Trigger The state that triggers this action (`MOVED`, `JUST_MOVED`, `STOPPED`, `JUST_STOPPED`).
+	 * @param Axis The axes to monitor for triggering (`X`, `Y`, `EITHER`, `BOTH`).
+	 * @param PixelsPerUnit How many pixels of movement = `1.0` in analog motion (lower: more sensitive; higher: less sensitive).
+	 * @param DeadZone Minimum analog value before motion will be reported.
+	 * @param InvertY Whether to invert the y-axis.
+	 * @param InvertX Whether to invert the x-axis.
 	 */
 	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, PixelsPerUnit:Int = 10, DeadZone:Float = 0.1, InvertY:Bool = false,
 			InvertX:Bool = false)
@@ -139,9 +139,9 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 {
 	/**
-	 * Mouse input -- X/Y is the mouse's absolute screen position
-	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
+	 * Creates a mouse position input. X/Y is the mouse's absolute screen position.
+	 * @param Trigger The state that triggers this action (`MOVED`, `JUST_MOVED`, `STOPPED`, `JUST_STOPPED`).
+	 * @param Axis The axes to monitor for triggering (`X`, `Y`, `EITHER`, `BOTH`).
 	 */
 	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER)
 	{
@@ -186,11 +186,11 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 {
 	/**
-	 * Gamepad action input for analog (trigger, joystick, touchpad, etc) events
-	 * @param	InputID "universal" gamepad input ID (LEFT_TRIGGER, RIGHT_ANALOG_STICK, TILT_PITCH, etc)
-	 * @param	Trigger What state triggers this action (MOVED, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
-	 * @param	GamepadID specific gamepad ID, or FlxInputDeviceID.FIRST_ACTIVE / ALL
+	 * Creates a gamepad input for analog (trigger, joystick, touchpad, etc) events.
+	 * @param InputID "Universal" gamepad input ID (`LEFT_TRIGGER`, `RIGHT_ANALOG_STICK`, `TILT_PITCH`, etc.).
+	 * @param Trigger The state that triggers this action (`MOVED`, `JUST_MOVED`, `STOPPED`, `JUST_STOPPED`).
+	 * @param Axis The axes to monitor for triggering (`X`, `Y`, `EITHER`, `BOTH`).
+	 * @param GamepadID Specific gamepad ID, or `FlxInputDeviceID.FIRST_ACTIVE` / `ALL`.
 	 */
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
@@ -257,18 +257,18 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 {
 	/**
-	 * Steam Controller action input for analog (trigger, joystick, touchpad, etc) events
-	 * @param	ActionHandle handle received from FlxSteamController.getAnalogActionHandle()
-	 * @param	Trigger what state triggers this action (MOVING, JUST_MOVED, STOPPED, JUST_STOPPED)
-	 * @param	Axis which axes to monitor for triggering: X, Y, EITHER, or BOTH
-	 * @param	DeviceHandle handle received from FlxSteamController.getConnectedControllers(), or FlxInputDeviceID.ALL / FlxInputDeviceID.FIRST_ACTIVE
+	 * Creates a Steam Controller input for analog (trigger, joystick, touchpad, etc) events.
+	 * @param ActionHandle Handle received from `FlxSteamController.getAnalogActionHandle()`.
+	 * @param Trigger The state that triggers this action (`MOVING`, `JUST_MOVED`, `STOPPED`, `JUST_STOPPED`).
+	 * @param Axis The axes to monitor for triggering (`X`, `Y`, `EITHER`, `BOTH`).
+	 * @param DeviceID Handle received from `FlxSteamController.getConnectedControllers()`, or `FlxInputDeviceID.ALL` / `FlxInputDeviceID.FIRST_ACTIVE`.
 	 */
 	@:allow(flixel.input.actions.FlxActionSet)
 	function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
 		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, cast Trigger, Axis, DeviceID);
 		#if FLX_NO_STEAM
-		FlxG.log.warn("steamwrap library not installed; steam inputs will be ignored.");
+		FlxG.log.warn("SteamWrap library not installed; Steam inputs will be ignored.");
 		#end
 	}
 

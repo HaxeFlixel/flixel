@@ -25,13 +25,13 @@ class CircularMotion extends Motion
 	/**
 	 * Starts moving along a circle.
 	 *
-	 * @param	CenterX			X position of the circle's center.
-	 * @param	CenterY			Y position of the circle's center.
-	 * @param	Radius			Radius of the circle.
-	 * @param	Angle			Starting position on the circle.
-	 * @param	Clockwise		If the motion is clockwise.
-	 * @param	DurationOrSpeed	Duration of the movement.
-	 * @param	UseDuration		Duration of the movement.
+	 * @param CenterX The x-position of the circle's center.
+	 * @param CenterY The y-position of the circle's center.
+	 * @param Radius Radius of the circle.
+	 * @param Angle Starting position on the circle.
+	 * @param Clockwise Whether the motion is clockwise.
+	 * @param DurationOrSpeed Duration or speed of the movement.
+	 * @param UseDuration Whether to use the previous param as duration or speed.
 	 */
 	public function setMotion(CenterX:Float, CenterY:Float, Radius:Float, Angle:Float, Clockwise:Bool, DurationOrSpeed:Float,
 			UseDuration:Bool = true):CircularMotion

@@ -1,27 +1,27 @@
 package flixel.input.mouse;
 
 #if FLX_MOUSE
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.display.Stage;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.Lib;
-import flash.ui.Mouse;
 import flixel.FlxG;
-import flixel.input.IFlxInputManager;
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.IFlxInputManager;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
+import openfl.Lib;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.display.Stage;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.ui.Mouse;
 #if FLX_NATIVE_CURSOR
-import flash.Vector;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.ui.MouseCursor;
-import flash.ui.MouseCursorData;
+import openfl.Vector;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.ui.MouseCursor;
+import openfl.ui.MouseCursorData;
 #end
 
 @:bitmap("assets/images/ui/cursor.png")
@@ -35,78 +35,78 @@ private class GraphicCursor extends BitmapData {}
 class FlxMouse extends FlxPointer implements IFlxInputManager
 {
 	/**
-	 * Whether or not mouse input is currently enabled.
+	 * Whether mouse input is currently enabled.
 	 * @since 4.1.0
 	 */
 	public var enabled:Bool = true;
 
 	/**
 	 * Current "delta" value of mouse wheel. If the wheel was just scrolled up,
-	 * it will have a positive value and vice versa. Otherwise the value will be 0.
+	 * it will have a positive value and vice versa. Otherwise, the value will be `0`.
 	 */
 	public var wheel(default, null):Int = 0;
 
 	/**
-	 * A display container for the mouse cursor. It is a child of FlxGame and
-	 * sits at the right "height". Not used on flash with the native cursor API.
+	 * A display container for the mouse cursor. It is a child of `FlxGame` and
+	 * sits at the right "height". Not used on Flash with the native cursor API.
 	 */
 	public var cursorContainer(default, null):Sprite;
 
 	/**
-	 * Used to toggle the visiblity of the mouse cursor - works on both
-	 * the flixel and the system cursor, depending on which one is active.
+	 * Used to toggle the visibility of the mouse cursor. Works on both
+	 * the Flixel and the system cursor, depending on which one is active.
 	 */
 	public var visible(default, set):Bool = #if (mobile || switch) false #else true #end;
 
 	/**
-	 * Tells flixel to use the default system mouse cursor instead of custom Flixel mouse cursors.
+	 * Whether to use the default system mouse cursor instead of custom Flixel mouse cursors.
 	 */
 	public var useSystemCursor(default, set):Bool = false;
 
 	/**
-	 * Check to see if the mouse has just been moved.
+	 * Whether the mouse has just been moved.
 	 * @since 4.4.0
 	 */
 	public var justMoved(get, never):Bool;
 
 	/**
-	 * Distance in pixels the mouse has moved since the last frame in the X direction.
+	 * Distance in pixels the mouse has moved since the last frame in the x direction.
 	 */
 	public var deltaX(get, never):Int;
 
 	/**
-	 * Distance in pixels the mouse has moved since the last frame in the Y direction.
+	 * Distance in pixels the mouse has moved since the last frame in the y direction.
 	 */
 	public var deltaY(get, never):Int;
 
 	/**
-	 * Distance in pixels the mouse has moved in screen space since the last frame in the X direction.
+	 * Distance in pixels the mouse has moved in screen space since the last frame in the x direction.
 	 */
 	public var deltaScreenX(get, never):Int;
 
 	/**
-	 * Distance in pixels the mouse has moved in screen space since the last frame in the Y direction.
+	 * Distance in pixels the mouse has moved in screen space since the last frame in the y direction.
 	 */
 	public var deltaScreenY(get, never):Int;
 
 	/**
-	 * Check to see if the left mouse button is currently pressed.
+	 * Whether the left mouse button is currently pressed.
 	 */
 	public var pressed(get, never):Bool;
 
 	/**
-	 * Check to see if the left mouse button has just been pressed.
+	 * Whether the left mouse button has just been pressed.
 	 */
 	public var justPressed(get, never):Bool;
 
 	/**
-	 * Check to see if the left mouse button is currently not pressed.
+	 * Whether the left mouse button is currently released.
 	 * @since 5.0.0
 	 */
 	public var released(get, never):Bool;
 
 	/**
-	 * Check to see if the left mouse button has just been released.
+	 * Whether the left mouse button has just been released.
 	 */
 	public var justReleased(get, never):Bool;
 
@@ -118,23 +118,23 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	#if FLX_MOUSE_ADVANCED
 	/**
-	 * Check to see if the right mouse button is currently pressed.
+	 * Whether the right mouse button is currently pressed.
 	 */
 	public var pressedRight(get, never):Bool;
 
 	/**
-	 * Check to see if the right mouse button has just been pressed.
+	 * Whether the right mouse button has just been pressed.
 	 */
 	public var justPressedRight(get, never):Bool;
-	
+
 	/**
-	 * Check to see if the right mouse button is currently not pressed.
+	 * Whether the right mouse button is currently released.
 	 * @since 5.0.0
 	 */
 	public var releasedRight(get, never):Bool;
 
 	/**
-	 * Check to see if the right mouse button has just been released.
+	 * Whether the right mouse button has just been released.
 	 */
 	public var justReleasedRight(get, never):Bool;
 
@@ -145,23 +145,23 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var justPressedTimeInTicksRight(get, never):Int;
 
 	/**
-	 * Check to see if the middle mouse button is currently pressed.
+	 * Whether the middle mouse button is currently pressed.
 	 */
 	public var pressedMiddle(get, never):Bool;
 
 	/**
-	 * Check to see if the middle mouse button has just been pressed.
+	 * Whether the middle mouse button has just been pressed.
 	 */
 	public var justPressedMiddle(get, never):Bool;
 
 	/**
-	 * Check to see if the middle mouse button is currently not pressed.
+	 * Whether the middle mouse button is currently released.
 	 * @since 5.0.0
 	 */
 	public var releasedMiddle(get, never):Bool;
 
 	/**
-	 * Check to see if the middle mouse button has just been released.
+	 * Whether the middle mouse button has just been released.
 	 */
 	public var justReleasedMiddle(get, never):Bool;
 
@@ -211,18 +211,21 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _lastLeftButtonState:FlxInputState;
 
 	/**
-	 * Helper variables to see if the mouse has moved since the last update, and by how much.
+	 * Helper variables to check whether the mouse has moved since the last update, and by how much.
 	 */
 	var _prevX:Int = 0;
+
 	var _prevY:Int = 0;
 	var _prevScreenX:Int = 0;
 	var _prevScreenY:Int = 0;
 
-	// Helper variable for cleaning up memory
+	/**
+	 * Helper variable for cleaning up memory.
+	 */
 	var _stage:Stage;
 
 	/**
-	 * Helper variables for flash native cursors
+	 * Helper variables for Flash native cursors.
 	 */
 	#if FLX_NATIVE_CURSOR
 	var _cursorDefaultName:String = "defaultCursor";
@@ -231,15 +234,15 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	#end
 
 	/**
-	 * Load a new mouse cursor graphic - if you're using native cursors on flash,
-	 * check registerNativeCursor() for more control.
+	 * Loads a new mouse cursor graphic. If you're using native cursors on Flash,
+	 * check `registerNativeCursor()` for more control.
 	 *
-	 * @param   Graphic   The image you want to use for the cursor.
-	 * @param   Scale     Change the size of the cursor.
-	 * @param   XOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
-	 *                    Has to be positive when using native cursors.
-	 * @param   YOffset   The number of pixels between the mouse's screen position and the graphic's top left corner.
-	 *                    Has to be positive when using native cursors.
+	 * @param Graphic The image to use for the cursor.
+	 * @param Scale The scale of the cursor.
+	 * @param XOffset The number of pixels between the x-coordinate of the mouse's screen position and
+	 * the x-coordinate of the left side of the graphic. Must be positive when using native cursors.
+	 * @param YOffset The number of pixels between the y-coordinate of the mouse's screen position and
+	 * the y-coordinate of the top of the graphic. Must be positive when using native cursors.
 	 */
 	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
@@ -309,8 +312,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Unload the current cursor graphic. If the current cursor is visible,
-	 * then the default system cursor is loaded up to replace the old one.
+	 * Unloads the current cursor graphic. If the current cursor is visible,
+	 * the default system cursor is loaded to replace the old one.
 	 */
 	public function unload():Void
 	{
@@ -329,10 +332,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	#if FLX_NATIVE_CURSOR
 	/**
-	 * Set a Native cursor that has been registered by name
-	 * Warning, you need to use registerNativeCursor() before you use it here
+	 * Sets a Native cursor that has been registered by name.
+	 * Warning: You need to use `registerNativeCursor()` before you use it here.
 	 *
-	 * @param   name   The name ID used when registered
+	 * @param name The name ID used when registered.
 	 */
 	public function setNativeCursor(name:String):Void
 	{
@@ -346,10 +349,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Shortcut to register a native cursor in flash
+	 * Shortcut to register a native cursor in Flash.
 	 *
-	 * @param   name         The ID name used for the cursor
-	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @param name The ID name used for the cursor.
+	 * @param cursorData `MouseCursorData` contains the bitmap, hotspot, etc.
 	 */
 	public inline function registerNativeCursor(name:String, cursorData:MouseCursorData):Void
 	{
@@ -357,11 +360,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Shortcut to register a simple MouseCursorData
+	 * Shortcut to register a simple `MouseCursorData`.
 	 *
-	 * @param   name         The ID name used for the cursor
-	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
-	 * @since   4.2.0
+	 * @param name The ID name used for the cursor.
+	 * @param cursorBitmap `MouseCursorData` contains the bitmap, hotspot, etc.
+	 * @since 4.2.0
 	 */
 	public function registerSimpleNativeCursorData(name:String, cursorBitmap:BitmapData):MouseCursorData
 	{
@@ -381,10 +384,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Shortcut to create and set a simple MouseCursorData
+	 * Shortcut to create and set a simple `MouseCursorData`.
 	 *
-	 * @param   name         The ID name used for the cursor
-	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
+	 * @param name The ID name used for the cursor.
+	 * @param cursorBitmap `MouseCursorData` contains the bitmap, hotspot, etc.
 	 */
 	public function setSimpleNativeCursorData(name:String, cursorBitmap:BitmapData):MouseCursorData
 	{
@@ -396,7 +399,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	#end
 
 	/**
-	 * Clean up memory. Internal use only.
+	 * Cleans up memory. Internal use only.
 	 */
 	@:noCompletion
 	public function destroy():Void
@@ -449,7 +452,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * @param   cursorContainer   The cursor container sprite passed by FlxGame
+	 * @param cursorContainer The cursor container sprite passed by `FlxGame`.
 	 */
 	@:allow(flixel.FlxG)
 	function new(cursorContainer:Sprite)
@@ -497,7 +500,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		#if !FLX_UNIT_TEST // Travis segfaults when game.mouseX / Y is accessed
 		setGlobalScreenPositionUnsafe(FlxG.game.mouseX, FlxG.game.mouseY);
 
-		// actually position the flixel mouse cursor graphic
+		// actually position the Flixel mouse cursor graphic
 		if (visible)
 		{
 			cursorContainer.x = FlxG.game.mouseX;
@@ -521,7 +524,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Called from the main Event.ACTIVATE that is dispatched in FlxGame
+	 * Called from the main `Event.ACTIVATE` that is dispatched in `FlxGame`.
 	 */
 	function onFocus():Void
 	{
@@ -535,7 +538,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	}
 
 	/**
-	 * Called from the main Event.DEACTIVATE that is dispatched in FlxGame
+	 * Called from the main `Event.DEACTIVATE` that is dispatched in `FlxGame`.
 	 */
 	function onFocusLost():Void
 	{
@@ -572,7 +575,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	#if FLX_MOUSE_ADVANCED
 	/**
-	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains true
+	 * We're detecting the mouse leave event to prevent a bug where `pressed` remains `true`
 	 * for the middle and right mouse button when pressed and dragged outside the window.
 	 */
 	inline function onMouseLeave(_):Void

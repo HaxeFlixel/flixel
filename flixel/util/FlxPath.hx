@@ -5,5 +5,5 @@ package flixel.util;
  * 
  * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
  */
-@:deprecated("FlxPath was moved to the package: `flixel.path`")
+@:deprecated("flixel.util.FlxPath was moved to flixel.path.FlxPath")
 typedef FlxPath = flixel.path.FlxPath;
