@@ -192,7 +192,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (numFrames == 0)
 		{
-			FlxG.log.warn('Could not create animation: $name, this sprite has no frames');
+			FlxG.log.warn('Could not create animation: "$name", this sprite has no frames');
 			return;
 		}
 		
@@ -223,10 +223,10 @@ class FlxAnimationController implements IFlxDestroyable
 			_animations.set(name, anim);
 			
 			if (hasInvalidFrames)
-				FlxG.log.warn('Could not add frames above ${numFrames - 1} to animation: $name');
+				FlxG.log.warn('Could not add frames above ${numFrames - 1} to animation: "$name"');
 		}
 		else
-			FlxG.log.warn('Could not create animation: $name, no valid frames were given');
+			FlxG.log.warn('Could not create animation: "$name", no valid frames were given');
 	}
 
 	/**
@@ -274,7 +274,7 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		
 		if (hasInvalidFrames)
-			FlxG.log.warn('Could not append frames above ${numFrames - 1} to animation: $Name');
+			FlxG.log.warn('Could not append frames above ${numFrames - 1} to animation: "$Name"');
 	}
 
 	/**
