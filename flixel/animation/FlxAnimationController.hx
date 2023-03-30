@@ -191,7 +191,10 @@ class FlxAnimationController implements IFlxDestroyable
 	public function add(name:String, frames:Array<Int>, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
 	{
 		if (numFrames == 0)
+		{
 			FlxG.log.warn('Could not create animation: $name, this sprite has no frames');
+			return;
+		}
 		
 		// Check _animations frames
 		var framesToAdd:Array<Int> = frames;
