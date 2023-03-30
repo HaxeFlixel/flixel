@@ -42,6 +42,13 @@ class FlxAnimationController implements IFlxDestroyable
 	 * The total number of frames in this image.
 	 * WARNING: assumes each row in the sprite sheet is full!
 	 */
+	public var numFrames(get, never):Int;
+
+	/**
+	 * The total number of frames in this image.
+	 * WARNING: assumes each row in the sprite sheet is full!
+	 */
+	@:deprecated("frames is deprecated, use numFrames")
 	public var frames(get, never):Int;
 
 	/**
@@ -174,40 +181,52 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Adds a new animation to the sprite.
 	 *
-	 * @param   Name        What this animation should be called (e.g. `"run"`).
-	 * @param   Frames      An array of indices indicating what frames to play in what order (e.g. `[0, 1, 2]`).
-	 * @param   FrameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
-	 * @param   Looped      Whether or not the animation is looped or just plays once.
-	 * @param   FlipX       Whether the frames should be flipped horizontally.
-	 * @param   FlipY       Whether the frames should be flipped vertically.
+	 * @param   name        What this animation should be called (e.g. `"run"`).
+	 * @param   frames      An array of indices indicating what frames to play in what order (e.g. `[0, 1, 2]`).
+	 * @param   frameRate   The speed in frames per second that the animation should play at (e.g. `40` fps).
+	 * @param   looped      Whether or not the animation is looped or just plays once.
+	 * @param   flipX       Whether the frames should be flipped horizontally.
+	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function add(Name:String, Frames:Array<Int>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
+	public function add(name:String, frames:Array<Int>, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
 	{
-		// Check _animations frames
-		var framesToAdd:Array<Int> = Frames;
-		var numFrames:Int = framesToAdd.length - 1;
-		var i:Int = numFrames;
-		while (i >= 0)
+		if (numFrames == 0)
 		{
-			if (framesToAdd[i] >= frames)
+			FlxG.log.warn('Could not create animation: "$name", this sprite has no frames');
+			return;
+		}
+		
+		// Check _animations frames
+		var framesToAdd:Array<Int> = frames;
+		var hasInvalidFrames = false;
+		var i = framesToAdd.length;
+		while (i-- >= 0)
+		{
+			final frame = framesToAdd[i];
+			if (frame >= numFrames)
 			{
+				// log if frames are excluded
+				hasInvalidFrames = true;
+				
 				// Splicing original Frames array could lead to unexpected results
 				// So we are cloning it (only once) and will use its copy
-				if (framesToAdd == Frames)
-				{
-					framesToAdd = Frames.copy();
-				}
+				if (framesToAdd == frames)
+					framesToAdd = frames.copy();
 
 				framesToAdd.splice(i, 1);
 			}
-			i--;
 		}
-
+		
 		if (framesToAdd.length > 0)
 		{
-			var anim = new FlxAnimation(this, Name, framesToAdd, FrameRate, Looped, FlipX, FlipY);
-			_animations.set(Name, anim);
+			var anim = new FlxAnimation(this, name, framesToAdd, frameRate, looped, flipX, flipY);
+			_animations.set(name, anim);
+			
+			if (hasInvalidFrames)
+				FlxG.log.warn('Could not add frames above ${numFrames - 1} to animation: "$name"');
 		}
+		else
+			FlxG.log.warn('Could not create animation: "$name", no valid frames were given');
 	}
 
 	/**
@@ -242,19 +261,20 @@ class FlxAnimationController implements IFlxDestroyable
 			FlxG.log.warn("No animation called \"" + Name + "\"");
 			return;
 		}
+		
+		var hasInvalidFrames = false;
 
 		// Check _animations frames
-		var numFrames:Int = Frames.length - 1;
-		var i:Int = numFrames;
-		while (i >= 0)
+		for (frame in Frames)
 		{
-			if (Frames[numFrames - i] < frames)
-			{
-				// add to existing animation, forward to backward
-				anim.frames.push(Frames[numFrames - i]);
-			}
-			i--;
+			if (frame < numFrames)
+				anim.frames.push(frame);
+			else
+				hasInvalidFrames = true;
 		}
+		
+		if (hasInvalidFrames)
+			FlxG.log.warn('Could not append frames above ${numFrames - 1} to animation: "$Name"');
 	}
 
 	/**
@@ -425,20 +445,18 @@ class FlxAnimationController implements IFlxDestroyable
 	 * to find `"file05.png"`, allowing 99 frames per animation.
 	 * Returns the found frame or `-1` on failure.
 	 */
-	function findSpriteFrame(Prefix:String, Index:Int, Postfix:String):Int
+	function findSpriteFrame(prefix:String, index:Int, postfix:String):Int
 	{
-		var numFrames:Int = frames;
-		var flxFrames:Array<FlxFrame> = _sprite.frames.frames;
-		for (i in 0...numFrames)
+		final frames = _sprite.frames.frames;
+		for (i in 0...frames.length)
 		{
-			var name:String = flxFrames[i].name;
-			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix))
+			final frame = frames[i];
+			final name = frame.name;
+			if (StringTools.startsWith(name, prefix) && StringTools.endsWith(name, postfix))
 			{
-				var index:Null<Int> = Std.parseInt(name.substring(Prefix.length, name.length - Postfix.length));
-				if (index != null && index == Index)
-				{
+				final frameIndex:Null<Int> = Std.parseInt(name.substring(prefix.length, name.length - postfix.length));
+				if (frameIndex == index)
 					return i;
-				}
 			}
 		}
 
@@ -639,7 +657,7 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.stop();
 			_curAnim = null;
 		}
-		frameIndex = FlxG.random.int(0, frames - 1);
+		frameIndex = FlxG.random.int(0, numFrames - 1);
 	}
 
 	inline function fireCallback():Void
@@ -724,9 +742,9 @@ class FlxAnimationController implements IFlxDestroyable
 
 	function set_frameIndex(Frame:Int):Int
 	{
-		if (_sprite.frames != null && frames > 0)
+		if (_sprite.frames != null && numFrames > 0)
 		{
-			Frame = Frame % frames;
+			Frame = Frame % numFrames;
 			_sprite.frame = _sprite.frames.frames[Frame];
 			frameIndex = Frame;
 			fireCallback();
@@ -908,6 +926,11 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	inline function get_frames():Int
+	{
+		return _sprite.numFrames;
+	}
+
+	inline function get_numFrames():Int
 	{
 		return _sprite.numFrames;
 	}
