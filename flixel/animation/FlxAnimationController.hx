@@ -447,8 +447,10 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	function findSpriteFrame(prefix:String, index:Int, postfix:String):Int
 	{
-		for (i=>frame in _sprite.frames.frames)
+		final frames = _sprite.frames.frames;
+		for (i in 0...frames.length)
 		{
+			final frame = frames[i];
 			final name = frame.name;
 			if (StringTools.startsWith(name, prefix) && StringTools.endsWith(name, postfix))
 			{
