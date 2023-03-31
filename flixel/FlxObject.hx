@@ -768,7 +768,7 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;
 
 	/**
-	 * Setting this to `true` will prevent the object from appearing
+	 * Setting this to `true` will prevent the object's bounding box from appearing
 	 * when `FlxG.debugger.drawDebug` is `true`.
 	 */
 	public var ignoreDrawDebug:Bool = false;
