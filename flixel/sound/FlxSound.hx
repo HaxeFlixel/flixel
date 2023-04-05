@@ -64,7 +64,7 @@ class FlxSound extends FlxBasic
 	public var amplitudeLeft(default, null):Float;
 
 	/**
-	 * Just the amplitude of the left stereo channel
+	 * Just the amplitude of the right stereo channel
 	 */
 	public var amplitudeRight(default, null):Float;
 
