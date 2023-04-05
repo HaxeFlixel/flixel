@@ -325,13 +325,14 @@ class FlxFramesCollection implements IFlxDestroyable
 	/**
 	 * Helper method for a adding frame to the collection.
 	 *
-	 * @param   frameObj   Frame to add.
+	 * @param   frameObj       Frame to add.
+	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
 	 * @return  Added frame.
 	 */
-	public function pushFrame(frameObj:FlxFrame):FlxFrame
+	public function pushFrame(frameObj:FlxFrame, overwriteHash = false):FlxFrame
 	{
-		var name:String = frameObj.name;
-		if (name != null && framesHash.exists(name))
+		final name:String = frameObj.name;
+		if (name != null && framesHash.exists(name) && !overwriteHash)
 			return framesHash.get(name);
 
 		frames.push(frameObj);
