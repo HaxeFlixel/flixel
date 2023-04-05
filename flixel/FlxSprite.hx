@@ -191,7 +191,7 @@ class FlxSprite extends FlxObject
 	 * The total number of frames in this image.
 	 * WARNING: assumes each row in the sprite sheet is full!
 	 */
-	public var numFrames(default, null):Int = 0;
+	public var numFrames(get, never):Int;
 
 	/**
 	 * Rendering variables.
@@ -1542,7 +1542,6 @@ class FlxSprite extends FlxObject
 			graphic = Frames.parent;
 			frames = Frames;
 			frame = frames.getByIndex(0);
-			numFrames = frames.numFrames;
 			resetHelpers();
 			bakedRotationAngle = 0;
 			animation.frameIndex = 0;
@@ -1556,6 +1555,13 @@ class FlxSprite extends FlxObject
 		}
 
 		return Frames;
+	}
+	function get_numFrames()
+	{
+		if (frames != null)
+			return frames.numFrames;
+			
+		return 0;
 	}
 
 	@:noCompletion
