@@ -11,11 +11,15 @@
 - `FlxBitmapText`: Add `x`, `y` and `text` args to constructor ([#2750](https://github.com/HaxeFlixel/flixel/pull/2750))
 - `FlxAtlasFrames`: Take `Xml` in `fromSparrow` ([#2751](https://github.com/HaxeFlixel/flixel/pull/2751))
 - `FlxBitmapFont`: Take `Xml` in `fromAngelCode` ([#2751](https://github.com/HaxeFlixel/flixel/pull/2751))
-- `FlxAnimtion`: Deprecate `delay` in favor of the new `frameDuration` field ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
+- `FlxAnimation`: Deprecate `delay` in favor of the new `frameDuration` field ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
+- `FlxAnimation` and `FlxColor`: Small fixes ([#2755](https://github.com/HaxeFlixel/flixel/pull/2755))
+- `FlxSound`: Fix doc comment ([#2767](https://github.com/HaxeFlixel/flixel/pull/2767))
+- `FlxSprite`: Better warnings for invalid `width`/`height` args on `loadGraphic` ([2762](https://github.com/HaxeFlixel/flixel/pull/2762))
 
 #### Bugfixes:
 - `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([#2738](https://github.com/HaxeFlixel/flixel/pull/2738))
 - `FlxText`: Fix `embedFonts` getter ([#2749](https://github.com/HaxeFlixel/flixel/pull/2749))
+- `DebugFrontEnd`: Fixed freezing bug when pressing tab on debug ([2760](https://github.com/HaxeFlixel/flixel/pull/2760))
 
 5.2.2 (February 15, 2023)
 ------------------------------
