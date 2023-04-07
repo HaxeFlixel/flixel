@@ -5,6 +5,8 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
+using StringTools;
+
 class FlxAnimationController implements IFlxDestroyable
 {
 	/**
@@ -452,7 +454,7 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			final frame = frames[i];
 			final name = frame.name;
-			if (StringTools.startsWith(name, prefix) && StringTools.endsWith(name, postfix))
+			if (name.startsWith(prefix) && name.endsWith(postfix))
 			{
 				final frameIndex:Null<Int> = Std.parseInt(name.substring(prefix.length, name.length - postfix.length));
 				if (frameIndex == index)
@@ -679,63 +681,61 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 	}
 
-	function byNamesHelper(AddTo:Array<Int>, FrameNames:Array<String>):Void
+	function byNamesHelper(addTo:Array<Int>, frameNames:Array<String>):Void
 	{
-		for (frameName in FrameNames)
+		for (frameName in frameNames)
 		{
-			if (_sprite.frames.framesHash.exists(frameName))
+			if (_sprite.frames.exists(frameName))
 			{
-				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(frameName);
-				AddTo.push(getFrameIndex(frameToAdd));
+				var frameToAdd = _sprite.frames.getByName(frameName);
+				addTo.push(getFrameIndex(frameToAdd));
 			}
 		}
 	}
 
-	function byStringIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<String>, Postfix:String):Void
+	function byStringIndicesHelper(addTo:Array<Int>, prefix:String, indices:Array<String>, suffix:String):Void
 	{
-		for (index in Indices)
+		for (index in indices)
 		{
-			var name:String = Prefix + index + Postfix;
-			if (_sprite.frames.framesHash.exists(name))
+			final name = prefix + index + suffix;
+			if (_sprite.frames.exists(name))
 			{
-				var frameToAdd:FlxFrame = _sprite.frames.framesHash.get(name);
-				AddTo.push(getFrameIndex(frameToAdd));
+				final frameToAdd = _sprite.frames.getByName(name);
+				addTo.push(getFrameIndex(frameToAdd));
 			}
 		}
 	}
 
-	function byIndicesHelper(AddTo:Array<Int>, Prefix:String, Indices:Array<Int>, Postfix:String):Void
+	function byIndicesHelper(addTo:Array<Int>, prefix:String, indices:Array<Int>, suffix:String):Void
 	{
-		for (index in Indices)
+		for (index in indices)
 		{
-			var indexToAdd:Int = findSpriteFrame(Prefix, index, Postfix);
+			final indexToAdd = findSpriteFrame(prefix, index, suffix);
 			if (indexToAdd != -1)
-			{
-				AddTo.push(indexToAdd);
-			}
+				addTo.push(indexToAdd);
 		}
 	}
 
-	function byPrefixHelper(AddTo:Array<Int>, AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	function byPrefixHelper(addTo:Array<Int>, frames:Array<FlxFrame>, prefix:String):Void
 	{
-		var name:String = AnimFrames[0].name;
-		var postIndex:Int = name.indexOf(".", Prefix.length);
-		var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		FlxFrame.sort(AnimFrames, Prefix.length, postFix.length);
-
-		for (animFrame in AnimFrames)
+		final name = frames[0].name;
+		final postIndex = name.indexOf(".", prefix.length);
+		final postFix = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+		FlxFrame.sort(frames, prefix.length, postFix.length);
+		
+		for (frame in frames)
 		{
-			AddTo.push(getFrameIndex(animFrame));
+			addTo.push(getFrameIndex(frame));
 		}
 	}
 
-	function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
+	function findByPrefix(animFrames:Array<FlxFrame>, prefix:String):Void
 	{
 		for (frame in _sprite.frames.frames)
 		{
-			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
+			if (frame.name != null && frame.name.startsWith(prefix))
 			{
-				AnimFrames.push(frame);
+				animFrames.push(frame);
 			}
 		}
 	}
@@ -760,7 +760,7 @@ class FlxAnimationController implements IFlxDestroyable
 
 	function set_frameName(Value:String):String
 	{
-		if (_sprite.frames != null && _sprite.frames.framesHash.exists(Value))
+		if (_sprite.frames != null && _sprite.frames.exists(Value))
 		{
 			if (_curAnim != null)
 			{
@@ -768,7 +768,7 @@ class FlxAnimationController implements IFlxDestroyable
 				_curAnim = null;
 			}
 
-			var frame = _sprite.frames.framesHash.get(Value);
+			var frame = _sprite.frames.getByName(Value);
 			if (frame != null)
 			{
 				frameIndex = getFrameIndex(frame);

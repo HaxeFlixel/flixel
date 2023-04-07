@@ -676,7 +676,7 @@ class FlxAtlas implements IFlxDestroyable
 
 		var atlasFrames:FlxAtlasFrames = _graphic.atlasFrames;
 
-		if (node.filled && !atlasFrames.framesHash.exists(node.key))
+		if (node.filled && !atlasFrames.exists(node.key))
 		{
 			var frame:FlxRect = FlxRect.get(node.x, node.y, node.width - border, node.height - border);
 			var sourceSize:FlxPoint = node.rotated ? FlxPoint.get(node.height - border,

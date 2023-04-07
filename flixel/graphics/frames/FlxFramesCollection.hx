@@ -30,8 +30,16 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Used only in `FlxAtlasFrames` and `FlxBitmapFont` (not implemented yet),
 	 * but you can try to use it for other types of collections
 	 * (give names to your frames).
+	 * 
+	 * Note: This was made private in Flixel 5.3.0
 	 */
-	public var framesHash:Map<String, FlxFrame>;
+	@:deprecated("`framesHash` is deprecated, use `getByName()` or `exists()`")
+	public var framesHash(get, set):Map<String, FlxFrame>;
+	
+	/**
+	 * Hash of frames, by name, for this frame collection.
+	 */
+	var framesByName(default, null):Map<String, FlxFrame>;
 
 	/**
 	 * Graphic object this frames belongs to.
@@ -56,21 +64,32 @@ class FlxFramesCollection implements IFlxDestroyable
 		this.type = type;
 		this.border = (border == null) ? FlxPoint.get() : border;
 		frames = [];
-		framesHash = new Map<String, FlxFrame>();
+		framesByName = new Map<String, FlxFrame>();
 
 		if (parent != null)
 			parent.addFrameCollection(this);
 	}
 
 	/**
-	 * Finds a frame in `framesHash` by its name.
+	 * Finds a frame in the collection by its name.
 	 *
 	 * @param   name   The name of the frame to find.
 	 * @return  Frame with specified name (if there is one).
 	 */
 	public inline function getByName(name:String):FlxFrame
 	{
-		return framesHash.get(name);
+		return framesByName.get(name);
+	}
+	
+	/**
+	 * Whether the collection has frame with the specified name.
+	 *
+	 * @param   name   The name of the frame to find.
+	 * @return  Whether the collection has frame with the specified name.
+	 */
+	public inline function exists(name:String):Bool
+	{
+		return framesByName.exists(name);
 	}
 
 	/**
@@ -116,7 +135,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	{
 		frames = FlxDestroyUtil.destroyArray(frames);
 		border = FlxDestroyUtil.put(border);
-		framesHash = null;
+		framesByName = null;
 		parent = null;
 		type = null;
 	}
@@ -171,8 +190,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX = false, flipY = false,
 			duration = 0.0):FlxFrame
 	{
-		if (name != null && framesHash.exists(name))
-			return framesHash.get(name);
+		if (name != null && exists(name))
+			return getByName(name);
 
 		var texFrame:FlxFrame = new FlxFrame(parent, angle, flipX, flipY, duration);
 		texFrame.name = name;
@@ -199,8 +218,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function setFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
-		if (framesHash.exists(name))
-			framesHash[name].offset.set(offsetX, offsetY);
+		if (exists(name))
+			getByName(name).offset.set(offsetX, offsetY);
 		else
 			FlxG.log.warn('No frame called $name');
 	}
@@ -218,8 +237,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addFrameOffset(name:String, offsetX:Float, offsetY:Float)
 	{
-		if (framesHash.exists(name))
-			framesHash[name].offset.add(offsetX, offsetY);
+		if (exists(name))
+			getByName(name).offset.add(offsetX, offsetY);
 		else
 			FlxG.log.warn('No frame called $name');
 	}
@@ -236,7 +255,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
 	{
-		for (name => frame in framesHash)
+		for (name => frame in framesByName)
 		{
 			if (name.indexOf(prefix) == 0)
 				frame.offset.set(offsetX, offsetY);
@@ -255,7 +274,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
 	{
-		for (name => frame in framesHash)
+		for (name => frame in framesByName)
 		{
 			if (name.indexOf(prefix) == 0)
 				frame.offset.add(offsetX, offsetY);
@@ -274,8 +293,8 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function setFrameDuration(name:String, duration:Float)
 	{
-		if (framesHash.exists(name))
-			framesHash[name].duration = duration;
+		if (exists(name))
+			getByName(name).duration = duration;
 		else
 			FlxG.log.warn('No frame called $name');
 	}
@@ -292,10 +311,10 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function setFramesDurationByPrefix(prefix:String, duration:Float)
 	{
-		for (name => frame in framesHash)
+		for (name => frame in framesByName)
 		{
 			if (name.indexOf(prefix) == 0)
-				framesHash[name].duration = duration;
+				getByName(name).duration = duration;
 		}
 	}
 
@@ -332,14 +351,14 @@ class FlxFramesCollection implements IFlxDestroyable
 	public function pushFrame(frameObj:FlxFrame, overwriteHash = false):FlxFrame
 	{
 		final name:String = frameObj.name;
-		if (name != null && framesHash.exists(name) && !overwriteHash)
-			return framesHash.get(name);
+		if (name != null && exists(name) && !overwriteHash)
+			return getByName(name);
 
 		frames.push(frameObj);
 		frameObj.cacheFrameMatrix();
 
 		if (name != null)
-			framesHash.set(name, frameObj);
+			framesByName.set(name, frameObj);
 
 		return frameObj;
 	}
@@ -364,6 +383,16 @@ class FlxFramesCollection implements IFlxDestroyable
 	inline function get_numFrames():Int
 	{
 		return frames.length;
+	}
+	
+	inline function get_framesHash()
+	{
+		return framesByName;
+	}
+	
+	inline function set_framesHash(value)
+	{
+		return framesByName = value;
 	}
 }
 
