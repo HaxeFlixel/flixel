@@ -412,6 +412,36 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		return atlasFrames;
 	}
+	
+	/**
+	 * Adds all ofthe frames from the specified collection
+	 * @param   collection     The frames to add.
+	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function addAtlas(collection:FlxAtlasFrames, overwriteHash = false)
+	{
+		for (frame in collection.frames)
+			pushFrame(frame, overwriteHash);
+			
+		return this;
+	}
+	
+	/**
+	 * Creates a new `FlxAtlasFrames` instance with all the frames from this and the desired instance.
+	 * @param   collection     The other frames to add.
+	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function concatenate(collection:FlxAtlasFrames, overwriteHash = false)
+	{
+		final newCollection = new FlxAtlasFrames(parent);
+		newCollection.addAtlas(this);
+		newCollection.addAtlas(this, overwriteHash);
+		return this;
+	}
 }
 
 typedef TexturePackerObject =
