@@ -70,6 +70,13 @@ class FlxColorTest extends FlxTest
 		Assert.areEqual(FlxColor.BLACK, (FlxColor.RED * FlxColor.GREEN));
 		Assert.areEqual(FlxColor.BLACK, (FlxColor.GREEN * FlxColor.RED));
 	}
+	
+	@Test // 2769
+	function testFromString()
+	{
+		final color:String = '#FF3F2021';
+		Assert.areEqual(FlxColor.fromString(color).toHexString(), "0xFF3F2021"); // Prints 0x7FFFFFFF instead of 0xFF3F2021
+	}
 
 	@Test // #1609
 	function testReflectionInvalidOperation()
