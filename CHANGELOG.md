@@ -5,6 +5,7 @@
 - `FlxFrame`: Add `duration` ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
 	- `FlxAtlasFrames`: Add `setFrameDuration` and `setFramesDurationByPrefix`
 	- `FlxAtlasFrames`: Add `fromAseprite` which takes Aseprite generated Json, and honors frame duration
+- `FlxState`: Add `startOutro`, deprecate `switchTo` ([#2768](https://github.com/HaxeFlixel/flixel/pull/2768))
 
 #### Changes and improvements:
 - `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
