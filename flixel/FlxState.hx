@@ -10,6 +10,8 @@ import flixel.util.FlxSignal.FlxTypedSignal;
  * It is for all intents and purpose a fancy `FlxGroup`. And really, it's not even that fancy.
  */
 @:keepSub // workaround for HaxeFoundation/haxe#3749
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("switchTo", "switchTo is deprecated, use startOutro"))
+// show deprecation warning when `switchTo` is overriden in dereived classes
 class FlxState extends FlxGroup
 {
 	/**
@@ -171,9 +173,24 @@ class FlxState extends FlxGroup
 	 *
 	 * Useful for customizing state switches, e.g. for transition effects.
 	 */
+	@:deprecated("switchTo is deprecated, use startOutro")
 	public function switchTo(nextState:FlxState):Bool
 	{
 		return true;
+	}
+	
+	/**
+	 * Called from `FlxG.switchState()`, when `onOutroComplete` is called, the actual state
+	 * switching will happen.
+	 * 
+	 * Note: Calling `super.startOutro(onOutroComplete)` will call `onOutroComplete`.
+	 * 
+	 * @param   onOutroComplete  Called when the outro is complete.
+	 * @since 5.3.0
+	 */
+	public function startOutro(onOutroComplete:()->Void)
+	{
+		onOutroComplete();
 	}
 
 	/**

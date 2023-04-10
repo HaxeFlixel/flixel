@@ -368,8 +368,18 @@ class FlxG
 	 */
 	public static inline function switchState(nextState:FlxState):Void
 	{
-		if (state.switchTo(nextState))
-			game._requestedState = nextState;
+		final stateOnCall = FlxG.state;
+		// Use reflection to avoid deprecation warning on switchTo
+		if (Reflect.field(state, 'switchTo')(nextState))
+		{
+			state.startOutro(function()
+			{
+				if (FlxG.state == stateOnCall)
+					game._requestedState = nextState;
+				else
+					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+			});
+		}
 	}
 
 	/**
