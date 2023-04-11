@@ -1179,7 +1179,6 @@ class FlxCamera extends FlxBasic
 			target.getMidpoint(_point);
 			_point.addPoint(targetOffset);
 			_scrollTarget.set(_point.x - width * 0.5, _point.y - height * 0.5);
-			_point.putWeak();
 		}
 		else
 		{
