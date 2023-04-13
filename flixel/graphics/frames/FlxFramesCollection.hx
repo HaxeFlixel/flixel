@@ -206,6 +206,45 @@ class FlxFramesCollection implements IFlxDestroyable
 	}
 
 	/**
+	 * Retrieves all frames with names starting with the specified prefix in an Array.
+	 * 
+	 * @param   prefix  The name prefix to look for.
+	 * @since 5.3.0
+	 */
+	public function getAllByPrefix(prefix:String)
+	{
+		final list = new Array<FlxFrame>();
+		forEachByPrefix(prefix, (frame)->list.push(frame), false);
+		return list;
+	}
+	
+	/**
+	 * Calls the given function on each frame whose name matches the specified prefix.
+	 * 
+	 * Note: This method is inlined so that optimizations are made when a literal anonymous
+	 * functions or inlined functions are passed in, or when literal `false` is used for
+	 * `warnIfEmpty`. Meaning, this is often more performant than `getAllByPrefix`.
+	 * 
+	 * @param   prefix  The name prefix to look for.
+	 * @since 5.3.0
+	 */
+	public inline function forEachByPrefix(prefix:String, func:(FlxFrame)->Void, warnIfEmpty = true, ?warningMsg:String)
+	{
+		var warn = warnIfEmpty;
+		for (name => frame in framesByName)
+		{
+			if (name.indexOf(prefix) == 0)
+			{
+				warn = false;
+				func(frame);
+			}
+		}
+		
+		if (warn)
+			FlxG.log.warn(warningMsg != null ? warningMsg : 'no frames found with the prefix "$prefix"');
+	}
+	
+	/**
 	 * Sets the target frame's offset to the specified values. This mainly exists because certain
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
@@ -247,38 +286,32 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Sets all frames with the specified name prefix to the specified offset. This mainly
 	 * exists because certain atlas exporters don't give the correct offset.
 	 * 
-	 * @param   prefix   The prefix used to determine which frames are affected.
-	 * @param   offsetX  The new horizontal offset of the frame.
-	 * @param   offsetY  The new vertical offset of the frame.
+	 * @param   prefix       The prefix used to determine which frames are affected.
+	 * @param   offsetX      The new horizontal offset of the frame.
+	 * @param   offsetY      The new vertical offset of the frame.
+	 * @param   warnIfEmpty  Whether to log a warning if no frames with the prefix are found.
 	 * 
 	 * @since 5.3.0
 	 */
-	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float, warnIfEmpty = true)
 	{
-		for (name => frame in framesByName)
-		{
-			if (name.indexOf(prefix) == 0)
-				frame.offset.set(offsetX, offsetY);
-		}
+		forEachByPrefix(prefix, (frame)->{ frame.offset.set(offsetX, offsetY); }, warnIfEmpty);
 	}
 
 	/**
 	 * Adjusts all frames with the specified name prefix by the specified offset. This mainly
 	 * exists because certain atlas exporters don't give the correct offset.
 	 * 
-	 * @param   prefix   The prefix used to determine which frames are affected.
-	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
-	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * @param   prefix       The prefix used to determine which frames are affected.
+	 * @param   offsetX      The horizontal adjustment added to the frame's current offset.
+	 * @param   offsetY      The vertical adjustment added to the frame's current offset.
+	 * @param   warnIfEmpty  Whether to log a warning if no frames with the prefix are found.
 	 * 
 	 * @since 5.3.0
 	 */
-	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float, warnIfEmpty = true)
 	{
-		for (name => frame in framesByName)
-		{
-			if (name.indexOf(prefix) == 0)
-				frame.offset.add(offsetX, offsetY);
-		}
+		forEachByPrefix(prefix, (frame)->{ frame.offset.add(offsetX, offsetY); }, warnIfEmpty);
 	}
 
 	/**
@@ -304,20 +337,17 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
 	 * a warning is logged.
 	 * 
-	 * @param   prefix    The prefix used to determine which frames are affected.
-	 * @param   duration  The new duration of the frame.
+	 * @param   prefix       The prefix used to determine which frames are affected.
+	 * @param   duration     The new duration of the frame.
+	 * @param   warnIfEmpty  Whether to log a warning if no frames with the prefix are found.
 	 * 
 	 * @since 5.3.0
 	 */
-	public function setFramesDurationByPrefix(prefix:String, duration:Float)
+	public function setFramesDurationByPrefix(prefix:String, duration:Float, warnIfEmpty = true)
 	{
-		for (name => frame in framesByName)
-		{
-			if (name.indexOf(prefix) == 0)
-				getByName(name).duration = duration;
-		}
+		forEachByPrefix(prefix, (frame)->{ frame.duration = duration; }, warnIfEmpty);
 	}
-
+	
 	/**
 	 * Checks if frame's area fits into atlas image, and trims if it's out of atlas image bounds.
 	 *
