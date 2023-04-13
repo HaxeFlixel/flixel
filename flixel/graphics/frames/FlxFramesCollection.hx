@@ -331,22 +331,6 @@ class FlxFramesCollection implements IFlxDestroyable
 		else
 			FlxG.log.warn('No frame called $name');
 	}
-
-	/**
-	 * Sets the target frame's offset to the specified values. This mainly exists because certain
-	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
-	 * a warning is logged.
-	 * 
-	 * @param   prefix       The prefix used to determine which frames are affected.
-	 * @param   duration     The new duration of the frame.
-	 * @param   warnIfEmpty  Whether to log a warning if no frames with the prefix are found.
-	 * 
-	 * @since 5.3.0
-	 */
-	public function setFramesDurationByPrefix(prefix:String, duration:Float, warnIfEmpty = true)
-	{
-		forEachByPrefix(prefix, (frame)->{ frame.duration = duration; }, warnIfEmpty);
-	}
 	
 	/**
 	 * Checks if frame's area fits into atlas image, and trims if it's out of atlas image bounds.
