@@ -730,43 +730,30 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			position.putWeak();
 		}
 
-		// Figure out what tiles we need to check against
-		var selectionX:Int = Math.floor((object.x - xPos) / scaledTileWidth);
-		var selectionY:Int = Math.floor((object.y - yPos) / scaledTileHeight);
-		var selectionWidth:Int = selectionX + Math.ceil(object.width / scaledTileWidth) + 1;
-		var selectionHeight:Int = selectionY + Math.ceil(object.height / scaledTileHeight) + 1;
-
-		// Then bound these coordinates by the map edges
-		selectionX = Std.int(FlxMath.bound(selectionX, 0, widthInTiles));
-		selectionY = Std.int(FlxMath.bound(selectionY, 0, heightInTiles));
-		selectionWidth = Std.int(FlxMath.bound(selectionWidth, 0, widthInTiles));
-		selectionHeight = Std.int(FlxMath.bound(selectionHeight, 0, heightInTiles));
-
-		// Then loop through this selection of tiles
-		var rowStart:Int = selectionY * widthInTiles;
-		var deltaX:Float = xPos - last.x;
-		var deltaY:Float = yPos - last.y;
-
-		for (row in selectionY...selectionHeight)
+		inline function bindInt(value:Int, min:Int, max:Int)
 		{
-			var column = selectionX;
+			return Std.int(FlxMath.bound(value, min, max));
+		}
 
-			while (column < selectionWidth)
+		// Figure out what tiles we need to check against, and bind them by the map edges
+		final minTileX:Int = bindInt(Math.floor((object.x - xPos) / scaledTileWidth), 0, widthInTiles);
+		final minTileY:Int = bindInt(Math.floor((object.y - yPos) / scaledTileHeight), 0, heightInTiles);
+		final maxTileX:Int = bindInt(Math.ceil((object.x + object.width - xPos) / scaledTileWidth), 0, widthInTiles);
+		final maxTileY:Int = bindInt(Math.ceil((object.y + object.height - yPos) / scaledTileHeight), 0, heightInTiles);
+
+		// Loop through the range of tiles and call the callback on them, accordingly
+		final deltaX:Float = xPos - last.x;
+		final deltaY:Float = yPos - last.y;
+
+		for (row in minTileY...maxTileY)
+		{
+			for (column in minTileX...maxTileX)
 			{
-				var index:Int = rowStart + column;
-				if (index < 0 || index > _data.length - 1)
-				{
-					column++;
-					continue;
-				}
-
-				var dataIndex:Int = _data[index];
+				final mapIndex:Int = (row * widthInTiles) + column;
+				final dataIndex:Int = _data[mapIndex];
 				if (dataIndex < 0)
-				{
-					column++;
 					continue;
-				}
-
+				
 				final tile = _tileObjects[dataIndex];
 				tile.width = scaledTileWidth;
 				tile.height = scaledTileHeight;
@@ -799,18 +786,14 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				{
 					if (tile.callbackFunction != null && (tile.filter == null || isOfType(object, tile.filter)))
 					{
-						tile.mapIndex = rowStart + column;
+						tile.mapIndex = mapIndex;
 						tile.callbackFunction(tile, object);
 					}
 
 					if (tile.allowCollisions != NONE)
 						results = true;
 				}
-
-				column++;
 			}
-
-			rowStart += widthInTiles;
 		}
 
 		return results;
