@@ -687,10 +687,12 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * Also calls the tile's registered callback if the filter matches.
 	 *
 	 * @param   object              The FlxObject you are checking for overlaps against.
-	 * @param   callback            An optional function that takes the form `myCallback(Object1:FlxObject,Object2:FlxObject)`, where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
-	 * @param   flipCallbackParams  Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
-	 * @param   position            Optional, specify a custom position for the tilemap (useful for overlapsAt()-type functionality).
-	 * @return  Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
+	 * @param   callback            An optional function that takes the form `myCallback(a:FlxObject, b:FlxObject)`,
+	 *                              where `a` is a `FlxTile`, and `b` is the given `object` paaram.
+	 * @param   flipCallbackParams  Used to preserve A-B list ordering from `FlxObject.separate()`,
+	 *                              returns the `FlxTile` object as the second parameter instead.
+	 * @param   position            Optional, specify a custom position for the tilemap (used for `overlapsAt`).
+	 * @return  Whether there were overlaps, and the result of the callback, if one was specified.
 	 */
 	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
