@@ -626,7 +626,7 @@ class FlxText extends FlxSprite
 
 	inline function get_embedded():Bool
 	{
-		return textField.embedFonts = true;
+		return textField.embedFonts;
 	}
 
 	inline function get_systemFont():String

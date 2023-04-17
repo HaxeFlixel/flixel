@@ -124,6 +124,7 @@ class FlxDebugger extends Sprite
 		super();
 
 		visible = false;
+		tabChildren = false;
 
 		Tooltip.init(this);
 

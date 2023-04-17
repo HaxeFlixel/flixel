@@ -10,8 +10,8 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
-import haxe.ds.Vector;
 import haxe.ds.ArraySort;
+import haxe.ds.Vector;
 
 /**
  * Base class for all frame types
@@ -83,6 +83,11 @@ class FlxFrame implements IFlxDestroyable
 	public var offset(default, null):FlxPoint;
 
 	/**
+	 * The duration of this frame in seconds. If 0, the anim controller will decide the duration
+	 */
+	public var duration:Float;
+
+	/**
 	 * The type of this frame.
 	 */
 	public var type:FlxFrameType;
@@ -93,12 +98,13 @@ class FlxFrame implements IFlxDestroyable
 
 	@:allow(flixel.graphics.FlxGraphic)
 	@:allow(flixel.graphics.frames.FlxFramesCollection)
-	function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
+	function new(parent:FlxGraphic, angle = FlxFrameAngle.ANGLE_0, flipX = false, flipY = false, duration = 0.0)
 	{
 		this.parent = parent;
 		this.angle = angle;
 		this.flipX = flipX;
 		this.flipY = flipY;
+		this.duration = duration;
 
 		type = FlxFrameType.REGULAR;
 

@@ -21,9 +21,9 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import openfl.Vector;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
-import openfl.Vector;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -128,7 +128,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used to smoothly track the camera as it follows:
 	 * The percent of the distance to the follow `target` the camera moves per 1/60 sec.
-	 * Values are bounded between `0.0` and `FlxG.updateFrameRate / 60` for consistency across framerates.
+	 * Values are bounded between `0.0` and `60 / FlxG.updateFramerate` for consistency across framerates.
 	 * The maximum value means no camera easing. A value of `0` means the camera does not move.
 	 */
 	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
@@ -1178,7 +1178,7 @@ class FlxCamera extends FlxBasic
 		{
 			target.getMidpoint(_point);
 			_point.addPoint(targetOffset);
-			focusOn(_point);
+			_scrollTarget.set(_point.x - width * 0.5, _point.y - height * 0.5);
 		}
 		else
 		{
@@ -1243,16 +1243,16 @@ class FlxCamera extends FlxBasic
 				_lastTargetPosition.x = target.x;
 				_lastTargetPosition.y = target.y;
 			}
+		}
 
-			if (followLerp >= 60 / FlxG.updateFramerate)
-			{
-				scroll.copyFrom(_scrollTarget); // no easing
-			}
-			else
-			{
-				scroll.x += (_scrollTarget.x - scroll.x) * followLerp * FlxG.updateFramerate / 60;
-				scroll.y += (_scrollTarget.y - scroll.y) * followLerp * FlxG.updateFramerate / 60;
-			}
+		if (followLerp >= 60 / FlxG.updateFramerate)
+		{
+			scroll.copyFrom(_scrollTarget); // no easing
+		}
+		else
+		{
+			scroll.x += (_scrollTarget.x - scroll.x) * followLerp * FlxG.updateFramerate / 60;
+			scroll.y += (_scrollTarget.y - scroll.y) * followLerp * FlxG.updateFramerate / 60;
 		}
 	}
 
@@ -2100,7 +2100,7 @@ class FlxCamera extends FlxBasic
 	
 	inline function get_viewBottom():Float
 	{
-		return scroll.x + viewMarginBottom;
+		return scroll.y + viewMarginBottom;
 	}
 	
 	// deprecated vars
@@ -2134,6 +2134,26 @@ class FlxCamera extends FlxBasic
 	{
 		return viewMarginBottom;
 	}
+	
+	/**
+	 * Do not use the following fields! They only exists because FlxCamera extends FlxBasic,
+	 * we're hiding them because they've only caused confusion.
+	 */
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function get_camera():FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.camera")
+	@:noCompletion
+	override function set_camera(value:FlxCamera):FlxCamera throw "don't reference camera.camera";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function get_cameras():Array<FlxCamera> throw "don't reference camera.cameras";
+	
+	@:deprecated("don't reference camera.cameras")
+	@:noCompletion
+	override function set_cameras(value:Array<FlxCamera>):Array<FlxCamera> throw "don't reference camera.cameras";
 	
 }
 
