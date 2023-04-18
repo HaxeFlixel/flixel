@@ -49,7 +49,7 @@ class PluginFrontEnd
 	{
 		for (plugin in list)
 		{
-			if (plugin is ClassType)
+			if (Std.isOfType(plugin, ClassType))
 			{
 				return cast plugin;
 			}
@@ -96,7 +96,7 @@ class PluginFrontEnd
 
 		while (i >= 0)
 		{
-			if (list[i] is ClassType)
+			if (Std.isOfType(list[i], ClassType))
 			{
 				list.splice(i, 1);
 				results = true;

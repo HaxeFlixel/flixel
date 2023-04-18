@@ -65,7 +65,7 @@ class Tracker extends Watch
 
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-			if (Object is profile.objectClass || Object == profile.objectClass)
+			if (Std.isOfType(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
 
 		return lastMatchingProfile;

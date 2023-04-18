@@ -470,7 +470,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		{
 			basic = members[i++]; // we use basic as FlxBasic for performance reasons
 
-			if (basic != null && !basic.exists && (ObjectClass == null || basic is ObjectClass))
+			if (basic != null && !basic.exists && (ObjectClass == null || Std.isOfType(basic, ObjectClass)))
 			{
 				if (Force && Type.getClassName(Type.getClass(basic)) != Type.getClassName(ObjectClass))
 				{
@@ -849,7 +849,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 						group.forEachOfType(ObjectClass, cast Function, Recurse);
 				}
 
-				if (basic is ObjectClass)
+				if (Std.isOfType(basic, ObjectClass))
 					Function(cast basic);
 			}
 		}

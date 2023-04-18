@@ -342,7 +342,7 @@ class Interaction extends Window
 	public function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
-			if (tool is className)
+			if (Std.isOfType(tool, className))
 				return tool;
 		return null;
 	}
