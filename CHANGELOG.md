@@ -1,5 +1,8 @@
 5.3.0 (TBD)
 ------------------------------
+#### Dependencies:
+- Dropped support for haxe 3, use 4.2.5 or higher
+
 #### New features:
 - `FlxAtlasFrames`: Add `addFrameOffset` and `addFramesOffsetByPrefix` ([#2746](https://github.com/HaxeFlixel/flixel/pull/2746))
 - `FlxFrame`: Add `duration` ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
