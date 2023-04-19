@@ -16,7 +16,7 @@ import openfl.display.BitmapData;
 
 using StringTools;
 
-abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
+class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -110,19 +110,42 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Virtual methods, must be implemented in each renderers
 	 */
-	abstract function updateTile(index:Int):Void;
+	function updateTile(index:Int):Void
+	{
+		throw "updateTile must be implemented";
+	}
 
-	abstract function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void;
+	function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
+	{
+		throw "cacheGraphics must be implemented";
+	}
 
-	abstract function initTileObjects():Void;
+	function initTileObjects():Void
+	{
+		throw "initTileObjects must be implemented";
+	}
 
-	abstract function updateMap():Void;
+	function updateMap():Void
+	{
+		throw "updateMap must be implemented";
+	}
 
-	abstract function computeDimensions():Void;
+	function computeDimensions():Void
+	{
+		throw "computeDimensions must be implemented";
+	}
 
-	abstract public function getTileIndexByCoords(coord:FlxPoint):Int;
+	public function getTileIndexByCoords(coord:FlxPoint):Int
+	{
+		throw "getTileIndexByCoords must be implemented";
+		return 0;
+	}
 
-	abstract public function getTileCoordsByIndex(index:Int, midpoint:Bool = true):FlxPoint;
+	public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
+	{
+		throw "getTileCoordsByIndex must be implemented";
+		return null;
+	}
 
 	/**
 	 * Shoots a ray from the start point to the end point.
@@ -136,7 +159,11 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
-	abstract public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool;
+	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
+	{
+		throw "ray must be implemented";
+		return false;
+	}
 
 	/**
 	 * Shoots a ray from the start point to the end point.
@@ -152,7 +179,11 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
-	abstract public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool;
+	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
+	{
+		throw "rayStep must be implemented?";
+		return false;
+	}
 
 	/**
 	 * Calculates at which point where the given line, from start to end, first enters the tilemap.
@@ -199,9 +230,16 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return calcRayEntry(end, start, result);
 	}
 
-	abstract public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false, ?position:FlxPoint):Bool;
+	public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
+	{
+		throw "overlapsWithCallback must be implemented";
+		return false;
+	}
 
-	abstract public function setDirty(dirty:Bool = true):Void;
+	public function setDirty(dirty:Bool = true):Void
+	{
+		throw "setDirty must be implemented";
+	}
 
 	function new()
 	{
