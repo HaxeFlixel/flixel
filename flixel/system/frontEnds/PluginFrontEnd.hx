@@ -5,11 +5,6 @@ import flixel.input.mouse.FlxMouseEventManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
-#end
 
 /**
  * Accessed via `FlxG.plugins`.
@@ -54,7 +49,7 @@ class PluginFrontEnd
 	{
 		for (plugin in list)
 		{
-			if (isOfType(plugin, ClassType))
+			if (Std.isOfType(plugin, ClassType))
 			{
 				return cast plugin;
 			}
@@ -101,7 +96,7 @@ class PluginFrontEnd
 
 		while (i >= 0)
 		{
-			if (isOfType(list[i], ClassType))
+			if (Std.isOfType(list[i], ClassType))
 			{
 				list.splice(i, 1);
 				results = true;
