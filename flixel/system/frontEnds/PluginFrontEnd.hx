@@ -19,8 +19,8 @@ class PluginFrontEnd
 	/**
 	 * Adds a new plugin to the global plugin array.
 	 *
-	 * @param	Plugin	Any object that extends FlxPlugin. Useful for managers and other things. See flixel.plugin for some examples!
-	 * @return	The same FlxPlugin-based plugin you passed in.
+	 * @param	Plugin	Any object that extends FlxBasic. Useful for managers and other things.
+	 * @return	The same plugin you passed in.
 	 */
 	@:generic
 	public function add<T:FlxBasic>(Plugin:T):T
@@ -62,7 +62,7 @@ class PluginFrontEnd
 	 * Removes an instance of a plugin from the global plugin array.
 	 *
 	 * @param	Plugin	The plugin instance you want to remove.
-	 * @return	The same FlxPlugin-based plugin you passed in.
+	 * @return	The same plugin you passed in.
 	 */
 	public function remove<T:FlxBasic>(Plugin:T):T
 	{
