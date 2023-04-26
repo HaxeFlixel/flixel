@@ -20,7 +20,7 @@
 - `FlxSound`: Fix doc comment ([#2767](https://github.com/HaxeFlixel/flixel/pull/2767))
 - `FlxSprite`: Better warnings for invalid `width`/`height` args on `loadGraphic` ([#2762](https://github.com/HaxeFlixel/flixel/pull/2762))
 - `FlxCamera`: Allow `followLerp` to be used with `NO_DEAD_ZONE` ([#2771](https://github.com/HaxeFlixel/flixel/pull/2771))
-- improve docs ([#2777](https://github.com/HaxeFlixel/flixel/pull/2777)) ([#2778](https://github.com/HaxeFlixel/flixel/pull/2778))
+- Improve docs ([#2777](https://github.com/HaxeFlixel/flixel/pull/2777)) ([#2778](https://github.com/HaxeFlixel/flixel/pull/2778))
 
 #### Bugfixes:
 - `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([#2738](https://github.com/HaxeFlixel/flixel/pull/2738))
