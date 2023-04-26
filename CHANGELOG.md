@@ -1,4 +1,4 @@
-5.3.0 (TBD)
+5.3.0 (April 26, 2023)
 ------------------------------
 #### Dependencies:
 - Dropped support for haxe 4.0 and 4.1, use 4.2.5 or higher
