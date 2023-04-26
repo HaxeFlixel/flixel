@@ -6,7 +6,6 @@
 #### New features:
 - `FlxAtlasFrames`: Add `addFrameOffset` and `addFramesOffsetByPrefix` ([#2746](https://github.com/HaxeFlixel/flixel/pull/2746))
 - `FlxFrame`: Add `duration` ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
-	- `FlxAtlasFrames`: Add `setFrameDuration` and `setFramesDurationByPrefix`
 	- `FlxAtlasFrames`: Add `fromAseprite` which takes Aseprite generated Json, and honors frame duration
 - `FlxState`: Add `startOutro`, deprecate `switchTo` ([#2768](https://github.com/HaxeFlixel/flixel/pull/2768))
 
