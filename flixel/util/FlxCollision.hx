@@ -9,8 +9,8 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.tile.FlxTileblock;
 
 /**
@@ -47,9 +47,8 @@ class FlxCollision
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var advanced = (Contact.angle != 0) || (Target.angle != 0)
-			|| Contact.scale.x != 1 || Contact.scale.y != 1
-			|| Target.scale.x != 1 || Target.scale.y != 1;
+		var advanced = (Contact.angle != 0) || (Target.angle != 0) || Contact.scale.x != 1 || Contact.scale.y != 1 || Target.scale.x != 1
+			|| Target.scale.y != 1;
 
 		Contact.getScreenBounds(boundsA, Camera);
 		Target.getScreenBounds(boundsB, Camera);
@@ -91,7 +90,6 @@ class FlxCollision
 
 			// translate it back!
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
-			
 
 			// prepare an empty canvas
 			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
@@ -232,8 +230,8 @@ class FlxCollision
 
 		if (PlaceOutside)
 		{
-			left = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			right = new FlxTileblock(Math.floor(Camera.x + Camera.width), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			left = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y), Thickness, Camera.height);
+			right = new FlxTileblock(Math.floor(Camera.x + Camera.width), Math.floor(Camera.y), Thickness, Camera.height);
 			top = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y - Thickness), Camera.width + Thickness * 2, Thickness);
 			bottom = new FlxTileblock(Math.floor(Camera.x - Thickness), Camera.height, Camera.width + Thickness * 2, Thickness);
 
@@ -301,7 +299,7 @@ class FlxCollision
 				result = FlxPoint.get(x, y);
 			else
 				result.set(x, y);
-			
+
 			putWeakRefs();
 			return result;
 		}
@@ -317,10 +315,10 @@ class FlxCollision
 			return getResult(start.x, start.y);
 
 		// are both points above, below, left or right of the bounds
-		if ((start.y < rect.top    && end.y < rect.top   )
-		||  (start.y > rect.bottom && end.y > rect.bottom)
-		||  (start.x > rect.right  && end.x > rect.right )
-		||  (start.x < rect.left   && end.x < rect.left) )
+		if ((start.y < rect.top && end.y < rect.top)
+			|| (start.y > rect.bottom && end.y > rect.bottom)
+			|| (start.x > rect.right && end.x > rect.right)
+			|| (start.x < rect.left && end.x < rect.left))
 		{
 			return nullResult();
 		}
