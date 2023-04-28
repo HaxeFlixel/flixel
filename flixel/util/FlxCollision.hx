@@ -47,8 +47,9 @@ class FlxCollision
 	public static function pixelPerfectCheck(Contact:FlxSprite, Target:FlxSprite, AlphaTolerance:Int = 1, ?Camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var advanced = (Contact.angle != 0) || (Target.angle != 0) || Contact.scale.x != 1 || Contact.scale.y != 1 || Target.scale.x != 1
-			|| Target.scale.y != 1;
+		var advanced = (Contact.angle != 0) || (Target.angle != 0)
+			|| Contact.scale.x != 1 || Contact.scale.y != 1
+			|| Target.scale.x != 1 || Target.scale.y != 1;
 
 		Contact.getScreenBounds(boundsA, Camera);
 		Target.getScreenBounds(boundsB, Camera);
@@ -315,10 +316,10 @@ class FlxCollision
 			return getResult(start.x, start.y);
 
 		// are both points above, below, left or right of the bounds
-		if ((start.y < rect.top && end.y < rect.top)
-			|| (start.y > rect.bottom && end.y > rect.bottom)
-			|| (start.x > rect.right && end.x > rect.right)
-			|| (start.x < rect.left && end.x < rect.left))
+		if ((start.y < rect.top    && end.y < rect.top   )
+		||  (start.y > rect.bottom && end.y > rect.bottom)
+		||  (start.x > rect.right  && end.x > rect.right )
+		||  (start.x < rect.left   && end.x < rect.left) )
 		{
 			return nullResult();
 		}
