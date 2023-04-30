@@ -217,6 +217,11 @@ class FlxAnimation extends FlxBaseAnimation
 				else
 					curFrame++;
 			}
+			
+			// prevents null ref when the sprite is destroyed on finishCallback (#2782)
+			if (finished)
+				break;
+			
 			curFrameDuration = getCurrentFrameDuration();
 		}
 	}
