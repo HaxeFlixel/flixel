@@ -2,105 +2,34 @@
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
-[![Build Status](https://travis-ci.org/HaxeFlixel/flixel.png)](https://travis-ci.org/HaxeFlixel/flixel) [![Fixes Needed](https://badge.waffle.io/haxeflixel/flixel.png?label=ready)](http://waffle.io/haxeflixel/flixel) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HaxeFlixel/flixel/trend.png)](https://bitdeli.com/HaxeFlixel "Bitdeli Badge")
+[![CI](https://img.shields.io/github/workflow/status/HaxeFlixel/flixel/CI.svg?logo=github)](https://github.com/HaxeFlixel/flixel/actions?query=workflow%3ACI)
+[![Discord](https://img.shields.io/discord/162395145352904705.svg?logo=discord)](https://discordapp.com/invite/rqEBAgF)
+[![Haxelib Version](https://badgen.net/haxelib/v/flixel)](https://lib.haxe.org/p/flixel)
+[![Haxelib Downloads](https://badgen.net/haxelib/d/flixel?color=blue)](https://lib.haxe.org/p/flixel)
+[![Haxelib License](https://badgen.net/haxelib/license/flixel)](LICENSE.md)
+[![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) 
 
-[![](showcase.png)](http://www.haxeflixel.com/showcase)
+[![](images/showcase.png)](https://haxeflixel.com/showcase)
 
-##Getting Started
+## Links
 
-[Click here to get started making games with HaxeFlixel.](http://haxeflixel.com/documentation/getting-started/)
+Here are the most important links to get you started with HaxeFlixel:
 
-HaxeFlixel is open source software developed by volunteers, [click here to meet the team!](https://github.com/orgs/HaxeFlixel/members)
+- [Getting Started](https://haxeflixel.com/documentation/getting-started/)
+- [Documentation](https://haxeflixel.com/documentation)
+- [API](https://api.haxeflixel.com/)
+- [Community](https://haxeflixel.com/documentation/community/)
 
-If you're a developer and like what we're doing, [read the docs](#for-developers) and get involved.
+If you want to contribute code or report an issue, please check our [CONTRIBUTING.md](https://github.com/HaxeFlixel/flixel/blob/dev/.github/CONTRIBUTING.md).
 
-##Links
+## Platforms
 
-In case you're looking for resources, help, or just want to interact with the community:
+Thanks to being built on top of [Haxe](https://haxe.org/) and [OpenFL](http://www.openfl.org/), HaxeFlixel can target the following platforms _natively_:
 
-- [HaxeFlixel.com](http://www.haxeflixel.com/)
-  - [Forums](http://www.haxeflixel.com/forum)
-  - [Docs](http://www.haxeflixel.com/documentation)
-  - [API](http://api.haxeflixel.com/)
-- [@HaxeFlixel on Twitter](https://twitter.com/HaxeFlixel)
-- [#haxeflixel IRC channel](http://webchat.freenode.net/?channels=haxeflixel)
+![](images/platforms.png)
 
-##About
+## About
 
-HaxeFlixel was created by Alexander Hohlov, also known as [Beeblerox](https://github.com/beeblerox) who continues to be the project lead. The codebase started largely from a Haxe port of the [AS3 version of Flixel](https://github.com/AdamAtomic/flixel) written by [Adam “Atomic” Saltsman](http://www.adamatomic.com/) and [Richard Davey's](http://www.photonstorm.com/flixel-power-tools) [Power Tools](https://github.com/photonstorm/Flixel-Power-Tools)
+HaxeFlixel has its roots in the original [ActionScript 3 version of Flixel](https://github.com/AdamAtomic/flixel), created by [Adam “Atomic” Saltsman](http://www.adamatomic.com/). It was started by [Alexander Hohlov](https://github.com/beeblerox) in 2011, initially as a straightforward Haxe port of the AS3 codebase and Richard Davey's [Flixel Power Tools](http://www.photonstorm.com/flixel-power-tools).
 
-Special thanks go to the community contributors [Werdn](https://github.com/werdn), [gamedevsam](https://github.com/gamedevsam), [impaler](https://github.com/impaler), [ProG4mr](https://github.com/ProG4mr), [Gama11](https://github.com/Gama11), [sergey-miryanov](https://github.com/sergey-miryanov) and more.
-
-HaxeFlixel presents substantial enhancements from the original Flixel AS3 code:
-
-- Use of a robust and powerful, open source language
-- Flexible Asset Management System
-- Cross-platform development for Linux, Mac and Windows
-- Texture Atlas and Layer enhancement for cpp targets
-- Integrated and robust Tween System
-- Access to OpenFL native extensions
-- Compile to Mobile and Desktop targets with native code through OpenFL
-- Impressive Native Performance using GPU accelerated drawTiles implementation on cpp targets
-- A powerful debugger with a console as well as an advanced logging system
-- A vibrant community that keeps updating the engine and adding new features to it
-
-##For Developers
-
-If you are wanting to contribute code, please review the following documentation:
-
-- [Install development flixel](http://haxeflixel.com/documentation/install-development-flixel/)
-- [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
-- [Code Style](http://haxeflixel.com/documentation/code-style)
-
-If you have a question or have not contributed on GitHub before, there are friendly people in the community that help out in the [forums](http://haxeflixel.com/documentation/community/).
-
-For using git with GitHub we recommended using a GUI application to manage your changes, for example [SourceTree](http://www.sourcetreeapp.com/).
-
-##Runtime Targets
-The current possible targets are:
-
-<table>
-  <tr>
-    <th>Mobile</th>
-    <th>Desktop</th>
-    <th>Web</th>
-  </tr>
-  <tr>
-    <td>Blackberry</td>
-    <td>Linux</td>
-    <td>Flash</td>
-  </tr>
-  <tr>
-    <td>iOS</td>
-    <td>Mac</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Android</td>
-    <td>Windows</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>WebOS</td>
-    <td>Neko</td>
-    <td></td>
-  </tr>
-</table>
-
-There's also experimental support for HTML5.
-
-##Basic Features
-
-- Display thousands of moving objects
-- Basic collisions between objects
-- Group objects together for simplicity
-- Easily generate and emit particles
-- Create game levels using tilemaps
-- Text display, save games, scrolling
-- Mouse, keyboard, controller, and touch inputs
-- Math & color utilities
-- Record and play back replays
-- Powerful interactive debugger
-- Camera system for split screen
-- Pathfinding and following
-- Easy object recycling
+Thanks to the efforts of the [core team](https://github.com/orgs/HaxeFlixel/people) as well as [over 100 contributors](https://github.com/HaxeFlixel/flixel/graphs/contributors), today's version of HaxeFlixel far surpasses the capabilities of the original. Not only has the core engine seen many substantial improvements and new features, there is also a far richer ecosystem with additional libaries and [over 80 demo projects](https://github.com/HaxeFlixel/flixel-demos) to learn from.

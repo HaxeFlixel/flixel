@@ -1,123 +1,139 @@
 package flixel.tweens.misc;
 
 import flixel.tweens.FlxTween;
-import flixel.util.FlxArrayUtil;
 
 /**
- * Tweens multiple numeric public properties of an Object simultaneously.
+ * Tweens multiple numeric properties of an object simultaneously.
  */
 class VarTween extends FlxTween
 {
-	private var _object:Dynamic;
-	private var _properties:Dynamic;
-	private var _vars:Array<String>;
-	private var _startValues:Array<Float>;
-	private var _range:Array<Float>;
-	
-	/**
-	 * Clean up references
-	 */
-	override public function destroy():Void 
+	var _object:Dynamic;
+	var _properties:Dynamic;
+	var _propertyInfos:Array<VarTweenProperty>;
+
+	function new(options:TweenOptions, ?manager:FlxTweenManager)
 	{
-		super.destroy();
-		_object = null;
-		_properties = null;
+		super(options, manager);
 	}
-	
-	private function new(Options:TweenOptions)
-	{
-		super(Options);
-		
-		_vars = [];
-		_startValues = [];
-		_range = [];
-	}
-	
+
 	/**
 	 * Tweens multiple numeric public properties.
-	 * 
+	 *
 	 * @param	object		The object containing the properties.
 	 * @param	properties	An object containing key/value pairs of properties and target values.
 	 * @param	duration	Duration of the tween.
 	 */
 	public function tween(object:Dynamic, properties:Dynamic, duration:Float):VarTween
 	{
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		if (object == null)
-		{
 			throw "Cannot tween variables of an object that is null.";
-		}
 		else if (properties == null)
-		{
 			throw "Cannot tween null properties.";
-		}
 		#end
-		
+
 		_object = object;
 		_properties = properties;
+		_propertyInfos = [];
 		this.duration = duration;
 		start();
+		initializeVars();
 		return this;
 	}
-	
-	override private function update():Void
+
+	override function update(elapsed:Float):Void
 	{
 		var delay:Float = (executions > 0) ? loopDelay : startDelay;
-		
+
+		// Leave properties alone until delay is over
 		if (_secondsSinceStart < delay)
-		{
-			// Leave properties alone until delay is over
-			super.update();
-		}
+			super.update(elapsed);
 		else
 		{
-			if (_vars.length < 1)
-			{
-				// We don't initalize() in tween() because otherwise the start values 
-				// will be inaccurate with delays
-				initializeVars();
-			}
-			
-			super.update();
-			
-			var i:Int = _vars.length;
-			while (i-- > 0) 
-			{
-				Reflect.setProperty(_object, _vars[i], (_startValues[i] + _range[i] * scale));
-			}
+			// Wait until the delay is done to set the starting values of tweens
+			if (Math.isNaN(_propertyInfos[0].startValue))
+				setStartValues();
+
+			super.update(elapsed);
+
+			if (active)
+				for (info in _propertyInfos)
+					Reflect.setProperty(info.object, info.field, info.startValue + info.range * scale);
 		}
 	}
-	
-	private function initializeVars():Void
+
+	function initializeVars():Void
 	{
-		var p:String;
-		var fields:Array<String>;
-		
+		var fieldPaths:Array<String>;
 		if (Reflect.isObject(_properties))
-		{
-			fields = Reflect.fields(_properties);
-		}
+			fieldPaths = Reflect.fields(_properties);
 		else
-		{
 			throw "Unsupported properties container - use an object containing key/value pairs.";
-		}
-		
-		for (p in fields)
+
+		for (fieldPath in fieldPaths)
 		{
-			if (Reflect.getProperty(_object, p) == null)
+			var target = _object;
+			var path = fieldPath.split(".");
+			var field = path.pop();
+			for (component in path)
 			{
-				throw "The Object does not have the property \"" + p + "\", or it is not accessible.";
+				target = Reflect.getProperty(target, component);
+				if (!Reflect.isObject(target))
+					throw 'The object does not have the property "$component" in "$fieldPath"';
 			}
-			
-			var a:Dynamic = Reflect.getProperty(_object, p);
-			
-			if (Math.isNaN(a)) 
-			{
-				throw "The property \"" + p + "\" is not numeric.";
-			}
-			_vars.push(p);
-			_startValues.push(a);
-			_range.push(Reflect.getProperty(_properties, p) - a);
+
+			_propertyInfos.push({
+				object: target,
+				field: field,
+				startValue: Math.NaN, // gets set after delay
+				range: Reflect.getProperty(_properties, fieldPath)
+			});
 		}
 	}
+
+	function setStartValues()
+	{
+		for (info in _propertyInfos)
+		{
+			if (Reflect.getProperty(info.object, info.field) == null)
+				throw 'The object does not have the property "${info.field}"';
+
+			var value:Dynamic = Reflect.getProperty(info.object, info.field);
+			if (Math.isNaN(value))
+				throw 'The property "${info.field}" is not numeric.';
+
+			info.startValue = value;
+			info.range = info.range - value;
+		}
+	}
+
+	override public function destroy():Void
+	{
+		super.destroy();
+		_object = null;
+		_properties = null;
+		_propertyInfos = null;
+	}
+
+	override function isTweenOf(object:Dynamic, ?field:String):Bool
+	{
+		if (object == _object && field == null)
+			return true;
+		
+		for (property in _propertyInfos)
+		{
+			if (object == property.object && (field == property.field || field == null))
+				return true;
+		}
+
+		return false;
+	}
+}
+
+private typedef VarTweenProperty =
+{
+	object:Dynamic,
+	field:String,
+	startValue:Float,
+	range:Float
 }

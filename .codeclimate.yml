@@ -1,0 +1,7 @@
+engines:
+ haxe-checkstyle:
+    enabled: true
+ratings:
+  paths:
+    - "flixel"
+    - "tests/unit/src"

@@ -1,10 +1,6 @@
 package flixel.input;
 
 import flixel.FlxG;
-import flixel.system.debug.FlxDebugger;
-import flixel.system.FlxAssets;
-import flixel.system.frontEnds.PluginFrontEnd;
-import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
@@ -14,22 +10,25 @@ import flixel.util.FlxStringUtil;
 class FlxSwipe
 {
 	/**
-	 * Either LEFT_MOUSE, MIDDLE_MOUSE or RIGHT_MOUSE, 
+	 * Either LEFT_MOUSE, MIDDLE_MOUSE or RIGHT_MOUSE,
 	 * or the touchPointID of a FlxTouch.
 	 */
 	public var ID(default, null):Int;
-	
+
 	public var startPosition(default, null):FlxPoint;
 	public var endPosition(default, null):FlxPoint;
-	
+
 	public var distance(get, never):Float;
+	@:deprecated("FlxSwipe.angle is deprecated, use degrees")
 	public var angle(get, never):Float;
+	public var degrees(get, never):Float;
+	public var radians(get, never):Float;
 	public var duration(get, never):Float;
-	
-	private var _startTimeInTicks:Float;
-	private var _endTimeInTicks:Float;
-	
-	private function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Float)
+
+	var _startTimeInTicks:Int;
+	var _endTimeInTicks:Int;
+
+	function new(ID:Int, StartPosition:FlxPoint, EndPosition:FlxPoint, StartTimeInTicks:Int)
 	{
 		this.ID = ID;
 		startPosition = StartPosition;
@@ -37,30 +36,41 @@ class FlxSwipe
 		_startTimeInTicks = StartTimeInTicks;
 		_endTimeInTicks = FlxG.game.ticks;
 	}
-	
-	private inline function toString():String
+
+	inline function toString():String
 	{
 		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("ID", ID), 
+			LabelValuePair.weak("ID", ID),
 			LabelValuePair.weak("start", startPosition),
 			LabelValuePair.weak("end", endPosition),
 			LabelValuePair.weak("distance", distance),
-			LabelValuePair.weak("angle", angle),
-			LabelValuePair.weak("duration", (duration / 1000))]);
+			LabelValuePair.weak("degrees", degrees),
+			LabelValuePair.weak("duration", duration)
+		]);
 	}
-	
-	private inline function get_distance():Float
+
+	inline function get_distance():Float
 	{
 		return FlxMath.vectorLength(startPosition.x - endPosition.x, startPosition.y - endPosition.y);
 	}
-	
-	private inline function get_angle():Float
+
+	inline function get_angle():Float
 	{
-		return startPosition.angleBetween(endPosition); 
+		return startPosition.degreesTo(endPosition);
 	}
-	
-	private inline function get_duration():Float
+
+	inline function get_degrees():Float
 	{
-		return (_endTimeInTicks - _startTimeInTicks);
+		return startPosition.degreesTo(endPosition);
+	}
+
+	inline function get_radians():Float
+	{
+		return startPosition.radiansTo(endPosition);
+	}
+
+	inline function get_duration():Float
+	{
+		return (_endTimeInTicks - _startTimeInTicks) / 1000;
 	}
 }

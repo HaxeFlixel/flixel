@@ -1,8 +1,7 @@
-﻿package flixel.tweens.misc;
+package flixel.tweens.misc;
 
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
-import flixel.math.FlxRandom;
 
 /**
  * Tweens from one angle to another.
@@ -10,15 +9,15 @@ import flixel.math.FlxRandom;
 class AngleTween extends FlxTween
 {
 	public var angle(default, null):Float;
-	
+
 	/**
 	 * Optional sprite object whose angle to tween
 	 */
 	public var sprite(default, null):FlxSprite;
-	
-	private var _start:Float;
-	private var _range:Float;
-	
+
+	var _start:Float;
+	var _range:Float;
+
 	/**
 	 * Clean up references
 	 */
@@ -27,10 +26,10 @@ class AngleTween extends FlxTween
 		super.destroy();
 		sprite = null;
 	}
-	
+
 	/**
 	 * Tweens the value from one angle to another.
-	 * 
+	 *
 	 * @param	FromAngle		Start angle.
 	 * @param	ToAngle			End angle.
 	 * @param	Duration		Duration of the tween.
@@ -38,40 +37,31 @@ class AngleTween extends FlxTween
 	public function tween(FromAngle:Float, ToAngle:Float, Duration:Float, ?Sprite:FlxSprite):AngleTween
 	{
 		_start = angle = FromAngle;
-		var d:Float = ToAngle - angle;
-		var a:Float = Math.abs(d);
-		if (a > 181) 
-		{
-			_range = (360 - a) * (d > 0 ? -1 : 1);
-		}
-		else if (a < 179) 
-		{
-			_range = d;
-		}
-		else 
-		{
-			_range = FlxRandom.float(180, -180);
-		}
+		_range = ToAngle - angle;
 		duration = Duration;
 		sprite = Sprite;
+		if (sprite != null)
+		{
+			sprite.angle = angle % 360;
+		}
 		start();
 		return this;
 	}
-	
-	override private function update():Void
+
+	override function update(elapsed:Float):Void
 	{
-		super.update();
-		
-		angle = (_start + _range * scale) % 360;
-		
-		if (angle < 0) 
-		{
-			angle += 360;
-		}
-		
+		super.update(elapsed);
+		angle = _start + _range * scale;
+
 		if (sprite != null)
 		{
-			sprite.angle = angle;
+			var spriteAngle:Float = angle % 360;
+			sprite.angle = spriteAngle;
 		}
+	}
+	
+	override function isTweenOf(object:Dynamic, ?field:String):Bool
+	{
+		return sprite == object && (field == null || field == "angle");
 	}
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://lime.software/project/1.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
+
+	<!-- _________________________ Application Settings _________________________ -->
+	
+	<app title="SwfVersion11_2" file="SwfVersion11_2" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app preloader="flixel.system.FlxPreloader" />
+	<set name="SWF_VERSION" value="11.2" />
+	
+	<!-- ____________________________ Window Settings ___________________________ -->
+	
+	<window width="640" height="480" fps="60" background="#000000" hardware="true" vsync="true" />
+
+	<window if="web" orientation="portrait"  />
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
+	
+	<!-- _____________________________ Path Settings ____________________________ -->
+	
+	<set name="BUILD_DIR" value="export" />
+	<source path="source" />
+	
+	<!-- _______________________________ Libraries ______________________________ -->
+	
+	<haxelib name="flixel"/>
+	
+	<!-- ______________________________ Haxedefines _____________________________ -->
+	
+	<haxedef name="FLX_NO_GAMEPAD"/>
+</project>

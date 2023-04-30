@@ -1,1 +1,0 @@
-haxelib run munit test

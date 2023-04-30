@@ -1,28 +1,45 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG;
-import flixel.math.FlxPoint;
-
 #if js
 import js.Browser;
+import flixel.math.FlxPoint;
 
+using flixel.util.FlxStringUtil;
+
+/**
+ * Tools and helpers relating to the js/html5 target.
+ *
+ * Accessed via `FlxG.html5`.
+ */
 class HTML5FrontEnd
 {
-	public var browser(get, never):FlxBrowser;
+	public var browser(default, null):FlxBrowser;
+
+	/** @since 4.2.0 */
+	public var platform(default, null):FlxPlatform;
+
+	/** @since 4.2.0 */
+	public var onMobile(default, null):Bool;
+
 	public var browserWidth(get, never):Int;
 	public var browserHeight(get, never):Int;
 	public var browserPosition(get, null):FlxPoint;
-	
+
 	@:allow(flixel.FlxG)
-	private function new() {}
-	
-	private function get_browser():FlxBrowser
+	function new()
 	{
-		if (Browser.navigator.userAgent.indexOf(" OPR/") > -1)
+		browser = getBrowser();
+		platform = getPlatform();
+		onMobile = getOnMobile();
+	}
+
+	function getBrowser():FlxBrowser
+	{
+		if (userAgentContains(" OPR/"))
 		{
 			return OPERA;
 		}
-		else if (Browser.navigator.userAgent.toLowerCase().indexOf("chrome") > -1)
+		else if (userAgentContains("chrome", true))
 		{
 			return CHROME;
 		}
@@ -30,7 +47,7 @@ class HTML5FrontEnd
 		{
 			return FIREFOX;
 		}
-		else if (untyped false || ! !document.documentMode)
+		else if (untyped false || !!document.documentMode)
 		{
 			return INTERNET_EXPLORER;
 		}
@@ -38,10 +55,71 @@ class HTML5FrontEnd
 		{
 			return SAFARI;
 		}
-		return UNKNOWN;
+		return FlxBrowser.UNKNOWN;
 	}
-	
-	private function get_browserPosition():FlxPoint
+
+	function getPlatform():FlxPlatform
+	{
+		if (userAgentContains("Win"))
+		{
+			return WINDOWS;
+		}
+		else if (userAgentContains("IEMobile"))
+		{
+			return WINDOWS_PHONE;
+		}
+		else if (userAgentContains("Android"))
+		{
+			return ANDROID;
+		}
+		else if (userAgentContains("Linux"))
+		{
+			return LINUX;
+		}
+		else if (userAgentContains("BlackBerry"))
+		{
+			return BLACKBERRY;
+		}
+		else if (userAgentContains("iPhone"))
+		{
+			return IOS(IPHONE);
+		}
+		else if (userAgentContains("iPad"))
+		{
+			return IOS(IPAD);
+		}
+		else if (userAgentContains("iPod"))
+		{
+			return IOS(IPOD);
+		}
+		else if (userAgentContains("Mac"))
+		{
+			return MAC;
+		}
+		else
+			return FlxPlatform.UNKNOWN;
+	}
+
+	function getOnMobile():Bool
+	{
+		return switch (platform)
+		{
+			case ANDROID, BLACKBERRY, WINDOWS_PHONE, IOS(_):
+				true;
+			default:
+				false;
+		}
+	}
+
+	function userAgentContains(substring:String, toLowerCase:Bool = false)
+	{
+		var userAgent = Browser.navigator.userAgent;
+		if (toLowerCase)
+			userAgent = userAgent.toLowerCase();
+		return userAgent.contains(substring);
+	}
+
+	function get_browserPosition():FlxPoint
 	{
 		if (browserPosition == null)
 		{
@@ -50,13 +128,13 @@ class HTML5FrontEnd
 		browserPosition.set(Browser.window.screenX, Browser.window.screenY);
 		return browserPosition;
 	}
-	
-	private inline function get_browserWidth():Int
+
+	inline function get_browserWidth():Int
 	{
 		return Browser.window.innerWidth;
 	}
-	
-	private inline function get_browserHeight():Int
+
+	inline function get_browserHeight():Int
 	{
 		return Browser.window.innerHeight;
 	}
@@ -70,5 +148,24 @@ enum FlxBrowser
 	SAFARI;
 	OPERA;
 	UNKNOWN;
+}
+
+enum FlxPlatform
+{
+	WINDOWS;
+	LINUX;
+	MAC;
+	ANDROID;
+	BLACKBERRY;
+	WINDOWS_PHONE;
+	IOS(device:FlxIOSDevice);
+	UNKNOWN;
+}
+
+enum FlxIOSDevice
+{
+	IPHONE;
+	IPAD;
+	IPOD;
 }
 #end

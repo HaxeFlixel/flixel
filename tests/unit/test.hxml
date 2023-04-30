@@ -1,0 +1,8 @@
+-swf bin/flash/bin/TestMain.swf
+-swf-version 11.8
+--no-output
+
+--next
+
+-js bin/html5/bin/TestMain.js
+--no-output

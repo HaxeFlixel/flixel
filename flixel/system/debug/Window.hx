@@ -8,19 +8,15 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
-import flash.text.TextFormat;
 import flixel.FlxG;
 import flixel.math.FlxMath;
-import flixel.system.FlxAssets;
+import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 
 @:bitmap("assets/images/debugger/windowHandle.png")
 private class GraphicWindowHandle extends BitmapData {}
-
-@:bitmap("assets/images/debugger/buttons/close.png")
-private class GraphicCloseButton extends BitmapData {}
 
 /**
  * A generic, Flash-based window class, created for use in FlxDebugger.
@@ -31,61 +27,69 @@ class Window extends Sprite
 	 * The background color of the window.
 	 */
 	public static inline var BG_COLOR:FlxColor = 0xDD5F5F5F;
-	
+
 	public static inline var HEADER_COLOR:FlxColor = 0xBB000000;
 	public static inline var HEADER_ALPHA:Float = 0.8;
 	public static inline var HEADER_HEIGHT:Int = 15;
-	
+
 	/**
 	 * How many windows there are currently in total.
 	 */
-	private static var WINDOW_AMOUNT:Int = 0;
+	static var windowAmount:Int = 0;
 
 	public var minSize:Point;
 	public var maxSize:Point;
 	public var toggleButton:FlxSystemButton;
-	
+
 	/**
 	 * Width of the window. Using Sprite.width is super unreliable for some reason!
 	 */
-	private var _width:Int;
+	var _width:Int;
+
 	/**
 	 * Height of the window. Using Sprite.height is super unreliable for some reason!
 	 */
-	private var _height:Int;
+	var _height:Int;
+
 	/**
 	 * Controls where the window is allowed to be positioned.
 	 */
-	private var _bounds:Rectangle;
-	
+	var _bounds:Rectangle;
+
 	/**
 	 * Window elements
-	 */ 
-	private var _background:Bitmap;
-	private var _header:Bitmap;
-	private var _shadow:Bitmap;
-	private var _title:TextField;
-	private var _handle:Bitmap;
-	private var _closeButton:FlxSystemButton;
-	
+	 */
+	var _background:Bitmap;
+
+	var _header:Bitmap;
+	var _shadow:Bitmap;
+	var _title:TextField;
+	var _handle:Bitmap;
+	var _icon:Bitmap;
+	var _closeButton:FlxSystemButton;
+
 	/**
 	 * Interaction helpers.
 	 */
-	private var _overHeader:Bool;
-	private var _overHandle:Bool;
-	private var _drag:Point;
-	private var _dragging:Bool;
-	private var _resizing:Bool;
-	private var _resizable:Bool;
-	
+	var _overHeader:Bool;
+
+	var _overHandle:Bool;
+	var _drag:Point;
+	var _dragging:Bool;
+	var _resizing:Bool;
+	var _resizable:Bool;
+
+	var _closable:Bool;
+	var _alwaysOnTop:Bool;
+
 	/**
 	 * The ID of this window.
 	 */
-	private var _id:Int;
-	
+	var _id:Int;
+
 	/**
 	 * Creates a new window object.  This Flash-based class is mainly (only?) used by FlxDebugger.
-	 * 
+	 *
 	 * @param   Title       The name of the window, displayed in the header bar.
 	 * @param   Icon	    The icon to use for the window header.
 	 * @param   Width       The initial width of the window.
@@ -93,78 +97,76 @@ class Window extends Sprite
 	 * @param   Resizable   Whether you can change the size of the window with a drag handle.
 	 * @param   Bounds      A rectangle indicating the valid screen area for the window.
 	 * @param   Closable    Whether this window has a close button that removes the window.
+	 * @param   AlwaysOnTop Whether this window should be forcibly put in front of any other window when clicked.
 	 */
-	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle, Closable:Bool = false)
+	public function new(Title:String, ?Icon:BitmapData, Width:Float = 0, Height:Float = 0, Resizable:Bool = true, ?Bounds:Rectangle, Closable:Bool = false,
+			AlwaysOnTop:Bool = true)
 	{
 		super();
-		
+
 		minSize = new Point(50, 30);
-		
+
 		_width = Std.int(Math.abs(Width));
 		_height = Std.int(Math.abs(Height));
 		updateBounds(Bounds);
 		_drag = new Point();
 		_resizable = Resizable;
-		
+		_closable = Closable;
+		_alwaysOnTop = AlwaysOnTop;
+
 		_shadow = new Bitmap(new BitmapData(1, 2, true, FlxColor.BLACK));
 		_background = new Bitmap(new BitmapData(1, 1, true, BG_COLOR));
 		_header = new Bitmap(new BitmapData(1, HEADER_HEIGHT, true, HEADER_COLOR));
 		_background.y = _header.height;
-		
-		_title = new TextField();
-		_title.x = 2;
-		_title.y = -1;
+
+		_title = DebuggerUtil.createTextField(2, -1);
 		_title.alpha = HEADER_ALPHA;
-		_title.height = 20;
-		_title.selectable = false;
-		_title.multiline = false;
-		_title.embedFonts = true;
-		_title.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, 12, 0xffffff);
 		_title.text = Title;
-		
+
 		addChild(_shadow);
 		addChild(_background);
 		addChild(_header);
 		addChild(_title);
-		
+
 		if (Icon != null)
 		{
-			var _icon = new Bitmap(Icon);
+			DebuggerUtil.fixSize(Icon);
+			_icon = new Bitmap(Icon);
 			_icon.x = 5;
 			_icon.y = 2;
 			_icon.alpha = HEADER_ALPHA;
 			_title.x = _icon.x + _icon.width + 2;
 			addChild(_icon);
 		}
-		
+
 		if (_resizable)
 		{
-			_handle = new Bitmap(new GraphicWindowHandle(0, 0));
+			_handle = new Bitmap(DebuggerUtil.fixSize(new GraphicWindowHandle(0, 0)));
 			addChild(_handle);
 		}
-		
-		if (Closable)
+
+		if (_closable)
 		{
 			_closeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), close);
 			_closeButton.alpha = HEADER_ALPHA;
 			addChild(_closeButton);
 		}
-		else 
+		else
 		{
-			_id = WINDOW_AMOUNT;
+			_id = windowAmount;
 			loadSaveData();
-			WINDOW_AMOUNT++;
+			windowAmount++;
 		}
-		
-		if ((_width != 0) || (_height != 0))
+
+		if (_width != 0 || _height != 0)
 		{
 			updateSize();
 		}
 		bound();
-		
+
 		addEventListener(Event.ENTER_FRAME, init);
 	}
-	
+
 	/**
 	 * Clean up memory.
 	 */
@@ -200,7 +202,7 @@ class Window extends Sprite
 		_handle = null;
 		_drag = null;
 		_closeButton = FlxDestroyUtil.destroy(_closeButton);
-		
+
 		var stage = FlxG.stage;
 		if (stage.hasEventListener(MouseEvent.MOUSE_MOVE))
 		{
@@ -215,7 +217,7 @@ class Window extends Sprite
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 	}
-	
+
 	/**
 	 * Resize the window.  Subject to pre-specified minimums, maximums, and bounding rectangles.
 	 *
@@ -228,10 +230,10 @@ class Window extends Sprite
 		_height = Std.int(Math.abs(Height));
 		updateSize();
 	}
-	
+
 	/**
 	 * Change the position of the window.  Subject to pre-specified bounding rectangles.
-	 * 
+	 *
 	 * @param 	X	Desired X position of top left corner of the window.
 	 * @param 	Y	Desired Y position of top left corner of the window.
 	 */
@@ -241,112 +243,110 @@ class Window extends Sprite
 		y = Y;
 		bound();
 	}
-	
+
 	public function updateBounds(Bounds:Rectangle):Void
 	{
 		_bounds = Bounds;
 		if (_bounds != null)
 		{
-			maxSize = new Point(_bounds.width,_bounds.height);
+			maxSize = new Point(_bounds.width, _bounds.height);
 		}
 		else
 		{
 			maxSize = new Point(FlxMath.MAX_VALUE_FLOAT, FlxMath.MAX_VALUE_FLOAT);
 		}
 	}
-	
+
 	public function setVisible(Value:Bool):Void
 	{
 		visible = Value;
-		FlxG.save.data.windowSettings[_id] = visible;
-		FlxG.save.flush();
-		
+
+		if (!_closable && FlxG.save.isBound)
+			saveWindowVisibility();
+
 		if (toggleButton != null)
-		{
 			toggleButton.toggled = !visible;
-		}
-		if (visible)
-		{
+
+		if (visible && _alwaysOnTop)
 			putOnTop();
-		}
 	}
-	
-	public inline function toggleVisible():Void
+
+	public function toggleVisible():Void
 	{
 		setVisible(!visible);
 	}
-	
+
 	public inline function putOnTop():Void
 	{
 		parent.addChild(this);
 	}
-	
-	private function loadSaveData():Void
+
+	function loadSaveData():Void
 	{
-		if (FlxG.save.data.windowSettings != null)
+		if (!FlxG.save.isBound)
+			return;
+
+		if (FlxG.save.data.windowSettings == null)
 		{
-			visible = FlxG.save.data.windowSettings[_id];
+			initWindowsSave();
+			FlxG.save.flush();
 		}
-		else
-		{
-			initSaveData();
-			loadSaveData();
-		}
+		visible = FlxG.save.data.windowSettings[_id];
 	}
 	
-	private function initSaveData():Void
+	function initWindowsSave()
 	{
-		var settings:Array<Bool> = [];
-		for (i in 0...10) // arbitrary max of windows
-		{
-			settings[i] = true;
-		}
-		FlxG.save.data.windowSettings = settings;
+		var maxWindows = 10; // arbitrary
+		FlxG.save.data.windowSettings = [for (_ in 0...maxWindows) true];
+	}
+	
+	function saveWindowVisibility()
+	{
+		if (FlxG.save.data.windowSettings == null)
+			initWindowsSave();
+		
+		FlxG.save.data.windowSettings[_id] = visible;
 		FlxG.save.flush();
 	}
-	
+
 	public function update():Void {}
-	
+
 	//***EVENT HANDLERS***//
-	
+
 	/**
 	 * Used to set up basic mouse listeners..
 	 */
-	private function init(?E:Event):Void
+	function init(?_:Event):Void
 	{
-		#if flash
-		if (root == null)
-		#else
-		if (stage == null)
-		#end
+		if (#if flash root #else stage #end == null)
 		{
 			return;
 		}
 		removeEventListener(Event.ENTER_FRAME, init);
-		
+
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		// it's important that the mouse down event listener is added to the window sprite, not the stage - this way 
+		// it's important that the mouse down event listener is added to the window sprite, not the stage - this way
 		// only the window on top receives the event and we don't have to deal with overlapping windows ourselves.
 		addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 	}
-	
+
 	/**
 	 * Mouse movement handler.  Figures out if mouse is over handle or header bar or what.
 	 */
-	private function onMouseMove(?E:MouseEvent):Void
+	function onMouseMove(?_:MouseEvent):Void
 	{
-		// mouseX / Y can be negative, which messes with the resizing if draggin in the opposite direction
+		// mouseX / Y can be negative, which messes with the resizing if dragging in the opposite direction
 		var mouseX:Float = (this.mouseX < 0) ? 0 : this.mouseX;
 		var mouseY:Float = (this.mouseY < 0) ? 0 : this.mouseY;
-		
+
 		if (!parent.visible)
 		{
 			_overHandle = _overHeader = false;
 			return;
 		}
-		
-		if (_dragging) //user is moving the window around
+
+		if (_dragging) // user is moving the window around
 		{
 			_overHeader = true;
 			reposition(parent.mouseX - _drag.x, parent.mouseY - _drag.y);
@@ -357,7 +357,7 @@ class Window extends Sprite
 			resize(mouseX - _drag.x, mouseY - _drag.y);
 		}
 		else if ((mouseX >= 0) && (mouseX <= _width) && (mouseY >= 0) && (mouseY <= _height))
-		{	//not dragging, mouse is over the window
+		{ // not dragging, mouse is over the window
 			_overHeader = (mouseX <= _header.width) && (mouseY <= _header.height);
 			if (_resizable)
 			{
@@ -365,45 +365,45 @@ class Window extends Sprite
 			}
 		}
 		else
-		{	//not dragging, mouse is NOT over window
+		{ // not dragging, mouse is NOT over window
 			_overHandle = _overHeader = false;
 		}
 	}
-	
+
 	/**
 	 * Figure out if window is being repositioned (clicked on header) or resized (clicked on handle).
 	 */
-	private function onMouseDown(?E:MouseEvent):Void
+	function onMouseDown(?_:MouseEvent):Void
 	{
 		if (_overHeader)
 		{
-			putOnTop();
+			if (_alwaysOnTop)
+				putOnTop();
 			_dragging = true;
 			_drag.x = mouseX;
 			_drag.y = mouseY;
 		}
 		else if (_overHandle)
 		{
-			putOnTop();
+			if (_alwaysOnTop)
+				putOnTop();
 			_resizing = true;
 			_drag.x = _width - mouseX;
 			_drag.y = _height - mouseY;
 		}
 	}
-	
+
 	/**
 	 * User let go of header bar or handler (or nothing), so turn off drag and resize behaviors.
 	 */
-	private function onMouseUp(?E:MouseEvent):Void
+	function onMouseUp(?_:MouseEvent):Void
 	{
 		_dragging = false;
 		_resizing = false;
 	}
-	
-	//***MISC GUI MGMT STUFF***//
-	
+
 	/**
-	 * Keep the window within the pre-specified bounding rectangle. 
+	 * Keep the window within the pre-specified bounding rectangle.
 	 */
 	public function bound():Void
 	{
@@ -413,15 +413,15 @@ class Window extends Sprite
 			y = FlxMath.bound(y, _bounds.top, _bounds.bottom - _height);
 		}
 	}
-	
+
 	/**
 	 * Update the Flash shapes to match the new size, and reposition the header, shadow, and handle accordingly.
 	 */
-	private function updateSize():Void
+	function updateSize():Void
 	{
 		_width = Std.int(FlxMath.bound(_width, minSize.x, maxSize.x));
 		_height = Std.int(FlxMath.bound(_height, minSize.y, maxSize.y));
-		
+
 		_header.scaleX = _width;
 		_background.scaleX = _width;
 		_background.scaleY = _height - _header.height;
@@ -439,11 +439,11 @@ class Window extends Sprite
 			_closeButton.y = 3;
 		}
 	}
-	
+
 	public function close():Void
 	{
 		destroy();
-		#if !FLX_NO_DEBUG
+		#if FLX_DEBUG
 		FlxG.game.debugger.removeWindow(this);
 		#end
 	}

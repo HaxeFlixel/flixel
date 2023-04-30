@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://lime.software/project/1.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://lime.software/project/1.0.2 http://lime.software/xsd/project-1.0.2.xsd">
+
+	<meta title="FlixelUnitTests" version="1.0.0" />
+	<app file="TestMain" main="TestMain" />
+	
+	<set name="SWF_VERSION" value="11.8" />
+	<source path="src" />
+	
+	<set name="no-custom-backend" />
+	<set name="unit-test" />
+	
+	<haxelib name="munit" />
+	<haxelib name="flixel" />
+	<haxelib name="hamcrest" />
+	<!-- <haxelib name="steamwrap" unless="hl" /> -->
+	
+	<haxedef name="FLX_UNIT_TEST" />
+	<haxedef name="FLX_RECORD" />
+</project>

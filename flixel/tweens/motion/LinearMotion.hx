@@ -1,7 +1,4 @@
-﻿package flixel.tweens.motion;
-
-import flixel.tweens.FlxEase.EaseFunction;
-import flixel.tweens.FlxTween;
+package flixel.tweens.motion;
 
 /**
  * Determines motion along a line, from one point to another.
@@ -12,17 +9,17 @@ class LinearMotion extends Motion
 	 * Length of the current line of movement.
 	 */
 	public var distance(get, never):Float;
-	
+
 	// Line information.
-	private var _fromX:Float = 0;
-	private var _fromY:Float = 0;
-	private var _moveX:Float = 0;
-	private var _moveY:Float = 0;
-	private var _distance:Float = -1;
+	var _fromX:Float = 0;
+	var _fromY:Float = 0;
+	var _moveX:Float = 0;
+	var _moveY:Float = 0;
+	var _distance:Float = -1;
 
 	/**
 	 * Starts moving along a line.
-	 * 
+	 *
 	 * @param	FromX			X start.
 	 * @param	FromY			Y start.
 	 * @param	ToX				X finish.
@@ -37,7 +34,7 @@ class LinearMotion extends Motion
 		y = _fromY = FromY;
 		_moveX = ToX - FromX;
 		_moveY = ToY - FromY;
-		
+
 		if (UseDuration)
 		{
 			duration = DurationOrSpeed;
@@ -46,20 +43,19 @@ class LinearMotion extends Motion
 		{
 			duration = distance / DurationOrSpeed;
 		}
-		
+
 		start();
-		
+
 		return this;
 	}
 
-	override private function update():Void
+	override function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 		x = _fromX + _moveX * scale;
 		y = _fromY + _moveY * scale;
-		
-		if ((x == (_fromX + _moveX)) && (y == (_fromY + _moveY)) 
-		    && active && (_secondsSinceStart >= duration))
+
+		if ((x == (_fromX + _moveX)) && (y == (_fromY + _moveY)) && active && (_secondsSinceStart >= duration))
 		{
 			finished = true;
 		}
@@ -69,9 +65,10 @@ class LinearMotion extends Motion
 		}
 	}
 
-	private function get_distance():Float
+	function get_distance():Float
 	{
-		if (_distance >= 0) return _distance;
-		return (_distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY));
+		if (_distance >= 0)
+			return _distance;
+		return _distance = Math.sqrt(_moveX * _moveX + _moveY * _moveY);
 	}
 }
