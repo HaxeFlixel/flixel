@@ -1358,20 +1358,30 @@ class FlxCamera extends FlxBasic
 	 * It takes camera's size and game's scale into account.
 	 * It's called every time you resize the camera or the game.
 	 */
-	function updateScrollRect():Void
+	function updateScrollRect():Void 
 	{
 		var rect:Rectangle = (_scrollRect != null) ? _scrollRect.scrollRect : null;
 
-		if (rect != null)
+		if (rect != null) 
 		{
 			rect.x = rect.y = 0;
 
-			rect.width = width * initialZoom * FlxG.scaleMode.scale.x;
+			var offset:Float = 0;
+			#if web
+			if (x > 0) 
+			{
+				offset = x / (2.0 * zoom);
+			}
+			#end
+
+			rect.x -= offset;
+
+			rect.width = width * initialZoom * FlxG.scaleMode.scale.x + offset;
 			rect.height = height * initialZoom * FlxG.scaleMode.scale.y;
 
 			_scrollRect.scrollRect = rect;
 
-			_scrollRect.x = -0.5 * rect.width;
+			_scrollRect.x = -0.5 * (rect.width + offset);
 			_scrollRect.y = -0.5 * rect.height;
 		}
 	}
