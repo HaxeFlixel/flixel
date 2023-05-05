@@ -23,45 +23,45 @@ class ConsoleFrontEnd
 	/**
 	 * Register a new function to use in any command.
 	 *
-	 * @param 	FunctionAlias		The name with which you want to access the function.
-	 * @param 	Function			The function to register.
+	 * @param   alias  The name with which you want to access the function.
+	 * @param   func   The function to register.
 	 */
-	public inline function registerFunction(FunctionAlias:String, Function:Dynamic):Void
+	public inline function registerFunction(alias:String, func:Dynamic):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerFunction(FunctionAlias, Function);
+		FlxG.game.debugger.console.registerFunction(alias, func);
 		#end
 	}
 
 	/**
 	 * Register a new object to use in any command.
 	 *
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
+	 * @param  alias   The name with which you want to access the object.
+	 * @param  object  The object to register.
 	 */
-	public inline function registerObject(ObjectAlias:String, AnyObject:Dynamic):Void
+	public inline function registerObject(alias:String, object:Dynamic):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerObject(ObjectAlias, AnyObject);
+		FlxG.game.debugger.console.registerObject(alias, object);
 		#end
 	}
 
 	/**
 	 * Register a new class to use in any command.
 	 *
-	 * @param	cl	The class to register.
+	 * @param   c  The class to register.
 	 */
-	public inline function registerClass(cl:Class<Dynamic>):Void
+	public inline function registerClass(c:Class<Dynamic>):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.console.registerClass(cl);
+		FlxG.game.debugger.console.registerClass(c);
 		#end
 	}
 
 	/**
 	 * Register a new enum to use in any command.
 	 *
-	 * @param	e	The enum to register.
+	 * @param   e  The enum to register.
 	 * @since 4.4.0
 	 */
 	public inline function registerEnum(e:Enum<Dynamic>):Void

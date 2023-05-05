@@ -260,10 +260,10 @@ class Console extends Window
 		}
 	}
 
-	override public function reposition(X:Float, Y:Float)
+	override public function reposition(x:Float, y:Float)
 	{
-		super.reposition(X, Y);
-		completionList.setY(y + Window.HEADER_HEIGHT);
+		super.reposition(x, y);
+		completionList.setY(this.y + Window.HEADER_HEIGHT);
 		completionList.close();
 	}
 	#end
@@ -271,49 +271,49 @@ class Console extends Window
 	/**
 	 * Register a new function to use in any command.
 	 *
-	 * @param 	FunctionAlias	The name with which you want to access the function.
-	 * @param 	Function		The function to register.
-	 * @param 	HelpText		An optional string to trace to the console using the "help" command.
+	 * @param   alias     The name with which you want to access the function.
+	 * @param   func      The function to register.
+	 * @param   helpText  An optional string to trace to the console using the "help" command.
 	 */
-	public function registerFunction(functionAlias:String, func:Dynamic, ?helpText:String)
+	public function registerFunction(alias:String, func:Dynamic, ?helpText:String)
 	{
-		registeredFunctions.set(functionAlias, func);
+		registeredFunctions.set(alias, func);
 		#if hscript
-		ConsoleUtil.registerFunction(functionAlias, func);
+		ConsoleUtil.registerFunction(alias, func);
 		#end
 
 		if (helpText != null)
-			registeredHelp.set(functionAlias, helpText);
+			registeredHelp.set(alias, helpText);
 	}
 
 	/**
 	 * Register a new object to use in any command.
 	 *
-	 * @param 	ObjectAlias		The name with which you want to access the object.
-	 * @param 	AnyObject		The object to register.
+	 * @param   alias   The name with which you want to access the object.
+	 * @param   object  The object to register.
 	 */
-	public function registerObject(objectAlias:String, anyObject:Dynamic)
+	public function registerObject(alias:String, object:Dynamic)
 	{
-		registeredObjects.set(objectAlias, anyObject);
+		registeredObjects.set(alias, object);
 		#if hscript
-		ConsoleUtil.registerObject(objectAlias, anyObject);
+		ConsoleUtil.registerObject(alias, object);
 		#end
 	}
 
 	/**
 	 * Register a new class to use in any command.
 	 *
-	 * @param	cl	The class to register.
+	 * @param   c  The class to register.
 	 */
-	public inline function registerClass(cl:Class<Dynamic>)
+	public inline function registerClass(c:Class<Dynamic>)
 	{
-		registerObject(FlxStringUtil.getClassName(cl, true), cl);
+		registerObject(FlxStringUtil.getClassName(c, true), c);
 	}
 
 	/**
 	 * Register a new enum to use in any command.
 	 *
-	 * @param	e	The enum to register.
+	 * @param   e  The enum to register.
 	 * @since 4.4.0
 	 */
 	public inline function registerEnum(e:Enum<Dynamic>)
