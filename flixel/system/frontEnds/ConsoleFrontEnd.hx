@@ -47,6 +47,19 @@ class ConsoleFrontEnd
 	}
 
 	/**
+	 * Removes an alias from the command registry.
+	 *
+	 * @param   alias  The alias to remove.
+	 * @since 5.4.0
+	 */
+	public function removeByAlias(alias:String)
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.removeByAlias(alias);
+		#end
+	}
+
+	/**
 	 * Register a new class to use in any command.
 	 *
 	 * @param   c  The class to register.
@@ -55,6 +68,19 @@ class ConsoleFrontEnd
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.console.registerClass(c);
+		#end
+	}
+
+	/**
+	 * Removes a class from the command registry.
+	 *
+	 * @param   c  The class to remove.
+	 * @since 5.4.0
+	 */
+	public inline function removeClass(c:Class<Dynamic>):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.removeClass(c);
 		#end
 	}
 
@@ -68,6 +94,19 @@ class ConsoleFrontEnd
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.console.registerEnum(e);
+		#end
+	}
+
+	/**
+	 * Removes an enum from the command registry.
+	 *
+	 * @param   e  The enum to remove.
+	 * @since 5.4.0
+	 */
+	public inline function removeEnum(e:Enum<Dynamic>):Void
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.removeEnum(e);
 		#end
 	}
 

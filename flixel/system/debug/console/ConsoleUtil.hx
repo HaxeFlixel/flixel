@@ -97,6 +97,17 @@ class ConsoleUtil
 		if (Reflect.isFunction(func))
 			interp.variables.set(alias, func);
 	}
+
+	/**
+	 * Removes an alias from the command registry.
+	 *
+	 * @param   alias  The alias to remove.
+	 * @since 5.4.0
+	 */
+	public static function removeByAlias(alias:String):Void
+	{
+		interp.variables.remove(alias);
+	}
 	#end
 
 	public static function getFields(Object:Dynamic):Array<String>
