@@ -798,13 +798,12 @@ class FlxText extends FlxSprite
 		if (oldWidth != newWidth || oldHeight != newHeight)
 		{
 			// Need to generate a new buffer to store the text graphic
-			height = newHeight;
 			var key:String = FlxG.bitmap.getUniqueKey("text");
 			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
 
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
-			frameHeight = newHeight;
+
 			textField.height = height * 1.2;
 			_flashRect.x = 0;
 			_flashRect.y = 0;
