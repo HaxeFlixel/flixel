@@ -125,10 +125,37 @@ class FlxText extends FlxSprite
 	 */
 	public var fieldWidth(get, set):Float;
 
+	public var fieldHeight(get, set):Float;
+
+	function get_fieldHeight():Float
+	{
+		return (textField != null) ? textField.height : 0;
+	}
+
+	function set_fieldHeight(value:Float):Float
+	{
+		if (textField == null)
+			return value;
+		if (value <= 0)
+		{
+			_autoHeight = true;
+		}
+		else
+		{
+			_autoHeight = false;
+
+			textField.height = value;
+		}
+		_regen = true;
+		return value;
+	}
+
 	/**
 	 * Whether the `fieldWidth` should be determined automatically. Requires `wordWrap` to be `false`.
 	 */
 	public var autoSize(get, set):Bool;
+
+	var _autoHeight:Bool = true;
 
 	/**
 	 * Offset that is applied to the shadow border style, if active.
@@ -786,8 +813,9 @@ class FlxText extends FlxSprite
 		}
 
 		var newWidth:Int = Math.ceil(textField.width);
+		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
 		// Account for gutter
-		var newHeight:Int = Math.ceil(textField.textHeight) + VERTICAL_GUTTER;
+		var newHeight:Int = Math.ceil(textfieldHeight) + VERTICAL_GUTTER;
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
@@ -804,7 +832,9 @@ class FlxText extends FlxSprite
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
 
-			textField.height = height * 1.2;
+			if (_autoHeight)
+				textField.height = height * 1.2;
+
 			_flashRect.x = 0;
 			_flashRect.y = 0;
 			_flashRect.width = newWidth;
