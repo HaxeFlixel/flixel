@@ -554,6 +554,8 @@ class FlxText extends FlxSprite
 		{
 			wordWrap = false;
 			autoSize = true;
+			// auto width always implies auto height
+			_autoHeight = true;
 		}
 		else
 		{
