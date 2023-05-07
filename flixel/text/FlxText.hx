@@ -35,6 +35,37 @@ import openfl.utils.AssetType;
 /**
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate
  * though. Also does nice pixel-perfect centering on pixel fonts as long as they are only one-liners.
+ * 
+ * ## Autosizing
+ * 
+ * By default `FlxText` is fully autosize - its height and width are determined automatically
+ * by its text content. But you can control this behavior:
+ * 
+ * ```haxe
+ * // 1. fixed width and height
+ * var text = new FlxText(0, 0, 100, "Hello");
+ * text.fieldHeight = 50;
+ * // or
+ * text.fieldWidth = 100;
+ * text.fieldHeight = 50;
+ * 
+ * // 2. fixed width but auto height
+ * var text = new FlxText(0, 0, 100, "Hello");
+ * // or
+ * text.fieldWidth = 100;
+ * text.fieldHeight = -1;
+ * 
+ * // 3. autosize (by default)
+ * var text = new FlxText(0, 0, -1, "Hello");
+ * // or
+ * text.autoSize = true;
+ * text.wordWrap = false;
+ * // or
+ * text.fieldWidth = text.fieldHeight = -1;
+ * 
+ * // 4. auto width but fixed height
+ * // has no sense and works as default autosize
+ * ```
  */
 class FlxText extends FlxSprite
 {
@@ -122,9 +153,17 @@ class FlxText extends FlxSprite
 	/**
 	 * The width of the `TextField` object used for bitmap generation for this `FlxText` object.
 	 * Use it when you want to change the visible width of text. Enables `autoSize` if `<= 0`.
+	 * 
+	 * **NOTE:** auto width always implies auto height
 	 */
 	public var fieldWidth(get, set):Float;
 
+	/**
+	 * The height of `TextField` object used for bitmap generation for this `FlxText` object.
+	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
+	 * 
+	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
+	 */
 	public var fieldHeight(get, set):Float;
 
 	function get_fieldHeight():Float
@@ -151,7 +190,8 @@ class FlxText extends FlxSprite
 	}
 
 	/**
-	 * Whether the `fieldWidth` should be determined automatically. Requires `wordWrap` to be `false`.
+	 * Whether the `fieldWidth` and `fieldHeight` should be determined automatically. 
+	 * Requires `wordWrap` to be `false`.
 	 */
 	public var autoSize(get, set):Bool;
 
