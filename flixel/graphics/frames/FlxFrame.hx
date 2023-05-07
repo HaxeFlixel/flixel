@@ -683,16 +683,14 @@ class FlxFrame implements IFlxDestroyable
  * Just enumeration of all types of frames.
  * Added for faster type detection with less usage of casting.
  */
-@:enum
-abstract FlxFrameType(Int)
+enum abstract FlxFrameType(Int)
 {
 	var REGULAR = 0;
 	var EMPTY = 2;
 	var GLYPH = 3;
 }
 
-@:enum
-abstract FlxFrameAngle(Int) from Int to Int
+enum abstract FlxFrameAngle(Int) from Int to Int
 {
 	var ANGLE_0 = 0;
 	var ANGLE_90 = 90;

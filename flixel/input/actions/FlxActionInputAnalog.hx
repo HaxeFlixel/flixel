@@ -14,8 +14,7 @@ import steamwrap.api.Controller.ControllerAnalogActionData;
 /**
  * @since 4.6.0
  */
-@:enum
-abstract FlxAnalogState(Int) from Int
+enum abstract FlxAnalogState(Int) from Int
 {
 	var JUST_STOPPED = cast FlxInputState.JUST_RELEASED; // became 0 on this frame
 	var STOPPED = cast FlxInputState.RELEASED; // is 0
@@ -390,8 +389,7 @@ class FlxActionInputAnalog extends FlxActionInput
 /**
  * @since 4.6.0
  */
-@:enum
-abstract FlxAnalogAxis(Int) from Int
+enum abstract FlxAnalogAxis(Int) from Int
 {
 	var X = 0;
 	var Y = 1;
