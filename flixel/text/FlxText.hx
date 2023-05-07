@@ -71,6 +71,10 @@ class FlxText extends FlxSprite
 {
 	/**
 	 * 2px gutter on both top and bottom
+	 * 
+	 * NOTE: Right now it is needed when new height is calculated from
+	 * `textHeight` to get a nice padding from bottom line of text
+	 * to bottom edge of text field.
 	 */
 	static inline var VERTICAL_GUTTER:Int = 4;
 
@@ -856,8 +860,9 @@ class FlxText extends FlxSprite
 
 		var newWidth:Int = Math.ceil(textField.width);
 		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
+		var vertGutter = _autoHeight ? VERTICAL_GUTTER : 0;
 		// Account for gutter
-		var newHeight:Int = Math.ceil(textfieldHeight) + VERTICAL_GUTTER;
+		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
@@ -875,7 +880,7 @@ class FlxText extends FlxSprite
 				_borderPixels = graphic.bitmap.clone();
 
 			if (_autoHeight)
-				textField.height = height * 1.2;
+				textField.height = newHeight;
 
 			_flashRect.x = 0;
 			_flashRect.y = 0;
