@@ -480,6 +480,8 @@ class FlxSprite extends FlxObject
 	 * HaxeFlixel copies the previous reference onto the `pixels` field instead
 	 * of creating another copy of the image data, to save memory.
 	 *
+	 * NOTE: This method updates hitbox size and frame size.
+	 *
 	 * @param   graphic      The image you want to use.
 	 * @param   animated     Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
 	 * @param   frameWidth   Specify the width of your sprite
@@ -622,6 +624,8 @@ class FlxSprite extends FlxObject
 	 * When you make an identical copy of a previously used image, by default
 	 * HaxeFlixel copies the previous reference onto the pixels field instead
 	 * of creating another copy of the image data, to save memory.
+	 *
+	 * NOTE: This method updates hitbox size and frame size.
 	 *
 	 * @param   Width    The width of the sprite you want to generate.
 	 * @param   Height   The height of the sprite you want to generate.
