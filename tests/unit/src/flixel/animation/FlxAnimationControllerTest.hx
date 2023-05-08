@@ -23,7 +23,7 @@ class FlxAnimationControllerTest extends FlxTest
 		#if !js // openfl-html5 doesn't like this test
 		loadSpriteSheet();
 		sprite.drawFrame();
-		Assert.areEqual(2, sprite.animation.frames);
+		Assert.areEqual(2, sprite.animation.numFrames);
 		Assert.areEqual(0xffffff, sprite.framePixels.getPixel(0, 0));
 
 		sprite.animation.frameIndex = 1;
