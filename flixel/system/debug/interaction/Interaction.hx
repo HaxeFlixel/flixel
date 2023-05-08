@@ -206,7 +206,7 @@ class Interaction extends Window
 	 * screen, they can be activated when the user clicks a button, and so on. Check
 	 * the classes in the package `flixel.system.debug.interaction.tools` for examples.
 	 *
-	 * @param tool instance of a tool that will be added to the interaction system.
+	 * @param   tool  instance of a tool that will be added to the interaction system.
 	 */
 	public function addTool(tool:Tool):Void
 	{
@@ -229,6 +229,13 @@ class Interaction extends Window
 		resizeByTotal(buttons);
 	}
 	
+	/**
+	 * Removes the tool, if possible. If the tool has a button, all other buttons will be moved and
+	 * the containing window will be resized, if needed.
+	 * 
+	 * @param   tool  The tool to be removed
+	 * @since 5.4.0
+	 */
 	public function removeTool(tool)
 	{
 		if (!_tools.contains(tool))
