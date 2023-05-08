@@ -301,14 +301,15 @@ class Console extends Window
 	}
 
 	/**
-	 * Removes an object from the command registry.
+	 * Removes an object or function from the command registry.
 	 *
-	 * @param   alias   The alias to remove.
+	 * @param   alias  The alias to remove.
 	 * @since 5.4.0
 	 */
 	public function removeByAlias(alias:String)
 	{
 		registeredObjects.remove(alias);
+		registeredFunctions.remove(alias);
 		#if hscript
 		ConsoleUtil.removeByAlias(alias);
 		#end
