@@ -36,8 +36,8 @@ class ConsoleFrontEnd
 	/**
 	 * Register a new object to use in any command.
 	 *
-	 * @param  alias   The name with which you want to access the object.
-	 * @param  object  The object to register.
+	 * @param   alias   The name with which you want to access the object.
+	 * @param   object  The object to register.
 	 */
 	public inline function registerObject(alias:String, object:Dynamic):Void
 	{
