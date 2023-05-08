@@ -316,6 +316,52 @@ class Console extends Window
 	}
 
 	/**
+	 * Removes an object from the command registry by searching through the list.
+	 *
+	 * Note: `removeByAlias` is more performant.
+	 *
+	 * @param   object  The object to remove.
+	 * @since 5.4.0
+	 */
+	public function removeObject(object:Dynamic)
+	{
+		for (alias in registeredObjects.keys())
+		{
+			if (registeredObjects[alias] == object)
+			{
+				registeredObjects.remove(alias);
+				#if hscript
+				ConsoleUtil.removeByAlias(alias);
+				#end
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Removes a function from the command registry by searching through the list.
+	 *
+	 * Note: `removeByAlias` is more performant.
+	 *
+	 * @param   func  The object to remove.
+	 * @since 5.4.0
+	 */
+	public function removeFunction(func:Dynamic)
+	{
+		for (alias in registeredFunctions.keys())
+		{
+			if (registeredFunctions[alias] == func)
+			{
+				registeredFunctions.remove(alias);
+				#if hscript
+				ConsoleUtil.removeByAlias(alias);
+				#end
+				break;
+			}
+		}
+	}
+
+	/**
 	 * Register a new class to use in any command.
 	 *
 	 * @param   c  The class to register.

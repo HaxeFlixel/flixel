@@ -33,9 +33,16 @@ class ConsoleFrontEndTest
 	#if !debug @Ignore #end
 	function testFunction()
 	{
-		FlxG.console.registerFunction("func", ()->"success");
+		var func = ()->"success";
+		FlxG.console.registerFunction("func", func);
 		assertCommandSucceedsWith("func()", "success");
 		FlxG.console.removeByAlias("func");
+		assertCommandFails("func()");
+		
+		//test again with removeFunction
+		FlxG.console.registerFunction("func", func);
+		assertCommandSucceedsWith("func", "success");// omit (), should still work
+		FlxG.console.removeFunction(func);
 		assertCommandFails("func()");
 	}
 	
@@ -47,7 +54,13 @@ class ConsoleFrontEndTest
 		FlxG.console.registerObject("p", p);
 		assertCommandSucceedsWith("p.set(2, 4)", p);
 		FlxG.console.removeByAlias("p");
-		assertCommandFails("p");
+		assertCommandFails("p.set(5, 10)");
+		
+		//test again with removeFunction
+		FlxG.console.registerObject("p", p);
+		assertCommandSucceedsWith("p.set(0, 0)", p);
+		FlxG.console.removeObject("p");
+		assertCommandFails("p.set(50, 100)");
 	}
 	
 	static function tryRunCommand(cmd:String):CommandOutcome

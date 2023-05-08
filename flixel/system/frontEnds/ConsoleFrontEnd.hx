@@ -47,12 +47,42 @@ class ConsoleFrontEnd
 	}
 
 	/**
+	 * Removes an object from the command registry.
+	 *
+	 * Note: `removeByAlias` is more performant, as this method searches the list for the object.
+	 *
+	 * @param   object  The object to remove.
+	 * @since 5.4.0
+	 */
+	public inline function removeObject(object:Dynamic)
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.removeObject(object);
+		#end
+	}
+
+	/**
+	 * Removes a function from the command registry.
+	 *
+	 * Note: `removeByAlias` is more performant, as this method searches the list for the function.
+	 *
+	 * @param   func  The object to remove.
+	 * @since 5.4.0
+	 */
+	public inline function removeFunction(func:Dynamic)
+	{
+		#if FLX_DEBUG
+		FlxG.game.debugger.console.removeFunction(func);
+		#end
+	}
+	
+	/**
 	 * Removes an alias from the command registry.
 	 *
 	 * @param   alias  The alias to remove.
 	 * @since 5.4.0
 	 */
-	public function removeByAlias(alias:String)
+	public inline function removeByAlias(alias:String)
 	{
 		#if FLX_DEBUG
 		FlxG.game.debugger.console.removeByAlias(alias);
