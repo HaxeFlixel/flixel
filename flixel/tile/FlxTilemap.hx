@@ -347,7 +347,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_checkBufferChanges = true;
 	}
 
-	override function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
+	function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
 	{
 		if ((tileGraphic is FlxFramesCollection))
 		{
@@ -405,7 +405,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		);
 	}
 
-	override function initTileObjects():Void
+	function initTileObjects():Void
 	{
 		if (frames == null)
 			return;
@@ -468,7 +468,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	}
 	#end
 
-	override function computeDimensions():Void
+	function computeDimensions():Void
 	{
 		scaledTileWidth = tileWidth * scale.x;
 		scaledTileHeight = tileHeight * scale.y;
@@ -477,7 +477,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		height = scaledHeight;
 	}
 
-	override function updateMap():Void
+	function updateMap():Void
 	{
 		#if FLX_DEBUG
 		if (FlxG.renderBlit)
@@ -655,7 +655,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 *
 	 * @param   dirty  Whether to flag the tilemap buffers as dirty or not.
 	 */
-	override public function setDirty(dirty:Bool = true):Void
+	public function setDirty(dirty:Bool = true):Void
 	{
 		if (FlxG.renderTile)
 			return;
@@ -676,7 +676,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @param   position            Optional, specify a custom position for the tilemap (useful for overlapsAt()-type functionality).
 	 * @return  Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
 	 */
-	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
+	public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
 	{
 		var results:Bool = false;
@@ -780,7 +780,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return results;
 	}
 
-	override public function getTileIndexByCoords(coord:FlxPoint):Int
+	public function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		var localX = coord.x - x;
 		var localY = coord.y - y;
@@ -792,7 +792,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		return Std.int(localY / scaledTileHeight) * widthInTiles + Std.int(localX / scaledTileWidth);
 	}
 
-	override public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
+	public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
 	{
 		var point = FlxPoint.get(x + (index % widthInTiles) * scaledTileWidth, y + Std.int(index / widthInTiles) * scaledTileHeight);
 		if (midpoint)
@@ -873,7 +873,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
-	override function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
+	function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		// trim the line to the parts inside the map
 		final trimmedStart = calcRayEntry(start, end);
@@ -1036,7 +1036,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
-	override function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
+	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		var step:Float = scaledTileWidth;
 
@@ -1372,7 +1372,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 *
 	 * @param   index  The index of the tile object in _tileObjects internal array you want to update.
 	 */
-	override function updateTile(index:Int):Void
+	function updateTile(index:Int):Void
 	{
 		var tile:FlxTile = _tileObjects[index];
 		if (tile == null || !tile.visible)
