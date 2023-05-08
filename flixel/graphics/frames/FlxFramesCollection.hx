@@ -168,13 +168,13 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   flipY        If packed image should be vertically flipped.
 	 * @return  Newly created and added frame object.
 	 */
-	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX:Bool = false,
-			flipY:Bool = false):FlxFrame
+	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX = false, flipY = false,
+			duration = 0.0):FlxFrame
 	{
 		if (name != null && framesHash.exists(name))
 			return framesHash.get(name);
 
-		var texFrame:FlxFrame = new FlxFrame(parent, angle, flipX, flipY);
+		var texFrame:FlxFrame = new FlxFrame(parent, angle, flipX, flipY, duration);
 		texFrame.name = name;
 		texFrame.sourceSize.set(sourceSize.x, sourceSize.y);
 		texFrame.offset.set(offset.x, offset.y);
@@ -184,6 +184,119 @@ class FlxFramesCollection implements IFlxDestroyable
 		offset = FlxDestroyUtil.put(offset);
 
 		return pushFrame(texFrame);
+	}
+
+	/**
+	 * Sets the target frame's offset to the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   name     The name of the frame.
+	 * @param   offsetX  The new horizontal offset of the frame.
+	 * @param   offsetY  The new vertical offset of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function setFrameOffset(name:String, offsetX:Float, offsetY:Float)
+	{
+		if (framesHash.exists(name))
+			framesHash[name].offset.set(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
+	}
+
+	/**
+	 * Adjusts the target frame's offset by the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   name     The name of the frame.
+	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
+	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function addFrameOffset(name:String, offsetX:Float, offsetY:Float)
+	{
+		if (framesHash.exists(name))
+			framesHash[name].offset.add(offsetX, offsetY);
+		else
+			FlxG.log.warn('No frame called $name');
+	}
+
+	/**
+	 * Sets all frames with the specified name prefix to the specified offset. This mainly
+	 * exists because certain atlas exporters don't give the correct offset.
+	 * 
+	 * @param   prefix   The prefix used to determine which frames are affected.
+	 * @param   offsetX  The new horizontal offset of the frame.
+	 * @param   offsetY  The new vertical offset of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function setFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	{
+		for (name => frame in framesHash)
+		{
+			if (name.indexOf(prefix) == 0)
+				frame.offset.set(offsetX, offsetY);
+		}
+	}
+
+	/**
+	 * Adjusts all frames with the specified name prefix by the specified offset. This mainly
+	 * exists because certain atlas exporters don't give the correct offset.
+	 * 
+	 * @param   prefix   The prefix used to determine which frames are affected.
+	 * @param   offsetX  The horizontal adjustment added to the frame's current offset.
+	 * @param   offsetY  The vertical adjustment added to the frame's current offset.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function addFramesOffsetByPrefix(prefix:String, offsetX:Float, offsetY:Float)
+	{
+		for (name => frame in framesHash)
+		{
+			if (name.indexOf(prefix) == 0)
+				frame.offset.add(offsetX, offsetY);
+		}
+	}
+
+	/**
+	 * Sets the target frame's offset to the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   name      The name of the frame.
+	 * @param   duration  The new duration of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function setFrameDuration(name:String, duration:Float)
+	{
+		if (framesHash.exists(name))
+			framesHash[name].duration = duration;
+		else
+			FlxG.log.warn('No frame called $name');
+	}
+
+	/**
+	 * Sets the target frame's offset to the specified values. This mainly exists because certain
+	 * atlas exporters don't give the correct offset. If no frame with the specified name exists,
+	 * a warning is logged.
+	 * 
+	 * @param   prefix    The prefix used to determine which frames are affected.
+	 * @param   duration  The new duration of the frame.
+	 * 
+	 * @since 5.3.0
+	 */
+	public function setFramesDurationByPrefix(prefix:String, duration:Float)
+	{
+		for (name => frame in framesHash)
+		{
+			if (name.indexOf(prefix) == 0)
+				framesHash[name].duration = duration;
+		}
 	}
 
 	/**

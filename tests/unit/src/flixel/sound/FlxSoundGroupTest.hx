@@ -1,4 +1,4 @@
-package flixel.system;
+package flixel.sound;
 
 import massive.munit.Assert;
 

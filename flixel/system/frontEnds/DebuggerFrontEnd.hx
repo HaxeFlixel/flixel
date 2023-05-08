@@ -166,6 +166,7 @@ class DebuggerFrontEnd
 
 		#if FLX_DEBUG
 		FlxG.game.debugger.visible = Value;
+		FlxG.game.debugger.tabChildren = Value;
 
 		// if the debugger is non-visible, then we need to focus on game sprite,
 		// so the game still will be able to capture key presses

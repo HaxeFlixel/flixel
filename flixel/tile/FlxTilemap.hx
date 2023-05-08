@@ -26,11 +26,6 @@ import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.geom.ColorTransform;
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
-#end
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -382,7 +377,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			/* if Using tile graphics like GraphicAuto or others defined above, they will not
 			 * load immediately. Track their loading and apply frame padding after.
 			**/
-			if (!graph.isLoaded && isOfType(graph.bitmap, IEmbeddedBitmapData))
+			if (!graph.isLoaded && Std.isOfType(graph.bitmap, IEmbeddedBitmapData))
 			{
 				var futureBitmap:IEmbeddedBitmapData = cast graph.bitmap;
 				futureBitmap.onLoad = function()
@@ -766,7 +761,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 				if (overlapFound)
 				{
-					if (tile.callbackFunction != null && (tile.filter == null || isOfType(object, tile.filter)))
+					if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
 					{
 						tile.mapIndex = rowStart + column;
 						tile.callbackFunction(tile, object);

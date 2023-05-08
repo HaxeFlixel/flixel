@@ -4,7 +4,7 @@ package flixel.util;
  * Simple enum for orthogonal directions. Can be combined into `FlxDirectionFlags`.
  * @since 4.10.0
  */
-@:enum abstract FlxDirection(Int) to Int
+enum abstract FlxDirection(Int) to Int
 {
 	var LEFT = 0x0001;
 	var RIGHT = 0x0010;
