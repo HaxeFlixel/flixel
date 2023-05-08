@@ -9,8 +9,8 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.tile.FlxTileblock;
 
 /**
@@ -91,7 +91,6 @@ class FlxCollision
 
 			// translate it back!
 			testMatrix.translate(boundsA.width / 2, boundsA.height / 2);
-			
 
 			// prepare an empty canvas
 			var testA2:BitmapData = FlxBitmapDataPool.get(Math.floor(boundsA.width), Math.floor(boundsA.height), true, FlxColor.TRANSPARENT, false);
@@ -232,8 +231,8 @@ class FlxCollision
 
 		if (PlaceOutside)
 		{
-			left = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
-			right = new FlxTileblock(Math.floor(Camera.x + Camera.width), Math.floor(Camera.y + Thickness), Thickness, Camera.height - (Thickness * 2));
+			left = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y), Thickness, Camera.height);
+			right = new FlxTileblock(Math.floor(Camera.x + Camera.width), Math.floor(Camera.y), Thickness, Camera.height);
 			top = new FlxTileblock(Math.floor(Camera.x - Thickness), Math.floor(Camera.y - Thickness), Camera.width + Thickness * 2, Thickness);
 			bottom = new FlxTileblock(Math.floor(Camera.x - Thickness), Camera.height, Camera.width + Thickness * 2, Thickness);
 
@@ -301,7 +300,7 @@ class FlxCollision
 				result = FlxPoint.get(x, y);
 			else
 				result.set(x, y);
-			
+
 			putWeakRefs();
 			return result;
 		}
