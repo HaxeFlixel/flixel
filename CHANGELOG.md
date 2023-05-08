@@ -1,3 +1,10 @@
+5.3.1 (May 7, 2023)
+------------------------------
+#### Changes and improvements:
+- Change all `@:enum abstract` to `enum abstract` to prevent warnings in haxe 4.3.1 ([#2790](https://github.com/HaxeFlixel/flixel/pull/2790))
+- `FlxAnimation`: Prevent crash when destroying sprites in an anim callback ([#2785](https://github.com/HaxeFlixel/flixel/pull/2785))
+- `FlxCollision`: Fix gap in `createCameraWall` ([#2781](https://github.com/HaxeFlixel/flixel/pull/2781))
+
 5.3.0 (April 26, 2023)
 ------------------------------
 #### Dependencies:
