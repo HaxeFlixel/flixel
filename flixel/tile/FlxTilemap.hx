@@ -873,7 +873,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
-	function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
+	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		// trim the line to the parts inside the map
 		final trimmedStart = calcRayEntry(start, end);
