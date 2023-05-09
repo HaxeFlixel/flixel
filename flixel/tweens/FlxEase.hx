@@ -32,6 +32,9 @@ class FlxEase
 	static final DEFAULT_B6:Float = 2.625 / 2.75;
 	static final DEFAULT_ELASTIC_AMPLITUDE:Float = 1;
 	static final DEFAULT_ELASTIC_PERIOD:Float = 0.4;
+	static final BOUNCE_OUT:Float->Float = bounceOutCustom(/*6*/);
+	static final BOUNCE_IN:Float->Float = bounceInCustom(/*6*/);
+	static final BOUNCE_IN_OUT:Float->Float = bounceInOutCustom(/*6*/);
 
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float
@@ -152,27 +155,66 @@ class FlxEase
 
 	public static function bounceIn(t:Float):Float
 	{
-		return 1 - bounceOut(1 - t);
+		return BOUNCE_IN(t);
+		//return 1 - bounceOut(1 - t);
 	}
 
-	public static function bounceOutCustom(Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float {
-		return (Float) ->
+	public static function bounceInCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	{
+		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
+		var func:Float->Float = function(t:Float)
+		{
+			return 1 - outFunc(1 - t);
+		};
+		return func;
+	}
+
+	public static function bounceOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	{
+		var func:Float->Float = function(t:Float)
+		{
+			if (t < Bounce1)
+				return 7.5625 * t * t;
+			if (t < Bounce2)
+				return 7.5625 * (t - Bounce3) * (t - Bounce3) + .75;
+			if (t < Bounce4)
+				return 7.5625 * (t - Bounce5) * (t - Bounce5) + .9375;
+			return 7.5625 * (t - Bounce6) * (t - Bounce6) + .984375;
+		};
+		return func;
+	}
+	
+	// /*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6
+	public static function bounceInOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	{
+		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
+		var func:Float->Float = function(t:Float)
+		{
+			return t < 0.5
+				? (1 - outFunc(1 - 2 * t)) / 2
+				: (1 + outFunc(2 * t - 1)) / 2;
+		};
+		return func;
+	}
+
 	public static function bounceOut(t:Float):Float
 	{
-		if (t < DEFAULT_B1)
+		return BOUNCE_OUT(t);
+		/*if (t < DEFAULT_B1)
 			return 7.5625 * t * t;
 		if (t < DEFAULT_B2)
 			return 7.5625 * (t - DEFAULT_B3) * (t - DEFAULT_B3) + .75;
 		if (t < DEFAULT_B4)
 			return 7.5625 * (t - DEFAULT_B5) * (t - DEFAULT_B5) + .9375;
-		return 7.5625 * (t - DEFAULT_B6) * (t - DEFAULT_B6) + .984375;
+		return 7.5625 * (t - DEFAULT_B6) * (t - DEFAULT_B6) + .984375;*/
 	}
 
 	public static function bounceInOut(t:Float):Float
 	{
-		return t < 0.5
+		return BOUNCE_IN_OUT(t);
+		/*return t < 0.5
 			? (1 - bounceOut(1 - 2 * t)) / 2
-			: (1 + bounceOut(2 * t - 1)) / 2;
+			: (1 + bounceOut(2 * t - 1)) / 2;*/
 	}
 
 	public static inline function circIn(t:Float):Float
