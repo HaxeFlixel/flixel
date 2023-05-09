@@ -153,13 +153,13 @@ class FlxEase
 		return -Math.cos(Math.PI * t) / 2 + .5;
 	}
 
-	public static inline function bounceIn(t:Float):Float
+	public static function bounceIn(t:Float):Float
 	{
 		return BOUNCE_IN(t);
 		//return 1 - bounceOut(1 - t);
 	}
 
-	public static inline function bounceInCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceInCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
 	{
 		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
 		var func:Float->Float = function(t:Float)
@@ -169,7 +169,7 @@ class FlxEase
 		return func;
 	}
 
-	public static inline function bounceOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
 	{
 		var func:Float->Float = function(t:Float)
 		{
@@ -185,7 +185,7 @@ class FlxEase
 	}
 	
 	// /*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6
-	public static inline function bounceInOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceInOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
 	{
 		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
 		var func:Float->Float = function(t:Float)
@@ -197,7 +197,7 @@ class FlxEase
 		return func;
 	}
 
-	public static inline function bounceOut(t:Float):Float
+	public static function bounceOut(t:Float):Float
 	{
 		return BOUNCE_OUT(t);
 		/*if (t < DEFAULT_B1)
@@ -209,7 +209,7 @@ class FlxEase
 		return 7.5625 * (t - DEFAULT_B6) * (t - DEFAULT_B6) + .984375;*/
 	}
 
-	public static inline function bounceInOut(t:Float):Float
+	public static function bounceInOut(t:Float):Float
 	{
 		return BOUNCE_IN_OUT(t);
 		/*return t < 0.5
