@@ -20,18 +20,18 @@ package flixel.tweens;
 class FlxEase
 {
 	/** Easing constants */
-	static var PI2:Float = Math.PI / 2;
-	static var DOUBLE_PI:Float = Math.PI * 2;
+	static var PI2(default, null):Float = Math.PI / 2;
+	static var DOUBLE_PI(default, null):Float = Math.PI * 2;
 
-	static inline var DEFAULT_EL:Float = Math.PI * 2 / .45;
-	static inline var DEFAULT_B1:Float = 1 / 2.75;
-	static inline var DEFAULT_B2:Float = 2 / 2.75;
-	static inline var DEFAULT_B3:Float = 1.5 / 2.75;
-	static inline var DEFAULT_B4:Float = 2.5 / 2.75;
-	static inline var DEFAULT_B5:Float = 2.25 / 2.75;
-	static inline var DEFAULT_B6:Float = 2.625 / 2.75;
-	static inline var DEFAULT_ELASTIC_AMPLITUDE:Float = 1;
-	static inline var DEFAULT_ELASTIC_PERIOD:Float = 0.4;
+	static var DEFAULT_EL(default, null):Float = Math.PI * 2 / .45;
+	static var DEFAULT_B1(default, null):Float = 1 / 2.75;
+	static var DEFAULT_B2(default, null):Float = 2 / 2.75;
+	static var DEFAULT_B3(default, null):Float = 1.5 / 2.75;
+	static var DEFAULT_B4(default, null):Float = 2.5 / 2.75;
+	static var DEFAULT_B5(default, null):Float = 2.25 / 2.75;
+	static var DEFAULT_B6(default, null):Float = 2.625 / 2.75;
+	static var DEFAULT_ELASTIC_AMPLITUDE(default, null):Float = 1;
+	static var DEFAULT_ELASTIC_PERIOD(default, null):Float = 0.4;
 	static var BOUNCE_OUT:Float->Float = bounceOutCustom(/*6*/);
 	static var BOUNCE_IN:Float->Float = bounceInCustom(/*6*/);
 	static var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom(/*6*/);
