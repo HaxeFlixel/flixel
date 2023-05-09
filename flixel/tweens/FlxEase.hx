@@ -155,6 +155,8 @@ class FlxEase
 		return 1 - bounceOut(1 - t);
 	}
 
+	public static function bounceOutCustom(Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float {
+		return (Float) ->
 	public static function bounceOut(t:Float):Float
 	{
 		if (t < DEFAULT_B1)
