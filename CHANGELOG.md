@@ -1,3 +1,13 @@
+5.4.0 (TBD)
+------------------------------
+#### New features:
+- Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
+	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
+	- `FlxG.game.debugger.interaction`: Add `removeTool`
+
+#### Changes and improvements:
+- `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
+
 5.3.1 (May 7, 2023)
 ------------------------------
 #### Changes and improvements:
