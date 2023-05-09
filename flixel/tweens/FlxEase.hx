@@ -158,17 +158,17 @@ class FlxEase
 		return BOUNCE_IN(t);
 	}
 
-	public static function bounceInCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):Float->Float
+	public static function bounceInCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
 	{
-		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
-		var func:Float->Float = function(t:Float)
+		var outFunc:EaseFunction = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
+		var func:EaseFunction = function(t:Float)
 		{
 			return 1 - outFunc(1 - t);
 		};
 		return func;
 	}
 
-	public static function bounceOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):Float->Float
+	public static function bounceOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
 	{
 		Bounce1 = Bounce1 == null ? DEFAULT_B1 : Bounce1;
 		Bounce2 = Bounce2 == null ? DEFAULT_B2 : Bounce2;
@@ -176,7 +176,7 @@ class FlxEase
 		Bounce4 = Bounce4 == null ? DEFAULT_B4 : Bounce4;
 		Bounce5 = Bounce5 == null ? DEFAULT_B6 : Bounce5;
 		Bounce6 = Bounce6 == null ? DEFAULT_B6 : Bounce6;
-		var func:Float->Float = function(t:Float)
+		var func:EaseFunction = function(t:Float)
 		{
 			if (t < Bounce1)
 				return 7.5625 * t * t;
@@ -189,10 +189,10 @@ class FlxEase
 		return func;
 	}
 	
-	public static function bounceInOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):Float->Float
+	public static function bounceInOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
 	{
-		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
-		var func:Float->Float = function(t:Float)
+		var outFunc:EaseFunction = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
+		var func:EaseFunction = function(t:Float)
 		{
 			return t < 0.5
 				? (1 - outFunc(1 - 2 * t)) / 2
