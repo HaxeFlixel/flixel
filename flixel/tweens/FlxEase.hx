@@ -32,9 +32,9 @@ class FlxEase
 	static var DEFAULT_B6(default, null):Float = 2.625 / 2.75;
 	static var DEFAULT_ELASTIC_AMPLITUDE(default, null):Float = 1;
 	static var DEFAULT_ELASTIC_PERIOD(default, null):Float = 0.4;
-	static var BOUNCE_OUT:Float->Float = bounceOutCustom(/*6*/);
-	static var BOUNCE_IN:Float->Float = bounceInCustom(/*6*/);
-	static var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom(/*6*/);
+	static var BOUNCE_OUT:Float->Float = bounceOutCustom();
+	static var BOUNCE_IN:Float->Float = bounceInCustom();
+	static var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom();
 
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float
@@ -159,7 +159,7 @@ class FlxEase
 		//return 1 - bounceOut(1 - t);
 	}
 
-	public static function bounceInCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceInCustom(/*bounces:Int = 6, */Bounce1:Null<Float> = null, Bounce2:Null<Float> = null, Bounce3:Null<Float> = null, Bounce4:Null<Float> = null, Bounce5:Null<Float> = null, Bounce6:Null<Float> = null):Float->Float
 	{
 		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
 		var func:Float->Float = function(t:Float)
@@ -169,8 +169,14 @@ class FlxEase
 		return func;
 	}
 
-	public static function bounceOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceOutCustom(/*bounces:Int = 6, */Bounce1:Null<Float> = null, Bounce2:Null<Float> = null, Bounce3:Null<Float> = null, Bounce4:Null<Float> = null, Bounce5:Null<Float> = null, Bounce6:Null<Float> = null):Float->Float
 	{
+		Bounce1 = Bounce1 == null ? DEFAULT_B1 : Bounce1;
+		Bounce2 = Bounce2 == null ? DEFAULT_B2 : Bounce2;
+		Bounce3 = Bounce3 == null ? DEFAULT_B3 : Bounce3;
+		Bounce4 = Bounce4 == null ? DEFAULT_B4 : Bounce4;
+		Bounce5 = Bounce5 == null ? DEFAULT_B6 : Bounce5;
+		Bounce6 = Bounce6 == null ? DEFAULT_B6 : Bounce6;
 		var func:Float->Float = function(t:Float)
 		{
 			if (t < Bounce1)
@@ -185,7 +191,7 @@ class FlxEase
 	}
 	
 	// /*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6
-	public static function bounceInOutCustom(/*bounces:Int = 6, */Bounce1:Float = DEFAULT_B1, Bounce2:Float = DEFAULT_B2, Bounce3:Float = DEFAULT_B3, Bounce4:Float = DEFAULT_B4, Bounce5:Float = DEFAULT_B5, Bounce6:Float = DEFAULT_B6):Float->Float
+	public static function bounceInOutCustom(/*bounces:Int = 6, */Bounce1:Null<Float> = null, Bounce2:Null<Float> = null, Bounce3:Null<Float> = null, Bounce4:Null<Float> = null, Bounce5:Null<Float> = null, Bounce6:Null<Float> = null):Float->Float
 	{
 		var outFunc:Float->Float = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
 		var func:Float->Float = function(t:Float)
