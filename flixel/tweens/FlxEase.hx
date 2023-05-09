@@ -20,17 +20,18 @@ package flixel.tweens;
 class FlxEase
 {
 	/** Easing constants */
-	static var PI2:Float = Math.PI / 2;
+	static final PI2:Float = Math.PI / 2;
+	static final DOUBLE_PI:Float = Math.PI * 2;
 
-	static var EL:Float = 2 * Math.PI / .45;
-	static var B1:Float = 1 / 2.75;
-	static var B2:Float = 2 / 2.75;
-	static var B3:Float = 1.5 / 2.75;
-	static var B4:Float = 2.5 / 2.75;
-	static var B5:Float = 2.25 / 2.75;
-	static var B6:Float = 2.625 / 2.75;
-	static var ELASTIC_AMPLITUDE:Float = 1;
-	static var ELASTIC_PERIOD:Float = 0.4;
+	static final DEFAULT_EL:Float = DOUBLE_PI / .45;
+	static final DEFAULT_B1:Float = 1 / 2.75;
+	static final DEFAULT_B2:Float = 2 / 2.75;
+	static final DEFAULT_B3:Float = 1.5 / 2.75;
+	static final DEFAULT_B4:Float = 2.5 / 2.75;
+	static final DEFAULT_B5:Float = 2.25 / 2.75;
+	static final DEFAULT_B6:Float = 2.625 / 2.75;
+	static final DEFAULT_ELASTIC_AMPLITUDE:Float = 1;
+	static final DEFAULT_ELASTIC_PERIOD:Float = 0.4;
 
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float
@@ -50,7 +51,7 @@ class FlxEase
 
 	public static inline function quadInOut(t:Float):Float
 	{
-		return t <= .5 ? t * t * 2 : 1 - (--t) * t * 2;
+		return t <= .5 ? quadIn(t) * 2 : 1 - (--t) * t * 2;
 	}
 
 	public static inline function cubeIn(t:Float):Float
@@ -65,7 +66,7 @@ class FlxEase
 
 	public static inline function cubeInOut(t:Float):Float
 	{
-		return t <= .5 ? t * t * t * 4 : 1 + (--t) * t * t * 4;
+		return t <= .5 ? cubeIn(t) * 4 : quadOut(t) * 4;
 	}
 
 	public static inline function quartIn(t:Float):Float
@@ -80,7 +81,7 @@ class FlxEase
 
 	public static inline function quartInOut(t:Float):Float
 	{
-		return t <= .5 ? t * t * t * t * 8 : (1 - (t = t * 2 - 2) * t * t * t) / 2 + .5;
+		return t <= .5 ? quartIn(t) * 8 : (1 - (t = t * 2 - 2) * t * t * t) / 2 + .5;
 	}
 
 	public static inline function quintIn(t:Float):Float
@@ -95,7 +96,7 @@ class FlxEase
 
 	public static inline function quintInOut(t:Float):Float
 	{
-		return ((t *= 2) < 1) ? (t * t * t * t * t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2;
+		return ((t *= 2) < 1) ? quintIn(t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2;
 	}
 
 	/** @since 4.3.0 */
@@ -156,13 +157,13 @@ class FlxEase
 
 	public static function bounceOut(t:Float):Float
 	{
-		if (t < B1)
+		if (t < DEFAULT_B1)
 			return 7.5625 * t * t;
-		if (t < B2)
-			return 7.5625 * (t - B3) * (t - B3) + .75;
-		if (t < B4)
-			return 7.5625 * (t - B5) * (t - B5) + .9375;
-		return 7.5625 * (t - B6) * (t - B6) + .984375;
+		if (t < DEFAULT_B2)
+			return 7.5625 * (t - DEFAULT_B3) * (t - DEFAULT_B3) + .75;
+		if (t < DEFAULT_B4)
+			return 7.5625 * (t - DEFAULT_B5) * (t - DEFAULT_B5) + .9375;
+		return 7.5625 * (t - DEFAULT_B6) * (t - DEFAULT_B6) + .984375;
 	}
 
 	public static function bounceInOut(t:Float):Float
@@ -223,14 +224,14 @@ class FlxEase
 
 	public static inline function elasticIn(t:Float):Float
 	{
-		return -(ELASTIC_AMPLITUDE * Math.pow(2,
-			10 * (t -= 1)) * Math.sin((t - (ELASTIC_PERIOD / (2 * Math.PI) * Math.asin(1 / ELASTIC_AMPLITUDE))) * (2 * Math.PI) / ELASTIC_PERIOD));
+		return -(DEFAULT_ELASTIC_AMPLITUDE * Math.pow(2,
+			10 * (t -= 1)) * Math.sin((t - (DEFAULT_ELASTIC_PERIOD / (DOUBLE_PI) * Math.asin(1 / DEFAULT_ELASTIC_AMPLITUDE))) * (DOUBLE_PI) / DEFAULT_ELASTIC_PERIOD));
 	}
 
 	public static inline function elasticOut(t:Float):Float
 	{
-		return (ELASTIC_AMPLITUDE * Math.pow(2,
-			-10 * t) * Math.sin((t - (ELASTIC_PERIOD / (2 * Math.PI) * Math.asin(1 / ELASTIC_AMPLITUDE))) * (2 * Math.PI) / ELASTIC_PERIOD)
+		return (DEFAULT_ELASTIC_AMPLITUDE * Math.pow(2,
+			-10 * t) * Math.sin((t - (DEFAULT_ELASTIC_PERIOD / (DOUBLE_PI) * Math.asin(1 / DEFAULT_ELASTIC_AMPLITUDE))) * (DOUBLE_PI) / DEFAULT_ELASTIC_PERIOD)
 			+ 1);
 	}
 
@@ -238,9 +239,9 @@ class FlxEase
 	{
 		if (t < 0.5)
 		{
-			return -0.5 * (Math.pow(2, 10 * (t -= 0.5)) * Math.sin((t - (ELASTIC_PERIOD / 4)) * (2 * Math.PI) / ELASTIC_PERIOD));
+			return -0.5 * (Math.pow(2, 10 * (t -= 0.5)) * Math.sin((t - (DEFAULT_ELASTIC_PERIOD / 4)) * (DOUBLE_PI) / DEFAULT_ELASTIC_PERIOD));
 		}
-		return Math.pow(2, -10 * (t -= 0.5)) * Math.sin((t - (ELASTIC_PERIOD / 4)) * (2 * Math.PI) / ELASTIC_PERIOD) * 0.5 + 1;
+		return Math.pow(2, -10 * (t -= 0.5)) * Math.sin((t - (DEFAULT_ELASTIC_PERIOD / 4)) * (DOUBLE_PI) / DEFAULT_ELASTIC_PERIOD) * 0.5 + 1;
 	}
 }
 
