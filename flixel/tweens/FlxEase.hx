@@ -32,9 +32,9 @@ class FlxEase
 	static inline var DEFAULT_B6:Float = 2.625 / 2.75;
 	static inline var DEFAULT_ELASTIC_AMPLITUDE:Float = 1;
 	static inline var DEFAULT_ELASTIC_PERIOD:Float = 0.4;
-	static inline var BOUNCE_OUT:Float->Float = bounceOutCustom(/*6*/);
-	static inline var BOUNCE_IN:Float->Float = bounceInCustom(/*6*/);
-	static inline var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom(/*6*/);
+	static var BOUNCE_OUT:Float->Float = bounceOutCustom(/*6*/);
+	static var BOUNCE_IN:Float->Float = bounceInCustom(/*6*/);
+	static var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom(/*6*/);
 
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float
