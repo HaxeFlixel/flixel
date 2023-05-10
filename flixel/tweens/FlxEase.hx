@@ -23,18 +23,15 @@ class FlxEase
 	static var PI2(default, null):Float = Math.PI / 2;
 	static var DOUBLE_PI(default, null):Float = Math.PI * 2;
 
-	static var DEFAULT_EL(default, null):Float = Math.PI * 2 / .45;
-	static var DEFAULT_B1(default, null):Float = 1 / 2.75;
-	static var DEFAULT_B2(default, null):Float = 2 / 2.75;
-	static var DEFAULT_B3(default, null):Float = 1.5 / 2.75;
-	static var DEFAULT_B4(default, null):Float = 2.5 / 2.75;
-	static var DEFAULT_B5(default, null):Float = 2.25 / 2.75;
-	static var DEFAULT_B6(default, null):Float = 2.625 / 2.75;
-	static var DEFAULT_ELASTIC_AMPLITUDE(default, null):Float = 1;
-	static var DEFAULT_ELASTIC_PERIOD(default, null):Float = 0.4;
-	static var BOUNCE_OUT:Float->Float = bounceOutCustom();
-	static var BOUNCE_IN:Float->Float = bounceInCustom();
-	static var BOUNCE_IN_OUT:Float->Float = bounceInOutCustom();
+	static var EL(default, null):Float = Math.PI * 2 / .45;
+	inline static var B1:Float = 1 / 2.75;
+	inline static var B2:Float = 2 / 2.75;
+	inline static var B3:Float = 1.5 / 2.75;
+	inline static var B4:Float = 2.5 / 2.75;
+	inline static var B5:Float = 2.25 / 2.75;
+	inline static var B6:Float = 2.625 / 2.75;
+	static var ELASTIC_AMPLITUDE(default, null):Float = 1;
+	static var ELASTIC_PERIOD(default, null):Float = 0.4;
 
 	/** @since 4.3.0 */
 	public static inline function linear(t:Float):Float
@@ -69,7 +66,7 @@ class FlxEase
 
 	public static inline function cubeInOut(t:Float):Float
 	{
-		return t <= .5 ? cubeIn(t) * 4 : quadOut(t) * 4;
+		return t <= .5 ? cubeIn(t) * 4 : -t * (t - 2) * 4;
 	}
 
 	public static inline function quartIn(t:Float):Float
@@ -153,62 +150,72 @@ class FlxEase
 		return -Math.cos(Math.PI * t) / 2 + .5;
 	}
 
+	/**
+	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
+	 * // Normal method:
+	 * `ease: FlxEase.bounceIn`
+	 * // New method:
+	 * `ease: FlxEase.bounceInCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 */
+	public static function bounceInCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	{
+		return bounceHelper(b1, b2, b3, b4, b5, b6);
+	}
+
+	/**
+	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
+	 * // Normal method:
+	 * `ease: FlxEase.bounceOut`
+	 * // New method:
+	 * `ease: FlxEase.bounceOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 */
+	public static function bounceOutCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	{
+		return function(t:Float):Float return 1 - bounceHelper(b1, b2, b3, b4, b5, b6)(1 - t);
+	}
+
+	/**
+	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
+	 * // Normal method:
+	 * `ease: FlxEase.bounceInOut`
+	 * // New method:
+	 * `ease: FlxEase.bounceInOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 */
+	public static function bounceInOutCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	{
+		return function(t:Float):Float return (t <= .5) ? bounceInCustom(b1, b2, b3, b4, b5, b6)(t * 2) / 2 : bounceOutCustom(b1, b2, b3, b4, b5, b6)(t * 2 - 1) / 2 + .5;
+	}
+
 	public static function bounceIn(t:Float):Float
 	{
-		return BOUNCE_IN(t);
-	}
-
-	public static function bounceInCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
-	{
-		var outFunc:EaseFunction = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
-		var func:EaseFunction = function(t:Float)
-		{
-			return 1 - outFunc(1 - t);
-		};
-		return func;
-	}
-
-	public static function bounceOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
-	{
-		Bounce1 = Bounce1 == null ? DEFAULT_B1 : Bounce1;
-		Bounce2 = Bounce2 == null ? DEFAULT_B2 : Bounce2;
-		Bounce3 = Bounce3 == null ? DEFAULT_B3 : Bounce3;
-		Bounce4 = Bounce4 == null ? DEFAULT_B4 : Bounce4;
-		Bounce5 = Bounce5 == null ? DEFAULT_B6 : Bounce5;
-		Bounce6 = Bounce6 == null ? DEFAULT_B6 : Bounce6;
-		var func:EaseFunction = function(t:Float)
-		{
-			if (t < Bounce1)
-				return 7.5625 * t * t;
-			if (t < Bounce2)
-				return 7.5625 * (t - Bounce3) * (t - Bounce3) + .75;
-			if (t < Bounce4)
-				return 7.5625 * (t - Bounce5) * (t - Bounce5) + .9375;
-			return 7.5625 * (t - Bounce6) * (t - Bounce6) + .984375;
-		};
-		return func;
-	}
-	
-	public static function bounceInOutCustom(/*bounces:Int = 6, */?Bounce1:Float, ?Bounce2:Float, ?Bounce3:Float, ?Bounce4:Float, ?Bounce5:Float, ?Bounce6:Float):EaseFunction
-	{
-		var outFunc:EaseFunction = bounceOutCustom(/*bounces, */Bounce1, Bounce2, Bounce3, Bounce4, Bounce5, Bounce6);
-		var func:EaseFunction = function(t:Float)
-		{
-			return t < 0.5
-				? (1 - outFunc(1 - 2 * t)) / 2
-				: (1 + outFunc(2 * t - 1)) / 2;
-		};
-		return func;
+		return bounceHelper()(t);
 	}
 
 	public static function bounceOut(t:Float):Float
 	{
-		return BOUNCE_OUT(t);
+		return 1 - bounceHelper()(1 - t);
 	}
 
 	public static function bounceInOut(t:Float):Float
 	{
-		return BOUNCE_IN_OUT(t);
+		return (t <= .5) ? bounceIn(t * 2) / 2 : bounceOut(t * 2 - 1) / 2 + .5;
+	}
+
+	/**
+	 * Returns a custom bounce ease (by the `easeIn` method)
+	 */
+	inline static function bounceHelper(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	{
+		return function(t:Float):Float
+			{
+				if (t < b1)
+					return 7.5625 * t * t;
+				if (t < b2)
+					return 7.5625 * (t - b3) * (t - b3) + .75;
+				if (t < b4)
+					return 7.5625 * (t - b5) * (t - b5) + .9375;
+				return 7.5625 * (t - b6) * (t - b6) + .984375;
+			};
 	}
 
 	public static inline function circIn(t:Float):Float
