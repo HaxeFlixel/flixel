@@ -161,11 +161,17 @@ class FlxEase
 	}
 
 	/**
-	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
-	 * // Normal method:
-	 * `ease: FlxEase.bounceIn`
-	 * // New method:
-	 * `ease: FlxEase.bounceInCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 * Creates a new ease function with the specified constants
+	 * 
+	 * Note: This method cannot be used as an ease param, you must pass the result into an ease param.
+	 * For example: 
+	 * ```haxe
+	 * final myEase = FlxEase.createBounceInOut(1 / 2.75, 2 / 2.75, 1.5 / 2.75, 2.5 / 2.75, 2.25 / 2.75, 2.625 / 2.75);
+	 * FlxTween.tween(sprite, { x: 600, y: 800 }, 2.0, { ease: myEase });
+	 * ```
+	 * 
+	 * @return A function that can be passed into a tween's ease property
+	 * @since 5.4.0
 	 */
 	public static function createBounceIn(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
@@ -173,11 +179,17 @@ class FlxEase
 	}
 
 	/**
-	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
-	 * // Normal method:
-	 * `ease: FlxEase.bounceOut`
-	 * // New method:
-	 * `ease: FlxEase.bounceOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 * Creates a new ease function with the specified constants
+	 * 
+	 * Note: This method cannot be used as an ease param, you must pass the result into an ease param.
+	 * For example: 
+	 * ```haxe
+	 * final myEase = FlxEase.createBounceIn(1 / 2.75, 2 / 2.75, 1.5 / 2.75, 2.5 / 2.75, 2.25 / 2.75, 2.625 / 2.75);
+	 * FlxTween.tween(sprite, { x: 600, y: 800 }, 2.0, { ease: myEase });
+	 * ```
+	 * 
+	 * @return A function that can be passed into a tween's ease property
+	 * @since 5.4.0
 	 */
 	public static function createBounceOut(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
@@ -185,11 +197,17 @@ class FlxEase
 	}
 
 	/**
-	 * Returns A NEW EASE FUNCTION. So it should be used a like different than often:
-	 * // Normal method:
-	 * `ease: FlxEase.bounceInOut`
-	 * // New method:
-	 * `ease: FlxEase.bounceInOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
+	 * Creates a new ease function with the specified constants
+	 * 
+	 * Note: This method cannot be used as an ease param, you must pass the result into an ease param.
+	 * For example: 
+	 * ```haxe
+	 * final myEase = FlxEase.createBounceInOut(1 / 2.75, 2 / 2.75, 1.5 / 2.75, 2.5 / 2.75, 2.25 / 2.75, 2.625 / 2.75);
+	 * FlxTween.tween(sprite, { x: 600, y: 800 }, 2.0, { ease: myEase });
+	 * ```
+	 * 
+	 * @return A function that can be passed into a tween's ease property
+	 * @since 5.4.0
 	 */
 	public static function createBounceInOut(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
