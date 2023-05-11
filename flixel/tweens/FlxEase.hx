@@ -216,7 +216,7 @@ class FlxEase
 	/**
 	 * The base bounce ease, used internally by all other ease functions.
 	 */
-	inline static function bounceOutHelper(t:Float, b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):Float
+	static inline function bounceOutHelper(t:Float, b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):Float
 	{
 		if (t < b1)
 			return 7.5625 * t * t;
