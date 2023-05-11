@@ -39,6 +39,16 @@ class FlxEase
 		return t;
 	}
 
+	public static inline function inOutHelper(t:Float, easeIn:EaseFunction, easeOut:EaseFunction)
+	{
+		return t <= .5 ? easeIn(t * 2) / 2 : (1 + easeOut(t * 2 - 1)) / 2;
+	}
+
+	public static inline function invertEase(t:Float, ease:EaseFunction)
+	{
+		return 1 - ease(1 - t);
+	}
+
 	public static inline function quadIn(t:Float):Float
 	{
 		return t * t;
@@ -46,12 +56,12 @@ class FlxEase
 
 	public static inline function quadOut(t:Float):Float
 	{
-		return -t * (t - 2);
+		return invertEase(t, quadIn);
 	}
 
 	public static inline function quadInOut(t:Float):Float
 	{
-		return t <= .5 ? quadIn(t) * 2 : 1 - (--t) * t * 2;
+		return inOutHelper(t, quadIn, quadOut);
 	}
 
 	public static inline function cubeIn(t:Float):Float
@@ -61,12 +71,12 @@ class FlxEase
 
 	public static inline function cubeOut(t:Float):Float
 	{
-		return 1 + (--t) * t * t;
+		return invertEase(t, cubeIn);
 	}
 
 	public static inline function cubeInOut(t:Float):Float
 	{
-		return t <= .5 ? cubeIn(t) * 4 : -t * (t - 2) * 4;
+		return inOutHelper(t, cubeIn, cubeOut);
 	}
 
 	public static inline function quartIn(t:Float):Float
@@ -76,12 +86,12 @@ class FlxEase
 
 	public static inline function quartOut(t:Float):Float
 	{
-		return 1 - (t -= 1) * t * t * t;
+		return invertEase(t, quartIn);
 	}
 
 	public static inline function quartInOut(t:Float):Float
 	{
-		return t <= .5 ? quartIn(t) * 8 : (1 - (t = t * 2 - 2) * t * t * t) / 2 + .5;
+		return inOutHelper(t, quartIn, quartOut);
 	}
 
 	public static inline function quintIn(t:Float):Float
@@ -91,12 +101,12 @@ class FlxEase
 
 	public static inline function quintOut(t:Float):Float
 	{
-		return (t = t - 1) * t * t * t * t + 1;
+		return invertEase(t, quintIn);
 	}
 
 	public static inline function quintInOut(t:Float):Float
 	{
-		return ((t *= 2) < 1) ? quintIn(t) / 2 : ((t -= 2) * t * t * t * t + 2) / 2;
+		return inOutHelper(t, quintIn, quintOut);
 	}
 
 	/** @since 4.3.0 */
@@ -255,16 +265,12 @@ class FlxEase
 
 	public static inline function backOut(t:Float):Float
 	{
-		return 1 - (--t) * (t) * (-2.70158 * t - 1.70158);
+		return invertEase(t, backIn);
 	}
 
 	public static function backInOut(t:Float):Float
 	{
-		t *= 2;
-		if (t < 1)
-			return t * t * (2.70158 * t - 1.70158) / 2;
-		t--;
-		return (1 - (--t) * (t) * (-2.70158 * t - 1.70158)) / 2 + .5;
+		return inOutHelper(t, backIn, backOut);
 	}
 
 	public static inline function elasticIn(t:Float):Float
@@ -275,9 +281,7 @@ class FlxEase
 
 	public static inline function elasticOut(t:Float):Float
 	{
-		return (ELASTIC_AMPLITUDE * Math.pow(2,
-			-10 * t) * Math.sin((t - (ELASTIC_PERIOD / (DOUBLE_PI) * Math.asin(1 / ELASTIC_AMPLITUDE))) * (DOUBLE_PI) / ELASTIC_PERIOD)
-			+ 1);
+		return invertEase(t, elasticIn);
 	}
 
 	public static function elasticInOut(t:Float):Float
