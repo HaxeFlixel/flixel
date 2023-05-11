@@ -167,9 +167,9 @@ class FlxEase
 	 * // New method:
 	 * `ease: FlxEase.bounceInCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
 	 */
-	public static function bounceInCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	public static function createBounceIn(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
-		return bounceHelper(b1, b2, b3, b4, b5, b6);
+		return function (t) return 1 - bounceOutHelper(1 - t, b1, b2, b3, b4, b5, b6);
 	}
 
 	/**
@@ -179,9 +179,9 @@ class FlxEase
 	 * // New method:
 	 * `ease: FlxEase.bounceOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
 	 */
-	public static function bounceOutCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	public static function createBounceOut(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
-		return function(t:Float):Float return 1 - bounceHelper(b1, b2, b3, b4, b5, b6)(1 - t);
+		return function(t) return bounceOutHelper(t, b1, b2, b3, b4, b5, b6);
 	}
 
 	/**
@@ -191,41 +191,40 @@ class FlxEase
 	 * // New method:
 	 * `ease: FlxEase.bounceInOutCustom(FlxEase.B1 * 0.5, FlxEase.B2 * 0.5, FlxEase.B3 * 0.5, FlxEase.B4 * 0.5, FlxEase.B5 * 0.5, FlxEase.B6)`
 	 */
-	public static function bounceInOutCustom(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	public static function createBounceInOut(b1:Float, b2:Float, b3:Float, b4:Float, b5:Float, b6:Float):EaseFunction
 	{
-		return function(t:Float):Float return (t <= .5) ? bounceInCustom(b1, b2, b3, b4, b5, b6)(t * 2) / 2 : bounceOutCustom(b1, b2, b3, b4, b5, b6)(t * 2 - 1) / 2 + .5;
+		return function(t) return (t <= .5)
+			? (1 - bounceOutHelper(1 - t * 2, b1, b2, b3, b4, b5, b6)) / 2
+			: (1 + bounceOutHelper(2 * t - 1, b1, b2, b3, b4, b5, b6)) / 2;
 	}
 
 	public static function bounceIn(t:Float):Float
 	{
-		return bounceHelper()(t);
+		return inline invertEase(t, bounceOut);
 	}
 
 	public static function bounceOut(t:Float):Float
 	{
-		return 1 - bounceHelper()(1 - t);
+		return bounceOutHelper(t);
 	}
 
 	public static function bounceInOut(t:Float):Float
 	{
-		return (t <= .5) ? bounceIn(t * 2) / 2 : bounceOut(t * 2 - 1) / 2 + .5;
+		return inOutHelper(t, bounceIn, bounceOut);
 	}
 
 	/**
-	 * Returns a custom bounce ease (by the `easeIn` method)
+	 * The base bounce ease, used internally by all other ease functions.
 	 */
-	inline static function bounceHelper(b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):EaseFunction
+	inline static function bounceOutHelper(t:Float, b1:Float = B1, b2:Float = B2, b3:Float = B3, b4:Float = B4, b5:Float = B5, b6:Float = B6):Float
 	{
-		return function(t:Float):Float
-			{
-				if (t < b1)
-					return 7.5625 * t * t;
-				if (t < b2)
-					return 7.5625 * (t - b3) * (t - b3) + .75;
-				if (t < b4)
-					return 7.5625 * (t - b5) * (t - b5) + .9375;
-				return 7.5625 * (t - b6) * (t - b6) + .984375;
-			};
+		if (t < b1)
+			return 7.5625 * t * t;
+		if (t < b2)
+			return 7.5625 * (t - b3) * (t - b3) + .75;
+		if (t < b4)
+			return 7.5625 * (t - b5) * (t - b5) + .9375;
+		return 7.5625 * (t - b6) * (t - b6) + .984375;
 	}
 
 	public static inline function circIn(t:Float):Float
