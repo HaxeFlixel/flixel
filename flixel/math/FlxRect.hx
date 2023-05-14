@@ -89,7 +89,7 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
-	 * Add this FlxPoint to the recycling pool if it's a weak reference (allocated via weak()).
+	 * Add this FlxRect to the recycling pool if it's a weak reference (allocated via weak()).
 	 */
 	public inline function putWeak():Void
 	{
