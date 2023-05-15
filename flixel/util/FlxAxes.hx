@@ -17,29 +17,19 @@ enum abstract FlxAxes(Int)
 	 */
 	public var y(get, never):Bool;
 	
-	/**
-	 * Internal helper to reference self
-	 */
-	var self(get, never):FlxAxes;
-	
-	inline function get_self():FlxAxes
-	{
-		return cast this;
-	}
-	
 	inline function get_x()
 	{
-		return self == X || self == XY;
+		return abstract == X || abstract == XY;
 	}
 	
 	inline function get_y()
 	{
-		return self == Y || self == XY;
+		return abstract == Y || abstract == XY;
 	}
 	
 	public function toString():String
 	{
-		return switch self
+		return switch(abstract)
 		{
 			case X: "x";
 			case Y: "y";
