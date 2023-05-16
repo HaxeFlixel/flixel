@@ -606,30 +606,48 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
-	 * Calls `kill()` on the group's `members` and then on the group itself.
-	 * You can revive this group later via `revive()` after this.
+	 * Calls `kill()` on the group's unkilled `members`. Revive them via `reviveMembers()`.
+	 * @since 5.4.0
 	 */
-	override public function kill():Void
+	public function killMembers():Void
 	{
 		for (basic in members)
 		{
 			if (basic != null && basic.exists)
 				basic.kill();
 		}
+	}
+
+	/**
+	 * Calls `killMembers()` and then kills the group itself.
+	 * Revive this group via `revive()`.
+	 */
+	override public function kill():Void
+	{
+		inline killMembers();
 
 		super.kill();
 	}
 
 	/**
-	 * Calls `revive()` on the group's members and then on the group itself.
+	 * Calls `revive()` on the group's killed members and then on the group itself.
+	 * @since 5.4.0
 	 */
-	override public function revive():Void
+	public function reviveMembers():Void
 	{
 		for (basic in members)
 		{
 			if (basic != null && !basic.exists)
 				basic.revive();
 		}
+	}
+
+	/**
+	 * Calls `reviveMembers()` and then revives the group itself.
+	 */
+	override public function revive():Void
+	{
+		inline reviveMembers();
 
 		super.revive();
 	}
