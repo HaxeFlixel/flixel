@@ -21,15 +21,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * Helper for overlap functions in `FlxObject` and `FlxTilemap`.
 	 */
 	@:noCompletion
-	static function overlaps(callback:(FlxBasic, Float, Float, Bool, FlxCamera)->Bool, group:FlxTypedGroup<FlxBasic>, x:Float, y:Float, inScreenSpace:Bool,
-			camera:FlxCamera):Bool
+	static function overlaps(callback:FlxBasic->Bool, group:FlxTypedGroup<FlxBasic>):Bool
 	{
 		if (group == null)
 			return false;
 		
 		for (basic in group)
 		{
-			if (basic != null && callback(basic, x, y, inScreenSpace, camera))
+			if (basic != null && callback(basic))
 				return true;
 		}
 		return false;
