@@ -6,22 +6,56 @@ import sys.FileSystem;
 using StringTools;
 using flixel.util.FlxArrayUtil;
 
+/**
+ * Typical use:
+ * ```haxe
+ * @:build(flixel.system.FlxAssets.buildFileReferences("assets", true))
+ * class AssetPaths {}
+ * ```
+ */
 class FlxAssetPaths
 {
+	/**
+	 * Searches through the specified directory and adds a static public field for every file found.
+	 * 
+	 * @param   directory       The folder of assets to build fields for
+	 * @param   subDirectories  If true, all subfolders will be included
+	 * @param   include         Regular Expression used to allow files based by name
+	 * @param   exclude         Regular Expression used to omit files based by name
+	 * @param   rename          A function that takes a filepath and returns a field name
+	 * @param   allFilesField   If non-null, it adds static public field with the given name with
+	 *                          an array of every file in the directory
+	 * @return  The fields are added to the class using this build macro
+	 */
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:EReg, ?exclude:EReg,
-			?rename:String->Null<String>):Array<Field>
+			?rename:String->Null<String>, allFilesField = "allFiles"):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
 
 		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
-		var fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
-		var fields = Context.getBuildFields();
+		final fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
+		final fields = Context.getBuildFields();
+		final allFiles = [];
 
 		// create new fields based on file references!
 		for (fileRef in fileReferences)
+		{
 			fields.push(fileRef.createField());
+			allFiles.push(macro $i{fileRef.name});
+		}
+		
+		if (allFilesField != null)
+		{
+			fields.push({
+				name: allFilesField,
+				doc: 'A list of every file in "$directory"',
+				access: [Access.APublic, Access.AStatic],
+				kind: FieldType.FVar(macro:Array<String>, macro $a{allFiles}),
+				pos: Context.currentPos()
+			});
+		}
 		
 		return fields;
 	}
