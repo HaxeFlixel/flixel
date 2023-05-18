@@ -38,23 +38,37 @@ class FlxAssetPaths
 		final fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
 		final fields = Context.getBuildFields();
 		final allFiles = [];
+		var duplicateAllFilesPath:String = null;
 
 		// create new fields based on file references!
 		for (fileRef in fileReferences)
 		{
 			fields.push(fileRef.createField());
-			allFiles.push(macro $i{fileRef.name});
+			if (allFilesField != null && duplicateAllFilesPath == null)
+			{
+				allFiles.push(macro $i{fileRef.name});
+				if (fileRef.name == allFilesField)
+					duplicateAllFilesPath = fileRef.value;
+			}
 		}
 		
 		if (allFilesField != null)
 		{
-			fields.push({
-				name: allFilesField,
-				doc: 'A list of every file in "$directory"',
-				access: [Access.APublic, Access.AStatic],
-				kind: FieldType.FVar(macro:Array<String>, macro $a{allFiles}),
-				pos: Context.currentPos()
-			});
+			if (duplicateAllFilesPath != null)
+			{
+				Context.warning('Could not add field "$allFilesField" due to conflicting file "$duplicateAllFilesPath"', Context.currentPos());
+			}
+			else
+			{
+				// add an array with every file
+				fields.push({
+					name: allFilesField,
+					doc: 'A list of every file in "$directory"',
+					access: [Access.APublic, Access.AStatic],
+					kind: FieldType.FVar(macro:Array<String>, macro $a{allFiles}),
+					pos: Context.currentPos()
+				});
+			}
 		}
 		
 		return fields;
