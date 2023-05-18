@@ -171,12 +171,13 @@ class FlxAssets
 	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
-			?rename:String->Null<String>):Array<Field>
+			?rename:String->Null<String>, allFilesField = "allFiles"):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
+		final buildRefs = flixel.system.macros.FlxAssetPaths.buildFileReferences;
+		return buildRefs(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename, allFilesField);
 		#end
 	}
 

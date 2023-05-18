@@ -7,11 +7,8 @@ using StringTools;
 using flixel.util.FlxArrayUtil;
 
 /**
- * Typical use:
- * ```haxe
- * @:build(flixel.system.FlxAssets.buildFileReferences("assets", true))
- * class AssetPaths {}
- * ```
+ * This class is used internally by `flixel.system.macros.FlxAssets`
+ * @see `flixel.system.macros.FlxAssets`
  */
 class FlxAssetPaths
 {
