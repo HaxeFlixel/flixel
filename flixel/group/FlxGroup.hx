@@ -661,6 +661,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	}
 
 	/**
+	 * Iterates through every member and index.
+	 */
+	public inline function keyValueIterator()
+	{
+		return members.keyValueIterator();
+	}
+
+	/**
 	 * Applies a function to all members.
 	 *
 	 * @param   func     A function that modifies one element at a time.
