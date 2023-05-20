@@ -6,22 +6,67 @@ import sys.FileSystem;
 using StringTools;
 using flixel.util.FlxArrayUtil;
 
+/**
+ * This class is used internally by `flixel.system.macros.FlxAssets`
+ * @see `flixel.system.macros.FlxAssets`
+ */
 class FlxAssetPaths
 {
+	/**
+	 * Searches through the specified directory and adds a static public field for every file found.
+	 * 
+	 * @param   directory       The folder of assets to build fields for
+	 * @param   subDirectories  If true, all subfolders will be included
+	 * @param   include         Regular Expression used to allow files based by name
+	 * @param   exclude         Regular Expression used to omit files based by name
+	 * @param   rename          A function that takes a filepath and returns a field name
+	 * @param   listField       If not an empty string, it adds static public field with the given
+	 *                          name with an array of every file in the directory
+	 * @return  The fields are added to the class using this build macro
+	 */
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:EReg, ?exclude:EReg,
-			?rename:String->Null<String>):Array<Field>
+			?rename:String->Null<String>, listField = "allFiles"):Array<Field>
 	{
 		if (!directory.endsWith("/"))
 			directory += "/";
 
 		Context.registerModuleDependency(Context.getLocalModule(), directory);
 
-		var fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
-		var fields = Context.getBuildFields();
+		final fileReferences = addFileReferences([], directory, subDirectories, include, exclude, rename);
+		final fields = Context.getBuildFields();
+		final allFiles = [];
+		var listConflictingPath:String = null;
 
 		// create new fields based on file references!
 		for (fileRef in fileReferences)
+		{
 			fields.push(fileRef.createField());
+			if (listField != "" && listConflictingPath == null)
+			{
+				allFiles.push(macro $i{fileRef.name});
+				if (fileRef.name == listField)
+					listConflictingPath = fileRef.value;
+			}
+		}
+		
+		if (listField != "")
+		{
+			if (listConflictingPath != null)
+			{
+				Context.warning('Could not add field "$listField" due to conflicting file "$listConflictingPath"', Context.currentPos());
+			}
+			else
+			{
+				// add an array with every file
+				fields.push({
+					name: listField,
+					doc: 'A list of every file in "$directory"',
+					access: [Access.APublic, Access.AStatic],
+					kind: FieldType.FVar(macro:Array<String>, macro $a{allFiles}),
+					pos: Context.currentPos()
+				});
+			}
+		}
 		
 		return fields;
 	}
