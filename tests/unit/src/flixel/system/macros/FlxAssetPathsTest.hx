@@ -36,8 +36,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[ExcludeString.text__txt, ExcludeString.fileWithMultipleDots__png__txt],
-			ExcludeString.allFiles,
-			ExcludeString
+			ExcludeString.allFiles
 		);
 	}
 	
