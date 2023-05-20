@@ -1,6 +1,7 @@
 5.4.0 (TBD)
 ------------------------------
 #### New features:
+- `AssetPaths` - Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
 - Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
 	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
 	- `FlxG.game.debugger.interaction`: Add `removeTool`
