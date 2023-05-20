@@ -6,11 +6,19 @@ import massive.munit.Assert;
 class FlxAssetPathsTest extends FlxTest
 {
 	@Test
-	function testAllFiles()
+	function testListField()
 	{
 		final numFiles:Int = Simple.allFiles.length;
 		final numFields:Int = Type.getClassFields(Simple).length;
 		Assert.areEqual(numFiles, numFields - 1);
+		Assert.areEqual(3, numFiles);
+	}
+	
+	@Test
+	function testNoListField()
+	{
+		final numFields:Int = Type.getClassFields(NoListField).length;
+		Assert.areEqual(3, numFields);
 	}
 	
 	@Test
@@ -86,10 +94,10 @@ class FlxAssetPathsTest extends FlxTest
 	}
 	
 	@Test
-	function testAllFilesRename()
+	function testListFieldRename()
 	{
-		final numFiles:Int = RenamedAllFiles.list.length;
-		final numFields:Int = Type.getClassFields(RenamedAllFiles).length;
+		final numFiles:Int = RenamedListField.list.length;
+		final numFields:Int = Type.getClassFields(RenamedListField).length;
 		Assert.areEqual(numFiles, numFields - 1);
 	}
 	
@@ -124,7 +132,10 @@ class FlxAssetPathsTest extends FlxTest
 class Simple {}
 
 @:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/simple", false, null, null, null, "list"))
-class RenamedAllFiles {}
+class RenamedListField {}
+
+@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/simple", false, null, null, null, ""))
+class NoListField {}
 
 @:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/invisibleFile"))
 class InvisibleFile {}

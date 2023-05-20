@@ -161,28 +161,30 @@ class FlxAssets
 	 * 
 	 * @param   directory       The directory to scan for files
 	 * @param   subDirectories  Whether to include subdirectories
-	 * @param   include         A string or `EReg` of files to include.
+	 * @param   include         A string or `EReg` of files to include
 	 *                          Example: `"*.jpg\|*.png\|*.gif"` will only add files with that extension
 	 * @param   exclude         A string or `EReg` of files to exclude. Example: `"*exclude/*\|*.ogg"`
 	 *                          will exclude .ogg files and everything in the exclude folder
-	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
-	 *
+	 * @param   rename          A function that takes the file path and returns a valid haxe field name
+	 * @param   listField       If not an empty string, it adds static public field with the given
+	 *                          name with an array of every file in the directory
+	 * 
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
 	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
-			?rename:String->Null<String>, allFilesField = "allFiles"):Array<Field>
+			?rename:String->Null<String>, listField = "allFiles"):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
 		final buildRefs = flixel.system.macros.FlxAssetPaths.buildFileReferences;
-		return buildRefs(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename, allFilesField);
+		return buildRefs(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename, listField);
 		#end
 	}
 
 	#if !doc_gen
-	private static function exprToRegex(expr:Expr):EReg
+	static function exprToRegex(expr:Expr):EReg
 	{
 		switch (expr.expr)
 		{
