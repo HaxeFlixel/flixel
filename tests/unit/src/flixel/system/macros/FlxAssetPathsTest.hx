@@ -18,8 +18,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[],
-			InvisibleFile.allFiles,
-			InvisibleFile
+			InvisibleFile.allFiles
 		);
 	}
 	
@@ -28,8 +27,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[IncludeString.text__txt, IncludeString.fileWithMultipleDots__png__txt],
-			IncludeString.allFiles,
-			IncludeString
+			IncludeString.allFiles
 		);
 	}
 	
@@ -48,8 +46,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[IncludeExcludeString.text__txt],
-			IncludeExcludeString.allFiles,
-			IncludeExcludeString
+			IncludeExcludeString.allFiles
 		);
 	}
 	
@@ -58,8 +55,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[IncludeEReg.text__txt, IncludeEReg.fileWithMultipleDots__png__txt],
-			IncludeEReg.allFiles,
-			IncludeEReg
+			IncludeEReg.allFiles
 		);
 	}
 	@Test 
@@ -67,8 +63,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[ExcludeEReg.text__txt, ExcludeEReg.fileWithMultipleDots__png__txt],
-			ExcludeEReg.allFiles,
-			ExcludeEReg
+			ExcludeEReg.allFiles
 		);
 	}
 	
@@ -77,8 +72,7 @@ class FlxAssetPathsTest extends FlxTest
 	{
 		assertPathArrays(
 			[IncludeExcludeEReg.text__txt],
-			IncludeExcludeEReg.allFiles,
-			IncludeExcludeEReg
+			IncludeExcludeEReg.allFiles
 		);
 	}
 	
@@ -88,8 +82,7 @@ class FlxAssetPathsTest extends FlxTest
 		assertPathArrays(
 			// [],
 			[Rename.text, Rename.fileWithMultipleDots, Rename.info],
-			Rename.allFiles,
-			Rename
+			Rename.allFiles
 		);
 	}
 	
@@ -104,7 +97,7 @@ class FlxAssetPathsTest extends FlxTest
 	/**
 	 * Similar to `FlxAssert.arraysEqual` but allows different orders and outputs more nicely
 	 */
-	function assertPathArrays(expected:Array<String>, actual:Array<String>, type:Class<Any>, ?info:PosInfos)
+	function assertPathArrays(expected:Array<String>, actual:Array<String>, ?info:PosInfos)
 	{
 		var fail = false;
 		if (expected.length != actual.length)
@@ -123,8 +116,7 @@ class FlxAssetPathsTest extends FlxTest
 		
 		if (fail)
 		{
-			final typeFields = Type.getClassFields(type);
-			Assert.fail('Expected $expected but was $actual.\n class fields: $typeFields', info);
+			Assert.fail('Expected $expected but was $actual', info);
 		}
 	}
 }
