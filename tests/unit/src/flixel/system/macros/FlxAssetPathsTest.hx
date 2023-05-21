@@ -87,7 +87,6 @@ class FlxAssetPathsTest extends FlxTest
 	function testRename()
 	{
 		assertPathArrays(
-			// [],
 			[Rename.text, Rename.fileWithMultipleDots, Rename.info],
 			Rename.allFiles
 		);
@@ -99,6 +98,18 @@ class FlxAssetPathsTest extends FlxTest
 		final numFiles:Int = RenamedListField.list.length;
 		final numFields:Int = Type.getClassFields(RenamedListField).length;
 		Assert.areEqual(numFiles, numFields - 1);
+	}
+	
+	@Test // https://github.com/HaxeFlixel/flixel/issues/2810
+	function testDuplicates()
+	{
+		final numFiles:Int = Duplicates.allFiles.length;
+		Assert.areEqual(2, numFiles);
+		
+		final numFields:Int = Type.getClassFields(Duplicates).length;
+		Assert.areEqual(1, numFields - 1);
+		
+		Assert.isTrue(Duplicates.allFiles.contains(Duplicates.info__txt));
 	}
 	
 	/**
@@ -165,3 +176,7 @@ class IncludeExcludeEReg {}
 		.split(" ").join("_");
 }))
 class Rename {}
+
+
+@:build(flixel.system.FlxAssets.buildFileReferences("assets/FlxAssetPaths/duplicates", true))
+class Duplicates {}

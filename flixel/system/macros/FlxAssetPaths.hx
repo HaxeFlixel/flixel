@@ -40,7 +40,9 @@ class FlxAssetPaths
 		// create new fields based on file references!
 		for (fileRef in fileReferences)
 		{
-			fields.push(fileRef.createField());
+			if (fileRef.duplicateOf == null)
+				fields.push(fileRef.createField());
+
 			if (listField != "" && listConflictingPath == null)
 			{
 				allFiles.push(macro $i{fileRef.name});
@@ -94,7 +96,10 @@ class FlxAssetPaths
 
 				var reference = FileReference.fromPath(path, rename);
 				if (reference != null)
-					addIfUnique(fileReferences, reference);
+				{
+					checkDuplicates(fileReferences, reference);
+					fileReferences.push(reference);
+				}
 			}
 			else if (subDirectories)
 			{
@@ -105,7 +110,7 @@ class FlxAssetPaths
 		return fileReferences;
 	}
 	
-	static function addIfUnique(fileReferences:Array<FileReference>, file:FileReference)
+	static function checkDuplicates(fileReferences:Array<FileReference>, file:FileReference)
 	{
 		for (i in 0...fileReferences.length)
 		{
@@ -116,18 +121,16 @@ class FlxAssetPaths
 				if (oldValue.split("/").length > file.value.split("/").length)
 				{
 					// replace it with the new one
-					fileReferences[i] = file;
+					fileReferences[i].duplicateOf = file;
 					file.warn('Duplicate files named "${file.name}" ignoring $oldValue');
 				}
 				else
 				{
+					file.duplicateOf = fileReferences[i];
 					file.warn('Duplicate files named "${file.name}" ignoring ${file.value}');
 				}
-				return;
 			}
 		}
-		
-		fileReferences.push(file);
 	}
 }
 
@@ -166,6 +169,7 @@ private class FileReference
 	public var name(default, null):String;
 	public var value(default, null):String;
 	public var documentation(default, null):String;
+	public var duplicateOf:FileReference = null;
 
 	function new(name:String, value:String)
 	{
