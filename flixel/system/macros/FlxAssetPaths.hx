@@ -189,6 +189,7 @@ class FlxAssetPaths
 		}
 		
 		// Show warnings for ignored files, if were not doing unit tests
+		#if !FLX_UNIT_TEST
 		for (name=>files in ignoredFiles)
 		{
 			if (files.length == 1)
@@ -203,6 +204,7 @@ class FlxAssetPaths
 					file.warn('... ignoring "${file.value}"');
 			}
 		}
+		#end
 	}
 }
 
