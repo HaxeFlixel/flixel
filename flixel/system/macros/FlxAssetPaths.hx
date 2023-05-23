@@ -89,7 +89,7 @@ class FlxAssetPaths
 	 * @param   include         Regular Expression used to allow files based by name
 	 * @param   exclude         Regular Expression used to omit files based by name
 	 */
-	inline static function getFileReferences(directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg):Array<FileReference>
+	static inline function getFileReferences(directory:String, subDirectories = false, ?include:EReg, ?exclude:EReg):Array<FileReference>
 	{
 		return addFileReferences([], directory, subDirectories, include, exclude);
 	}
@@ -217,8 +217,8 @@ private class FileReference
 		return path.split("/").pop();
 	}
 
-	public final value:String;
-	public final documentation:String;
+	public var value(default, null):String;
+	public var documentation(default, null):String;
 	public var name(default, null):String = null;
 
 	public function new(value:String)
