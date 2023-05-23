@@ -117,8 +117,10 @@ class Console extends Window
 		// openfl/openfl#1856
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, function(e:KeyboardEvent)
 		{
-			if (FlxG.debugger.visible && FlxG.game.debugger.console.visible && e.keyCode == Keyboard.TAB)
+			if (FlxG.debugger.visible && FlxG.game.debugger.console.visible && e.keyCode == Keyboard.TAB) {
 				FlxG.stage.focus = input;
+			}
+			e.preventDefault();
 		});
 		#end
 		#end
