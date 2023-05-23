@@ -347,6 +347,19 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_checkBufferChanges = true;
 	}
 
+	override function setTileProperties(tile:Int, allowCollisions = ANY, ?callback:FlxObject->FlxObject->Void, ?callbackFilter:Class<FlxObject>, range = 1):Void
+	{
+		final end = tile + range;
+		final maxIndex = _tileObjects.length;
+		if (end > maxIndex)
+		{
+			FlxG.log.error('Index $end exceeds the maximum tile index of $maxIndex. Please verify the Tile ($tile) and Range ($range) parameters.');
+			return;
+		}
+		
+		super.setTileProperties(tile, allowCollisions, callback, callbackFilter, range);
+	}
+
 	override function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
 	{
 		if ((tileGraphic is FlxFramesCollection))
