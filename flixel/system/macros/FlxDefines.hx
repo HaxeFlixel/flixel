@@ -56,6 +56,7 @@ private enum HelperDefines
 	FLX_DRAW_QUADS;
 	FLX_POINT_POOL;
 	FLX_PITCH;
+	FLX_NO_UNIT_TEST;
 }
 
 class FlxDefines
@@ -131,6 +132,7 @@ class FlxDefines
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
+		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
 	}
 
 	static function defineHelperDefines()
