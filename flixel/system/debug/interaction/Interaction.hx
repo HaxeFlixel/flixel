@@ -23,11 +23,6 @@ import flixel.util.FlxSpriteUtil;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
 import flash.display.Bitmap;
 #end
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
-#end
 
 /**
  * Adds a new functionality to Flixel debugger that allows any object
@@ -38,6 +33,10 @@ import Std.is as isOfType;
  */
 class Interaction extends Window
 {
+	static inline var BUTTONS_PER_LINE = 2;
+	static inline var SPACING = 25;
+	static inline var PADDING = 10;
+	
 	public var activeTool(default, null):Tool;
 	public var selectedItems(default, null):FlxTypedGroup<FlxObject> = new FlxTypedGroup();
 
@@ -207,7 +206,7 @@ class Interaction extends Window
 	 * screen, they can be activated when the user clicks a button, and so on. Check
 	 * the classes in the package `flixel.system.debug.interaction.tools` for examples.
 	 *
-	 * @param tool instance of a tool that will be added to the interaction system.
+	 * @param   tool  instance of a tool that will be added to the interaction system.
 	 */
 	public function addTool(tool:Tool):Void
 	{
@@ -219,16 +218,77 @@ class Interaction extends Window
 		if (button == null)
 			return;
 
-		var buttonsPerLine = 2;
-		var buttons = countToolsWithUIButton();
-		var lines = Std.int(Math.ceil(buttons / buttonsPerLine));
-		var slot = Std.int(buttons / lines);
+		final buttons = countToolsWithUIButton();
+		final row = Math.ceil(buttons / BUTTONS_PER_LINE);
+		final column = (buttons - 1) % BUTTONS_PER_LINE;
 
-		button.x = -15 + slot * 25;
-		button.y = 20 * lines;
+		button.x = PADDING + column * SPACING;
+		button.y = 20 * row;
 
 		addChild(button);
-		resize(25 * Math.min(buttons, buttonsPerLine) + 10, 25 * lines + 10);
+		resizeByTotal(buttons);
+	}
+	
+	/**
+	 * Removes the tool, if possible. If the tool has a button, all other buttons will be moved and
+	 * the containing window will be resized, if needed.
+	 * 
+	 * @param   tool  The tool to be removed
+	 * @since 5.4.0
+	 */
+	public function removeTool(tool)
+	{
+		if (!_tools.contains(tool))
+			return;
+		
+		// If there's no button just remove it
+		if (tool.button == null)
+		{
+			_tools.remove(tool);
+			return;
+		}
+		
+		// if there is a button move all the following buttons
+		var index = _tools.indexOf(tool);
+		var prevX = tool.button.x;
+		var prevY = tool.button.y;
+		
+		_tools.remove(tool);
+		removeChild(tool.button);
+		
+		while (index < _tools.length)
+		{
+			final tool = _tools[index];
+			if (tool.button != null)
+			{
+				// store button pos
+				final tempX = tool.button.x;
+				final tempY = tool.button.y;
+				// set to prev pos
+				tool.button.x = prevX;
+				tool.button.y = prevY;
+				// store prev pos
+				prevX = tempX;
+				prevY = tempY;
+			}
+			index++;
+		}
+		
+		autoResize();
+	}
+	
+	inline function autoResize()
+	{
+		resizeByTotal(countToolsWithUIButton());
+	}
+	
+	inline function resizeByTotal(total:Int)
+	{
+		final spacing = 25;
+		final padding = 10;
+		final rows = Math.ceil(total / BUTTONS_PER_LINE);
+		final columns = Math.min(total, BUTTONS_PER_LINE);
+		resize(spacing * columns + padding, spacing * rows + padding);
 	}
 
 	/**
@@ -347,7 +407,7 @@ class Interaction extends Window
 	public function getTool(className:Class<Tool>):Tool
 	{
 		for (tool in _tools)
-			if (isOfType(tool, className))
+			if (Std.isOfType(tool, className))
 				return tool;
 		return null;
 	}

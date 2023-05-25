@@ -100,7 +100,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 2, 2);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 4, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -369,8 +369,14 @@ class FlxG
 	 */
 	public static inline function switchState(nextState:NextState):Void
 	{
-		if (state.switchTo(nextState))
-			game._nextState = nextState;
+		final stateOnCall = FlxG.state;
+		state.startOutro(function()
+		{
+			if (FlxG.state == stateOnCall)
+				game._nextState = nextState;
+			else
+				FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+		});
 	}
 
 	/**

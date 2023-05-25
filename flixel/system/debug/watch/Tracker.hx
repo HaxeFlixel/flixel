@@ -31,11 +31,6 @@ import flixel.animation.FlxAnimationController;
 import flixel.input.touch.FlxTouch;
 #end
 #end
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
-#end
 import flixel.util.FlxStringUtil;
 
 class Tracker extends Watch
@@ -70,7 +65,7 @@ class Tracker extends Watch
 
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-			if (isOfType(Object, profile.objectClass) || Object == profile.objectClass)
+			if (Std.isOfType(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
 
 		return lastMatchingProfile;

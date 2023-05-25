@@ -1,6 +1,7 @@
 package flixel;
 
 import massive.munit.Assert;
+import flixel.util.FlxTimer;
 
 class FlxStateTest extends FlxTest
 {
@@ -37,13 +38,35 @@ class FlxStateTest extends FlxTest
 		resetState();
 		Assert.areEqual(finalState, FlxG.state);
 	}
+	
+	@Test
+	function testOutro()
+	{
+		var outroState = new OutroState();
+		
+		FlxG.switchState(outroState);
+		step();
+		Assert.areEqual(outroState, FlxG.state);
+		
+		FlxG.switchState(new FlxState());
+		step();
+		Assert.areEqual(outroState, FlxG.state);
+		step();
+		Assert.areNotEqual(outroState, FlxG.state);
+		
+	}
 }
 
 class FinalState extends FlxState
 {
-	override function switchTo(nextState:()->FlxState):Bool
+	override function startOutro(onOutroComplete:()->Void) {}
+}
+
+class OutroState extends FlxState
+{
+	override function startOutro(onOutroComplete:()->Void)
 	{
-		return false;
+		new FlxTimer().start(0, (_)->onOutroComplete());
 	}
 }
 

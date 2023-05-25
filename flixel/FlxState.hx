@@ -177,14 +177,17 @@ class FlxState extends FlxGroup
 	}
 
 	/**
-	 * Called from `FlxG.switchState()`. If `false` is returned, the state
-	 * switch is cancelled - the default implementation returns `true`.
-	 *
-	 * Useful for customizing state switches, e.g. for transition effects.
+	 * Called from `FlxG.switchState()`, when `onOutroComplete` is called, the actual state
+	 * switching will happen.
+	 * 
+	 * Note: Calling `super.startOutro(onOutroComplete)` will call `onOutroComplete`.
+	 * 
+	 * @param   onOutroComplete  Called when the outro is complete.
+	 * @since 5.3.0
 	 */
-	public function switchTo(nextState:NextState):Bool
+	public function startOutro(onOutroComplete:()->Void)
 	{
-		return true;
+		onOutroComplete();
 	}
 
 	/**

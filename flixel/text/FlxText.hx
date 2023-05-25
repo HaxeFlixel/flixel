@@ -626,7 +626,7 @@ class FlxText extends FlxSprite
 
 	inline function get_embedded():Bool
 	{
-		return textField.embedFonts = true;
+		return textField.embedFonts;
 	}
 
 	inline function get_systemFont():String
@@ -1156,8 +1156,7 @@ enum FlxTextBorderStyle
 	OUTLINE_FAST;
 }
 
-@:enum
-abstract FlxTextAlign(String) from String
+enum abstract FlxTextAlign(String) from String
 {
 	var LEFT = "left";
 

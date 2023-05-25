@@ -39,6 +39,11 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 		this.removeAll();
 	}
 
+	public inline function destroy():Void
+	{
+		this.destroy();
+	}
+
 	inline function get_dispatch():T
 	{
 		return this.dispatch;
@@ -270,6 +275,7 @@ interface IFlxSignal<T> extends IFlxDestroyable
 	function addOnce(listener:T):Void;
 	function remove(listener:T):Void;
 	function removeAll():Void;
+	function destroy():Void;
 	function has(listener:T):Bool;
 }
 #end

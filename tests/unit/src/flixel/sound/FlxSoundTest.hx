@@ -1,4 +1,4 @@
-package flixel.system;
+package flixel.sound;
 
 class FlxSoundTest
 {

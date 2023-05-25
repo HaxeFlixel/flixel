@@ -82,8 +82,7 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 /**
  * These IDs are negative to avoid overlaps with possible touch point IDs.
  */
-@:enum
-abstract FlxMouseButtonID(Int) to Int
+enum abstract FlxMouseButtonID(Int) to Int
 {
 	var LEFT = -1;
 	var MIDDLE = -2;
