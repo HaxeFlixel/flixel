@@ -9,6 +9,10 @@
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
 
+#### Bugfixes:
+- `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
+
+
 5.3.1 (May 7, 2023)
 ------------------------------
 #### Changes and improvements:
