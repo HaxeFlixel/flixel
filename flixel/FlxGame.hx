@@ -630,7 +630,7 @@ class FlxGame extends Sprite
 		FlxG.bitmap.clearCache();
 
 		// Finally assign and create the new state
-		_state = _nextState.create();
+		_state = _nextState.createInstance();
 		_state._constructor = _nextState.getConstructor();
 		_nextState = null;
 

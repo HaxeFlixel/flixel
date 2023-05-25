@@ -17,12 +17,12 @@ abstract NextState(Dynamic)
 		return cast func;
 	}
 	
-	public function create():FlxState
+	public function createInstance():FlxState
 	{
 		if (this is FlxState)
 			return cast this;
 		else if (this is Class)
-			return Type.createInstance(this, [])
+			return Type.createInstance(this, []);
 		else
 			return cast this();
 	}
