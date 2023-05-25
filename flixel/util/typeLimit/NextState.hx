@@ -47,14 +47,6 @@ abstract NextState(Dynamic)
 abstract InitialState(Dynamic) to NextState
 {
 	@:from
-	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`)")
-	public static function fromState(state:FlxState):InitialState
-	{
-		return cast state;
-	}
-	
-	@:from
-	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`)")
 	public static function fromType(state:Class<FlxState>):InitialState
 	{
 		return cast state;
