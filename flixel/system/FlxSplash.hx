@@ -1,8 +1,8 @@
 package flixel.system;
 
+import flash.Lib;
 import flash.display.Graphics;
 import flash.display.Sprite;
-import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
@@ -33,6 +33,7 @@ class FlxSplash extends FlxState
 	var _cachedBgColor:FlxColor;
 	var _cachedTimestep:Bool;
 	var _cachedAutoPause:Bool;
+	var complete:Bool = false;
 
 	override public function create():Void
 	{
@@ -83,6 +84,19 @@ class FlxSplash extends FlxState
 			FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
 		}
 		#end
+
+		FlxG.signals.preStateSwitch.addOnce(onStateSwitch);
+	}
+
+	function onStateSwitch()
+	{
+		/**
+			Normally FlxSplash switches to a new state on its completion,
+			but in case when the new state was requested before that moment
+			FlxSplash must be force-completed without using FlxSplash.nextState.
+		**/
+		if (!complete)
+			onComplete(null);
 	}
 
 	override public function destroy():Void
@@ -93,6 +107,7 @@ class FlxSplash extends FlxState
 		_times = null;
 		_colors = null;
 		_functions = null;
+
 		super.destroy();
 	}
 
@@ -191,6 +206,11 @@ class FlxSplash extends FlxState
 
 	function onComplete(Tween:FlxTween):Void
 	{
+		// If `Tween` is null then method was called not by FlxTween
+		// but by us which means splash must be force-completed
+		// due ongiong state switch
+		var forceComplete = Tween == null;
+
 		FlxG.cameras.bgColor = _cachedBgColor;
 		FlxG.fixedTimestep = _cachedTimestep;
 		FlxG.autoPause = _cachedAutoPause;
@@ -199,7 +219,11 @@ class FlxSplash extends FlxState
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
-		FlxG.switchState(Type.createInstance(nextState, []));
+
+		if (!forceComplete)
+			FlxG.switchState(Type.createInstance(nextState, []));
+
 		FlxG.game._gameJustStarted = true;
+		complete = true;
 	}
 }
