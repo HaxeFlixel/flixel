@@ -1,11 +1,6 @@
 package flixel.util.typeLimit;
 
 import flixel.FlxState;
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
-#end
 
 abstract NextState(Dynamic)
 {
@@ -24,15 +19,17 @@ abstract NextState(Dynamic)
 	
 	public function create():FlxState
 	{
-		if (isOfType(this, FlxState))
+		if (this is FlxState)
 			return cast this;
+		else if (this is Class)
+			return Type.createInstance(this, [])
 		else
 			return cast this();
 	}
 	
 	public function getConstructor():()->FlxState
 	{
-		if (isOfType(this, FlxState))
+		if (this is FlxState)
 		{
 			return function ():FlxState
 			{
@@ -61,7 +58,7 @@ abstract InitialState(Dynamic) to NextState
 	@:to
 	public function toNextState():NextState
 	{
-		if (isOfType(this, Class))
+		if (this is Class)
 		{
 			return function ():FlxState
 			{
