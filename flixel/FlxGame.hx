@@ -252,7 +252,9 @@ class FlxGame extends Sprite
 	 *                         If the demensions don't match the `Project.xml`, 
 	 *                         [`scaleMode`](https://api.haxeflixel.com/flixel/system/scaleModes/index.html)
 	 *                         will determine the actual display size of the game.
-	 * @param initialState     A constructor for the initial state, ex: `PlayState.new`
+	 * @param initialState     A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
+	 *                         Note: Before Flixel 6, this took a `Class<FlxState>`, this has been
+	 *                         deprecated, but is still available, for backwards compatibility.
 	 * @param updateFramerate  How frequently the game should update. Default is 60 fps.
 	 * @param drawFramerate    Sets the actual display / draw framerate for the game. Default is 60 fps.
 	 * @param skipSplash       Whether you want to skip the flixel splash screen with `FLX_NO_DEBUG`.
