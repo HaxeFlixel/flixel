@@ -42,18 +42,15 @@ class FlxStateTest extends FlxTest
 	@Test
 	function testOutro()
 	{
-		var outroState = new OutroState();
-		
-		FlxG.switchState(outroState);
+		FlxG.switchState(OutroState.new);
 		step();
-		Assert.areEqual(outroState, FlxG.state);
+		Assert.isType(FlxG.state, OutroState);
 		
-		FlxG.switchState(new FlxState());
+		FlxG.switchState(FlxState.new);
 		step();
-		Assert.areEqual(outroState, FlxG.state);
+		Assert.isType(FlxG.state, OutroState);
 		step();
-		Assert.areNotEqual(outroState, FlxG.state);
-		
+		Assert.isNotType(FlxG.state, OutroState);
 	}
 }
 
