@@ -818,13 +818,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		{
 			range = 1;
 		}
+		
+		final maxIndex = _tileObjects.length;
+		final end = tile + range;
+		if (maxIndex == 0)
+		{
+			final rangeDisplay = range == 1 ? 'tile $tile' : 'tiles $tile-${end-1}';
+			FlxG.log.error('Cannot setTileProperties of $rangeDisplay when tilemap does not contain any tiles.'
+				+ ' This may be due to an invalid graphic.');
+			return;
+		}
 
-		var end = tile + range;
-
-		var maxIndex = _tileObjects.length;
 		if (end > maxIndex)
 		{
-			throw 'Index $end exceeds the maximum tile index of $maxIndex. Please verify the Tile ($tile) and Range ($range) parameters.';
+			final rangeDisplay = range == 1 ? 'tile $tile' : 'tiles $tile-${end-1}';
+			FlxG.log.error('Cannot setTileProperties of $rangeDisplay when there are only $end tiles.');
+			return;
 		}
 
 		for (i in tile...end)
