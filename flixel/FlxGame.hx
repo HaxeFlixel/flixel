@@ -87,6 +87,7 @@ class FlxGame extends Sprite
 	/**
 	 * A flag for triggering the `preGameStart` and `postGameStart` "events".
 	 */
+	@:allow(flixel.FlxIntroSplash)
 	var _gameJustStarted:Bool = false;
 
 	/**
@@ -590,13 +591,7 @@ class FlxGame extends Sprite
 		}
 		else
 		{
-			_nextState = ()->new FlxSplash(
-				function ()
-				{
-					_gameJustStarted = true;
-					return _initialState.createInstance();
-				}
-			);
+			_nextState = ()->new FlxIntroSplash(_initialState);
 			_skipSplash = true; // only play it once
 		}
 
@@ -897,5 +892,14 @@ class FlxGame extends Sprite
 	{
 		// expensive, only call if necessary
 		return Lib.getTimer();
+	}
+}
+
+private class FlxIntroSplash extends FlxSplash
+{
+	override function startOutro(onOutroComplete:() -> Void)
+	{
+		FlxG.game._gameJustStarted = true;
+		super.startOutro(onOutroComplete);
 	}
 }
