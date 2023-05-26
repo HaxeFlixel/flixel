@@ -16,7 +16,6 @@ import flixel.util.typeLimit.NextState;
 
 class FlxSplash extends FlxState
 {
-	public static var nextState:NextState;
 
 	/**
 	 * @since 4.8.0
@@ -34,6 +33,14 @@ class FlxSplash extends FlxState
 	var _cachedBgColor:FlxColor;
 	var _cachedTimestep:Bool;
 	var _cachedAutoPause:Bool;
+	
+	var nextState:NextState;
+	
+	public function new(nextState:NextState)
+	{
+		super();
+		this.nextState = nextState;
+	}
 
 	override public function create():Void
 	{
@@ -201,6 +208,5 @@ class FlxSplash extends FlxState
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
 		FlxG.switchState(nextState);
-		FlxG.game._gameJustStarted = true;
 	}
 }

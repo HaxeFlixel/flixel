@@ -87,7 +87,6 @@ class FlxGame extends Sprite
 	/**
 	 * A flag for triggering the `preGameStart` and `postGameStart` "events".
 	 */
-	@:allow(flixel.system.FlxSplash)
 	var _gameJustStarted:Bool = false;
 
 	/**
@@ -584,16 +583,20 @@ class FlxGame extends Sprite
 		_skipSplash = true;
 		#end
 
-		if (_skipSplash || FlxSplash.nextState != null) // already played
+		if (_skipSplash)
 		{
 			_nextState = _initialState;
-			if (FlxSplash.nextState == null)
-				_gameJustStarted = true;
+			_gameJustStarted = true;
 		}
 		else
 		{
-			FlxSplash.nextState = _initialState;
-			_nextState = FlxSplash.new;
+			_nextState = ()->new FlxSplash(
+				function ()
+				{
+					_gameJustStarted = true;
+					return _initialState.createInstance();
+				}
+			);
 			_skipSplash = true; // only play it once
 		}
 
@@ -642,19 +645,16 @@ class FlxGame extends Sprite
 		_state.create();
 
 		if (_gameJustStarted)
-			gameStart();
+		{
+			FlxG.signals.postGameStart.dispatch();
+			_gameJustStarted = false;
+		}
 
 		#if FLX_DEBUG
 		debugger.console.registerObject("state", _state);
 		#end
 
 		FlxG.signals.postStateSwitch.dispatch();
-	}
-
-	function gameStart():Void
-	{
-		FlxG.signals.postGameStart.dispatch();
-		_gameJustStarted = false;
 	}
 
 	/**
