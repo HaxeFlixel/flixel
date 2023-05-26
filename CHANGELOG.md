@@ -9,6 +9,8 @@
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
 - Fix typos in various docs ([#2793](https://github.com/HaxeFlixel/flixel/pull/2793))([#2799](https://github.com/HaxeFlixel/flixel/pull/2799))
+- `FlxBaseTilemap`: Log errors rather than throw exceptions in `setTileProperties` with invalid args ([#2815](https://github.com/HaxeFlixel/flixel/pull/2815))
+- Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
