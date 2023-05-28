@@ -1015,7 +1015,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
 	{
-		var pixelColor = getPixelAt(worldPoint);
+		var pixelColor = getPixelAt(worldPoint, camera);
 		
 		if (pixelColor != null)
 			return pixelColor.alpha * alpha >= mask;
