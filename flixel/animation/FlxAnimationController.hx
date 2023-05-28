@@ -144,11 +144,13 @@ class FlxAnimationController implements IFlxDestroyable
 		_sprite = null;
 	}
 
+	#if (flixel >= "5.3.0")
 	@:allow(flixel.animation.FlxAnimation)
 	function getFrameDuration(index:Int)
 	{
 		return _sprite.frames.frames[index].duration;
 	}
+	#end
 
 	function clearPrerotated():Void
 	{
