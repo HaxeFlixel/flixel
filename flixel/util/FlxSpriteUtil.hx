@@ -82,11 +82,15 @@ class FlxSpriteUtil
 	 * @param	output		The FlxSprite you wish the resulting image to be placed in (will adjust width/height of image)
 	 * @return 	The output FlxSprite for chaining
 	 */
-	public static function alphaMaskFlxSprite(sprite:FlxSprite, mask:FlxSprite, output:FlxSprite):FlxSprite
+	public static function alphaMaskFlxSprite(sprite:FlxSprite, mask:FlxSprite, output:FlxSprite, ?X:Float, ?Y:Float):FlxSprite
 	{
 		sprite.drawFrame();
 		var data:BitmapData = sprite.pixels.clone();
-		data.copyChannel(mask.pixels, new Rectangle(0, 0, sprite.width, sprite.height), new Point(), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
+		
+		X = (X == null ? sprite.x : X);
+		Y = (Y == null ? sprite.y : Y);
+		
+		data.copyChannel(mask.pixels, new Rectangle(0, 0, sprite.width, sprite.height), new Point(X, Y), BitmapDataChannel.ALPHA, BitmapDataChannel.ALPHA);
 		output.pixels = data;
 		return output;
 	}
