@@ -8,6 +8,10 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 
+/**
+ * An alias for `FlxTypedGroup<FlxBasic>`, meaning any flixel object or basic can be added to a
+ * `FlxGroup`, even another `FlxGroup`.
+ */
 typedef FlxGroup = FlxTypedGroup<FlxBasic>;
 
 /**
