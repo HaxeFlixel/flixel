@@ -4,23 +4,14 @@ Copyright (c) 2009 Adam 'Atomic' Saltsman <br>
 Copyright (c) 2012 Matt Tuttle <br>
 Copyright (c) 2013 [HaxeFlixel Team](https://github.com/orgs/HaxeFlixel/people)
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
+İşbu yazılım ve ilişkili dokümantasyon dosyalarının (birlikte "Yazılım" olarak anılacaktır) bir kopyasını alan herhangi bir kişiye, Yazılım'a ilişkin her türlü sınırlama olmadan işlem yapma izni ücretsiz olarak verilir.
+Bu, Yazılım'ın kullanma, kopyalama, değiştirme, birleştirme, yayınlama, dağıtma alt lisanslama veya satış dahil ancak bunlarla sınırlı olmayan hakları içerir. 
+Ayrıca Yazılım'ın sağlanması için belirlenen kişilere bu faaliyetleri gerçekleştirmeleri için izin verilmektedir.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Ancak aşağıdaki koşullar geçerlidir:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+Yukarıdaki telif hakkı bildirimi ve bu izin bildirimi yazılımdaki tüm kopyalarda veya önemli bölümlerinde yer almalıdır.
+
+YAZILIM "OLDUĞU GİBİ" SAĞLANMAKTADIR VE HERHANGİ BİR GARANTİ OLMAKSIZIN TÜM AÇIKLAMALAR İLE BİRLİKTE SUNULMAKTADIR. SATILABİLMEZLİKLE İLGİLİ VEYA BELLLI BÖR AMAÇA UYGUNLUKLA İLGILI ZIMNÎ GARANTILER DE DÂHIL ANCAK BUNLARLA SINIRLI OLMAYAN HERTÜRLÜ GARANTİDEN AYRI TUTULUR. 
+YAZARLAR VEYA TELİF HAKKI SAHİPLERİ HERHANGI BIR İDDIA, ZARAR VEYA DİĞER SORUMLULUKTAN KAYNAKLANAN HERHANGI BIR OLAYDA SÖZ KONUSU DEĞILLERDIR. 
+BU, FAKAT BUNLARA SINIRLI OLMAMAK ÜZERE, YAZILIMIN KULLANIMINDAN YA DA BAŞKA İŞLEMLERDEN DOĞABILECEK ZARARLARDAN , ÖNGÖRÜLEMESİNEN ORTAYA ÇIKABILECEKLERE KADARDIR.
