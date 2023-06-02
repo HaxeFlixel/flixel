@@ -20,7 +20,7 @@ Burada HaxeFlixel ile başlayabilmeniz için bazı önemli bağlantılar var:
 - [API](https://api.haxeflixel.com/)
 - [Topluluk](https://haxeflixel.com/documentation/community/)
 
-Eğer kod katkısında bulunmak veya hata bildirmek istiyorsanız, lütfen [CONTRIBUTING.md'mizi](https://github.com/HaxeFlixel/flixel/blob/dev/.github/CONTRIBUTING.md) inceleyin.
+Eğer kod katkısında bulunmak veya hata bildirmek istiyorsanız, lütfen [CONTRIBUTING.md](https://github.com/neondev27/flixel/blob/dev_turkish/.github/CONTRIBUTING.md)'mizi inceleyin.
 
 ## Platformlar
 
