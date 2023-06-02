@@ -1,35 +1,35 @@
 [![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)](http://haxeflixel.com/)
 
-[flixel](https://github.com/HaxeFlixel/flixel) | [addons](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demos](https://github.com/HaxeFlixel/flixel-demos) | [tools](https://github.com/HaxeFlixel/flixel-tools) | [templates](https://github.com/HaxeFlixel/flixel-templates) | [docs](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
+[flixel](https://github.com/HaxeFlixel/flixel) | [eklentiler](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demolar](https://github.com/HaxeFlixel/flixel-demos) | [araçlar](https://github.com/HaxeFlixel/flixel-tools) | [şablonlar](https://github.com/HaxeFlixel/flixel-templates) | [dökümanlar](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com)
 
 [![CI](https://img.shields.io/github/actions/workflow/status/HaxeFlixel/flixel/main.yml?branch=dev&logo=github)](https://github.com/HaxeFlixel/flixel/actions?query=workflow%3ACI)
 [![Discord](https://img.shields.io/discord/162395145352904705.svg?logo=discord)](https://discordapp.com/invite/rqEBAgF)
-[![Haxelib Version](https://badgen.net/haxelib/v/flixel)](https://lib.haxe.org/p/flixel)
+[![Haxelib Sürümü](https://badgen.net/haxelib/v/flixel)](https://lib.haxe.org/p/flixel)
 [![Haxelib Downloads](https://badgen.net/haxelib/d/flixel?color=blue)](https://lib.haxe.org/p/flixel)
 [![Haxelib License](https://badgen.net/haxelib/license/flixel)](LICENSE.md)
 [![Patreon](https://img.shields.io/badge/donate-patreon-blue.svg)](https://www.patreon.com/haxeflixel) 
 
 [![](images/showcase.png)](https://haxeflixel.com/showcase)
 
-## Links
+## Bağlantılar
 
-Here are the most important links to get you started with HaxeFlixel:
+Burada HaxeFlixel ile başlayabilmeniz için bazı önemli bağlantılar var:
 
-- [Getting Started](https://haxeflixel.com/documentation/getting-started/)
-- [Documentation](https://haxeflixel.com/documentation)
+- [Başlarken](https://haxeflixel.com/documentation/getting-started/)
+- [Dökümantasyon](https://haxeflixel.com/documentation)
 - [API](https://api.haxeflixel.com/)
-- [Community](https://haxeflixel.com/documentation/community/)
+- [Topluluk](https://haxeflixel.com/documentation/community/)
 
-If you want to contribute code or report an issue, please check our [CONTRIBUTING.md](https://github.com/HaxeFlixel/flixel/blob/dev/.github/CONTRIBUTING.md).
+Eğer kod katkısında bulunmak veya hata bildirmek istiyorsanız, lütfen [CONTRIBUTING.md'mizi](https://github.com/HaxeFlixel/flixel/blob/dev/.github/CONTRIBUTING.md) inceleyin.
 
-## Platforms
+## Platformlar
 
-Thanks to being built on top of [Haxe](https://haxe.org/) and [OpenFL](http://www.openfl.org/), HaxeFlixel can target the following platforms _natively_:
+[Haxe](https://haxe.org/) and [OpenFL](http://www.openfl.org/) üzerinde yapılması sayesinde, HaxeFlixel _doğal olarak_ aşağıdaki platformları destekler:
 
 ![](images/platforms.png)
 
-## About
+## Hakkında
 
-HaxeFlixel has its roots in the original [ActionScript 3 version of Flixel](https://github.com/AdamAtomic/flixel), created by [Adam “Atomic” Saltsman](http://www.adamatomic.com/). It was started by [Alexander Hohlov](https://github.com/beeblerox) in 2011, initially as a straightforward Haxe port of the AS3 codebase and Richard Davey's [Flixel Power Tools](http://www.photonstorm.com/flixel-power-tools).
+HaxeFlixel, [Adam “Atomic” Saltsman](http://www.adamatomic.com/) tarafından yapılan [Flixel'in ActionScript3 versiyonu](https://github.com/AdamAtomic/flixel)ndan köklerini almaktadır. 2011'de [Alexander Hohlov](https://github.com/beeblerox) tarafından AS3 kod tabanının ve Richard Davey'in [Flixel Güç Araçları](http://www.photonstorm.com/flixel-power-tools)nın Haxe portu olarak başladı.
 
-Thanks to the efforts of the [core team](https://github.com/orgs/HaxeFlixel/people) as well as [over 100 contributors](https://github.com/HaxeFlixel/flixel/graphs/contributors), today's version of HaxeFlixel far surpasses the capabilities of the original. Not only has the core engine seen many substantial improvements and new features, there is also a far richer ecosystem with additional libaries and [over 80 demo projects](https://github.com/HaxeFlixel/flixel-demos) to learn from.
+HaxeFlixel'in bugünkü sürümü, [çekirdek ekibin](https://github.com/orgs/HaxeFlixel/people) ve [100'ün üzerinde katkıda bulunanları](https://github.com/HaxeFlixel/flixel/graphs/contributors) sayesinde bugünkü halini aldı. Yalnızca çekirdek motorunda değil birçok önemli gelişme ve yeni özellik görmenin yanı sıra, daha zengin bir ekosistem de ek kütüphanelerle ve [80'den fazla demo projesi](https://github.com/HaxeFlixel/flixel-demos)yle öğrenmeye olanak sağlamaktadır.
