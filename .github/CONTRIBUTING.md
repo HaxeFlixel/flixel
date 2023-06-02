@@ -1,13 +1,12 @@
-Thanks for contributing to HaxeFlixel!
+HaxeFlixel'e katkıda bulunduğunuz için teşekkürler!
+## Hata bildirme
 
-## Reporting a Bug
+Hata bildirdiğiniz zaman, size sunulan [sorun şablonu](https://github.com/HaxeFlixel/flixel/blob/dev/.github/ISSUE_TEMPLATE.md)nu basit bir biçimde doldurun.
 
-When reporting a bug, simply fill in the [issue template](https://github.com/HaxeFlixel/flixel/blob/dev/.github/ISSUE_TEMPLATE.md) that is presented to you.
+## Kod katkısı yapma
 
-## Contributing Code
+Kod katkıları için, aşağıdaki bağlantıları inceleyin:
 
-For code contributions, check out the following pages:
-
-- [Install Development Flixel](http://haxeflixel.com/documentation/install-development-flixel/)
-- [Code Contributions](http://haxeflixel.com/documentation/code-contributions)
-- [Code Style](http://haxeflixel.com/documentation/code-style)
+- [Geliştirme Flixel'i indir](http://haxeflixel.com/documentation/install-development-flixel/)
+- [Kod Katkısında Bulunma](http://haxeflixel.com/documentation/code-contributions)
+- [Kod Stili](http://haxeflixel.com/documentation/code-style)
