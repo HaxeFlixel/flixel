@@ -1,7 +1,7 @@
 HaxeFlixel'e katkıda bulunduğunuz için teşekkürler!
 ## Hata bildirme
 
-Hata bildirdiğiniz zaman, size sunulan [sorun şablonu](https://github.com/HaxeFlixel/flixel/blob/dev/.github/ISSUE_TEMPLATE.md)nu basit bir biçimde doldurun.
+Hata bildirdiğiniz zaman, size sunulan [sorun şablonu](https://github.com/HaxeFlixel/flixel/blob/dev/.github/ISSUE_TEMPLATE.md) nu basit bir biçimde doldurun.
 
 ## Kod katkısı yapma
 
