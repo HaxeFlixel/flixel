@@ -30,6 +30,7 @@ Eğer kod katkısında bulunmak veya hata bildirmek istiyorsanız, lütfen [CONT
 
 ## Hakkında
 
-HaxeFlixel, [Adam “Atomic” Saltsman](http://www.adamatomic.com/) tarafından yapılan [Flixel'in ActionScript3 versiyonu](https://github.com/AdamAtomic/flixel)ndan köklerini almaktadır. 2011'de [Alexander Hohlov](https://github.com/beeblerox) tarafından AS3 kod tabanının ve Richard Davey'in [Flixel Güç Araçları](http://www.photonstorm.com/flixel-power-tools)nın Haxe portu olarak başladı.
+HaxeFlixel, [Adam “Atomic” Saltsman](http://www.adamatomic.com/) tarafından yapılan [Flixel'in ActionScript3 versiyonu](https://github.com/AdamAtomic/flixel) ndan köklerini almaktadır. 2011'de [Alexander Hohlov](https://github.com/beeblerox) tarafından AS3 kod tabanının ve Richard Davey'in [Flixel Güç Araçları](http://www.photonstorm.com/flixel-power-tools) nın Haxe portu olarak başladı.
+
 
 HaxeFlixel'in bugünkü sürümü, [çekirdek ekibin](https://github.com/orgs/HaxeFlixel/people) ve [100'ün üzerinde katkıda bulunanları](https://github.com/HaxeFlixel/flixel/graphs/contributors) sayesinde bugünkü halini aldı. Yalnızca çekirdek motorunda değil birçok önemli gelişme ve yeni özellik görmenin yanı sıra, daha zengin bir ekosistem de ek kütüphanelerle ve [80'den fazla demo projesi](https://github.com/HaxeFlixel/flixel-demos)yle öğrenmeye olanak sağlamaktadır.
