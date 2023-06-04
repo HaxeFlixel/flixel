@@ -38,34 +38,8 @@ import openfl.utils.AssetType;
  * 
  * ## Autosizing
  * 
- * By default `FlxText` is fully autosize - its height and width are determined automatically
- * by its text content. But you can control this behavior:
- * 
- * ```haxe
- * // 1. fixed width and height
- * var text = new FlxText(0, 0, 100, "Hello");
- * text.fieldHeight = 50;
- * // or
- * text.fieldWidth = 100;
- * text.fieldHeight = 50;
- * 
- * // 2. fixed width but auto height
- * var text = new FlxText(0, 0, 100, "Hello");
- * // or
- * text.fieldWidth = 100;
- * text.fieldHeight = -1;
- * 
- * // 3. autosize (by default)
- * var text = new FlxText(0, 0, -1, "Hello");
- * // or
- * text.autoSize = true;
- * text.wordWrap = false;
- * // or
- * text.fieldWidth = text.fieldHeight = -1;
- * 
- * // 4. auto width but fixed height
- * // has no sense and works as default autosize
- * ```
+ * By default `FlxText` is autosized to fit it's text. 
+ * To set a fixed size, * use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
  */
 class FlxText extends FlxSprite
 {
