@@ -70,11 +70,7 @@ import openfl.utils.AssetType;
 class FlxText extends FlxSprite
 {
 	/**
-	 * 2px gutter on both top and bottom
-	 * 
-	 * NOTE: Right now it is needed when new height is calculated from
-	 * `textHeight` to get a nice padding from bottom line of text
-	 * to bottom edge of text field.
+	 * 4px gutter at the bottom when the field has automatic height
 	 */
 	static inline var VERTICAL_GUTTER:Int = 4;
 
