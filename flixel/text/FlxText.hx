@@ -170,29 +170,6 @@ class FlxText extends FlxSprite
 	 */
 	public var fieldHeight(get, set):Float;
 
-	function get_fieldHeight():Float
-	{
-		return (textField != null) ? textField.height : 0;
-	}
-
-	function set_fieldHeight(value:Float):Float
-	{
-		if (textField == null)
-			return value;
-		if (value <= 0)
-		{
-			_autoHeight = true;
-		}
-		else
-		{
-			_autoHeight = false;
-
-			textField.height = value;
-		}
-		_regen = true;
-		return value;
-	}
-
 	/**
 	 * Whether the `fieldWidth` and `fieldHeight` should be determined automatically. 
 	 * Requires `wordWrap` to be `false`.
@@ -615,6 +592,29 @@ class FlxText extends FlxSprite
 	function get_fieldWidth():Float
 	{
 		return (textField != null) ? textField.width : 0;
+	}
+
+	function get_fieldHeight():Float
+	{
+		return (textField != null) ? textField.height : 0;
+	}
+
+	function set_fieldHeight(value:Float):Float
+	{
+		if (textField == null)
+			return value;
+
+		if (value <= 0)
+		{
+			_autoHeight = true;
+		}
+		else
+		{
+			_autoHeight = false;
+			textField.height = value;
+		}
+		_regen = true;
+		return value;
 	}
 
 	function set_autoSize(value:Bool):Bool
