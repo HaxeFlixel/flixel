@@ -1,6 +1,6 @@
 package flixel.animation;
 
-import flash.display.BitmapData;
+import openfl.display.BitmapData;
 import flixel.FlxSprite;
 import massive.munit.Assert;
 

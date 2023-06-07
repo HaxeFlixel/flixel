@@ -1,7 +1,7 @@
 package flixel.tile;
 
-import flash.display.BitmapData;
-import flash.errors.ArgumentError;
+import openfl.display.BitmapData;
+import openfl.errors.ArgumentError;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import haxe.PosInfos;

@@ -1,11 +1,11 @@
 package flixel.text;
 
-import flash.display.BitmapData;
-import flash.geom.ColorTransform;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;

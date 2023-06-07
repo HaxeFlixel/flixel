@@ -1,8 +1,8 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.display.DisplayObject;
-import flash.display.DisplayObjectContainer;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import flixel.util.FlxPool.IFlxPooled;
 
 class FlxDestroyUtil

@@ -1,6 +1,6 @@
 package;
 
-import flash.errors.Error;
+import openfl.errors.Error;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;

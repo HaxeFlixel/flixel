@@ -1,8 +1,8 @@
 package flixel.system.debug.stats;
 
-import flash.display.BitmapData;
-import flash.system.System;
-import flash.text.TextField;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxLinkedList;

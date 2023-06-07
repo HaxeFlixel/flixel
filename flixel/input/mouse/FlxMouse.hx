@@ -1,14 +1,14 @@
 package flixel.input.mouse;
 
 #if FLX_MOUSE
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.display.Stage;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.Lib;
-import flash.ui.Mouse;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.display.Stage;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.Lib;
+import openfl.ui.Mouse;
 import flixel.FlxG;
 import flixel.input.IFlxInputManager;
 import flixel.input.FlxInput.FlxInputState;
@@ -17,11 +17,11 @@ import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
 #if FLX_NATIVE_CURSOR
-import flash.Vector;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.ui.MouseCursor;
-import flash.ui.MouseCursorData;
+import openfl.Vector;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.ui.MouseCursor;
+import openfl.ui.MouseCursorData;
 #end
 
 @:bitmap("assets/images/ui/cursor.png")

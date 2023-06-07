@@ -2,9 +2,9 @@ package flixel.system;
 
 import haxe.macro.Expr;
 #if !macro
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.media.Sound;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.media.Sound;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
