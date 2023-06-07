@@ -344,7 +344,7 @@ class FlxG
 		stage.resize(Width, Height);
 		#else
 		#if air
-		var window = openfl.desktop.NativeApplication.nativeApplication.activeWindow;
+		var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
 		window.width = Width;
 		window.height = Height;
 		#else
