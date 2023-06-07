@@ -21,7 +21,7 @@ import openfl.Vector;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.ui.MouseCursor;
-import openfl.ui.MouseCursorData;
+import flash.ui.MouseCursorData;
 #end
 
 @:bitmap("assets/images/ui/cursor.png")
