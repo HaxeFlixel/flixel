@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.Lib;
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.display.StageDisplayState;
-import flash.net.URLRequest;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;

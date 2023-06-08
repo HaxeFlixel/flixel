@@ -1,6 +1,6 @@
 package flixel.math;
 
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxStringUtil;

@@ -1,7 +1,7 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import flash.events.KeyboardEvent;
+import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;

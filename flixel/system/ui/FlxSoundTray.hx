@@ -12,8 +12,8 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 #if flash
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 #end
 
 /**

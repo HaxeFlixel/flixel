@@ -1,8 +1,8 @@
 package flixel.input;
 
 #if FLX_ACCELEROMETER
-import flash.events.AccelerometerEvent;
-import flash.sensors.Accelerometer;
+import openfl.events.AccelerometerEvent;
+import openfl.sensors.Accelerometer;
 
 /**
  * A class providing access to the accelerometer data of the mobile device.

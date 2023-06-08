@@ -1,6 +1,6 @@
 package;
 
-import flash.Lib;
+import openfl.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
 import massive.munit.TestRunner;
@@ -50,7 +50,7 @@ class TestMain
 		try
 		{
 			#if flash
-			flash.external.ExternalInterface.call("testResult", successful);
+			openfl.external.ExternalInterface.call("testResult", successful);
 			#elseif js
 			js.Lib.eval("testResult(" + successful + ");");
 			#elseif sys

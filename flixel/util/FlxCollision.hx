@@ -1,7 +1,7 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
