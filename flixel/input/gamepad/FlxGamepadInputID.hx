@@ -9,8 +9,7 @@ import flixel.system.macros.FlxMacroUtil;
  *
  * Maps enum values and strings to unique integer codes
  */
-@:enum
-abstract FlxGamepadInputID(Int) from Int to Int
+enum abstract FlxGamepadInputID(Int) from Int to Int
 {
 	public static var fromStringMap(default, null):Map<String, FlxGamepadInputID> = FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadInputID");
 	public static var toStringMap(default, null):Map<FlxGamepadInputID, String> = FlxMacroUtil.buildMap("flixel.input.gamepad.FlxGamepadInputID", true);

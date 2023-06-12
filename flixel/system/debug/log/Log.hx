@@ -1,8 +1,8 @@
 package flixel.system.debug.log;
 
 #if FLX_DEBUG
-import flash.text.TextField;
-import flash.text.TextFormat;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 import flixel.system.debug.FlxDebugger.GraphicLog;
 
 /**

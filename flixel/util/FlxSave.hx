@@ -56,7 +56,7 @@ import openfl.net.SharedObjectFlushStatus;
 class FlxSave implements IFlxDestroyable
 {
 	
-	static var invalidChars = ~/[ ~%&\\;:"',<>?#]+/;
+	static var invalidChars = ~/[ ~%&\\;:"',<>?#]+/g;
 	
 	/**
 	 * Checks for `~%&\;:"',<>?#` or space characters

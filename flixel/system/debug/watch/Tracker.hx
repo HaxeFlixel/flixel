@@ -1,10 +1,10 @@
 package flixel.system.debug.watch;
 
 #if FLX_DEBUG
-import flash.display.DisplayObject;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.DisplayObject;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -30,11 +30,6 @@ import flixel.animation.FlxAnimationController;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
-#end
-#if (haxe_ver >= 4.2)
-import Std.isOfType;
-#else
-import Std.is as isOfType;
 #end
 import flixel.util.FlxStringUtil;
 
@@ -70,7 +65,7 @@ class Tracker extends Watch
 
 		var lastMatchingProfile:TrackerProfile = null;
 		for (profile in profiles)
-			if (isOfType(Object, profile.objectClass) || Object == profile.objectClass)
+			if (Std.isOfType(Object, profile.objectClass) || Object == profile.objectClass)
 				lastMatchingProfile = profile;
 
 		return lastMatchingProfile;

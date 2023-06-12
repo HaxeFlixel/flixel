@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.Lib;
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.display.StageDisplayState;
-import flash.net.URLRequest;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
@@ -99,7 +99,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 3, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 4, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -368,8 +368,18 @@ class FlxG
 	 */
 	public static inline function switchState(nextState:FlxState):Void
 	{
-		if (state.switchTo(nextState))
-			game._requestedState = nextState;
+		final stateOnCall = FlxG.state;
+		// Use reflection to avoid deprecation warning on switchTo
+		if (Reflect.field(state, 'switchTo')(nextState))
+		{
+			state.startOutro(function()
+			{
+				if (FlxG.state == stateOnCall)
+					game._requestedState = nextState;
+				else
+					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+			});
+		}
 	}
 
 	/**

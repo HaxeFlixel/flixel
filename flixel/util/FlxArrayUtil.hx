@@ -140,7 +140,7 @@ class FlxArrayUtil
 	/**
 	 * Clears an array structure, but leaves the object data untouched
 	 * Useful for cleaning up temporary references to data you want to preserve.
-	 * WARNING: Can lead to memory leaks.
+	 * WARNING: Does not attempt to properly destroy the contents.
 	 *
 	 * @param	array		The array to clear out
 	 * @param	Recursive	Whether to search for arrays inside of arr and clear them out, too

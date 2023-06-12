@@ -56,7 +56,8 @@ class LogFrontEnd
 	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
 	{
 		#if FLX_DEBUG
-		if (FlxG.game.debugger == null)
+		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
+		if (FlxG.game == null || FlxG.game.debugger == null)
 		{
 			_standardTraceFunction(Data);
 			return;

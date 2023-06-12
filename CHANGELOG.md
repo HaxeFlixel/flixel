@@ -1,10 +1,38 @@
-5.3.0 (TBD)
+5.4.0 (TBD)
 ------------------------------
+#### New features:
+- `AssetPaths` - Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
+- Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
+	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
+	- `FlxG.game.debugger.interaction`: Add `removeTool`
+
+#### Changes and improvements:
+- `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
+- Fix typos in various docs ([#2793](https://github.com/HaxeFlixel/flixel/pull/2793))([#2799](https://github.com/HaxeFlixel/flixel/pull/2799))
+- `FlxBaseTilemap`: Log errors rather than throw exceptions in `setTileProperties` with invalid args ([#2815](https://github.com/HaxeFlixel/flixel/pull/2815))
+- Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
+
+#### Bugfixes:
+- `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
+
+
+5.3.1 (May 7, 2023)
+------------------------------
+#### Changes and improvements:
+- Change all `@:enum abstract` to `enum abstract` to prevent warnings in haxe 4.3.1 ([#2790](https://github.com/HaxeFlixel/flixel/pull/2790))
+- `FlxAnimation`: Prevent crash when destroying sprites in an anim callback ([#2785](https://github.com/HaxeFlixel/flixel/pull/2785))
+- `FlxCollision`: Fix gap in `createCameraWall` ([#2781](https://github.com/HaxeFlixel/flixel/pull/2781))
+
+5.3.0 (April 26, 2023)
+------------------------------
+#### Dependencies:
+- Dropped support for haxe 4.0 and 4.1, use 4.2.5 or higher
+
 #### New features:
 - `FlxAtlasFrames`: Add `addFrameOffset` and `addFramesOffsetByPrefix` ([#2746](https://github.com/HaxeFlixel/flixel/pull/2746))
 - `FlxFrame`: Add `duration` ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
-	- `FlxAtlasFrames`: Add `setFrameDuration` and `setFramesDurationByPrefix`
 	- `FlxAtlasFrames`: Add `fromAseprite` which takes Aseprite generated Json, and honors frame duration
+- `FlxState`: Add `startOutro`, deprecate `switchTo` ([#2768](https://github.com/HaxeFlixel/flixel/pull/2768))
 
 #### Changes and improvements:
 - `FlxSound` and `FlxSoundGroup`: Moved to the `flixel.sound` package, deprecate old package ([#2726](https://github.com/HaxeFlixel/flixel/pull/2726))
@@ -14,12 +42,16 @@
 - `FlxAnimation`: Deprecate `delay` in favor of the new `frameDuration` field ([#2752](https://github.com/HaxeFlixel/flixel/pull/2752))
 - `FlxAnimation` and `FlxColor`: Small fixes ([#2755](https://github.com/HaxeFlixel/flixel/pull/2755))
 - `FlxSound`: Fix doc comment ([#2767](https://github.com/HaxeFlixel/flixel/pull/2767))
-- `FlxSprite`: Better warnings for invalid `width`/`height` args on `loadGraphic` ([2762](https://github.com/HaxeFlixel/flixel/pull/2762))
+- `FlxSprite`: Better warnings for invalid `width`/`height` args on `loadGraphic` ([#2762](https://github.com/HaxeFlixel/flixel/pull/2762))
+- `FlxCamera`: Allow `followLerp` to be used with `NO_DEAD_ZONE` ([#2771](https://github.com/HaxeFlixel/flixel/pull/2771))
+- Improve docs ([#2777](https://github.com/HaxeFlixel/flixel/pull/2777)) ([#2778](https://github.com/HaxeFlixel/flixel/pull/2778))
 
 #### Bugfixes:
 - `FlxSave`: Fixed issue with `mergeDataFrom` where `overwrite = true` ([#2738](https://github.com/HaxeFlixel/flixel/pull/2738))
 - `FlxText`: Fix `embedFonts` getter ([#2749](https://github.com/HaxeFlixel/flixel/pull/2749))
 - `DebugFrontEnd`: Fixed freezing bug when pressing tab on debug ([2760](https://github.com/HaxeFlixel/flixel/pull/2760))
+- `LogFrontEnd`: Fixed null crashes when logging before `FlxGame` in created ([2779](https://github.com/HaxeFlixel/flixel/pull/2779))
+- `FlxSave`: Fixed saves with multiple invalid characters ([#2779](https://github.com/HaxeFlixel/flixel/pull/2779))
 
 5.2.2 (February 15, 2023)
 ------------------------------

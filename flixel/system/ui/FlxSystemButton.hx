@@ -1,14 +1,14 @@
 package flixel.system.ui;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
 import flixel.system.debug.DebuggerUtil;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 /**
- * A basic button for the debugger, extends flash.display.Sprite.
+ * A basic button for the debugger, extends openfl.display.Sprite.
  * Cannot be used in a FlxState.
  */
 class FlxSystemButton extends Sprite implements IFlxDestroyable

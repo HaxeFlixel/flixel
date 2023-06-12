@@ -23,7 +23,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.math.FlxPoint;
 
 /** @since 4.5.0 **/
-@:enum abstract FlxTweenType(Int) from Int to Int
+enum abstract FlxTweenType(Int) from Int to Int
 {
 	/**
 	 * Persistent Tween type, will stop when it finishes.

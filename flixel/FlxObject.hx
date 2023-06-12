@@ -1,6 +1,6 @@
 package flixel;
 
-import flash.display.Graphics;
+import openfl.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -1515,7 +1515,7 @@ class FlxObject extends FlxBasic
 /**
  * Determines when to apply collision drag to one object that collided with another.
  */
-@:enum abstract CollisionDragType(Int)
+enum abstract CollisionDragType(Int)
 {
 	/** Never drags on colliding objects. */
 	var NEVER = 0;
