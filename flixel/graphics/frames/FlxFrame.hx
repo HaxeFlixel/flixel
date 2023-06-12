@@ -21,11 +21,17 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Temp point helper, used internally
 	 */
-	static final _point = new Point();
+	static var _point = new Point();
 	
-	static final _rect:Rectangle = new Rectangle();
+	/**
+	 * Temp rect helper, used internally
+	 */
+	static var _rect = new Rectangle();
 	
-	static final _matrix:FlxMatrix = new FlxMatrix();
+	/**
+	 * Temp matrix helper, used internally
+	 */
+	static var _matrix = new FlxMatrix();
 
 	/**
 	 * Sorts an array of `FlxFrame` objects by their name, e.g.
