@@ -221,6 +221,13 @@ class FlxCamera extends FlxBasic
 	 * WARNING: setting this to `false` on blitting targets is very expensive.
 	 */
 	public var pixelPerfectRender:Bool;
+	
+	/**
+	 * If true, screen shake will be rounded to game pixels. Default's to false for backwards compatibility.
+	 * Note: this will likely be controlled by `pixelPerfectRender` in Flixel 6.
+	 * @since 5.4.0
+	 */
+	public var pixelPerfectShake:Bool = false;
 
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -379,13 +386,7 @@ class FlxCamera extends FlxBasic
 	 * Enables or disables the filters set via `setFilters()`.
 	 */
 	public var filtersEnabled:Bool = true;
-	
-	/**
-	 * If true, screen shake will be rounded to game pixels. Default's to false for backwards compatibility.
-	 * @since 5.4.0
-	 */
-	public var pixelPerfectShake:Bool = false;
-	
+
 	/**
 	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation.
 	 * It represents the size of buffer `BitmapData`
