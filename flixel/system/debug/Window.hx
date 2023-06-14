@@ -154,7 +154,9 @@ class Window extends Sprite
 		else
 		{
 			_id = windowAmount;
+			#if FLX_SAVE
 			loadSaveData();
+			#end
 			windowAmount++;
 		}
 
@@ -261,8 +263,10 @@ class Window extends Sprite
 	{
 		visible = Value;
 
+		#if FLX_SAVE
 		if (!_closable && FlxG.save.isBound)
 			saveWindowVisibility();
+		#end
 
 		if (toggleButton != null)
 			toggleButton.toggled = !visible;
@@ -281,6 +285,7 @@ class Window extends Sprite
 		parent.addChild(this);
 	}
 
+	#if FLX_SAVE
 	function loadSaveData():Void
 	{
 		if (!FlxG.save.isBound)
@@ -308,6 +313,7 @@ class Window extends Sprite
 		FlxG.save.data.windowSettings[_id] = visible;
 		FlxG.save.flush();
 	}
+	#end
 
 	public function update():Void {}
 

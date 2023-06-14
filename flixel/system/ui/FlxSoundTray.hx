@@ -126,6 +126,7 @@ class FlxSoundTray extends Sprite
 				visible = false;
 				active = false;
 
+				#if FLX_SAVE
 				// Save sound preferences
 				if (FlxG.save.isBound)
 				{
@@ -133,6 +134,7 @@ class FlxSoundTray extends Sprite
 					FlxG.save.data.volume = FlxG.sound.volume;
 					FlxG.save.flush();
 				}
+				#end
 			}
 		}
 	}
