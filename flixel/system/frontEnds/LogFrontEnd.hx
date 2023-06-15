@@ -19,30 +19,22 @@ class LogFrontEnd
 
 	public inline function add(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
 		advanced(data, LogStyle.NORMAL);
-		#end
 	}
 
 	public inline function warn(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
 		advanced(data, LogStyle.WARNING, true);
-		#end
 	}
 
 	public inline function error(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
 		advanced(data, LogStyle.ERROR, true);
-		#end
 	}
 
 	public inline function notice(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
 		advanced(data, LogStyle.NOTICE);
-		#end
 	}
 
 	/**
@@ -52,55 +44,41 @@ class LogFrontEnd
 	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
 	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
-	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce:Bool = false):Void
+	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void
 	{
+		if (style == null)
+			style = LogStyle.NORMAL;
+		
+		if (!(data is Array))
+			data = [data];
+		
 		#if FLX_DEBUG
 		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
 		if (FlxG.game == null || FlxG.game.debugger == null)
 		{
 			_standardTraceFunction(data);
-			return;
 		}
-
-		if (style == null)
-		{
-			style = LogStyle.NORMAL;
-		}
-
-		if (!(data is Array))
-		{
-			data = [data];
-		}
-
-		if (FlxG.game.debugger.log.add(data, style, fireOnce))
+		else if (FlxG.game.debugger.log.add(data, style, fireOnce))
 		{
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
 			if (style.errorSound != null)
 			{
-				var sound = FlxAssets.getSound(style.errorSound);
+				final sound = FlxAssets.getSound(style.errorSound);
 				if (sound != null)
-				{
 					FlxG.sound.load(sound).play();
-				}
 			}
 			#end
-
-			if (style.openConsole)
-			{
-				FlxG.debugger.visible = true;
-			}
-
-			if (style.callbackFunction != null)
-			{
-				style.callbackFunction();
-			}
 			
-			if (style.throwError)
-			{
-				throw style.toLogString(data);
-			}
+			if (style.openConsole)
+				FlxG.debugger.visible = true;
+			
+			if (style.callbackFunction != null)
+				style.callbackFunction();
 		}
 		#end
+		
+		if (style.throwError)
+			throw style.toLogString(data);
 	}
 
 	/**
