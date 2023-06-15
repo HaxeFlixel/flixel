@@ -41,10 +41,11 @@ class LogStyle
 	public var callbackFunction:()->Void;
 
 	/**
-	 * Whether an error is thrown when this LogStyle is used
+	 * Whether an exception is thrown when this LogStyle is used.
+	 * **Note**: Unlike other log style properties, this happens even in release mode.
 	 * @since 5.4.0
 	 */
-	public var throwError:Bool = false;
+	public var throwException:Bool = false;
 	
 	/**
 	 * Create a new LogStyle to be used in conjunction with `FlxG.log.advanced()`
@@ -61,7 +62,7 @@ class LogStyle
 	 * @param   throwError   Whether an error is thrown when this LogStyle is used
 	 */
 	public function new(prefix = "", color = "FFFFFF", size = 12, bold = false, italic = false, underlined = false,
-			?errorSound:String, openConsole = false, ?callback:()->Void, throwError = false)
+			?errorSound:String, openConsole = false, ?callback:()->Void, throwException = false)
 	{
 		this.prefix = prefix;
 		this.color = color;
@@ -72,7 +73,7 @@ class LogStyle
 		this.errorSound = errorSound;
 		this.openConsole = openConsole;
 		this.callbackFunction = callback;
-		this.throwError = throwError;
+		this.throwException = throwException;
 	}
 	
 	/**

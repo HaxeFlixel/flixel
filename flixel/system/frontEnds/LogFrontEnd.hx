@@ -77,7 +77,7 @@ class LogFrontEnd
 		}
 		#end
 		
-		if (style.throwError)
+		if (style.throwException)
 			throw style.toLogString(data);
 	}
 
