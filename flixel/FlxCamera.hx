@@ -223,11 +223,10 @@ class FlxCamera extends FlxBasic
 	public var pixelPerfectRender:Bool;
 	
 	/**
-	 * If true, screen shake will be rounded to game pixels. Default's to false for backwards compatibility.
-	 * Note: this will likely be controlled by `pixelPerfectRender` in Flixel 6.
+	 * If true, screen shake will be rounded to game pixels. If null, pixelPerfectRender is used.
 	 * @since 5.4.0
 	 */
-	public var pixelPerfectShake:Bool = false;
+	public var pixelPerfectShake:Null<Bool> = null;
 
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -1322,10 +1321,11 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
+				final pixelPerfect = pixelPerfectShake == null ? pixelPerfectRender : pixelPerfectShake;
 				if (_fxShakeAxes.x)
 				{
 					var shakePixels = FlxG.random.float(-1, 1) * _fxShakeIntensity * width;
-					if (pixelPerfectShake)
+					if (pixelPerfect)
 						shakePixels = Math.round(shakePixels);
 					
 					flashSprite.x += shakePixels * zoom * FlxG.scaleMode.scale.x;
@@ -1334,7 +1334,7 @@ class FlxCamera extends FlxBasic
 				if (_fxShakeAxes.y)
 				{
 					var shakePixels = FlxG.random.float(-1, 1) * _fxShakeIntensity * height;
-					if (pixelPerfectShake)
+					if (pixelPerfect)
 						shakePixels = Math.round(shakePixels);
 					
 					flashSprite.y += shakePixels * zoom * FlxG.scaleMode.scale.y;
