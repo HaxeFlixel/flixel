@@ -1,16 +1,22 @@
 5.4.0 (TBD)
 ------------------------------
 #### New features:
-- `AssetPaths` - Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
+- **README.md**: Add Turkish translations
+- `AssetPaths`: Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
 - Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
 	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
 	- `FlxG.game.debugger.interaction`: Add `removeTool`
+- `FlxText`: Add `fieldHeight` field ([#2789](https://github.com/HaxeFlixel/flixel/pull/2789))
+- `FlxG`: Add compiler flag `FLX_NO_SAVE` to remove `FlxG.save` (also counter-flag `FLX_SAVE`) ([#2840](https://github.com/HaxeFlixel/flixel/pull/2840))
+- `FlxCamera`: Add `pixelPerfectShake` field, for pixel-perfect camera shaking ([#2841](https://github.com/HaxeFlixel/flixel/pull/2841))
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
 - Fix typos in various docs ([#2793](https://github.com/HaxeFlixel/flixel/pull/2793))([#2799](https://github.com/HaxeFlixel/flixel/pull/2799))
 - `FlxBaseTilemap`: Log errors rather than throw exceptions in `setTileProperties` with invalid args ([#2815](https://github.com/HaxeFlixel/flixel/pull/2815))
 - Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
+- `FlxSprite`: Add erroneously unused `camera` arg when calling `pixelsOverlapPoint` ([#2824](https://github.com/HaxeFlixel/flixel/pull/2824))
+- Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
