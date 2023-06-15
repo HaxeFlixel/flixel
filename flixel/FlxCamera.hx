@@ -1330,6 +1330,7 @@ class FlxCamera extends FlxBasic
 					
 					flashSprite.x += shakePixels * zoom * FlxG.scaleMode.scale.x;
 				}
+				
 				if (_fxShakeAxes.y)
 				{
 					var shakePixels = FlxG.random.float(-1, 1) * _fxShakeIntensity * height;
