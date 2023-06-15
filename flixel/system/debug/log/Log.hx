@@ -17,7 +17,7 @@ class Log extends Window
 	var _lines:Array<String>;
 
 	/**
-	 * Creates a log window object.
+	 * Creates a log window object
 	 */
 	public function new()
 	{
@@ -37,7 +37,7 @@ class Log extends Window
 	}
 
 	/**
-	 * Clean up memory.
+	 * Clean up memory
 	 */
 	override public function destroy():Void
 	{
@@ -53,37 +53,27 @@ class Log extends Window
 
 	/**
 	 * Adds a new line to the log window.
-	 * @param 	Data		The data being logged.
-	 * @param 	Style		The LogStyle to be used for the log
-	 * @param 	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
+	 * 
+	 * @param   data      The data being logged
+	 * @param   style     The LogStyle to be used
+	 * @param   fireOnce  If true, the log history is checked for matching logs
 	 */
-	public function add(Data:Array<Dynamic>, Style:LogStyle, FireOnce:Bool = false):Bool
+	public function add(data:Array<Dynamic>, style:LogStyle, fireOnce = false):Bool
 	{
-		if (Data == null)
+		if (data == null)
 		{
 			return false;
 		}
-
-		var texts:Array<String> = new Array<String>();
-
-		// Format FlxPoints, Arrays, Maps or turn the Data entry into a String
-		for (i in 0...Data.length)
-		{
-			texts[i] = Std.string(Data[i]);
-
-			// Make sure you can't insert html tags
-			texts[i] = StringTools.htmlEscape(texts[i]);
-		}
-
-		var text:String = Style.prefix + texts.join(" ");
-
+		
 		// Apply text formatting
 		#if (!js && !lime_console)
-		text = flixel.util.FlxStringUtil.htmlFormat(text, Style.size, Style.color, Style.bold, Style.italic, Style.underlined);
+		final text = style.toHtmlString(data);
+		#else
+		final text = style.toLogString(data);
 		#end
-
+		
 		// Check if the text has been added yet already
-		if (FireOnce)
+		if (fireOnce)
 		{
 			for (line in _lines)
 			{

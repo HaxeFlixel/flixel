@@ -49,9 +49,9 @@ class LogFrontEnd
 	/**
 	 * Add an advanced log message to the debugger by also specifying a LogStyle. Backend to FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice().
 	 *
-	 * @param  data      Any Data to log.
-	 * @param  style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
-	 * @param  fireOnce  Whether you only want to log the Data in case it hasn't been added already
+	 * @param   data      Any Data to log.
+	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
+	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
 	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce:Bool = false):Void
 	{
@@ -124,8 +124,8 @@ class LogFrontEnd
 	/**
 	 * Internal function used as a interface between trace() and add().
 	 *
-	 * @param  data   The data that has been traced
-	 * @param  info   Information about the position at which trace() was called
+	 * @param   data  The data that has been traced
+	 * @param   info  Information about the position at which trace() was called
 	 */
 	function processTraceData(data:Dynamic, ?info:PosInfos):Void
 	{

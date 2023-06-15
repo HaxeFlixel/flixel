@@ -1,5 +1,7 @@
 package flixel.system.debug.log;
 
+using flixel.util.FlxStringUtil;
+
 /**
  * A class that allows you to create a custom style for `FlxG.log.advanced()`.
  * Also used internally for the pre-defined styles.
@@ -65,5 +67,35 @@ class LogStyle
 		this.openConsole = openConsole;
 		this.callbackFunction = callback;
 		this.throwError = throwError;
+	}
+	
+	/**
+	 * Converts the data into a log message according to this style.
+	 * 
+	 * @param   data  The data being logged
+	 */
+	public function toLogString(data:Array<Any>)
+	{
+		// Format FlxPoints, Arrays, Maps or turn the data entry into a String
+		final texts = new Array<String>();
+		for (i in 0...data.length)
+		{
+			final text = Std.string(data[i]);
+			
+			// Make sure you can't insert html tags
+			texts.push(StringTools.htmlEscape(text));
+		}
+		
+		return prefix + texts.join(" ");
+	}
+	
+	/**
+	 * Converts the data into an html log message according to this style.
+	 * 
+	 * @param   data  The data being logged
+	 */
+	public inline function toHtmlString(data:Array<Any>)
+	{
+		return toLogString(data).htmlFormat(size, color, bold, italic, underlined);
 	}
 }
