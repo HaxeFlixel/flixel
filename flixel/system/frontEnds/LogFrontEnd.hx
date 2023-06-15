@@ -3,7 +3,6 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
-import haxe.Log;
 import haxe.PosInfos;
 
 /**
@@ -122,7 +121,7 @@ class LogFrontEnd
 
 	inline function set_redirectTraces(redirect:Bool):Bool
 	{
-		Log.trace = (redirect) ? processTraceData : _standardTraceFunction;
+		haxe.Log.trace = (redirect) ? processTraceData : _standardTraceFunction;
 		return redirectTraces = redirect;
 	}
 
