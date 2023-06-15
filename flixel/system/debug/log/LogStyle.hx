@@ -41,6 +41,12 @@ class LogStyle
 	public var callbackFunction:()->Void;
 
 	/**
+	 * Whether an error is thrown when this LogStyle is used
+	 * @since 5.4.0
+	 */
+	public var throwError:Bool = false;
+	
+	/**
 	 * Create a new LogStyle to be used in conjunction with `FlxG.log.advanced()`
 	 *
 	 * @param   prefix       A prefix which is always attached to the start of the logged data

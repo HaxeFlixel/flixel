@@ -95,6 +95,11 @@ class LogFrontEnd
 			{
 				style.callbackFunction();
 			}
+			
+			if (style.throwError)
+			{
+				throw style.toLogString(data);
+			}
 		}
 		#end
 	}
