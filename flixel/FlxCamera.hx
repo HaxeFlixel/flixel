@@ -1329,7 +1329,6 @@ class FlxCamera extends FlxBasic
 						shakePixels = Math.round(shakePixels);
 					
 					flashSprite.x += shakePixels * zoom * FlxG.scaleMode.scale.x;
-					// flashSprite.x += FlxG.random.float(-_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom * FlxG.scaleMode.scale.x;
 				}
 				if (_fxShakeAxes.y)
 				{
@@ -1338,7 +1337,6 @@ class FlxCamera extends FlxBasic
 						shakePixels = Math.round(shakePixels);
 					
 					flashSprite.y += shakePixels * zoom * FlxG.scaleMode.scale.y;
-					// flashSprite.y += FlxG.random.float(-_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom * FlxG.scaleMode.scale.y;
 				}
 			}
 		}
