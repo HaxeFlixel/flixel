@@ -1,7 +1,7 @@
 package flixel.input.mouse;
 
 import haxe.ds.ArraySort;
-import flash.errors.Error;
+import openfl.errors.Error;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;

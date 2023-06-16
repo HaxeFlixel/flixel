@@ -369,7 +369,9 @@ class SoundFrontEnd
 
 	function new()
 	{
+		#if FLX_SAVE
 		loadSavedPrefs();
+		#end
 	}
 
 	/**
@@ -428,6 +430,7 @@ class SoundFrontEnd
 		}
 	}
 
+	#if FLX_SAVE
 	/**
 	 * Loads saved sound preferences if they exist.
 	 */
@@ -446,6 +449,7 @@ class SoundFrontEnd
 			muted = FlxG.save.data.mute;
 		}
 	}
+	#end
 
 	function set_volume(Volume:Float):Float
 	{

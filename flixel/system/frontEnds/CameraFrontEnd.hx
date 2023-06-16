@@ -1,6 +1,6 @@
 package flixel.system.frontEnds;
 
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxAxes;

@@ -27,6 +27,7 @@ private enum UserDefines
 	/* Simplifies FlxPoint but can increase GC frequency */
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
+	FLX_NO_SAVE;
 }
 
 /**
@@ -56,6 +57,8 @@ private enum HelperDefines
 	FLX_DRAW_QUADS;
 	FLX_POINT_POOL;
 	FLX_PITCH;
+	FLX_NO_UNIT_TEST;
+	FLX_SAVE;
 }
 
 class FlxDefines
@@ -131,6 +134,7 @@ class FlxDefines
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
+		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
 	}
 
 	static function defineHelperDefines()
@@ -151,6 +155,9 @@ class FlxDefines
 		#end
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
+		
+		if (!defined(FLX_NO_SAVE))
+			define(FLX_SAVE);
 		
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);

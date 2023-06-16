@@ -12,8 +12,8 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 #if flash
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 #end
 
 /**
@@ -126,6 +126,7 @@ class FlxSoundTray extends Sprite
 				visible = false;
 				active = false;
 
+				#if FLX_SAVE
 				// Save sound preferences
 				if (FlxG.save.isBound)
 				{
@@ -133,6 +134,7 @@ class FlxSoundTray extends Sprite
 					FlxG.save.data.volume = FlxG.sound.volume;
 					FlxG.save.flush();
 				}
+				#end
 			}
 		}
 	}

@@ -251,7 +251,7 @@ class FlxAnimation extends FlxBaseAnimation
 
 		if (tempFrame >= 0)
 		{
-			if (!looped && frame > maxFrameIndex)
+			if (!looped && tempFrame > maxFrameIndex)
 			{
 				finished = true;
 				curFrame = reversed ? 0 : maxFrameIndex;

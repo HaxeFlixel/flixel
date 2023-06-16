@@ -1,9 +1,9 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.LineScaleMode;
-import flash.display.CapsStyle;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.display.LineScaleMode;
+import openfl.display.CapsStyle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxAngle;
