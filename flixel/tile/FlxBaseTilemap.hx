@@ -230,7 +230,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return calcRayEntry(end, start, result);
 	}
 
-	public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
+	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject,FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
 		throw "overlapsWithCallback must be implemented";
 		return false;
