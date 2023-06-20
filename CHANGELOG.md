@@ -9,6 +9,8 @@
 - `FlxText`: Add `fieldHeight` field ([#2789](https://github.com/HaxeFlixel/flixel/pull/2789))
 - `FlxG`: Add compiler flag `FLX_NO_SAVE` to remove `FlxG.save` (also counter-flag `FLX_SAVE`) ([#2840](https://github.com/HaxeFlixel/flixel/pull/2840))
 - `FlxCamera`: Add `pixelPerfectShake` field, for pixel-perfect camera shaking ([#2841](https://github.com/HaxeFlixel/flixel/pull/2841))
+- `LogStyle`: Allow log styles to throw errors ([#2842](https://github.com/HaxeFlixel/flixel/pull/2842))
+- `FlxTilemap`: add `FlxTypedTilemap<T>` ([#2734](https://github.com/HaxeFlixel/flixel/pull/2734))
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
