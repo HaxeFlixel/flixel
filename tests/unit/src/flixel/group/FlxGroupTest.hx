@@ -237,4 +237,77 @@ class FlxGroupTest extends FlxTest
 			Assert.fail("FlxGroupTest#testRemovedSignal has failed.");
 		}
 	}
+	
+	function isKilled(basic:FlxBasic)
+	{
+		return basic.alive == false;
+	}
+	
+	function isAlive(basic:FlxBasic)
+	{
+		return basic.alive;
+	}
+	
+	@Test
+	function testFind()
+	{
+		group.remove(group.members[0]); // make first member null
+		group.members[3].kill(); // desired
+		group.members[6].kill();
+		
+		Assert.areEqual(group.members[3], group.find(isKilled));
+	}
+	
+	@Test
+	function testFindLast()
+	{
+		group.remove(group.members[0]); // make first member null
+		group.members[3].kill();
+		group.members[6].kill(); // desired
+		
+		Assert.areEqual(group.members[6], group.findLast(isKilled));
+	}
+	
+	@Test
+	function testFindIndex()
+	{
+		group.remove(group.members[0]); // make first member null
+		group.members[3].kill(); // desired
+		group.members[6].kill();
+		
+		function isKilled(basic) 
+		{
+			return basic.exists == false;
+		}
+		
+		Assert.areEqual(3, group.findIndex(isKilled));
+	}
+	
+	@Test
+	function testFindLastIndex()
+	{
+		group.remove(group.members[0]); // make first member null
+		group.members[3].kill();
+		group.members[6].kill(); // desired
+		
+		Assert.areEqual(6, group.findLastIndex(isKilled));
+	}
+	
+	@Test
+	function testAny()
+	{
+		group.remove(group.members[0]); // make first member null
+		group.members[3].kill();
+		group.members[6].kill(); // desired
+		
+		Assert.isTrue(group.any(isKilled));
+	}
+	
+	@Test
+	function testEvery()
+	{
+		group.remove(group.members[0]); // make first member null
+		
+		Assert.isTrue(group.every(isAlive));
+	}
 }

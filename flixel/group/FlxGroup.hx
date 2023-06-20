@@ -21,23 +21,6 @@ typedef FlxGroup = FlxTypedGroup<FlxBasic>;
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
-	/**
-	 * Helper for overlap functions in `FlxObject` and `FlxTilemap`.
-	 */
-	@:noCompletion
-	static function overlaps(callback:FlxBasic->Bool, group:FlxTypedGroup<FlxBasic>):Bool
-	{
-		if (group == null)
-			return false;
-		
-		for (basic in group)
-		{
-			if (basic != null && callback(basic))
-				return true;
-		}
-		return false;
-	}
-
 	@:noCompletion
 	static function resolveGroup(basic:FlxBasic):FlxTypedGroup<FlxBasic>
 	{
@@ -570,7 +553,101 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 		return count;
 	}
-
+	
+	/**
+	 * Searches for, and returns the first member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function find(func:T->Bool):Null<T>
+	{
+		for (basic in members)
+		{
+			if (basic != null && func(basic))
+				return basic;
+		}
+		return null;
+	}
+	
+	/**
+	 * Searches for, and returns the last member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function findLast(func:T->Bool):Null<T>
+	{
+		var i = members.length;
+		while (i-- > 0)
+		{
+			final basic = members[i];
+			if (basic != null && func(basic))
+				return basic;
+		}
+		return null;
+	}
+	
+	/**
+	 * Searches for, and returns the index of the first member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function findIndex(func:T->Bool):Int
+	{
+		for (i=>basic in members)
+		{
+			if (basic != null && func(basic))
+				return i;
+		}
+		return -1;
+	}
+	
+	/**
+	 * Searches for, and returns the index of the last member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function findLastIndex(func:T->Bool):Int
+	{
+		var i = members.length;
+		while (i-- > 0)
+		{
+			final basic = members[i];
+			if (basic != null && func(basic))
+				return i;
+		}
+		return -1;
+	}
+	
+	/**
+	 * Tests whether any member satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function any(func:T->Bool):Bool
+	{
+		for (basic in members)
+		{
+			if (basic != null && func(basic))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Tests whether every member satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function every(func:T->Bool):Bool
+	{
+		for (basic in members)
+		{
+			if (basic != null && !func(basic))
+				return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Returns a member at random from the group.
 	 *
