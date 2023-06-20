@@ -218,7 +218,7 @@ class FlxGroupTest extends FlxTest
 	{
 		group.maxSize = group.length;
 		final copy = group.members.copy();
-		group.forEach((basic)->basic.kill());
+		group.killMembers();
 		for (i in 0...group.length)
 			group.recycle(FlxBasic);
 		FlxAssert.arraysEqual(copy, group.members);
@@ -330,6 +330,17 @@ class FlxGroupTest extends FlxTest
 			Assert.isFalse(each.exists);
 		});
 		group.revive();
+		group.forEach(function(each)
+		{
+			Assert.isTrue(each.exists);
+		});
+		
+		group.killMembers();
+		group.forEach(function(each)
+		{
+			Assert.isFalse(each.exists);
+		});
+		group.reviveMembers();
 		group.forEach(function(each)
 		{
 			Assert.isTrue(each.exists);
@@ -504,5 +515,50 @@ class FlxGroupTest extends FlxTest
 		group.remove(group.members[0]); // make first member null
 		
 		Assert.isTrue(group.every(isAlive));
+	}
+	
+	@Test
+	function testGetFirstNull()
+	{
+		Assert.isTrue(group.length >= 6);
+	}
+	
+	@Test
+	function testGetFirstMisc()
+	{
+		Assert.isTrue(group.length > 6);
+		group.members[0].kill();
+		group.members[1].kill();
+		group.members[2].kill();
+		group.remove(group.members[3]); // make null
+		group.remove(group.members[5]); // make null
+		Assert.areEqual(3, group.getFirstNull());
+		Assert.areEqual(group.members[4], group.getFirstExisting());
+		Assert.areEqual(group.members[4], group.getFirstAlive());
+		Assert.areEqual(group.members[0], group.getFirstDead());
+		Assert.areEqual(group.members[0], group.getFirstAvailable());
+		final nullCount = 2;
+		final deadCount = 3;
+		Assert.areEqual(deadCount, group.countDead());
+		Assert.areEqual(group.length - nullCount - deadCount, group.countLiving());
+	}
+	
+	@Test
+	function testIterator()
+	{
+		var count = 0;
+		for (member in group) // array iterator
+			count++;
+		
+		Assert.areEqual(group.length, count);
+		
+		group.remove(group.members[0]);
+		group.members[1].kill();
+		
+		count = 0;
+		for (i=>member in group) // keyValueIterator
+			count++;
+		
+		Assert.areEqual(group.length, count);
 	}
 }
