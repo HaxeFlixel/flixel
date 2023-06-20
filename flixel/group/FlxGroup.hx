@@ -295,54 +295,47 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function recycle(?objectClass:Class<T>, ?objectFactory:Void->T, force = false, revive = true):T
 	{
+		inline function createObject():T
+		{
+			if (objectFactory != null)
+				return add(objectFactory());
+			
+			if (objectClass != null)
+				return add(Type.createInstance(objectClass, []));
+			
+			return null;
+		}
+		
 		// rotated recycling
 		if (maxSize > 0)
 		{
 			// create new instance
 			if (length < maxSize)
-			{
-				return recycleCreateObject(objectClass, objectFactory);
-			}
+				return createObject();
+			
 			// get the next member if at capacity
-			else
-			{
-				final basic = members[_marker++];
+			final basic = members[_marker++];
 
-				if (_marker >= maxSize)
-					_marker = 0;
+			if (_marker >= maxSize)
+				_marker = 0;
 
-				if (revive)
-					basic.revive();
+			if (revive)
+				basic.revive();
 
-				return cast basic;
-			}
+			return cast basic;
 		}
+		
 		// grow-style recycling - grab a basic with exists == false or create a new one
-		else
+		final basic = getFirstAvailable(objectClass, force);
+
+		if (basic != null)
 		{
-			final basic = getFirstAvailable(objectClass, force);
-
-			if (basic != null)
-			{
-				if (revive)
-					basic.revive();
-				return cast basic;
-			}
-
-			return recycleCreateObject(objectClass, objectFactory);
+			if (revive)
+				basic.revive();
+			return cast basic;
 		}
-	}
 
-	@:noCompletion
-	inline function recycleCreateObject(?objectClass:Class<T>, ?objectFactory:Void->T):T
-	{
-		if (objectFactory != null)
-			return add(objectFactory());
-		
-		if (objectClass != null)
-			return add(Type.createInstance(objectClass, []));
-		
-		return null;
+		return createObject();
 	}
 
 	/**
@@ -411,7 +404,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @param   order  A constant that defines the sort order.
 	 *                     Possible values are `FlxSort.ASCENDING` (default) and `FlxSort.DESCENDING`.
 	 */
-	public inline function sort(func:(Int,T,T)->Int, order:Int = FlxSort.ASCENDING):Void
+	public inline function sort(func:(Int,T,T)->Int, order = FlxSort.ASCENDING):Void
 	{
 		members.sort(func.bind(order));
 	}
@@ -427,9 +420,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAvailable(?objectClass:Class<T>, force = false):Null<T>
 	{
-		var i:Int = 0;
-		var basic:FlxBasic = null;
-
 		for (basic in members)
 		{
 			if (basic != null && !basic.exists && (objectClass == null || Std.isOfType(basic, objectClass)))
