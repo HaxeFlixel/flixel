@@ -408,7 +408,117 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	{
 		members.sort(func.bind(order));
 	}
-
+	
+	/**
+	 * Searches for, and returns the first member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function getFirst(func:T->Bool):Null<T>
+	{
+		var result:T = null;
+		for (basic in members)
+		{
+			if (basic != null && func(basic))
+			{
+				result = basic;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Searches for, and returns the last member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function getLast(func:T->Bool):Null<T>
+	{
+		var result:T = null;
+		var i = members.length;
+		while (i-- > 0)
+		{
+			final basic = members[i];
+			if (basic != null && func(basic))
+			{
+				result = basic;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Searches for, and returns the index of the first member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function getFirstIndex(func:T->Bool):Int
+	{
+		var result = -1;
+		for (i=>basic in members)
+		{
+			if (basic != null && func(basic))
+			{
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Searches for, and returns the index of the last member that satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function getLastIndex(func:T->Bool):Int
+	{
+		var result = -1;
+		var i = members.length;
+		while (i-- > 0)
+		{
+			final basic = members[i];
+			if (basic != null && func(basic))
+			{
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Tests whether any member satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function any(func:T->Bool):Bool
+	{
+		for (basic in members)
+		{
+			if (basic != null && func(basic))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Tests whether every member satisfies the function.
+	 * @param   func  The function that tests the members
+	 * @since 5.4.0
+	 */
+	public function every(func:T->Bool):Bool
+	{
+		for (basic in members)
+		{
+			if (basic != null && !func(basic))
+				return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Call this function to retrieve the first object with `exists == false` in the group.
 	 * This is handy for recycling in general, e.g. respawning enemies.
@@ -454,13 +564,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstExisting():Null<T>
 	{
-		for (basic in members)
-		{
-			if (basic != null && basic.exists)
-				return basic;
-		}
-
-		return null;
+		return inline getFirst((basic)->basic.exists);
 	}
 
 	/**
@@ -471,13 +575,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAlive():Null<T>
 	{
-		for (basic in members)
-		{
-			if (basic != null && basic.exists && basic.alive)
-				return basic;
-		}
-
-		return null;
+		return inline getFirst((basic)->basic.exists && basic.alive);
 	}
 
 	/**
@@ -488,15 +586,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstDead():Null<T>
 	{
-		for (basic in members)
-		{
-			if (basic != null && !basic.alive)
-				return basic;
-		}
-
-		return null;
+		return inline getFirst((basic)->!basic.alive);
 	}
-
+	
 	/**
 	 * Call this function to find out how many members of the group are not dead.
 	 *
@@ -531,7 +623,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		
 		for (basic in members)
 		{
-
 			if (basic != null)
 			{
 				if (count < 0)
@@ -542,100 +633,6 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 
 		return count;
-	}
-	
-	/**
-	 * Searches for, and returns the first member that satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function find(func:T->Bool):Null<T>
-	{
-		for (basic in members)
-		{
-			if (basic != null && func(basic))
-				return basic;
-		}
-		return null;
-	}
-	
-	/**
-	 * Searches for, and returns the last member that satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function findLast(func:T->Bool):Null<T>
-	{
-		var i = members.length;
-		while (i-- > 0)
-		{
-			final basic = members[i];
-			if (basic != null && func(basic))
-				return basic;
-		}
-		return null;
-	}
-	
-	/**
-	 * Searches for, and returns the index of the first member that satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function findIndex(func:T->Bool):Int
-	{
-		for (i=>basic in members)
-		{
-			if (basic != null && func(basic))
-				return i;
-		}
-		return -1;
-	}
-	
-	/**
-	 * Searches for, and returns the index of the last member that satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function findLastIndex(func:T->Bool):Int
-	{
-		var i = members.length;
-		while (i-- > 0)
-		{
-			final basic = members[i];
-			if (basic != null && func(basic))
-				return i;
-		}
-		return -1;
-	}
-	
-	/**
-	 * Tests whether any member satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function any(func:T->Bool):Bool
-	{
-		for (basic in members)
-		{
-			if (basic != null && func(basic))
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Tests whether every member satisfies the function.
-	 * @param   func  The function that tests the members
-	 * @since 5.4.0
-	 */
-	public function every(func:T->Bool):Bool
-	{
-		for (basic in members)
-		{
-			if (basic != null && !func(basic))
-				return false;
-		}
-		return true;
 	}
 	
 	/**
