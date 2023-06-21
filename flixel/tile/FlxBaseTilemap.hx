@@ -971,16 +971,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	@:access(flixel.group.FlxTypedGroup)
 	override public function overlaps(objectOrGroup:FlxBasic, inScreenSpace = false, ?camera:FlxCamera):Bool
 	{
-		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
+		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
-		{
-			return FlxTypedGroup.overlaps(tilemapOverlapsCallback, group, 0, 0, inScreenSpace, camera);
-		}
-		else if (tilemapOverlapsCallback(objectOrGroup))
-		{
-			return true;
-		}
-		return false;
+			return group.any(tilemapOverlapsCallback.bind(_, 0, 0, inScreenSpace, camera));
+		
+		return tilemapOverlapsCallback(objectOrGroup);
 	}
 
 	inline function tilemapOverlapsCallback(objectOrGroup:FlxBasic, x = 0.0, y = 0.0, inScreenSpace = false, ?camera:FlxCamera):Bool
@@ -1010,17 +1005,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	@:access(flixel.group.FlxTypedGroup)
 	override public function overlapsAt(x:Float, y:Float, objectOrGroup:FlxBasic, inScreenSpace:Bool = false, ?camera:FlxCamera):Bool
 	{
-		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
+		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
-		{
-			return FlxTypedGroup.overlaps(tilemapOverlapsAtCallback, group, x, y, inScreenSpace, camera);
-		}
-		else if (tilemapOverlapsAtCallback(objectOrGroup, x, y, inScreenSpace, camera))
-		{
-			return true;
-		}
-
-		return false;
+			return group.any(tilemapOverlapsAtCallback.bind(_, x, y, inScreenSpace, camera));
+		
+		return tilemapOverlapsAtCallback(objectOrGroup, x, y, inScreenSpace, camera);
 	}
 
 	inline function tilemapOverlapsAtCallback(objectOrGroup:FlxBasic, x:Float, y:Float, inScreenSpace:Bool, camera:FlxCamera):Bool

@@ -16,6 +16,10 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
+/**
+ * An alias for `FlxTypedSpriteGroup<FlxSprite>`, meaning any sprite can be added to a
+ * `FlxSpriteGroup`, even another `FlxSpriteGroup`.
+ */
 typedef FlxSpriteGroup = FlxTypedSpriteGroup<FlxSprite>;
 
 /**

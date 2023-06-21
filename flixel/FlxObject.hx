@@ -934,7 +934,7 @@ class FlxObject extends FlxBasic
 		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxTypedGroup.overlaps(overlapsCallback, group, 0, 0, inScreenSpace, camera);
+			return group.any(overlapsCallback.bind(_, 0, 0, inScreenSpace, camera));
 		}
 
 		if (objectOrGroup.flixelType == TILEMAP)
@@ -993,7 +993,7 @@ class FlxObject extends FlxBasic
 		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxTypedGroup.overlaps(overlapsAtCallback, group, x, y, inScreenSpace, camera);
+			return group.any(overlapsAtCallback.bind(_, x, y, inScreenSpace, camera));
 		}
 
 		if (objectOrGroup.flixelType == TILEMAP)
