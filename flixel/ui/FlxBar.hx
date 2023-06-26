@@ -833,6 +833,12 @@ class FlxBar extends FlxSprite
 			{
 				x = parent.x + positionOffset.x;
 				y = parent.y + positionOffset.y;
+
+				if (isPixelPerfectRender(camera)) 
+				{
+					x = Math.floor(x);
+					y = Math.floor(y);
+				}
 			}
 		}
 
