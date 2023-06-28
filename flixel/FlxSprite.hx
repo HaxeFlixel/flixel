@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.geom.ColorTransform;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
@@ -36,7 +36,7 @@ using flixel.util.FlxColorTransformUtil;
  * - [Handbook - FlxSprite](https://haxeflixel.com/documentation/flxsprite/)
  * 
  * ## Collision and Motion
- * Flixel handles many aspects of collision nad physics motions for you. This is all defined in the
+ * Flixel handles many aspects of collision and physics motions for you. This is all defined in the
  * base class: [FlxObject](https://api.haxeflixel.com/flixel/FlxObject.html), check there for things
  * like: `x`, `y`, `width`, `height`, `velocity`, `acceleration`, `maxVelocity`, `drag`, `angle`,
  * and `angularVelocity`. All of these affect the movement and orientation of the sprite as well
@@ -480,38 +480,44 @@ class FlxSprite extends FlxObject
 	 * HaxeFlixel copies the previous reference onto the `pixels` field instead
 	 * of creating another copy of the image data, to save memory.
 	 *
-	 * @param   Graphic    The image you want to use.
-	 * @param   Animated   Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
-	 * @param   Width      Specify the width of your sprite
-	 *                     (helps figure out what to do with non-square sprites or sprite sheets).
-	 * @param   Height     Specify the height of your sprite
-	 *                     (helps figure out what to do with non-square sprites or sprite sheets).
-	 * @param   Unique     Whether the graphic should be a unique instance in the graphics cache.
-	 *                     Set this to `true` if you want to modify the `pixels` field without changing
-	 *                     the `pixels` of other sprites with the same `BitmapData`.
-	 * @param   Key        Set this parameter if you're loading `BitmapData`.
+	 * NOTE: This method updates hitbox size and frame size.
+	 *
+	 * @param   graphic      The image you want to use.
+	 * @param   animated     Whether the `Graphic` parameter is a single sprite or a row / grid of sprites.
+	 * @param   frameWidth   Specify the width of your sprite
+	 *                       (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param   frameHeight  Specify the height of your sprite
+	 *                       (helps figure out what to do with non-square sprites or sprite sheets).
+	 * @param   unique       Whether the graphic should be a unique instance in the graphics cache.
+	 *                       Set this to `true` if you want to modify the `pixels` field without changing
+	 *                       the `pixels` of other sprites with the same `BitmapData`.
+	 * @param   key          Set this parameter if you're loading `BitmapData`.
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false, ?Key:String):FlxSprite
+	public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):FlxSprite
 	{
-		var graph:FlxGraphic = FlxG.bitmap.add(Graphic, Unique, Key);
+		var graph:FlxGraphic = FlxG.bitmap.add(graphic, unique, key);
 		if (graph == null)
 			return this;
 
-		if (Width == 0)
+		if (frameWidth == 0)
 		{
-			Width = Animated ? graph.height : graph.width;
-			Width = (Width > graph.width) ? graph.width : Width;
+			frameWidth = animated ? graph.height : graph.width;
+			frameWidth = (frameWidth > graph.width) ? graph.width : frameWidth;
 		}
+		else if (frameWidth > graph.width)
+			FlxG.log.warn('frameWidth:$frameWidth is larger than the graphic\'s width:${graph.width}');
 
-		if (Height == 0)
+		if (frameHeight == 0)
 		{
-			Height = Animated ? Width : graph.height;
-			Height = (Height > graph.height) ? graph.height : Height;
+			frameHeight = animated ? frameWidth : graph.height;
+			frameHeight = (frameHeight > graph.height) ? graph.height : frameHeight;
 		}
+		else if (frameHeight > graph.height)
+			FlxG.log.warn('frameHeight:$frameHeight is larger than the graphic\'s height:${graph.height}');
 
-		if (Animated)
-			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(Width, Height));
+		if (animated)
+			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(frameWidth, frameHeight));
 		else
 			frames = graph.imageFrame;
 
@@ -618,6 +624,8 @@ class FlxSprite extends FlxObject
 	 * When you make an identical copy of a previously used image, by default
 	 * HaxeFlixel copies the previous reference onto the pixels field instead
 	 * of creating another copy of the image data, to save memory.
+	 *
+	 * NOTE: This method updates hitbox size and frame size.
 	 *
 	 * @param   Width    The width of the sprite you want to generate.
 	 * @param   Height   The height of the sprite you want to generate.
@@ -1000,17 +1008,17 @@ class FlxSprite extends FlxObject
 	 * current displayed pixels. This check is ALWAYS made in screen space, and
 	 * factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 *
-	 * @param   worldPoint  point in world space you want to check.
-	 * @param   mask        Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera      The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   worldPoint      point in world space you want to check.
+	 * @param   alphaTolerance  Used to determine what counts as solid.
+	 * @param   camera          The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
+	public function pixelsOverlapPoint(worldPoint:FlxPoint, alphaTolerance = 0xFF, ?camera:FlxCamera):Bool
 	{
-		var pixelColor = getPixelAt(worldPoint);
+		final pixelColor = getPixelAt(worldPoint, camera);
 		
 		if (pixelColor != null)
-			return pixelColor.alpha * alpha >= mask;
+			return pixelColor.alpha * alpha >= alphaTolerance;
 		
 		// point is outside of the graphic
 		return false;

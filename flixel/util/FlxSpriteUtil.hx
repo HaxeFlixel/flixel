@@ -1,17 +1,17 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.display.BitmapDataChannel;
-import flash.display.BlendMode;
-import flash.display.CapsStyle;
-import flash.display.Graphics;
-import flash.display.JointStyle;
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.display.BitmapDataChannel;
+import openfl.display.BlendMode;
+import openfl.display.CapsStyle;
+import openfl.display.Graphics;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -28,7 +28,7 @@ import flixel.tweens.FlxTween;
 /**
  * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
  * Note that stage quality impacts the results of the draw() functions -
- * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
+ * use FlxG.stage.quality = openfl.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {

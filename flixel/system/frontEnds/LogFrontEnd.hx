@@ -3,7 +3,6 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
-import haxe.Log;
 import haxe.PosInfos;
 
 /**
@@ -16,86 +15,70 @@ class LogFrontEnd
 	 */
 	public var redirectTraces(default, set):Bool = false;
 
-	var _standardTraceFunction:Dynamic->?PosInfos->Void;
+	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
 
-	public inline function add(Data:Dynamic):Void
+	public inline function add(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
-		advanced(Data, LogStyle.NORMAL);
-		#end
+		advanced(data, LogStyle.NORMAL);
 	}
 
-	public inline function warn(Data:Dynamic):Void
+	public inline function warn(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
-		advanced(Data, LogStyle.WARNING, true);
-		#end
+		advanced(data, LogStyle.WARNING, true);
 	}
 
-	public inline function error(Data:Dynamic):Void
+	public inline function error(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
-		advanced(Data, LogStyle.ERROR, true);
-		#end
+		advanced(data, LogStyle.ERROR, true);
 	}
 
-	public inline function notice(Data:Dynamic):Void
+	public inline function notice(data:Dynamic):Void
 	{
-		#if FLX_DEBUG
-		advanced(Data, LogStyle.NOTICE);
-		#end
+		advanced(data, LogStyle.NOTICE);
 	}
 
 	/**
 	 * Add an advanced log message to the debugger by also specifying a LogStyle. Backend to FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice().
 	 *
-	 * @param	Data  		Any Data to log.
-	 * @param  	Style   	The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
-	 * @param  	FireOnce   	Whether you only want to log the Data in case it hasn't been added already
+	 * @param   data      Any Data to log.
+	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
+	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
-	public function advanced(Data:Dynamic, ?Style:LogStyle, FireOnce:Bool = false):Void
+	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void
 	{
+		if (style == null)
+			style = LogStyle.NORMAL;
+		
+		if (!(data is Array))
+			data = [data];
+		
 		#if FLX_DEBUG
-		if (FlxG.game.debugger == null)
+		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
+		if (FlxG.game == null || FlxG.game.debugger == null)
 		{
-			_standardTraceFunction(Data);
-			return;
+			_standardTraceFunction(data);
 		}
-
-		if (Style == null)
-		{
-			Style = LogStyle.NORMAL;
-		}
-
-		if (!(Data is Array))
-		{
-			Data = [Data];
-		}
-
-		if (FlxG.game.debugger.log.add(Data, Style, FireOnce))
+		else if (FlxG.game.debugger.log.add(data, style, fireOnce))
 		{
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
-			if (Style.errorSound != null)
+			if (style.errorSound != null)
 			{
-				var sound = FlxAssets.getSound(Style.errorSound);
+				final sound = FlxAssets.getSound(style.errorSound);
 				if (sound != null)
-				{
 					FlxG.sound.load(sound).play();
-				}
 			}
 			#end
-
-			if (Style.openConsole)
-			{
+			
+			if (style.openConsole)
 				FlxG.debugger.visible = true;
-			}
-
-			if (Style.callbackFunction != null)
-			{
-				Style.callbackFunction();
-			}
+			
+			if (style.callbackFunction != null)
+				style.callbackFunction();
 		}
 		#end
+		
+		if (style.throwException)
+			throw style.toLogString(data);
 	}
 
 	/**
@@ -114,25 +97,25 @@ class LogFrontEnd
 		_standardTraceFunction = haxe.Log.trace;
 	}
 
-	inline function set_redirectTraces(Redirect:Bool):Bool
+	inline function set_redirectTraces(redirect:Bool):Bool
 	{
-		Log.trace = (Redirect) ? processTraceData : _standardTraceFunction;
-		return redirectTraces = Redirect;
+		haxe.Log.trace = (redirect) ? processTraceData : _standardTraceFunction;
+		return redirectTraces = redirect;
 	}
 
 	/**
 	 * Internal function used as a interface between trace() and add().
 	 *
-	 * @param	Data	The data that has been traced
-	 * @param	Inf		Information about the position at which trace() was called
+	 * @param   data  The data that has been traced
+	 * @param   info  Information about the position at which trace() was called
 	 */
-	function processTraceData(Data:Dynamic, ?Info:PosInfos):Void
+	function processTraceData(data:Dynamic, ?info:PosInfos):Void
 	{
-		var paramArray:Array<Dynamic> = [Data];
+		var paramArray:Array<Dynamic> = [data];
 
-		if (Info.customParams != null)
+		if (info.customParams != null)
 		{
-			for (i in Info.customParams)
+			for (i in info.customParams)
 			{
 				paramArray.push(i);
 			}

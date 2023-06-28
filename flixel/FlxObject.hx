@@ -1,6 +1,6 @@
 package flixel;
 
-import flash.display.Graphics;
+import openfl.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -29,7 +29,7 @@ import flixel.util.FlxStringUtil;
  * - `maxVelocity`: The maximum `velocity` (or negative `velocity`) this object can have.
  * - `angle`: The orientation, in degrees, of this `object`. Does not affect collision, mainly
  *            used for `FlxSprite` graphics.
- * - `angularVelocity`: The rotational speed of thiw object in degrees per second.
+ * - `angularVelocity`: The rotational speed of the object in degrees per second.
  * 
  * ## Overlaps
  * If you're only checking an overlap between two objects you can use `player.overlaps(door)`
@@ -768,7 +768,7 @@ class FlxObject extends FlxBasic
 	public var debugBoundingBoxColorPartial(default, set):FlxColor = FlxColor.GREEN;
 
 	/**
-	 * Setting this to `true` will prevent the object from appearing
+	 * Setting this to `true` will prevent the object's bounding box from appearing
 	 * when `FlxG.debugger.drawDebug` is `true`.
 	 */
 	public var ignoreDrawDebug:Bool = false;
@@ -934,7 +934,7 @@ class FlxObject extends FlxBasic
 		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxTypedGroup.overlaps(overlapsCallback, group, 0, 0, inScreenSpace, camera);
+			return group.any(overlapsCallback.bind(_, 0, 0, inScreenSpace, camera));
 		}
 
 		if (objectOrGroup.flixelType == TILEMAP)
@@ -993,7 +993,7 @@ class FlxObject extends FlxBasic
 		var group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
 		{
-			return FlxTypedGroup.overlaps(overlapsAtCallback, group, x, y, inScreenSpace, camera);
+			return group.any(overlapsAtCallback.bind(_, x, y, inScreenSpace, camera));
 		}
 
 		if (objectOrGroup.flixelType == TILEMAP)
@@ -1515,7 +1515,7 @@ class FlxObject extends FlxBasic
 /**
  * Determines when to apply collision drag to one object that collided with another.
  */
-@:enum abstract CollisionDragType(Int)
+enum abstract CollisionDragType(Int)
 {
 	/** Never drags on colliding objects. */
 	var NEVER = 0;

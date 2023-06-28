@@ -1,10 +1,10 @@
 package flixel.system.debug.stats;
 
-import flash.display.Graphics;
-import flash.display.Shape;
-import flash.display.Sprite;
-import flash.text.TextField;
-import flash.text.TextFormatAlign;
+import openfl.display.Graphics;
+import openfl.display.Shape;
+import openfl.display.Sprite;
+import openfl.text.TextField;
+import openfl.text.TextFormatAlign;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;

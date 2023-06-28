@@ -709,7 +709,7 @@ enum FlxPathSimplifier
  * The policy to use with `FlxDiagonalPathfinder`.
  * @since 5.0.0
  */
-@:enum abstract FlxTilemapDiagonalPolicy(Int)
+enum abstract FlxTilemapDiagonalPolicy(Int)
 {
 	/**
 	 * No diagonal movement allowed when calculating the path

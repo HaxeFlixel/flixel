@@ -1,13 +1,13 @@
 package flixel.system.debug;
 
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
 import openfl.display.DisplayObject;
 import flixel.FlxG;
 import flixel.system.debug.console.Console;
@@ -124,6 +124,7 @@ class FlxDebugger extends Sprite
 		super();
 
 		visible = false;
+		tabChildren = false;
 
 		Tooltip.init(this);
 
