@@ -856,60 +856,89 @@ class FlxBitmapText extends FlxSprite
 		if (words.length == 0)
 			return;
 		
+		final maxLineWidth = _fieldWidth - 2 * padding;
 		final startX:Int = font.minOffsetX;
 		var lineWidth = startX;
 		var line:UnicodeString = "";
-		
+		var word:String = null;
+		var wordWidth:Int = 0;
 		var i = 0;
-		while (i < words.length)
+		
+		function addWord(word:String, wordWidth = -1)
 		{
-			final word = words[i];
-			final wordWidth = getWordWidth(word);
-
-			if (lineWidth + wordWidth <= _fieldWidth - 2 * padding) // the word fits in the current line
-			{
-				line = line + word;// `line += word` is broken in html5 on haxe 4.2.5
-				lineWidth += wordWidth + letterSpacing;
-				i++;
-				continue;
-			}
-			
-			// the word doesn't fit on the current line add what is there
+			line = line + word;// `line += word` is broken in html5 on haxe 4.2.5
+			lineWidth += (wordWidth < 0 ? getWordWidth(word) : wordWidth) + letterSpacing;
+		}
+		
+		inline function addCurrentWord()
+		{
+			addWord(word, wordWidth);
+			i++;
+		}
+		
+		function startNewLine()
+		{
 			if (line != "")
 				lines.push(line);
-
+			
 			// start a new line
 			line = "";
 			lineWidth = startX;
+		}
+		
+		function addWordByChars()
+		{
+			// put the word on the next line and split the word if it exceeds fieldWidth
+			var chunks:Array<UnicodeString> = [];
+			wrapLineByCharacter([line, word], chunks);
 			
-			if (isSpaceWord(word))//
+			// add all but the last chunk as a new line, the last chunk starts the next line
+			while (chunks.length > 1)
+				lines.push(chunks.shift());
+			
+			line = chunks.shift();
+			lineWidth = startX + getWordWidth(line);
+			i++;
+		}
+		
+		while (i < words.length)
+		{
+			word = words[i];
+			wordWidth = getWordWidth(word);
+			
+			if (lineWidth + wordWidth <= maxLineWidth)
 			{
+				// the word fits in the current line
+				addCurrentWord();
+				continue;
+			}
+			
+			if (isSpaceWord(word))
+			{
+				// skip spaces when starting a new line
+				startNewLine();
 				i++;
 				continue;
 			}
-
-			if (startX + wordWidth <= _fieldWidth - 2 * padding) // the word will fit on its own line
-				continue;
-
+			
+			final wordFitsLine = startX + wordWidth <= maxLineWidth;
+			
 			switch (wordSplit)
 			{
-				case NEVER:
-					// put the whole word on the next line
-					line = word;
-					lineWidth = startX + wordWidth + letterSpacing;
-
-				case FIELD_WIDTH:
-					// put the word on the next line and split the word if it exceeds fieldWidth
-					var chunks:Array<UnicodeString> = [];
-					wrapLineByCharacter([word], chunks);
-					// add all but the last chunk as a new line, the last chunk may be added onto
-					while (chunks.length > 1)
-						lines.push(chunks.shift());
-					
-					line = chunks.shift();
-					lineWidth = startX + getWordWidth(line);
+				case LINE_WIDTH if(!wordFitsLine):
+					addWordByChars();
+				case LENGTH(min) if (word.length >= min) :
+					addWordByChars();
+				case WIDTH(min) if (wordWidth >= min) :
+					addWordByChars();
+				case NEVER | LINE_WIDTH | LENGTH(_) | WIDTH(_):
+					// add word to next line, continue as normal
+					startNewLine();
+					addCurrentWord();
 			}
-			i++;
+			
+			if (lineWidth > maxLineWidth)
+				startNewLine();
 		}
 
 		// add the final line, since previous lines were added when the next one started
@@ -1782,15 +1811,22 @@ enum WordSplitConditions
 	 */
 	NEVER;
 	/**
-	 * Splits words that can't fit in a single line, alone. The word starts on a new line, and is
-	 * added character by character until the line is filled.
+	 * Splits words that can't fit in a single line, alone. The word starts on the previous line,
+	 * if possible, and is added character by character until the line is filled.
 	 */
-	FIELD_WIDTH;
+	LINE_WIDTH;
 	
-	/*
-	 * TODO - WIDTH(max:Float): splits words longer than the specified width, if needed. might make
-	 * certain cases look nicer, maybe they should just use hyphens.
+	/**
+	 * Splits words longer than the specified number of characters. The word starts on the previous
+	 * line, if possible, and is added character by character until the line is filled.
 	 */
+	LENGTH(minChars:Int);
+	
+	/**
+	 * Splits words wider than the specified number of pixels. The word starts on the previous
+	 * line, if possible, and is added character by character until the line is filled.
+	 */
+	WIDTH(minPixels:Int);
 }
 
 /*
