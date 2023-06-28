@@ -81,14 +81,14 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * A Boolean value that indicates whether the text field has word wrap.
 	 */
-	@:deprecated("wordWrap is deprecatred use wrap, instead")
+	@:deprecated("wordWrap is deprecated use wrap, instead")
 	public var wordWrap(get, set):Bool;
 
 	/**
 	 * Whether word wrapping algorithm should wrap lines by words or by single character.
 	 * Default value is true.
 	 */
-	@:deprecated("wrapByWord is deprecatred use wrap with values CHAR or WORD, instead")
+	@:deprecated("wrapByWord is deprecated use wrap with values CHAR or WORD, instead")
 	public var wrapByWord(get, set):Bool;
 
 	/**
@@ -1811,19 +1811,19 @@ enum WordSplitConditions
 	 */
 	NEVER;
 	/**
-	 * Splits words that can't fit in a single line, alone. The word starts on the previous line,
+	 * Will only split words that can't fit in a single line, alone. The word starts on the previous line,
 	 * if possible, and is added character by character until the line is filled.
 	 */
 	LINE_WIDTH;
 	
 	/**
-	 * Splits words longer than the specified number of characters. The word starts on the previous
+	 * May split words longer than the specified number of characters. The word starts on the previous
 	 * line, if possible, and is added character by character until the line is filled.
 	 */
 	LENGTH(minChars:Int);
 	
 	/**
-	 * Splits words wider than the specified number of pixels. The word starts on the previous
+	 * May split words wider than the specified number of pixels. The word starts on the previous
 	 * line, if possible, and is added character by character until the line is filled.
 	 */
 	WIDTH(minPixels:Int);
