@@ -416,13 +416,10 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirst(func:T->Bool):Null<T>
 	{
-		return inline getFirstHelper(func);
+		return getFirstHelper(func);
 	}
 	
-	/*
-	 * Final so it can be inlined
-	 */
-	final function getFirstHelper(func:T->Bool):Null<T>
+	inline function getFirstHelper(func:T->Bool):Null<T>
 	{
 		var result:T = null;
 		for (basic in members)
@@ -572,7 +569,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstExisting():Null<T>
 	{
-		return inline getFirstHelper((basic)->basic.exists);
+		return getFirstHelper((basic)->basic.exists);
 	}
 
 	/**
@@ -583,7 +580,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAlive():Null<T>
 	{
-		return inline getFirstHelper((basic)->basic.exists && basic.alive);
+		return getFirstHelper((basic)->basic.exists && basic.alive);
 	}
 
 	/**
@@ -594,7 +591,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstDead():Null<T>
 	{
-		return inline getFirstHelper((basic)->!basic.alive);
+		return getFirstHelper((basic)->!basic.alive);
 	}
 	
 	/**
