@@ -416,6 +416,11 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirst(func:T->Bool):Null<T>
 	{
+		return getFirstHelper(func);
+	}
+	
+	inline function getFirstHelper(func:T->Bool):Null<T>
+	{
 		var result:T = null;
 		for (basic in members)
 		{
@@ -564,7 +569,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstExisting():Null<T>
 	{
-		return inline getFirst((basic)->basic.exists);
+		return getFirstHelper((basic)->basic.exists);
 	}
 
 	/**
@@ -575,7 +580,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstAlive():Null<T>
 	{
-		return inline getFirst((basic)->basic.exists && basic.alive);
+		return getFirstHelper((basic)->basic.exists && basic.alive);
 	}
 
 	/**
@@ -586,7 +591,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	public function getFirstDead():Null<T>
 	{
-		return inline getFirst((basic)->!basic.alive);
+		return getFirstHelper((basic)->!basic.alive);
 	}
 	
 	/**
@@ -692,7 +697,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function kill():Void
 	{
-		inline killMembers();
+		killMembers();
 
 		super.kill();
 	}
@@ -715,7 +720,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function revive():Void
 	{
-		inline reviveMembers();
+		reviveMembers();
 
 		super.revive();
 	}
