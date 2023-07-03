@@ -11,6 +11,11 @@
 - `FlxCamera`: Add `pixelPerfectShake` field, for pixel-perfect camera shaking ([#2841](https://github.com/HaxeFlixel/flixel/pull/2841))
 - `LogStyle`: Allow log styles to throw errors ([#2842](https://github.com/HaxeFlixel/flixel/pull/2842))
 - `FlxTilemap`: add `FlxTypedTilemap<T>` ([#2734](https://github.com/HaxeFlixel/flixel/pull/2734))
+- `FlxGroup`: Various changes ([#2806](https://github.com/HaxeFlixel/flixel/pull/2806))
+	- Add `killMembers`, `reviveMembers` and `keyValueIterator`
+	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
+	- Replace `getFirstNull`'s loop with a simple `indexOf` check
+	- Improve readibility and simplify loops under the hood
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
@@ -19,6 +24,8 @@
 - Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
 - `FlxSprite`: Add erroneously unused `camera` arg when calling `pixelsOverlapPoint` ([#2824](https://github.com/HaxeFlixel/flixel/pull/2824))
 - Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
+- `FlxSpriteUtil`: Fix `cameraWrap` and `cameraBound` error when camera scroll is non-0 ([#2851](https://github.com/HaxeFlixel/flixel/pull/2851))
+- `FlxBar`: Fix pixel perfect rendering issue ([#2853](https://github.com/HaxeFlixel/flixel/pull/2853))
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
