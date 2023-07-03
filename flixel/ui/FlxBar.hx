@@ -842,13 +842,13 @@ class FlxBar extends FlxSprite
 	override public function draw():Void
 	{
 		super.draw();
-
+		
 		if (!FlxG.renderTile)
 			return;
-
+		
 		if (alpha == 0)
 			return;
-
+		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
 			for (camera in cameras)
@@ -857,26 +857,30 @@ class FlxBar extends FlxSprite
 				{
 					continue;
 				}
-
-				getScreenPosition(_point, camera).subtractPoint(offset);
-
-				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, flipX, flipY);
+				
+				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 				_matrix.translate(-origin.x, -origin.y);
 				_matrix.scale(scale.x, scale.y);
-
+				
 				// rotate matrix if sprite's graphic isn't prerotated
-				if (angle != 0)
+				if (bakedRotationAngle <= 0)
 				{
-					_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+					updateTrig();
+					
+					if (angle != 0)
+						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 				}
-
+				
+				getScreenPosition(_point, camera).subtractPoint(offset);
 				_point.add(origin.x, origin.y);
+				_matrix.translate(_point.x, _point.y);
+				
 				if (isPixelPerfectRender(camera))
 				{
-					_point.floor();
+					_matrix.tx = Math.floor(_matrix.tx);
+					_matrix.ty = Math.floor(_matrix.ty);
 				}
-
-				_matrix.translate(_point.x, _point.y);
+				
 				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
 			}
 		}
