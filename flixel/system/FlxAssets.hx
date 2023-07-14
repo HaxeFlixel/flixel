@@ -30,8 +30,8 @@ class GraphicVirtualInput extends BitmapData {}
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
 typedef FlxAngelCodeXmlAsset = FlxXmlAsset;
-typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerObject>;
-typedef FlxAsepriteJsonAsset = FlxTexturePackerJsonAsset;
+typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
+typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
