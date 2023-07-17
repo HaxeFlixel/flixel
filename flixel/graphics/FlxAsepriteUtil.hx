@@ -5,13 +5,55 @@ import flixel.system.FlxAssets;
 
 class FlxAsepriteUtil
 {
-	public static function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	/**
+	 * Helper for parsing Aseprite atlas json files. Reads frames via `FlxAtlasFrames.fromAseprite`
+	 * and returns the parsed AseAtlas to be used with other `FlxAsepriteUtil` helpers.
+	 * @param   sprite   The sprite to load the ase atlas's frames
+	 * @param   graphic  The png file associated with the atlas
+	 * @param   data     Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
+	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data
+	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
+	 * @since 5.4.0
+	 */
+	public static function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
 	{
 		final aseData = data.getData();
 		sprite.frames = FlxAtlasFrames.fromAseprite(graphic, aseData);
-		
+		return aseData;
+	}
+	
+	/**
+	 * Helper for parsing Aseprite atlas json files. Reads frame data via `FlxAtlasFrames.fromAseprite`,
+	 * then, reads
+	 * @param   sprite     The sprite to load the ase atlas's frames
+	 * @param   graphic    The png file associated with the atlas
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
+	 * @param   tagSuffix  
+	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data
+	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
+	 * @since 5.4.0
+	 */
+	public static function loadAseAtlasAndTags(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	{
+		final aseData = loadAseAtlas(sprite, graphic, aseData);
+		return addAseAtlasTags(sprite, aseData, tagSuffix);
+	}
+	
+	/**
+	 * 
+	 * @param   sprite     The sprite to add the animations
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json.
+	 * @param   tagSuffix  
+	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data.
+	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
+	 * @since 5.4.0
+	 */
+	public static function addAseAtlasTags(sprite:FlxSprite, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	{
 		for (frameTag in aseData.meta.frameTags)
 			sprite.animation.addByPrefix(frameTag.name, frameTag.name + tagSuffix);
+		
+		return aseData;
 	}
 }
 
@@ -25,6 +67,9 @@ typedef AseAtlasBase<T> = AtlasBase<T> &
 typedef AseAtlasArray = AseAtlasBase<Array<AseAtlasFrame>>;
 typedef TexturePackerAtlasArray = AtlasBase<Array<AseAtlasFrame>>;
 
+/**
+ * Internal helper used to 
+ */
 abstract Hash<T>(Dynamic)
 {
 	public inline function keyValueIterator():KeyValueIterator<String, T>
@@ -63,45 +108,146 @@ typedef AseAtlasMeta =
 	var layers:Array<AseAtlasLayer>;
 }
 
-typedef AseAtlasTag = { name: String, from:Int, to:Int, direction:String };
-
-typedef AseAtlasSlice =
+typedef AseObject = 
 {
-	var name:String;
-	var color:String;
+	/** The color used to display this object */
+	@:optional var color:AseAtlasColor;
 	
-	/**
-	 * Info of at what frames the slice changes size
-	 */
-	var keys: Array<AseAtlasSliceKey>;
+	/** A message attached to this object */
+	@:optional var data:String;
 }
 
-typedef AseAtlasLayer =
+/**
+ * Aseprite atlases use strings for colors (for some reason). This allows you to easily
+ * convert to a more usable format.
+ */
+abstract AseAtlasColor(String) to String
 {
+	/** Converts the underlying string to an actual color usable by flixel tools */
+	public function toFlxColor()
+	{
+		return flixel.util.FlxColor.fromString(this);
+	}
+	
+	public function toString() return this;
+}
+
+/**
+ * Tags are Aseprite's animation labels. They define a range of frames that all pertain to a
+ * certain animation.
+ */
+typedef AseAtlasTag = AseObject &
+{
+	/** The name of this tag */
 	var name:String;
 	
+	/** The tag's starting frame */
+	var from:Int;
+	
+	/** The tag's ending frame */
+	var to:Int;
+	
+	/** The tag's ending frame */
+	var direction:AseAtlasTagDirection;
+	
 	/**
-	 * The name of the parent layer
+	 * The number of times to repeat this animation before
+	 * 
+	 * Note: not cuurently used by flixel
 	 */
+	@:optional var repeat:Int;
+}
+
+enum abstract AseAtlasTagDirection(String)
+{
+	var FORWARD = "forward";
+	var REVERSE = "reverse";
+	var PINGPONG = "pingpong";
+	var PINGPONG_REVERSE = "pingpong_reverse";
+	
+	/** Whether this plays forward */
+	inline public function isForward() return this == FORWARD || this == PINGPONG;
+	/** Whether this plays in reverse */
+	inline public function isReverse() return !isForward();
+	/** Whether this animation plays back and forth */
+	inline public function isPingPong() return this == PINGPONG || this == PINGPONG_REVERSE;
+};
+
+/**
+ * Aseprite atlases allow for the definition of rectangles that can change on various
+ * frames of an animation.
+ * 
+ * Note: These values are not implemented, or understood by any of Flixel's tools, yet.
+ */
+typedef AseAtlasSlice = AseObject &
+{
+	/** The name of this slice */
+	var name:String;
+	
+	/** The "keyframes" where the slice changes properties */
+	var keys:Array<AseAtlasSliceKey>;
+}
+
+/**
+ * The "keyframes" of a slice.
+ */
+typedef AseAtlasSliceKey = AseObject &
+{
+	/** The frame that the slice changes properties */
+	var frame:Int;
+	
+	/** The size and postion of the slice at this frame */
+	var bounds:AtlasRect;
+	
+	/** The center rect of the 9-slice of this slice, if 9-slice is enabled */
+	@:optional var center:AtlasRect;
+	
+	/** The pivot point of this slice */
+	@:optional var pivot:AtlasPos;
+}
+
+typedef AseAtlasLayer = AseObject &
+{
+	/** The name of the layer */
+	var name:String;
+	
+	/** The name of the parent layer */
 	@:optional var group:String;
 	
-	/**
-	 * Ranges from 0 to 255
-	 */
+	/** Ranges from 0 to 255 */
 	@:optional var opacity:Int;
 	
-	/**
-	 * The effect added to this layer to change how the colors blend with colors on lower layers
-	 * @see AseBlendMode
-	 */
+	/** The effect added to this layer to change how the colors blend with colors on lower layers */
 	@:optional var blendMode:AseBlendMode;
 	
 	/**
-	 * Any notes that were left on cels of this layer
+	 * Any info that was left on cels of this layer.
+	 * 
+	 * Note: While `data`, `color` and `zIndex` are optional, a cel should always have
+	 * at least one of them with a non-null value.
 	 */
-	@:optional var cels:Array<{ frame:Int, data:String, ?color:String }>;
+	@:optional var cels:Array<AseAtlasCel>;
 }
 
+/**
+ * Any data attached to this frame cel.
+ * 
+ * Note: These values are not implemented, or understood by any of Flixel's tools, yet.
+ */
+typedef AseAtlasCel = AseObject &
+{
+	/** The frame number associated with this data */
+	var frame:Int;
+	
+	/** The intended display z-index of this frame */
+	@:optional var zIndex:Int;
+}
+
+/**
+ * The different types of blend modes offered by Aseprite's atlases.
+ * 
+ * Note: These values are not implemented, or understood by any of Flixel's tools, yet.
+ */
 enum abstract AseBlendMode(String)
 {
 	var NORMAL = "normal";
@@ -129,18 +275,6 @@ enum abstract AseBlendMode(String)
 	var HSL_COLOR = "hsl_color";
 	var HSL_LUMINOSITY = "hsl_luminosity";
 }
-
-typedef AseAtlasSliceKey =
-{
-	/**
-	 * The frame that the slice changes size
-	 */
-	var frame:Int;
-	/**
-	 * The size of the slice at this frame
-	 */
-	var bounds:AtlasRect;
-};
 
 /**
  * Size struct use for atlas json parsing, { w:Float, h:Float }
