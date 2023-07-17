@@ -7,6 +7,7 @@ import openfl.display.Graphics;
 import openfl.media.Sound;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxAsepriteUtil;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
