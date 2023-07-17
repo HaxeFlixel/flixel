@@ -35,7 +35,7 @@ class FlxAsepriteUtil
 	 */
 	public static function loadAseAtlasAndTags(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
-		final aseData = loadAseAtlas(sprite, graphic, aseData);
+		final aseData = loadAseAtlas(sprite, graphic, data);
 		return addAseAtlasTags(sprite, aseData, tagSuffix);
 	}
 	
@@ -50,6 +50,7 @@ class FlxAsepriteUtil
 	 */
 	public static function addAseAtlasTags(sprite:FlxSprite, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
+		final aseData = data.getData();
 		for (frameTag in aseData.meta.frameTags)
 			sprite.animation.addByPrefix(frameTag.name, frameTag.name + tagSuffix);
 		
@@ -158,7 +159,7 @@ typedef AseAtlasTag = AseObject &
 	@:optional var repeat:Int;
 }
 
-enum abstract AseAtlasTagDirection(String)
+enum abstract AseAtlasTagDirection(String) to String
 {
 	var FORWARD = "forward";
 	var REVERSE = "reverse";
@@ -171,7 +172,7 @@ enum abstract AseAtlasTagDirection(String)
 	inline public function isReverse() return !isForward();
 	/** Whether this animation plays back and forth */
 	inline public function isPingPong() return this == PINGPONG || this == PINGPONG_REVERSE;
-};
+}
 
 /**
  * Aseprite atlases allow for the definition of rectangles that can change on various
