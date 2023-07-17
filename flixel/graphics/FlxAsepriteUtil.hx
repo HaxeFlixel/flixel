@@ -5,7 +5,7 @@ import flixel.system.FlxAssets;
 
 class FlxAsepriteUtil
 {
-	static public function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	public static function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
 		final aseData = data.getData();
 		sprite.frames = FlxAtlasFrames.fromAseprite(graphic, aseData);
