@@ -3,48 +3,54 @@ package flixel.graphics;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets;
 
+/**
+ * Collection of helpers that deal with Aseprite files. Namely the json files exported for sprite sheets.
+ */
 class FlxAsepriteUtil
 {
 	/**
 	 * Helper for parsing Aseprite atlas json files. Reads frames via `FlxAtlasFrames.fromAseprite`
 	 * and returns the parsed AseAtlas to be used with other `FlxAsepriteUtil` helpers.
+	 * 
 	 * @param   sprite   The sprite to load the ase atlas's frames
 	 * @param   graphic  The png file associated with the atlas
 	 * @param   data     Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
-	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data
+	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
 	public static function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
 	{
-		final aseData = data.getData();
-		sprite.frames = FlxAtlasFrames.fromAseprite(graphic, aseData);
-		return aseData;
+		sprite.frames = FlxAtlasFrames.fromAseprite(graphic, data);
+		return sprite;
 	}
 	
 	/**
 	 * Helper for parsing Aseprite atlas json files. Reads frame data via `FlxAtlasFrames.fromAseprite`,
-	 * then, reads
+	 * then, adds animations for any tags listed.
+	 * 
 	 * @param   sprite     The sprite to load the ase atlas's frames
 	 * @param   graphic    The png file associated with the atlas
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
-	 * @param   tagSuffix  
-	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data
+	 * @param   tagSuffix  The delimeter on each frame name that follows the animation name and precedes the frame number
+	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
 	public static function loadAseAtlasAndTags(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
-		final aseData = loadAseAtlas(sprite, graphic, data);
+		final aseData = data.getData();
+		loadAseAtlas(sprite, graphic, aseData);
 		return addAseAtlasTags(sprite, aseData, tagSuffix);
 	}
 	
 	/**
+	 * Loops through the given ase atlas's tags and adds animations for each, to the gives sprite.
 	 * 
 	 * @param   sprite     The sprite to add the animations
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json.
-	 * @param   tagSuffix  
-	 * @return  The `AseAtlas` struct used to create the atlas. Mostly useful for the included `AseAtlasMeta` data.
+	 * @param   tagSuffix  The delimeter on each frame name that follows the animation name and precedes the frame number
+	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
@@ -54,7 +60,7 @@ class FlxAsepriteUtil
 		for (frameTag in aseData.meta.frameTags)
 			sprite.animation.addByPrefix(frameTag.name, frameTag.name + tagSuffix);
 		
-		return aseData;
+		return sprite;
 	}
 }
 
