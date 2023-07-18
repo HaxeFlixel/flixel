@@ -27,38 +27,54 @@ class FlxAsepriteUtil
 	
 	/**
 	 * Helper for parsing Aseprite atlas json files. Reads frame data via `loadAseAtlas`,
-	 * then, adds animations for any tags listed, via `addAseAtlasTags`.
+	 * then, adds animations for any tags listed, via `addAseAtlasTagsByPrefix`.
+	 * 
+	 * Notes: Assumes that the frame names are prefixed by tag name and assumes that the `tagSuffix`
+	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
+	 * for most cases.
+	 * 
+	 * It's recommended to disable the "exclude empty" option if you have empty frames (that is, 
+	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
+	 * not be able to add those empty frames to an animation
 	 * 
 	 * @param   sprite     The sprite to load the ase atlas's frames
 	 * @param   graphic    The png file associated with the atlas
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
 	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
-	 *                     frame number. Be sure to set your filename format to "{tag}:{tagframe}"
+	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function loadAseAtlasAndTags(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	public static function loadAseAtlasAndTagsByPrefix(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
 		final aseData = data.getData();
 		loadAseAtlas(sprite, graphic, aseData);
-		return addAseAtlasTags(sprite, aseData, tagSuffix);
+		return addAseAtlasTagsByPrefix(sprite, aseData, tagSuffix);
 	}
 	
 	/**
 	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
 	 * 
+	 * Notes: Assumes that the frame names are prefixed by tag name and assumes that the `tagSuffix`
+	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
+	 * for most cases.
+	 * 
+	 * It's recommended to disable the "exclude empty" option if you have empty frames (that is, 
+	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
+	 * not be able to add those empty frames to an animation.
+	 * 
 	 * @param   sprite     The sprite to add the animations
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
 	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
-	 *                     frame number. Be sure to set your filename format to "{tag}:{tagframe}"
+	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function addAseAtlasTags(sprite:FlxSprite, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	public static function addAseAtlasTagsByPrefix(sprite:FlxSprite, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
 	{
 		final aseData = data.getData();
 		for (frameTag in aseData.meta.frameTags)
