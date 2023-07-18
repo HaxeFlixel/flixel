@@ -1,5 +1,6 @@
 package flixel.graphics;
 
+import flixel.math.FlxMath;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets;
 
@@ -33,7 +34,7 @@ class FlxAsepriteUtil
 	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
 	 * for most cases.
 	 * 
-	 * It's recommended to disable the "exclude empty" option if you have empty frames (that is, 
+	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
 	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
 	 * not be able to add those empty frames to an animation
 	 * 
@@ -56,12 +57,13 @@ class FlxAsepriteUtil
 	
 	/**
 	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
+	 * Uses the frame names to determine which tag they belong to.
 	 * 
 	 * Notes: Assumes that the frame names are prefixed by tag name and assumes that the `tagSuffix`
 	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
 	 * for most cases.
 	 * 
-	 * It's recommended to disable the "exclude empty" option if you have empty frames (that is, 
+	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
 	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
 	 * not be able to add those empty frames to an animation.
 	 * 
@@ -79,6 +81,64 @@ class FlxAsepriteUtil
 		final aseData = data.getData();
 		for (frameTag in aseData.meta.frameTags)
 			sprite.animation.addByPrefix(frameTag.name, frameTag.name + tagSuffix);
+		
+		return sprite;
+	}
+	
+	/**
+	 * Helper for parsing Aseprite atlas json files. Reads frame data via `loadAseAtlas`,
+	 * then, adds animations for any tags listed, via `addAseAtlasTagsByIndex`.
+	 * 
+	 * Note: It's recommended to disable the "Ignore Empty" option if you have empty frames (that 
+	 * is, empty on every layer) in tags, while it will reduce the size of your json, this method
+	 * will not be able to add those empty frames to an animation.
+	 * 
+	 * @param   sprite     The sprite to load the ase atlas's frames
+	 * @param   graphic    The png file associated with the atlas
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                     string asset path to a json
+	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
+	 * @since 5.4.0
+	 */
+	public static function loadAseAtlasAndTagsByIndex(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
+	{
+		final aseData = data.getData();
+		loadAseAtlas(sprite, graphic, aseData);
+		return addAseAtlasTagsByIndex(sprite, aseData);
+	}
+	
+	/**
+	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
+	 * Uses the tag's `to` and `from` fields to determine.
+	 * 
+	 * Note: It's recommended to disable the "Ignore Empty" option if you have empty frames (that 
+	 * is, empty on every layer) in tags, while it will reduce the size of your json, this method
+	 * will not be able to add those empty frames to an animation.
+	 * 
+	 * @param   sprite     The sprite to add the animations
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                     string asset path to a json
+	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
+	 * @since 5.4.0
+	 */
+	public static function addAseAtlasTagsByIndex(sprite:FlxSprite, data:FlxAsepriteJsonAsset)
+	{
+		final aseData = data.getData();
+		final maxFrameNumber = sprite.frames.numFrames - 1;
+		for (frameTag in aseData.meta.frameTags)
+		{
+			if (frameTag.to >= sprite.frames.numFrames)
+			{
+				FlxG.log.warn('Tag "${frameTag.name}" `to` field (${frameTag.to}) exceeds the max '
+					+ 'frame number ($maxFrameNumber). Some animations may not be loaded correctly. '
+					+ 'Was the atlas exported with "Ignore Empty"/--ignore-empty?');
+			}
+			
+			final toFrame = FlxMath.minInt(frameTag.to, sprite.frames.numFrames);
+			sprite.animation.add(frameTag.name, [for (i in frameTag.from...toFrame + 1) i]);
+		}
 		
 		return sprite;
 	}
