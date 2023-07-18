@@ -129,14 +129,14 @@ class FlxAsepriteUtil
 		final maxFrameNumber = sprite.frames.numFrames - 1;
 		for (frameTag in aseData.meta.frameTags)
 		{
-			if (frameTag.to >= sprite.frames.numFrames)
+			if (frameTag.to > maxFrameNumber)
 			{
 				FlxG.log.warn('Tag "${frameTag.name}" `to` field (${frameTag.to}) exceeds the max '
 					+ 'frame number ($maxFrameNumber). Some animations may not be loaded correctly. '
 					+ 'Was the atlas exported with "Ignore Empty"/--ignore-empty?');
 			}
 			
-			final toFrame = FlxMath.minInt(frameTag.to, sprite.frames.numFrames);
+			final toFrame = FlxMath.minInt(frameTag.to, maxFrameNumber);
 			sprite.animation.add(frameTag.name, [for (i in frameTag.from...toFrame + 1) i]);
 		}
 		
