@@ -167,11 +167,11 @@ enum abstract AseAtlasTagDirection(String) to String
 	var PINGPONG_REVERSE = "pingpong_reverse";
 	
 	/** Whether this plays forward */
-	inline public function isForward() return this == FORWARD || this == PINGPONG;
+	public inline function isForward() return this == FORWARD || this == PINGPONG;
 	/** Whether this plays in reverse */
-	inline public function isReverse() return !isForward();
+	public inline function isReverse() return !isForward();
 	/** Whether this animation plays back and forth */
-	inline public function isPingPong() return this == PINGPONG || this == PINGPONG_REVERSE;
+	public inline function isPingPong() return this == PINGPONG || this == PINGPONG_REVERSE;
 }
 
 /**
