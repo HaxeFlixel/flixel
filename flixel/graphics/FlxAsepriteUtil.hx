@@ -9,12 +9,12 @@ import flixel.system.FlxAssets;
 class FlxAsepriteUtil
 {
 	/**
-	 * Helper for parsing Aseprite atlas json files. Reads frames via `FlxAtlasFrames.fromAseprite`
-	 * and returns the parsed AseAtlas to be used with other `FlxAsepriteUtil` helpers.
+	 * Helper for parsing Aseprite atlas json files. Reads frames via `FlxAtlasFrames.fromAseprite`.
 	 * 
 	 * @param   sprite   The sprite to load the ase atlas's frames
 	 * @param   graphic  The png file associated with the atlas
-	 * @param   data     Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                     string asset path to a json
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
@@ -26,13 +26,15 @@ class FlxAsepriteUtil
 	}
 	
 	/**
-	 * Helper for parsing Aseprite atlas json files. Reads frame data via `FlxAtlasFrames.fromAseprite`,
-	 * then, adds animations for any tags listed.
+	 * Helper for parsing Aseprite atlas json files. Reads frame data via `loadAseAtlas`,
+	 * then, adds animations for any tags listed, via `addAseAtlasTags`.
 	 * 
 	 * @param   sprite     The sprite to load the ase atlas's frames
 	 * @param   graphic    The png file associated with the atlas
-	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json
-	 * @param   tagSuffix  The delimeter on each frame name that follows the animation name and precedes the frame number
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                     string asset path to a json
+	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
+	 *                     frame number. Be sure to set your filename format to "{tag}:{tagframe}"
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
@@ -45,11 +47,13 @@ class FlxAsepriteUtil
 	}
 	
 	/**
-	 * Loops through the given ase atlas's tags and adds animations for each, to the gives sprite.
+	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
 	 * 
 	 * @param   sprite     The sprite to add the animations
-	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a string asset path to a json.
-	 * @param   tagSuffix  The delimeter on each frame name that follows the animation name and precedes the frame number
+	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                     string asset path to a json
+	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
+	 *                     frame number. Be sure to set your filename format to "{tag}:{tagframe}"
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
@@ -75,7 +79,7 @@ typedef AseAtlasArray = AseAtlasBase<Array<AseAtlasFrame>>;
 typedef TexturePackerAtlasArray = AtlasBase<Array<AseAtlasFrame>>;
 
 /**
- * Internal helper used to 
+ * Internal helper used to enumerate the fields of an atlas that has frame data keyed by frame names.
  */
 abstract Hash<T>(Dynamic)
 {
@@ -102,17 +106,42 @@ typedef HashOrArray<T> = flixel.util.typeLimit.OneOfTwo<Hash<T>, Array<T>>;
 typedef AseAtlas = AseAtlasBase<HashOrArray<AseAtlasFrame>>;
 typedef TexturePackerAtlas = AtlasBase<HashOrArray<TexturePackerAtlasFrame>>;
 
+/**
+ * Metadata attached to aseprite's atlas json, containing info about how the .aseprite file was
+ * set up.
+ */
 typedef AseAtlasMeta =
 {
+	/** The app used to save the file, often https://www.aseprite.org/ */
 	var app:String;
+	
+	/** The version of Aseprite used to export the json */
 	var version:String;
-	var image:String;
+	
+	/** Usually "I8" */
 	var format:String;
+	
+	/** The dimensions of the image file */
 	var size:AtlasSize;
+	
+	/** Usually "1" */
 	var scale:String;
-	var frameTags:Array<AseAtlasTag>;
-	var slices:Array<AseAtlasSlice>;
-	var layers:Array<AseAtlasLayer>;
+	
+	/**
+	 * The png file exported with this json, if one was
+	 * 
+	 * Note: Does not contain the relative filepath of that image (as of Aseprite 1.3-rc4)
+	 */
+	@:optional var image:String;
+	
+	/** A list of animation tags */
+	@:optional var frameTags:Array<AseAtlasTag>;
+	
+	/** A list of rects, 9-slices and pivots used in the Aseprite file, to be used however you desire */
+	@:optional var slices:Array<AseAtlasSlice>;
+	
+	/** A list of the layers used in the Aseprite file, to be used however you desire */
+	@:optional var layers:Array<AseAtlasLayer>;
 }
 
 typedef AseObject = 
@@ -158,9 +187,9 @@ typedef AseAtlasTag = AseObject &
 	var direction:AseAtlasTagDirection;
 	
 	/**
-	 * The number of times to repeat this animation before
+	 * The number of times to repeat this animation before aseprite's timeline switvhed to the next one.
 	 * 
-	 * Note: not cuurently used by flixel
+	 * Note: not currently used by flixel
 	 */
 	@:optional var repeat:Int;
 }
@@ -174,8 +203,10 @@ enum abstract AseAtlasTagDirection(String) to String
 	
 	/** Whether this plays forward */
 	public inline function isForward() return this == FORWARD || this == PINGPONG;
+	
 	/** Whether this plays in reverse */
 	public inline function isReverse() return !isForward();
+	
 	/** Whether this animation plays back and forth */
 	public inline function isPingPong() return this == PINGPONG || this == PINGPONG_REVERSE;
 }
@@ -221,7 +252,7 @@ typedef AseAtlasLayer = AseObject &
 	/** The name of the parent layer */
 	@:optional var group:String;
 	
-	/** Ranges from 0 to 255 */
+	/** Ranges from 0 to 0xFF (255) */
 	@:optional var opacity:Int;
 	
 	/** The effect added to this layer to change how the colors blend with colors on lower layers */
@@ -306,7 +337,7 @@ typedef AtlasFrame =
 	@:optional var filename:String;
 	
 	/**
-	 * Should alwyas be false
+	 * Should always be false
 	 */
 	var rotated:Bool;
 	
