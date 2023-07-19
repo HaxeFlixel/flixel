@@ -16,7 +16,7 @@ class FlxAsepriteUtil
 	 * @param   graphic  The png file associated with the atlas
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
@@ -35,7 +35,7 @@ class FlxAsepriteUtil
 	 * for most cases.
 	 * 
 	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
-	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
+	 * empty on every layer), while it will reduce the size of your json, this method will
 	 * not be able to add those empty frames to an animation
 	 * 
 	 * @param   sprite     The sprite to load the ase atlas's frames
@@ -44,7 +44,7 @@ class FlxAsepriteUtil
 	 *                     string asset path to a json
 	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
 	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
@@ -64,7 +64,7 @@ class FlxAsepriteUtil
 	 * for most cases.
 	 * 
 	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
-	 * empty on every layer) in tags, while it will reduce the size of your json, this method will
+	 * empty on every layer), while it will reduce the size of your json, this method will
 	 * not be able to add those empty frames to an animation.
 	 * 
 	 * @param   sprite     The sprite to add the animations
@@ -72,7 +72,7 @@ class FlxAsepriteUtil
 	 *                     string asset path to a json
 	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
 	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
@@ -97,7 +97,7 @@ class FlxAsepriteUtil
 	 * @param   graphic    The png file associated with the atlas
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
@@ -119,7 +119,7 @@ class FlxAsepriteUtil
 	 * @param   sprite     The sprite to add the animations
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
-	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
