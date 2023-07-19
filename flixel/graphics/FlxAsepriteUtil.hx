@@ -1,5 +1,6 @@
 package flixel.graphics;
 
+import flixel.animation.FlxAnimationController;
 import flixel.math.FlxMath;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets;
@@ -17,10 +18,11 @@ class FlxAsepriteUtil
 	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
 	 *                     string asset path to a json
 	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * 
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
+	public static inline function loadAseAtlas(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
 	{
 		sprite.frames = FlxAtlasFrames.fromAseprite(graphic, data);
 		return sprite;
@@ -30,38 +32,40 @@ class FlxAsepriteUtil
 	 * Helper for parsing Aseprite atlas json files. Reads frame data via `loadAseAtlas`,
 	 * then, adds animations for any tags listed, via `addAseAtlasTagsByPrefix`.
 	 * 
-	 * Notes: Assumes that the frame names are prefixed by tag name and assumes that the `tagSuffix`
-	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
-	 * for most cases.
+	 * Notes: Assumes that the frame names are prefixed by tag name, assumes that the `tagSuffix`
+	 * does not appear anywhere in the tag name and assumes that no tags overlap. You can use the
+	 * filename format `{outertag}:{frame}` for most cases.
 	 * 
 	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
 	 * empty on every layer), while it will reduce the size of your json, this method will
 	 * not be able to add those empty frames to an animation
 	 * 
-	 * @param   sprite     The sprite to load the ase atlas's frames
-	 * @param   graphic    The png file associated with the atlas
-	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
-	 *                     string asset path to a json
-	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
-	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
+	 * @param   sprite       The sprite to load the ase atlas's frames
+	 * @param   graphic      The png file associated with the atlas
+	 * @param   data         Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                       string asset path to a json
+	 * @param   tagSuffix    The delimeter on each frame name between the animation name and the
+	 *                       frame number. Be sure to set your filename format to `{outertag}:{frame}`
+	 * @param   excludeTags  A list of tags to ignore
 	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * 
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function loadAseAtlasAndTagsByPrefix(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	public static inline function loadAseAtlasAndTagsByPrefix(sprite, graphic, data:FlxAsepriteJsonAsset, tagSuffix = ":", ?excludeTags)
 	{
-		final aseData = data.getData();
-		loadAseAtlas(sprite, graphic, aseData);
-		return addAseAtlasTagsByPrefix(sprite, aseData, tagSuffix);
+		data = data.getData();
+		loadAseAtlas(sprite, graphic, data);
+		return addAseAtlasTagsByPrefix(sprite, data, tagSuffix, excludeTags);
 	}
 	
 	/**
 	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
 	 * Uses the frame names to determine which tag they belong to.
 	 * 
-	 * Notes: Assumes that the frame names are prefixed by tag name and assumes that the `tagSuffix`
-	 * does not appear anywhere in the tag name. You can use the filename format `{outertag}:{frame}`
-	 * for most cases.
+	 * Notes: Assumes that the frame names are prefixed by tag name, assumes that the `tagSuffix`
+	 * does not appear anywhere in the tag name and assumes that no tags overlap. You can use the
+	 * filename format `{outertag}:{frame}` for most cases.
 	 * 
 	 * It's recommended to disable the "Ignore Empty" option if you have empty frames (that is, 
 	 * empty on every layer), while it will reduce the size of your json, this method will
@@ -72,61 +76,99 @@ class FlxAsepriteUtil
 	 *                     string asset path to a json
 	 * @param   tagSuffix  The delimeter on each frame name between the animation name and the
 	 *                     frame number. Be sure to set your filename format to `{outertag}:{frame}`
+	 * @param   excludeTags  A list of tags to ignore
 	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * 
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function addAseAtlasTagsByPrefix(sprite:FlxSprite, data:FlxAsepriteJsonAsset, tagSuffix:String = ":")
+	public static inline function addAseAtlasTagsByPrefix(sprite:FlxSprite, data, tagSuffix = ":", ?excludeTags)
+	{
+		addByPrefixHelper(sprite.animation, data, tagSuffix, excludeTags);
+		return sprite;
+	}
+	
+	// TODO: overload addAseAtlasTagsByPrefix to take FlxAnimationController?
+	// This might mess with codeclimate
+	
+	static function addByPrefixHelper(animations:FlxAnimationController, data:FlxAsepriteJsonAsset, tagSuffix = ":", excludeTags:Null<Array<String>>)
 	{
 		final aseData = data.getData();
-		for (frameTag in aseData.meta.frameTags)
-			sprite.animation.addByPrefix(frameTag.name, frameTag.name + tagSuffix);
-		
-		return sprite;
+		for (tag in aseData.meta.frameTags)
+		{
+			final name = tag.name;
+			if (excludeTags == null || !excludeTags.contains(name))
+			{
+				final expectedFrames = tag.to - tag.from + 1;
+				animations.addByPrefix(name, name + tagSuffix);
+				// Animations aren't added if no frames are found
+				final anim = animations.getByName(name);
+				final actualFrames = anim == null ? 0 : anim.numFrames;
+				if (actualFrames != expectedFrames)
+				{
+					FlxG.log.warn('Tag "$name" expected $expectedFrames frames but found '
+						+ '$actualFrames. Was the atlas exported with "Ignore Empty"/--ignore-empty'
+						+ ', or are there multiple tags on a single frame?');
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Helper for parsing Aseprite atlas json files. Reads frame data via `loadAseAtlas`,
 	 * then, adds animations for any tags listed, via `addAseAtlasTagsByIndex`.
 	 * 
-	 * Note: It's recommended to disable the "Ignore Empty" option if you have empty frames (that 
+	 * Warning: It's important to disable the "Ignore Empty" option if you have empty frames (that
 	 * is, empty on every layer) in tags, while it will reduce the size of your json, this method
 	 * will not be able to add those empty frames to an animation.
 	 * 
-	 * @param   sprite     The sprite to load the ase atlas's frames
-	 * @param   graphic    The png file associated with the atlas
-	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
-	 *                     string asset path to a json
+	 * @param   sprite       The sprite to load the ase atlas's frames
+	 * @param   graphic      The png file associated with the atlas
+	 * @param   data         Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                       string asset path to a json
+	 * @param   excludeTags  A list of tags to ignore
 	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * 
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function loadAseAtlasAndTagsByIndex(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset)
+	public static inline function loadAseAtlasAndTagsByIndex(sprite:FlxSprite, graphic, data:FlxAsepriteJsonAsset, ?excludeTags)
 	{
-		final aseData = data.getData();
-		loadAseAtlas(sprite, graphic, aseData);
-		return addAseAtlasTagsByIndex(sprite, aseData);
+		data = data.getData();
+		loadAseAtlas(sprite, graphic, data);
+		return addAseAtlasTagsByIndex(sprite, data, excludeTags);
 	}
 	
 	/**
 	 * Loops through the given ase atlas's tags and adds animations for each, to the given sprite.
 	 * Uses the tag's `to` and `from` fields to determine.
 	 * 
-	 * Note: It's recommended to disable the "Ignore Empty" option if you have empty frames (that 
+	 * Warning: It's important to disable the "Ignore Empty" option if you have empty frames (that
 	 * is, empty on every layer) in tags, while it will reduce the size of your json, this method
 	 * will not be able to add those empty frames to an animation.
 	 * 
-	 * @param   sprite     The sprite to add the animations
-	 * @param   data       Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
-	 *                     string asset path to a json
+	 * @param   sprite       The sprite to add the animations
+	 * @param   data         Can be an `AseAtlas` struct, a JSON string matching the `AseAtlas` or a
+	 *                       string asset path to a json
+	 * @param   excludeTags  A list of tags to ignore
 	 * @return  The `FlxSprite` instance (nice for chaining stuff together, if you're into that).
+	 * 
 	 * @see flixel.graphics.FlxAsepriteUtil.AseAtlasMeta
 	 * @since 5.4.0
 	 */
-	public static function addAseAtlasTagsByIndex(sprite:FlxSprite, data:FlxAsepriteJsonAsset)
+	public static inline function addAseAtlasTagsByIndex(sprite:FlxSprite, data:FlxAsepriteJsonAsset, ?excludeTags)
+	{
+		addByIndexHelper(sprite.animation, data, excludeTags);
+		return sprite;
+	}
+	
+	// TODO: overload addAseAtlasTagsByIndex to take FlxAnimationController?
+	// This might mess with codeclimate
+	
+	static function addByIndexHelper(animations:FlxAnimationController, data:FlxAsepriteJsonAsset, excludeTags:Null<Array<String>>)
 	{
 		final aseData = data.getData();
-		final maxFrameNumber = sprite.frames.numFrames - 1;
+		final maxFrameNumber = animations.numFrames - 1;
 		for (frameTag in aseData.meta.frameTags)
 		{
 			if (frameTag.to > maxFrameNumber)
@@ -137,10 +179,8 @@ class FlxAsepriteUtil
 			}
 			
 			final toFrame = FlxMath.minInt(frameTag.to, maxFrameNumber);
-			sprite.animation.add(frameTag.name, [for (i in frameTag.from...toFrame + 1) i]);
+			animations.add(frameTag.name, [for (i in frameTag.from...toFrame + 1) i]);
 		}
-		
-		return sprite;
 	}
 }
 
