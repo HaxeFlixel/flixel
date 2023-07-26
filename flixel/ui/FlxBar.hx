@@ -98,7 +98,7 @@ class FlxBar extends FlxSprite
 	public var filledCallback:Void->Void;
 
 	/**
-	 * Object to track value from/
+	 * Object to track value from
 	 */
 	public var parent:Dynamic;
 
