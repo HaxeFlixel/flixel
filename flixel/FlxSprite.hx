@@ -988,7 +988,37 @@ class FlxSprite extends FlxObject
 		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
 		dirty = true;
 	}
-
+	
+	/**
+	 * Change's this sprite's color transform to apply a tint effect.
+	 * Mimics Adobe Animate's "Tint" color effect
+	 * 
+	 * @param   color     The 0xRRGGBB color to tint the sprite
+	 * @param   strength  The amount of tint to apply, from 0.0 to 1.0
+	 * 
+	 * @since 5.4.0
+	 */
+	public function setTint(color:FlxColor, strength:Float)
+	{
+		final mult = 1 - strength;
+		setColorTransform(mult, mult, mult, 1.0, Math.round(color.red * strength), Math.round(color.green * strength), Math.round(color.blue * strength));
+	}
+	
+	/**
+	 * Change's this sprite's color transform to brighten or darken it.
+	 * Mimics Adobe Animate's "Brightness" color effect
+	 * 
+	 * @param   brightness  Use 1.0 to fully brighten, -1.0 to fully darken, or anything inbetween
+	 * 
+	 * @since 5.4.0
+	 */
+	public function setBrightness(brightness:Float)
+	{
+		final mult = 1.0 - Math.abs(brightness);
+		final offset = Math.round(Math.max(0, 0xFF * brightness));
+		setColorTransform(mult, mult, mult, 1.0, offset, offset, offset);
+	}
+	
 	function updateColorTransform():Void
 	{
 		if (colorTransform == null)
