@@ -1000,8 +1000,13 @@ class FlxSprite extends FlxObject
 	 */
 	public function setTint(color:FlxColor, strength:Float)
 	{
+		inline function scaleInt(i:Int):Int
+		{
+			return Math.round(i * strength);
+		}
+		
 		final mult = 1 - strength;
-		setColorTransform(mult, mult, mult, 1.0, Math.round(color.red * strength), Math.round(color.green * strength), Math.round(color.blue * strength));
+		setColorTransform(mult, mult, mult, 1.0, scaleInt(color.red), scaleInt(color.green), scaleInt(color.blue));
 	}
 	
 	/**
