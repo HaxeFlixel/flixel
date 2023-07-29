@@ -20,6 +20,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
@@ -753,6 +754,71 @@ class FlxSpriteUtil
 	static function alphaTween(sprite:FlxSprite, f:Float):Void
 	{
 		sprite.alpha = f;
+	}
+	
+	/**
+	 * Change's this sprite's color transform to apply a tint effect.
+	 * Mimics Adobe Animate's "Tint" color effect
+	 * 
+	 * @param   tint  The color to tint the sprite, where alpha determines the strength
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function setTint(sprite:FlxSprite, tint:FlxColor)
+	{
+		final strength = tint.alphaFloat;
+		inline function scaleInt(i:Int):Int
+		{
+			return Math.round(i * strength);
+		}
+		
+		final mult = 1 - strength;
+		sprite.setColorTransform(mult, mult, mult, 1.0, scaleInt(tint.red), scaleInt(tint.green), scaleInt(tint.blue));
+	}
+	
+	/**
+	 * Uses `FlxTween.num` to call `setTint` on the target sprite
+	 * 
+	 * @param   tint        The color to tint the sprite, where alpha determines the max strength
+	 * @param   duration    How long the flash lasts
+	 * @param   func        Controls the amount of tint over time. The input float goes from 0 to
+	 *                      1.0, an output of 1.0 means the tint is fully applied. If omitted,
+	 *                      `(n)->1-n` is used, meaning it starts at full tint and fades away
+	 * @param   onComplete  Called when the flash is complete
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function flashTint(sprite:FlxSprite, tint = FlxColor.WHITE, duration = 0.5,
+		?func:(Float)->Float, ?onComplete:()->Void)
+	{
+		final options:TweenOptions = onComplete != null ? { onComplete: (_)->onComplete} : null;
+		if (func == null)
+			func = (n)->1-FlxEase.circIn(n);// start at full, fade out
+		
+		var color = tint.rgb;
+		final strength = tint.alphaFloat;
+		FlxTween.num(0, 1, duration, options, function(n)
+		{
+			color.alphaFloat = strength * func(n);
+			setTint(sprite, color);
+		});
+		
+		return sprite;
+	}
+	
+	/**
+	 * Change's this sprite's color transform to brighten or darken it.
+	 * Mimics Adobe Animate's "Brightness" color effect
+	 * 
+	 * @param   brightness  Use 1.0 to fully brighten, -1.0 to fully darken, or anything inbetween
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function setBrightness(sprite:FlxSprite, brightness:Float)
+	{
+		final mult = 1.0 - Math.abs(brightness);
+		final offset = Math.round(Math.max(0, 0xFF * brightness));
+		sprite.setColorTransform(mult, mult, mult, 1.0, offset, offset, offset);
 	}
 }
 

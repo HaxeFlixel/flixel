@@ -988,7 +988,7 @@ class FlxSprite extends FlxObject
 		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
 		dirty = true;
 	}
-
+	
 	function updateColorTransform():Void
 	{
 		if (colorTransform == null)
