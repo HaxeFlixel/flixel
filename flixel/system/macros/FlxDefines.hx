@@ -28,6 +28,7 @@ private enum UserDefines
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
 	FLX_NO_SAVE;
+	FLX_NO_SOUND_GAIN;
 }
 
 /**
@@ -59,6 +60,7 @@ private enum HelperDefines
 	FLX_PITCH;
 	FLX_NO_UNIT_TEST;
 	FLX_SAVE;
+	FLX_SOUND_GAIN;
 }
 
 class FlxDefines
@@ -147,15 +149,27 @@ class FlxDefines
 
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
+
 		#if (openfl_legacy || lime >= "8.0.0")
 		if (defined(FLX_NO_SOUND_SYSTEM) || #if openfl_legacy !defined("sys") #else defined("flash") #end)
 			define(FLX_NO_PITCH);
 		#else
 		define(FLX_NO_PITCH);
 		#end
+
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
-		
+
+		#if (native && !openfl_legacy)
+		if (defined(FLX_NO_SOUND_SYSTEM))
+			define(FLX_NO_SOUND_GAIN);
+		#else
+		define(FLX_NO_SOUND_GAIN);
+		#end
+
+		if (!defined(FLX_NO_SOUND_GAIN))
+			define(FLX_SOUND_GAIN);
+
 		if (!defined(FLX_NO_SAVE))
 			define(FLX_SAVE);
 		
