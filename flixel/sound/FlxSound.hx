@@ -107,7 +107,7 @@ class FlxSound extends FlxBasic
 	 */
 	public var time(get, set):Float;
 
-	#if (native && !openfl_legacy)
+	#if FLX_SOUND_GAIN
 	/**
 	 * The amount of audio signal.
 	 */
@@ -180,7 +180,7 @@ class FlxSound extends FlxBasic
 	 */
 	var _time:Float = 0;
 
-	#if (native && !openfl_legacy)
+	#if FLX_SOUND_GAIN
 	/**
 	 * Internal tracker for sound gain.
 	 */
@@ -449,7 +449,7 @@ class FlxSound extends FlxBasic
 		#if FLX_PITCH
 		pitch = 1;
 		#end
-		#if (native && !openfl_legacy)
+		#if FLX_SOUND_GAIN
 		gain = 1;
 		#end
 		_length = (_sound == null) ? 0 : _sound.length;
@@ -633,7 +633,7 @@ class FlxSound extends FlxBasic
 			#if FLX_PITCH
 			pitch = _pitch;
 			#end
-			#if (native && !openfl_legacy)
+			#if FLX_SOUND_GAIN
 			gain = _gain;
 			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
@@ -806,7 +806,7 @@ class FlxSound extends FlxBasic
 		return _time = time;
 	}
 
-	#if (native && !openfl_legacy)
+	#if FLX_SOUND_GAIN
 	inline function get_gain():Float
 	{
 		return _gain;
