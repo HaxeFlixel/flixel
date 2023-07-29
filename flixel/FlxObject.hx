@@ -886,22 +886,31 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	function updateMotion(elapsed:Float):Void
 	{
-		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
-		angularVelocity += velocityDelta;
-		angle += angularVelocity * elapsed;
-		angularVelocity += velocityDelta;
+		if (velocity.x == 0 && velocity.y == 0 && angularVelocity == 0)
+			return;
 
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
-		velocity.x += velocityDelta;
-		var delta = velocity.x * elapsed;
-		velocity.x += velocityDelta;
-		x += delta;
+		if (angularVelocity != 0) {
+			final velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
+		    angularVelocity += velocityDelta;
+		    angle += angularVelocity * elapsed;
+		    angularVelocity += velocityDelta;
+		}
 
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * elapsed;
-		velocity.y += velocityDelta;
-		y += delta;
+		if (velocity.x != 0) {
+			final velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
+		    velocity.x += velocityDelta;
+			final delta = velocity.x * elapsed;
+			velocity.x += velocityDelta;
+		    x += delta;
+		}
+
+		if (velocity.y != 0) {
+			final velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
+		    velocity.y += velocityDelta;
+		    final delta = velocity.y * elapsed;
+		    velocity.y += velocityDelta;
+		    y += delta;
+		}
 	}
 
 	/**
