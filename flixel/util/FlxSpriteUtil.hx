@@ -1,17 +1,17 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.display.BitmapDataChannel;
-import flash.display.BlendMode;
-import flash.display.CapsStyle;
-import flash.display.Graphics;
-import flash.display.JointStyle;
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.display.BitmapDataChannel;
+import openfl.display.BlendMode;
+import openfl.display.CapsStyle;
+import openfl.display.Graphics;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -28,7 +28,7 @@ import flixel.tweens.FlxTween;
 /**
  * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
  * Note that stage quality impacts the results of the draw() functions -
- * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
+ * use FlxG.stage.quality = openfl.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {
@@ -175,14 +175,14 @@ class FlxSpriteUtil
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.right < camera.viewLeft)
+		if (edges.has(LEFT) && spriteBounds.right < camera.viewMarginLeft)
 			sprite.x = camera.viewRight + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.left > camera.viewRight)
+		else if (edges.has(RIGHT) && spriteBounds.left > camera.viewMarginRight)
 			sprite.x = camera.viewLeft + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.bottom < camera.viewTop)
+		if (edges.has(UP) && spriteBounds.bottom < camera.viewMarginTop)
 			sprite.y = camera.viewBottom + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.top > camera.viewBottom)
+		else if (edges.has(DOWN) && spriteBounds.top > camera.viewMarginBottom)
 			sprite.y = camera.viewTop + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();
@@ -211,14 +211,14 @@ class FlxSpriteUtil
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.left < camera.viewLeft)
+		if (edges.has(LEFT) && spriteBounds.left < camera.viewMarginLeft)
 			sprite.x = camera.viewLeft + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.right > camera.viewRight)
+		else if (edges.has(RIGHT) && spriteBounds.right > camera.viewMarginRight)
 			sprite.x = camera.viewRight + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.top < camera.viewTop)
+		if (edges.has(UP) && spriteBounds.top < camera.viewMarginTop)
 			sprite.y = camera.viewTop + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.bottom > camera.viewBottom)
+		else if (edges.has(DOWN) && spriteBounds.bottom > camera.viewMarginBottom)
 			sprite.y = camera.viewBottom + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();

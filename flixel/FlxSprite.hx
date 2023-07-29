@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.display.BitmapData;
-import flash.display.BlendMode;
-import flash.geom.ColorTransform;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxBasic.IFlxBasic;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.FlxGraphic;
@@ -1008,17 +1008,17 @@ class FlxSprite extends FlxObject
 	 * current displayed pixels. This check is ALWAYS made in screen space, and
 	 * factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 *
-	 * @param   worldPoint  point in world space you want to check.
-	 * @param   mask        Used in the pixel hit test to determine what counts as solid.
-	 * @param   camera      The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   worldPoint      point in world space you want to check.
+	 * @param   alphaTolerance  Used to determine what counts as solid.
+	 * @param   camera          The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	public function pixelsOverlapPoint(worldPoint:FlxPoint, mask:Int = 0xFF, ?camera:FlxCamera):Bool
+	public function pixelsOverlapPoint(worldPoint:FlxPoint, alphaTolerance = 0xFF, ?camera:FlxCamera):Bool
 	{
-		var pixelColor = getPixelAt(worldPoint);
+		final pixelColor = getPixelAt(worldPoint, camera);
 		
 		if (pixelColor != null)
-			return pixelColor.alpha * alpha >= mask;
+			return pixelColor.alpha * alpha >= alphaTolerance;
 		
 		// point is outside of the graphic
 		return false;

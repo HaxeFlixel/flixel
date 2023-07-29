@@ -1,6 +1,6 @@
 package flixel.ui;
 
-import flash.events.MouseEvent;
+import openfl.events.MouseEvent;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.atlas.FlxAtlas;

@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.Lib;
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.display.StageDisplayState;
-import flash.net.URLRequest;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
@@ -190,11 +190,13 @@ class FlxG
 	 */
 	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 
+	#if FLX_SAVE
 	/**
 	 * A `FlxSave` used internally by flixel to save sound preferences and
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
+	#end
 
 	/**
 	 * A `FlxRandom` object which can be used to generate random numbers.
@@ -618,7 +620,9 @@ class FlxG
 		accelerometer = new FlxAccelerometer();
 		#end
 
+		#if FLX_SAVE
 		initSave();
+		#end
 
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
@@ -672,6 +676,7 @@ class FlxG
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 
+	#if FLX_SAVE
 	static function initSave()
 	{
 		// Don't init if the FlxG.save.bind was manually called before the FlxGame was created
@@ -685,6 +690,7 @@ class FlxG
 		if (save.isEmpty())
 			save.mergeDataFrom("flixel", null, false, false);
 	}
+	#end
 
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.

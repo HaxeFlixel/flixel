@@ -1,13 +1,13 @@
 package flixel.system.debug;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import flash.text.TextField;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.debug.FlxDebugger.GraphicCloseButton;
@@ -154,7 +154,9 @@ class Window extends Sprite
 		else
 		{
 			_id = windowAmount;
+			#if FLX_SAVE
 			loadSaveData();
+			#end
 			windowAmount++;
 		}
 
@@ -261,8 +263,10 @@ class Window extends Sprite
 	{
 		visible = Value;
 
+		#if FLX_SAVE
 		if (!_closable && FlxG.save.isBound)
 			saveWindowVisibility();
+		#end
 
 		if (toggleButton != null)
 			toggleButton.toggled = !visible;
@@ -281,6 +285,7 @@ class Window extends Sprite
 		parent.addChild(this);
 	}
 
+	#if FLX_SAVE
 	function loadSaveData():Void
 	{
 		if (!FlxG.save.isBound)
@@ -308,6 +313,7 @@ class Window extends Sprite
 		FlxG.save.data.windowSettings[_id] = visible;
 		FlxG.save.flush();
 	}
+	#end
 
 	public function update():Void {}
 

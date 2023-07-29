@@ -1,17 +1,17 @@
 package flixel.system.frontEnds;
 
-import flash.ui.Mouse;
+import openfl.ui.Mouse;
 import flixel.FlxG;
 #if FLX_RECORD
-import flash.events.Event;
-import flash.events.IOErrorEvent;
-import flash.utils.ByteArray;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.utils.ByteArray;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxRandom;
 #if flash
-import flash.net.FileReference;
-import flash.net.FileFilter;
+import openfl.net.FileReference;
+import openfl.net.FileFilter;
 #end
 #end
 
