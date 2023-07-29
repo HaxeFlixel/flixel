@@ -819,7 +819,6 @@ class FlxSound extends FlxBasic
 			@:privateAccess
 			if (_channel.__source != null)
 				_channel.__source.gain = v;
-			#end
 		}
 
 		return _gain = v;
