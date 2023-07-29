@@ -157,6 +157,9 @@ class FlxDefines
 		define(FLX_NO_PITCH);
 		#end
 
+		if (!defined(FLX_NO_PITCH))
+			define(FLX_PITCH);
+
 		#if (native && !openfl_legacy)
 		if (defined(FLX_NO_SOUND_SYSTEM))
 			define(FLX_NO_SOUND_GAIN);
