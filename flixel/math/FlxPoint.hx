@@ -1217,7 +1217,7 @@ import openfl.geom.Point;
 	 * The angle between points (in degrees).
 	 *
 	 * @param   p   second point, which we find the angle
-	 * @return  the angle in radians
+	 * @return  the angle in degrees
 	 */
 	public inline function degreesBetween(p:FlxPoint):Float
 	{
