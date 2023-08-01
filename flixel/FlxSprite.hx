@@ -991,6 +991,9 @@ class FlxSprite extends FlxObject
 	
 	function updateColorTransform():Void
 	{
+		if (colorTransform == null)
+			return;
+
 		useColorTransform = alpha != 1 || color != 0xffffff;
 		if (useColorTransform)
 			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
