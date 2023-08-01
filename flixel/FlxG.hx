@@ -571,7 +571,7 @@ class FlxG
 	{
 		var prefix:String = "";
 		// if the URL does not already start with a protocol, add it.
-		if (!~/^.*?:\/\//.match(URL))
+		if (!~/^.\w+?:\/*/.match(URL))
 			prefix = "https://";
 		Lib.getURL(new URLRequest(prefix + URL), Target);
 	}
