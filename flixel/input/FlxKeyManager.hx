@@ -80,6 +80,17 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	}
 
 	/**
+	 * Check to see if at least one key from an array of keys is released.
+	 *
+	 * @param	KeyArray 	An array of key names
+	 * @return	Whether at least one of the keys passed in is released.
+	 */
+	public inline function anyReleased(KeyArray:Array<Key>):Bool
+	{
+		return checkKeyArrayState(KeyArray, RELEASED);
+	}
+
+	/**
 	 * Check to see if at least one key from an array of keys was just released.
 	 *
 	 * @param	KeyArray 	An array of key names
