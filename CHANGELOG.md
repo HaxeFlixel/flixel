@@ -16,6 +16,7 @@
 	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
 	- Replace `getFirstNull`'s loop with a simple `indexOf` check
 	- Improve readibility and simplify loops under the hood
+ - `FlxSpriteUtil`: add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
@@ -26,6 +27,10 @@
 - Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
 - `FlxSpriteUtil`: Fix `cameraWrap` and `cameraBound` error when camera scroll is non-0 ([#2851](https://github.com/HaxeFlixel/flixel/pull/2851))
 - `FlxBar`: Fix pixel perfect rendering issue ([#2853](https://github.com/HaxeFlixel/flixel/pull/2853))
+- `FlxText`: Trigger re-draw when `text` is set to empty string ([#2846](https://github.com/HaxeFlixel/flixel/pull/2846))
+- `FlxPoint`: Small doc fix ([#2873](https://github.com/HaxeFlixel/flixel/pull/2873))
+- `FlxAndroidKey`: Fix `@:enum` deprecation warning ([#2876](https://github.com/HaxeFlixel/flixel/pull/2876))
+- Change `FlxSprite.setColorTransform` and `FlxSpriteUtil.setOffsets` args from ints to floats ([#2875](https://github.com/HaxeFlixel/flixel/pull/2875))
 - `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881)
 
 #### Bugfixes:
