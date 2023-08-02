@@ -101,7 +101,7 @@ using flixel.util.FlxColorTransformUtil;
  * ### Scale
  * [Snippets - Scale](https://snippets.haxeflixel.com/sprites/scale/)
  * (FlxPoint) Change the size of your sprite's graphic. NOTE: The hitbox is not automatically
- * adjusted, use updateHitbox() for that (or setGraphicSize()).
+ * adjusted, use updateHitbox() for that.
  * ```haxe
  * // twice as big
  * whiteSquare.scale.set(2, 2);
@@ -245,7 +245,7 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Change the size of your sprite's graphic.
-	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that (or `setGraphicSize()`).
+	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that.
 	 * WARNING: With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
 	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
@@ -698,23 +698,23 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Helper function to set the graphic's dimensions by using `scale`, allowing you to keep the current aspect ratio
-	 * should one of the Integers be `<= 0`. It might make sense to call `updateHitbox()` afterwards!
+	 * should one of the numbers be `<= 0`. It might make sense to call `updateHitbox()` afterwards!
 	 *
-	 * @param   Width    How wide the graphic should be. If `<= 0`, and `Height` is set, the aspect ratio will be kept.
-	 * @param   Height   How high the graphic should be. If `<= 0`, and `Width` is set, the aspect ratio will be kept.
+	 * @param   width    How wide the graphic should be. If `<= 0`, and `height` is set, the aspect ratio will be kept.
+	 * @param   height   How high the graphic should be. If `<= 0`, and `width` is set, the aspect ratio will be kept.
 	 */
-	public function setGraphicSize(Width:Int = 0, Height:Int = 0):Void
+	public function setGraphicSize(width = 0.0, height = 0.0):Void
 	{
-		if (Width <= 0 && Height <= 0)
+		if (width <= 0 && height <= 0)
 			return;
 
-		var newScaleX:Float = Width / frameWidth;
-		var newScaleY:Float = Height / frameHeight;
+		var newScaleX:Float = width / frameWidth;
+		var newScaleY:Float = height / frameHeight;
 		scale.set(newScaleX, newScaleY);
 
-		if (Width <= 0)
+		if (width <= 0)
 			scale.x = newScaleY;
-		else if (Height <= 0)
+		else if (height <= 0)
 			scale.y = newScaleX;
 	}
 
