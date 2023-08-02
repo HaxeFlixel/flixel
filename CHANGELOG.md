@@ -26,6 +26,7 @@
 - Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
 - `FlxSpriteUtil`: Fix `cameraWrap` and `cameraBound` error when camera scroll is non-0 ([#2851](https://github.com/HaxeFlixel/flixel/pull/2851))
 - `FlxBar`: Fix pixel perfect rendering issue ([#2853](https://github.com/HaxeFlixel/flixel/pull/2853))
+- `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881)
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
