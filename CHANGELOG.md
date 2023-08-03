@@ -16,7 +16,13 @@
 	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
 	- Replace `getFirstNull`'s loop with a simple `indexOf` check
 	- Improve readibility and simplify loops under the hood
- - `FlxSpriteUtil`: add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
+ - `FlxSpriteUtil`: Add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
+ - `FlxAsepriteUtils`: New util class with various helpers (via `using FlxAsepriteUtil;` ([#2860](https://github.com/HaxeFlixel/flixel/pull/2860))
+	- Added `loadAseAtlas`, `addAseAtlasTagsByIndex`, and `addAseAtlasTagsByPrefix`
+	- Added `TexturePackerAtlas` and `AseAtlas` types
+	- Added Aseprite metadata types: `AseAtlasMeta`, `AseAtlasTag`, `AseAtlasSlice` and `AseAtlasLayer`
+	- Deprecated `TexturePackerObject`, `TexturePackerFrameData` and `TexturePackerFrameRect`
+	for `TexturePackerAtlas`, `TexturePackerAtlasFrame` and `AtlasRect`, respectively;
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
