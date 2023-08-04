@@ -1,7 +1,7 @@
 package flixel.graphics.frames;
 
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.FlxAsepriteUtil;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -11,6 +11,7 @@ import flixel.system.FlxAssets;
 import haxe.Json;
 import haxe.xml.Access;
 import openfl.Assets;
+import openfl.geom.Rectangle;
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
@@ -69,23 +70,21 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		frames = new FlxAtlasFrames(graphic);
 
-		var data:TexturePackerObject = description.getData();
+		final data:TexturePackerAtlas = description.getData();
 
 		// JSON-Array
-		if ((data.frames is Array))
+		if (data.frames is Array)
 		{
-			for (frame in Lambda.array(data.frames))
-			{
-				texturePackerHelper(frame.filename, cast frame, frames, useFrameDuration);
-			}
+			final frameArray:Array<TexturePackerAtlasFrame> = data.frames;
+			for (frame in frameArray)
+				texturePackerHelper(frame.filename, frame, frames, useFrameDuration);
 		}
 		// JSON-Hash
 		else
 		{
-			for (frameName in Reflect.fields(data.frames))
-			{
-				texturePackerHelper(frameName, Reflect.field(data.frames, frameName), frames, useFrameDuration);
-			}
+			final frameHash:Hash<TexturePackerAtlasFrame> = data.frames;
+			for (name=>frame in frameHash)
+				texturePackerHelper(name, frame, frames, useFrameDuration);
 		}
 
 		return frames;
@@ -98,7 +97,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   frameData   The TexturePacker data excluding "filename".
 	 * @param   frames      The `FlxAtlasFrames` to add this frame to.
 	 */
-	static function texturePackerHelper(frameName:String, frameData:TexturePackerFrameData, frames:FlxAtlasFrames, useFrameDuration = false):Void
+	static function texturePackerHelper(frameName:String, frameData:TexturePackerAtlasFrame, frames:FlxAtlasFrames, useFrameDuration = false):Void
 	{
 		final rotated:Bool = frameData.rotated;
 		var angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0;
@@ -414,24 +413,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 }
 
-typedef TexturePackerObject =
-{
-	frames:Dynamic
-}
-
-typedef TexturePackerFrameRect =
-{
-	x:Float,
-	y:Float,
-	w:Float,
-	h:Float
-};
-
-typedef TexturePackerFrameData =
-{
-	var rotated:Bool;
-	var frame:TexturePackerFrameRect;
-	var sourceSize:{w:Float, h:Float};
-	var spriteSourceSize:{x:Float, y:Float};
-	var duration:Null<Int>;
-}
+@:deprecated("Use TexturePackerAtlas instead")// 5.4.0
+typedef TexturePackerObject = TexturePackerAtlas;
+@:deprecated("Use TexturePackerAtlasFrame instead")// 5.4.0
+typedef TexturePackerFrameData = TexturePackerAtlasFrame;
+@:deprecated("Use AtlasRect instead")// 5.4.0
+typedef TexturePackerFrameRect = AtlasRect;
