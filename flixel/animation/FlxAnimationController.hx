@@ -480,20 +480,18 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_sprite.frames != null)
 		{
-			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
+			final animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-
+			
 			if (animFrames.length > 0)
 			{
-				var frameIndices:Array<Int> = new Array<Int>();
+				final frameIndices:Array<Int> = [];
 				byPrefixHelper(frameIndices, animFrames, prefix); // finds frames and appends them to the blank array
-
-				if (frameIndices.length > 0)
-				{
-					var anim:FlxAnimation = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
-					_animations.set(name, anim);
-				}
+				final anim = new FlxAnimation(this, name, frameIndices, frameRate, looped, flipX, flipY);
+				_animations.set(name, anim);
 			}
+			else
+				FlxG.log.warn('Could not create animation: "$name", no frames were found with the prefix "$prefix" ');
 		}
 	}
 
@@ -518,14 +516,16 @@ class FlxAnimationController implements IFlxDestroyable
 
 		if (_sprite.frames != null)
 		{
-			var animFrames:Array<FlxFrame> = new Array<FlxFrame>();
+			final animFrames:Array<FlxFrame> = new Array<FlxFrame>();
 			findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-
+			
 			if (animFrames.length > 0)
 			{
 				// finds frames and appends them to the existing array
 				byPrefixHelper(anim.frames, animFrames, prefix);
 			}
+			else
+				FlxG.log.warn('Could not append to animation: "$name", no frames were found with the prefix: "$prefix"');
 		}
 	}
 
@@ -729,7 +729,7 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 	}
 
-	function findByPrefix(animFrames:Array<FlxFrame>, prefix:String):Void
+	function findByPrefix(animFrames:Array<FlxFrame>, prefix:String, logError = true):Void
 	{
 		for (frame in _sprite.frames.frames)
 		{
@@ -738,6 +738,30 @@ class FlxAnimationController implements IFlxDestroyable
 				animFrames.push(frame);
 			}
 		}
+		
+		// prevent and log errors for invalid frames
+		final invalidFrames = removeInvalidFrames(animFrames);
+		#if FLX_DEBUG
+		if (invalidFrames.length == 0 || !logError)
+			return;
+		
+		final names = invalidFrames.map((f)->'"${f.name}"').join(", ");
+		FlxG.log.error('Attempting to use frames that belong to a destroyed graphic, frame names: $names');
+		#end
+	}
+	
+	function removeInvalidFrames(frames:Array<FlxFrame>)
+	{
+		final invalid:Array<FlxFrame> = [];
+		var i = frames.length;
+		while (i-- > 0)
+		{
+			final frame = frames[i];
+			if (frame.parent.shader == null)
+				invalid.unshift(frames.splice(i, 1)[0]);
+		}
+		
+		return invalid;
 	}
 
 	function set_frameIndex(Frame:Int):Int
