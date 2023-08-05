@@ -1,6 +1,5 @@
 package flixel.graphics.frames;
 
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
@@ -11,6 +10,7 @@ import flixel.system.FlxAssets;
 import haxe.Json;
 import haxe.xml.Access;
 import openfl.Assets;
+import openfl.geom.Rectangle;
 
 /**
  * Atlas frames collection. It makes possible to use texture atlases in Flixel.
@@ -18,9 +18,19 @@ import openfl.Assets;
  */
 class FlxAtlasFrames extends FlxFramesCollection
 {
+	var usedGraphics:Array<FlxGraphic> = [];
+	
 	public function new(parent:FlxGraphic, ?border:FlxPoint)
 	{
 		super(parent, FlxFrameCollectionType.ATLAS, border);
+	}
+	
+	override function destroy()
+	{
+		while (usedGraphics.length > 0)
+			usedGraphics.shift().decrementUseCount();
+		
+		super.destroy();
 	}
 
 	/**
@@ -416,7 +426,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 	
 	/**
 	 * Adds all ofthe frames from the specified collection
-	 * @param   collection     The frames to add.
+	 * 
+	 * @param   collection     The frames to add. Note: calling destroy() on this collection
+	 *                         after it has been added can cause crashes.
 	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
 	 * 
 	 * @since 5.3.0
@@ -425,18 +437,26 @@ class FlxAtlasFrames extends FlxFramesCollection
 	{
 		for (frame in collection.frames)
 			pushFrame(frame, overwriteHash);
-			
+		
+		if (!usedGraphics.contains(collection.parent))
+		{
+			usedGraphics.push(collection.parent);
+			collection.parent.incrementUseCount();
+		}
+		
 		return this;
 	}
 	
 	/**
 	 * Creates a new `FlxAtlasFrames` instance with all the frames from this and the desired instance.
+	 * 
+	 * Note: Calling `destroy` on either of these graphics after concatenating them may cause crashes
 	 * @param   collection     The other frames to add.
 	 * @param   overwriteHash  If true, any new frames with matching names will replace old ones.
 	 * 
 	 * @since 5.3.0
 	 */
-	public function concatenate(collection:FlxAtlasFrames, overwriteHash = false)
+	public function concat(collection:FlxAtlasFrames, overwriteHash = false)
 	{
 		final newCollection = new FlxAtlasFrames(parent);
 		newCollection.addAtlas(this);

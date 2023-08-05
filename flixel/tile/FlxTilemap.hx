@@ -1,9 +1,5 @@
 package flixel.tile;
 
-import openfl.display.BitmapData;
-import openfl.display.Graphics;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -24,8 +20,12 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.Graphics;
 import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -1398,23 +1398,25 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 
 	/**
 	 * Internal function for setting graphic property for this object.
-	 * It changes graphic' useCount also for better memory tracking.
+	 * Changes the graphic's `useCount` for better memory tracking.
 	 */
+	@:noCompletion
 	function set_graphic(value:FlxGraphic):FlxGraphic
 	{
-		// If graphics are changing
 		if (graphic != value)
 		{
 			// If new graphic is not null, increase its use count
 			if (value != null)
-				value.useCount++;
-
+				value.incrementUseCount();
+			
 			// If old graphic is not null, decrease its use count
 			if (graphic != null)
-				graphic.useCount--;
+				graphic.decrementUseCount();
+			
+			graphic = value;
 		}
-
-		return graphic = value;
+		
+		return value;
 	}
 
 	override function set_pixelPerfectRender(value:Bool):Bool
