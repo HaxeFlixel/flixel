@@ -30,8 +30,6 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Used only in `FlxAtlasFrames` and `FlxBitmapFont` (not implemented yet),
 	 * but you can try to use it for other types of collections
 	 * (give names to your frames).
-	 * 
-	 * Note: This was made private in Flixel 5.3.0
 	 */
 	@:deprecated("`framesHash` is deprecated, use `getByName()` or `exists()`")
 	public var framesHash(get, set):Map<String, FlxFrame>;
