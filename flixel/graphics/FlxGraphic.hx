@@ -341,7 +341,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * `FlxImageFrame` object for the whole bitmap.
 	 */
-	public var imageFrame(default, null):FlxImageFrame;
+	public var imageFrame(get, null):FlxImageFrame;
 
 	/**
 	 * Atlas frames for this graphic.
