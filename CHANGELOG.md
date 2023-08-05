@@ -1,16 +1,43 @@
 5.4.0 (TBD)
 ------------------------------
 #### New features:
-- `AssetPaths` - Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
+- **README.md**: Add Turkish translations
+- `AssetPaths`: Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
 - Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
 	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
 	- `FlxG.game.debugger.interaction`: Add `removeTool`
+- `FlxText`: Add `fieldHeight` field ([#2789](https://github.com/HaxeFlixel/flixel/pull/2789))
+- `FlxG`: Add compiler flag `FLX_NO_SAVE` to remove `FlxG.save` (also counter-flag `FLX_SAVE`) ([#2840](https://github.com/HaxeFlixel/flixel/pull/2840))
+- `FlxCamera`: Add `pixelPerfectShake` field, for pixel-perfect camera shaking ([#2841](https://github.com/HaxeFlixel/flixel/pull/2841))
+- `LogStyle`: Allow log styles to throw errors ([#2842](https://github.com/HaxeFlixel/flixel/pull/2842))
+- `FlxTilemap`: add `FlxTypedTilemap<T>` ([#2734](https://github.com/HaxeFlixel/flixel/pull/2734))
+- `FlxGroup`: Various changes ([#2806](https://github.com/HaxeFlixel/flixel/pull/2806))
+	- Add `killMembers`, `reviveMembers` and `keyValueIterator`
+	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
+	- Replace `getFirstNull`'s loop with a simple `indexOf` check
+	- Improve readibility and simplify loops under the hood
+ - `FlxSpriteUtil`: Add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
+ - `FlxAsepriteUtils`: New util class with various helpers (via `using FlxAsepriteUtil;` ([#2860](https://github.com/HaxeFlixel/flixel/pull/2860))
+	- Added `loadAseAtlas`, `addAseAtlasTagsByIndex`, and `addAseAtlasTagsByPrefix`
+	- Added `TexturePackerAtlas` and `AseAtlas` types
+	- Added Aseprite metadata types: `AseAtlasMeta`, `AseAtlasTag`, `AseAtlasSlice` and `AseAtlasLayer`
+	- Deprecated `TexturePackerObject`, `TexturePackerFrameData` and `TexturePackerFrameRect`
+	for `TexturePackerAtlas`, `TexturePackerAtlasFrame` and `AtlasRect`, respectively;
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
 - Fix typos in various docs ([#2793](https://github.com/HaxeFlixel/flixel/pull/2793))([#2799](https://github.com/HaxeFlixel/flixel/pull/2799))
 - `FlxBaseTilemap`: Log errors rather than throw exceptions in `setTileProperties` with invalid args ([#2815](https://github.com/HaxeFlixel/flixel/pull/2815))
 - Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
+- `FlxSprite`: Add erroneously unused `camera` arg when calling `pixelsOverlapPoint` ([#2824](https://github.com/HaxeFlixel/flixel/pull/2824))
+- Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
+- `FlxSpriteUtil`: Fix `cameraWrap` and `cameraBound` error when camera scroll is non-0 ([#2851](https://github.com/HaxeFlixel/flixel/pull/2851))
+- `FlxBar`: Fix pixel perfect rendering issue ([#2853](https://github.com/HaxeFlixel/flixel/pull/2853))
+- `FlxText`: Trigger re-draw when `text` is set to empty string ([#2846](https://github.com/HaxeFlixel/flixel/pull/2846))
+- `FlxPoint`: Small doc fix ([#2873](https://github.com/HaxeFlixel/flixel/pull/2873))
+- `FlxAndroidKey`: Fix `@:enum` deprecation warning ([#2876](https://github.com/HaxeFlixel/flixel/pull/2876))
+- Change `FlxSprite.setColorTransform` and `FlxSpriteUtil.setOffsets` args from ints to floats ([#2875](https://github.com/HaxeFlixel/flixel/pull/2875))
+- `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881)
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))

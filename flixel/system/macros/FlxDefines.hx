@@ -27,6 +27,7 @@ private enum UserDefines
 	/* Simplifies FlxPoint but can increase GC frequency */
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
+	FLX_NO_SAVE;
 }
 
 /**
@@ -57,6 +58,7 @@ private enum HelperDefines
 	FLX_POINT_POOL;
 	FLX_PITCH;
 	FLX_NO_UNIT_TEST;
+	FLX_SAVE;
 }
 
 class FlxDefines
@@ -153,6 +155,9 @@ class FlxDefines
 		#end
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
+		
+		if (!defined(FLX_NO_SAVE))
+			define(FLX_SAVE);
 		
 		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);

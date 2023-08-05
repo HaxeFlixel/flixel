@@ -105,7 +105,43 @@ class GraphicAutoFull extends BitmapData {}
  * numbers and then associates those values with tiles from the sheet you pass in. It also includes
  * some handy static parsers that can convert arrays or images into strings that can be loaded.
  */
-class FlxTilemap extends FlxBaseTilemap<FlxTile>
+class FlxTilemap extends FlxTypedTilemap<FlxTile>
+{
+	public function new ()
+	{
+		super();
+	}
+
+	override function initTileObjects():Void
+	{
+		if (frames == null)
+			return;
+
+		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
+		// Create some tile objects that we'll use for overlap checks (one for each tile)
+		_tileObjects = new Array<FlxTile>();
+
+		var length:Int = frames.numFrames;
+		length += _startingIndex;
+
+		for (i in 0...length)
+			_tileObjects[i] = new FlxTile(this, i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
+
+		// Create debug tiles for rendering bounding boxes on demand
+		#if FLX_DEBUG
+		updateDebugTileBoundingBoxSolid();
+		updateDebugTileBoundingBoxNotSolid();
+		updateDebugTileBoundingBoxPartial();
+		#end
+	}
+}
+
+/**
+ * This is a traditional tilemap display and collision class. It takes a string of comma-separated
+ * numbers and then associates those values with tiles from the sheet you pass in. It also includes
+ * some handy static parsers that can convert arrays or images into strings that can be loaded.
+ */
+class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 {
 	/**
 	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
@@ -243,7 +279,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 */
 	var _checkBufferChanges:Bool = false;
 
-	public function new()
+	function new()
 	{
 		super();
 
@@ -405,29 +441,6 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		);
 	}
 
-	override function initTileObjects():Void
-	{
-		if (frames == null)
-			return;
-
-		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
-		// Create some tile objects that we'll use for overlap checks (one for each tile)
-		_tileObjects = new Array<FlxTile>();
-
-		var length:Int = frames.numFrames;
-		length += _startingIndex;
-
-		for (i in 0...length)
-			_tileObjects[i] = new FlxTile(this, i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
-
-		// Create debug tiles for rendering bounding boxes on demand
-		#if FLX_DEBUG
-		updateDebugTileBoundingBoxSolid();
-		updateDebugTileBoundingBoxNotSolid();
-		updateDebugTileBoundingBoxPartial();
-		#end
-	}
-
 	#if FLX_DEBUG
 	function updateDebugTileBoundingBoxSolid():Void
 	{
@@ -532,16 +545,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		screenYInTiles = Std.int(FlxMath.bound(screenYInTiles, 0, heightInTiles - screenRows));
 
 		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
-		var columnIndex:Int;
-		var tile:FlxTile;
 
 		for (row in 0...screenRows)
 		{
-			columnIndex = rowIndex;
+			var columnIndex = rowIndex;
 
 			for (column in 0...screenColumns)
 			{
-				tile = _tileObjects[_data[columnIndex]];
+				final tile = _tileObjects[_data[columnIndex]];
 
 				if (tile != null && tile.visible)
 				{
@@ -671,18 +682,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	 * Also calls the tile's registered callback if the filter matches.
 	 *
 	 * @param   object              The FlxObject you are checking for overlaps against.
-	 * @param   callback            An optional function that takes the form "myCallback(Object1:FlxObject,Object2:FlxObject)", where Object1 is a FlxTile object, and Object2 is the object passed in in the first parameter of this method.
-	 * @param   flipCallbackParams  Used to preserve A-B list ordering from FlxObject.separate() - returns the FlxTile object as the second parameter instead.
-	 * @param   position            Optional, specify a custom position for the tilemap (useful for overlapsAt()-type functionality).
-	 * @return  Whether there were overlaps, or if a callback was specified, whatever the return value of the callback was.
+	 * @param   callback            An optional function that takes the form `myCallback(a:FlxObject, b:FlxObject)`,
+	 *                              where `a` is a `FlxTile`, and `b` is the given `object` paaram.
+	 * @param   flipCallbackParams  Used to preserve A-B list ordering from `FlxObject.separate()`,
+	 *                              returns the `FlxTile` object as the second parameter instead.
+	 * @param   position            Optional, specify a custom position for the tilemap (used for `overlapsAt`).
+	 * @return  Whether there were overlaps, and the result of the callback, if one was specified.
 	 */
 	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
 	{
-		var results:Bool = false;
+		var results = false;
 
-		var xPos:Float = x;
-		var yPos:Float = y;
+		var xPos = x;
+		var yPos = y;
 
 		if (position != null)
 		{
@@ -691,47 +704,31 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			position.putWeak();
 		}
 
-		// Figure out what tiles we need to check against
-		var selectionX:Int = Math.floor((object.x - xPos) / scaledTileWidth);
-		var selectionY:Int = Math.floor((object.y - yPos) / scaledTileHeight);
-		var selectionWidth:Int = selectionX + Math.ceil(object.width / scaledTileWidth) + 1;
-		var selectionHeight:Int = selectionY + Math.ceil(object.height / scaledTileHeight) + 1;
-
-		// Then bound these coordinates by the map edges
-		selectionX = Std.int(FlxMath.bound(selectionX, 0, widthInTiles));
-		selectionY = Std.int(FlxMath.bound(selectionY, 0, heightInTiles));
-		selectionWidth = Std.int(FlxMath.bound(selectionWidth, 0, widthInTiles));
-		selectionHeight = Std.int(FlxMath.bound(selectionHeight, 0, heightInTiles));
-
-		// Then loop through this selection of tiles
-		var rowStart:Int = selectionY * widthInTiles;
-		var column:Int;
-		var tile:FlxTile;
-		var overlapFound:Bool;
-		var deltaX:Float = xPos - last.x;
-		var deltaY:Float = yPos - last.y;
-
-		for (row in selectionY...selectionHeight)
+		inline function bindInt(value:Int, min:Int, max:Int)
 		{
-			column = selectionX;
+			return Std.int(FlxMath.bound(value, min, max));
+		}
 
-			while (column < selectionWidth)
+		// Figure out what tiles we need to check against, and bind them by the map edges
+		final minTileX:Int = bindInt(Math.floor((object.x - xPos) / scaledTileWidth), 0, widthInTiles);
+		final minTileY:Int = bindInt(Math.floor((object.y - yPos) / scaledTileHeight), 0, heightInTiles);
+		final maxTileX:Int = bindInt(Math.ceil((object.x + object.width - xPos) / scaledTileWidth), 0, widthInTiles);
+		final maxTileY:Int = bindInt(Math.ceil((object.y + object.height - yPos) / scaledTileHeight), 0, heightInTiles);
+
+		// Loop through the range of tiles and call the callback on them, accordingly
+		final deltaX:Float = xPos - last.x;
+		final deltaY:Float = yPos - last.y;
+
+		for (row in minTileY...maxTileY)
+		{
+			for (column in minTileX...maxTileX)
 			{
-				var index:Int = rowStart + column;
-				if (index < 0 || index > _data.length - 1)
-				{
-					column++;
-					continue;
-				}
-
-				var dataIndex:Int = _data[index];
+				final mapIndex:Int = (row * widthInTiles) + column;
+				final dataIndex:Int = _data[mapIndex];
 				if (dataIndex < 0)
-				{
-					column++;
 					continue;
-				}
-
-				tile = _tileObjects[dataIndex];
+				
+				final tile = _tileObjects[dataIndex];
 				tile.width = scaledTileWidth;
 				tile.height = scaledTileHeight;
 				tile.x = xPos + column * tile.width;
@@ -739,7 +736,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
 
-				overlapFound = ((object.x + object.width) > tile.x)
+				var overlapFound = ((object.x + object.width) > tile.x)
 					&& (object.x < (tile.x + tile.width))
 					&& ((object.y + object.height) > tile.y)
 					&& (object.y < (tile.y + tile.height));
@@ -763,18 +760,14 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				{
 					if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
 					{
-						tile.mapIndex = rowStart + column;
+						tile.mapIndex = mapIndex;
 						tile.callbackFunction(tile, object);
 					}
 
 					if (tile.allowCollisions != NONE)
 						results = true;
 				}
-
-				column++;
 			}
-
-			rowStart += widthInTiles;
 		}
 
 		return results;

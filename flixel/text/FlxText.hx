@@ -869,7 +869,7 @@ class FlxText extends FlxSprite
 			}
 		}
 
-		if (textField != null && textField.text != null && textField.text.length > 0)
+		if (textField != null && textField.text != null)
 		{
 			// Now that we've cleared a buffer, we need to actually render the text to it
 			copyTextFormat(_defaultFormat, _formatAdjusted);
