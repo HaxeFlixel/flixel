@@ -208,7 +208,7 @@ class FlxTileFrames extends FlxFramesCollection
 			tileFrames.frames.push(frame);
 
 			if (frame.name != null)
-				tileFrames.framesHash.set(frame.name, frame);
+				tileFrames.framesByName.set(frame.name, frame);
 		}
 
 		return tileFrames;

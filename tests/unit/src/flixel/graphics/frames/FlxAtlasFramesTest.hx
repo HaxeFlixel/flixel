@@ -38,7 +38,7 @@ class FlxAtlasFramesTest extends FlxTest
 
 		for (frameArr in atlasArray.frames)
 		{
-			var hashArr = atlasJson.framesHash.get(frameArr.name);
+			var hashArr = atlasJson.getByName(frameArr.name);
 			Assert.areEqual(frameArr.name, hashArr.name);
 			Assert.isTrue(frameArr.sourceSize.equals(hashArr.sourceSize));
 		}
@@ -55,7 +55,7 @@ class FlxAtlasFramesTest extends FlxTest
 
 		for (frame in atlasJson.frames)
 		{
-			final frame2 = atlas2.framesHash.get(frame.name);
+			final frame2 = atlas2.getByName(frame.name);
 			Assert.isTrue(frame.sourceSize.equals(frame2.sourceSize));
 		}
 	}
@@ -71,7 +71,7 @@ class FlxAtlasFramesTest extends FlxTest
 
 		for (frame in atlasXml.frames)
 		{
-			final frame2 = atlas2.framesHash.get(frame.name);
+			final frame2 = atlas2.getByName(frame.name);
 			Assert.isTrue(frame.sourceSize.equals(frame2.sourceSize));
 		}
 	}
@@ -86,7 +86,7 @@ class FlxAtlasFramesTest extends FlxTest
 
 		for (frame in atlasXml.frames)
 		{
-			final frame2 = atlas2.framesHash.get(frame.name);
+			final frame2 = atlas2.getByName(frame.name);
 			Assert.isTrue(frame.sourceSize.equals(frame2.sourceSize));
 		}
 	}
