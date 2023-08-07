@@ -289,7 +289,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipX        Whether the frames should be flipped horizontally.
 	 * @param   FlipY        Whether the frames should be flipped vertically.
 	 */
-	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
+	public function addByNames(Name:String, FrameNames:Array<String>, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
 		{
@@ -340,7 +340,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipX       Whether the frames should be flipped horizontally.
 	 * @param   FlipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true,
+	public function addByStringIndices(Name:String, Prefix:String, Indices:Array<String>, Postfix:String, FrameRate:Float = 30, Looped:Bool = true,
 			FlipX:Bool = false, FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
@@ -396,7 +396,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   FlipX       Whether the frames should be flipped horizontally.
 	 * @param   FlipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Int = 30, Looped:Bool = true, FlipX:Bool = false,
+	public function addByIndices(Name:String, Prefix:String, Indices:Array<Int>, Postfix:String, FrameRate:Float = 30, Looped:Bool = true, FlipX:Bool = false,
 			FlipY:Bool = false):Void
 	{
 		if (_sprite.frames != null)
@@ -471,12 +471,12 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   name        What this animation should be called (e.g. `"run"`).
 	 * @param   prefix      Common beginning of image names in atlas (e.g. `"tiles-"`).
 	 * @param   frameRate   The animation speed in frames per second.
-	 *                      Note: individual frames have their own duration, which overides this value.
+	 *                      Note: individual frames have their own duration, which overrides this value.
 	 * @param   looped      Whether or not the animation is looped or just plays once.
 	 * @param   flipX       Whether the frames should be flipped horizontally.
 	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function addByPrefix(name:String, prefix:String, frameRate = 30, looped = true, flipX = false, flipY = false):Void
+	public function addByPrefix(name:String, prefix:String, frameRate = 30.0, looped = true, flipX = false, flipY = false):Void
 	{
 		if (_sprite.frames != null)
 		{
