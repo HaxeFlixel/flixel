@@ -382,7 +382,15 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		_checkBufferChanges = true;
 	}
-
+	
+	override function loadMapHelper(tileGraphic, tileWidth = 0, tileHeight = 0, ?autoTile, startingIndex = 0, drawIndex = 1, collideIndex = 1)
+	{
+		// redraw buffers, fixes https://github.com/HaxeFlixel/flixel/issues/2882
+		_checkBufferChanges = true;
+		
+		super.loadMapHelper(tileGraphic, tileWidth, tileHeight, autoTile, startingIndex, drawIndex, collideIndex);
+	}
+	
 	override function cacheGraphics(tileWidth:Int, tileHeight:Int, tileGraphic:FlxTilemapGraphicAsset):Void
 	{
 		if ((tileGraphic is FlxFramesCollection))
