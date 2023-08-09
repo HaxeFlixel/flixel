@@ -2,7 +2,8 @@
 	"haxecheckstyle.sourceFolders": [
 		"flixel",
 		"script",
-		"tests"
+		"tests/coverage/source",
+		"tests/unit/src"
 	],
 	"[haxe]": {
 		"editor.formatOnSave": true,
