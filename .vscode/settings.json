@@ -5,6 +5,10 @@
 		"tests/coverage/source",
 		"tests/unit/src"
 	],
+	"search.exclude": {
+		"tests/coverage/export/**/*.hx": true,
+		"tests/unit/bin/**/*.hx": true
+	},
 	"[haxe]": {
 		"editor.formatOnSave": true,
 		"editor.formatOnSaveMode": "modifications"
@@ -25,5 +29,37 @@
 				"flash:openfl"
 			]
 		}
+	],
+	"lime.projectFile": "tests/coverage/Project.xml",
+	"lime.targets": [
+		{
+			"label": "AIR",
+			"enabled":false
+		},
+		{
+			"label": "Electron",
+			"enabled":false
+		}
+	],
+	"lime.buildTypes": [
+		{
+			"label": "Final",
+			"enabled":false
+		},
+		{
+			"label": "Debug",
+			"enabled":false
+		},
+		{
+			"args": ["-Dcoverage1"],
+			"label": "Coverage1"
+		},
+		{
+			"args": ["-Dcoverage2"],
+			"label": "Coverage2"
+		}
+	],
+	"haxeTestExplorer.testCommand": [
+		"haxelib", "run", "lime", "test", "tests/unit/project.xml", "cpp", "--haxelib=test-adapter"
 	]
 }
