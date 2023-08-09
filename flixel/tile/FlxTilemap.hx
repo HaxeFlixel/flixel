@@ -107,6 +107,23 @@ class GraphicAutoFull extends BitmapData {}
  */
 class FlxTilemap extends FlxTypedTilemap<FlxTile>
 {
+	/**
+	 * The default frame padding tilemaps will use when their own `framePadding` is not set
+	 * 
+	 * @see FlxTypedTilemap.framePadding
+	 */
+	public static var defaultFramePadding(get, set):Int;
+	
+	public static inline function get_defaultFramePadding()
+	{
+		return FlxTypedTilemap.defaultFramePadding;
+	}
+	
+	public static inline function set_defaultFramePadding(value:Int)
+	{
+		return FlxTypedTilemap.defaultFramePadding = value;
+	}
+	
 	public function new ()
 	{
 		super();
@@ -144,8 +161,9 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 {
 	/**
-	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
-	 * number of pixels. Ignored if <= 0
+	 * The default frame padding tilemaps will use when their own `framePadding` is not set
+	 * 
+	 * @see FlxTypedTilemap.framePadding
 	 */
 	public static var defaultFramePadding = 2;
 
@@ -156,6 +174,17 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	@:deprecated("useScaleHaxe is no longer needed")
 	@:noCompletion
 	public var useScaleHack:Bool = false;
+	
+	
+	/**
+	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
+	 * number of pixels. Ignored if <= 0. If `null`, `defaultFramePadding` is used
+	 * 
+	 * Note: Changing this only affects future loadMap calls.
+	 * @see FlxTypedTilemap.defaultFramePadding
+	 * @since 5.4.0
+	 */
+	public var framePadding:Null<Int> = null;
 
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1).
@@ -412,9 +441,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
-
-		if (defaultFramePadding > 0 && graph.isLoaded)
-			frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+		
+		final actualFramePadding = framePadding == null ? defaultFramePadding : framePadding;
+		if (actualFramePadding > 0 && graph.isLoaded)
+			frames = padTileFrames(tileWidth, tileHeight, graph, actualFramePadding);
 		else
 		{
 			#if html5
@@ -426,13 +456,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				var futureBitmap:IEmbeddedBitmapData = cast graph.bitmap;
 				futureBitmap.onLoad = function()
 				{
-					frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+					frames = padTileFrames(tileWidth, tileHeight, graph, actualFramePadding);
 				}
 			}
-			else if (defaultFramePadding > 0 && !graph.isLoaded)
+			else if (actualFramePadding > 0 && !graph.isLoaded)
 			{
-				FlxG.log.warn('defaultFramePadding not applied to "${graph.key}" because it is loading asynchronously.'
-					+ "using `@:bitmap` assets on html5 is not recommended");
+				FlxG.log.warn('Frame padding not applied to "${graph.key}" because it is loading asynchronously.'
+					+ "Using `@:bitmap` assets on html5 is not recommended");
 			}
 			#end
 			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
