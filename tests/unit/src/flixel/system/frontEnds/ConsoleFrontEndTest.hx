@@ -67,50 +67,54 @@ class ConsoleFrontEndTest
 	{
 		try
 		{
-			return Success(ConsoleUtil.runCommand(cmd));
+			return SUCCESS(ConsoleUtil.runCommand(cmd));
 		}
 		catch (e)
 		{
-			return Fail(e);
+			return FAIL(e);
 		}
 	}
 	
-	inline static function commandSucceeds(cmd:String)
+	static inline function commandSucceeds(cmd:String)
 	{
-		return tryRunCommand(cmd).match(Success(_));
+		return tryRunCommand(cmd).match(SUCCESS(_));
 	}
 	
-	inline static function commandSucceedsWith(cmd:String, expected:Any)
+	static inline function commandSucceedsWith(cmd:String, expected:Any)
 	{
 		final result = tryRunCommand(cmd);
 		switch (result)
 		{
-			case Success(actual): return expected == actual;
-			case Fail(error): return false;
+			case SUCCESS(actual):
+				return expected == actual;
+			case FAIL(error):
+				return false;
 		}
 	}
 	
-	inline static function commandFails(cmd:String)
+	static inline function commandFails(cmd:String)
 	{
-		return tryRunCommand(cmd).match(Fail(_));
+		return tryRunCommand(cmd).match(FAIL(_));
 	}
 	
-	inline static function assertCommandSucceeds(cmd:String, ?pos:PosInfos)
+	static inline function assertCommandSucceeds(cmd:String, ?pos:PosInfos)
 	{
 		Assert.isTrue(commandSucceeds(cmd), pos);
 	}
 	
-	inline static function assertCommandSucceedsWith(cmd:String, expected:Any, ?pos:PosInfos)
+	static inline function assertCommandSucceedsWith(cmd:String, expected:Any, ?pos:PosInfos)
 	{
 		final result = tryRunCommand(cmd);
 		switch (result)
 		{
-			case Success(actual): Assert.areEqual(expected, actual, pos);
-			case Fail(error): Assert.fail('Expected $expected, got exception: ${error.message}', pos);
+			case SUCCESS(actual):
+				Assert.areEqual(expected, actual, pos);
+			case FAIL(error):
+				Assert.fail('Expected $expected, got exception: ${error.message}', pos);
 		}
 	}
 	
-	inline static function assertCommandFails(cmd:String, ?pos:PosInfos)
+	static inline function assertCommandFails(cmd:String, ?pos:PosInfos)
 	{
 		return Assert.isFalse(commandSucceeds(cmd), pos);
 	}
@@ -118,13 +122,16 @@ class ConsoleFrontEndTest
 
 enum CommandOutcome
 {
-	Success(result:Any);
-	Fail(error:Exception);
+	SUCCESS(result:Any);
+	FAIL(error:Exception);
 }
 
 enum TestEnum { A; B; C; }
 
 class TestClass
 {
-	static public function func() { return "success"; }
+	public static function func()
+	{
+		return "success";
+	}
 }
