@@ -1602,7 +1602,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Gets the filter array applied to the camera.
 	 */
-	public function getFilters():Void
+	public function getFilters()
 	{
 		return _filters;
 	}
