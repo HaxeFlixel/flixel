@@ -1600,6 +1600,14 @@ class FlxCamera extends FlxBasic
 	}
 
 	/**
+	 * Gets the filter array applied to the camera.
+	 */
+	public function getFilters()
+	{
+		return _filters;
+	}
+
+	/**
 	 * Copy the bounds, focus object, and `deadzone` info from an existing camera.
 	 *
 	 * @param   Camera  The camera you want to copy from.
