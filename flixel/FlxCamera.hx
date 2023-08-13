@@ -493,7 +493,7 @@ class FlxCamera extends FlxBasic
 	var _point:FlxPoint = FlxPoint.get();
 
 	/**
-	 * The filters array to be applied to the camera. Default value to null for performance reasons.
+	 * The filters array to be applied to the camera.
 	 */
 	public var filters:Null<Array<BitmapFilter>> = null;
 
@@ -1601,16 +1601,6 @@ class FlxCamera extends FlxBasic
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
 		this.filters = filters;
-	}
-
-	/**
-	 * Gets the filter array applied to the camera.
-     * WARNING: can return `null`.
-	 */
-	@:deprecated("getFilters() is deprecated, use the filters array instead")
-	public function getFilters():Array<BitmapFilter>
-	{
-		return filters;
 	}
 
 	/**
