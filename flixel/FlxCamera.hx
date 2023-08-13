@@ -497,6 +497,9 @@ class FlxCamera extends FlxBasic
 	 */
 	public var filters:Array<BitmapFilter>;
 
+	@:deprecated("_filters is deprecated, use filters instead")
+	var _filters:Array<BitmapFilter>;
+
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
 	 */
