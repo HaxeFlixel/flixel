@@ -493,9 +493,9 @@ class FlxCamera extends FlxBasic
 	var _point:FlxPoint = FlxPoint.get();
 
 	/**
-	 * Internal, the filters array to be applied to the camera.
+	 * The filters array to be applied to the camera. Default value to null for performance reasons.
 	 */
-	var _filters:Array<BitmapFilter>;
+	public var filters:Array<BitmapFilter>;
 
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -1150,7 +1150,7 @@ class FlxCamera extends FlxBasic
 		updateFlash(elapsed);
 		updateFade(elapsed);
 
-		flashSprite.filters = filtersEnabled ? _filters : null;
+		flashSprite.filters = filtersEnabled ? filters : null;
 
 		updateFlashSpritePosition();
 		updateShake(elapsed);
@@ -1594,9 +1594,10 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Sets the filter array to be applied to the camera.
 	 */
+	@:deprecated("setFilters() is deprecated, use the filters array instead")
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
-		_filters = filters;
+		this.filters = filters;
 	}
 
     /**
@@ -1611,12 +1612,12 @@ class FlxCamera extends FlxBasic
             return;
         }
 
-        // The _filters array is null by default
-        if (_filters == null)
+        // The filters array is null by default
+        if (filters == null)
         {
-            _filters = [];
+            filters = [];
         }
-        _filters.push(filter);
+        filters.push(filter);
     }
 
     /**
@@ -1625,21 +1626,22 @@ class FlxCamera extends FlxBasic
      */
     public function removeFilter(filter:BitmapFilter):Void
     {
-        if (filter == null || _filters == null || _filters.length < 1 || !_filters.contains(filter))
+        if (filter == null || filters == null || filters.length < 1 || !filters.contains(filter))
         {
             return;
         }
 
-        _filters.remove(filter);
+        filters.remove(filter);
     }
 
 	/**
 	 * Gets the filter array applied to the camera.
      * WARNING: can return `null`.
 	 */
+	@:deprecated("getFilters() is deprecated, use the filters array instead")
 	public function getFilters():Array<BitmapFilter>
 	{
-		return _filters;
+		return filters;
 	}
 
 	/**
