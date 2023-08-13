@@ -495,10 +495,20 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The filters array to be applied to the camera. Default value to null for performance reasons.
 	 */
-	public var filters:Array<BitmapFilter>;
+	public var filters:Null<Array<BitmapFilter>>;
 
 	@:deprecated("_filters is deprecated, use filters instead")
-	var _filters:Array<BitmapFilter>;
+	var _filters(get, set):Null<Array<BitmapFilter>>;
+
+	private function get__filters():Array<BitmapFilter>
+	{
+		return filters;
+	}
+
+	private function set__filters(Value:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		return filters = Value;
+	}
 
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -1603,10 +1613,7 @@ class FlxCamera extends FlxBasic
 		this.filters = filters;
 	}
 
-    /**
-     * Adds a new filter to be applied to the camera.
-     * @param filter The filter to add
-     */
+	/*
     public function addFilter(filter:BitmapFilter):Void
     {
         if (filter == null)
@@ -1623,10 +1630,6 @@ class FlxCamera extends FlxBasic
         filters.push(filter);
     }
 
-    /**
-     * Removes a filter from the camera.
-     * @param filter The filter to remove
-     */
     public function removeFilter(filter:BitmapFilter):Void
     {
         if (filter == null || filters == null || filters.length < 1 || !filters.contains(filter))
@@ -1635,7 +1638,7 @@ class FlxCamera extends FlxBasic
         }
 
         filters.remove(filter);
-    }
+    } */
 
 	/**
 	 * Gets the filter array applied to the camera.
