@@ -1603,33 +1603,6 @@ class FlxCamera extends FlxBasic
 		this.filters = filters;
 	}
 
-	/*
-    public function addFilter(filter:BitmapFilter):Void
-    {
-        if (filter == null)
-        {
-            FlxG.log.warn("Cannot add a null filter to the camera.");
-            return;
-        }
-
-        // The filters array is null by default
-        if (filters == null)
-        {
-            filters = [];
-        }
-        filters.push(filter);
-    }
-
-    public function removeFilter(filter:BitmapFilter):Void
-    {
-        if (filter == null || filters == null || filters.length < 1 || !filters.contains(filter))
-        {
-            return;
-        }
-
-        filters.remove(filter);
-    } */
-
 	/**
 	 * Gets the filter array applied to the camera.
      * WARNING: can return `null`.
