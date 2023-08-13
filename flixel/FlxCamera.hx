@@ -495,20 +495,10 @@ class FlxCamera extends FlxBasic
 	/**
 	 * The filters array to be applied to the camera. Default value to null for performance reasons.
 	 */
-	public var filters:Null<Array<BitmapFilter>>;
+	public var filters:Null<Array<BitmapFilter>> = null;
 
 	@:deprecated("_filters is deprecated, use filters instead")
-	var _filters(get, set):Null<Array<BitmapFilter>>;
-
-	private function get__filters():Array<BitmapFilter>
-	{
-		return filters;
-	}
-
-	private function set__filters(Value:Array<BitmapFilter>):Array<BitmapFilter>
-	{
-		return filters = Value;
-	}
+	var _filters(get, set):Null<Array<BitmapFilter>> = null;
 
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -2200,6 +2190,16 @@ class FlxCamera extends FlxBasic
 	inline function get_viewOffsetHeight():Float
 	{
 		return viewMarginBottom;
+	}
+
+	inline function get__filters():Array<BitmapFilter>
+	{
+		return filters;
+	}
+
+	inline function set__filters(Value:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		return filters = Value;
 	}
 	
 	/**
