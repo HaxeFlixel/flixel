@@ -404,31 +404,30 @@ class FlxG
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
 	 * Use `FlxTilemap#overlaps()` if you don't want that.
 	 *
-	 * @param   ObjectOrGroup1    The first object or group you want to check.
-	 * @param   ObjectOrGroup2    The second object or group you want to check. If it is the same as the first,
+	 * @param   objectOrGroup1    The first object or group you want to check.
+	 * @param   objectOrGroup2    The second object or group you want to check. If it is the same as the first,
 	 *                            Flixel knows to just do a comparison within that group.
-	 * @param   NotifyCallback    A function with two `FlxObject` parameters -
+	 * @param   notifyCallback    A function with two `FlxObject` parameters -
 	 *                            e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
 	 *                            that is called if those two objects overlap.
-	 * @param   ProcessCallback   A function with two `FlxObject` parameters -
+	 * @param   processCallback   A function with two `FlxObject` parameters -
 	 *                            e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
 	 *                            that is called if those two objects overlap.
 	 *                            If a `ProcessCallback` is provided, then `NotifyCallback`
 	 *                            will only be called if `ProcessCallback` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void,
-			?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifyCallback:Dynamic->Dynamic->Void,
+			?processCallback:Dynamic->Dynamic->Bool):Bool
 	{
-		if (ObjectOrGroup1 == null)
-			ObjectOrGroup1 = state;
-		if (ObjectOrGroup2 == ObjectOrGroup1)
-			ObjectOrGroup2 = null;
+		if (objectOrGroup1 == null)
+			objectOrGroup1 = state;
+		if (objectOrGroup2 == objectOrGroup1)
+			objectOrGroup2 = null;
 
 		FlxQuadTree.divisions = worldDivisions;
 		var quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback);
-		var result:Bool = quadTree.execute();
+		var result:Bool = quadTree.loadAndExecute(objectOrGroup1, objectOrGroup2, notifyCallback, processCallback);
 		quadTree.destroy();
 		return result;
 	}
