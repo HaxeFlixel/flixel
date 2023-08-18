@@ -1,14 +1,13 @@
 package flixel.graphics.frames;
 
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.FlxAsepriteTypes;
-import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.atlas.AtlasBase;
+import flixel.graphics.atlas.TexturePackerAtlas;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
-import haxe.Json;
 import haxe.xml.Access;
 import openfl.Assets;
 import openfl.geom.Rectangle;
