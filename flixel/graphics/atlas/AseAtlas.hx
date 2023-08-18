@@ -72,12 +72,8 @@ abstract AseAtlasColor(String) to String
 	/** Converts the underlying string to an actual color usable by flixel tools */
 	public function toFlxColor()
 	{
-		#if macro
-		// Avoid implicit imports that don't play nicely with macros on certain targets
-		return 0xFFFFFFFF;
-		#else
-		return flixel.util.FlxColor.fromString(this);
-		#end
+		// Note: FlxColor.fromString has imports that don't work with macros (see https://github.com/HaxeFlixel/flixel/issues/2893)
+		return this == null ? null : Std.parseInt("0x" + this.substr(1));
 	}
 	
 	public function toString()
