@@ -1,7 +1,7 @@
 package flixel.graphics.frames;
 
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.FlxAsepriteUtil;
+import flixel.graphics.FlxAsepriteTypes;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
