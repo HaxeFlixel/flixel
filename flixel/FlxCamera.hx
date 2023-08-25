@@ -1212,23 +1212,26 @@ class FlxCamera extends FlxBasic
 
 			if (style == SCREEN_BY_SCREEN)
 			{
-				if (targetX >= (scroll.x + width))
+				if (targetX >= viewRight)
 				{
-					_scrollTarget.x += width;
+					_scrollTarget.x += viewWidth;
 				}
-				else if (targetX < scroll.x)
+				else if (targetX + target.width < viewLeft)
 				{
-					_scrollTarget.x -= width;
+					_scrollTarget.x -= viewWidth;
 				}
 
-				if (targetY >= (scroll.y + height))
+				if (targetY >= viewBottom)
 				{
-					_scrollTarget.y += height;
+					_scrollTarget.y += viewHeight;
 				}
-				else if (targetY < scroll.y)
+				else if (targetY + target.height < viewTop)
 				{
-					_scrollTarget.y -= height;
+					_scrollTarget.y -= viewHeight;
 				}
+				
+				// without this we see weird behavior when switching to SCREEN_BY_SCREEN at arbitrary scroll positions
+				bindScrollPos(_scrollTarget);
 			}
 			else
 			{
