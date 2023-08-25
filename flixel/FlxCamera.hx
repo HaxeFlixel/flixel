@@ -1165,29 +1165,14 @@ class FlxCamera extends FlxBasic
 	 */
 	public function updateScroll():Void
 	{
-		// Make sure we didn't go outside the camera's bounds
-		bindScrollPos(scroll);
-	}
-	
-	/**
-	 * Takes the desired scroll position and restricts it to the camera's min/max scroll properties.
-	 * This modifies the given point.
-	 * 
-	 * @param   scrollPos  The scroll position
-	 * @return  The same point passed in, moved within the scroll bounds
-	 * @since 5.4.0
-	 */
-	public function bindScrollPos(scrollPos:FlxPoint)
-	{
 		var minX:Null<Float> = minScrollX == null ? null : minScrollX - (zoom - 1) * width / (2 * zoom);
 		var maxX:Null<Float> = maxScrollX == null ? null : maxScrollX + (zoom - 1) * width / (2 * zoom);
 		var minY:Null<Float> = minScrollY == null ? null : minScrollY - (zoom - 1) * height / (2 * zoom);
 		var maxY:Null<Float> = maxScrollY == null ? null : maxScrollY + (zoom - 1) * height / (2 * zoom);
 
-		// keep point with bounds
-		scrollPos.x = FlxMath.bound(scrollPos.x, minX, (maxX != null) ? maxX - width : null);
-		scrollPos.y = FlxMath.bound(scrollPos.y, minY, (maxY != null) ? maxY - height : null);
-		return scrollPos;
+		// Make sure we didn't go outside the camera's bounds
+		scroll.x = FlxMath.bound(scroll.x, minX, (maxX != null) ? maxX - width : null);
+		scroll.y = FlxMath.bound(scroll.y, minY, (maxY != null) ? maxY - height : null);
 	}
 
 	/**
@@ -1212,26 +1197,23 @@ class FlxCamera extends FlxBasic
 
 			if (style == SCREEN_BY_SCREEN)
 			{
-				if (targetX >= viewRight)
+				if (targetX >= (scroll.x + width))
 				{
-					_scrollTarget.x += viewWidth;
+					_scrollTarget.x += width;
 				}
-				else if (targetX + target.width < viewLeft)
+				else if (targetX < scroll.x)
 				{
-					_scrollTarget.x -= viewWidth;
+					_scrollTarget.x -= width;
 				}
 
-				if (targetY >= viewBottom)
+				if (targetY >= (scroll.y + height))
 				{
-					_scrollTarget.y += viewHeight;
+					_scrollTarget.y += height;
 				}
-				else if (targetY + target.height < viewTop)
+				else if (targetY < scroll.y)
 				{
-					_scrollTarget.y -= viewHeight;
+					_scrollTarget.y -= height;
 				}
-				
-				// without this we see weird behavior when switching to SCREEN_BY_SCREEN at arbitrary scroll positions
-				bindScrollPos(_scrollTarget);
 			}
 			else
 			{
