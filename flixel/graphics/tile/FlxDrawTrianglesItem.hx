@@ -93,7 +93,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		{
 			var gfx:Graphics = camera.debugLayer.graphics;
 			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(vertices, indices);
+			gfx.drawTriangles(vertices, indices, uvtData);
 		}
 		#end
 
