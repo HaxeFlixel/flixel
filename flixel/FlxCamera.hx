@@ -1187,7 +1187,7 @@ class FlxCamera extends FlxBasic
 		final minY:Null<Float> = minScrollY == null ? null : minScrollY - viewMarginTop;
 		final maxY:Null<Float> = maxScrollY == null ? null : maxScrollY - viewMarginBottom;
 
-		// keep point with bounds
+		// keep point within bounds
 		scrollPos.x = FlxMath.bound(scrollPos.x, minX, maxX);
 		scrollPos.y = FlxMath.bound(scrollPos.y, minY, maxY);
 		return scrollPos;
