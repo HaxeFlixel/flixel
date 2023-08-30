@@ -1,6 +1,9 @@
 package flixel;
 
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.util.FlxColor;
+import openfl.display.Graphics;
+import openfl.display.GraphicsPathCommand;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -33,6 +36,23 @@ class FlxStrip extends FlxSprite
 	public var colors:DrawData<Int> = new DrawData<Int>();
 
 	public var repeat:Bool = false;
+	
+	#if FLX_DEBUG
+	/**
+	 * Overriding this will force a specific color to be used for debug wireframe
+	 */
+	public var debugWireframeColor:FlxColor = FlxColor.BLUE;
+	
+	/**
+	 * If true, draws the triangles of this strip, unless ignoreDrawDebug is true
+	 */
+	public var drawDebugWireframe:Bool = false;
+	
+	/**
+	 * If true, draws the collision bounding box of this strip, unless ignoreDrawDebug is true
+	 */
+	public var drawDebugCollider:Bool = true;
+	#end
 
 	override public function destroy():Void
 	{
@@ -62,5 +82,65 @@ class FlxStrip extends FlxSprite
 			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
 			#end
 		}
+		
+		#if FLX_DEBUG
+		if (FlxG.debugger.drawDebug)
+			drawDebug();
+		#end
 	}
+	
+	#if FLX_DEBUG
+	override function drawDebugOnCamera(camera:FlxCamera)
+	{
+		final boundsOnScreen = isColliderOnScreen(camera);
+		final graphicOnScreen = isOnScreen(camera);
+		if (!camera.visible || !camera.exists || !(boundsOnScreen || graphicOnScreen))
+			return;
+		
+		final gfx:Graphics = beginDrawDebug(camera);
+		if (boundsOnScreen && drawDebugCollider)
+		{
+			final rect = getBoundingBox(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+		}
+		
+		if (graphicOnScreen && drawDebugWireframe)
+		{
+			drawDebugWireframeToBuffer(gfx);
+		}
+		
+		endDrawDebug(camera);
+	}
+	
+	function drawDebugWireframeToBuffer(gfx:Graphics)
+	{
+		gfx.lineStyle(1, debugWireframeColor, 0.5);
+		// draw a triangle path for each triangle in the drawitem
+		final numTriangles = Std.int(indices.length / 3);
+		for (i in 0...numTriangles)
+		{
+			gfx.drawPath
+			(
+				DrawData.ofArray([MOVE_TO, LINE_TO, LINE_TO, LINE_TO]),
+				DrawData.ofArray(
+				[
+					getVertexX(i * 3 + 0), getVertexY(i * 3 + 0),
+					getVertexX(i * 3 + 1), getVertexY(i * 3 + 1),
+					getVertexX(i * 3 + 2), getVertexY(i * 3 + 2),
+					getVertexX(i * 3 + 0), getVertexY(i * 3 + 0)
+				])
+			);
+		}
+	}
+	
+	inline function getVertexX(i:Int)
+	{
+		return x + vertices[indices[i] * 2];
+	}
+	
+	inline function getVertexY(i:Int)
+	{
+		return y + vertices[indices[i] * 2 + 1];
+	}
+	#end
 }

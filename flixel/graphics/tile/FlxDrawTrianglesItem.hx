@@ -88,14 +88,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE, (colored) ? colors : null, blending);
 		#end
 		camera.canvas.graphics.endFill();
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-		{
-			var gfx:Graphics = camera.debugLayer.graphics;
-			gfx.lineStyle(1, FlxColor.BLUE, 0.5);
-			gfx.drawTriangles(vertices, indices, uvtData);
-		}
-		#end
 
 		super.render(camera);
 	}
