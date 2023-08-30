@@ -1,9 +1,10 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem;
-import flixel.util.FlxColor;
 import openfl.display.Graphics;
 import openfl.display.GraphicsPathCommand;
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -106,14 +107,26 @@ class FlxStrip extends FlxSprite
 		
 		if (graphicOnScreen && drawDebugWireframe)
 		{
-			drawDebugWireframeToBuffer(gfx);
+			final pos = getScreenPosition(camera);
+			drawDebugWireframeToBuffer(gfx, pos);
 		}
 		
 		endDrawDebug(camera);
 	}
 	
-	function drawDebugWireframeToBuffer(gfx:Graphics)
+	function drawDebugWireframeToBuffer(gfx:Graphics, screenPos:FlxPoint)
 	{
+	
+		inline function getVertexX(i:Int)
+		{
+			return screenPos.x + vertices[indices[i] * 2];
+		}
+		
+		inline function getVertexY(i:Int)
+		{
+			return screenPos.y + vertices[indices[i] * 2 + 1];
+		}
+		
 		gfx.lineStyle(1, debugWireframeColor, 0.5);
 		// draw a triangle path for each triangle in the drawitem
 		final numTriangles = Std.int(indices.length / 3);
@@ -131,16 +144,6 @@ class FlxStrip extends FlxSprite
 				])
 			);
 		}
-	}
-	
-	inline function getVertexX(i:Int)
-	{
-		return x + vertices[indices[i] * 2];
-	}
-	
-	inline function getVertexY(i:Int)
-	{
-		return y + vertices[indices[i] * 2 + 1];
 	}
 	#end
 }
