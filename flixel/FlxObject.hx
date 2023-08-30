@@ -1151,6 +1151,18 @@ class FlxObject extends FlxBasic
 	 */
 	public function isOnScreen(?camera:FlxCamera):Bool
 	{
+		return isColliderOnScreen(camera);
+	}
+	
+	/**
+	 * Check and see if this object's hitbox is currently on screen.
+	 *
+	 * @param   camera   Specify which game camera you want.
+	 *                   If `null`, it will just grab the first global camera.
+	 * @return  Whether the object is on screen or not.
+	 */
+	public function isColliderOnScreen(?camera:FlxCamera):Bool
+	{
 		if (camera == null)
 			camera = FlxG.camera;
 
@@ -1270,7 +1282,7 @@ class FlxObject extends FlxBasic
 	 */
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		if (!camera.visible || !camera.exists || !isOnScreen(camera))
+		if (!camera.visible || !camera.exists || !isColliderOnScreen(camera))
 			return;
 
 		var rect = getBoundingBox(camera);
