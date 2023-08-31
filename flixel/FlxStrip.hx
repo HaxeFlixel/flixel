@@ -32,29 +32,29 @@ class FlxStrip extends FlxSprite
 	 */
 	// @:deprecated("FlxStrip's vertices is deprecated, use triangles.vertices, instead") // TODO
 	public var vertices(get, set):DrawData<Float>;
-	public function get_vertices() return triangles.vertices;
-	public function set_vertices(value:DrawData<Float>) return triangles.vertices = value;
+	inline function get_vertices() return triangles.vertices;
+	inline function set_vertices(value:DrawData<Float>) return triangles.vertices = value;
 
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
 	// @:deprecated("FlxStrip's indices is deprecated, use triangles.indices, instead") // TODO
 	public var indices(get, set):DrawData<Int>;
-	public function get_indices() return triangles.indices;
-	public function set_indices(value:DrawData<Int>) return triangles.indices = value;
+	inline function get_indices() return triangles.indices;
+	inline function set_indices(value:DrawData<Int>) return triangles.indices = value;
 
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
 	// @:deprecated("FlxStrip's uvtData is deprecated, use triangles.uvs, instead") // TODO
 	public var uvtData(get, set):DrawData<Float>;
-	public function get_uvtData() return triangles.uvs;
-	public function set_uvtData(value:DrawData<Float>) return triangles.uvs = value;
+	inline function get_uvtData() return triangles.uvs;
+	inline function set_uvtData(value:DrawData<Float>) return triangles.uvs = value;
 
 	// @:deprecated("FlxStrip's color is deprecated, use triangles.colors, instead") // TODO
 	public var colors(get, set):DrawData<Int>;
-	public function get_colors() return triangles.colors;
-	public function set_colors(value:DrawData<Int>) return triangles.colors = value;
+	inline function get_colors() return triangles.colors;
+	inline function set_colors(value:DrawData<Int>) return triangles.colors = value;
 
 	public var repeat:Bool = false;
 	
