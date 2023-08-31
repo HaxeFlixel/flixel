@@ -1,13 +1,13 @@
 package flixel;
 
-import openfl.Vector;
-import openfl.display.Graphics;
-import openfl.display.GraphicsPathCommand;
-import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.graphics.tile.FlxDrawTriangleData;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.Vector;
+import openfl.display.Graphics;
+import openfl.display.GraphicsPathCommand;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -75,7 +75,7 @@ class FlxStrip extends FlxSprite
 	public var drawDebugCollider:Bool = true;
 	#end
 	
-	public function new ()
+	public function new(x = 0.0, y = 0.0, ?graphic)
 	{
 		triangles = new FlxDrawTriangleData();
 		super(x, y, graphic);
