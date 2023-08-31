@@ -1,11 +1,13 @@
 package flixel;
 
-import flixel.graphics.tile.FlxDrawTrianglesItem;
 import openfl.Vector;
 import openfl.display.Graphics;
 import openfl.display.GraphicsPathCommand;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.graphics.tile.FlxDrawTriangleData;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -21,21 +23,38 @@ import flixel.util.FlxColor;
 class FlxStrip extends FlxSprite
 {
 	/**
+	 * List of triangles
+	 */
+	public var triangles:FlxDrawTriangleData;
+	
+	/**
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
-	public var vertices:DrawData<Float> = new DrawData<Float>();
+	// @:deprecated("FlxStrip's vertices is deprecated, use triangles.vertices, instead") // TODO
+	public var vertices(get, set):DrawData<Float>;
+	public function get_vertices() return triangles.vertices;
+	public function set_vertices(value:DrawData<Float>) return triangles.vertices = value;
 
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
-	public var indices:DrawData<Int> = new DrawData<Int>();
+	// @:deprecated("FlxStrip's indices is deprecated, use triangles.indices, instead") // TODO
+	public var indices(get, set):DrawData<Int>;
+	public function get_indices() return triangles.indices;
+	public function set_indices(value:DrawData<Int>) return triangles.indices = value;
 
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
-	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	// @:deprecated("FlxStrip's uvtData is deprecated, use triangles.uvs, instead") // TODO
+	public var uvtData(get, set):DrawData<Float>;
+	public function get_uvtData() return triangles.uvs;
+	public function set_uvtData(value:DrawData<Float>) return triangles.uvs = value;
 
-	public var colors:DrawData<Int> = new DrawData<Int>();
+	// @:deprecated("FlxStrip's color is deprecated, use triangles.colors, instead") // TODO
+	public var colors(get, set):DrawData<Int>;
+	public function get_colors() return triangles.colors;
+	public function set_colors(value:DrawData<Int>) return triangles.colors = value;
 
 	public var repeat:Bool = false;
 	
@@ -55,21 +74,23 @@ class FlxStrip extends FlxSprite
 	 */
 	public var drawDebugCollider:Bool = true;
 	#end
+	
+	public function new ()
+	{
+		triangles = new FlxDrawTriangleData();
+		super(x, y, graphic);
+	}
 
 	override public function destroy():Void
 	{
-		vertices = null;
-		indices = null;
-		uvtData = null;
-		colors = null;
-
+		triangles = FlxDestroyUtil.destroy(triangles);
 		super.destroy();
 	}
 
 	// TODO: check this for cases when zoom is less than initial zoom...
 	override public function draw():Void
 	{
-		if (alpha == 0 || graphic == null || vertices == null)
+		if (alpha == 0 || graphic == null || triangles.vertices == null)
 			return;
 
 		for (camera in cameras)
@@ -79,9 +100,9 @@ class FlxStrip extends FlxSprite
 
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			#if !flash
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing, colorTransform, shader);
+			camera.drawTriangleData(graphic, triangles, _point, blend, repeat, antialiasing, colorTransform, shader);
 			#else
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
+			camera.drawTriangleData(graphic, triangles, _point, blend, repeat, antialiasing);
 			#end
 		}
 		
@@ -119,7 +140,7 @@ class FlxStrip extends FlxSprite
 	{
 		gfx.lineStyle(1, debugTrianglesColor, 0.5);
 		// draw a path for each triangle
-		final numTriangles = Std.int(indices.length / 3);
+		final numTriangles = Std.int(triangles.indices.length / 3);
 		final commands = new Vector<Int>();
 		final data = new Vector<Float>();
 		for (i in 0...numTriangles)
@@ -131,9 +152,9 @@ class FlxStrip extends FlxSprite
 			commands.push(LINE_TO);
 			for (j in 0...4)
 			{
-				final index = indices[i * 3 + (j % 3)];
-				data.push(screenPos.x + vertices[index * 2 + 0]);
-				data.push(screenPos.y + vertices[index * 2 + 1]);
+				final index = triangles.indices[i * 3 + (j % 3)];
+				data.push(screenPos.x + triangles.vertices[index * 2 + 0]);
+				data.push(screenPos.y + triangles.vertices[index * 2 + 1]);
 			}
 		}
 		gfx.drawPath(commands, data);

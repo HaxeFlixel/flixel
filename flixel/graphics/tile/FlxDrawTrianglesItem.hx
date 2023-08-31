@@ -2,7 +2,7 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
+import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -128,7 +128,141 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		#end
 	}
 
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
+	public function addTriangleData(triangles:FlxDrawTriangleData, ?position:FlxPoint, ?cameraBounds:FlxRect
+			#if !flash , ?transform:ColorTransform #end):Void
+	{
+		if (position == null)
+			position = point.set();
+
+		if (cameraBounds == null)
+			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
+
+		var verticesLength:Int = triangles.vertices.length;
+		var prevVerticesLength:Int = this.vertices.length;
+		var numberOfVertices:Int = Std.int(verticesLength / 2);
+		var prevIndicesLength:Int = this.indices.length;
+		var prevUVTDataLength:Int = this.uvtData.length;
+		var prevColorsLength:Int = this.colors.length;
+		var prevNumberOfVertices:Int = this.numVertices;
+
+		var tempX:Float, tempY:Float;
+		var i:Int = 0;
+		var currentVertexPosition:Int = prevVerticesLength;
+
+		while (i < verticesLength)
+		{
+			tempX = position.x + triangles.vertices[i];
+			tempY = position.y + triangles.vertices[i + 1];
+
+			this.vertices[currentVertexPosition++] = tempX;
+			this.vertices[currentVertexPosition++] = tempY;
+
+			if (i == 0)
+			{
+				bounds.set(tempX, tempY, 0, 0);
+			}
+			else
+			{
+				inflateBounds(bounds, tempX, tempY);
+			}
+
+			i += 2;
+		}
+
+		if (!cameraBounds.overlaps(bounds))
+		{
+			this.vertices.splice(this.vertices.length - verticesLength, verticesLength);
+		}
+		else
+		{
+			var uvtDataLength:Int = triangles.uvs.length;
+			for (i in 0...uvtDataLength)
+			{
+				this.uvtData[prevUVTDataLength + i] = triangles.uvs[i];
+			}
+
+			var indicesLength:Int = triangles.indices.length;
+			for (i in 0...indicesLength)
+			{
+				this.indices[prevIndicesLength + i] = triangles.indices[i] + prevNumberOfVertices;
+			}
+
+			if (colored)
+			{
+				for (i in 0...numberOfVertices)
+				{
+					this.colors[prevColorsLength + i] = triangles.colors[i];
+				}
+
+				colorsPosition += numberOfVertices;
+			}
+
+			verticesPosition += verticesLength;
+			indicesPosition += indicesLength;
+		}
+
+		position.putWeak();
+		cameraBounds.putWeak();
+
+		#if !flash
+		for (_ in 0...numTriangles)
+		{
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+		}
+
+		if (colored || hasColorOffsets)
+		{
+			if (colorMultipliers == null)
+				colorMultipliers = [];
+
+			if (colorOffsets == null)
+				colorOffsets = [];
+
+			for (_ in 0...(numTriangles * 3))
+			{
+				if(transform != null)
+				{
+					colorMultipliers.push(transform.redMultiplier);
+					colorMultipliers.push(transform.greenMultiplier);
+					colorMultipliers.push(transform.blueMultiplier);
+
+					colorOffsets.push(transform.redOffset);
+					colorOffsets.push(transform.greenOffset);
+					colorOffsets.push(transform.blueOffset);
+					colorOffsets.push(transform.alphaOffset);
+				}
+				else
+				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+	
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+				}
+
+				colorMultipliers.push(1);
+			}
+		}
+		#end
+	}
+	
+	// @:deprecated("FlxCamera's addTriangles is deprecated use addTriangleData, instead") // TODO
+	inline public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
+			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
+	{
+		addTrianglesHelper(vertices, indices, uvtData, colors, position, cameraBounds #if !flash , transform #end);
+	}
+	
+	/**
+	 * Used to avoid deprecation warnings from other deprecated methods
+	 */
+	@:allow(flixel.FlxCamera.drawTriangles)
+	function addTrianglesHelper(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
 			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
 	{
 		if (position == null)
