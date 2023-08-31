@@ -142,7 +142,7 @@ class FlxGame extends Sprite
 	 */
 	var _lostFocus:Bool = false;
 
-	/**
+        /**
          * The filters array to be applied to the game.
          */
 	public var filters:Null<Array<BitmapFilter>> = null;
@@ -901,5 +901,15 @@ class FlxGame extends Sprite
 	{
 		// expensive, only call if necessary
 		return Lib.getTimer();
+	}
+
+	inline function set__filters(v:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		return filters = v;
+	}
+
+	inline function get__filters():Array<BitmapFilter>
+	{
+		return filters;
 	}
 }
