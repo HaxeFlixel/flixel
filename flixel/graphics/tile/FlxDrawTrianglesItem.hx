@@ -252,7 +252,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	}
 	
 	// @:deprecated("FlxCamera's addTriangles is deprecated use addTriangleData, instead") // TODO
-	inline public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
+	public inline function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
 			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
 	{
 		addTrianglesHelper(vertices, indices, uvtData, colors, position, cameraBounds #if !flash , transform #end);
