@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import openfl.Vector;
 import openfl.display.Graphics;
 import openfl.display.GraphicsPathCommand;
 import flixel.math.FlxPoint;
@@ -116,34 +117,26 @@ class FlxStrip extends FlxSprite
 	
 	function drawDebugWireframeToBuffer(gfx:Graphics, screenPos:FlxPoint)
 	{
-	
-		inline function getVertexX(i:Int)
-		{
-			return screenPos.x + vertices[indices[i] * 2];
-		}
-		
-		inline function getVertexY(i:Int)
-		{
-			return screenPos.y + vertices[indices[i] * 2 + 1];
-		}
-		
 		gfx.lineStyle(1, debugWireframeColor, 0.5);
-		// draw a triangle path for each triangle in the drawitem
+		// draw a path for each triangle
 		final numTriangles = Std.int(indices.length / 3);
+		final commands = new Vector<Int>();
+		final data = new Vector<Float>();
 		for (i in 0...numTriangles)
 		{
-			gfx.drawPath
-			(
-				DrawData.ofArray([MOVE_TO, LINE_TO, LINE_TO, LINE_TO]),
-				DrawData.ofArray(
-				[
-					getVertexX(i * 3 + 0), getVertexY(i * 3 + 0),
-					getVertexX(i * 3 + 1), getVertexY(i * 3 + 1),
-					getVertexX(i * 3 + 2), getVertexY(i * 3 + 2),
-					getVertexX(i * 3 + 0), getVertexY(i * 3 + 0)
-				])
-			);
+			// add triangle vertices 0, 1, 2, 0
+			commands.push(MOVE_TO);
+			commands.push(LINE_TO);
+			commands.push(LINE_TO);
+			commands.push(LINE_TO);
+			for (j in 0...4)
+			{
+				final index = indices[i * 3 + (j % 3)];
+				data.push(screenPos.x + vertices[index * 2 + 0]);
+				data.push(screenPos.y + vertices[index * 2 + 1]);
+			}
 		}
+		gfx.drawPath(commands, data);
 	}
 	#end
 }
