@@ -41,14 +41,14 @@ class FlxStrip extends FlxSprite
 	
 	#if FLX_DEBUG
 	/**
-	 * Overriding this will force a specific color to be used for debug wireframe
+	 * Overriding this will force a specific color to be used when debug drawing triangles
 	 */
-	public var debugWireframeColor:FlxColor = FlxColor.BLUE;
+	public var debugTrianglesColor:FlxColor = FlxColor.BLUE;
 	
 	/**
 	 * If true, draws the triangles of this strip, unless ignoreDrawDebug is true
 	 */
-	public var drawDebugWireframe:Bool = false;
+	public var drawDebugTriangles:Bool = false;
 	
 	/**
 	 * If true, draws the collision bounding box of this strip, unless ignoreDrawDebug is true
@@ -106,18 +106,18 @@ class FlxStrip extends FlxSprite
 			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
 		}
 		
-		if (graphicOnScreen && drawDebugWireframe)
+		if (graphicOnScreen && drawDebugTriangles)
 		{
 			final pos = getScreenPosition(camera);
-			drawDebugWireframeToBuffer(gfx, pos);
+			drawDebugTrianglesToBuffer(gfx, pos);
 		}
 		
 		endDrawDebug(camera);
 	}
 	
-	function drawDebugWireframeToBuffer(gfx:Graphics, screenPos:FlxPoint)
+	function drawDebugTrianglesToBuffer(gfx:Graphics, screenPos:FlxPoint)
 	{
-		gfx.lineStyle(1, debugWireframeColor, 0.5);
+		gfx.lineStyle(1, debugTrianglesColor, 0.5);
 		// draw a path for each triangle
 		final numTriangles = Std.int(indices.length / 3);
 		final commands = new Vector<Int>();
