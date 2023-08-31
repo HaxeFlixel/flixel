@@ -79,7 +79,7 @@ class FlxGame extends Sprite
 	public var ticks(default, null):Int = 0;
 
 	/**
-	 * Enables or disables the filters set via `setFilters()`.
+	 * Enables or disables the filters.
 	 */
 	public var filtersEnabled:Bool = true;
 
@@ -143,9 +143,12 @@ class FlxGame extends Sprite
 	var _lostFocus:Bool = false;
 
 	/**
-	 * The filters array to be applied to the game.
-	 */
-	var _filters:Array<BitmapFilter>;
+         * The filters array to be applied to the game.
+         */
+	public var filters:Null<Array<BitmapFilter>> = null;
+
+	@:deprecated("_filters is deprecated, use filters instead")
+	var _filters(get, set):Null<Array<BitmapFilter>>;
 
 	#if (desktop && lime_legacy)
 	/**
@@ -297,9 +300,10 @@ class FlxGame extends Sprite
 	/**
 	 * Sets the filter array to be applied to the game.
 	 */
+	@:deprecated("setFilters is deprecated, use the filters array instead")
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
-		_filters = filters;
+		this.filters = filters;
 	}
 
 	/**
@@ -762,7 +766,7 @@ class FlxGame extends Sprite
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 
-		filters = filtersEnabled ? _filters : null;
+		filters = filtersEnabled ? filters : null;
 	}
 
 	function updateElapsed():Void
