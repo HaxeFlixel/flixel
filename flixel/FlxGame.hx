@@ -301,7 +301,7 @@ class FlxGame extends Sprite
 	@:deprecated("setFilters is deprecated, use the filters array instead")
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
-		this.filters = filters;
+		_filters = filters;
 	}
 
 	/**
