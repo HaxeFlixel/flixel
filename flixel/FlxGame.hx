@@ -146,7 +146,7 @@ class FlxGame extends Sprite
      * The filters array to be applied to the game.
      */
 	@:deprecated("_filters is deprecated, use filters instead")
-	var _filters(get, set):Null<Array<BitmapFilter>>;
+	var _filters:Null<Array<BitmapFilter>>;
 
 	#if (desktop && lime_legacy)
 	/**
@@ -901,13 +901,13 @@ class FlxGame extends Sprite
 		return Lib.getTimer();
 	}
 
-	inline function set__filters(v:Array<BitmapFilter>):Array<BitmapFilter>
+	override function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
 	{
-		return filters = v;
+		return _filters = v;
 	}
 
-	inline function get__filters():Array<BitmapFilter>
+	override function get_filters():Array<BitmapFilter>
 	{
-		return filters;
+		return _filters;
 	}
 }
