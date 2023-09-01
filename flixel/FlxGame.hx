@@ -145,8 +145,6 @@ class FlxGame extends Sprite
         /**
          * The filters array to be applied to the game.
          */
-	public var filters:Null<Array<BitmapFilter>> = null;
-
 	@:deprecated("_filters is deprecated, use filters instead")
 	var _filters(get, set):Null<Array<BitmapFilter>>;
 
@@ -766,7 +764,7 @@ class FlxGame extends Sprite
 		FlxArrayUtil.clearArray(FlxG.swipes);
 		#end
 
-		filters = filtersEnabled ? filters : null;
+		super.set_filters(filtersEnabled ? _filters : null);
 	}
 
 	function updateElapsed():Void
