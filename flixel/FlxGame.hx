@@ -142,9 +142,9 @@ class FlxGame extends Sprite
 	 */
 	var _lostFocus:Bool = false;
 
-        /**
-         * The filters array to be applied to the game.
-         */
+    /**
+     * The filters array to be applied to the game.
+     */
 	@:deprecated("_filters is deprecated, use filters instead")
 	var _filters(get, set):Null<Array<BitmapFilter>>;
 
