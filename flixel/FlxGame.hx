@@ -908,12 +908,12 @@ class FlxGame extends Sprite
 		return Lib.getTimer();
 	}
 
-	#if (!flash || haxe >= "4.2.5") override #end function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
+	#if (!flash || haxe > "4.2.5") override #end function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
 	{
 		return _filters = v;
 	}
 
-	#if (!flash || haxe >= "4.2.5") override #end function get_filters():Array<BitmapFilter>
+	#if (!flash || haxe > "4.2.5") override #end function get_filters():Array<BitmapFilter>
 	{
 		return _filters;
 	}
