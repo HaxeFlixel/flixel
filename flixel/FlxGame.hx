@@ -901,12 +901,12 @@ class FlxGame extends Sprite
 		return Lib.getTimer();
 	}
 
-	#if !flash override #end function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
+	override function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
 	{
 		return _filters = v;
 	}
 
-	#if !flash override #end function get_filters():Array<BitmapFilter>
+	override function get_filters():Array<BitmapFilter>
 	{
 		return _filters;
 	}
