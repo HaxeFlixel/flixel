@@ -142,6 +142,13 @@ class FlxGame extends Sprite
 	 */
 	var _lostFocus:Bool = false;
 
+	#if (flash && haxe <= "4.2.5")
+	/**
+     * The filters array to be applied to the game.
+     */
+	public var filters:Null<Array<BitmapFilter>>;
+	#end
+		
     /**
      * The filters array to be applied to the game.
      */
@@ -901,12 +908,12 @@ class FlxGame extends Sprite
 		return Lib.getTimer();
 	}
 
-	override function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
+	#if (!flash || haxe >= "4.2.5") override #end function set_filters(v:Array<BitmapFilter>):Array<BitmapFilter>
 	{
 		return _filters = v;
 	}
 
-	override function get_filters():Array<BitmapFilter>
+	#if (!flash || haxe >= "4.2.5") override #end function get_filters():Array<BitmapFilter>
 	{
 		return _filters;
 	}
