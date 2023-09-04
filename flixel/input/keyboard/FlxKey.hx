@@ -74,6 +74,7 @@ enum abstract FlxKey(Int) from Int to Int
 	var GRAVEACCENT = 192;
 	var CONTROL = 17;
 	var ALT = 18;
+	var COMMAND = 224;
 	var SPACE = 32;
 	var UP = 38;
 	var DOWN = 40;
