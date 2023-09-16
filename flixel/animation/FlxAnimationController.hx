@@ -10,11 +10,6 @@ using StringTools;
 class FlxAnimationController implements IFlxDestroyable
 {
 	/**
-	 * How fast or slow should be every animation that is played.
-	 */
-	public static var timeScale:Float = 1.0;
-
-	/**
 	 * Property access for currently playing animation (warning: can be `null`).
 	 */
 	public var curAnim(get, set):FlxAnimation;
@@ -69,6 +64,11 @@ class FlxAnimationController implements IFlxDestroyable
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
 	public var finishCallback:(name:String) -> Void;
+
+	/**
+	 * How fast or slow time should pass for this animation controller
+	 */
+	public var timeScale:Float = 1.0;
 
 	/**
 	 * Internal, reference to owner sprite.
