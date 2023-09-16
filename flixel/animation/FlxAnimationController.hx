@@ -10,9 +10,9 @@ using StringTools;
 class FlxAnimationController implements IFlxDestroyable
 {
 	/**
-	 * The speed across every animation that is played.
+	 * How fast or slow should be every animation that is played.
 	 */
-	public static var animationSpeed:Float = 1.0;
+	public static var timeScale:Float = 1.0;
 
 	/**
 	 * Property access for currently playing animation (warning: can be `null`).
@@ -97,7 +97,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update(elapsed * animationSpeed);
+			_curAnim.update(elapsed * timeScale);
 		}
 		else if (_prerotated != null)
 		{
