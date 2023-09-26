@@ -417,8 +417,8 @@ class FlxG
 	 *                            will only be called if `ProcessCallback` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void,
-			?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:FlxObject->FlxObject->Void,
+			?ProcessCallback:FlxObject->FlxObject->Bool):Bool
 	{
 		if (ObjectOrGroup1 == null)
 			ObjectOrGroup1 = state;
@@ -470,7 +470,7 @@ class FlxG
 	 *                           that is called if those two objects overlap.
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
+	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:FlxObject->FlxObject->Void):Bool
 	{
 		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
 	}
