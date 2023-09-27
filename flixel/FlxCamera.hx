@@ -1473,7 +1473,7 @@ class FlxCamera extends FlxBasic
 	{
 		this.style = style;
 		this.target = target;
-		followLerp = Lerp;
+		followLerp = lerp;
 		var helper:Float;
 		var w:Float = 0;
 		var h:Float = 0;
