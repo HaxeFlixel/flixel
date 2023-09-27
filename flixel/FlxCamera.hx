@@ -131,7 +131,7 @@ class FlxCamera extends FlxBasic
 	 * Values are bounded between `0.0` and `60 / FlxG.updateFramerate` for consistency across framerates.
 	 * The maximum value means no camera easing. A value of `0` means the camera does not move.
 	 */
-	public var followLerp(default, set):Float = 60 / FlxG.updateFramerate;
+	public var followLerp:Float = 1.0;
 
 	/**
 	 * You can assign a "dead zone" to the camera in order to better control its movement.
@@ -1276,8 +1276,9 @@ class FlxCamera extends FlxBasic
 	
 	function updateLerp(elapsed:Float)
 	{
+		final boundLerp = FlxMath.bound(followLerp, 0, 1);
 		// Adjust lerp based on the current frame rate so lerp is less framerate dependant
-		final adjustedLerp = 1.0 - Math.pow(1.0 - followLerp, elapsed * 60);
+		final adjustedLerp = 1.0 - Math.pow(1.0 - boundLerp, elapsed * 60);
 		if (adjustedLerp >= 1)
 		{
 			scroll.copyFrom(_scrollTarget); // no easing
@@ -1929,12 +1930,6 @@ class FlxCamera extends FlxBasic
 			&& (rect.bottom > viewMarginTop) && (rect.y < viewMarginBottom);
 		rect.putWeak();
 		return contained;
-	}
-
-	//TODO: remove setter
-	function set_followLerp(value:Float):Float
-	{
-		return followLerp = FlxMath.bound(value, 0, 1);
 	}
 
 	function set_width(Value:Int):Int
