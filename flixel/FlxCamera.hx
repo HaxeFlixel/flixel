@@ -1273,7 +1273,7 @@ class FlxCamera extends FlxBasic
 		}
 		
 		// Adjust lerp based on the current frame rate so lerp is less framerate dependant
-		final adjustedLerp = followLerp * (elapsed * 60);
+		final adjustedLerp = 1.0 - Math.pow(1.0 - followLerp, elapsed * 60);
 		if (adjustedLerp >= 1)
 		{
 			scroll.copyFrom(_scrollTarget); // no easing
@@ -1927,9 +1927,10 @@ class FlxCamera extends FlxBasic
 		return contained;
 	}
 
-	function set_followLerp(Value:Float):Float
+	//TODO: remove setter
+	function set_followLerp(value:Float):Float
 	{
-		return followLerp = FlxMath.bound(Value, 0, 60 / FlxG.updateFramerate);
+		return followLerp = FlxMath.bound(value, 0, 1);
 	}
 
 	function set_width(Value:Int):Int
