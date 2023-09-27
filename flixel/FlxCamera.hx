@@ -1463,29 +1463,23 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Tells this camera object what `FlxObject` to track.
 	 *
-	 * @param   Target   The object you want the camera to track. Set to `null` to not follow anything.
-	 * @param   Style    Leverage one of the existing "deadzone" presets. Default is `LOCKON`.
+	 * @param   target   The object you want the camera to track. Set to `null` to not follow anything.
+	 * @param   style    Leverage one of the existing "deadzone" presets. Default is `LOCKON`.
 	 *                   If you use a custom deadzone, ignore this parameter and
 	 *                   manually specify the deadzone after calling `follow()`.
-	 * @param   Lerp     How much lag the camera should have (can help smooth out the camera movement).
+	 * @param   lerp     How much lag the camera should have (can help smooth out the camera movement).
 	 */
-	public function follow(Target:FlxObject, ?Style:FlxCameraFollowStyle, ?Lerp:Float):Void
+	public function follow(target:FlxObject, style = LOCKON, lerp = 1.0):Void
 	{
-		if (Style == null)
-			Style = LOCKON;
-
-		if (Lerp == null)
-			Lerp = 60 / FlxG.updateFramerate;
-
-		style = Style;
-		target = Target;
+		this.style = style;
+		this.target = target;
 		followLerp = Lerp;
 		var helper:Float;
 		var w:Float = 0;
 		var h:Float = 0;
 		_lastTargetPosition = null;
 
-		switch (Style)
+		switch (style)
 		{
 			case LOCKON:
 				if (target != null)
