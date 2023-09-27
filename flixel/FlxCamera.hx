@@ -1146,7 +1146,7 @@ class FlxCamera extends FlxBasic
 		// follow the target, if there is one
 		if (target != null)
 		{
-			updateFollow();
+			updateFollow(elapsed);
 		}
 
 		updateScroll();
@@ -1194,7 +1194,7 @@ class FlxCamera extends FlxBasic
 	 * Updates camera's scroll.
 	 * Called every frame by camera's `update()` method (if camera's `target` isn't `null`).
 	 */
-	public function updateFollow():Void
+	public function updateFollow(elapsed:Float):Void
 	{
 		// Either follow the object closely,
 		// or double check our deadzone and update accordingly.
@@ -1271,15 +1271,17 @@ class FlxCamera extends FlxBasic
 				_lastTargetPosition.y = target.y;
 			}
 		}
-
-		if (followLerp >= 60 / FlxG.updateFramerate)
+		
+		// Adjust lerp based on the current frame rate so lerp is less framerate dependant
+		final adjustedLerp = followLerp * (elapsed * 60);
+		if (adjustedLerp >= 1)
 		{
 			scroll.copyFrom(_scrollTarget); // no easing
 		}
 		else
 		{
-			scroll.x += (_scrollTarget.x - scroll.x) * followLerp * (60 / FlxG.updateFramerate);
-			scroll.y += (_scrollTarget.y - scroll.y) * followLerp * (60 / FlxG.updateFramerate);
+			scroll.x += (_scrollTarget.x - scroll.x) * adjustedLerp;
+			scroll.y += (_scrollTarget.y - scroll.y) * adjustedLerp;
 		}
 	}
 
