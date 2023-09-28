@@ -574,7 +574,7 @@ class FlxG
 		// if the url does not already start with a protocol, add it.
 		if (!~/^.\w+?:\/*/.match(url))
 			url = "https://" + url;
-		Lib.getURL(new URLRequest(url), Target);
+		Lib.getURL(new URLRequest(url), target);
 	}
 
 	/**
