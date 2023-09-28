@@ -10,7 +10,7 @@ class FlxBaseAnimation implements IFlxDestroyable
 	/**
 	 * Animation controller this animation belongs to
 	 */
-	public var parent:FlxAnimationController;
+	public var parent(default, null):FlxAnimationController;
 
 	/**
 	 * String name of the animation (e.g. `"walk"`)

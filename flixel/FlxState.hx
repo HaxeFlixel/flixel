@@ -10,7 +10,9 @@ import flixel.util.FlxSignal.FlxTypedSignal;
  * It is for all intents and purpose a fancy `FlxGroup`. And really, it's not even that fancy.
  */
 @:keepSub // workaround for HaxeFoundation/haxe#3749
+#if FLX_NO_UNIT_TEST
 @:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("switchTo", "switchTo is deprecated, use startOutro"))
+#end
 // show deprecation warning when `switchTo` is overriden in dereived classes
 class FlxState extends FlxGroup
 {

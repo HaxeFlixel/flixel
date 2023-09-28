@@ -1,14 +1,14 @@
 package flixel.util;
 
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.GradientType;
-import flash.display.InterpolationMethod;
-import flash.display.Shape;
-import flash.display.SpreadMethod;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.GradientType;
+import openfl.display.InterpolationMethod;
+import openfl.display.Shape;
+import openfl.display.SpreadMethod;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.math.FlxAngle;
 
 /**

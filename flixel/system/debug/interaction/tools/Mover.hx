@@ -1,7 +1,7 @@
 package flixel.system.debug.interaction.tools;
 
-import flash.display.BitmapData;
-import flash.ui.Keyboard;
+import openfl.display.BitmapData;
+import openfl.ui.Keyboard;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.system.debug.interaction.Interaction;

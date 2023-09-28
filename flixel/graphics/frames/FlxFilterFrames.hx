@@ -1,8 +1,8 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
@@ -110,7 +110,7 @@ class FlxFilterFrames extends FlxFramesCollection
 			if (frame.name != null)
 			{
 				filterFrame.name = frame.name;
-				framesHash.set(frame.name, filterFrame);
+				framesByName.set(frame.name, filterFrame);
 			}
 		}
 

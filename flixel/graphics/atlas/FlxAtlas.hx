@@ -1,7 +1,7 @@
 package flixel.graphics.atlas;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -676,7 +676,7 @@ class FlxAtlas implements IFlxDestroyable
 
 		var atlasFrames:FlxAtlasFrames = _graphic.atlasFrames;
 
-		if (node.filled && !atlasFrames.framesHash.exists(node.key))
+		if (node.filled && !atlasFrames.exists(node.key))
 		{
 			var frame:FlxRect = FlxRect.get(node.x, node.y, node.width - border, node.height - border);
 			var sourceSize:FlxPoint = node.rotated ? FlxPoint.get(node.height - border,

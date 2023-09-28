@@ -1,17 +1,17 @@
 package flixel.util;
 
-import flash.display.BitmapData;
-import flash.display.BitmapDataChannel;
-import flash.display.BlendMode;
-import flash.display.CapsStyle;
-import flash.display.Graphics;
-import flash.display.JointStyle;
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.geom.ColorTransform;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.BitmapData;
+import openfl.display.BitmapDataChannel;
+import openfl.display.BlendMode;
+import openfl.display.CapsStyle;
+import openfl.display.Graphics;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -20,6 +20,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
@@ -28,7 +29,7 @@ import flixel.tweens.FlxTween;
 /**
  * Some handy functions for FlxSprite (FlxObject) manipulation, mostly drawing-related.
  * Note that stage quality impacts the results of the draw() functions -
- * use FlxG.stage.quality = flash.display.StageQuality.BEST; for best results.
+ * use FlxG.stage.quality = openfl.display.StageQuality.BEST; for best results.
  */
 class FlxSpriteUtil
 {
@@ -175,14 +176,14 @@ class FlxSpriteUtil
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.right < camera.viewLeft)
+		if (edges.has(LEFT) && spriteBounds.right < camera.viewMarginLeft)
 			sprite.x = camera.viewRight + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.left > camera.viewRight)
+		else if (edges.has(RIGHT) && spriteBounds.left > camera.viewMarginRight)
 			sprite.x = camera.viewLeft + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.bottom < camera.viewTop)
+		if (edges.has(UP) && spriteBounds.bottom < camera.viewMarginTop)
 			sprite.y = camera.viewBottom + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.top > camera.viewBottom)
+		else if (edges.has(DOWN) && spriteBounds.top > camera.viewMarginBottom)
 			sprite.y = camera.viewTop + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();
@@ -211,14 +212,14 @@ class FlxSpriteUtil
 			sprite.y - spriteBounds.y - camera.scroll.y
 		);
 		
-		if (edges.has(LEFT) && spriteBounds.left < camera.viewLeft)
+		if (edges.has(LEFT) && spriteBounds.left < camera.viewMarginLeft)
 			sprite.x = camera.viewLeft + offset.x;
-		else if (edges.has(RIGHT) && spriteBounds.right > camera.viewRight)
+		else if (edges.has(RIGHT) && spriteBounds.right > camera.viewMarginRight)
 			sprite.x = camera.viewRight + offset.x - spriteBounds.width;
 		
-		if (edges.has(UP) && spriteBounds.top < camera.viewTop)
+		if (edges.has(UP) && spriteBounds.top < camera.viewMarginTop)
 			sprite.y = camera.viewTop + offset.y;
-		else if (edges.has(DOWN) && spriteBounds.bottom > camera.viewBottom)
+		else if (edges.has(DOWN) && spriteBounds.bottom > camera.viewMarginBottom)
 			sprite.y = camera.viewBottom + offset.y - spriteBounds.height;
 		
 		spriteBounds.put();
@@ -753,6 +754,71 @@ class FlxSpriteUtil
 	static function alphaTween(sprite:FlxSprite, f:Float):Void
 	{
 		sprite.alpha = f;
+	}
+	
+	/**
+	 * Change's this sprite's color transform to apply a tint effect.
+	 * Mimics Adobe Animate's "Tint" color effect
+	 * 
+	 * @param   tint  The color to tint the sprite, where alpha determines the strength
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function setTint(sprite:FlxSprite, tint:FlxColor)
+	{
+		final strength = tint.alphaFloat;
+		inline function scaleInt(i:Int):Int
+		{
+			return Math.round(i * strength);
+		}
+		
+		final mult = 1 - strength;
+		sprite.setColorTransform(mult, mult, mult, 1.0, scaleInt(tint.red), scaleInt(tint.green), scaleInt(tint.blue));
+	}
+	
+	/**
+	 * Uses `FlxTween.num` to call `setTint` on the target sprite
+	 * 
+	 * @param   tint        The color to tint the sprite, where alpha determines the max strength
+	 * @param   duration    How long the flash lasts
+	 * @param   func        Controls the amount of tint over time. The input float goes from 0 to
+	 *                      1.0, an output of 1.0 means the tint is fully applied. If omitted,
+	 *                      `(n)->1-n` is used, meaning it starts at full tint and fades away
+	 * @param   onComplete  Called when the flash is complete
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function flashTint(sprite:FlxSprite, tint = FlxColor.WHITE, duration = 0.5,
+		?func:(Float)->Float, ?onComplete:()->Void)
+	{
+		final options:TweenOptions = onComplete != null ? { onComplete: (_)->onComplete} : null;
+		if (func == null)
+			func = (n)->1-FlxEase.circIn(n);// start at full, fade out
+		
+		var color = tint.rgb;
+		final strength = tint.alphaFloat;
+		FlxTween.num(0, 1, duration, options, function(n)
+		{
+			color.alphaFloat = strength * func(n);
+			setTint(sprite, color);
+		});
+		
+		return sprite;
+	}
+	
+	/**
+	 * Change's this sprite's color transform to brighten or darken it.
+	 * Mimics Adobe Animate's "Brightness" color effect
+	 * 
+	 * @param   brightness  Use 1.0 to fully brighten, -1.0 to fully darken, or anything inbetween
+	 * 
+	 * @since 5.4.0
+	 */
+	public static inline function setBrightness(sprite:FlxSprite, brightness:Float)
+	{
+		final mult = 1.0 - Math.abs(brightness);
+		final offset = Math.round(Math.max(0, 0xFF * brightness));
+		sprite.setColorTransform(mult, mult, mult, 1.0, offset, offset, offset);
 	}
 }
 

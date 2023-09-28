@@ -1,6 +1,6 @@
 package flixel.text;
 
-import flash.display.BitmapData;
+import openfl.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -337,7 +337,7 @@ class FlxBitmapText extends FlxSprite
 				textRed *= textColor.redFloat;
 				textGreen *= textColor.greenFloat;
 				textBlue *= textColor.blueFloat;
-				tAlpha *= textColor.alpha;
+				tAlpha *= textColor.alphaFloat;
 			}
 
 			var bgRed:Float = cr;

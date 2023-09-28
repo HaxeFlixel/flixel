@@ -2,11 +2,13 @@ package flixel.system;
 
 import haxe.macro.Expr;
 #if !macro
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.media.Sound;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.media.Sound;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.atlas.AseAtlas;
+import flixel.graphics.atlas.TexturePackerAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -30,8 +32,8 @@ class GraphicVirtualInput extends BitmapData {}
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
 typedef FlxAngelCodeXmlAsset = FlxXmlAsset;
-typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerObject>;
-typedef FlxAsepriteJsonAsset = FlxTexturePackerJsonAsset;
+typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
+typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
@@ -161,27 +163,30 @@ class FlxAssets
 	 * 
 	 * @param   directory       The directory to scan for files
 	 * @param   subDirectories  Whether to include subdirectories
-	 * @param   include         A string or `EReg` of files to include.
+	 * @param   include         A string or `EReg` of files to include
 	 *                          Example: `"*.jpg\|*.png\|*.gif"` will only add files with that extension
 	 * @param   exclude         A string or `EReg` of files to exclude. Example: `"*exclude/*\|*.ogg"`
 	 *                          will exclude .ogg files and everything in the exclude folder
-	 * @param   rename          A function that takes the file path and returns a valid haxe field name.
-	 *
+	 * @param   rename          A function that takes the file path and returns a valid haxe field name
+	 * @param   listField       If not an empty string, it adds static public field with the given
+	 *                          name with an array of every file in the directory
+	 * 
 	 * @see [Flixel 5.0.0 Migration guide - AssetPaths has less caveats](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide#assetpaths-has-less-caveats-2575)
 	 * @see [Haxe Macros: Code completion for everything](http://blog.stroep.nl/2014/01/haxe-macros/)
 	**/
 	public static function buildFileReferences(directory = "assets/", subDirectories = false, ?include:Expr, ?exclude:Expr,
-			?rename:String->Null<String>):Array<Field>
+			?rename:String->Null<String>, listField = "allFiles"):Array<Field>
 	{
 		#if doc_gen
 		return [];
 		#else
-		return flixel.system.macros.FlxAssetPaths.buildFileReferences(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename);
+		final buildRefs = flixel.system.macros.FlxAssetPaths.buildFileReferences;
+		return buildRefs(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename, listField);
 		#end
 	}
 
 	#if !doc_gen
-	private static function exprToRegex(expr:Expr):EReg
+	static function exprToRegex(expr:Expr):EReg
 	{
 		switch (expr.expr)
 		{

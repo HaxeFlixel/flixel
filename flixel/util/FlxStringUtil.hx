@@ -1,6 +1,6 @@
 package flixel.util;
 
-import flash.display.BitmapData;
+import openfl.display.BitmapData;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
@@ -10,7 +10,7 @@ import flixel.util.typeLimit.OneOfTwo;
 using StringTools;
 
 #if flash
-import flash.geom.Matrix;
+import openfl.geom.Matrix;
 #end
 
 /**
