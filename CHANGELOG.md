@@ -1,4 +1,4 @@
-5.4.0 (TBD)
+5.4.0 (September 28, 2023)
 ------------------------------
 #### New features:
 - **README.md**: Add Turkish translations
