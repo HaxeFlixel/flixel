@@ -559,7 +559,7 @@ class FlxTypedPathfinderData<Tilemap:FlxBaseTilemap<FlxObject>>
 
 	/**
 	 * Mainly a helper class for FlxTilemapPathPolicy.  Used to store data while the paths
-	 * are computed, but also useful for analyzing the data once it's done somputing.
+	 * are computed, but also useful for analyzing the data once it's done computing.
 	 * 
 	 * @param mapSize    The total number of tiles in the map
 	 * @param startIndex The start index of the path
