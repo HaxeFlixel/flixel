@@ -245,12 +245,6 @@ class FlxImageFrame extends FlxFramesCollection
 		return imageFrame;
 	}
 
-	override public function destroy():Void
-	{
-		super.destroy();
-		FlxDestroyUtil.destroy(frame);
-	}
-
 	function get_frame():FlxFrame
 	{
 		return frames[0];
