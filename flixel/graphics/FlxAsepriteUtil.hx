@@ -1,5 +1,6 @@
 package flixel.graphics;
 
+import flixel.graphics.atlas.AseAtlas;
 import flixel.animation.FlxAnimationController;
 import flixel.math.FlxMath;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -100,9 +101,10 @@ class FlxAsepriteUtil
 			if (excludeTags == null || !excludeTags.contains(name))
 			{
 				final expectedFrames = tag.to - tag.from + 1;
-				animations.addByPrefix(name, name + tagSuffix);
+				animations.addByPrefix(name, name + tagSuffix, 30, tag.repeat.loops);
 				// Animations aren't added if no frames are found
 				final anim = animations.getByName(name);
+				setFramesDirection(anim.frames, tag.direction);
 				final actualFrames = anim == null ? 0 : anim.numFrames;
 				if (actualFrames != expectedFrames)
 				{
@@ -179,7 +181,30 @@ class FlxAsepriteUtil
 			}
 			
 			final toFrame = FlxMath.minInt(frameTag.to, maxFrameNumber);
-			animations.add(frameTag.name, [for (i in frameTag.from...toFrame + 1) i]);
+			final frames = [for (i in frameTag.from...toFrame + 1) i];
+			setFramesDirection(frames, frameTag.direction);
+			// In Aseprite 0 or lower isn't a possible value, and toggling the "repeat" checkbox
+			// toggles between "1" and infinity, which omits the field from json
+			animations.add(frameTag.name, frames, 30, frameTag.repeat.loops);
+		}
+	}
+	
+	static function setFramesDirection(frames:Array<Int>, direction:AseAtlasTagDirection)
+	{
+		switch(direction)
+		{
+			case FORWARD:// do nothing
+			case REVERSE:
+				
+				frames.reverse();
+			case PINGPONG | PINGPONG_REVERSE:
+				
+				if (direction == PINGPONG_REVERSE)
+					frames.reverse();
+				
+				var i = frames.length - 1;// skip last frame
+				while (i-- > 1) // skip first frame too
+					frames.push(frames[i]);
 		}
 	}
 }

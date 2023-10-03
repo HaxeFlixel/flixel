@@ -101,9 +101,32 @@ typedef AseAtlasTag = AseObject &
 	/**
 	 * The number of times to repeat this animation before aseprite's timeline switched to the next one.
 	 * 
-	 * Note: not currently used by flixel
+	 * Note: Used by `FlxAseAtlasUtils` to determine whether an animation loops. Loops if `> 0`.
 	 */
-	@:optional var repeat:Int;
+	@:optional var repeat:AseAtlasTagRepeat;
+}
+
+/**
+ * A string expected to always be a string with a valid int value (or null)
+ */
+abstract AseAtlasTagRepeat(Null<String>) from Null<String> to Null<String>
+{
+	/**
+	 * Whether the underlying value indicates whether to loop this animation
+	 */
+	public var loops(get, never):Bool;
+	
+	inline function get_loops()
+	{
+		return this != null && toInt() > 0;
+	}
+	
+	@:to
+	inline public function toInt()
+	{
+		return Std.parseInt(this);
+	}
+	
 }
 
 enum abstract AseAtlasTagDirection(String) to String
