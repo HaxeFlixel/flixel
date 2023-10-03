@@ -47,8 +47,9 @@ class FlxCollision
 	public static function pixelPerfectCheck(contact:FlxSprite, target:FlxSprite, alphaTolerance:Int = 1, ?camera:FlxCamera):Bool
 	{
 		// if either of the angles are non-zero, consider the angles of the sprites in the pixel check
-		var advanced = (contact.angle != 0) || (target.angle != 0) || contact.scale.x != 1 || contact.scale.y != 1 || target.scale.x != 1
-			|| target.scale.y != 1;
+		final advanced = contact.angle != 0 || target.angle != 0
+			|| contact.scale.x != 1 || contact.scale.y != 1
+			|| target.scale.x != 1 || target.scale.y != 1;
 
 		contact.getScreenBounds(boundsA, camera);
 		target.getScreenBounds(boundsB, camera);
