@@ -583,9 +583,14 @@ class FlxG
 	@:allow(flixel.FlxGame.new)
 	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
+		if (width < 0)
+			width = -width;
+		if (height < 0)
+			height = -height;
+		
 		FlxG.game = game;
-		FlxG.width = width = Std.int(Math.abs(width));
-		FlxG.height = height = Std.int(Math.abs(height));
+		FlxG.width = width;
+		FlxG.height = height;
 
 		initRenderMethod();
 
