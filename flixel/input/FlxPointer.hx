@@ -113,6 +113,9 @@ class FlxPointer
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
+		if (Camera == null)
+			Camera = ObjectOrGroup.cameras[0];
+		
 		var result:Bool = false;
 
 		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
