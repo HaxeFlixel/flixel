@@ -122,7 +122,7 @@ abstract AseAtlasTagRepeat(Null<String>) from Null<String> to Null<String>
 	}
 	
 	@:to
-	inline public function toInt()
+	public inline function toInt()
 	{
 		return Std.parseInt(this);
 	}
