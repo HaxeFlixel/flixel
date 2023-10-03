@@ -78,6 +78,13 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @since 4.2.0
 	 */
 	public var frames:Array<Int>;
+	
+	/**
+	 * How fast or slow time should pass for this animation.
+	 * 
+	 * Similar to `FlxAnimationController`'s `timeScale`, but won't effect other animations.
+	 */
+	public var timeScale:Float = 1.0;
 
 	/**
 	 * Internal, used to time each frame of animation.
@@ -199,7 +206,7 @@ class FlxAnimation extends FlxBaseAnimation
 		if (curFrameDuration == 0 || finished || paused)
 			return;
 
-		_frameTimer += elapsed;
+		_frameTimer += elapsed * timeScale;
 		while (_frameTimer > curFrameDuration && !finished)
 		{
 			_frameTimer -= curFrameDuration;
