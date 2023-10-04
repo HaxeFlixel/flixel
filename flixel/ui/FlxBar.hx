@@ -886,15 +886,15 @@ class FlxBar extends FlxSprite
 		}
 	}
 
-	override function set_pixels(Pixels:BitmapData):BitmapData
+	override function set_pixels(pixels:BitmapData):BitmapData
 	{
 		if (FlxG.renderTile)
 		{
-			return Pixels; // hack
+			return pixels; // hack
 		}
 		else
 		{
-			return super.set_pixels(Pixels);
+			return super.set_pixels(pixels);
 		}
 	}
 
