@@ -114,7 +114,7 @@ class FlxPointer
 	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
 	{
 		if (Camera == null)
-			Camera = ObjectOrGroup.cameras[0];
+			Camera = ObjectOrGroup.camera;
 		
 		var result:Bool = false;
 
