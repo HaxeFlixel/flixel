@@ -114,12 +114,12 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 	 */
 	public static var defaultFramePadding(get, set):Int;
 	
-	public static inline function get_defaultFramePadding()
+	static inline function get_defaultFramePadding()
 	{
 		return FlxTypedTilemap.defaultFramePadding;
 	}
 	
-	public static inline function set_defaultFramePadding(value:Int)
+	static inline function set_defaultFramePadding(value:Int)
 	{
 		return FlxTypedTilemap.defaultFramePadding = value;
 	}
