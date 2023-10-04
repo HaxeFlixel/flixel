@@ -1,3 +1,15 @@
+5.4.1 (October 4, 2023)
+
+#### Changes and improvements:
+- Various improvements and new features for animations ([#2930](https://github.com/HaxeFlixel/flixel/pull/2930))
+	- `FlxAnimation`: Make `frameDuration` and `looped` public
+	- `FlxAnimation`: Add `timeScale` (not to be confused with the same field added to `FlxAnimationController` in 5.4.0)
+	- `FlxAseAtlasUtils`: Use fields `repeat` and `direction` when creating animations from Aseprite tag data
+- `FlxTilemap`: Add `defaultFramePadding` back ([#2886](https://github.com/HaxeFlixel/flixel/pull/2886))
+
+#### Bugfixes:
+- `FlxSoundTray`: Fix sound tray hide animation ([#2923](https://github.com/HaxeFlixel/flixel/pull/2923))
+
 5.4.0 (September 28, 2023)
 ------------------------------
 #### New features:
