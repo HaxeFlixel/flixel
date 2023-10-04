@@ -337,7 +337,7 @@ class FlxBitmapText extends FlxSprite
 				textRed *= textColor.redFloat;
 				textGreen *= textColor.greenFloat;
 				textBlue *= textColor.blueFloat;
-				tAlpha *= textColor.alpha;
+				tAlpha *= textColor.alphaFloat;
 			}
 
 			var bgRed:Float = cr;

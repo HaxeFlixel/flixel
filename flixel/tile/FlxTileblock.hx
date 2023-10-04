@@ -21,15 +21,15 @@ class FlxTileblock extends FlxSprite
 	/**
 	 * Creates a new FlxBlock object with the specified position and size.
 	 *
-	 * @param	X			The X position of the block.
-	 * @param	Y			The Y position of the block.
-	 * @param	Width		The width of the block.
-	 * @param	Height		The height of the block.
+	 * @param   x       The X position of the block.
+	 * @param   y       The Y position of the block.
+	 * @param   width   The width of the block.
+	 * @param   height  The height of the block.
 	 */
-	public function new(X:Int, Y:Int, Width:Int, Height:Int)
+	public function new(x:Int, y:Int, width:Int, height:Int)
 	{
-		super(X, Y);
-		makeGraphic(Width, Height, FlxColor.TRANSPARENT, true);
+		super(x, y);
+		makeGraphic(width, height, FlxColor.TRANSPARENT, true);
 		active = false;
 		immovable = true;
 		moves = false;
@@ -44,9 +44,9 @@ class FlxTileblock extends FlxSprite
 	/**
 	 * Fills the block with a randomly arranged selection of frames.
 	 *
-	 * @param	TileFrames		The frames that should fill this block.
-	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
-	 * @return	This tile block.
+	 * @param   tileFrames  The frames that should fill this block.
+	 * @param   empties     The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return  This tile block.
 	 */
 	public function loadFrames(tileFrames:FlxTileFrames, empties:Int = 0):FlxTileblock
 	{
@@ -123,39 +123,39 @@ class FlxTileblock extends FlxSprite
 	/**
 	 * Fills the block with a randomly arranged selection of graphics from the image provided.
 	 *
-	 * @param	TileGraphic 	The graphic class that contains the tiles that should fill this block.
-	 * @param	TileWidth		The width of a single tile in the graphic.
-	 * @param	TileHeight		The height of a single tile in the graphic.
-	 * @param	Empties			The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
-	 * @return	This tile block.
+	 * @param   tileGraphic  The graphic class that contains the tiles that should fill this block.
+	 * @param   tileWidth    The width of a single tile in the graphic.
+	 * @param   tileHeight   The height of a single tile in the graphic.
+	 * @param   empties      The number of "empty" tiles to add to the auto-fill algorithm (e.g. 8 tiles + 4 empties = 1/3 of block will be open holes).
+	 * @return  This tile block.
 	 */
-	public function loadTiles(TileGraphic:FlxGraphicAsset, TileWidth:Int = 0, TileHeight:Int = 0, Empties:Int = 0):FlxTileblock
+	public function loadTiles(tileGraphic:FlxGraphicAsset, tileWidth = 0, tileHeight = 0, empties = 0):FlxTileblock
 	{
-		if (TileGraphic == null)
+		if (tileGraphic == null)
 		{
 			return this;
 		}
 
-		var graph:FlxGraphic = FlxG.bitmap.add(TileGraphic);
+		var graph:FlxGraphic = FlxG.bitmap.add(tileGraphic);
 		if (graph == null)
 		{
 			return this;
 		}
 
-		if (TileWidth == 0)
+		if (tileWidth == 0)
 		{
-			TileWidth = graph.height;
-			TileWidth = (TileWidth > graph.width) ? graph.width : TileWidth;
+			tileWidth = graph.height;
+			tileWidth = (tileWidth > graph.width) ? graph.width : tileWidth;
 		}
 
-		if (TileHeight == 0)
+		if (tileHeight == 0)
 		{
-			TileHeight = TileWidth;
-			TileHeight = (TileHeight > graph.height) ? graph.height : TileHeight;
+			tileHeight = tileWidth;
+			tileHeight = (tileHeight > graph.height) ? graph.height : tileHeight;
 		}
 
-		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(TileWidth, TileHeight));
-		return this.loadFrames(tileFrames, Empties);
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
+		return this.loadFrames(tileFrames, empties);
 	}
 
 	public function setTile(x:Int, y:Int, index:Int):Void

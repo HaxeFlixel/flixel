@@ -402,12 +402,12 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return value;
 	}
 
-	function onGameResized(_, _):Void
+	function onGameResized(w:Int, h:Int):Void
 	{
 		_checkBufferChanges = true;
 	}
 
-	function onCameraChanged(_):Void
+	function onCameraChanged(cam:FlxCamera):Void
 	{
 		_checkBufferChanges = true;
 	}
@@ -1170,19 +1170,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
 	 *
-	 * @param   x              The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y              The Y coordinate of the tile (in tiles, not pixels).
+	 * @param   tileX          The X coordinate of the tile (in tiles, not pixels).
+	 * @param   tileY          The Y coordinate of the tile (in tiles, not pixels).
 	 * @param   newTile        New tile for the map data. Use -1 if you dont want any changes. Default = 0 (empty)
 	 * @param   spriteFactory  Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return FlxSprite.
 	 */
-	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, ?SpriteFactory:FlxTileProperties->FlxSprite):FlxSprite
+	public function tileToSprite(tileX:Int, tileY:Int, newTile = 0, ?spriteFactory:FlxTileProperties->FlxSprite):FlxSprite
 	{
-		if (SpriteFactory == null)
-			SpriteFactory = defaultTileToSprite;
+		if (spriteFactory == null)
+			spriteFactory = defaultTileToSprite;
 
-		var rowIndex:Int = X + (Y * widthInTiles);
-		var tile:FlxTile = _tileObjects[_data[rowIndex]];
+		final rowIndex:Int = tileX + (tileY * widthInTiles);
+		final tile:FlxTile = _tileObjects[_data[rowIndex]];
 		var image:FlxImageFrame = null;
 
 		if (tile != null && tile.visible)
@@ -1190,19 +1190,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		else
 			image = FlxImageFrame.fromEmptyFrame(graphic, FlxRect.get(0, 0, tileWidth, tileHeight));
 
-		var tileX:Float = X * tileWidth * scale.x + x;
-		var tileY:Float = Y * tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = SpriteFactory({
+		final worldX:Float = tileX * tileWidth * scale.x + x;
+		final worldY:Float = tileY * tileHeight * scale.y + y;
+		var tileSprite:FlxSprite = spriteFactory({
 			graphic: image,
-			x: tileX,
-			y: tileY,
+			x: worldX,
+			y: worldY,
 			scale: FlxPoint.get().copyFrom(scale),
 			alpha: alpha,
 			blend: blend
 		});
 
-		if (NewTile >= 0)
-			setTile(X, Y, NewTile);
+		if (newTile >= 0)
+			setTile(tileX, tileY, newTile);
 
 		return tileSprite;
 	}

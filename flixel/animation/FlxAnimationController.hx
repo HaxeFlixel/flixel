@@ -66,6 +66,11 @@ class FlxAnimationController implements IFlxDestroyable
 	public var finishCallback:(name:String) -> Void;
 
 	/**
+	 * How fast or slow time should pass for this animation controller
+	 */
+	public var timeScale:Float = 1.0;
+
+	/**
 	 * Internal, reference to owner sprite.
 	 */
 	var _sprite:FlxSprite;
@@ -92,7 +97,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update(elapsed);
+			_curAnim.update(elapsed * timeScale);
 		}
 		else if (_prerotated != null)
 		{
