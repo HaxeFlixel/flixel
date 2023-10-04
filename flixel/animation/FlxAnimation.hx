@@ -83,6 +83,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 * How fast or slow time should pass for this animation.
 	 * 
 	 * Similar to `FlxAnimationController`'s `timeScale`, but won't effect other animations.
+	 * @since 5.4.1
 	 */
 	public var timeScale:Float = 1.0;
 

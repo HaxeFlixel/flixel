@@ -111,6 +111,7 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 	 * The default frame padding tilemaps will use when their own `framePadding` is not set
 	 * 
 	 * @see FlxTypedTilemap.framePadding
+	 * @since 5.0.0
 	 */
 	public static var defaultFramePadding(get, set):Int;
 	
@@ -164,6 +165,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * The default frame padding tilemaps will use when their own `framePadding` is not set
 	 * 
 	 * @see FlxTypedTilemap.framePadding
+	 * @since 5.0.0
 	 */
 	public static var defaultFramePadding = 2;
 
