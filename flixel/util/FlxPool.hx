@@ -14,7 +14,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	public var length(get, never):Int;
 
 	var _pool:Array<T> = [];
-	var _class:Class<T>;
+	var _constructor:()->T;
 
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
@@ -22,16 +22,27 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	 */
 	var _count:Int = 0;
 
-	public function new(classObj:Class<T>)
+	/**
+	 * Creates a pool of the specified type
+	 * @param   classRef     The type the pool will hold, used to create new instances, if no
+	 *                       constructor was given
+	 * @param   constructor  Used to create new instances, example: `FlxPoint.new.bind(0, 0)`
+	 */
+	public function new(?classRef:Class<T>, ?constructor:()->T)
 	{
-		_class = classObj;
+		if (constructor != null)
+			_constructor = constructor;
+		else if (classRef != null)
+			_constructor = ()->Type.createInstance(classRef, []);
+		else
+			throw 'FlxPool constructor must contain either a class or a factory function';
 	}
 
 	public function get():T
 	{
 		if (_count == 0)
 		{
-			return Type.createInstance(_class, []);
+			return _constructor();
 		}
 		return _pool[--_count];
 	}
@@ -64,7 +75,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	{
 		while (numObjects-- > 0)
 		{
-			_pool[_count++] = Type.createInstance(_class, []);
+			_pool[_count++] = _constructor();
 		}
 	}
 
