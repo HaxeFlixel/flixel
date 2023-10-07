@@ -12,7 +12,7 @@ import flixel.util.FlxTimer;
  */
 class FlxFlicker implements IFlxDestroyable
 {
-	static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker, FlxFlicker.new);
+	static var _pool:FlxPool<FlxFlicker> = new FlxPool<FlxFlicker>(FlxFlicker.new);
 
 	/**
 	 * Internal map for looking up which objects are currently flickering and getting their flicker data.
