@@ -1232,10 +1232,10 @@ enum abstract FlxTextAlign(String) from String
 	{
 		return switch (align)
 		{
-			case LEFT: TextFormatAlign.LEFT;
-			case CENTER: TextFormatAlign.CENTER;
-			case RIGHT: TextFormatAlign.RIGHT;
-			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
+			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
+			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
+			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
 		}
 	}
