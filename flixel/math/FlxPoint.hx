@@ -1436,7 +1436,7 @@ import openfl.geom.Point;
 class FlxBasePoint implements IFlxPooled
 {
 	#if FLX_POINT_POOL
-	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint);
+	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint.new.bind(0, 0));
 	#end
 
 	/**

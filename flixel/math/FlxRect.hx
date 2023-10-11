@@ -12,7 +12,7 @@ class FlxRect implements IFlxPooled
 {
 	public static var pool(get, never):IFlxPool<FlxRect>;
 
-	static var _pool:FlxPool<FlxRect> = new FlxPool(FlxRect);
+	static var _pool = new FlxPool(FlxRect.new.bind(0, 0, 0, 0));
 	// With the version below, this caused weird CI issues when FLX_NO_POINT_POOL is defined
 	// static var _pool = new FlxPool<FlxRect>(FlxRect);
 
