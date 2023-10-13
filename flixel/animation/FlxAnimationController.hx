@@ -97,7 +97,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update(elapsed * timeScale);
+			_curAnim.update(elapsed * (timeScale * FlxG.animationTimeScale));
 		}
 		else if (_prerotated != null)
 		{
