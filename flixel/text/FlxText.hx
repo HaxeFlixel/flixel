@@ -137,6 +137,7 @@ class FlxText extends FlxSprite
 	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
 	 * 
 	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
+	 * @since 5.4.0
 	 */
 	public var fieldHeight(get, set):Float;
 
