@@ -33,6 +33,7 @@
 	
 	<haxeflag name="--macro" value="include('flixel', true, ['flixel.system.macros'])" />
 	
+	<haxedef name="FLX_COVERAGE_TEST" />
 	<section if="coverage1">
 		<haxedef name="FLX_NO_MOUSE_ADVANCED" />
 		<haxedef name="FLX_NO_GAMEPAD" />
