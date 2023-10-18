@@ -1,6 +1,6 @@
 package flixel.text;
 
-import flixel.math.FlxRect;
+import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
@@ -15,11 +15,11 @@ import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
-import openfl.Assets;
 
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxUnicodeUtil;
@@ -538,7 +538,7 @@ class FlxText extends FlxSprite
 		super.updateHitbox();
 	}
 
-	override public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
 	{
 		regenGraphic();
 		return super.getScreenBounds(newRect, camera);
