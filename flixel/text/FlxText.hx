@@ -1,5 +1,6 @@
 package flixel.text;
 
+import flixel.math.FlxRect;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
@@ -535,6 +536,12 @@ class FlxText extends FlxSprite
 	{
 		regenGraphic();
 		super.updateHitbox();
+	}
+
+	override public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		regenGraphic();
+		return super.getScreenBounds(newRect, camera);
 	}
 
 	function set_fieldWidth(value:Float):Float
