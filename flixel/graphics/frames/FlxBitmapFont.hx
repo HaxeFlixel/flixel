@@ -80,6 +80,17 @@ class FlxBitmapFont extends FlxFramesCollection
 	var frame:FlxFrame;
 
 	/**
+	 * Lookup tables for additional glyphs characters.
+	 */
+	public var lookupTable:Map<String, String> = [];
+	public var revLookupTable:Map<String, String> = [];
+
+	/**
+	 * Special characters start index.
+	 */
+	public var specialStart:Int = 500;
+
+	/**
 	 * Creates a new bitmap font using specified bitmap data and letter input.
 	 */
 	function new(frame:FlxFrame, ?border:FlxPoint)
@@ -635,4 +646,51 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.updateSourceHeight();
 		return font;
 	}
+
+	/*
+	 * Adds additional glyphs to this font.
+	 * 
+	 * @param   Frames             Additional glyphs frames.
+	 * @param   StartingCharacter  Starting character code for additional glyphs.
+	 */
+	public function appendGlyphs(Frames:FlxFramesCollection, StartingCharacter:Int = 500):Void
+	{
+		specialStart = StartingCharacter;
+		
+		var offY:Int = parent.height;
+		
+		var tmpBmp:BitmapData = new BitmapData(Math.ceil(Math.max(parent.width, Frames.parent.width)), parent.height + Frames.parent.height, true, 0x00000000);
+		tmpBmp.copyPixels(parent.bitmap, parent.bitmap.rect, point);
+		tmpBmp.copyPixels(Frames.parent.bitmap, Frames.parent.bitmap.rect, new Point(0, parent.height));
+		
+		parent = FlxGraphic.fromBitmapData(tmpBmp, parent.key + "+" + Frames.parent.key, true);
+		parent.persist = true;
+		parent.destroyOnNoUse = false;
+		
+		var offset:FlxPoint;
+		
+		var currentCode:Int = StartingCharacter;
+		var charName:String;
+		
+		for (frame in Frames.frames)
+		{
+			frame.frame.y += offY;
+			offset = FlxPoint.get(0, Math.min(4, (lineHeight / 2) - (frame.frame.height / 2)));
+			var w:Float = frame.sourceSize.x;
+			var h:Float = frame.sourceSize.y;
+			w += (offset.x > 0) ? offset.x : 0;
+			h += (offset.y > 0) ? offset.y : 0;
+			frame.sourceSize.set(w, h);
+			frame.offset.addPoint(offset);
+			charName = new UnicodeBuffer().addChar(currentCode).toString();
+			lookupTable.set(frame.name, charName);
+			revLookupTable.set(charName, frame.name);
+			frame.name = charName;
+			pushFrame(frame);
+			charMap.set(currentCode, frame);
+			charAdvance.set(currentCode, Math.ceil(frame.sourceSize.x));
+			currentCode++;
+		}
+	}
+
 }
