@@ -118,7 +118,7 @@ abstract AseAtlasTagRepeat(Null<String>) from Null<String> to Null<String>
 	
 	inline function get_loops()
 	{
-		return this == null && toInt() > 1;
+		return this == null || toInt() > 1;
 	}
 	
 	@:to
