@@ -1,18 +1,20 @@
 package flixel.graphics.frames;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
+import flixel.graphics.frames.bmfontutils.BMFontFileTypeHelper;
+import flixel.graphics.frames.bmfontutils.FlxBMFontParser;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
-import openfl.Assets;
 import haxe.xml.Access;
+import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxUnicodeUtil;
 
@@ -183,79 +185,57 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		font = new FlxBitmapFont(frame);
 
-		final fast = new Access(data.getXml().firstElement());
+		final angelCodeDataType = BMFontFileTypeHelper.guessType(data);
+		final fontInfo = switch angelCodeDataType
+		{
+			case TEXT(text):
+				FlxBMFontParser.fromText(text);
+			case XML(xml):
+				FlxBMFontParser.fromXml(xml);
+			case BINARY(bytes):
+				FlxBMFontParser.fromBinary(bytes);
+		};
 
 		// how much to move the cursor when going to the next line.
-		font.lineHeight = Std.parseInt(fast.node.common.att.lineHeight);
-		font.size = Std.parseInt(fast.node.info.att.size);
-		font.fontName = Std.string(fast.node.info.att.face);
-		font.bold = (Std.parseInt(fast.node.info.att.bold) != 0);
-		font.italic = (Std.parseInt(fast.node.info.att.italic) != 0);
+		font.lineHeight = fontInfo.common.lineHeight;
+		font.size = fontInfo.info.fontSize;
+		font.fontName = fontInfo.info.fontName;
+		font.bold = fontInfo.info.bold;
+		font.italic = fontInfo.info.italic;
 
 		var frame:FlxRect;
 		var frameHeight:Int;
 		var offset:FlxPoint;
-		var charStr:String;
-		var charCode:Int;
 		var xOffset:Int, yOffset:Int, xAdvance:Int;
 
-		var chars = fast.node.chars;
-
-		for (char in chars.nodes.char)
+		for (char in fontInfo.chars)
 		{
 			frame = FlxRect.get();
-			frame.x = Std.parseInt(char.att.x); // X position within the bitmap image file.
-			frame.y = Std.parseInt(char.att.y); // Y position within the bitmap image file.
-			frame.width = Std.parseInt(char.att.width); // Width of the character in the image file.
-			frameHeight = Std.parseInt(char.att.height);
+			frame.x = char.x; // X position within the bitmap image file.
+			frame.y = char.y; // Y position within the bitmap image file.
+			frame.width = char.width; // Width of the character in the image file.
+			frameHeight = char.height;
 			frame.height = frameHeight; // Height of the character in the image file.
 
 			// Number of pixels to move right before drawing this character.
-			xOffset = char.has.xoffset ? Std.parseInt(char.att.xoffset) : 0;
+			xOffset = char.xoffset;
 			//  Number of pixels to move down before drawing this character.
-			yOffset = char.has.yoffset ? Std.parseInt(char.att.yoffset) : 0;
+			yOffset = char.yoffset;
 			//  Number of pixels to jump right after drawing this character.
-			xAdvance = char.has.xadvance ? Std.parseInt(char.att.xadvance) : 0;
+			xAdvance = char.xadvance;
 
 			offset = FlxPoint.get(xOffset, yOffset);
 
 			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
 
-			charCode = -1;
-			charStr = null;
-
-			if (char.has.letter) // The ASCII value of the character this line is describing. Helpful for debugging
+			if (char.id == null)
 			{
-				charStr = char.att.letter;
-			}
-			else if (char.has.id) // The character number in the ASCII table.
-			{
-				charCode = Std.parseInt(char.att.id);
+				throw 'Invalid font data!';
 			}
 
-			if (charCode == -1 && charStr == null)
-			{
-				throw 'Invalid font xml data!';
-			}
+			font.addCharFrame(char.id, frame, offset, xAdvance);
 
-			if (charStr != null)
-			{
-				charStr = switch (charStr)
-				{
-					case "space": ' ';
-					case "&quot;": '"';
-					case "&amp;": '&';
-					case "&gt;": '>';
-					case "&lt;": '<';
-					default: charStr;
-				}
-
-				charCode = charStr.uCharCodeAt(0);
-			}
-
-			font.addCharFrame(charCode, frame, offset, xAdvance);
-
-			if (charCode == SPACE_CODE)
+			if (char.id == SPACE_CODE)
 			{
 				font.spaceWidth = xAdvance;
 			}
