@@ -1,11 +1,11 @@
 package flixel.graphics.frames.bmfontutils;
 
 import flixel.FlxG;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFont_Char;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFont_Common;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFont_Info;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFont_KerningPair;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFont_PageInfo;
+import flixel.graphics.frames.bmfontutils.BMFont.BMFontCharBlock;
+import flixel.graphics.frames.bmfontutils.BMFont.BMFontCommonBlock;
+import flixel.graphics.frames.bmfontutils.BMFont.BMFontInfoBlock;
+import flixel.graphics.frames.bmfontutils.BMFont.BMFontKerningPair;
+import flixel.graphics.frames.bmfontutils.BMFont.BMFontPageInfoBlock;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
@@ -93,7 +93,7 @@ class FlxBMFontBinaryParser
 		var blockSize:Int = bytesInput.readInt32();
 		var fontSize = bytesInput.readInt16();
 		var bitField = bytesInput.readByte();
-		var fontInfo:BMFont_Info = {
+		var fontInfo:BMFontInfoBlock = {
 			fontSize: fontSize,
 			smooth: (bitField & 0x80) != 0,
 			unicode: (bitField & (0x80 >> 1)) != 0,
@@ -127,7 +127,7 @@ class FlxBMFontBinaryParser
 		var pages = bytesInput.readInt16();
 		var bitField = bytesInput.readByte();
 		var isPacked = (bitField & 0x2) != 0;
-		var commonBlock:BMFont_Common = {
+		var commonBlock:BMFontCommonBlock = {
 			lineHeight: lineHeight,
 			base: base,
 			scaleW: scaleW,
@@ -147,7 +147,7 @@ class FlxBMFontBinaryParser
 	function parsePagesBlock()
 	{
 		var blockSize = bytesInput.readInt32();
-		var pagesBlock:Array<BMFont_PageInfo> = [];
+		var pagesBlock:Array<BMFontPageInfoBlock> = [];
 		
 		var bytesRead = 0;
 		var i = 0;
@@ -176,7 +176,7 @@ class FlxBMFontBinaryParser
 		var chars = [];
 		while (bytesRead < blockSize)
 		{
-			var charInfo:BMFont_Char = {
+			var charInfo:BMFontCharBlock = {
 				id: bytesInput.readInt32(),
 				x: bytesInput.readInt16(),
 				y: bytesInput.readInt16(),
@@ -201,7 +201,7 @@ class FlxBMFontBinaryParser
 		var kerningPairs = [];
 		while (bytesRead < blockSize)
 		{
-			var kerningPair:BMFont_KerningPair = {
+			var kerningPair:BMFontKerningPair = {
 				first: bytesInput.readInt32(),
 				second: bytesInput.readInt32(),
 				amount: bytesInput.readInt16(),
@@ -252,7 +252,7 @@ class FlxBMFontTextParser
 	
 	function parseInfoBlock(attrs:String)
 	{
-		var info:BMFont_Info = {
+		var info:BMFontInfoBlock = {
 			fontName: null,
 			fontSize: null,
 			bold: false,
@@ -368,7 +368,7 @@ class FlxBMFontTextParser
 	
 	function parseCommonBlock(attrs:String)
 	{
-		var common:BMFont_Common = {
+		var common:BMFontCommonBlock = {
 			lineHeight: null,
 			base: null,
 			scaleW: null,
@@ -415,7 +415,7 @@ class FlxBMFontTextParser
 	
 	function parsePageBlock(attrs:String)
 	{
-		var page:BMFont_PageInfo = {
+		var page:BMFontPageInfoBlock = {
 			id: null,
 			file: null
 		};
@@ -477,7 +477,7 @@ class FlxBMFontTextParser
 	
 	function parseCharBlock(attrs:String)
 	{
-		var char:BMFont_Char = {
+		var char:BMFontCharBlock = {
 			id: null,
 			x: null,
 			y: null,
@@ -587,7 +587,7 @@ class FlxBMFontTextParser
 	
 	function parseKerningPair(attrs:String)
 	{
-		var kerningPair:BMFont_KerningPair = {
+		var kerningPair:BMFontKerningPair = {
 			first: null,
 			second: null,
 			amount: null
@@ -648,7 +648,7 @@ class FlxBMFontXMLParser
 		var spacingArr = spacing.split(',').map(Std.parseInt);
 		
 		var outline = infoNode.has.outline ? Std.parseInt(infoNode.att.outline) : 0;
-		var info:BMFont_Info = {
+		var info:BMFontInfoBlock = {
 			fontSize: Std.parseInt(infoNode.att.size),
 			smooth: infoNode.att.smooth != '0',
 			unicode: infoNode.att.unicode != '0',
@@ -678,7 +678,7 @@ class FlxBMFontXMLParser
 		var redChnl = (commonNode.has.redChnl) ? Std.parseInt(commonNode.att.redChnl) : 0;
 		var greenChnl = (commonNode.has.greenChnl) ? Std.parseInt(commonNode.att.greenChnl) : 0;
 		var blueChnl = (commonNode.has.blueChnl) ? Std.parseInt(commonNode.att.blueChnl) : 0;
-		var common:BMFont_Common = {
+		var common:BMFontCommonBlock = {
 			lineHeight: Std.parseInt(commonNode.att.lineHeight),
 			base: Std.parseInt(commonNode.att.base),
 			scaleW: Std.parseInt(commonNode.att.scaleW),
@@ -696,7 +696,7 @@ class FlxBMFontXMLParser
 	
 	function parsePagesBlock()
 	{
-		var pages:Array<BMFont_PageInfo> = [];
+		var pages:Array<BMFontPageInfoBlock> = [];
 		var pagesNode = fast.node.pages;
 		for (page in pagesNode.nodes.page)
 		{
@@ -711,7 +711,7 @@ class FlxBMFontXMLParser
 	function parseCharsBlock()
 	{
 		var charsNode = fast.node.chars;
-		var chars:Array<BMFont_Char> = [];
+		var chars:Array<BMFontCharBlock> = [];
 		for (char in charsNode.nodes.char)
 		{
 			var id = (char.has.letter) ? Util.getCorrectLetter(char.att.letter).charCodeAt(0) : Std.parseInt(char.att.id);
@@ -738,7 +738,7 @@ class FlxBMFontXMLParser
 	function parseKerningPairs()
 	{
 		var kerningPairsNode = fast.node.kernings;
-		var kerningPairs:Array<BMFont_KerningPair> = [];
+		var kerningPairs:Array<BMFontKerningPair> = [];
 		for (kerningPair in kerningPairsNode.nodes.kerning)
 		{
 			kerningPairs.push({

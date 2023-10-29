@@ -1,6 +1,6 @@
 package flixel.graphics.frames.bmfontutils;
 
-typedef BMFont_Info =
+typedef BMFontInfoBlock =
 {
 	public var fontSize:Null<Int>;
 	public var smooth:Bool;
@@ -21,7 +21,7 @@ typedef BMFont_Info =
 	public var fontName:String;
 };
 
-typedef BMFont_Common =
+typedef BMFontCommonBlock =
 {
 	public var lineHeight:Null<Int>;
 	public var base:Null<Int>;
@@ -35,13 +35,13 @@ typedef BMFont_Common =
 	public var blueChnl:Null<Int>;
 };
 
-typedef BMFont_PageInfo =
+typedef BMFontPageInfoBlock =
 {
 	public var id:Null<Int>;
 	public var file:String;
 };
 
-typedef BMFont_Char =
+typedef BMFontCharBlock =
 {
 	public var id:Null<Int>;
 	public var x:Null<Int>;
@@ -55,7 +55,7 @@ typedef BMFont_Char =
 	public var chnl:Null<Int>;
 };
 
-typedef BMFont_KerningPair =
+typedef BMFontKerningPair =
 {
 	public var first:Null<Int>;
 	public var second:Null<Int>;
@@ -64,11 +64,11 @@ typedef BMFont_KerningPair =
 
 class BMFont
 {
-	public var info:BMFont_Info;
-	public var common:BMFont_Common;
-	public var pages:Array<BMFont_PageInfo>;
-	public var chars:Array<BMFont_Char>;
-	public var kerningPairs:Array<BMFont_KerningPair>;
+	public var info:BMFontInfoBlock;
+	public var common:BMFontCommonBlock;
+	public var pages:Array<BMFontPageInfoBlock>;
+	public var chars:Array<BMFontCharBlock>;
+	public var kerningPairs:Array<BMFontKerningPair>;
 	
 	function new()
 	{
