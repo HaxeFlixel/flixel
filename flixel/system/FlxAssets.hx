@@ -1,5 +1,6 @@
 package flixel.system;
 
+import haxe.io.Bytes;
 import haxe.macro.Expr;
 #if !macro
 import openfl.display.BitmapData;
@@ -31,7 +32,7 @@ class GraphicVirtualInput extends BitmapData {}
 @:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
-typedef FlxAngelCodeXmlAsset = FlxXmlAsset;
+typedef FlxAngelCodeXmlAsset = OneOfThree<Xml, String, Bytes>;
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;

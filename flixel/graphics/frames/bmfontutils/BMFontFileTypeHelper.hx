@@ -72,6 +72,22 @@ class BMFontFileTypeHelper
 			}
 			return TEXT(text);
 		}
+		else if (data is Bytes)
+		{
+			var dataBytes:Bytes = cast data;
+			var expected = [66, 77, 70]; // 'B', 'M', 'F'
+			var isBinary = true;
+			for (i in 0...expected.length)
+			{
+				if (dataBytes.get(i) != expected[i])
+				{
+					isBinary = false;
+					break;
+				}
+			}
+			if (isBinary)
+				return BINARY(dataBytes);
+		}
 		throw 'Invalid bmfont descriptor file!';
 	}
 
