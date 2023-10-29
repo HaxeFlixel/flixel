@@ -32,7 +32,7 @@ class GraphicVirtualInput extends BitmapData {}
 @:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
-typedef FlxAngelCodeXmlAsset = OneOfThree<Xml, String, Bytes>;
+typedef FlxAngelCodeAsset = OneOfThree<Xml, String, Bytes>;
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
@@ -41,8 +41,11 @@ typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 
+@:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")
+typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
+
 @:deprecated("`FlxAngelCodeSource` is deprecated, use `FlxAngelCodeAsset` instead")
-typedef FlxAngelCodeSource = FlxAngelCodeXmlAsset;
+typedef FlxAngelCodeSource = FlxAngelCodeAsset;
 
 @:deprecated("`FlxTexturePackerSource` is deprecated, use `FlxAtlasDataAsset` instead")
 typedef FlxTexturePackerSource = FlxTexturePackerJsonAsset;
