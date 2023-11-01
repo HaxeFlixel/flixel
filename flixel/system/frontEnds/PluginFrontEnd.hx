@@ -18,13 +18,13 @@ class PluginFrontEnd
 
 	/**
 	 * Adds a new plugin to the global plugin array.
-	 * **DEPRECATED:** In a later version this will be changed to allow duplicate types.
+	 * **DEPRECATED:** In a later version this will be changed to behave like `addPlugin`.
 	 *
 	 * @param   plugin  Any object that extends FlxBasic. Useful for managers and other things.
 	 * @return  The same plugin you passed in.
 	 */
 	@:generic
-	@:deprecated("FlxG.plugins.add is deprecated, use `addIfUniqueType` or `addPlugin`, instead")
+	@:deprecated("FlxG.plugins.add is deprecated, use `addIfUniqueType` or `addPlugin`, instead.\nNote: In a later version `add` will be changed to behave like `addPlugin`")
 	public inline function add<T:FlxBasic>(plugin:T):T
 	{
 		return addIfUniqueType(plugin);
