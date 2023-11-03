@@ -373,11 +373,11 @@ class FlxG
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 */
-	public static inline function switchState(nextState:FlxState):Void
+	public static function switchState(nextState:FlxState):Void
 	{
 		final stateOnCall = FlxG.state;
 		// Use reflection to avoid deprecation warning on switchTo
-		if (Reflect.field(state, 'switchTo')(nextState))
+		if (Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]))
 		{
 			state.startOutro(function()
 			{
