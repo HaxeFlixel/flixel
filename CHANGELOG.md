@@ -1,3 +1,18 @@
+5.5.0 (November 8, 2023)
+
+#### New features:
+- `FlxG`: added `animationTimeScale` ([#2937](https://github.com/HaxeFlixel/flixel/pull/2937))
+
+#### Changes and improvements:
+- `FlxPool`: Use factory functions to create instances ([#2934](https://github.com/HaxeFlixel/flixel/pull/2934))
+
+#### Bugfixes:
+- Fixed errors from OpenFL 9.3.2
+- `FlxText`: Remove warnings about potential typos ([#2935](https://github.com/HaxeFlixel/flixel/pull/2935))
+- `FlxText`: Regen graphic in `getScreenBounds` calls ([#2942](https://github.com/HaxeFlixel/flixel/pull/2942))
+- `FlxBar`: Various fixes ([#2938](https://github.com/HaxeFlixel/flixel/pull/2938))
+
+
 5.4.1 (October 4, 2023)
 
 #### Changes and improvements:

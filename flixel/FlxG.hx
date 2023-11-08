@@ -84,6 +84,7 @@ class FlxG
 	
 	/**
 	 * How fast or slow animations should pass in the game; default is `1.0`.
+	 * @since 5.5.0
 	 */
 	public static var animationTimeScale:Float = 1.0;
 
