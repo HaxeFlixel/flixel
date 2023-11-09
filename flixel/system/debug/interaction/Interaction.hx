@@ -51,7 +51,17 @@ class Interaction extends Window
 	 * selection marks, for instance.
 	 */
 	public var shouldDrawItemsSelection:Bool = true;
-
+	
+	/**
+	 * Whether or not the user is using a mac keyboard, determines whether to use command or ctrl
+	 */
+	public final macKeyboard:Bool =
+		#if mac
+		true;
+		#elseif (js && html5)
+		untyped js.Syntax.code("/AppleWebKit/.test (navigator.userAgent) && /Mobile\\/\\w+/.test (navigator.userAgent) || /Mac/.test (navigator.platform)");
+		#end
+	
 	var _container:Sprite;
 	var _customCursor:Sprite;
 	var _tools:Array<Tool> = [];
@@ -592,11 +602,59 @@ class Interaction extends Window
 		return FlxG.debugger.visible && visible && activeTool != null;
 	}
 
-	public function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
+	/**
+	 * Returns a list all items in the state and substate that are within the given area
+	 * 
+	 * @param   state  The state to search
+	 * @param   area   The rectangular area to search
+	 * @since 5.6.0
+	 */
+	public function getItemsWithinState(state:FlxState, area:FlxRect):Array<FlxBasic>
 	{
-		findItemsWithinArea(items, state.members, area);
+		final items = new Array<FlxBasic>();
+		
+		addItemsWithinArea(items, state.members, area);
 		if (state.subState != null)
-			findItemsWithinState(items, state.subState, area);
+			addItemsWithinState(items, state.subState, area);
+		
+		return items;
+	}
+	
+	@:deprecated("findItemsWithinState is deprecated, use getItemsWithinState or addItemsWithinState")
+	public inline function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
+	{
+		addItemsWithinState(items, state, area);
+	}
+	
+	/**
+	 * finds all items in the state and substate that are within the given area and
+	 * adds them to the given list.
+	 * 
+	 * @param   items  The list to add the items
+	 * @param   state  The state to search
+	 * @param   area   The rectangular area to search
+	 * @since 5.6.0
+	 */
+	public function addItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
+	{
+		addItemsWithinArea(items, state.members, area);
+		if (state.subState != null)
+			addItemsWithinState(items, state.subState, area);
+	}
+	
+	/**
+	 * Finds and returns top-most item in the state and substate within the given area
+	 * 
+	 * @param   state  The state to search
+	 * @param   area   The rectangular area to search
+	 * @since 5.6.0
+	 */
+	public function getTopItemWithinState(state:FlxState, area:FlxRect):FlxBasic
+	{
+		if (state.subState != null)
+			return getTopItemWithinState(state.subState, area);
+		
+		return getTopItemWithinArea(state.members, area);
 	}
 
 	/**
@@ -605,27 +663,72 @@ class Interaction extends Window
 	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
 	 * `getHitbox()`) overlaps the area parameter.
 	 *
-	 * @param	items		array where the method will place all found items. Any previous content in the array will be preserved.
-	 * @param	members		array where the method will recursively search for items.
-	 * @param	area		a rectangle that describes the area where the method should search within.
+	 * @param   items    Array where the method will place all found items. Any previous content in the array will be preserved.
+	 * @param   members  Array where the method will recursively search for items.
+	 * @param   area     A rectangle that describes the area where the method should search within.
 	 */
-	@:access(flixel.group.FlxTypedGroup)
-	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
+	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	{
+		addItemsWithinArea(items, members, area);
+	}
+	
+	/**
+	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
+	 * the method has no return, you must pass an array where items will be placed. The method decides
+	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
+	 * `getHitbox()`) overlaps the area parameter.
+	 *
+	 * @param   items    Array where the method will place all found items. Any previous content in the array will be preserved.
+	 * @param   members  Array where the method will recursively search for items.
+	 * @param   area     A rectangle that describes the area where the method should search within.
+	 * @since 5.6.0
+	 */
+	public function addItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		// we iterate backwards to get the sprites on top first
 		var i = members.length;
 		while (i-- > 0)
 		{
-			var member = members[i];
+			final member = members[i];
 			// Ignore invisible or non-existent entities
 			if (member == null || !member.visible || !member.exists)
 				continue;
-
-			var group = FlxTypedGroup.resolveGroup(member);
+			
+			final group = FlxTypedGroup.resolveSelectionGroup(member);
 			if (group != null)
-				findItemsWithinArea(items, group.members, area);
-			else if ((member is FlxSprite) && area.overlaps(cast(member, FlxSprite).getHitbox()))
+				addItemsWithinArea(items, group.members, area);
+			else if ((member is FlxObject) && area.overlaps(cast(member, FlxObject).getHitbox()))
 				items.push(cast member);
 		}
+	}
+	
+	/**
+	 * Searches the members for the top-most object inside the given rectangle
+	 * 
+	 * @param   members  The list of FlxObjects or FlxGroups
+	 * @param   area     The rectangular area to search
+	 * @return  The top-most item
+	 * @since 5.6.0
+	 */
+	@:access(flixel.group.FlxTypedGroup)
+	public function getTopItemWithinArea(members:Array<FlxBasic>, area:FlxRect):FlxBasic
+	{
+		// we iterate backwards to get the sprites on top first
+		var i = members.length;
+		while (i-- > 0)
+		{
+			final member = members[i];
+			// Ignore invisible or non-existent entities
+			if (member == null || !member.visible || !member.exists)
+				continue;
+			
+			final group = FlxTypedGroup.resolveGroup(member);
+			if (group != null)
+				return getTopItemWithinArea(group.members, area);
+			else if ((member is FlxObject) && area.overlaps(cast(member, FlxObject).getHitbox()))
+				return member;
+		}
+		return null;
 	}
 }
