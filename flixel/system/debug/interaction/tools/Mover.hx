@@ -36,7 +36,7 @@ class Mover extends Tool
 	{
 		final key = _brain.macKeyboard ? Keyboard.COMMAND : Keyboard.CONTROL;
 		// Is the tool active or its hotkey pressed?
-		if (!isActive() && !_brain.keyPressed(key))
+		if (!isActive() && !_brain.keyPressed(key) && !_dragging)
 			return;
 
 		if (_brain.pointerPressed && !_dragging)

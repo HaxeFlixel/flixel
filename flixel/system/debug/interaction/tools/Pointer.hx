@@ -24,7 +24,6 @@ class Pointer extends Tool
 	var _selectionStartPoint:FlxPoint = new FlxPoint();
 	var _selectionEndPoint:FlxPoint = new FlxPoint();
 	var _selectionHappening:Bool = false;
-	var _selectionCancelled:Bool = false;
 	var _selectionArea:FlxRect = new FlxRect();
 
 	override public function init(brain:Interaction):Tool
@@ -69,7 +68,7 @@ class Pointer extends Tool
 		{
 			handleItemAddition(selectedItems);
 		}
-		else if (!_brain.keyPressed(Keyboard.SHIFT) && !_selectionCancelled)
+		else if (!_brain.keyPressed(Keyboard.SHIFT))
 			// User clicked an empty space without holding the "add more items" key,
 			// so it's time to unselect everything.
 			_brain.clearSelection();
@@ -77,22 +76,12 @@ class Pointer extends Tool
 
 	function calculateSelectionArea():Void
 	{
-		_selectionArea.x = _selectionStartPoint.x;
-		_selectionArea.y = _selectionStartPoint.y;
-		_selectionArea.width = _selectionEndPoint.x - _selectionArea.x;
-		_selectionArea.height = _selectionEndPoint.y - _selectionArea.y;
-
-		if (_selectionArea.width < 0)
-		{
-			_selectionArea.width *= -1;
-			_selectionArea.x = _selectionArea.x - _selectionArea.width;
-		}
-
-		if (_selectionArea.height < 0)
-		{
-			_selectionArea.height *= -1;
-			_selectionArea.y = _selectionArea.y - _selectionArea.height;
-		}
+		final start = _selectionStartPoint;
+		final end = _selectionEndPoint;
+		_selectionArea.x = start.x < end.x ? start.x : end.x;
+		_selectionArea.y = start.y < end.y ? start.y : end.y;
+		_selectionArea.right = start.x > end.x ? start.x : end.x;
+		_selectionArea.bottom = start.y > end.y ? start.y : end.y;
 	}
 
 	/**
@@ -102,7 +91,6 @@ class Pointer extends Tool
 	public function startSelection():Void
 	{
 		_selectionHappening = true;
-		_selectionCancelled = false;
 		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 	}
 
@@ -116,7 +104,6 @@ class Pointer extends Tool
 		if (!_selectionHappening)
 			return;
 
-		_selectionCancelled = true;
 		stopSelection();
 	}
 
