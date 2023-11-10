@@ -113,7 +113,7 @@ class Pointer extends Tool
 	/**
 	 * Stop any selection activity that is happening.
 	 */
-	public function stopSelectionAndFindItems():Array<FlxBasic>
+	public function stopSelectionAndFindItems():Array<FlxObject>
 	{
 		if (!_selectionHappening)
 			throw "stopSelectionAndFindItems called when not selecting";
@@ -121,7 +121,7 @@ class Pointer extends Tool
 		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		calculateSelectionArea();
 
-		var items:Array<FlxBasic> = null;
+		var items:Array<FlxObject> = null;
 		if (_selectionArea.width != 0 || _selectionArea.height != 0)
 		{
 			items = _brain.getItemsWithinState(FlxG.state, _selectionArea);
@@ -145,7 +145,7 @@ class Pointer extends Tool
 	/**
 	 * We register the current selection to the console for easy interaction.
 	 */
-	function updateConsoleSelection(items:Array<FlxBasic>)
+	function updateConsoleSelection(items:Array<FlxObject>)
 	{
 		FlxG.console.registerObject("selection", switch (items)
 		{
@@ -155,7 +155,7 @@ class Pointer extends Tool
 		});
 	}
 
-	function updateSelectedItems(items:Array<FlxBasic>, drewRect:Bool):Void
+	function updateSelectedItems(items:Array<FlxObject>, drewRect:Bool):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		final adding = _brain.keyPressed(Keyboard.SHIFT);
@@ -172,7 +172,7 @@ class Pointer extends Tool
 		final prevSelectedItems = _brain.selectedItems;
 		if (adding && !drewRect && items.length == 1)
 		{
-			final item:FlxObject = cast items[0];
+			final item = items[0];
 			// if they click a single item, toggle it from the selection
 			if (prevSelectedItems.members.contains(item))
 				prevSelectedItems.remove(item);
@@ -182,13 +182,13 @@ class Pointer extends Tool
 		else if (removing)
 		{
 			for (item in items)
-				prevSelectedItems.remove(cast item);
+				prevSelectedItems.remove(item);
 		}
 		else
 		{
 			// add them all
 			for (item in items)
-				prevSelectedItems.add(cast item);
+				prevSelectedItems.add(item);
 		}
 	}
 

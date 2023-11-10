@@ -609,9 +609,9 @@ class Interaction extends Window
 	 * @param   area   The rectangular area to search
 	 * @since 5.6.0
 	 */
-	public function getItemsWithinState(state:FlxState, area:FlxRect):Array<FlxBasic>
+	public function getItemsWithinState(state:FlxState, area:FlxRect):Array<FlxObject>
 	{
-		final items = new Array<FlxBasic>();
+		final items = new Array<FlxObject>();
 		
 		addItemsWithinArea(items, state.members, area);
 		if (state.subState != null)
@@ -623,7 +623,7 @@ class Interaction extends Window
 	@:deprecated("findItemsWithinState is deprecated, use getItemsWithinState or addItemsWithinState")
 	public inline function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
 	{
-		addItemsWithinState(items, state, area);
+		addItemsWithinState(cast items, state, area);
 	}
 	
 	/**
@@ -635,7 +635,7 @@ class Interaction extends Window
 	 * @param   area   The rectangular area to search
 	 * @since 5.6.0
 	 */
-	public function addItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
+	public function addItemsWithinState(items:Array<FlxObject>, state:FlxState, area:FlxRect):Void
 	{
 		addItemsWithinArea(items, state.members, area);
 		if (state.subState != null)
@@ -649,7 +649,7 @@ class Interaction extends Window
 	 * @param   area   The rectangular area to search
 	 * @since 5.6.0
 	 */
-	public function getTopItemWithinState(state:FlxState, area:FlxRect):FlxBasic
+	public function getTopItemWithinState(state:FlxState, area:FlxRect):FlxObject
 	{
 		if (state.subState != null)
 			return getTopItemWithinState(state.subState, area);
@@ -670,7 +670,7 @@ class Interaction extends Window
 	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
 	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
-		addItemsWithinArea(items, members, area);
+		addItemsWithinArea(cast items, members, area);
 	}
 	
 	/**
@@ -684,7 +684,7 @@ class Interaction extends Window
 	 * @param   area     A rectangle that describes the area where the method should search within.
 	 * @since 5.6.0
 	 */
-	public function addItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	public function addItemsWithinArea(items:Array<FlxObject>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		// we iterate backwards to get the sprites on top first
 		var i = members.length;
@@ -698,8 +698,12 @@ class Interaction extends Window
 			final group = FlxTypedGroup.resolveSelectionGroup(member);
 			if (group != null)
 				addItemsWithinArea(items, group.members, area);
-			else if ((member is FlxObject) && area.overlaps(cast(member, FlxObject).getHitbox()))
-				items.push(cast member);
+			else if (member is FlxObject)
+			{
+				final object:FlxObject = cast member;
+				if (area.overlaps(object.getHitbox()))
+					items.push(object);
+			}
 		}
 	}
 	
@@ -712,7 +716,7 @@ class Interaction extends Window
 	 * @since 5.6.0
 	 */
 	@:access(flixel.group.FlxTypedGroup)
-	public function getTopItemWithinArea(members:Array<FlxBasic>, area:FlxRect):FlxBasic
+	public function getTopItemWithinArea(members:Array<FlxBasic>, area:FlxRect):FlxObject
 	{
 		// we iterate backwards to get the sprites on top first
 		var i = members.length;
@@ -726,8 +730,13 @@ class Interaction extends Window
 			final group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
 				return getTopItemWithinArea(group.members, area);
-			else if ((member is FlxObject) && area.overlaps(cast(member, FlxObject).getHitbox()))
-				return member;
+			
+			if (member is FlxObject)
+			{
+				final object:FlxObject = cast member;
+				if (area.overlaps(object.getHitbox()))
+					return object;
+			}
 		}
 		return null;
 	}
