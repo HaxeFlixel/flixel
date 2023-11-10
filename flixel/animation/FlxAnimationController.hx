@@ -104,7 +104,7 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			var _timeScale:Float = timeScale;
 			if (useGlobalTimeScale)
-				_timeScale *= FlxG.animationTimEcale;
+				_timeScale *= FlxG.animationTimeScale;
 			_curAnim.update(elapsed * timeScale);
 		}
 		else if (_prerotated != null)
