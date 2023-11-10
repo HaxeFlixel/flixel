@@ -71,6 +71,11 @@ class FlxAnimationController implements IFlxDestroyable
 	public var timeScale:Float = 1.0;
 
 	/**
+	 * Whether the animation is affected by `FlxG.animationTimeScale` or not.
+	**/
+	public var useGlobalTimeScale:Bool = true;
+
+	/**
 	 * Internal, reference to owner sprite.
 	 */
 	var _sprite:FlxSprite;
@@ -97,7 +102,10 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update(elapsed * (timeScale * FlxG.animationTimeScale));
+			var _timeScale:Float = timeScale;
+			if (useGlobalTimeScale)
+				_timeScale *= FlxG.animationTimEcale;
+			_curAnim.update(elapsed * timeScale);
 		}
 		else if (_prerotated != null)
 		{
