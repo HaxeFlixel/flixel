@@ -62,16 +62,9 @@ class Pointer extends Tool
 			return;
 		
 		final selectedItems = stopSelectionAndFindItems();
-
+		final drewRect = _selectionArea.width != 0 || _selectionArea.height != 0;
 		// If we have items in the selection area, handle them
-		if (selectedItems != null && selectedItems.length > 0)
-		{
-			handleItemAddition(selectedItems);
-		}
-		else if (!_brain.keyPressed(Keyboard.SHIFT))
-			// User clicked an empty space without holding the "add more items" key,
-			// so it's time to unselect everything.
-			_brain.clearSelection();
+		updateSelectedItems(selectedItems, drewRect);
 	}
 
 	function calculateSelectionArea():Void
@@ -162,25 +155,39 @@ class Pointer extends Tool
 		});
 	}
 
-	function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
+	function updateSelectedItems(items:Array<FlxBasic>, drewRect:Bool):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		final adding = _brain.keyPressed(Keyboard.SHIFT);
-		final prevSelectedItems = _brain.selectedItems;
-
-		if (itemsInSelectionArea.length == 0)
-			return;
-
+		final removing = _brain.keyPressed(Keyboard.ALTERNATE) && !adding;
+		
 		// If we are not selectively adding items, just clear
 		// the brain's list of selected items.
-		if (!adding)
+		if (!adding && !removing)
 			_brain.clearSelection();
-
-		for (item in itemsInSelectionArea)
+		
+		if (items == null || items.length == 0)
+			return;
+		
+		final prevSelectedItems = _brain.selectedItems;
+		if (adding && !drewRect && items.length == 1)
 		{
-			if (prevSelectedItems.members.contains(cast item) && adding)
-				prevSelectedItems.remove(cast item);
+			final item:FlxObject = cast items[0];
+			// if they click a single item, toggle it from the selection
+			if (prevSelectedItems.members.contains(item))
+				prevSelectedItems.remove(item);
 			else
+				prevSelectedItems.add(item);
+		}
+		else if (removing)
+		{
+			for (item in items)
+				prevSelectedItems.remove(cast item);
+		}
+		else
+		{
+			// add them all
+			for (item in items)
 				prevSelectedItems.add(cast item);
 		}
 	}
