@@ -71,7 +71,7 @@ class FlxAnimationController implements IFlxDestroyable
 	public var timeScale:Float = 1.0;
 
 	/**
-	 * Whether the animation is affected by `FlxG.animationTimeScale` or not.
+	 * Whether the animation's `timeScale` is affected by `FlxG.animationTimeScale` or not.
 	**/
 	public var useGlobalTimeScale:Bool = true;
 
