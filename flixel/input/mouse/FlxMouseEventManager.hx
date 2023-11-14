@@ -13,8 +13,7 @@ import flixel.util.FlxDestroyUtil;
 
 /**
  * Provides mouse event detection for `FlxObject` and `FlxSprite` (pixel-perfect for those).
- * Normally you would use [`FlxMouseEvent`](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
- * static properties for this.
+ * Normally you would use `FlxMouseEvent` static properties for this.
  * 
  * You can make a new `FlxMouseEventManager` instance for private usage, 
  * but you should know what you are doing.
