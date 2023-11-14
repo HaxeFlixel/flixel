@@ -60,6 +60,8 @@ class Interaction extends Window
 		true;
 		#elseif (js && html5)
 		untyped js.Syntax.code("/AppleWebKit/.test (navigator.userAgent) && /Mobile\\/\\w+/.test (navigator.userAgent) || /Mac/.test (navigator.platform)");
+		#else
+		false;
 		#end
 	
 	var _container:Sprite;
