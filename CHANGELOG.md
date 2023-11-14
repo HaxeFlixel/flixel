@@ -1,7 +1,12 @@
+5.5.1 (TBD)
+
+#### Changes and improvements:
+- `FlxMouseEvent`: Added links to [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/) ([#2961](https://github.com/HaxeFlixel/flixel/pull/2961))
+
 5.5.0 (November 8, 2023)
 
 #### New features:
-- `FlxG`: added `animationTimeScale` ([#2937](https://github.com/HaxeFlixel/flixel/pull/2937))
+- `FlxG`: Added `animationTimeScale` ([#2937](https://github.com/HaxeFlixel/flixel/pull/2937))
 
 #### Changes and improvements:
 - `FlxPool`: Use factory functions to create instances ([#2934](https://github.com/HaxeFlixel/flixel/pull/2934))
