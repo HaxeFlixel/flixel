@@ -19,7 +19,8 @@ import flixel.util.FlxDestroyUtil;
  * You can make a new `FlxMouseEventManager` instance for private usage, 
  * but you should know what you are doing.
  * 
- * @see [`FlxMouseEvent`](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
+ * @see [FlxMouseEvent](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
+ * @see [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/)
  * 
  * @author TiagoLr (~~~ ProG4mr ~~~)
  */
