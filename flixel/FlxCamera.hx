@@ -635,6 +635,11 @@ class FlxCamera extends FlxBasic
 			itemToReturn = new FlxDrawItem();
 		}
 
+		if (graphic.wasDestroyed) {
+			// Throw an exception here, because throwing in `FlxDrawQuadsItem.render()` is not helpful.
+			throw 'Attempted to queue invalid FlxDrawItem, did you dispose of a cached sprite?';
+		}
+
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;

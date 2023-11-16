@@ -344,6 +344,16 @@ class FlxGraphic implements IFlxDestroyable
 	public var atlasFrames(get, never):FlxAtlasFrames;
 
 	/**
+	 * This value is `true` if this graphic has been disposed.
+	 * Attempting to render a disposed graphic will cause an error.
+	 */
+	public var wasDestroyed(get, never):Bool;
+
+	function get_wasDestroyed():Bool {
+		return shader == null;
+	}
+
+	/**
 	 * Storage for all available frame collection of all types for this graphic object.
 	 */
 	var frameCollections:Map<FlxFrameCollectionType, Array<Dynamic>>;

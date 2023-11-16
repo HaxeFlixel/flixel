@@ -115,6 +115,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			return;
 
 		var shader = shader != null ? shader : graphics.shader;
+
+		if (shader == null) {
+			// If this gets called, the check for `graphic.wasDestroyed` in FlxCamera failed.
+			throw 'Attempted to render invalid FlxDrawItem, did you dispose of a cached sprite?';
+		}
+
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;
