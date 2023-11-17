@@ -141,10 +141,8 @@ class Stats extends Window
 			drawMethod =
 				#if FLX_RENDER_TRIANGLE
 				"DrawTrian.";
-				#elseif FLX_DRAW_QUADS
-				"DrawQuads";
 				#else
-				"DrawTiles";
+				"DrawQuads";
 				#end
 			drawMethod = '\n$drawMethod:';
 		}

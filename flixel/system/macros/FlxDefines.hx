@@ -203,9 +203,10 @@ class FlxDefines
 		if (defined("mobile") || defined("js"))
 			define(FLX_ACCELEROMETER);
 
-		#if (openfl >= "8.0.0")
+		// #if (openfl >= "8.0.0")
+		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
-		#end
+		// #end
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
