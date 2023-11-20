@@ -197,6 +197,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 
+	@:deprecated("_cursor is deprecated, use the new, public cursor, instead")
     var _cursor(get, set):Bitmap;
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
