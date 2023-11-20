@@ -197,7 +197,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 
-    var _cursor(get, set):Bitmap = null;
+    var _cursor(get, set):Bitmap;
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
