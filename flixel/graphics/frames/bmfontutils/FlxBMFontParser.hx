@@ -6,6 +6,7 @@ import flixel.graphics.frames.bmfontutils.BMFont.BMFontCommonBlock;
 import flixel.graphics.frames.bmfontutils.BMFont.BMFontInfoBlock;
 import flixel.graphics.frames.bmfontutils.BMFont.BMFontKerningPair;
 import flixel.graphics.frames.bmfontutils.BMFont.BMFontPageInfoBlock;
+import flixel.system.FlxAssets.FlxAngelCodeAsset;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
@@ -18,17 +19,32 @@ using StringTools;
  */
 class FlxBMFontParser
 {
-	public static function fromText(text:String)
+	public static function parse(data:FlxAngelCodeAsset)
+	{
+		final angelCodeDataType = BMFontFileTypeHelper.guessType(data);
+		final fontInfo = switch angelCodeDataType
+		{
+			case TEXT(text):
+				fromText(text);
+			case XML(xml):
+				fromXml(xml);
+			case BINARY(bytes):
+				fromBinary(bytes);
+		};
+		return fontInfo;
+	}
+	
+	static function fromText(text:String)
 	{
 		return new FlxBMFontTextParser(text).parse();
 	}
 	
-	public static function fromXml(xml:Xml)
+	static function fromXml(xml:Xml)
 	{
 		return new FlxBMFontXMLParser(xml).parse();
 	}
 	
-	public static function fromBinary(bytes:Bytes)
+	static function fromBinary(bytes:Bytes)
 	{
 		return new FlxBMFontBinaryParser(new BytesInput(bytes)).parse();
 	}

@@ -185,16 +185,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		font = new FlxBitmapFont(frame);
 
-		final angelCodeDataType = BMFontFileTypeHelper.guessType(data);
-		final fontInfo = switch angelCodeDataType
-		{
-			case TEXT(text):
-				FlxBMFontParser.fromText(text);
-			case XML(xml):
-				FlxBMFontParser.fromXml(xml);
-			case BINARY(bytes):
-				FlxBMFontParser.fromBinary(bytes);
-		};
+		final fontInfo = FlxBMFontParser.parse(data);
 
 		// how much to move the cursor when going to the next line.
 		font.lineHeight = fontInfo.common.lineHeight;
