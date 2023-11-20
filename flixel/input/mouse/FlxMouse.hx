@@ -259,6 +259,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		{
 			_cursor = Type.createInstance(Graphic, []);
 		}
+		else if ((Graphic is Bitmap))
+		{
+			_cursor = Graphic;
+		}
 		else if ((Graphic is BitmapData))
 		{
 			_cursor = new Bitmap(cast Graphic);
