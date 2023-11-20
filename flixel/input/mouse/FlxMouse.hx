@@ -51,6 +51,11 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
 	public var cursorContainer(default, null):Sprite;
+	
+	/**
+	 * This is just a reference to the current cursor image, if there is one.
+	 */
+	public var cursor:Bitmap;
 
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both
@@ -192,11 +197,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 
-	/**
-	 * This is just a reference to the current cursor image, if there is one.
-	 */
-	var _cursor:Bitmap = null;
-
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
@@ -244,9 +244,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public function load(?Graphic:Dynamic, Scale:Float = 1, XOffset:Int = 0, YOffset:Int = 0):Void
 	{
 		#if !FLX_NATIVE_CURSOR
-		if (_cursor != null)
+		if (cursor != null)
 		{
-			FlxDestroyUtil.removeChild(cursorContainer, _cursor);
+			FlxDestroyUtil.removeChild(cursorContainer, cursor);
 		}
 		#end
 
@@ -257,29 +257,25 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 		if ((Graphic is Class))
 		{
-			_cursor = Type.createInstance(Graphic, []);
-		}
-		else if ((Graphic is Bitmap))
-		{
-			_cursor = Graphic;
+			cursor = Type.createInstance(Graphic, []);
 		}
 		else if ((Graphic is BitmapData))
 		{
-			_cursor = new Bitmap(cast Graphic);
+			cursor = new Bitmap(cast Graphic);
 		}
 		else if ((Graphic is String))
 		{
-			_cursor = new Bitmap(FlxAssets.getBitmapData(Graphic));
+			cursor = new Bitmap(FlxAssets.getBitmapData(Graphic));
 		}
 		else
 		{
-			_cursor = new Bitmap(new GraphicCursor(0, 0));
+			cursor = new Bitmap(new GraphicCursor(0, 0));
 		}
 
-		_cursor.x = XOffset;
-		_cursor.y = YOffset;
-		_cursor.scaleX = Scale;
-		_cursor.scaleY = Scale;
+		cursor.x = XOffset;
+		cursor.y = YOffset;
+		cursor.scaleX = Scale;
+		cursor.scaleY = Scale;
 
 		#if FLX_NATIVE_CURSOR
 		if (XOffset < 0 || YOffset < 0)
@@ -292,8 +288,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			throw "Negative scale isn't supported for native cursors.";
 		}
 
-		var scaledWidth:Int = Std.int(Scale * _cursor.bitmapData.width);
-		var scaledHeight:Int = Std.int(Scale * _cursor.bitmapData.height);
+		var scaledWidth:Int = Std.int(Scale * cursor.bitmapData.width);
+		var scaledHeight:Int = Std.int(Scale * cursor.bitmapData.height);
 
 		var bitmapWidth:Int = scaledWidth + XOffset;
 		var bitmapHeight:Int = scaledHeight + YOffset;
@@ -305,10 +301,10 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			_matrix.scale(Scale, Scale);
 			_matrix.translate(XOffset, YOffset);
 		}
-		cursorBitmap.draw(_cursor.bitmapData, _matrix);
+		cursorBitmap.draw(cursor.bitmapData, _matrix);
 		setSimpleNativeCursorData(_cursorDefaultName, cursorBitmap);
 		#else
-		cursorContainer.addChild(_cursor);
+		cursorContainer.addChild(cursor);
 		#end
 	}
 
@@ -318,7 +314,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 */
 	public function unload():Void
 	{
-		if (_cursor != null)
+		if (cursor != null)
 		{
 			if (cursorContainer.visible)
 			{
@@ -326,7 +322,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 			}
 			else
 			{
-				_cursor = FlxDestroyUtil.removeChild(cursorContainer, _cursor);
+				cursor = FlxDestroyUtil.removeChild(cursorContainer, cursor);
 			}
 		}
 	}
@@ -423,7 +419,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		}
 
 		cursorContainer = null;
-		_cursor = null;
+		cursor = null;
 
 		#if FLX_NATIVE_CURSOR
 		_matrix = null;
@@ -697,7 +693,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		}
 		else
 		{
-			if (_cursor == null)
+			if (cursor == null)
 				load();
 
 			#if FLX_NATIVE_CURSOR
