@@ -53,9 +53,9 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var cursorContainer(default, null):Sprite;
 	
 	/**
-	 * This is just a reference to the current cursor image, if there is one.
+	 * The current cursor bitmap, if there is one. To set, use the `load` function.
 	 */
-	public var cursor:Bitmap;
+	public var cursor(default, null):Null<Bitmap>;
 
 	/**
 	 * Used to toggle the visiblity of the mouse cursor - works on both
@@ -197,6 +197,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 
+    var _cursor(get, set):Bitmap = null;
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
@@ -755,6 +756,16 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_globalScreenX = record.x;
 		_globalScreenY = record.y;
 		updatePositions();
+	}
+
+	inline function get__cursor()
+	{
+	    return cursor;
+	}
+	
+	inline function set__cursor(value:Bitmap)
+	{
+	    return cursor = value;
 	}
 }
 #end
