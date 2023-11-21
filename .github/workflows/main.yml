@@ -39,9 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: sudo apt-get update
-    
     - uses: krdlab/setup-haxe@v1
-    
       with:
         haxe-version: ${{matrix.haxe-version}}
     - run: haxelib dev flixel .
@@ -51,3 +49,4 @@ jobs:
         flixel-versions: dev
         test-location: local
         target: ${{matrix.target}}
+        run-tests: true
