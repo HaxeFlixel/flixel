@@ -184,7 +184,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	str 	The string to be parsed
 	 * @return	A `FlxColor` or `null` if the `String` couldn't be parsed
 	 */
-	public static function fromString(str:String):Null<FlxColor>
+	@:from public static function fromString(str:String):Null<FlxColor>
 	{
 		var result:Null<FlxColor> = null;
 		str = StringTools.trim(str);
