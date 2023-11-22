@@ -88,7 +88,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Value And Int with bytes in the format 0xAARRGGBB
 	 * @return	The color as a FlxColor
 	 */
-	public static inline function fromInt(Value:Int):FlxColor
+	@:from public static inline function fromInt(Value:Int):FlxColor
 	{
 		return new FlxColor(Value);
 	}
