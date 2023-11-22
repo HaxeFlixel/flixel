@@ -42,6 +42,7 @@ jobs:
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{matrix.haxe-version}}
+    - uses: actions/checkout@v2
     - run: haxelib dev flixel .
     - uses: HaxeFlixel/setup-flixel@master
       with:
