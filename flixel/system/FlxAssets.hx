@@ -103,10 +103,8 @@ abstract FlxJsonAsset<T>(OneOfTwo<T, String>) from T from String
 typedef FlxShader =
 	#if (openfl_legacy || nme)
 	Dynamic;
-	#elseif FLX_DRAW_QUADS
-	flixel.graphics.tile.FlxGraphicsShader;
 	#else
-	openfl.display.Shader;
+	flixel.graphics.tile.FlxGraphicsShader;
 	#end
 #end
 

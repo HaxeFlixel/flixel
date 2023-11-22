@@ -19,7 +19,12 @@ private enum UserDefines
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
 	FLX_RECORD;
+	/* Defined in HaxeFlixel CI tests, do not use */
 	FLX_UNIT_TEST;
+	/* Defined in HaxeFlixel CI tests, do not use */
+	FLX_COVERAGE_TEST;
+	/* Defined in HaxeFlixel CI tests, do not use */
+	FLX_SWF_VERSION_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
 	/* Uses flixel 4.0 legacy collision */
@@ -57,7 +62,16 @@ private enum HelperDefines
 	FLX_DRAW_QUADS;
 	FLX_POINT_POOL;
 	FLX_PITCH;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
 	FLX_NO_UNIT_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_COVERAGE_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_SWF_VERSION_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_CI;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_CI;
 	FLX_SAVE;
 }
 
@@ -135,10 +149,17 @@ class FlxDefines
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
 		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
+		defineInversion(FLX_COVERAGE_TEST, FLX_NO_COVERAGE_TEST);
+		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 	}
 
 	static function defineHelperDefines()
 	{
+		if (defined(FLX_UNIT_TEST) || defined(FLX_COVERAGE_TEST) || defined(FLX_SWF_VERSION_TEST))
+			define(FLX_CI);
+		else
+			define(FLX_NO_CI);
+		
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 			define(FLX_MOUSE_ADVANCED);
 
@@ -182,9 +203,10 @@ class FlxDefines
 		if (defined("mobile") || defined("js"))
 			define(FLX_ACCELEROMETER);
 
-		#if (openfl >= "8.0.0")
+		// #if (openfl >= "8.0.0")
+		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
-		#end
+		// #end
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)

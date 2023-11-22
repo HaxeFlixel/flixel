@@ -10,7 +10,13 @@ class FlxPoolTest extends FlxTest
 	@Before
 	function before():Void
 	{
-		ppool = new FlxPool(FlxBasePoint);
+		ppool = new FlxPool(FlxBasePoint.new.bind(0, 0));
+	}
+
+	@Test
+	function testLegacy():Void
+	{
+		final pool = new FlxPool(FlxBasePoint);
 	}
 
 	@Test

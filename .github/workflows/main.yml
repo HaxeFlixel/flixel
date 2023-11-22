@@ -28,3 +28,25 @@ jobs:
         test-location: local
         target: ${{matrix.target}}
         run-tests: true
+  
+  sans-lix:
+    strategy:
+      matrix:
+        haxe-version: ["4.2.5", "4.3.3", latest]
+        target: [html5] #just html for testing
+        # target: [html5, hl, neko, flash, cpp]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - run: sudo apt-get update
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: ${{matrix.haxe-version}}
+    - run: haxelib dev flixel .
+    - uses: HaxeFlixel/setup-flixel@master
+      with:
+        haxe-version: current
+        flixel-versions: dev
+        test-location: local
+        target: ${{matrix.target}}
+        run-tests: true
