@@ -25,6 +25,7 @@ jobs:
     - uses: krdlab/setup-haxe@v1
       with:
         haxe-version: ${{matrix.haxe-version}}
+    - run: haxelib setup /home/runner/haxe/haxelib/
     - run: haxelib install haxelib 4.0.3
     - run: haxelib dev flixel .
     - uses: HaxeFlixel/setup-flixel@master
