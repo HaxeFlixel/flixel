@@ -1,6 +1,16 @@
 5.5.1 (TBD)
 
 #### Changes and improvements:
+- `FlxMouse`: Made the private `_cursor` field public, and renamed to `cursor` ([#2969](https://github.com/HaxeFlixel/flixel/pull/2969))
+- `Interaction`: Changes to Flixel's Debug Pointer and Mover tools ([#2964](https://github.com/HaxeFlixel/flixel/pull/2964))
+	- Hold Ctrl to drag selected objects, Shift to add to selection, Alt to remove from selection
+	- works better with `FlxObjects`
+	- See detailed list of changes [here](https://github.com/HaxeFlixel/flixel/pull/2964)
+- `PluginFrontEnd`: Allow multiple plugins of the same type ([#2952](https://github.com/HaxeFlixel/flixel/pull/2952))
+	- Add `addPlugin`, `addIfUnique` and `removeAllByType`
+	- Deprecate `add` and `removeType`
+- Remove compile conditionals using `FLX_DRAW_QUADS` ([#2962](https://github.com/HaxeFlixel/flixel/pull/2962))
+- `AseAtlas`: Set animation `loops` to match Aseprite's own settings ([#2963](https://github.com/HaxeFlixel/flixel/pull/2963))
 - `FlxMouseEvent`: Added links to [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/) ([#2961](https://github.com/HaxeFlixel/flixel/pull/2961))
 
 5.5.0 (November 8, 2023)
