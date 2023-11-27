@@ -779,7 +779,7 @@ class FlxSprite extends FlxObject
 			// switch graphic but log and preserve size
 			final width = this.width;
 			final height = this.height;
-			FlxG.log.warn('Cannot render a destroyed graphic, the placeholder image will be used instead');
+			FlxG.log.error('Cannot render a destroyed graphic, the placeholder image will be used instead');
 			loadGraphic("flixel/images/logo/default.png");
 			this.width = width;
 			this.height = height;
