@@ -851,7 +851,8 @@ class FlxCamera extends FlxBasic
 	}
 
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
-			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
+			?position:FlxPoint, angle:Float = 0, ?scale:FlxPoint, ?origin:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false,
+			?transform:ColorTransform, ?shader:FlxShader):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -932,13 +933,13 @@ class FlxCamera extends FlxBasic
 			var isColored:Bool = (colors != null && colors.length != 0);
 
 			#if !flash
-			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			final hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			isColored = isColored || (transform != null && transform.hasRGBMultipliers());
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds, transform);
+			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+			drawItem.addTriangles(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds, transform);
 			#else
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
+			drawItem.addTriangles(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds);
 			#end
 		}
 	}

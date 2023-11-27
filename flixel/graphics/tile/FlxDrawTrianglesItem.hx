@@ -1,5 +1,6 @@
 package flixel.graphics.tile;
 
+import flixel.math.FlxAngle;
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
@@ -21,6 +22,8 @@ typedef DrawData<T> = #if (flash || openfl >= "4.0.0") openfl.Vector<T> #else Ar
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
 	static var point:FlxPoint = FlxPoint.get();
+	static var size:FlxPoint = FlxPoint.get();
+	static var origin:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
 
 	#if !flash
@@ -137,17 +140,24 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	}
 
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
+			angle:Float = 0, ?scale:FlxPoint, ?originPoint:FlxPoint,
 			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
 	{
 		if (position == null)
 			position = point.set();
+
+		if (size == null)
+			scale = size.set(1, 1);
+			
+		if (originPoint == null)
+			originPoint = origin.set();
 
 		if (cameraBounds == null)
 			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
 
 		var verticesLength:Int = vertices.length;
 		var prevVerticesLength:Int = this.vertices.length;
-		var numberOfVertices:Int = Std.int(verticesLength / 2);
+		var numberOfVertices:Int = Std.int(verticesLength * 0.5);
 		var prevIndicesLength:Int = this.indices.length;
 		var prevUVTDataLength:Int = this.uvtData.length;
 		var prevColorsLength:Int = this.colors.length;
@@ -159,8 +169,23 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		while (i < verticesLength)
 		{
-			tempX = position.x + vertices[i];
-			tempY = position.y + vertices[i + 1];
+			var vertX:Float = (vertices[i] * scale.x) - originPoint.x;
+			var vertY:Float = (vertices[i + 1] * scale.x) - originPoint.y;
+			
+			if (angle != 0)
+			{
+				final _cos:Float = Math.cos(angle * FlxAngle.TO_RAD);
+				final _sin:Float = Math.sin(angle * FlxAngle.TO_RAD);
+				
+				final _vx:Float = vertX;
+				final _vy:Float = vertY;
+				
+				vertX = (_vx * _cos) + (_vy * -_sin);
+				vertY = (_vx * _sin) + (_vy * _cos);
+			}
+			
+			tempX = position.x + vertX;
+			tempY = position.y + vertY;
 
 			this.vertices[currentVertexPosition++] = tempX;
 			this.vertices[currentVertexPosition++] = tempY;
