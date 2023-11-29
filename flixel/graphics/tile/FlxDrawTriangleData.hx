@@ -22,6 +22,11 @@ class FlxDrawTriangleData implements IFlxDestroyable
 	
 	public var colors = new DrawData<Int>();
 	
+	/**
+	 * Whether the image is tiled
+	 */
+	public var repeat:Bool = false;
+	
 	public function new () {}
 	
 	public function destroy()

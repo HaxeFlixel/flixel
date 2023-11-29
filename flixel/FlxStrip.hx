@@ -56,7 +56,10 @@ class FlxStrip extends FlxSprite
 	inline function get_colors() return triangles.colors;
 	inline function set_colors(value:DrawData<Int>) return triangles.colors = value;
 
-	public var repeat:Bool = false;
+	// @:deprecated("FlxStrip's repeat is deprecated, use triangles.repeat, instead") // TODO
+	public var repeat(get, set):Bool;
+	inline function get_repeat() return triangles.repeat;
+	inline function set_repeat(value:Bool) return triangles.repeat = value;
 	
 	#if FLX_DEBUG
 	/**
