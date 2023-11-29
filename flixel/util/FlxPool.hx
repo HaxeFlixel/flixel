@@ -1,20 +1,46 @@
 package flixel.util;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.util.typeLimit.OneOfTwo;
+
+/**
+ * Helper type that allows the `FlxPool` constructor to take the new function param and the old,
+ * deprecated `Class<T>` param. This will be removed, soon anf FlxPool will only take a function.
+ */
+abstract PoolFactory<T:IFlxDestroyable>(()->T)
+{
+	@:from
+	#if FLX_NO_UNIT_TEST
+	@:deprecated("use `MyType.new` or `()->new MyType()` instead of `MyType`)")
+	#end
+	public static inline function fromClass<T:IFlxDestroyable>(classRef:Class<T>):PoolFactory<T>
+	{
+		return fromFunction(()->Type.createInstance(classRef, []));
+	}
+
+	@:from
+	public static inline function fromFunction<T:IFlxDestroyable>(func:()->T):PoolFactory<T>
+	{
+		return cast func;
+	}
+	
+	@:allow(flixel.util.FlxPool)
+	inline function getFunction():()->T
+	{
+		return this;
+	}
+}
 
 /**
  * A generic container that facilitates pooling and recycling of objects.
  * WARNING: Pooled objects must have parameter-less constructors: function new()
  */
-#if !display
-@:generic
-#end
 class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
 	public var length(get, never):Int;
 
 	var _pool:Array<T> = [];
-	var _class:Class<T>;
+	var _constructor:()->T;
 
 	/**
 	 * Objects aren't actually removed from the array in order to improve performance.
@@ -22,16 +48,22 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	 */
 	var _count:Int = 0;
 
-	public function new(classObj:Class<T>)
+	/**
+	 * Creates a pool of the specified type
+	 * @param   constructor  A function that takes no args and creates an instance,
+	 *                       example: `FlxRect.new.bind(0, 0, 0, 0)`
+	 */
+	
+	public function new(constructor:PoolFactory<T>)
 	{
-		_class = classObj;
+		_constructor = constructor.getFunction();
 	}
 
 	public function get():T
 	{
 		if (_count == 0)
 		{
-			return Type.createInstance(_class, []);
+			return _constructor();
 		}
 		return _pool[--_count];
 	}
@@ -64,7 +96,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	{
 		while (numObjects-- > 0)
 		{
-			_pool[_count++] = Type.createInstance(_class, []);
+			_pool[_count++] = _constructor();
 		}
 	}
 

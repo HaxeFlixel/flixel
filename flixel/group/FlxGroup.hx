@@ -37,7 +37,14 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		return null;
 	}
-
+	
+	@:noCompletion
+	@:allow(flixel.system.debug.interaction.Interaction)
+	static inline function resolveSelectionGroup(basic:FlxBasic)
+	{
+		return resolveGroup(basic);
+	}
+	
 	/**
 	 * `Array` of all the members in this group.
 	 */
