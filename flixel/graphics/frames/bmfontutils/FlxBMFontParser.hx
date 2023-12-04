@@ -55,11 +55,11 @@ class FlxBMFontBinaryParser
 {
 	var bytesInput:BytesInput;
 	
-	public static inline final BT_INFO:Int = 1;
-	public static inline final BT_COMMON:Int = 2;
-	public static inline final BT_PAGES:Int = 3;
-	public static inline final BT_CHARS:Int = 4;
-	public static inline final BT_KERNING_PAIRS:Int = 5;
+	public static inline var BT_INFO:Int = 1;
+	public static inline var BT_COMMON:Int = 2;
+	public static inline var BT_PAGES:Int = 3;
+	public static inline var BT_CHARS:Int = 4;
+	public static inline var BT_KERNING_PAIRS:Int = 5;
 	
 	public function new(input:BytesInput)
 	{
