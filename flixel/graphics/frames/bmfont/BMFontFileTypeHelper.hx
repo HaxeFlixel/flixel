@@ -1,4 +1,4 @@
-package flixel.graphics.frames.bmfontutils;
+package flixel.graphics.frames.bmfont;
 
 import flixel.system.FlxAssets.FlxAngelCodeAsset;
 import haxe.io.Bytes;

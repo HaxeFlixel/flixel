@@ -1,6 +1,6 @@
-package flixel.graphics.frames.bmfontutils;
+package flixel.graphics.frames.bmfont;
 
-import flixel.graphics.frames.bmfontutils.FlxBMFontParser;
+import flixel.graphics.frames.bmfont.FlxBMFontParser;
 import haxe.xml.Access;
 import UnicodeString;
 
@@ -383,7 +383,7 @@ private typedef BMFontKerningPairRaw =
 };
 
 @:forward
-@:access(flixel.graphics.frames.bmfontutils.BMFont)
+@:access(flixel.graphics.frames.bmfont.BMFont)
 abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
 {
 	public inline function new(first = -1, second = -1, amount = 0)

@@ -1,12 +1,8 @@
-package flixel.graphics.frames.bmfontutils;
+package flixel.graphics.frames.bmfont;
 
 import flixel.FlxG;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFontCharBlock;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFontCommonBlock;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFontInfoBlock;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFontKerningPair;
-import flixel.graphics.frames.bmfontutils.BMFont.BMFontPageInfoBlock;
-import flixel.system.FlxAssets.FlxAngelCodeAsset;
+import flixel.graphics.frames.bmfont.BMFont;
+import flixel.system.FlxAssets;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
@@ -39,7 +35,7 @@ class FlxBMFontParser
 	}
 }
 
-@:access(flixel.graphics.frames.bmfontutils.BMFont)
+@:access(flixel.graphics.frames.bmfont.BMFont)
 class FlxBMFontBinaryParser
 {
 	var bytesInput:BytesInput;
