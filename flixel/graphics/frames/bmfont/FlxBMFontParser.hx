@@ -94,7 +94,7 @@ class FlxBMFontBinaryParser
 		final blockSize = bytesInput.readInt32();
 		final size = bytesInput.readInt16();
 		final bitField = bytesInput.readByte();
-		final fontInfo:BMFontInfoBlock = {
+		final fontInfo:BMFontInfo = {
 			size: size,
 			smooth: (bitField & 0x80) != 0,
 			unicode: (bitField & (0x80 >> 1)) != 0,
@@ -128,7 +128,7 @@ class FlxBMFontBinaryParser
 		var pages = bytesInput.readInt16();
 		var bitField = bytesInput.readByte();
 		var isPacked = (bitField & 0x2) != 0;
-		var commonBlock:BMFontCommonBlock = {
+		var commonBlock:BMFontCommon = {
 			lineHeight: lineHeight,
 			base: base,
 			scaleW: scaleW,
@@ -148,7 +148,7 @@ class FlxBMFontBinaryParser
 	function parsePagesBlock()
 	{
 		var blockSize = bytesInput.readInt32();
-		var pagesBlock:Array<BMFontPageInfoBlock> = [];
+		var pagesBlock:Array<BMFontPage> = [];
 		
 		var bytesRead = 0;
 		var i = 0;
@@ -177,7 +177,7 @@ class FlxBMFontBinaryParser
 		var chars = [];
 		while (bytesRead < blockSize)
 		{
-			var charInfo:BMFontCharBlock = {
+			var charInfo:BMFontChar = {
 				id: bytesInput.readInt32(),
 				x: bytesInput.readInt16(),
 				y: bytesInput.readInt16(),
@@ -203,7 +203,7 @@ class FlxBMFontBinaryParser
 		var kerningPairs = [];
 		while (bytesRead < blockSize)
 		{
-			var kerningPair:BMFontKerningPair = {
+			var kerningPair:BMFontKerning = {
 				first: bytesInput.readInt32(),
 				second: bytesInput.readInt32(),
 				amount: bytesInput.readInt16(),

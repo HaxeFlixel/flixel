@@ -6,7 +6,7 @@ import UnicodeString;
 
 using StringTools;
 
-private typedef BMFontInfoBlockRaw =
+private typedef BMFontInfoRaw =
 {
 	var size:Int;
 	var smooth:Bool;
@@ -29,7 +29,7 @@ private typedef BMFontInfoBlockRaw =
 };
 
 @:forward
-abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
+abstract BMFontInfo(BMFontInfoRaw) from BMFontInfoRaw
 {
 	public inline function new()
 	{
@@ -71,7 +71,7 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 		this.spacingVert = Std.parseInt(spacings[1]);
 	}
 	
-	public static function fromXml(infoNode:Access):BMFontInfoBlock
+	public static function fromXml(infoNode:Access):BMFontInfo
 	{
 		final padding:String = infoNode.att.padding;
 		final paddingArr = padding.split(',').map(Std.parseInt);
@@ -103,7 +103,7 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 	
 	public static function fromText(infoText:String)
 	{
-		final info:BMFontInfoBlock = new BMFontInfoBlock();
+		final info:BMFontInfo = new BMFontInfo();
 		
 		BMFontTextAttributeParser.forEachAttribute(infoText,
 			function(key:String, value:UnicodeString)
@@ -131,7 +131,7 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 	}
 }
 
-private typedef BMFontCommonBlockRaw =
+private typedef BMFontCommonRaw =
 {
 	var lineHeight:Int;
 	var base:Int;
@@ -146,7 +146,7 @@ private typedef BMFontCommonBlockRaw =
 };
 
 @:forward
-abstract BMFontCommonBlock(BMFontCommonBlockRaw) from BMFontCommonBlockRaw
+abstract BMFontCommon(BMFontCommonRaw) from BMFontCommonRaw
 {
 	public inline function new ()
 	{
@@ -165,7 +165,7 @@ abstract BMFontCommonBlock(BMFontCommonBlockRaw) from BMFontCommonBlockRaw
 		};
 	}
 	
-	public static function fromXml(commonNode:Access):BMFontCommonBlock
+	public static function fromXml(commonNode:Access)
 	{
 		final alphaChnl = (commonNode.has.alphaChnl) ? Std.parseInt(commonNode.att.alphaChnl) : 0;
 		final redChnl = (commonNode.has.redChnl) ? Std.parseInt(commonNode.att.redChnl) : 0;
@@ -187,7 +187,7 @@ abstract BMFontCommonBlock(BMFontCommonBlockRaw) from BMFontCommonBlockRaw
 	
 	public static function fromText(commonText:String)
 	{
-		final common:BMFontCommonBlock = new BMFontCommonBlock();
+		final common:BMFontCommon = new BMFontCommon();
 		
 		BMFontTextAttributeParser.forEachAttribute(commonText,
 			function(key:String, value:UnicodeString)
@@ -212,14 +212,14 @@ abstract BMFontCommonBlock(BMFontCommonBlockRaw) from BMFontCommonBlockRaw
 	}
 }
 
-private typedef BMFontPageInfoBlockRaw =
+private typedef BMFontPageRaw =
 {
 	var id:Int;
 	var file:String;
 };
 
 @:forward
-abstract BMFontPageInfoBlock(BMFontPageInfoBlockRaw) from BMFontPageInfoBlockRaw
+abstract BMFontPage(BMFontPageRaw) from BMFontPageRaw
 {
 	public inline function new(id, file)
 	{
@@ -230,7 +230,7 @@ abstract BMFontPageInfoBlock(BMFontPageInfoBlockRaw) from BMFontPageInfoBlockRaw
 		}
 	}
 	
-	public static function fromXml(pageNode:Access):BMFontPageInfoBlock
+	public static function fromXml(pageNode:Access):BMFontPage
 	{
 		return
 		{
@@ -239,7 +239,7 @@ abstract BMFontPageInfoBlock(BMFontPageInfoBlockRaw) from BMFontPageInfoBlockRaw
 		}
 	}
 	
-	public static function listFromXml(pagesNode:Access):Array<BMFontPageInfoBlock>
+	public static function listFromXml(pagesNode:Access):Array<BMFontPage>
 	{
 		final pages = pagesNode.nodes.page;
 		return [for (page in pages) fromXml(page) ];
@@ -260,11 +260,11 @@ abstract BMFontPageInfoBlock(BMFontPageInfoBlockRaw) from BMFontPageInfoBlockRaw
 				}
 			}
 		);
-		return new BMFontPageInfoBlock(id, file);
+		return new BMFontPage(id, file);
 	}
 }
 
-private typedef BMFontCharBlockRaw =
+private typedef BMFontCharRaw =
 {
 	var id:Int;
 	var x:Int;
@@ -280,7 +280,7 @@ private typedef BMFontCharBlockRaw =
 };
 
 @:forward
-abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
+abstract BMFontChar(BMFontCharRaw) from BMFontCharRaw
 {
 	public inline function new()
 	{
@@ -322,15 +322,15 @@ abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
 		};
 	}
 	
-	public static function listFromXml(charsNode:Access):Array<BMFontCharBlock>
+	public static function listFromXml(charsNode:Access):Array<BMFontChar>
 	{
 		final chars = charsNode.nodes.char;
 		return [ for (char in chars) fromXml(char) ];
 	}
 	
-	public static function fromText(kerningText:String):BMFontCharBlock
+	public static function fromText(kerningText:String):BMFontChar
 	{
-		final char = new BMFontCharBlock();
+		final char = new BMFontChar();
 		
 		BMFontTextAttributeParser.forEachAttribute(kerningText, 
 			function(key:String, value:UnicodeString)
@@ -375,7 +375,7 @@ abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
 	}
 }
 
-private typedef BMFontKerningPairRaw =
+private typedef BMFontKerningRaw =
 {
 	var first:Int;
 	var second:Int;
@@ -384,7 +384,7 @@ private typedef BMFontKerningPairRaw =
 
 @:forward
 @:access(flixel.graphics.frames.bmfont.BMFont)
-abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
+abstract BMFontKerning(BMFontKerningRaw) from BMFontKerningRaw
 {
 	public inline function new(first = -1, second = -1, amount = 0)
 	{
@@ -396,7 +396,7 @@ abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
 		}
 	}
 	
-	public static function fromXml(kerningNode:Access):BMFontKerningPair
+	public static function fromXml(kerningNode:Access):BMFontKerning
 	{
 		return
 		{
@@ -406,13 +406,13 @@ abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
 		}
 	}
 	
-	public static function listFromXml(kerningsNode:Access):Array<BMFontKerningPair>
+	public static function listFromXml(kerningsNode:Access):Array<BMFontKerning>
 	{
 		final kernings = kerningsNode.nodes.kerning;
 		return [ for (pair in kernings) fromXml(pair) ];
 	}
 	
-	public static function fromText(kerningText:String):BMFontKerningPair
+	public static function fromText(kerningText:String):BMFontKerning
 	{
 		var first:Int = -1;
 		var second:Int = -1;
@@ -429,22 +429,17 @@ abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
 				}
 			}
 		);
-		return new BMFontKerningPair(first, second, amount);
+		return new BMFontKerning(first, second, amount);
 	}
-	
-	// public static function listFromText(kerningsText:String):Array<BMFontKerningPair>
-	// {
-		
-	// }
 }
 
 class BMFont
 {
-	public var info:BMFontInfoBlock;
-	public var common:BMFontCommonBlock;
-	public var pages:Array<BMFontPageInfoBlock>;
-	public var chars:Array<BMFontCharBlock>;
-	public var kerningPairs:Null<Array<BMFontKerningPair>> = null;
+	public var info:BMFontInfo;
+	public var common:BMFontCommon;
+	public var pages:Array<BMFontPage>;
+	public var chars:Array<BMFontChar>;
+	public var kerningPairs:Null<Array<BMFontKerning>> = null;
 	
 	function new(?info, ?common, ?pages, ?chars, ?kerningPairs)
 	{
@@ -458,15 +453,15 @@ class BMFont
 	public static function fromXml(xml:Xml)
 	{
 		final xmlAccess = new Access(xml);
-		final info = BMFontInfoBlock.fromXml(xmlAccess.node.info);
-		final common = BMFontCommonBlock.fromXml(xmlAccess.node.common);
-		final pages = BMFontPageInfoBlock.listFromXml(xmlAccess.node.pages);
-		final chars = BMFontCharBlock.listFromXml(xmlAccess.node.chars);
-		var kerningPairs:Array<BMFontKerningPair> = null;
+		final info = BMFontInfo.fromXml(xmlAccess.node.info);
+		final common = BMFontCommon.fromXml(xmlAccess.node.common);
+		final pages = BMFontPage.listFromXml(xmlAccess.node.pages);
+		final chars = BMFontChar.listFromXml(xmlAccess.node.chars);
+		var kerningPairs:Array<BMFontKerning> = null;
 		
 		if (xmlAccess.hasNode.kernings)
 		{
-			kerningPairs = BMFontKerningPair.listFromXml(xmlAccess.node.kernings);
+			kerningPairs = BMFontKerning.listFromXml(xmlAccess.node.kernings);
 		}
 		
 		return new BMFont(info, common, pages, chars, kerningPairs);
@@ -474,11 +469,11 @@ class BMFont
 	
 	public static function fromText(text:String)
 	{
-		var info:BMFontInfoBlock = null;
-		var common:BMFontCommonBlock = null;
-		final pages = new Array<BMFontPageInfoBlock>();
-		final chars = new Array<BMFontCharBlock>();
-		final kernings = new Array<BMFontKerningPair>();
+		var info:BMFontInfo = null;
+		var common:BMFontCommon = null;
+		final pages = new Array<BMFontPage>();
+		final chars = new Array<BMFontChar>();
+		final kernings = new Array<BMFontKerning>();
 		// we dont need these but they exists in the file
 		// var charCount = 0;
 		// var kerningCount = 0;
@@ -490,13 +485,13 @@ class BMFont
 			final blockAttrs = line.substring(line.indexOf(' ') + 1);
 			switch blockType
 			{
-				case 'info': info = BMFontInfoBlock.fromText(blockAttrs);
-				case 'common': common = BMFontCommonBlock.fromText(blockAttrs);
-				case 'page': pages.push(BMFontPageInfoBlock.fromText(blockAttrs));
+				case 'info': info = BMFontInfo.fromText(blockAttrs);
+				case 'common': common = BMFontCommon.fromText(blockAttrs);
+				case 'page': pages.push(BMFontPage.fromText(blockAttrs));
 				// case 'chars': charCount = Std.parseInt(blockAttrs.split("=").pop());
-				case 'char': chars.push(BMFontCharBlock.fromText(blockAttrs));
+				case 'char': chars.push(BMFontChar.fromText(blockAttrs));
 				// case 'kernings': kerningCount = Std.parseInt(blockAttrs.split("=").pop());
-				case 'kerning': kernings.push(BMFontKerningPair.fromText(blockAttrs));
+				case 'kerning': kernings.push(BMFontKerning.fromText(blockAttrs));
 			}
 		}
 		
