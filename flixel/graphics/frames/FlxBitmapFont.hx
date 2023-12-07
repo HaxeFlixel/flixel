@@ -219,7 +219,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
 
-			if (char.id == null)
+			if (char.id == -1)
 			{
 				throw 'Invalid font data!';
 			}

@@ -268,25 +268,7 @@ class FlxBMFontTextParser
 	
 	function parseInfoBlock(attrs:String)
 	{
-		var info:BMFontInfoBlock = {
-			fontName: null,
-			fontSize: null,
-			bold: false,
-			italic: false,
-			charSet: null,
-			unicode: false,
-			stretchH: null,
-			smooth: false,
-			aa: null,
-			paddingLeft: null,
-			paddingDown: null,
-			paddingRight: null,
-			paddingUp: null,
-			spacingVert: null,
-			spacingHoriz: null,
-			outline: null,
-			fixedHeight: false
-		};
+		var info:BMFontInfoBlock = BMFont.getDefaultInfoBlock();
 		
 		// the parsing here is a bit more involved since strings can have spaces within them
 		// so we can't just split by space like we usually do (same goes for parsePageBlock and parseCharBlock)
@@ -384,18 +366,7 @@ class FlxBMFontTextParser
 	
 	function parseCommonBlock(attrs:String)
 	{
-		var common:BMFontCommonBlock = {
-			lineHeight: null,
-			base: null,
-			scaleW: null,
-			scaleH: null,
-			pages: 0,
-			isPacked: false,
-			alphaChnl: null,
-			redChnl: null,
-			greenChnl: null,
-			blueChnl: null,
-		};
+		var common:BMFontCommonBlock = BMFont.getDefaultCommonBlock();
 		var keyValuePairs = attrs.split(' ').map((s) -> s.split('='));
 		for (kvPair in keyValuePairs)
 		{
@@ -431,10 +402,7 @@ class FlxBMFontTextParser
 	
 	function parsePageBlock(attrs:String)
 	{
-		var page:BMFontPageInfoBlock = {
-			id: null,
-			file: null
-		};
+		var page:BMFontPageInfoBlock = BMFont.getDefaultPageBlock();
 		var i = 0;
 		var word = '';
 		var readNumberLike = () ->
@@ -493,18 +461,7 @@ class FlxBMFontTextParser
 	
 	function parseCharBlock(attrs:String)
 	{
-		var char:BMFontCharBlock = {
-			id: null,
-			x: null,
-			y: null,
-			width: null,
-			height: null,
-			xoffset: 0,
-			yoffset: 0,
-			xadvance: 0,
-			page: null,
-			chnl: null,
-		};
+		var char:BMFontCharBlock = BMFont.getDefaultCharBlock();
 		var i = 0;
 		var word = '';
 		var readNumberLike = () ->
@@ -603,11 +560,7 @@ class FlxBMFontTextParser
 	
 	function parseKerningPair(attrs:String)
 	{
-		var kerningPair:BMFontKerningPair = {
-			first: null,
-			second: null,
-			amount: null
-		};
+		var kerningPair:BMFontKerningPair = BMFont.getDefaultKerningPair();
 		var keyValuePairs = attrs.split(' ').map((s) -> s.split('='));
 		for (kvPair in keyValuePairs)
 		{
