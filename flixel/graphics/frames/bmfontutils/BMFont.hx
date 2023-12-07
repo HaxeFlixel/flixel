@@ -1,10 +1,14 @@
 package flixel.graphics.frames.bmfontutils;
 
+import flixel.graphics.frames.bmfontutils.FlxBMFontParser;
 import haxe.xml.Access;
+import UnicodeString;
+
+using StringTools;
 
 private typedef BMFontInfoBlockRaw =
 {
-	var fontSize:Int;
+	var size:Int;
 	var smooth:Bool;
 	var unicode:Bool;
 	var italic:Bool;
@@ -20,7 +24,8 @@ private typedef BMFontInfoBlockRaw =
 	var spacingHoriz:Int;
 	var spacingVert:Int;
 	var outline:Int;
-	var fontName:String;
+	/** font name */
+	var face:String;
 };
 
 @:forward
@@ -30,7 +35,7 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 	{
 		this =
 		{
-			fontSize: -1,
+			size: -1,
 			smooth: false,
 			unicode: false,
 			italic: false,
@@ -46,8 +51,24 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 			spacingHoriz: 0,
 			spacingVert: 0,
 			outline: 0,
-			fontName: ''
+			face: ''
 		}
+	}
+	
+	inline function setPaddingsFromString(values:String)
+	{
+		final paddings = values.split(',');
+		this.paddingUp = Std.parseInt(paddings[0]);
+		this.paddingRight = Std.parseInt(paddings[1]);
+		this.paddingDown = Std.parseInt(paddings[2]);
+		this.paddingLeft = Std.parseInt(paddings[3]);
+	}
+	
+	inline function setSpacingsFromString(values:String)
+	{
+		final spacings = values.split(',');
+		this.spacingHoriz = Std.parseInt(spacings[0]);
+		this.spacingVert = Std.parseInt(spacings[1]);
 	}
 	
 	public static function fromXml(infoNode:Access):BMFontInfoBlock
@@ -60,7 +81,7 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 		
 		final outline = infoNode.has.outline ? Std.parseInt(infoNode.att.outline) : 0;
 		return {
-			fontSize: Std.parseInt(infoNode.att.size),
+			size: Std.parseInt(infoNode.att.size),
 			smooth: infoNode.att.smooth != '0',
 			unicode: infoNode.att.unicode != '0',
 			italic: infoNode.att.italic != '0',
@@ -76,8 +97,37 @@ abstract BMFontInfoBlock(BMFontInfoBlockRaw) from BMFontInfoBlockRaw
 			spacingHoriz: spacingArr[0],
 			spacingVert: spacingArr[1],
 			outline: outline,
-			fontName: infoNode.att.face
+			face: infoNode.att.face
 		}
+	}
+	
+	public static function fromText(infoText:String)
+	{
+		final info:BMFontInfoBlock = new BMFontInfoBlock();
+		
+		BMFontTextAttributeParser.forEachAttribute(infoText,
+			function(key:String, value:UnicodeString)
+			{
+				switch key
+				{
+					case 'face': info.face = value;
+					case 'size': info.size = Std.parseInt(value);
+					case 'bold': info.bold = value != '0';
+					case 'italic': info.italic = value != '0';
+					case 'charset': info.charSet = value;
+					case 'unicode': info.unicode = value != '0';
+					case 'stretchH': info.stretchH = Std.parseInt(value);
+					case 'smooth': info.smooth = value != '0';
+					case 'aa': info.aa = Std.parseInt(value);
+					case 'padding': info.setPaddingsFromString(value);
+					case 'spacing': info.setSpacingsFromString(value);
+					case 'outline': info.outline = Std.parseInt(value);
+					case 'fixedHeight': info.fixedHeight = value != '0';
+				}
+			}
+		);
+		
+		return info;
 	}
 }
 
@@ -134,6 +184,32 @@ abstract BMFontCommonBlock(BMFontCommonBlockRaw) from BMFontCommonBlockRaw
 			blueChnl: blueChnl
 		};
 	}
+	
+	public static function fromText(commonText:String)
+	{
+		final common:BMFontCommonBlock = new BMFontCommonBlock();
+		
+		BMFontTextAttributeParser.forEachAttribute(commonText,
+			function(key:String, value:UnicodeString)
+			{
+				switch key
+				{
+					case 'lineHeight': common.lineHeight = Std.parseInt(value);
+					case 'base': common.base = Std.parseInt(value);
+					case 'scaleW': common.scaleW = Std.parseInt(value);
+					case 'scaleH': common.scaleH = Std.parseInt(value);
+					case 'pages': common.pages = Std.parseInt(value);
+					case 'packed': common.isPacked = value != '0';
+					case 'alphaChnl': common.alphaChnl = Std.parseInt(value);
+					case 'redChnl': common.redChnl = Std.parseInt(value);
+					case 'greenChnl': common.greenChnl = Std.parseInt(value);
+					case 'blueChnl': common.blueChnl = Std.parseInt(value);
+				}
+			}
+		);
+		
+		return common;
+	}
 }
 
 private typedef BMFontPageInfoBlockRaw =
@@ -168,6 +244,24 @@ abstract BMFontPageInfoBlock(BMFontPageInfoBlockRaw) from BMFontPageInfoBlockRaw
 		final pages = pagesNode.nodes.page;
 		return [for (page in pages) fromXml(page) ];
 	}
+	
+	public static function fromText(pageText:String)
+	{
+		var id = -1;
+		var file:String = null;
+		BMFontTextAttributeParser.forEachAttribute(pageText, 
+			function(key:String, value:UnicodeString)
+			{
+				switch key
+				{
+					case 'id': id = Std.parseInt(value);
+					case 'file': file = value;
+					default: FlxG.log.warn('Unexpected font char attribute: $key=$value');
+				}
+			}
+		);
+		return new BMFontPageInfoBlock(id, file);
+	}
 }
 
 private typedef BMFontCharBlockRaw =
@@ -182,6 +276,7 @@ private typedef BMFontCharBlockRaw =
 	var xadvance:Int;
 	var page:Int;
 	var chnl:Int;
+	var letter:String;
 };
 
 @:forward
@@ -200,7 +295,8 @@ abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
 			yoffset: 0,
 			xadvance: 0,
 			page: -1,
-			chnl: -1
+			chnl: -1,
+			letter: null
 		}
 	}
 	
@@ -222,6 +318,7 @@ abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
 			xadvance: xadvance,
 			page: Std.parseInt(char.att.page),
 			chnl: Std.parseInt(char.att.chnl),
+			letter: char.att.letter
 		};
 	}
 	
@@ -229,6 +326,38 @@ abstract BMFontCharBlock(BMFontCharBlockRaw) from BMFontCharBlockRaw
 	{
 		final chars = charsNode.nodes.char;
 		return [ for (char in chars) fromXml(char) ];
+	}
+	
+	public static function fromText(kerningText:String):BMFontCharBlock
+	{
+		final char = new BMFontCharBlock();
+		
+		BMFontTextAttributeParser.forEachAttribute(kerningText, 
+			function(key:String, value:UnicodeString)
+			{
+				switch key
+				{
+					case 'id': char.id = Std.parseInt(value);
+					case 'x': char.x = Std.parseInt(value);
+					case 'y': char.y = Std.parseInt(value);
+					case 'width': char.width = Std.parseInt(value);
+					case 'height': char.height = Std.parseInt(value);
+					case 'xoffset': char.xoffset = Std.parseInt(value);
+					case 'yoffset': char.yoffset = Std.parseInt(value);
+					case 'xadvance': char.xadvance = Std.parseInt(value);
+					case 'page': char.page = Std.parseInt(value);
+					case 'chnl': char.chnl = Std.parseInt(value);
+					case 'letter': char.letter = value;
+					default: FlxG.log.warn('Unexpected font char attribute: $key=$value');
+				}
+			}
+		);
+		
+		// always true?
+		if (char.letter != null)
+			char.id = getCorrectLetter(char.letter).charCodeAt(0);
+		
+		return char;
 	}
 	
 	public static function getCorrectLetter(letter:String)
@@ -282,6 +411,31 @@ abstract BMFontKerningPair(BMFontKerningPairRaw) from BMFontKerningPairRaw
 		final kernings = kerningsNode.nodes.kerning;
 		return [ for (pair in kernings) fromXml(pair) ];
 	}
+	
+	public static function fromText(kerningText:String):BMFontKerningPair
+	{
+		var first:Int = -1;
+		var second:Int = -1;
+		var amount:Int = -1;
+		BMFontTextAttributeParser.forEachAttribute(kerningText, 
+			function(key:String, value:UnicodeString)
+			{
+				switch key
+				{
+					case 'first': first = Std.parseInt(value);
+					case 'second': second = Std.parseInt(value);
+					case 'amount': amount = Std.parseInt(value);
+					// default: FlxG.log.warn('Unexpected font char attribute: $key=$value');
+				}
+			}
+		);
+		return new BMFontKerningPair(first, second, amount);
+	}
+	
+	// public static function listFromText(kerningsText:String):Array<BMFontKerningPair>
+	// {
+		
+	// }
 }
 
 class BMFont
@@ -316,5 +470,36 @@ class BMFont
 		}
 		
 		return new BMFont(info, common, pages, chars, kerningPairs);
+	}
+	
+	public static function fromText(text:String)
+	{
+		var info:BMFontInfoBlock = null;
+		var common:BMFontCommonBlock = null;
+		final pages = new Array<BMFontPageInfoBlock>();
+		final chars = new Array<BMFontCharBlock>();
+		final kernings = new Array<BMFontKerningPair>();
+		// we dont need these but they exists in the file
+		// var charCount = 0;
+		// var kerningCount = 0;
+		
+		final lines = text.replace('\r\n', '\n').split('\n').filter((line) -> line.length > 0);
+		for (line in lines)
+		{
+			final blockType = line.substring(0, line.indexOf(' '));
+			final blockAttrs = line.substring(line.indexOf(' ') + 1);
+			switch blockType
+			{
+				case 'info': info = BMFontInfoBlock.fromText(blockAttrs);
+				case 'common': common = BMFontCommonBlock.fromText(blockAttrs);
+				case 'page': pages.push(BMFontPageInfoBlock.fromText(blockAttrs));
+				// case 'chars': charCount = Std.parseInt(blockAttrs.split("=").pop());
+				case 'char': chars.push(BMFontCharBlock.fromText(blockAttrs));
+				// case 'kernings': kerningCount = Std.parseInt(blockAttrs.split("=").pop());
+				case 'kerning': kernings.push(BMFontKerningPair.fromText(blockAttrs));
+			}
+		}
+		
+		return new BMFont(info, common, pages, chars, kernings.length > 0 ? kernings : null);
 	}
 }

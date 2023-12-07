@@ -189,8 +189,8 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		// how much to move the cursor when going to the next line.
 		font.lineHeight = fontInfo.common.lineHeight;
-		font.size = fontInfo.info.fontSize;
-		font.fontName = fontInfo.info.fontName;
+		font.size = fontInfo.info.size;
+		font.fontName = fontInfo.info.face;
 		font.bold = fontInfo.info.bold;
 		font.italic = fontInfo.info.italic;
 
