@@ -10,7 +10,6 @@ import flixel.system.FlxAssets.FlxAngelCodeAsset;
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 
 using StringTools;
 
@@ -27,7 +26,7 @@ class FlxBMFontParser
 			case TEXT(text):
 				fromText(text);
 			case XML(xml):
-				fromXml(xml);
+				BMFont.fromXml(xml);
 			case BINARY(bytes):
 				fromBinary(bytes);
 		};
@@ -37,11 +36,6 @@ class FlxBMFontParser
 	static function fromText(text:String)
 	{
 		return new FlxBMFontTextParser(text).parse();
-	}
-	
-	static function fromXml(xml:Xml)
-	{
-		return new FlxBMFontXMLParser(xml).parse();
 	}
 	
 	static function fromBinary(bytes:Bytes)
@@ -268,7 +262,7 @@ class FlxBMFontTextParser
 	
 	function parseInfoBlock(attrs:String)
 	{
-		var info:BMFontInfoBlock = BMFont.getDefaultInfoBlock();
+		var info:BMFontInfoBlock = new BMFontInfoBlock();
 		
 		// the parsing here is a bit more involved since strings can have spaces within them
 		// so we can't just split by space like we usually do (same goes for parsePageBlock and parseCharBlock)
@@ -366,7 +360,7 @@ class FlxBMFontTextParser
 	
 	function parseCommonBlock(attrs:String)
 	{
-		var common:BMFontCommonBlock = BMFont.getDefaultCommonBlock();
+		var common:BMFontCommonBlock = new BMFontCommonBlock();
 		var keyValuePairs = attrs.split(' ').map((s) -> s.split('='));
 		for (kvPair in keyValuePairs)
 		{
@@ -402,7 +396,7 @@ class FlxBMFontTextParser
 	
 	function parsePageBlock(attrs:String)
 	{
-		var page:BMFontPageInfoBlock = BMFont.getDefaultPageBlock();
+		var page:BMFontPageInfoBlock = new BMFontPageInfoBlock(-1, '');
 		var i = 0;
 		var word = '';
 		var readNumberLike = () ->
@@ -461,7 +455,7 @@ class FlxBMFontTextParser
 	
 	function parseCharBlock(attrs:String)
 	{
-		var char:BMFontCharBlock = BMFont.getDefaultCharBlock();
+		var char:BMFontCharBlock = new BMFontCharBlock();
 		var i = 0;
 		var word = '';
 		var readNumberLike = () ->
@@ -511,7 +505,7 @@ class FlxBMFontTextParser
 			switch word
 			{
 				case 'letter':
-					char.id = Util.getCorrectLetter(readString()).charCodeAt(0);
+					char.id = BMFontCharBlock.getCorrectLetter(readString()).charCodeAt(0);
 					word = '';
 				case 'id':
 					char.id = Std.parseInt(readNumberLike());
@@ -560,7 +554,7 @@ class FlxBMFontTextParser
 	
 	function parseKerningPair(attrs:String)
 	{
-		var kerningPair:BMFontKerningPair = BMFont.getDefaultKerningPair();
+		var kerningPair:BMFontKerningPair = new BMFontKerningPair();
 		var keyValuePairs = attrs.split(' ').map((s) -> s.split('='));
 		for (kvPair in keyValuePairs)
 		{
@@ -578,164 +572,5 @@ class FlxBMFontTextParser
 			}
 		}
 		return kerningPair;
-	}
-}
-
-@:access(flixel.graphics.frames.bmfontutils.BMFont)
-class FlxBMFontXMLParser
-{
-	var fast:Access;
-	
-	public function new(xml:Xml)
-	{
-		fast = new Access(xml);
-	}
-	
-	public function parse()
-	{
-		var fontInfo = new BMFont();
-		fontInfo.info = parseInfoBlock();
-		fontInfo.common = parseCommonBlock();
-		fontInfo.pages = parsePagesBlock();
-		fontInfo.chars = parseCharsBlock();
-		
-		if (fast.hasNode.kernings)
-		{
-			fontInfo.kerningPairs = parseKerningPairs();
-		}
-		
-		return fontInfo;
-	}
-	
-	function parseInfoBlock()
-	{
-		var infoNode = fast.node.info;
-		var padding:String = infoNode.att.padding;
-		var paddingArr = padding.split(',').map(Std.parseInt);
-		
-		var spacing:String = infoNode.att.spacing;
-		var spacingArr = spacing.split(',').map(Std.parseInt);
-		
-		var outline = infoNode.has.outline ? Std.parseInt(infoNode.att.outline) : 0;
-		var info:BMFontInfoBlock = {
-			fontSize: Std.parseInt(infoNode.att.size),
-			smooth: infoNode.att.smooth != '0',
-			unicode: infoNode.att.unicode != '0',
-			italic: infoNode.att.italic != '0',
-			bold: infoNode.att.bold != '0',
-			fixedHeight: (infoNode.has.fixedHeight) ? infoNode.att.fixedHeight != '0' : false,
-			charSet: infoNode.att.charset,
-			stretchH: Std.parseInt(infoNode.att.stretchH),
-			aa: Std.parseInt(infoNode.att.aa),
-			paddingUp: paddingArr[0],
-			paddingRight: paddingArr[1],
-			paddingDown: paddingArr[2],
-			paddingLeft: paddingArr[3],
-			spacingHoriz: spacingArr[0],
-			spacingVert: spacingArr[1],
-			outline: outline,
-			fontName: infoNode.att.face,
-		}
-		
-		return info;
-	}
-	
-	function parseCommonBlock()
-	{
-		var commonNode = fast.node.common;
-		var alphaChnl = (commonNode.has.alphaChnl) ? Std.parseInt(commonNode.att.alphaChnl) : 0;
-		var redChnl = (commonNode.has.redChnl) ? Std.parseInt(commonNode.att.redChnl) : 0;
-		var greenChnl = (commonNode.has.greenChnl) ? Std.parseInt(commonNode.att.greenChnl) : 0;
-		var blueChnl = (commonNode.has.blueChnl) ? Std.parseInt(commonNode.att.blueChnl) : 0;
-		var common:BMFontCommonBlock = {
-			lineHeight: Std.parseInt(commonNode.att.lineHeight),
-			base: Std.parseInt(commonNode.att.base),
-			scaleW: Std.parseInt(commonNode.att.scaleW),
-			scaleH: Std.parseInt(commonNode.att.scaleH),
-			pages: Std.parseInt(commonNode.att.pages),
-			isPacked: commonNode.att.packed != '0',
-			alphaChnl: alphaChnl,
-			redChnl: redChnl,
-			greenChnl: greenChnl,
-			blueChnl: blueChnl,
-		};
-		
-		return common;
-	}
-	
-	function parsePagesBlock()
-	{
-		var pages:Array<BMFontPageInfoBlock> = [];
-		var pagesNode = fast.node.pages;
-		for (page in pagesNode.nodes.page)
-		{
-			pages.push({
-				id: Std.parseInt(page.att.id),
-				file: page.att.file
-			});
-		}
-		return pages;
-	}
-	
-	function parseCharsBlock()
-	{
-		var charsNode = fast.node.chars;
-		var chars:Array<BMFontCharBlock> = [];
-		for (char in charsNode.nodes.char)
-		{
-			var id = (char.has.letter) ? Util.getCorrectLetter(char.att.letter).charCodeAt(0) : Std.parseInt(char.att.id);
-			var xoffset = (char.has.xoffset) ? Std.parseInt(char.att.xoffset) : 0;
-			var yoffset = (char.has.yoffset) ? Std.parseInt(char.att.yoffset) : 0;
-			var xadvance = (char.has.xadvance) ? Std.parseInt(char.att.xadvance) : 0;
-			chars.push({
-				id: id,
-				x: Std.parseInt(char.att.x),
-				y: Std.parseInt(char.att.y),
-				width: Std.parseInt(char.att.width),
-				height: Std.parseInt(char.att.height),
-				xoffset: xoffset,
-				yoffset: yoffset,
-				xadvance: xadvance,
-				page: Std.parseInt(char.att.page),
-				chnl: Std.parseInt(char.att.chnl),
-			});
-		}
-		
-		return chars;
-	}
-	
-	function parseKerningPairs()
-	{
-		var kerningPairsNode = fast.node.kernings;
-		var kerningPairs:Array<BMFontKerningPair> = [];
-		for (kerningPair in kerningPairsNode.nodes.kerning)
-		{
-			kerningPairs.push({
-				first: Std.parseInt(kerningPair.att.first),
-				second: Std.parseInt(kerningPair.att.second),
-				amount: Std.parseInt(kerningPair.att.amount)
-			});
-		}
-		
-		return kerningPairs;
-	}
-}
-
-@:noCompletion
-private final class Util
-{
-	public static function getCorrectLetter(letter:String)
-	{
-		// handle some special cases of letters in the xml files
-		var charStr = switch (letter)
-		{
-			case "space": ' ';
-			case "&quot;": '"';
-			case "&amp;": '&';
-			case "&gt;": '>';
-			case "&lt;": '<';
-			default: letter;
-		}
-		return charStr;
 	}
 }
