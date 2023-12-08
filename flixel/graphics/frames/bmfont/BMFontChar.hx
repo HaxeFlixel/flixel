@@ -6,6 +6,13 @@ import UnicodeString;
 
 using StringTools;
 
+/**
+ * Bitmap font character data used internally via `FlxBitmapFont.fromAngelCode` to serialize text,
+ * xml or binary files exported from [BMFont](https://www.angelcode.com/products/bmfont/)
+ * 
+ * @since 5.6.0
+ * @see [flixel.graphics.frames.FlxBitmapFont.fromAngelCode](https://api.haxeflixel.com/flixel/graphics/frames/FlxBitmapFont.html#fromAngelCode)
+ */
 @:structInit
 @:allow(flixel.graphics.frames.bmfont.BMFont)
 class BMFontChar

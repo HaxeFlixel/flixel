@@ -8,6 +8,13 @@ import openfl.utils.Assets;
 
 using StringTools;
 
+/**
+ * Used internally via `FlxBitmapFont.fromAngelCode` to serialize text, xml or binary files
+ * exported from [BMFont](https://www.angelcode.com/products/bmfont/)
+ * 
+ * @since 5.6.0
+ * @see [flixel.graphics.frames.FlxBitmapFont.fromAngelCode](https://api.haxeflixel.com/flixel/graphics/frames/FlxBitmapFont.html#fromAngelCode)
+ */
 class BMFont
 {
 	public var info:BMFontInfo;
@@ -208,7 +215,7 @@ class BMFont
 	}
 }
 
-enum abstract BMFontBlockId(Int) from Int
+private enum abstract BMFontBlockId(Int) from Int
 {
 	var INFO = 1;
 	var COMMON = 2;

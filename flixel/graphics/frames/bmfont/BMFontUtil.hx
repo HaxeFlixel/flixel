@@ -4,6 +4,7 @@ import UnicodeString;
 
 using StringTools;
 
+@:dox(hide)
 @:noCompletion
 class BMFontUtil
 {
