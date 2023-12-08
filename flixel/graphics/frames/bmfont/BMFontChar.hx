@@ -24,22 +24,18 @@ class BMFontChar
 	
 	static inline function fromXml(charNode:Access):BMFontChar
 	{
-		final char = charNode;
-		
-		final letter = char.has.letter ? char.att.letter : null;
-		final id = Std.parseInt(char.att.id);
 		return {
-			id: (letter != null) ? getCorrectLetter(letter).charCodeAt(0) : id,
-			x: Std.parseInt(char.att.x),
-			y: Std.parseInt(char.att.y),
-			width: Std.parseInt(char.att.width),
-			height: Std.parseInt(char.att.height),
-			xoffset: (char.has.xoffset) ? Std.parseInt(char.att.xoffset) : 0,
-			yoffset: (char.has.yoffset) ? Std.parseInt(char.att.yoffset) : 0,
-			xadvance: (char.has.xadvance) ? Std.parseInt(char.att.xadvance) : 0,
-			page: Std.parseInt(char.att.page),
-			chnl: Std.parseInt(char.att.chnl),
-			letter: letter
+			id: Std.parseInt(charNode.att.id),
+			x: Std.parseInt(charNode.att.x),
+			y: Std.parseInt(charNode.att.y),
+			width: Std.parseInt(charNode.att.width),
+			height: Std.parseInt(charNode.att.height),
+			xoffset: (charNode.has.xoffset) ? Std.parseInt(charNode.att.xoffset) : 0,
+			yoffset: (charNode.has.yoffset) ? Std.parseInt(charNode.att.yoffset) : 0,
+			xadvance: (charNode.has.xadvance) ? Std.parseInt(charNode.att.xadvance) : 0,
+			page: Std.parseInt(charNode.att.page),
+			chnl: Std.parseInt(charNode.att.chnl),
+			letter: charNode.has.letter ? charNode.att.letter : null
 		};
 	}
 	
@@ -83,9 +79,6 @@ class BMFontChar
 				}
 			}
 		);
-		
-		if (letter != null)
-			id = getCorrectLetter(letter).charCodeAt(0);
 		
 		return
 		{
