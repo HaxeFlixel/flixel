@@ -286,6 +286,8 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	#end
 	public var shader:FlxShader;
+	
+	public final finalFieldTest:Float = Math.random();
 
 	/**
 	 * The actual frame used for sprite rendering
