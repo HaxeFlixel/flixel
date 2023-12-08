@@ -204,7 +204,7 @@ class FlxBitmapText extends FlxSprite
 	 * @param   text  The text to display.
 	 * @param   font  Optional parameter for component's font prop
 	 */
-	public function new(?x = 0.0, ?y = 0.0, ?text:String, ?font:FlxBitmapFont)
+	public function new(?x = 0.0, ?y = 0.0, text = "", ?font:FlxBitmapFont)
 	{
 		super(x, y);
 
