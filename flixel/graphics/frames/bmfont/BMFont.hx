@@ -1,6 +1,9 @@
 package flixel.graphics.frames.bmfont;
 
 import flixel.graphics.frames.bmfont.FlxBMFontParser;
+import haxe.io.Bytes;
+import haxe.io.BytesInput;
+import haxe.io.BytesBuffer;
 import haxe.xml.Access;
 import UnicodeString;
 
@@ -129,6 +132,33 @@ abstract BMFontInfo(BMFontInfoRaw) from BMFontInfoRaw
 		
 		return info;
 	}
+	
+	public static function fromBytes(bytes:BytesInput)
+	{
+		final blockSize = bytes.readInt32();
+		final bitField = bytes.readByte();
+		final fontInfo:BMFontInfo = {
+			size: bytes.readInt16(),
+			smooth: (bitField & 0x80) != 0,
+			unicode: (bitField & (0x80 >> 1)) != 0,
+			italic: (bitField & (0x80 >> 2)) != 0,
+			bold: (bitField & (0x80 >> 3)) != 0,
+			fixedHeight: (bitField & (0x80 >> 4)) != 0,
+			charSet: String.fromCharCode(bytes.readByte()),
+			stretchH: bytes.readInt16(),
+			aa: bytes.readByte(),
+			paddingUp: bytes.readByte(),
+			paddingRight: bytes.readByte(),
+			paddingDown: bytes.readByte(),
+			paddingLeft: bytes.readByte(),
+			spacingHoriz: bytes.readByte(),
+			spacingVert: bytes.readByte(),
+			outline: bytes.readByte(),
+			face: bytes.readString(blockSize - 14 - 1)
+		};
+		bytes.readByte(); // skip the null terminator of the string
+		return fontInfo;
+	}
 }
 
 private typedef BMFontCommonRaw =
@@ -210,6 +240,26 @@ abstract BMFontCommon(BMFontCommonRaw) from BMFontCommonRaw
 		
 		return common;
 	}
+	
+	public static function fromBytes(bytes:BytesInput)
+	{
+		final blockSize = bytes.readInt32();
+		if (blockSize != 15)
+			throw 'Invalid block size for common block. Expected 15 got $blockSize';
+		
+		return {
+			lineHeight: bytes.readInt16(),
+			base: bytes.readInt16(),
+			scaleW: bytes.readInt16(),
+			scaleH: bytes.readInt16(),
+			pages: bytes.readInt16(),
+			isPacked: (bytes.readByte() & 0x2) != 0,
+			alphaChnl: bytes.readByte(),
+			redChnl: bytes.readByte(),
+			greenChnl: bytes.readByte(),
+			blueChnl: bytes.readByte(),
+		};
+	}
 }
 
 private typedef BMFontPageRaw =
@@ -261,6 +311,30 @@ abstract BMFontPage(BMFontPageRaw) from BMFontPageRaw
 			}
 		);
 		return new BMFontPage(id, file);
+	}
+	
+	public static function listFromBytes(bytes:BytesInput)
+	{
+		var blockSize = bytes.readInt32();
+		final pages = new Array<BMFontPage>();
+		
+		var i = 0;
+		while (blockSize < 0)
+		{
+			final bytesBuf = new BytesBuffer();
+			var curByte = bytes.readByte();
+			while (curByte != 0)
+			{
+				bytesBuf.addByte(curByte);
+				curByte = bytes.readByte();
+			}
+			final pageName = bytesBuf.getBytes().toString();
+			pages.push({id: i, file: pageName});
+			blockSize -= pageName.length + 1;
+			i++;
+		}
+		
+		return pages;
 	}
 }
 
@@ -360,6 +434,31 @@ abstract BMFontChar(BMFontCharRaw) from BMFontCharRaw
 		return char;
 	}
 	
+	public static function listFromBytes(bytes:BytesInput):Array<BMFontChar>
+	{
+		var blockSize = bytes.readInt32();
+		final chars = new Array<BMFontChar>();
+		while (blockSize > 0)
+		{
+			final char:BMFontChar = {
+				id: bytes.readInt32(),
+				x: bytes.readInt16(),
+				y: bytes.readInt16(),
+				width: bytes.readInt16(),
+				height: bytes.readInt16(),
+				xoffset: bytes.readInt16(),
+				yoffset: bytes.readInt16(),
+				xadvance: bytes.readInt16(),
+				page: bytes.readByte(),
+				chnl: bytes.readByte(),
+				letter: null
+			};
+			chars.push(char);
+			blockSize -= 20;
+		}
+		return chars;
+	}
+	
 	public static function getCorrectLetter(letter:String)
 	{
 		// handle some special cases of letters in the xml files
@@ -431,6 +530,24 @@ abstract BMFontKerning(BMFontKerningRaw) from BMFontKerningRaw
 		);
 		return new BMFontKerning(first, second, amount);
 	}
+	
+	public static function listFromBytes(bytes:BytesInput)
+	{
+		var blockSize = bytes.readInt32();
+		final kernings = new Array<BMFontKerning>();
+		while (blockSize > 0)
+		{
+			final kerning =
+			{
+				first: bytes.readInt32(),
+				second: bytes.readInt32(),
+				amount: bytes.readInt16()
+			};
+			kernings.push(kerning);
+			blockSize -= 10;// 4 + 4 + 2
+		}
+		return kernings;
+	}
 }
 
 class BMFont
@@ -439,15 +556,15 @@ class BMFont
 	public var common:BMFontCommon;
 	public var pages:Array<BMFontPage>;
 	public var chars:Array<BMFontChar>;
-	public var kerningPairs:Null<Array<BMFontKerning>> = null;
+	public var kerning:Null<Array<BMFontKerning>> = null;
 	
-	function new(?info, ?common, ?pages, ?chars, ?kerningPairs)
+	function new(?info, ?common, ?pages, ?chars, ?kerning)
 	{
 		this.info = info;
 		this.common = common;
 		this.pages = pages;
 		this.chars = chars;
-		this.kerningPairs = kerningPairs;
+		this.kerning = kerning;
 	}
 	
 	public static function fromXml(xml:Xml)
@@ -457,14 +574,14 @@ class BMFont
 		final common = BMFontCommon.fromXml(xmlAccess.node.common);
 		final pages = BMFontPage.listFromXml(xmlAccess.node.pages);
 		final chars = BMFontChar.listFromXml(xmlAccess.node.chars);
-		var kerningPairs:Array<BMFontKerning> = null;
+		var kerning:Array<BMFontKerning> = null;
 		
 		if (xmlAccess.hasNode.kernings)
 		{
-			kerningPairs = BMFontKerning.listFromXml(xmlAccess.node.kernings);
+			kerning = BMFontKerning.listFromXml(xmlAccess.node.kernings);
 		}
 		
-		return new BMFont(info, common, pages, chars, kerningPairs);
+		return new BMFont(info, common, pages, chars, kerning);
 	}
 	
 	public static function fromText(text:String)
@@ -497,4 +614,54 @@ class BMFont
 		
 		return new BMFont(info, common, pages, chars, kernings.length > 0 ? kernings : null);
 	}
+	
+	/**
+	 * @see https://www.angelcode.com/products/bmfont/doc/file_format.html#bin
+	 */
+	public static function fromBytes(bytes:Bytes)
+	{
+		final bytes = new BytesInput(bytes);
+		final expectedBytes = [66, 77, 70]; // 'B', 'M', 'F'
+		for (b in expectedBytes)
+		{
+			var testByte = bytes.readByte();
+			if (testByte != b)
+				throw 'Invalid binary .fnt file. Found $testByte, expected $b';
+		}
+		var version = bytes.readByte();
+		if (version < 3)
+		{
+			FlxG.log.warn('The BMFont parser is made to work on files with version 3. Using earlier versions can cause issues!');
+		}
+		
+		var info:BMFontInfo = null;
+		var common:BMFontCommon = null;
+		var pages:Array<BMFontPage> = null;
+		var chars:Array<BMFontChar> = null;
+		var kerning:Array<BMFontKerning> = null;
+		
+		// parsing blocks
+		while (bytes.position < bytes.length)
+		{
+			final blockId:BMFontBlockId = bytes.readByte();
+			switch blockId
+			{
+				case INFO: info = BMFontInfo.fromBytes(bytes);
+				case COMMON: common = BMFontCommon.fromBytes(bytes);
+				case PAGES: pages = BMFontPage.listFromBytes(bytes);
+				case CHARS: chars = BMFontChar.listFromBytes(bytes);
+				case KERNING: kerning = BMFontKerning.listFromBytes(bytes);
+			}
+		}
+		return new BMFont(info, common, pages, chars, kerning);
+	}
+}
+
+enum abstract BMFontBlockId(Int) from Int
+{
+	var INFO:Int = 1;
+	var COMMON:Int = 2;
+	var PAGES:Int = 3;
+	var CHARS:Int = 4;
+	var KERNING:Int = 5;
 }
