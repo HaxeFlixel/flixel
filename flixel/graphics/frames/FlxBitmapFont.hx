@@ -2,10 +2,8 @@ package flixel.graphics.frames;
 
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.graphics.frames.bmfont.BMFontFileTypeHelper;
-import flixel.graphics.frames.bmfont.FlxBMFontParser;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
@@ -165,17 +163,15 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public static function fromAngelCode(source:FlxBitmapFontGraphicAsset, data:FlxAngelCodeAsset):FlxBitmapFont
 	{
-		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
 
 		if ((source is FlxFrame))
 		{
 			frame = cast source;
-			graphic = frame.parent;
 		}
 		else
 		{
-			graphic = FlxG.bitmap.add(cast source);
+			final graphic = FlxG.bitmap.add(cast source);
 			frame = graphic.imageFrame.frame;
 		}
 
@@ -185,7 +181,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 		font = new FlxBitmapFont(frame);
 
-		final fontInfo = FlxBMFontParser.parse(data);
+		final fontInfo = data.parse();
 
 		// how much to move the cursor when going to the next line.
 		font.lineHeight = fontInfo.common.lineHeight;

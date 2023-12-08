@@ -1,6 +1,5 @@
 package flixel.system;
 
-import haxe.io.Bytes;
 import haxe.macro.Expr;
 #if !macro
 import openfl.display.BitmapData;
@@ -13,9 +12,11 @@ import flixel.graphics.atlas.TexturePackerAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
+import flixel.graphics.frames.bmfont.BMFont;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
+import haxe.io.Bytes;
 import haxe.Json;
 import haxe.xml.Access;
 import openfl.Assets;
@@ -32,7 +33,6 @@ class GraphicVirtualInput extends BitmapData {}
 @:file("assets/images/ui/virtual-input.txt")
 class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
 
-typedef FlxAngelCodeAsset = OneOfThree<Xml, String, Bytes>;
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
@@ -40,6 +40,15 @@ typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+
+abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String from Bytes
+{
+	public inline function parse()
+	{
+		return BMFont.parse(cast this);
+	}
+}
+
 
 @:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")
 typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
