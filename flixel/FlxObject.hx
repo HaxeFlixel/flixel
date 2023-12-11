@@ -612,7 +612,12 @@ class FlxObject extends FlxBasic
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
 	 * `FlxObject` and `FlxSprite` default to `true`. `FlxText`, `FlxTileblock` and `FlxTilemap` default to `false`.
 	 */
-	public var moves(default, set):Bool = true;
+	public var moves(default, set):Bool = movesDefault;
+
+	/**
+	 * The default value of the `moves` variable.
+	 */
+	public static var movesDefault:Bool = true;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
