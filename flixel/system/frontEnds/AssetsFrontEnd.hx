@@ -370,19 +370,19 @@ class AssetsFrontEnd
 enum abstract FlxAssetType(String)
 {
 	/** Binary assets (data that is not readable as text) */
-	public var BINARY = "binary";
+	var BINARY = "binary";
 	
 	/** Font assets, such as *.ttf or *.otf files */
-	public var FONT = "font";
+	var FONT = "font";
 	
 	/** Image assets, such as *.png or *.jpg files */
-	public var IMAGE ="image";
+	var IMAGE ="image";
 	
 	/** Audio assets, such as *.ogg or *.wav files */
-	public var SOUND = "sound";
+	var SOUND = "sound";
 	
 	/** Text assets */
-	public var TEXT = "text";
+	var TEXT = "text";
 	
 	public function toOpenFlType()
 	{
