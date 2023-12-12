@@ -1,6 +1,5 @@
 package flixel.text;
 
-import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
@@ -26,9 +25,6 @@ using flixel.util.FlxUnicodeUtil;
 
 #if flash
 import openfl.geom.Rectangle;
-#end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
 #end
 
 // TODO: think about filters and text
@@ -659,9 +655,9 @@ class FlxText extends FlxSprite
 		if (Font != null)
 		{
 			var newFontName:String = Font;
-			if (Assets.exists(Font, AssetType.FONT))
+			if (FlxG.assets.exists(Font, FONT))
 			{
-				newFontName = Assets.getFont(Font).fontName;
+				newFontName = FlxG.assets.getFont(Font).fontName;
 			}
 
 			_defaultFormat.font = newFontName;

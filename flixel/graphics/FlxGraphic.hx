@@ -40,7 +40,7 @@ class FlxGraphic implements IFlxDestroyable
 
 		if (!Cache)
 		{
-			bitmap = FlxAssets.getBitmapData(Source);
+			bitmap = FlxG.assets.getBitmapDataWarn(Source);
 			if (bitmap == null)
 				return null;
 			return createGraphic(bitmap, Key, Unique, Cache);
@@ -51,7 +51,7 @@ class FlxGraphic implements IFlxDestroyable
 		if (graphic != null)
 			return graphic;
 
-		bitmap = FlxAssets.getBitmapData(Source);
+		bitmap = FlxG.assets.getBitmapDataWarn(Source);
 		if (bitmap == null)
 			return null;
 
@@ -546,7 +546,7 @@ class FlxGraphic implements IFlxDestroyable
 		if (assetsClass != null)
 			newBitmap = FlxAssets.getBitmapFromClass(assetsClass);
 		else if (assetsKey != null)
-			newBitmap = FlxAssets.getBitmapData(assetsKey);
+			newBitmap = FlxG.assets.getBitmapDataWarn(assetsKey);
 
 		if (newBitmap != null)
 			return FlxGraphic.getBitmap(newBitmap, unique);

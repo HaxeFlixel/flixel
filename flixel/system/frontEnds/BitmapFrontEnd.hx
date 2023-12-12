@@ -5,7 +5,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
 #if !flash
@@ -216,7 +216,7 @@ class BitmapFrontEnd
 	/**
 	 * Creates string key for further caching.
 	 *
-	 * @param	systemKey	The first string key to use as a base for a new key. It's usually a key from openfl.Assets ("assets/image.png").
+	 * @param	systemKey	The first string key to use as a base for a new key. It's usually an asset key ("assets/image.png").
 	 * @param	userKey		The second string key to use as a base for a new key. It's usually a key provided by the user
 	 * @param	unique		Whether generated key should be unique or not.
 	 * @return	Created key.
