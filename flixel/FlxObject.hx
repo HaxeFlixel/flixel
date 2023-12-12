@@ -88,6 +88,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * The default `moves` value of all future `FlxObjects`
+	 * @since 5.6.0
 	 */
 	public static var defaultMoves:Bool = true;
 
