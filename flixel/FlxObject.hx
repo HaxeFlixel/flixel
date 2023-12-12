@@ -87,6 +87,11 @@ class FlxObject extends FlxBasic
 	public static var SEPARATE_BIAS:Float = 4;
 
 	/**
+	 * The default `moves` value of all future `FlxObjects`
+	 */
+	public static var defaultMoves:Bool = true;
+
+	/**
 	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
 	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.LEFT` directly.
 	 */
@@ -607,11 +612,6 @@ class FlxObject extends FlxBasic
 	 * decreases their rendering performance by a factor of ~10x when using blitting!
 	 */
 	public var angle(default, set):Float = 0;
-
-	/**
-	 * The default `moves` value of all future `FlxObjects`
-	 */
-	public static var defaultMoves:Bool = true;
 
 	/**
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
