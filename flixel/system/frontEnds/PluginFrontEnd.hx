@@ -72,7 +72,7 @@ class PluginFrontEnd
 	 *                See the `FlxPath` or `FlxTimer` constructors for example usage.
 	 * @return  The plugin object, or null if no matching plugin was found.
 	 */
-	public inline function get<T:FlxBasic>(type:Class<T>):T
+	public function get<T:FlxBasic>(type:Class<T>):T
 	{
 		for (plugin in list)
 		{
