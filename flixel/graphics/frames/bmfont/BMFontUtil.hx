@@ -8,16 +8,16 @@ using StringTools;
 @:noCompletion
 class BMFontUtil
 {
-	public static var SPACE_REG = ~/ +/g;
+	public static var ATTRIBUTE_REG = ~/(\w+?)=((".*?")|.*?)(\s|$)/g;
 	public static var QUOTES_REG = ~/^"(.+)"$/;
 	public static function forEachAttribute(text:UnicodeString, callback:(key:String, value:UnicodeString)->Void)
 	{
-		for (s in SPACE_REG.split(text))
+		while (ATTRIBUTE_REG.match(text))
 		{
-			final split = s.split('=');
-			final key = parseKey(split[0]);
-			final value = parseValue(split[1]);
+			final key = ATTRIBUTE_REG.matched(1);
+			final value = ATTRIBUTE_REG.matched(2);
 			callback(key, value);
+			text = ATTRIBUTE_REG.matchedRight();
 		}
 	}
 	
