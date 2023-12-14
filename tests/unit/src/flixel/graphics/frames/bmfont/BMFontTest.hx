@@ -40,12 +40,12 @@ class BMFontTest extends FlxTest
 		Assert.areEqual(font.info.stretchH, 100);
 		Assert.areEqual(font.info.smooth, true);
 		Assert.areEqual(font.info.aa, 1);
-		Assert.areEqual(font.info.paddingUp, 1);
-		Assert.areEqual(font.info.paddingRight, 2);
-		Assert.areEqual(font.info.paddingDown, 3);
-		Assert.areEqual(font.info.paddingLeft, 4);
-		Assert.areEqual(font.info.spacingHoriz, 1);
-		Assert.areEqual(font.info.spacingVert, 2);
+		Assert.areEqual(font.info.padding.up, 1);
+		Assert.areEqual(font.info.padding.right, 2);
+		Assert.areEqual(font.info.padding.down, 3);
+		Assert.areEqual(font.info.padding.left, 4);
+		Assert.areEqual(font.info.spacing.x, 1);
+		Assert.areEqual(font.info.spacing.y, 2);
 		Assert.areEqual(font.info.outline, 0);
 
 		// COMMON

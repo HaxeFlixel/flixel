@@ -189,49 +189,34 @@ class FlxBitmapFont extends FlxFramesCollection
 		font.fontName = fontInfo.info.face;
 		font.bold = fontInfo.info.bold;
 		font.italic = fontInfo.info.italic;
-
-		var frame:FlxRect;
-		var frameHeight:Int;
-		var offset:FlxPoint;
-		var xOffset:Int, yOffset:Int, xAdvance:Int;
-
+		
 		for (char in fontInfo.chars)
 		{
-			frame = FlxRect.get();
+			final frame = FlxRect.get();
 			frame.x = char.x; // X position within the bitmap image file.
 			frame.y = char.y; // Y position within the bitmap image file.
 			frame.width = char.width; // Width of the character in the image file.
-			frameHeight = char.height;
-			frame.height = frameHeight; // Height of the character in the image file.
-
-			// Number of pixels to move right before drawing this character.
-			xOffset = char.xoffset;
-			//  Number of pixels to move down before drawing this character.
-			yOffset = char.yoffset;
-			//  Number of pixels to jump right after drawing this character.
-			xAdvance = char.xadvance;
-
-			offset = FlxPoint.get(xOffset, yOffset);
-
-			font.minOffsetX = (font.minOffsetX < -xOffset) ? -xOffset : font.minOffsetX;
-
+			frame.height = char.height; // Height of the character in the image file.
+			
+			font.minOffsetX = (font.minOffsetX < -char.xoffset) ? -char.xoffset : font.minOffsetX;
+			
 			if (char.id == -1)
 			{
 				throw 'Invalid font data!';
 			}
-
-			font.addCharFrame(char.id, frame, offset, xAdvance);
-
+			
+			font.addCharFrame(char.id, frame, FlxPoint.get(char.xoffset, char.yoffset), char.xadvance);
+			
 			if (char.id == SPACE_CODE)
 			{
-				font.spaceWidth = xAdvance;
+				font.spaceWidth = char.xadvance;
 			}
 			else
 			{
-				font.lineHeight = (font.lineHeight > frameHeight + yOffset) ? font.lineHeight : frameHeight + yOffset;
+				font.lineHeight = (font.lineHeight > char.height + char.yoffset) ? font.lineHeight : char.height + char.yoffset;
 			}
 		}
-
+		
 		font.updateSourceHeight();
 		return font;
 	}
