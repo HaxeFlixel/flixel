@@ -145,7 +145,7 @@ class BMFontPadding
 		this.left = left;
 	}
 	
-	static public inline function fromString(data:String):BMFontPadding
+	public static inline function fromString(data:String):BMFontPadding
 	{
 		final values = data.split(',');
 		return
@@ -157,7 +157,7 @@ class BMFontPadding
 		};
 	}
 	
-	static public inline function fromBytes(bytes:BytesInput):BMFontPadding
+	public static inline function fromBytes(bytes:BytesInput):BMFontPadding
 	{
 		return
 		{
@@ -181,13 +181,13 @@ class BMFontSpacing
 		this.y = y;
 	}
 	
-	static public function fromString(data:String):BMFontSpacing
+	public static function fromString(data:String):BMFontSpacing
 	{
 		final values = data.split(',');
 		return { x: Std.parseInt(values[0]), y: Std.parseInt(values[1]) };
 	}
 	
-	static public inline function fromBytes(bytes:BytesInput):BMFontSpacing
+	public static inline function fromBytes(bytes:BytesInput):BMFontSpacing
 	{
 		return { x: bytes.readByte(), y: bytes.readByte() };
 	}
