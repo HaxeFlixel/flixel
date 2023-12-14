@@ -119,14 +119,8 @@ class BMFontInfo
 			charset: String.fromCharCode(bytes.readByte()),
 			stretchH: bytes.readInt16(),
 			aa: bytes.readByte(),
-			padding:
-			{
-				up: bytes.readByte(),
-				right: bytes.readByte(),
-				down: bytes.readByte(),
-				left: bytes.readByte()
-			},
-			spacing: { x: bytes.readByte(), y: bytes.readByte() },
+			padding: BMFontPadding.fromBytes(new BytesInput(bytes.read(4))),
+			spacing: BMFontSpacing.fromBytes(new BytesInput(bytes.read(2))),
 			outline: bytes.readByte(),
 			face: bytes.readString(blockSize - 14 - 1)
 		};
@@ -143,7 +137,7 @@ class BMFontPadding
 	public var down:Int = 0;
 	public var left:Int = 0;
 	
-	public function new(up = 0, right = 0, down = 0, left = 0)
+	public inline function new(up = 0, right = 0, down = 0, left = 0)
 	{
 		this.up = up;
 		this.right = right;
@@ -151,7 +145,7 @@ class BMFontPadding
 		this.left = left;
 	}
 	
-	static public function fromString(data:String):BMFontPadding
+	static public inline function fromString(data:String):BMFontPadding
 	{
 		final values = data.split(',');
 		return
@@ -162,6 +156,17 @@ class BMFontPadding
 			left: Std.parseInt(values[3])
 		};
 	}
+	
+	static public inline function fromBytes(bytes:BytesInput):BMFontPadding
+	{
+		return
+		{
+			up: bytes.readByte(),
+			right: bytes.readByte(),
+			down: bytes.readByte(),
+			left: bytes.readByte()
+		};
+	}
 }
 
 @:structInit
@@ -170,7 +175,7 @@ class BMFontSpacing
 	public var x:Int = 0;
 	public var y:Int = 0;
 	
-	public function new(x = 0, y = 0)
+	public inline function new(x = 0, y = 0)
 	{
 		this.x = x;
 		this.y = y;
@@ -182,4 +187,8 @@ class BMFontSpacing
 		return { x: Std.parseInt(values[0]), y: Std.parseInt(values[1]) };
 	}
 	
+	static public inline function fromBytes(bytes:BytesInput):BMFontSpacing
+	{
+		return { x: bytes.readByte(), y: bytes.readByte() };
+	}
 }
