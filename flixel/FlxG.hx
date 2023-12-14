@@ -11,6 +11,7 @@ import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
+import flixel.system.frontEnds.AssetsFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -334,6 +335,12 @@ class FlxG
 	 */
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 
+	/**
+	 * Contains helper functions relating to retrieving assets
+	 * @since 5.6.0
+	 */
+	public static var assets(default, null):AssetsFrontEnd = new AssetsFrontEnd();
+	
 	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
