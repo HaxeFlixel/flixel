@@ -126,18 +126,4 @@ class BMFontChar
 		}
 		return chars;
 	}
-	
-	static function getCorrectLetter(letter:String)
-	{
-		// handle some special cases of letters in the xml files
-		return switch (letter)
-		{
-			case "space": ' ';
-			case "&quot;": '"';
-			case "&amp;": '&';
-			case "&gt;": '>';
-			case "&lt;": '<';
-			default: letter;
-		}
-	}
 }
