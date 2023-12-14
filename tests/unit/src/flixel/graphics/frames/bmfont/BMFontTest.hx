@@ -6,6 +6,27 @@ import massive.munit.Assert;
 class BMFontTest extends FlxTest
 {
 	@Test
+	function testTextFormat()
+	{
+		var text = 'info face="Test Font" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,2,3,4 spacing=1,2 outline=0
+common lineHeight=32 base=26 scaleW=256 scaleH=256 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="tester_0.png"
+chars count=3
+char id=64   x=0     y=0     width=26    height=26    xoffset=1     yoffset=6     xadvance=27    page=0  chnl=15
+char id=65   x=40    y=26    width=19    height=20    xoffset=-1    yoffset=6     xadvance=18    page=0  chnl=15
+char id=66   x=35    y=48    width=16    height=20    xoffset=1     yoffset=6     xadvance=18    page=0  chnl=15
+kernings count=3 
+kerning first=65  second=32  amount=-1  
+kerning first=65  second=84  amount=-2  
+kerning first=66  second=86  amount=-3  
+';
+
+		var font = BMFont.parse(cast text);
+		trace(font);
+		assertFont(font);
+	}
+
+	@Test
 	function testXMLFormat()
 	{
 		var xml = '<?xml version="1.0"?>
@@ -13,7 +34,7 @@ class BMFontTest extends FlxTest
 		  <info face="Test Font" size="32" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="1" aa="1" padding="1,2,3,4" spacing="1,2" outline="0"/>
 		  <common lineHeight="32" base="26" scaleW="256" scaleH="256" pages="1" packed="0" alphaChnl="1" redChnl="0" greenChnl="0" blueChnl="0"/>
 		  <pages>
-			<page id="0" file="tester_xml_0.png" />
+			<page id="0" file="tester_0.png" />
 		  </pages>
 		  <chars count="3">
 			<char id="64" x="0" y="0" width="26" height="26" xoffset="1" yoffset="6" xadvance="27" page="0" chnl="15" />
@@ -29,7 +50,11 @@ class BMFontTest extends FlxTest
 		';
 
 		var font = BMFont.parse(cast xml);
+		assertFont(font);
+	}
 
+	// This assumes the incoming font has a specific configuration we are checking for
+	private function assertFont(font:BMFont) {
 		// INFO
 		Assert.areEqual(font.info.face, "Test Font");
 		Assert.areEqual(font.info.size, 32);
@@ -63,7 +88,7 @@ class BMFontTest extends FlxTest
 		// PAGES
 		Assert.areEqual(font.pages.length, 1);
 		Assert.areEqual(font.pages[0].id, 0);
-		Assert.areEqual(font.pages[0].file, "tester_xml_0.png");
+		Assert.areEqual(font.pages[0].file, "tester_0.png");
 
 		// Chars
 		Assert.areEqual(font.chars.length, 3);
