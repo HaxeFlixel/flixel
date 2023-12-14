@@ -8,35 +8,21 @@ using StringTools;
 @:noCompletion
 class BMFontUtil
 {
-	public static var SPACE_REG = ~/ +/g;
-	public static var QUOTES_REG = ~/^"(.+)"$/;
+	static var attFinder = ~/(\w+?)=("?)(.*?)\2(?=\s|$)/;
+	
 	public static function forEachAttribute(text:UnicodeString, callback:(key:String, value:UnicodeString)->Void)
 	{
-		for (s in SPACE_REG.split(text))
+		var index = 0;
+		while (attFinder.match(text.substr(index)))
 		{
-			final split = s.split('=');
-			final key = parseKey(split[0]);
-			final value = parseValue(split[1]);
+			final key = attFinder.matched(1);
+			final value = attFinder.matched(3);
 			callback(key, value);
+			
+			final nextIndex = text.length - attFinder.matchedRight().length;
+			if (nextIndex == index)
+				throw 'Error parsing text: $text';
+			index = nextIndex;
 		}
-	}
-	
-	static inline function parseKey(text:String)
-	{
-		// return removeQuotes(text);// not needed
-		return text;
-	}
-	
-	static inline function parseValue(text:String)
-	{
-		return removeQuotes(text);
-	}
-	
-	/**
-	 * Removes surrounding quotes from text
-	 */
-	static inline function removeQuotes(text:String)
-	{
-		return QUOTES_REG.match(text) ? QUOTES_REG.matched(1) : text;
 	}
 }
