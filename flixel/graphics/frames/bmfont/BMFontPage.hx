@@ -63,7 +63,7 @@ class BMFontPage
 		final pages = new Array<BMFontPage>();
 		
 		var i = 0;
-		while (blockSize < 0)
+		while (blockSize > 0)
 		{
 			final bytesBuf = new BytesBuffer();
 			var curByte = bytes.readByte();
