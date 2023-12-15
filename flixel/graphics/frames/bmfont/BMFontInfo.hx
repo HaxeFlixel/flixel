@@ -107,17 +107,19 @@ class BMFontInfo
 	static function fromBytes(bytes:BytesInput)
 	{
 		final blockSize = bytes.readInt32();
+		final size = bytes.readInt16();
 		final bitField = bytes.readByte();
+		final charsetByte = bytes.readByte();
 		final fontInfo:BMFontInfo =
 		{
-			size: bytes.readInt16(),
+			size: size,
 			smooth: (bitField & 0x80) != 0,
 			unicode: (bitField & (0x80 >> 1)) != 0,
 			italic: (bitField & (0x80 >> 2)) != 0,
 			bold: (bitField & (0x80 >> 3)) != 0,
 			fixedHeight: (bitField & (0x80 >> 4)) != 0,
-			charset: String.fromCharCode(bytes.readByte()),
-			stretchH: bytes.readInt16(),
+			charset: charsetByte > 0 ? String.fromCharCode(charsetByte) : "",
+			stretchH: bytes.readUInt16(),
 			aa: bytes.readByte(),
 			padding: BMFontPadding.fromBytes(new BytesInput(bytes.read(4))),
 			spacing: BMFontSpacing.fromBytes(new BytesInput(bytes.read(2))),
