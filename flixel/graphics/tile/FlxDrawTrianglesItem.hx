@@ -7,6 +7,7 @@ import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxColor;
 import openfl.display.Graphics;
@@ -167,16 +168,21 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var i:Int = 0;
 		var currentVertexPosition:Int = prevVerticesLength;
 
+		var _cos:Float = 1.0;
+		var _sin:Float = 0.0;
+		if (angle != 0)
+		{
+			_cos = FlxMath.fastCos(angle * FlxAngle.TO_RAD);
+			_sin = FlxMath.fastSin(angle * FlxAngle.TO_RAD);
+		}
+
 		while (i < verticesLength)
 		{
 			var vertX:Float = (vertices[i] * scale.x) - originPoint.x;
-			var vertY:Float = (vertices[i + 1] * scale.x) - originPoint.y;
+			var vertY:Float = (vertices[i + 1] * scale.y) - originPoint.y;
 			
 			if (angle != 0)
 			{
-				final _cos:Float = Math.cos(angle * FlxAngle.TO_RAD);
-				final _sin:Float = Math.sin(angle * FlxAngle.TO_RAD);
-				
 				final _vx:Float = vertX;
 				final _vy:Float = vertY;
 				
