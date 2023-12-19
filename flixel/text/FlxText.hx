@@ -1249,4 +1249,4 @@ enum abstract FlxTextAlign(String) from String
 	}
 }
 
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end;
+private typedef AlignType = TextFormatAlign;

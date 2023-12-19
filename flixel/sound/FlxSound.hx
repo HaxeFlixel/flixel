@@ -749,9 +749,10 @@ class FlxSound extends FlxBasic
 	function set_pitch(v:Float):Float
 	{
 		if (_channel != null)
-			#if openfl_legacy
+		{
 			_channel.pitch = v;
-			#elseif (openfl < "9.3.2")
+
+			#if (openfl < "9.3.2")
 			@:privateAccess
 			if (_channel.__source != null)
 				_channel.__source.pitch = v;
@@ -760,6 +761,7 @@ class FlxSound extends FlxBasic
 			if (_channel.__audioSource != null)
 				_channel.__audioSource.pitch = v;
 			#end
+		}
 			
 		return _pitch = v;
 	}
