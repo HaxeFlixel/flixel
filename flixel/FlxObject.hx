@@ -87,6 +87,13 @@ class FlxObject extends FlxBasic
 	public static var SEPARATE_BIAS:Float = 4;
 
 	/**
+	 * The default `moves` value of all future `FlxObjects` and `FlxSprites`
+	 * Note: Has no effect on `FlxTexts`, `FlxTilemaps` and `FlxTileBlocks`
+	 * @since 5.6.0
+	 */
+	public static var defaultMoves:Bool = true;
+
+	/**
 	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
 	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.LEFT` directly.
 	 */
@@ -612,7 +619,7 @@ class FlxObject extends FlxBasic
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
 	 * `FlxObject` and `FlxSprite` default to `true`. `FlxText`, `FlxTileblock` and `FlxTilemap` default to `false`.
 	 */
-	public var moves(default, set):Bool = true;
+	public var moves(default, set):Bool = defaultMoves;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
