@@ -327,6 +327,8 @@ class FlxGamepad implements IFlxDestroyable
 	 */
 	public inline function checkStatusRaw(RawID:Int, Status:FlxInputState):Bool
 	{
+		if(buttons == null)
+			return false;
 		var button = buttons[RawID];
 		return button != null && button.hasState(Status);
 	}
