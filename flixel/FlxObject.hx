@@ -87,7 +87,8 @@ class FlxObject extends FlxBasic
 	public static var SEPARATE_BIAS:Float = 4;
 
 	/**
-	 * The default `moves` value of all future `FlxObjects`
+	 * The default `moves` value of all future `FlxObjects` and `FlxSprites`
+	 * Note: Has no effect on `FlxTexts`, `FlxTilemaps` and `FlxTileBlocks`
 	 * @since 5.6.0
 	 */
 	public static var defaultMoves:Bool = true;
