@@ -52,7 +52,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
-	 * 
+	 *
 	 * Prior to 4.9.0 it was useful to change this value, but that feature is deprecated.
 	 * Instead use the `defaultDrawTarget` argument in `FlxG.cameras.add `.
 	 * or`FlxG.cameras.setDefaultDrawTarget` .
@@ -60,11 +60,11 @@ class FlxCamera extends FlxBasic
 	 */
 	@:deprecated("`FlxCamera.defaultCameras` is deprecated, use `FlxG.cameras.setDefaultDrawTarget` instead")
 	public static var defaultCameras(get, set):Array<FlxCamera>;
-	
+
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
 	 * cameras as their parent.
-	 * 
+	 *
 	 * This is the non-deprecated list that the public `defaultCameras` proxies. Allows flixel classes
 	 * to use it without warning.
 	 */
@@ -221,7 +221,7 @@ class FlxCamera extends FlxBasic
 	 * WARNING: setting this to `false` on blitting targets is very expensive.
 	 */
 	public var pixelPerfectRender:Bool;
-	
+
 	/**
 	 * If true, screen shake will be rounded to game pixels. If null, pixelPerfectRender is used.
 	 * @since 5.4.0
@@ -634,6 +634,8 @@ class FlxCamera extends FlxBasic
 		{
 			itemToReturn = new FlxDrawItem();
 		}
+
+		if (graphic.isDestroyed) throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
 
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
@@ -1168,11 +1170,11 @@ class FlxCamera extends FlxBasic
 		// Make sure we didn't go outside the camera's bounds
 		bindScrollPos(scroll);
 	}
-	
+
 	/**
 	 * Takes the desired scroll position and restricts it to the camera's min/max scroll properties.
 	 * This modifies the given point.
-	 * 
+	 *
 	 * @param   scrollPos  The scroll position
 	 * @return  The same point passed in, moved within the scroll bounds
 	 * @since 5.4.0
@@ -1229,7 +1231,7 @@ class FlxCamera extends FlxBasic
 				{
 					_scrollTarget.y -= viewHeight;
 				}
-				
+
 				// without this we see weird behavior when switching to SCREEN_BY_SCREEN at arbitrary scroll positions
 				bindScrollPos(_scrollTarget);
 			}
@@ -1348,16 +1350,16 @@ class FlxCamera extends FlxBasic
 					var shakePixels = FlxG.random.float(-1, 1) * _fxShakeIntensity * width;
 					if (pixelPerfect)
 						shakePixels = Math.round(shakePixels);
-					
+
 					flashSprite.x += shakePixels * zoom * FlxG.scaleMode.scale.x;
 				}
-				
+
 				if (_fxShakeAxes.y)
 				{
 					var shakePixels = FlxG.random.float(-1, 1) * _fxShakeIntensity * height;
 					if (pixelPerfect)
 						shakePixels = Math.round(shakePixels);
-					
+
 					flashSprite.y += shakePixels * zoom * FlxG.scaleMode.scale.y;
 				}
 			}
@@ -1868,11 +1870,11 @@ class FlxCamera extends FlxBasic
 		updateFlashOffset();
 		setScale(scaleX, scaleY);
 	}
-	
+
 	/**
 	 * The size and position of this camera's margins, via `viewMarginLeft`, `viewMarginTop`, `viewWidth`
 	 * and `viewHeight`.
-	 * 
+	 *
 	 * Notes: Deprecated, in 4.11.0 this was made public, but the wording is confusing.
 	 * In flixel 6.0.0 this will be changed to use `viewX`, `viewY`, `viewWidth` and `viewHeight`,
 	 * meaning, this will return the world coordinates of the camera.
@@ -1883,10 +1885,10 @@ class FlxCamera extends FlxBasic
 	{
 		if (rect == null)
 			rect = FlxRect.get();
-		
+
 		return rect.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
 	}
-	
+
 	/**
 	 * The size and position of this camera's margins, via `viewMarginLeft`, `viewMarginTop`, `viewWidth`
 	 * and `viewHeight`.
@@ -1896,10 +1898,10 @@ class FlxCamera extends FlxBasic
 	{
 		if (rect == null)
 			rect = FlxRect.get();
-		
+
 		return rect.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
 	}
-	
+
 	/**
 	 * Checks whether this camera contains a given point or rectangle, in
 	 * screen coordinates.
@@ -1912,7 +1914,7 @@ class FlxCamera extends FlxBasic
 		point.putWeak();
 		return contained;
 	}
-	
+
 	/**
 	 * Checks whether this camera contains a given rectangle, in screen coordinates.
 	 * @since 4.11.0
@@ -2060,7 +2062,7 @@ class FlxCamera extends FlxBasic
 
 	@:deprecated("Use calcMarginY")
 	inline function calcOffsetY():Void calcMarginY();
-	
+
 	inline function calcMarginX():Void
 	{
 		viewMarginX = 0.5 * width * (scaleX - initialZoom) / scaleX;
@@ -2070,104 +2072,104 @@ class FlxCamera extends FlxBasic
 	{
 		viewMarginY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 	}
-	
+
 	static inline function get_defaultCameras():Array<FlxCamera>
 	{
 		return _defaultCameras;
 	}
-	
+
 	static inline function set_defaultCameras(value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _defaultCameras = value;
 	}
-	
+
 	inline function get_viewMarginLeft():Float
 	{
 		return viewMarginX;
 	}
-	
+
 	inline function get_viewMarginTop():Float
 	{
 		return viewMarginY;
 	}
-	
+
 	inline function get_viewMarginRight():Float
 	{
 		return width - viewMarginX;
 	}
-	
+
 	inline function get_viewMarginBottom():Float
 	{
 		return height - viewMarginY;
 	}
-	
+
 	inline function get_viewWidth():Float
 	{
 		return width - viewMarginX * 2;
 	}
-	
+
 	inline function get_viewHeight():Float
 	{
 		return height - viewMarginY * 2;
 	}
-	
+
 	inline function get_viewX():Float
 	{
 		return scroll.x + viewMarginX;
 	}
-	
+
 	inline function get_viewY():Float
 	{
 		return scroll.y + viewMarginY;
 	}
-	
+
 	inline function get_viewLeft():Float
 	{
 		return viewX;
 	}
-	
+
 	inline function get_viewTop():Float
 	{
 		return viewY;
 	}
-	
+
 	inline function get_viewRight():Float
 	{
 		return scroll.x + viewMarginRight;
 	}
-	
+
 	inline function get_viewBottom():Float
 	{
 		return scroll.y + viewMarginBottom;
 	}
-	
+
 	// deprecated vars
 
 	inline function get_viewOffsetX():Float
 	{
 		return viewMarginX;
 	}
-	
+
 	inline function set_viewOffsetX(value:Float):Float
 	{
 		return viewMarginX = value;
 	}
-	
+
 	inline function get_viewOffsetY():Float
 	{
 		return viewMarginY;
 	}
-	
+
 	inline function set_viewOffsetY(value:Float):Float
 	{
 		return viewMarginY = value;
 	}
-	
+
 	inline function get_viewOffsetWidth():Float
 	{
 		return viewMarginRight;
 	}
-	
+
 	inline function get_viewOffsetHeight():Float
 	{
 		return viewMarginBottom;
@@ -2182,7 +2184,7 @@ class FlxCamera extends FlxBasic
 	{
 		return filters = Value;
 	}
-	
+
 	/**
 	 * Do not use the following fields! They only exists because FlxCamera extends FlxBasic,
 	 * we're hiding them because they've only caused confusion.
@@ -2190,19 +2192,19 @@ class FlxCamera extends FlxBasic
 	@:deprecated("don't reference camera.camera")
 	@:noCompletion
 	override function get_camera():FlxCamera throw "don't reference camera.camera";
-	
+
 	@:deprecated("don't reference camera.camera")
 	@:noCompletion
 	override function set_camera(value:FlxCamera):FlxCamera throw "don't reference camera.camera";
-	
+
 	@:deprecated("don't reference camera.cameras")
 	@:noCompletion
 	override function get_cameras():Array<FlxCamera> throw "don't reference camera.cameras";
-	
+
 	@:deprecated("don't reference camera.cameras")
 	@:noCompletion
 	override function set_cameras(value:Array<FlxCamera>):Array<FlxCamera> throw "don't reference camera.cameras";
-	
+
 }
 
 enum FlxCameraFollowStyle
