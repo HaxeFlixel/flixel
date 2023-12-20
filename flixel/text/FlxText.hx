@@ -1224,7 +1224,7 @@ enum abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 
-	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
 	{
 		return switch (align)
 		{
@@ -1236,7 +1236,7 @@ enum abstract FlxTextAlign(String) from String
 		}
 	}
 
-	public static function toOpenFL(align:FlxTextAlign):AlignType
+	public static function toOpenFL(align:FlxTextAlign):TextFormatAlign
 	{
 		return switch (align)
 		{
@@ -1248,5 +1248,3 @@ enum abstract FlxTextAlign(String) from String
 		}
 	}
 }
-
-private typedef AlignType = TextFormatAlign;
