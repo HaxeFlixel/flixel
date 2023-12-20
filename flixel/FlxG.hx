@@ -348,16 +348,12 @@ class FlxG
 	public static function resizeWindow(width:Int, height:Int):Void
 	{
 		#if desktop
-		#if openfl_legacy
-		stage.resize(width, height);
-		#else
 		#if air
 		var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
 		window.width = width;
 		window.height = height;
 		#else
 		Lib.application.window.resize(width, height);
-		#end
 		#end
 		#end
 	}

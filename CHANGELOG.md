@@ -2,6 +2,7 @@
 
 #### New features:
 - `FlxGraphic`: Added `isDestroyed` ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxBitmapFont`: Support for all BMFont output file types ([#2949](https://github.com/HaxeFlixel/flixel/pull/2949))
 
 #### Changes and improvements:
 - `FlxMouse`: Made the private `_cursor` field public, and renamed to `cursor` ([#2969](https://github.com/HaxeFlixel/flixel/pull/2969))
@@ -18,6 +19,10 @@
 
 #### Bugfixes:
 - Prevent crash when drawing a sprite with a destroyed graphic, by loading the placeholder logo. ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxG`: Fix HTML5 reflection issue where `state.switchTo` is null ([#2985](https://github.com/HaxeFlixel/flixel/pull/2985))
+- `FlxBitmapText`: Default `text` to `""` instead of `null` ([#2976](https://github.com/HaxeFlixel/flixel/pull/2976))
+- `FlxPlugin`: Fix inline error on haxe 4.3.3 ([#2986](https://github.com/HaxeFlixel/flixel/pull/2986))
+- `FlxKeyboard`: Fix plus keybind on Mac ([#2987](https://github.com/HaxeFlixel/flixel/pull/2987))
 
 5.5.0 (November 8, 2023)
 
