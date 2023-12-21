@@ -16,6 +16,12 @@
 		<assets path="assets/images/ui/button.png" rename="flixel/images/ui/button.png" embed="true" />
 		<assets path="assets/images/logo/default.png" rename="flixel/images/logo/default.png" embed="true" />
 	</section>
+
+	<section if="android">
+		<config>
+			<android appCategory="game" />
+		</config>
+	</section>
 	
 	<set name="legacy" unless="next" />
 	
