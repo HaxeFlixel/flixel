@@ -895,6 +895,16 @@ class FlxGamepad implements IFlxDestroyable
 			LabelValuePair.weak("deadZone", deadZone)
 		]);
 	}
+	
+	/**
+	 * Rumble
+	 */
+	public inline function rumble(duration:Int, largeStrength:Double, smallStrength:Double):Void
+	{
+		#if FLX_GAMEINPUT_API
+		_device.rumble(duration, largeStrength, smallStrength);
+		#end
+	}
 }
 
 enum FlxGamepadDeadZoneMode
