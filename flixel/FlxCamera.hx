@@ -850,7 +850,23 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
+	// backwards compatibility for FlxClothSprite
+	#if flash
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
+	{
+		drawTrianglesAdvanced(graphic, vertices, indices, uvtData, colors, position, 0, null, null, blend, repeat, smoothing, transform, shader);
+	}
+	#else
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+			?position:FlxPoint, angle:Float = 0, ?scale:FlxPoint, ?origin:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false,
+			?transform:ColorTransform, ?shader:FlxShader):Void
+	{
+		drawTrianglesAdvanced(graphic, vertices, indices, uvtData, colors, position, angle, scale, origin, blend, repeat, smoothing, transform, shader);
+	}
+	#end
+	
+	public function drawTrianglesAdvanced(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, angle:Float = 0, ?scale:FlxPoint, ?origin:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false,
 			?transform:ColorTransform, ?shader:FlxShader):Void
 	{
@@ -939,7 +955,7 @@ class FlxCamera extends FlxBasic
 			drawItem.addTriangles(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds, transform);
 			#else
 			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds);
+			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
 			#end
 		}
 	}
