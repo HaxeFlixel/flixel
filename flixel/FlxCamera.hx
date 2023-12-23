@@ -955,7 +955,7 @@ class FlxCamera extends FlxBasic
 			drawItem.addTriangles(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds, transform);
 			#else
 			final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+			drawItem.addTrianglesAdvanced(vertices, indices, uvtData, colors, position, angle, scale, origin, _bounds);
 			#end
 		}
 	}
