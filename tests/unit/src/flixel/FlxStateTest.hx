@@ -42,7 +42,7 @@ class FlxStateTest extends FlxTest
 		switchState(finalState);
 		Assert.areEqual(finalState, FlxG.state);
 
-		switchState(new FlxState());
+		switchState(FlxState.new);
 		Assert.areEqual(finalState, FlxG.state);
 
 		resetState();
@@ -69,9 +69,10 @@ class FlxStateTest extends FlxTest
 
 class FinalState extends FlxState
 {
-	override function switchTo(nextState:FlxState):Bool
+	/* prevents state switches */
+	override function startOutro(onOutroComplete:()->Void)
 	{
-		return false;
+		// startOutro(onOutroComplete); 
 	}
 }
 

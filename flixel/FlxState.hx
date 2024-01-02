@@ -45,7 +45,11 @@ class FlxState extends FlxGroup
 	 * The natural background color the cameras default to. In `AARRGGBB` format.
 	 */
 	public var bgColor(get, set):FlxColor;
-
+	
+	@:allow(flixel.FlxGame)
+	@:allow(flixel.FlxG)
+	var _constructor:()->FlxState;
+	
 	/**
 	 * Current substate. Substates also can be nested.
 	 */
@@ -83,7 +87,12 @@ class FlxState extends FlxGroup
 
 	@:noCompletion
 	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
-    
+	
+	public function new ()
+	{
+		super(0);
+	}
+	
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
@@ -156,11 +165,15 @@ class FlxState extends FlxGroup
 		}
 	}
 
-	override public function destroy():Void
+	override function destroy():Void
 	{
+		_constructor = function():FlxState
+		{
+			throw "Attempting to resetState while the current state is destroyed";
+		};
 		FlxDestroyUtil.destroy(_subStateOpened);
 		FlxDestroyUtil.destroy(_subStateClosed);
-        
+		
 		if (subState != null)
 		{
 			subState.destroy();

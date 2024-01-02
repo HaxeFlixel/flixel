@@ -27,6 +27,7 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
+import flixel.util.typeLimit.NextState;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -369,17 +370,27 @@ class FlxG
 	/**
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
+	 * @param   nextState  A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
+	 *                     Note: Before Flixel 6, this took a `FlxState` instance, this has been
+	 *                     deprecated, but is still available, for backwards compatibility.
 	 */
-	public static function switchState(nextState:FlxState):Void
+	public static inline function switchState(nextState:NextState):Void
 	{
 		final stateOnCall = FlxG.state;
-		// Use reflection to avoid deprecation warning on switchTo
-		if (Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]))
+		
+		var canSwitch = true;
+		if (nextState.isInstance())
+		{
+			// Use reflection to avoid deprecation warning on switchTo
+			canSwitch = Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
+		}
+		
+		if (canSwitch)
 		{
 			state.startOutro(function()
 			{
 				if (FlxG.state == stateOnCall)
-					game._requestedState = nextState;
+					game._nextState = nextState;
 				else
 					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
 			});
@@ -392,7 +403,10 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		switchState(Type.createInstance(Type.getClass(state), []));
+		if (state == null || state._constructor == null)
+			FlxG.log.error("FlxG.resetState was called while switching states");
+		else
+			switchState(state._constructor);
 	}
 
 	/**
