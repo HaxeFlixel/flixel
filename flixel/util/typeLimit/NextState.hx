@@ -47,13 +47,13 @@ abstract NextState(Dynamic)
 		return cast func;
 	}
 	
-	@:allow(flixel.FlxG.switchState)
+	@:allow(flixel.FlxG)
 	inline function isInstance():Bool
 	{
 		return this is FlxState;
 	}
 	
-	@:allow(flixel.FlxG.switchState)
+	@:allow(flixel.FlxG)
 	inline function isClass():Bool
 	{
 		return this is Class;

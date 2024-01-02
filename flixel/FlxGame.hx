@@ -629,7 +629,7 @@ class FlxGame extends Sprite
 
 		// Finally assign and create the new state
 		_state = _nextState.createInstance();
-		_state._constructor = _nextState.getConstructor();
+		_state._constructor = _nextState;
 		_nextState = null;
 
 		if (_gameJustStarted)

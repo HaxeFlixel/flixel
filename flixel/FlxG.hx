@@ -378,14 +378,7 @@ class FlxG
 	{
 		final stateOnCall = FlxG.state;
 		
-		var canSwitch = true;
-		if (nextState.isInstance())
-		{
-			// Use reflection to avoid deprecation warning on switchTo
-			canSwitch = Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
-		}
-		
-		if (canSwitch)
+		if (!nextState.isInstance() || canSwitchTo(cast nextState))
 		{
 			state.startOutro(function()
 			{
@@ -396,6 +389,12 @@ class FlxG
 			});
 		}
 	}
+	
+	static function canSwitchTo(nextState:FlxState)
+	{
+		// Use reflection to avoid deprecation warning on switchTo
+		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
+	}
 
 	/**
 	 * Request a reset of the current game state.
@@ -405,8 +404,11 @@ class FlxG
 	{
 		if (state == null || state._constructor == null)
 			FlxG.log.error("FlxG.resetState was called while switching states");
-		else
+		else if(!state._constructor.isInstance())
 			switchState(state._constructor);
+		else
+			// create new instance here so that state.switchTo is called (for backwards compatibility)
+			switchState(Type.createInstance(Type.getClass(state), []));
 	}
 
 	/**

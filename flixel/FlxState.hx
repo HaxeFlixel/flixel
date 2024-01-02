@@ -3,7 +3,8 @@ package flixel;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.FlxSignal;
+import flixel.util.typeLimit.NextState;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
@@ -46,9 +47,12 @@ class FlxState extends FlxGroup
 	 */
 	public var bgColor(get, set):FlxColor;
 	
+	/**
+	 * The specific argument that was passed into `switchState` or `FlxGame.new`
+	 */
 	@:allow(flixel.FlxGame)
 	@:allow(flixel.FlxG)
-	var _constructor:()->FlxState;
+	var _constructor:NextState;
 	
 	/**
 	 * Current substate. Substates also can be nested.
