@@ -390,10 +390,16 @@ class FlxG
 		}
 	}
 	
-	static function canSwitchTo(nextState:FlxState)
+	/**
+	 * Calls state.switchTo(nextState) without a deprecation warning.
+	 * This will be removed in Flixel 6.0.0
+	 * @since 5.6.0
+	 */
+	@:haxe.warning("-WDeprecated")
+	@:noCompletion
+	static inline function canSwitchTo(nextState:FlxState)
 	{
-		// Use reflection to avoid deprecation warning on switchTo
-		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
+		return state.switchTo(nextState);
 	}
 
 	/**
