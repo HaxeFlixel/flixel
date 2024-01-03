@@ -891,7 +891,11 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Rumble
+	 * Rumble the controller.
+	 *
+	 * @param	duration The length of the rumble effect in milliseconds
+	 * @param	largeStrength The strength to be applied to the large (left / low frequency) motor.
+	 * @param	smallStrength The strength to be applied to the small (right / high frequency) motor.
 	 */
 	public inline function rumble(duration:Int, largeStrength:Float, smallStrength:Float):Void
 	{
