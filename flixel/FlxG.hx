@@ -395,11 +395,16 @@ class FlxG
 	 * This will be removed in Flixel 6.0.0
 	 * @since 5.6.0
 	 */
-	@:haxe.warning("-WDeprecated")
 	@:noCompletion
-	static inline function canSwitchTo(nextState:FlxState)
+	@:haxe.warning("-WDeprecated")
+	static function canSwitchTo(nextState:FlxState)
 	{
+		#if (haxe < version("4.3.0"))
+		// Use reflection because @:haxe.warning("-WDeprecated") doesn't work until haxe 4.3
+		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
+		#else
 		return state.switchTo(nextState);
+		#end
 	}
 
 	/**
