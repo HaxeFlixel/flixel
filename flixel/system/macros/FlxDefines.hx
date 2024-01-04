@@ -3,6 +3,10 @@ package flixel.system.macros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+#if (flixel_addons >= "3.2.2")
+import flixel.addons.system.macros.FlxAddonDefines;
+#end
+
 
 using StringTools;
 
