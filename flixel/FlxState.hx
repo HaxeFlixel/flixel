@@ -11,10 +11,6 @@ import flixel.util.typeLimit.NextState;
  * It is for all intents and purpose a fancy `FlxGroup`. And really, it's not even that fancy.
  */
 @:keepSub // workaround for HaxeFoundation/haxe#3749
-#if FLX_NO_UNIT_TEST
-@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("switchTo", "switchTo is deprecated, use startOutro"))
-#end
-// show deprecation warning when `switchTo` is overriden in dereived classes
 class FlxState extends FlxGroup
 {
 	/**
@@ -52,7 +48,7 @@ class FlxState extends FlxGroup
 	 */
 	@:allow(flixel.FlxGame)
 	@:allow(flixel.FlxG)
-	var _constructor:NextState;
+	var _constructor:()->FlxState;
 	
 	/**
 	 * Current substate. Substates also can be nested.
@@ -105,7 +101,7 @@ class FlxState extends FlxGroup
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
+	override function draw():Void
 	{
 		if (persistentDraw || subState == null)
 			super.draw();
@@ -186,18 +182,6 @@ class FlxState extends FlxGroup
 		super.destroy();
 	}
 
-	/**
-	 * Called from `FlxG.switchState()`. If `false` is returned, the state
-	 * switch is cancelled - the default implementation returns `true`.
-	 *
-	 * Useful for customizing state switches, e.g. for transition effects.
-	 */
-	@:deprecated("switchTo is deprecated, use startOutro")
-	public function switchTo(nextState:FlxState):Bool
-	{
-		return true;
-	}
-	
 	/**
 	 * Called from `FlxG.switchState()`, when `onOutroComplete` is called, the actual state
 	 * switching will happen.

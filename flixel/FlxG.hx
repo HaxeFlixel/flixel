@@ -377,34 +377,13 @@ class FlxG
 	public static inline function switchState(nextState:NextState):Void
 	{
 		final stateOnCall = FlxG.state;
-		
-		if (!nextState.isInstance() || canSwitchTo(cast nextState))
+		state.startOutro(function()
 		{
-			state.startOutro(function()
-			{
-				if (FlxG.state == stateOnCall)
-					game._nextState = nextState;
-				else
-					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
-			});
-		}
-	}
-	
-	/**
-	 * Calls state.switchTo(nextState) without a deprecation warning.
-	 * This will be removed in Flixel 6.0.0
-	 * @since 5.6.0
-	 */
-	@:noCompletion
-	@:haxe.warning("-WDeprecated")
-	static function canSwitchTo(nextState:FlxState)
-	{
-		#if (haxe < version("4.3.0"))
-		// Use reflection because @:haxe.warning("-WDeprecated") doesn't work until haxe 4.3
-		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
-		#else
-		return state.switchTo(nextState);
-		#end
+			if (FlxG.state == stateOnCall)
+				game._nextState = nextState;
+			else
+				FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+		});
 	}
 
 	/**
@@ -413,13 +392,7 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		if (state == null || state._constructor == null)
-			FlxG.log.error("FlxG.resetState was called while switching states");
-		else if(!state._constructor.isInstance())
-			switchState(state._constructor);
-		else
-			// create new instance here so that state.switchTo is called (for backwards compatibility)
-			switchState(Type.createInstance(Type.getClass(state), []));
+		switchState(state._constructor);
 	}
 
 	/**
