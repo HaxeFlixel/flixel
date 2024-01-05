@@ -1,3 +1,8 @@
+6.0.0 (TBD)
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+
 5.6.0 (TBD)
 
 #### New features:
