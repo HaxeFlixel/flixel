@@ -14,7 +14,7 @@ class FlxColorTransformUtil
 		return transform;
 	}
 
-	public static function setOffsets(transform:ColorTransform, red:Int, green:Int, blue:Int, alpha:Int):ColorTransform
+	public static function setOffsets(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
 	{
 		transform.redOffset = red;
 		transform.greenOffset = green;

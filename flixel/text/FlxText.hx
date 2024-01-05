@@ -1,11 +1,12 @@
 package flixel.text;
 
-import flash.display.BitmapData;
-import flash.geom.ColorTransform;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
+import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -14,11 +15,11 @@ import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
-import openfl.Assets;
 
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxUnicodeUtil;
@@ -35,11 +36,16 @@ import openfl.utils.AssetType;
 /**
  * Extends FlxSprite to support rendering text. Can tint, fade, rotate and scale just like a sprite. Doesn't really animate
  * though. Also does nice pixel-perfect centering on pixel fonts as long as they are only one-liners.
+ * 
+ * ## Autosizing
+ * 
+ * By default `FlxText` is autosized to fit it's text. 
+ * To set a fixed size, use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
  */
 class FlxText extends FlxSprite
 {
 	/**
-	 * 2px gutter on both top and bottom
+	 * 4px gutter at the bottom when the field has automatic height
 	 */
 	static inline var VERTICAL_GUTTER:Int = 4;
 
@@ -122,13 +128,27 @@ class FlxText extends FlxSprite
 	/**
 	 * The width of the `TextField` object used for bitmap generation for this `FlxText` object.
 	 * Use it when you want to change the visible width of text. Enables `autoSize` if `<= 0`.
+	 * 
+	 * **NOTE:** auto width always implies auto height
 	 */
 	public var fieldWidth(get, set):Float;
 
 	/**
-	 * Whether the `fieldWidth` should be determined automatically. Requires `wordWrap` to be `false`.
+	 * The height of `TextField` object used for bitmap generation for this `FlxText` object.
+	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
+	 * 
+	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
+	 * @since 5.4.0
+	 */
+	public var fieldHeight(get, set):Float;
+
+	/**
+	 * Whether the `fieldWidth` and `fieldHeight` should be determined automatically. 
+	 * Requires `wordWrap` to be `false`.
 	 */
 	public var autoSize(get, set):Bool;
+
+	var _autoHeight:Bool = true;
 
 	/**
 	 * Offset that is applied to the shadow border style, if active.
@@ -518,6 +538,12 @@ class FlxText extends FlxSprite
 		super.updateHitbox();
 	}
 
+	override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		regenGraphic();
+		return super.getScreenBounds(newRect, camera);
+	}
+
 	function set_fieldWidth(value:Float):Float
 	{
 		if (textField == null)
@@ -527,6 +553,8 @@ class FlxText extends FlxSprite
 		{
 			wordWrap = false;
 			autoSize = true;
+			// auto width always implies auto height
+			_autoHeight = true;
 		}
 		else
 		{
@@ -542,6 +570,29 @@ class FlxText extends FlxSprite
 	function get_fieldWidth():Float
 	{
 		return (textField != null) ? textField.width : 0;
+	}
+
+	function get_fieldHeight():Float
+	{
+		return (textField != null) ? textField.height : 0;
+	}
+
+	function set_fieldHeight(value:Float):Float
+	{
+		if (textField == null)
+			return value;
+
+		if (value <= 0)
+		{
+			_autoHeight = true;
+		}
+		else
+		{
+			_autoHeight = false;
+			textField.height = value;
+		}
+		_regen = true;
+		return value;
 	}
 
 	function set_autoSize(value:Bool):Bool
@@ -786,8 +837,10 @@ class FlxText extends FlxSprite
 		}
 
 		var newWidth:Int = Math.ceil(textField.width);
+		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
+		var vertGutter = _autoHeight ? VERTICAL_GUTTER : 0;
 		// Account for gutter
-		var newHeight:Int = Math.ceil(textField.textHeight) + VERTICAL_GUTTER;
+		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
@@ -798,14 +851,15 @@ class FlxText extends FlxSprite
 		if (oldWidth != newWidth || oldHeight != newHeight)
 		{
 			// Need to generate a new buffer to store the text graphic
-			height = newHeight;
 			var key:String = FlxG.bitmap.getUniqueKey("text");
 			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
 
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
-			frameHeight = newHeight;
-			textField.height = height * 1.2;
+
+			if (_autoHeight)
+				textField.height = newHeight;
+
 			_flashRect.x = 0;
 			_flashRect.y = 0;
 			_flashRect.width = newWidth;
@@ -823,7 +877,7 @@ class FlxText extends FlxSprite
 			}
 		}
 
-		if (textField != null && textField.text != null && textField.text.length > 0)
+		if (textField != null && textField.text != null)
 		{
 			// Now that we've cleared a buffer, we need to actually render the text to it
 			copyTextFormat(_defaultFormat, _formatAdjusted);
@@ -1170,7 +1224,7 @@ enum abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 
-	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
 	{
 		return switch (align)
 		{
@@ -1182,17 +1236,15 @@ enum abstract FlxTextAlign(String) from String
 		}
 	}
 
-	public static function toOpenFL(align:FlxTextAlign):AlignType
+	public static function toOpenFL(align:FlxTextAlign):TextFormatAlign
 	{
 		return switch (align)
 		{
-			case LEFT: TextFormatAlign.LEFT;
-			case CENTER: TextFormatAlign.CENTER;
-			case RIGHT: TextFormatAlign.RIGHT;
-			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
+			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
+			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
+			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
 		}
 	}
 }
-
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end;

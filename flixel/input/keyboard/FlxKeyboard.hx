@@ -1,7 +1,7 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import flash.events.KeyboardEvent;
+import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;
@@ -51,6 +51,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		_nativeCorrection.set("123_222", FlxKey.LBRACKET);
 		_nativeCorrection.set("125_187", FlxKey.RBRACKET);
 		_nativeCorrection.set("126_233", FlxKey.GRAVEACCENT);
+		#if mac _nativeCorrection.set("0_43", FlxKey.PLUS); #end
 
 		_nativeCorrection.set("0_80", FlxKey.F1);
 		_nativeCorrection.set("0_81", FlxKey.F2);

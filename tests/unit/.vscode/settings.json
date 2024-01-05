@@ -1,5 +1,5 @@
 {
 	"haxeTestExplorer.testCommand": [
-		"haxelib", "run", "lime", "test", "neko", "--haxelib=test-adapter"
+		"haxelib", "run", "lime", "test", "cpp", "--haxelib=test-adapter"
 	]
 }

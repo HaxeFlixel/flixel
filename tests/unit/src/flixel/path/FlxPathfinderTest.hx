@@ -7,6 +7,7 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
 import haxe.PosInfos;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 using StringTools;
 
@@ -23,13 +24,14 @@ class FlxPathfinderTest extends FlxTest
 	@Before
 	function before()
 	{
+		final bitmapData = new BitmapData(UNIT * 16, UNIT);
 		bigMover = new BigMoverPathfinder(2, 2);
 		
 		map4x4 = new FlxTilemap();
-		map4x4.loadMapFromCSV(TileData.CSV_4X4, FlxGraphic.fromClass(GraphicAuto), UNIT, UNIT, AUTO);
+		map4x4.loadMapFromCSV(TileData.CSV_4X4, bitmapData, UNIT, UNIT, AUTO);
 
 		map6x5 = new FlxTilemap();
-		map6x5.loadMapFromCSV(TileData.CSV_6X5, FlxGraphic.fromClass(GraphicAuto), UNIT, UNIT, AUTO);
+		map6x5.loadMapFromCSV(TileData.CSV_6X5, bitmapData, UNIT, UNIT, AUTO);
 
 		_start = FlxPoint.get();
 		_end = FlxPoint.get();
@@ -129,14 +131,14 @@ class FlxPathfinderTest extends FlxTest
 
 class TileData
 {
-	static public inline var CSV_4X4
+	public static inline var CSV_4X4
 		= "0,1,0,0\n"
 		+ "0,1,0,0\n"
 		+ "0,0,1,0\n"
 		+ "0,0,0,0\n"
 		;
 
-	static public inline var CSV_6X5 
+	public static inline var CSV_6X5  
 		= "0,0,1,1,0,0\n"
 		+ "0,0,1,1,0,0\n"
 		+ "0,0,0,1,0,0\n"

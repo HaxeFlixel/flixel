@@ -1,8 +1,8 @@
 package flixel.system.debug.stats;
 
-import flash.display.BitmapData;
-import flash.system.System;
-import flash.text.TextField;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.system.FlxLinkedList;
@@ -141,10 +141,8 @@ class Stats extends Window
 			drawMethod =
 				#if FLX_RENDER_TRIANGLE
 				"DrawTrian.";
-				#elseif FLX_DRAW_QUADS
-				"DrawQuads";
 				#else
-				"DrawTiles";
+				"DrawQuads";
 				#end
 			drawMethod = '\n$drawMethod:';
 		}

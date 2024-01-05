@@ -1,11 +1,11 @@
 package flixel.system;
 
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.Lib;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.Lib;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxEase;
@@ -16,16 +16,15 @@ import flixel.util.typeLimit.NextState;
 
 class FlxSplash extends FlxState
 {
-
 	/**
 	 * @since 4.8.0
 	 */
 	public static var muted:Bool = #if html5 true #else false #end;
-
+	
 	var _sprite:Sprite;
 	var _gfx:Graphics;
 	var _text:TextField;
-
+	
 	var _times:Array<Float>;
 	var _colors:Array<Int>;
 	var _functions:Array<Void->Void>;
@@ -41,7 +40,7 @@ class FlxSplash extends FlxState
 		super();
 		this.nextState = nextState;
 	}
-
+	
 	override public function create():Void
 	{
 		_cachedBgColor = FlxG.cameras.bgColor;
@@ -108,7 +107,7 @@ class FlxSplash extends FlxState
 	{
 		FlxG.switchState(nextState);
 	}
-
+	
 	override public function onResize(Width:Int, Height:Int):Void
 	{
 		super.onResize(Width, Height);

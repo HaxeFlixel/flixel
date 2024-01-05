@@ -1,7 +1,7 @@
 package flixel.graphics.frames;
 
-import flash.display.BitmapData;
-import flash.geom.Point;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
@@ -208,7 +208,7 @@ class FlxTileFrames extends FlxFramesCollection
 			tileFrames.frames.push(frame);
 
 			if (frame.name != null)
-				tileFrames.framesHash.set(frame.name, frame);
+				tileFrames.framesByName.set(frame.name, frame);
 		}
 
 		return tileFrames;

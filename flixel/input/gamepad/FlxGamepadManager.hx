@@ -9,9 +9,9 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 import openfl.events.JoystickEvent;
 #elseif FLX_GAMEINPUT_API
-import flash.ui.GameInput;
-import flash.ui.GameInputDevice;
-import flash.events.GameInputEvent;
+import openfl.ui.GameInput;
+import openfl.ui.GameInputDevice;
+import openfl.events.GameInputEvent;
 
 using flixel.util.FlxStringUtil;
 #end

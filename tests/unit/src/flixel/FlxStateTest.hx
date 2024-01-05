@@ -13,7 +13,23 @@ class FlxStateTest extends FlxTest
 	}
 
 	@Test
-	function testResetState()
+	@Ignore // TODO: investigate
+	function testSwitchState()
+	{
+		var nextState:FlxState = null;
+		function createState()
+		{
+			return nextState = new FlxState();
+		}
+		
+		Assert.areNotEqual(nextState, FlxG.state);
+		switchState(createState);
+		Assert.areEqual(nextState, FlxG.state);
+	}
+
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function testResetStateLegacy()
 	{
 		switchState(TestState.new);
 		var state = FlxG.state;
@@ -24,13 +40,30 @@ class FlxStateTest extends FlxTest
 		Assert.isTrue(FlxG.state is TestState);
 	}
 
+	@Test
+	function testResetState()
+	{
+		var nextState:TestState = null;
+		function createState()
+		{
+			return nextState = new TestState();
+		}
+		
+		switchState(createState);
+		Assert.areEqual(nextState, FlxG.state);
+		
+		final oldState = nextState;
+		resetState();
+		Assert.areNotEqual(oldState, FlxG.state);
+		Assert.areEqual(nextState, FlxG.state);
+		Assert.isTrue((FlxG.state is TestState));
+	}
+	
 	@Test // #1676
 	function testCancelStateSwitch()
 	{
-		
 		switchState(FinalState.new);
-		var finalState = FlxG.state;
-		Assert.areEqual(finalState, FlxG.state);
+		final finalState = FlxG.state;
 
 		switchState(FlxState.new);
 		Assert.areEqual(finalState, FlxG.state);
@@ -56,7 +89,11 @@ class FlxStateTest extends FlxTest
 
 class FinalState extends FlxState
 {
-	override function startOutro(onOutroComplete:()->Void) {}
+	/* prevents state switches */
+	override function startOutro(onOutroComplete:()->Void)
+	{
+		// startOutro(onOutroComplete); 
+	}
 }
 
 class OutroState extends FlxState

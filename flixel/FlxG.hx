@@ -1,10 +1,10 @@
 package flixel;
 
-import flash.Lib;
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.display.StageDisplayState;
-import flash.net.URLRequest;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
@@ -81,7 +81,13 @@ class FlxG
 	/**
 	 * How fast or slow time should pass in the game; default is `1.0`.
 	 */
-	public static var timeScale:Float = 1;
+	public static var timeScale:Float = 1.0;
+	
+	/**
+	 * How fast or slow animations should pass in the game; default is `1.0`.
+	 * @since 5.5.0
+	 */
+	public static var animationTimeScale:Float = 1.0;
 
 	/**
 	 * How many times the quad tree should divide the world on each axis.
@@ -100,7 +106,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 4, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 6, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -191,11 +197,13 @@ class FlxG
 	 */
 	public static var worldBounds(default, null):FlxRect = FlxRect.get();
 
+	#if FLX_SAVE
 	/**
 	 * A `FlxSave` used internally by flixel to save sound preferences and
 	 * the history of the console window, but no reason you can't use it for your own stuff too!
 	 */
 	public static var save(default, null):FlxSave = new FlxSave();
+	#end
 
 	/**
 	 * A `FlxRandom` object which can be used to generate random numbers.
@@ -330,27 +338,23 @@ class FlxG
 	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
-	public static inline function resizeGame(Width:Int, Height:Int):Void
+	public static inline function resizeGame(width:Int, height:Int):Void
 	{
-		scaleMode.onMeasure(Width, Height);
+		scaleMode.onMeasure(width, height);
 	}
 
 	/**
 	 * Resizes the window. Only works on desktop targets (Neko, Windows, Linux, Mac).
 	 */
-	public static function resizeWindow(Width:Int, Height:Int):Void
+	public static function resizeWindow(width:Int, height:Int):Void
 	{
 		#if desktop
-		#if openfl_legacy
-		stage.resize(Width, Height);
-		#else
 		#if air
 		var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
-		window.width = Width;
-		window.height = Height;
+		window.width = width;
+		window.height = height;
 		#else
-		Lib.application.window.resize(Width, Height);
-		#end
+		Lib.application.window.resize(width, height);
 		#end
 		#end
 	}
@@ -402,31 +406,31 @@ class FlxG
 	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
 	 * Use `FlxTilemap#overlaps()` if you don't want that.
 	 *
-	 * @param   ObjectOrGroup1    The first object or group you want to check.
-	 * @param   ObjectOrGroup2    The second object or group you want to check. If it is the same as the first,
-	 *                            Flixel knows to just do a comparison within that group.
-	 * @param   NotifyCallback    A function with two `FlxObject` parameters -
-	 *                            e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
-	 *                            that is called if those two objects overlap.
-	 * @param   ProcessCallback   A function with two `FlxObject` parameters -
-	 *                            e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
-	 *                            that is called if those two objects overlap.
-	 *                            If a `ProcessCallback` is provided, then `NotifyCallback`
-	 *                            will only be called if `ProcessCallback` returns true for those objects!
+	 * @param   objectOrGroup1   The first object or group you want to check.
+	 * @param   objectOrGroup2   The second object or group you want to check. If it is the same as the first,
+	 *                           Flixel knows to just do a comparison within that group.
+	 * @param   notifyCallback   A function with two `FlxObject` parameters -
+	 *                           e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                           that is called if those two objects overlap.
+	 * @param   processCallback  A function with two `FlxObject` parameters -
+	 *                           e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                           that is called if those two objects overlap.
+	 *                           If a `ProcessCallback` is provided, then `NotifyCallback`
+	 *                           will only be called if `ProcessCallback` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	public static function overlap(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void,
-			?ProcessCallback:Dynamic->Dynamic->Bool):Bool
+	public static function overlap(?objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifyCallback:Dynamic->Dynamic->Void,
+			?processCallback:Dynamic->Dynamic->Bool):Bool
 	{
-		if (ObjectOrGroup1 == null)
-			ObjectOrGroup1 = state;
-		if (ObjectOrGroup2 == ObjectOrGroup1)
-			ObjectOrGroup2 = null;
+		if (objectOrGroup1 == null)
+			objectOrGroup1 = state;
+		if (objectOrGroup2 == objectOrGroup1)
+			objectOrGroup2 = null;
 
 		FlxQuadTree.divisions = worldDivisions;
-		var quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, ProcessCallback);
-		var result:Bool = quadTree.execute();
+		final quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
+		quadTree.load(objectOrGroup1, objectOrGroup2, notifyCallback, processCallback);
+		final result:Bool = quadTree.execute();
 		quadTree.destroy();
 		return result;
 	}
@@ -437,17 +441,17 @@ class FlxG
 	 * pixel perfect match on the intersecting area. Works with rotated and animated sprites.
 	 * May be slow, so use it sparingly.
 	 *
-	 * @param   Sprite1          The first `FlxSprite` to test against.
-	 * @param   Sprite2          The second `FlxSprite` to test again, sprite order is irrelevant.
-	 * @param   AlphaTolerance   The tolerance value above which alpha pixels are included.
-	 *                           Default to `255` (must be fully opaque for collision).
-	 * @param   Camera           If the collision is taking place in a camera other than
+	 * @param   sprite1         The first `FlxSprite` to test against.
+	 * @param   sprite2         The second `FlxSprite` to test again, sprite order is irrelevant.
+	 * @param   alphaTolerance  The tolerance value above which alpha pixels are included.
+	 *                          Default to `255` (must be fully opaque for collision).
+	 * @param   camera          If the collision is taking place in a camera other than
 	 *                          `FlxG.camera` (the default/current) then pass it here.
 	 * @return  Whether the sprites collide
 	 */
-	public static inline function pixelPerfectOverlap(Sprite1:FlxSprite, Sprite2:FlxSprite, AlphaTolerance:Int = 255, ?Camera:FlxCamera):Bool
+	public static inline function pixelPerfectOverlap(sprite1:FlxSprite, sprite2:FlxSprite, alphaTolerance = 255, ?camera:FlxCamera):Bool
 	{
-		return FlxCollision.pixelPerfectCheck(Sprite1, Sprite2, AlphaTolerance, Camera);
+		return FlxCollision.pixelPerfectCheck(sprite1, sprite2, alphaTolerance, camera);
 	}
 
 	/**
@@ -460,48 +464,48 @@ class FlxG
 	 * To create your own collision logic, write your own `ProcessCallback` and use `FlxG.overlap` to set it up.
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
-	 * @param   ObjectOrGroup1   The first object or group you want to check.
-	 * @param   ObjectOrGroup2   The second object or group you want to check. If it is the same as the first,
-	 *                           Flixel knows to just do a comparison within that group.
-	 * @param   NotifyCallback   A function with two `FlxObject` parameters -
-	 *                           e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
-	 *                           that is called if those two objects overlap.
+	 * @param   objectOrGroup1  The first object or group you want to check.
+	 * @param   objectOrGroup2  The second object or group you want to check. If it is the same as the first,
+	 *                          Flixel knows to just do a comparison within that group.
+	 * @param   notifyCallback  A function with two `FlxObject` parameters -
+	 *                          e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                          that is called if those two objects overlap.
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	public static inline function collide(?ObjectOrGroup1:FlxBasic, ?ObjectOrGroup2:FlxBasic, ?NotifyCallback:Dynamic->Dynamic->Void):Bool
+	public static inline function collide(?objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifyCallback:Dynamic->Dynamic->Void):Bool
 	{
-		return overlap(ObjectOrGroup1, ObjectOrGroup2, NotifyCallback, FlxObject.separate);
+		return overlap(objectOrGroup1, objectOrGroup2, notifyCallback, FlxObject.separate);
 	}
 
 	/**
 	 * Regular `DisplayObject`s are normally displayed over the Flixel cursor and the Flixel debugger if simply
 	 * added to `stage`. This function simplifies things by adding a `DisplayObject` directly below mouse level.
 	 *
-	 * @param   Child           The `DisplayObject` to add
-	 * @param   IndexModifier   Amount to add to the index - makes sure the index stays within bounds.
+	 * @param   child          The `DisplayObject` to add
+	 * @param   indexModifier  Amount to add to the index - makes sure the index stays within bounds.
 	 * @return  The added `DisplayObject`
 	 */
-	public static function addChildBelowMouse<T:DisplayObject>(Child:T, IndexModifier:Int = 0):T
+	public static function addChildBelowMouse<T:DisplayObject>(child:T, indexModifier = 0):T
 	{
 		var index = game.getChildIndex(game._inputContainer);
 		var max = game.numChildren;
 
-		index = FlxMath.maxAdd(index, IndexModifier, max);
-		game.addChildAt(Child, index);
-		return Child;
+		index = FlxMath.maxAdd(index, indexModifier, max);
+		game.addChildAt(child, index);
+		return child;
 	}
 
 	/**
 	 * Removes a child from the Flixel display list, if it is part of it.
 	 *
-	 * @param   Child   The `DisplayObject` to add
+	 * @param   child   The `DisplayObject` to add
 	 * @return  The removed `DisplayObject`
 	 */
-	public static inline function removeChild<T:DisplayObject>(Child:T):T
+	public static inline function removeChild<T:DisplayObject>(child:T):T
 	{
-		if (game.contains(Child))
-			game.removeChild(Child);
-		return Child;
+		if (game.contains(child))
+			game.removeChild(child);
+		return child;
 	}
 
 	public static function addPostProcess(postProcess:PostProcess):PostProcess
@@ -564,27 +568,31 @@ class FlxG
 	 * Opens a web page, by default a new tab or window. If the URL does not
 	 * already start with `"http://"` or `"https://"`, it gets added automatically.
 	 *
-	 * @param   URL      The address of the web page.
-	 * @param   Target   `"_blank"`, `"_self"`, `"_parent"` or `"_top"`
+	 * @param   url     The address of the web page.
+	 * @param   target  `"_blank"`, `"_self"`, `"_parent"` or `"_top"`
 	 */
-	public static inline function openURL(URL:String, Target:String = "_blank"):Void
+	public static inline function openURL(url:String, target = "_blank"):Void
 	{
-		var prefix:String = "";
-		// if the URL does not already start with "http://" or "https://", add it.
-		if (!~/^https?:\/\//.match(URL))
-			prefix = "http://";
-		Lib.getURL(new URLRequest(prefix + URL), Target);
+		// if the url does not already start with a protocol, add it.
+		if (!~/^.\w+?:\/*/.match(url))
+			url = "https://" + url;
+		Lib.getURL(new URLRequest(url), target);
 	}
 
 	/**
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
-	static function init(Game:FlxGame, Width:Int, Height:Int):Void
+	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
-		game = Game;
-		width = Std.int(Math.abs(Width));
-		height = Std.int(Math.abs(Height));
+		if (width < 0)
+			width = -width;
+		if (height < 0)
+			height = -height;
+		
+		FlxG.game = game;
+		FlxG.width = width;
+		FlxG.height = height;
 
 		initRenderMethod();
 
@@ -618,7 +626,9 @@ class FlxG
 		accelerometer = new FlxAccelerometer();
 		#end
 
+		#if FLX_SAVE
 		initSave();
+		#end
 
 		plugins = new PluginFrontEnd();
 		vcr = new VCRFrontEnd();
@@ -672,6 +682,7 @@ class FlxG
 		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 
+	#if FLX_SAVE
 	static function initSave()
 	{
 		// Don't init if the FlxG.save.bind was manually called before the FlxGame was created
@@ -685,6 +696,7 @@ class FlxG
 		if (save.isEmpty())
 			save.mergeDataFrom("flixel", null, false, false);
 	}
+	#end
 
 	/**
 	 * Called whenever the game is reset, doesn't have to do quite as much work as the basic initialization stuff.
@@ -702,17 +714,18 @@ class FlxG
 		autoPause = true;
 		fixedTimestep = true;
 		timeScale = 1.0;
+		animationTimeScale = 1.0;
 		elapsed = 0;
 		maxElapsed = 0.1;
 		worldBounds.set(-10, -10, width + 20, height + 20);
 		worldDivisions = 6;
 	}
 
-	static function set_scaleMode(ScaleMode:BaseScaleMode):BaseScaleMode
+	static function set_scaleMode(value:BaseScaleMode):BaseScaleMode
 	{
-		scaleMode = ScaleMode;
+		scaleMode = value;
 		game.onResize(null);
-		return ScaleMode;
+		return value;
 	}
 
 	#if FLX_MOUSE
@@ -735,28 +748,28 @@ class FlxG
 	}
 	#end
 
-	static function set_updateFramerate(Framerate:Int):Int
+	static function set_updateFramerate(value:Int):Int
 	{
-		if (Framerate < drawFramerate)
+		if (value < drawFramerate)
 			log.warn("FlxG.framerate: the game's framerate shouldn't be smaller than the flash framerate," + " since it can stop your game from updating.");
 
-		updateFramerate = Framerate;
+		updateFramerate = value;
 
-		game._stepMS = Math.abs(1000 / Framerate);
+		game._stepMS = Math.abs(1000 / value);
 		game._stepSeconds = game._stepMS / 1000;
 
 		if (game._maxAccumulation < game._stepMS)
 			game._maxAccumulation = game._stepMS;
 
-		return Framerate;
+		return value;
 	}
 
-	static function set_drawFramerate(Framerate:Int):Int
+	static function set_drawFramerate(value:Int):Int
 	{
-		if (Framerate > updateFramerate)
+		if (value > updateFramerate)
 			log.warn("FlxG.drawFramerate: the update framerate shouldn't be smaller than the draw framerate," + " since it can stop your game from updating.");
 
-		drawFramerate = Std.int(Math.abs(Framerate));
+		drawFramerate = Std.int(Math.abs(value));
 
 		if (game.stage != null)
 			game.stage.frameRate = drawFramerate;
@@ -766,7 +779,7 @@ class FlxG
 		if (game._maxAccumulation < game._stepMS)
 			game._maxAccumulation = game._stepMS;
 
-		return Framerate;
+		return value;
 	}
 
 	static function get_fullscreen():Bool
@@ -774,10 +787,10 @@ class FlxG
 		return stage.displayState == StageDisplayState.FULL_SCREEN || stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	}
 
-	static function set_fullscreen(Value:Bool):Bool
+	static function set_fullscreen(value:Bool):Bool
 	{
-		stage.displayState = Value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
-		return Value;
+		stage.displayState = value ? StageDisplayState.FULL_SCREEN : StageDisplayState.NORMAL;
+		return value;
 	}
 
 	static inline function get_stage():Stage

@@ -1,8 +1,8 @@
 package flixel.input.mouse;
 
 #if FLX_NATIVE_CURSOR
-import flash.ui.Mouse;
-import flash.ui.MouseCursor;
+import openfl.ui.Mouse;
+import openfl.ui.MouseCursor;
 #end
 import massive.munit.Assert;
 

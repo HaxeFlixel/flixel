@@ -1,14 +1,14 @@
 package flixel.system.debug.log;
 
 #if FLX_DEBUG
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.text.TextField;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.geom.Matrix;
+import openfl.text.TextField;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.ui.FlxSystemButton;

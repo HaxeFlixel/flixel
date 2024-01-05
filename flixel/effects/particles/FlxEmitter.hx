@@ -1,6 +1,6 @@
 package flixel.effects.particles;
 
-import flash.display.BlendMode;
+import openfl.display.BlendMode;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;

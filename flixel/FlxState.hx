@@ -3,7 +3,7 @@ package flixel;
 import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.FlxSignal;
 import flixel.util.typeLimit.NextState;
 
 /**
@@ -42,15 +42,18 @@ class FlxState extends FlxGroup
 	 * The natural background color the cameras default to. In `AARRGGBB` format.
 	 */
 	public var bgColor(get, set):FlxColor;
-
+	
+	/**
+	 * The specific argument that was passed into `switchState` or `FlxGame.new`
+	 */
+	@:allow(flixel.FlxGame)
+	@:allow(flixel.FlxG)
+	var _constructor:()->FlxState;
+	
 	/**
 	 * Current substate. Substates also can be nested.
 	 */
 	public var subState(default, null):FlxSubState;
-
-	@:allow(flixel.FlxGame)
-	@:allow(flixel.FlxG)
-	var _constructor:()->FlxState;
 
 	/**
 	 * If a state change was requested, the new state object is stored here until we switch to it.
@@ -84,12 +87,12 @@ class FlxState extends FlxGroup
 
 	@:noCompletion
 	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
-
+	
 	public function new ()
 	{
 		super(0);
 	}
-
+	
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
@@ -164,10 +167,13 @@ class FlxState extends FlxGroup
 
 	override function destroy():Void
 	{
-		_constructor = null;
+		_constructor = function():FlxState
+		{
+			throw "Attempting to resetState while the current state is destroyed";
+		};
 		FlxDestroyUtil.destroy(_subStateOpened);
 		FlxDestroyUtil.destroy(_subStateClosed);
-
+		
 		if (subState != null)
 		{
 			subState.destroy();

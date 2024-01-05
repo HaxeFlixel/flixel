@@ -9,15 +9,17 @@ using flixel.util.FlxArrayUtil;
 
 class FlxAssert
 {
-	public static function areNear(expected:Float, actual:Float, margin:Float = 0.001, ?info:PosInfos):Void
+	public static function areNear(expected:Float, actual:Float, margin = 0.001, ?msg:String, ?info:PosInfos):Void
 	{
 		if (areNearHelper(expected, actual))
 			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
 		else
 			Assert.fail('Value [$actual] is not within [$margin] of [$expected]', info);
 	}
 
-	public static function rectsNear(expected:FlxRect, actual:FlxRect, margin:Float = 0.001, ?info:PosInfos):Void
+	public static function rectsNear(expected:FlxRect, actual:FlxRect, margin = 0.001, ?msg:String, ?info:PosInfos):Void
 	{
 		var areNear = areNearHelper(expected.x, actual.x, margin)
 			&& areNearHelper(expected.y, actual.y, margin)
@@ -26,27 +28,33 @@ class FlxAssert
 		
 		if (areNear)
 			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
 		else
 			Assert.fail('Value [$actual] is not within [$margin] of [$expected]', info);
 	}
 
-	static function areNearHelper(expected:Float, actual:Float, margin:Float = 0.001):Bool
+	static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool
 	{
 		return actual >= expected - margin && actual <= expected + margin;
 	}
 
-	public static function arraysEqual<T>(expected:Array<T>, actual:Array<T>, ?info:PosInfos):Void
+	public static function arraysEqual<T>(expected:Array<T>, actual:Array<T>, ?msg:String, ?info:PosInfos):Void
 	{
 		if (expected.equals(actual))
 			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
 		else
 			Assert.fail('\nExpected\n   ${expected}\nbut was\n   ${actual}\n', info);
 	}
 
-	public static function arraysNotEqual<T>(expected:Array<T>, actual:Array<T>, ?info:PosInfos):Void
+	public static function arraysNotEqual<T>(expected:Array<T>, actual:Array<T>, ?msg:String, ?info:PosInfos):Void
 	{
 		if (!expected.equals(actual))
 			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
 		else
 			Assert.fail('\nValue\n   ${actual}\nwas equal to\n   ${expected}\n', info);
 	}
@@ -69,5 +77,31 @@ class FlxAssert
 			Assert.fail(msg, info);
 		else
 			Assert.fail("Value [" + actual + "] was equal to value [" + expected + "]", info);
+	}
+
+	public static function pointsNear(expected:FlxPoint, actual:FlxPoint, margin:Float = 0.001, ?msg:String, ?info:PosInfos)
+	{
+		var areNear = areNearHelper(expected.x, actual.x, margin)
+			&& areNearHelper(expected.y, actual.y, margin);
+		
+		if (areNear)
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [$actual] is not within [$margin] of [$expected]', info);
+	}
+
+	public static function pointNearXY(expectedX:Float, expectedY:Float, actual:FlxPoint, margin:Float = 0.001, ?msg:String, ?info:PosInfos)
+	{
+		var areNear = areNearHelper(expectedX, actual.x, margin)
+			&& areNearHelper(expectedY, actual.y, margin);
+		
+		if (areNear)
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [$actual] is not within [$margin] of [( x:$expectedX | y:$expectedY )]', info);
 	}
 }
