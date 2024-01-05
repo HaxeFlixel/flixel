@@ -12,20 +12,19 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.util.typeLimit.NextState;
 
 class FlxSplash extends FlxState
 {
-	public static var nextState:Class<FlxState>;
-
 	/**
 	 * @since 4.8.0
 	 */
 	public static var muted:Bool = #if html5 true #else false #end;
-
+	
 	var _sprite:Sprite;
 	var _gfx:Graphics;
 	var _text:TextField;
-
+	
 	var _times:Array<Float>;
 	var _colors:Array<Int>;
 	var _functions:Array<Void->Void>;
@@ -33,7 +32,15 @@ class FlxSplash extends FlxState
 	var _cachedBgColor:FlxColor;
 	var _cachedTimestep:Bool;
 	var _cachedAutoPause:Bool;
-
+	
+	var nextState:NextState;
+	
+	public function new(nextState:NextState)
+	{
+		super();
+		this.nextState = nextState;
+	}
+	
 	override public function create():Void
 	{
 		_cachedBgColor = FlxG.cameras.bgColor;
@@ -95,7 +102,12 @@ class FlxSplash extends FlxState
 		_functions = null;
 		super.destroy();
 	}
-
+	
+	function complete()
+	{
+		FlxG.switchState(nextState);
+	}
+	
 	override public function onResize(Width:Int, Height:Int):Void
 	{
 		super.onResize(Width, Height);
@@ -121,7 +133,7 @@ class FlxSplash extends FlxState
 		if (_curPart == 5)
 		{
 			// Make the logo a tad bit longer, so our users fully appreciate our hard work :D
-			FlxTween.tween(_sprite, {alpha: 0}, 3.0, {ease: FlxEase.quadOut, onComplete: onComplete});
+			FlxTween.tween(_sprite, {alpha: 0}, 3.0, {ease: FlxEase.quadOut, onComplete: (_)->complete()});
 			FlxTween.tween(_text, {alpha: 0}, 3.0, {ease: FlxEase.quadOut});
 		}
 	}
@@ -189,7 +201,7 @@ class FlxSplash extends FlxState
 		_gfx.endFill();
 	}
 
-	function onComplete(Tween:FlxTween):Void
+	override function startOutro(onOutroComplete:() -> Void)
 	{
 		FlxG.cameras.bgColor = _cachedBgColor;
 		FlxG.fixedTimestep = _cachedTimestep;
@@ -199,7 +211,7 @@ class FlxSplash extends FlxState
 		#end
 		FlxG.stage.removeChild(_sprite);
 		FlxG.stage.removeChild(_text);
-		FlxG.switchState(Type.createInstance(nextState, []));
-		FlxG.game._gameJustStarted = true;
+		
+		super.startOutro(onOutroComplete);
 	}
 }
