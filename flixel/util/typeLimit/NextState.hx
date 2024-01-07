@@ -127,4 +127,3 @@ abstract InitialState(Dynamic) to NextState
 			return cast this;
 	}
 }
-

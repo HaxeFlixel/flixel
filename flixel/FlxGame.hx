@@ -640,16 +640,19 @@ class FlxGame extends Sprite
 		_state.create();
 
 		if (_gameJustStarted)
-		{
-			FlxG.signals.postGameStart.dispatch();
-			_gameJustStarted = false;
-		}
+			gameStart();
 
 		#if FLX_DEBUG
 		debugger.console.registerObject("state", _state);
 		#end
 
 		FlxG.signals.postStateSwitch.dispatch();
+	}
+	
+	function gameStart()
+	{
+		FlxG.signals.postGameStart.dispatch();
+		_gameJustStarted = false;
 	}
 
 	/**
