@@ -1,11 +1,12 @@
 package;
 
-import openfl.errors.Error;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.typeLimit.NextState;
 import massive.munit.Assert;
+import openfl.errors.Error;
 
 class FlxTest
 {
@@ -48,7 +49,7 @@ class FlxTest
 		step();
 	}
 
-	function switchState(nextState:FlxState)
+	function switchState(nextState:NextState)
 	{
 		FlxG.switchState(nextState);
 		step();

@@ -1,5 +1,6 @@
 package flixel.text;
 
+import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
@@ -14,11 +15,11 @@ import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
-import openfl.Assets;
 
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxUnicodeUtil;
@@ -39,7 +40,7 @@ import openfl.utils.AssetType;
  * ## Autosizing
  * 
  * By default `FlxText` is autosized to fit it's text. 
- * To set a fixed size, * use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
+ * To set a fixed size, use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
  */
 class FlxText extends FlxSprite
 {
@@ -137,6 +138,7 @@ class FlxText extends FlxSprite
 	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
 	 * 
 	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
+	 * @since 5.4.0
 	 */
 	public var fieldHeight(get, set):Float;
 
@@ -534,6 +536,12 @@ class FlxText extends FlxSprite
 	{
 		regenGraphic();
 		super.updateHitbox();
+	}
+
+	override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		regenGraphic();
+		return super.getScreenBounds(newRect, camera);
 	}
 
 	function set_fieldWidth(value:Float):Float
@@ -1216,7 +1224,7 @@ enum abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 
-	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
 	{
 		return switch (align)
 		{
@@ -1228,17 +1236,15 @@ enum abstract FlxTextAlign(String) from String
 		}
 	}
 
-	public static function toOpenFL(align:FlxTextAlign):AlignType
+	public static function toOpenFL(align:FlxTextAlign):TextFormatAlign
 	{
 		return switch (align)
 		{
-			case LEFT: TextFormatAlign.LEFT;
-			case CENTER: TextFormatAlign.CENTER;
-			case RIGHT: TextFormatAlign.RIGHT;
-			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
+			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
+			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
+			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
 		}
 	}
 }
-
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end;

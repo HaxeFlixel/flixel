@@ -53,24 +53,24 @@ class FlxTile extends FlxObject
 	/**
 	 * Instantiate this new tile object.  This is usually called from FlxTilemap.loadMap().
 	 *
-	 * @param 	Tilemap			A reference to the tilemap object creating the tile.
-	 * @param 	Index			The actual core map data index for this tile type.
-	 * @param 	Width			The width of the tile.
-	 * @param 	Height			The height of the tile.
-	 * @param 	Visible			Whether the tile is visible or not.
-	 * @param 	AllowCollisions	The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
+	 * @param   tilemap          A reference to the tilemap object creating the tile.
+	 * @param   index            The actual core map data index for this tile type.
+	 * @param   width            The width of the tile.
+	 * @param   height           The height of the tile.
+	 * @param   visible          Whether the tile is visible or not.
+	 * @param   allowCollisions  The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
 	 */
-	public function new(Tilemap:FlxTilemap, Index:Int, Width:Float, Height:Float, Visible:Bool, AllowCollisions:FlxDirectionFlags)
+	public function new(tilemap:FlxTilemap, index:Int, width:Float, height:Float, visible:Bool, allowCollisions:FlxDirectionFlags)
 	{
-		super(0, 0, Width, Height);
+		super(0, 0, width, height);
 
 		immovable = true;
 		moves = false;
 
-		tilemap = Tilemap;
-		index = Index;
-		visible = Visible;
-		allowCollisions = AllowCollisions;
+		this.tilemap = tilemap;
+		this.index = index;
+		this.visible = visible;
+		this.allowCollisions = allowCollisions;
 	}
 
 	/**

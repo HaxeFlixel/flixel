@@ -1,4 +1,66 @@
-5.4.0 (TBD)
+6.0.0 (TBD)
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+
+5.6.0 (TBD)
+
+#### New features:
+- `FlxGraphic`: Added `isDestroyed` ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxBitmapFont`: Support for all BMFont output file types ([#2949](https://github.com/HaxeFlixel/flixel/pull/2949))
+- `FlxObject`: Add static `defaultMoves` field ((#2980)[https://github.com/HaxeFlixel/flixel/pull/2980])
+
+#### Changes and improvements:
+- `FlxMouse`: Made the private `_cursor` field public, and renamed to `cursor` ([#2969](https://github.com/HaxeFlixel/flixel/pull/2969))
+- `Interaction`: Changes to Flixel's Debug Pointer and Mover tools ([#2964](https://github.com/HaxeFlixel/flixel/pull/2964))
+	- Hold Ctrl to drag selected objects, Shift to add to selection, Alt to remove from selection
+	- works better with `FlxObjects`
+	- See detailed list of changes [here](https://github.com/HaxeFlixel/flixel/pull/2964)
+- `PluginFrontEnd`: Allow multiple plugins of the same type ([#2952](https://github.com/HaxeFlixel/flixel/pull/2952))
+	- Add `addPlugin`, `addIfUnique` and `removeAllByType`
+	- Deprecate `add` and `removeType`
+- Remove compile conditionals using `FLX_DRAW_QUADS` ([#2962](https://github.com/HaxeFlixel/flixel/pull/2962))
+- `AseAtlas`: Set animation `loops` to match Aseprite's own settings ([#2963](https://github.com/HaxeFlixel/flixel/pull/2963))
+- `FlxMouseEvent`: Added links to [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/) ([#2961](https://github.com/HaxeFlixel/flixel/pull/2961))
+- `NextState`: Allow `()->FlxState` args in `FlxG.switchState` and `FlxGame.new` ((#2997)[https://github.com/HaxeFlixel/flixel/pull/2997])
+- `FlxSplash`: Can now extend `FlxSplash` to add custom behavior ((#2997)[https://github.com/HaxeFlixel/flixel/pull/2997])
+- `FlxDrawQuadsItem`: Improve performance by pre-calculating alpha ((#2996)[https://github.com/HaxeFlixel/flixel/pull/2996])
+
+#### Bugfixes:
+- Prevent crash when drawing a sprite with a destroyed graphic, by loading the placeholder logo. ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxG`: Fix HTML5 reflection issue where `state.switchTo` is null ([#2985](https://github.com/HaxeFlixel/flixel/pull/2985))
+- `FlxBitmapText`: Default `text` to `""` instead of `null` ([#2976](https://github.com/HaxeFlixel/flixel/pull/2976))
+- `FlxPlugin`: Fix inline error on haxe 4.3.3 ([#2986](https://github.com/HaxeFlixel/flixel/pull/2986))
+- `FlxKeyboard`: Fix plus keybind on Mac ([#2987](https://github.com/HaxeFlixel/flixel/pull/2987))
+
+5.5.0 (November 8, 2023)
+
+#### New features:
+- `FlxG`: Added `animationTimeScale` ([#2937](https://github.com/HaxeFlixel/flixel/pull/2937))
+
+#### Changes and improvements:
+- `FlxPool`: Use factory functions to create instances ([#2934](https://github.com/HaxeFlixel/flixel/pull/2934))
+
+#### Bugfixes:
+- Fixed errors from OpenFL 9.3.2
+- `FlxText`: Remove warnings about potential typos ([#2935](https://github.com/HaxeFlixel/flixel/pull/2935))
+- `FlxText`: Regen graphic in `getScreenBounds` calls ([#2942](https://github.com/HaxeFlixel/flixel/pull/2942))
+- `FlxBar`: Various fixes ([#2938](https://github.com/HaxeFlixel/flixel/pull/2938))
+
+
+5.4.1 (October 4, 2023)
+
+#### Changes and improvements:
+- Various improvements and new features for animations ([#2930](https://github.com/HaxeFlixel/flixel/pull/2930))
+	- `FlxAnimation`: Make `frameDuration` and `looped` public
+	- `FlxAnimation`: Add `timeScale` (not to be confused with the same field added to `FlxAnimationController` in 5.4.0)
+	- `FlxAseAtlasUtils`: Use fields `repeat` and `direction` when creating animations from Aseprite tag data
+- `FlxTilemap`: Add `defaultFramePadding` back ([#2886](https://github.com/HaxeFlixel/flixel/pull/2886))
+
+#### Bugfixes:
+- `FlxSoundTray`: Fix sound tray hide animation ([#2923](https://github.com/HaxeFlixel/flixel/pull/2923))
+
+5.4.0 (September 28, 2023)
 ------------------------------
 #### New features:
 - **README.md**: Add Turkish translations
@@ -16,13 +78,15 @@
 	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
 	- Replace `getFirstNull`'s loop with a simple `indexOf` check
 	- Improve readibility and simplify loops under the hood
- - `FlxSpriteUtil`: Add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
- - `FlxAsepriteUtils`: New util class with various helpers (via `using FlxAsepriteUtil;` ([#2860](https://github.com/HaxeFlixel/flixel/pull/2860))
+- `FlxSpriteUtil`: Add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
+- `FlxAsepriteUtils`: New util class with various helpers (via `using FlxAsepriteUtil;` ([#2860](https://github.com/HaxeFlixel/flixel/pull/2860))
 	- Added `loadAseAtlas`, `addAseAtlasTagsByIndex`, and `addAseAtlasTagsByPrefix`
 	- Added `TexturePackerAtlas` and `AseAtlas` types
 	- Added Aseprite metadata types: `AseAtlasMeta`, `AseAtlasTag`, `AseAtlasSlice` and `AseAtlasLayer`
 	- Deprecated `TexturePackerObject`, `TexturePackerFrameData` and `TexturePackerFrameRect`
 	for `TexturePackerAtlas`, `TexturePackerAtlasFrame` and `AtlasRect`, respectively;
+- `FlxAtlasFrames`: Added multi-atlas capabilities with `addAtlas` and `concat` ([#2772](https://github.com/HaxeFlixel/flixel/pull/2772))
+- `FlxAnimationController`: add `timeScale` field to control animation speed ([#2913](https://github.com/HaxeFlixel/flixel/pull/2913))
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
@@ -37,11 +101,23 @@
 - `FlxPoint`: Small doc fix ([#2873](https://github.com/HaxeFlixel/flixel/pull/2873))
 - `FlxAndroidKey`: Fix `@:enum` deprecation warning ([#2876](https://github.com/HaxeFlixel/flixel/pull/2876))
 - Change `FlxSprite.setColorTransform` and `FlxSpriteUtil.setOffsets` args from ints to floats ([#2875](https://github.com/HaxeFlixel/flixel/pull/2875))
-- `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881)
+- `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881))
+- `FlxAnimationController`: Accept float for all functions taking `frameRate` ([#2884](https://github.com/HaxeFlixel/flixel/pull/2884))
+- `FlxCamera`: Make the `filters` array public ([#2890](https://github.com/HaxeFlixel/flixel/pull/2890))
+- `FlxSubState`: Destroy `_bgSprite` ([#2897](https://github.com/HaxeFlixel/flixel/pull/2897))
+- `FlxCamera`: Improve `SCREEN_BY_SCREEN` follow mode and add `bindScrollPos` method ([#2903](https://github.com/HaxeFlixel/flixel/pull/2903))
+- `Watch`: Allow `addFunction` to overwrite existing watches ([#2902](https://github.com/HaxeFlixel/flixel/pull/2902))
+- `FlxMath`: Wrap methods and imports in conditionals when in macros ([#2911](https://github.com/HaxeFlixel/flixel/pull/2911))
+- Assets: Run DeveImageOptimizer on all of HaxeFlixel's image assets ([#2901](https://github.com/HaxeFlixel/flixel/pull/2901))
+- `FlxG`: Allow `openURL` to work with any URL protocol ([#2877](https://github.com/HaxeFlixel/flixel/pull/2877))
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
-
+- `FlxTilemap`: Reset buffers when loading maps a second+ time from the same instance ([#2883](https://github.com/HaxeFlixel/flixel/pull/2883))
+- `FlxPointer`: Fix `overlaps` calls with a specified `camera` arg ([#2885](https://github.com/HaxeFlixel/flixel/pull/2885))
+- `FlxStrip`: Fix black shapes when `drawDebug` is true ([#2906](https://github.com/HaxeFlixel/flixel/pull/2906))
+- `FlxBitmapText`: Fix `textColor` not applied correctly ([#2918](https://github.com/HaxeFlixel/flixel/pull/2918))
+- `FlxCamera`: Fix camera lerping speeds on lower fps ([#2920](https://github.com/HaxeFlixel/flixel/pull/2920))
 
 5.3.1 (May 7, 2023)
 ------------------------------
