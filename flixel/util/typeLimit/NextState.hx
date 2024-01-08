@@ -74,7 +74,7 @@ abstract NextState(Dynamic)
 /**
  * A utility type that allows methods to accept multiple types, when dealing with "future" `FlxStates`.
  * Prior to haxeFlixel 6, the `FlxGame` constructor took a `FlxState` class which meant initial
- `FlxStates`could not have constructor args. In version 6.0.0 and higher, it now takes a function
+ * `FlxStates`could not have constructor args. In version 6.0.0 and higher, it now takes a function
  * that returns a newly created instance.
  * 
  * ## examples:
@@ -127,4 +127,3 @@ abstract InitialState(Dynamic) to NextState
 			return cast this;
 	}
 }
-
