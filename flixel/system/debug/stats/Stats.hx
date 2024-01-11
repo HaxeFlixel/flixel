@@ -12,11 +12,13 @@ import flixel.system.debug.FlxDebugger.GraphicStats;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 
+#if FLX_DEBUG
 @:bitmap("assets/images/debugger/buttons/minimize.png")
 private class GraphicMinimizeButton extends BitmapData {}
 
 @:bitmap("assets/images/debugger/buttons/maximize.png")
 private class GraphicMaximizeButton extends BitmapData {}
+#end
 
 /**
  * A simple performance monitor widget, for use in the debugger overlay.
