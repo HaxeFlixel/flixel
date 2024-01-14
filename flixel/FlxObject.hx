@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.FlxBasic.IFlxBasic;
 import openfl.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -1535,4 +1536,22 @@ enum abstract CollisionDragType(Int)
 
 	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
 	var HEAVIER = 3;
+}
+
+interface IFlxObject extends IFlxBasic {
+	var x(default, set):Float;
+	var y(default, set):Float;
+
+	var angle(default, set):Float;
+	var moves(default, set):Bool;
+	var immovable(default, set):Bool;
+
+	var velocity(default, null):FlxPoint;
+	var maxVelocity(default, null):FlxPoint;
+	var acceleration(default, null):FlxPoint;
+	var drag(default, null):FlxPoint;
+	var scrollFactor(default, null):FlxPoint;
+
+	function reset(X:Float, Y:Float):Void;
+	function setPosition(X:Float = 0, Y:Float = 0):Void;
 }
