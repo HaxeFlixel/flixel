@@ -1,5 +1,6 @@
 package flixel.system.debug.interaction;
 
+#if FLX_DEBUG
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
@@ -743,3 +744,4 @@ class Interaction extends Window
 		return null;
 	}
 }
+#end

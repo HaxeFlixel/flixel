@@ -1,5 +1,6 @@
 package flixel.system.debug.watch;
 
+#if FLX_DEBUG
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.system.debug.FlxDebugger.GraphicWatch;
@@ -14,7 +15,6 @@ using flixel.util.FlxArrayUtil;
  */
 class Watch extends Window
 {
-	#if FLX_DEBUG
 	static inline var LINE_HEIGHT:Int = 15;
 
 	var entriesContainer:Sprite;
@@ -161,5 +161,5 @@ class Watch extends Window
 		}
 		return max;
 	}
-	#end
 }
+#end
