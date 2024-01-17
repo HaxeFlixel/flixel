@@ -5,6 +5,10 @@
 - `FlxBitmapFont`: Support for all BMFont output file types ([#2949](https://github.com/HaxeFlixel/flixel/pull/2949))
 - `FlxObject`: Add static `defaultMoves` field ([#2980](https://github.com/HaxeFlixel/flixel/pull/2980))
 - `FlxText`: Add `underline` field ([#3002](https://github.com/HaxeFlixel/flixel/pull/3002))
+- `FlxBitmapText`: Add `wrap` field to expand wordwrap capabilities ([#2722](https://github.com/HaxeFlixel/flixel/pull/2722))
+	- Can now choose various to split words, conditionally, like if they are too long to fit in one line
+	- Also deprecates `wordWrap` and `wrapByWord`
+- `Android`: Set the default `appCategory` to "game" ([#3009](https://github.com/HaxeFlixel/flixel/pull/3009))
 
 #### Changes and improvements:
 - `FlxMouse`: Made the private `_cursor` field public, and renamed to `cursor` ([#2969](https://github.com/HaxeFlixel/flixel/pull/2969))
