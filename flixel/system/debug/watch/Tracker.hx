@@ -34,9 +34,9 @@ import flixel.input.touch.FlxTouch;
 
 import flixel.util.FlxStringUtil;
 
-#if FLX_DEBUG
 class Tracker extends Watch
 {
+	#if FLX_DEBUG
 	/**
 	 * Order matters here, as the last profile is the most relevant - i.e., if the
 	 * FlxSprite profile were added before the one for FlxObject, it would never be selected.
@@ -265,8 +265,8 @@ class Tracker extends Watch
 		for (variable in Variables)
 			add(variable, FIELD(_object, variable));
 	}
+	#end
 }
-#end
 
 class TrackerProfile
 {
