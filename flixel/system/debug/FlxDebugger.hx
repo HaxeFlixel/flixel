@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if FLX_DEBUG
 import openfl.display.BitmapData;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
@@ -64,6 +63,7 @@ private class GraphicDrawDebug extends BitmapData {}
  */
 class FlxDebugger extends Sprite
 {
+	#if FLX_DEBUG
 	/**
 	 * Internal, used to space out windows from the edges.
 	 */
@@ -520,8 +520,8 @@ class FlxDebugger extends Sprite
 		}
 		FlxG.openURL(url);
 	}
+	#end
 }
-#end
 
 enum FlxDebuggerLayout
 {
