@@ -1,5 +1,6 @@
 package flixel.system.debug.stats;
 
+#if FLX_DEBUG
 import openfl.display.BitmapData;
 import openfl.system.System;
 import openfl.text.TextField;
@@ -444,3 +445,4 @@ class Stats extends Window
 		}
 	}
 }
+#end
