@@ -1538,7 +1538,8 @@ enum abstract CollisionDragType(Int)
 	var HEAVIER = 3;
 }
 
-interface IFlxObject extends IFlxBasic {
+interface IFlxObject extends IFlxBasic
+{
 	var x(default, set):Float;
 	var y(default, set):Float;
 
