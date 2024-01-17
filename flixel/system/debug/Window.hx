@@ -1,6 +1,5 @@
 package flixel.system.debug;
 
-#if FLX_DEBUG
 import openfl.display.Sprite;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
@@ -455,6 +454,3 @@ class Window extends Sprite
 		#end
 	}
 }
-#else
-class Window extends openfl.display.Sprite {}
-#end
