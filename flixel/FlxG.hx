@@ -360,7 +360,7 @@ class FlxG
 	}
 
 	/**
-	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
+	 * Like hitting the reset button on a game console, this will re-launch the game as if it just started.
 	 */
 	public static inline function resetGame():Void
 	{
