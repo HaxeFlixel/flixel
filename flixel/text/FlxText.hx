@@ -1,12 +1,5 @@
 package flixel.text;
 
-import openfl.Assets;
-import openfl.display.BitmapData;
-import openfl.geom.ColorTransform;
-import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
-import openfl.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -20,6 +13,13 @@ import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
+import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
 using flixel.util.FlxUnicodeUtil;
@@ -85,6 +85,11 @@ class FlxText extends FlxSprite
 	 * Whether to use italic text or not (`false` by default). Only works on Flash.
 	 */
 	public var italic(get, set):Bool;
+
+	/**
+	 * Whether to use underlined text or not (`false` by default).
+	 */
+	public var underline(get, set):Bool;
 
 	/**
 	 * Whether to use word wrapping and multiline or not (`true` by default).
@@ -723,6 +728,21 @@ class FlxText extends FlxSprite
 		return value;
 	}
 
+	inline function get_underline():Bool
+	{
+		return _defaultFormat.underline;
+	}
+	
+	function set_underline(value:Bool):Bool
+	{
+		if (_defaultFormat.underline != value)
+		{
+			_defaultFormat.underline = value;
+			updateDefaultFormat();
+		}
+		return value;
+	}
+
 	inline function get_wordWrap():Bool
 	{
 		return textField.wordWrap;
@@ -1097,6 +1117,7 @@ class FlxText extends FlxSprite
 		to.font = from.font;
 		to.bold = from.bold;
 		to.italic = from.italic;
+		to.underline = from.underline;
 		to.size = from.size;
 		to.color = from.color;
 		to.leading = from.leading;
@@ -1147,15 +1168,16 @@ class FlxTextFormat
 	var format(default, null):TextFormat;
 
 	/**
-	 * @param   FontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
-	 * @param   Bold          Whether the text should be bold (must be supported by the font). `false` by default.
-	 * @param   Italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
-	 * @param   BorderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
+	 * @param   fontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
+	 * @param   bold          Whether the text should be bold (must be supported by the font). `false` by default.
+	 * @param   italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
+	 * @param   borderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
+	 * @param   underline     Whether the text should be underlined. `false` by default.
 	 */
-	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)
+	public function new(?fontColor:FlxColor, ?bold:Bool, ?italic:Bool, ?borderColor:FlxColor, ?underline:Bool)
 	{
-		format = new TextFormat(null, null, FontColor, Bold, Italic);
-		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+		format = new TextFormat(null, null, fontColor, bold, italic, underline);
+		this.borderColor = borderColor == null ? FlxColor.TRANSPARENT : borderColor;
 	}
 
 	function set_leading(value:Int):Int

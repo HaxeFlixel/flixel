@@ -133,14 +133,19 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 			var handler = getHandler(listener);
 			if (handler != null)
 			{
-				if (processingListeners)
-					pendingRemove.push(handler);
-				else
-				{
-					handlers.remove(handler);
-					handler.destroy();
-				}
+				removeHandler(handler);
 			}
+		}
+	}
+	
+	inline function removeHandler(handler:FlxSignalHandler<T>):Void
+	{
+		if (processingListeners)
+			pendingRemove.push(handler)
+		else
+		{
+			handlers.remove(handler);
+			handler.destroy();
 		}
 	}
 
@@ -292,14 +297,14 @@ private class Macro
 				handler.listener($a{exprs});
 
 				if (handler.dispatchOnce)
-					remove(handler.listener);
+					removeHandler(handler);
 			}
 
 			processingListeners = false;
 
 			for (handler in pendingRemove)
 			{
-				remove(handler.listener);
+				removeHandler(handler);
 			}
 			if (pendingRemove.length > 0)
 				pendingRemove = [];
