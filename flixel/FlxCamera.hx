@@ -1278,9 +1278,14 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			scroll.x += (_scrollTarget.x - scroll.x) * followLerp * (60 / FlxG.updateFramerate);
-			scroll.y += (_scrollTarget.y - scroll.y) * followLerp * (60 / FlxG.updateFramerate);
+			scroll.x = cameraLerp(scroll.x, _scrollTarget.x, followLerp);
+			scroll.y = cameraLerp(scroll.y, _scrollTarget.y, followLerp);
 		}
+	}
+
+	function cameraLerp(base:Float, target:Float, ratio:Float):Float
+	{
+		return base + (ratio * (FlxG.elapsed / (1 / 60))) * (target - base);
 	}
 
 	function updateFlash(elapsed:Float):Void
