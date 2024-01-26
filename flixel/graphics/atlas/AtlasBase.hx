@@ -64,4 +64,35 @@ typedef AtlasFrame =
 	var spriteSourceSize:AtlasRect;
 }
 
-typedef HashOrArray<T> = flixel.util.typeLimit.OneOfTwo<DynamicAccess<T>, Array<T>>;
+abstract HashOrArray<T>(Dynamic) from DynamicAccess<T> from Array<T>
+{
+	public inline function isArray()
+	{
+		return (this is Array);
+	}
+	
+	public inline function isHash()
+	{
+		return !isArray();
+	}
+	
+	@:to
+	public inline function toArray():Array<T>
+	{
+		return this;
+	}
+	
+	@:to
+	public inline function toHash():DynamicAccess<T>
+	{
+		return this;
+	}
+	
+	public inline function iterator():Iterator<T>
+	{
+		if (isArray())
+			return toArray().iterator();
+		else
+			return toHash().iterator();
+	}
+}
