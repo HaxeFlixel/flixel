@@ -9,7 +9,6 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import haxe.xml.Access;
-import haxe.DynamicAccess;
 import openfl.Assets;
 import openfl.geom.Rectangle;
 
