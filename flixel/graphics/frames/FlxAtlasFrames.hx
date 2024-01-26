@@ -9,6 +9,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import haxe.xml.Access;
+import haxe.DynamicAccess;
 import openfl.Assets;
 import openfl.geom.Rectangle;
 
@@ -92,7 +93,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		// JSON-Hash
 		else
 		{
-			final frameHash:Hash<TexturePackerAtlasFrame> = data.frames;
+			final frameHash:DynamicAccess<TexturePackerAtlasFrame> = data.frames;
 			for (name=>frame in frameHash)
 				texturePackerHelper(name, frame, frames, useFrameDuration);
 		}
