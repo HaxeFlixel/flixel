@@ -213,11 +213,14 @@ class QuadPath extends Motion
 			a2:Float = Math.sqrt(a),
 			a32:Float = 2 * a * a2,
 			c2:Float = 2 * Math.sqrt(c),
-			ba:Float = b / a2;
+			ba:Float = (a2 == 0) ? 0.00001 : b / a2,
+			bac2:Float = (ba == c2) ? 0.00001 : ba + c2,
+			a32denom:Float = (a32 == 0) ? 0.0001 : a32;
+
 
 		p1.put();
 		p2.put();
 
-		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) * Math.log((2 * a2 + ba + abc) / (ba + c2))) / (4 * a32);
+		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) * Math.log((2 * a2 + ba + abc) / (bac2))) / (4 * a32denom);
 	}
 }
