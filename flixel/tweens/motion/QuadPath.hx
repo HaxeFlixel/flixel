@@ -212,8 +212,8 @@ class QuadPath extends Motion
 			
 		p1.x = start.x - 2 * safeControl.x + finish.x;
 		p1.y = start.y - 2 * safeControl.y + finish.y;
-		p2.x = 2 * control.x - 2 * start.x;
-		p2.y = 2 * control.y - 2 * start.y;
+		p2.x = 2 * safeControl.x - 2 * start.x;
+		p2.y = 2 * safeControl.y - 2 * start.y;
 		var a:Float = 4 * (p1.x * p1.x + p1.y * p1.y),
 			b:Float = 4 * (p1.x * p2.x + p1.y * p2.y),
 			c:Float = p2.x * p2.x + p2.y * p2.y,
