@@ -204,6 +204,8 @@ class QuadPath extends Motion
 		var p1 = FlxPoint.get();
 		var p2 = FlxPoint.get();
 
+		// we add a small quantity if two consecutive points are equal
+		// otherwise the final equation will have a division by zero
 		if (safeControl.equals(start))
 			safeControl.add(FlxMath.EPSILON, FlxMath.EPSILON);
 			
