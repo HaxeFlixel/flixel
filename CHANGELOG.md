@@ -1,4 +1,4 @@
-5.6.0 (TBD)
+5.6.0 (February 2, 2024)
 
 #### New features:
 - `FlxGraphic`: Added `isDestroyed` ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
