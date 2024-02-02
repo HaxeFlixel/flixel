@@ -156,7 +156,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that adds two points, returning a new point.
+	 * Operator that adds the right point to the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A += B)
@@ -166,7 +166,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that subtracts two points, returning a new point.
+	 * Operator that subtracts the right point from the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A -= B)
@@ -176,7 +176,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that scales a points by float, returning a new point.
+	 * Operator that scales a point by float, returning the same point instance.
 	 */
 	@:noCompletion
 	@:op(A *= B)
@@ -224,7 +224,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that adds two points, returning a new point.
+	 * Operator that adds the right point to the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A += B)
@@ -234,7 +234,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that subtracts two points, returning a new point.
+	 * Operator that subtracts the right point from the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A -= B)

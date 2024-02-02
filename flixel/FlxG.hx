@@ -27,6 +27,7 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
+import flixel.util.typeLimit.NextState;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -105,7 +106,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 4, 1);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 6, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -348,9 +349,6 @@ class FlxG
 	public static function resizeWindow(width:Int, height:Int):Void
 	{
 		#if desktop
-		#if openfl_legacy
-		stage.resize(width, height);
-		#else
 		#if air
 		var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
 		window.width = width;
@@ -359,11 +357,10 @@ class FlxG
 		Lib.application.window.resize(width, height);
 		#end
 		#end
-		#end
 	}
 
 	/**
-	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
+	 * Like hitting the reset button on a game console, this will re-launch the game as if it just started.
 	 */
 	public static inline function resetGame():Void
 	{
@@ -373,21 +370,41 @@ class FlxG
 	/**
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
+	 * @param   nextState  A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
+	 *                     Note: Before Flixel 6, this took a `FlxState` instance, this has been
+	 *                     deprecated, but is still available, for backwards compatibility.
 	 */
-	public static inline function switchState(nextState:FlxState):Void
+	public static inline function switchState(nextState:NextState):Void
 	{
 		final stateOnCall = FlxG.state;
-		// Use reflection to avoid deprecation warning on switchTo
-		if (Reflect.field(state, 'switchTo')(nextState))
+		
+		if (!nextState.isInstance() || canSwitchTo(cast nextState))
 		{
 			state.startOutro(function()
 			{
 				if (FlxG.state == stateOnCall)
-					game._requestedState = nextState;
+					game._nextState = nextState;
 				else
 					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
 			});
 		}
+	}
+	
+	/**
+	 * Calls state.switchTo(nextState) without a deprecation warning.
+	 * This will be removed in Flixel 6.0.0
+	 * @since 5.6.0
+	 */
+	@:noCompletion
+	@:haxe.warning("-WDeprecated")
+	static function canSwitchTo(nextState:FlxState)
+	{
+		#if (haxe < version("4.3.0"))
+		// Use reflection because @:haxe.warning("-WDeprecated") doesn't work until haxe 4.3
+		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
+		#else
+		return state.switchTo(nextState);
+		#end
 	}
 
 	/**
@@ -396,7 +413,13 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		switchState(Type.createInstance(Type.getClass(state), []));
+		if (state == null || state._constructor == null)
+			FlxG.log.error("FlxG.resetState was called while switching states");
+		else if(!state._constructor.isInstance())
+			switchState(state._constructor);
+		else
+			// create new instance here so that state.switchTo is called (for backwards compatibility)
+			switchState(Type.createInstance(Type.getClass(state), []));
 	}
 
 	/**

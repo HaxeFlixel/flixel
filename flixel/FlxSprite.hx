@@ -282,9 +282,6 @@ class FlxSprite extends FlxObject
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
 	 */
-	#if openfl_legacy
-	@:noCompletion
-	#end
 	public var shader:FlxShader;
 
 	/**
@@ -774,6 +771,16 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null)
 			loadGraphic("flixel/images/logo/default.png");
+		else if (graphic != null && graphic.isDestroyed)
+		{
+			// switch graphic but log and preserve size
+			final width = this.width;
+			final height = this.height;
+			FlxG.log.error('Cannot render a destroyed graphic, the placeholder image will be used instead');
+			loadGraphic("flixel/images/logo/default.png");
+			this.width = width;
+			this.height = height;
+		}
 	}
 
 	/**

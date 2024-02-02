@@ -20,7 +20,7 @@ class FlxFlicker implements IFlxDestroyable
 	static var _boundObjects:Map<FlxObject, FlxFlicker> = new Map<FlxObject, FlxFlicker>();
 
 	/**
-	 * A simple flicker effect for sprites using a ping-pong tween by toggling visibility.
+	 * A simple flicker effect for sprites using a `FlxTimer` to toggle visibility.
 	 *
 	 * @param   Object               The object.
 	 * @param   Duration             How long to flicker for (in seconds). `0` means "forever".

@@ -314,6 +314,12 @@ class FlxGraphic implements IFlxDestroyable
 	public var isLoaded(get, never):Bool;
 
 	/**
+	 * Whether `destroy` was called on this graphic
+	 * @since 5.6.0
+	 */
+	public var isDestroyed(get, never):Bool;
+
+	/**
 	 * Whether the `BitmapData` of this graphic object can be dumped for decreased memory usage,
 	 * but may cause some issues (when you need direct access to pixels of this graphic.
 	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
@@ -388,14 +394,14 @@ class FlxGraphic implements IFlxDestroyable
 	 * @param   Persist   Whether or not this graphic stay in the cache after resetting it.
 	 *                    Default value is `false`, which means that this graphic will be destroyed at the cache reset.
 	 */
-	function new(Key:String, Bitmap:BitmapData, ?Persist:Bool)
+	function new(key:String, bitmap:BitmapData, ?persist:Bool)
 	{
-		key = Key;
-		persist = (Persist != null) ? Persist : defaultPersist;
+		this.key = key;
+		this.persist = (persist != null) ? persist : defaultPersist;
 
 		frameCollections = new Map<FlxFrameCollectionType, Array<Dynamic>>();
 		frameCollectionTypes = new Array<FlxFrameCollectionType>();
-		bitmap = Bitmap;
+		this.bitmap = bitmap;
 
 		shader = new FlxShader();
 	}
@@ -551,6 +557,11 @@ class FlxGraphic implements IFlxDestroyable
 	inline function get_isLoaded()
 	{
 		return bitmap != null && !bitmap.rect.isEmpty();
+	}
+	
+	inline function get_isDestroyed()
+	{
+		return shader == null;
 	}
 
 	inline function get_canBeDumped():Bool

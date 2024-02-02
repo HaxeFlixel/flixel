@@ -87,6 +87,13 @@ class FlxObject extends FlxBasic
 	public static var SEPARATE_BIAS:Float = 4;
 
 	/**
+	 * The default `moves` value of all future `FlxObjects` and `FlxSprites`
+	 * Note: Has no effect on `FlxTexts`, `FlxTilemaps` and `FlxTileBlocks`
+	 * @since 5.6.0
+	 */
+	public static var defaultMoves:Bool = true;
+
+	/**
 	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
 	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.LEFT` directly.
 	 */
@@ -612,7 +619,7 @@ class FlxObject extends FlxBasic
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
 	 * `FlxObject` and `FlxSprite` default to `true`. `FlxText`, `FlxTileblock` and `FlxTilemap` default to `false`.
 	 */
-	public var moves(default, set):Bool = true;
+	public var moves(default, set):Bool = defaultMoves;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
@@ -1170,7 +1177,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object is touching an object in (any of) the specified direction(s) this frame.
@@ -1182,7 +1189,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is just landed on a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object just landed on (any of) the specified surface(s) this frame.
