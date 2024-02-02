@@ -5,7 +5,7 @@
 - `FlxState`: Remove deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
 - `FlxG`: Add deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
 
-5.6.0 (TBD)
+5.6.0 (February 2, 2024)
 
 #### New features:
 - `FlxGraphic`: Added `isDestroyed` ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
@@ -32,6 +32,9 @@
 - `NextState`: Allow `()->FlxState` args in `FlxG.switchState` and `FlxGame.new` ([#2997](https://github.com/HaxeFlixel/flixel/pull/2997))
 - `FlxSplash`: Can now extend `FlxSplash` to add custom behavior ([#2997](https://github.com/HaxeFlixel/flixel/pull/2997))
 - `FlxDrawQuadsItem`: Improve performance by pre-calculating alpha ([#2996](https://github.com/HaxeFlixel/flixel/pull/2996))
+- `FlxSpriteGroup`: Now able to follow its `path` ([#3014](https://github.com/HaxeFlixel/flixel/pull/3014))
+- `FlxAtlasFrames`: Remove `Hash<T>` in favor of `DynamicAccess<T>` ([#3015](https://github.com/HaxeFlixel/flixel/pull/3015))
+- Various documentation ([#3021](https://github.com/HaxeFlixel/flixel/pull/3021)) ([#3012](https://github.com/HaxeFlixel/flixel/pull/3012))
 
 #### Bugfixes:
 - Prevent crash when drawing a sprite with a destroyed graphic, by loading the placeholder logo. ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
@@ -40,6 +43,7 @@
 - `FlxPlugin`: Fix inline error on haxe 4.3.3 ([#2986](https://github.com/HaxeFlixel/flixel/pull/2986))
 - `FlxKeyboard`: Fix plus keybind on Mac ([#2987](https://github.com/HaxeFlixel/flixel/pull/2987))
 - `FlxSignal`: Fix one-time listeners not being removed on hashlink ([#3004](https://github.com/HaxeFlixel/flixel/pull/3004))
+- `QuadPath`: Prevent crash by avoiding divide by zero in `getCurveLength` ([#3019](https://github.com/HaxeFlixel/flixel/pull/3019))
 
 5.5.0 (November 8, 2023)
 

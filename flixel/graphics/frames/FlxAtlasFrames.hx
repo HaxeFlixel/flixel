@@ -81,19 +81,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 		frames = new FlxAtlasFrames(graphic);
 
 		final data:TexturePackerAtlas = description.getData();
-
 		// JSON-Array
-		if (data.frames is Array)
+		if (data.frames.isArray())
 		{
-			final frameArray:Array<TexturePackerAtlasFrame> = data.frames;
-			for (frame in frameArray)
+			for (frame in data.frames.toArray())
 				texturePackerHelper(frame.filename, frame, frames, useFrameDuration);
 		}
 		// JSON-Hash
 		else
 		{
-			final frameHash:Hash<TexturePackerAtlasFrame> = data.frames;
-			for (name=>frame in frameHash)
+			for (name=>frame in data.frames.toHash())
 				texturePackerHelper(name, frame, frames, useFrameDuration);
 		}
 

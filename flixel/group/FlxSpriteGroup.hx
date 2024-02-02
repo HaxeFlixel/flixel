@@ -208,6 +208,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		group.update(elapsed);
 
+		if (path != null && path.active)
+			path.update(elapsed);
+
 		if (moves)
 			updateMotion(elapsed);
 	}
