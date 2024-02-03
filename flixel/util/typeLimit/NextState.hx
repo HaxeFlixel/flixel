@@ -7,7 +7,7 @@ import flixel.FlxState;
  * Prior to haxeFlixel 6, `FlxG.switchState` and other similar methods took a `FlxState` instance
  * which meant FlxStates were instantiated before the previous state was destroyed, potentially
  * causing errors. It also meant states with args couldn't be reset via FlxG.resetState. In version
- * 6.0.0 and higher, these methods now take a function that returns a newly created instance. This
+ * 5.6.0 and higher, these methods now take a function that returns a newly created instance. This
  * allows the state's instantiation to happen after the previous state is destroyed.
  * 
  * ## examples:
@@ -29,7 +29,7 @@ import flixel.FlxState;
  * FlxG.switchState(new PlayState());
  * ```
  * 
- * @since 6.0.0
+ * @since 5.6.0
  * @see [HaxeFlixel issue #2541](https://github.com/HaxeFlixel/flixel/issues/2541)
  */
 abstract NextState(Dynamic)
@@ -96,7 +96,7 @@ abstract NextState(Dynamic)
  * FlxG.switchState(PlayState);
  * ```
  * 
- * @since 6.0.0
+ * @since 5.6.0
  * @see [HaxeFlixel issue #2541](https://github.com/HaxeFlixel/flixel/issues/2541)
  */
 abstract InitialState(Dynamic) to NextState
