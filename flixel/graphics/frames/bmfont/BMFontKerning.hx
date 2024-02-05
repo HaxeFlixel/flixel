@@ -1,7 +1,6 @@
 package flixel.graphics.frames.bmfont;
 
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 
 /**
  * Kerning data used internally via `FlxBitmapFont.fromAngelCode` to serialize text, xml or binary
@@ -25,19 +24,19 @@ class BMFontKerning
 		this.amount = amount;
 	}
 	
-	static function fromXml(kerningNode:Access):BMFontKerning
+	static function fromXml(kerningNode:BMFontXml):BMFontKerning
 	{
 		return
 		{
-			first: Std.parseInt(kerningNode.att.first),
-			second: Std.parseInt(kerningNode.att.second),
-			amount: Std.parseInt(kerningNode.att.amount)
+			first: kerningNode.att.int("first"),
+			second: kerningNode.att.int("second"),
+			amount: kerningNode.att.int("amount")
 		}
 	}
 	
-	static function listFromXml(kerningsNode:Access):Array<BMFontKerning>
+	static function listFromXml(kerningsNode:BMFontXml):Array<BMFontKerning>
 	{
-		final kernings = kerningsNode.nodes.kerning;
+		final kernings = kerningsNode.nodes("kerning");
 		return [ for (pair in kernings) fromXml(pair) ];
 	}
 	

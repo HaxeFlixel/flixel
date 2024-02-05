@@ -1,7 +1,6 @@
 package flixel.graphics.frames.bmfont;
 
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 import UnicodeString;
 
 using StringTools;
@@ -29,26 +28,26 @@ class BMFontChar
 	public var chnl:Int;
 	public var letter:Null<String> = null;
 	
-	static inline function fromXml(charNode:Access):BMFontChar
+	static inline function fromXml(charNode:BMFontXml):BMFontChar
 	{
 		return {
-			id: Std.parseInt(charNode.att.id),
-			x: Std.parseInt(charNode.att.x),
-			y: Std.parseInt(charNode.att.y),
-			width: Std.parseInt(charNode.att.width),
-			height: Std.parseInt(charNode.att.height),
-			xoffset: (charNode.has.xoffset) ? Std.parseInt(charNode.att.xoffset) : 0,
-			yoffset: (charNode.has.yoffset) ? Std.parseInt(charNode.att.yoffset) : 0,
-			xadvance: (charNode.has.xadvance) ? Std.parseInt(charNode.att.xadvance) : 0,
-			page: Std.parseInt(charNode.att.page),
-			chnl: Std.parseInt(charNode.att.chnl),
-			letter: charNode.has.letter ? charNode.att.letter : null
+			id: charNode.att.int("id"),
+			x: charNode.att.int("x"),
+			y: charNode.att.int("y"),
+			width: charNode.att.int("width"),
+			height: charNode.att.int("height"),
+			xoffset: charNode.att.intSafe("xoffset", 0),
+			yoffset: charNode.att.intSafe("yoffset", 0),
+			xadvance: charNode.att.intSafe("xadvance", 0),
+			page: charNode.att.intWarn("page", -1),
+			chnl: charNode.att.intWarn("chnl", -1),
+			letter: charNode.att.stringSafe("letter")
 		};
 	}
 	
-	static function listFromXml(charsNode:Access):Array<BMFontChar>
+	static function listFromXml(charsNode:BMFontXml):Array<BMFontChar>
 	{
-		final chars = charsNode.nodes.char;
+		final chars = charsNode.nodes("char");
 		return [ for (char in chars) fromXml(char) ];
 	}
 	
