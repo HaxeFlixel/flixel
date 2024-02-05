@@ -1,5 +1,6 @@
 package flixel.tweens.motion;
 
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween.FlxTweenManager;
 import flixel.tweens.FlxTween.TweenOptions;
@@ -199,13 +200,22 @@ class QuadPath extends Motion
 
 	function getCurveLength(start:FlxPoint, control:FlxPoint, finish:FlxPoint):Float
 	{
+		var safeControl = control.clone();
 		var p1 = FlxPoint.get();
 		var p2 = FlxPoint.get();
 
-		p1.x = start.x - 2 * control.x + finish.x;
-		p1.y = start.y - 2 * control.y + finish.y;
-		p2.x = 2 * control.x - 2 * start.x;
-		p2.y = 2 * control.y - 2 * start.y;
+		// we add a small quantity if two consecutive points are equal
+		// otherwise the final equation will have a division by zero
+		if (safeControl.equals(start))
+			safeControl.add(FlxMath.EPSILON, FlxMath.EPSILON);
+			
+		if (safeControl.equals(finish))
+			safeControl.add(FlxMath.EPSILON, FlxMath.EPSILON);
+			
+		p1.x = start.x - 2 * safeControl.x + finish.x;
+		p1.y = start.y - 2 * safeControl.y + finish.y;
+		p2.x = 2 * safeControl.x - 2 * start.x;
+		p2.y = 2 * safeControl.y - 2 * start.y;
 		var a:Float = 4 * (p1.x * p1.x + p1.y * p1.y),
 			b:Float = 4 * (p1.x * p2.x + p1.y * p2.y),
 			c:Float = p2.x * p2.x + p2.y * p2.y,
@@ -217,6 +227,7 @@ class QuadPath extends Motion
 
 		p1.put();
 		p2.put();
+		safeControl.put();
 
 		return (a32 * abc + a2 * b * (abc - c2) + (4 * c * a - b * b) * Math.log((2 * a2 + ba + abc) / (ba + c2))) / (4 * a32);
 	}

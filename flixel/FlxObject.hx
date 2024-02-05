@@ -1177,7 +1177,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object is touching an object in (any of) the specified direction(s) this frame.
@@ -1189,7 +1189,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is just landed on a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object just landed on (any of) the specified surface(s) this frame.

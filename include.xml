@@ -46,4 +46,10 @@
 		<sample path="${haxelib:flixel-demos}/Tutorials" />
 		<sample path="${haxelib:flixel-demos}/User Interface" />
 	</section>
+
+	<section if="android">
+		<config:android>
+			<application android:appCategory="game" if="${lime &ge; 8.2.0}" />
+		</config:android>
+	</section>
 </project>

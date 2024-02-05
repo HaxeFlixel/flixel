@@ -1,14 +1,15 @@
 package flixel.system.frontEnds;
 
-import openfl.ui.Mouse;
 import flixel.FlxG;
+import openfl.ui.Mouse;
 #if FLX_RECORD
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
-import openfl.utils.ByteArray;
+import flixel.util.typeLimit.NextState;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxRandom;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+import openfl.utils.ByteArray;
 #if flash
 import openfl.net.FileReference;
 import openfl.net.FileFilter;
@@ -114,28 +115,33 @@ class VCRFrontEnd
 	/**
 	 * Load replay data from a string and play it back.
 	 *
-	 * @param	Data		The replay that you want to load.
-	 * @param	State		Optional parameter: if you recorded a state-specific demo or cutscene, pass a new instance of that state here.
-	 * @param	CancelKeys	Optional parameter: an array of string names of keys (see FlxKeyboard) that can be pressed to cancel the playback, e.g. ["ESCAPE","ENTER"].  Also accepts 2 custom key names: "ANY" and "MOUSE" (fairly self-explanatory I hope!).
-	 * @param	Timeout		Optional parameter: set a time limit for the replay. CancelKeys will override this if pressed.
-	 * @param	Callback	Optional parameter: if set, called when the replay finishes. Running to the end, CancelKeys, and Timeout will all trigger Callback(), but only once, and CancelKeys and Timeout will NOT call FlxG.stopReplay() if Callback is set!
+	 * @param   data        The replay that you want to load.
+	 * @param   state       If you recorded a state-specific demo or cutscene, pass a state
+	 *                      constructor here, just as you would to to `FlxG.switchState`.
+	 * @param   cancelKeys  An array of string names of keys (see `FlxKeyboard`) that can be pressed
+	 *                      to cancel the playback, e.g. `[ESCAPE,ENTER]`.  Also accepts 2 custom
+	 *                      key names: `ANY` and `MOUSE`.
+	 * @param   timeout     Set a time limit for the replay. `cancelKeys` will override this, if pressed.
+	 * @param   callback    If set, called when the replay finishes, any cancel key is pressed, or
+	 *                      if a timeout is triggered. Note: `cancelKeys` and `timeout` will NOT
+	 *                      call `FlxG.stopReplay()` if `callback` is set!
 	 */
-	public function loadReplay(Data:String, ?State:FlxState, ?CancelKeys:Array<FlxKey>, ?Timeout:Float = 0, ?Callback:Void->Void):Void
+	public function loadReplay(data:String, ?state:NextState, ?cancelKeys:Array<FlxKey>, ?timeout:Float = 0, ?callback:Void->Void):Void
 	{
-		FlxG.game._replay.load(Data);
+		FlxG.game._replay.load(data);
 
-		if (State == null)
+		if (state == null)
 		{
 			FlxG.resetGame();
 		}
 		else
 		{
-			FlxG.switchState(State);
+			FlxG.switchState(state);
 		}
 
-		cancelKeys = CancelKeys;
-		timeout = Std.int(Timeout * 1000);
-		replayCallback = Callback;
+		this.cancelKeys = cancelKeys;
+		this.timeout = Std.int(timeout * 1000);
+		replayCallback = callback;
 		FlxG.game._replayRequested = true;
 
 		#if FLX_KEYBOARD

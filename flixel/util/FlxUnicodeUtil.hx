@@ -2,10 +2,10 @@ package flixel.util;
 
 /**
  * Just an internal helper to deal with the deprecation of `haxe.Utf8` - not considered public API.
- * Todo: Remove and use Unicode strings
  */
 @:dox(hide)
 @:noCompletion
+@:deprecated("Use unicodeString")
 class FlxUnicodeUtil
 {
 	public static inline function uLength(s:String):Int
@@ -31,6 +31,7 @@ class FlxUnicodeUtil
 
 @:dox(hide)
 @:noCompletion
+@:deprecated("Use unicodeString")
 abstract UnicodeBuffer(UnicodeString)
 {
 	public inline function new(s:String = "")

@@ -1,5 +1,7 @@
 package flixel.graphics.atlas;
 
+import haxe.DynamicAccess;
+
 typedef AtlasBase<T> =
 {
 	frames:T
@@ -62,23 +64,35 @@ typedef AtlasFrame =
 	var spriteSourceSize:AtlasRect;
 }
 
-/**
- * Internal helper used to enumerate the fields of an atlas that has frame data keyed by frame names.
- */
-abstract Hash<T>(Dynamic)
+abstract HashOrArray<T>(Dynamic) from DynamicAccess<T> from Array<T>
 {
-	public inline function keyValueIterator():KeyValueIterator<String, T>
+	public inline function isArray()
 	{
-		var keys = Reflect.fields(this).iterator();
-		return {
-			hasNext: keys.hasNext,
-			next: () ->
-			{
-				final key = keys.next();
-				return {key: key, value: Reflect.field(this, key)};
-			}
-		};
+		return (this is Array);
+	}
+	
+	public inline function isHash()
+	{
+		return !isArray();
+	}
+	
+	@:to
+	public inline function toArray():Array<T>
+	{
+		return this;
+	}
+	
+	@:to
+	public inline function toHash():DynamicAccess<T>
+	{
+		return this;
+	}
+	
+	public inline function iterator():Iterator<T>
+	{
+		if (isArray())
+			return toArray().iterator();
+		else
+			return toHash().iterator();
 	}
 }
-
-typedef HashOrArray<T> = flixel.util.typeLimit.OneOfTwo<AtlasBase.Hash<T>, Array<T>>;
