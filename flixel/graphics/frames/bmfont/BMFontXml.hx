@@ -11,7 +11,7 @@ abstract BMFontXml(Xml) from Xml
 {
 	public var xml(get, never):Xml;
 	
-	public inline function get_xml()
+	inline function get_xml()
 	{
 		return this;
 	}
