@@ -35,7 +35,7 @@ import flixel.FlxState;
 abstract NextState(Dynamic)
 {
 	@:from
-	// @:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`)") // wait until 6.0.0
+	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`)")
 	public static function fromState(state:FlxState):NextState
 	{
 		return cast state;
@@ -47,23 +47,11 @@ abstract NextState(Dynamic)
 		return cast func;
 	}
 	
-	@:allow(flixel.FlxG)
-	inline function isInstance():Bool
-	{
-		return this is FlxState;
-	}
-	
-	@:allow(flixel.FlxG)
-	inline function isClass():Bool
-	{
-		return this is Class;
-	}
-	
 	public function createInstance():FlxState
 	{
-		if (isInstance())
+		if (this is FlxState)
 			return cast this;
-		else if (isClass())
+		else if (this is Class)
 			return Type.createInstance(this, []);
 		else
 			return cast this();
@@ -71,18 +59,13 @@ abstract NextState(Dynamic)
 	
 	public function getConstructor():()->FlxState
 	{
-		if (isInstance())
+		if (this is FlxState)
 		{
 			return function ():FlxState
 			{
 				return cast Type.createInstance(Type.getClass(this), []);
 			}
 		}
-		else if (isClass())
-			return function ():FlxState
-			{
-				return cast Type.createInstance(this, []);
-			}
 		else
 			return cast this;
 	}
@@ -91,7 +74,7 @@ abstract NextState(Dynamic)
 /**
  * A utility type that allows methods to accept multiple types, when dealing with "future" `FlxStates`.
  * Prior to haxeFlixel 6, the `FlxGame` constructor took a `FlxState` class which meant initial
- `FlxStates`could not have constructor args. In version 6.0.0 and higher, it now takes a function
+ * `FlxStates`could not have constructor args. In version 6.0.0 and higher, it now takes a function
  * that returns a newly created instance.
  * 
  * ## examples:
