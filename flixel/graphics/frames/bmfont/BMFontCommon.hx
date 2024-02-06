@@ -1,7 +1,6 @@
 package flixel.graphics.frames.bmfont;
 
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 
 /**
  * Common data used internally via `FlxBitmapFont.fromAngelCode` to serialize text, xml or binary
@@ -25,20 +24,20 @@ class BMFontCommon
 	public var greenChnl:Int;
 	public var blueChnl:Int;
 	
-	static function fromXml(commonNode:Access):BMFontCommon
+	static function fromXml(commonNode:BMFontXml):BMFontCommon
 	{
 		return
 		{
-			lineHeight: Std.parseInt(commonNode.att.lineHeight),
-			base: Std.parseInt(commonNode.att.base),
-			scaleW: Std.parseInt(commonNode.att.scaleW),
-			scaleH: Std.parseInt(commonNode.att.scaleH),
-			pages: Std.parseInt(commonNode.att.pages),
-			packed: commonNode.att.packed != '0',
-			alphaChnl: (commonNode.has.alphaChnl) ? Std.parseInt(commonNode.att.alphaChnl) : 0,
-			redChnl: (commonNode.has.redChnl) ? Std.parseInt(commonNode.att.redChnl) : 0,
-			greenChnl: (commonNode.has.greenChnl) ? Std.parseInt(commonNode.att.greenChnl) : 0,
-			blueChnl: (commonNode.has.blueChnl) ? Std.parseInt(commonNode.att.blueChnl) : 0
+			lineHeight: commonNode.att.int("lineHeight"),
+			base: commonNode.att.intWarn("base", -1),
+			scaleW: commonNode.att.intWarn("scaleW", 1),
+			scaleH: commonNode.att.intWarn("scaleH", 1),
+			pages: commonNode.att.intSafe("pages", 0),
+			packed: commonNode.att.boolSafe("packed", false),
+			alphaChnl: commonNode.att.intSafe("alphaChnl", 0),
+			redChnl: commonNode.att.intSafe("redChnl", 0),
+			greenChnl: commonNode.att.intSafe("greenChnl", 0),
+			blueChnl: commonNode.att.intSafe("blueChnl", 0)
 		};
 	}
 	
@@ -50,10 +49,10 @@ class BMFontCommon
 		var scaleH:Int = 1;
 		var pages:Int = 0;
 		var packed:Bool = false;
-		var alphaChnl:Int = -1;
-		var redChnl:Int = -1;
-		var greenChnl:Int = -1;
-		var blueChnl:Int = -1;
+		var alphaChnl:Int = 0;
+		var redChnl:Int = 0;
+		var greenChnl:Int = 0;
+		var blueChnl:Int = 0;
 		
 		BMFontUtil.forEachAttribute(commonText,
 			function(key:String, value:String)
