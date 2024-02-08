@@ -60,6 +60,15 @@ class FlxText extends FlxSprite
 	public var size(get, set):Int;
 
 	/**
+	 * A number representing the amount of space that is uniformly distributed
+	 * between all characters. The value specifies the number of pixels that are
+	 * added to the advance after each character.
+	 *
+	 * The default value is `null`, which means that 0 pixels of letter spacing is used.
+	 */
+	public var spacing(default, set):Null<Float> = null;
+
+	/**
 	 * The font used for this text (assuming that it's using embedded font).
 	 */
 	public var font(get, set):String;
@@ -638,6 +647,13 @@ class FlxText extends FlxSprite
 		_defaultFormat.size = Size;
 		updateDefaultFormat();
 		return Size;
+	}
+
+	function set_spacing(Spacing:Null<Float>):Null<Float>
+	{
+		_defaultFormat.letterSpacing = Spacing;
+		updateDefaultFormat();
+		return Spacing;
 	}
 
 	override function set_color(Color:FlxColor):Int
