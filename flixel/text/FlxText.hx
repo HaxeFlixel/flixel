@@ -66,7 +66,7 @@ class FlxText extends FlxSprite
 	 *
 	 * The default value is `null`, which means that 0 pixels of letter spacing is used.
 	 */
-	public var spacing(default, set):Null<Float> = null;
+	public var letterSpacing(default, set):Null<Float> = null;
 
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
@@ -649,9 +649,9 @@ class FlxText extends FlxSprite
 		return Size;
 	}
 
-	function set_spacing(Spacing:Null<Float>):Null<Float>
+	function set_letterSpacing(LetterSpacing:Null<Float>):Null<Float>
 	{
-		_defaultFormat.letterSpacing = Spacing;
+		_defaultFormat.letterSpacing = LetterSpacing;
 		updateDefaultFormat();
 		return Spacing;
 	}
