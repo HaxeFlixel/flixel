@@ -653,7 +653,7 @@ class FlxText extends FlxSprite
 	{
 		_defaultFormat.letterSpacing = LetterSpacing;
 		updateDefaultFormat();
-		return Spacing;
+		return LetterSpacing;
 	}
 
 	override function set_color(Color:FlxColor):Int
