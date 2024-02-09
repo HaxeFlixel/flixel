@@ -63,10 +63,8 @@ class FlxText extends FlxSprite
 	 * A number representing the amount of space that is uniformly distributed
 	 * between all characters. The value specifies the number of pixels that are
 	 * added to the advance after each character.
-	 *
-	 * The default value is `null`, which means that 0 pixels of letter spacing is used.
 	 */
-	public var letterSpacing(default, set):Null<Float> = null;
+	public var letterSpacing(get, set):Float;
 
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
@@ -649,7 +647,12 @@ class FlxText extends FlxSprite
 		return Size;
 	}
 
-	function set_letterSpacing(LetterSpacing:Null<Float>):Null<Float>
+	inline function get_letterSpacing():Float
+	{
+		return _defaultFormat.letterSpacing;
+	}
+
+	function set_letterSpacing(LetterSpacing:Float):Float
 	{
 		_defaultFormat.letterSpacing = LetterSpacing;
 		updateDefaultFormat();
