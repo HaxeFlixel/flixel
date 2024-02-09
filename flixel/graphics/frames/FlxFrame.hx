@@ -54,7 +54,7 @@ class FlxFrame implements IFlxDestroyable
 		if (num2 == null)
 			num2 = 0;
 
-		return num1 - num2;
+		return Math.abs(num1) - Math.abs(num2);
 	}
 
 	public var name:String;
