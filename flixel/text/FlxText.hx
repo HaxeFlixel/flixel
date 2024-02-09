@@ -226,6 +226,7 @@ class FlxText extends FlxSprite
 		textField.multiline = true;
 		textField.wordWrap = true;
 		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		letterSpacing = 0;
 		font = FlxAssets.FONT_DEFAULT;
 		_formatAdjusted = new TextFormat();
 		textField.defaultTextFormat = _defaultFormat;
