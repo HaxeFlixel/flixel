@@ -4,6 +4,7 @@ import openfl.display.BitmapData;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
+import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -54,7 +55,7 @@ class FlxFrame implements IFlxDestroyable
 		if (num2 == null)
 			num2 = 0;
 
-		return Math.abs(num1) - Math.abs(num2);
+		return FlxMath.absInt(num1) - FlxMath.absInt(num2);
 	}
 
 	public var name:String;
