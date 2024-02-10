@@ -1,3 +1,7 @@
+5.6.2 (February 10, 2024)
+#### Changes and improvements:
+- `FlxBitmapFont`: Prevent crashes from missing xml fields in `fromAngelCode` ([#3029](https://github.com/HaxeFlixel/flixel/pull/3029))
+
 5.6.1 (February 9, 2024)
 #### Changes and improvements:
 - `FlxBitmapFont`: Downgraded crashes of missing xml fields to warnings in `fromAngelCode` ([#3025](https://github.com/HaxeFlixel/flixel/pull/3025))

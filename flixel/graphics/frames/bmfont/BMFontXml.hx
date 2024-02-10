@@ -62,7 +62,7 @@ abstract BMFontXml(Xml) from Xml
 		if (this.nodeType == Xml.Document)
 			throw 'Cannot access document attribute $name';
 		
-		return this.nodeType == Xml.Document && this.exists(name);
+		return this.nodeType != Xml.Document && this.exists(name);
 	}
 	
 	/** Check the existence of a sub node with the given name. **/
