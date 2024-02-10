@@ -59,7 +59,7 @@ class FlxFrame implements IFlxDestroyable
 	 * @param suffix  Everything in the frames' name *after* the order
 	 * @param warn    Whether to warn on invalid names
 	 */
-	public static function sort_(frames:Array<FlxFrame>, prefixLength:Int, suffixLength:Int, warn = true):Void
+	public static function sort(frames:Array<FlxFrame>, prefixLength:Int, suffixLength:Int, warn = true):Void
 	{
 		sortHelper(frames, prefixLength, suffixLength, warn);
 	}
