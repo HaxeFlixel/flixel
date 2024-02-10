@@ -33,29 +33,67 @@ class FlxFrame implements IFlxDestroyable
 	 * Temp matrix helper, used internally
 	 */
 	static var _matrix = new FlxMatrix();
-
+	
 	/**
-	 * Sorts an array of `FlxFrame` objects by their name, e.g.
-	 * `["tiles-001.png", "tiles-003.png", "tiles-002.png"]`
-	 * with `"tiles-".length == prefixLength` and `".png".length == postfixLength`.
+	 * Sorts frames based on the value of the frames' name between the prefix and suffix.
+	 * Uses `Std.parseInt` to parse the value, if the result is `null`, 0 is used, if the result
+	 * is a negative number, the absolute valute is used.
+	 * 
+	 * @param frames  The list of frames to sort
+	 * @param prefix  Everything in the frames' name *before* the order
+	 * @param suffix  Everything in the frames' name *after* the order
+	 * @param warn    Whether to warn on invalid names
 	 */
-	public static function sort(frames:Array<FlxFrame>, prefixLength:Int, postfixLength:Int):Void
+	public static inline function sortFrames(frames:Array<FlxFrame>, prefix:String, ?suffix:String, warn = true):Void
 	{
-		ArraySort.sort(frames, sortByName.bind(_, _, prefixLength, postfixLength));
+		sortHelper(frames, prefix.length, suffix == null ? 0 : suffix.length, warn);
 	}
-
-	public static function sortByName(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, postfixLength:Int):Int
+	
+	/**
+	 * Sorts frames based on the value of the frames' name between the prefix and suffix.
+	 * Uses `Std.parseInt` to parse the value, if the result is `null`, 0 is used, if the result
+	 * is a negative number, the absolute valute is used.
+	 * 
+	 * @param frames  The list of frames to sort
+	 * @param prefix  Everything in the frames' name *before* the order
+	 * @param suffix  Everything in the frames' name *after* the order
+	 * @param warn    Whether to warn on invalid names
+	 */
+	public static function sort_(frames:Array<FlxFrame>, prefixLength:Int, suffixLength:Int, warn = true):Void
 	{
-		var name1:String = frame1.name;
-		var name2:String = frame2.name;
-		var num1:Null<Int> = Std.parseInt(name1.substring(prefixLength, name1.length - postfixLength));
-		var num2:Null<Int> = Std.parseInt(name2.substring(prefixLength, name2.length - postfixLength));
-		if (num1 == null)
-			num1 = 0;
-		if (num2 == null)
-			num2 = 0;
-
-		return FlxMath.absInt(num1) - FlxMath.absInt(num2);
+		sortHelper(frames, prefixLength, suffixLength, warn);
+	}
+	
+	static function sortHelper(frames:Array<FlxFrame>, prefixLength:Int, suffixLength:Int, warn = true):Void
+	{
+		if (warn)
+		{
+			for (frame in frames)
+				checkValidName(frame.name, prefixLength, suffixLength);
+		}
+		
+		ArraySort.sort(frames, sortByName.bind(_, _, prefixLength, suffixLength));
+	}
+	
+	static inline function checkValidName(name:String, prefixLength:Int, suffixLength:Int)
+	{
+		final nameSub = name.substring(prefixLength, name.length - suffixLength);
+		final num:Null<Int> = Std.parseInt(nameSub);
+		if (num == null)
+			FlxG.log.warn('Could not parse frame number of "$nameSub" in frame named "$name"');
+		else if (num < 0)
+			FlxG.log.warn('Found negative frame number "$nameSub" in frame named "$name"');
+	}
+	
+	public static function sortByName(frame1:FlxFrame, frame2:FlxFrame, prefixLength:Int, suffixLength:Int):Int
+	{
+		inline function getNameOrder(name:String):Int
+		{
+			final num:Null<Int> = Std.parseInt(name.substring(prefixLength, name.length - suffixLength));
+			return if (num == null) 0 else FlxMath.absInt(num);
+		}
+		
+		return getNameOrder(frame1.name) - getNameOrder(frame2.name);
 	}
 
 	public var name:String;
