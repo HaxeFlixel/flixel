@@ -29,7 +29,7 @@ class BMFontCommon
 		return
 		{
 			lineHeight: commonNode.att.int("lineHeight"),
-			base: commonNode.att.intWarn("base", -1),
+			base: commonNode.att.intSafe("base", -1),
 			scaleW: commonNode.att.intWarn("scaleW", 1),
 			scaleH: commonNode.att.intWarn("scaleH", 1),
 			pages: commonNode.att.intSafe("pages", 0),

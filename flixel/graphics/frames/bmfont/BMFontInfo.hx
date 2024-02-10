@@ -30,21 +30,27 @@ class BMFontInfo
 	
 	static function fromXml(infoNode:BMFontXml):BMFontInfo
 	{
-		return {
+		final info:BMFontInfo =
+		{
 			face: infoNode.att.string("face"),
 			size: infoNode.att.int("size"),
 			bold: infoNode.att.boolSafe("bold", false),
 			italic: infoNode.att.boolSafe("italic", false),
 			smooth: infoNode.att.boolSafe("smooth", false),
-			charset: infoNode.att.stringWarn("charset"),
-			unicode: infoNode.att.boolWarn("unicode", false),
-			stretchH: infoNode.att.intWarn("stretchH", 100),
-			aa: infoNode.att.intWarn("aa", 1),
-			padding: BMFontPadding.fromString(infoNode.att.stringWarn("padding")),
-			spacing: BMFontSpacing.fromString(infoNode.att.stringWarn("spacing")),
+			charset: infoNode.att.stringSafe("charset"),
+			unicode: infoNode.att.boolSafe("unicode", false),
+			stretchH: infoNode.att.intSafe("stretchH", 100),
+			aa: infoNode.att.intSafe("aa", 1),
 			outline: infoNode.att.intSafe("outline", 0),
 			fixedHeight: infoNode.att.boolSafe("fixedHeight", false)
 		}
+		
+		if (infoNode.has("padding"))
+			info.padding = BMFontPadding.fromString(infoNode.att.string("padding"));
+		if (infoNode.has("spacing"))
+			info.spacing = BMFontSpacing.fromString(infoNode.att.string("spacing"));
+			
+		return info;
 	}
 	
 	static function fromText(infoText:String):BMFontInfo
