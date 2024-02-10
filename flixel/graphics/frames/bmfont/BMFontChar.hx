@@ -39,8 +39,8 @@ class BMFontChar
 			xoffset: charNode.att.intSafe("xoffset", 0),
 			yoffset: charNode.att.intSafe("yoffset", 0),
 			xadvance: charNode.att.intSafe("xadvance", 0),
-			page: charNode.att.intWarn("page", -1),
-			chnl: charNode.att.intWarn("chnl", -1),
+			page: charNode.att.intSafe("page", -1),
+			chnl: charNode.att.intSafe("chnl", -1),
 			letter: charNode.att.stringSafe("letter")
 		};
 	}
