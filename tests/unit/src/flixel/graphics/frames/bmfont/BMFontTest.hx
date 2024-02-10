@@ -8,22 +8,22 @@ class BMFontTest extends FlxTest
 	@Test
 	function testTextFormat()
 	{
-		var text = 'info face="Arial Black" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,2,3,4 spacing=2,1 outline=0
-common lineHeight=32 base=25 scaleW=256 scaleH=256 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
-page id=0 file="arial_black_0.png"
-chars count=3
-char id=64   x=0     y=0     width=25    height=24    xoffset=-5    yoffset=7     xadvance=17    page=0  chnl=15
-char id=65   x=27    y=0     width=26    height=21    xoffset=-5    yoffset=7     xadvance=18    page=0  chnl=15
-char id=84   x=55    y=0     width=23    height=21    xoffset=-4    yoffset=7     xadvance=16    page=0  chnl=15
-kernings count=2
-kerning first=84  second=65  amount=-2  
-kerning first=65  second=84  amount=-2  
-';
-
+		var text =
+		'info face="Arial Black" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,2,3,4 spacing=2,1 outline=0'
+		+ '\ncommon lineHeight=32 base=25 scaleW=256 scaleH=256 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0'
+		+ '\npage id=0 file="arial_black_0.png"'
+		+ '\nchars count=3'
+		+ '\nchar id=64   x=0     y=0     width=25    height=24    xoffset=-5    yoffset=7     xadvance=17    page=0  chnl=15'
+		+ '\nchar id=65   x=27    y=0     width=26    height=21    xoffset=-5    yoffset=7     xadvance=18    page=0  chnl=15'
+		+ '\nchar id=84   x=55    y=0     width=23    height=21    xoffset=-4    yoffset=7     xadvance=16    page=0  chnl=15'
+		+ '\nkernings count=2'
+		+ '\nkerning first=84  second=65  amount=-2  '
+		+ '\nkerning first=65  second=84  amount=-2  ';
+		
 		var font = BMFont.parse(cast text);
 		assertFont(font);
 	}
-
+	
 	@Test
 	function testXMLFormat()
 	{
@@ -44,11 +44,11 @@ kerning first=65  second=84  amount=-2
 			<kerning first="65" second="84" amount="-2" />
 		  </kernings>
 		</font>';
-
+		
 		var font = BMFont.parse(cast xml);
 		assertFont(font);
 	}
-
+	
 	@Test
 	function testBinaryFormat()
 	{
@@ -58,15 +58,14 @@ kerning first=65  second=84  amount=-2
 		"00019001800FBFF07001100000F410000001B0000001A001500FBFF07001200000F5" +
 		"40000003700000017001500FCFF07001000000F05140000005400000041000000FEF" +
 		"F4100000054000000FEFF");
-
+		
 		var font = BMFont.parse(cast binary);
 		assertFont(font);
 	}
-
+	
 	// This assumes the incoming font has a specific configuration we are checking for
-	private function assertFont(font:BMFont) {
-		trace(font);
-
+	private function assertFont(font:BMFont)
+	{
 		// INFO
 		Assert.areEqual("Arial Black", font.info.face);
 		Assert.areEqual(32, font.info.size);
@@ -84,7 +83,7 @@ kerning first=65  second=84  amount=-2
 		Assert.areEqual(2, font.info.spacing.x);
 		Assert.areEqual(1, font.info.spacing.y);
 		Assert.areEqual(0, font.info.outline);
-
+		
 		// COMMON
 		Assert.areEqual(32, font.common.lineHeight);
 		Assert.areEqual(25, font.common.base);
@@ -96,81 +95,40 @@ kerning first=65  second=84  amount=-2
 		Assert.areEqual(0, font.common.redChnl);
 		Assert.areEqual(0, font.common.greenChnl);
 		Assert.areEqual(0, font.common.blueChnl);
-
+		
 		// PAGES
 		Assert.areEqual(1, font.pages.length);
 		Assert.areEqual(0, font.pages[0].id);
 		Assert.areEqual("arial_black_0.png", font.pages[0].file);
-
+		
 		// Chars
 		Assert.areEqual(3, font.chars.length);
-		var expectedChars:Array<BMFontChar> = [
-			{
-				id: 64,
-				x: 0,
-				y: 0,
-				width: 25,
-				height: 24,
-				xoffset: -5,
-				yoffset: 7,
-				xadvance: 17,
-				page: 0,
-				chnl: 15,
-				letter: "@"
-			},
-			{
-				id: 65,
-				x: 27,
-				y: 0,
-				width: 26,
-				height: 21,
-				xoffset: -5,
-				yoffset: 7,
-				xadvance: 18,
-				page: 0,
-				chnl: 15,
-				letter: "A"
-			},
-			{
-				id: 84,
-				x: 55,
-				y: 0,
-				width: 23,
-				height: 21,
-				xoffset: -4,
-				yoffset: 7,
-				xadvance: 16,
-				page: 0,
-				chnl: 15,
-				letter: "T"
-			},
+		var expectedChars:Array<BMFontChar> =
+		[
+			{ id: 64, x: 0, y: 0, width: 25, height: 24, xoffset: -5, yoffset: 7, xadvance: 17, page: 0, chnl: 15, letter: "@" },
+			{ id: 65, x: 27, y: 0, width: 26, height: 21, xoffset: -5, yoffset: 7, xadvance: 18, page: 0, chnl: 15, letter: "A" },
+			{ id: 84, x: 55, y: 0, width: 23, height: 21, xoffset: -4, yoffset: 7, xadvance: 16, page: 0, chnl: 15, letter: "T" },
 		];
-
-		for (i in 0...expectedChars.length) {
+		
+		for (i in 0...expectedChars.length)
 			assertCharMatches(expectedChars[i], font.chars[i]);
-		}
-
+		
 		// Kerning
 		Assert.areEqual(font.chars.length, 3);
-		var expectedKerns:Array<BMFontKerning> = [
-			{
-				first: 84,
-				second: 65,
-				amount: -2
-			},
-			{
-				first: 65,
-				second: 84,
-				amount: -2
-			},
+		var expectedKerns:Array<BMFontKerning> =
+		[
+			{ first: 84, second: 65, amount: -2 },
+			{ first: 65, second: 84, amount: -2 },
 		];
-
-		for (i in 0...expectedKerns.length) {
+		
+		for (i in 0...expectedKerns.length)
+		{
 			assertKerningMatches(expectedKerns[i], font.kerning[i]);
 		}
 	}
-
-	private function assertCharMatches(expected:BMFontChar, actual:BMFontChar) {
+	
+	private function assertCharMatches(expected:BMFontChar, actual:BMFontChar)
+	{
 		Assert.areEqual(expected.id, actual.id);
 		Assert.areEqual(expected.x, actual.x);
 		Assert.areEqual(expected.y, actual.y);
@@ -181,12 +139,12 @@ kerning first=65  second=84  amount=-2
 		Assert.areEqual(expected.xadvance, actual.xadvance);
 		Assert.areEqual(expected.page, actual.page);
 		Assert.areEqual(expected.chnl, actual.chnl);
-		// if (expected.letter != null) {
+		// if (expected.letter != null)
 		// 	Assert.areEqual(expected.letter, actual.letter);
-		// }
 	}
-
-	private function assertKerningMatches(expected:BMFontKerning, actual:BMFontKerning) {
+	
+	private function assertKerningMatches(expected:BMFontKerning, actual:BMFontKerning)
+	{
 		Assert.areEqual(expected.first, actual.first);
 		Assert.areEqual(expected.second, actual.second);
 		Assert.areEqual(expected.amount, actual.amount);
