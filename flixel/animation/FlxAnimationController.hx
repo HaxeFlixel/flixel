@@ -725,8 +725,8 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		final name = frames[0].name;
 		final postIndex = name.indexOf(".", prefix.length);
-		final postFix = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		FlxFrame.sort(frames, prefix.length, postFix.length);
+		final suffix = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+		FlxFrame.sortFrames(frames, prefix, suffix);
 		
 		for (frame in frames)
 		{
