@@ -3,7 +3,6 @@ package flixel.graphics.frames.bmfont;
 import flixel.system.FlxAssets;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 import openfl.utils.Assets;
 
 using StringTools;
@@ -34,16 +33,16 @@ class BMFont
 	
 	public static function fromXml(xml:Xml)
 	{
-		final xmlAccess = new Access(xml);
-		final info = BMFontInfo.fromXml(xmlAccess.node.info);
-		final common = BMFontCommon.fromXml(xmlAccess.node.common);
-		final pages = BMFontPage.listFromXml(xmlAccess.node.pages);
-		final chars = BMFontChar.listFromXml(xmlAccess.node.chars);
+		final main = new BMFontXml(xml);
+		final info = BMFontInfo.fromXml(main.node.get("info"));
+		final common = BMFontCommon.fromXml(main.node.get("common"));
+		final pages = BMFontPage.listFromXml(main.node.get("pages"));
+		final chars = BMFontChar.listFromXml(main.node.get("chars"));
 		var kerning:Array<BMFontKerning> = null;
 		
-		if (xmlAccess.hasNode.kernings)
+		if (main.hasNode("kernings"))
 		{
-			kerning = BMFontKerning.listFromXml(xmlAccess.node.kernings);
+			kerning = BMFontKerning.listFromXml(main.node.get("kernings"));
 		}
 		
 		return new BMFont(info, common, pages, chars, kerning);
