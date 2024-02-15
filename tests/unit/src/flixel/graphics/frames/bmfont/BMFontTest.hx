@@ -123,7 +123,7 @@ class BMFontTest extends FlxTest
 		
 		for (i in 0...expectedKerns.length)
 		{
-			assertKerningMatches(expectedKerns[i], font.kerning[i]);
+			assertKerningMatches(expectedKerns[i], font.kernings[i]);
 		}
 	}
 	
