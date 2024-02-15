@@ -33,7 +33,7 @@ class VarTween extends FlxTween
 		#end
 
 		_object = object;
-		_properties = properties;
+		_properties = properties;+
 		_propertyInfos = [];
 		this.duration = duration;
 		start();
@@ -50,6 +50,8 @@ class VarTween extends FlxTween
 			super.update(elapsed);
 		else
 		{
+			if (_propertyInfos[0] == null)
+				destroy();
 			// Wait until the delay is done to set the starting values of tweens
 			if (Math.isNaN(_propertyInfos[0].startValue))
 				setStartValues();
