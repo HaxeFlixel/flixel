@@ -33,7 +33,7 @@ class VarTween extends FlxTween
 		#end
 
 		_object = object;
-		_properties = properties;+
+		_properties = properties;
 		_propertyInfos = [];
 		this.duration = duration;
 		start();
