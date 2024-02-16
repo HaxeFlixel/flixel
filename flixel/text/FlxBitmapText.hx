@@ -285,7 +285,7 @@ class FlxBitmapText extends FlxSprite
 		super.updateHitbox();
 	}
 
-	inline function checkPendingChanges(useTiles:Bool = false):Void
+	function checkPendingChanges(useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -1269,6 +1269,8 @@ class FlxBitmapText extends FlxSprite
 
 	function updatePixels(useTiles:Bool = false):Void
 	{
+		pendingPixelsChange = false;
+
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
 		var bitmap:BitmapData = null;
 
@@ -1306,12 +1308,12 @@ class FlxBitmapText extends FlxSprite
 				textDrawData.splice(0, textDrawData.length);
 				borderDrawData.splice(0, borderDrawData.length);
 			}
-
-			width = frameWidth;
-			height = frameHeight;
-
-			origin.x = frameWidth * 0.5;
-			origin.y = frameHeight * 0.5;
+			
+			// use local var to avoid get_width and recursion
+			final newWidth = width = Math.abs(scale.x) * frameWidth;
+			final newHeight = height = Math.abs(scale.y) * frameHeight;
+			offset.set(-0.5 * (newWidth - frameWidth), -0.5 * (newHeight - frameHeight));
+			centerOrigin();
 		}
 
 		if (!useTiles)
@@ -1410,8 +1412,9 @@ class FlxBitmapText extends FlxSprite
 		{
 			dirty = true;
 		}
-
-		pendingPixelsChange = false;
+		
+		if (pendingPixelsChange)
+			throw "pendingPixelsChange was changed to true while processing changed pixels";
 	}
 
 	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
