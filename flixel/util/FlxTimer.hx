@@ -22,6 +22,20 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 class FlxTimer implements IFlxDestroyable
 {
 	/**
+	 * Handy tool to create and start a `FlxTimer`
+	 * @param   time        The duration of the timer, in seconds. If `0` then `onComplete`
+	 *                      fires on the next game update, and the `loops` argument is ignored.
+	 * @param   onComplete  Optional, triggered whenever the time runs out, once for each loop.
+	 *                      Callback should be formed `onTimer(Timer:FlxTimer);`
+	 * @param   loops       How many times the timer should go off. `0` means "looping forever".
+	 * @return  The `FlxTimer` instance
+	 */
+	public static inline function wait(time:Float, callback:(FlxTimer)->Void, loops = 1)
+	{
+		return new FlxTimer().start(time, onComplete, loops);
+	}
+	
+	/**
 	 * The global timer manager that handles global timers
 	 * @since 4.2.0
 	 */
@@ -115,14 +129,14 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Starts the timer and adds the timer to the timer manager.
 	 *
-	 * @param   time        How many seconds it takes for the timer to go off.
-	 *                      If 0 then timer will fire OnComplete callback only once at the first call of update method (which means that Loops argument will be ignored).
+	 * @param   time        The duration of the timer, in seconds. If `0` then `onComplete`
+	 *                      fires on the next game update, and the `loops` argument is ignored.
 	 * @param   onComplete  Optional, triggered whenever the time runs out, once for each loop.
-	 *                      Callback should be formed "onTimer(Timer:FlxTimer);"
+	 *                      Callback should be formed `onTimer(Timer:FlxTimer);`
 	 * @param   loops       How many times the timer should go off. 0 means "looping forever".
 	 * @return  A reference to itself (handy for chaining or whatever).
 	 */
-	public function start(time:Float = 1, ?onComplete:FlxTimer->Void, loops:Int = 1):FlxTimer
+	public function start(time:Float = 1, ?onComplete:(FlxTimer)->Void, loops:Int = 1):FlxTimer
 	{
 		if (manager != null && !_inManager)
 		{
