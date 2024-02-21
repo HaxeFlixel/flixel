@@ -30,7 +30,7 @@ class FlxTimer implements IFlxDestroyable
 	 * @param   loops       How many times the timer should go off. `0` means "looping forever".
 	 * @return  The `FlxTimer` instance
 	 */
-	public static inline function wait(time:Float, callback:(FlxTimer)->Void, loops = 1)
+	public static inline function wait(time:Float, onComplete:(FlxTimer)->Void, loops = 1)
 	{
 		return new FlxTimer().start(time, onComplete, loops);
 	}
