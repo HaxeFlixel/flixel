@@ -114,9 +114,16 @@ class FlxSound extends FlxBasic
 	public var length(get, never):Float;
 	
 	/**
-	 * The sound group this sound belongs to
+	 * The sound group this sound belongs to, can only be in one group.
+	 * NOTE: This setter is deprecated, use `group.add(sound)` or `group.remove(sound)`.
 	 */
-	public var group(default, set):FlxSoundGroup;
+	public var group(get, set):FlxSoundGroup;
+	
+	/**
+	 * The sound group this sound belongs to. This is a temporary proxy for group, until it is removed
+	 */
+	@:allow(flixel.sound.FlxSoundGroup)
+	var _group:FlxSoundGroup;
 	
 	/**
 	 * Whether or not this sound should loop.
@@ -707,24 +714,31 @@ class FlxSound extends FlxBasic
 	}
 	#end
 	
-	function set_group(group:FlxSoundGroup):FlxSoundGroup
+	// Will be removed in a major version, and become a simple `(default,null)` var
+	inline function get_group():FlxSoundGroup
 	{
-		if (this.group != group)
+		return _group;
+	}
+	
+	@:deprecated("sound.group = myGroup is deprecated, use myGroup.add(sound)") // 5.7.0
+	function set_group(value:FlxSoundGroup):FlxSoundGroup
+	{
+		if (_group != value)
 		{
-			var oldGroup:FlxSoundGroup = this.group;
+			final oldGroup = _group;
 			
 			// New group must be set before removing sound to prevent infinite recursion
-			this.group = group;
+			_group = value;
 			
 			if (oldGroup != null)
 				oldGroup.remove(this);
 				
-			if (group != null)
-				group.add(this);
-				
+			if (value != null)
+				value.add(this);
+			
 			updateTransform();
 		}
-		return group;
+		return value;
 	}
 	
 	inline function get_playing():Bool

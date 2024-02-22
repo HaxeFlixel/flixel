@@ -25,16 +25,20 @@ class FlxSoundGroup
 	}
 
 	/**
-	 * Add a sound to this group
+	 * Add a sound to this group, will remove the sound from any group it is currently in
 	 * @param	sound The sound to add to this group
 	 * @return True if sound was successfully added, false otherwise
 	 */
 	public function add(sound:FlxSound):Bool
 	{
-		if (sounds.indexOf(sound) < 0)
+		if (!sounds.contains(sound))
 		{
+			if (sound._group != null)
+				sound._group.sounds.remove(sound);
+			
 			sounds.push(sound);
-			sound.group = this;
+			sound._group = this;
+			sound.updateTransform();
 			return true;
 		}
 		return false;
@@ -47,10 +51,12 @@ class FlxSoundGroup
 	 */
 	public function remove(sound:FlxSound):Bool
 	{
-		if (sounds.indexOf(sound) >= 0)
+		if (sounds.contains(sound))
 		{
-			sound.group = null;
-			return sounds.remove(sound);
+			sound._group = null;
+			sounds.remove(sound);
+			sound.updateTransform();
+			return true;
 		}
 		return false;
 	}
