@@ -308,7 +308,7 @@ class SoundFrontEnd
 	{
 		if (music != null && (forceDestroy || !music.persist))
 		{
-			destroySound(music);
+			music.destroy();
 			music = null;
 		}
 
@@ -316,16 +316,9 @@ class SoundFrontEnd
 		{
 			if (sound != null && (forceDestroy || !sound.persist))
 			{
-				destroySound(sound);
+				sound.destroy();
 			}
 		}
-	}
-
-	function destroySound(sound:FlxSound):Void
-	{
-		defaultMusicGroup.remove(sound);
-		defaultSoundGroup.remove(sound);
-		sound.destroy();
 	}
 
 	/**

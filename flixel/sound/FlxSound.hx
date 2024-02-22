@@ -252,6 +252,10 @@ class FlxSound extends FlxBasic
 	
 	override public function destroy():Void
 	{
+		// Prevents double destroy
+		if (group != null)
+			group.remove(this);
+		
 		_transform = null;
 		exists = false;
 		active = false;
