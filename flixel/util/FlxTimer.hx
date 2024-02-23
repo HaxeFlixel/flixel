@@ -44,7 +44,7 @@ class FlxTimer implements IFlxDestroyable
 	 */
 	public static inline function loop(time:Float, onComplete:(loop:Int)->Void, loops:Int)
 	{
-		return new FlxTimer().start(time, (t)->onComplete(loops - t.loopsLeft), loops);
+		return new FlxTimer().start(time, (t)->onComplete(t.elapsedLoops), loops);
 	}
 	
 	/**
