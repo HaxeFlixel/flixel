@@ -24,15 +24,27 @@ class FlxTimer implements IFlxDestroyable
 	/**
 	 * Handy tool to create and start a `FlxTimer`
 	 * @param   time        The duration of the timer, in seconds. If `0` then `onComplete`
+	 *                      fires on the next game update.
+	 * @param   onComplete  Triggered whenever the time runs out
+	 * @return  The `FlxTimer` instance
+	 */
+	public static inline function wait(time:Float, onComplete:()->Void)
+	{
+		return new FlxTimer().start(time, (_)->onComplete());
+	}
+	
+	/**
+	 * Handy tool to create and start a `FlxTimer`
+	 * @param   time        The duration of the timer, in seconds. If `0` then `onComplete`
 	 *                      fires on the next game update, and the `loops` argument is ignored.
-	 * @param   onComplete  Optional, triggered whenever the time runs out, once for each loop.
-	 *                      Callback should be formed `onTimer(Timer:FlxTimer);`
+	 * @param   onComplete  triggered whenever the time runs out, once for each loop.
+	 *                      Should take a single `Int` arg representing the number of completed loops
 	 * @param   loops       How many times the timer should go off. `0` means "looping forever".
 	 * @return  The `FlxTimer` instance
 	 */
-	public static inline function wait(time:Float, onComplete:(FlxTimer)->Void, loops = 1)
+	public static inline function loop(time:Float, onComplete:(loop:Int)->Void, loops:Int)
 	{
-		return new FlxTimer().start(time, onComplete, loops);
+		return new FlxTimer().start(time, (t)->onComplete(loops - t.loopsLeft), loops);
 	}
 	
 	/**
