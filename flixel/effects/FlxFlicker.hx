@@ -149,8 +149,10 @@ class FlxFlicker implements IFlxDestroyable
 	 */
 	public function stop():Void
 	{
-		timer.cancel();
-		object.visible = true;
+		if (object != null) {
+			timer.cancel();
+			object.visible = true;
+		}
 		release();
 	}
 
