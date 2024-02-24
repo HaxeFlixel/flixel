@@ -14,8 +14,6 @@ import openfl.display.BitmapData;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-using flixel.util.FlxUnicodeUtil;
-
 /**
  * Holds information and bitmap characters for a bitmap font.
  */
@@ -232,7 +230,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * @param   charBGColor   An additional background color to remove. Defaults to `FlxColor.TRANSPARENT`.
 	 * @return  Generated bitmap font object.
 	 */
-	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:String, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
+	public static function fromXNA(source:FlxBitmapFontGraphicAsset, ?letters:UnicodeString, charBGColor:Int = FlxColor.TRANSPARENT):FlxBitmapFont
 	{
 		var graphic:FlxGraphic = null;
 		var frame:FlxFrame = null;
@@ -266,7 +264,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		var frameWidth:Int = Std.int(frame.frame.width);
 		var frameHeight:Int = Std.int(frame.frame.height);
 		var letterIdx:Int = 0;
-		var numLetters:Int = letters.uLength();
+		var numLetters:Int = letters.length;
 
 		var cy:Int = 0;
 		while (cy < frameHeight && letterIdx < numLetters)
@@ -309,7 +307,7 @@ class FlxBitmapFont extends FlxFramesCollection
 					final gw = gx - cx;
 					final gh = gy - cy;
 
-					final charCode = letters.uCharCodeAt(letterIdx);
+					final charCode = letters.charCodeAt(letterIdx);
 					final rect = FlxRect.get(cx, cy, gw, gh);
 					final xAdvance = gw;
 
@@ -451,7 +449,7 @@ class FlxBitmapFont extends FlxFramesCollection
 			for (i in 0...numCols)
 			{
 				final charRect = FlxRect.get(startX + i * spacedWidth, startY + j * spacedHeight, charWidth, charHeight);
-				font.addCharFrame(letters.uCharCodeAt(letterIndex), charRect, xAdvance);
+				font.addCharFrame(letters.charCodeAt(letterIndex), charRect, xAdvance);
 				letterIndex++;
 
 				if (letterIndex >= numLetters)
@@ -475,7 +473,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	function addCharFrame(charCode:Int, frame:FlxRect, ?offset:FlxPoint, xAdvance:Int):Void
 	{
-		final charName:String = new UnicodeBuffer().addChar(charCode).toString();
+		var charName:String = String.fromCharCode(charCode);
 		if (frame.width == 0 || frame.height == 0 || getByName(charName) != null)
 			return;
 		
@@ -492,7 +490,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 */
 	public function setCharFrame(charCode:Int, frame:FlxRect, xAdvance:Int, ?offset:FlxPoint):Void
 	{
-		final charName:String = new UnicodeBuffer().addChar(charCode).toString();
+		final charName:UnicodeString = String.fromCharCode(charCode);
 		if (frame.width == 0 || frame.height == 0)
 			FlxG.log.error('Invalid frame size: $frame for char "$charName" in font "$fontName"');
 		
@@ -580,7 +578,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		{
 			charWithBorder = char.setBorderTo(border);
 			font.pushFrame(charWithBorder);
-			code = char.name.uCharCodeAt(0);
+			code = (char.name:UnicodeString).charCodeAt(0);
 			font.charMap.set(code, charWithBorder);
 			font.charAdvance.set(code, charAdvance.get(code));
 		}

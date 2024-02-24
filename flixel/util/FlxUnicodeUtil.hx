@@ -5,7 +5,7 @@ package flixel.util;
  */
 @:dox(hide)
 @:noCompletion
-@:deprecated("Use unicodeString")
+@:deprecated("Use UnicodeString")
 class FlxUnicodeUtil
 {
 	public static inline function uLength(s:String):Int
@@ -31,8 +31,8 @@ class FlxUnicodeUtil
 
 @:dox(hide)
 @:noCompletion
-@:deprecated("Use unicodeString")
-abstract UnicodeBuffer(UnicodeString)
+@:deprecated("Use UnicodeString")
+abstract UnicodeBuffer(UnicodeString) from UnicodeString
 {
 	public inline function new(s:String = "")
 	{
@@ -41,7 +41,7 @@ abstract UnicodeBuffer(UnicodeString)
 
 	public inline function addChar(c:Int):UnicodeBuffer
 	{
-		return new UnicodeBuffer(this + String.fromCharCode(c));
+		return new UnicodeString(this + String.fromCharCode(c));
 	}
 
 	public inline function toString():String
