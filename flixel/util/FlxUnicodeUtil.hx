@@ -41,7 +41,7 @@ abstract UnicodeBuffer(UnicodeString) from UnicodeString
 
 	public inline function addChar(c:Int):UnicodeBuffer
 	{
-		return new UnicodeString(this + String.fromCharCode(c));
+		return String.fromCharCode(c);
 	}
 
 	public inline function toString():String
