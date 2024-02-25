@@ -32,7 +32,7 @@ class FlxUnicodeUtil
 @:dox(hide)
 @:noCompletion
 @:deprecated("Use UnicodeString")
-abstract UnicodeBuffer(UnicodeString) from UnicodeString from String
+abstract UnicodeBuffer(UnicodeString)
 {
 	public inline function new(s:String = "")
 	{
@@ -41,7 +41,7 @@ abstract UnicodeBuffer(UnicodeString) from UnicodeString from String
 
 	public inline function addChar(c:Int):UnicodeBuffer
 	{
-		return String.fromCharCode(c);
+		return new UnicodeBuffer(this + String.fromCharCode(c));
 	}
 
 	public inline function toString():String
