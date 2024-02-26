@@ -106,7 +106,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 6, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 7, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -371,8 +371,8 @@ class FlxG
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
 	 * @param   nextState  A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
-	 *                     Note: Before Flixel 6, this took a `FlxState` instance, this has been
-	 *                     deprecated, but is still available, for backwards compatibility.
+	 *                     Note: Before Flixel 5.6.0, this took a `FlxState` instance,
+	 *                     this is still available, for backwards compatibility.
 	 */
 	public static inline function switchState(nextState:NextState):Void
 	{

@@ -1,7 +1,6 @@
 package flixel.graphics.frames.bmfont;
 
 import haxe.io.BytesInput;
-import haxe.xml.Access;
 
 /**
  * Info data used internally via `FlxBitmapFont.fromAngelCode` to serialize text, xml or binary
@@ -29,23 +28,29 @@ class BMFontInfo
 	public var outline:Int = 0;
 	public var fixedHeight:Bool = false;
 	
-	static function fromXml(infoNode:Access):BMFontInfo
+	static function fromXml(infoNode:BMFontXml):BMFontInfo
 	{
-		return {
-			face: infoNode.att.face,
-			size: Std.parseInt(infoNode.att.size),
-			bold: infoNode.att.bold != '0',
-			italic: infoNode.att.italic != '0',
-			smooth: infoNode.att.smooth != '0',
-			charset: infoNode.att.charset,
-			unicode: infoNode.att.unicode != '0',
-			stretchH: Std.parseInt(infoNode.att.stretchH),
-			aa: Std.parseInt(infoNode.att.aa),
-			padding: BMFontPadding.fromString(infoNode.att.padding),
-			spacing: BMFontSpacing.fromString(infoNode.att.spacing),
-			outline: infoNode.has.outline ? Std.parseInt(infoNode.att.outline) : 0,
-			fixedHeight: infoNode.has.fixedHeight && infoNode.att.fixedHeight != '0'
+		final info:BMFontInfo =
+		{
+			face: infoNode.att.string("face"),
+			size: infoNode.att.int("size"),
+			bold: infoNode.att.boolSafe("bold", false),
+			italic: infoNode.att.boolSafe("italic", false),
+			smooth: infoNode.att.boolSafe("smooth", false),
+			charset: infoNode.att.stringSafe("charset"),
+			unicode: infoNode.att.boolSafe("unicode", false),
+			stretchH: infoNode.att.intSafe("stretchH", 100),
+			aa: infoNode.att.intSafe("aa", 1),
+			outline: infoNode.att.intSafe("outline", 0),
+			fixedHeight: infoNode.att.boolSafe("fixedHeight", false)
 		}
+		
+		if (infoNode.has("padding"))
+			info.padding = BMFontPadding.fromString(infoNode.att.string("padding"));
+		if (infoNode.has("spacing"))
+			info.spacing = BMFontSpacing.fromString(infoNode.att.string("spacing"));
+			
+		return info;
 	}
 	
 	static function fromText(infoText:String):BMFontInfo

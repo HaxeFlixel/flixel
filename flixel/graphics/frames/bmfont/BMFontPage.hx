@@ -2,7 +2,6 @@ package flixel.graphics.frames.bmfont;
 
 import haxe.io.BytesInput;
 import haxe.io.BytesBuffer;
-import haxe.xml.Access;
 
 /**
  * Page data used internally via `FlxBitmapFont.fromAngelCode` to serialize text, xml or binary
@@ -24,18 +23,18 @@ class BMFontPage
 		this.file = file;
 	}
 	
-	static function fromXml(pageNode:Access):BMFontPage
+	static function fromXml(pageNode:BMFontXml):BMFontPage
 	{
 		return
 		{
-			id: Std.parseInt(pageNode.att.id),
-			file: pageNode.att.file
+			id: pageNode.att.int("id"),
+			file: pageNode.att.string("file")
 		}
 	}
 	
-	static function listFromXml(pagesNode:Access):Array<BMFontPage>
+	static function listFromXml(pagesNode:BMFontXml):Array<BMFontPage>
 	{
-		final pages = pagesNode.nodes.page;
+		final pages = pagesNode.nodes("page");
 		return [for (page in pages) fromXml(page) ];
 	}
 	

@@ -1,9 +1,30 @@
 6.0.0 (TBD)
+
 #### Changes and improvements:
 - `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
 - `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
 - `FlxState`: Remove deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
 - `FlxG`: Add deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
+
+5.7.0 (TBD)
+
+#### New features:
+`FlxBitmapFont`: Add `setCharFrame` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+`FlxTimer`: Added static `wait` and `loops` methods ([#3040](https://github.com/HaxeFlixel/flixel/pull/3040))
+
+#### Changes and improvements:
+`FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+`FlxSound`: Deprecate `sound.group` setter, avoiding recursion errors ([#3041](https://github.com/HaxeFlixel/flixel/pull/3041))
+`FlxAssets`: Allow the immediate use of async images, once loaded ([#3022](https://github.com/HaxeFlixel/flixel/pull/3022))
+
+5.6.2 (February 10, 2024)
+#### Changes and improvements:
+- `FlxBitmapFont`: Prevent crashes from missing xml fields in `fromAngelCode` ([#3029](https://github.com/HaxeFlixel/flixel/pull/3029))
+
+5.6.1 (February 9, 2024)
+#### Changes and improvements:
+- `FlxBitmapFont`: Downgraded crashes of missing xml fields to warnings in `fromAngelCode` ([#3025](https://github.com/HaxeFlixel/flixel/pull/3025))
+- Corrected documenation for the recent `FlxG.switchstate` arg changes
 
 5.6.0 (February 2, 2024)
 
