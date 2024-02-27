@@ -16,6 +16,7 @@
 `FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
 `FlxSound`: Deprecate `sound.group` setter, avoiding recursion errors ([#3041](https://github.com/HaxeFlixel/flixel/pull/3041))
 `FlxAssets`: Allow the immediate use of async images, once loaded ([#3022](https://github.com/HaxeFlixel/flixel/pull/3022))
+`Flxtext`: Remove references to `FlxUnicodeUtil` ([#3049](https://github.com/HaxeFlixel/flixel/pull/3049))
 
 5.6.2 (February 10, 2024)
 #### Changes and improvements:
