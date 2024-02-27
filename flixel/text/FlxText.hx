@@ -22,7 +22,6 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
-using flixel.util.FlxUnicodeUtil;
 
 #if flash
 import openfl.geom.Rectangle;
@@ -310,7 +309,7 @@ class FlxText extends FlxSprite
 	 * @param   input   The text you want to format
 	 * @param   rules   `FlxTextFormat`s to selectively apply, paired with marker strings
 	 */
-	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
+	public function applyMarkup(input:UnicodeString, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
 		if (rules == null || rules.length == 0)
 			return this; // there's no point in running the big loop
@@ -328,15 +327,15 @@ class FlxText extends FlxSprite
 				continue;
 
 			var start:Bool = false;
-			var markerLength:Int = rule.marker.uLength();
+			var markerLength:Int = rule.marker.length;
 
 			if (!input.contains(rule.marker))
 				continue; // marker not present
 
 			// inspect each character
-			for (charIndex in 0...input.uLength())
+			for (charIndex in 0...input.length)
 			{
-				if (!input.uSub(charIndex, markerLength).uEquals(rule.marker))
+				if ((input.substr(charIndex, markerLength):UnicodeString) != rule.marker)
 					continue; // it's not one of the markers
 
 				if (start)
@@ -370,7 +369,7 @@ class FlxText extends FlxSprite
 		{
 			// Consider each range start
 			var delIndex:Int = rangeStarts[i];
-			var markerLength:Int = rulesToApply[i].marker.uLength();
+			var markerLength:Int = rulesToApply[i].marker.length;
 
 			// Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
@@ -1222,9 +1221,9 @@ private class FlxTextFormatRange
 class FlxTextFormatMarkerPair
 {
 	public var format:FlxTextFormat;
-	public var marker:String;
+	public var marker:UnicodeString;
 
-	public function new(format:FlxTextFormat, marker:String)
+	public function new(format:FlxTextFormat, marker:UnicodeString)
 	{
 		this.format = format;
 		this.marker = marker;
