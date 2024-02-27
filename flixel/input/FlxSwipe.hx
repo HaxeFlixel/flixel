@@ -19,8 +19,6 @@ class FlxSwipe
 	public var endPosition(default, null):FlxPoint;
 
 	public var distance(get, never):Float;
-	@:deprecated("FlxSwipe.angle is deprecated, use degrees")
-	public var angle(get, never):Float;
 	public var degrees(get, never):Float;
 	public var radians(get, never):Float;
 	public var duration(get, never):Float;
@@ -52,11 +50,6 @@ class FlxSwipe
 	inline function get_distance():Float
 	{
 		return FlxMath.vectorLength(startPosition.x - endPosition.x, startPosition.y - endPosition.y);
-	}
-
-	inline function get_angle():Float
-	{
-		return startPosition.degreesTo(endPosition);
 	}
 
 	inline function get_degrees():Float

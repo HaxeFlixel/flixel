@@ -168,15 +168,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * @since 5.0.0
 	 */
 	public static var defaultFramePadding = 2;
-
-	/**
-	 * DISABLED, the static var `defaultFramePadding` fixes the tearing issue in a more performant
-	 * and visually appealing way.
-	 */
-	@:deprecated("useScaleHaxe is no longer needed")
-	@:noCompletion
-	public var useScaleHack:Bool = false;
-	
 	
 	/**
 	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified

@@ -175,36 +175,6 @@ enum abstract FlxTweenType(Int) from Int to Int
 class FlxTween implements IFlxDestroyable
 {
 	/**
-	 * Deprecated, use `FlxTweenType.PERSIST` instead.
-	 */
-	@:deprecated("Use FlxTweenType.PERSIST instead")
-	public static var PERSIST = FlxTweenType.PERSIST;
-
-	/**
-	 * Deprecated, use `FlxTweenType.LOOPING` instead.
-	 */
-	@:deprecated("Use FlxTweenType.LOOPING instead")
-	public static var LOOPING = FlxTweenType.LOOPING;
-
-	/**
-	 * Deprecated, use `FlxTweenType.PINGPONG` instead.
-	 */
-	@:deprecated("Use FlxTweenType.PINGPONG instead")
-	public static var PINGPONG = FlxTweenType.PINGPONG;
-
-	/**
-	 * Deprecated, use `FlxTweenType.ONESHOT` instead.
-	 */
-	@:deprecated("Use FlxTweenType.ONESHOT instead")
-	public static var ONESHOT = FlxTweenType.ONESHOT;
-
-	/**
-	 * Deprecated, use `FlxTweenType.BACKWARD` instead.
-	 */
-	@:deprecated("Use FlxTweenType.BACKWARD instead")
-	public static var BACKWARD = FlxTweenType.BACKWARD;
-
-	/**
 	 * The global tweening manager that handles global tweens
 	 * @since 4.2.0
 	 */
