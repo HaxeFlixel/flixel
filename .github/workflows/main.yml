@@ -30,6 +30,7 @@ jobs:
         haxelib setup /home/runner/haxe/haxelib/
         haxelib install haxelib 4.0.3
         haxelib dev flixel .
+        haxelib git openfl https://github.com/openfl/openfl.git
     
     - uses: HaxeFlixel/setup-flixel@v1
       with:
