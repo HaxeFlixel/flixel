@@ -3,7 +3,7 @@
 #### New features:
 `FlxBitmapFont`: Add `setCharFrame` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
 `FlxTimer`: Added static `wait` and `loops` methods ([#3040](https://github.com/HaxeFlixel/flixel/pull/3040))
-
+`FlxBasic`: Added `container` and `FlxContainer` where a basic can only be in one container ([#3050](https://github.com/HaxeFlixel/flixel/pull/3050))
 
 #### Changes and improvements:
 `FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
