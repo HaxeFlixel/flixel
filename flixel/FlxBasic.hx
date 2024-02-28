@@ -1,6 +1,7 @@
 package flixel;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.group.FlxContainer;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -69,6 +70,11 @@ class FlxBasic implements IFlxDestroyable
 
 	@:noCompletion
 	var _cameras:Array<FlxCamera>;
+	
+	/**
+	 * The parent containing this basic, typically if you check this recursively you should reach the state
+	 */
+	public var container(default, null):Null<FlxContainer>;
 
 	public function new() {}
 
@@ -84,6 +90,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
+		if (container != null)
+			container.remove(this);
+		
+		container = null;
 		exists = false;
 		_cameras = null;
 	}

@@ -205,10 +205,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			{
 				length = index + 1;
 			}
-
-			if (_memberAdded != null)
-				_memberAdded.dispatch(basic);
-
+			
+			onMemberAdd(basic);
+			
 			return basic;
 		}
 
@@ -219,10 +218,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		// If we made it this far, we need to add the basic to the group.
 		members.push(basic);
 		length++;
-
-		if (_memberAdded != null)
-			_memberAdded.dispatch(basic);
-
+		onMemberAdd(basic);
+		
 		return basic;
 	}
 
@@ -254,10 +251,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (position < length && members[position] == null)
 		{
 			members[position] = object;
-
-			if (_memberAdded != null)
-				_memberAdded.dispatch(object);
-
+			onMemberAdd(object);
+			
 			return object;
 		}
 
@@ -268,9 +263,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		// If we made it this far, we need to insert the object into the group at the specified position.
 		members.insert(position, object);
 		length++;
-
-		if (_memberAdded != null)
-			_memberAdded.dispatch(object);
+		onMemberAdd(object);
 
 		return object;
 	}
@@ -369,10 +362,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 		else
 			members[index] = null;
-
-		if (_memberRemoved != null)
-			_memberRemoved.dispatch(basic);
-
+		
+		onMemberRemove(basic);
+		
 		return basic;
 	}
 
@@ -393,10 +385,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 		members[index] = newObject;
 
-		if (_memberRemoved != null)
-			_memberRemoved.dispatch(oldObject);
-		if (_memberAdded != null)
-			_memberAdded.dispatch(newObject);
+		onMemberRemove(oldObject);
+		onMemberAdd(newObject);
 
 		return newObject;
 	}
@@ -676,10 +666,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		if (_memberRemoved != null)
 		{
 			for (member in members)
-			{
-				if (member != null)
-					_memberRemoved.dispatch(member);
-			}
+				onMemberRemove(member);
 		}
 
 		FlxArrayUtil.clearArray(members);
@@ -888,8 +875,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 
 			if (basic != null)
 			{
-				if (_memberRemoved != null)
-					_memberRemoved.dispatch(cast basic);
+				onMemberRemove(basic);
 
 				basic.destroy();
 			}
@@ -897,6 +883,18 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		}
 
 		return maxSize;
+	}
+	
+	function onMemberAdd(member:T)
+	{
+		if (_memberAdded != null)
+			_memberAdded.dispatch(cast member);
+	}
+	
+	function onMemberRemove(member:T)
+	{
+		if (_memberRemoved != null)
+			_memberRemoved.dispatch(cast member);
 	}
 
 	@:noCompletion
