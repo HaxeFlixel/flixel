@@ -113,23 +113,23 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	override public function destroy():Void
 	{
 		super.destroy();
-
+		
 		FlxDestroyUtil.destroy(_memberAdded);
 		FlxDestroyUtil.destroy(_memberRemoved);
-
+		
 		if (members != null)
 		{
-			var i:Int = 0;
-			var basic:FlxBasic = null;
-
-			while (i < length)
+			/* Note: basic.destroy() will remove it from it's container, which may be this group.
+			 * So we need to make sure this loop can handle deletions
+			 */
+			var count = length;
+			while (count-- > 0)
 			{
-				basic = members[i++];
-
+				final basic = members.shift();
 				if (basic != null)
 					basic.destroy();
 			}
-
+			
 			members = null;
 		}
 	}
@@ -139,13 +139,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
-		var i:Int = 0;
-		var basic:FlxBasic = null;
-
-		while (i < length)
+		for (basic in members)
 		{
-			basic = members[i++];
-
 			if (basic != null && basic.exists && basic.active)
 			{
 				basic.update(elapsed);
