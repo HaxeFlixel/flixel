@@ -404,7 +404,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		var overlap = false;
 		#if FLX_MOUSE
-		for (camera in cameras)
+		for (camera in getCameras())
 		{
 			for (buttonID in mouseButtons)
 			{
@@ -423,7 +423,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		var overlap = false;
 		#if FLX_TOUCH
-		for (camera in cameras)
+		for (camera in getCameras())
 		{
 			for (touch in FlxG.touches.list)
 			{

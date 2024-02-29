@@ -191,7 +191,22 @@ class FlxBasic implements IFlxDestroyable
 			_cameras[0] = Value;
 		return Value;
 	}
-
+	
+	/**
+	 * The cameras that will draw this. Use `this.cameras` to set specific cameras for this object,
+	 * otherwise the container's cameras are used, or the container's container and so on. If there
+	 * is no container, like if this is only inside a `FlxGroup` rather than a `FlxContainer`.
+	 */
+	public function getCameras()
+	{
+		return if (_cameras != null)
+				_cameras;
+			else if (_cameras == null && container != null)
+				container.getCameras();
+			else
+				@:privateAccess FlxCamera._defaultCameras;
+	}
+	
 	@:noCompletion
 	function get_cameras():Array<FlxCamera>
 	{
