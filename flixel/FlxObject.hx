@@ -1259,8 +1259,8 @@ class FlxObject extends FlxBasic
 	{
 		if (ignoreDrawDebug)
 			return;
-
-		for (camera in cameras)
+		
+		for (camera in getCamerasLegacy())
 		{
 			drawDebugOnCamera(camera);
 

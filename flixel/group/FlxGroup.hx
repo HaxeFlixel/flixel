@@ -154,9 +154,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	override public function draw():Void
 	{
 		final oldDefaultCameras = FlxCamera._defaultCameras;
-		if (cameras != null)
+		if (_cameras != null)
 		{
-			FlxCamera._defaultCameras = cameras;
+			FlxCamera._defaultCameras = _cameras;
 		}
 
 		for (basic in members)

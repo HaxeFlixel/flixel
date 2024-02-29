@@ -207,10 +207,20 @@ class FlxBasic implements IFlxDestroyable
 				@:privateAccess FlxCamera._defaultCameras;
 	}
 	
+	/**
+	 * Helper while moving away from `get_cameras`. Should only be used in the draw phase
+	 */
+	@:noCompletion
+	inline function getCamerasLegacy()
+	{
+		@:privateAccess
+		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
+	}
+	
 	@:noCompletion
 	function get_cameras():Array<FlxCamera>
 	{
-		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
+		return getCamerasLegacy();
 	}
 
 	@:noCompletion

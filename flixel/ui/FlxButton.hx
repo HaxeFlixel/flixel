@@ -325,7 +325,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 		if (_spriteLabel != null && _spriteLabel.visible)
 		{
-			_spriteLabel.cameras = cameras;
+			_spriteLabel._cameras = _cameras;
 			_spriteLabel.draw();
 		}
 	}

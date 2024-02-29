@@ -641,7 +641,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			refreshBuffers();
 			_checkBufferChanges = false;
 		}
-
+		
+		final cameras = getCamerasLegacy();
 		var buffer:FlxTilemapBuffer;
 		var l:Int = cameras.length;
 
@@ -683,6 +684,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function refreshBuffers():Void
 	{
+		final cameras = getCamerasLegacy();
 		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
