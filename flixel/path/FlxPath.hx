@@ -1,6 +1,5 @@
 package flixel.path;
 
-import openfl.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
@@ -8,6 +7,34 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.Graphics;
+
+/**
+ * CenterMode defines how an object should be placed when following the path.
+ */
+enum CenterMode
+{
+	/**
+	 * Use autoCenter. Refer `autoCenter` for details.
+	 */
+	LEGACY;
+	
+	/**
+	 * Align the x,y position of the object on the path.
+	 */
+	POSITION;
+	
+	/**
+	 * Align the midpoint of the object on the path.
+	 */
+	CENTER;
+	
+	/**
+	 * If the object is a FlxSprite, align its origin point on the path.
+	 * If it is not a sprite it will use the position.
+	 */
+	ORIGIN;
+}
 
 /**
  * This is a simple path data container. Basically a list of points that
@@ -116,9 +143,14 @@ class FlxPath implements IFlxDestroyable
 	public var angle(default, null):Float = 0;
 
 	/**
-	 * Whether the object should auto-center the path or at its origin.
+	 * Legacy method of alignment for the object following the path. If true, align the midpoint of the object on the path, else use the x, y position.
 	 */
 	public var autoCenter:Bool = true;
+
+	/**
+	 * How to center the object on the path.
+	 */
+	public var centerMode:CenterMode = LEGACY;
 
 	/**
 	 * Whether the object's angle should be adjusted to the path angle during path follow behavior.
@@ -206,6 +238,7 @@ class FlxPath implements IFlxDestroyable
 		ignoreDrawDebug = false;
 		#end
 		autoCenter = true;
+		centerMode = LEGACY;
 		return this;
 	}
 
@@ -308,6 +341,35 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 
+	function computeCenter(centerPoint:FlxPoint):FlxPoint
+	{
+		return switch (centerMode)
+		{
+			case LEGACY:
+				if (autoCenter)
+				{
+					_point.add(object.width * 0.5, object.height * 0.5);
+				}
+				else
+				{
+					centerPoint;
+				}
+			case ORIGIN:
+				if (object is FlxSprite)
+				{
+					_point.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
+				}
+				else
+				{
+					centerPoint;
+				}
+			case CENTER:
+				_point.add(object.width * 0.5, object.height * 0.5);
+			case POSITION:
+				centerPoint;
+		}
+	}
+	
 	/**
 	 * Internal function for moving the object along the path.
 	 * The first half of the function decides if the object can advance to the next node in the path,
@@ -331,10 +393,8 @@ class FlxPath implements IFlxDestroyable
 		// first check if we need to be pointing at the next node yet
 		_point.x = object.x;
 		_point.y = object.y;
-		if (autoCenter)
-		{
-			_point.add(object.width * 0.5, object.height * 0.5);
-		}
+		_point = computeCenter(_point);
+
 		var node:FlxPoint = _nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
@@ -370,11 +430,8 @@ class FlxPath implements IFlxDestroyable
 			// set velocity based on path mode
 			_point.x = object.x;
 			_point.y = object.y;
+			_point = computeCenter(_point);
 
-			if (autoCenter)
-			{
-				_point.add(object.width * 0.5, object.height * 0.5);
-			}
 
 			if (!_point.equals(node))
 			{
@@ -445,14 +502,42 @@ class FlxPath implements IFlxDestroyable
 				if (axes.x)
 				{
 					object.x = oldNode.x;
-					if (autoCenter)
-						object.x -= object.width * 0.5;
+					switch (centerMode)
+					{
+						case LEGACY:
+							if (autoCenter)
+							{
+								object.x -= object.width * 0.5;
+							}
+						case ORIGIN:
+							if (object is FlxSprite)
+							{
+								object.x -= cast(object, FlxSprite).origin.x;
+							}
+						case CENTER:
+							object.x -= object.width * 0.5;
+						case POSITION:
+					}
 				}
 				if (axes.y)
 				{
 					object.y = oldNode.y;
-					if (autoCenter)
-						object.y -= object.height * 0.5;
+					switch (centerMode)
+					{
+						case LEGACY:
+							if (autoCenter)
+							{
+								object.y -= object.height * 0.5;
+							}
+						case ORIGIN:
+							if (object is FlxSprite)
+							{
+								object.y -= cast(object, FlxSprite).origin.y;
+							}
+						case CENTER:
+							object.y -= object.height * 0.5;
+						case POSITION:
+					}
 				}
 			}
 		}
