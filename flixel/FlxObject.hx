@@ -651,16 +651,52 @@ class FlxObject extends FlxBasic
 	public var acceleration(default, null):FlxPoint;
 
 	/**
-	 * This isn't drag exactly, more like deceleration that is only applied
-	 * when `acceleration` is not affecting the sprite.
+	 * Determines when `drag.x/y` is applied to `velocity.x/y`.
+	 * @since 5.1.0
+	 */
+	public var dragMode(default, null):FlxDragMode2D;
+	
+	/**
+	 * Determines when `angularDrag` is applied to `angularVelocity`.
+	 * @since 5.1.0
+	 */
+	public var angularDragMode:FlxDragMode = INERTIAL;
+	
+	/**
+	 * Determines when `linearDrag` is applied to `velocity`.
+	 * @since 5.1.0
+	 */
+	public var linearDragMode:FlxDragMode = ALWAYS;
+
+	/**
+	 * Not conventional drag, more like conditional deceleration. When applied, velocity will
+	 * reduce (or move closer to 0) by this amount (in pixels per second).
+	 * Use `linearDrag` to apply drag on velocity's overall magnitude.
+	 * 
+	 * Note: You can use `dragMode.x` and `dragMode.y` to determine when drag is applied.
 	 */
 	public var drag(default, null):FlxPoint;
 
 	/**
-	 * If you are using `acceleration`, you can use `maxVelocity` with it
-	 * to cap the speed automatically (very useful!).
+	 * The maximum velocity of this object in both X and Y axes.
+	 * Use `maxLinearVelocity` to limit velocity's overall magnitude.
 	 */
 	public var maxVelocity(default, null):FlxPoint;
+
+	/**
+	 * This isn't drag exactly, more like deceleration that is only applied
+	 * when `acceleration` is not affecting the sprite.
+	 * Use `drag` to apply drag on each axis.
+	 * @since 5.1.0
+	 */
+	public var linearDrag(default, null):Float = 0;
+
+	/**
+	 * The maximum velocity of this object, in terms of overall magnitude.
+	 * Use `maxVelocity` to limit velocity on each axis.
+	 * @since 5.1.0
+	 */
+	public var maxLinearVelocity(default, null):Float = 10000;
 
 	/**
 	 * Important variable for collision processing.
@@ -835,7 +871,12 @@ class FlxObject extends FlxBasic
 		velocity = FlxPoint.get();
 		acceleration = FlxPoint.get();
 		drag = FlxPoint.get();
+		dragMode = new FlxDragMode2D(INERTIAL, INERTIAL);
+		linearDragMode = ALWAYS;
+		angularDragMode = INERTIAL;
 		maxVelocity = FlxPoint.get(10000, 10000);
+		maxLinearVelocity = 10000;
+		linearDrag = 0;
 	}
 
 	/**
@@ -893,22 +934,69 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	function updateMotion(elapsed:Float):Void
 	{
-		var velocityDelta = 0.5 * (FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed) - angularVelocity);
+		final newAngularVelocity = FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, angularDragMode, maxAngular, elapsed);
+
+		final newVelocity = FlxPoint.get();
+		newVelocity.x = FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, dragMode.x, maxVelocity.x, elapsed);
+		newVelocity.y = FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, dragMode.y, maxVelocity.y, elapsed);
+		
+		computeLinearVelocity(newVelocity, acceleration, linearDrag, linearDragMode, maxLinearVelocity, elapsed);
+		
+		var velocityDelta = 0.5 * (newAngularVelocity - angularVelocity);
 		angularVelocity += velocityDelta;
 		angle += angularVelocity * elapsed;
 		angularVelocity += velocityDelta;
-
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
+		
+		velocityDelta = 0.5 * (newVelocity.x - velocity.x);
 		velocity.x += velocityDelta;
-		var delta = velocity.x * elapsed;
+		x += velocity.x * elapsed;
 		velocity.x += velocityDelta;
-		x += delta;
 
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
+		velocityDelta = 0.5 * (newVelocity.y - velocity.y);
 		velocity.y += velocityDelta;
-		delta = velocity.y * elapsed;
+		y += velocity.y * elapsed;
 		velocity.y += velocityDelta;
-		y += delta;
+	}
+
+	function computeLinearVelocity(velocity:FlxPoint, acceleration:FlxPoint, drag:Float, dragMode:FlxDragMode, max:Float, elapsed:Float)
+	{
+		// apply linearDrag
+		if (drag > 0 && !velocity.isZero())
+		{
+			// determine whether to apply drag
+			final applyDrag = switch(dragMode)
+			{
+				case ALWAYS:
+					true;
+				case INERTIAL:
+					acceleration.isZero();
+				case SKID:
+					acceleration.isZero() || acceleration.dotProduct(velocity) < 0;
+			}
+			
+			if (applyDrag)
+			{
+				final frameDrag = elapsed * drag;
+				final len = velocity.length;
+				if (len < frameDrag)
+					velocity.set(0, 0);
+				else
+					velocity.length = len - frameDrag;
+			}
+		}
+		
+		// limit velocity by maxLinearVelocity
+		if (!velocity.isZero() && max > 0)
+		{
+			// if velocity exceeds maxLinearVelocity
+			final vLengthSquared = velocity.lengthSquared;
+			if (vLengthSquared > max * max)
+			{
+				// reduce velocity length to limit
+				final scale = max / Math.sqrt(vLengthSquared);
+				velocity.scale(scale, scale);
+			}
+		}
 	}
 
 	/**
@@ -1517,6 +1605,40 @@ class FlxObject extends FlxBasic
 			path.object = this;
 		return this.path = path;
 	}
+}
+
+class FlxDragMode2D
+{
+	public var x:FlxDragMode;
+	public var y:FlxDragMode;
+	
+	public inline function new (x = INERTIAL, y = INERTIAL)
+	{
+		this.x = x;
+		this.y = y;
+	}
+}
+
+/**
+ * Determines when drag is applied to an object on a single x or y axis.
+ */
+enum FlxDragMode
+{
+	/**
+	 * Drag is always applied to the object's velocity.
+	 */
+	ALWAYS;
+	
+	/**
+	 * Drag is applied to objects in an "inertial" state, or, when the object has no acceleration.
+	 */
+	INERTIAL;
+	
+	/**
+	 * Drag is applied when there is no acceleration on the object or if the object is accelerating
+	 * in the opposite direction it is moving.
+	 */
+	SKID;
 }
 
 /**
