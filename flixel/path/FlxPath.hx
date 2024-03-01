@@ -14,15 +14,11 @@ import openfl.display.Graphics;
  */
 enum CenterMode
 {
-	/**
-	 * Use autoCenter. Refer `autoCenter` for details.
-	 */
-	LEGACY;
 	
 	/**
 	 * Align the x,y position of the object on the path.
 	 */
-	POSITION;
+	TOP_LEFT;
 	
 	/**
 	 * Align the midpoint of the object on the path.
@@ -34,6 +30,11 @@ enum CenterMode
 	 * If it is not a sprite it will use the position.
 	 */
 	ORIGIN;
+	
+	/**
+	 * Uses the specified offset from the position.
+	 */
+	CUSTOM(offset:FlxPoint);
 }
 
 /**
@@ -145,12 +146,13 @@ class FlxPath implements IFlxDestroyable
 	/**
 	 * Legacy method of alignment for the object following the path. If true, align the midpoint of the object on the path, else use the x, y position.
 	 */
-	public var autoCenter:Bool = true;
+	@:deprecated("path.autoCenter is deprecated, use centerMode") // 5.7.0
+	public var autoCenter(get, set):Bool;
 
 	/**
 	 * How to center the object on the path.
 	 */
-	public var centerMode:CenterMode = LEGACY;
+	public var centerMode:CenterMode = CENTER;
 
 	/**
 	 * Whether the object's angle should be adjusted to the path angle during path follow behavior.
@@ -228,7 +230,7 @@ class FlxPath implements IFlxDestroyable
 
 	/**
 	 * Just resets some debugging related variables (for debugger renderer).
-	 * Also resets `autoCenter` to `true`.
+	 * Also resets `centerMode` to `CENTER`.
 	 * @return This path object.
 	 */
 	public function reset():FlxPath
@@ -237,8 +239,7 @@ class FlxPath implements IFlxDestroyable
 		debugDrawData = {};
 		ignoreDrawDebug = false;
 		#end
-		autoCenter = true;
-		centerMode = LEGACY;
+		centerMode = CENTER;
 		return this;
 	}
 
@@ -341,32 +342,27 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 
-	function computeCenter(centerPoint:FlxPoint):FlxPoint
+	function computeCenter(point:FlxPoint):FlxPoint
 	{
+		point.x = object.x;
+		point.y = object.y;
 		return switch (centerMode)
 		{
-			case LEGACY:
-				if (autoCenter)
-				{
-					_point.add(object.width * 0.5, object.height * 0.5);
-				}
-				else
-				{
-					centerPoint;
-				}
 			case ORIGIN:
 				if (object is FlxSprite)
 				{
-					_point.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
+					point.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
 				}
 				else
 				{
-					centerPoint;
+					point;
 				}
 			case CENTER:
-				_point.add(object.width * 0.5, object.height * 0.5);
-			case POSITION:
-				centerPoint;
+				point.add(object.width * 0.5, object.height * 0.5);
+			case TOP_LEFT:
+				point;
+			case CUSTOM(offset):
+				point.addPoint(offset);
 		}
 	}
 	
@@ -428,10 +424,7 @@ class FlxPath implements IFlxDestroyable
 		if (object != null && speed != 0)
 		{
 			// set velocity based on path mode
-			_point.x = object.x;
-			_point.y = object.y;
-			_point = computeCenter(_point);
-
+			computeCenter(_point);
 
 			if (!_point.equals(node))
 			{
@@ -504,19 +497,14 @@ class FlxPath implements IFlxDestroyable
 					object.x = oldNode.x;
 					switch (centerMode)
 					{
-						case LEGACY:
-							if (autoCenter)
-							{
-								object.x -= object.width * 0.5;
-							}
 						case ORIGIN:
 							if (object is FlxSprite)
-							{
-								object.x -= cast(object, FlxSprite).origin.x;
-							}
+								object.x -= (cast object:FlxSprite).origin.x;
+						case CUSTOM(offset):
+							object.x -= offset.x;
 						case CENTER:
 							object.x -= object.width * 0.5;
-						case POSITION:
+						case TOP_LEFT:
 					}
 				}
 				if (axes.y)
@@ -524,19 +512,14 @@ class FlxPath implements IFlxDestroyable
 					object.y = oldNode.y;
 					switch (centerMode)
 					{
-						case LEGACY:
-							if (autoCenter)
-							{
-								object.y -= object.height * 0.5;
-							}
 						case ORIGIN:
 							if (object is FlxSprite)
-							{
-								object.y -= cast(object, FlxSprite).origin.y;
-							}
+								object.y -= (cast object:FlxSprite).origin.y;
+						case CUSTOM(offset):
+							object.y -= offset.y;
 						case CENTER:
 							object.y -= object.height * 0.5;
-						case POSITION:
+						case TOP_LEFT:
 					}
 				}
 			}
@@ -940,6 +923,21 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		return this.immovable = value;
+	}
+	
+	// deprecated 5.7.0
+	@:noCompletion
+	function set_autoCenter(value:Bool):Bool
+	{
+		centerMode = value ? CENTER : TOP_LEFT;
+		return value;
+	}
+	
+	// deprecated 5.7.0
+	@:noCompletion
+	function get_autoCenter():Bool
+	{
+		return centerMode.match(CENTER);
 	}
 }
 
