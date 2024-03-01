@@ -387,8 +387,6 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		// first check if we need to be pointing at the next node yet
-		_point.x = object.x;
-		_point.y = object.y;
 		_point = computeCenter(_point);
 
 		var node:FlxPoint = _nodes[nodeIndex];
@@ -424,7 +422,7 @@ class FlxPath implements IFlxDestroyable
 		if (object != null && speed != 0)
 		{
 			// set velocity based on path mode
-			computeCenter(_point);
+			_point = computeCenter(_point);
 
 			if (!_point.equals(node))
 			{
