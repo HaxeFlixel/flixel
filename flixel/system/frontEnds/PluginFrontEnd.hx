@@ -17,6 +17,12 @@ class PluginFrontEnd
 	public var list(default, null):Array<FlxBasic> = [];
 
 	/**
+	 * If `true`, then plugins will be drawn over the current state instead of under it.
+	 * @since 5.7.0
+	 */
+	public var drawOnTop:Bool = false;
+
+	/**
 	 * Adds a new plugin to the global plugin array.
 	 * **DEPRECATED:** In a later version this will be changed to behave like `addPlugin`.
 	 *
