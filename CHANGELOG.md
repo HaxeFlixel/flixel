@@ -1,3 +1,11 @@
+6.0.0 (TBD)
+
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+- `FlxState`: Remove deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
+- `FlxG`: Add deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
+
 5.7.0 (TBD)
 
 #### New features:

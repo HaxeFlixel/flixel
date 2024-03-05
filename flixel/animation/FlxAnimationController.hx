@@ -48,13 +48,6 @@ class FlxAnimationController implements IFlxDestroyable
 	public var numFrames(get, never):Int;
 
 	/**
-	 * The total number of frames in this image.
-	 * WARNING: assumes each row in the sprite sheet is full!
-	 */
-	@:deprecated("frames is deprecated, use numFrames") // 5.3.0
-	public var frames(get, never):Int;
-
-	/**
 	 * If assigned, will be called each time the current animation's frame changes.
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
@@ -953,11 +946,6 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.finish();
 		}
 		return value;
-	}
-
-	inline function get_frames():Int
-	{
-		return _sprite.numFrames;
 	}
 
 	inline function get_numFrames():Int
