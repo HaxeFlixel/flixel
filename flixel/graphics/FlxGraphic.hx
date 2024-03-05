@@ -304,11 +304,6 @@ class FlxGraphic implements IFlxDestroyable
 	public var destroyOnNoUse(default, set):Bool = true;
 
 	/**
-	 * Whether the `BitmapData` of this graphic object has been dumped or not.
-	 */
-	public var isDumped(default, null):Bool = false;
-
-	/**
 	 * Whether the `BitmapData` of this graphic object has been loaded or not.
 	 */
 	public var isLoaded(get, never):Bool;
@@ -318,13 +313,6 @@ class FlxGraphic implements IFlxDestroyable
 	 * @since 5.6.0
 	 */
 	public var isDestroyed(get, never):Bool;
-
-	/**
-	 * Whether the `BitmapData` of this graphic object can be dumped for decreased memory usage,
-	 * but may cause some issues (when you need direct access to pixels of this graphic.
-	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
-	 */
-	public var canBeDumped(get, never):Bool;
 
 	/**
 	 * GLSL shader for this graphic. Only used if utilizing sprites do not define a shader
@@ -407,61 +395,6 @@ class FlxGraphic implements IFlxDestroyable
 	}
 
 	/**
-	 * Dumps bits of `BitmapData` to decrease memory usage, but you can't read/write pixels on it anymore
-	 * (but you can call `onContext()` (or `undump()`) method which will restore it again).
-	 */
-	public function dump():Void
-	{
-		#if (lime_legacy && !flash)
-		if (FlxG.renderTile && canBeDumped)
-		{
-			bitmap.dumpBits();
-			isDumped = true;
-		}
-		#end
-	}
-
-	/**
-	 * Undumps bits of the `BitmapData` - regenerates it and regenerate tilesheet data for this object
-	 */
-	public function undump():Void
-	{
-		var newBitmap:BitmapData = getBitmapFromSystem();
-		if (newBitmap != null)
-			bitmap = newBitmap;
-		isDumped = false;
-	}
-
-	/**
-	 * Use this method to restore cached `BitmapData` (if it's possible).
-	 * It's called automatically when the RESIZE event occurs.
-	 */
-	public function onContext():Void
-	{
-		// no need to restore tilesheet if it hasn't been dumped
-		if (isDumped)
-		{
-			undump(); // restore everything
-			dump(); // and dump BitmapData again
-		}
-	}
-
-	/**
-	 * Asset reload callback for this graphic object.
-	 * It regenerated its tilesheet and resets frame bitmaps.
-	 */
-	public function onAssetsReload():Void
-	{
-		if (!canBeDumped)
-			return;
-
-		var dumped:Bool = isDumped;
-		undump();
-		if (dumped)
-			dump();
-	}
-
-	/**
 	 * Trying to free the memory as much as possible
 	 */
 	public function destroy():Void
@@ -536,24 +469,6 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 
-	/**
-	 * Gets the `BitmapData` for this graphic object from OpenFL.
-	 * This method is used for undumping graphic.
-	 */
-	function getBitmapFromSystem():BitmapData
-	{
-		var newBitmap:BitmapData = null;
-		if (assetsClass != null)
-			newBitmap = FlxAssets.getBitmapFromClass(assetsClass);
-		else if (assetsKey != null)
-			newBitmap = FlxAssets.getBitmapData(assetsKey);
-
-		if (newBitmap != null)
-			return FlxGraphic.getBitmap(newBitmap, unique);
-
-		return null;
-	}
-	
 	inline function get_isLoaded()
 	{
 		return bitmap != null && !bitmap.rect.isEmpty();
@@ -562,11 +477,6 @@ class FlxGraphic implements IFlxDestroyable
 	inline function get_isDestroyed()
 	{
 		return shader == null;
-	}
-
-	inline function get_canBeDumped():Bool
-	{
-		return assetsClass != null || assetsKey != null;
 	}
 	
 	public function incrementUseCount()

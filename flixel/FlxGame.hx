@@ -4,7 +4,6 @@ import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import flixel.util.typeLimit.NextState;
-import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.display.StageAlign;
@@ -13,10 +12,6 @@ import openfl.events.Event;
 import openfl.filters.BitmapFilter;
 #if desktop
 import openfl.events.FocusEvent;
-#end
-#if FLX_POST_PROCESS
-import flixel.effects.postprocess.PostProcess;
-import openfl.display.OpenGLView;
 #end
 #if FLX_DEBUG
 import flixel.system.debug.FlxDebugger;
@@ -148,14 +143,6 @@ class FlxGame extends Sprite
 	 */
 	var _filters:Array<BitmapFilter>;
 
-	#if (desktop && lime_legacy)
-	/**
-	 * Ugly workaround to ensure consistent behaviour between flash and cpp
-	 * (the focus event should not fire when the game starts up!)
-	 */
-	var _onFocusFiredOnce:Bool = false;
-	#end
-
 	#if FLX_FOCUS_LOST_SCREEN
 	/**
 	 * The "focus lost" screen.
@@ -227,18 +214,6 @@ class FlxGame extends Sprite
 	 */
 	@:allow(flixel.system.frontEnds.VCRFrontEnd)
 	var _recordingRequested:Bool = false;
-	#end
-
-	#if FLX_POST_PROCESS
-	/**
-	 * `Sprite` for postprocessing effects
-	 */
-	var postProcessLayer:Sprite = new Sprite();
-
-	/**
-	 * Post process effects active on the `postProcessLayer`.
-	 */
-	var postProcesses:Array<PostProcess> = [];
 	#end
 
 	/**
@@ -328,11 +303,6 @@ class FlxGame extends Sprite
 
 		addChild(_inputContainer);
 
-		#if FLX_POST_PROCESS
-		if (OpenGLView.isSupported)
-			addChild(postProcessLayer);
-		#end
-
 		// Creating the debugger overlay
 		#if FLX_DEBUG
 		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
@@ -354,13 +324,8 @@ class FlxGame extends Sprite
 		#end
 
 		// Focus gained/lost monitoring
-		#if (desktop && openfl <= "4.0.0")
-		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
-		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
-		#else
 		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 		stage.addEventListener(Event.ACTIVATE, onFocus);
-		#end
 
 		// Instantiate the initial state
 		resetGame();
@@ -378,8 +343,6 @@ class FlxGame extends Sprite
 
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
-
-		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
 	}
 
 	function onFocus(_):Void
@@ -387,15 +350,6 @@ class FlxGame extends Sprite
 		#if flash
 		if (!_lostFocus)
 			return; // Don't run this function twice (bug in standalone flash player)
-		#end
-
-		#if (desktop && lime_legacy)
-		// make sure the on focus event doesn't fire on startup
-		if (!_onFocusFiredOnce)
-		{
-			_onFocusFiredOnce = true;
-			return;
-		}
 		#end
 
 		#if mobile
@@ -428,11 +382,6 @@ class FlxGame extends Sprite
 
 	function onFocusLost(event:Event):Void
 	{
-		#if next
-		if (event != null && event.target != FlxG.stage)
-			return;
-		#end
-
 		#if flash
 		if (_lostFocus)
 			return; // Don't run this function twice (bug in standalone flash player)
@@ -467,11 +416,6 @@ class FlxGame extends Sprite
 		var width:Int = FlxG.stage.stageWidth;
 		var height:Int = FlxG.stage.stageHeight;
 
-		#if !flash
-		if (FlxG.renderTile)
-			FlxG.bitmap.onContext();
-		#end
-
 		resizeGame(width, height);
 	}
 
@@ -496,11 +440,6 @@ class FlxGame extends Sprite
 		#if FLX_SOUND_TRAY
 		if (soundTray != null)
 			soundTray.screenCenter();
-		#end
-
-		#if FLX_POST_PROCESS
-		for (postProcess in postProcesses)
-			postProcess.rebuild();
 		#end
 	}
 
@@ -736,11 +675,6 @@ class FlxGame extends Sprite
 
 		updateInput();
 
-		#if FLX_POST_PROCESS
-		if (postProcesses[0] != null)
-			postProcesses[0].update(FlxG.elapsed);
-		#end
-
 		#if FLX_SOUND_SYSTEM
 		FlxG.sound.update(FlxG.elapsed);
 		#end
@@ -855,11 +789,6 @@ class FlxGame extends Sprite
 
 		if (FlxG.renderTile)
 			FlxDrawBaseItem.drawCalls = 0;
-
-		#if FLX_POST_PROCESS
-		if (postProcesses[0] != null)
-			postProcesses[0].capture();
-		#end
 
 		FlxG.cameras.lock();
 

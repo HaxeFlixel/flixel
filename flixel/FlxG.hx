@@ -1,11 +1,5 @@
 package flixel;
 
-import openfl.Lib;
-import openfl.display.DisplayObject;
-import openfl.display.Stage;
-import openfl.display.StageDisplayState;
-import openfl.net.URLRequest;
-import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -28,6 +22,11 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -48,12 +47,6 @@ import flixel.input.FlxAccelerometer;
 #end
 #if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
-#end
-#if FLX_POST_PROCESS
-import flixel.util.FlxDestroyUtil;
-import openfl.display.OpenGLView;
-
-using flixel.util.FlxArrayUtil;
 #end
 
 #if html5
@@ -535,62 +528,6 @@ class FlxG
 		return child;
 	}
 
-	public static function addPostProcess(postProcess:PostProcess):PostProcess
-	{
-		#if FLX_POST_PROCESS
-		if (OpenGLView.isSupported)
-		{
-			var postProcesses = game.postProcesses;
-
-			// chaining
-			var length = postProcesses.length;
-			if (length > 0)
-			{
-				postProcesses[length - 1].to = postProcess;
-			}
-
-			game.postProcessLayer.addChild(postProcess);
-			postProcesses.push(postProcess);
-		}
-		else
-		{
-			FlxG.log.error("Shaders are not supported on this platform.");
-		}
-		#end
-
-		return postProcess;
-	}
-
-	public static function removePostProcess(postProcess:PostProcess):Void
-	{
-		#if FLX_POST_PROCESS
-		var postProcesses = game.postProcesses;
-		if (postProcesses.remove(postProcess))
-		{
-			chainPostProcesses();
-			postProcess.to = null;
-
-			FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
-		}
-		#end
-	}
-
-	#if FLX_POST_PROCESS
-	static function chainPostProcesses():Void
-	{
-		var postProcesses = game.postProcesses;
-
-		if (postProcesses.length > 0)
-		{
-			for (i in 0...postProcesses.length - 1)
-			{
-				postProcesses[i].to = postProcesses[i + 1];
-			}
-			postProcesses.last().to = null;
-		}
-	}
-	#end
-
 	/**
 	 * Opens a web page, by default a new tab or window. If the URL does not
 	 * already start with `"http://"` or `"https://"`, it gets added automatically.
@@ -667,37 +604,11 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
-		renderMethod = BLITTING;
-
-		#if (!lime_legacy && !flash)
-		#if (lime >= "7.0.0")
 		renderMethod = switch (stage.window.context.type)
 		{
 			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
 			default: BLITTING;
 		}
-		#else
-		if (!Lib.application.config.windows[0].hardware)
-		{
-			renderMethod = BLITTING;
-		}
-		else
-		{
-			renderMethod = switch (stage.window.renderer.type)
-			{
-				case OPENGL, CONSOLE: DRAW_TILES;
-				case CANVAS, FLASH, CAIRO: BLITTING;
-				default: BLITTING;
-			}
-		}
-		#end
-		#else
-		#if web
-		renderMethod = BLITTING;
-		#else
-		renderMethod = DRAW_TILES;
-		#end
-		#end
 
 		#if air
 		renderMethod = BLITTING;
