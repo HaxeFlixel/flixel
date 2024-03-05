@@ -1303,8 +1303,8 @@ class FlxObject extends FlxBasic
 		}
 
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.5);
-		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+		gfx.lineStyle(1, color, 0.75);
+		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
