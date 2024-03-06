@@ -577,11 +577,19 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
+		#if !flash
 		renderMethod = switch (stage.window.context.type)
 		{
 			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
 			default: BLITTING;
 		}
+		#else
+		#if web
+		renderMethod = BLITTING;
+		#else
+		renderMethod = DRAW_TILES;
+		#end
+		#end
 
 		#if air
 		renderMethod = BLITTING;
