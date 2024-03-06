@@ -305,7 +305,8 @@ class FlxGraphic implements IFlxDestroyable
 
 	/**
 	 * Whether the `BitmapData` of this graphic object has been dumped or not.
-	 */
+	 */=
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public var isDumped(default, null):Bool = false;
 
 	/**
@@ -324,6 +325,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * but may cause some issues (when you need direct access to pixels of this graphic.
 	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public var canBeDumped(get, never):Bool;
 
 	/**
@@ -410,6 +412,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * Dumps bits of `BitmapData` to decrease memory usage, but you can't read/write pixels on it anymore
 	 * (but you can call `onContext()` (or `undump()`) method which will restore it again).
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function dump():Void
 	{
 		#if (lime_legacy && !flash)
@@ -424,6 +427,7 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Undumps bits of the `BitmapData` - regenerates it and regenerate tilesheet data for this object
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function undump():Void
 	{
 		var newBitmap:BitmapData = getBitmapFromSystem();
@@ -436,6 +440,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * Use this method to restore cached `BitmapData` (if it's possible).
 	 * It's called automatically when the RESIZE event occurs.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function onContext():Void
 	{
 		// no need to restore tilesheet if it hasn't been dumped
@@ -450,6 +455,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * Asset reload callback for this graphic object.
 	 * It regenerated its tilesheet and resets frame bitmaps.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function onAssetsReload():Void
 	{
 		if (!canBeDumped)
@@ -540,6 +546,7 @@ class FlxGraphic implements IFlxDestroyable
 	 * Gets the `BitmapData` for this graphic object from OpenFL.
 	 * This method is used for undumping graphic.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	function getBitmapFromSystem():BitmapData
 	{
 		var newBitmap:BitmapData = null;
@@ -564,6 +571,7 @@ class FlxGraphic implements IFlxDestroyable
 		return shader == null;
 	}
 
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	inline function get_canBeDumped():Bool
 	{
 		return assetsClass != null || assetsKey != null;
