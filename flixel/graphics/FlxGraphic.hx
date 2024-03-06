@@ -305,7 +305,7 @@ class FlxGraphic implements IFlxDestroyable
 
 	/**
 	 * Whether the `BitmapData` of this graphic object has been dumped or not.
-	 */=
+	 */
 	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public var isDumped(default, null):Bool = false;
 
