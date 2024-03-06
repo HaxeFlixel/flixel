@@ -153,6 +153,7 @@ class FlxGame extends Sprite
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp
 	 * (the focus event should not fire when the game starts up!)
 	 */
+	@:deprecated("_onFocusFiredOnce is being removed") // 5.7.0
 	var _onFocusFiredOnce:Bool = false;
 	#end
 
@@ -233,11 +234,13 @@ class FlxGame extends Sprite
 	/**
 	 * `Sprite` for postprocessing effects
 	 */
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	var postProcessLayer:Sprite = new Sprite();
 
 	/**
 	 * Post process effects active on the `postProcessLayer`.
 	 */
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	var postProcesses:Array<PostProcess> = [];
 	#end
 
