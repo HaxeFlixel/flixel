@@ -1603,29 +1603,41 @@ class FlxCamera extends FlxBasic
 	}
 
 	/**
-	 * Stops the specified effects on `this` camera.
-	 *
-	 * @param   type  The type of effect to stop. Leave blank to stop all effects.
+	 * Stops the fade effect on `this` camera.
 	 */
-	public function stopFX(type:String = ""):Void
+	public function stopFade():Void
 	{
-		switch (type.toLowerCase())
-		{
-			case "fade":
-				_fxFadeAlpha = 0.0;
-				_fxFadeDuration = 0.0;
-			case "flash":
-				_fxFlashAlpha = 0.0;
-				updateFlashSpritePosition();
-			case "shake":
-				_fxShakeDuration = 0.0;
-			default:
-				_fxFadeAlpha = 0.0;
-				_fxFadeDuration = 0.0;
-				_fxFlashAlpha = 0.0;
-				updateFlashSpritePosition();
-				_fxShakeDuration = 0.0;
-		}
+		_fxFadeAlpha = 0.0;
+		_fxFadeDuration = 0.0;
+	}
+
+	/**
+	 * Stops the flash effect on `this` camera.
+	 */
+	public function stopFlash():Void
+	{
+		_fxFlashAlpha = 0.0;
+		updateFlashSpritePosition();
+	}
+
+	/**
+	 * Stops the shake effect on `this` camera.
+	 */
+	public function stopShake():Void
+	{
+		_fxShakeDuration = 0.0;
+	}
+
+	/**
+	 * Stops all effects on `this` camera.
+	 */
+	public function stopFX():Void
+	{
+		_fxFadeAlpha = 0.0;
+		_fxFadeDuration = 0.0;
+		_fxFlashAlpha = 0.0;
+		updateFlashSpritePosition();
+		_fxShakeDuration = 0.0;
 	}
 
 	/**
