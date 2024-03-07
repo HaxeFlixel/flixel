@@ -1613,23 +1613,17 @@ class FlxCamera extends FlxBasic
 		{
 			case "fade":
 				_fxFadeAlpha = 0.0;
-
 				_fxFadeDuration = 0.0;
 			case "flash":
 				_fxFlashAlpha = 0.0;
-
 				updateFlashSpritePosition();
 			case "shake":
 				_fxShakeDuration = 0.0;
 			default:
 				_fxFadeAlpha = 0.0;
-
 				_fxFadeDuration = 0.0;
-
 				_fxFlashAlpha = 0.0;
-
 				updateFlashSpritePosition();
-
 				_fxShakeDuration = 0.0;
 		}
 	}
