@@ -31,7 +31,7 @@ jobs:
         haxelib install haxelib 4.0.3
         haxelib dev flixel .
     
-    - uses: HaxeFlixel/setup-flixel@master 
+    - uses: HaxeFlixel/setup-flixel@master
       with:
         haxe-version: current
         lime-version: ${{matrix.haxe-version == 'latest' && 'dev' || 'release'}} 
