@@ -25,6 +25,8 @@ import openfl.Vector;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 
+using StringTools;
+
 using flixel.util.FlxColorTransformUtil;
 
 private typedef FlxDrawItem = flixel.graphics.tile.FlxDrawQuadsItem;
@@ -1601,15 +1603,35 @@ class FlxCamera extends FlxBasic
 	}
 
 	/**
-	 * Just turns off all the camera effects instantly.
+	 * Turns off specified effects on `this` camera.
+	 *
+	 * @param   type  The type of effect to cancel. Leave blank for all effects.
 	 */
-	public function stopFX():Void
+	public function stopFX(type:String = ""):Void
 	{
-		_fxFlashAlpha = 0.0;
-		_fxFadeAlpha = 0.0;
-		_fxFadeDuration = 0.0;
-		_fxShakeDuration = 0.0;
-		updateFlashSpritePosition();
+		switch (type.toLowerCase())
+		{
+			case "fade":
+				_fxFadeAlpha = 0.0;
+
+				_fxFadeDuration = 0.0;
+			case "flash":
+				_fxFlashAlpha = 0.0;
+
+				updateFlashSpritePosition();
+			case "shake":
+				_fxShakeDuration = 0.0;
+			default:
+				_fxFadeAlpha = 0.0;
+
+				_fxFadeDuration = 0.0;
+
+				_fxFlashAlpha = 0.0;
+
+				updateFlashSpritePosition();
+
+				_fxShakeDuration = 0.0;
+		}
 	}
 
 	/**
