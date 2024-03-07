@@ -1603,7 +1603,7 @@ class FlxCamera extends FlxBasic
 	}
 
 	/**
-	 * Turns off specified effects on `this` camera.
+	 * Stops the specified effects on `this` camera.
 	 *
 	 * @param   type  The type of effect to cancel. Leave blank for all effects.
 	 */
