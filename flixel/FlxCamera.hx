@@ -1605,7 +1605,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Stops the specified effects on `this` camera.
 	 *
-	 * @param   type  The type of effect to cancel. Leave blank for all effects.
+	 * @param   type  The type of effect to stop. Leave blank to stop all effects.
 	 */
 	public function stopFX(type:String = ""):Void
 	{
