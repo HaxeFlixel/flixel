@@ -3,6 +3,8 @@ package flixel.group;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.group.FlxContainer;
+import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxDestroyUtil;
 
 /**
@@ -30,6 +32,7 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
 {
 	override function initGroup(maxSize):Void
 	{
+		@:bypassAccessor
 		group = new FlxTypedContainer<T>(maxSize);
 	}
 	
