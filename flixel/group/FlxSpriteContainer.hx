@@ -42,7 +42,7 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
  * A special `FlxContainer` that shares mirrors the container information of it's
  * containing sprite.
  */
-private class SpriteContainer<T:FlxSprite> extends FlxContainer<T>
+private class SpriteContainer<T:FlxSprite> extends FlxTypedContainer<T>
 {
 	var parentSprite:FlxTypedSpriteContainer<T>;
 	
