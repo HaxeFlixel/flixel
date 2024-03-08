@@ -16,22 +16,31 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 
 /**
- * An alias for `FlxTypedSpriteGroup<FlxSprite>`, meaning any sprite can be added to a
- * `FlxSpriteGroup`, even another `FlxSpriteGroup`.
+ * `FlxSpriteGroup` is a special `FlxSprite` that can be treated like a single sprite even if it's
+ * made up of several member sprites. It shares the `FlxGroup` API, but it doesn't inherit from it.
+ * Note that `FlxSpriteContainer` also exists.
+ * 
+ * ## When to use a group or container
+ * `FlxGroups` are better for organising arbitrary groups for things like iterating or collision.
+ * `FlxContainers` are recommended when you are adding them to the current `FlxState`, or a
+ * child (or grandchild, and so on) of the state.
+ * Since `FlxSpriteGroups` and `FlxSpriteContainers` are usually meant to draw groups of sprites
+ * rather than organizing them for collision or iterating, it's recommended to always use
+ * `FlxSpriteContainer` instead of `FlxSpriteGroup`.
  */
 typedef FlxSpriteGroup = FlxTypedSpriteGroup<FlxSprite>;
 
 /**
- * `FlxSpriteGroup` is a special `FlxSprite` that can be treated like
- * a single sprite even if it's made up of several member sprites.
- * It shares the `FlxTypedGroup` API, but it doesn't inherit from it.
+ * A `FlxSpriteGroup` that only allows specific members to be a specific type of `FlxSprite`.
+ * To use any kind of `FlxSprite` use `FlxSpriteGroup`, which is an alias for
+ * `FlxTypedSpriteGroup<FlxSprite>`.
  */
 class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 {
 	/**
 	 * The actual group which holds all sprites.
 	 */
-	public var group:FlxTypedGroup<T>;
+	public var group(default, set):FlxTypedGroup<T>;
 
 	/**
 	 * The link to a group's `members` array.
@@ -75,10 +84,15 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 */
 	public function new(x = 0.0, y = 0.0, maxSize = 0)
 	{
+		initGroup(maxSize);
 		super(x, y);
+	}
+	
+	function initGroup(maxSize:Int):Void
+	{
 		group = new FlxTypedGroup<T>(maxSize);
 	}
-
+	
 	/**
 	 * This method is used for initialization of variables of complex types.
 	 * Don't forget to call `super.initVars()` if you'll override this method,
@@ -289,9 +303,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 *
 	 * @param	Sprite	The sprite or sprite group that is about to be added or inserted into the group.
 	 */
-	function preAdd(Sprite:T):Void
+	function preAdd(sprite:T):Void
 	{
-		var sprite:FlxSprite = cast Sprite;
 		sprite.x += x;
 		sprite.y += y;
 		sprite.alpha *= alpha;
@@ -1156,7 +1169,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return cast group.members;
 	}
-
+	
+	function set_group(value:FlxTypedGroup<T>):FlxTypedGroup<T>
+	{
+		return this.group = value;
+	}
+	
 	/**
 	 * Internal function to update the current animation frame.
 	 *

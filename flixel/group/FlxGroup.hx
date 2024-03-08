@@ -9,15 +9,30 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 
 /**
- * An alias for `FlxTypedGroup<FlxBasic>`, meaning any flixel object or basic can be added to a
- * `FlxGroup`, even another `FlxGroup`.
+ * Contains a bunch of `FlxBasic`s for vaious organizational purposes, namely
+ * collision, updating and drawing.
+ * 
+ * ## Collision
+ * When used as an arg in `FlxG.collide` or `FlxG.overlap`, groups will use quadtrees to
+ * greatly reduce the number of overlap checks, resulting in much better peformance compared
+ * to having individual overlap checks on each pair of objects.
+ * 
+ * ## Drawing and Updating
+ * Calling `update` or `draw` on a group will call `update` or `draw` on each member. Typically,
+ * to update or draw a group you add it to the state, or to a group that was added to the state,
+ * this way, the state will update and draw it's members based on the desired framerates.
+ * 
+ * ## FlxContainers
+ * Though objects can be in various organizational groups, it's highly recommended that they only
+ * get drawn or updated by one containing group. For this reason `FlxContainer` was made, objects
+ * can only be in one `FlxContainer` at a time, adding them to a second will remove them from
+ * their previous container, but not from any group.
  */
 typedef FlxGroup = FlxTypedGroup<FlxBasic>;
 
 /**
- * This is an organizational class that can update and render a bunch of `FlxBasic`s.
- * NOTE: Although `FlxGroup` extends `FlxBasic`, it will not automatically
- * add itself to the global collisions quad tree, it will only add its members.
+ * A `FlxGroup` that only allows specific members to be a specific type of `FlxBasic`.
+ * To use any kind of `FlxBasic` use `FlxGroup`, which is an alias for `FlxTypedGroup<FlxBasic>`.
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {

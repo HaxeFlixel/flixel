@@ -74,7 +74,7 @@ class FlxBasic implements IFlxDestroyable
 	/**
 	 * The parent containing this basic, typically if you check this recursively you should reach the state
 	 */
-	public var container(default, null):Null<FlxContainer>;
+	public var container(get, null):Null<FlxContainer>;
 
 	public function new() {}
 
@@ -211,7 +211,7 @@ class FlxBasic implements IFlxDestroyable
 	 * Helper while moving away from `get_cameras`. Should only be used in the draw phase
 	 */
 	@:noCompletion
-	inline function getCamerasLegacy()
+	function getCamerasLegacy()
 	{
 		@:privateAccess
 		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
@@ -227,6 +227,12 @@ class FlxBasic implements IFlxDestroyable
 	function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
+	}
+	
+	@:noCompletion
+	function get_container()
+	{
+		return this.container;
 	}
 }
 
