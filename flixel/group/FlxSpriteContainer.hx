@@ -17,6 +17,7 @@ import flixel.util.FlxDestroyUtil;
  * Since `FlxSpriteGroups` and `FlxSpriteContainers` are usually meant to draw groups of sprites
  * rather than organizing them for collision or iterating, it's recommended to always use
  * `FlxSpriteContainer` instead of `FlxSpriteGroup`.
+ * @since 5.7.0
  */
 typedef FlxSpriteContainer = FlxTypedSpriteContainer<FlxSprite>;
 

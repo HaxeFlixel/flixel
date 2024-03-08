@@ -73,6 +73,7 @@ class FlxBasic implements IFlxDestroyable
 	
 	/**
 	 * The parent containing this basic, typically if you check this recursively you should reach the state
+	 * @since 5.7.0
 	 */
 	public var container(get, null):Null<FlxContainer>;
 
@@ -230,6 +231,8 @@ class FlxBasic implements IFlxDestroyable
 	}
 	
 	@:noCompletion
+	// Only needed for FlxSpriteContainer.SpriteContainer
+	// TODO: remove this when FlxSpriteContainer is removed
 	function get_container()
 	{
 		return this.container;

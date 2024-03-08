@@ -18,6 +18,7 @@ typedef FlxContainer = FlxTypedContainer<FlxBasic>;
  * `FlxGroups` are better for organising arbitrary groups for things like iterating or collision.
  * `FlxContainers` are recommended when you are adding them to the current `FlxState`, or a
  * child (or grandchild, and so on) of the state.
+ * @since 5.7.0
  */
 class FlxTypedContainer<T:FlxBasic> extends FlxTypedGroup<T>
 {
