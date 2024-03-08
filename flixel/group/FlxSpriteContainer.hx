@@ -34,7 +34,7 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
 	override function initGroup(maxSize):Void
 	{
 		@:bypassAccessor
-		group = new FlxTypedContainer<T>(maxSize);
+		group = new SpriteContainer<T>(this, maxSize);
 	}
 	
 	@:deprecated("FlxSpriteContainer.group can not be set")
@@ -66,11 +66,11 @@ private class SpriteContainer<T:FlxSprite> extends FlxTypedContainer<T>
 	
 	override function getCamerasLegacy()
 	{
-		return parentSprite.getCamerasLegacy();
+		return (_cameras != null ? _cameras : parentSprite.getCamerasLegacy());
 	}
 	
 	override function getCameras()
 	{
-		return parentSprite.getCameras();
+		return (_cameras != null ? _cameras : parentSprite.getCameras());
 	}
 }
