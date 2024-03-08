@@ -25,8 +25,6 @@ import openfl.Vector;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 
-using StringTools;
-
 using flixel.util.FlxColorTransformUtil;
 
 private typedef FlxDrawItem = flixel.graphics.tile.FlxDrawQuadsItem;
