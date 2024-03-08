@@ -27,6 +27,7 @@ typedef FlxSpriteContainer = FlxTypedSpriteContainer<FlxSprite>;
  * A `FlxSpriteContainer` that only allows specific members to be a specific type of `FlxSprite`.
  * To use any kind of `FlxSprite` use `FlxSpriteContainer`, which is an alias for
  * `FlxTypedSpriteContainer<FlxSprite>`.
+ * @since 5.7.0
  */
 class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
 {
@@ -46,6 +47,7 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
  * A special `FlxContainer` that shares mirrors the container information of it's
  * containing sprite.
  */
+@:dox(hide)
 private class SpriteContainer<T:FlxSprite> extends FlxTypedContainer<T>
 {
 	var parentSprite:FlxTypedSpriteContainer<T>;

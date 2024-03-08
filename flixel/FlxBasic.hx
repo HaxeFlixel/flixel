@@ -197,6 +197,7 @@ class FlxBasic implements IFlxDestroyable
 	 * The cameras that will draw this. Use `this.cameras` to set specific cameras for this object,
 	 * otherwise the container's cameras are used, or the container's container and so on. If there
 	 * is no container, like if this is only inside a `FlxGroup` rather than a `FlxContainer`.
+	 * @since 5.7.0
 	 */
 	public function getCameras()
 	{
@@ -230,9 +231,9 @@ class FlxBasic implements IFlxDestroyable
 		return _cameras = Value;
 	}
 	
-	@:noCompletion
 	// Only needed for FlxSpriteContainer.SpriteContainer
 	// TODO: remove this when FlxSpriteContainer is removed
+	@:noCompletion
 	function get_container()
 	{
 		return this.container;
