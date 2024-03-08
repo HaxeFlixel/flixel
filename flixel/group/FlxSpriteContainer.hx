@@ -37,6 +37,7 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
 		group = new FlxTypedContainer<T>(maxSize);
 	}
 	
+	@:deprecated("FlxSpriteContainer.group can not be set")
 	override function set_group(value:FlxTypedGroup<T>):FlxTypedGroup<T>
 	{
 		throw "FlxSpriteContainer.group cannot be set in FlxSpriteContainers";
