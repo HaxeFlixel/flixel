@@ -6,6 +6,7 @@ import flixel.group.FlxGroup;
 /**
  * An alias for `FlxTypedContainer<FlxBasic>`, meaning any flixel object or basic can be added to a
  * `FlxContainer`, even another `FlxContainer`.
+ * @since 5.7.0
  */
 typedef FlxContainer = FlxTypedContainer<FlxBasic>;
 
