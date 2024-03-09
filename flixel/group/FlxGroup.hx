@@ -9,15 +9,30 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 import flixel.util.FlxSort;
 
 /**
- * An alias for `FlxTypedGroup<FlxBasic>`, meaning any flixel object or basic can be added to a
- * `FlxGroup`, even another `FlxGroup`.
+ * Contains a bunch of `FlxBasic`s for vaious organizational purposes, namely
+ * collision, updating and drawing.
+ * 
+ * ## Collision
+ * When used as an arg in `FlxG.collide` or `FlxG.overlap`, groups will use quadtrees to
+ * greatly reduce the number of overlap checks, resulting in much better peformance compared
+ * to having individual overlap checks on each pair of objects.
+ * 
+ * ## Drawing and Updating
+ * Calling `update` or `draw` on a group will call `update` or `draw` on each member. Typically,
+ * to update or draw a group you add it to the state, or to a group that was added to the state,
+ * this way, the state will update and draw it's members based on the desired framerates.
+ * 
+ * ## FlxContainers
+ * Though objects can be in various organizational groups, it's highly recommended that they only
+ * get drawn or updated by one containing group. For this reason `FlxContainer` was made, objects
+ * can only be in one `FlxContainer` at a time, adding them to a second will remove them from
+ * their previous container, but not from any group.
  */
 typedef FlxGroup = FlxTypedGroup<FlxBasic>;
 
 /**
- * This is an organizational class that can update and render a bunch of `FlxBasic`s.
- * NOTE: Although `FlxGroup` extends `FlxBasic`, it will not automatically
- * add itself to the global collisions quad tree, it will only add its members.
+ * A `FlxGroup` that only allows specific members to be a specific type of `FlxBasic`.
+ * To use any kind of `FlxBasic` use `FlxGroup`, which is an alias for `FlxTypedGroup<FlxBasic>`.
  */
 class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 {
@@ -113,23 +128,23 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	override public function destroy():Void
 	{
 		super.destroy();
-
+		
 		FlxDestroyUtil.destroy(_memberAdded);
 		FlxDestroyUtil.destroy(_memberRemoved);
-
+		
 		if (members != null)
 		{
-			var i:Int = 0;
-			var basic:FlxBasic = null;
-
-			while (i < length)
+			/* Note: basic.destroy() will remove it from it's container, which may be this group.
+			 * So we need to make sure this loop can handle deletions
+			 */
+			var count = length;
+			while (count-- > 0)
 			{
-				basic = members[i++];
-
+				final basic = members.shift();
 				if (basic != null)
 					basic.destroy();
 			}
-
+			
 			members = null;
 		}
 	}
@@ -139,13 +154,8 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 */
 	override public function update(elapsed:Float):Void
 	{
-		var i:Int = 0;
-		var basic:FlxBasic = null;
-
-		while (i < length)
+		for (basic in members)
 		{
-			basic = members[i++];
-
 			if (basic != null && basic.exists && basic.active)
 			{
 				basic.update(elapsed);
@@ -159,9 +169,9 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	override public function draw():Void
 	{
 		final oldDefaultCameras = FlxCamera._defaultCameras;
-		if (cameras != null)
+		if (_cameras != null)
 		{
-			FlxCamera._defaultCameras = cameras;
+			FlxCamera._defaultCameras = _cameras;
 		}
 
 		for (basic in members)
