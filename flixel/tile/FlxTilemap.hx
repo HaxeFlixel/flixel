@@ -632,14 +632,14 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			refreshBuffers();
 			_checkBufferChanges = false;
 		}
-
-		var camera:FlxCamera;
+		
+		final cameras = getCamerasLegacy();
 		var buffer:FlxTilemapBuffer;
 		var l:Int = cameras.length;
 
 		for (i in 0...l)
 		{
-			camera = cameras[i];
+			final camera = cameras[i];
 
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
@@ -675,6 +675,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function refreshBuffers():Void
 	{
+		final cameras = getCamerasLegacy();
 		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
@@ -1495,10 +1496,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		scaledTileWidth = tileWidth * scale.x;
 		width = scaledWidth;
-
+		
+		final cameras = getCameras();
 		if (cameras == null)
 			return;
-
+		
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
 				_buffers[i].updateColumns(tileWidth, widthInTiles, scale.x, cameras[i]);
@@ -1508,10 +1510,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		scaledTileHeight = tileHeight * scale.y;
 		height = scaledHeight;
-
+		
+		final cameras = getCameras();
 		if (cameras == null)
 			return;
-
+		
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
 				_buffers[i].updateRows(tileHeight, heightInTiles, scale.y, cameras[i]);
