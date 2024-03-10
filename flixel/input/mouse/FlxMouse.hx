@@ -10,6 +10,7 @@ import openfl.events.MouseEvent;
 import openfl.Lib;
 import openfl.ui.Mouse;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
 import flixel.input.IFlxInputManager;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
@@ -261,9 +262,13 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		{
 			cursor = Type.createInstance(Graphic, []);
 		}
+		else if ((Graphic is FlxGraphic))
+		{
+			cursor = new Bitmap(cast (Graphic, FlxGraphic).bitmap);
+		}
 		else if ((Graphic is BitmapData))
 		{
-			cursor = new Bitmap(cast Graphic);
+			cursor = new Bitmap(cast (Graphic, BitmapData));
 		}
 		else if ((Graphic is String))
 		{
