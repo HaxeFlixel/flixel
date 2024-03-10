@@ -702,6 +702,7 @@ class FlxObject extends FlxBasic
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
+	@:deprecated("This is no longer needed, as you can extend FlxObject")
 	public var health:Float = 1;
 
 	/**
@@ -1205,6 +1206,7 @@ class FlxObject extends FlxBasic
 	 *
 	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
 	 */
+	@:deprecated("This is no longer needed, as you can extend FlxObject")
 	public function hurt(damage:Float):Void
 	{
 		health = health - damage;
