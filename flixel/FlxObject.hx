@@ -700,11 +700,6 @@ class FlxObject extends FlxBasic
 	public var maxAngular:Float = 10000;
 
 	/**
-	 * Handy for storing health percentage or armor points or whatever.
-	 */
-	public var health:Float = 1;
-
-	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
@@ -1197,19 +1192,6 @@ class FlxObject extends FlxBasic
 	public inline function justTouched(direction:FlxDirectionFlags):Bool
 	{
 		return touching.hasAny(direction) && !wasTouching.hasAny(direction);
-	}
-
-	/**
-	 * Reduces the `health` variable of this object by the amount specified in `Damage`.
-	 * Calls `kill()` if health drops to or below zero.
-	 *
-	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
-	 */
-	public function hurt(damage:Float):Void
-	{
-		health = health - damage;
-		if (health <= 0)
-			kill();
 	}
 
 	/**
