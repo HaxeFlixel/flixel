@@ -561,4 +561,12 @@ class FlxGroupTest extends FlxTest
 		
 		Assert.areEqual(group.length, count);
 	}
+	
+	@Test
+	function testDestroyRemoveAll()
+	{
+		var members = group.members;
+		group.destroy();
+		Assert.areEqual(0, members.length);
+	}
 }

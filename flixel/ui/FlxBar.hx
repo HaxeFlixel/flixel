@@ -850,7 +850,7 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			for (camera in cameras)
+			for (camera in getCamerasLegacy())
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				{

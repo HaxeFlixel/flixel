@@ -699,10 +699,13 @@ class FlxObject extends FlxBasic
 	 */
 	public var maxAngular:Float = 10000;
 
+	#if FLX_HEALTH
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
+	@:deprecated("object.health is being removed in version 6.0.0")
 	public var health:Float = 1;
+	#end
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
@@ -1199,18 +1202,21 @@ class FlxObject extends FlxBasic
 		return touching.hasAny(direction) && !wasTouching.hasAny(direction);
 	}
 
+	#if FLX_HEALTH
 	/**
 	 * Reduces the `health` variable of this object by the amount specified in `Damage`.
 	 * Calls `kill()` if health drops to or below zero.
 	 *
 	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
 	 */
+	@:deprecated("object.health is being removed in version 6.0.0")
 	public function hurt(damage:Float):Void
 	{
 		health = health - damage;
 		if (health <= 0)
 			kill();
 	}
+	#end
 
 	/**
 	 * Centers this `FlxObject` on the screen, either by the x axis, y axis, or both.
@@ -1259,8 +1265,8 @@ class FlxObject extends FlxBasic
 	{
 		if (ignoreDrawDebug)
 			return;
-
-		for (camera in cameras)
+		
+		for (camera in getCamerasLegacy())
 		{
 			drawDebugOnCamera(camera);
 

@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.group.FlxGroup;
+import flixel.group.FlxContainer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
@@ -8,14 +8,14 @@ import flixel.util.typeLimit.NextState;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
- * It is for all intents and purpose a fancy `FlxGroup`. And really, it's not even that fancy.
+ * It is for all intents and purpose a fancy `FlxContainer`. And really, it's not even that fancy.
  */
 @:keepSub // workaround for HaxeFoundation/haxe#3749
 #if FLX_NO_UNIT_TEST
 @:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("switchTo", "switchTo is deprecated, use startOutro"))
 #end
 // show deprecation warning when `switchTo` is overriden in dereived classes
-class FlxState extends FlxGroup
+class FlxState extends FlxContainer
 {
 	/**
 	 * Determines whether or not this state is updated even when it is not the active state.

@@ -1,9 +1,9 @@
 package flixel.math;
 
-import openfl.geom.Rectangle;
-import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
+import flixel.util.FlxPool;
 import flixel.util.FlxStringUtil;
+import openfl.geom.Rectangle;
 
 /**
  * Stores a rectangle.
@@ -227,14 +227,26 @@ class FlxRect implements IFlxPooled
 	/**
 	 * Returns true if this FlxRect contains the FlxPoint
 	 *
-	 * @param	Point	The FlxPoint to check
-	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
+	 * @param   point  The FlxPoint to check
+	 * @return  True if the FlxPoint is within this FlxRect, otherwise false
 	 */
-	public inline function containsPoint(Point:FlxPoint):Bool
+	public inline function containsPoint(point:FlxPoint):Bool
 	{
-		var result = FlxMath.pointInFlxRect(Point.x, Point.y, this);
-		Point.putWeak();
+		final result = containsXY(point.x, point.y);
+		point.putWeak();
 		return result;
+	}
+
+	/**
+	 * Returns true if this FlxRect contains the FlxPoint
+	 *
+	 * @param   xPos  The x position to check
+	 * @param   yPos  The y position to check
+	 * @return  True if the FlxPoint is within this FlxRect, otherwise false
+	 */
+	public inline function containsXY(xPos:Float, yPos:Float):Bool
+	{
+		return xPos >= left && xPos <= right && yPos >= top && yPos <= bottom;
 	}
 
 	/**
