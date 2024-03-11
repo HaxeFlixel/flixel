@@ -1230,39 +1230,48 @@ class FlxTextFormatMarkerPair
 	}
 }
 
-enum FlxTextBorderStyle
+enum abstract FlxTextBorderStyle(String) from String
 {
-	NONE;
+	var NONE = null;
 
 	/**
 	 * A simple shadow to the lower-right.
 	 * Use `FlxText.shadowOffset` for custom placement.
 	 */
-	SHADOW;
+	var SHADOW = "shadow";
 
 	/**
 	 * Outline on all 8 sides
 	 */
-	OUTLINE;
+	var OUTLINE = "outline";
 
 	/**
 	 * Outline, optimized using only 4 draw calls (might not work for narrow and/or 1-pixel fonts)
 	 */
-	OUTLINE_FAST;
+	var OUTLINE_FAST = "outline-fast";
 }
 
 enum abstract FlxTextAlign(String) from String
 {
+	/**
+	 * Aligns the `textField` to the far-left corner of its `fieldWidth`.
+	 */
 	var LEFT = "left";
 
 	/**
+	 * Aligns the `textField` to the exact center of its `fieldWidth.
+	 *
 	 * Warning: on Flash, this can have a negative impact on performance
 	 * of multiline texts that are frequently regenerated (especially with
 	 * `borderStyle == OUTLINE`) due to a workaround for blurry rendering.
 	 */
 	var CENTER = "center";
 
+	/*
+	 * Aligns the `textField` to the far-right corner of its `fieldWidth`.
+	 */
 	var RIGHT = "right";
+	// unused, not implemented.
 	var JUSTIFY = "justify";
 
 	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
