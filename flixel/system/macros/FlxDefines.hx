@@ -22,6 +22,8 @@ private enum UserDefines
 	FLX_NO_SOUND_TRAY;
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
+	/* Removes FlxObject.health */
+	FLX_NO_HEALTH;
 	FLX_RECORD;
 	/* Defined in HaxeFlixel CI tests, do not use */
 	FLX_UNIT_TEST;
@@ -77,6 +79,7 @@ private enum HelperDefines
 	/* Used in HaxeFlixel CI, should have no effect on personal projects */
 	FLX_NO_CI;
 	FLX_SAVE;
+	FLX_HEALTH;
 }
 
 class FlxDefines
@@ -96,6 +99,9 @@ class FlxDefines
 		#if (flixel_addons >= "3.2.2")
 		flixel.addons.system.macros.FlxAddonDefines.run();
 		#end
+		#if (flixel_ui >= "2.6.0")
+		flixel.addons.ui.system.macros.FlxUIDefines.run();
+		#end
 	}
 
 	static function checkCompatibility()
@@ -108,18 +114,21 @@ class FlxDefines
 		checkOpenFLVersions();
 		#end
 		
-		#if (flixel_addons < "3.0.2")
+		#if (flixel_addons < version("3.0.2"))
 		abortVersion("Flixel Addons", "3.0.2 or newer", "flixel-addons", (macro null).pos);
+		#end
+		#if (flixel_ui < version("2.4.0"))
+		abortVersion("Flixel UI", "2.4.0 or newer", "flixel-addons", (macro null).pos);
 		#end
 	}
 
 	static function checkOpenFLVersions()
 	{
-		#if (lime < "8.0.2")
+		#if (lime < version("8.0.2"))
 		abortVersion("Lime", "8.0.2 or newer", "lime", (macro null).pos);
 		#end
 
-		#if (openfl < "9.2.2")
+		#if (openfl < version("9.2.2"))
 		abortVersion("OpenFL", "9.2.2 or newer", "openfl", (macro null).pos);
 		#end
 	}
@@ -169,6 +178,7 @@ class FlxDefines
 		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
 		defineInversion(FLX_COVERAGE_TEST, FLX_NO_COVERAGE_TEST);
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
+		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 	}
 
 	static function defineHelperDefines()

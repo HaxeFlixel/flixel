@@ -37,10 +37,37 @@ class FlxTypedSpriteContainer<T:FlxSprite> extends FlxTypedSpriteGroup<T>
 		group = new SpriteContainer<T>(this, maxSize);
 	}
 	
+	@:access(flixel.FlxCamera)
+	override function draw():Void
+	{
+		final oldDefaultCameras = FlxCamera._defaultCameras;
+		if (_cameras != null)
+		{
+			FlxCamera._defaultCameras = _cameras;
+		}
+		
+		super.draw();
+		
+		FlxCamera._defaultCameras = oldDefaultCameras;
+	}
+	
 	@:deprecated("FlxSpriteContainer.group can not be set")
 	override function set_group(value:FlxTypedGroup<T>):FlxTypedGroup<T>
 	{
 		throw "FlxSpriteContainer.group cannot be set in FlxSpriteContainers";
+	}
+	
+	override function set_camera(value:FlxCamera):FlxCamera
+	{
+		// Do not set children's cameras, this in no longer needed
+		_cameras = value == null ? null : [value];
+		return value;
+	}
+	
+	override function set_cameras(value:Array<FlxCamera>):Array<FlxCamera>
+	{
+		// Do not set children's cameras, this in no longer needed
+		return _cameras = value;
 	}
 }
 
