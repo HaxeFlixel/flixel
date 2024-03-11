@@ -188,7 +188,7 @@ class FlxMath
 	 */
 	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
 	{
-		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
+		return rect.containsXY(pointX, pointY);
 	}
 
 	#if (FLX_MOUSE && !macro)
