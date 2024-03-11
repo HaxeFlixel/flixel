@@ -329,7 +329,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	/**
 	 * Clean up memory.
 	 */
-	override public function destroy():Void
+	override function destroy():Void
 	{
 		_flashPoint = null;
 		_flashRect = null;
@@ -531,7 +531,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	}
 
 	#if FLX_DEBUG
-	override public function drawDebugOnCamera(camera:FlxCamera):Void
+	override function drawDebugOnCamera(camera:FlxCamera):Void
 	{
 		if (!FlxG.renderTile)
 			return;
@@ -606,10 +606,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * @param   camera  Specify which game camera you want. If `null`, it will just grab the first global camera.
 	 * @return  Whether the object is on screen or not.
 	 */
-	override public function isOnScreen(?camera:FlxCamera):Bool
+	override function isOnScreen(?camera:FlxCamera):Bool
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 
 		var minX:Float = x - offset.x - camera.scroll.x * scrollFactor.x;
 		var minY:Float = y - offset.y - camera.scroll.y * scrollFactor.y;
@@ -621,7 +621,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	/**
 	 * Draws the tilemap buffers to the cameras.
 	 */
-	override public function draw():Void
+	override function draw():Void
 	{
 		// don't try to render a tilemap that isn't loaded yet
 		if (graphic == null)
@@ -695,7 +695,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 *
 	 * @param   dirty  Whether to flag the tilemap buffers as dirty or not.
 	 */
-	override public function setDirty(dirty:Bool = true):Void
+	override function setDirty(dirty:Bool = true):Void
 	{
 		if (FlxG.renderTile)
 			return;
@@ -718,7 +718,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * @param   position            Optional, specify a custom position for the tilemap (used for `overlapsAt`).
 	 * @return  Whether there were overlaps, and the result of the callback, if one was specified.
 	 */
-	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
+	override function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
 	{
 		var results = false;
@@ -802,7 +802,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 
-	override public function getTileIndexByCoords(coord:FlxPoint):Int
+	override function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		var localX = coord.x - x;
 		var localY = coord.y - y;
@@ -814,7 +814,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return Std.int(localY / scaledTileHeight) * widthInTiles + Std.int(localX / scaledTileWidth);
 	}
 
-	override public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
+	override function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
 	{
 		var point = FlxPoint.get(x + (index % widthInTiles) * scaledTileWidth, y + Std.int(index / widthInTiles) * scaledTileHeight);
 		if (midpoint)
@@ -865,14 +865,16 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	/**
 	 * Call this function to lock the automatic camera to the map's edges.
 	 *
-	 * @param   camera       Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
-	 * @param   border       Adjusts the camera follow boundary by whatever number of tiles you specify here.  Handy for blocking off deadends that are offscreen, etc.  Use a negative number to add padding instead of hiding the edges.
+	 * @param   camera       The desired camera.  If `null`, `getDefaultCamera()` is used.
+	 * @param   border       Adjusts the camera follow boundary by whatever number of tiles you
+	 *                       specify here. Handy for blocking off deadends that are offscreen, etc.
+	 *                       Use a negative number to add padding instead of hiding the edges.
 	 * @param   updateWorld  Whether to update the collision system's world size, default value is true.
 	 */
 	public function follow(?camera:FlxCamera, border = 0, updateWorld = true):Void
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 
 		camera.setScrollBoundsRect(
 			x + border * scaledTileWidth,
