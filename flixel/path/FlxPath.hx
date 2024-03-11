@@ -770,7 +770,7 @@ class FlxPath implements IFlxDestroyable
 
 		if (camera == null)
 		{
-			camera = FlxG.camera;
+			camera = object != null ? object.getDefaultCamera() : FlxG.camera;
 		}
 
 		var gfx:Graphics = null;
