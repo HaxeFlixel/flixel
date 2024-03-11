@@ -107,6 +107,24 @@ class GraphicAutoFull extends BitmapData {}
  */
 class FlxTilemap extends FlxTypedTilemap<FlxTile>
 {
+	/**
+	 * The default frame padding tilemaps will use when their own `framePadding` is not set
+	 * 
+	 * @see FlxTypedTilemap.framePadding
+	 * @since 5.0.0
+	 */
+	public static var defaultFramePadding(get, set):Int;
+	
+	static inline function get_defaultFramePadding()
+	{
+		return FlxTypedTilemap.defaultFramePadding;
+	}
+	
+	static inline function set_defaultFramePadding(value:Int)
+	{
+		return FlxTypedTilemap.defaultFramePadding = value;
+	}
+	
 	public function new ()
 	{
 		super();
@@ -144,18 +162,22 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 {
 	/**
-	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
-	 * number of pixels. Ignored if <= 0
+	 * The default frame padding tilemaps will use when their own `framePadding` is not set
+	 * 
+	 * @see FlxTypedTilemap.framePadding
+	 * @since 5.0.0
 	 */
 	public static var defaultFramePadding = 2;
-
+	
 	/**
-	 * DISABLED, the static var `defaultFramePadding` fixes the tearing issue in a more performant
-	 * and visually appealing way.
+	 * Eliminates tearing on tilemaps by extruding each tile frame's edge out by the specified
+	 * number of pixels. Ignored if <= 0. If `null`, `defaultFramePadding` is used
+	 * 
+	 * Note: Changing this only affects future loadMap calls.
+	 * @see FlxTypedTilemap.defaultFramePadding
+	 * @since 5.4.0
 	 */
-	@:deprecated("useScaleHaxe is no longer needed")
-	@:noCompletion
-	public var useScaleHack:Bool = false;
+	public var framePadding:Null<Int> = null;
 
 	/**
 	 * Changes the size of this tilemap. Default is (1, 1).
@@ -237,9 +259,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
 	 */
-	#if openfl_legacy
-	@:noCompletion
-	#end
 	public var shader:FlxShader;
 
 	/**
@@ -373,12 +392,12 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return value;
 	}
 
-	function onGameResized(_, _):Void
+	function onGameResized(w:Int, h:Int):Void
 	{
 		_checkBufferChanges = true;
 	}
 
-	function onCameraChanged(_):Void
+	function onCameraChanged(cam:FlxCamera):Void
 	{
 		_checkBufferChanges = true;
 	}
@@ -412,9 +431,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
-
-		if (defaultFramePadding > 0 && graph.isLoaded)
-			frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+		
+		final actualFramePadding = framePadding == null ? defaultFramePadding : framePadding;
+		if (actualFramePadding > 0 && graph.isLoaded)
+			frames = padTileFrames(tileWidth, tileHeight, graph, actualFramePadding);
 		else
 		{
 			#if html5
@@ -426,13 +446,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				var futureBitmap:IEmbeddedBitmapData = cast graph.bitmap;
 				futureBitmap.onLoad = function()
 				{
-					frames = padTileFrames(tileWidth, tileHeight, graph, defaultFramePadding);
+					frames = padTileFrames(tileWidth, tileHeight, graph, actualFramePadding);
 				}
 			}
-			else if (defaultFramePadding > 0 && !graph.isLoaded)
+			else if (actualFramePadding > 0 && !graph.isLoaded)
 			{
-				FlxG.log.warn('defaultFramePadding not applied to "${graph.key}" because it is loading asynchronously.'
-					+ "using `@:bitmap` assets on html5 is not recommended");
+				FlxG.log.warn('Frame padding not applied to "${graph.key}" because it is loading asynchronously.'
+					+ "Using `@:bitmap` assets on html5 is not recommended");
 			}
 			#end
 			frames = FlxTileFrames.fromGraphic(graph, FlxPoint.get(tileWidth, tileHeight));
@@ -612,14 +632,14 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			refreshBuffers();
 			_checkBufferChanges = false;
 		}
-
-		var camera:FlxCamera;
+		
+		final cameras = getCamerasLegacy();
 		var buffer:FlxTilemapBuffer;
 		var l:Int = cameras.length;
 
 		for (i in 0...l)
 		{
-			camera = cameras[i];
+			final camera = cameras[i];
 
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
@@ -655,6 +675,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function refreshBuffers():Void
 	{
+		final cameras = getCamerasLegacy();
 		for (i in 0...cameras.length)
 		{
 			var camera = cameras[i];
@@ -1140,19 +1161,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	/**
 	 * Change a particular tile to FlxSprite. Or just copy the graphic if you dont want any changes to map data itself.
 	 *
-	 * @param   x              The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y              The Y coordinate of the tile (in tiles, not pixels).
+	 * @param   tileX          The X coordinate of the tile (in tiles, not pixels).
+	 * @param   tileY          The Y coordinate of the tile (in tiles, not pixels).
 	 * @param   newTile        New tile for the map data. Use -1 if you dont want any changes. Default = 0 (empty)
 	 * @param   spriteFactory  Method for converting FlxTile to FlxSprite. If null then will be used defaultTileToSprite() method.
 	 * @return FlxSprite.
 	 */
-	public function tileToSprite(X:Int, Y:Int, NewTile:Int = 0, ?SpriteFactory:FlxTileProperties->FlxSprite):FlxSprite
+	public function tileToSprite(tileX:Int, tileY:Int, newTile = 0, ?spriteFactory:FlxTileProperties->FlxSprite):FlxSprite
 	{
-		if (SpriteFactory == null)
-			SpriteFactory = defaultTileToSprite;
+		if (spriteFactory == null)
+			spriteFactory = defaultTileToSprite;
 
-		var rowIndex:Int = X + (Y * widthInTiles);
-		var tile:FlxTile = _tileObjects[_data[rowIndex]];
+		final rowIndex:Int = tileX + (tileY * widthInTiles);
+		final tile:FlxTile = _tileObjects[_data[rowIndex]];
 		var image:FlxImageFrame = null;
 
 		if (tile != null && tile.visible)
@@ -1160,19 +1181,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		else
 			image = FlxImageFrame.fromEmptyFrame(graphic, FlxRect.get(0, 0, tileWidth, tileHeight));
 
-		var tileX:Float = X * tileWidth * scale.x + x;
-		var tileY:Float = Y * tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = SpriteFactory({
+		final worldX:Float = tileX * tileWidth * scale.x + x;
+		final worldY:Float = tileY * tileHeight * scale.y + y;
+		var tileSprite:FlxSprite = spriteFactory({
 			graphic: image,
-			x: tileX,
-			y: tileY,
+			x: worldX,
+			y: worldY,
 			scale: FlxPoint.get().copyFrom(scale),
 			alpha: alpha,
 			blend: blend
 		});
 
-		if (NewTile >= 0)
-			setTile(X, Y, NewTile);
+		if (newTile >= 0)
+			setTile(tileX, tileY, newTile);
 
 		return tileSprite;
 	}
@@ -1475,10 +1496,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		scaledTileWidth = tileWidth * scale.x;
 		width = scaledWidth;
-
+		
+		final cameras = getCameras();
 		if (cameras == null)
 			return;
-
+		
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
 				_buffers[i].updateColumns(tileWidth, widthInTiles, scale.x, cameras[i]);
@@ -1488,10 +1510,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		scaledTileHeight = tileHeight * scale.y;
 		height = scaledHeight;
-
+		
+		final cameras = getCameras();
 		if (cameras == null)
 			return;
-
+		
 		for (i in 0...cameras.length)
 			if (_buffers[i] != null)
 				_buffers[i].updateRows(tileHeight, heightInTiles, scale.y, cameras[i]);

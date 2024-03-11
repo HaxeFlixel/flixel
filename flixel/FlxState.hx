@@ -1,20 +1,17 @@
 package flixel;
 
-import flixel.group.FlxGroup;
+import flixel.group.FlxContainer;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.FlxSignal;
+import flixel.util.typeLimit.NextState;
 
 /**
  * This is the basic game "state" object - e.g. in a simple game you might have a menu state and a play state.
- * It is for all intents and purpose a fancy `FlxGroup`. And really, it's not even that fancy.
+ * It is for all intents and purpose a fancy `FlxContainer`. And really, it's not even that fancy.
  */
 @:keepSub // workaround for HaxeFoundation/haxe#3749
-#if FLX_NO_UNIT_TEST
-@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("switchTo", "switchTo is deprecated, use startOutro"))
-#end
-// show deprecation warning when `switchTo` is overriden in dereived classes
-class FlxState extends FlxGroup
+class FlxState extends FlxContainer
 {
 	/**
 	 * Determines whether or not this state is updated even when it is not the active state.
@@ -45,7 +42,14 @@ class FlxState extends FlxGroup
 	 * The natural background color the cameras default to. In `AARRGGBB` format.
 	 */
 	public var bgColor(get, set):FlxColor;
-
+	
+	/**
+	 * The specific argument that was passed into `switchState` or `FlxGame.new`
+	 */
+	@:allow(flixel.FlxGame)
+	@:allow(flixel.FlxG)
+	var _constructor:()->FlxState;
+	
 	/**
 	 * Current substate. Substates also can be nested.
 	 */
@@ -83,7 +87,12 @@ class FlxState extends FlxGroup
 
 	@:noCompletion
 	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
-    
+	
+	public function new ()
+	{
+		super(0);
+	}
+	
 	/**
 	 * This function is called after the game engine successfully switches states.
 	 * Override this function, NOT the constructor, to initialize or set up your game state.
@@ -92,7 +101,7 @@ class FlxState extends FlxGroup
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
+	override function draw():Void
 	{
 		if (persistentDraw || subState == null)
 			super.draw();
@@ -156,11 +165,15 @@ class FlxState extends FlxGroup
 		}
 	}
 
-	override public function destroy():Void
+	override function destroy():Void
 	{
+		_constructor = function():FlxState
+		{
+			throw "Attempting to resetState while the current state is destroyed";
+		};
 		FlxDestroyUtil.destroy(_subStateOpened);
 		FlxDestroyUtil.destroy(_subStateClosed);
-        
+		
 		if (subState != null)
 		{
 			subState.destroy();
@@ -169,18 +182,6 @@ class FlxState extends FlxGroup
 		super.destroy();
 	}
 
-	/**
-	 * Called from `FlxG.switchState()`. If `false` is returned, the state
-	 * switch is cancelled - the default implementation returns `true`.
-	 *
-	 * Useful for customizing state switches, e.g. for transition effects.
-	 */
-	@:deprecated("switchTo is deprecated, use startOutro")
-	public function switchTo(nextState:FlxState):Bool
-	{
-		return true;
-	}
-	
 	/**
 	 * Called from `FlxG.switchState()`, when `onOutroComplete` is called, the actual state
 	 * switching will happen.
@@ -243,7 +244,7 @@ class FlxState extends FlxGroup
 	{
 		return FlxG.cameras.bgColor = Value;
 	}
-    
+	
 	@:noCompletion
 	function get_subStateOpened():FlxTypedSignal<FlxSubState->Void>
 	{

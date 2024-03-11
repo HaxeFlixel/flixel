@@ -1,6 +1,7 @@
 package flixel;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.group.FlxContainer;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
 /**
@@ -69,6 +70,12 @@ class FlxBasic implements IFlxDestroyable
 
 	@:noCompletion
 	var _cameras:Array<FlxCamera>;
+	
+	/**
+	 * The parent containing this basic, typically if you check this recursively you should reach the state
+	 * @since 5.7.0
+	 */
+	public var container(get, null):Null<FlxContainer>;
 
 	public function new() {}
 
@@ -84,6 +91,10 @@ class FlxBasic implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
+		if (container != null)
+			container.remove(this);
+		
+		container = null;
 		exists = false;
 		_cameras = null;
 	}
@@ -181,17 +192,52 @@ class FlxBasic implements IFlxDestroyable
 			_cameras[0] = Value;
 		return Value;
 	}
-
+	
+	/**
+	 * The cameras that will draw this. Use `this.cameras` to set specific cameras for this object,
+	 * otherwise the container's cameras are used, or the container's container and so on. If there
+	 * is no container, say, if this is inside `FlxGroups` rather than a `FlxContainer` then the
+	 * default draw cameras are returned.
+	 * @since 5.7.0
+	 */
+	public function getCameras()
+	{
+		return if (_cameras != null)
+				_cameras;
+			else if (_cameras == null && container != null)
+				container.getCameras();
+			else
+				@:privateAccess FlxCamera._defaultCameras;
+	}
+	
+	/**
+	 * Helper while moving away from `get_cameras`. Should only be used in the draw phase
+	 */
+	@:noCompletion
+	function getCamerasLegacy()
+	{
+		@:privateAccess
+		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
+	}
+	
 	@:noCompletion
 	function get_cameras():Array<FlxCamera>
 	{
-		return (_cameras == null) ? FlxCamera._defaultCameras : _cameras;
+		return getCamerasLegacy();
 	}
 
 	@:noCompletion
 	function set_cameras(Value:Array<FlxCamera>):Array<FlxCamera>
 	{
 		return _cameras = Value;
+	}
+	
+	// Only needed for FlxSpriteContainer.SpriteContainer
+	// TODO: remove this when FlxSpriteContainer is removed
+	@:noCompletion
+	function get_container()
+	{
+		return this.container;
 	}
 }
 

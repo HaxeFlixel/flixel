@@ -24,7 +24,8 @@ import flixel.util.FlxDestroyUtil;
  * 
  * `FlxMouseEvent` is meant to be the access point to the global `FlxMouseEventManager` instance.
  * 
- * @see [`FlxMouseEventManager`](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEventManager.html)
+ * @see [FlxMouseEventManager](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEventManager.html)
+ * @see [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/)
  * @since 5.0.0
  */
 class FlxMouseEvent<T:FlxObject> implements IFlxDestroyable

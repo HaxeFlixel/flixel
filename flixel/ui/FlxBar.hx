@@ -128,7 +128,7 @@ class FlxBar extends FlxSprite
 	var _fillHorizontal:Bool;
 
 	/**
-	 * FlxSprite which is used for rendering front graphics of bar (showing value) in tile render mode.
+	 * FlxFrame which is used for rendering front graphics of bar (showing value) in tile render mode.
 	 */
 	var _frontFrame:FlxFrame;
 
@@ -198,9 +198,9 @@ class FlxBar extends FlxSprite
 	{
 		positionOffset = FlxDestroyUtil.put(positionOffset);
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderTile)
 		{
-			_frontFrame = null;
+			frontFrames = null;
 			_filledFlxRect = FlxDestroyUtil.put(_filledFlxRect);
 		}
 		else
@@ -214,7 +214,6 @@ class FlxBar extends FlxSprite
 		_filledBarPoint = null;
 
 		parent = null;
-		positionOffset = null;
 		emptyCallback = null;
 		filledCallback = null;
 
@@ -851,7 +850,7 @@ class FlxBar extends FlxSprite
 		
 		if (percent > 0 && _frontFrame.type != FlxFrameType.EMPTY)
 		{
-			for (camera in cameras)
+			for (camera in getCamerasLegacy())
 			{
 				if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				{
@@ -886,15 +885,15 @@ class FlxBar extends FlxSprite
 		}
 	}
 
-	override function set_pixels(Pixels:BitmapData):BitmapData
+	override function set_pixels(pixels:BitmapData):BitmapData
 	{
 		if (FlxG.renderTile)
 		{
-			return Pixels; // hack
+			return pixels; // hack
 		}
 		else
 		{
-			return super.set_pixels(Pixels);
+			return super.set_pixels(pixels);
 		}
 	}
 
@@ -984,8 +983,14 @@ class FlxBar extends FlxSprite
 	{
 		if (FlxG.renderTile)
 		{
+			if (value != null)
+				value.parent.incrementUseCount();
+				
+			if (frontFrames != null)
+				frontFrames.parent.decrementUseCount();
+
 			frontFrames = value;
-			_frontFrame = (value != null) ? value.frame.copyTo(_frontFrame) : null;
+			_frontFrame = (value != null) ? value.frame.copyTo(_frontFrame) : FlxDestroyUtil.destroy(_frontFrame);
 		}
 		else
 		{

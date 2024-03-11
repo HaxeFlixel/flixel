@@ -3,6 +3,10 @@ package flixel.system.macros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+#if (flixel_addons >= "3.2.2")
+import flixel.addons.system.macros.FlxAddonDefines;
+#end
+
 
 using StringTools;
 
@@ -18,8 +22,15 @@ private enum UserDefines
 	FLX_NO_SOUND_TRAY;
 	FLX_NO_FOCUS_LOST_SCREEN;
 	FLX_NO_DEBUG;
+	/* Removes FlxObject.health */
+	FLX_NO_HEALTH;
 	FLX_RECORD;
+	/* Defined in HaxeFlixel CI tests, do not use */
 	FLX_UNIT_TEST;
+	/* Defined in HaxeFlixel CI tests, do not use */
+	FLX_COVERAGE_TEST;
+	/* Defined in HaxeFlixel CI tests, do not use */
+	FLX_SWF_VERSION_TEST;
 	/* additional rendering define */
 	FLX_RENDER_TRIANGLE;
 	/* Uses flixel 4.0 legacy collision */
@@ -57,8 +68,18 @@ private enum HelperDefines
 	FLX_DRAW_QUADS;
 	FLX_POINT_POOL;
 	FLX_PITCH;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
 	FLX_NO_UNIT_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_COVERAGE_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_SWF_VERSION_TEST;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_CI;
+	/* Used in HaxeFlixel CI, should have no effect on personal projects */
+	FLX_NO_CI;
 	FLX_SAVE;
+	FLX_HEALTH;
 }
 
 class FlxDefines
@@ -66,17 +87,24 @@ class FlxDefines
 	public static function run()
 	{
 		#if !display
-		checkDependencyCompatibility();
+		checkCompatibility();
 		checkDefines();
 		if (defined("flash"))
 			checkSwfVersion();
 		#end
-
+		
 		defineInversions();
 		defineHelperDefines();
+		
+		#if (flixel_addons >= "3.2.2")
+		flixel.addons.system.macros.FlxAddonDefines.run();
+		#end
+		#if (flixel_ui >= "2.6.0")
+		flixel.addons.ui.system.macros.FlxUIDefines.run();
+		#end
 	}
 
-	static function checkDependencyCompatibility()
+	static function checkCompatibility()
 	{
 		#if (haxe < version("4.2.5"))
 		abortVersion("Haxe", "4.2.5 or newer", "haxe_ver", (macro null).pos);
@@ -85,16 +113,23 @@ class FlxDefines
 		#if !nme
 		checkOpenFLVersions();
 		#end
+		
+		#if (flixel_addons < version("3.0.2"))
+		abortVersion("Flixel Addons", "3.0.2 or newer", "flixel-addons", (macro null).pos);
+		#end
+		#if (flixel_ui < version("2.4.0"))
+		abortVersion("Flixel UI", "2.4.0 or newer", "flixel-addons", (macro null).pos);
+		#end
 	}
 
 	static function checkOpenFLVersions()
 	{
-		#if ((lime < "6.3.0") && ((lime < "2.8.1") || (lime >= "3.0.0")))
-		abortVersion("Lime", "6.3.0 or newer and 2.8.1-2.9.1", "lime", (macro null).pos);
+		#if (lime < version("8.0.2"))
+		abortVersion("Lime", "8.0.2 or newer", "lime", (macro null).pos);
 		#end
 
-		#if ((openfl < "8.0.0") && ((openfl < "3.5.0") || (openfl >= "4.0.0")))
-		abortVersion("OpenFL", "8.0.0 or newer and 3.5.0-3.6.1", "openfl", (macro null).pos);
+		#if (openfl < version("9.2.2"))
+		abortVersion("OpenFL", "9.2.2 or newer", "openfl", (macro null).pos);
 		#end
 	}
 
@@ -108,14 +143,20 @@ class FlxDefines
 		for (define in HelperDefines.getConstructors())
 			abortIfDefined(define);
 
-		var userDefinable = UserDefines.getConstructors();
 		for (define in Context.getDefines().keys())
 		{
-			if (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
+			if (isValidUserDefine(define))
 			{
 				Context.warning('"$define" is not a valid flixel define.', (macro null).pos);
 			}
 		}
+	}
+	
+	static var userDefinable = UserDefines.getConstructors();
+	static function isValidUserDefine(define:String)
+	{
+		return (define.startsWith("FLX_") && userDefinable.indexOf(define) == -1)
+			#if (flixel_addons >= version("3.2.2")) || FlxAddonDefines.isValidUserDefine(define) #end;
 	}
 
 	static function abortIfDefined(define:String)
@@ -135,10 +176,18 @@ class FlxDefines
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
 		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
+		defineInversion(FLX_COVERAGE_TEST, FLX_NO_COVERAGE_TEST);
+		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
+		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 	}
 
 	static function defineHelperDefines()
 	{
+		if (defined(FLX_UNIT_TEST) || defined(FLX_COVERAGE_TEST) || defined(FLX_SWF_VERSION_TEST))
+			define(FLX_CI);
+		else
+			define(FLX_NO_CI);
+		
 		if (!defined(FLX_NO_MOUSE) && !defined(FLX_NO_MOUSE_ADVANCED) && (!defined("flash") || defined("flash11_2")))
 			define(FLX_MOUSE_ADVANCED);
 
@@ -147,19 +196,21 @@ class FlxDefines
 
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
-		#if (openfl_legacy || lime >= "8.0.0")
-		if (defined(FLX_NO_SOUND_SYSTEM) || #if openfl_legacy !defined("sys") #else defined("flash") #end)
+
+		#if (lime >= "8.0.0")
+		if (defined(FLX_NO_SOUND_SYSTEM) || defined("flash"))
 			define(FLX_NO_PITCH);
 		#else
 		define(FLX_NO_PITCH);
 		#end
+
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
 		
 		if (!defined(FLX_NO_SAVE))
 			define(FLX_SAVE);
 		
-		if ((!defined("openfl_legacy") && !defined("flash")) || defined("flash11_8"))
+		if (!defined("flash") || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
 		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
 			define(FLX_JOYSTICK_API);
@@ -182,9 +233,10 @@ class FlxDefines
 		if (defined("mobile") || defined("js"))
 			define(FLX_ACCELEROMETER);
 
-		#if (openfl >= "8.0.0")
+		// #if (openfl >= "8.0.0")
+		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
-		#end
+		// #end
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)

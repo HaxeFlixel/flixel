@@ -156,7 +156,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that adds two points, returning a new point.
+	 * Operator that adds the right point to the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A += B)
@@ -166,7 +166,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that subtracts two points, returning a new point.
+	 * Operator that subtracts the right point from the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A -= B)
@@ -176,7 +176,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that scales a points by float, returning a new point.
+	 * Operator that scales a point by float, returning the same point instance.
 	 */
 	@:noCompletion
 	@:op(A *= B)
@@ -224,7 +224,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that adds two points, returning a new point.
+	 * Operator that adds the right point to the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A += B)
@@ -234,7 +234,7 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Operator that subtracts two points, returning a new point.
+	 * Operator that subtracts the right point from the left point, returning the left point instance.
 	 */
 	@:noCompletion
 	@:op(A -= B)
@@ -573,19 +573,6 @@ import openfl.geom.Point;
 	}
 
 	/**
-	 * Rotates this point clockwise in 2D space around another point by the given degrees.
-	 *
-	 * @param   pivot    The pivot you want to rotate this point around
-	 * @param   degrees  Rotate the point by this many degrees clockwise.
-	 * @return  A FlxPoint containing the coordinates of the rotated point.
-	 */
-	@:deprecated("rotate is deprecated, use pivotDegrees")
-	public function rotate(pivot:FlxPoint, degrees:Float):FlxPoint
-	{
-		return pivotDegrees(pivot, degrees);
-	}
-
-	/**
 	 * Rotates this point clockwise in 2D space around another point by the given radians.
 	 * Note: To rotate a point around 0,0 you can use `p.radians += angle`
 	 * @since 5.0.0
@@ -681,56 +668,6 @@ import openfl.geom.Point;
 	public inline function degreesFrom(point:FlxPoint):Float
 	{
 		return point.degreesTo(this);
-	}
-
-	/** DEPRECATED
-	 * 
-	 * Calculates the angle between this and another point. 0 degrees points straight up.
-	 * 
-	 * Note: Every other flixel function treats straight right as 0 degrees.
-	 * 
-	 * Also Note: The result is very innacurate.
-	 *
-	 * @param   point   The other point.
-	 * @return  The angle in degrees, between -180 and 180.
-	 * 
-	 * @see [Flixel 5.0.0 Migration guide](https://github.com/HaxeFlixel/flixel/wiki/Flixel-5.0.0-Migration-guide)
-	 */
-	@:deprecated("angleBetween is deprecated, use degreesTo instead")
-	public function angleBetween(point:FlxPoint):Float
-	{
-		var x:Float = point.x - x;
-		var y:Float = point.y - y;
-		var angle:Float = 0;
-
-		if ((x != 0) || (y != 0))
-		{
-			var c1:Float = Math.PI * 0.25;
-			var c2:Float = 3 * c1;
-			var ay:Float = (y < 0) ? -y : y;
-
-			if (x >= 0)
-			{
-				angle = c1 - c1 * ((x - ay) / (x + ay));
-			}
-			else
-			{
-				angle = c2 - c1 * ((x + ay) / (ay - x));
-			}
-			angle = ((y < 0) ? -angle : angle) * FlxAngle.TO_DEG;
-
-			if (angle > 90)
-			{
-				angle = angle - 270;
-			}
-			else
-			{
-				angle += 90;
-			}
-		}
-
-		point.putWeak();
-		return angle;
 	}
 
 	/**
@@ -1436,7 +1373,7 @@ import openfl.geom.Point;
 class FlxBasePoint implements IFlxPooled
 {
 	#if FLX_POINT_POOL
-	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint);
+	static var pool:FlxPool<FlxBasePoint> = new FlxPool(FlxBasePoint.new.bind(0, 0));
 	#end
 
 	/**

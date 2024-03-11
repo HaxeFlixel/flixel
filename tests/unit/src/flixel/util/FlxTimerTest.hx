@@ -18,8 +18,9 @@ class FlxTimerTest extends FlxTest
 	{
 		var calledBack:Bool = false;
 		timer.start(0, function(_) calledBack = true);
+		
+		Assert.isFalse(calledBack);
 		step();
-
 		Assert.isTrue(calledBack);
 	}
 
@@ -66,5 +67,29 @@ class FlxTimerTest extends FlxTest
 		// make sure these timers were updated
 		Assert.isTrue(timer2.progress > 0);
 		Assert.isTrue(timer3.progress > 0);
+	}
+	
+	@Test
+	function testWait()
+	{
+		var calledBack = false;
+		function onComplete() { calledBack = true; }
+		final timer1 = FlxTimer.wait(2/60, onComplete);
+		final timer2 = FlxTimer.wait(0.0001, timer1.cancel);
+		
+		step(3);
+		Assert.isTrue(timer1.finished && calledBack);
+	}
+	
+	@Test
+	function testLoop()
+	{
+		var calledBack = false;
+		function onComplete(n) { calledBack = true; }
+		final timer1 = FlxTimer.loop(2/60, onComplete, 0);
+		final timer2 = FlxTimer.loop(0.0001, (loop)->{ if (loop == 3) timer1.cancel(); }, 3);
+		
+		step(3);
+		Assert.isTrue(timer1.finished && calledBack);
 	}
 }

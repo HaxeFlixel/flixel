@@ -9,11 +9,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
 #if !flash
-#if openfl_legacy
-import openfl.gl.GL;
-#else
 import lime.graphics.opengl.GL;
-#end
 #end
 
 /**

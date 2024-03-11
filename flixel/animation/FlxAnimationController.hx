@@ -43,15 +43,9 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * The total number of frames in this image.
 	 * WARNING: assumes each row in the sprite sheet is full!
+	 * @since 5.3.0
 	 */
 	public var numFrames(get, never):Int;
-
-	/**
-	 * The total number of frames in this image.
-	 * WARNING: assumes each row in the sprite sheet is full!
-	 */
-	@:deprecated("frames is deprecated, use numFrames")
-	public var frames(get, never):Int;
 
 	/**
 	 * If assigned, will be called each time the current animation's frame changes.
@@ -64,6 +58,11 @@ class FlxAnimationController implements IFlxDestroyable
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
 	public var finishCallback:(name:String) -> Void;
+
+	/**
+	 * How fast or slow time should pass for this animation controller
+	 */
+	public var timeScale:Float = 1.0;
 
 	/**
 	 * Internal, reference to owner sprite.
@@ -79,7 +78,7 @@ class FlxAnimationController implements IFlxDestroyable
 	/**
 	 * Internal, stores all the animation that were added to this sprite.
 	 */
-	var _animations(default, null) = new Map<String, FlxAnimation>();
+	var _animations(default, null):Map<String, FlxAnimation> = [];
 
 	var _prerotated:FlxPrerotatedAnimation;
 
@@ -92,7 +91,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			_curAnim.update(elapsed);
+			_curAnim.update(elapsed * (timeScale * FlxG.animationTimeScale));
 		}
 		else if (_prerotated != null)
 		{
@@ -720,8 +719,8 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		final name = frames[0].name;
 		final postIndex = name.indexOf(".", prefix.length);
-		final postFix = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
-		FlxFrame.sort(frames, prefix.length, postFix.length);
+		final suffix = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+		FlxFrame.sortFrames(frames, prefix, suffix);
 		
 		for (frame in frames)
 		{
@@ -947,11 +946,6 @@ class FlxAnimationController implements IFlxDestroyable
 			_curAnim.finish();
 		}
 		return value;
-	}
-
-	inline function get_frames():Int
-	{
-		return _sprite.numFrames;
 	}
 
 	inline function get_numFrames():Int

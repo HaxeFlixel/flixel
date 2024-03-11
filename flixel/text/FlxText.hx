@@ -1,11 +1,5 @@
 package flixel.text;
 
-import openfl.display.BitmapData;
-import openfl.geom.ColorTransform;
-import openfl.text.TextField;
-import openfl.text.TextFieldAutoSize;
-import openfl.text.TextFormat;
-import openfl.text.TextFormatAlign;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
@@ -14,14 +8,20 @@ import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.helpers.FlxRange;
 import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.geom.ColorTransform;
+import openfl.text.TextField;
+import openfl.text.TextFieldAutoSize;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
-using flixel.util.FlxUnicodeUtil;
 
 #if flash
 import openfl.geom.Rectangle;
@@ -39,7 +39,7 @@ import openfl.utils.AssetType;
  * ## Autosizing
  * 
  * By default `FlxText` is autosized to fit it's text. 
- * To set a fixed size, * use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
+ * To set a fixed size, use the `fieldWidth`, `fieldHeight` and `autoSize` fields.
  */
 class FlxText extends FlxSprite
 {
@@ -57,6 +57,13 @@ class FlxText extends FlxSprite
 	 * The size of the text being displayed in pixels.
 	 */
 	public var size(get, set):Int;
+
+	/**
+	 * A number representing the amount of space that is uniformly distributed
+	 * between all characters. The value specifies the number of pixels that are
+	 * added to the advance after each character.
+	 */
+	public var letterSpacing(get, set):Float;
 
 	/**
 	 * The font used for this text (assuming that it's using embedded font).
@@ -84,6 +91,11 @@ class FlxText extends FlxSprite
 	 * Whether to use italic text or not (`false` by default). Only works on Flash.
 	 */
 	public var italic(get, set):Bool;
+
+	/**
+	 * Whether to use underlined text or not (`false` by default).
+	 */
+	public var underline(get, set):Bool;
 
 	/**
 	 * Whether to use word wrapping and multiline or not (`true` by default).
@@ -137,6 +149,7 @@ class FlxText extends FlxSprite
 	 * Use it when you want to change the visible height of the text. Enables "auto height" if `<= 0`.
 	 * 
 	 * **NOTE:** Fixed height has no effect if `autoSize = true`.
+	 * @since 5.4.0
 	 */
 	public var fieldHeight(get, set):Float;
 
@@ -212,6 +225,7 @@ class FlxText extends FlxSprite
 		textField.multiline = true;
 		textField.wordWrap = true;
 		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		letterSpacing = 0;
 		font = FlxAssets.FONT_DEFAULT;
 		_formatAdjusted = new TextFormat();
 		textField.defaultTextFormat = _defaultFormat;
@@ -295,7 +309,7 @@ class FlxText extends FlxSprite
 	 * @param   input   The text you want to format
 	 * @param   rules   `FlxTextFormat`s to selectively apply, paired with marker strings
 	 */
-	public function applyMarkup(input:String, rules:Array<FlxTextFormatMarkerPair>):FlxText
+	public function applyMarkup(input:UnicodeString, rules:Array<FlxTextFormatMarkerPair>):FlxText
 	{
 		if (rules == null || rules.length == 0)
 			return this; // there's no point in running the big loop
@@ -313,15 +327,15 @@ class FlxText extends FlxSprite
 				continue;
 
 			var start:Bool = false;
-			var markerLength:Int = rule.marker.uLength();
+			var markerLength:Int = rule.marker.length;
 
 			if (!input.contains(rule.marker))
 				continue; // marker not present
 
 			// inspect each character
-			for (charIndex in 0...input.uLength())
+			for (charIndex in 0...input.length)
 			{
-				if (!input.uSub(charIndex, markerLength).uEquals(rule.marker))
+				if ((input.substr(charIndex, markerLength):UnicodeString) != rule.marker)
 					continue; // it's not one of the markers
 
 				if (start)
@@ -355,7 +369,7 @@ class FlxText extends FlxSprite
 		{
 			// Consider each range start
 			var delIndex:Int = rangeStarts[i];
-			var markerLength:Int = rulesToApply[i].marker.uLength();
+			var markerLength:Int = rulesToApply[i].marker.length;
 
 			// Any start or end index that is HIGHER than this must be subtracted by one markerLength
 			for (j in 0...rangeStarts.length)
@@ -536,6 +550,12 @@ class FlxText extends FlxSprite
 		super.updateHitbox();
 	}
 
+	override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		regenGraphic();
+		return super.getScreenBounds(newRect, camera);
+	}
+
 	function set_fieldWidth(value:Float):Float
 	{
 		if (textField == null)
@@ -627,6 +647,18 @@ class FlxText extends FlxSprite
 		return Size;
 	}
 
+	inline function get_letterSpacing():Float
+	{
+		return _defaultFormat.letterSpacing;
+	}
+
+	function set_letterSpacing(LetterSpacing:Float):Float
+	{
+		_defaultFormat.letterSpacing = LetterSpacing;
+		updateDefaultFormat();
+		return LetterSpacing;
+	}
+
 	override function set_color(Color:FlxColor):Int
 	{
 		if (_defaultFormat.color == Color.to24Bit())
@@ -710,6 +742,21 @@ class FlxText extends FlxSprite
 		if (_defaultFormat.italic != value)
 		{
 			_defaultFormat.italic = value;
+			updateDefaultFormat();
+		}
+		return value;
+	}
+
+	inline function get_underline():Bool
+	{
+		return _defaultFormat.underline;
+	}
+	
+	function set_underline(value:Bool):Bool
+	{
+		if (_defaultFormat.underline != value)
+		{
+			_defaultFormat.underline = value;
 			updateDefaultFormat();
 		}
 		return value;
@@ -1089,6 +1136,7 @@ class FlxText extends FlxSprite
 		to.font = from.font;
 		to.bold = from.bold;
 		to.italic = from.italic;
+		to.underline = from.underline;
 		to.size = from.size;
 		to.color = from.color;
 		to.leading = from.leading;
@@ -1139,15 +1187,16 @@ class FlxTextFormat
 	var format(default, null):TextFormat;
 
 	/**
-	 * @param   FontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
-	 * @param   Bold          Whether the text should be bold (must be supported by the font). `false` by default.
-	 * @param   Italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
-	 * @param   BorderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
+	 * @param   fontColor     Font color, in `0xRRGGBB` format. Inherits from the default format by default.
+	 * @param   bold          Whether the text should be bold (must be supported by the font). `false` by default.
+	 * @param   italic        Whether the text should be in italics (must be supported by the font). Only works on Flash. `false` by default.
+	 * @param   borderColor   Border color, in `0xAARRGGBB` format. By default, no border (`null` / transparent).
+	 * @param   underline     Whether the text should be underlined. `false` by default.
 	 */
-	public function new(?FontColor:FlxColor, ?Bold:Bool, ?Italic:Bool, ?BorderColor:FlxColor)
+	public function new(?fontColor:FlxColor, ?bold:Bool, ?italic:Bool, ?borderColor:FlxColor, ?underline:Bool)
 	{
-		format = new TextFormat(null, null, FontColor, Bold, Italic);
-		borderColor = BorderColor == null ? FlxColor.TRANSPARENT : BorderColor;
+		format = new TextFormat(null, null, fontColor, bold, italic, underline);
+		this.borderColor = borderColor == null ? FlxColor.TRANSPARENT : borderColor;
 	}
 
 	function set_leading(value:Int):Int
@@ -1172,9 +1221,9 @@ private class FlxTextFormatRange
 class FlxTextFormatMarkerPair
 {
 	public var format:FlxTextFormat;
-	public var marker:String;
+	public var marker:UnicodeString;
 
-	public function new(format:FlxTextFormat, marker:String)
+	public function new(format:FlxTextFormat, marker:UnicodeString)
 	{
 		this.format = format;
 		this.marker = marker;
@@ -1216,7 +1265,7 @@ enum abstract FlxTextAlign(String) from String
 	var RIGHT = "right";
 	var JUSTIFY = "justify";
 
-	public static function fromOpenFL(align:AlignType):FlxTextAlign
+	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
 	{
 		return switch (align)
 		{
@@ -1228,17 +1277,15 @@ enum abstract FlxTextAlign(String) from String
 		}
 	}
 
-	public static function toOpenFL(align:FlxTextAlign):AlignType
+	public static function toOpenFL(align:FlxTextAlign):TextFormatAlign
 	{
 		return switch (align)
 		{
-			case LEFT: TextFormatAlign.LEFT;
-			case CENTER: TextFormatAlign.CENTER;
-			case RIGHT: TextFormatAlign.RIGHT;
-			case JUSTIFY: TextFormatAlign.JUSTIFY;
+			case FlxTextAlign.LEFT: TextFormatAlign.LEFT;
+			case FlxTextAlign.CENTER: TextFormatAlign.CENTER;
+			case FlxTextAlign.RIGHT: TextFormatAlign.RIGHT;
+			case FlxTextAlign.JUSTIFY: TextFormatAlign.JUSTIFY;
 			default: TextFormatAlign.LEFT;
 		}
 	}
 }
-
-private typedef AlignType = #if openfl_legacy String #else TextFormatAlign #end;

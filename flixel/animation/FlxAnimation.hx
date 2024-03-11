@@ -29,14 +29,8 @@ class FlxAnimation extends FlxBaseAnimation
 	 * Note: `FlxFrameCollections` and `FlxAtlasFrames` may have their own duration set per-frame,
 	 * those values will override this value.
 	 */
-	public var frameDuration(default, null):Float = 0;
-
-	/**
-	 * Seconds between frames (inverse of the framerate)
-	 */
-	@:deprecated('FlxAnimation.delay is deprecated, use `frameDuration`')
-	public var delay(get, set):Float;
-
+	public var frameDuration:Float = 0;
+	
 	/**
 	 * Whether the current animation has finished.
 	 */
@@ -50,7 +44,7 @@ class FlxAnimation extends FlxBaseAnimation
 	/**
 	 * Whether or not the animation is looped.
 	 */
-	public var looped(default, null):Bool = true;
+	public var looped:Bool = true;
 
 	/**
 	 * The custom loop point for this animation.
@@ -78,6 +72,14 @@ class FlxAnimation extends FlxBaseAnimation
 	 * @since 4.2.0
 	 */
 	public var frames:Array<Int>;
+	
+	/**
+	 * How fast or slow time should pass for this animation.
+	 * 
+	 * Similar to `FlxAnimationController`'s `timeScale`, but won't effect other animations.
+	 * @since 5.4.1
+	 */
+	public var timeScale:Float = 1.0;
 
 	/**
 	 * Internal, used to time each frame of animation.
@@ -199,7 +201,7 @@ class FlxAnimation extends FlxBaseAnimation
 		if (curFrameDuration == 0 || finished || paused)
 			return;
 
-		_frameTimer += elapsed;
+		_frameTimer += elapsed * timeScale;
 		while (_frameTimer > curFrameDuration && !finished)
 		{
 			_frameTimer -= curFrameDuration;
@@ -275,15 +277,5 @@ class FlxAnimation extends FlxBaseAnimation
 	inline function get_numFrames():Int
 	{
 		return frames.length;
-	}
-
-	inline function get_delay()
-	{
-		return frameDuration;
-	}
-
-	inline function set_delay(value:Float)
-	{
-		return frameDuration = value;
 	}
 }

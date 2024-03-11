@@ -87,77 +87,12 @@ class FlxObject extends FlxBasic
 	public static var SEPARATE_BIAS:Float = 4;
 
 	/**
-	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.LEFT` directly.
+	 * The default `moves` value of all future `FlxObjects` and `FlxSprites`
+	 * Note: Has no effect on `FlxTexts`, `FlxTilemaps` and `FlxTileBlocks`
+	 * @since 5.6.0
 	 */
-	@:deprecated("Use LEFT or FlxDirectionFlags.LEFT instead")
-	@:noCompletion
-	public static inline var LEFT = FlxDirectionFlags.LEFT;
-
-	/**
-	 * Generic value for "right". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.RIGHT` directly.
-	 */
-	@:deprecated("Use RIGHT or FlxDirectionFlags.RIGHT instead")
-	@:noCompletion
-	public static inline var RIGHT = FlxDirectionFlags.RIGHT;
-
-	/**
-	 * Generic value for "up". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.UP` directly.
-	 */
-	@:deprecated("Use UP or FlxDirectionFlags.UP instead")
-	@:noCompletion
-	public static inline var UP = FlxDirectionFlags.UP;
-
-	/**
-	 * Generic value for "down". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.DOWN` directly.
-	 */
-	@:deprecated("Use DOWN or FlxDirectionFlags.DOWN instead")
-	@:noCompletion
-	public static inline var DOWN = FlxDirectionFlags.DOWN;
-
-	/**
-	 * Special-case constant meaning no collisions, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.NONE` directly.
-	 */
-	@:deprecated("Use NONE or FlxDirectionFlags.NONE instead")
-	@:noCompletion
-	public static inline var NONE = FlxDirectionFlags.NONE;
-
-	/**
-	 * Special-case constant meaning up, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.CEILING` directly.
-	 */
-	@:deprecated("Use CEILING or FlxDirectionFlags.CEILING instead")
-	@:noCompletion
-	public static inline var CEILING = FlxDirectionFlags.CEILING;
-
-	/**
-	 * Special-case constant meaning down, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.FLOOR` directly.
-	 */
-	@:deprecated("Use FLOOR or FlxDirectionFlags.FLOOR instead")
-	@:noCompletion
-	public static inline var FLOOR = FlxDirectionFlags.FLOOR;
-
-	/**
-	 * Special-case constant meaning only the left and right sides, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.WALL` directly.
-	 */
-	@:deprecated("Use WALL or FlxDirectionFlags.WALL instead")
-	@:noCompletion
-	public static inline var WALL = FlxDirectionFlags.WALL;
-
-	/**
-	 * Special-case constant meaning any direction, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.ANY` directly.
-	 */
-	@:deprecated("Use ANY or FlxDirectionFlags.ANY instead")
-	@:noCompletion
-	public static inline var ANY = FlxDirectionFlags.ANY;
-
+	public static var defaultMoves:Bool = true;
+	
 	@:noCompletion
 	static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
 	@:noCompletion
@@ -612,7 +547,7 @@ class FlxObject extends FlxBasic
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
 	 * `FlxObject` and `FlxSprite` default to `true`. `FlxText`, `FlxTileblock` and `FlxTilemap` default to `false`.
 	 */
-	public var moves(default, set):Bool = true;
+	public var moves(default, set):Bool = defaultMoves;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
@@ -692,10 +627,13 @@ class FlxObject extends FlxBasic
 	 */
 	public var maxAngular:Float = 10000;
 
+	#if FLX_HEALTH
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
+	@:deprecated("object.health is being removed in version 6.0.0")
 	public var health:Float = 1;
+	#end
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
@@ -714,15 +652,6 @@ class FlxObject extends FlxBasic
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
 	public var allowCollisions(default, set) = FlxDirectionFlags.ANY;
-
-	/** DEPRECATED
-	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
-	 * (makes sense for horizontally-moving platforms in platformers for example).
-	 * 
-	 * Apart from having a weird typo, this has been deprecated for collisionXDrag, which allows more options.
-	 */
-	@:deprecated("Use `collisionXDrag`, instead. Note the corrected spelling: `collis(i)onXDrag")
-	public var collisonXDrag(get, set):Bool;
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -1170,7 +1099,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is touching a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object is touching an object in (any of) the specified direction(s) this frame.
@@ -1182,7 +1111,7 @@ class FlxObject extends FlxBasic
 
 	/**
 	 * Handy function for checking if this object is just landed on a particular surface.
-	 * Be sure to check it before calling `super.update()`, as that will reset the flags.
+	 * Note: These flags are set from `FlxG.collide` calls, and get reset in `super.update()`.
 	 *
 	 * @param   direction   Any of the collision flags (e.g. `LEFT`, `FLOOR`, etc).
 	 * @return  Whether the object just landed on (any of) the specified surface(s) this frame.
@@ -1192,18 +1121,21 @@ class FlxObject extends FlxBasic
 		return touching.hasAny(direction) && !wasTouching.hasAny(direction);
 	}
 
+	#if FLX_HEALTH
 	/**
 	 * Reduces the `health` variable of this object by the amount specified in `Damage`.
 	 * Calls `kill()` if health drops to or below zero.
 	 *
 	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
 	 */
+	@:deprecated("object.health is being removed in version 6.0.0")
 	public function hurt(damage:Float):Void
 	{
 		health = health - damage;
 		if (health <= 0)
 			kill();
 	}
+	#end
 
 	/**
 	 * Centers this `FlxObject` on the screen, either by the x axis, y axis, or both.
@@ -1252,8 +1184,8 @@ class FlxObject extends FlxBasic
 	{
 		if (ignoreDrawDebug)
 			return;
-
-		for (camera in cameras)
+		
+		for (camera in getCamerasLegacy())
 		{
 			drawDebugOnCamera(camera);
 
@@ -1462,19 +1394,6 @@ class FlxObject extends FlxBasic
 	function set_allowCollisions(value:FlxDirectionFlags):FlxDirectionFlags
 	{
 		return allowCollisions = value;
-	}
-
-	@:noCompletion
-	function get_collisonXDrag():Bool
-	{
-		return collisionXDrag == IMMOVABLE;
-	}
-
-	@:noCompletion
-	function set_collisonXDrag(value:Bool):Bool
-	{
-		collisionXDrag = value ? IMMOVABLE : NEVER;
-		return value;
 	}
 
 	#if FLX_DEBUG
