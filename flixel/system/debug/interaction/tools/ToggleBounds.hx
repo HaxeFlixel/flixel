@@ -21,9 +21,9 @@ using flixel.util.FlxArrayUtil;
 private class GraphicToggleBoundsTool extends BitmapData {}
 
 /**
- * A tool to scale and rotate selected game elements.
+ * A tool to toggle `ignoreDrawDebug` on objects
  *
- * @author Fernando Bevilacqua (dovyski@gmail.com)
+ * @author George
  */
 class ToggleBounds extends Tool
 {
