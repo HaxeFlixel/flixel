@@ -315,6 +315,15 @@ class FlxGraphic implements IFlxDestroyable
 	public var isDestroyed(get, never):Bool;
 
 	/**
+	 * Whether the `BitmapData` of this graphic object can be refreshed.
+	 * This is only the case for graphics with an `assetsKey` or `assetsClass`.
+	 */
+	public var canBeRefreshed(get, never):Bool;
+	
+	@:deprecated("`canBeDumped` is deprecated, use `canBeRefreshed`")
+	public var canBeDumped(get, never):Bool;
+
+	/**
 	 * GLSL shader for this graphic. Only used if utilizing sprites do not define a shader
 	 * Avoid changing it frequently as this is a costly operation.
 	 */
@@ -395,6 +404,34 @@ class FlxGraphic implements IFlxDestroyable
 	}
 
 	/**
+	 * Refreshes the `BitmapData` of this graphic.
+	 */
+	public function refreshBitmap():Void
+	{
+		var newBitmap:BitmapData = getBitmapFromSystem();
+		if (newBitmap != null)
+			bitmap = newBitmap;
+	}
+	
+	@:deprecated("`undump` is deprecated, use `refreshBitmap`")
+	public function undump():Void
+	{
+		refreshBitmap();
+	}
+	
+	/**
+	 * Asset reload callback for this graphic object.
+	 * It regenerates its bitmap data.
+	 */
+	public function onAssetsReload():Void
+	{
+		if (!canBeRefreshed)
+			return;
+			
+		refreshBitmap();
+	}
+
+	/**
 	 * Trying to free the memory as much as possible
 	 */
 	public function destroy():Void
@@ -469,6 +506,24 @@ class FlxGraphic implements IFlxDestroyable
 		return frame;
 	}
 
+	/**
+	 * Gets the `BitmapData` for this graphic object from OpenFL.
+	 * This method is used for refreshing bitmaps.
+	 */
+	function getBitmapFromSystem():BitmapData
+	{
+		var newBitmap:BitmapData = null;
+		if (assetsClass != null)
+			newBitmap = FlxAssets.getBitmapFromClass(assetsClass);
+		else if (assetsKey != null)
+			newBitmap = FlxAssets.getBitmapData(assetsKey);
+			
+		if (newBitmap != null)
+			return FlxGraphic.getBitmap(newBitmap, unique);
+			
+		return null;
+	}
+
 	inline function get_isLoaded()
 	{
 		return bitmap != null && !bitmap.rect.isEmpty();
@@ -477,6 +532,15 @@ class FlxGraphic implements IFlxDestroyable
 	inline function get_isDestroyed()
 	{
 		return shader == null;
+	}
+	inline function get_canBeRefreshed():Bool
+	{
+		return assetsClass != null || assetsKey != null;
+	}
+	
+	inline function get_canBeDumped():Bool
+	{
+		return canBeRefreshed;
 	}
 	
 	public function incrementUseCount()

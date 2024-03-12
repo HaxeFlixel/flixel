@@ -44,6 +44,18 @@ class BitmapFrontEnd
 		reset();
 	}
 
+	public function onAssetsReload(_):Void
+	{
+		for (key in _cache.keys())
+		{
+			var obj = _cache.get(key);
+			if (obj != null && obj.canBeRefreshed)
+			{
+				obj.onAssetsReload();
+			}
+		}
+	}
+
 	/**
 	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
 	 *
