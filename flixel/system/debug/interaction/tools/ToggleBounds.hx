@@ -50,6 +50,7 @@ class ToggleBounds extends Tool
 	
 	override function onButtonClicked()
 	{
+		#if FLX_DEBUG // needed for coverage tests
 		// super.onButtonClicked();
 		if (_brain.selectedItems.length == 0)
 			return;
@@ -74,5 +75,6 @@ class ToggleBounds extends Tool
 			}
 		}
 		// _brain.selectedItems.clear();
+		#end
 	}
 }
