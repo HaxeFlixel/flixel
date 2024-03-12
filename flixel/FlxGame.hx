@@ -345,6 +345,7 @@ class FlxGame extends Sprite
 
 		// make sure the cursor etc are properly scaled from the start
 		resizeGame(FlxG.stage.stageWidth, FlxG.stage.stageHeight);
+
 		Assets.addEventListener(Event.CHANGE, FlxG.bitmap.onAssetsReload);
 	}
 

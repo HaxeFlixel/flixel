@@ -533,6 +533,7 @@ class FlxGraphic implements IFlxDestroyable
 	{
 		return shader == null;
 	}
+
 	inline function get_canBeRefreshed():Bool
 	{
 		return assetsClass != null || assetsKey != null;
