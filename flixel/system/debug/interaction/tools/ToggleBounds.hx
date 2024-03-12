@@ -15,9 +15,7 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxArrayUtil;
 
-#if debug
-@:bitmap("assets/images/debugger/buttons/drawDebug.png")
-#end
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/drawDebug.png") #end
 private class GraphicToggleBoundsTool extends BitmapData {}
 
 /**
