@@ -499,7 +499,8 @@ class FlxGraphic implements IFlxDestroyable
 		if (collection.type != null)
 		{
 			var collections:Array<Dynamic> = getFramesCollections(collection.type);
-			collections.push(collection);
+			if (collections.indexOf(collection) == -1)
+				collections.push(collection);
 		}
 	}
 
@@ -511,6 +512,8 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public inline function getFramesCollections(type:FlxFrameCollectionType):Array<Dynamic>
 	{
+		if (isDestroyed) return [];
+		
 		var collections:Array<Dynamic> = frameCollections.get(type);
 		if (collections == null)
 		{

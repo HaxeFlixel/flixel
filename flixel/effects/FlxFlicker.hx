@@ -129,6 +129,16 @@ class FlxFlicker implements IFlxDestroyable
 		progressCallback = null;
 	}
 
+	public function pause():Void {
+		if (timer == null) return;
+		timer.active = false;
+	}
+
+	public function resume():Void {
+		if (timer == null) return;
+		timer.active = true;
+	}
+
 	/**
 	 * Starts flickering behavior.
 	 */
@@ -182,7 +192,12 @@ class FlxFlicker implements IFlxDestroyable
 			{
 				completionCallback(this);
 			}
-			release();
+
+			// NOTE: Calling `flicker` in the completion callback will call release() on this object before reinstantiating it.
+			// If that happens, we don't want to call release() again! So we check if the flicker is still done before releasing.
+			if (this.timer == Timer) {
+				release();
+			}
 		}
 	}
 

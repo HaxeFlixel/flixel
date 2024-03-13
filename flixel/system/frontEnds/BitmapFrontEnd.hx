@@ -294,7 +294,7 @@ class BitmapFrontEnd
 		if (graphic != null)
 		{
 			removeKey(graphic.key);
-			graphic.destroy();
+			if (!graphic.isDestroyed) graphic.destroy();
 		}
 	}
 
