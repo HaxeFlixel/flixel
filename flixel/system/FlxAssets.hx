@@ -2,9 +2,6 @@ package flixel.system;
 
 import haxe.macro.Expr;
 #if !macro
-import openfl.display.BitmapData;
-import openfl.display.Graphics;
-import openfl.media.Sound;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.atlas.AseAtlas;
@@ -16,10 +13,13 @@ import flixel.graphics.frames.bmfont.BMFont;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
-import haxe.io.Bytes;
 import haxe.Json;
+import haxe.io.Bytes;
 import haxe.xml.Access;
 import openfl.Assets;
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.media.Sound;
 import openfl.utils.ByteArray;
 
 using StringTools;
@@ -31,7 +31,7 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
+class VirtualInputData extends #if nme ByteArray #else ByteArrayData #end {}
 
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
