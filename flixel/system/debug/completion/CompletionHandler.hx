@@ -40,12 +40,7 @@ class CompletionHandler
 
 	function getCaretIndex():Int
 	{
-		#if openfl_legacy
-		// caretIndex is not a thing on legacy...
-		return input.text.length;
-		#else
 		return input.caretIndex;
-		#end
 	}
 
 	function onKeyUp(e:KeyboardEvent)

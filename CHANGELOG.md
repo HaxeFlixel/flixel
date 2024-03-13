@@ -1,4 +1,100 @@
-5.4.0 (TBD)
+5.7.0 (TBD)
+
+#### New features:
+- `FlxBitmapFont`: Added `setCharFrame` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+- `FlxTimer`: Added static `wait` and `loops` methods ([#3040](https://github.com/HaxeFlixel/flixel/pull/3040))
+- `FlxBasic`: Added `container` field and `FlxContainer` and `FlxSpriteContainer` where a basic can only be in one container ([#3050](https://github.com/HaxeFlixel/flixel/pull/3050)) ([#3055](https://github.com/HaxeFlixel/flixel/pull/3055)) ([#3068](https://github.com/HaxeFlixel/flixel/pull/3068)) 
+- `FlxPath`: Added `centerMode` to center on `TOP_LEFT`, `CENTER`, `ORIGIN` and more ([#3052](https://github.com/HaxeFlixel/flixel/pull/3052))
+- `FlxG.plugins`: Added `drawOnTop` field ([#3057](https://github.com/HaxeFlixel/flixel/pull/3057))
+- `FlxCamera`: Added `stopFade`, `stopFlash`, and `stopShake` ([#3063](https://github.com/HaxeFlixel/flixel/pull/3063))
+- `FlxRect`: Added `containsXY` ([#3069](https://github.com/HaxeFlixel/flixel/pull/3069))
+
+
+#### Changes and improvements:
+- `FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+- `FlxSound`: Deprecated `sound.group` setter, avoiding recursion errors ([#3041](https://github.com/HaxeFlixel/flixel/pull/3041))
+- `FlxAssets`: Allow the immediate use of async images, once loaded ([#3022](https://github.com/HaxeFlixel/flixel/pull/3022))
+- `FlxText`: Removed references to `FlxUnicodeUtil` ([#3049](https://github.com/HaxeFlixel/flixel/pull/3049))
+- `FlxObject`: Deprecated `health` and `hurt` ([#3065](https://github.com/HaxeFlixel/flixel/pull/3065))
+	- Added compiler flag `FLX_NO_HEALTH` to create your own replacement, if needed ([#3067](https://github.com/HaxeFlixel/flixel/pull/3067))
+
+5.6.2 (February 10, 2024)
+#### Changes and improvements:
+- `FlxBitmapFont`: Prevent crashes from missing xml fields in `fromAngelCode` ([#3029](https://github.com/HaxeFlixel/flixel/pull/3029))
+
+5.6.1 (February 9, 2024)
+#### Changes and improvements:
+- `FlxBitmapFont`: Downgraded crashes of missing xml fields to warnings in `fromAngelCode` ([#3025](https://github.com/HaxeFlixel/flixel/pull/3025))
+- Corrected documenation for the recent `FlxG.switchstate` arg changes
+
+5.6.0 (February 2, 2024)
+
+#### New features:
+- `FlxGraphic`: Added `isDestroyed` ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxBitmapFont`: Support for all BMFont output file types ([#2949](https://github.com/HaxeFlixel/flixel/pull/2949))
+- `FlxObject`: Add static `defaultMoves` field ([#2980](https://github.com/HaxeFlixel/flixel/pull/2980))
+- `FlxText`: Add `underline` field ([#3002](https://github.com/HaxeFlixel/flixel/pull/3002))
+- `FlxBitmapText`: Add `wrap` field to expand wordwrap capabilities ([#2722](https://github.com/HaxeFlixel/flixel/pull/2722))
+	- Can now choose various to split words, conditionally, like if they are too long to fit in one line
+	- Also deprecates `wordWrap` and `wrapByWord`
+- `Android`: Set the default `appCategory` to "game" ([#3009](https://github.com/HaxeFlixel/flixel/pull/3009))
+
+#### Changes and improvements:
+- `FlxMouse`: Made the private `_cursor` field public, and renamed to `cursor` ([#2969](https://github.com/HaxeFlixel/flixel/pull/2969))
+- `Interaction`: Changes to Flixel's Debug Pointer and Mover tools ([#2964](https://github.com/HaxeFlixel/flixel/pull/2964))
+	- Hold Ctrl to drag selected objects, Shift to add to selection, Alt to remove from selection
+	- works better with `FlxObjects`
+	- See detailed list of changes [here](https://github.com/HaxeFlixel/flixel/pull/2964)
+- `PluginFrontEnd`: Allow multiple plugins of the same type ([#2952](https://github.com/HaxeFlixel/flixel/pull/2952))
+	- Add `addPlugin`, `addIfUnique` and `removeAllByType`
+	- Deprecate `add` and `removeType`
+- Remove compile conditionals using `FLX_DRAW_QUADS` ([#2962](https://github.com/HaxeFlixel/flixel/pull/2962))
+- `AseAtlas`: Set animation `loops` to match Aseprite's own settings ([#2963](https://github.com/HaxeFlixel/flixel/pull/2963))
+- `FlxMouseEvent`: Added links to [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/) ([#2961](https://github.com/HaxeFlixel/flixel/pull/2961))
+- `NextState`: Allow `()->FlxState` args in `FlxG.switchState` and `FlxGame.new` ([#2997](https://github.com/HaxeFlixel/flixel/pull/2997))
+- `FlxSplash`: Can now extend `FlxSplash` to add custom behavior ([#2997](https://github.com/HaxeFlixel/flixel/pull/2997))
+- `FlxDrawQuadsItem`: Improve performance by pre-calculating alpha ([#2996](https://github.com/HaxeFlixel/flixel/pull/2996))
+- `FlxSpriteGroup`: Now able to follow its `path` ([#3014](https://github.com/HaxeFlixel/flixel/pull/3014))
+- `FlxAtlasFrames`: Remove `Hash<T>` in favor of `DynamicAccess<T>` ([#3015](https://github.com/HaxeFlixel/flixel/pull/3015))
+- Various documentation ([#3021](https://github.com/HaxeFlixel/flixel/pull/3021)) ([#3012](https://github.com/HaxeFlixel/flixel/pull/3012))
+
+#### Bugfixes:
+- Prevent crash when drawing a sprite with a destroyed graphic, by loading the placeholder logo. ([#2974](https://github.com/HaxeFlixel/flixel/pull/2974))
+- `FlxG`: Fix HTML5 reflection issue where `state.switchTo` is null ([#2985](https://github.com/HaxeFlixel/flixel/pull/2985))
+- `FlxBitmapText`: Default `text` to `""` instead of `null` ([#2976](https://github.com/HaxeFlixel/flixel/pull/2976))
+- `FlxPlugin`: Fix inline error on haxe 4.3.3 ([#2986](https://github.com/HaxeFlixel/flixel/pull/2986))
+- `FlxKeyboard`: Fix plus keybind on Mac ([#2987](https://github.com/HaxeFlixel/flixel/pull/2987))
+- `FlxSignal`: Fix one-time listeners not being removed on hashlink ([#3004](https://github.com/HaxeFlixel/flixel/pull/3004))
+- `QuadPath`: Prevent crash by avoiding divide by zero in `getCurveLength` ([#3019](https://github.com/HaxeFlixel/flixel/pull/3019))
+
+5.5.0 (November 8, 2023)
+
+#### New features:
+- `FlxG`: Added `animationTimeScale` ([#2937](https://github.com/HaxeFlixel/flixel/pull/2937))
+
+#### Changes and improvements:
+- `FlxPool`: Use factory functions to create instances ([#2934](https://github.com/HaxeFlixel/flixel/pull/2934))
+
+#### Bugfixes:
+- Fixed errors from OpenFL 9.3.2
+- `FlxText`: Remove warnings about potential typos ([#2935](https://github.com/HaxeFlixel/flixel/pull/2935))
+- `FlxText`: Regen graphic in `getScreenBounds` calls ([#2942](https://github.com/HaxeFlixel/flixel/pull/2942))
+- `FlxBar`: Various fixes ([#2938](https://github.com/HaxeFlixel/flixel/pull/2938))
+
+
+5.4.1 (October 4, 2023)
+
+#### Changes and improvements:
+- Various improvements and new features for animations ([#2930](https://github.com/HaxeFlixel/flixel/pull/2930))
+	- `FlxAnimation`: Make `frameDuration` and `looped` public
+	- `FlxAnimation`: Add `timeScale` (not to be confused with the same field added to `FlxAnimationController` in 5.4.0)
+	- `FlxAseAtlasUtils`: Use fields `repeat` and `direction` when creating animations from Aseprite tag data
+- `FlxTilemap`: Add `defaultFramePadding` back ([#2886](https://github.com/HaxeFlixel/flixel/pull/2886))
+
+#### Bugfixes:
+- `FlxSoundTray`: Fix sound tray hide animation ([#2923](https://github.com/HaxeFlixel/flixel/pull/2923))
+
+5.4.0 (September 28, 2023)
 ------------------------------
 #### New features:
 - **README.md**: Add Turkish translations
@@ -11,6 +107,20 @@
 - `FlxCamera`: Add `pixelPerfectShake` field, for pixel-perfect camera shaking ([#2841](https://github.com/HaxeFlixel/flixel/pull/2841))
 - `LogStyle`: Allow log styles to throw errors ([#2842](https://github.com/HaxeFlixel/flixel/pull/2842))
 - `FlxTilemap`: add `FlxTypedTilemap<T>` ([#2734](https://github.com/HaxeFlixel/flixel/pull/2734))
+- `FlxGroup`: Various changes ([#2806](https://github.com/HaxeFlixel/flixel/pull/2806))
+	- Add `killMembers`, `reviveMembers` and `keyValueIterator`
+	- Add new searching utils `getFirst`, `getLast`, `getFirstIndex`, `getLastIndex`, `any` and `every`
+	- Replace `getFirstNull`'s loop with a simple `indexOf` check
+	- Improve readibility and simplify loops under the hood
+- `FlxSpriteUtil`: Add `setTint` and `setBrightness` ([#2869](https://github.com/HaxeFlixel/flixel/pull/2869))
+- `FlxAsepriteUtils`: New util class with various helpers (via `using FlxAsepriteUtil;` ([#2860](https://github.com/HaxeFlixel/flixel/pull/2860))
+	- Added `loadAseAtlas`, `addAseAtlasTagsByIndex`, and `addAseAtlasTagsByPrefix`
+	- Added `TexturePackerAtlas` and `AseAtlas` types
+	- Added Aseprite metadata types: `AseAtlasMeta`, `AseAtlasTag`, `AseAtlasSlice` and `AseAtlasLayer`
+	- Deprecated `TexturePackerObject`, `TexturePackerFrameData` and `TexturePackerFrameRect`
+	for `TexturePackerAtlas`, `TexturePackerAtlasFrame` and `AtlasRect`, respectively;
+- `FlxAtlasFrames`: Added multi-atlas capabilities with `addAtlas` and `concat` ([#2772](https://github.com/HaxeFlixel/flixel/pull/2772))
+- `FlxAnimationController`: add `timeScale` field to control animation speed ([#2913](https://github.com/HaxeFlixel/flixel/pull/2913))
 
 #### Changes and improvements:
 - `FlxEase`: Simplify `bounceIn` and `bounceInOut` ([#2788](https://github.com/HaxeFlixel/flixel/pull/2788))
@@ -19,10 +129,29 @@
 - Add hxformat.json to published Flixel release ([#2818](https://github.com/HaxeFlixel/flixel/pull/2818))
 - `FlxSprite`: Add erroneously unused `camera` arg when calling `pixelsOverlapPoint` ([#2824](https://github.com/HaxeFlixel/flixel/pull/2824))
 - Changed references to the `flash` package to their `openfl` equivalent, whenever possible ([#2832](https://github.com/HaxeFlixel/flixel/pull/2832))
+- `FlxSpriteUtil`: Fix `cameraWrap` and `cameraBound` error when camera scroll is non-0 ([#2851](https://github.com/HaxeFlixel/flixel/pull/2851))
+- `FlxBar`: Fix pixel perfect rendering issue ([#2853](https://github.com/HaxeFlixel/flixel/pull/2853))
+- `FlxText`: Trigger re-draw when `text` is set to empty string ([#2846](https://github.com/HaxeFlixel/flixel/pull/2846))
+- `FlxPoint`: Small doc fix ([#2873](https://github.com/HaxeFlixel/flixel/pull/2873))
+- `FlxAndroidKey`: Fix `@:enum` deprecation warning ([#2876](https://github.com/HaxeFlixel/flixel/pull/2876))
+- Change `FlxSprite.setColorTransform` and `FlxSpriteUtil.setOffsets` args from ints to floats ([#2875](https://github.com/HaxeFlixel/flixel/pull/2875))
+- `FlxSprite`: Change `setGraphicSize` args from ints to floats ([#2881](https://github.com/HaxeFlixel/flixel/pull/2881))
+- `FlxAnimationController`: Accept float for all functions taking `frameRate` ([#2884](https://github.com/HaxeFlixel/flixel/pull/2884))
+- `FlxCamera`: Make the `filters` array public ([#2890](https://github.com/HaxeFlixel/flixel/pull/2890))
+- `FlxSubState`: Destroy `_bgSprite` ([#2897](https://github.com/HaxeFlixel/flixel/pull/2897))
+- `FlxCamera`: Improve `SCREEN_BY_SCREEN` follow mode and add `bindScrollPos` method ([#2903](https://github.com/HaxeFlixel/flixel/pull/2903))
+- `Watch`: Allow `addFunction` to overwrite existing watches ([#2902](https://github.com/HaxeFlixel/flixel/pull/2902))
+- `FlxMath`: Wrap methods and imports in conditionals when in macros ([#2911](https://github.com/HaxeFlixel/flixel/pull/2911))
+- Assets: Run DeveImageOptimizer on all of HaxeFlixel's image assets ([#2901](https://github.com/HaxeFlixel/flixel/pull/2901))
+- `FlxG`: Allow `openURL` to work with any URL protocol ([#2877](https://github.com/HaxeFlixel/flixel/pull/2877))
 
 #### Bugfixes:
 - `FlxAnimation`: Fix issue where `finishCallback` wasn't being fired on reversed animations ([#2811](https://github.com/HaxeFlixel/flixel/pull/2811))
-
+- `FlxTilemap`: Reset buffers when loading maps a second+ time from the same instance ([#2883](https://github.com/HaxeFlixel/flixel/pull/2883))
+- `FlxPointer`: Fix `overlaps` calls with a specified `camera` arg ([#2885](https://github.com/HaxeFlixel/flixel/pull/2885))
+- `FlxStrip`: Fix black shapes when `drawDebug` is true ([#2906](https://github.com/HaxeFlixel/flixel/pull/2906))
+- `FlxBitmapText`: Fix `textColor` not applied correctly ([#2918](https://github.com/HaxeFlixel/flixel/pull/2918))
+- `FlxCamera`: Fix camera lerping speeds on lower fps ([#2920](https://github.com/HaxeFlixel/flixel/pull/2920))
 
 5.3.1 (May 7, 2023)
 ------------------------------

@@ -106,6 +106,9 @@ class SoundFrontEnd
 	 */
 	public function playMusic(embeddedMusic:FlxSoundAsset, volume = 1.0, looped = true, ?group:FlxSoundGroup):Void
 	{
+		if (group == null)
+			group = defaultMusicGroup;
+		
 		if (music == null)
 		{
 			music = new FlxSound();
@@ -114,11 +117,11 @@ class SoundFrontEnd
 		{
 			music.stop();
 		}
-
+		
 		music.loadEmbedded(embeddedMusic, looped);
 		music.volume = volume;
 		music.persist = true;
-		music.group = (group == null) ? defaultMusicGroup : group;
+		group.add(music);
 		music.play();
 	}
 
@@ -180,14 +183,15 @@ class SoundFrontEnd
 
 	function loadHelper(sound:FlxSound, volume:Float, group:FlxSoundGroup, autoPlay = false):FlxSound
 	{
+		if (group == null)
+			group = defaultSoundGroup;
+		
 		sound.volume = volume;
-
+		group.add(sound);
+		
 		if (autoPlay)
-		{
 			sound.play();
-		}
-
-		sound.group = (group == null) ? defaultSoundGroup : group;
+		
 		return sound;
 	}
 
@@ -308,7 +312,7 @@ class SoundFrontEnd
 	{
 		if (music != null && (forceDestroy || !music.persist))
 		{
-			destroySound(music);
+			music.destroy();
 			music = null;
 		}
 
@@ -316,16 +320,9 @@ class SoundFrontEnd
 		{
 			if (sound != null && (forceDestroy || !sound.persist))
 			{
-				destroySound(sound);
+				sound.destroy();
 			}
 		}
-	}
-
-	function destroySound(sound:FlxSound):Void
-	{
-		defaultMusicGroup.remove(sound);
-		defaultSoundGroup.remove(sound);
-		sound.destroy();
 	}
 
 	/**

@@ -129,7 +129,7 @@ class FlxPointer
 		}
 		else
 		{
-			getPosition(_cachedPoint);
+			getWorldPosition(Camera, _cachedPoint);
 			var object:FlxObject = cast ObjectOrGroup;
 			result = object.overlapsPoint(_cachedPoint, true, Camera);
 		}

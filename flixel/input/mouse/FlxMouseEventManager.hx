@@ -13,13 +13,13 @@ import flixel.util.FlxDestroyUtil;
 
 /**
  * Provides mouse event detection for `FlxObject` and `FlxSprite` (pixel-perfect for those).
- * Normally you would use [`FlxMouseEvent`](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
- * static properties for this.
+ * Normally you would use `FlxMouseEvent` static properties for this.
  * 
  * You can make a new `FlxMouseEventManager` instance for private usage, 
  * but you should know what you are doing.
  * 
- * @see [`FlxMouseEvent`](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
+ * @see [FlxMouseEvent](https://api.haxeflixel.com/flixel/input/mouse/FlxMouseEvent.html)
+ * @see [FlxMouseEvent Demo](https://haxeflixel.com/demos/FlxMouseEvent/)
  * 
  * @author TiagoLr (~~~ ProG4mr ~~~)
  */
@@ -632,7 +632,7 @@ class FlxMouseEventManager extends FlxBasic
 
 	function checkOverlap<T:FlxObject>(event:FlxMouseEvent<T>):Bool
 	{
-		for (camera in event.object.cameras)
+		for (camera in event.object.getCameras())
 		{
 			#if FLX_MOUSE
 			_point = FlxG.mouse.getPositionInCameraView(camera, _point);

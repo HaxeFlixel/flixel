@@ -11,7 +11,7 @@ import flixel.util.FlxSpriteUtil;
 
 using flixel.util.FlxArrayUtil;
 
-@:bitmap("assets/images/debugger/cursorCross.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursorCross.png") #end
 class GraphicCursorCross extends BitmapData {}
 
 /**
@@ -24,9 +24,7 @@ class Pointer extends Tool
 	var _selectionStartPoint:FlxPoint = new FlxPoint();
 	var _selectionEndPoint:FlxPoint = new FlxPoint();
 	var _selectionHappening:Bool = false;
-	var _selectionCancelled:Bool = false;
 	var _selectionArea:FlxRect = new FlxRect();
-	var _itemsInSelectionArea:Array<FlxBasic> = [];
 
 	override public function init(brain:Interaction):Tool
 	{
@@ -60,38 +58,23 @@ class Pointer extends Tool
 
 		// If we made this far, the user just clicked the cursor
 		// If we had a selection happening, it's time to end it.
-		if (_selectionHappening)
-			stopSelection();
-
+		if (!_selectionHappening)
+			return;
+		
+		final selectedItems = stopSelectionAndFindItems();
+		final drewRect = _selectionArea.width != 0 || _selectionArea.height != 0;
 		// If we have items in the selection area, handle them
-		if (_itemsInSelectionArea.length > 0)
-		{
-			handleItemAddition(_itemsInSelectionArea);
-		}
-		else if (!_brain.keyPressed(Keyboard.CONTROL) && !_selectionCancelled)
-			// User clicked an empty space without holding the "add more items" key,
-			// so it's time to unselect everything.
-			_brain.clearSelection();
+		updateSelectedItems(selectedItems, drewRect);
 	}
 
 	function calculateSelectionArea():Void
 	{
-		_selectionArea.x = _selectionStartPoint.x;
-		_selectionArea.y = _selectionStartPoint.y;
-		_selectionArea.width = _selectionEndPoint.x - _selectionArea.x;
-		_selectionArea.height = _selectionEndPoint.y - _selectionArea.y;
-
-		if (_selectionArea.width < 0)
-		{
-			_selectionArea.width *= -1;
-			_selectionArea.x = _selectionArea.x - _selectionArea.width;
-		}
-
-		if (_selectionArea.height < 0)
-		{
-			_selectionArea.height *= -1;
-			_selectionArea.y = _selectionArea.y - _selectionArea.height;
-		}
+		final start = _selectionStartPoint;
+		final end = _selectionEndPoint;
+		_selectionArea.x = start.x < end.x ? start.x : end.x;
+		_selectionArea.y = start.y < end.y ? start.y : end.y;
+		_selectionArea.right = start.x > end.x ? start.x : end.x;
+		_selectionArea.bottom = start.y > end.y ? start.y : end.y;
 	}
 
 	/**
@@ -101,10 +84,7 @@ class Pointer extends Tool
 	public function startSelection():Void
 	{
 		_selectionHappening = true;
-		_selectionCancelled = false;
 		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
-		_itemsInSelectionArea.clearArray();
-		updateConsoleSelection();
 	}
 
 	/**
@@ -117,67 +97,98 @@ class Pointer extends Tool
 		if (!_selectionHappening)
 			return;
 
-		_selectionCancelled = true;
-		stopSelection(false);
+		stopSelection();
 	}
 
 	/**
 	 * Stop any selection activity that is happening.
-	 *
-	 * @param	findItems	If `true` (default), all items within the (stopped) selection area will be included in the list of selected items of the tool.
 	 */
-	public function stopSelection(findItems:Bool = true):Void
+	public function stopSelection():Void
+	{
+		// Clear everything
+		_selectionHappening = false;
+		_selectionArea.set(0, 0, 0, 0);
+	}
+	
+	/**
+	 * Stop any selection activity that is happening.
+	 */
+	public function stopSelectionAndFindItems():Array<FlxObject>
 	{
 		if (!_selectionHappening)
-			return;
+			throw "stopSelectionAndFindItems called when not selecting";
 
 		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
 		calculateSelectionArea();
 
-		if (findItems)
+		var items:Array<FlxObject> = null;
+		if (_selectionArea.width != 0 || _selectionArea.height != 0)
 		{
-			_brain.findItemsWithinState(_itemsInSelectionArea, FlxG.state, _selectionArea);
-			updateConsoleSelection();
+			items = _brain.getItemsWithinState(FlxG.state, _selectionArea);
 		}
+		else
+		{
+			// if not using the selection rect then select the top-most item
+			final topItem = _brain.getTopItemWithinState(FlxG.state, _selectionArea);
+			if (topItem != null)
+				items = [topItem];
+		}
+		
+		updateConsoleSelection(items);
 
 		// Clear everything
-		_selectionHappening = false;
-		_selectionArea.set(0, 0, 0, 0);
+		stopSelection();
+		
+		return items;
 	}
 
 	/**
 	 * We register the current selection to the console for easy interaction.
 	 */
-	function updateConsoleSelection()
+	function updateConsoleSelection(items:Array<FlxObject>)
 	{
-		FlxG.console.registerObject("selection", switch (_itemsInSelectionArea.length)
+		FlxG.console.registerObject("selection", switch (items)
 		{
-			case 0: null;
-			case 1: _itemsInSelectionArea[0];
-			case _: _itemsInSelectionArea;
+			case null | []: null;
+			case [lone]: lone;
+			default: items;
 		});
 	}
 
-	function handleItemAddition(itemsInSelectionArea:Array<FlxBasic>):Void
+	function updateSelectedItems(items:Array<FlxObject>, drewRect:Bool):Void
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
-		var adding = _brain.keyPressed(Keyboard.CONTROL);
-		var selectedItems = _brain.selectedItems;
-
-		if (itemsInSelectionArea.length == 0)
-			return;
-
+		final adding = _brain.keyPressed(Keyboard.SHIFT);
+		final removing = _brain.keyPressed(Keyboard.ALTERNATE) && !adding;
+		
 		// If we are not selectively adding items, just clear
 		// the brain's list of selected items.
-		if (!adding)
+		if (!adding && !removing)
 			_brain.clearSelection();
-
-		for (item in itemsInSelectionArea)
+		
+		if (items == null || items.length == 0)
+			return;
+		
+		final prevSelectedItems = _brain.selectedItems;
+		if (adding && !drewRect && items.length == 1)
 		{
-			if (selectedItems.members.contains(cast item) && adding)
-				selectedItems.remove(cast item);
+			final item = items[0];
+			// if they click a single item, toggle it from the selection
+			if (prevSelectedItems.members.contains(item))
+				prevSelectedItems.remove(item);
 			else
-				selectedItems.add(cast item);
+				prevSelectedItems.add(item);
+		}
+		else if (removing)
+		{
+			for (item in items)
+				prevSelectedItems.remove(item);
+		}
+		else
+		{
+			// add them all
+			for (item in items)
+				prevSelectedItems.add(item);
 		}
 	}
 

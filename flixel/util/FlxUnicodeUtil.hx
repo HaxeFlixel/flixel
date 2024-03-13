@@ -5,7 +5,7 @@ package flixel.util;
  */
 @:dox(hide)
 @:noCompletion
-@:deprecated("Use unicodeString")
+@:deprecated("Use UnicodeString")
 class FlxUnicodeUtil
 {
 	@:deprecated("Use UnicodeString")

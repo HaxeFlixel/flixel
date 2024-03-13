@@ -2,6 +2,7 @@ package flixel;
 
 import flixel.system.FlxBGSprite;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A `FlxSubState` can be opened inside of a `FlxState`.
@@ -62,7 +63,7 @@ class FlxSubState extends FlxState
 		// Draw background
 		if (FlxG.renderBlit)
 		{
-			for (camera in cameras)
+			for (camera in getCamerasLegacy())
 			{
 				camera.fill(bgColor);
 			}
@@ -82,7 +83,7 @@ class FlxSubState extends FlxState
 		closeCallback = null;
 		openCallback = null;
 		_parentState = null;
-		_bgSprite = null;
+		_bgSprite = FlxDestroyUtil.destroy(_bgSprite);
 	}
 
 	/**

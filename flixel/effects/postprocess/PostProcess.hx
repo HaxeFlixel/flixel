@@ -184,58 +184,6 @@ class PostProcess extends OpenGLView
 		time += elapsed;
 	}
 
-	#if openfl_legacy
-	/**
-	 * Renders to a framebuffer or the screen every frame.
-	 */
-	override public function render(rect:Rectangle)
-	{
-		GL.bindFramebuffer(GL.FRAMEBUFFER, renderTo);
-		GL.viewport(0, 0, screenWidth, screenHeight);
-
-		postProcessShader.bind();
-
-		GL.enableVertexAttribArray(vertexSlot);
-		GL.enableVertexAttribArray(texCoordSlot);
-
-		GL.activeTexture(GL.TEXTURE0);
-		GL.bindTexture(GL.TEXTURE_2D, texture);
-		GL.enable(GL.TEXTURE_2D);
-
-		GL.bindBuffer(GL.ARRAY_BUFFER, buffer);
-		GL.vertexAttribPointer(vertexSlot, 2, GL.FLOAT, false, 16, 0);
-		GL.vertexAttribPointer(texCoordSlot, 2, GL.FLOAT, false, 16, 8);
-
-		GL.uniform1i(imageUniform, 0);
-		GL.uniform1f(timeUniform, time);
-		GL.uniform2f(resolutionUniform, screenWidth, screenHeight);
-
-		for (u in uniforms)
-		{
-			GL.uniform1f(u.id, u.value);
-		}
-
-		GL.drawArrays(GL.TRIANGLES, 0, 6);
-
-		GL.bindBuffer(GL.ARRAY_BUFFER, null);
-		GL.disable(GL.TEXTURE_2D);
-		GL.bindTexture(GL.TEXTURE_2D, null);
-
-		GL.disableVertexAttribArray(vertexSlot);
-		GL.disableVertexAttribArray(texCoordSlot);
-
-		GL.useProgram(null);
-
-		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
-
-		// check gl error
-		if (GL.getError() == GL.INVALID_FRAMEBUFFER_OPERATION)
-		{
-			trace("INVALID_FRAMEBUFFER_OPERATION!!");
-		}
-	}
-	#end
-
 	var framebuffer:GLFramebuffer;
 	var renderbuffer:GLRenderbuffer;
 	var texture:GLTexture;

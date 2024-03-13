@@ -131,14 +131,14 @@ class FlxPathfinderTest extends FlxTest
 
 class TileData
 {
-	static public inline var CSV_4X4
+	public static inline var CSV_4X4
 		= "0,1,0,0\n"
 		+ "0,1,0,0\n"
 		+ "0,0,1,0\n"
 		+ "0,0,0,0\n"
 		;
 
-	static public inline var CSV_6X5 
+	public static inline var CSV_6X5  
 		= "0,0,1,1,0,0\n"
 		+ "0,0,1,1,0,0\n"
 		+ "0,0,0,1,0,0\n"

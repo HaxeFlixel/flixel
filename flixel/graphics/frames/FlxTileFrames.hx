@@ -208,7 +208,7 @@ class FlxTileFrames extends FlxFramesCollection
 			tileFrames.frames.push(frame);
 
 			if (frame.name != null)
-				tileFrames.framesHash.set(frame.name, frame);
+				tileFrames.framesByName.set(frame.name, frame);
 		}
 
 		return tileFrames;
@@ -237,9 +237,9 @@ class FlxTileFrames extends FlxFramesCollection
 		{
 			var name:String = framesToAdd[0].name;
 			var postIndex:Int = name.indexOf(".", Prefix.length);
-			var postFix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
+			var suffix:String = name.substring(postIndex == -1 ? name.length : postIndex, name.length);
 
-			FlxFrame.sort(framesToAdd, Prefix.length, postFix.length);
+			FlxFrame.sortFrames(framesToAdd, Prefix, suffix);
 			return FlxTileFrames.fromFrames(framesToAdd);
 		}
 
