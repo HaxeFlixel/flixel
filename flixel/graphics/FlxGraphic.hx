@@ -500,6 +500,8 @@ class FlxGraphic implements IFlxDestroyable
 		{
 			var collections:Array<Dynamic> = getFramesCollections(collection.type);
 			collections.push(collection);
+			if (!frameCollectionTypes.contains(collection.type))
+				frameCollectionTypes.push(collection.type);
 		}
 	}
 
