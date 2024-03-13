@@ -802,7 +802,7 @@ class FlxBitmapText extends FlxSprite
 				
 				word = word + String.fromCharCode(charCode);
 			}
-			else if (char == '-')
+			else if (charCode == '-'.code)
 			{
 				if (isSpaceWord && word != "")
 				{
@@ -1116,7 +1116,7 @@ class FlxBitmapText extends FlxSprite
 		var curY:Int = startY;
 
 		var line:UnicodeString = _lines[lineIndex];
-		var spaceWidth:Int = font.spaceWidth;
+		var adjustedSpaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.length;
 		var textWidth:Int = this.textWidth;
 
@@ -1126,7 +1126,7 @@ class FlxBitmapText extends FlxSprite
 
 			for (i in 0...lineLength)
 			{
-				charCode = line.charCodeAt(i);
+				final charCode = line.charCodeAt(i);
 
 				if (charCode == FlxBitmapFont.SPACE_CODE)
 				{
@@ -1143,11 +1143,9 @@ class FlxBitmapText extends FlxSprite
 			adjustedSpaceWidth = Std.int((textWidth - lineWidth + totalSpacesWidth) / numSpaces);
 		}
 
-		var tabWidth:Int = spaceWidth * numSpacesInTab;
-
 		for (i in 0...lineLength)
 		{
-			charCode = line.charCodeAt(i);
+			final charCode = line.charCodeAt(i);
 
 			if (charCode == FlxBitmapFont.SPACE_CODE)
 			{
@@ -1190,7 +1188,7 @@ class FlxBitmapText extends FlxSprite
 		var curY:Int = startY;
 
 		var line:String = _lines[lineIndex];
-		var spaceWidth:Int = font.spaceWidth;
+		var adjustedSpaceWidth:Int = font.spaceWidth;
 		var lineLength:Int = line.length;
 		var textWidth:Int = this.textWidth;
 		final lineLength:Int = line.length;
@@ -1217,9 +1215,7 @@ class FlxBitmapText extends FlxSprite
 			final totalSpacesWidth = numSpaces * font.spaceWidth;
 			adjustedSpaceWidth = Std.int((textWidth - lineWidth + totalSpacesWidth) / numSpaces);
 		}
-		
-		final adjustedTabWidth:Int = adjustedSpaceWidth * numSpacesInTab;
-		
+
 		for (i in 0...lineLength)
 		{
 			charCode = line.charCodeAt(i);
@@ -1230,7 +1226,7 @@ class FlxBitmapText extends FlxSprite
 			}
 			else if (charCode == FlxBitmapFont.TAB_CODE)
 			{
-				curX += adjustedTabWidth + letterSpacing;
+				curX += adjustedSpaceWidth * numSpacesInTab + letterSpacing;
 			}
 			else
 			{
