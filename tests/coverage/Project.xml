@@ -49,6 +49,7 @@
 		<haxedef name="FLX_RECORD" />
 		<haxedef name="FLX_RENDER_TRIANGLE" />
 		<haxedef name="FLX_NO_SAVE" />
+		<haxedef name="FLX_NO_HEALTH" />
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />

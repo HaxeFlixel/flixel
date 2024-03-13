@@ -50,14 +50,8 @@ abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String 
 }
 
 
-@:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")
+@:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")// 5.6.0
 typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
-
-@:deprecated("`FlxAngelCodeSource` is deprecated, use `FlxAngelCodeAsset` instead")
-typedef FlxAngelCodeSource = FlxAngelCodeAsset;
-
-@:deprecated("`FlxTexturePackerSource` is deprecated, use `FlxAtlasDataAsset` instead")
-typedef FlxTexturePackerSource = FlxTexturePackerJsonAsset;
 
 abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 {
@@ -276,7 +270,7 @@ class FlxAssets
 	public static inline function getBitmapData(id:String):BitmapData
 	{
 		if (Assets.exists(id))
-			return Assets.getBitmapData(id, false);
+			return Assets.getBitmapData(id, true);
 		FlxG.log.error('Could not find a BitmapData asset with ID \'$id\'.');
 		return null;
 	}

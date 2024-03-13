@@ -1,9 +1,60 @@
 6.0.0 (TBD)
+
 #### Changes and improvements:
 - `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
 - `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
-- `FlxState`: Remove deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
-- `FlxG`: Add deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))Z
+- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera`: Removed `defaultCameras`
+- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
+- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
+
+#### Removals
+We removed many features and utilities that were previously deprecated
+- `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
+- `FlxSwipe::angle`: Use `FlxSwipe.degrees`, instead
+- `FlxAngle.angleFromFacing`: Use `degrees` in `FlxDirectionFlags`, instead
+- `FlxAngle.getCartesianCoords`: Use `FlxVector.setPolarDegrees`, instead
+- `FlxObject` (legacy directions): Use `FlxDirectionFlags`, instead
+- `FlxObject::collisonXDrag`: Typo in name corrected to `FlxObject::collisionXDrag`
+- `FlxCamera::viewOffsetX/Y/Width/Height`: Use `viewMarginX/Y/Top/Bottom/Left/Right`, instead
+- `FlxTween` (legacy FlxTweenTypes): Use `FlxTweenType`, instead
+- `FlxRandom.shuffleArray`: Use `shuffle`, instead
+- `FlxPoint.rotate`: Use `pivotDegrees`, instead
+- `FlxPoint.angleBetween`: Use `degreesTo`, instead
+- `FlxVector`: Use `FlxPoint`, instead
+- `FlxTilemap.useScaleHack`: No longer needed, due to `defaultFramePadding`
+- `FlxG.signals.stateSwitched` and `gameStarted`: Use `preStateSwitch` and `postGameStart`, respectively
+- `FlxPath` (Legacy types): Use `FlxPathType`, instead
+- `flixel.system.FlxSound` and `FlxSoundGroup`: new package, `flixel.sound`
+- `FlxState::switchTo`: Use `startOutro`, instead
+- `FlxAnimation::delay`: Use `frameDuration`, instead
+- `FlxCollision.pixelPerfectPointCheck`: Use `FlxSprite::pixelsOverlapPoint`, instead
+- `FlxAnimationController.frames`: Use `numFrames`, instead
+- `FlxAssets.FlxAngelCodeSource`: Use `FlxAssets.FlxAngelCodeAsset`, instead
+- `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
+- `FlxUnicodeUtil`: Use `UnicodeString`, instead
+
+5.7.0 (TBD)
+
+#### New features:
+- `FlxBitmapFont`: Added `setCharFrame` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+- `FlxTimer`: Added static `wait` and `loops` methods ([#3040](https://github.com/HaxeFlixel/flixel/pull/3040))
+- `FlxBasic`: Added `container` field and `FlxContainer` and `FlxSpriteContainer` where a basic can only be in one container ([#3050](https://github.com/HaxeFlixel/flixel/pull/3050)) ([#3055](https://github.com/HaxeFlixel/flixel/pull/3055)) ([#3068](https://github.com/HaxeFlixel/flixel/pull/3068)) 
+- `FlxPath`: Added `centerMode` to center on `TOP_LEFT`, `CENTER`, `ORIGIN` and more ([#3052](https://github.com/HaxeFlixel/flixel/pull/3052))
+- `FlxG.plugins`: Added `drawOnTop` field ([#3057](https://github.com/HaxeFlixel/flixel/pull/3057))
+- `FlxCamera`: Added `stopFade`, `stopFlash`, and `stopShake` ([#3063](https://github.com/HaxeFlixel/flixel/pull/3063))
+- `FlxRect`: Added `containsXY` ([#3069](https://github.com/HaxeFlixel/flixel/pull/3069))
+
+
+#### Changes and improvements:
+- `FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
+- `FlxSound`: Deprecated `sound.group` setter, avoiding recursion errors ([#3041](https://github.com/HaxeFlixel/flixel/pull/3041))
+- `FlxAssets`: Allow the immediate use of async images, once loaded ([#3022](https://github.com/HaxeFlixel/flixel/pull/3022))
+- `FlxText`: Removed references to `FlxUnicodeUtil` ([#3049](https://github.com/HaxeFlixel/flixel/pull/3049))
+- `FlxObject`: Deprecated `health` and `hurt` ([#3065](https://github.com/HaxeFlixel/flixel/pull/3065))
+	- Added compiler flag `FLX_NO_HEALTH` to create your own replacement, if needed ([#3067](https://github.com/HaxeFlixel/flixel/pull/3067))
+
 5.6.2 (February 10, 2024)
 #### Changes and improvements:
 - `FlxBitmapFont`: Prevent crashes from missing xml fields in `fromAngelCode` ([#3029](https://github.com/HaxeFlixel/flixel/pull/3029))

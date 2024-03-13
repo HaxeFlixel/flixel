@@ -50,6 +50,7 @@ class FlxStrip extends FlxSprite
 		if (alpha == 0 || graphic == null || vertices == null)
 			return;
 
+		final cameras = getCamerasLegacy();
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)

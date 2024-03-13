@@ -632,7 +632,7 @@ class FlxMouseEventManager extends FlxBasic
 
 	function checkOverlap<T:FlxObject>(event:FlxMouseEvent<T>):Bool
 	{
-		for (camera in event.object.cameras)
+		for (camera in event.object.getCameras())
 		{
 			#if FLX_MOUSE
 			_point = FlxG.mouse.getPositionInCameraView(camera, _point);
