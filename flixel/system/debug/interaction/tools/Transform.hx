@@ -15,22 +15,22 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxArrayUtil;
 
-@:bitmap("assets/images/debugger/buttons/transform.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/transform.png") #end
 private class GraphicTransformTool extends BitmapData {}
 
-@:bitmap("assets/images/debugger/cursorCross.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursorCross.png") #end
 private class GraphicTransformCursorDefault extends BitmapData {}
 
-@:bitmap("assets/images/debugger/cursors/transformScaleY.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleY.png") #end
 private class GraphicTransformCursorScaleY extends BitmapData {}
 
-@:bitmap("assets/images/debugger/cursors/transformScaleX.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleX.png") #end
 private class GraphicTransformCursorScaleX extends BitmapData {}
 
-@:bitmap("assets/images/debugger/cursors/transformScaleXY.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleXY.png") #end
 private class GraphicTransformCursorScaleXY extends BitmapData {}
 
-@:bitmap("assets/images/debugger/cursors/transformRotate.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformRotate.png") #end
 private class GraphicTransformCursorRotate extends BitmapData {}
 
 /**
