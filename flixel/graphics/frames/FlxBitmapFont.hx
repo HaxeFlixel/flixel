@@ -114,7 +114,7 @@ class FlxBitmapFont extends FlxFramesCollection
 				return font;
 		}
 
-		var letters:String = "";
+		var letters:UnicodeString = "";
 		var bd:BitmapData = new BitmapData(700, 9, true, 0xFF888888);
 		graphic = FlxG.bitmap.add(bd, false, DEFAULT_FONT_KEY);
 
@@ -384,7 +384,7 @@ class FlxBitmapFont extends FlxFramesCollection
 	 *                    Use white pixels if you intend to change the color.
 	 * @param   letters   The characters used in the font set, in display order.
 	 *                    You can use the `TEXT_SET` constants for common font set arrangements.
-	 * @param   charSiz   The size of each character in the font set.
+	 * @param   charSize  The size of each character in the font set.
 	 * @param   region    The region of image to use for the font.
 	 *                    Default is null which means that the whole image will be used.
 	 * @param   spacing   Spaces between characters in the font set. Default is `null` which means no spaces.
