@@ -39,6 +39,11 @@ class FlxButton extends FlxTypedButton<FlxText>
 	public static inline var PRESSED:Int = 2;
 
 	/**
+	 * Used with public variable status, means non interactible.
+	 */
+	public static inline var DISABLED:Int = 3;
+
+	/**
 	 * Shortcut to setting label.text
 	 */
 	public var text(get, set):String;
@@ -122,19 +127,19 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	/**
 	 * What offsets the `label` should have for each status.
 	 */
-	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1)];
+	public var labelOffsets:Array<FlxPoint> = [FlxPoint.get(), FlxPoint.get(), FlxPoint.get(0, 1), FlxPoint.get()];
 
 	/**
 	 * What alpha value the label should have for each status. Default is `[0.8, 1.0, 0.5]`.
 	 * Multiplied with the button's `alpha`.
 	 */
-	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5];
+	public var labelAlphas:Array<Float> = [0.8, 1.0, 0.5, 0.3];
 
 	/**
 	 * What animation should be played for each status.
 	 * Default is ["normal", "highlight", "pressed"].
 	 */
-	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed"];
+	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed", "disabled"];
 
 	/**
 	 * Whether you can press the button simply by releasing the touch / mouse button over it (default).
@@ -246,6 +251,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		setupAnimation("normal", FlxButton.NORMAL);
 		setupAnimation("highlight", FlxButton.HIGHLIGHT);
 		setupAnimation("pressed", FlxButton.PRESSED);
+		setupAnimation("disabled", FlxButton.DISABLED);
 	}
 
 	function loadDefaultGraphic():Void
@@ -384,6 +390,9 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	function updateButton():Void
 	{
+		// Prevent interactions with this input if it's currently disabled
+		if (status == FlxButton.DISABLED)
+			return;
 		// We're looking for any touch / mouse overlaps with this button
 		var overlapFound = checkMouseOverlap();
 		if (!overlapFound)
