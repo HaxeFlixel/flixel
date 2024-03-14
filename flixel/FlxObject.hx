@@ -704,7 +704,7 @@ class FlxObject extends FlxBasic
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
 	@:deprecated("object.health is being removed in version 6.0.0")
-	public var health:Float = 1;
+	public var health(default, set):Float = 1;
 	#end
 
 	/**
@@ -1432,6 +1432,12 @@ class FlxObject extends FlxBasic
 	function get_height():Float
 	{
 		return height;
+	}
+
+	@:noCompletion
+	function set_health(value:Float):Float
+	{
+		return health = value;
 	}
 
 	@:noCompletion
