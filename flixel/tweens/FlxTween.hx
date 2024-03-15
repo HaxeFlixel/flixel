@@ -550,6 +550,12 @@ class FlxTween implements IFlxDestroyable
 	public var finished(default, null):Bool;
 	public var scale(default, null):Float = 0;
 	public var backward(default, null):Bool;
+	
+	/**
+	 * The total time passed since start
+	 * @since 5.7.0
+	 */
+	public var time(get, never):Float;
 
 	/**
 	 * How many times this tween has been executed / has finished so far - useful to
@@ -887,10 +893,15 @@ class FlxTween implements IFlxDestroyable
 		}
 		return loopDelay = dly;
 	}
+	
+	inline function get_time():Float
+	{
+		return Math.max(_secondsSinceStart - _delayToUse, 0);
+	}
 
 	inline function get_percent():Float
 	{
-		return Math.max((_secondsSinceStart - _delayToUse), 0) / duration;
+		return time / duration;
 	}
 
 	function set_percent(value:Float):Float

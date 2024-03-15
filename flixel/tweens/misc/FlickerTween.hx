@@ -22,7 +22,7 @@ typedef FlickerTweenOptions = TweenOptions &
 	
 	/**
 	 * An optional custom flicker function, defaults to
-	 * `function (tween) { return (tween.scale * tween.duration / tween.period) % 1 > tween.ratio; }`
+	 * `function (tween) { return (tween.time / tween.period) % 1 > tween.ratio; }`
 	 */
 	?tweenFunction:(FlickerTween)->Bool
 };
@@ -62,7 +62,7 @@ class FlickerTween extends FlxTween
 			if (options.ratio != null)
 				ratio = options.ratio;
 			
-			if (options.tweenFunction == null)
+			if (options.tweenFunction != null)
 				tweenFunction = options.tweenFunction;
 		}
 		
@@ -98,7 +98,7 @@ class FlickerTween extends FlxTween
 	{
 		super.update(elapsed);
 		
-		if (tweenFunction != null)
+		if (tweenFunction != null && _secondsSinceStart >= _delayToUse)
 		{
 			final visible = tweenFunction(this);
 			// do not call setter every frame
@@ -125,6 +125,6 @@ class FlickerTween extends FlxTween
 	 */
 	public static function defaultTweenFunction(tween:FlickerTween)
 	{
-		return (tween.scale * tween.duration / tween.period) % 1 > tween.ratio;
+		return (tween.time / tween.period) % 1 > tween.ratio;
 	}
 }
