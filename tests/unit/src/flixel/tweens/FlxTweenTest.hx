@@ -123,7 +123,7 @@ class FlxTweenTest extends FlxTest
 		Assert.isTrue(basic.visible);
 		Assert.isFalse(FlxTween.isFlickering(basic));
 		
-		FlxTween.flicker(basic, 1.0, {endVisibility: false});
+		FlxTween.flicker(basic, 1.0, 0.08, {endVisibility: false});
 		
 		step(FlxG.updateFramerate * 2); // 2 full seconds
 		
