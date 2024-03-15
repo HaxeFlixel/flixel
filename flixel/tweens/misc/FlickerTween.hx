@@ -101,6 +101,7 @@ class FlickerTween extends FlxTween
 		if (tweenFunction != null)
 		{
 			final visible = tweenFunction(this);
+			// do not call setter every frame
 			if (basic.visible != visible)
 				basic.visible = visible;
 		}
