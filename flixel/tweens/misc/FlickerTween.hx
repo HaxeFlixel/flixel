@@ -89,6 +89,13 @@ class FlickerTween extends FlxTween
 	{
 		this.basic = basic;
 		this.duration = duration;
+		this.period = period;
+		
+		if (period <= 0.0)
+		{
+			this.period = 1.0 / FlxG.updateFramerate;
+			FlxG.log.warn('Cannot flicker with a period of 0.0 or less, using 1.0 / FlxG.updateFramerate, instead');
+		}
 		
 		start();
 		return this;
