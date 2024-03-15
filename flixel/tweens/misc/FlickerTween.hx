@@ -122,7 +122,7 @@ class FlickerTween extends FlxTween
 	 * The default tween function of flicker tweens
 	 * @param   tween  The tween handling the flickering
 	 */
-	static public function defaultTweenFunction(tween:FlickerTween)
+	public static function defaultTweenFunction(tween:FlickerTween)
 	{
 		return (tween.scale * tween.duration / tween.period) % 1 > tween.ratio;
 	}
