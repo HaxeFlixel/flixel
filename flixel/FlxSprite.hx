@@ -277,7 +277,14 @@ class FlxSprite extends FlxObject
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
-
+	
+	/**
+	 * If true, clipRect will behave as it did in flixel 4 and earlier.
+	 * Where the clipRect will scale up proportionally with the sprite.
+	 * @since 5.0.0
+	 */
+	public var clipRectIgnoreScale(default, set):Bool = false;
+	
 	/**
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
@@ -1418,7 +1425,29 @@ class FlxSprite extends FlxObject
 
 		if (clipRect != null)
 		{
-			_frame = frame.clipTo(clipRect, _frame);
+			if (clipRectIgnoreScale)
+				_frame = frame.clipTo(clipRect, _frame);
+			else
+			{
+				//translate clipRect's world coorinates to graphical cooridinates
+				var rect = FlxRect.get();
+				var point = FlxPoint.get();
+				
+				point.set(x + clipRect.x, y + clipRect.y);
+				transformClipRectPoint(point);
+				rect.x = point.x;
+				rect.y = point.y;
+				
+				point.set(x + clipRect.right, y + clipRect.bottom);
+				transformClipRectPoint(point);
+				rect.right = point.x;
+				rect.bottom = point.y;
+				
+				_frame = frame.clipTo(rect, _frame);
+				
+				point.put();
+				rect.put();
+			}
 		}
 		else
 		{
@@ -1426,6 +1455,20 @@ class FlxSprite extends FlxObject
 		}
 
 		return frame;
+	}
+	
+	/**
+	 * Copied from transformWorldToPixelsSimple with angle and offset ignored.
+	 */
+	function transformClipRectPoint(worldPoint:FlxPoint)
+	{
+		worldPoint.subtract(x, y);
+		// result.addPoint(offset);
+		worldPoint.subtractPoint(origin);
+		worldPoint.scale(1 / scale.x, 1 / scale.y);
+		// can't clip an angled rect.
+		// result.degrees -= angle;
+		worldPoint.addPoint(origin);
 	}
 
 	@:noCompletion
@@ -1531,6 +1574,12 @@ class FlxSprite extends FlxObject
 			frame = frames.frames[animation.frameIndex];
 
 		return rect;
+	}
+
+	@:noCompletion
+	function set_clipRectIgnoreScale(value:Bool):Bool
+	{
+		return this.clipRectIgnoreScale = value;
 	}
 
 	/**
