@@ -227,7 +227,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		// Since this is a UI element, the default scrollFactor is (0, 0)
 		scrollFactor.set();
 
-		#if FLX_MOUSE
+		#if (flash && FLX_MOUSE)
 		FlxG.stage.addEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 
@@ -279,7 +279,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		currentInput = null;
 		input = null;
 
-		#if FLX_MOUSE
+		#if (flash && FLX_MOUSE)
 		FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP, onUpEventListener);
 		#end
 
@@ -389,7 +389,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		if (!overlapFound)
 			overlapFound = checkTouchOverlap();
 
-		if (currentInput != null && currentInput.justReleased && overlapFound)
+		if (currentInput != null && currentInput.justReleased && input.pressed)
 		{
 			onUpHandler();
 		}
@@ -464,16 +464,26 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 			currentInput = input;
 			onDownHandler();
 		}
-		else if (status == FlxButton.NORMAL)
+		else
 		{
-			// Allow "swiping" to press a button (dragging it over the button while pressed)
-			if (allowSwiping && input.pressed)
+			if (status == FlxButton.NORMAL)
 			{
-				onDownHandler();
+				// Allow "swiping" to press a button (dragging it over the button while pressed)
+				if (allowSwiping && input.pressed)
+				{
+					onDownHandler();
+				}
+				else
+				{
+					onOverHandler();
+				}
 			}
 			else
 			{
-				onOverHandler();
+				if(input.justReleased && status == FlxButton.PRESSED)
+				{
+					onUpHandler();
+				}
 			}
 		}
 	}
@@ -499,7 +509,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * Using an event listener is necessary for security reasons on flash -
 	 * certain things like opening a new window are only allowed when they are user-initiated.
 	 */
-	#if FLX_MOUSE
+	#if (flash && FLX_MOUSE)
 	function onUpEventListener(_):Void
 	{
 		if (visible && exists && active && status == FlxButton.PRESSED)
