@@ -59,6 +59,21 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	 * @since 4.5.0
 	 */
 	public var directAlpha:Bool = false;
+	
+	/**
+	 * Whether getters like findMinX, width and height will only count sprites with exist = true.
+	 * Defaults to false for backwards compatibility.
+	 * 
+	 * @since 5.3.0
+	 */
+	public var checkExistsInBounds:Bool = false;
+	
+	/**
+	 * Whether getters like findMinX, width and height will only count visible sprites.
+	 * 
+	 * @since 5.3.0
+	 */
+	public var checkVisibleInBounds:Bool = false;
 
 	/**
 	 * The maximum capacity of this group. Default is `0`, meaning no max capacity, and the group can just grow.
@@ -838,6 +853,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return findMaxXHelper() - findMinXHelper();
 	}
 
+	inline function ignoreBounds(sprite:Null<FlxSprite>)
+	{
+		return sprite == null
+			|| (checkExistsInBounds && !sprite.exists)
+			|| (checkVisibleInBounds && !sprite.visible);
+	}
+
 	/**
 	 * Returns the left-most position of the left-most member.
 	 * If there are no members, x is returned.
@@ -854,7 +876,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (ignoreBounds(member))
 				continue;
 			
 			var minX:Float;
@@ -866,6 +888,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			if (minX < value)
 				value = minX;
 		}
+		
 		return value;
 	}
 	
@@ -885,7 +908,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (ignoreBounds(member))
 				continue;
 			
 			var maxX:Float;
@@ -932,7 +955,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (ignoreBounds(member))
 				continue;
 			
 			var minY:Float;
@@ -963,7 +986,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (ignoreBounds(member))
 				continue;
 			
 			var maxY:Float;
