@@ -241,4 +241,16 @@ class FlxReplay
 		FlxArrayUtil.setLength(_frames, _capacity);
 		frameCount = 0;
 	}
+	
+	/**
+	 * Returns the last recorded frame index. **Note:** this is different from `frameCount`, which
+	 * is the number of unique records, which doesn't count frames with no input
+	 */
+	public function getDuration()
+	{
+		if (_frames != null)
+			return _frames[_frames.length - 1].frame;
+		
+		return 0;
+	}
 }
