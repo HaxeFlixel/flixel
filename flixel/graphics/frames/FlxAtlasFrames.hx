@@ -254,15 +254,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		for (texture in data.nodes.SubTexture)
 		{
+			var version2 = texture.has.width; 
 			var name = texture.att.name;
 			var trimmed = texture.has.frameX;
-			var rotated = (texture.has.rotated && texture.att.rotated == "true");
+			var rotated = (texture.has.rotated && texture.att.rotated == "true");-
 			var flipX = (texture.has.flipX && texture.att.flipX == "true");
 			var flipY = (texture.has.flipY && texture.att.flipY == "true");
 
-			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
-				Std.parseFloat(texture.att.height));
-
+			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat((version2) ? texture.att.width : texture.att.w),
+				Std.parseFloat((version2) ? texture.att.height : texture.att.h));
+			
 			var size = if (trimmed)
 			{
 				new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
@@ -272,6 +273,14 @@ class FlxAtlasFrames extends FlxFramesCollection
 			{
 				new Rectangle(0, 0, rect.width, rect.height);
 			}
+
+			if (size.width == 0 && size.height == 0)
+            {
+				size.setSize(1, 1);
+                frames.addEmptyFrame(size);
+                continue;
+            }
+			
 
 			var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 
