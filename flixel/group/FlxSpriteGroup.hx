@@ -131,6 +131,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		scale = FlxDestroyUtil.destroy(scale);
 		scrollFactor = FlxDestroyUtil.destroy(scrollFactor);
 
+		@:bypassAccessor
 		group = FlxDestroyUtil.destroy(group);
 
 		super.destroy();
