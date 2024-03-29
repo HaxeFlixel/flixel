@@ -276,7 +276,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			if (size.width == 0 && size.height == 0)
             {
-				size.setSize(1, 1);
+				size.width = size.height = 1;
                 frames.addEmptyFrame(size);
                 continue;
             }
