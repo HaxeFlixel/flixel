@@ -257,7 +257,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			var version2 = texture.has.width; 
 			var name = texture.att.name;
 			var trimmed = texture.has.frameX;
-			var rotated = (texture.has.rotated && texture.att.rotated == "true");-
+			var rotated = (texture.has.rotated && texture.att.rotated == "true");
 			var flipX = (texture.has.flipX && texture.att.flipX == "true");
 			var flipY = (texture.has.flipY && texture.att.flipY == "true");
 
