@@ -863,9 +863,16 @@ class FlxGame extends Sprite
 
 		FlxG.cameras.lock();
 
-		FlxG.plugins.draw();
-
-		_state.draw();
+		if (FlxG.plugins.drawOnTop)
+		{
+			_state.draw();
+			FlxG.plugins.draw();
+		}
+		else
+		{
+			FlxG.plugins.draw();
+			_state.draw();
+		}
 
 		if (FlxG.renderTile)
 		{

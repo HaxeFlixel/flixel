@@ -12,10 +12,10 @@ import flixel.system.debug.FlxDebugger.GraphicStats;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 
-@:bitmap("assets/images/debugger/buttons/minimize.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/minimize.png") #end
 private class GraphicMinimizeButton extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/maximize.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/maximize.png") #end
 private class GraphicMaximizeButton extends BitmapData {}
 
 /**

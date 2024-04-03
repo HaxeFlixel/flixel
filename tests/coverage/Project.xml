@@ -28,6 +28,9 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="nape-haxe4" />
 	<haxelib name="spinehaxe" />
+	<!-- Allows better completion while editing unit tests in VSC -->
+	<haxelib name="munit" />
+	<haxelib name="hamcrest" />
 	
 	<!-- ______________________________ Haxedefines _____________________________ -->
 	
@@ -49,6 +52,7 @@
 		<haxedef name="FLX_RECORD" />
 		<haxedef name="FLX_RENDER_TRIANGLE" />
 		<haxedef name="FLX_NO_SAVE" />
+		<haxedef name="FLX_NO_HEALTH" />
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />
