@@ -85,7 +85,11 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function bound<T:(Float & Int)>(Value:T, ?Min:T, ?Max:T):T
+	#else
+	public static inline function bound<T:(Float, Int)>(Value:T, ?Min:T, ?Max:T):T
+	#end
 	{
 		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
 		return (Max != null && lowerBound > Max) ? Max : lowerBound;
@@ -117,7 +121,11 @@ class FlxMath
 	 * @param Max 		Higher bound of range.
 	 * @return Returns true if Value is in range.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function inBounds<T:(Float & Int)>(Value:T, Min:Null<T>, Max:Null<T>):Bool
+	#else
+	public static inline function inBounds<T:(Float, Int)>(Value:T, Min:Null<T>, Max:Null<T>):Bool
+	#end
 	{
 		return (Min == null || Value >= Min) && (Max == null || Value <= Max);
 	}
@@ -125,7 +133,11 @@ class FlxMath
 	/**
 	 * Returns `true` if the given number is odd.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function isOdd<T:(Float & Int)>(n:T):Bool
+	#else
+	public static inline function isOdd<T:(Float, Int)>(n:T):Bool
+	#end
 	{
 		return (Std.int(n) & 1) != 0;
 	}
@@ -133,7 +145,11 @@ class FlxMath
 	/**
 	 * Returns `true` if the given number is even.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function isEven<T:(Float & Int)>(n:T):Bool
+	#else
+	public static inline function isEven<T:(Float, Int)>(n:T):Bool
+	#end
 	{
 		return (Std.int(n) & 1) == 0;
 	}
@@ -141,7 +157,11 @@ class FlxMath
 	/**
 	 * Returns `-1` if `a` is smaller, `1` if `b` is bigger and `0` if both numbers are equal.
 	 */
+	#if (haxe_ver >= 4)
 	public static function numericComparison<T:(Float & Int)>(a:T, b:T):Int
+	#else
+	public static function numericComparison<T:(Float, Int)>(a:T, b:T):Int
+	#end
 	{
 		if (b > a)
 		{
@@ -166,7 +186,11 @@ class FlxMath
 	 *
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
+	#if (haxe_ver >= 4)
 	public static function pointInCoordinates<T1:(Float & Int), T2:(Float & Int)>(pointX:T1, pointY:T1, rectX:T2, rectY:T2, rectWidth:T2, rectHeight:T2):Bool
+	#else
+	public static function pointInCoordinates<T1:(Float, Int), T2:(Float, Int)>(pointX:T1, pointY:T1, rectX:T2, rectY:T2, rectWidth:T2, rectHeight:T2):Bool
+	#end
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -186,7 +210,11 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
+	#if (haxe_ver >= 4)
 	public static function pointInFlxRect<T:(Float & Int)>(pointX:T, pointY:T, rect:FlxRect):Bool
+	#else
+	public static function pointInFlxRect<T:(Float, Int)>(pointX:T, pointY:T, rect:FlxRect):Bool
+	#end
 	{
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
@@ -226,7 +254,11 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
+	#if (haxe_ver >= 4)
 	public static function pointInRectangle<T:(Float & Int)>(pointX:T, pointY:T, rect:Rectangle):Bool
+	#else
+	public static function pointInRectangle<T:(Float, Int)>(pointX:T, pointY:T, rect:Rectangle):Bool
+	#end
 	{
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
@@ -241,7 +273,11 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
+	#if (haxe_ver >= 4)
 	public static function maxAdd<T:(Float & Int)>(value:T, amount:T, max:T, min:T = 0):T
+	#else
+	public static function maxAdd<T:(Float, Int)>(value:T, amount:T, max:T, min:T = 0):T
+	#end
 	{
 		value += amount;
 
@@ -266,7 +302,11 @@ class FlxMath
 	 * @param 	max 	The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
+	#if (haxe_ver >= 4)
 	public static function wrap<T:(Float & Int)>(value:T, min:T, max:T):T
+	#else
+	public static function wrap<T:(Float, Int)>(value:T, min:T, max:T):T
+	#end
 	{
 		var range:Int = max - min + 1;
 
@@ -477,7 +517,11 @@ class FlxMath
 		return decimals;
 	}
 
+	#if (haxe_ver >= 4)
 	public static inline function equal<T:(Float & Int)>(aValueA:T, aValueB:T, aDiff:T = EPSILON):Bool
+	#else
+	public static inline function equal<T:(Float, Int)>(aValueA:T, aValueB:T, aDiff:T = EPSILON):Bool
+	#end
 	{
 		return absInt(aValueA - aValueB) <= aDiff;
 	}
@@ -485,7 +529,11 @@ class FlxMath
 	/**
 	 * Returns `-1` if the number is smaller than `0` and `1` otherwise
 	 */
-	public static inline function signOf(n:Float):Int
+	#if (haxe_ver >= 4)
+	public static inline function signOf<T:(Float & Int)>(n:T):Int
+	#else
+	public static inline function signOf<T:(Float, Int)>(n:T):Int
+	#end
 	{
 		return (n < 0) ? -1 : 1;
 	}
@@ -493,7 +541,11 @@ class FlxMath
 	/**
 	 * Checks if two numbers have the same sign (using `FlxMath.signOf()`).
 	 */
-	public static inline function sameSign(a:Float, b:Float):Bool
+	#if (haxe_ver >= 4)
+	public static inline function sameSign<T:(Float & Int)>(a:T, b:T):Bool
+	#else
+	public static inline function sameSign<T:(Float, Int)>(a:T, b:T):Bool
+	#end
 	{
 		return signOf(a) == signOf(b);
 	}
@@ -553,7 +605,11 @@ class FlxMath
 	/**
 	 * Returns the bigger argument.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function maxInt<T:(Float & Int)>(a:T, b:T):T
+	#else
+	public static inline function maxInt<T:(Float, Int)>(a:T, b:T):T
+	#end
 	{
 		return (a > b) ? a : b;
 	}
@@ -561,7 +617,11 @@ class FlxMath
 	/**
 	 * Returns the smaller argument.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function minInt<T:(Float & Int)>(a:T, b:T):T
+	#else
+	public static inline function minInt<T:(Float, Int)>(a:T, b:T):T
+	#end
 	{
 		return (a > b) ? b : a;
 	}
@@ -569,7 +629,11 @@ class FlxMath
 	/**
 	 * Returns the absolute integer value.
 	 */
+	#if (haxe_ver >= 4)
 	public static inline function absInt<T:(Float & Int)>(n:T):T
+	#else
+	public static inline function absInt<T:(Float, Int)>(n:T):T
+	#end
 	{
 		return (n > 0) ? n : -n;
 	}
