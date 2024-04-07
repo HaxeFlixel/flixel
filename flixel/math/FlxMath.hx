@@ -91,7 +91,7 @@ class FlxMath
 	public static inline function bound<T:(Float, Int)>(Value:T, ?Min:T, ?Max:T):T
 	#end
 	{
-		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
+		var lowerBound:T = (Min != null && Value < Min) ? Min : Value;
 		return (Max != null && lowerBound > Max) ? Max : lowerBound;
 	}
 
