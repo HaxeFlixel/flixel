@@ -85,7 +85,7 @@ class FlxMath
 	 * @param	Max		Any number.
 	 * @return	The bounded value of the number.
 	 */
-	public static inline function bound(Value:Float, ?Min:Float, ?Max:Float):Float
+	public static inline function bound<T:(Float & Int)>(Value:T, ?Min:T, ?Max:T):T
 	{
 		var lowerBound:Float = (Min != null && Value < Min) ? Min : Value;
 		return (Max != null && lowerBound > Max) ? Max : lowerBound;
@@ -117,7 +117,7 @@ class FlxMath
 	 * @param Max 		Higher bound of range.
 	 * @return Returns true if Value is in range.
 	 */
-	public static inline function inBounds(Value:Float, Min:Null<Float>, Max:Null<Float>):Bool
+	public static inline function inBounds<T:(Float & Int)>(Value:T, Min:Null<T>, Max:Null<T>):Bool
 	{
 		return (Min == null || Value >= Min) && (Max == null || Value <= Max);
 	}
@@ -125,7 +125,7 @@ class FlxMath
 	/**
 	 * Returns `true` if the given number is odd.
 	 */
-	public static inline function isOdd(n:Float):Bool
+	public static inline function isOdd<T:(Float & Int)>(n:T):Bool
 	{
 		return (Std.int(n) & 1) != 0;
 	}
@@ -133,7 +133,7 @@ class FlxMath
 	/**
 	 * Returns `true` if the given number is even.
 	 */
-	public static inline function isEven(n:Float):Bool
+	public static inline function isEven<T:(Float & Int)>(n:T):Bool
 	{
 		return (Std.int(n) & 1) == 0;
 	}
@@ -141,7 +141,7 @@ class FlxMath
 	/**
 	 * Returns `-1` if `a` is smaller, `1` if `b` is bigger and `0` if both numbers are equal.
 	 */
-	public static function numericComparison(a:Float, b:Float):Int
+	public static function numericComparison<T:(Float & Int)>(a:T, b:T):Int
 	{
 		if (b > a)
 		{
@@ -166,7 +166,7 @@ class FlxMath
 	 *
 	 * @return	true if pointX/pointY is within the region, otherwise false
 	 */
-	public static function pointInCoordinates(pointX:Float, pointY:Float, rectX:Float, rectY:Float, rectWidth:Float, rectHeight:Float):Bool
+	public static function pointInCoordinates<T1:(Float & Int), T2:(Float & Int)>(pointX:T1, pointY:T1, rectX:T2, rectY:T2, rectWidth:T2, rectHeight:T2):Bool
 	{
 		if (pointX >= rectX && pointX <= (rectX + rectWidth))
 		{
@@ -186,7 +186,7 @@ class FlxMath
 	 * @param	rect		The FlxRect to test within
 	 * @return	true if pointX/pointY is within the FlxRect, otherwise false
 	 */
-	public static function pointInFlxRect(pointX:Float, pointY:Float, rect:FlxRect):Bool
+	public static function pointInFlxRect<T:(Float & Int)>(pointX:T, pointY:T, rect:FlxRect):Bool
 	{
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
@@ -226,7 +226,7 @@ class FlxMath
 	 * @param	rect		The Rectangle to test within
 	 * @return	true if pointX/pointY is within the Rectangle, otherwise false
 	 */
-	public static function pointInRectangle(pointX:Float, pointY:Float, rect:Rectangle):Bool
+	public static function pointInRectangle<T:(Float & Int)>(pointX:T, pointY:T, rect:Rectangle):Bool
 	{
 		return pointX >= rect.x && pointX <= rect.right && pointY >= rect.y && pointY <= rect.bottom;
 	}
@@ -241,7 +241,7 @@ class FlxMath
 	 * @param 	min 	The minimum the value is allowed to be
 	 * @return The new value
 	 */
-	public static function maxAdd(value:Int, amount:Int, max:Int, min:Int = 0):Int
+	public static function maxAdd<T:(Float & Int)>(value:T, amount:T, max:T, min:T = 0):T
 	{
 		value += amount;
 
@@ -266,7 +266,7 @@ class FlxMath
 	 * @param 	max 	The maximum the value is allowed to be
 	 * @return The wrapped value
 	 */
-	public static function wrap(value:Int, min:Int, max:Int):Int
+	public static function wrap<T:(Float & Int)>(value:T, min:T, max:T):T
 	{
 		var range:Int = max - min + 1;
 
@@ -477,9 +477,9 @@ class FlxMath
 		return decimals;
 	}
 
-	public static inline function equal(aValueA:Float, aValueB:Float, aDiff:Float = EPSILON):Bool
+	public static inline function equal<T:(Float & Int)>(aValueA:T, aValueB:T, aDiff:T = EPSILON):Bool
 	{
-		return Math.abs(aValueA - aValueB) <= aDiff;
+		return absInt(aValueA - aValueB) <= aDiff;
 	}
 
 	/**
@@ -553,7 +553,7 @@ class FlxMath
 	/**
 	 * Returns the bigger argument.
 	 */
-	public static inline function maxInt(a:Int, b:Int):Int
+	public static inline function maxInt<T:(Float & Int)>(a:T, b:T):T
 	{
 		return (a > b) ? a : b;
 	}
@@ -561,7 +561,7 @@ class FlxMath
 	/**
 	 * Returns the smaller argument.
 	 */
-	public static inline function minInt(a:Int, b:Int):Int
+	public static inline function minInt<T:(Float & Int)>(a:T, b:T):T
 	{
 		return (a > b) ? b : a;
 	}
@@ -569,7 +569,7 @@ class FlxMath
 	/**
 	 * Returns the absolute integer value.
 	 */
-	public static inline function absInt(n:Int):Int
+	public static inline function absInt<T:(Float & Int)>(n:T):T
 	{
 		return (n > 0) ? n : -n;
 	}
