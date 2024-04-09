@@ -76,20 +76,21 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			var i:Int = _pool.indexOf(obj);
 			// if the object's spot in the pool was overwritten, or if it's at or past _count (in the inaccessible zone)
 			if (i == -1 || i >= _count)
-			{
-				obj.destroy();
-				_pool[_count++] = obj;
-			}
+				putHelper(obj);
 		}
 	}
 
 	public function putUnsafe(obj:T):Void
 	{
+		// TODO: remove null check and make private?
 		if (obj != null)
-		{
-			obj.destroy();
-			_pool[_count++] = obj;
-		}
+			putHelper(obj);
+	}
+	
+	function putHelper(obj:T)
+	{
+		obj.destroy();
+		_pool[_count++] = obj;
 	}
 
 	public function preAllocate(numObjects:Int):Void
