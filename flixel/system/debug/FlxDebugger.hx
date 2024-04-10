@@ -509,7 +509,7 @@ class FlxDebugger extends openfl.display.Sprite
 
 	inline function openHomepage():Void
 	{
-		FlxG.openURL("http://www.haxeflixel.com");
+		FlxG.openURL("http://haxeflixel.com");
 	}
 
 	inline function openGitHub():Void
