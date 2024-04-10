@@ -147,11 +147,10 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			if (_pool.length == 0)
 				preAllocate(1);
 			
-			id = Type.getClassName(Type.getClass(_pool[0])).split(".").pop().split("Flx").pop();
+			id = Type.getClassName(Type.getClass(_pool[0])).split(".").pop().split("FlxBase").pop().split("Flx").pop();
 		}
 		
-		FlxG.watch.addFunction(id + "-pool", () -> '$length/$_totalCreated');
-		FlxG.watch.addFunction(id + "-top-leak", function()
+		FlxG.watch.addFunction(id + "-pool", function()
 		{
 			var most = 0;
 			var topStack:String = null;
@@ -165,10 +164,10 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 				}
 			}
 			
-			return if (topStack == null)
-				null;
-			else
-				'${prettyStack(topStack)}: $most';
+			var msg = '$length/$_totalCreated';
+			if (topStack != null)
+				msg += ' | $most from ${prettyStack(topStack)}';
+			return msg;
 		});
 	}
 	
@@ -212,7 +211,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	
 	inline function prettyStack(pos:String)
 	{
-		return pos.split("/").pop().split(".hx").shift();
+		return pos.split("/").pop().split(".hx").join("");
 	}
 	#end
 }
