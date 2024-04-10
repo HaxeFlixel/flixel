@@ -56,5 +56,6 @@
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />
+		<haxedef name="FLX_TRACK_POOLS" />
 	</section>
 </project>

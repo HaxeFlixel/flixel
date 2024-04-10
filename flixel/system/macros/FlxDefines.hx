@@ -39,6 +39,8 @@ private enum UserDefines
 	FLX_NO_POINT_POOL;
 	FLX_NO_PITCH;
 	FLX_NO_SAVE;
+	/** Adds trackers to FlxPool instances, only available on debug*/
+	FLX_TRACK_POOLS;
 }
 
 /**
@@ -80,6 +82,7 @@ private enum HelperDefines
 	FLX_NO_CI;
 	FLX_SAVE;
 	FLX_HEALTH;
+	FLX_NO_TRACK_POOLS;
 }
 
 class FlxDefines
@@ -179,6 +182,7 @@ class FlxDefines
 		defineInversion(FLX_COVERAGE_TEST, FLX_NO_COVERAGE_TEST);
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
+		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
 	}
 
 	static function defineHelperDefines()
@@ -237,6 +241,9 @@ class FlxDefines
 		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
 		// #end
+		
+		if (defined(FLX_TRACK_POOLS) && !defined("debug"))
+			abort("Can only define FLX_TRACK_POOLS on debug mode", (macro null).pos);
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
