@@ -212,7 +212,7 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	
 	inline function prettyStack(pos:String)
 	{
-		return topStack.split("/").pop().split(".hx").shift()
+		return pos.split("/").pop().split(".hx").shift();
 	}
 	#end
 }
