@@ -299,7 +299,7 @@ import openfl.geom.Point;
 
 	public inline function new(x:Float = 0, y:Float = 0)
 	{
-		this = new FlxBasePoint(x, y);
+		this = FlxPoint.get(x, y);
 	}
 
 	/**

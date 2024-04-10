@@ -1,6 +1,7 @@
 package flixel.util;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.FlxG;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.typeLimit.OneOfTwo;
 
 /**
@@ -47,6 +48,16 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	 * _count keeps track of the valid, accessible pool objects.
 	 */
 	var _count:Int = 0;
+	
+	#if FLX_TRACK_POOLS
+	/** Set to false before creating FlxGame to prevent logs */
+	public var autoLog = true;
+	
+	final _tracked = new Map<T, String>();
+	final _leakCount = new Map<String, Int>();
+	var _totalCreated = 0;
+	var _autoLogInitted = false;
+	#end
 
 	/**
 	 * Creates a pool of the specified type
@@ -61,11 +72,21 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 
 	public function get():T
 	{
-		if (_count == 0)
+		final obj:T = if (_count == 0)
 		{
-			return _constructor();
+			#if FLX_TRACK_POOLS
+			_totalCreated++;
+			#end
+			_constructor();
 		}
-		return _pool[--_count];
+		else
+			_pool[--_count];
+		
+		#if FLX_TRACK_POOLS
+		trackGet(obj);
+		#end
+		
+		return obj;
 	}
 
 	public function put(obj:T):Void
@@ -76,20 +97,25 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 			var i:Int = _pool.indexOf(obj);
 			// if the object's spot in the pool was overwritten, or if it's at or past _count (in the inaccessible zone)
 			if (i == -1 || i >= _count)
-			{
-				obj.destroy();
-				_pool[_count++] = obj;
-			}
+				putHelper(obj);
 		}
 	}
 
 	public function putUnsafe(obj:T):Void
 	{
+		// TODO: remove null check and make private?
 		if (obj != null)
-		{
-			obj.destroy();
-			_pool[_count++] = obj;
-		}
+			putHelper(obj);
+	}
+	
+	function putHelper(obj:T)
+	{
+		obj.destroy();
+		_pool[_count++] = obj;
+		
+		#if FLX_TRACK_POOLS
+		trackPut(obj);
+		#end
 	}
 
 	public function preAllocate(numObjects:Int):Void
@@ -112,6 +138,82 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	{
 		return _count;
 	}
+	
+	#if FLX_TRACK_POOLS
+	public function addLogs(?id:String)
+	{
+		if (id == null)
+		{
+			if (_pool.length == 0)
+				preAllocate(1);
+			
+			id = Type.getClassName(Type.getClass(_pool[0])).split(".").pop().split("FlxBase").pop().split("Flx").pop();
+		}
+		
+		FlxG.watch.addFunction(id + "-pool", function()
+		{
+			var most = 0;
+			var topStack:String = null;
+			for (stack in _leakCount.keys())
+			{
+				final count = _leakCount[stack];
+				if (most < count)
+				{
+					most = count;
+					topStack = stack;
+				}
+			}
+			
+			var msg = '$length/$_totalCreated';
+			if (topStack != null)
+				msg += ' | $most from ${prettyStack(topStack)}';
+			return msg;
+		});
+	}
+	
+	function trackGet(obj:T)
+	{
+		final callStack = haxe.CallStack.callStack();
+		final stack = stackToString(callStack[3]);
+		if (stack == null)
+			return;
+		
+		if (autoLog && !_autoLogInitted && FlxG.signals != null)
+		{
+			_autoLogInitted = true;
+			FlxG.signals.postStateSwitch.add(()->addLogs());
+			if (FlxG.game != null && FlxG.state != null)
+				addLogs();
+		}
+		
+		_tracked[obj] = stack;
+		if (_leakCount.exists(stack) == false)
+			_leakCount[stack] = 0;
+		
+		_leakCount[stack]++;
+	}
+	
+	inline function trackPut(obj:T)
+	{
+		final stack = _tracked[obj];
+		_tracked.remove(obj);
+		_leakCount[stack]--;
+	}
+	
+	function stackToString(stack:haxe.CallStack.StackItem)
+	{
+		return switch (stack)
+		{
+			case FilePos(_, file, line, _): '$file[$line]';
+			default: null;
+		}
+	}
+	
+	inline function prettyStack(pos:String)
+	{
+		return pos.split("/").pop().split(".hx").join("");
+	}
+	#end
 }
 
 interface IFlxPooled extends IFlxDestroyable
