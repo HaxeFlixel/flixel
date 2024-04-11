@@ -268,18 +268,18 @@ class FlxAtlasFrames extends FlxFramesCollection
 			
 			var size = if (trimmed)
 			{
-				new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
+				FlxRect.get(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
 					Std.parseInt(texture.att.frameHeight));
 			}
 			else
 			{
-				new Rectangle(0, 0, rect.width, rect.height);
+				FlxRect.get(0, 0, rect.width, rect.height);
 			}
 			
 
 			var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 
-			var offset = FlxPoint.get(-size.left, -size.top);
+			var offset = FlxPoint.get(-size.x, -size.y);
 			var sourceSize = FlxPoint.get(size.width, size.height);
 
 			if (rotated && !trimmed)
@@ -289,7 +289,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 			if (rect.width == 0 || rect.height == 0)
             {
                 if (!trimmed)
-                    size.width = size.height = 1;
+                    size.setSize(1,1);
                 
                 var frame = frames.addEmptyFrame(size);
 
