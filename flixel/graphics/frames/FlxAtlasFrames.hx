@@ -254,15 +254,17 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		for (texture in data.nodes.SubTexture)
 		{
-			var version2 = texture.has.width; 
+			if (!texture.has.width && texture.has.w)
+				throw "Sparrow v1 is not supported, use Sparrow v2";
+			
 			var name = texture.att.name;
 			var trimmed = texture.has.frameX;
 			var rotated = (texture.has.rotated && texture.att.rotated == "true");
 			var flipX = (texture.has.flipX && texture.att.flipX == "true");
 			var flipY = (texture.has.flipY && texture.att.flipY == "true");
 
-			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat((version2) ? texture.att.width : texture.att.w),
-				Std.parseFloat((version2) ? texture.att.height : texture.att.h));
+			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
+				Std.parseFloat(texture.att.height));
 			
 			if (rect.width == 0 && rect.height == 0)
             {
