@@ -265,10 +265,13 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
 				Std.parseFloat(texture.att.height));
-			
-			if (rect.width == 0 && rect.height == 0)
+
+			// Prevents issues caused by adding frames of size 0
+			if (rect.width <= 0 && rect.height <= 0)
             {
-                frames.addEmptyFrame(FlxRect.get(rect.x, rect.y, 1, 1));
+				rect.width = 1;
+				rect.height = 1;
+                frames.addEmptyFrame(rect);
                 continue;
             }
 			
