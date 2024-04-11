@@ -265,15 +265,6 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
 				Std.parseFloat(texture.att.height));
-
-			// Prevents issues caused by adding frames of size 0
-			if (rect.width <= 0 && rect.height <= 0)
-            {
-				rect.width = 1;
-				rect.height = 1;
-                frames.addEmptyFrame(rect);
-                continue;
-            }
 			
 			var size = if (trimmed)
 			{
@@ -293,6 +284,20 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			if (rotated && !trimmed)
 				sourceSize.set(size.height, size.width);
+
+			// Prevents issues caused by adding frames of size 0
+			if (rect.width == 0 || rect.height == 0)
+            {
+                if (!trimmed)
+                    size.width = size.height = 1;
+                
+                var frame = frames.addEmptyFrame(size);
+
+                frame.name = name;
+                frame.offset.copyFrom(offset);
+                
+                continue;
+            }
 
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
 		}
