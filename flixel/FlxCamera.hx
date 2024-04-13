@@ -1253,8 +1253,11 @@ class FlxCamera extends FlxBasic
 	
 	function updateLerp(elapsed:Float)
 	{
-		final boundLerp = FlxMath.bound(followLerp, 0, 1);
-		if (boundLerp == 1)
+		final boundLerp = FlxMath.bound(followLerp, 0.0, 1.0);
+		if (boundLerp == 0.0)
+			return;
+		
+		if (boundLerp == 1.0)
 		{
 			scroll.copyFrom(_scrollTarget); // no easing
 		}
