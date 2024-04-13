@@ -176,7 +176,16 @@ class FlxGame extends Sprite
 	 * Change this after calling `super()` in the `FlxGame` constructor
 	 * to use a customized sound tray based on `FlxSoundTray`.
 	 */
-	var _customSoundTray:Class<FlxSoundTray> = FlxSoundTray;
+	@:isVar var _customSoundTray(default, set):Class<FlxSoundTray>;
+	
+	private inline function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
+	{
+		if (soundTray != null) // There's null checking *within* the removeChild function, but just to be safe on a call.
+			removeChild(soundTray);
+		this.soundTray = Type.createInstance(newSoundTray, []);
+		addChild(soundTray);
+		return this._customSoundTray = newSoundTray;
+	}
 	#end
 
 	#if FLX_FOCUS_LOST_SCREEN
@@ -344,8 +353,8 @@ class FlxGame extends Sprite
 		#if !mobile
 		// Volume display tab
 		#if FLX_SOUND_TRAY
-		soundTray = Type.createInstance(_customSoundTray, []);
-		addChild(soundTray);
+		// I moved the setter to be a public function, so that any user may update the sound tray with full access.
+		changeSoundTray(FlxSoundTray);
 		#end
 
 		#if FLX_FOCUS_LOST_SCREEN
@@ -682,6 +691,17 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
+	}
+	// Very basic description, *please* feel free to rewrite the documentation.
+	
+	/** 
+	 * This is how you may apply custom sound trays to your game.
+	 * This can be called anytime to update the soundTray.
+	 * @param newSoundTray The class path to your new sound tray. It must extend `FlxSoundTray` in order to work.
+	 */
+	public function changeSoundTray(newSoundTray:Class<FlxSoundTray>):Void
+	{
+		this._customSoundTray = newSoundTray;
 	}
 
 	function handleReplayRequests():Void
