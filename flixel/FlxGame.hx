@@ -913,7 +913,7 @@ class FlxGame extends Sprite
 		// expensive, only call if necessary
 		return Lib.getTimer();
 	}
-	private function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
+	function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
 	{
 		var oldIndex:Int = 0;
 		if (soundTray != null) // There's null checking *within* the removeChild function, but just to be safe on a call.
