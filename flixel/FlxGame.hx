@@ -180,10 +180,12 @@ class FlxGame extends Sprite
 	
 	private inline function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
 	{
+		var oldIndex:Int = 0;
 		if (soundTray != null) // There's null checking *within* the removeChild function, but just to be safe on a call.
-			removeChild(soundTray);
+			oldIndex = getChildIndex(soundTray);
+		removeChild(soundTray);
 		this.soundTray = Type.createInstance(newSoundTray, []);
-		addChild(soundTray);
+		addChildAt(soundTray, oldIndex);
 		return this._customSoundTray = newSoundTray;
 	}
 	#end
