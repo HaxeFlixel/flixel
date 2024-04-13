@@ -177,17 +177,6 @@ class FlxGame extends Sprite
 	 * to use a customized sound tray based on `FlxSoundTray`.
 	 */
 	@:isVar var _customSoundTray(default, set):Class<FlxSoundTray>;
-	
-	private inline function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
-	{
-		var oldIndex:Int = 0;
-		if (soundTray != null) // There's null checking *within* the removeChild function, but just to be safe on a call.
-			oldIndex = getChildIndex(soundTray);
-		removeChild(soundTray);
-		this.soundTray = Type.createInstance(newSoundTray, []);
-		addChildAt(soundTray, oldIndex);
-		return this._customSoundTray = newSoundTray;
-	}
 	#end
 
 	#if FLX_FOCUS_LOST_SCREEN
@@ -694,17 +683,6 @@ class FlxGame extends Sprite
 		debugger.stats.activeObjects(FlxBasic.activeCount);
 		#end
 	}
-	// Very basic description, *please* feel free to rewrite the documentation.
-	
-	/** 
-	 * This is how you may apply custom sound trays to your game.
-	 * This can be called anytime to update the soundTray.
-	 * @param newSoundTray The class path to your new sound tray. It must extend `FlxSoundTray` in order to work.
-	 */
-	public function changeSoundTray(newSoundTray:Class<FlxSoundTray>):Void
-	{
-		this._customSoundTray = newSoundTray;
-	}
 
 	function handleReplayRequests():Void
 	{
@@ -920,6 +898,10 @@ class FlxGame extends Sprite
 		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
 	}
+	inline function changeSoundTray(newSoundTray:Class<FlxSoundTray>):Void
+	{
+		this._customSoundTray = newSoundTray;
+	}
 
 	inline function getTicks()
 	{
@@ -930,6 +912,16 @@ class FlxGame extends Sprite
 	{
 		// expensive, only call if necessary
 		return Lib.getTimer();
+	}
+	private function set__customSoundTray(newSoundTray:Class<FlxSoundTray>):Class<FlxSoundTray>
+	{
+		var oldIndex:Int = 0;
+		if (soundTray != null) // There's null checking *within* the removeChild function, but just to be safe on a call.
+			oldIndex = getChildIndex(soundTray);
+		removeChild(soundTray);
+		this.soundTray = Type.createInstance(newSoundTray, []);
+		addChildAt(soundTray, oldIndex);
+		return this._customSoundTray = newSoundTray;
 	}
 }
 
