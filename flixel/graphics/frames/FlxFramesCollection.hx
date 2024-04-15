@@ -163,7 +163,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
 	{
-		var frame = new FlxFrame(parent);
+		// Ensure region not a weak rect
+		region = FlxRect.get().copyFrom(region);
+		final frame = new FlxFrame(parent);
 		frame.frame = checkFrame(region);
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
