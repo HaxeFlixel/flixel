@@ -8,7 +8,10 @@
 - `FlxG.plugins`: Added `drawOnTop` field ([#3057](https://github.com/HaxeFlixel/flixel/pull/3057))
 - `FlxCamera`: Added `stopFade`, `stopFlash`, and `stopShake` ([#3063](https://github.com/HaxeFlixel/flixel/pull/3063))
 - `FlxRect`: Added `containsXY` ([#3069](https://github.com/HaxeFlixel/flixel/pull/3069))
-
+- `FlxDebugger`: Added button to toggle `ignoreDrawDebug` on selected objects ([#3071](https://github.com/HaxeFlixel/flixel/pull/3071))
+- `FlxTween`: Add tween-based `flicker()` system ([#3086](https://github.com/HaxeFlixel/flixel/pull/3086))
+- `FlxButton`: Add `DISABLED` state ([#3087](https://github.com/HaxeFlixel/flixel/pull/3087))
+- `FlxBitmapFont`: Honor kerning data from BMFont files ([#3035](https://github.com/HaxeFlixel/flixel/pull/3035))
 
 #### Changes and improvements:
 - `FlxBitmapText`: Honor `scale` when changing `width` and `height` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
@@ -17,6 +20,20 @@
 - `FlxText`: Removed references to `FlxUnicodeUtil` ([#3049](https://github.com/HaxeFlixel/flixel/pull/3049))
 - `FlxObject`: Deprecated `health` and `hurt` ([#3065](https://github.com/HaxeFlixel/flixel/pull/3065))
 	- Added compiler flag `FLX_NO_HEALTH` to create your own replacement, if needed ([#3067](https://github.com/HaxeFlixel/flixel/pull/3067))
+- Prevent building debug bitmaps in release mode ([#3077](https://github.com/HaxeFlixel/flixel/pull/3077))
+- `FlxUnicodeUtil`: Deprecated ([#3078](https://github.com/HaxeFlixel/flixel/pull/3078))
+- Various Changes brought up by EliteMasterEric ([#3085](https://github.com/HaxeFlixel/flixel/pull/3085))
+	- `FlxGraphic`: Check `isDestroyed` for better error messages when using destroyed graphics
+	- `FlxGraphic`: Prevent double destroy, and double adding of frame collections
+	- `FlxFlicker`: Prevent double `release()` calls
+- `FlxDebugger`: Updated the URL to HaxeFlixel site ([#3102](https://github.com/HaxeFlixel/flixel/pull/3102))
+
+#### Bugfixes:
+- `FlxKeyboard`: Fix `PLUS` key on windows ([#3093](https://github.com/HaxeFlixel/flixel/pull/3093))
+- `FlxSpriteContainer`: Fix error in `destroy` ([#3095](https://github.com/HaxeFlixel/flixel/pull/3095))
+- `FlxSprite`: Fix `getGraphicMidpoint()` ([#3101](https://github.com/HaxeFlixel/flixel/pull/3101))
+- `FlxPool`: Fix various point and rect pooling leaks ([#3103](https://github.com/HaxeFlixel/flixel/pull/3103))
+- `FlxAtlasFrames`: Prevent errors when adding frames of size 0 ([#3096](https://github.com/HaxeFlixel/flixel/pull/3096))
 
 5.6.2 (February 10, 2024)
 #### Changes and improvements:
