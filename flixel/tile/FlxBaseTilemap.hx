@@ -202,7 +202,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function calcRayEntry(start, end, ?result)
 	{
-		var bounds = getBounds();
+		var bounds = getBounds(FlxRect.weak());
 		// subtract 1 from size otherwise `getTileIndexByCoords` will have weird edge cases (literally)
 		bounds.width--;
 		bounds.height--;

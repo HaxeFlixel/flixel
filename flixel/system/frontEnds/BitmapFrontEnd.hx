@@ -287,14 +287,16 @@ class BitmapFrontEnd
 
 	/**
 	 * Totally removes specified FlxGraphic object.
-	 * @param	FlxGraphic object you want to remove and destroy.
+	 * @param   graphic  object you want to remove and destroy.
 	 */
 	public function remove(graphic:FlxGraphic):Void
 	{
 		if (graphic != null)
 		{
 			removeKey(graphic.key);
-			graphic.destroy();
+			// TODO: find causes of this, and prevent crashes from double graphic destroys
+			if (!graphic.isDestroyed)
+				graphic.destroy();
 		}
 	}
 

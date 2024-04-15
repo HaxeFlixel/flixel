@@ -14,6 +14,7 @@ class FlxSpriteGroupTest extends FlxTest
 		group = new FlxSpriteGroup();
 		for (i in 0...10)
 			group.add(new FlxSprite());
+		destroyable = group;
 	}
 
 	@Test // #1368
