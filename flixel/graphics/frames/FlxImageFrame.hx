@@ -91,7 +91,8 @@ class FlxImageFrame extends FlxFramesCollection
 	 */
 	public static function fromGraphic(graphic:FlxGraphic, ?region:FlxRect):FlxImageFrame
 	{
-		if (graphic == null)
+		// TODO: look into this
+		if (graphic == null || graphic.isDestroyed)
 			return null;
 
 		// find ImageFrame, if there is one already
