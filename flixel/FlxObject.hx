@@ -660,14 +660,14 @@ class FlxObject extends FlxBasic
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when `acceleration` is not affecting the sprite.
 	 */
-	@:deprecated("drag is deprecated, use dragMode instead")
+	// @:deprecated("drag is deprecated, use dragMode instead")
 	public var drag(default, null):FlxPoint;
 
 	/**
 	 * If you are using `acceleration`, you can use `maxVelocity` with it
 	 * to cap the speed automatically (very useful!).
 	 */
-	@:deprecated("maxVelocity is deprecated, use maxSpeedMode instead")
+	// @:deprecated("maxVelocity is deprecated, use maxSpeedMode instead")
 	public var maxVelocity(default, null):FlxPoint;
 
 	/**
