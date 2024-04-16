@@ -794,7 +794,17 @@ import openfl.geom.Point;
 		p.putWeak();
 		return dotProductWeak(normalized);
 	}
-
+	
+	/**
+	 * Check if the angle between 2 vectors are less than 90 degrees
+	 *
+	 * @param   p  point to check
+	 */
+	public inline function areSameFacing(p:FlxPoint):Bool
+	{
+		return dotProduct(p) > 0;
+	}
+	
 	/**
 	 * Check the perpendicularity of two points.
 	 *

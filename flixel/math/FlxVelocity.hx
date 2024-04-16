@@ -1,5 +1,6 @@
 package flixel.math;
 
+import flixel.FlxObject;
 import flixel.FlxSprite;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouch;
@@ -222,49 +223,172 @@ class FlxVelocity
 	/**
 	 * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
 	 *
-	 * @param	Velocity		Any component of velocity (e.g. 20).
-	 * @param	Acceleration		Rate at which the velocity is changing.
-	 * @param	Drag			Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-	 * @param	Max				An absolute value cap for the velocity (0 for no cap).
-	 * @param	Elapsed			The amount of time passed in to the latest update cycle
-	 * @return	The altered Velocity value.
+	 * @param   speed         Any component of velocity (e.g. 20).
+	 * @param   acceleration  Rate at which the velocity is changing.
+	 * @param   drag          Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+	 * @param   max           An absolute value cap for the velocity (0 for no cap).
+	 * @param   elapsed       The amount of time passed in to the latest update cycle
+	 * @return  The altered Velocity value.
 	 */
-	public static function computeVelocity(Velocity:Float, Acceleration:Float, Drag:Float, Max:Float, Elapsed:Float):Float
+	public static function computeVelocity(speed:Float, acceleration:Float, drag:Float, max:Float, elapsed:Float):Float
 	{
-		if (Acceleration != 0)
-		{
-			Velocity += Acceleration * Elapsed;
-		}
-		else if (Drag != 0)
-		{
-			var drag:Float = Drag * Elapsed;
-			if (Velocity - drag > 0)
-			{
-				Velocity -= drag;
-			}
-			else if (Velocity + drag < 0)
-			{
-				Velocity += drag;
-			}
-			else
-			{
-				Velocity = 0;
-			}
-		}
-		if ((Velocity != 0) && (Max != 0))
-		{
-			if (Velocity > Max)
-			{
-				Velocity = Max;
-			}
-			else if (Velocity < -Max)
-			{
-				Velocity = -Max;
-			}
-		}
-		return Velocity;
+		speed = computeSpeed1D(elapsed, speed, acceleration, drag, FlxDragApplyMode.INERTIAL);
+		
+		return capSpeed1D(speed, max);
 	}
-
+	
+	public static function capSpeed1D(speed:Float, max:Float):Float
+	{
+		if (speed != 0 && max > 0)
+		{
+			if (speed > max)
+			{
+				speed = max;
+			}
+			else if (speed < -max)
+			{
+				speed = -max;
+			}
+		}
+		
+		return speed;
+	}
+	
+	/**
+	 * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+	 *
+	 * @param   elapsed       The amount of time passed in to the latest update cycle
+	 * @param   speed         Any component of velocity (e.g. 20).
+	 * @param   acceleration  Rate at which the velocity is changing.
+	 * @param   drag          Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+	 * @return  The altered Velocity value.
+	 */
+	public static function computeSpeed1D(elapsed:Float, speed:Float, acceleration:Float,
+		drag:Float, dragApply:FlxDragApplyMode):Float
+	{
+		final applyDrag = drag > 0 && switch(dragApply)
+		{
+			case ALWAYS:
+				true;
+			case INERTIAL:
+				acceleration == 0;
+			case SKID:
+				// Apply drag if accelerating the opposite direction of current movement
+				acceleration == 0 || ((acceleration < 0) == (speed < 0));
+			
+		}
+		
+		if (acceleration != 0)
+		{
+			speed += acceleration * elapsed;
+		}
+		
+		if (applyDrag)
+		{
+			speed = applyDrag1D(elapsed, speed, drag);
+		}
+		
+		return speed;
+	}
+	
+	public static function applyDrag1D(elapsed:Float, speed:Float, drag:Float):Float
+	{
+		final frameDrag = drag * elapsed;
+		if (speed - frameDrag > 0)
+		{
+			speed -= frameDrag;
+		}
+		else if (speed + frameDrag < 0)
+		{
+			speed += frameDrag;
+		}
+		else
+		{
+			speed = 0;
+		}
+		
+		return speed;
+	}
+	
+	/**
+	 * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+	 *
+	 * @param   elapsed       The amount of time passed in to the latest update cycle
+	 * @param   velocity      Any component of velocity (e.g. 20).
+	 * @param   acceleration  Rate at which the velocity is changing.
+	 * @param   drag          Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+	 * @return  The altered Velocity value.
+	 */
+	public static function computeSpeed2D(elapsed:Float, velocity:FlxPoint, acceleration:FlxPoint,
+		max:FlxMovementType, drag:FlxMovementType, dragApply:FlxDragApplyMode)
+	{
+		switch(drag)
+		{
+			case NONE:
+				
+				velocity.x += elapsed * acceleration.x;
+				velocity.y += elapsed * acceleration.y;
+				
+			case BILINEAR(dragX, dragY):
+				
+				velocity.x = computeSpeed1D(elapsed, velocity.x, acceleration.x, dragX, dragApply);
+				velocity.y = computeSpeed1D(elapsed, velocity.y, acceleration.y, dragY, dragApply);
+				
+			case LINEAR(linearDrag):
+				
+				final applyDrag = linearDrag > 0 && switch(dragApply)
+				{
+					case ALWAYS:
+						true;
+					case INERTIAL:
+						acceleration.isZero();
+					case SKID:
+						// Apply drag unless if accelerating in the direction of movement (under ±90 degrees)
+						acceleration.isZero() || !acceleration.areSameFacing(velocity);
+					
+				}
+				
+				if (!acceleration.isZero())
+				{
+					velocity.x += acceleration.x * elapsed;
+					velocity.y += acceleration.y * elapsed;
+				}
+				
+				if (applyDrag)
+				{
+					final speed = velocity.length;
+					final scale = applyDrag1D(elapsed, speed, linearDrag) / speed;
+					velocity.x *= scale;
+					velocity.y *= scale;
+				}
+		}
+		
+		return capSpeed2D(velocity, max);
+	}
+	
+	public static function capSpeed2D(velocity:FlxPoint, max:FlxMovementType)
+	{
+		switch(max)
+		{
+			case NONE:
+			case BILINEAR(maxX, maxY):
+				
+				velocity.x = capSpeed1D(velocity.x, maxX);
+				velocity.y = capSpeed1D(velocity.y, maxY);
+				
+			case LINEAR(max):
+				
+				final speed = velocity.length;
+				if (speed > max)
+				{
+					velocity.x *= max / speed;
+					velocity.y *= max / speed;
+				}
+		}
+		
+		return velocity;
+	}
+	
 	/**
 	 * Sets the x/y acceleration on the source FlxSprite so it will accelerate in the direction of the specified angle.
 	 * You must give a maximum speed value (in pixels per second), beyond which the FlxSprite won't go any faster.
@@ -284,6 +408,6 @@ class FlxVelocity
 			source.velocity.set(0, 0);
 
 		source.acceleration.set(cosA * acceleration, sinA * acceleration);
-		source.maxVelocity.set(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
+		source.maxSpeedMode = BILINEAR(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
 	}
 }

@@ -650,16 +650,24 @@ class FlxObject extends FlxBasic
 	 */
 	public var acceleration(default, null):FlxPoint;
 
+	public var maxSpeedMode = FlxMovementType.NONE;
+	
+	public var dragMode = FlxMovementType.NONE;
+	public var dragApplyMode:FlxDragApplyMode = INERTIAL;
+	public var angularDragApplyMode:FlxDragApplyMode = INERTIAL;
+	
 	/**
 	 * This isn't drag exactly, more like deceleration that is only applied
 	 * when `acceleration` is not affecting the sprite.
 	 */
+	@:deprecated("drag is deprecated, use dragMode instead")
 	public var drag(default, null):FlxPoint;
 
 	/**
 	 * If you are using `acceleration`, you can use `maxVelocity` with it
 	 * to cap the speed automatically (very useful!).
 	 */
+	@:deprecated("maxVelocity is deprecated, use maxSpeedMode instead")
 	public var maxVelocity(default, null):FlxPoint;
 
 	/**
@@ -819,6 +827,7 @@ class FlxObject extends FlxBasic
 	 * Internal function for initialization of some object's variables.
 	 */
 	@:noCompletion
+	@:haxe.warning("-WDeprecated")
 	function initVars():Void
 	{
 		flixelType = OBJECT;
@@ -833,12 +842,15 @@ class FlxObject extends FlxBasic
 	 * Internal function for initialization of some variables that are used in `updateMotion()`.
 	 */
 	@:noCompletion
+	@:haxe.warning("-WDeprecated")
 	inline function initMotionVars():Void
 	{
 		velocity = FlxPoint.get();
 		acceleration = FlxPoint.get();
-		drag = FlxPoint.get();
-		maxVelocity = FlxPoint.get(10000, 10000);
+		function setDrag(p:FlxPoint) dragMode = BILINEAR(p.x, p.y);
+		function setMaxSpeed(p:FlxPoint) maxSpeedMode = BILINEAR(p.x, p.y);
+		drag = new FlxCallbackPoint(setDrag, setDrag, setDrag);
+		maxVelocity = new FlxCallbackPoint(setMaxSpeed, setMaxSpeed, setMaxSpeed);
 	}
 
 	/**
@@ -851,14 +863,15 @@ class FlxObject extends FlxBasic
 	 * Override this function to `null` out variables manually or call `destroy()` on class members if necessary.
 	 * Don't forget to call `super.destroy()`!
 	 */
+	@:haxe.warning("-WDeprecated")
 	override public function destroy():Void
 	{
 		super.destroy();
 
 		velocity = FlxDestroyUtil.put(velocity);
 		acceleration = FlxDestroyUtil.put(acceleration);
-		drag = FlxDestroyUtil.put(drag);
-		maxVelocity = FlxDestroyUtil.put(maxVelocity);
+		drag = FlxDestroyUtil.destroy(drag);
+		maxVelocity = FlxDestroyUtil.destroy(maxVelocity);
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
 		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
@@ -900,18 +913,20 @@ class FlxObject extends FlxBasic
 		angularVelocity += velocityDelta;
 		angle += angularVelocity * elapsed;
 		angularVelocity += velocityDelta;
-
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
-		velocity.x += velocityDelta;
-		var delta = velocity.x * elapsed;
-		velocity.x += velocityDelta;
-		x += delta;
-
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * elapsed;
-		velocity.y += velocityDelta;
-		y += delta;
+		
+		final newVelocity = FlxPoint.get().copyFrom(velocity);
+		FlxVelocity.computeSpeed2D(elapsed, newVelocity, acceleration, maxSpeedMode, dragMode, dragApplyMode);
+		
+		final velocityDeltaX = 0.5 * (newVelocity.x - velocity.x);
+		final velocityDeltaY = 0.5 * (newVelocity.y - velocity.y);
+		velocity.x += velocityDeltaX;
+		velocity.y += velocityDeltaY;
+		x += velocity.x * elapsed;
+		y += velocity.y * elapsed;
+		velocity.x += velocityDeltaX;
+		velocity.y += velocityDeltaY;
+		
+		newVelocity.put();
 	}
 
 	/**
@@ -1541,4 +1556,34 @@ enum abstract CollisionDragType(Int)
 
 	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
 	var HEAVIER = 3;
+}
+
+enum FlxMovementType
+{
+	/** Along one axis, usually in the direction of movement */
+	LINEAR(value:Float);
+	
+	/** Along two independant axes */
+	BILINEAR(x:Float, y:Float);
+	
+	NONE;
+}
+
+enum FlxDragApplyMode
+{
+	/**
+	 * Drag is always applied to the object's velocity.
+	 */
+	ALWAYS;
+	
+	/**
+	 * Drag is applied to objects in an "inertial" state, or, when the object has no acceleration.
+	 */
+	INERTIAL;
+	
+	/**
+	 * Drag is applied when there is no acceleration on the object or if the object is accelerating
+	 * in the opposite direction it is moving.
+	 */
+	SKID;
 }
