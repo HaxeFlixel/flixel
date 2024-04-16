@@ -1566,24 +1566,23 @@ enum FlxMovementType
 	/** Along two independant axes */
 	XY(x:Float, y:Float);
 	
+	/** Shortcut for 0 */
 	NONE;
 }
 
 enum FlxDragApplyMode
 {
-	/**
-	 * Drag is always applied to the object's velocity.
-	 */
+	/** Drag is always applied to the object's velocity */
 	ALWAYS;
 	
-	/**
-	 * Drag is applied to objects in an "inertial" state, or, when the object has no acceleration.
-	 */
+	/** Drag is applied to objects in an "inertial" state (not accelerating) */
 	INERTIAL;
 	
 	/**
-	 * Drag is applied when there is no acceleration on the object or if the object is accelerating
-	 * in the opposite direction it is moving.
+	 * Drag is to objects not accelerating in the direction they are moving, including
+	 * objects in an inertial state.  For a `dragmode` of `XY` this applies to both
+	 * axes separately, for `LINEAR`, drag is applied if the object is not accelerating
+	 * less than 90 degrees from the object's current movement direction
 	 */
 	SKID;
 }
