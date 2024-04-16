@@ -33,6 +33,7 @@
 - `FlxSpriteContainer`: Fix error in `destroy` ([#3095](https://github.com/HaxeFlixel/flixel/pull/3095))
 - `FlxSprite`: Fix `getGraphicMidpoint()` ([#3101](https://github.com/HaxeFlixel/flixel/pull/3101))
 - `FlxPool`: Fix various point and rect pooling leaks ([#3103](https://github.com/HaxeFlixel/flixel/pull/3103))
+([#3108](https://github.com/HaxeFlixel/flixel/pull/3108))
 - `FlxAtlasFrames`: Prevent errors when adding frames of size 0 ([#3096](https://github.com/HaxeFlixel/flixel/pull/3096))
 
 5.6.2 (February 10, 2024)
