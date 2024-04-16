@@ -329,7 +329,7 @@ class FlxVelocity
 				velocity.x += elapsed * acceleration.x;
 				velocity.y += elapsed * acceleration.y;
 				
-			case BILINEAR(dragX, dragY):
+			case XY(dragX, dragY):
 				
 				velocity.x = computeSpeed1D(elapsed, velocity.x, acceleration.x, dragX, dragApply);
 				velocity.y = computeSpeed1D(elapsed, velocity.y, acceleration.y, dragY, dragApply);
@@ -371,7 +371,7 @@ class FlxVelocity
 		switch(max)
 		{
 			case NONE:
-			case BILINEAR(maxX, maxY):
+			case XY(maxX, maxY):
 				
 				velocity.x = capSpeed1D(velocity.x, maxX);
 				velocity.y = capSpeed1D(velocity.y, maxY);
@@ -408,6 +408,6 @@ class FlxVelocity
 			source.velocity.set(0, 0);
 
 		source.acceleration.set(cosA * acceleration, sinA * acceleration);
-		source.maxSpeedMode = BILINEAR(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
+		source.maxSpeedMode = XY(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
 	}
 }
