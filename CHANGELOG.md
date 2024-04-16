@@ -1,4 +1,4 @@
-5.7.0 (TBD)
+5.7.0 (April 16, 2024)
 
 #### New features:
 - `FlxBitmapFont`: Added `setCharFrame` ([#3037](https://github.com/HaxeFlixel/flixel/pull/3037))
