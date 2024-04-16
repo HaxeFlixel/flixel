@@ -1,3 +1,8 @@
+5.7.1 (April 16, 2024)
+#### Bugfixes:
+- `FlxImageFrame`: Prevent null ref from destroyed graphics
+- `FlxSpriteGroup`: Fix issue where members draw to the wrong cameras
+
 5.7.0 (April 16, 2024)
 
 #### New features:
