@@ -310,7 +310,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		sprite.y += y;
 		sprite.alpha *= alpha;
 		sprite.scrollFactor.copyFrom(scrollFactor);
-		sprite._cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
+		sprite.cameras = _cameras; // _cameras instead of cameras because get_cameras() will not return null
 
 		if (clipRect != null)
 			clipRectTransform(sprite, clipRect);
@@ -679,7 +679,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (camera != Value)
 			transformChildren(cameraTransform, Value);
-		group.camera = Value;
 		return super.set_camera(Value);
 	}
 
@@ -687,7 +686,6 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (_cameras != Value)
 			transformChildren(camerasTransform, Value);
-		group.cameras = Value;
 		return super.set_cameras(Value);
 	}
 
