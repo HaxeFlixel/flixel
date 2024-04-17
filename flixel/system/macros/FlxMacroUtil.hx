@@ -17,9 +17,6 @@ class FlxMacroUtil
 		var type = Context.getType(typePath);
 		var values = [];
 
-		if (exclude == null)
-			exclude = ["NONE"];
-
 		switch (type.follow())
 		{
 			case TAbstract(_.get() => ab, _):
