@@ -1,3 +1,8 @@
+5.7.1 (April 16, 2024)
+#### Bugfixes:
+- `FlxImageFrame`: Prevent null ref from destroyed graphics ([#3113](https://github.com/HaxeFlixel/flixel/pull/3113))
+- `FlxSpriteGroup`: Fix issue where members draw to the wrong cameras ([#3113](https://github.com/HaxeFlixel/flixel/pull/3113))
+
 5.7.0 (April 16, 2024)
 
 #### New features:
