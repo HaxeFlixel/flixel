@@ -408,6 +408,6 @@ class FlxVelocity
 			source.velocity.set(0, 0);
 
 		source.acceleration.set(cosA * acceleration, sinA * acceleration);
-		source.maxSpeedMode = XY(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
+		source.maxVeloctity.set(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
 	}
 }
