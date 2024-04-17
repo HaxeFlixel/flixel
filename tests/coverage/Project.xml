@@ -56,7 +56,6 @@
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />
-		<!-- Failing on CI for some reason -->
-		<!-- <haxedef name="FLX_TRACK_POOLS" /> -->
+		<haxedef name="FLX_TRACK_POOLS" />
 	</section>
 </project>
