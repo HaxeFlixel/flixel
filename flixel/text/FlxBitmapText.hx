@@ -577,6 +577,7 @@ class FlxBitmapText extends FlxSprite
 
 	function set_text(value:UnicodeString):UnicodeString
 	{
+		value = parseExtraGlyphs(value);
 		if (value != text)
 		{
 			text = value;
@@ -584,6 +585,19 @@ class FlxBitmapText extends FlxSprite
 		}
 
 		return value;
+	}
+
+	function parseExtraGlyphs(?value:String = ""):String
+	{
+		var regex:EReg = new EReg("{{([a-zA-Z0-9 ]+)}}", "g");
+		
+		return regex.map(value, (r) ->
+		{
+			var unicode:String = font.lookupTable.get(r.matched(1));
+			if (unicode == null)
+				unicode = "!";
+			return unicode;
+		});
 	}
 
 	function updateText():Void
