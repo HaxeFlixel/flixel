@@ -358,7 +358,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		sprite.x -= x;
 		sprite.y -= y;
 		// alpha
-		sprite._cameras = null;
+		sprite.cameras = null;
 		return group.remove(sprite, splice);
 	}
 
@@ -1066,7 +1066,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		Sprite.camera = Camera;
 
 	inline function camerasTransform(Sprite:FlxSprite, Cameras:Array<FlxCamera>)
-		Sprite._cameras = Cameras;
+		Sprite.cameras = Cameras;
 
 	inline function offsetTransform(Sprite:FlxSprite, Offset:FlxPoint)
 		Sprite.offset.copyFrom(Offset);
