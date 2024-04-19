@@ -770,12 +770,17 @@ class FlxBitmapText extends FlxSprite
 	public function getRenderedText(text:UnicodeString)
 	{
 		text = (autoUpperCase) ? (text : UnicodeString).toUpperCase() : text;
-		var lines = text.split("\n");
 		
-		if (!wrap.match(NONE))
-			lines = autoWrap(lines);
+		if (!autoSize)
+		{
+			var lines = text.split("\n");
+			if (wrap != NONE)
+				return autoWrap(lines).join("\n");
+			
+			return cutLines(lines).join("\n");
+		}
 		
-		return cutLines(lines).join("\n");
+		return text;
 	}
 	
 	/**

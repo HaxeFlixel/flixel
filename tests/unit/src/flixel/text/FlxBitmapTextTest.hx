@@ -51,31 +51,31 @@ class FlxBitmapTextTest extends FlxTest
 		final msg2 = msg + "supercal-aphragalist\nicexpiala-docious"; // \n and hyphens
 		final msg3 = msg + "supercalaphragalisticexpialadocious"; // one long line
 		
-		getRenderedText(field, msg1, NONE, "The quick brown ");
-		getRenderedText(field, msg2, NONE, "The quick brown \nicexpiala-dociou");
-		getRenderedText(field, msg3, NONE, "The quick brown ");
+		assertRenderedText(field, msg1, NONE, "The quick brown ");
+		assertRenderedText(field, msg2, NONE, "The quick brown \nicexpiala-dociou");
+		assertRenderedText(field, msg3, NONE, "The quick brown ");
 		
-		getRenderedText(field, msg1, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt-icexpiala-doci\nous");
-		getRenderedText(field, msg2, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt\nicexpiala-dociou\ns");
-		getRenderedText(field, msg3, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercalaphragalist\nicexpialadocious");
+		assertRenderedText(field, msg1, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt-icexpiala-doci\nous");
+		assertRenderedText(field, msg2, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercal-aphragalis\nt\nicexpiala-dociou\ns");
+		assertRenderedText(field, msg3, CHAR, "The quick brown \nfox jumps over t\nhe lazy dog, sup\nercalaphragalist\nicexpialadocious");
 		
-		getRenderedText(field, msg1, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		getRenderedText(field, msg2, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		getRenderedText(field, msg3, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercalaphragal");
+		assertRenderedText(field, msg1, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(NEVER), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercalaphragalisticexpialadocious");
 		
-		getRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
-		getRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
-		getRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
+		assertRenderedText(field, msg1, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist-\nicexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-\naphragalist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(LINE_WIDTH), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 		
-		getRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist-icexpiala-\ndocious");
-		getRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist\nicexpiala-\ndocious");
-		getRenderedText(field, msg3, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
+		assertRenderedText(field, msg1, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist-icexpiala-\ndocious");
+		assertRenderedText(field, msg2, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, \nsupercal-aphraga\nlist\nicexpiala-\ndocious");
+		assertRenderedText(field, msg3, WORD(LENGTH(10)), "The quick brown \nfox jumps over \nthe lazy dog, su\npercalaphragalis\nticexpialadociou\ns");
 	}
 	
-	function getRenderedText(field:FlxBitmapText, text:UnicodeString, wrap:FlxBitmapText.Wrap, expected:UnicodeString)
+	function assertRenderedText(field:FlxBitmapText, text:UnicodeString, wrap:FlxBitmapText.Wrap, expected:UnicodeString, ?info:haxe.PosInfos)
 	{
 		field.wrap = wrap;
 		final actual = field.getRenderedText(text);
-		Assert.areEqual(expected, actual);
+		Assert.areEqual(expected, actual, info);
 	}
 }
