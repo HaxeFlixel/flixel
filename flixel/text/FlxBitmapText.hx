@@ -596,11 +596,11 @@ class FlxBitmapText extends FlxSprite
 		{
 			if (wrap != NONE)
 			{
-				autoWrap();
+				_lines = autoWrap(_lines);
 			}
 			else
 			{
-				cutLines();
+				_lines = cutLines(_lines);
 			}
 		}
 
@@ -712,11 +712,11 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Just cuts the lines which are too long to fit in the field.
 	 */
-	function cutLines():Void
+	function cutLines(lines:Array<UnicodeString>)
 	{
-		for (i in 0..._lines.length)
+		for (i in 0...lines.length)
 		{
-			final line = _lines[i];
+			final line = lines[i];
 			var lineWidth = font.minOffsetX;
 
 			var prevCode = -1;
@@ -734,11 +734,12 @@ class FlxBitmapText extends FlxSprite
 				if (lineWidth > _fieldWidth - 2 * padding)
 				{
 					// cut every character after this
-					_lines[i] = _lines[i].substr(0, c);
+					lines[i] = lines[i].substr(0, c);
 					break;
 				}
 			}
 		}
+		return lines;
 	}
 	
 	function getCharAdvance(charCode:Int, spaceWidth:Int)
@@ -763,16 +764,31 @@ class FlxBitmapText extends FlxSprite
 	}
 	
 	/**
+	 * Adds soft wraps to the text and cuts lines based on how it would be displayed in this field,
+	 * Also converts to upper-case, if `autoUpperCase` is `true`
+	 */
+	public function getRenderedText(text:UnicodeString)
+	{
+		text = (autoUpperCase) ? (text : UnicodeString).toUpperCase() : text;
+		var lines = text.split("\n");
+		
+		if (!wrap.match(NONE))
+			lines = autoWrap(lines);
+		
+		return cutLines(lines).join("\n");
+	}
+	
+	/**
 	 * Automatically wraps text by figuring out how many characters can fit on a
 	 * single line, and splitting the remainder onto a new line.
 	 */
-	function autoWrap():Void
+	function autoWrap(lines:Array<UnicodeString>)
 	{
 		// subdivide lines
 		var newLines:Array<UnicodeString> = [];
 		var words:Array<UnicodeString>; // the array of words in the current line
 
-		for (line in _lines)
+		for (line in lines)
 		{
 			words = [];
 			// split this line into words
@@ -789,7 +805,7 @@ class FlxBitmapText extends FlxSprite
 			}
 		}
 
-		_lines = newLines;
+		return newLines;
 	}
 
 	/**
