@@ -32,8 +32,8 @@ class FlxBitmapTextTest extends FlxTest
 		Assert.areEqual(text1.font, text2.font);
 	}
 	
-	@Test // #1526 and #2750
-	function testWrap()
+	@Test
+	function testWrapMono()
 	{
 		final image = new BitmapData(112, 60);
 		final monospaceLetters:String = " !\"#$%&'()*+,-.\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[/]^_`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -46,10 +46,15 @@ class FlxBitmapTextTest extends FlxTest
 		field.letterSpacing = -1;
 		field.multiLine = true;
 		
+		/*
+		Note: These tests were made quickly due to my current schedule, later on we may want
+		to simplify these, and also add tests for: kerning and unicode stuff
+		*/
+		
 		final msg = "The quick brown fox jumps over the lazy dog, ";
-		final msg1 = msg + "supercal-aphragalist-icexpiala-docious"; // hyphens
-		final msg2 = msg + "supercal-aphragalist\nicexpiala-docious"; // \n and hyphens
-		final msg3 = msg + "supercalaphragalisticexpialadocious"; // one long line
+		final msg1 = msg + "supercal-aphragalist-icexpiala-docious"; // long hyphenate4d word
+		final msg2 = msg + "supercal-aphragalist\nicexpiala-docious"; // hard wrap and hyphens
+		final msg3 = msg + "supercalaphragalisticexpialadocious"; // one long word
 		
 		assertRenderedText(field, msg1, NONE, "The quick brown ");
 		assertRenderedText(field, msg2, NONE, "The quick brown \nicexpiala-dociou");
