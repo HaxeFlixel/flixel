@@ -320,7 +320,7 @@ class FlxVelocity
 	 * @return  The altered Velocity value.
 	 */
 	public static function computeSpeed2D(elapsed:Float, velocity:FlxPoint, acceleration:FlxPoint,
-		max:FlxMovementType, drag:FlxMovementType, dragApply:FlxDragApplyMode)
+		max:FlxMaxSpeedMode, drag:FlxDragMode)
 	{
 		switch(drag)
 		{
@@ -329,12 +329,12 @@ class FlxVelocity
 				velocity.x += elapsed * acceleration.x;
 				velocity.y += elapsed * acceleration.y;
 				
-			case XY(dragX, dragY):
+			case XY(dragX, dragY, applyX, applyY):
 				
-				velocity.x = computeSpeed1D(elapsed, velocity.x, acceleration.x, dragX, dragApply);
-				velocity.y = computeSpeed1D(elapsed, velocity.y, acceleration.y, dragY, dragApply);
+				velocity.x = computeSpeed1D(elapsed, velocity.x, acceleration.x, dragX, applyX);
+				velocity.y = computeSpeed1D(elapsed, velocity.y, acceleration.y, dragY, applyY != null ? applyY : applyX);
 				
-			case LINEAR(linearDrag):
+			case UNIFORM(linearDrag, dragApply):
 				
 				final applyDrag = linearDrag > 0 && switch(dragApply)
 				{
@@ -366,7 +366,7 @@ class FlxVelocity
 		return capSpeed2D(velocity, max);
 	}
 	
-	public static function capSpeed2D(velocity:FlxPoint, max:FlxMovementType)
+	public static function capSpeed2D(velocity:FlxPoint, max:FlxMaxSpeedMode)
 	{
 		switch(max)
 		{
@@ -408,6 +408,6 @@ class FlxVelocity
 			source.velocity.set(0, 0);
 
 		source.acceleration.set(cosA * acceleration, sinA * acceleration);
-		source.maxVeloctity.set(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
+		source.maxVelocity.set(Math.abs(cosA * maxSpeed), Math.abs(sinA * maxSpeed));
 	}
 }

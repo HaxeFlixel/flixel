@@ -650,10 +650,9 @@ class FlxObject extends FlxBasic
 	 */
 	public var acceleration(default, null):FlxPoint;
 
-	public var maxSpeedMode = FlxMovementType.NONE;
+	public var maxSpeedMode = FlxMaxSpeedMode.NONE;
 	
-	public var dragMode = FlxMovementType.NONE;
-	public var dragApplyMode:FlxDragApplyMode = INERTIAL;
+	public var dragMode = FlxDragMode.NONE;
 	public var angularDragApplyMode:FlxDragApplyMode = INERTIAL;
 	
 	/**
@@ -847,7 +846,7 @@ class FlxObject extends FlxBasic
 	{
 		velocity = FlxPoint.get();
 		acceleration = FlxPoint.get();
-		function setDrag(p:FlxPoint) dragMode = XY(p.x, p.y);
+		function setDrag(p:FlxPoint) dragMode = XY(p.x, p.y, INERTIAL, INERTIAL);
 		function setMaxSpeed(p:FlxPoint) maxSpeedMode = XY(p.x, p.y);
 		drag = new FlxCallbackPoint(setDrag, setDrag, setDrag);
 		maxVelocity = new FlxCallbackPoint(setMaxSpeed, setMaxSpeed, setMaxSpeed);
@@ -915,7 +914,7 @@ class FlxObject extends FlxBasic
 		angularVelocity += velocityDelta;
 		
 		final newVelocity = FlxPoint.get().copyFrom(velocity);
-		FlxVelocity.computeSpeed2D(elapsed, newVelocity, acceleration, maxSpeedMode, dragMode, dragApplyMode);
+		FlxVelocity.computeSpeed2D(elapsed, newVelocity, acceleration, maxSpeedMode, dragMode);
 		
 		final velocityDeltaX = 0.5 * (newVelocity.x - velocity.x);
 		final velocityDeltaY = 0.5 * (newVelocity.y - velocity.y);
@@ -1558,15 +1557,27 @@ enum abstract CollisionDragType(Int)
 	var HEAVIER = 3;
 }
 
-enum FlxMovementType
+enum FlxMaxSpeedMode
 {
-	/** Along one axis, usually in the direction of movement */
+	/** The magnitude of velocity is capped */
 	LINEAR(value:Float);
 	
-	/** Along two independant axes */
+	/** Each axis is capped independantly */
 	XY(x:Float, y:Float);
 	
-	/** Shortcut for 0 */
+	/** No max speed */
+	NONE;
+}
+
+enum FlxDragMode
+{
+	/** Along one axis, usually in the direction of movement */
+	UNIFORM(value:Float, applyMode:FlxDragApplyMode);
+	
+	/** Drag is applied to each axes separately */
+	XY(x:Float, y:Float, xApplyMode:FlxDragApplyMode, ?yApplyMode:FlxDragApplyMode);
+	
+	/** No drag */
 	NONE;
 }
 
