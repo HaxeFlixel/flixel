@@ -2,6 +2,7 @@ package flixel.group;
 
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
+import flixel.group.FlxSpriteContainer;
 import massive.munit.Assert;
 
 class FlxSpriteContainerTest extends FlxSpriteGroupTest
@@ -18,11 +19,11 @@ class FlxSpriteContainerTest extends FlxSpriteGroupTest
 	{
 		final subGroup1 = new FlxSpriteContainer();
 		group.add(subGroup1);
-		final subGroup2 = new FlxSpriteContainer();
+		final subGroup2 = new FlxTypedSpriteContainer<FlxSprite>();
 		subGroup1.add(subGroup2);
 		final member1 = new FlxSprite();
 		final member2 = new FlxSprite();
-		subGroup2.add(member1);
+		subGroup1.add(member1);
 		subGroup2.add(member2);
 		
 		final cam = new FlxCamera();

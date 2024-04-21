@@ -144,11 +144,11 @@ class FlxSpriteGroupTest extends FlxTest
 	{
 		final subGroup1 = new FlxSpriteGroup();
 		group.add(subGroup1);
-		final subGroup2 = new FlxSpriteGroup();
+		final subGroup2 = new FlxTypedSpriteGroup<FlxSprite>();
 		subGroup1.add(subGroup2);
 		final member1 = new FlxSprite();
 		final member2 = new FlxSprite();
-		subGroup2.add(member1);
+		subGroup1.add(member1);
 		subGroup2.add(member2);
 		
 		final cam = new FlxCamera();
