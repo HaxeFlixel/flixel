@@ -101,10 +101,17 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override public function reset():Void
 	{
 		super.reset();
+		#if (flash || openfl >= "4.0.0")
+		vertices.length = 0;
+		indices.length = 0;
+		uvtData.length = 0;
+		colors.length = 0;
+		#else
 		vertices.splice(0, vertices.length);
 		indices.splice(0, indices.length);
 		uvtData.splice(0, uvtData.length);
 		colors.splice(0, colors.length);
+		#end
 
 		verticesPosition = 0;
 		indicesPosition = 0;
