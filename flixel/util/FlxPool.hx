@@ -53,8 +53,10 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	/** Set to false before creating FlxGame to prevent logs */
 	public var autoLog = true;
 	
-	final _tracked = new Map<T, String>();
-	final _leakCount = new Map<String, Int>();
+	// For some reason, this causes CI errors: `final _tracked = new Map<T, String>();`
+	
+	final _tracked:Map<T, String> = [];
+	final _leakCount:Map<String, Int> = [];
 	var _totalCreated = 0;
 	var _autoLogInitted = false;
 	#end

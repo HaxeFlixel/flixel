@@ -1,3 +1,21 @@
+5.8.0 (April 19, 2024)
+
+#### New features:
+- `FlxBitmapText`: Add `getRenderedText` ([#3120](https://github.com/HaxeFlixel/flixel/pull/3120))
+
+#### Bugfixes:
+- `FlxSpriteGroup`: Fix propegation of `cameras` field to members ([#3118](https://github.com/HaxeFlixel/flixel/pull/3118))
+- `FlxBitmapText`: Fix wrap issues caused from kerning ([#3120](https://github.com/HaxeFlixel/flixel/pull/3120))
+
+5.7.2 (April 17, 2024)
+#### Bugfixes:
+- `FlxSpriteGroup`: Better long term fix for members cameras ([#3116](https://github.com/HaxeFlixel/flixel/pull/3116))
+
+5.7.1 (April 16, 2024)
+#### Bugfixes:
+- `FlxImageFrame`: Prevent null ref from destroyed graphics ([#3113](https://github.com/HaxeFlixel/flixel/pull/3113))
+- `FlxSpriteGroup`: Fix issue where members draw to the wrong cameras ([#3113](https://github.com/HaxeFlixel/flixel/pull/3113))
+
 5.7.0 (April 16, 2024)
 
 #### New features:
