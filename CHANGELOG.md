@@ -1,3 +1,12 @@
+5.8.1 (TBD)
+
+#### Changes and improvements:
+- `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
+- `FlxPreloader`: Improve documentation ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
+
+#### Bugfixes:
+- 
+
 5.8.0 (April 19, 2024)
 
 #### New features:
