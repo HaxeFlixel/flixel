@@ -1218,7 +1218,16 @@ class FlxSprite extends FlxObject
 	{
 		if (point == null)
 			point = FlxPoint.get();
-		return point.set(x + frameWidth * 0.5 * scale.x, y + frameHeight * 0.5 * scale.y);
+		
+		point.set(x, y);
+		if (pixelPerfectPosition)
+			point.floor();
+		
+		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
+		point.x += origin.x - offset.x - _scaledOrigin.x + frameWidth * 0.5 * scale.x;
+		point.y += origin.y - offset.y - _scaledOrigin.y + frameHeight * 0.5 * scale.y;
+		
+		return point;
 	}
 
 	/**
