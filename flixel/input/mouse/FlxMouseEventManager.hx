@@ -271,7 +271,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   onMouseUp       Callback when mouse is released over this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
-	 * @param   onMouseOver     Callback when mouse is this object.
+	 * @param   onMouseOver     Callback when mouse is over this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   onMouseOut      Callback when mouse moves out of this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
