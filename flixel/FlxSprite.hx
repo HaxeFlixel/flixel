@@ -1223,6 +1223,7 @@ class FlxSprite extends FlxObject
 	 * Retrieves the world bounds of this sprite's graphic
 	 *
 	 * @param   rect  The resulting rect, if `null` a new one is created
+	 * @since 5.9.0
 	 */
 	public function getGraphicBounds(?rect:FlxRect):FlxRect
 	{
