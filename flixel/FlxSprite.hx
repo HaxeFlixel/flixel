@@ -1210,24 +1210,38 @@ class FlxSprite extends FlxObject
 	/**
 	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
 	 *
-	 * @param   point   Allows you to pass in an existing `FlxPoint` if you're so inclined.
-	 *                  Otherwise a new one is created.
-	 * @return  A `FlxPoint` containing the midpoint of this sprite's graphic in world coordinates.
+	 * @param   point  The resulting point, if `null` a new one is created
 	 */
 	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
 	{
-		if (point == null)
-			point = FlxPoint.get();
+		final rect = getGraphicBounds();
+		point = rect.getMidpoint(point);
+		rect.put();
+		return point;
+	}
+	/**
+	 * Retrieves the world bounds of this sprite's graphic
+	 *
+	 * @param   rect  The resulting rect, if `null` a new one is created
+	 */
+	public function getGraphicBounds(?rect:FlxRect):FlxRect
+	{
+		if (rect == null)
+			rect = FlxRect.get();
 		
-		point.set(x, y);
+		rect.set(x, y);
 		if (pixelPerfectPosition)
-			point.floor();
+			rect.floor();
 		
 		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
-		point.x += origin.x - offset.x - _scaledOrigin.x + frameWidth * 0.5 * scale.x;
-		point.y += origin.y - offset.y - _scaledOrigin.y + frameHeight * 0.5 * scale.y;
+		rect.x += origin.x - offset.x - _scaledOrigin.x;
+		rect.y += origin.y - offset.y - _scaledOrigin.y;
+		rect.setSize(frameWidth * scale.x, frameHeight * scale.y);
 		
-		return point;
+		if (angle % 360 != 0)
+			rect.getRotatedBounds(angle, _scaledOrigin, rect);
+		
+		return rect;
 	}
 
 	/**
