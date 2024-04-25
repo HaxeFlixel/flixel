@@ -1221,6 +1221,8 @@ class FlxSprite extends FlxObject
 	}
 	/**
 	 * Retrieves the world bounds of this sprite's graphic
+	 * **Note:** Ignores `scrollFactor`, to get the screen position of the graphic use
+	 * `getScreenBounds`
 	 *
 	 * @param   rect  The resulting rect, if `null` a new one is created
 	 * @since 5.9.0
