@@ -904,7 +904,7 @@ class FlxGame extends Sprite
 	function updateState(elapsed:Float):Void
 	{
 		if (_state.persistentUpdate || _state.subState == null)
-			_state.update(FlxG.elapsed);
+			_state.update(elapsed);
 
 		if (_state.subState != null)
 		{
