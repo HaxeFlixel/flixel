@@ -55,44 +55,23 @@ class FlxState extends FlxContainer
 	var _constructor:NextState;
 	
 	/**
-	 * Current substate. Substates also can be nested.
+	 * Current substate. `FlxSubState`s can also be nested.
 	 */
 	public var subState(default, null):FlxSubState;
-
-	/**
-	 * If a state change was requested, the new state object is stored here until we switch to it.
-	 */
-	@:noCompletion
-	var _requestedSubState:FlxSubState;
-
-	/**
-	 * Whether to reset the substate (when it changes, or when it's closed).
-	 */
-	@:noCompletion
-	var _requestSubStateReset:Bool = false;
 
 	/**
 	 * A `FlxSignal` that dispatches when a sub state is opened from this state.
 	 * @since 4.9.0
 	 */
-	public var subStateOpened(get, never):FlxTypedSignal<FlxSubState->Void>;
+	public var subStateOpened(default, null):FlxTypedSignal<FlxSubState->Void> = new FlxTypedSignal<FlxSubState->Void>();
 
 	/**
 	 * A `FlxSignal` that dispatches when a sub state is closed from this state.
 	 * @since 4.9.0
 	 */
-	public var subStateClosed(get, never):FlxTypedSignal<FlxSubState->Void>;
-
-	/**
-	 * Internal variables for lazily creating `subStateOpened` and `subStateClosed` signals when needed.
-	 */
-	@:noCompletion
-	var _subStateOpened:FlxTypedSignal<FlxSubState->Void>;
-
-	@:noCompletion
-	var _subStateClosed:FlxTypedSignal<FlxSubState->Void>;
+	public var subStateClosed(default, null):FlxTypedSignal<FlxSubState->Void> = new FlxTypedSignal<FlxSubState->Void>();
 	
-	public function new ()
+	public function new():Void
 	{
 		super(0);
 	}
@@ -105,84 +84,24 @@ class FlxState extends FlxContainer
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
-	{
-		if (persistentDraw || subState == null)
-			super.draw();
-
-		if (subState != null)
-			subState.draw();
-	}
-
-	public function openSubState(SubState:FlxSubState):Void
-	{
-		_requestSubStateReset = true;
-		_requestedSubState = SubState;
-	}
-
-	/**
-	 * Closes the substate of this state, if one exists.
-	 */
-	public function closeSubState():Void
-	{
-		_requestSubStateReset = true;
-	}
-
-	/**
-	 * Load substate for this state
-	 */
-	public function resetSubState():Void
-	{
-		// Close the old state (if there is an old state)
-		if (subState != null)
-		{
-			if (subState.closeCallback != null)
-				subState.closeCallback();
-			if (_subStateClosed != null)
-				_subStateClosed.dispatch(subState);
-
-			if (destroySubStates)
-				subState.destroy();
-		}
-
-		// Assign the requested state (or set it to null)
-		subState = _requestedSubState;
-		_requestedSubState = null;
-
-		if (subState != null)
-		{
-			// Reset the input so things like "justPressed" won't interfere
-			if (!persistentUpdate)
-				FlxG.inputs.onStateSwitch();
-
-			subState._parentState = this;
-
-			if (!subState._created)
-			{
-				subState._created = true;
-				subState.create();
-			}
-			if (subState.openCallback != null)
-				subState.openCallback();
-			if (_subStateOpened != null)
-				_subStateOpened.dispatch(subState);
-		}
-	}
-
 	override function destroy():Void
 	{
 		_constructor = function():FlxState
 		{
 			throw "Attempting to resetState while the current state is destroyed";
 		};
-		FlxDestroyUtil.destroy(_subStateOpened);
-		FlxDestroyUtil.destroy(_subStateClosed);
+
+		FlxDestroyUtil.destroy(subStateOpened);
+		
+		FlxDestroyUtil.destroy(subStateClosed);
 		
 		if (subState != null)
 		{
 			subState.destroy();
+
 			subState = null;
 		}
+
 		super.destroy();
 	}
 
@@ -225,28 +144,49 @@ class FlxState extends FlxContainer
 	public function onFocus():Void {}
 
 	/**
-	 * This function is called whenever the window size has been changed.
+	 * This function is called whenever the window is resized.
 	 *
-	 * @param   Width    The new window width
-	 * @param   Height   The new window Height
+	 * @param   width    The new window width
+	 * @param   height   The new window height
 	 */
-	public function onResize(Width:Int, Height:Int):Void {}
+	public function onResize(width:Int, height:Int):Void {}
 
-	@:allow(flixel.FlxGame)
-	function tryUpdate(elapsed:Float):Void
+	public function openSubState(_subState:FlxSubState):Void
 	{
-		if (persistentUpdate || subState == null)
-			update(elapsed);
-
-		if (_requestSubStateReset)
-		{
-			_requestSubStateReset = false;
-			resetSubState();
-		}
 		if (subState != null)
-		{
-			subState.tryUpdate(elapsed);
-		}
+			closeSubState();
+
+		if (_subState == null)
+			throw "Cannot open a `null` `FlxSubState`.";
+
+		subState = _subState;
+
+		if (!persistentUpdate)
+			FlxG.inputs.onStateSwitch();
+
+		subState.parentState = this;
+
+		subState.create();
+
+		if (subState.openCallback != null)
+			subState.openCallback();
+
+		if (subStateOpened != null)
+			subStateOpened.dispatch(subState);
+	}
+
+	public function closeSubState():Void
+	{
+		if (subState.closeCallback != null)
+			subState.closeCallback();
+
+		if (subStateClosed != null)
+			subStateClosed.dispatch(subState);
+
+		if (destroySubStates)
+			subState.destroy();
+
+		subState = null;
 	}
 
 	@:noCompletion
@@ -259,23 +199,5 @@ class FlxState extends FlxContainer
 	function set_bgColor(Value:FlxColor):FlxColor
 	{
 		return FlxG.cameras.bgColor = Value;
-	}
-    
-	@:noCompletion
-	function get_subStateOpened():FlxTypedSignal<FlxSubState->Void>
-	{
-		if (_subStateOpened == null)
-			_subStateOpened = new FlxTypedSignal<FlxSubState->Void>();
-
-		return _subStateOpened;
-	}
-
-	@:noCompletion
-	function get_subStateClosed():FlxTypedSignal<FlxSubState->Void>
-	{
-		if (_subStateClosed == null)
-			_subStateClosed = new FlxTypedSignal<FlxSubState->Void>();
-
-		return _subStateClosed;
 	}
 }

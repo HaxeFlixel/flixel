@@ -747,7 +747,7 @@ class FlxGame extends Sprite
 		#end
 		FlxG.plugins.update(FlxG.elapsed);
 
-		_state.tryUpdate(FlxG.elapsed);
+		updateState(FlxG.elapsed);
 
 		FlxG.cameras.update(FlxG.elapsed);
 		FlxG.signals.postUpdate.dispatch();
@@ -872,13 +872,15 @@ class FlxGame extends Sprite
 
 		if (FlxG.plugins.drawOnTop)
 		{
-			_state.draw();
+			drawState();
+
 			FlxG.plugins.draw();
 		}
 		else
 		{
 			FlxG.plugins.draw();
-			_state.draw();
+			
+			drawState();
 		}
 
 		if (FlxG.renderTile)
@@ -897,6 +899,44 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.stats.flixelDraw(getTicks() - ticks);
 		#end
+	}
+
+	function updateState(elapsed:Float):Void
+	{
+		if (_state.persistentUpdate || _state.subState == null)
+			_state.update(FlxG.elapsed);
+
+		if (_state.subState != null)
+		{
+			var _subState:FlxSubState = _state.subState;
+
+			while (_subState != null)
+			{
+				if (_subState.persistentUpdate || _subState.subState == null)
+					_subState.update(elapsed);
+
+				_subState = _subState.subState;
+			}
+		}
+	}
+
+	function drawState():Void
+	{
+		if (_state.persistentDraw || _state.subState == null)
+			_state.draw();
+
+		if (_state.subState != null)
+		{
+			var _subState:FlxSubState = _state.subState;
+
+			while (_subState != null)
+			{
+				if (_subState.persistentDraw || _subState.subState == null)
+					_subState.draw();
+
+				_subState = _subState.subState;
+			}
+		}
 	}
 
 	inline function getTicks()

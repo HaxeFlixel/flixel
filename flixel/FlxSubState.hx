@@ -31,18 +31,14 @@ class FlxSubState extends FlxState
 	@:noCompletion
 	var _bgSprite:FlxBGSprite;
 
-	/**
-	 * Helper var for `close()` so `closeSubState()` can be called on the parent.
-	 */
-	@:allow(flixel.FlxState.resetSubState)
-	var _parentState:FlxState;
-
 	@:noCompletion
 	var _bgColor:FlxColor;
 
-	@:noCompletion
-	@:allow(flixel.FlxState.resetSubState)
-	var _created:Bool = false;
+	/**
+	 * Stores a reference to the origin of `this` `FlxSubState`.
+	 */
+	@:allow(flixel.FlxState.openSubState)
+	public var parentState(default, null):FlxState;
 
 	/**
 	 * @param   BGColor   background color for this substate
@@ -55,6 +51,7 @@ class FlxSubState extends FlxState
 
 		if (FlxG.renderTile)
 			_bgSprite = new FlxBGSprite();
+
 		bgColor = BGColor;
 	}
 
@@ -80,19 +77,22 @@ class FlxSubState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
+
 		closeCallback = null;
 		openCallback = null;
-		_parentState = null;
+
+		parentState = null;
+
 		_bgSprite = FlxDestroyUtil.destroy(_bgSprite);
 	}
 
 	/**
-	 * Closes this substate.
+	 * Closes `this` `FlxSubState`.
 	 */
 	public function close():Void
 	{
-		if (_parentState != null && _parentState.subState == this)
-			_parentState.closeSubState();
+		if (parentState != null && parentState.subState == this)
+			parentState.closeSubState();
 	}
 
 	@:noCompletion

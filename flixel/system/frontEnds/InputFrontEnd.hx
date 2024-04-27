@@ -133,7 +133,7 @@ class InputFrontEnd
 	}
 
 	@:allow(flixel.FlxGame)
-	@:allow(flixel.FlxState.resetSubState)
+	@:allow(flixel.FlxState.openSubState)
 	function onStateSwitch():Void
 	{
 		if (resetOnStateSwitch)
