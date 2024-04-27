@@ -40,6 +40,9 @@ class FlxSubState extends FlxState
 	@:allow(flixel.FlxState.openSubState)
 	public var parentState(default, null):FlxState;
 
+	@:deprecated("`FlxSubState._parentState` is deprecated, use `FlxSubState.parentState instead.")
+	var _parentState(get, never):FlxState;
+
 	/**
 	 * @param   BGColor   background color for this substate
 	 */
@@ -108,5 +111,11 @@ class FlxSubState extends FlxState
 			_bgSprite.pixels.setPixel32(0, 0, Value);
 
 		return _bgColor = Value;
+	}
+	
+	@:noCompletion
+	function get__parentState():FlxState
+	{
+		return parentState;
 	}
 }
