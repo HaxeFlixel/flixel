@@ -908,14 +908,14 @@ class FlxGame extends Sprite
 
 		if (_state.subState != null)
 		{
-			var _subState:FlxSubState = _state.subState;
+			var subState:FlxSubState = _state.subState;
 
-			while (_subState != null)
+			while (subState != null)
 			{
-				if (_subState.persistentUpdate || _subState.subState == null)
-					_subState.update(elapsed);
+				if (subState.persistentUpdate || subState.subState == null)
+					subState.update(elapsed);
 
-				_subState = _subState.subState;
+				subState = subState.subState;
 			}
 		}
 	}
@@ -927,14 +927,14 @@ class FlxGame extends Sprite
 
 		if (_state.subState != null)
 		{
-			var _subState:FlxSubState = _state.subState;
+			var subState:FlxSubState = _state.subState;
 
-			while (_subState != null)
+			while (subState != null)
 			{
-				if (_subState.persistentDraw || _subState.subState == null)
-					_subState.draw();
+				if (subState.persistentDraw || subState.subState == null)
+					subState.draw();
 
-				_subState = _subState.subState;
+				subState = subState.subState;
 			}
 		}
 	}
