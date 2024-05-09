@@ -608,6 +608,10 @@ class FlxCamera extends FlxBasic
 		{
 			itemToReturn = new FlxDrawItem();
 		}
+		
+		// TODO: catch this error when the dev actually messes up, not in the draw phase
+		if (graphic.isDestroyed)
+			throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
 
 		if (graphic.isDestroyed) throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
 
@@ -1255,15 +1259,15 @@ class FlxCamera extends FlxBasic
 	
 	function updateLerp(elapsed:Float)
 	{
-		final boundLerp = FlxMath.bound(followLerp, 0, 1);
-		// Adjust lerp based on the current frame rate so lerp is less framerate dependant
-		final adjustedLerp = 1.0 - Math.pow(1.0 - boundLerp, elapsed * 60);
-		if (adjustedLerp >= 1)
+		if (followLerp >= 1.0)
 		{
 			scroll.copyFrom(_scrollTarget); // no easing
 		}
-		else
+		else if (followLerp > 0.0)
 		{
+			// Adjust lerp based on the current frame rate so lerp is less framerate dependant
+			final adjustedLerp = 1.0 - Math.pow(1.0 - followLerp, elapsed * 60);
+			
 			scroll.x += (_scrollTarget.x - scroll.x) * adjustedLerp;
 			scroll.y += (_scrollTarget.y - scroll.y) * adjustedLerp;
 		}
@@ -1453,14 +1457,14 @@ class FlxCamera extends FlxBasic
 		this.style = style;
 		this.target = target;
 		followLerp = lerp;
-		var helper:Float;
-		var w:Float = 0;
-		var h:Float = 0;
-		_lastTargetPosition = null;
+		_lastTargetPosition = FlxDestroyUtil.put(_lastTargetPosition);
+		deadzone = FlxDestroyUtil.put(deadzone);
 
 		switch (style)
 		{
 			case LOCKON:
+				var w:Float = 0;
+				var h:Float = 0;
 				if (target != null)
 				{
 					w = target.width;
@@ -1469,16 +1473,16 @@ class FlxCamera extends FlxBasic
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 
 			case PLATFORMER:
-				var w:Float = (width / 8);
-				var h:Float = (height / 3);
+				final w:Float = (width / 8);
+				final h:Float = (height / 3);
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 
 			case TOPDOWN:
-				helper = Math.max(width, height) / 4;
+				final helper = Math.max(width, height) / 4;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 
 			case TOPDOWN_TIGHT:
-				helper = Math.max(width, height) / 8;
+				final helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 
 			case SCREEN_BY_SCREEN:

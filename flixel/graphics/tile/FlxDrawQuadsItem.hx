@@ -114,11 +114,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		if (rects.length == 0)
 			return;
-
-		var shader = shader != null ? shader : graphics.shader;
-
-		if (shader == null) throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
-
+		
+		// TODO: catch this error when the dev actually messes up, not in the draw phase
+		if (shader == null && graphics.isDestroyed)
+			throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
+		
+		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;

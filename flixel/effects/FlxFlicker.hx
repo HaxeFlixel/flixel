@@ -176,28 +176,21 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Just a helper function for flicker() to update object's visibility.
 	 */
-	function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
-
+		
 		if (progressCallback != null)
-		{
 			progressCallback(this);
-		}
-
-		if (Timer.loops > 0 && Timer.loopsLeft == 0)
+		
+		if (timer.loops > 0 && timer.loopsLeft == 0)
 		{
 			object.visible = endVisibility;
 			if (completionCallback != null)
-			{
 				completionCallback(this);
-			}
-
-			// NOTE: Calling `flicker` in the completion callback will call release() on this object before reinstantiating it.
-			// If that happens, we don't want to call release() again! So we check if the flicker is still done before releasing.
-			if (this.timer == Timer) {
+			
+			if (this.timer == timer)
 				release();
-			}
 		}
 	}
 

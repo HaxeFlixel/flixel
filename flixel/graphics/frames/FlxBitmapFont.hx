@@ -71,6 +71,8 @@ class FlxBitmapFont extends FlxFramesCollection
 	 * Helper map where character's xAdvance are stored by char codes.
 	 */
 	var charAdvance:Map<Int, Int>;
+	
+	var kerning:Map<Int, Map<Int, Int>>;
 
 	/**
 	 * Atlas frame from which this font has been parsed.
@@ -88,6 +90,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		parent.destroyOnNoUse = false;
 		charMap = new Map<Int, FlxFrame>();
 		charAdvance = new Map<Int, Int>();
+		kerning = new Map<Int, Map<Int, Int>>();
 	}
 
 	override public function destroy():Void
@@ -173,50 +176,13 @@ class FlxBitmapFont extends FlxFramesCollection
 			frame = graphic.imageFrame.frame;
 		}
 
-		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
+		final font:FlxBitmapFont = FlxBitmapFont.findFont(frame);
 		if (font != null)
 			return font;
 
-		font = new FlxBitmapFont(frame);
-
+		final font = new FlxBitmapFont(frame);
 		final fontInfo = data.parse();
-
-		// how much to move the cursor when going to the next line.
-		font.lineHeight = fontInfo.common.lineHeight;
-		font.size = fontInfo.info.size;
-		font.fontName = fontInfo.info.face;
-		font.bold = fontInfo.info.bold;
-		font.italic = fontInfo.info.italic;
-		
-		for (char in fontInfo.chars)
-		{
-			final frame = FlxRect.get();
-			frame.x = char.x; // X position within the bitmap image file.
-			frame.y = char.y; // Y position within the bitmap image file.
-			frame.width = char.width; // Width of the character in the image file.
-			frame.height = char.height; // Height of the character in the image file.
-			
-			font.minOffsetX = (font.minOffsetX < -char.xoffset) ? -char.xoffset : font.minOffsetX;
-			
-			if (char.id == -1)
-			{
-				throw 'Invalid font data!';
-			}
-			
-			font.addCharFrame(char.id, frame, FlxPoint.weak(char.xoffset, char.yoffset), char.xadvance);
-			
-			if (char.id == SPACE_CODE)
-			{
-				font.spaceWidth = char.xadvance;
-			}
-			else
-			{
-				font.lineHeight = (font.lineHeight > char.height + char.yoffset) ? font.lineHeight : char.height + char.yoffset;
-			}
-		}
-		
-		font.updateSourceHeight();
-		return font;
+		return fontInfo.initBitmapFont(font);
 	}
 
 	/**
@@ -529,6 +495,22 @@ class FlxBitmapFont extends FlxFramesCollection
 	public inline function getCharAdvance(charCode:Int):Int
 	{
 		return charAdvance.exists(charCode) ? charAdvance.get(charCode) : 0;
+	}
+	
+	public function getKerning(prevCode:Int, nextCode:Int):Int
+	{
+		if (kerning.exists(prevCode) && kerning[prevCode].exists(nextCode))
+			return kerning[prevCode][nextCode];
+		else
+			return 0;
+	}
+	
+	public function addKerningPair(prevCode:Int, nextCode:Int, amount:Int)
+	{
+		if (!kerning.exists(prevCode))
+			kerning.set(prevCode, new Map<Int, Int>());
+		
+		kerning[prevCode][nextCode] = amount;
 	}
 
 	public inline function getCharWidth(charCode:Int):Float
