@@ -36,7 +36,7 @@ class InputFrontEnd
 	@:generic
 	public function addInput<T:IFlxInputManager>(input:T):T
 	{
-		if (list.contains(input))
+		if (!list.contains(input))
 			list.push(input);
 		
 		return input;
