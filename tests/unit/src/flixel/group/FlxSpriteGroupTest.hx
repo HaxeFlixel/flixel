@@ -1,5 +1,6 @@
 package flixel.group;
 
+import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import massive.munit.Assert;
@@ -136,7 +137,33 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.isTrue(member1.revived);
 		Assert.isFalse(member2.killed);
 		Assert.isFalse(member2.revived);
-		return group;
+	}
+	
+	@Test
+	function testMemberCameras()
+	{
+		final subGroup1 = new FlxSpriteGroup();
+		group.add(subGroup1);
+		final subGroup2 = new FlxTypedSpriteGroup<FlxSprite>();
+		subGroup1.add(subGroup2);
+		final member1 = new FlxSprite();
+		final member2 = new FlxSprite();
+		subGroup1.add(member1);
+		subGroup2.add(member2);
+		
+		final cam = new FlxCamera();
+		group.camera = cam;
+		Assert.areEqual(cam, member1.getCameras()[0]);
+		Assert.areEqual(cam, member2.getCameras()[0]);
+		Assert.areEqual(cam, member1.camera);
+		Assert.areEqual(cam, member2.camera);
+		
+		final cams = [new FlxCamera()];
+		group.cameras = cams;
+		Assert.areEqual(cams, member1.getCameras());
+		Assert.areEqual(cams, member2.getCameras());
+		Assert.areEqual(cams, member1.cameras);
+		Assert.areEqual(cams, member2.cameras);
 	}
 	@Test
 	/**
