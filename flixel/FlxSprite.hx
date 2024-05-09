@@ -1206,7 +1206,7 @@ class FlxSprite extends FlxObject
 		dirty = false;
 		return framePixels;
 	}
-
+	
 	/**
 	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
 	 *
@@ -1219,6 +1219,7 @@ class FlxSprite extends FlxObject
 		rect.put();
 		return point;
 	}
+	
 	/**
 	 * Retrieves the world bounds of this sprite's graphic
 	 * **Note:** Ignores `scrollFactor`, to get the screen position of the graphic use
@@ -1246,7 +1247,7 @@ class FlxSprite extends FlxObject
 		
 		return rect;
 	}
-
+	
 	/**
 	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
