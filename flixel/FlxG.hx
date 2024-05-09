@@ -630,23 +630,23 @@ class FlxG
 
 		// Instantiate inputs
 		#if FLX_KEYBOARD
-		keys = inputs.addUniqueType(new FlxKeyboard());
+		keys = inputs.addInput(new FlxKeyboard());
 		#end
 
 		#if FLX_MOUSE
-		mouse = inputs.addUniqueType(new FlxMouse(game._inputContainer));
+		mouse = inputs.addInput(new FlxMouse(game._inputContainer));
 		#end
 
 		#if FLX_TOUCH
-		touches = inputs.addUniqueType(new FlxTouchManager());
+		touches = inputs.addInput(new FlxTouchManager());
 		#end
 
 		#if FLX_GAMEPAD
-		gamepads = inputs.addUniqueType(new FlxGamepadManager());
+		gamepads = inputs.addInput(new FlxGamepadManager());
 		#end
 
 		#if android
-		android = inputs.add(new FlxAndroidKeys());
+		android = inputs.addInput(new FlxAndroidKeys());
 		#end
 
 		#if FLX_ACCELEROMETER
