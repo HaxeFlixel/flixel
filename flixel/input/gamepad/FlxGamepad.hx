@@ -733,20 +733,35 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		if (stick == null)
 			return 0;
-		return if (deadZoneMode == CIRCULAR) getAnalogAxisValueCircular(stick, stick.x); else getAnalogAxisValueIndependent(stick.x);
+		
+		return switch (deadZoneMode) 
+		{
+			case CIRCULAR:
+				getAnalogAxisValueCircular(stick, stick.x);
+			case INDEPENDENT_AXES:
+				getAnalogAxisValueIndependent(stick.x);
+		}
 	}
 	
 	function getAnalogYAxisValue(stick:FlxGamepadAnalogStick):Float
 	{
 		if (stick == null)
 			return 0;
-		return if (deadZoneMode == CIRCULAR) getAnalogAxisValueCircular(stick, stick.y); else getAnalogAxisValueIndependent(stick.y);
+		
+		return switch (deadZoneMode) 
+		{
+			case CIRCULAR:
+				getAnalogAxisValueCircular(stick, stick.y);
+			case INDEPENDENT_AXES:
+				getAnalogAxisValueIndependent(stick.y);
+		}
 	}
 	
 	function getAnalogAxisValueCircular(stick:FlxGamepadAnalogStick, axisID:Int):Float
 	{
 		if (stick == null)
 			return 0;
+		
 		var xAxis = getAxisValue(stick.x);
 		var yAxis = getAxisValue(stick.y);
 		
@@ -758,6 +773,7 @@ class FlxGamepad implements IFlxDestroyable
 		{
 			return getAxisValue(axisID);
 		}
+		
 		return 0;
 	}
 	
