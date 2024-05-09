@@ -249,7 +249,7 @@ class FlxReplay
 	public function getDuration()
 	{
 		if (_frames != null)
-			return _frames[_frames.length - 1].frame;
+			return _frames[_frames.length - 1].frame + 1;
 		
 		return 0;
 	}
