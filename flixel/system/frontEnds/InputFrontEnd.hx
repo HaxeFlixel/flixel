@@ -49,8 +49,13 @@ class InputFrontEnd
 	public function addUniqueType<T:IFlxInputManager>(input:T):T
 	{
 		// Don't add repeat types
-		if (!Lambda.exists(list, FlxStringUtil.sameClassName.bind(_, input)))
-			list.push(input);
+		for (i in list)
+		{
+			if (FlxStringUtil.sameClassName(input, i, false))
+			{
+				return input;
+			}
+		}
 		
 		return input;
 	}
