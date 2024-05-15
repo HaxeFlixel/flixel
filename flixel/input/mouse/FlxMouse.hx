@@ -51,7 +51,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * sits at the right "height". Not used on flash with the native cursor API.
 	 */
 	public var cursorContainer(default, null):Sprite;
-	
+
 	/**
 	 * The current cursor bitmap, if there is one. To set, use the `load` function.
 	 */
@@ -131,7 +131,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * Check to see if the right mouse button has just been pressed.
 	 */
 	public var justPressedRight(get, never):Bool;
-	
+
 	/**
 	 * Check to see if the right mouse button is currently not pressed.
 	 * @since 5.0.0
@@ -198,7 +198,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	#end
 
 	@:deprecated("_cursor is deprecated, use the new, public cursor, instead")
-    var _cursor(get, set):Bitmap;
+	var _cursor(get, set):Bitmap;
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
@@ -259,7 +259,19 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 		if ((Graphic is Class))
 		{
-			cursor = Type.createInstance(Graphic, []);
+			var _cursor = Type.createInstance(Graphic, []);
+			if ((cursor is BitmapData))
+			{
+				cursor = new Bitmap(cast _cursor);
+			}
+			else if ((cursor is Bitmap))
+			{
+				cursor = cast _cursor;
+			}
+			else
+			{
+				cursor = new Bitmap(new GraphicCursor(0, 0));
+			}
 		}
 		else if ((Graphic is BitmapData))
 		{
@@ -761,12 +773,12 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 
 	inline function get__cursor()
 	{
-	    return cursor;
+		return cursor;
 	}
-	
+
 	inline function set__cursor(value:Bitmap)
 	{
-	    return cursor = value;
+		return cursor = value;
 	}
 }
 #end
