@@ -57,6 +57,7 @@ class InputFrontEnd
 			}
 		}
 		
+		list.push(input);
 		return input;
 	}
 
