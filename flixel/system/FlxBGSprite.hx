@@ -20,6 +20,9 @@ class FlxBGSprite extends FlxSprite
 	@:access(flixel.FlxCamera)
 	override public function draw():Void
 	{
+		if (alpha == 0.0)
+			return;
+
 		for (camera in getCamerasLegacy())
 		{
 			if (!camera.visible || !camera.exists)
@@ -29,6 +32,7 @@ class FlxBGSprite extends FlxSprite
 
 			_matrix.identity();
 			_matrix.scale(camera.viewWidth, camera.viewHeight);
+			_matrix.translate(camera.viewMarginLeft, camera.viewMarginTop);
 			camera.drawPixels(frame, _matrix, colorTransform);
 
 			#if FLX_DEBUG
