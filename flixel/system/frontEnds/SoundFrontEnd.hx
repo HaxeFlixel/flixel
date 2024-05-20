@@ -1,6 +1,5 @@
 package flixel.system.frontEnds;
 
-import flixel.util.FlxSignal.FlxTypedSignal;
 #if FLX_SOUND_SYSTEM
 import flixel.FlxG;
 import flixel.group.FlxGroup;
@@ -10,6 +9,7 @@ import flixel.system.FlxAssets;
 import flixel.sound.FlxSound;
 import flixel.sound.FlxSoundGroup;
 import flixel.system.ui.FlxSoundTray;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import openfl.Assets;
 import openfl.media.Sound;
 #if (openfl >= "8.0.0")
