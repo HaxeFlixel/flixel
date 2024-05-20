@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+import flixel.util.FlxSignal.FlxTypedSignal;
 #if FLX_SOUND_SYSTEM
 import flixel.FlxG;
 import flixel.group.FlxGroup;
@@ -36,6 +37,11 @@ class SoundFrontEnd
 	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
 	public var volumeHandler:Float->Void;
+
+	/**
+	 * A signal that gets dispatched whenever the volume changes.
+	 */
+	public var onVolumeChange(default, null):FlxTypedSignal<Float->Void> = new FlxTypedSignal<Float->Void>();
 
 	#if FLX_KEYBOARD
 	/**
@@ -337,6 +343,8 @@ class SoundFrontEnd
 			volumeHandler(muted ? 0 : volume);
 		}
 
+		onVolumeChange.dispatch(muted ? 0 : volume);
+
 		showSoundTray(true);
 	}
 
@@ -454,9 +462,11 @@ class SoundFrontEnd
 
 		if (volumeHandler != null)
 		{
-			var param:Float = muted ? 0 : Volume;
-			volumeHandler(param);
+			volumeHandler(muted ? 0 : Volume);
 		}
+
+		onVolumeChange.dispatch(muted ? 0 : Volume);
+
 		return volume = Volume;
 	}
 }
