@@ -335,6 +335,7 @@ class SoundFrontEnd
 	/**
 	 * Toggles muted, also activating the sound tray.
 	 */
+	@:haxe.warning("-WDeprecated")
 	public function toggleMuted():Void
 	{
 		muted = !muted;
@@ -457,6 +458,7 @@ class SoundFrontEnd
 	}
 	#end
 
+	@:haxe.warning("-WDeprecated")
 	function set_volume(Volume:Float):Float
 	{
 		Volume = FlxMath.bound(Volume, 0, 1);
