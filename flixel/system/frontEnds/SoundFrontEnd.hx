@@ -36,7 +36,7 @@ class SoundFrontEnd
 	 * Set this hook to get a callback whenever the volume changes.
 	 * Function should take the form myVolumeHandler(volume:Float).
 	 */
-	@;deprecated("volumeHandler is deprecated, use onVolumeChange, instead")
+	@:deprecated("volumeHandler is deprecated, use onVolumeChange, instead")
 	public var volumeHandler:Float->Void;
 
 	/**
