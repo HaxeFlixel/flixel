@@ -10,25 +10,25 @@ import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.util.FlxStringUtil;
 #end
 
-@:bitmap("assets/images/debugger/buttons/open.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/open.png") #end
 private class GraphicOpen extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/pause.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/pause.png") #end
 private class GraphicPause extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/record_off.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/record_off.png") #end
 private class GraphicRecordOff extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/record_on.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/record_on.png") #end
 private class GraphicRecordOn extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/restart.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/restart.png") #end
 private class GraphicRestart extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/step.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/step.png") #end
 private class GraphicStep extends BitmapData {}
 
-@:bitmap("assets/images/debugger/buttons/stop.png")
+#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/stop.png") #end
 private class GraphicStop extends BitmapData {}
 
 /**

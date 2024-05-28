@@ -1,6 +1,5 @@
 package flixel.path;
 
-import openfl.display.Graphics;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
@@ -8,6 +7,35 @@ import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import openfl.display.Graphics;
+
+/**
+ * CenterMode defines how an object should be placed when following the path.
+ */
+enum CenterMode
+{
+	
+	/**
+	 * Align the x,y position of the object on the path.
+	 */
+	TOP_LEFT;
+	
+	/**
+	 * Align the midpoint of the object on the path.
+	 */
+	CENTER;
+	
+	/**
+	 * If the object is a FlxSprite, align its origin point on the path.
+	 * If it is not a sprite it will use the position.
+	 */
+	ORIGIN;
+	
+	/**
+	 * Uses the specified offset from the position.
+	 */
+	CUSTOM(offset:FlxPoint);
+}
 
 /**
  * This is a simple path data container. Basically a list of points that
@@ -47,41 +75,6 @@ import flixel.util.FlxSpriteUtil;
 class FlxPath implements IFlxDestroyable
 {
 	/**
-	 * Move from the start of the path to the end then stop.
-	 */
-	@:deprecated("Use FORWARD or FlxPathType.FORWARD instead")
-	@:noCompletion
-	public static inline var FORWARD = FlxPathType.FORWARD;
-
-	/**
-	 * Move from the end of the path to the start then stop.
-	 */
-	@:deprecated("Use BACKWARD or FlxPathType.BACKWARD instead")
-	@:noCompletion
-	public static inline var BACKWARD = FlxPathType.BACKWARD;
-
-	/**
-	 * Move from the start of the path to the end then directly back to the start, and start over.
-	 */
-	@:deprecated("Use LOOP_FORWARD or FlxPathType.LOOP_FORWARD instead")
-	@:noCompletion
-	public static inline var LOOP_FORWARD = FlxPathType.LOOP_FORWARD;
-
-	/**
-	 * Move from the end of the path to the start then directly back to the end, and start over.
-	 */
-	@:deprecated("Use LOOP_BACKWARD or FlxPathType.LOOP_BACKWARD instead")
-	@:noCompletion
-	public static inline var LOOP_BACKWARD = FlxPathType.LOOP_BACKWARD;
-
-	/**
-	 * Move from the start of the path to the end then turn around and go back to the start, over and over.
-	 */
-	@:deprecated("Use YOYO or FlxPathType.YOYO instead")
-	@:noCompletion
-	public static inline var YOYO = FlxPathType.YOYO;
-
-	/**
 	 * Path behavior controls: move from the start of the path to the end then stop.
 	 */
 	static var _point:FlxPoint = FlxPoint.get();
@@ -116,9 +109,15 @@ class FlxPath implements IFlxDestroyable
 	public var angle(default, null):Float = 0;
 
 	/**
-	 * Whether the object should auto-center the path or at its origin.
+	 * Legacy method of alignment for the object following the path. If true, align the midpoint of the object on the path, else use the x, y position.
 	 */
-	public var autoCenter:Bool = true;
+	@:deprecated("path.autoCenter is deprecated, use centerMode") // 5.7.0
+	public var autoCenter(get, set):Bool;
+
+	/**
+	 * How to center the object on the path.
+	 */
+	public var centerMode:CenterMode = CENTER;
 
 	/**
 	 * Whether the object's angle should be adjusted to the path angle during path follow behavior.
@@ -196,7 +195,7 @@ class FlxPath implements IFlxDestroyable
 
 	/**
 	 * Just resets some debugging related variables (for debugger renderer).
-	 * Also resets `autoCenter` to `true`.
+	 * Also resets `centerMode` to `CENTER`.
 	 * @return This path object.
 	 */
 	public function reset():FlxPath
@@ -205,7 +204,7 @@ class FlxPath implements IFlxDestroyable
 		debugDrawData = {};
 		ignoreDrawDebug = false;
 		#end
-		autoCenter = true;
+		centerMode = CENTER;
 		return this;
 	}
 
@@ -308,6 +307,30 @@ class FlxPath implements IFlxDestroyable
 		return this;
 	}
 
+	function computeCenter(point:FlxPoint):FlxPoint
+	{
+		point.x = object.x;
+		point.y = object.y;
+		return switch (centerMode)
+		{
+			case ORIGIN:
+				if (object is FlxSprite)
+				{
+					point.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
+				}
+				else
+				{
+					point;
+				}
+			case CENTER:
+				point.add(object.width * 0.5, object.height * 0.5);
+			case TOP_LEFT:
+				point;
+			case CUSTOM(offset):
+				point.addPoint(offset);
+		}
+	}
+	
 	/**
 	 * Internal function for moving the object along the path.
 	 * The first half of the function decides if the object can advance to the next node in the path,
@@ -329,12 +352,8 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		// first check if we need to be pointing at the next node yet
-		_point.x = object.x;
-		_point.y = object.y;
-		if (autoCenter)
-		{
-			_point.add(object.width * 0.5, object.height * 0.5);
-		}
+		_point = computeCenter(_point);
+
 		var node:FlxPoint = _nodes[nodeIndex];
 		var deltaX:Float = node.x - _point.x;
 		var deltaY:Float = node.y - _point.y;
@@ -368,13 +387,7 @@ class FlxPath implements IFlxDestroyable
 		if (object != null && speed != 0)
 		{
 			// set velocity based on path mode
-			_point.x = object.x;
-			_point.y = object.y;
-
-			if (autoCenter)
-			{
-				_point.add(object.width * 0.5, object.height * 0.5);
-			}
+			_point = computeCenter(_point);
 
 			if (!_point.equals(node))
 			{
@@ -445,14 +458,32 @@ class FlxPath implements IFlxDestroyable
 				if (axes.x)
 				{
 					object.x = oldNode.x;
-					if (autoCenter)
-						object.x -= object.width * 0.5;
+					switch (centerMode)
+					{
+						case ORIGIN:
+							if (object is FlxSprite)
+								object.x -= (cast object:FlxSprite).origin.x;
+						case CUSTOM(offset):
+							object.x -= offset.x;
+						case CENTER:
+							object.x -= object.width * 0.5;
+						case TOP_LEFT:
+					}
 				}
 				if (axes.y)
 				{
 					object.y = oldNode.y;
-					if (autoCenter)
-						object.y -= object.height * 0.5;
+					switch (centerMode)
+					{
+						case ORIGIN:
+							if (object is FlxSprite)
+								object.y -= (cast object:FlxSprite).origin.y;
+						case CUSTOM(offset):
+							object.y -= offset.y;
+						case CENTER:
+							object.y -= object.height * 0.5;
+						case TOP_LEFT:
+					}
 				}
 			}
 		}
@@ -739,7 +770,7 @@ class FlxPath implements IFlxDestroyable
 
 		if (camera == null)
 		{
-			camera = FlxG.camera;
+			camera = object != null ? object.getDefaultCamera() : FlxG.camera;
 		}
 
 		var gfx:Graphics = null;
@@ -855,6 +886,21 @@ class FlxPath implements IFlxDestroyable
 		}
 
 		return this.immovable = value;
+	}
+	
+	// deprecated 5.7.0
+	@:noCompletion
+	function set_autoCenter(value:Bool):Bool
+	{
+		centerMode = value ? CENTER : TOP_LEFT;
+		return value;
+	}
+	
+	// deprecated 5.7.0
+	@:noCompletion
+	function get_autoCenter():Bool
+	{
+		return centerMode.match(CENTER);
 	}
 }
 
