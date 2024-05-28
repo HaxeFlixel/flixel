@@ -22,7 +22,7 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 	public var length(get, never):Int;
 	public var finished(get, never):Bool;
 	
-	public final onComplete = new FlxTypedSignal<(FlxBasePath<TTarget>)->Void>();
+	public var onComplete(default, null) = new FlxTypedSignal<(FlxBasePath<TTarget>)->Void>();
 	
 	/**
 	 * Tracks which node of the path this object is currently moving toward.
