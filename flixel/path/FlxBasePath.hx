@@ -11,26 +11,71 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.Graphics;
 
+/**
+ * A simple ordered list of nodes that iterates based on conditions. For this class,
+ * that condition is not defined, and must be implemented in your extending class.
+ * 
+ * ## Example
+ * The following is an example of a class that moves the target to the next node and
+ * and advances the iterator when it is near.
+```haxe
+class FlxSimplePath extends flixel.path.FlxBasePath
+{
+	public var speed:Float;
+	
+	public function new (?nodes, ?target, speed = 100.0)
+	{
+		this.speed = speed;
+		super(nodes, target);
+	}
+	
+	override function isTargetAtNext(elapsed:Float):Bool
+	{
+		final frameSpeed = elapsed * speed;
+		final deltaX = next.x - target.x;
+		final deltaY = next.y - target.y;
+		// whether we will reach the next node this frame
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= frameSpeed;
+	}
+	
+	override function updateTarget(elapsed:Float)
+	{
+		// Aim velocity towards the next node then set magnitude to the desired speed
+		target.velocity.set(next.x - target.x, next.y - target.y);
+		target.velocity.length = speed;
+	}
+}
+```
+ * 
+ * @since 5.9.0
+ */
 typedef FlxBasePath = FlxTypedBasePath<FlxObject>;
+
+/**
+ * Typed version of `FlxBasePath` for flexibility in derived classes
+ * 
+ * @see flixel.path.FlxBasePath
+ * @since 5.9.0
+ */
 class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 {
-	/**
-	 * The list of FlxPoints that make up the path data.
-	 */
+	/** The list of points that make up the path data */
 	public var nodes:Array<FlxPoint>;
 	
+	/** The target traversing our path */
 	public var target:TTarget;
 	
-	public var length(get, never):Int;
+	/** The length of the `nodes` array */
+	public var totalNodes(get, never):Int;
 	public var finished(get, never):Bool;
 	
-	/** Called whenenever the end is reached, for YOYO this means both ends */
+	/** Called whenenever the end is reached, for `YOYO` this means both ends */
 	public var onEndReached(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
 	/** Called whenenever any node reached */
 	public var onNodeReached(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
-	/** Called when the end is reached and loopType is ONCE */
+	/** Called when the end is reached and `loopType1 is `ONCE` */
 	public var onFinish(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
 	/** The index of the last node the target has reached */
@@ -50,10 +95,10 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	public var direction(default, null) = FlxPathDirection.FORWARD;
 	
 	/**
-	 * Creates a new path
+	 * Creates a new path. If valid nodes and a target are given it will start immediately.
 	 * 
-	 * @param   nodes   An Optional array of nodes
-	 * @param   target  
+	 * @param   nodes   An Optional array of nodes. Unlike `FlxPath`, no copy is made
+	 * @param   target  The target traversing our path
 	 */
 	public function new (?nodes:Array<FlxPoint>, ?target:TTarget)
 	{
@@ -61,7 +106,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		this.target = target;
 		super();
 		
-		if (nodes != null && nodes.length > 0)
+		if (nodes != null && nodes.length > 0 && target != null)
 			restartPath();
 	}
 	
@@ -72,6 +117,11 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		onEndReached.removeAll();
 	}
 	
+	/**
+	 * Sets the current node to the desired end node
+	 * 
+	 * @param   direction  If `FORWARD`, it starts at the beginning
+	 */
 	public function restartPath(direction = FlxPathDirection.FORWARD):FlxTypedBasePath<TTarget>
 	{
 		this.direction = direction;
@@ -81,7 +131,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return this;
 	}
 	
-	public function getStartingNode()
+	function getStartingNode()
 	{
 		return direction == BACKWARD ? nodes.length - 1 : 0;
 	}
@@ -98,7 +148,8 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		}
 	}
 	
-	public function advance()
+	/** Iterates to the next node according to the desired `direction` */
+	function advance()
 	{
 		if (finished)
 		{
@@ -186,15 +237,15 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	}
 	
 	/** Override this with your logic that whether the target has reached the next node */
-	function isTargetAtNext(elapsed:Float)
+	function isTargetAtNext(elapsed:Float):Bool
 	{
-		return false;
+		throw 'isTargetAtNext is not implemented';
 	}
 	
 	/** Override this with your logic that brings the target towards the next node */
 	function updateTarget(elapsed:Float) {}
 	
-	inline function get_length()
+	inline function get_totalNodes()
 	{
 		return nodes != null ? nodes.length : 0;
 	}
@@ -214,6 +265,13 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return nodes != null ? nodes[nextIndex] : null;
 	}
 	
+	/**
+	 * Determines to which camera this will draw (or debug draw). The priority is from high to low:
+	 * - Whatever value you've manually given the `cameras` or `camera` field
+	 * - Any cameras drawing path's `container`, if one exists
+	 * - Any cameras drawing path's `target`, if one exists
+	 * - The default cameras
+	 */
 	override function getCameras():Array<FlxCamera>
 	{
 		return if (_cameras != null)
@@ -363,9 +421,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	#end
 }
 
-/**
- * Path behavior controls
- */
+/** Path behavior for when an end is reached */
 enum abstract FlxPathLoopType(Int) from Int to Int
 {
 	/** Stops when reaching the end */
@@ -378,9 +434,13 @@ enum abstract FlxPathLoopType(Int) from Int to Int
 	var YOYO = 0x001000;
 }
 
+/** The direction to traverse the nodes */
 enum abstract FlxPathDirection(Bool)
 {
+	/** Head towards the last node in the array */
 	var FORWARD = true;
+	
+	/** Head towards the first node in the array */
 	var BACKWARD = false;
 	
 	public inline function toInt()
@@ -389,6 +449,7 @@ enum abstract FlxPathDirection(Bool)
 	}
 }
 
+/** The drawing scheme of a path's debug draw */
 @:structInit
 class FlxPathDrawData
 {
