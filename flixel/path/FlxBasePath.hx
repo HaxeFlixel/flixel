@@ -206,11 +206,8 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 * @param  direction  Whether to head towards the head or the tail, if `null` the previous
 	 *                    value is maintained
 	 */
-	public function startAt(index:Int, ?direction:FlxPathDirection):FlxTypedBasePath<TTarget>
+	public function startAt(index:Int):FlxTypedBasePath<TTarget>
 	{
-		if (direction != null)
-			this.direction = direction;
-		
 		currentIndex = index;
 		setNextIndex();
 		
