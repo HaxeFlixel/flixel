@@ -65,6 +65,12 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	/** The target traversing our path */
 	public var target:TTarget;
 	
+	/** Behavior when the end(s) are reached */
+	public var loopType:FlxPathLoopType = LOOP;
+	
+	/** The direction the list of nodes is being traversed. `FORWARD` leads to the last node */
+	public var direction(default, null) = FlxPathDirection.FORWARD;
+	
 	/** The length of the `nodes` array */
 	public var totalNodes(get, never):Int;
 	
@@ -89,12 +95,6 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	public var current(get, never):Null<FlxPoint>;
 	/** The node the target is currently moving toward */
 	public var next(get, never):Null<FlxPoint>;
-	
-	/** Behavior when the end(s) are reached */
-	public var loopType:FlxPathLoopType = LOOP;
-	
-	/** The direction the list of nodes is being traversed. `FORWARD` leads to the last node */
-	public var direction(default, null) = FlxPathDirection.FORWARD;
 	
 	/**
 	 * Creates a new path. If valid nodes and a target are given it will start immediately.
