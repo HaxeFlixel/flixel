@@ -80,10 +80,10 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	/** Called when the end is reached and `loopType1 is `ONCE` */
 	public var onFinish(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
-	/** The index of the last node the target has reached */
-	public var currentIndex(default, null):Int = 0;
-	/** The index of the node the target is currently moving toward */
-	public var nextIndex(default, null):Null<Int> = null;
+	/** The index of the last node the target has reached, `-1` means "no current node" */
+	public var currentIndex(default, null):Int = -1;
+	/** The index of the node the target is currently moving toward, `-1` means the path is finished */
+	public var nextIndex(default, null):Int = -1;
 	
 	/** The last node the target has reached */
 	public var current(get, never):Null<FlxPoint>;
@@ -174,7 +174,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		{
 			nextIndex = switch (loopType)
 			{
-				case ONCE: null;
+				case ONCE: -1;
 				case LOOP: 0;
 				case YOYO:
 					direction = BACKWARD;
@@ -189,7 +189,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		{
 			nextIndex = switch (loopType)
 			{
-				case ONCE: null;
+				case ONCE: -1;
 				case LOOP: nodes.length - 1;
 				case YOYO:
 					direction = FORWARD;
@@ -206,7 +206,8 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 * Change the path node this object is currently at.
 	 *
 	 * @param  index      The index of the new node out of path.nodes.
-	 * @param  direction  Whether to head towards the head or the tail
+	 * @param  direction  Whether to head towards the head or the tail, if `null` the previous
+	 *                    value is maintained
 	 */
 	public function startAt(index:Int, ?direction:FlxPathDirection):FlxTypedBasePath<TTarget>
 	{
@@ -254,17 +255,17 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	
 	inline function get_finished()
 	{
-		return nextIndex == null;
+		return nextIndex < 0;
 	}
 	
 	inline function get_current()
 	{
-		return nodes != null ? nodes[currentIndex] : null;
+		return nodes != null && currentIndex >= 0 ? nodes[currentIndex] : null;
 	}
 	
 	inline function get_next()
 	{
-		return nodes != null ? nodes[nextIndex] : null;
+		return nodes != null && nextIndex >= 0? nodes[nextIndex] : null;
 	}
 	
 	/**
