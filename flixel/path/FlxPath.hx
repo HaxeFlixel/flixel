@@ -197,7 +197,7 @@ class FlxPath extends FlxBasePath
 		super(nodes != null ? nodes.copy() : []);
 		
 		active = false;
-		onPathComplete.add(function (_)
+		onEndReached.add(function (_)
 		{
 			if (onComplete != null)
 				onComplete(this);
@@ -464,6 +464,29 @@ class FlxPath extends FlxBasePath
 		
 		super.advance();
 	}
+	
+	#if FLX_DEBUG
+	
+	/**
+	 * While this doesn't override `FlxBasic.drawDebug()`, the behavior is very similar.
+	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
+	 * if the `drawDebug` mode was toggled in the debugger overlay.
+	 * You can use `debugColor` to control the path's appearance.
+	 *
+	 * @param camera   The camera object the path will draw to.
+	 */
+	@:deprecated("FlxPath.debugDraw() is deprecated, use draw() OR drawDebugOnCamera(camera), instead")
+	public function drawDebug(?camera:FlxCamera):Void
+	{
+		if (nodes == null || nodes.length <= 0 || ignoreDrawDebug)
+			return;
+		
+		if (camera == null)
+			camera = FlxG.camera;
+		
+		drawDebugOnCamera(camera);
+	}
+	#end
 
 	/**
 	 * Stops the path's movement.

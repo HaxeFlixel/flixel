@@ -1,5 +1,6 @@
 package flixel.path;
 
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
@@ -24,7 +25,13 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	public var finished(get, never):Bool;
 	
 	/** Called whenenever the end is reached, for YOYO this means both ends */
-	public var onPathComplete(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
+	public var onEndReached(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
+	
+	/** Called whenenever any node reached */
+	public var onNodeReached(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
+	
+	/** Called when the end is reached and loop is ONCE */
+	public var onFinish(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
 	/** The index of the last node the target has reached */
 	public var currentIndex(default, null):Int = 0;
@@ -62,7 +69,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	{
 		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
-		onPathComplete.removeAll();
+		onEndReached.removeAll();
 	}
 	
 	public function restartPath(direction = FlxPathDirection.FORWARD):FlxTypedBasePath<TTarget>
@@ -79,6 +86,18 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return direction == BACKWARD ? nodes.length - 1 : 0;
 	}
 	
+	function nodeReached()
+	{
+		advance();
+		
+		onNodeReached.dispatch(this);
+		
+		if (finished)
+		{
+			onFinish.dispatch(this);
+		}
+	}
+	
 	public function advance()
 	{
 		if (finished)
@@ -93,7 +112,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	
 	/**
 	 * Determines the next index based on the current index and direction.
-	 * Fires onPathComplete if the end is reached
+	 * Fires onEndReached if the end is reached
 	 */
 	function setNextIndex()
 	{
@@ -108,7 +127,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 					direction = BACKWARD;
 					currentIndex - 1;
 			}
-			onPathComplete.dispatch(this);
+			onEndReached.dispatch(this);
 			return;
 		}
 		
@@ -123,7 +142,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 					direction = FORWARD;
 					currentIndex + 1;
 			}
-			onPathComplete.dispatch(this);
+			onEndReached.dispatch(this);
 			return;
 		}
 		
@@ -158,7 +177,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		
 		if (isTargetAtNext(elapsed))
 		{
-			advance();
+			nodeReached();
 			if (finished)
 				return;
 		}
@@ -195,6 +214,18 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return nodes != null ? nodes[nextIndex] : null;
 	}
 	
+	override function getCameras():Array<FlxCamera>
+	{
+		return if (_cameras != null)
+				_cameras;
+			else if (container != null)
+				container.getCameras();
+			else if (target != null)
+				target.getCameras();
+			else
+				@:privateAccess FlxCamera._defaultCameras;
+	}
+	
 	#if FLX_DEBUG
 	/**
 	 * Specify a debug display color for the path. Default is WHITE.
@@ -207,30 +238,32 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 */
 	public var ignoreDrawDebug:Bool = false;
 	
+	override function draw()
+	{
+		// super.draw();
+		
+		if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
+		{
+			FlxBasic.visibleCount++;
+			
+			for (camera in getCameras())
+			{
+				drawDebugOnCamera(camera);
+			}
+		}
+	}
+	
 	/**
-	 * While this doesn't override `FlxBasic.drawDebug()`, the behavior is very similar.
 	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
 	 * if the `drawDebug` mode was toggled in the debugger overlay.
 	 * You can use `debugColor` to control the path's appearance.
 	 *
 	 * @param camera   The camera object the path will draw to.
 	 */
-	@:access(flixel.FlxCamera)
-	public function drawDebug(?camera:FlxCamera):Void
+	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		if (nodes == null || nodes.length <= 0)
-		{
-			return;
-		}
-
-		if (camera == null)
-		{
-			camera = FlxG.camera;
-		}
-
-		var gfx:Graphics = null;
-
 		// Set up our global flash graphics object to draw out the path
+		var gfx:Graphics = null;
 		if (FlxG.renderBlit)
 		{
 			gfx = FlxSpriteUtil.flashGfx;
@@ -241,20 +274,12 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			gfx = camera.debugLayer.graphics;
 		}
 		
-		final _point = FlxPoint.get();
-
+		final length = nodes.length;
 		// Then fill up the object with node and path graphics
-		var length = nodes.length;
-		for (i in 0...length)
+		for (i=>node in nodes)
 		{
-			// get a reference to the current node
-			var node = nodes[i];
-
 			// find the screen position of the node on this camera
-			_point.x = node.x;// - (camera.scroll.x * target.scrollFactor.x); // copied from getScreenPosition()
-			_point.y = node.y;// - (camera.scroll.y * target.scrollFactor.y);
-
-			camera.transformPoint(_point);
+			final prevNodeScreen = copyWorldToScreenPos(node, camera);
 
 			// decide what color this node should be
 			var nodeSize:Int = debugDrawData.nodeSize;
@@ -272,45 +297,68 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 					nodeSize = debugDrawData.endSize;
 				}
 			}
-
+			
 			// draw a box for the node
-			gfx.beginFill(nodeColor.rgb, nodeColor.alphaFloat);
-			gfx.lineStyle();
-			var nodeOffset = Math.floor(nodeSize * 0.5);
-			gfx.drawRect(_point.x - nodeOffset, _point.y - nodeOffset, nodeSize, nodeSize);
-			gfx.endFill();
-
-			// then find the next node in the path
-			var nextNode:FlxPoint;
-			if (i < length - 1)
+			drawNode(gfx, prevNodeScreen, nodeSize, nodeColor);
+			
+			if (i + 1 < length || loop == LOOP)
 			{
-				nextNode = nodes[i + 1];
+				// draw a line to the next node, if LOOP, get connect the tail and head
+				final nextNode = nodes[(i + 1) % length];
+				final nextNodeScreen = copyWorldToScreenPos(nextNode, camera);
+				drawLine(gfx, prevNodeScreen, nextNodeScreen);
+				nextNodeScreen.put();
 			}
-			else
-			{
-				nextNode = nodes[i];
-			}
-
-			// then draw a line to the next node
-			var lineOffset = debugDrawData.lineSize / 2;
-			gfx.moveTo(_point.x + lineOffset, _point.y + lineOffset);
-			gfx.lineStyle(debugDrawData.lineSize, debugDrawData.lineColor & 0xFFFFFF, debugDrawData.lineColor.alphaFloat);
-			_point.x = nextNode.x;// - (camera.scroll.x * target.scrollFactor.x); // copied from getScreenPosition()
-			_point.y = nextNode.y;// - (camera.scroll.y * target.scrollFactor.y);
-
-			if (FlxG.renderBlit)
-				_point.subtract(camera.viewMarginX, camera.viewMarginY);
-
-			gfx.lineTo(_point.x + lineOffset, _point.y + lineOffset);
+			prevNodeScreen.put();
 		}
-
+		
 		if (FlxG.renderBlit)
 		{
 			// then stamp the path down onto the game buffer
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
+	}
+	
+	@:access(flixel.FlxCamera)
+	function copyWorldToScreenPos(point:FlxPoint, camera:FlxCamera, ?result:FlxPoint)
+	{
+		result = point.clone(result);
+		if (target is FlxObject)
+		{
+			final object:FlxObject = cast target;
+			result.x -= camera.scroll.x * object.scrollFactor.x;
+			result.y -= camera.scroll.y * object.scrollFactor.y;
+		}
 		
-		_point.put();
+		if (FlxG.renderBlit)
+		{
+			result.x -= camera.viewMarginX;
+			result.y -= camera.viewMarginY;
+		}
+		
+		camera.transformPoint(result);
+		return result;
+	}
+	
+	inline function drawNode(gfx:Graphics, node:FlxPoint, size:Int, color:FlxColor)
+	{
+		gfx.beginFill(color.rgb, color.alphaFloat);
+		gfx.lineStyle();
+		final offset = Math.floor(size * 0.5);
+		gfx.drawRect(node.x - offset, node.y - offset, size, size);
+		gfx.endFill();
+	}
+	
+	function drawLine(gfx:Graphics, node1:FlxPoint, node2:FlxPoint)
+	{
+		// then draw a line to the next node
+		final color = debugDrawData.lineColor;
+		final size = debugDrawData.lineSize;
+		gfx.lineStyle(size, color.rgb, color.alphaFloat);
+		
+		final lineOffset = debugDrawData.lineSize / 2;
+		gfx.moveTo(node1.x + lineOffset, node1.y + lineOffset);
+		gfx.lineTo(node2.x + lineOffset, node2.y + lineOffset);
 	}
 	#end
 }
