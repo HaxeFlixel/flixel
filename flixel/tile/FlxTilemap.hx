@@ -129,28 +129,10 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 	{
 		super();
 	}
-
-	override function initTileObjects():Void
+	
+	override function createTile(index, width, height, visible, allowCollisions):FlxTile
 	{
-		if (frames == null)
-			return;
-
-		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
-		// Create some tile objects that we'll use for overlap checks (one for each tile)
-		_tileObjects = new Array<FlxTile>();
-
-		var length:Int = frames.numFrames;
-		length += _startingIndex;
-
-		for (i in 0...length)
-			_tileObjects[i] = new FlxTile(this, i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
-
-		// Create debug tiles for rendering bounding boxes on demand
-		#if FLX_DEBUG
-		updateDebugTileBoundingBoxSolid();
-		updateDebugTileBoundingBoxNotSolid();
-		updateDebugTileBoundingBoxPartial();
-		#end
+		return new FlxTile(this, index, width, height, visible, allowCollisions);
 	}
 }
 
@@ -384,7 +366,35 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		super.destroy();
 	}
+	
+	override function initTileObjects():Void
+	{
+		if (frames == null)
+			return;
 
+		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
+		// Create some tile objects that we'll use for overlap checks (one for each tile)
+		_tileObjects = [];
+
+		var length:Int = frames.numFrames;
+		length += _startingIndex;
+
+		for (i in 0...length)
+			_tileObjects[i] = createTile(i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
+
+		// Create debug tiles for rendering bounding boxes on demand
+		#if FLX_DEBUG
+		updateDebugTileBoundingBoxSolid();
+		updateDebugTileBoundingBoxNotSolid();
+		updateDebugTileBoundingBoxPartial();
+		#end
+	}
+	
+	function createTile(index, width, height, visible, allowCollisions):Tile
+	{
+		throw "createTile not implemented";
+	}
+	
 	function set_frames(value:FlxFramesCollection):FlxFramesCollection
 	{
 		frames = value;
