@@ -335,7 +335,7 @@ enum abstract FlxPathDirection(Bool)
 	var FORWARD = true;
 	var BACKWARD = false;
 	
-	inline public function toInt()
+	public inline function toInt()
 	{
 		return this ? 1 : -1;
 	}
