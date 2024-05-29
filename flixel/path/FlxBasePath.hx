@@ -30,7 +30,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	/** Called whenenever any node reached */
 	public var onNodeReached(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
-	/** Called when the end is reached and loop is ONCE */
+	/** Called when the end is reached and loopType is ONCE */
 	public var onFinish(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
 	/** The index of the last node the target has reached */
@@ -44,7 +44,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	public var next(get, never):Null<FlxPoint>;
 	
 	/** Behavior when the end(s) are reached */
-	public var loop:FlxPathLoop = LOOP;
+	public var loopType:FlxPathLoopType = LOOP;
 	
 	/** The direction the list of nodes is being traversed. `FORWARD` leads to the last node */
 	public var direction(default, null) = FlxPathDirection.FORWARD;
@@ -119,7 +119,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		// reached last
 		if (currentIndex == nodes.length - 1 && direction == FORWARD)
 		{
-			nextIndex = switch (loop)
+			nextIndex = switch (loopType)
 			{
 				case ONCE: null;
 				case LOOP: 0;
@@ -134,7 +134,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		// reached first
 		if (currentIndex == 0 && direction == BACKWARD)
 		{
-			nextIndex = switch (loop)
+			nextIndex = switch (loopType)
 			{
 				case ONCE: null;
 				case LOOP: nodes.length - 1;
@@ -301,7 +301,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			// draw a box for the node
 			drawNode(gfx, prevNodeScreen, nodeSize, nodeColor);
 			
-			if (i + 1 < length || loop == LOOP)
+			if (i + 1 < length || loopType == LOOP)
 			{
 				// draw a line to the next node, if LOOP, get connect the tail and head
 				final nextNode = nodes[(i + 1) % length];
@@ -366,7 +366,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 /**
  * Path behavior controls
  */
-enum abstract FlxPathLoop(Int) from Int to Int
+enum abstract FlxPathLoopType(Int) from Int to Int
 {
 	/** Stops when reaching the end */
 	var ONCE = 0x000000;

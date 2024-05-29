@@ -713,27 +713,27 @@ class FlxPath extends FlxBasePath
 	function get__mode()
 	{
 		final isForward = direction == FlxPathDirection.FORWARD;
-		return switch(loop)
+		return switch(loopType)
 		{
-			case FlxPathLoop.ONCE:
+			case FlxPathLoopType.ONCE:
 				isForward ? FlxPathType.FORWARD : FlxPathType.BACKWARD;
-			case FlxPathLoop.LOOP:
+			case FlxPathLoopType.LOOP:
 				isForward ? FlxPathType.LOOP_FORWARD : FlxPathType.LOOP_BACKWARD;
-			case FlxPathLoop.YOYO:
+			case FlxPathLoopType.YOYO:
 				FlxPathType.YOYO;
 		}
 	}
 	
 	function set__mode(value:FlxPathType):FlxPathType
 	{
-		loop = switch (value)
+		loopType = switch (value)
 		{
 			case FlxPathType.YOYO:
-				FlxPathLoop.YOYO;
+				FlxPathLoopType.YOYO;
 			case FlxPathType.FORWARD | FlxPathType.BACKWARD:
-				FlxPathLoop.ONCE;
+				FlxPathLoopType.ONCE;
 			case FlxPathType.LOOP_FORWARD | FlxPathType.LOOP_BACKWARD:
-				FlxPathLoop.LOOP;
+				FlxPathLoopType.LOOP;
 		}
 		
 		direction = switch (value)
