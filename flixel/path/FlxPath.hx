@@ -198,10 +198,13 @@ class FlxPath extends FlxBasePath
 	 */
 	public var angleOffset:Float = 0;
 	
+	@:deprecated("onComplete is deprecated, use the onEndReached signal, instead")
 	public var onComplete:FlxPath->Void;
+	
 	/**
 	 * Tracks which node of the path this object is currently moving toward.
 	 */
+	@:deprecated("nodeIndex is deprecated, use nextIndex, instead")
 	public var nodeIndex(get, never):Int;
 	
 	/**

@@ -19,7 +19,7 @@ import openfl.display.Graphics;
  * The following is an example of a class that moves the target to the next node and
  * and advances the iterator when it is near.
 ```haxe
-class FlxSimplePath extends flixel.path.FlxBasePath
+class SimplePath extends flixel.path.FlxBasePath
 {
 	public var speed:Float;
 	
@@ -34,7 +34,7 @@ class FlxSimplePath extends flixel.path.FlxBasePath
 		final frameSpeed = elapsed * speed;
 		final deltaX = next.x - target.x;
 		final deltaY = next.y - target.y;
-		// whether we will reach the next node this frame
+		// Whether the distance remaining is less than the distance we will travel this frame
 		return Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= frameSpeed;
 	}
 	
