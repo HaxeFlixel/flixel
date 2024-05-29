@@ -10,10 +10,12 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.Graphics;
 
+typedef CenterMode = FlxPathAnchorMode;
 /**
- * CenterMode defines how an object should be placed when following the path.
+ * Determines an object position in relation to the path
  */
-enum CenterMode
+ @:using(flixel.path.FlxPath.AnchorTools)
+enum FlxPathAnchorMode
 {
 	
 	/**
@@ -36,6 +38,42 @@ enum CenterMode
 	 * Uses the specified offset from the position.
 	 */
 	CUSTOM(offset:FlxPoint);
+}
+
+private class AnchorTools
+{
+	public static function computeAnchor(mode:FlxPathAnchorMode, object:FlxObject, ?result:FlxPoint):FlxPoint
+	{
+		result = computeAnchorOffset(mode, object, result);
+		return result.add(object.x, object.y);
+	}
+	
+	public static function computeAnchorOffset(mode:FlxPathAnchorMode, object:FlxObject, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		else
+			result.set();
+		
+		return switch (mode)
+		{
+			case ORIGIN:
+				if (object is FlxSprite)
+				{
+					result.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
+				}
+				else
+				{
+					result;
+				}
+			case CENTER:
+				result.add(object.width * 0.5, object.height * 0.5);
+			case TOP_LEFT:
+				result;
+			case CUSTOM(offset):
+				result.addPoint(offset);
+		}
+	}
 }
 
 /**
@@ -142,8 +180,9 @@ class FlxPath extends FlxBasePath
 	
 	/**
 	 * How to center the object on the path.
+	 * @since 5.7.0
 	 */
-	public var centerMode:CenterMode = CENTER;
+	public var centerMode:FlxPathAnchorMode = CENTER;
 	
 	/**
 	 * Whether the object's angle should be adjusted to the path angle during path follow behavior.
@@ -298,26 +337,7 @@ class FlxPath extends FlxBasePath
 
 	function computeCenter(point:FlxPoint):FlxPoint
 	{
-		point.x = object.x;
-		point.y = object.y;
-		return switch (centerMode)
-		{
-			case ORIGIN:
-				if (object is FlxSprite)
-				{
-					point.add(cast(object, FlxSprite).origin.x, cast(object, FlxSprite).origin.y);
-				}
-				else
-				{
-					point;
-				}
-			case CENTER:
-				point.add(object.width * 0.5, object.height * 0.5);
-			case TOP_LEFT:
-				point;
-			case CUSTOM(offset):
-				point.addPoint(offset);
-		}
+		return centerMode.computeAnchor(object, point);
 	}
 	
 	override function isTargetAtNext(elapsed:Float):Bool
