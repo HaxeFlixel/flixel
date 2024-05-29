@@ -1,9 +1,9 @@
 package flixel.path;
 
-import flixel.path.FlxBasePath;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.path.FlxBasePath;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -73,7 +73,7 @@ enum CenterMode
  * object.path = new FlxPath([new FlxPoint(0, 0), new FlxPoint(100, 0)]).start();
  * ```
  */
-class FlxPath extends FlxBasePath<FlxObject>
+class FlxPath extends FlxBasePath
 {
 	/**
 	 * Move from the start of the path to the end then stop.
@@ -159,6 +159,7 @@ class FlxPath extends FlxBasePath<FlxObject>
 	 */
 	public var angleOffset:Float = 0;
 	
+	public var onComplete:FlxPath->Void;
 	/**
 	 * Tracks which node of the path this object is currently moving toward.
 	 */
@@ -196,6 +197,11 @@ class FlxPath extends FlxBasePath<FlxObject>
 		super(nodes != null ? nodes.copy() : []);
 		
 		active = false;
+		onPathComplete.add(function (_)
+		{
+			if (onComplete != null)
+				onComplete(this);
+		});
 	}
 
 	/**
@@ -417,47 +423,46 @@ class FlxPath extends FlxBasePath<FlxObject>
 	 */
 	function advancePath(snap:Bool = true):FlxPoint
 	{
-		if (snap)
+		advance();
+		
+		return current;
+	}
+	
+	override function advance()
+	{
+		if (axes.x)
 		{
-			var oldNode:FlxPoint = nodes[nodeIndex];
-			if (oldNode != null)
+			object.x = next.x;
+			switch (centerMode)
 			{
-				if (axes.x)
-				{
-					object.x = oldNode.x;
-					switch (centerMode)
-					{
-						case ORIGIN:
-							if (object is FlxSprite)
-								object.x -= (cast object:FlxSprite).origin.x;
-						case CUSTOM(offset):
-							object.x -= offset.x;
-						case CENTER:
-							object.x -= object.width * 0.5;
-						case TOP_LEFT:
-					}
-				}
-				if (axes.y)
-				{
-					object.y = oldNode.y;
-					switch (centerMode)
-					{
-						case ORIGIN:
-							if (object is FlxSprite)
-								object.y -= (cast object:FlxSprite).origin.y;
-						case CUSTOM(offset):
-							object.y -= offset.y;
-						case CENTER:
-							object.y -= object.height * 0.5;
-						case TOP_LEFT:
-					}
-				}
+				case ORIGIN:
+					if (object is FlxSprite)
+						object.x -= (cast object:FlxSprite).origin.x;
+				case CUSTOM(offset):
+					object.x -= offset.x;
+				case CENTER:
+					object.x -= object.width * 0.5;
+				case TOP_LEFT:
 			}
 		}
-
-		advance();
-
-		return nodes[nodeIndex];
+		
+		if (axes.y)
+		{
+			object.y = next.y;
+			switch (centerMode)
+			{
+				case ORIGIN:
+					if (object is FlxSprite)
+						object.y -= (cast object:FlxSprite).origin.y;
+				case CUSTOM(offset):
+					object.y -= offset.y;
+				case CENTER:
+					object.y -= object.height * 0.5;
+				case TOP_LEFT:
+			}
+		}
+		
+		super.advance();
 	}
 
 	/**

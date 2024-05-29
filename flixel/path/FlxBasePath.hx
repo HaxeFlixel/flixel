@@ -10,7 +10,8 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxSpriteUtil;
 import openfl.display.Graphics;
 
-class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
+typedef FlxBasePath = FlxTypedBasePath<FlxObject>;
+class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 {
 	/**
 	 * The list of FlxPoints that make up the path data.
@@ -22,24 +23,31 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 	public var length(get, never):Int;
 	public var finished(get, never):Bool;
 	
-	public var onComplete(default, null) = new FlxTypedSignal<(FlxBasePath<TTarget>)->Void>();
+	/** Called whenenever the end is reached, for YOYO this means both ends */
+	public var onPathComplete(default, null) = new FlxTypedSignal<(FlxTypedBasePath<TTarget>)->Void>();
 	
-	/**
-	 * Tracks which node of the path this object is currently moving toward.
-	 */
+	/** The index of the last node the target has reached */
 	public var currentIndex(default, null):Int = 0;
+	/** The index of the node the target is currently moving toward */
 	public var nextIndex(default, null):Null<Int> = null;
 	
+	/** The last node the target has reached */
 	public var current(get, never):Null<FlxPoint>;
+	/** The node the target is currently moving toward */
 	public var next(get, never):Null<FlxPoint>;
 	
-	/**
-	 * Path behavior flag (like looping, yoyo, etc)
-	 */
+	/** Behavior when the end(s) are reached */
 	public var loop:FlxPathLoop = LOOP;
 	
-	public var direction = FlxPathDirection.FORWARD;
+	/** The direction the list of nodes is being traversed. `FORWARD` leads to the last node */
+	public var direction(default, null) = FlxPathDirection.FORWARD;
 	
+	/**
+	 * Creates a new path
+	 * 
+	 * @param   nodes   An Optional array of nodes
+	 * @param   target  
+	 */
 	public function new (?nodes:Array<FlxPoint>, ?target:TTarget)
 	{
 		this.nodes = nodes;
@@ -50,17 +58,14 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 			restartPath();
 	}
 	
-	/**
-	 * Clean up memory.
-	 */
 	override function destroy():Void
 	{
 		FlxDestroyUtil.putArray(nodes);
 		nodes = null;
-		onComplete.removeAll();
+		onPathComplete.removeAll();
 	}
 	
-	public function restartPath(direction = FlxPathDirection.FORWARD):FlxBasePath<TTarget>
+	public function restartPath(direction = FlxPathDirection.FORWARD):FlxTypedBasePath<TTarget>
 	{
 		this.direction = direction;
 		currentIndex = getStartingNode();
@@ -86,6 +91,10 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 		setNextIndex();
 	}
 	
+	/**
+	 * Determines the next index based on the current index and direction.
+	 * Fires onPathComplete if the end is reached
+	 */
 	function setNextIndex()
 	{
 		// reached last
@@ -99,7 +108,7 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 					direction = BACKWARD;
 					currentIndex - 1;
 			}
-			onComplete.dispatch(this);
+			onPathComplete.dispatch(this);
 			return;
 		}
 		
@@ -114,7 +123,7 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 					direction = FORWARD;
 					currentIndex + 1;
 			}
-			onComplete.dispatch(this);
+			onPathComplete.dispatch(this);
 			return;
 		}
 		
@@ -124,9 +133,10 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 	/**
 	 * Change the path node this object is currently at.
 	 *
-	 * @param  index    The index of the new node out of path.nodes.
+	 * @param  index      The index of the new node out of path.nodes.
+	 * @param  direction  Whether to head towards the head or the tail
 	 */
-	public function startAt(index:Int, ?direction:FlxPathDirection):FlxBasePath<TTarget>
+	public function startAt(index:Int, ?direction:FlxPathDirection):FlxTypedBasePath<TTarget>
 	{
 		if (direction != null)
 			this.direction = direction;
@@ -149,6 +159,8 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 		if (isTargetAtNext(elapsed))
 		{
 			advance();
+			if (finished)
+				return;
 		}
 		
 		updateTarget(elapsed);
@@ -183,8 +195,6 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
 		return nodes != null ? nodes[nextIndex] : null;
 	}
 	
-	
-
 	#if FLX_DEBUG
 	/**
 	 * Specify a debug display color for the path. Default is WHITE.
@@ -310,19 +320,13 @@ class FlxBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroyable
  */
 enum abstract FlxPathLoop(Int) from Int to Int
 {
-	/**
-	 * Move from the start of the path to the end then stop.
-	 */
+	/** Stops when reaching the end */
 	var ONCE = 0x000000;
 	
-	/**
-	 * Move from the start of the path to the end then directly back to the start, and start over.
-	 */
+	/** When the end is reached, go back to the other end and start again */
 	var LOOP = 0x000010;
 	
-	/**
-	 * Move from the start of the path to the end then turn around and go back to the start, over and over.
-	 */
+	/** When the end is reached, change direction and continue */
 	var YOYO = 0x001000;
 }
 
@@ -331,7 +335,7 @@ enum abstract FlxPathDirection(Bool)
 	var FORWARD = true;
 	var BACKWARD = false;
 	
-	public function toInt()
+	inline public function toInt()
 	{
 		return this ? 1 : -1;
 	}
