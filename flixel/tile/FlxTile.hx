@@ -2,6 +2,7 @@ package flixel.tile;
 
 import flixel.FlxObject;
 import flixel.graphics.frames.FlxFrame;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
 
 /**
@@ -29,7 +30,7 @@ class FlxTile extends FlxObject
 	/**
 	 * A reference to the tilemap this tile object belongs to.
 	 */
-	public var tilemap:FlxTilemap;
+	public var tilemap:FlxTypedTilemap<FlxTile>;
 
 	/**
 	 * The index of this tile type in the core map data.
@@ -60,7 +61,7 @@ class FlxTile extends FlxObject
 	 * @param   visible          Whether the tile is visible or not.
 	 * @param   allowCollisions  The collision flags for the object.  By default this value is ANY or NONE depending on the parameters sent to loadMap().
 	 */
-	public function new(tilemap:FlxTilemap, index:Int, width:Float, height:Float, visible:Bool, allowCollisions:FlxDirectionFlags)
+	public function new(tilemap:FlxTypedTilemap<FlxTile>, index:Int, width:Float, height:Float, visible:Bool, allowCollisions:FlxDirectionFlags)
 	{
 		super(0, 0, width, height);
 
