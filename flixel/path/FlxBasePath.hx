@@ -67,6 +67,8 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	
 	/** The length of the `nodes` array */
 	public var totalNodes(get, never):Int;
+	
+	/** Whether this path is done, only `true` when `loopType` is `ONCE` */
 	public var finished(get, never):Bool;
 	
 	/** Called whenenever the end is reached, for `YOYO` this means both ends */
