@@ -102,7 +102,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 * @param   nodes   An Optional array of nodes. Unlike `FlxPath`, no copy is made
 	 * @param   target  The target traversing our path
 	 */
-	public function new (?nodes:Array<FlxPoint>, ?target:TTarget)
+	public function new (?nodes:Array<FlxPoint>, ?target:TTarget, direction = FORWARD)
 	{
 		this.nodes = nodes;
 		this.target = target;
