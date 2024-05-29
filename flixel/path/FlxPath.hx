@@ -233,7 +233,8 @@ class FlxPath extends FlxBasePath
 	 */
 	@:allow(flixel.FlxObject)
 	var object(get, set):FlxObject;
-
+	
+	@:haxe.warning("-WDeprecated")
 	public function new(?nodes:Array<FlxPoint>)
 	{
 		super(nodes != null ? nodes.copy() : []);
@@ -320,9 +321,9 @@ class FlxPath extends FlxBasePath
 	 *
 	 * @return This path object.
 	 */
-	public function restart():FlxPath
+	override function restart():FlxPath
 	{
-		restartPath();
+		super.restart();
 		active = nodes.length > 0;
 		return this;
 	}

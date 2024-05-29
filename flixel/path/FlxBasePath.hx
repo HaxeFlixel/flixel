@@ -109,7 +109,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		super();
 		
 		if (nodes != null && nodes.length > 0 && target != null)
-			restartPath();
+			restart();
 	}
 	
 	override function destroy():Void
@@ -120,13 +120,10 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	}
 	
 	/**
-	 * Sets the current node to the desired end node
-	 * 
-	 * @param   direction  If `FORWARD`, it starts at the beginning
+	 * Sets the current node to the beginning, or the end if `direction` is `BACKWARD`
 	 */
-	public function restartPath(direction = FlxPathDirection.FORWARD):FlxTypedBasePath<TTarget>
+	public function restart():FlxTypedBasePath<TTarget>
 	{
-		this.direction = direction;
 		currentIndex = getStartingNode();
 		setNextIndex();
 		
