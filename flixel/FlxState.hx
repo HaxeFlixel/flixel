@@ -33,7 +33,7 @@ class FlxState extends FlxContainer
 	 *
 	 * By default, this is set to `true`, so the background states will continue to be "drawn" behind the current state.
 	 *
-	 * If the background states are not supposed to be `visible` when you have a different state on top,
+	 * If you do not want background states to be `visible` when you have a different state on top,
 	 * then you should set this to `false` for improved performance.
 	 */
 	public var persistentDraw:Bool = true;
