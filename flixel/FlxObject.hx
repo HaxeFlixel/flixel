@@ -1299,19 +1299,27 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
 	{
 		// Find the color to use
-		var color:Null<Int> = debugBoundingBoxColor;
-		if (color == null)
-		{
-			if (allowCollisions != FlxDirectionFlags.NONE)
-			{
-				color = partial ? debugBoundingBoxColorPartial : debugBoundingBoxColorSolid;
-			}
-			else
-			{
-				color = debugBoundingBoxColorNotSolid;
-			}
-		}
-
+		final color = getDebugBoundingBoxColor(allowCollisions);
+		drawDebugBoundingBoxColor(gfx, rect, color);
+	}
+	
+	function getDebugBoundingBoxColor(allowCollisions:Int)
+	{
+		if (debugBoundingBoxColor != null)
+			return debugBoundingBoxColor;
+		
+		if (allowCollisions == FlxDirectionFlags.NONE)
+			return debugBoundingBoxColorNotSolid;
+		
+		if (allowCollisions == FlxDirectionFlags.ANY)
+			return debugBoundingBoxColorSolid;
+		
+		return debugBoundingBoxColorPartial;
+		
+	}
+	
+	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
+	{
 		// fill static graphics object with square shape
 		gfx.lineStyle(1, color, 0.75);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);

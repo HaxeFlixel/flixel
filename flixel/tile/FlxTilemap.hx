@@ -573,11 +573,9 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		// Copied from getScreenPosition()
 		_helperPoint.x = x - camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - camera.scroll.y * scrollFactor.y;
-
-		var rectWidth:Float = scaledTileWidth;
-		var rectHeight:Float = scaledTileHeight;
-		var rect = FlxRect.get(0, 0, rectWidth, rectHeight);
-
+		
+		final rect = FlxRect.get(0, 0, scaledTileWidth, scaledTileHeight);
+		
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
 		_point.x = (camera.scroll.x * scrollFactor.x) - x;
@@ -601,19 +599,28 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			{
 				final tile = _tileObjects[_data[columnIndex]];
 
-				if (tile != null && tile.visible)
+				if (tile != null && tile.visible && !tile.ignoreDrawDebug)
 				{
-					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY);
+					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rect.width;
+					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rect.height;
+					
+						final color = tile.debugBoundingBoxColor != null
+							? tile.debugBoundingBoxColor
+							: getDebugBoundingBoxColor(tile.allowCollisions);
+						
+						if (color != null)
+						{
+							final colStr = color.toHexString();
+							drawDebugBoundingBoxColor(camera.debugLayer.graphics, rect, color);
+						}
 				}
 
 				columnIndex++;
 			}
-
+			
 			rowIndex += widthInTiles;
 		}
-
+		
 		rect.put();
 	}
 	#end
