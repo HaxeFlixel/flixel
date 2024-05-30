@@ -130,8 +130,10 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 		super();
 	}
 	
-	override function createTile(index, width, height, visible, allowCollisions):FlxTile
+	override function createTile(index:Int, width, height):FlxTile
 	{
+		final visible = index >= _drawIndex;
+		final allowCollisions = index >= _collideIndex ? this.allowCollisions : NONE;
 		return new FlxTile(this, index, width, height, visible, allowCollisions);
 	}
 }
@@ -380,7 +382,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		length += _startingIndex;
 
 		for (i in 0...length)
-			_tileObjects[i] = createTile(i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
+			_tileObjects[i] = createTile(i, tileWidth, tileHeight);
 
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
@@ -390,7 +392,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		#end
 	}
 	
-	function createTile(index, width, height, visible, allowCollisions):Tile
+	function createTile(index, width, height):Tile
 	{
 		throw "createTile not implemented";
 	}
