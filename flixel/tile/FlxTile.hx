@@ -73,7 +73,16 @@ class FlxTile extends FlxObject
 		this.visible = visible;
 		this.allowCollisions = allowCollisions;
 	}
-
+	
+	/** Whether this tile overlaps the object */
+	public function overlapsObject(object:FlxObject):Bool
+	{
+		return object.x + object.width > x
+			&& object.x < x + width
+			&& object.y + object.height > y
+			&& object.y < y + height;
+	}
+	
 	/**
 	 * Clean up memory.
 	 */

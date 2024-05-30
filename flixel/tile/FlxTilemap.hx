@@ -790,27 +790,16 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				tile.y = yPos + row * tile.height;
 				tile.last.x = tile.x - deltaX;
 				tile.last.y = tile.y - deltaY;
-
-				var overlapFound = ((object.x + object.width) > tile.x)
-					&& (object.x < (tile.x + tile.width))
-					&& ((object.y + object.height) > tile.y)
-					&& (object.y < (tile.y + tile.height));
-
-				if (tile.allowCollisions != NONE)
+				
+				if (!tile.overlapsObject(object))
+					continue;
+				
+				var overlapFound = false;
+				if (tile.allowCollisions != NONE && callback != null)
 				{
-					if (callback != null)
-					{
-						if (flipCallbackParams)
-						{
-							overlapFound = callback(object, tile);
-						}
-						else
-						{
-							overlapFound = callback(tile, object);
-						}
-					}
+					overlapFound = flipCallbackParams ? callback(object, tile) : callback(tile, object);
 				}
-
+				
 				if (overlapFound)
 				{
 					if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
