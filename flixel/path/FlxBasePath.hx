@@ -106,6 +106,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	{
 		this.nodes = nodes;
 		this.target = target;
+		this.direction = direction;
 		super();
 		
 		if (nodes != null && nodes.length > 0 && target != null)
