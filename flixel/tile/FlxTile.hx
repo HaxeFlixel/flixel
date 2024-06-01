@@ -74,13 +74,40 @@ class FlxTile extends FlxObject
 		this.allowCollisions = allowCollisions;
 	}
 	
-	/** Whether this tile overlaps the object */
+	/**
+	 * Whether this tile overlaps the object. this should be called directly after calling
+	 * `orient` to ensure this tile is in the correct world space.
+	 * 
+	 * This method is dynamic, meaning you can set custom behavior per tile, without extension.
+	 */
 	public dynamic function overlapsObject(object:FlxObject):Bool
 	{
 		return object.x + object.width > x
 			&& object.x < x + width
 			&& object.y + object.height > y
 			&& object.y < y + height;
+	}
+	
+	/**
+	 * Places this tile in the world according to the map's location. often used before calling
+	 * `overlapsObject`
+	 * 
+	 * This method is dynamic, meaning you can set custom behavior per tile, without extension.
+	 * 
+	 * @param   xPos    May be the true or a theoretical x of the map, based on what called this
+	 * @param   yPos    May be the true or a theoretical y of the map, based on what called this
+	 * @param   col     The tilemap column where this is being placed
+	 * @param   row     The tilemap row where this is being placed
+	 */
+	public dynamic function orient(xPos:Float, yPos:Float, col:Int, row:Int)
+	{
+		final map = this.tilemap;
+		width = map.scaledTileWidth;
+		height = map.scaledTileHeight;
+		x = xPos + col * width;
+		y = yPos + row * height;
+		last.x = x - xPos - map.last.x;
+		last.y = y - yPos - map.last.y;
 	}
 	
 	/**
