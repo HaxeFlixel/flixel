@@ -75,7 +75,7 @@ class FlxTile extends FlxObject
 	}
 	
 	/** Whether this tile overlaps the object */
-	dynamic public function overlapsObject(object:FlxObject):Bool
+	public dynamic function overlapsObject(object:FlxObject):Bool
 	{
 		return object.x + object.width > x
 			&& object.x < x + width
