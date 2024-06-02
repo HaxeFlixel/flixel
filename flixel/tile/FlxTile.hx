@@ -21,7 +21,7 @@ class FlxTile extends FlxObject
 	public var callbackFunction:(FlxObject, FlxObject)->Void = null;
 	
 	/** Dispatched whenever FlxG.collide resolves a collision with a tile of this type */
-	public final onCollide = new FlxTypedSignal<(FlxTile, FlxObject)->Void>();
+	public var onCollide = new FlxTypedSignal<(FlxTile, FlxObject)->Void>();
 	
 	/**
 	 * Each tile can store its own filter class for their callback functions.
