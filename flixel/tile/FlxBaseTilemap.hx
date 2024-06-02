@@ -285,6 +285,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   isCollision  If true, tiles where `allowCollisions` is `NONE` are excluded,
 	 *                       and the tiles' `onCollide` is dispatched
 	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
+	 * @since 5.9.0
 	 */
 	public function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
 	{
