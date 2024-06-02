@@ -229,13 +229,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		return calcRayEntry(end, start, result);
 	}
-
-	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject,FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
+	
+	@:deprecated("overlapsWithCallback is deprecated, use processOverlaps, instead")
+	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
 		throw "overlapsWithCallback must be implemented";
 		return false;
 	}
-
+	
+	public function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
+	{
+		throw "processOverlaps must be implemented";
+	}
+	
 	public function setDirty(dirty:Bool = true):Void
 	{
 		throw "setDirty must be implemented";
@@ -804,7 +810,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	/**
 	 * Adjust collision settings and/or bind a callback function to a range of tiles.
-	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
+	 * This callback function, if present, is triggered by calls to `overlap` or `processOverlaps`.
 	 *
 	 * @param   tile             The tile or tiles you want to adjust.
 	 * @param   allowCollisions  Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
@@ -982,7 +988,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast objectOrGroup);
+			return processOverlaps(cast objectOrGroup);
 		}
 		else
 		{
@@ -1016,7 +1022,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast objectOrGroup, null, false, _point.set(x, y));
+			return processOverlaps(cast objectOrGroup, null, _point.set(x, y));
 		}
 		else
 		{

@@ -733,7 +733,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				buffer.dirty = dirty;
 	}
 	
-	public function forEachOverlappingTile(object:FlxObject, func:(mapIndex:Int, tile:Tile)->Void, ?position:FlxPoint)
+	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint)
 	{
 		var xPos = x;
 		var yPos = y;
@@ -767,7 +767,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				tile.orient(xPos, yPos, column, row);
 				if (tile.overlapsObject(object))
 				{
-					func(mapIndex, tile);
+					func(tile);
 				}
 			}
 		}
@@ -786,34 +786,133 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * @param   position            Optional, specify a custom position for the tilemap (used for `overlapsAt`).
 	 * @return  Whether there were overlaps, and the result of the callback, if one was specified.
 	 */
-	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
+	override function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject,FlxObject)->Bool, flipCallbackParams:Bool = false,
 			?position:FlxPoint):Bool
 	{
 		var results = false;
 		
-		function func(mapIndex:Int, tile:Tile)
+		var xPos = x;
+		var yPos = y;
+		
+		if (position != null)
 		{
-			var overlapFound = false;
-			if (tile.allowCollisions != NONE && callback != null)
+			xPos = position.x;
+			yPos = position.y;
+			position.putWeak();
+		}
+		
+		inline function bindInt(value:Int, min:Int, max:Int)
+		{
+			return Std.int(FlxMath.bound(value, min, max));
+		}
+		
+		// Figure out what tiles we need to check against, and bind them by the map edges
+		final minTileX:Int = bindInt(Math.floor((object.x - xPos) / scaledTileWidth), 0, widthInTiles);
+		final minTileY:Int = bindInt(Math.floor((object.y - yPos) / scaledTileHeight), 0, heightInTiles);
+		final maxTileX:Int = bindInt(Math.ceil((object.x + object.width - xPos) / scaledTileWidth), 0, widthInTiles);
+		final maxTileY:Int = bindInt(Math.ceil((object.y + object.height - yPos) / scaledTileHeight), 0, heightInTiles);
+		
+		// Loop through the range of tiles and call the callback on them, accordingly
+		final deltaX:Float = xPos - last.x;
+		final deltaY:Float = yPos - last.y;
+		
+		for (row in minTileY...maxTileY)
+		{
+			for (column in minTileX...maxTileX)
 			{
-				overlapFound = flipCallbackParams ? callback(object, tile) : callback(tile, object);
+				final mapIndex:Int = (row * widthInTiles) + column;
+				final dataIndex:Int = _data[mapIndex];
+				if (dataIndex < 0)
+					continue;
+				
+				final tile = _tileObjects[dataIndex];
+				tile.width = scaledTileWidth;
+				tile.height = scaledTileHeight;
+				tile.x = xPos + column * tile.width;
+				tile.y = yPos + row * tile.height;
+				tile.last.x = tile.x - deltaX;
+				tile.last.y = tile.y - deltaY;
+				
+				var overlapFound = ((object.x + object.width) > tile.x)
+					&& (object.x < (tile.x + tile.width))
+					&& ((object.y + object.height) > tile.y)
+					&& (object.y < (tile.y + tile.height));
+				
+				if (tile.allowCollisions != NONE)
+				{
+					if (callback != null)
+					{
+						if (flipCallbackParams)
+						{
+							overlapFound = callback(object, tile);
+						}
+						else
+						{
+							overlapFound = callback(tile, object);
+						}
+					}
+				}
+				
+				if (overlapFound)
+				{
+					if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
+					{
+						tile.mapIndex = mapIndex;
+						tile.callbackFunction(tile, object);
+					}
+					
+					if (tile.allowCollisions != NONE)
+						results = true;
+				}
+			}
+		}
+		
+		return results;
+	}
+	
+	/**
+	 * Checks if the Object overlaps any tiles with any collision flags set,
+	 * and calls the specified callback function (if there is one).
+	 * Also calls the tile's registered callback if the filter matches.
+	 *
+	 * @param   object       The FlxObject you are checking for overlaps against
+	 * @param   callback     An optional function that takes the overlapping tile and object
+	 *                       where `a` is a `FlxTile`, and `b` is the given `object` paaram
+	 * @param   position     Optional, specify a custom position for the tilemap (see `overlapsAt`)
+	 * @param   isCollision  If true, tiles where `allowCollisions` is `NONE` are excluded,
+	 *                       and the tiles' `onCollide` is dispatched
+	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
+	 */
+	override function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
+	{
+		var results = false;
+		
+		function each(tile:Tile)
+		{
+			var overlapFound = tile.solid || !isCollision;
+			if (overlapFound && processCallback != null)
+			{
+				overlapFound = processCallback(tile, object);
 			}
 			
 			if (overlapFound)
 			{
-				if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
+				results = true;
+				
+				if (isCollision)
 				{
-					tile.mapIndex = mapIndex;
-					tile.callbackFunction(tile, object);
+					if (tile.callbackFunction != null)
+					{
+						tile.callbackFunction(tile, object);
+					}
+					
+					tile.onCollide.dispatch(tile, object);
 				}
-
-				if (tile.allowCollisions != NONE)
-					results = true;
 			}
 		}
 		
-		forEachOverlappingTile(object, func, position);
-
+		forEachOverlappingTile(object, each, position);
+		
 		return results;
 	}
 

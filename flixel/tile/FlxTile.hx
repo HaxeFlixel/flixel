@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.graphics.frames.FlxFrame;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
+import flixel.util.FlxSignal;
 
 /**
  * A simple helper object for FlxTilemap that helps expand collision opportunities and control.
@@ -17,8 +18,11 @@ class FlxTile extends FlxObject
 	 * This function should take the form myFunction(Tile:FlxTile,Object:FlxObject):void.
 	 * Defaults to null, set through FlxTilemap.setTileProperties().
 	 */
-	public var callbackFunction:FlxObject->FlxObject->Void = null;
-
+	public var callbackFunction:(FlxObject, FlxObject)->Void = null;
+	
+	/** Dispatched whenever FlxG.collide resolves a collision with a tile of this type */
+	public final onCollide = new FlxTypedSignal<(FlxTile, FlxObject)->Void>();
+	
 	/**
 	 * Each tile can store its own filter class for their callback functions.
 	 * That is, the callback will only be triggered if an object with a class
@@ -75,6 +79,19 @@ class FlxTile extends FlxObject
 	}
 	
 	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		super.destroy();
+
+		callbackFunction = null;
+		tilemap = null;
+		frame = null;
+		onCollide.removeAll();
+	}
+	
+	/**
 	 * Whether this tile overlaps the object. this should be called directly after calling
 	 * `orient` to ensure this tile is in the correct world space.
 	 * 
@@ -85,7 +102,8 @@ class FlxTile extends FlxObject
 		return object.x + object.width > x
 			&& object.x < x + width
 			&& object.y + object.height > y
-			&& object.y < y + height;
+			&& object.y < y + height
+			&& (filter == null || Std.isOfType(object, filter));
 	}
 	
 	/**
@@ -102,23 +120,12 @@ class FlxTile extends FlxObject
 	public dynamic function orient(xPos:Float, yPos:Float, col:Int, row:Int)
 	{
 		final map = this.tilemap;
+		mapIndex = (row * map.widthInTiles) + col;
 		width = map.scaledTileWidth;
 		height = map.scaledTileHeight;
 		x = xPos + col * width;
 		y = yPos + row * height;
 		last.x = x - xPos - map.last.x;
 		last.y = y - yPos - map.last.y;
-	}
-	
-	/**
-	 * Clean up memory.
-	 */
-	override public function destroy():Void
-	{
-		callbackFunction = null;
-		tilemap = null;
-		frame = null;
-
-		super.destroy();
 	}
 }
