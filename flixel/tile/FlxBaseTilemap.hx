@@ -275,7 +275,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
 	 * ```haxe
-	 final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
+	 * final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
 	 * ```
 	 *
 	 * @param   object       The FlxObject you are checking for overlaps against
