@@ -186,7 +186,7 @@ class FlxCamera extends FlxBasic
 	 * This sprite reference will allow you to do exactly that.
 	 * Basically, this sprite's `pixels` property is the camera's `BitmapData` buffer.
 	 *
-	 * NOTE: This variable is only used in blit render mode.
+	 * **NOTE:** This field is only used in blit render mode.
 	 */
 	public var screen:FlxSprite;
 
