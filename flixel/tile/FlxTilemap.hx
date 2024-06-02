@@ -875,6 +875,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * and calls the specified callback function (if there is one).
 	 * Also calls the tile's registered callback if the filter matches.
 	 *
+	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
+	 * ```haxe
+	 final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
+	 * ```
+	 *
 	 * @param   object       The FlxObject you are checking for overlaps against
 	 * @param   callback     An optional function that takes the overlapping tile and object
 	 *                       where `a` is a `FlxTile`, and `b` is the given `object` paaram
