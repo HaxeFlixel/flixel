@@ -734,7 +734,26 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				buffer.dirty = dirty;
 	}
 	
-	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint)
+	override function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint)
+	{
+		return forEachOverlappingTileHelper(object, filter, position, true);
+	}
+	
+	override function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
+	{
+		function filter(tile)
+		{
+			// call func on every overlapping tile
+			func(tile);
+			
+			// return true, since an overlapping tile was found
+			return true;
+		}
+		
+		return forEachOverlappingTileHelper(object, filter, position, false);
+	}
+	
+	function forEachOverlappingTileHelper(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint, stopAtFirst:Bool):Bool
 	{
 		var xPos = x;
 		var yPos = y;
@@ -757,6 +776,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		final maxTileX:Int = bindInt(Math.ceil((object.x + object.width - xPos) / scaledTileWidth), 0, widthInTiles);
 		final maxTileY:Int = bindInt(Math.ceil((object.y + object.height - yPos) / scaledTileHeight), 0, heightInTiles);
 		
+		var result = false;
 		for (row in minTileY...maxTileY)
 		{
 			for (column in minTileX...maxTileX)
@@ -768,10 +788,18 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				tile.orient(xPos, yPos, column, row);
 				if (tile.overlapsObject(object))
 				{
-					func(tile);
+					if (filter == null || filter(tile))
+					{
+						if (stopAtFirst)
+							return true;
+						
+						result = true;
+					}
 				}
 			}
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -871,24 +899,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 	
-	/**
-	 * Checks if the Object overlaps any tiles with any collision flags set,
-	 * and calls the specified callback function (if there is one).
-	 * Also calls the tile's registered callback if the filter matches.
-	 *
-	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
-	 * ```haxe
-	 final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
-	 * ```
-	 *
-	 * @param   object       The FlxObject you are checking for overlaps against
-	 * @param   callback     An optional function that takes the overlapping tile and object
-	 *                       where `a` is a `FlxTile`, and `b` is the given `object` paaram
-	 * @param   position     Optional, specify a custom position for the tilemap (see `overlapsAt`)
-	 * @param   isCollision  If true, tiles where `allowCollisions` is `NONE` are excluded,
-	 *                       and the tiles' `onCollide` is dispatched
-	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
-	 */
+	
 	override function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
 	{
 		var results = false;

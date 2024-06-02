@@ -230,6 +230,37 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return calcRayEntry(end, start, result);
 	}
 	
+	/**
+	 * Searches all tiles near the object for any that satisfy the given filter. Stops searching
+	 * when the first overlapping tile that satisfies the condition is found
+	 * 
+	 * @param   object    The object
+	 * @param   filter    Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition, if `null`, any overlapping tile will satisfy
+	 * @param   position  Optional, specify a custom position for the tilemap
+	 * @return  Whether any overlapping tile satisfied the condition, if there was one
+	 * @since 5.9.0
+	 */
+	public function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint):Bool
+	{
+		throw "overlapsWithCallback must be implemented";
+	}
+	
+	/**
+	 * Calls the given function on ever tile that is overlapping the target object
+	 * 
+	 * @param   object    The object
+	 * @param   filter    Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition
+	 * @param   position  Optional, specify a custom position for the tilemap
+	 * @return  Whether any overlapping tile was found
+	 * @since 5.9.0
+	 */
+	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
+	{
+		throw "overlapsWithCallback must be implemented";
+	}
+	
 	@:deprecated("overlapsWithCallback is deprecated, use processOverlaps, instead")
 	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
@@ -237,6 +268,24 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return false;
 	}
 	
+	/**
+	 * Checks if the Object overlaps any tiles with any collision flags set,
+	 * and calls the specified callback function (if there is one).
+	 * Also calls the tile's registered callback if the filter matches.
+	 *
+	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
+	 * ```haxe
+	 final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
+	 * ```
+	 *
+	 * @param   object       The FlxObject you are checking for overlaps against
+	 * @param   callback     An optional function that takes the overlapping tile and object
+	 *                       where `a` is a `FlxTile`, and `b` is the given `object` paaram
+	 * @param   position     Optional, specify a custom position for the tilemap (see `overlapsAt`)
+	 * @param   isCollision  If true, tiles where `allowCollisions` is `NONE` are excluded,
+	 *                       and the tiles' `onCollide` is dispatched
+	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
+	 */
 	public function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
 	{
 		throw "processOverlaps must be implemented";
@@ -1009,7 +1058,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
-	override public function overlapsAt(x:Float, y:Float, objectOrGroup:FlxBasic, inScreenSpace:Bool = false, ?camera:FlxCamera):Bool
+	override function overlapsAt(x:Float, y:Float, objectOrGroup:FlxBasic, inScreenSpace:Bool = false, ?camera:FlxCamera):Bool
 	{
 		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
