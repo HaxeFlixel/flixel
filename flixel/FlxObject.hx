@@ -191,6 +191,10 @@ class FlxObject extends FlxBasic
 	static function processCheckTilemap<T1:FlxObject, T2:FlxObject>
 		(object1:T1, object2:T2, func:(T1, T2)->Bool, isCollision = true):Bool
 	{
+		// two immovable objects cannot collide
+		if (isCollision && object1.immovable && object2.immovable)
+			return false;
+		
 		// If one of the objects is a tilemap, just pass it off.
 		if (object1.flixelType == TILEMAP)
 		{
@@ -226,17 +230,13 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
-		/*
-		 * Note: We must resolve all X overlaps before Y, otherwise, platformers may collide
-		 * with the bottoms of tiles when jumping along the edge of a column of tiles
-		 */
-		final separatedX = processCheckTilemap(object1, object2, separateXHelper);
-		final separatedY = processCheckTilemap(object1, object2, separateYHelper);
-		return separatedX || separatedY;
+		function helper(object1, object2)
+		{
+			final separatedX = separateXHelper(object1, object2);
+			final separatedY = separateYHelper(object1, object2);
+			return separatedX || separatedY;
+		}
+		return processCheckTilemap(object1, object2, helper);
 	}
 	
 	/**
@@ -247,10 +247,6 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separateX(object1:FlxObject, object2:FlxObject):Bool
 	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
 		return processCheckTilemap(object1, object2, separateXHelper);
 	}
 	
@@ -262,10 +258,6 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separateY(object1:FlxObject, object2:FlxObject):Bool
 	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
 		return processCheckTilemap(object1, object2, separateYHelper);
 	}
 	
