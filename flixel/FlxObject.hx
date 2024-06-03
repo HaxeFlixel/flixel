@@ -384,7 +384,7 @@ class FlxObject extends FlxBasic
 	 * The separateX that existed before HaxeFlixel 5.0, preserved for anyone who
 	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
 	 */
-	inline static function legacySeparateX(object1:FlxObject, object2:FlxObject, overlap:Float)
+	static inline function legacySeparateX(object1:FlxObject, object2:FlxObject, overlap:Float)
 	{
 		final vel1 = object1.velocity.x;
 		final vel2 = object2.velocity.x;
@@ -406,7 +406,7 @@ class FlxObject extends FlxBasic
 	 * The separateY that existed before HaxeFlixel 5.0, preserved for anyone who
 	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
 	 */
-	inline static function legacySeparateY(object1:FlxObject, object2:FlxObject, overlap:Float)
+	static inline function legacySeparateY(object1:FlxObject, object2:FlxObject, overlap:Float)
 	{
 		final vel1 = object1.velocity.y;
 		final vel2 = object2.velocity.y;
