@@ -1,5 +1,6 @@
 package flixel.tile;
 
+import flixel.FlxObject;
 import openfl.display.BitmapData;
 import openfl.errors.ArgumentError;
 import flixel.math.FlxPoint;
@@ -224,7 +225,50 @@ class FlxTilemapTest extends FlxTest
 		Assert.isTrue(overlaps(0, 0));
 		Assert.isFalse(overlaps(1, 1));
 	}
-
+	
+	@Test // #3158
+	function testIsOverlappingTile()
+	{
+		final mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; // 3x3 with a solid block in the middle
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
+		
+		final obj = new FlxObject(4, 12, 8, 8);
+		var count = 0;
+		final result = tilemap.isOverlappingTile(obj, (tile)->{ count++; return tile.solid; } );
+		// should be touching bottom-left 4 tiles only
+		Assert.isTrue(result);
+		// wont need to check all 4 before finding
+		Assert.areEqual(2, count);
+		
+		// test position
+		count = 0;
+		final result = tilemap.isOverlappingTile(obj, (tile)->{ count++; return tile.solid; }, FlxPoint.get(0, 8));
+		// should be touching top-left 4 tiles only
+		Assert.isTrue(result);
+		Assert.areEqual(4, count);
+	}
+	
+	@Test // #3158
+	function testForEachOverlappingTile()
+	{
+		final mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; // 3x3 with a solid block in the middle
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
+		
+		final obj = new FlxObject(4, 12, 8, 8);
+		var count = 0;
+		final result = tilemap.forEachOverlappingTile(obj, (tile)->count++);
+		// should be touching bottom-left 4 tiles only
+		Assert.isTrue(result);
+		Assert.areEqual(4, count);
+		
+		// test position
+		count = 0;
+		final result = tilemap.forEachOverlappingTile(obj, (tile)->count++, FlxPoint.get(0, 12));
+		// should be touching top 2 left tiles
+		Assert.isTrue(result);
+		Assert.areEqual(2, count);
+	}
+	
 	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)
 	{
 		Assert.areEqual(FlxG.camera.buffer.getPixel(x, 0), color, info);

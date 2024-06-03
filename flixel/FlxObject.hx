@@ -290,23 +290,14 @@ class FlxObject extends FlxBasic
 			
 			if (!object1.immovable && !object2.immovable)
 			{
-				final mass1 = object1.mass;
-				final mass2 = object2.mass;
 				#if FLX_4_LEGACY_COLLISION
-				object1.x = object1.x - (overlap * 0.5);
-				object2.x += overlap * 0.5;
-				
-				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
-				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
-				final average = (newVel1 + newVel2) * 0.5;
-				newVel1 -= average;
-				newVel2 -= average;
-				object1.velocity.x = average + (newVel1 * object1.elasticity);
-				object2.velocity.x = average + (newVel2 * object2.elasticity);
+				legacySeparateX(object1, object2, overlap);
 				#else
 				object1.x -= overlap * 0.5;
 				object2.x += overlap * 0.5;
 				
+				final mass1 = object1.mass;
+				final mass2 = object2.mass;
 				final momentum = mass1 * vel1 + mass2 * vel2;
 				object1.velocity.x = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
 				object2.velocity.x = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
@@ -351,23 +342,14 @@ class FlxObject extends FlxBasic
 			
 			if (!object1.immovable && !object2.immovable)
 			{
-				final mass1 = object1.mass;
-				final mass2 = object2.mass;
 				#if FLX_4_LEGACY_COLLISION
-				object1.y = object1.y - (overlap * 0.5);
-				object2.y += overlap * 0.5;
-				
-				var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
-				var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
-				final average = (newVel1 + newVel2) * 0.5;
-				newVel1 -= average;
-				newVel2 -= average;
-				object1.velocity.y = average + newVel1 * object1.elasticity;
-				object2.velocity.y = average + newVel2 * object2.elasticity;
+				legacySeparateY(object1, object2, overlap);
 				#else
 				object1.y -= overlap / 2;
 				object2.y += overlap / 2;
 				
+				final mass1 = object1.mass;
+				final mass2 = object2.mass;
 				final momentum = mass1 * vel1 + mass2 * vel2;
 				final newVel1 = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
 				final newVel2 = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
@@ -396,6 +378,50 @@ class FlxObject extends FlxBasic
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * The separateX that existed before HaxeFlixel 5.0, preserved for anyone who
+	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
+	 */
+	inline static function legacySeparateX(object1:FlxObject, object2:FlxObject, overlap:Float)
+	{
+		final vel1 = object1.velocity.x;
+		final vel2 = object2.velocity.x;
+		final mass1 = object1.mass;
+		final mass2 = object2.mass;
+		object1.x = object1.x - (overlap * 0.5);
+		object2.x += overlap * 0.5;
+		
+		var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
+		var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
+		final average = (newVel1 + newVel2) * 0.5;
+		newVel1 -= average;
+		newVel2 -= average;
+		object1.velocity.x = average + (newVel1 * object1.elasticity);
+		object2.velocity.x = average + (newVel2 * object2.elasticity);
+	}
+	
+	/**
+	 * The separateY that existed before HaxeFlixel 5.0, preserved for anyone who
+	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
+	 */
+	inline static function legacySeparateY(object1:FlxObject, object2:FlxObject, overlap:Float)
+	{
+		final vel1 = object1.velocity.y;
+		final vel2 = object2.velocity.y;
+		final mass1 = object1.mass;
+		final mass2 = object2.mass;
+		object1.y = object1.y - (overlap * 0.5);
+		object2.y += overlap * 0.5;
+		
+		var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
+		var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
+		final average = (newVel1 + newVel2) * 0.5;
+		newVel1 -= average;
+		newVel2 -= average;
+		object1.velocity.y = average + (newVel1 * object1.elasticity);
+		object2.velocity.y = average + (newVel2 * object2.elasticity);
 	}
 	
 	/**
