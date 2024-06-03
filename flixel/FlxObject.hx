@@ -245,32 +245,6 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Separates 2 overlapping objects. If either object may be a tilemap, and you want
-	 * to separate the object from the individual tiles, you should use `separate` instead
-	 * 
-	 * @return  Whether the objects were overlapping and were separated
-	 * @since 5.9.0
-	 */
-	public static inline function separateObjects(object1:FlxObject, object2:FlxObject):Bool
-	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
-		return separateHelper(object1, object2);
-	}
-	
-	/**
-	 * Same as `separate` but assumes both are not immovable and not tilemaps
-	 */
-	static function separateHelper(object1:FlxObject, object2:FlxObject):Bool
-	{
-		final separatedX:Bool = separateXHelper(object1, object2);
-		final separatedY:Bool = separateYHelper(object1, object2);
-		return separatedX || separatedY;
-	}
-	
-	/**
 	 * Separates 2 overlapping objects along the X-axis. if an object is a tilemap,
 	 * it will separate it from any tiles that overlap it.
 	 * 
@@ -298,22 +272,6 @@ class FlxObject extends FlxBasic
 			return false;
 		
 		return processCheckTilemap(object1, object2, separateYHelper);
-	}
-	
-	/**
-	 * Separates 2 overlapping objects in the X-axis. If either object may be a tilemap, and you want
-	 * to separate the object from the individual tiles, you should use `separateX` instead
-	 * 
-	 * @return  Whether the objects were overlapping and were separated along the X-axis.
-	 * @since 5.9.0
-	 */
-	public static inline function separateObjectsX(object1:FlxObject, object2:FlxObject):Bool
-	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
-		return separateXHelper(object1, object2);
 	}
 	
 	/**
@@ -441,22 +399,6 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Separates 2 overlapping objects in the Y-axis. If either object may be a tilemap, and you want
-	 * to separate the object from the individual tiles, you should use `separateY` instead
-	 * 
-	 * @return  Whether the objects were overlapping and were separated along the Y-axis.
-	 * @since 5.9.0
-	 */
-	public static inline function separateObjectsY(object1:FlxObject, object2:FlxObject):Bool
-	{
-		// can't separate two immovable objects
-		if (object1.immovable && object2.immovable)
-			return false;
-		
-		return separateYHelper(object1, object2);
-	}
-	
-	/**
 	 * Checks two objects for overlaps and sets their touching flags, accordingly.
 	 * If either object may be a tilemap, this will check the object against individual tiles
 	 * 
@@ -464,22 +406,13 @@ class FlxObject extends FlxBasic
 	 */
 	public static function updateTouchingFlags(object1:FlxObject, object2:FlxObject):Bool
 	{
-		return processCheckTilemap(object1, object2, updateObjectTouchingFlags, false);
-	}
-	
-	/**
-	 * Checks two objects for overlaps and sets their touching flags, accordingly.
-	 * If either object may be a tilemap, and you want to check individual tiles,
-	 * you should use `updateTouchingFlags` instead
-	 *
-	 * @return  Whether the objects are overlapping
-	 * @since 5.9.0
-	 */
-	public static function updateObjectTouchingFlags(object1:FlxObject, object2:FlxObject):Bool
-	{
-		final touchingX:Bool = updateObjectTouchingFlagsX(object1, object2);
-		final touchingY:Bool = updateObjectTouchingFlagsY(object1, object2);
-		return touchingX || touchingY;
+		function helper(object1:FlxObject, object2:FlxObject):Bool
+		{
+			final touchingX:Bool = updateTouchingFlagsXHelper(object1, object2);
+			final touchingY:Bool = updateTouchingFlagsYHelper(object1, object2);
+			return touchingX || touchingY;
+		}
+		return processCheckTilemap(object1, object2, helper, false);
 	}
 	
 	/**
@@ -490,18 +423,10 @@ class FlxObject extends FlxBasic
 	 */
 	public static function updateTouchingFlagsX(object1:FlxObject, object2:FlxObject):Bool
 	{
-		return processCheckTilemap(object1, object2, updateObjectTouchingFlagsX, false);
+		return processCheckTilemap(object1, object2, updateTouchingFlagsXHelper, false);
 	}
 	
-	/**
-	 * Checks two objects for overlaps along the X-axis and sets their touching flags, accordingly.
-	 * If either object may be a tilemap, and you want to check individual tiles,
-	 * you should use `updateTouchingFlags` instead
-	 *
-	 * @return  Whether the objects are overlapping in the X-axis
-	 * @since 5.9.0
-	 */
-	public static function updateObjectTouchingFlagsX(object1:FlxObject, object2:FlxObject):Bool
+	static function updateTouchingFlagsXHelper(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// Since we are not separating, always return any amount of overlap => false as last parameter
 		return computeOverlapX(object1, object2, false) != 0;
@@ -515,18 +440,10 @@ class FlxObject extends FlxBasic
 	 */
 	public static function updateTouchingFlagsY(object1:FlxObject, object2:FlxObject):Bool
 	{
-		return processCheckTilemap(object1, object2, updateObjectTouchingFlagsY, false);
+		return processCheckTilemap(object1, object2, updateTouchingFlagsYHelper, false);
 	}
 	
-	/**
-	 * Checks two objects for overlaps along the Y-axis and sets their touching flags, accordingly.
-	 * If either object may be a tilemap, and you want to check individual tiles,
-	 * you should use `updateTouchingFlags` instead
-	 *
-	 * @return  Whether the objects are overlapping in the Y-axis
-	 * @since 5.9.0
-	 */
-	public static function updateObjectTouchingFlagsY(object1:FlxObject, object2:FlxObject):Bool
+	static function updateTouchingFlagsYHelper(object1:FlxObject, object2:FlxObject):Bool
 	{
 		// Since we are not separating, always return any amount of overlap => false as last parameter
 		return computeOverlapY(object1, object2, false) != 0;
