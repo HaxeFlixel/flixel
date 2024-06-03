@@ -164,11 +164,6 @@ class FlxObject extends FlxBasic
 	@:deprecated("Use ANY or FlxDirectionFlags.ANY instead")
 	@:noCompletion
 	public static inline var ANY = FlxDirectionFlags.ANY;
-
-	@:noCompletion
-	static var _firstSeparateFlxRect:FlxRect = FlxRect.get();
-	@:noCompletion
-	static var _secondSeparateFlxRect:FlxRect = FlxRect.get();
 	
 	static function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
 	{
@@ -484,34 +479,34 @@ class FlxObject extends FlxBasic
 	{
 		var overlap:Float = 0;
 		// First, get the two object deltas
-		var obj1delta:Float = object1.x - object1.last.x;
-		var obj2delta:Float = object2.x - object2.last.x;
+		final delta1:Float = object1.x - object1.last.x;
+		final delta2:Float = object2.x - object2.last.x;
 
-		if (obj1delta != obj2delta)
+		if (delta1 != delta2)
 		{
 			// Check if the X hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
+			final delta1Abs:Float = (delta1 > 0) ? delta1 : -delta1;
+			final delta2Abs:Float = (delta2 > 0) ? delta2 : -delta2;
 
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(object1.x - ((obj1delta > 0) ? obj1delta : 0), object1.last.y, object1.width + obj1deltaAbs,
-				object1.height);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(object2.x - ((obj2delta > 0) ? obj2delta : 0), object2.last.y, object2.width + obj2deltaAbs,
-				object2.height);
-
-			if ((obj1rect.x + obj1rect.width > obj2rect.x)
-				&& (obj1rect.x < obj2rect.x + obj2rect.width)
-				&& (obj1rect.y + obj1rect.height > obj2rect.y)
-				&& (obj1rect.y < obj2rect.y + obj2rect.height))
+			final rect1 = FlxRect.get(object1.x - (delta1 > 0 ? delta1 : 0), object1.last.y, object1.width + delta1Abs, object1.height);
+			final rect2 = FlxRect.get(object2.x - (delta2 > 0 ? delta2 : 0), object2.last.y, object2.width + delta2Abs, object2.height);
+			
+			if (rect1.overlaps(rect2))
 			{
-				var maxOverlap:Float = checkMaxOverlap ? (obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS) : 0;
-
-				// If they did overlap (and can), figure out by how much and flip the corresponding flags
-				if (obj1delta > obj2delta)
+				final maxOverlap:Float = checkMaxOverlap ? (delta1Abs + delta2Abs + SEPARATE_BIAS) : 0;
+				
+				inline function canCollide(obj:FlxObject, dir:FlxDirectionFlags)
+				{
+					return obj.allowCollisions.has(dir);
+				}
+				
+				// If they do overlap (and can), figure out by how much and flip the corresponding flags
+				if (delta1 > delta2)
 				{
 					overlap = object1.x + object1.width - object2.x;
-					if ((checkMaxOverlap && (overlap > maxOverlap))
-						|| ((object1.allowCollisions & FlxDirectionFlags.RIGHT) == 0)
-						|| ((object2.allowCollisions & FlxDirectionFlags.LEFT) == 0))
+					if ((checkMaxOverlap && overlap > maxOverlap)
+						|| !canCollide(object1, FlxDirectionFlags.RIGHT)
+						|| !canCollide(object2, FlxDirectionFlags.LEFT))
 					{
 						overlap = 0;
 					}
@@ -521,12 +516,12 @@ class FlxObject extends FlxBasic
 						object2.touching |= FlxDirectionFlags.LEFT;
 					}
 				}
-				else if (obj1delta < obj2delta)
+				else if (delta1 < delta2)
 				{
 					overlap = object1.x - object2.width - object2.x;
-					if ((checkMaxOverlap && (-overlap > maxOverlap))
-						|| ((object1.allowCollisions & FlxDirectionFlags.LEFT) == 0)
-						|| ((object2.allowCollisions & FlxDirectionFlags.RIGHT) == 0))
+					if ((checkMaxOverlap && -overlap > maxOverlap)
+						|| !canCollide(object1, FlxDirectionFlags.LEFT)
+						|| !canCollide(object2, FlxDirectionFlags.RIGHT))
 					{
 						overlap = 0;
 					}
@@ -537,7 +532,11 @@ class FlxObject extends FlxBasic
 					}
 				}
 			}
+			
+			rect1.put();
+			rect2.put();
 		}
+		
 		return overlap;
 	}
 	
@@ -550,34 +549,35 @@ class FlxObject extends FlxBasic
 	{
 		var overlap:Float = 0;
 		// First, get the two object deltas
-		var obj1delta:Float = object1.y - object1.last.y;
-		var obj2delta:Float = object2.y - object2.last.y;
+		final delta1:Float = object1.y - object1.last.y;
+		final delta2:Float = object2.y - object2.last.y;
 
-		if (obj1delta != obj2delta)
+		if (delta1 != delta2)
 		{
 			// Check if the Y hulls actually overlap
-			var obj1deltaAbs:Float = (obj1delta > 0) ? obj1delta : -obj1delta;
-			var obj2deltaAbs:Float = (obj2delta > 0) ? obj2delta : -obj2delta;
+			final delta1Abs:Float = (delta1 > 0) ? delta1 : -delta1;
+			final delta2Abs:Float = (delta2 > 0) ? delta2 : -delta2;
+			
+			// TODO: why is this object1.x, but computeOverlapY is object1.last.y ?
+			final rect1 = FlxRect.get(object1.x, object1.y - (delta1 > 0 ? delta1 : 0), object1.width, object1.height + delta1Abs);
+			final rect2 = FlxRect.get(object2.x, object2.y - (delta2 > 0 ? delta2 : 0), object2.width, object2.height + delta2Abs);
 
-			var obj1rect:FlxRect = _firstSeparateFlxRect.set(object1.x, object1.y - ((obj1delta > 0) ? obj1delta : 0), object1.width,
-				object1.height + obj1deltaAbs);
-			var obj2rect:FlxRect = _secondSeparateFlxRect.set(object2.x, object2.y - ((obj2delta > 0) ? obj2delta : 0), object2.width,
-				object2.height + obj2deltaAbs);
-
-			if ((obj1rect.x + obj1rect.width > obj2rect.x)
-				&& (obj1rect.x < obj2rect.x + obj2rect.width)
-				&& (obj1rect.y + obj1rect.height > obj2rect.y)
-				&& (obj1rect.y < obj2rect.y + obj2rect.height))
+			if (rect1.overlaps(rect2))
 			{
-				var maxOverlap:Float = checkMaxOverlap ? (obj1deltaAbs + obj2deltaAbs + SEPARATE_BIAS) : 0;
-
+				final maxOverlap:Float = checkMaxOverlap ? (delta1Abs + delta2Abs + SEPARATE_BIAS) : 0;
+				
+				inline function canCollide(obj:FlxObject, dir:FlxDirectionFlags)
+				{
+					return obj.allowCollisions.has(dir);
+				}
+				
 				// If they did overlap (and can), figure out by how much and flip the corresponding flags
-				if (obj1delta > obj2delta)
+				if (delta1 > delta2)
 				{
 					overlap = object1.y + object1.height - object2.y;
 					if ((checkMaxOverlap && (overlap > maxOverlap))
-						|| ((object1.allowCollisions & FlxDirectionFlags.DOWN) == 0)
-						|| ((object2.allowCollisions & FlxDirectionFlags.UP) == 0))
+						|| !canCollide(object1, FlxDirectionFlags.DOWN)
+						|| !canCollide(object2, FlxDirectionFlags.UP))
 					{
 						overlap = 0;
 					}
@@ -587,12 +587,12 @@ class FlxObject extends FlxBasic
 						object2.touching |= FlxDirectionFlags.UP;
 					}
 				}
-				else if (obj1delta < obj2delta)
+				else if (delta1 < delta2)
 				{
 					overlap = object1.y - object2.height - object2.y;
 					if ((checkMaxOverlap && (-overlap > maxOverlap))
-						|| ((object1.allowCollisions & FlxDirectionFlags.UP) == 0)
-						|| ((object2.allowCollisions & FlxDirectionFlags.DOWN) == 0))
+						|| !canCollide(object1, FlxDirectionFlags.UP)
+						|| !canCollide(object2, FlxDirectionFlags.DOWN))
 					{
 						overlap = 0;
 					}
@@ -603,7 +603,11 @@ class FlxObject extends FlxBasic
 					}
 				}
 			}
+			
+			rect1.put();
+			rect2.put();
 		}
+		
 		return overlap;
 	}
 	
