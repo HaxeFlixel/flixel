@@ -189,9 +189,14 @@ class FlxObjectTest extends FlxTest
 	}
 
 	@Test
-	function testOverlapsPoint()
+	function testOverlapsPointInScreenSpace()
 	{
 		overlapsPointInScreenSpace(true);
+	}
+	
+	@Test
+	function testOverlapsPointNotInScreenSpace()
+	{
 		overlapsPointInScreenSpace(false);
 	}
 
