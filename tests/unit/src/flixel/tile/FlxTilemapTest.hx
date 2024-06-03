@@ -1,12 +1,13 @@
 package flixel.tile;
 
 import flixel.FlxObject;
-import openfl.display.BitmapData;
-import openfl.errors.ArgumentError;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.util.FlxDirectionFlags;
 import haxe.PosInfos;
 import massive.munit.Assert;
+import openfl.display.BitmapData;
+import openfl.errors.ArgumentError;
 
 using StringTools;
 
@@ -248,25 +249,112 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(4, count);
 	}
 	
-	@Test // #3158
-	function testForEachOverlappingTile()
+	@Test
+	function testWallLeft()
 	{
-		final mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; // 3x3 with a solid block in the middle
+		final mapData = [
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0
+		];
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
 		
-		final obj = new FlxObject(4, 12, 8, 8);
-		var count = 0;
-		final result = tilemap.forEachOverlappingTile(obj, (tile)->count++);
-		// should be touching bottom-left 4 tiles only
-		Assert.isTrue(result);
-		Assert.areEqual(4, count);
+		final obj = new FlxObject(0, 0, 8, 8);
 		
-		// test position
-		count = 0;
-		final result = tilemap.forEachOverlappingTile(obj, (tile)->count++, FlxPoint.get(0, 12));
-		// should be touching top 2 left tiles
-		Assert.isTrue(result);
-		Assert.areEqual(2, count);
+		// move up-left towards a left wal, make sure we only separate on the X
+		for (i in 0...40)
+		{
+			// check a bunch of locations
+			obj.x = 4;
+			obj.y = 4 + (i / 10);
+			obj.touching = NONE;
+			obj.last.set(12, obj.y + 8);
+			FlxG.collide(tilemap, obj);
+			
+			final result = obj.touching.toString();
+			Assert.areEqual(LEFT.toString(), result, 'Value [$result] was not equal to expected value [L] on i=$i');
+		}
+	}
+	
+	@Test
+	function testWallRight()
+	{
+		final mapData = [
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
+		
+		final obj = new FlxObject(0, 0, 8, 8);
+		
+		// move up-right towards a right wall, make sure we only separate on the X
+		for (i in 0...40)
+		{
+			// check a bunch of locations
+			obj.x = 12;
+			obj.y = 4 + (i / 10);
+			obj.touching = NONE;
+			obj.last.set(4, obj.y + 8);
+			FlxG.collide(tilemap, obj);
+			
+			final result = obj.touching.toString();
+			Assert.areEqual(RIGHT.toString(), result, 'Value [$result] was not equal to expected value [R] on i=$i');
+		}
+	}
+	
+	@Test
+	function testWallTop()
+	{
+		final mapData = [
+			1, 1, 1,
+			0, 0, 0,
+			0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
+		
+		final obj = new FlxObject(0, 0, 8, 8);
+		
+		// move up-left towards a ceiling, make sure we only separate on the Y
+		for (i in 0...40)
+		{
+			// check a bunch of locations
+			obj.x = 4 + (i / 10);
+			obj.y = 4;
+			obj.touching = NONE;
+			obj.last.set(obj.x + 8, 12);
+			FlxG.collide(tilemap, obj);
+			
+			final result = obj.touching.toString();
+			Assert.areEqual(UP.toString(), result, 'Value [$result] was not equal to expected value [U] on i=$i');
+		}
+	}
+	
+	@Test
+	function testWallBottom()
+	{
+		final mapData = [
+			0, 0, 0,
+			0, 0, 0,
+			1, 1, 1
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData());
+		
+		final obj = new FlxObject(0, 0, 8, 8);
+		
+		// move down-right towards a floor, make sure we only separate on the Y
+		for (i in 0...40)
+		{
+			// check a bunch of locations
+			obj.x = 12 - (i / 10);
+			obj.y = 12;
+			obj.touching = NONE;
+			obj.last.set(obj.x - 8, 4);
+			FlxG.collide(tilemap, obj);
+			
+			final result = obj.touching.toString();
+			Assert.areEqual(DOWN.toString(), result, 'Value [$result] was not equal to expected value [D] on i=$i');
+		}
 	}
 	
 	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)

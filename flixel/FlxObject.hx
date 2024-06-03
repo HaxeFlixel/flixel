@@ -558,9 +558,8 @@ class FlxObject extends FlxBasic
 			final delta1Abs:Float = (delta1 > 0) ? delta1 : -delta1;
 			final delta2Abs:Float = (delta2 > 0) ? delta2 : -delta2;
 			
-			// TODO: why is this object1.x, but computeOverlapY is object1.last.y ?
-			final rect1 = FlxRect.get(object1.x, object1.y - (delta1 > 0 ? delta1 : 0), object1.width, object1.height + delta1Abs);
-			final rect2 = FlxRect.get(object2.x, object2.y - (delta2 > 0 ? delta2 : 0), object2.width, object2.height + delta2Abs);
+			final rect1 = FlxRect.get(object1.last.x, object1.y - (delta1 > 0 ? delta1 : 0), object1.width, object1.height + delta1Abs);
+			final rect2 = FlxRect.get(object2.last.x, object2.y - (delta2 > 0 ? delta2 : 0), object2.width, object2.height + delta2Abs);
 
 			if (rect1.overlaps(rect2))
 			{
