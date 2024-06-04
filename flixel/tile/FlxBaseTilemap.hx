@@ -718,135 +718,300 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indices, please read documentation of 'setCustomTileMappings' function.";
 		}
 	}
-
+	
+	/**
+	 * Calculates a mapIndex via `row * widthInTiles + column`
+	 * 
+	 * @param  column  the grid X location, in tiles
+	 * @param  row     the grid Y location, in tiles
+	 */
+	public inline function getMapIndex(column:Int, row:Int):Int
+	{
+		return row * widthInTiles + column;
+	}
+	
+	/**
+	 * Calculates the column from a map location
+	 * 
+	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 */
+	public inline function getColumn(mapIndex:Int):Int
+	{
+		return mapIndex % widthInTiles;
+	}
+	
+	/**
+	 * Calculates the column from a map location
+	 * 
+	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 */
+	public inline function getRow(mapIndex:Int):Int
+	{
+		return Std.int(mapIndex / widthInTiles);
+	}
+	
+	/**
+	 * Whether a tile exists at the given map location
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @since 5.9.0
+	 */
+	public overload extern inline function tileExists(column:Int, row:Int):Bool
+	{
+		return column >= 0 && row >= 0 && column < widthInTiles && row < heightInTiles;
+	}
+	
+	/**
+	 * Whether a tile exists at the given map location
+	 *
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function tileExists(mapIndex:Int):Bool
+	{
+		return mapIndex >= 0 && mapIndex < _data.length;
+	}
+	
+	/**
+	 * Finds the tile instance at a particular column and row
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileData(column:Int, row:Int):Null<Tile>
+	{
+		return getTileData(getMapIndex(column, row));
+	}
+	
+	/**
+	 * Finds the tile instance with the given mapIndex
+	 *
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * 
+	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
+	 * You can call `tile.orient` or similar methods
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @return  An integer containing the value of the tile at this spot in the array.
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileData(mapIndex:Int):Null<Tile>
+	{
+		return _tileObjects[getTileIndex(mapIndex)];
+	}
+	
 	/**
 	 * Check the value of a particular tile.
 	 *
-	 * @param   x  The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y  The Y coordinate of the tile (in tiles, not pixels).
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileIndex(column:Int, row:Int):Int
+	{
+		return getTileIndex(getMapIndex(column, row));
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given map location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @return  The tileIndex of the tile with this `mapIndex`
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileIndex(mapIndex:Int):Int
+	{
+		return _data[mapIndex];
+	}
+	
+	/**
+	 * Check the value of a particular tile.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 */
+	@:deprecated("getTile is deprecated use getTileIndex(column, row), instead")
+	public function getTile(column:Int, row:Int):Int
+	{
+		return getTileIndex(column, row);
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given map location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   mapIndex  The desired location in the map
 	 * @return  An integer containing the value of the tile at this spot in the array.
 	 */
-	public function getTile(x:Int, y:Int):Int
+	@:deprecated("getTileByIndex is deprecated use getTileIndex(mapIndex), instead")
+	public function getTileByIndex(mapIndex:Int):Int
 	{
-		return _data[y * widthInTiles + x];
+		return getTileIndex(mapIndex);
 	}
-
+	
 	/**
-	 * Get the value of a tile in the tilemap by index.
-	 *
-	 * @param   index  The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @return  An integer containing the value of the tile at this spot in the array.
-	 */
-	public function getTileByIndex(index:Int):Int
-	{
-		return _data[index];
-	}
-
-	/**
-	 * Gets the collision flags of tile by index.
-	 *
-	 * @param   index  Tile index returned by getTile or getTileByIndex
+	 * Gets the collision flags of the tile at the given location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   mapIndex  The desired location in the map
 	 * @return  The internal collision flag for the requested tile.
 	 */
-	public function getTileCollisions(index:Int):FlxDirectionFlags
+	@:deprecated("getTileCollisions is deprecated use getTileData(index).allowCollisions, instead")
+	public function getTileCollisions(mapIndex:Int):FlxDirectionFlags
 	{
-		return _tileObjects[index].allowCollisions;
+		return getTileData(mapIndex).allowCollisions;
 	}
-
+	
 	/**
-	 * Returns a new array full of every map index of the requested tile type.
+	 * Returns a new array full of every map index of the requested tile type
+	 * 
+	 * **Note:** Unlike `getAllMapIndices` this will return `null` if no tiles are found
 	 *
 	 * @param   index  The requested tile type.
 	 * @return  An Array with a list of all map indices of that tile type.
 	 */
-	public function getTileInstances(index:Int):Array<Int>
+	@:deprecated("getTileInstances is deprecated, use getTileIndices, instead")// 5.9.0
+	public inline function getTileInstances(tileIndex:Int):Array<Int>
 	{
-		var array:Array<Int> = null;
-		var i:Int = 0;
-		var l:Int = widthInTiles * heightInTiles;
-
-		while (i < l)
+		// for backwards compat, return `null` if none are found
+		final result = getAllMapIndices(tileIndex);
+		return result.length == 0 ? null : result;
+	}
+	
+	/**
+	 * Returns a new array full of every map index of the requested tile type.
+	 * 
+	 * **Note:** Unlike `getTileInstances` this will return `[]` if no tiles are found
+	 * 
+	 * @param   index  The requested tile type.
+	 * @return  An Array with a list of all map indices of that tile type.
+	 * @since 5.9.0
+	 */
+	public function getAllMapIndices(tileIndex:Int):Array<Int>
+	{
+		final result:Array<Int> = [];
+		var i:Int = widthInTiles * heightInTiles;
+		
+		while (i-- > 0)
 		{
-			if (_data[i] == index)
+			if (_data[i] == tileIndex)
 			{
-				if (array == null)
-				{
-					array = [];
-				}
-				array.push(i);
+				result.unshift(i);
 			}
-			i++;
 		}
-
-		return array;
+		
+		return result;
 	}
-
+	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   x               The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y               The Y coordinate of the tile (in tiles, not pixels).
-	 * @param   tile            The new integer data you wish to inject.
+	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex       The new tileIndex to place at the mapIndex
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 */
-	public function setTile(x:Int, y:Int, tile:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
-		if ((x >= widthInTiles) || (y >= heightInTiles))
-		{
-			return false;
-		}
-
-		return setTileByIndex(y * widthInTiles + x, tile, updateGraphics);
+		return setTileHelper(mapIndex, tileIndex, updateGraphics);
 	}
-
+	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   index           The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tile            The new integer data you wish to inject.
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   tileIndex       The new integer data you wish to inject.
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 */
-	public function setTileByIndex(index:Int, tile:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
-		if (index >= _data.length)
-		{
+		return setTileHelper(getMapIndex(column, row), tileIndex, updateGraphics);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   tileIndex       The new integer data you wish to inject.
+	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 */
+	@:deprecated("setTile is deprecated, use setTileIndex(column, row, tileIndex,...), instead")
+	public function setTile(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		return setTileIndex(getMapIndex(column, row), tileIndex, updateGraphics);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex       The new tileIndex to place at the mapIndex
+	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 */
+	@:deprecated("setTileByIndex is deprecated, use setTileIndex(mapIndex, tileIndex,...), instead")
+	public function setTileByIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		return setTileIndex(mapIndex, tileIndex, updateGraphics);
+	}
+	
+	function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		if (!tileExists(mapIndex))
 			return false;
-		}
-
-		var ok:Bool = true;
-		_data[index] = tile;
-
+		
+		_data[mapIndex] = tileIndex;
+		
 		if (!updateGraphics)
 		{
-			return ok;
+			return true;
 		}
-
+		
 		setDirty();
-
-		if (auto == OFF)
+		
+		switch (auto)
 		{
-			updateTile(_data[index]);
-			return ok;
+			case OFF:
+				updateTile(_data[mapIndex]);
+			default:
+				updateTileWithAutoTile(mapIndex);
 		}
-
+		
+		return true;
+	}
+	
+	function updateTileWithAutoTile(mapIndex:Int)
+	{
 		// If this map is auto-tiled and it changes, locally update the arrangement
-		var i:Int;
-		var row:Int = Std.int(index / widthInTiles) - 1;
-		var rowLength:Int = row + 3;
-		var column:Int = index % widthInTiles - 1;
-		var columnHeight:Int = column + 3;
-
+		var row:Int = getRow(mapIndex) - 1;
+		var column:Int = getColumn(mapIndex) - 1;
+		final rowLength:Int = row + 3;
+		final columnHeight:Int = column + 3;
+		
 		while (row < rowLength)
 		{
 			column = columnHeight - 3;
-
+			
 			while (column < columnHeight)
 			{
-				if ((row >= 0) && (row < heightInTiles) && (column >= 0) && (column < widthInTiles))
+				if (tileExists(column, row))
 				{
-					i = row * widthInTiles + column;
+					final i = getMapIndex(column, row);
 					autoTile(i);
 					updateTile(_data[i]);
 				}
@@ -854,8 +1019,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			}
 			row++;
 		}
-
-		return ok;
 	}
 
 	/**
@@ -911,22 +1074,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getData(simple:Bool = false):Array<Int>
 	{
 		if (!simple)
-		{
 			return _data;
-		}
-
-		var i:Int = 0;
-		var l:Int = _data.length;
-		var data:Array<Int> = new Array();
-		FlxArrayUtil.setLength(data, l);
-
-		while (i < l)
-		{
-			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
-			i++;
-		}
-
-		return data;
+		
+		return
+		[
+			for (i in 0..._data.length)
+				(getTileData(i).solid ? 1 : 0)
+		];
 	}
 
 	/**
@@ -1104,10 +1258,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	function tileAtPointAllowsCollisions(point:FlxPoint):Bool
 	{
-		var tileIndex = getTileIndexByCoords(point);
-		if (tileIndex < 0 || tileIndex >= _data.length)
-			return false;
-		return _tileObjects[_data[tileIndex]].allowCollisions > 0;
+		final mapIndex = getTileIndexByCoords(point);
+		return tileExists(mapIndex) && getTileData(mapIndex).solid;
 	}
 
 	/**

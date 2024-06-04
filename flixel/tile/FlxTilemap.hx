@@ -1055,7 +1055,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		final endIndex = getTileIndexByCoords(end);
 
 		// If the starting tile is solid, return the starting position
-		if (getTileCollisions(getTileByIndex(startIndex)) != NONE)
+		if (getTileData(startIndex).allowCollisions != NONE)
 		{
 			if (result != null)
 				result.copyFrom(start);
@@ -1162,8 +1162,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		final step = startY <= endY ? 1 : -1;
 		while (true)
 		{
-			var index = y * widthInTiles + x;
-			if (getTileCollisions(getTileByIndex(index)) != NONE)
+			var index = getMapIndex(x, y);
+			if (getTileData(index).allowCollisions != NONE)
 				return index;
 			
 			if (y == endY)
