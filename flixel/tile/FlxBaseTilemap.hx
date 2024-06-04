@@ -662,6 +662,41 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indices, please read documentation of 'setCustomTileMappings' function.";
 		}
 	}
+	
+	/**
+	 * Check the value of a particular tile.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 */
+	public overload extern inline function getTileIndex(column:Int, row:Int):Int
+	{
+		return getTileIndexHelper(row * widthInTiles + column);
+	}
+	
+	/**
+	 * Get the value of a tile in the tilemap by index.
+	 *
+	 * @param   index  The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @return  An integer containing the value of the tile at this spot in the array.
+	 */
+	public overload extern inline function getTileByIndex(mapIndex:Int):Int
+	{
+		return getTileIndexHelper(index);
+	}
+	
+	/**
+	 * Check the value of a particular tile.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 */
+	inline function getTileIndexHelper(index:Int):Int
+	{
+		return _data[index];
+	}
 
 	/**
 	 * Check the value of a particular tile.
