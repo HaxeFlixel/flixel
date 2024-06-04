@@ -107,8 +107,8 @@ class FlxTile extends FlxObject
 	}
 	
 	/**
-	 * Places this tile in the world according to the map's location. often used before calling
-	 * `overlapsObject`
+	 * Places this tile in the world according to the desired map location. 
+	 * often used before calling `overlapsObject`
 	 * 
 	 * This method is dynamic, meaning you can set custom behavior per tile, without extension.
 	 * 
@@ -117,15 +117,58 @@ class FlxTile extends FlxObject
 	 * @param   col     The tilemap column where this is being placed
 	 * @param   row     The tilemap row where this is being placed
 	 */
-	public dynamic function orient(xPos:Float, yPos:Float, col:Int, row:Int)
+	public dynamic function orientAt(xPos:Float, yPos:Float, col:Int, row:Int)
 	{
-		final map = this.tilemap;
-		mapIndex = (row * map.widthInTiles) + col;
-		width = map.scaledTileWidth;
-		height = map.scaledTileHeight;
+		mapIndex = (row * tilemap.widthInTiles) + col;
+		width = tilemap.scaledTileWidth;
+		height = tilemap.scaledTileHeight;
 		x = xPos + col * width;
 		y = yPos + row * height;
-		last.x = x - xPos - map.last.x;
-		last.y = y - yPos - map.last.y;
+		last.x = x - xPos - tilemap.last.x;
+		last.y = y - yPos - tilemap.last.y;
+	}
+	
+	/**
+	 * Places this tile in the world according to the desired map location. 
+	 * often used before calling `overlapsObject`
+	 * 
+	 * Calls `orientAt` with the tilemap's current position
+	 * 
+	 * @param   col     The tilemap column where this is being placed
+	 * @param   row     The tilemap row where this is being placed
+	 */
+	public inline function orient(col:Int, row:Int)
+	{
+		orientAt(tilemap.x, tilemap.y, col, row);
+	}
+	
+	/**
+	 * Places this tile in the world according to the desired map location. 
+	 * often used before calling `overlapsObject`
+	 * 
+	 * Calls `orientAt` with the tilemap's current position
+	 * 
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   mapIndex  The desired location in the map
+	 */
+	public inline function orientByIndex(mapIndex:Int)
+	{
+		orientAtByIndex(tilemap.x, tilemap.y, mapIndex);
+	}
+	
+	/**
+	 * Places this tile in the world according to the desired map location. 
+	 * often used before calling `overlapsObject`
+	 * 
+	 * Calls `orientAt` with the tilemap's current position
+	 * 
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   mapIndex  The desired location in the map
+	 */
+	public inline function orientAtByIndex(xPos:Float, yPos:Float, mapIndex:Int)
+	{
+		orientAt(xPos, yPos, tilemap.getColumn(mapIndex), tilemap.getRow(mapIndex));
 	}
 }
