@@ -605,7 +605,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
 					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY);
+					drawDebugBoundingBox(camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY, camera.zoom);
 				}
 
 				columnIndex++;
