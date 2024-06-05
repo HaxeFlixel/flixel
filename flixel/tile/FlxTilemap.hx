@@ -1163,7 +1163,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		while (true)
 		{
 			var index = getMapIndex(x, y);
-			if (getTileData(index).allowCollisions != NONE)
+			if (getTileData(index).solid)
 				return index;
 			
 			if (y == endY)
@@ -1324,7 +1324,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		});
 
 		if (newTile >= 0)
-			setTile(tileX, tileY, newTile);
+			setTileIndex(tileX, tileY, newTile);
 
 		return tileSprite;
 	}
