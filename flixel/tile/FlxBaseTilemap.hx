@@ -864,10 +864,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 * 
+	 * ##Soft Deprecation
+	 * You should use `getTileData(mapIndex).allowCollisions`, instead
+	 * 
 	 * @param   mapIndex  The desired location in the map
 	 * @return  The internal collision flag for the requested tile.
 	 */
-	@:deprecated("getTileCollisions is deprecated use getTileData(index).allowCollisions, instead")
 	public function getTileCollisions(mapIndex:Int):FlxDirectionFlags
 	{
 		return getTileData(mapIndex).allowCollisions;
