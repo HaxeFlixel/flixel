@@ -102,7 +102,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt #if cpp from cpp.UInt8 
 	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return The color as a FlxColor
 	 */
-	public static inline function fromRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
+	public static inline function fromRGB(Red:FlxColorInt, Green:FlxColorInt, Blue:FlxColorInt, Alpha:FlxColorInt = 255):FlxColor
 	{
 		var color = new FlxColor();
 		return color.setRGB(Red, Green, Blue, Alpha);
@@ -456,7 +456,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt #if cpp from cpp.UInt8 
 	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return This color
 	 */
-	public inline function setRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
+	public inline function setRGB(Red:FlxColorInt, Green:FlxColorInt, Blue:FlxColorInt, Alpha:FlxColorInt = 255):FlxColor
 	{
 		red = Red;
 		green = Green;
