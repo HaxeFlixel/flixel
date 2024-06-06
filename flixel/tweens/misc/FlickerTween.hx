@@ -2,7 +2,7 @@ package flixel.tweens.misc;
 
 import flixel.FlxBasic;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase.EaseFunction;
+import flixel.tweens.FlxEase;
 
 /**
  * Special tween options for flicker tweens
@@ -97,10 +97,10 @@ class FlickerTween extends FlxTween
 		{
 			if (options.endVisibility != null)
 				endVisibility = options.endVisibility;
-				
+			
 			if (options.ratio != null)
 				ratio = options.ratio;
-				
+			
 			if (options.tweenFunction != null)
 				tweenFunction = options.tweenFunction;
 		}
