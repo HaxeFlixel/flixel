@@ -456,7 +456,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return This color
 	 */
-	public inline function setRGB(Red:FlxColorInt16, Green:FlxColorInt16, Blue:FlxColoInt16, Alpha:FlxColorInt16 = 255):FlxColor
+	public inline function setRGB(Red:FlxColorInt16, Green:FlxColorInt16, Blue:FlxColorInt16, Alpha:FlxColorInt16 = 255):FlxColor
 	{
 		red = Red;
 		green = Green;
