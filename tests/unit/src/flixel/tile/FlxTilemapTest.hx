@@ -248,6 +248,8 @@ class FlxTilemapTest extends FlxTest
 	{
 		tilemap.loadMapFromCSV("-1,1", getBitmapData(), 8, 8);
 		FlxAssert.arraysEqual([0, 1], tilemap.getData());
+		
+		Assert.areEqual(0, tilemap.getTileIndex(0));
 	}
 
 	@Test // #1520

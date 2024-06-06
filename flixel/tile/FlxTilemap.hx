@@ -599,7 +599,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			for (column in 0...screenColumns)
 			{
-				final tile = _tileObjects[_data[columnIndex]];
+				final tile = getTileData(columnIndex);
 
 				if (tile != null && tile.visible && !tile.ignoreDrawDebug)
 				{
@@ -780,10 +780,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		{
 			for (column in minTileX...maxTileX)
 			{
-				final mapIndex:Int = getMapIndex(column, row);
-				final tileIndex:Int = _data[mapIndex] < 0 ? 0 : _data[mapIndex];// TODO: still need to check -1?
-				
-				final tile = _tileObjects[tileIndex];
+				final tile = getTileData(column, row);
 				tile.orientAt(xPos, yPos, column, row);
 				if (tile.overlapsObject(object) && (filter == null || filter(tile)))
 				{
@@ -1123,8 +1120,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var stepY:Float = deltaY / steps;
 		var curX:Float = start.x - stepX - x;
 		var curY:Float = start.y - stepY - y;
-		var tileX:Int;
-		var tileY:Int;
 		var i:Int = 0;
 
 		start.putWeak();
@@ -1141,10 +1136,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				continue;
 			}
 
-			tileX = Math.floor(curX / scaledTileWidth);
-			tileY = Math.floor(curY / scaledTileHeight);
-
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != NONE)
+			var tileX = Math.floor(curX / scaledTileWidth);
+			var tileY = Math.floor(curY / scaledTileHeight);
+			
+			if (getTileData(column, row).solid)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(scaledTileWidth);
@@ -1220,9 +1215,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		if (spriteFactory == null)
 			spriteFactory = defaultTileToSprite;
-
-		final rowIndex:Int = tileX + (tileY * widthInTiles);
-		final tile:FlxTile = _tileObjects[_data[rowIndex]];
+		
+		final tile:FlxTile = getTileData(tileX, tileY);
 		var image:FlxImageFrame = null;
 
 		if (tile != null && tile.visible)
@@ -1232,7 +1226,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		final worldX:Float = tileX * tileWidth * scale.x + x;
 		final worldY:Float = tileY * tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = spriteFactory({
+		final tileSprite:FlxSprite = spriteFactory({
 			graphic: image,
 			x: worldX,
 			y: worldY,
@@ -1322,7 +1316,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			for (column in 0...screenColumns)
 			{
-				tile = _tileObjects[_data[columnIndex]];
+				tile = getTileData(columnIndex);
 
 				if (tile != null && tile.visible && tile.frame.type != FlxFrameType.EMPTY)
 				{
@@ -1437,7 +1431,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		setDirty();
 	}
 	#end
-
+	
+	/** Guards against -1 */
+	override function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics:Bool = true):Bool
+	{
+		return super.setTileHelper(mapIndex, tileIndex < 0 ? 0 : tileIndex, updateGraphics);
+	}
+	
 	/**
 	 * Internal function used in setTileByIndex() and the constructor to update the map.
 	 *
