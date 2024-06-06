@@ -40,10 +40,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public static var colorLookup(default, null):Map<String, Int> = FlxMacroUtil.buildMap("flixel.util.FlxColor");
 
-	public var red(get, set):Int;
-	public var blue(get, set):Int;
-	public var green(get, set):Int;
-	public var alpha(get, set):Int;
+	public var red(get, set):FlxColorInt;
+	public var blue(get, set):FlxColorInt;
+	public var green(get, set):FlxColorInt;
+	public var alpha(get, set):FlxColorInt;
 
 	public var redFloat(get, set):Float;
 	public var blueFloat(get, set):Float;
@@ -584,22 +584,22 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		#end
 	}
 
-	inline function get_red():Int
+	inline function get_red():FlxColorInt
 	{
 		return (getThis() >> 16) & 0xff;
 	}
 
-	inline function get_green():Int
+	inline function get_green():FlxColorInt
 	{
 		return (getThis() >> 8) & 0xff;
 	}
 
-	inline function get_blue():Int
+	inline function get_blue():FlxColorInt
 	{
 		return getThis() & 0xff;
 	}
 
-	inline function get_alpha():Int
+	inline function get_alpha():FlxColorInt
 	{
 		return (getThis() >> 24) & 0xff;
 	}
@@ -816,3 +816,9 @@ typedef TriadicHarmony =
 	color2:FlxColor,
 	color3:FlxColor
 }
+
+#if cpp
+private typedef FlxColorInt = cpp.UInt8;
+#else
+private typedef FlxColorInt = Int;
+#end
