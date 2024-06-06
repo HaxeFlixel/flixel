@@ -20,7 +20,10 @@ class FlxTile extends FlxObject
 	 */
 	public var callbackFunction:(FlxObject, FlxObject)->Void = null;
 	
-	/** Dispatched whenever FlxG.collide resolves a collision with a tile of this type */
+	/**
+	 * Dispatched whenever FlxG.collide resolves a collision with a tile of this type
+	 * @since 5.9.0
+	 */
 	public var onCollide = new FlxTypedSignal<(FlxTile, FlxObject)->Void>();
 	
 	/**
@@ -96,6 +99,7 @@ class FlxTile extends FlxObject
 	 * `orient` to ensure this tile is in the correct world space.
 	 * 
 	 * This method is dynamic, meaning you can set custom behavior per tile, without extension.
+	 * @since 5.9.0
 	 */
 	public dynamic function overlapsObject(object:FlxObject):Bool
 	{
@@ -116,6 +120,7 @@ class FlxTile extends FlxObject
 	 * @param   yPos    May be the true or a theoretical y of the map, based on what called this
 	 * @param   col     The tilemap column where this is being placed
 	 * @param   row     The tilemap row where this is being placed
+	 * @since 5.9.0
 	 */
 	public dynamic function orientAt(xPos:Float, yPos:Float, col:Int, row:Int)
 	{
@@ -136,6 +141,7 @@ class FlxTile extends FlxObject
 	 * 
 	 * @param   col     The tilemap column where this is being placed
 	 * @param   row     The tilemap row where this is being placed
+	 * @since 5.9.0
 	 */
 	public inline function orient(col:Int, row:Int)
 	{
@@ -151,6 +157,7 @@ class FlxTile extends FlxObject
 	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
 	 * 
 	 * @param   mapIndex  The desired location in the map
+	 * @since 5.9.0
 	 */
 	public inline function orientByIndex(mapIndex:Int)
 	{
@@ -166,6 +173,7 @@ class FlxTile extends FlxObject
 	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
 	 * 
 	 * @param   mapIndex  The desired location in the map
+	 * @since 5.9.0
 	 */
 	public inline function orientAtByIndex(xPos:Float, yPos:Float, mapIndex:Int)
 	{
