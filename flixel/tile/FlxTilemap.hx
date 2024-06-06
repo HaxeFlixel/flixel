@@ -831,24 +831,24 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 	
-	public function getRowAt(worldY:Float, bind = false):Int
+	override function getRowAt(worldY:Float, bind = false):Int
 	{
-		final unboundRow = Math.floor(worldY / scaledTileHeight);
+		final result = Math.floor(worldY / scaledTileHeight);
 		
 		if (bind)
-			return unboundRow < 0 ? 0 : (bind > heightInTiles ? heightInTiles : unboundRow);
+			return result < 0 ? 0 : (result > heightInTiles ? heightInTiles : result);
 		
-		return unbound;
+		return result;
 	}
 	
-	public function getColumnAt(worldX:Float, bind = false):Int
+	override function getColumnAt(worldX:Float, bind = false):Int
 	{
-		final unboundColumn = Math.floor(worldX / scaledTileWidth);
+		final result = Math.floor(worldX / scaledTileWidth);
 		
 		if (bind)
-			return unboundColumn < 0 ? 0 : (bind > widthInTiles ? widthInTiles : unboundColumn);
+			return result < 0 ? 0 : (result > widthInTiles ? widthInTiles : result);
 		
-		return unboundColumn;
+		return result;
 	}
 	
 	override public function getTileIndexByCoords(coord:FlxPoint):Int
