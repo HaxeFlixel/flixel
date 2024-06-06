@@ -926,6 +926,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   tileIndex       The new tileIndex to place at the mapIndex
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
 	 */
 	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
@@ -940,6 +941,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   tileIndex       The new integer data you wish to inject.
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
 	 */
 	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
