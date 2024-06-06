@@ -780,7 +780,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		{
 			for (column in minTileX...maxTileX)
 			{
-				final mapIndex:Int = (row * widthInTiles) + column;
+				final mapIndex:Int = getMapIndex(column, row);
 				final tileIndex:Int = _data[mapIndex] < 0 ? 0 : _data[mapIndex];// TODO: still need to check -1?
 				
 				final tile = _tileObjects[tileIndex];
@@ -831,22 +831,22 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 	
-	override function getRowAt(worldY:Float, bind = false):Int
-	{
-		final result = Math.floor(worldY / scaledTileHeight);
-		
-		if (bind)
-			return result < 0 ? 0 : (result > heightInTiles ? heightInTiles : result);
-		
-		return result;
-	}
-	
 	override function getColumnAt(worldX:Float, bind = false):Int
 	{
 		final result = Math.floor(worldX / scaledTileWidth);
 		
 		if (bind)
-			return result < 0 ? 0 : (result > widthInTiles ? widthInTiles : result);
+			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
+		
+		return result;
+	}
+	
+	override function getRowAt(worldY:Float, bind = false):Int
+	{
+		final result = Math.floor(worldY / scaledTileHeight);
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles -1 : result);
 		
 		return result;
 	}
