@@ -781,19 +781,16 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			for (column in minTileX...maxTileX)
 			{
 				final mapIndex:Int = (row * widthInTiles) + column;
-				final dataIndex:Int = _data[mapIndex] < 0 ? 0 : _data[mapIndex];
+				final tileIndex:Int = _data[mapIndex] < 0 ? 0 : _data[mapIndex];// TODO: still need to check -1?
 				
-				final tile = _tileObjects[dataIndex];
+				final tile = _tileObjects[tileIndex];
 				tile.orientAt(xPos, yPos, column, row);
 				if (tile.overlapsObject(object))
 				{
-					if (filter == null || filter(tile))
-					{
-						if (stopAtFirst)
-							return true;
-						
-						result = true;
-					}
+					if (stopAtFirst)
+						return true;
+					
+					result = true;
 				}
 			}
 		}
@@ -833,7 +830,27 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		
 		return results;
 	}
-
+	
+	public function getRowAt(worldY:Float, bind = false):Int
+	{
+		final unboundRow = Math.floor(worldY / scaledTileHeight);
+		
+		if (bind)
+			return unboundRow < 0 ? 0 : (bind > heightInTiles ? heightInTiles : unboundRow);
+		
+		return unbound;
+	}
+	
+	public function getColumnAt(worldX:Float, bind = false):Int
+	{
+		final unboundColumn = Math.floor(worldX / scaledTileWidth);
+		
+		if (bind)
+			return unboundColumn < 0 ? 0 : (bind > widthInTiles ? widthInTiles : unboundColumn);
+		
+		return unboundColumn;
+	}
+	
 	override public function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		var localX = coord.x - x;

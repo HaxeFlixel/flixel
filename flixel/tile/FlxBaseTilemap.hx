@@ -135,17 +135,39 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		throw "computeDimensions must be implemented";
 	}
-
+	
+	/**
+	 * Finds the row number that overlaps the given Y in world space
+	 * @param   worldY  A Y coordinate in the world
+	 * @param   bind    If true, it will prevent out of range values
+	 * @return  A row index, where 0 is the top-most row
+	 * @since 5.9.0
+	 */
+	public function getRowAt(worldY:Float, bind = false):Int
+	{
+		throw "getRowAt must be implemented";
+	}
+	
+	/**
+	 * Finds the row number that overlaps the given X in world space
+	 * @param   worldX  A X coordinate in the world
+	 * @param   bind    If true, it will prevent out of range values
+	 * @return  A column index, where 0 is the left-most column
+	 * @since 5.9.0
+	 */
+	public function getColumnAt(worldX:Float, bind = false):Int
+	{
+		throw "getColumnAt must be implemented";
+	}
+	
 	public function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		throw "getTileIndexByCoords must be implemented";
-		return 0;
 	}
 
 	public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
 	{
 		throw "getTileCoordsByIndex must be implemented";
-		return null;
 	}
 
 	/**
@@ -762,7 +784,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public overload extern inline function tileExists(column:Int, row:Int):Bool
 	{
-		return column >= 0 && row >= 0 && column < widthInTiles && row < heightInTiles;
+		return columnExists(column) && rowExists(row);
 	}
 	
 	/**
@@ -776,6 +798,28 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public overload extern inline function tileExists(mapIndex:Int):Bool
 	{
 		return mapIndex >= 0 && mapIndex < _data.length;
+	}
+	
+	/**
+	 * Whether a row exists at the given map location
+	 *
+	 * @param   column  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function columnExists(column:Int):Bool
+	{
+		return column >= 0 && column < widthInTiles;
+	}
+	
+	/**
+	 * Whether a row exists at the given map location
+	 *
+	 * @param   row  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function rowExists(row:Int):Bool
+	{
+		return row >= 0 && row < heightInTiles;
 	}
 	
 	/**
