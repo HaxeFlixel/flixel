@@ -785,7 +785,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				
 				final tile = _tileObjects[tileIndex];
 				tile.orientAt(xPos, yPos, column, row);
-				if (tile.overlapsObject(object))
+				if (tile.overlapsObject(object) && (filter == null || filter(tile)))
 				{
 					if (stopAtFirst)
 						return true;
