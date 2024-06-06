@@ -184,8 +184,12 @@ class FlxTilemapTest extends FlxTest
 	function testOffMapOverlap2()
 	{
 		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);
-		var sprite = new FlxSprite(-2, 10);
-		Assert.isFalse(tilemap.objectOverlapsTiles(sprite));
+		final obj = new FlxObject(-10, 10, 8, 8);
+		Assert.isFalse(tilemap.objectOverlapsTiles(obj));
+		
+		obj.x = 8;
+		obj.y = 8;
+		Assert.isFalse(tilemap.objectOverlapsTiles(obj));
 	}
 
 	@Test // #1550
@@ -293,7 +297,12 @@ class FlxTilemapTest extends FlxTest
 	@Test // #3158
 	function testIsOverlappingTile()
 	{
-		final mapData = [0, 0, 0, 0, 1, 0, 0, 0, 0]; // 3x3 with a solid block in the middle
+		final mapData =
+		[
+			0, 0, 0,
+			0, 1, 0,
+			0, 0, 0
+		]; // 3x3 with a solid block in the middle
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
 		
 		final obj = new FlxObject(4, 12, 8, 8);
@@ -451,12 +460,14 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(tilemap.getColumnAt(24, true), tilemap.getColumnAt(24, false));
 		Assert.areEqual(3, tilemap.getColumnAt(24));
 		Assert.areNotEqual(tilemap.getColumnAt(32, true), tilemap.getColumnAt(32, false));
-		Assert.areEqual(4, tilemap.getColumnAt(32));
+		Assert.areEqual(4, tilemap.getColumnAt(32, true));
+		Assert.areEqual(5, tilemap.getColumnAt(32, false));
 		
 		Assert.areEqual(tilemap.getRowAt(16, true), tilemap.getRowAt(16, false));
 		Assert.areEqual(2, tilemap.getRowAt(16));
 		Assert.areNotEqual(tilemap.getRowAt(24, true), tilemap.getRowAt(24, false));
-		Assert.areEqual(3, tilemap.getRowAt(24));
+		Assert.areEqual(3, tilemap.getRowAt(24, true));
+		Assert.areEqual(4, tilemap.getRowAt(24, false));
 	}
 	
 	@Test
