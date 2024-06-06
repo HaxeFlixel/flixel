@@ -584,22 +584,22 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		#end
 	}
 
-	inline function get_red():FlxColorInt
+	inline function get_red():FlxColorInt8
 	{
 		return (getThis() >> 16) & 0xff;
 	}
 
-	inline function get_green():FlxColorInt
+	inline function get_green():FlxColorInt8
 	{
 		return (getThis() >> 8) & 0xff;
 	}
 
-	inline function get_blue():FlxColorInt
+	inline function get_blue():FlxColorInt8
 	{
 		return getThis() & 0xff;
 	}
 
-	inline function get_alpha():FlxColorInt
+	inline function get_alpha():FlxColorInt8
 	{
 		return (getThis() >> 24) & 0xff;
 	}
