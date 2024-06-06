@@ -1139,7 +1139,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			var tileX = Math.floor(curX / scaledTileWidth);
 			var tileY = Math.floor(curY / scaledTileHeight);
 			
-			if (getTileData(column, row).solid)
+			if (getTileData(tileX, tileY).solid)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(scaledTileWidth);
