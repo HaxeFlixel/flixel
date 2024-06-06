@@ -180,12 +180,12 @@ class FlxTilemapTest extends FlxTest
 	}
 	
 	@Test // #1546
-	// same as testOffMapOverlap but with processOverlaps
+	// same as testOffMapOverlap but with objectOverlapsTiles
 	function testOffMapOverlap2()
 	{
 		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);
 		var sprite = new FlxSprite(-2, 10);
-		Assert.isFalse(tilemap.processOverlaps(sprite));
+		Assert.isFalse(tilemap.objectOverlapsTiles(sprite));
 	}
 
 	@Test // #1550
@@ -438,6 +438,27 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(tilemap.getTileData(4), tilemap.getTileData(1, 1));
 	}
 	
+	function testGetColumnRowAt()
+	{
+		
+		final mapData = [
+			0, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 0, 0,
+		];
+		tilemap.loadMapFromArray(mapData, 4, 3, getBitmapData(), 8, 8);
+		
+		Assert.areEqual(tilemap.getColumnAt(24, true), tilemap.getColumnAt(24, false));
+		Assert.areEqual(3, tilemap.getColumnAt(24));
+		Assert.areNotEqual(tilemap.getColumnAt(32, true), tilemap.getColumnAt(32, false));
+		Assert.areEqual(4, tilemap.getColumnAt(32));
+		
+		Assert.areEqual(tilemap.getRowAt(16, true), tilemap.getRowAt(16, false));
+		Assert.areEqual(2, tilemap.getRowAt(16));
+		Assert.areNotEqual(tilemap.getRowAt(24, true), tilemap.getRowAt(24, false));
+		Assert.areEqual(3, tilemap.getRowAt(24));
+	}
+	
 	@Test
 	function testTileExists()
 	{
@@ -454,6 +475,38 @@ class FlxTilemapTest extends FlxTest
 		Assert.isFalse(tilemap.tileExists(3, 1));
 		Assert.isFalse(tilemap.tileExists(1, 3));
 		Assert.isFalse(tilemap.tileExists(5, 5));
+	}
+	
+	@Test
+	function testColumnRowExists()
+	{
+		final mapData = [
+			0, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 4, 3, getBitmapData(), 8, 8);
+		
+		Assert.isFalse(tilemap.columnExists(5));
+		Assert.isFalse(tilemap.rowExists(5));
+		
+		Assert.isFalse(tilemap.columnExists(4));
+		Assert.isFalse(tilemap.rowExists(4));
+		
+		Assert.isTrue(tilemap.columnExists(3));
+		Assert.isFalse(tilemap.rowExists(3));
+		
+		Assert.isTrue(tilemap.columnExists(2));
+		Assert.isTrue(tilemap.rowExists(2));
+		
+		Assert.isTrue(tilemap.columnExists(1));
+		Assert.isTrue(tilemap.rowExists(1));
+		
+		Assert.isTrue(tilemap.columnExists(0));
+		Assert.isTrue(tilemap.rowExists(0));
+		
+		Assert.isFalse(tilemap.columnExists(-1));
+		Assert.isFalse(tilemap.rowExists(-1));
 	}
 	
 	@Test

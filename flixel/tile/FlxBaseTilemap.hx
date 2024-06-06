@@ -16,7 +16,7 @@ import openfl.display.BitmapData;
 
 using StringTools;
 
-@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use processOverlaps"))
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use objectOverlapsTiles"))
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -284,10 +284,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "overlapsWithCallback must be implemented";
 	}
 	
-	@:deprecated("overlapsWithCallback is deprecated, use processOverlaps(object, callback, pos), instead")
+	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead")
 	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
-		return processOverlaps(object, (t, o)->{ return flipCallbackParams ? callback(o, t) : callback(t, o); }, position);
+		return objectOverlapsTiles(object, (t, o)->{ return flipCallbackParams ? callback(o, t) : callback(t, o); }, position);
 	}
 	
 	/**
@@ -297,7 +297,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
 	 * ```haxe
-	 * final result = processOverlaps(obj, (tile, obj)->myProcessCallback(obj, tile));
+	 * final result = objectOverlapsTiles(obj, (tile, obj)->myCallback(obj, tile));
 	 * ```
 	 *
 	 * @param   object       The FlxObject you are checking for overlaps against
@@ -309,9 +309,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
 	 * @since 5.9.0
 	 */
-	public function processOverlaps<TObj:FlxObject>(object:TObj, ?processCallback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
+	public function objectOverlapsTiles<TObj:FlxObject>(object:TObj, ?callback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
 	{
-		throw "processOverlaps must be implemented";
+		throw "objectOverlapsTiles must be implemented";
 	}
 	
 	public function setDirty(dirty:Bool = true):Void
@@ -1074,7 +1074,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	/**
 	 * Adjust collision settings and/or bind a callback function to a range of tiles.
-	 * This callback function, if present, is triggered by calls to `overlap` or `processOverlaps`.
+	 * This callback function, if present, is triggered by calls to `overlap` or `objectOverlapsTiles`.
 	 *
 	 * @param   tile             The tile or tiles you want to adjust.
 	 * @param   allowCollisions  Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
@@ -1243,7 +1243,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return processOverlaps(cast objectOrGroup);
+			return objectOverlapsTiles(cast objectOrGroup);
 		}
 		else
 		{
@@ -1277,7 +1277,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return processOverlaps(cast objectOrGroup, null, _point.set(x, y));
+			return objectOverlapsTiles(cast objectOrGroup, null, _point.set(x, y));
 		}
 		else
 		{
