@@ -16,6 +16,7 @@ import openfl.display.BitmapData;
 
 using StringTools;
 
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use processOverlaps"))
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -261,11 +262,10 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "overlapsWithCallback must be implemented";
 	}
 	
-	@:deprecated("overlapsWithCallback is deprecated, use processOverlaps, instead")
+	@:deprecated("overlapsWithCallback is deprecated, use processOverlaps(object, callback, pos), instead")
 	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
-		return false;
+		return processOverlaps(object, (t, o)->{ return flipCallbackParams ? callback(o, t) : callback(t, o); }, position);
 	}
 	
 	/**

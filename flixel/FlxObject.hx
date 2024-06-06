@@ -188,8 +188,9 @@ class FlxObject extends FlxBasic
 	 * @return  The result of whichever separator was used
 	 * @since 5.9.0
 	 */
-	static function processCheckTilemap<T1:FlxObject, T2:FlxObject>
-		(object1:T1, object2:T2, func:(T1, T2)->Bool, isCollision = true):Bool
+	@:haxe.warning("-WDeprecated")
+	static function processCheckTilemap(object1:FlxObject, object2:FlxObject, func:(FlxObject, FlxObject)->Bool,
+		?position:FlxPoint, isCollision = true):Bool
 	{
 		// two immovable objects cannot collide
 		if (isCollision && object1.immovable && object2.immovable)
@@ -203,9 +204,9 @@ class FlxObject extends FlxBasic
 			function recurseProcess(tile, _)
 			{
 				// Keep tile as first arg
-				return processCheckTilemap(tile, object2, func, isCollision);
+				return processCheckTilemap(tile, object2, func, position, isCollision);
 			}
-			return tilemap.processOverlaps(object2, recurseProcess, null, isCollision);
+			return tilemap.overlapsWithCallback(object2, recurseProcess, false, position);
 		}
 		else if (object2.flixelType == TILEMAP)
 		{
@@ -214,9 +215,9 @@ class FlxObject extends FlxBasic
 			function recurseProcess(tile, _)
 			{
 				// Keep tile as second arg
-				return processCheckTilemap(object1, tile, func, isCollision);
+				return processCheckTilemap(object1, tile, func, position, isCollision);
 			}
-			return tilemap.processOverlaps(object1, recurseProcess, null, isCollision);
+			return tilemap.overlapsWithCallback(object1, recurseProcess, false, position);
 		}
 		
 		return func(object1, object2);
@@ -230,13 +231,23 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
-		function helper(object1, object2)
-		{
-			final separatedX = separateXHelper(object1, object2);
-			final separatedY = separateYHelper(object1, object2);
-			return separatedX || separatedY;
-		}
-		return processCheckTilemap(object1, object2, helper);
+		final separatedX = separateX(object1, object2);
+		final separatedY = separateY(object1, object2);
+		return separatedX || separatedY;
+		
+		/*
+		 * Note: can't do the following, FlxTilemapExt works better when you separate all
+		 * tiles in the x and then all tiles the y, rather than iterating all overlapping
+		 * tiles and separating the x and y on each of them. If we find a way around this
+		 * if would be more efficient to do the following
+		 */
+		// function helper(object1, object2)
+		// {
+		// 	final separatedX = separateXHelper(object1, object2);
+		// 	final separatedY = separateYHelper(object1, object2);
+		// 	return separatedX || separatedY;
+		// }
+		// return processCheckTilemap(object1, object2, helper);
 	}
 	
 	/**
