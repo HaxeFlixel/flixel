@@ -724,6 +724,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param  column  the grid X location, in tiles
 	 * @param  row     the grid Y location, in tiles
+	 * @since 5.9.0
 	 */
 	public inline function getMapIndex(column:Int, row:Int):Int
 	{
@@ -734,6 +735,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Calculates the column from a map location
 	 * 
 	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @since 5.9.0
 	 */
 	public inline function getColumn(mapIndex:Int):Int
 	{
@@ -744,6 +746,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Calculates the column from a map location
 	 * 
 	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @since 5.9.0
 	 */
 	public inline function getRow(mapIndex:Int):Int
 	{
