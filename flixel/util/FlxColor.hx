@@ -40,10 +40,10 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public static var colorLookup(default, null):Map<String, Int> = FlxMacroUtil.buildMap("flixel.util.FlxColor");
 
-	public var red(get, set):Int;
-	public var blue(get, set):Int;
-	public var green(get, set):Int;
-	public var alpha(get, set):Int;
+	public var red(get, set):FlxColorInt8;
+	public var blue(get, set):FlxColorInt8;
+	public var green(get, set):FlxColorInt8;
+	public var alpha(get, set):FlxColorInt8;
 
 	public var redFloat(get, set):Float;
 	public var blueFloat(get, set):Float;
@@ -102,7 +102,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return The color as a FlxColor
 	 */
-	public static inline function fromRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
+	public static inline function fromRGB(Red:FlxColorInt16, Green:FlxColorInt16, Blue:FlxColorInt16, Alpha:FlxColorInt16 = 255):FlxColor
 	{
 		var color = new FlxColor();
 		return color.setRGB(Red, Green, Blue, Alpha);
@@ -456,7 +456,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Alpha	How opaque the color should be, from 0 to 255
 	 * @return This color
 	 */
-	public inline function setRGB(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255):FlxColor
+	public inline function setRGB(Red:FlxColorInt16, Green:FlxColorInt16, Blue:FlxColorInt16, Alpha:FlxColorInt16 = 255):FlxColor
 	{
 		red = Red;
 		green = Green;
@@ -584,22 +584,22 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		#end
 	}
 
-	inline function get_red():Int
+	inline function get_red():FlxColorInt8
 	{
 		return (getThis() >> 16) & 0xff;
 	}
 
-	inline function get_green():Int
+	inline function get_green():FlxColorInt8
 	{
 		return (getThis() >> 8) & 0xff;
 	}
 
-	inline function get_blue():Int
+	inline function get_blue():FlxColorInt8
 	{
 		return getThis() & 0xff;
 	}
 
-	inline function get_alpha():Int
+	inline function get_alpha():FlxColorInt8
 	{
 		return (getThis() >> 24) & 0xff;
 	}
@@ -624,7 +624,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return alpha / 255;
 	}
 
-	inline function set_red(Value:Int):Int
+	inline function set_red(Value:FlxColorInt16):FlxColorInt16
 	{
 		validate();
 		this &= 0xff00ffff;
@@ -632,7 +632,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 
-	inline function set_green(Value:Int):Int
+	inline function set_green(Value:FlxColorInt16):FlxColorInt16
 	{
 		validate();
 		this &= 0xffff00ff;
@@ -640,7 +640,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 
-	inline function set_blue(Value:Int):Int
+	inline function set_blue(Value:FlxColorInt16):FlxColorInt16
 	{
 		validate();
 		this &= 0xffffff00;
@@ -648,7 +648,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 		return Value;
 	}
 
-	inline function set_alpha(Value:Int):Int
+	inline function set_alpha(Value:FlxColorInt16):FlxColorInt16
 	{
 		validate();
 		this &= 0x00ffffff;
@@ -816,3 +816,11 @@ typedef TriadicHarmony =
 	color2:FlxColor,
 	color3:FlxColor
 }
+
+#if cpp
+private typedef FlxColorInt8 = cpp.UInt8;
+private typedef FlxColorInt16 = cpp.Int16;
+#else
+private typedef FlxColorInt8 = Int;
+private typedef FlxColorInt16 = Int;
+#end
