@@ -820,6 +820,9 @@ typedef TriadicHarmony =
 #if cpp
 private typedef FlxColorInt8 = cpp.UInt8;
 private typedef FlxColorInt16 = cpp.Int16;
+#elseif hl
+private typedef FlxColorInt8 = hl.UI8;
+private typedef FlxColorInt16 = hl.UI16;
 #else
 private typedef FlxColorInt8 = Int;
 private typedef FlxColorInt16 = Int;
