@@ -43,8 +43,6 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
-    - run: sudo apt-get update
-    
     - uses: actions/checkout@v4
     
     - uses: krdlab/setup-haxe@v1
