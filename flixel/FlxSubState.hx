@@ -72,7 +72,7 @@ class FlxSubState extends FlxState
 		}
 		else // FlxG.renderTile
 		{
-			if (_bgSprite != null && _bgsprite.visible)
+			if (_bgSprite != null && _bgSprite.visible)
 				_bgSprite.draw();
 		}
 
@@ -110,7 +110,7 @@ class FlxSubState extends FlxState
 		if (FlxG.renderTile && _bgSprite != null)
 		{
 			_bgSprite.alpha = value.alphaFloat;
-			_bgsprite.visible = _bgSprite.alpha > 0;
+			_bgSprite.visible = _bgSprite.alpha > 0;
 			_bgSprite.color = value.rgb;
 		}
 

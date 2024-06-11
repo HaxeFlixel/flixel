@@ -10,7 +10,7 @@ class FlxBGSprite extends FlxSprite
 	public function new()
 	{
 		super();
-		// TODO: Use non-unique, now that we're not editing the pixels
+		// TODO: Use unique:false, now that we're not editing the pixels
 		makeGraphic(1, 1, FlxColor.WHITE, true, FlxG.bitmap.getUniqueKey("bg_graphic_"));
 		scrollFactor.set();
 	}
