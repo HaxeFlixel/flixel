@@ -16,6 +16,7 @@ import openfl.display.BitmapData;
 
 using StringTools;
 
+@:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use objectOverlapsTiles"))
 class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
@@ -134,17 +135,39 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		throw "computeDimensions must be implemented";
 	}
-
+	
+	/**
+	 * Finds the row number that overlaps the given Y in world space
+	 * @param   worldY  A Y coordinate in the world
+	 * @param   bind    If true, it will prevent out of range values
+	 * @return  A row index, where 0 is the top-most row
+	 * @since 5.9.0
+	 */
+	public function getRowAt(worldY:Float, bind = false):Int
+	{
+		throw "getRowAt must be implemented";
+	}
+	
+	/**
+	 * Finds the row number that overlaps the given X in world space
+	 * @param   worldX  A X coordinate in the world
+	 * @param   bind    If true, it will prevent out of range values
+	 * @return  A column index, where 0 is the left-most column
+	 * @since 5.9.0
+	 */
+	public function getColumnAt(worldX:Float, bind = false):Int
+	{
+		throw "getColumnAt must be implemented";
+	}
+	
 	public function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		throw "getTileIndexByCoords must be implemented";
-		return 0;
 	}
 
 	public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
 	{
 		throw "getTileCoordsByIndex must be implemented";
-		return null;
 	}
 
 	/**
@@ -229,13 +252,68 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		return calcRayEntry(end, start, result);
 	}
-
-	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject,FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
+	
+	/**
+	 * Searches all tiles near the object for any that satisfy the given filter. Stops searching
+	 * when the first overlapping tile that satisfies the condition is found
+	 * 
+	 * @param   object    The object
+	 * @param   filter    Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition, if `null`, any overlapping tile will satisfy
+	 * @param   position  Optional, specify a custom position for the tilemap
+	 * @return  Whether any overlapping tile satisfied the condition, if there was one
+	 * @since 5.9.0
+	 */
+	public function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint):Bool
 	{
 		throw "overlapsWithCallback must be implemented";
-		return false;
 	}
-
+	
+	/**
+	 * Calls the given function on ever tile that is overlapping the target object
+	 * 
+	 * @param   object    The object
+	 * @param   filter    Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition
+	 * @param   position  Optional, specify a custom position for the tilemap
+	 * @return  Whether any overlapping tile was found
+	 * @since 5.9.0
+	 */
+	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
+	{
+		throw "overlapsWithCallback must be implemented";
+	}
+	
+	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead")
+	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
+	{
+		return objectOverlapsTiles(object, (t, o)->{ return flipCallbackParams ? callback(o, t) : callback(t, o); }, position);
+	}
+	
+	/**
+	 * Checks if the Object overlaps any tiles with any collision flags set,
+	 * and calls the specified callback function (if there is one).
+	 * Also calls the tile's registered callback if the filter matches.
+	 *
+	 * **Note:** To flip the callback params you can simply swap them in a arrow func, like so:
+	 * ```haxe
+	 * final result = objectOverlapsTiles(obj, (tile, obj)->myCallback(obj, tile));
+	 * ```
+	 *
+	 * @param   object       The FlxObject you are checking for overlaps against
+	 * @param   callback     An optional function that takes the overlapping tile and object
+	 *                       where `a` is a `FlxTile`, and `b` is the given `object` paaram
+	 * @param   position     Optional, specify a custom position for the tilemap (see `overlapsAt`)
+	 * @param   isCollision  If true, tiles where `allowCollisions` is `NONE` are excluded,
+	 *                       and the tiles' `onCollide` is dispatched
+	 * @return  Whether there were overlaps that resulted in a positive callback, if one was specified
+	 * @since 5.9.0
+	 */
+	public function objectOverlapsTiles<TObj:FlxObject>(object:TObj, ?callback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
+	{
+		throw "objectOverlapsTiles must be implemented";
+	}
+	
 	public function setDirty(dirty:Bool = true):Void
 	{
 		throw "setDirty must be implemented";
@@ -662,135 +740,329 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			throw "You must provide valid 'randomChoices' if you wish to randomize tilemap indices, please read documentation of 'setCustomTileMappings' function.";
 		}
 	}
-
+	
+	/**
+	 * Calculates a mapIndex via `row * widthInTiles + column`
+	 * 
+	 * @param  column  the grid X location, in tiles
+	 * @param  row     the grid Y location, in tiles
+	 * @since 5.9.0
+	 */
+	public inline function getMapIndex(column:Int, row:Int):Int
+	{
+		return row * widthInTiles + column;
+	}
+	
+	/**
+	 * Calculates the column from a map location
+	 * 
+	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @since 5.9.0
+	 */
+	public inline function getColumn(mapIndex:Int):Int
+	{
+		return mapIndex % widthInTiles;
+	}
+	
+	/**
+	 * Calculates the column from a map location
+	 * 
+	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @since 5.9.0
+	 */
+	public inline function getRow(mapIndex:Int):Int
+	{
+		return Std.int(mapIndex / widthInTiles);
+	}
+	
+	/**
+	 * Whether a tile exists at the given map location
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @since 5.9.0
+	 */
+	public overload extern inline function tileExists(column:Int, row:Int):Bool
+	{
+		return columnExists(column) && rowExists(row);
+	}
+	
+	/**
+	 * Whether a tile exists at the given map location
+	 *
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function tileExists(mapIndex:Int):Bool
+	{
+		return mapIndex >= 0 && mapIndex < _data.length;
+	}
+	
+	/**
+	 * Whether a row exists at the given map location
+	 *
+	 * @param   column  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function columnExists(column:Int):Bool
+	{
+		return column >= 0 && column < widthInTiles;
+	}
+	
+	/**
+	 * Whether a row exists at the given map location
+	 *
+	 * @param   row  The desired location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function rowExists(row:Int):Bool
+	{
+		return row >= 0 && row < heightInTiles;
+	}
+	
+	/**
+	 * Finds the tile instance at a particular column and row
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileData(column:Int, row:Int):Null<Tile>
+	{
+		return getTileData(getMapIndex(column, row));
+	}
+	
+	/**
+	 * Finds the tile instance with the given mapIndex
+	 *
+	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * 
+	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
+	 * You can call `tile.orient` or similar methods
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @return  An integer containing the value of the tile at this spot in the array.
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileData(mapIndex:Int):Null<Tile>
+	{
+		return _tileObjects[getTileIndex(mapIndex)];
+	}
+	
 	/**
 	 * Check the value of a particular tile.
 	 *
-	 * @param   x  The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y  The Y coordinate of the tile (in tiles, not pixels).
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileIndex(column:Int, row:Int):Int
+	{
+		return getTileIndex(getMapIndex(column, row));
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given map location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @return  The tileIndex of the tile with this `mapIndex`
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileIndex(mapIndex:Int):Int
+	{
+		return _data[mapIndex];
+	}
+	
+	/**
+	 * Check the value of a particular tile.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @return  The tile index of the tile at this location
+	 */
+	@:deprecated("getTile is deprecated use getTileIndex(column, row), instead")
+	public function getTile(column:Int, row:Int):Int
+	{
+		return getTileIndex(column, row);
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given map location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   mapIndex  The desired location in the map
 	 * @return  An integer containing the value of the tile at this spot in the array.
 	 */
-	public function getTile(x:Int, y:Int):Int
+	@:deprecated("getTileByIndex is deprecated use getTileIndex(mapIndex), instead")
+	public function getTileByIndex(mapIndex:Int):Int
 	{
-		return _data[y * widthInTiles + x];
+		return getTileIndex(mapIndex);
 	}
-
+	
 	/**
-	 * Get the value of a tile in the tilemap by index.
-	 *
-	 * @param   index  The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @return  An integer containing the value of the tile at this spot in the array.
-	 */
-	public function getTileByIndex(index:Int):Int
-	{
-		return _data[index];
-	}
-
-	/**
-	 * Gets the collision flags of tile by index.
-	 *
-	 * @param   index  Tile index returned by getTile or getTileByIndex
+	 * Gets the collision flags of the tile at the given location
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 * 
+	 * ##Soft Deprecation
+	 * You should use `getTileData(mapIndex).allowCollisions`, instead
+	 * 
+	 * @param   mapIndex  The desired location in the map
 	 * @return  The internal collision flag for the requested tile.
 	 */
-	public function getTileCollisions(index:Int):FlxDirectionFlags
+	public function getTileCollisions(mapIndex:Int):FlxDirectionFlags
 	{
-		return _tileObjects[index].allowCollisions;
+		return getTileData(mapIndex).allowCollisions;
 	}
-
+	
 	/**
-	 * Returns a new array full of every map index of the requested tile type.
+	 * Returns a new array full of every map index of the requested tile type
+	 * 
+	 * **Note:** Unlike `getAllMapIndices` this will return `null` if no tiles are found
 	 *
 	 * @param   index  The requested tile type.
 	 * @return  An Array with a list of all map indices of that tile type.
 	 */
-	public function getTileInstances(index:Int):Array<Int>
+	@:deprecated("getTileInstances is deprecated, use getTileIndices, instead")// 5.9.0
+	public inline function getTileInstances(tileIndex:Int):Array<Int>
 	{
-		var array:Array<Int> = null;
-		var i:Int = 0;
-		var l:Int = widthInTiles * heightInTiles;
-
-		while (i < l)
+		// for backwards compat, return `null` if none are found
+		final result = getAllMapIndices(tileIndex);
+		return result.length == 0 ? null : result;
+	}
+	
+	/**
+	 * Returns a new array full of every map index of the requested tile type.
+	 * 
+	 * **Note:** Unlike `getTileInstances` this will return `[]` if no tiles are found
+	 * 
+	 * @param   index  The requested tile type.
+	 * @return  An Array with a list of all map indices of that tile type.
+	 * @since 5.9.0
+	 */
+	public function getAllMapIndices(tileIndex:Int):Array<Int>
+	{
+		final result:Array<Int> = [];
+		var i:Int = widthInTiles * heightInTiles;
+		
+		while (i-- > 0)
 		{
-			if (_data[i] == index)
+			if (_data[i] == tileIndex)
 			{
-				if (array == null)
-				{
-					array = [];
-				}
-				array.push(i);
+				result.unshift(i);
 			}
-			i++;
 		}
-
-		return array;
+		
+		return result;
 	}
-
+	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   x               The X coordinate of the tile (in tiles, not pixels).
-	 * @param   y               The Y coordinate of the tile (in tiles, not pixels).
-	 * @param   tile            The new integer data you wish to inject.
+	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex       The new tileIndex to place at the mapIndex
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
 	 */
-	public function setTile(x:Int, y:Int, tile:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
-		if ((x >= widthInTiles) || (y >= heightInTiles))
-		{
-			return false;
-		}
-
-		return setTileByIndex(y * widthInTiles + x, tile, updateGraphics);
+		return setTileHelper(mapIndex, tileIndex, updateGraphics);
 	}
-
+	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   index           The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tile            The new integer data you wish to inject.
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   tileIndex       The new integer data you wish to inject.
+	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
+	 */
+	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		return setTileHelper(getMapIndex(column, row), tileIndex, updateGraphics);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   tileIndex       The new integer data you wish to inject.
 	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 */
-	public function setTileByIndex(index:Int, tile:Int, updateGraphics = true):Bool
+	@:deprecated("setTile is deprecated, use setTileIndex(column, row, tileIndex,...), instead")
+	public function setTile(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
 	{
-		if (index >= _data.length)
-		{
+		return setTileIndex(getMapIndex(column, row), tileIndex, updateGraphics);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex       The new tileIndex to place at the mapIndex
+	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 */
+	@:deprecated("setTileByIndex is deprecated, use setTileIndex(mapIndex, tileIndex,...), instead")
+	public function setTileByIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		return setTileIndex(mapIndex, tileIndex, updateGraphics);
+	}
+	
+	function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	{
+		if (!tileExists(mapIndex))
 			return false;
-		}
-
-		var ok:Bool = true;
-		_data[index] = tile;
-
+		
+		_data[mapIndex] = tileIndex;
+		
 		if (!updateGraphics)
 		{
-			return ok;
+			return true;
 		}
-
+		
 		setDirty();
-
-		if (auto == OFF)
+		
+		switch (auto)
 		{
-			updateTile(_data[index]);
-			return ok;
+			case OFF:
+				updateTile(_data[mapIndex]);
+			default:
+				updateTileWithAutoTile(mapIndex);
 		}
-
+		
+		return true;
+	}
+	
+	function updateTileWithAutoTile(mapIndex:Int)
+	{
 		// If this map is auto-tiled and it changes, locally update the arrangement
-		var i:Int;
-		var row:Int = Std.int(index / widthInTiles) - 1;
-		var rowLength:Int = row + 3;
-		var column:Int = index % widthInTiles - 1;
-		var columnHeight:Int = column + 3;
-
+		var row:Int = getRow(mapIndex) - 1;
+		var column:Int = getColumn(mapIndex) - 1;
+		final rowLength:Int = row + 3;
+		final columnHeight:Int = column + 3;
+		
 		while (row < rowLength)
 		{
 			column = columnHeight - 3;
-
+			
 			while (column < columnHeight)
 			{
-				if ((row >= 0) && (row < heightInTiles) && (column >= 0) && (column < widthInTiles))
+				if (tileExists(column, row))
 				{
-					i = row * widthInTiles + column;
+					final i = getMapIndex(column, row);
 					autoTile(i);
 					updateTile(_data[i]);
 				}
@@ -798,13 +1070,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			}
 			row++;
 		}
-
-		return ok;
 	}
 
 	/**
 	 * Adjust collision settings and/or bind a callback function to a range of tiles.
-	 * This callback function, if present, is triggered by calls to overlap() or overlapsWithCallback().
+	 * This callback function, if present, is triggered by calls to `overlap` or `objectOverlapsTiles`.
 	 *
 	 * @param   tile             The tile or tiles you want to adjust.
 	 * @param   allowCollisions  Modify the tile or tiles to only allow collisions from certain directions, use FlxObject constants NONE, ANY, LEFT, RIGHT, etc. Default is "ANY".
@@ -855,22 +1125,13 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getData(simple:Bool = false):Array<Int>
 	{
 		if (!simple)
-		{
 			return _data;
-		}
-
-		var i:Int = 0;
-		var l:Int = _data.length;
-		var data:Array<Int> = new Array();
-		FlxArrayUtil.setLength(data, l);
-
-		while (i < l)
-		{
-			data[i] = (_tileObjects[_data[i]].allowCollisions > 0) ? 1 : 0;
-			i++;
-		}
-
-		return data;
+		
+		return
+		[
+			for (i in 0..._data.length)
+				(getTileData(i).solid ? 1 : 0)
+		];
 	}
 
 	/**
@@ -982,7 +1243,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast objectOrGroup);
+			return objectOverlapsTiles(cast objectOrGroup);
 		}
 		else
 		{
@@ -1003,7 +1264,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
-	override public function overlapsAt(x:Float, y:Float, objectOrGroup:FlxBasic, inScreenSpace:Bool = false, ?camera:FlxCamera):Bool
+	override function overlapsAt(x:Float, y:Float, objectOrGroup:FlxBasic, inScreenSpace:Bool = false, ?camera:FlxCamera):Bool
 	{
 		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
@@ -1016,7 +1277,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		if (objectOrGroup.flixelType == OBJECT || objectOrGroup.flixelType == TILEMAP)
 		{
-			return overlapsWithCallback(cast objectOrGroup, null, false, _point.set(x, y));
+			return objectOverlapsTiles(cast objectOrGroup, null, _point.set(x, y));
 		}
 		else
 		{
@@ -1048,10 +1309,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	function tileAtPointAllowsCollisions(point:FlxPoint):Bool
 	{
-		var tileIndex = getTileIndexByCoords(point);
-		if (tileIndex < 0 || tileIndex >= _data.length)
-			return false;
-		return _tileObjects[_data[tileIndex]].allowCollisions > 0;
+		final mapIndex = getTileIndexByCoords(point);
+		return tileExists(mapIndex) && getTileData(mapIndex).solid;
 	}
 
 	/**
