@@ -45,17 +45,19 @@ class FlxSubState extends FlxState
 	var _created:Bool = false;
 
 	/**
-	 * @param   BGColor   background color for this substate
+	 * @param   bgColor   background color for this substate
 	 */
-	public function new(BGColor:FlxColor = FlxColor.TRANSPARENT)
+	public function new(bgColor = FlxColor.TRANSPARENT)
 	{
 		super();
 		closeCallback = null;
 		openCallback = null;
 
 		if (FlxG.renderTile)
+		{
 			_bgSprite = new FlxBGSprite();
-		bgColor = BGColor;
+		}
+		this.bgColor = bgColor;
 	}
 
 	override public function draw():Void
@@ -68,9 +70,10 @@ class FlxSubState extends FlxState
 				camera.fill(bgColor);
 			}
 		}
-		else
+		else // FlxG.renderTile
 		{
-			_bgSprite.draw();
+			if (_bgSprite != null && _bgSprite.visible)
+				_bgSprite.draw();
 		}
 
 		// Now draw all children
@@ -102,11 +105,15 @@ class FlxSubState extends FlxState
 	}
 
 	@:noCompletion
-	override function set_bgColor(Value:FlxColor):FlxColor
+	override function set_bgColor(value:FlxColor):FlxColor
 	{
 		if (FlxG.renderTile && _bgSprite != null)
-			_bgSprite.pixels.setPixel32(0, 0, Value);
+		{
+			_bgSprite.alpha = value.alphaFloat;
+			_bgSprite.visible = _bgSprite.alpha > 0;
+			_bgSprite.color = value.rgb;
+		}
 
-		return _bgColor = Value;
+		return _bgColor = value;
 	}
 }
