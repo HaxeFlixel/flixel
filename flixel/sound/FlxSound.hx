@@ -81,6 +81,9 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
+	 * 
+	 * Note: On desktop targets this only works with mono sounds, due to limitations of OpenAL.
+	 * More info: [OpenFL Forums - SoundTransform.pan does not work](https://community.openfl.org/t/windows-legacy-soundtransform-pan-does-not-work/6616/2?u=geokureli)
 	 */
 	public var pan(get, set):Float;
 	
@@ -773,7 +776,9 @@ class FlxSound extends FlxBasic
 	
 	inline function set_pan(pan:Float):Float
 	{
-		return _transform.pan = pan;
+		_transform.pan = pan;
+		updateTransform();
+		return pan;
 	}
 	
 	inline function get_time():Float

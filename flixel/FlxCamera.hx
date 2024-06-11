@@ -182,25 +182,22 @@ class FlxCamera extends FlxBasic
 	public var bgColor:FlxColor;
 
 	/**
-	 * Sometimes it's easier to just work with a `FlxSprite` than it is to work directly with the `BitmapData` buffer.
+	 * Sometimes it's easier to just work with a `FlxSprite`, than it is to work directly with the `BitmapData` buffer.
 	 * This sprite reference will allow you to do exactly that.
-	 * Basically this sprite's `pixels` property is camera's `BitmapData` buffer.
-	 * NOTE: This variable is used only in blit render mode.
+	 * Basically, this sprite's `pixels` property is the camera's `BitmapData` buffer.
 	 *
-	 * The FlxBloom demo shows how you can use this variable in blit render mode.
-	 * @see http://haxeflixel.com/demos/FlxBloom/
+	 * **NOTE:** This field is only used in blit render mode.
 	 */
 	public var screen:FlxSprite;
 
 	/**
-	 * Whether to use alpha blending for camera's background fill or not.
-	 * If `true` then previously drawn graphics won't be erased,
-	 * and if camera's `bgColor` is transparent/semitransparent then you
-	 * will be able to see graphics of the previous frame.
-	 * Useful for blit render mode (and works only in this mode). Default value is `false`.
+	 * Whether to use alpha blending for the camera's background fill or not.
+	 * If `true`, then the previously drawn graphics won't be erased,
+	 * and if the camera's `bgColor` is transparent/semitransparent, then you
+	 * will be able to see the graphics of the previous frame.
 	 *
-	 * Usage example can be seen in FlxBloom demo.
-	 * @see http://haxeflixel.com/demos/FlxBloom/
+	 * This is Useful for blit render mode (and only works in this mode).
+	 * Default value is `false`.
 	 */
 	public var useBgAlphaBlending:Bool = false;
 
@@ -1477,14 +1474,14 @@ class FlxCamera extends FlxBasic
 		style = Style;
 		target = Target;
 		followLerp = Lerp;
-		var helper:Float;
-		var w:Float = 0;
-		var h:Float = 0;
-		_lastTargetPosition = null;
+		_lastTargetPosition = FlxDestroyUtil.put(_lastTargetPosition);
+		deadzone = FlxDestroyUtil.put(deadzone);
 
 		switch (Style)
 		{
 			case LOCKON:
+				var w:Float = 0;
+				var h:Float = 0;
 				if (target != null)
 				{
 					w = target.width;
@@ -1493,16 +1490,16 @@ class FlxCamera extends FlxBasic
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 
 			case PLATFORMER:
-				var w:Float = (width / 8);
-				var h:Float = (height / 3);
+				final w:Float = (width / 8);
+				final h:Float = (height / 3);
 				deadzone = FlxRect.get((width - w) / 2, (height - h) / 2 - h * 0.25, w, h);
 
 			case TOPDOWN:
-				helper = Math.max(width, height) / 4;
+				final helper = Math.max(width, height) / 4;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 
 			case TOPDOWN_TIGHT:
-				helper = Math.max(width, height) / 8;
+				final helper = Math.max(width, height) / 8;
 				deadzone = FlxRect.get((width - helper) / 2, (height - helper) / 2, helper, helper);
 
 			case SCREEN_BY_SCREEN:

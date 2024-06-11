@@ -24,6 +24,7 @@ class FlxReplay
 
 	/**
 	 * The number of frames in this recording.
+	 * **Note:** This doesn't include empty records, unlike `getDuration()`
 	 */
 	public var frameCount:Int;
 
@@ -240,5 +241,22 @@ class FlxReplay
 		_frames = new Array<FrameRecord>( /*_capacity*/);
 		FlxArrayUtil.setLength(_frames, _capacity);
 		frameCount = 0;
+	}
+	
+	/**
+	 * The duration of this replay, in frames. **Note:** this is different from `frameCount`, which
+	 * is the number of unique records, which doesn't count frames with no input
+	 * 
+	 * @since 5.9.0
+	 */
+	public function getDuration()
+	{
+		if (_frames != null)
+		{
+			// Add 1 to the last frame index, because they are zero-based
+			return _frames[_frames.length - 1].frame + 1;
+		}
+		
+		return 0;
 	}
 }

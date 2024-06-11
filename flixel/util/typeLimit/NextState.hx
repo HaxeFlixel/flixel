@@ -3,11 +3,11 @@ package flixel.util.typeLimit;
 import flixel.FlxState;
 
 /**
- * A utility type that allows methods to accept multiple types, when dealing with "future" F`lxStates`.
- * Prior to haxeFlixel 6, `FlxG.switchState` and other similar methods took a `FlxState` instance
- * which meant FlxStates were instantiated before the previous state was destroyed, potentially
- * causing errors. It also meant states with args couldn't be reset via FlxG.resetState. In version
- * 5.6.0 and higher, these methods now take a function that returns a newly created instance. This
+ * A utility type that allows methods to accept multiple types, when dealing with "future" `FlxStates`.
+ * Prior to HaxeFlixel 6, `FlxG.switchState` and other similar methods took a `FlxState` instance,
+ * which meant `FlxStates` were instantiated before the previous state was destroyed, potentially
+ * causing errors. It also meant that states with args couldn't be reset via `FlxG.resetState`. In version
+ * 5.6.0 and higher, these methods now take a function that returns a newly created state instance. This
  * allows the state's instantiation to happen after the previous state is destroyed.
  * 
  * ## examples:
