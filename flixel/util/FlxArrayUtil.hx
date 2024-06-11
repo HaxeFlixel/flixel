@@ -11,9 +11,10 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
+	@:deprecated("setLength is deprecated, use array.resize instead")
 	public static inline function setLength<T>(array:Array<T>, newLength:Int):Array<T>
 	{
-		if (newLength > 0)
+		if (newLength > 0 && newLength < array.length)
 			array.resize(newLength);
 		
 		return array;

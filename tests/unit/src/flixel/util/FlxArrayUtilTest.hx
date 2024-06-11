@@ -106,7 +106,18 @@ class FlxArrayUtilTest
 	@Test
 	function testSetLength()
 	{
-		Assert.isTrue([0, 1, 2, 3, 4, 5].setLength(3).equals([0, 1, 2]));
-		Assert.isTrue([0, 1, 2].setLength(5).equals([0, 1, 2, 0, 0]));
+		final arr = [0, 1, 2, 3, 4, 5];
+		
+		// ignores negative numbers
+		arr.setLength(-1);
+		FlxAssert.arraysEqual([0, 1, 2, 3, 4, 5], arr);
+		
+		// expected usage
+		arr.setLength(3);
+		FlxAssert.arraysEqual([0, 1, 2], arr);
+		
+		// can't make arrays bigger
+		arr.setLength(5);
+		FlxAssert.arraysEqual([0, 1, 2], arr);
 	}
 }
