@@ -16,8 +16,6 @@ jobs:
       fail-fast: false
     runs-on: macos-13
     steps:
-    - run: sudo apt-get update
-    
     - uses: actions/checkout@v4
     
     - uses: krdlab/setup-haxe@v1
