@@ -212,15 +212,18 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
-	 * Checks to see if some FlxRect object overlaps this FlxRect object.
+	 * Checks to see if this rectangle overlaps another
 	 *
-	 * @param	Rect	The rectangle being tested.
-	 * @return	Whether or not the two rectangles overlap.
+	 * @param   rect  The other rectangle
+	 * @return  Whether the two rectangles overlap
 	 */
-	public inline function overlaps(Rect:FlxRect):Bool
+	public inline function overlaps(rect:FlxRect):Bool
 	{
-		var result = (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
-		Rect.putWeak();
+		final result = rect.right > left
+			&& rect.left < right
+			&& rect.bottom > top
+			&& rect.top < bottom;
+		rect.putWeak();
 		return result;
 	}
 
@@ -462,7 +465,21 @@ class FlxRect implements IFlxPooled
 		rect.putWeak();
 		return result.set(x0, y0, x1 - x0, y1 - y0);
 	}
-
+	
+	/**
+	 * The middle point of this rect
+	 * 
+	 * @param   point  The point to hold the result, if `null` a new one is created
+	 * @since 5.9.0
+	 */
+	public function getMidpoint(?point:FlxPoint)
+	{
+		if (point == null)
+			point = FlxPoint.get();
+		
+		return point.set(x + 0.5 * width, y + 0.5 * height);
+	}
+	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */
