@@ -418,7 +418,8 @@ class FlxActionManagerTest extends FlxTest
 
 		t.destroy();
 	}
-
+	
+	#if hl @Ignore("makeFakeGamepad is failing on Hashlink #3140") #end
 	@Test
 	function testDeviceConnectedDisconnected()
 	{
