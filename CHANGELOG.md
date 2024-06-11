@@ -1,11 +1,47 @@
-5.8.1 (TBD)
+5.9.0 (TBD)
+
+#### New features:
+- `FlxReplay`: Add `getDuration` ([#3135](https://github.com/HaxeFlixel/flixel/pull/3135))
+- `InputFrontEnd`: ([#3134](https://github.com/HaxeFlixel/flixel/pull/3134))
+  - Add `addInput` and `addUniqueType` to replace `add`
+  - add `destroyOld` arg to the `replace` method
+  - Allow more than one instance of a certain `IFlxInputManager` type
+- `SoundFrontEnd`: Add `onVolumeChange` signal ([#3148](https://github.com/HaxeFlixel/flixel/pull/3148))
+- `FlxBasePath`: ([#3153](https://github.com/HaxeFlixel/flixel/pull/3153))
+  - Create base class for `FlxPath` for simpler custom path following logic
+  - Add signals `onEndReached`, `onFinished` and `onNodeReached`
+  - Replacement fields: `startAt`, `direction`, `loopType`, `target`, `currentIndex`, `nextIndex`, `current` and `next`
+- 
 
 #### Changes and improvements:
 - `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
-- `FlxPreloader`: Improve documentation ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
+- `FlxPreloader`: Improve documentation ([#3123](https://github.com/HaxeFlixel/flixel/pull/3123))
+- `FlxDrawTrianglesItem`: minor optimization ([#3121](https://github.com/HaxeFlixel/flixel/pull/3121))
+- `FlxTypedTilemap`: Add private `createTile` method for easier extension, with custom tile types ([#3154](https://github.com/HaxeFlixel/flixel/pull/3154))
+- `FlxState`: Improve doc for `persistentUpdate` & `persistentDraw` ([#3155](https://github.com/HaxeFlixel/flixel/pull/3155))
+- `FlxCamera`: Improve doc ([#3161](https://github.com/HaxeFlixel/flixel/pull/3161))
+- `NextState`: Improve doc ([#3160](https://github.com/HaxeFlixel/flixel/pull/3160))
+- `FlxSprite`: Account for `scale`, `origin`, `offset`, `angle` and `pixelPerfectPosition` in `getGraphicMidpoint` ([#3125](https://github.com/HaxeFlixel/flixel/pull/3125))
+- Major change to `FlxTilemap` and `FlxTiles` collision ([#3158](https://github.com/HaxeFlixel/flixel/pull/3158))
+  - `FlxTile`: Various features for allowing custom overlap/collision logic
+    - Add dynamic methods `overlapsObject` and `orientAt` with helpers `orient`, `orientByIndex` and `orientAtByIndex`
+    - Add `onCollide` signal, when overlaps are detected for collision purposes
+  - Tilemaps: Add various new tools and helpers to `FlxTilemap` and `FlxBaseTilemap`
+    - Added new `forEachOverlappingTile` calls a method with every tile that overlaps an object
+    - Added new `isOverlappingTile` method, allows you to check all tiles overlapping an object
+    - Added new `objectOverlapsTiles` to replace the now deprecated `overlapsWithCallbacks`
+      - Eschews `flipCallbackParams` arg, allowing better typing of both callback params
+      - Adds `isCollision` flag to control whether the Tiles' collision callbacks are fired and allows for processing non-solid tiles 
+    - Added new helpers: `getMapIndex`, `getRow`, `getColumn`, `getTileIndex`, `getTileData`, `tileExists`, `setTileIndex`, `getColumnAt`, `getRowAt`, `columnExists` and `rowExists`
+    - `FlxObject`: Add internal helpers for processing tilemaps in `separate`, `updateTouchingFlags` and similar functions
+    - Debug Drawing: Various improvements to debug drawing tilemaps
+      - Now honors tiles' `ignoreDrawDebug` and `debugBoundingBoxColor` fields
+      - New `getDebugBoundingBoxColor` in `FlxObject`. Meant to eventually replace `drawDebugBoundingBox`
+
 
 #### Bugfixes:
-- 
+- `FlxFlickerTween`: Fix "Unsupported recursive type" error on hl ([#3170](https://github.com/HaxeFlixel/flixel/pull/3170))
+- `FlxBGSprite`: Fix draw size when scale is not `1.0` ([#3142](https://github.com/HaxeFlixel/flixel/pull/3142))
 
 5.8.0 (April 19, 2024)
 
