@@ -118,7 +118,7 @@ class FlxReplay
 				if (frameCount >= _capacity)
 				{
 					_capacity *= 2;
-					FlxArrayUtil.setLength(_frames, _capacity);
+					_frames.resize(_capacity);
 				}
 			}
 		}
@@ -184,7 +184,7 @@ class FlxReplay
 		if (frameCount >= _capacity)
 		{
 			_capacity *= 2;
-			FlxArrayUtil.setLength(_frames, _capacity);
+			_frames.resize(_capacity);
 		}
 	}
 
@@ -238,8 +238,7 @@ class FlxReplay
 	function init():Void
 	{
 		_capacity = 100;
-		_frames = new Array<FrameRecord>( /*_capacity*/);
-		FlxArrayUtil.setLength(_frames, _capacity);
+		_frames = new Array<FrameRecord>();
 		frameCount = 0;
 	}
 	
