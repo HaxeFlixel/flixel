@@ -536,11 +536,29 @@ class FlxTilemapTest extends FlxTest
 		FlxAssert.arraysEqual([0,1,2,3,5,6,7,8], tilemap.getAllMapIndices(0));
 	}
 	
-	function assertPixelHasColor(x:Int, color:UInt, ?info:PosInfos)
+	@Test
+	function testOrientDelta()
 	{
-		Assert.areEqual(FlxG.camera.buffer.getPixel(x, 0), color, info);
+		final mapData = [0];
+		tilemap.loadMapFromArray(mapData, 1, 1, getBitmapData(), 8, 8);
+		step();
+		
+		tilemap.x = 0;
+		tilemap.last.x = 0;
+		final tile = tilemap.getTileData(0);
+		tile.orient(0, 0);
+		
+		Assert.areEqual(tile.x, tile.last.x);
+		Assert.areEqual(0, tile.x);
+		
+		tilemap.last.x = 10;
+		tilemap.x = 10;
+		tile.orient(0, 0);
+		
+		Assert.areEqual(tilemap.x - tilemap.last.x, tile.x - tile.last.x);
+		Assert.areEqual(tile.x, tile.last.x);
 	}
-
+	
 	function getBitmapData()
 	{
 		return new BitmapData(8*16, 8);

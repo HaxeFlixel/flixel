@@ -129,8 +129,8 @@ class FlxTile extends FlxObject
 		height = tilemap.scaledTileHeight;
 		x = xPos + col * width;
 		y = yPos + row * height;
-		last.x = x - xPos - tilemap.last.x;
-		last.y = y - yPos - tilemap.last.y;
+		last.x = x - (xPos - tilemap.last.x);
+		last.y = y - (yPos - tilemap.last.y);
 	}
 	
 	/**
