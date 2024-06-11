@@ -1206,21 +1206,48 @@ class FlxSprite extends FlxObject
 		dirty = false;
 		return framePixels;
 	}
-
+	
 	/**
 	 * Retrieve the midpoint of this sprite's graphic in world coordinates.
 	 *
-	 * @param   point   Allows you to pass in an existing `FlxPoint` if you're so inclined.
-	 *                  Otherwise a new one is created.
-	 * @return  A `FlxPoint` containing the midpoint of this sprite's graphic in world coordinates.
+	 * @param   point  The resulting point, if `null` a new one is created
 	 */
 	public function getGraphicMidpoint(?point:FlxPoint):FlxPoint
 	{
-		if (point == null)
-			point = FlxPoint.get();
-		return point.set(x + frameWidth * 0.5 * scale.x, y + frameHeight * 0.5 * scale.y);
+		final rect = getGraphicBounds();
+		point = rect.getMidpoint(point);
+		rect.put();
+		return point;
 	}
-
+	
+	/**
+	 * Retrieves the world bounds of this sprite's graphic
+	 * **Note:** Ignores `scrollFactor`, to get the screen position of the graphic use
+	 * `getScreenBounds`
+	 *
+	 * @param   rect  The resulting rect, if `null` a new one is created
+	 * @since 5.9.0
+	 */
+	public function getGraphicBounds(?rect:FlxRect):FlxRect
+	{
+		if (rect == null)
+			rect = FlxRect.get();
+		
+		rect.set(x, y);
+		if (pixelPerfectPosition)
+			rect.floor();
+		
+		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
+		rect.x += origin.x - offset.x - _scaledOrigin.x;
+		rect.y += origin.y - offset.y - _scaledOrigin.y;
+		rect.setSize(frameWidth * scale.x, frameHeight * scale.y);
+		
+		if (angle % 360 != 0)
+			rect.getRotatedBounds(angle, _scaledOrigin, rect);
+		
+		return rect;
+	}
+	
 	/**
 	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.

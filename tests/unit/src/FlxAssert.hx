@@ -59,6 +59,26 @@ class FlxAssert
 			Assert.fail('\nValue\n   ${actual}\nwas equal to\n   ${expected}\n', info);
 	}
 
+	public static function arrayContains<T>(array:Array<T>, item:T, ?msg:String, ?info:PosInfos):Void
+	{
+		if (array.contains(item))
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('\nValue\n   ${item}\nwas not found in array\n   ${array}\n', info);
+	}
+
+	public static function arrayNotContains<T>(array:Array<T>, item:T, ?msg:String, ?info:PosInfos):Void
+	{
+		if (!array.contains(item))
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('\nValue\n   ${item}\nwas found in array\n   ${array}\n', info);
+	}
+
 	public static function pointsEqual(expected:FlxPoint, actual:FlxPoint, ?msg:String, ?info:PosInfos)
 	{
 		if (expected.equals(actual))

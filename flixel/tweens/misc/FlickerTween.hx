@@ -2,29 +2,68 @@ package flixel.tweens.misc;
 
 import flixel.FlxBasic;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 
 /**
  * Special tween options for flicker tweens
  * @since 5.7.0
  */
-typedef FlickerTweenOptions = TweenOptions &
+/*Note: FlickerTweenOptions previously referenced TweenOptions, but was causing a "Unsupported recursive type" circular dependency issue when targeting HashLink
+ * See https://github.com/HaxeFlixel/flixel/issues/3149
+ */
+typedef FlickerTweenOptions =
 {
+	/**
+	 * Tween type - bit field of `FlxTween`'s static type constants.
+	 */
+	@:optional var type:FlxTweenType;
+	
+	/**
+	 * Optional easer function (see `FlxEase`).
+	 */
+	@:optional var ease:EaseFunction;
+	
+	/**
+	 * Optional start callback function.
+	 */
+	@:optional var onStart:TweenCallback;
+	
+	/**
+	 * Optional update callback function.
+	 */
+	@:optional var onUpdate:TweenCallback;
+	
+	/**
+	 * Optional complete callback function.
+	 */
+	@:optional var onComplete:TweenCallback;
+	
+	/**
+	 * Seconds to wait until starting this tween, `0` by default.
+	 */
+	@:optional var startDelay:Float;
+	
+	/**
+	 * Seconds to wait between loops of this tween, `0` by default.
+	 */
+	@:optional var loopDelay:Float;
+	
 	/**
 	 * Whether the object will show after the tween, defaults to `true`
 	 */
-	?endVisibility:Bool,
+	@:optional var endVisibility:Bool;
 	
 	/**
 	 * The amount of time the object will show, compared to the total duration, The default is `0.5`,
 	 * meaning equal times visible and invisible.
 	 */
-	?ratio:Float,
+	@:optional var ratio:Float;
 	
 	/**
 	 * An optional custom flicker function, defaults to
 	 * `function (tween) { return (tween.time / tween.period) % 1 > tween.ratio; }`
 	 */
-	?tweenFunction:(FlickerTween)->Bool
+	@:optional var tweenFunction:(FlickerTween) -> Bool;
 };
 
 /**
@@ -37,7 +76,7 @@ class FlickerTween extends FlxTween
 	public var basic(default, null):FlxBasic;
 	
 	/** Controls how the object flickers over time */
-	public var tweenFunction(default, null):(FlickerTween)->Bool;
+	public var tweenFunction(default, null):(FlickerTween) -> Bool;
 	
 	/** Whether the object will show after the tween, defaults to `true` */
 	public var endVisibility(default, null):Bool = true;
