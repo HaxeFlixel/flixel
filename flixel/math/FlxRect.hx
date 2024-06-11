@@ -212,15 +212,18 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
-	 * Checks to see if some FlxRect object overlaps this FlxRect object.
+	 * Checks to see if this rectangle overlaps another
 	 *
-	 * @param	Rect	The rectangle being tested.
-	 * @return	Whether or not the two rectangles overlap.
+	 * @param   rect  The other rectangle
+	 * @return  Whether the two rectangles overlap
 	 */
-	public inline function overlaps(Rect:FlxRect):Bool
+	public inline function overlaps(rect:FlxRect):Bool
 	{
-		var result = (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
-		Rect.putWeak();
+		final result = rect.right > left
+			&& rect.left < right
+			&& rect.bottom > top
+			&& rect.top < bottom;
+		rect.putWeak();
 		return result;
 	}
 

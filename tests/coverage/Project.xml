@@ -53,6 +53,7 @@
 		<haxedef name="FLX_RENDER_TRIANGLE" />
 		<haxedef name="FLX_NO_SAVE" />
 		<haxedef name="FLX_NO_HEALTH" />
+		<haxedef name="FLX_4_LEGACY_COLLISION" />
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />
