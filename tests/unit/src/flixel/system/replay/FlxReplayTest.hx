@@ -101,6 +101,15 @@ class FlxReplayTest extends FlxTest
 	{
 		return new FrameRecord().create(i, null, new MouseRecord(0, 0, mouseState, 0));
 	}
+	
+	@Test // #3135
+	function testGetDuration()
+	{
+		var replay = new FlxReplay();
+		replay.load("987654321\n299km0,0,2,0\n");
+		// add 1 because frame indices are zero-based
+		Assert.areEqual(300, replay.getDuration());
+	}
 }
 
 class ReplayState extends FlxState

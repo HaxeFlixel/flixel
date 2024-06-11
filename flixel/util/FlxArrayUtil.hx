@@ -11,25 +11,12 @@ class FlxArrayUtil
 	 * @param	array		The array.
 	 * @param	newLength	The length you want the array to have.
 	 */
-	@:generic
-	public static function setLength<T>(array:Array<T>, newLength:Int):Array<T>
+	@:deprecated("setLength is deprecated, use array.resize instead")
+	public static inline function setLength<T>(array:Array<T>, newLength:Int):Array<T>
 	{
-		if (newLength < 0)
-			return array;
-
-		var oldLength:Int = array.length;
-		var diff:Int = newLength - oldLength;
-		if (diff >= 0)
-			return array;
-
-		#if flash
-		untyped array.length = newLength;
-		#else
-		diff = -diff;
-		for (i in 0...diff)
-			array.pop();
-		#end
-
+		if (newLength > 0 && newLength < array.length)
+			array.resize(newLength);
+		
 		return array;
 	}
 

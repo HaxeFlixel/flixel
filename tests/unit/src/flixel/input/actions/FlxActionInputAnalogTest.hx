@@ -248,7 +248,8 @@ class FlxActionInputAnalogTest extends FlxTest
 
 		testInputStates(test, clear, move, [pos1, pos2, pos3, pos4], axis, a, b, c, d, callbacks);
 	}
-
+	
+	#if hl @Ignore("makeFakeGamepad is failing on Hashlink #3140") #end
 	@Test
 	function testGamepad()
 	{
