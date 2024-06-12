@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.path.FlxPath;
+import flixel.system.debug.FlxDebugDrawGraphic;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -1357,16 +1358,10 @@ class FlxObject extends FlxBasic
 		
 	}
 	
-	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
+	function drawDebugBoundingBoxColor(gfx:FlxDebugDrawGraphic, rect:FlxRect, color:FlxColor)
 	{
-		// fill static graphics object with square shape
-		gfx.beginFill(color, 0.75);
-		var size = 1;
-		
-		gfx.drawRect(rect.x, rect.y, size, rect.height);
-		gfx.drawRect(rect.x + size, rect.y, rect.width - 2 * size, size);
-		gfx.drawRect(rect.x + rect.width - size, rect.y, size, rect.height);
-		gfx.drawRect(rect.x + size, rect.y + rect.height - size, rect.width - 2 * size, size);
+		color.alphaFloat = 0.75;
+		gfx.drawBoundingBox(rect.x, rect.y, rect.width, rect.height, color, 1.0);
 	}
 
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
@@ -1386,8 +1381,6 @@ class FlxObject extends FlxBasic
 	{
 		if (FlxG.renderBlit)
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-		else if (FlxG.renderTile)
-			camera.debugLayer.graphics.endFill();
 	}
 	#end
 
