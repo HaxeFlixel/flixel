@@ -2,7 +2,7 @@ package flixel.text;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.addons.text.internal.FlxBaseTextInput;
+import flixel.text.FlxBaseInputText;
 import flixel.input.FlxPointer;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxPoint;
