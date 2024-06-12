@@ -130,8 +130,10 @@ class FlxTilemap extends FlxTypedTilemap<FlxTile>
 		super();
 	}
 	
-	override function createTile(index, width, height, visible, allowCollisions):FlxTile
+	override function createTile(index:Int, width, height):FlxTile
 	{
+		final visible = index >= _drawIndex;
+		final allowCollisions = index >= _collideIndex ? this.allowCollisions : NONE;
 		return new FlxTile(this, index, width, height, visible, allowCollisions);
 	}
 }
@@ -380,7 +382,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		length += _startingIndex;
 
 		for (i in 0...length)
-			_tileObjects[i] = createTile(i, tileWidth, tileHeight, (i >= _drawIndex), (i >= _collideIndex) ? allowCollisions : NONE);
+			_tileObjects[i] = createTile(i, tileWidth, tileHeight);
 
 		// Create debug tiles for rendering bounding boxes on demand
 		#if FLX_DEBUG
@@ -390,7 +392,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		#end
 	}
 	
-	function createTile(index, width, height, visible, allowCollisions):Tile
+	function createTile(index, width, height):Tile
 	{
 		throw "createTile not implemented";
 	}
@@ -573,11 +575,9 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		// Copied from getScreenPosition()
 		_helperPoint.x = x - camera.scroll.x * scrollFactor.x;
 		_helperPoint.y = y - camera.scroll.y * scrollFactor.y;
-
-		var rectWidth:Float = scaledTileWidth;
-		var rectHeight:Float = scaledTileHeight;
-		var rect = FlxRect.get(0, 0, rectWidth, rectHeight);
-
+		
+		final rect = FlxRect.get(0, 0, scaledTileWidth, scaledTileHeight);
+		
 		// Copy tile images into the tile buffer
 		// Modified from getScreenPosition()
 		_point.x = (camera.scroll.x * scrollFactor.x) - x;
@@ -599,21 +599,30 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			for (column in 0...screenColumns)
 			{
-				final tile = _tileObjects[_data[columnIndex]];
+				final tile = getTileData(columnIndex);
 
-				if (tile != null && tile.visible)
+				if (tile != null && tile.visible && !tile.ignoreDrawDebug)
 				{
-					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rectWidth;
-					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rectHeight;
-					drawDebugBoundingBox(camera.debugLayer.graphics, rect, tile.allowCollisions, tile.allowCollisions != ANY, camera.zoom);
+					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rect.width;
+					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rect.height;
+					
+						final color = tile.debugBoundingBoxColor != null
+							? tile.debugBoundingBoxColor
+							: getDebugBoundingBoxColor(tile.allowCollisions);
+						
+						if (color != null)
+						{
+							final colStr = color.toHexString();
+							drawDebugBoundingBoxColor(camera.debugLayer.graphics, rect, color, camera.zoom);
+						}
 				}
 
 				columnIndex++;
 			}
-
+			
 			rowIndex += widthInTiles;
 		}
-
+		
 		rect.put();
 	}
 	#end
@@ -723,104 +732,122 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			if (buffer != null)
 				buffer.dirty = dirty;
 	}
-
-	/**
-	 * Checks if the Object overlaps any tiles with any collision flags set,
-	 * and calls the specified callback function (if there is one).
-	 * Also calls the tile's registered callback if the filter matches.
-	 *
-	 * @param   object              The FlxObject you are checking for overlaps against.
-	 * @param   callback            An optional function that takes the form `myCallback(a:FlxObject, b:FlxObject)`,
-	 *                              where `a` is a `FlxTile`, and `b` is the given `object` paaram.
-	 * @param   flipCallbackParams  Used to preserve A-B list ordering from `FlxObject.separate()`,
-	 *                              returns the `FlxTile` object as the second parameter instead.
-	 * @param   position            Optional, specify a custom position for the tilemap (used for `overlapsAt`).
-	 * @return  Whether there were overlaps, and the result of the callback, if one was specified.
-	 */
-	override public function overlapsWithCallback(object:FlxObject, ?callback:FlxObject->FlxObject->Bool, flipCallbackParams:Bool = false,
-			?position:FlxPoint):Bool
+	
+	override function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint)
 	{
-		var results = false;
-
+		return forEachOverlappingTileHelper(object, filter, position, true);
+	}
+	
+	override function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
+	{
+		function filter(tile)
+		{
+			// call func on every overlapping tile
+			func(tile);
+			
+			// return true, since an overlapping tile was found
+			return true;
+		}
+		
+		return forEachOverlappingTileHelper(object, filter, position, false);
+	}
+	
+	function forEachOverlappingTileHelper(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint, stopAtFirst:Bool):Bool
+	{
 		var xPos = x;
 		var yPos = y;
-
+		
 		if (position != null)
 		{
 			xPos = position.x;
 			yPos = position.y;
 			position.putWeak();
 		}
-
+		
 		inline function bindInt(value:Int, min:Int, max:Int)
 		{
 			return Std.int(FlxMath.bound(value, min, max));
 		}
-
+		
 		// Figure out what tiles we need to check against, and bind them by the map edges
 		final minTileX:Int = bindInt(Math.floor((object.x - xPos) / scaledTileWidth), 0, widthInTiles);
 		final minTileY:Int = bindInt(Math.floor((object.y - yPos) / scaledTileHeight), 0, heightInTiles);
 		final maxTileX:Int = bindInt(Math.ceil((object.x + object.width - xPos) / scaledTileWidth), 0, widthInTiles);
 		final maxTileY:Int = bindInt(Math.ceil((object.y + object.height - yPos) / scaledTileHeight), 0, heightInTiles);
-
-		// Loop through the range of tiles and call the callback on them, accordingly
-		final deltaX:Float = xPos - last.x;
-		final deltaY:Float = yPos - last.y;
-
+		
+		var result = false;
 		for (row in minTileY...maxTileY)
 		{
 			for (column in minTileX...maxTileX)
 			{
-				final mapIndex:Int = (row * widthInTiles) + column;
-				final dataIndex:Int = _data[mapIndex];
-				if (dataIndex < 0)
-					continue;
-				
-				final tile = _tileObjects[dataIndex];
-				tile.width = scaledTileWidth;
-				tile.height = scaledTileHeight;
-				tile.x = xPos + column * tile.width;
-				tile.y = yPos + row * tile.height;
-				tile.last.x = tile.x - deltaX;
-				tile.last.y = tile.y - deltaY;
-
-				var overlapFound = ((object.x + object.width) > tile.x)
-					&& (object.x < (tile.x + tile.width))
-					&& ((object.y + object.height) > tile.y)
-					&& (object.y < (tile.y + tile.height));
-
-				if (tile.allowCollisions != NONE)
+				final tile = getTileData(column, row);
+				tile.orientAt(xPos, yPos, column, row);
+				if (tile.overlapsObject(object) && (filter == null || filter(tile)))
 				{
-					if (callback != null)
-					{
-						if (flipCallbackParams)
-						{
-							overlapFound = callback(object, tile);
-						}
-						else
-						{
-							overlapFound = callback(tile, object);
-						}
-					}
-				}
-
-				if (overlapFound)
-				{
-					if (tile.callbackFunction != null && (tile.filter == null || Std.isOfType(object, tile.filter)))
-					{
-						tile.mapIndex = mapIndex;
-						tile.callbackFunction(tile, object);
-					}
-
-					if (tile.allowCollisions != NONE)
-						results = true;
+					if (stopAtFirst)
+						return true;
+					
+					result = true;
 				}
 			}
 		}
-
+		
+		return result;
+	}
+	
+	override function objectOverlapsTiles<TObj:FlxObject>(object:TObj, ?callback:(Tile, TObj)->Bool, ?position:FlxPoint, isCollision = true):Bool
+	{
+		var results = false;
+		
+		function each(tile:Tile)
+		{
+			var overlapFound = tile.solid || !isCollision;
+			if (overlapFound && callback != null)
+			{
+				overlapFound = callback(tile, object);
+			}
+			
+			if (overlapFound)
+			{
+				if (tile.callbackFunction != null)
+				{
+					tile.callbackFunction(tile, object);
+				}
+				
+				// check again in case callback changed it (for backwards compatibility)
+				if (tile.solid || !isCollision)
+				{
+					tile.onCollide.dispatch(tile, object);
+					results = true;
+				}
+			}
+		}
+		
+		forEachOverlappingTile(object, each, position);
+		
 		return results;
 	}
-
+	
+	override function getColumnAt(worldX:Float, bind = false):Int
+	{
+		final result = Math.floor(worldX / scaledTileWidth);
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
+		
+		return result;
+	}
+	
+	override function getRowAt(worldY:Float, bind = false):Int
+	{
+		final result = Math.floor(worldY / scaledTileHeight);
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles -1 : result);
+		
+		return result;
+	}
+	
 	override public function getTileIndexByCoords(coord:FlxPoint):Int
 	{
 		var localX = coord.x - x;
@@ -943,7 +970,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		final endIndex = getTileIndexByCoords(end);
 
 		// If the starting tile is solid, return the starting position
-		if (getTileCollisions(getTileByIndex(startIndex)) != NONE)
+		if (getTileData(startIndex).allowCollisions != NONE)
 		{
 			if (result != null)
 				result.copyFrom(start);
@@ -1050,8 +1077,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		final step = startY <= endY ? 1 : -1;
 		while (true)
 		{
-			var index = y * widthInTiles + x;
-			if (getTileCollisions(getTileByIndex(index)) != NONE)
+			var index = getMapIndex(x, y);
+			if (getTileData(index).solid)
 				return index;
 			
 			if (y == endY)
@@ -1093,8 +1120,6 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var stepY:Float = deltaY / steps;
 		var curX:Float = start.x - stepX - x;
 		var curY:Float = start.y - stepY - y;
-		var tileX:Int;
-		var tileY:Int;
 		var i:Int = 0;
 
 		start.putWeak();
@@ -1111,10 +1136,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				continue;
 			}
 
-			tileX = Math.floor(curX / scaledTileWidth);
-			tileY = Math.floor(curY / scaledTileHeight);
-
-			if (_tileObjects[_data[tileY * widthInTiles + tileX]].allowCollisions != NONE)
+			var tileX = Math.floor(curX / scaledTileWidth);
+			var tileY = Math.floor(curY / scaledTileHeight);
+			
+			if (getTileData(tileX, tileY).solid)
 			{
 				// Some basic helper stuff
 				tileX *= Std.int(scaledTileWidth);
@@ -1190,9 +1215,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		if (spriteFactory == null)
 			spriteFactory = defaultTileToSprite;
-
-		final rowIndex:Int = tileX + (tileY * widthInTiles);
-		final tile:FlxTile = _tileObjects[_data[rowIndex]];
+		
+		final tile:FlxTile = getTileData(tileX, tileY);
 		var image:FlxImageFrame = null;
 
 		if (tile != null && tile.visible)
@@ -1202,7 +1226,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		final worldX:Float = tileX * tileWidth * scale.x + x;
 		final worldY:Float = tileY * tileHeight * scale.y + y;
-		var tileSprite:FlxSprite = spriteFactory({
+		final tileSprite:FlxSprite = spriteFactory({
 			graphic: image,
 			x: worldX,
 			y: worldY,
@@ -1212,7 +1236,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		});
 
 		if (newTile >= 0)
-			setTile(tileX, tileY, newTile);
+			setTileIndex(tileX, tileY, newTile);
 
 		return tileSprite;
 	}
@@ -1292,7 +1316,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			for (column in 0...screenColumns)
 			{
-				tile = _tileObjects[_data[columnIndex]];
+				tile = getTileData(columnIndex);
 
 				if (tile != null && tile.visible && tile.frame.type != FlxFrameType.EMPTY)
 				{
@@ -1407,7 +1431,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		setDirty();
 	}
 	#end
-
+	
+	/** Guards against -1 */
+	override function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics:Bool = true):Bool
+	{
+		return super.setTileHelper(mapIndex, tileIndex < 0 ? 0 : tileIndex, updateGraphics);
+	}
+	
 	/**
 	 * Internal function used in setTileByIndex() and the constructor to update the map.
 	 *
