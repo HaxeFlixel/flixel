@@ -46,7 +46,7 @@ class FlxBaseInputText extends FlxText
 	}
 
 	/**
-	 * An integer (`-based index) that indicates the bottommost line that is currently visible in the text object.
+	 * An integer (1-based index) that indicates the bottommost line that is currently visible in the text object.
 	 * 
 	 * All the text between the lines indicated by `scrollV` and `bottomScrollV` is currently visible in the text object.
 	 */
