@@ -649,7 +649,7 @@ class FlxSprite extends FlxObject
 		frames = graph.imageFrame;
 		
 		#if FLX_TRACK_GRAPHICS
-		graph.trackingInfo = 'makeGraphic($ID, $color)';
+		graph.trackingInfo = 'makeGraphic($ID, ${color.toHexString()})';
 		#end
 		
 		return this;
