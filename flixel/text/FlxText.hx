@@ -892,7 +892,11 @@ class FlxText extends FlxSprite
 			// Need to generate a new buffer to store the text graphic
 			var key:String = FlxG.bitmap.getUniqueKey("text");
 			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
-
+			
+			#if FLX_TRACK_GRAPHICS
+			graphic.trackingInfo = 'text($ID, $text)';
+			#end
+			
 			if (_hasBorderAlpha)
 				_borderPixels = graphic.bitmap.clone();
 

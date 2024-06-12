@@ -367,7 +367,12 @@ class FlxGraphic implements IFlxDestroyable
 	 * It is `false` by default, since it significantly increases memory consumption.
 	 */
 	public var unique:Bool = false;
-
+	
+	#if FLX_TRACK_GRAPHICS
+	/** Any info about the creation or intended usage of this graphic, for debugging purposes */
+	public var trackingInfo:String = "";
+	#end
+	
 	/**
 	 * Internal var holding `FlxImageFrame` for the whole bitmap of this graphic.
 	 * Use public `imageFrame` var to access/generate it.
