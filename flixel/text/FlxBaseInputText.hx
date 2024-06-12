@@ -27,7 +27,7 @@ import openfl.text.TextFormat;
  * @author Starmapo
  */
 @:access(openfl.text.TextField)
-class FlxInputBaseText extends FlxText
+class FlxBaseInputText extends FlxText
 {
 	/**
 	 * Checks whether the control key is pressed.
@@ -265,7 +265,7 @@ class FlxInputBaseText extends FlxText
 	var _scrollVCounter:Float = 0;
 
 	/**
-	 * Creates a new `FlxBaseTextInput` object.
+	 * Creates a new `FlxBaseInputText` object.
 	 * @param x The x position of the text.
 	 * @param y The y position of the text.
 	 * @param fieldWidth The `width` of the text object. Enables `autoSize` if `<= 0`. (`height` is determined automatically).
@@ -369,7 +369,7 @@ class FlxInputBaseText extends FlxText
 	}
 
 	/**
-	 * Adds another format to this `FlxBaseTextInput`.
+	 * Adds another format to this `FlxBaseInputText`.
 	 * @param format The format to be added.
 	 * @param start The start index of the string where the format will be applied.
 	 * @param end The end index of the string where the format will be applied.
@@ -1133,25 +1133,25 @@ class FlxInputBaseText extends FlxText
 
 	override function set_borderColor(value:FlxColor):FlxColor
 	{
-		// This feature is not supported in `FlxBaseTextInput`.
+		// This feature is not supported in `FlxBaseInputText`.
 		return value;
 	}
 
 	override function set_borderQuality(value:Float):Float
 	{
-		// This feature is not supported in `FlxBaseTextInput`.
+		// This feature is not supported in `FlxBaseInputText`.
 		return value;
 	}
 
 	override function set_borderSize(value:Float):Float
 	{
-		// This feature is not supported in `FlxBaseTextInput`.
+		// This feature is not supported in `FlxBaseInputText`.
 		return value;
 	}
 
 	override function set_borderStyle(value:FlxTextBorderStyle):FlxTextBorderStyle
 	{
-		// This feature is not supported in `FlxBaseTextInput`.
+		// This feature is not supported in `FlxBaseInputText`.
 		return value;
 	}
 
@@ -1439,7 +1439,7 @@ class FlxInputBaseText extends FlxText
 }
 
 /**
- * A custom `TextField` object with some modifications, which is used in `FlxBaseTextInput`.
+ * A custom `TextField` object with some modifications, which is used in `FlxBaseInputText`.
  * 
  * @author Starmapo
  */
@@ -1447,28 +1447,28 @@ class FlxInputBaseText extends FlxText
 class CustomTextField extends TextField
 {
 	/**
-	 * The `FlxBaseTextInput` object that this text field belongs to.
+	 * The `FlxBaseInputText` object that this text field belongs to.
 	 */
-	var textParent:FlxBaseTextInput;
+	var textParent:FlxBaseInputText;
 
 	/**
 	 * Creates a new `CustomTextField` object.
-	 * @param parent The `FlxBaseTextInput` object that this text field belongs to.
+	 * @param parent The `FlxBaseInputText` object that this text field belongs to.
 	 */
-	public function new(parent:FlxBaseTextInput)
+	public function new(parent:FlxBaseInputText)
 	{
 		super();
 		textParent = parent;
 		stage = FlxG.stage;
 
-		// Remove event listeners, as these are handled by `FlxBaseTextInput`.
+		// Remove event listeners, as these are handled by `FlxBaseInputText`.
 		__removeAllListeners();
 	}
 
 	#if (lime >= "8.0.0")
 	override function getBounds(targetCoordinateSpace:DisplayObject):Rectangle
 	{
-		// Edited to return the bounds of the `FlxBaseTextInput` object, used for setting the window's `textInputRect`.
+		// Edited to return the bounds of the `FlxBaseInputText` object, used for setting the window's `textInputRect`.
 		final rect = textParent.getTextInputRect();
 		final bounds = new Rectangle(rect.x, rect.y, rect.width, rect.height);
 		rect.put();
@@ -1480,7 +1480,7 @@ class CustomTextField extends TextField
 	{
 		super.__enableInput();
 
-		// Edited to remove event listeners, as these are handled by `FlxBaseTextInput`.
+		// Edited to remove event listeners, as these are handled by `FlxBaseInputText`.
 		stage.window.onTextInput.remove(window_onTextInput);
 		stage.window.onKeyDown.remove(window_onKeyDown);
 	}
