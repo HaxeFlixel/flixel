@@ -679,6 +679,19 @@ class Interaction extends Window
 		addItemsWithinArea(cast items, members, area);
 	}
 	
+	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
+	{
+		return area.overlaps(object.getHitbox(FlxRect.weak()));
+	}
+	
+	inline function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
+	{
+		// Ignore sprites' alpha when clicking a point
+		return (area.width <= 1 && area.height <= 1)
+			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
+			: isOverObject(sprite, area);
+	}
+	
 	/**
 	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
 	 * the method has no return, you must pass an array where items will be placed. The method decides
@@ -703,11 +716,19 @@ class Interaction extends Window
 			
 			final group = FlxTypedGroup.resolveSelectionGroup(member);
 			if (group != null)
+			{
 				addItemsWithinArea(items, group.members, area);
+			}
+			else if (member is FlxSprite)
+			{
+				final sprite:FlxSprite = cast member;
+				if (isOverSprite(sprite, area))
+					items.push(sprite);
+			}
 			else if (member is FlxObject)
 			{
 				final object:FlxObject = cast member;
-				if (area.overlaps(object.getHitbox()))
+				if (isOverObject(object, area))
 					items.push(object);
 			}
 		}
@@ -737,10 +758,16 @@ class Interaction extends Window
 			if (group != null)
 				return getTopItemWithinArea(group.members, area);
 			
-			if (member is FlxObject)
+			if (member is FlxSprite)
+			{
+				final sprite:FlxSprite = cast member;
+				if (isOverSprite(sprite, area))
+					return sprite;
+			}
+			else if (member is FlxObject)
 			{
 				final object:FlxObject = cast member;
-				if (area.overlaps(object.getHitbox()))
+				if (isOverObject(object, area))
 					return object;
 			}
 		}
