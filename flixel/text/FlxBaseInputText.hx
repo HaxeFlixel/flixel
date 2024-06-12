@@ -1443,6 +1443,7 @@ class FlxInputBaseText extends FlxText
  * 
  * @author Starmapo
  */
+@SuppressWarnings("checkstyle:MethodName")
 class CustomTextField extends TextField
 {
 	/**
@@ -1474,7 +1475,7 @@ class CustomTextField extends TextField
 		return bounds;
 	}
 	#end
-
+	
 	@:noCompletion override function __enableInput():Void
 	{
 		super.__enableInput();
