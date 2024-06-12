@@ -681,7 +681,6 @@ class Interaction extends Window
 	
 	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
 	{
-		// Ignore sprites' alpha
 		return area.overlaps(object.getHitbox(FlxRect.weak()));
 	}
 	
