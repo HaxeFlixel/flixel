@@ -1,16 +1,20 @@
 package flixel.system.debug;
 
+import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import openfl.display.Graphics;
 
 abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 {
-	static inline var USE_FILL = #if html5 true #else false #end;
+	inline function useFill()
+	{
+		return #if mac false #else FlxG.renderTile #end;
+	}
 	
 	public function drawBoundingBox(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness = 1.0)
 	{
-		if (USE_FILL)
+		if (useFill())
 		{
 			this.beginFill(color.rgb, color.alphaFloat);
 			
@@ -32,7 +36,7 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 	
 	public function drawLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness = 1.0)
 	{
-		if (USE_FILL)
+		if (useFill())
 		{
 			this.beginFill(color.rgb, color.alphaFloat);
 			final normal = FlxPoint.get(x2 - x1, y2 - y1).leftNormal();
