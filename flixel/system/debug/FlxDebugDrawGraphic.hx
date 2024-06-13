@@ -9,7 +9,9 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 {
 	inline function useFill()
 	{
-		return #if mac false #else FlxG.renderTile #end;
+		// true for testing
+		return true;
+		//return #if (cpp || hl) false #else FlxG.renderTile #end;
 	}
 	
 	public function drawBoundingBox(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness = 1.0)
@@ -18,10 +20,18 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 		{
 			this.beginFill(color.rgb, color.alphaFloat);
 			
-			this.drawRect(x, y, thickness, height);
-			this.drawRect(x + thickness, y, width - 2 * thickness, thickness);
-			this.drawRect(x + width - thickness, y, thickness, height);
-			this.drawRect(x + thickness, y + height - thickness, width - 2 * thickness, thickness);
+			// outer
+			this.moveTo(x, y);
+			this.lineTo(x + width, y);
+			this.lineTo(x + width, y + height);
+			this.lineTo(x, y + height);
+			this.lineTo(x, y);
+			// inner
+			this.lineTo(x + thickness, y + thickness);
+			this.lineTo(x + thickness, y + height - thickness);
+			this.lineTo(x + width - thickness, y + height - thickness);
+			this.lineTo(x + width - thickness, y + thickness);
+			this.lineTo(x + thickness, y + thickness);
 			
 			this.endFill();
 		}
