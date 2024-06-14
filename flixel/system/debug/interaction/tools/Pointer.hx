@@ -60,7 +60,7 @@ class Pointer extends Tool
 		// If we had a selection happening, it's time to end it.
 		if (!_selectionHappening)
 			return;
-
+		
 		final selectedItems = stopSelectionAndFindItems();
 		final drewRect = _selectionArea.width != 0 || _selectionArea.height != 0;
 		// If we have items in the selection area, handle them
@@ -109,7 +109,7 @@ class Pointer extends Tool
 		_selectionHappening = false;
 		_selectionArea.set(0, 0, 0, 0);
 	}
-
+	
 	/**
 	 * Stop any selection activity that is happening.
 	 */
@@ -133,12 +133,12 @@ class Pointer extends Tool
 			if (topItem != null)
 				items = [topItem];
 		}
-
+		
 		updateConsoleSelection(items);
 
 		// Clear everything
 		stopSelection();
-
+		
 		return items;
 	}
 
@@ -160,15 +160,15 @@ class Pointer extends Tool
 		// We add things to the selection list if the user is pressing the "add-new-item" key
 		final adding = _brain.keyPressed(Keyboard.SHIFT);
 		final removing = _brain.keyPressed(Keyboard.ALTERNATE) && !adding;
-
+		
 		// If we are not selectively adding items, just clear
 		// the brain's list of selected items.
 		if (!adding && !removing)
 			_brain.clearSelection();
-
+		
 		if (items == null || items.length == 0)
 			return;
-
+		
 		final prevSelectedItems = _brain.selectedItems;
 		if (adding && !drewRect && items.length == 1)
 		{

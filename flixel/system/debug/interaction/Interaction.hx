@@ -6,7 +6,6 @@ import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import openfl.events.MouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
@@ -38,7 +37,7 @@ class Interaction extends Window
 	static inline var BUTTONS_PER_LINE = 2;
 	static inline var SPACING = 25;
 	static inline var PADDING = 10;
-
+	
 	public var activeTool(default, null):Tool;
 	public var selectedItems(default, null):FlxTypedGroup<FlxObject> = new FlxTypedGroup();
 
@@ -53,7 +52,7 @@ class Interaction extends Window
 	 * selection marks, for instance.
 	 */
 	public var shouldDrawItemsSelection:Bool = true;
-
+	
 	/**
 	 * Whether or not the user is using a mac keyboard, determines whether to use command or ctrl
 	 */
@@ -65,7 +64,7 @@ class Interaction extends Window
 		#else
 		false;
 		#end
-
+	
 	var _container:Sprite;
 	var _customCursor:Sprite;
 	var _tools:Array<Tool> = [];
@@ -243,11 +242,11 @@ class Interaction extends Window
 		addChild(button);
 		resizeByTotal(buttons);
 	}
-
+	
 	/**
 	 * Removes the tool, if possible. If the tool has a button, all other buttons will be moved and
 	 * the containing window will be resized, if needed.
-	 *
+	 * 
 	 * @param   tool  The tool to be removed
 	 * @since 5.4.0
 	 */
@@ -255,22 +254,22 @@ class Interaction extends Window
 	{
 		if (!_tools.contains(tool))
 			return;
-
+		
 		// If there's no button just remove it
 		if (tool.button == null)
 		{
 			_tools.remove(tool);
 			return;
 		}
-
+		
 		// if there is a button move all the following buttons
 		var index = _tools.indexOf(tool);
 		var prevX = tool.button.x;
 		var prevY = tool.button.y;
-
+		
 		_tools.remove(tool);
 		removeChild(tool.button);
-
+		
 		while (index < _tools.length)
 		{
 			final tool = _tools[index];
@@ -288,15 +287,15 @@ class Interaction extends Window
 			}
 			index++;
 		}
-
+		
 		autoResize();
 	}
-
+	
 	inline function autoResize()
 	{
 		resizeByTotal(countToolsWithUIButton());
 	}
-
+	
 	inline function resizeByTotal(total:Int)
 	{
 		final spacing = 25;
@@ -611,7 +610,7 @@ class Interaction extends Window
 
 	/**
 	 * Returns a list all items in the state and substate that are within the given area
-	 *
+	 * 
 	 * @param   state  The state to search
 	 * @param   area   The rectangular area to search
 	 * @since 5.6.0
@@ -619,24 +618,24 @@ class Interaction extends Window
 	public function getItemsWithinState(state:FlxState, area:FlxRect):Array<FlxObject>
 	{
 		final items = new Array<FlxObject>();
-
+		
 		addItemsWithinArea(items, state.members, area);
 		if (state.subState != null)
 			addItemsWithinState(items, state.subState, area);
-
+		
 		return items;
 	}
-
+	
 	@:deprecated("findItemsWithinState is deprecated, use getItemsWithinState or addItemsWithinState")
 	public inline function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
 	{
 		addItemsWithinState(cast items, state, area);
 	}
-
+	
 	/**
 	 * finds all items in the state and substate that are within the given area and
 	 * adds them to the given list.
-	 *
+	 * 
 	 * @param   items  The list to add the items
 	 * @param   state  The state to search
 	 * @param   area   The rectangular area to search
@@ -648,10 +647,10 @@ class Interaction extends Window
 		if (state.subState != null)
 			addItemsWithinState(items, state.subState, area);
 	}
-
+	
 	/**
 	 * Finds and returns top-most item in the state and substate within the given area
-	 *
+	 * 
 	 * @param   state  The state to search
 	 * @param   area   The rectangular area to search
 	 * @since 5.6.0
@@ -660,7 +659,7 @@ class Interaction extends Window
 	{
 		if (state.subState != null)
 			return getTopItemWithinState(state.subState, area);
-
+		
 		return getTopItemWithinArea(state.members, area);
 	}
 
@@ -714,7 +713,7 @@ class Interaction extends Window
 			// Ignore invisible or non-existent entities
 			if (member == null || !member.visible || !member.exists)
 				continue;
-
+			
 			final group = FlxTypedGroup.resolveSelectionGroup(member);
 			if (group != null)
 			{
@@ -734,10 +733,10 @@ class Interaction extends Window
 			}
 		}
 	}
-
+	
 	/**
 	 * Searches the members for the top-most object inside the given rectangle
-	 *
+	 * 
 	 * @param   members  The list of FlxObjects or FlxGroups
 	 * @param   area     The rectangular area to search
 	 * @return  The top-most item
@@ -754,7 +753,7 @@ class Interaction extends Window
 			// Ignore invisible or non-existent entities
 			if (member == null || !member.visible || !member.exists)
 				continue;
-
+			
 			final group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
 				return getTopItemWithinArea(group.members, area);
