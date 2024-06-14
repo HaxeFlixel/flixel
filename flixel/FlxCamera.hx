@@ -610,8 +610,6 @@ class FlxCamera extends FlxBasic
 		if (graphic.isDestroyed)
 			throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
 
-		if (graphic.isDestroyed) throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
-
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
@@ -1442,7 +1440,7 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * Tells this camera object what `FlxObject` to track.
-	 * 
+	 *
 	 * @param   target   The object you want the camera to track. Set to `null` to not follow anything.
 	 * @param   style    Leverage one of the existing "deadzone" presets. Default is `LOCKON`.
 	 *                   If you use a custom deadzone, ignore this parameter and
@@ -1534,7 +1532,7 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * The screen is gradually filled with this color.
-	 * 
+	 *
 	 * @param   Color        The color you want to use.
 	 * @param   Duration     How long it takes for the fade to finish.
 	 * @param   FadeIn       `true` fades from a color, `false` fades to it.
@@ -1621,7 +1619,7 @@ class FlxCamera extends FlxBasic
 
 	/**
 	 * Copy the bounds, focus object, and `deadzone` info from an existing camera.
-	 * 
+	 *
 	 * @param   Camera  The camera you want to copy from.
 	 * @return  A reference to this `FlxCamera` object.
 	 */
@@ -1876,7 +1874,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (rect == null)
 			rect = FlxRect.get();
-			
+
 		return rect.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
 	}
 	
