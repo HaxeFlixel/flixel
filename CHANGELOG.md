@@ -223,7 +223,7 @@ We removed many features and utilities that were previously deprecated
 - **README.md**: Add Turkish translations
 - `AssetPaths`: Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
 - Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
-	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
+	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction`
 	- `FlxG.game.debugger.interaction`: Add `removeTool`
 - `FlxText`: Add `fieldHeight` field ([#2789](https://github.com/HaxeFlixel/flixel/pull/2789))
 - `FlxG`: Add compiler flag `FLX_NO_SAVE` to remove `FlxG.save` (also counter-flag `FLX_SAVE`) ([#2840](https://github.com/HaxeFlixel/flixel/pull/2840))
@@ -363,7 +363,7 @@ We removed many features and utilities that were previously deprecated
 - `AssetPaths`: various fixes ([#2680](https://github.com/HaxeFlixel/flixel/pull/2680))
 	- apply `include`/`exclude` args to files, not directories
 	- default file renamer will replace spaces with underscore
- 
+
 #### New features:
 - `FlxKeys`: Added `SCROLL_LOCK`, `NUMLOCK`, `WINDOWS`, `MENU`, `BREAK` and `NUMPADSLASH` keys ([#2638](https://github.com/HaxeFlixel/flixel/pull/2638))
 
