@@ -369,7 +369,11 @@ class FlxGraphic implements IFlxDestroyable
 	public var unique:Bool = false;
 	
 	#if FLX_TRACK_GRAPHICS
-	/** Any info about the creation or intended usage of this graphic, for debugging purposes */
+	/**
+	 * **Debug only**
+	 * Any info about the creation or intended usage of this graphic, for debugging purposes
+	 * @since 5.9.0
+	 */
 	public var trackingInfo:String = "";
 	#end
 	
