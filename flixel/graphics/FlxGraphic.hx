@@ -367,7 +367,16 @@ class FlxGraphic implements IFlxDestroyable
 	 * It is `false` by default, since it significantly increases memory consumption.
 	 */
 	public var unique:Bool = false;
-
+	
+	#if FLX_TRACK_GRAPHICS
+	/**
+	 * **Debug only**
+	 * Any info about the creation or intended usage of this graphic, for debugging purposes
+	 * @since 5.9.0
+	 */
+	public var trackingInfo:String = "";
+	#end
+	
 	/**
 	 * Internal var holding `FlxImageFrame` for the whole bitmap of this graphic.
 	 * Use public `imageFrame` var to access/generate it.
@@ -514,6 +523,12 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public inline function getFramesCollections(type:FlxFrameCollectionType):Array<Dynamic>
 	{
+		if (this.isDestroyed)
+		{
+			FlxG.log.warn('Invalid call to getFramesCollections on a destroyed graphic');
+			return [];
+		}
+		
 		var collections:Array<Dynamic> = frameCollections.get(type);
 		if (collections == null)
 		{
