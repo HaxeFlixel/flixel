@@ -23,7 +23,7 @@ class FlxGraphicsShader extends GraphicsShader
 				openfl_ColorOffsetv = colorOffset / 255.0;
 				openfl_ColorMultiplierv = colorMultiplier;
 			}
-		}")
+		}", true)
 	@:glFragmentHeader("
 		uniform bool hasTransform;
 		uniform bool hasColorTransform;
@@ -62,7 +62,7 @@ class FlxGraphicsShader extends GraphicsShader
 			}
 			return vec4(0.0, 0.0, 0.0, 0.0);
 		}
-	")
+	", true)
 	@:glFragmentSource("
 		#pragma header
 		
