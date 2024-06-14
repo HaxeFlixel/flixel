@@ -401,7 +401,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 - `WatchFrontEnd`: added `FlxG.watch.addFunction` ([#2500](https://github.com/HaxeFlixel/flixel/pull/2500))
 - `FlxPoint`: added binary operators `+`, `-`, `+=`, `-=`, `*`, and `*=` ([#2557](https://github.com/HaxeFlixel/flixel/pull/2557))
 - `FlxColor`: added `rgb` getter and setter ([#2555](https://github.com/HaxeFlixel/flixel/pull/2555))
-- `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty`
+- `FlxSave`: added `mergeDataFrom`, `mergeData` `status`, `isBound` and `isEmpty` 
 ([#2566](https://github.com/HaxeFlixel/flixel/pull/2566))
 ([#2584](https://github.com/HaxeFlixel/flixel/pull/2584))
 - `FlxAnimation` - added `loopPoint` to allow looping to a frame other than the starting frame ([#2621](https://github.com/HaxeFlixel/flixel/pull/2621))
@@ -716,7 +716,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 	- fixed selections being canceled on interaction with debugger UI ([897f21f](https://github.com/HaxeFlixel/flixel/commit/897f21f))
 - `FlxG.html5`: fixed `platform` detecting iPhone and iPod as "Mac" ([#2052](https://github.com/HaxeFlixel/flixel/issues/2052))
 - `FlxTilemap`: fixed a missing bounds check in `getTileIndexByCoords()` ([#2024](https://github.com/HaxeFlixel/flixel/issues/2024))
-- `FlxAnalog`: fixed mouse input without `FLX_NO_TOUCH` ([#2067](https://github.com/HaxeFlixel/flixel/issues/2067))
+- `FlxAnalog`: fixed mouse input without `FLX_NO_TOUCH` ([#2067](https://github.com/HaxeFlixel/flixel/issues/2067)) 
 - `flixel.input`: fixed `Float` being used for tick values ([#2071](https://github.com/HaxeFlixel/flixel/issues/2071))
 - `FlxCamera`: fixed object visibility for `zoom < 1` ([#2003](https://github.com/HaxeFlixel/flixel/issues/2003))
 - `FlxEmitter`: fixed issues with `lifespan == 0` ([#2074](https://github.com/HaxeFlixel/flixel/issues/2074))
@@ -875,7 +875,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 * `FlxTween`: fixed nested tween chains ([#1871](https://github.com/HaxeFlixel/flixel/issues/1871))
 * `FlxTypedGroup`: fixed recursion in `forEachOfType()` ([#1876](https://github.com/HaxeFlixel/flixel/issues/1876))
 * `Tracker`: [Neko] fixed a crash in `setVisible()` ([#1879](https://github.com/HaxeFlixel/flixel/issues/1879))
-* Fixed some flixel-internal fields being accessible when they shouldn't be ([#1849](https://github.com/HaxeFlixel/flixel/issues/1849))
+* Fixed some flixel-internal fields being accessible when they shouldn't be ([#1849](https://github.com/HaxeFlixel/flixel/issues/1849)) 
 
 #### Changes and improvements:
 
@@ -884,7 +884,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 * `FlxSpriteUtil`: changed `alphaMask()` arguments from `Dynamic` to `FlxGraphicAsset` ([#1806](https://github.com/HaxeFlixel/flixel/issues/1806))
 * `FlxG.signals`: changed `preUpdate` to be dispatched _after_ `FlxG.elapsed` is updated ([#1836](https://github.com/HaxeFlixel/flixel/issues/1836))
 * `FlxG.debugger`: changed `drawDebugChanged` to be dispatched _after_ `drawDebug` is updated
-* `FlxDefines`: added a check for incompatible OpenFL / Lime versions (should be < 4.0.0 / < 3.0.0 respectively)
+* `FlxDefines`: added a check for incompatible OpenFL / Lime versions (should be < 4.0.0 / < 3.0.0 respectively) 
 
 4.0.1 (March 19, 2016)
 ------------------------------
@@ -901,7 +901,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 * `FlxStringUtil.formatMoney()`:
 	* fixed formatting for `Amount < 0` ([#1754](https://github.com/HaxeFlixel/flixel/issues/1754))
 	* fixed formatting for negative amounts
-	* [HTML5] fixed formatting for amounts > Int32
+	* [HTML5] fixed formatting for amounts > Int32 
 * Debugger Stats window: fixed paused time being taken into account for average FPS
 
 4.0.0 (February 16, 2016)
@@ -1141,7 +1141,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 
 * `FlxAssets`:
 	* `cacheSounds()` -> `FlxG.sound.cacheAll()` ([#1097](https://github.com/HaxeFlixel/flixel/issues/1097))
-	* OpenFL live asset reloading is now supported (native targets)
+	* OpenFL live asset reloading is now supported (native targets) 
 * `FlxSound`
 	* can now be used even if `FLX_NO_SOUND_SYSTEM` is enabled ([#1199](https://github.com/HaxeFlixel/flixel/issues/1199))
 	* `looped` is now `public`
@@ -1183,7 +1183,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
  added `setRect()` method which allows you to set a rectangular region of tiles to the provided index
 * `FlxTile`:
  added `frame` variable which holds tile's "graphic"
-* `FlxTileblock`:
+* `FlxTileblock`: 
 	* added `setTile()` and `tileSprite` ([#1300](https://github.com/HaxeFlixel/flixel/issues/1300))
 	* added `loadFrames()` method which allows you to use frames collection as a source of graphic
 * `FlxTilemap`:
@@ -1242,7 +1242,7 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 * `FlxColor`:
 	* `FlxColor` is now an `abstract`, interchangeable with `Int` - the `FlxColorUtil` functions have been merged into it ([#1027](https://github.com/HaxeFlixel/flixel/issues/1027))
 	* the color presets have been reduced to a smaller, more useful selection ([#1117](https://github.com/HaxeFlixel/flixel/issues/1117))
-* `FlxPath`:
+* `FlxPath`: 
 	* the original `FlxObject#immovable` value is now restored after completion
 	* `active` is now only true when in progress
 	* fixed velocity being set even if the object position matches the current node
@@ -1266,5 +1266,5 @@ The alpha was causing issues with CI due to haxelib issues. We're foregoing the 
 
 * Added an initialization macro that aborts compilation with helpful errors when:
 	* targeting older SWF versions with invalid defines
-	* using an unsupported Haxe version
+	* using an unsupported Haxe version 
 * Flixel sound assets are now being embedded via `embed="true"`
