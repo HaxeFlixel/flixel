@@ -129,16 +129,6 @@ class FlxFlicker implements IFlxDestroyable
 		progressCallback = null;
 	}
 
-	public function pause():Void {
-		if (timer == null) return;
-		timer.active = false;
-	}
-
-	public function resume():Void {
-		if (timer == null) return;
-		timer.active = true;
-	}
-
 	/**
 	 * Starts flickering behavior.
 	 */
