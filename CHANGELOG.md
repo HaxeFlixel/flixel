@@ -48,7 +48,8 @@ We removed many features and utilities that were previously deprecated
   - Create base class for `FlxPath` for simpler custom path following logic
   - Add signals `onEndReached`, `onFinished` and `onNodeReached`
   - Replacement fields: `startAt`, `direction`, `loopType`, `target`, `currentIndex`, `nextIndex`, `current` and `next`
-- 
+- `FlxGraphic`: Add `trackingInfo` to help debugging graphics ([#3183](https://github.com/HaxeFlixel/flixel/pull/3183))
+- `FlxFlicker`: Add `pause` and `resume` ([#3179](https://github.com/HaxeFlixel/flixel/pull/3179))
 
 #### Changes and improvements:
 - `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
@@ -74,11 +75,14 @@ We removed many features and utilities that were previously deprecated
     - Debug Drawing: Various improvements to debug drawing tilemaps
       - Now honors tiles' `ignoreDrawDebug` and `debugBoundingBoxColor` fields
       - New `getDebugBoundingBoxColor` in `FlxObject`. Meant to eventually replace `drawDebugBoundingBox`
-
+- `FlxBGSprite`: Prevent draw call when transparent ([#3173](https://github.com/HaxeFlixel/flixel/pull/3173))
+- `FlxArrayUtil`: Deprecate `resize`, use `array.setLength` ([#3094](https://github.com/HaxeFlixel/flixel/pull/3094))
+- Debugging: Check alpha when point-selecting sprites ([#3184](https://github.com/HaxeFlixel/flixel/pull/3184))
 
 #### Bugfixes:
 - `FlxFlickerTween`: Fix "Unsupported recursive type" error on hl ([#3170](https://github.com/HaxeFlixel/flixel/pull/3170))
 - `FlxBGSprite`: Fix draw size when scale is not `1.0` ([#3142](https://github.com/HaxeFlixel/flixel/pull/3142))
+- `FlxGraphic`: Prevent null ref in `getFramesCollections` with destroyed graphics ([#3180](https://github.com/HaxeFlixel/flixel/pull/3180))
 
 5.8.0 (April 19, 2024)
 
