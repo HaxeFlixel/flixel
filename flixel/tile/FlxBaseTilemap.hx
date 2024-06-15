@@ -1241,69 +1241,98 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tileIndex       The new tileIndex to place at the mapIndex
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   mapIndex   The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex  The new tileIndex to place at the mapIndex
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileHelper(mapIndex, tileIndex, updateGraphics);
+		return setTileHelper(mapIndex, tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   column          The grid X location, in tiles
-	 * @param   row             The grid Y location, in tiles
-	 * @param   tileIndex       The new integer data you wish to inject.
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   column     The grid X location, in tiles
+	 * @param   row        The grid Y location, in tiles
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileHelper(getMapIndex(column, row), tileIndex, updateGraphics);
+		return setTileHelper(getMapIndex(column, row), tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   column          The grid X location, in tiles
-	 * @param   row             The grid Y location, in tiles
-	 * @param   tileIndex       The new integer data you wish to inject.
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   worldPos   A location in the world
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
+	 */
+	public overload extern inline function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
+	{
+		return setTileIndexAt(worldPos.x, worldPos.y, tileIndex, redraw);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   worldX     An X coordinate in the world
+	 * @param   worldY     A Y coordinate in the world
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
+	 */
+	public inline function setTileIndexAt(worldX:Float, worldY:Float, tileIndex:Int, redraw = true):Bool
+	{
+		return setTileHelper(getMapIndexAt(worldX, worldY), tileIndex, redraw);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   column     The grid X location, in tiles
+	 * @param   row        The grid Y location, in tiles
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 */
 	@:deprecated("setTile is deprecated, use setTileIndex(column, row, tileIndex,...), instead") // 5.9.0
-	public function setTile(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	public function setTile(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileIndex(getMapIndex(column, row), tileIndex, updateGraphics);
+		return setTileIndex(getMapIndex(column, row), tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tileIndex       The new tileIndex to place at the mapIndex
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   mapIndex   The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex  The new tileIndex to place at the mapIndex
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 */
 	@:deprecated("setTileByIndex is deprecated, use setTileIndex(mapIndex, tileIndex,...), instead") // 5.9.0
-	public function setTileByIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	public function setTileByIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileIndex(mapIndex, tileIndex, updateGraphics);
+		return setTileIndex(mapIndex, tileIndex, redraw);
 	}
 	
-	function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	function setTileHelper(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
 		if (!tileExists(mapIndex))
 			return false;
-		
+			
 		_data[mapIndex] = tileIndex;
 		
-		if (!updateGraphics)
+		if (!redraw)
 		{
 			return true;
 		}
