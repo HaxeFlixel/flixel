@@ -821,7 +821,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	
 	override function getColumnAt(worldX:Float, bind = false):Int
 	{
-		final result = Math.floor(worldX / scaledTileWidth);
+		final result = Math.floor((worldX - x) / scaledTileWidth);
 		
 		if (bind)
 			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
@@ -831,7 +831,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	
 	override function getRowAt(worldY:Float, bind = false):Int
 	{
-		final result = Math.floor(worldY / scaledTileHeight);
+		final result = Math.floor((worldY - y) / scaledTileHeight);
 		
 		if (bind)
 			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles -1 : result);
@@ -839,27 +839,14 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return result;
 	}
 	
-	override function getTileIndexByCoords(coord:FlxPoint):Int
+	override function getColumnPos(column:Float, midpoint = false):Float
 	{
-		var localX = coord.x - x;
-		var localY = coord.y - y;
-		coord.putWeak();
-
-		if ((localX < 0) || (localY < 0) || (localX >= scaledWidth) || (localY >= scaledHeight))
-			return -1;
-
-		return Std.int(localY / scaledTileHeight) * widthInTiles + Std.int(localX / scaledTileWidth);
+		return x + column * scaledTileWidth + (midpoint ? scaledTileWidth * 0.5 : 0);
 	}
 
-	override function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
+	override function getRowPos(row:Int, midpoint = false):Float
 	{
-		var point = FlxPoint.get(x + (index % widthInTiles) * scaledTileWidth, y + Std.int(index / widthInTiles) * scaledTileHeight);
-		if (midpoint)
-		{
-			point.x += scaledTileWidth * 0.5;
-			point.y += scaledTileHeight * 0.5;
-		}
-		return point;
+		return y + row * scaledTileHeight + (midpoint ? scaledTileHeight * 0.5 : 0);
 	}
 
 	/**
@@ -869,34 +856,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * @param   midpoint  Whether to return the coordinates of the tile midpoint, or upper left corner. Default is true, return midpoint.
 	 * @return  An Array with a list of all the coordinates of that tile type.
 	 */
-	public function getTileCoords(index:Int, midpoint = true):Array<FlxPoint>
+	@:deprecated("getTileCoords is deprecated, use getAllTilePos, instead")
+	public function getTileCoords(tileIndex:Int, midpoint = true):Array<FlxPoint>
 	{
-		var array:Array<FlxPoint> = null;
-
-		var point:FlxPoint;
-		var l:Int = widthInTiles * heightInTiles;
-
-		for (i in 0...l)
-		{
-			if (_data[i] == index)
-			{
-				point = FlxPoint.get(x + (i % widthInTiles) * scaledTileWidth, y + Std.int(i / widthInTiles) * scaledTileHeight);
-
-				if (midpoint)
-				{
-					point.x += scaledTileWidth * 0.5;
-					point.y += scaledTileHeight * 0.5;
-				}
-
-				if (array == null)
-				{
-					array = new Array<FlxPoint>();
-				}
-				array.push(point);
-			}
-		}
-
-		return array;
+		return getAllTilePos(tileIndex, midpoint);
 	}
 
 	/**
@@ -959,11 +922,11 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			trimmedEnd.put();
 		}
 
-		final startIndex = getTileIndexByCoords(start);
-		final endIndex = getTileIndexByCoords(end);
+		final startIndex = getMapIndex(start);
+		final endIndex = getMapIndex(end);
 
 		// If the starting tile is solid, return the starting position
-		if (getTileData(startIndex).allowCollisions != NONE)
+		if (getTileData(startIndex).solid)
 		{
 			if (result != null)
 				result.copyFrom(start);
@@ -972,10 +935,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			return false;
 		}
 
-		final startTileX = startIndex % widthInTiles;
-		final startTileY = Std.int(startIndex / widthInTiles);
-		final endTileX = endIndex % widthInTiles;
-		final endTileY = Std.int(endIndex / widthInTiles);
+		final startTileX = getColumn(startIndex);
+		final startTileY = getRow(startIndex);
+		final endTileX = getColumn(endIndex);
+		final endTileY = getRow(endIndex);
 		var hitIndex = -1;
 
 		if (start.x == end.x)
@@ -984,7 +947,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			if (hitIndex != -1 && result != null)
 			{
 				// check the bottom
-				result.copyFrom(getTileCoordsByIndex(hitIndex, false));
+				result.copyFrom(getTilePos(hitIndex));
 				result.x = start.x;
 				if (start.y > end.y)
 					result.y += scaledTileHeight;
@@ -1008,9 +971,9 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			while (tileX != endTileX)
 			{
-				xPos = x + (tileX + offset) * scaledTileWidth;
+				xPos = getColumnPos(tileX + offset);
 				yPos = m * xPos + b;
-				tileY = Math.floor((yPos - y) / scaledTileHeight);
+				tileY = getRowAt(yPos);
 				hitIndex = checkColumn(tileX, lastTileY, tileY);
 				if (hitIndex != -1)
 					break;
@@ -1023,7 +986,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			if (hitIndex != -1 && result != null)
 			{
-				result.copyFrom(getTileCoordsByIndex(hitIndex, false));
+				result.copyFrom(getTilePos(hitIndex));
 				if (Std.int(hitIndex / widthInTiles) == lastTileY)
 				{
 					if (start.x > end.x)
@@ -1432,7 +1395,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	}
 	
 	/**
-	 * Internal function used in setTileByIndex() and the constructor to update the map.
+	 * Internal function used in setTileIndex() and the constructor to update the map.
 	 *
 	 * @param   index  The index of the tile object in _tileObjects internal array you want to update.
 	 */

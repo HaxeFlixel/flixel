@@ -4,11 +4,11 @@ import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
 import flixel.path.FlxPathfinder;
+import flixel.system.FlxAssets;
 import flixel.util.FlxArrayUtil;
-import flixel.util.FlxColor;
 import flixel.util.FlxCollision;
+import flixel.util.FlxColor;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;
@@ -137,7 +137,21 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
+	 * Finds the column number that overlaps the given X in world space
+	 * 
+	 * @param   worldX  An X coordinate in the world
+	 * @param   bind    If true, it will prevent out of range values
+	 * @return  A column index, where 0 is the left-most column
+	 * @since 5.9.0
+	 */
+	public function getColumnAt(worldX:Float, bind = false):Int
+	{
+		throw "getColumnAt must be implemented";
+	}
+	
+	/**
 	 * Finds the row number that overlaps the given Y in world space
+	 * 
 	 * @param   worldY  A Y coordinate in the world
 	 * @param   bind    If true, it will prevent out of range values
 	 * @return  A row index, where 0 is the top-most row
@@ -149,31 +163,51 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Finds the row number that overlaps the given X in world space
-	 * @param   worldX  A X coordinate in the world
-	 * @param   bind    If true, it will prevent out of range values
-	 * @return  A column index, where 0 is the left-most column
+	 * Get the world position of the specified column
+	 * 
+	 * @param   column    The grid X location, in tiles
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
 	 * @since 5.9.0
 	 */
-	public function getColumnAt(worldX:Float, bind = false):Int
+	public function getColumnPos(column:Float, midPoint = false):Float
 	{
-		throw "getColumnAt must be implemented";
-	}
-	
-	public function getTileIndexByCoords(coord:FlxPoint):Int
-	{
-		throw "getTileIndexByCoords must be implemented";
+		throw "getColumnPos must be implemented";
 	}
 
-	public function getTileCoordsByIndex(index:Int, midpoint = true):FlxPoint
+	/**
+	 * Get the world position of the specified row
+	 * 
+	 * @param   row       The grid Y location, in tiles
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @since 5.9.0
+	 */
+	public function getRowPos(row:Int, midPoint = false):Float
 	{
-		throw "getTileCoordsByIndex must be implemented";
+		throw "getRowPos must be implemented";
+	}
+	
+	/**
+	 * **Note:** This method name is misleading! It does not return a `tileIndex`, it returns a `mapIndex`
+	 * 
+	 * @param   worldPos  A location in the world
+	 * @return  The `mapIndex` placed at the given world location
+	 */
+	@:deprecated("getTileIndexByCoords is deprecated, use getMapIndex, instead") // 5.9.0
+	public function getTileIndexByCoords(worldPos:FlxPoint):Int
+	{
+		return getMapIndex(worldPos);
+	}
+	@:deprecated("getTileCoordsByIndex is deprecated, use getTilePos, instead") // 5.9.0
+	public function getTileCoordsByIndex(mapIndex:Int, midpoint = true):FlxPoint
+	{
+		return getTilePos(mapIndex, midpoint);
 	}
 
 	/**
 	 * Shoots a ray from the start point to the end point.
 	 * If/when it passes through a tile, it stores that point and returns false.
-	 * Note: In flixel 5.0.0, this was redone, the old method is now `rayStep`
+	 * 
+	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
 	 *
 	 * @param   start   The world coordinates of the start of the ray.
 	 * @param   end     The world coordinates of the end of the ray.
@@ -213,7 +247,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * If the line starts inside the tilemap, a copy of start is returned.
 	 * If the line never enters the tilemap, null is returned.
 	 *
-	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * **Note:** If a result vector is supplied and the line is outside the tilemap, null is returned
 	 * and the supplied result is unchanged
 	 * @since 5.0.0
 	 *
@@ -238,7 +272,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * If the line ends inside the tilemap, a copy of end is returned.
 	 * If the line is never inside the tilemap, null is returned.
 	 *
-	 * Note: If a result vector is supplied and the line is outside the tilemap, null is returned
+	 * **Note:** If a result vector is supplied and the line is outside the tilemap, null is returned
 	 * and the supplied result is unchanged
 	 * @since 5.0.0
 	 *
@@ -284,7 +318,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		throw "overlapsWithCallback must be implemented";
 	}
 	
-	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead")
+	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead") // 5.9.0
 	public function overlapsWithCallback(object:FlxObject, ?callback:(FlxObject, FlxObject)->Bool, flipCallbackParams = false, ?position:FlxPoint):Bool
 	{
 		return objectOverlapsTiles(object, (t, o)->{ return flipCallbackParams ? callback(o, t) : callback(t, o); }, position);
@@ -328,7 +362,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		moves = false;
 	}
 
-	override public function destroy():Void
+	override function destroy():Void
 	{
 		_data = null;
 		super.destroy();
@@ -742,21 +776,50 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Calculates a mapIndex via `row * widthInTiles + column`
+	 * Calculates a `mapIndex` via `row * widthInTiles + column`,
+	 * if the column or row is not valid, the result is `-1`
 	 * 
-	 * @param  column  the grid X location, in tiles
-	 * @param  row     the grid Y location, in tiles
+	 * @param   column  The grid X location, in tiles
+	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public inline function getMapIndex(column:Int, row:Int):Int
+	public overload extern inline function getMapIndex(column:Int, row:Int):Int
 	{
-		return row * widthInTiles + column;
+		return tileExists(column, row) ? (row * widthInTiles + column) : -1;
 	}
 	
 	/**
+	 * Calculates a `mapIndex` of the given location, if the coordinate
+	 * does not overlap the tilemap, the result is `-1`
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 * 
+	 * @param   worldPos  A location in the world
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getMapIndex(worldPos:FlxPoint):Int
+	{
+		return getMapIndexAt(worldPos.x, worldPos.y);
+	}
+	
+	/**
+	 * Calculates a `mapIndex` of the given location, if the coordinate
+	 * does not overlap the tilemap, the result is `-1`
+	 *
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   worldX  An X coordinate in the world
+	 * @param   worldY  A Y coordinate in the world
+	 * @since 5.9.0
+	 */
+	public inline function getMapIndexAt(worldX:Float, worldY:Float):Int
+	{
+		return getMapIndex(getColumnAt(worldX), getRowAt(worldY));
+	}
+	/**
 	 * Calculates the column from a map location
 	 * 
-	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
 	 */
 	public inline function getColumn(mapIndex:Int):Int
@@ -767,7 +830,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Calculates the column from a map location
 	 * 
-	 * @param  mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
+	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
 	 */
 	public inline function getRow(mapIndex:Int):Int
@@ -778,8 +841,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Whether a tile exists at the given map location
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid X location, in tiles
+	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
 	public overload extern inline function tileExists(column:Int, row:Int):Bool
@@ -790,7 +853,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Whether a tile exists at the given map location
 	 *
-	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 *
 	 * @param   mapIndex  The desired location in the map
 	 * @since 5.9.0
@@ -801,9 +864,32 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
+	 * Whether a tile exists at the given map location
+	 *
+	 * @param   worldPos  A location in the map
+	 * @since 5.9.0
+	 */
+	public overload extern inline function tileExists(worldPos:FlxPoint):Bool
+	{
+		return tileExistsAt(worldPos.x, worldPos.y);
+	}
+	
+	/**
+	 * Whether a tile exists at the given map location
+	 * 
+	 * @param   worldX  An X coordinate in the world
+	 * @param   worldY  A Y coordinate in the world
+	 * @since 5.9.0
+	 */
+	public inline function tileExistsAt(worldX:Float, worldY:Float):Bool
+	{
+		return columnExistsAt(worldX) && rowExistsAt(worldY);
+	}
+	
+	/**
 	 * Whether a row exists at the given map location
 	 *
-	 * @param   column  The desired location in the map
+	 * @param   column  The grid X location, in tiles
 	 * @since 5.9.0
 	 */
 	public overload extern inline function columnExists(column:Int):Bool
@@ -812,9 +898,20 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
+	 * Whether a column exists at the given map location
+	 *
+	 * @param   worldX  An X coordinate in the world
+	 * @since 5.9.0
+	 */
+	public inline function columnExistsAt(worldX:Float):Bool
+	{
+		return columnExists(getColumnAt(worldX));
+	}
+	
+	/**
 	 * Whether a row exists at the given map location
 	 *
-	 * @param   row  The desired location in the map
+	 * @param   row  The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
 	public overload extern inline function rowExists(row:Int):Bool
@@ -823,11 +920,22 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Finds the tile instance at a particular column and row
+	 * Whether a row exists at the given map location
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
-	 * @return  The tile index of the tile at this location
+	 * @param   worldY  A Y coordinate in the world
+	 * @since 5.9.0
+	 */
+	public inline function rowExistsAt(worldY:Float):Bool
+	{
+		return rowExists(getRowAt(worldY));
+	}
+	
+	/**
+	 * Finds the tile instance at a particular column and row,
+	 * if the column or row is invalid, the result is `null`
+	 *
+	 * @param   column  The grid X location, in tiles
+	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
 	public overload extern inline function getTileData(column:Int, row:Int):Null<Tile>
@@ -836,15 +944,15 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Finds the tile instance with the given mapIndex
+	 * Finds the tile instance with the given `mapIndex`, 
+	 * if the `mapIndex` is invalid, the result is `null`
 	 *
-	 * **Note:** A tile's mapIndex can be calculated via `row * widthInTiles + column`
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 * 
 	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
 	 * You can call `tile.orient` or similar methods
 	 *
 	 * @param   mapIndex  The desired location in the map
-	 * @return  An integer containing the value of the tile at this spot in the array.
 	 * @since 5.9.0
 	 */
 	public overload extern inline function getTileData(mapIndex:Int):Null<Tile>
@@ -853,10 +961,42 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Check the value of a particular tile.
+	 * Finds the tile instance with the given world location, if the
+	 * coordinate does not overlap the tilemap, the result is `null`
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
+	 * You can call `tile.orient` or similar methods
+	 *
+	 * @param   worldPos  A location in the world
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileData(worldPos:FlxPoint):Null<Tile>
+	{
+		return getTileDataAt(worldPos.x, worldPos.y);
+	}
+	
+	/**
+	 * Finds the tile instance with the given world location, if the
+	 * coordinate does not overlap the tilemap, the result is `null`
+	 *
+	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
+	 * You can call `tile.orient` or similar methods
+	 *
+	 * @param   worldX  An X coordinate in the world
+	 * @param   worldY  A Y coordinate in the world
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileDataAt(worldX:Float, worldY:Float):Null<Tile>
+	{
+		return _tileObjects[getTileIndexAt(worldX, worldY)];
+	}
+	
+	/**
+	 * Check the value of a particular tile, if the
+	 * column or row is invalid, the result is `-1`
+	 *
+	 * @param   column  The grid X location, in tiles
+	 * @param   row     The grid Y location, in tiles
 	 * @return  The tile index of the tile at this location
 	 * @since 5.9.0
 	 */
@@ -866,7 +1006,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Get the `tileIndex` at the given map location
+	 * Get the `tileIndex` at the given map location, 
+	 * if the `mapIndex` is invalid, the result is `-1`
 	 * 
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 *
@@ -876,17 +1017,133 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public overload extern inline function getTileIndex(mapIndex:Int):Int
 	{
-		return _data[mapIndex];
+		return tileExists(mapIndex) ? _data[mapIndex] : -1;
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given location, if the coordinate
+	 * does not overlap the tilemap, the result is `-1`
+	 *
+	 * @param   worldPos  A location in the world
+	 * @return  The tileIndex of the tile at this location
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTileIndex(worldPos:FlxPoint):Int
+	{
+		return getTileIndexAt(worldPos.x, worldPos.y);
+	}
+	
+	/**
+	 * Get the `tileIndex` at the given location, if the coordinate
+	 * does not overlap the tilemap, the result is `-1`
+	 *
+	 * @param   worldX  An X coordinate in the world
+	 * @param   worldY  A Y coordinate in the world
+	 * @return  The tileIndex of the tile at this location
+	 * @since 5.9.0
+	 */
+	public inline function getTileIndexAt(worldX:Float, worldY:Float):Int
+	{
+		return getTileIndex(getColumnAt(worldX), getRowAt(worldY));
+	}
+	
+	/**
+	 * Get the world position of the specified tile, if the `mapIndex` is invalid,
+	 * the result is `null`
+	 * 
+	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
+	 *
+	 * @param   mapIndex  The desired location in the map
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @return  The world position of the matching tile
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTilePos(mapIndex:Int, midpoint = false):Null<FlxPoint>
+	{
+		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint) : null;
+	}
+	
+	/**
+	 * Get the world position of the specified tile
+	 * 
+	 * **Note:** The column or row does not need to be valid, to ensure a
+	 * valid tile, use `if (tileExists(column, row))`, first
+	 * 
+	 * @param   column    The grid X location, in tiles
+	 * @param   row       The grid Y location, in tiles
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @return  The world position of the matching tile
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTilePos(column:Int, row:Int, midpoint = false):FlxPoint
+	{
+		return FlxPoint.get(getColumnPos(column, midpoint), getRowPos(row, midpoint));
+	}
+	
+	/**
+	 * Get the world position of the tile overlapping the specified position
+	 * 
+	 * **Note:** The location does not need to overlap the tilemap, to ensure a
+	 * valid tile, use `if (tileExists(worldPos))`, first
+	 *
+	 * @param   worldPos  A location in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @return  The world position of the overlapping tile
+	 * @since 5.9.0
+	 */
+	public overload extern inline function getTilePos(worldPos:FlxPoint, midpoint = false):FlxPoint
+	{
+		return getTilePosAt(worldPos.x, worldPos.y, midpoint);
+	}
+	
+	/**
+	 * Get the world position of the tile overlapping the specified position
+	 *
+	 * **Note:** The location does not need to overlap the tilemap, to ensure a
+	 * valid tile, use `if (tileExistsAt(worldX, worldY))`, first
+	 * 
+	 * @param   worldX    An X coordinate in the world
+	 * @param   worldY    A Y coordinate in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @return  The world position of the overlapping tile
+	 * @since 5.9.0
+	 */
+	public inline function getTilePosAt(worldX:Float, worldY:Float, midpoint = false):FlxPoint
+	{
+		return getTilePos(getColumnAt(worldX), getRowAt(worldY), midpoint);
+	}
+	
+	/**
+	 * Returns a new array full of every coordinate of the requested tile type.
+	 *
+	 * @param   tileIndex  The requested tile type
+	 * @param   midpoint   Whether to use the tiles' midpoints, or upper left corner
+	 * @return  An Array with a list of all the coordinates of that tile type
+	 * @since 5.9.0
+	 */
+	public function getAllTilePos(tileIndex:Int, midpoint = false):Array<FlxPoint>
+	{
+		final result = [];
+		
+		final length = _data.length;
+		for (mapIndex in 0...length)
+		{
+			if (getTileIndex(mapIndex) == tileIndex)
+			{
+				result.push(getTilePos(mapIndex, midpoint));
+			}
+		}
+		return result;
 	}
 	
 	/**
 	 * Check the value of a particular tile.
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
+	 * @param   column  The grid X location, in tiles
+	 * @param   row     The grid Y location, in tiles
 	 * @return  The tile index of the tile at this location
 	 */
-	@:deprecated("getTile is deprecated use getTileIndex(column, row), instead")
+	@:deprecated("getTile is deprecated use getTileIndex(column, row), instead") // 5.9.0
 	public function getTile(column:Int, row:Int):Int
 	{
 		return getTileIndex(column, row);
@@ -900,7 +1157,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   mapIndex  The desired location in the map
 	 * @return  An integer containing the value of the tile at this spot in the array.
 	 */
-	@:deprecated("getTileByIndex is deprecated use getTileIndex(mapIndex), instead")
+	@:deprecated("getTileByIndex is deprecated use getTileIndex(mapIndex), instead") // 5.9.0
 	public function getTileByIndex(mapIndex:Int):Int
 	{
 		return getTileIndex(mapIndex);
@@ -950,85 +1207,132 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function getAllMapIndices(tileIndex:Int):Array<Int>
 	{
 		final result:Array<Int> = [];
-		var i:Int = widthInTiles * heightInTiles;
 		
-		while (i-- > 0)
+		final length = _data.length;
+		for (mapIndex in 0...length)
 		{
-			if (_data[i] == tileIndex)
+			if (getTileIndex(mapIndex) == tileIndex)
 			{
-				result.unshift(i);
+				result.push(mapIndex);
 			}
 		}
-		
 		return result;
 	}
+
+	/**
+	 * Calls the desired function with every `mapIndex` that uses the given `tileIndex`
+	 * 
+	 * @param   tileIndex  The desired tile type
+	 * @param   function   The function called with each mapIndex
+	 * @since 5.9.0
+	 */
+	public function forEachMapIndex(tileIndex:Int, f:(mapIndex:Int) -> Void)
+	{
+		final length = _data.length;
+		for (mapIndex in 0...length)
+		{
+			if (getTileIndex(mapIndex) == tileIndex)
+			{
+				f(mapIndex);
+			}
+		}
+	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tileIndex       The new tileIndex to place at the mapIndex
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   mapIndex   The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex  The new tileIndex to place at the mapIndex
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileHelper(mapIndex, tileIndex, updateGraphics);
+		return setTileHelper(mapIndex, tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
-	 * @param   tileIndex       The new integer data you wish to inject.
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   column     The grid X location, in tiles
+	 * @param   row        The grid Y location, in tiles
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileHelper(getMapIndex(column, row), tileIndex, updateGraphics);
+		return setTileHelper(getMapIndex(column, row), tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   row     The grid X coordinate of the tile (in tiles, not pixels)
-	 * @param   column  The grid Y coordinate of the tile (in tiles, not pixels)
-	 * @param   tileIndex       The new integer data you wish to inject.
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   worldPos   A location in the world
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
 	 */
-	@:deprecated("setTile is deprecated, use setTileIndex(column, row, tileIndex,...), instead")
-	public function setTile(column:Int, row:Int, tileIndex:Int, updateGraphics = true):Bool
+	public overload extern inline function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileIndex(getMapIndex(column, row), tileIndex, updateGraphics);
+		return setTileIndexAt(worldPos.x, worldPos.y, tileIndex, redraw);
 	}
 	
 	/**
 	 * Change the data and graphic of a tile in the tilemap.
 	 *
-	 * @param   mapIndex        The slot in the data array (Y * widthInTiles + X) where this tile is stored.
-	 * @param   tileIndex       The new tileIndex to place at the mapIndex
-	 * @param   updateGraphics  Whether the graphical representation of this tile should change.
+	 * @param   worldX     An X coordinate in the world
+	 * @param   worldY     A Y coordinate in the world
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
 	 * @return  Whether or not the tile was actually changed.
+	 * @since 5.9.0
 	 */
-	@:deprecated("setTileByIndex is deprecated, use setTileIndex(mapIndex, tileIndex,...), instead")
-	public function setTileByIndex(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	public inline function setTileIndexAt(worldX:Float, worldY:Float, tileIndex:Int, redraw = true):Bool
 	{
-		return setTileIndex(mapIndex, tileIndex, updateGraphics);
+		return setTileHelper(getMapIndexAt(worldX, worldY), tileIndex, redraw);
 	}
 	
-	function setTileHelper(mapIndex:Int, tileIndex:Int, updateGraphics = true):Bool
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   column     The grid X location, in tiles
+	 * @param   row        The grid Y location, in tiles
+	 * @param   tileIndex  The new integer data you wish to inject.
+	 * @param   redraw     Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 */
+	@:deprecated("setTile is deprecated, use setTileIndex(column, row, tileIndex,...), instead") // 5.9.0
+	public function setTile(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
+	{
+		return setTileIndex(getMapIndex(column, row), tileIndex, redraw);
+	}
+	
+	/**
+	 * Change the data and graphic of a tile in the tilemap.
+	 *
+	 * @param   mapIndex   The slot in the data array (Y * widthInTiles + X) where this tile is stored.
+	 * @param   tileIndex  The new tileIndex to place at the mapIndex
+	 * @param   redraw     Whether the graphical representation of this tile should change.
+	 * @return  Whether or not the tile was actually changed.
+	 */
+	@:deprecated("setTileByIndex is deprecated, use setTileIndex(mapIndex, tileIndex,...), instead") // 5.9.0
+	public function setTileByIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
+	{
+		return setTileIndex(mapIndex, tileIndex, redraw);
+	}
+	
+	function setTileHelper(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
 		if (!tileExists(mapIndex))
 			return false;
-		
+			
 		_data[mapIndex] = tileIndex;
 		
-		if (!updateGraphics)
+		if (!redraw)
 		{
 			return true;
 		}
@@ -1179,7 +1483,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
-	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 * **Note:** Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 *
 	 * @param   startIndex      The starting tile's map index.
 	 * @param   endIndex        The ending tile's map index.
@@ -1199,7 +1503,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	/**
 	 * Pathfinding helper function, floods a grid with distance information until it finds the end point.
-	 * NOTE: Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
+	 * **Note:** Currently this process does NOT use any kind of fancy heuristic! It's pretty brute.
 	 * @since 5.0.0
 	 *
 	 * @param   startIndex  The starting tile's map index.
@@ -1222,7 +1526,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Checks to see if some FlxObject overlaps this FlxObject object in world space.
 	 * If the group has a LOT of things in it, it might be faster to use FlxG.overlaps().
-	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * **Warning:** Currently tilemaps do NOT support screen space overlap checks!
 	 *
 	 * @param   object         The object being tested.
 	 * @param   inScreenSpace  Whether to take scroll factors into account when checking for overlap.
@@ -1230,7 +1534,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
-	override public function overlaps(objectOrGroup:FlxBasic, inScreenSpace = false, ?camera:FlxCamera):Bool
+	override function overlaps(objectOrGroup:FlxBasic, inScreenSpace = false, ?camera:FlxCamera):Bool
 	{
 		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null) // if it is a group
@@ -1293,7 +1597,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   camera         The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the point overlaps this object.
 	 */
-	override public function overlapsPoint(worldPoint:FlxPoint, inScreenSpace = false, ?camera:FlxCamera):Bool
+	override function overlapsPoint(worldPoint:FlxPoint, inScreenSpace = false, ?camera:FlxCamera):Bool
 	{
 		if (inScreenSpace)
 		{
@@ -1309,7 +1613,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 
 	function tileAtPointAllowsCollisions(point:FlxPoint):Bool
 	{
-		final mapIndex = getTileIndexByCoords(point);
+		final mapIndex = getMapIndex(point);
 		return tileExists(mapIndex) && getTileData(mapIndex).solid;
 	}
 
