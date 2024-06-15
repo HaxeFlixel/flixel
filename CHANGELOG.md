@@ -23,17 +23,18 @@
 - `FlxCamera`: Improve doc ([#3161](https://github.com/HaxeFlixel/flixel/pull/3161))
 - `NextState`: Improve doc ([#3160](https://github.com/HaxeFlixel/flixel/pull/3160))
 - `FlxSprite`: Account for `scale`, `origin`, `offset`, `angle` and `pixelPerfectPosition` in `getGraphicMidpoint` ([#3125](https://github.com/HaxeFlixel/flixel/pull/3125))
-- Major change to `FlxTilemap` and `FlxTiles` collision ([#3158](https://github.com/HaxeFlixel/flixel/pull/3158))
+- Major change to `FlxTilemap` and `FlxTiles` collision ([#3158](https://github.com/HaxeFlixel/flixel/pull/3158)) ([#3189](https://github.com/HaxeFlixel/flixel/pull/3189))
   - `FlxTile`: Various features for allowing custom overlap/collision logic
     - Add dynamic methods `overlapsObject` and `orientAt` with helpers `orient`, `orientByIndex` and `orientAtByIndex`
     - Add `onCollide` signal, when overlaps are detected for collision purposes
   - Tilemaps: Add various new tools and helpers to `FlxTilemap` and `FlxBaseTilemap`
-    - Added new `forEachOverlappingTile` calls a method with every tile that overlaps an object
+    - Added new `forEachOverlappingTile` which calls a method with every tile that overlaps an object
+    - Added new `forEachMapIndex` which calls a method with every tile of a certain tile index
     - Added new `isOverlappingTile` method, allows you to check all tiles overlapping an object
     - Added new `objectOverlapsTiles` to replace the now deprecated `overlapsWithCallbacks`
       - Eschews `flipCallbackParams` arg, allowing better typing of both callback params
       - Adds `isCollision` flag to control whether the Tiles' collision callbacks are fired and allows for processing non-solid tiles 
-    - Added new helpers: `getMapIndex`, `getRow`, `getColumn`, `getTileIndex`, `getTileData`, `tileExists`, `setTileIndex`, `getColumnAt`, `getRowAt`, `columnExists` and `rowExists`
+    - Added new helpers: `getMapIndex`, `getMapIndexAt`, `getRow`, `getColumn`, `getTileIndex`, `getTileIndexAt`, `getTileData`, `getTileDataAt`, `tileExists`, `tileExistsAt`, `setTileIndex`, `setTileIndexAt`, `getColumnAt`, `getRowAt`, `columnExists`, `rowExists`, `columnExistsAt`, `rowExistsAt`, `getColumnPos`, `getRowPos`, `getColumnPosAt`, `getRowPosAt`, `getTilePos`, `getTilePosAt` and `getAllTilePos`
     - `FlxObject`: Add internal helpers for processing tilemaps in `separate`, `updateTouchingFlags` and similar functions
     - Debug Drawing: Various improvements to debug drawing tilemaps
       - Now honors tiles' `ignoreDrawDebug` and `debugBoundingBoxColor` fields
