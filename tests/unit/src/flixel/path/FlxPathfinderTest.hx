@@ -106,7 +106,7 @@ class FlxPathfinderTest extends FlxTest
 		var i = points.length;
 		while (i-- > 0)
 		{
-			indices.unshift(map.getTileIndexByCoords(points[i]));
+			indices.unshift(map.getMapIndex(points[i]));
 			if (put)
 				points.pop().put();
 		}

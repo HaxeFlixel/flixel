@@ -124,7 +124,7 @@ class FlxTile extends FlxObject
 	 */
 	public dynamic function orientAt(xPos:Float, yPos:Float, col:Int, row:Int)
 	{
-		mapIndex = (row * tilemap.widthInTiles) + col;
+		mapIndex = tilemap.getMapIndex(col, row);
 		width = tilemap.scaledTileWidth;
 		height = tilemap.scaledTileHeight;
 		x = xPos + col * width;
