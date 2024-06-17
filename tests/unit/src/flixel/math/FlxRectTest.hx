@@ -94,4 +94,60 @@ class FlxRectTest extends FlxTest
 		pivot.put();
 		expected.put();
 	}
+	
+	@Test
+	function testIntersection()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(50, 50, 100, 100);
+		
+		final expected = FlxRect.get(50, 50, 50, 50);
+		final result = FlxRect.get();
+		rect1.intersection(rect2, result);
+		FlxAssert.rectsNear(expected, result, 0.0001);
+		
+		expected.put();
+		result.put();
+	}
+	
+	@Test
+	function testIntersectionEmpty()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(200, 200, 100, 100);
+		
+		final expected = FlxRect.get(0, 0, 0, 0);
+		final result = FlxRect.get(1000, 1000, 1000, 1000);
+		rect1.intersection(rect2, result);
+		FlxAssert.rectsNear(expected, result, 0.0001);
+		
+		expected.put();
+		result.put();
+	}
+	
+	@Test
+	function testClipTo()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(50, 50, 100, 100);
+		
+		final expected = FlxRect.get(50, 50, 50, 50);
+		rect1.clipTo(rect2);
+		FlxAssert.rectsNear(expected, rect1, 0.0001);
+		
+		expected.put();
+	}
+	
+	@Test
+	function testClipToEmpty()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(200, 200, 100, 100);
+		
+		final expected = FlxRect.get(0, 0, 0, 0);
+		rect1.clipTo(rect2);
+		FlxAssert.rectsNear(expected, rect1, 0.0001);
+		
+		expected.put();
+	}
 }
