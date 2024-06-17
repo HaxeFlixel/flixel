@@ -124,4 +124,30 @@ class FlxRectTest extends FlxTest
 		expected.put();
 		result.put();
 	}
+	
+	@Test
+	function testClipTo()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(50, 50, 100, 100);
+		
+		final expected = FlxRect.get(50, 50, 50, 50);
+		rect1.clipTo(rect2);
+		FlxAssert.rectsNear(expected, rect1, 0.0001);
+		
+		expected.put();
+	}
+	
+	@Test
+	function testClipToEmpty()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(200, 200, 100, 100);
+		
+		final expected = FlxRect.get(0, 0, 0, 0);
+		rect1.clipTo(rect2);
+		FlxAssert.rectsNear(expected, rect1, 0.0001);
+		
+		expected.put();
+	}
 }
