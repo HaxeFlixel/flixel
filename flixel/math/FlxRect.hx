@@ -438,32 +438,26 @@ class FlxRect implements IFlxPooled
 	 * Returns the area of intersection with specified rectangle.
 	 * If the rectangles do not intersect, this method returns an empty rectangle.
 	 *
-	 * @param	rect	Rectangle to check intersection against.
-	 * @return	The area of intersection of two rectangles.
+	 * @param   rect    Rectangle to check intersection against
+	 * @param   result  The resulting instance, if `null`, a new one is created
+	 * @return  The area of intersection of two rectangles
 	 */
 	public function intersection(rect:FlxRect, ?result:FlxRect):FlxRect
 	{
 		if (result == null)
 			result = FlxRect.get();
-
-		var x0:Float = x < rect.x ? rect.x : x;
-		var x1:Float = right > rect.right ? rect.right : right;
-		if (x1 <= x0)
-		{
-			rect.putWeak();
-			return result;
-		}
-
-		var y0:Float = y < rect.y ? rect.y : y;
-		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
-		if (y1 <= y0)
-		{
-			rect.putWeak();
-			return result;
-		}
-
+		
+		final x0:Float = x < rect.x ? rect.x : x;
+		final x1:Float = right > rect.right ? rect.right : right;
+		final y0:Float = y < rect.y ? rect.y : y;
+		final y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		rect.putWeak();
+		
+		if (x1 <= x0 || y1 <= y0)
+			return result.set(0, 0, 0, 0);
+		
 		return result.set(x0, y0, x1 - x0, y1 - y0);
+	}
 	}
 	
 	/**
