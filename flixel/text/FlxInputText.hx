@@ -1,6 +1,8 @@
 package flixel.text;
 
+import flixel.input.FlxPointer;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
 import lime.system.Clipboard;
@@ -19,7 +21,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var hasFocus(default, set):Bool = false;
 	
 	public var maxLength(default, set):Int = 0;
-
+	
 	public var multiline(get, set):Bool;
 	
 	public var passwordMode(get, set):Bool;
@@ -55,17 +57,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		#if FLX_MOUSE
 		if (visible)
 		{
-			if (FlxG.mouse.justPressed)
-			{
-				if (FlxG.mouse.overlaps(this))
-				{
-					hasFocus = true;
-				}
-				else
-				{
-					hasFocus = false;
-				}
-			}
+			updateInput();
 		}
 		#end
 	}
@@ -443,6 +435,44 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	#if FLX_MOUSE
+	function updateInput()
+	{
+		if (FlxG.mouse.justPressed)
+		{
+			updatePointerInput(FlxG.mouse);
+		}
+	}
+	
+	function updatePointerInput(pointer:FlxPointer)
+	{
+		var overlap = false;
+		var pointerPos = FlxPoint.get();
+		for (camera in getCameras())
+		{
+			pointer.getWorldPosition(camera, pointerPos);
+			if (overlapsPoint(pointerPos, true, camera))
+			{
+				hasFocus = true;
+				
+				getScreenPosition(_point, camera);
+				caretIndex = getCharAtPosition(pointerPos.x - _point.x, pointerPos.y - _point.y);
+				selectionIndex = caretIndex;
+				
+				overlap = true;
+				break;
+			}
+		}
+		
+		if (!overlap)
+		{
+			hasFocus = false;
+		}
+
+		pointerPos.put();
+	}
+	#end
+	
 	override function set_color(value:FlxColor):FlxColor
 	{
 		if (color != value)
@@ -560,6 +590,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+	
 	function get_multiline():Bool
 	{
 		return textField.multiline;
