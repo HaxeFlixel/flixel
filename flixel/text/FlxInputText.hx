@@ -5,7 +5,10 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import lime.system.Clipboard;
+import openfl.geom.Rectangle;
+import openfl.text.TextFormat;
 import openfl.utils.QName;
 
 class FlxInputText extends FlxText implements IFlxInputText
@@ -14,7 +17,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
 	
-	public var caretIndex(default, set):Int = -1;
+	public var caretIndex(get, set):Int;
 	
 	public var caretWidth(default, set):Int = 1;
 	
@@ -25,14 +28,20 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var multiline(get, set):Bool;
 	
 	public var passwordMode(get, set):Bool;
+
+	public var selectedTextColor(default, set):FlxColor = FlxColor.WHITE;
 	
 	public var selectionBeginIndex(get, never):Int;
+
+	public var selectionColor(default, set):FlxColor = FlxColor.BLACK;
 	
 	public var selectionEndIndex(get, never):Int;
 	
-	var caret:FlxSprite;
-	
-	var selectionIndex:Int = -1;
+	var _caret:FlxSprite;
+	var _caretIndex:Int = -1;
+	var _selectionBoxes:Array<FlxSprite> = [];
+	var _selectionFormat:TextFormat = new TextFormat();
+	var _selectionIndex:Int = -1;
 	
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
 	{
@@ -42,8 +51,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		// of the text, it won't be counted for in `numLines`
 		textField.type = INPUT;
 		
-		caret = new FlxSprite();
-		caret.moves = caret.active = caret.visible = false;
+		_selectionFormat.color = selectedTextColor;
+		
+		_caret = new FlxSprite();
+		_caret.visible = false;
 		regenCaret();
 		updateCaretPosition();
 		
@@ -64,16 +75,32 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	override function draw():Void
 	{
+		for (box in _selectionBoxes)
+			drawSprite(box);
+
 		super.draw();
 		
-		drawSprite(caret);
+		drawSprite(_caret);
 	}
 	
 	override function destroy():Void
 	{
 		FlxG.inputText.unregisterInputText(this);
+
+		_caret = FlxDestroyUtil.destroy(_caret);
+		while (_selectionBoxes.length > 0)
+			FlxDestroyUtil.destroy(_selectionBoxes.pop());
+		_selectionBoxes = null;
+		_selectionFormat = null;
 		
 		super.destroy();
+	}
+
+	override function applyFormats(formatAdjusted:TextFormat, useBorderColor:Bool = false):Void
+	{
+		super.applyFormats(formatAdjusted, useBorderColor);
+		
+		textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
 	}
 	
 	public function dispatchTypingAction(action:TypingAction):Void
@@ -87,6 +114,21 @@ class FlxInputText extends FlxText implements IFlxInputText
 			case COMMAND(cmd):
 				runCommand(cmd);
 		}
+	}
+
+	public function setSelection(beginIndex:Int, endIndex:Int):Void
+	{
+		_selectionIndex = beginIndex;
+		_caretIndex = endIndex;
+		_regen = true; // regenerate so the selected text format is applied
+		
+		if (textField == null)
+			return;
+			
+		_caret.alpha = (_selectionIndex == _caretIndex) ? 1 : 0;
+		
+		updateCaretPosition();
+		regenSelectionBoxes();
 	}
 	
 	function drawSprite(sprite:FlxSprite):Void
@@ -173,130 +215,205 @@ class FlxInputText extends FlxText implements IFlxInputText
 		switch (type)
 		{
 			case LEFT:
-				if (caretIndex > 0)
+				if (_caretIndex > 0)
 				{
-					caretIndex--;
+					_caretIndex--;
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case RIGHT:
-				if (caretIndex < text.length)
+				if (_caretIndex < text.length)
 				{
-					caretIndex++;
+					_caretIndex++;
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case UP:
-				var lineIndex = textField.getLineIndexOfChar(caretIndex);
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				if (lineIndex > 0)
 				{
-					caretIndex = getCharIndexOnDifferentLine(caretIndex, lineIndex - 1);
+					_caretIndex = getCharIndexOnDifferentLine(_caretIndex, lineIndex - 1);
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case DOWN:
-				var lineIndex = textField.getLineIndexOfChar(caretIndex);
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
-					caretIndex = getCharIndexOnDifferentLine(caretIndex, lineIndex + 1);
+					_caretIndex = getCharIndexOnDifferentLine(_caretIndex, lineIndex + 1);
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case HOME:
-				caretIndex = 0;
+				_caretIndex = 0;
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case END:
-				caretIndex = text.length;
+				_caretIndex = text.length;
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case LINE_BEGINNING:
-				caretIndex = textField.getLineOffset(textField.getLineIndexOfChar(caretIndex));
+				_caretIndex = textField.getLineOffset(textField.getLineIndexOfChar(_caretIndex));
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case LINE_END:
-				var lineIndex = textField.getLineIndexOfChar(caretIndex);
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
-					caretIndex = textField.getLineOffset(lineIndex + 1) - 1;
+					_caretIndex = textField.getLineOffset(lineIndex + 1) - 1;
 				}
 				else
 				{
-					caretIndex = text.length;
+					_caretIndex = text.length;
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case PREVIOUS_LINE:
-				var lineIndex = textField.getLineIndexOfChar(caretIndex);
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				if (lineIndex > 0)
 				{
 					var index = textField.getLineOffset(lineIndex);
-					if (caretIndex == index)
+					if (_caretIndex == index)
 					{
-						caretIndex = textField.getLineOffset(lineIndex - 1);
+						_caretIndex = textField.getLineOffset(lineIndex - 1);
 					}
 					else
 					{
-						caretIndex = index;
+						_caretIndex = index;
 					}
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 			case NEXT_LINE:
-				var lineIndex = textField.getLineIndexOfChar(caretIndex);
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
-					caretIndex = textField.getLineOffset(lineIndex + 1);
+					_caretIndex = textField.getLineOffset(lineIndex + 1);
 				}
 				else
 				{
-					caretIndex = text.length;
+					_caretIndex = text.length;
 				}
 				
 				if (!shiftKey)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
+				setSelection(_selectionIndex, _caretIndex);
 		}
 	}
 	
 	function regenCaret():Void
 	{
-		caret.makeGraphic(caretWidth, Std.int(size + 2), caretColor);
+		_caret.makeGraphic(caretWidth, Std.int(size + 2), caretColor);
+	}
+	
+	function regenSelectionBoxes():Void
+	{
+		if (textField == null)
+			return;
+			
+		while (_selectionBoxes.length > textField.numLines)
+		{
+			var box = _selectionBoxes.pop();
+			if (box != null)
+				box.destroy();
+		}
+		
+		if (_caretIndex == _selectionIndex)
+		{
+			for (box in _selectionBoxes)
+			{
+				if (box != null)
+					box.visible = false;
+			}
+			
+			return;
+		}
+		
+		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
+		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
+		
+		for (line in 0...textField.numLines)
+		{
+			if (line >= beginLine && line <= endLine)
+			{
+				var lineStartIndex = textField.getLineOffset(line);
+				var lineEndIndex = lineStartIndex + textField.getLineLength(line);
+				
+				var startIndex = FlxMath.maxInt(lineStartIndex, selectionBeginIndex);
+				var endIndex = FlxMath.minInt(lineEndIndex, selectionEndIndex);
+				
+				var startBoundaries = textField.getCharBoundaries(startIndex);
+				var endBoundaries = textField.getCharBoundaries(endIndex - 1);
+				if (endBoundaries == null && endIndex > startIndex) // end of line, try getting the previous character
+				{
+					endBoundaries = textField.getCharBoundaries(endIndex - 2);
+				}
+				
+				if (startBoundaries != null && endBoundaries != null)
+				{
+					if (_selectionBoxes[line] == null)
+						_selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
+						
+					_selectionBoxes[line].setPosition(x + startBoundaries.x, y + startBoundaries.y);
+					_selectionBoxes[line].setGraphicSize(endBoundaries.right - startBoundaries.x, startBoundaries.height);
+					_selectionBoxes[line].updateHitbox();
+					_selectionBoxes[line].visible = true;
+				}
+				else if (_selectionBoxes[line] != null)
+				{
+					_selectionBoxes[line].visible = false;
+				}
+			}
+			else if (_selectionBoxes[line] != null)
+			{
+				_selectionBoxes[line].visible = false;
+			}
+		}
 	}
 	
 	function replaceSelectedText(newText:String):Void
 	{
 		if (newText == null)
 			newText = "";
-		if (newText == "" && selectionIndex == caretIndex)
+		if (newText == "" && _selectionIndex == _caretIndex)
 			return;
 			
 		var beginIndex = selectionBeginIndex;
@@ -349,7 +466,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		text = text.substring(0, beginIndex) + newText + text.substring(endIndex);
 		
-		selectionIndex = caretIndex = beginIndex + newText.length;
+		_selectionIndex = _caretIndex = beginIndex + newText.length;
+		setSelection(_selectionIndex, _caretIndex);
 	}
 	
 	function runCommand(cmd:TypingCommand):Void
@@ -362,36 +480,36 @@ class FlxInputText extends FlxText implements IFlxInputText
 					replaceSelectedText("\n");
 				}
 			case DELETE_LEFT:
-				if (selectionIndex == caretIndex && caretIndex > 0)
+				if (_selectionIndex == _caretIndex && _caretIndex > 0)
 				{
-					selectionIndex = caretIndex - 1;
+					_selectionIndex = _caretIndex - 1;
 				}
 				
-				if (selectionIndex != caretIndex)
+				if (_selectionIndex != _caretIndex)
 				{
 					replaceSelectedText("");
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
 			case DELETE_RIGHT:
-				if (selectionIndex == caretIndex && caretIndex < text.length)
+				if (_selectionIndex == _caretIndex && _caretIndex < text.length)
 				{
-					selectionIndex = caretIndex + 1;
+					_selectionIndex = _caretIndex + 1;
 				}
 				
-				if (selectionIndex != caretIndex)
+				if (_selectionIndex != _caretIndex)
 				{
 					replaceSelectedText("");
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
 				}
 			case COPY:
-				if (caretIndex != selectionIndex && !passwordMode)
+				if (_caretIndex != _selectionIndex && !passwordMode)
 				{
-					Clipboard.text = text.substring(caretIndex, selectionIndex);
+					Clipboard.text = text.substring(_caretIndex, _selectionIndex);
 				}
 			case CUT:
-				if (caretIndex != selectionIndex && !passwordMode)
+				if (_caretIndex != _selectionIndex && !passwordMode)
 				{
-					Clipboard.text = text.substring(caretIndex, selectionIndex);
+					Clipboard.text = text.substring(_caretIndex, _selectionIndex);
 					
 					replaceSelectedText("");
 				}
@@ -401,8 +519,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 					replaceSelectedText(Clipboard.text);
 				}
 			case SELECT_ALL:
-				selectionIndex = 0;
-				caretIndex = text.length;
+				_selectionIndex = 0;
+				_caretIndex = text.length;
+				setSelection(_selectionIndex, _caretIndex);
 		}
 	}
 	
@@ -413,30 +532,30 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		if (text.length == 0)
 		{
-			caret.setPosition(x + GUTTER, y + GUTTER);
+			_caret.setPosition(x + GUTTER, y + GUTTER);
 		}
 		else
 		{
-			var lineIndex = textField.getLineIndexOfChar(caretIndex);
-			var boundaries = textField.getCharBoundaries(caretIndex - 1);
+			var boundaries = textField.getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				caret.setPosition(x + boundaries.right, y + boundaries.y);
+				_caret.setPosition(x + boundaries.right, y + boundaries.y);
 			}
 			else // end of line
 			{
 				var lineY:Float = GUTTER;
+				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
 				for (i in 0...lineIndex)
 				{
 					lineY += textField.getLineMetrics(i).height;
 				}
-				caret.setPosition(x + GUTTER, y + lineY);
+				_caret.setPosition(x + GUTTER, y + lineY);
 			}
 		}
 	}
 	
 	#if FLX_MOUSE
-	function updateInput()
+	function updateInput():Void
 	{
 		if (FlxG.mouse.justPressed)
 		{
@@ -444,7 +563,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
-	function updatePointerInput(pointer:FlxPointer)
+	function updatePointerInput(pointer:FlxPointer):Void
 	{
 		var overlap = false;
 		var pointerPos = FlxPoint.get();
@@ -456,8 +575,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 				hasFocus = true;
 				
 				getScreenPosition(_point, camera);
-				caretIndex = getCharAtPosition(pointerPos.x - _point.x, pointerPos.y - _point.y);
-				selectionIndex = caretIndex;
+				_caretIndex = getCharAtPosition(pointerPos.x - _point.x, pointerPos.y - _point.y);
+				_selectionIndex = _caretIndex;
+				setSelection(_selectionIndex, _caretIndex);
 				
 				overlap = true;
 				break;
@@ -492,20 +612,21 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 			if (hasFocus)
 			{
-				if (text.length < selectionIndex)
+				if (text.length < _selectionIndex)
 				{
-					selectionIndex = text.length;
+					_selectionIndex = text.length;
 				}
-				if (text.length < caretIndex)
+				if (text.length < _caretIndex)
 				{
-					caretIndex = text.length;
+					_caretIndex = text.length;
 				}
 			}
 			else
 			{
-				selectionIndex = 0;
-				caretIndex = 0;
+				_selectionIndex = 0;
+				_caretIndex = 0;
 			}
+			setSelection(_selectionIndex, _caretIndex);
 		}
 		
 		return value;
@@ -518,20 +639,26 @@ class FlxInputText extends FlxText implements IFlxInputText
 			caretColor = value;
 			regenCaret();
 		}
+
 		return value;
 	}
 	
+	function get_caretIndex():Int
+	{
+		return _caretIndex;
+	}
 	function set_caretIndex(value:Int):Int
 	{
-		if (caretIndex != value)
+		if (_caretIndex != value)
 		{
-			caretIndex = value;
-			if (caretIndex < 0)
-				caretIndex = 0;
-			if (caretIndex > text.length)
-				caretIndex = text.length;
-			updateCaretPosition();
+			_caretIndex = value;
+			if (_caretIndex < 0)
+				_caretIndex = 0;
+			if (_caretIndex > text.length)
+				_caretIndex = text.length;
+			setSelection(_caretIndex, _caretIndex);
 		}
+
 		return value;
 	}
 	
@@ -542,6 +669,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			caretWidth = value;
 			regenCaret();
 		}
+
 		return value;
 	}
 	
@@ -554,26 +682,29 @@ class FlxInputText extends FlxText implements IFlxInputText
 			{
 				FlxG.inputText.focus = this;
 				
-				if (caretIndex < 0)
+				if (_caretIndex < 0)
 				{
-					caretIndex = text.length;
-					selectionIndex = caretIndex;
+					_caretIndex = text.length;
+					_selectionIndex = _caretIndex;
+					setSelection(_selectionIndex, _caretIndex);
 				}
 				
-				caret.visible = true;
+				_caret.visible = true;
 			}
 			else if (FlxG.inputText.focus == this)
 			{
 				FlxG.inputText.focus = null;
 				
-				if (selectionIndex != caretIndex)
+				if (_selectionIndex != _caretIndex)
 				{
-					selectionIndex = caretIndex;
+					_selectionIndex = _caretIndex;
+					setSelection(_selectionIndex, _caretIndex);
 				}
 				
-				caret.visible = false;
+				_caret.visible = false;
 			}
 		}
+
 		return value;
 	}
 	
@@ -606,6 +737,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			wordWrap = value;
 			_regen = true;
 		}
+
 		return value;
 	}
 	
@@ -624,13 +756,40 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
+	function set_selectedTextColor(value:FlxColor):FlxColor
+	{
+		if (selectedTextColor != value)
+		{
+			selectedTextColor = value;
+			_selectionFormat.color = selectedTextColor;
+			_regen = true;
+		}
+		
+		return value;
+	}
+	
 	function get_selectionBeginIndex():Int
 	{
-		return FlxMath.minInt(caretIndex, selectionIndex);
+		return FlxMath.minInt(_caretIndex, _selectionIndex);
+	}
+	
+	function set_selectionColor(value:FlxColor):FlxColor
+	{
+		if (selectionColor != value)
+		{
+			selectionColor = value;
+			for (box in _selectionBoxes)
+			{
+				if (box != null)
+					box.makeGraphic(1, 1, selectionColor);
+			}
+		}
+		
+		return value;
 	}
 	
 	function get_selectionEndIndex():Int
 	{
-		return FlxMath.maxInt(caretIndex, selectionIndex);
+		return FlxMath.maxInt(_caretIndex, _selectionIndex);
 	}
 }
