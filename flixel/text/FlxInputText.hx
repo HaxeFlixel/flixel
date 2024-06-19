@@ -50,6 +50,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		super.update(elapsed);
 		
+		#if FLX_MOUSE
 		if (visible)
 		{
 			if (FlxG.mouse.justPressed)
@@ -64,6 +65,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 			}
 		}
+		#end
 	}
 	
 	override function draw():Void
