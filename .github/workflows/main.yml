@@ -31,9 +31,8 @@ jobs:
         haxelib install haxelib 4.0.3
         haxelib dev flixel .
     
-    - uses: HaxeFlixel/setup-flixel@v1
+    - uses: HaxeFlixel/setup-flixel@master
       with:
-        haxe-version: current
         flixel-versions: dev
         test-location: local
         target: ${{matrix.target}}
