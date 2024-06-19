@@ -167,8 +167,8 @@ class InputTextFrontEnd
 
 interface IFlxInputText
 {
-	public var hasFocus(default, set):Bool;
-	public function dispatchTypingAction(action:TypingAction):Void;
+	var hasFocus(default, set):Bool;
+	function dispatchTypingAction(action:TypingAction):Void;
 }
 
 enum TypingAction
