@@ -19,6 +19,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var hasFocus(default, set):Bool = false;
 	
 	public var maxLength(default, set):Int = 0;
+
+	public var multiline(get, set):Bool;
 	
 	public var passwordMode(get, set):Bool;
 	
@@ -363,7 +365,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		switch (cmd)
 		{
 			case NEW_LINE:
-				if (textField.multiline)
+				if (multiline)
 				{
 					replaceSelectedText("\n");
 				}
@@ -558,6 +560,23 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+	function get_multiline():Bool
+	{
+		return textField.multiline;
+	}
+	
+	function set_multiline(value:Bool):Bool
+	{
+		if (textField.multiline != value)
+		{
+			textField.multiline = value;
+			// `wordWrap` will still add new lines even if `multiline` is false,
+			// let's change it accordingly
+			wordWrap = value;
+			_regen = true;
+		}
+		return value;
+	}
 	
 	function get_passwordMode():Bool
 	{
@@ -566,7 +585,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	function set_passwordMode(value:Bool):Bool
 	{
-		return textField.displayAsPassword = value;
+		if (textField.displayAsPassword != value)
+		{
+			textField.displayAsPassword = value;
+			_regen = true;
+		}
+		return value;
 	}
 	
 	function get_selectionBeginIndex():Int
