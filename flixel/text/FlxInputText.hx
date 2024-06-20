@@ -7,6 +7,7 @@ import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import lime.system.Clipboard;
+import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.text.TextFormat;
 import openfl.utils.QName;
@@ -14,6 +15,8 @@ import openfl.utils.QName;
 class FlxInputText extends FlxText implements IFlxInputText
 {
 	static inline var GUTTER:Int = 2;
+	
+	public var bottomScrollV(get, never):Int;
 	
 	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
 	
@@ -24,10 +27,18 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var hasFocus(default, set):Bool = false;
 	
 	public var maxLength(default, set):Int = 0;
+
+	public var maxScrollH(get, never):Int;
+	
+	public var maxScrollV(get, never):Int;
 	
 	public var multiline(get, set):Bool;
 	
 	public var passwordMode(get, set):Bool;
+
+	public var scrollH(get, set):Int;
+	
+	public var scrollV(get, set):Int;
 
 	public var selectedTextColor(default, set):FlxColor = FlxColor.WHITE;
 	
@@ -39,6 +50,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	var _caret:FlxSprite;
 	var _caretIndex:Int = -1;
+	var _mouseDown:Bool;
+	var _pointerCamera:FlxCamera;
 	var _selectionBoxes:Array<FlxSprite> = [];
 	var _selectionFormat:TextFormat = new TextFormat();
 	var _selectionIndex:Int = -1;
@@ -88,6 +101,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		FlxG.inputText.unregisterInputText(this);
 
 		_caret = FlxDestroyUtil.destroy(_caret);
+		_pointerCamera = null;
 		while (_selectionBoxes.length > 0)
 			FlxDestroyUtil.destroy(_selectionBoxes.pop());
 		_selectionBoxes = null;
@@ -120,15 +134,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		_selectionIndex = beginIndex;
 		_caretIndex = endIndex;
-		_regen = true; // regenerate so the selected text format is applied
 		
 		if (textField == null)
 			return;
-			
-		_caret.alpha = (_selectionIndex == _caretIndex) ? 1 : 0;
-		
-		updateCaretPosition();
-		regenSelectionBoxes();
+
+		updateSelection();
 	}
 	
 	function drawSprite(sprite:FlxSprite):Void
@@ -160,9 +170,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		
 		var y:Float = GUTTER;
-		for (i in 0...lineIndex)
+		for (i in 0...FlxMath.maxInt(scrollV - 1, lineIndex))
 		{
-			y += textField.getLineMetrics(i).height;
+			var lineHeight = textField.getLineMetrics(i).height;
+			if (i < scrollV - 1)
+				y -= lineHeight;
+			if (i < lineIndex)
+				y += lineHeight;
 		}
 		y += textField.getLineMetrics(lineIndex).height / 2;
 		
@@ -171,6 +185,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	function getCharAtPosition(x:Float, y:Float):Int
 	{
+		x += scrollH;
+		for (i in 0...scrollV - 1)
+		{
+			y += textField.getLineMetrics(i).height;
+		}
+		if (y > textField.textHeight)
+			y = textField.textHeight;
+
 		var lineY:Float = GUTTER;
 		for (line in 0...textField.numLines)
 		{
@@ -207,7 +229,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			lineY += lineHeight;
 		}
 		
-		return -1;
+		return text.length;
 	}
 	
 	function moveCursor(type:MoveCursorAction, shiftKey:Bool):Void
@@ -343,72 +365,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		_caret.makeGraphic(caretWidth, Std.int(size + 2), caretColor);
 	}
-	
-	function regenSelectionBoxes():Void
-	{
-		if (textField == null)
-			return;
-			
-		while (_selectionBoxes.length > textField.numLines)
-		{
-			var box = _selectionBoxes.pop();
-			if (box != null)
-				box.destroy();
-		}
-		
-		if (_caretIndex == _selectionIndex)
-		{
-			for (box in _selectionBoxes)
-			{
-				if (box != null)
-					box.visible = false;
-			}
-			
-			return;
-		}
-		
-		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
-		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
-		
-		for (line in 0...textField.numLines)
-		{
-			if (line >= beginLine && line <= endLine)
-			{
-				var lineStartIndex = textField.getLineOffset(line);
-				var lineEndIndex = lineStartIndex + textField.getLineLength(line);
-				
-				var startIndex = FlxMath.maxInt(lineStartIndex, selectionBeginIndex);
-				var endIndex = FlxMath.minInt(lineEndIndex, selectionEndIndex);
-				
-				var startBoundaries = textField.getCharBoundaries(startIndex);
-				var endBoundaries = textField.getCharBoundaries(endIndex - 1);
-				if (endBoundaries == null && endIndex > startIndex) // end of line, try getting the previous character
-				{
-					endBoundaries = textField.getCharBoundaries(endIndex - 2);
-				}
-				
-				if (startBoundaries != null && endBoundaries != null)
-				{
-					if (_selectionBoxes[line] == null)
-						_selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
-						
-					_selectionBoxes[line].setPosition(x + startBoundaries.x, y + startBoundaries.y);
-					_selectionBoxes[line].setGraphicSize(endBoundaries.right - startBoundaries.x, startBoundaries.height);
-					_selectionBoxes[line].updateHitbox();
-					_selectionBoxes[line].visible = true;
-				}
-				else if (_selectionBoxes[line] != null)
-				{
-					_selectionBoxes[line].visible = false;
-				}
-			}
-			else if (_selectionBoxes[line] != null)
-			{
-				_selectionBoxes[line].visible = false;
-			}
-		}
-	}
-	
+
 	function replaceSelectedText(newText:String):Void
 	{
 		if (newText == null)
@@ -536,10 +493,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else
 		{
+			var scrollY = 0.0;
+			for (i in 0...scrollV - 1)
+			{
+				scrollY += textField.getLineMetrics(i).height;
+			}
 			var boundaries = textField.getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				_caret.setPosition(x + boundaries.right, y + boundaries.y);
+				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - scrollY);
 			}
 			else // end of line
 			{
@@ -549,7 +511,88 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					lineY += textField.getLineMetrics(i).height;
 				}
-				_caret.setPosition(x + GUTTER, y + lineY);
+				_caret.setPosition(x + GUTTER, y + lineY - scrollY);
+			}
+		}
+	}
+	
+	function updateSelection():Void
+	{
+		textField.setSelection(_selectionIndex, _caretIndex);
+		_caret.alpha = (_selectionIndex == _caretIndex) ? 1 : 0;
+		updateCaretPosition();
+		updateSelectionBoxes();
+		
+		_regen = true;
+	}
+	
+	function updateSelectionBoxes():Void
+	{
+		if (textField == null)
+			return;
+			
+		while (_selectionBoxes.length > textField.numLines)
+		{
+			var box = _selectionBoxes.pop();
+			if (box != null)
+				box.destroy();
+		}
+		
+		if (_caretIndex == _selectionIndex)
+		{
+			for (box in _selectionBoxes)
+			{
+				if (box != null)
+					box.visible = false;
+			}
+			
+			return;
+		}
+		
+		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
+		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
+		
+		var scrollY = 0.0;
+		for (i in 0...scrollV - 1)
+		{
+			scrollY += textField.getLineMetrics(i).height;
+		}
+		
+		for (line in 0...textField.numLines)
+		{
+			if ((line >= scrollV - 1 && line <= bottomScrollV - 1) && (line >= beginLine && line <= endLine))
+			{
+				var lineStartIndex = textField.getLineOffset(line);
+				var lineEndIndex = lineStartIndex + textField.getLineLength(line);
+				
+				var startIndex = FlxMath.maxInt(lineStartIndex, selectionBeginIndex);
+				var endIndex = FlxMath.minInt(lineEndIndex, selectionEndIndex);
+				
+				var startBoundaries = textField.getCharBoundaries(startIndex);
+				var endBoundaries = textField.getCharBoundaries(endIndex - 1);
+				if (endBoundaries == null && endIndex > startIndex) // end of line, try getting the previous character
+				{
+					endBoundaries = textField.getCharBoundaries(endIndex - 2);
+				}
+				
+				if (startBoundaries != null && endBoundaries != null)
+				{
+					if (_selectionBoxes[line] == null)
+						_selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
+						
+					_selectionBoxes[line].setPosition(x + startBoundaries.x - scrollH, y + startBoundaries.y - scrollY);
+					_selectionBoxes[line].setGraphicSize(endBoundaries.right - startBoundaries.x, startBoundaries.height);
+					_selectionBoxes[line].updateHitbox();
+					_selectionBoxes[line].visible = true;
+				}
+				else if (_selectionBoxes[line] != null)
+				{
+					_selectionBoxes[line].visible = false;
+				}
+			}
+			else if (_selectionBoxes[line] != null)
+			{
+				_selectionBoxes[line].visible = false;
 			}
 		}
 	}
@@ -557,13 +600,26 @@ class FlxInputText extends FlxText implements IFlxInputText
 	#if FLX_MOUSE
 	function updateInput():Void
 	{
+		if (_mouseDown)
+		{
+			if (FlxG.mouse.justMoved)
+			{
+				updatePointerDrag(FlxG.mouse);
+			}
+			
+			if (FlxG.mouse.released)
+			{
+				_mouseDown = false;
+				updatePointerRelease(FlxG.mouse);
+			}
+		}
 		if (FlxG.mouse.justPressed)
 		{
-			updatePointerInput(FlxG.mouse);
+			_mouseDown = checkPointerOverlap(FlxG.mouse);
 		}
 	}
 	
-	function updatePointerInput(pointer:FlxPointer):Void
+	function checkPointerOverlap(pointer:FlxPointer):Bool
 	{
 		var overlap = false;
 		var pointerPos = FlxPoint.get();
@@ -573,13 +629,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 			if (overlapsPoint(pointerPos, true, camera))
 			{
 				hasFocus = true;
+				_pointerCamera = camera;
 				
-				getScreenPosition(_point, camera);
-				_caretIndex = getCharAtPosition(pointerPos.x - _point.x, pointerPos.y - _point.y);
+				var relativePos = getRelativePosition(pointerPos);
+				_caretIndex = getCharAtPosition(relativePos.x, relativePos.y);
 				_selectionIndex = _caretIndex;
 				setSelection(_selectionIndex, _caretIndex);
 				
 				overlap = true;
+				relativePos.put();
 				break;
 			}
 		}
@@ -590,6 +648,51 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 
 		pointerPos.put();
+		return overlap;
+	}
+	
+	function updatePointerDrag(pointer:FlxPointer):Void
+	{
+		if (_selectionIndex < 0)
+			return;
+			
+		var pointerPos = pointer.getWorldPosition(_pointerCamera);
+		var relativePos = getRelativePosition(pointerPos);
+		
+		var char = getCharAtPosition(relativePos.x, relativePos.y);
+		if (char != _caretIndex)
+		{
+			_caretIndex = char;
+			updateSelection();
+		}
+		
+		pointerPos.put();
+		relativePos.put();
+	}
+	
+	function updatePointerRelease(pointer:FlxPointer):Void
+	{
+		if (!hasFocus)
+			return;
+			
+		var pointerPos = pointer.getWorldPosition(_pointerCamera);
+		var relativePos = getRelativePosition(pointerPos);
+		
+		var upPos = getCharAtPosition(relativePos.x, relativePos.y);
+		var leftPos = FlxMath.minInt(_selectionIndex, upPos);
+		var rightPos = FlxMath.maxInt(_selectionIndex, upPos);
+		
+		_selectionIndex = leftPos;
+		_caretIndex = rightPos;
+		
+		pointerPos.put();
+		relativePos.put();
+	}
+	
+	function getRelativePosition(point:FlxPoint)
+	{
+		getScreenPosition(_point, _pointerCamera);
+		return FlxPoint.get(point.x - _point.x, point.y - _point.y);
 	}
 	#end
 	
@@ -630,6 +733,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		
 		return value;
+	}
+	function get_bottomScrollV():Int
+	{
+		return textField.bottomScrollV;
 	}
 	
 	function set_caretColor(value:FlxColor):FlxColor
@@ -721,6 +828,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+	function get_maxScrollH():Int
+	{
+		return textField.maxScrollH;
+	}
+	
+	function get_maxScrollV():Int
+	{
+		return textField.maxScrollV;
+	}
 	
 	function get_multiline():Bool
 	{
@@ -752,6 +868,43 @@ class FlxInputText extends FlxText implements IFlxInputText
 		{
 			textField.displayAsPassword = value;
 			_regen = true;
+		}
+		return value;
+	}
+	function get_scrollH():Int
+	{
+		return textField.scrollH;
+	}
+	
+	function set_scrollH(value:Int):Int
+	{
+		if (value > maxScrollH)
+			value = maxScrollH;
+		if (value < 0)
+			value = 0;
+		if (textField.scrollH != value)
+		{
+			textField.scrollH = value;
+			updateSelection();
+		}
+		return value;
+	}
+	
+	function get_scrollV():Int
+	{
+		return textField.scrollV;
+	}
+	
+	function set_scrollV(value:Int):Int
+	{
+		if (value > maxScrollV)
+			value = maxScrollV;
+		if (value < 1)
+			value = 1;
+		if (textField.scrollV != value || textField.scrollV == 0)
+		{
+			textField.scrollV = value;
+			updateSelection();
 		}
 		return value;
 	}
