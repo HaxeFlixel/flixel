@@ -535,6 +535,7 @@ class FlxG
 		return child;
 	}
 
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	public static function addPostProcess(postProcess:PostProcess):PostProcess
 	{
 		#if FLX_POST_PROCESS
@@ -561,6 +562,7 @@ class FlxG
 		return postProcess;
 	}
 
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	public static function removePostProcess(postProcess:PostProcess):Void
 	{
 		#if FLX_POST_PROCESS
@@ -576,6 +578,7 @@ class FlxG
 	}
 
 	#if FLX_POST_PROCESS
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	static function chainPostProcesses():Void
 	{
 		var postProcesses = game.postProcesses;

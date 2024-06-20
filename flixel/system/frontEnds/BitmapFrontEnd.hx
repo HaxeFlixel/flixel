@@ -44,6 +44,7 @@ class BitmapFrontEnd
 		reset();
 	}
 
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function onAssetsReload(_):Void
 	{
 		for (key in _cache.keys())
@@ -60,6 +61,7 @@ class BitmapFrontEnd
 	 * New context handler.
 	 * Regenerates tilesheets for all dumped graphics objects in the cache.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function onContext():Void
 	{
 		for (key in _cache.keys())
@@ -76,6 +78,7 @@ class BitmapFrontEnd
 	 * Dumps bits of all graphics in the cache. This frees some memory, but you can't read/write pixels on those graphics anymore.
 	 * You can call undump() method for each FlxGraphic (or undumpCache()) object which will restore it again.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function dumpCache():Void
 	{
 		#if !web
@@ -93,6 +96,7 @@ class BitmapFrontEnd
 	/**
 	 * Restores graphics of all dumped objects in the cache.
 	 */
+	@:deprecated("FlxGraphic dumping is being removed") // 5.7.0
 	public function undumpCache():Void
 	{
 		#if !web
