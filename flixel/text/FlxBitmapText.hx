@@ -324,14 +324,6 @@ class FlxBitmapText extends FlxSprite
 			final full = 0xFF*0xFF;
 			function multiplyColors(a:FlxColor, b:FlxColor)
 			{
-				final aR = StringTools.hex(a.red);
-				final bR = StringTools.hex(b.red);
-				final aG = StringTools.hex(a.green);
-				final bG = StringTools.hex(b.green);
-				final aB = StringTools.hex(a.blue);
-				final bB = StringTools.hex(b.blue);
-				final aA = StringTools.hex(a.alpha);
-				final bA = StringTools.hex(b.alpha);
 				return FlxColor.fromRGBFloat(a.red * b.red / full, a.green * b.green / full, a.blue * b.blue / full, a.alpha * b.alpha / full);
 			}
 			
@@ -415,7 +407,6 @@ class FlxBitmapText extends FlxSprite
 	
 	function batchDrawData(drawItem:FlxDrawQuadsItem, list:FlxBuffer<TileDrawItem>, color:FlxColor)
 	{
-		final hex = color.toHexString();
 		_colorParams.setMultipliersFromColor(color);
 		
 		final scaleX = scale.x * _facingHorizontalMult;
