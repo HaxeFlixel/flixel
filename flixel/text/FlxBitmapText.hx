@@ -7,7 +7,11 @@ import flixel.FlxSprite;
 import openfl.geom.ColorTransform;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
+#if FLX_RENDER_TRIANGLE
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+#else
 import flixel.graphics.tile.FlxDrawQuadsItem;
+#end
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.text.FlxText.FlxTextAlign;
@@ -405,7 +409,11 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 	
+	#if FLX_RENDER_TRIANGLE
+	function batchDrawData(drawItem:FlxDrawTrianglesItem, list:FlxBuffer<TileDrawItem>, color:FlxColor)
+	#else
 	function batchDrawData(drawItem:FlxDrawQuadsItem, list:FlxBuffer<TileDrawItem>, color:FlxColor)
+	#end
 	{
 		_colorParams.setMultipliersFromColor(color);
 		
