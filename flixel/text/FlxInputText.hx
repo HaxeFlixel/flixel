@@ -3,6 +3,7 @@ package flixel.text;
 import flixel.input.FlxPointer;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -169,16 +170,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			x = GUTTER;
 		}
 		
-		var y:Float = GUTTER;
-		for (i in 0...FlxMath.maxInt(scrollV - 1, lineIndex))
-		{
-			var lineHeight = textField.getLineMetrics(i).height;
-			if (i < scrollV - 1)
-				y -= lineHeight;
-			if (i < lineIndex)
-				y += lineHeight;
-		}
-		y += textField.getLineMetrics(lineIndex).height / 2;
+		var y = GUTTER + getLineY(lineIndex) + textField.getLineMetrics(lineIndex).height / 2 - getLineY(scrollV - 1);
 		
 		return getCharAtPosition(x, y);
 	}
@@ -186,16 +178,19 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function getCharAtPosition(x:Float, y:Float):Int
 	{
 		x += scrollH;
-		for (i in 0...scrollV - 1)
-		{
-			y += textField.getLineMetrics(i).height;
-		}
+		y += getLineY(scrollV - 1);
+		
+		if (x < GUTTER)
+			x = GUTTER;
+
 		if (y > textField.textHeight)
 			y = textField.textHeight;
+		if (y < GUTTER)
+			y = GUTTER;
 
-		var lineY:Float = GUTTER;
 		for (line in 0...textField.numLines)
 		{
+			var lineY = GUTTER + getLineY(line);
 			var lineOffset = textField.getLineOffset(line);
 			var lineHeight = textField.getLineMetrics(line).height;
 			if (y >= lineY && y <= lineY + lineHeight)
@@ -225,11 +220,18 @@ class FlxInputText extends FlxText implements IFlxInputText
 				// a character wasn't found, return the last character of the line
 				return lineEndIndex;
 			}
-			
-			lineY += lineHeight;
 		}
 		
 		return text.length;
+	}
+	function getLineY(line:Int):Float
+	{
+		var scrollY = 0.0;
+		for (i in 0...line)
+		{
+			scrollY += textField.getLineMetrics(i).height;
+		}
+		return scrollY;
 	}
 	
 	function moveCursor(type:MoveCursorAction, shiftKey:Bool):Void
@@ -493,25 +495,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else
 		{
-			var scrollY = 0.0;
-			for (i in 0...scrollV - 1)
-			{
-				scrollY += textField.getLineMetrics(i).height;
-			}
 			var boundaries = textField.getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - scrollY);
+				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - getLineY(scrollV - 1));
 			}
 			else // end of line
 			{
-				var lineY:Float = GUTTER;
 				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
-				for (i in 0...lineIndex)
-				{
-					lineY += textField.getLineMetrics(i).height;
-				}
-				_caret.setPosition(x + GUTTER, y + lineY - scrollY);
+				_caret.setPosition(x + GUTTER, y + GUTTER + getLineY(lineIndex) - getLineY(scrollV - 1));
 			}
 		}
 	}
@@ -552,14 +544,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
 		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
 		
-		var scrollY = 0.0;
-		for (i in 0...scrollV - 1)
-		{
-			scrollY += textField.getLineMetrics(i).height;
-		}
+		var scrollY = getLineY(scrollV - 1);
 		
 		for (line in 0...textField.numLines)
 		{
+			var box = _selectionBoxes[line];
 			if ((line >= scrollV - 1 && line <= bottomScrollV - 1) && (line >= beginLine && line <= endLine))
 			{
 				var lineStartIndex = textField.getLineOffset(line);
@@ -577,22 +566,28 @@ class FlxInputText extends FlxText implements IFlxInputText
 				
 				if (startBoundaries != null && endBoundaries != null)
 				{
-					if (_selectionBoxes[line] == null)
-						_selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
+					if (box == null)
+						box = _selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
 						
-					_selectionBoxes[line].setPosition(x + startBoundaries.x - scrollH, y + startBoundaries.y - scrollY);
-					_selectionBoxes[line].setGraphicSize(endBoundaries.right - startBoundaries.x, startBoundaries.height);
-					_selectionBoxes[line].updateHitbox();
-					_selectionBoxes[line].visible = true;
+					var boxRect = FlxRect.get(startBoundaries.x - scrollH, startBoundaries.y - scrollY, endBoundaries.right - startBoundaries.x,
+						startBoundaries.height);
+					boxRect.clipTo(FlxRect.weak(0, 0, width, height)); // clip the selection box inside the text sprite
+					
+					box.setPosition(x + boxRect.x, y + boxRect.y);
+					box.setGraphicSize(boxRect.width, boxRect.height);
+					box.updateHitbox();
+					box.visible = true;
+
+					boxRect.put();
 				}
-				else if (_selectionBoxes[line] != null)
+				else if (box != null)
 				{
-					_selectionBoxes[line].visible = false;
+					box.visible = false;
 				}
 			}
-			else if (_selectionBoxes[line] != null)
+			else if (box != null)
 			{
-				_selectionBoxes[line].visible = false;
+				box.visible = false;
 			}
 		}
 	}
