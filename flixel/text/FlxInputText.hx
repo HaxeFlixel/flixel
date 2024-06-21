@@ -113,9 +113,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	override function applyFormats(formatAdjusted:TextFormat, useBorderColor:Bool = false):Void
 	{
+		var cache = scrollV;
+
 		super.applyFormats(formatAdjusted, useBorderColor);
 		
 		textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
+		scrollV = cache;
 	}
 	
 	public function dispatchTypingAction(action:TypingAction):Void
@@ -224,6 +227,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return text.length;
 	}
+
 	function getLineY(line:Int):Float
 	{
 		var scrollY = 0.0;
@@ -232,6 +236,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 			scrollY += textField.getLineMetrics(i).height;
 		}
 		return scrollY;
+	}
+
+	function isCaretLineVisible():Bool
+	{
+		var line = textField.getLineIndexOfChar(_caretIndex);
+		return line >= scrollV - 1 && line <= bottomScrollV - 1;
 	}
 	
 	function moveCursor(type:MoveCursorAction, shiftKey:Bool):Void
@@ -511,10 +521,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function updateSelection():Void
 	{
 		textField.setSelection(_selectionIndex, _caretIndex);
-		_caret.alpha = (_selectionIndex == _caretIndex) ? 1 : 0;
-		updateCaretPosition();
-		updateSelectionBoxes();
-		
+		updateSelectionSprites();
 		_regen = true;
 	}
 	
@@ -592,6 +599,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	function updateSelectionSprites():Void
+	{
+		_caret.alpha = (_selectionIndex == _caretIndex && isCaretLineVisible()) ? 1 : 0;
+		updateCaretPosition();
+		updateSelectionBoxes();
+	}
+	
 	#if FLX_MOUSE
 	function updateInput():Void
 	{
@@ -608,9 +622,22 @@ class FlxInputText extends FlxText implements IFlxInputText
 				updatePointerRelease(FlxG.mouse);
 			}
 		}
-		if (FlxG.mouse.justPressed)
+		if (checkPointerOverlap(FlxG.mouse))
 		{
-			_mouseDown = checkPointerOverlap(FlxG.mouse);
+			if (FlxG.mouse.justPressed)
+			{
+				_mouseDown = true;
+				updatePointerPress(FlxG.mouse);
+			}
+			
+			if (FlxG.mouse.wheel != 0)
+			{
+				scrollV = FlxMath.minInt(scrollV - FlxG.mouse.wheel, maxScrollV);
+			}
+		}
+		else if (FlxG.mouse.justPressed)
+		{
+			hasFocus = false;
 		}
 	}
 	
@@ -623,27 +650,27 @@ class FlxInputText extends FlxText implements IFlxInputText
 			pointer.getWorldPosition(camera, pointerPos);
 			if (overlapsPoint(pointerPos, true, camera))
 			{
-				hasFocus = true;
-				_pointerCamera = camera;
-				
-				var relativePos = getRelativePosition(pointerPos);
-				_caretIndex = getCharAtPosition(relativePos.x, relativePos.y);
-				_selectionIndex = _caretIndex;
-				setSelection(_selectionIndex, _caretIndex);
-				
+				if (_pointerCamera == null)
+					_pointerCamera = camera;
 				overlap = true;
-				relativePos.put();
 				break;
 			}
-		}
-		
-		if (!overlap)
-		{
-			hasFocus = false;
 		}
 
 		pointerPos.put();
 		return overlap;
+	}
+	
+	function updatePointerPress(pointer:FlxPointer):Void
+	{
+		hasFocus = true;
+		
+		var relativePos = getRelativePosition(pointer);
+		_caretIndex = getCharAtPosition(relativePos.x, relativePos.y);
+		_selectionIndex = _caretIndex;
+		setSelection(_selectionIndex, _caretIndex);
+		
+		relativePos.put();
 	}
 	
 	function updatePointerDrag(pointer:FlxPointer):Void
@@ -651,8 +678,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (_selectionIndex < 0)
 			return;
 			
-		var pointerPos = pointer.getWorldPosition(_pointerCamera);
-		var relativePos = getRelativePosition(pointerPos);
+		var relativePos = getRelativePosition(pointer);
 		
 		var char = getCharAtPosition(relativePos.x, relativePos.y);
 		if (char != _caretIndex)
@@ -660,8 +686,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			_caretIndex = char;
 			updateSelection();
 		}
-		
-		pointerPos.put();
+
 		relativePos.put();
 	}
 	
@@ -670,8 +695,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (!hasFocus)
 			return;
 			
-		var pointerPos = pointer.getWorldPosition(_pointerCamera);
-		var relativePos = getRelativePosition(pointerPos);
+		var relativePos = getRelativePosition(pointer);
 		
 		var upPos = getCharAtPosition(relativePos.x, relativePos.y);
 		var leftPos = FlxMath.minInt(_selectionIndex, upPos);
@@ -679,15 +703,18 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		_selectionIndex = leftPos;
 		_caretIndex = rightPos;
-		
-		pointerPos.put();
+
 		relativePos.put();
+		_pointerCamera = null;
 	}
 	
-	function getRelativePosition(point:FlxPoint)
+	function getRelativePosition(pointer:FlxPointer):FlxPoint
 	{
+		var pointerPos = pointer.getWorldPosition(_pointerCamera);
 		getScreenPosition(_point, _pointerCamera);
-		return FlxPoint.get(point.x - _point.x, point.y - _point.y);
+		var result = FlxPoint.get(pointerPos.x - _point.x, pointerPos.y - _point.y);
+		pointerPos.put();
+		return result;
 	}
 	#end
 	
@@ -729,6 +756,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+
 	function get_bottomScrollV():Int
 	{
 		return textField.bottomScrollV;
@@ -749,6 +777,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		return _caretIndex;
 	}
+
 	function set_caretIndex(value:Int):Int
 	{
 		if (_caretIndex != value)
@@ -823,6 +852,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+
 	function get_maxScrollH():Int
 	{
 		return textField.maxScrollH;
@@ -866,6 +896,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		return value;
 	}
+
 	function get_scrollH():Int
 	{
 		return textField.scrollH;
@@ -880,7 +911,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (textField.scrollH != value)
 		{
 			textField.scrollH = value;
-			updateSelection();
+			_regen = true;
+			updateSelectionSprites();
 		}
 		return value;
 	}
@@ -899,7 +931,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (textField.scrollV != value || textField.scrollV == 0)
 		{
 			textField.scrollV = value;
-			updateSelection();
+			_regen = true;
+			updateSelectionSprites();
 		}
 		return value;
 	}
