@@ -15,11 +15,21 @@ import openfl.utils.QName;
 
 class FlxInputText extends FlxText implements IFlxInputText
 {
+	public static inline var BACKSPACE_ACTION:String = "backspace";
+	
+	public static inline var DELETE_ACTION:String = "delete";
+	
+	public static inline var ENTER_ACTION:String = "enter";
+	
+	public static inline var INPUT_ACTION:String = "input";
+
 	static inline var GUTTER:Int = 2;
 	
 	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
 	
 	public var bottomScrollV(get, never):Int;
+	
+	public var callback:String->String->Void;
 	
 	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
 	
@@ -144,8 +154,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		switch (action)
 		{
-			case ADD_TEXT(text):
-				replaceSelectedText(text);
+			case ADD_TEXT(newText):
+				addText(newText);
 			case MOVE_CURSOR(type, shiftKey):
 				moveCursor(type, shiftKey);
 			case COMMAND(cmd):
@@ -163,6 +173,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		updateSelection();
 	}
+	function addText(newText:String):Void
+	{
+		newText = filterText(newText);
+		if (newText.length > 0)
+		{
+			replaceSelectedText(newText);
+			onChange(INPUT_ACTION);
+		}
+	}
 	
 	function drawSprite(sprite:FlxSprite):Void
 	{
@@ -172,6 +191,25 @@ class FlxInputText extends FlxText implements IFlxInputText
 			sprite._cameras = _cameras;
 			sprite.draw();
 		}
+	}
+	function filterText(newText:String):String
+	{
+		if (maxLength > 0)
+		{
+			var removeLength = (selectionEndIndex - selectionBeginIndex);
+			var newMaxLength = maxLength - text.length + removeLength;
+			
+			if (newMaxLength <= 0)
+			{
+				newText = "";
+			}
+			else if (newMaxLength < newText.length)
+			{
+				newText = newText.substr(0, newMaxLength);
+			}
+		}
+		
+		return newText;
 	}
 	
 	function getCharIndexOnDifferentLine(charIndex:Int, lineIndex:Int):Int
@@ -391,6 +429,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 				setSelection(_selectionIndex, _caretIndex);
 		}
 	}
+	function onChange(action:String):Void
+	{
+		if (callback != null)
+			callback(text, action);
+	}
 	
 	function regenCaret():Void
 	{
@@ -409,21 +452,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		if (beginIndex == endIndex && maxLength > 0 && text.length == maxLength)
 			return;
-			
-		if (beginIndex > text.length)
-		{
-			beginIndex = text.length;
-		}
-		if (endIndex > text.length)
-		{
-			endIndex = text.length;
-		}
-		if (endIndex < beginIndex)
-		{
-			var cache = endIndex;
-			endIndex = beginIndex;
-			beginIndex = cache;
-		}
+
 		if (beginIndex < 0)
 		{
 			beginIndex = 0;
@@ -436,22 +465,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (endIndex < beginIndex || beginIndex < 0 || endIndex > text.length || newText == null)
 			return;
-			
-		if (maxLength > 0)
-		{
-			var removeLength = (endIndex - beginIndex);
-			var newMaxLength = maxLength - text.length + removeLength;
-			
-			if (newMaxLength <= 0)
-			{
-				newText = "";
-			}
-			else if (newMaxLength < newText.length)
-			{
-				newText = newText.substr(0, newMaxLength);
-			}
-		}
-		
+
 		text = text.substring(0, beginIndex) + newText + text.substring(endIndex);
 		
 		_selectionIndex = _caretIndex = beginIndex + newText.length;
@@ -465,8 +479,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 			case NEW_LINE:
 				if (multiline)
 				{
-					replaceSelectedText("\n");
+					addText("\n");
 				}
+				onChange(ENTER_ACTION);
 			case DELETE_LEFT:
 				if (_selectionIndex == _caretIndex && _caretIndex > 0)
 				{
@@ -477,6 +492,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					replaceSelectedText("");
 					_selectionIndex = _caretIndex;
+					onChange(BACKSPACE_ACTION);
 				}
 			case DELETE_RIGHT:
 				if (_selectionIndex == _caretIndex && _caretIndex < text.length)
@@ -488,6 +504,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					replaceSelectedText("");
 					_selectionIndex = _caretIndex;
+					onChange(DELETE_ACTION);
 				}
 			case COPY:
 				if (_caretIndex != _selectionIndex && !passwordMode)
@@ -504,7 +521,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			case PASTE:
 				if (Clipboard.text != null)
 				{
-					replaceSelectedText(Clipboard.text);
+					addText(Clipboard.text);
 				}
 			case SELECT_ALL:
 				_selectionIndex = 0;
