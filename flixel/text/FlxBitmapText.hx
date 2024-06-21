@@ -321,7 +321,7 @@ class FlxBitmapText extends FlxSprite
 		{
 			checkPendingChanges(true);
 			
-			final FULL = 0xFF*0xFF;
+			final full = 0xFF*0xFF;
 			function multiplyColors(a:FlxColor, b:FlxColor)
 			{
 				final aR = StringTools.hex(a.red);
@@ -332,7 +332,7 @@ class FlxBitmapText extends FlxSprite
 				final bB = StringTools.hex(b.blue);
 				final aA = StringTools.hex(a.alpha);
 				final bA = StringTools.hex(b.alpha);
-				return FlxColor.fromRGBFloat(a.red * b.red / FULL, a.green * b.green / FULL, a.blue * b.blue / FULL, a.alpha * b.alpha / FULL);
+				return FlxColor.fromRGBFloat(a.red * b.red / full, a.green * b.green / full, a.blue * b.blue / full, a.alpha * b.alpha / full);
 			}
 			
 			final colorFullAlpha = color.rgb | 0xFF000000;
