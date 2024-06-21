@@ -17,6 +17,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 {
 	static inline var GUTTER:Int = 2;
 	
+	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
+	
 	public var bottomScrollV(get, never):Int;
 	
 	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
@@ -51,8 +53,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	var _caret:FlxSprite;
 	var _caretIndex:Int = -1;
-	var _mouseDown:Bool;
+	var _lastClickTime:Int = 0;
+	var _mouseDown:Bool = false;
 	var _pointerCamera:FlxCamera;
+	var _scrollVCounter:Float = 0;
 	var _selectionBoxes:Array<FlxSprite> = [];
 	var _selectionFormat:TextFormat = new TextFormat();
 	var _selectionIndex:Int = -1;
@@ -82,7 +86,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		#if FLX_MOUSE
 		if (visible)
 		{
-			updateInput();
+			updateInput(elapsed);
 		}
 		#end
 	}
@@ -113,12 +117,27 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	override function applyFormats(formatAdjusted:TextFormat, useBorderColor:Bool = false):Void
 	{
-		var cache = scrollV;
-
+		// scroll variables will be reset when `textField.setTextFormat()` is called,
+		// cache the current ones first
+		var cacheScrollH = scrollH;
+		var cacheScrollV = scrollV;
+		
 		super.applyFormats(formatAdjusted, useBorderColor);
 		
 		textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
-		scrollV = cache;
+		// set the scroll back to how it was
+		scrollH = cacheScrollH;
+		scrollV = cacheScrollV;
+	}
+	
+	override function regenGraphic():Void
+	{
+		var regenSelection = _regen;
+		
+		super.regenGraphic();
+		
+		if (_caret != null && regenSelection)
+			updateSelectionSprites();
 	}
 	
 	public function dispatchTypingAction(action:TypingAction):Void
@@ -375,7 +394,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	function regenCaret():Void
 	{
-		_caret.makeGraphic(caretWidth, Std.int(size + 2), caretColor);
+		_caret.makeGraphic(caretWidth, Std.int(size + 2), FlxColor.WHITE);
 	}
 
 	function replaceSelectedText(newText:String):Void
@@ -521,7 +540,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function updateSelection():Void
 	{
 		textField.setSelection(_selectionIndex, _caretIndex);
-		updateSelectionSprites();
 		_regen = true;
 	}
 	
@@ -574,7 +592,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 				if (startBoundaries != null && endBoundaries != null)
 				{
 					if (box == null)
-						box = _selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, selectionColor);
+					{
+						box = _selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+						box.color = selectionColor;
+					}
 						
 					var boxRect = FlxRect.get(startBoundaries.x - scrollH, startBoundaries.y - scrollY, endBoundaries.right - startBoundaries.x,
 						startBoundaries.height);
@@ -607,13 +628,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	
 	#if FLX_MOUSE
-	function updateInput():Void
+	function updateInput(elapsed:Float):Void
 	{
 		if (_mouseDown)
 		{
+			updatePointerDrag(FlxG.mouse, elapsed);
+
 			if (FlxG.mouse.justMoved)
 			{
-				updatePointerDrag(FlxG.mouse);
+				updatePointerMove(FlxG.mouse);
 			}
 			
 			if (FlxG.mouse.released)
@@ -628,6 +651,16 @@ class FlxInputText extends FlxText implements IFlxInputText
 			{
 				_mouseDown = true;
 				updatePointerPress(FlxG.mouse);
+				var currentTime = FlxG.game.ticks;
+				if (currentTime - _lastClickTime < 500)
+				{
+					updatePointerDoublePress(FlxG.mouse);
+					_lastClickTime = 0;
+				}
+				else
+				{
+					_lastClickTime = currentTime;
+				}
 			}
 			
 			if (FlxG.mouse.wheel != 0)
@@ -672,8 +705,36 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		relativePos.put();
 	}
+	function updatePointerDrag(pointer:FlxPointer, elapsed:Float)
+	{
+		var relativePos = getRelativePosition(pointer);
+		
+		if (relativePos.x > width - 1)
+		{
+			scrollH += Std.int(Math.max(Math.min((relativePos.x - width) * .1, 10), 1));
+		}
+		else if (relativePos.x < 1)
+		{
+			scrollH -= Std.int(Math.max(Math.min(relativePos.x * -.1, 10), 1));
+		}
+		
+		_scrollVCounter += elapsed;
+		
+		if (_scrollVCounter > 0.1)
+		{
+			if (relativePos.y > height - 2)
+			{
+				scrollV = Std.int(Math.min(scrollV + Math.max(Math.min((relativePos.y - height) * .03, 5), 1), maxScrollV));
+			}
+			else if (relativePos.y < 2)
+			{
+				scrollV -= Std.int(Math.max(Math.min(relativePos.y * -.03, 5), 1));
+			}
+			_scrollVCounter = 0;
+		}
+	}
 	
-	function updatePointerDrag(pointer:FlxPointer):Void
+	function updatePointerMove(pointer:FlxPointer):Void
 	{
 		if (_selectionIndex < 0)
 			return;
@@ -706,6 +767,33 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		relativePos.put();
 		_pointerCamera = null;
+	}
+	
+	function updatePointerDoublePress(pointer:FlxPointer):Void
+	{
+		var rightPos = text.length;
+		if (text.length > 0 && _caretIndex >= 0 && rightPos >= _caretIndex)
+		{
+			var leftPos = -1;
+			var pos = 0;
+			var startPos = FlxMath.maxInt(_caretIndex, 1);
+			
+			for (c in DELIMITERS)
+			{
+				pos = text.lastIndexOf(c, startPos - 1);
+				if (pos > leftPos)
+					leftPos = pos + 1;
+					
+				pos = text.indexOf(c, startPos);
+				if (pos < rightPos && pos != -1)
+					rightPos = pos;
+			}
+			
+			if (leftPos != rightPos)
+			{
+				setSelection(leftPos, rightPos);
+			}
+		}
 	}
 	
 	function getRelativePosition(pointer:FlxPointer):FlxPoint
@@ -767,7 +855,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (caretColor != value)
 		{
 			caretColor = value;
-			regenCaret();
+			_caret.color = caretColor;
 		}
 
 		return value;
@@ -873,10 +961,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (textField.multiline != value)
 		{
 			textField.multiline = value;
-			// `wordWrap` will still add new lines even if `multiline` is false,
-			// let's change it accordingly
-			wordWrap = value;
-			_regen = true;
 		}
 
 		return value;
@@ -912,7 +996,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		{
 			textField.scrollH = value;
 			_regen = true;
-			updateSelectionSprites();
 		}
 		return value;
 	}
@@ -932,7 +1015,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		{
 			textField.scrollV = value;
 			_regen = true;
-			updateSelectionSprites();
 		}
 		return value;
 	}
@@ -962,7 +1044,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			for (box in _selectionBoxes)
 			{
 				if (box != null)
-					box.makeGraphic(1, 1, selectionColor);
+					box.color = selectionColor;
 			}
 		}
 		
