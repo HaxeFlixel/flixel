@@ -10,13 +10,13 @@ using haxe.macro.Tools;
 
 class BufferMacro
 {
-	public static function build(includeGetters = true):ComplexType
+	public static function build(isVector:Bool, includeGetters = true):ComplexType
 	{
 		final local = Context.getLocalType();
 		switch local {
 			// Extract the type parameter
 			case TInst(local, [type]):
-				return buildBuffer(getFields(type, includeGetters), type);
+				return buildBuffer(getFields(type, includeGetters), type, isVector);
 			default:
 				throw "Expected TInst";
 		}
@@ -53,14 +53,17 @@ class BufferMacro
 		}
 	}
 	
-	static function buildBuffer(fields:Array<ClassField>, type:Type)
+	static function buildBuffer(fields:Array<ClassField>, type:Type, isVector:Bool)
 	{
+		// Sort fields by pos to ensure order is maintained (weird that this is needed)
+		fields.sort((a, b)->a.pos.getInfos().max - b.pos.getInfos().max);
+		
 		// Distinguish getters from actual fields
 		final getters:Array<ClassField> = fields.copy();
 		var i = fields.length;
 		while (i-- > 0)
 		{
-			// todo: Prevent double adds for getters over
+			// TODO: Prevent double adds for getters over typedef fields?
 			final field = fields[i];
 			if (field.kind.match(FVar(AccCall, _)))
 			{
@@ -68,15 +71,16 @@ class BufferMacro
 			}
 		}
 		
+		// Generate unique name for each type
 		final arrayType = fields[0].type;
 		final arrayTypeName = getTypeName(arrayType);
-		final prefix = arrayTypeName + "_" + getTypeIdentifier(type);
+		final prefix = (isVector ? "" : "Array_") + arrayTypeName + "_" + getTypeIdentifier(type);
 		final name = "Buffer_" + prefix;
 		final iterName = "BufferIterator_" + prefix;
 		final kvIterName = "BufferKeyValueIterator_" + prefix;
 		final complexType = type.toComplexType();
 		
-		// First check whether the generated type already exists
+		// Check whether the generated type already exists
 		try
 		{
 			Context.getType(name);
@@ -92,6 +96,7 @@ class BufferMacro
 		if (length < 2)
 			throw "Just use an array";
 		
+		// Make sure all fields use the same type
 		for (i in 1...length)
 		{
 			if (arrayType.toString() != fields[i].type.toString())
@@ -100,6 +105,7 @@ class BufferMacro
 			}
 		}
 		
+		// An easy way to instantiate the type from an index
 		final objectDecl:Expr =
 		{
 			pos: Context.currentPos(),
@@ -114,6 +120,7 @@ class BufferMacro
 			])
 		}
 		
+		// Make an overloaded `push` that takes an arg for each field
 		final pushEachBody =
 		[
 			for (field in fields)
@@ -146,6 +153,7 @@ class BufferMacro
 			})
 		}
 		
+		// Make an overloaded `push` that takes an item instance
 		final pushItemBody =
 		[
 			for (field in fields)
@@ -171,9 +179,11 @@ class BufferMacro
 			})
 		}
 		
+		// Get the iterator complex types (which are actually created later)
 		final iterCt = { name: iterName, pack: [] };
 		final kvIterCt = { name: kvIterName, pack: [] };
 		
+		// define the buffer
 		final def = macro class $name
 		{
 			static inline var FIELDS:Int = $v{length};
@@ -184,7 +194,7 @@ class BufferMacro
 			
 			public inline function new ()
 			{
-				this = new openfl.Vector();
+				$b{[isVector ? macro this = new openfl.Vector() : macro this = [] ]}
 			}
 			
 			/** Fetches the item at the desired index */
@@ -235,7 +245,10 @@ class BufferMacro
 			 */
 			public inline function resize(length:Int)
 			{
-				this.length = length * FIELDS;
+				$e{isVector
+					? macro this.length = length * FIELDS
+					: macro this.resize(length * FIELDS)
+				}
 			}
 			
 			/** Returns an iterator of the buffer's items */
@@ -251,6 +264,7 @@ class BufferMacro
 			}
 		};
 		
+		// Add our overloaded push methods from before
 		def.fields.push(pushEachFunc);
 		def.fields.push(pushItemFunc);
 		for (i => field in getters)
@@ -269,8 +283,9 @@ class BufferMacro
 			def.fields.push(getter);
 		}
 		
+		// Generate unique doc, but with static example
 		final itemTypeName = getTypeName(type);
-		def.doc = 'An `openfl.Vector<$arrayTypeName>` disguised as an `Array<$itemTypeName>`.'
+		def.doc = 'An `${isVector ? "openfl.Vector" : "Array"}<$arrayTypeName>` disguised as an `Array<$itemTypeName>`.'
 			+ "\nOften used in under-the-hood Flixel systems, like rendering,"
 			+ "\nwhere creating actual instances of objects every frame would balloon memory."
 			+ "\n"
@@ -298,10 +313,14 @@ class BufferMacro
 			+ "\nfor that reason it is recommended to use final vars";
 		// `macro class` gives a TDClass, so that needs to be replaced
 		final arrayCT = arrayType.toComplexType();
-		def.kind = TDAbstract((macro:openfl.Vector<$arrayCT>), [macro:openfl.Vector<$arrayCT>], [macro:openfl.Vector<$arrayCT>]);
+		
+		// Determine our buffer's base
+		final listType = (isVector ? macro:openfl.Vector<$arrayCT> : macro:Array<$arrayCT>);
+		def.kind = TDAbstract(listType, [listType], [listType]);
 		Context.defineType(def);
 		
 		final bufferCt = Context.getType(name).toComplexType();
+		// Make our iterator
 		final iterDef = macro class $iterName
 		{
 			var list:$bufferCt;
@@ -330,6 +349,7 @@ class BufferMacro
 		// iterDef.kind = TDClass(null, [], false, false, false);
 		Context.defineType(iterDef);
 		
+		// Make our key-value iterator
 		final kvIterDef = macro class $kvIterName
 		{
 			var list:$bufferCt;
@@ -387,6 +407,9 @@ class BufferMacro
 }
 #else
 
-@:genericBuild(flixel.system.FlxBuffer.BufferMacro.build())
+@:genericBuild(flixel.system.FlxBuffer.BufferMacro.build(true))
 class FlxBuffer<T> {}
+
+@:genericBuild(flixel.system.FlxBuffer.BufferMacro.build(false))
+class FlxBufferArray<T> {}
 #end
