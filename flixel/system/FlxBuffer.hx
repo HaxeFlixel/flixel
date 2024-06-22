@@ -308,7 +308,9 @@ class BufferMacro
 			+ "\nfeatures like `insert` and setting via array access operator, these can be"
 			+ "\nimplemented but are low priority"
 			+ "\n- Editing items retrieved from the buffer will not edit the corresponding indicies,"
-			+ "\nfor that reason it is recommended to use final vars";
+			+ "\nfor that reason it is recommended to use final vars"
+			+ "\n- all retrieved items must be handled via inline functions to avoid ever actually"
+			+ "\ninstantiating an anonymous structure. This includes `Std.string(item)`";
 		// `macro class` gives a TDClass, so that needs to be replaced
 		final arrayCT = arrayType.toComplexType();
 		
