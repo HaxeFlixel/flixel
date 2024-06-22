@@ -15,27 +15,25 @@ import openfl.utils.QName;
 
 class FlxInputText extends FlxText implements IFlxInputText
 {
-	public static inline var BACKSPACE_ACTION:String = "backspace";
-	
-	public static inline var DELETE_ACTION:String = "delete";
-	
-	public static inline var ENTER_ACTION:String = "enter";
-	
-	public static inline var INPUT_ACTION:String = "input";
-
 	static inline var GUTTER:Int = 2;
 	
 	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
 	
 	public var bottomScrollV(get, never):Int;
 	
-	public var callback:String->String->Void;
+	public var callback:String->FlxInputTextAction->Void;
 	
 	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
 	
 	public var caretIndex(get, set):Int;
 	
 	public var caretWidth(default, set):Int = 1;
+	
+	public var customFilterPattern(default, set):EReg;
+	
+	public var filterMode(default, set):FlxInputTextFilterMode = NO_FILTER;
+	
+	public var forceCase(default, set):FlxInputTextCase = ALL_CASES;
 	
 	public var hasFocus(default, set):Bool = false;
 	
@@ -188,7 +186,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	function addText(newText:String):Void
 	{
-		newText = filterText(newText);
+		newText = filterText(newText, true);
 		if (newText.length > 0)
 		{
 			replaceSelectedText(newText);
@@ -206,11 +204,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
-	function filterText(newText:String):String
+	function filterText(newText:String, selection:Bool = false):String
 	{
 		if (maxLength > 0)
 		{
-			var removeLength = (selectionEndIndex - selectionBeginIndex);
+			var removeLength = selection ? (selectionEndIndex - selectionBeginIndex) : text.length;
 			var newMaxLength = maxLength - text.length + removeLength;
 			
 			if (newMaxLength <= 0)
@@ -221,6 +219,34 @@ class FlxInputText extends FlxText implements IFlxInputText
 			{
 				newText = newText.substr(0, newMaxLength);
 			}
+		}
+		
+		if (forceCase == UPPER_CASE)
+		{
+			newText = newText.toUpperCase();
+		}
+		else if (forceCase == LOWER_CASE)
+		{
+			newText = newText.toLowerCase();
+		}
+		
+		if (filterMode != NO_FILTER)
+		{
+			var pattern = switch (filterMode)
+			{
+				case ONLY_ALPHA:
+					~/[^a-zA-Z]*/g;
+				case ONLY_NUMERIC:
+					~/[^0-9]*/g;
+				case ONLY_ALPHANUMERIC:
+					~/[^a-zA-Z0-9]*/g;
+				case CUSTOM_FILTER:
+					customFilterPattern;
+				default:
+					throw "Unknown filterMode (" + filterMode + ")";
+			}
+			if (pattern != null)
+				newText = pattern.replace(newText, "");
 		}
 		
 		return newText;
@@ -458,7 +484,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
-	function onChange(action:String):Void
+	function onChange(action:FlxInputTextAction):Void
 	{
 		if (callback != null)
 			callback(text, action);
@@ -1008,6 +1034,42 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
+	function set_customFilterPattern(value:EReg):EReg
+	{
+		if (customFilterPattern != value)
+		{
+			customFilterPattern = value;
+			if (filterMode == CUSTOM_FILTER)
+			{
+				text = filterText(text);
+			}
+		}
+		
+		return value;
+	}
+	
+	function set_filterMode(value:FlxInputTextFilterMode):FlxInputTextFilterMode
+	{
+		if (filterMode != value)
+		{
+			filterMode = value;
+			text = filterText(text);
+		}
+		
+		return value;
+	}
+	
+	function set_forceCase(value:FlxInputTextCase):FlxInputTextCase
+	{
+		if (forceCase != value)
+		{
+			forceCase = value;
+			text = filterText(text);
+		}
+		
+		return value;
+	}
+	
 	function set_hasFocus(value:Bool):Bool
 	{
 		if (hasFocus != value)
@@ -1048,10 +1110,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (maxLength != value)
 		{
 			maxLength = value;
-			if (maxLength > 0 && text.length > maxLength)
-			{
-				text = text.substr(0, maxLength);
-			}
+			text = filterText(text);
 		}
 		
 		return value;
@@ -1181,4 +1240,28 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+}
+
+enum abstract FlxInputTextAction(String) from String to String
+{
+	var INPUT_ACTION = "input";
+	var BACKSPACE_ACTION = "backspace";
+	var DELETE_ACTION = "delete";
+	var ENTER_ACTION = "enter";
+}
+
+enum abstract FlxInputTextCase(Int) from Int to Int
+{
+	var ALL_CASES = 0;
+	var UPPER_CASE = 1;
+	var LOWER_CASE = 2;
+}
+
+enum abstract FlxInputTextFilterMode(Int) from Int to Int
+{
+	var NO_FILTER = 0;
+	var ONLY_ALPHA = 1;
+	var ONLY_NUMERIC = 2;
+	var ONLY_ALPHANUMERIC = 3;
+	var CUSTOM_FILTER = 4;
 }
