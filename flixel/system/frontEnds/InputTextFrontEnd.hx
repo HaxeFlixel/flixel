@@ -51,6 +51,9 @@ class InputTextFrontEnd
 	
 	function onKeyDown(key:KeyCode, modifier:KeyModifier)
 	{
+		if (focus == null)
+			return;
+
 		// Taken from OpenFL's `TextField`
 		var modifierPressed = #if mac modifier.metaKey #elseif js(modifier.metaKey || modifier.ctrlKey) #else (modifier.ctrlKey && !modifier.altKey) #end;
 		

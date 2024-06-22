@@ -60,6 +60,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var selectionColor(default, set):FlxColor = FlxColor.BLACK;
 	
 	public var selectionEndIndex(get, never):Int;
+
+	/**
+	 * If `false`, no extra format will be applied for selected text.
+	 * 
+	 * Useful if you are using `addFormat()`, as the selected text format might
+	 * overwrite some of their properties.
+	 */
+	public var useSelectedTextFormat(default, set):Bool = true;
 	
 	var _caret:FlxSprite;
 	var _caretIndex:Int = -1;
@@ -81,9 +89,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		_selectionFormat.color = selectedTextColor;
 		
-		_caret = new FlxSprite();
+		_caret = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
 		_caret.visible = false;
-		regenCaret();
+		updateCaretSize();
 		updateCaretPosition();
 		
 		FlxG.inputText.registerInputText(this);
@@ -103,6 +111,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	override function draw():Void
 	{
+		regenGraphic();
+
 		for (box in _selectionBoxes)
 			drawSprite(box);
 
@@ -134,7 +144,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		super.applyFormats(formatAdjusted, useBorderColor);
 		
-		textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
+		if (!useBorderColor && useSelectedTextFormat)
+			textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
+
 		// set the scroll back to how it was
 		scrollH = cacheScrollH;
 		scrollV = cacheScrollV;
@@ -173,6 +185,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		updateSelection();
 	}
+
 	function addText(newText:String):Void
 	{
 		newText = filterText(newText);
@@ -192,6 +205,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			sprite.draw();
 		}
 	}
+
 	function filterText(newText:String):String
 	{
 		if (maxLength > 0)
@@ -210,6 +224,16 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		
 		return newText;
+	}
+
+	function getCaretOffsetX():Float
+	{
+		return switch (alignment)
+		{
+			case CENTER: (width / 2);
+			case RIGHT: width - GUTTER;
+			default: GUTTER;
+		}
 	}
 	
 	function getCharIndexOnDifferentLine(charIndex:Int, lineIndex:Int):Int
@@ -297,6 +321,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	function isCaretLineVisible():Bool
 	{
+		// `getLineIndexOfChar()` will return -1 if text is empty, but we still want the caret to show up
+		if (text.length == 0)
+			return true;
+
 		var line = textField.getLineIndexOfChar(_caretIndex);
 		return line >= scrollV - 1 && line <= bottomScrollV - 1;
 	}
@@ -429,15 +457,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 				setSelection(_selectionIndex, _caretIndex);
 		}
 	}
+
 	function onChange(action:String):Void
 	{
 		if (callback != null)
 			callback(text, action);
-	}
-	
-	function regenCaret():Void
-	{
-		_caret.makeGraphic(caretWidth, Std.int(size + 2), FlxColor.WHITE);
 	}
 
 	function replaceSelectedText(newText:String):Void
@@ -537,7 +561,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		if (text.length == 0)
 		{
-			_caret.setPosition(x + GUTTER, y + GUTTER);
+			_caret.setPosition(x + getCaretOffsetX(), y + GUTTER);
 		}
 		else
 		{
@@ -546,12 +570,31 @@ class FlxInputText extends FlxText implements IFlxInputText
 			{
 				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - getLineY(scrollV - 1));
 			}
-			else // end of line
+			else
 			{
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
-				_caret.setPosition(x + GUTTER, y + GUTTER + getLineY(lineIndex) - getLineY(scrollV - 1));
+				boundaries = textField.getCharBoundaries(_caretIndex);
+				if (boundaries != null)
+				{
+					_caret.setPosition(x + boundaries.x - scrollH, y + boundaries.y - getLineY(scrollV - 1));
+				}
+				else // end of line
+				{
+					var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + getLineY(lineIndex) - getLineY(scrollV - 1));
+				}
 			}
 		}
+		
+		_caret.clipRect = _caret.getHitbox(_caret.clipRect).clipTo(FlxRect.weak(x, y, width, height)).offset(-_caret.x, -_caret.y);
+	}
+	
+	function updateCaretSize():Void
+	{
+		if (_caret == null)
+			return;
+			
+		_caret.setGraphicSize(caretWidth, textField.getLineMetrics(0).height);
+		_caret.updateHitbox();
 	}
 	
 	function updateSelection():Void
@@ -660,14 +703,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			{
 				_mouseDown = false;
 				updatePointerRelease(FlxG.mouse);
-			}
-		}
-		if (checkPointerOverlap(FlxG.mouse))
-		{
-			if (FlxG.mouse.justPressed)
-			{
-				_mouseDown = true;
-				updatePointerPress(FlxG.mouse);
+
 				var currentTime = FlxG.game.ticks;
 				if (currentTime - _lastClickTime < 500)
 				{
@@ -678,6 +714,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					_lastClickTime = currentTime;
 				}
+			}
+		}
+		if (checkPointerOverlap(FlxG.mouse))
+		{
+			if (FlxG.mouse.justPressed)
+			{
+				_mouseDown = true;
+				updatePointerPress(FlxG.mouse);
 			}
 			
 			if (FlxG.mouse.wheel != 0)
@@ -722,6 +766,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		relativePos.put();
 	}
+
 	function updatePointerDrag(pointer:FlxPointer, elapsed:Float)
 	{
 		var relativePos = getRelativePosition(pointer);
@@ -823,12 +868,66 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	#end
 	
+	override function set_bold(value:Bool):Bool
+	{
+		if (bold != value)
+		{
+			super.set_bold(value);
+			updateCaretSize();
+		}
+		
+		return value;
+	}
+	
 	override function set_color(value:FlxColor):FlxColor
 	{
 		if (color != value)
 		{
 			super.set_color(value);
 			caretColor = value;
+		}
+		
+		return value;
+	}
+	override function set_font(value:String):String
+	{
+		if (font != value)
+		{
+			super.set_font(value);
+			updateCaretSize();
+		}
+		
+		return value;
+	}
+	
+	override function set_italic(value:Bool):Bool
+	{
+		if (italic != value)
+		{
+			super.set_italic(value);
+			updateCaretSize();
+		}
+		
+		return value;
+	}
+	
+	override function set_size(value:Int):Int
+	{
+		if (size != value)
+		{
+			super.set_size(value);
+			updateCaretSize();
+		}
+		
+		return value;
+	}
+	
+	override function set_systemFont(value:String):String
+	{
+		if (systemFont != value)
+		{
+			super.set_systemFont(value);
+			updateCaretSize();
 		}
 		
 		return value;
@@ -903,7 +1002,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (caretWidth != value)
 		{
 			caretWidth = value;
-			regenCaret();
+			updateCaretSize();
 		}
 
 		return value;
@@ -1071,5 +1170,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function get_selectionEndIndex():Int
 	{
 		return FlxMath.maxInt(_caretIndex, _selectionIndex);
+	}
+	function set_useSelectedTextFormat(value:Bool):Bool
+	{
+		if (useSelectedTextFormat != value)
+		{
+			useSelectedTextFormat = value;
+			_regen = true;
+		}
+		
+		return value;
 	}
 }
