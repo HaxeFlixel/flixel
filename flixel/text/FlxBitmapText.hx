@@ -160,7 +160,8 @@ class FlxBitmapText extends FlxSprite
 	public var shadowOffset(default, null):FlxPoint;
 
 	/**
-	 * Specifies whether the text should have background
+	 * Specifies whether the text should have a background. It is recommended to use a
+	 * `padding` of `1` or more with a background, especially when using a border style
 	 */
 	public var background(default, set):Bool = false;
 
@@ -618,24 +619,15 @@ class FlxBitmapText extends FlxSprite
 		pendingTextChange = false;
 		pendingTextBitmapChange = true;
 	}
-
+	
 	/**
 	 * Calculates the size of text field.
 	 */
 	function computeTextSize():Void
 	{
-		var txtWidth:Int = textWidth + Std.int(borderSize) * 2;
-		var txtHeight:Int = textHeight + 2 * padding + Std.int(borderSize) * 2;
-
-		if (autoSize)
-		{
-			txtWidth += 2 * padding;
-		}
-		else
-		{
-			txtWidth = fieldWidth;
-		}
-
+		final txtWidth = autoSize ? textWidth + padding * 2 : fieldWidth;
+		final txtHeight = textHeight + padding * 2;
+		
 		frameWidth = (txtWidth == 0) ? 1 : txtWidth;
 		frameHeight = (txtHeight == 0) ? 1 : txtHeight;
 	}
@@ -1475,17 +1467,19 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Set border's style (shadow, outline, etc), color, and size all in one go!
 	 *
-	 * @param	Style outline style
-	 * @param	Color outline color in flash 0xAARRGGBB format
-	 * @param	Size outline size in pixels
-	 * @param	Quality outline quality - # of iterations to use when drawing. 0:just 1, 1:equal number to BorderSize
+	 * @param   style    Outline style, such as `OUTLINE` or `SHADOW`
+	 * @param   color    Outline color
+	 * @param   size     Outline size in pixels.
+	 *                   **If `background` is `true`, you may want to increase this text's `padding`**
+	 * @param   quality  Outline quality, or the number of iterations to use when drawing.
+	 *                   `0` means `1` iteration, otherwise it draws `size * quality` iterations
 	 */
-	public inline function setBorderStyle(Style:FlxTextBorderStyle, Color:FlxColor = 0, Size:Float = 1, Quality:Float = 1):Void
+	public inline function setBorderStyle(style:FlxTextBorderStyle, color:FlxColor = 0, size = 1.0, quality = 1.0)
 	{
-		borderStyle = Style;
-		borderColor = Color;
-		borderSize = Size;
-		borderQuality = Quality;
+		borderStyle = style;
+		borderColor = color;
+		borderSize = size;
+		borderQuality = quality;
 		if (borderStyle == FlxTextBorderStyle.SHADOW)
 		{
 			shadowOffset.set(borderSize, borderSize);
