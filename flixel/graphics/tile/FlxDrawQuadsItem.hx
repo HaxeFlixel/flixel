@@ -16,13 +16,13 @@ typedef QuadRectRaw = { x:Float, y:Float, width:Float, height:Float };
 abstract QuadRect(QuadRectRaw) from QuadRectRaw to QuadRectRaw
 {
 	@:from
-	static public inline function fromFlxRect(rect:FlxRect):QuadRect
+	public static inline function fromFlxRect(rect:FlxRect):QuadRect
 	{
 		return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
 	}
 	
 	@:from
-	static public inline function fromRect(rect:openfl.geom.Rectangle):QuadRect
+	public static inline function fromRect(rect:openfl.geom.Rectangle):QuadRect
 	{
 		return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
 	}
@@ -38,7 +38,7 @@ typedef QuadTransformRaw = { a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Fl
 abstract QuadTransform(QuadTransformRaw) from QuadTransformRaw to QuadTransformRaw
 {
 	@:from
-	static public inline function fromMatrix(matrix:FlxMatrix):QuadTransform
+	public static inline function fromMatrix(matrix:FlxMatrix):QuadTransform
 	{
 		return { a: matrix.a, b: matrix.b, c: matrix.c, d: matrix.d, tx: matrix.tx, ty: matrix.ty };
 	}
