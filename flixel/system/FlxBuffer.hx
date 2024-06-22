@@ -120,15 +120,6 @@ class BufferMacro
 			])
 		}
 		
-		// Make an overloaded `push` that takes an arg for each field
-		final pushEachBody =
-		[
-			for (field in fields)
-			{
-				macro this.push($i{field.name});
-			}
-		];
-		pushEachBody.push(macro return length);
 		final pushEachFunc:Field =
 		{
 			doc:"Creates an item with the given values and adds it at the end of this Buffer and returns the new length of this Array.\n\n"
@@ -139,43 +130,14 @@ class BufferMacro
 			access: [APublic, AOverload, AExtern, AInline],
 			kind:FFun
 			({
-				args:
-				[
-					for (field in fields)
+				args: fields.map(function (f):FunctionArg return { type: f.type.toComplexType(), name: f.name }),
+				expr:macro {
+					$b{[for (field in fields)
 					{
-						{
-							type: field.type.toComplexType(),
-							name: field.name
-						}
-					}
-				],
-				expr:macro $b{pushEachBody}
-			})
-		}
-		
-		// Make an overloaded `push` that takes an item instance
-		final pushItemBody =
-		[
-			for (field in fields)
-			{
-				final name = field.name;
-				macro this.push(item.$name);
-			}
-		];
-		pushItemBody.push(macro return length);
-		
-		final pushItemFunc:Field =
-		{
-			doc:"Adds the item at the end of this Buffer and returns the new length of this Array.\n\n"
-				+ "This operation modifies this Array in place.\n\n"
-				+ "this.length increases by 1.",
-			pos: Context.currentPos(),
-			name: "push",
-			access: [APublic, AOverload, AExtern, AInline],
-			kind:FFun
-			({
-				args: [{name: "item", type: complexType}],
-				expr:macro $b{pushItemBody}
+						macro this.push($i{field.name});
+					}]}
+					return length;
+				}
 			})
 		}
 		
@@ -194,7 +156,10 @@ class BufferMacro
 			
 			public inline function new ()
 			{
-				$b{[isVector ? macro this = new openfl.Vector() : macro this = [] ]}
+				$e{ isVector
+					? macro this = new openfl.Vector()
+					: macro this = []
+				}
 			}
 			
 			/** Fetches the item at the desired index */
@@ -204,6 +169,39 @@ class BufferMacro
 				final iReal = i * FIELDS;
 				return $e{objectDecl};
 			}
+			
+			/**
+			 * Adds the item at the end of this Buffer and returns the new length of this Array
+			 * 
+			 * This operation modifies this Array in place
+			 * 
+			 * `this.length` increases by `1`
+			 */
+			public overload extern inline function push(item:$complexType):Int
+			{
+				$b{[
+					for (field in fields)
+					{
+						final name = field.name;
+						macro this.push(item.$name);
+					}
+				]}
+				return length;
+			}
+			
+			
+			/**
+			 * Creates an item with the given values and adds it at the end of this Buffer and returns the new length of this Array
+			 * 
+			 * This operation modifies this Array in place
+			 * 
+			 * `this.length` increases by `1`
+			 */
+			// public overload extern inline function push($a{???}):Int
+			// {
+			// 	$b{[fields.map((f)->macro this.push($i{f.name}))]}
+			// 	return length;
+			// }
 			
 			/** Removes and returns the first item */
 			public inline function shift():$complexType
@@ -266,7 +264,7 @@ class BufferMacro
 		
 		// Add our overloaded push methods from before
 		def.fields.push(pushEachFunc);
-		def.fields.push(pushItemFunc);
+		// def.fields.push(pushItemFunc);
 		for (i => field in getters)
 		{
 			final getter:Field =
