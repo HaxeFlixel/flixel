@@ -7,6 +7,7 @@ import flixel.math.FlxRect;
 import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
 import lime.system.Clipboard;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
@@ -18,6 +19,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	static inline var GUTTER:Int = 2;
 	
 	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
+	
+	public var background(default, set):Bool = false;
+	
+	public var backgroundColor(default, set):FlxColor = FlxColor.TRANSPARENT;
 	
 	public var bottomScrollV(get, never):Int;
 	
@@ -31,7 +36,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	public var customFilterPattern(default, set):EReg;
 	
+	public var fieldBorderColor(default, set):FlxColor = FlxColor.BLACK;
+	
+	public var fieldBorderThickness(default, set):Int = 1;
+	
 	public var filterMode(default, set):FlxInputTextFilterMode = NO_FILTER;
+	
+	public var focusGained:Void->Void;
+	
+	public var focusLost:Void->Void;
 	
 	public var forceCase(default, set):FlxInputTextCase = ALL_CASES;
 	
@@ -67,8 +80,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	public var useSelectedTextFormat(default, set):Bool = true;
 	
+	var _backgroundSprite:FlxSprite;
 	var _caret:FlxSprite;
 	var _caretIndex:Int = -1;
+	var _fieldBorderSprite:FlxSprite;
 	var _lastClickTime:Int = 0;
 	var _mouseDown:Bool = false;
 	var _pointerCamera:FlxCamera;
@@ -77,9 +92,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	var _selectionFormat:TextFormat = new TextFormat();
 	var _selectionIndex:Int = -1;
 	
-	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, embeddedFont:Bool = true)
+	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, textColor:FlxColor = FlxColor.BLACK,
+			backgroundColor:FlxColor = FlxColor.WHITE, embeddedFont:Bool = true)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
+		this.backgroundColor = backgroundColor;
 		
 		// If the text field's type isn't INPUT and there's a new line at the end
 		// of the text, it won't be counted for in `numLines`
@@ -91,6 +108,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_caret.visible = false;
 		updateCaretSize();
 		updateCaretPosition();
+		
+		color = textColor;
+		
+		if (backgroundColor != FlxColor.TRANSPARENT)
+		{
+			background = true;
+		}
 		
 		FlxG.inputText.registerInputText(this);
 	}
@@ -111,6 +135,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		regenGraphic();
 
+		drawSprite(_fieldBorderSprite);
+		drawSprite(_backgroundSprite);
+
 		for (box in _selectionBoxes)
 			drawSprite(box);
 
@@ -123,7 +150,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		FlxG.inputText.unregisterInputText(this);
 
+		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
+		_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
 		_pointerCamera = null;
 		while (_selectionBoxes.length > 0)
 			FlxDestroyUtil.destroy(_selectionBoxes.pop());
@@ -490,6 +519,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 			callback(text, action);
 	}
 
+	function regenBackground():Void
+	{
+		if (!background)
+			return;
+			
+		_fieldBorderSprite.makeGraphic(Std.int(fieldWidth) + (fieldBorderThickness * 2), Std.int(fieldHeight) + (fieldBorderThickness * 2), fieldBorderColor);
+		_backgroundSprite.makeGraphic(Std.int(fieldWidth), Std.int(fieldHeight), backgroundColor);
+		
+		updateBackgroundPosition();
+	}
+
 	function replaceSelectedText(newText:String):Void
 	{
 		if (newText == null)
@@ -578,6 +618,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 				_caretIndex = text.length;
 				setSelection(_selectionIndex, _caretIndex);
 		}
+	}
+
+	function updateBackgroundPosition():Void
+	{
+		if (!background)
+			return;
+			
+		_fieldBorderSprite.setPosition(x - fieldBorderThickness, y - fieldBorderThickness);
+		_backgroundSprite.setPosition(x, y);
 	}
 	
 	function updateCaretPosition():Void
@@ -682,13 +731,16 @@ class FlxInputText extends FlxText implements IFlxInputText
 						box = _selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
 						box.color = selectionColor;
 					}
-						
+
 					var boxRect = FlxRect.get(startBoundaries.x - scrollH, startBoundaries.y - scrollY, endBoundaries.right - startBoundaries.x,
 						startBoundaries.height);
 					boxRect.clipTo(FlxRect.weak(0, 0, width, height)); // clip the selection box inside the text sprite
 					
 					box.setPosition(x + boxRect.x, y + boxRect.y);
-					box.setGraphicSize(boxRect.width, boxRect.height);
+					if (boxRect.width > 0 && boxRect.height > 0)
+						box.setGraphicSize(boxRect.width, boxRect.height);
+					else
+						box.scale.set();
 					box.updateHitbox();
 					box.visible = true;
 
@@ -709,6 +761,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	function updateSelectionSprites():Void
 	{
 		_caret.alpha = (_selectionIndex == _caretIndex && isCaretLineVisible()) ? 1 : 0;
+		updateCaretPosition();
+		updateSelectionBoxes();
+	}
+	function updateSpritePositions():Void
+	{
+		updateBackgroundPosition();
 		updateCaretPosition();
 		updateSelectionBoxes();
 	}
@@ -915,6 +973,28 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+	override function set_fieldHeight(value:Float):Float
+	{
+		if (fieldHeight != value)
+		{
+			super.set_fieldHeight(value);
+			regenBackground();
+		}
+		
+		return value;
+	}
+	
+	override function set_fieldWidth(value:Float):Float
+	{
+		if (fieldWidth != value)
+		{
+			super.set_fieldWidth(value);
+			regenBackground();
+		}
+		
+		return value;
+	}
+	
 	override function set_font(value:String):String
 	{
 		if (font != value)
@@ -987,6 +1067,64 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 
+	override function set_x(value:Float)
+	{
+		if (x != value)
+		{
+			super.set_x(value);
+			updateSpritePositions();
+		}
+		
+		return value;
+	}
+	
+	override function set_y(value:Float)
+	{
+		if (y != value)
+		{
+			super.set_y(value);
+			updateSpritePositions();
+		}
+		
+		return value;
+	}
+	
+	function set_background(value:Bool):Bool
+	{
+		if (background != value)
+		{
+			background = value;
+			
+			if (background)
+			{
+				if (_backgroundSprite == null)
+					_backgroundSprite = new FlxSprite();
+				if (_fieldBorderSprite == null)
+					_fieldBorderSprite = new FlxSprite();
+					
+				regenBackground();
+			}
+			else
+			{
+				_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
+				_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
+			}
+		}
+		
+		return value;
+	}
+	
+	function set_backgroundColor(value:FlxColor):FlxColor
+	{
+		if (backgroundColor != value)
+		{
+			backgroundColor = value;
+			regenBackground();
+		}
+		
+		return value;
+	}
+
 	function get_bottomScrollV():Int
 	{
 		return textField.bottomScrollV;
@@ -1047,6 +1185,27 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
+	function set_fieldBorderColor(value:FlxColor):FlxColor
+	{
+		if (fieldBorderColor != value)
+		{
+			fieldBorderColor = value;
+			regenBackground();
+		}
+		
+		return value;
+	}
+	
+	function set_fieldBorderThickness(value:Int):Int
+	{
+		if (fieldBorderThickness != value)
+		{
+			fieldBorderThickness = value;
+			regenBackground();
+		}
+		
+		return value;
+	}
 	
 	function set_filterMode(value:FlxInputTextFilterMode):FlxInputTextFilterMode
 	{
@@ -1087,6 +1246,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				
 				_caret.visible = true;
+				if (focusGained != null)
+					focusGained();
 			}
 			else if (FlxG.inputText.focus == this)
 			{
@@ -1099,6 +1260,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				
 				_caret.visible = false;
+				if (focusLost != null)
+					focusLost();
 			}
 		}
 
