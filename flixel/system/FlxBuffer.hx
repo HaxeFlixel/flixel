@@ -141,9 +141,12 @@ class BufferMacro
 			})
 		}
 		
+		final bufferCt = TPath({pack: [], name: name});
 		// Get the iterator complex types (which are actually created later)
 		final iterCt = { name: iterName, pack: [] };
 		final kvIterCt = { name: kvIterName, pack: [] };
+		final itemTypeName = getTypeName(type);
+		final arrayCT = arrayType.toComplexType();
 		
 		// define the buffer
 		final def = macro class $name
@@ -188,7 +191,6 @@ class BufferMacro
 				]}
 				return length;
 			}
-			
 			
 			/**
 			 * Creates an item with the given values and adds it at the end of this Buffer and returns the new length of this Array
@@ -262,27 +264,7 @@ class BufferMacro
 			}
 		};
 		
-		// Add our overloaded push methods from before
-		def.fields.push(pushEachFunc);
-		// def.fields.push(pushItemFunc);
-		for (i => field in getters)
-		{
-			final getter:Field =
-			{
-				pos: Context.currentPos(),
-				name: "get" + field.name.charAt(0).toUpperCase() + field.name.substr(1),
-				access: [APublic, AInline],
-				kind:FFun
-				({
-					args: [{name: "index", type: (macro:Int)}],
-					expr:macro this[index * FIELDS + $v{i}]
-				})
-			};
-			def.fields.push(getter);
-		}
-		
 		// Generate unique doc, but with static example
-		final itemTypeName = getTypeName(type);
 		def.doc = 'An `${isVector ? "openfl.Vector" : "Array"}<$arrayTypeName>` disguised as an `Array<$itemTypeName>`.'
 			+ "\nOften used in under-the-hood Flixel systems, like rendering,"
 			+ "\nwhere creating actual instances of objects every frame would balloon memory."
@@ -311,15 +293,31 @@ class BufferMacro
 			+ "\nfor that reason it is recommended to use final vars"
 			+ "\n- all retrieved items must be handled via inline functions to avoid ever actually"
 			+ "\ninstantiating an anonymous structure. This includes `Std.string(item)`";
-		// `macro class` gives a TDClass, so that needs to be replaced
-		final arrayCT = arrayType.toComplexType();
 		
+		// Add our overloaded push methods from before
+		def.fields.push(pushEachFunc);
+		
+		for (i => field in getters)
+		{
+			final fieldName = field.name;
+			final funcName = "get" + fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
+			// Create the field in another class (for easy reification) then move it over
+			def.fields.push((macro class TempClass
+			{
+				/** Helper for `get(item).$name` */
+				public inline function $funcName(index:Int)
+				{
+					return get(index).$fieldName;
+				}
+			}).fields[0]);
+		}
+		
+		// `macro class` gives a TDClass, so that needs to be replaced
 		// Determine our buffer's base
 		final listType = (isVector ? macro:openfl.Vector<$arrayCT> : macro:Array<$arrayCT>);
 		def.kind = TDAbstract(listType, [listType], [listType]);
 		Context.defineType(def);
 		
-		final bufferCt = Context.getType(name).toComplexType();
 		// Make our iterator
 		final iterDef = macro class $iterName
 		{
@@ -380,7 +378,7 @@ class BufferMacro
 		Context.defineType(kvIterDef);
 		
 		// Return a `ComplexType` for the generated type
-		return TPath({pack: [], name: name});
+		return bufferCt;
 	}
 	
 	static function getTypeIdentifier(type:Type)
