@@ -36,6 +36,11 @@ class FlxBufferTest
 		Assert.areEqual(1, buffer.getY(15));
 		Assert.areEqual(6, buffer.getSum(15));
 		
+		buffer.set(0, { x: 1000, y: 1000 });
+		FlxAssert.allEqual(2000.0, [buffer.getSum(0), buffer.get(0).sum]);
+		buffer.insert(1, { x: 500, y: 500 });
+		FlxAssert.allEqual(1000.0, [buffer.getSum(1), buffer.get(1).sum]);
+		
 		// make sure it compiles
 		for (i=>item in buffer)
 		{
@@ -43,7 +48,7 @@ class FlxBufferTest
 			i;
 		}
 		
-		Assert.areEqual(0, buffer.shift().sum);
+		Assert.areEqual(2000, buffer.shift().sum);
 		Assert.areEqual(18, buffer.pop().sum);
 	}
 	
@@ -78,6 +83,11 @@ class FlxBufferTest
 		Assert.areEqual(1, buffer.getY(15));
 		Assert.areEqual(6, buffer.getSum(15));
 		
+		buffer.set(0, { x: 1000, y: 1000 });
+		FlxAssert.allEqual(2000.0, [buffer.getSum(0), buffer.get(0).sum]);
+		buffer.insert(1, { x: 500, y: 500 });
+		FlxAssert.allEqual(1000.0, [buffer.getSum(1), buffer.get(1).sum]);
+		
 		// make sure it compiles
 		for (i=>item in buffer)
 		{
@@ -85,66 +95,103 @@ class FlxBufferTest
 			i;
 		}
 		
-		Assert.areEqual(0, buffer.shift().sum);
+		Assert.areEqual(2000, buffer.shift().sum);
 		Assert.areEqual(18, buffer.pop().sum);
 	}
 	
 	@Test
-	function testArgOrderVector()
+	function testArgOrder()
 	{
-		final buffer = new FlxBuffer<{ d:Int, c:Int, b:Int, a:Int }>();
-		buffer.push(0, 10, 20, 30);
-		Assert.areEqual( 0, buffer.getD(0));
-		Assert.areEqual(10, buffer.getC(0));
-		Assert.areEqual(20, buffer.getB(0));
-		Assert.areEqual(30, buffer.getA(0));
+		final bVector = new FlxBuffer<{ d:Int, c:Int, b:Int, a:Int }>();
+		final bArray  = new FlxBufferArray<{ d:Int, c:Int, b:Int, a:Int }>();
 		
-		buffer.push({ d:5, c:15, b:25, a:35 });
-		Assert.areEqual( 5, buffer.getD(1));
-		Assert.areEqual(15, buffer.getC(1));
-		Assert.areEqual(25, buffer.getB(1));
-		Assert.areEqual(35, buffer.getA(1));
+		bVector.push(0, 10, 20, 30);
+		bArray.push(0, 10, 20, 30);
+		FlxAssert.allEqual( 0.0, [ bVector.getD(0), bVector.get(0).d, bArray.getD(0), bArray.get(0).d]);
+		FlxAssert.allEqual(10.0, [ bVector.getC(0), bVector.get(0).c, bArray.getC(0), bArray.get(0).c]);
+		FlxAssert.allEqual(20.0, [ bVector.getB(0), bVector.get(0).b, bArray.getB(0), bArray.get(0).b]);
+		FlxAssert.allEqual(30.0, [ bVector.getA(0), bVector.get(0).a, bArray.getA(0), bArray.get(0).a]);
 		
-		buffer.push({ a:6, b:16, c:26, d:36 });
-		Assert.areEqual( 6, buffer.getA(2));
-		Assert.areEqual(16, buffer.getB(2));
-		Assert.areEqual(26, buffer.getC(2));
-		Assert.areEqual(36, buffer.getD(2));
+		bVector.push({ d:5, c:15, b:25, a:35 });
+		bArray.push({ d:5, c:15, b:25, a:35 });
+		FlxAssert.allEqual( 5.0, [ bVector.getD(1), bVector.get(1).d, bArray.getD(1), bArray.get(1).d]);
+		FlxAssert.allEqual(15.0, [ bVector.getC(1), bVector.get(1).c, bArray.getC(1), bArray.get(1).c]);
+		FlxAssert.allEqual(25.0, [ bVector.getB(1), bVector.get(1).b, bArray.getB(1), bArray.get(1).b]);
+		FlxAssert.allEqual(35.0, [ bVector.getA(1), bVector.get(1).a, bArray.getA(1), bArray.get(1).a]);
 		
-		final item = buffer.get(2);
-		Assert.areEqual( 6, item.a);
-		Assert.areEqual(16, item.b);
-		Assert.areEqual(26, item.c);
-		Assert.areEqual(36, item.d);
+		bVector.insert(1, { d:7, c:17, b:27, a:37 });
+		bArray.insert(1, { d:7, c:17, b:27, a:37 });
+		FlxAssert.allEqual( 7.0, [ bVector.getD(1), bVector.get(1).d, bArray.getD(1), bArray.get(1).d]);
+		FlxAssert.allEqual(17.0, [ bVector.getC(1), bVector.get(1).c, bArray.getC(1), bArray.get(1).c]);
+		FlxAssert.allEqual(27.0, [ bVector.getB(1), bVector.get(1).b, bArray.getB(1), bArray.get(1).b]);
+		FlxAssert.allEqual(37.0, [ bVector.getA(1), bVector.get(1).a, bArray.getA(1), bArray.get(1).a]);
+		
+		bVector.set(2, { d:8, c:18, b:28, a:38 });
+		bArray.set(2, { d:8, c:18, b:28, a:38 });
+		FlxAssert.allEqual( 8.0, [ bVector.getD(2), bVector.get(2).d, bArray.getD(2), bArray.get(2).d]);
+		FlxAssert.allEqual(18.0, [ bVector.getC(2), bVector.get(2).c, bArray.getC(2), bArray.get(2).c]);
+		FlxAssert.allEqual(28.0, [ bVector.getB(2), bVector.get(2).b, bArray.getB(2), bArray.get(2).b]);
+		FlxAssert.allEqual(38.0, [ bVector.getA(2), bVector.get(2).a, bArray.getA(2), bArray.get(2).a]);
 	}
 	
 	@Test
-	function testArgOrderArray()
+	function testSlice()
 	{
-		final buffer = new FlxBufferArray<{ d:Int, c:Int, b:Int, a:Int }>();
-		buffer.push(0, 10, 20, 30);
-		Assert.areEqual( 0, buffer.getD(0));
-		Assert.areEqual(10, buffer.getC(0));
-		Assert.areEqual(20, buffer.getB(0));
-		Assert.areEqual(30, buffer.getA(0));
+		final bVector = new FlxBuffer<XYAbs>();
+		final bArray = new FlxBufferArray<XYAbs>();
+		final array = new Array<XYAbs>();
+		for (i in 0...100)
+		{
+			final item:XYAbs = { x: i % 10, y: Std.int(i / 10) };
+			bVector.push(item);
+			bArray.push(item);
+			array.push(item);
+		}
 		
-		buffer.push({ d:5, c:15, b:25, a:35 });
-		Assert.areEqual( 5, buffer.getD(1));
-		Assert.areEqual(15, buffer.getC(1));
-		Assert.areEqual(25, buffer.getB(1));
-		Assert.areEqual(35, buffer.getA(1));
-		
-		buffer.push({ a:6, b:16, c:26, d:36 });
-		Assert.areEqual( 6, buffer.getA(2));
-		Assert.areEqual(16, buffer.getB(2));
-		Assert.areEqual(26, buffer.getC(2));
-		Assert.areEqual(36, buffer.getD(2));
-		
-		final item = buffer.get(2);
-		Assert.areEqual( 6, item.a);
-		Assert.areEqual(16, item.b);
-		Assert.areEqual(26, item.c);
-		Assert.areEqual(36, item.d);
+		FlxAssert.allEqual(100,
+			[ bVector.length, bVector.slice(0).length
+			,  bArray.length,  bArray.slice(0).length
+			,   array.length,   array.slice(0).length
+			]);
+		FlxAssert.allEqual(900.0,
+			[ getTotalSum(bVector), getTotalSum(bVector.slice(0))
+			, getTotalSum( bArray), getTotalSum( bArray.slice(0))
+			, getTotalSum(  array), getTotalSum(  array.slice(0))
+			]);
+		FlxAssert.allEqual(575.0,
+			[ getTotalSum(bVector.slice(50))
+			, getTotalSum( bArray.slice(50))
+			, getTotalSum(  array.slice(50))
+			]);
+		FlxAssert.allEqual(450.0,
+			[ getTotalSum(bVector.slice(25, 75)), getTotalSum(bVector.slice(25, -25))
+			, getTotalSum( bArray.slice(25, 75)), getTotalSum( bArray.slice(25, -25))
+			, getTotalSum(  array.slice(25, 75)), getTotalSum(  array.slice(25, -25))
+			]);
+	}
+	
+	public overload extern inline function getTotalSum(buffer:FlxBuffer<XYAbs>)
+	{
+		return getTotalSum((cast buffer.iterator():Iterator<XYAbs>));
+	}
+	
+	public overload extern inline function getTotalSum(buffer:FlxBufferArray<XYAbs>)
+	{
+		return getTotalSum((cast buffer.iterator():Iterator<XYAbs>));
+	}
+	
+	public overload extern inline function getTotalSum(array:Array<XYAbs>)
+	{
+		return getTotalSum(array.iterator());
+	}
+	
+	public overload extern inline function getTotalSum(iter:Iterator<XYAbs>)
+	{
+		// return Lambda.fold(buffer, (item, total)->total + item.sum, 0);
+		var total = 0.0;
+		for (item in iter)
+			total += item.sum;
+		return total;
 	}
 }
 

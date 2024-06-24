@@ -173,6 +173,20 @@ class BufferMacro
 				return $e{objectDecl};
 			}
 			
+			/** Fetches the item at the desired index */
+			@:arrayAccess
+			public inline function set(pos:Int, item:$complexType):$complexType
+			{
+				$b{[
+					for (i=>field in fields)
+					{
+						final name = field.name;
+						macro this[pos * FIELDS + $v{i}] = item.$name;
+					}
+				]}
+				return item;
+			}
+			
 			/**
 			 * Adds the item at the end of this Buffer and returns the new length of this Array
 			 * 
@@ -234,6 +248,36 @@ class BufferMacro
 			}
 			
 			/**
+			* Inserts the element x at the position pos.
+			* 
+			* This operation modifies this Array in place.
+			* 
+			* The offset is calculated like so:
+			* 
+			* If pos exceeds this.length, the offset is this.length.
+			* If pos is negative, the offset is calculated from the end of this Array, i.e. this.length + pos. If this yields a negative value, the offset is 0.
+			* Otherwise, the offset is pos.
+			* If the resulting offset does not exceed this.length, all elements from and including that offset to the end of this Array are moved one index ahead.
+			*/
+			public inline function insert(pos:Int, item:$complexType)
+			{
+				$b{[
+					for (i=>field in fields)
+					{
+						final name = field.name;
+						if (isVector)
+						{
+							macro this.insertAt(pos * FIELDS + $v{i}, item.$name);
+						}
+						else
+						{
+							macro this.insert(pos * FIELDS + $v{i}, item.$name);
+						}
+					}
+				]}
+			}
+			
+			/**
 			 * Set the length of the Array.
 			 * If len is shorter than the array's current size, the last length - len elements will
 			 * be removed. If len is longer, the Array will be extended
@@ -249,6 +293,27 @@ class BufferMacro
 					? macro this.length = length * FIELDS
 					: macro this.resize(length * FIELDS)
 				}
+			}
+			
+			/**
+			* Creates a shallow copy of the range of this Buffer, starting at and including pos,
+			* up to but not including end.
+			* 
+			* This operation does not modify this Buffer.
+			* 
+			* The elements are not copied and retain their identity.
+			* 
+			* If end is omitted or exceeds this.length, it defaults to the end of this Buffer.
+			* 
+			* If pos or end are negative, their offsets are calculated from the end of this
+			* Buffer by this.length + pos and this.length + end respectively. If this yields
+			* a negative value, 0 is used instead.
+			* 
+			* If pos exceeds this.length or if end is less than or equals pos, the result is [].
+			*/
+			public inline function slice(pos:Int, ?end:Int):$bufferCt
+			{
+				return this.slice(pos * FIELDS, (end != null ? end : length) * FIELDS);
 			}
 			
 			/** Returns an iterator of the buffer's items */
