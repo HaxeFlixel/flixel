@@ -1739,8 +1739,13 @@ enum WordSplitConditions
 	WIDTH(minPixels:Int);
 }
 
-typedef TileDrawItemRaw = { final charCodeRaw:Float; final x:Float; final y:Float; };
+@:noCompletion
+private typedef TileDrawItemRaw = { final charCodeRaw:Float; final x:Float; final y:Float; };
 @:forward
+/**
+ * Internal type used for batch rendering characters, used by FlxBuffer
+ * **Warning:** all methods must be inlined 
+ */
 abstract TileDrawItem(TileDrawItemRaw) from TileDrawItemRaw
 {
 	public var charCode(get, never):Int;
