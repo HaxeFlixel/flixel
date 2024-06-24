@@ -673,6 +673,34 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(tile.x, tile.last.x);
 	}
 	
+	@Test
+	function testNegativeIndex()
+	{
+		final mapData = [
+			0, 0, 0,
+			0, 1, 0,
+			0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		
+		tilemap.setTileIndex(4, -2);
+		Assert.areEqual(-2, tilemap.getTileIndex(4));
+		
+		// cover entire map
+		final object = new FlxObject(4, 4, 16, 16);
+		object.last.set(object.x, object.y);
+		
+		try
+		{
+			Assert.isFalse(tilemap.overlaps(object));
+			// TODO:test ray, rayStep and others
+		}
+		catch(e)
+		{
+			Assert.fail('tilemap.overlaps(object) threw exception: ' + e.toString());
+		}
+	}
+	
 	function getBitmapData()
 	{
 		return new BitmapData(8*16, 8);
