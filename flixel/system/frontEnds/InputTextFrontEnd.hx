@@ -5,13 +5,15 @@ import lime.ui.KeyModifier;
 
 class InputTextFrontEnd
 {
-	public var focus(default, set):Null<IFlxInputText>;
+	public var focus(default, set):IFlxInputText;
+	
+	public var isTyping(get, never):Bool;
 	
 	var _registeredInputTexts:Array<IFlxInputText> = [];
 	
 	public function new() {}
 	
-	public function registerInputText(input:IFlxInputText)
+	public function registerInputText(input:IFlxInputText):Void
 	{
 		if (!_registeredInputTexts.contains(input))
 		{
@@ -27,7 +29,7 @@ class InputTextFrontEnd
 		}
 	}
 	
-	public function unregisterInputText(input:IFlxInputText)
+	public function unregisterInputText(input:IFlxInputText):Void
 	{
 		if (_registeredInputTexts.contains(input))
 		{
@@ -41,7 +43,7 @@ class InputTextFrontEnd
 		}
 	}
 	
-	function onTextInput(text:String)
+	function onTextInput(text:String):Void
 	{
 		if (focus != null)
 		{
@@ -49,7 +51,7 @@ class InputTextFrontEnd
 		}
 	}
 	
-	function onKeyDown(key:KeyCode, modifier:KeyModifier)
+	function onKeyDown(key:KeyCode, modifier:KeyModifier):Void
 	{
 		if (focus == null)
 			return;
@@ -143,9 +145,17 @@ class InputTextFrontEnd
 				}
 			default:
 		}
+		#if html5
+		// On HTML5, the SPACE key gets added to `FlxG.keys.preventDefaultKeys` by default, which also
+		// stops it from dispatching a text input event. We need to call `onTextInput()` manually
+		if (key == SPACE && FlxG.keys.preventDefaultKeys != null && FlxG.keys.preventDefaultKeys.contains(SPACE))
+		{
+			onTextInput(" ");
+		}
+		#end
 	}
 	
-	function set_focus(value:IFlxInputText)
+	function set_focus(value:IFlxInputText):IFlxInputText
 	{
 		if (focus != value)
 		{
@@ -166,10 +176,15 @@ class InputTextFrontEnd
 		
 		return value;
 	}
+	function get_isTyping():Bool
+	{
+		return focus != null && focus.editable;
+	}
 }
 
 interface IFlxInputText
 {
+	var editable:Bool;
 	var hasFocus(default, set):Bool;
 	function dispatchTypingAction(action:TypingAction):Void;
 }
