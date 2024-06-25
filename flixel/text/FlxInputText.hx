@@ -8,6 +8,7 @@ import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxTimer;
 import lime.system.Clipboard;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
@@ -86,7 +87,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	var _backgroundSprite:FlxSprite;
 	var _caret:FlxSprite;
+	var _caretFlash:Bool = false;
 	var _caretIndex:Int = -1;
+	var _caretTimer:FlxTimer = new FlxTimer();
 	var _fieldBorderSprite:FlxSprite;
 	var _lastClickTime:Int = 0;
 	var _mouseDown:Bool = false;
@@ -158,6 +161,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
+		if (_caretTimer != null)
+		{
+			_caretTimer.cancel();
+			_caretTimer = FlxDestroyUtil.destroy(_caretTimer);
+		}
 		_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
 		_pointerCamera = null;
 		while (_selectionBoxes.length > 0)
@@ -607,6 +615,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					addText("\n");
 				}
+				else
+				{
+					stopCaretTimer();
+					startCaretTimer();
+				}
 				onChange(ENTER_ACTION);
 			case DELETE_LEFT:
 				if (!editable)
@@ -623,6 +636,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 					_selectionIndex = _caretIndex;
 					onChange(BACKSPACE_ACTION);
 				}
+				else
+				{
+					stopCaretTimer();
+					startCaretTimer();
+				}
 			case DELETE_RIGHT:
 				if (!editable)
 					return;
@@ -637,6 +655,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 					replaceSelectedText("");
 					_selectionIndex = _caretIndex;
 					onChange(DELETE_ACTION);
+				}
+				else
+				{
+					stopCaretTimer();
+					startCaretTimer();
 				}
 			case COPY:
 				if (_caretIndex != _selectionIndex && !passwordMode)
@@ -659,6 +682,29 @@ class FlxInputText extends FlxText implements IFlxInputText
 				_selectionIndex = 0;
 				_caretIndex = text.length;
 				setSelection(_selectionIndex, _caretIndex);
+		}
+	}
+
+	function startCaretTimer():Void
+	{
+		_caretTimer.cancel();
+		
+		_caretFlash = !_caretFlash;
+		updateCaretVisibility();
+		_caretTimer.start(0.6, function(tmr)
+		{
+			startCaretTimer();
+		});
+	}
+	
+	function stopCaretTimer():Void
+	{
+		_caretTimer.cancel();
+		
+		if (_caretFlash)
+		{
+			_caretFlash = false;
+			updateCaretVisibility();
 		}
 	}
 
@@ -714,12 +760,19 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_caret.updateHitbox();
 	}
 	
+	function updateCaretVisibility():Void
+	{
+		_caret.visible = (_caretFlash && _selectionIndex == _caretIndex && isCaretLineVisible());
+	}
+	
 	function updateSelection(keepScroll:Bool = false):Void
 	{
 		var cacheScrollH = scrollH;
 		var cacheScrollV = scrollV;
 
 		textField.setSelection(_selectionIndex, _caretIndex);
+		stopCaretTimer();
+		startCaretTimer();
 		_regen = true;
 
 		if (keepScroll)
@@ -815,10 +868,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	
 	function updateSelectionSprites():Void
 	{
-		_caret.alpha = (_selectionIndex == _caretIndex && isCaretLineVisible()) ? 1 : 0;
+		updateCaretVisibility();
 		updateCaretPosition();
 		updateSelectionBoxes();
 	}
+
 	function updateSpritePositions():Void
 	{
 		updateBackgroundPosition();
@@ -855,6 +909,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 			}
 		}
+		else if (FlxG.mouse.justReleased)
+		{
+			_lastClickTime = 0;
+		}
+
 		if (checkPointerOverlap(FlxG.mouse))
 		{
 			if (FlxG.mouse.justPressed && selectable)
@@ -977,6 +1036,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_selectionIndex = leftPos;
 		_caretIndex = rightPos;
 		updateSelection(true);
+
+		if (hasFocus)
+		{
+			stopCaretTimer();
+			startCaretTimer();
+		}
 
 		relativePos.put();
 		_pointerCamera = null;
@@ -1321,7 +1386,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 					updateSelection(true);
 				}
 				
-				_caret.visible = true;
+				stopCaretTimer();
+				startCaretTimer();
+
 				if (focusGained != null)
 					focusGained();
 			}
@@ -1335,7 +1402,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 					updateSelection(true);
 				}
 				
-				_caret.visible = false;
+				stopCaretTimer();
+				
 				if (focusLost != null)
 					focusLost();
 			}
@@ -1377,6 +1445,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (textField.multiline != value)
 		{
 			textField.multiline = value;
+			if (multiline)
+			{
+				_autoHeight = false;
+			}
 		}
 
 		return value;

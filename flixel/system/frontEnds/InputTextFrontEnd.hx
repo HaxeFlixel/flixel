@@ -176,6 +176,7 @@ class InputTextFrontEnd
 		
 		return value;
 	}
+
 	function get_isTyping():Bool
 	{
 		return focus != null && focus.editable;
