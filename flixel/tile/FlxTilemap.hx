@@ -974,16 +974,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			final inc = movesRight ? 1 : -1;
 			final offset = movesRight ? 1 : 0;
 			var tileX = startTileX;
-			var tileY = 0;
-			var xPos = 0.0;
-			var yPos = 0.0;
 			var lastTileY = startTileY;
 
 			while (tileX != endTileX)
 			{
-				xPos = getColumnPos(tileX + offset);
-				yPos = m * xPos + b;
-				tileY = getRowAt(yPos);
+				final xPos = getColumnPos(tileX + offset);
+				final yPos = m * getColumnPos(tileX + offset) + b;
+				final tileY = getRowAt(yPos);
 				hitIndex = checkColumn(tileX, lastTileY, tileY);
 				if (hitIndex != -1)
 					break;
