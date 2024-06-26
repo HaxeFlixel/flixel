@@ -683,8 +683,8 @@ class FlxTilemapTest extends FlxTest
 		];
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
 		
-		tilemap.setTileIndex(1, -2);
-		Assert.areEqual(-2, tilemap.getTileIndex(1));
+		tilemap.setTileIndex(0, -2);
+		Assert.areEqual(-2, tilemap.getTileIndex(0));
 		
 		// cover entire map
 		final object = new FlxObject(4, 4, 16, 16);
@@ -693,20 +693,23 @@ class FlxTilemapTest extends FlxTest
 		var overlapResult = true;
 		var rayResult = false;
 		var rayStepResult = false;
+		var getIndexResult:FlxTile = null;
 		try
 		{
 			overlapResult = tilemap.overlaps(object);
 			rayResult = tilemap.ray(FlxPoint.weak(0, 0), new FlxPoint(tilemap.width, tilemap.height));
 			rayStepResult = tilemap.rayStep(FlxPoint.weak(0, 0), new FlxPoint(tilemap.width, tilemap.height));
+			getIndexResult = tilemap.getTileData(0);
 			// TODO: more tests?
 		}
 		catch(e)
 		{
-			Assert.fail('tilemap.overlaps(object) threw exception: ' + e.toString());
+			Assert.fail('Exception throw: ' + e.toString());
 		}
 		Assert.isTrue(overlapResult);
 		Assert.isFalse(rayResult);
 		Assert.isFalse(rayStepResult);
+		Assert.isNull(getIndexResult);
 	}
 	
 	function getBitmapData()
