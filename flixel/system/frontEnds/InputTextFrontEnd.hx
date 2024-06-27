@@ -2,13 +2,11 @@ package flixel.system.frontEnds;
 
 import lime.ui.KeyCode;
 import lime.ui.KeyModifier;
+import openfl.events.Event;
+import openfl.events.TextEvent;
 
 class InputTextFrontEnd
 {
-	#if flash
-	static final IGNORED_CHARACTERS:Array<KeyCode> = [BACKSPACE, TAB, RETURN, ESCAPE, DELETE];
-	#end
-
 	public var focus(default, set):IFlxInputText;
 	
 	public var isTyping(get, never):Bool;
@@ -23,12 +21,19 @@ class InputTextFrontEnd
 		{
 			_registeredInputTexts.push(input);
 			
-			if (!FlxG.stage.window.onTextInput.has(onTextInput))
+			if (!FlxG.stage.window.onKeyDown.has(onKeyDown))
 			{
-				FlxG.stage.window.onTextInput.add(onTextInput);
+				FlxG.stage.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
 				// Higher priority is needed here because FlxKeyboard will cancel
 				// the event for key codes in `preventDefaultKeys`.
 				FlxG.stage.window.onKeyDown.add(onKeyDown, false, 1000);
+				#if flash
+				FlxG.stage.addEventListener(Event.COPY, onCopy);
+				FlxG.stage.addEventListener(Event.CUT, onCut);
+				FlxG.stage.addEventListener(Event.PASTE, onPaste);
+				FlxG.stage.addEventListener(Event.SELECT_ALL, onSelectAll);
+				FlxG.stage.window.onKeyUp.add(onKeyUp, false, 1000);
+				#end
 			}
 		}
 	}
@@ -39,28 +44,30 @@ class InputTextFrontEnd
 		{
 			_registeredInputTexts.remove(input);
 			
-			if (_registeredInputTexts.length == 0 && FlxG.stage.window.onTextInput.has(onTextInput))
+			if (_registeredInputTexts.length == 0 && FlxG.stage.window.onKeyDown.has(onKeyDown))
 			{
-				FlxG.stage.window.onTextInput.remove(onTextInput);
+				FlxG.stage.removeEventListener(TextEvent.TEXT_INPUT, onTextInput);
 				FlxG.stage.window.onKeyDown.remove(onKeyDown);
+				#if flash
+				FlxG.stage.removeEventListener(Event.COPY, onCopy);
+				FlxG.stage.removeEventListener(Event.CUT, onCut);
+				FlxG.stage.removeEventListener(Event.PASTE, onPaste);
+				FlxG.stage.removeEventListener(Event.SELECT_ALL, onSelectAll);
+				FlxG.stage.window.onKeyUp.remove(onKeyUp);
+				#end
 			}
 		}
 	}
 	
-	function onTextInput(text:String):Void
+	function onTextInput(event:TextEvent):Void
 	{
-		#if flash
-		// On Flash, any key press will get dispatched for `onTextInput`, including untypeable characters,
-		// which messes up the text. Let's catch and ignore them.
-		// "RETURN" is ignored as well, since we already handle creating new lines inside the text object.
-		var code = text.charCodeAt(0);
-		if (code == 0 || IGNORED_CHARACTERS.contains(code))
+		// Adding new lines is handled inside FlxInputText
+		if (event.text.length == 1 && event.text.charCodeAt(0) == KeyCode.RETURN)
 			return;
-		#end
 
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(ADD_TEXT(text));
+			focus.dispatchTypingAction(ADD_TEXT(event.text));
 		}
 	}
 	
@@ -68,6 +75,12 @@ class InputTextFrontEnd
 	{
 		if (focus == null)
 			return;
+
+		#if flash
+		// COPY, CUT, PASTE and SELECT_ALL events will only be dispatched if the stage has a focus.
+		// Let's set one manually (just the stage itself)
+		FlxG.stage.focus = FlxG.stage;
+		#end
 
 		// Taken from OpenFL's `TextField`
 		var modifierPressed = #if mac modifier.metaKey #elseif js(modifier.metaKey || modifier.ctrlKey) #else (modifier.ctrlKey && !modifier.altKey) #end;
@@ -158,15 +171,57 @@ class InputTextFrontEnd
 				}
 			default:
 		}
+
 		#if html5
 		// On HTML5, the SPACE key gets added to `FlxG.keys.preventDefaultKeys` by default, which also
 		// stops it from dispatching a text input event. We need to call `onTextInput()` manually
 		if (key == SPACE && FlxG.keys.preventDefaultKeys != null && FlxG.keys.preventDefaultKeys.contains(SPACE))
 		{
-			onTextInput(" ");
+			onTextInput(new TextEvent(TextEvent.TEXT_INPUT, false, false, " "));
 		}
 		#end
 	}
+	#if flash
+	function onKeyUp(key:KeyCode, modifier:KeyModifier):Void
+	{
+		if (FlxG.stage.focus == FlxG.stage)
+		{
+			FlxG.stage.focus = null;
+		}
+	}
+	
+	function onCopy(e:Event):Void
+	{
+		if (focus != null)
+		{
+			focus.dispatchTypingAction(COMMAND(COPY));
+		}
+	}
+	
+	function onCut(e:Event):Void
+	{
+		if (focus != null)
+		{
+			focus.dispatchTypingAction(COMMAND(CUT));
+		}
+	}
+	
+	function onPaste(e:Event):Void
+	{
+		if (focus != null)
+		{
+			focus.dispatchTypingAction(COMMAND(PASTE));
+		}
+	}
+	
+	function onSelectAll(e:Event):Void
+	{
+		if (focus != null)
+		{
+			focus.dispatchTypingAction(COMMAND(SELECT_ALL));
+		}
+	}
+	#end
 	
 	function set_focus(value:IFlxInputText):IFlxInputText
 	{

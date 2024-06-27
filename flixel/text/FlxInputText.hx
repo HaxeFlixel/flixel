@@ -330,34 +330,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 			default: GUTTER;
 		}
 	}
-	
-	function getCharIndexOnDifferentLine(charIndex:Int, lineIndex:Int):Int
-	{
-		if (charIndex < 0 || charIndex > text.length)
-			return -1;
-		if (lineIndex < 0 || lineIndex > textField.numLines - 1)
-			return -1;
-			
-		var x = 0.0;
-		var charBoundaries = textField.getCharBoundaries(charIndex - 1);
-		if (charBoundaries != null)
-		{
-			x = charBoundaries.right;
-		}
-		else
-		{
-			x = GUTTER;
-		}
-		
-		var y = GUTTER + getLineY(lineIndex) + textField.getLineMetrics(lineIndex).height / 2 - getLineY(scrollV - 1);
-		
-		return getCharAtPosition(x, y);
-	}
-	
+
 	function getCharAtPosition(x:Float, y:Float):Int
 	{
+		#if !flash
 		x += scrollH;
-		y += getLineY(scrollV - 1);
+		y += getScrollVOffset();
+		#end
 		
 		if (x < GUTTER)
 			x = GUTTER;
@@ -379,7 +358,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				var lineEndIndex = lineOffset + lineLength;
 				for (char in 0...lineLength)
 				{
-					var boundaries = textField.getCharBoundaries(lineOffset + char);
+					var boundaries = getCharBoundaries(lineOffset + char);
 					// reached end of line, return this character
 					if (boundaries == null)
 						return lineOffset + char;
@@ -395,7 +374,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 						}
 					}
 				}
-				
+
 				// a character wasn't found, return the last character of the line
 				return lineEndIndex;
 			}
@@ -404,6 +383,79 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return text.length;
 	}
 
+	/**
+	 * NOTE: On Flash, this will not give the correct Y for characters that are out-of-view,
+	 * due to needing to internally change the vertical scroll to get their boundaries.
+	 * You should use `getLineY()` and `getScrollVOffset()` instead for getting the proper Y position.
+	 */
+	function getCharBoundaries(char:Int):Rectangle
+	{
+		#if flash
+		// On Flash, `getCharBoundaries()` always returns null if the character is before
+		// the current vertical scroll. Let's just set the scroll directly at the line
+		// and change it back later
+		var cacheScrollV = scrollV;
+		// Change the internal text field's property instead to not cause a loop due to `_regen`
+		// always being set back to true
+		textField.scrollV = getLineIndexOfChar(char) + 1;
+		var prevRegen = _regen;
+		#end
+		
+		var boundaries = textField.getCharBoundaries(char);
+		if (boundaries == null)
+		{
+			#if flash
+			textField.scrollV = cacheScrollV;
+			_regen = prevRegen;
+			#end
+			return null;
+		}
+		
+		// Scrolling is already accounted for in `getCharBoundaries()` on Flash
+		#if !flash
+		boundaries.x -= scrollH;
+		boundaries.y -= getScrollVOffset();
+		#else
+		textField.scrollV = cacheScrollV;
+		_regen = prevRegen;
+		#end
+		
+		return boundaries;
+	}
+	
+	function getCharIndexOnDifferentLine(charIndex:Int, lineIndex:Int):Int
+	{
+		if (charIndex < 0 || charIndex > text.length)
+			return -1;
+		if (lineIndex < 0 || lineIndex > textField.numLines - 1)
+			return -1;
+			
+		var x = 0.0;
+		var charBoundaries = getCharBoundaries(charIndex - 1);
+		if (charBoundaries != null)
+		{
+			x = charBoundaries.right;
+		}
+		else
+		{
+			x = GUTTER;
+		}
+		
+		var y = GUTTER + getLineY(lineIndex) + textField.getLineMetrics(lineIndex).height / 2;
+		
+		return getCharAtPosition(x, y);
+	}
+	
+	function getLineIndexOfChar(char:Int):Int
+	{
+		// On Flash, if the character is equal to the end of the text, it returns -1 as the line.
+		// We have to fix it manually.
+		return (char == text.length) ? textField.numLines - 1 : textField.getLineIndexOfChar(char);
+	}
+	
+	/**
+	 * NOTE: This does not include the vertical gutter on top of the text field.
+	 */
 	function getLineY(line:Int):Float
 	{
 		var scrollY = 0.0;
@@ -414,13 +466,18 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return scrollY;
 	}
 
+	function getScrollVOffset():Float
+	{
+		return getLineY(scrollV - 1);
+	}
+
 	function isCaretLineVisible():Bool
 	{
 		// `getLineIndexOfChar()` will return -1 if text is empty, but we still want the caret to show up
 		if (text.length == 0)
 			return true;
 
-		var line = textField.getLineIndexOfChar(_caretIndex);
+		var line = getLineIndexOfChar(_caretIndex);
 		return line >= scrollV - 1 && line <= bottomScrollV - 1;
 	}
 	
@@ -451,7 +508,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case UP:
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex > 0)
 				{
 					_caretIndex = getCharIndexOnDifferentLine(_caretIndex, lineIndex - 1);
@@ -463,7 +520,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case DOWN:
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
 					_caretIndex = getCharIndexOnDifferentLine(_caretIndex, lineIndex + 1);
@@ -491,7 +548,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case LINE_BEGINNING:
-				_caretIndex = textField.getLineOffset(textField.getLineIndexOfChar(_caretIndex));
+				_caretIndex = textField.getLineOffset(getLineIndexOfChar(_caretIndex));
 				
 				if (!shiftKey)
 				{
@@ -499,7 +556,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case LINE_END:
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
 					_caretIndex = textField.getLineOffset(lineIndex + 1) - 1;
@@ -515,7 +572,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case PREVIOUS_LINE:
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex > 0)
 				{
 					var index = textField.getLineOffset(lineIndex);
@@ -535,7 +592,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 			case NEXT_LINE:
-				var lineIndex = textField.getLineIndexOfChar(_caretIndex);
+				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
 					_caretIndex = textField.getLineOffset(lineIndex + 1);
@@ -728,22 +785,22 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else
 		{
-			var boundaries = textField.getCharBoundaries(_caretIndex - 1);
+			var lineY = GUTTER + getLineY(getLineIndexOfChar(_caretIndex));
+			var boundaries = getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - getLineY(scrollV - 1));
+				_caret.setPosition(x + boundaries.right - scrollH, y + lineY - getScrollVOffset());
 			}
 			else
 			{
-				boundaries = textField.getCharBoundaries(_caretIndex);
+				boundaries = getCharBoundaries(_caretIndex);
 				if (boundaries != null)
 				{
-					_caret.setPosition(x + boundaries.x - scrollH, y + boundaries.y - getLineY(scrollV - 1));
+					_caret.setPosition(x + boundaries.x - scrollH, y + lineY - getScrollVOffset());
 				}
 				else // end of line
 				{
-					var lineIndex = textField.getLineIndexOfChar(_caretIndex);
-					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + getLineY(lineIndex) - getLineY(scrollV - 1));
+					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + lineY - getScrollVOffset());
 				}
 			}
 		}
@@ -765,6 +822,58 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_caret.visible = (_caretFlash && _selectionIndex == _caretIndex && isCaretLineVisible());
 	}
 	
+	#if flash
+	function updateScrollH():Void
+	{
+		if (textField.textWidth <= width - (GUTTER * 2))
+		{
+			scrollH = 0;
+			return;
+		}
+		
+		var tempScrollH = scrollH;
+		if (_caretIndex == 0 || textField.getLineOffset(getLineIndexOfChar(_caretIndex)) == _caretIndex)
+		{
+			tempScrollH = 0;
+		}
+		else
+		{
+			var caret:Rectangle = null;
+			if (_caretIndex < text.length)
+			{
+				caret = getCharBoundaries(_caretIndex);
+			}
+			if (caret == null)
+			{
+				caret = getCharBoundaries(_caretIndex - 1);
+				caret.x += caret.width;
+			}
+			
+			while (caret.x < tempScrollH && tempScrollH > 0)
+			{
+				tempScrollH -= 24;
+			}
+			while (caret.x > tempScrollH + width - (GUTTER * 2))
+			{
+				tempScrollH += 24;
+			}
+		}
+		
+		if (tempScrollH < 0)
+		{
+			scrollH = 0;
+		}
+		else if (tempScrollH > maxScrollH)
+		{
+			scrollH = maxScrollH;
+		}
+		else
+		{
+			scrollH = tempScrollH;
+		}
+	}
+	#end
+	
 	function updateSelection(keepScroll:Bool = false):Void
 	{
 		var cacheScrollH = scrollH;
@@ -780,9 +889,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 			scrollH = cacheScrollH;
 			scrollV = cacheScrollV;
 		}
-		else if (scrollH != cacheScrollH || scrollV != cacheScrollV)
+		else
 		{
-			onChange(SCROLL_ACTION);
+			#if flash
+			// Horizontal scroll is not automatically set on Flash
+			updateScrollH();
+			#end
+			
+			if (scrollH != cacheScrollH || scrollV != cacheScrollV)
+			{
+				onChange(SCROLL_ACTION);
+			}
 		}
 	}
 	
@@ -810,11 +927,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 			return;
 		}
 		
-		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
-		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
+		var beginLine = getLineIndexOfChar(selectionBeginIndex);
+		var endLine = getLineIndexOfChar(selectionEndIndex);
 		
 		var beginV = scrollV - 1;
-		var scrollY = getLineY(beginV);
 		
 		for (line in beginV...bottomScrollV)
 		{
@@ -828,11 +944,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 				var startIndex = FlxMath.maxInt(lineStartIndex, selectionBeginIndex);
 				var endIndex = FlxMath.minInt(lineEndIndex, selectionEndIndex);
 				
-				var startBoundaries = textField.getCharBoundaries(startIndex);
-				var endBoundaries = textField.getCharBoundaries(endIndex - 1);
+				var startBoundaries = getCharBoundaries(startIndex);
+				var endBoundaries = getCharBoundaries(endIndex - 1);
 				if (endBoundaries == null && endIndex > startIndex) // end of line, try getting the previous character
 				{
-					endBoundaries = textField.getCharBoundaries(endIndex - 2);
+					endBoundaries = getCharBoundaries(endIndex - 2);
 				}
 				
 				if (startBoundaries != null && endBoundaries != null)
@@ -843,7 +959,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 						box.color = selectionColor;
 					}
 
-					var boxRect = FlxRect.get(startBoundaries.x - scrollH, startBoundaries.y - scrollY, endBoundaries.right - startBoundaries.x,
+					var boxRect = FlxRect.get(startBoundaries.x - scrollH, GUTTER + getLineY(line) - getScrollVOffset(),
+						endBoundaries.right - startBoundaries.x,
 						startBoundaries.height);
 					boxRect.clipTo(FlxRect.weak(0, 0, width, height)); // clip the selection box inside the text sprite
 					
@@ -966,7 +1083,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		hasFocus = true;
 		
 		var relativePos = getRelativePosition(pointer);
-		_caretIndex = getCharAtPosition(relativePos.x, relativePos.y);
+		_caretIndex = getCharAtPosition(relativePos.x + scrollH, relativePos.y + getScrollVOffset());
 		_selectionIndex = _caretIndex;
 		updateSelection(true);
 		
@@ -1002,6 +1119,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			}
 			_scrollVCounter = 0;
 		}
+
 		if (scrollH != cacheScrollH || scrollV != cacheScrollV)
 		{
 			onChange(SCROLL_ACTION);
@@ -1015,7 +1133,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		var relativePos = getRelativePosition(pointer);
 		
-		var char = getCharAtPosition(relativePos.x, relativePos.y);
+		var char = getCharAtPosition(relativePos.x + scrollH, relativePos.y + getScrollVOffset());
 		if (char != _caretIndex)
 		{
 			_caretIndex = char;
@@ -1032,7 +1150,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		var relativePos = getRelativePosition(pointer);
 		
-		var upPos = getCharAtPosition(relativePos.x, relativePos.y);
+		var upPos = getCharAtPosition(relativePos.x + scrollH, relativePos.y + getScrollVOffset());
 		var leftPos = FlxMath.minInt(_selectionIndex, upPos);
 		var rightPos = FlxMath.maxInt(_selectionIndex, upPos);
 		
