@@ -5,6 +5,10 @@ import lime.ui.KeyModifier;
 
 class InputTextFrontEnd
 {
+	#if flash
+	static final IGNORED_CHARACTERS:Array<KeyCode> = [BACKSPACE, TAB, RETURN, ESCAPE, DELETE];
+	#end
+
 	public var focus(default, set):IFlxInputText;
 	
 	public var isTyping(get, never):Bool;
@@ -45,6 +49,15 @@ class InputTextFrontEnd
 	
 	function onTextInput(text:String):Void
 	{
+		#if flash
+		// On Flash, any key press will get dispatched for `onTextInput`, including untypeable characters,
+		// which messes up the text. Let's catch and ignore them.
+		// "RETURN" is ignored as well, since we already handle creating new lines inside the text object.
+		var code = text.charCodeAt(0);
+		if (code == 0 || IGNORED_CHARACTERS.contains(code))
+			return;
+		#end
+
 		if (focus != null)
 		{
 			focus.dispatchTypingAction(ADD_TEXT(text));

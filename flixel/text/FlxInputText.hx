@@ -790,8 +790,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (textField == null)
 			return;
-			
-		while (_selectionBoxes.length > textField.numLines)
+
+		var visibleLines = bottomScrollV - scrollV + 1;
+		while (_selectionBoxes.length > visibleLines)
 		{
 			var box = _selectionBoxes.pop();
 			if (box != null)
@@ -812,12 +813,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 		var beginLine = textField.getLineIndexOfChar(selectionBeginIndex);
 		var endLine = textField.getLineIndexOfChar(selectionEndIndex);
 		
-		var scrollY = getLineY(scrollV - 1);
+		var beginV = scrollV - 1;
+		var scrollY = getLineY(beginV);
 		
-		for (line in 0...textField.numLines)
+		for (line in beginV...bottomScrollV)
 		{
-			var box = _selectionBoxes[line];
-			if ((line >= scrollV - 1 && line <= bottomScrollV - 1) && (line >= beginLine && line <= endLine))
+			var i = line - beginV;
+			var box = _selectionBoxes[i];
+			if (line >= beginLine && line <= endLine)
 			{
 				var lineStartIndex = textField.getLineOffset(line);
 				var lineEndIndex = lineStartIndex + textField.getLineLength(line);
@@ -836,7 +839,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					if (box == null)
 					{
-						box = _selectionBoxes[line] = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+						box = _selectionBoxes[i] = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
 						box.color = selectionColor;
 					}
 
