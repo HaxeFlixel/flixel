@@ -942,7 +942,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 					endBoundaries = getCharBoundaries(endIndex - 2);
 				}
 				
-				if (startBoundaries != null && endBoundaries != null)
+				// If word wrapping is enabled, the start boundary might actually be at the end of
+				// the previous line, which causes some visual bugs. Let's check to make sure the
+				// boundaries are in the same line
+				if (startBoundaries != null && endBoundaries != null && FlxMath.equal(startBoundaries.y, endBoundaries.y))
 				{
 					if (box == null)
 					{
