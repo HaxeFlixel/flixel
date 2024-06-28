@@ -333,11 +333,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	function getCharAtPosition(x:Float, y:Float):Int
 	{
-		#if !flash
-		x += scrollH;
-		y += getScrollVOffset();
-		#end
-		
 		if (x < GUTTER)
 			x = GUTTER;
 
@@ -411,11 +406,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			return null;
 		}
 		
-		// Scrolling is already accounted for in `getCharBoundaries()` on Flash
-		#if !flash
-		boundaries.x -= scrollH;
-		boundaries.y -= getScrollVOffset();
-		#else
+		#if flash
 		textField.scrollV = cacheScrollV;
 		_regen = prevRegen;
 		#end
