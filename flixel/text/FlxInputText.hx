@@ -1,5 +1,6 @@
 package flixel.text;
 
+import flixel.input.touch.FlxTouch;
 import flixel.input.FlxPointer;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -91,14 +92,23 @@ class FlxInputText extends FlxText implements IFlxInputText
 	var _caretIndex:Int = -1;
 	var _caretTimer:FlxTimer = new FlxTimer();
 	var _fieldBorderSprite:FlxSprite;
-	var _lastClickTime:Int = 0;
-	var _mouseDown:Bool = false;
 	var _pointerCamera:FlxCamera;
 	var _regenBackground:Bool = false;
-	var _scrollVCounter:Float = 0;
 	var _selectionBoxes:Array<FlxSprite> = [];
 	var _selectionFormat:TextFormat = new TextFormat();
 	var _selectionIndex:Int = -1;
+	#if FLX_POINTER_INPUT
+	var _lastClickTime:Int = 0;
+	var _scrollVCounter:Float = 0;
+	#if FLX_MOUSE
+	var _mouseDown:Bool = false;
+	#end
+	#if FLX_TOUCH
+	var _currentTouch:FlxTouch;
+	var _lastTouchX:Null<Float>;
+	var _lastTouchY:Null<Float>;
+	#end
+	#end
 	
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, textColor:FlxColor = FlxColor.BLACK,
 			backgroundColor:FlxColor = FlxColor.WHITE, embeddedFont:Bool = true)
@@ -132,10 +142,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		super.update(elapsed);
 		
-		#if FLX_MOUSE
+		#if FLX_POINTER_INPUT
 		if (visible)
 		{
-			updateInput(elapsed);
+			if (!updateMouseInput(elapsed))
+				updateTouchInput(elapsed);
 		}
 		#end
 	}
@@ -172,6 +183,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 			FlxDestroyUtil.destroy(_selectionBoxes.pop());
 		_selectionBoxes = null;
 		_selectionFormat = null;
+		#if FLX_TOUCH
+		_currentTouch = null;
+		#end
 		
 		super.destroy();
 	}
@@ -378,11 +392,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return text.length;
 	}
 
-	/**
-	 * NOTE: On Flash, this will not give the correct Y for characters that are out-of-view,
-	 * due to needing to internally change the vertical scroll to get their boundaries.
-	 * You should use `getLineY()` and `getScrollVOffset()` instead for getting the proper Y position.
-	 */
 	function getCharBoundaries(char:Int):Rectangle
 	{
 		#if flash
@@ -390,9 +399,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		// the current vertical scroll. Let's just set the scroll directly at the line
 		// and change it back later
 		var cacheScrollV = scrollV;
+		var lineIndex = getLineIndexOfChar(char);
 		// Change the internal text field's property instead to not cause a loop due to `_regen`
 		// always being set back to true
-		textField.scrollV = getLineIndexOfChar(char) + 1;
+		textField.scrollV = lineIndex + 1;
 		var prevRegen = _regen;
 		#end
 		
@@ -409,6 +419,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		#if flash
 		textField.scrollV = cacheScrollV;
 		_regen = prevRegen;
+		// Set the Y to the correct position
+		boundaries.y = GUTTER + getLineY(lineIndex);
 		#end
 		
 		return boundaries;
@@ -455,6 +467,33 @@ class FlxInputText extends FlxText implements IFlxInputText
 			scrollY += textField.getLineMetrics(i).height;
 		}
 		return scrollY;
+	}
+
+	function getLimeBounds(camera:FlxCamera):lime.math.Rectangle
+	{
+		if (camera == null)
+			camera = FlxG.camera;
+			
+		var rect = getScreenBounds(camera);
+		
+		// transform bounds inside camera & stage
+		rect.x = (rect.x * camera.totalScaleX) - (0.5 * camera.width * (camera.scaleX - camera.initialZoom) * FlxG.scaleMode.scale.x) + FlxG.game.x;
+		rect.y = (rect.y * camera.totalScaleY) - (0.5 * camera.height * (camera.scaleY - camera.initialZoom) * FlxG.scaleMode.scale.y) + FlxG.game.y;
+		rect.width *= camera.totalScaleX;
+		rect.height *= camera.totalScaleY;
+		
+		#if openfl_dpi_aware
+		var scale = FlxG.stage.window.scale;
+		if (scale != 1.0)
+		{
+			rect.x /= scale;
+			rect.y /= scale;
+			rect.width /= scale;
+			rect.height /= scale;
+		}
+		#end
+		
+		return new lime.math.Rectangle(rect.x, rect.y, rect.width, rect.height);
 	}
 
 	function getScrollVOffset():Float
@@ -776,22 +815,21 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else
 		{
-			var lineY = GUTTER + getLineY(getLineIndexOfChar(_caretIndex));
 			var boundaries = getCharBoundaries(_caretIndex - 1);
 			if (boundaries != null)
 			{
-				_caret.setPosition(x + boundaries.right - scrollH, y + lineY - getScrollVOffset());
+				_caret.setPosition(x + boundaries.right - scrollH, y + boundaries.y - getScrollVOffset());
 			}
 			else
 			{
 				boundaries = getCharBoundaries(_caretIndex);
 				if (boundaries != null)
 				{
-					_caret.setPosition(x + boundaries.x - scrollH, y + lineY - getScrollVOffset());
+					_caret.setPosition(x + boundaries.x - scrollH, y + boundaries.y - getScrollVOffset());
 				}
 				else // end of line
 				{
-					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + lineY - getScrollVOffset());
+					_caret.setPosition(x + getCaretOffsetX(), y + GUTTER + getLineY(getLineIndexOfChar(_caretIndex)) - getScrollVOffset());
 				}
 			}
 		}
@@ -922,7 +960,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 		var endLine = getLineIndexOfChar(selectionEndIndex);
 		
 		var beginV = scrollV - 1;
-		
+		var scrollVOffset = getScrollVOffset();
+
 		for (line in beginV...bottomScrollV)
 		{
 			var i = line - beginV;
@@ -953,7 +992,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 						box.color = selectionColor;
 					}
 
-					var boxRect = FlxRect.get(startBoundaries.x - scrollH, GUTTER + getLineY(line) - getScrollVOffset(),
+					var boxRect = FlxRect.get(startBoundaries.x - scrollH, startBoundaries.y - scrollVOffset,
 						endBoundaries.right - startBoundaries.x,
 						startBoundaries.height);
 					boxRect.clipTo(FlxRect.weak(0, 0, width, height)); // clip the selection box inside the text sprite
@@ -994,9 +1033,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		updateSelectionBoxes();
 	}
 	
-	#if FLX_MOUSE
-	function updateInput(elapsed:Float):Void
+	#if FLX_POINTER_INPUT
+	function updateMouseInput(elapsed:Float):Bool
 	{
+		var overlap = false;
+		#if FLX_MOUSE
 		if (_mouseDown)
 		{
 			updatePointerDrag(FlxG.mouse, elapsed);
@@ -1008,19 +1049,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 			if (FlxG.mouse.released)
 			{
-				_mouseDown = false;
 				updatePointerRelease(FlxG.mouse);
-
-				var currentTime = FlxG.game.ticks;
-				if (currentTime - _lastClickTime < 500)
-				{
-					updatePointerDoublePress(FlxG.mouse);
-					_lastClickTime = 0;
-				}
-				else
-				{
-					_lastClickTime = currentTime;
-				}
+				_mouseDown = false;
 			}
 		}
 		else if (FlxG.mouse.justReleased)
@@ -1030,12 +1060,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		if (checkPointerOverlap(FlxG.mouse))
 		{
+			overlap = true;
 			if (FlxG.mouse.justPressed && selectable)
 			{
 				_mouseDown = true;
 				updatePointerPress(FlxG.mouse);
 			}
-			
 			if (FlxG.mouse.wheel != 0)
 			{
 				var cacheScrollV = scrollV;
@@ -1050,6 +1080,60 @@ class FlxInputText extends FlxText implements IFlxInputText
 		{
 			hasFocus = false;
 		}
+		#end
+		return overlap;
+	}
+	
+	function updateTouchInput(elapsed:Float):Bool
+	{
+		var overlap = false;
+		#if FLX_TOUCH
+		if (_currentTouch != null)
+		{
+			updatePointerDrag(_currentTouch, elapsed);
+			
+			if (_lastTouchX != _currentTouch.x || _lastTouchY != _currentTouch.y)
+			{
+				updatePointerMove(_currentTouch);
+				_lastTouchX = _currentTouch.x;
+				_lastTouchY = _currentTouch.y;
+			}
+			
+			if (_currentTouch.released)
+			{
+				updatePointerRelease(_currentTouch);
+				_currentTouch = null;
+				_lastTouchY = _lastTouchX = null;
+			}
+		}
+		
+		var pressedElsewhere = false;
+		for (touch in FlxG.touches.list)
+		{
+			if (checkPointerOverlap(touch))
+			{
+				overlap = true;
+				if (touch.justPressed && selectable)
+				{
+					_currentTouch = touch;
+					_lastTouchX = touch.x;
+					_lastTouchY = touch.y;
+					updatePointerPress(touch);
+				}
+				break;
+			}
+			else if (touch.justPressed)
+			{
+				pressedElsewhere = true;
+				_lastClickTime = 0;
+			}
+		}
+		if (pressedElsewhere && _currentTouch == null)
+		{
+			hasFocus = false;
+		}
+		#end
+		return overlap;
 	}
 	
 	function checkPointerOverlap(pointer:FlxPointer):Bool
@@ -1084,7 +1168,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		relativePos.put();
 	}
 
-	function updatePointerDrag(pointer:FlxPointer, elapsed:Float)
+	function updatePointerDrag(pointer:FlxPointer, elapsed:Float):Void
 	{
 		var relativePos = getRelativePosition(pointer);
 		var cacheScrollH = scrollH;
@@ -1160,6 +1244,16 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		relativePos.put();
 		_pointerCamera = null;
+		var currentTime = FlxG.game.ticks;
+		if (currentTime - _lastClickTime < 500)
+		{
+			updatePointerDoublePress(pointer);
+			_lastClickTime = 0;
+		}
+		else
+		{
+			_lastClickTime = currentTime;
+		}
 	}
 	
 	function updatePointerDoublePress(pointer:FlxPointer):Void
@@ -1193,7 +1287,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		var pointerPos = pointer.getWorldPosition(_pointerCamera);
 		getScreenPosition(_point, _pointerCamera);
-		var result = FlxPoint.get(pointerPos.x - _point.x, pointerPos.y - _point.y);
+		var result = FlxPoint.get((pointerPos.x - _pointerCamera.scroll.x) - _point.x, (pointerPos.y - _pointerCamera.scroll.y) - _point.y);
 		pointerPos.put();
 		return result;
 	}
@@ -1492,6 +1586,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 			hasFocus = value;
 			if (hasFocus)
 			{
+				// Ensure that the text field isn't hidden by a keyboard overlay
+				var bounds = getLimeBounds(_pointerCamera);
+				FlxG.stage.window.setTextInputRect(bounds);
+
 				FlxG.inputText.focus = this;
 				
 				if (_caretIndex < 0)

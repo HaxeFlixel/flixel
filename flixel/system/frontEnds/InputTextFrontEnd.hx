@@ -181,6 +181,7 @@ class InputTextFrontEnd
 		}
 		#end
 	}
+
 	#if flash
 	function onKeyUp(key:KeyCode, modifier:KeyModifier):Void
 	{
