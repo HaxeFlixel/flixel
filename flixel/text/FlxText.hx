@@ -1271,11 +1271,9 @@ enum abstract FlxTextAlign(String) from String
 
 	public static function fromOpenFL(align:TextFormatAlign):FlxTextAlign
 	{
-		if (align == null)
-			return LEFT;
-		
 		return switch (align)
 		{
+			case null: LEFT;
 			case TextFormatAlign.LEFT: LEFT;
 			case TextFormatAlign.CENTER: CENTER;
 			case TextFormatAlign.RIGHT: RIGHT;
