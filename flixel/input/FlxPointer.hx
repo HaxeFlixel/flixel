@@ -92,6 +92,16 @@ class FlxPointer
 	}
 
 	/**
+	 * Returns a FlxPoint with this input's global screen x and y
+	 */
+	public function getGlobalScreenPosition(?point:FlxPoint):FlxPoint
+	{
+		if (point == null)
+			point = FlxPoint.get();
+		return point.set(_globalScreenX, _globalScreenY);
+	}
+
+	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
 	public function getPosition(?point:FlxPoint):FlxPoint
