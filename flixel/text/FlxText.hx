@@ -98,7 +98,15 @@ class FlxText extends FlxSprite
 	public var underline(get, set):Bool;
 
 	/**
-	 * Whether to use word wrapping and multiline or not (`true` by default).
+	 * Whether new lines in the text should be allowed or not (`true` by default).
+	 * 
+	 * **NOTE:** If word wrapping is on, the text field could still have multiple
+	 * lines even if this is disabled.
+	 */
+	public var multiLine(get, set):Bool;
+	
+	/**
+	 * Whether to use word wrapping or not (`true` by default).
 	 */
 	public var wordWrap(get, set):Bool;
 
@@ -625,6 +633,11 @@ class FlxText extends FlxSprite
 
 	function set_text(Text:String):String
 	{
+		if (!multiLine && (Text.contains("\n") || Text.contains("\r")))
+		{
+			Text = Text.split("\n").join("").split("\r").join("");
+		}
+
 		text = Text;
 		if (textField != null)
 		{
@@ -758,6 +771,28 @@ class FlxText extends FlxSprite
 		{
 			_defaultFormat.underline = value;
 			updateDefaultFormat();
+		}
+		return value;
+	}
+
+	function get_multiLine():Bool
+	{
+		return (textField != null) ? textField.multiline : false;
+	}
+	
+	function set_multiLine(value:Bool):Bool
+	{
+		if (textField == null)
+			return value;
+			
+		if (textField.multiline != value)
+		{
+			textField.multiline = value;
+			if (!value)
+			{
+				// Refresh text to remove any new lines
+				text = text;
+			}
 		}
 		return value;
 	}
