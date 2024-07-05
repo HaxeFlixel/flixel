@@ -321,6 +321,9 @@ class FlxG
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
 
+	/**
+	 * Used for detecting text input and dispatching commands on input text fields.
+	 */
 	public static var inputText(default, null):InputTextFrontEnd = new InputTextFrontEnd();
 
 	public static var initialWidth(default, null):Int = 0;

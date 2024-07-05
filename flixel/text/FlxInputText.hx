@@ -16,66 +16,180 @@ import openfl.geom.Rectangle;
 import openfl.text.TextFormat;
 import openfl.utils.QName;
 
+/**
+ * An `FlxText` object that can be selected and edited by the user.
+ */
 class FlxInputText extends FlxText implements IFlxInputText
 {
+	/**
+	 * The gaps at the sides of the text field (2px).
+	 */
 	static inline var GUTTER:Int = 2;
 	
+	/**
+	 * Characters that break up the words to select when double-pressing.
+	 */
 	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
 	
+	/**
+	 * Whether or not the text field has a background.
+	 */
 	public var background(default, set):Bool = false;
 	
-	public var backgroundColor(default, set):FlxColor = FlxColor.TRANSPARENT;
+	/**
+	 * The color of the background of the text field, if it's enabled.
+	 */
+	public var backgroundColor(default, set):FlxColor = FlxColor.WHITE;
 	
+	/**
+	 * Indicates the bottommost line (1-based index) that is currently
+	 * visible in the text field.
+	 */
 	public var bottomScrollV(get, never):Int;
 	
+	/**
+	 * A function called when an action occurs in the text field. The first parameter
+	 * is the current text, and the second parameter indicates what kind of action
+	 * it was.
+	 */
 	public var callback:String->FlxInputTextAction->Void;
 	
-	public var caretColor(default, set):FlxColor = FlxColor.WHITE;
+	/**
+	 * The selection cursor's color. Has the same color as the text field by default, and 
+	 * it's automatically set whenever it changes.
+	 */
+	public var caretColor(default, set):FlxColor;
 	
+	/**
+	 * The position of the selection cursor. An index of 0 means the caret is before the
+	 * character at position 0.
+	 * 
+	 * Modifying this will reset the current selection (no text will be selected).
+	 */
 	public var caretIndex(get, set):Int;
 	
+	/**
+	 * The selection cursor's width.
+	 */
 	public var caretWidth(default, set):Int = 1;
 	
+	/**
+	 * This regular expression will filter out (remove) everything that matches.
+	 * 
+	 * Changing this will automatically set `filterMode` to `CUSTOM_FILTER`.
+	 */
 	public var customFilterPattern(default, set):EReg;
 
+	/**
+	 * Whether or not the text field can be edited by the user.
+	 */
 	public var editable:Bool = true;
 	
+	/**
+	 * The color of the border for the text field, if it has a background.
+	 */
 	public var fieldBorderColor(default, set):FlxColor = FlxColor.BLACK;
 	
+	/**
+	 * The thickness of the border for the text field, if it has a background.
+	 * 
+	 * Setting this to 0 will remove the border entirely.
+	 */
 	public var fieldBorderThickness(default, set):Int = 1;
 	
+	/**
+	 * Defines how to filter the text (no filter, only letters, only numbers, 
+	 * only letters & numbers, or a custom filter).
+	 */
 	public var filterMode(default, set):FlxInputTextFilterMode = NO_FILTER;
 	
+	/**
+	 * Callback that is triggered when this text field gains focus.
+	 */
 	public var focusGained:Void->Void;
 	
+	/**
+	 * Callback that is triggered when this text field loses focus.
+	 */
 	public var focusLost:Void->Void;
 	
+	/**
+	 * Defines whether a letter case is enforced on the text.
+	 */
 	public var forceCase(default, set):FlxInputTextCase = ALL_CASES;
 	
+	/**
+	 * Whether or not the text field is the current active one on the screen.
+	 */
 	public var hasFocus(default, set):Bool = false;
 	
+	/**
+	 * Set the maximum length for the text field. 0 means unlimited.
+	 */
 	public var maxLength(default, set):Int = 0;
 
+	/**
+	 * The maximum value of `scrollH`.
+	 */
 	public var maxScrollH(get, never):Int;
 	
+	/**
+	 * The maximum value of `scrollV`.
+	 */
 	public var maxScrollV(get, never):Int;
 	
 	public var multiline(get, set):Bool;
 	
+	/**
+	 * Whether or not the text field is a password text field. This will
+	 * hide all characters behind asterisks (*), and prevent any text
+	 * from being copied.
+	 */
 	public var passwordMode(get, set):Bool;
 
+	/**
+	 * The current horizontal scrolling position, in pixels. Defaults to
+	 * 0, which means the text is not horizontally scrolled.
+	 */
 	public var scrollH(get, set):Int;
 	
+	/**
+	 * The current vertical scrolling position, by line number. If the first
+	 * line displayed is the first line in the text field, `scrollV`
+	 * is set to 1 (not 0).
+	 */
 	public var scrollV(get, set):Int;
 
+	/**
+	 * Whether or not the text can be selected by the user. If set to false,
+	 * the text field will technically also become uneditable, since the user
+	 * can't select it first.
+	 */
 	public var selectable:Bool = true;
 
+	/**
+	 * The color that the text inside the selection will change into, if
+	 * `useSelectedTextFormat` is enabled.
+	 */
 	public var selectedTextColor(default, set):FlxColor = FlxColor.WHITE;
 	
+	/**
+	 * The beginning index of the current selection.
+	 * 
+	 * **Warning:** Will be -1 if the text hasn't been selected yet!
+	 */
 	public var selectionBeginIndex(get, never):Int;
 
+	/**
+	 * The color of the selection, shown behind the currently selected text.
+	 */
 	public var selectionColor(default, set):FlxColor = FlxColor.BLACK;
 	
+	/**
+	 * The ending index of the current selection.
+	 * 
+	 * **Warning:** Will be -1 if the text hasn't been selected yet!
+	 */
 	public var selectionEndIndex(get, never):Int;
 
 	/**
@@ -86,36 +200,110 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	public var useSelectedTextFormat(default, set):Bool = true;
 	
+	/**
+	 * An FlxSprite representing the background of the text field.
+	 */
 	var _backgroundSprite:FlxSprite;
+	/**
+	 * An FlxSprite representing the selection cursor.
+	 */
 	var _caret:FlxSprite;
+	/**
+	 * This variable is used for the caret flash timer to indicate whether it
+	 * is currently visible or not.
+	 */
 	var _caretFlash:Bool = false;
+	/**
+	 * Internal variable for the current index of the selection cursor.
+	 */
 	var _caretIndex:Int = -1;
+	/**
+	 * The timer used to flash the caret while the text field has focus.
+	 */
 	var _caretTimer:FlxTimer = new FlxTimer();
+	/**
+	 * An FlxSprite representing the border of the text field.
+	 */
 	var _fieldBorderSprite:FlxSprite;
+	/**
+	 * Internal variable that holds the camera that the text field is being pressed on.
+	 */
 	var _pointerCamera:FlxCamera;
+	/**
+	 * Indicates whether or not the background sprites need to be regenerated due to a
+	 * change.
+	 */
 	var _regenBackground:Bool = false;
+	/**
+	 * An array holding the selection box sprites for the text field. It will only be as
+	 * long as the amount of lines that are currently visible. Some items may be null if
+	 * the respective line hasn't been selected yet.
+	 */
 	var _selectionBoxes:Array<FlxSprite> = [];
+	/**
+	 * The format that will be used for text inside the current selection.
+	 */
 	var _selectionFormat:TextFormat = new TextFormat();
+	/**
+	 * The current index of the selection from the caret.
+	 */
 	var _selectionIndex:Int = -1;
 	#if FLX_POINTER_INPUT
-	var _lastClickTime:Int = 0;
+	/**
+	 * Stores the last time that this text field was pressed on, which helps to check for double-presses.
+	 */
+	var _lastPressTime:Int = 0;
+	
+	/**
+	 * Timer for the text field to scroll vertically when dragging over it.
+	 */
 	var _scrollVCounter:Float = 0;
 	#if FLX_MOUSE
+	/**
+	 * Indicates whether the mouse is pressing down on this text field.
+	 */
 	var _mouseDown:Bool = false;
 	#end
 	#if FLX_TOUCH
+	/**
+	 * Stores the FlxTouch that is pressing down on this text field, if there is one.
+	 */
 	var _currentTouch:FlxTouch;
+	/**
+	 * Used for checking if the current touch has just moved on the X axis.
+	 */
 	var _lastTouchX:Null<Float>;
+	/**
+	 * Used for checking if the current touch has just moved on the Y axis.
+	 */
 	var _lastTouchY:Null<Float>;
 	#end
 	#end
 	
+	/**
+	 * Creates a new `FlxInputText` object at the specified position.
+	 * @param x               The X position of the text.
+	 * @param y               The Y position of the text.
+	 * @param fieldWidth      The `width` of the text object. Enables `autoSize` if `<= 0`.
+	 *                         (`height` is determined automatically).
+	 * @param text            The actual text you would like to display initially.
+	 * @param size            The font size for this text object.
+	 * @param textColor       The color of the text
+	 * @param backgroundColor The color of the background (`FlxColor.TRANSPARENT` for no background color)
+	 * @param embeddedFont    Whether this text field uses embedded fonts or not.
+	 */
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, textColor:FlxColor = FlxColor.BLACK,
 			backgroundColor:FlxColor = FlxColor.WHITE, embeddedFont:Bool = true)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
+		if (text == null || text == "")
+		{
+			textField.text = "";
+			_regen = true;
+		}
 		this.backgroundColor = backgroundColor;
 		
+		// Default to a single-line text field
 		wordWrap = multiline = false;
 		// If the text field's type isn't INPUT and there's a new line at the end
 		// of the text, it won't be counted for in `numLines`
@@ -166,6 +354,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		drawSprite(_caret);
 	}
 	
+	/**
+	 * Clean up memory.
+	 */
 	override function destroy():Void
 	{
 		FlxG.inputText.unregisterInputText(this);
@@ -235,6 +426,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Replaces the currently selected text with `newText`, or just inserts it at
+	 * the selection cursor if there isn't any text selected.
+	 */
 	public function replaceSelectedText(newText:String):Void
 	{
 		if (newText == null)
@@ -256,6 +451,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		replaceText(beginIndex, endIndex, newText);
 	}
 
+	/**
+	 * Sets the selection to span from `beginIndex` to `endIndex`. The selection cursor
+	 * will end up at `endIndex`.
+	 */
 	public function setSelection(beginIndex:Int, endIndex:Int):Void
 	{
 		_selectionIndex = beginIndex;
@@ -267,6 +466,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		updateSelection();
 	}
 
+	/**
+	 * Filters the specified text and adds it to the field at the current selection.
+	 */
 	function addText(newText:String):Void
 	{
 		newText = filterText(newText, true);
@@ -277,6 +479,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	/**
+	 * Helper function to draw sprites with the correct cameras and scroll factor.
+	 */
 	function drawSprite(sprite:FlxSprite):Void
 	{
 		if (sprite != null && sprite.visible)
@@ -287,6 +492,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Returns the specified text filtered using `maxLength`, `forceCase` and `filterMode`.
+	 * @param newText   The string to filter.
+	 * @param selection Whether or not this string is meant to be added at the selection or if we're
+	 *                  replacing the entire text. This is used for cutting the string appropiately
+	 *                  when `maxLength` is set.
+	 */
 	function filterText(newText:String, selection:Bool = false):String
 	{
 		if (maxLength > 0)
@@ -335,6 +547,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return newText;
 	}
 
+	/**
+	 * Returns the X offset of the selection cursor based on the current alignment.
+	 * 
+	 * Used for positioning the cursor when there isn't any text at the current line.
+	 */
 	function getCaretOffsetX():Float
 	{
 		return switch (alignment)
@@ -345,6 +562,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Gets the character index at a specific point on the text field.
+	 * 
+	 * If the point is over a line but not over a character inside it, it will return
+	 * the last character in the line. If no line is found at the point, the length
+	 * of the text is returned.
+	 */
 	function getCharAtPosition(x:Float, y:Float):Int
 	{
 		if (x < GUTTER)
@@ -392,6 +616,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return text.length;
 	}
 
+	/**
+	 * Gets the boundaries of the character at the specified index in the text field.
+	 * 
+	 * This handles `textField.getCharBoundaries()` not being able to return boundaries
+	 * of a character that isn't currently visible on Flash.
+	 */
 	function getCharBoundaries(char:Int):Rectangle
 	{
 		#if flash
@@ -426,6 +656,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return boundaries;
 	}
 	
+	/**
+	 * Gets the index of the character horizontally closest to `charIndex` at the
+	 * specified line.
+	 */
 	function getCharIndexOnDifferentLine(charIndex:Int, lineIndex:Int):Int
 	{
 		if (charIndex < 0 || charIndex > text.length)
@@ -449,6 +683,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return getCharAtPosition(x, y);
 	}
 	
+	/**
+	 * Gets the line index of the specified character.
+	 * 
+	 * This handles `textField.getLineIndexOfChar()` not returning a valid index for the
+	 * text's length on Flash.
+	 */
 	function getLineIndexOfChar(char:Int):Int
 	{
 		// On Flash, if the character is equal to the end of the text, it returns -1 as the line.
@@ -457,7 +697,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	
 	/**
-	 * NOTE: This does not include the vertical gutter on top of the text field.
+	 * Gets the Y position of the specified line in the text field.
+	 * 
+	 * **NOTE:** This does not include the vertical gutter on top of the text field.
 	 */
 	function getLineY(line:Int):Float
 	{
@@ -469,6 +711,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return scrollY;
 	}
 
+	/**
+	 * Calculates the bounds of the text field on the stage, which is used for setting the
+	 * text input rect for the Lime window.
+	 * @param camera The camera to use to get the bounds of the text field.
+	 */
 	function getLimeBounds(camera:FlxCamera):lime.math.Rectangle
 	{
 		if (camera == null)
@@ -496,11 +743,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return new lime.math.Rectangle(rect.x, rect.y, rect.width, rect.height);
 	}
 
+	/**
+	 * Gets the Y offset of the current vertical scroll based on `scrollV`.
+	 */
 	function getScrollVOffset():Float
 	{
 		return getLineY(scrollV - 1);
 	}
 
+	/**
+	 * Checks if the line the selection cursor is at is currently visible.
+	 */
 	function isCaretLineVisible():Bool
 	{
 		// `getLineIndexOfChar()` will return -1 if text is empty, but we still want the caret to show up
@@ -511,6 +764,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return line >= scrollV - 1 && line <= bottomScrollV - 1;
 	}
 	
+	/**
+	 * Dispatches an action to move the selection cursor.
+	 * @param type     The type of action to dispatch.
+	 * @param shiftKey Whether or not the shift key is currently pressed.
+	 */
 	function moveCursor(type:MoveCursorAction, shiftKey:Bool):Void
 	{
 		switch (type)
@@ -640,6 +898,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Dispatches `callback` with the appropiate text action, if there is one set.
+	 */
 	function onChange(action:FlxInputTextAction):Void
 	{
 		if (callback != null)
@@ -652,6 +913,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Regenerates the background sprites if they're enabled.
+	 */
 	function regenBackground():Void
 	{
 		if (!background)
@@ -682,6 +946,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_regenBackground = false;
 	}
 
+	/**
+	 * Replaces the text at the specified range with `newText`, or just inserts it if
+	 * `beginIndex` and `endIndex` are the same.
+	 */
 	function replaceText(beginIndex:Int, endIndex:Int, newText:String):Void
 	{
 		if (endIndex < beginIndex || beginIndex < 0 || endIndex > text.length || newText == null)
@@ -693,6 +961,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		setSelection(_selectionIndex, _caretIndex);
 	}
 	
+	/**
+	 * Runs the specified typing command.
+	 */
 	function runCommand(cmd:TypingCommand):Void
 	{
 		switch (cmd)
@@ -772,6 +1043,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Starts the timer for the caret to flash.
+	 * 
+	 * Call this right after `stopCaretTimer()` to show the caret immediately.
+	 */
 	function startCaretTimer():Void
 	{
 		_caretTimer.cancel();
@@ -784,6 +1060,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		});
 	}
 	
+	/**
+	 * Stops the timer for the caret to flash and hides it.
+	 */
 	function stopCaretTimer():Void
 	{
 		_caretTimer.cancel();
@@ -795,6 +1074,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 
+	/**
+	 * Updates the position of the background sprites, if they're enabled.
+	 */
 	function updateBackgroundPosition():Void
 	{
 		if (!background)
@@ -804,6 +1086,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_backgroundSprite.setPosition(x, y);
 	}
 	
+	/**
+	 * Updates the position of the selection cursor.
+	 */
 	function updateCaretPosition():Void
 	{
 		if (textField == null)
@@ -837,21 +1122,35 @@ class FlxInputText extends FlxText implements IFlxInputText
 		_caret.clipRect = _caret.getHitbox(_caret.clipRect).clipTo(FlxRect.weak(x, y, width, height)).offset(-_caret.x, -_caret.y);
 	}
 	
+	/**
+	 * Updates the size of the selection cursor.
+	 */
 	function updateCaretSize():Void
 	{
 		if (_caret == null)
 			return;
+		var lineHeight = height - (GUTTER * 2);
+		if (text.length > 0)
+		{
+			lineHeight = textField.getLineMetrics(0).height;
+		}
 			
-		_caret.setGraphicSize(caretWidth, textField.getLineMetrics(0).height);
+		_caret.setGraphicSize(caretWidth, lineHeight);
 		_caret.updateHitbox();
 	}
 	
+	/**
+	 * Updates the visibility of the selection cursor.
+	 */
 	function updateCaretVisibility():Void
 	{
 		_caret.visible = (_caretFlash && _selectionIndex == _caretIndex && isCaretLineVisible());
 	}
 	
 	#if flash
+	/**
+	 * Used in Flash to automatically update the horizontal scroll after setting the selection.
+	 */
 	function updateScrollH():Void
 	{
 		if (textField.textWidth <= width - (GUTTER * 2))
@@ -903,6 +1202,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	#end
 	
+	/**
+	 * Updates the selection with the current `_selectionIndex` and `_caretIndex`.
+	 * @param keepScroll Whether or not to keep the current horizontal and vertical scroll.
+	 */
 	function updateSelection(keepScroll:Bool = false):Void
 	{
 		var cacheScrollH = scrollH;
@@ -932,6 +1235,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	/**
+	 * Updates the selection boxes according to the current selection.
+	 */
 	function updateSelectionBoxes():Void
 	{
 		if (textField == null)
@@ -1019,6 +1325,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	/**
+	 * Updates both the selection cursor and the selection boxes.
+	 */
 	function updateSelectionSprites():Void
 	{
 		updateCaretVisibility();
@@ -1026,6 +1335,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		updateSelectionBoxes();
 	}
 
+	/**
+	 * Updates all of the sprites' positions.
+	 */
 	function updateSpritePositions():Void
 	{
 		updateBackgroundPosition();
@@ -1034,6 +1346,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	
 	#if FLX_POINTER_INPUT
+	/**
+	 * Checks for mouse input on the text field.
+	 * @return Whether or not mouse overlap was detected.
+	 */
 	function updateMouseInput(elapsed:Float):Bool
 	{
 		var overlap = false;
@@ -1055,7 +1371,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else if (FlxG.mouse.justReleased)
 		{
-			_lastClickTime = 0;
+			_lastPressTime = 0;
 		}
 
 		if (checkPointerOverlap(FlxG.mouse))
@@ -1084,6 +1400,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return overlap;
 	}
 	
+	/**
+	 * Checks for touch input on the text field.
+	 * @return Whether or not touch overlap was detected.
+	 */
 	function updateTouchInput(elapsed:Float):Bool
 	{
 		var overlap = false;
@@ -1125,7 +1445,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			else if (touch.justPressed)
 			{
 				pressedElsewhere = true;
-				_lastClickTime = 0;
+				_lastPressTime = 0;
 			}
 		}
 		if (pressedElsewhere && _currentTouch == null)
@@ -1136,6 +1456,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return overlap;
 	}
 	
+	/**
+	 * Checks if the pointer is overlapping the text field. This will also set
+	 * `_pointerCamera` accordingly if it detects overlap.
+	 */
 	function checkPointerOverlap(pointer:FlxPointer):Bool
 	{
 		var overlap = false;
@@ -1156,6 +1480,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return overlap;
 	}
 	
+	/**
+	 * Called when a pointer presses on this text field.
+	 */
 	function updatePointerPress(pointer:FlxPointer):Void
 	{
 		hasFocus = true;
@@ -1168,6 +1495,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		relativePos.put();
 	}
 
+	/**
+	 * Updates the text field's dragging while a pointer has pressed down on it.
+	 */
 	function updatePointerDrag(pointer:FlxPointer, elapsed:Float):Void
 	{
 		var relativePos = getRelativePosition(pointer);
@@ -1204,6 +1534,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	/**
+	 * Called when a pointer moves while its pressed down on the text field.
+	 */
 	function updatePointerMove(pointer:FlxPointer):Void
 	{
 		if (_selectionIndex < 0)
@@ -1221,6 +1554,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		relativePos.put();
 	}
 	
+	/**
+	 * Called when a pointer is released after pressing down on the text field.
+	 */
 	function updatePointerRelease(pointer:FlxPointer):Void
 	{
 		if (!hasFocus)
@@ -1245,17 +1581,20 @@ class FlxInputText extends FlxText implements IFlxInputText
 		relativePos.put();
 		_pointerCamera = null;
 		var currentTime = FlxG.game.ticks;
-		if (currentTime - _lastClickTime < 500)
+		if (currentTime - _lastPressTime < 500)
 		{
 			updatePointerDoublePress(pointer);
-			_lastClickTime = 0;
+			_lastPressTime = 0;
 		}
 		else
 		{
-			_lastClickTime = currentTime;
+			_lastPressTime = currentTime;
 		}
 	}
 	
+	/**
+	 * Called when a pointer double-presses the text field.
+	 */
 	function updatePointerDoublePress(pointer:FlxPointer):Void
 	{
 		var rightPos = text.length;
@@ -1283,6 +1622,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 	}
 	
+	/**
+	 * Returns the position of the pointer relative to the text field.
+	 */
 	function getRelativePosition(pointer:FlxPointer):FlxPoint
 	{
 		var pointerPos = pointer.getWorldPosition(_pointerCamera);
@@ -1407,6 +1749,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 				setSelection(_selectionIndex, _caretIndex);
 			}
+			if (autoSize || _autoHeight)
+			{
+				_regenBackground = true;
+			}
 		}
 		
 		return value;
@@ -1524,7 +1870,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (customFilterPattern != value)
 		{
 			customFilterPattern = value;
-			if (filterMode == CUSTOM_FILTER)
+			if (filterMode != CUSTOM_FILTER)
+			{
+				filterMode = CUSTOM_FILTER;
+			}
+			else
 			{
 				text = filterText(text);
 			}
@@ -1771,26 +2121,73 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 enum abstract FlxInputTextAction(String) from String to String
 {
+	/**
+	 * Dispatched whenever the text is changed by the user. It's always
+	 * dispatched after `INPUT_ACTION`, `BACKSPACE_ACTION`, and
+	 * `DELETE_ACTION`.
+	 */
 	var CHANGE_ACTION = "change";
+	/**
+	 * Dispatched whenever new text is added by the user.
+	 */
 	var INPUT_ACTION = "input";
+	/**
+	 * Dispatched whenever text to the left is removed by the user (pressing
+	 * backspace).
+	 */
 	var BACKSPACE_ACTION = "backspace";
+	/**
+	 * Dispatched whenever text to the right is removed by the user (pressing
+	 * delete).
+	 */
 	var DELETE_ACTION = "delete";
+	/**
+	 * Dispatched whenever enter is pressed by the user while the text field
+	 * is focused.
+	 */
 	var ENTER_ACTION = "enter";
+	/**
+	 * Dispatched whenever the text field is scrolled in some way.
+	 */
 	var SCROLL_ACTION = "scroll";
 }
 
 enum abstract FlxInputTextCase(Int) from Int to Int
 {
+	/**
+	 * Allows both lowercase and uppercase letters.
+	 */
 	var ALL_CASES = 0;
+	/**
+	 * Changes all text to be uppercase.
+	 */
 	var UPPER_CASE = 1;
+	/**
+	 * Changes all text to be lowercase.
+	 */
 	var LOWER_CASE = 2;
 }
 
 enum abstract FlxInputTextFilterMode(Int) from Int to Int
 {
+	/**
+	 * Does not filter the text at all.
+	 */
 	var NO_FILTER = 0;
+	/**
+	 * Only allows letters (a-z & A-Z) to be added to the text.
+	 */
 	var ONLY_ALPHA = 1;
+	/**
+	 * Only allows numbers (0-9) to be added to the text.
+	 */
 	var ONLY_NUMERIC = 2;
+	/**
+	 * Only allows letters (a-z & A-Z) and numbers (0-9) to be added to the text.
+	 */
 	var ONLY_ALPHANUMERIC = 3;
+	/**
+	 * Lets you use a custom filter with `customFilterPattern`.
+	 */
 	var CUSTOM_FILTER = 4;
 }

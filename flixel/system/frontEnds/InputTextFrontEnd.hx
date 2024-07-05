@@ -5,16 +5,32 @@ import lime.ui.KeyModifier;
 import openfl.events.Event;
 import openfl.events.TextEvent;
 
+/**
+ * Accessed via `FlxG.inputText`.
+ */
 class InputTextFrontEnd
 {
+	/**
+	 * The input text object that's currently in focus, or `null` if there isn't any.
+	 */
 	public var focus(default, set):IFlxInputText;
 	
+	/**
+	 * Returns whether or not there's currently an editable input text in focus.
+	 */
 	public var isTyping(get, never):Bool;
 	
+	/**
+	 * Contains all of the currently registered input text objects.
+	 */
 	var _registeredInputTexts:Array<IFlxInputText> = [];
 	
 	public function new() {}
 	
+	/**
+	 * Registers an input text object, and initiates the event listeners if it's
+	 * the first one to be added.
+	 */
 	public function registerInputText(input:IFlxInputText):Void
 	{
 		if (!_registeredInputTexts.contains(input))
@@ -38,6 +54,10 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Unregisters an input text object, and removes the event listeners if there
+	 * aren't any more left.
+	 */
 	public function unregisterInputText(input:IFlxInputText):Void
 	{
 		if (_registeredInputTexts.contains(input))
@@ -59,6 +79,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when a `TEXT_INPUT` event is received.
+	 */
 	function onTextInput(event:TextEvent):Void
 	{
 		// Adding new lines is handled inside FlxInputText
@@ -71,6 +94,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when an `onKeyDown` event is recieved.
+	 */
 	function onKeyDown(key:KeyCode, modifier:KeyModifier):Void
 	{
 		if (focus == null)
@@ -183,6 +209,10 @@ class InputTextFrontEnd
 	}
 
 	#if flash
+	/**
+	 * Called when an `onKeyUp` event is recieved. This is used to reset the stage's focus
+	 * back to null.
+	 */
 	function onKeyUp(key:KeyCode, modifier:KeyModifier):Void
 	{
 		if (FlxG.stage.focus == FlxG.stage)
@@ -191,6 +221,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when a `COPY` event is received.
+	 */
 	function onCopy(e:Event):Void
 	{
 		if (focus != null)
@@ -199,6 +232,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when a `CUT` event is received.
+	 */
 	function onCut(e:Event):Void
 	{
 		if (focus != null)
@@ -207,6 +243,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when a `PASTE` event is received.
+	 */
 	function onPaste(e:Event):Void
 	{
 		if (focus != null)
@@ -215,6 +254,9 @@ class InputTextFrontEnd
 		}
 	}
 	
+	/**
+	 * Called when a `SELECT_ALL` event is received.
+	 */
 	function onSelectAll(e:Event):Void
 	{
 		if (focus != null)
@@ -268,25 +310,81 @@ enum TypingAction
 
 enum MoveCursorAction
 {
+	/**
+	 * Moves the cursor one character to the left.
+	 */
 	LEFT;
+	/**
+	 * Moves the cursor one character to the right.
+	 */
 	RIGHT;
+	/**
+	 * Moves the cursor up to the previous line.
+	 */
 	UP;
+	/**
+	 * Moves the cursor down to the next line.
+	 */
 	DOWN;
+	/**
+	 * Moves the cursor to the beginning of the text.
+	 */
 	HOME;
+	/**
+	 * Moves the cursor to the end of the text.
+	 */
 	END;
+	/**
+	 * Moves the cursor to the beginning of the current line.
+	 */
 	LINE_BEGINNING;
+	/**
+	 * Moves the cursor to the end of the current line.
+	 */
 	LINE_END;
+	/**
+	 * Moves the cursor to the beginning of the current line, or the previous line
+	 * if it's already there.
+	 */
 	PREVIOUS_LINE;
+	/**
+	 * Moves the cursor to the beginning of the next line, or the end of the text
+	 * if it's at the last line.
+	 */
 	NEXT_LINE;
 }
 
 enum TypingCommand
 {
+	/**
+	 * Enters a new line into the text.
+	 */
 	NEW_LINE;
+	/**
+	 * Deletes the character to the left of the cursor, or the selection if
+	 * there's already one.
+	 */
 	DELETE_LEFT;
+	/**
+	 * Deletes the character to the right of the cursor, or the selection if
+	 * there's already one.
+	 */
 	DELETE_RIGHT;
+	/**
+	 * Copies the current selection into the clipboard.
+	 */
 	COPY;
+	/**
+	 * Copies the current selection into the clipboard and then removes it
+	 * from the text field.
+	 */
 	CUT;
+	/**
+	 * Pastes the clipboard's text into the field.
+	 */
 	PASTE;
+	/**
+	 * Selects all of the text in the field.
+	 */
 	SELECT_ALL;
 }
