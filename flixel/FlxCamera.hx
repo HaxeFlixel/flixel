@@ -1545,6 +1545,8 @@ class FlxCamera extends FlxBasic
 			return;
 
 		_fxFlashColor = Color;
+		if (_fxFlashColor.alpha == 0)
+			_fxFlashColor.alpha = 0xff;
 		if (Duration <= 0)
 			Duration = 0.000001;
 		_fxFlashDuration = Duration;
@@ -1567,6 +1569,8 @@ class FlxCamera extends FlxBasic
 			return;
 
 		_fxFadeColor = Color;
+		if (_fxFadeColor.alpha == 0)
+			_fxFadeColor.alpha = 0xff;
 		if (Duration <= 0)
 			Duration = 0.000001;
 
@@ -1722,35 +1726,40 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	function drawFX():Void
 	{
+		var fxColor:FlxColor;
 		var alphaComponent:Float;
 
 		// Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			alphaComponent = _fxFlashColor.alpha;
+			fxColor = _fxFlashColor;
+			alphaComponent = fxColor.alphaFloat * _fxFlashAlpha;
 
 			if (FlxG.renderBlit)
 			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
+				fxColor.alphaFloat = alphaComponent;
+				fill(fxColor);
 			}
 			else
 			{
-				fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, canvas.graphics);
+				fill(fxColor.rgb, true, alphaComponent, canvas.graphics);
 			}
 		}
 
 		// Draw the "fade" special effect onto the buffer
 		if (_fxFadeAlpha > 0.0)
 		{
-			alphaComponent = _fxFadeColor.alpha;
+			fxColor = _fxFadeColor;
+			alphaComponent = fxColor.alphaFloat * _fxFadeAlpha;
 
 			if (FlxG.renderBlit)
 			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
+				fxColor.alphaFloat = alphaComponent;
+				fill(fxColor);
 			}
 			else
 			{
-				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
+				fill(fxColor.rgb, true, alphaComponent, canvas.graphics);
 			}
 		}
 	}
