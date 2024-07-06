@@ -132,6 +132,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 *                     (`Frame = numFrames - 1 - Frame`), so `Frame` value will mean frame index
 	 *                     from the animation's end in this case.
 	 */
+	@:haxe.warning("-WDeprecated")
 	public function play(Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (!Force && !finished && reversed == Reversed)
@@ -252,6 +253,7 @@ class FlxAnimation extends FlxBaseAnimation
 		return value;
 	}
 
+	@:haxe.warning("-WDeprecated")
 	function set_curFrame(frame:Int):Int
 	{
 		var maxFrameIndex:Int = numFrames - 1;
