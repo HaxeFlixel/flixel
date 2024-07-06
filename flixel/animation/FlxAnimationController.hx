@@ -166,6 +166,7 @@ class FlxAnimationController implements IFlxDestroyable
 		clearPrerotated();
 	}
 
+	@:haxe.warning("-WDeprecated")
 	public function destroy():Void
 	{
 		FlxDestroyUtil.destroy(_frameCallback);
@@ -694,6 +695,7 @@ class FlxAnimationController implements IFlxDestroyable
 		frameIndex = FlxG.random.int(0, numFrames - 1);
 	}
 
+	@:haxe.warning("-WDeprecated")
 	inline function fireCallback():Void
 	{
 		final name = (_curAnim != null) ? (_curAnim.name) : null;
@@ -709,6 +711,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	@:allow(flixel.animation)
+	@:haxe.warning("-WDeprecated")
 	inline function fireFinishCallback(?name:String):Void
 	{
 		if (finishCallback != null)
