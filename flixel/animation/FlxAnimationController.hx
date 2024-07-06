@@ -711,7 +711,7 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			finishCallback(name);
 		}
-		if (_finishedCallback)
+		if (_finishedCallback != null)
 		{
 			_finishedCallback.dispatch(name);
 		}
