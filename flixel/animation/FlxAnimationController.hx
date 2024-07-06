@@ -78,15 +78,18 @@ class FlxAnimationController implements IFlxDestroyable
 	 * A `FlxSignal` that dispatches each time the current animation's frame changes.
 	 */
 	public var frameCallback(get, never):FlxTypedSignal<String->Int->Int->Void>;
-	
+
 	/**
 	 * A `FlxSignal` that dispatches each time the current animation finishes.
 	 */
 	public var finishedCallback(get, never):FlxTypedSignal<String->Void>;
-	
+
+	/**
+	 * Internal variables for lazily creating `frameCallback` and `finishedCallback` signals when needed.
+	 */
 	@:noCompletion
 	var _frameCallback:FlxTypedSignal<String->Int->Int->Void>;
-	
+
 	@:noCompletion
 	var _finishedCallback:FlxTypedSignal<String->Void>;
 
@@ -165,8 +168,9 @@ class FlxAnimationController implements IFlxDestroyable
 
 	public function destroy():Void
 	{
-		_frameCallback = FlxDestroyUtil.destroy(_frameCallback);
-		_finishedCallback = FlxDestroyUtil.destroy(_finishedCallback);
+		FlxDestroyUtil.destroy(_frameCallback);
+		FlxDestroyUtil.destroy(_finishedCallback);
+
 		destroyAnimations();
 		_animations = null;
 		callback = null;
