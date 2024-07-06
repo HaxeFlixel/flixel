@@ -75,6 +75,11 @@ abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 		return cast(this, Xml);
 	}
 
+	inline public function getFirstElement()
+	{
+		return getXml().getFirstElement();
+	}
+
 	static inline function fromPath<T>(path:String):Xml
 	{
 		return fromXmlString(Assets.getText(path));
