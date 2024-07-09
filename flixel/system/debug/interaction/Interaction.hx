@@ -141,7 +141,7 @@ class Interaction extends Window
 
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
-		_flixelPointer.setGlobalScreenPositionUnsafe(event.stageX, event.stageY);
+		_flixelPointer.setRawPositionUnsafe(event.stageX, event.stageY);
 
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)

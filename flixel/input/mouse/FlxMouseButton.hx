@@ -34,13 +34,13 @@ class FlxMouseButton extends FlxInput<Int> implements IFlxDestroyable
 
 		if (justPressed)
 		{
-			justPressedPosition.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			justPressedPosition.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
 			justPressedTimeInTicks = FlxG.game.ticks;
 		}
 		#if FLX_POINTER_INPUT
 		else if (justReleased)
 		{
-			FlxG.swipes.push(new FlxSwipe(ID, justPressedPosition.copyTo(), FlxG.mouse.getScreenPosition(), justPressedTimeInTicks));
+			FlxG.swipes.push(new FlxSwipe(ID, justPressedPosition.copyTo(), FlxG.mouse.getViewPosition(), justPressedTimeInTicks));
 		}
 		#end
 	}
