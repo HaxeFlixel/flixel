@@ -80,7 +80,7 @@ class FlxPointer
 	}
 	
 	/**
-	 * The world position relative to the main camera's scroll position, where `(0, 0)` is the
+	 * The position relative to the game's position in the window, where `(0, 0)` is the
 	 * top-left edge of the game and `(FlxG.width, FlxG.height)` is the bottom-right
 	 * 
 	 * **Note:** Fields `gameX` and `gameY` also store this result
@@ -97,7 +97,7 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
+	 * Fetch the world position relative to the main camera's `scroll` position, where
 	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
 	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right
 	 * 
