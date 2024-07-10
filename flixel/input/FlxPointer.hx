@@ -99,9 +99,9 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the position of the pointer relative to given camera, where `(cam.viewLeft, cam.viewTop)`
-	 * is the top-left of the camera and `(cam.viewRight, cam.viewBottom)` is the bottom right of
-	 * the camera and `(0, 0)` is 
+	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
+	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
+	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
 	 * 
 	 * **Note:** Fields `viewX` and `viewY` also store this result
 	 *
@@ -123,10 +123,12 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the position of the pointer relative to given camera, where `(cam.viewLeft, cam.viewTop)`
-	 * is the top-left of the camera and `(cam.viewRight, cam.viewBottom)` is the bottom right of
-	 * the camera and `(0, 0)` is 
-	 *
+	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
+	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
+	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
+	 * 
+	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
+	 * 
 	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
 	 * @param   result  An existing point to store the results, if `null`, one is created
 	 */
@@ -146,7 +148,9 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the screen position of the pointer on any given camera
+	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
+	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
+	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
 	 * 
 	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
 	 * 
@@ -181,13 +185,10 @@ class FlxPointer
 	}
 	
 	/**
-	 * Checks to see if some FlxObject overlaps this FlxObject or FlxGroup.
-	 * If the group has a LOT of things in it, it might be faster to use FlxG.overlaps().
-	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
+	 * Checks to see if this pointer overlaps some `FlxObject` or `FlxGroup`.
 	 *
-	 * @param 	ObjectOrGroup The object or group being tested.
-	 * @param 	Camera Specify which game camera you want. If null getScreenPosition() will just grab the first global camera.
-	 * @return 	Whether or not the two objects overlap.
+	 * @param   objectOrGroup  The object or group being tested
+	 * @param   camera         Helps determine the world position. If `null`, `FlxG.camera` is used
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(objectOrGroup:FlxBasic, ?camera:FlxCamera):Bool
@@ -207,7 +208,7 @@ class FlxPointer
 		}
 		// check object
 		getWorldPosition(camera, _cachedPoint);
-		final object:FlxObject = cast objectOrGroup;
+		final object = cast (objectOrGroup, FlxObject);
 		return object.overlapsPoint(_cachedPoint, true, camera);
 	}
 	
