@@ -82,22 +82,6 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the position of the pointer relative to the window, where `(0, 0)` is the top-left of
-	 * the window and `(stage.stageWidth, stage.stageHeight)` is the bottom right of the camera
-	 * 
-	 * **Note:** 
-	 * 
-	 * @param   result  An existing point to store the results, if `null`, one is created
-	 */
-	public function getWindowPosition(?result:FlxPoint):FlxPoint
-	{
-		if (result == null)
-			return FlxPoint.get();
-		
-		return result.set(_rawX + FlxG.game.x, _rawY + FlxG.game.y);
-	}
-	
-	/**
 	 * The world position relative to the main camera's scroll position, where `(0, 0)` is the
 	 * top-left edge of the game and `(FlxG.width, FlxG.height)` is the bottom-right edge of the game
 	 * 
@@ -111,7 +95,7 @@ class FlxPointer
 		if (result == null)
 			return FlxPoint.get();
 		
-		return result.set(Std.int(getRawGameX()), Std.int(getRawGameY()));
+		return result.set(Std.int(_rawX), Std.int(_rawY));
 	}
 	
 	/**
@@ -131,10 +115,10 @@ class FlxPointer
 		
 		if (result == null)
 			result = FlxPoint.get();
-
+		
 		result.x = Std.int((gameX - camera.x) / camera.zoom + camera.viewMarginX);
 		result.y = Std.int((gameY - camera.y) / camera.zoom + camera.viewMarginY);
-
+		
 		return result;
 	}
 	
@@ -154,10 +138,10 @@ class FlxPointer
 		
 		if (result == null)
 			result = FlxPoint.get();
-
+		
 		result.x = (gameX - camera.x + 0.5 * camera.width * (camera.zoom - camera.initialZoom)) / camera.zoom;
 		result.y = (gameY - camera.y + 0.5 * camera.height * (camera.zoom - camera.initialZoom)) / camera.zoom;
-
+		
 		return result;
 	}
 	
@@ -175,13 +159,13 @@ class FlxPointer
 	{
 		if (camera == null)
 			camera = FlxG.camera;
-
+		
 		if (result == null)
 			result = FlxPoint.get();
-
+		
 		result.x = (gameX - camera.x) / camera.zoom + camera.viewMarginX;
 		result.y = (gameY - camera.y) / camera.zoom + camera.viewMarginY;
-
+		
 		return result;
 	}
 	
@@ -245,8 +229,8 @@ class FlxPointer
 	@:haxe.warning("-WDeprecated")
 	public function setRawPositionUnsafe(x:Float, y:Float)
 	{
-		_rawX = x;
-		_rawY = y;
+		_rawX = x / FlxG.scaleMode.scale.x;
+		_rawY = y / FlxG.scaleMode.scale.y;
 		
 		updatePositions();
 	}
@@ -273,16 +257,6 @@ class FlxPointer
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([LabelValuePair.weak("x", x), LabelValuePair.weak("y", y)]);
-	}
-	
-	inline function getRawGameX():Float
-	{
-		return _rawX / FlxG.scaleMode.scale.x;
-	}
-	
-	inline function getRawGameY():Float
-	{
-		return _rawY / FlxG.scaleMode.scale.y;
 	}
 	
 	inline function get__globalScreenX():Int

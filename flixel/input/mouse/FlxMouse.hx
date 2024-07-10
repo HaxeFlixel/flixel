@@ -786,8 +786,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		}
 		_lastLeftButtonState = _leftButton.current = record.button;
 		wheel = record.wheel;
-		// TODO: Store raw pos, instead, add versioning to recordings
-		setRawPositionUnsafe(record.x * FlxG.scaleMode.scale.x, record.y * FlxG.scaleMode.scale.y);
+		_rawX = record.x;
+		_rawY = record.y;
 		updatePositions();
 	}
 

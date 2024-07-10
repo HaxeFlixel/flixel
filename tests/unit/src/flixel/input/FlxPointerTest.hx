@@ -54,14 +54,12 @@ class FlxPointerTest
 		Assert.areEqual(1, FlxG.camera.initialZoom);
 		Assert.areEqual(640, FlxG.camera.width);
 		Assert.areEqual(480, FlxG.camera.height);
-		// FlxAssert.pointsEqual(p(1.25, 1.25), FlxG.scaleMode.scale);
 		FlxG.camera.setSize(560, 480);
 		FlxG.camera.setPosition(20, 12);
 		Assert.areEqual(140, FlxG.camera.viewMarginX);// 560/4
 		Assert.areEqual(120, FlxG.camera.viewMarginY);// 480/4
 		
 		pointer.setRawPositionUnsafe(50 * FlxG.scaleMode.scale.x, 50 * FlxG.scaleMode.scale.y);
-		// FlxAssert.pointsEqual(p( 40,  50), pointer.getWindowPosition(result)); //  (50, 50) - (10, 0)
 		FlxAssert.pointsEqual(p( 50,  50), pointer.getGamePosition  (result)); //  (50, 50)
 		FlxAssert.pointsEqual(p(155, 139), pointer.getViewPosition  (result)); // ((50, 50) - (20, 12)) / 2 + (140, 120)
 		FlxAssert.pointsEqual(p(150, 124), pointer.getWorldPosition (result)); // ((50, 50) - (20, 12)) / 2 + (140, 120) - (-5, -15)
