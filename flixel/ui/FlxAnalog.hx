@@ -301,11 +301,7 @@ class FlxAnalog extends FlxSpriteGroup
 		// if the control is used in a group, for example.
 		if (Touch != null)
 		{
-			#if (flixel < version("5.9.0"))
-			TouchPoint.set(Touch.screenX, Touch.screenY);
-			#else
 			TouchPoint.set(Touch.viewX, Touch.viewY);
-			#end
 		}
 		#end
 
