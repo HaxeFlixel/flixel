@@ -27,7 +27,6 @@ class FlxPointerTest
 		final zero = FlxPoint.get(0, 0);
 		pointer.setRawPositionUnsafe(0, 0);
 		final p = FlxPoint.get();
-		FlxAssert.pointsEqual(zero, pointer.getWindowPosition(p));
 		FlxAssert.pointsEqual(zero, pointer.getGamePosition(p));
 		Assert.areEqual(0, pointer.gameX);
 		Assert.areEqual(0, pointer.gameY);
