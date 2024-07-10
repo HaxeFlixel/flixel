@@ -52,9 +52,9 @@ class FlxPointer
 	public var gameY(default, null):Int = 0;
 
 	@:deprecated("_globalScreenX is deprecated, use gameX, instead") // 5.9.0
-	var _globalScreenX(get, never):Int;
+	var _globalScreenX(get, set):Int;
 	@:deprecated("_globalScreenY is deprecated, use gameY, instead") // 5.9.0
-	var _globalScreenY(get, never):Int;
+	var _globalScreenY(get, set):Int;
 	
 	var _rawX(default, null):Float = 0;
 	var _rawY(default, null):Float = 0;
@@ -179,8 +179,8 @@ class FlxPointer
 		if (result == null)
 			result = FlxPoint.get();
 
-		result.x = (_globalScreenX - camera.x) / camera.zoom + camera.viewMarginX;
-		result.y = (_globalScreenY - camera.y) / camera.zoom + camera.viewMarginY;
+		result.x = (gameX - camera.x) / camera.zoom + camera.viewMarginX;
+		result.y = (gameY - camera.y) / camera.zoom + camera.viewMarginY;
 
 		return result;
 	}
@@ -206,30 +206,25 @@ class FlxPointer
 	 * @return 	Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	public function overlaps(ObjectOrGroup:FlxBasic, ?Camera:FlxCamera):Bool
+	public function overlaps(objectOrGroup:FlxBasic, ?camera:FlxCamera):Bool
 	{
-		var result:Bool = false;
-		
-		var group = FlxTypedGroup.resolveGroup(ObjectOrGroup);
+		// check group
+		final group = FlxTypedGroup.resolveGroup(objectOrGroup);
 		if (group != null)
 		{
-			group.forEachExists(function(basic:FlxBasic)
+			for (basic in group.members)
 			{
-				if (overlaps(basic, Camera))
+				if (basic != null && overlaps(basic, camera))
 				{
-					result = true;
-					return;
+					return true;
 				}
-			});
+			}
+			return false;
 		}
-		else
-		{
-			getWorldPosition(Camera, _cachedPoint);
-			var object:FlxObject = cast ObjectOrGroup;
-			result = object.overlapsPoint(_cachedPoint, true, Camera);
-		}
-		
-		return result;
+		// check object
+		getWorldPosition(camera, _cachedPoint);
+		final object:FlxObject = cast objectOrGroup;
+		return object.overlapsPoint(_cachedPoint, true, camera);
 	}
 	
 	/**
@@ -298,5 +293,17 @@ class FlxPointer
 	inline function get__globalScreenY():Int
 	{
 		return gameY;
+	}
+	
+	inline function set__globalScreenX(value:Int):Int
+	{
+		_rawX = value * FlxG.scaleMode.scale.x;
+		return value;
+	}
+	
+	inline function set__globalScreenY(value:Int):Int
+	{
+		_rawY = value * FlxG.scaleMode.scale.y;
+		return value;
 	}
 }
