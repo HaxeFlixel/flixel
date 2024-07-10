@@ -46,28 +46,30 @@ class FlxPointerTest
 		final expected = FlxPoint.get();
 		inline function p(x, y) return expected.set(x, y);
 		
+		//Note: FlxG.scaleMode may be different on github actions compared to local
+		
 		FlxG.game.x -= 10;
 		FlxG.camera.zoom = 2.0;
 		FlxG.camera.scroll.set(-5, -15);
 		Assert.areEqual(1, FlxG.camera.initialZoom);
 		Assert.areEqual(640, FlxG.camera.width);
 		Assert.areEqual(480, FlxG.camera.height);
-		FlxAssert.pointsEqual(p(1.25, 1.25), FlxG.scaleMode.scale);
+		// FlxAssert.pointsEqual(p(1.25, 1.25), FlxG.scaleMode.scale);
 		FlxG.camera.setSize(560, 480);
-		FlxG.camera.setPosition(20, 0);
+		FlxG.camera.setPosition(20, 12);
 		Assert.areEqual(140, FlxG.camera.viewMarginX);// 560/4
 		Assert.areEqual(120, FlxG.camera.viewMarginY);// 480/4
 		
-		pointer.setRawPositionUnsafe(50, 50);
-		FlxAssert.pointsEqual(p( 40,  50), pointer.getWindowPosition(result)); //  (50, 50) - (10, 0)
-		FlxAssert.pointsEqual(p( 40,  40), pointer.getGamePosition  (result)); //  (50, 50) / 1.25
-		FlxAssert.pointsEqual(p(150, 140), pointer.getViewPosition  (result)); // ((50, 50) / 1.25 - (20, 0)) / 2 + (140, 120)
-		FlxAssert.pointsEqual(p(145, 125), pointer.getWorldPosition (result)); // ((50, 50) / 1.25 - (20, 0)) / 2 + (140, 120) - (-5, -15)
-		Assert.areEqual(40, pointer.gameX);
-		Assert.areEqual(40, pointer.gameY);
-		Assert.areEqual(150, pointer.viewX);
-		Assert.areEqual(140, pointer.viewY);
-		Assert.areEqual(145, pointer.x);
-		Assert.areEqual(125, pointer.y);
+		pointer.setRawPositionUnsafe(50 * FlxG.scaleMode.scale.x, 50 * FlxG.scaleMode.scale.y);
+		// FlxAssert.pointsEqual(p( 40,  50), pointer.getWindowPosition(result)); //  (50, 50) - (10, 0)
+		FlxAssert.pointsEqual(p( 50,  50), pointer.getGamePosition  (result)); //  (50, 50)
+		FlxAssert.pointsEqual(p(155, 139), pointer.getViewPosition  (result)); // ((50, 50) - (20, 12)) / 2 + (140, 120)
+		FlxAssert.pointsEqual(p(150, 124), pointer.getWorldPosition (result)); // ((50, 50) - (20, 12)) / 2 + (140, 120) - (-5, -15)
+		Assert.areEqual( 50, pointer.gameX);
+		Assert.areEqual( 50, pointer.gameY);
+		Assert.areEqual(155, pointer.viewX);
+		Assert.areEqual(139, pointer.viewY);
+		Assert.areEqual(150, pointer.x);
+		Assert.areEqual(124, pointer.y);
 	}
 }
