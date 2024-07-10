@@ -20,32 +20,30 @@ class FlxPointer
 	public var screenY(default, never):Int = 0;
 	
 	/**
-	 * The world position relative to the main camera's scroll position, where `0` is `cam.scroll.x`,
-	 * `cam.viewMarginX` or `cam.viewMarginLeft` is the left edge of the camera and 
-	 * `cam.viewMarginRight` is the right edge of the camera
+	 * The world position relative to the main camera's scroll position, `cam.viewMarginX` or
+	 * `cam.viewMarginLeft` is the left edge of the camera and `cam.viewMarginRight` is the right
 	 * 
 	 * @since 5.9.0
 	 */
 	public var viewX(default, null):Int = 0;
 	/**
-	 * The world position relative to the main camera's scroll position, where `0` is `cam.scroll.x`,
-	 * `cam.viewMarginX` or `cam.viewMarginTop` is the top edge of the camera and 
-	 * `cam.viewMarginBottom` is the bottom edge of the camera
+	 * The world position relative to the main camera's scroll position, `cam.viewMarginY` or
+	 * `cam.viewMarginTop` is the top edge of the camera and `cam.viewMarginBottom` is the bottom
 	 * 
 	 * @since 5.9.0
 	 */
 	public var viewY(default, null):Int = 0;
 	
 	/**
-	 * The position relative to the `FlxGame`'s position in the window, where `0` is the left edge
-	 * of the game and `FlxG.scaleMode.gameSize.x` is the right edge of the game
+	 * The position relative to the `FlxGame`'s position in the window,
+	 * where `0` is the left edge of the game and `FlxG.width` is the right
 	 * 
 	 * @since 5.9.0
 	 */
 	public var gameX(default, null):Int = 0;
 	/**
-	 * The position relative to the `FlxGame`'s position in the window, where `0` is the top edge
-	 * of the game and `FlxG.scaleMode.gameSize.y` is the bottom edge of the game
+	 * The position relative to the `FlxGame`'s position in the window,
+	 * where `0` is the top edge of the game and `FlxG.height` is the bottom
 	 * 
 	 * @since 5.9.0
 	 */
@@ -68,8 +66,8 @@ class FlxPointer
 	 * 
 	 * **Note:** Fields `x` and `y` also store this result
 	 *
-	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
-	 * @param   result  An existing point to store the results, if `null`, one is created
+	 * @param   camera  If unspecified, `FlxG.camera` is used, instead
+	 * @param   result  An existing point to store the results, if unspecified, one is created
 	 */
 	public function getWorldPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
@@ -83,11 +81,11 @@ class FlxPointer
 	
 	/**
 	 * The world position relative to the main camera's scroll position, where `(0, 0)` is the
-	 * top-left edge of the game and `(FlxG.width, FlxG.height)` is the bottom-right edge of the game
+	 * top-left edge of the game and `(FlxG.width, FlxG.height)` is the bottom-right
 	 * 
 	 * **Note:** Fields `gameX` and `gameY` also store this result
 	 * 
-	 * @param   result  An existing point to store the results, if `null`, one is created
+	 * @param   result  An existing point to store the results, if unspecified, one is created
 	 * @since 5.9.0
 	 */
 	public function getGamePosition(?result:FlxPoint):FlxPoint
@@ -101,12 +99,12 @@ class FlxPointer
 	/**
 	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
 	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
-	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
+	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right
 	 * 
 	 * **Note:** Fields `viewX` and `viewY` also store this result
 	 *
-	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
-	 * @param   result  An existing point to store the results, if `null`, one is created
+	 * @param   camera  If unspecified, `FlxG.camera` is used, instead
+	 * @param   result  An existing point to store the results, if unspecified, one is created
 	 */
 	public function getViewPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
@@ -129,8 +127,8 @@ class FlxPointer
 	 * 
 	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
 	 * 
-	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
-	 * @param   result  An existing point to store the results, if `null`, one is created
+	 * @param   camera  If unspecified, `FlxG.camera` is used, instead
+	 * @param   result  An existing point to store the results, if unspecified, one is created
 	 */
 	@:deprecated("getScreenPosition is deprecated, use getViewPosition, instead") // 5.9.0
 	public function getScreenPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
@@ -155,7 +153,7 @@ class FlxPointer
 	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
 	 * 
 	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
-	 * @param   result  An existing point to store the results, if `null`, one is created
+	 * @param   result  An existing point to store the results, if unspecified, one is created
 	 * @return  The pointer's location relative to camera's viewport.
 	 */
 	@:deprecated("getPositionInCameraView is deprecated, use getViewPosition, instead") // 5.9.0
@@ -188,7 +186,7 @@ class FlxPointer
 	 * Checks to see if this pointer overlaps some `FlxObject` or `FlxGroup`.
 	 *
 	 * @param   objectOrGroup  The object or group being tested
-	 * @param   camera         Helps determine the world position. If `null`, `FlxG.camera` is used
+	 * @param   camera         Helps determine the world position. If unspecified, `FlxG.camera` is used
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function overlaps(objectOrGroup:FlxBasic, ?camera:FlxCamera):Bool
