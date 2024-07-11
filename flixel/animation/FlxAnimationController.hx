@@ -59,39 +59,30 @@ class FlxAnimationController implements IFlxDestroyable
 	 * If assigned, will be called each time the current animation's frame changes.
 	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
 	 */
-	@:deprecated('callback is deprecated, use `frameCallback`')
+	@:deprecated('callback is deprecated, use onFrameChange.add') // 5.9.0
 	public var callback:(name:String, frameNumber:Int, frameIndex:Int) -> Void;
-
+	
 	/**
 	 * If assigned, will be called each time the current animation finishes.
 	 * A function that has 1 parameter: a string name - animation name.
 	 */
-	@:deprecated('finishCallback is deprecated, use `finishedCallback`')
+	@:deprecated('finishCallback is deprecated, use onFinish.add') // 5.9.0
 	public var finishCallback:(name:String) -> Void;
-
+	
+	/**
+	 * A `FlxSignal` that dispatches each time the current animation's frame changes.
+	 */
+	public final onFrameChange = new FlxTypedSignal<(String, Int, Int)->Void>();
+	
+	/**
+	 * A `FlxSignal` that dispatches each time the current animation finishes.
+	 */
+	public final onFinish = new FlxTypedSignal<(String)->Void>();
+	
 	/**
 	 * How fast or slow time should pass for this animation controller
 	 */
 	public var timeScale:Float = 1.0;
-
-	/**
-	 * A `FlxSignal` that dispatches each time the current animation's frame changes.
-	 */
-	public var frameCallback(get, never):FlxTypedSignal<String->Int->Int->Void>;
-
-	/**
-	 * A `FlxSignal` that dispatches each time the current animation finishes.
-	 */
-	public var finishedCallback(get, never):FlxTypedSignal<String->Void>;
-
-	/**
-	 * Internal variables for lazily creating `frameCallback` and `finishedCallback` signals when needed.
-	 */
-	@:noCompletion
-	var _frameCallback:FlxTypedSignal<String->Int->Int->Void>;
-
-	@:noCompletion
-	var _finishedCallback:FlxTypedSignal<String->Void>;
 
 	/**
 	 * Internal, reference to owner sprite.
@@ -169,8 +160,8 @@ class FlxAnimationController implements IFlxDestroyable
 	@:haxe.warning("-WDeprecated")
 	public function destroy():Void
 	{
-		FlxDestroyUtil.destroy(_frameCallback);
-		FlxDestroyUtil.destroy(_finishedCallback);
+		FlxDestroyUtil.destroy(onFrameChange);
+		FlxDestroyUtil.destroy(onFinish);
 
 		destroyAnimations();
 		_animations = null;
@@ -696,7 +687,7 @@ class FlxAnimationController implements IFlxDestroyable
 	}
 
 	@:haxe.warning("-WDeprecated")
-	inline function fireCallback():Void
+	function fireCallback():Void
 	{
 		final name = (_curAnim != null) ? (_curAnim.name) : null;
 		final number = (_curAnim != null) ? (_curAnim.curFrame) : frameIndex;
@@ -704,24 +695,20 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			callback(name, number, frameIndex);
 		}
-		if (_frameCallback != null)
-		{
-			_frameCallback.dispatch(name, number, frameIndex);
-		}
+		
+		onFrameChange.dispatch(name, number, frameIndex);
 	}
 
 	@:allow(flixel.animation)
 	@:haxe.warning("-WDeprecated")
-	inline function fireFinishCallback(?name:String):Void
+	function fireFinishCallback(?name:String):Void
 	{
 		if (finishCallback != null)
 		{
 			finishCallback(name);
 		}
-		if (_finishedCallback != null)
-		{
-			_finishedCallback.dispatch(name);
-		}
+		
+		onFinish.dispatch(name);
 	}
 
 	function byNamesHelper(addTo:Array<Int>, frameNames:Array<String>):Void
@@ -1012,22 +999,5 @@ class FlxAnimationController implements IFlxDestroyable
 	public inline function getFrameIndex(frame:FlxFrame):Int
 	{
 		return _sprite.frames.frames.indexOf(frame);
-	}
-	@:noCompletion
-	function get_frameCallback():FlxTypedSignal<String->Int->Int->Void>
-	{
-		if (_frameCallback == null)
-			_frameCallback = new FlxTypedSignal<String->Int->Int->Void>();
-			
-		return _frameCallback;
-	}
-	
-	@:noCompletion
-	function get_finishedCallback():FlxTypedSignal<String->Void>
-	{
-		if (_finishedCallback == null)
-			_finishedCallback = new FlxTypedSignal<String->Void>();
-			
-		return _finishedCallback;
 	}
 }
