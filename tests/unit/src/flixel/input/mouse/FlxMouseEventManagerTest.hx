@@ -12,7 +12,7 @@ class FlxMouseEventManagerTest extends FlxTest
 	function before()
 	{
 		FlxMouseEvent.removeAll();
-		FlxG.mouse.setGlobalScreenPositionUnsafe(75, 75); // causes a mouse over callback for each test
+		FlxG.mouse.setRawPositionUnsafe(75, 75); // causes a mouse over callback for each test
 
 		sprite0 = new FlxSprite(0, 0);
 		sprite0.makeGraphic(100, 100, 0xffffffff, false);

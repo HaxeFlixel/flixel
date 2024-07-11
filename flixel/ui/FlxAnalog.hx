@@ -220,7 +220,7 @@ class FlxAnalog extends FlxSpriteGroup
 		var offAll:Bool = true;
 
 		#if FLX_MOUSE
-		_point.set(FlxG.mouse.screenX, FlxG.mouse.screenY);
+		_point.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
 
 		if (!updateAnalog(_point, FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased))
 		{
@@ -301,7 +301,7 @@ class FlxAnalog extends FlxSpriteGroup
 		// if the control is used in a group, for example.
 		if (Touch != null)
 		{
-			TouchPoint.set(Touch.screenX, Touch.screenY);
+			TouchPoint.set(Touch.viewX, Touch.viewY);
 		}
 		#end
 
