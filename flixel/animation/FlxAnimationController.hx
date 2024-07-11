@@ -56,28 +56,40 @@ class FlxAnimationController implements IFlxDestroyable
 	public var frames(get, never):Int;
 
 	/**
-	 * If assigned, will be called each time the current animation's frame changes.
-	 * A function that has 3 parameters: a string name, a frame number, and a frame index.
+	 * If assigned, will be called each time the current animation's frame changes
+	 * 
+	 * @param   animName     The name of the current animation
+	 * @param   frameNumber  The progress of the current animation, in frames
+	 * @param   frameIndex   The current animation's frameIndex in the tile sheet
 	 */
 	@:deprecated('callback is deprecated, use onFrameChange.add') // 5.9.0
-	public var callback:(name:String, frameNumber:Int, frameIndex:Int) -> Void;
+	public var callback:(animName:String, frameNumber:Int, frameIndex:Int)->Void;
 	
 	/**
 	 * If assigned, will be called each time the current animation finishes.
-	 * A function that has 1 parameter: a string name - animation name.
+	 * 
+	 * @param   animName  The name of the current animation
 	 */
 	@:deprecated('finishCallback is deprecated, use onFinish.add') // 5.9.0
-	public var finishCallback:(name:String) -> Void;
+	public var finishCallback:(animName:String) -> Void;
 	
 	/**
-	 * A `FlxSignal` that dispatches each time the current animation's frame changes.
+	 * Dispatches each time the current animation's frame changes
+	 * 
+	 * @param   animName     The name of the current animation
+	 * @param   frameNumber  The progress of the current animation, in frames
+	 * @param   frameIndex   The current animation's frameIndex in the tile sheet
+	 * @since 5.9.0
 	 */
-	public final onFrameChange = new FlxTypedSignal<(String, Int, Int)->Void>();
+	public final onFrameChange = new FlxTypedSignal<(animName:String, frameNumber:Int, frameIndex:Int)->Void>();
 	
 	/**
-	 * A `FlxSignal` that dispatches each time the current animation finishes.
+	 * Dispatches each time the current animation finishes.
+	 * 
+	 * @param   animName  The name of the current animation
+	 * @since 5.9.0
 	 */
-	public final onFinish = new FlxTypedSignal<(String)->Void>();
+	public final onFinish = new FlxTypedSignal<(animName:String)->Void>();
 	
 	/**
 	 * How fast or slow time should pass for this animation controller
