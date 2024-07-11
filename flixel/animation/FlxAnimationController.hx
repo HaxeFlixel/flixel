@@ -806,7 +806,6 @@ class FlxAnimationController implements IFlxDestroyable
 		return invalid;
 	}
 
-	@:haxe.warning("-WDeprecated")
 	function set_frameIndex(Frame:Int):Int
 	{
 		if (_sprite.frames != null && numFrames > 0)
