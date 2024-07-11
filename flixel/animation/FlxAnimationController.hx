@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.util.FlxSignal;
 
 using StringTools;
 
