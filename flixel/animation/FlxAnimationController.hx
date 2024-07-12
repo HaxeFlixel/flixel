@@ -92,6 +92,14 @@ class FlxAnimationController implements IFlxDestroyable
 	public final onFinish = new FlxTypedSignal<(animName:String)->Void>();
 	
 	/**
+	 * Dispatches each time the current animation's loop is complete.
+	 * Works only with looped animations.
+	 * 
+	 * @param   animName  The name of the current animation
+	 */
+	public final onLoopComplete = new FlxTypedSignal<(animName:String)->Void>();
+	
+	/**
 	 * How fast or slow time should pass for this animation controller
 	 */
 	public var timeScale:Float = 1.0;
@@ -174,6 +182,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		FlxDestroyUtil.destroy(onFrameChange);
 		FlxDestroyUtil.destroy(onFinish);
+		FlxDestroyUtil.destroy(onLoopComplete);
 
 		destroyAnimations();
 		_animations = null;
@@ -721,6 +730,12 @@ class FlxAnimationController implements IFlxDestroyable
 		}
 		
 		onFinish.dispatch(name);
+	}
+
+	@:allow(flixel.animation)
+	function fireLoopCallback(?name:String):Void
+	{
+		onLoopComplete.dispatch(name);
 	}
 
 	function byNamesHelper(addTo:Array<Int>, frameNames:Array<String>):Void
