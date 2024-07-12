@@ -33,6 +33,7 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testCallbackAfterFirstLoadGraphic():Void
 	{
 		var timesCalled:Int = 0;
@@ -48,12 +49,31 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.areEqual(1, timesCalled);
 		Assert.areEqual(0, callbackFrameIndex);
 	}
-
+	
 	@Test
-	function testCallbackNoFrameIndexChange():Void
+	function testOnFrameChangeAfterFirstLoadGraphic():Void
 	{
 		var timesCalled:Int = 0;
-		sprite.animation.callback = function(_, _, _) timesCalled++;
+		var callbackFrameIndex:Int = -1;
+		sprite.animation.onFrameChange.add(function(s:String, n:Int, i:Int)
+		{
+			timesCalled++;
+			callbackFrameIndex = i;
+		});
+
+		loadSpriteSheet();
+
+		Assert.areEqual(1, timesCalled);
+		Assert.areEqual(0, callbackFrameIndex);
+	}
+
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function testOnFrameChangeNoFrameIndexChange():Void
+	{
+		var timesCalled:Int = 0;
+		sprite.animation.callback = function(_, _, _) timesCalled++;// remove later
+		sprite.animation.onFrameChange.add(function(_, _, _) timesCalled++);
 
 		sprite.animation.frameIndex = 0;
 		sprite.animation.frameIndex = 0;
@@ -75,15 +95,30 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test // #1781
+	@:haxe.warning("-WDeprecated")
 	function testFinishCallbackOnce():Void
 	{
 		loadSpriteSheet();
 		sprite.animation.add("animation", [0, 1, 2], 3000, false);
-
+		
 		var timesCalled = 0;
 		sprite.animation.finishCallback = function(_) timesCalled++;
 		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(1, timesCalled);
+	}
 
+	@Test // #1781
+	function testOnFinishOnce():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1, 2], 3000, false);
+		
+		var timesCalled = 0;
+		sprite.animation.onFinish.add((_)->timesCalled++);
+		sprite.animation.play("animation");
+		
 		step();
 		Assert.areEqual(1, timesCalled);
 	}
