@@ -216,7 +216,7 @@ class FlxAnimation extends FlxBaseAnimation
 				if (looped && curFrame == loopPoint)
 				{
 					curFrame = numFrames - 1;
-					parent.fireLoopCallback(name);
+					parent.onLoopComplete.dispatch(name);
 				}
 				else
 				{
@@ -228,7 +228,7 @@ class FlxAnimation extends FlxBaseAnimation
 				if (looped && curFrame == numFrames - 1)
 				{
 					curFrame = loopPoint;
-					parent.fireLoopCallback(name);
+					parent.onLoopComplete.dispatch(name);
 				}
 				else
 				{
