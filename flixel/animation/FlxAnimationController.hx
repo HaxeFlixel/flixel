@@ -97,7 +97,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 * 
 	 * @param   animName  The name of the current animation
 	 */
-	public final onLoop = new FlxTypedSignal<(animName:String) -> Void>();
+	public final onLoop = new FlxTypedSignal<(animName:String)->Void>();
 	
 	/**
 	 * How fast or slow time should pass for this animation controller
