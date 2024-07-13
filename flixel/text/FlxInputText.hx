@@ -138,6 +138,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	public var maxScrollV(get, never):Int;
 	
+	/**
+	 * Whether or not the user can create a new line in the text field
+	 * with the enter key.
+	 */
 	public var multiline(get, set):Bool;
 	
 	/**
@@ -2008,10 +2012,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (textField.multiline != value)
 		{
 			textField.multiline = value;
-			if (multiline)
-			{
-				_autoHeight = false;
-			}
 		}
 
 		return value;
