@@ -137,6 +137,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * The maximum value of `scrollV`.
 	 */
 	public var maxScrollV(get, never):Int;
+
+	/**
+	 * Whether or not the text field will automatically be scrolled
+	 * when the user rolls the mouse wheel on the text field.
+	 */
+	public var mouseWheelEnabled:Bool = true;
 	
 	/**
 	 * Whether or not the user can create a new line in the text field
@@ -165,9 +171,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var scrollV(get, set):Int;
 
 	/**
-	 * Whether or not the text can be selected by the user. If set to false,
-	 * the text field will technically also become uneditable, since the user
-	 * can't select it first.
+	 * Whether or not the text can be selected by the user.
 	 */
 	public var selectable:Bool = true;
 
@@ -1386,7 +1390,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				_mouseDown = true;
 				updatePointerPress(FlxG.mouse);
 			}
-			if (FlxG.mouse.wheel != 0)
+			if (FlxG.mouse.wheel != 0 && mouseWheelEnabled)
 			{
 				var cacheScrollV = scrollV;
 				scrollV = FlxMath.minInt(scrollV - FlxG.mouse.wheel, maxScrollV);
