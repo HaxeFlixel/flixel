@@ -198,7 +198,7 @@ class InputTextFrontEnd
 			default:
 		}
 
-		#if html5
+		#if (html5 && FLX_KEYBOARD)
 		// On HTML5, the SPACE key gets added to `FlxG.keys.preventDefaultKeys` by default, which also
 		// stops it from dispatching a text input event. We need to call `onTextInput()` manually
 		if (key == SPACE && FlxG.keys.preventDefaultKeys != null && FlxG.keys.preventDefaultKeys.contains(SPACE))
