@@ -122,7 +122,7 @@ class InputTextFrontEnd
 			case LEFT:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(PREVIOUS_LINE, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
 				}
 				else
 				{
@@ -131,7 +131,7 @@ class InputTextFrontEnd
 			case RIGHT:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(NEXT_LINE, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
 				}
 				else
 				{
@@ -140,7 +140,7 @@ class InputTextFrontEnd
 			case UP:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
 				}
 				else
 				{
@@ -149,7 +149,7 @@ class InputTextFrontEnd
 			case DOWN:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
 				}
 				else
 				{
@@ -162,7 +162,7 @@ class InputTextFrontEnd
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_BEGINNING, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
 				}
 			case END:
 				if (modifierPressed)
@@ -171,7 +171,7 @@ class InputTextFrontEnd
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_END, modifier.shiftKey));
+					focus.dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
 				}
 			case C:
 				if (modifierPressed)
@@ -337,21 +337,21 @@ enum MoveCursorAction
 	/**
 	 * Moves the cursor to the beginning of the current line.
 	 */
-	LINE_BEGINNING;
+	LINE_LEFT;
 	/**
 	 * Moves the cursor to the end of the current line.
 	 */
-	LINE_END;
+	LINE_RIGHT;
 	/**
-	 * Moves the cursor to the beginning of the current line, or the previous line
-	 * if it's already there.
+	 * Moves the cursor to the beginning of the previous word, or the
+	 * start of the text if there aren't any more words.
 	 */
-	PREVIOUS_LINE;
+	WORD_LEFT;
 	/**
-	 * Moves the cursor to the beginning of the next line, or the end of the text
-	 * if it's at the last line.
+	 * Moves the cursor to the beginning of the next word, or the end
+	 * of the text if there aren't any more words.
 	 */
-	NEXT_LINE;
+	WORD_RIGHT;
 }
 
 enum TypingCommand

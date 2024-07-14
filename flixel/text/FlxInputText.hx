@@ -1,7 +1,7 @@
 package flixel.text;
 
-import flixel.input.touch.FlxTouch;
 import flixel.input.FlxPointer;
+import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -27,7 +27,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	static inline var GUTTER:Int = 2;
 	
 	/**
-	 * Characters that break up the words to select when double-pressing.
+	 * Characters that break up the words to select.
 	 */
 	static final DELIMITERS:Array<String> = ['\n', '.', '!', '?', ',', ' ', ';', ':', '(', ')', '-', '_', '/'];
 	
@@ -843,7 +843,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 					_selectionIndex = _caretIndex;
 				}
 				setSelection(_selectionIndex, _caretIndex);
-			case LINE_BEGINNING:
+			case LINE_LEFT:
 				_caretIndex = textField.getLineOffset(getLineIndexOfChar(_caretIndex));
 				
 				if (!shiftKey)
@@ -851,7 +851,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 					_selectionIndex = _caretIndex;
 				}
 				setSelection(_selectionIndex, _caretIndex);
-			case LINE_END:
+			case LINE_RIGHT:
 				var lineIndex = getLineIndexOfChar(_caretIndex);
 				if (lineIndex < textField.numLines - 1)
 				{
@@ -867,18 +867,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 					_selectionIndex = _caretIndex;
 				}
 				setSelection(_selectionIndex, _caretIndex);
-			case PREVIOUS_LINE:
-				var lineIndex = getLineIndexOfChar(_caretIndex);
-				if (lineIndex > 0)
+			case WORD_LEFT:
+				if (_caretIndex > 0)
 				{
-					var index = textField.getLineOffset(lineIndex);
-					if (_caretIndex == index)
+					_caretIndex--;
+					while (_caretIndex > 0 && DELIMITERS.contains(text.charAt(_caretIndex)))
 					{
-						_caretIndex = textField.getLineOffset(lineIndex - 1);
+						_caretIndex--;
 					}
-					else
+					while (_caretIndex > 0 && !DELIMITERS.contains(text.charAt(_caretIndex - 1)))
 					{
-						_caretIndex = index;
+						_caretIndex--;
 					}
 				}
 				
@@ -887,15 +886,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 					_selectionIndex = _caretIndex;
 				}
 				setSelection(_selectionIndex, _caretIndex);
-			case NEXT_LINE:
-				var lineIndex = getLineIndexOfChar(_caretIndex);
-				if (lineIndex < textField.numLines - 1)
+			case WORD_RIGHT:
+				while (_caretIndex < text.length && !DELIMITERS.contains(text.charAt(_caretIndex)))
 				{
-					_caretIndex = textField.getLineOffset(lineIndex + 1);
+					_caretIndex++;
 				}
-				else
+				while (_caretIndex < text.length && DELIMITERS.contains(text.charAt(_caretIndex)))
 				{
-					_caretIndex = text.length;
+					_caretIndex++;
 				}
 				
 				if (!shiftKey)
@@ -1609,12 +1607,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (text.length > 0 && _caretIndex >= 0 && rightPos >= _caretIndex)
 		{
 			var leftPos = -1;
-			var pos = 0;
 			var startPos = FlxMath.maxInt(_caretIndex, 1);
 			
 			for (c in DELIMITERS)
 			{
-				pos = text.lastIndexOf(c, startPos - 1);
+				var pos = text.lastIndexOf(c, startPos - 1);
 				if (pos > leftPos)
 					leftPos = pos + 1;
 					
