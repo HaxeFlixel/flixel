@@ -118,7 +118,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		if (FlxG.game.replaying
 			&& !inKeyArray(FlxG.debugger.toggleKeys, event)
 			&& inKeyArray(FlxG.vcr.cancelKeys, event)
-			&& !FlxG.inputText.isTyping)
+			&& !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.vcr.cancelReplay();
 		}
