@@ -1545,8 +1545,6 @@ class FlxCamera extends FlxBasic
 			return;
 
 		_fxFlashColor = Color;
-		if (_fxFlashColor.alpha == 0)
-			_fxFlashColor.alpha = 0xff;
 		if (Duration <= 0)
 			Duration = 0.000001;
 		_fxFlashDuration = Duration;
@@ -1569,8 +1567,6 @@ class FlxCamera extends FlxBasic
 			return;
 
 		_fxFadeColor = Color;
-		if (_fxFadeColor.alpha == 0)
-			_fxFadeColor.alpha = 0xff;
 		if (Duration <= 0)
 			Duration = 0.000001;
 
