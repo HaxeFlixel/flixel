@@ -1273,6 +1273,10 @@ enum abstract FlxTextAlign(String) from String
 	{
 		return switch (align)
 		{
+			// This `null` check is needed for HashLink, otherwise it will cast
+			// a `null` alignment to 0 which results in returning `CENTER`
+			// instead of the default `LEFT`.
+			case null: LEFT;
 			case TextFormatAlign.LEFT: LEFT;
 			case TextFormatAlign.CENTER: CENTER;
 			case TextFormatAlign.RIGHT: RIGHT;
