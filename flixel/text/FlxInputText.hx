@@ -250,6 +250,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	var _regenBackground:Bool = false;
 	/**
+	 * Indicates whether or not the selection cursor's size needs to be regenerated due
+	 * to a change.
+	 */
+	var _regenCaretSize:Bool = false;
+	
+	/**
 	 * An array holding the selection box sprites for the text field. It will only be as
 	 * long as the amount of lines that are currently visible. Some items may be null if
 	 * the respective line hasn't been selected yet.
@@ -423,7 +429,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		super.regenGraphic();
 		
-		if (_caret != null && regenSelection)
+		if (_regenCaretSize)
+			updateCaretSize();
+		if (regenSelection)
 			updateSelectionSprites();
 		if (_regenBackground)
 			regenBackground();
@@ -973,6 +981,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (!background)
 			return;
+
+		_regenBackground = false;
 			
 		if (fieldBorderThickness > 0)
 		{
@@ -996,7 +1006,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		
 		updateBackgroundPosition();
-		_regenBackground = false;
 	}
 
 	/**
@@ -1153,7 +1162,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function updateCaretPosition():Void
 	{
-		if (textField == null)
+		if (textField == null || _caret == null)
 			return;
 			
 		if (text.length == 0)
@@ -1191,6 +1200,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (_caret == null)
 			return;
+		_regenCaretSize = false;
+
 		var lineHeight = height - (GUTTER * 2);
 		if (text.length > 0)
 		{
@@ -1206,6 +1217,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function updateCaretVisibility():Void
 	{
+		if (_caret == null)
+			return;
+
 		_caret.visible = (_caretFlash && editable && _selectionIndex == _caretIndex && isCaretLineVisible());
 	}
 	
@@ -1300,7 +1314,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function updateSelectionBoxes():Void
 	{
-		if (textField == null)
+		if (textField == null || _selectionBoxes == null)
 			return;
 
 		var visibleLines = bottomScrollV - scrollV + 1;
@@ -1684,7 +1698,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function getRelativePosition(pointer:FlxPointer):FlxPoint
 	{
-		var pointerPos = pointer.getWorldPosition(_pointerCamera);
+		var pointerPos = pointer.getWorldPosition(_pointerCamera, FlxPoint.get());
 		getScreenPosition(_point, _pointerCamera);
 		var result = FlxPoint.get((pointerPos.x - _pointerCamera.scroll.x) - _point.x, (pointerPos.y - _pointerCamera.scroll.y) - _point.y);
 		pointerPos.put();
@@ -1697,7 +1711,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (bold != value)
 		{
 			super.set_bold(value);
-			updateCaretSize();
+			_regenCaretSize = _regenBackground = true;
 		}
 		
 		return value;
@@ -1752,7 +1766,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (font != value)
 		{
 			super.set_font(value);
-			updateCaretSize();
+			_regenCaretSize = _regenBackground = true;
 		}
 		
 		return value;
@@ -1763,7 +1777,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (italic != value)
 		{
 			super.set_italic(value);
-			updateCaretSize();
+			_regenCaretSize = _regenBackground = true;
 		}
 		
 		return value;
@@ -1774,7 +1788,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (size != value)
 		{
 			super.set_size(value);
-			updateCaretSize();
+			_regenCaretSize = _regenBackground = true;
 		}
 		
 		return value;
@@ -1785,7 +1799,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (systemFont != value)
 		{
 			super.set_systemFont(value);
-			updateCaretSize();
+			_regenCaretSize = _regenBackground = true;
 		}
 		
 		return value;
@@ -1933,7 +1947,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (caretWidth != value)
 		{
 			caretWidth = value;
-			updateCaretSize();
+			_regenCaretSize = true;
 		}
 
 		return value;
