@@ -635,7 +635,7 @@ class FlxMouseEventManager extends FlxBasic
 		for (camera in event.object.getCameras())
 		{
 			#if FLX_MOUSE
-			_point = FlxG.mouse.getPositionInCameraView(camera, _point);
+			_point = FlxG.mouse.getViewPosition(camera, _point);
 			if (camera.containsPoint(_point))
 			{
 				_point = FlxG.mouse.getWorldPosition(camera, _point);
@@ -650,7 +650,7 @@ class FlxMouseEventManager extends FlxBasic
 			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
-				_point = touch.getPositionInCameraView(camera, _point);
+				_point = touch.getViewPosition(camera, _point);
 				if (camera.containsPoint(_point))
 				{
 					_point = touch.getWorldPosition(camera, _point);
