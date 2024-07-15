@@ -12,7 +12,6 @@ import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
-import flixel.system.frontEnds.InputTextFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
 import flixel.system.frontEnds.SignalFrontEnd;
@@ -320,11 +319,6 @@ class FlxG
 	 * Contains a list of all plugins and the functions required to `add()`, `remove()` them etc.
 	 */
 	public static var plugins(default, null):PluginFrontEnd;
-
-	/**
-	 * Used for detecting text input and dispatching commands on input text fields.
-	 */
-	public static var inputText(default, null):InputTextFrontEnd = new InputTextFrontEnd();
 
 	public static var initialWidth(default, null):Int = 0;
 	public static var initialHeight(default, null):Int = 0;

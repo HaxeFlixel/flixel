@@ -1,10 +1,11 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;
+import flixel.text.FlxInputText;
+import openfl.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -101,7 +102,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Debugger toggle
 		#if FLX_DEBUG
-		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && !FlxG.inputText.isTyping)
+		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
 		}

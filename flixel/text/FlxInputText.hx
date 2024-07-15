@@ -5,7 +5,7 @@ import flixel.input.touch.FlxTouch;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.frontEnds.InputTextFrontEnd;
+import flixel.text.FlxInputTextManager;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
@@ -21,6 +21,11 @@ import openfl.utils.QName;
  */
 class FlxInputText extends FlxText implements IFlxInputText
 {
+	/**
+	 * The global manager that handles input text objects.
+	 */
+	public static var globalManager:FlxInputTextManager;
+
 	/**
 	 * The gaps at the sides of the text field (2px).
 	 */
@@ -344,7 +349,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			background = true;
 		}
 		
-		FlxG.inputText.registerInputText(this);
+		FlxInputText.globalManager.registerInputText(this);
 	}
 	
 	override function update(elapsed:Float):Void
@@ -384,7 +389,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	override function destroy():Void
 	{
-		FlxG.inputText.unregisterInputText(this);
+		FlxInputText.globalManager.unregisterInputText(this);
 
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
@@ -2028,7 +2033,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				var bounds = getLimeBounds(_pointerCamera);
 				FlxG.stage.window.setTextInputRect(bounds);
 
-				FlxG.inputText.focus = this;
+				FlxInputText.globalManager.focus = this;
 				
 				if (_caretIndex < 0)
 				{
@@ -2043,9 +2048,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 					focusGained();
 				_justGainedFocus = true;
 			}
-			else if (FlxG.inputText.focus == this)
+			else if (FlxInputText.globalManager.focus == this)
 			{
-				FlxG.inputText.focus = null;
+				FlxInputText.globalManager.focus = null;
 				
 				if (_selectionIndex != _caretIndex)
 				{

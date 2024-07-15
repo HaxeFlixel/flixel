@@ -1,4 +1,4 @@
-package flixel.system.frontEnds;
+package flixel.text;
 
 import lime.ui.KeyCode;
 import lime.ui.KeyModifier;
@@ -6,9 +6,10 @@ import openfl.events.Event;
 import openfl.events.TextEvent;
 
 /**
- * Accessed via `FlxG.inputText`.
+ * A manager for tracking and dispatching events for input text objects.
+ * Normally accessed via the static `FlxInputText.globalManager` rather than being created separately.
  */
-class InputTextFrontEnd
+class FlxInputTextManager extends FlxBasic
 {
 	/**
 	 * The input text object that's currently in focus, or `null` if there isn't any.
@@ -24,9 +25,7 @@ class InputTextFrontEnd
 	 * Contains all of the currently registered input text objects.
 	 */
 	var _registeredInputTexts:Array<IFlxInputText> = [];
-	
-	public function new() {}
-	
+
 	/**
 	 * Registers an input text object, and initiates the event listeners if it's
 	 * the first one to be added.
@@ -314,39 +313,48 @@ enum MoveCursorAction
 	 * Moves the cursor one character to the left.
 	 */
 	LEFT;
+
 	/**
 	 * Moves the cursor one character to the right.
 	 */
 	RIGHT;
+
 	/**
 	 * Moves the cursor up to the previous line.
 	 */
 	UP;
+
 	/**
 	 * Moves the cursor down to the next line.
 	 */
 	DOWN;
+
 	/**
 	 * Moves the cursor to the beginning of the text.
 	 */
 	HOME;
+
 	/**
 	 * Moves the cursor to the end of the text.
 	 */
 	END;
+
 	/**
 	 * Moves the cursor to the beginning of the current line.
 	 */
 	LINE_LEFT;
+
 	/**
 	 * Moves the cursor to the end of the current line.
 	 */
 	LINE_RIGHT;
+
 	/**
 	 * Moves the cursor to the beginning of the previous word, or the
 	 * start of the text if there aren't any more words.
 	 */
 	WORD_LEFT;
+
 	/**
 	 * Moves the cursor to the beginning of the next word, or the end
 	 * of the text if there aren't any more words.
@@ -360,29 +368,35 @@ enum TypingCommand
 	 * Enters a new line into the text.
 	 */
 	NEW_LINE;
+
 	/**
 	 * Deletes the character to the left of the cursor, or the selection if
 	 * there's already one.
 	 */
 	DELETE_LEFT;
+
 	/**
 	 * Deletes the character to the right of the cursor, or the selection if
 	 * there's already one.
 	 */
 	DELETE_RIGHT;
+
 	/**
 	 * Copies the current selection into the clipboard.
 	 */
 	COPY;
+
 	/**
 	 * Copies the current selection into the clipboard and then removes it
 	 * from the text field.
 	 */
 	CUT;
+
 	/**
 	 * Pastes the clipboard's text into the field.
 	 */
 	PASTE;
+
 	/**
 	 * Selects all of the text in the field.
 	 */
