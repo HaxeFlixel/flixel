@@ -1722,40 +1722,35 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	function drawFX():Void
 	{
-		var fxColor:FlxColor;
-		var alphaComponent:Float;
-
 		// Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			fxColor = _fxFlashColor;
-			alphaComponent = fxColor.alphaFloat * _fxFlashAlpha;
-
 			if (FlxG.renderBlit)
 			{
-				fxColor.alphaFloat = alphaComponent;
-				fill(fxColor);
+				var color = _fxFlashColor;
+				color.alphaFloat *= _fxFlashAlpha;
+				fill(color);
 			}
 			else
 			{
-				fill(fxColor.rgb, true, alphaComponent, canvas.graphics);
+				final alpha = color.alphaFloat * _fxFlashAlpha;
+				fill(_fxFlashColor.rgb, true, alpha, canvas.graphics);
 			}
 		}
-
+		
 		// Draw the "fade" special effect onto the buffer
 		if (_fxFadeAlpha > 0.0)
 		{
-			fxColor = _fxFadeColor;
-			alphaComponent = fxColor.alphaFloat * _fxFadeAlpha;
-
 			if (FlxG.renderBlit)
 			{
-				fxColor.alphaFloat = alphaComponent;
-				fill(fxColor);
+				var color = _fxFadeColor;
+				color.alphaFloat *= _fxFadeAlpha;
+				fill(color);
 			}
 			else
 			{
-				fill(fxColor.rgb, true, alphaComponent, canvas.graphics);
+				final alpha = _fxFadeColor.alphaFloat * _fxFadeAlpha;
+				fill(_fxFadeColor.rgb, true, alpha, canvas.graphics);
 			}
 		}
 	}
