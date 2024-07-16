@@ -8,6 +8,7 @@ import flixel.math.FlxRect;
 import flixel.text.FlxInputTextManager;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSignal;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxTimer;
 import lime.system.Clipboard;
@@ -15,6 +16,8 @@ import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.text.TextFormat;
 import openfl.utils.QName;
+
+using StringTools;
 
 /**
  * An `FlxText` object that can be selected and edited by the user.
@@ -51,14 +54,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * visible in the text field.
 	 */
 	public var bottomScrollV(get, never):Int;
-	
-	/**
-	 * A function called when an action occurs in the text field. The first parameter
-	 * is the current text, and the second parameter indicates what kind of action
-	 * it was.
-	 */
-	public var callback:String->FlxInputTextAction->Void;
-	
+
 	/**
 	 * The selection cursor's color. Has the same color as the text field by default, and 
 	 * it's automatically set whenever it changes.
@@ -77,13 +73,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * The selection cursor's width.
 	 */
 	public var caretWidth(default, set):Int = 1;
-	
-	/**
-	 * This regular expression will filter out (remove) everything that matches.
-	 * 
-	 * Changing this will automatically set `filterMode` to `CUSTOM_FILTER`.
-	 */
-	public var customFilterPattern(default, set):EReg;
 
 	/**
 	 * Whether or not the text field can be edited by the user.
@@ -103,21 +92,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var fieldBorderThickness(default, set):Int = 1;
 	
 	/**
-	 * Defines how to filter the text (no filter, only letters, only numbers, 
-	 * only letters & numbers, or a custom filter).
+	 * Defines how to filter the text (remove unwanted characters).
 	 */
-	public var filterMode(default, set):FlxInputTextFilterMode = NO_FILTER;
-	
-	/**
-	 * Callback that is triggered when this text field gains focus.
-	 */
-	public var focusGained:Void->Void;
-	
-	/**
-	 * Callback that is triggered when this text field loses focus.
-	 */
-	public var focusLost:Void->Void;
-	
+	public var filterMode(default, set):FlxInputTextFilterMode = NONE;
+
 	/**
 	 * Defines whether a letter case is enforced on the text.
 	 */
@@ -161,6 +139,25 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * from being copied.
 	 */
 	public var passwordMode(get, set):Bool;
+
+	/**
+	 * Gets dispatched whenever this text field gains/loses focus, indicated by
+	 * the `Bool` parameter (`true` if it has focus).
+	 */
+	public var onFocusChange(default, null):FlxTypedSignal<Bool->Void> = new FlxTypedSignal<Bool->Void>();
+	
+	/**
+	 * Gets dispatched whenever the horizontal and/or vertical scroll is changed.
+	 * The two parameters indicate the current `scrollH` and `scrollV` respectively.
+	 */
+	public var onScrollChange(default, null):FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal<Int->Int->Void>();
+	
+	/**
+	 * Gets dispatched whenever the text is changed by the user. The `String`
+	 * parameter is the current text, while the `FlxInputTextChange` parameter
+	 * indicates what type of change occurred.
+	 */
+	public var onTextChange(default, null):FlxTypedSignal<String->FlxInputTextChange->Void> = new FlxTypedSignal<String->FlxInputTextChange->Void>();
 
 	/**
 	 * The current horizontal scrolling position, in pixels. Defaults to
@@ -391,6 +388,21 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		FlxInputText.globalManager.unregisterInputText(this);
 
+		if (onFocusChange != null)
+		{
+			onFocusChange.destroy();
+			onFocusChange = null;
+		}
+		if (onScrollChange != null)
+		{
+			onScrollChange.destroy();
+			onScrollChange = null;
+		}
+		if (onTextChange != null)
+		{
+			onTextChange.destroy();
+			onTextChange = null;
+		}
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
 		if (_caretTimer != null)
@@ -507,7 +519,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (newText.length > 0)
 		{
 			replaceSelectedText(newText);
-			onChange(INPUT_ACTION);
+			onTextChange.dispatch(text, INPUT_ACTION);
 		}
 	}
 
@@ -583,18 +595,22 @@ class FlxInputText extends FlxText implements IFlxInputText
 			newText = newText.toLowerCase();
 		}
 		
-		if (filterMode != NO_FILTER)
+		if (filterMode != NONE)
 		{
 			var pattern = switch (filterMode)
 			{
-				case ONLY_ALPHA:
+				case ALPHABET:
 					~/[^a-zA-Z]*/g;
-				case ONLY_NUMERIC:
+				case NUMERIC:
 					~/[^0-9]*/g;
-				case ONLY_ALPHANUMERIC:
+				case ALPHANUMERIC:
 					~/[^a-zA-Z0-9]*/g;
-				case CUSTOM_FILTER:
-					customFilterPattern;
+				case REG(reg):
+					reg;
+				case CHARS(chars):
+					// In a character set, only \, - and ] need to be escaped
+					chars = chars.replace('\\', "\\\\").replace('-', "\\-").replace(']', "\\]");
+					new EReg("[^" + chars + "]*", "g");
 				default:
 					throw "Unknown filterMode (" + filterMode + ")";
 			}
@@ -965,21 +981,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 
 	/**
-	 * Dispatches `callback` with the appropiate text action, if there is one set.
-	 */
-	function onChange(action:FlxInputTextAction):Void
-	{
-		if (callback != null)
-		{
-			callback(text, action);
-			if (action == INPUT_ACTION || action == BACKSPACE_ACTION || action == DELETE_ACTION)
-			{
-				callback(text, CHANGE_ACTION);
-			}
-		}
-	}
-
-	/**
 	 * Regenerates the background sprites if they're enabled.
 	 */
 	function regenBackground():Void
@@ -1054,7 +1055,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					restartCaretTimer();
 				}
-				onChange(ENTER_ACTION);
+				onTextChange.dispatch(text, ENTER_ACTION);
 			case DELETE_LEFT:
 				if (!editable)
 					return;
@@ -1068,7 +1069,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					replaceSelectedText("");
 					_selectionIndex = _caretIndex;
-					onChange(BACKSPACE_ACTION);
+					onTextChange.dispatch(text, BACKSPACE_ACTION);
 				}
 				else
 				{
@@ -1087,7 +1088,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					replaceSelectedText("");
 					_selectionIndex = _caretIndex;
-					onChange(DELETE_ACTION);
+					onTextChange.dispatch(text, DELETE_ACTION);
 				}
 				else
 				{
@@ -1309,7 +1310,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 			if (scrollH != cacheScrollH || scrollV != cacheScrollV)
 			{
-				onChange(SCROLL_ACTION);
+				onScrollChange.dispatch(scrollH, scrollV);
 			}
 		}
 	}
@@ -1464,7 +1465,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				scrollV = FlxMath.minInt(scrollV - FlxG.mouse.wheel, maxScrollV);
 				if (scrollV != cacheScrollV)
 				{
-					onChange(SCROLL_ACTION);
+					onScrollChange.dispatch(scrollH, scrollV);
 				}
 			}
 		}
@@ -1607,7 +1608,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		if (scrollH != cacheScrollH || scrollV != cacheScrollV)
 		{
-			onChange(SCROLL_ACTION);
+			onScrollChange.dispatch(scrollH, scrollV);
 		}
 	}
 	
@@ -1957,24 +1958,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 		return value;
 	}
-	
-	function set_customFilterPattern(value:EReg):EReg
-	{
-		if (customFilterPattern != value)
-		{
-			customFilterPattern = value;
-			if (filterMode != CUSTOM_FILTER)
-			{
-				filterMode = CUSTOM_FILTER;
-			}
-			else
-			{
-				text = filterText(text);
-			}
-		}
-		
-		return value;
-	}
 
 	function set_fieldBorderColor(value:FlxColor):FlxColor
 	{
@@ -2044,8 +2027,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 				
 				restartCaretTimer();
 
-				if (focusGained != null)
-					focusGained();
 				_justGainedFocus = true;
 			}
 			else if (FlxInputText.globalManager.focus == this)
@@ -2059,10 +2040,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				
 				stopCaretTimer();
-				
-				if (focusLost != null)
-					focusLost();
 			}
+			onFocusChange.dispatch(hasFocus);
 		}
 
 		return value;
@@ -2208,14 +2187,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 }
 
-enum abstract FlxInputTextAction(String) from String to String
+enum abstract FlxInputTextChange(String) from String to String
 {
-	/**
-	 * Dispatched whenever the text is changed by the user. It's always
-	 * dispatched after `INPUT_ACTION`, `BACKSPACE_ACTION`, and
-	 * `DELETE_ACTION`.
-	 */
-	var CHANGE_ACTION = "change";
 	/**
 	 * Dispatched whenever new text is added by the user.
 	 */
@@ -2235,10 +2208,6 @@ enum abstract FlxInputTextAction(String) from String to String
 	 * is focused.
 	 */
 	var ENTER_ACTION = "enter";
-	/**
-	 * Dispatched whenever the text field is scrolled in some way.
-	 */
-	var SCROLL_ACTION = "scroll";
 }
 
 enum abstract FlxInputTextCase(Int) from Int to Int
@@ -2257,26 +2226,32 @@ enum abstract FlxInputTextCase(Int) from Int to Int
 	var LOWER_CASE = 2;
 }
 
-enum abstract FlxInputTextFilterMode(Int) from Int to Int
+enum FlxInputTextFilterMode
 {
 	/**
 	 * Does not filter the text at all.
 	 */
-	var NO_FILTER = 0;
+	NONE;
 	/**
 	 * Only allows letters (a-z & A-Z) to be added to the text.
 	 */
-	var ONLY_ALPHA = 1;
+	ALPHABET;
 	/**
 	 * Only allows numbers (0-9) to be added to the text.
 	 */
-	var ONLY_NUMERIC = 2;
+	NUMERIC;
 	/**
 	 * Only allows letters (a-z & A-Z) and numbers (0-9) to be added to the text.
 	 */
-	var ONLY_ALPHANUMERIC = 3;
+	ALPHANUMERIC;
 	/**
-	 * Lets you use a custom filter with `customFilterPattern`.
+	 * Uses a regular expression to filter the text. Characters that are matched
+	 * will be removed.
 	 */
-	var CUSTOM_FILTER = 4;
+	REG(reg:EReg);
+	
+	/**
+	 * Only allows the characters present in the string to be added to the text.
+	 */
+	CHARS(chars:String);
 }
