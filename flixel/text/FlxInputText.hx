@@ -141,6 +141,12 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var passwordMode(get, set):Bool;
 
 	/**
+	 * Gets dispatched whenever the enter key is pressed on the text field.
+	 * The `String` parameter is the current text.
+	 */
+	public var onEnter(default, null):FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
+
+	/**
 	 * Gets dispatched whenever this text field gains/loses focus, indicated by
 	 * the `Bool` parameter (`true` if it has focus).
 	 */
@@ -1055,7 +1061,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				{
 					restartCaretTimer();
 				}
-				onTextChange.dispatch(text, ENTER_ACTION);
+				onEnter.dispatch(text);
 			case DELETE_LEFT:
 				if (!editable)
 					return;
@@ -2203,11 +2209,6 @@ enum abstract FlxInputTextChange(String) from String to String
 	 * delete).
 	 */
 	var DELETE_ACTION = "delete";
-	/**
-	 * Dispatched whenever enter is pressed by the user while the text field
-	 * is focused.
-	 */
-	var ENTER_ACTION = "enter";
 }
 
 enum abstract FlxInputTextCase(Int) from Int to Int
