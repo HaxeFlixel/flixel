@@ -24,7 +24,17 @@ class FlxInputTextManager extends FlxBasic
 	/**
 	 * Contains all of the currently registered input text objects.
 	 */
-	var _registeredInputTexts:Array<IFlxInputText> = [];
+	var _registeredInputTexts:Array<IFlxInputText>;
+	
+	/**
+	 * Clean up memory.
+	 */
+	override public function destroy():Void
+	{
+		focus = null;
+		unregisterAll();
+		super.destroy();
+	}
 
 	/**
 	 * Registers an input text object, and initiates the event listeners if it's
@@ -32,6 +42,9 @@ class FlxInputTextManager extends FlxBasic
 	 */
 	public function registerInputText(input:IFlxInputText):Void
 	{
+		if (_registeredInputTexts == null)
+			_registeredInputTexts = [];
+
 		if (!_registeredInputTexts.contains(input))
 		{
 			_registeredInputTexts.push(input);
@@ -52,6 +65,18 @@ class FlxInputTextManager extends FlxBasic
 			}
 		}
 	}
+
+	/**
+	 * Unregisters all the input texts from the manager.
+	 */
+	public function unregisterAll():Void
+	{
+		if (_registeredInputTexts == null)
+			return;
+			
+		for (input in _registeredInputTexts)
+			unregisterInputText(input);
+	}
 	
 	/**
 	 * Unregisters an input text object, and removes the event listeners if there
@@ -59,6 +84,9 @@ class FlxInputTextManager extends FlxBasic
 	 */
 	public function unregisterInputText(input:IFlxInputText):Void
 	{
+		if (_registeredInputTexts == null)
+			return;
+		
 		if (_registeredInputTexts.contains(input))
 		{
 			_registeredInputTexts.remove(input);
@@ -74,6 +102,7 @@ class FlxInputTextManager extends FlxBasic
 				FlxG.stage.removeEventListener(Event.SELECT_ALL, onSelectAll);
 				FlxG.stage.window.onKeyUp.remove(onKeyUp);
 				#end
+				_registeredInputTexts = null;
 			}
 		}
 	}
