@@ -217,6 +217,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var useSelectedTextFormat(default, set):Bool = true;
 	
 	/**
+	 * The input text manager powering this instance
+	 */
+	public var manager(default, null):FlxInputTextManager;
+	
+	/**
 	 * An FlxSprite representing the background of the text field.
 	 */
 	var _backgroundSprite:FlxSprite;
@@ -320,9 +325,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * @param textColor       The color of the text
 	 * @param backgroundColor The color of the background (`FlxColor.TRANSPARENT` for no background color)
 	 * @param embeddedFont    Whether this text field uses embedded fonts or not.
+	 * @param manager         Optional input text manager that will power this input text.
+	 *                        If `null`, `globalManager` is used
 	 */
 	public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0, ?text:String, size:Int = 8, textColor:FlxColor = FlxColor.BLACK,
-			backgroundColor:FlxColor = FlxColor.WHITE, embeddedFont:Bool = true)
+			backgroundColor:FlxColor = FlxColor.WHITE, embeddedFont:Bool = true, ?manager:FlxInputTextManager)
 	{
 		super(x, y, fieldWidth, text, size, embeddedFont);
 		if (text == null || text == "")
@@ -352,7 +359,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 			background = true;
 		}
 		
-		FlxInputText.globalManager.registerInputText(this);
+		if (manager == null)
+		{
+			manager = FlxInputText.globalManager;
+		}
+		
+		this.manager = manager;
+		manager.registerInputText(this);
 	}
 	
 	override function update(elapsed:Float):Void
@@ -392,7 +405,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	override function destroy():Void
 	{
-		FlxInputText.globalManager.unregisterInputText(this);
+		manager.unregisterInputText(this);
 
 		if (onFocusChange != null)
 		{
@@ -2022,7 +2035,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				var bounds = getLimeBounds(_pointerCamera);
 				FlxG.stage.window.setTextInputRect(bounds);
 
-				FlxInputText.globalManager.focus = this;
+				manager.focus = this;
 				
 				if (_caretIndex < 0)
 				{
@@ -2035,9 +2048,9 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 				_justGainedFocus = true;
 			}
-			else if (FlxInputText.globalManager.focus == this)
+			else if (manager.focus == this)
 			{
-				FlxInputText.globalManager.focus = null;
+				manager.focus = null;
 				
 				if (_selectionIndex != _caretIndex)
 				{
