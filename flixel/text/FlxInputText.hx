@@ -368,6 +368,29 @@ class FlxInputText extends FlxText implements IFlxInputText
 		manager.registerInputText(this);
 	}
 	
+	public function setManager(manager:FlxInputTextManager)
+	{
+		if (this.manager == null)
+		{
+			FlxG.log.error("Cannot set manager once destroyed");
+			return;
+		}
+		
+		if (manager == this.manager)
+			return;
+		
+		final hasFocus = this.manager.focus == this;
+		this.manager.unregisterInputText(this);
+		
+		manager.registerInputText(this);
+		if (hasFocus)
+		{
+			manager.focus = this;
+		}
+		
+		this.manager = manager;
+	}
+	
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
