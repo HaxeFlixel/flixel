@@ -1,5 +1,6 @@
 package flixel.text;
 
+import flixel.util.FlxSignal;
 import lime.ui.KeyCode;
 import lime.ui.KeyModifier;
 import openfl.events.Event;
@@ -20,6 +21,11 @@ class FlxInputTextManager extends FlxBasic
 	 * Returns whether or not there's currently an editable input text in focus.
 	 */
 	public var isTyping(get, never):Bool;
+	
+	/**
+	 * 
+	 */
+	public final onTypingAction = new FlxTypedSignal<(action:TypingAction)->Void>();
 	
 	/**
 	 * Contains all of the currently registered input text objects.
@@ -118,8 +124,14 @@ class FlxInputTextManager extends FlxBasic
 
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(ADD_TEXT(event.text));
+			dispatchTypingAction(ADD_TEXT(event.text));
 		}
+	}
+	
+	function dispatchTypingAction(action:TypingAction)
+	{
+		focus.dispatchTypingAction(action);
+		onTypingAction.dispatch(action);
 	}
 	
 	/**
@@ -142,86 +154,86 @@ class FlxInputTextManager extends FlxBasic
 		switch (key)
 		{
 			case RETURN, NUMPAD_ENTER:
-				focus.dispatchTypingAction(COMMAND(NEW_LINE));
+				dispatchTypingAction(COMMAND(NEW_LINE));
 			case BACKSPACE:
-				focus.dispatchTypingAction(COMMAND(DELETE_LEFT));
+				dispatchTypingAction(COMMAND(DELETE_LEFT));
 			case DELETE:
-				focus.dispatchTypingAction(COMMAND(DELETE_RIGHT));
+				dispatchTypingAction(COMMAND(DELETE_RIGHT));
 			case LEFT:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LEFT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(LEFT, modifier.shiftKey));
 				}
 			case RIGHT:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(RIGHT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(RIGHT, modifier.shiftKey));
 				}
 			case UP:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(UP, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(UP, modifier.shiftKey));
 				}
 			case DOWN:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(DOWN, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(DOWN, modifier.shiftKey));
 				}
 			case HOME:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
 				}
 			case END:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
 				}
 				else
 				{
-					focus.dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
+					dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
 				}
 			case C:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(COMMAND(COPY));
+					dispatchTypingAction(COMMAND(COPY));
 				}
 			case X:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(COMMAND(CUT));
+					dispatchTypingAction(COMMAND(CUT));
 				}
 			#if !js
 			case V:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(COMMAND(PASTE));
+					dispatchTypingAction(COMMAND(PASTE));
 				}
 			#end
 			case A:
 				if (modifierPressed)
 				{
-					focus.dispatchTypingAction(COMMAND(SELECT_ALL));
+					dispatchTypingAction(COMMAND(SELECT_ALL));
 				}
 			default:
 		}
@@ -256,7 +268,7 @@ class FlxInputTextManager extends FlxBasic
 	{
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(COMMAND(COPY));
+			dispatchTypingAction(COMMAND(COPY));
 		}
 	}
 	
@@ -267,7 +279,7 @@ class FlxInputTextManager extends FlxBasic
 	{
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(COMMAND(CUT));
+			dispatchTypingAction(COMMAND(CUT));
 		}
 	}
 	
@@ -278,7 +290,7 @@ class FlxInputTextManager extends FlxBasic
 	{
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(COMMAND(PASTE));
+			dispatchTypingAction(COMMAND(PASTE));
 		}
 	}
 	
@@ -289,7 +301,7 @@ class FlxInputTextManager extends FlxBasic
 	{
 		if (focus != null)
 		{
-			focus.dispatchTypingAction(COMMAND(SELECT_ALL));
+			dispatchTypingAction(COMMAND(SELECT_ALL));
 		}
 	}
 	#end
