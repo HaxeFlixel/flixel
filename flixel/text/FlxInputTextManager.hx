@@ -173,82 +173,40 @@ class FlxInputTextManager extends FlxBasic
 				dispatchTypingAction(COMMAND(DELETE_LEFT));
 			case DELETE:
 				dispatchTypingAction(COMMAND(DELETE_RIGHT));
+			case LEFT if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
 			case LEFT:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(LEFT, modifier.shiftKey));
-				}
+				dispatchTypingAction(MOVE_CURSOR(LEFT, modifier.shiftKey));
+			case RIGHT if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
 			case RIGHT:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(RIGHT, modifier.shiftKey));
-				}
+				dispatchTypingAction(MOVE_CURSOR(RIGHT, modifier.shiftKey));
+			case UP if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
 			case UP:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(UP, modifier.shiftKey));
-				}
+				dispatchTypingAction(MOVE_CURSOR(UP, modifier.shiftKey));
+			case DOWN if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
 			case DOWN:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(DOWN, modifier.shiftKey));
-				}
+				dispatchTypingAction(MOVE_CURSOR(DOWN, modifier.shiftKey));
+			case HOME if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
 			case HOME:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
-				}
+				dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
+			case END if (modifierPressed):
+				dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
 			case END:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
-				}
-				else
-				{
-					dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
-				}
-			case C:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(COMMAND(COPY));
-				}
-			case X:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(COMMAND(CUT));
-				}
+				dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
+			case C if (modifierPressed):
+				dispatchTypingAction(COMMAND(COPY));
+			case X if (modifierPressed):
+				dispatchTypingAction(COMMAND(CUT));
 			#if !js
-			case V:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(COMMAND(PASTE));
-				}
+			case V if (modifierPressed):
+				dispatchTypingAction(COMMAND(PASTE));
 			#end
-			case A:
-				if (modifierPressed)
-				{
-					dispatchTypingAction(COMMAND(SELECT_ALL));
-				}
+			case A if (modifierPressed):
+				dispatchTypingAction(COMMAND(SELECT_ALL));
 			default:
 		}
 
