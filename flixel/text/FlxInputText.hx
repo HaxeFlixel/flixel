@@ -1682,23 +1682,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		if (!hasFocus)
 			return;
-			
-		var relativePos = getRelativePosition(pointer);
 		
-		var upPos = getCharAtPosition(relativePos.x + scrollH, relativePos.y + getScrollVOffset());
-		var leftPos = FlxMath.minInt(_selectionIndex, upPos);
-		var rightPos = FlxMath.maxInt(_selectionIndex, upPos);
-		
-		_selectionIndex = leftPos;
-		_caretIndex = rightPos;
-		updateSelection(true);
 
 		if (hasFocus)
 		{
 			restartCaretTimer();
 		}
 
-		relativePos.put();
 		_pointerCamera = null;
 		var currentTime = FlxG.game.ticks;
 		if (currentTime - _lastPressTime < 500)
