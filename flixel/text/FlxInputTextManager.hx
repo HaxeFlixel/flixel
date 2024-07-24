@@ -30,16 +30,47 @@ class FlxInputTextManager extends FlxBasic
 	/**
 	 * Contains all of the currently registered input text objects.
 	 */
-	var _registeredInputTexts:Array<IFlxInputText>;
+	final _registeredInputTexts = new Array<IFlxInputText>();
 	
 	/**
 	 * Clean up memory.
 	 */
 	override public function destroy():Void
 	{
-		focus = null;
-		unregisterAll();
 		super.destroy();
+		
+		focus = null;
+		_registeredInputTexts.resize(0);
+		removeEvents();
+	}
+	
+	function addEvents()
+	{
+		
+		FlxG.stage.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
+		// Higher priority is needed here because FlxKeyboard will cancel
+		// the event for key codes in `preventDefaultKeys`.
+		FlxG.stage.window.onKeyDown.add(onKeyDown, false, 1000);
+		#if flash
+		FlxG.stage.addEventListener(Event.COPY, onCopy);
+		FlxG.stage.addEventListener(Event.CUT, onCut);
+		FlxG.stage.addEventListener(Event.PASTE, onPaste);
+		FlxG.stage.addEventListener(Event.SELECT_ALL, onSelectAll);
+		FlxG.stage.window.onKeyUp.add(onKeyUp, false, 1000);
+		#end
+	}
+	
+	function removeEvents()
+	{
+		FlxG.stage.removeEventListener(TextEvent.TEXT_INPUT, onTextInput);
+		FlxG.stage.window.onKeyDown.remove(onKeyDown);
+		#if flash
+		FlxG.stage.removeEventListener(Event.COPY, onCopy);
+		FlxG.stage.removeEventListener(Event.CUT, onCut);
+		FlxG.stage.removeEventListener(Event.PASTE, onPaste);
+		FlxG.stage.removeEventListener(Event.SELECT_ALL, onSelectAll);
+		FlxG.stage.window.onKeyUp.remove(onKeyUp);
+		#end
 	}
 
 	/**
@@ -48,40 +79,15 @@ class FlxInputTextManager extends FlxBasic
 	 */
 	public function registerInputText(input:IFlxInputText):Void
 	{
-		if (_registeredInputTexts == null)
-			_registeredInputTexts = [];
-
 		if (!_registeredInputTexts.contains(input))
 		{
 			_registeredInputTexts.push(input);
 			
 			if (!FlxG.stage.window.onKeyDown.has(onKeyDown))
 			{
-				FlxG.stage.addEventListener(TextEvent.TEXT_INPUT, onTextInput);
-				// Higher priority is needed here because FlxKeyboard will cancel
-				// the event for key codes in `preventDefaultKeys`.
-				FlxG.stage.window.onKeyDown.add(onKeyDown, false, 1000);
-				#if flash
-				FlxG.stage.addEventListener(Event.COPY, onCopy);
-				FlxG.stage.addEventListener(Event.CUT, onCut);
-				FlxG.stage.addEventListener(Event.PASTE, onPaste);
-				FlxG.stage.addEventListener(Event.SELECT_ALL, onSelectAll);
-				FlxG.stage.window.onKeyUp.add(onKeyUp, false, 1000);
-				#end
+				addEvents();
 			}
 		}
-	}
-
-	/**
-	 * Unregisters all the input texts from the manager.
-	 */
-	public function unregisterAll():Void
-	{
-		if (_registeredInputTexts == null)
-			return;
-			
-		for (input in _registeredInputTexts)
-			unregisterInputText(input);
 	}
 	
 	/**
@@ -90,25 +96,13 @@ class FlxInputTextManager extends FlxBasic
 	 */
 	public function unregisterInputText(input:IFlxInputText):Void
 	{
-		if (_registeredInputTexts == null)
-			return;
-		
 		if (_registeredInputTexts.contains(input))
 		{
 			_registeredInputTexts.remove(input);
 			
 			if (_registeredInputTexts.length == 0 && FlxG.stage.window.onKeyDown.has(onKeyDown))
 			{
-				FlxG.stage.removeEventListener(TextEvent.TEXT_INPUT, onTextInput);
-				FlxG.stage.window.onKeyDown.remove(onKeyDown);
-				#if flash
-				FlxG.stage.removeEventListener(Event.COPY, onCopy);
-				FlxG.stage.removeEventListener(Event.CUT, onCut);
-				FlxG.stage.removeEventListener(Event.PASTE, onPaste);
-				FlxG.stage.removeEventListener(Event.SELECT_ALL, onSelectAll);
-				FlxG.stage.window.onKeyUp.remove(onKeyUp);
-				#end
-				_registeredInputTexts = null;
+				removeEvents();
 			}
 		}
 	}
