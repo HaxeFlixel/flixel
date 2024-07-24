@@ -15,7 +15,7 @@ class FlxInputTextManager extends FlxBasic
 	/**
 	 * The input text object that's currently in focus, or `null` if there isn't any.
 	 */
-	public var focus(default, set):IFlxInputText;
+	public var focus(default, null):IFlxInputText;
 	
 	/**
 	 * Returns whether or not there's currently an editable input text in focus.
@@ -110,6 +110,26 @@ class FlxInputTextManager extends FlxBasic
 				#end
 				_registeredInputTexts = null;
 			}
+		}
+	}
+	
+	public function setFocus(value:IFlxInputText)
+	{
+		if (focus != value)
+		{
+			if (focus != null)
+			{
+				focus.hasFocus = false;
+			}
+			
+			focus = value;
+			
+			if (focus != null)
+			{
+				focus.hasFocus = true;
+			}
+			
+			FlxG.stage.window.textInputEnabled = (focus != null);
 		}
 	}
 	
@@ -306,28 +326,6 @@ class FlxInputTextManager extends FlxBasic
 	}
 	#end
 	
-	function set_focus(value:IFlxInputText):IFlxInputText
-	{
-		if (focus != value)
-		{
-			if (focus != null)
-			{
-				focus.hasFocus = false;
-			}
-			
-			focus = value;
-			
-			if (focus != null)
-			{
-				focus.hasFocus = true;
-			}
-			
-			FlxG.stage.window.textInputEnabled = (focus != null);
-		}
-		
-		return value;
-	}
-
 	function get_isTyping():Bool
 	{
 		return focus != null && focus.editable;

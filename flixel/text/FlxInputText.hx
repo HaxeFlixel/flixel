@@ -385,7 +385,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		manager.registerInputText(this);
 		if (hasFocus)
 		{
-			manager.focus = this;
+			manager.setFocus(this);
 		}
 		
 		this.manager = manager;
@@ -2058,7 +2058,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				var bounds = getLimeBounds(_pointerCamera);
 				FlxG.stage.window.setTextInputRect(bounds);
 
-				manager.focus = this;
+				manager.setFocus(this);
 				
 				if (_caretIndex < 0)
 				{
@@ -2073,7 +2073,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			}
 			else if (manager.focus == this)
 			{
-				manager.focus = null;
+				manager.setFocus(null);
 				
 				if (_selectionIndex != _caretIndex)
 				{
