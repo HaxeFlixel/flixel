@@ -33,6 +33,24 @@ class FlxInputTextManager extends FlxBasic
 	final _registeredInputTexts = new Array<IFlxInputText>();
 	
 	/**
+	 * Whether we should use mac modifer keys or not. Behavior in linux is currently unknown
+	 */
+	final _mac:Bool = false;
+	
+	public function new ()
+	{
+		#if mac
+		_mac = true;
+		#elseif (js && html5)
+		final userAgent = js.Browser.navigator.userAgent.toUpperCase();
+		final platform = js.Browser.navigator.platform.toUpperCase();
+		_mac = userAgent.indexOf("APPLEWEBKIT") != -1 || platform.indexOf("MAC") != -1;
+		#end
+		
+		super();
+	}
+	
+	/**
 	 * Clean up memory.
 	 */
 	override public function destroy():Void
@@ -161,9 +179,15 @@ class FlxInputTextManager extends FlxBasic
 		// Let's set one manually (just the stage itself)
 		FlxG.stage.focus = FlxG.stage;
 		#end
-
-		// Taken from OpenFL's `TextField`
-		var modifierPressed = #if mac modifier.metaKey #elseif js(modifier.metaKey || modifier.ctrlKey) #else (modifier.ctrlKey && !modifier.altKey) #end;
+		
+		// Modifier used for commands like cut, copy and paste
+		final commandPressed = _mac ? modifier.metaKey : modifier.ctrlKey;
+		
+		// Modifier used to move one word over
+		final wordModPressed = modifier.altKey;
+		
+		// Modifier used to move one line over
+		final lineModPressed = commandPressed;
 		
 		switch (key)
 		{
@@ -173,39 +197,43 @@ class FlxInputTextManager extends FlxBasic
 				dispatchTypingAction(COMMAND(DELETE_LEFT));
 			case DELETE:
 				dispatchTypingAction(COMMAND(DELETE_RIGHT));
-			case LEFT if (modifierPressed):
+			case LEFT if (lineModPressed):
+				dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
+			case LEFT if (wordModPressed):
 				dispatchTypingAction(MOVE_CURSOR(WORD_LEFT, modifier.shiftKey));
 			case LEFT:
 				dispatchTypingAction(MOVE_CURSOR(LEFT, modifier.shiftKey));
-			case RIGHT if (modifierPressed):
+			case RIGHT if (lineModPressed):
+				dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
+			case RIGHT if (wordModPressed):
 				dispatchTypingAction(MOVE_CURSOR(WORD_RIGHT, modifier.shiftKey));
 			case RIGHT:
 				dispatchTypingAction(MOVE_CURSOR(RIGHT, modifier.shiftKey));
-			case UP if (modifierPressed):
-				dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
+			case UP if (_mac && commandPressed):
+				dispatchTypingAction(MOVE_CURSOR(TOP, modifier.shiftKey));
 			case UP:
 				dispatchTypingAction(MOVE_CURSOR(UP, modifier.shiftKey));
-			case DOWN if (modifierPressed):
-				dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
+			case DOWN if (_mac && commandPressed):
+				dispatchTypingAction(MOVE_CURSOR(BOTTOM, modifier.shiftKey));
 			case DOWN:
 				dispatchTypingAction(MOVE_CURSOR(DOWN, modifier.shiftKey));
-			case HOME if (modifierPressed):
-				dispatchTypingAction(MOVE_CURSOR(HOME, modifier.shiftKey));
+			case HOME if (!_mac && commandPressed):
+				dispatchTypingAction(MOVE_CURSOR(TOP, modifier.shiftKey));
 			case HOME:
 				dispatchTypingAction(MOVE_CURSOR(LINE_LEFT, modifier.shiftKey));
-			case END if (modifierPressed):
-				dispatchTypingAction(MOVE_CURSOR(END, modifier.shiftKey));
+			case END if (!_mac && commandPressed):
+				dispatchTypingAction(MOVE_CURSOR(BOTTOM, modifier.shiftKey));
 			case END:
 				dispatchTypingAction(MOVE_CURSOR(LINE_RIGHT, modifier.shiftKey));
-			case C if (modifierPressed):
+			case C if (commandPressed):
 				dispatchTypingAction(COMMAND(COPY));
-			case X if (modifierPressed):
+			case X if (commandPressed):
 				dispatchTypingAction(COMMAND(CUT));
 			#if !js
-			case V if (modifierPressed):
+			case V if (commandPressed):
 				dispatchTypingAction(COMMAND(PASTE));
 			#end
-			case A if (modifierPressed):
+			case A if (commandPressed):
 				dispatchTypingAction(COMMAND(SELECT_ALL));
 			default:
 		}
@@ -323,12 +351,12 @@ enum MoveCursorAction
 	/**
 	 * Moves the cursor to the beginning of the text.
 	 */
-	HOME;
+	TOP;
 
 	/**
 	 * Moves the cursor to the end of the text.
 	 */
-	END;
+	BOTTOM;
 
 	/**
 	 * Moves the cursor to the beginning of the current line.

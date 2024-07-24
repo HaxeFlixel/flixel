@@ -939,7 +939,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 				restartCaretTimer();
-			case HOME:
+			case TOP:
 				_caretIndex = 0;
 				
 				if (!shiftKey)
@@ -948,7 +948,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 				}
 				setSelection(_selectionIndex, _caretIndex);
 				restartCaretTimer();
-			case END:
+			case BOTTOM:
 				_caretIndex = text.length;
 				
 				if (!shiftKey)
