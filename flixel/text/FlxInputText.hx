@@ -141,29 +141,34 @@ class FlxInputText extends FlxText implements IFlxInputText
 	public var passwordMode(get, set):Bool;
 
 	/**
-	 * Gets dispatched whenever the enter key is pressed on the text field.
-	 * The `String` parameter is the current text.
+	 * Gets dispatched whenever the enter key is pressed on the text field
+	 * 
+	 * @param   text  The current text
 	 */
-	public var onEnter(default, null):FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
+	public final onEnter = new FlxTypedSignal<(text:String)->Void>();
 
 	/**
-	 * Gets dispatched whenever this text field gains/loses focus, indicated by
-	 * the `Bool` parameter (`true` if it has focus).
+	 * Gets dispatched whenever this text field gains/loses focus
+	 * 
+	 * @param   focused  Whether the text is focused
 	 */
-	public var onFocusChange(default, null):FlxTypedSignal<Bool->Void> = new FlxTypedSignal<Bool->Void>();
+	public final onFocusChange = new FlxTypedSignal<(focused:Bool)->Void>();
 	
 	/**
-	 * Gets dispatched whenever the horizontal and/or vertical scroll is changed.
-	 * The two parameters indicate the current `scrollH` and `scrollV` respectively.
+	 * Gets dispatched whenever the horizontal and/or vertical scroll is changed
+	 * 
+	 * @param   scrollH  The current horizontal scroll
+	 * @param   scrollV  The current vertical scroll
 	 */
-	public var onScrollChange(default, null):FlxTypedSignal<Int->Int->Void> = new FlxTypedSignal<Int->Int->Void>();
+	public final onScrollChange = new FlxTypedSignal<(scrollH:Int, scrollV:Int)->Void>();
 	
 	/**
-	 * Gets dispatched whenever the text is changed by the user. The `String`
-	 * parameter is the current text, while the `FlxInputTextChange` parameter
-	 * indicates what type of change occurred.
+	 * Gets dispatched whenever the text is changed by the user
+	 * 
+	 * @param   text  The current text
+	 * @param   text  What type of change occurred
 	 */
-	public var onTextChange(default, null):FlxTypedSignal<String->FlxInputTextChange->Void> = new FlxTypedSignal<String->FlxInputTextChange->Void>();
+	public final onTextChange = new FlxTypedSignal<(text:String, change:FlxInputTextChange)->Void>();
 
 	/**
 	 * The current horizontal scrolling position, in pixels. Defaults to
@@ -481,21 +486,11 @@ class FlxInputText extends FlxText implements IFlxInputText
 	{
 		manager.unregisterInputText(this);
 
-		if (onFocusChange != null)
-		{
-			onFocusChange.destroy();
-			onFocusChange = null;
-		}
-		if (onScrollChange != null)
-		{
-			onScrollChange.destroy();
-			onScrollChange = null;
-		}
-		if (onTextChange != null)
-		{
-			onTextChange.destroy();
-			onTextChange = null;
-		}
+		FlxDestroyUtil.destroy(onEnter);
+		FlxDestroyUtil.destroy(onFocusChange);
+		FlxDestroyUtil.destroy(onScrollChange);
+		FlxDestroyUtil.destroy(onTextChange);
+		
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
 		if (_caretTimer != null)
