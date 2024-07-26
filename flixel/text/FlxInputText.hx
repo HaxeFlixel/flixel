@@ -1971,7 +1971,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 
-	function get_bottomScrollV():Int
+	inline function get_bottomScrollV():Int
 	{
 		return textField.bottomScrollV;
 	}
@@ -1987,7 +1987,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function get_caretIndex():Int
+	inline function get_caretIndex():Int
 	{
 		return _caretIndex;
 	}
@@ -2083,22 +2083,22 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function get_maxScrollH():Int
+	inline function get_maxScrollH():Int
 	{
 		return textField.maxScrollH;
 	}
 	
-	function get_maxScrollV():Int
+	inline function get_maxScrollV():Int
 	{
 		return textField.maxScrollV;
 	}
 	
-	function get_multiline():Bool
+	inline function get_multiline():Bool
 	{
 		return textField.multiline;
 	}
 	
-	function set_multiline(value:Bool):Bool
+	inline function set_multiline(value:Bool):Bool
 	{
 		if (textField.multiline != value)
 		{
@@ -2108,7 +2108,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function get_passwordMode():Bool
+	inline function get_passwordMode():Bool
 	{
 		return textField.displayAsPassword;
 	}
@@ -2122,18 +2122,14 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		return value;
 	}
-
-	function get_scrollH():Int
+	
+	inline function get_scrollH():Int
 	{
 		return textField.scrollH;
 	}
 	
 	function set_scrollH(value:Int):Int
 	{
-		if (value > maxScrollH)
-			value = maxScrollH;
-		if (value < 0)
-			value = 0;
 		if (textField.scrollH != value)
 		{
 			textField.scrollH = value;
@@ -2142,17 +2138,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function get_scrollV():Int
+	inline function get_scrollV():Int
 	{
 		return textField.scrollV;
 	}
 	
 	function set_scrollV(value:Int):Int
 	{
-		if (value > maxScrollV)
-			value = maxScrollV;
-		if (value < 1)
-			value = 1;
 		if (textField.scrollV != value || textField.scrollV == 0)
 		{
 			textField.scrollV = value;
