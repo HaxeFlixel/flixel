@@ -131,14 +131,14 @@ class FlxInputTextManager extends FlxBasic
 		{
 			if (focus != null)
 			{
-				focus.hasFocus = false;
+				focus.endFocus();
 			}
 			
 			focus = value;
 			
 			if (focus != null)
 			{
-				focus.hasFocus = true;
+				focus.startFocus();
 			}
 			
 			FlxG.stage.window.textInputEnabled = (focus != null);
@@ -315,7 +315,8 @@ class FlxInputTextManager extends FlxBasic
 interface IFlxInputText
 {
 	var editable:Bool;
-	var hasFocus(default, set):Bool;
+	function startFocus():Void;
+	function endFocus():Void;
 	function dispatchTypingAction(action:TypingAction):Void;
 }
 

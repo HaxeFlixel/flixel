@@ -104,7 +104,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	/**
 	 * Whether or not the text field is the current active one on the screen.
 	 */
-	public var hasFocus(default, set):Bool = false;
+	public var hasFocus(default, null):Bool = false;
 	
 	/**
 	 * Set the maximum length for the text field. 0 means unlimited.
@@ -389,6 +389,57 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		
 		this.manager = manager;
+	}
+	
+	public function startFocus()
+	{
+		if (!hasFocus)
+		{
+			// set first to avoid infinite loop
+			hasFocus = true;
+			
+			// Ensure that the text field isn't hidden by a keyboard overlay
+			final bounds = getLimeBounds(_pointerCamera);
+			FlxG.stage.window.setTextInputRect(bounds);
+			
+			manager.setFocus(this);
+			
+			if (_caretIndex < 0)
+			{
+				_caretIndex = text.length;
+				_selectionIndex = _caretIndex;
+				updateSelection(true);
+			}
+			
+			restartCaretTimer();
+			
+			_justGainedFocus = true;
+			onFocusChange.dispatch(hasFocus);
+		}
+	}
+	
+	public function endFocus()
+	{
+		if (hasFocus)
+		{
+			// set first to avoid infinite loop
+			hasFocus = false;
+			
+			// make sure we have not already switched to a new focus (probably not needed, but may in the future)
+			if (manager.focus == this)
+			{
+				manager.setFocus(null);
+			}
+			
+			if (_selectionIndex != _caretIndex)
+			{
+				_selectionIndex = _caretIndex;
+				updateSelection(true);
+			}
+			
+			stopCaretTimer();
+			onFocusChange.dispatch(hasFocus);
+		}
 	}
 	
 	override function update(elapsed:Float):Void
@@ -1513,7 +1564,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		else if (FlxG.mouse.justPressed && !_justGainedFocus)
 		{
-			hasFocus = false;
+			endFocus();
 		}
 		#end
 		return overlap;
@@ -1569,7 +1620,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		}
 		if (pressedElsewhere && _currentTouch == null && !_justGainedFocus)
 		{
-			hasFocus = false;
+			endFocus();
 		}
 		#end
 		return overlap;
@@ -1604,7 +1655,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function updatePointerPress(pointer:FlxPointer):Void
 	{
-		hasFocus = true;
+		startFocus();
 		
 		var relativePos = getRelativePosition(pointer);
 		_caretIndex = getCharAtPosition(relativePos.x + scrollH, relativePos.y + getScrollVOffset());
@@ -2037,48 +2088,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function set_hasFocus(value:Bool):Bool
-	{
-		if (hasFocus != value)
-		{
-			hasFocus = value;
-			if (hasFocus)
-			{
-				// Ensure that the text field isn't hidden by a keyboard overlay
-				var bounds = getLimeBounds(_pointerCamera);
-				FlxG.stage.window.setTextInputRect(bounds);
-
-				manager.setFocus(this);
-				
-				if (_caretIndex < 0)
-				{
-					_caretIndex = text.length;
-					_selectionIndex = _caretIndex;
-					updateSelection(true);
-				}
-				
-				restartCaretTimer();
-
-				_justGainedFocus = true;
-			}
-			else if (manager.focus == this)
-			{
-				manager.setFocus(null);
-				
-				if (_selectionIndex != _caretIndex)
-				{
-					_selectionIndex = _caretIndex;
-					updateSelection(true);
-				}
-				
-				stopCaretTimer();
-			}
-			onFocusChange.dispatch(hasFocus);
-		}
-
-		return value;
-	}
-	
 	function set_maxLength(value:Int):Int
 	{
 		if (value < 0)
@@ -2091,7 +2100,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		return value;
 	}
-
+	
 	function get_maxScrollH():Int
 	{
 		return textField.maxScrollH;
