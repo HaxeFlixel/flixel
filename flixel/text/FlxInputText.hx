@@ -109,7 +109,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	/**
 	 * Set the maximum length for the text field. 0 means unlimited.
 	 */
-	public var maxLength(default, set):Int = 0;
+	public var maxChars(get, set):Int;
 
 	/**
 	 * The maximum value of `scrollH`.
@@ -572,7 +572,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		var beginIndex = selectionBeginIndex;
 		var endIndex = selectionEndIndex;
 		
-		if (beginIndex == endIndex && maxLength > 0 && text.length == maxLength)
+		if (beginIndex == endIndex && maxChars > 0 && text.length == maxChars)
 			return;
 			
 		if (beginIndex < 0)
@@ -651,29 +651,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 
 	/**
-	 * Returns the specified text filtered using `maxLength`, `forceCase` and `filterMode`.
+	 * Returns the specified text filtered using `forceCase` and `filterMode`.
 	 * @param newText   The string to filter.
 	 * @param selection Whether or not this string is meant to be added at the selection or if we're
-	 *                  replacing the entire text. This is used for cutting the string appropiately
-	 *                  when `maxLength` is set.
+	 *                  replacing the entire text.
 	 */
 	function filterText(newText:String, selection:Bool = false):String
 	{
-		if (maxLength > 0)
-		{
-			var removeLength = selection ? (selectionEndIndex - selectionBeginIndex) : text.length;
-			var newMaxLength = maxLength - text.length + removeLength;
-			
-			if (newMaxLength <= 0)
-			{
-				newText = "";
-			}
-			else if (newMaxLength < newText.length)
-			{
-				newText = newText.substr(0, newMaxLength);
-			}
-		}
-		
 		if (forceCase == UPPER_CASE)
 		{
 			newText = newText.toUpperCase();
@@ -2083,14 +2067,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 		return value;
 	}
 	
-	function set_maxLength(value:Int):Int
+	inline function get_maxChars():Int
 	{
-		if (value < 0)
-			value = 0;
-		if (maxLength != value)
+		return textField.maxChars;
+	}
+	
+	function set_maxChars(value:Int):Int
+	{
+		if (textField.maxChars != value)
 		{
-			maxLength = value;
-			text = filterText(text);
+			textField.maxChars = value;
+			_regen = true;
 		}
 		
 		return value;
