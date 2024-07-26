@@ -235,18 +235,13 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	var _caret:FlxSprite;
 	/**
-	 * This variable is used for the caret flash timer to indicate whether it
-	 * is currently visible or not.
-	 */
-	var _caretFlash:Bool = false;
-	/**
 	 * Internal variable for the current index of the selection cursor.
 	 */
 	var _caretIndex:Int = -1;
 	/**
 	 * The timer used to flash the caret while the text field has focus.
 	 */
-	var _caretTimer:FlxTimer = new FlxTimer();
+	var _caretTimer:Float = 0;
 	/**
 	 * An FlxSprite representing the border of the text field.
 	 */
@@ -442,7 +437,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 				updateSelection(true);
 			}
 			
-			stopCaretTimer();
 			onFocusChange.dispatch(hasFocus);
 		}
 	}
@@ -450,6 +444,10 @@ class FlxInputText extends FlxText implements IFlxInputText
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+		
+		_caretTimer += elapsed;
+		final showCaret = (_caretTimer % 1.2) < 0.6;
+		_caret.visible = showCaret && hasFocus && editable && _selectionIndex == _caretIndex && isCaretLineVisible();
 		
 		#if FLX_POINTER_INPUT
 		if (visible)
@@ -493,11 +491,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 		
 		_backgroundSprite = FlxDestroyUtil.destroy(_backgroundSprite);
 		_caret = FlxDestroyUtil.destroy(_caret);
-		if (_caretTimer != null)
-		{
-			_caretTimer.cancel();
-			_caretTimer = FlxDestroyUtil.destroy(_caretTimer);
-		}
 		_fieldBorderSprite = FlxDestroyUtil.destroy(_fieldBorderSprite);
 		_pointerCamera = null;
 		while (_selectionBoxes.length > 0)
@@ -1103,15 +1096,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 	}
 	
 	/**
-	 * Helper function to stop and then start the caret flashing timer.
-	 */
-	function restartCaretTimer():Void
-	{
-		stopCaretTimer();
-		startCaretTimer();
-	}
-	
-	/**
 	 * Runs the specified typing command.
 	 */
 	function runCommand(cmd:TypingCommand):Void
@@ -1189,38 +1173,17 @@ class FlxInputText extends FlxText implements IFlxInputText
 				setSelection(_selectionIndex, _caretIndex);
 		}
 	}
-
+	
 	/**
 	 * Starts the timer for the caret to flash.
 	 * 
 	 * Call this right after `stopCaretTimer()` to show the caret immediately.
 	 */
-	function startCaretTimer():Void
+	function restartCaretTimer():Void
 	{
-		_caretTimer.cancel();
-		
-		_caretFlash = !_caretFlash;
-		updateCaretVisibility();
-		_caretTimer.start(0.6, function(tmr)
-		{
-			startCaretTimer();
-		});
+		_caretTimer = 0;
 	}
 	
-	/**
-	 * Stops the timer for the caret to flash and hides it.
-	 */
-	function stopCaretTimer():Void
-	{
-		_caretTimer.cancel();
-		
-		if (_caretFlash)
-		{
-			_caretFlash = false;
-			updateCaretVisibility();
-		}
-	}
-
 	/**
 	 * Updates the position of the background sprites, if they're enabled.
 	 */
@@ -1288,17 +1251,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		_caret.makeGraphic(caretWidth, Std.int(lineHeight));
 		clipSprite(_caret);
-	}
-	
-	/**
-	 * Updates the visibility of the selection cursor.
-	 */
-	function updateCaretVisibility():Void
-	{
-		if (_caret == null)
-			return;
-
-		_caret.visible = (_caretFlash && editable && _selectionIndex == _caretIndex && isCaretLineVisible());
 	}
 	
 	#if flash
@@ -1479,7 +1431,6 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	function updateSelectionSprites():Void
 	{
-		updateCaretVisibility();
 		updateCaretPosition();
 		updateSelectionBoxes();
 	}
