@@ -446,7 +446,7 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Load graphic from another `FlxSprite` and copy its tile sheet data.
-	 * This method can useful for non-flash targets.
+	 * This method can be useful for non-flash targets.
 	 *
 	 * @param   Sprite   The `FlxSprite` from which you want to load graphic data.
 	 * @return  This `FlxSprite` instance (nice for chaining stuff together, if you're into that).

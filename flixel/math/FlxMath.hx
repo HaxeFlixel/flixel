@@ -213,7 +213,7 @@ class FlxMath
 		}
 		else
 		{
-			return pointInFlxRect(FlxG.mouse.screenX, FlxG.mouse.screenY, rect);
+			return pointInFlxRect(FlxG.mouse.viewX, FlxG.mouse.viewY, rect);
 		}
 	}
 	#end
@@ -398,8 +398,8 @@ class FlxMath
 	 */
 	public static inline function distanceToMouse(Sprite:FlxSprite):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.viewX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.viewY;
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 
@@ -414,8 +414,8 @@ class FlxMath
 	 */
 	public static inline function isDistanceToMouseWithin(Sprite:FlxSprite, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - FlxG.mouse.viewX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - FlxG.mouse.viewY;
 
 		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;
@@ -434,8 +434,8 @@ class FlxMath
 	 */
 	public static inline function distanceToTouch(Sprite:FlxSprite, Touch:FlxTouch):Int
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.viewX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.viewY;
 		return Std.int(FlxMath.vectorLength(dx, dy));
 	}
 
@@ -450,8 +450,8 @@ class FlxMath
 	 */
 	public static inline function isDistanceToTouchWithin(Sprite:FlxSprite, Touch:FlxTouch, Distance:Float, IncludeEqual:Bool = false):Bool
 	{
-		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.screenX;
-		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.screenY;
+		var dx:Float = (Sprite.x + Sprite.origin.x) - Touch.viewX;
+		var dy:Float = (Sprite.y + Sprite.origin.y) - Touch.viewY;
 
 		if (IncludeEqual)
 			return dx * dx + dy * dy <= Distance * Distance;

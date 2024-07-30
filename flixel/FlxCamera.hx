@@ -648,6 +648,7 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
 			&& _headTriangles.blending == blendInt
+			&& _headTriangles.blend == blend
 			#if !flash
 			&& _headTriangles.hasColorOffsets == hasColorOffsets
 			&& _headTriangles.shader == shader
@@ -682,6 +683,7 @@ class FlxCamera extends FlxBasic
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
 		itemToReturn.blending = blendInt;
+		itemToReturn.blend = blend;
 		#if !flash
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.shader = shader;
@@ -1672,8 +1674,11 @@ class FlxCamera extends FlxBasic
 			if (FxAlpha == 0)
 				return;
 
-			var targetGraphics:Graphics = (graphics == null) ? canvas.graphics : graphics;
+			final targetGraphics = (graphics == null) ? canvas.graphics : graphics;
 
+			#if (openfl > "8.7.0")
+			targetGraphics.overrideBlendMode(null);
+			#end
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading
@@ -1688,35 +1693,35 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	function drawFX():Void
 	{
-		var alphaComponent:Float;
-
 		// Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
-			alphaComponent = _fxFlashColor.alpha;
-
 			if (FlxG.renderBlit)
 			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha) << 24) + (_fxFlashColor & 0x00ffffff));
+				var color = _fxFlashColor;
+				color.alphaFloat *= _fxFlashAlpha;
+				fill(color);
 			}
 			else
 			{
-				fill((_fxFlashColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFlashAlpha / 255, canvas.graphics);
+				final alpha = color.alphaFloat * _fxFlashAlpha;
+				fill(_fxFlashColor.rgb, true, alpha, canvas.graphics);
 			}
 		}
-
+		
 		// Draw the "fade" special effect onto the buffer
 		if (_fxFadeAlpha > 0.0)
 		{
-			alphaComponent = _fxFadeColor.alpha;
-
 			if (FlxG.renderBlit)
 			{
-				fill((Std.int(((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha) << 24) + (_fxFadeColor & 0x00ffffff));
+				var color = _fxFadeColor;
+				color.alphaFloat *= _fxFadeAlpha;
+				fill(color);
 			}
 			else
 			{
-				fill((_fxFadeColor & 0x00ffffff), true, ((alphaComponent <= 0) ? 0xff : alphaComponent) * _fxFadeAlpha / 255, canvas.graphics);
+				final alpha = _fxFadeColor.alphaFloat * _fxFadeAlpha;
+				fill(_fxFadeColor.rgb, true, alpha, canvas.graphics);
 			}
 		}
 	}

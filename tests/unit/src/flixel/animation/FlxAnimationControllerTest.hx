@@ -33,6 +33,7 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testCallbackAfterFirstLoadGraphic():Void
 	{
 		var timesCalled:Int = 0;
@@ -48,12 +49,31 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.areEqual(1, timesCalled);
 		Assert.areEqual(0, callbackFrameIndex);
 	}
-
+	
 	@Test
-	function testCallbackNoFrameIndexChange():Void
+	function testOnFrameChangeAfterFirstLoadGraphic():Void
 	{
 		var timesCalled:Int = 0;
-		sprite.animation.callback = function(_, _, _) timesCalled++;
+		var callbackFrameIndex:Int = -1;
+		sprite.animation.onFrameChange.add(function(s:String, n:Int, i:Int)
+		{
+			timesCalled++;
+			callbackFrameIndex = i;
+		});
+
+		loadSpriteSheet();
+
+		Assert.areEqual(1, timesCalled);
+		Assert.areEqual(0, callbackFrameIndex);
+	}
+
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function testOnFrameChangeNoFrameIndexChange():Void
+	{
+		var timesCalled:Int = 0;
+		sprite.animation.callback = function(_, _, _) timesCalled++;// remove later
+		sprite.animation.onFrameChange.add(function(_, _, _) timesCalled++);
 
 		sprite.animation.frameIndex = 0;
 		sprite.animation.frameIndex = 0;
@@ -75,19 +95,116 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test // #1781
+	@:haxe.warning("-WDeprecated")
 	function testFinishCallbackOnce():Void
 	{
 		loadSpriteSheet();
-		sprite.animation.add("animation", [0, 1, 2], 3000, false);
-
+		sprite.animation.add("animation", [0, 1, 0], 3000, false);
+		
 		var timesCalled = 0;
 		sprite.animation.finishCallback = function(_) timesCalled++;
 		sprite.animation.play("animation");
-
+		
 		step();
 		Assert.areEqual(1, timesCalled);
 	}
-
+	
+	@Test // #1781
+	function testOnFinishOnce():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1, 0], 3000, false);
+		
+		var timesCalled = 0;
+		sprite.animation.onFinish.add((_)->timesCalled++);
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(1, timesCalled);
+	}
+	
+	@Test // #1781
+	function testOnFinishNever():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0], 3000, true);
+		
+		var timesCalled = 0;
+		sprite.animation.onFinish.add((_)->timesCalled++);
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(0, timesCalled);
+	}
+	
+	@Test
+	/** Make sure onLoop is called when fps is high enough to loop in one frame */
+	function testOnLoopOneFrame():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1, 0], 3 * 20 * FlxG.updateFramerate, true);
+		
+		var timesCalled = 0;
+		sprite.animation.onLoop.add((_)->timesCalled++);
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(20, timesCalled);
+	}
+	
+	@Test
+	/** Make sure onLoop is NOT called when anim is not set to loop */
+	function testOnLoop():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1], 2 * 20 * FlxG.updateFramerate, true);
+		
+		var timesCalled = 0;
+		sprite.animation.onLoop.add(function (_)
+		{
+			timesCalled++;
+			Assert.areEqual(0, sprite.animation.curAnim.curFrame);
+		});
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(20, timesCalled);
+	}
+	
+	@Test
+	/** Make sure onLoop is NOT called when anim is not set to loop */
+	function testOnLoopReverse():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0, 1], 2 * 20 * FlxG.updateFramerate, true);
+		
+		var timesCalled = 0;
+		sprite.animation.onLoop.add(function (_)
+		{
+			timesCalled++;
+			Assert.areEqual(1, sprite.animation.curAnim.curFrame);
+		});
+		sprite.animation.play("animation", false, true);
+		
+		step();
+		Assert.areEqual(20, timesCalled);
+	}
+	
+	@Test
+	/** Make sure onLoop is NOT called when anim is not set to loop */
+	function testOnLoopNever():Void
+	{
+		loadSpriteSheet();
+		sprite.animation.add("animation", [0], 3000, false);
+		
+		var timesCalled = 0;
+		sprite.animation.onLoop.add((_)->timesCalled++);
+		sprite.animation.play("animation");
+		
+		step();
+		Assert.areEqual(0, timesCalled);
+	}
+	
 	@Test // #1786
 	function testNullFrameName():Void
 	{
