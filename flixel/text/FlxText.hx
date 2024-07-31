@@ -20,14 +20,11 @@ import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+import openfl.utils.AssetType;
 
 using flixel.util.FlxStringUtil;
-
 #if flash
 import openfl.geom.Rectangle;
-#end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
 #end
 
 // TODO: think about filters and text

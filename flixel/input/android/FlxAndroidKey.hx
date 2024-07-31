@@ -12,8 +12,8 @@ enum abstract FlxAndroidKey(Int) from Int to Int
 	public static var toStringMap(default, null):Map<FlxAndroidKey, String> = FlxMacroUtil.buildMap("flixel.input.android.FlxAndroidKey", true);
 	var ANY = -2;
 	var NONE = -1;
-	var MENU = #if (openfl >= "8.0.0") 0x4000010C #else 16777234 #end;
-	var BACK = #if (openfl >= "8.0.0") 0x4000010E #else 27 #end;
+	var MENU = 0x4000010C;
+	var BACK = 0x4000010E;
 
 	@:from
 	public static inline function fromString(s:String)
