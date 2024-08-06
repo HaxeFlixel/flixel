@@ -1,10 +1,5 @@
 package flixel;
 
-import openfl.Lib;
-import openfl.display.DisplayObject;
-import openfl.display.Stage;
-import openfl.display.StageDisplayState;
-import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
@@ -28,6 +23,11 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end

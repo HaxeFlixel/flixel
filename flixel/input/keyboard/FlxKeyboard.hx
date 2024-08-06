@@ -1,10 +1,11 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;
+import flixel.text.FlxInputText;
+import openfl.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -101,7 +102,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Debugger toggle
 		#if FLX_DEBUG
-		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event))
+		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
 		}
@@ -114,7 +115,10 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
-		if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event) && inKeyArray(FlxG.vcr.cancelKeys, event))
+		if (FlxG.game.replaying
+			&& !inKeyArray(FlxG.debugger.toggleKeys, event)
+			&& inKeyArray(FlxG.vcr.cancelKeys, event)
+			&& !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.vcr.cancelReplay();
 		}
