@@ -95,7 +95,7 @@ class CompletionList extends Sprite
 			case Keyboard.UP:
 				updateIndices(-1);
 
-			case Keyboard.ENTER:
+			case Keyboard.ENTER | Keyboard.TAB:
 				if (completed != null)
 					completed(items[selectedIndex]);
 				close();
