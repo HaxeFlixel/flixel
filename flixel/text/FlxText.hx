@@ -1038,7 +1038,7 @@ class FlxText extends FlxSprite
 
 				for (i in 0...iterations)
 				{
-					copyTextWithOffset(delta, delta);
+					copyTextWithOffset(shadowOffset.x, shadowOffset.y);
 				}
 
 				_matrix.translate(-shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
