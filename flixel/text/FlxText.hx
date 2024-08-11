@@ -839,7 +839,7 @@ class FlxText extends FlxSprite
 	override function get_height():Float
 	{
 		regenGraphic();
-		return super.get_height();
+		return super.get_height() + shadowOffset.y;
 	}
 
 	override function updateColorTransform():Void
@@ -875,11 +875,11 @@ class FlxText extends FlxSprite
 			oldHeight = graphic.height;
 		}
 
-		var newWidth:Int = Math.ceil(textField.width);
+		var newWidth:Int = Math.ceil(textField.width) + Std.int(shadowOffset?.x);
 		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
 		var vertGutter = _autoHeight ? VERTICAL_GUTTER : 0;
 		// Account for gutter
-		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
+		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter + Std.int(shadowOffset?.y);
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
@@ -1042,7 +1042,6 @@ class FlxText extends FlxSprite
 				}
 
 				_matrix.translate(-shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
-
 			case OUTLINE:
 				// Render an outline around the text
 				// (do 8 offset draw calls)
