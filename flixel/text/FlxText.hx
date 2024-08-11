@@ -883,8 +883,8 @@ class FlxText extends FlxSprite
 
 		if (shadowOffset != null)
 		{
-			newWidth += Math.ceil(shadowOffset.x);
-			newHeight += Math.ceil(shadowOffset.y);
+			newWidth += Math.ceil(Math.abs(shadowOffset.x));
+			newHeight += Math.ceil(Math.abs(shadowOffset.y));
 		}
 
 		// prevent text height from shrinking on flash if text == ""
@@ -1044,7 +1044,9 @@ class FlxText extends FlxSprite
 
 				for (i in 0...iterations)
 				{
-					copyTextWithOffset(shadowOffset.x, shadowOffset.y);
+					copyTextWithOffset(shadowOffset.x >= 0 ?
+						 shadowOffset.x : delta, shadowOffset.y >= 0 ?
+						 shadowOffset.y : delta);
 				}
 
 				_matrix.translate(-shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
