@@ -875,11 +875,17 @@ class FlxText extends FlxSprite
 			oldHeight = graphic.height;
 		}
 
-		var newWidth:Int = Math.ceil(textField.width) + Std.int(shadowOffset?.x);
+		var newWidth:Int = Math.ceil(textField.width);
 		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
 		var vertGutter = _autoHeight ? VERTICAL_GUTTER : 0;
 		// Account for gutter
-		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter + Std.int(shadowOffset?.y);
+		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
+
+		if (shadowOffset != null)
+		{
+			newWidth += Math.ceil(shadowOffset.x);
+			newHeight += Math.ceil(shadowOffset.y);
+		}
 
 		// prevent text height from shrinking on flash if text == ""
 		if (textField.textHeight == 0)
