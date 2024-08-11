@@ -839,7 +839,7 @@ class FlxText extends FlxSprite
 	override function get_height():Float
 	{
 		regenGraphic();
-		return super.get_height() + shadowOffset.y;
+		return super.get_height();
 	}
 
 	override function updateColorTransform():Void
