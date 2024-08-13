@@ -74,7 +74,7 @@ class FlxPointer
 		if (camera == null)
 			camera = FlxG.camera;
 		
-		getViewPosition(camera, result);
+		result = getViewPosition(camera, result);
 		result.addPoint(camera.scroll);
 		return result;
 	}

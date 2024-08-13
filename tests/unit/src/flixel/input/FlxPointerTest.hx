@@ -69,4 +69,48 @@ class FlxPointerTest
 		Assert.areEqual(150, pointer.x);
 		Assert.areEqual(124, pointer.y);
 	}
+	
+	@Test
+	function testNullResult()
+	{
+		try
+		{
+			final result = pointer.getPosition();
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "getPosition", message: "${e.message}"');
+		}
+		
+		try
+		{
+			final result = pointer.getWorldPosition();
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "getWorldPosition", message: "${e.message}"');
+		}
+		
+		try
+		{
+			final result = pointer.getViewPosition();
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "getViewPosition", message: "${e.message}"');
+		}
+		
+		try
+		{
+			final result = pointer.getGamePosition();
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "getGamePosition", message: "${e.message}"');
+		}
+	}
 }
