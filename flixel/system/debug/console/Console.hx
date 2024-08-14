@@ -197,6 +197,7 @@ class Console extends Window
 	{
 		if (completionList.visible)
 		{
+			// Fixes issue with listening for key down events - https://github.com/HaxeFlixel/flixel/pull/3225
 			completionList.onKeyDown(e);
 			return;
 		}
