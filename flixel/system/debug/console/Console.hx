@@ -196,7 +196,11 @@ class Console extends Window
 	function onKeyDown(e:KeyboardEvent)
 	{
 		if (completionList.visible)
+		{
+			// Fixes issue with listening for key down events - https://github.com/HaxeFlixel/flixel/pull/3225
+			completionList.onKeyDown(e);
 			return;
+		}
 
 		switch (e.keyCode)
 		{
