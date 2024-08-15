@@ -872,33 +872,47 @@ class FlxText extends FlxSprite
 	{
 		if (textField == null || !_regen)
 			return;
-
-		var oldWidth:Int = 0;
-		var oldHeight:Int = VERTICAL_GUTTER;
-
-		if (graphic != null)
+		
+		final oldWidth:Int = graphic != null ? graphic.width : 0;
+		final oldHeight:Int = graphic != null ? graphic.height : VERTICAL_GUTTER;
+		
+		final newWidthFloat:Float = textField.width;
+		final newHeightFloat:Float = _autoHeight ? textField.textHeight + VERTICAL_GUTTER : textField.height;
+		
+		var borderWidth:Float = 0;
+		var borderHeight:Float = 0;
+		switch(borderStyle)
 		{
-			oldWidth = graphic.width;
-			oldHeight = graphic.height;
+			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
+				borderWidth += Math.abs(borderSize);
+				borderHeight += Math.abs(borderSize);
+			
+			case SHADOW: // with non-default shadowOffset value
+				borderWidth += Math.abs(_shadowOffset.x);
+				borderHeight += Math.abs(_shadowOffset.y);
+			
+			case SHADOW_CUSTOM(offsetX, offsetY):
+				borderWidth += Math.abs(offsetX);
+				borderHeight += Math.abs(offsetY);
+			
+			case OUTLINE_FAST | OUTLINE:
+				borderWidth += Math.abs(borderSize) * 2;
+				borderHeight += Math.abs(borderSize) * 2;
+			
+			case NONE:
 		}
-
-		var newWidth:Int = Math.ceil(textField.width);
-		var textfieldHeight = _autoHeight ? textField.textHeight : textField.height;
-		var vertGutter = _autoHeight ? VERTICAL_GUTTER : 0;
-		// Account for gutter
-		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
-
+		
+		final newWidth:Int = Math.ceil(newWidthFloat + borderWidth);
+		final newHeight:Int = Math.ceil(newHeightFloat + borderHeight);
+		
 		// prevent text height from shrinking on flash if text == ""
-		if (textField.textHeight == 0)
-		{
-			newHeight = oldHeight;
-		}
-
-		if (oldWidth != newWidth || oldHeight != newHeight)
+		if (textField.textHeight != 0 && (oldWidth != newWidth || oldHeight != newHeight))
 		{
 			// Need to generate a new buffer to store the text graphic
-			var key:String = FlxG.bitmap.getUniqueKey("text");
+			final key:String = FlxG.bitmap.getUniqueKey("text");
 			makeGraphic(newWidth, newHeight, FlxColor.TRANSPARENT, false, key);
+			width = Math.ceil(newWidthFloat);
+			height = Math.ceil(newHeightFloat);
 			
 			#if FLX_TRACK_GRAPHICS
 			graphic.trackingInfo = 'text($ID, $text)';
@@ -1029,6 +1043,28 @@ class FlxText extends FlxSprite
 	
 	function applyBorderStyle():Void
 	{
+		// offset entire image to fit the border
+		switch(borderStyle)
+		{
+			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
+				if (borderSize < 0)
+					offset.set(-borderSize, -borderSize);
+			
+			case SHADOW: // with non-default shadowOffset value
+				offset.x = _shadowOffset.x < 0 ? -_shadowOffset.x : 0;
+				offset.y = _shadowOffset.y < 0 ? -_shadowOffset.y : 0;
+			
+			case SHADOW_CUSTOM(offsetX, offsetY):
+				offset.x = offsetX < 0 ? -offsetX : 0;
+				offset.y = offsetY < 0 ? -offsetY : 0;
+			
+			case OUTLINE_FAST | OUTLINE if (borderSize < 0):
+				offset.set(-borderSize, -borderSize);
+			
+			case NONE | OUTLINE_FAST | OUTLINE:
+		}
+		_matrix.translate(offset.x, offset.y);
+		
 		switch (borderStyle)
 		{
 			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
