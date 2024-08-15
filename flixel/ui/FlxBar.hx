@@ -368,7 +368,7 @@ class FlxBar extends FlxSprite
 						borderSize = FlxPoint.get(1.0, 1.0);
 
 					emptyBar = new BitmapData(barWidth, barHeight, true, border);
-					emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), empty);
+					emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2, barHeight - borderSize.y * 2), empty);
 				}
 				else
 				{
@@ -388,7 +388,7 @@ class FlxBar extends FlxSprite
 					borderSize = FlxPoint.get(1.0, 1.0);
 
 				_emptyBar = new BitmapData(barWidth, barHeight, true, border);
-				_emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), empty);
+				_emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2, barHeight - borderSize.y * 2), empty);
 			}
 			else
 			{
@@ -428,7 +428,7 @@ class FlxBar extends FlxSprite
 						borderSize = FlxPoint.get(1.0, 1.0);
 
 					filledBar = new BitmapData(barWidth, barHeight, true, border);
-					filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), fill);
+					filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2, barHeight - borderSize.y * 2), fill);
 				}
 				else
 				{
@@ -448,7 +448,7 @@ class FlxBar extends FlxSprite
 					borderSize = FlxPoint.get(1.0, 1.0);
 
 				_filledBar = new BitmapData(barWidth, barHeight, true, border);
-				_filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), fill);
+				_filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2, barHeight - borderSize.y * 2), fill);
 			}
 			else
 			{
@@ -520,7 +520,8 @@ class FlxBar extends FlxSprite
 						borderSize = FlxPoint.get(1.0, 1.0);
 
 					emptyBar = new BitmapData(barWidth, barHeight, true, border);
-					FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, empty, 1, 1, chunkSize, rotation);
+					FlxGradient.overlayGradientOnBitmapData(emptyBar, Std.int(barWidth - borderSize.x * 2), Std.int(barHeight - borderSize.y * 2), empty, 1,
+						1, chunkSize, rotation);
 				}
 				else
 				{
@@ -540,7 +541,8 @@ class FlxBar extends FlxSprite
 					borderSize = FlxPoint.get(1.0, 1.0);
 
 				_emptyBar = new BitmapData(barWidth, barHeight, true, border);
-				FlxGradient.overlayGradientOnBitmapData(_emptyBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, empty, 1, 1, chunkSize, rotation);
+				FlxGradient.overlayGradientOnBitmapData(_emptyBar, Std.int(barWidth - borderSize.x * 2), Std.int(barHeight - borderSize.y * 2), empty, 1, 1,
+					chunkSize, rotation);
 			}
 			else
 			{
@@ -592,7 +594,8 @@ class FlxBar extends FlxSprite
 						borderSize = FlxPoint.get(1.0, 1.0);
 
 					filledBar = new BitmapData(barWidth, barHeight, true, border);
-					FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, fill, 1, 1, chunkSize, rotation);
+					FlxGradient.overlayGradientOnBitmapData(filledBar, Std.int(barWidth - borderSize.x * 2), Std.int(barHeight - borderSize.y * 2), fill, 1,
+						1, chunkSize, rotation);
 				}
 				else
 				{
@@ -612,7 +615,8 @@ class FlxBar extends FlxSprite
 					borderSize = FlxPoint.get(1.0, 1.0);
 
 				_filledBar = new BitmapData(barWidth, barHeight, true, border);
-				FlxGradient.overlayGradientOnBitmapData(_filledBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, fill, 1, 1, chunkSize, rotation);
+				FlxGradient.overlayGradientOnBitmapData(_filledBar, Std.int(barWidth - borderSize.x * 2), Std.int(barHeight - borderSize.y * 2), fill, 1, 1,
+					chunkSize, rotation);
 			}
 			else
 			{
