@@ -160,12 +160,14 @@ class FlxText extends FlxSprite
 	public var autoSize(get, set):Bool;
 
 	var _autoHeight:Bool = true;
-
+	
+	var _shadowOffset:FlxPoint;
 	/**
 	 * Offset that is applied to the shadow border style, if active.
 	 * `x` and `y` are multiplied by `borderSize`. Default is `(1, 1)`, or lower-right corner.
 	 */
-	public var shadowOffset(default, null):FlxPoint;
+	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_CUSTOM(offsetX, offsetY)), instead")
+	public var shadowOffset(get, never):FlxPoint;
 
 	var _defaultFormat:TextFormat;
 	var _formatAdjusted:TextFormat;
@@ -240,7 +242,7 @@ class FlxText extends FlxSprite
 
 		drawFrame();
 
-		shadowOffset = FlxPoint.get(1, 1);
+		_shadowOffset = FlxPoint.get(1, 1);
 	}
 
 	/**
@@ -252,7 +254,7 @@ class FlxText extends FlxSprite
 		_font = null;
 		_defaultFormat = null;
 		_formatAdjusted = null;
-		shadowOffset = FlxDestroyUtil.put(shadowOffset);
+		_shadowOffset = FlxDestroyUtil.put(_shadowOffset);
 		super.destroy();
 	}
 
@@ -841,6 +843,11 @@ class FlxText extends FlxSprite
 		regenGraphic();
 		return super.get_height();
 	}
+	
+	inline function get_shadowOffset()
+	{
+		return _shadowOffset;
+	}
 
 	override function updateColorTransform():Void
 	{
@@ -1019,38 +1026,70 @@ class FlxText extends FlxSprite
 		regenGraphic();
 		super.calcFrame(RunOnCpp);
 	}
-
+	
 	function applyBorderStyle():Void
 	{
-		var iterations:Int = Std.int(borderSize * borderQuality);
-		if (iterations <= 0)
-		{
-			iterations = 1;
-		}
-		var delta:Float = borderSize / iterations;
-
 		switch (borderStyle)
 		{
-			case SHADOW:
+			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
 				// Render a shadow beneath the text
-				// (do one lower-right offset draw call)
 				applyFormats(_formatAdjusted, true);
-
+				
+				final originX = _matrix.tx;
+				final originY = _matrix.ty;
+				
+				final iterations = borderQuality < 1 ? 1 : Std.int(Math.abs(borderSize) * borderQuality);
+				var i = iterations + 1;
+				while (i-- > 1)
+				{
+					copyTextWithOffset(borderSize / iterations * i, borderSize / iterations * i);
+					// reset to origin
+					_matrix.tx = originX;
+					_matrix.ty = originY;
+				}
+			
+			case SHADOW: // with non-default shadowOffset value
+				// Render a shadow beneath the text using the shadowOffset property
+				applyFormats(_formatAdjusted, true);
+				
+				var iterations = borderQuality < 1 ? 1 : Std.int(Math.abs(borderSize) * borderQuality);
+				final delta = borderSize / iterations;
 				for (i in 0...iterations)
 				{
 					copyTextWithOffset(delta, delta);
 				}
-
-				_matrix.translate(-shadowOffset.x * borderSize, -shadowOffset.y * borderSize);
-
+				
+				_matrix.translate(-_shadowOffset.x * borderSize, -_shadowOffset.y * borderSize);
+			
+			case SHADOW_CUSTOM(offsetX, offsetY):
+				// Render a shadow beneath the text with the specified offset
+				applyFormats(_formatAdjusted, true);
+				
+				final originX = _matrix.tx;
+				final originY = _matrix.ty;
+				
+				// Size is average of both, so (4, 4) has 4 iterations, just like SHADOW
+				final size = (Math.abs(offsetX) + Math.abs(offsetY)) / 2;
+				final iterations = borderQuality < 1 ? 1 : Std.int(size * borderQuality);
+				var i = iterations + 1;
+				while (i-- > 1)
+				{
+					copyTextWithOffset(offsetX / iterations * i, offsetY / iterations * i);
+					// reset to origin
+					_matrix.tx = originX;
+					_matrix.ty = originY;
+				}
+			
 			case OUTLINE:
 				// Render an outline around the text
 				// (do 8 offset draw calls)
 				applyFormats(_formatAdjusted, true);
-
-				var curDelta:Float = delta;
-				for (i in 0...iterations)
+				
+				final iterations = FlxMath.maxInt(1, Std.int(borderSize * borderQuality));
+				var i = iterations + 1;
+				while (i-- > 1)
 				{
+					final curDelta = borderSize / iterations * i;
 					copyTextWithOffset(-curDelta, -curDelta); // upper-left
 					copyTextWithOffset(curDelta, 0); // upper-middle
 					copyTextWithOffset(curDelta, 0); // upper-right
@@ -1059,29 +1098,29 @@ class FlxText extends FlxSprite
 					copyTextWithOffset(-curDelta, 0); // lower-middle
 					copyTextWithOffset(-curDelta, 0); // lower-left
 					copyTextWithOffset(0, -curDelta); // lower-left
-
+					
 					_matrix.translate(curDelta, 0); // return to center
-					curDelta += delta;
 				}
-
+			
 			case OUTLINE_FAST:
 				// Render an outline around the text
 				// (do 4 diagonal offset draw calls)
 				// (this method might not work with certain narrow fonts)
 				applyFormats(_formatAdjusted, true);
-
-				var curDelta:Float = delta;
-				for (i in 0...iterations)
+				
+				final iterations = FlxMath.maxInt(1, Std.int(borderSize * borderQuality));
+				var i = iterations + 1;
+				while (i-- > 1)
 				{
+					final curDelta = borderSize / iterations * i;
 					copyTextWithOffset(-curDelta, -curDelta); // upper-left
 					copyTextWithOffset(curDelta * 2, 0); // upper-right
 					copyTextWithOffset(0, curDelta * 2); // lower-right
 					copyTextWithOffset(-curDelta * 2, 0); // lower-left
-
+					
 					_matrix.translate(curDelta, -curDelta); // return to center
-					curDelta += delta;
 				}
-
+			
 			case NONE:
 		}
 	}
@@ -1237,20 +1276,26 @@ class FlxTextFormatMarkerPair
 enum FlxTextBorderStyle
 {
 	NONE;
-
+	
 	/**
-	 * A simple shadow to the lower-right.
-	 * Use `FlxText.shadowOffset` for custom placement.
+	 * A simple shadow to the lower-right
 	 */
 	SHADOW;
-
+	
+	/**
+	 * A shadow that allows custom placement
+	 * **Note:** Ignores borderSize
+	 */
+	SHADOW_CUSTOM(offsetX:Float, offsetY:Float);
+	
 	/**
 	 * Outline on all 8 sides
 	 */
 	OUTLINE;
-
+	
 	/**
-	 * Outline, optimized using only 4 draw calls (might not work for narrow and/or 1-pixel fonts)
+	 * Outline, optimized using only 4 draw calls
+	 * **Note:** Might not work for narrow and/or 1-pixel fonts
 	 */
 	OUTLINE_FAST;
 }
