@@ -615,6 +615,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		status = value;
 		updateLabelAlpha();
+		updateLabelPosition();
 		return status;
 	}
 
