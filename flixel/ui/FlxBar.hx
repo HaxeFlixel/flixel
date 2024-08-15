@@ -324,13 +324,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled health bar in the given colours, with optional 1px thick border.
+	 * Creates a solid-colour filled health bar in the given colours, with optional border.
 	 * All colour values are in 0xAARRGGBB format, so if you want a slightly transparent health bar give it lower AA values.
 	 *
 	 * @param	empty		The color of the bar when empty in 0xAARRGGBB format (the background colour)
 	 * @param	fill		The color of the bar when full in 0xAARRGGBB format (the foreground colour)
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder	Should the bar be outlined with a solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return	This FlxBar object with generated images for front and background.
 	 */
 	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
@@ -341,11 +342,12 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled background for health bar in the given colour, with optional 1px thick border.
+	 * Creates a solid-colour filled background for health bar in the given colour, with optional border.
 	 *
 	 * @param	empty			The color of the bar when empty in 0xAARRGGBB format (the background colour)
-	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder		Should the bar be outlined with a solid border?
 	 * @param	border			The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return	This FlxBar object with generated image for rendering health bar background.
 	 */
 	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
@@ -401,10 +403,11 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a solid-colour filled foreground for health bar in the given colour, with optional 1px thick border.
+	 * Creates a solid-colour filled foreground for health bar in the given colour, with optional border.
 	 * @param	fill		The color of the bar when full in 0xAARRGGBB format (the foreground colour)
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder	Should the bar be outlined with a solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return	This FlxBar object with generated image for rendering actual values.
 	 */
 	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
@@ -459,15 +462,16 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled health bar using the given colour ranges, with optional 1px thick border.
+	 * Creates a gradient filled health bar using the given colour ranges, with optional border.
 	 * All colour values are in 0xAARRGGBB format, so if you want a slightly transparent health bar give it lower AA values.
 	 *
 	 * @param	empty		Array of colour values used to create the gradient of the health bar when empty, each colour must be in 0xAARRGGBB format (the background colour)
 	 * @param	fill		Array of colour values used to create the gradient of the health bar when full, each colour must be in 0xAARRGGBB format (the foreground colour)
 	 * @param	chunkSize	If you want a more old-skool looking chunky gradient, increase this value!
 	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder	Should the bar be outlined with a solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return 	This FlxBar object with generated images for front and background.
 	 */
 	public function createGradientBar(empty:Array<FlxColor>, fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
@@ -479,13 +483,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled background for health bar using the given colour range, with optional 1px thick border.
+	 * Creates a gradient filled background for health bar using the given colour range, with optional border.
 	 *
 	 * @param	empty			Array of colour values used to create the gradient of the health bar when empty, each colour must be in 0xAARRGGBB format (the background colour)
 	 * @param	chunkSize		If you want a more old-skool looking chunky gradient, increase this value!
 	 * @param	rotation		Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder		Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder		Should the bar be outlined with a solid border?
 	 * @param	border			The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return 	This FlxBar object with generated image for background rendering.
 	 */
 	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
@@ -550,13 +555,14 @@ class FlxBar extends FlxSprite
 	}
 
 	/**
-	 * Creates a gradient filled foreground for health bar using the given colour range, with optional 1px thick border.
+	 * Creates a gradient filled foreground for health bar using the given colour range, with optional border.
 	 *
 	 * @param	fill		Array of colour values used to create the gradient of the health bar when full, each colour must be in 0xAARRGGBB format (the foreground colour)
 	 * @param	chunkSize	If you want a more old-skool looking chunky gradient, increase this value!
 	 * @param	rotation	Angle of the gradient in degrees. 90 = top to bottom, 180 = left to right. Any angle is valid
-	 * @param	showBorder	Should the bar be outlined with a 1px solid border?
+	 * @param	showBorder	Should the bar be outlined with a solid border?
 	 * @param	border		The border colour in 0xAARRGGBB format
+	 * @param   borderSize  An `FlxPoint` containing the dimensions of the border.
 	 * @return 	This FlxBar object with generated image for rendering actual values.
 	 */
 	public function createGradientFilledBar(fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
