@@ -881,6 +881,7 @@ class FlxText extends FlxSprite
 		// Account for gutter
 		var newHeight:Int = Math.ceil(textfieldHeight) + vertGutter;
 
+		// Increase the dimensions of the bitmap to allow for the drawing of the shadow properly.
 		if (shadowOffset != null)
 		{
 			newWidth += Math.ceil(Math.abs(shadowOffset.x));
