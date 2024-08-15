@@ -333,10 +333,10 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated images for front and background.
 	 */
-	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
+	public function createFilledBar(empty:FlxColor, fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
-		createColoredEmptyBar(empty, showBorder, border);
-		createColoredFilledBar(fill, showBorder, border);
+		createColoredEmptyBar(empty, showBorder, border, borderSize);
+		createColoredFilledBar(fill, showBorder, border, borderSize);
 		return this;
 	}
 
@@ -348,7 +348,7 @@ class FlxBar extends FlxSprite
 	 * @param	border			The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for rendering health bar background.
 	 */
-	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
+	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
@@ -362,8 +362,11 @@ class FlxBar extends FlxSprite
 
 				if (showBorder)
 				{
+					if (borderSize == null)
+						borderSize = FlxPoint.get(1.0, 1.0);
+
 					emptyBar = new BitmapData(barWidth, barHeight, true, border);
-					emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
+					emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), empty);
 				}
 				else
 				{
@@ -379,8 +382,11 @@ class FlxBar extends FlxSprite
 		{
 			if (showBorder)
 			{
+				if (borderSize == null)
+					borderSize = FlxPoint.get(1.0, 1.0);
+
 				_emptyBar = new BitmapData(barWidth, barHeight, true, border);
-				_emptyBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), empty);
+				_emptyBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), empty);
 			}
 			else
 			{
@@ -401,7 +407,7 @@ class FlxBar extends FlxSprite
 	 * @param	border		The border colour in 0xAARRGGBB format
 	 * @return	This FlxBar object with generated image for rendering actual values.
 	 */
-	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE):FlxBar
+	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
@@ -415,8 +421,11 @@ class FlxBar extends FlxSprite
 
 				if (showBorder)
 				{
+					if (borderSize == null)
+						borderSize = FlxPoint.get(1.0, 1.0);
+
 					filledBar = new BitmapData(barWidth, barHeight, true, border);
-					filledBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), fill);
+					filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), fill);
 				}
 				else
 				{
@@ -432,8 +441,11 @@ class FlxBar extends FlxSprite
 		{
 			if (showBorder)
 			{
+				if (borderSize == null)
+					borderSize = FlxPoint.get(1.0, 1.0);
+
 				_filledBar = new BitmapData(barWidth, barHeight, true, border);
-				_filledBar.fillRect(new Rectangle(1, 1, barWidth - 2, barHeight - 2), fill);
+				_filledBar.fillRect(new Rectangle(borderSize.x, borderSize.y, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0), fill);
 			}
 			else
 			{
@@ -459,10 +471,10 @@ class FlxBar extends FlxSprite
 	 * @return 	This FlxBar object with generated images for front and background.
 	 */
 	public function createGradientBar(empty:Array<FlxColor>, fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
-			border:FlxColor = FlxColor.WHITE):FlxBar
+			border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
-		createGradientEmptyBar(empty, chunkSize, rotation, showBorder, border);
-		createGradientFilledBar(fill, chunkSize, rotation, showBorder, border);
+		createGradientEmptyBar(empty, chunkSize, rotation, showBorder, border, borderSize);
+		createGradientFilledBar(fill, chunkSize, rotation, showBorder, border, borderSize);
 		return this;
 	}
 
@@ -477,7 +489,7 @@ class FlxBar extends FlxSprite
 	 * @return 	This FlxBar object with generated image for background rendering.
 	 */
 	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
-			border:FlxColor = FlxColor.WHITE):FlxBar
+			border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
@@ -499,8 +511,11 @@ class FlxBar extends FlxSprite
 
 				if (showBorder)
 				{
+					if (borderSize == null)
+						borderSize = FlxPoint.get(1.0, 1.0);
+
 					emptyBar = new BitmapData(barWidth, barHeight, true, border);
-					FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
+					FlxGradient.overlayGradientOnBitmapData(emptyBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, empty, 1, 1, chunkSize, rotation);
 				}
 				else
 				{
@@ -516,8 +531,11 @@ class FlxBar extends FlxSprite
 		{
 			if (showBorder)
 			{
+				if (borderSize == null)
+					borderSize = FlxPoint.get(1.0, 1.0);
+
 				_emptyBar = new BitmapData(barWidth, barHeight, true, border);
-				FlxGradient.overlayGradientOnBitmapData(_emptyBar, barWidth - 2, barHeight - 2, empty, 1, 1, chunkSize, rotation);
+				FlxGradient.overlayGradientOnBitmapData(_emptyBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, empty, 1, 1, chunkSize, rotation);
 			}
 			else
 			{
@@ -542,7 +560,7 @@ class FlxBar extends FlxSprite
 	 * @return 	This FlxBar object with generated image for rendering actual values.
 	 */
 	public function createGradientFilledBar(fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
-			border:FlxColor = FlxColor.WHITE):FlxBar
+			border:FlxColor = FlxColor.WHITE, ?borderSize:FlxPoint):FlxBar
 	{
 		if (FlxG.renderTile)
 		{
@@ -564,8 +582,11 @@ class FlxBar extends FlxSprite
 
 				if (showBorder)
 				{
+					if (borderSize == null)
+						borderSize = FlxPoint.get(1.0, 1.0);
+
 					filledBar = new BitmapData(barWidth, barHeight, true, border);
-					FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - 2, barHeight - 2, fill, 1, 1, chunkSize, rotation);
+					FlxGradient.overlayGradientOnBitmapData(filledBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, fill, 1, 1, chunkSize, rotation);
 				}
 				else
 				{
@@ -581,8 +602,11 @@ class FlxBar extends FlxSprite
 		{
 			if (showBorder)
 			{
+				if (borderSize == null)
+					borderSize = FlxPoint.get(1.0, 1.0);
+
 				_filledBar = new BitmapData(barWidth, barHeight, true, border);
-				FlxGradient.overlayGradientOnBitmapData(_filledBar, barWidth - 2, barHeight - 2, fill, 1, 1, chunkSize, rotation);
+				FlxGradient.overlayGradientOnBitmapData(_filledBar, barWidth - borderSize.x * 2.0, barHeight - borderSize.y * 2.0, fill, 1, 1, chunkSize, rotation);
 			}
 			else
 			{
