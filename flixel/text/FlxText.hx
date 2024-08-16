@@ -166,7 +166,7 @@ class FlxText extends FlxSprite
 	 * Offset that is applied to the shadow border style, if active.
 	 * `x` and `y` are multiplied by `borderSize`. Default is `(1, 1)`, or lower-right corner.
 	 */
-	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_CUSTOM(offsetX, offsetY)), instead")
+	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_XY(offsetX, offsetY)), instead")
 	public var shadowOffset(get, never):FlxPoint;
 
 	var _defaultFormat:TextFormat;
@@ -891,7 +891,7 @@ class FlxText extends FlxSprite
 				borderWidth += Math.abs(borderSize);
 				borderHeight += Math.abs(borderSize);
 			
-			case SHADOW_CUSTOM(offsetX, offsetY):
+			case SHADOW_XY(offsetX, offsetY):
 				borderWidth += Math.abs(offsetX);
 				borderHeight += Math.abs(offsetY);
 			
@@ -1054,7 +1054,7 @@ class FlxText extends FlxSprite
 				if (borderSize < 0)
 					offset.set(-borderSize, -borderSize);
 			
-			case SHADOW_CUSTOM(offsetX, offsetY):
+			case SHADOW_XY(offsetX, offsetY):
 				offset.x = offsetX < 0 ? -offsetX : 0;
 				offset.y = offsetY < 0 ? -offsetY : 0;
 			
@@ -1097,7 +1097,7 @@ class FlxText extends FlxSprite
 					_matrix.ty = originY;
 				}
 			
-			case SHADOW_CUSTOM(offsetX, offsetY):
+			case SHADOW_XY(offsetX, offsetY):
 				// Render a shadow beneath the text with the specified offset
 				applyFormats(_formatAdjusted, true);
 				
@@ -1322,7 +1322,7 @@ enum FlxTextBorderStyle
 	 * A shadow that allows custom placement
 	 * **Note:** Ignores borderSize
 	 */
-	SHADOW_CUSTOM(offsetX:Float, offsetY:Float);
+	SHADOW_XY(offsetX:Float, offsetY:Float);
 	
 	/**
 	 * Outline on all 8 sides
