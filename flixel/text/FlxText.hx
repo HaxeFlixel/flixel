@@ -883,13 +883,13 @@ class FlxText extends FlxSprite
 		var borderHeight:Float = 0;
 		switch(borderStyle)
 		{
-			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
-				borderWidth += Math.abs(borderSize);
-				borderHeight += Math.abs(borderSize);
-			
-			case SHADOW: // with non-default shadowOffset value
+			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
 				borderWidth += Math.abs(_shadowOffset.x);
 				borderHeight += Math.abs(_shadowOffset.y);
+			
+			case SHADOW: // With the default shadowOffset value
+				borderWidth += Math.abs(borderSize);
+				borderHeight += Math.abs(borderSize);
 			
 			case SHADOW_CUSTOM(offsetX, offsetY):
 				borderWidth += Math.abs(offsetX);
@@ -1046,13 +1046,13 @@ class FlxText extends FlxSprite
 		// offset entire image to fit the border
 		switch(borderStyle)
 		{
-			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
-				if (borderSize < 0)
-					offset.set(-borderSize, -borderSize);
-			
-			case SHADOW: // with non-default shadowOffset value
+			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
 				offset.x = _shadowOffset.x < 0 ? -_shadowOffset.x : 0;
 				offset.y = _shadowOffset.y < 0 ? -_shadowOffset.y : 0;
+			
+			case SHADOW: // With the default shadowOffset value
+				if (borderSize < 0)
+					offset.set(-borderSize, -borderSize);
 			
 			case SHADOW_CUSTOM(offsetX, offsetY):
 				offset.x = offsetX < 0 ? -offsetX : 0;
@@ -1067,7 +1067,20 @@ class FlxText extends FlxSprite
 		
 		switch (borderStyle)
 		{
-			case SHADOW if (_shadowOffset.x == 1 && _shadowOffset.y == 1):
+			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
+				// Render a shadow beneath the text using the shadowOffset property
+				applyFormats(_formatAdjusted, true);
+				
+				var iterations = borderQuality < 1 ? 1 : Std.int(Math.abs(borderSize) * borderQuality);
+				final delta = borderSize / iterations;
+				for (i in 0...iterations)
+				{
+					copyTextWithOffset(delta, delta);
+				}
+				
+				_matrix.translate(-_shadowOffset.x * borderSize, -_shadowOffset.y * borderSize);
+			
+			case SHADOW: // With the default shadowOffset value
 				// Render a shadow beneath the text
 				applyFormats(_formatAdjusted, true);
 				
@@ -1083,19 +1096,6 @@ class FlxText extends FlxSprite
 					_matrix.tx = originX;
 					_matrix.ty = originY;
 				}
-			
-			case SHADOW: // with non-default shadowOffset value
-				// Render a shadow beneath the text using the shadowOffset property
-				applyFormats(_formatAdjusted, true);
-				
-				var iterations = borderQuality < 1 ? 1 : Std.int(Math.abs(borderSize) * borderQuality);
-				final delta = borderSize / iterations;
-				for (i in 0...iterations)
-				{
-					copyTextWithOffset(delta, delta);
-				}
-				
-				_matrix.translate(-_shadowOffset.x * borderSize, -_shadowOffset.y * borderSize);
 			
 			case SHADOW_CUSTOM(offsetX, offsetY):
 				// Render a shadow beneath the text with the specified offset
