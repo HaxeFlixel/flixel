@@ -1047,8 +1047,8 @@ class FlxText extends FlxSprite
 		switch(borderStyle)
 		{
 			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
-				offset.x = _shadowOffset.x < 0 ? -_shadowOffset.x : 0;
-				offset.y = _shadowOffset.y < 0 ? -_shadowOffset.y : 0;
+				offset.x = _shadowOffset.x > 0 ? _shadowOffset.x : 0;
+				offset.y = _shadowOffset.y > 0 ? _shadowOffset.y : 0;
 			
 			case SHADOW: // With the default shadowOffset value
 				if (borderSize < 0)
