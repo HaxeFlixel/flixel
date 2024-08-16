@@ -161,14 +161,19 @@ class FlxText extends FlxSprite
 
 	var _autoHeight:Bool = true;
 	
-	var _shadowOffset:FlxPoint;
+	var _shadowOffset:FlxPoint = FlxPoint.get(1, 1);
 	/**
 	 * Offset that is applied to the shadow border style, if active.
 	 * `x` and `y` are multiplied by `borderSize`. Default is `(1, 1)`, or lower-right corner.
 	 */
 	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_XY(offsetX, offsetY)), instead")
 	public var shadowOffset(get, never):FlxPoint;
-
+	
+	/**
+	 * Used to offset the graphic to account for the border
+	 */
+	var _graphicOffset:FlxPoint = FlxPoint.get(0, 0);
+	
 	var _defaultFormat:TextFormat;
 	var _formatAdjusted:TextFormat;
 	var _formatRanges:Array<FlxTextFormatRange> = [];
@@ -241,8 +246,6 @@ class FlxText extends FlxSprite
 		moves = false;
 
 		drawFrame();
-
-		_shadowOffset = FlxPoint.get(1, 1);
 	}
 
 	/**
@@ -255,6 +258,7 @@ class FlxText extends FlxSprite
 		_defaultFormat = null;
 		_formatAdjusted = null;
 		_shadowOffset = FlxDestroyUtil.put(_shadowOffset);
+		_graphicOffset = FlxDestroyUtil.put(_graphicOffset);
 		super.destroy();
 	}
 
@@ -1023,6 +1027,45 @@ class FlxText extends FlxSprite
 		regenGraphic();
 		super.draw();
 	}
+	
+	override function drawSimple(camera:FlxCamera):Void
+	{
+		// same as super but checks _graphicOffset
+		getScreenPosition(_point, camera).subtractPoint(offset).subtractPoint(_graphicOffset);
+		if (isPixelPerfectRender(camera))
+			_point.floor();
+		
+		_point.copyToFlash(_flashPoint);
+		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+	}
+	
+	override function drawComplex(camera:FlxCamera):Void
+	{
+		_frame.prepareMatrix(_matrix, ANGLE_0, checkFlipX(), checkFlipY());
+		_matrix.translate(-origin.x, -origin.y);
+		_matrix.scale(scale.x, scale.y);
+		
+		if (bakedRotationAngle <= 0)
+		{
+			updateTrig();
+			
+			if (angle != 0)
+				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+		}
+		
+		// same as super but checks _graphicOffset
+		getScreenPosition(_point, camera).subtractPoint(offset).subtractPoint(_graphicOffset);
+		_point.add(origin.x, origin.y);
+		_matrix.translate(_point.x, _point.y);
+		
+		if (isPixelPerfectRender(camera))
+		{
+			_matrix.tx = Math.floor(_matrix.tx);
+			_matrix.ty = Math.floor(_matrix.ty);
+		}
+		
+		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
+	}
 
 	/**
 	 * Internal function to update the current animation frame.
@@ -1047,23 +1090,24 @@ class FlxText extends FlxSprite
 		switch(borderStyle)
 		{
 			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
-				offset.x = _shadowOffset.x > 0 ? _shadowOffset.x : 0;
-				offset.y = _shadowOffset.y > 0 ? _shadowOffset.y : 0;
+				_graphicOffset.x = _shadowOffset.x > 0 ? _shadowOffset.x : 0;
+				_graphicOffset.y = _shadowOffset.y > 0 ? _shadowOffset.y : 0;
 			
 			case SHADOW: // With the default shadowOffset value
 				if (borderSize < 0)
-					offset.set(-borderSize, -borderSize);
+					_graphicOffset.set(-borderSize, -borderSize);
 			
 			case SHADOW_XY(offsetX, offsetY):
-				offset.x = offsetX < 0 ? -offsetX : 0;
-				offset.y = offsetY < 0 ? -offsetY : 0;
+				_graphicOffset.x = offsetX < 0 ? -offsetX : 0;
+				_graphicOffset.y = offsetY < 0 ? -offsetY : 0;
 			
 			case OUTLINE_FAST | OUTLINE if (borderSize < 0):
-				offset.set(-borderSize, -borderSize);
+				_graphicOffset.set(-borderSize, -borderSize);
 			
 			case NONE | OUTLINE_FAST | OUTLINE:
+				_graphicOffset.set(0, 0);
 		}
-		_matrix.translate(offset.x, offset.y);
+		_matrix.translate(_graphicOffset.x, _graphicOffset.y);
 		
 		switch (borderStyle)
 		{
