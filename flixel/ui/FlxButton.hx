@@ -667,7 +667,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
-	 * The callback function to call when this even fires.
+	 * The callback function to call when this event fires.
 	 */
 	public var callback:Void->Void;
 
@@ -679,7 +679,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 
 	/**
-	 * @param   Callback   The callback function to call when this even fires.
+	 * @param   Callback   The callback function to call when this event fires.
 	 * @param   sound      The sound to play when this event fires.
 	 */
 	public function new(?Callback:Void->Void, ?sound:FlxSound)
