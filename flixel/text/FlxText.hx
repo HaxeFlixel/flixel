@@ -161,12 +161,16 @@ class FlxText extends FlxSprite
 
 	var _autoHeight:Bool = true;
 	
+	/**
+	 * Internal handler for deprecated `shadowOffset` field
+	 */
 	var _shadowOffset:FlxPoint = FlxPoint.get(1, 1);
+	
 	/**
 	 * Offset that is applied to the shadow border style, if active.
 	 * `x` and `y` are multiplied by `borderSize`. Default is `(1, 1)`, or lower-right corner.
 	 */
-	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_XY(offsetX, offsetY)), instead")
+	@:deprecated("shadowOffset is deprecated, use setBorderStyle(SHADOW_XY(offsetX, offsetY)), instead") // 5.9.0
 	public var shadowOffset(get, never):FlxPoint;
 	
 	/**
