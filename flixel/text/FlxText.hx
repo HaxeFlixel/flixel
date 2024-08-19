@@ -1145,20 +1145,20 @@ class FlxText extends FlxSprite
 					_matrix.ty = originY;
 				}
 			
-			case SHADOW_XY(offsetX, offsetY):
+			case SHADOW_XY(shadowX, shadowY):
 				// Render a shadow beneath the text with the specified offset
 				applyFormats(_formatAdjusted, true);
 				
 				final originX = _matrix.tx;
 				final originY = _matrix.ty;
 				
-				// Size is average of both, so (4, 4) has 4 iterations, just like SHADOW
-				final size = (Math.abs(offsetX) + Math.abs(offsetY)) / 2;
+				// Size is max of both, so (4, 4) has 4 iterations, just like SHADOW
+				final size = Math.max(shadowX, shadowY);
 				final iterations = borderQuality < 1 ? 1 : Std.int(size * borderQuality);
 				var i = iterations + 1;
 				while (i-- > 1)
 				{
-					copyTextWithOffset(offsetX / iterations * i, offsetY / iterations * i);
+					copyTextWithOffset(shadowX / iterations * i, shadowY / iterations * i);
 					// reset to origin
 					_matrix.tx = originX;
 					_matrix.ty = originY;
