@@ -251,6 +251,8 @@ class FlxSprite extends FlxObject
 	 */
 	public var scale(default, null):FlxPoint;
 
+	public var skew(default, null):FlxPoint;
+
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
@@ -343,6 +345,9 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	var _scaledOrigin:FlxPoint;
 
+	@:noCompletion
+	var _skewMatrix:FlxMatrix;
+
 	/**
 	 * These vars are being used for rendering in some of `FlxSprite` subclasses (`FlxTileblock`, `FlxBar`,
 	 * and `FlxBitmapText`) and for checks if the sprite is in camera's view.
@@ -393,10 +398,12 @@ class FlxSprite extends FlxObject
 		offset = FlxPoint.get();
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
+		skew = FlxPoint.get();
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
 		_scaledOrigin = new FlxPoint();
+		_skewMatrix = new FlxMatrix();
 	}
 
 	/**
@@ -418,8 +425,10 @@ class FlxSprite extends FlxObject
 		offset = FlxDestroyUtil.put(offset);
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
+		skew = FlxDestroyUtil.put(skew);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
+		_skewMatrix = null;
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -856,6 +865,17 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
+		_skewMatrix.identity();
+		
+		if (skew.x != 0.0 || skew.y != 0.0)
+		{
+			_skewMatrix.b = Math.tan(skew.y * FlxAngle.TO_RAD);
+			
+			_skewMatrix.c = Math.tan(skew.x * FlxAngle.TO_RAD);
+		}
+		
+		_matrix.concat(_skewMatrix);
+
 		getScreenPosition(_point, camera).subtractPoint(offset);
 		_point.add(origin.x, origin.y);
 		_matrix.translate(_point.x, _point.y);
@@ -1285,7 +1305,7 @@ class FlxSprite extends FlxObject
 		if (FlxG.renderTile)
 			return false;
 
-		return isSimpleRenderBlit(camera);
+		return isSimpleRenderBlit(camera) && (skew.x == 0) && (skew.y == 0);
 	}
 
 	/**
