@@ -356,7 +356,7 @@ class FlxBar extends FlxSprite
 		{
 			var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + empty.toHexString();
 			if (showBorder)
-				emptyKey += ",border: " + border.toHexString();
+				emptyKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 
 			if (!FlxG.bitmap.checkCache(emptyKey))
 			{
@@ -410,7 +410,7 @@ class FlxBar extends FlxSprite
 		{
 			var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fill.toHexString();
 			if (showBorder)
-				filledKey += ",border: " + border.toHexString();
+				filledKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 
 			if (!FlxG.bitmap.checkCache(filledKey))
 			{
@@ -495,7 +495,7 @@ class FlxBar extends FlxSprite
 
 			if (showBorder)
 			{
-				emptyKey += ",border: " + border.toHexString();
+				emptyKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 			}
 
 			if (!FlxG.bitmap.checkCache(emptyKey))
@@ -563,7 +563,7 @@ class FlxBar extends FlxSprite
 
 			if (showBorder)
 			{
-				filledKey += ",border: " + border.toHexString();
+				filledKey += ",border: " + border.toHexString() + "borderSize: " + borderSize;
 			}
 
 			if (!FlxG.bitmap.checkCache(filledKey))
