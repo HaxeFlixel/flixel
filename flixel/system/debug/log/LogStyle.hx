@@ -38,7 +38,13 @@ class LogStyle
 	/**
 	 * A callback function that is called when this LogStyle is used
 	 */
+	@:deprecated("callbackFunction is deprecated, use callback, instead")
 	public var callbackFunction:()->Void;
+	
+	/**
+	 * A callback function that is called when this LogStyle is used
+	 */
+	public var callback:(data:Any)->Void;
 
 	/**
 	 * Whether an exception is thrown when this LogStyle is used.
@@ -50,19 +56,21 @@ class LogStyle
 	/**
 	 * Create a new LogStyle to be used in conjunction with `FlxG.log.advanced()`
 	 *
-	 * @param   prefix       A prefix which is always attached to the start of the logged data
-	 * @param   color        The text color
-	 * @param   size         The text size
-	 * @param   bold         Whether the text is bold or not
-	 * @param   italic       Whether the text is italic or not
-	 * @param   underlined   Whether the text is underlined or not
-	 * @param   errorSound   A sound to be played when this LogStyle is used
-	 * @param   openConsole  Whether the console should be forced to open when this LogStyle is used
-	 * @param   callback     A callback function that is called when this LogStyle is used
-	 * @param   throwError   Whether an error is thrown when this LogStyle is used
+	 * @param   prefix            A prefix which is always attached to the start of the logged data
+	 * @param   color             The text color
+	 * @param   size              The text size
+	 * @param   bold              Whether the text is bold or not
+	 * @param   italic            Whether the text is italic or not
+	 * @param   underlined        Whether the text is underlined or not
+	 * @param   errorSound        A sound to be played when this LogStyle is used
+	 * @param   openConsole       Whether the console should be forced to open when this LogStyle is used
+	 * @param   callbackFunction  A callback function that is called when this LogStyle is used
+	 * @param   callback          A callback function that is called when this LogStyle is used
+	 * @param   throwError        Whether an error is thrown when this LogStyle is used
 	 */
+	 @:haxe.warning("-WDeprecated")
 	public function new(prefix = "", color = "FFFFFF", size = 12, bold = false, italic = false, underlined = false,
-			?errorSound:String, openConsole = false, ?callback:()->Void, throwException = false)
+			?errorSound:String, openConsole = false, ?callbackFunction:()->Void, ?callback:(Any)->Void, throwException = false)
 	{
 		this.prefix = prefix;
 		this.color = color;
@@ -72,7 +80,8 @@ class LogStyle
 		this.underlined = underlined;
 		this.errorSound = errorSound;
 		this.openConsole = openConsole;
-		this.callbackFunction = callback;
+		this.callbackFunction = callbackFunction;
+		this.callback = callback;
 		this.throwException = throwException;
 	}
 	
