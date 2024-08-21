@@ -10,6 +10,29 @@ import openfl.geom.Matrix;
 class FlxMatrix extends Matrix
 {
 	/**
+	 * Changes the skew transformation applied to `this` matrix, in radians.
+	 * @param	x	Horizontal skew in radians.
+	 * @param	y	Vertical skew in radians.
+	 * @return	`this` skewed matrix.
+	 */
+	public inline function skew(x:Float = 0.0, y:Float = 0.0):FlxMatrix
+	{
+		var a1:Float = a + b * x;
+		b = a * y + b;
+		a = a1;
+		
+		var c1:Float = c + d * x;
+		d = c * y + d;
+		c = c1;
+		
+		var tx1:Float = tx + ty * x;
+		ty = tx * y + ty;
+		tx = tx1;
+		
+		return this;
+	}
+
+	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle
 	 * @param	cos	The cosine value for rotation angle

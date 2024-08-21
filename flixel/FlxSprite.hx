@@ -251,6 +251,9 @@ class FlxSprite extends FlxObject
 	 */
 	public var scale(default, null):FlxPoint;
 
+	/**
+	 * Changes the skew transformation applied to `this` sprite, in degrees.
+	 */
 	public var skew(default, null):FlxPoint;
 
 	/**
@@ -345,9 +348,6 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	var _scaledOrigin:FlxPoint;
 
-	@:noCompletion
-	var _skewMatrix:FlxMatrix;
-
 	/**
 	 * These vars are being used for rendering in some of `FlxSprite` subclasses (`FlxTileblock`, `FlxBar`,
 	 * and `FlxBitmapText`) and for checks if the sprite is in camera's view.
@@ -403,7 +403,6 @@ class FlxSprite extends FlxObject
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
 		_scaledOrigin = new FlxPoint();
-		_skewMatrix = new FlxMatrix();
 	}
 
 	/**
@@ -428,7 +427,6 @@ class FlxSprite extends FlxObject
 		skew = FlxDestroyUtil.put(skew);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
-		_skewMatrix = null;
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -865,16 +863,10 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
-		_skewMatrix.identity();
-		
 		if (skew.x != 0.0 || skew.y != 0.0)
 		{
-			_skewMatrix.b = Math.tan(skew.y * FlxAngle.TO_RAD);
-			
-			_skewMatrix.c = Math.tan(skew.x * FlxAngle.TO_RAD);
+			_matrix.skew(skew.x * FlxAngle.TO_RAD, skew.y * FlxAngle.TO_RAD);
 		}
-		
-		_matrix.concat(_skewMatrix);
 
 		getScreenPosition(_point, camera).subtractPoint(offset);
 		_point.add(origin.x, origin.y);
@@ -1724,6 +1716,7 @@ interface IFlxSprite extends IFlxBasic
 	var offset(default, null):FlxPoint;
 	var origin(default, null):FlxPoint;
 	var scale(default, null):FlxPoint;
+	var skew(default, null):FlxPoint;
 	var velocity(default, null):FlxPoint;
 	var maxVelocity(default, null):FlxPoint;
 	var acceleration(default, null):FlxPoint;
