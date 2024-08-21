@@ -482,6 +482,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 */
 	override function destroy():Void
 	{
+		endFocus();
 		manager.unregisterInputText(this);
 
 		FlxDestroyUtil.destroy(onEnter);
