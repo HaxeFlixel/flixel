@@ -1,6 +1,7 @@
 5.9.0 (TBD)
 ------------------------------
 #### New features:
+- `FlxInputText`: Add improved input text to core flixel (flixel-ui's implementation will be deprecated) ([#3219](https://github.com/HaxeFlixel/flixel/pull/3219))
 - `FlxReplay`: Add `getDuration` ([#3135](https://github.com/HaxeFlixel/flixel/pull/3135))
 - `InputFrontEnd`: ([#3134](https://github.com/HaxeFlixel/flixel/pull/3134))
   - Add `addInput` and `addUniqueType` to replace `add`
@@ -13,6 +14,12 @@
   - Replacement fields: `startAt`, `direction`, `loopType`, `target`, `currentIndex`, `nextIndex`, `current` and `next`
 - `FlxGraphic`: Add `trackingInfo` to help debugging graphics ([#3183](https://github.com/HaxeFlixel/flixel/pull/3183))
 - `FlxFlicker`: Add `pause` and `resume` ([#3179](https://github.com/HaxeFlixel/flixel/pull/3179))
+- `FlxRect`: Add `clipTo` and fix `intersection` bug ([#3190](https://github.com/HaxeFlixel/flixel/pull/3190))
+- `FlxPointer`: Add `getGamePosition`, `gameX/Y`, `getViewPosition`, and `viewX/Y`, to replace "screen" fields ([#3210](https://github.com/HaxeFlixel/flixel/pull/3210))
+- `FlxAnimationController`: Add `onLoop`, `onFrameChange` and `onFinish`, to replace `callback` and `finishCallback` ([#3205](https://github.com/HaxeFlixel/flixel/pull/3205)) ([#3216](https://github.com/HaxeFlixel/flixel/pull/3216))
+- `FlxStrip`: Add support for blendmodes ([3213](https://github.com/HaxeFlixel/flixel/pull/3213))
+- `FlxTextBorderStyle`: Add SHADOW_XY, prevent border clipping ([3236](https://github.com/HaxeFlixel/flixel/pull/3236))
+- `LogStyle`: add `callback` to replace `callbackFunction` ([3239](https://github.com/HaxeFlixel/flixel/pull/3239))
 
 #### Changes and improvements:
 - `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
@@ -42,11 +49,17 @@
 - `FlxBGSprite`: Prevent draw call when transparent ([#3173](https://github.com/HaxeFlixel/flixel/pull/3173))
 - `FlxArrayUtil`: Deprecate `resize`, use `array.setLength` ([#3094](https://github.com/HaxeFlixel/flixel/pull/3094))
 - Debugging: Check alpha when point-selecting sprites ([#3184](https://github.com/HaxeFlixel/flixel/pull/3184))
+- `FlxBitmapText`: Ignore border outline when computing field size ([#3193](https://github.com/HaxeFlixel/flixel/pull/3193))
+- `FlxDebugger`: Improve console code completion ([#3222](https://github.com/HaxeFlixel/flixel/pull/3222))
 
 #### Bugfixes:
 - `FlxFlickerTween`: Fix "Unsupported recursive type" error on hl ([#3170](https://github.com/HaxeFlixel/flixel/pull/3170))
 - `FlxBGSprite`: Fix draw size when scale is not `1.0` ([#3142](https://github.com/HaxeFlixel/flixel/pull/3142))
 - `FlxGraphic`: Prevent null ref in `getFramesCollections` with destroyed graphics ([#3180](https://github.com/HaxeFlixel/flixel/pull/3180))
+- `FlxText`: Handle null align on HL ([#3196](https://github.com/HaxeFlixel/flixel/pull/3196))
+- `FlxCamera`: Fix blending issue ([#3217](https://github.com/HaxeFlixel/flixel/pull/3217)) ([#3255](https://github.com/HaxeFlixel/flixel/pull/3255))
+- `FlxStrip`: Fix `color` preventing other strips from drawing ([#3220](https://github.com/HaxeFlixel/flixel/pull/3220))
+- `FlxButton`: Fix `label` position when moves is false ([#3232](https://github.com/HaxeFlixel/flixel/pull/3232))
 
 5.8.0 (April 19, 2024)
 ------------------------------
