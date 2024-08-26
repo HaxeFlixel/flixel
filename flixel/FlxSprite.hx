@@ -252,9 +252,11 @@ class FlxSprite extends FlxObject
 	public var scale(default, null):FlxPoint;
 
 	/**
-	 * Changes the skew transformation applied to `this` sprite, in degrees.
+	 * An `FlxMatrix` that is concatenated to the internal matrix.
+	 * Use this if you want to make unique changes to the rendering of `this` sprite.
+	 * @since 5.9.0
 	 */
-	public var skew(default, null):FlxPoint;
+	public var transform(default, null):FlxMatrix;
 
 	/**
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
@@ -398,7 +400,7 @@ class FlxSprite extends FlxObject
 		offset = FlxPoint.get();
 		origin = FlxPoint.get();
 		scale = FlxPoint.get(1, 1);
-		skew = FlxPoint.get();
+		transform = new FlxMatrix();
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
@@ -424,7 +426,7 @@ class FlxSprite extends FlxObject
 		offset = FlxDestroyUtil.put(offset);
 		origin = FlxDestroyUtil.put(origin);
 		scale = FlxDestroyUtil.put(scale);
-		skew = FlxDestroyUtil.put(skew);
+		transform = null;
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
 
@@ -863,10 +865,7 @@ class FlxSprite extends FlxObject
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
-		if (skew.x != 0.0 || skew.y != 0.0)
-		{
-			_matrix.skew(skew.x * FlxAngle.TO_RAD, skew.y * FlxAngle.TO_RAD);
-		}
+		_matrix.concat(transform);
 
 		getScreenPosition(_point, camera).subtractPoint(offset);
 		_point.add(origin.x, origin.y);
@@ -1297,7 +1296,7 @@ class FlxSprite extends FlxObject
 		if (FlxG.renderTile)
 			return false;
 
-		return isSimpleRenderBlit(camera) && (skew.x == 0) && (skew.y == 0);
+		return isSimpleRenderBlit(camera) && transform.isIdentity();
 	}
 
 	/**
@@ -1716,7 +1715,7 @@ interface IFlxSprite extends IFlxBasic
 	var offset(default, null):FlxPoint;
 	var origin(default, null):FlxPoint;
 	var scale(default, null):FlxPoint;
-	var skew(default, null):FlxPoint;
+	var transform(default, null):FlxMatrix;
 	var velocity(default, null):FlxPoint;
 	var maxVelocity(default, null):FlxPoint;
 	var acceleration(default, null):FlxPoint;

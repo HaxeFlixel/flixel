@@ -9,29 +9,37 @@ import openfl.geom.Matrix;
  */
 class FlxMatrix extends Matrix
 {
+	public inline function isIdentity():Bool
+	{
+		return equals(Matrix.__identity);
+	}
+	
 	/**
-	 * Changes the skew transformation applied to `this` matrix, in radians.
-	 * @param	x	Horizontal skew in radians.
-	 * @param	y	Vertical skew in radians.
+	 * Skews `this` matrix, in radians.
+	 * @param	skewX	Horizontal skew in radians.
+	 * @param	skewY	Vertical skew in radians.
 	 * @return	`this` skewed matrix.
 	 */
-	public inline function skew(x:Float = 0.0, y:Float = 0.0):FlxMatrix
+	public inline function skewRadians(skewX:Float, skewY:Float):FlxMatrix
 	{
-		var a1:Float = a + b * x;
-		b = a * y + b;
-		a = a1;
-		
-		var c1:Float = c + d * x;
-		d = c * y + d;
-		c = c1;
-		
-		var tx1:Float = tx + ty * x;
-		ty = tx * y + ty;
-		tx = tx1;
-		
+		b = Math.tan(skewY);
+
+		c = Math.tan(skewX);
+
 		return this;
 	}
 
+	/**
+	 * Skews `this` matrix, in degrees.
+	 * @param	skewY	Horizontal skew in degrees.
+	 * @param	skewX	Vertical skew in degrees.
+	 * @return	`this` skewed matrix.
+	 */
+	public inline function skewDegrees(skewX:Float, skewY:Float):FlxMatrix
+	{
+		return skewRadians(skewY * FlxAngle.TO_RAD, skewX * FlxAngle.TO_RAD);
+	}
+	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle

@@ -6,7 +6,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.atlas.FlxNode;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -1058,10 +1057,7 @@ class FlxText extends FlxSprite
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 
-		if (skew.x != 0.0 || skew.y != 0.0)
-		{
-			_matrix.skew(skew.x * FlxAngle.TO_RAD, skew.y * FlxAngle.TO_RAD);
-		}
+		_matrix.concat(transform);
 		
 		// same as super but checks _graphicOffset
 		getScreenPosition(_point, camera).subtractPoint(offset).subtractPoint(_graphicOffset);
