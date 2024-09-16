@@ -128,6 +128,7 @@ class Watch extends Window
 		resetEntries();
 		minSize.setTo(getMaxMinWidth() + entriesContainerOffset.x, entriesContainer.height + entriesContainerOffset.y);
 		super.updateSize();
+		reposition(x, y);
 	}
 
 	function resetEntries():Void
