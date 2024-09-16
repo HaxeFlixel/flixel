@@ -87,7 +87,7 @@ class Watch extends Window
 		var entry = new WatchEntry(displayName, data, removeEntry);
 		entries.push(entry);
 		entriesContainer.addChild(entry);
-		resetEntries();
+		updateSize();
 	}
 
 	public function remove(displayName:String, data:WatchEntryData):Void
@@ -102,7 +102,7 @@ class Watch extends Window
 		entries.fastSplice(entry);
 		entriesContainer.removeChild(entry);
 		entry.destroy();
-		resetEntries();
+		updateSize();
 	}
 
 	public function removeAll():Void
@@ -114,7 +114,7 @@ class Watch extends Window
 			entry.destroy();
 		}
 		entries.splice(0, entries.length);
-		resetEntries();
+		updateSize();
 	}
 
 	override public function update():Void
@@ -125,9 +125,9 @@ class Watch extends Window
 
 	override function updateSize():Void
 	{
+		resetEntries();
 		minSize.setTo(getMaxMinWidth() + entriesContainerOffset.x, entriesContainer.height + entriesContainerOffset.y);
 		super.updateSize();
-		resetEntries();
 	}
 
 	function resetEntries():Void
