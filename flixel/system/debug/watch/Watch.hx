@@ -30,7 +30,7 @@ class Watch extends Window
 		entriesContainer.y = entriesContainerOffset.y;
 		addChild(entriesContainer);
 
-		FlxG.signals.preStateSwitch.add(removeAll);
+		FlxG.signals.preStateSwitch.add(clear);
 	}
 
 	public function add(displayName:String, data:WatchEntryData):Void
@@ -105,15 +105,23 @@ class Watch extends Window
 		updateSize();
 	}
 
-	public function removeAll():Void
+	/**
+	 * internal method to remove all without calling updateSize
+	 */
+	function clear():Void
 	{
-		for (i in 0...entries.length)
+		for (entry in entries)
 		{
-			var entry = entries[i];
 			entriesContainer.removeChild(entry);
 			entry.destroy();
 		}
-		entries.splice(0, entries.length);
+		
+		entries.resize(0);
+	}
+
+	public function removeAll():Void
+	{
+		clear();
 		updateSize();
 	}
 
