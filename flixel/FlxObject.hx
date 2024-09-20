@@ -652,7 +652,8 @@ class FlxObject extends FlxBasic
 	 * Set the angle (in degrees) of a sprite to rotate it. WARNING: rotating sprites
 	 * decreases their rendering performance by a factor of ~10x when using blitting!
 	 */
-	public var angle(default, set):Float = 0;
+	@:isVar
+	public var angle(get, set):Float = 0;
 
 	/**
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
@@ -1483,6 +1484,12 @@ class FlxObject extends FlxBasic
 	function get_height():Float
 	{
 		return height;
+	}
+
+	@:noCompletion
+	function get_angle():Float
+	{
+		return angle;
 	}
 
 	@:noCompletion
