@@ -428,9 +428,8 @@ class FlxG
 			objectOrGroup2 = null;
 
 		FlxQuadTree.divisions = worldDivisions;
-		final quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(objectOrGroup1, objectOrGroup2, notifyCallback, processCallback);
-		final result:Bool = quadTree.execute();
+		var quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
+		var result:Bool = quadTree.loadAndExecute(objectOrGroup1, objectOrGroup2, notifyCallback, processCallback);
 		quadTree.destroy();
 		return result;
 	}
