@@ -359,8 +359,8 @@ class FlxGame extends Sprite
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
 		#else
-		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
-		stage.addEventListener(Event.ACTIVATE, onFocus);
+		stage.nativeWindow.addEventListener(Event.DEACTIVATE, onFocusLost);
+		stage.nativeWindow.addEventListener(Event.ACTIVATE, onFocus);
 		#end
 
 		// Instantiate the initial state
