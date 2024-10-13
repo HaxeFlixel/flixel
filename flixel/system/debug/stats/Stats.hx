@@ -333,7 +333,14 @@ class Stats extends Window
 	 */
 	public inline function currentMem():Float
 	{
-		return (System.totalMemory / 1024) / 1000;
+		#if cpp
+		var usage:Float = cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE);
+		#elseif hl
+		var usage:Float = hl.Gc.stats().currentMemory;
+		#else
+		var usage:Float = System.totalMemory;
+		#end
+		return (usage / 1024) / 1000;
 	}
 
 	/**
