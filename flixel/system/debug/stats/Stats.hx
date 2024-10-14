@@ -333,7 +333,7 @@ class Stats extends Window
 	 */
 	public inline function currentMem():Float
 	{
-		return (System.totalMemory / 1024) / 1000;
+		return (#if (openfl >= "9.4.0") System.totalMemoryNumber #else System.totalMemory #end / 1024) / 1000;
 	}
 
 	/**
