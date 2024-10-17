@@ -4,15 +4,21 @@ import openfl.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import openfl.geom.ColorTransform;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.graphics.frames.FlxFrame;
+#if FLX_RENDER_TRIANGLE
+import flixel.graphics.tile.FlxDrawTrianglesItem;
+#else
+import flixel.graphics.tile.FlxDrawQuadsItem;
+#end
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import openfl.geom.ColorTransform;
+import flixel.system.FlxBuffer;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -198,9 +204,10 @@ class FlxBitmapText extends FlxSprite
 	var pendingTextBitmapChange:Bool = true;
 	var pendingPixelsChange:Bool = true;
 
-	var textData:Array<Float>;
-	var textDrawData:Array<Float>;
-	var borderDrawData:Array<Float>;
+	// var textData:Array<Float>;
+	var textData:FlxBuffer<TileDrawItem>;
+	var textDrawData:FlxBuffer<TileDrawItem>;
+	var borderDrawData:FlxBuffer<TileDrawItem>;
 
 	/**
 	 * Helper bitmap buffer for text pixels but without any color transformations
@@ -232,10 +239,9 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			textData = [];
-
-			textDrawData = [];
-			borderDrawData = [];
+			textData = new FlxBuffer<TileDrawItem>();
+			textDrawData = new FlxBuffer<TileDrawItem>();
+			borderDrawData = new FlxBuffer<TileDrawItem>();
 		}
 		
 		this.text = text;
@@ -323,79 +329,26 @@ class FlxBitmapText extends FlxSprite
 		else
 		{
 			checkPendingChanges(true);
-
-			var textLength:Int = Std.int(textDrawData.length / 3);
-			var borderLength:Int = Std.int(borderDrawData.length / 3);
-
-			var dataPos:Int;
-
-			var cr:Float = color.redFloat;
-			var cg:Float = color.greenFloat;
-			var cb:Float = color.blueFloat;
-
-			var borderRed:Float = borderColor.redFloat * cr;
-			var borderGreen:Float = borderColor.greenFloat * cg;
-			var borderBlue:Float = borderColor.blueFloat * cb;
-			var bAlpha:Float = borderColor.alphaFloat * alpha;
-
-			var textRed:Float = cr;
-			var textGreen:Float = cg;
-			var textBlue:Float = cb;
-			var tAlpha:Float = alpha;
-
-			if (useTextColor)
+			
+			final full = 0xFF*0xFF;
+			function multiplyColors(a:FlxColor, b:FlxColor)
 			{
-				textRed *= textColor.redFloat;
-				textGreen *= textColor.greenFloat;
-				textBlue *= textColor.blueFloat;
-				tAlpha *= textColor.alphaFloat;
+				return FlxColor.fromRGBFloat(a.red * b.red / full, a.green * b.green / full, a.blue * b.blue / full, a.alpha * b.alpha / full);
 			}
-
-			var bgRed:Float = cr;
-			var bgGreen:Float = cg;
-			var bgBlue:Float = cb;
-			var bgAlpha:Float = alpha;
-
-			if (background)
-			{
-				bgRed *= backgroundColor.redFloat;
-				bgGreen *= backgroundColor.greenFloat;
-				bgBlue *= backgroundColor.blueFloat;
-				bgAlpha *= backgroundColor.alphaFloat;
-			}
-
-			var drawItem;
-			var currFrame:FlxFrame = null;
-			var currTileX:Float = 0;
-			var currTileY:Float = 0;
-			var sx:Float = scale.x * _facingHorizontalMult;
-			var sy:Float = scale.y * _facingVerticalMult;
-
-			var ox:Float = origin.x;
-			var oy:Float = origin.y;
-
-			if (_facingHorizontalMult != 1)
-			{
-				ox = frameWidth - ox;
-			}
-			if (_facingVerticalMult != 1)
-			{
-				oy = frameHeight - oy;
-			}
-
-			var clippedFrameRect;
-
+			
+			final colorFullAlpha = color.rgb | 0xFF000000;
+			final borderColorMult = multiplyColors(borderColor, colorFullAlpha);
+			final bgColorMult = multiplyColors(backgroundColor, colorFullAlpha);
+			final textColorMult = useTextColor ? multiplyColors(textColor, colorFullAlpha) : colorFullAlpha;
+			
+			final clippedFrameRect = FlxRect.get();
 			if (clipRect != null)
-			{
-				clippedFrameRect = clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight));
-
-				if (clippedFrameRect.isEmpty)
-					return;
-			}
+				clipRect.intersection(FlxRect.weak(0, 0, frameWidth, frameHeight), clippedFrameRect)
 			else
-			{
-				clippedFrameRect = FlxRect.get(0, 0, frameWidth, frameHeight);
-			}
+				clippedFrameRect.set(0, 0, frameWidth, frameHeight);
+			
+			if (clippedFrameRect.isEmpty)
+				return;
 
 			final cameras = getCamerasLegacy();
 			for (camera in cameras)
@@ -416,97 +369,98 @@ class FlxBitmapText extends FlxSprite
 
 				if (background)
 				{
+					final offsetX = _facingHorizontalMult != 1 ? frameWidth - origin.x : origin.x;
+					final offsetY = _facingVerticalMult != 1 ? frameHeight - origin.y : origin.y;
 					// backround tile transformations
-					currFrame = FlxG.bitmap.whitePixel;
+					final currFrame = FlxG.bitmap.whitePixel;
 					_matrix.identity();
 					_matrix.scale(0.1 * clippedFrameRect.width, 0.1 * clippedFrameRect.height);
-					_matrix.translate(clippedFrameRect.x - ox, clippedFrameRect.y - oy);
-					_matrix.scale(sx, sy);
+					_matrix.translate(clippedFrameRect.x - offsetX, clippedFrameRect.y - offsetY);
+					_matrix.scale(scale.x * _facingHorizontalMult, scale.y * _facingVerticalMult);
 
 					if (angle != 0)
 					{
 						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 					}
 
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(bgRed, bgGreen, bgBlue, bgAlpha);
+					_matrix.translate(_point.x + offsetX, _point.y + offsetY);
+					_colorParams.setMultipliersFromColor(bgColorMult);
 					camera.drawPixels(currFrame, null, _matrix, _colorParams, blend, antialiasing);
 				}
 
-				var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
+				final hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
 
-				drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
-
-				for (j in 0...borderLength)
-				{
-					dataPos = j * 3;
-
-					currFrame = font.getCharFrame(Std.int(borderDrawData[dataPos]));
-
-					currTileX = borderDrawData[dataPos + 1];
-					currTileY = borderDrawData[dataPos + 2];
-
-					if (clipRect != null)
-					{
-						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
-						currFrame = currFrame.clipTo(clippedFrameRect);
-					}
-
-					currFrame.prepareMatrix(_matrix);
-					_matrix.translate(currTileX - ox, currTileY - oy);
-					_matrix.scale(sx, sy);
-					if (angle != 0)
-					{
-						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-					}
-
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(borderRed, borderGreen, borderBlue, bAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
-				}
-
-				for (j in 0...textLength)
-				{
-					dataPos = j * 3;
-
-					currFrame = font.getCharFrame(Std.int(textDrawData[dataPos]));
-
-					currTileX = textDrawData[dataPos + 1];
-					currTileY = textDrawData[dataPos + 2];
-
-					if (clipRect != null)
-					{
-						clippedFrameRect.copyFrom(clipRect).offset(-currTileX, -currTileY);
-						currFrame = currFrame.clipTo(clippedFrameRect);
-					}
-
-					currFrame.prepareMatrix(_matrix);
-					_matrix.translate(currTileX - ox, currTileY - oy);
-					_matrix.scale(sx, sy);
-					if (angle != 0)
-					{
-						_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-					}
-
-					_matrix.translate(_point.x + ox, _point.y + oy);
-					_colorParams.setMultipliers(textRed, textGreen, textBlue, tAlpha);
-					drawItem.addQuad(currFrame, _matrix, _colorParams);
-				}
-
+				final drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
+				
+				// draw the text border
+				batchDrawData(drawItem, borderDrawData, borderColorMult);
+				// draw the actual text
+				batchDrawData(drawItem, textDrawData, textColorMult);
+				
 				#if FLX_DEBUG
 				FlxBasic.visibleCount++;
 				#end
 			}
-
+			
 			// dispose clipRect helpers
 			clippedFrameRect.put();
-
+			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
 				drawDebug();
 			}
 			#end
+		}
+	}
+	
+	#if FLX_RENDER_TRIANGLE
+	function batchDrawData(drawItem:FlxDrawTrianglesItem, list:FlxBuffer<TileDrawItem>, color:FlxColor)
+	#else
+	function batchDrawData(drawItem:FlxDrawQuadsItem, list:FlxBuffer<TileDrawItem>, color:FlxColor)
+	#end
+	{
+		_colorParams.setMultipliersFromColor(color);
+		
+		final scaleX = scale.x * _facingHorizontalMult;
+		final scaleY = scale.y * _facingVerticalMult;
+		
+		final offsetX = _facingHorizontalMult != 1 ? frameWidth - origin.x : origin.x;
+		final offsetY = _facingVerticalMult != 1 ? frameHeight - origin.y : origin.y;
+		
+		for (item in list)
+		{
+			final currFrame = getClippedCharFrame(item);
+			currFrame.prepareMatrix(_matrix);
+			_matrix.translate(item.x - offsetX, item.y - offsetY);
+			_matrix.scale(scaleX, scaleY);
+			if (angle != 0)
+			{
+				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+			}
+			
+			_matrix.translate(_point.x + offsetX, _point.y + offsetY);
+			// TODO: cull offscreen chars
+			drawItem.addQuad(currFrame, _matrix, _colorParams);
+		}
+	}
+	
+	/**
+	 * Gets the character frame and clips it according to the clipRect
+	 */
+	inline function getClippedCharFrame(item:TileDrawItem)
+	{
+		final currFrame = font.getCharFrame(item.charCode);
+		
+		return if (clipRect == null)
+			currFrame;
+		else
+		{
+			final clippedFrameRect = FlxRect.get().copyFrom(clipRect);
+			clippedFrameRect.offset(-item.x, -item.y);
+			final result = currFrame.clipTo(clippedFrameRect);
+			clippedFrameRect.put();
+			result;
 		}
 	}
 
@@ -1084,25 +1038,20 @@ class FlxBitmapText extends FlxSprite
 		}
 		else if (FlxG.renderTile)
 		{
-			textData.splice(0, textData.length);
+			textData.resize(0);
 		}
 
 		_fieldWidth = frameWidth;
 
-		var numLines:Int = _lines.length;
-		var line:UnicodeString;
-		var lineWidth:Int;
-
-		var ox:Int, oy:Int;
-
+		final numLines:Int = _lines.length;
 		for (i in 0...numLines)
 		{
-			line = _lines[i];
-			lineWidth = _linesWidth[i];
+			final line:UnicodeString = _lines[i];
+			final lineWidth = _linesWidth[i];
 
 			// LEFT
-			ox = font.minOffsetX;
-			oy = i * (font.lineHeight + lineSpacing) + padding;
+			var ox = font.minOffsetX;
+			var oy = i * (font.lineHeight + lineSpacing) + padding;
 
 			if (alignment == FlxTextAlign.CENTER)
 			{
@@ -1147,17 +1096,14 @@ class FlxBitmapText extends FlxSprite
 
 	function blitLine(line:UnicodeString, startX:Int, startY:Int):Void
 	{
-		var data:Array<Float> = [];
+		final data = new FlxBuffer<TileDrawItem>();
 		addLineData(line, startX, startY, data);
 		
 		while (data.length > 0)
 		{
-			final charCode = Std.int(data.shift());
-			final x = data.shift();
-			final y = data.shift();
-			
-			final charFrame = font.getCharFrame(charCode);
-			_flashPoint.setTo(x, y);
+			final item = data.shift();
+			final charFrame = font.getCharFrame(item.charCode);
+			_flashPoint.setTo(item.x, item.y);
 			charFrame.paint(textBitmap, _flashPoint, true);
 		}
 	}
@@ -1170,10 +1116,8 @@ class FlxBitmapText extends FlxSprite
 		addLineData(line, startX, startY, textData);
 	}
 	
-	function addLineData(line:UnicodeString, startX:Int, startY:Int, data:Array<Float>)
+	function addLineData(line:UnicodeString, startX:Int, startY:Int, data:FlxBuffer<TileDrawItem>)
 	{
-		var pos:Int = data.length;
-		
 		var curX:Float = startX;
 		var curY:Int = startY;
 
@@ -1198,9 +1142,7 @@ class FlxBitmapText extends FlxSprite
 			final hasFrame = font.charExists(charCode);
 			if (hasFrame && !isSpace)
 			{
-				data[pos++] = charCode;
-				data[pos++] = curX;
-				data[pos++] = curY;
+				data.push(charCode, curX, curY);
 			}
 			
 			if (hasFrame || isSpace)
@@ -1274,8 +1216,8 @@ class FlxBitmapText extends FlxSprite
 			}
 			else
 			{
-				textDrawData.splice(0, textDrawData.length);
-				borderDrawData.splice(0, borderDrawData.length);
+				textDrawData.resize(0);
+				borderDrawData.resize(0);
 			}
 
 			// use local var to avoid get_width and recursion
@@ -1449,32 +1391,24 @@ class FlxBitmapText extends FlxSprite
 		if (!FlxG.renderTile)
 			return;
 
-		var data:Array<Float> = isFront ? textDrawData : borderDrawData;
+		final data = isFront ? textDrawData : borderDrawData;
 
-		var pos:Int = data.length;
-		var textPos:Int;
-		var textLen:Int = Std.int(textData.length / 3);
-		var rect = FlxRect.get();
-		var frameVisible;
+		final rect = FlxRect.get();
 
+		final textLen:Int = textData.length;
 		for (i in 0...textLen)
 		{
-			textPos = 3 * i;
-
-			frameVisible = true;
-
+			final textPos = i;
+			final item = textData.get(textPos);
+			
 			if (clipRect != null)
 			{
-				rect.copyFrom(clipRect).offset(-textData[textPos + 1] - posX, -textData[textPos + 2] - posY);
-				frameVisible = font.getCharFrame(Std.int(textData[textPos])).clipTo(rect).type != FlxFrameType.EMPTY;
+				rect.copyFrom(clipRect).offset(-item.x - posX, -item.y - posY);
+				if (font.getCharFrame(item.charCode).clipTo(rect).type == FlxFrameType.EMPTY)
+					continue;
 			}
-
-			if (frameVisible)
-			{
-				data[pos++] = textData[textPos];
-				data[pos++] = textData[textPos + 1] + posX;
-				data[pos++] = textData[textPos + 2] + posY;
-			}
+			
+			data.push(item.charCodeRaw, item.x + posX, item.y + posY);
 		}
 
 		rect.put();
@@ -1818,6 +1752,19 @@ enum WordSplitConditions
 	 * line, if possible, and is added character by character until the line is filled.
 	 */
 	WIDTH(minPixels:Int);
+}
+
+@:noCompletion
+private typedef TileDrawItemRaw = { final charCodeRaw:Float; final x:Float; final y:Float; };
+@:forward
+/**
+ * Internal type used for batch rendering characters, used by FlxBuffer
+ * **Warning:** all methods must be inlined 
+ */
+abstract TileDrawItem(TileDrawItemRaw) from TileDrawItemRaw
+{
+	public var charCode(get, never):Int;
+	inline function get_charCode() return Std.int(this.charCodeRaw);
 }
 
 /*
