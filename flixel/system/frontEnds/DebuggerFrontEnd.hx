@@ -173,8 +173,6 @@ class DebuggerFrontEnd
 		if (!Value)
 		{
 			FlxG.stage.focus = null;
-			// setting focus to null will trigger a focus lost event, let's undo that
-			FlxG.game.onFocus(null);
 
 			#if FLX_MOUSE
 			FlxG.mouse.enabled = true;
