@@ -63,7 +63,7 @@ class PSVitaMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: PSVitaID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: PSVitaID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: PSVitaID.RIGHT_ANALOG_STICK.rawRight;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 	

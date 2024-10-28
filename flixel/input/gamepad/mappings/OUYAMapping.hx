@@ -77,7 +77,7 @@ class OUYAMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: OUYAID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: OUYAID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: OUYAID.RIGHT_ANALOG_STICK.rawRight;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 	

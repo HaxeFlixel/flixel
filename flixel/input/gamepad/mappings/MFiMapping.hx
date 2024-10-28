@@ -75,7 +75,7 @@ class MFiMapping extends FlxGamepadMapping
 			case LEFT_TRIGGER_FAKE: MFiID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER_FAKE: MFiID.RIGHT_TRIGGER;
 			#end
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 

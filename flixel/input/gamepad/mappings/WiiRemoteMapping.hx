@@ -80,12 +80,11 @@ class WiiRemoteMapping extends FlxGamepadMapping
 			case WiiRemoteID.NUNCHUK_DPAD_DOWN: DPAD_DOWN;
 			case WiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case WiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
-			default:
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawUp) LEFT_STICK_DIGITAL_UP;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawDown) LEFT_STICK_DIGITAL_DOWN;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawLeft) LEFT_STICK_DIGITAL_LEFT;
-				if (rawID == WiiRemoteID.LEFT_ANALOG_STICK.rawRight) LEFT_STICK_DIGITAL_RIGHT;
-				NONE;
+			case id if (id == WiiRemoteID.LEFT_ANALOG_STICK.rawUp): LEFT_STICK_DIGITAL_UP;
+			case id if (id == WiiRemoteID.LEFT_ANALOG_STICK.rawDown): LEFT_STICK_DIGITAL_DOWN;
+			case id if (id == WiiRemoteID.LEFT_ANALOG_STICK.rawLeft): LEFT_STICK_DIGITAL_LEFT;
+			case id if (id == WiiRemoteID.LEFT_ANALOG_STICK.rawRight): LEFT_STICK_DIGITAL_RIGHT;
+			default: super.getRawID(rawID);
 		}
 	}
 
@@ -147,7 +146,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: WiiRemoteID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: WiiRemoteID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: WiiRemoteID.RIGHT_ANALOG_STICK.rawRight;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 
@@ -174,7 +173,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 			case LEFT_STICK_DIGITAL_DOWN: WiiRemoteID.LEFT_ANALOG_STICK.rawDown;
 			case LEFT_STICK_DIGITAL_LEFT: WiiRemoteID.LEFT_ANALOG_STICK.rawLeft;
 			case LEFT_STICK_DIGITAL_RIGHT: WiiRemoteID.LEFT_ANALOG_STICK.rawRight;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 
@@ -195,7 +194,7 @@ class WiiRemoteMapping extends FlxGamepadMapping
 			case START: WiiRemoteID.REMOTE_PLUS;
 			case TILT_PITCH: WiiRemoteID.REMOTE_TILT_PITCH;
 			case TILT_ROLL: WiiRemoteID.REMOTE_TILT_ROLL;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 

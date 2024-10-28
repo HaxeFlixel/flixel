@@ -93,7 +93,7 @@ class XInputMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: XInputID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: XInputID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: XInputID.RIGHT_ANALOG_STICK.rawRight;
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 

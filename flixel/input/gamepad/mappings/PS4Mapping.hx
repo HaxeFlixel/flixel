@@ -96,7 +96,7 @@ class PS4Mapping extends FlxGamepadMapping
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 	
