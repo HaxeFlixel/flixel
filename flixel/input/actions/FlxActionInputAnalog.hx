@@ -97,7 +97,7 @@ class FlxActionInputAnalogMouseMotion extends FlxActionInputAnalog
 		deadZone = DeadZone;
 		invertX = InvertX;
 		invertY = InvertY;
-		super(FlxInputDevice.MOUSE, -1, cast Trigger, Axis);
+		super(FlxInputDevice.MOUSE, -1, Trigger, Axis);
 	}
 
 	override public function update():Void
@@ -144,7 +144,7 @@ class FlxActionInputAnalogMousePosition extends FlxActionInputAnalog
 	 */
 	public function new(Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER)
 	{
-		super(FlxInputDevice.MOUSE, -1, cast Trigger, Axis);
+		super(FlxInputDevice.MOUSE, -1, Trigger, Axis);
 	}
 
 	override public function update():Void
@@ -193,7 +193,7 @@ class FlxActionInputAnalogGamepad extends FlxActionInputAnalog
 	 */
 	public function new(InputID:FlxGamepadInputID, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, GamepadID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		super(FlxInputDevice.GAMEPAD, InputID, cast Trigger, Axis, GamepadID);
+		super(FlxInputDevice.GAMEPAD, InputID, Trigger, Axis, GamepadID);
 	}
 
 	override public function update():Void
@@ -265,7 +265,7 @@ class FlxActionInputAnalogSteam extends FlxActionInputAnalog
 	@:allow(flixel.input.actions.FlxActionSet)
 	function new(ActionHandle:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.ALL)
 	{
-		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, cast Trigger, Axis, DeviceID);
+		super(FlxInputDevice.STEAM_CONTROLLER, ActionHandle, Trigger, Axis, DeviceID);
 		#if FLX_NO_STEAM
 		FlxG.log.warn("steamwrap library not installed; steam inputs will be ignored.");
 		#end
@@ -310,9 +310,9 @@ class FlxActionInputAnalog extends FlxActionInput
 	static inline var A_X = true;
 	static inline var A_Y = false;
 
-	function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxInputState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
+	function new(Device:FlxInputDevice, InputID:Int, Trigger:FlxAnalogState, Axis:FlxAnalogAxis = EITHER, DeviceID:Int = FlxInputDeviceID.FIRST_ACTIVE)
 	{
-		super(FlxInputType.ANALOG, Device, InputID, Trigger, DeviceID);
+		super(FlxInputType.ANALOG, Device, InputID, cast Trigger, DeviceID);
 		axis = Axis;
 		xMoved = new FlxInput<Int>(0);
 		yMoved = new FlxInput<Int>(1);
