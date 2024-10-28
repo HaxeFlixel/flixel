@@ -211,6 +211,26 @@ class FlxGamepadButtonList extends FlxBaseGamepadList
 	inline function get_RIGHT_STICK_DIGITAL_LEFT()
 		return check(FlxGamepadInputID.RIGHT_STICK_DIGITAL_LEFT);
 
+	public var FACE_UP(get, never):Bool;
+	
+	inline function get_FACE_UP()
+		return check(FlxGamepadInputID.FACE_UP);
+
+	public var FACE_DOWN(get, never):Bool;
+	
+	inline function get_FACE_DOWN()
+		return check(FlxGamepadInputID.FACE_DOWN);
+
+	public var FACE_LEFT(get, never):Bool;
+	
+	inline function get_FACE_LEFT()
+		return check(FlxGamepadInputID.FACE_LEFT);
+
+	public var FACE_RIGHT(get, never):Bool;
+	
+	inline function get_FACE_RIGHT()
+		return check(FlxGamepadInputID.FACE_RIGHT);
+
 	public function new(status:FlxInputState, gamepad:FlxGamepad)
 	{
 		super(status, gamepad);

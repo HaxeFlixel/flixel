@@ -85,7 +85,7 @@ class LogitechMapping extends FlxGamepadMapping
 			case LEFT_TRIGGER_FAKE: LogitechID.SEVEN;
 			case RIGHT_TRIGGER_FAKE: LogitechID.EIGHT;
 			#end
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 	

@@ -30,10 +30,17 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 	{
 		return switch (rawID)
 		{
+			#if FLX_ABXY_BY_LABEL
+			case SwitchJoyconRightID.A: X;
+			case SwitchJoyconRightID.B: A;
+			case SwitchJoyconRightID.X: Y;
+			case SwitchJoyconRightID.Y: B;
+			#else
 			case SwitchJoyconRightID.A: A;
 			case SwitchJoyconRightID.B: X;
 			case SwitchJoyconRightID.X: B;
 			case SwitchJoyconRightID.Y: Y;
+			#end
 			case SwitchJoyconRightID.HOME: GUIDE;
 			case SwitchJoyconRightID.PLUS: START;
 			case SwitchJoyconRightID.LEFT_STICK_CLICK: LEFT_STICK_CLICK;
@@ -53,10 +60,17 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 	{
 		return switch (ID)
 		{
+			#if FLX_ABXY_BY_LABEL
+			case A: SwitchJoyconRightID.X;
+			case B: SwitchJoyconRightID.A;
+			case X: SwitchJoyconRightID.Y;
+			case Y: SwitchJoyconRightID.B;
+			#else
 			case A: SwitchJoyconRightID.A;
 			case B: SwitchJoyconRightID.X;
 			case X: SwitchJoyconRightID.B;
 			case Y: SwitchJoyconRightID.Y;
+			#end
 			case GUIDE: SwitchJoyconRightID.HOME;
 			case START: SwitchJoyconRightID.PLUS;
 			case LEFT_STICK_CLICK: SwitchJoyconRightID.LEFT_STICK_CLICK;
@@ -68,11 +82,15 @@ class SwitchJoyconRightMapping extends FlxGamepadMapping
 			case LEFT_STICK_DIGITAL_DOWN: SwitchJoyconRightID.LEFT_ANALOG_STICK.rawDown;
 			case LEFT_STICK_DIGITAL_LEFT: SwitchJoyconRightID.LEFT_ANALOG_STICK.rawLeft;
 			case LEFT_STICK_DIGITAL_RIGHT: SwitchJoyconRightID.LEFT_ANALOG_STICK.rawRight;
+			case FACE_UP: SwitchJoyconRightID.Y;
+			case FACE_DOWN: SwitchJoyconRightID.A;
+			case FACE_LEFT: SwitchJoyconRightID.B;
+			case FACE_RIGHT: SwitchJoyconRightID.X;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 

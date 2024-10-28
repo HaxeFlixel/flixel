@@ -16,18 +16,38 @@ enum abstract FlxGamepadInputID(Int) from Int to Int
 	// Button Indices
 	var ANY = -2;
 	var NONE = -1;
-
-	/**BOTTOM face button*/
+	
+	#if FLX_ABXY_BY_LABEL
+	/**
+	 * A face button, the BOTTOM on most controllers, or the RIGHT on Nintendo controllers. It
+	 * is recommended to use this for ## and `FACE_DOWN` or `FACE_RIGHT` for actions like jumping
+	 */
 	var A = 0;
 
-	/**RIGHT face button*/
+	/**
+	 * B face button, the RIGHT on most controllers, or the BOTTOM on Nintendo controllers. It
+	 * is recommended to use this for ## and `FACE_DOWN` or `FACE_RIGHT` for actions like jumping
+	 */
 	var B = 1;
 
-	/**LEFT face button*/
+	/** X face button, the LEFT on most controllers, or the TOP on Nintendo controllers */
 	var X = 2;
 
-	/**TOP face button*/
+	/** Y face button, the TOP on most controllers, or the LEFT on Nintendo controllers */
 	var Y = 3;
+	#else
+	/** BOTTOM face button */
+	var A = 0;
+
+	/** RIGHT face button */
+	var B = 1;
+
+	/** LEFT face button */
+	var X = 2;
+
+	/** TOP face button */
+	var Y = 3;
+	#end
 
 	/**left digital "bumper"*/
 	var LEFT_SHOULDER = 4;
@@ -127,6 +147,15 @@ enum abstract FlxGamepadInputID(Int) from Int to Int
 
 	/**left analog stick as a dpad, pushed left**/
 	var RIGHT_STICK_DIGITAL_LEFT = 41;
+
+	/** TOP face button */
+	var FACE_UP = 42;
+	/** BOTTOM face button */
+	var FACE_DOWN = 43;
+	/** LEFT face button */
+	var FACE_LEFT = 44;
+	/** RIGHT face button */
+	var FACE_RIGHT = 45;
 
 	@:from
 	public static inline function fromString(s:String)

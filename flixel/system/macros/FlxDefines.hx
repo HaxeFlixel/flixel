@@ -43,6 +43,8 @@ private enum UserDefines
 	FLX_TRACK_POOLS;
 	/** Adds `creationInfo` to FlxGraphic instances, automatically defined with FLX_DEBUG */
 	FLX_TRACK_GRAPHICS;
+	/** Whether ABXY refer to switch gamepad buttons by name rather than XInput locations */
+	FLX_ABXY_BY_LABEL;
 }
 
 /**
@@ -86,6 +88,8 @@ private enum HelperDefines
 	FLX_HEALTH;
 	FLX_NO_TRACK_POOLS;
 	FLX_NO_TRACK_GRAPHICS;
+	/** Whether ABXY refer to switch gamepad buttons by XInput locations rather than name */
+	FLX_ABXY_BY_LOCATION;
 }
 
 class FlxDefines
@@ -186,6 +190,7 @@ class FlxDefines
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
+		defineInversion(FLX_ABXY_BY_LABEL, FLX_ABXY_BY_LOCATION);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
 	}
 

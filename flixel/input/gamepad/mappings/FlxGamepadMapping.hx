@@ -65,7 +65,14 @@ class FlxGamepadMapping
 	 */
 	public function getRawID(ID:FlxGamepadInputID):Int
 	{
-		return -1;
+		return switch ID
+		{
+			case FACE_UP: getRawID(Y);
+			case FACE_DOWN: getRawID(A);
+			case FACE_LEFT: getRawID(X);
+			case FACE_RIGHT: getRawID(B);
+			default: -1;
+		}
 	}
 
 	/**
@@ -139,6 +146,8 @@ class FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: "rs-down";
 			case RIGHT_STICK_DIGITAL_LEFT: "rs-left";
 			case RIGHT_STICK_DIGITAL_RIGHT: "rs-right";
+			case FACE_UP | FACE_DOWN | FACE_LEFT| FACE_RIGHT:
+				getInputLabel(getRawID(id));
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: "l2";
 			case RIGHT_TRIGGER_FAKE: "r2";

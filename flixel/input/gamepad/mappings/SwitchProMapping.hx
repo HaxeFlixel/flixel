@@ -65,10 +65,17 @@ class SwitchProMapping extends FlxGamepadMapping
 	{
 		return switch (ID)
 		{
+			#if FLX_ABXY_BY_LABEL
+			case A: SwitchProID.A;
+			case B: SwitchProID.B;
+			case X: SwitchProID.X;
+			case Y: SwitchProID.Y;
+			#else
 			case A: SwitchProID.B;
 			case B: SwitchProID.A;
 			case X: SwitchProID.Y;
 			case Y: SwitchProID.X;
+			#end
 			case BACK: SwitchProID.MINUS;
 			case EXTRA_0: SwitchProID.CAPTURE;
 			case GUIDE: SwitchProID.HOME;
@@ -91,11 +98,15 @@ class SwitchProMapping extends FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: SwitchProID.RIGHT_ANALOG_STICK.rawDown;
 			case RIGHT_STICK_DIGITAL_LEFT: SwitchProID.RIGHT_ANALOG_STICK.rawLeft;
 			case RIGHT_STICK_DIGITAL_RIGHT: SwitchProID.RIGHT_ANALOG_STICK.rawRight;
+			case FACE_UP: SwitchProID.X;
+			case FACE_DOWN: SwitchProID.B;
+			case FACE_LEFT: SwitchProID.Y;
+			case FACE_RIGHT: SwitchProID.A;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			default: -1;
+			default: super.getRawID(ID);
 		}
 	}
 

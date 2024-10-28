@@ -52,10 +52,17 @@ class SwitchJoyconLeftMapping extends FlxGamepadMapping
 	{
 		return switch (id)
 		{
+			#if FLX_ABXY_BY_LABEL
+			case A: SwitchJoyconLeftID.RIGHT;
+			case B: SwitchJoyconLeftID.DOWN;
+			case X: SwitchJoyconLeftID.UP;
+			case Y: SwitchJoyconLeftID.LEFT;
+			#else
 			case A: SwitchJoyconLeftID.DOWN;
 			case B: SwitchJoyconLeftID.RIGHT;
 			case X: SwitchJoyconLeftID.LEFT;
 			case Y: SwitchJoyconLeftID.UP;
+			#end
 			case START: SwitchJoyconLeftID.MINUS;
 			case LEFT_STICK_CLICK: SwitchJoyconLeftID.LEFT_STICK_CLICK;
 			case LEFT_SHOULDER: SwitchJoyconLeftID.SL;
@@ -66,11 +73,15 @@ class SwitchJoyconLeftMapping extends FlxGamepadMapping
 			case LEFT_STICK_DIGITAL_DOWN: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawDown;
 			case LEFT_STICK_DIGITAL_LEFT: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawLeft;
 			case LEFT_STICK_DIGITAL_RIGHT: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawRight;
+			case FACE_UP: SwitchJoyconLeftID.UP;
+			case FACE_DOWN: SwitchJoyconLeftID.DOWN;
+			case FACE_LEFT: SwitchJoyconLeftID.LEFT;
+			case FACE_RIGHT: SwitchJoyconLeftID.RIGHT;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			default: -1;
+			default: super.getRawID(id);
 		}
 	}
 
@@ -78,15 +89,26 @@ class SwitchJoyconLeftMapping extends FlxGamepadMapping
 	{
 		return switch (id)
 		{
+			#if FLX_ABXY_BY_LABEL
+			case A: "right";
+			case B: "down";
+			case X: "up";
+			case Y: "left";
+			#else
 			case A: "down";
 			case B: "right";
 			case X: "left";
 			case Y: "up";
+			#end
 			case START: "minus";
 			case EXTRA_0: "l";
 			case LEFT_SHOULDER: "sl";
 			case RIGHT_SHOULDER: "sr";
 			case LEFT_TRIGGER: "zl";
+			case FACE_UP: "up";
+			case FACE_DOWN: "down";
+			case FACE_LEFT: "left";
+			case FACE_RIGHT: "right";
 			case _: super.getInputLabel(id);
 		}
 	}
