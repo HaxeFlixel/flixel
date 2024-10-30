@@ -880,7 +880,9 @@ class FlxGamepad implements IFlxDestroyable
 		return _deadZone = deadZone;
 	}
 	
-	/** 
+	/**
+	 * A string representing the label of the target input. For instance, on a PS4 gamepad
+	 * `A` is "x", while Xbox is "a" and the Switch pro controller is "B"
 	 * @since 4.8.0
 	 */
 	public inline function getInputLabel(id:FlxGamepadInputID)
@@ -889,6 +891,8 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/** 
+	 * The value of the target gamepad input. For instance, on a PS4 gamepad `A` is `PS4(PS4ID.X)`,
+	 * while Xbox is `XInput(XInputID.A)` and the Switch pro controller is `SwitchPro(SwitchProID.B)`
 	 * @since 5.9.0
 	 */
 	public function getMappedInput(id:FlxGamepadInputID):FlxGamepadMappedInput
