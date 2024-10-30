@@ -67,8 +67,8 @@ class FlxGamepadMapping
 	{
 		return switch ID
 		{
-			case ACCEPT: A;
-			case CANCEL: B;
+			case ACCEPT: getRawID(A);
+			case CANCEL: getRawID(B);
 			default: -1;
 		}
 	}
