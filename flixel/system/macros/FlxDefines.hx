@@ -86,6 +86,7 @@ private enum HelperDefines
 	FLX_HEALTH;
 	FLX_NO_TRACK_POOLS;
 	FLX_NO_TRACK_GRAPHICS;
+	FLX_OPENGL_AVAILABLE;
 }
 
 class FlxDefines
@@ -251,6 +252,10 @@ class FlxDefines
 		
 		if (defined(FLX_DEBUG))
 			define(FLX_TRACK_GRAPHICS);
+
+		#if (lime_opengl || lime_opengles || lime_webgl)
+		define(FLX_OPENGL_AVAILABLE);
+		#end
 		
 		defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS);
 	}
