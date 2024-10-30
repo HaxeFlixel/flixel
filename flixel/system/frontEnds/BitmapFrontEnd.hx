@@ -8,7 +8,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import openfl.Assets;
-#if !flash
+#if (!flash && (lime_opengl || lime_opengles || lime_webgl))
 import lime.graphics.opengl.GL;
 #end
 
@@ -19,9 +19,11 @@ import lime.graphics.opengl.GL;
  */
 class BitmapFrontEnd
 {
-	#if !flash
+	#if (!flash && (lime_opengl || lime_opengles || lime_webgl))
 	/**
-	 * Gets max texture size for native targets
+	 * Returns the maximum allowed width and height for a texture.
+	 * Only available on hardware-accelerated targets that use OpenGL,
+	 * if used on an unsupported target the returned value will always be -1.
 	 */
 	public var maxTextureSize(get, never):Int;
 	#end
@@ -391,10 +393,13 @@ class BitmapFrontEnd
 		}
 	}
 
-	#if !flash
+	#if (!flash && (lime_opengl || lime_opengles || lime_webgl))
 	function get_maxTextureSize():Int
 	{
-		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		if (FlxG.stage.window.context.attributes.hardware)
+			return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		
+		return -1;
 	}
 	#end
 
