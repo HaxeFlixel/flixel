@@ -164,8 +164,10 @@ class FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: "rs-down";
 			case RIGHT_STICK_DIGITAL_LEFT: "rs-left";
 			case RIGHT_STICK_DIGITAL_RIGHT: "rs-right";
-			case ACCEPT: getInputLabel(cast getRawID(id));
-			case CANCEL: getInputLabel(cast getRawID(id));
+			case ACCEPT if (getGlobalBottomIsAccept()): getInputLabel(A);
+			case CANCEL if (getGlobalBottomIsAccept()): getInputLabel(B);
+			case ACCEPT: getInputLabel(B);
+			case CANCEL: getInputLabel(A);
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: "l2";
 			case RIGHT_TRIGGER_FAKE: "r2";
