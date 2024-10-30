@@ -89,7 +89,7 @@ class FlxGamepadMapping
 		{
 			case BOTTOM: true;
 			case RIGHT: false;
-			case ADAPTIVE: bottomIsAccept;
+			case USE_MAPPING: bottomIsAccept;
 		}
 	}
 

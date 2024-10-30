@@ -616,8 +616,8 @@ enum FlxGamepadAcceptMode
 	RIGHT;
 	
 	/**
-	 * Behavies like `BOTTOM` for nearly all gamepads, but `RIGHT` for Nintendo
-	 * Switch gamepads
+	 * Behaves like `BOTTOM` for nearly all gamepads, but `RIGHT` for specific mappings,
+	 * namely Nintendo Switch gamepads
 	 */
-	ADAPTIVE;
+	USE_MAPPING;
 }
