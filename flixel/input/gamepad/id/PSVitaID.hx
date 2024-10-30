@@ -8,29 +8,29 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  *
  * This will ONLY work with the gamepad API (available only in OpenFL "next", not "legacy") and will NOT work with the joystick API
  */
-class PSVitaID
+enum abstract PSVitaID(Int) to Int
 {
-	public static inline var X:Int = 6;
-	public static inline var CIRCLE:Int = 7;
-	public static inline var SQUARE:Int = 8;
-	public static inline var TRIANGLE:Int = 9;
-	public static inline var SELECT:Int = 10;
-	public static inline var START:Int = 12;
-	public static inline var L:Int = 15;
-	public static inline var R:Int = 16;
+	var X = 6;
+	var CIRCLE = 7;
+	var SQUARE = 8;
+	var TRIANGLE = 9;
+	var SELECT = 10;
+	var START = 12;
+	var L = 15;
+	var R = 16;
 
-	public static inline var DPAD_UP:Int = 17;
-	public static inline var DPAD_DOWN:Int = 18;
-	public static inline var DPAD_LEFT:Int = 19;
-	public static inline var DPAD_RIGHT:Int = 20;
+	var DPAD_UP = 17;
+	var DPAD_DOWN = 18;
+	var DPAD_LEFT = 19;
+	var DPAD_RIGHT = 20;
 
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
+	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<PSVitaID>(0, 1, {
 		up: 21,
 		down: 22,
 		left: 23,
 		right: 24
 	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
+	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<PSVitaID>(2, 3, {
 		up: 25,
 		down: 26,
 		left: 27,
