@@ -50,7 +50,12 @@ class FlxGamepadManager implements IFlxInputManager
 	 * @since 4.6.0
 	 */
 	public var deviceDisconnected(default, null):FlxTypedSignal<FlxGamepad->Void>;
-
+	
+	/**
+	 * Whether the bottom or right face button is ACCEPT
+	 */
+	public var acceptMode:FlxGamepadAcceptMode = BOTTOM;
+	
 	/**
 	 * Stores all gamepads - can have null entries, but index matches event.device
 	 */
@@ -594,4 +599,25 @@ class FlxGamepadManager implements IFlxInputManager
 				count++;
 		return count;
 	}
+}
+
+enum FlxGamepadAcceptMode
+{
+	/**
+	 * The bottom face button is `ACCEPT` and the right face button is `CANCEL`.
+	 * This is common on western-style consoles, like XBox or American PS4/5
+	 */
+	BOTTOM;
+	
+	/**
+	 * The right face button is `ACCEPT` and the bottom face button is `CANCEL`.
+	 * This is common in Japanese PS4/5 consoles, and Nintendo consoles
+	 */
+	RIGHT;
+	
+	/**
+	 * Behavies like `BOTTOM` for nearly all gamepads, but `RIGHT` for Nintendo
+	 * Switch gamepads
+	 */
+	ADAPTIVE;
 }

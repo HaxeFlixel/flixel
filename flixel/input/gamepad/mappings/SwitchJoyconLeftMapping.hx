@@ -24,6 +24,7 @@ class SwitchJoyconLeftMapping extends FlxGamepadMapping
 		leftStick = SwitchJoyconLeftID.LEFT_ANALOG_STICK;
 		supportsMotion = true;
 		supportsPointer = false;
+		bottomIsAccept = false;
 	}
 
 	override public function getID(rawID:Int):FlxGamepadInputID
@@ -70,8 +71,6 @@ class SwitchJoyconLeftMapping extends FlxGamepadMapping
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			case ACCEPT: SwitchJoyconLeftID.RIGHT;
-			case CANCEL: SwitchJoyconLeftID.DOWN;
 			default: super.getRawID(id);
 		}
 	}

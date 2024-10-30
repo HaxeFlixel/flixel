@@ -19,6 +19,11 @@ class FlxGamepadMapping
 	var attachment(default, set):FlxGamepadAttachment = NONE;
 
 	var manufacturer:Manufacturer;
+	
+	/**
+	 * Whether to treat `A` or `B` as `ACCEPT` or `CANCEL`, when `FlxG.gamepads.acceptMode` is `ADAPTIVE`
+	 */
+	var bottomIsAccept:Bool = true;
 
 	public function new(?attachment:FlxGamepadAttachment)
 	{
@@ -67,9 +72,24 @@ class FlxGamepadMapping
 	{
 		return switch ID
 		{
-			case ACCEPT: getRawID(A);
-			case CANCEL: getRawID(B);
+			case ACCEPT if (getGlobalBottomIsAccept()): getRawID(A);
+			case CANCEL if (getGlobalBottomIsAccept()): getRawID(B);
+			case ACCEPT: getRawID(B);
+			case CANCEL: getRawID(A);
 			default: -1;
+		}
+	}
+	
+	function getGlobalBottomIsAccept()
+	{
+		if (FlxG.gamepads == null)
+			return bottomIsAccept;
+		
+		return switch FlxG.gamepads.acceptMode
+		{
+			case BOTTOM: true;
+			case RIGHT: false;
+			case ADAPTIVE: bottomIsAccept;
 		}
 	}
 
