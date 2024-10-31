@@ -27,7 +27,7 @@ enum abstract LogitechID(Int) to Int
 	var DPAD_RIGHT = 7;
 
 	// TODO: Someone needs to look this up and define it! (NOTE: not all logitech controllers have this)
-	var LOGITECH:Int = -1;
+	var LOGITECH = -1;
 	#else // native and html5
 	var ONE = 0;
 	var TWO = 1;
