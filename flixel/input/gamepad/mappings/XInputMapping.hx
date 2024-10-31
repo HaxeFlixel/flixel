@@ -117,7 +117,7 @@ class XInputMapping extends FlxTypedGamepadMapping<XInputID>
 
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.XInput(getRawID(id));
+		return FlxGamepadMappedInput.X_INPUT(getRawID(id));
 	}
 	
 	#if FLX_JOYSTICK_API

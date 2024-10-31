@@ -98,7 +98,7 @@ class SwitchJoyconRightMapping extends FlxTypedGamepadMapping<SwitchJoyconRightI
 	
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.SwitchJoyconRight(getRawID(id));
+		return FlxGamepadMappedInput.SWITCH_JOYCON_RIGHT(getRawID(id));
 	}
 	
 	#if FLX_JOYSTICK_API

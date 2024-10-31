@@ -135,7 +135,7 @@ class FlxTypedGamepadMapping<TInputID:Int>
 	
 	public function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.Unknown(id);
+		return FlxGamepadMappedInput.UNKNOWN(id);
 	}
 	
 	public function getInputLabel(id:FlxGamepadInputID):Null<String>

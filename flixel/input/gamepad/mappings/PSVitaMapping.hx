@@ -87,7 +87,7 @@ class PSVitaMapping extends FlxTypedGamepadMapping<PSVitaID>
 	
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.PSVita(getRawID(id));
+		return FlxGamepadMappedInput.PS_VITA(getRawID(id));
 	}
 	
 	override function isAxisFlipped(axisID:Int):Bool

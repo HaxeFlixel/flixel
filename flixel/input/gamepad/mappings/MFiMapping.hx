@@ -82,7 +82,7 @@ class MFiMapping extends FlxTypedGamepadMapping<MFiID>
 
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.MFi(getRawID(id));
+		return FlxGamepadMappedInput.MFI(getRawID(id));
 	}
 	
 	#if FLX_JOYSTICK_API

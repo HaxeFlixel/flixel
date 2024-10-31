@@ -351,6 +351,6 @@ class WiiRemoteMapping extends FlxTypedGamepadMapping<WiiRemoteID>
 	
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.WiiRemote(getRawID(id));
+		return FlxGamepadMappedInput.WII(getRawID(id));
 	}
 }

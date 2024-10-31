@@ -123,7 +123,7 @@ class SwitchProMapping extends FlxTypedGamepadMapping<SwitchProID>
 	
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.SwitchPro(getRawID(id));
+		return FlxGamepadMappedInput.SWITCH_PRO(getRawID(id));
 	}
 	
 	#if FLX_JOYSTICK_API

@@ -7,11 +7,11 @@ import flixel.input.gamepad.mappings.FlxGamepadMapping;
 class LogitechMapping extends FlxTypedGamepadMapping<LogitechID>
 {
 	#if FLX_JOYSTICK_API
-	var LEFT_ANALOG_STICK_FAKE_X = 20;
-	var LEFT_ANALOG_STICK_FAKE_Y = 21;
+	static inline var LEFT_ANALOG_STICK_FAKE_X = 20;
+	static inline var LEFT_ANALOG_STICK_FAKE_Y = 21;
 
-	var RIGHT_ANALOG_STICK_FAKE_X = 22;
-	var RIGHT_ANALOG_STICK_FAKE_Y = 23;
+	static inline var RIGHT_ANALOG_STICK_FAKE_X = 22;
+	static inline var RIGHT_ANALOG_STICK_FAKE_Y = 23;
 	#end
 
 	override function initValues():Void
@@ -92,7 +92,7 @@ class LogitechMapping extends FlxTypedGamepadMapping<LogitechID>
 	
 	override function getMappedInput(id:FlxGamepadInputID)
 	{
-		return FlxGamepadMappedInput.Logitech(getRawID(id));
+		return FlxGamepadMappedInput.LOGITECH(getRawID(id));
 	}
 	
 	override function getInputLabel(id:FlxGamepadInputID)
