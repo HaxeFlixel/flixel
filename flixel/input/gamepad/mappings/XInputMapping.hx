@@ -104,14 +104,14 @@ class XInputMapping extends FlxTypedGamepadMapping<XInputID>
 		if (manufacturer == GooglePepper)
 			return false;
 
-		return axisID == XInputID.leftAnalogStick.y || axisID == XInputID.rightAnalogStick.y;
+		return axisID == XInputID.LEFT_ANALOG_STICK.y || axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
 	#end
 
 	#if xbox1
 	override function isAxisFlipped(axisID:XInputID):Bool
 	{
-		return axisID == XInputID.leftAnalogStick.y || axisID == XInputID.rightAnalogStick.y;
+		return axisID == XInputID.LEFT_ANALOG_STICK.y || axisID == XInputID.RIGHT_ANALOG_STICK.y;
 	}
 	#end
 
