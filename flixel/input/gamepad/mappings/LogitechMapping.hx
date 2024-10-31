@@ -119,7 +119,7 @@ class LogitechMapping extends FlxTypedGamepadMapping<LogitechID>
 	}
 
 	#if FLX_JOYSTICK_API
-	override function axisIndexToRawID(axisID:MFiID):Int
+	override function axisIndexToRawID(axisID:LogitechID):Int
 	{
 		return if (axisID == leftStick.x) LEFT_ANALOG_STICK_FAKE_X; else if (axisID == leftStick.y) LEFT_ANALOG_STICK_FAKE_Y; else if (axisID == rightStick.x)
 			RIGHT_ANALOG_STICK_FAKE_X;
