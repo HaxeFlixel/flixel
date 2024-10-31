@@ -21,9 +21,11 @@ class BitmapFrontEnd
 {
 	#if FLX_OPENGL_AVAILABLE
 	/**
-	 * Returns the maximum allowed width and height for a texture.
-	 * Only available on hardware-accelerated targets that use OpenGL,
-	 * if used on an unsupported target the returned value will always be -1.
+	 * Returns the maximum allowed width and height (in pixels) for a texture.
+	 * This value is only available on hardware-accelerated targets that use OpenGL.
+	 * On unsupported targets, the returned value will always be -1.
+	 * 
+	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
 	public var maxTextureSize(get, never):Int;
 	#end
