@@ -1,5 +1,6 @@
 package flixel.input.gamepad;
 
+import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.id.LogitechID;
 import flixel.input.gamepad.id.MayflashWiiRemoteID;
 import flixel.input.gamepad.id.MFiID;
@@ -12,6 +13,7 @@ import flixel.input.gamepad.id.SwitchProID;
 import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XInputID;
 
+@:using(flixel.input.gamepad.FlxGamepadMappedInput.FlxGamepadMappedInputTools)
 enum FlxGamepadMappedInput
 {
 	LOGITECH(id:LogitechID);
@@ -26,4 +28,26 @@ enum FlxGamepadMappedInput
 	WII(id:WiiRemoteID);
 	X_INPUT(id:XInputID);
 	UNKNOWN(id:FlxGamepadInputID);
+}
+
+class FlxGamepadMappedInputTools
+{
+	static inline public function toModel(input:FlxGamepadMappedInput):FlxGamepadModel
+	{
+		return switch input
+		{
+			case FlxGamepadMappedInput.OUYA(_): FlxGamepadModel.OUYA;
+			case FlxGamepadMappedInput.PS4(_): FlxGamepadModel.PS4;
+			case FlxGamepadMappedInput.PS_VITA(_): FlxGamepadModel.PSVITA;
+			case FlxGamepadMappedInput.LOGITECH(_): FlxGamepadModel.LOGITECH;
+			case FlxGamepadMappedInput.X_INPUT(_): FlxGamepadModel.XINPUT;
+			case FlxGamepadMappedInput.WII(_): FlxGamepadModel.WII_REMOTE;
+			case FlxGamepadMappedInput.MAYFLASH_WII(_): FlxGamepadModel.MAYFLASH_WII_REMOTE;
+			case FlxGamepadMappedInput.SWITCH_PRO(_): FlxGamepadModel.SWITCH_PRO;
+			case FlxGamepadMappedInput.SWITCH_JOYCON_LEFT(_): FlxGamepadModel.SWITCH_JOYCON_LEFT;
+			case FlxGamepadMappedInput.SWITCH_JOYCON_RIGHT(_): FlxGamepadModel.SWITCH_JOYCON_RIGHT;
+			case FlxGamepadMappedInput.MFI(_): FlxGamepadModel.MFI;
+			case FlxGamepadMappedInput.UNKNOWN(_): FlxGamepadModel.UNKNOWN;
+		}
+	}
 }
