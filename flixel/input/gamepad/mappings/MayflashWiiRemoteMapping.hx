@@ -198,7 +198,7 @@ class MayflashWiiRemoteMapping extends FlxTypedGamepadMapping<MayflashWiiRemoteI
 	}
 
 	#if FLX_JOYSTICK_API
-	override function axisIndexToRawID(axisID:TInputID):Int
+	override function axisIndexToRawID(axisID:MayflashWiiRemoteID):Int
 	{
 		if (attachment == WII_NUNCHUCK || attachment == WII_CLASSIC_CONTROLLER)
 		{
