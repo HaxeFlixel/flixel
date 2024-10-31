@@ -19,8 +19,8 @@ class PS4Mapping extends FlxTypedGamepadMapping<PS4ID>
 
 	override function initValues():Void
 	{
-		leftStick = PS4ID.leftAnalogStick;
-		rightStick = PS4ID.rightAnalogStick;
+		leftStick = PS4ID.LEFT_ANALOG_STICK;
+		rightStick = PS4ID.RIGHT_ANALOG_STICK;
 		supportsMotion = true;
 		supportsPointer = true;
 	}
@@ -85,14 +85,14 @@ class PS4Mapping extends FlxTypedGamepadMapping<PS4ID>
 			case DPAD_RIGHT: PS4ID.DPAD_RIGHT;
 			case LEFT_TRIGGER: PS4ID.L2;
 			case RIGHT_TRIGGER: PS4ID.R2;
-			case LEFT_STICK_DIGITAL_UP: PS4ID.leftAnalogStick.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: PS4ID.leftAnalogStick.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: PS4ID.leftAnalogStick.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: PS4ID.leftAnalogStick.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: PS4ID.rightAnalogStick.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: PS4ID.rightAnalogStick.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: PS4ID.rightAnalogStick.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: PS4ID.rightAnalogStick.rawRight;
+			case LEFT_STICK_DIGITAL_UP: PS4ID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: PS4ID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: PS4ID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: PS4ID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: PS4ID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: PS4ID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: PS4ID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: PS4ID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;

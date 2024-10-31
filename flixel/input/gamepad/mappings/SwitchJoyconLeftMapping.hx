@@ -22,7 +22,7 @@ class SwitchJoyconLeftMapping extends FlxTypedGamepadMapping<SwitchJoyconLeftID>
 
 	override function initValues():Void
 	{
-		leftStick = SwitchJoyconLeftID.leftAnalogStick;
+		leftStick = SwitchJoyconLeftID.LEFT_ANALOG_STICK;
 		supportsMotion = true;
 		supportsPointer = false;
 		bottomIsAccept = false;
@@ -64,10 +64,10 @@ class SwitchJoyconLeftMapping extends FlxTypedGamepadMapping<SwitchJoyconLeftID>
 			case RIGHT_SHOULDER: SwitchJoyconLeftID.SR;
 			case LEFT_TRIGGER: SwitchJoyconLeftID.ZL;
 			case EXTRA_0: SwitchJoyconLeftID.L;
-			case LEFT_STICK_DIGITAL_UP: SwitchJoyconLeftID.leftAnalogStick.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: SwitchJoyconLeftID.leftAnalogStick.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: SwitchJoyconLeftID.leftAnalogStick.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: SwitchJoyconLeftID.leftAnalogStick.rawRight;
+			case LEFT_STICK_DIGITAL_UP: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: SwitchJoyconLeftID.LEFT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;

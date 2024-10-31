@@ -58,7 +58,7 @@ enum abstract SwitchJoyconRightID(Int) to Int
 	var LEFT_STICK_LEFT = 24;
 	var LEFT_STICK_RIGHT = 25;
 	#end
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(0, 1, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(0, 1, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,

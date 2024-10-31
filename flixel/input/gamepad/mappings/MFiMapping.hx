@@ -8,8 +8,8 @@ class MFiMapping extends FlxTypedGamepadMapping<MFiID>
 {
 	override function initValues():Void
 	{
-		leftStick = MFiID.leftAnalogStick;
-		rightStick = MFiID.rightAnalogStick;
+		leftStick = MFiID.LEFT_ANALOG_STICK;
+		rightStick = MFiID.RIGHT_ANALOG_STICK;
 	}
 
 	override function getID(rawID:MFiID):FlxGamepadInputID
@@ -64,14 +64,14 @@ class MFiMapping extends FlxTypedGamepadMapping<MFiID>
 			case DPAD_RIGHT: MFiID.DPAD_RIGHT;
 			case LEFT_TRIGGER: MFiID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER: MFiID.RIGHT_TRIGGER;
-			case LEFT_STICK_DIGITAL_UP: MFiID.leftAnalogStick.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: MFiID.leftAnalogStick.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: MFiID.leftAnalogStick.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: MFiID.leftAnalogStick.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: MFiID.rightAnalogStick.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: MFiID.rightAnalogStick.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: MFiID.rightAnalogStick.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: MFiID.rightAnalogStick.rawRight;
+			case LEFT_STICK_DIGITAL_UP: MFiID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: MFiID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: MFiID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: MFiID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: MFiID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: MFiID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: MFiID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: MFiID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: MFiID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER_FAKE: MFiID.RIGHT_TRIGGER;

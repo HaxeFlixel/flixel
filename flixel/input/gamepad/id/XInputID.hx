@@ -46,10 +46,10 @@ enum abstract XInputID(Int) to Int
 	var RIGHT_TRIGGER = 11;
 
 	
-	static var leftX = 0;
-	static var leftY = 1;
-	static var rightX = 2;
-	static var rightY = 3;
+	static final LEFT_X = 0;
+	static final LEFT_Y = 1;
+	static final RIGHT_X = 2;
+	static final RIGHT_Y = 3;
 	
 	var LEFT_STICK_UP = 20;
 	var LEFT_STICK_DOWN = 21;
@@ -81,10 +81,10 @@ enum abstract XInputID(Int) to Int
 	var DPAD_LEFT = 19;
 	var DPAD_RIGHT = 20;
 	
-	static var leftX = 0;
-	static var leftY = 1;
-	static var rightX = 2;
-	static var rightY = 3;
+	inline static final LEFT_X = 0;
+	inline static final LEFT_Y = 1;
+	inline static final RIGHT_X = 2;
+	inline static final RIGHT_Y = 3;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
@@ -131,10 +131,10 @@ enum abstract XInputID(Int) to Int
 	var LEFT_TRIGGER = 2;
 	var RIGHT_TRIGGER = 5;
 
-	static var leftX = 0;
-	static var leftY = 1;
-	static var rightX = 3;
-	static var rightY = 4;
+	inline static final LEFT_X = 0;
+	inline static final LEFT_Y = 1;
+	inline static final RIGHT_X = 3;
+	inline static final RIGHT_Y = 4;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
@@ -170,10 +170,10 @@ enum abstract XInputID(Int) to Int
 	var LEFT_TRIGGER = 2;
 	var RIGHT_TRIGGER = 5;
 
-	static var leftX = 0;
-	static var leftY = 1;
-	static var rightX = 3;
-	static var rightY = 4;
+	inline static final LEFT_X = 0;
+	inline static final LEFT_Y = 1;
+	inline static final RIGHT_X = 3;
+	inline static final RIGHT_Y = 4;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
@@ -187,14 +187,14 @@ enum abstract XInputID(Int) to Int
 	#end
 	#end
 	
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<XInputID>(leftX, leftY, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<XInputID>(LEFT_X, LEFT_Y, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,
 		right: LEFT_STICK_RIGHT
 	});
 	
-	public static var rightAnalogStick = new FlxTypedGamepadAnalogStick<XInputID>(rightX, rightY, {
+	public static var RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<XInputID>(RIGHT_X, RIGHT_Y, {
 		up: RIGHT_STICK_UP,
 		down: RIGHT_STICK_DOWN,
 		left: RIGHT_STICK_LEFT,

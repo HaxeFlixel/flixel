@@ -191,7 +191,7 @@ enum abstract WiiRemoteID(Int) to Int
 	/**
 	 * the nunchuk only has the "left" analog stick
 	 */
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,
@@ -201,7 +201,7 @@ enum abstract WiiRemoteID(Int) to Int
 	/**
 	 * the classic controller has both the "left" and "right" analog sticks
 	 */
-	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<WiiRemoteID>(2, 3, {
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<WiiRemoteID>(2, 3, {
 		up: RIGHT_STICK_UP,
 		down: RIGHT_STICK_DOWN,
 		left: RIGHT_STICK_LEFT,

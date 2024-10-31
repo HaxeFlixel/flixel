@@ -22,8 +22,8 @@ class SwitchProMapping extends FlxTypedGamepadMapping<SwitchProID>
 
 	override function initValues():Void
 	{
-		leftStick = SwitchProID.leftAnalogStick;
-		rightStick = SwitchProID.rightAnalogStick;
+		leftStick = SwitchProID.LEFT_ANALOG_STICK;
+		rightStick = SwitchProID.RIGHT_ANALOG_STICK;
 		supportsMotion = true;
 		supportsPointer = false;
 		bottomIsAccept = false;
@@ -85,14 +85,14 @@ class SwitchProMapping extends FlxTypedGamepadMapping<SwitchProID>
 			case DPAD_DOWN: SwitchProID.DPAD_DOWN;
 			case DPAD_LEFT: SwitchProID.DPAD_LEFT;
 			case DPAD_RIGHT: SwitchProID.DPAD_RIGHT;
-			case LEFT_STICK_DIGITAL_UP: SwitchProID.leftAnalogStick.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: SwitchProID.leftAnalogStick.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: SwitchProID.leftAnalogStick.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: SwitchProID.leftAnalogStick.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: SwitchProID.rightAnalogStick.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: SwitchProID.rightAnalogStick.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: SwitchProID.rightAnalogStick.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: SwitchProID.rightAnalogStick.rawRight;
+			case LEFT_STICK_DIGITAL_UP: SwitchProID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: SwitchProID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: SwitchProID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: SwitchProID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: SwitchProID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: SwitchProID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: SwitchProID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: SwitchProID.RIGHT_ANALOG_STICK.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;

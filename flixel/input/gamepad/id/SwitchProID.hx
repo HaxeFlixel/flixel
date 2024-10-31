@@ -80,13 +80,13 @@ enum abstract SwitchProID(Int) to Int
 	var RIGHT_STICK_RIGHT = 29;
 	#end
 	
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<SwitchProID>(0, 1, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchProID>(0, 1, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,
 		right: LEFT_STICK_RIGHT
 	});
-	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<SwitchProID>(2, 3, {
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchProID>(2, 3, {
 		up: RIGHT_STICK_UP,
 		down: RIGHT_STICK_DOWN,
 		left: RIGHT_STICK_LEFT,

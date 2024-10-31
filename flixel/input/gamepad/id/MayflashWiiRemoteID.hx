@@ -153,8 +153,7 @@ enum abstract MayflashWiiRemoteID(Int) to Int
 	var REMOTE_DPAD_RIGHT = 25;
 	
 	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
-	public static final remoteDPad = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>
-	(0, 1, {
+	public static final REMOTE_DPAD = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,
 		left: REMOTE_DPAD_LEFT,
@@ -163,14 +162,14 @@ enum abstract MayflashWiiRemoteID(Int) to Int
 		mode: ONLY_DIGITAL
 	});
 	
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>(0, 1, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>(0, 1, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,
 		right: LEFT_STICK_RIGHT
 	}); // the nunchuk only has the "left" analog stick
 	
-	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>(2, 3, {
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<MayflashWiiRemoteID>(2, 3, {
 		up: RIGHT_STICK_UP,
 		down: RIGHT_STICK_DOWN,
 		left: RIGHT_STICK_LEFT,

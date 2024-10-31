@@ -19,8 +19,8 @@ class XInputMapping extends FlxTypedGamepadMapping<XInputID>
 
 	override function initValues():Void
 	{
-		leftStick = XInputID.leftAnalogStick;
-		rightStick = XInputID.rightAnalogStick;
+		leftStick = XInputID.LEFT_ANALOG_STICK;
+		rightStick = XInputID.RIGHT_ANALOG_STICK;
 	}
 
 	override function getID(rawID:XInputID):FlxGamepadInputID
@@ -86,14 +86,14 @@ class XInputMapping extends FlxTypedGamepadMapping<XInputID>
 			case LEFT_TRIGGER_FAKE: LEFT_TRIGGER_FAKE;
 			case RIGHT_TRIGGER_FAKE: RIGHT_TRIGGER_FAKE;
 			#end
-			case LEFT_STICK_DIGITAL_UP: XInputID.leftAnalogStick.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: XInputID.leftAnalogStick.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: XInputID.leftAnalogStick.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: XInputID.leftAnalogStick.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: XInputID.rightAnalogStick.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: XInputID.rightAnalogStick.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: XInputID.rightAnalogStick.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: XInputID.rightAnalogStick.rawRight;
+			case LEFT_STICK_DIGITAL_UP: XInputID.LEFT_ANALOG_STICK.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: XInputID.LEFT_ANALOG_STICK.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: XInputID.LEFT_ANALOG_STICK.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: XInputID.LEFT_ANALOG_STICK.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: XInputID.RIGHT_ANALOG_STICK.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: XInputID.RIGHT_ANALOG_STICK.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: XInputID.RIGHT_ANALOG_STICK.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: XInputID.RIGHT_ANALOG_STICK.rawRight;
 			default: super.getRawID(ID);
 		}
 	}

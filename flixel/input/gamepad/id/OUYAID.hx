@@ -36,13 +36,13 @@ enum abstract OUYAID(Int) to Int
 	var RIGHT_STICK_RIGHT = 30;
 	
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
-	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<OUYAID>(0, 1, {
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<OUYAID>(0, 1, {
 		up: LEFT_STICK_UP,
 		down: LEFT_STICK_DOWN,
 		left: LEFT_STICK_LEFT,
 		right: LEFT_STICK_RIGHT
 	});
-	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<OUYAID>(2, 3, {
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<OUYAID>(2, 3, {
 		up: RIGHT_STICK_UP,
 		down: RIGHT_STICK_DOWN,
 		left: RIGHT_STICK_LEFT,
