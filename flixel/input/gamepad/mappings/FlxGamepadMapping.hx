@@ -78,7 +78,7 @@ class FlxTypedGamepadMapping<TInputID:Int>
 			case CANCEL if (getGlobalBottomIsAccept()): getRawID(B);
 			case ACCEPT: getRawID(B);
 			case CANCEL: getRawID(A);
-			default: cast -1;
+			default: cast -1;// TODO: Throw error
 		}
 	}
 	
@@ -124,7 +124,7 @@ class FlxTypedGamepadMapping<TInputID:Int>
 
 	public function checkForFakeAxis(ID:FlxGamepadInputID):Int
 	{
-		return cast -1;
+		return -1;
 	}
 	#end
 

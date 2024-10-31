@@ -830,19 +830,19 @@ class FlxGamepad implements IFlxDestroyable
 	{
 		return switch (model)
 		{
-			case LOGITECH: cast new LogitechMapping(attachment);
-			case OUYA: cast new OUYAMapping(attachment);
-			case PS4: cast new PS4Mapping(attachment);
-			case PSVITA: cast new PSVitaMapping(attachment);
-			case XINPUT: cast new XInputMapping(attachment);
-			case MAYFLASH_WII_REMOTE: cast new MayflashWiiRemoteMapping(attachment);
-			case WII_REMOTE: cast new WiiRemoteMapping(attachment);
-			case MFI: cast new MFiMapping(attachment);
-			case SWITCH_PRO: cast new SwitchProMapping(attachment);
-			case SWITCH_JOYCON_LEFT: cast new SwitchJoyconLeftMapping(attachment);
-			case SWITCH_JOYCON_RIGHT: cast new SwitchJoyconRightMapping(attachment);
+			case LOGITECH: new LogitechMapping(attachment);
+			case OUYA: new OUYAMapping(attachment);
+			case PS4: new PS4Mapping(attachment);
+			case PSVITA: new PSVitaMapping(attachment);
+			case XINPUT: new XInputMapping(attachment);
+			case MAYFLASH_WII_REMOTE: new MayflashWiiRemoteMapping(attachment);
+			case WII_REMOTE: new WiiRemoteMapping(attachment);
+			case MFI: new MFiMapping(attachment);
+			case SWITCH_PRO: new SwitchProMapping(attachment);
+			case SWITCH_JOYCON_LEFT: new SwitchJoyconLeftMapping(attachment);
+			case SWITCH_JOYCON_RIGHT: new SwitchJoyconRightMapping(attachment);
 			// default to XInput if we don't have a mapping for this
-			case _: cast new XInputMapping(attachment);
+			case _: new XInputMapping(attachment);
 		}
 	}
 
