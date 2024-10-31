@@ -16,8 +16,8 @@ class OUYAMapping extends FlxTypedGamepadMapping<OUYAID>
 
 	override function initValues():Void
 	{
-		leftStick = OUYAID.LEFT_ANALOG_STICK;
-		rightStick = OUYAID.RIGHT_ANALOG_STICK;
+		leftStick = OUYAID.leftAnalogStick;
+		rightStick = OUYAID.rightAnalogStick;
 	}
 
 	override function getID(rawID:OUYAID):FlxGamepadInputID
@@ -70,14 +70,14 @@ class OUYAMapping extends FlxTypedGamepadMapping<OUYAID>
 			case DPAD_RIGHT: OUYAID.DPAD_RIGHT;
 			case LEFT_TRIGGER: OUYAID.LEFT_TRIGGER;
 			case RIGHT_TRIGGER: OUYAID.RIGHT_TRIGGER;
-			case LEFT_STICK_DIGITAL_UP: OUYAID.LEFT_ANALOG_STICK.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: OUYAID.LEFT_ANALOG_STICK.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: OUYAID.LEFT_ANALOG_STICK.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: OUYAID.LEFT_ANALOG_STICK.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: OUYAID.RIGHT_ANALOG_STICK.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: OUYAID.RIGHT_ANALOG_STICK.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: OUYAID.RIGHT_ANALOG_STICK.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: OUYAID.RIGHT_ANALOG_STICK.rawRight;
+			case LEFT_STICK_DIGITAL_UP: OUYAID.leftAnalogStick.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: OUYAID.leftAnalogStick.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: OUYAID.leftAnalogStick.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: OUYAID.leftAnalogStick.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: OUYAID.rightAnalogStick.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: OUYAID.rightAnalogStick.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: OUYAID.rightAnalogStick.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: OUYAID.rightAnalogStick.rawRight;
 			default: super.getRawID(ID);
 		}
 	}

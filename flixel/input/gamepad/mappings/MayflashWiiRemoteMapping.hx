@@ -81,10 +81,10 @@ class MayflashWiiRemoteMapping extends FlxTypedGamepadMapping<MayflashWiiRemoteI
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_DOWN: DPAD_DOWN;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_LEFT: DPAD_LEFT;
 			case MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT: DPAD_RIGHT;
-			case id if (id == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp): LEFT_STICK_DIGITAL_UP;
-			case id if (id == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown): LEFT_STICK_DIGITAL_DOWN;
-			case id if (id == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft): LEFT_STICK_DIGITAL_LEFT;
-			case id if (id == MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight): LEFT_STICK_DIGITAL_RIGHT;
+			case id if (id == MayflashWiiRemoteID.leftAnalogStick.rawUp): LEFT_STICK_DIGITAL_UP;
+			case id if (id == MayflashWiiRemoteID.leftAnalogStick.rawDown): LEFT_STICK_DIGITAL_DOWN;
+			case id if (id == MayflashWiiRemoteID.leftAnalogStick.rawLeft): LEFT_STICK_DIGITAL_LEFT;
+			case id if (id == MayflashWiiRemoteID.leftAnalogStick.rawRight): LEFT_STICK_DIGITAL_RIGHT;
 			default: NONE;
 		}
 	}
@@ -139,14 +139,14 @@ class MayflashWiiRemoteMapping extends FlxTypedGamepadMapping<MayflashWiiRemoteI
 			case RIGHT_TRIGGER: MayflashWiiRemoteID.CLASSIC_R;
 			case EXTRA_0: MayflashWiiRemoteID.CLASSIC_ONE;
 			case EXTRA_1: MayflashWiiRemoteID.CLASSIC_TWO;
-			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.RIGHT_ANALOG_STICK.rawRight;
+			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.leftAnalogStick.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.leftAnalogStick.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.leftAnalogStick.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.leftAnalogStick.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: MayflashWiiRemoteID.rightAnalogStick.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.rightAnalogStick.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.rightAnalogStick.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.rightAnalogStick.rawRight;
 			default: getRawDefault(ID);
 		}
 	}
@@ -170,10 +170,10 @@ class MayflashWiiRemoteMapping extends FlxTypedGamepadMapping<MayflashWiiRemoteI
 			case DPAD_RIGHT: MayflashWiiRemoteID.NUNCHUK_DPAD_RIGHT;
 			case POINTER_X: MayflashWiiRemoteID.NUNCHUK_POINTER_X;
 			case POINTER_Y: MayflashWiiRemoteID.NUNCHUK_POINTER_Y;
-			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.LEFT_ANALOG_STICK.rawRight;
+			case LEFT_STICK_DIGITAL_UP: MayflashWiiRemoteID.leftAnalogStick.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: MayflashWiiRemoteID.leftAnalogStick.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: MayflashWiiRemoteID.leftAnalogStick.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: MayflashWiiRemoteID.leftAnalogStick.rawRight;
 			default: super.getRawID(ID);
 		}
 	}
@@ -245,13 +245,13 @@ class MayflashWiiRemoteMapping extends FlxTypedGamepadMapping<MayflashWiiRemoteI
 	{
 		leftStick = switch (attachment)
 		{
-			case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.LEFT_ANALOG_STICK;
-			case NONE: MayflashWiiRemoteID.REMOTE_DPAD;
+			case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.leftAnalogStick;
+			case NONE: MayflashWiiRemoteID.remoteDPad;
 		}
 
 		rightStick = switch (attachment)
 		{
-			case WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.RIGHT_ANALOG_STICK;
+			case WII_CLASSIC_CONTROLLER: MayflashWiiRemoteID.rightAnalogStick;
 			default: null;
 		}
 

@@ -66,32 +66,16 @@ enum abstract WiiRemoteID(Int) to Int
 	var REMOTE_NULL_AXIS = 4;
 	var NUNCHUK_NULL_AXIS = 4;
 
-	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
-	// so we have to pass in some "fake" ID's to get simulated digital inputs
-	public static var REMOTE_DPAD(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
-		up: REMOTE_DPAD_UP,
-		down: REMOTE_DPAD_DOWN,
-		left: REMOTE_DPAD_LEFT,
-		right: REMOTE_DPAD_RIGHT,
-		threshold: 0.5,
-		mode: ONLY_DIGITAL
-	});
-
-	// the nunchuk only has the "left" analog stick
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
-		up: 32,
-		down: 33,
-		left: 34,
-		right: 35
-	});
-	// the classic controller has both the "left" and "right" analog sticks
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(2, 3, {
-		up: 36,
-		down: 37,
-		left: 38,
-		right: 39
-	});
-
+	var LEFT_STICK_UP = 32;
+	var LEFT_STICK_DOWN = 33;
+	var LEFT_STICK_LEFT = 34;
+	var LEFT_STICK_RIGHT = 35;
+	
+	var RIGHT_STICK_UP = 36;
+	var RIGHT_STICK_DOWN = 37;
+	var RIGHT_STICK_LEFT = 38;
+	var RIGHT_STICK_RIGHT = 39;
+	
 	// these aren't real axes, they're simulated when the right digital buttons are pushed
 	var LEFT_TRIGGER_FAKE = 4;
 	var RIGHT_TRIGGER_FAKE = 5;
@@ -169,36 +153,16 @@ enum abstract WiiRemoteID(Int) to Int
 	var REMOTE_NULL_AXIS = 4;
 	var NUNCHUK_NULL_AXIS = 4;
 
-	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...so we have to pass in some "fake" ID's to get simulated digital inputs
-	public static var REMOTE_DPAD(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
-		up: (cast REMOTE_DPAD_UP:Int),
-		down: (cast REMOTE_DPAD_DOWN:Int),
-		left: (cast REMOTE_DPAD_LEFT:Int),
-		right: (cast REMOTE_DPAD_RIGHT:Int),
-		threshold: 0.5,
-		mode: ONLY_DIGITAL
-	});
-
-	/**
-	 * the nunchuk only has the "left" analog stick
-	 */
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
-		up: 28,
-		down: 29,
-		left: 30,
-		right: 31
-	});
-
-	/**
-	 * the classic controller has both the "left" and "right" analog sticks
-	 */
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<WiiRemoteID>(2, 3, {
-		up: 32,
-		down: 33,
-		left: 34,
-		right: 35
-	});
-
+	var LEFT_STICK_UP = 28;
+	var LEFT_STICK_DOWN = 29;
+	var LEFT_STICK_LEFT = 30;
+	var LEFT_STICK_RIGHT = 31;
+	
+	var RIGHT_STICK_UP = 32;
+	var RIGHT_STICK_DOWN = 33;
+	var RIGHT_STICK_LEFT = 34;
+	var RIGHT_STICK_RIGHT = 35;
+	
 	// these aren't real axes, they're simulated when the right digital buttons are pushed
 	var LEFT_TRIGGER_FAKE = 4;
 	var RIGHT_TRIGGER_FAKE = 5;
@@ -212,4 +176,36 @@ enum abstract WiiRemoteID(Int) to Int
 	var REMOTE_DPAD_X = 26;
 	var REMOTE_DPAD_Y = 27;
 	#end
+	
+	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
+	// so we have to pass in some "fake" ID's to get simulated digital inputs
+	public static final remoteDPad = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
+		up: REMOTE_DPAD_UP,
+		down: REMOTE_DPAD_DOWN,
+		left: REMOTE_DPAD_LEFT,
+		right: REMOTE_DPAD_RIGHT,
+		threshold: 0.5,
+		mode: ONLY_DIGITAL
+	});
+	
+	/**
+	 * the nunchuk only has the "left" analog stick
+	 */
+	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
+	});
+
+	/**
+	 * the classic controller has both the "left" and "right" analog sticks
+	 */
+	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<WiiRemoteID>(2, 3, {
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
+	});
+
 }

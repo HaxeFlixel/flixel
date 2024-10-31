@@ -6,8 +6,8 @@ typedef FlxGamepadAnalogStick = FlxTypedGamepadAnalogStick<Int>;
 
 class FlxTypedGamepadAnalogStick<TInputID:Int>
 {
-	public var x(default, null):TInputID;
-	public var y(default, null):TInputID;
+	public var x(default, null):Int;
+	public var y(default, null):Int;
 
 	/**
 	 * a raw button input ID, for sending a digital event for "up" alongside the analog event
@@ -39,20 +39,31 @@ class FlxTypedGamepadAnalogStick<TInputID:Int>
 	 */
 	public var mode(default, null):FlxAnalogToDigitalMode = BOTH;
 
-	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings)
+	public function new(x:Int, y:Int, ?settings:FlxGamepadAnalogStickSettings<TInputID>)
 	{
-		this.x = cast x;
-		this.y = cast y;
+		this.x = x;
+		this.y = y;
 
-		if (settings == null)
-			return;
-
-		mode = (settings.mode != null) ? settings.mode : BOTH;
-		rawUp = cast (settings.up != null) ? settings.up : -1;
-		rawDown = cast (settings.down != null) ? settings.down : -1;
-		rawLeft = cast (settings.left != null) ? settings.left : -1;
-		rawRight = cast (settings.right != null) ? settings.right : -1;
-		digitalThreshold = (settings.threshold != null) ? settings.threshold : 0.5;
+		if (settings != null)
+		{
+			if (settings.mode != null)
+				mode = settings.mode;
+			
+			if (settings.up != null)
+				rawUp = settings.up;
+			
+			if (settings.down != null)
+				rawDown = settings.down;
+			
+			if (settings.left != null)
+				rawLeft = settings.left;
+			
+			if (settings.right != null)
+				rawRight = settings.right;
+			
+			if (settings.threshold != null)
+				digitalThreshold = settings.threshold;
+		}
 	}
 
 	public function toString():String
@@ -70,12 +81,12 @@ class FlxTypedGamepadAnalogStick<TInputID:Int>
 	}
 }
 
-typedef FlxGamepadAnalogStickSettings =
+typedef FlxGamepadAnalogStickSettings<TInputID:Int> =
 {
-	?up:Int,
-	?down:Int,
-	?left:Int,
-	?right:Int,
+	?up:TInputID,
+	?down:TInputID,
+	?left:TInputID,
+	?right:TInputID,
 	?threshold:Float,
 	?mode:FlxAnalogToDigitalMode
 }

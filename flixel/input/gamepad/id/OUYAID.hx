@@ -24,18 +24,28 @@ enum abstract OUYAID(Int) to Int
 	var DPAD_RIGHT = 20;
 	var DPAD_DOWN = 18;
 	var DPAD_UP = 17;
-
+	
+	var LEFT_STICK_UP = 23;
+	var LEFT_STICK_DOWN = 24;
+	var LEFT_STICK_LEFT = 25;
+	var LEFT_STICK_RIGHT = 26;
+	
+	var RIGHT_STICK_UP = 27;
+	var RIGHT_STICK_DOWN = 28;
+	var RIGHT_STICK_LEFT = 29;
+	var RIGHT_STICK_RIGHT = 30;
+	
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<OUYAID>(0, 1, {
-		up: 23,
-		down: 24,
-		left: 25,
-		right: 26
+	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<OUYAID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
 	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<OUYAID>(2, 3, {
-		up: 27,
-		down: 28,
-		left: 29,
-		right: 30
+	public static final rightAnalogStick = new FlxTypedGamepadAnalogStick<OUYAID>(2, 3, {
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
 	});
 }

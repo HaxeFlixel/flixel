@@ -35,18 +35,11 @@ enum abstract SwitchJoyconRightID(Int) to Int
 	var HOME = 20;
 	var CAPTURE = 21;
 	var LEFT_STICK_CLICK = 22;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(0, 1, {
-		up: 24,
-		down: 25,
-		left: 26,
-		right: 27
-	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(2, 3, {
-		up: 28,
-		down: 29,
-		left: 30,
-		right: 31
-	});
+	
+	var LEFT_STICK_UP = 24;
+	var LEFT_STICK_DOWN = 25;
+	var LEFT_STICK_LEFT = 26;
+	var LEFT_STICK_RIGHT = 27;
 	#else
 	var ZR = 5;
 	var A = 6;
@@ -59,12 +52,16 @@ enum abstract SwitchJoyconRightID(Int) to Int
 	var LEFT_STICK_CLICK = 13;
 	var SL = 15;
 	var SR = 16;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(0, 1, {
-		up: 22,
-		down: 23,
-		left: 24,
-		right: 25
-	});
-	#end
 	
+	var LEFT_STICK_UP = 22;
+	var LEFT_STICK_DOWN = 23;
+	var LEFT_STICK_LEFT = 24;
+	var LEFT_STICK_RIGHT = 25;
+	#end
+	public static final leftAnalogStick = new FlxTypedGamepadAnalogStick<SwitchJoyconRightID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
+	});
 }

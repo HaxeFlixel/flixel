@@ -23,17 +23,27 @@ enum abstract PSVitaID(Int) to Int
 	var DPAD_DOWN = 18;
 	var DPAD_LEFT = 19;
 	var DPAD_RIGHT = 20;
-
+	
+	var LEFT_STICK_UP = 21;
+	var LEFT_STICK_DOWN = 22;
+	var LEFT_STICK_LEFT = 23;
+	var LEFT_STICK_RIGHT = 24;
+	
+	var RIGHT_STICK_UP = 25;
+	var RIGHT_STICK_DOWN = 26;
+	var RIGHT_STICK_LEFT = 27;
+	var RIGHT_STICK_RIGHT = 28;
+	
 	public static var LEFT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<PSVitaID>(0, 1, {
-		up: 21,
-		down: 22,
-		left: 23,
-		right: 24
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
 	});
 	public static var RIGHT_ANALOG_STICK(default, null) = new FlxTypedGamepadAnalogStick<PSVitaID>(2, 3, {
-		up: 25,
-		down: 26,
-		left: 27,
-		right: 28
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
 	});
 }

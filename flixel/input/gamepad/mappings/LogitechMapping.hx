@@ -16,8 +16,8 @@ class LogitechMapping extends FlxTypedGamepadMapping<LogitechID>
 
 	override function initValues():Void
 	{
-		leftStick = LogitechID.LEFT_ANALOG_STICK;
-		rightStick = LogitechID.RIGHT_ANALOG_STICK;
+		leftStick = LogitechID.leftAnalogStick;
+		rightStick = LogitechID.rightAnalogStick;
 	}
 
 	override function getID(rawID:LogitechID):FlxGamepadInputID
@@ -74,14 +74,14 @@ class LogitechMapping extends FlxTypedGamepadMapping<LogitechID>
 			case DPAD_RIGHT: LogitechID.DPAD_RIGHT;
 			case LEFT_TRIGGER: LogitechID.SEVEN;
 			case RIGHT_TRIGGER: LogitechID.EIGHT;
-			case LEFT_STICK_DIGITAL_UP: LogitechID.LEFT_ANALOG_STICK.rawUp;
-			case LEFT_STICK_DIGITAL_DOWN: LogitechID.LEFT_ANALOG_STICK.rawDown;
-			case LEFT_STICK_DIGITAL_LEFT: LogitechID.LEFT_ANALOG_STICK.rawLeft;
-			case LEFT_STICK_DIGITAL_RIGHT: LogitechID.LEFT_ANALOG_STICK.rawRight;
-			case RIGHT_STICK_DIGITAL_UP: LogitechID.RIGHT_ANALOG_STICK.rawUp;
-			case RIGHT_STICK_DIGITAL_DOWN: LogitechID.RIGHT_ANALOG_STICK.rawDown;
-			case RIGHT_STICK_DIGITAL_LEFT: LogitechID.RIGHT_ANALOG_STICK.rawLeft;
-			case RIGHT_STICK_DIGITAL_RIGHT: LogitechID.RIGHT_ANALOG_STICK.rawRight;
+			case LEFT_STICK_DIGITAL_UP: LogitechID.leftAnalogStick.rawUp;
+			case LEFT_STICK_DIGITAL_DOWN: LogitechID.leftAnalogStick.rawDown;
+			case LEFT_STICK_DIGITAL_LEFT: LogitechID.leftAnalogStick.rawLeft;
+			case LEFT_STICK_DIGITAL_RIGHT: LogitechID.leftAnalogStick.rawRight;
+			case RIGHT_STICK_DIGITAL_UP: LogitechID.rightAnalogStick.rawUp;
+			case RIGHT_STICK_DIGITAL_DOWN: LogitechID.rightAnalogStick.rawDown;
+			case RIGHT_STICK_DIGITAL_LEFT: LogitechID.rightAnalogStick.rawLeft;
+			case RIGHT_STICK_DIGITAL_RIGHT: LogitechID.rightAnalogStick.rawRight;
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: LogitechID.SEVEN;
 			case RIGHT_TRIGGER_FAKE: LogitechID.EIGHT;
