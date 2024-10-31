@@ -179,7 +179,7 @@ enum abstract WiiRemoteID(Int) to Int
 	
 	// Yes, the WiiRemote DPAD is treated as ANALOG for some reason...
 	// so we have to pass in some "fake" ID's to get simulated digital inputs
-	public static final remoteDPad = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
+	public static final REMOTE_DPAD = new FlxTypedGamepadAnalogStick<WiiRemoteID>(0, 1, {
 		up: REMOTE_DPAD_UP,
 		down: REMOTE_DPAD_DOWN,
 		left: REMOTE_DPAD_LEFT,

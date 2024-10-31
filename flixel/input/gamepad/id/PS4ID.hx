@@ -36,10 +36,10 @@ enum abstract PS4ID(Int) to Int
 	var PS = 22;
 	var TOUCHPAD_CLICK = 23;
 	
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 2;
-	inline static final RIGHT_Y = 5;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 2;
+	static inline final RIGHT_Y = 5;
 	
 	var LEFT_STICK_UP = 24;
 	var LEFT_STICK_DOWN = 25;
@@ -71,10 +71,10 @@ enum abstract PS4ID(Int) to Int
 	#if ps4
 	var TOUCHPAD_CLICK = 10; // On an actual PS4, share is reserved by the system, and the touchpad click can serve more or less as a replacement for the "back/select" button
 	
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 2;
-	inline static final RIGHT_Y = 3;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 2;
+	static inline final RIGHT_Y = 3;
 	
 	var LEFT_STICK_UP = 32;
 	var LEFT_STICK_DOWN = 33;
@@ -90,10 +90,10 @@ enum abstract PS4ID(Int) to Int
 	#else
 	var SHARE = 10; // This is only accessible when not using an actual Playstation 4, otherwise it's reserved by the system
 
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 2;
-	inline static final RIGHT_Y = 3;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 2;
+	static inline final RIGHT_Y = 3;
 	
 	var LEFT_STICK_UP = 22;
 	var LEFT_STICK_DOWN = 23;
@@ -136,10 +136,10 @@ enum abstract PS4ID(Int) to Int
 	var L2 = 3;
 	var R2 = 4;
 
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 2;
-	inline static final RIGHT_Y = 5;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 2;
+	static inline final RIGHT_Y = 5;
 	
 	var LEFT_STICK_UP = 27;
 	var LEFT_STICK_DOWN = 28;

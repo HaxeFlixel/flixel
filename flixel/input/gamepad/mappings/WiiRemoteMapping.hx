@@ -267,7 +267,7 @@ class WiiRemoteMapping extends FlxTypedGamepadMapping<WiiRemoteID>
 		leftStick = switch (attachment)
 		{
 			case WII_NUNCHUCK, WII_CLASSIC_CONTROLLER: WiiRemoteID.LEFT_ANALOG_STICK;
-			case NONE: WiiRemoteID.remoteDPad;
+			case NONE: WiiRemoteID.REMOTE_DPAD;
 		}
 
 		rightStick = switch (attachment)

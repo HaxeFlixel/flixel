@@ -81,10 +81,10 @@ enum abstract XInputID(Int) to Int
 	var DPAD_LEFT = 19;
 	var DPAD_RIGHT = 20;
 	
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 2;
-	inline static final RIGHT_Y = 3;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 2;
+	static inline final RIGHT_Y = 3;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
@@ -131,10 +131,10 @@ enum abstract XInputID(Int) to Int
 	var LEFT_TRIGGER = 2;
 	var RIGHT_TRIGGER = 5;
 
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 3;
-	inline static final RIGHT_Y = 4;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 3;
+	static inline final RIGHT_Y = 4;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
@@ -170,10 +170,10 @@ enum abstract XInputID(Int) to Int
 	var LEFT_TRIGGER = 2;
 	var RIGHT_TRIGGER = 5;
 
-	inline static final LEFT_X = 0;
-	inline static final LEFT_Y = 1;
-	inline static final RIGHT_X = 3;
-	inline static final RIGHT_Y = 4;
+	static inline final LEFT_X = 0;
+	static inline final LEFT_Y = 1;
+	static inline final RIGHT_X = 3;
+	static inline final RIGHT_Y = 4;
 
 	var LEFT_STICK_UP = 21;
 	var LEFT_STICK_DOWN = 22;
