@@ -13,6 +13,10 @@ import flixel.input.gamepad.id.SwitchProID;
 import flixel.input.gamepad.id.WiiRemoteID;
 import flixel.input.gamepad.id.XInputID;
 
+/**
+ * A list of every possible gamepad input from every known device
+ * @since 5.9.0
+ */
 @:using(flixel.input.gamepad.FlxGamepadMappedInput.FlxGamepadMappedInputTools)
 enum FlxGamepadMappedInput
 {
@@ -30,7 +34,7 @@ enum FlxGamepadMappedInput
 	UNKNOWN(id:FlxGamepadInputID);
 }
 
-class FlxGamepadMappedInputTools
+private class FlxGamepadMappedInputTools
 {
 	public static inline function toModel(input:FlxGamepadMappedInput):FlxGamepadModel
 	{

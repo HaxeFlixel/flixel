@@ -53,6 +53,7 @@ class FlxGamepadManager implements IFlxInputManager
 	
 	/**
 	 * Whether the bottom or right face button is ACCEPT
+	 * @since 5.9.0
 	 */
 	public var acceptMode:FlxGamepadAcceptMode = BOTTOM;
 	
@@ -601,6 +602,9 @@ class FlxGamepadManager implements IFlxInputManager
 	}
 }
 
+/**
+ * @since 5.9.0
+ */
 enum FlxGamepadAcceptMode
 {
 	/**

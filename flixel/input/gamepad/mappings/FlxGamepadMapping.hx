@@ -24,6 +24,7 @@ class FlxTypedGamepadMapping<TInputID:Int>
 	
 	/**
 	 * Whether to treat `A` or `B` as `ACCEPT` or `CANCEL`, when `FlxG.gamepads.acceptMode` is `ADAPTIVE`
+	 * @since 5.9.0
 	 */
 	var bottomIsAccept:Bool = true;
 
