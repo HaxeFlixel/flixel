@@ -32,7 +32,7 @@ enum FlxGamepadMappedInput
 
 class FlxGamepadMappedInputTools
 {
-	static public inline function toModel(input:FlxGamepadMappedInput):FlxGamepadModel
+	public static inline function toModel(input:FlxGamepadMappedInput):FlxGamepadModel
 	{
 		return switch input
 		{
