@@ -5,37 +5,47 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
 /**
  * IDs for OUYA controllers
  */
-class OUYAID
+enum abstract OUYAID(Int) to Int
 {
-	public static inline var O:Int = 6;
-	public static inline var U:Int = 8;
-	public static inline var Y:Int = 9;
-	public static inline var A:Int = 7;
-	public static inline var LB:Int = 15;
-	public static inline var RB:Int = 16;
-	public static inline var LEFT_STICK_CLICK:Int = 13;
-	public static inline var RIGHT_STICK_CLICK:Int = 14;
-	public static inline var HOME:Int = 0x01000012;	// Not sure if press HOME is taken in account on OUYA
-	public static inline var LEFT_TRIGGER:Int = 4;
-	public static inline var RIGHT_TRIGGER:Int = 5;
+	var O = 6;
+	var U = 8;
+	var Y = 9;
+	var A = 7;
+	var LB = 15;
+	var RB = 16;
+	var LEFT_STICK_CLICK = 13;
+	var RIGHT_STICK_CLICK = 14;
+	var HOME = 0x01000012;	// Not sure if press HOME is taken in account on OUYA
+	var LEFT_TRIGGER = 4;
+	var RIGHT_TRIGGER = 5;
 
 	// "fake" IDs, we manually watch for hat axis changes and then send events using these otherwise unused joystick button codes
-	public static inline var DPAD_LEFT:Int = 19;
-	public static inline var DPAD_RIGHT:Int = 20;
-	public static inline var DPAD_DOWN:Int = 18;
-	public static inline var DPAD_UP:Int = 17;
-
+	var DPAD_LEFT = 19;
+	var DPAD_RIGHT = 20;
+	var DPAD_DOWN = 18;
+	var DPAD_UP = 17;
+	
+	var LEFT_STICK_UP = 23;
+	var LEFT_STICK_DOWN = 24;
+	var LEFT_STICK_LEFT = 25;
+	var LEFT_STICK_RIGHT = 26;
+	
+	var RIGHT_STICK_UP = 27;
+	var RIGHT_STICK_DOWN = 28;
+	var RIGHT_STICK_LEFT = 29;
+	var RIGHT_STICK_RIGHT = 30;
+	
 	// If TRIGGER axis returns value > 0 then LT is being pressed, and if it's < 0 then RT is being pressed
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 23,
-		down: 24,
-		left: 25,
-		right: 26
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<OUYAID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
 	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
-		up: 27,
-		down: 28,
-		left: 29,
-		right: 30
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<OUYAID>(2, 3, {
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
 	});
 }
