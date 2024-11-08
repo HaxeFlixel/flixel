@@ -218,7 +218,7 @@ class Console extends Window
 				if (!history.isEmpty)
 					setText(history.getPreviousCommand());
 
-			#if html5
+			#if (html5 && FLX_KEYBOARD)
 			// FlxKeyboard.preventDefaultKeys adds "preventDefault" on HTML5
 			// so it ends up not fully propegating our inputs to the stage/event listeners
 			// we do this small work around so we don't need to mess around with lime/openfl events
