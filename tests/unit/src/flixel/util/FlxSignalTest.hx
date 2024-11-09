@@ -29,7 +29,7 @@ class FlxSignalTest extends FlxTest
 	function callbackIncrementCounter()
 		counter++;
 
-	function callbackIncrementCounter_Int(v:Int):Void
+	function callbackIncrementCounterInt(v:Int):Void
 		counter++;
 
 	function addAllEmptyCallbacks():Void
@@ -162,11 +162,11 @@ class FlxSignalTest extends FlxTest
 	}
 
 	@Test
-	function testDispatchOnce_signal1():Void
+	function testDispatchOnceSignal1():Void
 	{
 		// see https://github.com/HaxeFoundation/hashlink/issues/578
 		
-		signal1.addOnce(callbackIncrementCounter_Int);
+		signal1.addOnce(callbackIncrementCounterInt);
 		
 		signal1.dispatch(42);
 		signal1.dispatch(42);
