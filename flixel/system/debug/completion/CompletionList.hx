@@ -37,8 +37,6 @@ class CompletionList extends Sprite
 		createPopupEntries(capacity);
 		createScrollBar();
 		updateSelectedItem();
-
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 	}
 
 	public function show(x:Float, items:Array<String>)
@@ -82,7 +80,7 @@ class CompletionList extends Sprite
 		addChild(scrollBar);
 	}
 
-	function onKeyDown(e:KeyboardEvent)
+	public function onKeyDown(e:KeyboardEvent)
 	{
 		if (!visible)
 			return;
@@ -95,7 +93,7 @@ class CompletionList extends Sprite
 			case Keyboard.UP:
 				updateIndices(-1);
 
-			case Keyboard.ENTER:
+			case Keyboard.ENTER | Keyboard.TAB:
 				if (completed != null)
 					completed(items[selectedIndex]);
 				close();

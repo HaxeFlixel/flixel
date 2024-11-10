@@ -4,6 +4,7 @@ import openfl.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
@@ -328,4 +329,44 @@ class FlxSpriteTest extends FlxTest
 		
 		expected.put();
 	}
+	
+	@Test
+	function testGetGraphicMidpoint()
+	{
+		final full:SimplePoint = [sprite1.frameWidth, sprite1.frameHeight];
+		final mid:SimplePoint = [full.x / 2, full.y / 2];
+		final zero:SimplePoint = [0, 0];
+		assertGraphicMidpoint({ pos:[0, 5], size:full, origin:mid, offset:zero});
+		assertGraphicMidpoint({ pos:[0, 5], size:full, origin:full, offset:zero});
+		assertGraphicMidpoint({ pos:[0, 5], size:[10, 10], origin:mid, offset:zero});
+		assertGraphicMidpoint({ pos:[0, 5], size:[50, 50], origin:mid, offset:[1, 3]});
+		assertGraphicMidpoint({ pos:[0, 5], size:[50, 50], origin:zero, offset:zero});
+		assertGraphicMidpoint({ pos:[0, 5], size:[50, 50], origin:full, offset:[50, 60]});
+		assertGraphicMidpoint({ pos:[0, 5], size:[50, 100], origin:[10, 20], offset:[-50, 60]});
+	}
+	
+	function assertGraphicMidpoint(orientation:Orientation, ?pos:PosInfos)
+	{
+		sprite1.x = orientation.pos.x;
+		sprite1.y = orientation.pos.y;
+		sprite1.setGraphicSize(orientation.size.x, orientation.size.y);
+		sprite1.offset.set(orientation.offset.x, orientation.offset.y);
+		sprite1.origin.set(orientation.origin.x, orientation.origin.y);
+		final actual = sprite1.getGraphicMidpoint(FlxPoint.weak());
+		
+		// check against getScreenBounds
+		final rect = sprite1.getScreenBounds(FlxRect.weak());
+		FlxAssert.areNear(rect.x + 0.5 * rect.width, actual.x, 0.001, pos);
+		FlxAssert.areNear(rect.y + 0.5 * rect.height, actual.y, 0.001, pos);
+	}
 }
+
+abstract SimplePoint(Array<Float>) from Array<Float>
+{
+	public var x(get, never):Float;
+	inline function get_x() return this[0];
+	
+	public var y(get, never):Float;
+	inline function get_y() return this[1];
+} 
+typedef Orientation = { pos:SimplePoint, size:SimplePoint, offset:SimplePoint, origin:SimplePoint }

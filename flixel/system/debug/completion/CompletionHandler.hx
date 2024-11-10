@@ -40,12 +40,7 @@ class CompletionHandler
 
 	function getCaretIndex():Int
 	{
-		#if openfl_legacy
-		// caretIndex is not a thing on legacy...
-		return input.text.length;
-		#else
 		return input.caretIndex;
-		#end
 	}
 
 	function onKeyUp(e:KeyboardEvent)
@@ -53,7 +48,7 @@ class CompletionHandler
 		var text = getTextUntilCaret();
 
 		// close completion so that enter works
-		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'"))
+		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'") || text.endsWith(";"))
 		{
 			completionList.close();
 			return;

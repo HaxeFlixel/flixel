@@ -160,7 +160,8 @@ class FlxPointTest extends FlxTest
 	}
 
 	@Test
-	function testPivotDegrees() {
+	function testPivotDegrees()
+	{
 		// Pivot around point in same quadrant
 		point1.set(10, 10);
 		point2.set(5, 5);
@@ -183,10 +184,10 @@ class FlxPointTest extends FlxTest
 	}
 
 	function assertPointNearlyEquals(p:FlxPoint, x:Float, y:Float, tolerance:Float = .01, ?msg:String, ?info:PosInfos)
-		{
-			if (msg == null)
-				msg = 'Expected (x: $x | y: $y) but was $p';
+	{
+		if (msg == null)
+			msg = 'Expected (x: $x | y: $y) but was $p';
 
-			Assert.isTrue(Math.abs(x - p.x) <= tolerance && Math.abs(y -p.y) <= tolerance, msg, info);
-		}
+		Assert.isTrue(Math.abs(x - p.x) <= tolerance && Math.abs(y -p.y) <= tolerance, msg, info);
+	}
 }

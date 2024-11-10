@@ -120,7 +120,7 @@ class ConsoleUtil
 		else if (Reflect.isObject(Object)) // get instance fields
 			fields = Type.getInstanceFields(Type.getClass(Object));
 
-		// on Flash, enums are classes, so Std.is(_, Enum) fails
+		// on Flash, enums are classes, so Std.isOfType(_, Enum) fails
 		fields.remove("__constructs__");
 
 		var filteredFields = [];

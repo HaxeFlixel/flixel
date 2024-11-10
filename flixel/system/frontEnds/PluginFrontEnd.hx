@@ -2,6 +2,8 @@ package flixel.system.frontEnds;
 
 import flixel.input.mouse.FlxMouseEvent;
 import flixel.input.mouse.FlxMouseEventManager;
+import flixel.text.FlxInputText;
+import flixel.text.FlxInputTextManager;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
@@ -15,6 +17,12 @@ class PluginFrontEnd
 	 * An array container for plugins.
 	 */
 	public var list(default, null):Array<FlxBasic> = [];
+
+	/**
+	 * If `true`, then plugins will be drawn over the current state instead of under it.
+	 * @since 5.7.0
+	 */
+	public var drawOnTop:Bool = false;
 
 	/**
 	 * Adds a new plugin to the global plugin array.
@@ -72,7 +80,7 @@ class PluginFrontEnd
 	 *                See the `FlxPath` or `FlxTimer` constructors for example usage.
 	 * @return  The plugin object, or null if no matching plugin was found.
 	 */
-	public inline function get<T:FlxBasic>(type:Class<T>):T
+	public function get<T:FlxBasic>(type:Class<T>):T
 	{
 		for (plugin in list)
 		{
@@ -132,6 +140,7 @@ class PluginFrontEnd
 		addPlugin(FlxTimer.globalManager = new FlxTimerManager());
 		addPlugin(FlxTween.globalManager = new FlxTweenManager());
 		addPlugin(FlxMouseEvent.globalManager = new FlxMouseEventManager());
+		addPlugin(FlxInputText.globalManager = new FlxInputTextManager());
 	}
 
 	/**

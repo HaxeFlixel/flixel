@@ -8,12 +8,8 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
-#if !flash
-#if openfl_legacy
-import openfl.gl.GL;
-#else
+#if FLX_OPENGL_AVAILABLE
 import lime.graphics.opengl.GL;
-#end
 #end
 
 /**
@@ -23,9 +19,13 @@ import lime.graphics.opengl.GL;
  */
 class BitmapFrontEnd
 {
-	#if !flash
+	#if FLX_OPENGL_AVAILABLE
 	/**
-	 * Gets max texture size for native targets
+	 * Returns the maximum allowed width and height (in pixels) for a texture.
+	 * This value is only available on hardware-accelerated targets that use OpenGL.
+	 * On unsupported targets, the returned value will always be -1.
+	 * 
+	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
 	public var maxTextureSize(get, never):Int;
 	#end
@@ -291,14 +291,16 @@ class BitmapFrontEnd
 
 	/**
 	 * Totally removes specified FlxGraphic object.
-	 * @param	FlxGraphic object you want to remove and destroy.
+	 * @param   graphic  object you want to remove and destroy.
 	 */
 	public function remove(graphic:FlxGraphic):Void
 	{
 		if (graphic != null)
 		{
 			removeKey(graphic.key);
-			graphic.destroy();
+			// TODO: find causes of this, and prevent crashes from double graphic destroys
+			if (!graphic.isDestroyed)
+				graphic.destroy();
 		}
 	}
 
@@ -393,10 +395,13 @@ class BitmapFrontEnd
 		}
 	}
 
-	#if !flash
+	#if FLX_OPENGL_AVAILABLE
 	function get_maxTextureSize():Int
 	{
-		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		if (FlxG.stage.window.context.attributes.hardware)
+			return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		
+		return -1;
 	}
 	#end
 

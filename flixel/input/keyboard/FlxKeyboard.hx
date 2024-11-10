@@ -1,10 +1,11 @@
 package flixel.input.keyboard;
 
 #if FLX_KEYBOARD
-import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.system.replay.CodeValuePair;
+import flixel.text.FlxInputText;
+import openfl.events.KeyboardEvent;
 
 /**
  * Keeps track of what keys are pressed and how with handy Bools or strings.
@@ -51,6 +52,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 		_nativeCorrection.set("123_222", FlxKey.LBRACKET);
 		_nativeCorrection.set("125_187", FlxKey.RBRACKET);
 		_nativeCorrection.set("126_233", FlxKey.GRAVEACCENT);
+		_nativeCorrection.set("0_43", FlxKey.PLUS);
 
 		_nativeCorrection.set("0_80", FlxKey.F1);
 		_nativeCorrection.set("0_81", FlxKey.F2);
@@ -100,7 +102,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Debugger toggle
 		#if FLX_DEBUG
-		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event))
+		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
 		}
@@ -113,7 +115,10 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Attempted to cancel the replay?
 		#if FLX_RECORD
-		if (FlxG.game.replaying && !inKeyArray(FlxG.debugger.toggleKeys, event) && inKeyArray(FlxG.vcr.cancelKeys, event))
+		if (FlxG.game.replaying
+			&& !inKeyArray(FlxG.debugger.toggleKeys, event)
+			&& inKeyArray(FlxG.vcr.cancelKeys, event)
+			&& !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.vcr.cancelReplay();
 		}
@@ -167,16 +172,16 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 	 * @param	Record	Array of data about key states.
 	 */
 	@:allow(flixel.system.replay.FlxReplay)
-	function playback(Record:Array<CodeValuePair>):Void
+	function playback(record:Array<CodeValuePair>):Void
 	{
-		var i:Int = 0;
-		var l:Int = Record.length;
+		var i = 0;
+		final len = record.length;
 
-		while (i < l)
+		while (i < len)
 		{
-			var o = Record[i++];
-			var o2 = getKey(o.code);
-			o2.current = o.value;
+			final keyRecord = record[i++];
+			final key = getKey(keyRecord.code);
+			key.current = keyRecord.value;
 		}
 	}
 }

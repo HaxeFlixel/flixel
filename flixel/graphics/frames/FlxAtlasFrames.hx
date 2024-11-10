@@ -80,19 +80,16 @@ class FlxAtlasFrames extends FlxFramesCollection
 		frames = new FlxAtlasFrames(graphic);
 
 		final data:TexturePackerAtlas = description.getData();
-
 		// JSON-Array
-		if (data.frames is Array)
+		if (data.frames.isArray())
 		{
-			final frameArray:Array<TexturePackerAtlasFrame> = data.frames;
-			for (frame in frameArray)
+			for (frame in data.frames.toArray())
 				texturePackerHelper(frame.filename, frame, frames, useFrameDuration);
 		}
 		// JSON-Hash
 		else
 		{
-			final frameHash:Hash<TexturePackerAtlasFrame> = data.frames;
-			for (name=>frame in frameHash)
+			for (name=>frame in data.frames.toHash())
 				texturePackerHelper(name, frame, frames, useFrameDuration);
 		}
 
@@ -256,6 +253,9 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 		for (texture in data.nodes.SubTexture)
 		{
+			if (!texture.has.width && texture.has.w)
+				throw "Sparrow v1 is not supported, use Sparrow v2";
+			
 			var name = texture.att.name;
 			var trimmed = texture.has.frameX;
 			var rotated = (texture.has.rotated && texture.att.rotated == "true");
@@ -264,24 +264,39 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width),
 				Std.parseFloat(texture.att.height));
-
+			
 			var size = if (trimmed)
 			{
-				new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
+				FlxRect.get(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
 					Std.parseInt(texture.att.frameHeight));
 			}
 			else
 			{
-				new Rectangle(0, 0, rect.width, rect.height);
+				FlxRect.get(0, 0, rect.width, rect.height);
 			}
+			
 
 			var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
 
-			var offset = FlxPoint.get(-size.left, -size.top);
+			var offset = FlxPoint.get(-size.x, -size.y);
 			var sourceSize = FlxPoint.get(size.width, size.height);
 
 			if (rotated && !trimmed)
 				sourceSize.set(size.height, size.width);
+
+			// Prevents issues caused by adding frames of size 0
+			if (rect.width == 0 || rect.height == 0)
+            {
+                if (!trimmed)
+                    size.setSize(1,1);
+                
+                var frame = frames.addEmptyFrame(size);
+
+                frame.name = name;
+                frame.offset.copyFrom(offset);
+                
+                continue;
+            }
 
 			frames.addAtlasFrame(rect, sourceSize, offset, name, angle, flipX, flipY);
 		}
