@@ -10,17 +10,80 @@ import openfl.display.BitmapData;
 import openfl.media.Sound;
 import openfl.utils.Assets;
 import openfl.utils.AssetType;
+import openfl.utils.AssetCache;
 import openfl.utils.Future;
 import openfl.text.Font;
 
+using StringTools;
+
 /**
- * Accessed via `FlxG.log`
+ * Accessed via `FlxG.assets`. The main interface for the asset system. By default, OpenFl's
+ * Asset system is used, which uses relative path strings to retrive assets, though you can completely
+ * avoid Openfl's asset system by setting custom methods to the following dynamic fields: `getAssetUnsafe`,
+ * `loadAsset`, `exists`, `isLocal` and `list`.
+ * 
+ * ## Common Uses for Custom Methods
+ * The initial reason for making customizable asset system
+ * was to allow for "hot-reloading", or testing new assets in your game without recompiling, with
+ * each change. Say, if you would like a debug feature where you load assets from source assets,
+ * rather than the assets copied over to your export folder, you could overwrite this system to do
+ * just that.
+ * 
+ * Other potential uses for this are modding, bypassing the manifest and loading resources from
+ * a remote location.
+ * 
+ * ### Quick Setup for "Hot-Reloading"
+ * To simplify the process mentioned above, the `FLX_CUSTOM_ASSETS_DIRECTORY` flag was created.
+ * By adding `-DFLX_CUSTOM_ASSETS_DIRECTORY="../../../assets"` to your lime build command
+ * it will automatically grab assets from your project root's assets folder rather than, the
+ * default "export/hl/bin/assets". This will only work with a single asset root folder with one
+ * asset library and will use the openfl asset system if the asset id starts with "flixel/" or
+ * tries to references a specific library using the format: "libName:asset/path/file.ext".
  * 
  * @since 5.9.0
  */
 class AssetsFrontEnd
 {
+	#if FLX_CUSTOM_ASSETS_DIRECTORY
+	/**
+	 * The target directory
+	 */
+	final directory:String;
+	
+	/**
+	 * The parent of the target directory, is prepended to any `id` passed in
+	 */
+	final parentDirectory:String;
+	
+	public function new ()
+	{
+		final rawPath = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY")}';
+		// Remove final slash and accepts backslashes and removes redundancies
+		directory = haxe.io.Path.normalize(rawPath);
+		// Verify valid directory
+		if (sys.FileSystem.exists(directory) == false)
+			throw 'Invalid value:"$directory" of FLX_CUSTOM_ASSETS_DIRECTORY, expecting relative or absolute path';
+		// remove final "/assets" since the id typically contains it
+		final split = sys.FileSystem.absolutePath(directory).split("/");
+		split.pop();
+		parentDirectory = split.join("/");
+	}
+	
+	function getPath(id:String)
+	{
+		return haxe.io.Path.normalize('$parentDirectory/$id');
+	}
+	
+	/**
+	 * True for assets packaged with all HaxeFlixel build, and any non-default libraries
+	 */
+	function useOpenflAssets(id:String)
+	{
+		return id.startsWith("flixel/") || id.contains(':');
+	}
+	#else
 	public function new () {}
+	#end
 	
 	/**
 	 * Used by methods like `getAsset`, `getBitmapData`, `getText`, their "unsafe" counterparts and
@@ -34,6 +97,56 @@ class AssetsFrontEnd
 	 */
 	public dynamic function getAssetUnsafe(id:String, type:FlxAssetType, useCache = true):Null<Any>
 	{
+		#if FLX_STANDARD_ASSETS_DIRECTORY
+		return getOpenflAssetUnsafe(id, type, useCache);
+		#else
+		
+		if (useOpenflAssets(id))
+			return getOpenflAssetUnsafe(id, type, useCache);
+		// load from custom assets directory
+		final canUseCache = useCache && Assets.cache.enabled;
+		
+		final asset:Any = switch type
+		{
+			// No caching
+			case TEXT:
+				sys.io.File.getContent(getPath(id));
+			case BINARY:
+				sys.io.File.getBytes(getPath(id));
+			
+			// Check cache
+			case IMAGE if (canUseCache && Assets.cache.hasBitmapData(id)):
+				Assets.cache.getBitmapData(id);
+			case SOUND if (canUseCache && Assets.cache.hasSound(id)):
+				Assets.cache.getSound(id);
+			case FONT if (canUseCache && Assets.cache.hasFont(id)):
+				Assets.cache.getFont(id);
+			
+			// Get asset and set cache
+			case IMAGE:
+				final bitmap = BitmapData.fromFile(getPath(id));
+				if (canUseCache)
+					Assets.cache.setBitmapData(id, bitmap);
+				bitmap;
+			case SOUND:
+				final sound = Sound.fromFile(getPath(id));
+				if (canUseCache)
+					Assets.cache.setSound(id, sound);
+				sound;
+			case FONT:
+				final font = Font.fromFile(getPath(id));
+				if (canUseCache)
+					Assets.cache.setFont(id, font);
+				font;
+		}
+		
+		return asset;
+		#end
+	}
+	
+	function getOpenflAssetUnsafe(id:String, type:FlxAssetType, useCache = true):Null<Any>
+	{
+		// Use openfl assets
 		return switch(type)
 		{
 			case TEXT: Assets.getText(id);
@@ -54,12 +167,23 @@ class AssetsFrontEnd
 	 */
 	public function getAsset(id:String, type:FlxAssetType, useCache = true, ?logStyle:LogStyle):Null<Any>
 	{
-		if (exists(id, type))
-			return getAssetUnsafe(id, type, useCache);
+		inline function log(message:String)
+		{
+			if (logStyle == null)
+				logStyle = LogStyle.ERROR;
+			FlxG.log.advanced(message, logStyle);
+		}
 		
-		if (logStyle == null)
-			logStyle = LogStyle.ERROR;
-		FlxG.log.advanced('Could not find a $type asset with ID \'$id\'.', logStyle);
+		if (exists(id, type))
+		{
+			if (isLocal(id, type))
+				return getAssetUnsafe(id, type, useCache);
+			
+			log('$type asset "$id" exists, but only asynchronously');
+			return null;
+		}
+		
+		log('Could not find a $type asset with ID \'$id\'.');
 		return null;
 	}
 	
@@ -72,6 +196,21 @@ class AssetsFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
 	public dynamic function loadAsset(id:String, type:FlxAssetType, useCache = true):Future<Any>
+	{
+		#if FLX_STANDARD_ASSETS_DIRECTORY
+		return loadOpenflAsset(id, type, useCache);
+		#else
+		
+		if (useOpenflAssets(id))
+			return loadOpenflAsset(id, type, useCache);
+		
+		// get the asset synchronously and wrap it in a future
+		return Future.withValue(getAsset(id, type, useCache));
+		// TODO: html?
+		#end
+	}
+	
+	function loadOpenflAsset(id:String, type:FlxAssetType, useCache = true):Future<Any>
 	{
 		return switch(type)
 		{
@@ -92,7 +231,14 @@ class AssetsFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
+		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.exists(id, type.toOpenFlType());
+		#else
+		if (useOpenflAssets(id))
+			return Assets.exists(id, type.toOpenFlType());
+		// Can't verify contents match expected type without
+		return sys.FileSystem.exists(getPath(id));
+		#end
 	}
 	
 	/**
@@ -107,7 +253,15 @@ class AssetsFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
+		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
+		#else
+		
+		if (useOpenflAssets(id))
+			Assets.isLocal(id, type.toOpenFlType(), useCache);
+		
+		return true;
+		#end
 	}
 	
 	/**
@@ -119,7 +273,25 @@ class AssetsFrontEnd
 	 */
 	public dynamic function list(?type:FlxAssetType)
 	{
+		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.list(type.toOpenFlType());
+		#else
+		// list all files in the directory, recursively
+		final list = [];
+		function addFiles(directory:String, prefix = "")
+		{
+			for (path in sys.FileSystem.readDirectory(directory))
+			{
+				if (sys.FileSystem.isDirectory('$directory/$path'))
+					addFiles('$directory/$path',path + '/');
+				else
+					list.push(prefix + path);
+			}
+		}
+		final prefix = haxe.io.Path.withoutDirectory(directory) + "/";
+		addFiles(directory, prefix);
+		return list;
+		#end
 	}
 	
 	/**

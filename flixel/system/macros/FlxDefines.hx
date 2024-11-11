@@ -43,6 +43,14 @@ private enum UserDefines
 	FLX_TRACK_POOLS;
 	/** Adds `creationInfo` to FlxGraphic instances, automatically defined with FLX_DEBUG */
 	FLX_TRACK_GRAPHICS;
+	/**
+	 * Loads from the specified relative or absolute directory. Unlike other boolean flags,
+	 * this flag should contain a string value.
+	 * 
+	 * **Note:** When using assets entirely from outside the build directory, it is wise to disable
+	 * any `</asset>` tags in your project.xml, to reduce your total memory
+	 */
+	FLX_CUSTOM_ASSETS_DIRECTORY;
 }
 
 /**
@@ -87,6 +95,8 @@ private enum HelperDefines
 	FLX_NO_TRACK_POOLS;
 	FLX_NO_TRACK_GRAPHICS;
 	FLX_OPENGL_AVAILABLE;
+	/** Defined to `1`(or `true`) if `FLX_CUSTOM_ASSETS_DIRECTORY` is not defined */
+	FLX_STANDARD_ASSETS_DIRECTORY;
 }
 
 class FlxDefines
@@ -260,6 +270,16 @@ class FlxDefines
 		#end
 		
 		defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS);
+		
+		if (defined(FLX_CUSTOM_ASSETS_DIRECTORY))
+		{
+			// Todo: check sys targets
+			final dir = definedValue(FLX_CUSTOM_ASSETS_DIRECTORY);
+			if (sys.FileSystem.isDirectory(dir) || dir == "1")
+				abort('The value: "$dir" of FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory', (macro null).pos);
+		}
+		else // define boolean inversion
+			define(FLX_STANDARD_ASSETS_DIRECTORY);
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
@@ -287,6 +307,11 @@ class FlxDefines
 			abort(errorMessage, (macro null).pos);
 	}
 
+	static inline function definedValue(define:Dynamic):String
+	{
+		return Context.definedValue(Std.string(define));
+	}
+	
 	static inline function defined(define:Dynamic)
 	{
 		return Context.defined(Std.string(define));
