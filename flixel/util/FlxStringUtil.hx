@@ -568,7 +568,7 @@ class FlxStringUtil
 
 		if ((ImageFile is String))
 		{
-			tempBitmapData = FlxG.assets.getBitmapDataWarn(ImageFile);
+			tempBitmapData = FlxG.assets.getBitmapDataAndLog(ImageFile);
 		}
 		else
 		{

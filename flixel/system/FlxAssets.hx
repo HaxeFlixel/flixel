@@ -280,7 +280,7 @@ class FlxAssets
 	**/
 	public static inline function getBitmapData(id:String):BitmapData
 	{
-		return FlxG.assets.getBitmapDataWarn(id);
+		return FlxG.assets.getBitmapDataAndLog(id);
 	}
 
 	/**
@@ -316,7 +316,7 @@ class FlxAssets
 		}
 		else if ((graphic is String))
 		{
-			return FlxG.assets.getBitmapDataWarn(graphic);
+			return FlxG.assets.getBitmapDataAndLog(graphic);
 		}
 
 		return null;
