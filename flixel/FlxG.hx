@@ -340,7 +340,7 @@ class FlxG
 	 * Contains helper functions relating to retrieving assets
 	 * @since 5.9.0
 	 */
-	public static var assets(default, null):AssetsFrontEnd = new AssetsFrontEnd();
+	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
 	
 	/**
 	 * Resizes the game within the window by reapplying the current scale mode.

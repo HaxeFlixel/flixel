@@ -22,7 +22,7 @@ using StringTools;
  * avoid Openfl's asset system by setting custom methods to the following dynamic fields: `getAssetUnsafe`,
  * `loadAsset`, `exists`, `isLocal` and `list`.
  * 
- * ## Common Uses for Custom Methods
+ * ## Common Uses
  * The initial reason for making customizable asset system
  * was to allow for "hot-reloading", or testing new assets in your game without recompiling, with
  * each change. Say, if you would like a debug feature where you load assets from source assets,
@@ -42,7 +42,7 @@ using StringTools;
  * 
  * @since 5.9.0
  */
-class AssetsFrontEnd
+class AssetFrontEnd
 {
 	#if FLX_CUSTOM_ASSETS_DIRECTORY
 	/**
