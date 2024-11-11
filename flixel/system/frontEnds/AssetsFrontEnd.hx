@@ -199,7 +199,7 @@ class AssetsFrontEnd
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
-	 * @param   id  The ID or asset path for the asset
+	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
 	public inline function getXml(id:String, useCache = true)
@@ -213,7 +213,7 @@ class AssetsFrontEnd
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
-	 * @param   id  The ID or asset path for the asset
+	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
