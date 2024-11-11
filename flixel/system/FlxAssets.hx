@@ -374,7 +374,7 @@ class FlxAssets
 	 * @param   id  The asset id of the local sound file.
 	 * @return  The sound file.
 	 * 
-	 * @since 5.6.0
+	 * @since 5.9.0
 	 */
 	public static function getSoundAddExtension(id:String, useCache = true):Sound
 	{

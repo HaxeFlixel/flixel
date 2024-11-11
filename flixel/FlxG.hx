@@ -338,7 +338,7 @@ class FlxG
 
 	/**
 	 * Contains helper functions relating to retrieving assets
-	 * @since 5.6.0
+	 * @since 5.9.0
 	 */
 	public static var assets(default, null):AssetsFrontEnd = new AssetsFrontEnd();
 	
