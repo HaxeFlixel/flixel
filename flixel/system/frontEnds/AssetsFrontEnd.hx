@@ -425,6 +425,7 @@ class AssetsFrontEnd
 /**
  * The AssetType enum lists the core set of available
  * asset types from the OpenFL command-line tools.
+ * @since 5.9.0
  */
 enum abstract FlxAssetType(String)
 {
