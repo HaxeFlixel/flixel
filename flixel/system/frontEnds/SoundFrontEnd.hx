@@ -210,7 +210,7 @@ class SoundFrontEnd
 	{
 		// load the sound into the OpenFL assets cache
 		if (FlxG.assets.exists(embeddedSound, SOUND))
-			return FlxG.assets.getSound(embeddedSound, true);
+			return FlxG.assets.getSoundUnsafe(embeddedSound, true);
 		FlxG.log.error('Could not find a Sound asset with an ID of \'$embeddedSound\'.');
 		return null;
 	}

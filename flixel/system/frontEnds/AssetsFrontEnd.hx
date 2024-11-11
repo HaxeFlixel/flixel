@@ -23,15 +23,16 @@ class AssetsFrontEnd
 	public function new () {}
 	
 	/**
-	 * Used by methods like `getBitmapData`, `getText` and the like to get assets synchronously.
-	 * Can be set to a custom function to avoid the existing asset system.
+	 * Used by methods like `getAsset`, `getBitmapData`, `getText`, their "unsafe" counterparts and
+	 * the like to get assets synchronously. Can be set to a custom function to avoid the existing
+	 * asset system. Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * @param   id        The id of the asset, usually a path
 	 * @param   type      The type of asset to look for, determines the type
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  The asset, if found, otherwise `null` is returned
 	 */
-	public dynamic function getAsset(id:String, type:FlxAssetType, useCache = true):Null<Any>
+	public dynamic function getAssetUnsafe(id:String, type:FlxAssetType, useCache = true):Null<Any>
 	{
 		return switch(type)
 		{
@@ -44,17 +45,17 @@ class AssetsFrontEnd
 	}
 	
 	/**
-	 * Calls `getAsset` if the asset exists, otherwise logs that the asset is missing, via `FlxG.log`
+	 * Calls `getAssetUnsafe` if the asset exists, otherwise logs that the asset is missing, via `FlxG.log`
 	 * 
 	 * @param   id        The id of the asset, usually a path
 	 * @param   type      The type of asset to look for, determines the type
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
-	public function getAssetAndLog(id:String, type:FlxAssetType, useCache = true, ?logStyle:LogStyle):Null<Any>
+	public function getAsset(id:String, type:FlxAssetType, useCache = true, ?logStyle:LogStyle):Null<Any>
 	{
 		if (exists(id, type))
-			return getAsset(id, type, useCache);
+			return getAssetUnsafe(id, type, useCache);
 		
 		if (logStyle == null)
 			logStyle = LogStyle.ERROR;
@@ -83,11 +84,12 @@ class AssetsFrontEnd
 	}
 	
 	/**
-	 * Whether a specific asset ID and type exists
+	 * Whether a specific asset ID and type exists.
+	 * Can be set to a custom function to avoid the existing asset system.
 	 * 
 	 * @param   id    The ID or asset path for the asset
 	 * @param   type  The asset type to match, or null to match any type
-	**/
+	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
 		return Assets.exists(id, type.toOpenFlType());
@@ -95,39 +97,41 @@ class AssetsFrontEnd
 	
 	/**
 	 * Returns whether an asset is "local", and therefore can be loaded synchronously, or with the
-	 * `getAsset` method, otherwise the `loadAsset` method should be used
+	 * `getAsset` method, otherwise the `loadAsset` method should be used.
+	 * Can be set to a custom function to avoid the existing asset system.
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   type      The asset type to match, or null to match any type
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  Whether the asset is local
 	 */
-	public inline function isLocal(id:String, ?type:FlxAssetType, useCache = true)
+	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
 	}
 	
 	/**
-	 * Returns a list of all assets (by type)
+	 * Returns a list of all assets (by type).
+	 * Can be set to a custom function to avoid the existing asset system.
 	 * 
 	 * @param   type  The asset type to match, or null to match any type
 	 * @return  An array of asset ID values
-	**/
-	public inline function list(?type:FlxAssetType)
+	 */
+	public dynamic function list(?type:FlxAssetType)
 	{
 		return Assets.list(type.toOpenFlType());
 	}
 	
 	/**
-	 * Gets an instance of a bitmap
+	 * Gets an instance of a bitmap. Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * @param   id        The ID or asset path for the bitmap
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  A new BitmapData object
-	**/
-	public inline function getBitmapData(id:String, useCache = false):BitmapData
+	 */
+	public inline function getBitmapDataUnsafe(id:String, useCache = false):BitmapData
 	{
-		return cast getAsset(id, IMAGE, useCache);
+		return cast getAssetUnsafe(id, IMAGE, useCache);
 	}
 	
 	/**
@@ -136,22 +140,22 @@ class AssetsFrontEnd
 	 * @param   id        The ID or asset path for the bitmap
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  A new BitmapData object
-	**/
-	public inline function getBitmapDataAndLog(id:String, useCache = false, ?logStyle:LogStyle):BitmapData
+	 */
+	public inline function getBitmapData(id:String, useCache = false, ?logStyle:LogStyle):BitmapData
 	{
-		return cast getAssetAndLog(id, IMAGE, useCache, logStyle);
+		return cast getAsset(id, IMAGE, useCache, logStyle);
 	}
 	
 	/**
-	 * Gets an instance of a sound
+	 * Gets an instance of a sound. Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
 	 */
-	public inline function getSound(id:String, useCache = true):Sound
+	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
-		return cast getAsset(id, SOUND, useCache);
+		return cast getAssetUnsafe(id, SOUND, useCache);
 	}
 	
 	/**
@@ -162,22 +166,23 @@ class AssetsFrontEnd
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
 	 */
-	public inline function getSoundAndLog(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
-		return cast getAssetAndLog(id, SOUND, useCache, logStyle);
+		return cast getAsset(id, SOUND, useCache, logStyle);
 	}
 	
 	/**
-	 * Gets the contents of a text-based asset
+	 * Gets the contents of a text-based asset. Unlike its "safe" counterpart, there is no log
+	 * on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache text assets
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
-	public inline function getText(id:String, useCache = true):String
+	public inline function getTextUnsafe(id:String, useCache = true):String
 	{
-		return cast getAsset(id, TEXT, useCache);
+		return cast getAssetUnsafe(id, TEXT, useCache);
 	}
 	
 	/**
@@ -189,27 +194,28 @@ class AssetsFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
-	public inline function getTextAndLog(id:String, useCache = true, ?logStyle:LogStyle):String
+	public inline function getText(id:String, useCache = true, ?logStyle:LogStyle):String
 	{
-		return cast getAssetAndLog(id, TEXT, useCache, logStyle);
+		return cast getAsset(id, TEXT, useCache, logStyle);
 	}
 	
 	/**
-	 * Parses the contents of a xml-based asset into an `Xml` object
+	 * Parses the contents of a xml-based asset into an `Xml` object.
+	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
-	public inline function getXml(id:String, useCache = true)
+	public inline function getXmlUnsafe(id:String, useCache = true)
 	{
-		final text = getText(id, useCache);
+		final text = getTextUnsafe(id, useCache);
 		return text != null ? parseXml(text) : null;
 	}
 	
 	/**
-	 * Parses the contents of a xml-based asset into an `Xml` object
+	 * Parses the contents of a xml-based asset into an `Xml` object, logs when the asset is not found
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
@@ -217,28 +223,29 @@ class AssetsFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
-	public inline function getXmlAndLog(id:String, useCache = true, ?logStyle:LogStyle)
+	public inline function getXml(id:String, useCache = true, ?logStyle:LogStyle)
 	{
-		final text = getTextAndLog(id, useCache, logStyle);
+		final text = getText(id, useCache, logStyle);
 		return text != null ? parseXml(text) : null;
 	}
 	
 	/**
-	 * Gets the contents of a xml-based asset
+	 * Gets the contents of a xml-based asset.
+	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache json assets
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
-	public inline function getJson(id:String, useCache = true)
+	public inline function getJsonUnsafe(id:String, useCache = true)
 	{
-		final text = getText(id, useCache);
+		final text = getTextUnsafe(id, useCache);
 		return text != null ? parseJson(text) : null;
 	}
 	
 	/**
-	 * Gets the contents of a xml-based asset
+	 * Gets the contents of a xml-based asset, logs when the asset is not found
 	 * 
 	 * **Note:** The default asset system does not cache json assets
 	 * 
@@ -246,60 +253,62 @@ class AssetsFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
-	public inline function getJsonAndLog(id:String, useCache = true, ?logStyle:LogStyle)
+	public inline function getJson(id:String, useCache = true, ?logStyle:LogStyle)
 	{
-		final text = getTextAndLog(id, useCache, logStyle);
+		final text = getText(id, useCache, logStyle);
 		return text != null ? parseJson(text) : null;
 	}
 	
 	/**
-	 * Gets the contents of a binary asset
+	 * Gets the contents of a binary asset.
+	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache binary assets
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 */
-	public inline function getBytes(id:String, useCache = true):Bytes
+	public inline function getBytesUnsafe(id:String, useCache = true):Bytes
+	{
+		return cast getAssetUnsafe(id, BINARY, useCache);
+	}
+	
+	/**
+	 * Gets the contents of a binary asset, logs when the asset is not found
+	 * 
+	 * **Note:** The default asset system does not cache binary assets
+	 * 
+	 * @param   id        The ID or asset path for the asset
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 */
+	public inline function getBytes(id:String, useCache = true, ?logStyle:LogStyle):Bytes
 	{
 		return cast getAsset(id, BINARY, useCache);
 	}
 	
 	/**
-	 * Gets the contents of a binary asset
-	 * 
-	 * **Note:** The default asset system does not cache binary assets
-	 * 
-	 * @param   id        The ID or asset path for the asset
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 */
-	public inline function getBytesAndLog(id:String, useCache = true, ?logStyle:LogStyle):Bytes
-	{
-		return cast getAssetAndLog(id, BINARY, useCache);
-	}
-	
-	/**
-	 * Gets the contents of a font asset
+	 * Gets the contents of a font asset.
+	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache
 	 */
-	public inline function getFont(id:String, useCache = true):Font
+	public inline function getFontUnsafe(id:String, useCache = true):Font
 	{
-		return cast getAsset(id, FONT, useCache);
+		return cast getAssetUnsafe(id, FONT, useCache);
 	}
 	
 	/**
-	 * Gets the contents of a font asset
+	 * Gets the contents of a font asset, logs when the asset is not found
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 */
-	public inline function getFontAndLog(id:String, useCache = true, ?logStyle:LogStyle):Font
+	public inline function getFont(id:String, useCache = true, ?logStyle:LogStyle):Font
 	{
-		return cast getAssetAndLog(id, FONT, useCache, logStyle);
+		return cast getAsset(id, FONT, useCache, logStyle);
 	}
 	
 	/**

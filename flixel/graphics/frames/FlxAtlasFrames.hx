@@ -152,7 +152,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		frames = new FlxAtlasFrames(graphic);
 
 		if (FlxG.assets.exists(description))
-			description = FlxG.assets.getText(description);
+			description = FlxG.assets.getTextUnsafe(description);
 
 		var pack:String = StringTools.trim(description);
 		var lines:Array<String> = pack.split("\n");
@@ -378,7 +378,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 		frames = new FlxAtlasFrames(graphic);
 
 		if (FlxG.assets.exists(Description))
-			Description = FlxG.assets.getText(Description);
+			Description = FlxG.assets.getTextUnsafe(Description);
 
 		var pack = StringTools.trim(Description);
 		var lines:Array<String> = pack.split("\n");

@@ -77,7 +77,7 @@ abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 
 	static inline function fromPath<T>(path:String):Xml
 	{
-		return FlxG.assets.getXml(path);
+		return FlxG.assets.getXmlUnsafe(path);
 	}
 
 	static inline function fromXmlString<T>(data:String):Xml
@@ -104,7 +104,7 @@ abstract FlxJsonAsset<T>(OneOfTwo<T, String>) from T from String
 
 	static inline function fromPath<T>(path:String):T
 	{
-		return cast FlxG.assets.getJson(path);
+		return cast FlxG.assets.getJsonUnsafe(path);
 	}
 
 	static inline function fromDataString<T>(data:String):T
@@ -280,7 +280,7 @@ class FlxAssets
 	**/
 	public static inline function getBitmapData(id:String):BitmapData
 	{
-		return FlxG.assets.getBitmapDataAndLog(id);
+		return FlxG.assets.getBitmapData(id);
 	}
 
 	/**
@@ -316,7 +316,7 @@ class FlxAssets
 		}
 		else if ((graphic is String))
 		{
-			return FlxG.assets.getBitmapDataAndLog(graphic);
+			return FlxG.assets.getBitmapData(graphic);
 		}
 
 		return null;
@@ -381,7 +381,7 @@ class FlxAssets
 		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
 			id += "." + defaultSoundExtension;
 
-		return FlxG.assets.getSound(id, useCache);
+		return FlxG.assets.getSoundUnsafe(id, useCache);
 	}
 
 	public static function getVirtualInputFrames():FlxAtlasFrames

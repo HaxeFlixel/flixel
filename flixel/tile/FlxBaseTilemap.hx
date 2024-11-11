@@ -391,7 +391,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		// path to map data file?
 		if (FlxG.assets.exists(mapData))
 		{
-			mapData = FlxG.assets.getText(mapData);
+			mapData = FlxG.assets.getTextUnsafe(mapData);
 		}
 
 		// Figure out the map dimensions based on the data string
