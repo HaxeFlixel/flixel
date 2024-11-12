@@ -373,7 +373,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Parses the contents of a xml-based asset into an `Xml` object.
+	 * Parses the contents of an xml-based asset into an `Xml` object.
 	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
@@ -388,7 +388,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Parses the contents of a xml-based asset into an `Xml` object, logs when the asset is not found
+	 * Parses the contents of an xml-based asset into an `Xml` object, logs when the asset is not found
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
@@ -485,7 +485,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Loads an bitmap asset asynchronously
+	 * Loads a bitmap asset asynchronously
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -585,7 +585,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Parses an xml string, creates and returns an Xml object
+	 * Parses an xml string, creates and returns an `Xml` object
 	 */
 	public inline function parseXml(xmlText:String)
 	{
