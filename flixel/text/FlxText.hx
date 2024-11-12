@@ -26,9 +26,6 @@ using flixel.util.FlxStringUtil;
 #if flash
 import openfl.geom.Rectangle;
 #end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
-#end
 
 // TODO: think about filters and text
 
@@ -693,9 +690,9 @@ class FlxText extends FlxSprite
 		if (Font != null)
 		{
 			var newFontName:String = Font;
-			if (Assets.exists(Font, AssetType.FONT))
+			if (FlxG.assets.exists(Font, FONT))
 			{
-				newFontName = Assets.getFont(Font).fontName;
+				newFontName = FlxG.assets.getFontUnsafe(Font).fontName;
 			}
 
 			_defaultFormat.font = newFontName;

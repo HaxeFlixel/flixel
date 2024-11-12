@@ -64,7 +64,7 @@ class LogFrontEnd
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
 			if (style.errorSound != null)
 			{
-				final sound = FlxAssets.getSound(style.errorSound);
+				final sound = FlxAssets.getSoundAddExtension(style.errorSound);
 				if (sound != null)
 					FlxG.sound.load(sound).play();
 			}
