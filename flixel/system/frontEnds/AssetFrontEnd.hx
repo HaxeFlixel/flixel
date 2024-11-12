@@ -403,7 +403,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Gets the contents of a xml-based asset.
+	 * Gets the contents of a json-based asset.
 	 * Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
 	 * **Note:** The default asset system does not cache json assets
@@ -418,7 +418,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Gets the contents of a xml-based asset, logs when the asset is not found
+	 * Gets the contents of a json-based asset, logs when the asset is not found
 	 * 
 	 * **Note:** The default asset system does not cache json assets
 	 * 
@@ -523,7 +523,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Loads a text asset asynchronously
+	 * Loads an xml asset asynchronously
 	 * 
 	 * **Note:** The default asset system does not cache xml assets
 	 * 
@@ -537,7 +537,7 @@ class AssetFrontEnd
 	}
 	
 	/**
-	 * Loads a text asset asynchronously
+	 * Loads a json asset asynchronously
 	 * 
 	 * **Note:** The default asset system does not cache json assets
 	 * 
