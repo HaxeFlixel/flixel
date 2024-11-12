@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.LogStyle;
 import haxe.io.Bytes;
+import haxe.io.Path;
 import haxe.Json;
 import haxe.xml.Access;
 import openfl.display.BitmapData;
@@ -59,7 +60,7 @@ class AssetFrontEnd
 	{
 		final rawPath = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY")}';
 		// Remove final slash and accepts backslashes and removes redundancies
-		directory = haxe.io.Path.normalize(rawPath);
+		directory = Path.normalize(rawPath);
 		// Verify valid directory
 		if (sys.FileSystem.exists(directory) == false)
 			throw 'Invalid value:"$directory" of FLX_CUSTOM_ASSETS_DIRECTORY, expecting relative or absolute path';
@@ -71,7 +72,7 @@ class AssetFrontEnd
 	
 	function getPath(id:String)
 	{
-		return haxe.io.Path.normalize('$parentDirectory/$id');
+		return Path.normalize('$parentDirectory/$id');
 	}
 	
 	/**
@@ -288,7 +289,7 @@ class AssetFrontEnd
 					list.push(prefix + path);
 			}
 		}
-		final prefix = haxe.io.Path.withoutDirectory(directory) + "/";
+		final prefix = Path.withoutDirectory(directory) + "/";
 		addFiles(directory, prefix);
 		return list;
 		#end

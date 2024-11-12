@@ -3,6 +3,7 @@ package flixel.system.macros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+import haxe.io.Path;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
 #end
@@ -273,10 +274,22 @@ class FlxDefines
 		
 		if (defined(FLX_CUSTOM_ASSETS_DIRECTORY))
 		{
-			// Todo: check sys targets
-			final dir = definedValue(FLX_CUSTOM_ASSETS_DIRECTORY);
-			if (sys.FileSystem.isDirectory(dir) || dir == "1")
-				abort('The value: "$dir" of FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory', (macro null).pos);
+			if (!defined("sys"))
+			{
+				abort('FLX_CUSTOM_ASSETS_DIRECTORY is only available on sys targets', (macro null).pos);
+			}
+			else
+			{
+				// Todo: check sys targets
+				final rawDirectory = Path.normalize(definedValue(FLX_CUSTOM_ASSETS_DIRECTORY));
+				final directory = Path.normalize(rawDirectory);
+				if (!sys.FileSystem.isDirectory(directory) || directory == "1")
+				{
+					final absPath = sys.FileSystem.absolutePath(directory);
+					abort('FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory, got "$rawDirectory"'
+						+ '\nabsolute path: $absPath', (macro null).pos);
+				}
+			}
 		}
 		else // define boolean inversion
 			define(FLX_STANDARD_ASSETS_DIRECTORY);
