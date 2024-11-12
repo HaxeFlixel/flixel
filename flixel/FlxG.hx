@@ -6,7 +6,7 @@ import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
-import flixel.system.frontEnds.AssetsFrontEnd;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;

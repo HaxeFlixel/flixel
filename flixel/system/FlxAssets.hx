@@ -9,7 +9,7 @@ import flixel.graphics.atlas.TexturePackerAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.system.frontEnds.AssetsFrontEnd;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.graphics.frames.bmfont.BMFont;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
