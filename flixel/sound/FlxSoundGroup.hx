@@ -61,7 +61,7 @@ class FlxSoundGroup extends FlxBasic
 	{
 		super.kill();
 		for (sound in sounds)
-			@:privateAccess sound.cleanup(false);
+			sound.kill();
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -192,19 +192,17 @@ class FlxSoundGroup extends FlxBasic
 	
 	function get_length():Float
 	{
-		var _length:Float = 0.0;
+		var maxLength:Float = 0.0;
 		for (sound in sounds)
 		{
-			if (sound.length > _length)
+			if (sound.length > maxLength)
 			{
-				_length = sound.length;
+				maxLength = sound.length;
 			}
 		}
-		return _length;
+		return maxLength;
 	}
-	
-	var _alreadyPaused:Bool = false;
-	var _paused:Bool;
+
 	
 	function onFocus():Void
 	{
