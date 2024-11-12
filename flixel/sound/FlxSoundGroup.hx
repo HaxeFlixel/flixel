@@ -17,10 +17,12 @@ class FlxSoundGroup extends FlxBasic
 	 */
 	public var volume(default, set):Float;
 	
+	#if FLX_PITCH
 	/**
 	 * The pitch of this group
 	 */
 	public var pitch(default, set):Float;
+	#end
 	
 	/**
 	 * The position of this group in milliseconds.
@@ -46,8 +48,10 @@ class FlxSoundGroup extends FlxBasic
 	{
 		super();
 		this.volume = volume;
+		#if FLX_SOUND_SYSTEM
 		FlxG.signals.focusLost.add(onFocusLost);
 		FlxG.signals.focusGained.add(onFocus);
+		#end
 	}
 	
 	override public function destroy()
@@ -175,6 +179,7 @@ class FlxSoundGroup extends FlxBasic
 		return time;
 	}
 	
+	#if FLX_PITCH
 	function set_pitch(pitch:Float):Float
 	{
 		this.pitch = pitch;
@@ -184,6 +189,7 @@ class FlxSoundGroup extends FlxBasic
 		}
 		return pitch;
 	}
+	#end
 	
 	function get_time():Float
 	{
@@ -203,7 +209,7 @@ class FlxSoundGroup extends FlxBasic
 		return maxLength;
 	}
 
-	
+	#if FLX_SOUND_SYSTEM
 	function onFocus():Void
 	{
 		for(sound in sounds)
@@ -215,6 +221,7 @@ class FlxSoundGroup extends FlxBasic
 		for(sound in sounds)
 			@:privateAccess sound.onFocusLost();
 	}
+	#end
 	
 	override public function toString():String
 	{
