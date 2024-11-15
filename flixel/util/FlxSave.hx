@@ -1,6 +1,7 @@
 package flixel.util;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import haxe.Exception;
 import openfl.errors.Error;
 import openfl.net.SharedObject;
 import openfl.net.SharedObjectFlushStatus;
@@ -164,8 +165,19 @@ class FlxSave implements IFlxDestroyable
 		
 		try
 		{
-			_sharedObject = FlxSharedObject.getLocal(name, path);
-			status = BOUND(name, path);
+			switch FlxSharedObject.getLocal(name, path)
+			{
+				case SUCCESS(sharedObject):
+					_sharedObject = sharedObject;
+					data = _sharedObject.data;
+					status = BOUND(name, path);
+					return true;
+				case FAILURE(type, sharedObject):
+					_sharedObject = sharedObject;
+					data = _sharedObject.data;
+					status = LOAD_ERROR(type);
+					return false;
+			}
 		}
 		catch (e:Error)
 		{
@@ -173,8 +185,6 @@ class FlxSave implements IFlxDestroyable
 			destroy();
 			return false;
 		}
-		data = _sharedObject.data;
-		return true;
 	}
 
 	/**
@@ -290,9 +300,26 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public function erase():Bool
 	{
-		if (!checkStatus())
-			return false;
-
+		switch (status)
+		{
+			case BOUND(_, _):
+			case EMPTY:
+				FlxG.log.warn("You must call FlxSave.bind() before you can read or write data.");
+				return false;
+			case ERROR(_):
+				return false;
+			case LOAD_ERROR(IO(_)):
+				return false;
+			case LOAD_ERROR(INVALID_NAME(_, _)):
+				return false;
+			case LOAD_ERROR(INVALID_PATH(_, _)):
+				return false;
+			case LOAD_ERROR(PARSING(_, _)):
+				// Can still erase
+			case found:
+				throw 'Unhandled status: $found';
+		}
+		
 		_sharedObject.clear();
 		data = {};
 		return true;
@@ -307,12 +334,22 @@ class FlxSave implements IFlxDestroyable
 	{
 		switch (status)
 		{
+			case BOUND(name, path):
+				return true;
 			case EMPTY:
 				FlxG.log.warn("You must call FlxSave.bind() before you can read or write data.");
 			case ERROR(msg):
 				FlxG.log.error(msg);
-			default:
-				return true;
+			case LOAD_ERROR(IO(e)):
+				FlxG.log.error('IO ERROR: ${e.message}');
+			case LOAD_ERROR(INVALID_NAME(name, reason)):
+				FlxG.log.error('Invalid name:"$name", ${reason == null ? "" : reason}.');
+			case LOAD_ERROR(INVALID_PATH(path, reason)):
+				FlxG.log.error('Invalid path:"$path", ${reason == null ? "" : reason}.');
+			case LOAD_ERROR(PARSING(rawData, e)):
+				FlxG.log.error('Error parsing "$rawData", ${e.message}.');
+			case found:
+				throw 'Unexpected status: $found';
 		}
 		return false;
 	}
@@ -421,10 +458,10 @@ private class FlxSharedObject extends SharedObject
 		return path;
 	}
 	
-	public static function getLocal(name:String, ?localPath:String):SharedObject
+	public static function getLocal(name:String, ?localPath:String):LoadResult
 	{
 		if (name == null || name == "")
-			throw new Error('Error: Invalid name:"$name".');
+			return FAILURE(INVALID_NAME(name));
 		
 		if (localPath == null)
 			localPath = "";
@@ -437,14 +474,17 @@ private class FlxSharedObject extends SharedObject
 		{
 			var encodedData = null;
 			
+			if (~/(?:^|\/)\.\.\//.match(localPath))
+				return FAILURE(INVALID_PATH(localPath, "../ not allowed in localPath"));
+			
 			try
 			{
-				if (~/(?:^|\/)\.\.\//.match(localPath))
-					throw new Error("../ not allowed in localPath");
-				
 				encodedData = getData(name, localPath);
 			}
-			catch (e:Dynamic) {}
+			catch (e)
+			{
+				return FAILURE(IO(e));
+			}
 			
 			if (localPath == "")
 				localPath = getDefaultLocalPath();
@@ -463,13 +503,17 @@ private class FlxSharedObject extends SharedObject
 					unserializer.setResolver(cast resolver);
 					sharedObject.data = unserializer.unserialize();
 				}
-				catch (e:Dynamic) {}
+				catch (e)
+				{
+					all.set(id, sharedObject);
+					return FAILURE(PARSING(encodedData, e), sharedObject);
+				}
 			}
 			
 			all.set(id, sharedObject);
 		}
 		
-		return all.get(id);
+		return SUCCESS(all.get(id));
 	}
 	
 	#if (js && html5)
@@ -652,20 +696,46 @@ private class FlxSharedObject extends SharedObject
 	#end
 }
 
+enum LoadResult
+{
+	SUCCESS(obj:SharedObject);
+	FAILURE(type:LoadFailureType, ?obj:SharedObject);
+}
+
+enum LoadFailureType
+{
+	/** Malformed name string */
+	INVALID_NAME(name:String, ?message:String);
+	
+	/** Malformed path string */
+	INVALID_PATH(path:String, ?message:String);
+	
+	/** An error while retrieving the data */
+	IO(exception:Exception);
+	
+	/** An error while parsing the data */
+	PARSING(rawData:String, exception:Exception);
+}
+
 enum FlxSaveStatus
 {
 	/**
 	 * The initial state, call bind() in order to use.
 	 */
 	EMPTY;
-
+	
 	/**
 	 * The save is set up correctly.
 	 */
 	BOUND(name:String, ?path:String);
-
+	
 	/**
-	 * There was an issue.
+	 * There was an issue during `flush`
 	 */
 	ERROR(msg:String);
+	
+	/**
+	 * There was an issue while loading
+	 */
+	LOAD_ERROR(type:LoadFailureType);
 }
