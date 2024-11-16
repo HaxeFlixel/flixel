@@ -100,6 +100,15 @@ class FlxSave implements IFlxDestroyable
 	}
 	
 	/**
+	 * The default class resolver of a FlxSave, handles certain Flixel and Openfl classes
+	 */
+	public static inline function resolveFlixelClasses(name:String)
+	{
+		@:privateAccess
+		return SharedObject.__resolveClass(name);
+	}
+	
+	/**
 	 * Allows you to directly access the data container in the local shared object.
 	 */
 	public var data(default, null):Dynamic;
@@ -147,15 +156,18 @@ class FlxSave implements IFlxDestroyable
 	/**
 	 * Automatically creates or reconnects to locally saved data.
 	 *
-	 * @param   name  The name of the save (should be the same each time to access old data).
-	 *                May not contain spaces or any of the following characters:
-	 *                `~ % & \ ; : " ' , < > ? #`
-	 * @param   path  The full or partial path to the file that created the shared object.
-	 *                Mainly used to differentiate from other FlxSaves. If you do not specify
-	 *                this parameter, the company name specified in your Project.xml is used.
+	 * @param   name          The name of the save (should be the same each time to access old data).
+	 *                        May not contain spaces or any of the following characters:
+	 *                        `~ % & \ ; : " ' , < > ? #`
+	 * @param   path          The full or partial path to the file that created the shared object.
+	 *                        Mainly used to differentiate from other FlxSaves. If you do not specify
+	 *                        this parameter, the company name specified in your Project.xml is used.
+	 * @param   backupParser  A function that takes a string and an error and returns parsed data.
+	 *                        If there is an error parsing the raw save data, this will be called as
+	 *                        a backup. if null is returned, the save will stay in an error state.
 	 * @return  Whether or not you successfully connected to the save data.
 	 */
-	public function bind(name:String, ?path:String):Bool
+	public function bind(name:String, ?path:String, ?backupParser:(String, Exception)->Null<Any>):Bool
 	{
 		destroy();
 		
@@ -172,9 +184,26 @@ class FlxSave implements IFlxDestroyable
 					data = _sharedObject.data;
 					status = BOUND(name, path);
 					return true;
+				case FAILURE(PARSING(rawData, exception), sharedObject) if (backupParser != null):
+					
+					data = sharedObject.data;
+					
+					// Use the provided backup parser
+					final parsedData = backupParser(rawData, exception);
+					if (parsedData == null)
+					{
+						status = LOAD_ERROR(PARSING(rawData, exception));
+						return false;
+					}
+					
+					for (field in Reflect.fields(parsedData))
+						Reflect.setField(data, field, Reflect.field(parsedData, field));
+					
+					_sharedObject = sharedObject;
+					status = BOUND(name, path);
+					return true;
 				case FAILURE(type, sharedObject):
 					_sharedObject = sharedObject;
-					data = _sharedObject.data;
 					status = LOAD_ERROR(type);
 					return false;
 			}
@@ -285,12 +314,12 @@ class FlxSave implements IFlxDestroyable
 		{
 			status = ERROR("There was an problem flushing the save data.");
 		}
-
+		
 		checkStatus();
-
+		
 		return isBound;
 	}
-
+	
 	/**
 	 * Erases everything stored in the local shared object.
 	 * Data is immediately erased and the object is saved that way,
@@ -300,25 +329,8 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public function erase():Bool
 	{
-		switch (status)
-		{
-			case BOUND(_, _):
-			case EMPTY:
-				FlxG.log.warn("You must call FlxSave.bind() before you can read or write data.");
-				return false;
-			case ERROR(_):
-				return false;
-			case LOAD_ERROR(IO(_)):
-				return false;
-			case LOAD_ERROR(INVALID_NAME(_, _)):
-				return false;
-			case LOAD_ERROR(INVALID_PATH(_, _)):
-				return false;
-			case LOAD_ERROR(PARSING(_, _)):
-				// Can still erase
-			case found:
-				throw 'Unhandled status: $found';
-		}
+		if (!checkStatus())
+			return false;
 		
 		_sharedObject.clear();
 		data = {};
@@ -337,7 +349,7 @@ class FlxSave implements IFlxDestroyable
 			case BOUND(name, path):
 				return true;
 			case EMPTY:
-				FlxG.log.warn("You must call FlxSave.bind() before you can read or write data.");
+				FlxG.log.warn("You must call save.bind() before you can read or write data.");
 			case ERROR(msg):
 				FlxG.log.error(msg);
 			case LOAD_ERROR(IO(e)):
@@ -499,7 +511,7 @@ private class FlxSharedObject extends SharedObject
 				try
 				{
 					final unserializer = new haxe.Unserializer(encodedData);
-					final resolver = { resolveEnum: Type.resolveEnum, resolveClass: SharedObject.__resolveClass };
+					final resolver = { resolveEnum: Type.resolveEnum, resolveClass: FlxSave.resolveFlixelClasses };
 					unserializer.setResolver(cast resolver);
 					sharedObject.data = unserializer.unserialize();
 				}
