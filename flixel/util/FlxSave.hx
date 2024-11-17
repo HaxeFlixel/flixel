@@ -189,9 +189,6 @@ class FlxSave implements IFlxDestroyable
 					status = BOUND(name, path);
 					return true;
 				case FAILURE(PARSING(rawData, exception), sharedObject) if (backupParser != null):
-					
-					data = sharedObject.data;
-					
 					// Use the provided backup parser
 					final parsedData = backupParser(rawData, exception);
 					if (parsedData == null)
@@ -200,6 +197,7 @@ class FlxSave implements IFlxDestroyable
 						return false;
 					}
 					
+					data = sharedObject.data;
 					for (field in Reflect.fields(parsedData))
 						Reflect.setField(data, field, Reflect.field(parsedData, field));
 					
