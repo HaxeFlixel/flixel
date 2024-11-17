@@ -104,8 +104,12 @@ class FlxSave implements IFlxDestroyable
 	 */
 	public static inline function resolveFlixelClasses(name:String)
 	{
+		#if flash
+		return Type.resolveEnum(name);
+		#else
 		@:privateAccess
 		return SharedObject.__resolveClass(name);
+		#end
 	}
 	
 	/**
@@ -425,9 +429,17 @@ private class FlxSharedObject extends SharedObject
 {
 	#if (flash || android || ios)
 	/** Use SharedObject as usual */
-	public static inline function getLocal(name:String, ?localPath:String):SharedObject
+	public static inline function getLocal(name:String, ?localPath:String):LoadResult
 	{
-		return SharedObject.getLocal(name, localPath);
+		try
+		{
+			final obj = SharedObject.getLocal(name, localPath);
+			return SUCCESS(obj);
+		}
+		catch (e)
+		{
+			return FAILURE(IO(e));
+		}
 	}
 	
 	public static inline function exists(name:String, ?path:String)
