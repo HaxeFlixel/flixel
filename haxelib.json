@@ -7,5 +7,8 @@
 	"version": "5.9.0",
 	"releasenote": "TBD",
 	"contributors": ["haxeflixel", "Gama11", "GeoKureli"],
-	"dependencies": {}
+	"dependencies": {
+		"lime": "",
+		"openfl": ""
+	}
 }
