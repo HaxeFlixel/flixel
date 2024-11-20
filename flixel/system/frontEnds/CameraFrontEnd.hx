@@ -86,7 +86,7 @@ class CameraFrontEnd
 	 */
 	public function insert<T:FlxCamera>(NewCamera:T, Position:Int, DefaultDrawTarget:Bool = true):T
 	{
-		var camera:FlxCamera = list[position];
+		var camera:FlxCamera = list[Position];
 		if (camera == null) return NewCamera;
 		
 		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(camera.flashSprite));
