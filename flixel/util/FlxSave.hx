@@ -105,7 +105,7 @@ class FlxSave implements IFlxDestroyable
 	public static inline function resolveFlixelClasses(name:String)
 	{
 		#if flash
-		return Type.resolveEnum(name);
+		return Type.resolveClass(name);
 		#else
 		@:privateAccess
 		return SharedObject.__resolveClass(name);
