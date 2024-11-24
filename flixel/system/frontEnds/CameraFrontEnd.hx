@@ -77,30 +77,38 @@ class CameraFrontEnd
 	
 	/**
 	 * Inserts a new camera object to the game.
+	 * 
+	 * - If `position` is negative, `list.length + position` is used
+	 * - If `position` exceeds `list.length`, the camera is added to the end.
 	 *
-	 * @param	NewCamera         The camera you want to add.
-	 * @param	Position          The position in the list where you want to insert the camera
-	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
+	 * @param	newCamera         The camera you want to add.
+	 * @param	position          The position in the list where you want to insert the camera
+	 * @param	defaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
 	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
 	 */
-	public function insert<T:FlxCamera>(NewCamera:T, Position:Int, DefaultDrawTarget:Bool = true):T
+	public function insert<T:FlxCamera>(newCamera:T, position:Int, defaultDrawTarget = true):T
 	{
-		var camera:FlxCamera = list[Position];
-		if (camera == null) return NewCamera;
+	    // negative numbers are relative to the length (match Array.insert's behavior)
+	    if (position < 0)
+	        position += list.length;
+	    
+	    // invalid ranges are added (match Array.insert's behavior)
+        if (position >= list.length)
+            return add(newCamera);
+        
+        final childIndex = FlxG.game.getChildIndex(list[position]);
+        FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
 		
-		FlxG.game.addChildAt(NewCamera.flashSprite, FlxG.game.getChildIndex(camera.flashSprite));
+		list.insert(position, newCamera);
+		if (defaultDrawTarget)
+			defaults.push(newCamera);
 		
-		list.insert(Position, NewCamera);
-		if (DefaultDrawTarget)
-			defaults.push(NewCamera);
-		
-		for (i in 0...list.length)
-		{
+		for (i in position...list.length)
 			list[i].ID = i;
-		}
-		cameraAdded.dispatch(NewCamera);
-		return NewCamera;
+		
+		cameraAdded.dispatch(newCamera);
+		return newCamera;
 	}
 
 	/**
