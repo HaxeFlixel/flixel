@@ -166,9 +166,9 @@ class FlxSave implements IFlxDestroyable
 	 * @param   path          The full or partial path to the file that created the shared object.
 	 *                        Mainly used to differentiate from other FlxSaves. If you do not specify
 	 *                        this parameter, the company name specified in your Project.xml is used.
-	 * @param   backupParser  A function that takes a string and an error and returns parsed data.
-	 *                        If there is an error parsing the raw save data, this will be called as
+	 * @param   backupParser  If there is an error parsing the raw save data, this will be called as
 	 *                        a backup. if null is returned, the save will stay in an error state.
+	 *                        **Note:** This arg is never used when targeting flash
 	 * @return  Whether or not you successfully connected to the save data.
 	 */
 	public function bind(name:String, ?path:String, ?backupParser:(String, Exception)->Null<Any>):Bool
@@ -435,6 +435,7 @@ private class FlxSharedObject extends SharedObject
 		}
 		catch (e)
 		{
+			// We can't detect parsing or naming errors in flash, just use IO for everything
 			return FAILURE(IO(e));
 		}
 	}
