@@ -197,11 +197,10 @@ class FlxSave implements IFlxDestroyable
 						return false;
 					}
 					
-					data = sharedObject.data;
-					for (field in Reflect.fields(parsedData))
-						Reflect.setField(data, field, Reflect.field(parsedData, field));
-					
 					_sharedObject = sharedObject;
+					data = parsedData;
+					@:privateAccess
+					sharedObject.data = parsedData;
 					status = BOUND(name, path);
 					return true;
 				case FAILURE(type, sharedObject):
