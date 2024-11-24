@@ -97,7 +97,7 @@ class CameraFrontEnd
         if (position >= list.length)
             return add(newCamera);
         
-        final childIndex = FlxG.game.getChildIndex(list[position]);
+        final childIndex = FlxG.game.getChildIndex(list[position].flashSprite);
         FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
 		
 		list.insert(position, newCamera);
