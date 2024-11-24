@@ -74,6 +74,42 @@ class CameraFrontEnd
 		cameraAdded.dispatch(NewCamera);
 		return NewCamera;
 	}
+	
+	/**
+	 * Inserts a new camera object to the game.
+	 * 
+	 * - If `position` is negative, `list.length + position` is used
+	 * - If `position` exceeds `list.length`, the camera is added to the end.
+	 *
+	 * @param	newCamera         The camera you want to add.
+	 * @param	position          The position in the list where you want to insert the camera
+	 * @param	defaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
+	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
+	 * @return	This FlxCamera instance.
+	 */
+	public function insert<T:FlxCamera>(newCamera:T, position:Int, defaultDrawTarget = true):T
+	{
+	    // negative numbers are relative to the length (match Array.insert's behavior)
+	    if (position < 0)
+	        position += list.length;
+	    
+	    // invalid ranges are added (match Array.insert's behavior)
+        if (position >= list.length)
+            return add(newCamera);
+        
+        final childIndex = FlxG.game.getChildIndex(list[position].flashSprite);
+        FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
+		
+		list.insert(position, newCamera);
+		if (defaultDrawTarget)
+			defaults.push(newCamera);
+		
+		for (i in position...list.length)
+			list[i].ID = i;
+		
+		cameraAdded.dispatch(newCamera);
+		return newCamera;
+	}
 
 	/**
 	 * Remove a camera from the game.
