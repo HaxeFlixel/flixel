@@ -188,6 +188,7 @@ class FlxSave implements IFlxDestroyable
 					data = _sharedObject.data;
 					status = BOUND(name, path);
 					return true;
+				#if !flash
 				case FAILURE(PARSING(rawData, exception), sharedObject) if (backupParser != null):
 					// Use the provided backup parser
 					final parsedData = backupParser(rawData, exception);
@@ -203,6 +204,7 @@ class FlxSave implements IFlxDestroyable
 					sharedObject.data = parsedData;
 					status = BOUND(name, path);
 					return true;
+				#end
 				case FAILURE(type, sharedObject):
 					_sharedObject = sharedObject;
 					status = LOAD_ERROR(type);
