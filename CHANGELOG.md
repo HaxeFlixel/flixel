@@ -34,7 +34,7 @@ We removed many features and utilities that were previously deprecated
 - `FlxUnicodeUtil`: Use `UnicodeString`, instead
 - `FlxState::switchTo`: Use `startOutro`, instead ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
 - `FlxCamera.defaultCameras`: Use `FlxG.cameras.setDefaultDrawTarget`, instead
-- `FlxSaveStatus.ERROR`: Use `FlxSaveStatus.SAVE_ERROR`, instead
+- `FlxSaveStatus.ERROR`: Use `FlxSaveStatus.SAVE_ERROR`, instead ([#3294](https://github.com/HaxeFlixel/flixel/pull/3294))
 
 5.9.0 (TBD)
 ------------------------------
