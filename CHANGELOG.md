@@ -3,13 +3,11 @@
 #### Changes and improvements:
 - `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
 - `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
-- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
 - `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
-- `FlxCamera`: Removed `defaultCameras`
 - `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
 - `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
 
-#### Removals
+#### Removals and Breaking Changes
 We removed many features and utilities that were previously deprecated
 - `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
 - `FlxSwipe::angle`: Use `FlxSwipe.degrees`, instead
@@ -34,6 +32,9 @@ We removed many features and utilities that were previously deprecated
 - `FlxAssets.FlxAngelCodeSource`: Use `FlxAssets.FlxAngelCodeAsset`, instead
 - `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
 - `FlxUnicodeUtil`: Use `UnicodeString`, instead
+- `FlxState::switchTo`: Use `startOutro`, instead ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera.defaultCameras`: Use `FlxG.cameras.setDefaultDrawTarget`, instead
+- `FlxSaveStatus.ERROR`: Use `FlxSaveStatus.SAVE_ERROR`, instead
 
 5.9.0 (TBD)
 ------------------------------
