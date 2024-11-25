@@ -507,8 +507,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 
 	override function applyFormats(formatAdjusted:TextFormat, useBorderColor:Bool = false):Void
 	{
-		// scroll variables will be reset when `textField.setTextFormat()` is called,
-		// cache the current ones first
+		// Scroll variables will be reset when `textField.setTextFormat()` is called,
+		// cache the current ones first.
 		var cacheScrollH = scrollH;
 		var cacheScrollV = scrollV;
 		
@@ -517,9 +517,15 @@ class FlxInputText extends FlxText implements IFlxInputText
 		if (!useBorderColor && useSelectedTextFormat && selectionEndIndex > selectionBeginIndex)
 			textField.setTextFormat(_selectionFormat, selectionBeginIndex, selectionEndIndex);
 
-		// set the scroll back to how it was
-		scrollH = cacheScrollH;
-		scrollV = cacheScrollV;
+		// Set the scroll back to how it was.
+		// This changes the internal text field's scroll instead to make sure that
+		// `__updateLayout()` gets called even if the scroll hasn't changed.
+		// If it doesn't get called here, it will be called when the text field
+		// is being drawn to this sprite's graphic, which will reset the scroll
+		// to the current selection, effectively making scrolling with the mouse
+		// wheel not work.
+		textField.scrollH = cacheScrollH;
+		textField.scrollV = cacheScrollV;
 	}
 	
 	override function regenGraphic():Void
@@ -609,7 +615,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 	 * Clips the sprite inside the bounds of the text field, taking
 	 * `clipRect` into account.
 	 */
-	function clipSprite(sprite:FlxSprite)
+	function clipSprite(sprite:FlxSprite, border:Bool = false)
 	{
 		if (sprite == null)
 			return;
@@ -619,7 +625,8 @@ class FlxInputText extends FlxText implements IFlxInputText
 			rect = FlxRect.get();
 		rect.set(0, 0, sprite.width, sprite.height);
 		
-		var bounds = FlxRect.get(0, 0, width, height);
+		var bounds = border ? FlxRect.get(-fieldBorderThickness, -fieldBorderThickness, width + (fieldBorderThickness * 2),
+			height + (fieldBorderThickness * 2)) : FlxRect.get(0, 0, width, height);
 		if (clipRect != null)
 		{
 			bounds = bounds.clipTo(clipRect);
@@ -1195,7 +1202,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 			
 		_fieldBorderSprite.setPosition(x - fieldBorderThickness, y - fieldBorderThickness);
 		_backgroundSprite.setPosition(x, y);
-		clipSprite(_fieldBorderSprite);
+		clipSprite(_fieldBorderSprite, true);
 		clipSprite(_backgroundSprite);
 	}
 	
@@ -1741,7 +1748,7 @@ class FlxInputText extends FlxText implements IFlxInputText
 		super.set_clipRect(value);
 		
 		clipSprite(_backgroundSprite);
-		clipSprite(_fieldBorderSprite);
+		clipSprite(_fieldBorderSprite, true);
 		clipSprite(_caret);
 		for (box in _selectionBoxes)
 			clipSprite(box);

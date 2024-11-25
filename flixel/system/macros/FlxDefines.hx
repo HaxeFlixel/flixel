@@ -3,6 +3,7 @@ package flixel.system.macros;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+import haxe.io.Path;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
 #end
@@ -43,6 +44,14 @@ private enum UserDefines
 	FLX_TRACK_POOLS;
 	/** Adds `creationInfo` to FlxGraphic instances, automatically defined with FLX_DEBUG */
 	FLX_TRACK_GRAPHICS;
+	/**
+	 * Loads from the specified relative or absolute directory. Unlike other boolean flags,
+	 * this flag should contain a string value.
+	 * 
+	 * **Note:** When using assets entirely from outside the build directory, it is wise to disable
+	 * any `</asset>` tags in your project.xml, to reduce your total memory
+	 */
+	FLX_CUSTOM_ASSETS_DIRECTORY;
 }
 
 /**
@@ -86,6 +95,9 @@ private enum HelperDefines
 	FLX_HEALTH;
 	FLX_NO_TRACK_POOLS;
 	FLX_NO_TRACK_GRAPHICS;
+	FLX_OPENGL_AVAILABLE;
+	/** Defined to `1`(or `true`) if `FLX_CUSTOM_ASSETS_DIRECTORY` is not defined */
+	FLX_STANDARD_ASSETS_DIRECTORY;
 }
 
 class FlxDefines
@@ -251,8 +263,36 @@ class FlxDefines
 		
 		if (defined(FLX_DEBUG))
 			define(FLX_TRACK_GRAPHICS);
+
+		#if (lime_opengl || lime_opengles || lime_webgl)
+		// FlxG.stage.window.context.attributes.hardware is not always defined during unit tests
+		if (defined(FLX_NO_UNIT_TEST))
+			define(FLX_OPENGL_AVAILABLE);
+		#end
 		
 		defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS);
+		
+		if (defined(FLX_CUSTOM_ASSETS_DIRECTORY))
+		{
+			if (!defined("sys"))
+			{
+				abort('FLX_CUSTOM_ASSETS_DIRECTORY is only available on sys targets', (macro null).pos);
+			}
+			else
+			{
+				// Todo: check sys targets
+				final rawDirectory = Path.normalize(definedValue(FLX_CUSTOM_ASSETS_DIRECTORY));
+				final directory = Path.normalize(rawDirectory);
+				if (!sys.FileSystem.isDirectory(directory) || directory == "1")
+				{
+					final absPath = sys.FileSystem.absolutePath(directory);
+					abort('FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory, got "$rawDirectory"'
+						+ '\nabsolute path: $absPath', (macro null).pos);
+				}
+			}
+		}
+		else // define boolean inversion
+			define(FLX_STANDARD_ASSETS_DIRECTORY);
 	}
 
 	static function defineInversion(userDefine:UserDefines, invertedDefine:HelperDefines)
@@ -280,6 +320,11 @@ class FlxDefines
 			abort(errorMessage, (macro null).pos);
 	}
 
+	static inline function definedValue(define:Dynamic):String
+	{
+		return Context.definedValue(Std.string(define));
+	}
+	
 	static inline function defined(define:Dynamic)
 	{
 		return Context.defined(Std.string(define));

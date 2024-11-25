@@ -54,9 +54,16 @@ We removed many features and utilities that were previously deprecated
 - `FlxRect`: Add `clipTo` and fix `intersection` bug ([#3190](https://github.com/HaxeFlixel/flixel/pull/3190))
 - `FlxPointer`: Add `getGamePosition`, `gameX/Y`, `getViewPosition`, and `viewX/Y`, to replace "screen" fields ([#3210](https://github.com/HaxeFlixel/flixel/pull/3210))
 - `FlxAnimationController`: Add `onLoop`, `onFrameChange` and `onFinish`, to replace `callback` and `finishCallback` ([#3205](https://github.com/HaxeFlixel/flixel/pull/3205)) ([#3216](https://github.com/HaxeFlixel/flixel/pull/3216))
-- `FlxStrip`: Add support for blendmodes ([3213](https://github.com/HaxeFlixel/flixel/pull/3213))
-- `FlxTextBorderStyle`: Add SHADOW_XY, prevent border clipping ([3236](https://github.com/HaxeFlixel/flixel/pull/3236))
-- `LogStyle`: add `callback` to replace `callbackFunction` ([3239](https://github.com/HaxeFlixel/flixel/pull/3239))
+- `FlxStrip`: Add support for blendmodes ([#3213](https://github.com/HaxeFlixel/flixel/pull/3213))
+- `FlxTextBorderStyle`: Add SHADOW_XY, prevent border clipping ([#3236](https://github.com/HaxeFlixel/flixel/pull/3236))
+- `LogStyle`: Add `callback` to replace `callbackFunction` ([#3239](https://github.com/HaxeFlixel/flixel/pull/3239))
+- `FlxBar`: Add custom border sizes ([#3234](https://github.com/HaxeFlixel/flixel/pull/3234))
+- Gamepads: Add `acceptMode` and "mapped inputs" ([#3276](https://github.com/HaxeFlixel/flixel/pull/3276)) ([#3280](https://github.com/HaxeFlixel/flixel/pull/3280))
+  - Add `ACCEPT` and `CANCEL` input IDs that conditionally map to either `A` or `B` depending on `FlxG.gamepads.acceptMode`
+  - Add `gamepad.getMappedInput` to get an anum value of every possible gamepad input from various devices, i.e. `PS4(PS4ID.X)`
+- `FlxG.assets`: A way to overwrite and customize the way HaxeFlixel fetches or produces assets from ids ([#2982](https://github.com/HaxeFlixel/flixel/pull/2982))
+- `FlxG.cameras`: Add `insert` method ([#3290](https://github.com/HaxeFlixel/flixel/pull/3290))
+- `FlxSave`: Allow custom handling of parsing errors ([#3286](https://github.com/HaxeFlixel/flixel/pull/3286))
 
 #### Changes and improvements:
 - `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
@@ -88,6 +95,12 @@ We removed many features and utilities that were previously deprecated
 - Debugging: Check alpha when point-selecting sprites ([#3184](https://github.com/HaxeFlixel/flixel/pull/3184))
 - `FlxBitmapText`: Ignore border outline when computing field size ([#3193](https://github.com/HaxeFlixel/flixel/pull/3193))
 - `FlxDebugger`: Improve console code completion ([#3222](https://github.com/HaxeFlixel/flixel/pull/3222))
+- `FlxGraphicsShader`: Optimize color math ([#3227](https://github.com/HaxeFlixel/flixel/pull/3227))
+- Improve android config on lime 8.2.0 ([#3253](https://github.com/HaxeFlixel/flixel/pull/3253))
+- Debug Watch: Resize the watch window when watchers are added or removed ([#3251](https://github.com/HaxeFlixel/flixel/pull/3251))
+- Reduce memory of Flixel's embedded assets via oxipng ([#3257](https://github.com/HaxeFlixel/flixel/pull/3257))
+- Debug Stats: Improve accuracy of "Total Memory" in OpenFL 9.4.0 ([#3266](https://github.com/HaxeFlixel/flixel/pull/3266))
+- `FlxGraphic`: Improve checks for max texture size ([#3279](https://github.com/HaxeFlixel/flixel/pull/3279))
 
 #### Bugfixes:
 - `FlxFlickerTween`: Fix "Unsupported recursive type" error on hl ([#3170](https://github.com/HaxeFlixel/flixel/pull/3170))
@@ -97,6 +110,9 @@ We removed many features and utilities that were previously deprecated
 - `FlxCamera`: Fix blending issue ([#3217](https://github.com/HaxeFlixel/flixel/pull/3217)) ([#3255](https://github.com/HaxeFlixel/flixel/pull/3255))
 - `FlxStrip`: Fix `color` preventing other strips from drawing ([#3220](https://github.com/HaxeFlixel/flixel/pull/3220))
 - `FlxButton`: Fix `label` position when moves is false ([#3232](https://github.com/HaxeFlixel/flixel/pull/3232))
+- Debug Console: Fix arrow keys ([#3247](https://github.com/HaxeFlixel/flixel/pull/3247))
+- `FlxGame`: Fix `ACTIVATE` and `DEACTIVATE` event dispatches ([#3260](https://github.com/HaxeFlixel/flixel/pull/3260))
+- `FlxAction`: Fix bug where multiple `check` calls wipe analog fields ([#3277](https://github.com/HaxeFlixel/flixel/pull/3277))
 
 5.8.0 (April 19, 2024)
 ------------------------------

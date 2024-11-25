@@ -7,7 +7,6 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 import openfl.media.Sound;
@@ -16,9 +15,6 @@ import openfl.media.SoundTransform;
 import openfl.net.URLRequest;
 #if flash11
 import openfl.utils.ByteArray;
-#end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
 #end
 
 /**
@@ -365,8 +361,8 @@ class FlxSound extends FlxBasic
 		}
 		else if ((EmbeddedSound is String))
 		{
-			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
-				_sound = Assets.getSound(EmbeddedSound);
+			if (FlxG.assets.exists(EmbeddedSound, SOUND))
+				_sound = FlxG.assets.getSoundUnsafe(EmbeddedSound);
 			else
 				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}

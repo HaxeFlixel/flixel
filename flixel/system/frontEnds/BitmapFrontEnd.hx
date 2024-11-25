@@ -5,10 +5,10 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Assets;
-#if !flash
+#if FLX_OPENGL_AVAILABLE
 import lime.graphics.opengl.GL;
 #end
 
@@ -19,9 +19,13 @@ import lime.graphics.opengl.GL;
  */
 class BitmapFrontEnd
 {
-	#if !flash
+	#if FLX_OPENGL_AVAILABLE
 	/**
-	 * Gets max texture size for native targets
+	 * Returns the maximum allowed width and height (in pixels) for a texture.
+	 * This value is only available on hardware-accelerated targets that use OpenGL.
+	 * On unsupported targets, the returned value will always be -1.
+	 * 
+	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
 	public var maxTextureSize(get, never):Int;
 	#end
@@ -212,7 +216,7 @@ class BitmapFrontEnd
 	/**
 	 * Creates string key for further caching.
 	 *
-	 * @param	systemKey	The first string key to use as a base for a new key. It's usually a key from openfl.Assets ("assets/image.png").
+	 * @param	systemKey	The first string key to use as a base for a new key. It's usually an asset key ("assets/image.png").
 	 * @param	userKey		The second string key to use as a base for a new key. It's usually a key provided by the user
 	 * @param	unique		Whether generated key should be unique or not.
 	 * @return	Created key.
@@ -391,10 +395,13 @@ class BitmapFrontEnd
 		}
 	}
 
-	#if !flash
+	#if FLX_OPENGL_AVAILABLE
 	function get_maxTextureSize():Int
 	{
-		return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		if (FlxG.stage.window.context.attributes.hardware)
+			return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		
+		return -1;
 	}
 	#end
 
