@@ -764,7 +764,7 @@ enum FlxSaveStatus
 	BOUND(name:String, ?path:String);
 	
 	/**
-	 * There was an issue during `flush`
+	 * There was an issue during `flush`. Previously known as `ERROR(msg:String)`
 	 */
 	SAVE_ERROR(type:SaveFailureType);
 	
@@ -772,4 +772,8 @@ enum FlxSaveStatus
 	 * There was an issue while loading
 	 */
 	LOAD_ERROR(type:LoadFailureType);
+	
+	@:noCompletion
+	@:deprecated("FlxSaveStatus.ERROR is never used, it has been replaced by SAVE_ERROR")
+	ERROR(msg:String);
 }
