@@ -59,13 +59,12 @@ class AssetFrontEnd
 	public function new ()
 	{
 		final rawPath = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY")}';
-		// Remove final slash and accepts backslashes and removes redundancies
-		directory = Path.normalize(rawPath);
+		directory = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY_ABS")}';
 		// Verify valid directory
 		if (sys.FileSystem.exists(directory) == false)
-			throw 'Invalid value:"$directory" of FLX_CUSTOM_ASSETS_DIRECTORY, expecting relative or absolute path';
+			throw 'Error finding custom asset directory:"$directory" from given path: $rawPath';
 		// remove final "/assets" since the id typically contains it
-		final split = sys.FileSystem.absolutePath(directory).split("/");
+		final split = directory.split("/");
 		split.pop();
 		parentDirectory = split.join("/");
 	}
