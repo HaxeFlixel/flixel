@@ -1,9 +1,9 @@
 package flixel.system.macros;
 
+import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
-import haxe.io.Path;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
 #end
@@ -98,6 +98,8 @@ private enum HelperDefines
 	FLX_OPENGL_AVAILABLE;
 	/** Defined to `1`(or `true`) if `FLX_CUSTOM_ASSETS_DIRECTORY` is not defined */
 	FLX_STANDARD_ASSETS_DIRECTORY;
+	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
+	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
 }
 
 class FlxDefines
@@ -283,12 +285,13 @@ class FlxDefines
 				// Todo: check sys targets
 				final rawDirectory = Path.normalize(definedValue(FLX_CUSTOM_ASSETS_DIRECTORY));
 				final directory = Path.normalize(rawDirectory);
+				final absPath = sys.FileSystem.absolutePath(directory);
 				if (!sys.FileSystem.isDirectory(directory) || directory == "1")
 				{
-					final absPath = sys.FileSystem.absolutePath(directory);
 					abort('FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory, got "$rawDirectory"'
 						+ '\nabsolute path: $absPath', (macro null).pos);
 				}
+				define(FLX_CUSTOM_ASSETS_DIRECTORY_ABS, absPath);
 			}
 		}
 		else // define boolean inversion
@@ -330,9 +333,9 @@ class FlxDefines
 		return Context.defined(Std.string(define));
 	}
 
-	static inline function define(define:Dynamic)
+	static inline function define(define:Dynamic, ?value:String)
 	{
-		Compiler.define(Std.string(define));
+		Compiler.define(Std.string(define), value);
 	}
 
 	static function abort(message:String, pos:Position)
