@@ -37,6 +37,10 @@ class FlxPathfinderTest extends FlxTest
 		_end = FlxPoint.get();
 	}
 
+	#if hl
+	@Ignore("Failing on HL from getInBoundDirections")
+	// TODO: remove in HL 1.15, fixed here: https://github.com/HaxeFoundation/hashlink/issues/694
+	#end
 	@Test
 	function testFindPath()
 	{
@@ -60,6 +64,10 @@ class FlxPathfinderTest extends FlxTest
 	}
 	
 	
+	#if hl
+	@Ignore("Failing on HL from getInBoundDirections")
+	// TODO: remove in HL 1.15, fixed here: https://github.com/HaxeFoundation/hashlink/issues/694
+	#end
 	@Test // custom pathfinder
 	function testCustomPathfinder()
 	{
@@ -106,7 +114,7 @@ class FlxPathfinderTest extends FlxTest
 		var i = points.length;
 		while (i-- > 0)
 		{
-			indices.unshift(map.getTileIndexByCoords(points[i]));
+			indices.unshift(map.getMapIndex(points[i]));
 			if (put)
 				points.pop().put();
 		}

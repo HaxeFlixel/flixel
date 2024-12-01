@@ -1,5 +1,7 @@
 package flixel.graphics.frames.bmfont;
 
+import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
@@ -20,15 +22,15 @@ class BMFont
 	public var common:BMFontCommon;
 	public var pages:Array<BMFontPage>;
 	public var chars:Array<BMFontChar>;
-	public var kerning:Null<Array<BMFontKerning>> = null;
+	public var kernings:Null<Array<BMFontKerning>> = null;
 	
-	function new(?info, ?common, ?pages, ?chars, ?kerning)
+	function new(?info, ?common, ?pages, ?chars, ?kernings)
 	{
 		this.info = info;
 		this.common = common;
 		this.pages = pages;
 		this.chars = chars;
-		this.kerning = kerning;
+		this.kernings = kernings;
 	}
 	
 	public static function fromXml(xml:Xml)
@@ -38,14 +40,14 @@ class BMFont
 		final common = BMFontCommon.fromXml(main.node.get("common"));
 		final pages = BMFontPage.listFromXml(main.node.get("pages"));
 		final chars = BMFontChar.listFromXml(main.node.get("chars"));
-		var kerning:Array<BMFontKerning> = null;
+		var kernings:Array<BMFontKerning> = null;
 		
 		if (main.hasNode("kernings"))
 		{
-			kerning = BMFontKerning.listFromXml(main.node.get("kernings"));
+			kernings = BMFontKerning.listFromXml(main.node.get("kernings"));
 		}
 		
-		return new BMFont(info, common, pages, chars, kerning);
+		return new BMFont(info, common, pages, chars, kernings);
 	}
 	
 	public static function fromText(text:String)
@@ -118,6 +120,53 @@ class BMFont
 			}
 		}
 		return new BMFont(info, common, pages, chars, kerning);
+	}
+	
+	@:access(flixel.graphics.frames.FlxBitmapFont)
+	public function initBitmapFont(font:FlxBitmapFont):FlxBitmapFont
+	{
+		// how much to move the cursor when going to the next line.
+		font.lineHeight = common.lineHeight;
+		font.size = info.size;
+		font.fontName = info.face;
+		font.bold = info.bold;
+		font.italic = info.italic;
+		
+		for (char in chars)
+		{
+			final frame = FlxRect.get();
+			frame.x = char.x; // X position within the bitmap image file.
+			frame.y = char.y; // Y position within the bitmap image file.
+			frame.width = char.width; // Width of the character in the image file.
+			frame.height = char.height; // Height of the character in the image file.
+			
+			font.minOffsetX = (font.minOffsetX < -char.xoffset) ? -char.xoffset : font.minOffsetX;
+			
+			if (char.id == -1)
+			{
+				throw 'Invalid font data!';
+			}
+			
+			font.addCharFrame(char.id, frame, FlxPoint.get(char.xoffset, char.yoffset), char.xadvance);
+			
+			if (char.id == FlxBitmapFont.SPACE_CODE)
+			{
+				font.spaceWidth = char.xadvance;
+			}
+			else
+			{
+				font.lineHeight = (font.lineHeight > char.height + char.yoffset) ? font.lineHeight : char.height + char.yoffset;
+			}
+		}
+		
+		if (kernings != null)
+		{
+			for (kerning in kernings)
+				font.addKerningPair(kerning.first, kerning.second, kerning.amount);
+		}
+		
+		font.updateSourceHeight();
+		return font;
 	}
 	
 	public static function parse(data:FlxAngelCodeAsset):BMFont

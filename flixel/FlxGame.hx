@@ -3,6 +3,7 @@ package flixel;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.typeLimit.NextState;
 import openfl.Assets;
 import openfl.Lib;
@@ -361,6 +362,9 @@ class FlxGame extends Sprite
 		#if (desktop && openfl <= "4.0.0")
 		stage.addEventListener(FocusEvent.FOCUS_OUT, onFocusLost);
 		stage.addEventListener(FocusEvent.FOCUS_IN, onFocus);
+		#elseif (sys && openfl >= "9.3.0")
+		stage.nativeWindow.addEventListener(Event.DEACTIVATE, onFocusLost);
+		stage.nativeWindow.addEventListener(Event.ACTIVATE, onFocus);
 		#else
 		stage.addEventListener(Event.DEACTIVATE, onFocusLost);
 		stage.addEventListener(Event.ACTIVATE, onFocus);
@@ -761,7 +765,13 @@ class FlxGame extends Sprite
 		#end
 
 		#if FLX_POINTER_INPUT
-		FlxArrayUtil.clearArray(FlxG.swipes);
+		var len = FlxG.swipes.length;
+		while(len-- > 0)
+		{
+			final swipe = FlxG.swipes.pop();
+			if (swipe != null)
+				swipe.destroy();
+		}
 		#end
 
 		filters = filtersEnabled ? _filters : null;

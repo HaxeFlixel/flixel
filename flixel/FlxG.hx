@@ -1,16 +1,12 @@
 package flixel;
 
-import openfl.Lib;
-import openfl.display.DisplayObject;
-import openfl.display.Stage;
-import openfl.display.StageDisplayState;
-import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -28,6 +24,11 @@ import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -106,7 +107,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 7, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 9, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -335,6 +336,12 @@ class FlxG
 	 */
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 
+	/**
+	 * Contains helper functions relating to retrieving assets
+	 * @since 5.9.0
+	 */
+	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
+	
 	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
@@ -633,23 +640,23 @@ class FlxG
 
 		// Instantiate inputs
 		#if FLX_KEYBOARD
-		keys = inputs.add(new FlxKeyboard());
+		keys = inputs.addInput(new FlxKeyboard());
 		#end
 
 		#if FLX_MOUSE
-		mouse = inputs.add(new FlxMouse(game._inputContainer));
+		mouse = inputs.addInput(new FlxMouse(game._inputContainer));
 		#end
 
 		#if FLX_TOUCH
-		touches = inputs.add(new FlxTouchManager());
+		touches = inputs.addInput(new FlxTouchManager());
 		#end
 
 		#if FLX_GAMEPAD
-		gamepads = inputs.add(new FlxGamepadManager());
+		gamepads = inputs.addInput(new FlxGamepadManager());
 		#end
 
 		#if android
-		android = inputs.add(new FlxAndroidKeys());
+		android = inputs.addInput(new FlxAndroidKeys());
 		#end
 
 		#if FLX_ACCELEROMETER
@@ -759,21 +766,24 @@ class FlxG
 	}
 
 	#if FLX_MOUSE
-	static function set_mouse(NewMouse:FlxMouse):FlxMouse
+	static function set_mouse(newMouse:FlxMouse):FlxMouse
 	{
-		if (mouse == null) // if no mouse, just add it
+		// if there's no mouse, add it
+		if (mouse == null)
 		{
-			mouse = inputs.add(NewMouse); // safe to do b/c it won't add repeats!
+			mouse = inputs.addUniqueType(newMouse);
 			return mouse;
 		}
-		var oldMouse:FlxMouse = mouse;
-		var result:FlxMouse = inputs.replace(oldMouse, NewMouse); // replace existing mouse
+		
+		// replace existing mouse
+		final oldMouse:FlxMouse = mouse;
+		final result:FlxMouse = inputs.replace(oldMouse, newMouse, true);
 		if (result != null)
 		{
 			mouse = result;
-			oldMouse.destroy();
-			return NewMouse;
+			return newMouse;
 		}
+		
 		return oldMouse;
 	}
 	#end
