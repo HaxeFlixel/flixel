@@ -186,8 +186,12 @@ class FlxAssets
 		#if doc_gen
 		return [];
 		#else
+		#if !display
 		final buildRefs = flixel.system.macros.FlxAssetPaths.buildFileReferences;
 		return buildRefs(directory, subDirectories, exprToRegex(include), exprToRegex(exclude), rename, listField);
+		#else
+		return [];
+		#end
 		#end
 	}
 
