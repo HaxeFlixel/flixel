@@ -283,7 +283,7 @@ class AssetFrontEnd
 			for (path in sys.FileSystem.readDirectory(directory))
 			{
 				if (sys.FileSystem.isDirectory('$directory/$path'))
-					addFiles('$directory/$path',path + '/');
+					addFiles('$directory/$path', prefix + path + '/');
 				else
 					list.push(prefix + path);
 			}
