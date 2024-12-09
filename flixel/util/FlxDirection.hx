@@ -10,15 +10,20 @@ enum abstract FlxDirection(Int)
 	var RIGHT = 0x0010;
 	var UP = 0x0100;
 	var DOWN = 0x1000;
-
-	#if (haxe <= version("4.3.0"))
-	var abstract(get, never):FlxDirectionFlags;
-	inline function get_abstract():FlxDirectionFlags return cast this;
-	#end
+	
+	var self(get, never):FlxDirection;
+	inline function get_self():FlxDirection
+	{
+		#if (haxe >= version("4.3.0"))
+		return abstract;
+		#else
+		return cast this;
+		#end
+	}
 	
 	public function toString()
 	{
-		return switch abstract
+		return switch self
 		{
 			case LEFT: "L";
 			case RIGHT: "R";

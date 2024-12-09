@@ -32,12 +32,18 @@ enum abstract FlxDirectionFlags(Int)
 
 	/** Special-case constant meaning any, or all directions. */
 	var ANY = 0x1111; // LEFT | RIGHT | UP | DOWN;
-
-	#if (haxe <= version("4.3.0"))
-	var abstract(get, never):FlxDirectionFlags;
-	inline function get_abstract():FlxDirectionFlags return cast this;
-	#end
-
+	
+	var self(get, never):FlxDirectionFlags;
+	
+	inline function get_self():FlxDirectionFlags
+	{
+		#if (haxe >= version("4.3.0"))
+		return abstract;
+		#else
+		return cast this;
+		#end
+	}
+	
 	/**
 	 * Calculates the angle (in degrees) of the facing flags.
 	 * Returns 0 if two opposing flags are true.
@@ -46,7 +52,7 @@ enum abstract FlxDirectionFlags(Int)
 	public var degrees(get, never):Float;
 	function get_degrees():Float
 	{
-		return switch abstract
+		return switch self
 		{
 			case RIGHT: 0;
 			case DOWN: 90;
@@ -139,7 +145,7 @@ enum abstract FlxDirectionFlags(Int)
 	
 	public function toString()
 	{
-		if (abstract == NONE)
+		if (self == NONE)
 			return "NONE";
 
 		var str = "";
@@ -181,16 +187,16 @@ enum abstract FlxDirectionFlags(Int)
 		return cast dir;
 	}
 
-	// Expose int operators
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")// Expose int operators
 	@:op(A & B) static function and(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
-
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
 	@:op(A | B) static function or(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
-
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
 	@:op(A > B) static function gt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
 	@:op(A < B) static function lt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
 	@:op(A >= B) static function gte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-
+	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
 	@:op(A <= B) static function lte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 }
