@@ -666,7 +666,7 @@ class FlxQuadTree extends FlxRect
 		while (_iterator != null)
 		{
 			checkObject = _iterator.object;
-			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions != null)
+			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions == NONE)
 			{
 				_iterator = _iterator.next;
 				continue;

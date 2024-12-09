@@ -33,7 +33,7 @@ enum abstract FlxDirectionFlags(Int)
 	/** Special-case constant meaning any, or all directions. */
 	var ANY = 0x1111; // LEFT | RIGHT | UP | DOWN;
 
-	#if (haxe < version("4.3.0"))
+	#if (haxe <= version("4.3.0"))
 	var abstract(get, never):FlxDirectionFlags;
 	inline function get_abstract():FlxDirectionFlags return cast this;
 	#end
@@ -46,7 +46,7 @@ enum abstract FlxDirectionFlags(Int)
 	public var degrees(get, never):Float;
 	function get_degrees():Float
 	{
-		return switch (abstract)
+		return switch abstract
 		{
 			case RIGHT: 0;
 			case DOWN: 90;

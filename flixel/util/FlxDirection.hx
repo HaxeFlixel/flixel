@@ -11,7 +11,7 @@ enum abstract FlxDirection(Int)
 	var UP = 0x0100;
 	var DOWN = 0x1000;
 
-	#if (haxe < version("4.3.0"))
+	#if (haxe <= version("4.3.0"))
 	var abstract(get, never):FlxDirectionFlags;
 	inline function get_abstract():FlxDirectionFlags return cast this;
 	#end
