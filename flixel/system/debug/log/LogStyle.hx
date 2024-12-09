@@ -1,5 +1,7 @@
 package flixel.system.debug.log;
 
+import flixel.util.FlxSignal;
+
 using flixel.util.FlxStringUtil;
 
 /**
@@ -43,8 +45,10 @@ class LogStyle
 	
 	/**
 	 * A callback function that is called when this LogStyle is used
+	 * **Note:** Unlike the deprecated `callbackFunction`, this is called every time,
+	 * even when logged with `once = true` and even in release mode.
 	 */
-	public var callback:(data:Any)->Void;
+	public final onLog = new FlxTypedSignal<(data:Any)->Void>();
 
 	/**
 	 * Whether an exception is thrown when this LogStyle is used.
@@ -81,7 +85,8 @@ class LogStyle
 		this.errorSound = errorSound;
 		this.openConsole = openConsole;
 		this.callbackFunction = callbackFunction;
-		this.callback = callback;
+		if (callback != null)
+			onLog.add(callback);
 		this.throwException = throwException;
 	}
 	
