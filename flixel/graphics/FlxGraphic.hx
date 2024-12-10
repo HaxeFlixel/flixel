@@ -637,7 +637,7 @@ class FlxGraphic implements IFlxDestroyable
 
 			#if FLX_OPENGL_AVAILABLE
 			var max:Int = FlxG.bitmap.maxTextureSize;
-			if (max != -1)
+			if (max > 0)
 			{
 				if (width > max || height > max)
 					FlxG.log.warn('Graphic dimensions (${width}x${height}) exceed the maximum allowed size (${max}x${max}), which may cause rendering issues.');

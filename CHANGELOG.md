@@ -56,7 +56,7 @@ We removed many features and utilities that were previously deprecated
 - `FlxAnimationController`: Add `onLoop`, `onFrameChange` and `onFinish`, to replace `callback` and `finishCallback` ([#3205](https://github.com/HaxeFlixel/flixel/pull/3205)) ([#3216](https://github.com/HaxeFlixel/flixel/pull/3216))
 - `FlxStrip`: Add support for blendmodes ([#3213](https://github.com/HaxeFlixel/flixel/pull/3213))
 - `FlxTextBorderStyle`: Add SHADOW_XY, prevent border clipping ([#3236](https://github.com/HaxeFlixel/flixel/pull/3236))
-- `LogStyle`: Add `callback` to replace `callbackFunction` ([#3239](https://github.com/HaxeFlixel/flixel/pull/3239))
+- `LogStyle`: Add `onLog` signal to replace `callbackFunction` ([#3239](https://github.com/HaxeFlixel/flixel/pull/3239))([#3307](https://github.com/HaxeFlixel/flixel/pull/3307))
 - `FlxBar`: Add custom border sizes ([#3234](https://github.com/HaxeFlixel/flixel/pull/3234))
 - Gamepads: Add `acceptMode` and "mapped inputs" ([#3276](https://github.com/HaxeFlixel/flixel/pull/3276)) ([#3280](https://github.com/HaxeFlixel/flixel/pull/3280))
   - Add `ACCEPT` and `CANCEL` input IDs that conditionally map to either `A` or `B` depending on `FlxG.gamepads.acceptMode`
@@ -101,6 +101,7 @@ We removed many features and utilities that were previously deprecated
 - Reduce memory of Flixel's embedded assets via oxipng ([#3257](https://github.com/HaxeFlixel/flixel/pull/3257))
 - Debug Stats: Improve accuracy of "Total Memory" in OpenFL 9.4.0 ([#3266](https://github.com/HaxeFlixel/flixel/pull/3266))
 - `FlxGraphic`: Improve checks for max texture size ([#3279](https://github.com/HaxeFlixel/flixel/pull/3279))
+- Debugging: Stop dispatching onFocus event when closing debugger ([#3271](https://github.com/HaxeFlixel/flixel/pull/3271))
 
 #### Bugfixes:
 - `FlxFlickerTween`: Fix "Unsupported recursive type" error on hl ([#3170](https://github.com/HaxeFlixel/flixel/pull/3170))

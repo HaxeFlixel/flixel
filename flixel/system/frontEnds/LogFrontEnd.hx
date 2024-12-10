@@ -50,16 +50,15 @@ class LogFrontEnd
 		if (style == null)
 			style = LogStyle.NORMAL;
 		
-		if (!(data is Array))
-			data = [data];
+		final arrayData = (!(data is Array) ? [data] : cast data);
 		
 		#if FLX_DEBUG
 		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
 		if (FlxG.game == null || FlxG.game.debugger == null)
 		{
-			_standardTraceFunction(data);
+			_standardTraceFunction(arrayData);
 		}
-		else if (FlxG.game.debugger.log.add(data, style, fireOnce))
+		else if (FlxG.game.debugger.log.add(arrayData, style, fireOnce))
 		{
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
 			if (style.errorSound != null)
@@ -75,14 +74,13 @@ class LogFrontEnd
 			
 			if (style.callbackFunction != null)
 				style.callbackFunction();
-			
-			if (style.callback != null)
-				style.callback(data);
 		}
 		#end
 		
+		style.onLog.dispatch(data);
+		
 		if (style.throwException)
-			throw style.toLogString(data);
+			throw style.toLogString(arrayData);
 	}
 
 	/**
