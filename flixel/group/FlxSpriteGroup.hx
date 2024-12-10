@@ -1073,7 +1073,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		Sprite.offset.copyFrom(Offset);
 
 	inline function originTransform(Sprite:FlxSprite, Origin:FlxPoint)
-		Sprite.origin.copyFrom(Origin);
+		Sprite.origin.set(x + origin.x - Sprite.x, y + origin.y - Sprite.y);
 
 	inline function scaleTransform(Sprite:FlxSprite, Scale:FlxPoint)
 		Sprite.scale.copyFrom(Scale);

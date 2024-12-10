@@ -1,3 +1,40 @@
+6.0.0 (TBD)
+
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera`: Removed `defaultCameras`
+- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
+- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
+
+#### Removals
+We removed many features and utilities that were previously deprecated
+- `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
+- `FlxSwipe::angle`: Use `FlxSwipe.degrees`, instead
+- `FlxAngle.angleFromFacing`: Use `degrees` in `FlxDirectionFlags`, instead
+- `FlxAngle.getCartesianCoords`: Use `FlxVector.setPolarDegrees`, instead
+- `FlxObject` (legacy directions): Use `FlxDirectionFlags`, instead
+- `FlxObject::collisonXDrag`: Typo in name corrected to `FlxObject::collisionXDrag`
+- `FlxCamera::viewOffsetX/Y/Width/Height`: Use `viewMarginX/Y/Top/Bottom/Left/Right`, instead
+- `FlxTween` (legacy FlxTweenTypes): Use `FlxTweenType`, instead
+- `FlxRandom.shuffleArray`: Use `shuffle`, instead
+- `FlxPoint.rotate`: Use `pivotDegrees`, instead
+- `FlxPoint.angleBetween`: Use `degreesTo`, instead
+- `FlxVector`: Use `FlxPoint`, instead
+- `FlxTilemap.useScaleHack`: No longer needed, due to `defaultFramePadding`
+- `FlxG.signals.stateSwitched` and `gameStarted`: Use `preStateSwitch` and `postGameStart`, respectively
+- `FlxPath` (Legacy types): Use `FlxPathType`, instead
+- `flixel.system.FlxSound` and `FlxSoundGroup`: new package, `flixel.sound`
+- `FlxState::switchTo`: Use `startOutro`, instead
+- `FlxAnimation::delay`: Use `frameDuration`, instead
+- `FlxCollision.pixelPerfectPointCheck`: Use `FlxSprite::pixelsOverlapPoint`, instead
+- `FlxAnimationController.frames`: Use `numFrames`, instead
+- `FlxAssets.FlxAngelCodeSource`: Use `FlxAssets.FlxAngelCodeAsset`, instead
+- `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
+- `FlxUnicodeUtil`: Use `UnicodeString`, instead
+
 5.9.0 (TBD)
 ------------------------------
 #### New features:
@@ -221,7 +258,7 @@
 - **README.md**: Add Turkish translations
 - `AssetPaths`: Add `allFiles` field, and an arg in `FlxAssets.buildFileReferences` to change the identifier ([#2807](https://github.com/HaxeFlixel/flixel/pull/2807))
 - Debug tools: Add ways to remove custom debug tools ([#2792](https://github.com/HaxeFlixel/flixel/pull/2792))
-	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction` 
+	- `FlxG.console`: Add `removeByAlias`, `removeEnum`, `removeClass`, `removeObject` and `removeFunction`
 	- `FlxG.game.debugger.interaction`: Add `removeTool`
 - `FlxText`: Add `fieldHeight` field ([#2789](https://github.com/HaxeFlixel/flixel/pull/2789))
 - `FlxG`: Add compiler flag `FLX_NO_SAVE` to remove `FlxG.save` (also counter-flag `FLX_SAVE`) ([#2840](https://github.com/HaxeFlixel/flixel/pull/2840))
@@ -361,7 +398,7 @@
 - `AssetPaths`: various fixes ([#2680](https://github.com/HaxeFlixel/flixel/pull/2680))
 	- apply `include`/`exclude` args to files, not directories
 	- default file renamer will replace spaces with underscore
- 
+
 #### New features:
 - `FlxKeys`: Added `SCROLL_LOCK`, `NUMLOCK`, `WINDOWS`, `MENU`, `BREAK` and `NUMPADSLASH` keys ([#2638](https://github.com/HaxeFlixel/flixel/pull/2638))
 
