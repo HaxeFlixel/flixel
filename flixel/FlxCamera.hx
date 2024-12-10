@@ -1906,11 +1906,11 @@ class FlxCamera extends FlxBasic
 	 * and `viewHeight`.
 	 * 
 	 * Notes: Deprecated, in 4.11.0 this was made public, but the wording is confusing.
-	 * In flixel 6.0.0 this will be changed to use `viewX`, `viewY`, `viewWidth` and `viewHeight`,
+	 * After flixel 6.0.0 this will be changed to use `viewX`, `viewY`, `viewWidth` and `viewHeight`,
 	 * meaning, this will return the world coordinates of the camera.
 	 * @since 4.11.0
 	 */
-	@deprecated("getViewMarginRect")
+	@:deprecated("getViewRect is deprecated, use getViewMarginRect")
 	public function getViewRect(?rect:FlxRect)
 	{
 		if (rect == null)
