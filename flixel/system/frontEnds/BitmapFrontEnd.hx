@@ -139,19 +139,18 @@ class BitmapFrontEnd
 
 	/**
 	 * Loads a bitmap from a file, clones it if necessary and caches it.
-	 * 
-	 * @param	graphic FlxGraphic object, BitmapData or String from which to create the new FlxGraphic.
-	 * @param	unique Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	key Sets a custom key (or name) to the newly created FlxGraphic. 
-	 * @return	The FlxGraphic we just created.
+	 * @param   graphic  Optional FlxGraphics object to create FlxGraphic from.
+	 * @param   unique   Ensures that the bitmap data uses a new slot in the cache.
+	 * @param   key      Force the cache to use a specific Key to index the bitmap.
+	 * @return  The FlxGraphic we just created.
 	 */
-	public function add(graphic:FlxGraphicAsset, unique:Bool = false, ?key:String):FlxGraphic
+	public function add(graphic:FlxGraphicAsset, unique = false, ?key:String):FlxGraphic
 	{
-		if (graphic is FlxGraphic)
+		if ((graphic is FlxGraphic))
 		{
 			return FlxGraphic.fromGraphic(cast graphic, unique, key);
 		}
-		else if (graphic is BitmapData)
+		else if ((graphic is BitmapData))
 		{
 			return FlxGraphic.fromBitmapData(cast graphic, unique, key);
 		}
