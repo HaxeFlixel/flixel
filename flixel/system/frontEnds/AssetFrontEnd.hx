@@ -231,6 +231,10 @@ class AssetFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExtIf(id);
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.exists(id, type.toOpenFlType());
 		#else
@@ -253,6 +257,10 @@ class AssetFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExtIf(id);
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
 		#else
@@ -327,11 +335,13 @@ class AssetFrontEnd
 	 */
 	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
-		return cast getAssetUnsafe(id, SOUND, useCache);
+		return cast getAssetUnsafe(addSoundExtIf(id), SOUND, useCache);
 	}
 	
 	/**
-	 * Gets an instance of a sound, logs when the asset is not found
+	 * Gets an instance of a sound, logs when the asset is not found.
+	 * 
+	 * **Note:** If the `FLX_SOUND_ADD_EXT` flag is enabled, you may omit the file extension
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -340,7 +350,7 @@ class AssetFrontEnd
 	 */
 	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
-		return cast getAsset(id, SOUND, useCache, logStyle);
+		return cast getAsset(addSoundExtIf(id), SOUND, useCache, logStyle);
 	}
 	
 	/**
@@ -353,10 +363,24 @@ class AssetFrontEnd
 	 */
 	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
+		return getSound(addSoundExt(id), useCache, logStyle);
+	}
+	
+	inline function addSoundExtIf(id:String)
+	{
+		#if FLX_SOUND_ADD_EXT
+		return addSoundExt(id);
+		#else
+		return id;
+		#end
+	}
+	
+	inline function addSoundExt(id:String)
+	{
 		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
-			id += "." + #if flash "mp3" #else "ogg" #end;
+			return id + "." + #if flash "mp3" #else "ogg" #end;
 			
-		return getSound(id, useCache, logStyle);
+		return id;
 	}
 	
 	/**

@@ -52,6 +52,10 @@ private enum UserDefines
 	 * any `</asset>` tags in your project.xml, to reduce your total memory
 	 */
 	FLX_CUSTOM_ASSETS_DIRECTORY;
+	/**
+	 * allows you to use sound paths with no extension, and the default sound type for that target will be used
+	 */
+	FLX_SOUND_ADD_EXT;
 }
 
 /**
@@ -100,6 +104,7 @@ private enum HelperDefines
 	FLX_STANDARD_ASSETS_DIRECTORY;
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
+	FLX_SOUND_NO_ADD_EXT
 }
 
 class FlxDefines
@@ -200,6 +205,7 @@ class FlxDefines
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
+		defineInversion(FLX_SOUND_ADD_EXT, FLX_SOUND_NO_ADD_EXT);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
 	}
 

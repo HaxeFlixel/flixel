@@ -54,6 +54,7 @@
 		<haxedef name="FLX_NO_SAVE" />
 		<haxedef name="FLX_NO_HEALTH" />
 		<haxedef name="FLX_4_LEGACY_COLLISION" />
+		<haxedef name="FLX_SOUND_ADD_EXT" />
 	</section>
 	<section if="coverage2">
 		<haxedef name="debug" />
@@ -77,5 +78,6 @@
 		<haxedef name="FLX_NO_SAVE" />
 		<haxedef name="FLX_NO_HEALTH" />
 		<haxedef name="FLX_4_LEGACY_COLLISION" />
+		<haxedef name="FLX_SOUND_ADD_EXT" />
 	</section>
 </project>
