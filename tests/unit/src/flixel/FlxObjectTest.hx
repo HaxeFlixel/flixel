@@ -374,7 +374,7 @@ class FlxObjectTest extends FlxTest
 	function testViewCenter()
 	{
 		final cam = FlxG.camera;
-		cam.scroll.set = 100;
+		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
 		final center = FlxPoint.get(cam.viewX + (cam.viewWidth - object1.width) / 2, cam.viewY + (cam.viewHeight - object1.height) / 2);
 		final offCenter = center.copyTo().add(1000, 1000);
