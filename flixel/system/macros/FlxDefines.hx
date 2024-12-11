@@ -53,7 +53,9 @@ private enum UserDefines
 	 */
 	FLX_CUSTOM_ASSETS_DIRECTORY;
 	/**
-	 * allows you to use sound paths with no extension, and the default sound type for that target will be used
+	 * Allows you to use sound paths with no extension, and the default sound type for that
+	 * target will be used. If enabled it will use ogg on all targets except flash, which uses mp3.
+	 * If this flag is set to "wav", "mp3" or "ogg" if will use that type
 	 */
 	FLX_SOUND_ADD_EXT;
 }
