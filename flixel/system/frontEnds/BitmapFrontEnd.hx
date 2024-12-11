@@ -132,7 +132,7 @@ class BitmapFrontEnd
 	 * @param   key     Force the cache to use a specific Key to index the bitmap.
 	 * @return  The created graphic.
 	 */
-	public function create(width:Int, height:Int, color:FlxColor, unique:Bool = false, ?key:String):FlxGraphic
+	public function create(width:Int, height:Int, color:FlxColor, unique = false, ?key:String):FlxGraphic
 	{
 		return FlxGraphic.fromRectangle(width, height, color, unique, key);
 	}
