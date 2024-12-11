@@ -125,12 +125,12 @@ class BitmapFrontEnd
 	/**
 	 * Creates a new FlxGraphic object (a colored rectangle) and caches it.
 	 *
-	 * @param	width	How wide the rectangle should be.
-	 * @param	height	How high the rectangle should be.
-	 * @param	color	What color the rectangle should be (0xAARRGGBB).
-	 * @param	unique	Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	key		Force the cache to use a specific Key to index the bitmap.
-	 * @return	The FlxGraphic we just created.
+	 * @param   width   How wide the rectangle should be.
+	 * @param   height  How high the rectangle should be.
+	 * @param   color   What color the rectangle should be (0xAARRGGBB).
+	 * @param   unique  Ensures that the bitmap data uses a new slot in the cache.
+	 * @param   key     Force the cache to use a specific Key to index the bitmap.
+	 * @return  The created graphic.
 	 */
 	public function create(width:Int, height:Int, color:FlxColor, unique:Bool = false, ?key:String):FlxGraphic
 	{
