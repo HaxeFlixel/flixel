@@ -241,9 +241,11 @@ class AssetFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
+		#if FLX_SOUND_ADD_EXT
 		// add file extension
 		if (type == SOUND)
-			id = addSoundExtIf(id);
+			id = addSoundExt(id);
+		#end
 		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.exists(id, type.toOpenFlType());
@@ -267,9 +269,11 @@ class AssetFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
+		#if FLX_SOUND_ADD_EXT
 		// add file extension
 		if (type == SOUND)
-			id = addSoundExtIf(id);
+			id = addSoundExt(id);
+		#end
 		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
