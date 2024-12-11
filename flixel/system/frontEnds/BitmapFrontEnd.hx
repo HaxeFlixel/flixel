@@ -160,7 +160,7 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Caches a specified FlxGraphic object.
+	 * Caches the specified graphic.
 	 *
 	 * @param   graphic  The graphic to cache.
 	 * @return	Cached FlxGraphic object.
