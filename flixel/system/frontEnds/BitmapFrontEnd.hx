@@ -162,7 +162,7 @@ class BitmapFrontEnd
 	/**
 	 * Caches a specified FlxGraphic object.
 	 *
-	 * @param	graphic	FlxGraphic to store in the cache.
+	 * @param   graphic  The graphic to cache.
 	 * @return	Cached FlxGraphic object.
 	 */
 	public inline function addGraphic(graphic:FlxGraphic):FlxGraphic
