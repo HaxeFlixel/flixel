@@ -106,7 +106,7 @@ private enum HelperDefines
 	FLX_STANDARD_ASSETS_DIRECTORY;
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
-	FLX_SOUND_NO_ADD_EXT
+	FLX_SOUND_NO_ADD_EXT;
 }
 
 class FlxDefines
