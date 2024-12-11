@@ -55,7 +55,7 @@ private enum UserDefines
 	/**
 	 * Allows you to use sound paths with no extension, and the default sound type for that
 	 * target will be used. If enabled it will use ogg on all targets except flash, which uses mp3.
-	 * If this flag is set to "wav", "mp3" or "ogg" if will use that type
+	 * If this flag is set to any string, that is used for the file extension
 	 */
 	FLX_SOUND_ADD_EXT;
 }

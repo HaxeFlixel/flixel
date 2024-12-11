@@ -85,14 +85,10 @@ class AssetFrontEnd
 	public function new () {}
 	#end
 	
-	#if (FLX_SOUND_ADD_EXT == "wav")
-	public static final defaultSoundExtension:String = '.wav';
-	#elseif (FLX_SOUND_ADD_EXT == "mp3")
-	public static final defaultSoundExtension:String = '.mp3';
-	#elseif (FLX_SOUND_ADD_EXT == "ogg")
-	public static final defaultSoundExtension:String = '.ogg';
+	#if (FLX_SOUND_ADD_EXT == "1" || FLX_SOUND_NO_ADD_EXT)
+	public final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
 	#else
-	public static final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
+	public final defaultSoundExtension:String = '.${haxe.macro.Compiler.getDefine("FLX_SOUND_ADD_EXT")}';
 	#end
 	
 	/**
