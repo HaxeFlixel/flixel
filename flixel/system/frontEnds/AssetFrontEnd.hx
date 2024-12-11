@@ -344,6 +344,22 @@ class AssetFrontEnd
 	}
 	
 	/**
+	 * Gets an instance of a sound, logs when the asset is not found
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 */
+	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	{
+		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+			id += "." + #if flash "mp3" #else "ogg" #end;
+			
+		return getSound(id, useCache, logStyle);
+	}
+	
+	/**
 	 * Gets the contents of a text-based asset. Unlike its "safe" counterpart, there is no log
 	 * on missing assets
 	 * 
