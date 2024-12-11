@@ -123,7 +123,7 @@ class BitmapFrontEnd
 	}
 
 	/**
-	 * Creates a new FlxGraphic object (a colored rectangle) and caches it.
+	 * Creates a new graphic of a colored rectangle and caches it.
 	 *
 	 * @param   width   How wide the rectangle should be.
 	 * @param   height  How high the rectangle should be.
