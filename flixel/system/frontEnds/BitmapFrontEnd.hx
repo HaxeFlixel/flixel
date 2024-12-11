@@ -139,28 +139,24 @@ class BitmapFrontEnd
 
 	/**
 	 * Loads a bitmap from a file, clones it if necessary and caches it.
-	 * @param	Graphic		Optional FlxGraphics object to create FlxGraphic from.
-	 * @param	Frames			Optional FlxFramesCollection object to create FlxGraphic from.
-	 * @param	Bitmap			Optional BitmapData object to create FlxGraphic from.
-	 * @param	BitmapClass	Optional Class for BitmapData to create FlxGraphic from.
-	 * @param	Str			Optional String key to use for FlxGraphic instantiation.
-	 * @param	Unique			Ensures that the bitmap data uses a new slot in the cache.
-	 * @param	Key				Force the cache to use a specific Key to index the bitmap.
-	 * @return	The FlxGraphic we just created.
+	 * @param   graphic  Optional FlxGraphics object to create FlxGraphic from.
+	 * @param   unique   Ensures that the bitmap data uses a new slot in the cache.
+	 * @param   key      Force the cache to use a specific Key to index the bitmap.
+	 * @return  The FlxGraphic we just created.
 	 */
-	public function add(Graphic:FlxGraphicAsset, Unique:Bool = false, ?Key:String):FlxGraphic
+	public function add(graphic:FlxGraphicAsset, unique = false, ?key:String):FlxGraphic
 	{
-		if ((Graphic is FlxGraphic))
+		if ((graphic is FlxGraphic))
 		{
-			return FlxGraphic.fromGraphic(cast Graphic, Unique, Key);
+			return FlxGraphic.fromGraphic(cast graphic, unique, key);
 		}
-		else if ((Graphic is BitmapData))
+		else if ((graphic is BitmapData))
 		{
-			return FlxGraphic.fromBitmapData(cast Graphic, Unique, Key);
+			return FlxGraphic.fromBitmapData(cast graphic, unique, key);
 		}
 
 		// String case
-		return FlxGraphic.fromAssetKey(Std.string(Graphic), Unique, Key);
+		return FlxGraphic.fromAssetKey(Std.string(graphic), unique, key);
 	}
 
 	/**
