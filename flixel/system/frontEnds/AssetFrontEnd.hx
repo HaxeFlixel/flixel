@@ -85,6 +85,16 @@ class AssetFrontEnd
 	public function new () {}
 	#end
 	
+	#if (FLX_SOUND_ADD_EXT == "wav")
+	public static final defaultSoundExtension:String = '.wav';
+	#elseif (FLX_SOUND_ADD_EXT == "mp3")
+	public static final defaultSoundExtension:String = '.mp3';
+	#elseif (FLX_SOUND_ADD_EXT == "ogg")
+	public static final defaultSoundExtension:String = '.ogg';
+	#else
+	public static final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
+	#end
+	
 	/**
 	 * Used by methods like `getAsset`, `getBitmapData`, `getText`, their "unsafe" counterparts and
 	 * the like to get assets synchronously. Can be set to a custom function to avoid the existing
@@ -378,7 +388,7 @@ class AssetFrontEnd
 	inline function addSoundExt(id:String)
 	{
 		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
-			return id + "." + #if flash "mp3" #else "ogg" #end;
+			return id + defaultSoundExtension;
 			
 		return id;
 	}
