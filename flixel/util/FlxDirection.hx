@@ -21,6 +21,11 @@ enum abstract FlxDirection(Int)
 		#end
 	}
 	
+	inline function new(value:Int)
+	{
+		this = value;
+	}
+	
 	public function toString()
 	{
 		return switch self
@@ -34,9 +39,26 @@ enum abstract FlxDirection(Int)
 	
 	@:deprecated("implicit cast from FlxDirection to Int is deprecated, use an explicit cast")
 	@:to
-	function toIntImplicit()
+	inline function toIntImplicit()
+	{
+		return toInt();
+	}
+	
+	
+	inline public function toInt()
 	{
 		return this;
 	}
 	
+	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use an explicit cast")
+	@:from
+	inline static function fromIntImplicit(value:Int):FlxDirection
+	{
+		return fromInt(value);
+	}
+	
+	public inline static function fromInt(value:Int):FlxDirection
+	{
+		return new FlxDirection(value);
+	}
 }

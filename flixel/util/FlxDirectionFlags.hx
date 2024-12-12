@@ -93,7 +93,11 @@ enum abstract FlxDirectionFlags(Int)
 	public var right(get, never):Bool;
 	inline function get_right() return has(RIGHT);
 	
-
+	inline function new(value:Int)
+	{
+		this = value;
+	}
+	
 	/**
 	 * Returns true if this contains **all** of the supplied flags.
 	 */
@@ -107,7 +111,7 @@ enum abstract FlxDirectionFlags(Int)
 	 */
 	public inline function hasAny(dir:FlxDirectionFlags):Bool
 	{
-		return cast this & dir.toInt() > 0;
+		return this & dir.toInt() > 0;
 	}
 
 	/**
@@ -115,7 +119,7 @@ enum abstract FlxDirectionFlags(Int)
 	 */
 	public inline function with(dir:FlxDirectionFlags):FlxDirectionFlags
 	{
-		return cast this | dir.toInt();
+		return fromInt(this | dir.toInt());
 	}
 
 	/**
@@ -123,22 +127,22 @@ enum abstract FlxDirectionFlags(Int)
 	 */
 	public inline function without(dir:FlxDirectionFlags):FlxDirectionFlags
 	{
-		return cast this & ~dir.toInt();
+		return fromInt(this & ~dir.toInt());
 	}
 	
 	public inline function not():FlxDirectionFlags
 	{
-		return cast ~this;
+		return fromInt(~this);
 	}
 
 	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use an explicit cast")
 	@:to
-	function toIntImplicit()
+	inline function toIntImplicit()
 	{
 		return toInt();
 	}
 	
-	function toInt():Int
+	public inline function toInt():Int
 	{
 		return this;
 	}
@@ -176,15 +180,20 @@ enum abstract FlxDirectionFlags(Int)
 
 	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use an explicit cast")
 	@:from
-	inline static function fromInt(int:Int):FlxDirectionFlags
+	public inline static function fromIntImplicit(value:Int):FlxDirectionFlags
 	{
-		return cast int;
+		return fromInt(value);
+	}
+	
+	public inline static function fromInt(value:Int):FlxDirectionFlags
+	{
+		return new FlxDirectionFlags(value);
 	}
 	
 	@:from
 	inline static function fromDir(dir:FlxDirection):FlxDirectionFlags
 	{
-		return cast dir;
+		return fromInt(dir.toInt());
 	}
 
 	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")// Expose int operators
