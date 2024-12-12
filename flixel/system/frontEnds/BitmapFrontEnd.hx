@@ -114,12 +114,12 @@ class BitmapFrontEnd
 	/**
 	 * Check the local bitmap cache to see if a bitmap with this key has been loaded already.
 	 *
-	 * @param	Key	The key identifying the bitmap.
-	 * @return	Whether or not this file can be found in the cache.
+	 * @param   key  The key identifying the bitmap.
+	 * @return  Whether or not this file can be found in the cache.
 	 */
-	public inline function checkCache(Key:String):Bool
+	public inline function checkCache(key:String):Bool
 	{
-		return get(Key) != null;
+		return get(key) != null;
 	}
 
 	/**
@@ -174,8 +174,8 @@ class BitmapFrontEnd
 	/**
 	 * Gets an FlxGraphic object from this storage from its key.
 	 * 
-	 * @param	key	 The FlxGraphics key (or name).
-	 * @return	The FlxGraphic with the specified key, or null if the object doesn't exist.
+	 * @param   key  The FlxGraphics key (or name).
+	 * @return  The FlxGraphic with the specified key, or null if the object doesn't exist.
 	 */
 	public inline function get(key:String):FlxGraphic
 	{
@@ -213,12 +213,12 @@ class BitmapFrontEnd
 	/**
 	 * Creates string key for further caching.
 	 *
-	 * @param	systemKey	The first string key to use as a base for a new key. It's usually an asset key ("assets/image.png").
-	 * @param	userKey		The second string key to use as a base for a new key. It's usually a key provided by the user
-	 * @param	unique		Whether generated key should be unique or not.
-	 * @return	Created key.
+	 * @param   systemKey  The first string key to use as a base for a new key. It's usually an asset key ("assets/image.png").
+	 * @param   userKey    The second string key to use as a base for a new key. It's usually a key provided by the user
+	 * @param   unique     Whether generated key should be unique or not.
+	 * @return  Created key.
 	 */
-	public function generateKey(systemKey:String, userKey:String, unique:Bool = false):String
+	public function generateKey(systemKey:String, userKey:String, unique = false):String
 	{
 		var key:String = userKey;
 		if (key == null)
