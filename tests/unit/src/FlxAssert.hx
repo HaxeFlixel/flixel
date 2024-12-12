@@ -124,4 +124,13 @@ class FlxAssert
 		else
 			Assert.fail('Value [$actual] is not within [$margin] of [( x:$expectedX | y:$expectedY )]', info);
 	}
+	
+	public static function allEqual<T>(expected:T, results:Array<T>, ?msg:String, ?info:PosInfos)
+	{
+		for (i=>actual in results)
+		{
+			final message = msg != null ? msg : 'Value $i [$actual] was not equal to expected value [$expected]';
+			Assert.areEqual(expected, actual, msg, info);
+		}
+	}
 }
