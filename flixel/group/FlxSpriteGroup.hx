@@ -1,6 +1,5 @@
 package flixel.group;
 
-import flixel.util.FlxDirectionFlags;
 import openfl.display.BitmapData;
 import openfl.display.BlendMode;
 import flixel.FlxCamera;
@@ -14,6 +13,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSort;
 
 /**
