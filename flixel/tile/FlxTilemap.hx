@@ -1538,7 +1538,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return tileSprite;
 	}
 
-	override function set_allowCollisions(value:Int):Int
+	override function set_allowCollisions(value:FlxDirectionFlags):FlxDirectionFlags
 	{
 		for (tile in _tileObjects)
 			if (tile.index >= _collideIndex)

@@ -616,7 +616,7 @@ class FlxQuadTree extends FlxRect
 				{
 					_iterator = iterator.next;
 				}
-				if (_object != null && _object.exists && _object.allowCollisions > 0 && _iterator != null && _iterator.object != null && overlapNode())
+				if (_object != null && _object.exists && _object.allowCollisions != NONE && _iterator != null && _iterator.object != null && overlapNode())
 				{
 					overlapProcessed = true;
 				}
@@ -666,7 +666,7 @@ class FlxQuadTree extends FlxRect
 		while (_iterator != null)
 		{
 			checkObject = _iterator.object;
-			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions <= 0)
+			if (_object == checkObject || !checkObject.exists || checkObject.allowCollisions == NONE)
 			{
 				_iterator = _iterator.next;
 				continue;

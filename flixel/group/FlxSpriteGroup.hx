@@ -13,6 +13,7 @@ import flixel.math.FlxRect;
 import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSort;
 
 /**
@@ -753,7 +754,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return alpha = Value;
 	}
 
-	override function set_facing(Value:Int):Int
+	override function set_facing(Value:FlxDirectionFlags):FlxDirectionFlags
 	{
 		if (exists && facing != Value)
 			transformChildren(facingTransform, Value);
@@ -1023,7 +1024,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	inline function directAlphaTransform(Sprite:FlxSprite, Alpha:Float)
 		Sprite.alpha = Alpha; // direct set
 
-	inline function facingTransform(Sprite:FlxSprite, Facing:Int)
+	inline function facingTransform(Sprite:FlxSprite, Facing:FlxDirectionFlags)
 		Sprite.facing = Facing;
 
 	inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)

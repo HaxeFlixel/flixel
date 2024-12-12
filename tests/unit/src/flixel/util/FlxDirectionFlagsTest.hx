@@ -26,7 +26,7 @@ class FlxDirectionFlagsTest extends FlxTest
 		}
 
 		Assert.isTrue(f(null));
-		Assert.isFalse(f(0));
+		Assert.isFalse(f(cast 0));
 		Assert.isFalse(f(LEFT));
 	}
 
@@ -151,48 +151,6 @@ class FlxDirectionFlagsTest extends FlxTest
 		Assert.areEqual(0x0111, dirs.with(UP));
 		Assert.areEqual(WALL, dirs.with(NONE));
 		Assert.areEqual(ANY, dirs.with(ANY));
-	}
-
-	@Test
-	function operatorInts()
-	{
-		dirs = WALL;
-		Assert.isTrue((dirs & LEFT) > 0);
-		Assert.isTrue((dirs & LEFT) > NONE);
-		Assert.isTrue((dirs & 0x0001) > 0);
-		Assert.isTrue((dirs & 0x0001) > NONE);
-		Assert.isTrue((dirs & LEFT) >= 0x1);
-		Assert.isTrue((dirs & LEFT) >= LEFT);
-		Assert.isTrue((dirs & 0x0001) >= 0x1);
-		Assert.isTrue((dirs & 0x0001) >= LEFT);
-		Assert.isTrue((dirs & LEFT) == LEFT);
-		Assert.isTrue((dirs & LEFT) == 0x1);
-		Assert.isTrue((dirs & 0x0001) == LEFT);
-		Assert.isTrue((dirs & 0x0001) == 0x1);
-
-		Assert.isFalse((dirs & LEFT) <= 0);
-		Assert.isFalse((dirs & LEFT) <= NONE);
-		Assert.isFalse((dirs & 0x0001) <= 0);
-		Assert.isFalse((dirs & 0x0001) <= NONE);
-
-		dirs = NONE;
-		Assert.isTrue((dirs | LEFT) > 0);
-		Assert.isTrue((dirs | LEFT) > NONE);
-		Assert.isTrue((dirs | 0x0001) > 0);
-		Assert.isTrue((dirs | 0x0001) > NONE);
-		Assert.isTrue((dirs | LEFT) >= 0x1);
-		Assert.isTrue((dirs | LEFT) >= LEFT);
-		Assert.isTrue((dirs | 0x0001) >= 0x1);
-		Assert.isTrue((dirs | 0x0001) >= LEFT);
-		Assert.isTrue((dirs | LEFT) == LEFT);
-		Assert.isTrue((dirs | LEFT) == 0x1);
-		Assert.isTrue((dirs | 0x0001) == LEFT);
-		Assert.isTrue((dirs | 0x0001) == 0x1);
-
-		Assert.isFalse((dirs | LEFT) <= 0);
-		Assert.isFalse((dirs | LEFT) <= NONE);
-		Assert.isFalse((dirs | 0x0001) <= 0);
-		Assert.isFalse((dirs | 0x0001) <= NONE);
 	}
 
 	@Test
