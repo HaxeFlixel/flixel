@@ -1,4 +1,4 @@
-5.9.0 (TBD)
+5.9.0 (December 12, 2024)
 ------------------------------
 #### New features:
 - `FlxInputText`: Add improved input text to core flixel (flixel-ui's implementation will be deprecated) ([#3219](https://github.com/HaxeFlixel/flixel/pull/3219))
