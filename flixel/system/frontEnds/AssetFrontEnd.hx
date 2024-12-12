@@ -85,10 +85,10 @@ class AssetFrontEnd
 	public function new () {}
 	#end
 	
-	#if (FLX_SOUND_ADD_EXT == "1" || FLX_SOUND_NO_ADD_EXT)
+	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
 	public final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
 	#else
-	public final defaultSoundExtension:String = '.${haxe.macro.Compiler.getDefine("FLX_SOUND_ADD_EXT")}';
+	public final defaultSoundExtension:String = '.${haxe.macro.Compiler.getDefine("FLX_DEFAULT_SOUND_EXT")}';
 	#end
 	
 	/**
@@ -237,7 +237,7 @@ class AssetFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
-		#if FLX_SOUND_ADD_EXT
+		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
 		if (type == SOUND)
 			id = addSoundExt(id);
@@ -265,7 +265,7 @@ class AssetFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
-		#if FLX_SOUND_ADD_EXT
+		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
 		if (type == SOUND)
 			id = addSoundExt(id);
@@ -351,7 +351,7 @@ class AssetFrontEnd
 	/**
 	 * Gets an instance of a sound, logs when the asset is not found.
 	 * 
-	 * **Note:** If the `FLX_SOUND_ADD_EXT` flag is enabled, you may omit the file extension
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -378,7 +378,7 @@ class AssetFrontEnd
 	
 	inline function addSoundExtIf(id:String)
 	{
-		#if FLX_SOUND_ADD_EXT
+		#if FLX_DEFAULT_SOUND_EXT
 		return addSoundExt(id);
 		#else
 		return id;

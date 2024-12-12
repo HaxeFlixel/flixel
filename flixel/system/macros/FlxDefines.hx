@@ -57,7 +57,7 @@ private enum UserDefines
 	 * target will be used. If enabled it will use ogg on all targets except flash, which uses mp3.
 	 * If this flag is set to any string, that is used for the file extension
 	 */
-	FLX_SOUND_ADD_EXT;
+	FLX_DEFAULT_SOUND_EXT;
 }
 
 /**
@@ -106,7 +106,7 @@ private enum HelperDefines
 	FLX_STANDARD_ASSETS_DIRECTORY;
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
-	FLX_SOUND_NO_ADD_EXT;
+	FLX_NO_DEFAULT_SOUND_EXT;
 }
 
 class FlxDefines
@@ -207,7 +207,7 @@ class FlxDefines
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
-		defineInversion(FLX_SOUND_ADD_EXT, FLX_SOUND_NO_ADD_EXT);
+		defineInversion(FLX_DEFAULT_SOUND_EXT, FLX_NO_DEFAULT_SOUND_EXT);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
 	}
 
