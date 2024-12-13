@@ -208,7 +208,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Helper var to prevent the sound from playing after focus was regained when it was already paused.
 	 */
-	var _alreadyPaused:Bool = false;
+	var _resumeOnFocus:Bool = false;
 	
 	/**
 	 * The FlxSound constructor gets all the variables initialized, but NOT ready to play a sound yet.
@@ -697,14 +697,17 @@ class FlxSound extends FlxBasic
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	function onFocus():Void
 	{
-		if (!_alreadyPaused)
+		if (_resumeOnFocus)
+		{
+			_resumeOnFocus = false;
 			resume();
+		}
 	}
 	
 	@:allow(flixel.system.frontEnds.SoundFrontEnd)
 	function onFocusLost():Void
 	{
-		_alreadyPaused = _paused;
+		_resumeOnFocus = !_paused;
 		pause();
 	}
 	#end
