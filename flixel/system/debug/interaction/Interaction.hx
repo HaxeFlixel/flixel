@@ -376,7 +376,7 @@ class Interaction extends Window
 
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.render.blit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
@@ -408,7 +408,7 @@ class Interaction extends Window
 		}
 
 		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
+		if (FlxG.render.blit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 

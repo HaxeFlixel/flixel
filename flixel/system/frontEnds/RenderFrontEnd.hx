@@ -1,19 +1,47 @@
 package flixel.system.frontEnds;
 
-import flixel.FlxG.FlxRenderMethod as RenderMethod;
+import flixel.FlxG;
+import openfl.display.Stage;
 
-class DisplayFrontEnd
+class RenderFrontEnd
 {
+	public var method:FlxRenderMethod;
+	public var blit(default, null):Bool;
+	public var tile(default, null):Bool;
+	
+	public var pixelMode(default, null):FlxPixelMode = CUSTOM;
+	
 	public function new () {}
 	
-	public var render(get, never):FlxRenderMethod;
-	inline function get_render():FlxRenderMethod
+	@:allow(flixel.FlxG)
+	function init()
 	{
-		return FlxG.renderMethod;
+		method = BLITTING;
+		
+		#if (!lime_legacy && !flash)
+		method = switch (FlxG.stage.window.context.type)
+		{
+			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
+			default: BLITTING;
+		}
+		#else
+		#if web
+		method = BLITTING;
+		#else
+		method = DRAW_TILES;
+		#end
+		#end
+		
+		#if air
+		method = BLITTING;
+		#end
+		
+		blit = method == BLITTING;
+		tile = method == DRAW_TILES;
+		FlxObject.defaultPixelPerfectPosition = blit;
 	}
 	
-	public var pixelMode(default, set):FlxPixelMode;
-	inline function set_pixelMode(value:FlxPixelMode)
+	public function setPixelMode(value:FlxPixelMode)
 	{
 		switch value
 		{
@@ -37,17 +65,7 @@ class DisplayFrontEnd
 				lime.app.Application.current.window.element.style.removeProperty("image-rendering");
 				#end
 		}
-		return pixelMode = value;
 	}
-}
-
-abstract FlxRenderMethod(RenderMethod) from RenderMethod
-{
-	public var blit(get, never):Bool;
-	inline function get_blit() return this == BLITTING;
-	
-	public var tile(get, never):Bool;
-	inline function get_tile() return this == DRAW_TILES;
 }
 
 enum FlxPixelMode

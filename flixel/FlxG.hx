@@ -12,10 +12,10 @@ import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
-import flixel.system.frontEnds.DisplayFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
+import flixel.system.frontEnds.RenderFrontEnd;
 import flixel.system.frontEnds.SignalFrontEnd;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.frontEnds.VCRFrontEnd;
@@ -151,10 +151,15 @@ class FlxG
 
 	public static var renderMethod(default, null):FlxRenderMethod;
 
+	@:deprecated("FlxG.renderBlit is deprecated, use FlxG.render.blit, instead")
 	public static var renderBlit(default, null):Bool;
+	@:deprecated("FlxG.renderTile is deprecated, use FlxG.render.tile, instead")
 	public static var renderTile(default, null):Bool;
 	
-	public static var display(default, null) = new DisplayFrontEnd();
+	/**
+	 * 
+	 */
+	public static var render(default, null) = new RenderFrontEnd();
 	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
@@ -620,6 +625,7 @@ class FlxG
 	 * Called by `FlxGame` to set up `FlxG` during `FlxGame`'s constructor.
 	 */
 	@:allow(flixel.FlxGame.new)
+	@:haxe.warning("-WDeprecated")
 	static function init(game:FlxGame, width:Int, height:Int):Void
 	{
 		if (width < 0)
@@ -631,12 +637,15 @@ class FlxG
 		FlxG.width = width;
 		FlxG.height = height;
 
-		initRenderMethod();
+		render.init();
+		renderMethod = render.method;
+		renderBlit = renderMethod == BLITTING;
+		renderTile = renderMethod == DRAW_TILES;
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
 
-		resizeGame(Lib.current.stage.stageWidth, Lib.current.stage.stageHeight);
+		resizeGame(stage.stageWidth, stage.stageHeight);
 
 		// Instantiate inputs
 		#if FLX_KEYBOARD
@@ -673,50 +682,6 @@ class FlxG
 		#if FLX_SOUND_SYSTEM
 		sound = new SoundFrontEnd();
 		#end
-	}
-
-	static function initRenderMethod():Void
-	{
-		renderMethod = BLITTING;
-
-		#if (!lime_legacy && !flash)
-		#if (lime >= "7.0.0")
-		renderMethod = switch (stage.window.context.type)
-		{
-			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
-			default: BLITTING;
-		}
-		#else
-		if (!Lib.application.config.windows[0].hardware)
-		{
-			renderMethod = BLITTING;
-		}
-		else
-		{
-			renderMethod = switch (stage.window.renderer.type)
-			{
-				case OPENGL, CONSOLE: DRAW_TILES;
-				case CANVAS, FLASH, CAIRO: BLITTING;
-				default: BLITTING;
-			}
-		}
-		#end
-		#else
-		#if web
-		renderMethod = BLITTING;
-		#else
-		renderMethod = DRAW_TILES;
-		#end
-		#end
-
-		#if air
-		renderMethod = BLITTING;
-		#end
-
-		renderBlit = renderMethod == BLITTING;
-		renderTile = renderMethod == DRAW_TILES;
-
-		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 
 	#if FLX_SAVE

@@ -1366,7 +1366,7 @@ class FlxObject extends FlxBasic
 
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.render.blit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
@@ -1379,7 +1379,7 @@ class FlxObject extends FlxBasic
 
 	inline function endDrawDebug(camera:FlxCamera)
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.render.blit)
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 	#end
