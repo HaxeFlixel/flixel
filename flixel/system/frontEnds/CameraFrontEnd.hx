@@ -132,7 +132,7 @@ class CameraFrontEnd
 			return;
 		}
 
-		if (FlxG.renderTile)
+		if (FlxG.render.tile)
 		{
 			for (i in 0...list.length)
 			{
@@ -260,7 +260,7 @@ class CameraFrontEnd
 				continue;
 			}
 
-			if (FlxG.renderBlit)
+			if (FlxG.render.blit)
 			{
 				camera.checkResize();
 
@@ -270,7 +270,7 @@ class CameraFrontEnd
 				}
 			}
 
-			if (FlxG.renderTile)
+			if (FlxG.render.tile)
 			{
 				camera.clearDrawStack();
 				camera.canvas.graphics.clear();
@@ -280,7 +280,7 @@ class CameraFrontEnd
 				#end
 			}
 
-			if (FlxG.renderBlit)
+			if (FlxG.render.blit)
 			{
 				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 				camera.screen.dirty = true;
@@ -295,7 +295,7 @@ class CameraFrontEnd
 	@:allow(flixel.FlxGame)
 	inline function render():Void
 	{
-		if (FlxG.renderTile)
+		if (FlxG.render.tile)
 		{
 			for (camera in list)
 			{
@@ -322,7 +322,7 @@ class CameraFrontEnd
 
 			camera.drawFX();
 
-			if (FlxG.renderBlit)
+			if (FlxG.render.blit)
 			{
 				if (useBufferLocking)
 				{

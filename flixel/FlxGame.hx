@@ -472,7 +472,7 @@ class FlxGame extends Sprite
 		var height:Int = FlxG.stage.stageHeight;
 
 		#if !flash
-		if (FlxG.renderTile)
+		if (FlxG.render.tile)
 			FlxG.bitmap.onContext();
 		#end
 
@@ -863,7 +863,7 @@ class FlxGame extends Sprite
 
 		FlxG.signals.preDraw.dispatch();
 
-		if (FlxG.renderTile)
+		if (FlxG.render.tile)
 			FlxDrawBaseItem.drawCalls = 0;
 
 		#if FLX_POST_PROCESS
@@ -884,7 +884,7 @@ class FlxGame extends Sprite
 			_state.draw();
 		}
 
-		if (FlxG.renderTile)
+		if (FlxG.render.tile)
 		{
 			FlxG.cameras.render();
 
