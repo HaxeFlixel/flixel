@@ -78,7 +78,7 @@ enum FlxPixelMode
 	PIXELATED;
 	
 	/**
-	 * Makes no changes to any default redering properties
+	 * Makes no changes to any default rendering properties
 	 */
 	CUSTOM;
 	
