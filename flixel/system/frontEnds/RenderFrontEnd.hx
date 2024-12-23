@@ -43,6 +43,7 @@ class RenderFrontEnd
 	
 	public function setPixelMode(value:FlxPixelMode)
 	{
+		this.pixelMode = value;
 		switch value
 		{
 			case CUSTOM:// do nothing
@@ -73,7 +74,7 @@ enum FlxPixelMode
 	/**
 	 * Enables various features that result in crisp pixels, namely:
 	 * - Changes `FlxSprite.defaultAntialiasing` to `false`
-	 * - On web, changes the `image-rendering` to `"pixelated"`
+	 * - On web, changes the window's `image-rendering` to `"pixelated"`
 	 */
 	PIXELATED;
 	
@@ -85,7 +86,7 @@ enum FlxPixelMode
 	/**
 	 * Enables various features that result in crisp pixels, namely:
 	 * - Changes `FlxSprite.defaultAntialiasing` to `true`
-	 * - On web, changes the `image-rendering` to `"pixelated"`
+	 * - On web, removes the window's `image-rendering` to its default value (no value)
 	 */
 	SMOOTH;
 }
