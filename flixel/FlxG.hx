@@ -12,6 +12,7 @@ import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
+import flixel.system.frontEnds.DisplayFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
 import flixel.system.frontEnds.LogFrontEnd;
 import flixel.system.frontEnds.PluginFrontEnd;
@@ -152,7 +153,9 @@ class FlxG
 
 	public static var renderBlit(default, null):Bool;
 	public static var renderTile(default, null):Bool;
-
+	
+	public static var display(default, null) = new DisplayFrontEnd();
+	
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
 	 */
