@@ -13,6 +13,15 @@ class FlxColorTransformUtil
 
 		return transform;
 	}
+	
+	/**
+	 * Helper for transform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat)
+	 * @since 5.9.0
+	 */
+	public static inline function setMultipliersFromColor(transform:ColorTransform, color:FlxColor):ColorTransform
+	{
+		return setMultipliers(transform, color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat);
+	}
 
 	public static function setOffsets(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
 	{
@@ -23,7 +32,16 @@ class FlxColorTransformUtil
 
 		return transform;
 	}
-
+	
+	/**
+	 * Helper for transform.setOffsets(color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat)
+	 * @since 5.9.0
+	 */
+	public static inline function setOffsetsFromColor(transform:ColorTransform, color:FlxColor):ColorTransform
+	{
+		return setOffsets(transform, color.redFloat, color.greenFloat, color.blueFloat, color.alphaFloat);
+	}
+	
 	/**
 	 * Returns whether red, green, or blue multipliers are set to anything other than 1.
 	 */
