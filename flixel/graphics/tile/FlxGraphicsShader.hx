@@ -15,8 +15,16 @@ class FlxGraphicsShader extends GraphicsShader
 		
 		if (hasColorTransform)
 		{
-			openfl_ColorOffsetv = (openfl_ColorOffsetv * colorMultiplier) + (colorOffset / 255.0);
-			openfl_ColorMultiplierv *= colorMultiplier;
+			if (openfl_HasColorTransform)
+			{
+				openfl_ColorOffsetv = (openfl_ColorOffsetv * colorMultiplier) + (colorOffset / 255.0);
+				openfl_ColorMultiplierv *= colorMultiplier;
+			}
+			else
+			{
+				openfl_ColorOffsetv = colorOffset / 255.0;
+				openfl_ColorMultiplierv = colorMultiplier;
+			}
 		}
 	")
 	@:glFragmentHeader("
@@ -25,7 +33,7 @@ class FlxGraphicsShader extends GraphicsShader
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!hasTransform)
+			if (!(hasTransform || openfl_HasColorTransform))
 				return color;
 			
 			if (color.a == 0.0)
