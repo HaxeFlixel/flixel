@@ -35,12 +35,12 @@ class FlxAtlasFrames extends FlxFramesCollection
 	/**
 	 * Parsing method for atlases generated from Aseprite's JSON export options. Note that Aseprite
 	 * and Texture Packer use the same JSON format, however this method honors frames' `duration`
-	 * whereas `fromTexturePackerJson` ignores it by default (for backwrds compatibility reasons).
+	 * whereas `fromTexturePackerJson` ignores it by default (for backwards compatibility reasons).
 	 *
 	 * @param   source       The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
 	 * @param   description  Contents of JSON file with atlas description.
 	 *                       You can get it with `FlxG.assets.getText(path/to/description.json)`.
-	 *                       Or you can just a pass path to the JSON file in the assets directory.
+	 *                       Or you can just pass a path to the JSON file in the assets directory.
 	 *                       You can also directly pass in the parsed object.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 * @see [Exporting texture atlases with Aseprite](https://www.aseprite.org/docs/sprite-sheet/#texture-atlases)
@@ -56,10 +56,10 @@ class FlxAtlasFrames extends FlxFramesCollection
 	 * @param   source            The image source (can be `FlxGraphic`, `String`, or `BitmapData`).
 	 * @param   description       Contents of JSON file with atlas description.
 	 *                            You can get it with `FlxG.assets.getText(path/to/description.json)`.
-	 *                            Or you can just a pass path to the JSON file in the assets directory.
+	 *                            Or you can just pass a path to the JSON file in the assets directory.
 	 *                            You can also directly pass in the parsed object.
 	 * @param   useFrameDuration  If true, any frame durations defined in the JSON will override the
-	 *                            frameRate set in you `FlxAnimationController`.
+	 *                            frameRate set in your `FlxAnimationController`.
 	 *                            Note: You can also use `fromAseprite` which uses duration.
 	 * @return  Newly created `FlxAtlasFrames` collection.
 	 */
