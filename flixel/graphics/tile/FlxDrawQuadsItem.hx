@@ -130,6 +130,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			shader.colorOffset.value = colorOffsets;
 		}
 
+		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
 		#if (openfl > "8.7.0")
