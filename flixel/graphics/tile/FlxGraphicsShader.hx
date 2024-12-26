@@ -4,54 +4,26 @@ import openfl.display.GraphicsShader;
 
 class FlxGraphicsShader extends GraphicsShader
 {
-	@:glVertexHeader("
-		attribute float alpha;
-		attribute vec4 colorMultiplier;
-		attribute vec4 colorOffset;
-		uniform bool hasColorTransform;
-	")
-	@:glVertexBody("
-		openfl_Alphav = openfl_Alpha * alpha;
-		
-		if (hasColorTransform)
-		{
-			if (openfl_HasColorTransform)
-			{
-				openfl_ColorOffsetv = (openfl_ColorOffsetv * colorMultiplier) + (colorOffset / 255.0);
-				openfl_ColorMultiplierv *= colorMultiplier;
-			}
-			else
-			{
-				openfl_ColorOffsetv = colorOffset / 255.0;
-				openfl_ColorMultiplierv = colorMultiplier;
-			}
-		}
-	")
 	@:glFragmentHeader("
-		uniform bool hasTransform;  // TODO: Is this still needed?
+		uniform float alpha;
+		uniform vec4 colorMultiplier;
+		uniform vec4 colorOffset;
 		uniform bool hasColorTransform;
+		
+		vec4 transform(bool has, vec4 color, vec4 mult, vec4 offset)
+		{
+			return mix(color, clamp(offset + (color * mult), 0.0, 1.0), float(has));
+		}
+		
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!(hasTransform || openfl_HasColorTransform))
-				return color;
 			
-			if (color.a == 0.0)
-				return vec4(0.0, 0.0, 0.0, 0.0);
+			color = transform(openfl_HasColorTransform, color, openfl_ColorMultiplierv, openfl_ColorOffsetv);
+			color = transform(hasColorTransform, color, colorMultiplier, colorOffset / 255.0);
 			
-			if (openfl_HasColorTransform || hasColorTransform)
-			{
-				color = vec4 (color.rgb / color.a, color.a);
-				vec4 mult = vec4 (openfl_ColorMultiplierv.rgb, 1.0);
-				color = clamp (openfl_ColorOffsetv + (color * mult), 0.0, 1.0);
-				
-				if (color.a == 0.0)
-					return vec4 (0.0, 0.0, 0.0, 0.0);
-				
-				return vec4 (color.rgb * color.a * openfl_Alphav, color.a * openfl_Alphav);
-			}
-			
-			return color * openfl_Alphav;
+			float _alpha = color.a * openfl_Alphav * alpha;
+			return vec4 (color.rgb * _alpha, _alpha);
 		}
 	")
 	@:glFragmentBody("
