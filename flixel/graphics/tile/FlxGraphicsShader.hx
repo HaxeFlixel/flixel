@@ -28,7 +28,7 @@ class FlxGraphicsShader extends GraphicsShader
 		}
 	")
 	@:glFragmentHeader("
-		uniform bool hasTransform;  // TODO: Is this still needed?
+		uniform bool hasTransform;  // TODO: Is this still needed? Apparently, yes!
 		uniform bool hasColorTransform;
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
