@@ -17,41 +17,38 @@ class FlxGraphicsShader extends GraphicsShader
 		{
 			if (openfl_HasColorTransform)
 			{
+				// concat transforms
 				openfl_ColorOffsetv = (openfl_ColorOffsetv * colorMultiplier) + (colorOffset / 255.0);
 				openfl_ColorMultiplierv *= colorMultiplier;
 			}
 			else
 			{
+				// overwrite openfl's transform
 				openfl_ColorOffsetv = colorOffset / 255.0;
 				openfl_ColorMultiplierv = colorMultiplier;
 			}
 		}
 	")
 	@:glFragmentHeader("
-		uniform bool hasTransform;  // TODO: Is this still needed? Apparently, yes!
 		uniform bool hasColorTransform;
+		
+		vec4 transform(vec4 color, vec4 mult, vec4 offset, float alpha)
+		{
+			color = clamp(offset + (color * mult), 0.0, 1.0);
+			alpha *= color.a;
+			return vec4 (color.rgb * alpha, alpha);
+		}
+		
+		vec4 transformIf(bool hasTransform, vec4 color, vec4 mult, vec4 offset, float alpha)
+		{
+			return mix(color, transform(color, mult, offset, alpha), float(hasTransform));
+		}
+		
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			if (!(hasTransform || openfl_HasColorTransform))
-				return color;
-			
-			if (color.a == 0.0)
-				return vec4(0.0, 0.0, 0.0, 0.0);
-			
-			if (openfl_HasColorTransform || hasColorTransform)
-			{
-				color = vec4 (color.rgb / color.a, color.a);
-				vec4 mult = vec4 (openfl_ColorMultiplierv.rgb, 1.0);
-				color = clamp (openfl_ColorOffsetv + (color * mult), 0.0, 1.0);
-				
-				if (color.a == 0.0)
-					return vec4 (0.0, 0.0, 0.0, 0.0);
-				
-				return vec4 (color.rgb * color.a * openfl_Alphav, color.a * openfl_Alphav);
-			}
-			
-			return color * openfl_Alphav;
+			bool hasTransform = openfl_HasColorTransform || hasColorTransform;
+			return transformIf(hasTransform, color, openfl_ColorMultiplierv, openfl_ColorOffsetv, openfl_Alphav);
 		}
 	")
 	@:glFragmentBody("
