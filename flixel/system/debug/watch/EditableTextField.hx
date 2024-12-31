@@ -142,10 +142,8 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	{
 		var value:Dynamic = switch (expectedType)
 		{
-			#if neko
 			case TInt: Std.parseInt(text);
 			case TFloat: Std.parseFloat(text);
-			#end
 			case TBool if (text == "true"): true;
 			case TBool if (text == "false"): false;
 			case TEnum(e):
