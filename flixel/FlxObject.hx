@@ -1256,24 +1256,19 @@ class FlxObject extends FlxBasic
 			kill();
 	}
 	#end
-
+	
 	/**
 	 * Centers this `FlxObject` on the screen, either by the x axis, y axis, or both.
-	 *
+	 * 
 	 * @param   axes   On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both. 
 	 * @return  This FlxObject for chaining
 	 */
+	@:deprecated("screenCenter is deprecated, use FlxG.centerHitbox instead")
 	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes.x)
-			x = (FlxG.width - width) / 2;
-
-		if (axes.y)
-			y = (FlxG.height - height) / 2;
-
-		return this;
+		return FlxG.centerHitbox(this, axes);
 	}
-
+	
 	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.

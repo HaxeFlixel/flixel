@@ -1902,6 +1902,50 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
+	 * Centers `FlxSprite` by graphic size in this camera view, either by the x axis, y axis, or both.
+	 * 
+	 * @param   sprite       The sprite to center.
+	 * @param   axes         On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered sprite for chaining.
+	 * @since TBA
+	 */
+	public function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
+	{
+		if (axes.x)
+		{
+			final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
+			sprite.x = viewX + (viewWidth - graphicWidth) / 2;
+		}
+		
+		if (axes.y)
+		{
+			final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
+			sprite.y = viewY + (viewHeight - graphicHeight) / 2;
+		}
+		
+		return sprite;
+	}
+	
+	/**
+	 * Centers `FlxObject` by hitbox size in this camera view, either by the x axis, y axis, or both.
+	 * 
+	 * @param   sprite       The object to center.
+	 * @param   axes         On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered object for chaining.
+	 * @since TBA
+	 */
+	public function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
+	{
+		if (axes.x)
+			object.x = viewX + (viewWidth - object.width) / 2;
+		
+		if (axes.y)
+			object.y = viewY + (viewHeight - object.height) / 2;
+		
+		return object;
+	}
+	
+	/**
 	 * The size and position of this camera's margins, via `viewMarginLeft`, `viewMarginTop`, `viewWidth`
 	 * and `viewHeight`.
 	 * 
