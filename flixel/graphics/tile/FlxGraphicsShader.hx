@@ -30,25 +30,31 @@ class FlxGraphicsShader extends GraphicsShader
 		}
 	")
 	@:glFragmentHeader("
+		// Note: this is being set to false somewhere!
+		uniform bool hasTransform;
 		uniform bool hasColorTransform;
 		
 		vec4 transform(vec4 color, vec4 mult, vec4 offset, float alpha)
 		{
 			color = clamp(offset + (color * mult), 0.0, 1.0);
-			alpha *= color.a;
-			return vec4 (color.rgb * alpha, alpha);
+			return vec4 (color.rgb, 1.0) * color.a * alpha;
 		}
 		
 		vec4 transformIf(bool hasTransform, vec4 color, vec4 mult, vec4 offset, float alpha)
 		{
-			return mix(color, transform(color, mult, offset, alpha), float(hasTransform));
+			return mix(color * alpha, transform(color, mult, offset, alpha), float(hasTransform));
 		}
 		
 		vec4 flixel_texture2D(sampler2D bitmap, vec2 coord)
 		{
 			vec4 color = texture2D(bitmap, coord);
-			bool hasTransform = openfl_HasColorTransform || hasColorTransform;
-			return transformIf(hasTransform, color, openfl_ColorMultiplierv, openfl_ColorOffsetv, openfl_Alphav);
+			if (!hasTransform && !openfl_HasColorTransform)
+				return color;
+			
+			color = mix(color, vec4(0.0), float(color.a == 0.0));
+			
+			bool _hasTransform = openfl_HasColorTransform || hasColorTransform;
+			return transformIf(_hasTransform, color, openfl_ColorMultiplierv, openfl_ColorOffsetv, openfl_Alphav);
 		}
 	")
 	@:glFragmentBody("
