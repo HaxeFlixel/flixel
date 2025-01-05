@@ -965,8 +965,8 @@ class FlxGamepad implements IFlxDestroyable
 	}
 	
 	/**
-	 * Part of the keystroke recording system.
-	 * Takes data about key presses and sets it into array.
+	 * Part of the gamepad recording system.
+	 * Takes data about analog and buttons and sets it into array.
 	 *
 	 * @param	Record	Array of data about key states.
 	 */
