@@ -221,25 +221,22 @@ class FrameRecord
 				}
 				
 				// go through each data pair and enter it into this frame's analog state
-				if (analogArray.length > 0)
+				var analogPair:Array<String>;
+				i = 0;
+				l = inputsArray[0].length;
+				while (i < l)
 				{
-					var analogPair:Array<String>;
-					i = 0;
-					l = inputsArray[0].length;
-					while (i < l)
+					var pairString = analogArray[i++];
+					if (pairString != null)
 					{
-						var pairString = analogArray[i++];
-						if (pairString != null)
+						analogPair = pairString.split(":");
+						if (analogPair.length == 2)
 						{
-							analogPair = pairString.split(":");
-							if (analogPair.length == 2)
+							if (gamepad == null)
 							{
-								if (gamepad == null)
-								{
-									gamepad = new Array<GamepadRecord>();
-								}
-								currentGamepad.analog.push(new IntegerFloatPair(Std.parseInt(analogPair[0]), Std.parseFloat(analogPair[1])));
+								gamepad = new Array<GamepadRecord>();
 							}
+							currentGamepad.analog.push(new IntegerFloatPair(Std.parseInt(analogPair[0]), Std.parseFloat(analogPair[1])));
 						}
 					}
 				}

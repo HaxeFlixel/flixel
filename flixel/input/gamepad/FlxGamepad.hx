@@ -958,7 +958,9 @@ class FlxGamepad implements IFlxDestroyable
 		for (i in 0...axis.length)
 		{
 			var axisValue = getAxisValue(i);
-			analogData.push(new IntegerFloatPair(i, axisValue));
+			if (axisValue != 0)
+				analogData.push(new IntegerFloatPair(i, axisValue));
+
 		}
 		
 		return new GamepadRecord(id, data, analogData);
@@ -984,7 +986,10 @@ class FlxGamepad implements IFlxDestroyable
 		}
 		i = 0;
 		final len = record.analog.length;
-		
+		for (i in 0...axis.length)
+		{
+			axis[i] = 0;
+		}
 		while (i < len)
 		{
 			final keyRecord = record.analog[i++];
