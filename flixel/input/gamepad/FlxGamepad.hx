@@ -1,5 +1,7 @@
 package flixel.input.gamepad;
 
+import flixel.system.replay.GamepadRecord;
+import flixel.system.replay.CodeValuePair;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadMappedInput;
 import flixel.input.gamepad.lists.FlxGamepadAnalogList;
@@ -907,6 +909,55 @@ class FlxGamepad implements IFlxDestroyable
 			LabelValuePair.weak("model", model),
 			LabelValuePair.weak("deadZone", deadZone)
 		]);
+	}
+	/**
+	 * If any buttons are not "released",
+	 * this function will return an array indicating
+	 * which buttons are pressed and what state they are in.
+	 *
+	 * @return	An array of button state data. Null if there is no data.
+	 */
+	@:allow(flixel.system.replay.FlxReplay)
+	function record():GamepadRecord
+	{
+		var data:Array<CodeValuePair> = null;
+		
+		for (button in buttons)
+		{
+			if (button == null || button.released)
+			{
+				continue;
+			}
+			
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			
+			data.push(new CodeValuePair(button.ID, button.current));
+		}
+		
+		return new GamepadRecord(id, data);
+	}
+	
+	/**
+	 * Part of the keystroke recording system.
+	 * Takes data about key presses and sets it into array.
+	 *
+	 * @param	Record	Array of data about key states.
+	 */
+	@:allow(flixel.system.replay.FlxReplay)
+	function playback(record:Array<CodeValuePair>):Void
+	{
+		var i = 0;
+		final len = record.length;
+		
+		while (i < len)
+		{
+			final keyRecord = record[i++];
+			final id = getButton(keyRecord.code);
+			id.current = keyRecord.value;
+		}
 	}
 }
 

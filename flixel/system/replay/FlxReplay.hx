@@ -165,6 +165,18 @@ class FlxReplay
 			continueFrame = false;
 		#end
 
+		#if FLX_GAMEINPUT_API
+		var gamepadRecords:Array<GamepadRecord> = new Array();
+		for (gamepad in FlxG.gamepads.getActiveGamepads())
+		{
+			var gamepadRecord:GamepadRecord = gamepad.record();
+			if (gamepadRecord != null)
+			{
+				continueFrame = false;
+			}
+		}
+		#end
+
 		if (continueFrame)
 		{
 			frame++;

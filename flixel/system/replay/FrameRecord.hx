@@ -21,6 +21,11 @@ class FrameRecord
 	public var mouse:MouseRecord;
 
 	/**
+	 * An array containing all the gamepad inputs.
+	 */
+	public var gamepad:Array<GamepadRecord>;
+
+	/**
 	 * Instantiate array new frame record.
 	 */
 	public function new()
@@ -28,6 +33,7 @@ class FrameRecord
 		frame = 0;
 		keys = null;
 		mouse = null;
+		gamepad = null;
 	}
 
 	/**
@@ -37,11 +43,12 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this FrameRecord object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
+	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord, ?Gamepad:Array<GamepadRecord>):FrameRecord
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;
 		mouse = Mouse;
+		gamepad = Gamepad;
 
 		return this;
 	}
@@ -53,6 +60,7 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
+		gamepad = null;
 	}
 
 	/**
@@ -85,6 +93,29 @@ class FrameRecord
 			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
 		}
 
+		for (record in gamepad)
+		{
+			output += "g";
+			if (record != null)
+			{
+				output += record.gamepadID + ",";
+				var object:CodeValuePair;
+				var i:Int = 0;
+				var l:Int = keys.length;
+				while (i < l)
+				{
+					if (i > 0)
+					{
+						output += ",";
+					}
+					object = record.buttons[i++];
+					output += object.code + ":" + object.value;
+				}
+			}
+		}
+		
+		trace(output);
+
 		return output;
 	}
 
@@ -103,8 +134,10 @@ class FrameRecord
 
 		// split up keyboard and mouse data
 		array = array[1].split("m");
+		var gamepadArray:Array<String> = array[1].split("g");
+
 		var keyData:String = array[0];
-		var mouseData:String = array[1];
+		var mouseData:String = gamepadArray.splice(0, 1)[0];
 
 		// parse keyboard data
 		if (keyData.length > 0)
