@@ -93,28 +93,43 @@ class FrameRecord
 			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
 		}
 
-		for (record in gamepad)
+		if (gamepad != null)
 		{
-			output += "g";
-			if (record != null)
+			for (record in gamepad)
 			{
-				output += record.gamepadID + ",";
-				var object:CodeValuePair;
-				var i:Int = 0;
-				var l:Int = keys.length;
-				while (i < l)
+				output += "g";
+				if (record != null)
 				{
-					if (i > 0)
+					output += record.gamepadID + ",";
+					var object:CodeValuePair;
+					var i:Int = 0;
+					var l:Int = record.buttons.length;
+					while (i < l)
 					{
-						output += ",";
+						if (i > 0)
+						{
+							output += ",";
+						}
+						object = record.buttons[i++];
+						output += object.code + ":" + object.value;
 					}
-					object = record.buttons[i++];
-					output += object.code + ":" + object.value;
+					output += "/";
+					var object:IntegerFloatPair;
+					var i:Int = 0;
+					var l:Int = record.analog.length;
+					while (i < l)
+					{
+						if (i > 0)
+						{
+							output += ",";
+						}
+						object = record.analog[i++];
+						output += object.code + ":" + object.value;
+					}
 				}
 			}
 		}
-		
-		trace(output);
+
 
 		return output;
 	}
@@ -170,6 +185,66 @@ class FrameRecord
 			if (array.length >= 4)
 			{
 				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
+			}
+		}
+
+		if (gamepadArray.length > 0)
+		{
+			for (gamepadString in gamepadArray)
+			{
+				array = gamepadString.split(",");
+				var currentGamepad:GamepadRecord = new GamepadRecord(Std.parseInt(array[0]), [], []);
+				
+				var inputsArray:Array<String> = gamepadString.substring(array[0].length + 1).split("/");
+				var buttonsArray:Array<String> = inputsArray[0].split(",");
+				var analogArray:Array<String> = inputsArray[1].split(",");
+				
+				// go through each data pair and enter it into this frame's button state
+				var buttonPair:Array<String>;
+				i = 0;
+				l = inputsArray[0].length;
+				while (i < l)
+				{
+					var pairString = buttonsArray[i++];
+					if (pairString != null)
+					{
+						buttonPair = pairString.split(":");
+						if (buttonPair.length == 2)
+						{
+							if (gamepad == null)
+							{
+								gamepad = new Array<GamepadRecord>();
+							}
+							currentGamepad.buttons.push(new CodeValuePair(Std.parseInt(buttonPair[0]), Std.parseInt(buttonPair[1])));
+						}
+					}
+				}
+				
+				// go through each data pair and enter it into this frame's analog state
+				if (analogArray.length > 0)
+				{
+					var analogPair:Array<String>;
+					i = 0;
+					l = inputsArray[0].length;
+					while (i < l)
+					{
+						var pairString = analogArray[i++];
+						if (pairString != null)
+						{
+							analogPair = pairString.split(":");
+							if (analogPair.length == 2)
+							{
+								if (gamepad == null)
+								{
+									gamepad = new Array<GamepadRecord>();
+								}
+								currentGamepad.analog.push(new IntegerFloatPair(Std.parseInt(analogPair[0]), Std.parseFloat(analogPair[1])));
+							}
+						}
+					}
+				}
+				
+				this.gamepad.push(currentGamepad);
 			}
 		}
 

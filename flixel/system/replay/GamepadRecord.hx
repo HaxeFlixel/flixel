@@ -16,6 +16,10 @@ class GamepadRecord
 	 * An array referring to digital gamepad buttons and it's state.
 	 */
 	public var buttons(default, null):Array<CodeValuePair>;
+	/**
+	 * An array referring to analog gamepad inputs and their state.
+	 */
+	public var analog(default, null):Array<IntegerFloatPair>;
 
 	/**
 	 * Instantiate a new mouse input record.
@@ -23,9 +27,10 @@ class GamepadRecord
 	 * @param   GamepadID	The ID of the gamepad being recorded
 	 * @param	Buttons		An array referring to digital gamepad buttons and it's state.
 	 */
-	public function new(gamepadID:Int, buttons:Array<CodeValuePair>)
+	public function new(gamepadID:Int, buttons:Array<CodeValuePair>, analog:Array<IntegerFloatPair>)
 	{
-		this.gamepadID =gamepadID;
+		this.gamepadID = gamepadID;
 		this.buttons = buttons;	
+		this.analog = analog;
 	}
 }

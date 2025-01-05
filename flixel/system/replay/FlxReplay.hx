@@ -1,5 +1,6 @@
 package flixel.system.replay;
 
+import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.util.FlxArrayUtil;
 
@@ -171,6 +172,7 @@ class FlxReplay
 			var gamepadRecord:GamepadRecord = gamepad.record();
 			if (gamepadRecord != null)
 			{
+				gamepadRecords.push(gamepadRecord);
 				continueFrame = false;
 			}
 		}
@@ -198,6 +200,8 @@ class FlxReplay
 			_frames.resize(_capacity);
 		}
 	}
+
+	var fakeGamepads:Map<Int, FlxGamepad> = [];
 
 	/**
 	 * Get the current frame record data and load it into the input managers.
@@ -231,6 +235,26 @@ class FlxReplay
 			FlxG.mouse.playback(fr.mouse);
 		}
 		#end
+		if (fr.gamepad != null)
+		{
+			for (record in fr.gamepad)
+			{
+				var gamepad = null;
+				if (fakeGamepads.exists(record.gamepadID))
+				{
+					gamepad = fakeGamepads.get(record.gamepadID);
+				}
+				else
+				{
+					gamepad = new FlxGamepad(-record.gamepadID, FlxG.gamepads, FlxGamepadModel.UNKNOWN, null);
+					FlxG.gamepads.addPlaybackGamepad(gamepad);
+					gamepad.recording = true;
+					fakeGamepads.set(record.gamepadID, gamepad);
+				}
+				
+				gamepad.playback(record);
+			}
+		}
 	}
 
 	/**
