@@ -165,7 +165,6 @@ class FlxReplay
 			continueFrame = false;
 		#end
 
-		#if FLX_GAMEINPUT_API
 		var gamepadRecords:Array<GamepadRecord> = new Array();
 		for (gamepad in FlxG.gamepads.getActiveGamepads())
 		{
@@ -175,7 +174,6 @@ class FlxReplay
 				continueFrame = false;
 			}
 		}
-		#end
 
 		if (continueFrame)
 		{
@@ -190,6 +188,7 @@ class FlxReplay
 		#if FLX_KEYBOARD
 		frameRecorded.keys = keysRecord;
 		#end
+		frameRecorded.gamepad = gamepadRecords;
 
 		_frames[frameCount++] = frameRecorded;
 
