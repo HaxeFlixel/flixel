@@ -449,7 +449,6 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
-		onFinish.removeAll();
 		onFinish.add(onComplete);
 		onComplete = OnComplete;
 		#if FLX_PITCH
