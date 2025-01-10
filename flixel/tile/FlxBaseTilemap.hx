@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPathfinder;
 import flixel.system.FlxAssets;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
@@ -207,18 +208,16 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * If/when it passes through a tile, it stores that point and returns false.
 	 * 
 	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
-	 *
-	 * @param   start   The world coordinates of the start of the ray.
-	 * @param   end     The world coordinates of the end of the ray.
-	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                  Only returned if the line enters the rect.
+	 * 
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   result  Optional result vector, indicating where the ray hit a wall
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills Result if a tile was hit.
+	 *          Returns false and fills `result` if a tile was hit.
 	 */
 	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
 		throw "ray must be implemented";
-		return false;
 	}
 
 	/**
@@ -227,18 +226,323 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
 	 *
-	 * @param   start   The world coordinates of the start of the ray.
-	 * @param   end     The world coordinates of the end of the ray.
-	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
-	 *                  Only returned if the line enters the rect.
-	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills Result if a tile was hit.
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   func    The condition, where `tile` is the tile instance for that location
 	 */
-	public function forEachOverlappingRay(start:FlxPoint, end:FlxPoint, ?func:FlxPoint):Void
+	inline public function forEachInRay(start:FlxPoint, end:FlxPoint, ?func:(Tile)->Void):Void
 	{
-		throw "ray must be implemented";
+		findIndexInRayI(start, end, voidFindIgnoreIndex(func));
+	}
+	
+	/**
+	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
+	 * 
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   func    The condition, where `index` is the tile's map index, and `tile` is
+	 *                  the tile instance for that location, or `null` if there is no instance
+	 */
+	inline public function forEachInRayI(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>) -> Void)
+	{
+		findIndexInRayI(start, end, voidFind(func));
+	}
+	
+	/**
+	 * Checks all tiles overlapping a ray from `start` to `end`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   func    The condition, where `tile` is the tile instance for that location
+	 * @param   result  Optional result vector, indicating where the ray hit the found tile
+	 * @return  The index of the found tile
+	 */
+	inline public function findIndexInRay(start:FlxPoint, end:FlxPoint, func:(Tile) -> Bool, ?result:FlxPoint):Int
+	{
+		return findIndexInRayI(start, end, ignoreIndex(func), result);
+	}
+	
+	/**
+	 * Checks all tile indices overlapping a ray from `start` to `end`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   start   The world coordinates of the start of the ray
+	 * @param   end     The world coordinates of the end of the ray
+	 * @param   func    The condition, where `index` is the tile's map index, and `tile` is
+	 *                  the tile instance for that location, or `null` if there is no instance
+	 * @param   result  Optional result vector, indicating where the ray hit the found tile
+	 * @return  The index of the found tile
+	 */
+	public function findIndexInRayI(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>) -> Bool, ?result:FlxPoint):Int
+	{
+		// trim the line to the parts inside the map
+		final trimmedStart = calcRayEntry(start, end);
+		final trimmedEnd = calcRayExit(start, end);
+		
+		start.putWeak();
+		end.putWeak();
+		
+		if (trimmedStart == null || trimmedEnd == null)
+		{
+			FlxDestroyUtil.put(trimmedStart);
+			FlxDestroyUtil.put(trimmedEnd);
+			return -1;
+		}
+		
+		start = trimmedStart;
+		end = trimmedEnd;
+		
+		inline function clearRefs()
+		{
+			trimmedStart.put();
+			trimmedEnd.put();
+		}
+		
+		final startIndex = getMapIndex(start);
+		final endIndex = getMapIndex(end);
+		
+		// If the starting tile is solid, return the starting position
+		final tile = getTileData(startIndex);
+		if (tile != null && tile.solid)
+		{
+			if (result != null)
+				result.copyFrom(start);
+				
+			clearRefs();
+			return startIndex;
+		}
+		
+		final startTileX = getColumn(startIndex);
+		final startTileY = getRow(startIndex);
+		final endTileX = getColumn(endIndex);
+		final endTileY = getRow(endIndex);
+		
+		final scaledTileWidth = getColumnPos(1) - getColumnPos(0);
+		final scaledTileHeight = getRowPos(1) - getRowPos(0);
+		var hitIndex = -1;
+		
+		if (start.x == end.x)
+		{
+			hitIndex = findIndexInColumnI(startTileX, startTileY, endTileY, func);
+			if (hitIndex != -1 && result != null)
+			{
+				// check the bottom
+				result.copyFrom(getTilePos(hitIndex));
+				result.x = start.x;
+				if (start.y > end.y)
+					result.y += scaledTileHeight;
+			}
+		}
+		else
+		{
+			// Use y = mx + b formula
+			final m = (start.y - end.y) / (start.x - end.x);
+			// y - mx = b
+			final b = start.y - m * start.x;
+			
+			final movesRight = start.x < end.x;
+			final inc = movesRight ? 1 : -1;
+			final offset = movesRight ? 1 : 0;
+			var tileX = startTileX;
+			var lastTileY = startTileY;
+			
+			while (tileX != endTileX)
+			{
+				final xPos = getColumnPos(tileX + offset);
+				final yPos = m * getColumnPos(tileX + offset) + b;
+				final tileY = getRowAt(yPos);
+				hitIndex = findIndexInColumnI(tileX, lastTileY, tileY, func);
+				if (hitIndex != -1)
+					break;
+				lastTileY = tileY;
+				tileX += inc;
+			}
+			
+			if (hitIndex == -1)
+				hitIndex = findIndexInColumnI(endTileX, lastTileY, endTileY, func);
+				
+			if (hitIndex != -1 && result != null)
+			{
+				result.copyFrom(getTilePos(hitIndex));
+				if (Std.int(hitIndex / widthInTiles) == lastTileY)
+				{
+					if (start.x > end.x)
+						result.x += scaledTileWidth;
+						
+					// set result to left side
+					result.y = m * result.x + b; // mx + b
+				}
+				else
+				{
+					// if ascending
+					if (start.y > end.y)
+					{
+						// change result to bottom
+						result.y += scaledTileHeight;
+					}
+					// otherwise result is top
+					
+					// x = (y - b)/m
+					result.x = (result.y - b) / m;
+				}
+			}
+		}
+		
+		clearRefs();
+		return hitIndex;
 	}
 
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The function, where `tile` is the tile instance for that location
+	 */
+	inline public function forEachIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Void)
+	{
+		findIndexInColumnI(column, startRow, endRow, voidFindIgnoreIndex(func));
+	}
+	
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The function, where `index` is the tile's map index, and `tile` is
+	 *                    the tile instance for that location, or `null` if there is no instance
+	 */
+	inline public function forEachIndexInColumnI(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool)
+	{
+		findIndexInColumnI(column, startRow, endRow, voidFind(func));
+	}
+	
+	/**
+	 * Helper to convert `(Int, Null<Tile>)->Bool` to `(Tile>)->Void`.
+	 * Checks null, ignores index, always returns false
+	 */
+	inline function voidFindIgnoreIndex(func:(Tile)->Void):(Int, Null<Tile>)->Bool
+	{
+		return function (_, t)
+		{
+			if (t != null)
+				func(t);
+			
+			return false;
+		};
+	}
+	
+	/**
+	 * Helper to convert `(Int, Null<Tile>)->Bool` to `(Int, Null<Tile>)->Void`.
+	 * Always returns false
+	 */
+	inline function voidFind(func:(Int, Null<Tile>)->Void):(index:Int, tile:Null<Tile>)->Bool
+	{
+		return (_, t)->{ func(_, t); return false; };
+	}
+	
+	
+	/**
+	 * Checks all tiles in the `column` between the specified `startRow` and `endRow`,
+	 * Retrieves the first tile that satisfies to condition of `func` and returns it
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The condition, where `tile` is the tile instance for that location
+	 * @return  The found tile
+	 */
+	public function findInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Bool):Tile
+	{
+		final index = findIndexInColumnI(column, startRow, endRow, ignoreIndex(func));
+		if (index < 0)
+			return null;
+		
+		final data = getTileData(index);
+		if (data == null)
+			throw 'Unexpected null tile at $index'; // internal error
+		
+		return data;
+	}
+	
+	/**
+	 * Checks all tiles in the `column` between the specified `startRow` and `endRow`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The condition, where `tile` is the tile instance for that location
+	 * @return  The index of the found tile
+	 */
+	inline public function findIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Bool):Int
+	{
+		return findIndexInColumnI(column, startRow, endRow, ignoreIndex(func));
+	}
+	
+	/**
+	 * Helper to convert `(Int, Null<Tile>)->Bool` to `(Tile)->Bool`.
+	 * Checks null, ignores index
+	 */
+	inline function ignoreIndex(func:(Tile)->Bool):(Int, Null<Tile>)->Bool
+	{
+		return (_, t)->t != null && func(t);
+	}
+	
+	/**
+	 * Checks all tile indices in the `column` between the specified `startRow` and `endRow`,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   column    The column to check
+	 * @param   startRow  The row to check from
+	 * @param   endRow    The row to check to
+	 * @param   func      The condition, where `index` is the tile's map index, and `tile` is
+	 *                    the tile instance for that location, or `null` if there is no instance
+	 * @return  The index of the found tile
+	 */
+	public function findIndexInColumnI(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	{
+		if (startRow < 0)
+			startRow = 0;
+			
+		if (endRow < 0)
+			endRow = 0;
+			
+		if (startRow > heightInTiles - 1)
+			startRow = heightInTiles - 1;
+			
+		if (endRow > heightInTiles - 1)
+			endRow = heightInTiles - 1;
+			
+		var row = startRow;
+		final step = startRow <= endRow ? 1 : -1;
+		while (true)
+		{
+			final index = getMapIndex(column, row);
+			final tile = getTileData(index);
+			if (func(index, tile))
+				return index;
+				
+			if (row == endRow)
+				break;
+				
+			row += step;
+		}
+		
+		return -1;
+	}
+	
 	/**
 	 * Shoots a ray from the start point to the end point.
 	 * If/when it passes through a tile, it stores that point and returns false.
