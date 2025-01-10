@@ -205,7 +205,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getColumnPosAt(worldX:Float, midpoint = false):Float
 	{
-		return getColumnPos(getColumnAt(worldX), midPoint);
+		return getColumnPos(getColumnAt(worldX), midpoint);
 	}
 	
 	/**
@@ -217,7 +217,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getRowPosAt(worldY:Float, midpoint = false):Float
 	{
-		return getRowPos(getRowAt(worldY), midPoint);
+		return getRowPos(getRowAt(worldY), midpoint);
 	}
 	
 	/**
