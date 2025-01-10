@@ -197,6 +197,30 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
+	 * Get the world position of the column at the specified location
+	 * 
+	 * @param   worldX    An X coordinate in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or left edge
+	 * @since 5.10.0
+	 */
+	public function getColumnPosAt(worldX:Float, midpoint = false):Float
+	{
+		return getColumnPos(getColumnAt(worldX), midPoint);
+	}
+	
+	/**
+	 * Get the world position of the row at the specified location
+	 * 
+	 * @param   worldY    An X coordinate in the world
+	 * @param   midpoint  Whether to use the tile's midpoint, or upper edge
+	 * @since 5.10.0
+	 */
+	public function getRowPosAt(worldY:Float, midpoint = false):Float
+	{
+		return getRowPos(getRowAt(worldY), midPoint);
+	}
+	
+	/**
 	 * Get the size of a column, in world coordinates
 	 * 
 	 * @since 5.10.0
