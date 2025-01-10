@@ -146,7 +146,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getColumnAt(worldX:Float, bind = false):Int
 	{
-		throw "getColumnAt must be implemented";
+		final result = Math.floor((worldX - x) / getTileWidth());
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
+			
+		return result;
 	}
 	
 	/**
@@ -159,7 +164,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function getRowAt(worldY:Float, bind = false):Int
 	{
-		throw "getRowAt must be implemented";
+		final result = Math.floor((worldY - y) / getTileWidth());
+		
+		if (bind)
+			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles - 1 : result);
+			
+		return result;
 	}
 	
 	/**
@@ -169,11 +179,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
 	 * @since 5.9.0
 	 */
-	public function getColumnPos(column:Float, midPoint = false):Float
+	public function getColumnPos(column:Int, midpoint = false):Float
 	{
-		throw "getColumnPos must be implemented";
+		return x + column * getTileWidth() + (midpoint ? getTileWidth() * 0.5 : 0);
 	}
-
+	
 	/**
 	 * Get the world position of the specified row
 	 * 
@@ -181,9 +191,29 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
 	 * @since 5.9.0
 	 */
-	public function getRowPos(row:Int, midPoint = false):Float
+	public function getRowPos(row:Int, midpoint = false):Float
 	{
-		throw "getRowPos must be implemented";
+		return y + row * getTileHeight() + (midpoint ? getTileHeight() * 0.5 : 0);
+	}
+	
+	/**
+	 * Get the size of a column, in world coordinates
+	 * 
+	 * @since 5.10.0
+	 */
+	public function getTileWidth():Float
+	{
+		throw "getTileWidth must be implemented";
+	}
+	
+	/**
+	 * Get the size of a column, in world coordinates
+	 * 
+	 * @since 5.10.0
+	 */
+	public function getTileHeight():Float
+	{
+		throw "getTileHeight must be implemented";
 	}
 	
 	/**
@@ -204,31 +234,31 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 
 	/**
-	 * Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Determines whether the ray can travel from `start` to `end` without hitting a solid wall
 	 * 
 	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
 	 * 
 	 * @param   start   The world coordinates of the start of the ray
 	 * @param   end     The world coordinates of the end of the ray
-	 * @param   result  Optional result vector, indicating where the ray hit a wall
-	 * @return  Returns true if the ray made it from Start to End without hitting anything.
-	 *          Returns false and fills `result` if a tile was hit.
+	 * @param   result  Optional result vector, indicating where the ray hit the first wall
+	 * @return  Whether the ray can travel from `start` to `end` without hitting a solid wall
 	 */
 	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
-		throw "ray must be implemented";
+		// TODO: only check for collisions in the direction needed
+		// This requires findIndexInRayI to pass intersection data back
+		return findIndexInRayI(start, end, (_, t)->t != null && t.solid, result);
 	}
 
 	/**
-	 * Shoots a ray from the start point to the end point.
-	 * If/when it passes through a tile, it stores that point and returns false.
+	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
 	 * 
 	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
 	 *
 	 * @param   start   The world coordinates of the start of the ray
 	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The condition, where `tile` is the tile instance for that location
+	 * @param   func    The function, where `tile` is the tile instance for that location
+	 * @since 5.10.0
 	 */
 	inline public function forEachInRay(start:FlxPoint, end:FlxPoint, ?func:(Tile)->Void):Void
 	{
@@ -240,8 +270,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param   start   The world coordinates of the start of the ray
 	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The condition, where `index` is the tile's map index, and `tile` is
+	 * @param   func    The function, where `index` is the tile's map index, and `tile` is
 	 *                  the tile instance for that location, or `null` if there is no instance
+	 * @since 5.10.0
 	 */
 	inline public function forEachInRayI(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>) -> Void)
 	{
@@ -259,6 +290,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func    The condition, where `tile` is the tile instance for that location
 	 * @param   result  Optional result vector, indicating where the ray hit the found tile
 	 * @return  The index of the found tile
+	 * @since 5.10.0
 	 */
 	inline public function findIndexInRay(start:FlxPoint, end:FlxPoint, func:(Tile) -> Bool, ?result:FlxPoint):Int
 	{
@@ -275,6 +307,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                  the tile instance for that location, or `null` if there is no instance
 	 * @param   result  Optional result vector, indicating where the ray hit the found tile
 	 * @return  The index of the found tile
+	 * @since 5.10.0
 	 */
 	public function findIndexInRayI(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>) -> Bool, ?result:FlxPoint):Int
 	{
@@ -320,8 +353,8 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final endTileX = getColumn(endIndex);
 		final endTileY = getRow(endIndex);
 		
-		final scaledTileWidth = getColumnPos(1) - getColumnPos(0);
-		final scaledTileHeight = getRowPos(1) - getRowPos(0);
+		final tileWidth = getTileWidth();
+		final tileHeight = getTileHeight();
 		var hitIndex = -1;
 		
 		if (start.x == end.x)
@@ -333,7 +366,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				result.copyFrom(getTilePos(hitIndex));
 				result.x = start.x;
 				if (start.y > end.y)
-					result.y += scaledTileHeight;
+					result.y += tileHeight;
 			}
 		}
 		else
@@ -370,7 +403,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				if (Std.int(hitIndex / widthInTiles) == lastTileY)
 				{
 					if (start.x > end.x)
-						result.x += scaledTileWidth;
+						result.x += tileWidth;
 						
 					// set result to left side
 					result.y = m * result.x + b; // mx + b
@@ -381,7 +414,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 					if (start.y > end.y)
 					{
 						// change result to bottom
-						result.y += scaledTileHeight;
+						result.y += tileHeight;
 					}
 					// otherwise result is top
 					
@@ -404,6 +437,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
 	 * @param   func      The function, where `tile` is the tile instance for that location
+	 * @since 5.10.0
 	 */
 	inline public function forEachIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Void)
 	{
@@ -418,6 +452,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The function, where `index` is the tile's map index, and `tile` is
 	 *                    the tile instance for that location, or `null` if there is no instance
+	 * @since 5.10.0
 	 */
 	inline public function forEachIndexInColumnI(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool)
 	{
@@ -460,6 +495,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The condition, where `tile` is the tile instance for that location
 	 * @return  The found tile
+	 * @since 5.10.0
 	 */
 	public function findInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Bool):Tile
 	{
@@ -485,6 +521,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The condition, where `tile` is the tile instance for that location
 	 * @return  The index of the found tile
+	 * @since 5.10.0
 	 */
 	inline public function findIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(Tile)->Bool):Int
 	{
@@ -510,6 +547,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func      The condition, where `index` is the tile's map index, and `tile` is
 	 *                    the tile instance for that location, or `null` if there is no instance
 	 * @return  The index of the found tile
+	 * @since 5.10.0
 	 */
 	public function findIndexInColumnI(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
 	{

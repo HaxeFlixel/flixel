@@ -830,36 +830,16 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 	
-	override function getColumnAt(worldX:Float, bind = false):Int
+	override function getTileWidth()
 	{
-		final result = Math.floor((worldX - x) / scaledTileWidth);
-		
-		if (bind)
-			return result < 0 ? 0 : (result >= widthInTiles ? widthInTiles - 1 : result);
-		
-		return result;
+		return scaledTileWidth;
 	}
 	
-	override function getRowAt(worldY:Float, bind = false):Int
+	override function getTileHeight()
 	{
-		final result = Math.floor((worldY - y) / scaledTileHeight);
-		
-		if (bind)
-			return result < 0 ? 0 : (result >= heightInTiles ? heightInTiles -1 : result);
-		
-		return result;
+		return scaledTileHeight;
 	}
 	
-	override function getColumnPos(column:Float, midpoint = false):Float
-	{
-		return x + column * scaledTileWidth + (midpoint ? scaledTileWidth * 0.5 : 0);
-	}
-
-	override function getRowPos(row:Int, midpoint = false):Float
-	{
-		return y + row * scaledTileHeight + (midpoint ? scaledTileHeight * 0.5 : 0);
-	}
-
 	/**
 	 * Returns a new array full of every coordinate of the requested tile type.
 	 *
