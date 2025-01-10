@@ -247,7 +247,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		// TODO: only check for collisions in the direction needed
 		// This requires findIndexInRayI to pass intersection data back
-		return findIndexInRayI(start, end, (_, t)->t != null && t.solid, result);
+		return -1 < findIndexInRayI(start, end, (_, t)->t != null && t.solid, result);
 	}
 
 	/**
