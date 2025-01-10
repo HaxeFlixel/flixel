@@ -224,6 +224,24 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Shoots a ray from the start point to the end point.
 	 * If/when it passes through a tile, it stores that point and returns false.
+	 * 
+	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
+	 *
+	 * @param   start   The world coordinates of the start of the ray.
+	 * @param   end     The world coordinates of the end of the ray.
+	 * @param   result  Optional result vector, to avoid creating a new instance to be returned.
+	 *                  Only returned if the line enters the rect.
+	 * @return  Returns true if the ray made it from Start to End without hitting anything.
+	 *          Returns false and fills Result if a tile was hit.
+	 */
+	public function forEachOverlappingRay(start:FlxPoint, end:FlxPoint, ?func:FlxPoint):Void
+	{
+		throw "ray must be implemented";
+	}
+
+	/**
+	 * Shoots a ray from the start point to the end point.
+	 * If/when it passes through a tile, it stores that point and returns false.
 	 * This method checks at steps and can miss, for better results use `ray()`
 	 * @since 5.0.0
 	 *
