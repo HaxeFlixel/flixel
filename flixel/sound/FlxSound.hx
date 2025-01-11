@@ -73,7 +73,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Signal that is dispatched on sound complete.
 	 */
-	public var onFinish:FlxSignal;
+	public final onFinish:FlxSignal;
 
 	/**
 	 * Tracker for sound complete callback. If assigned, will be called
@@ -223,6 +223,7 @@ class FlxSound extends FlxBasic
 	public function new()
 	{
 		super();
+		onFinish = new FlxSignal();
 		reset();
 	}
 	
@@ -231,9 +232,6 @@ class FlxSound extends FlxBasic
 	 */
 	function reset():Void
 	{
-		if (onFinish == null)
-			onFinish = new FlxSignal();
-		
 		destroy();
 		
 		x = 0;
