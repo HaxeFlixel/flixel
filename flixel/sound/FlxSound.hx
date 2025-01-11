@@ -231,6 +231,9 @@ class FlxSound extends FlxBasic
 	 */
 	function reset():Void
 	{
+		if (onFinish == null)
+			onFinish = new FlxSignal();
+		
 		destroy();
 		
 		x = 0;
@@ -251,9 +254,6 @@ class FlxSound extends FlxBasic
 		amplitudeLeft = 0;
 		amplitudeRight = 0;
 		autoDestroy = false;
-		
-		if (onFinish == null)
-			onFinish = new FlxSignal();
 
 		if (_transform == null)
 			_transform = new SoundTransform();
@@ -286,6 +286,8 @@ class FlxSound extends FlxBasic
 			_sound.removeEventListener(Event.ID3, gotID3);
 			_sound = null;
 		}
+		
+		onFinish.removeAll();
 		
 		onComplete = null;
 		
@@ -449,6 +451,7 @@ class FlxSound extends FlxBasic
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
+		onFinish.removeAll();
 		onFinish.add(onComplete);
 		onComplete = OnComplete;
 		#if FLX_PITCH
