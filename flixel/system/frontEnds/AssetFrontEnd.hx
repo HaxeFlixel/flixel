@@ -85,6 +85,12 @@ class AssetFrontEnd
 	public function new () {}
 	#end
 	
+	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
+	public final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
+	#else
+	public final defaultSoundExtension:String = '.${haxe.macro.Compiler.getDefine("FLX_DEFAULT_SOUND_EXT")}';
+	#end
+	
 	/**
 	 * Used by methods like `getAsset`, `getBitmapData`, `getText`, their "unsafe" counterparts and
 	 * the like to get assets synchronously. Can be set to a custom function to avoid the existing
@@ -231,6 +237,12 @@ class AssetFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
+		#if FLX_DEFAULT_SOUND_EXT
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExt(id);
+		#end
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.exists(id, type.toOpenFlType());
 		#else
@@ -253,6 +265,12 @@ class AssetFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
+		#if FLX_DEFAULT_SOUND_EXT
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExt(id);
+		#end
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
 		#else
@@ -327,7 +345,22 @@ class AssetFrontEnd
 	 */
 	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
-		return cast getAssetUnsafe(id, SOUND, useCache);
+		return cast getAssetUnsafe(addSoundExtIf(id), SOUND, useCache);
+	}
+	
+	/**
+	 * Gets an instance of a sound, logs when the asset is not found.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 */
+	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	{
+		return cast getAsset(addSoundExtIf(id), SOUND, useCache, logStyle);
 	}
 	
 	/**
@@ -338,9 +371,26 @@ class AssetFrontEnd
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
 	 */
-	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
-		return cast getAsset(id, SOUND, useCache, logStyle);
+		return getSound(addSoundExt(id), useCache, logStyle);
+	}
+	
+	inline function addSoundExtIf(id:String)
+	{
+		#if FLX_DEFAULT_SOUND_EXT
+		return addSoundExt(id);
+		#else
+		return id;
+		#end
+	}
+	
+	inline function addSoundExt(id:String)
+	{
+		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+			return id + defaultSoundExtension;
+			
+		return id;
 	}
 	
 	/**
