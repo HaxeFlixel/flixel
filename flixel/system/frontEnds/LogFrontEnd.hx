@@ -19,7 +19,7 @@ class LogFrontEnd
 	
 	public inline function add(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NORMAL, false pos);
+		advanced(data, LogStyle.NORMAL, false, pos);
 	}
 	
 	public inline function warn(data:Dynamic, ?pos:PosInfos):Void
