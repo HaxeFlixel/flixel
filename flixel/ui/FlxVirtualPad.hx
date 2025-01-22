@@ -284,6 +284,7 @@ class FlxVirtualStick extends FlxSpriteContainer
 	{
 		super.update(elapsed);
 		
+		#if FLX_MOUSE
 		final pos = FlxG.mouse.getViewPosition(getCameras()[0], cast value);
 		pos.subtract(back.x + back.radius, back.y + back.radius);
 		
@@ -303,6 +304,7 @@ class FlxVirtualStick extends FlxSpriteContainer
 		}
 		else
 			pos.zero();
+		#end
 		
 		top.x = back.x + back.radius - top.radius + value.x * (back.radius - top.radius);
 		top.y = back.y + back.radius - top.radius + value.y * (back.radius - top.radius);
