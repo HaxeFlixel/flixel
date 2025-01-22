@@ -241,7 +241,7 @@ enum FlxVirtualInputID
 
 private class FlxVirtualInputIDTools
 {
-	static public function getFrames(id:FlxVirtualInputID)
+	public static function getFrames(id:FlxVirtualInputID)
 	{
 		final name = switch id
 		{
@@ -323,6 +323,6 @@ abstract CircleSprite(FlxSprite) to FlxSprite
 		FlxSpriteUtil.drawCircle(this, -1, -1, -1, color);
 	}
 	
-	public function get_radius() return this.frameWidth * 0.5;
-	public function get_radiusSquared() return radius * radius;
+	inline function get_radius() return this.frameWidth * 0.5;
+	inline function get_radiusSquared() return radius * radius;
 }
