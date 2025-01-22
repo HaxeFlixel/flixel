@@ -79,7 +79,7 @@ class FlxVirtualPad extends FlxSpriteContainer
 		super();
 		scrollFactor.set();
 		
-		add(actions = new FlxVirtualActionButtons(actionMode));
+		add(actions = new FlxVirtualActionButtons(0, 0, actionMode));
 		actions.x = FlxG.width - actions.width;
 		
 		switch dPadMode
@@ -88,7 +88,7 @@ class FlxVirtualPad extends FlxSpriteContainer
 				add(stick = new FlxVirtualStick());
 				stick.y = height - stick.height;
 			default:
-				add(dPad = new FlxVirtualDPadButtons(dPadMode));
+				add(dPad = new FlxVirtualDPadButtons(0, 0, dPadMode));
 				dPad.y = height - dPad.height;
 		}
 		actions.y = height - actions.height;
