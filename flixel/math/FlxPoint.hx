@@ -1594,10 +1594,10 @@ abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
 	public var length(get, never):Float;
 	
 	/** The angle formed by the point with the horizontal axis (in degrees) */
-	public var degrees(get, set):Float;
+	public var degrees(get, never):Float;
 
 	/** The angle formed by the point with the horizontal axis (in radians) */
-	public var radians(get, set):Float;
+	public var radians(get, never):Float;
 	
 	inline function get_x():Float return this.x;
 	inline function get_y():Float return this.y;
