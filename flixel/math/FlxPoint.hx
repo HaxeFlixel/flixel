@@ -1583,6 +1583,57 @@ class FlxBasePoint implements IFlxPooled
 	}
 }
 
+@:forward
+@:forward.new
+abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
+{
+	public var x(get, never):Float;
+	public var y(get, never):Float;
+	
+	/** Length of the point */
+	public var length(get, never):Float;
+	
+	/** The angle formed by the point with the horizontal axis (in degrees) */
+	public var degrees(get, set):Float;
+
+	/** The angle formed by the point with the horizontal axis (in radians) */
+	public var radians(get, set):Float;
+	
+	inline function get_x():Float return this.x;
+	inline function get_y():Float return this.y;
+	inline function get_length():Float return this.length;
+	inline function get_radians():Float return this.radians;
+	inline function get_degrees():Float return this.degrees;
+	
+	// hide underlying mutators
+	inline function set(x = 0, y = 0):FlxReadOnlyPoint return this.set(x, y);
+	inline function add(x = 0, y = 0):FlxReadOnlyPoint return this.add(x, y);
+	inline function addPoint(point):FlxReadOnlyPoint return this.addPoint(point);
+	inline function subtract(x = 0, y = 0):FlxReadOnlyPoint return this.subtract(x, y);
+	inline function subtractPoint(point):FlxReadOnlyPoint return this.subtractPoint(point);
+	inline function scale(x = 0, y = 0):FlxReadOnlyPoint return this.scale(x, y);
+	inline function scalePoint(point):FlxReadOnlyPoint return this.scalePoint(point);
+	inline function copyFrom(point):FlxReadOnlyPoint return this.copyFrom(point);
+	inline function copyFromFlash(point):FlxReadOnlyPoint return this.copyFromFlash(point);
+	inline function floor():FlxReadOnlyPoint return this.floor();
+	inline function ceil():FlxReadOnlyPoint return this.ceil();
+	inline function round():FlxReadOnlyPoint return this.round();
+	inline function rotate(pivot, degrees):FlxReadOnlyPoint return this.pivotDegrees(pivot, degrees);
+	inline function pivotRadians(pivot, radians):FlxReadOnlyPoint return this.pivotRadians(pivot, radians);
+	inline function pivotDegrees(pivot, degrees):FlxReadOnlyPoint return this.pivotDegrees(pivot, degrees);
+	inline function transform(matrix):FlxReadOnlyPoint return this.transform(matrix);
+	inline function zero():FlxReadOnlyPoint return this.zero();
+	inline function normalize():FlxReadOnlyPoint return this.normalize();
+	inline function rotateByRadians(rads):FlxReadOnlyPoint return this.rotateByRadians(rads);
+	inline function rotateByDegrees(degs):FlxReadOnlyPoint return this.rotateByDegrees(degs);
+	inline function rotateWithTrig(sin, cos):FlxReadOnlyPoint return this.rotateWithTrig(sin, cos);
+	inline function setPolarRadians(length, radians):FlxReadOnlyPoint return this.setPolarRadians(length, radians);
+	inline function setPolarDegrees(length, degrees):FlxReadOnlyPoint return this.setPolarDegrees(length, degrees);
+	inline function negate():FlxReadOnlyPoint return this.negate();
+	inline function truncate(max):FlxReadOnlyPoint return this.truncate(max);
+	inline function bounce(normal, coeff = 1.0):FlxReadOnlyPoint return this.bounce(normal, coeff);
+	inline function bounceWithFriction(normal, coeff = 1.0, friction = 0.0):FlxReadOnlyPoint return this.bounce(normal, coeff);
+}
 
 /**
  * A FlxPoint that calls a function when set_x(), set_y() or set() is called. Used in FlxSpriteGroup.
