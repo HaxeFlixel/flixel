@@ -1,5 +1,6 @@
 package flixel.ui;
 
+import flixel.ui.FlxAnalog;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteContainer;
@@ -94,6 +95,10 @@ class FlxVirtualPad extends FlxSpriteContainer
 		actions.y = height - actions.height;
 		
 		y = FlxG.height - height;
+		
+		#if FLX_DEBUG
+		this.ignoreDrawDebug = true;
+		#end
 	}
 	
 	public function getButton(id:FlxVirtualInputID)
@@ -115,6 +120,10 @@ class FlxVirtualPadButtons extends FlxTypedSpriteContainer<FlxVirtualPadButton>
 	{
 		super(x, y);
 		scrollFactor.set();
+		
+		#if FLX_DEBUG
+		this.ignoreDrawDebug = true;
+		#end
 	}
 	
 	override public function destroy():Void
@@ -260,71 +269,4 @@ private class FlxVirtualInputIDTools
 		final frame = FlxAssets.getVirtualInputFrames().getByName(name);
 		return FlxTileFrames.fromFrame(frame, FlxPoint.get(44, 45));
 	}
-}
-
-class FlxVirtualStick extends FlxSpriteContainer
-{
-	public static inline var TOP_RATIO = 1/3;
-	
-	public var value:FlxReadOnlyPoint = FlxPoint.get();
-	
-	final back:CircleSprite;
-	final top:CircleSprite;
-	var dragging = false;
-	
-	public function new (x = 0.0, y = 0.0, radius = 60)
-	{
-		super(x, y);
-		add(back = new CircleSprite(0, 0, radius, 0x80ffffff));
-		final topRadius = Math.round(radius * TOP_RATIO);
-		add(top = new CircleSprite(0, 0, 20));
-	}
-	
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		
-		#if FLX_MOUSE
-		final pos = FlxG.mouse.getViewPosition(getCameras()[0], cast value);
-		pos.subtract(back.x + back.radius, back.y + back.radius);
-		
-		final mouseOver = pos.lengthSquared < back.radiusSquared;
-		if (FlxG.mouse.pressed && mouseOver)
-			dragging = true;
-		
-		if (FlxG.mouse.released)
-			dragging = false;
-		
-		if (dragging)
-		{
-			if (mouseOver)
-				pos.scale(1 / back.radius);
-			else
-				pos.normalize();
-		}
-		else
-			pos.zero();
-		#end
-		
-		top.x = back.x + back.radius - top.radius + value.x * (back.radius - top.radius);
-		top.y = back.y + back.radius - top.radius + value.y * (back.radius - top.radius);
-	}
-}
-
-@:forward
-abstract CircleSprite(FlxSprite) to FlxSprite
-{
-	public var radius(get, never):Float;
-	public var radiusSquared(get, never):Float;
-	
-	public function new (x = 0.0, y = 0.0, radius:Int, color = FlxColor.WHITE)
-	{
-		this = new FlxSprite(x, y);
-		this.makeGraphic(radius * 2, radius * 2, 0x0);
-		
-		FlxSpriteUtil.drawCircle(this, -1, -1, -1, color);
-	}
-	
-	inline function get_radius() return this.frameWidth * 0.5;
-	inline function get_radiusSquared() return radius * radius;
 }
