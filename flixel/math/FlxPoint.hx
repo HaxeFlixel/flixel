@@ -633,12 +633,44 @@ import openfl.geom.Point;
 	 * @param   point  A FlxPoint object to calculate the distance to.
 	 * @return  The distance between the two points as a Float.
 	 */
-	public function distanceTo(point:FlxPoint):Float
+	public overload inline extern function distanceTo(point:FlxPoint):Float
 	{
-		var dx:Float = x - point.x;
-		var dy:Float = y - point.y;
+		final result = distanceTo(point.x, point.y);
 		point.putWeak();
-		return FlxMath.vectorLength(dx, dy);
+		return result;
+	}
+	
+	/**
+	 * Calculate the distance to another position
+	 *
+	 * @return  The distance between the two positions as a Float.
+	 */
+	public overload inline extern function distanceTo(x:Float, y:Float):Float
+	{
+		return Math.sqrt(distanceSquaredTo(x, y));
+	}
+	
+	/**
+	 * Calculate the squared distance to another point.
+	 *
+	 * @param   point  A FlxPoint object to calculate the distance to.
+	 * @return  The distance between the two points as a Float.
+	 */
+	public overload inline extern function distanceSquaredTo(point:FlxPoint):Float
+	{
+		final result = distanceSquaredTo(point.x, point.y);
+		point.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Calculate the distance to another position
+	 *
+	 * @return  The distance between the two positions as a Float.
+	 */
+	public overload inline extern function distanceSquaredTo(x:Float, y:Float):Float
+	{
+		return (this.x - x) * (this.x - x) + (this.y - y) + (this.y - y);
 	}
 
 	/**
@@ -1255,20 +1287,33 @@ import openfl.geom.Point;
 	/**
 	 * The distance between points
 	 */
-	public inline function dist(p:FlxPoint):Float
+	public overload inline extern function dist(x:Float, y:Float):Float
 	{
-		return Math.sqrt(distSquared(p));
+		return distanceTo(x, y);
 	}
 
 	/**
+	 * The distance between points
+	 */
+	public overload inline extern function dist(p:FlxPoint):Float
+	{
+		return distanceTo(p);
+	}
+	
+	/**
 	 * The squared distance between points
 	 */
-	public inline function distSquared(p:FlxPoint):Float
+	public overload inline extern function distSquared(p:FlxPoint):Float
 	{
-		var dx:Float = p.x - x;
-		var dy:Float = p.y - y;
-		p.putWeak();
-		return dx * dx + dy * dy;
+		return distanceSquaredTo(p);
+	}
+	
+	/**
+	 * The squared distance between positions
+	 */
+	public overload inline extern function distSquared(x:Float, y:Float):Float
+	{
+		return distanceSquaredTo(x, y);
 	}
 
 	/**
