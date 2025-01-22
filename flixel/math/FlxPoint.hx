@@ -372,17 +372,27 @@ import openfl.geom.Point;
 	/**
 	 * Scale this point.
 	 *
-	 * @param   x - scale x coefficient
-	 * @param   y - scale y coefficient, if omitted, x is used
-	 * @return  scaled point
+	 * @param   x  The x scale coefficient
+	 * @param   y  The y scale coefficient
+	 * @return  this point
 	 */
-	public inline function scale(x:Float, ?y:Float):FlxPoint
+	public overload inline extern function scale(x:Float, y:Float):FlxPoint
 	{
-		if (y == null)
-			y = x;
-
 		this.x *= x;
 		this.y *= y;
+		return this;
+	}
+	
+	/**
+	 * Scale this point.
+	 *
+	 * @param   amount  The scale coefficient
+	 * @return  this point
+	 */
+	public overload inline extern function scale(amount:Float):FlxPoint
+	{
+		this.x *= amount;
+		this.y *= amount;
 		return this;
 	}
 
