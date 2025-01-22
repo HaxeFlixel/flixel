@@ -102,7 +102,7 @@ class FlxVirtualStick extends FlxSpriteContainer
 		
 		updateValue(cast value);
 		
-		final adjustedLerp = FlxMath.getFrameLerp(lerp, elapsed);
+		final adjustedLerp = FlxMath.getElapsedLerp(lerp, elapsed);
 		final newX = x + radius - thumb.radius + value.x * radius;
 		final newY = y + radius - thumb.radius + value.y * radius;
 		thumb.x += (newX - thumb.x) * adjustedLerp;
