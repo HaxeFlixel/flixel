@@ -114,6 +114,7 @@ class FlxMath
 	 * 
 	 * @param   lerp     The ratio to lerp in 1/60th of a second
 	 * @param   elapsed  The amount of time that has actually passed
+	 * @since 5.10.0
 	 */
 	public static function getElapsedLerp(lerp:Float, elapsed:Float):Float
 	{

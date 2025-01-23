@@ -322,7 +322,7 @@ import openfl.geom.Point;
 	 * @param   y  Amount to add to y
 	 * @return  This point.
 	 */
-	public inline function add(x:Float = 0, y:Float = 0):FlxPoint
+	public overload extern inline function add(x:Float = 0, y:Float = 0):FlxPoint
 	{
 		this.x += x;
 		this.y += y;
@@ -331,15 +331,43 @@ import openfl.geom.Point;
 
 	/**
 	 * Adds the coordinates of another point to the coordinates of this point.
+	 * @since 5.10.0
 	 *
 	 * @param   point  The point to add to this point
 	 * @return  This point.
 	 */
-	public inline function addPoint(point:FlxPoint):FlxPoint
+	public overload inline extern function add(point:FlxPoint):FlxPoint
 	{
 		add(point.x, point.y);
 		point.putWeak();
 		return this;
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 * @since 5.10.0
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to the altered point parameter.
+	 */
+	public overload inline extern function add(p:Point):FlxPoint
+	{
+		x += p.x;
+		y += p.y;
+		
+		return this;
+	}
+	
+	/**
+	 * Adds the coordinates of another point to the coordinates of this point.
+	 *
+	 * @param   point  The point to add to this point
+	 * @return  This point.
+	 */
+	// @:deprecated("addPoint is deprecated, use add(point), instead")// 5.10.0
+	public inline function addPoint(point:FlxPoint):FlxPoint
+	{
+		return add(point);
 	}
 
 	/**
@@ -349,10 +377,37 @@ import openfl.geom.Point;
 	 * @param   y  Amount to subtract from y
 	 * @return  This point.
 	 */
-	public inline function subtract(x:Float = 0, y:Float = 0):FlxPoint
+	public overload inline extern function subtract(x:Float = 0, y:Float = 0):FlxPoint
 	{
 		this.x -= x;
 		this.y -= y;
+		return this;
+	}
+
+	/**
+	 * Subtracts the coordinates of another point from the coordinates of this point.
+	 * @since 5.10.0
+	 *
+	 * @param   point  The point to subtract from this point
+	 * @return  This point.
+	 */
+	public overload inline extern function subtract(point:FlxPoint):FlxPoint
+	{
+		subtract(point.x, point.y);
+		point.putWeak();
+		return this;
+	}
+
+	/**
+	 * Subtracts the coordinates of another point from the coordinates of this point.
+	 * @since 5.10.0
+	 *
+	 * @param   point  The point to subtract from this point
+	 * @return  This point.
+	 */
+	public overload inline extern function subtract(point:Point):FlxPoint
+	{
+		subtract(point.x, point.y);
 		return this;
 	}
 
@@ -362,6 +417,7 @@ import openfl.geom.Point;
 	 * @param   point  The point to subtract from this point
 	 * @return  This point.
 	 */
+	// @:deprecated("subtractPoint is deprecated, use subtract(point), instead")// 5.10.0
 	public inline function subtractPoint(point:FlxPoint):FlxPoint
 	{
 		subtract(point.x, point.y);
@@ -385,6 +441,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Scale this point.
+	 * @since 5.10.0
 	 *
 	 * @param   amount  The scale coefficient
 	 * @return  this point
@@ -395,13 +452,27 @@ import openfl.geom.Point;
 		this.y *= amount;
 		return this;
 	}
+	
+	/**
+	 * Scale this point by another point.
+	 * @since 5.10.0
+	 *
+	 * @param   point  The x and y scale coefficient
+	 * @return  this point
+	 */
+	public overload inline extern function scale(point:Point):FlxPoint
+	{
+		scale(point.x, point.y);
+		return this;
+	}
 
 	/**
 	 * Scale this point by another point.
 	 *
-	 * @param   point - The x and y scale coefficient
+	 * @param   point  The x and y scale coefficient
 	 * @return  scaled point
 	 */
+	// @:deprecated("scalePoint is deprecated, use scale(point), instead")// 5.10.0
 	public inline function scalePoint(point:FlxPoint):FlxPoint
 	{
 		scale(point.x, point.y);
@@ -448,7 +519,7 @@ import openfl.geom.Point;
 	 * @param   p  Any FlxPoint.
 	 * @return  A reference to itself.
 	 */
-	public inline function copyFrom(p:FlxPoint):FlxPoint
+	public overload inline extern function copyFrom(p:FlxPoint):FlxPoint
 	{
 		set(p.x, p.y);
 		p.putWeak();
@@ -457,10 +528,23 @@ import openfl.geom.Point;
 
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
+	 * @since 5.10.0
 	 *
 	 * @param   p  Any Point.
 	 * @return  A reference to itself.
 	 */
+	public overload inline extern function copyFrom(p:Point):FlxPoint
+	{
+		return this.set(p.x, p.y);
+	}
+
+	/**
+	 * Helper function, just copies the values from the specified Flash point.
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to itself.
+	 */
+	// @:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 5.10.0
 	public inline function copyFromFlash(p:Point):FlxPoint
 	{
 		return this.set(p.x, p.y);
@@ -472,7 +556,7 @@ import openfl.geom.Point;
 	 * @param   p   optional point to copy this point to
 	 * @return  copy of this point
 	 */
-	public inline function copyTo(?p:FlxPoint):FlxPoint
+	public overload inline extern function copyTo(?p:FlxPoint):FlxPoint
 	{
 		if (p == null)
 		{
@@ -483,20 +567,28 @@ import openfl.geom.Point;
 
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
+	 * @since 5.10.0
 	 *
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
 	 */
-	public inline function copyToFlash(?p:Point):Point
+	public overload inline extern function copyTo(p:Point):Point
 	{
-		if (p == null)
-		{
-			p = new Point();
-		}
-
 		p.x = x;
 		p.y = y;
 		return p;
+	}
+
+	/**
+	 * Helper function, just copies the values from this point to the specified Flash point.
+	 *
+	 * @param   p  Any Point.
+	 * @return  A reference to the altered point parameter.
+	 */
+	// @:deprecated("copyToFlash is deprecated, use copyTo, instead")// 5.10.0
+	public inline function copyToFlash(?p:Point):Point
+	{
+		return copyTo(p != null ? p : new Point());
 	}
 
 	/**
@@ -642,6 +734,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the distance to another position
+	 * @since 5.10.0
 	 *
 	 * @return  The distance between the two positions as a Float.
 	 */
@@ -652,6 +745,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the squared distance to another point.
+	 * @since 5.10.0
 	 *
 	 * @param   point  A FlxPoint object to calculate the distance to.
 	 * @return  The distance between the two points as a Float.
@@ -665,6 +759,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the distance to another position
+	 * @since 5.10.0
 	 *
 	 * @return  The distance between the two positions as a Float.
 	 */
@@ -1286,6 +1381,7 @@ import openfl.geom.Point;
 
 	/**
 	 * The distance between points
+	 * @since 5.10.0
 	 */
 	public overload inline extern function dist(x:Float, y:Float):Float
 	{
@@ -1310,6 +1406,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * The squared distance between positions
+	 * @since 5.10.0
 	 */
 	public overload inline extern function distSquared(x:Float, y:Float):Float
 	{
@@ -1631,6 +1728,7 @@ class FlxBasePoint implements IFlxPooled
 /**
  * A point that, once set, cannot be changed. Useful for objects
  * that want to expose a readonly `x` and `y` value
+ * @since 5.10.0
  */
 @:forward
 @:forward.new
@@ -1657,13 +1755,13 @@ abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
 	// hide underlying mutators
 	inline function set(x = 0, y = 0):FlxReadOnlyPoint return this.set(x, y);
 	inline function add(x = 0, y = 0):FlxReadOnlyPoint return this.add(x, y);
-	inline function addPoint(point):FlxReadOnlyPoint return this.addPoint(point);
+	inline function addPoint(point):FlxReadOnlyPoint return this.add(point);
 	inline function subtract(x = 0, y = 0):FlxReadOnlyPoint return this.subtract(x, y);
-	inline function subtractPoint(point):FlxReadOnlyPoint return this.subtractPoint(point);
+	inline function subtractPoint(point):FlxReadOnlyPoint return this.subtract(point);
 	inline function scale(x = 0, y = 0):FlxReadOnlyPoint return this.scale(x, y);
-	inline function scalePoint(point):FlxReadOnlyPoint return this.scalePoint(point);
+	inline function scalePoint(point):FlxReadOnlyPoint return this.scale(point);
 	inline function copyFrom(point):FlxReadOnlyPoint return this.copyFrom(point);
-	inline function copyFromFlash(point):FlxReadOnlyPoint return this.copyFromFlash(point);
+	inline function copyFromFlash(point):FlxReadOnlyPoint return this.copyFrom(point);
 	inline function floor():FlxReadOnlyPoint return this.floor();
 	inline function ceil():FlxReadOnlyPoint return this.ceil();
 	inline function round():FlxReadOnlyPoint return this.round();

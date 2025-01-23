@@ -514,7 +514,7 @@ class FlxTileFrames extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
-		var resultBorder:FlxPoint = FlxPoint.get().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.get().add(this.border).add(border);
 		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
 		if (tileFrames != null)

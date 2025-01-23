@@ -682,7 +682,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				if (buffer.isDirty(this, camera))
 					drawTilemap(buffer, camera);
 
-				getScreenPosition(_point, camera).subtractPoint(offset).add(buffer.x, buffer.y).copyToFlash(_flashPoint);
+				getScreenPosition(_point, camera).subtract(offset).add(buffer.x, buffer.y).copyTo(_flashPoint);
 				buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			}
 			else
@@ -1239,7 +1239,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		}
 		else
 		{
-			getScreenPosition(_point, camera).subtractPoint(offset).copyToFlash(_helperPoint);
+			getScreenPosition(_point, camera).subtractPoint(offset).copyTo(_helperPoint);
 
 			_helperPoint.x = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
