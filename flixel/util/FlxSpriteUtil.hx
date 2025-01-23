@@ -159,16 +159,16 @@ class FlxSpriteUtil
 	/**
 	 * Checks the sprite's screen bounds of the FlxSprite and keeps them within the camera by wrapping it around.
 	 *
-	 * @param	sprite	The FlxSprite to wrap.
-	 * @param	camera	The camera to wrap around. If left null, `FlxG.camera` is used.
-	 * @param	edges	The edges FROM which to wrap. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
-	 * @return	The FlxSprite for chaining
+	 * @param   sprite  The FlxSprite to wrap.
+	 * @param   camera  The camera to wrap around. If `null`, `sprite.getDefaultCamera()` is used.
+	 * @param   edges   The edges FROM which to wrap. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
+	 * @return  The FlxSprite for chaining
 	 * @since 4.11.0
 	 */
 	public static function cameraWrap(sprite:FlxSprite, ?camera:FlxCamera, edges:FlxDirectionFlags = ANY):FlxSprite
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = sprite.getDefaultCamera();
 		
 		var spriteBounds = sprite.getScreenBounds(camera);
 		var offset = FlxPoint.get(
@@ -195,16 +195,16 @@ class FlxSpriteUtil
 	/**
 	 * Checks the sprite's screen bounds and keeps it entirely within the camera.
 	 *
-	 * @param	sprite	The FlxSprite to restrict.
-	 * @param	camera	The camera resitricting the sprite. If left null, `FlxG.camera` is used.
-	 * @param	edges	The edges to restrict. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
-	 * @return	The FlxSprite for chaining
+	 * @param   sprite  The FlxSprite to restrict.
+	 * @param   camera  The camera resitricting the sprite. If left null, `sprite.getDefaultCamera()` is used.
+	 * @param   edges   The edges to restrict. Use constants like `LEFT`, `RIGHT`, `UP|DOWN` or `ANY`.
+	 * @return  The FlxSprite for chaining
 	 * @since 4.11.0
 	 */
 	public static function cameraBound(sprite:FlxSprite, ?camera:FlxCamera, edges:FlxDirectionFlags = ANY):FlxSprite
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = sprite.getDefaultCamera();
 		
 		var spriteBounds = sprite.getScreenBounds(camera);
 		var offset = FlxPoint.get(

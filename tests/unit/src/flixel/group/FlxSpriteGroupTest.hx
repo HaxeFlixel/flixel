@@ -165,6 +165,33 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.areEqual(cams, member1.cameras);
 		Assert.areEqual(cams, member2.cameras);
 	}
+	@Test
+	/**
+	 * Ensure that member origins are correctly set when 
+	 * the group origin is set.
+	 */
+	function testOriginTransform()
+	{
+		var f1 = new FlxSprite(-10, 100);
+		var f2 = new FlxSprite(50, 50);
+		group.add(f1);
+		group.add(f2);
+		
+		group.setPosition(280, 300);
+		group.origin.set(300, 400);
+		
+		// Verify positions are updated - absolute
+		Assert.areEqual(270, f1.x);
+		Assert.areEqual(400, f1.y);
+		Assert.areEqual(330, f2.x);
+		Assert.areEqual(350, f2.y);
+		
+		// Verify origins are correct - relative
+		Assert.areEqual(310, f1.origin.x);
+		Assert.areEqual(300, f1.origin.y);
+		Assert.areEqual(250, f2.origin.x);
+		Assert.areEqual(350, f2.origin.y);
+	}
 }
 
 class Member extends FlxSprite
