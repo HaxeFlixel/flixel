@@ -166,7 +166,7 @@ class FlxReplay
 			continueFrame = false;
 		#end
 
-		#if FLX_GAMEINPUT_API
+		#if FLX_GAMEPAD
 		var gamepadRecords:Array<GamepadRecord> = new Array();
 		for (gamepad in FlxG.gamepads.getActiveGamepads())
 		{
@@ -192,7 +192,7 @@ class FlxReplay
 		#if FLX_KEYBOARD
 		frameRecorded.keys = keysRecord;
 		#end
-		#if FLX_GAMEINPUT_API
+		#if FLX_GAMEPAD
 		frameRecorded.gamepad = gamepadRecords;
 		#end
 
@@ -239,7 +239,7 @@ class FlxReplay
 			FlxG.mouse.playback(fr.mouse);
 		}
 		#end
-		#if FLX_GAMEINPUT_API
+		#if FLX_GAMEPAD
 		if (fr.gamepad != null)
 		{
 			for (record in fr.gamepad)
