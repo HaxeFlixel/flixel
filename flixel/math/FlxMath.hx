@@ -575,7 +575,15 @@ class FlxMath
 	}
 	
 	/**
-	 * Returns `a mod b`.
+	 * Performs a modulo operation on two numbers.
+	 * This function differs from the built-in `%` operator in that it always
+	 * returns a positive result even with negative numbers involved.
+	 * For example, `-5 % 3` would return `-2` (truncated division),
+	 * while `mod(-5, 3)` would return `1` (Euclidean division).
+	 * 
+	 * @param a The dividend.
+	 * @param b The divisor.
+	 * @return `a mod b`.
 	 */
 	public static inline function mod(a:Float, b:Float):Float
 	{
