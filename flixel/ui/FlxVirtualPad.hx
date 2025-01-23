@@ -106,6 +106,7 @@ class FlxVirtualPad extends FlxSpriteContainer
 		return switch id
 		{
 			case A | B | C | X | Y: actions.getButton(id);
+			case UP | DOWN | LEFT | RIGHT if (dPad == null): null;
 			case UP | DOWN | LEFT | RIGHT: dPad.getButton(id);
 			case STICK: null;
 		}

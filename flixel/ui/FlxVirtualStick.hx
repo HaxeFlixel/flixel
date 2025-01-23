@@ -1,10 +1,11 @@
 package flixel.ui;
 
-import flixel.input.FlxPointer;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteContainer;
+import flixel.input.FlxPointer;
+import flixel.input.actions.FlxActionInputAnalog;
 import flixel.input.touch.FlxTouch;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
@@ -38,9 +39,13 @@ class FlxVirtualStick extends FlxSpriteContainer
 	/** The minimum absolute value, to consider this input active */
 	public var deadzone = 0.0;
 	
-	public var onMoveStart = new FlxSignal();
-	public var onMoveEnd = new FlxSignal();
-	public var onMove = new FlxSignal();
+	public final onJustMove = new FlxSignal();
+	public final onJustStop = new FlxSignal();
+	public final onMove = new FlxSignal();
+	
+	public var xStatus(default, null) = FlxAnalogState.STOPPED;
+	public var yStatus(default, null) = FlxAnalogState.STOPPED;
+	public var status(default, null) = FlxAnalogState.STOPPED;
 	
 	/** Used to track press events */
 	final button:InvisibleCircleButton;
@@ -91,8 +96,8 @@ class FlxVirtualStick extends FlxSpriteContainer
 		thumb.destroy();
 		base.destroy();
 		
-		onMoveStart.removeAll();
-		onMoveEnd.removeAll();
+		onJustMove.removeAll();
+		onJustStop.removeAll();
 		onMove.removeAll();
 	}
 	
@@ -115,15 +120,9 @@ class FlxVirtualStick extends FlxSpriteContainer
 		final oldY = value.y;
 		
 		if (button.justPressed)
-		{
-			onMoveStart.dispatch();
 			dragging = true;
-		}
 		else if (button.released && dragging)
-		{
-			onMoveEnd.dispatch();
 			dragging = false;
-		}
 		
 		final pos:FlxPoint = cast value;
 		if (dragging)
@@ -136,8 +135,43 @@ class FlxVirtualStick extends FlxSpriteContainer
 		else
 			pos.zero();
 		
-		if (value.x != oldX || value.y != oldY)
+		xStatus = getStatus(oldX, value.x);
+		yStatus = getStatus(oldY, value.y);
+		
+		if ((yStatus.justMoved && xStatus == STOPPED) || (xStatus.justMoved && yStatus == STOPPED))
+		{
+			status = JUST_MOVED;
+			onJustMove.dispatch();
 			onMove.dispatch();
+		}
+		else if ((yStatus.justStopped && xStatus.stopped) || (xStatus.justStopped && yStatus.stopped))
+		{
+			status = JUST_STOPPED;
+			onJustStop.dispatch();
+		}
+		else if (xStatus.moved || yStatus.moved)
+		{
+			status = MOVED;
+			onMove.dispatch();
+		}
+		else
+		{
+			status = STOPPED;
+		}
+	}
+	
+	function getStatus(prev:Float, curr:Float)
+	{
+		return if (prev == 0 && curr != 0)
+			JUST_MOVED;
+		else if (prev != 0 && curr != 0)
+			MOVED;
+		else if (prev != 0 && curr == 0)
+			JUST_STOPPED;
+		else if (prev == 0 && curr == 0)
+			STOPPED;
+		else
+			throw 'Unexpected case - prev: $prev, curr:$curr';// not possible
 	}
 }
 
