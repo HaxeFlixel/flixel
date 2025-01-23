@@ -114,13 +114,12 @@ class FlxVirtualStick extends FlxSpriteContainer
 		final oldX = value.x;
 		final oldY = value.y;
 		
-		#if FLX_MOUSE
 		if (button.justPressed)
 		{
 			onMoveStart.dispatch();
 			dragging = true;
 		}
-		else if (FlxG.mouse.justReleased)
+		else if (button.released && dragging)
 		{
 			onMoveEnd.dispatch();
 			dragging = false;
@@ -136,7 +135,6 @@ class FlxVirtualStick extends FlxSpriteContainer
 		}
 		else
 			pos.zero();
-		#end
 		
 		if (value.x != oldX || value.y != oldY)
 			onMove.dispatch();
@@ -172,6 +170,9 @@ abstract CircleSprite(FlxSprite) to FlxSprite
 	inline function get_radiusSquared() return radius * radius;
 }
 
+/**
+ * Special button that covers the virtual stick and tracks mouse and touch
+ */
 class InvisibleCircleButton extends FlxTypedButton<FlxSprite>
 {
 	public var radius(get, never):Float;
@@ -199,8 +200,26 @@ class InvisibleCircleButton extends FlxTypedButton<FlxSprite>
 			lastPointer = pointer;
 			return true;
 		}
-
+		
 		return false;
+	}
+	
+	override function updateButton()
+	{
+		if (currentInput != null)
+		{
+			if (currentInput.justReleased)
+				onUpHandler();
+			return;
+		}
+		
+		super.updateButton();
+	}
+	
+	override function onUpHandler()
+	{
+		super.onUpHandler();
+		lastPointer = null;
 	}
 	
 	override function overlapsPoint(point:FlxPoint, inScreenSpace = false, ?camera:FlxCamera):Bool
