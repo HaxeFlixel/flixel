@@ -189,8 +189,10 @@ class InvisibleCircleButton extends FlxTypedButton<FlxSprite>
 	
 	override function draw()
 	{
+		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
+		#end
 	}
 	
 	override function checkInput(pointer, input, justPressedPosition, camera):Bool
