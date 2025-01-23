@@ -331,7 +331,7 @@ import openfl.geom.Point;
 
 	/**
 	 * Adds the coordinates of another point to the coordinates of this point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   point  The point to add to this point
 	 * @return  This point.
@@ -345,7 +345,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Adds the coordinates of another point to the coordinates of this point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
@@ -364,7 +364,7 @@ import openfl.geom.Point;
 	 * @param   point  The point to add to this point
 	 * @return  This point.
 	 */
-	// @:deprecated("addPoint is deprecated, use add(point), instead")// 5.10.0
+	// @:deprecated("addPoint is deprecated, use add(point), instead")// 6.0.0
 	public inline function addPoint(point:FlxPoint):FlxPoint
 	{
 		return add(point);
@@ -386,7 +386,7 @@ import openfl.geom.Point;
 
 	/**
 	 * Subtracts the coordinates of another point from the coordinates of this point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   point  The point to subtract from this point
 	 * @return  This point.
@@ -400,7 +400,7 @@ import openfl.geom.Point;
 
 	/**
 	 * Subtracts the coordinates of another point from the coordinates of this point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   point  The point to subtract from this point
 	 * @return  This point.
@@ -417,7 +417,7 @@ import openfl.geom.Point;
 	 * @param   point  The point to subtract from this point
 	 * @return  This point.
 	 */
-	// @:deprecated("subtractPoint is deprecated, use subtract(point), instead")// 5.10.0
+	// @:deprecated("subtractPoint is deprecated, use subtract(point), instead")// 6.0.0
 	public inline function subtractPoint(point:FlxPoint):FlxPoint
 	{
 		subtract(point.x, point.y);
@@ -441,7 +441,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Scale this point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   amount  The scale coefficient
 	 * @return  this point
@@ -455,7 +455,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Scale this point by another point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   point  The x and y scale coefficient
 	 * @return  this point
@@ -472,7 +472,7 @@ import openfl.geom.Point;
 	 * @param   point  The x and y scale coefficient
 	 * @return  scaled point
 	 */
-	// @:deprecated("scalePoint is deprecated, use scale(point), instead")// 5.10.0
+	// @:deprecated("scalePoint is deprecated, use scale(point), instead")// 6.0.0
 	public inline function scalePoint(point:FlxPoint):FlxPoint
 	{
 		scale(point.x, point.y);
@@ -528,7 +528,7 @@ import openfl.geom.Point;
 
 	/**
 	 * Helper function, just copies the values from the specified Flash point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   p  Any Point.
 	 * @return  A reference to itself.
@@ -544,7 +544,7 @@ import openfl.geom.Point;
 	 * @param   p  Any Point.
 	 * @return  A reference to itself.
 	 */
-	// @:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 5.10.0
+	// @:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 6.0.0
 	public inline function copyFromFlash(p:Point):FlxPoint
 	{
 		return this.set(p.x, p.y);
@@ -567,7 +567,7 @@ import openfl.geom.Point;
 
 	/**
 	 * Helper function, just copies the values from this point to the specified Flash point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
@@ -585,7 +585,7 @@ import openfl.geom.Point;
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
 	 */
-	// @:deprecated("copyToFlash is deprecated, use copyTo, instead")// 5.10.0
+	// @:deprecated("copyToFlash is deprecated, use copyTo, instead")// 6.0.0
 	public inline function copyToFlash(?p:Point):Point
 	{
 		return copyTo(p != null ? p : new Point());
@@ -721,7 +721,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the distance to another position
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @return  The distance between the two positions as a Float.
 	 */
@@ -732,7 +732,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the squared distance to another point.
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @param   point  A FlxPoint object to calculate the distance to.
 	 * @return  The distance between the two points as a Float.
@@ -746,7 +746,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * Calculate the distance to another position
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 *
 	 * @return  The distance between the two positions as a Float.
 	 */
@@ -1318,7 +1318,7 @@ import openfl.geom.Point;
 
 	/**
 	 * The distance between points
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 */
 	public overload inline extern function dist(x:Float, y:Float):Float
 	{
@@ -1343,7 +1343,7 @@ import openfl.geom.Point;
 	
 	/**
 	 * The squared distance between positions
-	 * @since 5.10.0
+	 * @since 6.0.0
 	 */
 	public overload inline extern function distSquared(x:Float, y:Float):Float
 	{
@@ -1665,7 +1665,7 @@ class FlxBasePoint implements IFlxPooled
 /**
  * A point that, once set, cannot be changed. Useful for objects
  * that want to expose a readonly `x` and `y` value
- * @since 5.10.0
+ * @since 6.0.0
  */
 @:forward
 @:forward.new
