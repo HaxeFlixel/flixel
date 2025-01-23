@@ -1628,6 +1628,10 @@ class FlxBasePoint implements IFlxPooled
 	}
 }
 
+/**
+ * A point that, once set, cannot be changed. Useful for objects
+ * that want to expose a readonly `x` and `y` value
+ */
 @:forward
 @:forward.new
 abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
