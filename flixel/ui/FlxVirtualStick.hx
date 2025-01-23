@@ -33,8 +33,8 @@ class FlxVirtualStick extends FlxSpriteContainer
 	/** The radius in which the stick can move */
 	public final radius:Float;
 	
-	/** The speed of easing when the thumb is released */
-	public var lerp:Float;
+	/** Used to smooth the thumb's motion. Should be between 0 and 1.0. */
+	public var lerp:Float = 0.25;
 	
 	/** The minimum absolute value, to consider this input active */
 	public var deadzone = 0.1;
@@ -58,13 +58,11 @@ class FlxVirtualStick extends FlxSpriteContainer
 	 * @param   x            The location in screen space.
 	 * @param   y            The location in screen space.
 	 * @param   radius       The radius where the thumb can move. If 0, half the base's width will be used.
-	 * @param   lerp         Used to smoothly back thumb to center. Should be between 0 and 1.0.
 	 * @param   baseGraphic  The graphic you want to display as base of the joystick.
 	 * @param   thumbGraphic The graphic you want to display as thumb of the joystick.
 	 */
-	public function new(x = 0.0, y = 0.0, radius = 0.0, lerp = 0.25, ?baseGraphic:FlxGraphicAsset, ?thumbGraphic:FlxGraphicAsset)
+	public function new(x = 0.0, y = 0.0, radius = 0.0, ?baseGraphic:FlxGraphicAsset, ?thumbGraphic:FlxGraphicAsset)
 	{
-		this.lerp = lerp;
 		super(x, y);
 		
 		add(base = new CircleSprite(0, 0, baseGraphic, "base"));
