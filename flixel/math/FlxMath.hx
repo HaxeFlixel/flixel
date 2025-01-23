@@ -573,4 +573,13 @@ class FlxMath
 	{
 		return (n > 0) ? n : -n;
 	}
+	
+	/**
+	 * Returns `a mod b`.
+	 */
+	public static inline function mod(a:Float, b:Float):Float
+	{
+		b = Math.abs(b);
+		return a - b * Math.floor(a / b);
+	}
 }
