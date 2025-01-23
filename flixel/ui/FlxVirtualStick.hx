@@ -37,7 +37,7 @@ class FlxVirtualStick extends FlxSpriteContainer
 	public var lerp:Float;
 	
 	/** The minimum absolute value, to consider this input active */
-	public var deadzone = 0.0;
+	public var deadzone = 0.1;
 	
 	public final onJustMove = new FlxSignal();
 	public final onJustStop = new FlxSignal();
@@ -131,6 +131,12 @@ class FlxVirtualStick extends FlxSpriteContainer
 			pos.scale(1 / radius);
 			if (pos.lengthSquared > 1.0)
 				pos.normalize();
+			
+			if (pos.x < deadzone && pos.x > -deadzone)
+				pos.x = 0;
+			
+			if (pos.y < deadzone && pos.y > -deadzone)
+				pos.y = 0;
 		}
 		else
 			pos.zero();
