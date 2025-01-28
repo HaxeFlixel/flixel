@@ -154,6 +154,7 @@ class FlxGame extends Sprite
 	 * Ugly workaround to ensure consistent behaviour between flash and cpp
 	 * (the focus event should not fire when the game starts up!)
 	 */
+	@:deprecated("_onFocusFiredOnce is being removed") // 5.7.0
 	var _onFocusFiredOnce:Bool = false;
 	#end
 
@@ -234,11 +235,13 @@ class FlxGame extends Sprite
 	/**
 	 * `Sprite` for postprocessing effects
 	 */
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	var postProcessLayer:Sprite = new Sprite();
 
 	/**
 	 * Post process effects active on the `postProcessLayer`.
 	 */
+	@:deprecated("Flixel's PostProcess is being removed") // 5.7.0
 	var postProcesses:Array<PostProcess> = [];
 	#end
 
@@ -308,6 +311,7 @@ class FlxGame extends Sprite
 	/**
 	 * Used to instantiate the guts of the flixel game object once we have a valid reference to the root.
 	 */
+	@:haxe.warning("-WDeprecated") // remove in 6.0.0
 	function create(_):Void
 	{
 		if (stage == null)
@@ -466,6 +470,7 @@ class FlxGame extends Sprite
 	}
 
 	@:allow(flixel.FlxG)
+	@:haxe.warning("-WDeprecated")
 	function onResize(_):Void
 	{
 		var width:Int = FlxG.stage.stageWidth;
