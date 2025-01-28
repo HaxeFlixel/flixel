@@ -52,7 +52,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 	override public function render(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile)
+		if (!FlxG.render.tile)
 			return;
 
 		if (numTriangles <= 0)

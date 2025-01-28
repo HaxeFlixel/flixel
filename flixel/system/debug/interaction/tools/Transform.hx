@@ -324,7 +324,7 @@ class Transform extends Tool
 		drawMarkers(gfx);
 
 		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
+		if (FlxG.render.blit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
 
