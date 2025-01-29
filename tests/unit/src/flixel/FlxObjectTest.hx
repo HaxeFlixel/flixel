@@ -1,14 +1,15 @@
 package flixel;
 
-import openfl.display.BitmapData;
+import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxObjectTest extends FlxTest
 {
@@ -77,7 +78,92 @@ class FlxObjectTest extends FlxTest
 		step(60);
 		Assert.isFalse(FlxG.overlap(object1, object2));
 	}
-
+	
+	@Test
+	function testSeprateX():Void
+	{
+		final object1 = new FlxObject(5, 0, 10, 10);
+		object1.last.x = 10;
+		final object2 = new FlxObject(0, 0, 10, 10);
+		object2.last.x = -5;
+		
+		Assert.areEqual(-5, FlxObject.computeOverlapX(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		Assert.isTrue(FlxG.overlap(object1, object2));
+		
+		Assert.isTrue(FlxObject.separateX(object1, object2));
+		
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		Assert.isFalse(FlxG.overlap(object1, object2));
+		Assert.isTrue(object1.x > object2.x);
+	}
+	
+	@Test
+	function testSeprateY():Void
+	{
+		final object1 = new FlxObject(0, 5, 10, 10);
+		object1.last.y = 10;
+		final object2 = new FlxObject(0, 0, 10, 10);
+		object2.last.y = -5;
+		
+		Assert.areEqual(-5, FlxObject.computeOverlapY(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		
+		Assert.isTrue(FlxObject.separateY(object1, object2));
+		
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		Assert.isFalse(FlxG.overlap(object1, object2));
+		Assert.isTrue(object1.y > object2.y);
+	}
+	
+	@Test
+	function testSeprateXFromOpposite():Void
+	{
+		/*
+		 * NOTE: An odd y value on either may result in a rounding error where the second
+		 * computeOverlapY is 0 but FlxG.overlap returns true
+		 */
+		final object1 = new FlxObject(20, 0, 10, 10);
+		object1.last.x = object1.x - 30;
+		final object2 = new FlxObject(0, 0, 10, 10);
+		object2.last.x = object2.x + 30;
+		
+		Assert.areEqual(30, FlxObject.computeOverlapX(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		
+		Assert.isTrue(FlxObject.separateX(object1, object2));
+		
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		Assert.isFalse(FlxG.overlap(object1, object2));
+		Assert.isTrue(object1.x < object2.x);
+	}
+	
+	@Test
+	function testSeprateYFromOpposite():Void
+	{
+		/*
+		 * NOTE: An odd y value on either may result in a rounding error where the second
+		 * computeOverlapY is 0 but FlxG.overlap returns true
+		 */
+		final object1 = new FlxObject(0, 20, 10, 10);
+		object1.last.y = object1.y - 30;
+		final object2 = new FlxObject(0, 0, 10, 10);
+		object2.last.y = object2.y + 30;
+		
+		Assert.areEqual(30, FlxObject.computeOverlapY(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		
+		Assert.isTrue(FlxObject.separateY(object1, object2));
+		
+		Assert.areEqual(0, FlxObject.computeOverlapY(object1, object2));
+		Assert.areEqual(0, FlxObject.computeOverlapX(object1, object2));
+		Assert.isFalse(FlxG.overlap(object1, object2));
+		Assert.isTrue(object1.y < object2.y);
+	}
+	
 	@Test // closes #1564, tests #1561
 	function testSeparateYAfterX():Void
 	{
@@ -189,9 +275,14 @@ class FlxObjectTest extends FlxTest
 	}
 
 	@Test
-	function testOverlapsPoint()
+	function testOverlapsPointInScreenSpace()
 	{
 		overlapsPointInScreenSpace(true);
+	}
+	
+	@Test
+	function testOverlapsPointNotInScreenSpace()
+	{
 		overlapsPointInScreenSpace(false);
 	}
 

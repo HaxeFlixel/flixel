@@ -64,7 +64,7 @@ class BMFontTest extends FlxTest
 	}
 	
 	// This assumes the incoming font has a specific configuration we are checking for
-	private function assertFont(font:BMFont)
+	function assertFont(font:BMFont)
 	{
 		// INFO
 		Assert.areEqual("Arial Black", font.info.face);
@@ -123,11 +123,11 @@ class BMFontTest extends FlxTest
 		
 		for (i in 0...expectedKerns.length)
 		{
-			assertKerningMatches(expectedKerns[i], font.kerning[i]);
+			assertKerningMatches(expectedKerns[i], font.kernings[i]);
 		}
 	}
 	
-	private function assertCharMatches(expected:BMFontChar, actual:BMFontChar)
+	function assertCharMatches(expected:BMFontChar, actual:BMFontChar)
 	{
 		Assert.areEqual(expected.id, actual.id);
 		Assert.areEqual(expected.x, actual.x);
@@ -143,7 +143,7 @@ class BMFontTest extends FlxTest
 		// 	Assert.areEqual(expected.letter, actual.letter);
 	}
 	
-	private function assertKerningMatches(expected:BMFontKerning, actual:BMFontKerning)
+	function assertKerningMatches(expected:BMFontKerning, actual:BMFontKerning)
 	{
 		Assert.areEqual(expected.first, actual.first);
 		Assert.areEqual(expected.second, actual.second);

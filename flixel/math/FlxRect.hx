@@ -1,9 +1,9 @@
 package flixel.math;
 
-import openfl.geom.Rectangle;
-import flixel.util.FlxPool;
 import flixel.util.FlxPool.IFlxPooled;
+import flixel.util.FlxPool;
 import flixel.util.FlxStringUtil;
+import openfl.geom.Rectangle;
 
 /**
  * Stores a rectangle.
@@ -212,29 +212,44 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
-	 * Checks to see if some FlxRect object overlaps this FlxRect object.
+	 * Checks to see if this rectangle overlaps another
 	 *
-	 * @param	Rect	The rectangle being tested.
-	 * @return	Whether or not the two rectangles overlap.
+	 * @param   rect  The other rectangle
+	 * @return  Whether the two rectangles overlap
 	 */
-	public inline function overlaps(Rect:FlxRect):Bool
+	public inline function overlaps(rect:FlxRect):Bool
 	{
-		var result = (Rect.x + Rect.width > x) && (Rect.x < x + width) && (Rect.y + Rect.height > y) && (Rect.y < y + height);
-		Rect.putWeak();
+		final result = rect.right > left
+			&& rect.left < right
+			&& rect.bottom > top
+			&& rect.top < bottom;
+		rect.putWeak();
 		return result;
 	}
 
 	/**
 	 * Returns true if this FlxRect contains the FlxPoint
 	 *
-	 * @param	Point	The FlxPoint to check
-	 * @return	True if the FlxPoint is within this FlxRect, otherwise false
+	 * @param   point  The FlxPoint to check
+	 * @return  True if the FlxPoint is within this FlxRect, otherwise false
 	 */
-	public inline function containsPoint(Point:FlxPoint):Bool
+	public inline function containsPoint(point:FlxPoint):Bool
 	{
-		var result = FlxMath.pointInFlxRect(Point.x, Point.y, this);
-		Point.putWeak();
+		final result = containsXY(point.x, point.y);
+		point.putWeak();
 		return result;
+	}
+
+	/**
+	 * Returns true if this FlxRect contains the FlxPoint
+	 *
+	 * @param   xPos  The x position to check
+	 * @param   yPos  The y position to check
+	 * @return  True if the FlxPoint is within this FlxRect, otherwise false
+	 */
+	public inline function containsXY(xPos:Float, yPos:Float):Bool
+	{
+		return xPos >= left && xPos <= right && yPos >= top && yPos <= bottom;
 	}
 
 	/**
@@ -418,39 +433,59 @@ class FlxRect implements IFlxPooled
 		rect.putWeak();
 		return result;
 	}
-
+	
 	/**
 	 * Returns the area of intersection with specified rectangle.
 	 * If the rectangles do not intersect, this method returns an empty rectangle.
 	 *
-	 * @param	rect	Rectangle to check intersection against.
-	 * @return	The area of intersection of two rectangles.
+	 * @param   rect    Rectangle to check intersection against
+	 * @param   result  The resulting instance, if `null`, a new one is created
+	 * @return  The area of intersection of two rectangles
 	 */
 	public function intersection(rect:FlxRect, ?result:FlxRect):FlxRect
 	{
 		if (result == null)
 			result = FlxRect.get();
-
-		var x0:Float = x < rect.x ? rect.x : x;
-		var x1:Float = right > rect.right ? rect.right : right;
-		if (x1 <= x0)
-		{
-			rect.putWeak();
-			return result;
-		}
-
-		var y0:Float = y < rect.y ? rect.y : y;
-		var y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
-		if (y1 <= y0)
-		{
-			rect.putWeak();
-			return result;
-		}
-
+		
+		final x0:Float = x < rect.x ? rect.x : x;
+		final x1:Float = right > rect.right ? rect.right : right;
+		final y0:Float = y < rect.y ? rect.y : y;
+		final y1:Float = bottom > rect.bottom ? rect.bottom : bottom;
 		rect.putWeak();
+		
+		if (x1 <= x0 || y1 <= y0)
+			return result.set(0, 0, 0, 0);
+		
 		return result.set(x0, y0, x1 - x0, y1 - y0);
 	}
-
+	
+	/**
+	 * Resizes `this` instance so that it fits within the intersection of the this and
+	 * the target rect. If there is no overlap between them, The result is an empty rect.
+	 *
+	 * @param   rect    Rectangle to check intersection against
+	 * @return  This rect, useful for chaining
+	 * @since 5.9.0
+	 */
+	public function clipTo(rect:FlxRect):FlxRect
+	{
+		return rect.intersection(this, this);
+	}
+	
+	/**
+	 * The middle point of this rect
+	 * 
+	 * @param   point  The point to hold the result, if `null` a new one is created
+	 * @since 5.9.0
+	 */
+	public function getMidpoint(?point:FlxPoint)
+	{
+		if (point == null)
+			point = FlxPoint.get();
+		
+		return point.set(x + 0.5 * width, y + 0.5 * height);
+	}
+	
 	/**
 	 * Convert object to readable string name. Useful for debugging, save games, etc.
 	 */

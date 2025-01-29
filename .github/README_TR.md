@@ -1,4 +1,4 @@
-[![](https://raw.github.com/HaxeFlixel/haxeflixel.com/master/src/files/images/flixel-logos/HaxeFlixel.png)](http://haxeflixel.com/)
+[![](https://raw.githubusercontent.com/HaxeFlixel/haxeflixel.com/master/content/_static/images/flixel-logos/HaxeFlixel.png)](http://haxeflixel.com/)
 
 [flixel](https://github.com/HaxeFlixel/flixel) | [eklentiler](https://github.com/HaxeFlixel/flixel-addons) | [ui](https://github.com/HaxeFlixel/flixel-ui) | [demolar](https://github.com/HaxeFlixel/flixel-demos) | [araçlar](https://github.com/HaxeFlixel/flixel-tools) | [şablonlar](https://github.com/HaxeFlixel/flixel-templates) | [dökümanlar](https://github.com/HaxeFlixel/flixel-docs) | [haxeflixel.com](https://github.com/HaxeFlixel/haxeflixel.com) | [english](https://github.com/HaxeFlixel/flixel/blob/dev/README.md)
 

@@ -1,6 +1,7 @@
 package flixel.input.gamepad;
 
 import flixel.input.FlxInput.FlxInputState;
+import flixel.input.gamepad.FlxGamepadMappedInput;
 import flixel.input.gamepad.lists.FlxGamepadAnalogList;
 import flixel.input.gamepad.lists.FlxGamepadButtonList;
 import flixel.input.gamepad.lists.FlxGamepadMotionValueList;
@@ -879,12 +880,24 @@ class FlxGamepad implements IFlxDestroyable
 		return _deadZone = deadZone;
 	}
 	
-	/** 
+	/**
+	 * A string representing the label of the target input. For instance, on a PS4 gamepad
+	 * `A` is "x", while Xbox is "a" and the Switch pro controller is "B"
 	 * @since 4.8.0
 	 */
 	public inline function getInputLabel(id:FlxGamepadInputID)
 	{
 		return mapping.getInputLabel(id);
+	}
+	
+	/** 
+	 * The value of the target gamepad input. For instance, on a PS4 gamepad `A` is `PS4(PS4ID.X)`,
+	 * while Xbox is `X_INPUT(XInputID.A)` and the Switch pro controller is `SWITCH_PRO(SwitchProID.B)`
+	 * @since 5.9.0
+	 */
+	public function getMappedInput(id:FlxGamepadInputID):FlxGamepadMappedInput
+	{
+		return mapping.getMappedInput(id);
 	}
 
 	public function toString():String

@@ -48,7 +48,7 @@ class CompletionHandler
 		var text = getTextUntilCaret();
 
 		// close completion so that enter works
-		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'"))
+		if (text.endsWith(")") || text.endsWith("\"") || text.endsWith("'") || text.endsWith(";"))
 		{
 			completionList.close();
 			return;

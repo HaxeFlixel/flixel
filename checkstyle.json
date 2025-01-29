@@ -18,7 +18,8 @@
 	"exclude": {
 		"all": [
 			"TestSuite",
-			"/export/"
+			"/export/",
+			"tests/unit/bin/"
 		],
 		"AvoidStarImport": [
 			"flixel.math.FlxRandomTest"
@@ -34,7 +35,8 @@
 					"STATIC",
 					"MACRO",
 					"INLINE",
-					"DYNAMIC"
+					"DYNAMIC",
+					"FINAL"
 				]
 			}
 		},

@@ -7,7 +7,6 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 import openfl.media.Sound;
@@ -79,6 +78,9 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
+	 * 
+	 * Note: On desktop targets this only works with mono sounds, due to limitations of OpenAL.
+	 * More info: [OpenFL Forums - SoundTransform.pan does not work](https://community.openfl.org/t/windows-legacy-soundtransform-pan-does-not-work/6616/2?u=geokureli)
 	 */
 	public var pan(get, set):Float;
 	
@@ -336,6 +338,8 @@ class FlxSound extends FlxBasic
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 *
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
@@ -360,8 +364,8 @@ class FlxSound extends FlxBasic
 		}
 		else if ((EmbeddedSound is String))
 		{
-			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
-				_sound = Assets.getSound(EmbeddedSound);
+			if (FlxG.assets.exists(EmbeddedSound, SOUND))
+				_sound = FlxG.assets.getSoundUnsafe(EmbeddedSound);
 			else
 				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
@@ -771,7 +775,9 @@ class FlxSound extends FlxBasic
 	
 	inline function set_pan(pan:Float):Float
 	{
-		return _transform.pan = pan;
+		_transform.pan = pan;
+		updateTransform();
+		return pan;
 	}
 	
 	inline function get_time():Float

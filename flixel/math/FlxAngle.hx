@@ -246,8 +246,8 @@ class FlxAngle
 
 		var p:FlxPoint = Object.getScreenPosition();
 
-		var dx:Float = FlxG.mouse.screenX - p.x;
-		var dy:Float = FlxG.mouse.screenY - p.y;
+		var dx:Float = FlxG.mouse.viewX - p.x;
+		var dy:Float = FlxG.mouse.viewY - p.y;
 
 		p.put();
 
@@ -296,8 +296,8 @@ class FlxAngle
 		// In order to get the angle between the object and mouse, we need the objects screen coordinates (rather than world coordinates)
 		var p:FlxPoint = Object.getScreenPosition();
 
-		var dx:Float = Touch.screenX - p.x;
-		var dy:Float = Touch.screenY - p.y;
+		var dx:Float = Touch.viewX - p.x;
+		var dy:Float = Touch.viewY - p.y;
 
 		p.put();
 

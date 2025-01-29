@@ -1,5 +1,7 @@
 package flixel.tweens;
 
+import flixel.FlxBasic;
+import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween.TweenCallback;
 import flixel.util.FlxTimer;
@@ -70,6 +72,76 @@ class FlxTweenTest extends FlxTest
 			Assert.isNotNull(f);
 		});
 		step();
+	}
+
+	@Test
+	function testFlicker()
+	{
+		final basic = new FlxBasic();
+		FlxTween.flicker(basic, 1, 0.08);
+		
+		step();
+		
+		Assert.isFalse(basic.visible);
+		Assert.isTrue(FlxTween.isFlickering(basic));
+	}
+	
+	@Test
+	function testFlickerZeroPeriod()
+	{
+		final basic = new FlxBasic();
+		final tween = FlxTween.flicker(basic, 1.0, 0.0);
+		
+		Assert.areNotEqual(0.0, tween.period);
+	}
+	
+	@Test
+	function testFlickerStartDelay()
+	{
+		final basic = new FlxBasic();
+		FlxTween.flicker(basic, 1.0, 0.08, {startDelay: 1.0});
+		
+		step();
+		
+		Assert.isTrue(basic.visible);
+		Assert.isTrue(FlxTween.isFlickering(basic));
+		
+		step(FlxG.updateFramerate); // 1 full second
+		
+		Assert.isFalse(basic.visible);
+		Assert.isTrue(FlxTween.isFlickering(basic));
+	}
+	
+	@Test
+	function testFlickerEndVisibility()
+	{
+		final basic = new FlxBasic();
+		FlxTween.flicker(basic, 1.0);
+		
+		step(FlxG.updateFramerate * 2); // 2 full seconds
+		
+		Assert.isTrue(basic.visible);
+		Assert.isFalse(FlxTween.isFlickering(basic));
+		
+		FlxTween.flicker(basic, 1.0, 0.08, {endVisibility: false});
+		
+		step(FlxG.updateFramerate * 2); // 2 full seconds
+		
+		Assert.isFalse(basic.visible);
+		Assert.isFalse(FlxTween.isFlickering(basic));
+	}
+	
+	@Test
+	function testFlickerEndVisibilityCancel()
+	{
+		final basic = new FlxBasic();
+		FlxTween.flicker(basic, 1.0);
+		
+		step();
+		
+		Assert.isFalse(basic.visible);
+		FlxTween.stopFlickering(basic);
+		Assert.isTrue(basic.visible);
 	}
 
 	@Test

@@ -35,7 +35,7 @@ enum abstract FlxGamepadInputID(Int) from Int to Int
 	/**right digital "bumper"*/
 	var RIGHT_SHOULDER = 5;
 
-	/**also known as "select", the leftmost center button*/
+	/**also known as "select", the left-most center button*/
 	var BACK = 6;
 
 	/**the rightmost center button*/
@@ -127,7 +127,19 @@ enum abstract FlxGamepadInputID(Int) from Int to Int
 
 	/**left analog stick as a dpad, pushed left**/
 	var RIGHT_STICK_DIGITAL_LEFT = 41;
-
+	
+	/**
+	 * Mapped to The bottom face button on most controllers, and the
+	 * right face button on Nintendo Switch controllers
+	**/
+	var ACCEPT = 42;
+	
+	/**
+	 * Mapped to The bottom face button on most controllers, and the
+	 * right face button on Nintendo Switch controllers
+	**/
+	var CANCEL = 43;
+	
 	@:from
 	public static inline function fromString(s:String)
 	{

@@ -102,4 +102,23 @@ class FlxArrayUtilTest
 		Assert.isTrue([0, 1, 2, 3, 4, 5].safeSwap(0, 2).equals([2, 1, 0, 3, 4, 5]));
 		Assert.isTrue([0, 1, 2, 3, 4, 5].safeSwap(1, 6).equals([0, 1, 2, 3, 4, 5]));
 	}
+
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function testSetLength()
+	{
+		final arr = [0, 1, 2, 3, 4, 5];
+		
+		// ignores negative numbers
+		arr.setLength(-1);
+		FlxAssert.arraysEqual([0, 1, 2, 3, 4, 5], arr);
+		
+		// expected usage
+		arr.setLength(3);
+		FlxAssert.arraysEqual([0, 1, 2], arr);
+		
+		// can't make arrays bigger
+		arr.setLength(5);
+		FlxAssert.arraysEqual([0, 1, 2], arr);
+	}
 }

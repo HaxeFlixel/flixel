@@ -145,6 +145,28 @@ class FlxFlicker implements IFlxDestroyable
 	}
 
 	/**
+	 * Temporarily pause the flickering, so it can be resumed later.
+	 */
+	public function pause():Void
+	{
+		if (timer == null)
+			return;
+		
+		timer.active = false;
+	}
+
+	/**
+	 * Resume the flickering after it has been temporarily paused.
+	 */
+	public function resume():Void
+	{
+		if (timer == null)
+			return;
+		
+		timer.active = true;
+	}
+
+	/**
 	 * Prematurely ends flickering.
 	 */
 	public function stop():Void
@@ -166,23 +188,21 @@ class FlxFlicker implements IFlxDestroyable
 	/**
 	 * Just a helper function for flicker() to update object's visibility.
 	 */
-	function flickerProgress(Timer:FlxTimer):Void
+	function flickerProgress(timer:FlxTimer):Void
 	{
 		object.visible = !object.visible;
-
+		
 		if (progressCallback != null)
-		{
 			progressCallback(this);
-		}
-
-		if (Timer.loops > 0 && Timer.loopsLeft == 0)
+		
+		if (timer.loops > 0 && timer.loopsLeft == 0)
 		{
 			object.visible = endVisibility;
 			if (completionCallback != null)
-			{
 				completionCallback(this);
-			}
-			release();
+			
+			if (this.timer == timer)
+				release();
 		}
 	}
 

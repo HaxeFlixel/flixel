@@ -17,7 +17,7 @@ private class GraphicLogoCorners extends BitmapData {}
 
 /**
  * This is the Default HaxeFlixel Themed Preloader
- * You can make your own style of Preloader by overriding `FlxPreloaderBase` and using this class as an example.
+ * You can make your own style of Preloader by extending `FlxBasePreloader` and using this class as an example.
  * To use your Preloader, simply change `Project.xml` to say: `<app preloader="class.path.MyPreloader" />`
  */
 class FlxPreloader extends FlxBasePreloader
