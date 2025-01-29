@@ -1,14 +1,5 @@
 6.0.0 (TBD)
 
-#### Changes and improvements:
-- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
-- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
-- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
-- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
-- `FlxCamera`: Removed `defaultCameras`
-- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
-- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
-
 #### Removals
 We removed many features and utilities that were previously deprecated
 - `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
@@ -34,6 +25,23 @@ We removed many features and utilities that were previously deprecated
 - `FlxAssets.FlxAngelCodeSource`: Use `FlxAssets.FlxAngelCodeAsset`, instead
 - `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
 - `FlxUnicodeUtil`: Use `UnicodeString`, instead
+
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera`: Removed `defaultCameras`
+- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
+- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
+- `FlxG.log`: Add `PosInfos` args to loggers, for better tracing info ([#3338](https://github.com/HaxeFlixel/flixel/pull/3338))
+
+#### New features:
+- `FlxMath`: Add improved, euclidean division `mod` function ([#3341](https://github.com/HaxeFlixel/flixel/pull/3341))
+
+#### Bugfixes:
+- `FlxCamera`: Fix `color` field ([#3326](https://github.com/HaxeFlixel/flixel/pull/3326))
+- `FlxCamera`: Reset `bgColor` on reset ([#3254](https://github.com/HaxeFlixel/flixel/issues/3254))
 
 5.9.0 (December 12, 2024)
 ------------------------------
