@@ -16,27 +16,27 @@ class LogFrontEnd
 	public var redirectTraces(default, set):Bool = false;
 
 	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
-
-	public inline function add(data:Dynamic):Void
+	
+	public inline function add(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NORMAL);
+		advanced(data, LogStyle.NORMAL, false, pos);
 	}
-
-	public inline function warn(data:Dynamic):Void
+	
+	public inline function warn(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.WARNING, true);
+		advanced(data, LogStyle.WARNING, true, pos);
 	}
-
-	public inline function error(data:Dynamic):Void
+	
+	public inline function error(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.ERROR, true);
+		advanced(data, LogStyle.ERROR, true, pos);
 	}
-
-	public inline function notice(data:Dynamic):Void
+	
+	public inline function notice(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NOTICE);
+		advanced(data, LogStyle.NOTICE, false, pos);
 	}
-
+	
 	/**
 	 * Add an advanced log message to the debugger by also specifying a LogStyle. Backend to FlxG.log.add(), FlxG.log.warn(), FlxG.log.error() and FlxG.log.notice().
 	 *
@@ -44,26 +44,26 @@ class LogFrontEnd
 	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
 	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
-	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void
+	@:haxe.warning("-WDeprecated")
+	public function advanced(data:Any, ?style:LogStyle, fireOnce = false, ?pos:PosInfos):Void
 	{
 		if (style == null)
 			style = LogStyle.NORMAL;
 		
-		if (!(data is Array))
-			data = [data];
+		final arrayData = (!(data is Array) ? [data] : cast data);
 		
 		#if FLX_DEBUG
 		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
 		if (FlxG.game == null || FlxG.game.debugger == null)
 		{
-			_standardTraceFunction(data);
+			_standardTraceFunction(arrayData);
 		}
-		else if (FlxG.game.debugger.log.add(data, style, fireOnce))
+		else if (FlxG.game.debugger.log.add(arrayData, style, fireOnce))
 		{
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
 			if (style.errorSound != null)
 			{
-				final sound = FlxAssets.getSound(style.errorSound);
+				final sound = FlxAssets.getSoundAddExtension(style.errorSound);
 				if (sound != null)
 					FlxG.sound.load(sound).play();
 			}
@@ -77,8 +77,10 @@ class LogFrontEnd
 		}
 		#end
 		
+		style.onLog.dispatch(data, pos);
+		
 		if (style.throwException)
-			throw style.toLogString(data);
+			throw style.toLogString(arrayData);
 	}
 
 	/**
@@ -109,9 +111,9 @@ class LogFrontEnd
 	 * @param   data  The data that has been traced
 	 * @param   info  Information about the position at which trace() was called
 	 */
-	function processTraceData(data:Dynamic, ?info:PosInfos):Void
+	function processTraceData(data:Any, ?info:PosInfos):Void
 	{
-		var paramArray:Array<Dynamic> = [data];
+		var paramArray:Array<Any> = [data];
 
 		if (info.customParams != null)
 		{

@@ -1,16 +1,12 @@
 package flixel;
 
-import openfl.Lib;
-import openfl.display.DisplayObject;
-import openfl.display.Stage;
-import openfl.display.StageDisplayState;
-import openfl.net.URLRequest;
 import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -27,6 +23,12 @@ import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
+import flixel.util.typeLimit.NextState;
+import openfl.Lib;
+import openfl.display.DisplayObject;
+import openfl.display.Stage;
+import openfl.display.StageDisplayState;
+import openfl.net.URLRequest;
 #if FLX_TOUCH
 import flixel.input.touch.FlxTouchManager;
 #end
@@ -105,7 +107,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 4, 1);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 9, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -335,6 +337,12 @@ class FlxG
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 
 	/**
+	 * Contains helper functions relating to retrieving assets
+	 * @since 5.9.0
+	 */
+	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
+	
+	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
 	public static inline function resizeGame(width:Int, height:Int):Void
@@ -348,9 +356,6 @@ class FlxG
 	public static function resizeWindow(width:Int, height:Int):Void
 	{
 		#if desktop
-		#if openfl_legacy
-		stage.resize(width, height);
-		#else
 		#if air
 		var window = flash.desktop.NativeApplication.nativeApplication.activeWindow;
 		window.width = width;
@@ -359,11 +364,10 @@ class FlxG
 		Lib.application.window.resize(width, height);
 		#end
 		#end
-		#end
 	}
 
 	/**
-	 * Like hitting the reset button a game console, this will re-launch the game as if it just started.
+	 * Like hitting the reset button on a game console, this will re-launch the game as if it just started.
 	 */
 	public static inline function resetGame():Void
 	{
@@ -373,21 +377,20 @@ class FlxG
 	/**
 	 * Attempts to switch from the current game state to `nextState`.
 	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
+	 * @param   nextState  A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
+	 *                     Note: Before Flixel 5.6.0, this took a `FlxState` instance,
+	 *                     this is still available, for backwards compatibility.
 	 */
-	public static inline function switchState(nextState:FlxState):Void
+	public static inline function switchState(nextState:NextState):Void
 	{
 		final stateOnCall = FlxG.state;
-		// Use reflection to avoid deprecation warning on switchTo
-		if (Reflect.field(state, 'switchTo')(nextState))
+		state.startOutro(function()
 		{
-			state.startOutro(function()
-			{
-				if (FlxG.state == stateOnCall)
-					game._requestedState = nextState;
-				else
-					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
-			});
-		}
+			if (FlxG.state == stateOnCall)
+				game._nextState = nextState;
+			else
+				FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+		});
 	}
 
 	/**
@@ -396,7 +399,7 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		switchState(Type.createInstance(Type.getClass(state), []));
+		switchState(state._constructor);
 	}
 
 	/**
@@ -607,23 +610,23 @@ class FlxG
 
 		// Instantiate inputs
 		#if FLX_KEYBOARD
-		keys = inputs.add(new FlxKeyboard());
+		keys = inputs.addInput(new FlxKeyboard());
 		#end
 
 		#if FLX_MOUSE
-		mouse = inputs.add(new FlxMouse(game._inputContainer));
+		mouse = inputs.addInput(new FlxMouse(game._inputContainer));
 		#end
 
 		#if FLX_TOUCH
-		touches = inputs.add(new FlxTouchManager());
+		touches = inputs.addInput(new FlxTouchManager());
 		#end
 
 		#if FLX_GAMEPAD
-		gamepads = inputs.add(new FlxGamepadManager());
+		gamepads = inputs.addInput(new FlxGamepadManager());
 		#end
 
 		#if android
-		android = inputs.add(new FlxAndroidKeys());
+		android = inputs.addInput(new FlxAndroidKeys());
 		#end
 
 		#if FLX_ACCELEROMETER
@@ -733,21 +736,24 @@ class FlxG
 	}
 
 	#if FLX_MOUSE
-	static function set_mouse(NewMouse:FlxMouse):FlxMouse
+	static function set_mouse(newMouse:FlxMouse):FlxMouse
 	{
-		if (mouse == null) // if no mouse, just add it
+		// if there's no mouse, add it
+		if (mouse == null)
 		{
-			mouse = inputs.add(NewMouse); // safe to do b/c it won't add repeats!
+			mouse = inputs.addUniqueType(newMouse);
 			return mouse;
 		}
-		var oldMouse:FlxMouse = mouse;
-		var result:FlxMouse = inputs.replace(oldMouse, NewMouse); // replace existing mouse
+		
+		// replace existing mouse
+		final oldMouse:FlxMouse = mouse;
+		final result:FlxMouse = inputs.replace(oldMouse, newMouse, true);
 		if (result != null)
 		{
 			mouse = result;
-			oldMouse.destroy();
-			return NewMouse;
+			return newMouse;
 		}
+		
 		return oldMouse;
 	}
 	#end

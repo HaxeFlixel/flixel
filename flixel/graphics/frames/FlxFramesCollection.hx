@@ -163,7 +163,9 @@ class FlxFramesCollection implements IFlxDestroyable
 	 */
 	public function addSpriteSheetFrame(region:FlxRect):FlxFrame
 	{
-		var frame = new FlxFrame(parent);
+		// Ensure region not a weak rect
+		region = FlxRect.get().copyFrom(region);
+		final frame = new FlxFrame(parent);
 		frame.frame = checkFrame(region);
 		frame.sourceSize.set(region.width, region.height);
 		frame.offset.set(0, 0);
@@ -183,6 +185,7 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * @param   angle        Rotation of packed image (can be `0`, `90` or `-90`).
 	 * @param   flipX        If packed image should be horizontally flipped.
 	 * @param   flipY        If packed image should be vertically flipped.
+	 * @param	duration	 The duration of this frame in seconds. If 0, the anim controller will decide the duration.
 	 * @return  Newly created and added frame object.
 	 */
 	public function addAtlasFrame(frame:FlxRect, sourceSize:FlxPoint, offset:FlxPoint, ?name:String, angle:FlxFrameAngle = 0, flipX = false, flipY = false,

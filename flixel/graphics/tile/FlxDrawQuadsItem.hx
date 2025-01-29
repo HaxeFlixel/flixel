@@ -67,8 +67,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.tx);
 		transforms.push(matrix.ty);
 
+		var alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
 		for (i in 0...VERTICES_PER_QUAD)
-			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
+			alphas.push(alphaMultiplier);
 
 		if (colored || hasColorOffsets)
 		{
@@ -113,8 +114,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	{
 		if (rects.length == 0)
 			return;
-
-		var shader = shader != null ? shader : graphics.shader;
+		
+		// TODO: catch this error when the dev actually messes up, not in the draw phase
+		if (shader == null && graphics.isDestroyed)
+			throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
+		
+		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;

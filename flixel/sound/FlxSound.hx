@@ -7,7 +7,6 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
 import openfl.media.Sound;
@@ -16,9 +15,6 @@ import openfl.media.SoundTransform;
 import openfl.net.URLRequest;
 #if flash11
 import openfl.utils.ByteArray;
-#end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
 #end
 
 /**
@@ -81,6 +77,9 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Pan amount. -1 = full left, 1 = full right. Proximity based panning overrides this.
+	 * 
+	 * Note: On desktop targets this only works with mono sounds, due to limitations of OpenAL.
+	 * More info: [OpenFL Forums - SoundTransform.pan does not work](https://community.openfl.org/t/windows-legacy-soundtransform-pan-does-not-work/6616/2?u=geokureli)
 	 */
 	public var pan(get, set):Float;
 	
@@ -114,7 +113,8 @@ class FlxSound extends FlxBasic
 	public var length(get, never):Float;
 	
 	/**
-	 * The sound group this sound belongs to
+	 * The sound group this sound belongs to, can only be in one group.
+	 * NOTE: This setter is deprecated, use `group.add(sound)` or `group.remove(sound)`.
 	 */
 	public var group(default, set):FlxSoundGroup;
 	
@@ -252,6 +252,10 @@ class FlxSound extends FlxBasic
 	
 	override public function destroy():Void
 	{
+		// Prevents double destroy
+		if (group != null)
+			group.remove(this);
+		
 		_transform = null;
 		exists = false;
 		active = false;
@@ -333,6 +337,8 @@ class FlxSound extends FlxBasic
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 *
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
@@ -357,8 +363,8 @@ class FlxSound extends FlxBasic
 		}
 		else if ((EmbeddedSound is String))
 		{
-			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
-				_sound = Assets.getSound(EmbeddedSound);
+			if (FlxG.assets.exists(EmbeddedSound, SOUND))
+				_sound = FlxG.assets.getSoundUnsafe(EmbeddedSound);
 			else
 				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
@@ -703,24 +709,20 @@ class FlxSound extends FlxBasic
 	}
 	#end
 	
-	function set_group(group:FlxSoundGroup):FlxSoundGroup
+	@:deprecated("sound.group = myGroup is deprecated, use myGroup.add(sound)") // 5.7.0
+	function set_group(value:FlxSoundGroup):FlxSoundGroup
 	{
-		if (this.group != group)
+		if (value != null)
 		{
-			var oldGroup:FlxSoundGroup = this.group;
-			
-			// New group must be set before removing sound to prevent infinite recursion
-			this.group = group;
-			
-			if (oldGroup != null)
-				oldGroup.remove(this);
-				
-			if (group != null)
-				group.add(this);
-				
-			updateTransform();
+			// add to new group, also removes from prev and calls updateTransform
+			value.add(this);
 		}
-		return group;
+		else
+		{
+			// remove from prev group, also calls updateTransform
+			group.remove(this);
+		}
+		return value;
 	}
 	
 	inline function get_playing():Bool
@@ -749,9 +751,8 @@ class FlxSound extends FlxBasic
 	function set_pitch(v:Float):Float
 	{
 		if (_channel != null)
-			#if openfl_legacy
-			_channel.pitch = v;
-			#elseif (openfl < "9.3.2")
+		{
+			#if (openfl < "9.3.2")
 			@:privateAccess
 			if (_channel.__source != null)
 				_channel.__source.pitch = v;
@@ -760,6 +761,7 @@ class FlxSound extends FlxBasic
 			if (_channel.__audioSource != null)
 				_channel.__audioSource.pitch = v;
 			#end
+		}
 			
 		return _pitch = v;
 	}
@@ -772,7 +774,9 @@ class FlxSound extends FlxBasic
 	
 	inline function set_pan(pan:Float):Float
 	{
-		return _transform.pan = pan;
+		_transform.pan = pan;
+		updateTransform();
+		return pan;
 	}
 	
 	inline function get_time():Float

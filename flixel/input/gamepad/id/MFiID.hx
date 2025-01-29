@@ -1,41 +1,52 @@
 package flixel.input.gamepad.id;
 
+import flixel.input.gamepad.FlxGamepadAnalogStick;
+
 /**
  * IDs for MFi controllers
  */
-class MFiID
+enum abstract MFiID(Int) to Int
 {
-	public static inline var A:Int = 6;
-	public static inline var B:Int = 7;
-	public static inline var X:Int = 8;
-	public static inline var Y:Int = 9;
-	public static inline var LB:Int = 15;
-	public static inline var RB:Int = 16;
-	public static inline var BACK:Int = 10;
-	public static inline var START:Int = 12;
-	public static inline var LEFT_STICK_CLICK:Int = 13;
-	public static inline var RIGHT_STICK_CLICK:Int = 14;
+	var LEFT_TRIGGER = 4;
+	var RIGHT_TRIGGER = 5;
+	
+	var A = 6;
+	var B = 7;
+	var X = 8;
+	var Y = 9;
+	var LB = 15;
+	var RB = 16;
+	var BACK = 10;
+	var GUIDE = 11;
+	var START = 12;
+	var LEFT_STICK_CLICK = 13;
+	var RIGHT_STICK_CLICK = 14;
+	
+	var DPAD_UP = 17;
+	var DPAD_DOWN = 18;
+	var DPAD_LEFT = 19;
+	var DPAD_RIGHT = 20;
 
-	public static inline var GUIDE:Int = 11;
-
-	public static inline var DPAD_UP:Int = 17;
-	public static inline var DPAD_DOWN:Int = 18;
-	public static inline var DPAD_LEFT:Int = 19;
-	public static inline var DPAD_RIGHT:Int = 20;
-
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 21,
-		down: 22,
-		left: 23,
-		right: 24
+	var LEFT_STICK_UP = 21;
+	var LEFT_STICK_DOWN = 22;
+	var LEFT_STICK_LEFT = 23;
+	var LEFT_STICK_RIGHT = 24;
+		
+	var RIGHT_STICK_UP = 25;
+	var RIGHT_STICK_DOWN = 26;
+	var RIGHT_STICK_LEFT = 27;
+	var RIGHT_STICK_RIGHT = 28;
+	
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<MFiID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
 	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
-		up: 25,
-		down: 26,
-		left: 27,
-		right: 28
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<MFiID>(2, 3, {
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
 	});
-
-	public static inline var LEFT_TRIGGER:Int = 4;
-	public static inline var RIGHT_TRIGGER:Int = 5;
 }

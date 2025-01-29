@@ -7,6 +7,6 @@ typedef TexturePackerAtlasFrame = AtlasFrame &
 	?duration:Int
 }
 
-typedef TexturePackerAtlasHash = AtlasBase<AtlasBase.Hash<TexturePackerAtlasFrame>>;
+typedef TexturePackerAtlasHash = AtlasBase<haxe.DynamicAccess<TexturePackerAtlasFrame>>;
 typedef TexturePackerAtlas = AtlasBase<HashOrArray<TexturePackerAtlasFrame>>;
 typedef TexturePackerAtlasArray = AtlasBase<Array<TexturePackerAtlasFrame>>;

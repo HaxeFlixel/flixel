@@ -1,5 +1,6 @@
 package flixel.group;
 
+import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.math.FlxRect;
 import massive.munit.Assert;
@@ -14,6 +15,7 @@ class FlxSpriteGroupTest extends FlxTest
 		group = new FlxSpriteGroup();
 		for (i in 0...10)
 			group.add(new FlxSprite());
+		destroyable = group;
 	}
 
 	@Test // #1368
@@ -135,7 +137,60 @@ class FlxSpriteGroupTest extends FlxTest
 		Assert.isTrue(member1.revived);
 		Assert.isFalse(member2.killed);
 		Assert.isFalse(member2.revived);
-		return group;
+	}
+	
+	@Test
+	function testMemberCameras()
+	{
+		final subGroup1 = new FlxSpriteGroup();
+		group.add(subGroup1);
+		final subGroup2 = new FlxTypedSpriteGroup<FlxSprite>();
+		subGroup1.add(subGroup2);
+		final member1 = new FlxSprite();
+		final member2 = new FlxSprite();
+		subGroup1.add(member1);
+		subGroup2.add(member2);
+		
+		final cam = new FlxCamera();
+		group.camera = cam;
+		Assert.areEqual(cam, member1.getCameras()[0]);
+		Assert.areEqual(cam, member2.getCameras()[0]);
+		Assert.areEqual(cam, member1.camera);
+		Assert.areEqual(cam, member2.camera);
+		
+		final cams = [new FlxCamera()];
+		group.cameras = cams;
+		Assert.areEqual(cams, member1.getCameras());
+		Assert.areEqual(cams, member2.getCameras());
+		Assert.areEqual(cams, member1.cameras);
+		Assert.areEqual(cams, member2.cameras);
+	}
+	@Test
+	/**
+	 * Ensure that member origins are correctly set when 
+	 * the group origin is set.
+	 */
+	function testOriginTransform()
+	{
+		var f1 = new FlxSprite(-10, 100);
+		var f2 = new FlxSprite(50, 50);
+		group.add(f1);
+		group.add(f2);
+		
+		group.setPosition(280, 300);
+		group.origin.set(300, 400);
+		
+		// Verify positions are updated - absolute
+		Assert.areEqual(270, f1.x);
+		Assert.areEqual(400, f1.y);
+		Assert.areEqual(330, f2.x);
+		Assert.areEqual(350, f2.y);
+		
+		// Verify origins are correct - relative
+		Assert.areEqual(310, f1.origin.x);
+		Assert.areEqual(300, f1.origin.y);
+		Assert.areEqual(250, f2.origin.x);
+		Assert.areEqual(350, f2.origin.y);
 	}
 }
 

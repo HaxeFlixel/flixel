@@ -7,18 +7,26 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import openfl.system.Capabilities;
 #end
 
-class FlxGamepadMapping
+typedef FlxGamepadMapping = FlxTypedGamepadMapping<Int>;
+
+class FlxTypedGamepadMapping<TInputID:Int>
 {
 	public var supportsMotion:Bool = false;
 	public var supportsPointer:Bool = false;
 
-	public var leftStick:FlxGamepadAnalogStick;
-	public var rightStick:FlxGamepadAnalogStick;
+	public var leftStick:FlxTypedGamepadAnalogStick<TInputID>;
+	public var rightStick:FlxTypedGamepadAnalogStick<TInputID>;
 
 	@:allow(flixel.input.gamepad.FlxGamepad)
 	var attachment(default, set):FlxGamepadAttachment = NONE;
 
 	var manufacturer:Manufacturer;
+	
+	/**
+	 * Whether to treat `A` or `B` as `ACCEPT` or `CANCEL`, when `FlxG.gamepads.acceptMode` is `ADAPTIVE`
+	 * @since 5.9.0
+	 */
+	var bottomIsAccept:Bool = true;
 
 	public function new(?attachment:FlxGamepadAttachment)
 	{
@@ -39,7 +47,7 @@ class FlxGamepadMapping
 
 	function initValues():Void {}
 
-	public function getAnalogStick(ID:FlxGamepadInputID):FlxGamepadAnalogStick
+	public function getAnalogStick(ID:FlxGamepadInputID):FlxTypedGamepadAnalogStick<TInputID>
 	{
 		return switch (ID)
 		{
@@ -55,7 +63,7 @@ class FlxGamepadMapping
 	/**
 	 * Given a raw hardware code, return the "universal" ID
 	 */
-	public function getID(rawID:Int):FlxGamepadInputID
+	public function getID(rawID:TInputID):FlxGamepadInputID
 	{
 		return FlxGamepadInputID.NONE;
 	}
@@ -63,20 +71,44 @@ class FlxGamepadMapping
 	/**
 	 * Given an ID, return the raw hardware code
 	 */
-	public function getRawID(ID:FlxGamepadInputID):Int
+	public function getRawID(ID:FlxGamepadInputID):TInputID
 	{
-		return -1;
+		return switch ID
+		{
+			case ACCEPT if (getGlobalBottomIsAccept()): getRawID(A);
+			case CANCEL if (getGlobalBottomIsAccept()): getRawID(B);
+			case ACCEPT: getRawID(B);
+			case CANCEL: getRawID(A);
+			default: cast -1;// TODO: Throw error
+		}
+	}
+	
+	function getGlobalBottomIsAccept()
+	{
+		#if FLX_GAMEPAD
+		if (FlxG.gamepads != null)
+		{
+			return switch FlxG.gamepads.acceptMode
+			{
+				case BOTTOM: true;
+				case RIGHT: false;
+				case USE_MAPPING: bottomIsAccept;
+			}
+		}
+		#end
+		
+		return bottomIsAccept;
 	}
 
 	/**
 	 * Whether this axis needs to be flipped
 	 */
-	public function isAxisFlipped(axisID:Int):Bool
+	public function isAxisFlipped(axisID:TInputID):Bool
 	{
 		return false;
 	}
 
-	public function isAxisForMotion(ID:FlxGamepadInputID):Bool
+	public function isAxisForMotion(ID:TInputID):Bool
 	{
 		return false;
 	}
@@ -86,7 +118,7 @@ class FlxGamepadMapping
 	 * Given an axis index value like 0-6, figures out which input that
 	 * corresponds to and returns a "fake" ButtonID for that input
 	 */
-	public function axisIndexToRawID(axisID:Int):Int
+	public function axisIndexToRawID(axisID:TInputID):Int
 	{
 		return -1;
 	}
@@ -100,6 +132,11 @@ class FlxGamepadMapping
 	function set_attachment(attachment:FlxGamepadAttachment):FlxGamepadAttachment
 	{
 		return this.attachment = attachment;
+	}
+	
+	public function getMappedInput(id:FlxGamepadInputID)
+	{
+		return FlxGamepadMappedInput.UNKNOWN(id);
 	}
 	
 	public function getInputLabel(id:FlxGamepadInputID):Null<String>
@@ -139,6 +176,10 @@ class FlxGamepadMapping
 			case RIGHT_STICK_DIGITAL_DOWN: "rs-down";
 			case RIGHT_STICK_DIGITAL_LEFT: "rs-left";
 			case RIGHT_STICK_DIGITAL_RIGHT: "rs-right";
+			case ACCEPT if (getGlobalBottomIsAccept()): getInputLabel(A);
+			case CANCEL if (getGlobalBottomIsAccept()): getInputLabel(B);
+			case ACCEPT: getInputLabel(B);
+			case CANCEL: getInputLabel(A);
 			#if FLX_JOYSTICK_API
 			case LEFT_TRIGGER_FAKE: "l2";
 			case RIGHT_TRIGGER_FAKE: "r2";

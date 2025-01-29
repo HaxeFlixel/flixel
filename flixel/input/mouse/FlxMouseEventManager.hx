@@ -271,7 +271,7 @@ class FlxMouseEventManager extends FlxBasic
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   onMouseUp       Callback when mouse is released over this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
-	 * @param   onMouseOver     Callback when mouse is this object.
+	 * @param   onMouseOver     Callback when mouse is over this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
 	 * @param   onMouseOut      Callback when mouse moves out of this object.
 	 *                          Must have Object as argument - e.g. `onMouseDown(object:FlxObject)`.
@@ -632,10 +632,10 @@ class FlxMouseEventManager extends FlxBasic
 
 	function checkOverlap<T:FlxObject>(event:FlxMouseEvent<T>):Bool
 	{
-		for (camera in event.object.cameras)
+		for (camera in event.object.getCameras())
 		{
 			#if FLX_MOUSE
-			_point = FlxG.mouse.getPositionInCameraView(camera, _point);
+			_point = FlxG.mouse.getViewPosition(camera, _point);
 			if (camera.containsPoint(_point))
 			{
 				_point = FlxG.mouse.getWorldPosition(camera, _point);
@@ -650,7 +650,7 @@ class FlxMouseEventManager extends FlxBasic
 			#if FLX_TOUCH
 			for (touch in FlxG.touches.list)
 			{
-				_point = touch.getPositionInCameraView(camera, _point);
+				_point = touch.getViewPosition(camera, _point);
 				if (camera.containsPoint(_point))
 				{
 					_point = touch.getWorldPosition(camera, _point);

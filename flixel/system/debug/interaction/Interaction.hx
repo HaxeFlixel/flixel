@@ -18,6 +18,7 @@ import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
+import flixel.system.debug.interaction.tools.ToggleBounds;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
@@ -90,6 +91,7 @@ class Interaction extends Window
 		addTool(new Mover());
 		addTool(new Eraser());
 		addTool(new Transform());
+		addTool(new ToggleBounds());
 
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
@@ -139,7 +141,7 @@ class Interaction extends Window
 
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
-		_flixelPointer.setGlobalScreenPositionUnsafe(event.stageX, event.stageY);
+		_flixelPointer.setRawPositionUnsafe(Std.int(FlxG.game.mouseX), Std.int(FlxG.game.mouseY));
 
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
@@ -397,9 +399,11 @@ class Interaction extends Window
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
-				// Render a red rectangle centered at the selected item
-				gfx.lineStyle(0.9, 0xff0000);
-				gfx.drawRect(member.x - FlxG.camera.scroll.x, member.y - FlxG.camera.scroll.y, member.width * 1.0, member.height * 1.0);
+				final margin = 0.5;
+				final scroll = FlxG.camera.scroll;
+				// Render a white rectangle centered at the selected item
+				gfx.lineStyle(1.0, 0xFFFFFF, 0.75);
+				gfx.drawRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2);
 			}
 		}
 
@@ -675,6 +679,19 @@ class Interaction extends Window
 		addItemsWithinArea(cast items, members, area);
 	}
 	
+	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
+	{
+		return area.overlaps(object.getHitbox(FlxRect.weak()));
+	}
+	
+	inline function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
+	{
+		// Ignore sprites' alpha when clicking a point
+		return (area.width <= 1 && area.height <= 1)
+			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
+			: isOverObject(sprite, area);
+	}
+	
 	/**
 	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
 	 * the method has no return, you must pass an array where items will be placed. The method decides
@@ -699,11 +716,19 @@ class Interaction extends Window
 			
 			final group = FlxTypedGroup.resolveSelectionGroup(member);
 			if (group != null)
+			{
 				addItemsWithinArea(items, group.members, area);
+			}
+			else if (member is FlxSprite)
+			{
+				final sprite:FlxSprite = cast member;
+				if (isOverSprite(sprite, area))
+					items.push(sprite);
+			}
 			else if (member is FlxObject)
 			{
 				final object:FlxObject = cast member;
-				if (area.overlaps(object.getHitbox()))
+				if (isOverObject(object, area))
 					items.push(object);
 			}
 		}
@@ -733,10 +758,16 @@ class Interaction extends Window
 			if (group != null)
 				return getTopItemWithinArea(group.members, area);
 			
-			if (member is FlxObject)
+			if (member is FlxSprite)
+			{
+				final sprite:FlxSprite = cast member;
+				if (isOverSprite(sprite, area))
+					return sprite;
+			}
+			else if (member is FlxObject)
 			{
 				final object:FlxObject = cast member;
-				if (area.overlaps(object.getHitbox()))
+				if (isOverObject(object, area))
 					return object;
 			}
 		}

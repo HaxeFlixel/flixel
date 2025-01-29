@@ -248,7 +248,8 @@ class FlxActionInputAnalogTest extends FlxTest
 
 		testInputStates(test, clear, move, [pos1, pos2, pos3, pos4], axis, a, b, c, d, callbacks);
 	}
-
+	
+	#if hl @Ignore("makeFakeGamepad is failing on Hashlink #3140") #end
 	@Test
 	function testGamepad()
 	{
@@ -504,7 +505,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	{
 		if (FlxG.mouse == null)
 			return;
-		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
+		FlxG.mouse.setRawPositionUnsafe(0, 0);
 
 		var left = @:privateAccess FlxG.mouse._leftButton;
 		var right = @:privateAccess FlxG.mouse._rightButton;
@@ -581,7 +582,7 @@ class FlxActionInputAnalogTest extends FlxTest
 	{
 		if (FlxG.mouse == null)
 			return;
-		FlxG.mouse.setGlobalScreenPositionUnsafe(0, 0);
+		FlxG.mouse.setRawPositionUnsafe(0, 0);
 		step();
 		step();
 	}
@@ -601,7 +602,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		if (FlxG.mouse == null)
 			return;
 		step();
-		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		FlxG.mouse.setRawPositionUnsafe(X, Y);
 		updateActions(arr);
 	}
 
@@ -628,7 +629,7 @@ class FlxActionInputAnalogTest extends FlxTest
 		if (FlxG.mouse == null)
 			return;
 		step();
-		FlxG.mouse.setGlobalScreenPositionUnsafe(X, Y);
+		FlxG.mouse.setRawPositionUnsafe(X, Y);
 		updateActions(arr);
 	}
 
