@@ -334,6 +334,12 @@ class FlxGame extends Sprite
 			addChild(postProcessLayer);
 		#end
 
+		// We have to call this after a stage is created
+		// otherwise it will fail and cause a crash
+		#if FLX_OPENGL_AVAILABLE
+		FlxG.bitmap.setMaxTextureSize();
+		#end
+
 		// Creating the debugger overlay
 		#if FLX_DEBUG
 		debugger = new FlxDebugger(FlxG.stage.stageWidth, FlxG.stage.stageHeight);

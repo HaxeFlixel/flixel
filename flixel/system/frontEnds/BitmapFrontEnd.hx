@@ -27,7 +27,7 @@ class BitmapFrontEnd
 	 * 
 	 * @see https://opengl.gpuinfo.org/displaycapability.php?name=GL_MAX_TEXTURE_SIZE
 	 */
-	public var maxTextureSize(get, never):Int;
+	public var maxTextureSize(default, null):Int;
 	#end
 
 	/**
@@ -393,12 +393,10 @@ class BitmapFrontEnd
 	}
 
 	#if FLX_OPENGL_AVAILABLE
-	function get_maxTextureSize():Int
+	@:allow(flixel.FlxGame)
+	function setMaxTextureSize():Void
 	{
-		if (FlxG.stage.window.context.attributes.hardware)
-			return cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
-		
-		return -1;
+		maxTextureSize = FlxG.stage.window.context.attributes.hardware ? cast GL.getParameter(GL.MAX_TEXTURE_SIZE) : -1; 
 	}
 	#end
 
