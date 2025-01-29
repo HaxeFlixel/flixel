@@ -458,8 +458,8 @@ class FlxSpriteUtil
 	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
 	 *
 	 * @param	sprite		The FlxSprite to manipulate
-	 * @param	X 			X coordinate of the circle's center (automatically centered on the sprite if -1)
-	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the sprite if -1)
+	 * @param	X 			X coordinate of the circle's center (automatically centered on the bitmap if -1)
+	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the bitmap if -1)
 	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
 	 * @param	FillColor 		The ARGB color to fill this circle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
@@ -471,14 +471,10 @@ class FlxSpriteUtil
 	{
 		if (X == -1 || Y == -1)
 		{
-			var midPoint = sprite.getGraphicMidpoint();
-
 			if (X == -1)
-				X = midPoint.x - sprite.x;
+				X = sprite.frameWidth / 2;
 			if (Y == -1)
-				Y = midPoint.y - sprite.y;
-
-			midPoint.put();
+				Y = sprite.frameHeight / 2;
 		}
 
 		if (Radius < 1)

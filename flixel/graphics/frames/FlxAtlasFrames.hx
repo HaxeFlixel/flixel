@@ -423,7 +423,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxAtlasFrames
 	{
-		var resultBorder = FlxPoint.weak().addPoint(this.border).addPoint(border);
+		var resultBorder = FlxPoint.weak().add(this.border).add(border);
 		var atlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
 		if (atlasFrames != null)
 			return atlasFrames;
