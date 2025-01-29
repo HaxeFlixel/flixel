@@ -13,7 +13,6 @@ import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
 import openfl.net.URLRequest;
-import openfl.utils.AssetType;
 #if flash11
 import openfl.utils.ByteArray;
 #end
