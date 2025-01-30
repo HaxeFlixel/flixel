@@ -421,7 +421,22 @@ class FlxGraphic implements IFlxDestroyable
 		if (newBitmap != null)
 			bitmap = newBitmap;
 	}
-	
+
+	/**
+	 * Frees the software image buffer for this graphic's `BitmapData`.
+	 * This can significantly reduce RAM usage at the cost of not being able to draw on the graphic.
+	 * 
+	 * Note that this operation might not complete immediately; 
+	 * it might take a bit for the garbage collector to collect the bitmap.
+	 * 
+	 * @see `openfl.display.BitmapData.disposeImage()`
+	 */
+	public function dump():Void
+	{
+		if (bitmap != null)
+			bitmap.disposeImage();
+	}
+
 	@:deprecated("`undump` is deprecated, use `refresh`")
 	public function undump():Void
 	{
