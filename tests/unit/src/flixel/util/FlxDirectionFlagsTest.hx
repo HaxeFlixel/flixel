@@ -182,8 +182,19 @@ class FlxDirectionFlagsTest extends FlxTest
 			Assert.areEqual(b.not(), a, 'Value ${b.toInt()}:[$b].not() was not equal to expected value ${a.toInt()}:[$a]', pos);
 		}
 		
-		assertNot(RIGHT | DOWN, ANY);
+		assertNot(RIGHT | DOWN, LEFT | UP);
 		assertNot(RIGHT, LEFT | UP | DOWN);
 		assertNot(ANY, NONE);
+	}
+	
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function implicitBackwardsCompat()
+	{
+		
+		Assert.isTrue(FlxDirectionFlags.NONE == 0);
+		Assert.isTrue(0 == FlxDirectionFlags.NONE);
+		Assert.isTrue(flixel.util.FlxDirection.LEFT == 0x0001);
+		Assert.isTrue(0x0001 == flixel.util.FlxDirection.LEFT);
 	}
 }
