@@ -337,6 +337,8 @@ class FlxSound extends FlxBasic
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 *
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
 	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.

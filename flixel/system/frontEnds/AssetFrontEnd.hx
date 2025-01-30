@@ -35,7 +35,7 @@ using StringTools;
  * 
  * ### Quick Setup for "Hot-Reloading"
  * To simplify the process mentioned above, the `FLX_CUSTOM_ASSETS_DIRECTORY` flag was created.
- * By adding `-DFLX_CUSTOM_ASSETS_DIRECTORY="../../../assets"` to your lime build command
+ * By adding `-DFLX_CUSTOM_ASSETS_DIRECTORY="assets"` to your lime build command
  * it will automatically grab assets from your project root's assets folder rather than, the
  * default "export/hl/bin/assets". This will only work with a single asset root folder with one
  * asset library and will use the openfl asset system if the asset id starts with "flixel/" or
@@ -59,13 +59,12 @@ class AssetFrontEnd
 	public function new ()
 	{
 		final rawPath = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY")}';
-		// Remove final slash and accepts backslashes and removes redundancies
-		directory = Path.normalize(rawPath);
+		directory = '${haxe.macro.Compiler.getDefine("FLX_CUSTOM_ASSETS_DIRECTORY_ABS")}';
 		// Verify valid directory
 		if (sys.FileSystem.exists(directory) == false)
-			throw 'Invalid value:"$directory" of FLX_CUSTOM_ASSETS_DIRECTORY, expecting relative or absolute path';
+			throw 'Error finding custom asset directory:"$directory" from given path: $rawPath';
 		// remove final "/assets" since the id typically contains it
-		final split = sys.FileSystem.absolutePath(directory).split("/");
+		final split = directory.split("/");
 		split.pop();
 		parentDirectory = split.join("/");
 	}
@@ -84,6 +83,12 @@ class AssetFrontEnd
 	}
 	#else
 	public function new () {}
+	#end
+	
+	#if (FLX_DEFAULT_SOUND_EXT == "1" || FLX_NO_DEFAULT_SOUND_EXT)
+	public final defaultSoundExtension:String = #if flash ".mp3" #else ".ogg" #end;
+	#else
+	public final defaultSoundExtension:String = '.${haxe.macro.Compiler.getDefine("FLX_DEFAULT_SOUND_EXT")}';
 	#end
 	
 	/**
@@ -232,6 +237,12 @@ class AssetFrontEnd
 	 */
 	public dynamic function exists(id:String, ?type:FlxAssetType)
 	{
+		#if FLX_DEFAULT_SOUND_EXT
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExt(id);
+		#end
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.exists(id, type.toOpenFlType());
 		#else
@@ -254,6 +265,12 @@ class AssetFrontEnd
 	 */
 	public dynamic function isLocal(id:String, ?type:FlxAssetType, useCache = true)
 	{
+		#if FLX_DEFAULT_SOUND_EXT
+		// add file extension
+		if (type == SOUND)
+			id = addSoundExt(id);
+		#end
+		
 		#if FLX_STANDARD_ASSETS_DIRECTORY
 		return Assets.isLocal(id, type.toOpenFlType(), useCache);
 		#else
@@ -284,7 +301,7 @@ class AssetFrontEnd
 			for (path in sys.FileSystem.readDirectory(directory))
 			{
 				if (sys.FileSystem.isDirectory('$directory/$path'))
-					addFiles('$directory/$path',path + '/');
+					addFiles('$directory/$path', prefix + path + '/');
 				else
 					list.push(prefix + path);
 			}
@@ -328,7 +345,22 @@ class AssetFrontEnd
 	 */
 	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
-		return cast getAssetUnsafe(id, SOUND, useCache);
+		return cast getAssetUnsafe(addSoundExtIf(id), SOUND, useCache);
+	}
+	
+	/**
+	 * Gets an instance of a sound, logs when the asset is not found.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 */
+	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	{
+		return cast getAsset(addSoundExtIf(id), SOUND, useCache, logStyle);
 	}
 	
 	/**
@@ -339,9 +371,26 @@ class AssetFrontEnd
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
 	 */
-	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
+	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
-		return cast getAsset(id, SOUND, useCache, logStyle);
+		return getSound(addSoundExt(id), useCache, logStyle);
+	}
+	
+	inline function addSoundExtIf(id:String)
+	{
+		#if FLX_DEFAULT_SOUND_EXT
+		return addSoundExt(id);
+		#else
+		return id;
+		#end
+	}
+	
+	inline function addSoundExt(id:String)
+	{
+		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+			return id + defaultSoundExtension;
+			
+		return id;
 	}
 	
 	/**

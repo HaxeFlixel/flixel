@@ -1182,7 +1182,7 @@ class FlxCamera extends FlxBasic
 		if (deadzone == null)
 		{
 			target.getMidpoint(_point);
-			_point.addPoint(targetOffset);
+			_point.add(targetOffset);
 			_scrollTarget.set(_point.x - width * 0.5, _point.y - height * 0.5);
 		}
 		else
@@ -1676,9 +1676,7 @@ class FlxCamera extends FlxBasic
 
 			final targetGraphics = (graphics == null) ? canvas.graphics : graphics;
 
-			#if (openfl > "8.7.0")
 			targetGraphics.overrideBlendMode(null);
-			#end
 			targetGraphics.beginFill(Color, FxAlpha);
 			// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 			// which could appear while cameras fading

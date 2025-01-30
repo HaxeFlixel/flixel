@@ -71,7 +71,7 @@ private class AnchorTools
 			case TOP_LEFT:
 				result;
 			case CUSTOM(offset):
-				result.addPoint(offset);
+				result.add(offset);
 		}
 	}
 }
@@ -399,7 +399,7 @@ class FlxPath extends FlxBasePath
 		}
 		else
 		{
-			var velocity = object.velocity.copyFrom(node).subtractPoint(_point);
+			var velocity = object.velocity.copyFrom(node).subtract(_point);
 			velocity.length = speed;
 			angle = velocity.degrees;
 		}

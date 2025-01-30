@@ -228,6 +228,9 @@ class FlxKeyManager<Key:Int, KeyList:FlxBaseKeyList> implements IFlxInputManager
 	 */
 	public function destroy():Void
 	{
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		
 		_keyListArray = null;
 		_keyListMap = null;
 	}

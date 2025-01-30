@@ -1,15 +1,15 @@
 package flixel.system.macros;
 
+import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
-import haxe.io.Path;
+using StringTools;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
 #end
 
 
-using StringTools;
 
 private enum UserDefines
 {
@@ -52,6 +52,12 @@ private enum UserDefines
 	 * any `</asset>` tags in your project.xml, to reduce your total memory
 	 */
 	FLX_CUSTOM_ASSETS_DIRECTORY;
+	/**
+	 * Allows you to use sound paths with no extension, and the default sound type for that
+	 * target will be used. If enabled it will use ogg on all targets except flash, which uses mp3.
+	 * If this flag is set to any string, that is used for the file extension
+	 */
+	FLX_DEFAULT_SOUND_EXT;
 }
 
 /**
@@ -74,7 +80,6 @@ private enum HelperDefines
 	FLX_NATIVE_CURSOR;
 	FLX_SOUND_TRAY;
 	FLX_POINTER_INPUT;
-	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
 	FLX_ACCELEROMETER;
@@ -98,6 +103,9 @@ private enum HelperDefines
 	FLX_OPENGL_AVAILABLE;
 	/** Defined to `1`(or `true`) if `FLX_CUSTOM_ASSETS_DIRECTORY` is not defined */
 	FLX_STANDARD_ASSETS_DIRECTORY;
+	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
+	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
+	FLX_NO_DEFAULT_SOUND_EXT;
 }
 
 class FlxDefines
@@ -198,6 +206,7 @@ class FlxDefines
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
 		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
+		defineInversion(FLX_DEFAULT_SOUND_EXT, FLX_NO_DEFAULT_SOUND_EXT);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
 	}
 
@@ -217,12 +226,8 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 
-		#if (lime >= "8.0.0")
 		if (defined(FLX_NO_SOUND_SYSTEM) || defined("flash"))
 			define(FLX_NO_PITCH);
-		#else
-		define(FLX_NO_PITCH);
-		#end
 
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
@@ -241,11 +246,6 @@ class FlxDefines
 
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
-
-		#if (openfl < "4.0.0")
-		if (defined("cpp") || defined("neko"))
-			define(FLX_POST_PROCESS);
-		#end
 
 		if (defined("cpp") && defined("steamwrap"))
 			define(FLX_STEAMWRAP);
@@ -283,12 +283,13 @@ class FlxDefines
 				// Todo: check sys targets
 				final rawDirectory = Path.normalize(definedValue(FLX_CUSTOM_ASSETS_DIRECTORY));
 				final directory = Path.normalize(rawDirectory);
+				final absPath = sys.FileSystem.absolutePath(directory);
 				if (!sys.FileSystem.isDirectory(directory) || directory == "1")
 				{
-					final absPath = sys.FileSystem.absolutePath(directory);
 					abort('FLX_CUSTOM_ASSETS_DIRECTORY must be a path to a directory, got "$rawDirectory"'
 						+ '\nabsolute path: $absPath', (macro null).pos);
 				}
+				define(FLX_CUSTOM_ASSETS_DIRECTORY_ABS, absPath);
 			}
 		}
 		else // define boolean inversion
@@ -330,9 +331,9 @@ class FlxDefines
 		return Context.defined(Std.string(define));
 	}
 
-	static inline function define(define:Dynamic)
+	static inline function define(define:Dynamic, ?value:String)
 	{
-		Compiler.define(Std.string(define));
+		Compiler.define(Std.string(define), value);
 	}
 
 	static function abort(message:String, pos:Position)

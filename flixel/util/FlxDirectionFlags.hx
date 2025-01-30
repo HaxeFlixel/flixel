@@ -65,6 +65,23 @@ enum abstract FlxDirectionFlags(Int) from Int from FlxDirection to Int
 	{
 		return degrees * FlxAngle.TO_RAD;
 	}
+	
+	/** Whether this has the `UP` flag **/
+	public var up(get, never):Bool;
+	inline function get_up() return has(UP);
+	
+	/** Whether this has the `DOWN` flag **/
+	public var down(get, never):Bool;
+	inline function get_down() return has(DOWN);
+	
+	/** Whether this has the `LEFT` flag **/
+	public var left(get, never):Bool;
+	inline function get_left() return has(LEFT);
+	
+	/** Whether this has the `RIGHT` flag **/
+	public var right(get, never):Bool;
+	inline function get_right() return has(RIGHT);
+	
 
 	/**
 	 * Returns true if this contains **all** of the supplied flags.
