@@ -1603,7 +1603,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			if (camera == null)
 				camera = getDefaultCamera();
 
-			worldPoint.subtractPoint(camera.scroll);
+			worldPoint.subtract(camera.scroll);
 			worldPoint.putWeak();
 		}
 

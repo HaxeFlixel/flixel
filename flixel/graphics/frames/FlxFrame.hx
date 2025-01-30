@@ -349,7 +349,7 @@ class FlxFrame implements IFlxDestroyable
 
 		if (angle == FlxFrameAngle.ANGLE_0)
 		{
-			offset.copyToFlash(_point);
+			offset.copyTo(_point);
 			if (point != null)
 				_point.offset(point.x, point.y);
 				
@@ -521,7 +521,7 @@ class FlxFrame implements IFlxDestroyable
 		else
 		{
 			frameToFill.type = FlxFrameType.REGULAR;
-			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y).addPoint(offset);
+			frameToFill.offset.set(frameRect.x, frameRect.y).subtract(rect.x, rect.y).add(offset);
 
 			final p1 = FlxPoint.weak(frameRect.x, frameRect.y);
 			final p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
@@ -623,7 +623,7 @@ class FlxFrame implements IFlxDestroyable
 		else
 		{
 			clippedFrame.type = FlxFrameType.REGULAR;
-			clippedFrame.offset.set(frameRect.x, frameRect.y).addPoint(offset);
+			clippedFrame.offset.set(frameRect.x, frameRect.y).add(offset);
 
 			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
 			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);

@@ -1,5 +1,15 @@
 package flixel.util;
 
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import openfl.display.BitmapData;
 import openfl.display.BitmapDataChannel;
 import openfl.display.BlendMode;
@@ -12,16 +22,6 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.effects.FlxFlicker;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
@@ -425,7 +425,6 @@ class FlxSpriteUtil
 		return sprite;
 	}
 
-	#if (flash || openfl >= "8.0.0")
 	/**
 	 * This function draws a rounded rectangle on a FlxSprite. Same as drawRoundRect,
 	 * except it allows you to determine the radius of each corner individually.
@@ -452,14 +451,13 @@ class FlxSpriteUtil
 		endDraw(sprite, drawStyle);
 		return sprite;
 	}
-	#end
 
 	/**
 	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
 	 *
 	 * @param	sprite		The FlxSprite to manipulate
-	 * @param	X 			X coordinate of the circle's center (automatically centered on the sprite if -1)
-	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the sprite if -1)
+	 * @param	X 			X coordinate of the circle's center (automatically centered on the bitmap if -1)
+	 * @param	Y 			Y coordinate of the circle's center (automatically centered on the bitmap if -1)
 	 * @param	Radius 		Radius of the circle (makes sure the circle fully fits on the sprite's graphic if < 1, assuming and and y are centered)
 	 * @param	FillColor 		The ARGB color to fill this circle with. FlxColor.TRANSPARENT (0x0) means no fill.
 	 * @param	lineStyle	A LineStyle typedef containing the params of Graphics.lineStyle()
@@ -471,14 +469,10 @@ class FlxSpriteUtil
 	{
 		if (X == -1 || Y == -1)
 		{
-			var midPoint = sprite.getGraphicMidpoint();
-
 			if (X == -1)
-				X = midPoint.x - sprite.x;
+				X = sprite.frameWidth / 2;
 			if (Y == -1)
-				Y = midPoint.y - sprite.y;
-
-			midPoint.put();
+				Y = sprite.frameHeight / 2;
 		}
 
 		if (Radius < 1)

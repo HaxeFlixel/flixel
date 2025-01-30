@@ -1,14 +1,5 @@
 6.0.0 (TBD)
 
-#### Changes and improvements:
-- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
-- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
-- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
-- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
-- `FlxCamera`: Removed `defaultCameras`
-- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
-- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
-
 #### Removals
 We removed many features and utilities that were previously deprecated
 - `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
@@ -35,7 +26,24 @@ We removed many features and utilities that were previously deprecated
 - `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
 - `FlxUnicodeUtil`: Use `UnicodeString`, instead
 
-5.9.0 (TBD)
+#### Changes and improvements:
+- `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
+- `FlxCamera`: Smoother camera lerping, particularly with non-fixed timesteps ([#2922](https://github.com/HaxeFlixel/flixel/pull/2922))
+- `FlxState`: Removed deprecated `switchTo` ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxG`: Added deprecation warning on `switchState` with instances ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera`: Removed `defaultCameras`
+- `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
+- `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
+- `FlxG.log`: Add `PosInfos` args to loggers, for better tracing info ([#3338](https://github.com/HaxeFlixel/flixel/pull/3338))
+
+#### New features:
+- `FlxMath`: Add improved, euclidean division `mod` function ([#3341](https://github.com/HaxeFlixel/flixel/pull/3341))
+
+#### Bugfixes:
+- `FlxCamera`: Fix `color` field ([#3326](https://github.com/HaxeFlixel/flixel/pull/3326))
+- `FlxCamera`: Reset `bgColor` on reset ([#3254](https://github.com/HaxeFlixel/flixel/issues/3254))
+
+5.9.0 (December 12, 2024)
 ------------------------------
 #### New features:
 - `FlxInputText`: Add improved input text to core flixel (flixel-ui's implementation will be deprecated) ([#3219](https://github.com/HaxeFlixel/flixel/pull/3219))
@@ -64,6 +72,9 @@ We removed many features and utilities that were previously deprecated
 - `FlxG.assets`: A way to overwrite and customize the way HaxeFlixel fetches or produces assets from ids ([#2982](https://github.com/HaxeFlixel/flixel/pull/2982))
 - `FlxG.cameras`: Add `insert` method ([#3290](https://github.com/HaxeFlixel/flixel/pull/3290))
 - `FlxSave`: Allow custom handling of parsing errors ([#3286](https://github.com/HaxeFlixel/flixel/pull/3286))
+- `FlxDirectionFlags`: Add `up`, `down`, `left` and `right` fields ([#3303](https://github.com/HaxeFlixel/flixel/pull/3303))
+- `FlxG.assets`: Add `getSoundAddExt` ([#3311](https://github.com/HaxeFlixel/flixel/pull/3311))
+- `FlxG.assets`: Add `-DFLX_DEFAULT_SOUND_EXT` to automatically append file extension to sound asset ids ([#3314](https://github.com/HaxeFlixel/flixel/pull/3314))
 
 #### Changes and improvements:
 - `FlxKey`: Add `NONE` to `fromStringMap` and `toStringMap` ([#3119](https://github.com/HaxeFlixel/flixel/pull/3119))
@@ -100,7 +111,7 @@ We removed many features and utilities that were previously deprecated
 - Debug Watch: Resize the watch window when watchers are added or removed ([#3251](https://github.com/HaxeFlixel/flixel/pull/3251))
 - Reduce memory of Flixel's embedded assets via oxipng ([#3257](https://github.com/HaxeFlixel/flixel/pull/3257))
 - Debug Stats: Improve accuracy of "Total Memory" in OpenFL 9.4.0 ([#3266](https://github.com/HaxeFlixel/flixel/pull/3266))
-- `FlxGraphic`: Improve checks for max texture size ([#3279](https://github.com/HaxeFlixel/flixel/pull/3279))
+- `FlxGraphic`: Improve checks for max texture size ([#3279](https://github.com/HaxeFlixel/flixel/pull/3279))([#3295](https://github.com/HaxeFlixel/flixel/pull/3295))
 - Debugging: Stop dispatching onFocus event when closing debugger ([#3271](https://github.com/HaxeFlixel/flixel/pull/3271))
 
 #### Bugfixes:
@@ -114,6 +125,7 @@ We removed many features and utilities that were previously deprecated
 - Debug Console: Fix arrow keys ([#3247](https://github.com/HaxeFlixel/flixel/pull/3247))
 - `FlxGame`: Fix `ACTIVATE` and `DEACTIVATE` event dispatches ([#3260](https://github.com/HaxeFlixel/flixel/pull/3260))
 - `FlxAction`: Fix bug where multiple `check` calls wipe analog fields ([#3277](https://github.com/HaxeFlixel/flixel/pull/3277))
+- `FlxKeyManager`: Remove events on destroy, preventing crashes ([#3299](https://github.com/HaxeFlixel/flixel/pull/3299))
 
 5.8.0 (April 19, 2024)
 ------------------------------
