@@ -1247,14 +1247,14 @@ class FlxObject extends FlxBasic
 		endDrawDebug(camera);
 	}
 
-	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
 		final color = getDebugBoundingBoxColor(allowCollisions);
 		drawDebugBoundingBoxColor(gfx, rect, color);
 	}
 	
-	function getDebugBoundingBoxColor(allowCollisions:Int)
+	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
 	{
 		if (debugBoundingBoxColor != null)
 			return debugBoundingBoxColor;

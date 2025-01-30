@@ -140,11 +140,11 @@ class FlxDefines
 		checkOpenFLVersions();
 		#end
 		
-		#if (flixel_addons < version("3.0.2"))
-		abortVersion("Flixel Addons", "3.0.2 or newer", "flixel-addons", (macro null).pos);
+		#if (flixel_addons < version("3.3.0"))
+		abortVersion("Flixel Addons", "3.3.0 or newer", "flixel-addons", (macro null).pos);
 		#end
-		#if (flixel_ui < version("2.4.0"))
-		abortVersion("Flixel UI", "2.4.0 or newer", "flixel-addons", (macro null).pos);
+		#if (flixel_ui < version("2.6.2"))
+		abortVersion("Flixel UI", "2.6.2 or newer", "flixel_ui", (macro null).pos);
 		#end
 	}
 
