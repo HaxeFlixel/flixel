@@ -415,17 +415,17 @@ class FlxGraphic implements IFlxDestroyable
 	/**
 	 * Refreshes the `BitmapData` of this graphic.
 	 */
-	public function refreshBitmap():Void
+	public function refresh():Void
 	{
 		var newBitmap:BitmapData = getBitmapFromSystem();
 		if (newBitmap != null)
 			bitmap = newBitmap;
 	}
 	
-	@:deprecated("`undump` is deprecated, use `refreshBitmap`")
+	@:deprecated("`undump` is deprecated, use `refresh`")
 	public function undump():Void
 	{
-		refreshBitmap();
+		refresh();
 	}
 	
 	/**
@@ -437,7 +437,7 @@ class FlxGraphic implements IFlxDestroyable
 		if (!canBeRefreshed)
 			return;
 			
-		refreshBitmap();
+		refresh();
 	}
 
 	/**
