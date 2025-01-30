@@ -108,6 +108,18 @@ class FlxMath
 	{
 		return a + ratio * (b - a);
 	}
+	
+	/**
+	 * Adjusts the given lerp to account for the time that has passed
+	 * 
+	 * @param   lerp     The ratio to lerp in 1/60th of a second
+	 * @param   elapsed  The amount of time that has actually passed
+	 * @since 6.0.0
+	 */
+	public static function getElapsedLerp(lerp:Float, elapsed:Float):Float
+	{
+		return 1.0 - Math.pow(1.0 - lerp, elapsed * 60);
+	}
 
 	/**
 	 * Checks if number is in defined range. A null bound means that side is unbounded.
