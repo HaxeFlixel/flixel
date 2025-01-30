@@ -28,6 +28,8 @@ We removed many features and utilities that were previously deprecated
 - `FlxState::switchTo`: Use `startOutro`, instead ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
 - `FlxCamera.defaultCameras`: Use `FlxG.cameras.setDefaultDrawTarget`, instead
 - `FlxSave`: Deprecate and remove all uses of `FlxSaveStatus.ERROR` for `FlxSaveStatus.SAVE_ERROR` ([#3294](https://github.com/HaxeFlixel/flixel/pull/3294))
+- `FlxDefines`: `FLX_POST_PROCESS` and all flags pertaining to outdated openfl/lime versions ([#3059](https://github.com/HaxeFlixel/flixel/pull/3059))
+- `FlxDirection` and `FlxDirectionFlags`: Deprecate implicit casts to/from Int and all operators ([#3308](https://github.com/HaxeFlixel/flixel/pull/3308))
 
 #### Changes and improvements:
 - `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
@@ -38,9 +40,15 @@ We removed many features and utilities that were previously deprecated
 - `FlxCamera`: Fixed `zoom` and `defaultZoom` so it works with values other than 1.0 ([#2907](https://github.com/HaxeFlixel/flixel/pull/2907))
 - `FlxBasic`: Added `getDefaultCamera`, used in nearly all methods taking an optional `camera` arg ([#3072](https://github.com/HaxeFlixel/flixel/pull/3072))
 - `FlxG.log`: Add `PosInfos` args to loggers, for better tracing info ([#3338](https://github.com/HaxeFlixel/flixel/pull/3338))
+- `FlxSpriteUtil`: `drawCicle` now centers the image to the bitmap, if x/y are omitted ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
 
 #### New features:
 - `FlxMath`: Add improved, euclidean division `mod` function ([#3341](https://github.com/HaxeFlixel/flixel/pull/3341))
+- `FlxVirtualStick`: Add analog directional input to `FlxVirtualPad`, deprecated `FlxAnalog` ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
+- `FlxButton`: Added `toString` and `toInt` methods to `FlxButtonState`, deprecate `statusAnimations` ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
+- `FlxPoint`: Added `scale`, `dist`, `distSquared`, `distanceTo` and `distanceSquaredTo` overloaded methods ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
+- `FlxMath`: Added `getElapsedLerp` for framerate independate lerping ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
+- `FlxAnalogState`: add `moved`, `justMoved`, `stopped` and `justStopped` getters ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
 
 #### Bugfixes:
 - `FlxCamera`: Fix `color` field ([#3326](https://github.com/HaxeFlixel/flixel/pull/3326))
