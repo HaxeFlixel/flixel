@@ -42,6 +42,7 @@ We removed many features and utilities that were previously deprecated
 - `FlxG.log`: Add `PosInfos` args to loggers, for better tracing info ([#3338](https://github.com/HaxeFlixel/flixel/pull/3338))
 - `FlxSpriteUtil`: `drawCicle` now centers the image to the bitmap, if x/y are omitted ([#3340](https://github.com/HaxeFlixel/flixel/pull/3340))
 - `FlxCamera`: Calulate adjusted lerp only when needed ([#3106](https://github.com/HaxeFlixel/flixel/pull/3106))
+- `FlxGraphicsShader`: Compatibility with [future OpenFL Shader improvements](https://github.com/openfl/openfl/pull/2722) ([#3347](https://github.com/HaxeFlixel/flixel/pull/3347))
 
 #### New features:
 - `FlxMath`: Add improved, euclidean division `mod` function ([#3341](https://github.com/HaxeFlixel/flixel/pull/3341))
