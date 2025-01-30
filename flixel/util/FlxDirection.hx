@@ -37,7 +37,7 @@ enum abstract FlxDirection(Int)
 		}
 	}
 	
-	@:deprecated("implicit cast from FlxDirection to Int is deprecated, use an explicit cast")
+	@:deprecated("implicit cast from FlxDirection to Int is deprecated, use toInt()")
 	@:to
 	inline function toIntImplicit()
 	{
@@ -50,7 +50,7 @@ enum abstract FlxDirection(Int)
 		return this;
 	}
 	
-	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use an explicit cast")
+	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use FlxDirection.fromInt")
 	@:from
 	inline static function fromIntImplicit(value:Int):FlxDirection
 	{

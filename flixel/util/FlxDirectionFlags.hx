@@ -135,7 +135,7 @@ enum abstract FlxDirectionFlags(Int)
 		return fromInt((~this & ANY.toInt()));
 	}
 
-	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use an explicit cast")
+	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use FlxDirectionFlags.fromInt")
 	@:to
 	inline function toIntImplicit()
 	{
@@ -178,7 +178,7 @@ enum abstract FlxDirectionFlags(Int)
 			|  (down  ? DOWN  : NONE);
 	}
 
-	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use an explicit cast")
+	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use FlxDirectionFlags.fromInt")
 	@:from
 	public inline static function fromIntImplicit(value:Int):FlxDirectionFlags
 	{
