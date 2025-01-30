@@ -14,8 +14,8 @@ import flixel.graphics.frames.bmfont.BMFont;
 import flixel.util.typeLimit.OneOfFour;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
-import haxe.io.Bytes;
 import haxe.Json;
+import haxe.io.Bytes;
 import haxe.xml.Access;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
@@ -31,7 +31,7 @@ class GraphicLogo extends BitmapData {}
 class GraphicVirtualInput extends BitmapData {}
 
 @:file("assets/images/ui/virtual-input.txt")
-class VirtualInputData extends #if (lime_legacy || nme) ByteArray #else ByteArrayData #end {}
+class VirtualInputData extends #if nme ByteArray #else ByteArrayData #end {}
 
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;

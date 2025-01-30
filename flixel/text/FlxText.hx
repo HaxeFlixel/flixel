@@ -22,7 +22,6 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
-
 #if flash
 import openfl.geom.Rectangle;
 #end

@@ -1,5 +1,15 @@
 package flixel.util;
 
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.effects.FlxFlicker;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.system.FlxAssets;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import openfl.display.BitmapData;
 import openfl.display.BitmapDataChannel;
 import openfl.display.BlendMode;
@@ -12,16 +22,6 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.effects.FlxFlicker;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxAssets;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 
 // TODO: pad(): Pad the sprite out with empty pixels left/right/above/below it
 // TODO: rotateClockwise(): Takes the bitmapData from the given source FlxSprite and rotates it 90 degrees clockwise
@@ -425,7 +425,6 @@ class FlxSpriteUtil
 		return sprite;
 	}
 
-	#if (flash || openfl >= "8.0.0")
 	/**
 	 * This function draws a rounded rectangle on a FlxSprite. Same as drawRoundRect,
 	 * except it allows you to determine the radius of each corner individually.
@@ -452,7 +451,6 @@ class FlxSpriteUtil
 		endDraw(sprite, drawStyle);
 		return sprite;
 	}
-	#end
 
 	/**
 	 * This function draws a circle on a FlxSprite at position X,Y with the specified color.
