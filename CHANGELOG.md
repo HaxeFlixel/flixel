@@ -1,6 +1,6 @@
 6.0.0 (TBD)
 
-#### Removals
+#### Removals and Breaking Changes
 We removed many features and utilities that were previously deprecated
 - `flixel.util.FlxPath`: New package, `flixel.path.FlxPath`
 - `FlxSwipe::angle`: Use `FlxSwipe.degrees`, instead
@@ -25,6 +25,9 @@ We removed many features and utilities that were previously deprecated
 - `FlxAssets.FlxAngelCodeSource`: Use `FlxAssets.FlxAngelCodeAsset`, instead
 - `FlxAssets.FlxTexturePackerSource`: Use `FlxTexturePackerJsonAsset`, instead
 - `FlxUnicodeUtil`: Use `UnicodeString`, instead
+- `FlxState::switchTo`: Use `startOutro`, instead ([#2733](https://github.com/HaxeFlixel/flixel/pull/2733))
+- `FlxCamera.defaultCameras`: Use `FlxG.cameras.setDefaultDrawTarget`, instead
+- `FlxSave`: Deprecate and remove all uses of `FlxSaveStatus.ERROR` for `FlxSaveStatus.SAVE_ERROR` ([#3294](https://github.com/HaxeFlixel/flixel/pull/3294))
 
 #### Changes and improvements:
 - `FlxSpritegroup`: Setting `origin` now causes members to pivot around the same point ([#2981](https://github.com/HaxeFlixel/flixel/pull/2981))
