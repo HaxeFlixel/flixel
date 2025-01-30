@@ -132,7 +132,7 @@ enum abstract FlxDirectionFlags(Int)
 	
 	public inline function not():FlxDirectionFlags
 	{
-		return fromInt(~this);
+		return fromInt((~this & ANY.toInt()));
 	}
 
 	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use an explicit cast")
