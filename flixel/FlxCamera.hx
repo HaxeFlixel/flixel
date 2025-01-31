@@ -11,6 +11,7 @@ import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
+import flixel.graphics.tile.FlxDrawTriangleData;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -827,6 +828,100 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
+	public function drawTriangleData(graphic:FlxGraphic, triangles:FlxDrawTriangleData, ?position:FlxPoint, ?blend:BlendMode, repeat = false,
+			smoothing = false, ?transform:ColorTransform, ?shader:FlxShader):Void
+	{
+		if (FlxG.renderBlit)
+		{
+			if (position == null)
+				position = renderPoint.set();
+
+			_bounds.set(0, 0, width, height);
+
+			var verticesLength:Int = triangles.vertices.length;
+			var currentVertexPosition:Int = 0;
+
+			var tempX:Float, tempY:Float;
+			var i:Int = 0;
+			var bounds = renderRect.set();
+			drawVertices.splice(0, drawVertices.length);
+
+			while (i < verticesLength)
+			{
+				tempX = position.x + triangles.vertices[i];
+				tempY = position.y + triangles.vertices[i + 1];
+
+				drawVertices[currentVertexPosition++] = tempX;
+				drawVertices[currentVertexPosition++] = tempY;
+
+				if (i == 0)
+				{
+					bounds.set(tempX, tempY, 0, 0);
+				}
+				else
+				{
+					FlxDrawTrianglesItem.inflateBounds(bounds, tempX, tempY);
+				}
+
+				i += 2;
+			}
+
+			position.putWeak();
+
+			if (!_bounds.overlaps(bounds))
+			{
+				drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
+			}
+			else
+			{
+				trianglesSprite.graphics.clear();
+				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);
+				trianglesSprite.graphics.drawTriangles(drawVertices, triangles.indices, triangles.uvs);
+				trianglesSprite.graphics.endFill();
+
+				// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
+				if (_useBlitMatrix)
+					_helperMatrix.copyFrom(_blitMatrix);
+				else
+				{
+					_helperMatrix.identity();
+					_helperMatrix.translate(-viewMarginLeft, -viewMarginTop);
+				}
+
+				buffer.draw(trianglesSprite, _helperMatrix);
+				#if FLX_DEBUG
+				if (FlxG.debugger.drawDebug)
+				{
+					var gfx:Graphics = FlxSpriteUtil.flashGfx;
+					gfx.clear();
+					gfx.lineStyle(1, FlxColor.BLUE, 0.5);
+					gfx.drawTriangles(drawVertices, triangles.indices);
+					buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
+				}
+				#end
+				// End of TODO...
+			}
+
+			bounds.put();
+		}
+		else
+		{
+			_bounds.set(0, 0, width, height);
+			var isColored:Bool = (triangles.colors != null && triangles.colors.length != 0);
+
+			#if !flash
+			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
+			isColored = isColored || (transform != null && transform.hasRGBMultipliers());
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+			drawItem.addTriangleData(triangles, position, _bounds, transform);
+			#else
+			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
+			drawItem.addTriangleData(triangles, position, _bounds);
+			#end
+		}
+	}
+	
+	// @:deprecated("FlxCamera's drawTriangles is deprecated use drawTriangleData, instead") // TODO
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
@@ -912,10 +1007,10 @@ class FlxCamera extends FlxBasic
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 			isColored = isColored || (transform != null && transform.hasRGBMultipliers());
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds, transform);
+			drawItem.addTrianglesHelper(vertices, indices, uvtData, colors, position, _bounds, transform);
 			#else
 			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
+			drawItem.addTrianglesHelper(vertices, indices, uvtData, colors, position, _bounds);
 			#end
 		}
 	}
