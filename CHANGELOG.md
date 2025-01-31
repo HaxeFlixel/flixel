@@ -1,4 +1,4 @@
-# 6.0.0 (TBD)
+# 6.0.0 (January 31, 2025)
 
 #### Removals and Breaking Changes
 We removed many features and utilities that were previously deprecated
