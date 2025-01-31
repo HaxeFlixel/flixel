@@ -179,11 +179,13 @@ class CameraFrontEnd
 	 */
 	public function reset(?NewCamera:FlxCamera):Void
 	{
+		FlxG.camera = null;
+		
 		while (list.length > 0)
 			remove(list[0]);
 
 		if (NewCamera == null)
-			NewCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+			NewCamera = new FlxCamera();
 
 		FlxG.camera = add(NewCamera);
 		NewCamera.ID = 0;
