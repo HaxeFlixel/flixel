@@ -850,20 +850,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		return y + row * scaledTileHeight + (midpoint ? scaledTileHeight * 0.5 : 0);
 	}
-
-	/**
-	 * Returns a new array full of every coordinate of the requested tile type.
-	 *
-	 * @param   index     The requested tile type.
-	 * @param   midpoint  Whether to return the coordinates of the tile midpoint, or upper left corner. Default is true, return midpoint.
-	 * @return  An Array with a list of all the coordinates of that tile type.
-	 */
-	@:deprecated("getTileCoords is deprecated, use getAllTilePos, instead")
-	public function getTileCoords(tileIndex:Int, midpoint = true):Array<FlxPoint>
-	{
-		return getAllTilePos(tileIndex, midpoint);
-	}
-
+	
 	/**
 	 * Call this function to lock the automatic camera to the map's edges.
 	 *
@@ -1287,7 +1274,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 						#if FLX_DEBUG
 						if (FlxG.debugger.drawDebug && !ignoreDrawDebug)
 						{
-							if (tile.allowCollisions <= NONE)
+							if (tile.allowCollisions == NONE)
 							{
 								debugTile = _debugTileNotSolid;
 							}

@@ -134,13 +134,6 @@ enum abstract FlxDirectionFlags(Int)
 	{
 		return fromInt((~this & ANY.toInt()));
 	}
-
-	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use toInt")
-	@:to
-	inline function toIntImplicit()
-	{
-		return toInt();
-	}
 	
 	public inline function toInt():Int
 	{
@@ -177,13 +170,6 @@ enum abstract FlxDirectionFlags(Int)
 			|  (up    ? UP    : NONE)
 			|  (down  ? DOWN  : NONE);
 	}
-
-	@:deprecated("implicit cast from Int to FlxDirectionFlags is deprecated, use FlxDirectionFlags.fromInt")
-	@:from
-	inline static function fromIntImplicit(value:Int):FlxDirectionFlags
-	{
-		return fromInt(value);
-	}
 	
 	public inline static function fromInt(value:Int):FlxDirectionFlags
 	{
@@ -195,17 +181,6 @@ enum abstract FlxDirectionFlags(Int)
 	{
 		return fromInt(dir.toInt());
 	}
-
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")// Expose int operators
-	@:op(A & B) static function and(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
+	
 	@:op(A | B) static function or(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A > B) static function gt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A < B) static function lt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A >= B) static function gte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A <= B) static function lte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 }

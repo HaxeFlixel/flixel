@@ -14,12 +14,6 @@ class FlxPoolTest extends FlxTest
 	}
 
 	@Test
-	function testLegacy():Void
-	{
-		final pool = new FlxPool(FlxBasePoint);
-	}
-
-	@Test
 	function putNull():Void
 	{
 		ppool.put(null);

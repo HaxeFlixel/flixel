@@ -85,18 +85,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	public var deltaY(get, never):Int;
 	
 	/**
-	 * Distance in pixels the mouse has moved in screen space since the last frame in the X direction.
-	 */
-	@:deprecated("deltaScreenX is deprecated, use deltaViewX, instead") // 5.9.0
-	public var deltaScreenX(get, never):Int;
-	
-	/**
-	 * Distance in pixels the mouse has moved in screen space since the last frame in the Y direction.
-	 */
-	@:deprecated("deltaScreenY is deprecated, use deltaViewY, instead") // 5.9.0
-	public var deltaScreenY(get, never):Int;
-	
-	/**
 	 * Distance in pixels the mouse has moved in view space since the last frame in the X direction.
 	 * @since 5.9.0
 	 */
@@ -211,8 +199,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _rightButton:FlxMouseButton;
 	#end
 
-	@:deprecated("_cursor is deprecated, use the new, public cursor, instead")
-    var _cursor(get, set):Bitmap;
 	var _cursorBitmapData:BitmapData;
 	var _wheelUsed:Bool = false;
 	var _visibleWhenFocusLost:Bool = true;
@@ -233,10 +219,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	var _prevY:Int = 0;
 	var _prevViewX:Int = 0;
 	var _prevViewY:Int = 0;
-	@:deprecated("_prevScreenX is deprecated, use _prevViewX, instead")
-	var _prevScreenX(get, never):Int;
-	@:deprecated("_prevScreenY is deprecated, use _prevViewY, instead")
-	var _prevScreenY(get, never):Int;
 
 	// Helper variable for cleaning up memory
 	var _stage:Stage;
@@ -618,19 +600,7 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	
 	inline function get_deltaViewY():Int
 		return viewY - _prevViewY;
-		
-	inline function get__prevScreenX():Int
-		return _prevViewX;
 	
-	inline function get__prevScreenY():Int
-		return _prevViewY;
-		
-	inline function get_deltaScreenX():Int
-		return deltaViewX;
-	
-	inline function get_deltaScreenY():Int
-		return deltaViewY;
-
 	inline function get_pressed():Bool
 		return _leftButton.pressed;
 
@@ -789,16 +759,6 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		_rawX = record.x;
 		_rawY = record.y;
 		updatePositions();
-	}
-
-	inline function get__cursor()
-	{
-		return cursor;
-	}
-	
-	inline function set__cursor(value:Bitmap)
-	{
-		return cursor = value;
 	}
 }
 #end

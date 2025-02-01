@@ -320,9 +320,6 @@ class FlxGraphic implements IFlxDestroyable
 	 */
 	public var canBeRefreshed(get, never):Bool;
 	
-	@:deprecated("`canBeDumped` is deprecated, use `canBeRefreshed`")
-	public var canBeDumped(get, never):Bool;
-
 	/**
 	 * GLSL shader for this graphic. Only used if utilizing sprites do not define a shader
 	 * Avoid changing it frequently as this is a costly operation.
@@ -375,24 +372,6 @@ class FlxGraphic implements IFlxDestroyable
 	#end
 	
 	/**
-	 * Internal var holding `FlxImageFrame` for the whole bitmap of this graphic.
-	 * Use public `imageFrame` var to access/generate it.
-	 */
-	@:deprecated("_imageFrame is deprecated, use imageFrame")
-	var _imageFrame(get, set):FlxImageFrame;
-	inline function get__imageFrame() return imageFrame;
-	inline function set__imageFrame(value:FlxImageFrame) return imageFrame = value;
-
-	@:deprecated('_useCount is deprecated, use incrementUseCount and decrementUseCount')
-	var _useCount(get, set):Int;
-	inline function get__useCount() return useCount;
-	inline function set__useCount(value:Int) return useCount = value;
-
-	@:deprecated('_destroyOnNoUse is deprecated, use destroyOnNoUse')
-	var _destroyOnNoUse(get, set):Bool;
-	inline function get__destroyOnNoUse() return destroyOnNoUse;
-	inline function set__destroyOnNoUse(value:Bool) return destroyOnNoUse = value;
-	/**
 	 * `FlxGraphic` constructor
 	 *
 	 * @param   Key       Key string for this graphic object, with which you can get it from bitmap cache.
@@ -420,12 +399,6 @@ class FlxGraphic implements IFlxDestroyable
 		var newBitmap:BitmapData = getBitmapFromSystem();
 		if (newBitmap != null)
 			bitmap = newBitmap;
-	}
-	
-	@:deprecated("`undump` is deprecated, use `refresh`")
-	public function undump():Void
-	{
-		refresh();
 	}
 	
 	/**
@@ -555,11 +528,6 @@ class FlxGraphic implements IFlxDestroyable
 	inline function get_canBeRefreshed():Bool
 	{
 		return assetsClass != null || assetsKey != null;
-	}
-	
-	inline function get_canBeDumped():Bool
-	{
-		return canBeRefreshed;
 	}
 	
 	public function incrementUseCount()

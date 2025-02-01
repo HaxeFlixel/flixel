@@ -12,13 +12,6 @@ class FlxPointer
 	/** The position in the world */
 	public var y(default, null):Int = 0;
 	
-	/** The world position relative to the main camera's scroll position */
-	@:deprecated("screenX is deprecated, use viewX, instead")
-	public var screenX(default, never):Int = 0;
-	/** The world position relative to the main camera's scroll position */
-	@:deprecated("screenY is deprecated, use viewY, instead")
-	public var screenY(default, never):Int = 0;
-	
 	/**
 	 * The world position relative to the main camera's scroll position, `cam.viewMarginX` or
 	 * `cam.viewMarginLeft` is the left edge of the camera and `cam.viewMarginRight` is the right
@@ -49,11 +42,6 @@ class FlxPointer
 	 */
 	public var gameY(default, null):Int = 0;
 
-	@:deprecated("_globalScreenX is deprecated, use gameX, instead") // 5.9.0
-	var _globalScreenX(get, set):Int;
-	@:deprecated("_globalScreenY is deprecated, use gameY, instead") // 5.9.0
-	var _globalScreenY(get, set):Int;
-	
 	var _rawX(default, null):Float = 0;
 	var _rawY(default, null):Float = 0;
 
@@ -121,57 +109,6 @@ class FlxPointer
 	}
 	
 	/**
-	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
-	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
-	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
-	 * 
-	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
-	 * 
-	 * @param   camera  If unspecified, `FlxG.camera` is used, instead
-	 * @param   result  An existing point to store the results, if unspecified, one is created
-	 */
-	@:deprecated("getScreenPosition is deprecated, use getViewPosition, instead") // 5.9.0
-	public function getScreenPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
-	{
-		if (camera == null)
-			camera = FlxG.camera;
-		
-		if (result == null)
-			result = FlxPoint.get();
-		
-		result.x = (gameX - camera.x + 0.5 * camera.width * (camera.zoom - camera.initialZoom)) / camera.zoom;
-		result.y = (gameY - camera.y + 0.5 * camera.height * (camera.zoom - camera.initialZoom)) / camera.zoom;
-		
-		return result;
-	}
-	
-	/**
-	 * Fetch the position of the pointer relative to given camera's `scroll` position, where
-	 * `(cam.viewMarginLeft, cam.viewMarginTop)` is the top-left of the camera and
-	 * `(cam.viewMarginRight, cam.viewMarginBottom)` is the bottom right of the camera
-	 * 
-	 * **Note:** Fields `viewX` and `viewY` also store this result for `FlxG.camera`
-	 * 
-	 * @param   camera  If unspecified, `FlxG.camera` is used, instead.
-	 * @param   result  An existing point to store the results, if unspecified, one is created
-	 * @return  The pointer's location relative to camera's viewport.
-	 */
-	@:deprecated("getPositionInCameraView is deprecated, use getViewPosition, instead") // 5.9.0
-	public function getPositionInCameraView(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
-	{
-		if (camera == null)
-			camera = FlxG.camera;
-		
-		if (result == null)
-			result = FlxPoint.get();
-		
-		result.x = (gameX - camera.x) / camera.zoom + camera.viewMarginX;
-		result.y = (gameY - camera.y) / camera.zoom + camera.viewMarginY;
-		
-		return result;
-	}
-	
-	/**
 	 * Returns a FlxPoint with this input's x and y.
 	 */
 	public function getPosition(?result:FlxPoint):FlxPoint
@@ -211,21 +148,10 @@ class FlxPointer
 	}
 	
 	/**
-	 * Directly set the underyling screen position variable. WARNING! You should never use
-	 * this unless you are trying to manually dispatch low-level mouse / touch events to the stage.
-	 */
-	@:deprecated("setGlobalScreenPositionUnsafe is deprecated, use setRawPositionUnsafe, instead")
-	public inline function setGlobalScreenPositionUnsafe(newX:Float, newY:Float):Void
-	{
-		setRawPositionUnsafe(newX, newY);
-	}
-	
-	/**
 	 * Directly set the underyling position variable. WARNING! You should never use
 	 * this unless you are trying to manually dispatch low-level mouse / touch events to the stage.
 	 * @since 5.9.0
 	 */
-	@:haxe.warning("-WDeprecated")
 	public function setRawPositionUnsafe(x:Float, y:Float)
 	{
 		_rawX = x / FlxG.scaleMode.scale.x;
@@ -236,7 +162,7 @@ class FlxPointer
 	
 	/**
 	 * Helper function to update the cursor used by update() and playback().
-	 * Updates the x, y, screenX, and screenY variables based on the default camera.
+	 * Updates the x, y, viewX, and viewY variables based on the default camera.
 	 */
 	function updatePositions():Void
 	{
@@ -256,27 +182,5 @@ class FlxPointer
 	public function toString():String
 	{
 		return FlxStringUtil.getDebugString([LabelValuePair.weak("x", x), LabelValuePair.weak("y", y)]);
-	}
-	
-	inline function get__globalScreenX():Int
-	{
-		return gameX;
-	}
-	
-	inline function get__globalScreenY():Int
-	{
-		return gameY;
-	}
-	
-	inline function set__globalScreenX(value:Int):Int
-	{
-		_rawX = value * FlxG.scaleMode.scale.x;
-		return value;
-	}
-	
-	inline function set__globalScreenY(value:Int):Int
-	{
-		_rawY = value * FlxG.scaleMode.scale.y;
-		return value;
 	}
 }

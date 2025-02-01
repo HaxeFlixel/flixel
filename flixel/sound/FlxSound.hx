@@ -114,9 +114,9 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * The sound group this sound belongs to, can only be in one group.
-	 * NOTE: This setter is deprecated, use `group.add(sound)` or `group.remove(sound)`.
 	 */
-	public var group(default, set):FlxSoundGroup;
+	@:allow(flixel.sound.FlxSoundGroup)
+	public var group(default, null):FlxSoundGroup;
 	
 	/**
 	 * Whether or not this sound should loop.
@@ -708,22 +708,6 @@ class FlxSound extends FlxBasic
 		pause();
 	}
 	#end
-	
-	@:deprecated("sound.group = myGroup is deprecated, use myGroup.add(sound)") // 5.7.0
-	function set_group(value:FlxSoundGroup):FlxSoundGroup
-	{
-		if (value != null)
-		{
-			// add to new group, also removes from prev and calls updateTransform
-			value.add(this);
-		}
-		else
-		{
-			// remove from prev group, also calls updateTransform
-			group.remove(this);
-		}
-		return value;
-	}
 	
 	inline function get_playing():Bool
 	{

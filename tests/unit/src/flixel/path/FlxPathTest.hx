@@ -42,19 +42,6 @@ class FlxPathTest extends FlxTest
 	}
 
 	@Test
-	@:haxe.warning("-WDeprecated")
-	function testCancelNoCallback()
-	{
-		startPath();
-		path.onComplete = function(_)
-		{
-			Assert.fail("Callback called");
-		};
-		path.cancel();
-		step();
-	}
-
-	@Test
 	function testAddAtNoCrashOnEmptyPath()
 	{
 		path.addAt(10, 10, 0);

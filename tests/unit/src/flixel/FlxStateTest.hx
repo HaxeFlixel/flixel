@@ -28,19 +28,6 @@ class FlxStateTest extends FlxTest
 	}
 
 	@Test
-	@:haxe.warning("-WDeprecated")
-	function testResetStateLegacy()
-	{
-		switchState(TestState.new);
-		var state = FlxG.state;
-		Assert.areEqual(state, FlxG.state);
-
-		resetState();
-		Assert.areNotEqual(state, FlxG.state);
-		Assert.isTrue(FlxG.state is TestState);
-	}
-
-	@Test
 	function testResetState()
 	{
 		var nextState:TestState = null;

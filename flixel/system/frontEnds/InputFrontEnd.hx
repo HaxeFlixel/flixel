@@ -19,16 +19,6 @@ class InputFrontEnd
 	 * Disable if you need persistent input states across states.
 	 */
 	public var resetOnStateSwitch:Bool = true;
-
-	/**
-	 * Add an input to the system
-	 */
-	@:generic
-	@:deprecated("add is deprecated, use addUniqueType")
-	public inline function add<T:IFlxInputManager>(input:T):T
-	{
-		return addUniqueType(input);
-	}
 	
 	/**
 	 * Add an input to the system, unless the same instance was already added

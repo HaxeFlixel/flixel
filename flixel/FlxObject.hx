@@ -116,7 +116,6 @@ class FlxObject extends FlxBasic
 	 * @return  The result of whichever separator was used
 	 * @since 5.9.0
 	 */
-	@:haxe.warning("-WDeprecated")
 	static function processCheckTilemap(object1:FlxObject, object2:FlxObject, func:(FlxObject, FlxObject)->Bool,
 		?position:FlxPoint, isCollision = true):Bool
 	{
@@ -134,7 +133,7 @@ class FlxObject extends FlxBasic
 				// Keep tile as first arg
 				return processCheckTilemap(tile, object2, func, position, isCollision);
 			}
-			return tilemap.overlapsWithCallback(object2, recurseProcess, false, position);
+			return tilemap.objectOverlapsTiles(object2, recurseProcess, position);
 		}
 		else if (object2.flixelType == TILEMAP)
 		{
@@ -145,7 +144,7 @@ class FlxObject extends FlxBasic
 				// Keep tile as second arg
 				return processCheckTilemap(object1, tile, func, position, isCollision);
 			}
-			return tilemap.overlapsWithCallback(object1, recurseProcess, false, position);
+			return tilemap.objectOverlapsTiles(object1, recurseProcess, position);
 		}
 		
 		return func(object1, object2);
@@ -1400,7 +1399,7 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	inline function get_solid():Bool
 	{
-		return (allowCollisions & FlxDirectionFlags.ANY) > FlxDirectionFlags.NONE;
+		return allowCollisions != FlxDirectionFlags.NONE;
 	}
 
 	@:noCompletion

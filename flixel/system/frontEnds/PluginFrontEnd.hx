@@ -23,20 +23,6 @@ class PluginFrontEnd
 	 * @since 5.7.0
 	 */
 	public var drawOnTop:Bool = false;
-
-	/**
-	 * Adds a new plugin to the global plugin array.
-	 * **DEPRECATED:** In a later version this will be changed to behave like `addPlugin`.
-	 *
-	 * @param   plugin  Any object that extends FlxBasic. Useful for managers and other things.
-	 * @return  The same plugin you passed in.
-	 */
-	@:generic
-	@:deprecated("FlxG.plugins.add is deprecated, use `addIfUniqueType` or `addPlugin`, instead.\nNote: In a later version `add` will be changed to behave like `addPlugin`")
-	public inline function add<T:FlxBasic>(plugin:T):T
-	{
-		return addIfUniqueType(plugin);
-	}
 	
 	/**
 	 * Adds a new plugin to the global plugin array, does not check for existing instances of this type.
@@ -103,18 +89,6 @@ class PluginFrontEnd
 	{
 		list.remove(plugin);
 		return plugin;
-	}
-
-	/**
-	 * Removes all instances of a plugin from the global plugin array.
-	 *
-	 * @param   type  The class name of the plugin type you want removed from the array.
-	 * @return  Whether or not at least one instance of this plugin type was removed.
-	 */
-	@:deprecated("FlxG.plugin.removeType is deprecated, use `removeAllByType` instead")
-	public inline function removeType(type:Class<FlxBasic>):Bool
-	{
-		return removeAllByType(type);
 	}
 	
 	public function removeAllByType(type:Class<FlxBasic>):Bool

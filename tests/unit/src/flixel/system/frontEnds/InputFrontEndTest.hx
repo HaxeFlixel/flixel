@@ -17,19 +17,6 @@ class InputFrontEndTest
 	}
 	
 	@Test
-	@:haxe.warning("-WDeprecated")
-	function testAdd()
-	{
-		final input1 = new CustomInputManager();
-		inputs.add(input1);
-		FlxAssert.arrayContains(inputs.list, input1);
-		
-		final input2 = new CustomInputManager();
-		inputs.add(input2);
-		FlxAssert.arrayNotContains(inputs.list, input2);
-	}
-	
-	@Test
 	function testAddUniqueType()
 	{
 		final input1 = new CustomInputManager();

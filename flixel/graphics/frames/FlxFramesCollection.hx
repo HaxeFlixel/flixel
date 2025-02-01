@@ -24,15 +24,6 @@ class FlxFramesCollection implements IFlxDestroyable
 	 * Number of frames in this collection.
 	 */
 	public var numFrames(get, never):Int;
-
-	/**
-	 * Hash of frames for this frame collection.
-	 * Used only in `FlxAtlasFrames` and `FlxBitmapFont` (not implemented yet),
-	 * but you can try to use it for other types of collections
-	 * (give names to your frames).
-	 */
-	@:deprecated("`framesHash` is deprecated, use `getByName()` or `exists()`")
-	public var framesHash(get, set):Map<String, FlxFrame>;
 	
 	/**
 	 * Hash of frames, by name, for this frame collection.
@@ -398,16 +389,6 @@ class FlxFramesCollection implements IFlxDestroyable
 	inline function get_numFrames():Int
 	{
 		return frames.length;
-	}
-	
-	inline function get_framesHash()
-	{
-		return framesByName;
-	}
-	
-	inline function set_framesHash(value)
-	{
-		return framesByName = value;
 	}
 }
 

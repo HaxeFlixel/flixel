@@ -82,21 +82,7 @@ class FlxDirectionFlagsTest extends FlxTest
 		Assert.areEqual(WALL, (LEFT | RIGHT));
 		Assert.areEqual(WALL, (RIGHT | LEFT));
 	}
-
-	@Test
-	function andSame()
-	{
-		Assert.areEqual(LEFT, (LEFT & LEFT));
-		Assert.areEqual(RIGHT, (RIGHT & RIGHT));
-	}
-
-	@Test
-	function andNotSame()
-	{
-		Assert.areEqual(NONE, (LEFT & RIGHT));
-		Assert.areEqual(NONE, (RIGHT & LEFT));
-	}
-
+	
 	@Test
 	function withoutSame()
 	{
@@ -186,15 +172,5 @@ class FlxDirectionFlagsTest extends FlxTest
 		assertNot(RIGHT, LEFT | UP | DOWN);
 		assertNot(ANY, NONE);
 	}
-	
-	@Test
-	@:haxe.warning("-WDeprecated")
-	function implicitBackwardsCompat()
-	{
-		
-		Assert.isTrue(FlxDirectionFlags.NONE == 0);
-		Assert.isTrue(0 == FlxDirectionFlags.NONE);
-		Assert.isTrue(flixel.util.FlxDirection.LEFT == 0x0001);
-		Assert.isTrue(0x0001 == flixel.util.FlxDirection.LEFT);
-	}
+
 }
