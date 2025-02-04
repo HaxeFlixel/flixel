@@ -80,6 +80,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 */
 	public var lightness(get, set):Float;
 
+	/**
+	 * The luminance, or "percieved brightness" of a color (from 0 to 1)
+	 * RGB -> Luma calculation from https://www.w3.org/TR/AERT/#color-contrast
+	 */
+	public var luminance(get, never):Float;
+
 	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 
 	/**
@@ -739,6 +745,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	inline function get_brightness():Float
 	{
 		return maxColor();
+	}
+
+	inline function get_luminance():Float
+	{
+		return (redFloat * 299 + greenFloat * 587 + blueFloat * 114) / 1000;
 	}
 
 	inline function get_saturation():Float
