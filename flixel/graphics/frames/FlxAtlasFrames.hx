@@ -476,10 +476,3 @@ class FlxAtlasFrames extends FlxFramesCollection
 		return this;
 	}
 }
-
-@:deprecated("Use TexturePackerAtlas instead")// 5.4.0
-typedef TexturePackerObject = TexturePackerAtlas;
-@:deprecated("Use TexturePackerAtlasFrame instead")// 5.4.0
-typedef TexturePackerFrameData = TexturePackerAtlasFrame;
-@:deprecated("Use AtlasRect instead")// 5.4.0
-typedef TexturePackerFrameRect = AtlasRect;

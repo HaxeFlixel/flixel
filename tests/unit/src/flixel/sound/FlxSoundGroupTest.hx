@@ -16,16 +16,4 @@ class FlxSoundGroupTest
 		Assert.areEqual(0, group.sounds.length);
 		Assert.areEqual(1, FlxG.sound.defaultSoundGroup.sounds.length);
 	}
-	
-	@:haxe.warning("-WDeprecated")
-	function testSetter()
-	{
-		var group = new FlxSoundGroup();
-		var sound = new FlxSound();
-		sound.group = group;
-		Assert.areEqual(1, group.sounds.length);
-		sound.group = FlxG.sound.defaultSoundGroup;
-		Assert.areEqual(0, group.sounds.length);
-		Assert.areEqual(1, FlxG.sound.defaultSoundGroup.sounds.length);
-	}
 }

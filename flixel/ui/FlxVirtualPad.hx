@@ -1,6 +1,5 @@
 package flixel.ui;
 
-import flixel.ui.FlxAnalog;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.group.FlxSpriteContainer;
@@ -32,42 +31,6 @@ class FlxVirtualPad extends FlxSpriteContainer
 	 * An Analog directional input
 	 */
 	public final stick:Null<FlxVirtualStick>;
-	
-	@:deprecated("buttonA is deprecated, use getButton(A), instead")
-	public var buttonA(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonA() return actions.getButton(A);
-	
-	@:deprecated("buttonB is deprecated, use getButton(B), instead")
-	public var buttonB(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonB() return actions.getButton(B);
-	
-	@:deprecated("buttonC is deprecated, use getButton(C), instead")
-	public var buttonC(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonC() return actions.getButton(C);
-	
-	@:deprecated("buttonY is deprecated, use getButton(Y), instead")
-	public var buttonY(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonY() return actions.getButton(Y);
-	
-	@:deprecated("buttonX is deprecated, use getButton(X), instead")
-	public var buttonX(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonX() return actions.getButton(X);
-	
-	@:deprecated("buttonLeft is deprecated, use getButton(LEFT), instead")
-	public var buttonLeft(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonLeft() return dPad.getButton(LEFT);
-	
-	@:deprecated("buttonUp is deprecated, use getButton(UP), instead")
-	public var buttonUp(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonUp() return dPad.getButton(UP);
-	
-	@:deprecated("buttonRight is deprecated, use getButton(RIGHT), instead")
-	public var buttonRight(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonRight() return dPad.getButton(RIGHT);
-	
-	@:deprecated("buttonDown is deprecated, use getButton(DOWN), instead")
-	public var buttonDown(get, never):Null<FlxVirtualPadButton>;
-	inline function get_buttonDown() return dPad.getButton(DOWN);
 	
 	/**
 	 * Create a gamepad which contains 4 directional buttons and 4 action buttons.

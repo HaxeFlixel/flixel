@@ -138,12 +138,6 @@ class FlxPath extends FlxBasePath
 	public var angle(default, null):Float = 0;
 	
 	/**
-	 * Legacy method of alignment for the object following the path. If true, align the midpoint of the object on the path, else use the x, y position.
-	 */
-	@:deprecated("path.autoCenter is deprecated, use centerMode") // 5.7.0
-	public var autoCenter(get, set):Bool;
-	
-	/**
 	 * How to center the object on the path.
 	 * @since 5.7.0
 	 */
@@ -162,15 +156,6 @@ class FlxPath extends FlxBasePath
 	 * @since 5.0.0
 	 */
 	public var angleOffset:Float = 0;
-	
-	@:deprecated("onComplete is deprecated, use the onEndReached signal, instead")
-	public var onComplete:FlxPath->Void;
-	
-	/**
-	 * Tracks which node of the path this object is currently moving toward.
-	 */
-	@:deprecated("nodeIndex is deprecated, use nextIndex, instead")
-	public var nodeIndex(get, never):Int;
 	
 	/**
 	 * Whether to limit movement to certain axes.
@@ -199,17 +184,11 @@ class FlxPath extends FlxBasePath
 	@:allow(flixel.FlxObject)
 	var object(get, set):FlxObject;
 	
-	@:haxe.warning("-WDeprecated")
 	public function new(?nodes:Array<FlxPoint>)
 	{
 		super(nodes != null ? nodes.copy() : []);
 		
 		active = false;
-		onEndReached.add(function (_)
-		{
-			if (onComplete != null)
-				onComplete(this);
-		});
 	}
 
 	/**
@@ -454,29 +433,6 @@ class FlxPath extends FlxBasePath
 		super.advance();
 	}
 	
-	#if FLX_DEBUG
-	
-	/**
-	 * While this doesn't override `FlxBasic.drawDebug()`, the behavior is very similar.
-	 * Based on this path data, it draws a simple lines-and-boxes representation of the path
-	 * if the `drawDebug` mode was toggled in the debugger overlay.
-	 * You can use `debugColor` to control the path's appearance.
-	 *
-	 * @param camera   The camera object the path will draw to.
-	 */
-	@:deprecated("FlxPath.debugDraw() is deprecated, use draw() OR drawDebugOnCamera(camera), instead")
-	public function drawDebug(?camera:FlxCamera):Void
-	{
-		if (nodes == null || nodes.length <= 0 || ignoreDrawDebug)
-			return;
-		
-		if (camera == null)
-			camera = FlxG.camera;
-		
-		drawDebugOnCamera(camera);
-	}
-	#end
-
 	/**
 	 * Stops the path's movement.
 	 *
@@ -648,11 +604,6 @@ class FlxPath extends FlxBasePath
 		}
 		return null;
 	}
-	
-	inline function get_nodeIndex()
-	{
-		return nextIndex;
-	}
 
 	function set_immovable(value:Bool):Bool
 	{
@@ -671,21 +622,6 @@ class FlxPath extends FlxBasePath
 		}
 
 		return this.immovable = value;
-	}
-	
-	// deprecated 5.7.0
-	@:noCompletion
-	function set_autoCenter(value:Bool):Bool
-	{
-		centerMode = value ? CENTER : TOP_LEFT;
-		return value;
-	}
-	
-	// deprecated 5.7.0
-	@:noCompletion
-	function get_autoCenter():Bool
-	{
-		return centerMode.match(CENTER);
 	}
 	
 	function get__inc()

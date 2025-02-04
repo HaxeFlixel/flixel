@@ -6,21 +6,6 @@ package flixel.util;
 class FlxArrayUtil
 {
 	/**
-	 * Sets the length of an array.
-	 *
-	 * @param	array		The array.
-	 * @param	newLength	The length you want the array to have.
-	 */
-	@:deprecated("setLength is deprecated, use array.resize instead")
-	public static inline function setLength<T>(array:Array<T>, newLength:Int):Array<T>
-	{
-		if (newLength > 0 && newLength < array.length)
-			array.resize(newLength);
-		
-		return array;
-	}
-
-	/**
 	 * Safely removes an element from an array by swapping it with the last element and calling `pop()`
 	 * (won't do anything if the element is not in the array). This is a lot faster than regular `splice()`,
 	 * but it can only be used on arrays where order doesn't matter.

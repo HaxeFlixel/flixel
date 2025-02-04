@@ -40,14 +40,7 @@ class LogStyle
 
 	/**
 	 * A callback function that is called when this LogStyle is used
-	 */
-	@:deprecated("callbackFunction is deprecated, use callback, instead")
-	public var callbackFunction:()->Void;
-	
-	/**
-	 * A callback function that is called when this LogStyle is used
-	 * **Note:** Unlike the deprecated `callbackFunction`, this is called every time,
-	 * even when logged with `once = true` and even in release mode.
+	 * **Note:** This is called every time, even when logged with `once = true` and even in release mode
 	 */
 	public final onLog = new FlxTypedSignal<(data:Any, ?pos:PosInfos) -> Void>();
 	
@@ -73,7 +66,6 @@ class LogStyle
 	 * @param   callback          A callback function that is called when this LogStyle is used
 	 * @param   throwError        Whether an error is thrown when this LogStyle is used
 	 */
-	 @:haxe.warning("-WDeprecated")
 	public function new(prefix = "", color = "FFFFFF", size = 12, bold = false, italic = false, underlined = false,
 			?errorSound:String, openConsole = false, ?callbackFunction:()->Void, ?callback:(Any, ?PosInfos)->Void, throwException = false)
 	{
@@ -85,7 +77,6 @@ class LogStyle
 		this.underlined = underlined;
 		this.errorSound = errorSound;
 		this.openConsole = openConsole;
-		this.callbackFunction = callbackFunction;
 		if (callback != null)
 			onLog.add(callback);
 		this.throwException = throwException;

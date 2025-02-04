@@ -171,16 +171,6 @@ class FlxTilemapTest extends FlxTest
 	}
 
 	@Test // #1546
-	@:haxe.warning("-WDeprecated")
-	function testOffMapOverlap()
-	{
-		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);
-		var sprite = new FlxSprite(-2, 10);
-		Assert.isFalse(tilemap.overlapsWithCallback(sprite));
-	}
-	
-	@Test // #1546
-	// same as testOffMapOverlap but with objectOverlapsTiles
 	function testOffMapOverlap2()
 	{
 		tilemap.loadMapFrom2DArray([[1], [0]], getBitmapData(), 8, 8);

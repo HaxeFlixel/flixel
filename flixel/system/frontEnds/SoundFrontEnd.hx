@@ -28,14 +28,7 @@ class SoundFrontEnd
 	 * Whether or not the game sounds are muted.
 	 */
 	public var muted:Bool = false;
-
-	/**
-	 * Set this hook to get a callback whenever the volume changes.
-	 * Function should take the form myVolumeHandler(volume:Float).
-	 */
-	@:deprecated("volumeHandler is deprecated, use onVolumeChange, instead")
-	public var volumeHandler:Float->Void;
-
+	
 	/**
 	 * A signal that gets dispatched whenever the volume changes.
 	 */
@@ -338,18 +331,12 @@ class SoundFrontEnd
 	/**
 	 * Toggles muted, also activating the sound tray.
 	 */
-	@:haxe.warning("-WDeprecated")
 	public function toggleMuted():Void
 	{
 		muted = !muted;
-
-		if (volumeHandler != null)
-		{
-			volumeHandler(muted ? 0 : volume);
-		}
-
+		
 		onVolumeChange.dispatch(muted ? 0 : volume);
-
+		
 		showSoundTray(true);
 	}
 
@@ -464,18 +451,12 @@ class SoundFrontEnd
 	}
 	#end
 
-	@:haxe.warning("-WDeprecated")
 	function set_volume(Volume:Float):Float
 	{
 		Volume = FlxMath.bound(Volume, 0, 1);
-
-		if (volumeHandler != null)
-		{
-			volumeHandler(muted ? 0 : Volume);
-		}
-
+		
 		onVolumeChange.dispatch(muted ? 0 : Volume);
-
+		
 		return volume = Volume;
 	}
 }

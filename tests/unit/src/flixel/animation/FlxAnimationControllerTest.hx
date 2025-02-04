@@ -33,24 +33,6 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test
-	@:haxe.warning("-WDeprecated")
-	function testCallbackAfterFirstLoadGraphic():Void
-	{
-		var timesCalled:Int = 0;
-		var callbackFrameIndex:Int = -1;
-		sprite.animation.callback = function(s:String, n:Int, i:Int)
-		{
-			timesCalled++;
-			callbackFrameIndex = i;
-		};
-
-		loadSpriteSheet();
-
-		Assert.areEqual(1, timesCalled);
-		Assert.areEqual(0, callbackFrameIndex);
-	}
-	
-	@Test
 	function testOnFrameChangeAfterFirstLoadGraphic():Void
 	{
 		var timesCalled:Int = 0;
@@ -68,21 +50,6 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 
 	@Test
-	@:haxe.warning("-WDeprecated")
-	function testOnFrameChangeNoFrameIndexChange():Void
-	{
-		var timesCalled:Int = 0;
-		sprite.animation.callback = function(_, _, _) timesCalled++;// remove later
-		sprite.animation.onFrameChange.add(function(_, _, _) timesCalled++);
-
-		sprite.animation.frameIndex = 0;
-		sprite.animation.frameIndex = 0;
-		sprite.animation.frameIndex = 0;
-
-		Assert.areEqual(0, timesCalled);
-	}
-
-	@Test
 	function testAddUnmodifiedArray():Void
 	{
 		// 2 is an invalid frame index and will be spliced
@@ -92,21 +59,6 @@ class FlxAnimationControllerTest extends FlxTest
 		sprite.animation.add("animation", animation);
 
 		FlxAssert.arraysEqual([0, 1, 2], animation);
-	}
-
-	@Test // #1781
-	@:haxe.warning("-WDeprecated")
-	function testFinishCallbackOnce():Void
-	{
-		loadSpriteSheet();
-		sprite.animation.add("animation", [0, 1, 0], 3000, false);
-		
-		var timesCalled = 0;
-		sprite.animation.finishCallback = function(_) timesCalled++;
-		sprite.animation.play("animation");
-		
-		step();
-		Assert.areEqual(1, timesCalled);
 	}
 	
 	@Test // #1781

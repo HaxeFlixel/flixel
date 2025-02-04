@@ -44,7 +44,6 @@ class LogFrontEnd
 	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
 	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
-	@:haxe.warning("-WDeprecated")
 	public function advanced(data:Any, ?style:LogStyle, fireOnce = false, ?pos:PosInfos):Void
 	{
 		if (style == null)
@@ -71,9 +70,6 @@ class LogFrontEnd
 			
 			if (style.openConsole)
 				FlxG.debugger.visible = true;
-			
-			if (style.callbackFunction != null)
-				style.callbackFunction();
 		}
 		#end
 		

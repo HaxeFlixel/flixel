@@ -626,12 +626,6 @@ class Interaction extends Window
 		return items;
 	}
 	
-	@:deprecated("findItemsWithinState is deprecated, use getItemsWithinState or addItemsWithinState")
-	public inline function findItemsWithinState(items:Array<FlxBasic>, state:FlxState, area:FlxRect):Void
-	{
-		addItemsWithinState(cast items, state, area);
-	}
-	
 	/**
 	 * finds all items in the state and substate that are within the given area and
 	 * adds them to the given list.
@@ -661,22 +655,6 @@ class Interaction extends Window
 			return getTopItemWithinState(state.subState, area);
 		
 		return getTopItemWithinArea(state.members, area);
-	}
-
-	/**
-	 * Find all items within an area. In order to improve performance and reduce temporary allocations,
-	 * the method has no return, you must pass an array where items will be placed. The method decides
-	 * if an item is within the searching area or not by checking if the item's hitbox (obtained from
-	 * `getHitbox()`) overlaps the area parameter.
-	 *
-	 * @param   items    Array where the method will place all found items. Any previous content in the array will be preserved.
-	 * @param   members  Array where the method will recursively search for items.
-	 * @param   area     A rectangle that describes the area where the method should search within.
-	 */
-	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
-	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
-	{
-		addItemsWithinArea(cast items, members, area);
 	}
 	
 	inline function isOverObject(object:FlxObject, area:FlxRect):Bool

@@ -49,10 +49,6 @@ abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String 
 	}
 }
 
-
-@:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")// 5.6.0
-typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
-
 abstract FlxXmlAsset(OneOfTwo<Xml, String>) from Xml from String
 {
 	public function getXml()
@@ -346,19 +342,6 @@ class FlxAssets
 		}
 		
 		return null;
-	}
-
-	/**
-	 * Loads an OpenFL sound asset from the given asset id. If an extension not provided the 
-	 * `defaultSoundExtension` is used (defaults to "ogg" on non-flash targets).
-	 * 
-	 * @param   id  The asset id of the local sound file.
-	 * @return  The sound file.
-	 */
-	@:deprecated("FlxAssets.getSound is deprecated, use getSoundAddExtension, instead")
-	public static inline function getSound(id:String):Sound
-	{
-		return getSoundAddExtension(id);
 	}
 	
 	/**

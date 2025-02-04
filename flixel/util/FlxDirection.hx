@@ -37,24 +37,9 @@ enum abstract FlxDirection(Int)
 		}
 	}
 	
-	@:deprecated("implicit cast from FlxDirection to Int is deprecated, use toInt()")
-	@:to
-	inline function toIntImplicit()
-	{
-		return toInt();
-	}
-	
-	
 	inline public function toInt()
 	{
 		return this;
-	}
-	
-	@:deprecated("implicit cast from Int to FlxDirection is deprecated, use FlxDirection.fromInt")
-	@:from
-	inline static function fromIntImplicit(value:Int):FlxDirection
-	{
-		return fromInt(value);
 	}
 	
 	public inline static function fromInt(value:Int):FlxDirection

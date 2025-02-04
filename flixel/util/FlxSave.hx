@@ -364,8 +364,6 @@ class FlxSave implements IFlxDestroyable
 				FlxG.log.error('Invalid path:"$path", ${reason == null ? "" : reason}.');
 			case LOAD_ERROR(PARSING(rawData, e)):
 				FlxG.log.error('Error parsing "$rawData", ${e.message}.');
-			case found:
-				throw 'Unexpected status: $found';
 		}
 		return false;
 	}
@@ -764,7 +762,7 @@ enum FlxSaveStatus
 	BOUND(name:String, ?path:String);
 	
 	/**
-	 * There was an issue during `flush`. Previously known as `ERROR(msg:String)`
+	 * There was an issue during `flush`
 	 */
 	SAVE_ERROR(type:SaveFailureType);
 	
@@ -772,8 +770,4 @@ enum FlxSaveStatus
 	 * There was an issue while loading
 	 */
 	LOAD_ERROR(type:LoadFailureType);
-	
-	@:noCompletion
-	@:deprecated("FlxSaveStatus.ERROR is never used, it has been replaced by SAVE_ERROR")
-	ERROR(msg:String);
 }

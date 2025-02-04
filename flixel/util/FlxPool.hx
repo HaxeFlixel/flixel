@@ -5,36 +5,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.typeLimit.OneOfTwo;
 
 /**
- * Helper type that allows the `FlxPool` constructor to take the new function param and the old,
- * deprecated `Class<T>` param. This will be removed, soon anf FlxPool will only take a function.
- */
-abstract PoolFactory<T:IFlxDestroyable>(()->T)
-{
-	@:from
-	#if FLX_NO_UNIT_TEST
-	@:deprecated("use `MyType.new` or `()->new MyType()` instead of `MyType`)")
-	#end
-	public static inline function fromClass<T:IFlxDestroyable>(classRef:Class<T>):PoolFactory<T>
-	{
-		return fromFunction(()->Type.createInstance(classRef, []));
-	}
-
-	@:from
-	public static inline function fromFunction<T:IFlxDestroyable>(func:()->T):PoolFactory<T>
-	{
-		return cast func;
-	}
-	
-	@:allow(flixel.util.FlxPool)
-	inline function getFunction():()->T
-	{
-		return this;
-	}
-}
-
-/**
  * A generic container that facilitates pooling and recycling of objects.
- * WARNING: Pooled objects must have parameter-less constructors: function new()
  */
 class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 {
@@ -64,12 +35,12 @@ class FlxPool<T:IFlxDestroyable> implements IFlxPool<T>
 	/**
 	 * Creates a pool of the specified type
 	 * @param   constructor  A function that takes no args and creates an instance,
-	 *                       example: `FlxRect.new.bind(0, 0, 0, 0)`
+	 *                       example: `FlxRect.new.bind(0, 0, 0, 0)` or `()->FlxRect.get()`
 	 */
 	
-	public function new(constructor:PoolFactory<T>)
+	public function new(constructor)
 	{
-		_constructor = constructor.getFunction();
+		_constructor = constructor;
 	}
 
 	public function get():T
