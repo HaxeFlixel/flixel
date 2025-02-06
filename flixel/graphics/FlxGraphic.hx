@@ -423,15 +423,15 @@ class FlxGraphic implements IFlxDestroyable
 	}
 
 	/**
-	 * Frees the software image buffer for this graphic's `BitmapData`.
+	 * If possible, frees the software image buffer for this graphic's `BitmapData`.
 	 * This can significantly reduce RAM usage at the cost of not being able to draw on the graphic.
+	 * Call `FlxGraphic.refresh()` to refresh this graphic's `BitmapData` and restore drawing functionality.
 	 * 
-	 * Note that this operation might not complete immediately; 
-	 * it might take a bit for the garbage collector to collect the bitmap.
+	 * Note that the buffer may not be cleaned up immediately.
 	 * 
 	 * @see `openfl.display.BitmapData.disposeImage()`
 	 */
-	public function dump():Void
+	public function freeImageBuffer():Void
 	{
 		if (bitmap != null)
 			bitmap.disposeImage();
