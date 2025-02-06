@@ -633,6 +633,10 @@ class FlxGraphic implements IFlxDestroyable
 					FlxG.log.warn('Graphic dimensions (${width}x${height}) exceed the maximum allowed size (${max}x${max}), which may cause rendering issues.');
 			}
 			#end
+
+			#if FLX_FREE_IMAGE_BUFFER
+			freeImageBuffer();
+			#end
 		}
 
 		return value;
