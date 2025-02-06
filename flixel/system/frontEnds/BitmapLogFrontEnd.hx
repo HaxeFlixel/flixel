@@ -2,17 +2,55 @@ package flixel.system.frontEnds;
 
 import openfl.display.BitmapData;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
 
 /**
  * Accessed via `FlxG.bitmapLog`.
  */
 class BitmapLogFrontEnd
 {
-	public inline function add(Data:BitmapData, Name:String = ""):Void
+	public overload inline extern function add(data:BitmapData, name = ""):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.add(Data, Name);
+		FlxG.game.debugger.bitmapLog.add(data, name);
 		#end
+	}
+	
+	public overload inline extern function add(graphic:FlxGraphic, ?name:String):Void
+	{
+		addGraphic(graphic, name);
+	}
+	
+	function addGraphic(graphic:FlxGraphic, ?name:String):Void
+	{
+		#if FLX_DEBUG
+		if (graphic != null && graphic.bitmap != null)
+		{
+			if (name == null)
+				name = getGraphicName(graphic);
+			
+			add(graphic.bitmap, name);
+		}
+		#end
+	}
+	
+	function getGraphicName(graphic:FlxGraphic)
+	{
+		if (graphic.key != null)
+			return graphic.key;
+		
+		if (graphic.assetsKey != null)
+			return graphic.assetsKey;
+		
+		if (graphic.assetsClass != null)
+			return Type.getClassName(graphic.assetsClass);
+		
+		#if FLX_TRACK_GRAPHICS
+		if (graphic.trackingInfo != null)
+			return graphic.trackingInfo;
+		#end
+		
+		return null;
 	}
 
 	/**
