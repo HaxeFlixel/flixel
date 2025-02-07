@@ -556,26 +556,15 @@ class FlxStringUtil
 	 * Converts a resource image file to a comma-separated string. Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
 	 *
-	 * @param	ImageFile	An embedded graphic, preferably black and white.
-	 * @param	Invert		Load white pixels as solid instead.
-	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param   imageFile  An embedded graphic, preferably black and white.
+	 * @param   invert     Load white pixels as solid instead.
+	 * @param   scale      Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap   An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+	 * @return  A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
+	public static function imageToCSV(graphic:FlxGraphicSource, invert = false, scale = 1, ?colorMap:Array<FlxColor>):String
 	{
-		var tempBitmapData:BitmapData;
-
-		if ((ImageFile is String))
-		{
-			tempBitmapData = FlxG.assets.getBitmapData(ImageFile);
-		}
-		else
-		{
-			tempBitmapData = (Type.createInstance(ImageFile, [])).bitmapData;
-		}
-
-		return bitmapToCSV(tempBitmapData, Invert, Scale, ColorMap);
+		return bitmapToCSV(graphic.resolveBitmapData(), invert, scale, colorMap);
 	}
 
 	/**
