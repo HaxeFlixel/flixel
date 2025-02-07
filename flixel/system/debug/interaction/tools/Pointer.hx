@@ -32,7 +32,7 @@ class Pointer extends Tool
 
 		_name = "Pointer";
 		setButton(GraphicCursorCross);
-		setCursor(new GraphicCursorCross(0, 0));
+		setCursor(new GraphicCursorCross(0, 0), -5, -5);
 
 		return this;
 	}
