@@ -65,6 +65,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	@:deprecated('finishCallback is deprecated, use onFinish.add') // 5.9.0
 	public var finishCallback:(animName:String) -> Void;
+
+	public final onPlay = new FlxTypedSignal<(animName:String)->Void>();
 	
 	/**
 	 * Dispatches each time the current animation's frame changes
@@ -611,6 +613,8 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			_sprite.dirty = true;
 		}
+
+		onPlay.dispatch(animName);
 	}
 
 	/**
