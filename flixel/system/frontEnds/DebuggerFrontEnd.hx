@@ -3,7 +3,9 @@ package flixel.system.frontEnds;
 import openfl.display.BitmapData;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.debug.FlxDebugger.FlxDebuggerLayout;
+import flixel.system.debug.FlxDebugger;
+import flixel.system.debug.interaction.Interaction;
+import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.debug.Window;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
@@ -48,7 +50,20 @@ class DebuggerFrontEnd
 	public var visibilityChanged(default, null):FlxSignal = new FlxSignal();
 
 	public var visible(default, set):Bool = false;
-
+	
+	/** Helper for adding and removing debug tools */
+	public var tools:DebugToolsFrontEnd;
+	
+	/** Helper for adding and removing debug windows */
+	public var windows:DebugWindowsFrontEnd;
+	
+	@:allow(flixel.FlxG)
+	function new()
+	{
+		tools = new DebugToolsFrontEnd();
+		windows = new DebugWindowsFrontEnd();
+	}
+	
 	/**
 	 * Change the way the debugger's windows are laid out.
 	 *
@@ -140,10 +155,7 @@ class DebuggerFrontEnd
 		FlxG.game.debugger.removeButton(Button, UpdateLayout);
 		#end
 	}
-
-	@:allow(flixel.FlxG)
-	function new() {}
-
+	
 	function set_drawDebug(Value:Bool):Bool
 	{
 		if (drawDebug == Value)
@@ -191,5 +203,49 @@ class DebuggerFrontEnd
 		#end
 
 		return visible;
+	}
+}
+
+@:allow(flixel.system.frontEnds.DebuggerFrontEnd)
+class DebugToolsFrontEnd
+{
+	public var activeTool(get, never):Tool;
+	inline function get_activeTool() return interaction.activeTool;
+	
+	var interaction(get, never):Interaction;
+	inline function get_interaction() return FlxG.game.debugger.interaction;
+	
+	function new() {}
+	
+	public function add(tool)
+	{
+		interaction.addTool(tool);
+	}
+	
+	public function remove(tool)
+	{
+		interaction.removeTool(tool);
+	}
+}
+
+@:allow(flixel.system.frontEnds.DebuggerFrontEnd)
+class DebugWindowsFrontEnd
+{
+	var debugger(get, never):FlxDebugger;
+	inline function get_debugger() return FlxG.game.debugger;
+	
+	function new() {}
+	
+	public function add(window, ?button)
+	{
+		debugger.addWindow(window);
+		debugger.addWindowToggleButton(window, button);
+	}
+	
+	public function remove(window)
+	{
+		debugger.removeWindow(window);
+		if (window.toggleButton != null)
+			debugger.removeButton(window.toggleButton);
 	}
 }
