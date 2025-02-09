@@ -23,7 +23,7 @@ class LogBitmap extends Tool
 	{
 		super.init(brain);
 		
-		_name = "Log Bitmaps";
+		_name = "Log selected bitmaps";
 		setButton(GraphicLogBitmapTool);
 		button.toggleMode = false;
 		
@@ -47,15 +47,12 @@ class LogBitmap extends Tool
 		if (_brain.selectedItems.length == 0)
 			return;
 		
-		// get whether any selected object is being debug drawn
-		var anyEnabled = false;
 		for (member in _brain.selectedItems)
 		{
 			if (member != null && member is FlxSprite)
 			{
 				final sprite:FlxSprite = cast member;
-				if (sprite.graphic != null && sprite.graphic.bitmap != null)
-					FlxG.bitmapLog.add(sprite.graphic);
+				FlxG.bitmapLog.add(sprite.graphic);
 			}
 		}
 		#end
