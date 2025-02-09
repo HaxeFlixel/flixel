@@ -383,16 +383,19 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 	 * @param   cursorData   MouseCursorData contains the bitmap, hotspot etc
 	 * @since   4.2.0
 	 */
-	public function registerSimpleNativeCursorData(name:String, cursorBitmap:BitmapData):MouseCursorData
+	public function registerSimpleNativeCursorData(name:String, cursorBitmap:BitmapData, hotSpot:Point):MouseCursorData
 	{
 		var cursorVector = new Vector<BitmapData>();
 		cursorVector[0] = cursorBitmap;
 
 		if (cursorBitmap.width > 32 || cursorBitmap.height > 32)
 			throw "BitmapData files used for native cursors cannot exceed 32x32 pixels due to an OS limitation.";
-
+		
+		if(hotSpot == null)
+			hotSpot = new Point();
+		
 		var cursorData = new MouseCursorData();
-		cursorData.hotSpot = new Point(0, 0);
+		cursorData.hotSpot = hotSpot;
 		cursorData.data = cursorVector;
 
 		registerNativeCursor(name, cursorData);

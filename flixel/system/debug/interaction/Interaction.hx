@@ -85,6 +85,7 @@ class Interaction extends Window
 
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
+		_customCursor.mouseChildren = false;
 		_container.addChild(_customCursor);
 
 		// Add all built-in tools
@@ -442,15 +443,17 @@ class Interaction extends Window
 		}
 	}
 
-	public function registerCustomCursor(name:String, icon:BitmapData):Void
+	public function registerCustomCursor(name:String, icon:BitmapData, offsetX = 0.0, offsetY = 0.0):Void
 	{
 		if (icon == null)
 			return;
 
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.registerSimpleNativeCursorData(name, icon);
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(offsetX, offsetY));
 		#else
 		var sprite = new Sprite();
+		sprite.x = offsetX;
+		sprite.y = offsetY;
 		sprite.visible = false;
 		sprite.name = name;
 		sprite.addChild(new Bitmap(icon));

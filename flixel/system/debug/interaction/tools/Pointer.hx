@@ -12,7 +12,7 @@ import flixel.util.FlxSpriteUtil;
 using flixel.util.FlxArrayUtil;
 
 #if FLX_DEBUG @:bitmap("assets/images/debugger/cursorCross.png") #end
-class GraphicCursorCross extends BitmapData {}
+private class Cursor extends BitmapData {}
 
 /**
  * A tool to use the mouse cursor to select game elements.
@@ -31,8 +31,8 @@ class Pointer extends Tool
 		super.init(brain);
 
 		_name = "Pointer";
-		setButton(GraphicCursorCross);
-		setCursor(new GraphicCursorCross(0, 0), -5, -5);
+		setButton(Cursor);
+		setCursor(new Cursor(0, 0), -5, -5);
 
 		return this;
 	}
