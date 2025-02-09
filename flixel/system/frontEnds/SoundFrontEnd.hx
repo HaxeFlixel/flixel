@@ -467,16 +467,16 @@ class SoundFrontEnd
 	@:haxe.warning("-WDeprecated")
 	function set_volume(Volume:Float):Float
 	{
-		Volume = FlxMath.bound(Volume, 0, 1);
+		volume = FlxMath.bound(Volume, 0, 1);
 
 		if (volumeHandler != null)
 		{
-			volumeHandler(muted ? 0 : Volume);
+			volumeHandler(muted ? 0 : volume);
 		}
 
-		onVolumeChange.dispatch(muted ? 0 : Volume);
+		onVolumeChange.dispatch(muted ? 0 : volume);
 
-		return volume = Volume;
+		return volume;
 	}
 }
 #end
