@@ -20,6 +20,7 @@ import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.debug.interaction.tools.ToggleBounds;
+import flixel.system.debug.interaction.tools.TrackObject;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
@@ -95,6 +96,7 @@ class Interaction extends Window
 		addTool(new Transform());
 		addTool(new ToggleBounds());
 		addTool(new LogBitmap());
+		addTool(new TrackObject());
 
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
