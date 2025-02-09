@@ -19,6 +19,7 @@ import flixel.util.FlxStringUtil;
 import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
 import flixel.system.debug.FlxDebugger.GraphicArrowRight;
 import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
+import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 
 using flixel.util.FlxBitmapDataUtil;
 
@@ -42,6 +43,7 @@ class BitmapLog extends Window
 	var _buttonLeft:FlxSystemButton;
 	var _buttonText:FlxSystemButton;
 	var _buttonRight:FlxSystemButton;
+	var _buttonRemove:FlxSystemButton;
 	var _counterText:TextField;
 	var _dimensionsText:TextField;
 	var _ui:Sprite;
@@ -60,6 +62,11 @@ class BitmapLog extends Window
 		_canvasBitmap.x = 0;
 		_canvasBitmap.y = 15;
 		addChild(_canvasBitmap);
+		
+		_buttonRemove = new FlxSystemButton(new GraphicCloseButton(0, 0), removeCurrent);
+		_buttonRemove.x = width - _buttonRemove.width;
+		_buttonRemove.y = Window.HEADER_HEIGHT + 3;
+		addChild(_buttonRemove);
 
 		createHeaderUI();
 		createFooterUI();
@@ -185,6 +192,8 @@ class BitmapLog extends Window
 
 		_footer.width = _width;
 		_footer.y = _height - _footer.height;
+		
+		_buttonRemove.x = _width - _buttonRemove.width;
 
 		resizeTexts();
 	}
@@ -228,21 +237,67 @@ class BitmapLog extends Window
 		zoom = 1;
 		_curMouseOffset.set();
 	}
-
+	
+	function indexOf(bitmap:BitmapData)
+	{
+		for (i => entry in _entries)
+		{
+			if (entry.bitmap == bitmap)
+				return i;
+		}
+		return -1;
+	}
+	
+	function entryOf(bitmap:BitmapData):Null<BitmapLogEntry>
+	{
+		for (entry in _entries)
+		{
+			if (entry.bitmap == bitmap)
+				return entry;
+		}
+		return null;
+	}
+	
+	public function has(bitmap:BitmapData)
+	{
+		for (i => entry in _entries)
+		{
+			if (entry.bitmap == bitmap)
+				return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Add a BitmapData to the log
 	 */
-	public function add(bmp:BitmapData, name:String = ""):Bool
+	public function add(bitmap:BitmapData, name:String = ""):Bool
 	{
-		if (bmp == null)
-		{
+		if (bitmap == null)
 			return false;
-		}
+		
 		setVisible(true);
-		_entries.push({bitmap: bmp.clone(), name: name});
+		
+		final entry = entryOf(bitmap);
+		if (entry != null && entry.name == name)
+			return true;
+		
+		_entries.push({bitmap: bitmap, name: name});
 		return refreshCanvas();
 	}
-
+	
+	public function remove(bitmap:BitmapData)
+	{
+		final index = indexOf(bitmap);
+		if (index != -1)
+			clearAt(index);
+	}
+	
+	function removeCurrent()
+	{
+		clearAt(_curIndex);
+	}
+	
 	/**
 	 * Clear one bitmap object from the log -- the last one, by default
 	 */
