@@ -816,6 +816,14 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 			transformChildren(clipRectTransform, rect);
 		return super.set_clipRect(rect);
 	}
+	
+	
+	override function set_clipRectIgnoreScale(value:Bool):Bool
+	{
+		if (exists && clipRectIgnoreScale != value)
+			transformChildren(clipRectIgnoreScaleTransform, value);
+		return super.set_clipRectIgnoreScale(value);
+	}
 
 	override function set_pixelPerfectRender(Value:Bool):Bool
 	{
@@ -1029,6 +1037,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	inline function flipXTransform(Sprite:FlxSprite, FlipX:Bool)
 		Sprite.flipX = FlipX;
+
+	inline function clipRectIgnoreScaleTransform(sprite:FlxSprite, value:Bool)
+		sprite.clipRectIgnoreScale = value;
 
 	inline function flipYTransform(Sprite:FlxSprite, FlipY:Bool)
 		Sprite.flipY = FlipY;
