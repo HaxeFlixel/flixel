@@ -938,7 +938,9 @@ class FlxTypedGroupIterator<T>
 	var _cursor:Int;
 	var _length:Int;
 
-	public function new(groupMembers:Array<T>, ?filter:T->Bool)
+	// NOTE: these methods are inlined to ensure there are no allocation when iterating through a group
+	
+	public inline function new(groupMembers:Array<T>, ?filter:T->Bool)
 	{
 		_groupMembers = groupMembers;
 		_filter = filter;
@@ -946,12 +948,12 @@ class FlxTypedGroupIterator<T>
 		_length = _groupMembers.length;
 	}
 
-	public function next()
+	public inline function next()
 	{
 		return hasNext() ? _groupMembers[_cursor++] : null;
 	}
 
-	public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		while (_cursor < _length && (_groupMembers[_cursor] == null || _filter != null && !_filter(_groupMembers[_cursor])))
 		{
