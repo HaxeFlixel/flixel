@@ -51,17 +51,21 @@ class DebuggerFrontEnd
 
 	public var visible(default, set):Bool = false;
 	
+	#if FLX_DEBUG
 	/** Helper for adding and removing debug tools */
 	public var tools:DebugToolsFrontEnd;
 	
 	/** Helper for adding and removing debug windows */
 	public var windows:DebugWindowsFrontEnd;
+	#end
 	
 	@:allow(flixel.FlxG)
 	function new()
 	{
+		#if FLX_DEBUG
 		tools = new DebugToolsFrontEnd();
 		windows = new DebugWindowsFrontEnd();
+		#end
 	}
 	
 	/**
@@ -206,6 +210,7 @@ class DebuggerFrontEnd
 	}
 }
 
+#if FLX_DEBUG
 @:allow(flixel.system.frontEnds.DebuggerFrontEnd)
 class DebugToolsFrontEnd
 {
@@ -249,3 +254,4 @@ class DebugWindowsFrontEnd
 			debugger.removeButton(window.toggleButton);
 	}
 }
+#end
