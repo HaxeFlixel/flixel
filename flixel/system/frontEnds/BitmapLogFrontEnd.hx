@@ -1,18 +1,23 @@
 package flixel.system.frontEnds;
 
-import openfl.display.BitmapData;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
 
 /**
  * Accessed via `FlxG.bitmapLog`.
  */
 class BitmapLogFrontEnd
 {
+	#if FLX_DEBUG
+	public var window(get, never):flixel.system.debug.log.BitmapLog;
+	inline function get_window() return FlxG.game.debugger.bitmapLog;
+	#end
+	
 	public overload inline extern function add(data:BitmapData, name = ""):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.add(data, name);
+		window.add(data, name);
 		#end
 	}
 	
@@ -59,7 +64,7 @@ class BitmapLogFrontEnd
 	public inline function clear():Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.clear();
+		window.clear();
 		#end
 	}
 
@@ -70,7 +75,7 @@ class BitmapLogFrontEnd
 	public inline function clearAt(Index:Int = -1):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.clearAt(Index);
+		window.clearAt(Index);
 		#end
 	}
 
