@@ -145,10 +145,13 @@ class WatchBase<TEntry:WatchEntry> extends Window
 		clear();
 	}
 
-	override public function update():Void
+	override function update():Void
 	{
 		for (entry in entries)
-			entry.updateValue();
+		{
+			if (entriesContainer.isChildVisible(entry))
+				entry.updateValue();
+		}
 	}
 
 	override function updateSize():Void
@@ -261,5 +264,13 @@ class ScrollSprite extends Sprite
 		super.addChild(child);
 		updateScroll();
 		return child;
+	}
+	
+	public function isChildVisible(child:DisplayObject)
+	{
+		if (getChildIndex(child) == -1)
+			throw "Invalid child, not a child of this container";
+		
+		return child.y < scroll.bottom && child.y + child.height > scroll.y;
 	}
 }
