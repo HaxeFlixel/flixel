@@ -752,7 +752,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function distanceSquaredTo(x:Float, y:Float):Float
 	{
-		return (this.x - x) * (this.x - x) + (this.y - y) + (this.y - y);
+		return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
 	}
 
 	/**
