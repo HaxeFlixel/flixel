@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.math.FlxPoint;
 import massive.munit.Assert;
 
 @:access(flixel.FlxG)
@@ -103,5 +104,71 @@ class FlxGTest extends FlxTest
 	function testDefaultHeight():Void
 	{
 		Assert.areEqual(480, FlxG.height);
+	}
+	
+	@Test
+	function testCenter()
+	{
+		final sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.scale.set(-2, -4);
+		final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
+		final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
+		final center = FlxPoint.get((FlxG.width - graphicWidth) / 2, (FlxG.height - graphicHeight) / 2);
+		final offCenter = center.copyTo().add(1000, 1000);
+		
+		sprite.setPosition(offCenter.x, offCenter.y);
+		FlxG.center(sprite, X);
+		Assert.areEqual(sprite.x, center.x);
+		Assert.areEqual(sprite.y, offCenter.y);
+		
+		sprite.setPosition(offCenter.x, offCenter.y);
+		FlxG.center(sprite, Y);
+		Assert.areEqual(sprite.x, offCenter.x);
+		Assert.areEqual(sprite.y, center.y);
+		
+		sprite.setPosition(offCenter.x, offCenter.y);
+		FlxG.center(sprite, XY);
+		Assert.areEqual(sprite.x, center.x);
+		Assert.areEqual(sprite.y, center.y);
+		
+		sprite.setPosition(offCenter.x, offCenter.y);
+		FlxG.center(sprite);
+		Assert.areEqual(sprite.x, center.x);
+		Assert.areEqual(sprite.y, center.y);
+		
+		offCenter.put();
+		center.put();
+	}
+	
+	@Test
+	function testCenterHitbox()
+	{
+		final object = new FlxObject(0, 0, 10, 10);
+		final center = FlxPoint.get((FlxG.width - object.width) / 2, (FlxG.height - object.height) / 2);
+		final offCenter = center.copyTo().add(1000, 1000);
+		
+		object.setPosition(offCenter.x, offCenter.y);
+		FlxG.centerHitbox(object, X);
+		Assert.areEqual(object.x, center.x);
+		Assert.areEqual(object.y, offCenter.y);
+		
+		object.setPosition(offCenter.x, offCenter.y);
+		FlxG.centerHitbox(object, Y);
+		Assert.areEqual(object.x, offCenter.x);
+		Assert.areEqual(object.y, center.y);
+		
+		object.setPosition(offCenter.x, offCenter.y);
+		FlxG.centerHitbox(object, XY);
+		Assert.areEqual(object.x, center.x);
+		Assert.areEqual(object.y, center.y);
+		
+		object.setPosition(offCenter.x, offCenter.y);
+		FlxG.centerHitbox(object);
+		Assert.areEqual(object.x, center.x);
+		Assert.areEqual(object.y, center.y);
+		
+		offCenter.put();
+		center.put();
 	}
 }

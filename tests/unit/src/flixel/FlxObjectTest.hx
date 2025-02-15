@@ -341,6 +341,7 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
+	@:haxe.warning("-WDeprecated") // TODO: remove this test?
 	function testScreenCenter()
 	{
 		var center = FlxPoint.get((FlxG.width - object1.width) / 2, (FlxG.height - object1.height) / 2);
@@ -350,17 +351,17 @@ class FlxObjectTest extends FlxTest
 		object1.screenCenter(X);
 		Assert.areEqual(object1.x, center.x);
 		Assert.areEqual(object1.y, offCenter.y);
-
+		
 		object1.setPosition(offCenter.x, offCenter.y);
 		object1.screenCenter(Y);
 		Assert.areEqual(object1.x, offCenter.x);
 		Assert.areEqual(object1.y, center.y);
-
+		
 		object1.setPosition(offCenter.x, offCenter.y);
 		object1.screenCenter(XY);
 		Assert.areEqual(object1.x, center.x);
 		Assert.areEqual(object1.y, center.y);
-
+		
 		object1.setPosition(offCenter.x, offCenter.y);
 		object1.screenCenter();
 		Assert.areEqual(object1.x, center.x);
@@ -369,7 +370,7 @@ class FlxObjectTest extends FlxTest
 		offCenter.put();
 		center.put();
 	}
-
+	
 	@Test
 	function testgetRotatedBounds()
 	{
