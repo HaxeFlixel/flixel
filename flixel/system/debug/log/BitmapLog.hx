@@ -307,7 +307,6 @@ class BitmapLog extends Window
 		{
 			Index = _entries.length - 1;
 		}
-		FlxDestroyUtil.dispose(_entries[Index].bitmap);
 		_entries[Index] = null;
 		_entries.splice(Index, 1);
 
@@ -322,10 +321,8 @@ class BitmapLog extends Window
 	public function clear():Void
 	{
 		for (i in 0..._entries.length)
-		{
-			FlxDestroyUtil.dispose(_entries[i].bitmap);
 			_entries[i] = null;
-		}
+		
 		_entries = [];
 		if (_canvas != null)
 			_canvas.fillRect(_canvas.rect, FlxColor.TRANSPARENT);
