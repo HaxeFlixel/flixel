@@ -21,192 +21,164 @@ private class Cursor extends BitmapData {}
  */
 class Pointer extends Tool
 {
-	var _selectionStartPoint:FlxPoint = new FlxPoint();
-	var _selectionEndPoint:FlxPoint = new FlxPoint();
-	var _selectionHappening:Bool = false;
-	var _selectionArea:FlxRect = new FlxRect();
-
+	var state = IDLE;
+	
 	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
-
+		
 		_name = "Pointer";
 		setButton(Cursor);
 		setCursor(new Cursor(0, 0), -5, -5);
-
+		
 		return this;
 	}
-
+	
 	override public function update():Void
 	{
 		// If the tool is active, update the custom cursor cursor
 		if (!isActive())
 			return;
-
-		if (_brain.pointerJustPressed && !_selectionHappening)
-			startSelection();
-
-		if (_selectionHappening)
-		{
-			_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
-			calculateSelectionArea();
-		}
-
-		// Check clicks on the screen
-		if (!_brain.pointerJustReleased)
-			return;
-
-		// If we made this far, the user just clicked the cursor
-		// If we had a selection happening, it's time to end it.
-		if (!_selectionHappening)
-			return;
 		
-		final selectedItems = stopSelectionAndFindItems();
-		final drewRect = _selectionArea.width != 0 || _selectionArea.height != 0;
-		// If we have items in the selection area, handle them
-		updateSelectedItems(selectedItems, drewRect);
-	}
-
-	function calculateSelectionArea():Void
-	{
-		final start = _selectionStartPoint;
-		final end = _selectionEndPoint;
-		_selectionArea.x = start.x < end.x ? start.x : end.x;
-		_selectionArea.y = start.y < end.y ? start.y : end.y;
-		_selectionArea.right = start.x > end.x ? start.x : end.x;
-		_selectionArea.bottom = start.y > end.y ? start.y : end.y;
-	}
-
-	/**
-	 * Start a selection area. A selection area is a rectangular shaped area
-	 * whose boundaries will be used to select game elements.
-	 */
-	public function startSelection():Void
-	{
-		_selectionHappening = true;
-		_selectionStartPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
-	}
-
-	/**
-	 * Cancel any selection activity that is happening, removing the selection rectangle from the screen.
-	 * Any item within the (canceled) selection area will be ignored. If you want to stop the selection
-	 * and actually process the action/items, use `stopSelection()`.
-	 */
-	public function cancelSelection():Void
-	{
-		if (!_selectionHappening)
-			return;
-
-		stopSelection();
-	}
-
-	/**
-	 * Stop any selection activity that is happening.
-	 */
-	public function stopSelection():Void
-	{
-		// Clear everything
-		_selectionHappening = false;
-		_selectionArea.set(0, 0, 0, 0);
+		switch state
+		{
+			case IDLE:
+				
+				if (_brain.pointerJustPressed)
+					state = PRESS(_brain.flixelPointer.x, _brain.flixelPointer.y);
+			
+			case PRESS(startX, startY):
+				if (_brain.pointerJustReleased)
+				{
+					final selection = FlxRect.get(startX, startY);
+					final topItem = _brain.getTopItemWithinState(FlxG.state, selection);
+					updateSelected(TOP(topItem));
+					selection.put();
+					
+					state = IDLE;
+				}
+				else if (_brain.flixelPointer.x != startX || _brain.flixelPointer.y != startY)
+					state = DRAG(startX, startY);
+				
+			case DRAG(startX, startY):
+				if (_brain.pointerJustReleased)
+				{
+					final selection = FlxRect.get(startX, startY);
+					setAbsRect(selection, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
+					final items = _brain.getItemsWithinState(FlxG.state, selection);
+					updateSelected(ALL(items));
+					selection.put();
+					
+					state = IDLE;
+				}
+		}
+		FlxG.watch.addQuick('pointer.state', state);
 	}
 	
-	/**
-	 * Stop any selection activity that is happening.
-	 */
-	public function stopSelectionAndFindItems():Array<FlxObject>
-	{
-		if (!_selectionHappening)
-			throw "stopSelectionAndFindItems called when not selecting";
-
-		_selectionEndPoint.set(_brain.flixelPointer.x, _brain.flixelPointer.y);
-		calculateSelectionArea();
-
-		var items:Array<FlxObject> = null;
-		if (_selectionArea.width != 0 || _selectionArea.height != 0)
-		{
-			items = _brain.getItemsWithinState(FlxG.state, _selectionArea);
-		}
-		else
-		{
-			// if not using the selection rect then select the top-most item
-			final topItem = _brain.getTopItemWithinState(FlxG.state, _selectionArea);
-			if (topItem != null)
-				items = [topItem];
-		}
-		
-		updateConsoleSelection(items);
-
-		// Clear everything
-		stopSelection();
-		
-		return items;
-	}
-
-	/**
-	 * We register the current selection to the console for easy interaction.
-	 */
-	function updateConsoleSelection(items:Array<FlxObject>)
-	{
-		FlxG.console.registerObject("selection", switch (items)
-		{
-			case null | []: null;
-			case [lone]: lone;
-			default: items;
-		});
-	}
-
-	function updateSelectedItems(items:Array<FlxObject>, drewRect:Bool):Void
+	function updateSelected(selection:Selection)
 	{
 		// We add things to the selection list if the user is pressing the "add-new-item" key
-		final adding = _brain.keyPressed(Keyboard.SHIFT);
-		final removing = _brain.keyPressed(Keyboard.ALTERNATE) && !adding;
+		final alt = _brain.keyPressed(Keyboard.ALTERNATE);
+		final shift = _brain.keyPressed(Keyboard.SHIFT);
 		
-		// If we are not selectively adding items, just clear
-		// the brain's list of selected items.
-		if (!adding && !removing)
-			_brain.clearSelection();
+		final addSelected = _brain.selectedItems.add;
+		final removeSelected = _brain.selectedItems.remove;
+		inline function wasSelected(o) 
+		{
+			return _brain.selectedItems.members.contains(o);
+		}
 		
-		if (items == null || items.length == 0)
-			return;
+		switch selection
+		{
+			case TOP(null) | ALL([]) if (alt || shift):
+				// Shift/alt click or select nothing: do nothing
+			case TOP(null) | ALL([]):
+				// Normal click or select nothing: deselect all
+				_brain.clearSelection();
+			case TOP(item) if (alt):
+				// Alt-click a single item: remove it
+				if (wasSelected(item))
+					removeSelected(item);
+			case TOP(item) if (shift):
+				// Shift-click a single item: toggle it from the selection
+				if (wasSelected(item))
+					removeSelected(item);
+				else
+					addSelected(item);
+			case TOP(item):
+				// Click sigle item: deselect all, select item
+				_brain.clearSelection();
+				addSelected(item);
+			case ALL(items) if (alt):
+				// Alt-select many items: toggle it from the selection
+				for (item in items)
+				{
+					if (wasSelected(item))
+						removeSelected(item);
+				}
+			case ALL(items) if (shift):
+				// Shift-select many items, toggle it from the selection
+				for (item in items)
+				{
+					if (wasSelected(item))
+						addSelected(item);
+				}
+			case ALL(items):
+				// Normal-select many items: deelect all, select the new
+				_brain.clearSelection();
+				for (item in items)
+					addSelected(item);
+		}
 		
-		final prevSelectedItems = _brain.selectedItems;
-		if (adding && !drewRect && items.length == 1)
-		{
-			final item = items[0];
-			// if they click a single item, toggle it from the selection
-			if (prevSelectedItems.members.contains(item))
-				prevSelectedItems.remove(item);
-			else
-				prevSelectedItems.add(item);
-		}
-		else if (removing)
-		{
-			for (item in items)
-				prevSelectedItems.remove(item);
-		}
-		else
-		{
-			// add them all
-			for (item in items)
-				prevSelectedItems.add(item);
-		}
+		FlxG.console.registerObject("selection", _brain.selectedItems.members);
 	}
-
+	
+	public function cancelSelection()
+	{
+		state = IDLE;
+	}
+	
 	override public function draw():Void
 	{
 		var gfx:Graphics = _brain.getDebugGraphics();
 		if (gfx == null)
 			return;
-
-		if (_selectionHappening)
+		
+		switch state
 		{
-			// Render the selection rectangle
-			gfx.lineStyle(0.9, 0xbb0000);
-			gfx.drawRect(_selectionArea.x - FlxG.camera.scroll.x, _selectionArea.y - FlxG.camera.scroll.y, _selectionArea.width, _selectionArea.height);
+			case IDLE | PRESS(_, _):
+			case DRAG(startX, startY):
+				final rect = FlxRect.get();
+				setAbsRect(rect, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
+				// Render the selection rectangle
+				gfx.lineStyle(0.9, 0xbb0000);
+				gfx.drawRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height);
+				rect.put();
 		}
-
+		
 		// Render everything into the camera buffer
 		if (FlxG.renderBlit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 	}
+	
+	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)
+	{
+		rect.x = x1 < x2 ? x1 : x2;
+		rect.y = y1 < y2 ? y1 : y2;
+		rect.width = x1 < x2 ? x2 - x1 : x1 - x2;
+		rect.height = y1 < y2 ? y2 - y1 : y1 - y2;
+	}
+}
+
+private enum State
+{
+	IDLE;
+	PRESS(startX:Float, startY:Float);
+	DRAG(startX:Float, startY:Float);
+}
+
+private enum Selection
+{
+	TOP(obj:Null<FlxObject>);
+	ALL(objs:Array<FlxObject>);
 }

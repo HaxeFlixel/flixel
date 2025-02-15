@@ -700,9 +700,9 @@ class Interaction extends Window
 	function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
 	{
 		// Ignore sprites' alpha when clicking a point
-		return (area.width <= 1 && area.height <= 1)
-			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
-			: isOverObject(sprite, area);
+		return isOverObject(sprite, area)
+			&& (area.width > 1 || area.height > 1
+				|| sprite.pixelsOverlapPoint(flixelPointer, 0xEE));
 	}
 	
 	/**
