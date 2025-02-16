@@ -16,7 +16,7 @@ class Watch extends WatchBase<WatchEntry>
 	#if FLX_DEBUG
 	public function new(closable = false)
 	{
-		super(WatchEntry.new, "Watch", new GraphicWatch(0, 0), true, null, closable);
+		super(WatchEntry.new, "Watch", Icon.watch, true, null, closable);
 	}
 	#end
 }

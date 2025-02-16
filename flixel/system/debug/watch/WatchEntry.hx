@@ -3,11 +3,9 @@ package flixel.system.debug.watch;
 import flixel.util.FlxSignal;
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
-import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFieldAutoSize;
@@ -49,7 +47,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 		
 		updateName();
 		
-		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), ()->onRemove.dispatch()));
+		addChild(removeButton = new FlxSystemButton(Icon.close, ()->onRemove.dispatch()));
 		removeButton.y = (TEXT_HEIGHT - removeButton.height) / 2;
 		removeButton.alpha = 0.3;
 	}

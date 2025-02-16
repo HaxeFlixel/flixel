@@ -9,8 +9,6 @@ import flixel.system.debug.interaction.Interaction;
 
 using flixel.util.FlxArrayUtil;
 
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/bitmapLog.png") #end
-private class GraphicLogBitmapTool extends BitmapData {}
 
 /**
  * A tool to add selected sprites to the BitmapLog window
@@ -24,7 +22,7 @@ class LogBitmap extends Tool
 		super.init(brain);
 		
 		_name = "Log selected bitmaps";
-		setButton(GraphicLogBitmapTool);
+		setButton(Icon.bitmapLog);
 		button.toggleMode = false;
 		
 		// _tooltip = Tooltip.add(null, "");

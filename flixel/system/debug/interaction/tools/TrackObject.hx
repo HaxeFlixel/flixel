@@ -8,12 +8,6 @@ import openfl.display.BitmapData;
 
 using flixel.util.FlxArrayUtil;
 
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/watch.png") #end
-private class Button extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursorCross.png") #end
-private class Cursor extends BitmapData {}
-
 /**
  * A tool to open a tracker for the selected object
  *
@@ -26,10 +20,10 @@ class TrackObject extends Tool
 		super.init(brain);
 		
 		_name = "Track object";
-		setButton(Button);
+		setButton(Icon.watch);
 		button.toggleMode = true;
 		
-		setCursor(new Cursor(0, 0), -5, -5);
+		setCursor(Icon.cross, -5, -5);
 		
 		return this;
 	}
