@@ -5,8 +5,9 @@ import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
-import flixel.FlxObject;
 import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
@@ -15,10 +16,12 @@ import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
+import flixel.system.debug.interaction.tools.LogBitmap;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
 import flixel.system.debug.interaction.tools.Tool;
 import flixel.system.debug.interaction.tools.ToggleBounds;
+import flixel.system.debug.interaction.tools.TrackObject;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
@@ -84,6 +87,7 @@ class Interaction extends Window
 
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
+		_customCursor.mouseChildren = false;
 		_container.addChild(_customCursor);
 
 		// Add all built-in tools
@@ -92,6 +96,8 @@ class Interaction extends Window
 		addTool(new Eraser());
 		addTool(new Transform());
 		addTool(new ToggleBounds());
+		addTool(new LogBitmap());
+		addTool(new TrackObject());
 
 		FlxG.signals.postDraw.add(postDraw);
 		FlxG.debugger.visibilityChanged.add(handleDebuggerVisibilityChanged);
@@ -154,18 +160,23 @@ class Interaction extends Window
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(cast event.target))
+		if (event.type == MouseEvent.MOUSE_DOWN && objectBelongsToDebugger(event.target))
 			return;
-
+		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
 		pointerJustReleased = event.type == MouseEvent.MOUSE_UP;
-
+		
 		if (pointerJustPressed)
 			pointerPressed = true;
 		else if (pointerJustReleased)
 			pointerPressed = false;
 	}
 
+	function objectBelongsToDebugger(object:openfl.utils.Object):Bool
+	{
+		return object is DisplayObject && belongsToDebugger(cast object);
+	}
+	
 	function belongsToDebugger(object:DisplayObject):Bool
 	{
 		if (object == null)
@@ -440,15 +451,17 @@ class Interaction extends Window
 		}
 	}
 
-	public function registerCustomCursor(name:String, icon:BitmapData):Void
+	public function registerCustomCursor(name:String, icon:BitmapData, offsetX = 0.0, offsetY = 0.0):Void
 	{
 		if (icon == null)
 			return;
 
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.registerSimpleNativeCursorData(name, icon);
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(offsetX, offsetY));
 		#else
 		var sprite = new Sprite();
+		sprite.x = offsetX;
+		sprite.y = offsetY;
 		sprite.visible = false;
 		sprite.name = name;
 		sprite.addChild(new Bitmap(icon));
@@ -674,22 +687,22 @@ class Interaction extends Window
 	 * @param   area     A rectangle that describes the area where the method should search within.
 	 */
 	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
-	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		addItemsWithinArea(cast items, members, area);
 	}
 	
-	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
+	function isOverObject(object:FlxObject, area:FlxRect):Bool
 	{
 		return area.overlaps(object.getHitbox(FlxRect.weak()));
 	}
 	
-	inline function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
+	function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
 	{
 		// Ignore sprites' alpha when clicking a point
-		return (area.width <= 1 && area.height <= 1)
-			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
-			: isOverObject(sprite, area);
+		return isOverObject(sprite, area)
+			&& (area.width > 1 || area.height > 1
+				|| sprite.pixelsOverlapPoint(flixelPointer, 0xEE));
 	}
 	
 	/**
@@ -756,7 +769,11 @@ class Interaction extends Window
 			
 			final group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
-				return getTopItemWithinArea(group.members, area);
+			{
+				final result = getTopItemWithinArea(group.members, area);
+				if (result != null)
+					return result;
+			}
 			
 			if (member is FlxSprite)
 			{

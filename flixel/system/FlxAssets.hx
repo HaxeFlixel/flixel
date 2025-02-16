@@ -37,9 +37,15 @@ typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
 typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
-typedef FlxGraphicSource = OneOfThree<BitmapData, Class<Dynamic>, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
+abstract FlxGraphicSource(OneOfThree<BitmapData, Class<Dynamic>, String>) from BitmapData from Class<Dynamic> from String
+{
+	public function resolveBitmapData()
+	{
+		return FlxAssets.resolveBitmapData(cast this);
+	}
+}
 
 abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String from Bytes
 {
@@ -310,7 +316,7 @@ class FlxAssets
 		}
 		else if ((graphic is String))
 		{
-			return FlxG.assets.getBitmapData(graphic);
+			return FlxG.assets.getBitmapData(cast graphic);
 		}
 
 		return null;
@@ -342,7 +348,7 @@ class FlxAssets
 		}
 		else if ((graphic is String))
 		{
-			return graphic;
+			return cast graphic;
 		}
 		
 		return null;
