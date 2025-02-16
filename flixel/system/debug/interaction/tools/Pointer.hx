@@ -81,12 +81,8 @@ class Pointer extends Tool
 		final alt = _brain.keyPressed(Keyboard.ALTERNATE);
 		final shift = _brain.keyPressed(Keyboard.SHIFT);
 		
-		final addSelected = _brain.selectedItems.add;
-		final removeSelected = _brain.selectedItems.remove;
-		inline function wasSelected(o) 
-		{
-			return _brain.selectedItems.members.contains(o);
-		}
+		final selected = _brain.selectedItems;
+		inline function wasSelected(o) return _brain.selectedItems.members.contains(o);
 		
 		switch selection
 		{
@@ -98,36 +94,36 @@ class Pointer extends Tool
 			case TOP(item) if (alt):
 				// Alt-click a single item: remove it
 				if (wasSelected(item))
-					removeSelected(item);
+					selected.remove(item);
 			case TOP(item) if (shift):
 				// Shift-click a single item: toggle it from the selection
 				if (wasSelected(item))
-					removeSelected(item);
+					selected.remove(item);
 				else
-					addSelected(item);
+					selected.add(item);
 			case TOP(item):
 				// Click sigle item: deselect all, select item
 				_brain.clearSelection();
-				addSelected(item);
+				selected.add(item);
 			case ALL(items) if (alt):
 				// Alt-select many items: toggle it from the selection
 				for (item in items)
 				{
 					if (wasSelected(item))
-						removeSelected(item);
+						selected.remove(item);
 				}
 			case ALL(items) if (shift):
 				// Shift-select many items, toggle it from the selection
 				for (item in items)
 				{
 					if (wasSelected(item))
-						addSelected(item);
+						selected.add(item);
 				}
 			case ALL(items):
 				// Normal-select many items: deelect all, select the new
 				_brain.clearSelection();
 				for (item in items)
-					addSelected(item);
+					selected.add(item);
 		}
 		
 		FlxG.console.registerObject("selection", _brain.selectedItems.members);
