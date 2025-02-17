@@ -686,7 +686,7 @@ class Interaction extends Window
 		// Ignore sprites' alpha when clicking a point
 		return (area.width > 1 || area.height > 1)
 			? isOverObject(sprite, area)
-			: sprite.pixelsOverlapPoint(flixelPointer, 0xEE);
+			: sprite.pixelsOverlapPoint(flixelPointer, 0x10);
 	}
 	
 	/**
