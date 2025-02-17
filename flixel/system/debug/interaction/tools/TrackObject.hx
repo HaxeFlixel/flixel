@@ -23,7 +23,7 @@ class TrackObject extends Tool
 		setButton(Icon.watch);
 		button.toggleMode = true;
 		
-		setCursor(Icon.cross, -5, -5);
+		setCursor(Icon.watch, -5, -5);
 		
 		return this;
 	}
