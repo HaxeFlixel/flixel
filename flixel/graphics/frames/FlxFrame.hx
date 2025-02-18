@@ -762,22 +762,22 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 	inline function get_bottom():Float { return this.height; }
 	inline function set_bottom(value):Float { return this.height = value; }
 	
-	inline public function set(l, t, r, b)
+	public inline function set(l, t, r, b)
 	{
 		this.set(l, t, r, b);
 	}
 	
-	inline public function copyTo(uv:FlxUVRect)
+	public inline function copyTo(uv:FlxUVRect)
 	{
 		uv.set(left, top, right, bottom);
 	}
 	
-	inline public function copyFrom(uv:FlxUVRect)
+	public inline function copyFrom(uv:FlxUVRect)
 	{
 		set(uv.left, uv.top, uv.right, uv.bottom);
 	}
 	
-	static public function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
+	public static function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
 	{
 		return FlxRect.get(l, t, r, b);
 	}
