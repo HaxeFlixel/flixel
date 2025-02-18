@@ -774,4 +774,14 @@ class Interaction extends Window
 		}
 		return null;
 	}
+	
+	public function toDebugX(worldX:Float, camera:FlxCamera)
+	{
+		return camera.canvas.localToGlobal(new Point(worldX, 0)).x;
+	}
+	
+	public function toDebugY(worldY:Float, camera:FlxCamera)
+	{
+		return camera.canvas.localToGlobal(new Point(0, worldY)).y;
+	}
 }

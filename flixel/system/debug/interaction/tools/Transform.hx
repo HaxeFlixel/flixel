@@ -107,7 +107,10 @@ class Transform extends Tool
 		
 		state = TRANSFORM(target, action, _brain.flixelPointer.x, _brain.flixelPointer.y);
 		
-		tooltip.show(target);
+		final camera = target.getDefaultCamera();
+		this.x = _brain.toDebugX(target.x + target.origin.x, camera);
+		this.y = _brain.toDebugY(target.y + target.origin.y, camera);
+		tooltip.show(x, y);
 	}
 	
 	function checkMarkers():Void
@@ -260,15 +263,6 @@ class Transform extends Tool
 	}
 }
 
-private function toDebugX(worldX:Float, camera:FlxCamera)
-{
-	return FlxG.game.debugger.globalToLocal(camera.canvas.localToGlobal(new Point(worldX, 0))).x;
-}
-
-private function toDebugY(worldY:Float, camera:FlxCamera)
-{
-	return FlxG.game.debugger.globalToLocal(camera.canvas.localToGlobal(new Point(0, worldY))).y;
-}
 private class Marker
 {
 	public static inline var MOUSE_RADIUS = 10;
@@ -324,13 +318,11 @@ private abstract TransformTooltip(TooltipOverlay) to TooltipOverlay
 		this.visible = false;
 	}
 	
-	public function show(target:FlxSprite)
+	public function show(x:Float, y:Float)
 	{
 		this.setVisible(true);
-		final camera = target.getDefaultCamera();
-		final canvas = camera.canvas;
-		this.x = camera.x + toDebugX(target.x + target.origin.x, camera);
-		this.y = camera.y + toDebugY(target.y + target.origin.y, camera);
+		this.x = x;
+		this.y = y;
 	}
 	
 	public inline function hide()
