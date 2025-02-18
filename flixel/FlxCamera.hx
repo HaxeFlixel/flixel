@@ -1016,8 +1016,13 @@ class FlxCamera extends FlxBasic
 			zoom = defaultZoom;
 		
 		// Use the game dimensions if width / height are <= 0
-		this.width = width <= 0 ? Math.ceil(FlxG.width / zoom) : width;
-		this.height = height <= 0 ? Math.ceil(FlxG.height / zoom) : height;
+		if (width <= 0)
+			width = Math.ceil(FlxG.width / zoom);
+		if (height <= 0)
+			height = Math.ceil(FlxG.height / zoom);
+		
+		this.width = width;
+		this.height = height;
 		_flashRect = new Rectangle(0, 0, width, height);
 
 		flashSprite.addChild(_scrollRect);
