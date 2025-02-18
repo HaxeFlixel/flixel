@@ -50,9 +50,6 @@ class ScrollSprite extends Sprite
 	
 	function onMouseScroll(e:MouseEvent)
 	{
-		FlxG.watch.addQuick("mouseX", mouseX);
-		FlxG.watch.addQuick("mouseY", mouseY);
-		FlxG.watch.addQuick("scroll", scroll);
 		if (mouseX > 0 && mouseX < scroll.width && mouseY - scroll.y > 0 && mouseY - scroll.y < scroll.height)
 		{
 			scroll.y -= e.delta;
@@ -172,9 +169,7 @@ class ScrollBar extends Sprite
 			if (state != IDLE)
 				throw "expected state: IDLE";
 			
-			final localY = getLocalY(e.stageY);
-			FlxG.watch.addQuick('drag offset', localY - handle.y);
-			state = DRAG_HANDLE(localY - handle.y);
+			state = DRAG_HANDLE(getLocalY(e.stageY) - handle.y);
 		}
 		else
 			state = IDLE;
@@ -193,8 +188,6 @@ class ScrollBar extends Sprite
 	function mouseMoveHelper(stageY:Float)
 	{
 		final localY = getLocalY(stageY);
-		FlxG.watch.addQuick('scrollbar', 'stageY: $stageY, localY: $localY, height: ${bg.height}');
-		
 		switch state
 		{
 			case IDLE:

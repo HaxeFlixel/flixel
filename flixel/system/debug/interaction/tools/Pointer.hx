@@ -70,7 +70,6 @@ class Pointer extends Tool
 					state = IDLE;
 				}
 		}
-		FlxG.watch.addQuick('pointer.state', state);
 	}
 	
 	function updateSelected(selection:Selection)
