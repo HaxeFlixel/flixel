@@ -441,7 +441,7 @@ class Interaction extends Window
 			return;
 
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(offsetX, offsetY));
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(-offsetX, -offsetY));
 		#else
 		var sprite = new Sprite();
 		sprite.x = offsetX;
@@ -777,11 +777,19 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
-		return camera.canvas.localToGlobal(new Point(worldX, 0)).x;
+		if (FlxG.renderTile)
+			return camera.canvas.localToGlobal(new Point(worldX, 0)).x;
+		else
+			@:privateAccess
+			return camera._flashBitmap.localToGlobal(new Point(worldX, 0)).x;
 	}
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
-		return camera.canvas.localToGlobal(new Point(0, worldY)).y;
+		if (FlxG.renderTile)
+			return camera.canvas.localToGlobal(new Point(0, worldY)).y;
+		else
+			@:privateAccess
+			return camera._flashBitmap.localToGlobal(new Point(0, worldY)).y;
 	}
 }

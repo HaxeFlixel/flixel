@@ -393,6 +393,8 @@ class FlxMouse extends FlxPointer implements IFlxInputManager
 		
 		if(hotSpot == null)
 			hotSpot = new Point();
+		else if (hotSpot.x < 0 || hotSpot.y < 0 || hotSpot.x > cursorBitmap.width || hotSpot.y > cursorBitmap.height)
+			throw 'Invalid hotSpot: $hotSpot';
 		
 		var cursorData = new MouseCursorData();
 		cursorData.hotSpot = hotSpot;
