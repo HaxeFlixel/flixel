@@ -105,10 +105,8 @@ class FlxFrame implements IFlxDestroyable
 
 	/**
 	 * UV coordinates for this frame.
-	 * WARNING: For optimization purposes, width and height of this rect
-	 * contain right and bottom coordinates (`x + width` and `y + height`).
 	 */
-	public var uv:FlxRect;
+	public var uv:FlxUVRect;
 
 	public var parent:FlxGraphic;
 
@@ -683,6 +681,7 @@ class FlxFrame implements IFlxDestroyable
 		clone.frame = FlxRect.get().copyFrom(frame);
 		clone.type = type;
 		clone.name = name;
+		clone.duration = duration;
 		clone.cacheFrameMatrix();
 		return clone;
 	}
@@ -709,7 +708,7 @@ class FlxFrame implements IFlxDestroyable
 		if (value != null)
 		{
 			if (uv == null)
-				uv = FlxRect.get();
+				uv = FlxUVRect.get();
 
 			uv.set(value.x / parent.width, value.y / parent.height, value.right / parent.width, value.bottom / parent.height);
 		}
@@ -735,4 +734,51 @@ enum abstract FlxFrameAngle(Int) from Int to Int
 	var ANGLE_90 = 90;
 	var ANGLE_NEG_90 = -90;
 	var ANGLE_270 = -90;
+}
+
+/**
+ * FlxRect, but instead of `x`, `y`, `width` and `height`, it takes a `left`, `right`, `top` and
+ * `bottom`. This is for optimization reasons, to reduce arithmetic when drawing vertices
+ */
+@:forward(put)
+abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
+{
+	public var left(get, set):Float;
+	inline function get_left():Float { return this.x; }
+	inline function set_left(value):Float { return this.x = value; }
+	
+	/** Top */
+	public var right(get, set):Float;
+	inline function get_right():Float { return this.y; }
+	inline function set_right(value):Float { return this.y = value; }
+	
+	/** Right */
+	public var top(get, set):Float;
+	inline function get_top():Float { return this.width; }
+	inline function set_top(value):Float { return this.width = value; }
+	
+	/** Bottom */
+	public var bottom(get, set):Float;
+	inline function get_bottom():Float { return this.height; }
+	inline function set_bottom(value):Float { return this.height = value; }
+	
+	inline public function set(l, t, r, b)
+	{
+		this.set(l, t, r, b);
+	}
+	
+	inline public function copyTo(uv:FlxUVRect)
+	{
+		uv.set(left, top, right, bottom);
+	}
+	
+	inline public function copyFrom(uv:FlxUVRect)
+	{
+		set(uv.left, uv.top, uv.right, uv.bottom);
+	}
+	
+	static public function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
+	{
+		return FlxRect.get(l, t, r, b);
+	}
 }
