@@ -50,12 +50,12 @@ class Transform extends Tool
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
 	
-	final markers = [
-		new Marker(ROTATE, true, true),
-		new Marker(SCALE_X, false, true),
-		new Marker(SCALE_XY, false, false),
-		new Marker(SCALE_Y, true, false)
-	];
+	// final markers = [
+	// 	new Marker(ROTATE, true, true),
+	// 	new Marker(SCALE_X, false, true),
+	// 	new Marker(SCALE_XY, false, false),
+	// 	new Marker(SCALE_Y, true, false)
+	// ];
 
 	override public function init(brain:Interaction):Tool
 	{
