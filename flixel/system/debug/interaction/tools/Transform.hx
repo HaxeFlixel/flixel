@@ -70,7 +70,7 @@ class Transform extends Tool
 		brain.registerCustomCursor(CURSOR_SCALE_Y, Icon.scaleY, -5, -5);
 		brain.registerCustomCursor(CURSOR_SCALE_XY, Icon.scaleXY, -5, -5);
 
-		_tooltip = new TransformTooltip());
+		_tooltip = new TransformTooltip();
 
 		for (i in 0...4)
 			_markers.push(new FlxPoint());
