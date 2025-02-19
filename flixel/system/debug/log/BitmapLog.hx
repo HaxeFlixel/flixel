@@ -27,17 +27,17 @@ using flixel.util.FlxBitmapDataUtil;
  */
 class BitmapLog extends Window
 {
-	public var zoom(default, set):Float = 1;
+	public var zoom:Float = 1;
 
 	final entries = new Array<BitmapLogEntry>();
 	final canvas:Bitmap;
 	final header:Header;
 	final footer:Footer;
 	final buttonRemove:FlxSystemButton;
+	final canvasOffset = FlxPoint.get();
+	final lastMouse = FlxPoint.get();
 	
 	var index:Int = -1;
-	var lastMousePos:FlxPoint = FlxPoint.get();
-	var curMouseOffset:FlxPoint = FlxPoint.get();
 	var middleMouseDown:Bool = false;
 	
 	public function new()
@@ -112,10 +112,9 @@ class BitmapLog extends Window
 	{
 		if (middleMouseDown)
 		{
-			var delta = FlxPoint.get(mouseX, mouseY);
-			curMouseOffset.add(delta.subtract(lastMousePos));
+			canvasOffset.add(mouseX - lastMouse.x, mouseY - lastMouse.y);
 			drawCanvas();
-			lastMousePos.set(mouseX, mouseY);
+			lastMouse.set(mouseX, mouseY);
 		}
 	}
 
@@ -169,7 +168,7 @@ class BitmapLog extends Window
 	inline function resetSettings():Void
 	{
 		zoom = 1;
-		curMouseOffset.set();
+		canvasOffset.set();
 	}
 	
 	function indexOf(bitmap:BitmapData)
@@ -273,7 +272,7 @@ class BitmapLog extends Window
 		point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
 		point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
 		
-		point.add(curMouseOffset);
+		point.add(canvasOffset);
 		
 		final matrix = new Matrix();
 		matrix.identity();
@@ -298,7 +297,7 @@ class BitmapLog extends Window
 		if (this.index < 0)
 			header.clear();
 		
-		zoom = 1.0;
+		resetSettings();
 		drawCanvas();
 		return true;
 	}
@@ -328,28 +327,19 @@ class BitmapLog extends Window
 
 	function onMouseWheel(e:MouseEvent):Void
 	{
-		zoom += FlxMath.signOf(e.delta) * 0.25 * zoom;
+		zoom = Math.max(0.01, zoom + FlxMath.signOf(e.delta) * 0.25);
 		drawCanvas();
 	}
 
 	function onMiddleDown(e:MouseEvent):Void
 	{
 		middleMouseDown = true;
-		lastMousePos.set(mouseX, mouseY);
+		lastMouse.set(mouseX, mouseY);
 	}
 
 	function onMiddleUp(e:MouseEvent):Void
 	{
 		middleMouseDown = false;
-	}
-
-	function set_zoom(Value:Float):Float
-	{
-		if (Value < 0)
-		{
-			Value = 0;
-		}
-		return zoom = Value;
 	}
 }
 
