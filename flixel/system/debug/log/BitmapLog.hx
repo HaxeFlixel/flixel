@@ -132,7 +132,7 @@ class BitmapLog extends Window
 		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
 		final canvasWidth = Std.int(_width - canvas.x);
-		final canvasHeight = Std.int(_height - canvas.y - footer.height);
+		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
 		
 		if (canvasWidth > 0 && canvasHeight > 0)
 		{
@@ -143,7 +143,7 @@ class BitmapLog extends Window
 		buttonRemove.x = _width - buttonRemove.width - 3;
 		
 		header.resize(_width - 5);
-		footer.y = _height - footer.height;
+		footer.y = _height - footer.getHeight();
 		footer.resize(_width);
 	}
 
@@ -404,7 +404,8 @@ class Header extends Sprite
 		dimensions.visible = width > 200;
 	}
 	
-	override function get_height() return Window.HEADER_HEIGHT;
+	// Note: get_height doesn't work in flash
+	public function getHeight() return Window.HEADER_HEIGHT;
 }
 
 class Footer extends Sprite
@@ -436,6 +437,7 @@ class Footer extends Sprite
 		bg.width = width;
 	}
 	
-	override function get_height() return Window.HEADER_HEIGHT;
+	// Note: get_height doesn't work in flash
+	public function getHeight() return Window.HEADER_HEIGHT;
 }
 #end
