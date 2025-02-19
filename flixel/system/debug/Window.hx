@@ -389,8 +389,8 @@ class Window extends Sprite
 			if (_alwaysOnTop)
 				putOnTop();
 			_resizing = true;
-			_drag.x = _width - mouseX;
-			_drag.y = _height - mouseY;
+			_drag.x = mouseX - _width;
+			_drag.y = mouseY - _height;
 		}
 	}
 
