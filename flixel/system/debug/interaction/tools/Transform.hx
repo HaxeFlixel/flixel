@@ -286,32 +286,32 @@ class Transform extends Tool
 
 	function drawMarkers(gfx:Graphics):Void
 	{
-		// gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		// gfx.beginFill(FlxColor.MAGENTA);
-		// for (i in 0..._markers.length)
-		// 	if (i == MARKER_ROTATE)
-		// 		// Rotation marker
-		// 		gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
-		// 	else
-		// 		// Scale marker
-		// 		gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
-		// gfx.endFill();
+		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		gfx.beginFill(FlxColor.MAGENTA);
+		for (i in 0..._markers.length)
+			if (i == MARKER_ROTATE)
+				// Rotation marker
+				gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
+			else
+				// Scale marker
+				gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
+		gfx.endFill();
 		
 		
-		gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		// gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
 		
-		// draw lines
-		gfx.moveTo(markers[3].x, markers[3].y);
-		for (marker in markers)
-			gfx.lineTo(marker.x, marker.y);
+		// // draw lines
+		// gfx.moveTo(markers[3].x, markers[3].y);
+		// for (marker in markers)
+		// 	gfx.lineTo(marker.x, marker.y);
 		
-		// draw markers
-		for (marker in markers)
-		{
-			final x = marker.x;
-			final y = marker.y;
-			// Marker.draw(x, y, marker.type == ROTATE, gfx);
-		}
+		// // draw markers
+		// for (marker in markers)
+		// {
+		// 	final x = marker.x;
+		// 	final y = marker.y;
+		// 	// Marker.draw(x, y, marker.type == ROTATE, gfx);
+		// }
 	}
 
 	override public function draw():Void
