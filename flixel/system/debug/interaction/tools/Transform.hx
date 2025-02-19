@@ -296,22 +296,6 @@ class Transform extends Tool
 				// Scale marker
 				gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
 		gfx.endFill();
-		
-		
-		// gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		
-		// // draw lines
-		// gfx.moveTo(markers[3].x, markers[3].y);
-		// for (marker in markers)
-		// 	gfx.lineTo(marker.x, marker.y);
-		
-		// // draw markers
-		// for (marker in markers)
-		// {
-		// 	final x = marker.x;
-		// 	final y = marker.y;
-		// 	// Marker.draw(x, y, marker.type == ROTATE, gfx);
-		// }
 	}
 
 	override public function draw():Void
@@ -344,8 +328,8 @@ class Transform extends Tool
 				// elements at once requires some further thoughts and love.
 				_target = cast member;
 				
-				for (marker in markers)
-					marker.reposition(_target);
+				// for (marker in markers)
+				// 	marker.reposition(_target);
 					
 				break;
 			}
