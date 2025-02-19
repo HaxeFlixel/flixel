@@ -348,7 +348,6 @@ typedef BitmapLogEntry =
 	bitmap:BitmapData,
 	name:String
 }
-#end
 
 class Header extends Sprite
 {
@@ -439,3 +438,4 @@ class Footer extends Sprite
 	
 	override function get_height() return Window.HEADER_HEIGHT;
 }
+#end
