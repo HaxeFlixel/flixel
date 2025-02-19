@@ -604,93 +604,93 @@ class Transform extends Tool
 // 	}
 // }
 
-// private class Marker
-// {
-// 	public static inline var MOUSE_RADIUS = 10;
+private class Marker
+{
+	public static inline var MOUSE_RADIUS = 10;
 	
-// 	static inline var BUFFER = 2;
-// 	static inline var CIRCLE_RADIUS = 5;
-// 	static inline var RECT_MARGIN = 2;
-// 	static inline var RECT_SIZE = RECT_MARGIN * 2 + 1;
+	static inline var BUFFER = 2;
+	static inline var CIRCLE_RADIUS = 5;
+	static inline var RECT_MARGIN = 2;
+	static inline var RECT_SIZE = RECT_MARGIN * 2 + 1;
 	
-// 	public var x:Float = 0;
-// 	public var y:Float = 0;
-// 	public final type:TransformType;
-// 	public final left:Bool;
-// 	public final up:Bool;
+	public var x:Float = 0;
+	public var y:Float = 0;
+	public final type:TransformType;
+	public final left:Bool;
+	public final up:Bool;
 	
-// 	public function new (type:TransformType, left:Bool, up:Bool)
-// 	{
-// 		this.type = type;
-// 		this.left = left;
-// 		this.up = up;
-// 	}
+	public function new (type:TransformType, left:Bool, up:Bool)
+	{
+		this.type = type;
+		this.left = left;
+		this.up = up;
+	}
 	
-// 	public function reposition(target:FlxSprite)
-// 	{
-// 		final w = target.frameWidth * target.scale.x * 0.5;
-// 		final h = target.frameHeight * target.scale.y * 0.5;
-// 		final rot = FlxPoint.get((left ? -w : w), (up ? -h : h));
-// 		rot.degrees += target.angle;
-// 		rot.length += BUFFER;
-// 		x = target.x + target.origin.x + rot.x;
-// 		y = target.y + target.origin.y + rot.y;
-// 		rot.put();
-// 	}
+	public function reposition(target:FlxSprite)
+	{
+		final w = target.frameWidth * target.scale.x * 0.5;
+		final h = target.frameHeight * target.scale.y * 0.5;
+		final rot = FlxPoint.get((left ? -w : w), (up ? -h : h));
+		rot.degrees += target.angle;
+		rot.length += BUFFER;
+		x = target.x + target.origin.x + rot.x;
+		y = target.y + target.origin.y + rot.y;
+		rot.put();
+	}
 	
-// 	public static function draw(screenX:Float, screenY:Float, circle:Bool, gfx:Graphics)
-// 	{
-// 		gfx.beginFill(FlxColor.MAGENTA);
-// 		if (circle)
-// 			gfx.drawCircle(screenX, screenY, CIRCLE_RADIUS);
-// 		else
-// 			gfx.drawRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE);
-// 		gfx.endFill();
-// 	}
-// }
+	public static function draw(screenX:Float, screenY:Float, circle:Bool, gfx:Graphics)
+	{
+		gfx.beginFill(FlxColor.MAGENTA);
+		if (circle)
+			gfx.drawCircle(screenX, screenY, CIRCLE_RADIUS);
+		else
+			gfx.drawRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE);
+		gfx.endFill();
+	}
+}
 
-// @:forward(setText)
-// private abstract TransformTooltip(TooltipOverlay) to TooltipOverlay
-// {
-// 	public inline function new ()
-// 	{
-// 		this = Tooltip.add(null, "");
-// 		this.textField.wordWrap = false;
-// 		this.visible = false;
-// 	}
+@:forward(setText)
+private abstract TransformTooltip(TooltipOverlay) to TooltipOverlay
+{
+	public inline function new ()
+	{
+		this = Tooltip.add(null, "");
+		this.textField.wordWrap = false;
+		this.visible = false;
+	}
 	
-// 	public function show(x:Float, y:Float)
-// 	{
-// 		this.setVisible(true);
-// 		this.x = x;
-// 		this.y = y;
-// 	}
+	public function show(x:Float, y:Float)
+	{
+		this.setVisible(true);
+		this.x = x;
+		this.y = y;
+	}
 	
-// 	public inline function hide()
-// 	{
-// 		this.setVisible(false);
-// 	}
-// }
+	public inline function hide()
+	{
+		this.setVisible(false);
+	}
+}
 
-// private enum abstract TransformType(String) to String
-// {
-// 	var ROTATE = "transformRotate";
-// 	var SCALE_X = "transformScaleX";
-// 	var SCALE_Y = "transformScaleY";
-// 	var SCALE_XY = "transformScaleXY";
-// }
+private enum abstract TransformType(String) to String
+{
+	var ROTATE = "transformRotate";
+	var SCALE_X = "transformScaleX";
+	var SCALE_Y = "transformScaleY";
+	var SCALE_XY = "transformScaleXY";
+}
 
-// private enum State
-// {
-// 	IDLE;
-// 	SELECTED(target:FlxSprite);
-// 	TRANSFORM(target:FlxSprite, action:TransformAction, startMouseX:Float, startMouseY:Float);
-// }
+private enum State
+{
+	IDLE;
+	SELECTED(target:FlxSprite);
+	TRANSFORM(target:FlxSprite, action:TransformAction, startMouseX:Float, startMouseY:Float);
+}
 
-// private enum TransformAction
-// {
-// 	SET_ANGLE(start:Float);
-// 	SET_SCALE_X(start:Float);
-// 	SET_SCALE_Y(start:Float);
-// 	SET_SCALE_XY(startX:Float, startY:Float);
-// }
+private enum TransformAction
+{
+	SET_ANGLE(start:Float);
+	SET_SCALE_X(start:Float);
+	SET_SCALE_Y(start:Float);
+	SET_SCALE_XY(startX:Float, startY:Float);
+}
