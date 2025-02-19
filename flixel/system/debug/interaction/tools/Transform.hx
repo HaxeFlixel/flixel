@@ -50,7 +50,7 @@ class Transform extends Tool
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
 	
-	var markers:Array<Markers> = [];
+	var markers:Array<Marker> = [];
 	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
