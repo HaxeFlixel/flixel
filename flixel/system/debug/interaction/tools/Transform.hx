@@ -44,11 +44,18 @@ class Transform extends Tool
 	var _actionHappening:Bool;
 	var _actionMarker:Int;
 	var _actionScaleDirection:FlxPoint = new FlxPoint();
-	var _tooltip:TooltipOverlay;
+	var _tooltip:TransformTooltip;
 	var _markers:Array<FlxPoint> = [];
 	var _target:FlxSprite;
 	var _targetArea:FlxRect = new FlxRect();
 	var _mouseCursor:FlxPoint = new FlxPoint();
+	
+	final markers = [
+		new Marker(ROTATE, true, true),
+		new Marker(SCALE_X, false, true),
+		new Marker(SCALE_XY, false, false),
+		new Marker(SCALE_Y, true, false)
+	];
 
 	override public function init(brain:Interaction):Tool
 	{
@@ -63,8 +70,7 @@ class Transform extends Tool
 		brain.registerCustomCursor(CURSOR_SCALE_Y, Icon.scaleY, -5, -5);
 		brain.registerCustomCursor(CURSOR_SCALE_XY, Icon.scaleXY, -5, -5);
 
-		_tooltip = Tooltip.add(null, "");
-		_tooltip.textField.wordWrap = false;
+		_tooltip = new TransformTooltip();
 
 		for (i in 0...4)
 			_markers.push(new FlxPoint());
@@ -112,7 +118,7 @@ class Transform extends Tool
 	{
 		_actionHappening = false;
 		_actionMarker = -1;
-		_tooltip.setVisible(false);
+		_tooltip.hide();
 	}
 
 	function getCursorNameByMarker(marker:Int):String
@@ -163,11 +169,7 @@ class Transform extends Tool
 
 	function showTooltip(text:String):Void
 	{
-		if (!_tooltip.visible)
-			_tooltip.setVisible(true);
-
-		_tooltip.x = _target.x - FlxG.camera.scroll.x;
-		_tooltip.y = _target.y - FlxG.camera.scroll.y;
+		_tooltip.show(_target.x - FlxG.camera.scroll.x, _target.y - FlxG.camera.scroll.y);
 		_tooltip.setText(text);
 	}
 
@@ -284,16 +286,32 @@ class Transform extends Tool
 
 	function drawMarkers(gfx:Graphics):Void
 	{
-		gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		gfx.beginFill(FlxColor.MAGENTA);
-		for (i in 0..._markers.length)
-			if (i == MARKER_ROTATE)
-				// Rotation marker
-				gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
-			else
-				// Scale marker
-				gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
-		gfx.endFill();
+		// gfx.lineStyle(0.9, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		// gfx.beginFill(FlxColor.MAGENTA);
+		// for (i in 0..._markers.length)
+		// 	if (i == MARKER_ROTATE)
+		// 		// Rotation marker
+		// 		gfx.drawCircle(_markers[i].x, _markers[i].y, MARKER_SIZE * 0.9);
+		// 	else
+		// 		// Scale marker
+		// 		gfx.drawRect(_markers[i].x - MARKER_SIZE / 2, _markers[i].y - MARKER_SIZE / 2, MARKER_SIZE, MARKER_SIZE);
+		// gfx.endFill();
+		
+		
+		gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
+		
+		// draw lines
+		gfx.moveTo(markers[3].x, markers[3].y);
+		for (marker in markers)
+			gfx.lineTo(marker.x, marker.y);
+		
+		// draw markers
+		for (marker in markers)
+		{
+			final x = marker.x;
+			final y = marker.y;
+			Marker.draw(x, y, marker.type == ROTATE, gfx);
+		}
 	}
 
 	override public function draw():Void
@@ -325,6 +343,10 @@ class Transform extends Tool
 				// Allow only a single element to be worked on. Working with multiple
 				// elements at once requires some further thoughts and love.
 				_target = cast member;
+				
+				for (marker in markers)
+					marker.reposition(_target);
+					
 				break;
 			}
 		}
