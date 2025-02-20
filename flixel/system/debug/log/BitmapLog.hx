@@ -69,15 +69,15 @@ class BitmapLog extends Window
 		
 	// 	setVisible(false);
 		
-	// 	#if FLX_MOUSE
-	// 	addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-	// 	#if FLX_MOUSE_ADVANCED
-	// 	addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
-	// 	addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
-	// 	#end
-	// 	#end
+		#if FLX_MOUSE
+		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#if FLX_MOUSE_ADVANCED
+		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
+		#end
+		#end
 		
-	// 	FlxG.signals.preStateSwitch.add(clear);
+		FlxG.signals.preStateSwitch.add(clear);
 		
 	// 	// place the handle on top
 	// 	removeChild(_handle);
@@ -96,33 +96,33 @@ class BitmapLog extends Window
 	// 	clear();
 	
 	// 	removeChild(canvas);
-	// 	canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
-	// 	entries.resize(0);
+		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		entries.resize(0);
 	
-	// 	removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-	// 	#if FLX_MOUSE_ADVANCED
-	// 	removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
-	// 	removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
-	// 	#end
+		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		#if FLX_MOUSE_ADVANCED
+		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
+		#end
 	
-	// 	FlxG.signals.preStateSwitch.remove(clear);
+		FlxG.signals.preStateSwitch.remove(clear);
 	}
 	
 	override function update():Void
 	{
 		super.update();
-	// 	if (middleMouseDown)
-	// 	{
+		if (middleMouseDown)
+		{
 	// 		canvasOffset.add(mouseX - lastMouse.x, mouseY - lastMouse.y);
-	// 		drawCanvas();
+			drawCanvas();
 	// 		lastMouse.set(mouseX, mouseY);
-	// 	}
+		}
 	}
 	
 	override function updateSize():Void
 	{
 		super.updateSize();
-	// 	// account for the footer
+		// account for the footer
 	// 	_background.scaleY = _height - _header.height * 2;
 	}
 	
@@ -130,16 +130,16 @@ class BitmapLog extends Window
 	{
 		super.resize(width, height);
 		
-	// 	canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
-	// 	final canvasWidth = Std.int(_width - canvas.x);
-	// 	final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
+		final canvasWidth = Std.int(_width - canvas.x);
+		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
 		
-	// 	if (canvasWidth > 0 && canvasHeight > 0)
-	// 	{
-	// 		canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
-	// 		drawCanvas();
-	// 	}
+		if (canvasWidth > 0 && canvasHeight > 0)
+		{
+			canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
+			drawCanvas();
+		}
 		
 	// 	buttonRemove.x = _width - buttonRemove.width - 3;
 		
@@ -153,8 +153,8 @@ class BitmapLog extends Window
 	 */
 	inline function next()
 	{
-	// 	resetSettings();
-	// 	setIndex(index + 1);
+		resetSettings();
+		setIndex(index + 1);
 	}
 	
 	/**
@@ -162,8 +162,8 @@ class BitmapLog extends Window
 	 */
 	inline function previous()
 	{
-	// 	resetSettings();
-	// 	setIndex(index - 1);
+		resetSettings();
+		setIndex(index - 1);
 	}
 	
 	inline function resetSettings()
@@ -207,10 +207,10 @@ class BitmapLog extends Window
 	//  */
 	public function add(bitmap:BitmapData, name:String = ""):Bool
 	{
-	// 	if (bitmap == null)
-	// 		return false;
+		if (bitmap == null)
+			return false;
 		
-	// 	setVisible(true);
+		setVisible(true);
 		
 	// 	final entry = entryOf(bitmap);
 	// 	if (entry != null && entry.name == name)
@@ -223,14 +223,14 @@ class BitmapLog extends Window
 	
 	public function remove(bitmap:BitmapData)
 	{
-	// 	final index = indexOf(bitmap);
-	// 	if (index != -1)
-	// 		clearAt(index);
+		final index = indexOf(bitmap);
+		if (index != -1)
+			clearAt(index);
 	}
 	
 	function removeCurrent()
 	{
-	// 	clearAt(index);
+		clearAt(index);
 	}
 	
 	/**
@@ -251,21 +251,21 @@ class BitmapLog extends Window
 	
 	public function clear():Void
 	{
-	// 	entries.resize(0);
-	// 	drawCanvas();
+		entries.resize(0);
+		drawCanvas();
 	}
 	
 	function drawCanvas()
 	{
-	// 	final canvasBmd = canvas.bitmapData;
+		final canvasBmd = canvas.bitmapData;
 		
-	// 	if (index < 0)
-	// 	{
-	// 		// wiping transparent doesn't work for some reason
-	// 		canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
-	// 		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
-	// 		return;
-	// 	}
+		if (index < 0)
+		{
+			// wiping transparent doesn't work for some reason
+			canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
+			canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+			return;
+		}
 		
 	// 	final bitmap = entries[index].bitmap;
 	// 	// find the window center
@@ -281,7 +281,7 @@ class BitmapLog extends Window
 	// 	matrix.translate(point.x, point.y);
 	// 	point.put();
 		
-	// 	canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
 	// 	canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
 		
 	// 	drawBoundingBox(bitmap);
@@ -293,54 +293,54 @@ class BitmapLog extends Window
 	
 	function setIndex(index:Int):Bool
 	{
-	// 	this.index = validIndex(index);
+		this.index = validIndex(index);
 		
 	// 	if (this.index < 0)
 	// 		header.clear();
 		
-	// 	resetSettings();
-	// 	drawCanvas();
+		resetSettings();
+		drawCanvas();
 		return true;
 	}
 	
 	function validIndex(index:Int)
 	{
-	// 	if (entries.length == 0)
-	// 		return -1;
+		if (entries.length == 0)
+			return -1;
 		
-	// 	if (index < 0)
-	// 		return entries.length - 1;
+		if (index < 0)
+			return entries.length - 1;
 		
-	// 	if (index >= entries.length)
-	// 		return 0;
+		if (index >= entries.length)
+			return 0;
 		
 		return index;
 	}
 	
 	function drawBoundingBox(bitmap:BitmapData):Void
 	{
-	// 	var gfx:Graphics = FlxSpriteUtil.flashGfx;
-	// 	gfx.clear();
-	// 	gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
-	// 	var offset = 1 / zoom;
-	// 	gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
+		var gfx:Graphics = FlxSpriteUtil.flashGfx;
+		gfx.clear();
+		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
+		var offset = 1 / zoom;
+		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
 	}
 	
 	function onMouseWheel(e:MouseEvent):Void
 	{
-	// 	zoom = Math.max(0.01, zoom + FlxMath.signOf(e.delta) * 0.25);
-	// 	drawCanvas();
+		zoom = Math.max(0.01, zoom + FlxMath.signOf(e.delta) * 0.25);
+		drawCanvas();
 	}
 	
 	function onMiddleDown(e:MouseEvent):Void
 	{
-	// 	middleMouseDown = true;
-	// 	lastMouse.set(mouseX, mouseY);
+		middleMouseDown = true;
+		lastMouse.set(mouseX, mouseY);
 	}
 	
 	function onMiddleUp(e:MouseEvent):Void
 	{
-	// 	middleMouseDown = false;
+		middleMouseDown = false;
 	}
 }
 
