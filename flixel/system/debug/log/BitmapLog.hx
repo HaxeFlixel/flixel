@@ -27,63 +27,63 @@ using flixel.util.FlxBitmapDataUtil;
  */
 class BitmapLog extends Window
 {
-	public var zoom:Float = 1;
+	// public var zoom:Float = 1;
 
-	final entries = new Array<BitmapLogEntry>();
-	final canvas:Bitmap;
-	final header:Header;
-	final footer:Footer;
-	final buttonRemove:FlxSystemButton;
-	final canvasOffset = FlxPoint.get();
-	final lastMouse = FlxPoint.get();
+	// final entries = new Array<BitmapLogEntry>();
+	// final canvas:Bitmap;
+	// final header:Header;
+	// final footer:Footer;
+	// final buttonRemove:FlxSystemButton;
+	// final canvasOffset = FlxPoint.get();
+	// final lastMouse = FlxPoint.get();
 	
-	var index:Int = -1;
-	var middleMouseDown:Bool = false;
+	// var index:Int = -1;
+	// var middleMouseDown:Bool = false;
 	
 	public function new()
 	{
 		super("BitmapLog", Icon.bitmapLog);
 		
-		minSize.x = 165;
-		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
+	// 	minSize.x = 165;
+	// 	minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
-		canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
-		canvas.x = 0;
-		canvas.y = 15;
-		addChild(canvas);
+	// 	canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
+	// 	canvas.x = 0;
+	// 	canvas.y = 15;
+	// 	addChild(canvas);
 		
-		buttonRemove = new FlxSystemButton(Icon.close, removeCurrent);
-		buttonRemove.x = width - buttonRemove.width - 3;
-		buttonRemove.y = Window.HEADER_HEIGHT + 3;
-		addChild(buttonRemove);
+	// 	buttonRemove = new FlxSystemButton(Icon.close, removeCurrent);
+	// 	buttonRemove.x = width - buttonRemove.width - 3;
+	// 	buttonRemove.y = Window.HEADER_HEIGHT + 3;
+	// 	addChild(buttonRemove);
 		
-		header = new Header();
-		header.y = 2;
-		header.onPrev.add(()->setIndex(index - 1));
-		header.onNext.add(()->setIndex(index + 1));
-		header.onReset.add(resetSettings);
-		addChild(header);
+	// 	header = new Header();
+	// 	header.y = 2;
+	// 	header.onPrev.add(()->setIndex(index - 1));
+	// 	header.onNext.add(()->setIndex(index + 1));
+	// 	header.onReset.add(resetSettings);
+	// 	addChild(header);
 		
-		footer = new Footer();
-		addChild(footer);
+	// 	footer = new Footer();
+	// 	addChild(footer);
 		
-		setVisible(false);
+	// 	setVisible(false);
 		
-		#if FLX_MOUSE
-		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if FLX_MOUSE_ADVANCED
-		addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
-		addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
-		#end
-		#end
+	// 	#if FLX_MOUSE
+	// 	addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+	// 	#if FLX_MOUSE_ADVANCED
+	// 	addEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+	// 	addEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
+	// 	#end
+	// 	#end
 		
-		FlxG.signals.preStateSwitch.add(clear);
+	// 	FlxG.signals.preStateSwitch.add(clear);
 		
-		// place the handle on top
-		removeChild(_handle);
-		addChild(_handle);
+	// 	// place the handle on top
+	// 	removeChild(_handle);
+	// 	addChild(_handle);
 		
-		removeChild(_shadow);
+	// 	removeChild(_shadow);
 	}
 	
 	/**
@@ -93,254 +93,254 @@ class BitmapLog extends Window
 	{
 		super.destroy();
 
-		clear();
+	// 	clear();
 
-		removeChild(canvas);
-		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
-		entries.resize(0);
+	// 	removeChild(canvas);
+	// 	canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+	// 	entries.resize(0);
 
-		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		#if FLX_MOUSE_ADVANCED
-		removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
-		removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
-		#end
+	// 	removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+	// 	#if FLX_MOUSE_ADVANCED
+	// 	removeEventListener(MouseEvent.MIDDLE_MOUSE_DOWN, onMiddleDown);
+	// 	removeEventListener(MouseEvent.MIDDLE_MOUSE_UP, onMiddleUp);
+	// 	#end
 
-		FlxG.signals.preStateSwitch.remove(clear);
+	// 	FlxG.signals.preStateSwitch.remove(clear);
+	// }
+
+	// override function update():Void
+	// {
+	// 	if (middleMouseDown)
+	// 	{
+	// 		canvasOffset.add(mouseX - lastMouse.x, mouseY - lastMouse.y);
+	// 		drawCanvas();
+	// 		lastMouse.set(mouseX, mouseY);
+	// 	}
 	}
 
-	override function update():Void
-	{
-		if (middleMouseDown)
-		{
-			canvasOffset.add(mouseX - lastMouse.x, mouseY - lastMouse.y);
-			drawCanvas();
-			lastMouse.set(mouseX, mouseY);
-		}
-	}
+	// override function updateSize():Void
+	// {
+	// 	super.updateSize();
+	// 	// account for the footer
+	// 	_background.scaleY = _height - _header.height * 2;
+	// }
 
-	override function updateSize():Void
-	{
-		super.updateSize();
-		// account for the footer
-		_background.scaleY = _height - _header.height * 2;
-	}
-
-	override function resize(width:Float, height:Float):Void
-	{
-		super.resize(width, height);
+	// override function resize(width:Float, height:Float):Void
+	// {
+	// 	super.resize(width, height);
 		
-		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+	// 	canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
-		final canvasWidth = Std.int(_width - canvas.x);
-		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
+	// 	final canvasWidth = Std.int(_width - canvas.x);
+	// 	final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
 		
-		if (canvasWidth > 0 && canvasHeight > 0)
-		{
-			canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
-			drawCanvas();
-		}
+	// 	if (canvasWidth > 0 && canvasHeight > 0)
+	// 	{
+	// 		canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
+	// 		drawCanvas();
+	// 	}
 		
-		buttonRemove.x = _width - buttonRemove.width - 3;
+	// 	buttonRemove.x = _width - buttonRemove.width - 3;
 		
-		header.resize(_width - 5);
-		footer.y = _height - footer.getHeight();
-		footer.resize(_width);
-	}
+	// 	header.resize(_width - 5);
+	// 	footer.y = _height - footer.getHeight();
+	// 	footer.resize(_width);
+	// }
 
-	/**
-	 * Show the next logged BitmapData in memory
-	 */
-	inline function next():Void
-	{
-		resetSettings();
-		setIndex(index + 1);
-	}
+	// /**
+	//  * Show the next logged BitmapData in memory
+	//  */
+	// inline function next():Void
+	// {
+	// 	resetSettings();
+	// 	setIndex(index + 1);
+	// }
 
-	/**
-	 * Show the previous logged BitmapData in memory
-	 */
-	inline function previous():Void
-	{
-		resetSettings();
-		setIndex(index - 1);
-	}
+	// /**
+	//  * Show the previous logged BitmapData in memory
+	//  */
+	// inline function previous():Void
+	// {
+	// 	resetSettings();
+	// 	setIndex(index - 1);
+	// }
 
-	inline function resetSettings():Void
-	{
-		zoom = 1;
-		canvasOffset.set();
-	}
+	// inline function resetSettings():Void
+	// {
+	// 	zoom = 1;
+	// 	canvasOffset.set();
+	// }
 	
-	function indexOf(bitmap:BitmapData)
-	{
-		for (i => entry in entries)
-		{
-			if (entry.bitmap == bitmap)
-				return i;
-		}
-		return -1;
-	}
+	// function indexOf(bitmap:BitmapData)
+	// {
+	// 	for (i => entry in entries)
+	// 	{
+	// 		if (entry.bitmap == bitmap)
+	// 			return i;
+	// 	}
+	// 	return -1;
+	// }
 	
-	function entryOf(bitmap:BitmapData):Null<BitmapLogEntry>
-	{
-		for (entry in entries)
-		{
-			if (entry.bitmap == bitmap)
-				return entry;
-		}
-		return null;
-	}
+	// function entryOf(bitmap:BitmapData):Null<BitmapLogEntry>
+	// {
+	// 	for (entry in entries)
+	// 	{
+	// 		if (entry.bitmap == bitmap)
+	// 			return entry;
+	// 	}
+	// 	return null;
+	// }
 	
-	public function has(bitmap:BitmapData)
-	{
-		for (i => entry in entries)
-		{
-			if (entry.bitmap == bitmap)
-				return true;
-		}
-		return false;
-	}
+	// public function has(bitmap:BitmapData)
+	// {
+	// 	for (i => entry in entries)
+	// 	{
+	// 		if (entry.bitmap == bitmap)
+	// 			return true;
+	// 	}
+	// 	return false;
+	// }
 	
-	/**
-	 * Add a BitmapData to the log
-	 */
+	// /**
+	//  * Add a BitmapData to the log
+	//  */
 	public function add(bitmap:BitmapData, name:String = ""):Bool
 	{
-		if (bitmap == null)
-			return false;
+	// 	if (bitmap == null)
+	// 		return false;
 		
-		setVisible(true);
+	// 	setVisible(true);
 		
-		final entry = entryOf(bitmap);
-		if (entry != null && entry.name == name)
-			return true;
+	// 	final entry = entryOf(bitmap);
+	// 	if (entry != null && entry.name == name)
+	// 		return true;
 		
-		entries.push({bitmap: bitmap, name: name});
-		setIndex(index < 0 ? 0 : index);
+	// 	entries.push({bitmap: bitmap, name: name});
+	// 	setIndex(index < 0 ? 0 : index);
 		return true;
 	}
 	
-	public function remove(bitmap:BitmapData)
-	{
-		final index = indexOf(bitmap);
-		if (index != -1)
-			clearAt(index);
-	}
+	// public function remove(bitmap:BitmapData)
+	// {
+	// 	final index = indexOf(bitmap);
+	// 	if (index != -1)
+	// 		clearAt(index);
+	// }
 	
-	function removeCurrent()
-	{
-		clearAt(index);
-	}
+	// function removeCurrent()
+	// {
+	// 	clearAt(index);
+	// }
 	
 	/**
 	 * Clear one bitmap object from the log -- the last one, by default
 	 */
 	public function clearAt(index = -1):Void
 	{
-		if (index == -1)
-			index = entries.length - 1;
+	// 	if (index == -1)
+	// 		index = entries.length - 1;
 		
-		entries.splice(index, 1);
+	// 	entries.splice(index, 1);
 
-		if (index > entries.length - 1)
-			setIndex(entries.length - 1);
-		else
-			drawCanvas();
+	// 	if (index > entries.length - 1)
+	// 		setIndex(entries.length - 1);
+	// 	else
+	// 		drawCanvas();
 	}
 
 	public function clear():Void
 	{
-		entries.resize(0);
-		drawCanvas();
+	// 	entries.resize(0);
+	// 	drawCanvas();
 	}
 
-	function drawCanvas()
-	{
-		final canvasBmd = canvas.bitmapData;
+	// function drawCanvas()
+	// {
+	// 	final canvasBmd = canvas.bitmapData;
 		
-		if (index < 0)
-		{
-			// wiping transparent doesn't work for some reason
-			canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
-			canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
-			return;
-		}
+	// 	if (index < 0)
+	// 	{
+	// 		// wiping transparent doesn't work for some reason
+	// 		canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
+	// 		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+	// 		return;
+	// 	}
 		
-		final bitmap = entries[index].bitmap;
-		// find the window center
-		final point = FlxPoint.get();
-		point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
-		point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
+	// 	final bitmap = entries[index].bitmap;
+	// 	// find the window center
+	// 	final point = FlxPoint.get();
+	// 	point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
+	// 	point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
 		
-		point.add(canvasOffset);
+	// 	point.add(canvasOffset);
 		
-		final matrix = new Matrix();
-		matrix.identity();
-		matrix.scale(zoom, zoom);
-		matrix.translate(point.x, point.y);
-		point.put();
+	// 	final matrix = new Matrix();
+	// 	matrix.identity();
+	// 	matrix.scale(zoom, zoom);
+	// 	matrix.translate(point.x, point.y);
+	// 	point.put();
 		
-		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
-		canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
+	// 	canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+	// 	canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
 		
-		drawBoundingBox(bitmap);
-		canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
+	// 	drawBoundingBox(bitmap);
+	// 	canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
 		
-		header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
-		footer.setText(entries[index]);
-	}
+	// 	header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
+	// 	footer.setText(entries[index]);
+	// }
 	
-	function setIndex(index:Int):Bool
-	{
-		this.index = validIndex(index);
+	// function setIndex(index:Int):Bool
+	// {
+	// 	this.index = validIndex(index);
 		
-		if (this.index < 0)
-			header.clear();
+	// 	if (this.index < 0)
+	// 		header.clear();
 		
-		resetSettings();
-		drawCanvas();
-		return true;
-	}
+	// 	resetSettings();
+	// 	drawCanvas();
+	// 	return true;
+	// }
 	
-	function validIndex(index:Int)
-	{
-		if (entries.length == 0)
-			return -1;
+	// function validIndex(index:Int)
+	// {
+	// 	if (entries.length == 0)
+	// 		return -1;
 		
-		if (index < 0)
-			return entries.length - 1;
+	// 	if (index < 0)
+	// 		return entries.length - 1;
 		
-		if (index >= entries.length)
-			return 0;
+	// 	if (index >= entries.length)
+	// 		return 0;
 		
-		return index;
-	}
+	// 	return index;
+	// }
 	
-	function drawBoundingBox(bitmap:BitmapData):Void
-	{
-		var gfx:Graphics = FlxSpriteUtil.flashGfx;
-		gfx.clear();
-		gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
-		var offset = 1 / zoom;
-		gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
-	}
+	// function drawBoundingBox(bitmap:BitmapData):Void
+	// {
+	// 	var gfx:Graphics = FlxSpriteUtil.flashGfx;
+	// 	gfx.clear();
+	// 	gfx.lineStyle(1, FlxColor.RED, 0.75, false, LineScaleMode.NONE);
+	// 	var offset = 1 / zoom;
+	// 	gfx.drawRect(-offset, -offset, bitmap.width + offset, bitmap.height + offset);
+	// }
 
-	function onMouseWheel(e:MouseEvent):Void
-	{
-		zoom = Math.max(0.01, zoom + FlxMath.signOf(e.delta) * 0.25);
-		drawCanvas();
-	}
+	// function onMouseWheel(e:MouseEvent):Void
+	// {
+	// 	zoom = Math.max(0.01, zoom + FlxMath.signOf(e.delta) * 0.25);
+	// 	drawCanvas();
+	// }
 
-	function onMiddleDown(e:MouseEvent):Void
-	{
-		middleMouseDown = true;
-		lastMouse.set(mouseX, mouseY);
-	}
+	// function onMiddleDown(e:MouseEvent):Void
+	// {
+	// 	middleMouseDown = true;
+	// 	lastMouse.set(mouseX, mouseY);
+	// }
 
-	function onMiddleUp(e:MouseEvent):Void
-	{
-		middleMouseDown = false;
-	}
+	// function onMiddleUp(e:MouseEvent):Void
+	// {
+	// 	middleMouseDown = false;
+	// }
 }
 
 typedef BitmapLogEntry =
