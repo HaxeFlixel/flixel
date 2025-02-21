@@ -99,8 +99,7 @@ class FlxCameraTest extends FlxTest
 		sprite.origin.set(100, 100);
 		sprite.offset.set(100, 100);
 		sprite.scale.set(2, 4);
-		// causes fail
-		// sprite.angle = 180;
+		sprite.angle = 180;
 		final cam = FlxG.camera;
 		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
