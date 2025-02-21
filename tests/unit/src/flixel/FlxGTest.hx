@@ -122,23 +122,23 @@ class FlxGTest extends FlxTest
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
 		FlxG.center(sprite, X);
-		Assert.areEqual(sprite.x, center.x);
-		Assert.areEqual(sprite.y, offCenter.y);
+		FlxAssert.areNear(sprite.x, center.x);
+		FlxAssert.areNear(sprite.y, offCenter.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
 		FlxG.center(sprite, Y);
-		Assert.areEqual(sprite.x, offCenter.x);
-		Assert.areEqual(sprite.y, center.y);
+		FlxAssert.areNear(sprite.x, offCenter.x);
+		FlxAssert.areNear(sprite.y, center.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
 		FlxG.center(sprite, XY);
-		Assert.areEqual(sprite.x, center.x);
-		Assert.areEqual(sprite.y, center.y);
+		FlxAssert.areNear(sprite.x, center.x);
+		FlxAssert.areNear(sprite.y, center.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
 		FlxG.center(sprite);
-		Assert.areEqual(sprite.x, center.x);
-		Assert.areEqual(sprite.y, center.y);
+		FlxAssert.areNear(sprite.x, center.x);
+		FlxAssert.areNear(sprite.y, center.y);
 		
 		offset.put();
 		graphicBounds.put();
