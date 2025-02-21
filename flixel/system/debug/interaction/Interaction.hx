@@ -84,6 +84,7 @@ class Interaction extends Window
 
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
+		_customCursor.mouseChildren = false;
 		_container.addChild(_customCursor);
 
 		// Add all built-in tools
@@ -154,18 +155,23 @@ class Interaction extends Window
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(cast event.target))
+		if (event.type == MouseEvent.MOUSE_DOWN && objectBelongsToDebugger(event.target))
 			return;
-
+		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
 		pointerJustReleased = event.type == MouseEvent.MOUSE_UP;
-
+		
 		if (pointerJustPressed)
 			pointerPressed = true;
 		else if (pointerJustReleased)
 			pointerPressed = false;
 	}
 
+	function objectBelongsToDebugger(object:openfl.utils.Object):Bool
+	{
+		return object is DisplayObject && belongsToDebugger(cast object);
+	}
+	
 	function belongsToDebugger(object:DisplayObject):Bool
 	{
 		if (object == null)
