@@ -5,14 +5,13 @@ import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
-import flixel.FlxObject;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
+import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
@@ -79,7 +78,7 @@ class Interaction extends Window
 
 	public function new(container:Sprite)
 	{
-		super("Tools", new GraphicInteractive(0, 0), 40, 25, false);
+		super("Tools", Icon.interactive, 40, 25, false);
 		reposition(2, 100);
 		_container = container;
 

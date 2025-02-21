@@ -2,7 +2,6 @@ package flixel.system.debug.watch;
 
 import flixel.FlxG;
 import flixel.math.FlxPoint;
-import flixel.system.debug.FlxDebugger.GraphicWatch;
 import openfl.display.Sprite;
 
 using flixel.util.FlxStringUtil;
@@ -23,7 +22,7 @@ class Watch extends Window
 
 	public function new(closable:Bool = false)
 	{
-		super("Watch", new GraphicWatch(0, 0), 0, 0, true, null, closable);
+		super("Watch", Icon.watch, 0, 0, true, null, closable);
 
 		entriesContainer = new Sprite();
 		entriesContainer.x = entriesContainerOffset.x;
