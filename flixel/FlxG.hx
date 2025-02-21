@@ -481,44 +481,56 @@ class FlxG
 	/**
 	 * Centers `FlxSprite` by graphic size in game space, either by the x axis, y axis, or both.
 	 * 
-	 * @param   sprite       The sprite to center.
-	 * @param   axes         On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @param   sprite  The sprite to center.
+	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered sprite for chaining.
 	 * @since TBA
 	 */
 	public static function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
+		final graphicBounds = sprite.getGraphicBounds();
+		
 		if (axes.x)
 		{
-			final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
-			sprite.x = (FlxG.width - graphicWidth) / 2;
+			final offset = sprite.x - graphicBounds.x;
+			sprite.x = (FlxG.width - graphicBounds.width) / 2 + offset;
 		}
 		
 		if (axes.y)
 		{
-			final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
-			sprite.y = (FlxG.height - graphicHeight) / 2;
+			final offset = sprite.y - graphicBounds.y;
+			sprite.y = (FlxG.height - graphicBounds.height) / 2 + offset;
 		}
 		
+		graphicBounds.put();
 		return sprite;
 	}
 	
 	/**
 	 * Centers `FlxObject` by hitbox size in game space, either by the x axis, y axis, or both.
 	 * 
-	 * @param   sprite       The object to center.
-	 * @param   axes         On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @param   object  The object to center.
+	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered object for chaining.
 	 * @since TBA
 	 */
 	public static function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{
+		final hitbox = object.getHitbox();
+		
 		if (axes.x)
-			object.x = (FlxG.width - object.width) / 2;
+		{
+			final offset = object.x - hitbox.x;
+			object.x = (FlxG.width - hitbox.width) / 2 + offset;
+		}
 		
 		if (axes.y)
-			object.y = (FlxG.height - object.height) / 2;
+		{
+			final offset = object.y - hitbox.y;
+			object.y = (FlxG.height - hitbox.height) / 2 + offset;
+		}
 		
+		hitbox.put();
 		return object;
 	}
 	

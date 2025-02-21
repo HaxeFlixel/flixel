@@ -110,11 +110,15 @@ class FlxGTest extends FlxTest
 	function testCenter()
 	{
 		final sprite = new FlxSprite();
-		sprite.makeGraphic(10, 10);
-		sprite.scale.set(-2, -4);
-		final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
-		final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
-		final center = FlxPoint.get((FlxG.width - graphicWidth) / 2, (FlxG.height - graphicHeight) / 2);
+		sprite.makeGraphic(100, 100);
+		sprite.origin.set(100, 100);
+		sprite.offset.set(100, 100);
+		sprite.scale.set(2, 4);
+		// causes fail
+		// sprite.angle = 180;
+		final graphicBounds = sprite.getGraphicBounds();
+		final offset = FlxPoint.get(sprite.x - graphicBounds.x, sprite.y - graphicBounds.y);
+		final center = FlxPoint.get((FlxG.width - graphicBounds.width) / 2 + offset.x, (FlxG.height - graphicBounds.height) / 2 + offset.y);
 		final offCenter = center.copyTo().add(1000, 1000);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
@@ -137,6 +141,8 @@ class FlxGTest extends FlxTest
 		Assert.areEqual(sprite.x, center.x);
 		Assert.areEqual(sprite.y, center.y);
 		
+		offset.put();
+		graphicBounds.put();
 		offCenter.put();
 		center.put();
 	}
@@ -145,7 +151,9 @@ class FlxGTest extends FlxTest
 	function testCenterHitbox()
 	{
 		final object = new FlxObject(0, 0, 10, 10);
-		final center = FlxPoint.get((FlxG.width - object.width) / 2, (FlxG.height - object.height) / 2);
+		final hitbox = object.getHitbox();
+		final offset = FlxPoint.get(object.x - hitbox.x, object.y - hitbox.y);
+		final center = FlxPoint.get((FlxG.width - hitbox.width) / 2 + offset.x, (FlxG.height - hitbox.height) / 2 + offset.y);
 		final offCenter = center.copyTo().add(1000, 1000);
 		
 		object.setPosition(offCenter.x, offCenter.y);
@@ -168,6 +176,8 @@ class FlxGTest extends FlxTest
 		Assert.areEqual(object.x, center.x);
 		Assert.areEqual(object.y, center.y);
 		
+		offset.put();
+		hitbox.put();
 		offCenter.put();
 		center.put();
 	}

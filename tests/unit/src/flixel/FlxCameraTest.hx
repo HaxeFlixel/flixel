@@ -95,14 +95,18 @@ class FlxCameraTest extends FlxTest
 	function testCenter()
 	{
 		final sprite = new FlxSprite();
-		sprite.makeGraphic(10, 10);
-		sprite.scale.set(-2, -4);
+		sprite.makeGraphic(100, 100);
+		sprite.origin.set(100, 100);
+		sprite.offset.set(100, 100);
+		sprite.scale.set(2, 4);
+		// causes fail
+		// sprite.angle = 180;
 		final cam = FlxG.camera;
 		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
-		final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
-		final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
-		final center = FlxPoint.get(cam.viewX + (cam.viewWidth - graphicWidth) / 2, cam.viewY + (cam.viewHeight - graphicHeight) / 2);
+		final graphicBounds = sprite.getScreenBounds(null, cam);
+		final offset = FlxPoint.get(sprite.x - graphicBounds.x, sprite.y - graphicBounds.y);
+		final center = FlxPoint.get((cam.width - graphicBounds.width) / 2 + offset.x, (cam.height - graphicBounds.height) / 2 + offset.y);
 		final offCenter = center.copyTo().add(1000, 1000);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
@@ -125,6 +129,8 @@ class FlxCameraTest extends FlxTest
 		Assert.areEqual(sprite.x, center.x);
 		Assert.areEqual(sprite.y, center.y);
 		
+		offset.put();
+		graphicBounds.put();
 		offCenter.put();
 		center.put();
 	}
@@ -136,7 +142,9 @@ class FlxCameraTest extends FlxTest
 		final cam = FlxG.camera;
 		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
-		final center = FlxPoint.get(cam.viewX + (cam.viewWidth - object.width) / 2, cam.viewY + (cam.viewHeight - object.height) / 2);
+		final hitbox = object.getHitbox();
+		final offset = FlxPoint.get(object.x - hitbox.x, object.y - hitbox.y);
+		final center = FlxPoint.get(cam.scroll.x + (cam.width - hitbox.width) / 2 + offset.x, cam.scroll.y + (cam.height - hitbox.height) / 2 + offset.y);
 		final offCenter = center.copyTo().add(1000, 1000);
 		
 		object.setPosition(offCenter.x, offCenter.y);
@@ -159,6 +167,8 @@ class FlxCameraTest extends FlxTest
 		Assert.areEqual(object.x, center.x);
 		Assert.areEqual(object.y, center.y);
 		
+		offset.put();
+		hitbox.put();
 		offCenter.put();
 		center.put();
 	}

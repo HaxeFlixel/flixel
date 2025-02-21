@@ -1876,44 +1876,56 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Centers `FlxSprite` by graphic size in this camera view, either by the x axis, y axis, or both.
 	 * 
-	 * @param   sprite       The sprite to center.
-	 * @param   axes         On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @param   sprite  The sprite to center.
+	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered sprite for chaining.
 	 * @since TBA
 	 */
 	public function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
+		final graphicBounds = sprite.getScreenBounds(null, this);
+		
 		if (axes.x)
 		{
-			final graphicWidth = sprite.frameWidth * Math.abs(sprite.scale.x);
-			sprite.x = viewX + (viewWidth - graphicWidth) / 2;
+			final offset = sprite.x - graphicBounds.x;
+			sprite.x = (width - graphicBounds.width) / 2 + offset;
 		}
 		
 		if (axes.y)
 		{
-			final graphicHeight = sprite.frameHeight * Math.abs(sprite.scale.y);
-			sprite.y = viewY + (viewHeight - graphicHeight) / 2;
+			final offset = sprite.y - graphicBounds.y;
+			sprite.y = (height - graphicBounds.height) / 2 + offset;
 		}
 		
+		graphicBounds.put();
 		return sprite;
 	}
 	
 	/**
 	 * Centers `FlxObject` by hitbox size in this camera view, either by the x axis, y axis, or both.
 	 * 
-	 * @param   sprite       The object to center.
-	 * @param   axes         On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @param   object  The object to center.
+	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered object for chaining.
 	 * @since TBA
 	 */
 	public function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{
+		final hitbox = object.getHitbox();
+		
 		if (axes.x)
-			object.x = viewX + (viewWidth - object.width) / 2;
+		{
+			final offset = object.x - hitbox.x;
+			object.x = scroll.x + (width - hitbox.width) / 2 + offset;
+		}
 		
 		if (axes.y)
-			object.y = viewY + (viewHeight - object.height) / 2;
+		{
+			final offset = object.y - hitbox.y;
+			object.y = scroll.y + (height - hitbox.height) / 2 + offset;
+		}
 		
+		hitbox.put();
 		return object;
 	}
 	
