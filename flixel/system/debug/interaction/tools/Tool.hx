@@ -61,10 +61,10 @@ class Tool extends Sprite implements IFlxDestroyable
 	 * that a specific action is happening. Use `setCursorInUse()` to
 	 * learn more about custom cursors.
 	 */
-	function setCursor(Icon:BitmapData):Void
+	function setCursor(Icon:BitmapData, offsetX = 0.0, offsetY = 0.0):Void
 	{
 		cursor = Icon;
-		_brain.registerCustomCursor(_name, cursor);
+		_brain.registerCustomCursor(_name, cursor, offsetX, offsetY);
 	}
 
 	/**

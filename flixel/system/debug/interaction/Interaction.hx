@@ -7,6 +7,7 @@ import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import flixel.FlxObject;
 import openfl.events.MouseEvent;
+import openfl.geom.Point;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
@@ -114,43 +115,28 @@ class Interaction extends Window
 		else
 			restoreSystemCursor();
 	}
-
+	
 	function updateMouse(event:MouseEvent):Void
 	{
 		#if (neko || js) // openfl/openfl#1305
 		if (event.stageX == null || event.stageY == null)
 			return;
 		#end
-
-		var offsetX = 0.0;
-		var offsetY = 0.0;
-
-		// If the active tool has a custom cursor, we assume its
-		// "point of click" is the center of the cursor icon.
-		if (activeTool != null)
-		{
-			var cursorIcon = activeTool.cursor;
-			if (cursorIcon != null)
-			{
-				offsetX = cursorIcon.width / FlxG.scaleMode.scale.x / 2;
-				offsetY = cursorIcon.height / FlxG.scaleMode.scale.y / 2;
-			}
-		}
-
-		_customCursor.x = event.stageX + offsetX;
-		_customCursor.y = event.stageY + offsetY;
-
+		
+		_customCursor.x = event.stageX;
+		_customCursor.y = event.stageY;
+		
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
 		_flixelPointer.setRawPositionUnsafe(Std.int(FlxG.game.mouseX), Std.int(FlxG.game.mouseY));
-
+		
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
-		flixelPointer.x = _flixelPointer.x + offsetX;
-		flixelPointer.y = _flixelPointer.y + offsetY;
+		flixelPointer.x = _flixelPointer.x;
+		flixelPointer.y = _flixelPointer.y;
 		#end
 	}
-
+	
 	function handleMouseClick(event:MouseEvent):Void
 	{
 		// Did the user click a debugger UI element instead of performing
@@ -446,15 +432,17 @@ class Interaction extends Window
 		}
 	}
 
-	public function registerCustomCursor(name:String, icon:BitmapData):Void
+	public function registerCustomCursor(name:String, icon:BitmapData, offsetX = 0.0, offsetY = 0.0):Void
 	{
 		if (icon == null)
 			return;
 
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.registerSimpleNativeCursorData(name, icon);
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(-offsetX, -offsetY));
 		#else
 		var sprite = new Sprite();
+		sprite.x = offsetX;
+		sprite.y = offsetY;
 		sprite.visible = false;
 		sprite.name = name;
 		sprite.addChild(new Bitmap(icon));
