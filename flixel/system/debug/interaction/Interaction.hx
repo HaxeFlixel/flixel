@@ -674,22 +674,22 @@ class Interaction extends Window
 	 * @param   area     A rectangle that describes the area where the method should search within.
 	 */
 	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
-	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		addItemsWithinArea(cast items, members, area);
 	}
 	
-	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
+	function isOverObject(object:FlxObject, area:FlxRect):Bool
 	{
 		return area.overlaps(object.getHitbox(FlxRect.weak()));
 	}
 	
-	inline function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
+	function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
 	{
 		// Ignore sprites' alpha when clicking a point
-		return (area.width <= 1 && area.height <= 1)
-			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
-			: isOverObject(sprite, area);
+		return (area.width > 1 || area.height > 1)
+			? isOverObject(sprite, area)
+			: sprite.pixelsOverlapPoint(flixelPointer, 0x10);
 	}
 	
 	/**
@@ -756,7 +756,11 @@ class Interaction extends Window
 			
 			final group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
-				return getTopItemWithinArea(group.members, area);
+			{
+				final result = getTopItemWithinArea(group.members, area);
+				if (result != null)
+					return result;
+			}
 			
 			if (member is FlxSprite)
 			{
