@@ -1,37 +1,20 @@
 package flixel.system.debug.interaction.tools;
 
-import openfl.display.BitmapData;
-import openfl.display.Graphics;
-import openfl.display.LineScaleMode;
-import openfl.display.CapsStyle;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
-import flixel.system.debug.interaction.Interaction;
+import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
+import flixel.system.debug.Icon;
 import flixel.system.debug.Tooltip;
-import flixel.util.FlxSpriteUtil;
+import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
+import openfl.display.CapsStyle;
+import openfl.display.Graphics;
+import openfl.display.LineScaleMode;
 
 using flixel.util.FlxArrayUtil;
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/transform.png") #end
-private class GraphicTransformTool extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursorCross.png") #end
-private class GraphicTransformCursorDefault extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleY.png") #end
-private class GraphicTransformCursorScaleY extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleX.png") #end
-private class GraphicTransformCursorScaleX extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformScaleXY.png") #end
-private class GraphicTransformCursorScaleXY extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/cursors/transformRotate.png") #end
-private class GraphicTransformCursorRotate extends BitmapData {}
 
 /**
  * A tool to scale and rotate selected game elements.
@@ -70,25 +53,15 @@ class Transform extends Tool
 	override public function init(brain:Interaction):Tool
 	{
 		super.init(brain);
-
+		
 		_name = "Transform";
-		setButton(GraphicTransformTool);
-		setCursor(new GraphicTransformCursorDefault(0, 0));
-
-		brain.registerCustomCursor(CURSOR_ROTATE, new GraphicTransformCursorRotate(0, 0));
-		brain.registerCustomCursor(CURSOR_SCALE_X, new GraphicTransformCursorScaleX(0, 0));
-		brain.registerCustomCursor(CURSOR_SCALE_Y, new GraphicTransformCursorScaleY(0, 0));
-		brain.registerCustomCursor(CURSOR_SCALE_XY, new GraphicTransformCursorScaleXY(0, 0));
-
-		_tooltip = Tooltip.add(null, "");
-		_tooltip.textField.wordWrap = false;
-
-		for (i in 0...4)
-			_markers.push(new FlxPoint());
-
-		stopAction();
-
-		FlxG.signals.preStateSwitch.add(function() _target = null);
+		setButton(Icon.transform);
+		setCursor(Icon.transform);
+		
+		brain.registerCustomCursor(CURSOR_ROTATE, Icon.rotate, -5, -5);
+		brain.registerCustomCursor(CURSOR_SCALE_X, Icon.scaleX, -5, -5);
+		brain.registerCustomCursor(CURSOR_SCALE_Y, Icon.scaleY, -5, -5);
+		brain.registerCustomCursor(CURSOR_SCALE_XY, Icon.scaleXY, -5, -5);
 		return this;
 	}
 

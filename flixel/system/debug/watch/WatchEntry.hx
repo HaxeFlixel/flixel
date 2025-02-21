@@ -2,7 +2,6 @@ package flixel.system.debug.watch;
 
 import flixel.math.FlxMath;
 import flixel.system.FlxAssets;
-import flixel.system.debug.FlxDebugger.GraphicCloseButton;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -46,7 +45,7 @@ class WatchEntry extends Sprite implements IFlxDestroyable
 
 		updateName();
 
-		addChild(removeButton = new FlxSystemButton(new GraphicCloseButton(0, 0), removeEntry.bind(this)));
+		addChild(removeButton = new FlxSystemButton(Icon.close, removeEntry.bind(this)));
 		removeButton.y = (TEXT_HEIGHT - removeButton.height) / 2;
 		removeButton.alpha = 0.3;
 	}

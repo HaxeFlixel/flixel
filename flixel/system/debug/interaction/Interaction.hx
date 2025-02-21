@@ -5,13 +5,13 @@ import openfl.display.Graphics;
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
-import flixel.FlxObject;
 import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.debug.FlxDebugger.GraphicInteractive;
 import flixel.system.debug.Window;
 import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
@@ -78,12 +78,13 @@ class Interaction extends Window
 
 	public function new(container:Sprite)
 	{
-		super("Tools", new GraphicInteractive(0, 0), 40, 25, false);
+		super("Tools", Icon.interactive, 40, 25, false);
 		reposition(2, 100);
 		_container = container;
 
 		_customCursor = new Sprite();
 		_customCursor.mouseEnabled = false;
+		_customCursor.mouseChildren = false;
 		_container.addChild(_customCursor);
 
 		// Add all built-in tools
@@ -113,59 +114,49 @@ class Interaction extends Window
 		else
 			restoreSystemCursor();
 	}
-
+	
 	function updateMouse(event:MouseEvent):Void
 	{
 		#if (neko || js) // openfl/openfl#1305
 		if (event.stageX == null || event.stageY == null)
 			return;
 		#end
-
-		var offsetX = 0.0;
-		var offsetY = 0.0;
-
-		// If the active tool has a custom cursor, we assume its
-		// "point of click" is the center of the cursor icon.
-		if (activeTool != null)
-		{
-			var cursorIcon = activeTool.cursor;
-			if (cursorIcon != null)
-			{
-				offsetX = cursorIcon.width / FlxG.scaleMode.scale.x / 2;
-				offsetY = cursorIcon.height / FlxG.scaleMode.scale.y / 2;
-			}
-		}
-
-		_customCursor.x = event.stageX + offsetX;
-		_customCursor.y = event.stageY + offsetY;
-
+		
+		_customCursor.x = event.stageX;
+		_customCursor.y = event.stageY;
+		
 		#if FLX_MOUSE
 		// Calculate in-game coordinates based on mouse position and camera.
 		_flixelPointer.setRawPositionUnsafe(Std.int(FlxG.game.mouseX), Std.int(FlxG.game.mouseY));
-
+		
 		// Store Flixel mouse coordinates to speed up all
 		// internal calculations (overlap, etc)
-		flixelPointer.x = _flixelPointer.x + offsetX;
-		flixelPointer.y = _flixelPointer.y + offsetY;
+		flixelPointer.x = _flixelPointer.x;
+		flixelPointer.y = _flixelPointer.y;
 		#end
 	}
-
+	
 	function handleMouseClick(event:MouseEvent):Void
 	{
 		// Did the user click a debugger UI element instead of performing
 		// a click related to a tool?
-		if (event.type == MouseEvent.MOUSE_DOWN && belongsToDebugger(cast event.target))
+		if (event.type == MouseEvent.MOUSE_DOWN && objectBelongsToDebugger(event.target))
 			return;
-
+		
 		pointerJustPressed = event.type == MouseEvent.MOUSE_DOWN;
 		pointerJustReleased = event.type == MouseEvent.MOUSE_UP;
-
+		
 		if (pointerJustPressed)
 			pointerPressed = true;
 		else if (pointerJustReleased)
 			pointerPressed = false;
 	}
 
+	function objectBelongsToDebugger(object:openfl.utils.Object):Bool
+	{
+		return object is DisplayObject && belongsToDebugger(cast object);
+	}
+	
 	function belongsToDebugger(object:DisplayObject):Bool
 	{
 		if (object == null)
@@ -440,15 +431,17 @@ class Interaction extends Window
 		}
 	}
 
-	public function registerCustomCursor(name:String, icon:BitmapData):Void
+	public function registerCustomCursor(name:String, icon:BitmapData, offsetX = 0.0, offsetY = 0.0):Void
 	{
 		if (icon == null)
 			return;
 
 		#if (FLX_NATIVE_CURSOR && FLX_MOUSE)
-		FlxG.mouse.registerSimpleNativeCursorData(name, icon);
+		FlxG.mouse.registerSimpleNativeCursorData(name, icon, new Point(-offsetX, -offsetY));
 		#else
 		var sprite = new Sprite();
+		sprite.x = offsetX;
+		sprite.y = offsetY;
 		sprite.visible = false;
 		sprite.name = name;
 		sprite.addChild(new Bitmap(icon));
@@ -674,22 +667,22 @@ class Interaction extends Window
 	 * @param   area     A rectangle that describes the area where the method should search within.
 	 */
 	@:deprecated("findItemsWithinArea is deprecated, use addItemsWithinArea")// since 5.6.0
-	public inline function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
+	public function findItemsWithinArea(items:Array<FlxBasic>, members:Array<FlxBasic>, area:FlxRect):Void
 	{
 		addItemsWithinArea(cast items, members, area);
 	}
 	
-	inline function isOverObject(object:FlxObject, area:FlxRect):Bool
+	function isOverObject(object:FlxObject, area:FlxRect):Bool
 	{
 		return area.overlaps(object.getHitbox(FlxRect.weak()));
 	}
 	
-	inline function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
+	function isOverSprite(sprite:FlxSprite, area:FlxRect):Bool
 	{
 		// Ignore sprites' alpha when clicking a point
-		return (area.width <= 1 && area.height <= 1)
-			? sprite.pixelsOverlapPoint(flixelPointer, 0xEE)
-			: isOverObject(sprite, area);
+		return (area.width > 1 || area.height > 1)
+			? isOverObject(sprite, area)
+			: sprite.pixelsOverlapPoint(flixelPointer, 0x10);
 	}
 	
 	/**
@@ -756,7 +749,11 @@ class Interaction extends Window
 			
 			final group = FlxTypedGroup.resolveGroup(member);
 			if (group != null)
-				return getTopItemWithinArea(group.members, area);
+			{
+				final result = getTopItemWithinArea(group.members, area);
+				if (result != null)
+					return result;
+			}
 			
 			if (member is FlxSprite)
 			{
