@@ -16,9 +16,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import flixel.system.debug.FlxDebugger.GraphicArrowLeft;
-import flixel.system.debug.FlxDebugger.GraphicArrowRight;
-import flixel.system.debug.FlxDebugger.GraphicBitmapLog;
 
 using flixel.util.FlxBitmapDataUtil;
 
@@ -51,7 +48,7 @@ class BitmapLog extends Window
 
 	public function new()
 	{
-		super("BitmapLog", new GraphicBitmapLog(0, 0));
+		super("BitmapLog", Icon.bitmapLog);
 
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
@@ -88,7 +85,7 @@ class BitmapLog extends Window
 		_ui = new Sprite();
 		_ui.y = 2;
 
-		_buttonLeft = new FlxSystemButton(new GraphicArrowLeft(0, 0), previous);
+		_buttonLeft = new FlxSystemButton(Icon.arrowLeft, previous);
 
 		_dimensionsText = DebuggerUtil.createTextField();
 
@@ -103,7 +100,7 @@ class BitmapLog extends Window
 		});
 		_buttonText.addChild(_counterText);
 
-		_buttonRight = new FlxSystemButton(new GraphicArrowRight(0, 0), next);
+		_buttonRight = new FlxSystemButton(Icon.arrowRight, next);
 		_buttonRight.x = 60;
 
 		_ui.addChild(_buttonLeft);
@@ -153,7 +150,7 @@ class BitmapLog extends Window
 		if (_middleMouseDown)
 		{
 			var delta = FlxPoint.get(mouseX, mouseY);
-			_curMouseOffset.addPoint(delta.subtractPoint(_lastMousePos));
+			_curMouseOffset.add(delta.subtract(_lastMousePos));
 			refreshCanvas();
 			_lastMousePos.set(mouseX, mouseY);
 		}
@@ -309,7 +306,7 @@ class BitmapLog extends Window
 		_point.x = (_canvas.width / 2) - (_curBitmap.width * zoom / 2);
 		_point.y = (_canvas.height / 2) - (_curBitmap.height * zoom / 2);
 
-		_point.addPoint(_curMouseOffset);
+		_point.add(_curMouseOffset);
 
 		_matrix.identity();
 		_matrix.scale(zoom, zoom);

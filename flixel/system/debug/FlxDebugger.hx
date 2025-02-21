@@ -26,38 +26,6 @@ import flixel.util.FlxHorizontalAlign;
 using flixel.util.FlxArrayUtil;
 #end
 
-#if FLX_DEBUG @:bitmap("assets/images/debugger/flixel.png") #end
-private class GraphicFlixel extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/drawDebug.png") #end
-private class GraphicDrawDebug extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/log.png") #end
-@:noCompletion class GraphicLog extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/stats.png") #end
-@:noCompletion class GraphicStats extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/watch.png") #end
-@:noCompletion class GraphicWatch extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/bitmapLog.png") #end
-@:noCompletion class GraphicBitmapLog extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/console.png") #end
-@:noCompletion class GraphicConsole extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/arrowLeft.png") #end
-@:noCompletion class GraphicArrowLeft extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/arrowRight.png") #end
-@:noCompletion class GraphicArrowRight extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/close.png") #end
-@:noCompletion class GraphicCloseButton extends BitmapData {}
-
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/interactive.png") #end
-@:noCompletion class GraphicInteractive extends BitmapData {}
 /**
  * Container for the new debugger overlay. Most of the functionality is in the debug folder widgets,
  * but this class instantiates the widgets and handles their basic formatting and arrangement.
@@ -156,18 +124,18 @@ class FlxDebugger extends openfl.display.Sprite
 
 		vcr = new VCR(this);
 
-		addButton(LEFT, new GraphicFlixel(0, 0), openHomepage);
+		addButton(LEFT, Icon.flixel, openHomepage);
 		addButton(LEFT, null, openGitHub).addChild(txt);
 
-		addWindowToggleButton(interaction, GraphicInteractive);
-		addWindowToggleButton(bitmapLog, GraphicBitmapLog);
-		addWindowToggleButton(log, GraphicLog);
+		addWindowToggleButton(interaction, Icon.interactive);
+		addWindowToggleButton(bitmapLog, Icon.bitmapLog);
+		addWindowToggleButton(log, Icon.log);
 
-		addWindowToggleButton(watch, GraphicWatch);
-		addWindowToggleButton(console, GraphicConsole);
-		addWindowToggleButton(stats, GraphicStats);
+		addWindowToggleButton(watch, Icon.watch);
+		addWindowToggleButton(console, Icon.console);
+		addWindowToggleButton(stats, Icon.stats);
 
-		var drawDebugButton = addButton(RIGHT, new GraphicDrawDebug(0, 0), toggleDrawDebug, true);
+		var drawDebugButton = addButton(RIGHT, Icon.drawDebug, toggleDrawDebug, true);
 		drawDebugButton.toggled = !FlxG.debugger.drawDebug;
 		FlxG.debugger.drawDebugChanged.add(function()
 		{
@@ -424,9 +392,9 @@ class FlxDebugger extends openfl.display.Sprite
 			resetButtonLayout();
 	}
 
-	public function addWindowToggleButton(window:Window, icon:Class<BitmapData>):Void
+	public function addWindowToggleButton(window:Window, icon:FlxGraphicSource):Void
 	{
-		var button = addButton(RIGHT, Type.createInstance(icon, [0, 0]), window.toggleVisible, true, true);
+		var button = addButton(RIGHT, icon.resolveBitmapData(), window.toggleVisible, true, true);
 		window.toggleButton = button;
 		button.toggled = !window.visible;
 	}

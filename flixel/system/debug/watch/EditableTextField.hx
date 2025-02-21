@@ -1,7 +1,8 @@
 package flixel.system.debug.watch;
 
 import flixel.math.FlxMath;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxColor;
 import openfl.events.FocusEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
@@ -10,6 +11,8 @@ import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
 import Type.ValueType;
+
+using StringTools;
 
 class EditableTextField extends TextField implements IFlxDestroyable
 {
@@ -142,10 +145,9 @@ class EditableTextField extends TextField implements IFlxDestroyable
 	{
 		var value:Dynamic = switch (expectedType)
 		{
-			#if neko
+			case TInt if (text.startsWith("#") || text.startsWith("0x")): FlxColor.fromString(text);
 			case TInt: Std.parseInt(text);
 			case TFloat: Std.parseFloat(text);
-			#end
 			case TBool if (text == "true"): true;
 			case TBool if (text == "false"): false;
 			case TEnum(e):

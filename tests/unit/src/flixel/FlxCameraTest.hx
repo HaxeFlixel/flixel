@@ -48,7 +48,7 @@ class FlxCameraTest extends FlxTest
 	function testDefaultCamerasStateSwitch():Void
 	{
 		FlxCamera._defaultCameras = [FlxG.camera];
-		switchState(new FlxState());
+		switchState(FlxState.new);
 
 		Assert.areEqual(FlxG.cameras.defaults, FlxCamera._defaultCameras);
 	}
