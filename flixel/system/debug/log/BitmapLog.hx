@@ -44,30 +44,30 @@ class BitmapLog extends Window
 	{
 		super("BitmapLog", Icon.bitmapLog);
 		
-	// 	minSize.x = 165;
-	// 	minSize.y = Window.HEADER_HEIGHT * 2 + 1;
+		minSize.x = 165;
+		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
 		canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
-	// 	canvas.x = 0;
-	// 	canvas.y = 15;
-	// 	addChild(canvas);
+		canvas.x = 0;
+		canvas.y = 15;
+		addChild(canvas);
 		
 		buttonRemove = new FlxSystemButton(Icon.close, removeCurrent);
-	// 	buttonRemove.x = width - buttonRemove.width - 3;
-	// 	buttonRemove.y = Window.HEADER_HEIGHT + 3;
-	// 	addChild(buttonRemove);
+		buttonRemove.x = width - buttonRemove.width - 3;
+		buttonRemove.y = Window.HEADER_HEIGHT + 3;
+		addChild(buttonRemove);
 		
 		header = new Header();
-	// 	header.y = 2;
-	// 	header.onPrev.add(()->setIndex(index - 1));
-	// 	header.onNext.add(()->setIndex(index + 1));
-	// 	header.onReset.add(resetSettings);
-	// 	addChild(header);
+		header.y = 2;
+		header.onPrev.add(()->setIndex(index - 1));
+		header.onNext.add(()->setIndex(index + 1));
+		header.onReset.add(resetSettings);
+		addChild(header);
 		
 		footer = new Footer();
-	// 	addChild(footer);
+		addChild(footer);
 		
-	// 	setVisible(false);
+		setVisible(false);
 		
 		#if FLX_MOUSE
 		addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -79,11 +79,11 @@ class BitmapLog extends Window
 		
 		FlxG.signals.preStateSwitch.add(clear);
 		
-	// 	// place the handle on top
-	// 	removeChild(_handle);
-	// 	addChild(_handle);
+		// place the handle on top
+		removeChild(_handle);
+		addChild(_handle);
 		
-	// 	removeChild(_shadow);
+		removeChild(_shadow);
 	}
 	
 	/**
@@ -93,11 +93,11 @@ class BitmapLog extends Window
 	{
 		super.destroy();
 	
-	// 	clear();
+		clear();
 	
-	// 	removeChild(canvas);
+		removeChild(canvas);
 		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
-	// 	entries.resize(0);
+		entries.resize(0);
 	
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		#if FLX_MOUSE_ADVANCED
