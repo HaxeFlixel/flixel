@@ -122,30 +122,30 @@ class BitmapLog extends Window
 	override function updateSize():Void
 	{
 		super.updateSize();
-	// 	// account for the footer
-	// 	_background.scaleY = _height - _header.height * 2;
+		// account for the footer
+		_background.scaleY = _height - _header.height * 2;
 	}
 	
 	override function resize(width:Float, height:Float):Void
 	{
 		super.resize(width, height);
 		
-	// 	canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
-	// 	final canvasWidth = Std.int(_width - canvas.x);
-	// 	final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
+		final canvasWidth = Std.int(_width - canvas.x);
+		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
 		
-	// 	if (canvasWidth > 0 && canvasHeight > 0)
-	// 	{
-	// 		canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
-	// 		drawCanvas();
-	// 	}
+		if (canvasWidth > 0 && canvasHeight > 0)
+		{
+			canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
+			drawCanvas();
+		}
 		
-	// 	buttonRemove.x = _width - buttonRemove.width - 3;
+		buttonRemove.x = _width - buttonRemove.width - 3;
 		
-	// 	header.resize(_width - 5);
-	// 	footer.y = _height - footer.getHeight();
-	// 	footer.resize(_width);
+		header.resize(_width - 5);
+		footer.y = _height - footer.getHeight();
+		footer.resize(_width);
 	}
 	
 	/**
