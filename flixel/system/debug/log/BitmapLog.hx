@@ -254,6 +254,8 @@ class BitmapLog extends Window
 	function drawCanvas()
 	{
 		final canvasBmd = canvas.bitmapData;
+		if (canvasBmd == null)
+			throw "Unexpected null canvas";
 		
 		if (index < 0)
 		{
