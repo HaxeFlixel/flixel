@@ -253,11 +253,11 @@ class BitmapLog extends Window
 	
 	function drawCanvas()
 	{
-		if (canvas.bitmapData == null)
-		{
-			// If the window is too small there is no canvas bitmap
-			return;
-		}
+		// if (canvas.bitmapData == null)
+		// {
+		// 	// If the window is too small there is no canvas bitmap
+		// 	return;
+		// }
 		
 		final canvasBmd = canvas.bitmapData;
 		
