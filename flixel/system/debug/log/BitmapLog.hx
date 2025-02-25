@@ -30,9 +30,9 @@ class BitmapLog extends Window
 	public var zoom:Float = 1;
 	
 	final entries = new Array<BitmapLogEntry>();
-	final canvas:Bitmap;
+	// final canvas:Bitmap;
 	final header:Header;
-	// final footer:Footer;
+	final footer:Footer;
 	final buttonRemove:FlxSystemButton;
 	final canvasOffset = FlxPoint.get();
 	
@@ -46,10 +46,10 @@ class BitmapLog extends Window
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
-		canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
-		canvas.x = 0;
-		canvas.y = 15;
-		addChild(canvas);
+		// canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
+		// canvas.x = 0;
+		// canvas.y = 15;
+		// addChild(canvas);
 		
 		buttonRemove = new FlxSystemButton(Icon.close, removeCurrent);
 		buttonRemove.x = width - buttonRemove.width - 3;
@@ -63,8 +63,8 @@ class BitmapLog extends Window
 		header.onReset.add(resetSettings);
 		addChild(header);
 		
-		// footer = new Footer();
-		// addChild(footer);
+		footer = new Footer();
+		addChild(footer);
 		
 		setVisible(false);
 		
@@ -90,8 +90,8 @@ class BitmapLog extends Window
 	
 		clear();
 	
-		removeChild(canvas);
-		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		// removeChild(canvas);
+		// canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		entries.resize(0);
 	
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -137,29 +137,29 @@ class BitmapLog extends Window
 	{
 		super.updateSize();
 		// account for the footer
-		// _background.scaleY = _height - _header.height * 2;
+		_background.scaleY = _height - _header.height * 2;
 	}
 	
 	override function resize(width:Float, height:Float):Void
 	{
 		super.resize(width, height);
 		
-		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		// canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
-		final canvasWidth = Std.int(_width - canvas.x);
-		final canvasHeight = Std.int(_height - canvas.y);// - footer.getHeight());
+		final canvasWidth = Std.int(_width /* - canvas.x */);
+		final canvasHeight = Std.int(_height /* - canvas.y */ - footer.getHeight());
 		
 		if (canvasWidth > 0 && canvasHeight > 0)
 		{
-			canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
+			// canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
 			drawCanvas();
 		}
 		
 		buttonRemove.x = _width - buttonRemove.width - 3;
 		
 		header.resize(_width - 5);
-		// footer.y = _height - footer.getHeight();
-		// footer.resize(_width);
+		footer.y = _height - footer.getHeight();
+		footer.resize(_width);
 	}
 	
 	inline function resetSettings()
@@ -253,21 +253,21 @@ class BitmapLog extends Window
 	
 	function drawCanvas()
 	{
-		final canvasBmd = canvas.bitmapData;
+		// final canvasBmd = canvas.bitmapData;
 		
 		if (index < 0)
 		{
 			// wiping transparent doesn't work for some reason
-			canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
-			canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+			// canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
+			// canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
 			return;
 		}
 		
 		final bitmap = entries[index].bitmap;
 		// find the window center
 		final point = FlxPoint.get();
-		point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
-		point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
+		// point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
+		// point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
 		
 		point.add(canvasOffset);
 		
@@ -277,14 +277,14 @@ class BitmapLog extends Window
 		matrix.translate(point.x, point.y);
 		point.put();
 		
-		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
-		canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
+		// canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+		// canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
 		
 		drawBoundingBox(bitmap);
-		canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
+		// canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
 		
 		header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
-		// footer.setText(entries[index]);
+		footer.setText(entries[index]);
 	}
 	
 	function setIndex(index:Int):Bool
