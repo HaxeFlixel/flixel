@@ -38,6 +38,13 @@ class FlxSoundTray extends Sprite
 	var _bars:Array<Bitmap>;
 
 	/**
+	 * Text under the volume bars. Defaults to `defaultLabel`.
+	 */
+	var text:TextField;
+	
+	var bg:Bitmap;
+
+	/**
 	 * How wide the sound tray background is.
 	 */
 	var _width:Int = 80;
@@ -53,6 +60,9 @@ class FlxSoundTray extends Sprite
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
 
+	/**The default text that will be shown when changing the volume.**/
+	public var defaultLabel:String = 'VOLUME';
+
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
@@ -64,15 +74,15 @@ class FlxSoundTray extends Sprite
 		visible = false;
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
-		var tmp:Bitmap = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
+		bg = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
 		screenCenter();
-		addChild(tmp);
+		addChild(bg);
 
-		var text:TextField = new TextField();
-		text.width = tmp.width;
-		text.height = tmp.height;
+		text = new TextField();
+		text.width = bg.width;
+		// text.height = bg.height;
 		text.multiline = true;
-		text.wordWrap = true;
+		// text.wordWrap = true;
 		text.selectable = false;
 
 		#if flash
@@ -85,23 +95,20 @@ class FlxSoundTray extends Sprite
 		dtf.align = TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf;
 		addChild(text);
-		text.text = "VOLUME";
+		text.text = defaultLabel;
 		text.y = 16;
 
-		var bx:Int = 10;
-		var by:Int = 14;
+
 		_bars = new Array();
 
+		var tmp:Bitmap;
 		for (i in 0...10)
 		{
 			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.WHITE));
-			tmp.x = bx;
-			tmp.y = by;
 			addChild(tmp);
 			_bars.push(tmp);
-			bx += 6;
-			by--;
 		}
+		updateSize();
 
 		y = -height;
 		visible = false;
@@ -143,8 +150,10 @@ class FlxSoundTray extends Sprite
 	 * Makes the little volume tray slide out.
 	 *
 	 * @param	up Whether the volume is increasing.
+	 * @param label Text to show on the volume tray. If left empty, will show `defaultLabel`.
+	 * @param newVolume Volume between 0 and 1 that will be shown on the volume bars. Useful for multiple volume settings, such as music and sound. Leaving this empty will default to `FlxG.sound.volume`.
 	 */
-	public function show(up:Bool = false):Void
+	public function show(up:Bool = false, ?label:String, ?newVolume:Float):Void
 	{
 		if (!silent)
 		{
@@ -153,6 +162,13 @@ class FlxSoundTray extends Sprite
 				FlxG.sound.load(sound).play();
 		}
 
+		if (label != null)
+			text.text = label;
+		else
+			text.text = defaultLabel;
+			
+		updateSize();
+		
 		_timer = 1;
 		y = 0;
 		visible = true;
@@ -182,7 +198,29 @@ class FlxSoundTray extends Sprite
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
 
-		x = (0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x);
+		x = (0.5 * (Lib.current.stage.stageWidth - bg.width * _defaultScale) - FlxG.game.x);
+	}
+	
+	function updateSize()
+	{
+		if (text.textWidth + 10 > bg.width)
+			text.width = text.textWidth + 10;
+			
+		bg.width = text.textWidth + 10 > _width ? text.textWidth + 10 : _width;
+		
+		text.width = bg.width;
+		
+		var bx:Int = Std.int(bg.width / 2 - 30);
+		var by:Int = 14;
+		for (i in 0..._bars.length)
+		{
+			_bars[i].x = bx;
+			_bars[i].y = by;
+			bx += 6;
+			by--;
+		}
+		
+		screenCenter();
 	}
 }
 #end
