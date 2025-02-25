@@ -31,8 +31,8 @@ class BitmapLog extends Window
 	
 	final entries = new Array<BitmapLogEntry>();
 	final canvas:Bitmap;
-	// final header:Header;
-	final footer:Footer;
+	final header:Header;
+	// final footer:Footer;
 	final buttonRemove:FlxSystemButton;
 	final canvasOffset = FlxPoint.get();
 	
@@ -56,15 +56,15 @@ class BitmapLog extends Window
 		buttonRemove.y = Window.HEADER_HEIGHT + 3;
 		addChild(buttonRemove);
 		
-		// header = new Header();
-		// header.y = 2;
-		// header.onPrev.add(()->setIndex(index - 1));
-		// header.onNext.add(()->setIndex(index + 1));
-		// header.onReset.add(resetSettings);
-		// addChild(header);
+		header = new Header();
+		header.y = 2;
+		header.onPrev.add(()->setIndex(index - 1));
+		header.onNext.add(()->setIndex(index + 1));
+		header.onReset.add(resetSettings);
+		addChild(header);
 		
-		footer = new Footer();
-		addChild(footer);
+		// footer = new Footer();
+		// addChild(footer);
 		
 		setVisible(false);
 		
@@ -137,7 +137,7 @@ class BitmapLog extends Window
 	{
 		super.updateSize();
 		// account for the footer
-		_background.scaleY = _height - _header.height * 2;
+		// _background.scaleY = _height - _header.height * 2;
 	}
 	
 	override function resize(width:Float, height:Float):Void
@@ -147,7 +147,7 @@ class BitmapLog extends Window
 		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
 		final canvasWidth = Std.int(_width - canvas.x);
-		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
+		final canvasHeight = Std.int(_height - canvas.y);// - footer.getHeight());
 		
 		if (canvasWidth > 0 && canvasHeight > 0)
 		{
@@ -157,9 +157,9 @@ class BitmapLog extends Window
 		
 		buttonRemove.x = _width - buttonRemove.width - 3;
 		
-		// header.resize(_width - 5);
-		footer.y = _height - footer.getHeight();
-		footer.resize(_width);
+		header.resize(_width - 5);
+		// footer.y = _height - footer.getHeight();
+		// footer.resize(_width);
 	}
 	
 	inline function resetSettings()
@@ -283,16 +283,16 @@ class BitmapLog extends Window
 		drawBoundingBox(bitmap);
 		canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
 		
-		// header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
-		footer.setText(entries[index]);
+		header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
+		// footer.setText(entries[index]);
 	}
 	
 	function setIndex(index:Int):Bool
 	{
 		this.index = validIndex(index);
 		
-		// if (this.index < 0)
-		// 	header.clear();
+		if (this.index < 0)
+			header.clear();
 		
 		resetSettings();
 		drawCanvas();
