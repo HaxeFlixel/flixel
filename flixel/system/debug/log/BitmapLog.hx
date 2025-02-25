@@ -144,7 +144,7 @@ class BitmapLog extends Window
 	{
 		super.resize(width, height);
 		
-		// canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
 		final canvasWidth = Std.int(_width /* - canvas.x */);
 		final canvasHeight = Std.int(_height /* - canvas.y */ - footer.getHeight());
