@@ -31,7 +31,7 @@ class BitmapLog extends Window
 	
 	final entries = new Array<BitmapLogEntry>();
 	final canvas:Bitmap;
-	final header:Header;
+	// final header:Header;
 	final footer:Footer;
 	final buttonRemove:FlxSystemButton;
 	final canvasOffset = FlxPoint.get();
@@ -56,12 +56,12 @@ class BitmapLog extends Window
 		buttonRemove.y = Window.HEADER_HEIGHT + 3;
 		addChild(buttonRemove);
 		
-		header = new Header();
-		header.y = 2;
-		header.onPrev.add(()->setIndex(index - 1));
-		header.onNext.add(()->setIndex(index + 1));
-		header.onReset.add(resetSettings);
-		addChild(header);
+		// header = new Header();
+		// header.y = 2;
+		// header.onPrev.add(()->setIndex(index - 1));
+		// header.onNext.add(()->setIndex(index + 1));
+		// header.onReset.add(resetSettings);
+		// addChild(header);
 		
 		footer = new Footer();
 		addChild(footer);
@@ -157,7 +157,7 @@ class BitmapLog extends Window
 		
 		buttonRemove.x = _width - buttonRemove.width - 3;
 		
-		header.resize(_width - 5);
+		// header.resize(_width - 5);
 		footer.y = _height - footer.getHeight();
 		footer.resize(_width);
 	}
@@ -283,7 +283,7 @@ class BitmapLog extends Window
 		drawBoundingBox(bitmap);
 		canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
 		
-		header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
+		// header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
 		footer.setText(entries[index]);
 	}
 	
@@ -291,8 +291,8 @@ class BitmapLog extends Window
 	{
 		this.index = validIndex(index);
 		
-		if (this.index < 0)
-			header.clear();
+		// if (this.index < 0)
+		// 	header.clear();
 		
 		resetSettings();
 		drawCanvas();
