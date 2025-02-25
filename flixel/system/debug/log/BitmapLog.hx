@@ -146,12 +146,12 @@ class BitmapLog extends Window
 		
 		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		
-		final canvasWidth = Std.int(_width /* - canvas.x */);
-		final canvasHeight = Std.int(_height /* - canvas.y */ - footer.getHeight());
+		final canvasWidth = Std.int(_width - canvas.x);
+		final canvasHeight = Std.int(_height - canvas.y - footer.getHeight());
 		
 		if (canvasWidth > 0 && canvasHeight > 0)
 		{
-			// canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
+			canvas.bitmapData = new BitmapData(canvasWidth, canvasHeight, true, FlxColor.TRANSPARENT);
 			drawCanvas();
 		}
 		
