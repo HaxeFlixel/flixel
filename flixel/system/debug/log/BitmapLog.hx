@@ -253,9 +253,13 @@ class BitmapLog extends Window
 	
 	function drawCanvas()
 	{
+		if (canvas.bitmapData == null)
+		{
+			// If the window is too small there is no canvas bitmap
+			return;
+		}
+		
 		final canvasBmd = canvas.bitmapData;
-		if (canvasBmd == null)
-			throw "Unexpected null canvas";
 		
 		if (index < 0)
 		{
@@ -268,8 +272,8 @@ class BitmapLog extends Window
 		final bitmap = entries[index].bitmap;
 		// find the window center
 		final point = FlxPoint.get();
-		// point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
-		// point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
+		point.x = (canvasBmd.width / 2) - (bitmap.width * zoom / 2);
+		point.y = (canvasBmd.height / 2) - (bitmap.height * zoom / 2);
 		
 		point.add(canvasOffset);
 		
@@ -279,11 +283,11 @@ class BitmapLog extends Window
 		matrix.translate(point.x, point.y);
 		point.put();
 		
-		// canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
-		// canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
+		canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+		canvasBmd.draw(bitmap, matrix, null, null, canvasBmd.rect, false);
 		
 		drawBoundingBox(bitmap);
-		// canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
+		canvasBmd.draw(FlxSpriteUtil.flashGfxSprite, matrix, null, null, canvasBmd.rect, false);
 		
 		header.setText(index + 1, entries.length, bitmap.width, bitmap.height);
 		footer.setText(entries[index]);
