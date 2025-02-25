@@ -253,13 +253,13 @@ class BitmapLog extends Window
 	
 	function drawCanvas()
 	{
-		// final canvasBmd = canvas.bitmapData;
+		final canvasBmd = canvas.bitmapData;
 		
 		if (index < 0)
 		{
 			// wiping transparent doesn't work for some reason
-			// canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
-			// canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
+			canvasBmd.fillRect(canvasBmd.rect, FlxColor.WHITE);
+			canvasBmd.fillRect(canvasBmd.rect, FlxColor.TRANSPARENT);
 			return;
 		}
 		
