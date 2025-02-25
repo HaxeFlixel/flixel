@@ -30,7 +30,7 @@ class BitmapLog extends Window
 	public var zoom:Float = 1;
 	
 	final entries = new Array<BitmapLogEntry>();
-	// final canvas:Bitmap;
+	final canvas:Bitmap;
 	final header:Header;
 	final footer:Footer;
 	final buttonRemove:FlxSystemButton;
@@ -46,10 +46,10 @@ class BitmapLog extends Window
 		minSize.x = 165;
 		minSize.y = Window.HEADER_HEIGHT * 2 + 1;
 		
-		// canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
-		// canvas.x = 0;
-		// canvas.y = 15;
-		// addChild(canvas);
+		canvas = new Bitmap(new BitmapData(Std.int(width), Std.int(height - 15), true, FlxColor.TRANSPARENT));
+		canvas.x = 0;
+		canvas.y = 15;
+		addChild(canvas);
 		
 		buttonRemove = new FlxSystemButton(Icon.close, removeCurrent);
 		buttonRemove.x = width - buttonRemove.width - 3;
@@ -90,8 +90,8 @@ class BitmapLog extends Window
 	
 		clear();
 	
-		// removeChild(canvas);
-		// canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
+		removeChild(canvas);
+		canvas.bitmapData = FlxDestroyUtil.dispose(canvas.bitmapData);
 		entries.resize(0);
 	
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
