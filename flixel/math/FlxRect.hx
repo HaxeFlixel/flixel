@@ -611,3 +611,84 @@ class FlxRect implements IFlxPooled
 		return _pool;
 	}
 }
+
+@:forward
+@:forward.new
+@:forward.variance
+abstract FlxReadOnlyRect(FlxRect) from FlxRect to IFlxPooled
+{
+	public static var pool(get, never):IFlxPool<FlxRect>;
+	static inline function get_pool()
+	{
+		return FlxRect.pool;
+	}
+
+	/**
+	 * Recycle or create new FlxRect.
+	 * Be sure to put() them back into the pool after you're done with them!
+	 */
+	public static inline function get(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxReadOnlyRect
+	{
+		return FlxRect.get(x, y, width, height);
+	}
+
+	/**
+	 * Recycle or create a new FlxRect which will automatically be released
+	 * to the pool when passed into a flixel function.
+	 */
+	public static inline function weak(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxReadOnlyRect
+	{
+		return FlxRect.weak(x, y, width, height);
+	}
+
+	public var x(get, never):Float;
+	inline function get_x() return this.x;
+	
+	public var y(get, never):Float;
+	inline function get_y() return this.y;
+	
+	public var width(get, never):Float;
+	inline function get_width() return this.width;
+	
+	public var height(get, never):Float;
+	inline function get_height() return this.height;
+	
+	/** The x coordinate of the left side of the rectangle */
+	public var left(get, never):Float;
+	inline function get_left() return this.left;
+
+	/** The x coordinate of the right side of the rectangle */
+	public var right(get, never):Float;
+	inline function get_right() return this.right;
+
+	/** The y coordinate of the top of the rectangle */
+	public var top(get, never):Float;
+	inline function get_top() return this.top;
+
+	/** The y coordinate of the bottom of the rectangle */
+	public var bottom(get, never):Float;
+	inline function get_bottom() return this.bottom;
+	
+	/** Whether width or height of this rectangle is equal to zero or not */
+	public var isEmpty(get, never):Bool;
+	inline function get_isEmpty() return this.isEmpty;
+	
+	// Hide functions that set fields, by making private versions
+	inline function destroy() return this.destroy();
+	inline function setSize(w, h) return this.setSize(w, h);
+	inline function setPosition(x, y) return this.setPosition(x, y);
+	inline function set(x = 0.0, y = 0.0, w = 0.0, h = 0.0) return this.set(x, y, w, h);
+	inline function setBounds(x1, y1, x2, y2) return this.setBounds(x1, y1, x2, y2);
+	inline function setAbs(x, y, w, h) return this.setAbs(x, y, w, h);
+	inline function setBoundsAbs(x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0) return this.setBoundsAbs(x1, y1, x2, y2);
+	inline function copyFrom(rect) return this.copyFrom(rect);
+	inline function copyFromFlash(rect) return this.copyFromFlash(rect);
+	inline function union(rect) return this.union(rect);
+	inline function floor() return this.floor();
+	inline function ceil() return this.ceil();
+	inline function round() return this.round();
+	inline function fromTwoPoints(p1, p2) return this.fromTwoPoints(p1, p2);
+	inline function unionWithPoint(p) return this.unionWithPoint(p);
+	inline function offset(dx, dy) return this.offset(dx, dy);
+	inline function clipTo(rect) return this.clipTo(rect);
+}
