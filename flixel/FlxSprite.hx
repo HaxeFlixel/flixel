@@ -277,7 +277,7 @@ class FlxSprite extends FlxObject
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
-	var lastClipRect = FlxRect.get(Math.NaN);
+	var _lastClipRect = FlxRect.get(Math.NaN);
 
 	/**
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
@@ -421,7 +421,7 @@ class FlxSprite extends FlxObject
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
-		lastClipRect = FlxDestroyUtil.put(lastClipRect);
+		_lastClipRect = FlxDestroyUtil.put(_lastClipRect);
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -839,17 +839,17 @@ class FlxSprite extends FlxObject
 	 */
 	function checkClipRect()
 	{
-		if ((clipRect == null && Math.isNaN(lastClipRect.x))
-		|| (clipRect != null && clipRect.equals(lastClipRect)))
+		if ((clipRect == null && Math.isNaN(_lastClipRect.x))
+		|| (clipRect != null && clipRect.equals(_lastClipRect)))
 			return;
 		
 		// redraw frame
 		frame = frames.frames[animation.frameIndex];
 		
 		if (clipRect == null)
-			lastClipRect.set(Math.NaN);
+			_lastClipRect.set(Math.NaN);
 		else
-			lastClipRect.copyFrom(clipRect);
+			_lastClipRect.copyFrom(clipRect);
 	}
 
 	@:noCompletion
