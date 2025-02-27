@@ -1,8 +1,5 @@
 package flixel.graphics.frames;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -13,6 +10,9 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 import haxe.ds.ArraySort;
 import haxe.ds.Vector;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 /**
  * Base class for all frame types
@@ -576,83 +576,79 @@ class FlxFrame implements IFlxDestroyable
 	 *                         If `null`, a new frame will be created.
 	 * @return  Result of applying frame clipping
 	 */
-	public function clipTo(clip:FlxRect, ?clippedFrame:FlxFrame):FlxFrame
+	public function clipTo(rect:FlxRect, ?clippedFrame:FlxFrame):FlxFrame
 	{
 		if (clippedFrame == null)
-		{
 			clippedFrame = new FlxFrame(parent, angle);
-		}
-		else
-		{
-			clippedFrame.parent = parent;
-			clippedFrame.angle = angle;
-			clippedFrame.frame = FlxDestroyUtil.put(clippedFrame.frame);
-		}
 
-		clippedFrame.sourceSize.copyFrom(sourceSize);
-		clippedFrame.name = name;
+		copyTo(clippedFrame);
+		return clippedFrame.clip(rect);
+	}
 
+	/**
+	 * Clips this frame to the desired rect
+	 *
+	 * @param   rect  Clipping rectangle to apply
+	 */
+	public function clip(rect:FlxRect)
+	{
 		// no need to make all calculations if original frame is empty...
 		if (type == FlxFrameType.EMPTY)
-		{
-			clippedFrame.type = FlxFrameType.EMPTY;
-			clippedFrame.offset.set(0, 0);
-			return clippedFrame;
-		}
-
-		final clippedRect:FlxRect = FlxRect.get(0, 0).setSize(frame.width, frame.height);
+			return this;
+		
+		final clippedRect = FlxRect.get(0, 0, frame.width, frame.height);
 		if (angle != FlxFrameAngle.ANGLE_0)
 		{
 			clippedRect.width = frame.height;
 			clippedRect.height = frame.width;
 		}
-
-		clip.offset(-offset.x, -offset.y);
-		var frameRect:FlxRect = clippedRect.intersection(clip);
+		
+		rect.offset(-offset.x, -offset.y);
+		final frameRect:FlxRect = clippedRect.intersection(rect);
+		rect.offset(offset.x, offset.y);
 		clippedRect.put();
-
+		
 		if (frameRect.isEmpty)
 		{
-			clippedFrame.type = FlxFrameType.EMPTY;
-			frameRect.set(0, 0, 0, 0);
-			clippedFrame.frame = frameRect;
-			clippedFrame.offset.set(0, 0);
+			type = FlxFrameType.EMPTY;
+			frame.set(0, 0, 0, 0);
+			offset.set(0, 0);
 		}
 		else
 		{
-			clippedFrame.type = FlxFrameType.REGULAR;
-			clippedFrame.offset.set(frameRect.x, frameRect.y).add(offset);
-
-			var p1 = FlxPoint.weak(frameRect.x, frameRect.y);
-			var p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
-
-			_matrix.identity();
-
-			if (angle == FlxFrameAngle.ANGLE_NEG_90)
-			{
-				_matrix.rotateByPositive90();
-				_matrix.translate(frame.width, 0);
-			}
-			else if (angle == FlxFrameAngle.ANGLE_90)
-			{
-				_matrix.rotateByNegative90();
-				_matrix.translate(0, frame.height);
-			}
-
+			type = FlxFrameType.REGULAR;
+			offset.add(frameRect.x, frameRect.y);
+			
 			if (angle != FlxFrameAngle.ANGLE_0)
 			{
+				final p1 = FlxPoint.weak(frameRect.x, frameRect.y);
+				final p2 = FlxPoint.weak(frameRect.right, frameRect.bottom);
+				
+				_matrix.identity();
+				
+				if (angle == FlxFrameAngle.ANGLE_NEG_90)
+				{
+					_matrix.rotateByPositive90();
+					_matrix.translate(frame.width, 0);
+				}
+				else if (angle == FlxFrameAngle.ANGLE_90)
+				{
+					_matrix.rotateByNegative90();
+					_matrix.translate(0, frame.height);
+				}
+				
 				p1.transform(_matrix);
 				p2.transform(_matrix);
+				frameRect.fromTwoPoints(p1, p2);
 			}
-
-			frameRect.fromTwoPoints(p1, p2);
+			
 			frameRect.offset(frame.x, frame.y);
-			clippedFrame.frame = frameRect;
-			clippedFrame.cacheFrameMatrix();
+			frame.copyFrom(frameRect);
+			cacheFrameMatrix();
 		}
-
-		clip.offset(offset.x, offset.y);
-		return clippedFrame;
+		
+		frameRect.put();
+		return this;
 	}
 
 	/**
