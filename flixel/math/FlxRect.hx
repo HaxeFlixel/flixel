@@ -127,19 +127,77 @@ class FlxRect implements IFlxPooled
 	/**
 	 * Fill this rectangle with the data provided.
 	 *
-	 * @param	X		The X-coordinate of the point in space.
-	 * @param	Y		The Y-coordinate of the point in space.
-	 * @param	Width	Desired width of the rectangle.
-	 * @param	Height	Desired height of the rectangle.
-	 * @return	A reference to itself.
+	 * @param   x       The X-coordinate of the point in space
+	 * @param   y       The Y-coordinate of the point in space
+	 * @param   width   Desired width of the rectangle
+	 * @param   height  Desired height of the rectangle
+	 * @return  This rectangle
 	 */
-	public inline function set(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public inline function set(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		x = X;
-		y = Y;
-		width = Width;
-		height = Height;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 		return this;
+	}
+	
+	/**
+	 * Fill this rectangle from the two given corner locations
+	 *
+	 * @param   x1  The position of this rect
+	 * @param   y1  The position of this rect
+	 * @param   x2  The position of this rect's opposite corner
+	 * @param   y2  The position of this rect's opposite corner
+	 * @return  This rectangle
+	 */
+	public inline function setBounds(x1:Float, y1:Float, x2:Float, y2:Float):FlxRect
+	{
+		return set(x1, y1, x2 - x1, y2 - y1);
+	}
+	
+	/**
+	 * Fills the rectangle so that it has always has a positive width and height. For example:
+	 * ```haxe
+	 * rect.setAbs(100, 100, -50, -50);
+	 * // Is the same as
+	 * rect.set(50, 50, 50, 50);
+	 * ```
+	 * 
+	 * @param x       The X-coordinate of the point in space
+	 * @param y       The Y-coordinate of the point in space
+	 * @param width   Desired width of the rectangle
+	 * @param height  Desired height of the rectangle
+	 * @return  This rectangle
+	 */
+	public inline function setAbs(x:Float, y:Float, width:Float, height:Float)
+	{
+		this.x = width > 0 ? x : x + width;
+		this.y = height > 0 ? y : y + height;
+		this.width = width > 0 ? width : -width;
+		this.height = height > 0 ? height : -height;
+		return this;
+	}
+	
+	/**
+	 * Fills the rectangle so that it has always has a positive width and height. For example:
+	 * ```haxe
+	 * rect.setBoundsAbs(100, 100, 50, 50);
+	 * // Is the same as
+	 * rect.setBounds(50, 50, 100, 100);
+	 * // ...or
+	 * rect.set(50, 50, 50, 50);
+	 * ```
+	 *
+	 * @param   x1  The position of this rect
+	 * @param   y1  The position of this rect
+	 * @param   x2  The position of this rect's opposite corner
+	 * @param   y2  The position of this rect's opposite corner
+	 * @return  This rectangle
+	 */
+	public overload inline extern function setBoundsAbs(x1 = 0.0, y1 = 0.0, x2 = 0.0, y2 = 0.0):FlxRect
+	{
+		return setAbs(x1, y1, x2 - x1, y2 - y1);
 	}
 
 	/**
