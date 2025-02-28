@@ -163,6 +163,9 @@ class FlxSoundTray extends Sprite
 		final numBars = Math.round(volume * 10);
 		for (i in 0..._bars.length)
 			_bars[i].alpha = i < numBars ? 1.0 : 0.5;
+
+		_label.text = label;
+		updateSize();
 	}
 	
 	/**
