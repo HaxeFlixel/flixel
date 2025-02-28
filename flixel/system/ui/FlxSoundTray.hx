@@ -20,6 +20,7 @@ import openfl.text.GridFitType;
  * The flixel sound tray, the little volume meter that pops down sometimes.
  * Accessed via `FlxG.game.soundTray` or `FlxG.sound.soundTray`.
  */
+@:allow(flixel.system.frontEnds.SoundFrontEnd)
 class FlxSoundTray extends Sprite
 {
 	/**
@@ -27,6 +28,13 @@ class FlxSoundTray extends Sprite
 	 */
 	public var active:Bool;
 
+	/**
+	 * The volume label
+	 */
+	var _label:TextField;
+	
+	var _bg:Bitmap;
+	
 	/**
 	 * Helps us auto-hide the sound tray after a volume change.
 	 */
@@ -36,32 +44,22 @@ class FlxSoundTray extends Sprite
 	 * Helps display the volume bars on the sound tray.
 	 */
 	var _bars:Array<Bitmap>;
-
-	/**
-	 * Text under the volume bars. Defaults to `defaultLabel`.
-	 */
-	var text:TextField;
 	
-	var bg:Bitmap;
-
 	/**
-	 * How wide the sound tray background is.
+	 * The minimum width of the sound tray
 	 */
-	var _width:Int = 80;
+	var _minWidth:Int = 80;
 
 	var _defaultScale:Float = 2.0;
 
 	/**The sound used when increasing the volume.**/
-	public var volumeUpSound:String = "flixel/sounds/beep";
+	public var volumeUpSound:FlxSoundAsset = "flixel/sounds/beep";
 
 	/**The sound used when decreasing the volume.**/
-	public var volumeDownSound:String = 'flixel/sounds/beep';
+	public var volumeDownSound:FlxSoundAsset = 'flixel/sounds/beep';
 
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
-
-	/**The default text that will be shown when changing the volume.**/
-	public var defaultLabel:String = 'VOLUME';
 
 	/**
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
@@ -74,29 +72,29 @@ class FlxSoundTray extends Sprite
 		visible = false;
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
-		bg = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
+		_bg = new Bitmap(new BitmapData(_minWidth, 30, true, 0x7F000000));
 		screenCenter();
-		addChild(bg);
+		addChild(_bg);
 
-		text = new TextField();
-		text.width = bg.width;
+		_label = new TextField();
+		_label.width = _bg.width;
 		// text.height = bg.height;
-		text.multiline = true;
+		_label.multiline = true;
 		// text.wordWrap = true;
-		text.selectable = false;
+		_label.selectable = false;
 
 		#if flash
-		text.embedFonts = true;
-		text.antiAliasType = AntiAliasType.NORMAL;
-		text.gridFitType = GridFitType.PIXEL;
+		_label.embedFonts = true;
+		_label.antiAliasType = AntiAliasType.NORMAL;
+		_label.gridFitType = GridFitType.PIXEL;
 		#else
 		#end
 		var dtf:TextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 10, 0xffffff);
 		dtf.align = TextFormatAlign.CENTER;
-		text.defaultTextFormat = dtf;
-		addChild(text);
-		text.text = defaultLabel;
-		text.y = 16;
+		_label.defaultTextFormat = dtf;
+		addChild(_label);
+		_label.text = "VOLUME";
+		_label.y = 16;
 
 
 		_bars = new Array();
@@ -145,72 +143,73 @@ class FlxSoundTray extends Sprite
 			}
 		}
 	}
-
+	
 	/**
-	 * Makes the little volume tray slide out.
-	 *
-	 * @param	up Whether the volume is increasing.
-	 * @param label Text to show on the volume tray. If left empty, will show `defaultLabel`.
-	 * @param newVolume Volume between 0 and 1 that will be shown on the volume bars. Useful for multiple volume settings, such as music and sound. Leaving this empty will default to `FlxG.sound.volume`.
+	 * Shows the volume animation for the desired settings
+	 * @param   volume    The volume, 1.0 is full volume
+	 * @param   sound     The sound to play, if any
+	 * @param   duration  How long the tray will show
+	 * @param   label     The test label to display
 	 */
-	public function show(up:Bool = false, ?label:String, ?newVolume:Float):Void
+	public function showAnim(volume:Float, ?sound:FlxSoundAsset, duration = 1.0, label = "VOLUME")
 	{
-		if (!silent)
-		{
-			var sound = FlxAssets.getSoundAddExtension(up ? volumeUpSound : volumeDownSound);
-			if (sound != null)
-				FlxG.sound.load(sound).play();
-		}
-
-		if (label != null)
-			text.text = label;
-		else
-			text.text = defaultLabel;
-			
-		updateSize();
+		if (sound != null)
+			FlxG.sound.play(FlxG.assets.getSoundAddExt(sound));
 		
-		_timer = 1;
+		_timer = duration;
 		y = 0;
 		visible = true;
 		active = true;
-		var globalVolume:Int = Math.round((newVolume != null ? newVolume : FlxG.sound.volume) * 10);
-
-		if (FlxG.sound.muted)
-		{
-			globalVolume = 0;
-		}
-
+		final numBars = Math.round(volume * 10);
 		for (i in 0..._bars.length)
-		{
-			if (i < globalVolume)
-			{
-				_bars[i].alpha = 1;
-			}
-			else
-			{
-				_bars[i].alpha = 0.5;
-			}
-		}
+			_bars[i].alpha = i < numBars ? 1.0 : 0.5;
 	}
+	
+	/**
+	 * Makes the little volume tray slide out.
+	 *
+	 * @param   up  Whether the volume is increasing.
+	 */
+	@:deprecated("show is deprecated, use showAnim")
+	public function show(up:Bool = false):Void
+	{
+		if (up)
+			showIncrement();
+		else
+			showDecrement();
+	}
+	
+	function showIncrement():Void
+	{
+		final volume = FlxG.sound.muted ? 0 : FlxG.sound.volume;
+		showAnim(volume, silent ? null : volumeUpSound);
+	}
+	
+	function showDecrement():Void
+	{
+		final volume = FlxG.sound.muted ? 0 : FlxG.sound.volume;
+		showAnim(volume, silent ? null : volumeDownSound);
+	}
+	
 
 	public function screenCenter():Void
 	{
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
 
-		x = (0.5 * (Lib.current.stage.stageWidth - bg.width * _defaultScale) - FlxG.game.x);
+		x = (0.5 * (Lib.current.stage.stageWidth - _bg.width * _defaultScale) - FlxG.game.x);
 	}
 	
 	function updateSize()
 	{
-		if (text.textWidth + 10 > bg.width)
-			text.width = text.textWidth + 10;
+		if (_label.textWidth + 10 > _bg.width)
+			_label.width = _label.textWidth + 10;
 			
-		bg.width = text.textWidth + 10 > _width ? text.textWidth + 10 : _width;
+		_bg.width = _label.textWidth + 10 > _minWidth ? _label.textWidth + 10 : _minWidth;
 		
-		text.width = bg.width;
+		_label.width = _bg.width;
 		
-		var bx:Int = Std.int(bg.width / 2 - 30);
+		var bx:Int = Std.int(_bg.width / 2 - 30);
 		var by:Int = 14;
 		for (i in 0..._bars.length)
 		{
