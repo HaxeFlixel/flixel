@@ -28,7 +28,22 @@ typedef AtlasPos =
 /**
  * Rectangle struct use for atlas json parsing, { x:Float, y:Float, w:Float, h:Float }
  */
-typedef AtlasRect = AtlasPos & AtlasSize;
+@:forward
+abstract AtlasRect(AtlasPos & AtlasSize) from AtlasPos & AtlasSize
+{
+	public var l(get, never):Float; inline function get_l() return this.x;
+	public var r(get, never):Float; inline function get_r() return this.x + this.w;
+	public var t(get, never):Float; inline function get_t() return this.y;
+	public var b(get, never):Float; inline function get_b() return this.y + this.h;
+	
+	public function toFlxRect(?rect)
+	{
+		if (rect == null)
+			rect = flixel.math.FlxRect.get();
+		
+		return rect.set(this.x, this.y, this.w, this.h);
+	}
+}
 
 typedef AtlasFrame =
 {
