@@ -33,9 +33,16 @@ class FlxSoundTray extends Sprite
 	var _timer:Float;
 
 	/**
+	 * Text under the volume bars.
+	 */
+	var text:TextField;
+
+	/**
 	 * Helps display the volume bars on the sound tray.
 	 */
 	var _bars:Array<Bitmap>;
+
+	var bg:Bitmap; 
 
 	/**
 	 * How wide the sound tray background is.
@@ -64,13 +71,13 @@ class FlxSoundTray extends Sprite
 		visible = false;
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
-		var tmp:Bitmap = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
+		bg = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
 		screenCenter();
-		addChild(tmp);
+		addChild(bg);
 
-		var text:TextField = new TextField();
-		text.width = tmp.width;
-		text.height = tmp.height;
+		text = new TextField();
+		text.width = bg.width;
+		text.height = bg.height;
 		text.multiline = true;
 		text.wordWrap = true;
 		text.selectable = false;
@@ -94,7 +101,7 @@ class FlxSoundTray extends Sprite
 
 		for (i in 0...10)
 		{
-			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.WHITE));
+			var tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.WHITE));
 			tmp.x = bx;
 			tmp.y = by;
 			addChild(tmp);
