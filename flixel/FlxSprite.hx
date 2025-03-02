@@ -869,6 +869,7 @@ class FlxSprite extends FlxObject
 		drawFrameComplex(_frame, camera);
 	}
 	
+	@:noCompletion
 	function drawFrameComplex(frame:FlxFrame, camera:FlxCamera):Void
 	{
 		final matrix = this._matrix; // TODO: Just use local?
