@@ -277,7 +277,7 @@ class FlxSprite extends FlxObject
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
-	var _lastClipRect = FlxRect.get(Math.NaN);
+	var _lastClipRect:FlxRect;
 
 	/**
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
@@ -398,6 +398,7 @@ class FlxSprite extends FlxObject
 		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
 		_scaledOrigin = new FlxPoint();
+		_lastClipRect = FlxRect.get(Math.NaN);
 	}
 
 	/**
