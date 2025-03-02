@@ -15,14 +15,25 @@ class FlxRect implements IFlxPooled
 	static var _pool:FlxPool<FlxRect> = new FlxPool(FlxRect.new.bind(0, 0, 0, 0));
 	// With the version below, this caused weird CI issues when FLX_NO_POINT_POOL is defined
 	// static var _pool = new FlxPool<FlxRect>(FlxRect);
-
+	
 	/**
 	 * Recycle or create new FlxRect.
 	 * Be sure to put() them back into the pool after you're done with them!
 	 */
-	public static inline function get(X:Float = 0, Y:Float = 0, Width:Float = 0, Height:Float = 0):FlxRect
+	public static inline function get(x = 0.0, y = 0.0, width = 0.0, height = 0.0):FlxRect
 	{
-		var rect = _pool.get().set(X, Y, Width, Height);
+		var rect = _pool.get().set(x, y, width, height);
+		rect._inPool = false;
+		return rect;
+	}
+	
+	/**
+	 * Recycle or create new FlxRect that matches the given rect.
+	 * Be sure to put() them back into the pool after you're done with them!
+	 */
+	public static inline function getCopy(rect:FlxRect):FlxRect
+	{
+		var rect = _pool.get().copyFrom(rect);
 		rect._inPool = false;
 		return rect;
 	}
