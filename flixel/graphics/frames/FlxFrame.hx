@@ -1,6 +1,8 @@
 package flixel.graphics.frames;
 
 import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.slice.FlxFrameSlices;
+import flixel.graphics.frames.slice.FlxSliceSection;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
@@ -142,10 +144,18 @@ class FlxFrame implements IFlxDestroyable
 	var tileMatrix:Vector<Float>;
 
 	var blitMatrix:Vector<Float>;
-
-	@:allow(flixel.graphics.FlxGraphic)
-	@:allow(flixel.graphics.frames.FlxFramesCollection)
-	function new(parent:FlxGraphic, angle = FlxFrameAngle.ANGLE_0, flipX = false, flipY = false, duration = 0.0)
+	
+	/**
+	 * The 9-slice rect of this frame
+	 */
+	public var slice:FlxRect;
+	
+	/**
+	 * Internal helper for this frame's 9-slicing
+	 */
+	var sliceData:FlxFrameSlices;
+	
+	public function new(parent:FlxGraphic, angle = FlxFrameAngle.ANGLE_0, flipX = false, flipY = false, duration = 0.0)
 	{
 		this.parent = parent;
 		this.angle = angle;
@@ -161,11 +171,42 @@ class FlxFrame implements IFlxDestroyable
 		blitMatrix = new Vector<Float>(6);
 		if (FlxG.renderTile)
 			tileMatrix = new Vector<Float>(6);
+		
+		sliceData = new FlxFrameSlices(this);
 	}
-
-	@:allow(flixel.graphics.frames.FlxFramesCollection)
-	@:allow(flixel.graphics.frames.FlxBitmapFont)
-	function cacheFrameMatrix():Void
+	
+	/**
+	 * Updates the internal helpers to prepare this frame for rendering.
+	 * Called automaticaly in `copyTo`.
+	 */
+	public function updateCache()
+	{
+		if (slice == null && sliceData.rect != null)
+			sliceData.clear();
+		else if (slice != null && (sliceData.rect == null || sliceData.rect.equals(slice)))
+			sliceData.set(slice);
+		
+		// TODO: Defer matrix stuff?
+	}
+	
+	/**
+	 * Fills the target frame sections with this frame's slice data, for rendering
+	 * @param list 
+	 */
+	public function initSliceSections(frames:FlxSectionList<FlxFrame>)
+	{
+		if (slice != null)
+		{
+			for (section=>frame in frames)
+				sliceData.initSectionFrame(section, frame);
+		}
+	}
+	
+	/**
+	 * initializes internal data, used for rendering, usually called after creation
+	 * @since 6.1.0
+	 */
+	public function cacheFrameMatrix():Void
 	{
 		prepareBlitMatrix(_matrix, true);
 		blitMatrix[0] = _matrix.a;
@@ -669,7 +710,8 @@ class FlxFrame implements IFlxDestroyable
 			clone.angle = angle;
 			clone.frame = FlxDestroyUtil.put(clone.frame);
 		}
-
+		
+		updateCache();
 		clone.offset.copyFrom(offset);
 		clone.flipX = flipX;
 		clone.flipY = flipY;
@@ -679,6 +721,9 @@ class FlxFrame implements IFlxDestroyable
 		clone.name = name;
 		clone.duration = duration;
 		clone.cacheFrameMatrix();
+		clone.slice = slice;
+		clone.sliceData.copyFrom(sliceData);
+		
 		return clone;
 	}
 
@@ -690,6 +735,7 @@ class FlxFrame implements IFlxDestroyable
 		offset = FlxDestroyUtil.put(offset);
 		frame = FlxDestroyUtil.put(frame);
 		uv = FlxDestroyUtil.put(uv);
+		sliceData = FlxDestroyUtil.destroy(sliceData);
 		blitMatrix = null;
 		tileMatrix = null;
 	}
