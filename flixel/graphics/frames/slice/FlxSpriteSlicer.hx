@@ -27,9 +27,9 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	public var rect:Null<FlxRect> = null;
 	
 	/**
-	 * Used to detect changes to `rect`
+	 * The current, active slicing rect, used internally to detect changes to `rect`
 	 */
-	var lastRect = new FlxRect(Math.NaN);
+	var currentRect = new FlxRect(Math.NaN);
 	var frameDirty = false;
 	
 	/**
@@ -63,7 +63,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	public function destroy()
 	{
-		lastRect = FlxDestroyUtil.put(lastRect);
+		currentRect = FlxDestroyUtil.put(currentRect);
 		FlxDestroyUtil.putArray(cast destRects);
 		FlxDestroyUtil.destroyArray(cast subframes);
 		destRects = null;
@@ -214,12 +214,12 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	{
 		if (rect != null)
 		{
-			if (!rectsMatch(rect, lastRect) || frameDirty)
+			if (rectsNotMatch(rect, currentRect) || frameDirty)
 				updateSourceRects(rect);
 		}
 		else if (targetFrame.slice != null)
 		{
-			if (!rectsMatch(targetFrame.slice, lastRect) || frameDirty)
+			if (rectsNotMatch(targetFrame.slice, currentRect) || frameDirty)
 			{
 				if (target.clipRect == null)
 					updateSourceRectsFromFrame(targetFrame);
@@ -229,13 +229,13 @@ class FlxSpriteSlicer implements IFlxDestroyable
 		}
 		else
 		{
-			lastRect.set(Math.NaN);
+			currentRect.set(Math.NaN);
 		}
 	}
 	
 	function updateSourceRects(rect:FlxRect)
 	{
-		lastRect.copyFrom(rect);
+		currentRect.copyFrom(rect);
 		frameDirty = false;
 		
 		final srcBounds = FlxRect.get(0, 0, target.frameWidth, target.frameHeight);
@@ -270,7 +270,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	function updateSourceRectsFromFrame(frame:FlxFrame)
 	{
-		lastRect.copyFrom(frame.slice);
+		currentRect.copyFrom(frame.slice);
 		frameDirty = false;
 		frame.initSliceSections(subframes);
 		updateDestRects();
@@ -291,7 +291,7 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	function updateDestRects()
 	{
 		final srcBounds = FlxRect.get(0, 0, target.frameWidth, target.frameHeight);
-		final srcSlice = getValidRect(lastRect);
+		final srcSlice = getValidRect(currentRect);
 		
 		if (target.clipRect != null)
 		{
@@ -352,26 +352,26 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	
 	function transformSourceXUnsafe(x:Float)
 	{
-		if (x < lastRect.x)
+		if (x < currentRect.x)
 			return x;
 		
-		if (x > lastRect.right)
+		if (x > currentRect.right)
 			return displayWidth - target.frameWidth + x;
 		
-		final middleScaleX = (displayWidth - target.frameWidth + lastRect.width) / lastRect.width;
-		return lastRect.x + (x - lastRect.x) * middleScaleX;
+		final middleScaleX = (displayWidth - target.frameWidth + currentRect.width) / currentRect.width;
+		return currentRect.x + (x - currentRect.x) * middleScaleX;
 	}
 	
 	function transformSourceYUnsafe(y:Float)
 	{
-		if (y < lastRect.y)
+		if (y < currentRect.y)
 			return y;
 		
-		if (y > lastRect.bottom)
+		if (y > currentRect.bottom)
 			return displayHeight - target.frameHeight + y;
 		
-		final middleScaleY = (displayHeight - target.frameHeight + lastRect.height) / lastRect.height;
-		return lastRect.y + (y - lastRect.y) * middleScaleY;
+		final middleScaleY = (displayHeight - target.frameHeight + currentRect.height) / currentRect.height;
+		return currentRect.y + (y - currentRect.y) * middleScaleY;
 	}
 	
 	/**
@@ -419,5 +419,10 @@ class FlxSpriteSlicer implements IFlxDestroyable
 	static function rectsMatch(a:FlxRect, b:FlxRect)
 	{
 		return (a == null && b == null) || (a != null && b != null && a.equals(b));
+	}
+	
+	static function rectsNotMatch(a:FlxRect, b:FlxRect)
+	{
+		return !rectsMatch(a, b);
 	}
 }
