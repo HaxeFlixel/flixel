@@ -817,12 +817,12 @@ class FlxSprite extends FlxObject
 		{
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
-
+			
 			if (isSimpleRender(camera))
 				drawSimple(camera);
 			else
 				drawComplex(camera);
-
+			
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
