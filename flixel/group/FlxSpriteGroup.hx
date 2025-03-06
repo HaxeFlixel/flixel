@@ -1086,7 +1086,8 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		if (ClipRect == null)
 			Sprite.clipRect = null;
 		else
-			Sprite.clipRect = FlxRect.get(ClipRect.x - Sprite.x + x, ClipRect.y - Sprite.y + y, ClipRect.width, ClipRect.height);
+			Sprite.clipRect = FlxRect.get((ClipRect.x - Sprite.x + x) * (1 / Sprite.scale.x), (ClipRect.y - Sprite.y + y) * (1 / Sprite.scale.y),
+				ClipRect.width * (1 / Sprite.scale.x), ClipRect.height * (1 / Sprite.scale.y));
 	}
 
 	// Functions for the FlxCallbackPoint
