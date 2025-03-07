@@ -584,7 +584,21 @@ class FlxFrame implements IFlxDestroyable
 		copyTo(clippedFrame);
 		return clippedFrame.clip(rect);
 	}
-
+	
+	/**
+	 * Whether there is any overlap between this frame and the given rect. If clipping this frame to
+	 * the given rect would result in an empty frame, the result is `false`
+	 */
+	public function overlaps(rect:FlxRect)
+	{
+		rect.x += frame.x - offset.x;
+		rect.y += frame.y - offset.y;
+		final result = rect.overlaps(frame);
+		rect.x -= frame.x - offset.x;
+		rect.y -= frame.y - offset.y;
+		return result;
+	}
+	
 	/**
 	 * Clips this frame to the desired rect
 	 *
