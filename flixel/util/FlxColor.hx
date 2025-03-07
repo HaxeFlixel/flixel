@@ -517,7 +517,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	This color
 	 */
-	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
+	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha = 1.0):FlxColor
 	{
 		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
@@ -533,7 +533,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255
 	 * @return	This color
 	 */
-	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
+	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha = 1.0):FlxColor
 	{
 		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
