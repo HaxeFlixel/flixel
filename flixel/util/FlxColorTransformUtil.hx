@@ -4,7 +4,96 @@ import openfl.geom.ColorTransform;
 
 class FlxColorTransformUtil
 {
-	public static function setMultipliers(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
+	/**
+	 * Resets the transform to default values, multipliers become `1.0` and offsets become `0.0`
+	 */
+	public static inline function reset(transform:ColorTransform):ColorTransform
+	{
+		return set(transform, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+	}
+	
+	/**
+	 * Quick way to set all of a transform's values
+	 * 
+	 * @param   rMult    The value for the red multiplier, ranges from 0 to 1
+	 * @param   gMult    The value for the green multiplier, ranges from 0 to 1
+	 * @param   bMult    The value for the blue multiplier, ranges from 0 to 1
+	 * @param   aMult    The value for the alpha transparency multiplier, ranges from 0 to 1
+	 * @param   rOffset  The offset value for the red color channel, ranges from -255 to 255
+	 * @param   gOffset  The offset value for the green color channel, ranges from -255 to 255
+	 * @param   bOffset  The offset for the blue color channel value, ranges from -255 to 255
+	 * @param   aOffset  The offset for alpha transparency channel value, ranges from -255 to 255
+	 */
+	overload public static inline extern function set(transform:ColorTransform, 
+			rMult, gMult, bMult, aMult = 1.0,
+			rOffset, gOffset, bOffset, aOffset = 0.0):ColorTransform
+	{
+		setMultipliers(transform, rMult, gMult, bMult, aMult);
+		setOffsets(transform, rOffset, gOffset, bOffset, aOffset);
+		
+		return transform;
+	}
+	
+	/**
+	 * Quick way to set all of a transform's values
+	 * 
+	 * @param   colorMult  A `FlxColor` whos `redFloat`, `greenFloat`, `blueFloat` and
+	 *                    `alphaFloat` values determine the multipliers of this transform
+	 * @param   color      A `FlxColor` whos `red`, `green`, `blue` and `alpha` values
+	 *                     determine the offsets of this transform
+	 */
+	overload public static inline extern function set(transform:ColorTransform, colorMult = FlxColor.WHITE, colorOffset:FlxColor = 0x0):ColorTransform
+	{
+		return set(transform,
+			colorMult.redFloat, colorMult.greenFloat, colorMult.blueFloat, colorMult.alphaFloat,
+			colorOffset.red, colorOffset.green, colorOffset.blue, colorOffset.alpha
+		);
+	}
+	
+	/**
+	 * Scales each color's multiplier by the specifified amount
+	 * 
+	 * @param   rMult  The amount to scale the red multiplier
+	 * @param   gMult  The amount to scale the green multiplier
+	 * @param   bMult  The amount to scale the blue multiplier
+	 * @param   aMult  The amount to scale the alpha transparency multiplier
+	 * @return ColorTransform
+	 */
+	overload public static inline extern function scaleMultipliers(transform:ColorTransform, rMult = 1.0, gMult = 1.0, bMult = 1.0, aMult = 1.0):ColorTransform
+	{
+		transform.redMultiplier *= rMult;
+		transform.greenMultiplier *= gMult;
+		transform.blueMultiplier *= bMult;
+		transform.alphaMultiplier *= aMult;
+		
+		return transform;
+	}
+	
+	/**
+	 * Scales each color's multiplier by the color's specifified normal values
+	 * 
+	 * @param   color   A `FlxColor` whos `redFloat`, `greenFloat`, `blueFloat` and
+	 *                  `alphaFloat` values scale the multipliers of this transform
+	 */
+	overload public static inline extern function scaleMultipliers(transform:ColorTransform, color:FlxColor):ColorTransform
+	{
+		transform.redMultiplier *= color.redFloat;
+		transform.greenMultiplier *= color.greenFloat;
+		transform.blueMultiplier *= color.blueFloat;
+		transform.alphaMultiplier *= color.alphaFloat;
+		
+		return transform;
+	}
+	
+	/**
+	 * Quick way to set all of a transform's multipliers
+	 * 
+	 * @param   rMult  The value for the red multiplier, ranges from 0 to 1
+	 * @param   gMult  The value for the green multiplier, ranges from 0 to 1
+	 * @param   bMult  The value for the blue multiplier, ranges from 0 to 1
+	 * @param   aMult  The value for the alpha transparency multiplier, ranges from 0 to 1
+	 */
+	overload public static inline extern function setMultipliers(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
 	{
 		transform.redMultiplier = red;
 		transform.greenMultiplier = green;
@@ -13,7 +102,31 @@ class FlxColorTransformUtil
 
 		return transform;
 	}
+	
+	/**
+	 * Quick way to set all of a transform's multipliers with a single color
+	 * 
+	 * @param   color   A `FlxColor` whos `redFloat`, `greenFloat`, `blueFloat` and
+	 *                  `alphaFloat` values determine the multipliers of this transform
+	 */
+	overload public static inline extern function setMultipliers(transform:ColorTransform, color:FlxColor):ColorTransform
+	{
+		transform.redMultiplier = color.redFloat;
+		transform.greenMultiplier = color.greenFloat;
+		transform.blueMultiplier = color.blueFloat;
+		transform.alphaMultiplier = color.alphaFloat;
 
+		return transform;
+	}
+
+	/**
+	 * Quick way to set all of a transform's offsets
+	 * 
+	 * @param   red    The value for the red offset, ranges from 0 to 255
+	 * @param   green  The value for the green offset, ranges from 0 to 255
+	 * @param   blue   The value for the blue offset, ranges from 0 to 255
+	 * @param   alpha  The value for the alpha transparency offset, ranges from 0 to 255
+	 */
 	public static function setOffsets(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
 	{
 		transform.redOffset = red;
