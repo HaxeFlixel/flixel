@@ -143,9 +143,7 @@ class FlxFrame implements IFlxDestroyable
 
 	var blitMatrix:Vector<Float>;
 
-	@:allow(flixel.graphics.FlxGraphic)
-	@:allow(flixel.graphics.frames.FlxFramesCollection)
-	function new(parent:FlxGraphic, angle = FlxFrameAngle.ANGLE_0, flipX = false, flipY = false, duration = 0.0)
+	public function new(parent:FlxGraphic, angle = FlxFrameAngle.ANGLE_0, flipX = false, flipY = false, duration = 0.0)
 	{
 		this.parent = parent;
 		this.angle = angle;
