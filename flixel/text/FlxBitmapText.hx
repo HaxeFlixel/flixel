@@ -1213,14 +1213,25 @@ class FlxBitmapText extends FlxSprite
 			bitmap.lock();
 		}
 
-		var isFront:Bool = false;
+		forEachBorder(drawText.bind(_, _, false, bitmap, useTiles));
+		drawText(0, 0, true, bitmap, useTiles);
 
-		var iterations:Int = Std.int(borderSize * borderQuality);
-		iterations = (iterations <= 0) ? 1 : iterations;
+		if (!useTiles)
+		{
+			bitmap.unlock();
+		}
 
-		var delta:Int = Std.int(borderSize / iterations);
+		if (FlxG.renderBlit)
+		{
+			dirty = true;
+		}
 
-		// render border
+		if (pendingPixelsChange)
+			throw "pendingPixelsChange was changed to true while processing changed pixels";
+	}
+	
+	function forEachBorder(func:(xOffset:Int, yOffset:Int)->Void)
+	{
 		switch (borderStyle)
 		{
 			case SHADOW if (_shadowOffset.x != 1 || _shadowOffset.y != 1):
@@ -1237,7 +1248,7 @@ class FlxBitmapText extends FlxSprite
 				{
 					for (iterX in 0...iterationsX)
 					{
-						drawText(deltaX * (iterX + 1), deltaY * (iterY + 1), isFront, bitmap, useTiles);
+						func(deltaX * (iterX + 1), deltaY * (iterY + 1));
 					}
 				}
 				
@@ -1247,7 +1258,7 @@ class FlxBitmapText extends FlxSprite
 				var i = iterations + 1;
 				while (i-- > 1)
 				{
-					drawText(Std.int(delta * i), Std.int(delta * i), isFront, bitmap, useTiles);
+					func(Std.int(delta * i), Std.int(delta * i));
 				}
 				
 			case SHADOW_XY(shadowX, shadowY):
@@ -1257,70 +1268,43 @@ class FlxBitmapText extends FlxSprite
 				var i = iterations + 1;
 				while (i-- > 1)
 				{
-					drawText(Std.int(shadowX / iterations * i), Std.int(shadowY / iterations * i), isFront, bitmap, useTiles);
+					func(Std.int(shadowX / iterations * i), Std.int(shadowY / iterations * i));
 				}
 				
 			case OUTLINE:
-				// Render an outline around the text
-				// (do 8 offset draw calls)
-				var itd:Int = 0;
+				// Render an outline around the text (8 draws)
+				var iterations:Int = Std.int(borderSize * borderQuality);
+				iterations = (iterations <= 0) ? 1 : iterations;
+				final delta = Std.int(borderSize / iterations);
 				for (iter in 0...iterations)
 				{
-					itd = delta * (iter + 1);
-					// upper-left
-					drawText(-itd, -itd, isFront, bitmap, useTiles);
-					// upper-middle
-					drawText(0, -itd, isFront, bitmap, useTiles);
-					// upper-right
-					drawText(itd, -itd, isFront, bitmap, useTiles);
-					// middle-left
-					drawText(-itd, 0, isFront, bitmap, useTiles);
-					// middle-right
-					drawText(itd, 0, isFront, bitmap, useTiles);
-					// lower-left
-					drawText(-itd, itd, isFront, bitmap, useTiles);
-					// lower-middle
-					drawText(0, itd, isFront, bitmap, useTiles);
-					// lower-right
-					drawText(itd, itd, isFront, bitmap, useTiles);
+					final i = delta * (iter + 1);
+					func(-i, -i); // upper-left
+					func( 0, -i); // upper-middle
+					func( i, -i); // upper-right
+					func(-i,  0); // middle-left
+					func( i,  0); // middle-right
+					func(-i,  i); // lower-left
+					func( 0,  i); // lower-middle
+					func( i,  i); // lower-right
 				}
 			case OUTLINE_FAST:
-				// Render an outline around the text
-				// (do 4 diagonal offset draw calls)
-				// (this method might not work with certain narrow fonts)
-				var itd:Int = 0;
+				// Render an outline around the text in each corner (4 draws)
+				var iterations:Int = Std.int(borderSize * borderQuality);
+				iterations = (iterations <= 0) ? 1 : iterations;
+				final delta = Std.int(borderSize / iterations);
 				for (iter in 0...iterations)
 				{
-					itd = delta * (iter + 1);
-					// upper-left
-					drawText(-itd, -itd, isFront, bitmap, useTiles);
-					// upper-right
-					drawText(itd, -itd, isFront, bitmap, useTiles);
-					// lower-left
-					drawText(-itd, itd, isFront, bitmap, useTiles);
-					// lower-right
-					drawText(itd, itd, isFront, bitmap, useTiles);
+					final i = delta * (iter + 1);
+					func(-i, -i); // upper-left
+					func( i, -i); // upper-right
+					func(-i,  i); // lower-left
+					func( i,  i); // lower-right
 				}
 			case NONE:
 		}
-
-		isFront = true;
-		drawText(0, 0, isFront, bitmap, useTiles);
-
-		if (!useTiles)
-		{
-			bitmap.unlock();
-		}
-
-		if (FlxG.renderBlit)
-		{
-			dirty = true;
-		}
-
-		if (pendingPixelsChange)
-			throw "pendingPixelsChange was changed to true while processing changed pixels";
 	}
-
+	
 	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
