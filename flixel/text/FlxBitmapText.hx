@@ -472,7 +472,7 @@ class FlxBitmapText extends FlxSprite
 			forEachBorder(function (xCharOffset, yCharOffset)
 			{
 				lineDrawData.forEachI(function (char, x, charIndex, lineIndex)
-					drawFunc(font.getCharFrame(char), x + xCharOffset, lineIndex * spacing + yCharOffset,
+					drawFunc(font.getCharFrame(char), x + xOffset + xCharOffset, lineIndex * spacing + yOffset + yCharOffset,
 					borderColorTransform, charIndex, lineIndex, true)
 				);
 			});
