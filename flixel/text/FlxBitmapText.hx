@@ -355,8 +355,18 @@ class FlxBitmapText extends FlxSprite
 					final frame = FlxG.bitmap.whitePixel;
 					final matrix = matrixDrawHelper;
 					matrix.identity();
-					matrix.scale(trimmedClipRect.width / frame.frame.width, 0.1 * trimmedClipRect.height / frame.frame.height);
-					matrix.translate(trimmedClipRect.x - originX, trimmedClipRect.y - originY);
+					if (trimmedClipRect != null)
+					{
+						matrix.scale(trimmedClipRect.width, trimmedClipRect.height);
+						matrix.translate(trimmedClipRect.x, trimmedClipRect.y);
+					}
+					else
+					{
+						matrix.scale(frameWidth, frameHeight);
+					}
+					
+					matrix.scale(1 / frame.frame.width, 1 / frame.frame.height);
+					matrix.translate(-originX, -originY);
 					matrix.scale(scaleX, scaleY);
 
 					if (angle != 0)
@@ -372,7 +382,7 @@ class FlxBitmapText extends FlxSprite
 				
 				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());
 				final drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
-				function addQuad(frame:FlxFrame, x:Float, y:Float, color:ColorTransform)
+				function addQuad(frame:FlxFrame, x:Float, y:Float, color:ColorTransform, charIndex:Int, lineIndex:Int, isBorder:Bool)
 				{
 					final matrix = matrixDrawHelper;
 					frame.prepareMatrix(matrix);
@@ -384,10 +394,10 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
-					drawItem.addQuad(frame, matrix, color);
+					renderTileCharFrame(drawItem, frame, matrix, color, charIndex, lineIndex, isBorder);
 				}
 				
-				renderTileData(trimmedClipRect, addQuad);
+				renderTileData(trimmedClipRect, padding, padding, addQuad);
 				
 				#if FLX_DEBUG
 				FlxBasic.visibleCount++;
@@ -428,8 +438,11 @@ class FlxBitmapText extends FlxSprite
 	 * **Note:** For performance reasons (and aesthetic preference) the border is trimmed so
 	 * that it extends beyond it's foreground counterpart. I.E.: a border size of 1 will extend
 	 * 1px beyond the trim rect.
+	 * 
+	 * @param   xOffset  Offsets the text position, used for scrolling or padding
+	 * @param   yOffset  Offsets the text position, used for scrolling or padding
 	 */
-	function renderTileData(?frameRect:FlxRect, drawFunc:(frame:FlxFrame, x:Float, y:Float, color:ColorTransform)->Void)
+	function renderTileData(?frameRect:FlxRect, xOffset:Float, yOffset:Float, drawFunc:CharDrawFunction)
 	{
 		final colorHelper = Std.int(alpha * 0xFF) << 24 | this.color;
 		
@@ -443,28 +456,48 @@ class FlxBitmapText extends FlxSprite
 		
 		if (frameRect != null)
 		{
-			lineDrawData.forEachTrimmed(frameRect, padding, padding, function (frame, x, y)
+			lineDrawData.forEachTrimmedI(frameRect, xOffset, yOffset, function (frame, x, y, charIndex, lineIndex)
 			{
-				forEachBorder(function (xOffset, yOffset)
+				forEachBorder(function (xCharOffset, yCharOffset)
 				{
-					drawFunc(frame, x + xOffset, y + yOffset, borderColorTransform);
+					drawFunc(frame, x + xCharOffset, y + yCharOffset, borderColorTransform, charIndex, lineIndex, true);
 				});
 			});
 			
-			lineDrawData.forEachTrimmed(frameRect, padding, padding, drawFunc.bind(_, _, _, textColorTransform));
+			lineDrawData.forEachTrimmedI(frameRect, xOffset, yOffset, drawFunc.bind(_, _, _, textColorTransform, _, _, false));
 		}
 		else
 		{
 			final spacing = lineHeight + lineSpacing;
-			forEachBorder(function (xOffset, yOffset)
+			forEachBorder(function (xCharOffset, yCharOffset)
 			{
-				lineDrawData.forEach(function (char, x, line)
-					drawFunc(font.getCharFrame(char), x + xOffset + padding, line * spacing + yOffset + padding, borderColorTransform)
+				lineDrawData.forEachI(function (char, x, charIndex, lineIndex)
+					drawFunc(font.getCharFrame(char), x + xCharOffset, lineIndex * spacing + yCharOffset,
+					borderColorTransform, charIndex, lineIndex, true)
 				);
 			});
 			
-			lineDrawData.forEach((char, x, line)->drawFunc(font.getCharFrame(char), x + padding, line * spacing + padding, textColorTransform));
+			lineDrawData.forEachI(function (char, x, charIndex, lineIndex)
+			{
+				drawFunc(font.getCharFrame(char), x + xOffset, lineIndex * spacing + yOffset, textColorTransform, charIndex, lineIndex, false);
+			});
 		}
+	}
+	
+	/**
+	 * Used internally to render each character in renderTile mode. Can be overriden to
+	 * create per-character effects, like shakey text, or multiple formats
+	 * 
+	 * @param   drawItem   The triangle or quad batch that will render this character
+	 * @param   frame      The character's frame
+	 * @param   matrix     the transformation matrix determining the screen position of the character
+	 * @param   color      The color transformation to apply to this character (`Note:` this instance is used on multiple chars )
+	 * @param   charIndex  
+	 * @param   lineIndex  
+	 */
+	function renderTileCharFrame<T>(drawItem:FlxDrawBaseItem<T>, frame, matrix, color, charIndex:Int, lineIndex:Int, isBorder:Bool)
+	{
+		drawItem.addQuad(frame, matrix, color);
 	}
 	
 	override function set_clipRect(Rect:FlxRect):FlxRect
@@ -1714,6 +1747,8 @@ enum WordSplitConditions
 	WIDTH(minPixels:Int);
 }
 
+typedef CharDrawFunction = (frame:FlxFrame, x:Float, y:Float, color:ColorTransform, charIndex:Int, lineIndex:Int, isBorder:Bool)->Void;
+
 /**
  * Used internally to track and iterate character rendering positions of multiple lines of text
  */
@@ -1759,14 +1794,24 @@ class TextLineList implements IFlxDestroyable
 	}
 	
 	/**
+	 * Loops through each line of each character and calls `func` on every character.
+	 * Similar to `forEach` but includes the character's index on it's line as well
+	 */
+	public function forEachI(func:(charCode:Int, x:Float, index:Int, line:Int)->Void)
+	{
+		for (i=>line in lines)
+			line.forEachI(func.bind(_, _, _, i));
+	}
+	
+	/**
 	 * Loops through each line of each character and calls `func` on every character touching the
 	 * given rectangle. Unlike `forEach` this returns the character's frame, which is trimmed if
 	 * the frame lies in the edge of the trimming rectangle
 	 * 
-	 * @param rect     The trimming rectangle
-	 * @param xOffset  Any offset to apply to each char before checking against the rect
-	 * @param yOffset  Any offset to apply to each char before checking against the rect
-	 * @param func     The operation to perform on each character inside the rect
+	 * @param   rect     The trimming rectangle
+	 * @param   xOffset  Any offset to apply to each char before checking against the rect
+	 * @param   yOffset  Any offset to apply to each char before checking against the rect
+	 * @param   func     The operation to perform on each character inside the rect
 	 * @return ->Void)
 	 */
 	public function forEachTrimmed(rect:FlxRect, xOffset:Float, yOffset:Float, func:(frame:FlxFrame, x:Float, y:Float)->Void)
@@ -1804,6 +1849,53 @@ class TextLineList implements IFlxDestroyable
 		
 		trimmedFrame.destroy();
 	}
+	
+	/**
+	 * Loops through each line of each character and calls `func` on every character touching the
+	 * given rectangle. Unlike `forEach` this returns the character's frame, which is trimmed if
+	 * the frame lies in the edge of the trimming rectangle
+	 * 
+	 * @param   rect     The trimming rectangle
+	 * @param   xOffset  Any offset to apply to each char before checking against the rect
+	 * @param   yOffset  Any offset to apply to each char before checking against the rect
+	 * @param   func     The operation to perform on each character inside the rect
+	 * @return ->Void)
+	 */
+	public function forEachTrimmedI(rect:FlxRect, xOffset:Float, yOffset:Float, func:(frame:FlxFrame, x:Float, y:Float, charIndex:Int, lineIndex:Int)->Void)
+	{
+		function clamp(value:Int)
+		{
+			return value < 0 ? 0 : value > lines.length ? lines.length : value;
+		}
+		
+		final trimmedFrame = new FlxFrame(null);
+		
+		final start = clamp(Math.floor((rect.top - yOffset) / (target.lineHeight + target.lineSpacing)));
+		final end = clamp(Math.ceil((rect.bottom - yOffset) / (target.lineHeight + target.lineSpacing)));
+		for (lineIndex in start...end)
+		{
+			final y = lineIndex * (target.lineHeight + target.lineSpacing) + yOffset;
+			
+			lines[lineIndex].forEachInBoundsI(target.font, rect.left - xOffset, rect.right - xOffset, function (charCode, x, charIndex)
+			{
+				final frame = target.font.getCharFrame(charCode);
+				trimmedRectHelper.copyFrom(rect).offset(-x - xOffset, -y);
+				if (frame.isContained(trimmedRectHelper))
+				{
+					// no trimming necessary
+					func(frame, x + xOffset, y, charIndex, lineIndex);
+				}
+				else if (frame.overlaps(trimmedRectHelper))
+				{
+					// copy the frame, trim it and draw
+					frame.clipTo(trimmedRectHelper, trimmedFrame);
+					func(trimmedFrame, x + xOffset, y, charIndex, lineIndex);
+				}
+			});
+		}
+		
+		trimmedFrame.destroy();
+	}
 }
 
 /**
@@ -1823,8 +1915,8 @@ abstract CharList(Array<Float>) from Array<Float>
 	
 	/**
 	 * Adds a character
-	 * @param charCode  An int code representing the character
-	 * @param x         The x of the character relative to the `FlxBitmapText`
+	 * @param   charCode  An int code representing the character
+	 * @param   x         The x of the character relative to the `FlxBitmapText`
 	 */
 	overload public inline extern function push(charCode:Int, x:Float)
 	{
@@ -1845,11 +1937,21 @@ abstract CharList(Array<Float>) from Array<Float>
 	}
 	
 	/**
+	 * Loops through and calls `func` on every character, similar to `forEach` but includes the
+	 * character's index on it's line as well
+	 */
+	public function forEachI(func:(charCode:Int, x:Float, index:Int)->Void)
+	{
+		for (i in 0...Std.int(this.length / LENGTH))
+			func(getChar(i), getX(i), i);
+	}
+	
+	/**
 	 * Loops through and calls `func` on every character touching the given bounds
 	 * 
-	 * @param font   The `FlxBitmapFont`, used to get frame data
-	 * @param left   The left-most clipping bounds
-	 * @param right  The right-most clipping bounds
+	 * @param   font   The `FlxBitmapFont`, used to get frame data
+	 * @param   left   The left-most clipping bounds
+	 * @param   right  The right-most clipping bounds
 	 */
 	public function forEachInBounds(font:FlxBitmapFont, left:Float, right:Float, func:(charCode:Int, x:Float)->Void)
 	{
@@ -1860,6 +1962,25 @@ abstract CharList(Array<Float>) from Array<Float>
 			final x = getX(i);
 			if (x + frame.frame.width >= left && x < right)
 				func(char, x);
+		}
+	}
+	
+	/**
+	 * Loops through and calls `func` on every character touching the given bounds
+	 * 
+	 * @param   font   The `FlxBitmapFont`, used to get frame data
+	 * @param   left   The left-most clipping bounds
+	 * @param   right  The right-most clipping bounds
+	 */
+	public function forEachInBoundsI(font:FlxBitmapFont, left:Float, right:Float, func:(charCode:Int, x:Float, index:Int)->Void)
+	{
+		for (i in 0...Std.int(this.length / LENGTH))
+		{
+			final char = getChar(i);
+			final frame = font.getCharFrame(char);
+			final x = getX(i);
+			if (x + frame.frame.width >= left && x < right)
+				func(char, x, i);
 		}
 	}
 	
