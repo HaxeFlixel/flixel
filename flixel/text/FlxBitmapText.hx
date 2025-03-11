@@ -398,19 +398,16 @@ class FlxBitmapText extends FlxSprite
 				final drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
 				function addQuad(charCode:Int, x:Float, y:Float, color:ColorTransform)
 				{
-					final frame = font.getCharFrame(charCode);
+					var frame = font.getCharFrame(charCode);
 					if (clipRect != null)
 					{
 						charClipHelper.copyFrom(clippedFrameRect).offset(-x, -y);
-						frame.clipTo(charClipHelper, charClippedFrame);
-					}
-					else
-					{
-						frame.copyTo(charClippedFrame);
+						if (!frame.isContained(charClipHelper))
+							frame = frame.clipTo(charClipHelper, charClippedFrame);
 					}
 					
 					final matrix = matrixDrawHelper;
-					charClippedFrame.prepareMatrix(matrix);
+					frame.prepareMatrix(matrix);
 					matrix.translate(x - originX, y - originY);
 					matrix.scale(scaleX, scaleY);
 					if (angle != 0)
@@ -419,20 +416,21 @@ class FlxBitmapText extends FlxSprite
 					}
 					
 					matrix.translate(screenPos.x + originX, screenPos.y + originY);
-					drawItem.addQuad(charClippedFrame, matrix, color);
+					drawItem.addQuad(frame, matrix, color);
 				}
 				
 				borderDrawData.forEach(addQuad.bind(_, _, _, borderColorTransform));
 				textDrawData.forEach(addQuad.bind(_, _, _, textColorTransform));
-				
 				#if FLX_DEBUG
 				FlxBasic.visibleCount++;
 				#end
 			}
 			
 			// dispose helpers
+			charClipHelper.put();
 			clippedFrameRect.put();
 			screenPos.put();
+			charClippedFrame.destroy();
 			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
