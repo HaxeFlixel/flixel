@@ -98,6 +98,7 @@ class FlxBitmapText extends FlxSprite
 	/**
 	 * Whether to autmatically adjust the `width`, `height`, `offset` and
 	 * `origin` whenever the size of the text is changed.
+	 * @since 6.1.0
 	 */
 	public var autoBounds(default, set):Bool = true;
 
