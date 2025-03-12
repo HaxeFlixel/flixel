@@ -6,6 +6,7 @@ class FlxColorTransformUtil
 {
 	/**
 	 * Resets the transform to default values, multipliers become `1.0` and offsets become `0.0`
+	 * @since 6.1.0
 	 */
 	public static inline function reset(transform:ColorTransform):ColorTransform
 	{
@@ -23,6 +24,7 @@ class FlxColorTransformUtil
 	 * @param   gOffset  The offset value for the green color channel, ranges from -255 to 255
 	 * @param   bOffset  The offset for the blue color channel value, ranges from -255 to 255
 	 * @param   aOffset  The offset for alpha transparency channel value, ranges from -255 to 255
+	 * @since 6.1.0
 	 */
 	overload public static inline extern function set(transform:ColorTransform, 
 			rMult, gMult, bMult, aMult = 1.0,
@@ -41,6 +43,7 @@ class FlxColorTransformUtil
 	 *                    `alphaFloat` values determine the multipliers of this transform
 	 * @param   color      A `FlxColor` whos `red`, `green`, `blue` and `alpha` values
 	 *                     determine the offsets of this transform
+	 * @since 6.1.0
 	 */
 	overload public static inline extern function set(transform:ColorTransform, colorMult = FlxColor.WHITE, colorOffset:FlxColor = 0x0):ColorTransform
 	{
@@ -58,6 +61,7 @@ class FlxColorTransformUtil
 	 * @param   bMult  The amount to scale the blue multiplier
 	 * @param   aMult  The amount to scale the alpha transparency multiplier
 	 * @return ColorTransform
+	 * @since 6.1.0
 	 */
 	overload public static inline extern function scaleMultipliers(transform:ColorTransform, rMult = 1.0, gMult = 1.0, bMult = 1.0, aMult = 1.0):ColorTransform
 	{
@@ -74,6 +78,7 @@ class FlxColorTransformUtil
 	 * 
 	 * @param   color   A `FlxColor` whos `redFloat`, `greenFloat`, `blueFloat` and
 	 *                  `alphaFloat` values scale the multipliers of this transform
+	 * @since 6.1.0
 	 */
 	overload public static inline extern function scaleMultipliers(transform:ColorTransform, color:FlxColor):ColorTransform
 	{
@@ -93,7 +98,7 @@ class FlxColorTransformUtil
 	 * @param   bMult  The value for the blue multiplier, ranges from 0 to 1
 	 * @param   aMult  The value for the alpha transparency multiplier, ranges from 0 to 1
 	 */
-	overload public static inline extern function setMultipliers(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
+	overload public static inline extern function setMultipliers(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha = 1.0):ColorTransform
 	{
 		transform.redMultiplier = red;
 		transform.greenMultiplier = green;
@@ -108,6 +113,7 @@ class FlxColorTransformUtil
 	 * 
 	 * @param   color   A `FlxColor` whos `redFloat`, `greenFloat`, `blueFloat` and
 	 *                  `alphaFloat` values determine the multipliers of this transform
+	 * @since 6.1.0
 	 */
 	overload public static inline extern function setMultipliers(transform:ColorTransform, color:FlxColor):ColorTransform
 	{
@@ -127,7 +133,7 @@ class FlxColorTransformUtil
 	 * @param   blue   The value for the blue offset, ranges from 0 to 255
 	 * @param   alpha  The value for the alpha transparency offset, ranges from 0 to 255
 	 */
-	public static function setOffsets(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha:Float):ColorTransform
+	public static function setOffsets(transform:ColorTransform, red:Float, green:Float, blue:Float, alpha = 0.0):ColorTransform
 	{
 		transform.redOffset = red;
 		transform.greenOffset = green;
