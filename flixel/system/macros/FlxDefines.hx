@@ -4,6 +4,7 @@ import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+
 using StringTools;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
@@ -58,6 +59,11 @@ private enum UserDefines
 	 * If this flag is set to any string, that is used for the file extension
 	 */
 	FLX_DEFAULT_SOUND_EXT;
+	
+	/**
+	 * Used to make the debug windows bigger
+	 */
+	FLX_DEBUGGER_SCALE;
 }
 
 /**
