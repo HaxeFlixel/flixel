@@ -1,6 +1,5 @@
 package flixel.text;
 
-import openfl.display.BitmapData;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -12,6 +11,7 @@ import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText.FlxTextBorderStyle;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
 import openfl.geom.ColorTransform;
 
 using flixel.util.FlxColorTransformUtil;
@@ -94,6 +94,13 @@ class FlxBitmapText extends FlxSprite
 	 * Default value if true.
 	 */
 	public var autoSize(default, set):Bool = true;
+	
+	/**
+	 * Whether to autmatically adjust the `width`, `height`, `offset` and
+	 * `origin` whenever the size of the text is changed.
+	 * @since 6.1.0
+	 */
+	public var autoBounds(default, set):Bool = true;
 
 	/**
 	 * Number of pixels between text and text field border
@@ -1278,11 +1285,8 @@ class FlxBitmapText extends FlxSprite
 				borderDrawData.splice(0, borderDrawData.length);
 			}
 
-			// use local var to avoid get_width and recursion
-			final newWidth = width = Math.abs(scale.x) * frameWidth;
-			final newHeight = height = Math.abs(scale.y) * frameHeight;
-			offset.set(-0.5 * (newWidth - frameWidth), -0.5 * (newHeight - frameHeight));
-			centerOrigin();
+			if (autoBounds)
+				autoAdjustBounds();
 		}
 
 		if (!useTiles)
@@ -1396,6 +1400,15 @@ class FlxBitmapText extends FlxSprite
 
 		if (pendingPixelsChange)
 			throw "pendingPixelsChange was changed to true while processing changed pixels";
+	}
+	
+	function autoAdjustBounds()
+	{
+		// use local var to avoid get_width and recursion
+		final newWidth = width = Math.abs(scale.x) * frameWidth;
+		final newHeight = height = Math.abs(scale.y) * frameHeight;
+		offset.set(-0.5 * (newWidth - frameWidth), -0.5 * (newHeight - frameHeight));
+		centerOrigin();
 	}
 
 	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
@@ -1609,6 +1622,14 @@ class FlxBitmapText extends FlxSprite
 			pendingTextChange = true;
 
 		return autoSize = value;
+	}
+	
+	function set_autoBounds(value:Bool):Bool
+	{
+		if (autoBounds != value)
+			pendingTextChange = true;
+		
+		return this.autoBounds = value;
 	}
 
 	function set_padding(value:Int):Int
