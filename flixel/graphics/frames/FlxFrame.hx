@@ -586,6 +586,7 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Whether there is any overlap between this frame and the given rect. If clipping this frame to
 	 * the given rect would result in an empty frame, the result is `false`
+	 * @since 6.1.0
 	 */
 	public function overlaps(rect:FlxRect)
 	{
