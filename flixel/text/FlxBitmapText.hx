@@ -321,10 +321,12 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 
+	// TODO: Make these all local statics when min haxe-ver is 4.3
 	static final bgColorTransformDrawHelper = new ColorTransform();
 	static final borderColorTransformDrawHelper = new ColorTransform();
 	static final textColorTransformDrawHelper = new ColorTransform();
 	static final matrixDrawHelper = new FlxMatrix();
+	static final frameDrawHelper = new ReusableFrame();
 	override function draw()
 	{
 		if (FlxG.renderBlit)
@@ -361,7 +363,7 @@ class FlxBitmapText extends FlxSprite
 				return;
 			
 			final charClipHelper = FlxRect.get();
-			final charClippedFrame = new FlxFrame(null);
+			final charClippedFrame = frameDrawHelper;
 			final screenPos = FlxPoint.get();
 			
 			final cameras = getCamerasLegacy();
@@ -437,7 +439,6 @@ class FlxBitmapText extends FlxSprite
 			charClipHelper.put();
 			clippedFrameRect.put();
 			screenPos.put();
-			charClippedFrame.destroy();
 			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
@@ -1333,11 +1334,10 @@ class FlxBitmapText extends FlxSprite
 		}
 	}
 
+	// TODO: Make this a local statics when min haxe-ver is 4.3
+	static final matrixBlitHelper = new FlxMatrix();
 	function blitText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData):Void
 	{
-		_matrix.identity();
-		_matrix.translate(posX, posY);
-
 		var colorToApply = FlxColor.WHITE;
 
 		if (isFront && useTextColor)
@@ -1358,7 +1358,9 @@ class FlxBitmapText extends FlxSprite
 		}
 		else
 		{
-			bitmap.draw(textBitmap, _matrix, _colorParams);
+			matrixBlitHelper.identity();
+			matrixBlitHelper.translate(posX, posY);
+			bitmap.draw(textBitmap, matrixBlitHelper, _colorParams);
 		}
 	}
 	
@@ -1781,6 +1783,21 @@ abstract CharList(Array<Float>) from Array<Float>
 	{
 		return this[index] = value;
 	}
+}
+
+/**
+ * Helper to avoid creating a new frame every draw call
+ */
+private class ReusableFrame extends FlxFrame
+{
+	public function new ()
+	{
+		super(null);
+		// We need to define this now, since it's created before renderTile is set
+		tileMatrix = new MatrixVector();
+	}
+	
+	override function destroy() {}
 }
 
 /*
