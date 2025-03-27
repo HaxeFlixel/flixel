@@ -60,12 +60,6 @@ class FlxColorTransformUtilTest extends FlxTest
 		assertCTEquals(0.4, 0.5, 0.6, 1.5, 0, 0, 0, 0);
 		color.scaleMultipliers(0.4, 0.5, 0.6);
 		assertCTEquals(0.16, 0.25, 0.36, 1.5, 0, 0, 0, 0);
-		color.scaleMultipliers(0.4, 0.5);
-		assertCTEquals(0.064, 0.125, 0.36, 1.5, 0, 0, 0, 0);
-		color.scaleMultipliers(0.4);
-		assertCTEquals(0.0256, 0.125, 0.36, 1.5, 0, 0, 0, 0);
-		color.scaleMultipliers();
-		assertCTEquals(0.0256, 0.125, 0.36, 1.5, 0, 0, 0, 0);
 	}
 	
 	@Test

@@ -81,7 +81,7 @@ class FlxColorTransformUtil
 	 * @return ColorTransform
 	 * @since 6.1.0
 	 */
-	overload public static inline extern function scaleMultipliers(transform:ColorTransform, rMult = 1.0, gMult = 1.0, bMult = 1.0, aMult = 1.0):ColorTransform
+	overload public static inline extern function scaleMultipliers(transform:ColorTransform, rMult:Float, gMult:Float, bMult:Float, aMult = 1.0):ColorTransform
 	{
 		transform.redMultiplier *= rMult;
 		transform.greenMultiplier *= gMult;
