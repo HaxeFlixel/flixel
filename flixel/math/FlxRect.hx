@@ -286,6 +286,23 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
+	 * Checks to see if this rectangle fully contains another
+	 *
+	 * @param   rect  The other rectangle
+	 * @return  Whether this rectangle contains the given rectangle
+	 * @since 6.1.0
+	 */
+	public inline function contains(rect:FlxRect):Bool
+	{
+		final result = rect.left >= left
+			&& rect.right <= right
+			&& rect.top >= top
+			&& rect.bottom <= bottom;
+		rect.putWeak();
+		return result;
+	}
+
+	/**
 	 * Returns true if this FlxRect contains the FlxPoint
 	 *
 	 * @param   point  The FlxPoint to check
