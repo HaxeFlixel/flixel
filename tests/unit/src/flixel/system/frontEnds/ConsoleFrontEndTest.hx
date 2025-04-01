@@ -10,7 +10,7 @@ import massive.munit.Assert;
 class ConsoleFrontEndTest
 {
 	@Test
-	#if !debug @Ignore #end
+	#if (!debug || hl) @Ignore #end // Fails on HL: https://github.com/HaxeFoundation/hashlink/issues/769
 	function testEnum()
 	{
 		FlxG.console.registerEnum(TestEnum);
