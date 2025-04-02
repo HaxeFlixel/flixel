@@ -338,7 +338,7 @@ class FlxBitmapText extends FlxSprite
 		{
 			checkPendingChanges(true);
 			
-			final colorHelper = Std.int(alpha * 0xFF) << 24 | this.color;
+			final colorHelper = Std.int(alpha * 0xFF) << 24 | this.color.rgb;
 			
 			final textColorTransform = textColorTransformDrawHelper.reset();
 			textColorTransform.setMultipliers(colorHelper);
