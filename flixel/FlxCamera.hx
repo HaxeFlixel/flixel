@@ -356,7 +356,7 @@ class FlxCamera extends FlxBasic
 	public var followLead(default, null):FlxPoint = FlxPoint.get();
 
 	/**
-	 * Enables or disables the filters set via `setFilters()`.
+	 * Enables or disables the filters set via the `filters` array.
 	 */
 	public var filtersEnabled:Bool = true;
 
