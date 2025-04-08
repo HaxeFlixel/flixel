@@ -255,14 +255,14 @@ class FlxSprite extends FlxObject
 	 * Blending modes, just like Photoshop or whatever, e.g. "multiply", "screen", etc.
 	 */
 	public var blend(default, set):BlendMode;
-
+	
 	/**
 	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
 	 * `0xAARRGGBB` colors, but the alpha value will simply be ignored. To change the opacity use `alpha`.
 	 * @see https://snippets.haxeflixel.com/sprites/color/
 	 */
-	public var color(default, set):FlxColor = 0xffffff;
-
+	public var color(default, set):FlxColor = FlxColor.WHITE;
+	
 	public var colorTransform(default, null):ColorTransform;
 
 	/**
@@ -1008,7 +1008,7 @@ class FlxSprite extends FlxObject
 			dirty = true;
 		return positions;
 	}
-
+	
 	/**
 	 * Sets the sprite's color transformation with control over color offsets.
 	 * With `FlxG.renderTile`, offsets are only supported on OpenFL Next version 3.6.0 or higher.
@@ -1025,13 +1025,13 @@ class FlxSprite extends FlxObject
 	public function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0,
 			redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
 	{
-		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).rgb;
-		alpha = alphaMultiplier;
+		@:bypassAccessor color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 0);
+		@:bypassAccessor alpha = alphaMultiplier;
 
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
 
-		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBOffsets();
+		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBAOffsets();
 		dirty = true;
 	}
 	
@@ -1040,15 +1040,16 @@ class FlxSprite extends FlxObject
 		if (colorTransform == null)
 			return;
 
-		useColorTransform = alpha != 1 || color != 0xffffff;
+		useColorTransform = alpha != 1 || color.rgb != 0xffffff;
 		if (useColorTransform)
 			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
 		else
 			colorTransform.setMultipliers(1, 1, 1, 1);
 
+		useColorTransform = useColorTransform || colorTransform.hasRGBAOffsets();
 		dirty = true;
 	}
-
+	
 	/**
 	 * Checks to see if a point in 2D world space overlaps this `FlxSprite` object's
 	 * current displayed pixels. This check is ALWAYS made in screen space, and
