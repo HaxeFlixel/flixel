@@ -667,11 +667,11 @@ class FlxText extends FlxSprite
 
 	override function set_color(Color:FlxColor):Int
 	{
-		if (_defaultFormat.color == Color.to24Bit())
+		if (_defaultFormat.color == Color.rgb)
 		{
 			return Color;
 		}
-		_defaultFormat.color = Color.to24Bit();
+		_defaultFormat.color = Color.rgb;
 		color = Color;
 		updateDefaultFormat();
 		return Color;
@@ -1232,7 +1232,7 @@ class FlxText extends FlxSprite
 	{
 		// Apply the default format
 		copyTextFormat(_defaultFormat, FormatAdjusted, false);
-		FormatAdjusted.color = UseBorderColor ? borderColor.to24Bit() : _defaultFormat.color;
+		FormatAdjusted.color = UseBorderColor ? borderColor.rgb : _defaultFormat.color;
 		textField.setTextFormat(FormatAdjusted);
 
 		// Apply other formats
@@ -1247,7 +1247,7 @@ class FlxText extends FlxSprite
 			{
 				var textFormat:TextFormat = formatRange.format.format;
 				copyTextFormat(textFormat, FormatAdjusted, false);
-				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.to24Bit() : textFormat.color;
+				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.rgb : textFormat.color;
 			}
 
 			textField.setTextFormat(FormatAdjusted, formatRange.range.start, Std.int(Math.min(formatRange.range.end, textField.text.length)));

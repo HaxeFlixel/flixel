@@ -1025,7 +1025,7 @@ class FlxSprite extends FlxObject
 	public function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0,
 			redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
 	{
-		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).to24Bit();
+		color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier).rgb;
 		alpha = alphaMultiplier;
 
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
