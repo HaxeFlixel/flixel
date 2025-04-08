@@ -1883,6 +1883,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
+		// We need to disable these flags to get accurate graphic bounds
+		final pixelPerfectPosition = sprite.pixelPerfectPosition;
+		final pixelPerfectRender = sprite.pixelPerfectRender;
+		sprite.pixelPerfectPosition = false;
+		@:bypassAccessor sprite.pixelPerfectRender = false;
+		
 		final graphicBounds = sprite.getScreenBounds(null, this);
 		
 		if (axes.x)
@@ -1897,6 +1903,9 @@ class FlxCamera extends FlxBasic
 			sprite.y = (height - graphicBounds.height) / 2 + offset;
 		}
 		
+		// Now we set flags back to their original state
+		sprite.pixelPerfectPosition = pixelPerfectPosition;
+		@:bypassAccessor sprite.pixelPerfectRender = pixelPerfectRender;
 		graphicBounds.put();
 		return sprite;
 	}

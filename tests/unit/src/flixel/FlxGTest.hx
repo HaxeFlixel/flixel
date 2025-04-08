@@ -115,6 +115,7 @@ class FlxGTest extends FlxTest
 		sprite.offset.set(100, 100);
 		sprite.scale.set(2, 4);
 		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
 		final graphicBounds = sprite.getGraphicBounds();
 		final offset = FlxPoint.get(sprite.x - graphicBounds.x, sprite.y - graphicBounds.y);
 		final center = FlxPoint.get((FlxG.width - graphicBounds.width) / 2 + offset.x, (FlxG.height - graphicBounds.height) / 2 + offset.y);

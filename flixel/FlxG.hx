@@ -488,6 +488,10 @@ class FlxG
 	 */
 	public static function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
+		// We need to disable this flag to get accurate graphic bounds
+		final pixelPerfectPosition = sprite.pixelPerfectPosition;
+		sprite.pixelPerfectPosition = false;
+		
 		final graphicBounds = sprite.getGraphicBounds();
 		
 		if (axes.x)
@@ -502,6 +506,8 @@ class FlxG
 			sprite.y = (FlxG.height - graphicBounds.height) / 2 + offset;
 		}
 		
+		// Now we set flag back to its original state
+		sprite.pixelPerfectPosition = pixelPerfectPosition;
 		graphicBounds.put();
 		return sprite;
 	}

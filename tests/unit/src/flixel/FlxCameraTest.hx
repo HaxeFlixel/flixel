@@ -100,6 +100,8 @@ class FlxCameraTest extends FlxTest
 		sprite.offset.set(100, 100);
 		sprite.scale.set(2, 4);
 		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
+		sprite.pixelPerfectRender = true;
 		final cam = FlxG.camera;
 		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
