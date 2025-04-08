@@ -235,6 +235,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
+	@:deprecated("rayStep is deprecated, ray() has an infinite resolution, without any loss in performance")
 	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		throw "rayStep must be implemented?";

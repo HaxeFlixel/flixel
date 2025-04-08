@@ -1,3 +1,46 @@
+# 6.1.0 (TBD)
+
+#### Changes and improvements:
+- Various improvements to debug tools ([#3328](https://github.com/HaxeFlixel/flixel/pull/3328)) ([#3374](https://github.com/HaxeFlixel/flixel/pull/3374)) ([#3375](https://github.com/HaxeFlixel/flixel/pull/3375))
+	- `FlxG.watch`: Add `Float`, `Int` and hexdecimal parsing on all targets
+	- `FlxG.watch`: Add scroll bars
+	- Centralize all debugger icons
+	- `FlxGraphicSource`: Add `resolveBitmapData`
+	- `Interaction`: Fix bug where the cursor blocked mouse clicks and align pointers to system cursor
+	- `FlxSprite`: Improve bitmap tracker info
+	- `BitmapLog`: Change window icon
+	- `BitmapLog`: Change drag from middle click to left
+	- `Window`: Improve window resizing
+	- `FlxG.debug`: add `windows` and `tools` shortcuts
+	- Refactor `Pointer`, `BitmapLog` and `Transform` windows
+	- `Transform` debug tool: Improved scaling
+- `FlxGroup`: Inline group iterators ([#3362](https://github.com/HaxeFlixel/flixel/pull/3362))
+- `FlxFrame`: Imprive code readability with `UVRect` ([#3371](https://github.com/HaxeFlixel/flixel/pull/3371))
+- `FlxG.bitmap`: Query max texture size only once instead of every time it's needed ([#3369](https://github.com/HaxeFlixel/flixel/pull/3369))
+- `FlxSprite`: Allow changes to `clipRect` to take effect without the setter ([#3381](https://github.com/HaxeFlixel/flixel/pull/3381))
+- `FlxSoundTray`: Various improvements for extending classes ([#3378](https://github.com/HaxeFlixel/flixel/pull/3378))
+	- Change `volumeUpSound` and `volumeDownSound` to `FlxSoundAsset` types
+	- Add private local `_label` and `_bg` fields
+	- Add `showAnim`, deprecate `show`
+	- Dynamically size the background 
+- `FlxSpriteGroup`: Remove `inline` from `clipRectTransform`, allowing overriding ([#3388](https://github.com/HaxeFlixel/flixel/pull/3388))
+- `FlxKeyboard`: Add `enabled` check when preparing to toggle debugger ([#3393](https://github.com/HaxeFlixel/flixel/pull/3393))
+
+#### New features:
+- `FlxColor`: Add `luminance` ([#3357](https://github.com/HaxeFlixel/flixel/pull/3357))
+- `FlxStringUtil`: Add `capitalizeFirstLetters` and `isRomanNumeral` ([#3374](https://github.com/HaxeFlixel/flixel/pull/3374))
+- New Debug tools: `LogBitmap` and `TrackObject` ([#3375](https://github.com/HaxeFlixel/flixel/pull/3375))
+- `FlxRect`: Add `FlxReadOnlyRect`, `setAbs`, `setBounds` and `setBoundsAbs` ([#3382](https://github.com/HaxeFlixel/flixel/pull/3382))
+- `FlxBitmapText`: Add `autoBounds` ([#3396](https://github.com/HaxeFlixel/flixel/pull/3396))
+- `FlxDebugger`: Add `scale`, `defaultScale` and `-DFLX_DEBUGGER_SCALE=2` ([3399](https://github.com/HaxeFlixel/flixel/pull/3399))
+
+#### Bugfixes:
+- `FlxG.sound`: Set volume prior to dispatching `onVolumeChange` ([#3360](https://github.com/HaxeFlixel/flixel/pull/3360))
+- `FlxPoint`: Fix math in `distanceSquaredTo` ([#3365](https://github.com/HaxeFlixel/flixel/pull/3365))
+- `FlxCamera`: Fix size on the flash target ([#3370](https://github.com/HaxeFlixel/flixel/pull/3370))
+- `FlxBGSprite`: Cover entire view ([#3397](https://github.com/HaxeFlixel/flixel/pull/3397))
+- `FlxAtlas`: Fix `persist` ([#3400](https://github.com/HaxeFlixel/flixel/pull/3400))
+
 # 6.0.0 (January 31, 2025)
 
 #### Removals and Breaking Changes
