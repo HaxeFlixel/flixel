@@ -488,10 +488,6 @@ class FlxG
 	 */
 	public static function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
-		// We need to disable this flag to get accurate graphic bounds
-		final pixelPerfectPosition = sprite.pixelPerfectPosition;
-		sprite.pixelPerfectPosition = false;
-		
 		final graphicBounds = sprite.getGraphicBounds();
 		
 		if (axes.x)
@@ -506,8 +502,6 @@ class FlxG
 			sprite.y = (FlxG.height - graphicBounds.height) / 2 + offset;
 		}
 		
-		// Now we set flag back to its original state
-		sprite.pixelPerfectPosition = pixelPerfectPosition;
 		graphicBounds.put();
 		return sprite;
 	}
@@ -522,21 +516,12 @@ class FlxG
 	 */
 	public static function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{
-		final hitbox = object.getHitbox();
-		
 		if (axes.x)
-		{
-			final offset = object.x - hitbox.x;
-			object.x = (FlxG.width - hitbox.width) / 2 + offset;
-		}
+			object.x = (FlxG.width - object.width) / 2;
 		
 		if (axes.y)
-		{
-			final offset = object.y - hitbox.y;
-			object.y = (FlxG.height - hitbox.height) / 2 + offset;
-		}
+			object.y = (FlxG.height - object.height) / 2;
 		
-		hitbox.put();
 		return object;
 	}
 	

@@ -1883,12 +1883,6 @@ class FlxCamera extends FlxBasic
 	 */
 	public function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
-		// We need to disable these flags to get accurate graphic bounds
-		final pixelPerfectPosition = sprite.pixelPerfectPosition;
-		final pixelPerfectRender = sprite.pixelPerfectRender;
-		sprite.pixelPerfectPosition = false;
-		@:bypassAccessor sprite.pixelPerfectRender = false;
-		
 		final graphicBounds = sprite.getScreenBounds(null, this);
 		
 		if (axes.x)
@@ -1903,9 +1897,6 @@ class FlxCamera extends FlxBasic
 			sprite.y = (height - graphicBounds.height) / 2 + offset;
 		}
 		
-		// Now we set flags back to their original state
-		sprite.pixelPerfectPosition = pixelPerfectPosition;
-		@:bypassAccessor sprite.pixelPerfectRender = pixelPerfectRender;
 		graphicBounds.put();
 		return sprite;
 	}
@@ -1920,21 +1911,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{
-		final hitbox = object.getHitbox();
-		
 		if (axes.x)
-		{
-			final offset = object.x - hitbox.x;
-			object.x = scroll.x + (width - hitbox.width) / 2 + offset;
-		}
+			object.x = scroll.x + (width - object.width) / 2;
 		
 		if (axes.y)
-		{
-			final offset = object.y - hitbox.y;
-			object.y = scroll.y + (height - hitbox.height) / 2 + offset;
-		}
+			object.y = scroll.y + (height - object.height) / 2;
 		
-		hitbox.put();
 		return object;
 	}
 	
