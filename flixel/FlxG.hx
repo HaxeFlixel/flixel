@@ -484,9 +484,9 @@ class FlxG
 	 * @param   sprite  The sprite to center.
 	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered sprite for chaining.
-	 * @since TBA
+	 * @since 6.2.0
 	 */
-	public static function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
+	public static function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
 		// We need to disable this flag to get accurate graphic bounds
 		final pixelPerfectPosition = sprite.pixelPerfectPosition;
@@ -518,7 +518,7 @@ class FlxG
 	 * @param   object  The object to center.
 	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered object for chaining.
-	 * @since TBA
+	 * @since 6.2.0
 	 */
 	public static function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{

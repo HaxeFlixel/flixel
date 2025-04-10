@@ -1879,9 +1879,9 @@ class FlxCamera extends FlxBasic
 	 * @param   sprite  The sprite to center.
 	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered sprite for chaining.
-	 * @since TBA
+	 * @since 6.2.0
 	 */
-	public function center<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
+	public function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
 		// We need to disable these flags to get accurate graphic bounds
 		final pixelPerfectPosition = sprite.pixelPerfectPosition;
@@ -1916,7 +1916,7 @@ class FlxCamera extends FlxBasic
 	 * @param   object  The object to center.
 	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
 	 * @return  Centered object for chaining.
-	 * @since TBA
+	 * @since 6.2.0
 	 */
 	public function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
 	{

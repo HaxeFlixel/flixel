@@ -91,8 +91,8 @@ class FlxCameraTest extends FlxTest
 		Assert.areEqual(defaultLerp, camera.followLerp);
 	}
 	
-	@Test
-	function testCenter()
+	@Test // #3329
+	function testCenterGraphic()
 	{
 		final sprite = new FlxSprite();
 		sprite.makeGraphic(100, 100);
@@ -111,22 +111,22 @@ class FlxCameraTest extends FlxTest
 		final offCenter = center.copyTo().add(1000, 1000);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
-		cam.center(sprite, X);
+		cam.centerGraphic(sprite, X);
 		FlxAssert.areNear(sprite.x, center.x);
 		FlxAssert.areNear(sprite.y, offCenter.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
-		cam.center(sprite, Y);
+		cam.centerGraphic(sprite, Y);
 		FlxAssert.areNear(sprite.x, offCenter.x);
 		FlxAssert.areNear(sprite.y, center.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
-		cam.center(sprite, XY);
+		cam.centerGraphic(sprite, XY);
 		FlxAssert.areNear(sprite.x, center.x);
 		FlxAssert.areNear(sprite.y, center.y);
 		
 		sprite.setPosition(offCenter.x, offCenter.y);
-		cam.center(sprite);
+		cam.centerGraphic(sprite);
 		FlxAssert.areNear(sprite.x, center.x);
 		FlxAssert.areNear(sprite.y, center.y);
 		
@@ -136,7 +136,7 @@ class FlxCameraTest extends FlxTest
 		center.put();
 	}
 	
-	@Test
+	@Test // #3329
 	function testCenterHitbox()
 	{
 		final object = new FlxObject(0, 0, 10, 10);
