@@ -58,12 +58,6 @@ private enum UserDefines
 	 * If this flag is set to any string, that is used for the file extension
 	 */
 	FLX_DEFAULT_SOUND_EXT;
-	/**
-	 * If enabled, FlxGraphic instances will automatically call `FlxGraphic.freeImageBuffer()`.
-	 * This significantly decreases RAM usage but makes the bitmap uneditable.
-	 * Call `FlxGraphic.refresh()` to restore functionality for drawing on the bitmap.
-	 */
-	FLX_FREE_IMAGE_BUFFER;
 }
 
 /**
