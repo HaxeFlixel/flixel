@@ -109,76 +109,68 @@ class FlxGTest extends FlxTest
 	@Test // #3329
 	function testCenterGraphic()
 	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
 		final sprite = new FlxSprite();
-		sprite.makeGraphic(100, 100);
-		sprite.origin.set(100, 100);
-		sprite.offset.set(100, 100);
+		sprite.makeGraphic(10, 10);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
 		sprite.scale.set(2, 4);
 		sprite.angle = 180;
 		sprite.pixelPerfectPosition = true;
-		final graphicBounds = sprite.getGraphicBounds();
-		final offset = FlxPoint.get(sprite.x - graphicBounds.x, sprite.y - graphicBounds.y);
-		final center = FlxPoint.get((FlxG.width - graphicBounds.width) / 2 + offset.x, (FlxG.height - graphicBounds.height) / 2 + offset.y);
-		final offCenter = center.copyTo().add(1000, 1000);
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		function assertCenterGraphic(sprite, expectedX, expectedY)
+		{
+			FlxAssert.areNear(sprite.x, expectedX);
+			FlxAssert.areNear(sprite.y, expectedY);
+		}
+		
+		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, X);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, offCenter.y);
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 0);
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, Y);
-		FlxAssert.areNear(sprite.x, offCenter.x);
-		FlxAssert.areNear(sprite.y, center.y);
+		assertCenterGraphic(sprite, 0, 240 - 20 - (-10 + 10));
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, XY);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, center.y);
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(1640, 1480);
 		FlxG.centerGraphic(sprite);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, center.y);
-		
-		offset.put();
-		graphicBounds.put();
-		offCenter.put();
-		center.put();
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
 	}
 	
 	@Test // #3329
 	function testCenterHitbox()
 	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
 		final object = new FlxObject(0, 0, 10, 10);
-		final hitbox = object.getHitbox();
-		final offset = FlxPoint.get(object.x - hitbox.x, object.y - hitbox.y);
-		final center = FlxPoint.get((FlxG.width - hitbox.width) / 2 + offset.x, (FlxG.height - hitbox.height) / 2 + offset.y);
-		final offCenter = center.copyTo().add(1000, 1000);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		function assertCenterHitbox(object, expectedX, expectedY)
+		{
+			Assert.areEqual(object.x, expectedX);
+			Assert.areEqual(object.y, expectedY);
+		}
+		
+		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, X);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, offCenter.y);
+		assertCenterHitbox(object, 320 - 5, 0);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, Y);
-		Assert.areEqual(object.x, offCenter.x);
-		Assert.areEqual(object.y, center.y);
+		assertCenterHitbox(object, 0, 240 - 5);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, XY);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, center.y);
+		assertCenterHitbox(object, 320 - 5, 240 - 5);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(1640, 1480);
 		FlxG.centerHitbox(object);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, center.y);
-		
-		offset.put();
-		hitbox.put();
-		offCenter.put();
-		center.put();
+		assertCenterHitbox(object, 320 - 5, 240 - 5);
 	}
 }

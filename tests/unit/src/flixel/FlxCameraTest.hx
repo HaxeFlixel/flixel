@@ -94,84 +94,79 @@ class FlxCameraTest extends FlxTest
 	@Test // #3329
 	function testCenterGraphic()
 	{
+		final cam = FlxG.camera;
+		cam.scroll.set(100, 100);
+		cam.zoom *= 2;
+		
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
 		final sprite = new FlxSprite();
-		sprite.makeGraphic(100, 100);
-		sprite.origin.set(100, 100);
-		sprite.offset.set(100, 100);
+		sprite.makeGraphic(10, 10);
+		sprite.scrollFactor.set(2, 2);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
 		sprite.scale.set(2, 4);
 		sprite.angle = 180;
 		sprite.pixelPerfectPosition = true;
 		sprite.pixelPerfectRender = true;
-		final cam = FlxG.camera;
-		cam.scroll.set(100, 100);
-		cam.zoom *= 2;
-		final graphicBounds = sprite.getScreenBounds(null, cam);
-		final offset = FlxPoint.get(sprite.x - graphicBounds.x, sprite.y - graphicBounds.y);
-		final center = FlxPoint.get((cam.width - graphicBounds.width) / 2 + offset.x, (cam.height - graphicBounds.height) / 2 + offset.y);
-		final offCenter = center.copyTo().add(1000, 1000);
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		function assertCenterGraphic(sprite, expectedX, expectedY)
+		{
+			FlxAssert.areNear(sprite.x, expectedX);
+			FlxAssert.areNear(sprite.y, expectedY);
+		}
+		
+		sprite.setPosition(0, 0);
 		cam.centerGraphic(sprite, X);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, offCenter.y);
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 0);
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(0, 0);
 		cam.centerGraphic(sprite, Y);
-		FlxAssert.areNear(sprite.x, offCenter.x);
-		FlxAssert.areNear(sprite.y, center.y);
+		assertCenterGraphic(sprite, 0, 100 + 240 - 20 - (-110 + 10));
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(0, 0);
 		cam.centerGraphic(sprite, XY);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, center.y);
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 100 + 240 - 20 - (-110 + 10));
 		
-		sprite.setPosition(offCenter.x, offCenter.y);
+		sprite.setPosition(1640, 1480);
 		cam.centerGraphic(sprite);
-		FlxAssert.areNear(sprite.x, center.x);
-		FlxAssert.areNear(sprite.y, center.y);
-		
-		offset.put();
-		graphicBounds.put();
-		offCenter.put();
-		center.put();
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 100 + 240 - 20 - (-110 + 10));
 	}
 	
 	@Test // #3329
 	function testCenterHitbox()
 	{
-		final object = new FlxObject(0, 0, 10, 10);
 		final cam = FlxG.camera;
 		cam.scroll.set(100, 100);
 		cam.zoom *= 2;
-		final hitbox = object.getHitbox();
-		final offset = FlxPoint.get(object.x - hitbox.x, object.y - hitbox.y);
-		final center = FlxPoint.get(cam.scroll.x + (cam.width - hitbox.width) / 2 + offset.x, cam.scroll.y + (cam.height - hitbox.height) / 2 + offset.y);
-		final offCenter = center.copyTo().add(1000, 1000);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
+		final object = new FlxObject(0, 0, 10, 10);
+		
+		function assertCenterHitbox(object, expectedX, expectedY)
+		{
+			Assert.areEqual(object.x, expectedX);
+			Assert.areEqual(object.y, expectedY);
+		}
+		
+		object.setPosition(0, 0);
 		cam.centerHitbox(object, X);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, offCenter.y);
+		assertCenterHitbox(object, 100 + 320 - 5, 0);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(0, 0);
 		cam.centerHitbox(object, Y);
-		Assert.areEqual(object.x, offCenter.x);
-		Assert.areEqual(object.y, center.y);
+		assertCenterHitbox(object, 0, 100 + 240 - 5);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(0, 0);
 		cam.centerHitbox(object, XY);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, center.y);
+		assertCenterHitbox(object, 100 + 320 - 5, 100 + 240 - 5);
 		
-		object.setPosition(offCenter.x, offCenter.y);
+		object.setPosition(1640, 1480);
 		cam.centerHitbox(object);
-		Assert.areEqual(object.x, center.x);
-		Assert.areEqual(object.y, center.y);
-		
-		offset.put();
-		hitbox.put();
-		offCenter.put();
-		center.put();
+		assertCenterHitbox(object, 100 + 320 - 5, 100 + 240 - 5);
 	}
 	
 	@Test
