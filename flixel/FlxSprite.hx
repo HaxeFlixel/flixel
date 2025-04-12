@@ -1230,7 +1230,7 @@ class FlxSprite extends FlxObject
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 		}
 
-		if (useColorTransform)
+		if (FlxG.renderBlit && useColorTransform)
 		{
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
