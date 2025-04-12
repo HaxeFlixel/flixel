@@ -73,7 +73,14 @@ class FlxSubState extends FlxState
 		else // FlxG.renderTile
 		{
 			if (_bgSprite != null && _bgSprite.visible)
+			{
+				final oldDefaultCameras = @:privateAccess FlxCamera._defaultCameras;
+				if (_cameras != null)
+					@:privateAccess FlxCamera._defaultCameras = _cameras;
+
 				_bgSprite.draw();
+				@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
+			}
 		}
 
 		// Now draw all children
