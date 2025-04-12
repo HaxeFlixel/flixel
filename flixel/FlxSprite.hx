@@ -1201,7 +1201,7 @@ class FlxSprite extends FlxObject
 
 		updateFramePixels();
 	}
-
+	
 	/**
 	 * Retrieves the `BitmapData` of the current `FlxFrame`. Updates `framePixels`.
 	 */
@@ -1209,7 +1209,7 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null || !dirty)
 			return framePixels;
-
+		
 		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 		// if you'll try then it will clear framePixels and you won't see anything
 		if (FlxG.renderTile && _frameGraphic != null)
@@ -1217,24 +1217,18 @@ class FlxSprite extends FlxObject
 			dirty = false;
 			return framePixels;
 		}
-
-		var doFlipX:Bool = checkFlipX();
-		var doFlipY:Bool = checkFlipY();
-
+		
+		final doFlipX = checkFlipX();
+		final doFlipY = checkFlipY();
+		
 		if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
-		{
 			framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
-		}
 		else
-		{
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
-		}
-
+		
 		if (FlxG.renderBlit && useColorTransform)
-		{
 			framePixels.colorTransform(_flashRect, colorTransform);
-		}
-
+		
 		if (FlxG.renderTile && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
@@ -1242,7 +1236,7 @@ class FlxSprite extends FlxObject
 			_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
 			_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
 		}
-
+		
 		dirty = false;
 		return framePixels;
 	}
