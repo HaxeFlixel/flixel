@@ -1232,7 +1232,6 @@ class FlxSprite extends FlxObject
 		if (FlxG.renderTile && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
-			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 			_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
 			_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
 		}
