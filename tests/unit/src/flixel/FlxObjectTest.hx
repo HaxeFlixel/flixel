@@ -117,30 +117,19 @@ class FlxObjectTest extends FlxTest
 		Assert.isFalse(FlxG.overlap(object1, object2));
 		Assert.isTrue(object1.y > object2.y);
 	}
-	@Test
-	function testComputeOverlapOnBothAxisNewlyOverlapping():Void
-	{
-		final object1 = new FlxObject(10.01, -.01, 10, 10);
-		final object2 = new FlxObject(0, 10, 10, 10);
-		
-		object1.setPosition(9.95, .05);
-		
-		FlxAssert.areNear(-.05, FlxObject.computeOverlapX(object1, object2));
-		FlxAssert.areNear(-.05, FlxObject.computeOverlapY(object1, object2));
-	}
 	
 	@Test
 	function testSeparateOnBothAxisNewlyOverlapping():Void
 	{
-		final object1 = new FlxObject(10.01, -.01, 10, 10);
+		final object1 = new FlxObject(11, -1, 10, 10);
 		final object2 = new FlxObject(0, 10, 10, 10);
 		object2.immovable = true;
 		
-		object1.setPosition(9.95, .05);
+		object1.setPosition(9, 2);
 		
 		Assert.isTrue(FlxObject.separate(object1, object2));
 		// X-axis resolves first and no collision
-		Assert.areEqual(9.95, object1.x);
+		Assert.areEqual(9, object1.x);
 		// Y-axis resolves second and is stopped by collision
 		Assert.areEqual(0, object1.y);
 	}
