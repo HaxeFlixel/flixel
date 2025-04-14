@@ -159,8 +159,16 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
+		var tmp1 = object1.last.copyTo();
+		var tmp2 = object2.last.copyTo();
 		final separatedX = separateX(object1, object2);
+		object1.last.x = object1.x;
+		object2.last.x = object2.x;
 		final separatedY = separateY(object1, object2);
+		object1.last.copyFrom(tmp1);
+		object2.last.copyFrom(tmp2);
+		tmp1.put();
+		tmp2.put();
 		return separatedX || separatedY;
 		
 		/*
