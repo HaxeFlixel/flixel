@@ -74,12 +74,8 @@ class FlxSubState extends FlxState
 		{
 			if (_bgSprite != null && _bgSprite.visible)
 			{
-				final oldDefaultCameras = @:privateAccess FlxCamera._defaultCameras;
-				if (_cameras != null)
-					@:privateAccess FlxCamera._defaultCameras = _cameras;
-
+				_bgSprite.cameras = getCameras();
 				_bgSprite.draw();
-				@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 			}
 		}
 
