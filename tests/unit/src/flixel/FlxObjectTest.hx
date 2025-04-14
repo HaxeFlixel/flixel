@@ -80,7 +80,7 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
-	function testSeprateX():Void
+	function testSeparateX():Void
 	{
 		final object1 = new FlxObject(5, 0, 10, 10);
 		object1.last.x = 10;
@@ -100,7 +100,7 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
-	function testSeprateY():Void
+	function testSeparateY():Void
 	{
 		final object1 = new FlxObject(0, 5, 10, 10);
 		object1.last.y = 10;
@@ -117,9 +117,36 @@ class FlxObjectTest extends FlxTest
 		Assert.isFalse(FlxG.overlap(object1, object2));
 		Assert.isTrue(object1.y > object2.y);
 	}
+	@Test
+	function testComputeOverlapOnBothAxisNewlyOverlapping():Void
+	{
+		final object1 = new FlxObject(10.01, -.01, 10, 10);
+		final object2 = new FlxObject(0, 10, 10, 10);
+		
+		object1.setPosition(9.95, .05);
+		
+		FlxAssert.areNear(-.05, FlxObject.computeOverlapX(object1, object2));
+		FlxAssert.areNear(-.05, FlxObject.computeOverlapY(object1, object2));
+	}
 	
 	@Test
-	function testSeprateXFromOpposite():Void
+	function testSeparateOnBothAxisNewlyOverlapping():Void
+	{
+		final object1 = new FlxObject(10.01, -.01, 10, 10);
+		final object2 = new FlxObject(0, 10, 10, 10);
+		object2.immovable = true;
+		
+		object1.setPosition(9.95, .05);
+		
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// X-axis resolves first and no collision
+		Assert.areEqual(9.95, object1.x);
+		// Y-axis resolves second and is stopped by collision
+		Assert.areEqual(0, object1.y);
+	}
+	
+	@Test
+	function testSeparateXFromOpposite():Void
 	{
 		/*
 		 * NOTE: An odd y value on either may result in a rounding error where the second
@@ -142,7 +169,7 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
-	function testSeprateYFromOpposite():Void
+	function testSeparateYFromOpposite():Void
 	{
 		/*
 		 * NOTE: An odd y value on either may result in a rounding error where the second
@@ -371,7 +398,7 @@ class FlxObjectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBounds()
+	function testGetRotatedBounds()
 	{
 		var expected = FlxRect.get();
 		var rect = FlxRect.get();
