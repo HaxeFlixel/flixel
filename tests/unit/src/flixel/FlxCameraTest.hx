@@ -163,7 +163,7 @@ class FlxCameraTest extends FlxTest
 		// track leaked points
 		@:privateAccess
 		final pointPool = FlxBasePoint.pool;
-		pointPool.preAllocate(1);
+		pointPool.preAllocate(100);
 		final startingPoolLength = pointPool.length;
 		#end
 		
@@ -246,7 +246,7 @@ class FlxCameraTest extends FlxTest
 		FlxAssert.pointNearXY(650, 500, camera.viewToGamePosition(320, 240, game));
 		
 		#if FLX_POINT_POOL
-		Assert.areEqual(pointPool.length, startingPoolLength);
+		Assert.areEqual(startingPoolLength, pointPool.length);
 		#end
 	}
 	
