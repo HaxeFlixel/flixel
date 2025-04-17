@@ -330,6 +330,7 @@ class FlxFrame implements IFlxDestroyable
 	 * 
 	 * @param   framePos  The position in this frame
 	 * @param   result    Optional arg for the returning point
+	 * @since 6.2.0
 	 */
 	public function toSourcePosition(framePos:FlxPoint, ?result:FlxPoint)
 	{
