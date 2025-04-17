@@ -271,8 +271,13 @@ class FlxSprite extends FlxObject
 	public var useColorTransform(default, null):Bool = false;
 
 	/**
-	 * Clipping rectangle for this sprite.
-	 * Set to `null` to discard graphic frame clipping.
+	 * Clipping rectangle for this sprite's frame. When `null`, the entire
+	 * frame is shown, otherwise `x`, `y`, `width` and `height` determine which portion
+	 * of the frame is shown. Expected values are within (`0`,`0`) and (`frameWidth`,`frameHeight`),
+	 * extending the rect beyond the frame will not extend the graphic.
+	 * 
+	 * Fields like position `scale`, `offset`, `angle`, `flipX` and `flipY` have no effect and are
+	 * applied after the frame is clipped. Use `clipToWorldBounds` or `clipToViewBounds` to convert
 	 */
 	public var clipRect(default, set):FlxRect;
 	var _lastClipRect = FlxRect.get(Math.NaN);
@@ -726,6 +731,95 @@ class FlxSprite extends FlxObject
 		else if (height <= 0)
 			scale.y = newScaleX;
 	}
+	
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered,
+	 * will be clipped to the given world coordinates.
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	overload public inline extern function clipToWorldRect(x:Float, y:Float, width:Float, height:Float)
+	{
+		clipToWorldBounds(x, y, x + width, y + height);
+	}
+	
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered,
+	 * will be clipped to the given screen rectangle.
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	overload public inline extern function clipToWorldRect(rect:FlxRect)
+	{
+		clipToWorldBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+	}
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered,
+	 * will be clipped to the given world coordinates.
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	public function clipToWorldBounds(left:Float, top:Float, right:Float, bottom:Float)
+	{
+		if (clipRect == null)
+			clipRect = new FlxRect();
+		
+		final p1 = FlxPoint.get(left, top);
+		worldToFramePosition(p1, camera, p1);
+		final p2 = FlxPoint.get(right, bottom);
+		worldToFramePosition(p2, camera, p2);
+		
+		clipRect.setBoundsAbs(p1.x, p1.y, p2.x, p2.y);
+		p1.put();
+		p2.put();
+	}
+	
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered,
+	 * will be clipped to the given screen coordinates.
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	overload public inline extern function clipToViewRect(x:Float, y:Float, width:Float, height:Float, ?camera:FlxCamera)
+	{
+		clipToViewBounds(x, y, x + width, y + height, camera);
+	}
+	
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered, will be clipped to the given
+	 * screen rectangle. If `clipRect` is `null` a new instance is created
+	 * 
+	 * **NOTE:** `clipRect` is not set to the passed in rect instance
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	overload public inline extern function clipToViewRect(rect:FlxRect, ?camera:FlxCamera)
+	{
+		clipToViewBounds(rect.left, rect.top, rect.right, rect.bottom, camera);
+		rect.putWeak();
+	}
+	
+	/**
+	 * Sets this sprite's `clipRect` so that, when rendered,
+	 * will be clipped to the given screen coordinates.
+	 * 
+	 * **NOTE:** Does not work with most angles
+	 */
+	public function clipToViewBounds(left:Float, top:Float, right:Float, bottom:Float, ?camera:FlxCamera)
+	{
+		if (clipRect == null)
+			clipRect = new FlxRect();
+		
+		if (camera != null)
+			camera = getDefaultCamera();
+		
+		final p1 = viewToFramePosition(left, top, camera);
+		final p2 = viewToFramePosition(right, bottom, camera);
+		
+		clipRect.setBoundsAbs(p1.x, p1.y, p2.x, p2.y);
+		p1.put();
+		p2.put();
+	}
 
 	/**
 	 * Updates the sprite's hitbox (`width`, `height`, `offset`) according to the current `scale`.
@@ -1072,7 +1166,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Determines which of this sprite's pixels are at the specified world coordinate, if any.
-	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, `scrollFactor`, `flipX` and `flipY`.
 	 * 
 	 * @param  worldPoint  The point in world space
 	 * @param  camera      The camera, used for `scrollFactor`. If `null`, `getDefaultCamera()` is used.
@@ -1081,16 +1175,13 @@ class FlxSprite extends FlxObject
 	 */
 	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
-		transformWorldToPixels(worldPoint, camera, _point);
+		final point = worldToFramePosition(worldPoint, camera);
 		
-		// point is inside the graphic
-		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
-		{
-			var frameData:BitmapData = updateFramePixels();
-			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
-		}
+		final overlaps = point.x >= 0 && point.x <= frameWidth && point.y >= 0 && point.y <= frameHeight;
+		final result = overlaps ? frame.getPixelAt(point) : null;
 		
-		return null;
+		point.put();
+		return result;
 	}
 	
 	/**
@@ -1104,27 +1195,27 @@ class FlxSprite extends FlxObject
 	 */
 	public function getPixelAtScreen(screenPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
-		transformScreenToPixels(screenPoint, camera, _point);
+		final point = viewToFramePosition(screenPoint, camera);
 		
-		// point is inside the graphic
-		if (_point.x >= 0 && _point.x <= frameWidth && _point.y >= 0 && _point.y <= frameHeight)
-		{
-			var frameData:BitmapData = updateFramePixels();
-			return frameData.getPixel32(Std.int(_point.x), Std.int(_point.y));
-		}
+		final overlaps = point.x >= 0 && point.x <= frameWidth && point.y >= 0 && point.y <= frameHeight;
+		final result = overlaps ? frame.getPixelAt(point) : null;
 		
-		return null;
+		point.put();
+		return result;
 	}
 	
 	/**
-	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic.
+	 * Converts the point from world coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the frame.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * 
+	 * **Note:** the term "pixels" in this title is a misnomer, this transforms to frame coordinates.
 	 * 
 	 * @param   worldPoint  The world coordinates
 	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `getDefaultCamera()` is used
 	 * @param   result      Optional arg for the returning point
 	 */
+	@:deprecated("transformWorldToPixels is deprecated, use worldToFramePosition")
 	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
@@ -1136,13 +1227,16 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
-	 * Converts the point from world coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic. Same as `worldToPixels` but never uses a camera,
-	 * therefore `scrollFactor` is ignored
+	 * Converts the point from world coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the frame. Same as `worldToFramePosition` but never uses a camera,
+	 * therefore `scrollFactor` is ignored.
+	 * 
+	 * **Note:** the term "pixels" in this title is a misnomer, this transforms to frame coordinates.
 	 * 
 	 * @param   worldPoint  The world coordinates.
 	 * @param   result      Optional arg for the returning point
 	 */
+	@:deprecated("transformWorldToPixelsSimple is deprecated, use worldToFramePositionSimple")
 	public function transformWorldToPixelsSimple(worldPoint:FlxPoint, ?result:FlxPoint):FlxPoint
 	{
 		result = getPosition(result);
@@ -1161,19 +1255,22 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Converts the point from screen coordinates to this sprite's pixel coordinates where (0,0)
-	 * is the top left of the graphic.
-	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
+	 * Converts the point from screen coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the frame.
+	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`
 	 * 
-	 * @param   screenPoint  The screen coordinates
-	 * @param   camera       The desired "screen" space. If `null`, `getDefaultCamera()` is used
-	 * @param   result       Optional arg for the returning point
+	 * **Note:** the term "pixels" in this title is a misnomer, this transforms to frame coordinates.
+	 * 
+	 * @param   screenPos  The screen coordinates
+	 * @param   camera     The desired "screen" space. If `null`, `getDefaultCamera()` is used
+	 * @param   result     Optional arg for the returning point
 	 */
-	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	@:deprecated("transformScreenToPixels is deprecated, use screenToFramePosition")
+	public function transformScreenToPixels(screenPos:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		result = getScreenPosition(result, camera);
 		
-		result.subtract(screenPoint.x, screenPoint.y);
+		result.subtract(screenPos.x, screenPos.y);
 		result.negate();
 		result.add(offset);
 		result.subtract(origin);
@@ -1181,11 +1278,124 @@ class FlxSprite extends FlxObject
 		result.degrees -= angle;
 		result.add(origin);
 		
-		screenPoint.putWeak();
+		screenPos.putWeak();
 		
 		return result;
 	}
 
+	/**
+	 * Converts the point from world coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the frame. Factors in `scale`, `angle`, `offset`, `origin`,
+	 * `scrollFactor`, `flipX` and `flipY`.
+	 * 
+	 * @param   worldPos  The world coordinates
+	 * @param   camera    The camera, used for `scrollFactor`. If `null`, `getDefaultCamera()` is used
+	 * @param   result    Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	public function worldToFramePosition(worldPos:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		// get the screen pos without scrollFactor, then get the world, WITH scrollFactor
+		final screenPoint = camera.worldToViewPosition(worldPos, 1.0, 1.0, FlxPoint.weak());
+		return viewToFramePosition(screenPoint, camera, result);
+	}
+	
+	/**
+	 * Converts the point from world coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the frame. Same as `worldToFrameCoord` but never uses a camera,
+	 * therefore `scrollFactor` is ignored
+	 * 
+	 * @param   worldPos  The world coordinates.
+	 * @param   result    Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	public function worldToFramePositionSimple(worldPos:FlxPoint, ?result:FlxPoint):FlxPoint
+	{
+		result = getPosition(result);
+		
+		result.subtract(worldPos.x, worldPos.y);
+		worldPos.putWeak();
+		result.negate();
+		result.add(offset);
+		result.subtract(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.add(origin);
+		
+		final animFlipX = animation.curAnim != null && animation.curAnim.flipX;
+		if (flipX != animFlipX)
+			result.x = frameWidth - result.x;
+		
+		final animFlipY = animation.curAnim != null && animation.curAnim.flipY;
+		if (flipY != animFlipY)
+			result.y = frameHeight - result.y;
+		
+		
+		return result;
+	}
+	
+	/**
+	 * Converts the point from camera coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the camera's frame. Factors in `scale`, `angle`, `offset`, `origin`,
+	 * `scrollFactor`, `flipX` and `flipY`.
+	 * 
+	 * @param   viewPoint  The coordinates in the camera's view
+	 * @param   camera     The desired "screen" space. If `null`, `getDefaultCamera()` is used
+	 * @param   result     Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	overload public inline extern function viewToFramePosition(viewPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		result = viewToFrameHelper(viewPoint.x, viewPoint.y, result);
+		viewPoint.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Converts the point from camera coordinates to this sprite's frame coordinates where (0,0)
+	 * is the top left of the camera's frame. Factors in `scale`, `angle`, `offset`, `origin`,
+	 * `scrollFactor`, `flipX` and `flipY`.
+	 * 
+	 * @param   viewX   The coordinates in the camera's view
+	 * @param   camera  The desired "screen" space. If `null`, `getDefaultCamera()` is used
+	 * @param   result  Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	overload public inline extern function viewToFramePosition(viewX:Float, viewY:Float, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		return viewToFrameHelper(viewX, viewY, camera, result);
+	}
+	
+	function viewToFrameHelper(viewX:Float, viewY:Float, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (camera == null)
+			camera = this.getDefaultCamera();
+		
+		result = camera.viewToWorldPosition(viewX, viewY, scrollFactor, result);
+		result.subtract(x, y);
+		// return result;
+		
+		// result = getViewPosition(camera, result);
+		// result.set(viewX - result.x, viewY - result.y);
+		result.add(offset);
+		result.subtract(origin);
+		result.scale(1 / scale.x, 1 / scale.y);
+		result.degrees -= angle;
+		result.add(origin);
+		
+		final animFlipX = animation.curAnim != null && animation.curAnim.flipX;
+		if (flipX != animFlipX)
+			result.x = frameWidth - result.x;
+		
+		final animFlipY = animation.curAnim != null && animation.curAnim.flipY;
+		if (flipY != animFlipY)
+			result.y = frameHeight - result.y;
+		
+		return result;
+	}
 	/**
 	 * Internal function to update the current animation frame.
 	 *

@@ -1785,7 +1785,180 @@ class FlxCamera extends FlxBasic
 		x = X;
 		y = Y;
 	}
-
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldPos       The position in the world
+	 * @param   scrollFactorX  How much this camera's scroll affects the result, for parallax
+	 * @param   scrollFactorY  How much this camera's scroll affects the result, for parallax
+	 * @param   result         Optional arg for the returning point
+	 */
+	overload public inline extern function worldToViewPosition(worldPos:FlxPoint, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result:FlxPoint)
+	{
+		return worldToViewHelper(worldPos.x, worldPos.y, scrollFactorX, scrollFactorY, result);
+	}
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldPos      The position in the world
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	overload public inline extern function worldToViewPosition(worldPos:FlxPoint, ?scrollFactor:FlxPoint, ?result:FlxPoint)
+	{
+		return worldToViewPosition(worldPos.x, worldPos.y, scrollFactor, result);
+	}
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldX        The position in the world
+	 * @param   worldY        The position in the world
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax=
+	 * @param   result        Optional arg for the returning point
+	 */
+	overload public inline extern function worldToViewPosition(worldX:Float, worldY:Float, ?scrollFactor:FlxPoint, ?result:FlxPoint)
+	{
+		result = worldToViewHelper(worldX, worldY, scrollFactor != null ? scrollFactor.x : 1.0, scrollFactor != null ? scrollFactor.y : 1.0, result);
+		scrollFactor.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldX        The position in the world
+	 * @param   worldY        The position in the world
+	 * @param   scrollFactorX  How much this camera's scroll affects the result, for parallax
+	 * @param   scrollFactorY  How much this camera's scroll affects the result, for parallax
+	 * @param   result         Optional arg for the returning point
+	 */
+	overload public inline extern function worldToViewPosition(worldX:Float, worldY:Float, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result)
+	{
+		return worldToViewHelper(worldX, worldY, scrollFactorX, scrollFactorY, result);
+	}
+	
+	function worldToViewHelper(worldX:Float, worldY:Float, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		return result.set(worldToViewX(worldX, scrollFactorX), worldToViewY(worldY, scrollFactorY));
+	}
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldX        The position in the world
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result         Optional arg for the returning point
+	 */
+	public function worldToViewX(worldX:Float, scrollFactor = 1.0)
+	{
+		return (worldX - (scroll.x * scrollFactor) - viewMarginX) * zoom;
+	}
+	
+	/**
+	 * Takes a world position and gives the position it will be displayed in the camera's view
+	 * 
+	 * @param   worldY        The position in the world
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	public function worldToViewY(worldY:Float, scrollFactor = 1.0)
+	{
+		return (worldY - (scroll.y * scrollFactor) - viewMarginY) * zoom;
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewPos        The position in this camera's view
+	 * @param   scrollFactorX  How much this camera's scroll affects the result, for parallax
+	 * @param   scrollFactorY  How much this camera's scroll affects the result, for parallax
+	 * @param   result         Optional arg for the returning point
+	 */
+	overload public inline extern function viewToWorldPosition(viewPos:FlxPoint, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result:FlxPoint)
+	{
+		return viewToWorldHelper(viewPos.x, viewPos.y, scrollFactorX, scrollFactorY, result);
+		
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewPos       The position in this camera's view
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	overload public inline extern function viewToWorldPosition(viewPos:FlxPoint, ?scrollFactor:FlxPoint, ?result:FlxPoint)
+	{
+		return viewToWorldPosition(viewPos.x, viewPos.y, scrollFactor, result);
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewX         The position in this camera's view
+	 * @param   viewY         The position in this camera's view
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	overload public inline extern function viewToWorldPosition(viewX:Float, viewY:Float, ?scrollFactor:FlxPoint, ?result:FlxPoint)
+	{
+		result = viewToWorldHelper(viewX, viewY, scrollFactor != null ? scrollFactor.x : 1.0, scrollFactor != null ? scrollFactor.y : 1.0, result);
+		scrollFactor.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewX          The position in this camera's view
+	 * @param   viewY          The position in this camera's view
+	 * @param   scrollFactorX  How much this camera's scroll affects the result, for parallax
+	 * @param   scrollFactorY  How much this camera's scroll affects the result, for parallax
+	 * @param   result         Optional arg for the returning point
+	 */
+	overload public inline extern function viewToWorldPosition(viewX:Float, viewY:Float, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result)
+	{
+		return worldToViewHelper(viewX, viewY, scrollFactorX, scrollFactorY, result);
+	}
+	
+	function viewToWorldHelper(viewX:Float, viewY:Float, scrollFactorX = 1.0, scrollFactorY = 1.0, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		return result.set(viewToWorldX(viewX, scrollFactorX), viewToWorldY(viewY, scrollFactorY));
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewX         The position in this camera's view
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	public function viewToWorldX(viewX:Float, scrollFactor = 1.0)
+	{
+		return (viewX / zoom) + (scroll.x * scrollFactor) + viewMarginX;
+	}
+	
+	/**
+	 * Takes a position in this camera's view and gives the world position being displayed
+	 * 
+	 * @param   viewY         The position in this camera's view
+	 * @param   scrollFactor  How much this camera's scroll affects the result, for parallax
+	 * @param   result        Optional arg for the returning point
+	 */
+	public function viewToWorldY(viewY:Float, scrollFactor = 1.0)
+	{
+		return (viewY / zoom) + (scroll.y * scrollFactor) + viewMarginY;
+	}
+	
 	/**
 	 * Specify the bounding rectangle of where the camera is allowed to move.
 	 *

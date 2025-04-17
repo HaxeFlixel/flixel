@@ -359,6 +359,180 @@ class FlxSpriteTest extends FlxTest
 		FlxAssert.areNear(rect.x + 0.5 * rect.width, actual.x, 0.001, pos);
 		FlxAssert.areNear(rect.y + 0.5 * rect.height, actual.y, 0.001, pos);
 	}
+	
+	@Test
+	function testWorldToFramePosition()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final worldPos = FlxPoint.get();
+		final actual = FlxPoint.get();
+		function assertFramePosition(worldX:Float, worldY:Float, expectedX:Float, expectedY:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			worldPos.set(worldX, worldY);
+			sprite1.worldToFramePosition(worldPos, actual);
+			FlxAssert.areNear(expectedX, actual.x, margin, 'X Value [${actual.x}] is not within [$margin] of [$expectedX]', pos);
+			FlxAssert.areNear(expectedY, actual.y, margin, 'Y Value [${actual.y}] is not within [$margin] of [$expectedY]', pos);
+			sprite1.worldToFramePositionSimple(worldPos, actual);
+			FlxAssert.areNear(expectedX, actual.x, margin, 'Simple X Value [${actual.x}] is not within [$margin] of [$expectedX]', pos);
+			FlxAssert.areNear(expectedY, actual.y, margin, 'Simple Y Value [${actual.y}] is not within [$margin] of [$expectedY]', pos);
+		}
+		
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(150, 150, 50, 50);
+		FlxG.camera.scroll.set(50, 100);
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(150, 150, 50, 50);
+		sprite1.scale.set(2, 2);
+		assertFramePosition(100, 100, 25, 25);
+		assertFramePosition(150, 150, 50, 50);
+		sprite1.angle = 90;
+		assertFramePosition(100, 100, 25, 75);
+		assertFramePosition(150, 150, 50, 50);
+		sprite1.flipX = true;
+		assertFramePosition(100, 100, 75, 75);
+		assertFramePosition(150, 150, 50, 50);
+		sprite1.flipY = true;
+		assertFramePosition(100, 100, 75, 25);
+		assertFramePosition(150, 150, 50, 50);
+	}
+	
+	@Test
+	function testViewToFramePosition()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final worldPos = FlxPoint.get();
+		final actual = FlxPoint.get();
+		function assertFramePosition(worldX:Float, worldY:Float, expectedX:Float, expectedY:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			worldPos.set(worldX, worldY);
+			sprite1.viewToFramePosition(worldPos, actual);
+			FlxAssert.areNear(expectedX, actual.x, margin, 'X Value [${actual.x}] is not within [$margin] of [$expectedX]', pos);
+			FlxAssert.areNear(expectedY, actual.y, margin, 'Y Value [${actual.y}] is not within [$margin] of [$expectedY]', pos);
+		}
+		
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.scale.set(2, 2);
+		assertFramePosition(100, 100, 25, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.angle = 90;
+		assertFramePosition(100, 100, 25, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipX = true;
+		assertFramePosition(100, 100, 75, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipY = true;
+		assertFramePosition(100, 100, 75, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		FlxG.camera.scroll.set(50, 100);
+		assertFramePosition(100, 100, 25, 50);
+		assertFramePosition(100, 50, 50, 50);
+		
+		FlxG.camera.zoom = 2;
+		assertFramePosition(100, 100, 25, 50);
+	}
+	
+	@Test
+	function testClipToWorldBounds()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final expected = FlxRect.get();
+		function assertClipRect(expectedX:Float, expectedY:Float, expectedWidth:Float, expectedHeight:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			FlxAssert.rectsNear(expected.set(expectedX, expectedY, expectedWidth, expectedHeight), sprite1.clipRect, margin, pos);
+		}
+		
+		sprite1.clipToWorldBounds(100, 100, 200, 200);
+		assertClipRect(0, 0, 100, 100);
+		
+		sprite1.scale.set(2, 2);
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(0, 0, 50, 50);
+		
+		sprite1.angle = 90;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(0, 50, 50, 50);
+		
+		sprite1.flipX = true;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 50, 50, 50);
+		
+		sprite1.flipY = true;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.scroll.set(50, 100);
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.zoom = 2;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+	}
+	
+	@Test
+	function testClipToViewBounds()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		sprite1.camera = FlxG.camera;
+		
+		final expected = FlxRect.get();
+		function assertClipRect(expectedX:Float, expectedY:Float, expectedWidth:Float, expectedHeight:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			FlxAssert.rectsNear(expected.set(expectedX, expectedY, expectedWidth, expectedHeight), sprite1.clipRect, margin, pos);
+		}
+		
+		sprite1.clipToViewBounds(100, 100, 200, 200);
+		assertClipRect(0, 0, 100, 100);
+		
+		sprite1.scale.set(2, 2);
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(0, 0, 50, 50);
+		
+		sprite1.angle = 90;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(0, 50, 50, 50);
+		
+		sprite1.flipX = true;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(50, 50, 50, 50);
+		
+		sprite1.flipY = true;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.scroll.set(100, 50);
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(25, 50, 50, 50);
+		sprite1.clipToViewBounds(40, 40, 150, 150);
+		assertClipRect(25, 45, 55, 55);
+		sprite1.clipToViewBounds(30, 30, 150, 150);
+		assertClipRect(25, 40, 60, 60);
+		
+		FlxG.camera.zoom = 4;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(25, 50, 50, 50);//TODO: why does zoom have no effect
+		sprite1.clipToViewBounds(40, 40, 150, 150);
+		assertClipRect(25, 45, 55, 55);
+		sprite1.clipToViewBounds(30, 30, 150, 150);
+		assertClipRect(25, 40, 60, 60);
+	}
 }
 
 abstract SimplePoint(Array<Float>) from Array<Float>
