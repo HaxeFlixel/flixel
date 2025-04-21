@@ -600,12 +600,18 @@ class FlxSound extends FlxBasic
 			_channel.soundTransform = _transform;
 	}
 	
-	function calcTransformVolume()
+	function calcTransformVolume():Float
 	{
-		final volume = #if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * #end
-			(group != null ? group.volume : 1) * _volume * _volumeAdjust;
+		final volume = (group != null ? group.volume : 1.0) * _volume * _volumeAdjust;
 		
-		return FlxG.sound.applySoundCurve(volume);
+		#if FLX_SOUND_SYSTEM
+		if (FlxG.sound.muted)
+			return 0.0;
+		
+		return FlxG.sound.applySoundCurve(FlxG.sound.volume * volume);
+		#else
+		return volume;
+		#end
 	}
 	
 	/**
