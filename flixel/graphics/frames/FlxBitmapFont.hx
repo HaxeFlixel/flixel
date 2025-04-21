@@ -466,7 +466,7 @@ class FlxBitmapFont extends FlxFramesCollection
 		final h:Float = charFrame.sourceSize.y + (offset != null && offset.y > 0 ? offset.y : 0);
 		charFrame.sourceSize.set(w, h);
 		if (offset != null)
-			charFrame.offset.addPoint(offset);//calls putWeak
+			charFrame.offset.add(offset);//calls putWeak
 		charFrame.name = charName;
 		pushFrame(charFrame, true);
 		charMap.set(charCode, charFrame);
@@ -536,7 +536,7 @@ class FlxBitmapFont extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxBitmapFont
 	{
-		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.weak().add(this.border).add(border);
 
 		var font:FlxBitmapFont = FlxBitmapFont.findFont(frame, resultBorder);
 		if (font != null)

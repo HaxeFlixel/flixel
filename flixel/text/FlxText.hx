@@ -22,12 +22,8 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
 using flixel.util.FlxStringUtil;
-
 #if flash
 import openfl.geom.Rectangle;
-#end
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
 #end
 
 // TODO: think about filters and text
@@ -693,9 +689,9 @@ class FlxText extends FlxSprite
 		if (Font != null)
 		{
 			var newFontName:String = Font;
-			if (Assets.exists(Font, AssetType.FONT))
+			if (FlxG.assets.exists(Font, FONT))
 			{
-				newFontName = Assets.getFont(Font).fontName;
+				newFontName = FlxG.assets.getFontUnsafe(Font).fontName;
 			}
 
 			_defaultFormat.font = newFontName;
@@ -1035,11 +1031,11 @@ class FlxText extends FlxSprite
 	override function drawSimple(camera:FlxCamera):Void
 	{
 		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtractPoint(offset).subtractPoint(_graphicOffset);
+		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
 		if (isPixelPerfectRender(camera))
 			_point.floor();
 		
-		_point.copyToFlash(_flashPoint);
+		_point.copyTo(_flashPoint);
 		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 	}
 	
@@ -1058,7 +1054,7 @@ class FlxText extends FlxSprite
 		}
 		
 		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtractPoint(offset).subtractPoint(_graphicOffset);
+		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
 		_point.add(origin.x, origin.y);
 		_matrix.translate(_point.x, _point.y);
 		

@@ -272,11 +272,10 @@ class FlxSprite extends FlxObject
 
 	/**
 	 * Clipping rectangle for this sprite.
-	 * Changing the rect's properties directly doesn't have any effect,
-	 * reassign the property to update it (`sprite.clipRect = sprite.clipRect;`).
 	 * Set to `null` to discard graphic frame clipping.
 	 */
 	public var clipRect(default, set):FlxRect;
+	var _lastClipRect = FlxRect.get(Math.NaN);
 
 	/**
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
@@ -420,6 +419,7 @@ class FlxSprite extends FlxObject
 		scale = FlxDestroyUtil.put(scale);
 		_halfSize = FlxDestroyUtil.put(_halfSize);
 		_scaledOrigin = FlxDestroyUtil.put(_scaledOrigin);
+		_lastClipRect = FlxDestroyUtil.put(_lastClipRect);
 
 		framePixels = FlxDestroyUtil.dispose(framePixels);
 
@@ -571,7 +571,7 @@ class FlxSprite extends FlxObject
 		}
 		
 		#if FLX_TRACK_GRAPHICS
-		tempGraph.trackingInfo = 'loadRotatedGraphic($ID, $Rotations, $Frame, $AntiAliasing, $AutoBuffer)';
+		tempGraph.trackingInfo = '$ID.loadRotatedGraphic(${brushGraphic.trackingInfo}, $Rotations, $Frame, $AntiAliasing, $AutoBuffer)';
 		#end
 		
 		var max:Int = (brush.height > brush.width) ? brush.height : brush.width;
@@ -615,7 +615,7 @@ class FlxSprite extends FlxObject
 			graphic = FlxGraphic.fromBitmapData(frame.paint(), false, key);
 		
 		#if FLX_TRACK_GRAPHICS
-		graphic.trackingInfo = 'loadRotatedFrame($ID, $rotations, $antiAliasing, $autoBuffer)';
+		graphic.trackingInfo = '$ID.loadRotatedFrame($key, $rotations, $antiAliasing, $autoBuffer)';
 		#end
 		
 		return loadRotatedGraphic(graphic, rotations, -1, antiAliasing, autoBuffer);
@@ -649,7 +649,7 @@ class FlxSprite extends FlxObject
 		frames = graph.imageFrame;
 		
 		#if FLX_TRACK_GRAPHICS
-		graph.trackingInfo = 'makeGraphic($ID, ${color.toHexString()})';
+		graph.trackingInfo = '$ID.makeGraphic($width, $height, ${color.toHexString()}, $unique, $key)';
 		#end
 		
 		return this;
@@ -801,24 +801,26 @@ class FlxSprite extends FlxObject
 	 */
 	override public function draw():Void
 	{
+		checkClipRect();
+		
 		checkEmptyFrame();
-
+		
 		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY)
 			return;
-
+		
 		if (dirty) // rarely
 			calcFrame(useFramePixels);
-
+		
 		for (camera in getCamerasLegacy())
 		{
 			if (!camera.visible || !camera.exists || !isOnScreen(camera))
 				continue;
-
+			
 			if (isSimpleRender(camera))
 				drawSimple(camera);
 			else
 				drawComplex(camera);
-
+			
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
@@ -829,44 +831,69 @@ class FlxSprite extends FlxObject
 			drawDebug();
 		#end
 	}
+	
+	/**
+	 * Checks the previous frame's clipRect compared to the current. If there's changes, apply them
+	 */
+	function checkClipRect()
+	{
+		if (frames == null
+		|| (clipRect == null && Math.isNaN(_lastClipRect.x))
+		|| (clipRect != null && clipRect.equals(_lastClipRect)))
+			return;
+		
+		// redraw frame
+		frame = frames.frames[animation.frameIndex];
+		
+		if (clipRect == null)
+			_lastClipRect.set(Math.NaN);
+		else
+			_lastClipRect.copyFrom(clipRect);
+	}
 
 	@:noCompletion
 	function drawSimple(camera:FlxCamera):Void
 	{
-		getScreenPosition(_point, camera).subtractPoint(offset);
+		getScreenPosition(_point, camera).subtract(offset);
 		if (isPixelPerfectRender(camera))
 			_point.floor();
 
-		_point.copyToFlash(_flashPoint);
+		_point.copyTo(_flashPoint);
 		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 	}
 
 	@:noCompletion
 	function drawComplex(camera:FlxCamera):Void
 	{
-		_frame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
-		_matrix.translate(-origin.x, -origin.y);
-		_matrix.scale(scale.x, scale.y);
-
+		drawFrameComplex(_frame, camera);
+	}
+	
+	function drawFrameComplex(frame:FlxFrame, camera:FlxCamera):Void
+	{
+		final matrix = this._matrix; // TODO: Just use local?
+		frame.prepareMatrix(matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
+		matrix.translate(-origin.x, -origin.y);
+		matrix.scale(scale.x, scale.y);
+		
 		if (bakedRotationAngle <= 0)
 		{
 			updateTrig();
-
+			
 			if (angle != 0)
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
-
-		getScreenPosition(_point, camera).subtractPoint(offset);
+		
+		getScreenPosition(_point, camera).subtract(offset);
 		_point.add(origin.x, origin.y);
-		_matrix.translate(_point.x, _point.y);
-
+		matrix.translate(_point.x, _point.y);
+		
 		if (isPixelPerfectRender(camera))
 		{
-			_matrix.tx = Math.floor(_matrix.tx);
-			_matrix.ty = Math.floor(_matrix.ty);
+			matrix.tx = Math.floor(matrix.tx);
+			matrix.ty = Math.floor(matrix.ty);
 		}
-
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
+		
+		camera.drawPixels(frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
 	}
 
 	/**
@@ -1029,7 +1056,7 @@ class FlxSprite extends FlxObject
 	 *
 	 * @param   worldPoint      point in world space you want to check.
 	 * @param   alphaTolerance  Used to determine what counts as solid.
-	 * @param   camera          The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   camera          The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the point overlaps this object.
 	 */
 	public function pixelsOverlapPoint(worldPoint:FlxPoint, alphaTolerance = 0xFF, ?camera:FlxCamera):Bool
@@ -1048,7 +1075,7 @@ class FlxSprite extends FlxObject
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
 	 * @param  worldPoint  The point in world space
-	 * @param  camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @param  camera      The camera, used for `scrollFactor`. If `null`, `getDefaultCamera()` is used.
 	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
 	 * @since 5.0.0
 	 */
@@ -1071,7 +1098,7 @@ class FlxSprite extends FlxObject
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
 	 * @param  screenPoint  The point in screen space
-	 * @param  camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param  camera       The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return a `FlxColor`, if the point is in the sprite's graphic, otherwise `null` is returned.
 	 * @since 5.0.0
 	 */
@@ -1094,14 +1121,14 @@ class FlxSprite extends FlxObject
 	 * is the top left of the graphic.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
-	 * @param   worldPoint  The world coordinates.
-	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `FlxG.camera` is used.
+	 * @param   worldPoint  The world coordinates
+	 * @param   camera      The camera, used for `scrollFactor`. If `null`, `getDefaultCamera()` is used
 	 * @param   result      Optional arg for the returning point
 	 */
 	public function transformWorldToPixels(worldPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 		
 		var screenPoint = FlxPoint.weak(worldPoint.x - camera.scroll.x, worldPoint.y - camera.scroll.y);
 		worldPoint.putWeak();
@@ -1122,11 +1149,11 @@ class FlxSprite extends FlxObject
 		
 		result.subtract(worldPoint.x, worldPoint.y);
 		result.negate();
-		result.addPoint(offset);
-		result.subtractPoint(origin);
+		result.add(offset);
+		result.subtract(origin);
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
-		result.addPoint(origin);
+		result.add(origin);
 		
 		worldPoint.putWeak();
 		
@@ -1139,7 +1166,7 @@ class FlxSprite extends FlxObject
 	 * Factors in `scale`, `angle`, `offset`, `origin`, and `scrollFactor`.
 	 * 
 	 * @param   screenPoint  The screen coordinates
-	 * @param   camera       The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   camera       The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @param   result       Optional arg for the returning point
 	 */
 	public function transformScreenToPixels(screenPoint:FlxPoint, ?camera:FlxCamera, ?result:FlxPoint):FlxPoint
@@ -1148,11 +1175,11 @@ class FlxSprite extends FlxObject
 		
 		result.subtract(screenPoint.x, screenPoint.y);
 		result.negate();
-		result.addPoint(offset);
-		result.subtractPoint(origin);
+		result.add(offset);
+		result.subtract(origin);
 		result.scale(1 / scale.x, 1 / scale.y);
 		result.degrees -= angle;
-		result.addPoint(origin);
+		result.add(origin);
 		
 		screenPoint.putWeak();
 		
@@ -1265,13 +1292,13 @@ class FlxSprite extends FlxObject
 	 * Check and see if this object is currently on screen. Differs from `FlxObject`'s implementation
 	 * in that it takes the actual graphic into account, not just the hitbox or bounding box or whatever.
 	 *
-	 * @param   Camera  Specify which game camera you want. If `null`, `FlxG.camera` is used.
+	 * @param   camera  Specify which game camera you want. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether the object is on screen or not.
 	 */
 	override public function isOnScreen(?camera:FlxCamera):Bool
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 		
 		return camera.containsRect(getScreenBounds(_rect, camera));
 	}
@@ -1324,8 +1351,8 @@ class FlxSprite extends FlxObject
 	/**
 	 * Calculates the smallest globally aligned bounding box that encompasses this sprite's graphic as it
 	 * would be displayed. Honors scrollFactor, rotation, scale, offset and origin.
-	 * @param newRect Optional output `FlxRect`, if `null`, a new one is created.
-	 * @param camera  Optional camera used for scrollFactor, if null `FlxG.camera` is used.
+	 * @param newRect  Optional output `FlxRect`, if `null`, a new one is created
+	 * @param camera   Optional camera used for scrollFactor, if null `getDefaultCamera()` is used
 	 * @return A globally aligned `FlxRect` that fully contains the input sprite.
 	 * @since 4.11.0
 	 */
@@ -1335,7 +1362,7 @@ class FlxSprite extends FlxObject
 			newRect = FlxRect.get();
 		
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 		
 		newRect.setPosition(x, y);
 		if (pixelPerfectPosition)
@@ -1450,21 +1477,16 @@ class FlxSprite extends FlxObject
 		{
 			return null;
 		}
-
+		
 		if (FlxG.renderTile)
 		{
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
-
+		
+		_frame = frame.copyTo(_frame);
 		if (clipRect != null)
-		{
-			_frame = frame.clipTo(clipRect, _frame);
-		}
-		else
-		{
-			_frame = frame.copyTo(_frame);
-		}
-
+			_frame.clip(clipRect);
+		
 		return frame;
 	}
 
@@ -1566,9 +1588,6 @@ class FlxSprite extends FlxObject
 			clipRect = rect.round();
 		else
 			clipRect = null;
-
-		if (frames != null)
-			frame = frames.frames[animation.frameIndex];
 
 		return rect;
 	}

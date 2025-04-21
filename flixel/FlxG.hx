@@ -1,11 +1,11 @@
 package flixel;
 
-import flixel.effects.postprocess.PostProcess;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
 import flixel.system.FlxQuadTree;
 import flixel.system.FlxVersion;
+import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
@@ -48,12 +48,6 @@ import flixel.input.FlxAccelerometer;
 #end
 #if FLX_POINTER_INPUT
 import flixel.input.FlxSwipe;
-#end
-#if FLX_POST_PROCESS
-import flixel.util.FlxDestroyUtil;
-import openfl.display.OpenGLView;
-
-using flixel.util.FlxArrayUtil;
 #end
 
 #if html5
@@ -106,7 +100,7 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(5, 9, 0);
+	public static var VERSION(default, null):FlxVersion = new FlxVersion(6, 0, 0);
 
 	/**
 	 * Internal tracker for game object.
@@ -336,6 +330,12 @@ class FlxG
 	public static var signals(default, null):SignalFrontEnd = new SignalFrontEnd();
 
 	/**
+	 * Contains helper functions relating to retrieving assets
+	 * @since 5.9.0
+	 */
+	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
+	
+	/**
 	 * Resizes the game within the window by reapplying the current scale mode.
 	 */
 	public static inline function resizeGame(width:Int, height:Int):Void
@@ -377,34 +377,13 @@ class FlxG
 	public static inline function switchState(nextState:NextState):Void
 	{
 		final stateOnCall = FlxG.state;
-		
-		if (!nextState.isInstance() || canSwitchTo(cast nextState))
+		state.startOutro(function()
 		{
-			state.startOutro(function()
-			{
-				if (FlxG.state == stateOnCall)
-					game._nextState = nextState;
-				else
-					FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
-			});
-		}
-	}
-	
-	/**
-	 * Calls state.switchTo(nextState) without a deprecation warning.
-	 * This will be removed in Flixel 6.0.0
-	 * @since 5.6.0
-	 */
-	@:noCompletion
-	@:haxe.warning("-WDeprecated")
-	static function canSwitchTo(nextState:FlxState)
-	{
-		#if (haxe < version("4.3.0"))
-		// Use reflection because @:haxe.warning("-WDeprecated") doesn't work until haxe 4.3
-		return Reflect.callMethod(state, Reflect.field(state, 'switchTo'), [nextState]);
-		#else
-		return state.switchTo(nextState);
-		#end
+			if (FlxG.state == stateOnCall)
+				game._nextState = nextState;
+			else
+				FlxG.log.warn("`onOutroComplete` was called after the state was switched. This will be ignored");
+		});
 	}
 
 	/**
@@ -413,13 +392,7 @@ class FlxG
 	 */
 	public static inline function resetState():Void
 	{
-		if (state == null || state._constructor == null)
-			FlxG.log.error("FlxG.resetState was called while switching states");
-		else if(!state._constructor.isInstance())
-			switchState(state._constructor);
-		else
-			// create new instance here so that state.switchTo is called (for backwards compatibility)
-			switchState(Type.createInstance(Type.getClass(state), []));
+		switchState(state._constructor);
 	}
 
 	/**
@@ -535,62 +508,6 @@ class FlxG
 		return child;
 	}
 
-	public static function addPostProcess(postProcess:PostProcess):PostProcess
-	{
-		#if FLX_POST_PROCESS
-		if (OpenGLView.isSupported)
-		{
-			var postProcesses = game.postProcesses;
-
-			// chaining
-			var length = postProcesses.length;
-			if (length > 0)
-			{
-				postProcesses[length - 1].to = postProcess;
-			}
-
-			game.postProcessLayer.addChild(postProcess);
-			postProcesses.push(postProcess);
-		}
-		else
-		{
-			FlxG.log.error("Shaders are not supported on this platform.");
-		}
-		#end
-
-		return postProcess;
-	}
-
-	public static function removePostProcess(postProcess:PostProcess):Void
-	{
-		#if FLX_POST_PROCESS
-		var postProcesses = game.postProcesses;
-		if (postProcesses.remove(postProcess))
-		{
-			chainPostProcesses();
-			postProcess.to = null;
-
-			FlxDestroyUtil.removeChild(game.postProcessLayer, postProcess);
-		}
-		#end
-	}
-
-	#if FLX_POST_PROCESS
-	static function chainPostProcesses():Void
-	{
-		var postProcesses = game.postProcesses;
-
-		if (postProcesses.length > 0)
-		{
-			for (i in 0...postProcesses.length - 1)
-			{
-				postProcesses[i].to = postProcesses[i + 1];
-			}
-			postProcesses.last().to = null;
-		}
-	}
-	#end
-
 	/**
 	 * Opens a web page, by default a new tab or window. If the URL does not
 	 * already start with `"http://"` or `"https://"`, it gets added automatically.
@@ -667,30 +584,12 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
-		renderMethod = BLITTING;
-
-		#if (!lime_legacy && !flash)
-		#if (lime >= "7.0.0")
+		#if !flash
 		renderMethod = switch (stage.window.context.type)
 		{
 			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
 			default: BLITTING;
 		}
-		#else
-		if (!Lib.application.config.windows[0].hardware)
-		{
-			renderMethod = BLITTING;
-		}
-		else
-		{
-			renderMethod = switch (stage.window.renderer.type)
-			{
-				case OPENGL, CONSOLE: DRAW_TILES;
-				case CANVAS, FLASH, CAIRO: BLITTING;
-				default: BLITTING;
-			}
-		}
-		#end
 		#else
 		#if web
 		renderMethod = BLITTING;

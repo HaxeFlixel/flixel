@@ -1,15 +1,14 @@
 package flixel.system.debug.console;
 
 #if FLX_DEBUG
-import openfl.text.TextField;
-import openfl.text.TextFormat;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.system.debug.FlxDebugger.GraphicConsole;
-import flixel.system.debug.completion.CompletionList;
 import flixel.system.debug.completion.CompletionHandler;
+import flixel.system.debug.completion.CompletionList;
 import flixel.util.FlxStringUtil;
-#if (!next && sys)
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+#if sys
 import openfl.events.MouseEvent;
 #end
 #if hscript
@@ -58,7 +57,7 @@ class Console extends Window
 	 */
 	var input:TextField;
 
-	#if (!next && sys)
+	#if sys
 	var inputMouseDown:Bool = false;
 	var stageMouseDown:Bool = false;
 	#end
@@ -72,7 +71,7 @@ class Console extends Window
 	 */
 	public function new(completionList:CompletionList)
 	{
-		super("Console", new GraphicConsole(0, 0), 0, 0, false);
+		super("Console", Icon.console, 0, 0, false);
 		this.completionList = completionList;
 		completionList.setY(y + Window.HEADER_HEIGHT);
 
@@ -123,7 +122,7 @@ class Console extends Window
 		#end
 		#end
 
-		#if (!next && sys) // workaround for broken TextField focus on native
+		#if sys // workaround for broken TextField focus on native
 		input.addEventListener(MouseEvent.MOUSE_DOWN, function(_)
 		{
 			inputMouseDown = true;
@@ -135,7 +134,7 @@ class Console extends Window
 		#end
 	}
 
-	#if (!next && sys)
+	#if sys
 	@:access(flixel.FlxGame.onFocus)
 	override public function update()
 	{
@@ -218,7 +217,7 @@ class Console extends Window
 				if (!history.isEmpty)
 					setText(history.getPreviousCommand());
 
-			#if html5
+			#if (html5 && FLX_KEYBOARD)
 			// FlxKeyboard.preventDefaultKeys adds "preventDefault" on HTML5
 			// so it ends up not fully propegating our inputs to the stage/event listeners
 			// we do this small work around so we don't need to mess around with lime/openfl events

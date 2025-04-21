@@ -87,7 +87,7 @@ class FlxSplash extends FlxState
 		#if FLX_SOUND_SYSTEM
 		if (!muted)
 		{
-			FlxG.sound.load(FlxAssets.getSound("flixel/sounds/flixel")).play();
+			FlxG.sound.load(FlxAssets.getSoundAddExtension("flixel/sounds/flixel")).play();
 		}
 		#end
 	}
