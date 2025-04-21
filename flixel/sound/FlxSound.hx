@@ -605,8 +605,7 @@ class FlxSound extends FlxBasic
 		final volume = #if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * #end
 			(group != null ? group.volume : 1) * _volume * _volumeAdjust;
 		
-		final clampedVolume = Math.max(0, Math.min(1, volume));
-		return Math.exp(Math.log(0.001) * (1 - clampedVolume));
+		return FlxG.sound.applySoundCurve(volume);
 	}
 	
 	/**
