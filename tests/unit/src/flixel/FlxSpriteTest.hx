@@ -400,6 +400,7 @@ class FlxSpriteTest extends FlxTest
 		}
 		
 		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(100, 110, 0, 10);
 		assertFramePosition(150, 150, 50, 50);
 		
 		#if FLX_POINT_POOL
@@ -464,6 +465,7 @@ class FlxSpriteTest extends FlxTest
 		}
 		
 		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(100, 110, 0, 10);
 		assertFramePosition(150, 150, 50, 50);
 		
 		sprite1.scale.set(2, 2);
@@ -520,6 +522,9 @@ class FlxSpriteTest extends FlxTest
 		sprite1.clipToWorldBounds(100, 100, 200, 200);
 		assertClipRect(0, 0, 100, 100);
 		
+		sprite1.clipToWorldBounds(100, 110, 200, 190);
+		assertClipRect(0, 10, 100, 80);
+		
 		sprite1.scale.set(2, 2);
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
 		assertClipRect(0, 0, 50, 50);
@@ -574,6 +579,9 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite1.clipToViewBounds(100, 100, 200, 200);
 		assertClipRect(0, 0, 100, 100);
+		
+		sprite1.clipToViewBounds(100, 110, 200, 190);
+		assertClipRect(0, 10, 100, 80);
 		
 		sprite1.scale.set(2, 2);
 		sprite1.clipToViewBounds(50, 50, 150, 150);
