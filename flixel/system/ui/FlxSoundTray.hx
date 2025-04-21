@@ -160,7 +160,6 @@ class FlxSoundTray extends Sprite
 		y = 0;
 		visible = true;
 		active = true;
-		
 		final numBars = Math.round(volume * 10);
 		for (i in 0..._bars.length)
 			_bars[i].alpha = i < numBars ? 1.0 : 0.5;

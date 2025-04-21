@@ -594,13 +594,13 @@ class FlxSound extends FlxBasic
 	@:allow(flixel.sound.FlxSoundGroup)
 	function updateTransform():Void
 	{
-		_transform.volume = calcTranformVolume();
+		_transform.volume = calcTransformVolume();
 		
 		if (_channel != null)
 			_channel.soundTransform = _transform;
 	}
 	
-	function calcTranformVolume()
+	function calcTransformVolume()
 	{
 		final volume = #if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * #end
 			(group != null ? group.volume : 1) * _volume * _volumeAdjust;

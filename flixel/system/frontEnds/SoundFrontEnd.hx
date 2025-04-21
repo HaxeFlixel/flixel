@@ -362,7 +362,7 @@ class SoundFrontEnd
 		volume += Amount;
 		showSoundTray(Amount > 0);
 	}
-	
+
 	/**
 	 * Shows the sound tray if it is enabled.
 	 * @param up Whether or not the volume is increasing.
