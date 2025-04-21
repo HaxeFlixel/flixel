@@ -1374,7 +1374,7 @@ class FlxSprite extends FlxObject
 			camera = getDefaultCamera();
 		
 		// get the screen pos without scrollFactor, then get the world, WITH scrollFactor
-		return viewToFrameHelper(camera.worldToViewX(worldX), camera.worldToViewY(worldX), camera, result);
+		return viewToFrameHelper(camera.worldToViewX(worldX), camera.worldToViewY(worldY), camera, result);
 	}
 	
 	/**
