@@ -57,13 +57,13 @@ class FlxSpriteTest extends FlxTest
 		var color = FlxColor.RED;
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(0, 0));
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(90, 90));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(0, 0));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(90, 90));
 
 		color = FlxColor.GREEN;
 		colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(120, 120, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(119, 119));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(119, 119));
 	}
 
 	@Test
@@ -491,6 +491,50 @@ class FlxSpriteTest extends FlxTest
 		FlxG.camera.zoom = 2;
 		assertFramePosition(100, 100, -35, 130);
 		assertFramePosition(150, 150, -60, 155);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testGetPixelAt()
+	{
+		final WHITE = FlxColor.WHITE;
+		final BLACK = FlxColor.BLACK;
+		final RED = FlxColor.RED;
+		
+		sprite1.x = 100;
+		sprite1.y = 0;
+		sprite1.makeGraphic(100, 100, WHITE);
+		sprite1.graphic.bitmap.fillRect(new openfl.geom.Rectangle(50, 50, 50, 50), BLACK);
+		
+		final worldPos = FlxPoint.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertPixelAt(expected:FlxColor, x:Float, y:Float, ?pos:PosInfos)
+		{
+			FlxAssert.colorsEqual(expected, sprite1.getPixelAt(worldPos.set(x, y)), pos);
+		}
+		
+		assertPixelAt(WHITE, 125, 25);
+		assertPixelAt(BLACK, 175, 75);
+		
+		sprite1.color = RED;
+		assertPixelAt(RED, 125, 25);
+		assertPixelAt(BLACK, 175, 75);
+		
+		sprite1.color = WHITE;
+		sprite1.setColorTransform(1.0, 0.5, 0.0, 1.0, 0x0, 0x0, 0x80);
+		assertPixelAt(0xFFff8080, 125, 25);
+		assertPixelAt(0xFF000080, 175, 75);
 		
 		#if FLX_POINT_POOL
 		Assert.areEqual(startingPoolLength, pointPool.length);

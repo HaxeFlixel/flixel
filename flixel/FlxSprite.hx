@@ -1227,13 +1227,37 @@ class FlxSprite extends FlxObject
 	 */
 	public function getPixelAt(worldPoint:FlxPoint, ?camera:FlxCamera):Null<FlxColor>
 	{
-		final point = worldToFramePosition(worldPoint, camera);
-		
+		final point = worldToFramePosition(worldPoint, camera, FlxPoint.weak());
 		final overlaps = point.x >= 0 && point.x <= frameWidth && point.y >= 0 && point.y <= frameHeight;
-		final result = overlaps ? frame.getPixelAt(point) : null;
+		if (!overlaps)
+		{
+			point.put();
+			return null;
+		}
 		
-		point.put();
-		return result;
+		final frameColor = frame.getPixelAt(point);
+		
+		if (useColorTransform)
+		{
+			return FlxColor.fromRGBFloat
+			(
+				frameColor.redFloat   * colorTransform.redMultiplier   + (colorTransform.redOffset   / 0xFF),
+				frameColor.greenFloat * colorTransform.greenMultiplier + (colorTransform.greenOffset / 0xFF),
+				frameColor.blueFloat  * colorTransform.blueMultiplier  + (colorTransform.blueOffset  / 0xFF)
+			);
+		}
+		
+		if (color.rgb != 0xffffff)
+		{
+			return FlxColor.fromRGBFloat
+			(
+				frameColor.redFloat * color.redFloat,
+				frameColor.greenFloat * color.greenFloat,
+				frameColor.blueFloat * color.blueFloat
+			);
+		}
+		
+		return frameColor;
 	}
 	
 	/**
