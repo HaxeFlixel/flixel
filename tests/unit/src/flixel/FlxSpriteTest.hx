@@ -531,10 +531,13 @@ class FlxSpriteTest extends FlxTest
 		assertPixelAt(RED, 125, 25);
 		assertPixelAt(BLACK, 175, 75);
 		
-		sprite1.color = WHITE;
 		sprite1.setColorTransform(1.0, 0.5, 0.0, 1.0, 0x0, 0x0, 0x80);
 		assertPixelAt(0xFFff8080, 125, 25);
 		assertPixelAt(0xFF000080, 175, 75);
+		
+		sprite1.alpha = 0.5;
+		assertPixelAt(0x80ff8080, 125, 25);
+		assertPixelAt(0x80000080, 175, 75);
 		
 		#if FLX_POINT_POOL
 		Assert.areEqual(startingPoolLength, pointPool.length);

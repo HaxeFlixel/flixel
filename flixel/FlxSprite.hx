@@ -11,8 +11,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxAssets.FlxShader;
+import flixel.system.FlxAssets;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -1217,6 +1216,39 @@ class FlxSprite extends FlxObject
 	}
 	
 	/**
+	 * Helper to apply the sprite's color or colorTransform to the specified color
+	 */
+	function transformColor(colorIn:FlxColor):FlxColor
+	{
+		final colorStr = color.toHexString();
+		if (useColorTransform)
+		{
+			final ct = colorTransform;
+			return FlxColor.fromRGB
+			(
+				Math.round(colorIn.red * ct.redMultiplier + ct.redOffset),
+				Math.round(colorIn.green * ct.greenMultiplier + ct.greenOffset),
+				Math.round(colorIn.blue * ct.blueMultiplier + ct.blueOffset),
+				Math.round(colorIn.alpha * alpha)
+			);
+		}
+		
+		if (color.rgb != 0xffffff)
+		{
+			final result = FlxColor.fromRGBFloat
+			(
+				colorIn.redFloat * color.redFloat,
+				colorIn.greenFloat * color.greenFloat,
+				colorIn.blueFloat * color.blueFloat,
+				colorIn.alphaFloat * alpha
+			);
+			return result;
+		}
+		
+		return colorIn;
+	}
+	
+	/**
 	 * Determines which of this sprite's pixels are at the specified world coordinate, if any.
 	 * Factors in `scale`, `angle`, `offset`, `origin`, `scrollFactor`, `flipX` and `flipY`.
 	 * 
@@ -1235,29 +1267,7 @@ class FlxSprite extends FlxObject
 			return null;
 		}
 		
-		final frameColor = frame.getPixelAt(point);
-		
-		if (useColorTransform)
-		{
-			return FlxColor.fromRGBFloat
-			(
-				frameColor.redFloat   * colorTransform.redMultiplier   + (colorTransform.redOffset   / 0xFF),
-				frameColor.greenFloat * colorTransform.greenMultiplier + (colorTransform.greenOffset / 0xFF),
-				frameColor.blueFloat  * colorTransform.blueMultiplier  + (colorTransform.blueOffset  / 0xFF)
-			);
-		}
-		
-		if (color.rgb != 0xffffff)
-		{
-			return FlxColor.fromRGBFloat
-			(
-				frameColor.redFloat * color.redFloat,
-				frameColor.greenFloat * color.greenFloat,
-				frameColor.blueFloat * color.blueFloat
-			);
-		}
-		
-		return frameColor;
+		return transformColor(frame.getPixelAt(point));
 	}
 	
 	/**
