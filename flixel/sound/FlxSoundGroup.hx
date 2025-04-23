@@ -16,6 +16,11 @@ class FlxSoundGroup
 	public var volume(default, set):Float;
 
 	/**
+	 * Whether or not this group is muted
+	 */
+	public var muted:Bool;
+
+	/**
 	 * Create a new sound group
 	 * @param	volume  The initial volume of this group
 	 */
