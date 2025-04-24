@@ -89,6 +89,15 @@ class FlxSoundGroup
 			sound.resume();
 	}
 
+	/**
+	 * Returns the volume of this group, taking `muted` in account.
+	 * @return The volume of the group or 0 if the group is muted.
+	 */
+	public function getVolume():Float
+	{
+		return muted ? 0.0 : volume;
+	}
+
 	function set_volume(volume:Float):Float
 	{
 		this.volume = volume;
