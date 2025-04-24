@@ -18,7 +18,7 @@ class FlxSoundGroup
 	/**
 	 * Whether or not this group is muted
 	 */
-	public var muted:Bool;
+	public var muted(default, set):Bool;
 
 	/**
 	 * Create a new sound group
@@ -106,5 +106,15 @@ class FlxSoundGroup
 			sound.updateTransform();
 		}
 		return volume;
+	}
+
+	function set_muted(value:Bool):Bool
+	{
+		muted = value;
+		for (sound in sounds)
+		{
+			sound.updateTransform();
+		}
+		return muted;
 	}
 }
