@@ -263,7 +263,10 @@ class FlxSprite extends FlxObject
 	 */
 	public var color(default, set):FlxColor = FlxColor.WHITE;
 	
-	public var colorTransform(default, null):ColorTransform;
+	/**
+	 * The color effects of this sprite, changes to `color` or `alplha` will be reflected here
+	 */
+	public final colorTransform = new ColorTransform();
 
 	/**
 	 * Whether or not to use a `ColorTransform` set via `setColorTransform()`.
@@ -394,7 +397,6 @@ class FlxSprite extends FlxObject
 		scale = FlxPoint.get(1, 1);
 		_halfSize = FlxPoint.get();
 		_matrix = new FlxMatrix();
-		colorTransform = new ColorTransform();
 		_scaledOrigin = new FlxPoint();
 	}
 
@@ -428,7 +430,6 @@ class FlxSprite extends FlxObject
 		_flashRect2 = null;
 		_flashPointZero = null;
 		_matrix = null;
-		colorTransform = null;
 		blend = null;
 
 		frames = null;
@@ -1037,9 +1038,6 @@ class FlxSprite extends FlxObject
 	
 	function updateColorTransform():Void
 	{
-		if (colorTransform == null)
-			return;
-
 		useColorTransform = alpha != 1 || color.rgb != 0xffffff;
 		if (useColorTransform)
 			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
