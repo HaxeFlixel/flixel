@@ -271,6 +271,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Whether or not to use a `ColorTransform` set via `setColorTransform()`.
 	 */
+	@:deprecated("useColorTransform is deprecated, use hasColorTransform(), instead")// 6.1.0
 	public var useColorTransform(default, null):Bool = false;
 
 	/**
@@ -1023,29 +1024,45 @@ class FlxSprite extends FlxObject
 	 * @param   blueOffset        The offset for the blue color channel value, in the range from `-255` to `255`.
 	 * @param   alphaOffset       The offset for alpha transparency channel value, in the range from `-255` to `255`.
 	 */
+	@:haxe.warning("-WDeprecated")
 	public function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0,
 			redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
 	{
-		@:bypassAccessor color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 0);
+		@:bypassAccessor color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 1.0);
 		@:bypassAccessor alpha = alphaMultiplier;
-
+		
 		colorTransform.setMultipliers(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier);
 		colorTransform.setOffsets(redOffset, greenOffset, blueOffset, alphaOffset);
-
-		useColorTransform = alpha != 1 || color != 0xffffff || colorTransform.hasRGBAOffsets();
+		useColorTransform = hasColorTransformRaw();
+		
 		dirty = true;
 	}
 	
+	@:haxe.warning("-WDeprecated")
 	function updateColorTransform():Void
 	{
-		useColorTransform = alpha != 1 || color.rgb != 0xffffff;
-		if (useColorTransform)
-			colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
-		else
-			colorTransform.setMultipliers(1, 1, 1, 1);
-
-		useColorTransform = useColorTransform || colorTransform.hasRGBAOffsets();
+		colorTransform.setMultipliers(color.redFloat, color.greenFloat, color.blueFloat, alpha);
+		useColorTransform = hasColorTransformRaw();
+		
 		dirty = true;
+	}
+	
+	/**
+	 * Whether this sprite has a color transform, menaing any of the following: less than full
+	 * `alpha`, a `color` tint, or a `colorTransform` whos values are not the default.
+	 */
+	@:haxe.warning("-WDeprecated")
+	public function hasColorTransform()
+	{
+		return useColorTransform || hasColorTransformRaw();
+	}
+	
+	/**
+	 * Helper for the non-deprecated component of `hasColorTransform`
+	 */
+	function hasColorTransformRaw()
+	{
+		return alpha != 1 || color.rgb != 0xffffff || colorTransform.hasRGBAOffsets();
 	}
 	
 	/**
@@ -1208,7 +1225,7 @@ class FlxSprite extends FlxObject
 	{
 		if (_frame == null || !dirty)
 			return framePixels;
-
+		
 		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 		// if you'll try then it will clear framePixels and you won't see anything
 		if (FlxG.renderTile && _frameGraphic != null)
@@ -1216,10 +1233,10 @@ class FlxSprite extends FlxObject
 			dirty = false;
 			return framePixels;
 		}
-
-		var doFlipX:Bool = checkFlipX();
-		var doFlipY:Bool = checkFlipY();
-
+		
+		final doFlipX = checkFlipX();
+		final doFlipY = checkFlipY();
+		
 		if (!doFlipX && !doFlipY && _frame.type == FlxFrameType.REGULAR)
 		{
 			framePixels = _frame.paint(framePixels, _flashPointZero, false, true);
@@ -1228,12 +1245,12 @@ class FlxSprite extends FlxObject
 		{
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 		}
-
-		if (useColorTransform)
+		
+		if (FlxG.renderBlit && hasColorTransform())
 		{
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
-
+		
 		if (FlxG.renderTile && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
@@ -1241,7 +1258,7 @@ class FlxSprite extends FlxObject
 			_frameGraphic = FlxGraphic.fromBitmapData(framePixels, false, null, false);
 			_frame = _frameGraphic.imageFrame.frame.copyTo(_frame);
 		}
-
+		
 		dirty = false;
 		return framePixels;
 	}

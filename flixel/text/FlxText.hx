@@ -862,16 +862,7 @@ class FlxText extends FlxSprite
 
 	override function updateColorTransform():Void
 	{
-		if (alpha != 1)
-		{
-			colorTransform.alphaMultiplier = alpha;
-			useColorTransform = true;
-		}
-		else
-		{
-			colorTransform.alphaMultiplier = 1;
-			useColorTransform = false;
-		}
+		colorTransform.alphaMultiplier = alpha;
 
 		dirty = true;
 	}
