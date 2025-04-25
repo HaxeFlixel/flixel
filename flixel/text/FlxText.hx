@@ -664,17 +664,24 @@ class FlxText extends FlxSprite
 		updateDefaultFormat();
 		return LetterSpacing;
 	}
-
-	override function set_color(Color:FlxColor):Int
+	
+	override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0)
 	{
-		if (_defaultFormat.color == Color.rgb)
-		{
-			return Color;
-		}
-		_defaultFormat.color = Color.rgb;
-		color = Color;
+		super.setColorTransform(1, 1, 1, 1, redOffset, greenOffset, blueOffset, alphaOffset);
+		_defaultFormat.color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 0);
 		updateDefaultFormat();
-		return Color;
+	}
+
+	override function set_color(value:FlxColor):Int
+	{
+		if (_defaultFormat.color == value.rgb)
+		{
+			return value;
+		}
+		_defaultFormat.color = value.rgb;
+		color = value;
+		updateDefaultFormat();
+		return value;
 	}
 
 	inline function get_font():String
