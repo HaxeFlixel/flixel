@@ -266,7 +266,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * The color effects of this sprite, changes to `color` or `alplha` will be reflected here
 	 */
-	public final colorTransform = new ColorTransform();
+	public var colorTransform(default, null) = new ColorTransform();
 
 	/**
 	 * Whether or not to use a `ColorTransform` set via `setColorTransform()`.
