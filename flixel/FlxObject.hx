@@ -1055,6 +1055,67 @@ class FlxObject extends FlxBasic
 	}
 
 	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   result  Optional arg for the returning poin
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this objects
+	 * @since 6.2.0
+	 */
+	public function getViewPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return result.set(getViewXHelper(camera), getViewYHelper(camera));
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewX(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewXHelper(camera);
+	}
+	
+	inline function getViewXHelper(camera:FlxCamera)
+	{
+		final x = pixelPerfectPosition ? Math.floor(this.x) : this.x;
+		return (x - (camera.scroll.x * scrollFactor.x) - camera.viewMarginX) * camera.zoom;
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewY(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewYHelper(camera);
+	}
+	
+	inline function getViewYHelper(camera:FlxCamera)
+	{
+		final y = pixelPerfectPosition ? Math.floor(this.y) : this.y;
+		return (y - (camera.scroll.y * scrollFactor.y) - camera.viewMarginY) * camera.zoom;
+	}
+	
+	/**
 	 * Returns the world position of this object.
 	 * 
 	 * @param   result  Optional arg for the returning point.

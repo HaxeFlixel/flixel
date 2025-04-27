@@ -157,6 +157,32 @@ class FlxRect implements IFlxPooled
 	}
 	
 	/**
+	 * Ensures that width and height are positive while covering the same space. For example:
+	 * ```haxe
+	 * rect.set(100, 100, -50, -50).abs();
+	 * // Is the same as
+	 * rect.set(50, 50, 50, 50);
+	 * ```
+	 * @since 6.2.0
+	 */
+	public inline function abs()
+	{
+		if (width < 0)
+		{
+			x += width;
+			width = -width;
+		}
+		
+		if (height < 0)
+		{
+			y += height;
+			height = -height;
+		}
+		
+		return this;
+	}
+	
+	/**
 	 * Fills the rectangle so that it has always has a positive width and height. For example:
 	 * ```haxe
 	 * rect.setAbs(100, 100, -50, -50);
@@ -172,11 +198,7 @@ class FlxRect implements IFlxPooled
 	 */
 	public inline function setAbs(x:Float, y:Float, width:Float, height:Float)
 	{
-		this.x = width > 0 ? x : x + width;
-		this.y = height > 0 ? y : y + height;
-		this.width = width > 0 ? width : -width;
-		this.height = height > 0 ? height : -height;
-		return this;
+		return this.set(x, y, width, height).abs();
 	}
 	
 	/**

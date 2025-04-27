@@ -2,6 +2,7 @@ package;
 
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxColor;
 import haxe.PosInfos;
 import massive.munit.Assert;
 
@@ -123,5 +124,16 @@ class FlxAssert
 			Assert.fail(msg, info);
 		else
 			Assert.fail('Value [$actual] is not within [$margin] of [( x:$expectedX | y:$expectedY )]', info);
+	}
+	
+	
+	public static function colorsEqual(expected:FlxColor, actual:FlxColor, ?msg:String, ?info:PosInfos):Void
+	{
+		if (expected == actual)
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [${actual.toHexString()}] is not equal to [${expected.toHexString()}]', info);
 	}
 }

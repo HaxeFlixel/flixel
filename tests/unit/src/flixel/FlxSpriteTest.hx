@@ -1,14 +1,14 @@
 package flixel;
 
-import openfl.display.BitmapData;
 import flixel.animation.FlxAnimation;
 import flixel.graphics.atlas.FlxAtlas;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
+import openfl.display.BitmapData;
 
 class FlxSpriteTest extends FlxTest
 {
@@ -57,13 +57,13 @@ class FlxSpriteTest extends FlxTest
 		var color = FlxColor.RED;
 		var colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(100, 100, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(0, 0));
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(90, 90));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(0, 0));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(90, 90));
 
 		color = FlxColor.GREEN;
 		colorSprite = new FlxSprite();
 		colorSprite.makeGraphic(120, 120, color);
-		Assert.areEqual(color.to24Bit(), colorSprite.pixels.getPixel(119, 119));
+		FlxAssert.colorsEqual(color.rgb, colorSprite.pixels.getPixel(119, 119));
 	}
 
 	@Test
@@ -358,6 +358,348 @@ class FlxSpriteTest extends FlxTest
 		final rect = sprite1.getScreenBounds(FlxRect.weak());
 		FlxAssert.areNear(rect.x + 0.5 * rect.width, actual.x, 0.001, pos);
 		FlxAssert.areNear(rect.y + 0.5 * rect.height, actual.y, 0.001, pos);
+	}
+	
+	@Test
+	function testWorldToFramePosition()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final worldPos = FlxPoint.get();
+		final actual = FlxPoint.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertFramePosition(worldX:Float, worldY:Float, expectedX:Float, expectedY:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			function getMsg(prefix:String)
+			{
+				return '$prefix - Value [$actual] is not within [$margin] of [( x:$expectedX | y:$expectedY )]';
+			}
+			
+			sprite1.worldToFramePosition(worldX, worldY, actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('(xy)'), pos);
+			
+			sprite1.worldToFramePositionSimple(worldX, worldY, actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('simple(xy)'), pos);
+			
+			worldPos.set(worldX, worldY);
+			sprite1.worldToFramePosition(worldPos, actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('(p)'), pos);
+			
+			sprite1.worldToFramePositionSimple(worldPos, actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('simple(p)'), pos);
+		}
+		
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(100, 110, 0, 10);
+		assertFramePosition(150, 150, 50, 50);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+		
+		FlxG.camera.scroll.set(50, 100);
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.scale.set(2, 2);
+		assertFramePosition(100, 100, 25, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.angle = 90;
+		assertFramePosition(100, 100, 25, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipX = true;
+		assertFramePosition(100, 100, 75, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipY = true;
+		assertFramePosition(100, 100, 75, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testViewToFramePosition()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final worldPos = FlxPoint.get();
+		final actual = FlxPoint.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertFramePosition(worldX:Float, worldY:Float, expectedX:Float, expectedY:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			function getMsg(prefix:String)
+			{
+				return '$prefix - Value [$actual] is not within [$margin] of [( x:$expectedX | y:$expectedY )]';
+			}
+			
+			sprite1.viewToFramePosition(worldX, worldY, actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('(xy)'), pos);
+			
+			sprite1.viewToFramePosition(worldPos.set(worldX, worldY), actual);
+			FlxAssert.pointNearXY(expectedX, expectedY, actual, margin, getMsg('(p)'), pos);
+		}
+		
+		assertFramePosition(100, 100, 0, 0);
+		assertFramePosition(100, 110, 0, 10);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.scale.set(2, 2);
+		assertFramePosition(100, 100, 25, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.angle = 90;
+		assertFramePosition(100, 100, 25, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipX = true;
+		assertFramePosition(100, 100, 75, 75);
+		assertFramePosition(150, 150, 50, 50);
+		
+		sprite1.flipY = true;
+		assertFramePosition(100, 100, 75, 25);
+		assertFramePosition(150, 150, 50, 50);
+		
+		FlxG.camera.scroll.set(50, 100);
+		assertFramePosition(100, 100, 25, 50);
+		assertFramePosition(150, 150, 0, 75);
+		
+		FlxG.camera.zoom = 2;
+		assertFramePosition(100, 100, -35, 130);
+		assertFramePosition(150, 150, -60, 155);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testGetPixelAt()
+	{
+		final WHITE = FlxColor.WHITE;
+		final BLACK = FlxColor.BLACK;
+		final RED = FlxColor.RED;
+		
+		sprite1.x = 100;
+		sprite1.y = 0;
+		sprite1.makeGraphic(100, 100, WHITE);
+		sprite1.graphic.bitmap.fillRect(new openfl.geom.Rectangle(50, 50, 50, 50), BLACK);
+		
+		final worldPos = FlxPoint.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertPixelAt(expected:FlxColor, x:Float, y:Float, ?pos:PosInfos)
+		{
+			FlxAssert.colorsEqual(expected, sprite1.getPixelAt(worldPos.set(x, y)), pos);
+		}
+		
+		assertPixelAt(WHITE, 125, 25);
+		assertPixelAt(BLACK, 175, 75);
+		
+		sprite1.color = RED;
+		assertPixelAt(RED, 125, 25);
+		assertPixelAt(BLACK, 175, 75);
+		
+		sprite1.setColorTransform(1.0, 0.5, 0.0, 1.0, 0x0, 0x0, 0x80);
+		assertPixelAt(0xFFff8080, 125, 25);
+		assertPixelAt(0xFF000080, 175, 75);
+		
+		sprite1.alpha = 0.5;
+		assertPixelAt(0x80ff8080, 125, 25);
+		assertPixelAt(0x80000080, 175, 75);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testClipToWorldBounds()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		
+		final expected = FlxRect.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertClipRect(expectedX:Float, expectedY:Float, expectedWidth:Float, expectedHeight:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			FlxAssert.rectsNear(expected.set(expectedX, expectedY, expectedWidth, expectedHeight), sprite1.clipRect, margin, pos);
+		}
+		
+		sprite1.clipToWorldBounds(100, 100, 200, 200);
+		assertClipRect(0, 0, 100, 100);
+		
+		sprite1.clipToWorldBounds(100, 110, 200, 190);
+		assertClipRect(0, 10, 100, 80);
+		
+		sprite1.scale.set(2, 2);
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(0, 0, 50, 50);
+		
+		sprite1.angle = 90;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(0, 50, 50, 50);
+		
+		sprite1.flipX = true;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 50, 50, 50);
+		
+		sprite1.flipY = true;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.scroll.set(50, 100);
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.zoom = 2;
+		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testClipToViewBounds()
+	{
+		sprite1.x = 100;
+		sprite1.y = 100;
+		sprite1.makeGraphic(100, 100);
+		sprite1.camera = FlxG.camera;
+		
+		final expected = FlxRect.get();
+		
+		#if FLX_POINT_POOL
+		// track leaked points
+		@:privateAccess
+		final pointPool = FlxBasePoint.pool;
+		pointPool.preAllocate(100);
+		final startingPoolLength = pointPool.length;
+		#end
+		
+		function assertClipRect(expectedX:Float, expectedY:Float, expectedWidth:Float, expectedHeight:Float, margin = 0.001, ?pos:PosInfos)
+		{
+			FlxAssert.rectsNear(expected.set(expectedX, expectedY, expectedWidth, expectedHeight), sprite1.clipRect, margin, pos);
+		}
+		
+		sprite1.clipToViewBounds(100, 100, 200, 200);
+		assertClipRect(0, 0, 100, 100);
+		
+		sprite1.clipToViewBounds(100, 110, 200, 190);
+		assertClipRect(0, 10, 100, 80);
+		
+		sprite1.scale.set(2, 2);
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(0, 0, 50, 50);
+		
+		sprite1.angle = 90;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(0, 50, 50, 50);
+		
+		sprite1.flipX = true;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(50, 50, 50, 50);
+		
+		sprite1.flipY = true;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		
+		FlxG.camera.scroll.set(100, 50);
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(25, 50, 50, 50);
+		sprite1.clipToViewBounds(40, 40, 150, 150);
+		assertClipRect(25, 45, 55, 55);
+		sprite1.clipToViewBounds(30, 30, 150, 150);
+		assertClipRect(25, 40, 60, 60);
+		
+		FlxG.camera.zoom = 4;
+		sprite1.clipToViewBounds(50, 50, 150, 150);
+		assertClipRect(-65, 170, 50, 50);
+		sprite1.clipToViewBounds(40, 40, 150, 150);
+		assertClipRect(-65, 165, 55, 55);// wtf!
+		sprite1.clipToViewBounds(30, 30, 150, 150);
+		assertClipRect(-65, 160, 60, 60);
+		
+		#if FLX_POINT_POOL
+		Assert.areEqual(startingPoolLength, pointPool.length);
+		#end
+	}
+	
+	@Test
+	function testCoordinateConvertersNullResult()
+	{
+		// Test that a new point is returned when a result is not supplied (A common dev error)
+		try
+		{
+			final result = sprite1.viewToFramePosition(sprite1.x, sprite1.y);
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "viewToFramePosition", message: "${e.message}", stack:\n${e.stack}');
+		}
+		
+		try
+		{
+			final result = sprite1.worldToFramePosition(sprite1.x, sprite1.y);
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "worldToFramePosition", message: "${e.message}", stack:\n${e.stack}');
+		}
+		
+		try
+		{
+			final result = sprite1.worldToFramePositionSimple(sprite1.x, sprite1.y);
+			Assert.areEqual(0, result.x);
+		}
+		catch(e)
+		{
+			Assert.fail('Exception thrown from "worldToFramePositionSimple", message: "${e.message}", stack:\n${e.stack}');
+		}
 	}
 }
 
