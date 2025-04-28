@@ -1,4 +1,4 @@
-# 6.1.0 (TBD)
+# 6.1.0 (Apr 28, 2025)
 
 #### Changes and improvements:
 - Various improvements to debug tools ([#3328](https://github.com/HaxeFlixel/flixel/pull/3328)) ([#3374](https://github.com/HaxeFlixel/flixel/pull/3374)) ([#3375](https://github.com/HaxeFlixel/flixel/pull/3375))
