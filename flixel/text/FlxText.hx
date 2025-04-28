@@ -664,17 +664,24 @@ class FlxText extends FlxSprite
 		updateDefaultFormat();
 		return LetterSpacing;
 	}
-
-	override function set_color(Color:FlxColor):Int
+	
+	override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0)
 	{
-		if (_defaultFormat.color == Color.to24Bit())
-		{
-			return Color;
-		}
-		_defaultFormat.color = Color.to24Bit();
-		color = Color;
+		super.setColorTransform(1, 1, 1, 1, redOffset, greenOffset, blueOffset, alphaOffset);
+		_defaultFormat.color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 0);
 		updateDefaultFormat();
-		return Color;
+	}
+
+	override function set_color(value:FlxColor):Int
+	{
+		if (_defaultFormat.color == value.rgb)
+		{
+			return value;
+		}
+		_defaultFormat.color = value.rgb;
+		color = value;
+		updateDefaultFormat();
+		return value;
 	}
 
 	inline function get_font():String
@@ -855,19 +862,7 @@ class FlxText extends FlxSprite
 
 	override function updateColorTransform():Void
 	{
-		if (colorTransform == null)
-			colorTransform = new ColorTransform();
-
-		if (alpha != 1)
-		{
-			colorTransform.alphaMultiplier = alpha;
-			useColorTransform = true;
-		}
-		else
-		{
-			colorTransform.alphaMultiplier = 1;
-			useColorTransform = false;
-		}
+		colorTransform.alphaMultiplier = alpha;
 
 		dirty = true;
 	}
@@ -1232,7 +1227,7 @@ class FlxText extends FlxSprite
 	{
 		// Apply the default format
 		copyTextFormat(_defaultFormat, FormatAdjusted, false);
-		FormatAdjusted.color = UseBorderColor ? borderColor.to24Bit() : _defaultFormat.color;
+		FormatAdjusted.color = UseBorderColor ? borderColor.rgb : _defaultFormat.color;
 		textField.setTextFormat(FormatAdjusted);
 
 		// Apply other formats
@@ -1247,7 +1242,7 @@ class FlxText extends FlxSprite
 			{
 				var textFormat:TextFormat = formatRange.format.format;
 				copyTextFormat(textFormat, FormatAdjusted, false);
-				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.to24Bit() : textFormat.color;
+				FormatAdjusted.color = UseBorderColor ? formatRange.format.borderColor.rgb : textFormat.color;
 			}
 
 			textField.setTextFormat(FormatAdjusted, formatRange.range.start, Std.int(Math.min(formatRange.range.end, textField.text.length)));
