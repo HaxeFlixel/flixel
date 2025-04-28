@@ -208,7 +208,10 @@ class FlxSprite extends FlxObject
 	public var bakedRotationAngle(default, null):Float = 0;
 
 	/**
-	 * Set alpha to a number between `0` and `1` to change the opacity of the sprite.
+	 * Set alpha to a number between `0` and `1` to change the opacity of the sprite. Calling
+	 * `setColorTransform` will also change this value
+	 * 
+	 * **NOTE:** This value is automatically clamped to 0 <= a <= 1
 	 @see https://snippets.haxeflixel.com/sprites/alpha/
 	 */
 	public var alpha(default, set):Float = 1.0;
@@ -246,7 +249,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Change the size of your sprite's graphic.
 	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that.
-	 * WARNING: With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
+	 * **WARNING:** With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
 	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
 	public var scale(default, null):FlxPoint;
@@ -257,8 +260,8 @@ class FlxSprite extends FlxObject
 	public var blend(default, set):BlendMode;
 	
 	/**
-	 * Tints the whole sprite to a color (`0xRRGGBB` format) - similar to OpenGL vertex colors. You can use
-	 * `0xAARRGGBB` colors, but the alpha value will simply be ignored. To change the opacity use `alpha`.
+	 * Multiplies this sprite's image by the given red, green and blue components, alpha is ignored.
+	 * To change the opacity use `alpha`. Calling `setColorTransform` will also change this value.
 	 * @see https://snippets.haxeflixel.com/sprites/color/
 	 */
 	public var color(default, set):FlxColor = FlxColor.WHITE;
@@ -1028,6 +1031,7 @@ class FlxSprite extends FlxObject
 	public function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0,
 			redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
 	{
+		alphaMultiplier = FlxMath.bound(alphaMultiplier, 0, 1);
 		@:bypassAccessor color = FlxColor.fromRGBFloat(redMultiplier, greenMultiplier, blueMultiplier, 1.0);
 		@:bypassAccessor alpha = alphaMultiplier;
 		
@@ -1520,26 +1524,24 @@ class FlxSprite extends FlxObject
 	}
 
 	@:noCompletion
-	function set_alpha(Alpha:Float):Float
+	function set_alpha(value:Float):Float
 	{
-		Alpha = FlxMath.bound(Alpha, 0, 1);
-		if (alpha == Alpha)
-		{
-			return Alpha;
-		}
-		alpha = Alpha;
+		value = FlxMath.bound(value, 0, 1);
+		if (alpha == value)
+			return value;
+		
+		alpha = value;
 		updateColorTransform();
 		return alpha;
 	}
 
 	@:noCompletion
-	function set_color(Color:FlxColor):Int
+	function set_color(value:FlxColor):Int
 	{
-		if (color == Color)
-		{
-			return Color;
-		}
-		color = Color;
+		if (color == value)
+			return value;
+		
+		color = value;
 		updateColorTransform();
 		return color;
 	}
