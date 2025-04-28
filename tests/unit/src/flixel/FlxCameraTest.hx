@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import massive.munit.Assert;
 
@@ -89,7 +90,85 @@ class FlxCameraTest extends FlxTest
 		camera.follow(new FlxObject());
 		Assert.areEqual(defaultLerp, camera.followLerp);
 	}
-
+	
+	@Test // #3329
+	function testCenterGraphic()
+	{
+		final cam = FlxG.camera;
+		cam.scroll.set(100, 100);
+		cam.zoom *= 2;
+		
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
+		final sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.scrollFactor.set(2, 2);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
+		sprite.scale.set(2, 4);
+		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
+		sprite.pixelPerfectRender = true;
+		
+		function assertCenterGraphic(sprite, expectedX, expectedY)
+		{
+			FlxAssert.areNear(sprite.x, expectedX);
+			FlxAssert.areNear(sprite.y, expectedY);
+		}
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, X);
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 0);
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, Y);
+		assertCenterGraphic(sprite, 0, 100 + 240 - 20 - (-110 + 10));
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, XY);
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 100 + 240 - 20 - (-110 + 10));
+		
+		sprite.setPosition(1640, 1480);
+		cam.centerGraphic(sprite);
+		assertCenterGraphic(sprite, 100 + 320 - 10 - (-110 + 10), 100 + 240 - 20 - (-110 + 10));
+	}
+	
+	@Test // #3329
+	function testCenterHitbox()
+	{
+		final cam = FlxG.camera;
+		cam.scroll.set(100, 100);
+		cam.zoom *= 2;
+		
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
+		final object = new FlxObject(0, 0, 10, 10);
+		
+		function assertCenterHitbox(object, expectedX, expectedY)
+		{
+			Assert.areEqual(object.x, expectedX);
+			Assert.areEqual(object.y, expectedY);
+		}
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, X);
+		assertCenterHitbox(object, 100 + 320 - 5, 0);
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, Y);
+		assertCenterHitbox(object, 0, 100 + 240 - 5);
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, XY);
+		assertCenterHitbox(object, 100 + 320 - 5, 100 + 240 - 5);
+		
+		object.setPosition(1640, 1480);
+		cam.centerHitbox(object);
+		assertCenterHitbox(object, 100 + 320 - 5, 100 + 240 - 5);
+	}
+	
 	@Test
 	function testFadeInFadeOut()
 	{

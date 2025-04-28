@@ -341,36 +341,6 @@ class FlxObjectTest extends FlxTest
 	}
 	
 	@Test
-	function testScreenCenter()
-	{
-		var center = FlxPoint.get((FlxG.width - object1.width) / 2, (FlxG.height - object1.height) / 2);
-		var offCenter = center.copyTo().add(1000, 1000);
-		
-		object1.setPosition(offCenter.x, offCenter.y);
-		object1.screenCenter(X);
-		Assert.areEqual(object1.x, center.x);
-		Assert.areEqual(object1.y, offCenter.y);
-
-		object1.setPosition(offCenter.x, offCenter.y);
-		object1.screenCenter(Y);
-		Assert.areEqual(object1.x, offCenter.x);
-		Assert.areEqual(object1.y, center.y);
-
-		object1.setPosition(offCenter.x, offCenter.y);
-		object1.screenCenter(XY);
-		Assert.areEqual(object1.x, center.x);
-		Assert.areEqual(object1.y, center.y);
-
-		object1.setPosition(offCenter.x, offCenter.y);
-		object1.screenCenter();
-		Assert.areEqual(object1.x, center.x);
-		Assert.areEqual(object1.y, center.y);
-		
-		offCenter.put();
-		center.put();
-	}
-
-	@Test
 	function testgetRotatedBounds()
 	{
 		var expected = FlxRect.get();

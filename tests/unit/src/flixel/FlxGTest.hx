@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.math.FlxPoint;
 import massive.munit.Assert;
 
 @:access(flixel.FlxG)
@@ -103,5 +104,73 @@ class FlxGTest extends FlxTest
 	function testDefaultHeight():Void
 	{
 		Assert.areEqual(480, FlxG.height);
+	}
+	
+	@Test // #3329
+	function testCenterGraphic()
+	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
+		final sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
+		sprite.scale.set(2, 4);
+		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
+		
+		function assertCenterGraphic(sprite, expectedX, expectedY)
+		{
+			FlxAssert.areNear(sprite.x, expectedX);
+			FlxAssert.areNear(sprite.y, expectedY);
+		}
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, X);
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 0);
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, Y);
+		assertCenterGraphic(sprite, 0, 240 - 20 - (-10 + 10));
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, XY);
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+		
+		sprite.setPosition(1640, 1480);
+		FlxG.centerGraphic(sprite);
+		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+	}
+	
+	@Test // #3329
+	function testCenterHitbox()
+	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
+		final object = new FlxObject(0, 0, 10, 10);
+		
+		function assertCenterHitbox(object, expectedX, expectedY)
+		{
+			Assert.areEqual(object.x, expectedX);
+			Assert.areEqual(object.y, expectedY);
+		}
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, X);
+		assertCenterHitbox(object, 320 - 5, 0);
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, Y);
+		assertCenterHitbox(object, 0, 240 - 5);
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, XY);
+		assertCenterHitbox(object, 320 - 5, 240 - 5);
+		
+		object.setPosition(1640, 1480);
+		FlxG.centerHitbox(object);
+		assertCenterHitbox(object, 320 - 5, 240 - 5);
 	}
 }
