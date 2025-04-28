@@ -15,7 +15,7 @@
 	- Refactor `Pointer`, `BitmapLog` and `Transform` windows
 	- `Transform` debug tool: Improved scaling
 - `FlxGroup`: Inline group iterators ([#3362](https://github.com/HaxeFlixel/flixel/pull/3362))
-- `FlxFrame`: Imprive code readability with `UVRect` ([#3371](https://github.com/HaxeFlixel/flixel/pull/3371))
+- `FlxFrame`: Improve code readability with `UVRect` ([#3371](https://github.com/HaxeFlixel/flixel/pull/3371))
 - `FlxG.bitmap`: Query max texture size only once instead of every time it's needed ([#3369](https://github.com/HaxeFlixel/flixel/pull/3369))
 - `FlxSprite`: Allow changes to `clipRect` to take effect without the setter ([#3381](https://github.com/HaxeFlixel/flixel/pull/3381))
 - `FlxSoundTray`: Various improvements for extending classes ([#3378](https://github.com/HaxeFlixel/flixel/pull/3378))
