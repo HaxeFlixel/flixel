@@ -3,7 +3,6 @@ package flixel.system.debug.log;
 #if FLX_DEBUG
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import flixel.system.debug.FlxDebugger.GraphicLog;
 
 /**
  * A simple trace output window for use in the debugger overlay.
@@ -21,7 +20,7 @@ class Log extends Window
 	 */
 	public function new()
 	{
-		super("Log", new GraphicLog(0, 0));
+		super("Log", Icon.log);
 
 		_text = new TextField();
 		_text.x = 2;
