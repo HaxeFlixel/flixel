@@ -20,18 +20,10 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 		{
 			this.beginFill(color.rgb, color.alphaFloat);
 			
-			// outer
-			this.moveTo(x, y);
-			this.lineTo(x + width, y);
-			this.lineTo(x + width, y + height);
-			this.lineTo(x, y + height);
-			this.lineTo(x, y);
-			// inner
-			this.lineTo(x + thickness, y + thickness);
-			this.lineTo(x + thickness, y + height - thickness);
-			this.lineTo(x + width - thickness, y + height - thickness);
-			this.lineTo(x + width - thickness, y + thickness);
-			this.lineTo(x + thickness, y + thickness);
+			this.drawRect(x - thickness, y - thickness, thickness, height + thickness);
+			this.drawRect(x, y - thickness, width + thickness, thickness);
+			this.drawRect(x + width, y, thickness, height - thickness);
+			this.drawRect(x, y + height - thickness, width + thickness, thickness);
 			
 			this.endFill();
 		}
