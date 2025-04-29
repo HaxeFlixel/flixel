@@ -1,30 +1,26 @@
 package flixel.system.debug;
 
 import flixel.FlxG;
-import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 import openfl.display.Graphics;
 
 abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 {
-	inline function useFill()
+	function useHardware(sizeSquared:Float)
 	{
-		// true for testing
-		return true;
-		//return #if (cpp || hl) false #else FlxG.renderTile #end;
+		return FlxG.renderTile && sizeSquared > 100 * 100;
 	}
 	
 	public function drawBoundingBox(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness = 1.0)
 	{
-		if (useFill())
+		if (useHardware(width * height))
 		{
 			this.beginFill(color.rgb, color.alphaFloat);
-			
-			this.drawRect(x - thickness, y - thickness, thickness, height + thickness);
-			this.drawRect(x, y - thickness, width + thickness, thickness);
-			this.drawRect(x + width, y, thickness, height - thickness);
-			this.drawRect(x, y + height - thickness, width + thickness, thickness);
-			
+			this.drawRect(x, y, thickness, height); // left
+			this.drawRect(x + thickness, y, width - thickness * 2, thickness); // top
+			this.drawRect(x + width - thickness, y, thickness, height); // right
+			this.drawRect(x + thickness, y + height - thickness, width - thickness * 2, thickness); // bottom
 			this.endFill();
 		}
 		else
@@ -38,28 +34,10 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 	
 	public function drawLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness = 1.0)
 	{
-		if (useFill())
-		{
-			this.beginFill(color.rgb, color.alphaFloat);
-			final normal = FlxPoint.get(x2 - x1, y2 - y1).leftNormal();
-			normal.length = thickness;
-			
-			this.moveTo(x1 + normal.x, y1 + normal.y);
-			this.lineTo(x2 + normal.x, y2 + normal.y);
-			this.lineTo(x2 - normal.x, y2 - normal.y);
-			this.lineTo(x1 - normal.x, y1 - normal.y);
-			
-			this.endFill();
-			normal.put();
-		}
-		else
-		{
-			
 			this.lineStyle(thickness, color.rgb, color.alphaFloat);
 			
 			this.moveTo(x1, y1);
 			this.lineTo(x2, y2);
-		}
 	}
 	
 	public function drawRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor)
