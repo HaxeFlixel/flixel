@@ -1034,34 +1034,32 @@ class FlxText extends FlxSprite
 		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
 	}
 	
-	override function drawComplex(camera:FlxCamera):Void
+	override function getDrawComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)
 	{
-		_frame.prepareMatrix(_matrix, ANGLE_0, checkFlipX(), checkFlipY());
-		_matrix.translate(-origin.x, -origin.y);
-		_matrix.scale(scale.x, scale.y);
+		frame.prepareMatrix(matrix, ANGLE_0, checkFlipX(), checkFlipY());
+		matrix.translate(-origin.x, -origin.y);
+		matrix.scale(scale.x, scale.y);
 		
 		if (bakedRotationAngle <= 0)
 		{
 			updateTrig();
 			
 			if (angle != 0)
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
+				matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
 		
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		_point.add(origin.x, origin.y);
-		_matrix.translate(_point.x, _point.y);
+		final screenPos = getScreenPosition(camera).subtract(offset).subtract(_graphicOffset);
+		screenPos.add(origin.x, origin.y);
+		matrix.translate(screenPos.x, screenPos.y);
+		screenPos.put();
 		
 		if (isPixelPerfectRender(camera))
 		{
-			_matrix.tx = Math.floor(_matrix.tx);
-			_matrix.ty = Math.floor(_matrix.ty);
+			matrix.tx = Math.floor(matrix.tx);
+			matrix.ty = Math.floor(matrix.ty);
 		}
-		
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
 	}
-
+	
 	/**
 	 * Internal function to update the current animation frame.
 	 *
