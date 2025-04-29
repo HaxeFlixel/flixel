@@ -1023,41 +1023,9 @@ class FlxText extends FlxSprite
 		super.draw();
 	}
 	
-	override function drawSimple(camera:FlxCamera):Void
+	override function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		if (isPixelPerfectRender(camera))
-			_point.floor();
-		
-		_point.copyTo(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
-	}
-	
-	override function getDrawComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)
-	{
-		frame.prepareMatrix(matrix, ANGLE_0, checkFlipX(), checkFlipY());
-		matrix.translate(-origin.x, -origin.y);
-		matrix.scale(scale.x, scale.y);
-		
-		if (bakedRotationAngle <= 0)
-		{
-			updateTrig();
-			
-			if (angle != 0)
-				matrix.rotateWithTrig(_cosAngle, _sinAngle);
-		}
-		
-		final screenPos = getScreenPosition(camera).subtract(offset).subtract(_graphicOffset);
-		screenPos.add(origin.x, origin.y);
-		matrix.translate(screenPos.x, screenPos.y);
-		screenPos.put();
-		
-		if (isPixelPerfectRender(camera))
-		{
-			matrix.tx = Math.floor(matrix.tx);
-			matrix.ty = Math.floor(matrix.ty);
-		}
+		return super.getScreenPosition(result, camera).subtract(_graphicOffset);
 	}
 	
 	/**

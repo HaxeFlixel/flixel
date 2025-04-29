@@ -19,13 +19,7 @@ class FlxMatrixSprite implements FlxSprite
 	{
 		renderMatrix = new FlxSpriteMatrixTransform(this);
 		
-		super(x, y, graphic);
-	}
-	override function destroy():Void
-	{
-		super.destroy();
-		
-		renderMatrix.destroy();
+		super(x, y, simpleGraphic);
 	}
 	
 	override function isSimpleRenderBlit()
