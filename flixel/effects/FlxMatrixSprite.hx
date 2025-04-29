@@ -1,6 +1,7 @@
 package flixel.effects;
 
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxMatrix;
 
 /**
@@ -17,7 +18,7 @@ class FlxMatrixSprite extends FlxSprite
 	
 	public function new (x = 0.0, y = 0.0, simpleGraphic)
 	{
-		renderMatrix = new FlxSpriteMatrixTransform(this);
+		renderMatrix = new FlxMatrix(this);
 		
 		super(x, y, simpleGraphic);
 	}
