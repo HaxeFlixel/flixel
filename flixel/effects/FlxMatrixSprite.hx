@@ -6,7 +6,7 @@ import flixel.math.FlxMatrix;
 /**
  * A sprite that uses a `renderMatrix` to transform its rendering
  */
-class FlxMatrixSprite implements FlxSprite
+class FlxMatrixSprite extends FlxSprite
 {
 	/**
 	 * The matrix used to transform how this sprite is rendered
