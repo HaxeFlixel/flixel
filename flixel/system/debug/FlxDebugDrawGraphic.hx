@@ -7,7 +7,7 @@ import openfl.display.Graphics;
 
 abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 {
-	function useHardware(sizeSquared:Float)
+	inline function useHardware(sizeSquared:Float)
 	{
 		return FlxG.renderTile && sizeSquared > 100 * 100;
 	}
@@ -34,15 +34,14 @@ abstract FlxDebugDrawGraphic(Graphics) from Graphics to Graphics
 	
 	public function drawLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness = 1.0)
 	{
-			this.lineStyle(thickness, color.rgb, color.alphaFloat);
-			
-			this.moveTo(x1, y1);
-			this.lineTo(x2, y2);
+		this.lineStyle(thickness, color.rgb, color.alphaFloat);
+		
+		this.moveTo(x1, y1);
+		this.lineTo(x2, y2);
 	}
 	
 	public function drawRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor)
 	{
-		// always use fill
 		this.beginFill(color.rgb, color.alphaFloat);
 		this.drawRect(x, y, width, height);
 		this.endFill();
