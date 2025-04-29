@@ -8,12 +8,12 @@ enum abstract FlxAxes(Int)
 	var NONE = 0x00;
 	
 	/**
-	 * Whether the horizontal axis is anebled
+	 * Whether the horizontal axis is enabled
 	 */
 	public var x(get, never):Bool;
 	
 	/**
-	 * Whether the vertical axis is anebled
+	 * Whether the vertical axis is enabled
 	 */
 	public var y(get, never):Bool;
 	

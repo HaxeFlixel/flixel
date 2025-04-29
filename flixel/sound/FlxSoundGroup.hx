@@ -16,6 +16,11 @@ class FlxSoundGroup
 	public var volume(default, set):Float;
 
 	/**
+	 * Whether or not this group is muted
+	 */
+	public var muted(default, set):Bool;
+
+	/**
 	 * Create a new sound group
 	 * @param	volume  The initial volume of this group
 	 */
@@ -84,6 +89,15 @@ class FlxSoundGroup
 			sound.resume();
 	}
 
+	/**
+	 * Returns the volume of this group, taking `muted` in account.
+	 * @return The volume of the group or 0 if the group is muted.
+	 */
+	public function getVolume():Float
+	{
+		return muted ? 0.0 : volume;
+	}
+
 	function set_volume(volume:Float):Float
 	{
 		this.volume = volume;
@@ -92,5 +106,15 @@ class FlxSoundGroup
 			sound.updateTransform();
 		}
 		return volume;
+	}
+
+	function set_muted(value:Bool):Bool
+	{
+		muted = value;
+		for (sound in sounds)
+		{
+			sound.updateTransform();
+		}
+		return muted;
 	}
 }

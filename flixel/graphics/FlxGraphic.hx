@@ -40,7 +40,7 @@ class FlxGraphic implements IFlxDestroyable
 
 		if (!Cache)
 		{
-			bitmap = FlxAssets.getBitmapData(Source);
+			bitmap = FlxG.assets.getBitmapData(Source);
 			if (bitmap == null)
 				return null;
 			return createGraphic(bitmap, Key, Unique, Cache);
@@ -51,7 +51,7 @@ class FlxGraphic implements IFlxDestroyable
 		if (graphic != null)
 			return graphic;
 
-		bitmap = FlxAssets.getBitmapData(Source);
+		bitmap = FlxG.assets.getBitmapData(Source);
 		if (bitmap == null)
 			return null;
 
@@ -304,11 +304,6 @@ class FlxGraphic implements IFlxDestroyable
 	public var destroyOnNoUse(default, set):Bool = true;
 
 	/**
-	 * Whether the `BitmapData` of this graphic object has been dumped or not.
-	 */
-	public var isDumped(default, null):Bool = false;
-
-	/**
 	 * Whether the `BitmapData` of this graphic object has been loaded or not.
 	 */
 	public var isLoaded(get, never):Bool;
@@ -320,10 +315,12 @@ class FlxGraphic implements IFlxDestroyable
 	public var isDestroyed(get, never):Bool;
 
 	/**
-	 * Whether the `BitmapData` of this graphic object can be dumped for decreased memory usage,
-	 * but may cause some issues (when you need direct access to pixels of this graphic.
-	 * If the graphic is dumped then you should call `undump()` and have total access to pixels.
+	 * Whether the `BitmapData` of this graphic object can be refreshed.
+	 * This is only the case for graphics with an `assetsKey` or `assetsClass`.
 	 */
+	public var canBeRefreshed(get, never):Bool;
+	
+	@:deprecated("`canBeDumped` is deprecated, use `canBeRefreshed`")
 	public var canBeDumped(get, never):Bool;
 
 	/**
@@ -416,58 +413,31 @@ class FlxGraphic implements IFlxDestroyable
 	}
 
 	/**
-	 * Dumps bits of `BitmapData` to decrease memory usage, but you can't read/write pixels on it anymore
-	 * (but you can call `onContext()` (or `undump()`) method which will restore it again).
+	 * Refreshes the `BitmapData` of this graphic.
 	 */
-	public function dump():Void
-	{
-		#if (lime_legacy && !flash)
-		if (FlxG.renderTile && canBeDumped)
-		{
-			bitmap.dumpBits();
-			isDumped = true;
-		}
-		#end
-	}
-
-	/**
-	 * Undumps bits of the `BitmapData` - regenerates it and regenerate tilesheet data for this object
-	 */
-	public function undump():Void
+	public function refresh():Void
 	{
 		var newBitmap:BitmapData = getBitmapFromSystem();
 		if (newBitmap != null)
 			bitmap = newBitmap;
-		isDumped = false;
 	}
-
-	/**
-	 * Use this method to restore cached `BitmapData` (if it's possible).
-	 * It's called automatically when the RESIZE event occurs.
-	 */
-	public function onContext():Void
+	
+	@:deprecated("`undump` is deprecated, use `refresh`")
+	public function undump():Void
 	{
-		// no need to restore tilesheet if it hasn't been dumped
-		if (isDumped)
-		{
-			undump(); // restore everything
-			dump(); // and dump BitmapData again
-		}
+		refresh();
 	}
-
+	
 	/**
 	 * Asset reload callback for this graphic object.
-	 * It regenerated its tilesheet and resets frame bitmaps.
+	 * It regenerates its bitmap data.
 	 */
 	public function onAssetsReload():Void
 	{
-		if (!canBeDumped)
+		if (!canBeRefreshed)
 			return;
-
-		var dumped:Bool = isDumped;
-		undump();
-		if (dumped)
-			dump();
+			
+		refresh();
 	}
 
 	/**
@@ -479,8 +449,6 @@ class FlxGraphic implements IFlxDestroyable
 
 		shader = null;
 
-		key = null;
-		assetsKey = null;
 		assetsClass = null;
 		imageFrame = FlxDestroyUtil.destroy(imageFrame);
 
@@ -556,7 +524,7 @@ class FlxGraphic implements IFlxDestroyable
 
 	/**
 	 * Gets the `BitmapData` for this graphic object from OpenFL.
-	 * This method is used for undumping graphic.
+	 * This method is used for refreshing bitmaps.
 	 */
 	function getBitmapFromSystem():BitmapData
 	{
@@ -564,14 +532,14 @@ class FlxGraphic implements IFlxDestroyable
 		if (assetsClass != null)
 			newBitmap = FlxAssets.getBitmapFromClass(assetsClass);
 		else if (assetsKey != null)
-			newBitmap = FlxAssets.getBitmapData(assetsKey);
+			newBitmap = FlxG.assets.getBitmapData(assetsKey);
 
 		if (newBitmap != null)
 			return FlxGraphic.getBitmap(newBitmap, unique);
-
+			
 		return null;
 	}
-	
+
 	inline function get_isLoaded()
 	{
 		return bitmap != null && !bitmap.rect.isEmpty();
@@ -582,9 +550,14 @@ class FlxGraphic implements IFlxDestroyable
 		return shader == null;
 	}
 
-	inline function get_canBeDumped():Bool
+	inline function get_canBeRefreshed():Bool
 	{
 		return assetsClass != null || assetsKey != null;
+	}
+	
+	inline function get_canBeDumped():Bool
+	{
+		return canBeRefreshed;
 	}
 	
 	public function incrementUseCount()
@@ -634,6 +607,15 @@ class FlxGraphic implements IFlxDestroyable
 			bitmap = value;
 			width = bitmap.width;
 			height = bitmap.height;
+
+			#if FLX_OPENGL_AVAILABLE
+			var max:Int = FlxG.bitmap.maxTextureSize;
+			if (max > 0)
+			{
+				if (width > max || height > max)
+					FlxG.log.warn('Graphic dimensions (${width}x${height}) exceed the maximum allowed size (${max}x${max}), which may cause rendering issues.');
+			}
+			#end
 		}
 
 		return value;

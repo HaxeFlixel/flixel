@@ -32,6 +32,18 @@ class FlxBitmapTextTest extends FlxTest
 		Assert.areEqual(text1.font, text2.font);
 	}
 	
+	@Test // #1526 and #2750
+	function testAutoBounds()
+	{
+		final text = new FlxBitmapText("test");
+		text.autoBounds = false;
+		text.offset.x = 100;
+		text.text = "text.text.text";
+		@:privateAccess
+		text.checkPendingChanges(true);
+		Assert.areEqual(100, text.offset.x);
+	}
+	
 	@Test
 	function testWrapMono()
 	{

@@ -46,13 +46,9 @@ class FlxButtonTest extends FlxTest
 
 	function assertStatusAnimationsExist()
 	{
-		var normalName:String = button.statusAnimations[NORMAL];
-		var highlightName:String = button.statusAnimations[HIGHLIGHT];
-		var pressedName:String = button.statusAnimations[PRESSED];
-
-		Assert.isNotNull(button.animation.getByName(normalName));
-		Assert.isNotNull(button.animation.getByName(highlightName));
-		Assert.isNotNull(button.animation.getByName(pressedName));
+		Assert.isNotNull(button.animation.getByName(NORMAL.toString()));
+		Assert.isNotNull(button.animation.getByName(HIGHLIGHT.toString()));
+		Assert.isNotNull(button.animation.getByName(PRESSED.toString()));
 	}
 
 	@Test // #1479

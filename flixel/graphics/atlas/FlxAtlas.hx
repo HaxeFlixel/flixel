@@ -810,7 +810,7 @@ class FlxAtlas implements IFlxDestroyable
 
 	function onClear(_):Void
 	{
-		if (!persist || (_graphic != null && _graphic.useCount <= 0))
+		if (!persist && _graphic != null && _graphic.useCount <= 0)
 			destroy();
 	}
 

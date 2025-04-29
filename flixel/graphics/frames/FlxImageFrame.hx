@@ -242,7 +242,7 @@ class FlxImageFrame extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxImageFrame
 	{
-		var resultBorder:FlxPoint = FlxPoint.weak().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.weak().add(this.border).add(border);
 
 		var imageFrame:FlxImageFrame = FlxImageFrame.findFrame(parent, frame.frame, resultBorder);
 		if (imageFrame != null)
