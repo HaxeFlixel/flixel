@@ -18,14 +18,14 @@ class FlxMatrixSprite extends FlxSprite
 	
 	public function new (x = 0.0, y = 0.0, simpleGraphic)
 	{
-		renderMatrix = new FlxMatrix(this);
+		renderMatrix = new FlxMatrix();
 		
 		super(x, y, simpleGraphic);
 	}
 	
-	override function isSimpleRenderBlit()
+	override function isSimpleRenderBlit(cam)
 	{
-		return isSimpleRenderBlit() || matrix.isIdentity();
+		return super.isSimpleRenderBlit(cam) || matrix.isIdentity();
 	}
 	
 	override function getDrawComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)
