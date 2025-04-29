@@ -110,22 +110,22 @@ enum FlxInputDevice
  * Just a bucket for some handy sentinel values.
  * @since 4.6.0
  */
-class FlxInputDeviceID
+enum abstract FlxInputDeviceID(Int) from Int to Int
 {
 	/**
 	 * Means "every connected device of the given type" (ie all gamepads, all steam controllers, etc)
 	 */
-	public static inline var ALL:Int = -1;
+	var ALL = -1;
 
 	/**
 	 * Means "the first connected device that has an active input" (ie a pressed button or moved analog stick/trigger/etc)
 	 */
-	public static inline var FIRST_ACTIVE:Int = -2;
+	var FIRST_ACTIVE = -2;
 
 	/**
 	 * Means "no device"
 	 */
-	public static inline var NONE:Int = -3;
+	var NONE = -3;
 }
 
 /**

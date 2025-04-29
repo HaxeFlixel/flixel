@@ -31,6 +31,22 @@ enum abstract FlxButtonState(Int) to Int
 	
 	/** The button is not interactible */
 	var DISABLED = 3;
+	
+	public function toInt()
+	{
+		return this;
+	}
+	
+	public function toString()
+	{
+		return switch (cast this:FlxButtonState)
+		{
+			case NORMAL: "normal";
+			case HIGHLIGHT: "highlight";
+			case PRESSED: "pressed";
+			case DISABLED: "disabled";
+		}
+	}
 }
 
 /**
@@ -108,9 +124,9 @@ class FlxButton extends FlxTypedButton<FlxText>
 	{
 		if (Text != null)
 		{
-			label = new FlxText(x + labelOffsets[FlxButtonState.NORMAL].x, y + labelOffsets[FlxButtonState.NORMAL].y, 80, Text);
+			label = new FlxText(x + labelOffsets[FlxButtonState.NORMAL.toInt()].x, y + labelOffsets[FlxButtonState.NORMAL.toInt()].y, 80, Text);
 			label.setFormat(null, 8, 0x333333, "center");
-			label.alpha = labelAlphas[status];
+			label.alpha = labelAlphas[status.toInt()];
 			label.drawFrame(true);
 		}
 	}
@@ -162,6 +178,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 * What animation should be played for each status.
 	 * Default is ["normal", "highlight", "pressed"].
 	 */
+	@:deprecated("statusAnimations is deprecated, use status.toString(), instead")
 	public var statusAnimations:Array<String> = ["normal", "highlight", "pressed", "disabled"];
 
 	/**
@@ -230,7 +247,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	 */
 	var currentInput:IFlxInput;
 
-	var lastStatus = -1;
+	var lastStatus:FlxButtonState = cast -1;
 
 	/**
 	 * Creates a new `FlxTypedButton` object with a gray background.
@@ -260,8 +277,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 		#end
 
 		#if FLX_NO_MOUSE // no need for highlight frame without mouse input
-		statusAnimations[HIGHLIGHT] = "normal";
-		labelAlphas[HIGHLIGHT] = 1;
+		labelAlphas[HIGHLIGHT.toInt()] = 1;
 		#end
 
 		input = new FlxInput(0);
@@ -271,10 +287,10 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		super.graphicLoaded();
 
-		setupAnimation("normal", NORMAL);
-		setupAnimation("highlight", HIGHLIGHT);
-		setupAnimation("pressed", PRESSED);
-		setupAnimation("disabled", DISABLED);
+		setupAnimation("normal", NORMAL.toInt());
+		setupAnimation("highlight", (#if FLX_MOUSE HIGHLIGHT #else NORMAL #end).toInt());
+		setupAnimation("pressed", PRESSED.toInt());
+		setupAnimation("disabled", DISABLED.toInt());
 	}
 
 	function loadDefaultGraphic():Void
@@ -342,7 +358,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 
 	function updateStatusAnimation():Void
 	{
-		animation.play(statusAnimations[status]);
+		animation.play(status.toString());
 	}
 
 	/**
@@ -472,7 +488,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	function checkInput(pointer:FlxPointer, input:IFlxInput, justPressedPosition:FlxPoint, camera:FlxCamera):Bool
 	{
 		if (maxInputMovement != Math.POSITIVE_INFINITY
-			&& justPressedPosition.distanceTo(pointer.getScreenPosition(FlxPoint.weak())) > maxInputMovement
+			&& justPressedPosition.distanceTo(pointer.getViewPosition(camera, FlxPoint.weak())) > maxInputMovement
 			&& input == currentInput)
 		{
 			currentInput = null;
@@ -514,16 +530,16 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		if (_spriteLabel != null) // Label positioning
 		{
-			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status].x;
-			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status].y;
+			_spriteLabel.x = (pixelPerfectPosition ? Math.floor(x) : x) + labelOffsets[status.toInt()].x;
+			_spriteLabel.y = (pixelPerfectPosition ? Math.floor(y) : y) + labelOffsets[status.toInt()].y;
 		}
 	}
 
 	function updateLabelAlpha()
 	{
-		if (_spriteLabel != null && labelAlphas.length > (status : Int))
+		if (_spriteLabel != null && labelAlphas.length > status.toInt())
 		{
-			_spriteLabel.alpha = alpha * labelAlphas[status];
+			_spriteLabel.alpha = alpha * labelAlphas[status.toInt()];
 		}
 	}
 
@@ -615,6 +631,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 	{
 		status = value;
 		updateLabelAlpha();
+		updateLabelPosition();
 		return status;
 	}
 
@@ -666,7 +683,7 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite implements IFlxInput
 private class FlxButtonEvent implements IFlxDestroyable
 {
 	/**
-	 * The callback function to call when this even fires.
+	 * The callback function to call when this event fires.
 	 */
 	public var callback:Void->Void;
 
@@ -678,7 +695,7 @@ private class FlxButtonEvent implements IFlxDestroyable
 	#end
 
 	/**
-	 * @param   Callback   The callback function to call when this even fires.
+	 * @param   Callback   The callback function to call when this event fires.
 	 * @param   sound      The sound to play when this event fires.
 	 */
 	public function new(?Callback:Void->Void, ?sound:FlxSound)

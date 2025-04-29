@@ -5,7 +5,6 @@
 		"FLX_NATIVE_CURSOR",
 		"FLX_SOUND_TRAY",
 		"FLX_POINTER_INPUT",
-		"FLX_POST_PROCESS",
 		"FLX_RECORD"
 	],
 	"defineCombinations": [
@@ -19,7 +18,8 @@
 	"exclude": {
 		"all": [
 			"TestSuite",
-			"/export/"
+			"/export/",
+			"tests/unit/bin/"
 		],
 		"AvoidStarImport": [
 			"flixel.math.FlxRandomTest"
@@ -35,7 +35,8 @@
 					"STATIC",
 					"MACRO",
 					"INLINE",
-					"DYNAMIC"
+					"DYNAMIC",
+					"FINAL"
 				]
 			}
 		},

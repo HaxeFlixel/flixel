@@ -17,70 +17,80 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  * 
  * @since 4.8.0
  */
-class SwitchProID
+enum abstract SwitchProID(Int) to Int
 {
 	#if flash
-	public static inline var DPAD_UP:Int = 4;
-	public static inline var DPAD_DOWN:Int = 5;
-	public static inline var DPAD_LEFT:Int = 6;
-	public static inline var DPAD_RIGHT:Int = 7;
-	public static inline var A:Int = 8;
-	public static inline var B:Int = 9;
-	public static inline var X:Int = 10;
-	public static inline var Y:Int = 11;
-	public static inline var L:Int = 12;
-	public static inline var R:Int = 13;
-	public static inline var ZL:Int = 14;
-	public static inline var ZR:Int = 15;
-	public static inline var MINUS:Int = 16;
-	public static inline var PLUS:Int = 17;
-	public static inline var HOME:Int = 20;
-	public static inline var CAPTURE:Int = 21;
-	public static inline var LEFT_STICK_CLICK:Int = 22;
-	public static inline var RIGHT_STICK_CLICK:Int = 23;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 24,
-		down: 25,
-		left: 26,
-		right: 27
-	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
-		up: 28,
-		down: 29,
-		left: 30,
-		right: 31
-	});
+	var DPAD_UP = 4;
+	var DPAD_DOWN = 5;
+	var DPAD_LEFT = 6;
+	var DPAD_RIGHT = 7;
+	var A = 8;
+	var B = 9;
+	var X = 10;
+	var Y = 11;
+	var L = 12;
+	var R = 13;
+	var ZL = 14;
+	var ZR = 15;
+	var MINUS = 16;
+	var PLUS = 17;
+	var HOME = 20;
+	var CAPTURE = 21;
+	var LEFT_STICK_CLICK = 22;
+	var RIGHT_STICK_CLICK = 23;
+	
+	var LEFT_STICK_UP = 24;
+	var LEFT_STICK_DOWN = 25;
+	var LEFT_STICK_LEFT = 26;
+	var LEFT_STICK_RIGHT = 27;
+	
+	var RIGHT_STICK_UP = 28;
+	var RIGHT_STICK_DOWN = 29;
+	var RIGHT_STICK_LEFT = 30;
+	var RIGHT_STICK_RIGHT = 31;
+	
 	#else
-	public static inline var ZL:Int = 4;
-	public static inline var ZR:Int = 5;
-	public static inline var B:Int = 6;
-	public static inline var A:Int = 7;
-	public static inline var Y:Int = 8;
-	public static inline var X:Int = 9;
-	public static inline var MINUS:Int = 10;
-	public static inline var HOME:Int = 11;
-	public static inline var PLUS:Int = 12;
-	public static inline var LEFT_STICK_CLICK:Int = 13;
-	public static inline var RIGHT_STICK_CLICK:Int = 14;
-	public static inline var L:Int = 15;
-	public static inline var R:Int = 16;
-	public static inline var DPAD_UP:Int = 17;
-	public static inline var DPAD_DOWN:Int = 18;
-	public static inline var DPAD_LEFT:Int = 19;
-	public static inline var DPAD_RIGHT:Int = 20;
-	public static inline var CAPTURE:Int = 21;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 22,
-		down: 23,
-		left: 24,
-		right: 25
-	});
-	public static var RIGHT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(2, 3, {
-		up: 26,
-		down: 27,
-		left: 28,
-		right: 29
-	});
+	var ZL = 4;
+	var ZR = 5;
+	var B = 6;
+	var A = 7;
+	var Y = 8;
+	var X = 9;
+	var MINUS = 10;
+	var HOME = 11;
+	var PLUS = 12;
+	var LEFT_STICK_CLICK = 13;
+	var RIGHT_STICK_CLICK = 14;
+	var L = 15;
+	var R = 16;
+	var DPAD_UP = 17;
+	var DPAD_DOWN = 18;
+	var DPAD_LEFT = 19;
+	var DPAD_RIGHT = 20;
+	var CAPTURE = 21;
+	
+	var LEFT_STICK_UP = 22;
+	var LEFT_STICK_DOWN = 23;
+	var LEFT_STICK_LEFT = 24;
+	var LEFT_STICK_RIGHT = 25;
+	
+	var RIGHT_STICK_UP = 26;
+	var RIGHT_STICK_DOWN = 27;
+	var RIGHT_STICK_LEFT = 28;
+	var RIGHT_STICK_RIGHT = 29;
 	#end
+	
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchProID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
+	});
+	public static final RIGHT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchProID>(2, 3, {
+		up: RIGHT_STICK_UP,
+		down: RIGHT_STICK_DOWN,
+		left: RIGHT_STICK_LEFT,
+		right: RIGHT_STICK_RIGHT
+	});
 	
 }

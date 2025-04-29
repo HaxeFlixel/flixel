@@ -492,7 +492,7 @@ class FlxStringUtil
 		{
 			for (i in 0...ColorMap.length)
 			{
-				ColorMap[i] = ColorMap[i].to24Bit();
+				ColorMap[i] = ColorMap[i].rgb;
 			}
 		}
 
@@ -556,26 +556,15 @@ class FlxStringUtil
 	 * Converts a resource image file to a comma-separated string. Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
 	 *
-	 * @param	ImageFile	An embedded graphic, preferably black and white.
-	 * @param	Invert		Load white pixels as solid instead.
-	 * @param	Scale		Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
-	 * @param	ColorMap	An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param   imageFile  An embedded graphic, preferably black and white.
+	 * @param   invert     Load white pixels as solid instead.
+	 * @param   scale      Default is 1.  Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
+	 * @param   colorMap   An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
+	 * @return  A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function imageToCSV(ImageFile:Dynamic, Invert:Bool = false, Scale:Int = 1, ?ColorMap:Array<FlxColor>):String
+	public static function imageToCSV(graphic:FlxGraphicSource, invert = false, scale = 1, ?colorMap:Array<FlxColor>):String
 	{
-		var tempBitmapData:BitmapData;
-
-		if ((ImageFile is String))
-		{
-			tempBitmapData = FlxAssets.getBitmapData(ImageFile);
-		}
-		else
-		{
-			tempBitmapData = (Type.createInstance(ImageFile, [])).bitmapData;
-		}
-
-		return bitmapToCSV(tempBitmapData, Invert, Scale, ColorMap);
+		return bitmapToCSV(graphic.resolveBitmapData(), invert, scale, colorMap);
 	}
 
 	/**
@@ -665,12 +654,11 @@ class FlxStringUtil
 	public static function toTitleCase(str:String):String 
 	{
 		var exempt:Array<String> = ["a", "an", "the", "at", "by", "for", "in", "of", "on", "to", "up", "and", "as", "but", "or", "nor"];
-		var roman = ~/^(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)$/i;
 		var words:Array<String> = str.toLowerCase().split(" ");
 		
 		for (i in 0...words.length) 
 		{
-			if (roman.match(words[i]))
+			if (isRomanNumeral(words[i]))
 				words[i] = words[i].toUpperCase();
 			else if (i == 0 || exempt.indexOf(words[i]) == -1)
 				words[i] = words[i].charAt(0).toUpperCase() + words[i].substr(1);
@@ -678,6 +666,25 @@ class FlxStringUtil
 
 		return words.join(" ");
 		
+	}
+	
+	/**
+	 * Capitalizes the first letter of every word, does not change the others to lower
+	 */
+	static final whitespace = ~/(?<=\r|\s|^)([a-z])/g;
+	public static function capitalizeFirstLetters(str:String):String
+	{
+		// TODO: Unit test
+		return whitespace.map(str, (r)->r.matched(0).toUpperCase());
+	}
+	
+	/**
+	 * Wether the string contains a valid roman numeral
+	 */
+	static final roman = ~/^(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)$/i;
+	public static function isRomanNumeral(str:String):Bool
+	{
+		return roman.match(str);
 	}
 }
 

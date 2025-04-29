@@ -19,44 +19,48 @@ import flixel.input.gamepad.FlxGamepadAnalogStick;
  * 
  * @since 4.8.0
  */
-class SwitchJoyconLeftID
+enum abstract SwitchJoyconLeftID(Int) to Int
 {
 	#if flash
-	public static inline var UP:Int = 8;
-	public static inline var LEFT:Int = 9;
-	public static inline var DOWN:Int = 10;
-	public static inline var RIGHT:Int = 11;
-	public static inline var SL:Int = 12;
-	public static inline var SR:Int = 13;
-	public static inline var ZL:Int = 14;
-	public static inline var L:Int = 15;
-	public static inline var MINUS:Int = 17;
-	public static inline var CAPTURE:Int = 21;
-	public static inline var LEFT_STICK_CLICK:Int = 22;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 24,
-		down: 25,
-		left: 26,
-		right: 27
-	});
+	var UP = 8;
+	var LEFT = 9;
+	var DOWN = 10;
+	var RIGHT = 11;
+	var SL = 12;
+	var SR = 13;
+	var ZL = 14;
+	var L = 15;
+	var MINUS = 17;
+	var CAPTURE = 21;
+	var LEFT_STICK_CLICK = 22;
+	
+	var LEFT_STICK_UP = 24;
+	var LEFT_STICK_DOWN = 25;
+	var LEFT_STICK_LEFT = 26;
+	var LEFT_STICK_RIGHT = 27;
 	#else
-	public static inline var ZL:Int = 4;
-	public static inline var DOWN:Int = 6;
-	public static inline var RIGHT:Int = 7;
-	public static inline var LEFT:Int = 8;
-	public static inline var UP:Int = 9;
-	public static inline var L:Int = 10;
-	public static inline var MINUS:Int = 12;
-	public static inline var LEFT_STICK_CLICK:Int = 13;
-	public static inline var SL:Int = 15;
-	public static inline var SR:Int = 16;
-	public static inline var CAPTURE:Int = 21;
-	public static var LEFT_ANALOG_STICK(default, null) = new FlxGamepadAnalogStick(0, 1, {
-		up: 22,
-		down: 23,
-		left: 24,
-		right: 25
-	});
+	var ZL = 4;
+	var DOWN = 6;
+	var RIGHT = 7;
+	var LEFT = 8;
+	var UP = 9;
+	var L = 10;
+	var MINUS = 12;
+	var LEFT_STICK_CLICK = 13;
+	var SL = 15;
+	var SR = 16;
+	var CAPTURE = 21;
+	
+	var LEFT_STICK_UP = 22;
+	var LEFT_STICK_DOWN = 23;
+	var LEFT_STICK_LEFT = 24;
+	var LEFT_STICK_RIGHT = 25;
 	#end
+	public static final LEFT_ANALOG_STICK = new FlxTypedGamepadAnalogStick<SwitchJoyconLeftID>(0, 1, {
+		up: LEFT_STICK_UP,
+		down: LEFT_STICK_DOWN,
+		left: LEFT_STICK_LEFT,
+		right: LEFT_STICK_RIGHT
+	});
 	
 }

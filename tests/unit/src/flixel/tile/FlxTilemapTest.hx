@@ -290,7 +290,7 @@ class FlxTilemapTest extends FlxTest
 		tilemap.loadMapFrom2DArray([[1]], new BitmapData(2, 1));
 		function overlaps(x, y)
 			return tilemap.overlapsPoint(FlxPoint.get(x, y));
-
+		
 		Assert.isFalse(overlaps(-1, -1));
 		Assert.isTrue(overlaps(0, 0));
 		Assert.isFalse(overlaps(1, 1));
@@ -440,13 +440,26 @@ class FlxTilemapTest extends FlxTest
 			0, 0, 0
 		];
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		tilemap.x += 10;
+		tilemap.y += 20;
+		tilemap.scale.set(2, 2);
+		
+		final size = 16;
+		final half = 8;
 		
 		Assert.areEqual(tilemap.getTileIndex(4), tilemap.getTileIndex(1, 1));
 		Assert.areEqual(1, tilemap.getTileIndex(4));
 		Assert.areEqual(2, tilemap.getColumn(8));
 		Assert.areEqual(2, tilemap.getRow(8));
 		
+		Assert.areEqual(-1, tilemap.getMapIndex(1000, 1));
+		Assert.areEqual(-1, tilemap.getTileIndex(1000, 1));
+		Assert.areEqual(8, tilemap.getMapIndexAt(10 + 2 * size + half, 20 + 2 * size + half));
+		Assert.areEqual(0, tilemap.getTileIndexAt(10 + 2 * size + half, 20 + 2 * size + half));
+		Assert.areEqual(-1, tilemap.getTileIndexAt(10 + 1000 * size + half, 20 + 2 * size + half));
+		
 		Assert.areEqual(tilemap.getTileData(4), tilemap.getTileData(1, 1));
+		Assert.areEqual(tilemap.getTileData(1, 1), tilemap.getTileDataAt(10 + 1 * size + half, 20 + 1 * size + half));
 	}
 	
 	function testGetColumnRowAt()
@@ -457,6 +470,7 @@ class FlxTilemapTest extends FlxTest
 			0, 1, 0, 0,
 			0, 0, 0, 0,
 		];
+		tilemap.y += 10;
 		tilemap.loadMapFromArray(mapData, 4, 3, getBitmapData(), 8, 8);
 		
 		Assert.areEqual(tilemap.getColumnAt(24, true), tilemap.getColumnAt(24, false));
@@ -465,11 +479,55 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(4, tilemap.getColumnAt(32, true));
 		Assert.areEqual(5, tilemap.getColumnAt(32, false));
 		
-		Assert.areEqual(tilemap.getRowAt(16, true), tilemap.getRowAt(16, false));
-		Assert.areEqual(2, tilemap.getRowAt(16));
-		Assert.areNotEqual(tilemap.getRowAt(24, true), tilemap.getRowAt(24, false));
-		Assert.areEqual(3, tilemap.getRowAt(24, true));
-		Assert.areEqual(4, tilemap.getRowAt(24, false));
+		Assert.areEqual(tilemap.getRowAt(10 + 16, true), tilemap.getRowAt(10 + 16, false));
+		Assert.areEqual(2, tilemap.getRowAt(10 + 16));
+		Assert.areNotEqual(tilemap.getRowAt(10 + 24, true), tilemap.getRowAt(10 + 24, false));
+		Assert.areEqual(3, tilemap.getRowAt(10 + 24, true));
+		Assert.areEqual(4, tilemap.getRowAt(10 + 24, false));
+	}
+	
+	@Test
+	function testColumnRowPos()
+	{
+		tilemap.loadMapFromArray(sampleMapArray, 4, 3, getBitmapData(), 8, 8);
+		tilemap.x = 10;
+		tilemap.y = 20;
+		tilemap.scale.set(2, 2);
+		
+		final size = 16;
+		final half = 8;
+		
+		Assert.areEqual(0, tilemap.getColumnAt(tilemap.getColumnPos(0)));
+		Assert.areEqual(1, tilemap.getColumnAt(tilemap.getColumnPos(1)));
+		Assert.areEqual(2, tilemap.getColumnAt(tilemap.getColumnPos(2)));
+		Assert.areEqual(3, tilemap.getColumnAt(tilemap.getColumnPos(3)));
+		Assert.areEqual(1000, tilemap.getColumnAt(tilemap.getColumnPos(1000)));
+		Assert.areEqual(10 + 3 * size, tilemap.getColumnPos(3));
+		Assert.areEqual(10 + 3 * size + half, tilemap.getColumnPos(3, true));
+		Assert.areEqual(10 + 1000 * size, tilemap.getColumnPos(1000));
+		
+		Assert.areEqual(0, tilemap.getRowAt(tilemap.getRowPos(0)));
+		Assert.areEqual(1, tilemap.getRowAt(tilemap.getRowPos(1)));
+		Assert.areEqual(2, tilemap.getRowAt(tilemap.getRowPos(2)));
+		Assert.areEqual(1000, tilemap.getRowAt(tilemap.getRowPos(1000)));
+		Assert.areEqual(20 + 2 * size, tilemap.getRowPos(2));
+		Assert.areEqual(20 + 2 * size + half, tilemap.getRowPos(2, true));
+		Assert.areEqual(20 + 1000 * size, tilemap.getRowPos(1000));
+		
+		Assert.areEqual(null, tilemap.getTilePos(1000));
+		Assert.areEqual(null, tilemap.getTilePos(-1));
+		
+		
+		inline function assertPosEqual(expectedX:Float, expectedY:Float, actual:FlxPoint, ?infos:PosInfos)
+		{
+			Assert.areEqual(expectedX, actual.x, 'Point x [${actual.x}] was not equal to expected value [$expectedX]', infos);
+			Assert.areEqual(expectedY, actual.y, 'Point y [${actual.y}] was not equal to expected value [$expectedY]', infos);
+		}
+		
+		assertPosEqual(10 + -size, 20 + -size, tilemap.getTilePos(-1, -1));
+		assertPosEqual(10 + size, 20 + size, tilemap.getTilePos(1, 1));
+		assertPosEqual(10 + 1000 * size, 20 + 1000 * size, tilemap.getTilePos(1000, 1000));
+		assertPosEqual(10 + 1000 * size, 20 + 1000 * size, tilemap.getTilePosAt(10 + 1000 * size, 20 + 1000 * size));
 	}
 	
 	@Test
@@ -481,6 +539,11 @@ class FlxTilemapTest extends FlxTest
 			0, 0, 0
 		];
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		tilemap.x = 10;
+		tilemap.y = 20;
+		tilemap.scale.set(2, 2);
+		
+		final size = 16;
 		
 		Assert.isTrue(tilemap.tileExists(4));
 		Assert.isTrue(tilemap.tileExists(1, 1));
@@ -488,6 +551,11 @@ class FlxTilemapTest extends FlxTest
 		Assert.isFalse(tilemap.tileExists(3, 1));
 		Assert.isFalse(tilemap.tileExists(1, 3));
 		Assert.isFalse(tilemap.tileExists(5, 5));
+		
+		Assert.isTrue(tilemap.tileExistsAt(10 + 1 * size, 20 + 1 * size));
+		Assert.isFalse(tilemap.tileExistsAt(10 + 3 * size, 20 + 1 * size));
+		Assert.isFalse(tilemap.tileExistsAt(10 + 1 * size, 20 + 3 * size));
+		Assert.isFalse(tilemap.tileExistsAt(10 + 5 * size, 20 + 5 * size));
 	}
 	
 	@Test
@@ -499,27 +567,59 @@ class FlxTilemapTest extends FlxTest
 			0, 0, 0, 0
 		];
 		tilemap.loadMapFromArray(mapData, 4, 3, getBitmapData(), 8, 8);
+		tilemap.x = 10;
+		tilemap.y = 20;
+		tilemap.scale.set(2, 2);
+		
+		final size = 16;
 		
 		Assert.isFalse(tilemap.columnExists(5));
 		Assert.isFalse(tilemap.rowExists(5));
+		Assert.isFalse(tilemap.tileExists(5, 5));
+		Assert.isFalse(tilemap.columnExistsAt(10 + 5 * size));
+		Assert.isFalse(tilemap.rowExistsAt(20 + 5 * size));
+		Assert.isFalse(tilemap.tileExistsAt(10 + 5 * size, 20 + 5 * size));
 		
 		Assert.isFalse(tilemap.columnExists(4));
 		Assert.isFalse(tilemap.rowExists(4));
+		Assert.isFalse(tilemap.tileExists(4, 4));
+		Assert.isFalse(tilemap.columnExistsAt(10 + 4 * size));
+		Assert.isFalse(tilemap.rowExistsAt(20 + 4 * size));
 		
 		Assert.isTrue(tilemap.columnExists(3));
 		Assert.isFalse(tilemap.rowExists(3));
+		Assert.isFalse(tilemap.tileExists(3, 3));
+		Assert.isTrue(tilemap.columnExistsAt(10 + 3 * size));
+		Assert.isFalse(tilemap.rowExistsAt(20 + 3 * size));
+		Assert.isFalse(tilemap.tileExistsAt(10 + 3 * size, 20 + 3 * size));
 		
 		Assert.isTrue(tilemap.columnExists(2));
 		Assert.isTrue(tilemap.rowExists(2));
+		Assert.isTrue(tilemap.tileExists(2, 2));
+		Assert.isTrue(tilemap.columnExistsAt(10 + 2 * size));
+		Assert.isTrue(tilemap.rowExistsAt(20 + 2 * size));
+		Assert.isTrue(tilemap.tileExistsAt(10 + 2 * size, 20 + 2 * size));
 		
 		Assert.isTrue(tilemap.columnExists(1));
 		Assert.isTrue(tilemap.rowExists(1));
+		Assert.isTrue(tilemap.tileExists(1, 1));
+		Assert.isTrue(tilemap.columnExistsAt(10 + 1 * size));
+		Assert.isTrue(tilemap.rowExistsAt(20 + 1 * size));
+		Assert.isTrue(tilemap.tileExistsAt(10 + 1 * size, 20 + 1 * size));
 		
 		Assert.isTrue(tilemap.columnExists(0));
 		Assert.isTrue(tilemap.rowExists(0));
+		Assert.isTrue(tilemap.tileExists(0, 0));
+		Assert.isTrue(tilemap.columnExistsAt(10));
+		Assert.isTrue(tilemap.rowExistsAt(20));
+		Assert.isTrue(tilemap.tileExistsAt(10, 20));
 		
 		Assert.isFalse(tilemap.columnExists(-1));
 		Assert.isFalse(tilemap.rowExists(-1));
+		Assert.isFalse(tilemap.tileExists(-1, -1));
+		Assert.isFalse(tilemap.columnExistsAt(10 - 1));
+		Assert.isFalse(tilemap.rowExistsAt(20 - 1));
+		Assert.isFalse(tilemap.tileExistsAt(10 - 1, 20 - 1));
 	}
 	
 	@Test
@@ -531,9 +631,23 @@ class FlxTilemapTest extends FlxTest
 			0, 0, 0
 		];
 		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		tilemap.x = 10;
+		tilemap.y = 20;
+		tilemap.scale.set(2, 2);
 		
 		FlxAssert.arraysEqual([4], tilemap.getAllMapIndices(1));
+		
+		final pos = tilemap.getAllTilePos(1);
+		Assert.areEqual(1, pos.length);
+		Assert.areEqual(10 + 16, pos[0].x);
+		Assert.areEqual(20 + 16, pos[0].y);
+		
 		FlxAssert.arraysEqual([0,1,2,3,5,6,7,8], tilemap.getAllMapIndices(0));
+		FlxAssert.arraysEqual([0,1,2,3,5,6,7,8], tilemap.getAllTilePos(0).map((p)->tilemap.getMapIndex(p)));
+		FlxAssert.arraysEqual([0,1,2,3,5,6,7,8], tilemap.getAllTilePos(0, true).map((p)->tilemap.getMapIndex(p)));
+		final all = new Array<Int>();
+		tilemap.forEachMapIndex(0, all.push);
+		FlxAssert.arraysEqual([0,1,2,3,5,6,7,8], all);
 	}
 	
 	@Test
@@ -557,6 +671,46 @@ class FlxTilemapTest extends FlxTest
 		
 		Assert.areEqual(tilemap.x - tilemap.last.x, tile.x - tile.last.x);
 		Assert.areEqual(tile.x, tile.last.x);
+	}
+	
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function testNegativeIndex()
+	{
+		final mapData = [
+			0, 0, 0,
+			0, 1, 0,
+			0, 0, 0
+		];
+		tilemap.loadMapFromArray(mapData, 3, 3, getBitmapData(), 8, 8);
+		
+		tilemap.setTileIndex(0, -2);
+		Assert.areEqual(-2, tilemap.getTileIndex(0));
+		
+		// cover entire map
+		final object = new FlxObject(4, 4, 16, 16);
+		object.last.set(object.x, object.y);
+		
+		var overlapResult = true;
+		var rayResult = false;
+		var rayStepResult = false;
+		var getIndexResult:FlxTile = null;
+		try
+		{
+			overlapResult = tilemap.overlaps(object);
+			rayResult = tilemap.ray(FlxPoint.weak(0, 0), new FlxPoint(tilemap.width, tilemap.height));
+			rayStepResult = tilemap.rayStep(FlxPoint.weak(0, 0), new FlxPoint(tilemap.width, tilemap.height));
+			getIndexResult = tilemap.getTileData(0);
+			// TODO: more tests?
+		}
+		catch(e)
+		{
+			Assert.fail('Exception throw: ' + e.toString());
+		}
+		Assert.isTrue(overlapResult);
+		Assert.isFalse(rayResult);
+		Assert.isFalse(rayStepResult);
+		Assert.isNull(getIndexResult);
 	}
 	
 	function getBitmapData()

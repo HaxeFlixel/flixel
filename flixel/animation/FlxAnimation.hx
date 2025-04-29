@@ -30,13 +30,7 @@ class FlxAnimation extends FlxBaseAnimation
 	 * those values will override this value.
 	 */
 	public var frameDuration:Float = 0;
-
-	/**
-	 * Seconds between frames (inverse of the framerate)
-	 */
-	@:deprecated('FlxAnimation.delay is deprecated, use `frameDuration`')
-	public var delay(get, set):Float;
-
+	
 	/**
 	 * Whether the current animation has finished.
 	 */
@@ -214,16 +208,26 @@ class FlxAnimation extends FlxBaseAnimation
 			if (reversed)
 			{
 				if (looped && curFrame == loopPoint)
+				{
 					curFrame = numFrames - 1;
+					parent.fireLoopCallback(name);
+				}
 				else
+				{
 					curFrame--;
+				}
 			}
 			else
 			{
 				if (looped && curFrame == numFrames - 1)
+				{
 					curFrame = loopPoint;
+					parent.fireLoopCallback(name);
+				}
 				else
+				{
 					curFrame++;
+				}
 			}
 			
 			// prevents null ref when the sprite is destroyed on finishCallback (#2782)
@@ -283,15 +287,5 @@ class FlxAnimation extends FlxBaseAnimation
 	inline function get_numFrames():Int
 	{
 		return frames.length;
-	}
-
-	inline function get_delay()
-	{
-		return frameDuration;
-	}
-
-	inline function set_delay(value:Float)
-	{
-		return frameDuration = value;
 	}
 }

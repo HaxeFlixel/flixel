@@ -5,16 +5,13 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
-import flixel.system.FlxAssets;
 import flixel.sound.FlxSound;
 import flixel.sound.FlxSoundGroup;
+import flixel.system.FlxAssets;
 import flixel.system.ui.FlxSoundTray;
+import flixel.text.FlxInputText;
 import flixel.util.FlxSignal;
-import openfl.Assets;
 import openfl.media.Sound;
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
-#end
 
 /**
  * Accessed via `FlxG.sound`.
@@ -106,6 +103,8 @@ class SoundFrontEnd
 	/**
 	 * Set up and play a looping background soundtrack.
 	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 *
 	 * @param   embeddedMusic  The sound file you want to loop in the background.
 	 * @param   volume         How loud the sound should be, from 0 to 1.
 	 * @param   looped         Whether to loop this music.
@@ -134,6 +133,8 @@ class SoundFrontEnd
 
 	/**
 	 * Creates a new FlxSound object.
+	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 *
 	 * @param   embeddedSound   The embedded sound resource you want to play.  To stream, use the optional URL parameter instead.
 	 * @param   volume          How loud to play it (0 to 1).
@@ -212,8 +213,8 @@ class SoundFrontEnd
 	public inline function cache(embeddedSound:String):Sound
 	{
 		// load the sound into the OpenFL assets cache
-		if (Assets.exists(embeddedSound, AssetType.SOUND) || Assets.exists(embeddedSound, AssetType.MUSIC))
-			return Assets.getSound(embeddedSound, true);
+		if (FlxG.assets.exists(embeddedSound, SOUND))
+			return FlxG.assets.getSoundUnsafe(embeddedSound, true);
 		FlxG.log.error('Could not find a Sound asset with an ID of \'$embeddedSound\'.');
 		return null;
 	}
@@ -224,7 +225,7 @@ class SoundFrontEnd
 	 */
 	public function cacheAll():Void
 	{
-		for (id in Assets.list(AssetType.SOUND))
+		for (id in FlxG.assets.list(SOUND))
 		{
 			cache(id);
 		}
@@ -232,6 +233,8 @@ class SoundFrontEnd
 
 	/**
 	 * Plays a sound from an embedded sound. Tries to recycle a cached sound first.
+	 *
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 *
 	 * @param   embeddedSound  The embedded sound resource you want to play.
 	 * @param   volume         How loud to play it (0 to 1).
@@ -369,11 +372,42 @@ class SoundFrontEnd
 		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
-			FlxG.game.soundTray.show(up);
+			if (up)
+				FlxG.game.soundTray.showIncrement();
+			else
+				FlxG.game.soundTray.showDecrement();
 		}
 		#end
 	}
-
+	
+	/**
+	 * Takes the volume scale used by Flixel fields and gives the final transformed volume that is
+	 * actually used to play the sound. To reverse this operation, use `reverseSoundCurve`. This
+	 * field is `dynamic` and can be overwritten. 
+	 */
+	public dynamic function applySoundCurve(volume:Float)
+	{
+		return volume;
+		
+		// Example of linear to logarithmic sound curve:
+		// final clampedVolume = Math.max(0, Math.min(1, volume));
+		// return Math.exp(Math.log(0.001) * (1 - clampedVolume));
+	}
+	
+	/**
+	 * Takes a transformed volume and returns the corresponding volume scale used by Flixel fields.
+	 * Used to reverse the operation of `applySoundCurve`. This field is `dynamic` and can be
+	 * set to a custom function.
+	 */
+	public dynamic function reverseSoundCurve(curvedVolume:Float)
+	{
+		return curvedVolume;
+		
+		// Example of logarithmic to linear sound curve:
+		// final clampedVolume = Math.max(minValue, Math.min(1, x));
+		// return 1 - (Math.log(clampedVolume) / Math.log(0.001));
+	}
+	
 	function new()
 	{
 		#if FLX_SAVE
@@ -394,12 +428,15 @@ class SoundFrontEnd
 			list.update(elapsed);
 
 		#if FLX_KEYBOARD
-		if (FlxG.keys.anyJustReleased(muteKeys))
-			toggleMuted();
-		else if (FlxG.keys.anyJustReleased(volumeUpKeys))
-			changeVolume(0.1);
-		else if (FlxG.keys.anyJustReleased(volumeDownKeys))
-			changeVolume(-0.1);
+		if (!FlxInputText.globalManager.isTyping)
+		{
+			if (FlxG.keys.anyJustReleased(muteKeys))
+				toggleMuted();
+			else if (FlxG.keys.anyJustReleased(volumeUpKeys))
+				changeVolume(0.1);
+			else if (FlxG.keys.anyJustReleased(volumeDownKeys))
+				changeVolume(-0.1);
+		}
 		#end
 	}
 
@@ -461,16 +498,16 @@ class SoundFrontEnd
 	@:haxe.warning("-WDeprecated")
 	function set_volume(Volume:Float):Float
 	{
-		Volume = FlxMath.bound(Volume, 0, 1);
+		volume = FlxMath.bound(Volume, 0, 1);
 
 		if (volumeHandler != null)
 		{
-			volumeHandler(muted ? 0 : Volume);
+			volumeHandler(muted ? 0 : volume);
 		}
 
-		onVolumeChange.dispatch(muted ? 0 : Volume);
+		onVolumeChange.dispatch(muted ? 0 : volume);
 
-		return volume = Volume;
+		return volume;
 	}
 }
 #end
