@@ -12,6 +12,8 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 {
 	public var dispatch(get, never):T;
 
+	public var canceled(get, set):Bool;
+
 	public function new();
 
 	public inline function add(listener:T):Void
@@ -29,14 +31,19 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 		this.remove(listener);
 	}
 
+	public inline function removeAll():Void
+	{
+		this.removeAll();
+	}
+
 	public inline function has(listener:T):Bool
 	{
 		return this.has(listener);
 	}
 
-	public inline function removeAll():Void
+	public inline function cancel():Void
 	{
-		this.removeAll();
+		canceled = true;
 	}
 
 	public inline function destroy():Void
@@ -47,6 +54,16 @@ abstract FlxTypedSignal<T>(IFlxSignal<T>)
 	inline function get_dispatch():T
 	{
 		return this.dispatch;
+	}
+
+	inline function get_canceled():Bool
+	{
+		return this.canceled;
+	}
+	
+	inline function set_canceled(cancel:Bool):Bool
+	{
+		return this.canceled = cancel;
 	}
 
 	@:to
@@ -104,6 +121,8 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	 */
 	public var dispatch:T;
 
+	public var canceled:Bool;
+
 	var handlers:Array<FlxSignalHandler<T>>;
 	var pendingRemove:Array<FlxSignalHandler<T>>;
 	var processingListeners:Bool = false;
@@ -112,6 +131,7 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 	{
 		handlers = [];
 		pendingRemove = [];
+		canceled = false;
 	}
 
 	public function add(listener:T)
@@ -149,6 +169,11 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		}
 	}
 
+	public inline function removeAll():Void
+	{
+		FlxDestroyUtil.destroyArray(handlers);
+	}
+
 	public function has(listener:T):Bool
 	{
 		if (listener == null)
@@ -156,9 +181,9 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 		return getHandler(listener) != null;
 	}
 
-	public inline function removeAll():Void
+	public function cancel():Void
 	{
-		FlxDestroyUtil.destroyArray(handlers);
+		canceled = true;
 	}
 
 	public function destroy():Void
@@ -276,12 +301,14 @@ private class FlxSignal4<T1, T2, T3, T4> extends FlxBaseSignal<T1->T2->T3->T4->V
 interface IFlxSignal<T> extends IFlxDestroyable
 {
 	var dispatch:T;
+	var canceled:Bool;
 	function add(listener:T):Void;
 	function addOnce(listener:T):Void;
 	function remove(listener:T):Void;
 	function removeAll():Void;
-	function destroy():Void;
 	function has(listener:T):Bool;
+	function cancel():Void;
+	function destroy():Void;
 }
 #end
 
@@ -294,6 +321,12 @@ private class Macro
 			processingListeners = true;
 			for (handler in handlers)
 			{
+				if (canceled)
+				{
+					canceled = false;
+					break;
+				}
+
 				handler.listener($a{exprs});
 
 				if (handler.dispatchOnce)
