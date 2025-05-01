@@ -129,9 +129,9 @@ private class FlxBaseSignal<T> implements IFlxSignal<T>
 
 	public function new()
 	{
+		canceled = false;
 		handlers = [];
 		pendingRemove = [];
-		canceled = false;
 	}
 
 	public function add(listener:T)
@@ -322,10 +322,7 @@ private class Macro
 			for (handler in handlers)
 			{
 				if (canceled)
-				{
-					canceled = false;
 					break;
-				}
 
 				handler.listener($a{exprs});
 
@@ -333,6 +330,7 @@ private class Macro
 					removeHandler(handler);
 			}
 
+			canceled = false;
 			processingListeners = false;
 
 			for (handler in pendingRemove)
