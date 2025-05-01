@@ -356,7 +356,7 @@ class FlxCamera extends FlxBasic
 	public var followLead(default, null):FlxPoint = FlxPoint.get();
 
 	/**
-	 * Enables or disables the filters set via `setFilters()`.
+	 * Enables or disables the filters set via the `filters` array.
 	 */
 	public var filtersEnabled:Bool = true;
 
@@ -608,7 +608,7 @@ class FlxCamera extends FlxBasic
 		
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
 		if (graphic.isDestroyed)
-			throw 'Attempted to queue an invalid FlxDrawItem, did you destroy a cached sprite?';
+			throw 'Cannot queue ${graphic.key}. This sprite was destroyed.';
 
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smooth;
@@ -771,7 +771,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored = (transform != null && transform.hasRGBMultipliers());
+			var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 
 			#if FLX_RENDER_TRIANGLE

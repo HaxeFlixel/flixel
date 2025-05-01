@@ -30,7 +30,7 @@ class DebuggerUtil
 		tf.antiAliasType = AntiAliasType.NORMAL;
 		tf.gridFitType = GridFitType.PIXEL;
 		#end
-		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.to24Bit());
+		tf.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEBUGGER, Size, Color.rgb);
 		tf.alpha = Color.alphaFloat;
 		tf.autoSize = TextFieldAutoSize.LEFT;
 		return tf;

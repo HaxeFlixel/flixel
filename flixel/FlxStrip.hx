@@ -9,7 +9,7 @@ import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
  * Use these links for more info about `drawTriangles()`:
  * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Graphics.html#drawTriangles%28%29
  * @see http://help.adobe.com/en_US/as3/dev/WS84753F1C-5ABE-40b1-A2E4-07D7349976C4.html
- * @see http://www.flashandmath.com/advanced/p10triangles/index.html
+ * @see https://web.archive.org/web/20170620062159/http://www.flashandmath.com/advanced/p10triangles/index.html
  *
  * WARNING: This class is EXTREMELY slow on Flash!
  */
