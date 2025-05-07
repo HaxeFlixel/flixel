@@ -34,8 +34,10 @@ class FlxDestroyUtil
 		{
 			for (e in array)
 				destroy(e);
-			array.splice(0, array.length);
+			
+			array.resize(0);
 		}
+		
 		return null;
 	}
 
