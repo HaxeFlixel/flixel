@@ -9,6 +9,7 @@ import flixel.system.frontEnds.AssetFrontEnd;
 import flixel.system.frontEnds.BitmapFrontEnd;
 import flixel.system.frontEnds.BitmapLogFrontEnd;
 import flixel.system.frontEnds.CameraFrontEnd;
+import flixel.system.frontEnds.CollisionFrontEnd;
 import flixel.system.frontEnds.ConsoleFrontEnd;
 import flixel.system.frontEnds.DebuggerFrontEnd;
 import flixel.system.frontEnds.InputFrontEnd;
@@ -334,6 +335,12 @@ class FlxG
 	 * @since 5.9.0
 	 */
 	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
+
+	/**
+	 * Contains helper functions relating to retrieving assets
+	 * @since 6.2.0
+	 */
+	public static var collision(default, null):CollisionFrontEnd = new CollisionFrontEnd();
 	
 	/**
 	 * Resizes the game within the window by reapplying the current scale mode.

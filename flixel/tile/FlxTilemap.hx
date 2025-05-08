@@ -16,6 +16,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
@@ -27,6 +28,7 @@ import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+using flixel.util.FlxCollision;
 using flixel.util.FlxColorTransformUtil;
 
 #if html5
@@ -776,6 +778,57 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					continue;
 				tile.orientAt(xPos, yPos, column, row);
 				if (tile.overlapsObject(object) && (filter == null || filter(tile)))
+				{
+					if (stopAtFirst)
+						return true;
+					
+					result = true;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	override function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool):Bool
+	{
+		function filter(tile)
+		{
+			// return true, since an overlapping tile was found
+			return tile.overlapsObject(object) && (func == null || func(tile));
+		}
+		
+		final reverse = FlxAxes.fromBools(object.last.x > object.x, object.last.y > object.y);
+		return forEachTileOverlappingRect(object.getDeltaRect(FlxRect.weak()), filter, reverse, false);
+	}
+	
+	function forEachTileOverlappingRect(rect:FlxRect, filter:(tile:Tile)->Bool, reverse:FlxAxes, stopAtFirst:Bool):Bool
+	{
+		inline function bindInt(value:Int, min:Int, max:Int)
+		{
+			return Std.int(FlxMath.bound(value, min, max));
+		}
+		
+		// Figure out what tiles we need to check against, and bind them by the map edges
+		final minTileX:Int = bindInt(Math.floor((rect.x - this.x) / scaledTileWidth), 0, widthInTiles);
+		final minTileY:Int = bindInt(Math.floor((rect.y - this.y) / scaledTileHeight), 0, heightInTiles);
+		final maxTileX:Int = bindInt(Math.ceil((rect.right - this.x) / scaledTileWidth), 0, widthInTiles);
+		final maxTileY:Int = bindInt(Math.ceil((rect.bottom - this.y) / scaledTileHeight), 0, heightInTiles);
+		rect.putWeak();
+		
+		var result = false;
+		for (r in 0...maxTileY - minTileY)
+		{
+			final row = reverse.y ? maxTileY - r - 1 : minTileY + r;
+			for (c in 0...maxTileX - minTileX)
+			{
+				final column = reverse.x ? maxTileX - c - 1 : minTileX + c;
+				final tile = getTileData(column, row);
+				if (tile == null)
+					continue;
+				
+				tile.orientAt(this.x, this.y, column, row);
+				if (filter(tile))
 				{
 					if (stopAtFirst)
 						return true;
