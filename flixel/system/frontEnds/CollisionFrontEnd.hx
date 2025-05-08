@@ -7,6 +7,8 @@ import flixel.math.FlxRect;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxDirectionFlags;
 
+using flixel.util.FlxCollision;
+
 @:access(flixel.FlxObject)
 class CollisionFrontEnd
 {
@@ -131,35 +133,34 @@ class CollisionFrontEnd
 	 * @param   isCollision  Does nothing, if both objects are immovable
 	 * @return  The result of whichever separator was used
 	 */
-	function processCheckTilemap(object1:FlxObject, object2:FlxObject, func:(FlxObject, FlxObject)->Bool,
-		?position:FlxPoint, isCollision = true):Bool
+	function processCheckTilemap(object1:FlxObject, object2:FlxObject, func:(FlxObject, FlxObject)->Bool):Bool
 	{
 		// two immovable objects cannot collide
-		if (isCollision && object1.immovable && object2.immovable)
+		if (object1.immovable && object2.immovable)
 			return false;
 		
 		// If one of the objects is a tilemap, just pass it off.
 		if (object1.flixelType == TILEMAP)
 		{
-			final tilemap:FlxBaseTilemap<Dynamic> = cast object1;
+			final tilemap:FlxBaseTilemap<FlxObject> = cast object1;
 			// If object1 is a tilemap, check it's tiles against object2, which may also be a tilemap
-			function recurseProcess(tile, _)
+			function recurseProcess(tile)
 			{
 				// Keep tile as first arg
-				return processCheckTilemap(tile, object2, func, position, isCollision);
+				return processCheckTilemap(tile, object2, func);
 			}
-			return tilemap.objectOverlapsTiles(object2, recurseProcess, position);
+			return tilemap.forEachCollidingTile(object2, recurseProcess);
 		}
 		else if (object2.flixelType == TILEMAP)
 		{
-			final tilemap:FlxBaseTilemap<Dynamic> = cast object2;
+			final tilemap:FlxBaseTilemap<FlxObject> = cast object2;
 			// If object1 is a tilemap, check it's tiles against object2, which may also be a tilemap
-			function recurseProcess(tile, _)
+			function recurseProcess(tile)
 			{
 				// Keep tile as second arg
-				return processCheckTilemap(object1, tile, func, position, isCollision);
+				return processCheckTilemap(object1, tile, func);
 			}
-			return tilemap.objectOverlapsTiles(object1, recurseProcess, position);
+			return tilemap.forEachCollidingTile(object1, recurseProcess);
 		}
 		
 		return func(object1, object2);
@@ -224,7 +225,7 @@ class CollisionFrontEnd
 	
 	public function checkCollision(object1:FlxObject, object2:FlxObject)
 	{
-		return checkSweptRects(object1, object2)
+		return checkDeltaOverlaps(object1, object2)
 			&& (checkXCollisionHelper(object1, object2) || checkYCollisionHelper(object1, object2));
 	}
 	
@@ -232,29 +233,9 @@ class CollisionFrontEnd
 	 * Internal function use to determine if two objects may cross path,
 	 * by comparing the bounds they occupy this frame
 	 */
-	function checkSweptRects(object1:FlxObject, object2:FlxObject)
+	function checkDeltaOverlaps(object1:FlxObject, object2:FlxObject)
 	{
-		final rect1 = getSweptRect(object1);
-		final rect2 = getSweptRect(object2);
-		
-		final result = rect1.overlaps(rect2);
-		
-		rect1.put();
-		rect2.put();
-		return result;
-	}
-	
-	function getSweptRect(object:FlxObject, ?rect:FlxRect)
-	{
-		if (rect == null)
-			rect = FlxRect.get();
-		
-		rect.x = object.x > object.last.x ? object.last.x : object.x;
-		rect.right = (object.x > object.last.x ? object.x : object.last.x) + object.width;
-		rect.y = object.y > object.last.y ? object.last.y : object.y;
-		rect.bottom = (object.y > object.last.y ? object.y : object.last.y) + object.height;
-		
-		return rect;
+		return object1.overlapsDelta(object2);
 	}
 	
 	function separateXHelper(object1:FlxObject, object2:FlxObject, overlap:Float)
@@ -488,7 +469,7 @@ class CollisionFrontEnd
 	}
 }
 
-inline function abs(n:Float)
+private inline function abs(n:Float)
 {
 	return n > 0 ? n : -n;
 }
