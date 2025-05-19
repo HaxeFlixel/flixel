@@ -57,7 +57,11 @@ class FlxTile extends FlxObject
 	 * Frame graphic for this tile.
 	 */
 	public var frame:FlxFrame;
-
+	
+	#if FLX_DEBUG
+	public var customDebugDraw = false;
+	#end
+	
 	/**
 	 * Instantiate this new tile object.  This is usually called from FlxTilemap.loadMap().
 	 *

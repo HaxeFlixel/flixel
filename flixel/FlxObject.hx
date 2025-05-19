@@ -1,6 +1,8 @@
 package flixel;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
@@ -550,6 +552,63 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
+	 * Helper to compute the overlap of two objects, this is used when
+	 * `object1.computeCollisionOverlap(object2)` is called on two objects
+	 */
+	public static function defaultComputeCollisionOverlap(object1:FlxObject, object2:FlxObject, ?result:FlxPoint)
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		result.set(defaultComputeCollisionOverlapX(object1, object2), defaultComputeCollisionOverlapY(object1, object2));
+		
+		function abs(n:Float) return n < 0 ? -n : n;
+		
+		final absX = abs(result.x);
+		final absY = abs(result.y);
+		
+		// separate on the smaller axis
+		if (absX > absY)
+		{
+			result.x = 0;
+			if (absY > SEPARATE_BIAS)
+				result.y = 0;
+		}
+		else
+		{
+			result.y = 0;
+			if (absX > SEPARATE_BIAS)
+				result.x = 0;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Helper to compute the X overlap of two objects, this is used when
+	 * `object1.computeCollisionOverlapX(object2)` is called on two objects
+	 */
+	public static function defaultComputeCollisionOverlapX(object1:FlxObject, object2:FlxObject)
+	{
+		if ((object1.x - object1.last.x) > (object2.x - object2.last.x))
+			return object1.x + object1.width - object2.x;
+		
+		return object1.x - object2.width - object2.x;
+	}
+	
+	/**
+	 * Helper to compute the Y overlap of two objects, this is used when
+	 * `object1.computeCollisionOverlapY(object2)` is called on two objects
+	 */
+	public static function defaultComputeCollisionOverlapY(object1:FlxObject, object2:FlxObject)
+	{
+		if ((object1.y - object1.last.y) > (object2.y - object2.last.y))
+			return object1.y + object1.height - object2.y;
+		
+		return object1.y - object2.height - object2.y;
+	}
+	
+	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
 	public var x(default, set):Float = 0;
@@ -913,7 +972,7 @@ class FlxObject extends FlxBasic
 		{
 			return group.any(overlapsCallback.bind(_, 0, 0, inScreenSpace, camera));
 		}
-
+		
 		if (objectOrGroup.flixelType == TILEMAP)
 		{
 			// Since tilemap's have to be the caller, not the target, to do proper tile-based collisions,
@@ -921,13 +980,13 @@ class FlxObject extends FlxBasic
 			var tilemap:FlxBaseTilemap<Dynamic> = cast objectOrGroup;
 			return tilemap.overlaps(this, inScreenSpace, camera);
 		}
-
-		var object:FlxObject = cast objectOrGroup;
+		
+		final object:FlxObject = cast objectOrGroup;
 		if (!inScreenSpace)
 		{
 			return (object.x + object.width > x) && (object.x < x + width) && (object.y + object.height > y) && (object.y < y + height);
 		}
-
+		
 		if (camera == null)
 			camera = getDefaultCamera();
 		
@@ -938,11 +997,16 @@ class FlxObject extends FlxBasic
 			&& (objectScreenPos.y + object.height > _point.y)
 			&& (objectScreenPos.y < _point.y + height);
 	}
-
+	
 	@:noCompletion
 	inline function overlapsCallback(objectOrGroup:FlxBasic, x:Float, y:Float, inScreenSpace:Bool, camera:FlxCamera):Bool
 	{
 		return overlaps(objectOrGroup, inScreenSpace, camera);
+	}
+	
+	public function computeCollisionOverlap(object:FlxObject, ?result:FlxPoint):FlxPoint
+	{
+		return defaultComputeCollisionOverlap(this, object, result);
 	}
 
 	/**

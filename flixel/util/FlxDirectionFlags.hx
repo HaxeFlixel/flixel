@@ -93,6 +93,14 @@ enum abstract FlxDirectionFlags(Int)
 	public var right(get, never):Bool;
 	inline function get_right() return has(RIGHT);
 	
+	/** A new instance with only the left and right flags **/
+	public var x(get, never):FlxDirectionFlags;
+	inline function get_x() return self & WALL;
+	
+	/** A new instance with only the up and down flags **/
+	public var y(get, never):FlxDirectionFlags;
+	inline function get_y() return without(WALL);
+	
 	inline function new(value:Int)
 	{
 		this = value;
@@ -115,24 +123,39 @@ enum abstract FlxDirectionFlags(Int)
 	}
 
 	/**
-	 * Creates a new `FlxDirections` that includes the supplied directions.
+	 * Creates a new `FlxDirectionFlags` that includes the supplied directions.
 	 */
 	public inline function with(dir:FlxDirectionFlags):FlxDirectionFlags
 	{
 		return fromInt(this | dir.toInt());
 	}
-
+	
 	/**
-	 * Creates a new `FlxDirections` that excludes the supplied directions.
+	 * Creates a new `FlxDirectionFlags` that excludes the supplied directions.
 	 */
 	public inline function without(dir:FlxDirectionFlags):FlxDirectionFlags
 	{
 		return fromInt(this & ~dir.toInt());
 	}
 	
+	public function and(dir:FlxDirectionFlags):FlxDirectionFlags
+	{
+		return fromInt(this & dir.toInt());
+	}
+	
+	public function or(dir:FlxDirectionFlags):FlxDirectionFlags
+	{
+		return fromInt(this | dir.toInt());
+	}
+	
 	public inline function not():FlxDirectionFlags
 	{
 		return fromInt((~this & ANY.toInt()));
+	}
+	
+	public inline function flip():FlxDirectionFlags
+	{
+		return fromBools(right, left, down, up);
 	}
 
 	@:deprecated("implicit cast from FlxDirectionFlags to Int is deprecated, use toInt")
@@ -196,16 +219,14 @@ enum abstract FlxDirectionFlags(Int)
 		return fromInt(dir.toInt());
 	}
 
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")// Expose int operators
-	@:op(A & B) static function and(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
+	@:op(A & B) static function andOp(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
+	@:op(A | B) static function orOp(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
 	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A | B) static function or(a:FlxDirectionFlags, b:FlxDirectionFlags):FlxDirectionFlags;
+	@:op(A > B) static function gtOp(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A > B) static function gt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
+	@:op(A < B) static function ltOp(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A < B) static function lt(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
+	@:op(A >= B) static function gteOp(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A >= B) static function gte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
-	@:deprecated("FlxDirectionFlags operators are deprecated, use has(), instead")
-	@:op(A <= B) static function lte(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
+	@:op(A <= B) static function lteOp(a:FlxDirectionFlags, b:FlxDirectionFlags):Bool;
 }

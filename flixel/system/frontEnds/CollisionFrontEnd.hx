@@ -15,13 +15,6 @@ class CollisionFrontEnd
 	public function new () {}
 	
 	/**
-	 * This value dictates the maximum number of pixels two objects have to intersect
-	 * before collision stops trying to separate them.
-	 * Don't modify this unless your objects are passing through each other.
-	 */
-	public var maxOverlap:Float = 4;
-	
-	/**
 	 * Call this function to see if one `FlxObject` overlaps another within `FlxG.worldBounds`.
 	 * Can be called with one object and one group, or two groups, or two objects,
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
@@ -114,16 +107,6 @@ class CollisionFrontEnd
 		// return separatedX || separatedY;
 	}
 	
-	public function separateX(object1:FlxObject, object2:FlxObject)
-	{
-		return processCheckTilemap(object1, object2, checkAndSeparateX);
-	}
-	
-	public function separateY(object1:FlxObject, object2:FlxObject)
-	{
-		return processCheckTilemap(object1, object2, checkAndSeparateY);
-	}
-	
 	/**
 	 * Internal elper that determines whether either object is a tilemap, determines
 	 * which tiles are overlapping and calls the appropriate separator
@@ -166,57 +149,34 @@ class CollisionFrontEnd
 		return func(object1, object2);
 	}
 	
+	static final overlapHelperPoint = FlxPoint.get();
 	function checkAndSeparate(object1:FlxObject, object2:FlxObject)
 	{
-		if (checkCollision(object1, object2))
+		if (checkDeltaOverlaps(object1, object2))
 		{
-			final overlapX = computeCollisionOverlapXHelper(object1, object2);
-			final overlapY = computeCollisionOverlapYHelper(object1, object2);
-			
-			if ((overlapX == 0 && overlapY == 0) || (abs(overlapX) > maxOverlap && abs(overlapY) > maxOverlap))
+			// check if any collisions are allowed
+			final allowX = checkCollisionXHelper(object1, object2);
+			final allowY = checkCollisionYHelper(object1, object2);
+			if (!allowX && !allowY)
 				return false;
 			
-			if (abs(overlapX) < abs(overlapY))
+			// determine the amount of overlap
+			final overlap = object1.computeCollisionOverlap(object2, overlapHelperPoint);
+			
+			// seprate x
+			if (allowX && overlap.x != 0)
 			{
 				updateTouchingFlagsXHelper(object1, object2);
-				separateXHelper(object1, object2, overlapX);
+				separateXHelper(object1, object2, overlap.x);
 			}
-			else
+			
+			// seprate y
+			if (allowY && overlap.y != 0)
 			{
 				updateTouchingFlagsYHelper(object1, object2);
-				separateYHelper(object1, object2, overlapY);
+				separateYHelper(object1, object2, overlap.y);
 			}
 			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	function checkAndSeparateX(object1:FlxObject, object2:FlxObject)
-	{
-		if (checkCollision(object1, object2))
-		{
-			final overlapX = computeCollisionOverlapXHelper(object1, object2);
-			if (abs(overlapX) > maxOverlap)
-				return false;
-			
-			separateXHelper(object1, object2, overlapX);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	function checkAndSeparateY(object1:FlxObject, object2:FlxObject)
-	{
-		if (checkCollision(object1, object2))
-		{
-			final overlapY = computeCollisionOverlapYHelper(object1, object2);
-			if (abs(overlapY) > maxOverlap)
-				return false;
-			
-			separateYHelper(object1, object2, overlapY);
 			return true;
 		}
 		
@@ -226,7 +186,7 @@ class CollisionFrontEnd
 	public function checkCollision(object1:FlxObject, object2:FlxObject)
 	{
 		return checkDeltaOverlaps(object1, object2)
-			&& (checkXCollisionHelper(object1, object2) || checkYCollisionHelper(object1, object2));
+			&& (checkCollisionXHelper(object1, object2) || checkCollisionYHelper(object1, object2));
 	}
 	
 	/**
@@ -320,69 +280,62 @@ class CollisionFrontEnd
 			object2.x += object1.x - object1.last.x;
 	}
 	
+	/**
+	 * Helper to determine which edges of `object1`, if any, will strike the opposing edge of `object2`
+	 * based solely on their delta positions
+	 */
+	public function getCollisionEdge(object1:FlxObject, object2:FlxObject)
+	{
+		return getCollisionEdgeX(object1, object2) | getCollisionEdgeY(object1, object2);
+	}
+	
+	
+	/**
+	 * Helper to determine which horizontal edge of `object1`, if any, will strike the opposing edge of `object2`
+	 * based solely on their delta positions
+	 */
+	public function getCollisionEdgeX(object1:FlxObject, object2:FlxObject)
+	{
+		final deltaDiff = (object1.x - object1.last.x) - (object2.x - object2.last.x);
+		return deltaDiff == 0 ? NONE : deltaDiff > 0 ? RIGHT : LEFT;
+	}
+	
+	/**
+	 * Helper to determine which vertical edge of `object1`, if any, will strike the opposing edge of `object2`
+	 * based solely on their delta positions
+	 */
+	public function getCollisionEdgeY(object1:FlxObject, object2:FlxObject)
+	{
+		final deltaDiff = (object1.y - object1.last.y) - (object2.y - object2.last.y);
+		return abs(deltaDiff) < 0.0001 ? NONE : deltaDiff > 0 ? DOWN : UP;
+	}
+	
 	inline function canObjectCollide(obj:FlxObject, dir:FlxDirectionFlags)
 	{
 		return obj.allowCollisions.has(dir);
 	}
 	
-	function checkXCollisionHelper(object1:FlxObject, object2:FlxObject)
+	function checkCollisionXHelper(object1:FlxObject, object2:FlxObject)
 	{
-		final deltaDiff = (object1.x - object1.last.x) - (object2.x - object2.last.x);
-		return (deltaDiff > 0 && canObjectCollide(object1, RIGHT) && canObjectCollide(object2, LEFT))
-			|| (deltaDiff < 0 && canObjectCollide(object1, LEFT) && canObjectCollide(object2, RIGHT));
+		final dir = getCollisionEdgeX(object1, object2);
+		return (dir == RIGHT && canObjectCollide(object1, RIGHT) && canObjectCollide(object2, LEFT))
+			|| (dir == LEFT && canObjectCollide(object1, LEFT) && canObjectCollide(object2, RIGHT));
 	}
 	
-	function checkYCollisionHelper(object1:FlxObject, object2:FlxObject)
+	function checkCollisionYHelper(object1:FlxObject, object2:FlxObject)
 	{
-		final deltaDiff = (object1.y - object1.last.y) - (object2.y - object2.last.y);
-		return (deltaDiff > 0 && canObjectCollide(object1, DOWN) && canObjectCollide(object2, UP))
-			|| (deltaDiff < 0 && canObjectCollide(object1, UP) && canObjectCollide(object2, DOWN));
+		final dir = getCollisionEdgeY(object1, object2);
+		return (dir == DOWN && canObjectCollide(object1, DOWN) && canObjectCollide(object2, UP))
+			|| (dir == UP && canObjectCollide(object1, UP) && canObjectCollide(object2, DOWN));
 	}
 	
 	/** Determines if the two objects crossed pathed this frame and computes their overlap, otherwise returns (0, 0) **/
 	public function computeCollisionOverlap(object1:FlxObject, object2:FlxObject, ?result:FlxPoint)
 	{
-		if (result == null)
-			result = FlxPoint.get();
-		
 		if (checkCollision(object1, object2))
-			result.set(computeCollisionOverlapXHelper(object1, object2), computeCollisionOverlapYHelper(object1, object2));
+			object1.computeCollisionOverlap(object2, result);
 		
 		return result;
-	}
-	
-	/** Determines if the two objects crossed pathed this frame and computes their overlap, otherwise returns 0 **/
-	public function computeCollisionOverlapX(object1:FlxObject, object2:FlxObject)
-	{
-		if (checkCollision(object1, object2))
-			return computeCollisionOverlapXHelper(object1, object2);
-		
-		return 0;
-	}
-	
-	/** Determines if the two objects crossed pathed this frame and computes their overlap, otherwise returns 0 **/
-	public function computeCollisionOverlapY(object1:FlxObject, object2:FlxObject)
-	{
-		if (checkCollision(object1, object2))
-			return computeCollisionOverlapYHelper(object1, object2);
-		
-		return 0;
-	}
-	
-	function computeCollisionOverlapXHelper(object1:FlxObject, object2:FlxObject)
-	{
-		if ((object1.x - object1.last.x) > (object2.x - object2.last.x))
-			return object1.x + object1.width - object2.x;
-			
-		return object1.x - object2.width - object2.x;
-	}
-	
-	function computeCollisionOverlapYHelper(object1:FlxObject, object2:FlxObject)
-	{
-		if ((object1.y - object1.last.y) > (object2.y - object2.last.y))
-			return object1.y + object1.height - object2.y;
-			
-		return object1.y - object2.height - object2.y;
 	}
 	
 	function updateTouchingFlagsXHelper(object1:FlxObject, object2:FlxObject)
@@ -472,4 +425,9 @@ class CollisionFrontEnd
 private inline function abs(n:Float)
 {
 	return n > 0 ? n : -n;
+}
+
+private inline function min(a:Float, b:Float)
+{
+	return a < b ? a : b;
 }

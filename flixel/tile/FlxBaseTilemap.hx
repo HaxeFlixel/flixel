@@ -330,7 +330,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @see FlxCollision.getDeltaRect
 	 * @since 6.2.0
 	 */
-	public function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool):Bool
+	public function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
 		throw "forEachCollidingTile must be implemented";
 	}
@@ -1633,7 +1633,19 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final mapIndex = getMapIndex(point);
 		return tileExists(mapIndex) && getTileData(mapIndex).solid;
 	}
-
+	
+	override function computeCollisionOverlap(object:FlxObject, ?result:FlxPoint):FlxPoint
+	{
+		function each (t:Tile)
+		{
+			result = t.computeCollisionOverlap(object, result);
+			return result.x != 0 || result.y != 0;
+		}
+		// TODO: Resolve multiple overlapping tiles rather than the first
+		forEachCollidingTile(object, each, true);
+		return result;
+	}
+	
 	/**
 	 * Get the world coordinates and size of the entire tilemap as a FlxRect.
 	 *

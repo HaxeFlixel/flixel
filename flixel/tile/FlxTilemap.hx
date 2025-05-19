@@ -593,7 +593,18 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			for (column in 0...screenColumns)
 			{
 				final tile = getTileData(columnIndex);
-
+				
+				#if FLX_DEBUG
+				if (tile.customDebugDraw)
+				{
+					tile.orient(column, row);
+					tile.drawDebugOnCamera(camera);
+					
+					columnIndex++;
+					continue;
+				}
+				#end
+				
 				if (tile != null && tile.visible && !tile.ignoreDrawDebug)
 				{
 					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rect.width;
@@ -790,16 +801,19 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return result;
 	}
 	
-	override function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool):Bool
+	override function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
 		function filter(tile)
 		{
-			// return true, since an overlapping tile was found
-			return tile.overlapsObject(object) && (func == null || func(tile));
+			final overlapping = tile.overlapsObject(object);
+			if (overlapping && tile.callbackFunction != null)
+				tile.callbackFunction(tile, object);
+			
+			return overlapping && (func == null || func(tile));
 		}
 		
 		final reverse = FlxAxes.fromBools(object.last.x > object.x, object.last.y > object.y);
-		return forEachTileOverlappingRect(object.getDeltaRect(FlxRect.weak()), filter, reverse, false);
+		return forEachTileOverlappingRect(object.getDeltaRect(FlxRect.weak()), filter, reverse, stopAtFirst);
 	}
 	
 	function forEachTileOverlappingRect(rect:FlxRect, filter:(tile:Tile)->Bool, reverse:FlxAxes, stopAtFirst:Bool):Bool

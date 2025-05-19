@@ -337,7 +337,7 @@ class FlxG
 	public static var assets(default, null):AssetFrontEnd = new AssetFrontEnd();
 
 	/**
-	 * Contains helper functions relating to retrieving assets
+	 * Contains helper functions relating to collision
 	 * @since 6.2.0
 	 */
 	public static var collision(default, null):CollisionFrontEnd = new CollisionFrontEnd();
