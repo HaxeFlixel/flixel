@@ -267,7 +267,7 @@ class FlxSprite extends FlxObject
 	public var color(default, set):FlxColor = FlxColor.WHITE;
 	
 	/**
-	 * The color effects of this sprite, changes to `color` or `alplha` will be reflected here
+	 * The color effects of this sprite, changes to `color` or `alpha` will be reflected here
 	 */
 	public var colorTransform(default, null) = new ColorTransform();
 
