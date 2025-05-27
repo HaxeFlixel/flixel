@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -415,31 +416,72 @@ class FlxG
 	 *
 	 * @param   objectOrGroup1   The first object or group you want to check.
 	 * @param   objectOrGroup2   The second object or group you want to check. If it is the same as the first,
-	 *                           Flixel knows to just do a comparison within that group.
-	 * @param   notifyCallback   A function with two `FlxObject` parameters -
+	 * @param   notifier         A function with two `FlxObject` parameters -
 	 *                           e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
 	 *                           that is called if those two objects overlap.
-	 * @param   processCallback  A function with two `FlxObject` parameters -
+	 * @param   processer        A function with two `FlxObject` parameters -
 	 *                           e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
 	 *                           that is called if those two objects overlap.
-	 *                           If a `ProcessCallback` is provided, then `NotifyCallback`
-	 *                           will only be called if `ProcessCallback` returns true for those objects!
+	 *                           If a `processor` is provided, then `notifier`
+	 *                           will only be called if `processer` returns true for those objects!
 	 * @return  Whether any overlaps were detected.
 	 */
-	public static function overlap(?objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifyCallback:Dynamic->Dynamic->Void,
-			?processCallback:Dynamic->Dynamic->Bool):Bool
+	overload public static inline extern function overlap(objectOrGroup1:FlxBasic, objectOrGroup2:FlxBasic, ?notifier, ?processser):Bool
 	{
-		if (objectOrGroup1 == null)
-			objectOrGroup1 = state;
-		if (objectOrGroup2 == objectOrGroup1)
-			objectOrGroup2 = null;
-
-		FlxQuadTree.divisions = worldDivisions;
-		final quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
-		quadTree.load(objectOrGroup1, objectOrGroup2, notifyCallback, processCallback);
-		final result:Bool = quadTree.execute();
-		quadTree.destroy();
-		return result;
+		return overlapHelper(objectOrGroup1, objectOrGroup2, notifier, processser);
+	}
+	
+	/**
+	 * Checks if any `FlxObject` in the group overlaps another within `FlxG.worldBounds`.
+	 *
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
+	 *
+	 * @param   group      The group of objects you want to check
+	 * @param   notifier   A function with two `FlxObject` parameters -
+	 *                     e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                     that is called if those two objects overlap.
+	 * @param   processer  A function with two `FlxObject` parameters -
+	 *                     e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                     that is called if those two objects overlap.
+	 *                     If a `processor` is provided, then `notifier`
+	 *                     will only be called if `processer` returns true for those objects!
+	 * @return  Whether any overlaps were detected.
+	 */
+	overload public static inline extern function overlap(group:FlxGroup, ?notifier, ?processser):Bool
+	{
+		return overlapHelper(group, null, notifier, processser);
+	}
+	
+	/**
+	 * Checks if any `FlxObject` in `FlxG.state` overlaps another within `FlxG.worldBounds`.
+	 *
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * NOTE: this takes the entire area of `FlxTilemap`s into account (including "empty" tiles).
+	 * Use `FlxTilemap#overlaps()` if you don't want that.
+	 *
+	 * @param   notifier   A function with two object parameters -
+	 *                     e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                     that is called if those two objects overlap.
+	 * @param   processer  A function with two `FlxObject` parameters -
+	 *                     e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                     that is called if those two objects overlap.
+	 *                     If a `processor` is provided, then `notifier`
+	 *                     will only be called if `processer` returns true for those objects!
+	 * @return  Whether any overlaps were detected.
+	 */
+	overload public static inline extern function overlap(?notifier, ?processser):Bool
+	{
+		return overlapHelper(state, null, notifier, processser);
+	}
+	
+	static function overlapHelper(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifier:Dynamic->Dynamic->Void,
+			?processser:Dynamic->Dynamic->Bool):Bool
+	{
+		return FlxQuadTree.executeOnce(worldBounds, worldDivisions, objectOrGroup1, objectOrGroup2, notifier, processser);
 	}
 
 	/**
@@ -467,21 +509,62 @@ class FlxG
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).
 	 *
-	 * This function just calls `FlxG.overlap` and presets the `ProcessCallback` parameter to `FlxObject.separate`.
-	 * To create your own collision logic, write your own `ProcessCallback` and use `FlxG.overlap` to set it up.
+	 * This function just calls `FlxG.overlap` and presets the `processer` parameter to `FlxObject.separate`.
+	 * To create your own collision logic, write your own `processer` and use `FlxG.overlap` to set it up.
 	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * @param   objectOrGroup1  The first object or group you want to check.
 	 * @param   objectOrGroup2  The second object or group you want to check. If it is the same as the first,
 	 *                          Flixel knows to just do a comparison within that group.
-	 * @param   notifyCallback  A function with two `FlxObject` parameters -
+	 * @param   notifier  A function with two `FlxObject` parameters -
 	 *                          e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
 	 *                          that is called if those two objects overlap.
 	 * @return  Whether any objects were successfully collided/separated.
 	 */
-	public static inline function collide(?objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifyCallback:Dynamic->Dynamic->Void):Bool
+	overload public static inline extern function collide(objectOrGroup1:FlxBasic, objectOrGroup2:FlxBasic, ?notifier):Bool
 	{
-		return overlap(objectOrGroup1, objectOrGroup2, notifyCallback, FlxObject.separate);
+		return overlap(objectOrGroup1, objectOrGroup2, notifier, FlxObject.separate);
+	}
+
+	/**
+	 * Checks if any `FlxObject` in the group collides another within `FlxG.worldBounds` and separates any collisions.
+	 *
+	 * This function just calls `FlxG.overlap` and presets the `processer` parameter to `FlxObject.separate`.
+	 * To create your own collision logic, write your own `processer` and use `FlxG.overlap` to set it up.
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 *
+	 * @param   objectOrGroup1  The first object or group you want to check.
+	 * @param   objectOrGroup2  The second object or group you want to check. If it is the same as the first,
+	 *                          Flixel knows to just do a comparison within that group.
+	 * @param   notifier  A function with two `FlxObject` parameters -
+	 *                          e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                          that is called if those two objects overlap.
+	 * @return  Whether any objects were successfully collided/separated.
+	 */
+	overload public static inline extern function collide<T:FlxBasic>(group:FlxTypedGroup<T>, ?notifier):Bool
+	{
+		return overlap(group, notifier, FlxObject.separate);
+	}
+
+	/**
+	 * Call this function to see if one `FlxObject` collides with another within `FlxG.worldBounds`.
+	 * Can be called with one object and one group, or two groups, or two objects,
+	 * whatever floats your boat! For maximum performance try bundling a lot of objects
+	 * together using a FlxGroup (or even bundling groups together!).
+	 *
+	 * This function just calls `FlxG.overlap` and presets the `processer` parameter to `FlxObject.separate`.
+	 * To create your own collision logic, write your own `processer` and use `FlxG.overlap` to set it up.
+	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 * 
+	 *                    Flixel knows to just do a comparison within that group.
+	 * @param   notifier  A function with two `FlxObject` parameters -
+	 *                    e.g. `onOverlap(object1:FlxObject, object2:FlxObject)` -
+	 *                    that is called if those two objects overlap.
+	 * @return  Whether any objects were successfully collided/separated.
+	 */
+	overload public static inline extern function collide<T:FlxBasic>(?notifier:(Dynamic, Dynamic)->Void):Bool
+	{
+		return overlap(notifier, FlxObject.separate);
 	}
 
 	/**
@@ -490,7 +573,7 @@ class FlxG
 	 *
 	 * @param   child          The `DisplayObject` to add
 	 * @param   indexModifier  Amount to add to the index - makes sure the index stays within bounds.
-	 * @return  The added `DisplayObject`
+	 * @return  The added `DisplayObject`)
 	 */
 	public static function addChildBelowMouse<T:DisplayObject>(child:T, indexModifier = 0):T
 	{

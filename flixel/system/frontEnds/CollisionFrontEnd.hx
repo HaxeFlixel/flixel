@@ -60,15 +60,7 @@ class CollisionFrontEnd
 	
 	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, ?process:Null<(TA, TB)->Bool>)
 	{
-		if (b == a)
-			b = null;
-
-		FlxQuadTree.divisions = FlxG.worldDivisions;// TODO
-		final quadTree = FlxQuadTree.recycle(FlxG.worldBounds.x, FlxG.worldBounds.y, FlxG.worldBounds.width, FlxG.worldBounds.height);
-		quadTree.load(a, b, cast notify, cast process);
-		final result:Bool = quadTree.execute();
-		quadTree.destroy();
-		return result;
+		return FlxQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, a, b, cast notify, cast process);
 	}
 	
 	/**

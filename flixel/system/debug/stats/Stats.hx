@@ -296,9 +296,11 @@ class Stats extends Window
 
 		drawTimeGraph.update(drwTime);
 		updateTimeGraph.update(updTime);
-
+		
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
-			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") + FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST;
+			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") 
+			+ FlxQuadTree.pool.length + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
+			;
 	}
 
 	function divide(f1:Float, f2:Float):Float
