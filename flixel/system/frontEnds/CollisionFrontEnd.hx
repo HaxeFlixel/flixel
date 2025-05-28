@@ -4,14 +4,29 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.physics.FlxCollider;
+import flixel.physics.FlxCollisionQuadTree;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxDirectionFlags;
 
+using flixel.physics.FlxCollider.FlxColliderUtil;
 using flixel.util.FlxCollision;
 
 @:access(flixel.FlxObject)
 class CollisionFrontEnd
 {
+	/**
+	 * Collisions between FlxObjects will not resolve overlaps larger than this values, in pixels
+	 */
+	public var maxOverlap = 4;
+	
+	/**
+	 * How many times the quad tree should divide the world on each axis.
+	 * Generally, sparse collisions can have fewer divisons,
+	 * while denser collision activity usually profits from more. Default value is `6`.
+	 */
+	public static var worldDivisions:Int = 6;
+	
 	public function new () {}
 	
 	/**
@@ -60,7 +75,7 @@ class CollisionFrontEnd
 	
 	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, ?process:Null<(TA, TB)->Bool>)
 	{
-		return FlxQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, a, b, cast notify, cast process);
+		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, a, b, cast notify, cast process);
 	}
 	
 	/**
@@ -69,9 +84,9 @@ class CollisionFrontEnd
 	 * whatever floats your boat! For maximum performance try bundling a lot of objects
 	 * together using a FlxGroup (or even bundling groups together!).
 	 *
-	 * This function just calls `FlxG.overlap` and presets the `ProcessCallback` parameter to `FlxObject.separate`.
-	 * To create your own collision logic, write your own `ProcessCallback` and use `FlxG.overlap` to set it up.
-	 * NOTE: does NOT take objects' `scrollFactor` into account, all overlaps are checked in world space.
+	 * This function just calls `overlap` and presets the `processer` parameter to `separate`.
+	 * To create your own collision logic, write your own `processer` and use `overlap` to set it up.
+	 * **NOTE:** does NOT take sprites' `scrollFactor` into account, all overlaps are checked in world space.
 	 *
 	 * @param   a        The first object or group you want to check.
 	 * @param   b        The second object or group you want to check. Can be the same group as the first.
@@ -90,327 +105,330 @@ class CollisionFrontEnd
 	 * 
 	 * @return  Whether the objects were overlapping and were separated
 	 */
-	public function separate(object1:FlxObject, object2:FlxObject)
+	public function separate(a:FlxObject, b:FlxObject)
 	{
-		return processCheckTilemap(object1, object2, checkAndSeparate);
-		
-		// final separatedX = separateX(object1, object2);
-		// final separatedY = separateY(object1, object2);
-		// return separatedX || separatedY;
-	}
-	
-	/**
-	 * Internal elper that determines whether either object is a tilemap, determines
-	 * which tiles are overlapping and calls the appropriate separator
-	 * 
-	 * @param   func         The process you wish to call with both objects, or between tiles,
-	 *                       
-	 * @param   isCollision  Does nothing, if both objects are immovable
-	 * @return  The result of whichever separator was used
-	 */
-	function processCheckTilemap(object1:FlxObject, object2:FlxObject, func:(FlxObject, FlxObject)->Bool):Bool
-	{
-		// two immovable objects cannot collide
-		if (object1.immovable && object2.immovable)
-			return false;
-		
-		// If one of the objects is a tilemap, just pass it off.
-		if (object1.flixelType == TILEMAP)
-		{
-			final tilemap:FlxBaseTilemap<FlxObject> = cast object1;
-			// If object1 is a tilemap, check it's tiles against object2, which may also be a tilemap
-			function recurseProcess(tile)
-			{
-				// Keep tile as first arg
-				return processCheckTilemap(tile, object2, func);
-			}
-			return tilemap.forEachCollidingTile(object2, recurseProcess);
-		}
-		else if (object2.flixelType == TILEMAP)
-		{
-			final tilemap:FlxBaseTilemap<FlxObject> = cast object2;
-			// If object1 is a tilemap, check it's tiles against object2, which may also be a tilemap
-			function recurseProcess(tile)
-			{
-				// Keep tile as second arg
-				return processCheckTilemap(object1, tile, func);
-			}
-			return tilemap.forEachCollidingTile(object1, recurseProcess);
-		}
-		
-		return func(object1, object2);
+		return FlxColliderUtil.process(a, b, checkAndSeparate);
 	}
 	
 	static final overlapHelperPoint = FlxPoint.get();
-	function checkAndSeparate(object1:FlxObject, object2:FlxObject)
+	static final overlapInverseHelperPoint = FlxPoint.get();
+	function checkAndSeparate(a:IFlxCollider, b:IFlxCollider)
 	{
-		if (checkDeltaOverlaps(object1, object2))
-		{
-			// check if any collisions are allowed
-			final allowX = checkCollisionXHelper(object1, object2);
-			final allowY = checkCollisionYHelper(object1, object2);
-			if (!allowX && !allowY)
+		final colliderA = a.getCollider();
+		final colliderB = b.getCollider();
+		// if (colliderA.overlapsDelta(colliderB))
+		// {
+			colliderA.onBoundsCollide.dispatch(b);
+			colliderB.onBoundsCollide.dispatch(a);
+			
+			if (!colliderA.type.match(SHAPE(_)) || !colliderB.type.match(SHAPE(_)))
+				return true;
+			
+			final overlap = a.computeCollisionOverlap(b);
+			
+			if (overlap.isZero())
 				return false;
 			
-			// determine the amount of overlap
-			final overlap = object1.computeCollisionOverlap(object2, overlapHelperPoint);
+			final negativeOverlap = overlap.copyTo(overlapInverseHelperPoint);
+			
+			colliderA.onCollide.dispatch(b, overlap);
+			colliderB.onCollide.dispatch(a, negativeOverlap);
 			
 			// seprate x
-			if (allowX && overlap.x != 0)
+			if (overlap.x != 0)
 			{
-				updateTouchingFlagsXHelper(object1, object2);
-				separateXHelper(object1, object2, overlap.x);
+				updateTouchingFlagsXHelper(colliderA, colliderB);
+				separateXHelper(colliderA, colliderB, overlap.x);
 			}
 			
 			// seprate y
-			if (allowY && overlap.y != 0)
+			if (overlap.y != 0)
 			{
-				updateTouchingFlagsYHelper(object1, object2);
-				separateYHelper(object1, object2, overlap.y);
+				updateTouchingFlagsYHelper(colliderA, colliderB);
+				separateYHelper(colliderA, colliderB, overlap.y);
 			}
 			
+			updateObjectFields(a, colliderA);
+			updateObjectFields(b, colliderB);
+			
+			colliderA.onSeparate.dispatch(b, overlap);
+			colliderB.onSeparate.dispatch(a, negativeOverlap);
+			negativeOverlap.put();
+			
 			return true;
-		}
+		// }
 		
-		return false;
-	}
-	
-	public function checkCollision(object1:FlxObject, object2:FlxObject)
-	{
-		return checkDeltaOverlaps(object1, object2)
-			&& (checkCollisionXHelper(object1, object2) || checkCollisionYHelper(object1, object2));
+		// return false;
 	}
 	
 	/**
-	 * Internal function use to determine if two objects may cross path,
-	 * by comparing the bounds they occupy this frame
+	 * Updates the legacy object's fields so they match the collider's, these vars are to preserve
+	 * reflection in existing games
 	 */
-	function checkDeltaOverlaps(object1:FlxObject, object2:FlxObject)
+	function updateObjectFields(obj:IFlxCollider, collider:FlxCollider)
 	{
-		return object1.overlapsDelta(object2);
+		if (obj is FlxObject)
+		{
+			final object:FlxObject = cast obj;
+			@:bypassAccessor object.x = collider.x;
+			@:bypassAccessor object.y = collider.y;
+			@:bypassAccessor object.touching = collider.touching;
+		}
 	}
 	
-	function separateXHelper(object1:FlxObject, object2:FlxObject, overlap:Float)
+	public function checkCollision(a:FlxCollider, b:FlxCollider)
 	{
-		final delta1 = object1.x - object1.last.x;
-		final delta2 = object2.x - object2.last.x;
-		final vel1 = object1.velocity.x;
-		final vel2 = object2.velocity.x;
+		return a.overlapsDelta(b)
+			&& (checkCollisionEdgesX(a, b) || checkCollisionEdgesY(a, b));
+	}
+	
+	function separateHelper(a:FlxCollider, b:FlxCollider, overlap:FlxPoint)
+	{
+		final delta1 = FlxPoint.get(a.x - a.last.x, a.y - a.last.y);
+		final delta2 = FlxPoint.get(b.x - b.last.x, b.y - b.last.y);
+		final vel1 = a.velocity;
+		final vel2 = b.velocity;
 		
-		if (!object1.immovable && !object2.immovable)
+		if (!a.immovable && !b.immovable)
 		{
-			#if FLX_4_LEGACY_COLLISION
-			legacySeparateX(object1, object2, overlap);
-			#else
-			object1.x -= overlap * 0.5;
-			object2.x += overlap * 0.5;
+			a.x -= overlap.x * 0.5;
+			a.y -= overlap.y * 0.5;
+			b.x += overlap.x * 0.5;
+			b.y += overlap.y * 0.5;
 			
-			final mass1 = object1.mass;
-			final mass2 = object2.mass;
+			final mass1 = a.mass;
+			final mass2 = b.mass;
+			final momentum = mass1 * vel1.length + mass2 * vel2.length;
+			
+			// TODO: rebound x/y on overlap normal
+			a.velocity.x = (momentum + a.elasticity * mass2 * (vel2.x - vel1.x)) / (mass1 + mass2);
+			b.velocity.x = (momentum + b.elasticity * mass1 * (vel1.x - vel2.x)) / (mass1 + mass2);
+		}
+		else if (!a.immovable)
+		{
+			a.x -= overlap.x;
+			a.y -= overlap.y;
+			
+			// TODO: rebound x/y on overlap normal
+			a.velocity.x = vel2.x - vel1.x * a.elasticity;
+		}
+		else if (!b.immovable)
+		{
+			b.x += overlap.x;
+			b.y += overlap.y;
+			
+			// TODO: rebound x/y on overlap normal
+			b.velocity.x = vel1.x - vel2.x * b.elasticity;
+		}
+	}
+	
+	function separateXHelper(a:FlxCollider, b:FlxCollider, overlap:Float)
+	{
+		final delta1 = a.x - a.last.x;
+		final delta2 = b.x - b.last.x;
+		final vel1 = a.velocity.x;
+		final vel2 = b.velocity.x;
+		
+		if (!a.immovable && !b.immovable)
+		{
+			a.x -= overlap * 0.5;
+			b.x += overlap * 0.5;
+			
+			final mass1 = a.mass;
+			final mass2 = b.mass;
 			final momentum = mass1 * vel1 + mass2 * vel2;
-			object1.velocity.x = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
-			object2.velocity.x = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
-			#end
+			a.velocity.x = (momentum + a.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
+			b.velocity.x = (momentum + b.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
 		}
-		else if (!object1.immovable)
+		else if (!a.immovable)
 		{
-			object1.x -= overlap;
-			object1.velocity.x = vel2 - vel1 * object1.elasticity;
+			a.x -= overlap;
+			a.velocity.x = vel2 - vel1 * a.elasticity;
 		}
-		else if (!object2.immovable)
+		else if (!b.immovable)
 		{
-			object2.x += overlap;
-			object2.velocity.x = vel1 - vel2 * object2.elasticity;
+			b.x += overlap;
+			b.velocity.x = vel1 - vel2 * b.elasticity;
 		}
 		
 		// use collisionDrag properties to determine whether one object
-		if (allowCollisionDrag(object1.collisionYDrag, object1, object2) && delta1 > delta2)
-			object1.y += object2.y - object2.last.y;
-		else if (allowCollisionDrag(object2.collisionYDrag, object2, object1) && delta2 > delta1)
-			object2.y += object1.y - object1.last.y;
+		if (allowCollisionDrag(a.collisionYDrag, a, b) && delta1 > delta2)
+			a.y += b.y - b.last.y;
+		else if (allowCollisionDrag(b.collisionYDrag, b, a) && delta2 > delta1)
+			b.y += a.y - a.last.y;
 	}
 	
-	function separateYHelper(object1:FlxObject, object2:FlxObject, overlap:Float)
+	function separateYHelper(a:FlxCollider, b:FlxCollider, overlap:Float)
 	{
-		final delta1 = object1.y - object1.last.y;
-		final delta2 = object2.y - object2.last.y;
-		final vel1 = object1.velocity.y;
-		final vel2 = object2.velocity.y;
+		final delta1 = a.y - a.last.y;
+		final delta2 = b.y - b.last.y;
+		final vel1 = a.velocity.y;
+		final vel2 = b.velocity.y;
 		
-		if (!object1.immovable && !object2.immovable)
+		if (!a.immovable && !b.immovable)
 		{
-			#if FLX_4_LEGACY_COLLISION
-			legacySeparateY(object1, object2, overlap);
-			#else
-			object1.y -= overlap / 2;
-			object2.y += overlap / 2;
+			a.y -= overlap / 2;
+			b.y += overlap / 2;
 			
-			final mass1 = object1.mass;
-			final mass2 = object2.mass;
+			final mass1 = a.mass;
+			final mass2 = b.mass;
 			final momentum = mass1 * vel1 + mass2 * vel2;
-			final newVel1 = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
-			final newVel2 = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
-			object1.velocity.y = newVel1;
-			object2.velocity.y = newVel2;
-			#end
+			final newVel1 = (momentum + a.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
+			final newVel2 = (momentum + b.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+			a.velocity.y = newVel1;
+			b.velocity.y = newVel2;
 		}
-		else if (!object1.immovable)
+		else if (!a.immovable)
 		{
-			object1.y -= overlap;
-			object1.velocity.y = vel2 - vel1 * object1.elasticity;
+			a.y -= overlap;
+			a.velocity.y = vel2 - vel1 * a.elasticity;
 		}
-		else if (!object2.immovable)
+		else if (!b.immovable)
 		{
-			object2.y += overlap;
-			object2.velocity.y = vel1 - vel2 * object2.elasticity;
+			b.y += overlap;
+			b.velocity.y = vel1 - vel2 * b.elasticity;
 		}
 		
 		// use collisionDrag properties to determine whether one object
-		if (allowCollisionDrag(object1.collisionXDrag, object1, object2) && delta1 > delta2)
-			object1.x += object2.x - object2.last.x;
-		else if (allowCollisionDrag(object2.collisionXDrag, object2, object1) && delta2 > delta1)
-			object2.x += object1.x - object1.last.x;
+		if (allowCollisionDrag(a.collisionXDrag, a, b) && delta1 > delta2)
+			a.x += b.x - b.last.x;
+		else if (allowCollisionDrag(b.collisionXDrag, b, a) && delta2 > delta1)
+			b.x += a.x - a.last.x;
 	}
 	
 	/**
-	 * Helper to determine which edges of `object1`, if any, will strike the opposing edge of `object2`
+	 * Helper to determine which edges of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
 	 */
-	public function getCollisionEdge(object1:FlxObject, object2:FlxObject)
+	overload public inline extern function getCollisionEdges(a:IFlxCollider, b:IFlxCollider)
 	{
-		return getCollisionEdgeX(object1, object2) | getCollisionEdgeY(object1, object2);
+		return FlxColliderUtil.getCollisionEdges(a.getCollider(), b.getCollider());
+	}
+	
+	/**
+	 * Helper to determine which edges of `a`, if any, will strike the opposing edge of `b`
+	 * based solely on their delta positions
+	 */
+	overload public inline extern function getCollisionEdges(a:FlxCollider, b:FlxCollider)
+	{
+		return FlxColliderUtil.getCollisionEdges(a, b);
+	}
+	
+	/**
+	 * Helper to determine which horizontal edge of `a`, if any, will strike the opposing edge of `b`
+	 * based solely on their delta positions
+	 */
+	overload public inline extern function getCollisionEdgesX(a:IFlxCollider, b:IFlxCollider)
+	{
+		return FlxColliderUtil.getCollisionEdgesX(a.getCollider(), b.getCollider());
+	}
+	
+	/**
+	 * Helper to determine which horizontal edge of `a`, if any, will strike the opposing edge of `b`
+	 * based solely on their delta positions
+	 */
+	overload public inline extern function getCollisionEdgesX(a:FlxCollider, b:FlxCollider)
+	{
+		return FlxColliderUtil.getCollisionEdgesX(a, b);
 	}
 	
 	
 	/**
-	 * Helper to determine which horizontal edge of `object1`, if any, will strike the opposing edge of `object2`
+	 * Helper to determine which vertical edge of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
 	 */
-	public function getCollisionEdgeX(object1:FlxObject, object2:FlxObject)
+	overload public inline extern function getCollisionEdgesY(a:IFlxCollider, b:IFlxCollider)
 	{
-		final deltaDiff = (object1.x - object1.last.x) - (object2.x - object2.last.x);
-		return deltaDiff == 0 ? NONE : deltaDiff > 0 ? RIGHT : LEFT;
+		return FlxColliderUtil.getCollisionEdgesY(a.getCollider(), b.getCollider());
 	}
 	
 	/**
-	 * Helper to determine which vertical edge of `object1`, if any, will strike the opposing edge of `object2`
+	 * Helper to determine which vertical edge of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
 	 */
-	public function getCollisionEdgeY(object1:FlxObject, object2:FlxObject)
+	overload public inline extern function getCollisionEdgesY(a:FlxCollider, b:FlxCollider)
 	{
-		final deltaDiff = (object1.y - object1.last.y) - (object2.y - object2.last.y);
-		return abs(deltaDiff) < 0.0001 ? NONE : deltaDiff > 0 ? DOWN : UP;
+		return FlxColliderUtil.getCollisionEdgesY(a, b);
 	}
 	
-	inline function canObjectCollide(obj:FlxObject, dir:FlxDirectionFlags)
+	inline function canCollide(obj:FlxCollider, dir:FlxDirectionFlags)
 	{
 		return obj.allowCollisions.has(dir);
 	}
 	
-	function checkCollisionXHelper(object1:FlxObject, object2:FlxObject)
+	/**
+	 * Returns whether thetwo objects can collide in the X direction they are traveling.
+	 * Checks `allowCollisions`.
+	 */
+	overload public inline extern function checkCollisionEdgesX(a:IFlxCollider, b:IFlxCollider)
 	{
-		final dir = getCollisionEdgeX(object1, object2);
-		return (dir == RIGHT && canObjectCollide(object1, RIGHT) && canObjectCollide(object2, LEFT))
-			|| (dir == LEFT && canObjectCollide(object1, LEFT) && canObjectCollide(object2, RIGHT));
+		return FlxColliderUtil.checkCollisionEdgesX(a.getCollider(), b.getCollider());
 	}
 	
-	function checkCollisionYHelper(object1:FlxObject, object2:FlxObject)
+	/**
+	 * Returns whether thetwo objects can collide in the X direction they are traveling.
+	 * Checks `allowCollisions`.
+	 */
+	overload public inline extern function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider)
 	{
-		final dir = getCollisionEdgeY(object1, object2);
-		return (dir == DOWN && canObjectCollide(object1, DOWN) && canObjectCollide(object2, UP))
-			|| (dir == UP && canObjectCollide(object1, UP) && canObjectCollide(object2, DOWN));
+		return FlxColliderUtil.checkCollisionEdgesX(a, b);
 	}
 	
-	/** Determines if the two objects crossed pathed this frame and computes their overlap, otherwise returns (0, 0) **/
-	public function computeCollisionOverlap(object1:FlxObject, object2:FlxObject, ?result:FlxPoint)
+	/**
+	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
+	 * Checks `allowCollisions`.
+	 */
+	overload public inline extern function checkCollisionEdgesY(a:IFlxCollider, b:IFlxCollider)
 	{
-		if (checkCollision(object1, object2))
-			object1.computeCollisionOverlap(object2, result);
-		
-		return result;
+		return FlxColliderUtil.checkCollisionEdgesY(a.getCollider(), b.getCollider());
 	}
 	
-	function updateTouchingFlagsXHelper(object1:FlxObject, object2:FlxObject)
+	/**
+	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
+	 * Checks `allowCollisions`.
+	 */
+	overload public inline extern function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider)
 	{
-		if ((object1.x - object1.last.x) > (object2.x - object2.last.x))
+		return FlxColliderUtil.checkCollisionEdgesY(a, b);
+	}
+	
+	function updateTouchingFlagsXHelper(a:FlxCollider, b:FlxCollider)
+	{
+		if ((a.x - a.last.x) > (b.x - b.last.x))
 		{
-			object1.touching |= RIGHT;
-			object2.touching |= LEFT;
+			a.touching |= RIGHT;
+			b.touching |= LEFT;
 		}
 		else
 		{
-			object1.touching |= LEFT;
-			object2.touching |= RIGHT;
+			a.touching |= LEFT;
+			b.touching |= RIGHT;
 		}
 	}
 	
-	function updateTouchingFlagsYHelper(object1:FlxObject, object2:FlxObject)
+	function updateTouchingFlagsYHelper(a:FlxCollider, b:FlxCollider)
 	{
-		if ((object1.y - object1.last.y) > (object2.y - object2.last.y))
+		if ((a.y - a.last.y) > (b.y - b.last.y))
 		{
-			object1.touching |= DOWN;
-			object2.touching |= UP;
+			a.touching |= DOWN;
+			b.touching |= UP;
 		}
 		else
 		{
-			object1.touching |= UP;
-			object2.touching |= DOWN;
+			a.touching |= UP;
+			b.touching |= DOWN;
 		}
 	}
 	
-	function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
+	function allowCollisionDrag(type:FlxCollisionDragType, a:FlxCollider, b:FlxCollider):Bool
 	{
-		return object2.active && object2.moves && switch (type)
+		return b.moves && switch (type)
 		{
 			case NEVER: false;
 			case ALWAYS: true;
-			case IMMOVABLE: object2.immovable;
-			case HEAVIER: object2.immovable || object2.mass > object1.mass;
+			case IMMOVABLE: b.immovable;
+			case HEAVIER: b.immovable || b.mass > a.mass;
 		}
-	}
-	
-	/**
-	 * The separateX that existed before HaxeFlixel 5.0, preserved for anyone who
-	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
-	 */
-	static inline function legacySeparateX(object1:FlxObject, object2:FlxObject, overlap:Float)
-	{
-		final vel1 = object1.velocity.x;
-		final vel2 = object2.velocity.x;
-		final mass1 = object1.mass;
-		final mass2 = object2.mass;
-		object1.x = object1.x - (overlap * 0.5);
-		object2.x += overlap * 0.5;
-		
-		var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
-		var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
-		final average = (newVel1 + newVel2) * 0.5;
-		newVel1 -= average;
-		newVel2 -= average;
-		object1.velocity.x = average + (newVel1 * object1.elasticity);
-		object2.velocity.x = average + (newVel2 * object2.elasticity);
-	}
-	
-	/**
-	 * The separateY that existed before HaxeFlixel 5.0, preserved for anyone who
-	 * needs to use it in an old project. Does not preserve momentum, avoid if possible
-	 */
-	static inline function legacySeparateY(object1:FlxObject, object2:FlxObject, overlap:Float)
-	{
-		final vel1 = object1.velocity.y;
-		final vel2 = object2.velocity.y;
-		final mass1 = object1.mass;
-		final mass2 = object2.mass;
-		object1.y = object1.y - (overlap * 0.5);
-		object2.y += overlap * 0.5;
-		
-		var newVel1 = Math.sqrt((vel2 * vel2 * mass2) / mass1) * ((vel2 > 0) ? 1 : -1);
-		var newVel2 = Math.sqrt((vel1 * vel1 * mass1) / mass2) * ((vel1 > 0) ? 1 : -1);
-		final average = (newVel1 + newVel2) * 0.5;
-		newVel1 -= average;
-		newVel2 -= average;
-		object1.velocity.y = average + (newVel1 * object1.elasticity);
-		object2.velocity.y = average + (newVel2 * object2.elasticity);
 	}
 }
 

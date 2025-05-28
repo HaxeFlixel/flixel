@@ -1,15 +1,16 @@
 package flixel.system.debug.stats;
 
-import openfl.display.BitmapData;
-import openfl.system.System;
-import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
+import flixel.physics.FlxCollisionQuadTree;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.debug.DebuggerUtil;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 
 
 /**
@@ -299,7 +300,7 @@ class Stats extends Window
 		
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
 			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") 
-			+ FlxQuadTree.pool.length + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
+			+ (FlxQuadTree.pool.length + FlxCollisionQuadTree.pool.length) + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
 			;
 	}
 

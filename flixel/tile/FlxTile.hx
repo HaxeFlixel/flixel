@@ -2,6 +2,7 @@ package flixel.tile;
 
 import flixel.FlxObject;
 import flixel.graphics.frames.FlxFrame;
+import flixel.physics.FlxCollider.IFlxCollider;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSignal;
@@ -111,7 +112,12 @@ class FlxTile extends FlxObject
 			&& object.x < x + width
 			&& object.y + object.height > y
 			&& object.y < y + height
-			&& (filter == null || Std.isOfType(object, filter));
+			&& canCollide(object);
+	}
+	
+	public function canCollide(object:Any)
+	{
+		return filter == null || Std.isOfType(object, filter);
 	}
 	
 	/**

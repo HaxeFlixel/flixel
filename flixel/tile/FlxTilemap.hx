@@ -14,6 +14,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.physics.FlxCollider.IFlxCollider;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import flixel.util.FlxAxes;
@@ -801,19 +802,37 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return result;
 	}
 	
-	override function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
+	override function forEachCollidingTile(object:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
-		function filter(tile)
+		final collider = object.getCollider();
+		if (object is FlxObject)
 		{
-			final overlapping = tile.overlapsObject(object);
-			if (overlapping && tile.callbackFunction != null)
-				tile.callbackFunction(tile, object);
+			final obj:FlxObject = cast object;
+			function filter(tile:Tile)
+			{
+				final overlapping = tile.overlapsObject(obj);
+				if (overlapping && tile.callbackFunction != null)
+					tile.callbackFunction(tile, obj);
+				
+				final result = tile.canCollide(object) && (func == null || func(tile));
+				
+				if (result)
+					tile.onCollide.dispatch(tile, obj);
+				
+				return result;
+			}
 			
-			return overlapping && (func == null || func(tile));
+			final reverse = FlxAxes.fromBools(collider.last.x > collider.x, collider.last.y > collider.y);
+			return forEachTileOverlappingRect(collider.getDeltaRect(FlxRect.weak()), filter, reverse, stopAtFirst);
 		}
 		
-		final reverse = FlxAxes.fromBools(object.last.x > object.x, object.last.y > object.y);
-		return forEachTileOverlappingRect(object.getDeltaRect(FlxRect.weak()), filter, reverse, stopAtFirst);
+		function filter(tile:Tile)
+		{
+			return func == null || func(tile);
+		}
+		
+		final reverse = FlxAxes.fromBools(collider.last.x > collider.x, collider.last.y > collider.y);
+		return forEachTileOverlappingRect(collider.getDeltaRect(FlxRect.weak()), filter, reverse, stopAtFirst);
 	}
 	
 	function forEachTileOverlappingRect(rect:FlxRect, filter:(tile:Tile)->Bool, reverse:FlxAxes, stopAtFirst:Bool):Bool

@@ -5,6 +5,7 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPathfinder;
+import flixel.physics.FlxCollider;
 import flixel.system.FlxAssets;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxCollision;
@@ -323,14 +324,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * **NOTE:** Tiles are iterated in the direction the object moved this frame. For example, if
 	 * `object.last.y` is greater than `object.y`, tiles are checked from bottom to top
 	 * 
-	 * @param   object  The object
-	 * @param   func    Function that takes a tile and returns whether is satisfies the
-	 *                  disired condition
+	 * @param   collider  The colliding object
+	 * @param   func      Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition
 	 * @return  Whether any colliding tile was found
 	 * @see FlxCollision.getDeltaRect
 	 * @since 6.2.0
 	 */
-	public function forEachCollidingTile(object:FlxObject, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
+	public function forEachCollidingTile(collider:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
 	{
 		throw "forEachCollidingTile must be implemented";
 	}
@@ -377,6 +378,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		flixelType = TILEMAP;
 		immovable = true;
 		moves = false;
+		collider.type = FlxColliderType.TILEMAP;
 	}
 
 	override function destroy():Void
@@ -1632,18 +1634,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		final mapIndex = getMapIndex(point);
 		return tileExists(mapIndex) && getTileData(mapIndex).solid;
-	}
-	
-	override function computeCollisionOverlap(object:FlxObject, ?result:FlxPoint):FlxPoint
-	{
-		function each (t:Tile)
-		{
-			result = t.computeCollisionOverlap(object, result);
-			return result.x != 0 || result.y != 0;
-		}
-		// TODO: Resolve multiple overlapping tiles rather than the first
-		forEachCollidingTile(object, each, true);
-		return result;
 	}
 	
 	/**

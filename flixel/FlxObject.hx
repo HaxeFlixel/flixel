@@ -7,6 +7,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
 import flixel.path.FlxPath;
+import flixel.physics.FlxCollider;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
@@ -74,7 +75,7 @@ import openfl.display.Graphics;
  * - [Demos - Collision and Grouping](https://haxeflixel.com/demos/CollisionAndGrouping/)
  * @see [Demos - EZPlatformer](https://haxeflixel.com/demos/EZPlatformer/)
  */
-class FlxObject extends FlxBasic
+class FlxObject extends FlxBasic implements IFlxCollider
 {
 	/**
 	 * Default value for `FlxObject`'s `pixelPerfectPosition` var.
@@ -95,7 +96,7 @@ class FlxObject extends FlxBasic
 	 */
 	public static var defaultMoves:Bool = true;
 	
-	static function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
+	static function allowCollisionDrag(type:FlxCollisionDragType, object1:FlxObject, object2:FlxObject):Bool
 	{
 		return object2.active && object2.moves && switch (type)
 		{
@@ -552,82 +553,27 @@ class FlxObject extends FlxBasic
 	}
 	
 	/**
-	 * Helper to compute the overlap of two objects, this is used when
-	 * `object1.computeCollisionOverlap(object2)` is called on two objects
-	 */
-	public static function defaultComputeCollisionOverlap(object1:FlxObject, object2:FlxObject, ?result:FlxPoint)
-	{
-		if (result == null)
-			result = FlxPoint.get();
-		
-		result.set(defaultComputeCollisionOverlapX(object1, object2), defaultComputeCollisionOverlapY(object1, object2));
-		
-		function abs(n:Float) return n < 0 ? -n : n;
-		
-		final absX = abs(result.x);
-		final absY = abs(result.y);
-		
-		// separate on the smaller axis
-		if (absX > absY)
-		{
-			result.x = 0;
-			if (absY > SEPARATE_BIAS)
-				result.y = 0;
-		}
-		else
-		{
-			result.y = 0;
-			if (absX > SEPARATE_BIAS)
-				result.x = 0;
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Helper to compute the X overlap of two objects, this is used when
-	 * `object1.computeCollisionOverlapX(object2)` is called on two objects
-	 */
-	public static function defaultComputeCollisionOverlapX(object1:FlxObject, object2:FlxObject)
-	{
-		if ((object1.x - object1.last.x) > (object2.x - object2.last.x))
-			return object1.x + object1.width - object2.x;
-		
-		return object1.x - object2.width - object2.x;
-	}
-	
-	/**
-	 * Helper to compute the Y overlap of two objects, this is used when
-	 * `object1.computeCollisionOverlapY(object2)` is called on two objects
-	 */
-	public static function defaultComputeCollisionOverlapY(object1:FlxObject, object2:FlxObject)
-	{
-		if ((object1.y - object1.last.y) > (object2.y - object2.last.y))
-			return object1.y + object1.height - object2.y;
-		
-		return object1.y - object2.height - object2.y;
-	}
-	
-	/**
 	 * X position of the upper left corner of this object in world space.
 	 */
-	public var x(default, set):Float = 0;
+	@:isVar // keep var for reflection
+	public var x(get, set):Float = 0;
 
 	/**
 	 * Y position of the upper left corner of this object in world space.
 	 */
-	public var y(default, set):Float = 0;
+	@:isVar // keep var for reflection
+	public var y(get, set):Float = 0;
 
 	/**
 	 * The width of this object's hitbox. For sprites, use `offset` to control the hitbox position.
 	 */
-	@:isVar
+	@:isVar // keep var for reflection
 	public var width(get, set):Float;
 
 	/**
 	 * The height of this object's hitbox. For sprites, use `offset` to control the hitbox position.
 	 */
-	@:isVar
+	@:isVar // keep var for reflection
 	public var height(get, set):Float;
 
 	/**
@@ -653,12 +599,14 @@ class FlxObject extends FlxBasic
 	 * Set this to `false` if you want to skip the automatic motion/movement stuff (see `updateMotion()`).
 	 * `FlxObject` and `FlxSprite` default to `true`. `FlxText`, `FlxTileblock` and `FlxTilemap` default to `false`.
 	 */
-	public var moves(default, set):Bool = defaultMoves;
+	@:isVar // keep var for reflection
+	public var moves(get, set):Bool;
 
 	/**
 	 * Whether an object will move/alter position after a collision.
 	 */
-	public var immovable(default, set):Bool = false;
+	@:isVar // keep var for reflection
+	public var immovable(get, set):Bool = false;
 
 	/**
 	 * Whether the object collides or not. For more control over what directions the object will collide from,
@@ -706,12 +654,14 @@ class FlxObject extends FlxBasic
 	 * The virtual mass of the object. Default value is 1. Currently only used with elasticity
 	 * during collision resolution. Change at your own risk; effects seem crazy unpredictable so far!
 	 */
-	public var mass:Float = 1;
+	@:isVar // keep var for reflection
+	public var mass(get, set):Float = 1;
 
 	/**
 	 * The bounciness of this object. Only affects collisions. Default value is 0, or "not bouncy at all."
 	 */
-	public var elasticity:Float = 0;
+	@:isVar // keep var for reflection
+	public var elasticity(get, set):Float = 0;
 
 	/**
 	 * This is how fast you want this sprite to spin (in degrees per second).
@@ -747,19 +697,22 @@ class FlxObject extends FlxBasic
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var touching = FlxDirectionFlags.NONE;
+	@:isVar // keep var for reflection
+	public var touching(get, set) = FlxDirectionFlags.NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating surface contacts from the previous game loop step. Use bitwise operators to check the values
 	 * stored here, or use isTouching(), justTouched(), etc. You can even use them broadly as boolean values if you're feeling saucy!
 	 */
-	public var wasTouching = FlxDirectionFlags.NONE;
+	@:isVar // keep var for reflection
+	public var wasTouching(get, set) = FlxDirectionFlags.NONE;
 
 	/**
 	 * Bit field of flags (use with UP, DOWN, LEFT, RIGHT, etc) indicating collision directions. Use bitwise operators to check the values stored here.
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
-	public var allowCollisions(default, set) = FlxDirectionFlags.ANY;
+	@:isVar // keep var for reflection
+	public var allowCollisions(get, set) = FlxDirectionFlags.ANY;
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -767,7 +720,8 @@ class FlxObject extends FlxBasic
 	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
 	 * @since 4.11.0
 	 */
-	public var collisionXDrag:CollisionDragType = IMMOVABLE;
+	@:isVar // keep var for reflection
+	public var collisionXDrag(get, set) = FlxCollisionDragType.IMMOVABLE;
 
 	/**
 	 * Whether this sprite is dragged along with the vertical movement of objects it collides with
@@ -775,7 +729,8 @@ class FlxObject extends FlxBasic
 	 * IMMOVABLE, ALWAYS, HEAVIER or NEVER
 	 * @since 4.11.0
 	 */
-	public var collisionYDrag:CollisionDragType = NEVER;
+	@:isVar // keep var for reflection
+	public var collisionYDrag(get, set) = FlxCollisionDragType.NEVER;
 
 	#if FLX_DEBUG
 	/**
@@ -818,6 +773,14 @@ class FlxObject extends FlxBasic
 	 * See `flixel.util.FlxPath` for more info and usage examples.
 	 */
 	public var path(default, set):FlxPath = null;
+	
+	var collider:FlxCollider;
+	
+	/** For `IFlxCollider` */
+	public inline function getCollider()
+	{
+		return collider;
+	}
 
 	@:noCompletion
 	var _point:FlxPoint = FlxPoint.get();
@@ -832,6 +795,8 @@ class FlxObject extends FlxBasic
 	 */
 	public function new(x:Float = 0, y:Float = 0, width:Float = 0, height:Float = 0)
 	{
+		collider = new FlxCollider();
+		moves = defaultMoves;
 		super();
 
 		this.x = x;
@@ -849,7 +814,7 @@ class FlxObject extends FlxBasic
 	function initVars():Void
 	{
 		flixelType = OBJECT;
-		last = FlxPoint.get(x, y);
+		last = collider.last;
 		scrollFactor = FlxPoint.get(1, 1);
 		pixelPerfectPosition = FlxObject.defaultPixelPerfectPosition;
 
@@ -862,8 +827,8 @@ class FlxObject extends FlxBasic
 	@:noCompletion
 	inline function initMotionVars():Void
 	{
-		velocity = FlxPoint.get();
-		acceleration = FlxPoint.get();
+		velocity = collider.velocity;
+		acceleration = collider.acceleration;
 		drag = FlxPoint.get();
 		maxVelocity = FlxPoint.get(10000, 10000);
 	}
@@ -882,12 +847,12 @@ class FlxObject extends FlxBasic
 	{
 		super.destroy();
 
-		velocity = FlxDestroyUtil.put(velocity);
-		acceleration = FlxDestroyUtil.put(acceleration);
+		velocity = null;
+		acceleration = null;
 		drag = FlxDestroyUtil.put(drag);
 		maxVelocity = FlxDestroyUtil.put(maxVelocity);
+		last = null;
 		scrollFactor = FlxDestroyUtil.put(scrollFactor);
-		last = FlxDestroyUtil.put(last);
 		_point = FlxDestroyUtil.put(_point);
 		_rect = FlxDestroyUtil.put(_rect);
 	}
@@ -927,18 +892,16 @@ class FlxObject extends FlxBasic
 		angularVelocity += velocityDelta;
 		angle += angularVelocity * elapsed;
 		angularVelocity += velocityDelta;
-
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
-		velocity.x += velocityDelta;
-		var delta = velocity.x * elapsed;
-		velocity.x += velocityDelta;
-		x += delta;
-
-		velocityDelta = 0.5 * (FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
-		velocity.y += velocityDelta;
-		delta = velocity.y * elapsed;
-		velocity.y += velocityDelta;
-		y += delta;
+		
+		// if (collider.drag == NONE && !drag.isZero())
+			collider.drag = ORTHO(drag.x, drag.y);
+		
+		// if (collider.maxVelocity == NONE && !maxVelocity.isZero())
+			collider.maxVelocity = ORTHO(maxVelocity.x, maxVelocity.y);
+		
+		collider.update(elapsed);
+		@:bypassAccessor x = collider.bounds.x;
+		@:bypassAccessor y = collider.bounds.y;
 	}
 
 	/**
@@ -1002,11 +965,6 @@ class FlxObject extends FlxBasic
 	inline function overlapsCallback(objectOrGroup:FlxBasic, x:Float, y:Float, inScreenSpace:Bool, camera:FlxCamera):Bool
 	{
 		return overlaps(objectOrGroup, inScreenSpace, camera);
-	}
-	
-	public function computeCollisionOverlap(object:FlxObject, ?result:FlxPoint):FlxPoint
-	{
-		return defaultComputeCollisionOverlap(this, object, result);
 	}
 
 	/**
@@ -1421,17 +1379,29 @@ class FlxObject extends FlxBasic
 			LabelValuePair.weak("velocity", velocity)
 		]);
 	}
-
+	
+	@:noCompletion
+	inline function get_x():Float
+	{
+		return collider.x;
+	}
+	
 	@:noCompletion
 	function set_x(value:Float):Float
 	{
-		return x = value;
+		return x = collider.bounds.x = value;
 	}
-
+	
+	@:noCompletion
+	inline function get_y():Float
+	{
+		return collider.y;
+	}
+	
 	@:noCompletion
 	function set_y(value:Float):Float
 	{
-		return y = value;
+		return y = collider.bounds.y = value;
 	}
 
 	@:noCompletion
@@ -1445,7 +1415,7 @@ class FlxObject extends FlxBasic
 		}
 		#end
 
-		return width = value;
+		return width = collider.bounds.width = value;
 	}
 
 	@:noCompletion
@@ -1459,19 +1429,19 @@ class FlxObject extends FlxBasic
 		}
 		#end
 
-		return height = value;
+		return height = collider.bounds.height = value;
 	}
 
 	@:noCompletion
 	function get_width():Float
 	{
-		return width;
+		return collider.bounds.width;
 	}
 
 	@:noCompletion
 	function get_height():Float
 	{
-		return height;
+		return collider.bounds.height;
 	}
 
 	@:noCompletion
@@ -1494,15 +1464,27 @@ class FlxObject extends FlxBasic
 	}
 
 	@:noCompletion
-	function set_moves(value:Bool):Bool
+	inline function get_moves():Bool
 	{
-		return moves = value;
+		return collider.moves;
 	}
 
 	@:noCompletion
+	function set_moves(value:Bool):Bool
+	{
+		return moves = collider.moves = value;
+	}
+
+	@:noCompletion
+	inline function get_immovable():Bool
+	{
+		return collider.immovable;
+	}
+	
+	@:noCompletion
 	function set_immovable(value:Bool):Bool
 	{
-		return immovable = value;
+		return immovable = collider.immovable = value;
 	}
 
 	@:noCompletion
@@ -1510,13 +1492,91 @@ class FlxObject extends FlxBasic
 	{
 		return pixelPerfectRender = value;
 	}
-
+	
+	@:noCompletion
+	inline function get_touching():FlxDirectionFlags
+	{
+		return collider.touching;
+	}
+	
+	@:noCompletion
+	inline function set_touching(value:FlxDirectionFlags):FlxDirectionFlags
+	{
+		return touching = collider.touching = value;
+	}
+	
+	@:noCompletion
+	inline function get_wasTouching():FlxDirectionFlags
+	{
+		return collider.touching;
+	}
+	
+	@:noCompletion
+	inline function set_wasTouching(value:FlxDirectionFlags):FlxDirectionFlags
+	{
+		return wasTouching = collider.wasTouching = value;
+	}
+	
+	@:noCompletion
+	inline function get_allowCollisions():FlxDirectionFlags
+	{
+		return collider.allowCollisions;
+	}
+	
 	@:noCompletion
 	function set_allowCollisions(value:FlxDirectionFlags):FlxDirectionFlags
 	{
-		return allowCollisions = value;
+		return allowCollisions = collider.allowCollisions = value;
 	}
-
+	
+	@:noCompletion
+	inline function get_collisionXDrag():FlxCollisionDragType
+	{
+		return collider.collisionXDrag;
+	}
+	
+	@:noCompletion
+	inline function set_collisionXDrag(value:FlxCollisionDragType):FlxCollisionDragType
+	{
+		return collisionXDrag = collider.collisionXDrag = value;
+	}
+	
+	@:noCompletion
+	inline function get_collisionYDrag():FlxCollisionDragType
+	{
+		return collider.collisionYDrag;
+	}
+	
+	@:noCompletion
+	inline function set_collisionYDrag(value:FlxCollisionDragType):FlxCollisionDragType
+	{
+		return collisionYDrag = collider.collisionYDrag = value;
+	}
+	
+	@:noCompletion
+	inline function get_mass():Float
+	{
+		return collider.mass;
+	}
+	
+	@:noCompletion
+	inline function set_mass(value:Float):Float
+	{
+		return mass = collider.mass = value;
+	}
+	
+	@:noCompletion
+	inline function get_elasticity():Float
+	{
+		return collider.elasticity;
+	}
+	
+	@:noCompletion
+	inline function set_elasticity(value:Float):Float
+	{
+		return elasticity = collider.elasticity = value;
+	}
+	
 	#if FLX_DEBUG
 	@:noCompletion
 	function set_debugBoundingBoxColorSolid(color:FlxColor)
@@ -1552,20 +1612,5 @@ class FlxObject extends FlxBasic
 	}
 }
 
-/**
- * Determines when to apply collision drag to one object that collided with another.
- */
-enum abstract CollisionDragType(Int)
-{
-	/** Never drags on colliding objects. */
-	var NEVER = 0;
-
-	/** Always drags on colliding objects. */
-	var ALWAYS = 1;
-
-	/** Drags when colliding with immovable objects. */
-	var IMMOVABLE = 2;
-
-	/** Drags when colliding with heavier objects. Immovable objects have infinite mass. */
-	var HEAVIER = 3;
-}
+@:deprecated("CollisionDragType is deprecated, use flixel.physics.FlxCollider.FlxCollisionDragType, instead")
+typedef CollisionDragType = flixel.physics.FlxCollider.FlxCollisionDragType;
