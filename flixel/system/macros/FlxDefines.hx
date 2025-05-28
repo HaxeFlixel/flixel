@@ -251,7 +251,7 @@ class FlxDefines
 		
 		if (!defined("flash") || defined("flash11_8"))
 			define(FLX_GAMEINPUT_API);
-		else if (!defined("openfl_next") && (defined("cpp") || defined("neko")))
+		else if (!defined("openfl_next") && (defined("cpp")))
 			define(FLX_JOYSTICK_API);
 
 		#if nme

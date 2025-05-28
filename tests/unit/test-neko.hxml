@@ -1,2 +1,0 @@
--cmd haxelib run munit gen
--cmd haxelib run lime test neko

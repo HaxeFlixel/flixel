@@ -356,10 +356,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				red = transform.redMultiplier;
 				green = transform.greenMultiplier;
 				blue = transform.blueMultiplier;
-
-				#if !neko
 				alpha = transform.alphaMultiplier;
-				#end
 			}
 
 			var color = FlxColor.fromRGBFloat(red, green, blue, alpha);

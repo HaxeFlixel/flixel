@@ -8,11 +8,10 @@ There's a 1:1 mapping between `.hx` files in Flixel and the unit test project - 
 
 ### Building
 
-Run one of the `test-*.hxml` files in this directory to run the tests on that specific target, e.g. `haxe test-neko.hxml`. Currently supported are:
+Run one of the `test-*.hxml` files in this directory to run the tests on that specific target, e.g. `haxe test-cpp.hxml`. Currently supported are:
 
 - `web` (Flash + HTML5)
 - `cpp`
-- `neko`
 
 Alternatively, this can be done from within Visual Studio Code - (`F1` -> `Tasks: Run Task` -> Choose the target to test).
 
