@@ -246,7 +246,7 @@ class FlxTileSlopeUtil
 		// if (glueDownVelocity > 0 && isInTile && FlxG.collision.getCollisionEdgesY(tile, object).up)
 		// if (glueDownVelocity > 0 && isInTile && overlap.y < 0)
 		// if (isOnSlope(tile, object))
-		if (FlxG.collision.getCollisionEdgesY(tile.getCollider(), object).up)
+		if (FlxG.collision.getCollisionEdgesY(tile, object).has(UP))
 		{
 			final useLeftCorner = slope > 0;
 			final objectLastX = useLeftCorner ? object.last.x : object.last.x + object.width;
