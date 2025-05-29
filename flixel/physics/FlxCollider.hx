@@ -25,7 +25,7 @@ enum FlxColliderShape
 	 * @param   computeOverlap  A function that takes two colliders and determines how much
 	 *                          they overlap, and in which direction
 	 */
-	CUSTOM(name:String, computeOverlap:(a:IFlxCollider, b:IFlxCollider, ?result:FlxPoint)->FlxPoint);
+	CUSTOM(name:String, computeOverlap:(collider:IFlxCollider, ?result:FlxPoint)->FlxPoint);
 }
 
 enum FlxColliderType
@@ -357,8 +357,8 @@ class FlxColliderUtil
 			case [SHAPE(shapeA), SHAPE(shapeB)]:
 				switch [shapeA, shapeB]
 				{
-					case [CUSTOM(_, func), _]: func(a, b, result);
-					case [_, CUSTOM(_, func)]: func(a, b, result);
+					case [CUSTOM(_, func), _]: func(b, result);
+					case [_, CUSTOM(_, func)]: func(a, result).negate();
 					case [AABB, AABB]: computeCollisionOverlapAabb(colliderA, colliderB, result);
 					case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
 				}
