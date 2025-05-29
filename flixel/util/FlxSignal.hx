@@ -302,12 +302,15 @@ private class Macro
 
 			processingListeners = false;
 
-			for (handler in pendingRemove)
+			if (pendingRemove != null)
 			{
-				removeHandler(handler);
+				for (handler in pendingRemove)
+				{
+					removeHandler(handler);
+				}
+				if (pendingRemove.length > 0)
+					pendingRemove = [];
 			}
-			if (pendingRemove.length > 0)
-				pendingRemove = [];
 		}
 	}
 }
