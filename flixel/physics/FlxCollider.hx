@@ -364,7 +364,7 @@ class FlxColliderUtil
 		}
 	}
 	
-	public static function computeCollisionOverlap(a:IFlxCollider, b:IFlxCollider, ?result:FlxPoint):FlxPoint
+	public static function computeCollisionOverlap(a:IFlxCollider, b:IFlxCollider, maxOverlap:Float, ?result:FlxPoint):FlxPoint
 	{
 		final colliderA = a.getCollider();
 		final colliderB = b.getCollider();
@@ -375,7 +375,7 @@ class FlxColliderUtil
 				{
 					case [CUSTOM(_, func), _]: func(b, result);
 					case [_, CUSTOM(_, func)]: func(a, result).negate();
-					case [AABB, AABB]: computeCollisionOverlapAabb(colliderA, colliderB, result);
+					case [AABB, AABB]: computeCollisionOverlapAabb(colliderA, colliderB, maxOverlap, result);
 					case [shapeA, shapeB]: throw 'Unexpected types: [$shapeA, $shapeB]';
 				}
 			default:
@@ -422,7 +422,7 @@ class FlxColliderUtil
 	 * Helper to compute the overlap of two objects, this is used when
 	 * `a.computeCollisionOverlap(b)` is called on two objects
 	 */
-	public static function computeCollisionOverlapAabb(a:FlxCollider, b:FlxCollider, ?result:FlxPoint)
+	public static function computeCollisionOverlapAabb(a:FlxCollider, b:FlxCollider, maxOverlap:Float, ?result:FlxPoint)
 	{
 		if (result == null)
 			result = FlxPoint.get();
@@ -441,7 +441,7 @@ class FlxColliderUtil
 		if (checkForFullPenetrationX(a, b) || allowX && !allowY)
 		{
 			final overlap = computeCollisionOverlapXAabb(a, b);
-			if (abs(overlap) > FlxG.collision.maxOverlap)
+			if (abs(overlap) > maxOverlap)
 				return result;
 			
 			return result.set(overlap, 0);
@@ -451,7 +451,7 @@ class FlxColliderUtil
 		if (checkForFullPenetrationY(a, b) || !allowX && allowY)
 		{
 			final overlap = computeCollisionOverlapYAabb(a, b);
-			if (abs(overlap) > FlxG.collision.maxOverlap)
+			if (abs(overlap) > maxOverlap)
 				return result;
 			
 			return result.set(0, overlap);
@@ -466,13 +466,13 @@ class FlxColliderUtil
 		if (absX > absY)
 		{
 			result.x = 0;
-			if (absY > FlxG.collision.maxOverlap)// Todo: pass in maxOverlap
+			if (absY > maxOverlap)
 				result.y = 0;
 		}
 		else
 		{
 			result.y = 0;
-			if (absX > FlxG.collision.maxOverlap)// Todo: pass in maxOverlap
+			if (absX > maxOverlap)
 				result.x = 0;
 		}
 		
