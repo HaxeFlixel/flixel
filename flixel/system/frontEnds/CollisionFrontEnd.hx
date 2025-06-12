@@ -18,7 +18,7 @@ class CollisionFrontEnd
 	/**
 	 * Collisions between FlxObjects will not resolve overlaps larger than this values, in pixels
 	 */
-	public var maxOverlap = 4;
+	public var maxOverlap = 4.0;
 	
 	/**
 	 * How many times the quad tree should divide the world on each axis.
@@ -359,37 +359,49 @@ class CollisionFrontEnd
 	/**
 	 * Returns whether thetwo objects can collide in the X direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	overload public inline extern function checkCollisionEdgesX(a:IFlxCollider, b:IFlxCollider)
+	overload public inline extern function checkCollisionEdgesX(a:IFlxCollider, b:IFlxCollider, elseBoth = false)
 	{
-		return FlxColliderUtil.checkCollisionEdgesX(a.getCollider(), b.getCollider());
+		return FlxColliderUtil.checkCollisionEdgesX(a.getCollider(), b.getCollider(), elseBoth);
 	}
 	
 	/**
 	 * Returns whether thetwo objects can collide in the X direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	overload public inline extern function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider)
+	overload public inline extern function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider, elseBoth = false)
 	{
-		return FlxColliderUtil.checkCollisionEdgesX(a, b);
+		return FlxColliderUtil.checkCollisionEdgesX(a, b, elseBoth);
 	}
 	
 	/**
 	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	overload public inline extern function checkCollisionEdgesY(a:IFlxCollider, b:IFlxCollider)
+	overload public inline extern function checkCollisionEdgesY(a:IFlxCollider, b:IFlxCollider, elseBoth = false)
 	{
-		return FlxColliderUtil.checkCollisionEdgesY(a.getCollider(), b.getCollider());
+		return FlxColliderUtil.checkCollisionEdgesY(a.getCollider(), b.getCollider(), elseBoth);
 	}
 	
 	/**
 	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	overload public inline extern function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider)
+	overload public inline extern function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider, elseBoth = false)
 	{
-		return FlxColliderUtil.checkCollisionEdgesY(a, b);
+		return FlxColliderUtil.checkCollisionEdgesY(a, b, elseBoth);
 	}
 	
 	function updateTouchingFlagsXHelper(a:FlxCollider, b:FlxCollider)

@@ -70,10 +70,12 @@ class FlxCollider
 	
 	public var wasTouching = FlxDirectionFlags.NONE;
 	
+	/** Whether the collider can be moved by other colliders */
 	public var immovable = false;
 	
 	public var mass = 1.0;
 	
+	/** The amount of momentum conserved after a collision, defaults to `0` meaning, collisions will stop the collider */
 	public var elasticity = 0.0;
 	
 	public var onBoundsCollide = new FlxTypedSignal<(collider:IFlxCollider)->Void>();
@@ -114,6 +116,13 @@ class FlxCollider
 	
 	public var bottom(get, never):Float;
 	
+	/** The distance this collider has moved this frame */
+	public var deltaX(get, never):Float;
+	
+	/** The distance this collider has moved this frame */
+	public var deltaY(get, never):Float;
+	
+	/** Whether this collider will update its position, velocity and acceleration */
 	public var moves:Bool;
 	
 	public var type:FlxColliderType;
@@ -142,16 +151,20 @@ class FlxCollider
 	
 	public function update(elapsed:Float)
 	{
-		final lastVelocityX = velocity.x;
-		final lastVelocityY = velocity.y;
-		velocity.x += acceleration.x * elapsed;
-		velocity.y += acceleration.y * elapsed;
-		
-		applyDrag(elapsed);
-		constrainVelocity();
-		
-		x += (lastVelocityX + 0.5 * (velocity.x - lastVelocityX)) * elapsed;
-		y += (lastVelocityY + 0.5 * (velocity.y - lastVelocityY)) * elapsed;
+		last.set(x, y);
+		if (moves)
+		{
+			final lastVelocityX = velocity.x;
+			final lastVelocityY = velocity.y;
+			velocity.x += acceleration.x * elapsed;
+			velocity.y += acceleration.y * elapsed;
+			
+			applyDrag(elapsed);
+			constrainVelocity();
+			
+			x += (lastVelocityX + 0.5 * (velocity.x - lastVelocityX)) * elapsed;
+			y += (lastVelocityY + 0.5 * (velocity.y - lastVelocityY)) * elapsed;
+		}
 	}
 	
 	function applyDrag(elapsed:Float)
@@ -249,6 +262,9 @@ class FlxCollider
 	inline function get_right():Float { return bounds.right; }
 	inline function get_top():Float { return bounds.top; }
 	inline function get_bottom():Float { return bounds.bottom; }
+	
+	inline function get_deltaX():Float { return x - last.x; }
+	inline function get_deltaY():Float { return y - last.y; }
 }
 
 class FlxColliderUtil
@@ -411,7 +427,7 @@ class FlxColliderUtil
 		if (result == null)
 			result = FlxPoint.get();
 		
-		if (!a.bounds.overlaps(b.bounds))
+		if (!checkForPenetration(a, b))
 			return result.set(0, 0);
 		
 		final allowX = FlxG.collision.checkCollisionEdgesX(a, b);
@@ -422,7 +438,7 @@ class FlxColliderUtil
 		function abs(n:Float) return n < 0 ? -n : n;
 		
 		// only X
-		if (allowX && !allowY)
+		if (checkForFullPenetrationX(a, b) || allowX && !allowY)
 		{
 			final overlap = computeCollisionOverlapXAabb(a, b);
 			if (abs(overlap) > FlxG.collision.maxOverlap)
@@ -432,7 +448,7 @@ class FlxColliderUtil
 		}
 		
 		// only Y
-		if (!allowX && allowY)
+		if (checkForFullPenetrationY(a, b) || !allowX && allowY)
 		{
 			final overlap = computeCollisionOverlapYAabb(a, b);
 			if (abs(overlap) > FlxG.collision.maxOverlap)
@@ -450,17 +466,48 @@ class FlxColliderUtil
 		if (absX > absY)
 		{
 			result.x = 0;
-			if (absY > FlxG.collision.maxOverlap)
+			if (absY > FlxG.collision.maxOverlap)// Todo: pass in maxOverlap
 				result.y = 0;
 		}
 		else
 		{
 			result.y = 0;
-			if (absX > FlxG.collision.maxOverlap)
+			if (absX > FlxG.collision.maxOverlap)// Todo: pass in maxOverlap
 				result.x = 0;
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Checks whether the colliders overlap, or if they did overlap this frame
+	 */
+	public static function checkForPenetration(a:FlxCollider, b:FlxCollider)
+	{
+		return a.bounds.overlaps(b.bounds)
+			|| (checkForFullPenetrationX(a, b))
+			|| (checkForFullPenetrationY(a, b));
+		
+	}
+	
+	/**
+	 * Checks whether one collider fully passed the other, this frame, in the X axis
+	 */
+	public static function checkForFullPenetrationX(a:FlxCollider, b:FlxCollider)
+	{
+		return a.bounds.overlapsY(b.bounds) && (a.deltaX > b.deltaX
+			? a.left > b.right && a.last.x + a.width < b.last.x
+			: a.right < b.left && a.last.x > b.last.x + b.width);
+	}
+	
+	/**
+	 * Checks whether one collider fully passed the other, this frame, in the Y axis
+	 */
+	public static function checkForFullPenetrationY(a:FlxCollider, b:FlxCollider)
+	{
+		return a.bounds.overlapsX(b.bounds) && (a.deltaY > b.deltaY
+			? a.top > b.bottom && a.last.y + a.height < b.last.y
+			: a.bottom < b.top && a.last.y > b.last.y + b.height);
 	}
 	
 	/**
@@ -469,7 +516,7 @@ class FlxColliderUtil
 	 */
 	public static function computeCollisionOverlapXAabb(a:FlxCollider, b:FlxCollider):Float
 	{
-		if ((a.x - a.last.x) > (b.x - b.last.x))
+		if (a.deltaX > b.deltaX)
 			return a.x + a.width - b.x;
 		
 		return a.x - b.width - b.x;
@@ -481,7 +528,7 @@ class FlxColliderUtil
 	 */
 	public static function computeCollisionOverlapYAabb(a:FlxCollider, b:FlxCollider):Float
 	{
-		if ((a.y - a.last.y) > (b.y - b.last.y))
+		if (a.deltaY > b.deltaY)
 			return a.y + a.height - b.y;
 		
 		return a.y - b.height - b.y;
@@ -492,30 +539,40 @@ class FlxColliderUtil
 	/**
 	 * Helper to determine which edges of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	public static function getCollisionEdges(a:FlxCollider, b:FlxCollider)
+	public static function getCollisionEdges(a:FlxCollider, b:FlxCollider, elseBoth = false)
 	{
-		return getCollisionEdgesX(a, b) | getCollisionEdgesY(a, b);
+		return getCollisionEdgesX(a, b, elseBoth) | getCollisionEdgesY(a, b, elseBoth);
 	}
 	
 	/**
 	 * Helper to determine which horizontal edge of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	public static function getCollisionEdgesX(a:FlxCollider, b:FlxCollider):FlxDirectionFlags
+	public static function getCollisionEdgesX(a:FlxCollider, b:FlxCollider, elseBoth = false):FlxDirectionFlags
 	{
-		final deltaDiff = (a.x - a.last.x) - (b.x - b.last.x);
-		return abs(deltaDiff) < 0.0001 ? (RIGHT | LEFT) : deltaDiff > 0 ? RIGHT : LEFT;
+		final deltaDiff = a.deltaX - b.deltaX;
+		return abs(deltaDiff) < 0.0001 ? (elseBoth ? RIGHT | LEFT : NONE) : deltaDiff > 0 ? RIGHT : LEFT;
 	}
+	
 	
 	/**
 	 * Helper to determine which vertical edge of `a`, if any, will strike the opposing edge of `b`
 	 * based solely on their delta positions
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	public static function getCollisionEdgesY(a:FlxCollider, b:FlxCollider):FlxDirectionFlags
+	public static function getCollisionEdgesY(a:FlxCollider, b:FlxCollider, elseBoth = false):FlxDirectionFlags
 	{
-		final deltaDiff = (a.y - a.last.y) - (b.y - b.last.y);
-		return abs(deltaDiff) < 0.0001 ? NONE : deltaDiff > 0 ? DOWN : UP;
+		final deltaDiff = a.deltaY - b.deltaY;
+		return abs(deltaDiff) < 0.0001 ? (elseBoth ? DOWN | UP : NONE) : deltaDiff > 0 ? DOWN : UP;
 	}
 	
 	static inline function canObjectCollide(obj:FlxCollider, dir:FlxDirectionFlags)
@@ -526,10 +583,13 @@ class FlxColliderUtil
 	/**
 	 * Returns whether thetwo objects can collide in the X direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	public static function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider)
+	public static function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider, elseBoth = false)
 	{
-		final dir = getCollisionEdgesX(a, b);
+		final dir = getCollisionEdgesX(a, b, elseBoth);
 		return (dir.has(RIGHT) && canObjectCollide(a, RIGHT) && canObjectCollide(b, LEFT))
 			|| (dir.has(LEFT) && canObjectCollide(a, LEFT) && canObjectCollide(b, RIGHT));
 	}
@@ -537,10 +597,13 @@ class FlxColliderUtil
 	/**
 	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
 	 * Checks `allowCollisions`.
+	 * 
+	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
+	 *                    not moving relative to one another
 	 */
-	public static function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider)
+	public static function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider, elseBoth = false)
 	{
-		final dir = getCollisionEdgesY(a, b);
+		final dir = getCollisionEdgesY(a, b, elseBoth);
 		return (dir.has(DOWN) && canObjectCollide(a, DOWN) && canObjectCollide(b, UP))
 			|| (dir.has(UP) && canObjectCollide(a, UP) && canObjectCollide(b, DOWN));
 	}
