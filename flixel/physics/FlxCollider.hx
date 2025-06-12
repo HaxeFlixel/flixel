@@ -438,7 +438,7 @@ class FlxColliderUtil
 		function abs(n:Float) return n < 0 ? -n : n;
 		
 		// only X
-		if (checkForFullPenetrationX(a, b) || allowX && !allowY)
+		if ((allowX && !allowY) || penetratedOnX(a, b))
 		{
 			final overlap = computeCollisionOverlapXAabb(a, b);
 			if (abs(overlap) > maxOverlap)
@@ -448,7 +448,7 @@ class FlxColliderUtil
 		}
 		
 		// only Y
-		if (checkForFullPenetrationY(a, b) || !allowX && allowY)
+		if ((!allowX && allowY) || penetratedOnY(a, b))
 		{
 			final overlap = computeCollisionOverlapYAabb(a, b);
 			if (abs(overlap) > maxOverlap)
@@ -479,15 +479,36 @@ class FlxColliderUtil
 		return result;
 	}
 	
+	public static function penetratedOnX(a:FlxCollider, b:FlxCollider)
+	{
+		return (lastOverlappedY(a, b) && a.bounds.overlapsY(b.bounds))
+			|| (checkForFullPenetrationX(a, b) && a.bounds.overlapsX(b.bounds) && lastOverlappedX(a, b));
+	}
+	
+	public static function penetratedOnY(a:FlxCollider, b:FlxCollider)
+	{
+		return (lastOverlappedX(a, b) && a.bounds.overlapsX(b.bounds))
+			|| (checkForFullPenetrationY(a, b) && a.bounds.overlapsY(b.bounds) && lastOverlappedY(a, b));
+	}
+	
+	public static function lastOverlappedX(a:FlxCollider, b:FlxCollider)
+	{
+		return a.last.x < b.last.x + b.width && a.last.x + a.width > b.last.x;
+	}
+	
+	public static function lastOverlappedY(a:FlxCollider, b:FlxCollider)
+	{
+		return a.last.y < b.last.y + b.height && a.last.y + a.height > b.last.y;
+	}
+	
 	/**
 	 * Checks whether the colliders overlap, or if they did overlap this frame
 	 */
 	public static function checkForPenetration(a:FlxCollider, b:FlxCollider)
 	{
 		return a.bounds.overlaps(b.bounds)
-			|| (checkForFullPenetrationX(a, b))
-			|| (checkForFullPenetrationY(a, b));
-		
+			|| (checkForFullPenetrationX(a, b) && (a.bounds.overlapsY(b.bounds) || lastOverlappedY(a, b)))
+			|| (checkForFullPenetrationY(a, b) && (a.bounds.overlapsX(b.bounds) || lastOverlappedX(a, b)));
 	}
 	
 	/**
@@ -495,7 +516,7 @@ class FlxColliderUtil
 	 */
 	public static function checkForFullPenetrationX(a:FlxCollider, b:FlxCollider)
 	{
-		return a.bounds.overlapsY(b.bounds) && (a.deltaX > b.deltaX
+		return (a.deltaX > b.deltaX
 			? a.left > b.right && a.last.x + a.width < b.last.x
 			: a.right < b.left && a.last.x > b.last.x + b.width);
 	}
@@ -505,7 +526,7 @@ class FlxColliderUtil
 	 */
 	public static function checkForFullPenetrationY(a:FlxCollider, b:FlxCollider)
 	{
-		return a.bounds.overlapsX(b.bounds) && (a.deltaY > b.deltaY
+		return (a.deltaY > b.deltaY
 			? a.top > b.bottom && a.last.y + a.height < b.last.y
 			: a.bottom < b.top && a.last.y > b.last.y + b.height);
 	}
