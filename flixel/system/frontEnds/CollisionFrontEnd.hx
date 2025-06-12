@@ -177,12 +177,6 @@ class CollisionFrontEnd
 		}
 	}
 	
-	public function checkCollision(a:FlxCollider, b:FlxCollider)
-	{
-		return a.overlapsDelta(b)
-			&& (checkCollisionEdgesX(a, b) || checkCollisionEdgesY(a, b));
-	}
-	
 	function separateHelper(a:FlxCollider, b:FlxCollider, overlap:FlxPoint)
 	{
 		final delta1 = FlxPoint.get(a.x - a.last.x, a.y - a.last.y);
@@ -297,112 +291,9 @@ class CollisionFrontEnd
 			b.x += a.x - a.last.x;
 	}
 	
-	/**
-	 * Helper to determine which edges of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdges(a:IFlxCollider, b:IFlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdges(a.getCollider(), b.getCollider());
-	}
-	
-	/**
-	 * Helper to determine which edges of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdges(a:FlxCollider, b:FlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdges(a, b);
-	}
-	
-	/**
-	 * Helper to determine which horizontal edge of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdgesX(a:IFlxCollider, b:IFlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdgesX(a.getCollider(), b.getCollider());
-	}
-	
-	/**
-	 * Helper to determine which horizontal edge of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdgesX(a:FlxCollider, b:FlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdgesX(a, b);
-	}
-	
-	
-	/**
-	 * Helper to determine which vertical edge of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdgesY(a:IFlxCollider, b:IFlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdgesY(a.getCollider(), b.getCollider());
-	}
-	
-	/**
-	 * Helper to determine which vertical edge of `a`, if any, will strike the opposing edge of `b`
-	 * based solely on their delta positions
-	 */
-	overload public inline extern function getCollisionEdgesY(a:FlxCollider, b:FlxCollider)
-	{
-		return FlxColliderUtil.getCollisionEdgesY(a, b);
-	}
-	
 	inline function canCollide(obj:FlxCollider, dir:FlxDirectionFlags)
 	{
 		return obj.allowCollisions.has(dir);
-	}
-	
-	/**
-	 * Returns whether thetwo objects can collide in the X direction they are traveling.
-	 * Checks `allowCollisions`.
-	 * 
-	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
-	 *                    not moving relative to one another
-	 */
-	overload public inline extern function checkCollisionEdgesX(a:IFlxCollider, b:IFlxCollider, elseBoth = false)
-	{
-		return FlxColliderUtil.checkCollisionEdgesX(a.getCollider(), b.getCollider(), elseBoth);
-	}
-	
-	/**
-	 * Returns whether thetwo objects can collide in the X direction they are traveling.
-	 * Checks `allowCollisions`.
-	 * 
-	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
-	 *                    not moving relative to one another
-	 */
-	overload public inline extern function checkCollisionEdgesX(a:FlxCollider, b:FlxCollider, elseBoth = false)
-	{
-		return FlxColliderUtil.checkCollisionEdgesX(a, b, elseBoth);
-	}
-	
-	/**
-	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
-	 * Checks `allowCollisions`.
-	 * 
-	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
-	 *                    not moving relative to one another
-	 */
-	overload public inline extern function checkCollisionEdgesY(a:IFlxCollider, b:IFlxCollider, elseBoth = false)
-	{
-		return FlxColliderUtil.checkCollisionEdgesY(a.getCollider(), b.getCollider(), elseBoth);
-	}
-	
-	/**
-	 * Returns whether thetwo objects can collide in the Y direction they are traveling.
-	 * Checks `allowCollisions`.
-	 * 
-	 * @param   elseBoth  Whether to return `NONE` or "both" directions, when the objects are
-	 *                    not moving relative to one another
-	 */
-	overload public inline extern function checkCollisionEdgesY(a:FlxCollider, b:FlxCollider, elseBoth = false)
-	{
-		return FlxColliderUtil.checkCollisionEdgesY(a, b, elseBoth);
 	}
 	
 	function updateTouchingFlagsXHelper(a:FlxCollider, b:FlxCollider)

@@ -430,8 +430,8 @@ class FlxColliderUtil
 		if (!checkForPenetration(a, b))
 			return result.set(0, 0);
 		
-		final allowX = FlxG.collision.checkCollisionEdgesX(a, b);
-		final allowY = FlxG.collision.checkCollisionEdgesY(a, b);
+		final allowX = checkCollisionEdgesX(a, b);
+		final allowY = checkCollisionEdgesY(a, b);
 		if (!allowX && !allowY)
 			return result.set(0, 0);
 		
