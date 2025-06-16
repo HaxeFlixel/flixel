@@ -7,8 +7,12 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.physics.FlxCollider;
 import flixel.system.FlxLinkedList;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPool;
+import flixel.util.FlxSpriteUtil;
+import haxe.iterators.ArrayIterator;
+import openfl.display.Graphics;
 
 typedef NotifyCallback = (IFlxCollider, IFlxCollider) -> Void;
 
@@ -28,66 +32,58 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	 */
 	public var divisions:Int = 0;
 	
-	public var rect:FlxRect;
+	public var maxItems:Int = 10;
 	
-	final listA:Array<IFlxCollider> = [];
-	final listB:Array<IFlxCollider> = [];
+	public final rect = FlxRect.get();
 	
-	var nw:Null<FlxCollisionQuadTree>;
-	var ne:Null<FlxCollisionQuadTree>;
-	var se:Null<FlxCollisionQuadTree>;
-	var sw:Null<FlxCollisionQuadTree>;
+	var data:QuadTreeData = LEAF([]);
 	
-	overload public static inline extern function executeOnce(x, y, width, height, divisions, objectA, objectB, notifier, processer)
+	static function executeOnceHelper(x, y, width, height, divisions, maxItems, objectA, objectB, ?notifier, ?processer)
 	{
-		final quad = get(x, y, width, height, divisions);
+		final quad = get(x, y, width, height, divisions, maxItems);
 		final result = quad.loadAndExecute(objectA, objectB, notifier, processer);
 		quad.put();
 		return result;
 	}
 	
-	overload public static inline extern function executeOnce(rect, divisions, objectA, objectB, notifier, processer)
+	overload public static inline extern function executeOnce(x:Float, y:Float, width:Float, height:Float, divisions, maxItems, objectA, objectB, ?notifier, ?processer)
 	{
-		return executeOnce(rect.x, rect.y, rect.width, rect.height, divisions, objectA, objectB, notifier, processer);
+		return executeOnceHelper(x, y, width, height, divisions, maxItems, objectA, objectB, notifier, processer);
 	}
 	
-	overload public static inline extern function get(x, y, width, height, divisions)
+	overload public static inline extern function executeOnce(rect:FlxRect, divisions, maxItems, objectA, objectB, ?notifier, ?processer)
 	{
-		return pool.get().reset(x, y, width, height, divisions);
+		return executeOnce(rect.x, rect.y, rect.width, rect.height, divisions, maxItems, objectA, objectB, notifier, processer);
 	}
 	
-	overload public static inline extern function get(rect:FlxRect, divisions:Int)
+	overload public static inline extern function get(x, y, width, height, divisions, maxItems)
 	{
-		return get(rect.x, rect.y, rect.width, rect.height, divisions);
+		return pool.get().reset(x, y, width, height, divisions, maxItems);
 	}
 	
-	overload static inline extern function getSub(x, y, width, height, parent)
+	overload public static inline extern function get(rect:FlxRect, divisions:Int, maxItems:Int)
 	{
-		return pool.get().resetSub(x, y, width, height, parent);
+		return get(rect.x, rect.y, rect.width, rect.height, divisions, maxItems);
 	}
 	
-	overload static inline extern function getSub(rect:FlxRect, parent)
+	
+	overload public static inline extern function get()
 	{
-		return getSub(rect.x, rect.y, rect.width, rect.height, parent);
+		return get(0, 0, 0, 0, 0, 0);
 	}
 	
 	function new() {}
 	
-	public function reset(x:Float, y:Float, width:Float, height:Float, divisions:Int)
+	public function reset(x:Float, y:Float, width:Float, height:Float, divisions:Int, maxItems:Int)
 	{
 		this.divisions = divisions;
+		this.maxItems = maxItems;
 		
-		rect = FlxRect.get(x, y, width, height);
+		rect.set(x, y, width, height);
 		
-		listA.resize(0);
-		listB.resize(0);
+		destroy();
 		
 		return this;
-	}
-	
-	public function resetSub(x:Float, y:Float, width:Float, height:Float, parent:FlxCollisionQuadTree)
-	{
-		return reset(x, y, width, height, parent.divisions - 1);
 	}
 	
 	/**
@@ -95,18 +91,34 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	 */
 	public function destroy():Void
 	{
-		listA.resize(0);
-		listB.resize(0);
-		
-		nw = FlxDestroyUtil.destroy(nw);
-		ne = FlxDestroyUtil.destroy(ne);
-		sw = FlxDestroyUtil.destroy(sw);
-		se = FlxDestroyUtil.destroy(se);
+		switch data
+		{
+			case LEAF(items):
+				items.resize(0);
+			case BRANCH(children):
+				children.destroy();
+				data = LEAF([]);
+		}
 	}
 	
 	public function put()
 	{
 		pool.put(this);
+	}
+	
+	public function getCount():Int
+	{
+		return switch data
+		{
+			case LEAF(items): items.length;
+			case BRANCH(children):
+				var count = 0;
+				
+				for (child in children)
+					count += child.getCount();
+				
+				return count;
+		}
 	}
 	
 	/**
@@ -123,18 +135,19 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	 *                           This will return true if the notifyCallback should be called.
 	 * @return  Whether or not any overlaps were found.
 	 */
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
 	public function loadAndExecute(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifier:NotifyCallback, ?processer:ProcessCallback):Bool
 	{
-		load(objectOrGroup1, objectOrGroup2);
-		return execute(objectOrGroup2 != null, notifier, processer);
+		add(objectOrGroup1);
+		if (objectOrGroup2 != null && objectOrGroup2 == objectOrGroup1)
+		{
+			add(objectOrGroup2);
+			return execute(objectOrGroup1, notifier, processer);
+		}
+		return execute(objectOrGroup1, notifier, processer);
 	}
 	
-	function load(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic):Void
-	{
-		add(objectOrGroup1, true);
-		if (objectOrGroup2 != null && objectOrGroup2 != objectOrGroup1)
-			add(objectOrGroup2, false);
-	}
+	
 	
 	/**
 	 * Call this function to add an object to the root of the tree.
@@ -144,7 +157,7 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	 * @param   list   A int flag indicating the list to which you want to add the objects.  Options are A_LIST and B_LIST.
 	 */
 	@:access(flixel.group.FlxTypedGroup.resolveGroup)
-	function add(basic:FlxBasic, listA:Bool):Void
+	public function add(basic:FlxBasic):Void
 	{
 		final group = FlxTypedGroup.resolveGroup(basic);
 		if (group != null)
@@ -152,7 +165,7 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 			for (member in group.members)
 			{
 				if (member != null && member.exists)
-					add(member, listA);
+					add(member);
 			}
 		}
 		else if (basic is IFlxCollider)
@@ -160,7 +173,7 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 			final collider = (cast basic : IFlxCollider).getCollider();
 			if (basic.exists && collider.allowCollisions != NONE)
 			{
-				addCollider(cast basic, collider, listA);
+				addCollider(cast basic);
 			}
 		}
 		else
@@ -173,111 +186,132 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	 * Internal function for recursively navigating and creating the tree
 	 * while adding objects to the appropriate nodes.
 	 */
-	function addCollider(object:IFlxCollider, collider:FlxCollider, isA:Bool):Void
+	function addCollider(object:IFlxCollider):Void
 	{
-		final bounds = collider.bounds;
-		// If this quad (not its children) lies entirely inside this object, add it here
-		if (divisions > 0 || bounds.contains(rect))
-		{
-			(isA ? listA : listB).push(object);
+		final bounds = object.getCollider().bounds;
+		if (!rect.overlaps(bounds))
 			return;
-		}
 		
-		final quadrant = FlxRect.get();
-		
-		getQuadrant(false, false, quadrant);
-		if (quadrant.overlaps(bounds))
+		switch data
 		{
-			if (nw == null)
-				nw = getSub(quadrant, this);
+			case LEAF(items):
+				items.push(object);
 				
-			nw.addCollider(object, collider, isA);
-		}
-		
-		getQuadrant(true, false, quadrant);
-		if (quadrant.overlaps(bounds))
-		{
-			if (ne == null)
-				ne = getSub(quadrant, this);
+				if (items.length > maxItems && divisions > 0)
+				{
+					final children = new ChildTrees(this);
+					for (item in items)
+					{
+						for (child in children.iterator())
+							child.addCollider(item);
+					}
+					data = BRANCH(children);
+				}
 				
-			ne.addCollider(object, collider, isA);
-		}
-		
-		getQuadrant(false, true, quadrant);
-		if (quadrant.overlaps(bounds))
-		{
-			if (sw == null)
-				sw = getSub(quadrant, this);
+			case BRANCH(children):
 				
-			sw.addCollider(object, collider, isA);
+				for (child in children)
+					child.addCollider(object);
 		}
-		
-		getQuadrant(true, true, quadrant);
-		if (quadrant.overlaps(bounds))
-		{
-			if (se == null)
-				se = getSub(quadrant, this);
-				
-			se.addCollider(object, collider, isA);
-		}
-		
-		quadrant.put();
 	}
 	
-	function execute(useBothLists:Bool, notifier:NotifyCallback, processer:ProcessCallback):Bool
+	static var noNotify = (a, b)->{} ;
+	static var noProcess = (a, b)->true;
+	
+	public function execute(objectOrGroup:FlxBasic, ?notifier:NotifyCallback, ?processer:ProcessCallback):Bool
 	{
-		var processed = false;
+		final noCallback = notifier == null && execute == null;
 		
-		if (useBothLists)
-		{
-			for (a in 0...listA.length)
-			{
-				for (b in 0...listB.length)
-				{
-					if (process(listA[a], listB[b], notifier, processer))
-						processed = true;
-				}
-			}
-		}
-		else
-		{
-			for (a in 0...listA.length)
-			{
-				for (b in a...listA.length)
-				{
-					if (process(listA[a], listA[b], notifier, processer))
-						processed = true;
-				}
-			}
-		}
+		if (notifier == null)
+			notifier = noNotify;
 		
-		// Advance through the tree by calling overlap on each child
-		if (nw != null && nw.execute(useBothLists, notifier, processer))
-			processed = true;
-			
-		if (ne != null && ne.execute(useBothLists, notifier, processer))
-			processed = true;
-			
-		if (se != null && se.execute(useBothLists, notifier, processer))
-			processed = true;
-			
-		if (sw != null && sw.execute(useBothLists, notifier, processer))
-			processed = true;
-			
-		return processed;
+		if (processer == null)
+			processer = noProcess;
+		
+		return executeHelper(objectOrGroup, [], notifier, processer, noCallback);
 	}
 	
-	function process(a:IFlxCollider, b:IFlxCollider, notifier:Null<NotifyCallback>, processer:Null<ProcessCallback>):Bool
+	@:access(flixel.group.FlxTypedGroup.resolveGroup)
+	function executeHelper(basic:FlxBasic, exclude:Array<IFlxCollider>, notifier:NotifyCallback, processer:ProcessCallback, stopAtFirst:Bool):Bool
 	{
-		if (a.getCollider().bounds.overlaps(b.getCollider().bounds) && (processer == null || processer(a, b)))
+		final group = FlxTypedGroup.resolveGroup(basic);
+		if (group != null)
 		{
-			if (notifier != null)
-				notifier(a, b);
-				
-			return true;
+			var found = false;
+			for (member in group.members)
+			{
+				if (member != null && member.exists && executeHelper(member, exclude, notifier, processer, stopAtFirst))
+				{
+					if (stopAtFirst)
+						return true;
+					
+					found = true;
+				}
+			}
+			return found;
+		}
+		
+		if (basic is IFlxCollider)
+		{
+			// add collider to excludes, otherwise each impact will dispatch twice
+			exclude.push(cast basic);
+			return executeColliderHelper(cast basic, exclude.copy(), notifier, processer, stopAtFirst);
 		}
 		
 		return false;
+	}
+	
+	public function executeCollider(object:IFlxCollider, notifier:NotifyCallback, processer:ProcessCallback, stopAtFirst:Bool):Bool
+	{
+		return executeColliderHelper(object, [], notifier, processer, stopAtFirst);
+	}
+	
+	function executeColliderHelper(object:IFlxCollider, checked:Array<IFlxCollider>, notifier:NotifyCallback, processer:ProcessCallback, stopAtFirst:Bool):Bool
+	{
+		switch data
+		{
+			case LEAF(items):
+				final b = object.getCollider().bounds;
+				
+				if (!b.overlaps(rect))
+					return false;
+				
+				var found = false;
+				for (item in items)
+				{
+					if (checked.contains(item) || item == object)
+						continue;
+					
+					checked.push(item);
+					final a = item.getCollider().bounds;
+					final overlaps = a.overlaps(b);
+					if (a.overlaps(b) && processer(object, item))
+					{
+						notifier(object, item);
+						if (stopAtFirst)
+							return true;
+						
+						found = true;
+					}
+				}
+				return found;
+				
+			case BRANCH(children):
+				
+				var found = false;
+				for (child in children.iterator())
+				{
+					if (child.executeColliderHelper(object, checked, notifier, processer, stopAtFirst))
+					{
+						if (stopAtFirst)
+							return true;
+						
+						found = true;
+					}
+				}
+				
+				return found;
+		}
 	}
 	
 	function getQuadrant(up:Bool, left:Bool, result:FlxRect)
@@ -288,10 +322,143 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 		if (up && left)
 			result.set(rect.x, rect.y, halfX, halfY);
 		else if (up && !left)
-			result.set(rect.x + halfX, rect.y, halfX, rect.height);
+			result.set(rect.x + halfX, rect.y, halfX, halfY);
 		else if (!up && left)
-			result.set(rect.x, rect.y + halfY, rect.width, halfY);
+			result.set(rect.x, rect.y + halfY, halfX, halfY);
 		else if (!up && !left)
 			result.set(rect.x + halfX, rect.y + halfY, halfX, halfY);
+	}
+	
+	public function drawDebugOnCamera(camera:FlxCamera)
+	{
+		if (!camera.visible || !camera.exists)
+			return;
+
+		final gfx = beginDrawDebug(camera);
+		drawDebugHelper(gfx, -camera.viewLeft, -camera.viewTop);
+		endDrawDebug(camera);
+	}
+	
+	function drawDebugHelper(gfx:Graphics, offsetX:Float, offsetY:Float)
+	{
+		// fill static graphics object with square shape
+		// gfx.lineStyle(0.1, 0xFF00ff00, 1);
+		final color:FlxColor = switch divisions
+		{
+			case 0: 0xFFff00ff;
+			case 1: 0xFFff0000;
+			case 2: 0xFFff8000;
+			case 3: 0xFFffff00;
+			case 4: 0xFF00ff00;
+			case 5: 0xFF0000ff;
+			case _: 0xFF800080;
+		}
+		
+		switch data
+		{
+			case BRANCH(children):
+				
+				if (color.alpha > 0)
+				{
+					gfx.beginFill(color, 1);
+					gfx.drawRect(rect.x + offsetX, rect.y + (rect.height * 0.5) + offsetY, rect.width, 1.0);
+					gfx.drawRect(rect.x + (rect.width * 0.5) + offsetX, rect.y + offsetY, 1, rect.height);
+					gfx.endFill();
+				}
+				
+				for (child in children)
+					child.drawDebugHelper(gfx, offsetX, offsetY);
+				
+			case LEAF(items):
+		}
+	}
+	
+	inline function beginDrawDebug(camera:FlxCamera):Graphics
+	{
+		if (FlxG.renderBlit)
+		{
+			FlxSpriteUtil.flashGfx.clear();
+			return FlxSpriteUtil.flashGfx;
+		}
+		else
+		{
+			return camera.debugLayer.graphics;
+		}
+	}
+
+	inline function endDrawDebug(camera:FlxCamera)
+	{
+		if (FlxG.renderBlit)
+			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+	}
+}
+
+enum abstract Quadrant(Int)
+{
+	static public function iterator():Iterator<Quadrant>
+	{
+		return cast 0...4;
+	}
+	
+	var NW = 0;
+	var NE = 1;
+	var SE = 2;
+	var SW = 3;
+}
+
+enum QuadTreeData
+{
+	LEAF(items:Array<IFlxCollider>);
+	BRANCH(children:ChildTrees);
+}
+
+abstract ChildTrees(Array<FlxCollisionQuadTree>)
+{
+	public var nw(get, never):FlxCollisionQuadTree;
+	public var ne(get, never):FlxCollisionQuadTree;
+	public var se(get, never):FlxCollisionQuadTree;
+	public var sw(get, never):FlxCollisionQuadTree;
+	inline function get_nw() return this[(cast NW:Int)];
+	inline function get_ne() return this[(cast NE:Int)];
+	inline function get_se() return this[(cast SE:Int)];
+	inline function get_sw() return this[(cast SW:Int)];
+	
+	public function new (parent:FlxCollisionQuadTree)
+	{
+		this = [];
+		for (i in Quadrant.iterator())
+			this.push(createQuadrant(parent, i));
+	}
+	
+	public function destroy()
+	{
+		for (i in this)
+			i.destroy();
+		
+		this.resize(0);
+	}
+	
+	function createQuadrant(parent:FlxCollisionQuadTree, quadrant:Quadrant)
+	{
+		final rect = parent.rect;
+		final halfX = rect.width * 0.5;
+		final halfY = rect.height * 0.5;
+		
+		return switch quadrant
+		{
+			case NW:
+				FlxCollisionQuadTree.get(rect.x, rect.y, halfX, halfY, parent.divisions - 1, parent.maxItems);
+			case NE:
+				FlxCollisionQuadTree.get(rect.x + halfX, rect.y, halfX, halfY, parent.divisions - 1, parent.maxItems);
+			case SE:
+				FlxCollisionQuadTree.get(rect.x + halfX, rect.y + halfY, halfX, halfY, parent.divisions - 1, parent.maxItems);
+			case SW:
+				FlxCollisionQuadTree.get(rect.x, rect.y + halfY, halfX, halfY, parent.divisions - 1, parent.maxItems);
+		}
+	}
+	
+	public function iterator()
+	{
+		return this.iterator();
 	}
 }

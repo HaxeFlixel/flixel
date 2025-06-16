@@ -73,9 +73,10 @@ class CollisionFrontEnd
 		return overlapHelper(FlxG.state, null, notify, process);
 	}
 	
-	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, ?process:Null<(TA, TB)->Bool>)
+	function overlapHelper<TA:FlxObject, TB:FlxObject>(a:FlxBasic, b:Null<FlxBasic>, notify:Null<(TA, TB)->Void>, process:Null<(TA, TB)->Bool>)
 	{
-		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, a, b, cast notify, cast process);
+		// TODO: 
+		return FlxCollisionQuadTree.executeOnce(FlxG.worldBounds, FlxG.worldDivisions, 10, a, b, cast notify, cast process);
 	}
 	
 	/**
@@ -126,35 +127,35 @@ class CollisionFrontEnd
 			
 			final overlap = a.computeCollisionOverlap(b, maxOverlap);
 			
-			
-			if (overlap.isZero())
-				return false;
-			
-			final negativeOverlap = overlap.copyTo(overlapInverseHelperPoint);
-			
-			colliderA.onCollide.dispatch(b, overlap);
-			colliderB.onCollide.dispatch(a, negativeOverlap);
-			
-			// seprate x
-			if (overlap.x != 0)
+			if (!overlap.isZero())
 			{
-				updateTouchingFlagsXHelper(colliderA, colliderB);
-				separateXHelper(colliderA, colliderB, overlap.x);
+				final negativeOverlap = overlap.copyTo(overlapInverseHelperPoint);
+				
+				colliderA.onCollide.dispatch(b, overlap);
+				colliderB.onCollide.dispatch(a, negativeOverlap);
+				
+				// seprate x
+				if (overlap.x != 0)
+				{
+					updateTouchingFlagsXHelper(colliderA, colliderB);
+					separateXHelper(colliderA, colliderB, overlap.x);
+				}
+				
+				// seprate y
+				if (overlap.y != 0)
+				{
+					updateTouchingFlagsYHelper(colliderA, colliderB);
+					separateYHelper(colliderA, colliderB, overlap.y);
+				}
+				
+				updateObjectFields(a, colliderA);
+				updateObjectFields(b, colliderB);
+				
+				colliderA.onSeparate.dispatch(b, overlap);
+				colliderB.onSeparate.dispatch(a, negativeOverlap);
+				negativeOverlap.put();
 			}
-			
-			// seprate y
-			if (overlap.y != 0)
-			{
-				updateTouchingFlagsYHelper(colliderA, colliderB);
-				separateYHelper(colliderA, colliderB, overlap.y);
-			}
-			
-			updateObjectFields(a, colliderA);
-			updateObjectFields(b, colliderB);
-			
-			colliderA.onSeparate.dispatch(b, overlap);
-			colliderB.onSeparate.dispatch(a, negativeOverlap);
-			negativeOverlap.put();
+			overlap.put();
 			
 			return true;
 		// }
