@@ -104,6 +104,10 @@ class FlxCollider
 	
 	public var height(get, set):Float;
 	
+	public var halfWidth(get, never):Float;
+	
+	public var halfHeight(get, never):Float;
+	
 	public var centerX(get, never):Float;
 	
 	public var centerY(get, never):Float;
@@ -125,18 +129,15 @@ class FlxCollider
 	/** Whether this collider will update its position, velocity and acceleration */
 	public var moves:Bool;
 	
-	public var type:FlxColliderType;
+	public var type:FlxColliderType = SHAPE(AABB);
 	
 	/**
 	 * Creates a new collider
 	 * 
 	 * @param   type  Defaults to `SHAPE(AABB)`
 	 */
-	public function new (?type:FlxColliderType)
+	public function new ()
 	{
-		if (type == null)
-			type = SHAPE(AABB);
-		this.type = type;
 	}
 	
 	public function destroy()
@@ -246,18 +247,32 @@ class FlxCollider
 		return rect;
 	}
 	
+	/** The distance this collider has moved this frame */
+	public inline function getDelta(?result:FlxPoint):FlxPoint
+	{
+		return result == null ? FlxPoint.get(deltaX, deltaY) : result.set(deltaX, deltaY);
+	}
+	
+	/** The center of this collider, using the half width and height */
+	public inline function getCenter(?result:FlxPoint):FlxPoint
+	{
+		return result == null ? FlxPoint.get(centerX, centerY) : result.set(centerX, centerY);
+	}
+	
 	inline function get_x():Float { return bounds.x; }
 	inline function get_y():Float { return bounds.y; }
 	inline function get_width():Float { return bounds.width; }
 	inline function get_height():Float { return bounds.height; }
+	inline function get_halfWidth():Float { return bounds.width * 0.5; }
+	inline function get_halfHeight():Float { return bounds.height * 0.5; }
 	
 	inline function set_x(value:Float):Float { return bounds.x = value; }
 	inline function set_y(value:Float):Float { return bounds.y = value; }
 	inline function set_width(value:Float):Float { return bounds.width = value; }
 	inline function set_height(value:Float):Float { return bounds.height = value; }
 	
-	inline function get_centerX():Float { return bounds.x + bounds.width * 0.5; }
-	inline function get_centerY():Float { return bounds.y + bounds.height * 0.5; }
+	inline function get_centerX():Float { return bounds.x + halfWidth; }
+	inline function get_centerY():Float { return bounds.y + halfHeight; }
 	inline function get_left():Float { return bounds.left; }
 	inline function get_right():Float { return bounds.right; }
 	inline function get_top():Float { return bounds.top; }
