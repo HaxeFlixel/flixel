@@ -129,8 +129,8 @@ class FlxTileSlopeUtil
 		if (result == null)
 			result = FlxPoint.get();
 		
-		final allowX = FlxG.collision.checkCollisionEdgesX(tile, object);
-		final allowY = FlxG.collision.checkCollisionEdgesY(tile, object);
+		final allowX = FlxColliderUtil.checkCollisionEdgesX(tile, object);
+		final allowY = FlxColliderUtil.checkCollisionEdgesY(tile, object);
 		if (!allowX && !allowY)
 			return result.set(0, 0);
 		
@@ -172,14 +172,14 @@ class FlxTileSlopeUtil
 	
 	static function checkHitSolidWallX(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges)
 	{
-		final solidCollisions = edges.and(FlxG.collision.getCollisionEdgesX(tile, object));
+		final solidCollisions = edges.and(FlxColliderUtil.getCollisionEdgesX(tile, object));
 		return (solidCollisions.right && object.last.x >= tile.x + tile.width)
 			|| (solidCollisions.left && object.last.x + object.width <= tile.x);
 	}
 	
 	static function checkHitSolidWallY(tile:FlxCollider, object:FlxCollider, edges:FlxSlopeEdges)
 	{
-		final solidCollisions = edges.and(FlxG.collision.getCollisionEdgesY(tile, object));
+		final solidCollisions = edges.and(FlxColliderUtil.getCollisionEdgesY(tile, object));
 		return (solidCollisions.down && object.last.y >= tile.y + tile.height)
 			|| (solidCollisions.up && object.last.y + object.height <= tile.y);
 	}
@@ -245,10 +245,10 @@ class FlxTileSlopeUtil
 		// final slope = edges.getSlope(grade);
 		// final b = tile.y + edges.getYIntercept(grade) * tile.height;
 		// final isInTile = (object.x < tile.x + tile.width && object.x + object.width > tile.x); 
-		// if (glueDownVelocity > 0 && isInTile && FlxG.collision.getCollisionEdgesY(tile, object).up)
+		// if (glueDownVelocity > 0 && isInTile && FlxColliderUtil.getCollisionEdgesY(tile, object).up)
 		// if (glueDownVelocity > 0 && isInTile && overlap.y < 0)
 		// if (isOnSlope(tile, object))
-		if (FlxG.collision.getCollisionEdgesY(tile, object).has(UP))
+		if (FlxColliderUtil.getCollisionEdgesY(tile, object).has(UP))
 		{
 			final slope = edges.getSlope(grade);
 			final yInt = edges.getYIntercept(grade) * tile.height;
