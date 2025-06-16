@@ -139,7 +139,7 @@ class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 	public function loadAndExecute(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifier:NotifyCallback, ?processer:ProcessCallback):Bool
 	{
 		add(objectOrGroup1);
-		if (objectOrGroup2 != null && objectOrGroup2 == objectOrGroup1)
+		if (objectOrGroup2 != null || objectOrGroup2 == objectOrGroup1)
 		{
 			add(objectOrGroup2);
 			return execute(objectOrGroup1, notifier, processer);
