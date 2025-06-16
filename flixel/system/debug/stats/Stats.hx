@@ -300,7 +300,7 @@ class Stats extends Window
 		
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
 			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") 
-			+ (FlxQuadTree.pool.length + FlxCollisionQuadTree.pool.length) + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
+			+ (FlxQuadTree._NUM_CACHED_QUAD_TREES + FlxCollisionQuadTree.pool.length) + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
 			;
 	}
 

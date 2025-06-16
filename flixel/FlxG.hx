@@ -481,7 +481,17 @@ class FlxG
 	static function overlapHelper(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic, ?notifier:Dynamic->Dynamic->Void,
 			?processser:Dynamic->Dynamic->Bool):Bool
 	{
-		return FlxQuadTree.executeOnce(worldBounds, worldDivisions, objectOrGroup1, objectOrGroup2, notifier, processser);
+		if (objectOrGroup1 == null)
+			objectOrGroup1 = state;
+		if (objectOrGroup2 == objectOrGroup1)
+			objectOrGroup2 = null;
+
+		FlxQuadTree.divisions = worldDivisions;
+		final quadTree = FlxQuadTree.recycle(worldBounds.x, worldBounds.y, worldBounds.width, worldBounds.height);
+		quadTree.load(objectOrGroup1, objectOrGroup2, notifier, processser);
+		final result:Bool = quadTree.execute();
+		quadTree.destroy();
+		return result;
 	}
 
 	/**
