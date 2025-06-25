@@ -810,6 +810,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		return blend = Value;
 	}
 
+	override function set_shader(Value:FlxShader):FlxShader
+	{
+		if (exists && shader != Value)
+			transformChildren(shaderTransform, Value);
+		return shader = Value;
+	}
+
 	override function set_clipRect(rect:FlxRect):FlxRect
 	{
 		if (exists)
@@ -1044,6 +1051,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 
 	inline function blendTransform(Sprite:FlxSprite, Blend:BlendMode)
 		Sprite.blend = Blend;
+
+	inline function shaderTransform(Sprite:FlxSprite, Shader:FlxShader)
+		Sprite.shader = Shader;
 
 	inline function immovableTransform(Sprite:FlxSprite, Immovable:Bool)
 		Sprite.immovable = Immovable;

@@ -288,7 +288,7 @@ class FlxSprite extends FlxObject
 	 * GLSL shader for this sprite. Avoid changing it frequently as this is a costly operation.
 	 * @since 4.1.0
 	 */
-	public var shader:FlxShader;
+	public var shader(default, set):FlxShader;
 
 	/**
 	 * The actual frame used for sprite rendering
@@ -1575,6 +1575,12 @@ class FlxSprite extends FlxObject
 	function set_blend(Value:BlendMode):BlendMode
 	{
 		return blend = Value;
+	}
+
+	@:noCompletion
+	function set_shader(Value:FlxShader):FlxShader
+	{
+		return shader = Value;
 	}
 
 	/**
