@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         haxe-version: ["4.2.5", "4.3.6"]
-        target: [html5, hl, neko, flash, cpp]
+        target: [html5, hl, flash, cpp]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:

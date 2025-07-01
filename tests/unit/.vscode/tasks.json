@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "hxml",
-			"file": "test-neko.hxml",
+			"file": "test-cpp.hxml",
 			"group": {
 				"kind": "build",
 				"isDefault": true
