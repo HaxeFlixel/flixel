@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.system.debug.FlxDebugDrawGraphic;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -396,25 +397,18 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		return result;
 	}
 	
-	inline function drawNode(gfx:Graphics, node:FlxPoint, size:Int, color:FlxColor)
+	inline function drawNode(gfx:FlxDebugDrawGraphic, node:FlxPoint, size:Int, color:FlxColor)
 	{
-		gfx.beginFill(color.rgb, color.alphaFloat);
-		gfx.lineStyle();
-		final offset = Math.floor(size * 0.5);
-		gfx.drawRect(node.x - offset, node.y - offset, size, size);
-		gfx.endFill();
+		final offset = size * 0.5;
+		gfx.drawRect(node.x - offset, node.y - offset, size, size, color);
 	}
 	
-	function drawLine(gfx:Graphics, node1:FlxPoint, node2:FlxPoint)
+	function drawLine(gfx:FlxDebugDrawGraphic, p1:FlxPoint, p2:FlxPoint)
 	{
-		// then draw a line to the next node
 		final color = debugDrawData.lineColor;
 		final size = debugDrawData.lineSize;
-		gfx.lineStyle(size, color.rgb, color.alphaFloat);
-		
-		final lineOffset = debugDrawData.lineSize / 2;
-		gfx.moveTo(node1.x + lineOffset, node1.y + lineOffset);
-		gfx.lineTo(node2.x + lineOffset, node2.y + lineOffset);
+		final half = debugDrawData.lineSize / 2;
+		gfx.drawLine(p1.x + half, p1.y + half, p2.x + half, p2.y + half, color, size);
 	}
 	#end
 }
