@@ -24,6 +24,13 @@ typedef FlickerTweenOptions =
 	@:optional var ease:EaseFunction;
 	
 	/**
+	 * Optional set framerate for this tween to update at.
+	 * This also affects how often `onUpdate` is called.
+	 * Not to be confused with `period` for flickering.
+	 */
+	@:optional var framerate:Float;
+	
+	/**
 	 * Optional start callback function.
 	 */
 	@:optional var onStart:TweenCallback;
