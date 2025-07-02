@@ -683,7 +683,6 @@ class FlxGame extends Sprite
 
 		updateInput();
 		
-		// not sure if this will cause issues, but it did cause `key` and `mouse` input checks to run twice if this was above `updateInput()`.
 		FlxG.signals.preUpdate.dispatch();
 
 		#if FLX_SOUND_SYSTEM
