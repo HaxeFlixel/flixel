@@ -30,7 +30,7 @@ class CameraFrontEnd
 	/**
 	 * The current (global, applies to all cameras) bgColor.
 	 */
-	public var bgColor(get, set):FlxColor;
+	public var bgColor(default, set):FlxColor;
 
 	/** @since 4.2.0 */
 	public var cameraAdded(default, null):FlxTypedSignal<FlxCamera->Void> = new FlxTypedSignal<FlxCamera->Void>();
@@ -362,12 +362,7 @@ class CameraFrontEnd
 			camera.onResize();
 		}
 	}
-
-	function get_bgColor():FlxColor
-	{
-		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
-	}
-
+	
 	function set_bgColor(Color:FlxColor):FlxColor
 	{
 		for (camera in list)
