@@ -1255,6 +1255,53 @@ class FlxObject extends FlxBasic
 			return;
 
 		var rect = getBoundingBox(camera);
+		#if !flash
+		var viewLeft = camera.viewMarginLeft - 1;
+		var viewRight = camera.viewMarginRight + 1;
+		var viewTop = camera.viewMarginTop - 1;
+		var viewBottom = camera.viewMarginBottom + 1;
+		
+		// clamp the rect to the bounds of the camera
+		// this is neccesary to avoid big bitmaps when zoomed in
+		if (rect.x < viewLeft)
+		{
+			rect.width -= (viewLeft - rect.x);
+			rect.x = viewLeft;
+		}
+		else if (rect.x > viewRight)
+		{
+			rect.x = viewRight;
+			rect.width = 0;
+		}
+		
+		if (rect.right > viewRight)
+		{
+			rect.width = viewRight - rect.x;
+		}
+		
+		if (rect.y < viewTop)
+		{
+			rect.height -= (viewTop - rect.y);
+			rect.y = viewTop;
+		}
+		else if (rect.y > viewBottom)
+		{
+			rect.y = viewBottom;
+			rect.height = 0;
+		}
+		
+		if (rect.bottom > viewBottom)
+		{
+			rect.height = viewBottom - rect.y;
+		}
+		
+		rect.width = Math.max(0, rect.width);
+		rect.height = Math.max(0, rect.height);
+		
+		if (rect.isEmpty)
+			return;
+		#end
+		
 		var gfx:Graphics = beginDrawDebug(camera);
 		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
 		endDrawDebug(camera);
@@ -1285,7 +1332,7 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75);
+		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
