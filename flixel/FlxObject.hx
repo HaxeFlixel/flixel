@@ -1256,10 +1256,10 @@ class FlxObject extends FlxBasic
 
 		var rect = getBoundingBox(camera);
 		#if !flash
-		var viewLeft = camera.viewMarginLeft - 1;
-		var viewRight = camera.viewMarginRight + 1;
-		var viewTop = camera.viewMarginTop - 1;
-		var viewBottom = camera.viewMarginBottom + 1;
+		var viewLeft = camera.viewMarginLeft - 2;
+		var viewRight = camera.viewMarginRight + 2;
+		var viewTop = camera.viewMarginTop - 2;
+		var viewBottom = camera.viewMarginBottom + 2;
 		
 		// clamp the rect to the bounds of the camera
 		// this is neccesary to avoid big bitmaps when zoomed in
