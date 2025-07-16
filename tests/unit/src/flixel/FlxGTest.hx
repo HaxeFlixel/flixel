@@ -1,5 +1,7 @@
 package flixel;
 
+import flixel.math.FlxPoint;
+import haxe.PosInfos;
 import massive.munit.Assert;
 
 @:access(flixel.FlxG)
@@ -103,5 +105,67 @@ class FlxGTest extends FlxTest
 	function testDefaultHeight():Void
 	{
 		Assert.areEqual(480, FlxG.height);
+	}
+	
+	@Test // #3329
+	function testCenterGraphic()
+	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
+		final sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
+		sprite.scale.set(2, 4);
+		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, X);
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 0);
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, Y);
+		assertCenter(sprite, 0, 240 - 20 - (-10 + 10));
+		
+		sprite.setPosition(0, 0);
+		FlxG.centerGraphic(sprite, XY);
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+		
+		sprite.setPosition(1640, 1480);
+		FlxG.centerGraphic(sprite);
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+	}
+	
+	@Test // #3329
+	function testCenterHitbox()
+	{
+		Assert.areEqual(FlxG.width, 640);
+		Assert.areEqual(FlxG.height, 480);
+		
+		final object = new FlxObject(0, 0, 10, 10);
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, X);
+		assertCenter(object, 320 - 5, 0);
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, Y);
+		assertCenter(object, 0, 240 - 5);
+		
+		object.setPosition(0, 0);
+		FlxG.centerHitbox(object, XY);
+		assertCenter(object, 320 - 5, 240 - 5);
+		
+		object.setPosition(1640, 1480);
+		FlxG.centerHitbox(object);
+		assertCenter(object, 320 - 5, 240 - 5);
+	}
+	
+	function assertCenter(object:FlxObject, expectedX:Float, expectedY:Float, ?info:PosInfos)
+	{
+		FlxAssert.areNear(object.x, expectedX, info);
+		FlxAssert.areNear(object.y, expectedY, info);
 	}
 }

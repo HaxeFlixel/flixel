@@ -20,6 +20,7 @@ import flixel.system.frontEnds.VCRFrontEnd;
 import flixel.system.frontEnds.WatchFrontEnd;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.RatioScaleMode;
+import flixel.util.FlxAxes;
 import flixel.util.FlxCollision;
 import flixel.util.FlxSave;
 import flixel.util.typeLimit.NextState;
@@ -476,7 +477,54 @@ class FlxG
 	{
 		return overlap(objectOrGroup1, objectOrGroup2, notifyCallback, FlxObject.separate);
 	}
-
+	
+	/**
+	 * Centers `FlxSprite` by graphic size in game space, either by the x axis, y axis, or both.
+	 * 
+	 * @param   sprite  The sprite to center.
+	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered sprite for chaining.
+	 * @since 6.2.0
+	 */
+	public static function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
+	{
+		final graphicBounds = sprite.getAccurateGraphicBounds();
+		
+		if (axes.x)
+		{
+			final offset = sprite.x - graphicBounds.x;
+			sprite.x = (FlxG.width - graphicBounds.width) / 2 + offset;
+		}
+		
+		if (axes.y)
+		{
+			final offset = sprite.y - graphicBounds.y;
+			sprite.y = (FlxG.height - graphicBounds.height) / 2 + offset;
+		}
+		
+		graphicBounds.put();
+		return sprite;
+	}
+	
+	/**
+	 * Centers `FlxObject` by hitbox size in game space, either by the x axis, y axis, or both.
+	 * 
+	 * @param   object  The object to center.
+	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered object for chaining.
+	 * @since 6.2.0
+	 */
+	public static function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
+	{
+		if (axes.x)
+			object.x = (FlxG.width - object.width) / 2;
+		
+		if (axes.y)
+			object.y = (FlxG.height - object.height) / 2;
+		
+		return object;
+	}
+	
 	/**
 	 * Regular `DisplayObject`s are normally displayed over the Flixel cursor and the Flixel debugger if simply
 	 * added to `stage`. This function simplifies things by adding a `DisplayObject` directly below mouse level.

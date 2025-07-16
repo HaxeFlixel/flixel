@@ -1031,7 +1031,7 @@ class FlxObject extends FlxBasic
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
-
+	
 	/**
 	 * Returns the screen position of this object.
 	 *
@@ -1041,19 +1041,29 @@ class FlxObject extends FlxBasic
 	 */
 	public function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
+		return getScreenPositionHelper(result, camera, true);
+	}
+	
+	public function getAccurateScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
+	{
+		return getScreenPositionHelper(result, camera, false);
+	}
+	
+	public function getScreenPositionHelper(result:FlxPoint, camera:FlxCamera, honorPixelPerfect:Bool):FlxPoint
+	{
 		if (result == null)
 			result = FlxPoint.get();
-
+		
 		if (camera == null)
 			camera = getDefaultCamera();
-
+		
 		result.set(x, y);
-		if (pixelPerfectPosition)
+		if (honorPixelPerfect && pixelPerfectPosition)
 			result.floor();
-
+		
 		return result.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
 	}
-
+	
 	/**
 	 * Returns the world position of this object.
 	 * 
@@ -1173,24 +1183,19 @@ class FlxObject extends FlxBasic
 			kill();
 	}
 	#end
-
+	
 	/**
 	 * Centers this `FlxObject` on the screen, either by the x axis, y axis, or both.
-	 *
+	 * 
 	 * @param   axes   On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both. 
 	 * @return  This FlxObject for chaining
 	 */
+	@:deprecated("screenCenter is deprecated, use FlxG.centerHitbox instead")
 	public inline function screenCenter(axes:FlxAxes = XY):FlxObject
 	{
-		if (axes.x)
-			x = (FlxG.width - width) / 2;
-
-		if (axes.y)
-			y = (FlxG.height - height) / 2;
-
-		return this;
+		return FlxG.centerHitbox(this, axes);
 	}
-
+	
 	/**
 	 * Helper function to set the coordinates of this object.
 	 * Handy since it only requires one line of code.

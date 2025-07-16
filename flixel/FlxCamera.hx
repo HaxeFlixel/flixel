@@ -1874,6 +1874,53 @@ class FlxCamera extends FlxBasic
 	}
 	
 	/**
+	 * Centers `FlxSprite` by graphic size in this camera view, either by the x axis, y axis, or both.
+	 * 
+	 * @param   sprite  The sprite to center.
+	 * @param   axes    On what axes to center the sprite (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered sprite for chaining.
+	 * @since 6.2.0
+	 */
+	public function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
+	{
+		final graphicBounds = sprite.getAccurateScreenBounds(null, this);
+		
+		if (axes.x)
+		{
+			final offset = sprite.x - graphicBounds.x;
+			sprite.x = (width - graphicBounds.width) / 2 + offset;
+		}
+		
+		if (axes.y)
+		{
+			final offset = sprite.y - graphicBounds.y;
+			sprite.y = (height - graphicBounds.height) / 2 + offset;
+		}
+		
+		graphicBounds.put();
+		return sprite;
+	}
+	
+	/**
+	 * Centers `FlxObject` by hitbox size in this camera view, either by the x axis, y axis, or both.
+	 * 
+	 * @param   object  The object to center.
+	 * @param   axes    On what axes to center the object (e.g. `X`, `Y`, `XY`) - default is both.
+	 * @return  Centered object for chaining.
+	 * @since 6.2.0
+	 */
+	public function centerHitbox<T:FlxObject>(object:T, axes:FlxAxes = XY):T
+	{
+		if (axes.x)
+			object.x = scroll.x + (width - object.width) / 2;
+		
+		if (axes.y)
+			object.y = scroll.y + (height - object.height) / 2;
+		
+		return object;
+	}
+	
+	/**
 	 * The size and position of this camera's margins, via `viewMarginLeft`, `viewMarginTop`, `viewWidth`
 	 * and `viewHeight`.
 	 * @since 5.2.0

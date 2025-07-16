@@ -1289,23 +1289,31 @@ class FlxSprite extends FlxObject
 	 * @since 5.9.0
 	 */
 	public function getGraphicBounds(?rect:FlxRect):FlxRect
+	{		
+		return getGraphicBoundsHelper(rect, true);
+	}
+	
+	public function getAccurateGraphicBounds(?rect:FlxRect):FlxRect
+	{		
+		return getGraphicBoundsHelper(rect, false);
+	}
+	
+	public function getGraphicBoundsHelper(rect:FlxRect, honorPixelPerfect:Bool):FlxRect
 	{
 		if (rect == null)
 			rect = FlxRect.get();
 		
 		rect.set(x, y);
-		if (pixelPerfectPosition)
+		if (honorPixelPerfect && pixelPerfectPosition)
 			rect.floor();
 		
-		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
+		final absoluteScale = _point.set(Math.abs(scale.x), Math.abs(scale.y));
+		_scaledOrigin.set(origin.x * absoluteScale.x, origin.y * absoluteScale.y);
 		rect.x += origin.x - offset.x - _scaledOrigin.x;
 		rect.y += origin.y - offset.y - _scaledOrigin.y;
-		rect.setSize(frameWidth * scale.x, frameHeight * scale.y);
+		rect.setSize(frameWidth * absoluteScale.x, frameHeight * absoluteScale.y);
 		
-		if (angle % 360 != 0)
-			rect.getRotatedBounds(angle, _scaledOrigin, rect);
-		
-		return rect;
+		return rect.getRotatedBounds(angle, _scaledOrigin, rect);
 	}
 	
 	/**
@@ -1359,7 +1367,7 @@ class FlxSprite extends FlxObject
 	 * @return A globally aligned `FlxRect` that fully contains the input object's width and height.
 	 * @since 4.11.0
 	 */
-	override function getRotatedBounds(?newRect:FlxRect)
+	override public function getRotatedBounds(?newRect:FlxRect):FlxRect
 	{
 		if (newRect == null)
 			newRect = FlxRect.get();
@@ -1378,6 +1386,16 @@ class FlxSprite extends FlxObject
 	 */
 	public function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
 	{
+		return getScreenBoundsHelper(newRect, camera, true);
+	}
+	
+	public function getAccurateScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
+	{
+		return getScreenBoundsHelper(newRect, camera, false);
+	}
+	
+	function getScreenBoundsHelper(newRect:FlxRect, camera:FlxCamera, honorPixelPerfect:Bool):FlxRect
+	{
 		if (newRect == null)
 			newRect = FlxRect.get();
 		
@@ -1385,14 +1403,17 @@ class FlxSprite extends FlxObject
 			camera = getDefaultCamera();
 		
 		newRect.setPosition(x, y);
-		if (pixelPerfectPosition)
+		if (honorPixelPerfect && pixelPerfectPosition)
 			newRect.floor();
-		_scaledOrigin.set(origin.x * scale.x, origin.y * scale.y);
-		newRect.x += -Std.int(camera.scroll.x * scrollFactor.x) - offset.x + origin.x - _scaledOrigin.x;
-		newRect.y += -Std.int(camera.scroll.y * scrollFactor.y) - offset.y + origin.y - _scaledOrigin.y;
-		if (isPixelPerfectRender(camera))
+		
+		final absoluteScale = _point.set(Math.abs(scale.x), Math.abs(scale.y));
+		_scaledOrigin.set(origin.x * absoluteScale.x, origin.y * absoluteScale.y);
+		newRect.x += -camera.scroll.x * scrollFactor.x - offset.x + origin.x - _scaledOrigin.x;
+		newRect.y += -camera.scroll.y * scrollFactor.y - offset.y + origin.y - _scaledOrigin.y;
+		if (honorPixelPerfect && isPixelPerfectRender(camera))
 			newRect.floor();
-		newRect.setSize(frameWidth * Math.abs(scale.x), frameHeight * Math.abs(scale.y));
+		
+		newRect.setSize(frameWidth * absoluteScale.x, frameHeight * absoluteScale.y);
 		return newRect.getRotatedBounds(angle, _scaledOrigin, newRect);
 	}
 	

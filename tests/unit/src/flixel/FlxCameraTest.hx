@@ -1,6 +1,8 @@
 package flixel;
 
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import haxe.PosInfos;
 import massive.munit.Assert;
 
 @:access(flixel.system.frontEnds.CameraFrontEnd)
@@ -89,7 +91,79 @@ class FlxCameraTest extends FlxTest
 		camera.follow(new FlxObject());
 		Assert.areEqual(defaultLerp, camera.followLerp);
 	}
-
+	
+	@Test // #3329
+	function testCenterGraphic()
+	{
+		final cam = FlxG.camera;
+		cam.scroll.set(100.5, 100.5);
+		cam.zoom *= 2;
+		
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
+		final sprite = new FlxSprite();
+		sprite.makeGraphic(10, 10);
+		sprite.scrollFactor.set(2, 2);
+		sprite.origin.set(10, 10);
+		sprite.offset.set(10, 10);
+		sprite.scale.set(2, 4);
+		sprite.angle = 180;
+		sprite.pixelPerfectPosition = true;
+		sprite.pixelPerfectRender = true;
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, X);
+		assertCenter(sprite, 100.5 + 320 - 10 - (-110.5 + 10), 0);
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, Y);
+		assertCenter(sprite, 0, 100.5 + 240 - 20 - (-110.5 + 10));
+		
+		sprite.setPosition(0, 0);
+		cam.centerGraphic(sprite, XY);
+		assertCenter(sprite, 100.5 + 320 - 10 - (-110.5 + 10), 100.5 + 240 - 20 - (-110.5 + 10));
+		
+		sprite.setPosition(1640, 1480);
+		cam.centerGraphic(sprite);
+		assertCenter(sprite, 100.5 + 320 - 10 - (-110.5 + 10), 100.5 + 240 - 20 - (-110.5 + 10));
+	}
+	
+	@Test // #3329
+	function testCenterHitbox()
+	{
+		final cam = FlxG.camera;
+		cam.scroll.set(100.5, 100.5);
+		cam.zoom *= 2;
+		
+		Assert.areEqual(cam.width, 640);
+		Assert.areEqual(cam.height, 480);
+		
+		final object = new FlxObject(0, 0, 10, 10);
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, X);
+		assertCenter(object, 100.5 + 320 - 5, 0);
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, Y);
+		assertCenter(object, 0, 100.5 + 240 - 5);
+		
+		object.setPosition(0, 0);
+		cam.centerHitbox(object, XY);
+		assertCenter(object, 100.5 + 320 - 5, 100.5 + 240 - 5);
+		
+		object.setPosition(1640, 1480);
+		cam.centerHitbox(object);
+		assertCenter(object, 100.5 + 320 - 5, 100.5 + 240 - 5);
+	}
+	
+	function assertCenter(object:FlxObject, expectedX:Float, expectedY:Float, ?info:PosInfos)
+	{
+		FlxAssert.areNear(object.x, expectedX, info);
+		FlxAssert.areNear(object.y, expectedY, info);
+	}
+	
 	@Test
 	function testFadeInFadeOut()
 	{
