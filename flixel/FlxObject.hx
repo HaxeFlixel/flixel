@@ -1031,7 +1031,7 @@ class FlxObject extends FlxBasic
 	{
 		return (x + width > FlxG.worldBounds.x) && (x < FlxG.worldBounds.right) && (y + height > FlxG.worldBounds.y) && (y < FlxG.worldBounds.bottom);
 	}
-
+	
 	/**
 	 * Returns the screen position of this object.
 	 *
@@ -1041,19 +1041,29 @@ class FlxObject extends FlxBasic
 	 */
 	public function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
+		return getScreenPositionHelper(result, camera, true);
+	}
+	
+	public function getAccurateScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
+	{
+		return getScreenPositionHelper(result, camera, false);
+	}
+	
+	public function getScreenPositionHelper(result:FlxPoint, camera:FlxCamera, honorPixelPerfect:Bool):FlxPoint
+	{
 		if (result == null)
 			result = FlxPoint.get();
-
+		
 		if (camera == null)
 			camera = getDefaultCamera();
-
+		
 		result.set(x, y);
-		if (pixelPerfectPosition)
+		if (honorPixelPerfect && pixelPerfectPosition)
 			result.floor();
-
+		
 		return result.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
 	}
-
+	
 	/**
 	 * Returns the world position of this object.
 	 * 

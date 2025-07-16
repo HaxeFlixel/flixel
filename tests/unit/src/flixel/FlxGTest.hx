@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.math.FlxPoint;
+import haxe.PosInfos;
 import massive.munit.Assert;
 
 @:access(flixel.FlxG)
@@ -120,27 +121,21 @@ class FlxGTest extends FlxTest
 		sprite.angle = 180;
 		sprite.pixelPerfectPosition = true;
 		
-		function assertCenterGraphic(sprite, expectedX, expectedY)
-		{
-			FlxAssert.areNear(sprite.x, expectedX);
-			FlxAssert.areNear(sprite.y, expectedY);
-		}
-		
 		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, X);
-		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 0);
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 0);
 		
 		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, Y);
-		assertCenterGraphic(sprite, 0, 240 - 20 - (-10 + 10));
+		assertCenter(sprite, 0, 240 - 20 - (-10 + 10));
 		
 		sprite.setPosition(0, 0);
 		FlxG.centerGraphic(sprite, XY);
-		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
 		
 		sprite.setPosition(1640, 1480);
 		FlxG.centerGraphic(sprite);
-		assertCenterGraphic(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
+		assertCenter(sprite, 320 - 10 - (-10 + 10), 240 - 20 - (-10 + 10));
 	}
 	
 	@Test // #3329
@@ -151,26 +146,26 @@ class FlxGTest extends FlxTest
 		
 		final object = new FlxObject(0, 0, 10, 10);
 		
-		function assertCenterHitbox(object, expectedX, expectedY)
-		{
-			Assert.areEqual(object.x, expectedX);
-			Assert.areEqual(object.y, expectedY);
-		}
-		
 		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, X);
-		assertCenterHitbox(object, 320 - 5, 0);
+		assertCenter(object, 320 - 5, 0);
 		
 		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, Y);
-		assertCenterHitbox(object, 0, 240 - 5);
+		assertCenter(object, 0, 240 - 5);
 		
 		object.setPosition(0, 0);
 		FlxG.centerHitbox(object, XY);
-		assertCenterHitbox(object, 320 - 5, 240 - 5);
+		assertCenter(object, 320 - 5, 240 - 5);
 		
 		object.setPosition(1640, 1480);
 		FlxG.centerHitbox(object);
-		assertCenterHitbox(object, 320 - 5, 240 - 5);
+		assertCenter(object, 320 - 5, 240 - 5);
+	}
+	
+	function assertCenter(object:FlxObject, expectedX:Float, expectedY:Float, ?info:PosInfos)
+	{
+		FlxAssert.areNear(object.x, expectedX, info);
+		FlxAssert.areNear(object.y, expectedY, info);
 	}
 }

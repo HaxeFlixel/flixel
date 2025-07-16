@@ -1883,7 +1883,7 @@ class FlxCamera extends FlxBasic
 	 */
 	public function centerGraphic<T:FlxSprite>(sprite:T, axes:FlxAxes = XY):T
 	{
-		final graphicBounds = sprite.getScreenBounds(null, this);
+		final graphicBounds = sprite.getAccurateScreenBounds(null, this);
 		
 		if (axes.x)
 		{
