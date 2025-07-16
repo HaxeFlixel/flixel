@@ -572,7 +572,7 @@ class FlxSpriteUtil
 
 		if (FillColor != FlxColor.TRANSPARENT)
 		{
-			flashGfx.beginFill(FillColor.to24Bit(), FillColor.alphaFloat);
+			flashGfx.beginFill(FillColor.rgb, FillColor.alphaFloat);
 		}
 	}
 
@@ -634,7 +634,7 @@ class FlxSpriteUtil
 			if (lineStyle.miterLimit == null)
 				lineStyle.miterLimit = 3;
 
-			flashGfx.lineStyle(lineStyle.thickness, color.to24Bit(), color.alphaFloat, lineStyle.pixelHinting, lineStyle.scaleMode, lineStyle.capsStyle,
+			flashGfx.lineStyle(lineStyle.thickness, color.rgb, color.alphaFloat, lineStyle.pixelHinting, lineStyle.scaleMode, lineStyle.capsStyle,
 				lineStyle.jointStyle, lineStyle.miterLimit);
 		}
 	}

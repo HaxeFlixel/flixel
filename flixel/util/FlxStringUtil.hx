@@ -492,7 +492,7 @@ class FlxStringUtil
 		{
 			for (i in 0...ColorMap.length)
 			{
-				ColorMap[i] = ColorMap[i].to24Bit();
+				ColorMap[i] = ColorMap[i].rgb;
 			}
 		}
 
