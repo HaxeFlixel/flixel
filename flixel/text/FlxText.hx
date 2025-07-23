@@ -1307,6 +1307,8 @@ class FlxText extends FlxSprite
 			textField.sharpness = 400;
 		}
 
+		_regen = true;
+
 		return antialiasing = value;
 	}
 }
