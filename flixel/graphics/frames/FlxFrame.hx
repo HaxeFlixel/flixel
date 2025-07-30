@@ -842,7 +842,7 @@ abstract MatrixVector(Vector<Float>)
 		ty = 0;
 	}
 	
-	public inline function set(a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0)
+	public #if !hl inline #end function set(a = 1.0, b = 0.0, c = 0.0, d = 1.0, tx = 0.0, ty = 0.0)
 	{
 		set_a(a);
 		set_b(b);
