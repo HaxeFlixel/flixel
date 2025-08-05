@@ -180,7 +180,7 @@ class FlxG
 	public static var scaleMode(default, set):BaseScaleMode = new RatioScaleMode();
 
 	/**
-	 * Use this to toggle between fullscreen and normal mode. Works on CPP, Neko and Flash.
+	 * Use this to toggle between fullscreen and normal mode. Works on CPP and Flash.
 	 * You can easily toggle fullscreen with e.g.: `FlxG.fullscreen = !FlxG.fullscreen;`
 	 */
 	public static var fullscreen(get, set):Bool;
@@ -344,7 +344,7 @@ class FlxG
 	}
 
 	/**
-	 * Resizes the window. Only works on desktop targets (Neko, Windows, Linux, Mac).
+	 * Resizes the window. Only works on desktop targets (Windows, Linux, Mac).
 	 */
 	public static function resizeWindow(width:Int, height:Int):Void
 	{

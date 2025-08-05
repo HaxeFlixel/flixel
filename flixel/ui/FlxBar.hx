@@ -963,13 +963,6 @@ class FlxBar extends FlxSprite
 
 	function get_value():Float
 	{
-		#if neko
-		if (value == null)
-		{
-			value = min;
-		}
-		#end
-
 		return value;
 	}
 
