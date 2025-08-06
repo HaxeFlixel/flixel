@@ -9,6 +9,37 @@ import openfl.geom.Matrix;
  */
 class FlxMatrix extends Matrix
 {
+	public inline function isIdentity():Bool
+	{
+		return a == 1 && b == 0 && c == 0 && d == 1 && tx == 0 && ty == 0;
+	}
+	
+	/**
+	 * Skews `this` matrix, in radians.
+	 * @param	skewX	Horizontal skew in radians.
+	 * @param	skewY	Vertical skew in radians.
+	 * @return	`this` skewed matrix.
+	 */
+	public inline function skewRadians(skewX:Float, skewY:Float):FlxMatrix
+	{
+		b = Math.tan(skewY);
+
+		c = Math.tan(skewX);
+
+		return this;
+	}
+
+	/**
+	 * Skews `this` matrix, in degrees.
+	 * @param	skewY	Horizontal skew in degrees.
+	 * @param	skewX	Vertical skew in degrees.
+	 * @return	`this` skewed matrix.
+	 */
+	public inline function skewDegrees(skewX:Float, skewY:Float):FlxMatrix
+	{
+		return skewRadians(skewY * FlxAngle.TO_RAD, skewX * FlxAngle.TO_RAD);
+	}
+	
 	/**
 	 * Rotates this matrix, but takes the values of sine and cosine,
 	 * so it might be useful when you rotate multiple matrices by the same angle
