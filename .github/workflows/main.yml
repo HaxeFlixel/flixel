@@ -15,9 +15,10 @@ jobs:
         haxe-version: ["4.2.5", "4.3.6"]
         target: [html5, hl, neko, flash, cpp]
       fail-fast: false
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: "macos-13"
     steps:
-    - run: sudo apt-get update
+    # - run: sudo apt-get update
     
     - uses: actions/checkout@v3
     
@@ -27,7 +28,6 @@ jobs:
     
     - name: "Configure Haxelib"
       run: |
-        haxelib setup /home/runner/haxe/haxelib/
         haxelib install haxelib 4.0.3
         haxelib dev flixel .
     
