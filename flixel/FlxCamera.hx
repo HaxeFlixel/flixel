@@ -1660,7 +1660,7 @@ class FlxCamera extends FlxBasic
 	 * @param   Color        The color to fill with in `0xAARRGGBB` hex format.
 	 * @param   BlendAlpha   Whether to blend the alpha value or just wipe the previous contents. Default is `true`.
 	 */
-	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics):Void
+	public function fill(Color:FlxColor, BlendAlpha:Bool = true, FxAlpha:Float = 1.0, ?graphics:Graphics, force:Bool = false):Void
 	{
 		if (FlxG.renderBlit)
 		{
@@ -1676,7 +1676,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			if (FxAlpha == 0)
+			if (FxAlpha == 0 && !force)
 				return;
 
 			final targetGraphics = (graphics == null) ? canvas.graphics : graphics;
