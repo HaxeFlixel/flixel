@@ -371,6 +371,12 @@ class FlxGamepadManager implements IFlxInputManager
 		return -1;
 	}
 
+	public function addPlaybackGamepad(gamepad:FlxGamepad)
+	{
+		_gamepads[gamepad.id] = gamepad;
+		_activeGamepads.push(gamepad);
+	}
+
 	function addGamepad(Device:GameInputDevice):Void
 	{
 		if (Device == null)
