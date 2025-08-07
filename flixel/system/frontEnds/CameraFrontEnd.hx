@@ -289,7 +289,7 @@ class CameraFrontEnd
 			}
 			else
 			{
-				camera.fill(camera.bgColor.rgb, camera.useBgAlphaBlending, camera.bgColor.alphaFloat, null, camera.filtersEnabled && camera.filters != null && camera.filters.length > 0);
+				camera.fill(camera.bgColor.rgb, camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 			}
 		}
 	}
