@@ -432,6 +432,26 @@ class FlxTweenTest extends FlxTest
 		Assert.isTrue(tween3Updated);
 	}
 
+	@Test
+	function testTweenFramerate()
+	{
+		// no given tween framerate
+		var tweenUpdatesDefault:Int = 0;
+		var tweenDefault:FlxTween = FlxTween.tween(this, {value: 1000}, 2, {startDelay: 0.54321, onUpdate: function(_) tweenUpdatesDefault++});
+		step(FlxG.updateFramerate * 3); // 3 full seconds
+		Assert.areEqual(FlxG.updateFramerate * 2, tweenUpdatesDefault);
+		
+		// various tween framerate values
+		var testFramerates:Array<Float> = [5, 10, 10.1, 24, 29.9, 30, 30.1, 31, 59.9, 60, 100];
+		for (framerate in testFramerates)
+		{
+			var tweenUpdates:Int = 0;
+			var tween:FlxTween = FlxTween.tween(this, {value: 1000}, 2, {startDelay: 0.54321, framerate: framerate, onUpdate: function(_) tweenUpdates++});
+			step(FlxG.updateFramerate * 3); // 3 full seconds
+			Assert.areEqual(Std.int(Math.ceil(Math.min(framerate, FlxG.updateFramerate) * 2)), tweenUpdates);
+		}
+	}
+
 	function makeTween(duration:Float, onComplete:TweenCallback, ?onUpdate:TweenCallback):FlxTween
 	{
 		var foo = {f: 0};
