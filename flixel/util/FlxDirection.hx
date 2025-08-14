@@ -37,6 +37,17 @@ enum abstract FlxDirection(Int)
 		}
 	}
 	
+	public inline function flip():FlxDirectionFlags
+	{
+		return switch self
+		{
+			case RIGHT: LEFT;
+			case LEFT: RIGHT;
+			case UP: DOWN;
+			case DOWN: UP;
+		}
+	}
+	
 	@:deprecated("implicit cast from FlxDirection to Int is deprecated, use toInt()")
 	@:to
 	inline function toIntImplicit()
