@@ -1,15 +1,16 @@
 package flixel.system.debug.stats;
 
-import openfl.display.BitmapData;
-import openfl.system.System;
-import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.math.FlxMath;
+import flixel.physics.FlxCollisionQuadTree;
 import flixel.system.FlxLinkedList;
 import flixel.system.FlxQuadTree;
 import flixel.system.debug.DebuggerUtil;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxColor;
+import openfl.display.BitmapData;
+import openfl.system.System;
+import openfl.text.TextField;
 
 
 /**
@@ -296,9 +297,11 @@ class Stats extends Window
 
 		drawTimeGraph.update(drwTime);
 		updateTimeGraph.update(updTime);
-
+		
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
-			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") + FlxQuadTree._NUM_CACHED_QUAD_TREES + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST;
+			+ (FlxG.renderTile ? (drawCallsCount + "\n") : "") 
+			+ (FlxQuadTree.pool.length + FlxCollisionQuadTree.pool.length) + "\n" + FlxLinkedList._NUM_CACHED_FLX_LIST
+			;
 	}
 
 	function divide(f1:Float, f2:Float):Float
