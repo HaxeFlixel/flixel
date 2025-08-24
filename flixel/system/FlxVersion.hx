@@ -11,11 +11,19 @@ class FlxVersion
 	public var minor(default, null):Int;
 	public var patch(default, null):Int;
 
-	public function new(Major:Int, Minor:Int, Patch:Int)
+	public var branch(default, null):String;
+	public var display(default, null):String;
+	
+	public function new(Major:Int, Minor:Int, Patch:Int, ?Branch:String, ?Display:String)
 	{
 		major = Major;
 		minor = Minor;
 		patch = Patch;
+		if (Branch != null)
+			branch = '-$Branch';
+			
+		if (Display != null)
+			display = '$Display ';
 	}
 
 	/**
@@ -30,6 +38,6 @@ class FlxVersion
 		{
 			sha = "@" + sha.substring(0, 7);
 		}
-		return 'HaxeFlixel $major.$minor.$patch$sha';
+		return '$display$major.$minor.$patch$branch$sha';
 	}
 }
