@@ -35,7 +35,7 @@ class FlxGitSHA
 			name: "sha",
 			doc: null,
 			meta: [],
-			access: [Access.APublic, Access.AStatic],
+			access: [Access.APublic],
 			kind: FieldType.FProp("default", "null", macro:Dynamic, macro $v{sha}),
 			pos: Context.currentPos()
 		});

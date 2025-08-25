@@ -11,19 +11,17 @@ class FlxVersion
 	public var minor(default, null):Int;
 	public var patch(default, null):Int;
 
-	public var branch(default, null):String;
-	public var display(default, null):String;
+	public var branch(default, null):String = "";
+	public var prefix(default, null):String = "";
 	
-	public function new(Major:Int, Minor:Int, Patch:Int, ?Branch:String, ?Display:String)
+	public function new(Major:Int, Minor:Int, Patch:Int, ?Branch:String, ?Prefix:String)
 	{
 		major = Major;
 		minor = Minor;
 		patch = Patch;
-		if (Branch != null)
-			branch = '-$Branch';
-			
-		if (Display != null)
-			display = '$Display ';
+
+		branch = Branch;
+		prefix = Prefix;
 	}
 
 	/**
@@ -33,11 +31,19 @@ class FlxVersion
 	 */
 	public function toString():String
 	{
-		var sha = FlxVersion.sha;
+		if (prefix != "")
+		{
+			prefix = prefix + " ";
+		}
+		if (branch != "")
+		{
+			branch = "-" + branch;
+		}
+
 		if (sha != "")
 		{
 			sha = "@" + sha.substring(0, 7);
 		}
-		return '$display$major.$minor.$patch$branch$sha';
+		return '$prefix$major.$minor.$patch$branch$sha';
 	}
 }
