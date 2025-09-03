@@ -676,7 +676,7 @@ class FlxCamera extends FlxBasic
 		
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
 		if (graphic.isDestroyed)
-			throw 'Cannot queue ${graphic.key}. This sprite was destroyed.'; 
+			throw 'Cannot queue ${graphic.key}. This sprite was destroyed.';
 		
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smoothing;
@@ -824,7 +824,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 	
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
+	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<FlxColor>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
 		final cameraBounds = _bounds.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
@@ -833,11 +833,6 @@ class FlxCamera extends FlxBasic
 		{
 			if (position == null)
 				position = renderPoint.set();
-			
-			#if FLX_DEBUG
-			if (colors != null && colors.length != 0)
-				FlxG.log.warn('FlxCamera.drawTriangles: "colors" is deprecated and will be ignored');
-			#end
 			
 			drawVertices.length = 0;
 			final verticesLength = vertices.length;

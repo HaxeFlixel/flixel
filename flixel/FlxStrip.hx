@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.util.FlxColor;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -30,12 +31,13 @@ class FlxStrip extends FlxSprite
 	 */
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
 	
-	@:deprecated("colors is deprecated")
-	public var colors:DrawData<Int> = new DrawData<Int>();
+	/**
+	 * A `Vector` of colors for vertices. Works similar to `color`. Isn't supported on `FlxG.renderBlit`.
+	 */
+	public var colors:DrawData<FlxColor> = new DrawData<FlxColor>();
 	
 	public var repeat:Bool = false;
 	
-	@:haxe.warning("-WDeprecated")
 	override public function destroy():Void
 	{
 		vertices = null;
@@ -47,7 +49,6 @@ class FlxStrip extends FlxSprite
 	}
 	
 	// TODO: check this for cases when zoom is less than initial zoom...
-	@:haxe.warning("-WDeprecated")
 	override public function draw():Void
 	{
 		if (alpha == 0 || graphic == null || vertices == null)

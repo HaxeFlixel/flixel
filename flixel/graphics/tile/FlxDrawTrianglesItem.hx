@@ -129,7 +129,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		colorOffsets = null;
 	}
 	
-	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
+	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<FlxColor>, ?position:FlxPoint,
 			?cameraBounds:FlxRect, ?transform:ColorTransform):Void
 	{
 		if (position == null)
@@ -137,11 +137,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		
 		if (cameraBounds == null)
 			cameraBounds = rect.set(0, 0, FlxG.width, FlxG.height);
-		
-		#if FLX_DEBUG
-		if (colors != null && colors.length != 0)
-			FlxG.log.warn('FlxDrawTrianglesItem.addTriangles: "colors" is deprecated and will be ignored');
-		#end
 		
 		// reset bounds outside camera view
 		bounds.set(Math.NaN, Math.NaN, Math.NaN, Math.NaN);
@@ -184,9 +179,21 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			this.indices.push(prevNumberOfVertices + index);
 		
 		final indicesLength = indices.length;
+		final colorsLength = colors != null ? colors.length : -1;
+		
 		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
-		for (_ in 0...indicesLength)
-			alphas.push(alphaMultiplier);
+		for (i in 0...indicesLength)
+		{
+			var alpha = alphaMultiplier;
+			
+			if (i < colorsLength)
+			{
+				final color = colors[indices[i]];
+				alpha *= color.alphaFloat;
+			}
+			
+			alphas.push(alpha);
+		}
 		
 		if (colored || hasColorOffsets)
 		{
@@ -211,11 +218,23 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				alphaOffset = transform.alphaOffset;
 			}
 			
-			for (_ in 0...indicesLength)
+			for (i in 0...indicesLength)
 			{
-				colorMultipliers.push(redMultiplier);
-				colorMultipliers.push(greenMultiplier);
-				colorMultipliers.push(blueMultiplier);
+				var red = redMultiplier;
+				var green = greenMultiplier;
+				var blue = blueMultiplier;
+				
+				if (i < colorsLength)
+				{
+					final color = colors[indices[i]];
+					red *= color.redFloat;
+					green *= color.greenFloat;
+					blue *= color.blueFloat;
+				}
+				
+				colorMultipliers.push(red);
+				colorMultipliers.push(green);
+				colorMultipliers.push(blue);
 				colorMultipliers.push(1);
 				
 				colorOffsets.push(redOffset);
