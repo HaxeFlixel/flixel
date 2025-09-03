@@ -890,7 +890,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			final isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
+			final isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end) || (colors != null && colors.length != 0);
 			final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
 			
 			final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
