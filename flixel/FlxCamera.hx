@@ -835,7 +835,7 @@ class FlxCamera extends FlxBasic
 				position = renderPoint.set();
 			
 			drawVertices.length = 0;
-			final verticesLength = vertices.length;
+			final verticesLength = Std.int(vertices.length / 2) * 2;
 			final bounds = renderRect.set();
 			var i = 0;
 			
@@ -857,7 +857,7 @@ class FlxCamera extends FlxBasic
 			
 			position.putWeak();
 			
-			if (cameraBounds.overlaps(bounds))
+			if (bounds.overlaps(cameraBounds) && Std.int(indices.length / 3) != 0)
 			{
 				trianglesSprite.graphics.clear();
 				trianglesSprite.graphics.beginBitmapFill(graphic.bitmap, null, repeat, smoothing);

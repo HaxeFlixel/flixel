@@ -141,8 +141,8 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		// reset bounds outside camera view
 		bounds.set(Math.NaN, Math.NaN, Math.NaN, Math.NaN);
 		
-		final prevNumberOfVertices = numVertices;
-		final verticesLength = vertices.length;
+		final prevNumVertices = numVertices;
+		final verticesLength = Std.int(vertices.length / 2) * 2;
 		var i = 0;
 		
 		while (i < verticesLength)
@@ -161,25 +161,22 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			i += 2;
 		}
 		
-		final inBounds = cameraBounds.overlaps(bounds);
-		
 		position.putWeak();
-		cameraBounds.putWeak();
 		
-		if (!inBounds)
+		if (!bounds.overlaps(cameraBounds))
 		{
 			this.vertices.length -= verticesLength;
 			return;
 		}
 		
-		for (uvt in uvtData)
-			this.uvtData.push(uvt);
-		
-		for (index in indices)
-			this.indices.push(prevNumberOfVertices + index);
-		
-		final indicesLength = indices.length;
+		final indicesLength = Std.int(indices.length / 3) * 3;
 		final colorsLength = colors != null ? colors.length : -1;
+		
+		for (i in 0...verticesLength)
+			this.uvtData.push(uvtData[i]);
+		
+		for (i in 0...indicesLength)
+			this.indices.push(prevNumVertices + indices[i]);
 		
 		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
 		for (i in 0...indicesLength)
@@ -270,7 +267,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		final prevNumberOfVertices = numVertices;
+		final prevNumVertices = numVertices;
 		
 		inline function addVertex(x:Float, y:Float)
 		{
@@ -293,12 +290,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData.push(frame.uv.left);
 		uvtData.push(frame.uv.bottom);
 		
-		indices.push(prevNumberOfVertices);
-		indices.push(prevNumberOfVertices + 1);
-		indices.push(prevNumberOfVertices + 2);
-		indices.push(prevNumberOfVertices + 2);
-		indices.push(prevNumberOfVertices + 3);
-		indices.push(prevNumberOfVertices);
+		indices.push(prevNumVertices);
+		indices.push(prevNumVertices + 1);
+		indices.push(prevNumVertices + 2);
+		indices.push(prevNumVertices + 2);
+		indices.push(prevNumVertices + 3);
+		indices.push(prevNumVertices);
 		
 		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
 		for (_ in 0...INDICES_PER_QUAD)
