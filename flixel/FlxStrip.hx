@@ -1,6 +1,7 @@
 package flixel;
 
 import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.util.FlxColor;
 
 /**
  * A very basic rendering component which uses `drawTriangles()`.
@@ -19,49 +20,48 @@ class FlxStrip extends FlxSprite
 	 * A `Vector` of floats where each pair of numbers is treated as a coordinate location (an x, y pair).
 	 */
 	public var vertices:DrawData<Float> = new DrawData<Float>();
-
+	
 	/**
 	 * A `Vector` of integers or indexes, where every three indexes define a triangle.
 	 */
 	public var indices:DrawData<Int> = new DrawData<Int>();
-
+	
 	/**
 	 * A `Vector` of normalized coordinates used to apply texture mapping.
 	 */
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
-
-	public var colors:DrawData<Int> = new DrawData<Int>();
-
+	
+	/**
+	 * A `Vector` of colors for vertices. Works similar to `color`. Isn't supported on `FlxG.renderBlit`.
+	 */
+	public var colors:DrawData<FlxColor> = new DrawData<FlxColor>();
+	
 	public var repeat:Bool = false;
-
+	
 	override public function destroy():Void
 	{
 		vertices = null;
 		indices = null;
 		uvtData = null;
 		colors = null;
-
+		
 		super.destroy();
 	}
-
+	
 	// TODO: check this for cases when zoom is less than initial zoom...
 	override public function draw():Void
 	{
 		if (alpha == 0 || graphic == null || vertices == null)
 			return;
-
+		
 		final cameras = getCamerasLegacy();
 		for (camera in cameras)
 		{
 			if (!camera.visible || !camera.exists)
 				continue;
-
+			
 			getScreenPosition(_point, camera).subtractPoint(offset);
-			#if !flash
 			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing, colorTransform, shader);
-			#else
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
-			#end
 		}
 	}
 }
