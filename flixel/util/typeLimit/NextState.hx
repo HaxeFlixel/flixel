@@ -35,8 +35,8 @@ import flixel.FlxState;
 abstract NextState(Dynamic)
 {
 	@:from
-	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`)")
-	public static function fromState(state:FlxState):NextState
+	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `new MyState()`")
+	public static inline function fromState(state:FlxState):NextState
 	{
 		return cast state;
 	}
@@ -51,8 +51,6 @@ abstract NextState(Dynamic)
 	{
 		if (this is FlxState)
 			return cast this;
-		else if (this is Class)
-			return Type.createInstance(this, []);
 		else
 			return cast this();
 	}
@@ -73,8 +71,8 @@ abstract NextState(Dynamic)
 
 /**
  * A utility type that allows methods to accept multiple types, when dealing with "future" `FlxStates`.
- * Prior to haxeFlixel 6, the `FlxGame` constructor took a `FlxState` class which meant initial
- * `FlxStates`could not have constructor args. In version 6.0.0 and higher, it now takes a function
+ * Prior to HaxeFlixel 6, the `FlxGame` constructor took a `FlxState` class which meant initial
+ * `FlxStates` could not have constructor args. In version 6.0.0 and higher, it now takes a function
  * that returns a newly created instance.
  * 
  * ## examples:
@@ -102,7 +100,8 @@ abstract NextState(Dynamic)
 abstract InitialState(Dynamic) to NextState
 {
 	@:from
-	public static function fromType(state:Class<FlxState>):InitialState
+	@:deprecated("use `MyState.new` or `()->new MyState()` instead of `MyState`")
+	public static inline function fromType(state:Class<FlxState>):InitialState
 	{
 		return cast state;
 	}
