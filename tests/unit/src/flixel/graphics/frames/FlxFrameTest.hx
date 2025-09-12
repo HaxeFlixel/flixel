@@ -1,6 +1,7 @@
 package flixel.graphics.frames;
 
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxRect;
 import haxe.PosInfos;
 import massive.munit.Assert;
@@ -95,6 +96,22 @@ class FlxFrameTest extends FlxTest
 		assertNotOverlaps(100, 100);
 		assertOverlaps(99, 99);
 		Assert.isTrue(true);
+	}
+	
+	@Test
+	function testUVRect()
+	{
+		final rect = FlxRect.get();
+		rect.x = 10;
+		rect.y = 20;
+		rect.width = 90;
+		rect.height = 100;
+		
+		final uvRect:FlxUVRect = rect;
+		FlxAssert.areNear(uvRect.left, rect.x);
+		FlxAssert.areNear(uvRect.top, rect.y);
+		FlxAssert.areNear(uvRect.right, rect.width);
+		FlxAssert.areNear(uvRect.bottom, rect.height);
 	}
 
 	function createFrames(name:String, width = 100, height = 100, cols = 10, rows = 10, buffer = 0):Array<FlxFrame>
