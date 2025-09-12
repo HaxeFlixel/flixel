@@ -793,6 +793,16 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 	{
 		return FlxRect.get(l, t, r, b);
 	}
+	
+	public inline function toString()
+	{
+		return return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("l", left),
+			LabelValuePair.weak("t", top),
+			LabelValuePair.weak("r", right),
+			LabelValuePair.weak("b", bottom)
+		]);
+	}
 }
 
 /**
