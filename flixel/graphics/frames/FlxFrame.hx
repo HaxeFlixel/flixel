@@ -789,11 +789,6 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 		set(uv.left, uv.top, uv.right, uv.bottom);
 	}
 	
-	public static function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
-	{
-		return FlxRect.get(l, t, r, b);
-	}
-	
 	public inline function toString()
 	{
 		return return FlxStringUtil.getDebugString([
@@ -802,6 +797,11 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 			LabelValuePair.weak("r", right),
 			LabelValuePair.weak("b", bottom)
 		]);
+	}
+	
+	public static function get(l = 0.0, t = 0.0, r = 0.0, b = 0.0)
+	{
+		return FlxRect.get(l, t, r, b);
 	}
 }
 
