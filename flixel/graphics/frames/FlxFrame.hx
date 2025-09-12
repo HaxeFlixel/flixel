@@ -761,13 +761,13 @@ abstract FlxUVRect(FlxRect) from FlxRect to flixel.util.FlxPool.IFlxPooled
 	
 	/** Top */
 	public var right(get, set):Float;
-	inline function get_right():Float { return this.y; }
-	inline function set_right(value):Float { return this.y = value; }
+	inline function get_right():Float { return this.width; }
+	inline function set_right(value):Float { return this.width = value; }
 	
 	/** Right */
 	public var top(get, set):Float;
-	inline function get_top():Float { return this.width; }
-	inline function set_top(value):Float { return this.width = value; }
+	inline function get_top():Float { return this.y; }
+	inline function set_top(value):Float { return this.y = value; }
 	
 	/** Bottom */
 	public var bottom(get, set):Float;
