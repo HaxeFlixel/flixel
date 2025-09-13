@@ -113,7 +113,17 @@ class FlxFrameTest extends FlxTest
 		FlxAssert.areNear(uvRect.right, rect.width);
 		FlxAssert.areNear(uvRect.bottom, rect.height);
 	}
-
+	
+	@Test
+	function testClipFrame()
+	{
+		final frame = createFrames("clip", 100, 100, 1, 1)[0];
+		FlxAssert.rectsNear(cast frame.uv, FlxRect.get(0, 0, 1, 1));
+		
+		frame.clip(FlxRect.get(10, 10, 80, 80));
+		FlxAssert.rectsNear(cast frame.uv, FlxRect.get(0.1, 0.1, 0.1 + 0.8, 0.1 + 0.8));
+	}
+	
 	function createFrames(name:String, width = 100, height = 100, cols = 10, rows = 10, buffer = 0):Array<FlxFrame>
 	{
 		final sprite = new FlxSprite(0, 0);
@@ -132,6 +142,7 @@ class FlxFrameTest extends FlxTest
 		
 		return sprite.frames.frames;
 	}
+	
 	function createFrame(name:String):FlxFrame
 	{
 		var frame = new FlxFrame(null);
