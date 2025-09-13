@@ -54,7 +54,7 @@ class FlxSpriteUtil
 	 * @param	mask		The mask to apply. Remember the non-alpha zero areas are the parts that will display.
 	 * @return 	The FlxSprite for chaining
 	 */
-	public static function alphaMask(output:FlxSprite, source:FlxGraphicSource, mask:FlxGraphicSource):FlxSprite
+	public static function alphaMask(output:FlxSprite, source:FlxGraphicAsset, mask:FlxGraphicAsset):FlxSprite
 	{
 		var data:BitmapData = FlxAssets.resolveBitmapData(source);
 		var maskData:BitmapData = FlxAssets.resolveBitmapData(mask);
