@@ -326,39 +326,10 @@ class FlxRandom
 	 */
 	public function color(?Min:FlxColor, ?Max:FlxColor, ?Alpha:Int, GreyScale:Bool = false):FlxColor
 	{
-		var red:Int;
-		var green:Int;
-		var blue:Int;
-		var alpha:Int;
-
-		if (Min == null && Max == null)
-		{
-			red = int(0, 255);
-			green = int(0, 255);
-			blue = int(0, 255);
-			alpha = Alpha == null ? int(0, 255) : Alpha;
-		}
-		else if (Max == null)
-		{
-			red = int(Min.red, 255);
-			green = GreyScale ? red : int(Min.green, 255);
-			blue = GreyScale ? red : int(Min.blue, 255);
-			alpha = Alpha == null ? int(Min.alpha, 255) : Alpha;
-		}
-		else if (Min == null)
-		{
-			red = int(0, Max.red);
-			green = GreyScale ? red : int(0, Max.green);
-			blue = GreyScale ? red : int(0, Max.blue);
-			alpha = Alpha == null ? int(0, Max.alpha) : Alpha;
-		}
-		else
-		{
-			red = int(Min.red, Max.red);
-			green = GreyScale ? red : int(Min.green, Max.green);
-			blue = GreyScale ? red : int(Min.blue, Max.blue);
-			alpha = Alpha == null ? int(Min.alpha, Max.alpha) : Alpha;
-		}
+		final red:Int = int(Min?.red ?? 0, Max?.red ?? 255);
+		final green:Int = GreyScale ? red : int(Min?.green ?? 0, Max?.green ?? 255);
+		final blue:Int = GreyScale ? red : int(Min?.blue ?? 0, Max?.blue ?? 255);
+		final alpha:Int = Alpha == null ? int(Min?.alpha ?? 0, Max?.alpha ?? 255) : Alpha;
 
 		return FlxColor.fromRGB(red, green, blue, alpha);
 	}
