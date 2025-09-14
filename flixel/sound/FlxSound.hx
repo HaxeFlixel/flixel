@@ -663,11 +663,11 @@ class FlxSound extends FlxBasic
 			{
 				if (loops > 0)
 					loops--;
-			}
-			else
-			{
-				cleanup(autoDestroy);
-				return;
+				else
+				{
+					cleanup(autoDestroy);
+					return;
+				}
 			}
 			cleanup(false);
 			play(false, loopTime, endTime);
