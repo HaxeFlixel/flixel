@@ -669,6 +669,7 @@ class FlxSound extends FlxBasic
 					return;
 				}
 			}
+
 			cleanup(false);
 			play(false, loopTime, endTime);
 		}
