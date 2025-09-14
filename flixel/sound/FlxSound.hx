@@ -366,6 +366,14 @@ class FlxSound extends FlxBasic
 			else
 				FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
 		}
+		else if ((EmbeddedSound is ByteArrayData))
+		{
+			var bytes:ByteArray = cast EmbeddedSound;
+
+			_sound = new Sound();
+			_sound.addEventListener(Event.ID3, gotID3);
+			_sound.loadCompressedDataFromByteArray(bytes, bytes.length);
+		}
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
 		return init(Looped, AutoDestroy, OnComplete);
