@@ -156,8 +156,14 @@ class FlxGame extends Sprite
 	 * Mouse cursor.
 	 */
 	@:allow(flixel.FlxG)
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	var _inputContainer:Sprite;
+
+	/**
+	 * All cameras' sprites are added here to make it easier to
+	 * do things such as applying a filter to the entire game view.
+	 */
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	var _cameraContainer:Sprite;
 
 	#if FLX_SOUND_TRAY
 	/**
@@ -250,6 +256,7 @@ class FlxGame extends Sprite
 
 		// Super high priority init stuff
 		_inputContainer = new Sprite();
+		_cameraContainer = new Sprite();
 
 		if (gameWidth == 0)
 			gameWidth = FlxG.stage.stageWidth;
@@ -305,6 +312,7 @@ class FlxGame extends Sprite
 		stage.frameRate = FlxG.drawFramerate;
 
 		addChild(_inputContainer);
+		addChild(_cameraContainer);
 
 		// Creating the debugger overlay
 		#if FLX_DEBUG
