@@ -717,7 +717,7 @@ class FlxGame extends Sprite
 		}
 		#end
 
-		filters = filtersEnabled ? _filters : null;
+		_cameraContainer.filters = filtersEnabled ? _filters : null;
 	}
 
 	function updateElapsed():Void
