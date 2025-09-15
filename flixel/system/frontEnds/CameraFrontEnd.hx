@@ -57,22 +57,22 @@ class CameraFrontEnd
 	 * Handy for PiP, split-screen, etc.
 	 * @see flixel.FlxBasic.cameras
 	 *
-	 * @param	NewCamera         The camera you want to add.
-	 * @param	DefaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
+	 * @param	newCamera         The camera you want to add.
+	 * @param	defaultDrawTarget Whether to add the camera to the list of default draw targets. If false, 
 	 *                            `FlxBasics` will not render to it unless you add it to their `cameras` list.
 	 * @return	This FlxCamera instance.
 	 */
-	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
+	public function add<T:FlxCamera>(newCamera:T, defaultDrawTarget:Bool = true):T
 	{
 		FlxG.game._cameraContainer.addChild(newCamera.flashSprite);
 
-		list.push(NewCamera);
-		if (DefaultDrawTarget)
-			defaults.push(NewCamera);
+		list.push(newCamera);
+		if (defaultDrawTarget)
+			defaults.push(newCamera);
 		
-		NewCamera.ID = list.length - 1;
-		cameraAdded.dispatch(NewCamera);
-		return NewCamera;
+		newCamera.ID = list.length - 1;
+		cameraAdded.dispatch(newCamera);
+		return newCamera;
 	}
 	
 	/**
@@ -114,17 +114,17 @@ class CameraFrontEnd
 	/**
 	 * Remove a camera from the game.
 	 *
-	 * @param   Camera    The camera you want to remove.
-	 * @param   Destroy   Whether to call destroy() on the camera, default value is true.
+	 * @param   camera    The camera you want to remove.
+	 * @param   destroy   Whether to call destroy() on the camera, default value is true.
 	 */
-	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
+	public function remove(camera:FlxCamera, destroy:Bool = true):Void
 	{
-		var index:Int = list.indexOf(Camera);
-		if (Camera != null && index != -1)
+		var index:Int = list.indexOf(camera);
+		if (camera != null && index != -1)
 		{
-			FlxG.game._cameraContainer.removeChild(Camera.flashSprite);
+			FlxG.game._cameraContainer.removeChild(camera.flashSprite);
 			list.splice(index, 1);
-			defaults.remove(Camera);
+			defaults.remove(camera);
 		}
 		else
 		{
@@ -140,10 +140,10 @@ class CameraFrontEnd
 			}
 		}
 
-		if (Destroy)
-			Camera.destroy();
+		if (destroy)
+			camera.destroy();
 
-		cameraRemoved.dispatch(Camera);
+		cameraRemoved.dispatch(camera);
 	}
 	
 	/**
@@ -175,20 +175,20 @@ class CameraFrontEnd
 	 * Dumps all the current cameras and resets to just one camera.
 	 * Handy for doing split-screen especially.
 	 *
-	 * @param	NewCamera	Optional; specify a specific camera object to be the new main camera.
+	 * @param	newCamera	Optional; specify a specific camera object to be the new main camera.
 	 */
-	public function reset(?NewCamera:FlxCamera):Void
+	public function reset(?newCamera:FlxCamera):Void
 	{
 		FlxG.camera = null;
 		
 		while (list.length > 0)
 			remove(list[0]);
 
-		if (NewCamera == null)
-			NewCamera = new FlxCamera();
+		if (newCamera == null)
+			newCamera = new FlxCamera();
 
-		FlxG.camera = add(NewCamera);
-		NewCamera.ID = 0;
+		FlxG.camera = add(newCamera);
+		newCamera.ID = 0;
 
 		FlxCamera._defaultCameras = defaults;
 	}
@@ -196,50 +196,50 @@ class CameraFrontEnd
 	/**
 	 * All screens are filled with this color and gradually return to normal.
 	 *
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the flash to fade.
-	 * @param	OnComplete	A function you want to run when the flash finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param	color		The color you want to use.
+	 * @param	duration	How long it takes for the flash to fade.
+	 * @param	onComplete	A function you want to run when the flash finishes.
+	 * @param	force		Force the effect to reset.
 	 */
-	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(color:FlxColor = FlxColor.WHITE, duration:Float = 1, ?onComplete:Void->Void, force:Bool = false):Void
 	{
 		for (camera in list)
 		{
-			camera.flash(Color, Duration, OnComplete, Force);
+			camera.flash(color, duration, onComplete, force);
 		}
 	}
 
 	/**
 	 * The screen is gradually filled with this color.
 	 *
-	 * @param	Color		The color you want to use.
-	 * @param	Duration	How long it takes for the fade to finish.
-	 * @param 	FadeIn 		True fades from a color, false fades to it.
-	 * @param	OnComplete	A function you want to run when the fade finishes.
-	 * @param	Force		Force the effect to reset.
+	 * @param	color		The color you want to use.
+	 * @param	duration	How long it takes for the fade to finish.
+	 * @param 	fadeIn 		True fades from a color, false fades to it.
+	 * @param	onComplete	A function you want to run when the fade finishes.
+	 * @param	force		Force the effect to reset.
 	 */
-	public function fade(Color:FlxColor = FlxColor.BLACK, Duration:Float = 1, FadeIn:Bool = false, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function fade(color:FlxColor = FlxColor.BLACK, duration:Float = 1, fadeIn:Bool = false, ?onComplete:Void->Void, force:Bool = false):Void
 	{
 		for (camera in list)
 		{
-			camera.fade(Color, Duration, FadeIn, OnComplete, Force);
+			camera.fade(color, duration, fadeIn, onComplete, force);
 		}
 	}
 
 	/**
 	 * A simple screen-shake effect.
 	 *
-	 * @param	Intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
-	 * @param	Duration	The length in seconds that the shaking effect should last.
-	 * @param	OnComplete	A function you want to run when the shake effect finishes.
-	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
-	 * @param	Axes		On what axes to shake. Default value is XY / both.
+	 * @param	intensity	Percentage of screen size representing the maximum distance that the screen can move while shaking.
+	 * @param	duration	The length in seconds that the shaking effect should last.
+	 * @param	onComplete	A function you want to run when the shake effect finishes.
+	 * @param	force		Force the effect to reset (default = true, unlike flash() and fade()!).
+	 * @param	axes		On what axes to shake. Default value is XY / both.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
+	public function shake(intensity:Float = 0.05, duration:Float = 0.5, ?onComplete:Void->Void, force:Bool = true, ?axes:FlxAxes):Void
 	{
 		for (camera in list)
 		{
-			camera.shake(Intensity, Duration, OnComplete, Force, Axes);
+			camera.shake(intensity, duration, onComplete, force, axes);
 		}
 	}
 
@@ -368,13 +368,13 @@ class CameraFrontEnd
 		return (FlxG.camera == null) ? FlxColor.BLACK : FlxG.camera.bgColor;
 	}
 
-	function set_bgColor(Color:FlxColor):FlxColor
+	function set_bgColor(color:FlxColor):FlxColor
 	{
 		for (camera in list)
 		{
-			camera.bgColor = Color;
+			camera.bgColor = color;
 		}
 
-		return Color;
+		return color;
 	}
 }
