@@ -64,7 +64,7 @@ class CameraFrontEnd
 	 */
 	public function add<T:FlxCamera>(NewCamera:T, DefaultDrawTarget:Bool = true):T
 	{
-		FlxG.game._cameraContainer.addChildAt(NewCamera.flashSprite, 0);
+		FlxG.game._cameraContainer.addChild(newCamera.flashSprite);
 
 		list.push(NewCamera);
 		if (DefaultDrawTarget)
@@ -97,8 +97,8 @@ class CameraFrontEnd
         if (position >= list.length)
             return add(newCamera);
         
-        final childIndex = FlxG.game.getChildIndex(list[position].flashSprite);
-        FlxG.game.addChildAt(newCamera.flashSprite, childIndex);
+        final childIndex = FlxG.game._cameraContainer.getChildIndex(list[position].flashSprite);
+        FlxG.game._cameraContainer.addChildAt(newCamera.flashSprite, childIndex);
 		
 		list.insert(position, newCamera);
 		if (defaultDrawTarget)
@@ -122,7 +122,7 @@ class CameraFrontEnd
 		var index:Int = list.indexOf(Camera);
 		if (Camera != null && index != -1)
 		{
-			FlxG.game.removeChild(Camera.flashSprite);
+			FlxG.game._cameraContainer.removeChild(Camera.flashSprite);
 			list.splice(index, 1);
 			defaults.remove(Camera);
 		}

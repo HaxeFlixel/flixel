@@ -255,8 +255,8 @@ class FlxGame extends Sprite
 		#end
 
 		// Super high priority init stuff
-		_inputContainer = new Sprite();
 		_cameraContainer = new Sprite();
+		_inputContainer = new Sprite();
 
 		if (gameWidth == 0)
 			gameWidth = FlxG.stage.stageWidth;
@@ -311,8 +311,8 @@ class FlxGame extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		stage.frameRate = FlxG.drawFramerate;
 
-		addChild(_inputContainer);
 		addChild(_cameraContainer);
+		addChild(_inputContainer);
 
 		// Creating the debugger overlay
 		#if FLX_DEBUG
