@@ -467,6 +467,11 @@ class FlxCamera extends FlxBasic
 	var _point:FlxPoint = FlxPoint.get();
 
 	/**
+	 * Determines whether camera effects should be updated (includes flash, fade, and shake).
+	 */
+	public var updateEffects:Bool = true;
+
+	/**
 	 * The filters array to be applied to the camera.
 	 */
 	public var filters:Null<Array<BitmapFilter>> = null;
@@ -1277,6 +1282,9 @@ class FlxCamera extends FlxBasic
 
 	function updateFlash(elapsed:Float):Void
 	{
+		if (!updateEffects)
+			return;
+
 		// Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
@@ -1290,7 +1298,7 @@ class FlxCamera extends FlxBasic
 
 	function updateFade(elapsed:Float):Void
 	{
-		if (_fxFadeDuration == 0.0)
+		if (_fxFadeDuration == 0.0 || !updateEffects)
 			return;
 
 		if (_fxFadeIn)
@@ -1322,6 +1330,9 @@ class FlxCamera extends FlxBasic
 
 	function updateShake(elapsed:Float):Void
 	{
+		if (!updateEffects)
+			return;
+		
 		if (_fxShakeDuration > 0)
 		{
 			_fxShakeDuration -= elapsed;
