@@ -20,6 +20,7 @@ typedef DrawData<T> = openfl.Vector<T>;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
+	static inline final INDICES_PER_QUAD = 6;
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
 
@@ -296,7 +297,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		var prevVerticesPos:Int = verticesPosition;
 		var prevIndicesPos:Int = indicesPosition;
-		var prevColorsPos:Int = colorsPosition;
 		var prevNumberOfVertices:Int = numVertices;
 
 		var point = FlxPoint.get();
@@ -344,33 +344,48 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 3;
 		indices[prevIndicesPos + 5] = prevNumberOfVertices;
 
-		if (colored)
+		#if !flash
+		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
+		for (i in 0...INDICES_PER_QUAD)
+			alphas.push(alphaMultiplier);
+			
+		if (colored || hasColorOffsets)
 		{
-			var red = 1.0;
-			var green = 1.0;
-			var blue = 1.0;
-			var alpha = 1.0;
-
-			if (transform != null)
+			if (colorMultipliers == null)
+				colorMultipliers = [];
+				
+			if (colorOffsets == null)
+				colorOffsets = [];
+				
+			for (i in 0...INDICES_PER_QUAD)
 			{
-				red = transform.redMultiplier;
-				green = transform.greenMultiplier;
-				blue = transform.blueMultiplier;
-
-				#if !neko
-				alpha = transform.alphaMultiplier;
-				#end
+				if (transform != null)
+				{
+					colorMultipliers.push(transform.redMultiplier);
+					colorMultipliers.push(transform.greenMultiplier);
+					colorMultipliers.push(transform.blueMultiplier);
+					
+					colorOffsets.push(transform.redOffset);
+					colorOffsets.push(transform.greenOffset);
+					colorOffsets.push(transform.blueOffset);
+					colorOffsets.push(transform.alphaOffset);
+				}
+				else
+				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+				}
+				
+				colorMultipliers.push(1);
 			}
-
-			var color = FlxColor.fromRGBFloat(red, green, blue, alpha);
-
-			colors[prevColorsPos] = color;
-			colors[prevColorsPos + 1] = color;
-			colors[prevColorsPos + 2] = color;
-			colors[prevColorsPos + 3] = color;
-
-			colorsPosition += 4;
 		}
+		#end
 
 		verticesPosition += 8;
 		indicesPosition += 6;
