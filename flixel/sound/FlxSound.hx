@@ -6,6 +6,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxSignal;
 import flixel.util.FlxStringUtil;
 import openfl.events.Event;
 import openfl.events.IEventDispatcher;
@@ -68,9 +69,15 @@ class FlxSound extends FlxBasic
 	public var autoDestroy:Bool;
 	
 	/**
+	 * Signal that is dispatched on sound complete.
+	 */
+	public final onFinish:FlxSignal;
+
+	/**
 	 * Tracker for sound complete callback. If assigned, will be called
 	 * each time when sound reaches its end.
 	 */
+	@:deprecated("`FlxSound.onComplete` is deprecated! Use `FlxSound.onFinish` instead.")
 	public var onComplete:Void->Void;
 	
 	/**
@@ -214,6 +221,7 @@ class FlxSound extends FlxBasic
 	public function new()
 	{
 		super();
+		onFinish = new FlxSignal();
 		reset();
 	}
 	
@@ -242,12 +250,13 @@ class FlxSound extends FlxBasic
 		amplitudeLeft = 0;
 		amplitudeRight = 0;
 		autoDestroy = false;
-		
+
 		if (_transform == null)
 			_transform = new SoundTransform();
 		_transform.pan = 0;
 	}
 	
+	@:haxe.warning("-WDeprecated")
 	override public function destroy():Void
 	{
 		// Prevents double destroy
@@ -273,6 +282,8 @@ class FlxSound extends FlxBasic
 			_sound.removeEventListener(Event.ID3, gotID3);
 			_sound = null;
 		}
+		
+		onFinish.removeAll();
 		
 		onComplete = null;
 		
@@ -427,12 +438,15 @@ class FlxSound extends FlxBasic
 		return init(Looped, AutoDestroy, OnComplete);
 	}
 	
+	@:haxe.warning("-WDeprecated")
 	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
 		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
 		exists = true;
+		onFinish.removeAll();
+		onFinish.add(onComplete);
 		onComplete = OnComplete;
 		#if FLX_PITCH
 		pitch = 1;
@@ -645,8 +659,11 @@ class FlxSound extends FlxBasic
 	 * An internal helper function used to help Flash
 	 * clean up finished sounds or restart looped sounds.
 	 */
+	@:haxe.warning("-WDeprecated")
 	function stopped(?_):Void
 	{
+		onFinish.dispatch();
+
 		if (onComplete != null)
 			onComplete();
 			
