@@ -743,6 +743,8 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	function render():Void
 	{
+		flashSprite.filters = filtersEnabled ? filters : null;
+		
 		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
 		while (currItem != null)
 		{
@@ -1138,8 +1140,6 @@ class FlxCamera extends FlxBasic
 		updateScroll();
 		updateFlash(elapsed);
 		updateFade(elapsed);
-
-		flashSprite.filters = filtersEnabled ? filters : null;
 
 		updateFlashSpritePosition();
 		updateShake(elapsed);
