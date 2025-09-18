@@ -25,10 +25,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 	#if !flash
 	public var shader:FlxShader;
+
 	var alphas:Array<Float>;
 	var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
 	#end
+
+	public var repeat:Bool = false;
 
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
@@ -59,13 +62,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			return;
 
 		#if !flash
-		var shader = shader != null ? shader : graphics.shader;
+		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
-		shader.bitmap.wrap = REPEAT; // in order to prevent breaking tiling behaviour in classes that use drawTriangles
+		shader.bitmap.wrap = repeat ? REPEAT : CLAMP;
 		shader.alpha.value = alphas;
 
-		if (colored || hasColorOffsets)
+		if (colored)
 		{
 			shader.colorMultiplier.value = colorMultipliers;
 			shader.colorOffset.value = colorOffsets;
@@ -76,14 +79,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			shader.colorOffset.value = null;
 		}
 
-		setParameterValue(shader.hasTransform, true);
-		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
+		setParameterValue(shader.hasColorTransform, colored);
 
 		camera.canvas.graphics.overrideBlendMode(blend);
-
 		camera.canvas.graphics.beginShaderFill(shader);
 		#else
-		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, repeat, (camera.antialiasing || antialiasing));
 		#end
 
 		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
@@ -113,11 +114,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indicesPosition = 0;
 		colorsPosition = 0;
 		#if !flash
-		alphas.splice(0, alphas.length);
+		alphas.resize(0);
 		if (colorMultipliers != null)
-			colorMultipliers.splice(0, colorMultipliers.length);
+			colorMultipliers.resize(0);
 		if (colorOffsets != null)
-			colorOffsets.splice(0, colorOffsets.length);
+			colorOffsets.resize(0);
 		#end
 	}
 
@@ -214,12 +215,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		cameraBounds.putWeak();
 
 		#if !flash
-		for (_ in 0...indicesLength)
-		{
-			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
-		}
+		var alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
+		for (i in 0...indicesLength)
+			alphas.push(alphaMultiplier);
 
-		if (colored || hasColorOffsets)
+		if (colored)
 		{
 			if (colorMultipliers == null)
 				colorMultipliers = [];
@@ -227,32 +227,30 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			if (colorOffsets == null)
 				colorOffsets = [];
 
-			for (_ in 0...indicesLength)
+			if (transform != null)
 			{
-				if(transform != null)
+				for (i in 0...indicesLength)
 				{
 					colorMultipliers.push(transform.redMultiplier);
 					colorMultipliers.push(transform.greenMultiplier);
 					colorMultipliers.push(transform.blueMultiplier);
+					colorMultipliers.push(1);
 
 					colorOffsets.push(transform.redOffset);
 					colorOffsets.push(transform.greenOffset);
 					colorOffsets.push(transform.blueOffset);
 					colorOffsets.push(transform.alphaOffset);
 				}
-				else
+			}
+			else
+			{
+				for (i in 0...indicesLength)
 				{
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-	
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
+					for (_ in 0...4)
+						colorMultipliers.push(1);
+					for (_ in 0...4)
+						colorOffsets.push(0);
 				}
-
-				colorMultipliers.push(1);
 			}
 		}
 		#end
