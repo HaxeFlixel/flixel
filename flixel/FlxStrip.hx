@@ -32,7 +32,7 @@ class FlxStrip extends FlxSprite
 
 	public var colors:DrawData<Int> = new DrawData<Int>();
 
-	public var repeat:Bool = false;
+	public var repeat:Bool = true;
 
 	override public function destroy():Void
 	{

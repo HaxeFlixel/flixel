@@ -403,8 +403,7 @@ class FlxBitmapText extends FlxSprite
 					camera.drawPixels(FlxG.bitmap.whitePixel, null, matrix, colorTransform, blend, antialiasing);
 				}
 				
-				final hasColorOffsets = (colorTransform != null && colorTransform.hasRGBAOffsets());
-				final drawItem = camera.startQuadBatch(font.parent, true, hasColorOffsets, blend, antialiasing, shader);
+				final drawItem = camera.startQuadBatch(font.parent, true, blend, antialiasing, shader);
 				function addQuad(charCode:Int, x:Float, y:Float, color:ColorTransform)
 				{
 					var frame = font.getCharFrame(charCode);
