@@ -89,8 +89,9 @@ class BaseScaleMode
 		if (FlxG.game == null)
 			return;
 
-		FlxG.game.x = offset.x;
-		FlxG.game.y = offset.y;
+		final rect = FlxG.game.filteredContainer.scrollRect;
+		rect.setTo(-offset.x, -offset.y, deviceSize.x, deviceSize.y);
+		FlxG.game.filteredContainer.scrollRect = rect;
 	}
 
 	function set_horizontalAlign(value:FlxHorizontalAlign):FlxHorizontalAlign

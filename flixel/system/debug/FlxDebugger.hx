@@ -325,8 +325,6 @@ class FlxDebugger extends openfl.display.Sprite
 		resetButtonLayout();
 		resetLayout();
 		scaleX = scaleY = scale;
-		x = -FlxG.scaleMode.offset.x;
-		y = -FlxG.scaleMode.offset.y;
 	}
 
 	function updateBounds():Void
