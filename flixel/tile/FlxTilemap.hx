@@ -1217,7 +1217,8 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	@:access(flixel.FlxCamera)
 	function drawTilemap(buffer:FlxTilemapBuffer, camera:FlxCamera):Void
 	{
-		var isColored:Bool = (alpha != 1) || (color != 0xffffff);
+		var isColored = (colorTransform != null #if !html5
+			&& (colorTransform.hasRGBMultipliers() || colorTransform.hasRGBAOffsets()) #end);
 
 		// only used for renderTile
 		var drawX:Float = 0;
@@ -1240,8 +1241,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			scaledWidth = scaledTileWidth;
 			scaledHeight = scaledTileHeight;
 
-			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
-			drawItem = camera.startQuadBatch(graphic, isColored, hasColorOffsets, blend, antialiasing, shader);
+			drawItem = camera.startQuadBatch(graphic, isColored, blend, antialiasing, shader);
 		}
 
 		// Copy tile images into the tile buffer
