@@ -733,6 +733,18 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
+	 * Helper function to scale the graphic's dimensions, allowing to scale the based on the width/height.
+	 * Meant to be a shortcut to `sprite.setGraphicSize(sprite.width * 0.67)`.
+	 * @param x = 0.0 the amount of scaling in the x axis. if this variable is set to 0.0, it'll be omitted to the y axis.
+	 * @param y = 0.0 the amount of scaling in the y axis. if this variable is set to 0.0, it'll be omitted to the x axis.
+	 * @param absolute = false Checks if the image scaling should be relative to the scaled dimensions like `width` or the raw frame dimensions like `frameWidth`
+	 */
+	public extern inline function scaleGraphicSize(x = 0.0, y = 0.0, absolute = false)
+	{
+		setGraphicSize( ((absolute) ? frameWidth : width) * ((x != 0.) ? x : y), ((absolute) ? frameHeight : height) * ((y != 0.) ? y : x) );
+	}
+
+	/**
 	 * Updates the sprite's hitbox (`width`, `height`, `offset`) according to the current `scale`.
 	 * Also calls `centerOrigin()`.
 	 */
