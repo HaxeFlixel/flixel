@@ -461,7 +461,7 @@ class AssetFrontEnd
 	
 	inline function addSoundExt(id:String)
 	{
-		final needsExt = Path.extension(id) == "";
+		final needsExt = Path.extension(id).length == 0;
 		if (needsExt)
 			return id + defaultSoundExtension;
 			
