@@ -86,7 +86,7 @@ class SoundFrontEnd
 	public var defaultMusicGroup:FlxSoundGroup = new FlxSoundGroup();
 
 	/**
-	 * The group sounds in load() / loadFromURL / play() are added to unless specified otherwise.
+	 * The group sounds in load() / loadFromURL() / play() are added to unless specified otherwise.
 	 */
 	public var defaultSoundGroup:FlxSoundGroup = new FlxSoundGroup();
 
