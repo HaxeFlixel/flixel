@@ -174,8 +174,12 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			FlxCamera._defaultCameras = _cameras;
 		}
 
-		for (basic in members)
+		var renderOrderedArray = [for (i in 0...members.length) i];
+		renderOrderedArray.sort((a, b) -> members[a].renderOrder - members[b].renderOrder);
+		
+		for (i in renderOrderedArray)
 		{
+			var basic = members[i];
 			if (basic != null && basic.exists && basic.visible)
 				basic.draw();
 		}
