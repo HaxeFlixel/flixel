@@ -881,7 +881,8 @@ class FlxCamera extends FlxBasic
 					_helperMatrix.translate(-viewMarginLeft, -viewMarginTop);
 				}
 
-				buffer.draw(trianglesSprite, _helperMatrix);
+				buffer.draw(trianglesSprite, _helperMatrix, transform);
+
 				#if FLX_DEBUG
 				if (FlxG.debugger.drawDebug)
 				{
