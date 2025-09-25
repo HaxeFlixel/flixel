@@ -121,7 +121,9 @@ class Interaction extends Window
 		else
 		{
 			restoreSystemCursor();
+			#if FLX_MOUSE
 			FlxG.mouse.enabled = true;
+			#end
 		}
 	}
 	
