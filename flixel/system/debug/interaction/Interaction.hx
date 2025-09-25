@@ -1,28 +1,28 @@
 package flixel.system.debug.interaction;
 
+import openfl.display.BitmapData;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.display.DisplayObject;
+import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.debug.Window;
+import flixel.system.debug.interaction.tools.Transform;
 import flixel.system.debug.interaction.tools.Eraser;
 import flixel.system.debug.interaction.tools.LogBitmap;
 import flixel.system.debug.interaction.tools.Mover;
 import flixel.system.debug.interaction.tools.Pointer;
-import flixel.system.debug.interaction.tools.ToggleBounds;
 import flixel.system.debug.interaction.tools.Tool;
+import flixel.system.debug.interaction.tools.ToggleBounds;
 import flixel.system.debug.interaction.tools.TrackObject;
-import flixel.system.debug.interaction.tools.Transform;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
-import openfl.display.BitmapData;
-import openfl.display.DisplayObject;
-import openfl.display.Graphics;
-import openfl.display.Sprite;
-import openfl.events.KeyboardEvent;
-import openfl.events.MouseEvent;
-import openfl.geom.Point;
 #if !(FLX_NATIVE_CURSOR && FLX_MOUSE)
 import openfl.display.Bitmap;
 #end
@@ -114,15 +114,9 @@ class Interaction extends Window
 	function handleDebuggerVisibilityChanged():Void
 	{
 		if (FlxG.debugger.visible)
-		{
 			saveSystemCursorInfo();
-			resetActiveTool();
-		}
 		else
-		{
 			restoreSystemCursor();
-			FlxG.mouse.enabled = true;
-		}
 	}
 	
 	function updateMouse(event:MouseEvent):Void
@@ -536,11 +530,6 @@ class Interaction extends Window
 
 		activeTool = value;
 
-		resetActiveTool();
-	}
-	
-	public function resetActiveTool():Void
-	{
 		if (activeTool != null)
 		{
 			// A tool is active. Enable cursor specific cursors

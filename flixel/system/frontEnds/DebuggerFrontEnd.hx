@@ -1,19 +1,19 @@
 package flixel.system.frontEnds;
 
+import openfl.display.BitmapData;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.debug.FlxDebugger;
-import flixel.system.debug.Window;
 import flixel.system.debug.interaction.Interaction;
 import flixel.system.debug.interaction.tools.Tool;
+import flixel.system.debug.Window;
 import flixel.system.debug.watch.Tracker;
 import flixel.system.ui.FlxSystemButton;
 import flixel.util.FlxHorizontalAlign;
 import flixel.util.FlxSignal;
-import openfl.display.BitmapData;
 
-using flixel.util.FlxArrayUtil;
 using flixel.util.FlxStringUtil;
+using flixel.util.FlxArrayUtil;
 
 /**
  * Accessed via `FlxG.debugger`.
@@ -172,16 +172,36 @@ class DebuggerFrontEnd
 		return drawDebug;
 	}
 
-	function set_visible(value:Bool):Bool
+	@:access(flixel.FlxGame.onFocus)
+	function set_visible(Value:Bool):Bool
 	{
-		if (visible == value)
+		if (visible == Value)
 			return visible;
 
-		visible = value;
+		visible = Value;
 
 		#if FLX_DEBUG
-		FlxG.game.debugger.visible = value;
-		FlxG.game.debugger.tabChildren = value;
+		FlxG.game.debugger.visible = Value;
+		FlxG.game.debugger.tabChildren = Value;
+
+		// if the debugger is non-visible, then we need to focus on game sprite,
+		// so the game still will be able to capture key presses
+		if (!Value)
+		{
+			FlxG.stage.focus = null;
+
+			#if FLX_MOUSE
+			FlxG.mouse.enabled = true;
+			#end
+		}
+		else
+		{
+			#if FLX_MOUSE
+			// Debugger is visible, allow mouse input in the game only if the
+			// interaction tool is not in use.
+			FlxG.mouse.enabled = !FlxG.game.debugger.interaction.isInUse();
+			#end
+		}
 
 		visibilityChanged.dispatch();
 		#end
