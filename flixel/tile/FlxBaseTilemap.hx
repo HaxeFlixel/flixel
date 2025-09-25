@@ -235,6 +235,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Returns true if the ray made it from Start to End without hitting anything.
 	 *          Returns false and fills Result if a tile was hit.
 	 */
+	@:deprecated("rayStep is deprecated, ray() has an infinite resolution, without any loss in performance")
 	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		throw "rayStep must be implemented?";
@@ -1593,7 +1594,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * @param   worldPoint     The point in world space you want to check.
 	 * @param   inScreenSpace  Whether to take scroll factors into account when checking for overlap.
-	 * @param   camera         Specify which game camera you want.  If null getScreenPosition() will just grab the first global camera.
+	 * @param   camera         The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the point overlaps this object.
 	 */
 	override function overlapsPoint(worldPoint:FlxPoint, inScreenSpace = false, ?camera:FlxCamera):Bool
@@ -1601,9 +1602,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if (inScreenSpace)
 		{
 			if (camera == null)
-				camera = FlxG.camera;
+				camera = getDefaultCamera();
 
-			worldPoint.subtractPoint(camera.scroll);
+			worldPoint.subtract(camera.scroll);
 			worldPoint.putWeak();
 		}
 

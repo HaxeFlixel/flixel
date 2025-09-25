@@ -35,7 +35,7 @@ using StringTools;
  * 
  * ### Quick Setup for "Hot-Reloading"
  * To simplify the process mentioned above, the `FLX_CUSTOM_ASSETS_DIRECTORY` flag was created.
- * By adding `-DFLX_CUSTOM_ASSETS_DIRECTORY="../../../assets"` to your lime build command
+ * By adding `-DFLX_CUSTOM_ASSETS_DIRECTORY="assets"` to your lime build command
  * it will automatically grab assets from your project root's assets folder rather than, the
  * default "export/hl/bin/assets". This will only work with a single asset root folder with one
  * asset library and will use the openfl asset system if the asset id starts with "flixel/" or

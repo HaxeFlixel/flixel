@@ -4,12 +4,13 @@ import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Position;
+
+using StringTools;
 #if (flixel_addons >= "3.2.2")
 import flixel.addons.system.macros.FlxAddonDefines;
 #end
 
 
-using StringTools;
 
 private enum UserDefines
 {
@@ -25,6 +26,8 @@ private enum UserDefines
 	FLX_NO_DEBUG;
 	/* Removes FlxObject.health */
 	FLX_NO_HEALTH;
+	/* Enables FlxObject.health */
+	FLX_HEALTH;
 	FLX_RECORD;
 	/* Defined in HaxeFlixel CI tests, do not use */
 	FLX_UNIT_TEST;
@@ -58,6 +61,11 @@ private enum UserDefines
 	 * If this flag is set to any string, that is used for the file extension
 	 */
 	FLX_DEFAULT_SOUND_EXT;
+	
+	/**
+	 * Used to make the debug windows bigger
+	 */
+	FLX_DEBUGGER_SCALE;
 }
 
 /**
@@ -80,7 +88,6 @@ private enum HelperDefines
 	FLX_NATIVE_CURSOR;
 	FLX_SOUND_TRAY;
 	FLX_POINTER_INPUT;
-	FLX_POST_PROCESS;
 	FLX_JOYSTICK_API;
 	FLX_GAMEINPUT_API;
 	FLX_ACCELEROMETER;
@@ -98,7 +105,8 @@ private enum HelperDefines
 	/* Used in HaxeFlixel CI, should have no effect on personal projects */
 	FLX_NO_CI;
 	FLX_SAVE;
-	FLX_HEALTH;
+	/** Neither FLX_HEALTH not FLX_NO_HEALTH was defined */
+	FLX_HEALTH_NOT_DEFINED;
 	FLX_NO_TRACK_POOLS;
 	FLX_NO_TRACK_GRAPHICS;
 	FLX_OPENGL_AVAILABLE;
@@ -141,11 +149,11 @@ class FlxDefines
 		checkOpenFLVersions();
 		#end
 		
-		#if (flixel_addons < version("3.0.2"))
-		abortVersion("Flixel Addons", "3.0.2 or newer", "flixel-addons", (macro null).pos);
+		#if (flixel_addons < version("3.3.0"))
+		abortVersion("Flixel Addons", "3.3.0 or newer", "flixel-addons", (macro null).pos);
 		#end
-		#if (flixel_ui < version("2.4.0"))
-		abortVersion("Flixel UI", "2.4.0 or newer", "flixel-addons", (macro null).pos);
+		#if (flixel_ui < version("2.6.2"))
+		abortVersion("Flixel UI", "2.6.2 or newer", "flixel_ui", (macro null).pos);
 		#end
 	}
 
@@ -205,10 +213,15 @@ class FlxDefines
 		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
 		defineInversion(FLX_COVERAGE_TEST, FLX_NO_COVERAGE_TEST);
 		defineInversion(FLX_SWF_VERSION_TEST, FLX_NO_SWF_VERSION_TEST);
-		defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
 		defineInversion(FLX_TRACK_POOLS, FLX_NO_TRACK_POOLS);
 		defineInversion(FLX_DEFAULT_SOUND_EXT, FLX_NO_DEFAULT_SOUND_EXT);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
+		// defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
+		if (!defined(FLX_NO_HEALTH) && !defined(FLX_HEALTH))
+		{
+			define(FLX_HEALTH_NOT_DEFINED);
+			define(FLX_HEALTH);
+		}
 	}
 
 	static function defineHelperDefines()
@@ -227,12 +240,8 @@ class FlxDefines
 		if (!defined(FLX_NO_SOUND_SYSTEM) && !defined(FLX_NO_SOUND_TRAY))
 			define(FLX_SOUND_TRAY);
 
-		#if (lime >= "8.0.0")
 		if (defined(FLX_NO_SOUND_SYSTEM) || defined("flash"))
 			define(FLX_NO_PITCH);
-		#else
-		define(FLX_NO_PITCH);
-		#end
 
 		if (!defined(FLX_NO_PITCH))
 			define(FLX_PITCH);
@@ -251,11 +260,6 @@ class FlxDefines
 
 		if (!defined(FLX_NO_TOUCH) || !defined(FLX_NO_MOUSE))
 			define(FLX_POINTER_INPUT);
-
-		#if (openfl < "4.0.0")
-		if (defined("cpp") || defined("neko"))
-			define(FLX_POST_PROCESS);
-		#end
 
 		if (defined("cpp") && defined("steamwrap"))
 			define(FLX_STEAMWRAP);

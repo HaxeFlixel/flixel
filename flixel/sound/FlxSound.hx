@@ -13,9 +13,7 @@ import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
 import openfl.net.URLRequest;
-#if flash11
 import openfl.utils.ByteArray;
-#end
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
@@ -337,7 +335,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from an embedded MP3.
 	 *
-	 * **Note:** If the `FLX_SOUND_ADD_EXT` flag is enabled, you may omit the file extension
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 *
 	 * @param	EmbeddedSound	An embedded Class object representing an MP3 file.
 	 * @param	Looped			Whether or not this sound should loop endlessly.
@@ -409,7 +407,6 @@ class FlxSound extends FlxBasic
 		return init(Looped, AutoDestroy, OnComplete);
 	}
 	
-	#if flash11
 	/**
 	 * One of the main setup functions for sounds, this function loads a sound from a ByteArray.
 	 *
@@ -429,7 +426,6 @@ class FlxSound extends FlxBasic
 		
 		return init(Looped, AutoDestroy, OnComplete);
 	}
-	#end
 	
 	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
 	{
@@ -598,11 +594,24 @@ class FlxSound extends FlxBasic
 	@:allow(flixel.sound.FlxSoundGroup)
 	function updateTransform():Void
 	{
-		_transform.volume = #if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume * #end
-			(group != null ? group.volume : 1) * _volume * _volumeAdjust;
-			
+		_transform.volume = calcTransformVolume();
+		
 		if (_channel != null)
 			_channel.soundTransform = _transform;
+	}
+	
+	function calcTransformVolume():Float
+	{
+		final volume = (group != null ? group.getVolume() : 1.0) * _volume * _volumeAdjust;
+		
+		#if FLX_SOUND_SYSTEM
+		if (FlxG.sound.muted)
+			return 0.0;
+		
+		return FlxG.sound.applySoundCurve(FlxG.sound.volume * volume);
+		#else
+		return volume;
+		#end
 	}
 	
 	/**

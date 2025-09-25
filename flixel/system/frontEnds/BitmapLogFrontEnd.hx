@@ -1,18 +1,61 @@
 package flixel.system.frontEnds;
 
-import openfl.display.BitmapData;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
 
 /**
  * Accessed via `FlxG.bitmapLog`.
  */
 class BitmapLogFrontEnd
 {
-	public inline function add(Data:BitmapData, Name:String = ""):Void
+	#if FLX_DEBUG
+	public var window(get, never):flixel.system.debug.log.BitmapLog;
+	inline function get_window() return FlxG.game.debugger.bitmapLog;
+	#end
+	
+	public overload inline extern function add(data:BitmapData, name = ""):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.add(Data, Name);
+		window.add(data, name);
 		#end
+	}
+	
+	public overload inline extern function add(graphic:FlxGraphic, ?name:String):Void
+	{
+		addGraphic(graphic, name);
+	}
+	
+	function addGraphic(graphic:FlxGraphic, ?name:String):Void
+	{
+		#if FLX_DEBUG
+		if (graphic != null && graphic.bitmap != null)
+		{
+			if (name == null)
+				name = getGraphicName(graphic);
+			
+			add(graphic.bitmap, name);
+		}
+		#end
+	}
+	
+	function getGraphicName(graphic:FlxGraphic)
+	{
+		if (graphic.key != null)
+			return graphic.key;
+		
+		if (graphic.assetsKey != null)
+			return graphic.assetsKey;
+		
+		if (graphic.assetsClass != null)
+			return Type.getClassName(graphic.assetsClass);
+		
+		#if FLX_TRACK_GRAPHICS
+		if (graphic.trackingInfo != null)
+			return graphic.trackingInfo;
+		#end
+		
+		return null;
 	}
 
 	/**
@@ -21,7 +64,7 @@ class BitmapLogFrontEnd
 	public inline function clear():Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.clear();
+		window.clear();
 		#end
 	}
 
@@ -32,7 +75,7 @@ class BitmapLogFrontEnd
 	public inline function clearAt(Index:Int = -1):Void
 	{
 		#if FLX_DEBUG
-		FlxG.game.debugger.bitmapLog.clearAt(Index);
+		window.clearAt(Index);
 		#end
 	}
 

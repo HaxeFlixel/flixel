@@ -1,7 +1,7 @@
 package flixel.math;
 
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
 
 class FlxRectTest extends FlxTest
 {
@@ -34,7 +34,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBounds()
+	function testGetRotatedBounds()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
@@ -64,7 +64,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBoundsSelf()
+	function testGetRotatedBoundsSelf()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
@@ -149,5 +149,29 @@ class FlxRectTest extends FlxTest
 		FlxAssert.rectsNear(expected, rect1, 0.0001);
 		
 		expected.put();
+	}
+	
+	@Test
+	function testContins()
+	{
+		rect1.set(0, 0, 100, 100);
+		
+		inline function assertContains(x, y, width = 50, height = 50, ?pos:PosInfos)
+		{
+			Assert.isTrue(rect1.contains(rect2.set(x, y, width, height)), pos);
+		}
+		
+		inline function assertNotContains(x, y, width = 50, height = 50, ?pos:PosInfos)
+		{
+			Assert.isFalse(rect1.contains(rect2.set(x, y, width, height)), pos);
+		}
+		
+		assertContains(25, 25);
+		assertContains(0, 0);
+		assertNotContains(-1, -1);
+		assertContains(50, 50);
+		assertNotContains(51, 51);
+		assertContains(0, 0, 100, 100);
+		assertNotContains(-1, -1, 101, 101);
 	}
 }

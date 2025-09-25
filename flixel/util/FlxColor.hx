@@ -1,5 +1,6 @@
 package flixel.util;
 
+import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
 
@@ -79,6 +80,12 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * The lightness of the color (from 0 to 1)
 	 */
 	public var lightness(get, set):Float;
+
+	/**
+	 * The luminance, or "percieved brightness" of a color (from 0 to 1)
+	 * RGB -> Luma calculation from https://www.w3.org/TR/AERT/#color-contrast
+	 */
+	public var luminance(get, never):Float;
 
 	static var COLOR_REGEX = ~/^(0x|#)(([A-F0-9]{2}){3,4})$/i;
 
@@ -252,16 +259,13 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param Ease An optional easing function, such as those provided in FlxEase
 	 * @return An array of colors of length Steps, shifting from Color1 to Color2
 	 */
-	public static function gradient(Color1:FlxColor, Color2:FlxColor, Steps:Int, ?Ease:Float->Float):Array<FlxColor>
+	public static function gradient(Color1:FlxColor, Color2:FlxColor, Steps:Int, ?Ease:EaseFunction):Array<FlxColor>
 	{
 		var output = new Array<FlxColor>();
 
 		if (Ease == null)
 		{
-			Ease = function(t:Float):Float
-			{
-				return t;
-			}
+			Ease = FlxEase.linear;
 		}
 
 		for (step in 0...Steps)
@@ -360,6 +364,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 *
 	 * @return A 24 bit version of this color
 	 */
+	@:deprecated("to24Bit() is deprecated, use rgb field, instead.")
 	public inline function to24Bit():FlxColor
 	{
 		return this & 0xffffff;
@@ -511,7 +516,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255.
 	 * @return	This color
 	 */
-	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha:Float):FlxColor
+	public inline function setHSB(Hue:Float, Saturation:Float, Brightness:Float, Alpha = 1.0):FlxColor
 	{
 		var chroma = Brightness * Saturation;
 		var match = Brightness - chroma;
@@ -527,7 +532,7 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	 * @param	Alpha		How opaque the color should be, either between 0 and 1 or 0 and 255
 	 * @return	This color
 	 */
-	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha:Float):FlxColor
+	public inline function setHSL(Hue:Float, Saturation:Float, Lightness:Float, Alpha = 1.0):FlxColor
 	{
 		var chroma = (1 - Math.abs(2 * Lightness - 1)) * Saturation;
 		var match = Lightness - chroma / 2;
@@ -739,6 +744,11 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	inline function get_brightness():Float
 	{
 		return maxColor();
+	}
+
+	inline function get_luminance():Float
+	{
+		return (redFloat * 299 + greenFloat * 587 + blueFloat * 114) / 1000;
 	}
 
 	inline function get_saturation():Float
