@@ -74,7 +74,7 @@ class FlxBitmapText extends FlxSprite
 
 	/**
 	 * The type of automatic wrapping to use, when the text doesn't fit the width. Ignored when
-	 * `autoSize` is true. Use options like: `NONE`, `CHAR`, `WORD(NEVER)` and `WORD(FIELD_WIDTH)`
+	 * `autoSize` is true. Use options like: `NONE`, `CHAR`, `WORD(NEVER)` and `WORD(LINE_WIDTH)`
 	 */
 	public var wrap(default, set):Wrap = WORD(NEVER);
 
