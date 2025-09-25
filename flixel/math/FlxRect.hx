@@ -286,6 +286,32 @@ class FlxRect implements IFlxPooled
 	}
 
 	/**
+	 * Checks to see if this rectangle overlaps another in the X axis
+	 *
+	 * @param   rect  The other rectangle
+	 */
+	public inline function overlapsX(rect:FlxRect):Bool
+	{
+		final result = rect.right > left
+			&& rect.left < right;
+		rect.putWeak();
+		return result;
+	}
+
+	/**
+	 * Checks to see if this rectangle overlaps another in the Y axis
+	 *
+	 * @param   rect  The other rectangle
+	 */
+	public inline function overlapsY(rect:FlxRect):Bool
+	{
+		final result = rect.bottom > top
+			&& rect.top < bottom;
+		rect.putWeak();
+		return result;
+	}
+	
+	/**
 	 * Checks to see if this rectangle fully contains another
 	 *
 	 * @param   rect  The other rectangle
@@ -301,7 +327,7 @@ class FlxRect implements IFlxPooled
 		rect.putWeak();
 		return result;
 	}
-
+	
 	/**
 	 * Returns true if this FlxRect contains the FlxPoint
 	 *
@@ -532,6 +558,41 @@ class FlxRect implements IFlxPooled
 			return result.set(0, 0, 0, 0);
 		
 		return result.set(x0, y0, x1 - x0, y1 - y0);
+	}
+	
+	/**
+	 * How much this rectangle overlaps the other in the X axis
+	 */
+	public inline function intersectionX(rect:FlxRect):Float
+	{
+		final result = intersectionXHelper(rect);
+		rect.putWeak();
+		return result;
+	}
+	
+	inline function intersectionXHelper(rect:FlxRect):Float
+	{
+		final l = x < rect.x ? rect.x : x;
+		final r = right > rect.right ? rect.right : right;
+		return r <= l ? 0 : r - l;
+	}
+	
+	
+	/**
+	 * How much this rectangle overlaps the other in the Y axis
+	 */
+	public inline function intersectionY(rect:FlxRect):Float
+	{
+		final result = intersectionYHelper(rect);
+		rect.putWeak();
+		return result;
+	}
+	
+	inline function intersectionYHelper(rect:FlxRect):Float
+	{
+		final t = y < rect.y ? rect.y : y;
+		final b = bottom > rect.bottom ? rect.bottom : bottom;
+		return b <= t ? 0 : b - t;
 	}
 	
 	/**

@@ -1,7 +1,5 @@
 package flixel.util;
 
-import openfl.display.BitmapData;
-import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -12,6 +10,8 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.tile.FlxTileblock;
+import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 
 /**
  * FlxCollision
@@ -369,5 +369,41 @@ class FlxCollision
 	public static inline function calcRectExit(rect, start, end, ?result)
 	{
 		return calcRectEntry(rect, end, start, result);
+	}
+	
+	/**
+	 * The smallest rect that contains the object in it's current and last position
+	 * 
+	 * @param   rect  Optional point to store the result, if `null` one is created
+	 * @since 6.2.0
+	 */
+	public static function getDeltaRect(object:FlxObject, ?rect:FlxRect)
+	{
+		if (rect == null)
+			rect = FlxRect.get();
+		
+		rect.x = object.x > object.last.x ? object.last.x : object.x;
+		rect.right = (object.x > object.last.x ? object.x : object.last.x) + object.width;
+		rect.y = object.y > object.last.y ? object.last.y : object.y;
+		rect.bottom = (object.y > object.last.y ? object.y : object.last.y) + object.height;
+		
+		return rect;
+	}
+	
+	/**
+	 * Checks whether the two objects' delta rects overlap
+	 * @see FlxCollision.getDeltaRect
+	 * @since 6.2.0
+	 */
+	public static function overlapsDelta(object1:FlxObject, object2:FlxObject)
+	{
+		final rect1 = getDeltaRect(object1);
+		final rect2 = getDeltaRect(object2);
+		
+		final result = rect1.overlaps(rect2);
+		
+		rect1.put();
+		rect2.put();
+		return result;
 	}
 }

@@ -5,6 +5,7 @@ import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPathfinder;
+import flixel.physics.FlxCollider;
 import flixel.system.FlxAssets;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxCollision;
@@ -300,22 +301,39 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "isOverlappingTile must be implemented";
 	}
 	
 	/**
-	 * Calls the given function on ever tile that is overlapping the target object
+	 * Calls the given function on every tile that is overlapping the target object
 	 * 
 	 * @param   object    The object
-	 * @param   filter    Function that takes a tile and returns whether is satisfies the
-	 *                    disired condition
+	 * @param   func      Function that takes a tile
 	 * @param   position  Optional, specify a custom position for the tilemap
 	 * @return  Whether any overlapping tile was found
 	 * @since 5.9.0
 	 */
 	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "forEachOverlappingTile must be implemented";
+	}
+	
+	/**
+	 * Calls the given function on every tile that is overlapping the target object's delta rect
+	 * 
+	 * **NOTE:** Tiles are iterated in the direction the object moved this frame. For example, if
+	 * `object.last.y` is greater than `object.y`, tiles are checked from bottom to top
+	 * 
+	 * @param   collider  The colliding object
+	 * @param   func      Function that takes a tile and returns whether is satisfies the
+	 *                    disired condition
+	 * @return  Whether any colliding tile was found
+	 * @see FlxCollision.getDeltaRect
+	 * @since 6.2.0
+	 */
+	public function forEachCollidingTile(collider:IFlxCollider, func:(tile:Tile)->Bool, stopAtFirst = false):Bool
+	{
+		throw "forEachCollidingTile must be implemented";
 	}
 	
 	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead") // 5.9.0
@@ -360,6 +378,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		flixelType = TILEMAP;
 		immovable = true;
 		moves = false;
+		collider.type = FlxColliderType.TILEMAP;
 	}
 
 	override function destroy():Void
@@ -1616,7 +1635,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final mapIndex = getMapIndex(point);
 		return tileExists(mapIndex) && getTileData(mapIndex).solid;
 	}
-
+	
 	/**
 	 * Get the world coordinates and size of the entire tilemap as a FlxRect.
 	 *

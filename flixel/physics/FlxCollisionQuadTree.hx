@@ -1,44 +1,42 @@
-package flixel.system;
+package flixel.physics;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxCollision;
+import flixel.physics.FlxCollider;
+import flixel.system.FlxLinkedList;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPool;
 
-typedef ProcessCallback = (FlxObject, FlxObject) -> Bool;
-typedef NotifyCallback = (FlxObject, FlxObject) -> Void;
+typedef NotifyCallback = (IFlxCollider, IFlxCollider) -> Void;
 
 /**
  * A fairly generic quad tree structure for rapid overlap checks.
- * FlxQuadTree is also configured for single or dual list operation.
+ * FlxCollisionQuadTree is also configured for single or dual list operation.
  * You can add items either to its A list or its B list.
  * When you do an overlap check, you can compare the A list to itself,
  * or the A list against the B list.  Handy for different things!
  */
-class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
+class FlxCollisionQuadTree implements IFlxDestroyable implements IFlxPooled
 {
-	public static var pool:FlxPool<FlxQuadTree> = new FlxPool(() -> new FlxQuadTree());
+	public static var pool:FlxPool<FlxCollisionQuadTree> = new FlxPool(() -> new FlxCollisionQuadTree());
 	
 	/**
 	 * Controls the granularity of the quad tree.  Default is 6 (decent performance on large and small worlds).
 	 */
-	public var divisions:Int;
+	public var divisions:Int = 0;
 	
 	public var rect:FlxRect;
 	
-	final listA:Array<FlxObject> = [];
-	final listB:Array<FlxObject> = [];
+	final listA:Array<IFlxCollider> = [];
+	final listB:Array<IFlxCollider> = [];
 	
-	var nw:Null<FlxQuadTree>;
-	var ne:Null<FlxQuadTree>;
-	var se:Null<FlxQuadTree>;
-	var sw:Null<FlxQuadTree>;
-	
-	// var minSize:Float;
+	var nw:Null<FlxCollisionQuadTree>;
+	var ne:Null<FlxCollisionQuadTree>;
+	var se:Null<FlxCollisionQuadTree>;
+	var sw:Null<FlxCollisionQuadTree>;
 	
 	overload public static inline extern function executeOnce(x, y, width, height, divisions, objectA, objectB, notifier, processer)
 	{
@@ -53,22 +51,24 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 		return executeOnce(rect.x, rect.y, rect.width, rect.height, divisions, objectA, objectB, notifier, processer);
 	}
 	
-	/**
-	 * Recycle a cached Quad Tree node, or creates a new one if needed.
-	 * @param   x          The X-coordinate of the point in space.
-	 * @param   y          The Y-coordinate of the point in space.
-	 * @param   width      Desired width of this node.
-	 * @param   height     Desired height of this node.
-	 * @param   divisions  Desired height of this node.
-	 */
-	public static function get(x, y, width, height, divisions)
+	overload public static inline extern function get(x, y, width, height, divisions)
 	{
 		return pool.get().reset(x, y, width, height, divisions);
 	}
 	
-	static function getSub(x, y, width, height, parent)
+	overload public static inline extern function get(rect:FlxRect, divisions:Int)
+	{
+		return get(rect.x, rect.y, rect.width, rect.height, divisions);
+	}
+	
+	overload static inline extern function getSub(x, y, width, height, parent)
 	{
 		return pool.get().resetSub(x, y, width, height, parent);
+	}
+	
+	overload static inline extern function getSub(rect:FlxRect, parent)
+	{
+		return getSub(rect.x, rect.y, rect.width, rect.height, parent);
 	}
 	
 	function new() {}
@@ -85,7 +85,7 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 		return this;
 	}
 	
-	public function resetSub(x:Float, y:Float, width:Float, height:Float, parent:FlxQuadTree)
+	public function resetSub(x:Float, y:Float, width:Float, height:Float, parent:FlxCollisionQuadTree)
 	{
 		return reset(x, y, width, height, parent.divisions - 1);
 	}
@@ -95,14 +95,13 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 	 */
 	public function destroy():Void
 	{
-		rect = FlxDestroyUtil.put(rect);
 		listA.resize(0);
 		listB.resize(0);
 		
-		nw = FlxDestroyUtil.put(nw);
-		ne = FlxDestroyUtil.put(ne);
-		sw = FlxDestroyUtil.put(sw);
-		se = FlxDestroyUtil.put(se);
+		nw = FlxDestroyUtil.destroy(nw);
+		ne = FlxDestroyUtil.destroy(ne);
+		sw = FlxDestroyUtil.destroy(sw);
+		se = FlxDestroyUtil.destroy(se);
 	}
 	
 	public function put()
@@ -130,7 +129,7 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 		return execute(objectOrGroup2 != null, notifier, processer);
 	}
 	
-	public function load(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic):Void
+	function load(objectOrGroup1:FlxBasic, ?objectOrGroup2:FlxBasic):Void
 	{
 		add(objectOrGroup1, true);
 		if (objectOrGroup2 != null && objectOrGroup2 != objectOrGroup1)
@@ -156,15 +155,17 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 					add(member, listA);
 			}
 		}
-		else if (basic is FlxObject)
+		else if (basic is IFlxCollider)
 		{
-			final object:FlxObject = cast basic;
-			if (object.exists && object.allowCollisions != NONE)
-				addObject(object, listA);
+			final collider = (cast basic : IFlxCollider).getCollider();
+			if (basic.exists && collider.allowCollisions != NONE)
+			{
+				addCollider(cast basic, collider, listA);
+			}
 		}
 		else
 		{
-			throw 'Can only add FlxGroups, FlxSpriteGroups and FlxObjects to quad trees';
+			throw 'Can only add FlxGroups and IFlxColliders to quad trees';
 		}
 	}
 	
@@ -172,14 +173,13 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 	 * Internal function for recursively navigating and creating the tree
 	 * while adding objects to the appropriate nodes.
 	 */
-	function addObject(object:FlxObject, isA:Bool):Void
+	function addCollider(object:IFlxCollider, collider:FlxCollider, isA:Bool):Void
 	{
-		final bounds = object.getHitbox();
-		// If this quad lies entirely inside this object, add it here
+		final bounds = collider.bounds;
+		// If this quad (not its children) lies entirely inside this object, add it here
 		if (divisions > 0 || bounds.contains(rect))
 		{
 			(isA ? listA : listB).push(object);
-			bounds.put();
 			return;
 		}
 		
@@ -189,60 +189,67 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 		if (quadrant.overlaps(bounds))
 		{
 			if (nw == null)
-				nw = getSub(quadrant.x, quadrant.y, quadrant.width, quadrant.height, this);
+				nw = getSub(quadrant, this);
 				
-			nw.addObject(object, isA);
+			nw.addCollider(object, collider, isA);
 		}
 		
 		getQuadrant(true, false, quadrant);
 		if (quadrant.overlaps(bounds))
 		{
 			if (ne == null)
-				ne = getSub(quadrant.x, quadrant.y, quadrant.width, quadrant.height, this);
+				ne = getSub(quadrant, this);
 				
-			ne.addObject(object, isA);
+			ne.addCollider(object, collider, isA);
 		}
 		
 		getQuadrant(false, true, quadrant);
 		if (quadrant.overlaps(bounds))
 		{
 			if (sw == null)
-				sw = getSub(quadrant.x, quadrant.y, quadrant.width, quadrant.height, this);
+				sw = getSub(quadrant, this);
 				
-			sw.addObject(object, isA);
+			sw.addCollider(object, collider, isA);
 		}
 		
 		getQuadrant(true, true, quadrant);
 		if (quadrant.overlaps(bounds))
 		{
 			if (se == null)
-				se = getSub(quadrant.x, quadrant.y, quadrant.width, quadrant.height, this);
+				se = getSub(quadrant, this);
 				
-			se.addObject(object, isA);
+			se.addCollider(object, collider, isA);
 		}
 		
 		quadrant.put();
-		bounds.put();
 	}
 	
-	public function execute(useBothLists:Bool, notifier:NotifyCallback, processer:ProcessCallback):Bool
+	function execute(useBothLists:Bool, notifier:NotifyCallback, processer:ProcessCallback):Bool
 	{
 		var processed = false;
 		
-		final listB = useBothLists ? this.listB : this.listA;
-		for (a in 0...listA.length)
+		if (useBothLists)
 		{
-			final objectA = listA[a];
-			final rectA = FlxCollision.getDeltaRect(objectA);
-			for (b in 0...listB.length)
+			for (a in 0...listA.length)
 			{
-				final objectB = listB[b];
-				final rectB = FlxCollision.getDeltaRect(objectB);
-				if (processOverlap(objectA, objectB, rectA, rectB, notifier, processer))
-					processed = true;
+				for (b in 0...listB.length)
+				{
+					if (process(listA[a], listB[b], notifier, processer))
+						processed = true;
+				}
 			}
 		}
-	
+		else
+		{
+			for (a in 0...listA.length)
+			{
+				for (b in a...listA.length)
+				{
+					if (process(listA[a], listA[b], notifier, processer))
+						processed = true;
+				}
+			}
+		}
 		
 		// Advance through the tree by calling overlap on each child
 		if (nw != null && nw.execute(useBothLists, notifier, processer))
@@ -260,9 +267,9 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 		return processed;
 	}
 	
-	function processOverlap(a:FlxObject, b:FlxObject, rectA:FlxRect, rectB:FlxRect, notifier:Null<NotifyCallback>, processer:Null<ProcessCallback>):Bool
+	function process(a:IFlxCollider, b:IFlxCollider, notifier:Null<NotifyCallback>, processer:Null<ProcessCallback>):Bool
 	{
-		if (rectA.overlaps(rectB) && (processer == null || processer(a, b)))
+		if (a.getCollider().bounds.overlaps(b.getCollider().bounds) && (processer == null || processer(a, b)))
 		{
 			if (notifier != null)
 				notifier(a, b);
@@ -275,9 +282,16 @@ class FlxQuadTree implements IFlxDestroyable implements IFlxPooled
 	
 	function getQuadrant(up:Bool, left:Bool, result:FlxRect)
 	{
-		result.set(rect.x, rect.y, rect.width / 2, rect.height / 2);
+		final halfX = rect.width / 2;
+		final halfY = rect.height / 2;
 		
-		if (!left) result.x += result.width;
-		if (!up  ) result.y += result.height;
+		if (up && left)
+			result.set(rect.x, rect.y, halfX, halfY);
+		else if (up && !left)
+			result.set(rect.x + halfX, rect.y, halfX, rect.height);
+		else if (!up && left)
+			result.set(rect.x, rect.y + halfY, rect.width, halfY);
+		else if (!up && !left)
+			result.set(rect.x + halfX, rect.y + halfY, halfX, halfY);
 	}
 }
