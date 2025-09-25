@@ -643,10 +643,8 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
 			&& _headTriangles.blend == blend
-			#if !flash
 			&& _headTriangles.hasColorOffsets == hasColorOffsets
 			&& _headTriangles.shader == shader
-			#end
 			)
 		{
 			return _headTriangles;
@@ -676,10 +674,8 @@ class FlxCamera extends FlxBasic
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
 		itemToReturn.blend = blend;
-		#if !flash
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.shader = shader;
-		#end
 
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
@@ -900,17 +896,11 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored:Bool = (colors != null && colors.length != 0);
+			final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
+			final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
 
-			#if !flash
-			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-			isColored = isColored || (transform != null && transform.hasRGBMultipliers());
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+			final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
 			drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds, transform);
-			#else
-			var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-			drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds);
-			#end
 		}
 	}
 
