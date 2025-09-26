@@ -1254,57 +1254,25 @@ class FlxObject extends FlxBasic
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
-		var rect = getBoundingBox(camera);
-		#if !flash
-		var viewLeft = camera.viewMarginLeft - 2;
-		var viewRight = camera.viewMarginRight + 2;
-		var viewTop = camera.viewMarginTop - 2;
-		var viewBottom = camera.viewMarginBottom + 2;
-		
-		// clamp the rect to the bounds of the camera
-		// this is neccesary to avoid big bitmaps when zoomed in
-		if (rect.x < viewLeft)
+		final rect = getBoundingBox(camera);
+		if (FlxG.renderTile)
 		{
-			rect.width -= (viewLeft - rect.x);
-			rect.x = viewLeft;
-		}
-		else if (rect.x > viewRight)
-		{
-			rect.x = viewRight;
-			rect.width = 0;
+			final PAD = 2;
+			final view = camera.getViewMarginRect();
+			view.left -= PAD;
+			view.top -= PAD;
+			view.right += PAD;
+			view.bottom += PAD;
+			rect.clipTo(view);
+			view.put();
 		}
 		
-		if (rect.right > viewRight)
+		if (rect.width > 0 && rect.height > 0)
 		{
-			rect.width = viewRight - rect.x;
+			final gfx = beginDrawDebug(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+			endDrawDebug(camera);
 		}
-		
-		if (rect.y < viewTop)
-		{
-			rect.height -= (viewTop - rect.y);
-			rect.y = viewTop;
-		}
-		else if (rect.y > viewBottom)
-		{
-			rect.y = viewBottom;
-			rect.height = 0;
-		}
-		
-		if (rect.bottom > viewBottom)
-		{
-			rect.height = viewBottom - rect.y;
-		}
-		
-		rect.width = Math.max(0, rect.width);
-		rect.height = Math.max(0, rect.height);
-		
-		if (rect.isEmpty)
-			return;
-		#end
-		
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-		endDrawDebug(camera);
 	}
 
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
