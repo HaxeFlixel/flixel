@@ -262,9 +262,10 @@ class FlxSprite extends FlxObject
 	/**
 	 * Multiplies this sprite's image by the given red, green and blue components, alpha is ignored.
 	 * To change the opacity use `alpha`. Calling `setColorTransform` will also change this value.
+	 * defaults to flixel.FlxColor.TRANSPARENT for zero tint, to tint a sprite use a non transparent color.
 	 * @see https://snippets.haxeflixel.com/sprites/color/
 	 */
-	public var color(default, set):FlxColor = FlxColor.WHITE;
+	public var color(default, set):FlxColor = FlxColor.TRANSPARENT;
 	
 	/**
 	 * The color effects of this sprite, changes to `color` or `alpha` will be reflected here
@@ -368,6 +369,12 @@ class FlxSprite extends FlxObject
 	var _facingFlip:Map<FlxDirectionFlags, {x:Bool, y:Bool}> = new Map<FlxDirectionFlags, {x:Bool, y:Bool}>();
 
 	/**
+	 * Tells this `FlxSprite` to batch any color Tint that is not `flixel.FlxColor.TRANSPARENT`
+	 */
+	@:noCompletion
+	var _colored:Bool;
+
+	/**
 	 * Creates a `FlxSprite` at a specified position with a specified one-frame graphic.
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
 	 *
@@ -440,6 +447,7 @@ class FlxSprite extends FlxObject
 		graphic = null;
 		_frame = FlxDestroyUtil.destroy(_frame);
 		_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
+		_colored = false;
 
 		shader = null;
 	}
@@ -898,7 +906,7 @@ class FlxSprite extends FlxObject
 			matrix.ty = Math.floor(matrix.ty);
 		}
 		
-		camera.drawPixels(frame, framePixels, matrix, colorTransform, blend, antialiasing, shader);
+		camera.drawPixels(frame, framePixels, matrix, colorTransform, _colored, blend, antialiasing, shader);
 	}
 
 	/**
@@ -1537,12 +1545,19 @@ class FlxSprite extends FlxObject
 
 	@:noCompletion
 	function set_color(value:FlxColor):Int
-	{
-		if (color == value)
-			return value;
-		
-		color = value;
-		updateColorTransform();
+	{	
+		if(value == FlxColor.TRANSPARENT) {
+			_colored = false;
+			color = FlxColor.TRANSPARENT;
+		} else {
+			if (color == value)
+			{
+				return value;
+			}
+			color = value;
+			updateColorTransform();
+			_colored = true;
+		}
 		return color;
 	}
 
