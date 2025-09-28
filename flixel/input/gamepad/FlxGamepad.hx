@@ -1,5 +1,8 @@
 package flixel.input.gamepad;
 
+import flixel.system.replay.IntegerFloatPair;
+import flixel.system.replay.GamepadRecord;
+import flixel.system.replay.CodeValuePair;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.input.gamepad.FlxGamepadMappedInput;
 import flixel.input.gamepad.lists.FlxGamepadAnalogList;
@@ -119,6 +122,11 @@ class FlxGamepad implements IFlxDestroyable
 	 * (contains continously updated X and Y coordinates, each between 0.0 and 1.0)
 	 */
 	public var pointer(default, null):FlxGamepadPointerValueList;
+
+	/**
+	 * Returns axis values from the `axis` list, as if gamepads were turned off.
+	**/
+	public var recording:Bool = false;
 
 	#if FLX_JOYSTICK_API
 	public var hat(default, null):FlxPoint = FlxPoint.get();
@@ -702,6 +710,15 @@ class FlxGamepad implements IFlxDestroyable
 
 	function getAxisValue(AxisID:Int):Float
 	{
+		if (recording)
+		{
+			if (AxisID < 0 || AxisID >= axis.length)
+			{
+				return 0;
+			}
+			return axis[AxisID];
+		}
+		
 		var axisValue:Float = 0;
 
 		#if FLX_GAMEINPUT_API
@@ -721,6 +738,7 @@ class FlxGamepad implements IFlxDestroyable
 
 		axisValue = axis[AxisID];
 		#end
+
 
 		if (isAxisForAnalogStick(AxisID))
 		{
@@ -907,6 +925,76 @@ class FlxGamepad implements IFlxDestroyable
 			LabelValuePair.weak("model", model),
 			LabelValuePair.weak("deadZone", deadZone)
 		]);
+	}
+	/**
+	 * If any buttons are not "released",
+	 * this function will return an array indicating
+	 * which buttons are pressed and what state they are in.
+	 *
+	 * @return	An array of button state data. Null if there is no data.
+	 */
+	@:allow(flixel.system.replay.FlxReplay)
+	function record():GamepadRecord
+	{
+		var data:Array<CodeValuePair> = null;
+		
+		for (button in buttons)
+		{
+			if (button == null || button.released)
+			{
+				continue;
+			}
+			
+			if (data == null)
+			{
+				data = new Array<CodeValuePair>();
+			}
+			
+			data.push(new CodeValuePair(button.ID, button.current));
+		}
+		
+		var analogData:Array<IntegerFloatPair> = new Array<IntegerFloatPair>();
+		
+		for (i in 0...axis.length)
+		{
+			var axisValue = getAxisValue(i);
+			if (axisValue != 0)
+				analogData.push(new IntegerFloatPair(i, axisValue));
+
+		}
+		
+		return new GamepadRecord(id, data, analogData);
+	}
+	
+	/**
+	 * Part of the gamepad recording system.
+	 * Takes data about analog and buttons and sets it into array.
+	 *
+	 * @param	Record	Array of data about key states.
+	 */
+	@:allow(flixel.system.replay.FlxReplay)
+	function playback(record:GamepadRecord):Void
+	{
+		var i = 0;
+		final len = record.buttons.length;
+		
+		while (i < len)
+		{
+			final keyRecord = record.buttons[i++];
+			final id = getButton(keyRecord.code);
+			id.current = keyRecord.value;
+		}
+		i = 0;
+		final len = record.analog.length;
+		for (i in 0...axis.length)
+		{
+			axis[i] = 0;
+		}
+		while (i < len)
+		{
+			final keyRecord = record.analog[i++];
+			axis[keyRecord.code] = keyRecord.value;
+		}
 	}
 }
 

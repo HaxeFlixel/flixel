@@ -21,6 +21,11 @@ class FrameRecord
 	public var mouse:MouseRecord;
 
 	/**
+	 * An array containing all the gamepad inputs.
+	 */
+	public var gamepad:Array<GamepadRecord>;
+
+	/**
 	 * Instantiate array new frame record.
 	 */
 	public function new()
@@ -28,6 +33,7 @@ class FrameRecord
 		frame = 0;
 		keys = null;
 		mouse = null;
+		gamepad = null;
 	}
 
 	/**
@@ -37,11 +43,12 @@ class FrameRecord
 	 * @param Mouse		Mouse data from the mouse manager.
 	 * @return A reference to this FrameRecord object.
 	 */
-	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord):FrameRecord
+	public function create(Frame:Float, ?Keys:Array<CodeValuePair>, ?Mouse:MouseRecord, ?Gamepad:Array<GamepadRecord>):FrameRecord
 	{
 		frame = Math.floor(Frame);
 		keys = Keys;
 		mouse = Mouse;
+		gamepad = Gamepad;
 
 		return this;
 	}
@@ -53,6 +60,7 @@ class FrameRecord
 	{
 		keys = null;
 		mouse = null;
+		gamepad = null;
 	}
 
 	/**
@@ -85,6 +93,44 @@ class FrameRecord
 			output += mouse.x + "," + mouse.y + "," + mouse.button + "," + mouse.wheel;
 		}
 
+		if (gamepad != null)
+		{
+			for (record in gamepad)
+			{
+				output += "g";
+				if (record != null)
+				{
+					output += record.gamepadID + ",";
+					var object:CodeValuePair;
+					var i:Int = 0;
+					var l:Int = record.buttons.length;
+					while (i < l)
+					{
+						if (i > 0)
+						{
+							output += ",";
+						}
+						object = record.buttons[i++];
+						output += object.code + ":" + object.value;
+					}
+					output += "/";
+					var object:IntegerFloatPair;
+					var i:Int = 0;
+					var l:Int = record.analog.length;
+					while (i < l)
+					{
+						if (i > 0)
+						{
+							output += ",";
+						}
+						object = record.analog[i++];
+						output += object.code + ":" + object.value;
+					}
+				}
+			}
+		}
+
+
 		return output;
 	}
 
@@ -103,8 +149,10 @@ class FrameRecord
 
 		// split up keyboard and mouse data
 		array = array[1].split("m");
+		var gamepadArray:Array<String> = array[1].split("g");
+
 		var keyData:String = array[0];
-		var mouseData:String = array[1];
+		var mouseData:String = gamepadArray.splice(0, 1)[0];
 
 		// parse keyboard data
 		if (keyData.length > 0)
@@ -137,6 +185,63 @@ class FrameRecord
 			if (array.length >= 4)
 			{
 				mouse = new MouseRecord(Std.parseInt(array[0]), Std.parseInt(array[1]), Std.parseInt(array[2]), Std.parseInt(array[3]));
+			}
+		}
+
+		if (gamepadArray.length > 0)
+		{
+			for (gamepadString in gamepadArray)
+			{
+				array = gamepadString.split(",");
+				var currentGamepad:GamepadRecord = new GamepadRecord(Std.parseInt(array[0]), [], []);
+				
+				var inputsArray:Array<String> = gamepadString.substring(array[0].length + 1).split("/");
+				var buttonsArray:Array<String> = inputsArray[0].split(",");
+				var analogArray:Array<String> = inputsArray[1].split(",");
+				
+				// go through each data pair and enter it into this frame's button state
+				var buttonPair:Array<String>;
+				i = 0;
+				l = inputsArray[0].length;
+				while (i < l)
+				{
+					var pairString = buttonsArray[i++];
+					if (pairString != null)
+					{
+						buttonPair = pairString.split(":");
+						if (buttonPair.length == 2)
+						{
+							if (gamepad == null)
+							{
+								gamepad = new Array<GamepadRecord>();
+							}
+							currentGamepad.buttons.push(new CodeValuePair(Std.parseInt(buttonPair[0]), Std.parseInt(buttonPair[1])));
+						}
+					}
+				}
+				
+				// go through each data pair and enter it into this frame's analog state
+				var analogPair:Array<String>;
+				i = 0;
+				l = inputsArray[0].length;
+				while (i < l)
+				{
+					var pairString = analogArray[i++];
+					if (pairString != null)
+					{
+						analogPair = pairString.split(":");
+						if (analogPair.length == 2)
+						{
+							if (gamepad == null)
+							{
+								gamepad = new Array<GamepadRecord>();
+							}
+							currentGamepad.analog.push(new IntegerFloatPair(Std.parseInt(analogPair[0]), Std.parseFloat(analogPair[1])));
+						}
+					}
+				}
+				
+				this.gamepad.push(currentGamepad);
 			}
 		}
 
