@@ -209,6 +209,198 @@ class FlxObjectTest extends FlxTest
 		Assert.areEqual(5, object1.y);
 	}
 	
+	/**
+	 * Object overlapping the top of an object, with upwards veocity
+	 */
+	@Test
+	function testSeparateOppositeVelocityUp():Void
+	{
+		function reset()
+		{
+			object1.last.set(0, -10);
+			object1.setSize(10, 10);
+			object1.x = object1.last.x;
+			object1.y = object1.last.y + 2;
+			object1.velocity.y = -100;
+			object2.last.set(0, 0);
+			object2.setPosition(0, 0);
+			object2.setSize(10, 10);
+		}
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-9, object1.y);
+		Assert.areEqual(-100, object1.velocity.y);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-9, object1.y);
+		Assert.areEqual(-100, object1.velocity.y);
+		
+		// test with immovable b
+		object2.immovable = true;
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-10, object1.y);
+		Assert.areEqual(-100, object1.velocity.y);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-10, object1.y);
+		Assert.areEqual(-100, object1.velocity.y);
+	}
+	
+	/**
+	 * Object overlapping the bottom of an object, with downwards veocity
+	 */
+	@Test
+	function testSeparateOppositeVelocityDown():Void
+	{
+		function reset()
+		{
+			object1.last.set(0, 10);
+			object1.setSize(10, 10);
+			object1.x = object1.last.x;
+			object1.y = object1.last.y - 2;
+			object1.velocity.y = 100;
+			object2.last.set(0, 0);
+			object2.setPosition(0, 0);
+			object2.setSize(10, 10);
+		}
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(9, object1.y);
+		Assert.areEqual(100, object1.velocity.y);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(9, object1.y);
+		Assert.areEqual(100, object1.velocity.y);
+		
+		// test with immovable b
+		object2.immovable = true;
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(10, object1.y);
+		Assert.areEqual(100, object1.velocity.y);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(10, object1.y);
+		Assert.areEqual(100, object1.velocity.y);
+	}
+	
+	/**
+	 * Object overlapping the left side of an object, with leftwards veocity
+	 */
+	@Test
+	function testSeparateOppositeVelocityLeft():Void
+	{
+		function reset()
+		{
+			object1.last.set(-10, 0);
+			object1.setSize(10, 10);
+			object1.x = object1.last.x + 2;
+			object1.y = object1.last.y;
+			object1.velocity.x = -100;
+			object2.last.set(0, 0);
+			object2.setPosition(0, 0);
+			object2.setSize(10, 10);
+		}
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-9, object1.x);
+		Assert.areEqual(-100, object1.velocity.x);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-9, object1.x);
+		Assert.areEqual(-100, object1.velocity.x);
+		
+		// test with immovable b
+		object2.immovable = true;
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-10, object1.x);
+		Assert.areEqual(-100, object1.velocity.x);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(-10, object1.x);
+		Assert.areEqual(-100, object1.velocity.x);
+	}
+	
+	/**
+	 * Object overlapping the right side of an object, with rightwards veocity
+	 */
+	@Test
+	function testSeparateOppositeVelocityRight():Void
+	{
+		function reset()
+		{
+			object1.last.set(10, 0);
+			object1.setSize(10, 10);
+			object1.x = object1.last.x - 2;
+			object1.y = object1.last.y;
+			object1.velocity.x = 100;
+			object2.last.set(0, 0);
+			object2.setPosition(0, 0);
+			object2.setSize(10, 10);
+		}
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(9, object1.x);
+		Assert.areEqual(100, object1.velocity.x);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(9, object1.x);
+		Assert.areEqual(100, object1.velocity.x);
+		
+		// test with immovable b
+		object2.immovable = true;
+		
+		reset();
+		Assert.isTrue(FlxObject.separate(object1, object2));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(10, object1.x);
+		Assert.areEqual(100, object1.velocity.x);
+		
+		// test with swapped a/b
+		reset();
+		Assert.isTrue(FlxObject.separate(object2, object1));
+		// object1 is separated, but maintains velocity
+		Assert.areEqual(10, object1.x);
+		Assert.areEqual(100, object1.velocity.x);
+	}
+	
 	@Ignore("Reverted #3418 as it breaks moving platforms")
 	@Test
 	function testSeparateOnBothAxisNewlyOverlapping():Void
