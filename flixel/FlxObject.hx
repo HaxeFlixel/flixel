@@ -159,16 +159,8 @@ class FlxObject extends FlxBasic
 	 */
 	public static function separate(object1:FlxObject, object2:FlxObject):Bool
 	{
-		var tmp1 = object1.last.copyTo();
-		var tmp2 = object2.last.copyTo();
 		final separatedX = separateX(object1, object2);
-		object1.last.x = object1.x;
-		object2.last.x = object2.x;
 		final separatedY = separateY(object1, object2);
-		object1.last.copyFrom(tmp1);
-		object2.last.copyFrom(tmp2);
-		tmp1.put();
-		tmp2.put();
 		return separatedX || separatedY;
 		
 		/*
@@ -222,6 +214,11 @@ class FlxObject extends FlxBasic
 			final vel1 = object1.velocity.x;
 			final vel2 = object2.velocity.x;
 			
+			inline function sameDir(a:Float, b:Float)
+			{
+				return (a <= 0 && b <= 0) || (a >= 0 && b >= 0);
+			}
+			
 			if (!object1.immovable && !object2.immovable)
 			{
 				#if FLX_4_LEGACY_COLLISION
@@ -233,19 +230,25 @@ class FlxObject extends FlxBasic
 				final mass1 = object1.mass;
 				final mass2 = object2.mass;
 				final momentum = mass1 * vel1 + mass2 * vel2;
-				object1.velocity.x = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
-				object2.velocity.x = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
+				
+				if (sameDir(vel1, overlap))
+					object1.velocity.x = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
+				
+				if (sameDir(vel2, -overlap))
+					object2.velocity.x = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
 				#end
 			}
 			else if (!object1.immovable)
 			{
 				object1.x -= overlap;
-				object1.velocity.x = vel2 - vel1 * object1.elasticity;
+				if (sameDir(vel1, overlap))
+					object1.velocity.x = vel2 - vel1 * object1.elasticity;
 			}
 			else if (!object2.immovable)
 			{
 				object2.x += overlap;
-				object2.velocity.x = vel1 - vel2 * object2.elasticity;
+				if (sameDir(vel2, -overlap))
+					object2.velocity.x = vel1 - vel2 * object2.elasticity;
 			}
 			
 			// use collisionDrag properties to determine whether one object
@@ -274,6 +277,11 @@ class FlxObject extends FlxBasic
 			final vel1 = object1.velocity.y;
 			final vel2 = object2.velocity.y;
 			
+			inline function sameDir(a:Float, b:Float)
+			{
+				return (a <= 0 && b <= 0) || (a >= 0 && b >= 0);
+			}
+			
 			if (!object1.immovable && !object2.immovable)
 			{
 				#if FLX_4_LEGACY_COLLISION
@@ -287,19 +295,25 @@ class FlxObject extends FlxBasic
 				final momentum = mass1 * vel1 + mass2 * vel2;
 				final newVel1 = (momentum + object1.elasticity * mass2 * (vel2 - vel1)) / (mass1 + mass2);
 				final newVel2 = (momentum + object2.elasticity * mass1 * (vel1 - vel2)) / (mass1 + mass2);
-				object1.velocity.y = newVel1;
-				object2.velocity.y = newVel2;
+				
+				if (sameDir(vel1, overlap))
+					object1.velocity.y = newVel1;
+				
+				if (sameDir(vel2, -overlap))
+					object2.velocity.y = newVel2;
 				#end
 			}
 			else if (!object1.immovable)
 			{
 				object1.y -= overlap;
-				object1.velocity.y = vel2 - vel1 * object1.elasticity;
+				if (sameDir(vel1, overlap))
+					object1.velocity.y = vel2 - vel1 * object1.elasticity;
 			}
 			else if (!object2.immovable)
 			{
 				object2.y += overlap;
-				object2.velocity.y = vel1 - vel2 * object2.elasticity;
+				if (sameDir(vel2, -overlap))
+					object2.velocity.y = vel1 - vel2 * object2.elasticity;
 			}
 			
 			// use collisionDrag properties to determine whether one object
