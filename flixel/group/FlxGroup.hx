@@ -985,6 +985,10 @@ class FlxTypedGroupIterator<T>
 }
 
 #if !FLX_NO_RENDER_ORDER
+/**
+ * An enum that provides the ways to order the rendering of a `FlxGroup`.
+ * Use it with bitwise operators.
+ */
 enum abstract FlxRenderingMode(Int) from Int to Int
 {
 	var NONE = 0;
