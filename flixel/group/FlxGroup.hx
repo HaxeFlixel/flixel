@@ -87,7 +87,12 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	 * @since 4.4.0
 	 */
 	public var memberRemoved(get, never):FlxTypedSignal<T->Void>;
-
+	#if !FLX_NO_RENDER_ORDER
+	/**
+	 * Method used to sort the `FlxBasic` objects that are about to be drawn.
+	 */
+	public var renderOrderMode:Int = NONE | BY_RENDERORDER;
+	#end
 	/**
 	 * Internal variables for lazily creating `memberAdded` and `memberRemoved` signals when needed.
 	 */
@@ -174,15 +179,27 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			FlxCamera._defaultCameras = _cameras;
 		}
 
+		#if !FLX_NO_RENDER_ORDER
+		// This can be expanded on later by adding checks for FlxObject (which contains the Y variable)
+		// Then its possible to add y sorting too.
+
 		var renderOrderedArray = [for (i in 0...members.length) i];
-		renderOrderedArray.sort((a, b) -> members[a].renderOrder - members[b].renderOrder);
-		
+		if (renderOrderMode & FlxRenderingMode.BY_RENDERORDER != 0)
+			renderOrderedArray.sort((a, b) -> members[a].renderOrder - members[b].renderOrder);
+
 		for (i in renderOrderedArray)
 		{
 			var basic = members[i];
 			if (basic != null && basic.exists && basic.visible)
 				basic.draw();
 		}
+		#else
+		for (basic in members)
+		{
+			if (basic != null && basic.exists && basic.visible)
+				basic.draw();
+		}
+		#end
 
 		FlxCamera._defaultCameras = oldDefaultCameras;
 	}
@@ -966,3 +983,11 @@ class FlxTypedGroupIterator<T>
 		return _cursor < _length;
 	}
 }
+
+#if !FLX_NO_RENDER_ORDER
+enum abstract FlxRenderingMode(Int) from Int to Int
+{
+	var NONE = 0;
+	var BY_RENDERORDER = 1;
+}
+#end

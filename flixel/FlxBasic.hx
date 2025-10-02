@@ -38,13 +38,13 @@ class FlxBasic implements IFlxDestroyable
 	 * Controls whether `draw()` is automatically called by `FlxState`/`FlxGroup`.
 	 */
 	public var visible(default, set):Bool = true;
-
+	#if !FLX_NO_RENDER_ORDER
 	/**
 	 * An index that sorts the FlxBasic when `draw()` is called by `FlxState`/`FlxGroup`.
 	 * This produces easy layer sorting, not being needed to rely on `add()` or `insert()`.
 	 */
 	public var renderOrder:Int = 0;
-
+	#end
 	/**
 	 * Useful state for many game objects - "dead" (`!alive`) vs `alive`. `kill()` and
 	 * `revive()` both flip this switch (along with `exists`, but you can override that).

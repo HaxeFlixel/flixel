@@ -23,6 +23,7 @@ private enum UserDefines
 	FLX_NO_SOUND_SYSTEM;
 	FLX_NO_SOUND_TRAY;
 	FLX_NO_FOCUS_LOST_SCREEN;
+	FLX_NO_RENDER_ORDER;
 	FLX_NO_DEBUG;
 	/* Removes FlxObject.health */
 	FLX_NO_HEALTH;
@@ -81,6 +82,7 @@ private enum HelperDefines
 	FLX_KEYBOARD;
 	FLX_SOUND_SYSTEM;
 	FLX_FOCUS_LOST_SCREEN;
+	FLX_RENDER_ORDER;
 	FLX_DEBUG;
 	FLX_STEAMWRAP;
 
@@ -208,6 +210,7 @@ class FlxDefines
 		defineInversion(FLX_NO_KEYBOARD, FLX_KEYBOARD);
 		defineInversion(FLX_NO_SOUND_SYSTEM, FLX_SOUND_SYSTEM);
 		defineInversion(FLX_NO_FOCUS_LOST_SCREEN, FLX_FOCUS_LOST_SCREEN);
+		defineInversion(FLX_NO_RENDER_ORDER, FLX_RENDER_ORDER);
 		defineInversion(FLX_NO_DEBUG, FLX_DEBUG);
 		defineInversion(FLX_NO_POINT_POOL, FLX_POINT_POOL);
 		defineInversion(FLX_UNIT_TEST, FLX_NO_UNIT_TEST);
