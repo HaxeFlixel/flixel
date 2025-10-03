@@ -43,7 +43,7 @@ class FlxBasic implements IFlxDestroyable
 	 * An index that sorts the FlxBasic when `draw()` is called by `FlxState`/`FlxGroup`.
 	 * This produces easy layer sorting, not being needed to rely on `add()` or `insert()`.
 	 */
-	public var renderOrder:Int = 0;
+	public var renderOrder:Float = 0;
 	#end
 	/**
 	 * Useful state for many game objects - "dead" (`!alive`) vs `alive`. `kill()` and

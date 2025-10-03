@@ -109,6 +109,12 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	var _marker:Int = 0;
 
 	/**
+	 * Internal array to sort the objects during a draw call based on the `renderOrderMode` variable
+	 */
+	@:noCompletion
+	var _drawMemberIndices:Array<Int>;
+
+	/**
 	 * @param   MaxSize   Maximum amount of members allowed.
 	 */
 	public function new(MaxSize:Int = 0)
@@ -116,6 +122,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		super();
 
 		members = [];
+		_drawMemberIndices = [];
 		maxSize = Std.int(Math.abs(MaxSize));
 		flixelType = GROUP;
 	}
@@ -183,11 +190,16 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 		// This can be expanded on later by adding checks for FlxObject (which contains the Y variable)
 		// Then its possible to add y sorting too.
 
-		var renderOrderedArray = [for (i in 0...members.length) i];
-		if (renderOrderMode & FlxRenderingMode.BY_RENDERORDER != 0)
-			renderOrderedArray.sort((a, b) -> members[a].renderOrder - members[b].renderOrder);
+		if (_drawMemberIndices.length != members.length)
+			_drawMemberIndices = [for (i in 0...members.length) i]; // Recreate the array with the new member length
 
-		for (i in renderOrderedArray)
+		if (renderOrderMode & FlxRenderingMode.BY_RENDERORDER != 0)
+			_drawMemberIndices.sort((a, b) ->
+			{
+				return FlxSort.byValues(FlxSort.ASCENDING, members[a].renderOrder, members[b].renderOrder);
+			});
+
+		for (i in _drawMemberIndices)
 		{
 			var basic = members[i];
 			if (basic != null && basic.exists && basic.visible)
