@@ -108,11 +108,13 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	@:noCompletion
 	var _marker:Int = 0;
 
+	#if !FLX_NO_RENDER_ORDER
 	/**
 	 * Internal array to sort the objects during a draw call based on the `renderOrderMode` variable
 	 */
 	@:noCompletion
 	var _drawMemberIndices:Array<Int>;
+	#end
 
 	/**
 	 * @param   MaxSize   Maximum amount of members allowed.
