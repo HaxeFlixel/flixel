@@ -13,7 +13,6 @@
 - `FlxFrame`: Update `uv` in `clip` method ([#3476](https://github.com/HaxeFlixel/flixel/pull/3476))
 - `FlxSignal`: Allow `destroy` during `dispatch` ([#3436](https://github.com/HaxeFlixel/flixel/pull/3436))
 - `FlxG.gamepads`: Extend PS4 mapping to work with PS5 ([#3380](https://github.com/HaxeFlixel/flixel/pull/3380))
-- `FlxG.overlap`: Improve overlap detection across both axes ([#3418](https://github.com/HaxeFlixel/flixel/pull/3418))
 
 #### Bugfixes:
 - `FlxCamera`: Honor `filter` changes when `active = false` ([#3481](https://github.com/HaxeFlixel/flixel/pull/3481))
