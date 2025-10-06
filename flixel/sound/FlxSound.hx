@@ -382,35 +382,6 @@ class FlxSound extends FlxBasic
 	}
 
 	/**
-	 * Loads a streamed sound from the provided file path.
-	 * This does not load sounds from web locations. Use `loadFromURL()` for that, instead.
-	 * 
-	 * If sound streaming is not supported, a normal sound will be returned.
-	 * 
-	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
-	 * 
-	 * @param path The path to the sound asset.
-	 * @param looped Whether or not this sound should loop endlessly.
-	 * @param autoDestroy Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
-	 * @param onComplete Called when the sound finishes playing.
-	 * @return This FlxSound instance (nice for chaining stuff together, if you're into that).
-	 * 
-	 * @since 6.2.0
-	 */
-	public function loadStreamed(path:String, looped:Bool = false, autoDestroy:Bool = false, ?onComplete:Void->Void):FlxSound
-	{
-		cleanup(true);
-
-		if (FlxG.assets.exists(path, MUSIC))
-			_sound = FlxG.assets.getMusicUnsafe(path);
-		else
-			FlxG.log.error('Could not find a Sound asset with an ID of \'$path\'.');
-		
-		// NOTE: can't pull ID3 info from embedded sound currently
-		return init(looped, autoDestroy, onComplete);
-	}
-
-	/**
 	 * Loads a sound from the provided URL.
 	 * 
 	 * @param soundURL A string representing the URL of the sound you want to play.

@@ -15,11 +15,6 @@ import openfl.utils.AssetCache;
 import openfl.utils.Future;
 import openfl.text.Font;
 
-#if lime_vorbis
-import lime.media.vorbis.VorbisFile;
-import lime.media.AudioBuffer;
-#end
-
 using StringTools;
 
 /**
@@ -128,9 +123,7 @@ class AssetFrontEnd
 			// Check cache
 			case IMAGE if (canUseCache && Assets.cache.hasBitmapData(id)):
 				Assets.cache.getBitmapData(id);
-			// Lime doesn't expose a way to detect if sound streaming is supported so we have to check ourselves
-			// MUSIC behaves like SOUND when sound streaming is unsupported.
-			case SOUND #if !lime_vorbis , MUSIC #end if (canUseCache && Assets.cache.hasSound(id)):
+			case SOUND if (canUseCache && Assets.cache.hasSound(id)):
 				Assets.cache.getSound(id);
 			case FONT if (canUseCache && Assets.cache.hasFont(id)):
 				Assets.cache.getFont(id);
@@ -141,19 +134,11 @@ class AssetFrontEnd
 				if (canUseCache)
 					Assets.cache.setBitmapData(id, bitmap);
 				bitmap;
-			case SOUND #if !lime_vorbis , MUSIC #end:
+			case SOUND:
 				final sound = Sound.fromFile(getPath(id));
 				if (canUseCache)
 					Assets.cache.setSound(id, sound);
 				sound;
-			#if lime_vorbis
-			case MUSIC:
-				// Ignore cache when streaming sounds
-				final vorbisFile = VorbisFile.fromFile(getPath(id));
-				final buffer = AudioBuffer.fromVorbisFile(buffer);
-				final sound = Sound.fromAudioBuffer(buffer);
-				sound;
-			#end
 			case FONT:
 				final font = Font.fromFile(getPath(id));
 				if (canUseCache)
@@ -174,7 +159,6 @@ class AssetFrontEnd
 			case BINARY: Assets.getBytes(id);
 			case IMAGE: Assets.getBitmapData(id, useCache);
 			case SOUND: Assets.getSound(id, useCache);
-			case MUSIC: Assets.getMusic(id, useCache);
 			case FONT: Assets.getFont(id, useCache);
 		}
 	}
@@ -240,7 +224,6 @@ class AssetFrontEnd
 			case BINARY: Assets.loadBytes(id);
 			case IMAGE: Assets.loadBitmapData(id, useCache);
 			case SOUND: Assets.loadSound(id, useCache);
-			case MUSIC: Assets.loadMusic(id, useCache);
 			case FONT: Assets.loadFont(id, useCache);
 		}
 	}
@@ -256,7 +239,7 @@ class AssetFrontEnd
 	{
 		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
-		if (type == SOUND || type == MUSIC)
+		if (type == SOUND)
 			id = addSoundExt(id);
 		#end
 		
@@ -284,7 +267,7 @@ class AssetFrontEnd
 	{
 		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
-		if (type == SOUND || type == MUSIC)
+		if (type == SOUND)
 			id = addSoundExt(id);
 		#end
 		
@@ -364,20 +347,6 @@ class AssetFrontEnd
 	{
 		return cast getAssetUnsafe(addSoundExtIf(id), SOUND, useCache);
 	}
-
-	/**
-	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets
-	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 */
-	public inline function getMusicUnsafe(id:String, useCache = true):Sound
-	{
-		return cast getAssetUnsafe(addSoundExtIf(id), MUSIC, useCache);
-	}
 	
 	/**
 	 * Gets an instance of a sound, logs when the asset is not found.
@@ -393,23 +362,6 @@ class AssetFrontEnd
 	{
 		return cast getAsset(addSoundExtIf(id), SOUND, useCache, logStyle);
 	}
-
-	/**
-	 * Gets an instance of a streamed sound, logs when the asset is not found.
-	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
-	 * 
-	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 */
-	public inline function getMusic(id:String, useCache = true, ?logStyle:LogStyle):Sound
-	{
-		return cast getAsset(addSoundExtIf(id), MUSIC, useCache, logStyle);
-	}
 	
 	/**
 	 * Gets an instance of a sound, logs when the asset is not found
@@ -422,21 +374,6 @@ class AssetFrontEnd
 	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
 		return getSound(addSoundExt(id), useCache, logStyle);
-	}
-
-	/**
-	 * Gets an instance of a streamed sound, logs when the asset is not found
-	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 */
-	public inline function getMusicAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
-	{
-		return getMusic(addSoundExt(id), useCache, logStyle);
 	}
 	
 	inline function addSoundExtIf(id:String)
@@ -620,20 +557,6 @@ class AssetFrontEnd
 	{
 		return cast loadAsset(id, SOUND, useCache);
 	}
-
-	/**
-	 * Loads a streamed sound asset asynchronously
-	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the asset
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  Returns a `Future` which allows listeners to be added via methods like `onComplete`
-	 */
-	public inline function loadMusic(id:String, useCache = true):Future<Sound>
-	{
-		return cast loadAsset(id, MUSIC, useCache);
-	}
 	
 	/**
 	 * Loads a text asset asynchronously
@@ -749,9 +672,6 @@ enum abstract FlxAssetType(String)
 	
 	/** Audio assets, such as *.ogg or *.wav files */
 	var SOUND = "sound";
-
-	/** Streamed audio assets, such as *.ogg or *.wav files */
-	var MUSIC = "music";
 	
 	/** Text assets */
 	var TEXT = "text";
@@ -764,7 +684,6 @@ enum abstract FlxAssetType(String)
 			case FONT: AssetType.FONT;
 			case IMAGE: AssetType.IMAGE;
 			case SOUND: AssetType.SOUND;
-			case MUSIC: AssetType.MUSIC;
 			case TEXT: AssetType.TEXT;
 		}
 	}
