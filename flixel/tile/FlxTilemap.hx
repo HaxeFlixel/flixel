@@ -562,59 +562,50 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 		if (buffer == null)
 			return;
-
-		// Copied from getScreenPosition()
-		_helperPoint.x = x - camera.scroll.x * scrollFactor.x;
-		_helperPoint.y = y - camera.scroll.y * scrollFactor.y;
+		
+		inline function bindInt(value:Int, min:Int, max:Int)
+		{
+			return Std.int(FlxMath.bound(value, min, max));
+		}
+		
+		// Figure out what tiles we need to check against, and bind them by the map edges
+		final screenPos = getScreenPosition(camera);
+		// Get the screen offset caused by scrollFactor
+		final scrollOffsetX = screenPos.x + camera.scroll.x - x;
+		final scrollOffsetY = screenPos.y + camera.scroll.y - y;
+		final minTileX = getColumnAt(camera.viewLeft - scrollOffsetX, true);
+		final minTileY = getRowAt(camera.viewTop - scrollOffsetY, true);
+		final maxTileX = getColumnAt(camera.viewRight - scrollOffsetX, true);
+		final maxTileY = getRowAt(camera.viewBottom - scrollOffsetY, true);
+		// TODO: add forEachInBounds/Rect or something
 		
 		final rect = FlxRect.get(0, 0, scaledTileWidth, scaledTileHeight);
-		
-		// Copy tile images into the tile buffer
-		// Modified from getScreenPosition()
-		_point.x = (camera.scroll.x * scrollFactor.x) - x;
-		_point.y = (camera.scroll.y * scrollFactor.y) - y;
-		var screenXInTiles:Int = Math.floor(_point.x / scaledTileWidth);
-		var screenYInTiles:Int = Math.floor(_point.y / scaledTileHeight);
-		var screenRows:Int = buffer.rows;
-		var screenColumns:Int = buffer.columns;
-
-		// Bound the upper left corner
-		screenXInTiles = Std.int(FlxMath.bound(screenXInTiles, 0, widthInTiles - screenColumns));
-		screenYInTiles = Std.int(FlxMath.bound(screenYInTiles, 0, heightInTiles - screenRows));
-
-		var rowIndex:Int = screenYInTiles * widthInTiles + screenXInTiles;
-
-		for (row in 0...screenRows)
+		for (row in minTileY...maxTileY + 1)
 		{
-			var columnIndex = rowIndex;
-
-			for (column in 0...screenColumns)
+			for (column in minTileX...maxTileX + 1)
 			{
-				final tile = getTileData(columnIndex);
+				final tile = getTileData(column, row);
 
 				if (tile != null && tile.visible && !tile.ignoreDrawDebug)
 				{
-					rect.x = _helperPoint.x + (columnIndex % widthInTiles) * rect.width;
-					rect.y = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * rect.height;
+					rect.x = screenPos.x + column * rect.width;
+					rect.y = screenPos.y + row * rect.height;
 					
-						final color = tile.debugBoundingBoxColor != null
-							? tile.debugBoundingBoxColor
-							: getDebugBoundingBoxColor(tile.allowCollisions);
-						
-						if (color != null)
-						{
-							final colStr = color.toHexString();
-							drawDebugBoundingBoxColor(camera.debugLayer.graphics, rect, color);
-						}
+					final color = tile.debugBoundingBoxColor != null
+						? tile.debugBoundingBoxColor
+						: getDebugBoundingBoxColor(tile.allowCollisions);
+					
+					if (color != null)
+					{
+						final colStr = color.toHexString();
+						drawDebugBoundingBoxColor(camera.debugLayer.graphics, rect, color);
+					}
 				}
-
-				columnIndex++;
 			}
-			
-			rowIndex += widthInTiles;
 		}
 		
 		rect.put();
+		screenPos.put();
 	}
 	#end
 
