@@ -1246,10 +1246,25 @@ class FlxObject extends FlxBasic
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
-		var rect = getBoundingBox(camera);
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-		endDrawDebug(camera);
+		final rect = getBoundingBox(camera);
+		if (FlxG.renderTile)
+		{
+			final PAD = 2;
+			final view = camera.getViewMarginRect();
+			view.left -= PAD;
+			view.top -= PAD;
+			view.right += PAD;
+			view.bottom += PAD;
+			rect.clipTo(view);
+			view.put();
+		}
+		
+		if (rect.width > 0 && rect.height > 0)
+		{
+			final gfx = beginDrawDebug(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+			endDrawDebug(camera);
+		}
 	}
 
 	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
@@ -1277,7 +1292,7 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75);
+		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 

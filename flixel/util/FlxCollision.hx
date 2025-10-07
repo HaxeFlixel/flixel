@@ -366,7 +366,7 @@ class FlxCollision
 	 *                Only returned if the line enters the rect.
 	 * @return The point of exit of the line from the rect, if possible.
 	 */
-	public static inline function calcRectExit(rect, start, end, result)
+	public static inline function calcRectExit(rect, start, end, ?result)
 	{
 		return calcRectEntry(rect, end, start, result);
 	}

@@ -239,8 +239,10 @@ class FlxText extends FlxSprite
 		textField.text = Text;
 		fieldWidth = FieldWidth;
 		textField.embedFonts = EmbeddedFont;
-		textField.sharpness = 100;
 		textField.height = (Text.length <= 0) ? 1 : 10;
+
+		// call this just to set the textfield's properties
+		set_antialiasing(antialiasing);
 
 		allowCollisions = NONE;
 		moves = false;
@@ -1285,6 +1287,24 @@ class FlxText extends FlxSprite
 		super.set_frames(Frames);
 		_regen = false;
 		return Frames;
+	}
+
+	override function set_antialiasing(value:Bool):Bool
+	{
+		if (value)
+		{
+			textField.antiAliasType = NORMAL;
+			textField.sharpness = 100;
+		}
+		else
+		{
+			textField.antiAliasType = ADVANCED;
+			textField.sharpness = 400;
+		}
+
+		_regen = true;
+
+		return antialiasing = value;
 	}
 }
 
