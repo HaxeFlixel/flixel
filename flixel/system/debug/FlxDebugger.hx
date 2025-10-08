@@ -264,8 +264,9 @@ class FlxDebugger extends openfl.display.Sprite
 				console.reposition(GUTTER, _screen.y);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
 				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
-				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 2);
-				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
+				final heightWatch = _screen.y * 0.5;
+				watch.resize((_screen.x - GUTTER * 3) / 2, heightWatch);
+				watch.reposition(_screen.x, _screen.y - heightWatch - console.height - (GUTTER + 1.75) * 1.5);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y - (GUTTER * 2) - (_screen.y / 2) - (35 * 2));
 				bitmapLog.reposition(0, GUTTER * 1.5);
@@ -304,8 +305,9 @@ class FlxDebugger extends openfl.display.Sprite
 				console.reposition(GUTTER, _screen.y);
 				log.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				log.reposition(0, _screen.y - log.height - console.height - GUTTER * 1.5);
-				watch.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
-				watch.reposition(_screen.x, _screen.y - watch.height - console.height - GUTTER * 1.5);
+				final heightWatch = _screen.y * 0.25;
+				watch.resize((_screen.x - GUTTER * 3) / 2, heightWatch);
+				watch.reposition(_screen.x, _screen.y - heightWatch - console.height - (GUTTER + 1.75) * 1.5);
 				stats.reposition(_screen.x, 0);
 				bitmapLog.resize((_screen.x - GUTTER * 3) / 2, _screen.y / 4);
 				bitmapLog.reposition(0, log.y - GUTTER - bitmapLog.height);
