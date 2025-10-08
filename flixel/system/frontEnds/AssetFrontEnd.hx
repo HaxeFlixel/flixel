@@ -376,7 +376,8 @@ class AssetFrontEnd
 	/**
 	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets
 	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
+	 * Audio streaming may not be supported for some targets or files. If audio streaming is
+	 * not supported, a `SOUND` asset will be returned instead.
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -405,7 +406,8 @@ class AssetFrontEnd
 	/**
 	 * Gets an instance of a streamed sound, logs when the asset is not found.
 	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
+	 * Audio streaming may not be supported for some targets or files. If audio streaming is
+	 * not supported, a `SOUND` asset will be returned instead.
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
@@ -435,7 +437,8 @@ class AssetFrontEnd
 	/**
 	 * Gets an instance of a streamed sound, logs when the asset is not found
 	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
+	 * Audio streaming may not be supported for some targets or files. If audio streaming is
+	 * not supported, a `SOUND` asset will be returned instead.
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -632,7 +635,8 @@ class AssetFrontEnd
 	/**
 	 * Loads a streamed sound asset asynchronously
 	 * 
-	 * If sound streaming is not supported a normal sound will be returned instead.
+	 * Audio streaming may not be supported for some targets or files. If audio streaming is
+	 * not supported, a `SOUND` asset will be returned instead.
 	 * 
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
