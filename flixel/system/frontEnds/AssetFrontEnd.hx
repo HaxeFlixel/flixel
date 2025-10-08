@@ -128,9 +128,7 @@ class AssetFrontEnd
 			// Check cache
 			case IMAGE if (canUseCache && Assets.cache.hasBitmapData(id)):
 				Assets.cache.getBitmapData(id);
-			// Lime doesn't expose a way to detect if sound streaming is supported so we have to check ourselves
-			// MUSIC behaves like SOUND when sound streaming is unsupported.
-			case SOUND #if !lime_vorbis , MUSIC #end if (canUseCache && Assets.cache.hasSound(id)):
+			case SOUND, MUSIC if (canUseCache && Assets.cache.hasSound(id)):
 				Assets.cache.getSound(id);
 			case FONT if (canUseCache && Assets.cache.hasFont(id)):
 				Assets.cache.getFont(id);
@@ -141,19 +139,29 @@ class AssetFrontEnd
 				if (canUseCache)
 					Assets.cache.setBitmapData(id, bitmap);
 				bitmap;
-			case SOUND #if !lime_vorbis , MUSIC #end:
+			case SOUND:
 				final sound = Sound.fromFile(getPath(id));
 				if (canUseCache)
 					Assets.cache.setSound(id, sound);
 				sound;
-			#if lime_vorbis
 			case MUSIC:
-				// Ignore cache when streaming sounds
+				var sound:Sound;
+				#if lime_vorbis
 				final vorbisFile = VorbisFile.fromFile(getPath(id));
-				final buffer = AudioBuffer.fromVorbisFile(buffer);
-				final sound = Sound.fromAudioBuffer(buffer);
+				if (vorbisFile != null)
+				{
+					final buffer = AudioBuffer.fromVorbisFile(buffer);
+					sound = Sound.fromAudioBuffer(buffer);
+				}
+				else
+				#end
+				{
+					// can't stream this sound, fall back to default behavior
+					sound = Sound.fromFile(getPath(id));
+					if (canUseCache)
+						Assets.cache.setSound(id, sound);
+				}
 				sound;
-			#end
 			case FONT:
 				final font = Font.fromFile(getPath(id));
 				if (canUseCache)
