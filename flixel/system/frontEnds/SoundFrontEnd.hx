@@ -86,7 +86,7 @@ class SoundFrontEnd
 	public var defaultMusicGroup:FlxSoundGroup = new FlxSoundGroup();
 
 	/**
-	 * The group sounds in load() / play() / stream() are added to unless specified otherwise.
+	 * The group sounds in load() / loadFromURL() / play() are added to unless specified otherwise.
 	 */
 	public var defaultSoundGroup:FlxSoundGroup = new FlxSoundGroup();
 
@@ -124,7 +124,7 @@ class SoundFrontEnd
 			music.stop();
 		}
 		
-		music.loadEmbedded(embeddedMusic, looped);
+		music.load(embeddedMusic, looped);
 		music.volume = volume;
 		music.persist = true;
 		group.add(music);
@@ -161,7 +161,7 @@ class SoundFrontEnd
 
 		if (embeddedSound != null)
 		{
-			sound.loadEmbedded(embeddedSound, looped, autoDestroy, onComplete);
+			sound.load(embeddedSound, looped, autoDestroy, onComplete);
 			loadHelper(sound, volume, group, autoPlay);
 			// Call OnlLoad() because the sound already loaded
 			if (onLoad != null && sound._sound != null)
@@ -182,7 +182,7 @@ class SoundFrontEnd
 				}
 			}
 
-			sound.loadStream(url, looped, autoDestroy, onComplete, loadCallback);
+			sound.loadFromURL(url, looped, autoDestroy, onComplete, loadCallback);
 			loadHelper(sound, volume, group);
 		}
 
@@ -251,7 +251,7 @@ class SoundFrontEnd
 		{
 			embeddedSound = cache(embeddedSound);
 		}
-		var sound = list.recycle(FlxSound).loadEmbedded(embeddedSound, looped, autoDestroy, onComplete);
+		var sound = list.recycle(FlxSound).load(embeddedSound, looped, autoDestroy, onComplete);
 		return loadHelper(sound, volume, group, true);
 	}
 
@@ -269,10 +269,31 @@ class SoundFrontEnd
 	 * @param   onLoad       Called when the sound finished loading.
 	 * @return  A FlxSound object.
 	 */
-	public function stream(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
+	public function loadFromURL(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
 			?onLoad:Void->Void):FlxSound
 	{
 		return load(null, volume, looped, group, autoDestroy, true, url, onComplete, onLoad);
+	}
+
+	/**
+	 * Plays a sound from a URL. Tries to recycle a cached sound first.
+	 * NOTE: Just calls FlxG.sound.load() with AutoPlay == true.
+	 *
+	 * @param   url          Load a sound from an external web resource instead.
+	 * @param   volume       How loud to play it (0 to 1).
+	 * @param   looped       Whether to loop this sound.
+	 * @param   group        The group to add this sound to.
+	 * @param   autoDestroy  Whether to destroy this sound when it finishes playing.
+	 *                       Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param   onComplete   Called when the sound finished playing
+	 * @param   onLoad       Called when the sound finished loading.
+	 * @return  A FlxSound object.
+	 */
+	@:deprecated("FlxG.sound.stream() is deprecated, use FlxG.sound.loadFromURL() instead")
+	public function stream(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
+			?onLoad:Void->Void):FlxSound
+	{
+		return loadFromURL(url, volume, looped, group, autoDestroy, onComplete, onLoad);
 	}
 
 	/**
