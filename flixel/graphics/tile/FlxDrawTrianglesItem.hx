@@ -328,7 +328,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2;
 		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3;
 
-		#if !flash
 		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
 		for (i in 0...INDICES_PER_QUAD)
 			alphas.push(alphaMultiplier);
@@ -369,7 +368,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 				colorMultipliers.push(1);
 			}
 		}
-		#end
 
 		verticesPosition += 8;
 		indicesPosition += 6;
