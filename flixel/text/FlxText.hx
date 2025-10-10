@@ -1025,45 +1025,11 @@ class FlxText extends FlxSprite
 		super.draw();
 	}
 	
-	override function drawSimple(camera:FlxCamera):Void
+	override function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		if (isPixelPerfectRender(camera))
-			_point.floor();
-		
-		_point.copyTo(_flashPoint);
-		camera.copyPixels(_frame, framePixels, _flashRect, _flashPoint, colorTransform, blend, antialiasing);
+		return super.getScreenPosition(result, camera).subtract(_graphicOffset);
 	}
 	
-	override function drawComplex(camera:FlxCamera):Void
-	{
-		_frame.prepareMatrix(_matrix, ANGLE_0, checkFlipX(), checkFlipY());
-		_matrix.translate(-origin.x, -origin.y);
-		_matrix.scale(scale.x, scale.y);
-		
-		if (bakedRotationAngle <= 0)
-		{
-			updateTrig();
-			
-			if (angle != 0)
-				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
-		}
-		
-		// same as super but checks _graphicOffset
-		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
-		_point.add(origin.x, origin.y);
-		_matrix.translate(_point.x, _point.y);
-		
-		if (isPixelPerfectRender(camera))
-		{
-			_matrix.tx = Math.floor(_matrix.tx);
-			_matrix.ty = Math.floor(_matrix.ty);
-		}
-		
-		camera.drawPixels(_frame, framePixels, _matrix, colorTransform, blend, antialiasing, shader);
-	}
-
 	/**
 	 * Internal function to update the current animation frame.
 	 *
