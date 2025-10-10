@@ -1,4 +1,28 @@
-# 6.1.0 (Apr 28, 2025)
+### 6.1.1 (Oct 7, 2025)
+
+#### Changes and improvements:
+- `FlxSignal`: Remove antiquated Hashlink workaround ([#3458](https://github.com/HaxeFlixel/flixel/pull/3458))
+- `FlxCollision`: Make result optional in `calcRectExit` ([#3448](https://github.com/HaxeFlixel/flixel/pull/3448))
+- `FlxCamera`: Honor alpha in `flash()` ([#3455](https://github.com/HaxeFlixel/flixel/pull/3455))
+- `FlxGame`: Update inputs before dispatching `FlxG.signals.preUpdate` ([#3442](https://github.com/HaxeFlixel/flixel/pull/3442))
+- `FlxTouchManager`: add null-safety ([#3440](https://github.com/HaxeFlixel/flixel/pull/3440))
+- `FlxCamera`: Improve error message when drawing a destroyed `FlxGraphic` ([#3417](https://github.com/HaxeFlixel/flixel/pull/3417))
+- `FlxCamera`: Remove references to unused `blending` variable ([#3467](https://github.com/HaxeFlixel/flixel/pull/3467))
+- `FlxText`: Improve pixel font support ([#3453](https://github.com/HaxeFlixel/flixel/pull/3453))
+- `FlxDrawQuadsItem`: Call `endFill()` after drawing ([#3462](https://github.com/HaxeFlixel/flixel/pull/3462))
+- `FlxFrame`: Update `uv` in `clip` method ([#3476](https://github.com/HaxeFlixel/flixel/pull/3476))
+- `FlxSignal`: Allow `destroy` during `dispatch` ([#3436](https://github.com/HaxeFlixel/flixel/pull/3436))
+- `FlxG.gamepads`: Extend PS4 mapping to work with PS5 ([#3380](https://github.com/HaxeFlixel/flixel/pull/3380))
+
+#### Bugfixes:
+- `FlxCamera`: Honor `filter` changes when `active = false` ([#3481](https://github.com/HaxeFlixel/flixel/pull/3481))
+- `FlxUVRect`: Fix mixup of `right` and `top` fields ([#3475](https://github.com/HaxeFlixel/flixel/pull/3475))
+- `FlxCamera`: Fix `FlxStrip` disapearing on zoomed out cameras ([#3484](https://github.com/HaxeFlixel/flixel/pull/3484))
+- `FlxFrame`: Fix rotated frames not rendering on Hashlink ([#3454](https://github.com/HaxeFlixel/flixel/pull/3454))
+- `FlxSound`: Prevent paused sounds resuming on focus ([#3316](https://github.com/HaxeFlixel/flixel/pull/3316))
+- `FlxTilemap`: Fix debug draw when zoomed ([#3504](https://github.com/HaxeFlixel/flixel/pull/3504))
+
+## 6.1.0 (Apr 28, 2025)
 
 #### Changes and improvements:
 - Various improvements to debug tools ([#3328](https://github.com/HaxeFlixel/flixel/pull/3328)) ([#3374](https://github.com/HaxeFlixel/flixel/pull/3374)) ([#3375](https://github.com/HaxeFlixel/flixel/pull/3375))

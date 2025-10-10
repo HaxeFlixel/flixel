@@ -24,12 +24,10 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
 
-	#if !flash
 	public var shader:FlxShader;
 	var alphas:Array<Float>;
 	var colorMultipliers:Array<Float>;
 	var colorOffsets:Array<Float>;
-	#end
 
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
@@ -46,16 +44,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	{
 		super();
 		type = FlxDrawItemType.TRIANGLES;
-		#if !flash
 		alphas = [];
-		#end
 	}
 
 	override public function render(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile)
-			return;
-
 		if (numTriangles <= 0)
 			return;
 
@@ -113,13 +106,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		verticesPosition = 0;
 		indicesPosition = 0;
 		colorsPosition = 0;
-		#if !flash
 		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
 		if (colorOffsets != null)
 			colorOffsets.splice(0, colorOffsets.length);
-		#end
 	}
 
 	override public function dispose():Void
@@ -131,15 +122,13 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData = null;
 		colors = null;
 		bounds = null;
-		#if !flash
 		alphas = null;
 		colorMultipliers = null;
 		colorOffsets = null;
-		#end
 	}
 
 	public function addTriangles(vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint,
-			?cameraBounds:FlxRect #if !flash , ?transform:ColorTransform #end):Void
+			?cameraBounds:FlxRect, ?transform:ColorTransform):Void
 	{
 		if (position == null)
 			position = point.set();
@@ -206,57 +195,54 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 				colorsPosition += numberOfVertices;
 			}
-
+			
+			final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
+			for (_ in 0...indicesLength)
+				alphas.push(alphaMultiplier);
+			
+			if (colored || hasColorOffsets)
+			{
+				if (colorMultipliers == null)
+					colorMultipliers = [];
+				
+				if (colorOffsets == null)
+					colorOffsets = [];
+				
+				for (_ in 0...indicesLength)
+				{
+					if (transform != null)
+					{
+						colorMultipliers.push(transform.redMultiplier);
+						colorMultipliers.push(transform.greenMultiplier);
+						colorMultipliers.push(transform.blueMultiplier);
+						
+						colorOffsets.push(transform.redOffset);
+						colorOffsets.push(transform.greenOffset);
+						colorOffsets.push(transform.blueOffset);
+						colorOffsets.push(transform.alphaOffset);
+					}
+					else
+					{
+						colorMultipliers.push(1);
+						colorMultipliers.push(1);
+						colorMultipliers.push(1);
+						
+						colorOffsets.push(0);
+						colorOffsets.push(0);
+						colorOffsets.push(0);
+						colorOffsets.push(0);
+					}
+					
+					colorMultipliers.push(1);
+				}
+			}
+			
 			verticesPosition += verticesLength;
 			indicesPosition += indicesLength;
 		}
 
 		position.putWeak();
 		cameraBounds.putWeak();
-
-		#if !flash
-		for (_ in 0...indicesLength)
-		{
-			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
-		}
-
-		if (colored || hasColorOffsets)
-		{
-			if (colorMultipliers == null)
-				colorMultipliers = [];
-
-			if (colorOffsets == null)
-				colorOffsets = [];
-
-			for (_ in 0...indicesLength)
-			{
-				if(transform != null)
-				{
-					colorMultipliers.push(transform.redMultiplier);
-					colorMultipliers.push(transform.greenMultiplier);
-					colorMultipliers.push(transform.blueMultiplier);
-
-					colorOffsets.push(transform.redOffset);
-					colorOffsets.push(transform.greenOffset);
-					colorOffsets.push(transform.blueOffset);
-					colorOffsets.push(transform.alphaOffset);
-				}
-				else
-				{
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-					colorMultipliers.push(1);
-	
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-					colorOffsets.push(0);
-				}
-
-				colorMultipliers.push(1);
-			}
-		}
-		#end
 	}
 
 	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
