@@ -20,6 +20,7 @@ typedef DrawData<T> = openfl.Vector<T>;
  */
 class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 {
+	static inline final INDICES_PER_QUAD = 6;
 	static var point:FlxPoint = FlxPoint.get();
 	static var rect:FlxRect = FlxRect.get();
 
@@ -280,12 +281,11 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
-		var prevVerticesPos:Int = verticesPosition;
-		var prevIndicesPos:Int = indicesPosition;
-		var prevColorsPos:Int = colorsPosition;
-		var prevNumberOfVertices:Int = numVertices;
+		final prevVerticesPos = verticesPosition;
+		final prevIndicesPos = indicesPosition;
+		final prevNumberOfVertices = numVertices;
 
-		var point = FlxPoint.get();
+		point.set(0, 0);
 		point.transform(matrix);
 
 		vertices[prevVerticesPos] = point.x;
@@ -303,59 +303,70 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		uvtData[prevVerticesPos + 2] = frame.uv.right;
 		uvtData[prevVerticesPos + 3] = frame.uv.top;
 
-		point.set(frame.frame.width, frame.frame.height);
+		point.set(0, frame.frame.height);
 		point.transform(matrix);
 
 		vertices[prevVerticesPos + 4] = point.x;
 		vertices[prevVerticesPos + 5] = point.y;
 
-		uvtData[prevVerticesPos + 4] = frame.uv.right;
+		uvtData[prevVerticesPos + 4] = frame.uv.left;
 		uvtData[prevVerticesPos + 5] = frame.uv.bottom;
 
-		point.set(0, frame.frame.height);
+		point.set(frame.frame.width, frame.frame.height);
 		point.transform(matrix);
 
 		vertices[prevVerticesPos + 6] = point.x;
 		vertices[prevVerticesPos + 7] = point.y;
 
-		point.put();
-
-		uvtData[prevVerticesPos + 6] = frame.uv.left;
+		uvtData[prevVerticesPos + 6] = frame.uv.right;
 		uvtData[prevVerticesPos + 7] = frame.uv.bottom;
 
 		indices[prevIndicesPos] = prevNumberOfVertices;
 		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1;
 		indices[prevIndicesPos + 2] = prevNumberOfVertices + 2;
-		indices[prevIndicesPos + 3] = prevNumberOfVertices + 2;
-		indices[prevIndicesPos + 4] = prevNumberOfVertices + 3;
-		indices[prevIndicesPos + 5] = prevNumberOfVertices;
+		indices[prevIndicesPos + 3] = prevNumberOfVertices + 1;
+		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2;
+		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3;
 
-		if (colored)
+		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
+		for (i in 0...INDICES_PER_QUAD)
+			alphas.push(alphaMultiplier);
+			
+		if (colored || hasColorOffsets)
 		{
-			var red = 1.0;
-			var green = 1.0;
-			var blue = 1.0;
-			var alpha = 1.0;
-
-			if (transform != null)
+			if (colorMultipliers == null)
+				colorMultipliers = [];
+				
+			if (colorOffsets == null)
+				colorOffsets = [];
+				
+			for (i in 0...INDICES_PER_QUAD)
 			{
-				red = transform.redMultiplier;
-				green = transform.greenMultiplier;
-				blue = transform.blueMultiplier;
-
-				#if !neko
-				alpha = transform.alphaMultiplier;
-				#end
+				if (transform != null)
+				{
+					colorMultipliers.push(transform.redMultiplier);
+					colorMultipliers.push(transform.greenMultiplier);
+					colorMultipliers.push(transform.blueMultiplier);
+					
+					colorOffsets.push(transform.redOffset);
+					colorOffsets.push(transform.greenOffset);
+					colorOffsets.push(transform.blueOffset);
+					colorOffsets.push(transform.alphaOffset);
+				}
+				else
+				{
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					colorMultipliers.push(1);
+					
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+					colorOffsets.push(0);
+				}
+				
+				colorMultipliers.push(1);
 			}
-
-			var color = FlxColor.fromRGBFloat(red, green, blue, alpha);
-
-			colors[prevColorsPos] = color;
-			colors[prevColorsPos + 1] = color;
-			colors[prevColorsPos + 2] = color;
-			colors[prevColorsPos + 3] = color;
-
-			colorsPosition += 4;
 		}
 
 		verticesPosition += 8;
