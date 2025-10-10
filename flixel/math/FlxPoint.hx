@@ -301,20 +301,48 @@ import openfl.geom.Point;
 	{
 		this = FlxPoint.get(x, y);
 	}
-
+	
+	/**
+	 * Set the coordinates of this point object.
+	 *
+	 * @param   n  The X and Y coordinate of the point in space.
+	 */
+	public inline function setXY(n:Float):FlxBasePoint
+	{
+		return set(n, n);
+	}
+	
+	
 	/**
 	 * Set the coordinates of this point object.
 	 *
 	 * @param   x  The X-coordinate of the point in space.
 	 * @param   y  The Y-coordinate of the point in space.
 	 */
-	public inline function set(x:Float = 0, y:Float = 0):FlxPoint
+	overload public inline extern function set(x:Float, y:Float):FlxPoint
 	{
-		this.x = x;
-		this.y = y;
-		return this;
+		return this.set(x, y);
 	}
-
+	
+	/**
+	 * Sets the x coordinate of this point and zeroes the y coordinate.
+	 *
+	 * @param   x  The X-coordinate of the point in space.
+	 */
+	@:deprecated("set(n) is deprecated, use the two-arged set(n, 0), instead")
+	overload public inline extern function set(x:Float):FlxPoint
+	{
+		return set(x, 0);
+	}
+	
+	/**
+	 * Set the coordinates of this point to zero.
+	 */
+	overload public inline extern function set():FlxPoint
+	{
+		return set(0, 0);
+	}
+	
 	/**
 	 * Adds to the coordinates of this point.
 	 *
@@ -1577,18 +1605,45 @@ class FlxBasePoint implements IFlxPooled
 	{
 		set(x, y);
 	}
-
+	
+	/**
+	 * Necessary for FlxCallbackPoint.
+	 */
+	function setHelper(x:Float, y:Float):FlxBasePoint
+	{
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+	
 	/**
 	 * Set the coordinates of this point object.
 	 *
 	 * @param   x  The X-coordinate of the point in space.
 	 * @param   y  The Y-coordinate of the point in space.
 	 */
-	public function set(x:Float = 0, y:Float = 0):FlxBasePoint
+	overload public inline extern function set(x:Float, y:Float):FlxBasePoint
 	{
-		this.x = x;
-		this.y = y;
-		return this;
+		return setHelper(x, y);
+	}
+	
+	/**
+	 * Sets the x coordinate of this point and zeroes the y coordinate.
+	 *
+	 * @param   x  The X-coordinate of the point in space.
+	 */
+	@:deprecated("set(n) is deprecated, use the two-arged set(n, 0), instead")
+	overload public inline extern function set(x:Float):FlxBasePoint
+	{
+		return set(x, 0);
+	}
+	
+	/**
+	 * Set the coordinates of this point to zero.
+	 */
+	overload public inline extern function set():FlxBasePoint
+	{
+		return set(0, 0);
 	}
 
 	/**
@@ -1690,7 +1745,9 @@ abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
 	inline function get_degrees():Float return this.degrees;
 	
 	// hide underlying mutators
-	inline function set(x = 0, y = 0):FlxReadOnlyPoint return this.set(x, y);
+	overload inline extern function set(x, y):FlxReadOnlyPoint return this.set(x, y);
+	overload inline extern function set(x):FlxReadOnlyPoint return this.set(x);
+	overload inline extern function set():FlxReadOnlyPoint return this.set();
 	inline function add(x = 0, y = 0):FlxReadOnlyPoint return this.add(x, y);
 	inline function addPoint(point):FlxReadOnlyPoint return this.add(point);
 	inline function subtract(x = 0, y = 0):FlxReadOnlyPoint return this.subtract(x, y);
@@ -1753,9 +1810,9 @@ class FlxCallbackPoint extends FlxBasePoint
 		}
 	}
 
-	override public function set(x:Float = 0, y:Float = 0):FlxCallbackPoint
+	override function setHelper(x:Float, y:Float):FlxCallbackPoint
 	{
-		super.set(x, y);
+		super.setHelper(x, y);
 		if (_setXYCallback != null)
 			_setXYCallback(this);
 		return this;
