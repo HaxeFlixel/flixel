@@ -1049,6 +1049,8 @@ class FlxText extends FlxSprite
 			if (angle != 0)
 				_matrix.rotateWithTrig(_cosAngle, _sinAngle);
 		}
+
+		_matrix.concat(transform);
 		
 		// same as super but checks _graphicOffset
 		getScreenPosition(_point, camera).subtract(offset).subtract(_graphicOffset);
