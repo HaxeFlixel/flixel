@@ -126,6 +126,12 @@ class FlxSound extends FlxBasic
 	 * @since 4.1.0
 	 */
 	public var loopTime:Float = 0;
+
+	/**
+	 * In case of looping, the amount of times the sound can loop.
+	 * If not set / `null`, the sound loops normally if looped.
+	 */
+	public var loops:Null<Float>;
 	
 	/**
 	 * At which point to stop playing the sound, in milliseconds.
@@ -233,6 +239,7 @@ class FlxSound extends FlxBasic
 		_volumeAdjust = 1.0;
 		looped = false;
 		loopTime = 0.0;
+		loops = 0;
 		endTime = 0.0;
 		_target = null;
 		_radius = 0;
@@ -652,6 +659,17 @@ class FlxSound extends FlxBasic
 			
 		if (looped)
 		{
+			if (loops != null)
+			{
+				if (loops > 0)
+					loops--;
+				else
+				{
+					cleanup(autoDestroy);
+					return;
+				}
+			}
+
 			cleanup(false);
 			play(false, loopTime, endTime);
 		}
