@@ -36,16 +36,19 @@ class VirtualInputData extends #if nme ByteArray #else ByteArrayData #end {}
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
 typedef FlxSoundAsset = OneOfThree<String, Sound, Class<Sound>>;
-typedef FlxGraphicAsset = OneOfThree<FlxGraphic, BitmapData, String>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
-abstract FlxGraphicSource(OneOfThree<BitmapData, Class<Dynamic>, String>) from BitmapData from Class<Dynamic> from String
+
+abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic>>) from FlxGraphic to FlxGraphic from BitmapData to BitmapData from String to String from Class<Dynamic> to Class<Dynamic>
 {
-	public function resolveBitmapData()
+	public inline function resolveBitmapData():BitmapData
 	{
 		return FlxAssets.resolveBitmapData(cast this);
 	}
 }
+
+@:deprecated("`FlxGraphicSource` is deprecated, use `FlxGraphicAsset` instead")
+typedef FlxGraphicSource = FlxGraphicAsset;
 
 abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String from Bytes
 {
@@ -54,7 +57,6 @@ abstract FlxAngelCodeAsset(OneOfThree<Xml, String, Bytes>) from Xml from String 
 		return BMFont.parse(cast this);
 	}
 }
-
 
 @:deprecated("`FlxAngelCodeXmlAsset` is deprecated, use `FlxAngelCodeAsset` instead")// 5.6.0
 typedef FlxAngelCodeXmlAsset = FlxAngelCodeAsset;
@@ -304,9 +306,13 @@ class FlxAssets
 	 * @param   graphic  input data to get BitmapData object for.
 	 * @return  BitmapData for specified Dynamic object.
 	 */
-	public static function resolveBitmapData(graphic:FlxGraphicSource):BitmapData
+	public static function resolveBitmapData(graphic:FlxGraphicAsset):BitmapData
 	{
-		if ((graphic is BitmapData))
+		if ((graphic is FlxGraphic))
+		{
+			return cast(graphic, FlxGraphic).bitmap;
+		}
+		else if ((graphic is BitmapData))
 		{
 			return cast graphic;
 		}
@@ -333,12 +339,16 @@ class FlxAssets
 	 * @param   key      optional key string.
 	 * @return  Key String for specified Graphic object.
 	 */
-	public static function resolveKey(graphic:FlxGraphicSource, ?key:String):String
+	public static function resolveKey(graphic:FlxGraphicAsset, ?key:String):String
 	{
 		if (key != null)
 			return key;
 		
-		if ((graphic is BitmapData))
+		if ((graphic is FlxGraphic))
+		{
+			return cast(graphic, FlxGraphic).key;
+		}
+		else if ((graphic is BitmapData))
 		{
 			return key;
 		}

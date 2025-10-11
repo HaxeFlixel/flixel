@@ -417,7 +417,7 @@ class FlxDebugger extends openfl.display.Sprite
 			resetButtonLayout();
 	}
 
-	public function addWindowToggleButton(window:Window, icon:FlxGraphicSource):Void
+	public function addWindowToggleButton(window:Window, icon:FlxGraphicAsset):Void
 	{
 		var button = addButton(RIGHT, icon.resolveBitmapData(), window.toggleVisible, true, true);
 		window.toggleButton = button;

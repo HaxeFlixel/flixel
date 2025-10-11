@@ -562,7 +562,7 @@ class FlxStringUtil
 	 * @param   colorMap   An array of color values (alpha values are ignored) in the order they're intended to be assigned as indices
 	 * @return  A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function imageToCSV(graphic:FlxGraphicSource, invert = false, scale = 1, ?colorMap:Array<FlxColor>):String
+	public static function imageToCSV(graphic:FlxGraphicAsset, invert = false, scale = 1, ?colorMap:Array<FlxColor>):String
 	{
 		return bitmapToCSV(graphic.resolveBitmapData(), invert, scale, colorMap);
 	}
