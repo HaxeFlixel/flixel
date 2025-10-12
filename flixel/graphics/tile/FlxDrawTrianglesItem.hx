@@ -273,7 +273,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		final prevIndicesPos = indicesPosition;
 		final prevNumberOfVertices = numVertices;
 
-		point.set(0, 0);
+		final point = FlxPoint.get();
 		point.transform(matrix);
 
 		vertices[prevVerticesPos] = point.x;
@@ -305,7 +305,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		vertices[prevVerticesPos + 6] = point.x;
 		vertices[prevVerticesPos + 7] = point.y;
-
+		
+		point.put();
+		
 		uvtData[prevVerticesPos + 6] = frame.uv.right;
 		uvtData[prevVerticesPos + 7] = frame.uv.bottom;
 
