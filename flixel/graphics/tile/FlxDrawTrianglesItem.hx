@@ -32,6 +32,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	@:deprecated("colors is deprecated, use colorMultipliers and colorOffsets")
 	public var colors:DrawData<Int> = new DrawData<Int>();
 
 	public var verticesPosition:Int = 0;
@@ -101,7 +102,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices.length = 0;
 		indices.length = 0;
 		uvtData.length = 0;
-		colors.length = 0;
 
 		verticesPosition = 0;
 		indicesPosition = 0;
@@ -120,7 +120,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices = null;
 		indices = null;
 		uvtData = null;
-		colors = null;
 		bounds = null;
 		alphas = null;
 		colorMultipliers = null;
@@ -141,7 +140,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
 		var prevIndicesLength:Int = this.indices.length;
 		var prevUVTDataLength:Int = this.uvtData.length;
-		var prevColorsLength:Int = this.colors.length;
 		var prevNumberOfVertices:Int = this.numVertices;
 
 		var tempX:Float, tempY:Float;
@@ -184,16 +182,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			for (i in 0...indicesLength)
 			{
 				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
-			}
-
-			if (colored)
-			{
-				for (i in 0...numberOfVertices)
-				{
-					this.colors[prevColorsLength + i] = colors[i];
-				}
-
-				colorsPosition += numberOfVertices;
 			}
 			
 			final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
