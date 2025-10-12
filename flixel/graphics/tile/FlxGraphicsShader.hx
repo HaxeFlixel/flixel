@@ -54,9 +54,14 @@ class FlxGraphicsShader extends GraphicsShader
 			return color * openfl_Alphav;
 		}
 	", true)
-	@:glFragmentBody("
-		gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
-	", true)
+	@:glFragmentSource("
+		#pragma header
+
+		void main(void)
+		{
+			gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
+		}
+	")
 	public function new()
 	{
 		super();
