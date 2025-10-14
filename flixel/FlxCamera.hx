@@ -11,6 +11,7 @@ import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
+import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
@@ -26,8 +27,6 @@ import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 
 using flixel.util.FlxColorTransformUtil;
-
-private typedef FlxDrawItem = flixel.graphics.tile.FlxDrawQuadsItem;
 
 /**
  * The camera class is used to display the game's visuals.
@@ -537,7 +536,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Last draw tiles item
 	 */
-	var _headTiles:FlxDrawItem;
+	var _headTiles:FlxDrawQuadsItem;
 
 	/**
 	 * Last draw triangles item
@@ -547,7 +546,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Draw tiles stack items that can be reused
 	 */
-	static var _storageTilesHead:FlxDrawItem;
+	static var _storageTilesHead:FlxDrawQuadsItem;
 
 	/**
 	 * Draw triangles stack items that can be reused
@@ -601,7 +600,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			itemToReturn = new FlxDrawItem();
+			itemToReturn = new FlxDrawQuadsItem();
 		}
 		
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
