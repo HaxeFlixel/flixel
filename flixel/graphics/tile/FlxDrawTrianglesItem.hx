@@ -272,19 +272,16 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		final prevVerticesPos = verticesPosition;
 		final prevNumberOfVertices = numVertices;
 		
-		inline function addVertices(index:Int, x:Float, y:Float)
-		{
-			final i = (index << 1) + prevVerticesPos;
-			vertices[i + 0] = matrix.transformX(x, y);
-			vertices[i + 1] = matrix.transformY(x, y);
-		}
-		
 		final w = frame.frame.width;
 		final h = frame.frame.height;
-		addVertices(0, 0, 0); // top-left
-		addVertices(1, w, 0); // top-right
-		addVertices(2, 0, h); // bottom-left
-		addVertices(3, w, h); // bottom-right
+		vertices[prevVerticesPos + 0] = matrix.transformX(0, 0); // left
+		vertices[prevVerticesPos + 1] = matrix.transformY(0, 0); // top
+		vertices[prevVerticesPos + 2] = matrix.transformX(w, 0); // right
+		vertices[prevVerticesPos + 3] = matrix.transformY(w, 0); // top
+		vertices[prevVerticesPos + 4] = matrix.transformX(0, h); // left
+		vertices[prevVerticesPos + 5] = matrix.transformY(0, h); // bottom
+		vertices[prevVerticesPos + 6] = matrix.transformX(w, h); // right
+		vertices[prevVerticesPos + 7] = matrix.transformY(w, h); // bottom
 		
 		uvtData[prevVerticesPos + 0] = frame.uv.left;
 		uvtData[prevVerticesPos + 1] = frame.uv.top;
