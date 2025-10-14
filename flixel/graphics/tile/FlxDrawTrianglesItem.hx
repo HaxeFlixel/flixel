@@ -32,10 +32,12 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	public var vertices:DrawData<Float> = new DrawData<Float>();
 	public var indices:DrawData<Int> = new DrawData<Int>();
 	public var uvtData:DrawData<Float> = new DrawData<Float>();
+	@:deprecated("colors is deprecated, use colorMultipliers and colorOffsets")
 	public var colors:DrawData<Int> = new DrawData<Int>();
 
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
+	@:deprecated("colorsPosition is deprecated")
 	public var colorsPosition:Int = 0;
 
 	var bounds:FlxRect = FlxRect.get();
@@ -101,11 +103,9 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices.length = 0;
 		indices.length = 0;
 		uvtData.length = 0;
-		colors.length = 0;
 
 		verticesPosition = 0;
 		indicesPosition = 0;
-		colorsPosition = 0;
 		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
@@ -120,7 +120,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		vertices = null;
 		indices = null;
 		uvtData = null;
-		colors = null;
 		bounds = null;
 		alphas = null;
 		colorMultipliers = null;
@@ -141,7 +140,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		var numberOfVertices:Int = Std.int(verticesLength / 2);
 		var prevIndicesLength:Int = this.indices.length;
 		var prevUVTDataLength:Int = this.uvtData.length;
-		var prevColorsLength:Int = this.colors.length;
 		var prevNumberOfVertices:Int = this.numVertices;
 
 		var tempX:Float, tempY:Float;
@@ -184,16 +182,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 			for (i in 0...indicesLength)
 			{
 				this.indices[prevIndicesLength + i] = indices[i] + prevNumberOfVertices;
-			}
-
-			if (colored)
-			{
-				for (i in 0...numberOfVertices)
-				{
-					this.colors[prevColorsLength + i] = colors[i];
-				}
-
-				colorsPosition += numberOfVertices;
 			}
 			
 			final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
@@ -282,51 +270,35 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void
 	{
 		final prevVerticesPos = verticesPosition;
-		final prevIndicesPos = indicesPosition;
 		final prevNumberOfVertices = numVertices;
-
-		point.set(0, 0);
-		point.transform(matrix);
-
-		vertices[prevVerticesPos] = point.x;
-		vertices[prevVerticesPos + 1] = point.y;
-
-		uvtData[prevVerticesPos] = frame.uv.left;
+		
+		final w = frame.frame.width;
+		final h = frame.frame.height;
+		vertices[prevVerticesPos + 0] = matrix.transformX(0, 0); // left
+		vertices[prevVerticesPos + 1] = matrix.transformY(0, 0); // top
+		vertices[prevVerticesPos + 2] = matrix.transformX(w, 0); // right
+		vertices[prevVerticesPos + 3] = matrix.transformY(w, 0); // top
+		vertices[prevVerticesPos + 4] = matrix.transformX(0, h); // left
+		vertices[prevVerticesPos + 5] = matrix.transformY(0, h); // bottom
+		vertices[prevVerticesPos + 6] = matrix.transformX(w, h); // right
+		vertices[prevVerticesPos + 7] = matrix.transformY(w, h); // bottom
+		
+		uvtData[prevVerticesPos + 0] = frame.uv.left;
 		uvtData[prevVerticesPos + 1] = frame.uv.top;
-
-		point.set(frame.frame.width, 0);
-		point.transform(matrix);
-
-		vertices[prevVerticesPos + 2] = point.x;
-		vertices[prevVerticesPos + 3] = point.y;
-
 		uvtData[prevVerticesPos + 2] = frame.uv.right;
 		uvtData[prevVerticesPos + 3] = frame.uv.top;
-
-		point.set(0, frame.frame.height);
-		point.transform(matrix);
-
-		vertices[prevVerticesPos + 4] = point.x;
-		vertices[prevVerticesPos + 5] = point.y;
-
 		uvtData[prevVerticesPos + 4] = frame.uv.left;
 		uvtData[prevVerticesPos + 5] = frame.uv.bottom;
-
-		point.set(frame.frame.width, frame.frame.height);
-		point.transform(matrix);
-
-		vertices[prevVerticesPos + 6] = point.x;
-		vertices[prevVerticesPos + 7] = point.y;
-
 		uvtData[prevVerticesPos + 6] = frame.uv.right;
 		uvtData[prevVerticesPos + 7] = frame.uv.bottom;
-
-		indices[prevIndicesPos] = prevNumberOfVertices;
-		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1;
-		indices[prevIndicesPos + 2] = prevNumberOfVertices + 2;
-		indices[prevIndicesPos + 3] = prevNumberOfVertices + 1;
-		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2;
-		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3;
+		
+		final prevIndicesPos = indicesPosition;
+		indices[prevIndicesPos + 0] = prevNumberOfVertices + 0; // TL
+		indices[prevIndicesPos + 1] = prevNumberOfVertices + 1; // TR
+		indices[prevIndicesPos + 2] = prevNumberOfVertices + 2; // BL
+		indices[prevIndicesPos + 3] = prevNumberOfVertices + 1; // TR
+		indices[prevIndicesPos + 4] = prevNumberOfVertices + 2; // BL
+		indices[prevIndicesPos + 5] = prevNumberOfVertices + 3; // BR
 
 		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
 		for (i in 0...INDICES_PER_QUAD)
