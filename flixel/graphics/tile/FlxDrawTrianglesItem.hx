@@ -37,6 +37,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 	public var verticesPosition:Int = 0;
 	public var indicesPosition:Int = 0;
+	@:deprecated("colorsPosition is deprecated")
 	public var colorsPosition:Int = 0;
 
 	var bounds:FlxRect = FlxRect.get();
@@ -105,7 +106,7 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		verticesPosition = 0;
 		indicesPosition = 0;
-		colorsPosition = 0;
+		 = 0;
 		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
