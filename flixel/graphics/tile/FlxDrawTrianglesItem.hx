@@ -106,7 +106,6 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 
 		verticesPosition = 0;
 		indicesPosition = 0;
-		 = 0;
 		alphas.splice(0, alphas.length);
 		if (colorMultipliers != null)
 			colorMultipliers.splice(0, colorMultipliers.length);
