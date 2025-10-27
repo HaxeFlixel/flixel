@@ -114,4 +114,13 @@ class BaseScaleMode
 		}
 		return value;
 	}
+
+	/**
+	 * Helper function to change FlxG width / height.
+	 */
+	function setGlobalSize(width:Int, height:Int):Void
+	{
+		FlxG.width = width;
+		FlxG.height = height;
+	}
 }
