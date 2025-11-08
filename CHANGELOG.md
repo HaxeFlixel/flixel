@@ -1,4 +1,4 @@
-### 6.1.1 (TBD)
+### 6.1.1 (Oct 7, 2025)
 
 #### Changes and improvements:
 - `FlxSignal`: Remove antiquated Hashlink workaround ([#3458](https://github.com/HaxeFlixel/flixel/pull/3458))
@@ -20,6 +20,7 @@
 - `FlxCamera`: Fix `FlxStrip` disapearing on zoomed out cameras ([#3484](https://github.com/HaxeFlixel/flixel/pull/3484))
 - `FlxFrame`: Fix rotated frames not rendering on Hashlink ([#3454](https://github.com/HaxeFlixel/flixel/pull/3454))
 - `FlxSound`: Prevent paused sounds resuming on focus ([#3316](https://github.com/HaxeFlixel/flixel/pull/3316))
+- `FlxTilemap`: Fix debug draw when zoomed ([#3504](https://github.com/HaxeFlixel/flixel/pull/3504))
 
 ## 6.1.0 (Apr 28, 2025)
 
