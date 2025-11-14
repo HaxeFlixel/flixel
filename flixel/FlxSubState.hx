@@ -63,6 +63,7 @@ class FlxSubState extends FlxState
 	override public function draw():Void
 	{
 		// Draw background
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			for (camera in getCamerasLegacy())
@@ -71,6 +72,7 @@ class FlxSubState extends FlxState
 			}
 		}
 		else // FlxG.renderTile
+		#end
 		{
 			if (_bgSprite != null && _bgSprite.visible)
 			{

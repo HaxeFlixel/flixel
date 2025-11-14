@@ -235,11 +235,13 @@ class FlxBitmapText extends FlxSprite
 
 		this.font = (font == null) ? FlxBitmapFont.getDefaultFont() : font;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pixels = new BitmapData(1, 1, true, FlxColor.TRANSPARENT);
 		}
 		else
+		#end
 		{
 			textData = [];
 			textDrawData = [];
@@ -284,10 +286,12 @@ class FlxBitmapText extends FlxSprite
 		}
 		pendingTextBitmapChange = pendingTextBitmapChange || Force;
 		checkPendingChanges(false);
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			super.drawFrame(Force);
 		}
+		#end
 	}
 	
 	override function updateHitbox()
@@ -298,10 +302,12 @@ class FlxBitmapText extends FlxSprite
 
 	function checkPendingChanges(useTiles:Bool = false):Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			useTiles = false;
 		}
+		#end
 
 		if (pendingTextChange)
 		{
@@ -329,12 +335,14 @@ class FlxBitmapText extends FlxSprite
 	static final frameDrawHelper = new ReusableFrame();
 	override function draw()
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			checkPendingChanges(false);
 			super.draw();
 		}
 		else
+		#end
 		{
 			checkPendingChanges(true);
 			
@@ -452,7 +460,7 @@ class FlxBitmapText extends FlxSprite
 	override function set_clipRect(Rect:FlxRect):FlxRect
 	{
 		super.set_clipRect(Rect);
-		if (!FlxG.renderBlit)
+		if (FlxG.renderTile)
 		{
 			pendingTextBitmapChange = true;
 		}
@@ -462,20 +470,24 @@ class FlxBitmapText extends FlxSprite
 	override function set_color(Color:FlxColor):FlxColor
 	{
 		super.set_color(Color);
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pendingTextBitmapChange = true;
 		}
+		#end
 		return color;
 	}
 
 	override function set_alpha(value:Float):Float
 	{
 		super.set_alpha(value);
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pendingTextBitmapChange = true;
 		}
+		#end
 		return value;
 	}
 
@@ -484,10 +496,12 @@ class FlxBitmapText extends FlxSprite
 		if (textColor != value)
 		{
 			textColor = value;
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				pendingPixelsChange = true;
 			}
+			#end
 		}
 
 		return value;
@@ -498,10 +512,12 @@ class FlxBitmapText extends FlxSprite
 		if (useTextColor != value)
 		{
 			useTextColor = value;
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				pendingPixelsChange = true;
 			}
+			#end
 		}
 
 		return value;
@@ -1001,10 +1017,12 @@ class FlxBitmapText extends FlxSprite
 	{
 		computeTextSize();
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			useTiles = false;
 		}
+		#end
 
 		if (!useTiles)
 		{
@@ -1172,6 +1190,7 @@ class FlxBitmapText extends FlxSprite
 		var colorForFill:Int = background ? backgroundColor : FlxColor.TRANSPARENT;
 		var bitmap:BitmapData = null;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			if (pixels == null || (frameWidth != pixels.width || frameHeight != pixels.height))
@@ -1186,6 +1205,7 @@ class FlxBitmapText extends FlxSprite
 			bitmap = pixels;
 		}
 		else
+		#end
 		{
 			if (!useTiles)
 			{
@@ -1224,10 +1244,12 @@ class FlxBitmapText extends FlxSprite
 			bitmap.unlock();
 		}
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			dirty = true;
 		}
+		#end
 
 		if (pendingPixelsChange)
 			throw "pendingPixelsChange was changed to true while processing changed pixels";
@@ -1319,10 +1341,12 @@ class FlxBitmapText extends FlxSprite
 	
 	function drawText(posX:Int, posY:Int, isFront:Bool = true, ?bitmap:BitmapData, useTiles:Bool = false):Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			useTiles = false;
 		}
+		#end
 
 		if (useTiles)
 		{
@@ -1553,10 +1577,12 @@ class FlxBitmapText extends FlxSprite
 		if (background != value)
 		{
 			background = value;
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				pendingPixelsChange = true;
 			}
+			#end
 		}
 
 		return value;
@@ -1567,10 +1593,12 @@ class FlxBitmapText extends FlxSprite
 		if (backgroundColor != value)
 		{
 			backgroundColor = value;
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				pendingPixelsChange = true;
 			}
+			#end
 		}
 
 		return value;
@@ -1592,10 +1620,12 @@ class FlxBitmapText extends FlxSprite
 		if (borderColor != value)
 		{
 			borderColor = value;
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				pendingPixelsChange = true;
 			}
+			#end
 		}
 
 		return value;

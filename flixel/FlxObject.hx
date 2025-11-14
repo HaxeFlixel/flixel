@@ -1298,21 +1298,28 @@ class FlxObject extends FlxBasic
 
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
 		}
 		else
+		#end
 		{
 			return camera.debugLayer.graphics;
 		}
 	}
 
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("endDrawDebug is deprecated")
+	#end
 	inline function endDrawDebug(camera:FlxCamera)
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		#end
 	}
 	#end
 

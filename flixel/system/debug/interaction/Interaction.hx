@@ -377,13 +377,18 @@ class Interaction extends Window
 			drawItemsSelection();
 	}
 
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("getDebugGraphics is deprecated")
+	#end
 	public function getDebugGraphics():Graphics
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
 		}
+		#end
 
 		#if FLX_DEBUG
 		return FlxG.camera.debugLayer.graphics;
@@ -410,9 +415,11 @@ class Interaction extends Window
 			}
 		}
 
+		#if FLX_RENDER_BLIT
 		// Draw the debug info to the main camera buffer.
 		if (FlxG.renderBlit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		#end
 	}
 
 	/**

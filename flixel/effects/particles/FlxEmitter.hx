@@ -264,9 +264,11 @@ class FlxTypedEmitter<T:FlxSprite & IFlxParticle> extends FlxTypedGroup<T>
 		var particle:T = Type.createInstance(particleClass, []);
 		var frame = Multiple ? FlxG.random.int(0, totalFrames - 1) : -1;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit && bakedRotationAngles > 0)
 			particle.loadRotatedGraphic(Graphics, bakedRotationAngles, frame, false, AutoBuffer);
 		else
+		#end
 			particle.loadGraphic(Graphics, Multiple);
 
 		if (Multiple)

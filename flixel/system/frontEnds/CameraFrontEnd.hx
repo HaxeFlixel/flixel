@@ -262,6 +262,7 @@ class CameraFrontEnd
 				continue;
 			}
 
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				camera.checkResize();
@@ -271,6 +272,7 @@ class CameraFrontEnd
 					camera.buffer.lock();
 				}
 			}
+			#end
 
 			if (FlxG.renderTile)
 			{
@@ -282,12 +284,14 @@ class CameraFrontEnd
 				#end
 			}
 
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				camera.fill(camera.bgColor, camera.useBgAlphaBlending);
 				camera.screen.dirty = true;
 			}
 			else
+			#end
 			{
 				camera.fill(camera.bgColor.rgb, camera.useBgAlphaBlending, camera.bgColor.alphaFloat);
 			}
@@ -324,6 +328,7 @@ class CameraFrontEnd
 
 			camera.drawFX();
 
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				if (useBufferLocking)
@@ -333,6 +338,7 @@ class CameraFrontEnd
 
 				camera.screen.dirty = true;
 			}
+			#end
 		}
 	}
 
