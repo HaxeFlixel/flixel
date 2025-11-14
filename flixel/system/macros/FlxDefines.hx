@@ -280,7 +280,7 @@ class FlxDefines
 		// #end
 
 		if (!defined(FLX_NO_RENDER_BLIT))
-			define(FLX_RENDER_BLIT)
+			define(FLX_RENDER_BLIT);
 		
 		if (defined(FLX_TRACK_POOLS) && !defined("debug"))
 			abort("Can only define FLX_TRACK_POOLS on debug mode", (macro null).pos);
