@@ -1742,7 +1742,7 @@ class FlxCamera extends FlxBasic
 
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	#if FLX_NO_RENDER_BLIT
-	@:deprecated("checkResize is deprecated");
+	@:deprecated("checkResize is deprecated")
 	#end
 	function checkResize():Void
 	{
@@ -1769,7 +1769,7 @@ class FlxCamera extends FlxBasic
 	}
 
 	#if FLX_NO_RENDER_BLIT
-	@:deprecated("updateBlitMatrix is deprecated");
+	@:deprecated("updateBlitMatrix is deprecated")
 	#end
 	inline function updateBlitMatrix():Void
 	{
