@@ -109,12 +109,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		}
 	}
 
-	#if !flash
 	override public function render(camera:FlxCamera):Void
 	{
 		if (rects.length == 0)
 			return;
 		
+		#if !flash
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
 		if (shader == null && graphics.isDestroyed)
 			throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
@@ -135,10 +135,14 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 
 		camera.canvas.graphics.overrideBlendMode(blend);
 		camera.canvas.graphics.beginShaderFill(shader);
+		#else
+		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		#end
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		camera.canvas.graphics.endFill();
 		super.render(camera);
 	}
+	
 
 	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void
 	{
@@ -146,5 +150,4 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 			parameter.value = [];
 		parameter.value[0] = value;
 	}
-	#end
 }
