@@ -504,7 +504,7 @@ import openfl.geom.Point;
 	 */
 	public inline function addNew(p:FlxPoint):FlxPoint
 	{
-		return clone().addPoint(p);
+		return clone().add(p);
 	}
 
 	/**

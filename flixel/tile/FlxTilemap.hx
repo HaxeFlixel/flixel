@@ -1220,7 +1220,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		}
 		else
 		{
-			getScreenPosition(_point, camera).subtractPoint(offset).copyTo(_helperPoint);
+			getScreenPosition(_point, camera).subtract(offset).copyTo(_helperPoint);
 
 			_helperPoint.x = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
