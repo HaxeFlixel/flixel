@@ -162,7 +162,7 @@ import openfl.geom.Point;
 	@:op(A += B)
 	static inline function plusEqualOp(a:FlxPoint, b:FlxPoint):FlxPoint
 	{
-		return a.addPoint(b);
+		return a.add(b);
 	}
 
 	/**
@@ -172,7 +172,7 @@ import openfl.geom.Point;
 	@:op(A -= B)
 	static inline function minusEqualOp(a:FlxPoint, b:FlxPoint):FlxPoint
 	{
-		return a.subtractPoint(b);
+		return a.subtract(b);
 	}
 
 	/**
@@ -357,7 +357,7 @@ import openfl.geom.Point;
 	 * @param   point  The point to add to this point
 	 * @return  This point.
 	 */
-	// @:deprecated("addPoint is deprecated, use add(point), instead")// 6.0.0
+	@:deprecated("addPoint is deprecated, use add(point), instead")// 6.1.2
 	public inline function addPoint(point:FlxPoint):FlxPoint
 	{
 		return add(point);
@@ -408,7 +408,7 @@ import openfl.geom.Point;
 	 * @param   point  The point to subtract from this point
 	 * @return  This point.
 	 */
-	// @:deprecated("subtractPoint is deprecated, use subtract(point), instead")// 6.0.0
+	@:deprecated("subtractPoint is deprecated, use subtract(point), instead")// 6.1.2
 	public inline function subtractPoint(point:FlxPoint):FlxPoint
 	{
 		subtract(point.x, point.y);
@@ -470,7 +470,7 @@ import openfl.geom.Point;
 	 * @param   point  The x and y scale coefficient
 	 * @return  scaled point
 	 */
-	// @:deprecated("scalePoint is deprecated, use scale(point), instead")// 6.0.0
+	@:deprecated("scalePoint is deprecated, use scale(point), instead")// 6.1.2
 	public inline function scalePoint(point:FlxPoint):FlxPoint
 	{
 		scale(point.x, point.y);
@@ -508,7 +508,7 @@ import openfl.geom.Point;
 	 */
 	public inline function subtractNew(p:FlxPoint):FlxPoint
 	{
-		return clone().subtractPoint(p);
+		return clone().subtract(p);
 	}
 
 	/**
@@ -542,7 +542,7 @@ import openfl.geom.Point;
 	 * @param   p  Any Point.
 	 * @return  A reference to itself.
 	 */
-	// @:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 6.0.0
+	@:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 6.1.2
 	public inline function copyFromFlash(p:Point):FlxPoint
 	{
 		return set(p.x, p.y);
@@ -583,7 +583,7 @@ import openfl.geom.Point;
 	 * @param   p  Any Point.
 	 * @return  A reference to the altered point parameter.
 	 */
-	// @:deprecated("copyToFlash is deprecated, use copyTo, instead")// 6.0.0
+	@:deprecated("copyToFlash is deprecated, use copyTo, instead")// 6.1.2
 	public inline function copyToFlash(?p:Point):Point
 	{
 		return copyTo(p != null ? p : new Point());
@@ -677,7 +677,7 @@ import openfl.geom.Point;
 	 */
 	public function pivotRadians(pivot:FlxPoint, radians:Float):FlxPoint
 	{
-		_point1.copyFrom(this).subtractPoint(pivot);
+		_point1.copyFrom(this).subtract(pivot);
 		_point1.radians += radians;
 		set(_point1.x + pivot.x, _point1.y + pivot.y);
 		pivot.putWeak();
