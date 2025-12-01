@@ -845,7 +845,12 @@ import openfl.geom.Point;
 	 */
 	inline function dotProductWeak(p:FlxPoint):Float
 	{
-		return x * p.x + y * p.y;
+		return dotProductXY(p.x, p.y);
+	}
+	
+	inline function dotProductXY(x:Float, y:Float):Float
+	{
+		return this.x * x + this.y * y;
 	}
 
 	/**
@@ -1136,7 +1141,12 @@ import openfl.geom.Point;
 	 */
 	inline function perpProductWeak(p:FlxPoint):Float
 	{
-		return lx * p.x + ly * p.y;
+		return perpProductXY(p.x, p.y);
+	}
+	
+	inline function perpProductXY(x:Float, y:Float):Float
+	{
+		return lx * x + ly * y;
 	}
 
 	/**
