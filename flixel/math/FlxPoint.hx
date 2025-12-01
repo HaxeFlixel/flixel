@@ -1063,9 +1063,9 @@ import openfl.geom.Point;
 		return set(x * -1, y * -1);
 	}
 
-	public inline function negateNew():FlxPoint
+	public inline function negateNew(?result:FlxPoint):FlxPoint
 	{
-		return clone().negate();
+		return clone(result).negate();
 	}
 
 	/**
