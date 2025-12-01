@@ -539,8 +539,8 @@ import openfl.geom.Point;
 	/**
 	 * Helper function, just copies the values from this point to the specified point.
 	 *
-	 * @param   p   optional point to copy this point to
-	 * @return  copy of this point
+	 * @param   p  An optional point to copy this point to
+	 * @return  The new point
 	 */
 	public overload inline extern function copyTo(?p:FlxPoint):FlxPoint
 	{
@@ -555,8 +555,8 @@ import openfl.geom.Point;
 	 * Helper function, just copies the values from this point to the specified Flash point.
 	 * @since 6.0.0
 	 *
-	 * @param   p  Any Point.
-	 * @return  A reference to the altered point parameter.
+	 * @param   p  The point to copy this point to
+	 * @return  The new point
 	 */
 	public overload inline extern function copyTo(p:Point):Point
 	{
@@ -1366,8 +1366,8 @@ import openfl.geom.Point;
 	/**
 	 * Copies this point.
 	 *
-	 * @param   p   optional point to copy this point to
-	 * @return  copy of this point
+	 * @param   p  An optional point to copy this point to
+	 * @return  The new point
 	 */
 	public inline function clone(?p:FlxPoint):FlxPoint
 	{
