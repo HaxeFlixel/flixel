@@ -343,8 +343,6 @@ class BitmapFrontEnd
 
 	#if FLX_OPENGL_AVAILABLE
 	static var _maxTextureSize = -1;
-
-	@:allow(flixel.FlxG)
 	function get_maxTextureSize():Int
 	{
 		if (_maxTextureSize < 0 && FlxG.stage.window.context.attributes.hardware)
