@@ -89,7 +89,7 @@ class FlxCallbackPointTest extends FlxTest
 		p.subtract(p2)                          ; assertChecked(1);
 		p.subtractPoint(p2)                     ; assertChecked(1);
 		p.scale(2, 2)                           ; assertChecked(1);
-		// p.scale(p2)                             ; assertChecked(1);
+		p.scale(p2)                             ; assertChecked(1);
 		p.scalePoint(p2)                        ; assertChecked(1);
 		p.copyFrom(p2)                          ; assertChecked(1);
 		p.copyFromFlash(fp)                     ; assertChecked(1);
@@ -192,7 +192,7 @@ class FlxCallbackPointTest extends FlxTest
 		p.subtract(p2)                          ; assertChecked(1);
 		p.subtractPoint(p2)                     ; assertChecked(1);
 		p.scale(2, 2)                           ; assertChecked(1);
-		// p.scale(p2)                             ; assertChecked(1);
+		p.scale(p2)                             ; assertChecked(1);
 		p.scalePoint(p2)                        ; assertChecked(1);
 		p.copyFrom(p2)                          ; assertChecked(1);
 		p.copyFromFlash(fp)                     ; assertChecked(1);
@@ -303,7 +303,7 @@ class FlxCallbackPointTest extends FlxTest
 		p.subtract(p2)                          ; assertChecked(1);
 		p.subtractPoint(p2)                     ; assertChecked(1);
 		p.scale(2, 2)                           ; assertChecked(1);
-		// p.scale(p2)                             ; assertChecked(1);
+		p.scale(p2)                             ; assertChecked(1);
 		p.scalePoint(p2)                        ; assertChecked(1);
 		p.copyFrom(p2)                          ; assertChecked(1);
 		p.copyFromFlash(fp)                     ; assertChecked(1);

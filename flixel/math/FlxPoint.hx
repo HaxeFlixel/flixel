@@ -447,6 +447,18 @@ import openfl.geom.Point;
 	 * @param   point  The x and y scale coefficient
 	 * @return  this point
 	 */
+	public overload inline extern function scale(point:FlxPoint):FlxPoint
+	{
+		return scale(point.x, point.y);
+	}
+	
+	/**
+	 * Scale this point by another point.
+	 * @since 6.0.0
+	 *
+	 * @param   point  The x and y scale coefficient
+	 * @return  this point
+	 */
 	public overload inline extern function scale(point:Point):FlxPoint
 	{
 		return scale(point.x, point.y);
