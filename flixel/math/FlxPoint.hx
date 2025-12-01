@@ -934,7 +934,8 @@ import openfl.geom.Point;
 	 */
 	public inline function isZero():Bool
 	{
-		return Math.abs(x) < EPSILON && Math.abs(y) < EPSILON;
+		// i.e: x*x < EPSILON_SQUARED && y*y < EPSILON_SQUARED;
+		return lengthSquared < 2 * EPSILON_SQUARED;
 	}
 
 	/**
@@ -1038,7 +1039,7 @@ import openfl.geom.Point;
 		{
 			p = get();
 		}
-		p.set(-y, x);
+		p.set(rx, ry);
 		return p;
 	}
 
@@ -1051,7 +1052,7 @@ import openfl.geom.Point;
 		{
 			p = get();
 		}
-		p.set(y, -x);
+		p.set(lx, ly);
 		return p;
 	}
 
