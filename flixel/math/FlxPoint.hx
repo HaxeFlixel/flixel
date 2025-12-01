@@ -71,12 +71,19 @@ import openfl.geom.Point;
  */
 @:forward abstract FlxPoint(FlxBasePoint) to FlxBasePoint from FlxBasePoint 
 {
+	
+	/**
+	 * Vector components less than this are considered zero, to account for rounding errors
+	 */
 	public static inline var EPSILON:Float = 0.0000001;
 	public static inline var EPSILON_SQUARED:Float = EPSILON * EPSILON;
+	
+	/**
+	 * Vector lengths less than this are considered zero, to account for rounding errors
+	 */
+	public static inline var EPSILON_LENGTH:Float = EPSILON * FlxMath.SQUARE_ROOT_OF_TWO;
 
 	static var _point1 = new FlxPoint();
-	static var _point2 = new FlxPoint();
-	static var _point3 = new FlxPoint();
 
 	/**
 	 * Recycle or create new FlxPoint.
@@ -861,9 +868,10 @@ import openfl.geom.Point;
 	 */
 	public inline function dotProdWithNormalizing(p:FlxPoint):Float
 	{
-		var normalized:FlxPoint = p.clone(_point1).normalize();
+		final length = p.length;
+		final result = length < EPSILON_LENGTH ? 0 : dotProductXY(p.x / length, p.y / length);
 		p.putWeak();
-		return dotProductWeak(normalized);
+		return result;
 	}
 
 	/**
@@ -1365,12 +1373,13 @@ import openfl.geom.Point;
 	 */
 	public inline function bounceWithFriction(normal:FlxPoint, bounceCoeff:Float = 1, friction:Float = 0):FlxPoint
 	{
-		var p1:FlxPoint = projectToNormalizedWeak(normal.rightNormal(_point3), _point1);
-		var p2:FlxPoint = projectToNormalizedWeak(normal, _point2);
-		var bounceX:Float = -p2.x;
-		var bounceY:Float = -p2.y;
-		var frictionX:Float = p1.x;
-		var frictionY:Float = p1.y;
+		final dp = dotProductWeak(normal);
+		final bounceX = -normal.x * dp;
+		final bounceY = -normal.y * dp;
+		final pp = perpProductWeak(normal);
+		final frictionX = normal.rx * pp;
+		final frictionY = normal.ry * pp;
+		
 		normal.putWeak();
 		
 		return set(bounceX * bounceCoeff + frictionX * friction, bounceY * bounceCoeff + frictionY * friction);
