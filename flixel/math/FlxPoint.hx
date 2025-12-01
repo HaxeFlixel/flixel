@@ -310,9 +310,7 @@ import openfl.geom.Point;
 	 */
 	public inline function set(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		this.x = x;
-		this.y = y;
-		return this;
+		return this.set(x, y);
 	}
 
 	/**
@@ -324,9 +322,7 @@ import openfl.geom.Point;
 	 */
 	public overload extern inline function add(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		this.x += x;
-		this.y += y;
-		return this;
+		return set(this.x + x, this.y + y);
 	}
 
 	/**
@@ -352,10 +348,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function add(p:Point):FlxPoint
 	{
-		x += p.x;
-		y += p.y;
-		
-		return this;
+		return add(p.x, p.y);
 	}
 	
 	/**
@@ -379,9 +372,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function subtract(x:Float = 0, y:Float = 0):FlxPoint
 	{
-		this.x -= x;
-		this.y -= y;
-		return this;
+		return set(this.x - x, this.y - y);
 	}
 
 	/**
@@ -434,9 +425,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function scale(x:Float, y:Float):FlxPoint
 	{
-		this.x *= x;
-		this.y *= y;
-		return this;
+		return set(this.x * x, this.y * y);
 	}
 	
 	/**
@@ -448,9 +437,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function scale(amount:Float):FlxPoint
 	{
-		this.x *= amount;
-		this.y *= amount;
-		return this;
+		return scale(amount, amount);
 	}
 	
 	/**
@@ -462,8 +449,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function scale(point:Point):FlxPoint
 	{
-		scale(point.x, point.y);
-		return this;
+		return scale(point.x, point.y);
 	}
 
 	/**
@@ -535,7 +521,7 @@ import openfl.geom.Point;
 	 */
 	public overload inline extern function copyFrom(p:Point):FlxPoint
 	{
-		return this.set(p.x, p.y);
+		return set(p.x, p.y);
 	}
 
 	/**
@@ -547,7 +533,7 @@ import openfl.geom.Point;
 	// @:deprecated("copyFromFlash is deprecated, use copyFrom, instead")// 6.0.0
 	public inline function copyFromFlash(p:Point):FlxPoint
 	{
-		return this.set(p.x, p.y);
+		return set(p.x, p.y);
 	}
 
 	/**
@@ -624,9 +610,7 @@ import openfl.geom.Point;
 	 */
 	public inline function floor():FlxPoint
 	{
-		x = Math.floor(x);
-		y = Math.floor(y);
-		return this;
+		return set(Math.floor(x), Math.floor(y));
 	}
 
 	/**
@@ -634,9 +618,7 @@ import openfl.geom.Point;
 	 */
 	public inline function ceil():FlxPoint
 	{
-		x = Math.ceil(x);
-		y = Math.ceil(y);
-		return this;
+		return set(Math.ceil(x), Math.ceil(y));
 	}
 
 	/**
@@ -644,9 +626,7 @@ import openfl.geom.Point;
 	 */
 	public inline function round():FlxPoint
 	{
-		x = Math.round(x);
-		y = Math.round(y);
-		return this;
+		return set(Math.round(x), Math.round(y));
 	}
 
 	/**
@@ -945,8 +925,7 @@ import openfl.geom.Point;
 	 */
 	public inline function zero():FlxPoint
 	{
-		x = y = 0;
-		return this;
+		return set(0, 0);
 	}
 
 	/**
@@ -979,12 +958,7 @@ import openfl.geom.Point;
 	{
 		var s:Float = Math.sin(rads);
 		var c:Float = Math.cos(rads);
-		var tempX:Float = x;
-
-		x = tempX * c - y * s;
-		y = tempX * s + y * c;
-
-		return this;
+		return set(x * c - y * s, x * s + y * c);
 	}
 
 	/**
@@ -1007,10 +981,7 @@ import openfl.geom.Point;
 	 */
 	public inline function rotateWithTrig(sin:Float, cos:Float):FlxPoint
 	{
-		var tempX:Float = x;
-		x = tempX * cos - y * sin;
-		y = tempX * sin + y * cos;
-		return this;
+		return set(x * cos - y * sin, x * sin + y * cos);
 	}
 
 	/**
@@ -1024,9 +995,7 @@ import openfl.geom.Point;
 	 */
 	public function setPolarRadians(length:Float, radians:Float):FlxPoint
 	{
-		x = length * Math.cos(radians);
-		y = length * Math.sin(radians);
-		return this;
+		return set(length * Math.cos(radians), length * Math.sin(radians));
 	}
 
 	/**
@@ -1074,9 +1043,7 @@ import openfl.geom.Point;
 	 */
 	public inline function negate():FlxPoint
 	{
-		x *= -1;
-		y *= -1;
-		return this;
+		return set(x * -1, y * -1);
 	}
 
 	public inline function negateNew():FlxPoint
@@ -1360,8 +1327,7 @@ import openfl.geom.Point;
 	public inline function bounce(normal:FlxPoint, bounceCoeff:Float = 1):FlxPoint
 	{
 		var d:Float = (1 + bounceCoeff) * dotProductWeak(normal);
-		x -= d * normal.x;
-		y -= d * normal.y;
+		set(x - d * normal.x, y - d * normal.y);
 		normal.putWeak();
 		return this;
 	}
@@ -1382,10 +1348,9 @@ import openfl.geom.Point;
 		var bounceY:Float = -p2.y;
 		var frictionX:Float = p1.x;
 		var frictionY:Float = p1.y;
-		x = bounceX * bounceCoeff + frictionX * friction;
-		y = bounceY * bounceCoeff + frictionY * friction;
 		normal.putWeak();
-		return this;
+		
+		return set(bounceX * bounceCoeff + frictionX * friction, bounceY * bounceCoeff + frictionY * friction);
 	}
 
 	/**
@@ -1455,8 +1420,7 @@ import openfl.geom.Point;
 		if (!isZero())
 		{
 			var a:Float = radians;
-			x = l * Math.cos(a);
-			y = l * Math.sin(a);
+			set(l * Math.cos(a), l * Math.sin(a));
 		}
 		return l;
 	}
@@ -1486,8 +1450,7 @@ import openfl.geom.Point;
 	{
 		var len:Float = length;
 
-		x = len * Math.cos(rads);
-		y = len * Math.sin(rads);
+		set(len * Math.cos(rads), len * Math.sin(rads));
 		return rads;
 	}
 
@@ -1726,8 +1689,8 @@ abstract FlxReadOnlyPoint(FlxPoint) from FlxPoint
 class FlxCallbackPoint extends FlxBasePoint
 {
 	var _setXCallback:FlxPoint->Void;
-	var _setYCallback:FlxPoint->Void;
-	var _setXYCallback:FlxPoint->Void;
+	var _setYCallback:Null<FlxPoint->Void>;
+	var _setXYCallback:Null<FlxPoint->Void>;
 
 	/**
 	 * If you only specify one callback function, then the remaining two will use the same.
@@ -1739,41 +1702,60 @@ class FlxCallbackPoint extends FlxBasePoint
 	public function new(setXCallback:FlxPoint->Void, ?setYCallback:FlxPoint->Void, ?setXYCallback:FlxPoint->Void)
 	{
 		super();
-
-		_setXCallback = setXCallback;
-		_setYCallback = setXYCallback;
-		_setXYCallback = setXYCallback;
-
-		if (_setXCallback != null)
+		
+		// TODO: operator overloading?
+		if (setXCallback != null && setYCallback == null && setXYCallback == null)
 		{
-			if (_setYCallback == null)
-				_setYCallback = setXCallback;
-			if (_setXYCallback == null)
-				_setXYCallback = setXCallback;
+			_setXYCallback = setXCallback;
+		}
+		else
+		{
+			_setXCallback = setXCallback;
+			_setYCallback = setYCallback;
+			_setXYCallback = setXYCallback;
 		}
 	}
 
 	override public function set(x:Float = 0, y:Float = 0):FlxCallbackPoint
 	{
-		super.set(x, y);
+		@:bypassAccessor this.x = x;
+		@:bypassAccessor this.y = y;
+		
+		if (_setXCallback != null)
+			_setXCallback(this);
+		
+		if (_setYCallback != null)
+			_setYCallback(this);
+		
 		if (_setXYCallback != null)
 			_setXYCallback(this);
+		
 		return this;
 	}
 
 	override function set_x(value:Float):Float
 	{
 		super.set_x(value);
+		
 		if (_setXCallback != null)
 			_setXCallback(this);
+		
+		if (_setXYCallback != null)
+			_setXYCallback(this);
+		
 		return value;
 	}
 
 	override function set_y(value:Float):Float
 	{
 		super.set_y(value);
+		
 		if (_setYCallback != null)
 			_setYCallback(this);
+		
+		if (_setXYCallback != null)
+			_setXYCallback(this);
+		
 		return value;
 	}
 
