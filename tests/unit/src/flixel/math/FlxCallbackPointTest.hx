@@ -120,7 +120,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
-		
+		// Check operators
+		p += norm                               ; assertChecked(1);
+		p -= norm                               ; assertChecked(1);
+		p *= 2                                  ; assertChecked(1);
+		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
+		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
 		assertChecked(0);
 	}
@@ -223,7 +228,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
-		
+		// Check operators
+		p += norm                               ; assertChecked(1);
+		p -= norm                               ; assertChecked(1);
+		p *= 2                                  ; assertChecked(1);
+		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
+		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
 		assertChecked(0);
 	}
@@ -334,7 +344,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
-		
+		// Check operators
+		p += norm                               ; assertChecked(1);
+		p -= norm                               ; assertChecked(1);
+		p *= 2                                  ; assertChecked(1);
+		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
+		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
 		assertChecked(0);
 	}
