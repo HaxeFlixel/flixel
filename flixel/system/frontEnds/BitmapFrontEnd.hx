@@ -347,8 +347,8 @@ class BitmapFrontEnd
 	@:allow(flixel.FlxG)
 	function get_maxTextureSize():Int
 	{
-		if (_maxTextureSize < 0 && FlxG.stage.window.context.attributes.hardware)
-			_maxTextureSize = cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		if (_maxTextureSize < 0)
+			_maxTextureSize = FlxG.renderTile ? cast GL.getParameter(GL.MAX_TEXTURE_SIZE) : 0;
 		
 		return _maxTextureSize;
 	}
