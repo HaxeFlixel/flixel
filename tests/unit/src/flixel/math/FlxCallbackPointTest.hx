@@ -120,10 +120,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
+		#if (haxe >= version("4.3.0"))
 		// Check operators
 		p += norm                               ; assertChecked(1);
 		p -= norm                               ; assertChecked(1);
 		p *= 2                                  ; assertChecked(1);
+		#end
 		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
 		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
@@ -228,10 +230,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
+		#if (haxe >= version("4.3.0"))
 		// Check operators
 		p += norm                               ; assertChecked(1);
 		p -= norm                               ; assertChecked(1);
 		p *= 2                                  ; assertChecked(1);
+		#end
 		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
 		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
@@ -344,10 +348,12 @@ class FlxCallbackPointTest extends FlxTest
 		p.length = 90                           ; assertChecked(1);
 		p.degrees = 90                          ; assertChecked(1);
 		p.radians = 90                          ; assertChecked(1);
+		#if (haxe >= version("4.3.0"))
 		// Check operators
 		p += norm                               ; assertChecked(1);
 		p -= norm                               ; assertChecked(1);
 		p *= 2                                  ; assertChecked(1);
+		#end
 		final newP = ((p + norm) - norm) * 2    ; assertChecked(0);
 		// check getters
 		final sum = p.dx + p.dy + p.rx + p.ry + p.lx + p.ly + p.lengthSquared;
