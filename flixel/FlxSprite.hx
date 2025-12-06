@@ -1054,6 +1054,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Whether this sprite has a color transform, menaing any of the following: less than full
 	 * `alpha`, a `color` tint, or a `colorTransform` whos values are not the default.
+	 * @since 6.1.0
 	 */
 	@:haxe.warning("-WDeprecated")
 	public function hasColorTransform()

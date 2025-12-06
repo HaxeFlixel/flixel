@@ -511,10 +511,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		if (tileBitmap == null)
 			tileBitmap = makeDebugTile(color);
 		else
-		{
-			tileBitmap.fillRect(tileBitmap.rect, FlxColor.TRANSPARENT);
 			drawDebugTile(tileBitmap, color);
-		}
 
 		setDirty();
 		return tileBitmap;
@@ -1223,7 +1220,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		}
 		else
 		{
-			getScreenPosition(_point, camera).subtractPoint(offset).copyTo(_helperPoint);
+			getScreenPosition(_point, camera).subtract(offset).copyTo(_helperPoint);
 
 			_helperPoint.x = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
@@ -1360,18 +1357,15 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void
 	{
-		if (color != FlxColor.TRANSPARENT)
+		if (color == FlxColor.TRANSPARENT)
 		{
-			var gfx:Graphics = FlxSpriteUtil.flashGfx;
-			gfx.clear();
-			gfx.moveTo(0, 0);
-			gfx.lineStyle(1, color, 0.5);
-			gfx.lineTo(tileWidth - 1, 0);
-			gfx.lineTo(tileWidth - 1, tileHeight - 1);
-			gfx.lineTo(0, tileHeight - 1);
-			gfx.lineTo(0, 0);
-
-			debugTile.draw(FlxSpriteUtil.flashGfxSprite);
+			debugTile.fillRect(debugTile.rect, FlxColor.TRANSPARENT);
+		}
+		else
+		{
+			// 0.5 alpha
+			debugTile.fillRect(debugTile.rect, (0x80 << 24) | color.rgb);
+			debugTile.fillRect(new Rectangle(1, 1, tileWidth - 2, tileHeight - 2), 0x0);
 		}
 	}
 

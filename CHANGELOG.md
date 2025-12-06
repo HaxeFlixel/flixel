@@ -1,3 +1,20 @@
+### 6.1.2 (December 6, 2025)
+
+#### Changes and improvements:
+- `FlxG.Assets`: Check any sound extension before appending in `getSoundAddExt` ([#3511](https://github.com/HaxeFlixel/flixel/pull/3511))
+- `FlxCamera`: Honor color transformation in `drawTriangles` on `renderBlit` targets ([#3503](https://github.com/HaxeFlixel/flixel/pull/3503))
+- `FlxInputText`: Honor `selectionColor.alphaFloat` ([#3491](https://github.com/HaxeFlixel/flixel/pull/3491))
+- `FlxGraphicsShader`: Remove redundant body glsl ([#3512](https://github.com/HaxeFlixel/flixel/pull/3512))
+- `BaseScaleMode`: Add `setGlobalSize` to allow derived classes to modify `FlxG.width` / `height` ([#3516](https://github.com/HaxeFlixel/flixel/pull/3516))
+- `FlxG`: query maxTextureSize when window is created ([#3522](https://github.com/HaxeFlixel/flixel/pull/3522))
+- `FlxCallbackPoint`: Fix duplicate calls and call xy whenever x or y is set directly ([#3524](https://github.com/HaxeFlixel/flixel/pull/3524))
+
+#### Bugfixes:
+- `FlxDebugger`: Fixed watch window position ([#3506](https://github.com/HaxeFlixel/flixel/pull/3506))
+- `FlxCamera`: Fix filter memory leak ([#3459](https://github.com/HaxeFlixel/flixel/pull/3459))
+- `FlxTilemap`: Fix tilemap debug drawing on `renderBlit` targets([#3509](https://github.com/HaxeFlixel/flixel/issues/3509))
+- `FlxCamera`: Fix FLX_RENDER_TRIANGLE not rendering anything ([#3505](https://github.com/HaxeFlixel/flixel/pull/3505))
+
 ### 6.1.1 (Oct 7, 2025)
 
 #### Changes and improvements:
