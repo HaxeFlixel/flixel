@@ -307,7 +307,7 @@ import openfl.geom.Point;
 	 *
 	 * @param   n  The X and Y coordinate of the point in space.
 	 */
-	public inline function setXY(n:Float):FlxBasePoint
+	public inline function setXY(n:Float):FlxPoint
 	{
 		return set(n, n);
 	}
