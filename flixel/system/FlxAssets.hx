@@ -1,5 +1,6 @@
 package flixel.system;
 
+import haxe.io.Path;
 import haxe.macro.Expr;
 #if !macro
 import flixel.FlxG;
@@ -378,7 +379,8 @@ class FlxAssets
 	 */
 	public static function getSoundAddExtension(id:String, useCache = true):Sound
 	{
-		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+		final needsExt = Path.extension(id).length == 0;
+		if (needsExt)
 			id += "." + defaultSoundExtension;
 
 		return FlxG.assets.getSoundUnsafe(id, useCache);

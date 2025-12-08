@@ -168,6 +168,7 @@ class FlxPointTest extends FlxTest
 	}
 
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testOperators()
 	{
 		point1.set(1, 2);
