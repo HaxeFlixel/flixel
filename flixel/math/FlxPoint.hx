@@ -336,7 +336,7 @@ import openfl.geom.Point;
 	 *
 	 * @param   x  The X-coordinate of the point in space.
 	 */
-	@:deprecated("set(n) with one arg, is deprecated, use the two-arged set(n, 0), instead")
+	@:deprecated("set(n) with one arg, is deprecated, use the two-arged set(n, 0), instead") // 6.2.0
 	overload public inline extern function set(x:Float):FlxPoint
 	{
 		return set(x, 0);
@@ -345,7 +345,7 @@ import openfl.geom.Point;
 	/**
 	 * Set the coordinates of this point to zero.
 	 */
-	@:deprecated("set() with no args, is deprecated, use the two-arged set(0, 0) or zero(), instead")
+	// @:deprecated("set() with no args, is deprecated, use the two-arged set(0, 0), setXY(0) or zero(), instead")
 	overload public inline extern function set():FlxPoint
 	{
 		return set(0, 0);
