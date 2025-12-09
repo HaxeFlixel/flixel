@@ -53,7 +53,7 @@ private class AnchorTools
 		if (result == null)
 			result = FlxPoint.get();
 		else
-			result.set();
+			result.zero();
 		
 		return switch (mode)
 		{
@@ -363,7 +363,7 @@ class FlxPath extends FlxBasePath
 		}
 		else
 		{
-			object.velocity.set();
+			object.velocity.zero();
 		}
 
 		// then set object rotation if necessary

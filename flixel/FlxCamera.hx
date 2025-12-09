@@ -1,13 +1,5 @@
 package flixel;
 
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-import openfl.display.DisplayObject;
-import openfl.display.Graphics;
-import openfl.display.Sprite;
-import openfl.geom.ColorTransform;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -23,8 +15,16 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import openfl.Vector;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import openfl.display.BlendMode;
+import openfl.display.DisplayObject;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
 import openfl.filters.BitmapFilter;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -824,7 +824,7 @@ class FlxCamera extends FlxBasic
 		if (FlxG.renderBlit)
 		{
 			if (position == null)
-				position = renderPoint.set();
+				position = renderPoint.zero();
 
 			var verticesLength:Int = vertices.length;
 			var currentVertexPosition:Int = 0;
@@ -1018,7 +1018,7 @@ class FlxCamera extends FlxBasic
 			screen = new FlxSprite();
 			buffer = new BitmapData(width, height, true, 0);
 			screen.pixels = buffer;
-			screen.origin.set();
+			screen.origin.zero();
 			_flashBitmap = new Bitmap(buffer);
 			_scrollRect.addChild(_flashBitmap);
 			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
@@ -1717,7 +1717,7 @@ class FlxCamera extends FlxBasic
 				var oldBuffer:FlxGraphic = screen.graphic;
 				buffer = new BitmapData(width, height, true, 0);
 				screen.pixels = buffer;
-				screen.origin.set();
+				screen.origin.zero();
 				_flashBitmap.bitmapData = buffer;
 				_flashRect.width = width;
 				_flashRect.height = height;

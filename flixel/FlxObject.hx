@@ -1102,7 +1102,7 @@ class FlxObject extends FlxBasic
 		wasTouching = FlxDirectionFlags.NONE;
 		setPosition(x, y);
 		last.set(this.x, this.y);
-		velocity.set();
+		velocity.zero();
 		revive();
 	}
 

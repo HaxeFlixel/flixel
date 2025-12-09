@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import haxe.PosInfos;
@@ -89,6 +90,16 @@ class FlxAssert
 			Assert.fail("Value [" + actual + "] was not equal to expected value [" + expected + "]", info);
 	}
 
+	public static function pointsEqualXY(expectedX:Float, expectedY:Float, actual:FlxPoint, ?msg:String, ?info:PosInfos)
+	{
+		if (FlxMath.equal(expectedX, actual.x) && FlxMath.equal(expectedY, actual.y))
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [$actual] was not equal to expected value [( x: $expectedX | y: $expectedY )]', info);
+	}
+	
 	public static function pointsNotEqual(expected:FlxPoint, actual:FlxPoint, ?msg:String, ?info:PosInfos)
 	{
 		if (!expected.equals(actual))
@@ -96,7 +107,17 @@ class FlxAssert
 		else if (msg != null)
 			Assert.fail(msg, info);
 		else
-			Assert.fail("Value [" + actual + "] was equal to value [" + expected + "]", info);
+			Assert.fail('Value [$actual] was equal to value [$expected]', info);
+	}
+	
+	public static function pointsNotEqualXY(expectedX:Float, expectedY:Float, actual:FlxPoint, ?msg:String, ?info:PosInfos)
+	{
+		if (!FlxMath.equal(expectedX, actual.x) || !FlxMath.equal(expectedY, actual.y))
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [$actual] was equal to value [( x: $expectedX | y: $expectedY )]', info);
 	}
 
 	public static function pointsNear(expected:FlxPoint, actual:FlxPoint, margin:Float = 0.001, ?msg:String, ?info:PosInfos)
