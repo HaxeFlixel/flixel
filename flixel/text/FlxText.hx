@@ -571,19 +571,20 @@ class FlxText extends FlxSprite
 
 		if (value <= 0)
 		{
-			wordWrap = false;
+			_regen = _regen || !autosize || wordWrap || !_autoHeight;
 			autoSize = true;
+			wordWrap = false;
 			// auto width always implies auto height
 			_autoHeight = true;
 		}
 		else
 		{
+			_regen = _regen || autoSize || !wordWrap || textField.width != value;
 			autoSize = false;
 			wordWrap = true;
 			textField.width = value;
 		}
 
-		_regen = true;
 		return value;
 	}
 
@@ -599,29 +600,38 @@ class FlxText extends FlxSprite
 
 	function set_fieldHeight(value:Float):Float
 	{
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField == null)
+		{
+			FlxG.log.error("Cannot set fieldHeight of destroyed FlxText");
 			return value;
+		}
 
 		if (value <= 0)
 		{
+			_regen = _regen || !_autoHeight;
 			_autoHeight = true;
 		}
 		else
 		{
+			_regen = _regen || _autoHeight || textField.height != value;
 			_autoHeight = false;
 			textField.height = value;
 		}
-		_regen = true;
 		return value;
 	}
 
 	function set_autoSize(value:Bool):Bool
 	{
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField != null)
 		{
-			textField.autoSize = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
-			_regen = true;
+			final newValue = value ? TextFieldAutoSize.LEFT : TextFieldAutoSize.NONE;
+			_regen = _regen || textField.autoSize != newValue;
+			textField.autoSize = newValue;
 		}
+		else
+			FlxG.log.error("Cannot set autosize of destroyed FlxText");
 
 		return value;
 	}
@@ -631,16 +641,18 @@ class FlxText extends FlxSprite
 		return (textField != null) ? (textField.autoSize != TextFieldAutoSize.NONE) : false;
 	}
 
-	function set_text(Text:String):String
+	function set_text(value:String):String
 	{
-		text = Text;
+		// TODO: Remove if and let it crash on 7.0.0
 		if (textField != null)
 		{
-			var ot:String = textField.text;
-			textField.text = Text;
-			_regen = (textField.text != ot) || _regen;
+			_regen = _regen || (this.text != value);
+			textField.text = value;
 		}
-		return Text;
+		else
+			FlxG.log.error("Cannot set text of destroyed FlxText");
+		
+		return this.text = value;
 	}
 
 	inline function get_size():Int
@@ -648,11 +660,15 @@ class FlxText extends FlxSprite
 		return Std.int(_defaultFormat.size);
 	}
 
-	function set_size(Size:Int):Int
+	function set_size(value:Int):Int
 	{
-		_defaultFormat.size = Size;
-		updateDefaultFormat();
-		return Size;
+		if (_defaultFormat.size != value)
+		{
+			_defaultFormat.size = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
 	}
 
 	inline function get_letterSpacing():Float
@@ -660,11 +676,15 @@ class FlxText extends FlxSprite
 		return _defaultFormat.letterSpacing;
 	}
 
-	function set_letterSpacing(LetterSpacing:Float):Float
+	function set_letterSpacing(value:Float):Float
 	{
-		_defaultFormat.letterSpacing = LetterSpacing;
-		updateDefaultFormat();
-		return LetterSpacing;
+		if (_defaultFormat.letterSpacing != value)
+		{
+			_defaultFormat.letterSpacing = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
 	}
 	
 	override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0, greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0)
@@ -691,27 +711,33 @@ class FlxText extends FlxSprite
 		return _font;
 	}
 
-	function set_font(Font:String):String
+	function set_font(value:String):String
 	{
+		final newFont = getFontHelper(value);
+		
+		_regen = _regen || !textField.embedFonts;
 		textField.embedFonts = true;
-
-		if (Font != null)
+		
+		if (_defaultFormat.font != newFont)
 		{
-			var newFontName:String = Font;
-			if (FlxG.assets.exists(Font, FONT))
-			{
-				newFontName = FlxG.assets.getFontUnsafe(Font).fontName;
-			}
-
-			_defaultFormat.font = newFontName;
+			_defaultFormat.font = newFont;
+			updateDefaultFormat();
+		}
+		
+		return _font = newFont;
+	}
+	
+	static function getFontHelper(font:String)
+	{
+		if (value != null)
+		{
+			if (FlxG.assets.exists(value, FONT))
+				return FlxG.assets.getFontUnsafe(value).fontName;
+			
+			return font;
 		}
 		else
-		{
-			_defaultFormat.font = FlxAssets.FONT_DEFAULT;
-		}
-
-		updateDefaultFormat();
-		return _font = _defaultFormat.font;
+			return FlxAssets.FONT_DEFAULT;
 	}
 
 	inline function get_embedded():Bool
@@ -724,12 +750,18 @@ class FlxText extends FlxSprite
 		return _defaultFormat.font;
 	}
 
-	function set_systemFont(Font:String):String
+	function set_systemFont(value:String):String
 	{
+		_regen = _regen || textField.embedFonts;
 		textField.embedFonts = false;
-		_defaultFormat.font = Font;
-		updateDefaultFormat();
-		return Font;
+		
+		if (_defaultFormat.font != value)
+		{
+			_defaultFormat.font = value;
+			updateDefaultFormat();
+		}
+		
+		return value;
 	}
 
 	inline function get_bold():Bool
@@ -874,6 +906,8 @@ class FlxText extends FlxSprite
 		if (textField == null || !_regen)
 			return;
 		
+		_regen = false;
+		
 		final oldWidth:Int = graphic != null ? graphic.width : 0;
 		final oldHeight:Int = graphic != null ? graphic.height : VERTICAL_GUTTER;
 		
@@ -955,8 +989,7 @@ class FlxText extends FlxSprite
 
 			drawTextFieldTo(graphic.bitmap);
 		}
-
-		_regen = false;
+		
 		resetFrame();
 	}
 
@@ -1291,6 +1324,8 @@ class FlxText extends FlxSprite
 
 	override function set_antialiasing(value:Bool):Bool
 	{
+		_regen = _regen || this.antialiasing != value;
+		
 		if (value)
 		{
 			textField.antiAliasType = NORMAL;
@@ -1301,9 +1336,7 @@ class FlxText extends FlxSprite
 			textField.antiAliasType = ADVANCED;
 			textField.sharpness = 400;
 		}
-
-		_regen = true;
-
+		
 		return antialiasing = value;
 	}
 }
