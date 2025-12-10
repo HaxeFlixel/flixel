@@ -571,7 +571,7 @@ class FlxText extends FlxSprite
 
 		if (value <= 0)
 		{
-			_regen = _regen || !autosize || wordWrap || !_autoHeight;
+			_regen = _regen || !autoSize || wordWrap || !_autoHeight;
 			autoSize = true;
 			wordWrap = false;
 			// auto width always implies auto height
@@ -729,15 +729,15 @@ class FlxText extends FlxSprite
 	
 	static function getFontHelper(font:String)
 	{
-		if (value != null)
+		if (font != null)
 		{
-			if (FlxG.assets.exists(value, FONT))
-				return FlxG.assets.getFontUnsafe(value).fontName;
+			if (FlxG.assets.exists(font, FONT))
+				return FlxG.assets.getFontUnsafe(font).fontName;
 			
 			return font;
 		}
-		else
-			return FlxAssets.FONT_DEFAULT;
+		
+		return FlxAssets.FONT_DEFAULT;
 	}
 
 	inline function get_embedded():Bool
