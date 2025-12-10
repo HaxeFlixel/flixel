@@ -130,7 +130,7 @@ class FlxText extends FlxSprite
 	 * Reference to a `TextField` object used internally for rendering -
 	 * be sure to know what you're doing if messing with its properties!
 	 */
-	public var textField(default, null):TextField;
+	public var textField(default, null):TextField = new TextField();
 
 	/**
 	 * The width of the `TextField` object used for bitmap generation for this `FlxText` object.
@@ -174,8 +174,8 @@ class FlxText extends FlxSprite
 	 */
 	var _graphicOffset:FlxPoint = FlxPoint.get(0, 0);
 	
-	var _defaultFormat:TextFormat;
-	var _formatAdjusted:TextFormat;
+	var _defaultFormat = new TextFormat(null, size, 0xffffff);
+	var _formatAdjusted = new TextFormat();
 	var _formatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
 
@@ -211,35 +211,32 @@ class FlxText extends FlxSprite
 	 * @param   Size           The font size for this text object.
 	 * @param   EmbeddedFont   Whether this text field uses embedded fonts or not.
 	 */
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true)
+	public function new(x = 0.0, y = 0.0, fieldWidth = 0.0, ?text:String, size = 8, embeddedFont = true)
 	{
-		super(X, Y);
-
-		if (Text == null || Text == "")
-		{
-			// empty texts have a textHeight of 0, need to
-			// prevent initializing with "" before the first calcFrame() call
-			text = "";
-			Text = " ";
-		}
-		else
-		{
-			text = Text;
-		}
-
-		textField = new TextField();
 		textField.selectable = false;
 		textField.multiline = true;
 		textField.wordWrap = true;
-		_defaultFormat = new TextFormat(null, Size, 0xffffff);
+		
+		super(x, y);
+
+		if (text == null || text == "")
+		{
+			// empty texts have a textHeight of 0, need to
+			// prevent initializing with "" before the first calcFrame() call
+			text = " ";
+		}
+		else
+		{
+			this.text = text;
+		}
+		
 		letterSpacing = 0;
 		font = FlxAssets.FONT_DEFAULT;
-		_formatAdjusted = new TextFormat();
 		textField.defaultTextFormat = _defaultFormat;
-		textField.text = Text;
-		fieldWidth = FieldWidth;
-		textField.embedFonts = EmbeddedFont;
-		textField.height = (Text.length <= 0) ? 1 : 10;
+		textField.text = text;
+		this.fieldWidth = fieldWidth;
+		textField.embedFonts = embeddedFont;
+		textField.height = (text.length <= 0) ? 1 : 10;
 
 		// call this just to set the textfield's properties
 		set_antialiasing(antialiasing);
@@ -571,17 +568,17 @@ class FlxText extends FlxSprite
 
 		if (value <= 0)
 		{
-			_regen = _regen || !autoSize || wordWrap || !_autoHeight;
 			autoSize = true;
 			wordWrap = false;
 			// auto width always implies auto height
+			_regen = _regen || !_autoHeight;
 			_autoHeight = true;
 		}
 		else
 		{
-			_regen = _regen || autoSize || !wordWrap || textField.width != value;
 			autoSize = false;
 			wordWrap = true;
+			_regen = _regen || textField.width != value;
 			textField.width = value;
 		}
 
