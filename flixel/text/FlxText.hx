@@ -174,7 +174,7 @@ class FlxText extends FlxSprite
 	 */
 	var _graphicOffset:FlxPoint = FlxPoint.get(0, 0);
 	
-	var _defaultFormat = new TextFormat(null, size, 0xffffff);
+	var _defaultFormat:TextFormat;
 	var _formatAdjusted = new TextFormat();
 	var _formatRanges:Array<FlxTextFormatRange> = [];
 	var _font:String;
@@ -216,6 +216,7 @@ class FlxText extends FlxSprite
 		textField.selectable = false;
 		textField.multiline = true;
 		textField.wordWrap = true;
+		_defaultFormat = new TextFormat(null, size, 0xffffff);
 		
 		super(x, y);
 
