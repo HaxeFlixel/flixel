@@ -387,7 +387,8 @@ class AssetFrontEnd
 	
 	inline function addSoundExt(id:String)
 	{
-		if (!id.endsWith(".mp3") && !id.endsWith(".ogg") && !id.endsWith(".wav"))
+		final needsExt = Path.extension(id).length == 0;
+		if (needsExt)
 			return id + defaultSoundExtension;
 			
 		return id;
