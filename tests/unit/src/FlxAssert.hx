@@ -3,6 +3,7 @@ package;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import flixel.util.FlxStringUtil;
 import haxe.PosInfos;
 import massive.munit.Assert;
 
@@ -22,17 +23,37 @@ class FlxAssert
 
 	public static function rectsNear(expected:FlxRect, actual:FlxRect, margin = 0.001, ?msg:String, ?info:PosInfos):Void
 	{
-		var areNear = areNearHelper(expected.x, actual.x, margin)
-			&& areNearHelper(expected.y, actual.y, margin)
-			&& areNearHelper(expected.width, actual.width, margin)
-			&& areNearHelper(expected.height, actual.height, margin);
+		rectsNearXYWH(expected.x, expected.y, expected.width, expected.height, actual, margin, msg, info);
+	}
+	
+	public static function rectsNearLTRD(expectedL:Float, expectedT:Float, expectedR:Float, expectedD:Float, actual:FlxRect, margin = 0.001, ?msg:String, ?info:PosInfos):Void
+	{
+		rectsNearXYWH(expectedL, expectedT, expectedR - expectedL, expectedD - expectedT, actual, margin, msg, info);
+	}
+	
+	public static function rectsNearXYWH(expectedX:Float, expectedY:Float, expectedW:Float, expectedH:Float, actual:FlxRect, margin = 0.001, ?msg:String, ?info:PosInfos):Void
+	{
+		var areNear = areNearHelper(expectedX, actual.x, margin)
+			&& areNearHelper(expectedY, actual.y, margin)
+			&& areNearHelper(expectedW, actual.width, margin)
+			&& areNearHelper(expectedH, actual.height, margin);
 		
 		if (areNear)
 			Assert.assertionCount++;
 		else if (msg != null)
 			Assert.fail(msg, info);
 		else
-			Assert.fail('Value [$actual] is not within [$margin] of [$expected]', info);
+			Assert.fail('Value [$actual] is not within [$margin] of [${toRectString(expectedX, expectedY, expectedW, expectedH)}]', info);
+	}
+	
+	static function toRectString(x:Float, y:Float, w:Float, h:Float):String
+	{
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("x", x),
+			LabelValuePair.weak("y", y),
+			LabelValuePair.weak("w", w),
+			LabelValuePair.weak("h", h)
+		]);
 	}
 
 	static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool

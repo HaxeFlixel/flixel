@@ -1,6 +1,5 @@
 package flixel.math;
 
-import flixel.util.FlxPool.IFlxPooled;
 import flixel.util.FlxPool;
 import flixel.util.FlxStringUtil;
 import openfl.geom.Rectangle;
@@ -545,6 +544,51 @@ class FlxRect implements IFlxPooled
 	public function clipTo(rect:FlxRect):FlxRect
 	{
 		return rect.intersection(this, this);
+	}
+	
+	/**
+	 * 
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10)` will increase the width and height by 20 (10 on each side).
+	 * 
+	 * **Note:** Negative numbers will shrink the edge.
+	 * 
+	 * @param amount The amount to extend the left, top, right and bottom edges
+	 */
+	overload public inline extern function pad(amount:Float)
+	{
+		return pad(amount, amount, amount, amount);
+	}
+	
+	/**
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10, 5)` will increase the width by 20 (10 on each side) and the height by 10.
+	 * 
+	 * **Note:** Negative numbers will shrink the edges.
+	 * 
+	 * @param   leftAndRight  The amount to extend both the left and right
+	 * @param   topAndBottom  The amount to extend both the top and bottom
+	 */
+	overload public inline extern function pad(leftAndRight:Float, topAndBottom:Float)
+	{
+		return pad(leftAndRight, topAndBottom, leftAndRight, topAndBottom);
+	}
+	
+	/**
+	 * Expands all four edges outward by the specified amounts. For example:
+	 * `rect.pad(10, 5, 20, 5)` will increase the width by 30 (10 on the left and 20 on the right)
+	 * and the height by 10 (5 on both side).
+	 * 
+	 * **Note:** Negative numbers will shrink the edge.
+	 * 
+	 * @param   left    The amount to extend the left
+	 * @param   top     The amount to extend the top
+	 * @param   right   The amount to extend the right
+	 * @param   bottom  The amount to extend the bottom
+	 */
+	overload public inline extern function pad(left:Float, top:Float, right:Float, bottom:Float)
+	{
+		return set(x - left, y - top, width + left + right, height + top + bottom);
 	}
 	
 	/**
