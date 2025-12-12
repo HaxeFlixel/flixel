@@ -179,16 +179,13 @@ class FlxRectTest extends FlxTest
 	@Test
 	function testPad()
 	{
-		rect1.setBounds(50, 50, 100, 100);
-		rect1.pad(1, 2, 3, 4);
+		rect1.setBounds(50, 50, 100, 100).pad(1, 2, 3, 4);
 		FlxAssert.rectsNearLTRD(50 - 1, 50 - 2, 100 + 3, 100 + 4, rect1);
 		
-		rect1.setBounds(50, 50, 100, 100);
-		rect1.pad(10, 20);
+		rect1.setBounds(50, 50, 100, 100).pad(10, 20);
 		FlxAssert.rectsNearLTRD(50 - 10, 50 - 20, 100 + 10, 100 + 20, rect1);
 		
-		rect1.setBounds(50, 50, 100, 100);
-		rect1.pad(10);
+		rect1.setBounds(50, 50, 100, 100).pad(10);
 		FlxAssert.rectsNearLTRD(50 - 10, 50 - 10, 100 + 10, 100 + 10, rect1);
 	}
 }
