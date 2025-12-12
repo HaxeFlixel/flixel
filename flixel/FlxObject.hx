@@ -1251,10 +1251,7 @@ class FlxObject extends FlxBasic
 		{
 			final PAD = 2;
 			final view = camera.getViewMarginRect();
-			view.left -= PAD;
-			view.top -= PAD;
-			view.right += PAD;
-			view.bottom += PAD;
+			view.pad(PAD);
 			rect.clipTo(view);
 			view.put();
 		}
