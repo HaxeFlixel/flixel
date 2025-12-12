@@ -1,9 +1,69 @@
 package flixel.system.frontEnds;
 
 import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
 import flixel.system.FlxAssets;
+import flixel.system.debug.log.FlxLogStyle;
+import flixel.system.debug.log.LogStyle;
 import haxe.PosInfos;
+
+class FlxLogStylesList
+{
+	public var normal (default, set):FlxLogStyle;
+	public var warning(default, set):FlxLogStyle;
+	public var error  (default, set):FlxLogStyle;
+	public var notice (default, set):FlxLogStyle;
+	public var console(default, set):FlxLogStyle;
+	
+	@:haxe.warning("-WDeprecated")
+	public function new ()
+	{
+		normal  = new FlxLogStyle();
+		warning = new FlxLogStyle("[WARNING] ", "D9F85C", 12, false, false, false, "flixel/sounds/beep", true);
+		error   = new FlxLogStyle("[ERROR] ", "FF8888", 12, false, false, false, "flixel/sounds/beep", true);
+		notice  = new FlxLogStyle("[NOTICE] ", "5CF878", 12, false);
+		console = new FlxLogStyle("> ", "5A96FA", 12, false);
+		
+		#if FLX_THROW_ERRORS
+		error.throwException = true;
+		#end
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	function set_normal (style:FlxLogStyle)
+	{
+		@:bypassAccessor LogStyle.NORMAL = style;
+		return this.normal = style;
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	function set_warning(style:FlxLogStyle)
+	{
+		@:bypassAccessor LogStyle.WARNING = style;
+		return this.warning = style;
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	function set_error  (style:FlxLogStyle)
+	{
+		@:bypassAccessor LogStyle.ERROR = style;
+		return this.error = style;
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	function set_notice (style:FlxLogStyle)
+	{
+		@:bypassAccessor LogStyle.NOTICE = style;
+		return this.notice = style;
+	}
+	
+	@:haxe.warning("-WDeprecated")
+	function set_console(style:FlxLogStyle)
+	{
+		@:bypassAccessor LogStyle.CONSOLE = style;
+		return this.console = style;
+	}
+	
+}
 
 /**
  * Accessed via `FlxG.log`.
@@ -14,27 +74,29 @@ class LogFrontEnd
 	 * Whether everything you trace() is being redirected into the log window.
 	 */
 	public var redirectTraces(default, set):Bool = false;
+	
+	public final styles:FlxLogStylesList;
 
 	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
 	
 	public inline function add(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NORMAL, false, pos);
+		advanced(data, styles.normal, false, pos);
 	}
 	
 	public inline function warn(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.WARNING, true, pos);
+		advanced(data, styles.warning, true, pos);
 	}
 	
 	public inline function error(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.ERROR, true, pos);
+		advanced(data, styles.error, true, pos);
 	}
 	
 	public inline function notice(data:Dynamic, ?pos:PosInfos):Void
 	{
-		advanced(data, LogStyle.NOTICE, false, pos);
+		advanced(data, styles.notice, false, pos);
 	}
 	
 	/**
@@ -97,6 +159,7 @@ class LogFrontEnd
 	function new()
 	{
 		_standardTraceFunction = haxe.Log.trace;
+		styles = new FlxLogStylesList();
 	}
 
 	inline function set_redirectTraces(redirect:Bool):Bool
@@ -123,6 +186,6 @@ class LogFrontEnd
 			}
 		}
 
-		advanced(paramArray, LogStyle.NORMAL);
+		advanced(paramArray, styles.normal);
 	}
 }

@@ -66,6 +66,11 @@ private enum UserDefines
 	 * Used to make the debug windows bigger
 	 */
 	FLX_DEBUGGER_SCALE;
+	
+	/**
+	 * Whether `FlxG.log.error` calls will throw an exception
+	 */
+	FLX_THROW_ERRORS;
 }
 
 /**
@@ -115,6 +120,7 @@ private enum HelperDefines
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
 	FLX_NO_DEFAULT_SOUND_EXT;
+	FLX_NO_THROW_ERRORS;
 }
 
 class FlxDefines
@@ -285,6 +291,7 @@ class FlxDefines
 		#end
 		
 		defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS);
+		defineInversion(FLX_THROW_ERRORS, FLX_NO_THROW_ERRORS);
 		
 		if (defined(FLX_CUSTOM_ASSETS_DIRECTORY))
 		{
