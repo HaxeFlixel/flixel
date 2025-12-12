@@ -79,8 +79,8 @@ class FlxLogStyleTest
 		Assert.isTrue(FlxG.debugger.visible, "Expected debugger to be visible");
 	}
 	
-	inline function log(msg:Any = "test", ?pos:PosInfos)
+	inline function log(msg:Any = "test", fireOnce = false, ?pos:PosInfos)
 	{
-		FlxG.log.advanced(msg, style, pos);
+		FlxG.log.advanced(msg, style, fireOnce, pos);
 	}
 }
