@@ -1249,9 +1249,8 @@ class FlxObject extends FlxBasic
 		final rect = getBoundingBox(camera);
 		if (FlxG.renderTile)
 		{
-			final PAD = 2;
 			final view = camera.getViewMarginRect();
-			view.pad(PAD);
+			view.pad(2);
 			rect.clipTo(view);
 			view.put();
 		}
