@@ -1,18 +1,18 @@
 package flixel.system.debug.log;
 
 import flixel.FlxG;
-import flixel.system.debug.log.LogStyle;
+import flixel.system.debug.log.FlxLogStyle;
 import haxe.PosInfos;
 import massive.munit.Assert;
 
 class FlxLogStyleTest
 {
-	var style:LogStyle;
+	var style:FlxLogStyle;
 	
 	@Before
 	function before():Void
 	{
-		style = new LogStyle();
+		style = new FlxLogStyle();
 	}
 	
 	@Test

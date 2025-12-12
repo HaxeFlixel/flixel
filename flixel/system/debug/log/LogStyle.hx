@@ -7,7 +7,6 @@ import haxe.PosInfos;
  * Also used internally for the pre-defined styles.
  */
 @:forward
-@:deprecated("LogStyle is deprecated, use FlxLogStyle, instead")
 abstract LogStyle(FlxLogStyle) from FlxLogStyle to FlxLogStyle
 {
 	@:deprecated("LogStyle.NORMAL is deprecated, use FlxG.log.styles.NORMAL, instead")
@@ -55,6 +54,7 @@ abstract LogStyle(FlxLogStyle) from FlxLogStyle to FlxLogStyle
 		return CONSOLE = style;
 	}
 	
+	@:deprecated("LogStyle is deprecated, use FlxLogStyle, instead")
 	public function new(prefix = "", color = "FFFFFF", size = 12, bold = false, italic = false, underlined = false,
 			?errorSound:String, openConsole = false, ?callbackFunction:()->Void, ?callback:(Any, ?PosInfos)->Void, throwException = false)
 	{
