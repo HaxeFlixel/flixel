@@ -21,7 +21,7 @@ class FlxLogStyleTest
 		style.throwException = true;
 		try
 		{
-			log();
+			log('testThrowException-1');
 			Assert.fail("Expected log() to throw an exception");
 		}
 		catch(e)
@@ -32,12 +32,12 @@ class FlxLogStyleTest
 		style.throwException = false;
 		try
 		{
-			log(style);
+			log('testThrowException-2');
 			Assert.assertionCount++;
 		}
 		catch(e)
 		{
-			Assert.fail("Unexpected exception thrown by log()");
+			Assert.fail('Unexpected exception thrown by log() - "${e.message}"');
 		}
 	}
 	
@@ -45,14 +45,14 @@ class FlxLogStyleTest
 	function testOnLog()
 	{
 		var called = false;
-		style.prefix = "Specific Prefix";
+		style.prefix = "some-prefix";
 		style.onLog.addOnce(function (msg, ?_)
 		{
-			Assert.areEqual("Specific Message", msg);
+			Assert.areEqual("testOnLog", msg);
 			called = true;
 		});
 		
-		log("Specific Message");
+		log("testOnLog");
 		Assert.isTrue(called, "Expected style.onLog to be dispatched");
 	}
 	
@@ -64,7 +64,7 @@ class FlxLogStyleTest
 		var called = false;
 		style.callbackFunction = ()->called = true;
 		
-		log();
+		log('testCallbackFunction');
 		Assert.isTrue(called, "Expected callbackFunction to be caled, it was not");
 	}
 	
@@ -75,11 +75,11 @@ class FlxLogStyleTest
 		FlxG.debugger.visible = false;
 		
 		style.openConsole = true;
-		log();
+		log("testOpenConsole");
 		Assert.isTrue(FlxG.debugger.visible, "Expected debugger to be visible");
 	}
 	
-	inline function log(msg:Any = "test", fireOnce = false, ?pos:PosInfos)
+	inline function log(msg:Any, fireOnce = false, ?pos:PosInfos)
 	{
 		FlxG.log.advanced(msg, style, fireOnce, pos);
 	}
