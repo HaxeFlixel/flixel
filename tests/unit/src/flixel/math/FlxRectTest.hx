@@ -202,4 +202,17 @@ class FlxRectTest extends FlxTest
 		rect2.abs();
 		FlxAssert.rectsNear(rect1, rect2, 0.0001);
 	}
+	
+	@Test
+	function testPad()
+	{
+		rect1.setBounds(50, 50, 100, 100).pad(1, 2, 3, 4);
+		FlxAssert.rectsNearLTRD(50 - 1, 50 - 2, 100 + 3, 100 + 4, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10, 20);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 20, 100 + 10, 100 + 20, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 10, 100 + 10, 100 + 10, rect1);
+	}
 }
