@@ -200,7 +200,7 @@ class FlxBitmapDataUtil
 					{
 						identical = false;
 
-						if (pixel1.to24Bit() != pixel2.to24Bit())
+						if (pixel1.rgb != pixel2.rgb)
 						{
 							result.setPixel32(i, j,
 								FlxColor.fromRGB(getDiff(pixel1.red, pixel2.red), getDiff(pixel1.green, pixel2.green), getDiff(pixel1.blue, pixel2.blue)));

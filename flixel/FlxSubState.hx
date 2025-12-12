@@ -73,7 +73,10 @@ class FlxSubState extends FlxState
 		else // FlxG.renderTile
 		{
 			if (_bgSprite != null && _bgSprite.visible)
+			{
+				_bgSprite.cameras = getCameras();
 				_bgSprite.draw();
+			}
 		}
 
 		// Now draw all children

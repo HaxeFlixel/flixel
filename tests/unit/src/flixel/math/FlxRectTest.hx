@@ -34,7 +34,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBounds()
+	function testGetRotatedBounds()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
@@ -64,7 +64,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBoundsSelf()
+	function testGetRotatedBoundsSelf()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
