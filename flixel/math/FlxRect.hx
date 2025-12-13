@@ -554,6 +554,7 @@ class FlxRect implements IFlxPooled
 	 * **Note:** Negative numbers will shrink the edge.
 	 * 
 	 * @param amount The amount to extend the left, top, right and bottom edges
+	 * @since 6.2.0
 	 */
 	overload public inline extern function pad(amount:Float)
 	{
@@ -568,6 +569,7 @@ class FlxRect implements IFlxPooled
 	 * 
 	 * @param   leftAndRight  The amount to extend both the left and right
 	 * @param   topAndBottom  The amount to extend both the top and bottom
+	 * @since 6.2.0
 	 */
 	overload public inline extern function pad(leftAndRight:Float, topAndBottom:Float)
 	{
@@ -585,6 +587,7 @@ class FlxRect implements IFlxPooled
 	 * @param   top     The amount to extend the top
 	 * @param   right   The amount to extend the right
 	 * @param   bottom  The amount to extend the bottom
+	 * @since 6.2.0
 	 */
 	overload public inline extern function pad(left:Float, top:Float, right:Float, bottom:Float)
 	{
