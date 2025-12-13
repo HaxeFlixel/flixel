@@ -1,5 +1,6 @@
 package flixel.system.debug.log;
 
+import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
 import haxe.PosInfos;
 
@@ -8,6 +9,7 @@ using flixel.util.FlxStringUtil;
 /**
  * A class that allows you to create a custom style for `FlxG.log.advanced()`.
  * Also used internally for the pre-defined styles.
+ * @since 6.2.0
  */
 class FlxLogStyle
 {
@@ -15,23 +17,22 @@ class FlxLogStyle
 	 * A prefix which is always attached to the start of the logged data
 	 */
 	public var prefix:String;
-
-	public var color:String;
-	public var size:Int;
-	public var bold:Bool;
-	public var italic:Bool;
-	public var underlined:Bool;
-
+	
+	/**
+	 * The formatting applied to the text
+	 */
+	public var format:FlxLogFormat;
+	
 	/**
 	 * A sound to be played when this LogStyle is used
 	 */
 	public var errorSound:String;
-
+	
 	/**
 	 * Whether the console should be forced to open when this LogStyle is used
 	 */
 	public var openConsole:Bool;
-
+	
 	/**
 	 * A callback function that is called when this LogStyle is used
 	 */
@@ -56,27 +57,17 @@ class FlxLogStyle
 	 * Create a new LogStyle to be used in conjunction with `FlxG.log.advanced()`
 	 *
 	 * @param   prefix            A prefix which is always attached to the start of the logged data
-	 * @param   color             The text color
-	 * @param   size              The text size
-	 * @param   bold              Whether the text is bold or not
-	 * @param   italic            Whether the text is italic or not
-	 * @param   underlined        Whether the text is underlined or not
+	 * @param   style             The formatting applied to the text
 	 * @param   errorSound        A sound to be played when this LogStyle is used
 	 * @param   openConsole       Whether the console should be forced to open when this LogStyle is used
-	 * @param   callbackFunction  A callback function that is called when this LogStyle is used
 	 * @param   callback          A callback function that is called when this LogStyle is used
 	 * @param   throwError        Whether an error is thrown when this LogStyle is used
 	 */
 	 @:haxe.warning("-WDeprecated")
-	public function new(prefix = "", color = "FFFFFF", size = 12, bold = false, italic = false, underlined = false,
-			?errorSound:String, openConsole = false, throwException = false)
+	public function new(prefix = "", ?format:FlxLogFormat, ?errorSound:String, openConsole = false, throwException = false)
 	{
 		this.prefix = prefix;
-		this.color = color;
-		this.size = size;
-		this.bold = bold;
-		this.italic = italic;
-		this.underlined = underlined;
+		this.format = format != null ? format : {};
 		this.errorSound = errorSound;
 		this.openConsole = openConsole;
 		this.throwException = throwException;
@@ -109,6 +100,36 @@ class FlxLogStyle
 	 */
 	public inline function toHtmlString(data:Array<Any>)
 	{
-		return toLogString(data).htmlFormat(size, color, bold, italic, underlined);
+		return toLogString(data).htmlFormat(format.size, format.getColorString(), format.bold, format.italic, format.underlined);
+	}
+}
+
+@:structInit
+class FlxLogFormat
+{
+	public var color = FlxColor.WHITE;
+	public var size = 12;
+	public var bold = false;
+	public var italic = false;
+	public var underlined = false;
+	
+	public function new(color = FlxColor.WHITE, size = 12, bold = false, italic = false, underlined = false)
+	{
+		this.color = color;
+		this.size = size;
+		this.bold = bold;
+		this.italic = italic;
+		this.underlined = underlined;
+	}
+	
+	public function getColorString(prefix = "")
+	{
+		return color.toHexString(prefix, false);
+	}
+	
+	public function setColorString(value:String)
+	{
+		color = FlxColor.fromString('#$value');
+		return value;
 	}
 }

@@ -18,10 +18,10 @@ class FlxLogStylesList
 	public function new ()
 	{
 		normal  = new FlxLogStyle();
-		warning = new FlxLogStyle("[WARNING] ", "D9F85C", 12, false, false, false, "flixel/sounds/beep", true);
-		error   = new FlxLogStyle("[ERROR] ", "FF8888", 12, false, false, false, "flixel/sounds/beep", true);
-		notice  = new FlxLogStyle("[NOTICE] ", "5CF878", 12, false);
-		console = new FlxLogStyle("> ", "5A96FA", 12, false);
+		warning = new FlxLogStyle("[WARNING] ", { color: 0xD9F85C }, "flixel/sounds/beep", true);
+		error   = new FlxLogStyle("[ERROR] ", { color: 0xFF8888 }, "flixel/sounds/beep", true);
+		notice  = new FlxLogStyle("[NOTICE] ", { color: 0x5CF878 });
+		console = new FlxLogStyle("> ", { color: 0x5A96FA });
 		
 		#if FLX_THROW_ERRORS
 		error.throwException = true;
