@@ -320,12 +320,14 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	{
 		// Set up our global flash graphics object to draw out the path
 		var gfx:Graphics = null;
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			gfx = FlxSpriteUtil.flashGfx;
 			gfx.clear();
 		}
 		else
+		#end
 		{
 			gfx = camera.debugLayer.graphics;
 		}
@@ -368,11 +370,13 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			prevNodeScreen.put();
 		}
 		
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			// then stamp the path down onto the game buffer
 			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
 		}
+		#end
 	}
 	
 	@:access(flixel.FlxCamera)
@@ -386,11 +390,13 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			result.y -= camera.scroll.y * object.scrollFactor.y;
 		}
 		
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			result.x -= camera.viewMarginX;
 			result.y -= camera.viewMarginY;
 		}
+		#end
 		
 		camera.transformPoint(result);
 		return result;

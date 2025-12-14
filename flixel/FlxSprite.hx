@@ -763,11 +763,13 @@ class FlxSprite extends FlxObject
 
 		centerOrigin();
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			dirty = true;
 			updateFramePixels();
 		}
+		#end
 	}
 
 	override public function update(elapsed:Float):Void
@@ -918,6 +920,7 @@ class FlxSprite extends FlxObject
 
 		var bitmapData:BitmapData = Brush.framePixels;
 
+		#if FLX_RENDER_BLIT
 		if (isSimpleRenderBlit()) // simple render
 		{
 			_flashPoint.x = X + frame.frame.x;
@@ -929,6 +932,7 @@ class FlxSprite extends FlxObject
 			_flashRect2.height = graphic.bitmap.height;
 		}
 		else // complex render
+		#end
 		{
 			_matrix.identity();
 			_matrix.translate(-Brush.origin.x, -Brush.origin.y);
@@ -942,11 +946,13 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		}
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			dirty = true;
 			calcFrame();
 		}
+		#end
 	}
 
 	/**
@@ -957,6 +963,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			if (Force || dirty)
@@ -966,6 +973,7 @@ class FlxSprite extends FlxObject
 			}
 		}
 		else
+		#end
 		{
 			dirty = true;
 			calcFrame(true);
@@ -1251,10 +1259,12 @@ class FlxSprite extends FlxObject
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 		}
 		
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit && hasColorTransform())
 		{
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
+		#end
 		
 		if (FlxG.renderTile && useFramePixels)
 		{
@@ -1330,10 +1340,14 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderTile)
 			return false;
 
 		return isSimpleRenderBlit(camera);
+		#else
+		return false;
+		#end
 	}
 
 	/**
@@ -1344,6 +1358,9 @@ class FlxSprite extends FlxObject
 	 *
 	 * @param   camera   If a camera is passed its `pixelPerfectRender` flag is taken into account
 	 */
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("isSimpleRenderBlit is deprecated")
+	#end
 	public function isSimpleRenderBlit(?camera:FlxCamera):Bool
 	{
 		var result:Bool = (angle == 0 || bakedRotationAngle > 0) && scale.x == 1 && scale.y == 1 && blend == null;

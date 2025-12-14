@@ -117,6 +117,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		updateColumns(tileWidth, widthInTiles, scaleX, camera);
 		updateRows(tileHeight, heightInTiles, scaleY, camera);
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			final newWidth = Std.int(columns * tileWidth);
@@ -137,6 +138,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 				dirty = true;
 			}
 		}
+		#end
 	}
 	
 	/**
@@ -144,6 +146,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pixels = FlxDestroyUtil.dispose(pixels);
@@ -151,6 +154,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 			_matrix = null;
 			_flashRect = null;
 		}
+		#end
 	}
 	
 	/**
@@ -159,12 +163,17 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 *
 	 * @param   color  What color to fill with, in 0xAARRGGBB hex format.
 	 */
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("fill is deprecated")
+	#end
 	public function fill(color = FlxColor.TRANSPARENT):Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pixels.fillRect(_flashRect, color);
 		}
+		#end
 	}
 	
 	/**

@@ -305,8 +305,10 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		debugBoundingBoxColorPartial = FlxColor.PINK;
 		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
+		#end
 		#end
 	}
 
@@ -321,6 +323,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		_buffers = FlxDestroyUtil.destroyArray(_buffers);
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			#if FLX_DEBUG
@@ -331,6 +334,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 			#end
 		}
 		else
+		#end
 		{
 			_helperPoint = null;
 			_matrix = null;
@@ -350,7 +354,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		FlxG.cameras.cameraRemoved.remove(onCameraChanged);
 		FlxG.cameras.cameraResized.remove(onCameraChanged);
 
-		#if FLX_DEBUG
+		#if (FLX_DEBUG && FLX_RENDER_BLIT)
 		if (FlxG.renderBlit)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
@@ -529,7 +533,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	override function updateMap():Void
 	{
-		#if FLX_DEBUG
+		#if (FLX_DEBUG && FLX_RENDER_BLIT)
 		if (FlxG.renderBlit)
 			_debugRect = new Rectangle(0, 0, tileWidth, tileHeight);
 		#end
@@ -656,6 +660,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			buffer = _buffers[i];
 
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 			{
 				if (buffer.isDirty(this, camera))
@@ -665,6 +670,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				buffer.draw(camera, _flashPoint, scale.x, scale.y);
 			}
 			else
+			#end
 			{
 				drawTilemap(buffer, camera);
 			}
@@ -1214,11 +1220,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var scaledHeight:Float = 0;
 		var drawItem = null;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			buffer.fill();
 		}
 		else
+		#end
 		{
 			getScreenPosition(_point, camera).subtract(offset).copyTo(_helperPoint);
 
@@ -1268,6 +1276,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				{
 					frame = tile.frame;
 
+					#if FLX_RENDER_BLIT
 					if (FlxG.renderBlit)
 					{
 						frame.paint(buffer.pixels, _flashPoint, true);
@@ -1295,6 +1304,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 						#end
 					}
 					else
+					#end
 					{
 						drawX = _helperPoint.x + (columnIndex % widthInTiles) * scaledWidth;
 						drawY = _helperPoint.y + Math.floor(columnIndex / widthInTiles) * scaledHeight;
@@ -1316,26 +1326,33 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					}
 				}
 
+				#if FLX_RENDER_BLIT
 				if (FlxG.renderBlit)
 					_flashPoint.x += tileWidth;
+				#end
 
 				columnIndex++;
 			}
 
+			#if FLX_RENDER_BLIT
 			if (FlxG.renderBlit)
 				_flashPoint.y += tileHeight;
+			#end
+
 			rowIndex += widthInTiles;
 		}
 
 		buffer.x = screenXInTiles * scaledTileWidth;
 		buffer.y = screenYInTiles * scaledTileHeight;
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			if (isColored)
 				buffer.colorTransform(colorTransform);
 			buffer.blend = blend;
 		}
+		#end
 
 		buffer.dirty = false;
 	}
@@ -1345,14 +1362,21 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 * Just generates a wireframe box the size of a tile with the specified color.
 	 */
 	#if FLX_DEBUG
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("makeDebugTile is deprecated")
+	#end
 	function makeDebugTile(color:FlxColor):BitmapData
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderTile)
 			return null;
 
 		var debugTile = new BitmapData(tileWidth, tileHeight, true, 0);
 		drawDebugTile(debugTile, color);
 		return debugTile;
+		#else
+		return null;
+		#end
 	}
 
 	function drawDebugTile(debugTile:BitmapData, color:FlxColor):Void

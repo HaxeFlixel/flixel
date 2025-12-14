@@ -172,6 +172,7 @@ class FlxBar extends FlxSprite
 
 		_filledBarPoint = new Point();
 		_filledBarRect = new Rectangle();
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			_zeroOffset = new Point();
@@ -179,6 +180,7 @@ class FlxBar extends FlxSprite
 			makeGraphic(width, height, FlxColor.TRANSPARENT, true);
 		}
 		else
+		#end
 		{
 			_filledFlxRect = FlxRect.get();
 		}
@@ -742,13 +744,18 @@ class FlxBar extends FlxSprite
 	/**
 	 * Stamps health bar background on its pixels
 	 */
+	#if FLX_NO_RENDER_BLIT
+	@:deprecated("updateEmptyBar is deprecated")
+	#end
 	public function updateEmptyBar():Void
 	{
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			pixels.copyPixels(_emptyBar, _emptyBarRect, _zeroOffset);
 			dirty = true;
 		}
+		#end
 	}
 
 	/**
@@ -806,11 +813,13 @@ class FlxBar extends FlxSprite
 					_filledBarPoint.y = Std.int((barHeight - _filledBarRect.height) / 2);
 			}
 
+			#if FLX_RENDER_BLIT			
 			if (FlxG.renderBlit)
 			{
 				pixels.copyPixels(_filledBar, _filledBarRect, _filledBarPoint, null, null, true);
 			}
 			else
+			#end
 			{
 				if (frontFrames != null)
 				{
@@ -823,10 +832,12 @@ class FlxBar extends FlxSprite
 			}
 		}
 
+		#if FLX_RENDER_BLIT
 		if (FlxG.renderBlit)
 		{
 			dirty = true;
 		}
+		#end
 	}
 
 	override public function update(elapsed:Float):Void

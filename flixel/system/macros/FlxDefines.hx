@@ -66,6 +66,11 @@ private enum UserDefines
 	 * Used to make the debug windows bigger
 	 */
 	FLX_DEBUGGER_SCALE;
+
+	/**
+	 * Disables the blitting renderer. Tile rendering will be used on all targets instead.
+	 */
+	FLX_NO_RENDER_BLIT;
 }
 
 /**
@@ -115,6 +120,7 @@ private enum HelperDefines
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
 	FLX_NO_DEFAULT_SOUND_EXT;
+	FLX_RENDER_BLIT;
 }
 
 class FlxDefines
@@ -217,6 +223,7 @@ class FlxDefines
 		defineInversion(FLX_DEFAULT_SOUND_EXT, FLX_NO_DEFAULT_SOUND_EXT);
 		// defineInversion(FLX_TRACK_GRAPHICS, FLX_NO_TRACK_GRAPHICS); // special case
 		// defineInversion(FLX_NO_HEALTH, FLX_HEALTH);
+		defineInversion(FLX_NO_RENDER_BLIT, FLX_RENDER_BLIT);
 		if (!defined(FLX_NO_HEALTH) && !defined(FLX_HEALTH))
 		{
 			define(FLX_HEALTH_NOT_DEFINED);
@@ -271,6 +278,9 @@ class FlxDefines
 		// should always be defined as of 5.5.1 and, therefore, deprecated
 		define(FLX_DRAW_QUADS);
 		// #end
+
+		if (!defined(FLX_NO_RENDER_BLIT))
+			define(FLX_RENDER_BLIT);
 		
 		if (defined(FLX_TRACK_POOLS) && !defined("debug"))
 			abort("Can only define FLX_TRACK_POOLS on debug mode", (macro null).pos);

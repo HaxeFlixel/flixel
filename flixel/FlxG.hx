@@ -145,6 +145,7 @@ class FlxG
 
 	public static var renderMethod(default, null):FlxRenderMethod;
 
+	@:deprecated("renderBlit will be removed")
 	public static var renderBlit(default, null):Bool;
 	public static var renderTile(default, null):Bool;
 
@@ -590,6 +591,7 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
+		#if FLX_RENDER_BLIT
 		#if !flash
 		renderMethod = switch (stage.window.context.type)
 		{
@@ -606,6 +608,9 @@ class FlxG
 
 		#if air
 		renderMethod = BLITTING;
+		#end
+		#else
+		renderMethod = DRAW_TILES;
 		#end
 
 		renderBlit = renderMethod == BLITTING;
@@ -753,5 +758,5 @@ class FlxG
 enum FlxRenderMethod
 {
 	DRAW_TILES;
-	BLITTING;
+	@:deprecated BLITTING;
 }

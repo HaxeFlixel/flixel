@@ -149,9 +149,11 @@ class Pointer extends Tool
 				rect.put();
 		}
 		
+		#if FLX_RENDER_BLIT
 		// Render everything into the camera buffer
 		if (FlxG.renderBlit)
 			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		#end
 	}
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)
