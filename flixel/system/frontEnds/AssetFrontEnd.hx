@@ -3,17 +3,17 @@ package flixel.system.frontEnds;
 import flixel.FlxG;
 import flixel.system.FlxAssets;
 import flixel.system.debug.log.LogStyle;
+import haxe.Json;
 import haxe.io.Bytes;
 import haxe.io.Path;
-import haxe.Json;
 import haxe.xml.Access;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
-import openfl.utils.Assets;
-import openfl.utils.AssetType;
-import openfl.utils.AssetCache;
-import openfl.utils.Future;
 import openfl.text.Font;
+import openfl.utils.AssetCache;
+import openfl.utils.AssetType;
+import openfl.utils.Assets;
+import openfl.utils.Future;
 
 using StringTools;
 
@@ -173,12 +173,10 @@ class AssetFrontEnd
 	 */
 	public function getAsset(id:String, type:FlxAssetType, useCache = true, ?logStyle:LogStyle):Null<Any>
 	{
-		inline function log(message:String)
-		{
-			if (logStyle == null)
-				logStyle = LogStyle.ERROR;
-			FlxG.log.advanced(message, logStyle);
-		}
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
 		
 		if (exists(id, type))
 		{

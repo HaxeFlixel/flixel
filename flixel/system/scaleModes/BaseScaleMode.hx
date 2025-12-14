@@ -31,8 +31,7 @@ class BaseScaleMode
 
 	public function onMeasure(Width:Int, Height:Int):Void
 	{
-		FlxG.width = FlxG.initialWidth;
-		FlxG.height = FlxG.initialHeight;
+		setGlobalSize(FlxG.initialWidth, FlxG.initialHeight);
 
 		updateGameSize(Width, Height);
 		updateDeviceSize(Width, Height);
@@ -113,5 +112,14 @@ class BaseScaleMode
 			updateGamePosition();
 		}
 		return value;
+	}
+
+	/**
+	 * Helper function to change FlxG width / height.
+	 */
+	function setGlobalSize(width:Int, height:Int):Void
+	{
+		FlxG.width = width;
+		FlxG.height = height;
 	}
 }

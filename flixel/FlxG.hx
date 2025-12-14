@@ -100,7 +100,9 @@ class FlxG
 	 * The HaxeFlixel version, in semantic versioning syntax. Use `Std.string()`
 	 * on it to get a `String` formatted like this: `"HaxeFlixel MAJOR.MINOR.PATCH-COMMIT_SHA"`.
 	 */
-	public static var VERSION(default, null):FlxVersion = new FlxVersion(6, 1, 0);
+	#if !macro
+	public static final VERSION:FlxVersion = new flixel.system.FlxAutoVersion<"flixel">();
+	#end
 
 	/**
 	 * Internal tracker for game object.
@@ -539,6 +541,10 @@ class FlxG
 		FlxG.height = height;
 
 		initRenderMethod();
+		#if FLX_OPENGL_AVAILABLE
+		// Query once when window is created and cache for later
+		bitmap.get_maxTextureSize();
+		#end
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
