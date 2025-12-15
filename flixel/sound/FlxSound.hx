@@ -382,12 +382,19 @@ class FlxSound extends FlxBasic
 		return init(looped, autoDestroy, onComplete);
 	}
 
+	#if FLX_STREAM_MUSIC
 	/**
-	 * Loads a streamed sound from the provided file path.
-	 * This does not load sounds from web locations. Use `loadFromURL()` for that, instead.
+	 * Streams a sound from the given file path.
+	 * The default audio playback behavior is to load the entire sound into memory before playing it.
+	 * This is fine for shorter sounds like sound effects, but is not ideal for larger sounds like
+	 * music tracks because it may cause high memory usage and lag while loading.
+	 * In this case it is better to stream the music, which loads and unloads chunks of data as the
+	 * music plays, keeping memory usage low.
 	 * 
-	 * Audio streaming may not be supported for some targets or files. If audio streaming is 
-	 * not supported, the default sound loading behavior will be used as a fallback.
+	 * Due to a backend limitation, audio streaming is currently only available on native targets 
+	 * and OGG/Vorbis audio files.
+	 * 
+	 * This does not load sounds from web locations. Use `loadFromURL()` for that, instead.
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
@@ -411,6 +418,7 @@ class FlxSound extends FlxBasic
 		// NOTE: can't pull ID3 info from embedded sound currently
 		return init(looped, autoDestroy, onComplete);
 	}
+	#end
 
 	/**
 	 * Loads a sound from the provided URL.
