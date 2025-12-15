@@ -56,7 +56,7 @@ class FlxAssert
 		]);
 	}
 
-	static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool
+	public static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool
 	{
 		return actual >= expected - margin && actual <= expected + margin;
 	}
