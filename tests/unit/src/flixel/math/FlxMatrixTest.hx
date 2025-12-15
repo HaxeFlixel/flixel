@@ -122,9 +122,9 @@ class FlxMatrixTest extends FlxTest
 	function assertScalersNearXY(expectedScaleX:Float, expectedScaleY:Float, actual:FlxMatrix, margin = 0.001, ?msg:String, ?pos)
 	{
 		if (!FlxAssert.areNearHelper(expectedScaleX, actual.a, margin))
-			Assert.fail('Matrix A value [${actual.a}] is not within [$margin] of [$expectedScaleX]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix A value [${actual.a}] is not within [$margin] of [$expectedScaleX]', pos);
 		else if (!FlxAssert.areNearHelper(expectedScaleY, actual.d, margin))
-			Assert.fail('Matrix D value [${actual.d}] is not within [$margin] of [$expectedScaleX]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix D value [${actual.d}] is not within [$margin] of [$expectedScaleX]', pos);
 		else
 			Assert.assertionCount++;
 	}
@@ -132,9 +132,9 @@ class FlxMatrixTest extends FlxTest
 	function assertSkewsNearXY(expectedSkewX:Float, expectedSkewY:Float, actual:FlxMatrix, margin = 0.001, ?msg:String, ?pos)
 	{
 		if (!FlxAssert.areNearHelper(expectedSkewX, actual.c, margin))
-			Assert.fail('Matrix C value [${actual.c}] is not within [$margin] of [$expectedSkewX]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix C value [${actual.c}] is not within [$margin] of [$expectedSkewX]', pos);
 		else if (!FlxAssert.areNearHelper(expectedSkewY, actual.b, margin))
-			Assert.fail('Matrix B value [${actual.b}] is not within [$margin] of [$expectedSkewX]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix B value [${actual.b}] is not within [$margin] of [$expectedSkewX]', pos);
 		else
 			Assert.assertionCount++;
 	}
@@ -142,9 +142,9 @@ class FlxMatrixTest extends FlxTest
 	function assertPosNearXY(expectedTX:Float, expectedTY:Float, actual:FlxMatrix, margin = 0.001, ?msg:String, ?pos)
 	{
 		if (!FlxAssert.areNearHelper(expectedTX, actual.tx, margin))
-			Assert.fail('Matrix TX value [${actual.tx}] is not within [$margin] of [$expectedTX]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix TX value [${actual.tx}] is not within [$margin] of [$expectedTX]', pos);
 		else if (!FlxAssert.areNearHelper(expectedTY, actual.ty, margin))
-			Assert.fail('Matrix TY value [${actual.ty}] is not within [$margin] of [$expectedTY]', pos);
+			Assert.fail(msg != null ? msg : 'Matrix TY value [${actual.ty}] is not within [$margin] of [$expectedTY]', pos);
 		else
 			Assert.assertionCount++;
 	}
@@ -161,8 +161,10 @@ class FlxMatrixTest extends FlxTest
 		{
 			Assert.assertionCount++;
 		}
-		else
+		else if (msg == null)
 			Assert.fail('Matrix [$actual] is not within [$margin] of [${matrixToString(expA, expB, expC, expD, expX, expY)}]', pos);
+		else
+			Assert.fail(msg, pos);
 	}
 	
 	static public function matrixToString(a:Float, b:Float, c:Float, d:Float, tx:Float, ty:Float)
