@@ -21,6 +21,9 @@ class FlxMatrixSprite extends FlxSprite
 		renderMatrix = new FlxMatrix();
 		
 		super(x, y, simpleGraphic);
+		
+		if (FlxG.renderBlit)
+			FlxG.log.warn("FlxMatrixSprites do not work on blit targets");
 	}
 	
 	override function isSimpleRenderBlit(?cam)
