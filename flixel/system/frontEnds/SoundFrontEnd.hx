@@ -189,6 +189,16 @@ class SoundFrontEnd
 		return sound;
 	}
 
+	#if FLX_STREAM_MUSIC
+	public function loadStreamed(id:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = false, autoPlay = false, ?onComplete:Void->Void):FlxSound 
+	{
+		var sound:FlxSound = list.recycle(FlxSound);
+		sound.loadStreamed(id, looped, autoDestroy, onComplete);
+		loadHelper(sound, volume, group, autoPlay);
+		return sound;
+	}
+	#end
+
 	function loadHelper(sound:FlxSound, volume:Float, group:FlxSoundGroup, autoPlay = false):FlxSound
 	{
 		if (group == null)

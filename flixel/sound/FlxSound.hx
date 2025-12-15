@@ -144,6 +144,9 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for a Flash sound object.
 	 */
 	@:allow(flixel.system.frontEnds.SoundFrontEnd.load)
+	#if FLX_STREAM_MUSIC
+	@:allow(flixel.system.frontEnds.SoundFrontEnd.loadStreamed)
+	#end
 	var _sound:Sound;
 	
 	/**
