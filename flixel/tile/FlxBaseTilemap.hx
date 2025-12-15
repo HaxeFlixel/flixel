@@ -527,7 +527,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  A reference to this instance of FlxTilemap, for chaining as usual :)
 	 * @since   4.1.0
 	 */
-	public function loadMapFromGraphic(mapGraphic:FlxGraphicSource, invert = false, scale = 1, ?colorMap:Array<FlxColor>,
+	public function loadMapFromGraphic(mapGraphic:FlxGraphicAsset, invert = false, scale = 1, ?colorMap:Array<FlxColor>,
 			tileGraphic:FlxTilemapGraphicAsset, tileWidth = 0, tileHeight = 0, ?autoTile:FlxTilemapAutoTiling,
 			startingIndex = 0, drawIndex = 1, collideIndex = 1)
 	{

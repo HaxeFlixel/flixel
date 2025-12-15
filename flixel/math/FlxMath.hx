@@ -270,7 +270,7 @@ class FlxMath
 	}
 
 	/**
-	 * Makes sure that value always stays between 0 and max,
+	 * Makes sure that value always stays between min and max,
 	 * by wrapping the value around.
 	 *
 	 * @param 	value 	The value to wrap around

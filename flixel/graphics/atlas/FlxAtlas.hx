@@ -173,7 +173,7 @@ class FlxAtlas implements IFlxDestroyable
 	 *                    You can omit it if you pass `String` or `Class<Dynamic>` as a `Graphic` source.
 	 * @return  Newly created and added node, or `null` if there is no space for it.
 	 */
-	public function addNode(Graphic:FlxGraphicSource, ?Key:String):FlxNode
+	public function addNode(Graphic:FlxGraphicAsset, ?Key:String):FlxNode
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
 
@@ -602,7 +602,7 @@ class FlxAtlas implements IFlxDestroyable
 	 * @param   region        Region of source image to use as a source graphic
 	 * @return  Generated `FlxTileFrames` for the added node
 	 */
-	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicSource, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint,
+	public function addNodeWithSpacesAndBorders(Graphic:FlxGraphicAsset, ?Key:String, tileSize:FlxPoint, tileSpacing:FlxPoint, ?tileBorder:FlxPoint,
 			?region:FlxRect):FlxTileFrames
 	{
 		var key:String = FlxAssets.resolveKey(Graphic, Key);
