@@ -740,7 +740,7 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
+	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?colored:Bool, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
 		if (FlxG.renderBlit)
@@ -760,7 +760,11 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			var isColored = (transform != null #if !html5 && transform.hasRGBMultipliers() #end);
+			var isColored:Bool = false;
+			if(transform != null) {
+				if(#if !html5 transform.hasRGBMultipliers() #else true #end || colored)
+					isColored = true;
+			}
 			var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 
 			#if FLX_RENDER_TRIANGLE
