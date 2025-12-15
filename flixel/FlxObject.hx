@@ -1102,7 +1102,7 @@ class FlxObject extends FlxBasic
 		wasTouching = FlxDirectionFlags.NONE;
 		setPosition(x, y);
 		last.set(this.x, this.y);
-		velocity.set();
+		velocity.zero();
 		revive();
 	}
 
@@ -1249,12 +1249,8 @@ class FlxObject extends FlxBasic
 		final rect = getBoundingBox(camera);
 		if (FlxG.renderTile)
 		{
-			final PAD = 2;
 			final view = camera.getViewMarginRect();
-			view.left -= PAD;
-			view.top -= PAD;
-			view.right += PAD;
-			view.bottom += PAD;
+			view.pad(2);
 			rect.clipTo(view);
 			view.put();
 		}

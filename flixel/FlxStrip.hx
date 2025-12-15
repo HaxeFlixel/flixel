@@ -56,12 +56,9 @@ class FlxStrip extends FlxSprite
 			if (!camera.visible || !camera.exists)
 				continue;
 
-			getScreenPosition(_point, camera).subtractPoint(offset);
-			#if !flash
+			getScreenPosition(_point, camera);
+			_point -= offset;
 			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing, colorTransform, shader);
-			#else
-			camera.drawTriangles(graphic, vertices, indices, uvtData, colors, _point, blend, repeat, antialiasing);
-			#end
 		}
 	}
 }
