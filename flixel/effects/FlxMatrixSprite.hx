@@ -29,7 +29,7 @@ class FlxMatrixSprite extends FlxSprite
 	
 	override function isSimpleRenderBlit(?cam)
 	{
-		return super.isSimpleRenderBlit(cam) || renderMatrix.isIdentity();
+		return super.isSimpleRenderBlit(cam) && renderMatrix.isIdentity();
 	}
 	
 	override function prepareComplexMatrix(matrix:FlxMatrix, frame:FlxFrame, camera:FlxCamera)
