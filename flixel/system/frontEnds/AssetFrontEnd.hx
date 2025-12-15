@@ -156,6 +156,10 @@ class AssetFrontEnd
 				else
 				#end
 				{
+					#if lime_vorbis
+					FlxG.log.error('Failed to stream MUSIC asset with an ID of "$id", is it a proper OGG/Vorbis file?');
+					#end
+
 					// can't stream this sound, fall back to default behavior
 					sound = Sound.fromFile(getPath(id));
 					if (canUseCache)
@@ -182,7 +186,13 @@ class AssetFrontEnd
 			case BINARY: Assets.getBytes(id);
 			case IMAGE: Assets.getBitmapData(id, useCache);
 			case SOUND: Assets.getSound(id, useCache);
-			case MUSIC: Assets.getMusic(id, useCache);
+			case MUSIC:
+				#if lime_vorbis
+				if (!canStreamSound(id))
+					FlxG.log.error('Failed to stream MUSIC asset with an ID of "$id", is it a proper OGG/Vorbis file?');
+				#end
+
+				Assets.getMusic(id, useCache);
 			case FONT: Assets.getFont(id, useCache);
 		}
 	}
@@ -738,6 +748,25 @@ class AssetFrontEnd
 		future.onProgress((progress, total)->promise.progress(progress, total));
 		
 		return promise.future;
+	}
+
+	inline function canStreamSound(file:String):Bool
+	{
+		#if lime_vorbis
+		// Check if file is really OGG/Vorbis
+		var vorbis = VorbisFile.fromFile(file);
+		if (vorbis != null)
+		{
+			vorbis.clear();
+			vorbis = null;
+
+			return true;
+		}
+
+		return false;
+		#else
+		return false;
+		#end
 	}
 }
 
