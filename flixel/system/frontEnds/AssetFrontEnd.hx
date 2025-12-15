@@ -390,6 +390,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since 6.2.0
 	 */
 	public inline function getMusicUnsafe(id:String, useCache = true):Sound
 	{
@@ -423,6 +424,7 @@ class AssetFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since 6.2.0
 	 */
 	public inline function getMusic(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
@@ -452,6 +454,7 @@ class AssetFrontEnd
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
 	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since 6.2.0
 	 */
 	public inline function getMusicAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
@@ -649,6 +652,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the asset
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @return  Returns a `Future` which allows listeners to be added via methods like `onComplete`
+	 * @since 6.2.0
 	 */
 	public inline function loadMusic(id:String, useCache = true):Future<Sound>
 	{
@@ -762,11 +766,9 @@ class AssetFrontEnd
 
 			return true;
 		}
-
-		return false;
-		#else
-		return false;
 		#end
+		
+		return false;
 	}
 }
 
