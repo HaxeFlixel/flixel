@@ -339,7 +339,7 @@ class AssetFrontEnd
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSoundUnsafe(id:String, useCache = true):Sound
 	{
@@ -354,7 +354,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSound(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
@@ -367,7 +367,7 @@ class AssetFrontEnd
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
 	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Dos not return a `FlxSound`
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
 	 */
 	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
