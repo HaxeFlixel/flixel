@@ -37,7 +37,7 @@ class FlxMatrix extends Matrix
 	 */
 	public inline function skewDegrees(skewX:Float, skewY:Float):FlxMatrix
 	{
-		return skewRadians(skewY * FlxAngle.TO_RAD, skewX * FlxAngle.TO_RAD);
+		return skewRadians(skewX * FlxAngle.TO_RAD, skewY * FlxAngle.TO_RAD);
 	}
 	
 	/**
