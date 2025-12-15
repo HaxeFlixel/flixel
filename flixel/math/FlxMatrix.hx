@@ -150,7 +150,9 @@ class FlxMatrix extends Matrix
 			LabelValuePair.weak("a", a),
 			LabelValuePair.weak("b", b),
 			LabelValuePair.weak("c", c),
-			LabelValuePair.weak("d", d)
+			LabelValuePair.weak("d", d),
+			LabelValuePair.weak("tx", tx),
+			LabelValuePair.weak("ty", ty)
 		]);
 	}
 }
