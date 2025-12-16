@@ -408,7 +408,7 @@ class AssetFrontEnd
 	 */
 	public dynamic function streamSoundUnsafe(id:String):Sound
 	{
-		return Assets.getMusic(id);
+		return Assets.getMusic(addSoundExtIf(id));
 	}
 
 	/**
@@ -438,7 +438,7 @@ class AssetFrontEnd
 		if (exists(id, SOUND))
 		{
 			if (isLocal(id, SOUND))
-				return streamSoundUnsafe(addSoundExtIf(id));
+				return streamSoundUnsafe(id);
 			
 			log('SOUND asset "$id" exists, but only asynchronously');
 			return null;
@@ -465,22 +465,7 @@ class AssetFrontEnd
 	 */
 	public function streamSoundAddExt(id:String, ?logStyle:LogStyle):Sound
 	{
-		if (logStyle == null)
-			logStyle = FlxG.log.styles.error;
-		
-		final log = FlxG.log.advanced.bind(_, logStyle);
-		
-		if (exists(id, SOUND))
-		{
-			if (isLocal(id, SOUND))
-				return streamSoundUnsafe(addSoundExt(id));
-			
-			log('SOUND asset "$id" exists, but only asynchronously');
-			return null;
-		}
-		
-		log('Could not find a SOUND asset with ID \'$id\'.');
-		return null;
+		return streamSound(addSoundExt(id));
 	}
 	
 	/**
