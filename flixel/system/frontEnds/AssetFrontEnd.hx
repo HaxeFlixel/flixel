@@ -15,11 +15,6 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import openfl.utils.Future;
 
-#if FLX_STREAM_SOUND
-import lime.media.vorbis.VorbisFile;
-import lime.media.AudioBuffer;
-#end
-
 using StringTools;
 
 /**
@@ -501,13 +496,12 @@ class AssetFrontEnd
 	 */
 	public inline function canStreamSound(id:String):Bool
 	{
-		#if FLX_STREAM_SOUND
+		#if lime_vorbis
 		// Check if file is really OGG/Vorbis
-		var vorbis = VorbisFile.fromFile(Assets.getPath(addSoundExtIf(id)));
+		final vorbis = lime.media.vorbis.VorbisFile.fromFile(Assets.getPath(addSoundExtIf(id)));
 		if (vorbis != null)
 		{
 			vorbis.clear();
-			vorbis = null;
 
 			return true;
 		}
