@@ -175,7 +175,8 @@ class FlxRectTest extends FlxTest
 		assertNotContains(-1, -1, 101, 101);
 	}
 	
-	public function testBounds()
+	@Test
+	function testBounds()
 	{
 		rect1.set(100, 150, 100, 100);
 		rect2.setBounds(100, 150, 200, 250);
@@ -183,7 +184,8 @@ class FlxRectTest extends FlxTest
 		FlxAssert.rectsNear(rect1, rect2, 0.0001);
 	}
 	
-	public function testBoundsAbs()
+	@Test
+	function testBoundsAbs()
 	{
 		rect1.set(100, 150, 100, 100);
 		rect2.setBoundsAbs(200, 250, 100, 150);
@@ -191,7 +193,9 @@ class FlxRectTest extends FlxTest
 		FlxAssert.rectsNear(rect1, rect2, 0.0001);
 	}
 	
-	public function testAbs()
+	
+	@Test
+	function testAbs()
 	{
 		rect1.set(0, 0, 100, 100);
 		rect2.set(100, 100, -100, -100);
