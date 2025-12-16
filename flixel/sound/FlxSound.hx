@@ -387,12 +387,10 @@ class FlxSound extends FlxBasic
 
 	#if FLX_STREAM_SOUND
 	/**
-	 * Streams a sound from the given file path.
-	 * The default audio playback behavior is to load the entire sound into memory before playing it.
-	 * This is fine for shorter sounds like sound effects, but is not ideal for larger sounds like
-	 * music tracks because it may cause high memory usage and lag while loading.
-	 * In this case it is better to stream the music, which loads and unloads chunks of data as the
-	 * music plays, keeping memory usage low.
+	 * Streams a sound from the given file path. Unlike the `load` method, this will load and
+	 * unload chunks of data as the sound plays, keeping memory usage low. This is recommended for
+	 * longer sounds, like music tracks. For shorter sounds like sound effects, it is better to
+	 * use the `load` method, which loads the entire sound into memory before playing it.
 	 * 
 	 * Due to a backend limitation, audio streaming is currently only available on native targets 
 	 * and OGG/Vorbis audio files.
@@ -401,11 +399,11 @@ class FlxSound extends FlxBasic
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
-	 * @param path The ID or asset path to the sound asset.
-	 * @param looped Whether or not this sound should loop endlessly.
-	 * @param autoDestroy Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
-	 * @param onComplete Called when the sound finishes playing.
-	 * @return This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 * @param   path         The ID or asset path to the sound asset.
+	 * @param   looped       Whether or not this sound should loop endlessly.
+	 * @param   autoDestroy  Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * @param   onComplete   Called when the sound finishes playing.
+	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 * 
 	 * @since 6.2.0
 	 */
