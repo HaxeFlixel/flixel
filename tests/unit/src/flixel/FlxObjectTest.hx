@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
@@ -517,6 +518,44 @@ class FlxObjectTest extends FlxTest
 		FlxAssert.rectsNear(expected, rect);
 		
 		expected.put();
+	}
+	
+	@Test
+	function testGetViewPosition()
+	{
+		final object = new FlxObject(0, 0, 1, 1);
+		final p = FlxPoint.get();
+		inline function getViewPos() return object.getViewPosition(FlxG.camera, p);
+		
+		FlxAssert.pointNearXY(0, 0, getViewPos());
+		
+		object.setPosition(10, 20);
+		FlxAssert.pointNearXY(10, 20, getViewPos());
+		
+		object.angle = 90;
+		FlxAssert.pointNearXY(10, 20, getViewPos());
+		
+		object.scrollFactor.set(0.5, 0);
+		FlxAssert.pointNearXY(10, 20, getViewPos());
+		
+		object.scrollFactor.set(1, 1);
+		object.setPosition(400, 200);
+		FlxG.camera.scroll.set(50, 25);
+		FlxAssert.pointNearXY(400 - 50, 200 - 25, getViewPos());
+		
+		object.scrollFactor.set(0.5, 0);
+		FlxAssert.pointNearXY(400 - 50 / 2, 200, getViewPos());
+		
+		FlxG.camera.zoom = 2;
+		object.scrollFactor.set(1, 1);
+		FlxG.camera.scroll.set(0, 0);
+		FlxAssert.pointNearXY(400 + 80, 160, getViewPos());
+		
+		FlxG.camera.scroll.set(50, 25);
+		FlxAssert.pointNearXY(480 - 100, 200 - 40 - 50, getViewPos());
+		
+		object.scrollFactor.set(0.5, 0);
+		FlxAssert.pointNearXY(400 + 80 - 100 / 2, 200 - 40, getViewPos());
 	}
 }
 
