@@ -437,7 +437,7 @@ class AssetFrontEnd
 		
 		if (exists(id, SOUND))
 		{
-			if (canStreamSound(id))
+			if (!canStreamSound(id))
 			{
 				log('Unable to stream SOUND asset with ID "$id". Expected a .OGG/Vorbis file');
 				return null;
