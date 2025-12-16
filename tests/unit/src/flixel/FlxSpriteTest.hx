@@ -568,32 +568,48 @@ class FlxSpriteTest extends FlxTest
 		
 		sprite1.clipToWorldBounds(100, 100, 200, 200);
 		assertClipRect(0, 0, 100, 100);
+		sprite1.clipToWorldBoundsSimple(100, 100, 200, 200);
+		assertClipRect(0, 0, 100, 100);
 		
 		sprite1.clipToWorldBounds(100, 110, 200, 190);
+		assertClipRect(0, 10, 100, 80);
+		sprite1.clipToWorldBoundsSimple(100, 110, 200, 190);
 		assertClipRect(0, 10, 100, 80);
 		
 		sprite1.scale.set(2, 2);
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
 		assertClipRect(0, 0, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
+		assertClipRect(0, 0, 50, 50);
 		
 		sprite1.angle = 90;
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(0, 50, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
 		assertClipRect(0, 50, 50, 50);
 		
 		sprite1.flipX = true;
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
 		assertClipRect(50, 50, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
+		assertClipRect(50, 50, 50, 50);
 		
 		sprite1.flipY = true;
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
 		assertClipRect(50, 0, 50, 50);
 		
 		FlxG.camera.scroll.set(50, 100);
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
 		assertClipRect(50, 0, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
 		
 		FlxG.camera.zoom = 2;
 		sprite1.clipToWorldBounds(50, 50, 150, 150);
+		assertClipRect(50, 0, 50, 50);
+		sprite1.clipToWorldBoundsSimple(50, 50, 150, 150);
 		assertClipRect(50, 0, 50, 50);
 		
 		#if FLX_POINT_POOL
