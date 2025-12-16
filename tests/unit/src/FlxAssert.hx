@@ -21,6 +21,16 @@ class FlxAssert
 		else
 			Assert.fail('Value [$actual] is not within [$margin] of [$expected]', info);
 	}
+	
+	public static function colorsEqual(expected:FlxColor, actual:FlxColor, ?msg:String, ?info:PosInfos):Void
+	{
+		if (expected == actual)
+			Assert.assertionCount++;
+		else if (msg != null)
+			Assert.fail(msg, info);
+		else
+			Assert.fail('Value [${actual.toHexString()}] is not equal to [${expected.toHexString()}]', info);
+	}
 
 	public static function rectsNear(expected:FlxRect, actual:FlxRect, margin = 0.001, ?msg:String, ?info:PosInfos):Void
 	{
@@ -57,7 +67,7 @@ class FlxAssert
 		]);
 	}
 
-	static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool
+	public static function areNearHelper(expected:Float, actual:Float, margin = 0.001):Bool
 	{
 		return actual >= expected - margin && actual <= expected + margin;
 	}
