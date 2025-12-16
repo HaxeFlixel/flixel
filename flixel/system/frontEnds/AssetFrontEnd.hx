@@ -404,7 +404,7 @@ class AssetFrontEnd
 	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
-	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
 	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * @param   id        The ID or asset path for the sound
@@ -422,7 +422,7 @@ class AssetFrontEnd
 	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
-	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
 	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
@@ -459,7 +459,7 @@ class AssetFrontEnd
 	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
-	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
 	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * @param   id        The ID or asset path for the sound
@@ -491,7 +491,7 @@ class AssetFrontEnd
 	/**
 	 * Checks whether the sound asset with the specified ID can be streamed.
 	 * 
-	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work on native targets and OGG/Vorbis files.
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
