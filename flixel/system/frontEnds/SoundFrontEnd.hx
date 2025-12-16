@@ -190,9 +190,31 @@ class SoundFrontEnd
 	}
 
 	#if FLX_STREAM_SOUND
-	public function loadStreamed(id:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = false, autoPlay = false, ?onComplete:Void->Void):FlxSound 
+	/**
+	 * Streams a sound from the given file path. Unlike the `load` method, this will load and
+	 * unload chunks of data as the sound plays, keeping memory usage low. This is recommended for
+	 * longer sounds, like music tracks. For shorter sounds like sound effects, it is better to
+	 * use the `load` method, which loads the entire sound into memory before playing it.
+	 * 
+	 * Due to a backend limitation, audio streaming is currently only available on native targets 
+	 * and OGG/Vorbis audio files.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id           The ID or asset path to the sound asset.
+	 * @param   volume       How loud to play it (0 to 1).
+	 * @param   looped       Whether or not this sound should loop endlessly.
+	 * @param   group        The group to add this sound to.
+	 * @param   autoDestroy  Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * @param   autoPlay     Whether to play the sound.
+	 * @param   onComplete   Called when the sound finishes playing.
+	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 * 
+	 * @since 6.2.0
+	 */
+	public function loadStreamed(id:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = false, autoPlay = false, ?onComplete:()->Void):FlxSound 
 	{
-		var sound:FlxSound = list.recycle(FlxSound);
+		final sound = list.recycle(FlxSound);
 		sound.loadStreamed(id, looped, autoDestroy, onComplete);
 		loadHelper(sound, volume, group, autoPlay);
 		return sound;
