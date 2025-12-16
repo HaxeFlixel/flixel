@@ -413,10 +413,10 @@ class FlxSound extends FlxBasic
 	{
 		cleanup(true);
 
-		if (FlxG.assets.exists(path, MUSIC))
-			_sound = FlxG.assets.getMusicUnsafe(path);
+		if (FlxG.assets.exists(path, SOUND))
+			_sound = FlxG.assets.streamSoundUnsafe(path);
 		else
-			FlxG.log.error('Could not find a Music asset with an ID of \'$path\'.');
+			FlxG.log.error('Could not find a Sound asset with an ID of \'$path\'.');
 		
 		// NOTE: can't pull ID3 info from embedded sound currently
 		return init(looped, autoDestroy, onComplete);

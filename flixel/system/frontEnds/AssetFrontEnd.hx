@@ -15,7 +15,7 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import openfl.utils.Future;
 
-#if lime_vorbis
+#if FLX_STREAM_SOUND
 import lime.media.vorbis.VorbisFile;
 import lime.media.AudioBuffer;
 #end
@@ -128,7 +128,7 @@ class AssetFrontEnd
 			// Check cache
 			case IMAGE if (canUseCache && Assets.cache.hasBitmapData(id)):
 				Assets.cache.getBitmapData(id);
-			case SOUND, MUSIC if (canUseCache && Assets.cache.hasSound(id)):
+			case SOUND if (canUseCache && Assets.cache.hasSound(id)):
 				Assets.cache.getSound(id);
 			case FONT if (canUseCache && Assets.cache.hasFont(id)):
 				Assets.cache.getFont(id);
@@ -143,28 +143,6 @@ class AssetFrontEnd
 				final sound = Sound.fromFile(getPath(id));
 				if (canUseCache)
 					Assets.cache.setSound(id, sound);
-				sound;
-			case MUSIC:
-				var sound:Sound;
-				#if lime_vorbis
-				final vorbisFile = VorbisFile.fromFile(getPath(id));
-				if (vorbisFile != null)
-				{
-					final buffer = AudioBuffer.fromVorbisFile(buffer);
-					sound = Sound.fromAudioBuffer(buffer);
-				}
-				else
-				#end
-				{
-					#if lime_vorbis
-					FlxG.log.error('Failed to stream MUSIC asset with an ID of "$id", is it a proper OGG/Vorbis file?');
-					#end
-
-					// can't stream this sound, fall back to default behavior
-					sound = Sound.fromFile(getPath(id));
-					if (canUseCache)
-						Assets.cache.setSound(id, sound);
-				}
 				sound;
 			case FONT:
 				final font = Font.fromFile(getPath(id));
@@ -186,13 +164,6 @@ class AssetFrontEnd
 			case BINARY: Assets.getBytes(id);
 			case IMAGE: Assets.getBitmapData(id, useCache);
 			case SOUND: Assets.getSound(id, useCache);
-			case MUSIC:
-				#if lime_vorbis
-				if (!canStreamSound(id))
-					FlxG.log.error('Failed to stream MUSIC asset with an ID of "$id", is it a proper OGG/Vorbis file?');
-				#end
-
-				Assets.getMusic(id, useCache);
 			case FONT: Assets.getFont(id, useCache);
 		}
 	}
@@ -256,7 +227,6 @@ class AssetFrontEnd
 			case BINARY: Assets.loadBytes(id);
 			case IMAGE: Assets.loadBitmapData(id, useCache);
 			case SOUND: Assets.loadSound(id, useCache);
-			case MUSIC: Assets.loadMusic(id, useCache);
 			case FONT: Assets.loadFont(id, useCache);
 		}
 	}
@@ -272,7 +242,7 @@ class AssetFrontEnd
 	{
 		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
-		if (type == SOUND || type == MUSIC)
+		if (type == SOUND)
 			id = addSoundExt(id);
 		#end
 		
@@ -300,7 +270,7 @@ class AssetFrontEnd
 	{
 		#if FLX_DEFAULT_SOUND_EXT
 		// add file extension
-		if (type == SOUND || type == MUSIC)
+		if (type == SOUND)
 			id = addSoundExt(id);
 		#end
 		
@@ -380,22 +350,6 @@ class AssetFrontEnd
 	{
 		return cast getAssetUnsafe(addSoundExtIf(id), SOUND, useCache);
 	}
-
-	/**
-	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets
-	 * 
-	 * Audio streaming may not be supported for some targets or files. If audio streaming is
-	 * not supported, a `SOUND` asset will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 * @since 6.2.0
-	 */
-	public inline function getMusicUnsafe(id:String, useCache = true):Sound
-	{
-		return cast getAssetUnsafe(addSoundExtIf(id), MUSIC, useCache);
-	}
 	
 	/**
 	 * Gets an instance of a sound, logs when the asset is not found.
@@ -411,25 +365,6 @@ class AssetFrontEnd
 	{
 		return cast getAsset(addSoundExtIf(id), SOUND, useCache, logStyle);
 	}
-
-	/**
-	 * Gets an instance of a streamed sound, logs when the asset is not found.
-	 * 
-	 * Audio streaming may not be supported for some targets or files. If audio streaming is
-	 * not supported, a `SOUND` asset will be returned instead.
-	 * 
-	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 * @since 6.2.0
-	 */
-	public inline function getMusic(id:String, useCache = true, ?logStyle:LogStyle):Sound
-	{
-		return cast getAsset(addSoundExtIf(id), MUSIC, useCache, logStyle);
-	}
 	
 	/**
 	 * Gets an instance of a sound, logs when the asset is not found
@@ -442,23 +377,6 @@ class AssetFrontEnd
 	public inline function getSoundAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
 	{
 		return getSound(addSoundExt(id), useCache, logStyle);
-	}
-
-	/**
-	 * Gets an instance of a streamed sound, logs when the asset is not found
-	 * 
-	 * Audio streaming may not be supported for some targets or files. If audio streaming is
-	 * not supported, a `SOUND` asset will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the sound
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
-	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
-	 * @since 6.2.0
-	 */
-	public inline function getMusicAddExt(id:String, useCache = true, ?logStyle:LogStyle):Sound
-	{
-		return getMusic(addSoundExt(id), useCache, logStyle);
 	}
 	
 	inline function addSoundExtIf(id:String)
@@ -478,7 +396,120 @@ class AssetFrontEnd
 			
 		return id;
 	}
+
+	/**
+	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets.
+	 * 
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public dynamic function streamSoundUnsafe(id:String):Sound
+	{
+		return Assets.getMusic(id);
+	}
+
+	/**
+	 * Gets an instance of a streamed sound, logs when the asset is not found.
+	 * 
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public function streamSound(id:String, ?logStyle:LogStyle):Sound
+	{
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
+		
+		if (exists(id, SOUND))
+		{
+			if (isLocal(id, SOUND))
+				return streamSoundUnsafe(addSoundExtIf(id));
+			
+			log('SOUND asset "$id" exists, but only asynchronously');
+			return null;
+		}
+		
+		log('Could not find a SOUND asset with ID \'$id\'.');
+		return null;
+	}
+
+	/**
+	 * Gets an instance of a streamed sound, logs when the asset is not found.
+	 * 
+	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
+	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * 
+	 * @param   id        The ID or asset path for the sound
+	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
+	 * @param   logStyle  How to log, if the asset is not found. Uses `LogStyle.ERROR` by default
+	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
+	 * @since   6.2.0
+	 */
+	public function streamSoundAddExt(id:String, ?logStyle:LogStyle):Sound
+	{
+		if (logStyle == null)
+			logStyle = FlxG.log.styles.error;
+		
+		final log = FlxG.log.advanced.bind(_, logStyle);
+		
+		if (exists(id, SOUND))
+		{
+			if (isLocal(id, SOUND))
+				return streamSoundUnsafe(addSoundExt(id));
+			
+			log('SOUND asset "$id" exists, but only asynchronously');
+			return null;
+		}
+		
+		log('Could not find a SOUND asset with ID \'$id\'.');
+		return null;
+	}
 	
+	/**
+	 * Checks whether the sound asset with the specified ID can be streamed.
+	 * 
+	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * 
+	 * @param   file   The ID or asset path for the asset
+	 * @return  Returns whether the sound can be streamed or not.
+	 * @since   6.2.0
+	 */
+	public inline function canStreamSound(id:String):Bool
+	{
+		#if FLX_STREAM_SOUND
+		// Check if file is really OGG/Vorbis
+		var vorbis = VorbisFile.fromFile(getPath(id));
+		if (vorbis != null)
+		{
+			vorbis.clear();
+			vorbis = null;
+
+			return true;
+		}
+		#end
+
+		return false;
+	}
+
 	/**
 	 * Gets the contents of a text-based asset. Unlike its "safe" counterpart, there is no log
 	 * on missing assets
@@ -642,22 +673,6 @@ class AssetFrontEnd
 	{
 		return cast loadAsset(id, SOUND, useCache);
 	}
-
-	/**
-	 * Loads a streamed sound asset asynchronously
-	 * 
-	 * Audio streaming may not be supported for some targets or files. If audio streaming is
-	 * not supported, a `SOUND` asset will be returned instead.
-	 * 
-	 * @param   id        The ID or asset path for the asset
-	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
-	 * @return  Returns a `Future` which allows listeners to be added via methods like `onComplete`
-	 * @since 6.2.0
-	 */
-	public inline function loadMusic(id:String, useCache = true):Future<Sound>
-	{
-		return cast loadAsset(id, MUSIC, useCache);
-	}
 	
 	/**
 	 * Loads a text asset asynchronously
@@ -753,23 +768,6 @@ class AssetFrontEnd
 		
 		return promise.future;
 	}
-
-	inline function canStreamSound(file:String):Bool
-	{
-		#if lime_vorbis
-		// Check if file is really OGG/Vorbis
-		var vorbis = VorbisFile.fromFile(file);
-		if (vorbis != null)
-		{
-			vorbis.clear();
-			vorbis = null;
-
-			return true;
-		}
-		#end
-		
-		return false;
-	}
 }
 
 /**
@@ -790,9 +788,6 @@ enum abstract FlxAssetType(String)
 	
 	/** Audio assets, such as *.ogg or *.wav files */
 	var SOUND = "sound";
-
-	/** Streamed audio assets, such as *.ogg or *.wav files */
-	var MUSIC = "music";
 	
 	/** Text assets */
 	var TEXT = "text";
@@ -805,7 +800,6 @@ enum abstract FlxAssetType(String)
 			case FONT: AssetType.FONT;
 			case IMAGE: AssetType.IMAGE;
 			case SOUND: AssetType.SOUND;
-			case MUSIC: AssetType.MUSIC;
 			case TEXT: AssetType.TEXT;
 		}
 	}
