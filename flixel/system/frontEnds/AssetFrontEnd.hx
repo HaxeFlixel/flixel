@@ -399,11 +399,13 @@ class AssetFrontEnd
 
 	/**
 	 * Gets an instance of a streamed sound. Unlike its "safe" counterpart, there is no log on missing assets.
-	 * 
+	 * Can be set to a custom function to avoid the existing asset system.
+	 *
 	 * Streamed sounds load and unload chunks of audio data during playback, keeping memory usage low.
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
 	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @return  A new `Sound` object Note: Does not return a `FlxSound`
@@ -421,6 +423,7 @@ class AssetFrontEnd
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
 	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
 	 * 
@@ -457,6 +460,7 @@ class AssetFrontEnd
 	 * The usage of streamed sounds is only recommended for larger audio tracks, such as music.
 	 * 
 	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
+	 * Trying to stream an unsupported file format will fall back to regular sound loading behavior.
 	 * 
 	 * @param   id        The ID or asset path for the sound
 	 * @param   useCache  Whether to allow use of the asset cache (if one exists)
@@ -489,6 +493,8 @@ class AssetFrontEnd
 	 * 
 	 * **Note**: Due to a backend limitation, streamed sounds currently only work with OGG/Vorbis files.
 	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
 	 * @param   file   The ID or asset path for the asset
 	 * @return  Returns whether the sound can be streamed or not.
 	 * @since   6.2.0
@@ -497,7 +503,7 @@ class AssetFrontEnd
 	{
 		#if FLX_STREAM_SOUND
 		// Check if file is really OGG/Vorbis
-		var vorbis = VorbisFile.fromFile(getPath(id));
+		var vorbis = VorbisFile.fromFile(Assets.getPath(addSoundExtIf(id)));
 		if (vorbis != null)
 		{
 			vorbis.clear();

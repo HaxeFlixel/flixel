@@ -189,7 +189,7 @@ class SoundFrontEnd
 		return sound;
 	}
 
-	#if FLX_STREAM_MUSIC
+	#if FLX_STREAM_SOUND
 	public function loadStreamed(id:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = false, autoPlay = false, ?onComplete:Void->Void):FlxSound 
 	{
 		var sound:FlxSound = list.recycle(FlxSound);
