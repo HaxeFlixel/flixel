@@ -1767,7 +1767,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper for coordinate converters
 	 */
-	static inline function safeGetX(p:FlxPoint, backup:Float)
+	static inline function safeGetX(p:Null<FlxPoint>, backup:Float)
 	{
 		return p == null ? backup : p.x;
 	}
@@ -1775,7 +1775,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper for coordinate converters
 	 */
-	static inline function safeGetY(p:FlxPoint, backup:Float)
+	static inline function safeGetY(p:Null<FlxPoint>, backup:Float)
 	{
 		return p == null ? backup : p.y;
 	}
