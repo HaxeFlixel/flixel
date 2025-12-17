@@ -144,6 +144,9 @@ class FlxSound extends FlxBasic
 	 * Internal tracker for a Flash sound object.
 	 */
 	@:allow(flixel.system.frontEnds.SoundFrontEnd.load)
+	#if FLX_STREAM_SOUND
+	@:allow(flixel.system.frontEnds.SoundFrontEnd.loadStreamed)
+	#end
 	var _sound:Sound;
 	
 	/**
@@ -381,6 +384,51 @@ class FlxSound extends FlxBasic
 		// NOTE: can't pull ID3 info from embedded sound currently
 		return init(looped, autoDestroy, onComplete);
 	}
+
+	#if FLX_STREAM_SOUND
+	/**
+	 * Streams a sound from the given file path. Unlike the `load` method, this will load and
+	 * unload chunks of data as the sound plays, keeping memory usage low. This is recommended for
+	 * longer sounds, like music tracks. For shorter sounds like sound effects, it is better to
+	 * use the `load` method, which loads the entire sound into memory before playing it.
+	 * 
+	 * Due to a backend limitation, audio streaming is currently only available on native targets 
+	 * and OGG/Vorbis audio files.
+	 * 
+	 * This does not load sounds from web locations. Use `loadFromURL()` for that, instead.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   path         The ID or asset path to the sound asset.
+	 * @param   looped       Whether or not this sound should loop endlessly.
+	 * @param   autoDestroy  Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * @param   onComplete   Called when the sound finishes playing.
+	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 * 
+	 * @since 6.2.0
+	 */
+	public function loadStreamed(path:String, looped:Bool = false, autoDestroy:Bool = false, ?onComplete:Void->Void):FlxSound
+	{
+		cleanup(true);
+
+		if (FlxG.assets.exists(path, SOUND))
+		{
+			if (FlxG.assets.canStreamSound(path))
+			{
+				_sound = FlxG.assets.streamSoundUnsafe(path);
+				
+				// NOTE: can't pull ID3 info from embedded sound currently
+				return init(looped, autoDestroy, onComplete);
+			}
+			
+			FlxG.log.error('Unable to stream SOUND asset with ID "$path". Expected a .OGG/Vorbis file');
+		}
+		else
+			FlxG.log.error('Could not find a Sound asset with an ID of \'$path\'.');
+		
+		return this;
+	}
+	#end
 
 	/**
 	 * Loads a sound from the provided URL.

@@ -133,6 +133,8 @@ private enum HelperDefine
 	/** The normalized, absolute path of `FLX_CUSTOM_ASSETS_DIRECTORY`, used internally */
 	FLX_CUSTOM_ASSETS_DIRECTORY_ABS;
 	FLX_NO_DEFAULT_SOUND_EXT;
+	/** Enables audio streaming related APIs */
+	FLX_STREAM_SOUND;
 }
 
 class FlxDefines
@@ -326,6 +328,10 @@ class FlxDefines
 		}
 		else // define boolean inversion
 			define(FLX_STANDARD_ASSETS_DIRECTORY);
+
+		#if lime_vorbis
+		define(FLX_STREAM_SOUND);
+		#end
 		
 		validateLogLevel(FLX_LOG_THROW);
 		validateLogLevel(FLX_LOG_PLAY_SOUND);
