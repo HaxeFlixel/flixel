@@ -412,12 +412,21 @@ class FlxSound extends FlxBasic
 		cleanup(true);
 
 		if (FlxG.assets.exists(path, SOUND))
-			_sound = FlxG.assets.streamSoundUnsafe(path);
+		{
+			if (FlxG.assets.canStreamSound(path))
+			{
+				_sound = FlxG.assets.streamSoundUnsafe(path);
+				
+				// NOTE: can't pull ID3 info from embedded sound currently
+				return init(looped, autoDestroy, onComplete);
+			}
+			
+			FlxG.log.error('Unable to stream SOUND asset with ID "$path". Expected a .OGG/Vorbis file');
+		}
 		else
 			FlxG.log.error('Could not find a Sound asset with an ID of \'$path\'.');
 		
-		// NOTE: can't pull ID3 info from embedded sound currently
-		return init(looped, autoDestroy, onComplete);
+		return this;
 	}
 	#end
 
