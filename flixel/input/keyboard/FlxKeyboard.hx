@@ -102,7 +102,7 @@ class FlxKeyboard extends FlxKeyManager<FlxKey, FlxKeyList>
 
 		// Debugger toggle
 		#if FLX_DEBUG
-		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && !FlxInputText.globalManager.isTyping)
+		if (FlxG.game.debugger != null && inKeyArray(FlxG.debugger.toggleKeys, event) && enabled && !FlxInputText.globalManager.isTyping)
 		{
 			FlxG.debugger.visible = !FlxG.debugger.visible;
 		}

@@ -1,7 +1,5 @@
 package flixel.graphics.frames;
 
-import openfl.display.BitmapData;
-import openfl.geom.Point;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
 import flixel.math.FlxPoint;
@@ -10,6 +8,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxBitmapDataUtil;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import openfl.display.BitmapData;
+import openfl.geom.Point;
 
 /**
  * Spritesheet frame collection. It is used for tilemaps and animated sprites.
@@ -91,7 +91,7 @@ class FlxTileFrames extends FlxFramesCollection
 			borderY = Std.int(tileBorder.y);
 		}
 
-		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().addPoint(tileSize).add(2 * borderX, 2 * borderY), null, tileSpacing);
+		var tileFrames:FlxTileFrames = FlxTileFrames.fromGraphic(result, FlxPoint.get().add(tileSize).add(2 * borderX, 2 * borderY), null, tileSpacing);
 
 		if (tileBorder == null)
 			return tileFrames;
@@ -514,7 +514,7 @@ class FlxTileFrames extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxTileFrames
 	{
-		var resultBorder:FlxPoint = FlxPoint.get().addPoint(this.border).addPoint(border);
+		var resultBorder:FlxPoint = FlxPoint.get().add(this.border).add(border);
 		var resultSize:FlxPoint = FlxPoint.get().copyFrom(tileSize).subtract(2 * border.x, 2 * border.y);
 		var tileFrames:FlxTileFrames = FlxTileFrames.findFrame(parent, resultSize, region, atlasFrame, tileSpacing, resultBorder);
 		if (tileFrames != null)

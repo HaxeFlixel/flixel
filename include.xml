@@ -17,8 +17,6 @@
 		<assets path="assets/images/logo/default.png" rename="flixel/images/logo/default.png" embed="true" />
 	</section>
 	
-	<set name="legacy" unless="next" />
-	
 	<haxelib name="openfl" unless="create" />
 	<haxelib name="hscript" unless="create || coverage2" optional="true" />
 	

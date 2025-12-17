@@ -45,6 +45,45 @@ class FlxPointTest extends FlxTest
 	}
 
 	@Test
+	function testDistanceTo():Void
+	{
+		assertDistanceTo(0, 0, 0, 0, 0);
+		assertDistanceTo(0, 0, 1, 0, 1);
+		assertDistanceTo(0, 0, 0, 1, 1);
+		assertDistanceTo(0, 0, -1, 0, 1);
+		assertDistanceTo(0, 0, 0, -1, 1);
+
+		assertDistanceTo(0, 0, 1, 1, Math.sqrt(2));
+		assertDistanceTo(0, 0, -1, 1, Math.sqrt(2));
+		assertDistanceTo(0, 0, 1, -1, Math.sqrt(2));
+		assertDistanceTo(0, 0, -1, -1, Math.sqrt(2));
+
+		assertDistanceTo(3, 4, 0, 0, 5);
+		assertDistanceTo(-3, -4, 0, 0, 5);
+		assertDistanceTo(3, 4, -3, -4, 10);
+
+		assertDistanceTo(5, 5, 10, 10, Math.sqrt(50));
+		assertDistanceTo(-5, -5, -10, -10, Math.sqrt(50));
+
+		assertDistanceTo(7, -3, -2, 6, Math.sqrt(162));
+		assertDistanceTo(-7, 3, 2, -6, Math.sqrt(162));
+	}
+
+	function assertDistanceTo(x0, y0, x1, y1, expected:Float):Void
+	{
+		point1.set(x0, y0);
+		point2.set(x1, y1);
+		FlxAssert.areNear(point1.distanceTo(point2), expected);
+		FlxAssert.areNear(point2.distanceTo(point1), expected);
+		FlxAssert.areNear(point1.dist(point2), expected);
+		FlxAssert.areNear(point2.dist(point1), expected);
+		FlxAssert.areNear(point1.distanceSquaredTo(point2), expected * expected);
+		FlxAssert.areNear(point2.distanceSquaredTo(point1), expected * expected);
+		FlxAssert.areNear(point1.distSquared(point2), expected * expected);
+		FlxAssert.areNear(point2.distSquared(point1), expected * expected);
+	}
+
+	@Test
 	function testDegreesBetween():Void
 	{
 		point1.set(0, 1);
@@ -129,6 +168,7 @@ class FlxPointTest extends FlxTest
 	}
 
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testOperators()
 	{
 		point1.set(1, 2);
@@ -177,17 +217,22 @@ class FlxPointTest extends FlxTest
 		point2.set(-1, -1);
 		assertPointNearlyEquals(point1.pivotDegrees(point2, 45), -1, 14.55);
 	}
+	
+	@Test
+	function testSetXY()
+	{
+		point1.set(1, 2);
+		point1.setXY(10);
+		FlxAssert.pointNearXY(10, 10, point1);
+	}
 
 	function assertPointEquals(p:FlxPoint, x:Float, y:Float, ?msg:String, ?info:PosInfos)
 	{
-		assertPointNearlyEquals(p, x, y, 0.0, msg, info);
+		FlxAssert.pointsEqualXY(x, y, p, msg, info);
 	}
 
 	function assertPointNearlyEquals(p:FlxPoint, x:Float, y:Float, tolerance:Float = .01, ?msg:String, ?info:PosInfos)
 	{
-		if (msg == null)
-			msg = 'Expected (x: $x | y: $y) but was $p';
-
-		Assert.isTrue(Math.abs(x - p.x) <= tolerance && Math.abs(y -p.y) <= tolerance, msg, info);
+		FlxAssert.pointNearXY(x, y, p, tolerance, msg, info);
 	}
 }

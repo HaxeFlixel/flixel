@@ -86,7 +86,7 @@ class SoundFrontEnd
 	public var defaultMusicGroup:FlxSoundGroup = new FlxSoundGroup();
 
 	/**
-	 * The group sounds in load() / play() / stream() are added to unless specified otherwise.
+	 * The group sounds in load() / loadFromURL() / play() are added to unless specified otherwise.
 	 */
 	public var defaultSoundGroup:FlxSoundGroup = new FlxSoundGroup();
 
@@ -124,7 +124,7 @@ class SoundFrontEnd
 			music.stop();
 		}
 		
-		music.loadEmbedded(embeddedMusic, looped);
+		music.load(embeddedMusic, looped);
 		music.volume = volume;
 		music.persist = true;
 		group.add(music);
@@ -161,7 +161,7 @@ class SoundFrontEnd
 
 		if (embeddedSound != null)
 		{
-			sound.loadEmbedded(embeddedSound, looped, autoDestroy, onComplete);
+			sound.load(embeddedSound, looped, autoDestroy, onComplete);
 			loadHelper(sound, volume, group, autoPlay);
 			// Call OnlLoad() because the sound already loaded
 			if (onLoad != null && sound._sound != null)
@@ -182,12 +182,44 @@ class SoundFrontEnd
 				}
 			}
 
-			sound.loadStream(url, looped, autoDestroy, onComplete, loadCallback);
+			sound.loadFromURL(url, looped, autoDestroy, onComplete, loadCallback);
 			loadHelper(sound, volume, group);
 		}
 
 		return sound;
 	}
+
+	#if FLX_STREAM_SOUND
+	/**
+	 * Streams a sound from the given file path. Unlike the `load` method, this will load and
+	 * unload chunks of data as the sound plays, keeping memory usage low. This is recommended for
+	 * longer sounds, like music tracks. For shorter sounds like sound effects, it is better to
+	 * use the `load` method, which loads the entire sound into memory before playing it.
+	 * 
+	 * Due to a backend limitation, audio streaming is currently only available on native targets 
+	 * and OGG/Vorbis audio files.
+	 * 
+	 * **Note:** If the `FLX_DEFAULT_SOUND_EXT` flag is enabled, you may omit the file extension
+	 * 
+	 * @param   id           The ID or asset path to the sound asset.
+	 * @param   volume       How loud to play it (0 to 1).
+	 * @param   looped       Whether or not this sound should loop endlessly.
+	 * @param   group        The group to add this sound to.
+	 * @param   autoDestroy  Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * @param   autoPlay     Whether to play the sound.
+	 * @param   onComplete   Called when the sound finishes playing.
+	 * @return  This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 * 
+	 * @since 6.2.0
+	 */
+	public function loadStreamed(id:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = false, autoPlay = false, ?onComplete:()->Void):FlxSound 
+	{
+		final sound = list.recycle(FlxSound);
+		sound.loadStreamed(id, looped, autoDestroy, onComplete);
+		loadHelper(sound, volume, group, autoPlay);
+		return sound;
+	}
+	#end
 
 	function loadHelper(sound:FlxSound, volume:Float, group:FlxSoundGroup, autoPlay = false):FlxSound
 	{
@@ -251,7 +283,7 @@ class SoundFrontEnd
 		{
 			embeddedSound = cache(embeddedSound);
 		}
-		var sound = list.recycle(FlxSound).loadEmbedded(embeddedSound, looped, autoDestroy, onComplete);
+		var sound = list.recycle(FlxSound).load(embeddedSound, looped, autoDestroy, onComplete);
 		return loadHelper(sound, volume, group, true);
 	}
 
@@ -269,10 +301,31 @@ class SoundFrontEnd
 	 * @param   onLoad       Called when the sound finished loading.
 	 * @return  A FlxSound object.
 	 */
-	public function stream(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
+	public function loadFromURL(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
 			?onLoad:Void->Void):FlxSound
 	{
 		return load(null, volume, looped, group, autoDestroy, true, url, onComplete, onLoad);
+	}
+
+	/**
+	 * Plays a sound from a URL. Tries to recycle a cached sound first.
+	 * NOTE: Just calls FlxG.sound.load() with AutoPlay == true.
+	 *
+	 * @param   url          Load a sound from an external web resource instead.
+	 * @param   volume       How loud to play it (0 to 1).
+	 * @param   looped       Whether to loop this sound.
+	 * @param   group        The group to add this sound to.
+	 * @param   autoDestroy  Whether to destroy this sound when it finishes playing.
+	 *                       Leave this value set to "false" if you want to re-use this FlxSound instance.
+	 * @param   onComplete   Called when the sound finished playing
+	 * @param   onLoad       Called when the sound finished loading.
+	 * @return  A FlxSound object.
+	 */
+	@:deprecated("FlxG.sound.stream() is deprecated, use FlxG.sound.loadFromURL() instead")
+	public function stream(url:String, volume = 1.0, looped = false, ?group:FlxSoundGroup, autoDestroy = true, ?onComplete:Void->Void,
+			?onLoad:Void->Void):FlxSound
+	{
+		return loadFromURL(url, volume, looped, group, autoDestroy, onComplete, onLoad);
 	}
 
 	/**
@@ -372,11 +425,42 @@ class SoundFrontEnd
 		#if FLX_SOUND_TRAY
 		if (FlxG.game.soundTray != null && soundTrayEnabled)
 		{
-			FlxG.game.soundTray.show(up);
+			if (up)
+				FlxG.game.soundTray.showIncrement();
+			else
+				FlxG.game.soundTray.showDecrement();
 		}
 		#end
 	}
-
+	
+	/**
+	 * Takes the volume scale used by Flixel fields and gives the final transformed volume that is
+	 * actually used to play the sound. To reverse this operation, use `reverseSoundCurve`. This
+	 * field is `dynamic` and can be overwritten. 
+	 */
+	public dynamic function applySoundCurve(volume:Float)
+	{
+		return volume;
+		
+		// Example of linear to logarithmic sound curve:
+		// final clampedVolume = Math.max(0, Math.min(1, volume));
+		// return Math.exp(Math.log(0.001) * (1 - clampedVolume));
+	}
+	
+	/**
+	 * Takes a transformed volume and returns the corresponding volume scale used by Flixel fields.
+	 * Used to reverse the operation of `applySoundCurve`. This field is `dynamic` and can be
+	 * set to a custom function.
+	 */
+	public dynamic function reverseSoundCurve(curvedVolume:Float)
+	{
+		return curvedVolume;
+		
+		// Example of logarithmic to linear sound curve:
+		// final clampedVolume = Math.max(minValue, Math.min(1, x));
+		// return 1 - (Math.log(clampedVolume) / Math.log(0.001));
+	}
+	
 	function new()
 	{
 		#if FLX_SAVE
@@ -467,16 +551,16 @@ class SoundFrontEnd
 	@:haxe.warning("-WDeprecated")
 	function set_volume(Volume:Float):Float
 	{
-		Volume = FlxMath.bound(Volume, 0, 1);
+		volume = FlxMath.bound(Volume, 0, 1);
 
 		if (volumeHandler != null)
 		{
-			volumeHandler(muted ? 0 : Volume);
+			volumeHandler(muted ? 0 : volume);
 		}
 
-		onVolumeChange.dispatch(muted ? 0 : Volume);
+		onVolumeChange.dispatch(muted ? 0 : volume);
 
-		return volume = Volume;
+		return volume;
 	}
 }
 #end

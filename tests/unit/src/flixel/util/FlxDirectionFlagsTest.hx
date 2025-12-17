@@ -2,6 +2,7 @@ package flixel.util;
 
 import massive.munit.Assert;
 import flixel.util.FlxDirectionFlags;
+import haxe.PosInfos;
 
 /**
  * A bulk of these tests are copied from `FlxColor`.
@@ -26,7 +27,7 @@ class FlxDirectionFlagsTest extends FlxTest
 		}
 
 		Assert.isTrue(f(null));
-		Assert.isFalse(f(0));
+		Assert.isFalse(f(cast 0));
 		Assert.isFalse(f(LEFT));
 	}
 
@@ -154,54 +155,12 @@ class FlxDirectionFlagsTest extends FlxTest
 	}
 
 	@Test
-	function operatorInts()
-	{
-		dirs = WALL;
-		Assert.isTrue((dirs & LEFT) > 0);
-		Assert.isTrue((dirs & LEFT) > NONE);
-		Assert.isTrue((dirs & 0x0001) > 0);
-		Assert.isTrue((dirs & 0x0001) > NONE);
-		Assert.isTrue((dirs & LEFT) >= 0x1);
-		Assert.isTrue((dirs & LEFT) >= LEFT);
-		Assert.isTrue((dirs & 0x0001) >= 0x1);
-		Assert.isTrue((dirs & 0x0001) >= LEFT);
-		Assert.isTrue((dirs & LEFT) == LEFT);
-		Assert.isTrue((dirs & LEFT) == 0x1);
-		Assert.isTrue((dirs & 0x0001) == LEFT);
-		Assert.isTrue((dirs & 0x0001) == 0x1);
-
-		Assert.isFalse((dirs & LEFT) <= 0);
-		Assert.isFalse((dirs & LEFT) <= NONE);
-		Assert.isFalse((dirs & 0x0001) <= 0);
-		Assert.isFalse((dirs & 0x0001) <= NONE);
-
-		dirs = NONE;
-		Assert.isTrue((dirs | LEFT) > 0);
-		Assert.isTrue((dirs | LEFT) > NONE);
-		Assert.isTrue((dirs | 0x0001) > 0);
-		Assert.isTrue((dirs | 0x0001) > NONE);
-		Assert.isTrue((dirs | LEFT) >= 0x1);
-		Assert.isTrue((dirs | LEFT) >= LEFT);
-		Assert.isTrue((dirs | 0x0001) >= 0x1);
-		Assert.isTrue((dirs | 0x0001) >= LEFT);
-		Assert.isTrue((dirs | LEFT) == LEFT);
-		Assert.isTrue((dirs | LEFT) == 0x1);
-		Assert.isTrue((dirs | 0x0001) == LEFT);
-		Assert.isTrue((dirs | 0x0001) == 0x1);
-
-		Assert.isFalse((dirs | LEFT) <= 0);
-		Assert.isFalse((dirs | LEFT) <= NONE);
-		Assert.isFalse((dirs | 0x0001) <= 0);
-		Assert.isFalse((dirs | 0x0001) <= NONE);
-	}
-
-	@Test
 	function testAngles()
 	{
-		function assertDegrees(flags:FlxDirectionFlags, degrees:Float)
+		function assertDegrees(flags:FlxDirectionFlags, degrees:Float, margin = 0.001, ?pos:PosInfos)
 		{
-			FlxAssert.areNear(flags.degrees, degrees);
-			FlxAssert.areNear(flags.radians, degrees / 180 * Math.PI);
+			FlxAssert.areNear(flags.degrees, degrees, margin, null, pos);
+			FlxAssert.areNear(flags.radians, degrees / 180 * Math.PI, margin, null, pos);
 		}
 		
 		assertDegrees(RIGHT       , 0  );
@@ -212,5 +171,30 @@ class FlxDirectionFlagsTest extends FlxTest
 		assertDegrees(LEFT | UP   ,-135);
 		assertDegrees(UP          ,-90 );
 		assertDegrees(UP | RIGHT  ,-45 );
+	}
+	
+	@Test
+	function testNot()
+	{
+		inline function assertNot(a:FlxDirectionFlags, b:FlxDirectionFlags, ?pos:PosInfos)
+		{
+			Assert.areEqual(a.not(), b, 'Value ${a.toInt()}:[$a].not() was not equal to expected value ${b.toInt()}:[$b]', pos);
+			Assert.areEqual(b.not(), a, 'Value ${b.toInt()}:[$b].not() was not equal to expected value ${a.toInt()}:[$a]', pos);
+		}
+		
+		assertNot(RIGHT | DOWN, LEFT | UP);
+		assertNot(RIGHT, LEFT | UP | DOWN);
+		assertNot(ANY, NONE);
+	}
+	
+	@Test
+	@:haxe.warning("-WDeprecated")
+	function implicitBackwardsCompat()
+	{
+		
+		Assert.isTrue(FlxDirectionFlags.NONE == 0);
+		Assert.isTrue(0 == FlxDirectionFlags.NONE);
+		Assert.isTrue(flixel.util.FlxDirection.LEFT == 0x0001);
+		Assert.isTrue(0x0001 == flixel.util.FlxDirection.LEFT);
 	}
 }

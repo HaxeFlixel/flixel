@@ -1,6 +1,5 @@
 package flixel;
 
-import openfl.display.Graphics;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -13,6 +12,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
+import openfl.display.Graphics;
 
 /**
  * At their core `FlxObjects` are just boxes with positions that can move and collide with other
@@ -46,7 +46,7 @@ import flixel.util.FlxStringUtil;
  * FlxG.overlap(playerGroup, medKitGroup
  *     function onOverlap(player, medKit)
  *     {
- *         player.health = 100;
+ *         player.heal(100);
  *         medKit.kill();
  *     }
  * );
@@ -92,78 +92,6 @@ class FlxObject extends FlxBasic
 	 * @since 5.6.0
 	 */
 	public static var defaultMoves:Bool = true;
-
-	/**
-	 * Generic value for "left". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.LEFT` directly.
-	 */
-	@:deprecated("Use LEFT or FlxDirectionFlags.LEFT instead")
-	@:noCompletion
-	public static inline var LEFT = FlxDirectionFlags.LEFT;
-
-	/**
-	 * Generic value for "right". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.RIGHT` directly.
-	 */
-	@:deprecated("Use RIGHT or FlxDirectionFlags.RIGHT instead")
-	@:noCompletion
-	public static inline var RIGHT = FlxDirectionFlags.RIGHT;
-
-	/**
-	 * Generic value for "up". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.UP` directly.
-	 */
-	@:deprecated("Use UP or FlxDirectionFlags.UP instead")
-	@:noCompletion
-	public static inline var UP = FlxDirectionFlags.UP;
-
-	/**
-	 * Generic value for "down". Used by `facing`, `allowCollisions`, and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.DOWN` directly.
-	 */
-	@:deprecated("Use DOWN or FlxDirectionFlags.DOWN instead")
-	@:noCompletion
-	public static inline var DOWN = FlxDirectionFlags.DOWN;
-
-	/**
-	 * Special-case constant meaning no collisions, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.NONE` directly.
-	 */
-	@:deprecated("Use NONE or FlxDirectionFlags.NONE instead")
-	@:noCompletion
-	public static inline var NONE = FlxDirectionFlags.NONE;
-
-	/**
-	 * Special-case constant meaning up, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.CEILING` directly.
-	 */
-	@:deprecated("Use CEILING or FlxDirectionFlags.CEILING instead")
-	@:noCompletion
-	public static inline var CEILING = FlxDirectionFlags.CEILING;
-
-	/**
-	 * Special-case constant meaning down, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.FLOOR` directly.
-	 */
-	@:deprecated("Use FLOOR or FlxDirectionFlags.FLOOR instead")
-	@:noCompletion
-	public static inline var FLOOR = FlxDirectionFlags.FLOOR;
-
-	/**
-	 * Special-case constant meaning only the left and right sides, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.WALL` directly.
-	 */
-	@:deprecated("Use WALL or FlxDirectionFlags.WALL instead")
-	@:noCompletion
-	public static inline var WALL = FlxDirectionFlags.WALL;
-
-	/**
-	 * Special-case constant meaning any direction, used mainly by `allowCollisions` and `touching`.
-	 * Note: This exists for backwards compatibility, prefer using `FlxDirectionFlags.ANY` directly.
-	 */
-	@:deprecated("Use ANY or FlxDirectionFlags.ANY instead")
-	@:noCompletion
-	public static inline var ANY = FlxDirectionFlags.ANY;
 	
 	static function allowCollisionDrag(type:CollisionDragType, object1:FlxObject, object2:FlxObject):Bool
 	{
@@ -742,7 +670,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Handy for storing health percentage or armor points or whatever.
 	 */
-	@:deprecated("object.health is being removed in version 6.0.0")
+	#if FLX_HEALTH_NOT_DEFINED
+	@:deprecated("object.health is deprecated, add <haxedef name=\"FLX_HEALTH\"/> in your project.xml to continue using it")
+	#end
 	public var health:Float = 1;
 	#end
 
@@ -763,15 +693,6 @@ class FlxObject extends FlxBasic
 	 * Useful for things like one-way platforms (e.g. allowCollisions = UP;). The accessor "solid" just flips this variable between NONE and ANY.
 	 */
 	public var allowCollisions(default, set) = FlxDirectionFlags.ANY;
-
-	/** DEPRECATED
-	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
-	 * (makes sense for horizontally-moving platforms in platformers for example).
-	 * 
-	 * Apart from having a weird typo, this has been deprecated for collisionXDrag, which allows more options.
-	 */
-	@:deprecated("Use `collisionXDrag`, instead. Note the corrected spelling: `collis(i)onXDrag")
-	public var collisonXDrag(get, set):Bool;
 
 	/**
 	 * Whether this sprite is dragged along with the horizontal movement of objects it collides with
@@ -970,11 +891,10 @@ class FlxObject extends FlxBasic
 	 * If the group has a LOT of things in it, it might be faster to use `FlxG.overlap()`.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 *
-	 * @param   objectOrGroup   The object or group being tested.
-	 * @param   inScreenSpace   Whether to take scroll factors into account when checking for overlap.
-	 *                          Default is `false`, or "only compare in world space."
-	 * @param   camera          Specify which game camera you want.
-	 *                          If `null`, it will just grab the first global camera.
+	 * @param   objectOrGroup  The object or group being tested.
+	 * @param   inScreenSpace  Whether to take scroll factors into account when checking for overlap.
+	 *                         Default is `false`, or "only compare in world space."
+	 * @param   camera         The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
@@ -1001,9 +921,8 @@ class FlxObject extends FlxBasic
 		}
 
 		if (camera == null)
-		{
-			camera = FlxG.camera;
-		}
+			camera = getDefaultCamera();
+		
 		var objectScreenPos:FlxPoint = object.getScreenPosition(null, camera);
 		getScreenPosition(_point, camera);
 		return (objectScreenPos.x + object.width > _point.x)
@@ -1025,15 +944,14 @@ class FlxObject extends FlxBasic
 	 * rather than taking the object's size into account.
 	 * WARNING: Currently tilemaps do NOT support screen space overlap checks!
 	 *
-	 * @param   x               The X position you want to check.
-	 *                          Pretends this object (the caller, not the parameter) is located here.
-	 * @param   y               The Y position you want to check.
-	 *                          Pretends this object (the caller, not the parameter) is located here.
-	 * @param   objectOrGroup   The object or group being tested.
-	 * @param   inScreenSpace   Whether to take scroll factors into account when checking for overlap.
-	 *                          Default is `false`, or "only compare in world space."
-	 * @param   camera          Specify which game camera you want.
-	 *                          If `null`, it will just grab the first global camera.
+	 * @param   x              The X position you want to check.
+	 *                         Pretends this object (the caller, not the parameter) is located here.
+	 * @param   y              The Y position you want to check.
+	 *                         Pretends this object (the caller, not the parameter) is located here.
+	 * @param   objectOrGroup  The object or group being tested.
+	 * @param   inScreenSpace  Whether to take scroll factors into account when checking for overlap.
+	 *                         Default is `false`, or "only compare in world space."
+	 * @param   camera         The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the two objects overlap.
 	 */
 	@:access(flixel.group.FlxTypedGroup)
@@ -1062,9 +980,8 @@ class FlxObject extends FlxBasic
 		}
 
 		if (camera == null)
-		{
-			camera = FlxG.camera;
-		}
+			camera = getDefaultCamera();
+		
 		var objectScreenPos:FlxPoint = object.getScreenPosition(null, camera);
 		getScreenPosition(_point, camera);
 		return (objectScreenPos.x + object.width > _point.x)
@@ -1082,10 +999,9 @@ class FlxObject extends FlxBasic
 	/**
 	 * Checks to see if a point in 2D world space overlaps this `FlxObject`.
 	 *
-	 * @param   point           The point in world space you want to check.
-	 * @param   inScreenSpace   Whether to take scroll factors into account when checking for overlap.
-	 * @param   camera          Specify which game camera you want.
-	 *                          If `null`, it will just grab the first global camera.
+	 * @param   point          The point in world space you want to check.
+	 * @param   inScreenSpace  Whether to take scroll factors into account when checking for overlap.
+	 * @param   camera         The desired "screen" space. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether or not the point overlaps this object.
 	 */
 	public function overlapsPoint(point:FlxPoint, inScreenSpace = false, ?camera:FlxCamera):Bool
@@ -1096,11 +1012,10 @@ class FlxObject extends FlxBasic
 		}
 
 		if (camera == null)
-		{
-			camera = FlxG.camera;
-		}
-		var xPos:Float = point.x - camera.scroll.x;
-		var yPos:Float = point.y - camera.scroll.y;
+			camera = getDefaultCamera();
+		
+		final xPos:Float = point.x - camera.scroll.x;
+		final yPos:Float = point.y - camera.scroll.y;
 		getScreenPosition(_point, camera);
 		point.putWeak();
 		return (xPos >= _point.x) && (xPos < _point.x + width) && (yPos >= _point.y) && (yPos < _point.y + height);
@@ -1121,7 +1036,7 @@ class FlxObject extends FlxBasic
 	 * Returns the screen position of this object.
 	 *
 	 * @param   result  Optional arg for the returning point
-	 * @param   camera  The desired "screen" coordinate space. If `null`, `FlxG.camera` is used.
+	 * @param   camera  The desired "screen" coordinate space. If `null`, `getDefaultCamera()` is used.
 	 * @return  The screen position of this object.
 	 */
 	public function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
@@ -1130,7 +1045,7 @@ class FlxObject extends FlxBasic
 			result = FlxPoint.get();
 
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 
 		result.set(x, y);
 		if (pixelPerfectPosition)
@@ -1139,6 +1054,67 @@ class FlxObject extends FlxBasic
 		return result.subtract(camera.scroll.x * scrollFactor.x, camera.scroll.y * scrollFactor.y);
 	}
 
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   result  Optional arg for the returning poin
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this objects
+	 * @since 6.2.0
+	 */
+	public function getViewPosition(?camera:FlxCamera, ?result:FlxPoint):FlxPoint
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return result.set(getViewXHelper(camera), getViewYHelper(camera));
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewX(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewXHelper(camera);
+	}
+	
+	inline function getViewXHelper(camera:FlxCamera)
+	{
+		final x = pixelPerfectPosition ? Math.floor(this.x) : this.x;
+		return (x - (camera.scroll.x * scrollFactor.x) - camera.viewMarginX) * camera.zoom;
+	}
+	
+	/**
+	 * Returns the view position of this object
+	 *
+	 * @param   camera  The desired "view" coordinate space. If `null`, `getDefaultCamera()` is used
+	 * @return  The view position of this object
+	 * @since 6.2.0
+	 */
+	public function getViewY(?camera:FlxCamera)
+	{
+		if (camera == null)
+			camera = getDefaultCamera();
+		
+		return getViewYHelper(camera);
+	}
+	
+	inline function getViewYHelper(camera:FlxCamera)
+	{
+		final y = pixelPerfectPosition ? Math.floor(this.y) : this.y;
+		return (y - (camera.scroll.y * scrollFactor.y) - camera.viewMarginY) * camera.zoom;
+	}
+	
 	/**
 	 * Returns the world position of this object.
 	 * 
@@ -1178,8 +1154,8 @@ class FlxObject extends FlxBasic
 	 * Handy function for reviving game objects.
 	 * Resets their existence flags and position.
 	 *
-	 * @param   x   The new X position of this object.
-	 * @param   y   The new Y position of this object.
+	 * @param   x  The new X position of this object.
+	 * @param   y  The new Y position of this object.
 	 */
 	public function reset(x:Float, y:Float):Void
 	{
@@ -1187,21 +1163,20 @@ class FlxObject extends FlxBasic
 		wasTouching = FlxDirectionFlags.NONE;
 		setPosition(x, y);
 		last.set(this.x, this.y);
-		velocity.set();
+		velocity.zero();
 		revive();
 	}
 
 	/**
 	 * Check and see if this object is currently on screen.
 	 *
-	 * @param   camera   Specify which game camera you want.
-	 *                   If `null`, it will just grab the first global camera.
+	 * @param   camera  Specify which game camera you want. If `null`, `getDefaultCamera()` is used
 	 * @return  Whether the object is on screen or not.
 	 */
 	public function isOnScreen(?camera:FlxCamera):Bool
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 
 		getScreenPosition(_point, camera);
 		return camera.containsPoint(_point, width, height);
@@ -1213,7 +1188,7 @@ class FlxObject extends FlxBasic
 	public function isPixelPerfectRender(?camera:FlxCamera):Bool
 	{
 		if (camera == null)
-			camera = FlxG.camera;
+			camera = getDefaultCamera();
 		return pixelPerfectRender == null ? camera.pixelPerfectRender : pixelPerfectRender;
 	}
 
@@ -1248,7 +1223,10 @@ class FlxObject extends FlxBasic
 	 *
 	 * @param   Damage   How much health to take away (use a negative number to give a health bonus).
 	 */
-	@:deprecated("object.health is being removed in version 6.0.0")
+	
+	#if FLX_HEALTH_NOT_DEFINED
+	@:deprecated("object.hurt is deprecated, add <haxedef name=\"FLX_HEALTH\"/> in your project.xml to continue using it")
+	#end
 	public function hurt(damage:Float):Void
 	{
 		health = health - damage;
@@ -1329,20 +1307,31 @@ class FlxObject extends FlxBasic
 		if (!camera.visible || !camera.exists || !isOnScreen(camera))
 			return;
 
-		var rect = getBoundingBox(camera);
-		var gfx:Graphics = beginDrawDebug(camera);
-		drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-		endDrawDebug(camera);
+		final rect = getBoundingBox(camera);
+		if (FlxG.renderTile)
+		{
+			final view = camera.getViewMarginRect();
+			view.pad(2);
+			rect.clipTo(view);
+			view.put();
+		}
+		
+		if (rect.width > 0 && rect.height > 0)
+		{
+			final gfx = beginDrawDebug(camera);
+			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
+			endDrawDebug(camera);
+		}
 	}
 
-	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:Int, partial:Bool)
+	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
 		final color = getDebugBoundingBoxColor(allowCollisions);
 		drawDebugBoundingBoxColor(gfx, rect, color);
 	}
 	
-	function getDebugBoundingBoxColor(allowCollisions:Int)
+	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
 	{
 		if (debugBoundingBoxColor != null)
 			return debugBoundingBoxColor;
@@ -1360,7 +1349,7 @@ class FlxObject extends FlxBasic
 	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
-		gfx.lineStyle(1, color, 0.75);
+		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
@@ -1526,19 +1515,6 @@ class FlxObject extends FlxBasic
 	function set_allowCollisions(value:FlxDirectionFlags):FlxDirectionFlags
 	{
 		return allowCollisions = value;
-	}
-
-	@:noCompletion
-	function get_collisonXDrag():Bool
-	{
-		return collisionXDrag == IMMOVABLE;
-	}
-
-	@:noCompletion
-	function set_collisonXDrag(value:Bool):Bool
-	{
-		collisionXDrag = value ? IMMOVABLE : NEVER;
-		return value;
 	}
 
 	#if FLX_DEBUG

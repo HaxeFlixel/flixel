@@ -20,6 +20,15 @@ enum abstract FlxAnalogState(Int) from Int
 	var STOPPED = cast FlxInputState.RELEASED; // is 0
 	var MOVED = cast FlxInputState.PRESSED; // is !0
 	var JUST_MOVED = cast FlxInputState.JUST_PRESSED; // became !0 on this frame
+	
+	public var moved(get, never):Bool;
+	inline function get_moved() return this == MOVED || justMoved;
+	public var justMoved(get, never):Bool;
+	inline function get_justMoved() return this == JUST_MOVED;
+	public var justStopped(get, never):Bool;
+	inline function get_justStopped() return this == JUST_STOPPED;
+	public var stopped(get, never):Bool;
+	inline function get_stopped() return this == STOPPED || justStopped;
 }
 
 /**

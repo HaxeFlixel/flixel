@@ -21,7 +21,7 @@ class TestMain
 	public function new()
 	{
 		// Flixel was not designed for unit testing so we can only have one instance for now.
-		Lib.current.stage.addChild(new FlxGame(640, 480, FlxState, 60, 60, true));
+		Lib.current.stage.addChild(new FlxGame(640, 480, FlxState.new, 60, 60, true));
 
 		var suites = new Array<Class<massive.munit.TestSuite>>();
 		suites.push(TestSuite);

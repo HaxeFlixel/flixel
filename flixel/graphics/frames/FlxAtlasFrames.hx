@@ -423,7 +423,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 
 	override public function addBorder(border:FlxPoint):FlxAtlasFrames
 	{
-		var resultBorder = FlxPoint.weak().addPoint(this.border).addPoint(border);
+		var resultBorder = FlxPoint.weak().add(this.border).add(border);
 		var atlasFrames = FlxAtlasFrames.findFrame(parent, resultBorder);
 		if (atlasFrames != null)
 			return atlasFrames;
@@ -437,7 +437,7 @@ class FlxAtlasFrames extends FlxFramesCollection
 	}
 	
 	/**
-	 * Adds all ofthe frames from the specified collection
+	 * Adds all of the frames from the specified collection
 	 * 
 	 * @param   collection     The frames to add. Note: calling destroy() on this collection
 	 *                         after it has been added can cause crashes.

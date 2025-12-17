@@ -15,9 +15,6 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxArrayUtil;
 
-#if FLX_DEBUG @:bitmap("assets/images/debugger/buttons/drawDebug.png") #end
-private class GraphicToggleBoundsTool extends BitmapData {}
-
 /**
  * A tool to toggle `ignoreDrawDebug` on objects
  *
@@ -30,7 +27,7 @@ class ToggleBounds extends Tool
 		super.init(brain);
 		
 		_name = "Toggle Debug Draw";
-		setButton(GraphicToggleBoundsTool);
+		setButton(Icon.drawDebug);
 		button.toggleMode = false;
 		
 		// _tooltip = Tooltip.add(null, "");

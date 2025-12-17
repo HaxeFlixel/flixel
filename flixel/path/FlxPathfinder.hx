@@ -128,6 +128,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 * @param data   The pathfinder data for this current search.
 	 * @param points An array of FlxPoint nodes.
 	 */
+	@:haxe.warning("-WDeprecated")
 	function simplifyPath(data:Data, points:Array<FlxPoint>, simplify:FlxPathSimplifier):Array<FlxPoint>
 	{
 		switch(simplify)
@@ -242,6 +243,7 @@ class FlxTypedPathfinder<Tilemap:FlxBaseTilemap<FlxObject>, Data:FlxTypedPathfin
 	 * @param points     An array of FlxPoint nodes.
 	 * @param reolution  Defaults to 1, meaning check every tile or so.  Higher means more checks!
 	 */
+	@:haxe.warning("-WDeprecated")
 	function simplifyRayStep(data:Data, points:Array<FlxPoint>, resolution:Float):Void
 	{
 		// A point used to calculate rays
@@ -688,6 +690,7 @@ enum FlxPathSimplifier
 	 * Removes nodes who'with neighbors that have no walls directly blocking
 	 * Uses `tilemap.rayStep`.
 	 */
+	@:deprecated("RAY_STEP is deprecated, use RAY, instead")
 	RAY_STEP(resolution:Float);
 
 	/**

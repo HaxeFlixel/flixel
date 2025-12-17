@@ -1,7 +1,7 @@
 package flixel.math;
 
-import massive.munit.Assert;
 import haxe.PosInfos;
+import massive.munit.Assert;
 
 class FlxRectTest extends FlxTest
 {
@@ -34,7 +34,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBounds()
+	function testGetRotatedBounds()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
@@ -64,7 +64,7 @@ class FlxRectTest extends FlxTest
 	}
 
 	@Test
-	function testgetRotatedBoundsSelf()
+	function testGetRotatedBoundsSelf()
 	{
 		var pivot = FlxPoint.get();
 		var expected = FlxRect.get();
@@ -149,5 +149,74 @@ class FlxRectTest extends FlxTest
 		FlxAssert.rectsNear(expected, rect1, 0.0001);
 		
 		expected.put();
+	}
+	
+	@Test
+	function testContains()
+	{
+		rect1.set(0, 0, 100, 100);
+		
+		inline function assertContains(x, y, width = 50, height = 50, ?pos:PosInfos)
+		{
+			Assert.isTrue(rect1.contains(rect2.set(x, y, width, height)), pos);
+		}
+		
+		inline function assertNotContains(x, y, width = 50, height = 50, ?pos:PosInfos)
+		{
+			Assert.isFalse(rect1.contains(rect2.set(x, y, width, height)), pos);
+		}
+		
+		assertContains(25, 25);
+		assertContains(0, 0);
+		assertNotContains(-1, -1);
+		assertContains(50, 50);
+		assertNotContains(51, 51);
+		assertContains(0, 0, 100, 100);
+		assertNotContains(-1, -1, 101, 101);
+	}
+	
+	@Test
+	function testBounds()
+	{
+		rect1.set(100, 150, 100, 100);
+		rect2.setBounds(100, 150, 200, 250);
+		
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	@Test
+	function testBoundsAbs()
+	{
+		rect1.set(100, 150, 100, 100);
+		rect2.setBoundsAbs(200, 250, 100, 150);
+		
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	
+	@Test
+	function testAbs()
+	{
+		rect1.set(0, 0, 100, 100);
+		rect2.set(100, 100, -100, -100);
+		
+		rect2.abs();
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+		
+		rect2.abs();
+		FlxAssert.rectsNear(rect1, rect2, 0.0001);
+	}
+	
+	@Test
+	function testPad()
+	{
+		rect1.setBounds(50, 50, 100, 100).pad(1, 2, 3, 4);
+		FlxAssert.rectsNearLTRD(50 - 1, 50 - 2, 100 + 3, 100 + 4, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10, 20);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 20, 100 + 10, 100 + 20, rect1);
+		
+		rect1.setBounds(50, 50, 100, 100).pad(10);
+		FlxAssert.rectsNearLTRD(50 - 10, 50 - 10, 100 + 10, 100 + 10, rect1);
 	}
 }

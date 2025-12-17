@@ -41,28 +41,25 @@ class FlxSubStateTest extends FlxTest
 	@Test // #1971
 	function testOpenPersistentSubStateFromNewParent()
 	{
-		var state1 = new FlxState();
-		var state2 = new FlxState();
-		state1.destroySubStates = false;
-		FlxG.switchState(state1);
+		FlxG.switchState(FlxStateNoDestroySubState.new.bind(false));
 		step();
 		FlxG.state.openSubState(subState1);
 		step();
 
-		Assert.areEqual(state1.subState, subState1);
+		Assert.areEqual(FlxG.state.subState, subState1);
 		subState1.close();
 		step();
-		Assert.isNull(state1.subState);
+		Assert.isNull(FlxG.state.subState);
 
-		FlxG.switchState(state2);
+		FlxG.switchState(FlxStateNoDestroySubState.new.bind(true));
 		step();
 		FlxG.state.openSubState(subState1);
 		step();
 
-		Assert.areEqual(state2.subState, subState1);
+		Assert.areEqual(FlxG.state.subState, subState1);
 		subState1.close();
 		step();
-		Assert.isNull(state2.subState);
+		Assert.isNull(FlxG.state.subState);
 	}
 
 	@Test // #2023
@@ -85,5 +82,14 @@ class FlxSubStateTest extends FlxTest
 
 		Assert.isTrue(opened);
 		Assert.isTrue(closed);
+	}
+}
+
+class FlxStateNoDestroySubState extends FlxState
+{
+	public function new (destroySubStates)
+	{
+		super();
+		this.destroySubStates = destroySubStates;
 	}
 }
