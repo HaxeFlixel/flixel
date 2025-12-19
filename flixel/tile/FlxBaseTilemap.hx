@@ -6,17 +6,16 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.path.FlxPathfinder;
 import flixel.system.FlxAssets;
-import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirection;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxStringUtil;
 import openfl.display.BitmapData;
 
 using StringTools;
-using flixel.tile.FlxBaseTilemap.RayTools;
 using flixel.tile.FlxBaseTilemap.AmbiIntIterator;
 
 @:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use objectOverlapsTiles"))
@@ -322,7 +321,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	inline overload extern public function forEachInRay(start, end, func:(Tile)->Void)
 	{
-		findIndexInRayHelper(start, end, func.toFindIE());
+		findIndexInRayHelper(start, end, (i, t, e)->{ func(t); return false; });
 	}
 	
 	/**
@@ -334,9 +333,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                  the tile data at that location, if one exists
 	 * @since 5.10.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
+	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Void)
 	{
-		findIndexInRayHelper(start, end, func.toFindIE());
+		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t); return false; });
 	}
 	
 	/**
@@ -350,7 +349,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	inline overload extern public function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
 	{
-		findIndexInRayHelper(start, end, func.toFindIE());
+		findIndexInRayHelper(start, end, (i, t, e)->{ func(t, e); return false; });
 	}
 	
 	/**
@@ -362,9 +361,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                  at that location, if one exists and `entry` is how the ray entered the tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool)
+	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
 	{
-		findIndexInRayHelper(start, end, func.toFindIE());
+		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t, e); return false; });
 	}
 	
 	/**
@@ -379,9 +378,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findIndexInRay(start, end, func:(Tile)->Bool)
+	inline overload extern public function findIndexInRay(start, end, func:(tile:Tile)->Bool)
 	{
-		return findIndexInRayHelper(start, end, func.toFindIE());
+		return findIndexInRayHelper(start, end, (i, t, e)->func(t));
 	}
 	
 	/**
@@ -395,10 +394,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findIndexInRay
-		(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
+	inline overload extern public function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
 	{
-		return findIndexInRayHelper(start, end, func.toFindIE());
+		return findIndexInRayHelper(start, end, (i, t, e)->func(i, t));
 	}
 	
 	/**
@@ -412,14 +410,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findIndexInRay
-		(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool)
+	inline overload extern public function findIndexInRay(start, end, func)
 	{
 		return findIndexInRayHelper(start, end, func);
 	}
 	
-	function findIndexInRayHelper
-		(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):Int
+	function findIndexInRayHelper(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):Int
 	{
 		switch findInRayHelper(start, end, func)
 		{
@@ -444,7 +440,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	inline overload extern public function findInRay(start, end, func:(Tile)->Bool)
 	{
-		return findInRayHelper(start, end, func.toFindIE());
+		return findInRayHelper(start, end, (_, t, _)->func(t));
 	}
 	
 	/**
@@ -458,10 +454,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findInRay
-		(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
+	inline overload extern public function findInRay(start, end, func)
 	{
-		return findInRayHelper(start, end, func.toFindIE());
+		return findInRayHelper(start, end, (i:Int, t:Tile, _)->func(i, t));
 	}
 	
 	/**
@@ -475,8 +470,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findInRay
-		(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool)
+	inline overload extern public function findInRay(start, end, func)
 	{
 		return findInRayHelper(start, end, func);
 	}
@@ -632,9 +626,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func      The function, where `tile` is the tile data at that location
 	 * @since 5.10.0
 	 */
-	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(Tile)->Void)
+	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
 	{
-		findIndexInColumnHelper(column, startRow, endRow, func.toFindI());
+		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(t); return false; });
 	}
 	
 	/**
@@ -649,7 +643,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
 	{
-		findIndexInColumnHelper(column, startRow, endRow, func.toFindI());
+		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
 	}
 	
 	/**
@@ -665,14 +659,14 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The found tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findInColumn(column, startRow, endRow, func:(Tile)->Bool)
+	inline overload extern public function findInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
 	{
 		return findInColumnHelper(column, startRow, endRow, func);
 	}
 	
-	function findInColumnHelper(column:Int, startRow:Int, endRow:Int, func:(Tile)->Bool):Tile
+	function findInColumnHelper(column:Int, startRow:Int, endRow:Int, func:(tile:Tile)->Bool):Tile
 	{
-		final index = findIndexInColumnHelper(column, startRow, endRow, func.ignoreIndex());
+		final index = findIndexInColumnHelper(column, startRow, endRow, (i, t)->func(t));
 		if (index < 0)
 			return null;
 		
@@ -696,9 +690,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 5.10.0
 	 */
-	inline overload extern public function findIndexInColumn(column, startRow, endRow, func:(Tile)->Bool)
+	inline overload extern public function findIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
 	{
-		return findIndexInColumnHelper(column, startRow, endRow, func.ignoreIndex());
+		return findIndexInColumnHelper(column, startRow, endRow, (i, t)->func(t));
 	}
 	
 	/**
@@ -2292,95 +2286,6 @@ enum FlxRayResult
 	END;
 }
 
-private class RayTools
-{
-	inline overload extern static public function ignoreIndex<Tile:FlxObject>(func:FindTileFunc<Tile>):FindTileFuncI<Tile>
-	{
-		return (_, t)->t != null && func(t);
-	}
-	
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:FindRayFunc<Tile>):FindRayFuncI<Tile>
-	{
-		return (_, t, e)->t != null && func(t, e);
-	}
-	
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:FindTileFunc<Tile>):FindRayFuncI<Tile>
-	{
-		return (_, t, _)->t != null && func(t);
-	}
-	
-	/**
-	 * Helper to convert `(Int, Null<Tile>)->Bool` to `(Tile)->Void`.
-	 * Checks null, ignores index, always returns false
-	 */
-	inline overload extern static public function toFindI<Tile:FlxObject>(func:ForEachTileFunc<Tile>):FindTileFuncI<Tile>
-	{
-		return function (_, t)
-		{
-			if (t != null)
-				func(t);
-			
-			return false;
-		};
-	}
-	
-	/**
-	 * Helper to convert a `(Int, Null<Tile>)->Bool` to `(Int, Null<Tile>)->Void`.
-	 * Always returns false
-	 */
-	inline overload extern static public function toFindI<Tile:FlxObject>(func:ForEachTileFuncI<Tile>):FindTileFuncI<Tile>
-	{
-		return (i, t)->{ func(i, t); return false; };
-	}
-	
-	/**
-	 * Helper to convert `(Tile)->Void` to `(Int, Null<Tile>, FlxRayEntry)->Bool`.
-	 * Checks null, ignores index, always returns false
-	 */
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:ForEachTileFunc<Tile>):FindRayFuncI<Tile>
-	{
-		return function (_, t, _)
-		{
-			if (t != null)
-				func(t);
-			
-			return false;
-		};
-	}
-	
-	/**
-	 * Helper to convert a `(Int, Null<Tile>)->Bool` to `(Int, Null<Tile>, FlxRayEntry)->Void`.
-	 * Always returns false
-	 */
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:ForEachTileFuncI<Tile>):FindRayFuncI<Tile>
-	{
-		return (i, t, _)->{ func(i, t); return false; };
-	}
-	
-	/**
-	 * Helper to convert `(Int, Null<Tile>, FlxRayEntry)->Bool` to `(Tile, FlxRayEntry)->Void`.
-	 * Checks null, ignores index, always returns false
-	 */
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:ForEachRayFunc<Tile>):FindRayFuncI<Tile>
-	{
-		return function (_, t, e)
-		{
-			if (t != null)
-				func(t, e);
-			
-			return false;
-		};
-	}
-	
-	/**
-	 * Helper to convert `(Int, Null<Tile>)->Bool` to `(Int, Null<Tile>)->Void`.
-	 * Always returns false
-	 */
-	inline overload extern static public function toFindIE<Tile:FlxObject>(func:ForEachRayFuncI<Tile>):FindRayFuncI<Tile>
-	{
-		return (i, t, e)->{ func(i, t, e); return false; };
-	}
-}
 private class AmbiIntIterator 
 {
 	final start:Int;
