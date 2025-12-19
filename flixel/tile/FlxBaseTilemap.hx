@@ -596,7 +596,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   entry     How the ray entered this column
 	 */
 	function findIndexInColumnWithEntry
-		(column, startRow, endRow, func:FindRayFuncI<Tile>, entry:FlxRayEntry):RayResultHelper
+		(column, startRow, endRow, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool, entry:FlxRayEntry):RayResultHelper
 	{
 		final startI = getMapIndex(column, startRow);
 		final edge = EDGE(startRow < endRow ? UP : DOWN);
@@ -645,7 +645,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
 	{
-		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(t); return false; });
+		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
 	}
 	
 	/**
@@ -2190,82 +2190,6 @@ enum FlxTilemapAutoTiling
 // =============================================================================
 //{ region                          Ray + Helpers
 // =============================================================================
-
-/**
- * `(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool`
- * The callback function for helpers like `findIndexInRayI`
- * 
- * @param   index  The index of the tile in the map, where 0 is the top-left
- * @param   tile   The tile instance, if one exists
- * @param   entry  How the ray entered the tile
- * @return  Whether this tile matches the search condition
- */
-typedef FindRayFuncI<Tile:FlxObject> = (index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool;
-
-/**
- * `(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Void`
- * The callback function for helpers like `forEachIndexInRayI`
- * 
- * @param   index  The index of the tile in the map, where 0 is the top-left
- * @param   tile   The tile instance, if one exists
- * @param   entry  How the ray entered the tile
- */
-typedef ForEachRayFuncI<Tile:FlxObject> = (index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Void;
-
-/**
- * `(tile:Tile, entry:FlxRayEntry) -> Bool`
- * The callback function for helpers like `findIndexInRay`
- * 
- * @param   tile   The tile instance
- * @param   entry  How the ray entered the tile
- * @return  Whether this tile matches the search condition
- */
-typedef FindRayFunc<Tile:FlxObject> = (tile:Tile, entry:FlxRayEntry) -> Bool;
-
-/**
- * `(tile:Tile, entry:FlxRayEntry) -> Void`
- * The callback function for helpers like `forEachIndexInRay`
- * 
- * @param   tile   The tile instance
- * @param   entry  How the ray entered the tile
- */
-typedef ForEachRayFunc<Tile:FlxObject> = (tile:Tile, entry:FlxRayEntry) -> Void;
-
-/**
- * `(index:Int, tile:Null<Tile>) -> Bool`
- * The callback function for helpers like `findIndexInRayI`
- * 
- * @param   index  The index of the tile in the map, where 0 is the top-left
- * @param   tile   The tile instance, if one exists
- * @return  Whether this tile matches the search condition
- */
-typedef FindTileFuncI<Tile:FlxObject> = (index:Int, tile:Null<Tile>) -> Bool;
-
-/**
- * `(index:Int, tile:Null<Tile>) -> Void`
- * The callback function for helpers like `forEachIndexInRayI`
- * 
- * @param   index  The index of the tile in the map, where 0 is the top-left
- * @param   tile   The tile instance, if one exists
- */
-typedef ForEachTileFuncI<Tile:FlxObject> = (index:Int, tile:Null<Tile>) -> Void;
-
-/**
- * `(tile:Tile) -> Bool`
- * The callback function for helpers like `findIndexInRay`
- * 
- * @param   tile   The tile instance
- * @return  Whether this tile matches the search condition
- */
-typedef FindTileFunc<Tile:FlxObject> = (tile:Tile) -> Bool;
-
-/**
- * `(tile:Tile) -> Void`
- * The callback function for helpers like `forEachIndexInRay`
- * 
- * @param   tile   The tile instance
- */
-typedef ForEachTileFunc<Tile:FlxObject> = (tile:Tile) -> Void;
 
 enum FlxRayEntry
 {
