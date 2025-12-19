@@ -271,13 +271,11 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   start     The world coordinates of the start of the ray
 	 * @param   end       The world coordinates of the end of the ray
 	 * @param   result    Optional result vector, indicating where the ray hit the first wall
-	 * @param   checkDir  Whether this method honors the tiles' `allowCollisions` directions
 	 * @return  Whether the ray can travel from `start` to `end` without hitting a wall
 	 */
-	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, checkDir = false):Bool
+	public function ray(start:FlxPoint, end:FlxPoint, ?result:FlxPoint):Bool
 	{
-		final func = checkDir ? checkRayDirHelper(start, end) : (_, t:Tile, _)->t != null && t.solid;
-		switch findInRayHelper(start, end, func)
+		return switch rayAdvanced(start, end, false)
 		{
 			case END:
 				return true;
@@ -291,10 +289,29 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
+	 * Determines whether the ray can travel from `start` to `end` without hitting a solid wall.
+	 * 
+	 * **Note:** In flixel 5.0.0, this was redone, the old method is now `rayStep`
+	 * 
+	 * @param   start     The world coordinates of the start of the ray
+	 * @param   end       The world coordinates of the end of the ray
+	 * @param   checkDir  Whether this method honors the tiles' `allowCollisions` directions
+	 * @return  Whether the ray can travel from `start` to `end` without hitting a wall
+	 */
+	public function rayAdvanced(start:FlxPoint, end:FlxPoint, checkDir = true)
+	{
+		final func = checkRayDirHelper(start, end, checkDir);
+		return findInRayHelper(start, end, func);
+	}
+	
+	/**
 	 * Ray func helper, checks tiles' directions compared to the ray direction
 	 */
-	function checkRayDirHelper(start:FlxPoint, end:FlxPoint):FindRayFuncI<Tile>
+	function checkRayDirHelper(start:FlxPoint, end:FlxPoint, checkDir:Bool)
 	{
+		if (!checkDir)
+			return (_, t:Tile, _)->t != null && t.solid;
+		
 		return function (i:Int, tile:Null<Tile>, entry:FlxRayEntry)
 		{
 			return tile != null && switch entry
