@@ -19,7 +19,7 @@ using StringTools;
 using flixel.tile.FlxBaseTilemap.AmbiIntIterator;
 
 @:autoBuild(flixel.system.macros.FlxMacroUtil.deprecateOverride("overlapsWithCallback", "overlapsWithCallback is deprecated, use objectOverlapsTiles"))
-class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
+abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 {
 	/**
 	 * Set this flag to use one of the 16-tile binary auto-tile algorithms (OFF, AUTO, or ALT).
@@ -739,7 +739,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		for (row in startRow.iter(endRow))
 		{
 			final index = getMapIndex(column, row);
-			final tile = getTileData(index);
+			final tile = getTileData(index, true);
 			if (func(index, tile))
 				return index;
 		}
@@ -1465,11 +1465,12 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * @param   column  The grid X location, in tiles
 	 * @param   row     The grid Y location, in tiles
+	 * @param   orient  If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTileData(column:Int, row:Int):Null<Tile>
+	overload public inline extern function getTileData(column:Int, row:Int, orient = false):Null<Tile>
 	{
-		return getTileData(getMapIndex(column, row));
+		return getTileData(getMapIndex(column, row), orient);
 	}
 	
 	/**
@@ -1477,47 +1478,47 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * if the `mapIndex` is invalid, the result is `null`
 	 *
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
-	 * 
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
 	 *
 	 * @param   mapIndex  The desired location in the map
+	 * @param   orient    If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTileData(mapIndex:Int):Null<Tile>
+	overload public inline extern function getTileData(mapIndex:Int, orient = false):Null<Tile>
 	{
-		return _tileObjects[getTileIndex(mapIndex)];
+		final tile = _tileObjects[getTileIndex(mapIndex)];
+		if (orient)
+			orientTile(tile, mapIndex);
+		
+		return tile;
 	}
+	
+	abstract function orientTile(tile:Null<Tile>, mapIndex:Int):Null<Tile>;
 	
 	/**
 	 * Finds the tile instance with the given world location, if the
 	 * coordinate does not overlap the tilemap, the result is `null`
-	 *
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
 	 *
 	 * @param   worldPos  A location in the world
+	 * @param   orient    If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTileData(worldPos:FlxPoint):Null<Tile>
+	overload public inline extern function getTileData(worldPos:FlxPoint, orient = false):Null<Tile>
 	{
-		return getTileDataAt(worldPos.x, worldPos.y);
+		return getTileDataAt(worldPos.x, worldPos.y, orient);
 	}
 	
 	/**
 	 * Finds the tile instance with the given world location, if the
 	 * coordinate does not overlap the tilemap, the result is `null`
 	 *
-	 * **Note:** The reulting tile's `x`, `y`, `width` and `height` will not be accurate.
-	 * You can call `tile.orient` or similar methods
-	 *
 	 * @param   worldX  An X coordinate in the world
-	 * @param   worldY  A Y coordinate in the world
+	 * @param   worldY  An Y coordinate in the world
+	 * @param   orient  If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTileDataAt(worldX:Float, worldY:Float):Null<Tile>
+	overload public inline extern function getTileDataAt(worldX:Float, worldY:Float, orient = false):Null<Tile>
 	{
-		return _tileObjects[getTileIndexAt(worldX, worldY)];
+		return getTileData(getMapIndexAt(worldX, worldY), orient);
 	}
 	
 	/**

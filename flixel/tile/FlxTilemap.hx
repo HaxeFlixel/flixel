@@ -1195,6 +1195,15 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	}
 	#end
 	
+	
+	function orientTile(tile:Null<Tile>, mapIndex:Int):Null<Tile>
+	{
+		if (tile != null)
+			tile.orientByIndex(mapIndex);
+		
+		return tile;
+	}
+	
 	/**
 	 * Internal function used in setTileIndex() and the constructor to update the map.
 	 *
