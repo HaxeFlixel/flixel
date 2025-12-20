@@ -1362,7 +1362,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Calculates the column from a map location
+	 * Calculates the row from a map location
 	 * 
 	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
