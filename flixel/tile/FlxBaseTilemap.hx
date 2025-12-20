@@ -685,8 +685,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			return null;
 		
 		final data = getTileData(index);
-		if (data == null)
-			throw 'Unexpected null tile at $index'; // internal error
 		
 		return data;
 	}
