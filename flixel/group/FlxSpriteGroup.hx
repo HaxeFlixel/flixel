@@ -1,5 +1,7 @@
 package flixel.group;
 
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
@@ -13,14 +15,12 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxDirectionFlags;
 import flixel.util.FlxSort;
-import openfl.display.BitmapData;
-import openfl.display.BlendMode;
 
 /**
  * `FlxSpriteGroup` is a special `FlxSprite` that can be treated like a single sprite even if it's
  * made up of several member sprites. It shares the `FlxGroup` API, but it doesn't inherit from it.
  * Note that `FlxSpriteContainer` also exists.
- * 
+ *
  * ## When to use a group or container
  * `FlxGroups` are better for organising arbitrary groups for things like iterating or collision.
  * `FlxContainers` are recommended when you are adding them to the current `FlxState`, or a
@@ -88,12 +88,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		initGroup(maxSize);
 		super(x, y);
 	}
-	
+
 	function initGroup(maxSize:Int):Void
 	{
 		group = new FlxTypedGroup<T>(maxSize);
 	}
-	
+
 	/**
 	 * This method is used for initialization of variables of complex types.
 	 * Don't forget to call `super.initVars()` if you'll override this method,
@@ -166,7 +166,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		for (sprite in group.members)
 		{
-			if (sprite != null && sprite.exists && sprite.visible && sprite.isOnScreen(Camera))
+			if (sprite != null && sprite.exists && sprite.visible && !sprite.destroyed && sprite.isOnScreen(Camera))
 				return true;
 		}
 
@@ -186,7 +186,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var result:Bool = false;
 		for (sprite in group.members)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if (sprite != null && sprite.exists && sprite.visible && !sprite.destroyed)
 			{
 				result = result || sprite.overlapsPoint(point, InScreenSpace, Camera);
 			}
@@ -209,7 +209,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var result:Bool = false;
 		for (sprite in group.members)
 		{
-			if (sprite != null && sprite.exists && sprite.visible)
+			if (sprite != null && sprite.exists && sprite.visible && !sprite.destroyed)
 			{
 				result = result || sprite.pixelsOverlapPoint(point, Mask, Camera);
 			}
@@ -584,13 +584,13 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		for (sprite in group.members)
 		{
-			if (sprite != null)
+			if (sprite != null && !sprite.destroyed)
 				sprite.reset(sprite.x + X - x, sprite.y + Y - y);
 		}
-		
+
 		// prevent any transformations on children, mainly from setter overrides
 		_skipTransformChildren = true;
-		
+
 		// recreate super.reset() but call super.revive instead of revive
 		touching = NONE;
 		wasTouching = NONE;
@@ -599,7 +599,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		// last.set(x, y); // null on sprite groups
 		velocity.zero();
 		super.revive();
-		
+
 		_skipTransformChildren = false;
 	}
 
@@ -634,12 +634,12 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function transformChildren<V>(Function:T->V->Void, Value:V):Void
 	{
-		if (_skipTransformChildren || group == null)
+		if (_skipTransformChildren || group == null || group.destroyed)
 			return;
 
 		for (sprite in group.members)
 		{
-			if (sprite != null)
+			if (sprite != null && !sprite.destroyed)
 				Function(cast sprite, Value);
 		}
 	}
@@ -653,7 +653,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	@:generic
 	public function multiTransformChildren<V>(FunctionArray:Array<T->V->Void>, ValueArray:Array<V>):Void
 	{
-		if (_skipTransformChildren || group == null)
+		if (_skipTransformChildren || group == null || group.destroyed)
 			return;
 
 		var numProps:Int = FunctionArray.length;
@@ -663,7 +663,7 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		var lambda:T->V->Void;
 		for (sprite in group.members)
 		{
-			if ((sprite != null) && sprite.exists)
+			if (sprite != null && sprite.exists && !sprite.destroyed)
 			{
 				for (i in 0...numProps)
 				{
@@ -836,72 +836,72 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (length == 0)
 			return 0;
-		
+
 		return findMaxXHelper() - findMinXHelper();
 	}
 
 	/**
 	 * Returns the left-most position of the left-most member.
 	 * If there are no members, x is returned.
-	 * 
+	 *
 	 * @since 5.0.0
 	 */
 	public function findMinX()
 	{
 		return length == 0 ? x : findMinXHelper();
 	}
-	
+
 	function findMinXHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (member == null || member.destroyed)
 				continue;
-			
+
 			var minX:Float;
 			if (member.flixelType == SPRITEGROUP)
 				minX = (cast member:FlxSpriteGroup).findMinX();
 			else
 				minX = member.x;
-			
+
 			if (minX < value)
 				value = minX;
 		}
 		return value;
 	}
-	
+
 	/**
 	 * Returns the right-most position of the right-most member.
 	 * If there are no members, x is returned.
-	 * 
+	 *
 	 * @since 5.0.0
 	 */
 	public function findMaxX()
 	{
 		return length == 0 ? x : findMaxXHelper();
 	}
-	
+
 	function findMaxXHelper()
 	{
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (member == null || member.destroyed)
 				continue;
-			
+
 			var maxX:Float;
 			if (member.flixelType == SPRITEGROUP)
 				maxX = (cast member:FlxSpriteGroup).findMaxX();
 			else
 				maxX = member.x + member.width;
-			
+
 			if (maxX > value)
 				value = maxX;
 		}
 		return value;
 	}
-	
+
 	/**
 	 * This functionality isn't supported in SpriteGroup
 	 */
@@ -914,66 +914,66 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		if (length == 0)
 			return 0;
-		
+
 		return findMaxYHelper() - findMinYHelper();
 	}
-	
+
 	/**
 	 * Returns the top-most position of the top-most member.
 	 * If there are no members, y is returned.
-	 * 
+	 *
 	 * @since 5.0.0
 	 */
 	public function findMinY()
 	{
 		return length == 0 ? y : findMinYHelper();
 	}
-	
+
 	function findMinYHelper()
 	{
 		var value = Math.POSITIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (member == null || member.destroyed)
 				continue;
-			
+
 			var minY:Float;
 			if (member.flixelType == SPRITEGROUP)
 				minY = (cast member:FlxSpriteGroup).findMinY();
 			else
 				minY = member.y;
-			
+
 			if (minY < value)
 				value = minY;
 		}
 		return value;
 	}
-	
+
 	/**
 	 * Returns the top-most position of the top-most member.
 	 * If there are no members, y is returned.
-	 * 
+	 *
 	 * @since 5.0.0
 	 */
 	public function findMaxY()
 	{
 		return length == 0 ? y : findMaxYHelper();
 	}
-	
+
 	function findMaxYHelper()
 	{
 		var value = Math.NEGATIVE_INFINITY;
 		for (member in group.members)
 		{
-			if (member == null)
+			if (member == null || member.destroyed)
 				continue;
-			
+
 			var maxY:Float;
 			if (member.flixelType == SPRITEGROUP)
 				maxY = (cast member:FlxSpriteGroup).findMaxY();
 			else
 				maxY = member.y + member.height;
-			
+
 			if (maxY > value)
 				value = maxY;
 		}
@@ -1166,17 +1166,17 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 	{
 		return null;
 	}
-	
+
 	inline function get__sprites():Array<FlxSprite>
 	{
 		return cast group.members;
 	}
-	
+
 	function set_group(value:FlxTypedGroup<T>):FlxTypedGroup<T>
 	{
 		return this.group = value;
 	}
-	
+
 	/**
 	 * Internal function to update the current animation frame.
 	 *
