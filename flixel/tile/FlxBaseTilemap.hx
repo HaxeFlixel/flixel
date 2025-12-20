@@ -520,19 +520,18 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final startTileY = getRow(startIndex);
 		final endTileX = getColumn(endIndex);
 		final endTileY = getRow(endIndex);
+		final dirY = start.y < end.y ? FlxDirection.UP : FlxDirection.DOWN;
 		
 		// handle vertical line (infinite slope), first
 		if (start.x == end.x)
 		{
-			// did the ray start here or from outside the map
-			final entry = wasStartTrimmed ? EDGE(start.y < end.y ? UP : DOWN) : START;
-			final result = findIndexInColumnWithEntry(startTileX, startTileY, endTileY, func, entry);
-			if (result != null)
+			final entry = wasStartTrimmed ? EDGE(dirY) : START;
+			final resultIndex = findIndexInColumnWithEntry(startTileX, startTileY, endTileY, func, entry);
+			if (resultIndex != -1)
 			{
-				// check the bottom
-				final resultX = start.x;
-				final resultY = getRowPos(getRow(result.index + (start.y > end.y ? 1 : 0)));
-				return STOPPED(result.index, resultX, resultY, result.entry);
+				final resultY = getRowPos(getRow(resultIndex + (start.y > end.y ? 1 : 0)));
+				final colEntry = getRow(resultIndex) == startTileY ? entry : EDGE(dirY);
+				return STOPPED(resultIndex, start.x, resultY, colEntry);
 			}
 			
 			return END;
@@ -546,7 +545,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final movesRight = start.x < end.x;
 		final inc = movesRight ? 1 : -1;
 		final offset = movesRight ? 1 : 0;
-		var entry = wasStartTrimmed ? EDGE(movesRight ? LEFT : RIGHT) : START;
+		var colEntry = wasStartTrimmed ? EDGE(movesRight ? LEFT : RIGHT) : START;
 		var lastTileY = startTileY;
 		
 		for (tileX in startTileX.iter(endTileX))
@@ -554,11 +553,15 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			final xPos = getColumnPos(tileX + offset);
 			final yPos = ambiClamp(m * getColumnPos(tileX + offset) + b, startY, endY);
 			final tileY = getRowAt(yPos);
-			final result = findIndexInColumnWithEntry(tileX, lastTileY, tileY, func, entry);
-			if (result != null)
-				return calcRayResult(result, m, b, start);
+			final resultIndex = findIndexInColumnWithEntry(tileX, lastTileY, tileY, func, colEntry);
+			if (resultIndex != -1)
+			{
+				final endY = getRow(resultIndex);
+				final tileEntry = endY == lastTileY ? colEntry : EDGE(dirY);
+				return calcRayResult(resultIndex, tileEntry, m, b, start);
+			}
 			
-			entry = EDGE(movesRight ? LEFT : RIGHT);
+			colEntry = EDGE(movesRight ? LEFT : RIGHT);
 			lastTileY = tileY;
 		}
 		
@@ -583,10 +586,6 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Helper for retriving ray entry results
-	 */
-	static final _rayResultHelper = new RayResultHelper();
-	/**
 	 * Helper to add an `entry` to `findIndexInColumn` callbacks
 	 * 
 	 * @param   column    The column to check
@@ -596,39 +595,37 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   entry     How the ray entered this column
 	 */
 	function findIndexInColumnWithEntry
-		(column, startRow, endRow, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool, entry:FlxRayEntry):RayResultHelper
+		(column, startRow, endRow, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry) -> Bool, entry:FlxRayEntry)
 	{
 		final startI = getMapIndex(column, startRow);
 		final edge = EDGE(startRow < endRow ? UP : DOWN);
 		final f = (i, t)->func(i, t, i == startI ? entry : edge);
-		final index = findIndexInColumn(column, startRow, endRow, f);
-		if (index == -1)
-			return null;
-		return _rayResultHelper.set(index, index == startI ? entry : edge);
+		
+		return findIndexInColumn(column, startRow, endRow, f);
 	}
 	
-	function calcRayResult(data:RayResultHelper, m:Float, b:Float, start:FlxPoint):FlxRayResult
+	function calcRayResult(index:Int, entry:FlxRayEntry, m:Float, b:Float, start:FlxPoint):FlxRayResult
 	{
-		return switch data.entry
+		return switch entry
 		{
 			case START:
-				STOPPED(data.index, start.x, start.y, data.entry);
+				STOPPED(index, start.x, start.y, entry);
 			case EDGE(LEFT):
-				final x = getColumnPos(getColumn(data.index));
+				final x = getColumnPos(getColumn(index));
 				final y = m * x + b;
-				STOPPED(data.index, x, y, data.entry);
+				STOPPED(index, x, y, entry);
 			case EDGE(RIGHT):
-				final x = getColumnPos(getColumn(data.index)) + getTileWidth();
+				final x = getColumnPos(getColumn(index)) + getTileWidth();
 				final y = m * x + b;
-				STOPPED(data.index, x, y, data.entry);
+				STOPPED(index, x, y, entry);
 			case EDGE(UP):
-				final y = getRowPos(getRow(data.index));
+				final y = getRowPos(getRow(index));
 				final x = (y - b) / m;
-				STOPPED(data.index, x, y, data.entry);
+				STOPPED(index, x, y, entry);
 			case EDGE(DOWN):
-				final y = getRowPos(getRow(data.index)) + getTileHeight();
+				final y = getRowPos(getRow(index)) + getTileHeight();
 				final x = (y - b) / m;
-				STOPPED(data.index, x, y, data.entry);
+				STOPPED(index, x, y, entry);
 		}
 	}
 
@@ -2198,20 +2195,6 @@ enum FlxRayEntry
 	 * The ray started in the tile
 	 */
 	START;
-}
-
-private class RayResultHelper
-{
-	public var index:Int = 0;
-	public var entry:FlxRayEntry = START;
-	
-	public function new () {}
-	public function set(index, entry)
-	{
-		this.index = index;
-		this.entry = entry;
-		return this;
-	}
 }
 
 enum FlxRayResult
