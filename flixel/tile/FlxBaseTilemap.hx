@@ -525,7 +525,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		if (start.x == end.x)
 		{
 			// did the ray start here or from outside the map
-			final entry = wasStartTrimmed ? START : EDGE(start.y < end.y ? UP : DOWN);
+			final entry = wasStartTrimmed ? EDGE(start.y < end.y ? UP : DOWN) : START;
 			final result = findIndexInColumnWithEntry(startTileX, startTileY, endTileY, func, entry);
 			if (result != null)
 			{
@@ -546,7 +546,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		final movesRight = start.x < end.x;
 		final inc = movesRight ? 1 : -1;
 		final offset = movesRight ? 1 : 0;
-		var entry = wasStartTrimmed ? START : EDGE(movesRight ? LEFT : RIGHT);
+		var entry = wasStartTrimmed ? EDGE(movesRight ? LEFT : RIGHT) : START;
 		var lastTileY = startTileY;
 		
 		for (tileX in startTileX.iter(endTileX))
