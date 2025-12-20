@@ -203,7 +203,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param   worldX    An X coordinate in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or left edge
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
 	public function getColumnPosAt(worldX:Float, midpoint = false):Float
 	{
@@ -215,7 +215,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param   worldY    An X coordinate in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper edge
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
 	public function getRowPosAt(worldY:Float, midpoint = false):Float
 	{
@@ -225,7 +225,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Get the size of a column, in world coordinates
 	 * 
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
 	public function getTileWidth():Float
 	{
@@ -235,7 +235,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Get the size of a column, in world coordinates
 	 * 
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
 	public function getTileHeight():Float
 	{
@@ -334,9 +334,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   start   The world coordinates of the start of the ray
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The function, where `tile` is the tile data at that location
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(Tile)->Void)
+	overload public inline extern function forEachInRay(start, end, func:(Tile)->Void)
 	{
 		findIndexInRayHelper(start, end, (i, t, e)->{ func(t); return false; });
 	}
@@ -348,9 +348,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The function, where `index` is the tile's map index, and `tile` is
 	 *                  the tile data at that location, if one exists
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Void)
+	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Void)
 	{
 		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t); return false; });
 	}
@@ -362,9 +362,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The function, where `tile` is the tile data at that location and
 	 *                  `entry` is how the ray entered the tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
+	overload public inline extern function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
 	{
 		findIndexInRayHelper(start, end, (i, t, e)->{ func(t, e); return false; });
 	}
@@ -376,9 +376,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The function, where `index` is the tile's map index, `tile` is the tile data
 	 *                  at that location, if one exists and `entry` is how the ray entered the tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
+	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
 	{
 		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t, e); return false; });
 	}
@@ -393,9 +393,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The stopping condition, where `tile` is the tile data at that location
 	 * @return  The index of the found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findIndexInRay(start, end, func:(tile:Tile)->Bool)
+	overload public inline extern function findIndexInRay(start, end, func:(tile:Tile)->Bool)
 	{
 		return findIndexInRayHelper(start, end, (i, t, e)->func(t));
 	}
@@ -409,9 +409,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                  tile data at that location, if one exists
 	 * @return  The index of the found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
+	overload public inline extern function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
 	{
 		return findIndexInRayHelper(start, end, (i, t, e)->func(i, t));
 	}
@@ -425,9 +425,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the tile data
 	 *                  at that location, if one exists, `entry` is how the ray entered the tile
 	 * @return  The index of the found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findIndexInRay(start, end, func)
+	overload public inline extern function findIndexInRay(start, end, func)
 	{
 		return findIndexInRayHelper(start, end, func);
 	}
@@ -453,9 +453,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end     The world coordinates of the end of the ray
 	 * @param   func    The stopping condition, where `tile` is the tile data at that location
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findInRay(start, end, func:(Tile)->Bool)
+	overload public inline extern function findInRay(start, end, func:(Tile)->Bool)
 	{
 		return findInRayHelper(start, end, (_, t, _)->func(t));
 	}
@@ -469,9 +469,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                  tile data at that location, if one exists
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findInRay(start, end, func)
+	overload public inline extern function findInRay(start, end, func)
 	{
 		return findInRayHelper(start, end, (i:Int, t:Tile, _)->func(i, t));
 	}
@@ -485,9 +485,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the tile data
 	 *                  at that location, if one exists, `entry` is how the ray entered the tile
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findInRay(start, end, func)
+	overload public inline extern function findInRay(start, end, func)
 	{
 		return findInRayHelper(start, end, func);
 	}
@@ -638,9 +638,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
 	 * @param   func      The function, where `tile` is the tile data at that location
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
+	overload public inline extern function forEachIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
 	{
 		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
 	}
@@ -653,9 +653,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The function, where `index` is the tile's map index, and `tile` is
 	 *                    the tile data at that location, if one exists
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function forEachIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
+	overload public inline extern function forEachIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
 	{
 		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
 	}
@@ -671,9 +671,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The stopping condition, where `tile` is the tile data at that location
 	 * @return  The found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
+	overload public inline extern function findInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
 	{
 		return findInColumnHelper(column, startRow, endRow, func);
 	}
@@ -702,9 +702,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The stopping condition, where `tile` is the tile data at that location
 	 * @return  The index of the found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
+	overload public inline extern function findIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
 	{
 		return findIndexInColumnHelper(column, startRow, endRow, (i, t)->func(t));
 	}
@@ -719,9 +719,9 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func      The stopping condition, where `index` is the tile's map index, and
 	 *                    `tile` is the tile data at that location, if one exists
 	 * @return  The index of the found tile
-	 * @since 5.10.0
+	 * @since 6.2.0
 	 */
-	inline overload extern public function findIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Bool)
+	overload public inline extern function findIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Bool)
 	{
 		return findIndexInColumnHelper(column, startRow, endRow, func);
 	}
@@ -846,7 +846,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function forEachOverlappingTile(object:FlxObject, func:(tile:Tile)->Void, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "forEachOverlappingTile must be implemented";
 	}
 	
 	@:deprecated("overlapsWithCallback is deprecated, use objectOverlapsTiles(object, callback, pos), instead") // 5.9.0
@@ -1314,7 +1314,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getMapIndex(column:Int, row:Int):Int
+	overload public inline extern function getMapIndex(column:Int, row:Int):Int
 	{
 		return tileExists(column, row) ? (row * widthInTiles + column) : -1;
 	}
@@ -1328,7 +1328,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldPos  A location in the world
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getMapIndex(worldPos:FlxPoint):Int
+	overload public inline extern function getMapIndex(worldPos:FlxPoint):Int
 	{
 		return getMapIndexAt(worldPos.x, worldPos.y);
 	}
@@ -1376,7 +1376,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(column:Int, row:Int):Bool
+	overload public inline extern function tileExists(column:Int, row:Int):Bool
 	{
 		return columnExists(column) && rowExists(row);
 	}
@@ -1389,7 +1389,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   mapIndex  The desired location in the map
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(mapIndex:Int):Bool
+	overload public inline extern function tileExists(mapIndex:Int):Bool
 	{
 		return mapIndex >= 0 && mapIndex < _data.length;
 	}
@@ -1400,7 +1400,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldPos  A location in the map
 	 * @since 5.9.0
 	 */
-	public overload extern inline function tileExists(worldPos:FlxPoint):Bool
+	overload public inline extern function tileExists(worldPos:FlxPoint):Bool
 	{
 		return tileExistsAt(worldPos.x, worldPos.y);
 	}
@@ -1423,7 +1423,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   column  The grid X location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function columnExists(column:Int):Bool
+	overload public inline extern function columnExists(column:Int):Bool
 	{
 		return column >= 0 && column < widthInTiles;
 	}
@@ -1445,7 +1445,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row  The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function rowExists(row:Int):Bool
+	overload public inline extern function rowExists(row:Int):Bool
 	{
 		return row >= 0 && row < heightInTiles;
 	}
@@ -1469,7 +1469,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   row     The grid Y location, in tiles
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(column:Int, row:Int):Null<Tile>
+	overload public inline extern function getTileData(column:Int, row:Int):Null<Tile>
 	{
 		return getTileData(getMapIndex(column, row));
 	}
@@ -1486,7 +1486,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   mapIndex  The desired location in the map
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(mapIndex:Int):Null<Tile>
+	overload public inline extern function getTileData(mapIndex:Int):Null<Tile>
 	{
 		return _tileObjects[getTileIndex(mapIndex)];
 	}
@@ -1501,7 +1501,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldPos  A location in the world
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileData(worldPos:FlxPoint):Null<Tile>
+	overload public inline extern function getTileData(worldPos:FlxPoint):Null<Tile>
 	{
 		return getTileDataAt(worldPos.x, worldPos.y);
 	}
@@ -1517,7 +1517,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldY  A Y coordinate in the world
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileDataAt(worldX:Float, worldY:Float):Null<Tile>
+	overload public inline extern function getTileDataAt(worldX:Float, worldY:Float):Null<Tile>
 	{
 		return _tileObjects[getTileIndexAt(worldX, worldY)];
 	}
@@ -1531,7 +1531,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tile index of the tile at this location
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(column:Int, row:Int):Int
+	overload public inline extern function getTileIndex(column:Int, row:Int):Int
 	{
 		return getTileIndex(getMapIndex(column, row));
 	}
@@ -1546,7 +1546,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tileIndex of the tile with this `mapIndex`
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(mapIndex:Int):Int
+	overload public inline extern function getTileIndex(mapIndex:Int):Int
 	{
 		return tileExists(mapIndex) ? _data[mapIndex] : -1;
 	}
@@ -1559,7 +1559,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The tileIndex of the tile at this location
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTileIndex(worldPos:FlxPoint):Int
+	overload public inline extern function getTileIndex(worldPos:FlxPoint):Int
 	{
 		return getTileIndexAt(worldPos.x, worldPos.y);
 	}
@@ -1589,7 +1589,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(mapIndex:Int, midpoint = false):Null<FlxPoint>
+	overload public inline extern function getTilePos(mapIndex:Int, midpoint = false):Null<FlxPoint>
 	{
 		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint) : null;
 	}
@@ -1606,7 +1606,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(column:Int, row:Int, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(column:Int, row:Int, midpoint = false):FlxPoint
 	{
 		return FlxPoint.get(getColumnPos(column, midpoint), getRowPos(row, midpoint));
 	}
@@ -1622,7 +1622,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The world position of the overlapping tile
 	 * @since 5.9.0
 	 */
-	public overload extern inline function getTilePos(worldPos:FlxPoint, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(worldPos:FlxPoint, midpoint = false):FlxPoint
 	{
 		return getTilePosAt(worldPos.x, worldPos.y, midpoint);
 	}
@@ -1778,7 +1778,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(mapIndex:Int, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileHelper(mapIndex, tileIndex, redraw);
 	}
@@ -1793,7 +1793,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(column:Int, row:Int, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileHelper(getMapIndex(column, row), tileIndex, redraw);
 	}
@@ -1807,7 +1807,7 @@ class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  Whether or not the tile was actually changed.
 	 * @since 5.9.0
 	 */
-	public overload extern inline function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
+	overload public inline extern function setTileIndex(worldPos:FlxPoint, tileIndex:Int, redraw = true):Bool
 	{
 		return setTileIndexAt(worldPos.x, worldPos.y, tileIndex, redraw);
 	}
