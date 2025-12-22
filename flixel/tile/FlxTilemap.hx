@@ -809,12 +809,12 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		return results;
 	}
 	
-	override function getTileWidth()
+	function getTileWidth()
 	{
 		return scaledTileWidth;
 	}
 	
-	override function getTileHeight()
+	function getTileHeight()
 	{
 		return scaledTileHeight;
 	}

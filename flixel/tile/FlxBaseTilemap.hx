@@ -227,20 +227,14 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @since 6.2.0
 	 */
-	public function getTileWidth():Float
-	{
-		throw "getTileWidth must be implemented";
-	}
+	abstract public function getTileWidth():Float;
 	
 	/**
 	 * Get the size of a column, in world coordinates
 	 * 
 	 * @since 6.2.0
 	 */
-	public function getTileHeight():Float
-	{
-		throw "getTileHeight must be implemented";
-	}
+	abstract  public function getTileHeight():Float;
 	
 	/**
 	 * **Note:** This method name is misleading! It does not return a `tileIndex`, it returns a `mapIndex`
