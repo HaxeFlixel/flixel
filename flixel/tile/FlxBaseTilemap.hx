@@ -622,7 +622,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				STOPPED(index, x, y, entry);
 		}
 	}
-
+	
 	/**
 	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
 	 * 
@@ -652,6 +652,38 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	overload public inline extern function forEachIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
 	{
 		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
+	}
+	
+	
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `tile` is the tile data at that location
+	 * @since 6.2.0
+	 */
+	overload public inline extern function forEachIndexInRow(column, startRow, endRow, func:(tile:Tile)->Void)
+	{
+		findIndexInRowHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
+	}
+	
+	/**
+	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The function, where `index` is the tile's map index, and `tile` is
+	 *                       the tile data at that location, if one exists
+	 * @since 6.2.0
+	 */
+	overload public inline extern function forEachIndexInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Void)
+	{
+		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ func(i, t); return false; });
 	}
 	
 	/**
@@ -731,6 +763,91 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			endRow = heightInTiles - 1;
 			
 		for (row in startRow.iter(endRow))
+		{
+			final index = getMapIndex(column, row);
+			final tile = getTileData(index, true);
+			if (func(index, tile))
+				return index;
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Checks all tile indices in the `row` between the specified start and end column,
+	 * Retrieves the first tile that satisfies to condition of `func` and returns it
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `tile` is the tile data at that location
+	 * @return  The found tile
+	 * @since 6.2.0
+	 */
+	overload public inline extern function findInRow(row, startColumn, endColumn, func:(tile:Tile)->Bool)
+	{
+		return findInRowHelper(row, startColumn, endColumn, func);
+	}
+	
+	function findInRowHelper(row:Int, startColumn:Int, endColumn:Int, func:(tile:Tile)->Bool):Tile
+	{
+		final index = findIndexInRowHelper(row, startColumn, endColumn, (i, t)->func(t));
+		if (index < 0)
+			return null;
+		
+		return getTileData(index);
+	}
+	
+	/**
+	 * Checks all tile indices in the `row` between the specified start and end column,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * **Note:** This skips any tiles with no instance
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `tile` is the tile data at that location
+	 * @return  The index of the found tile
+	 * @since 6.2.0
+	 */
+	overload public inline extern function findIndexInRow(row, startColumn, endColumn, func:(tile:Tile)->Bool)
+	{
+		return findIndexInRowHelper(row, startColumn, endColumn, (i, t)->func(t));
+	}
+	
+	/**
+	 * Checks all tile indices in the `row` between the specified start and end column,
+	 * finds the first tile that satisfies to condition of `func` and returns its index
+	 * 
+	 * @param   row          The row to check
+	 * @param   startColumn  The column to check from
+	 * @param   endColumn    The column to check to
+	 * @param   func         The stopping condition, where `index` is the tile's map index, and
+	 *                      `tile` is the tile data at that location, if one exists
+	 * @return  The index of the found tile
+	 * @since 6.2.0
+	 */
+	overload public inline extern function findIndexInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Bool)
+	{
+		return findIndexInRowHelper(row, startColumn, endColumn, func);
+	}
+	
+	function findIndexInRowHelper(row:Int, startColumn:Int, endColumn:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	{
+		if (startColumn < 0)
+			startColumn = 0;
+		else if (startColumn > widthInTiles - 1)
+			startColumn = heightInTiles - 1;
+			
+		if (endColumn < 0)
+			endColumn = 0;
+		else if (endColumn > widthInTiles - 1)
+			endColumn = widthInTiles - 1;
+			
+		for (column in startColumn.iter(endColumn))
 		{
 			final index = getMapIndex(column, row);
 			final tile = getTileData(index, true);
