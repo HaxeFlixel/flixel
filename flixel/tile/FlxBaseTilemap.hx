@@ -1457,7 +1457,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		return getMapIndex(getColumnAt(worldX), getRowAt(worldY));
 	}
 	/**
-	 * Calculates the column from a map location
+	 * Calculates the column from a map index
+	 * 
+	 * **Note:** The index is not checked against the total tiles, to ensure a
+	 * valid tile, use `if (tileExists(mapIndex))`, first
 	 * 
 	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
@@ -1468,7 +1471,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	}
 	
 	/**
-	 * Calculates the row from a map location
+	 * Calculates the row from a map index
+	 * 
+	 * **Note:** The index is not checked against the total tiles, to ensure a
+	 * valid tile, use `if (tileExists(mapIndex))`, first
 	 * 
 	 * @param   mapIndex  The location in the map where `mapIndex = row * widthInTiles + column`
 	 * @since 5.9.0
