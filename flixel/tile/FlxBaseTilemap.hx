@@ -682,9 +682,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func         The stopping condition, where `tile` is the tile data at that location
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachInRow(column, startRow, endRow, func:(tile:Tile)->Void)
+	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(tile:Tile)->Void)
 	{
-		findIndexInRowHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
+		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ if (t != null) func(t); return false; });
 	}
 	
 	/**
