@@ -16,6 +16,7 @@ import flixel.system.debug.interaction.tools.TrackObject;
 import flixel.system.debug.interaction.tools.Transform;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.display.Graphics;
@@ -377,6 +378,7 @@ class Interaction extends Window
 			drawItemsSelection();
 	}
 
+	@:deprecated("getDebugGraphics() is deprecated. Use the debug draw functions from FlxCamera instead.")
 	public function getDebugGraphics():Graphics
 	{
 		if (FlxG.renderBlit)
@@ -394,25 +396,23 @@ class Interaction extends Window
 
 	function drawItemsSelection():Void
 	{
-		var gfx:Graphics = getDebugGraphics();
-		if (gfx == null)
-			return;
+		final camera = FlxG.camera;
+		camera.beginDrawDebug();
 
 		for (member in selectedItems)
 		{
 			if (member != null && member.scrollFactor != null && member.isOnScreen())
 			{
 				final margin = 0.5;
-				final scroll = FlxG.camera.scroll;
+				final scroll = camera.scroll;
 				// Render a white rectangle centered at the selected item
-				gfx.lineStyle(1.0, 0xFFFFFF, 0.75);
-				gfx.drawRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2);
+
+				final color:FlxColor = FlxColor.fromRGBFloat(1, 1, 1, 0.75);
+				camera.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
 			}
 		}
 
-		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		camera.endDrawDebug();
 	}
 
 	/**
@@ -791,18 +791,18 @@ class Interaction extends Window
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
 		if (FlxG.renderTile)
-			return camera.canvas.localToGlobal(new Point(worldX, 0)).x;
+			return camera.viewQuad.canvas.localToGlobal(new Point(worldX, 0)).x;
 		else
 			@:privateAccess
-			return camera._flashBitmap.localToGlobal(new Point(worldX, 0)).x;
+			return camera.viewBlit._flashBitmap.localToGlobal(new Point(worldX, 0)).x;
 	}
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
 		if (FlxG.renderTile)
-			return camera.canvas.localToGlobal(new Point(0, worldY)).y;
+			return camera.viewQuad.canvas.localToGlobal(new Point(0, worldY)).y;
 		else
 			@:privateAccess
-			return camera._flashBitmap.localToGlobal(new Point(0, worldY)).y;
+			return camera.viewBlit._flashBitmap.localToGlobal(new Point(0, worldY)).y;
 	}
 }

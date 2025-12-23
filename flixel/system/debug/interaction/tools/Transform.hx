@@ -232,34 +232,35 @@ class Transform extends Tool
 			case TRANSFORM(target, _, _, _):
 				target;
 		}
+
+		FlxG.camera.beginDrawDebug();
 		
-		final gfx = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
+		final camera = target.getDefaultCamera();
+		drawSelection(camera);
+		Marker.draw(target.x + target.origin.x, target.y + target.origin.y, false, camera);
 		
-		drawSelection(gfx, target.getDefaultCamera());
-		Marker.draw(target.x + target.origin.x, target.y + target.origin.y, false, gfx);
-		
-		// Draw the debug info to the main camera buffer.
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
-	
-	function drawSelection(gfx:Graphics, camera:FlxCamera)
+
+	function drawSelection(camera:FlxCamera)
 	{
-		gfx.lineStyle(1.0, FlxColor.MAGENTA, 1.0, false, LineScaleMode.NORMAL, CapsStyle.SQUARE);
-		
 		// draw lines
-		gfx.moveTo(markers[3].x, markers[3].y);
+		var prevX = markers[3].x;
+		var prevY = markers[3].y;
 		for (marker in markers)
-			gfx.lineTo(marker.x, marker.y);
+		{
+			camera.drawDebugLine(prevX, prevY, marker.x, marker.y, FlxColor.MAGENTA);
+
+			prevX = marker.x;
+			prevY = marker.y;
+		}
 		
 		// draw markers
 		for (marker in markers)
 		{
 			final x = marker.x;
 			final y = marker.y;
-			Marker.draw(x, y, marker.type == ROTATE, gfx);
+			Marker.draw(x, y, marker.type == ROTATE, camera);
 		}
 	}
 }
@@ -297,15 +298,13 @@ private class Marker
 		y = target.y + target.origin.y + rot.y;
 		rot.put();
 	}
-	
-	public static function draw(screenX:Float, screenY:Float, circle:Bool, gfx:Graphics)
+
+	public static function draw(screenX:Float, screenY:Float, circle:Bool, camera:FlxCamera)
 	{
-		gfx.beginFill(FlxColor.MAGENTA);
 		if (circle)
-			gfx.drawCircle(screenX, screenY, CIRCLE_RADIUS);
+			camera.drawDebugCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
 		else
-			gfx.drawRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE);
-		gfx.endFill();
+			camera.drawDebugFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
 	}
 }
 

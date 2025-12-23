@@ -9,6 +9,7 @@ import flixel.math.FlxRect;
 import flixel.system.debug.Icon;
 import flixel.system.debug.interaction.Interaction;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
 
 using flixel.util.FlxArrayUtil;
 
@@ -133,9 +134,7 @@ class Pointer extends Tool
 	
 	override public function draw():Void
 	{
-		var gfx:Graphics = _brain.getDebugGraphics();
-		if (gfx == null)
-			return;
+		FlxG.camera.beginDrawDebug();
 		
 		switch state
 		{
@@ -144,14 +143,13 @@ class Pointer extends Tool
 				final rect = FlxRect.get();
 				setAbsRect(rect, startX, startY, _brain.flixelPointer.x, _brain.flixelPointer.y);
 				// Render the selection rectangle
-				gfx.lineStyle(0.9, 0xbb0000);
-				gfx.drawRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height);
+				var color:FlxColor = 0xbb0000;
+				color.alphaFloat = 0.9;
+				FlxG.camera.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
 				rect.put();
 		}
 		
-		// Render everything into the camera buffer
-		if (FlxG.renderBlit)
-			FlxG.camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		FlxG.camera.endDrawDebug();
 	}
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)

@@ -1,10 +1,5 @@
 package flixel;
 
-<<<<<<< HEAD
-import flixel.system.render.FlxCameraView;
-import flixel.system.render.quad.FlxQuadView;
-import flixel.system.render.blit.FlxBlitView;
-
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
@@ -13,8 +8,6 @@ import openfl.display.Sprite;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-=======
->>>>>>> upstream/dev
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -25,6 +18,9 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.FlxCameraView;
+import flixel.system.render.quad.FlxQuadView;
+import flixel.system.render.blit.FlxBlitView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -36,6 +32,7 @@ import openfl.display.BlendMode;
 import openfl.display.DisplayObject;
 import openfl.display.Graphics;
 import openfl.display.Sprite;
+import openfl.display.DisplayObjectContainer;
 import openfl.filters.BitmapFilter;
 import openfl.geom.ColorTransform;
 import openfl.geom.Point;
@@ -356,6 +353,11 @@ class FlxCamera extends FlxBasic
 	public var viewBottom(get, never):Float;
 
 	/**
+	 * Reference to camera's `view.display`.
+	 */
+	public var display(get, never):DisplayObjectContainer;
+
+	/**
 	 * Helper matrix object. Used in blit render mode when camera's zoom is less than initialZoom
 	 * (it is applied to all objects rendered on the camera at such circumstances).
 	 */
@@ -545,7 +547,7 @@ class FlxCamera extends FlxBasic
 	 * Helper rect for `drawTriangles()` visibility checks
 	 */
 	@:deprecated("depblit")
-	var _bounds:FlxRect = FlxRect.get();
+	var _bounds:FlxRect;
 
 	/**
 	 * Sprite used for actual rendering in tile render mode (instead of `_flashBitmap` for blitting).
@@ -589,7 +591,7 @@ class FlxCamera extends FlxBasic
 	 * Last draw tiles item
 	 */
 	@:deprecated("depquad")
-	var _headTiles:FlxDrawItem;
+	var _headTiles:FlxDrawQuadsItem;
 
 	/**
 	 * Last draw triangles item
@@ -601,7 +603,7 @@ class FlxCamera extends FlxBasic
 	 * Draw tiles stack items that can be reused
 	 */
 	@:deprecated("depquad")
-	static var _storageTilesHead:FlxDrawItem;
+	static var _storageTilesHead:FlxDrawQuadsItem;
 
 	/**
 	 * Draw triangles stack items that can be reused
@@ -820,7 +822,6 @@ class FlxCamera extends FlxBasic
 	{
 		view.destroy();
 
-		_bounds = FlxDestroyUtil.put(_bounds);
 		scroll = FlxDestroyUtil.put(scroll);
 		targetOffset = FlxDestroyUtil.put(targetOffset);
 		deadzone = FlxDestroyUtil.put(deadzone);
@@ -2015,6 +2016,11 @@ class FlxCamera extends FlxBasic
 	inline function get_viewBottom():Float
 	{
 		return scroll.y + viewMarginBottom;
+	}
+
+	inline function get_display():DisplayObjectContainer
+	{
+		return view.display;
 	}
 
 	inline function set_flashSprite(value:Sprite):Sprite

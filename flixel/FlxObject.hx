@@ -1318,17 +1318,26 @@ class FlxObject extends FlxBasic
 		
 		if (rect.width > 0 && rect.height > 0)
 		{
-			final gfx = beginDrawDebug(camera);
-			drawDebugBoundingBox(gfx, rect, allowCollisions, immovable);
-			endDrawDebug(camera);
+			camera.beginDrawDebug();
+			drawDebugBoundingBox(camera, rect, allowCollisions);
+			camera.endDrawDebug();
 		}
 	}
 
-	function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
+	@:deprecated("drawDebugBoundingBox(gfx, rect, allowCollisions, partial) is deprecated. Use drawDebugBoundingBox(camera, rect, allowCollisions) instead.")
+	overload extern inline function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
 		final color = getDebugBoundingBoxColor(allowCollisions);
 		drawDebugBoundingBoxColor(gfx, rect, color);
+	}
+
+	overload extern inline function drawDebugBoundingBox(camera:FlxCamera, rect:FlxRect, allowCollisions:FlxDirectionFlags)
+	{
+		// Find the color to use
+		var color = getDebugBoundingBoxColor(allowCollisions);
+		color.alphaFloat = 0.75;
+		drawDebugBoundingBoxColor(camera, rect, color);
 	}
 	
 	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
@@ -1346,11 +1355,17 @@ class FlxObject extends FlxBasic
 		
 	}
 	
-	function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
+	@:deprecated("drawDebugBoundingBoxColor(gfx, rect, color) is deprecated, use drawDebugBoundingBoxColor(camera, rect, color) instead")
+	overload extern inline function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
 		gfx.lineStyle(1, color, 0.75, false, null, null, MITER, 255);
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
+	}
+
+	overload extern inline function drawDebugBoundingBoxColor(camera:FlxCamera, rect:FlxRect, color:FlxColor)
+	{
+		camera.drawDebugRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color);
 	}
 
 	@:deprecated("use object.beginDrawDebug(camera) is deprecated, camera.beginDrawDebug() instead")
