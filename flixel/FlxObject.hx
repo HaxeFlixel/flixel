@@ -1289,23 +1289,25 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
+	@:deprecated("use object.beginDrawDebug(camera) is deprecated, camera.beginDrawDebug() instead")
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
+		camera.beginDrawDebug();
+
 		if (FlxG.renderBlit)
 		{
-			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
 		}
 		else
 		{
-			return camera.debugLayer.graphics;
+			return camera.viewQuad.debugLayer.graphics;
 		}
 	}
 
+	@:deprecated("use object.endDrawDebug(camera) is deprecated, camera.endDrawDebug() instead")
 	inline function endDrawDebug(camera:FlxCamera)
 	{
-		if (FlxG.renderBlit)
-			camera.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+		camera.endDrawDebug();
 	}
 	#end
 

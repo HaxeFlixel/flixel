@@ -79,15 +79,15 @@ class FlxDrawTrianglesItem extends FlxDrawBaseItem<FlxDrawTrianglesItem>
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
-		camera.canvas.graphics.overrideBlendMode(blend);
+		camera.viewQuad.canvas.graphics.overrideBlendMode(blend);
 
-		camera.canvas.graphics.beginShaderFill(shader);
+		camera.viewQuad.canvas.graphics.beginShaderFill(shader);
 		#else
-		camera.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
+		camera.viewQuad.canvas.graphics.beginBitmapFill(graphics.bitmap, null, true, (camera.antialiasing || antialiasing));
 		#end
 
-		camera.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
-		camera.canvas.graphics.endFill();
+		camera.viewQuad.canvas.graphics.drawTriangles(vertices, indices, uvtData, TriangleCulling.NONE);
+		camera.viewQuad.canvas.graphics.endFill();
 
 		#if FLX_DEBUG
 		if (FlxG.debugger.drawDebug)
