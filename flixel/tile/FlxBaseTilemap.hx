@@ -2301,28 +2301,24 @@ enum FlxTilemapAutoTiling
 }
 
 // =============================================================================
-//{ region                          Ray + Helpers
+//{ region                          Ray Helpers
 // =============================================================================
 
 enum FlxRayEntry
 {
+	/** The ray entered the tile on the given edge */
 	EDGE(dir:FlxDirection);
-	/**
-	 * The ray started in the tile
-	 */
+	
+	/** The ray started in the tile */
 	START;
 }
 
 enum FlxRayResult
 {
-	/**
-	 * The ray reached a stopping tile
-	 */
+	/** The ray reached a stopping tile */
 	STOPPED(mapIndex:Int, x:Float, y:Float, entry:FlxRayEntry);
 	
-	/**
-	 * The ray reached the end without being stopped
-	 */
+	/** The ray reached the end without being stopped */
 	END;
 }
 
