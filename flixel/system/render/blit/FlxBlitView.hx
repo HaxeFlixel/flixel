@@ -139,7 +139,7 @@ class FlxBlitView extends FlxCameraView
         screen = new FlxSprite();
         buffer = new BitmapData(camera.width, camera.height, true, 0);
         screen.pixels = buffer;
-        screen.origin.set();
+        screen.origin.zero();
         _flashBitmap = new Bitmap(buffer);
         _scrollRect.addChild(_flashBitmap);
         _fill = new BitmapData(camera.width, camera.height, true, FlxColor.TRANSPARENT);
@@ -159,6 +159,7 @@ class FlxBlitView extends FlxCameraView
 		_scrollRect = null;
 		_flashRect = null;
 		_flashPoint = null;
+        _bounds = FlxDestroyUtil.put(_bounds);
     }
 
     override function lock(?useBufferLocking:Bool) 
@@ -240,10 +241,10 @@ class FlxBlitView extends FlxCameraView
     override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader) 
     {
+        final cameraBounds = _bounds.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
+
         if (position == null)
             position = renderPoint.set();
-
-        _bounds.set(0, 0, camera.width, camera.height);
 
         var verticesLength:Int = vertices.length;
         var currentVertexPosition:Int = 0;
@@ -275,7 +276,7 @@ class FlxBlitView extends FlxCameraView
 
         position.putWeak();
 
-        if (!_bounds.overlaps(bounds))
+        if (!cameraBounds.overlaps(bounds))
         {
             drawVertices.splice(drawVertices.length - verticesLength, verticesLength);
         }
@@ -295,7 +296,8 @@ class FlxBlitView extends FlxCameraView
                 _helperMatrix.translate(-viewMarginLeft, -viewMarginTop);
             }
 
-            buffer.draw(trianglesSprite, _helperMatrix);
+            buffer.draw(trianglesSprite, _helperMatrix, transform);
+
             #if FLX_DEBUG
             if (FlxG.debugger.drawDebug)
             {
@@ -392,7 +394,7 @@ class FlxBlitView extends FlxCameraView
             var oldBuffer:FlxGraphic = screen.graphic;
             buffer = new BitmapData(camera.width, camera.height, true, 0);
             screen.pixels = buffer;
-            screen.origin.set();
+            screen.origin.zero();
             _flashBitmap.bitmapData = buffer;
             _flashRect.width = camera.width;
             _flashRect.height = camera.height;

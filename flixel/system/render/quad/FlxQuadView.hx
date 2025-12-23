@@ -26,8 +26,6 @@ import openfl.display.Sprite;
 
 using flixel.util.FlxColorTransformUtil;
 
-private typedef FlxDrawItem = flixel.graphics.tile.FlxDrawQuadsItem;
-
 class FlxQuadView extends FlxCameraView
 {
     /**
@@ -117,6 +115,7 @@ class FlxQuadView extends FlxCameraView
         flashSprite = null;
 		_scrollRect = null;
 		_helperMatrix = null;
+		_bounds = FlxDestroyUtil.put(_bounds);
     }
 
     override function lock(?useBufferLocking:Bool):Void
@@ -170,35 +169,27 @@ class FlxQuadView extends FlxCameraView
 		var isColored = (transform != null && transform.hasRGBMultipliers());
 		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
 
-		#if !FLX_RENDER_TRIANGLE
-		var drawItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
+		#if FLX_RENDER_TRIANGLE
+		final drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend, hasColorOffsets, shader);
 		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(frame.parent, smoothing, isColored, blend);
+		final drawItem:FlxDrawQuadsItem = startQuadBatch(frame.parent, isColored, hasColorOffsets, blend, smoothing, shader);
 		#end
 		drawItem.addQuad(frame, _helperMatrix, transform);
 	}
 
 	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>, ?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader) 
 	{
-		_bounds.set(0, 0, camera.width, camera.height);
-		var isColored:Bool = (colors != null && colors.length != 0);
+		final cameraBounds = _bounds.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
 
-		#if !flash
-		var hasColorOffsets:Bool = (transform != null && transform.hasRGBAOffsets());
-		isColored = isColored || (transform != null && transform.hasRGBMultipliers());
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
-		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds, transform);
-		#else
-		var drawItem:FlxDrawTrianglesItem = startTrianglesBatch(graphic, smoothing, isColored, blend);
-		drawItem.addTriangles(vertices, indices, uvtData, colors, position, _bounds);
-		#end
+		final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
+		final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
+
+		final drawItem = startTrianglesBatch(graphic, smoothing, isColored, blend, hasColorOffsets, shader);
+		drawItem.addTriangles(vertices, indices, uvtData, colors, position, cameraBounds, transform);
 	}
 
 	override function fill(color:FlxColor, blendAlpha:Bool = true):Void
 	{
-		if (color.alpha == 0)
-			return;
-
 		canvas.graphics.overrideBlendMode(null);
 		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
@@ -310,7 +301,7 @@ class FlxQuadView extends FlxCameraView
 	/**
 	 * Last draw tiles item
 	 */
-	var _headTiles:FlxDrawItem;
+	var _headTiles:FlxDrawQuadsItem;
 
 	/**
 	 * Last draw triangles item
@@ -320,7 +311,7 @@ class FlxQuadView extends FlxCameraView
 	/**
 	 * Draw tiles stack items that can be reused
 	 */
-	static var _storageTilesHead:FlxDrawItem;
+	static var _storageTilesHead:FlxDrawQuadsItem;
 
 	/**
 	 * Draw triangles stack items that can be reused
@@ -334,14 +325,12 @@ class FlxQuadView extends FlxCameraView
 		return startTrianglesBatch(graphic, smooth, colored, blend);
 		#else
 		var itemToReturn = null;
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 
 		if (_currentDrawItem != null
 			&& _currentDrawItem.type == FlxDrawItemType.TILES
 			&& _headTiles.graphics == graphic
 			&& _headTiles.colored == colored
 			&& _headTiles.hasColorOffsets == hasColorOffsets
-			&& _headTiles.blending == blendInt
 			&& _headTiles.blend == blend
 			&& _headTiles.antialiasing == smooth
 			&& _headTiles.shader == shader)
@@ -358,7 +347,7 @@ class FlxQuadView extends FlxCameraView
 		}
 		else
 		{
-			itemToReturn = new FlxDrawItem();
+			itemToReturn = new FlxDrawQuadsItem();
 		}
 		
 		// TODO: catch this error when the dev actually messes up, not in the draw phase
@@ -369,7 +358,6 @@ class FlxQuadView extends FlxCameraView
 		itemToReturn.antialiasing = smooth;
 		itemToReturn.colored = colored;
 		itemToReturn.hasColorOffsets = hasColorOffsets;
-		itemToReturn.blending = blendInt;
 		itemToReturn.blend = blend;
 		itemToReturn.shader = shader;
 
@@ -395,20 +383,14 @@ class FlxQuadView extends FlxCameraView
 	@:noCompletion
 	public function startTrianglesBatch(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
-
 		if (_currentDrawItem != null
 			&& _currentDrawItem.type == FlxDrawItemType.TRIANGLES
 			&& _headTriangles.graphics == graphic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
-			&& _headTriangles.blending == blendInt
 			&& _headTriangles.blend == blend
-			#if !flash
 			&& _headTriangles.hasColorOffsets == hasColorOffsets
-			&& _headTriangles.shader == shader
-			#end
-			)
+			&& _headTriangles.shader == shader)
 		{
 			return _headTriangles;
 		}
@@ -420,7 +402,6 @@ class FlxQuadView extends FlxCameraView
 	public function getNewDrawTrianglesItem(graphic:FlxGraphic, smoothing:Bool = false, isColored:Bool = false, ?blend:BlendMode, ?hasColorOffsets:Bool, ?shader:FlxShader):FlxDrawTrianglesItem
 	{
 		var itemToReturn:FlxDrawTrianglesItem = null;
-		var blendInt:Int = FlxDrawBaseItem.blendToInt(blend);
 
 		if (_storageTrianglesHead != null)
 		{
@@ -437,12 +418,9 @@ class FlxQuadView extends FlxCameraView
 		itemToReturn.graphics = graphic;
 		itemToReturn.antialiasing = smoothing;
 		itemToReturn.colored = isColored;
-		itemToReturn.blending = blendInt;
 		itemToReturn.blend = blend;
-		#if !flash
 		itemToReturn.hasColorOffsets = hasColorOffsets;
 		itemToReturn.shader = shader;
-		#end
 
 		itemToReturn.nextTyped = _headTriangles;
 		_headTriangles = itemToReturn;
