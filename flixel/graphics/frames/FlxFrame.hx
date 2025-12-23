@@ -295,7 +295,88 @@ class FlxFrame implements IFlxDestroyable
 
 		return rotateAndFlip(mat, rotation, doFlipX, doFlipY);
 	}
-
+	
+	/**
+	 * Finds the pixel at the position of this frame
+	 * 
+	 * @param   framePos  The position in this frame
+	 * @return  The color of the pixel on this frame
+	 * @since 6.2.0
+	 */
+	overload public inline extern function getPixelAt(framePos:FlxPoint):Null<FlxColor>
+	{
+		final result = getPixelAt(framePos.x, framePos.y);
+		framePos.putWeak();
+		return result;
+	}
+	
+	/**
+	 * Finds the pixel color at the position of this frame
+	 * 
+	 * @param   frameX  The X position in this frame
+	 * @param   frameY  The Y position in this frame
+	 * @return  The color of the pixel on this frame
+	 * @since 6.2.0
+	 */
+	overload public inline extern function getPixelAt(frameX:Float, frameY:Float):Null<FlxColor>
+	{
+		final sourceX = Std.int(toSourceXHelper(frameX, frameY));
+		final sourceY = Std.int(toSourceYHelper(frameX, frameY));
+		return parent.bitmap.getPixel32(sourceX, sourceY);
+	}
+	
+	/**
+	 * Takes the given frame position and returns the equivalent position on the source image
+	 * 
+	 * @param   framePos  The position in this frame
+	 * @param   result    Optional arg for the returning point
+	 * @since 6.2.0
+	 */
+	public function toSourcePosition(framePos:FlxPoint, ?result:FlxPoint)
+	{
+		if (result == null)
+			result = FlxPoint.get();
+		
+		if (type == FlxFrameType.EMPTY)
+			return result.set(0, 0);
+		
+		final sourceX = Std.int(toSourceXHelper(framePos.x, framePos.y));
+		final sourceY = Std.int(toSourceYHelper(framePos.x, framePos.y));
+		framePos.putWeak();
+		return result.set(sourceX, sourceY);
+	}
+	
+	
+	function toSourceXHelper(frameX:Float, frameY:Float):Float
+	{
+		return frame.x + switch angle
+		{
+			// frame.flipX seems to have no effect on tile or blit targets 
+			// TODO: investigate
+			// case ANGLE_0: flipX ? frame.width - frameX : frameX;
+			// case ANGLE_90: flipX ? frameY : frame.height - frameY;
+			// case ANGLE_270: flipX ? frameY : frame.height - frameY;
+			case ANGLE_0: frameX;
+			case ANGLE_90: frameY;
+			case ANGLE_270: frame.height - frameY;
+		}
+	}
+	
+	function toSourceYHelper(frameX:Float, frameY:Float):Float
+	{
+		return frame.y + switch angle
+		{
+			// frame.flipX seems to have no effect on tile or blit targets 
+			// TODO: investigate
+			// case ANGLE_0: flipY ? frame.height - frameY : frameY;
+			// case ANGLE_90: flipY ? frameX : frame.width - frameX;
+			// case ANGLE_270: flipY ? frame.width - frameX : frameX;
+			case ANGLE_0: frameY;
+			case ANGLE_90: frame.width - frameX;
+			case ANGLE_270: frameX;
+		}
+	}
+	
 	/**
 	 * Draws frame on specified `BitmapData` object.
 	 *

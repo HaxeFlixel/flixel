@@ -136,6 +136,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		camera.viewQuad.canvas.graphics.overrideBlendMode(blend);
 		camera.viewQuad.canvas.graphics.beginShaderFill(shader);
 		camera.viewQuad.canvas.graphics.drawQuads(rects, null, transforms);
+		camera.viewQuad.canvas.graphics.endFill();
 		super.render(camera);
 	}
 

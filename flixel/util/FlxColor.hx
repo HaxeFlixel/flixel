@@ -1,8 +1,8 @@
 package flixel.util;
 
-import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import flixel.system.macros.FlxMacroUtil;
+import flixel.tweens.FlxEase;
 
 /**
  * Class representing a color, based on Int. Provides a variety of methods for creating and converting colors.
@@ -373,14 +373,26 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	/**
 	 * Return a String representation of the color in the format
 	 *
-	 * @param Alpha Whether to include the alpha value in the hex string
-	 * @param Prefix Whether to include "0x" prefix at start of string
+	 * @param   alpha   Whether to include the alpha value in the hex string
+	 * @param   usePrefix  Whether to include "0x" prefix at start of string
 	 * @return	A string of length 10 in the format 0xAARRGGBB
 	 */
-	public inline function toHexString(Alpha:Bool = true, Prefix:Bool = true):String
+	overload public inline extern function toHexString(alpha:Bool, usePrefix:Bool):String
 	{
-		return (Prefix ? "0x" : "") + (Alpha ? StringTools.hex(alpha,
-			2) : "") + StringTools.hex(red, 2) + StringTools.hex(green, 2) + StringTools.hex(blue, 2);
+		return toHexString(usePrefix ? "0x" : "", alpha);
+	}
+
+	/**
+	 * Return a String representation of the color in the format
+	 *
+	 * @param   includeAlpha  Whether to include the alpha value in the hex string
+	 * @param   prefix        Optional color prefix
+	 * @since 6.2.0
+	 */
+	overload public inline extern function toHexString(prefix:String = "0x", includeAlpha = true):String
+	{
+		inline function hex(n) return StringTools.hex(n, 2);
+		return prefix + (includeAlpha ? hex(alpha) : "") + hex(red) + hex(green) + hex(blue);
 	}
 
 	/**
