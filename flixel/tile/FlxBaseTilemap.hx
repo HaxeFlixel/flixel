@@ -451,7 +451,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	overload public inline extern function findInRay(start, end, func:(Tile)->Bool)
 	{
-		return findInRayHelper(start, end, (_, t, _)->func(t));
+		return findInRayHelper(start, end, (i, t, e)-> t != null && func(t));
 	}
 	
 	/**
@@ -465,19 +465,35 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findInRay(start, end, func)
+	overload public inline extern function findInRay(start, end, func:(i:Int, t:Null<Tile>)->Bool)
 	{
-		return findInRayHelper(start, end, (i:Int, t:Tile, _)->func(i, t));
+		return findInRayHelper(start, end, (i, t, e)->func(i, t));
 	}
 	
 	/**
 	 * Checks all tile indices overlapping a ray from `start` to `end`,
 	 * finds the first tile that satisfies to condition of `func`
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the tile data
-	 *                  at that location, if one exists, `entry` is how the ray entered the tile
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `tile` is the tile data at
+	 *                 that location, `entry` is how the ray entered the tile
+	 * @return  The result of the ray, whether it reached the end or was stopped, and where
+	 * @since 6.2.0
+	 */
+	overload public inline extern function findInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Bool)
+	{
+		return findInRayHelper(start, end, (i, t, e)->t != null && func(t, e));
+	}
+	
+	/**
+	 * Checks all tile indices overlapping a ray from `start` to `end`,
+	 * finds the first tile that satisfies to condition of `func`
+	 * 
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
+	 *                 tile data at that location, if one exists, `entry` is how the ray entered the tile
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
