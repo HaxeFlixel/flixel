@@ -650,7 +650,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func      The function, where `tile` is the tile data at that location
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
+	overload public inline extern function forEachInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
 	{
 		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
 	}
@@ -665,7 +665,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                    the tile data at that location, if one exists
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
+	overload public inline extern function forEachInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
 	{
 		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
 	}
@@ -682,7 +682,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   func         The stopping condition, where `tile` is the tile data at that location
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachIndexInRow(column, startRow, endRow, func:(tile:Tile)->Void)
+	overload public inline extern function forEachInRow(column, startRow, endRow, func:(tile:Tile)->Void)
 	{
 		findIndexInRowHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
 	}
@@ -697,7 +697,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *                       the tile data at that location, if one exists
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachIndexInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Void)
+	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Void)
 	{
 		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ func(i, t); return false; });
 	}
