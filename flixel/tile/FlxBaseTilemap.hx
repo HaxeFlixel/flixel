@@ -768,6 +768,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	function findIndexInColumnHelper(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
 	{
+		if (!columnExists(column))
+			throw 'Invalid column: $column, total column: $widthInTiles';
+		
 		if (startRow < 0)
 			startRow = 0;
 		else if (startRow > heightInTiles - 1)
@@ -781,6 +784,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		for (row in startRow.iter(endRow))
 		{
 			final index = getMapIndex(column, row);
+			if (index == -1)
+				throw 'Unexpected -1 map index for column: $column row: $row';
+			
 			final tile = getTileData(index, true);
 			if (func(index, tile))
 				return index;
@@ -853,10 +859,13 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	function findIndexInRowHelper(row:Int, startColumn:Int, endColumn:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
 	{
+		if (!rowExists(row))
+			throw 'Invalid row: $row, total rows: $heightInTiles';
+		
 		if (startColumn < 0)
 			startColumn = 0;
 		else if (startColumn > widthInTiles - 1)
-			startColumn = heightInTiles - 1;
+			startColumn = widthInTiles - 1;
 			
 		if (endColumn < 0)
 			endColumn = 0;
@@ -866,6 +875,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 		for (column in startColumn.iter(endColumn))
 		{
 			final index = getMapIndex(column, row);
+			if (index == -1)
+				throw 'Unexpected -1 map index for column: $column row: $row';
+			
 			final tile = getTileData(index, true);
 			if (func(index, tile))
 				return index;
