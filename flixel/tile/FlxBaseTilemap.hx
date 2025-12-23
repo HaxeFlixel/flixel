@@ -523,7 +523,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 			final resultIndex = findIndexInColumnWithEntry(startTileX, startTileY, endTileY, func, entry);
 			if (resultIndex != -1)
 			{
-				final resultY = getRowPos(getRow(resultIndex + (start.y > end.y ? 1 : 0)));
+				final resultY = getRowPos(getRow(resultIndex) + (start.y > end.y ? 1 : 0));
 				final colEntry = getRow(resultIndex) == startTileY ? entry : EDGE(dirY);
 				return STOPPED(resultIndex, start.x, resultY, colEntry);
 			}
