@@ -338,9 +338,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
 	 *
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The function, where `tile` is the tile data at that location
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The function, where `tile` is the tile data at that location
 	 * @since 6.2.0
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(Tile)->Void)
@@ -351,10 +351,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The function, where `index` is the tile's map index, and `tile` is
-	 *                  the tile data at that location, if one exists
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The function, where `index` is the tile's map index, and `tile` is
+	 *                 the tile data at that location, if one exists
 	 * @since 6.2.0
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Void)
@@ -365,10 +365,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
 	 *
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The function, where `tile` is the tile data at that location and
-	 *                  `entry` is how the ray entered the tile
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The function, where `tile` is the tile data at that location and
+	 *                 `entry` is how the ray entered the tile
 	 * @since 6.2.0
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
@@ -379,10 +379,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	/**
 	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The function, where `index` is the tile's map index, `tile` is the tile data
-	 *                  at that location, if one exists and `entry` is how the ray entered the tile
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The function, where `index` is the tile's map index, `tile` is the tile data
+	 *                 at that location, if one exists and `entry` is how the ray entered the tile
 	 * @since 6.2.0
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
@@ -411,24 +411,24 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * **Note:** This skips any tiles with no instance
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `tile` is the tile data at that location
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `tile` is the tile data at that location
 	 * @return  The index of the found tile
 	 * @since 6.2.0
 	 */
 	overload public inline extern function findIndexInRay(start, end, func:(tile:Tile)->Bool)
 	{
-		return findIndexInRayHelper(start, end, (i, t, e)->func(t));
+		return findIndexInRayHelper(start, end, (i, t, e)->t != null && func(t));
 	}
 	
 	/**
 	 * Checks all tile indices overlapping a ray from `start` to `end`,
 	 * finds the first tile that satisfies to condition of `func` and returns its index
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                  tile data at that location, if one exists
 	 * @return  The index of the found tile
 	 * @since 6.2.0
@@ -458,9 +458,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Checks all tile indices overlapping a ray from `start` to `end`,
 	 * finds the first tile that satisfies to condition of `func` and returns its index
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the tile data
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the tile data
 	 *                  at that location, if one exists, `entry` is how the ray entered the tile
 	 * @return  The index of the found tile
 	 * @since 6.2.0
@@ -502,9 +502,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * **Note:** This skips any tiles with no instance
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `tile` is the tile data at that location
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `tile` is the tile data at that location
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
@@ -517,10 +517,10 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Checks all tile indices overlapping a ray from `start` to `end`,
 	 * finds the first tile that satisfies to condition of `func`
 	 * 
-	 * @param   start   The world coordinates of the start of the ray
-	 * @param   end     The world coordinates of the end of the ray
-	 * @param   func    The stopping condition, where `index` is the tile's map index, `tile` is the
-	 *                  tile data at that location, if one exists
+	 * @param   start  The world coordinates of the start of the ray
+	 * @param   end    The world coordinates of the end of the ray
+	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
+	 *                 tile data at that location, if one exists
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
