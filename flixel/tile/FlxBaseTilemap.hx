@@ -1696,18 +1696,19 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	
 	/**
 	 * Get the world position of the specified tile, if the `mapIndex` is invalid,
-	 * the result is `null`
+	 * `null` is returned and `result` is unchanged
 	 * 
 	 * **Note:** A tile's `mapIndex` can be calculated via `row * widthInTiles + column`
 	 *
 	 * @param   mapIndex  The desired location in the map
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the position, if the mapIndex is valid
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTilePos(mapIndex:Int, midpoint = false):Null<FlxPoint>
+	overload public inline extern function getTilePos(mapIndex:Int, midpoint = false, ?result:FlxPoint):Null<FlxPoint>
 	{
-		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint) : null;
+		return tileExists(mapIndex) ? getTilePos(getColumn(mapIndex), getRow(mapIndex), midpoint, result) : null;
 	}
 	
 	/**
@@ -1719,12 +1720,15 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   column    The grid X location, in tiles
 	 * @param   row       The grid Y location, in tiles
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the matching tile
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTilePos(column:Int, row:Int, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(column:Int, row:Int, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return FlxPoint.get(getColumnPos(column, midpoint), getRowPos(row, midpoint));
+		if (result == null)
+			result = FlxPoint.get();
+		return result.set(getColumnPos(column, midpoint), getRowPos(row, midpoint));
 	}
 	
 	/**
@@ -1735,12 +1739,13 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 *
 	 * @param   worldPos  A location in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the overlapping tile
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTilePos(worldPos:FlxPoint, midpoint = false):FlxPoint
+	overload public inline extern function getTilePos(worldPos:FlxPoint, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return getTilePosAt(worldPos.x, worldPos.y, midpoint);
+		return getTilePosAt(worldPos.x, worldPos.y, midpoint, result);
 	}
 	
 	/**
@@ -1752,12 +1757,13 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   worldX    An X coordinate in the world
 	 * @param   worldY    A Y coordinate in the world
 	 * @param   midpoint  Whether to use the tile's midpoint, or upper left corner
+	 * @param   result    The point used to set the resulting position
 	 * @return  The world position of the overlapping tile
 	 * @since 5.9.0
 	 */
-	public inline function getTilePosAt(worldX:Float, worldY:Float, midpoint = false):FlxPoint
+	public inline function getTilePosAt(worldX:Float, worldY:Float, midpoint = false, ?result:FlxPoint):FlxPoint
 	{
-		return getTilePos(getColumnAt(worldX), getRowAt(worldY), midpoint);
+		return getTilePos(getColumnAt(worldX), getRowAt(worldY), midpoint, result);
 	}
 	
 	/**
