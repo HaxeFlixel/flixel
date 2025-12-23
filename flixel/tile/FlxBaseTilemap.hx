@@ -332,7 +332,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(Tile)->Void)
 	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ func(t); return false; });
+		findIndexInRayHelper(start, end, (i, t, e)->{ if (t != null) func(t); return false; });
 	}
 	
 	/**
@@ -360,7 +360,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	overload public inline extern function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
 	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ func(t, e); return false; });
+		findIndexInRayHelper(start, end, (i, t, e)->{ if (t != null) func(t, e); return false; });
 	}
 	
 	/**
