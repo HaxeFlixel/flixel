@@ -634,7 +634,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startColumn  The column to check from
 	 * @param   endColumn    The column to check to
 	 * @param   func         The stopping condition, where `index` is the tile's map index, and
-	 *                      `tile` is the tile data at that location, if one exists, if `true` is
+	 *                      `tile` is the tile data at that location, if one exists. If `true` is
 	 *                       returned, the search ends and that tile's index is the result
 	 * @return  The index of the found tile
 	 * @since 6.2.0
