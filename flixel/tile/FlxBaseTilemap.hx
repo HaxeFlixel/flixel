@@ -680,7 +680,6 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function rayStep(start:FlxPoint, end:FlxPoint, ?result:FlxPoint, resolution:Float = 1):Bool
 	{
 		throw "rayStep must be implemented?";
-		return false;
 	}
 
 	/**
