@@ -216,7 +216,7 @@ class FlxQuadView extends FlxCameraView
 	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
-		final cameraBounds = _bounds.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
+		final cameraBounds = _bounds.set(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
 		
 		final isColored = (colors != null && colors.length != 0) || (transform != null && transform.hasRGBMultipliers());
 		final hasColorOffsets = (transform != null && transform.hasRGBAOffsets());
@@ -231,7 +231,7 @@ class FlxQuadView extends FlxCameraView
 		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		canvas.graphics.drawRect(viewMarginLeft - 1, viewMarginTop - 1, viewWidth + 2, viewHeight + 2);
+		canvas.graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
 		canvas.graphics.endFill();
 	}
 	

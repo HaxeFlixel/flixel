@@ -53,6 +53,7 @@ using flixel.util.FlxColorTransformUtil;
  *         |-> `canvas:Sprite`        (its graphics is used for rendering objects in tile render mode)
  *         |-> `debugLayer:Sprite`    (this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
+@:allow(flixel.system.render.FlxCameraView)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -1853,8 +1854,7 @@ class FlxCamera extends FlxBasic
 		{
 			width = Value;
 			
-			if (view != null)
-				view.calcMarginX();
+			calcMarginX();
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
@@ -1870,8 +1870,7 @@ class FlxCamera extends FlxBasic
 		{
 			height = Value;
 
-			if (view != null)
-				view.calcMarginY();
+			calcMarginY();
 			updateFlashOffset();
 			updateScrollRect();
 			updateInternalSpritePositions();
@@ -1936,16 +1935,14 @@ class FlxCamera extends FlxBasic
 		return this.visible = visible;
 	}
 
-	@:deprecated("depshared")
 	inline function calcMarginX():Void
 	{
-		view.calcMarginX();
+		viewMarginX = 0.5 * width * (scaleX - initialZoom) / scaleX;
 	}
 
-	@:deprecated("depshared")
 	inline function calcMarginY():Void
 	{
-		view.calcMarginY();
+		viewMarginY = 0.5 * height * (scaleY - initialZoom) / scaleY;
 	}
 	
 	static inline function get_defaultCameras():Array<FlxCamera>

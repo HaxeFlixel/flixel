@@ -241,7 +241,7 @@ class FlxBlitView extends FlxCameraView
 		}
 		else
 		{
-			_helperMatrix.translate(-viewMarginLeft, -viewMarginTop);
+			_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
 			buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || antialiasing));
 		}
 	}
@@ -260,8 +260,8 @@ class FlxBlitView extends FlxCameraView
 			}
 			else
 			{
-				_helperPoint.x = destPoint.x - Std.int(viewMarginLeft);
-				_helperPoint.y = destPoint.y - Std.int(viewMarginTop);
+				_helperPoint.x = destPoint.x - Std.int(camera.viewMarginLeft);
+				_helperPoint.y = destPoint.y - Std.int(camera.viewMarginTop);
 				buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 			}
 		}
@@ -275,7 +275,7 @@ class FlxBlitView extends FlxCameraView
 	override function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader)
 	{
-		final cameraBounds = _bounds.set(viewMarginLeft, viewMarginTop, viewWidth, viewHeight);
+		final cameraBounds = _bounds.set(camera.viewMarginLeft, camera.viewMarginTop, camera.viewWidth, camera.viewHeight);
 		
 		if (position == null)
 			position = renderPoint.set();
@@ -327,7 +327,7 @@ class FlxBlitView extends FlxCameraView
 			else
 			{
 				_helperMatrix.identity();
-				_helperMatrix.translate(-viewMarginLeft, -viewMarginTop);
+				_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
 			}
 			
 			buffer.draw(trianglesSprite, _helperMatrix, transform);
@@ -443,7 +443,7 @@ class FlxBlitView extends FlxCameraView
 	inline function updateBlitMatrix():Void
 	{
 		_blitMatrix.identity();
-		_blitMatrix.translate(-viewMarginLeft, -viewMarginTop);
+		_blitMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
 		_blitMatrix.scale(camera.scaleX, camera.scaleY);
 		
 		_useBlitMatrix = (camera.scaleX < camera.initialZoom) || (camera.scaleY < camera.initialZoom);
@@ -451,7 +451,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override function transformRect(rect:FlxRect):FlxRect
 	{
-		rect.offset(-viewMarginLeft, -viewMarginTop);
+		rect.offset(-camera.viewMarginLeft, -camera.viewMarginTop);
 		
 		if (_useBlitMatrix)
 		{
@@ -466,7 +466,7 @@ class FlxBlitView extends FlxCameraView
 	
 	override function transformPoint(point:FlxPoint):FlxPoint
 	{
-		point.subtract(viewMarginLeft, viewMarginTop);
+		point.subtract(camera.viewMarginLeft, camera.viewMarginTop);
 		
 		if (_useBlitMatrix)
 			point.scale(camera.zoom);

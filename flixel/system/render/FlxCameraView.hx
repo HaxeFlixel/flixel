@@ -60,76 +60,6 @@ class FlxCameraView implements IFlxDestroyable
 	public var camera(default, null):FlxCamera;
 	
 	/**
-	 * The margin cut off on the left and right by the camera zooming in (or out), in world space.
-	 */
-	public var viewMarginX(default, null):Float;
-	
-	/**
-	 * The margin cut off on the top and bottom by the camera zooming in (or out), in world space.
-	 */
-	public var viewMarginY(default, null):Float;
-	
-	/**
-	 * The margin cut off on the left by the camera zooming in (or out), in world space.
-	 */
-	public var viewMarginLeft(get, never):Float;
-	
-	/**
-	 * The margin cut off on the top by the camera zooming in (or out), in world space
-	 */
-	public var viewMarginTop(get, never):Float;
-	
-	/**
-	 * The margin cut off on the right by the camera zooming in (or out), in world space
-	 */
-	public var viewMarginRight(get, never):Float;
-	
-	/**
-	 * The margin cut off on the bottom by the camera zooming in (or out), in world space
-	 */
-	public var viewMarginBottom(get, never):Float;
-	
-	/**
-	 * The size of the camera's view, in world space.
-	 */
-	public var viewWidth(get, never):Float;
-	
-	/**
-	 * The size of the camera's view, in world space.
-	 */
-	public var viewHeight(get, never):Float;
-	
-	/**
-	 * The left of the camera's view, in world space.
-	 */
-	public var viewX(get, never):Float;
-	
-	/**
-	 * The top of the camera's view, in world space.
-	 */
-	public var viewY(get, never):Float;
-	
-	/**
-	 * The left of the camera's view, in world space.
-	 */
-	public var viewLeft(get, never):Float;
-	
-	/**
-	 * The top of the camera's view, in world space.
-	 */
-	public var viewTop(get, never):Float;
-	
-	/**
-	 * The right side of the camera's view, in world space.
-	 */
-	public var viewRight(get, never):Float;
-	
-	/**
-	 * The bottom side of the camera's view, in world space.
-	 */
-	public var viewBottom(get, never):Float;
-	
-	/**
 	 * A shortcut for `camera.antialiasing`. Used so implementations can listen to changes.
 	 */
 	public var antialiasing(get, set):Bool;
@@ -199,8 +129,8 @@ class FlxCameraView implements IFlxDestroyable
 	
 	function updateScale():Void
 	{
-		calcMarginX();
-		calcMarginY();
+		camera.calcMarginX();
+		camera.calcMarginY();
 	}
 	
 	function updatePosition():Void {}
@@ -269,76 +199,6 @@ class FlxCameraView implements IFlxDestroyable
 	}
 	
 	function checkResize():Void {}
-	
-	public inline function calcMarginX():Void
-	{
-		viewMarginX = 0.5 * camera.width * (camera.scaleX - camera.initialZoom) / camera.scaleX;
-	}
-	
-	public inline function calcMarginY():Void
-	{
-		viewMarginY = 0.5 * camera.height * (camera.scaleY - camera.initialZoom) / camera.scaleY;
-	}
-	
-	inline function get_viewMarginLeft():Float
-	{
-		return viewMarginX;
-	}
-	
-	inline function get_viewMarginTop():Float
-	{
-		return viewMarginY;
-	}
-	
-	inline function get_viewMarginRight():Float
-	{
-		return camera.width - viewMarginX;
-	}
-	
-	inline function get_viewMarginBottom():Float
-	{
-		return camera.height - viewMarginY;
-	}
-	
-	inline function get_viewWidth():Float
-	{
-		return camera.width - viewMarginX * 2;
-	}
-	
-	inline function get_viewHeight():Float
-	{
-		return camera.height - viewMarginY * 2;
-	}
-	
-	inline function get_viewX():Float
-	{
-		return camera.scroll.x + viewMarginX;
-	}
-	
-	inline function get_viewY():Float
-	{
-		return camera.scroll.y + viewMarginY;
-	}
-	
-	inline function get_viewLeft():Float
-	{
-		return viewX;
-	}
-	
-	inline function get_viewTop():Float
-	{
-		return viewY;
-	}
-	
-	inline function get_viewRight():Float
-	{
-		return camera.scroll.x + viewMarginRight;
-	}
-	
-	inline function get_viewBottom():Float
-	{
-		return camera.scroll.y + viewMarginBottom;
-	}
 	
 	function get_display():DisplayObjectContainer
 	{
