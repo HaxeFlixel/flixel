@@ -129,12 +129,30 @@ class FlxCameraView implements IFlxDestroyable
 	 */
 	public var viewBottom(get, never):Float;
 	
+	/**
+	 * A shortcut for `camera.antialiasing`. Used so implementations can listen to changes.
+	 */
 	public var antialiasing(get, set):Bool;
+
+	/**
+	 * A shortcut for `camera.angle`. Used so implementations can listen to changes.
+	 */
 	public var angle(get, set):Float;
+
+	/**
+	 * A shortcut for `camera.alpha`. Used so implementations can listen to changes.
+	 */
 	public var alpha(get, set):Float;
+
+	/**
+	 * A shortcut for `camera.color`. Used so implementations can listen to changes.
+	 */
 	public var color(get, set):FlxColor;
+
+	/**
+	 * A shortcut for `camera.visible`. Used so implementations can listen to changes.
+	 */
 	public var visible(get, set):Bool;
-	public var filters:Array<BitmapFilter> = [];
 	
 	var _flashOffset:FlxPoint = FlxPoint.get();
 	

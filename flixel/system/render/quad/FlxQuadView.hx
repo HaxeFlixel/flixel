@@ -133,7 +133,7 @@ class FlxQuadView extends FlxCameraView
 	
 	override function render():Void
 	{
-		flashSprite.filters = camera.filtersEnabled ? filters : null;
+		flashSprite.filters = camera.filtersEnabled ? camera.filters : null;
 		
 		var currItem:FlxDrawBaseItem<Dynamic> = _headOfDrawStack;
 		while (currItem != null)
