@@ -341,8 +341,8 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   start  The world coordinates of the start of the ray
 	 * @param   end    The world coordinates of the end of the ray
 	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
-	 *                 tile data at that location, if one exists, `entry` is how the ray entered the
-	 *                 tile, if `true` is returned, the search ends and that tile's index is the result
+	 *                 tile data at that location, if one exists and `entry` is how the ray entered the
+	 *                 tile. If `true` is returned, the search ends and that tile's index is the result
 	 * @return  The index of the found tile
 	 * @since 6.2.0
 	 */
@@ -365,7 +365,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   end    The world coordinates of the end of the ray
 	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                 tile data at that location, if one exists, `entry` is how the ray entered the
-	 *                 tile, if `true` is returned, the search ends and that tile is the result
+	 *                 tile. If `true` is returned, the search ends and that tile is the result
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
@@ -470,7 +470,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   endRow    The row to check to
 	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                    tile data at that location, if one exists, `entry` is how the ray entered the
-	 *                    tile, if `true` is returned, the search ends and that tile is the result
+	 *                    tile. If `true` is returned, the search ends and that tile is the result
 	 * @param   entry     How the ray entered this column
 	 */
 	function findIndexInColumnWithEntry
@@ -548,7 +548,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
 	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is
-	 *                    the tile data at that location, if one exists, if `true` is returned,
+	 *                    the tile data at that location, if one exists. If `true` is returned,
 	 *                    the search ends and that tile is the result
 	 * @return  The found tile
 	 * @since 6.2.0
@@ -570,7 +570,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
 	 * @param   func      The stopping condition, where `index` is the tile's map index, `tile` is
-	 *                    the tile data at that location, if one exists, if `true` is returned,
+	 *                    the tile data at that location, if one exists. If `true` is returned,
 	 *                    the search ends and that tile is the result
 	 * @return  The index of the found tile
 	 * @since 6.2.0
@@ -612,7 +612,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   startColumn  The column to check from
 	 * @param   endColumn    The column to check to
 	 * @param   func         The stopping condition, where `index` is the tile's map index, `tile` is
-	 *                       the tile data at that location, if one exists, if `true` is returned,
+	 *                       the tile data at that location, if one exists. If `true` is returned,
 	 *                       the search ends and that tile is the result
 	 * @return  The found tile
 	 * @since 6.2.0
