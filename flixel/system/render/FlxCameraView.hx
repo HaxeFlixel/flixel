@@ -95,12 +95,16 @@ class FlxCameraView implements IFlxDestroyable
 	{
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
-	
-	public function lock(?useBufferLocking:Bool):Void {}
-	
+
+	/**
+	 * Called prior to the rendering call, clears the screen and prepares everything needed.
+	 */
+	public function clear():Void {}
+
+	/**
+	 * The actual rendering call where everything gets drawn.
+	 */
 	public function render():Void {}
-	
-	public function unlock(?useBufferLocking:Bool):Void {}
 	
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
 		?shader:FlxShader):Void {}

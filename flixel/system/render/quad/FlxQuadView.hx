@@ -118,7 +118,7 @@ class FlxQuadView extends FlxCameraView
 		_bounds = FlxDestroyUtil.put(_bounds);
 	}
 	
-	override function lock(?useBufferLocking:Bool):Void
+	override function clear():Void
 	{
 		clearDrawStack();
 		
@@ -141,10 +141,7 @@ class FlxQuadView extends FlxCameraView
 			currItem.render(camera);
 			currItem = currItem.next;
 		}
-	}
-	
-	override function unlock(?useBufferLocking:Bool):Void
-	{
+
 		camera.drawFX();
 	}
 	

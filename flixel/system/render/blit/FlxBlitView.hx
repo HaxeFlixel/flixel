@@ -29,6 +29,14 @@ import flixel.util.FlxSpriteUtil;
 class FlxBlitView extends FlxCameraView
 {
 	/**
+	 * Whether the camera's buffer should be locked and unlocked during render calls.
+	 * 
+	 * Allows you to possibly slightly optimize the rendering process IF
+	 * you are not doing any pre-processing in your game state's draw() call.
+	 */
+	public static var useBufferLocking:Bool = false;
+
+	/**
 	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
 	static var trianglesSprite:Sprite = new Sprite();
@@ -162,7 +170,7 @@ class FlxBlitView extends FlxCameraView
 		_bounds = FlxDestroyUtil.put(_bounds);
 	}
 	
-	override function lock(?useBufferLocking:Bool)
+	override function clear():Void
 	{
 		checkResize();
 		
@@ -175,7 +183,7 @@ class FlxBlitView extends FlxCameraView
 		screen.dirty = true;
 	}
 	
-	override function unlock(?useBufferLocking:Bool):Void
+	override function render():Void
 	{
 		camera.drawFX();
 		

@@ -805,7 +805,7 @@ class FlxGame extends Sprite
 
 		FlxCameraView.totalDrawCalls = 0;
 
-		FlxG.cameras.lock();
+		FlxG.cameras.clear();
 
 		if (FlxG.plugins.drawOnTop)
 		{
@@ -818,16 +818,14 @@ class FlxGame extends Sprite
 			_state.draw();
 		}
 
+		FlxG.cameras.render();
+
 		if (FlxG.renderTile)
 		{
-			FlxG.cameras.render();
-
 			#if FLX_DEBUG
 			debugger.stats.drawCalls(FlxCameraView.totalDrawCalls);
 			#end
 		}
-
-		FlxG.cameras.unlock();
 
 		FlxG.signals.postDraw.dispatch();
 

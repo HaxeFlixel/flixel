@@ -659,9 +659,9 @@ class FlxCamera extends FlxBasic
 	}
 
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	inline function lock(?useBufferLocking:Bool):Void
+	inline function clear():Void
 	{
-		view.lock(useBufferLocking);
+		view.clear();
 	}
 
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
@@ -669,13 +669,7 @@ class FlxCamera extends FlxBasic
 	{
 		view.render();
 	}
-
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	inline function unlock(?useBufferLocking:Bool):Void
-	{
-		view.unlock(useBufferLocking);
-	}
-
+	
 	public function beginDrawDebug():Void
 	{
 		view.beginDrawDebug();

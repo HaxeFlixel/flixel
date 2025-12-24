@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+import flixel.system.render.blit.FlxBlitView;
 import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -44,8 +45,11 @@ class CameraFrontEnd
 	/**
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
+	 * 
+	 * **NOTE**: Only works with the blitting renderer.
 	 */
-	public var useBufferLocking:Bool = false;
+	@:deprecated("useBufferLocking is deprecated, use FlxBlitView.useBufferLocking, instead.")
+	public var useBufferLocking(get, set):Bool;
 
 	/**
 	 * Internal helper variable for clearing the cameras each frame.
@@ -253,45 +257,50 @@ class CameraFrontEnd
 	 * Called by the game object to lock all the camera buffers and clear them for the next draw pass.
 	 */
 	@:allow(flixel.FlxGame)
+	@:deprecated("lock() is deprecated, use clear() instead.")
 	inline function lock():Void
+	{
+		clear();
+	}
+
+	/**
+	 * Called by the game object to clear all the camera buffers for the next draw pass.
+	 */
+	@:allow(flixel.FlxGame)
+	inline function clear():Void
 	{
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
 			{
-				camera.lock(useBufferLocking);
-			}
-		}
-	}
-
-	@:allow(flixel.FlxGame)
-	inline function render():Void
-	{
-		if (FlxG.renderTile)
-		{
-			for (camera in list)
-			{
-				if ((camera != null) && camera.exists && camera.visible)
-				{
-					camera.render();
-				}
+				camera.clear();
 			}
 		}
 	}
 
 	/**
-	 * Called by the game object to draw the special FX and unlock all the camera buffers.
+	 * Called by the game object to draw everything onto the screen.
 	 */
 	@:allow(flixel.FlxGame)
-	inline function unlock():Void
+	inline function render():Void
 	{
 		for (camera in list)
 		{
 			if ((camera != null) && camera.exists && camera.visible)
 			{
-				camera.unlock(useBufferLocking);
+				camera.render();
 			}
 		}
+	}
+
+	/**
+	 * Called by the game object to draw everything onto the screen.
+	 */
+	@:allow(flixel.FlxGame)
+	@:deprecated("unlock() is deprecated, use render() instead.")
+	inline function unlock():Void
+	{
+		render();
 	}
 
 	/**
@@ -334,5 +343,21 @@ class CameraFrontEnd
 		}
 
 		return Color;
+	}
+
+	function get_useBufferLocking():Bool 
+	{
+		if (FlxG.renderBlit)
+			return FlxBlitView.useBufferLocking;
+
+		return false;
+	}
+
+	function set_useBufferLocking(value:Bool):Bool
+	{
+		if (FlxG.renderBlit)
+			return FlxBlitView.useBufferLocking = value;
+
+		return value;
 	}
 }
