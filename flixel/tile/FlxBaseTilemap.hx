@@ -494,7 +494,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				final y = m * x + b;
 				STOPPED(index, x, y, entry);
 			case EDGE(RIGHT):
-				final x = getColumnPos(getColumn(index)) + getTileWidth();
+				final x = getColumnPos(getColumn(index) + 1);
 				final y = m * x + b;
 				STOPPED(index, x, y, entry);
 			case EDGE(UP):
@@ -502,7 +502,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 				final x = (y - b) / m;
 				STOPPED(index, x, y, entry);
 			case EDGE(DOWN):
-				final y = getRowPos(getRow(index)) + getTileHeight();
+				final y = getRowPos(getRow(index) + 1);
 				final x = (y - b) / m;
 				STOPPED(index, x, y, entry);
 		}
