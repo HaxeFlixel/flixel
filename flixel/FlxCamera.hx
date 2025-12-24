@@ -44,16 +44,10 @@ using flixel.util.FlxColorTransformUtil;
  * The camera class is used to display the game's visuals.
  * By default one camera is created automatically, that is the same size as window.
  * You can add more cameras or even replace the main camera using utilities in `FlxG.cameras`.
- *
- * Every camera has following display list:
- * `flashSprite:Sprite` (which is a container for everything else in the camera, it's added to FlxG.game sprite)
- *     |-> `_scrollRect:Sprite` (which is used for cropping camera's graphic, mostly in tile render mode)
- *         |-> `_flashBitmap:Bitmap`  (its bitmapData property is buffer BitmapData, this var is used in blit render mode.
- *                                    Everything is rendered on buffer in blit render mode)
- *         |-> `canvas:Sprite`        (its graphics is used for rendering objects in tile render mode)
- *         |-> `debugLayer:Sprite`    (this sprite is used in tile render mode for rendering debug info, like bounding boxes)
  */
 @:allow(flixel.system.render.FlxCameraView)
+@:access(flixel.system.render.blit.FlxBlitView)
+@:access(flixel.system.render.quad.FlxQuadView)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -117,14 +111,14 @@ class FlxCamera extends FlxBasic
 	public var view(default, null):FlxCameraView;
 
 	/**
-	 * This camera's `view`, but typed as a `FlxQuadView`.
+	 * This camera's `view`, typed as a `FlxQuadView`.
 	 * 
 	 * **NOTE**: May be null depending on the render implementation used.
 	 */
 	public var viewQuad(default, null):Null<FlxQuadView>;
 
 	/**
-	 * This camera's `view`, but typed as a `FlxBlitView`.
+	 * This camera's `view`, typed as a `FlxBlitView`.
 	 * 
 	 * **NOTE**: May be null depending on the render implementation used.
 	 */
@@ -193,8 +187,10 @@ class FlxCamera extends FlxBasic
 	 * The actual `BitmapData` of the camera display itself.
 	 * Used in blit render mode, where you can manipulate its pixels for achieving some visual effects.
 	 */
-	@:deprecated("buffer is deprecated, avoid referencing it directly and use the methods from camera.view instead")
+	@:deprecated("buffer is deprecated, use camera.viewBlit.buffer, instead")
 	public var buffer(get, set):BitmapData;
+	inline function set_buffer(value:BitmapData):BitmapData return viewBlit.buffer = value;
+	inline function get_buffer():BitmapData return viewBlit.buffer;
 
 	/**
 	 * The natural background color of the camera, in `AARRGGBB` format. Defaults to `FlxG.cameras.bgColor`.
@@ -209,8 +205,10 @@ class FlxCamera extends FlxBasic
 	 *
 	 * **NOTE:** This field is only used in blit render mode.
 	 */
-	@:deprecated("screen is deprecated, avoid referencing it directly and use the methods from camera.view instead")
+	@:deprecated("screen is deprecated, use camera.viewBlit.screen, instead")
 	public var screen(get, set):FlxSprite;
+	inline function set_screen(value:FlxSprite):FlxSprite return viewBlit.screen = value;
+	inline function get_screen():FlxSprite return viewBlit.screen;
 
 	/**
 	 * Whether to use alpha blending for the camera's background fill or not.
@@ -231,8 +229,17 @@ class FlxCamera extends FlxBasic
 	 *
 	 * Its position is modified by `updateFlashSpritePosition()` which is called every frame.
 	 */
-	@:deprecated("flashSprite is deprecated, avoid referencing it directly and use the methods from camera.view instead")
+	@:deprecated("flashSprite is deprecated, use camera.viewQuad.flashSprite/camera.viewBlit.flashSprite, instead")
 	public var flashSprite(get, set):Sprite;
+	inline function set_flashSprite(value:Sprite):Sprite
+	{
+		var sprite = FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
+		return sprite = value;
+	}
+	inline function get_flashSprite():Sprite
+	{
+		return FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
+	}
 
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
@@ -362,14 +369,18 @@ class FlxCamera extends FlxBasic
 	 * Helper matrix object. Used in blit render mode when camera's zoom is less than initialZoom
 	 * (it is applied to all objects rendered on the camera at such circumstances).
 	 */
-	@:deprecated("depblit")
-	var _blitMatrix:FlxMatrix = new FlxMatrix();
+	@:deprecated("_blitMatrix is deprecated, use camera.viewBlit.blitMatrix, instead")
+	var _blitMatrix(get, set):FlxMatrix;
+	inline function get__blitMatrix():FlxMatrix return viewBlit._blitMatrix;
+	inline function set__blitMatrix(value:FlxMatrix) return viewBlit._blitMatrix = value;
 
 	/**
 	 * Logical flag for tracking whether to apply _blitMatrix transformation to objects or not.
 	 */
-	@:deprecated("depblit")
-	var _useBlitMatrix:Bool = false;
+	@:deprecated("_useBlitMatrix is deprecated, use camera.viewBlit._useBlitMatrix, instead")
+	var _useBlitMatrix(get, set):Bool;
+	inline function get__useBlitMatrix():Bool return viewBlit._useBlitMatrix;
+	inline function set__useBlitMatrix(value:Bool) return viewBlit._useBlitMatrix = value;
 
 	/**
 	 * The alpha value of this camera display (a number between `0.0` and `1.0`).
@@ -408,16 +419,20 @@ class FlxCamera extends FlxBasic
 	 * (the area of camera's buffer which should be filled with `bgColor`).
 	 * Do not modify it unless you know what are you doing.
 	 */
-	@:deprecated("depblit")
+	@:deprecated("_flashRect is deprecated, use camera.viewBlit._flashRect, instead")
 	var _flashRect:Rectangle;
+	inline function get__flashRect():Rectangle return viewBlit._flashRect;
+	inline function set__flashRect(value:Rectangle) return viewBlit._flashRect = value;
 
 	/**
 	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation:
 	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
 	 * Do not modify it unless you know what are you doing.
 	 */
-	 @:deprecated("depblit")
+	@:deprecated("_flashPoint is deprecated, use camera.viewBlit._flashPoint, instead")
 	var _flashPoint:Point = new Point();
+	inline function get__flashPoint():Point return viewBlit._flashPoint;
+	inline function set__flashPoint(value:Point) return viewBlit._flashPoint = value;
 
 	/**
 	 * Internal, used for positioning camera's `flashSprite` on screen.
@@ -426,7 +441,10 @@ class FlxCamera extends FlxBasic
 	 * Its value depends on camera's size (`width` and `height`), game's `scale` and camera's initial zoom factor.
 	 * Do not modify it unless you know what are you doing.
 	 */
-	var _flashOffset:FlxPoint = FlxPoint.get();
+	@:deprecated("_flashOffset is deprecated, use camera.view._flashOffset, instead")
+	var _flashOffset(get, set):FlxPoint;
+	inline function get__flashOffset():FlxPoint return view._flashOffset;
+	inline function set__flashOffset(value:FlxPoint) return view._flashOffset = value;
 
 	/**
 	 * Internal, represents the color of `flash()` special effect.
@@ -524,8 +542,10 @@ class FlxCamera extends FlxBasic
 	 * Internal helper variable for doing better wipes/fills between renders.
 	 * Used it blit render mode only (in `fill()` method).
 	 */
-	@:deprecated("depblit")
-	var _fill:BitmapData;
+	@:deprecated("_fill is deprecated, use camera.viewBlit._fill, instead")
+	var _fill(get, set):BitmapData;
+	inline function get__fill():BitmapData return viewBlit._fill;
+	inline function set__fill(value:BitmapData):BitmapData return viewBlit._fill = value;
 
 	/**
 	 * Internal, used to render buffer to screen space. Used it blit render mode only.
@@ -533,22 +553,42 @@ class FlxCamera extends FlxBasic
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 * It is a child of the `_scrollRect` `Sprite`.
 	 */
-	@:deprecated("depblit")
-	var _flashBitmap:Bitmap;
+	@:deprecated("_flashBitmap is deprecated, use camera.viewBlit._flashBitmap, instead")
+	var _flashBitmap(get, set):Bitmap;
+	inline function get__flashBitmap():Bitmap return viewBlit._flashBitmap;
+	inline function set__flashBitmap(value:Bitmap):Bitmap return viewBlit._flashBitmap = value;
 
 	/**
 	 * Internal sprite, used for correct trimming of camera viewport.
 	 * It is a child of `flashSprite`.
 	 * Its position is modified by `updateScrollRect()` method, which is called on camera's resize and scale events.
 	 */
-	@:deprecated("depshared")
-	var _scrollRect:Sprite;
+	@:deprecated("_scrollRect is deprecated, use camera.viewQuad._scrollRect/camera.viewBlit._scrollRect, instead")
+	var _scrollRect(get, set):Sprite;
+	inline function get__scrollRect():Sprite
+	{
+		return FlxG.renderTile ? viewQuad._scrollRect : viewBlit._scrollRect;
+	}
+	inline function set__scrollRect(value:Sprite):Sprite 
+	{
+		var scrollRect = FlxG.renderTile ? viewQuad._scrollRect : viewBlit._scrollRect;
+		return scrollRect = value;
+	}
 
 	/**
 	 * Helper rect for `drawTriangles()` visibility checks
 	 */
-	@:deprecated("depblit")
-	var _bounds:FlxRect;
+	@:deprecated("_bounds is deprecated, use camera.viewQuad._bounds/camera.viewBlit._bounds, instead")
+	var _bounds(get, set):FlxRect;
+	inline function get__bounds():FlxRect 
+	{
+		return FlxG.renderTile ? viewQuad._bounds : viewBlit._bounds;
+	}
+	inline function set__bounds(value:FlxRect):FlxRect 
+	{
+		var bounds = FlxG.renderTile ? viewQuad._bounds : viewBlit._bounds;
+		return bounds = value;
+	}
 
 	/**
 	 * Sprite used for actual rendering in tile render mode (instead of `_flashBitmap` for blitting).
@@ -556,8 +596,10 @@ class FlxCamera extends FlxBasic
 	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
-	@:deprecated("canvas is deprecated, avoid referencing it directly and use the methods from camera.view instead")
+	@:deprecated("canvas is deprecated, use camera.viewQuad.canvas, instead")
 	public var canvas(get, set):Sprite;
+	inline function set_canvas(value:Sprite):Sprite return viewQuad.canvas = value;
+	inline function get_canvas():Sprite return viewQuad.canvas;
 
 	#if FLX_DEBUG
 	/**
@@ -566,73 +608,106 @@ class FlxCamera extends FlxBasic
 	 * It is a child of `_scrollRect` `Sprite` (which trims graphics that should be invisible).
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
 	 */
-	@:deprecated("debugLayer is deprecated, avoid referencing it directly and use the methods from camera.view instead")
+	@:deprecated("debugLayer is deprecated, use camera.viewQuad.debugLayer, instead")
 	public var debugLayer(get, set):Sprite;
+	inline function set_debugLayer(value:Sprite):Sprite return viewQuad.debugLayer;
+	inline function get_debugLayer():Sprite return viewQuad.debugLayer;
 	#end
 
-	@:deprecated("depshared")
-	var _helperMatrix:FlxMatrix = new FlxMatrix();
+	@:deprecated("_helperMatrix is deprecated, use camera.viewQuad._helperMatrix/camera.viewBlit._helperMatrix, instead")
+	var _helperMatrix(get, set):FlxMatrix;
+	inline function get__helperMatrix():FlxMatrix
+	{
+		return FlxG.renderTile ? viewQuad._helperMatrix : viewBlit._helperMatrix;
+	}
+	inline function set__helperMatrix(value:FlxMatrix):FlxMatrix 
+	{
+		var mat = FlxG.renderTile ? viewQuad._helperMatrix : viewBlit._helperMatrix;
+		return mat = value;
+	}
 
-	@:deprecated("depblit")
-	var _helperPoint:Point = new Point();
+	@:deprecated("_helperPoint is deprecated, use camera.viewBlit._helperPoint, instead")
+	var _helperPoint(get, set):Point;
+	inline function get__helperPoint():Point return viewBlit._helperPoint;
+	inline function set__helperPoint(value:Point):Point return viewBlit._helperPoint = value;
 
 	/**
 	 * Currently used draw stack item
 	 */
-	@:deprecated("depquad")
-	var _currentDrawItem:FlxDrawBaseItem<Dynamic>;
+	@:deprecated("_currentDrawItem is deprecated, use camera.viewQuad._currentDrawItem, instead")
+	var _currentDrawItem(get, set):FlxDrawBaseItem<Dynamic>;
+	inline function get__currentDrawItem():FlxDrawBaseItem<Dynamic> return viewQuad._currentDrawItem;
+	inline function set__currentDrawItem(value:FlxDrawBaseItem<Dynamic>):FlxDrawBaseItem<Dynamic> return viewQuad._currentDrawItem = value;
 
 	/**
 	 * Pointer to head of stack with draw items
 	 */
-	@:deprecated("depquad")
-	var _headOfDrawStack:FlxDrawBaseItem<Dynamic>;
+	@:deprecated("_headOfDrawStack is deprecated, use camera.viewQuad._headOfDrawStack, instead")
+	var _headOfDrawStack(get, set):FlxDrawBaseItem<Dynamic>;
+	inline function get__headOfDrawStack():FlxDrawBaseItem<Dynamic> return viewQuad._headOfDrawStack;
+	inline function set__headOfDrawStack(value:FlxDrawBaseItem<Dynamic>):FlxDrawBaseItem<Dynamic> return viewQuad._headOfDrawStack = value;
 
 	/**
 	 * Last draw tiles item
 	 */
-	@:deprecated("depquad")
-	var _headTiles:FlxDrawQuadsItem;
+	@:deprecated("_headTiles is deprecated, use camera.viewQuad._headTiles, instead")
+	var _headTiles(get, set):FlxDrawQuadsItem;
+	inline function get__headTiles():FlxDrawQuadsItem return viewQuad._headTiles;
+	inline function set__headTiles(value:FlxDrawQuadsItem):FlxDrawQuadsItem return viewQuad._headTiles = value;
 
 	/**
 	 * Last draw triangles item
 	 */
-	@:deprecated("depquad")
-	var _headTriangles:FlxDrawTrianglesItem;
+	@:deprecated("_headTriangles is deprecated, use camera.viewQuad._headTriangles, instead")
+	var _headTriangles(get, set):FlxDrawTrianglesItem;
+	inline function get__headTriangles():FlxDrawTrianglesItem return viewQuad._headTriangles;
+	inline function set__headTriangles(value:FlxDrawTrianglesItem):FlxDrawTrianglesItem return viewQuad._headTriangles = value;
 
 	/**
 	 * Draw tiles stack items that can be reused
 	 */
-	@:deprecated("depquad")
-	static var _storageTilesHead:FlxDrawQuadsItem;
+	@:deprecated("_storageTilesHead is deprecated, use FlxQuadView._storageTilesHead, instead")
+	static var _storageTilesHead(get, set):FlxDrawQuadsItem;
+	static inline function get__storageTilesHead():FlxDrawQuadsItem return FlxQuadView._storageTilesHead;
+	static inline function set__storageTilesHead(value:FlxDrawQuadsItem):FlxDrawQuadsItem return FlxQuadView._storageTilesHead = value;
 
 	/**
 	 * Draw triangles stack items that can be reused
 	 */
-	@:deprecated("depquad")
-	static var _storageTrianglesHead:FlxDrawTrianglesItem;
+	@:deprecated("_storageTrianglesHead is deprecated, use FlxQuadView._storageTrianglesHead, instead")
+	static var _storageTrianglesHead(get, set):FlxDrawTrianglesItem;
+	static inline function get__storageTrianglesHead():FlxDrawTrianglesItem return FlxQuadView._storageTrianglesHead;
+	static inline function set__storageTrianglesHead(value:FlxDrawTrianglesItem):FlxDrawTrianglesItem return FlxQuadView._storageTrianglesHead = value;
 
 	/**
 	 * Internal variable, used for visibility checks to minimize `drawTriangles()` calls.
 	 */
-	@:deprecated("depblit")
-	static var drawVertices:Vector<Float> = new Vector<Float>();
+	@:deprecated("drawVertices is deprecated, use FlxBlitView.drawVertices, instead")
+	static var drawVertices(get, set):Vector<Float>;
+	static inline function get_drawVertices():Vector<Float> return FlxBlitView.drawVertices;
+	static inline function set_drawVertices(value:Vector<Float>):Vector<Float> return FlxBlitView.drawVertices = value;
 
 	/**
 	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
-	@:deprecated("depblit")
-	static var trianglesSprite:Sprite = new Sprite();
+	@:deprecated("trianglesSprite is deprecated, use FlxBlitView.trianglesSprite, instead")
+	static var trianglesSprite(get, set):Sprite;
+	static inline function get_trianglesSprite():Sprite return FlxBlitView.trianglesSprite;
+	static inline function set_trianglesSprite(value:Sprite):Sprite return FlxBlitView.trianglesSprite = value;
 
 	/**
 	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer.
 	 * Added for less garbage creation.
 	 */
-	@:deprecated("depblit")
-	static var renderPoint:FlxPoint = FlxPoint.get();
+	@:deprecated("renderPoint is deprecated, use FlxBlitView.renderPoint, instead")
+	static var renderPoint(get, set):FlxPoint;
+	static inline function get_renderPoint():FlxPoint return FlxBlitView.renderPoint;
+	static inline function set_renderPoint(value:FlxPoint):FlxPoint return FlxBlitView.renderPoint = value;
 
-	@:deprecated("depblit")
-	static var renderRect:FlxRect = FlxRect.get();
+	@:deprecated("renderRect is deprecated, use FlxBlitView.renderRect, instead")
+	static var renderRect(get, set):FlxRect;
+	static inline function get_renderRect():FlxRect return FlxBlitView.renderRect;
+	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitView.renderRect = value;
 
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
@@ -669,7 +744,7 @@ class FlxCamera extends FlxBasic
 	{
 		view.render();
 	}
-	
+
 	public function beginDrawDebug():Void
 	{
 		view.beginDrawDebug();
@@ -2013,59 +2088,6 @@ class FlxCamera extends FlxBasic
 	{
 		return view.display;
 	}
-
-	inline function set_flashSprite(value:Sprite):Sprite
-	{
-		var sprite = FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
-		return sprite = value;
-	}
-
-	inline function get_flashSprite():Sprite
-	{
-		return FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
-	}
-
-	inline function set_screen(value:FlxSprite):FlxSprite
-	{
-		return viewBlit.screen = value;
-	}
-
-	inline function get_screen():FlxSprite
-	{
-		return viewBlit.screen;
-	}
-
-	inline function set_buffer(value:BitmapData):BitmapData
-	{
-		return viewBlit.buffer = value;
-	}
-
-	inline function get_buffer():BitmapData
-	{
-		return viewBlit.buffer;
-	}
-
-	inline function set_canvas(value:Sprite):Sprite 
-	{
-		return viewQuad.canvas = value;
-	}
-
-	inline function get_canvas():Sprite 
-	{
-		return viewQuad.canvas;
-	}
-
-	#if FLX_DEBUG
-	inline function set_debugLayer(value:Sprite):Sprite 
-	{
-		return viewQuad.debugLayer;
-	}
-
-	inline function get_debugLayer():Sprite 
-	{
-		return viewQuad.debugLayer;
-	}
-	#end
 	
 	/**
 	 * Do not use the following fields! They only exists because FlxCamera extends FlxBasic,
