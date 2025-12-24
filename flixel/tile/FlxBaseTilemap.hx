@@ -295,7 +295,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	public function rayAdvanced(start:FlxPoint, end:FlxPoint, checkDir = true)
 	{
 		final func = checkRayDirHelper(start, end, checkDir);
-		return findInRayHelper(start, end, func);
+		return findInRay(start, end, func);
 	}
 	
 	/**
@@ -327,131 +327,13 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param   start  The world coordinates of the start of the ray
 	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The function, where `index` is the tile's map index
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRay(start, end, func:(index:Int)->Void)
-	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ func(i); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
-	 *
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The function, where `tile` is the tile data at that location
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRay(start, end, func:(Tile)->Void)
-	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ if (t != null) func(t); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The function, where `index` is the tile's map index, and `tile` is
-	 *                 the tile data at that location, if one exists
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>)->Void)
-	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
-	 *
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The function, where `tile` is the tile data at that location and
-	 *                 `entry` is how the ray entered the tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Void)
-	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ if (t != null) func(t, e); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles overlapping a ray from `start` to `end`
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
 	 * @param   func   The function, where `index` is the tile's map index, `tile` is the tile data
 	 *                 at that location, if one exists and `entry` is how the ray entered the tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
+	inline public function forEachInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Void)
 	{
-		findIndexInRayHelper(start, end, (i, t, e)->{ func(i, t, e); return false; });
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `index` is the tile's map index
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInRay(start, end, func:(index:Int)->Bool)
-	{
-		return findIndexInRayHelper(start, end, (i, t, e)->func(i));
-	}
-	
-	/**
-	 * Checks all tiles overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `tile` is the tile data at that location
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInRay(start, end, func:(tile:Tile)->Bool)
-	{
-		return findIndexInRayHelper(start, end, (i, t, e)->t != null && func(t));
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
-	 *                  tile data at that location, if one exists
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>)->Bool)
-	{
-		return findIndexInRayHelper(start, end, (i, t, e)->func(i, t));
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `tile` is the tile data
-	 *                  at that location, `entry` is how the ray entered the tile
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Bool)
-	{
-		return findIndexInRayHelper(start, end, (i, t, e)->t != null && func(t, e));
+		findInRay(start, end, (i, t, e)->{ func(i, t, e); return false; });
 	}
 	
 	/**
@@ -465,14 +347,9 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findIndexInRay(start, end, func)
+	public function findIndexInRay(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):Int
 	{
-		return findIndexInRayHelper(start, end, func);
-	}
-	
-	function findIndexInRayHelper(start, end, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):Int
-	{
-		switch findInRayHelper(start, end, func)
+		switch findInRay(start, end, func)
 		{
 			case END:
 				return -1;
@@ -487,81 +364,12 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * 
 	 * @param   start  The world coordinates of the start of the ray
 	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `index` is the tile's map index
-	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findInRay(start, end, func:(index:Int)->Bool)
-	{
-		return findInRayHelper(start, end, (i, t, e)->func(i));
-	}
-	
-	/**
-	 * Checks all tiles overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func`
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `tile` is the tile data at that location
-	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findInRay(start, end, func:(Tile)->Bool)
-	{
-		return findInRayHelper(start, end, (i, t, e)-> t != null && func(t));
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func`
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
-	 *                 tile data at that location, if one exists
-	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findInRay(start, end, func:(i:Int, t:Null<Tile>)->Bool)
-	{
-		return findInRayHelper(start, end, (i, t, e)->func(i, t));
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func`
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
-	 * @param   func   The stopping condition, where `tile` is the tile data at
-	 *                 that location, `entry` is how the ray entered the tile
-	 * @return  The result of the ray, whether it reached the end or was stopped, and where
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findInRay(start, end, func:(tile:Tile, entry:FlxRayEntry)->Bool)
-	{
-		return findInRayHelper(start, end, (i, t, e)->t != null && func(t, e));
-	}
-	
-	/**
-	 * Checks all tile indices overlapping a ray from `start` to `end`,
-	 * finds the first tile that satisfies to condition of `func`
-	 * 
-	 * @param   start  The world coordinates of the start of the ray
-	 * @param   end    The world coordinates of the end of the ray
 	 * @param   func   The stopping condition, where `index` is the tile's map index, `tile` is the
 	 *                 tile data at that location, if one exists, `entry` is how the ray entered the tile
 	 * @return  The result of the ray, whether it reached the end or was stopped, and where
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findInRay(start, end, func)
-	{
-		return findInRayHelper(start, end, func);
-	}
-	
-	function findInRayHelper
+	public function findInRay
 		(start:FlxPoint, end:FlxPoint, func:(index:Int, tile:Null<Tile>, entry:FlxRayEntry)->Bool):FlxRayResult
 	{
 		// trim the line to the parts inside the map
@@ -668,9 +476,11 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	{
 		final startI = getMapIndex(column, startRow);
 		final edge = EDGE(startRow < endRow ? UP : DOWN);
-		final f = (i, t)->func(i, t, i == startI ? entry : edge);
 		
-		return findIndexInColumn(column, startRow, endRow, f);
+		return findIndexInColumn(column, startRow, endRow, function(i, t)
+		{
+			return func(i, t, i == startI ? entry : edge);
+		});
 	}
 	
 	function calcRayResult(index:Int, entry:FlxRayEntry, m:Float, b:Float, start:FlxPoint):FlxRayResult
@@ -704,73 +514,13 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   column    The column to check
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
-	 * @param   func      The function, where `index` is the tile's map index
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInColumn(column, startRow, endRow, func:(index:Int)->Void)
-	{
-		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   column    The column to check
-	 * @param   startRow  The row to check from
-	 * @param   endRow    The row to check to
-	 * @param   func      The function, where `tile` is the tile data at that location
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInColumn(column, startRow, endRow, func:(tile:Tile)->Void)
-	{
-		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ if (t != null) func(t); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
-	 * 
-	 * @param   column    The column to check
-	 * @param   startRow  The row to check from
-	 * @param   endRow    The row to check to
 	 * @param   func      The function, where `index` is the tile's map index, and `tile` is
 	 *                    the tile data at that location, if one exists
 	 * @since 6.2.0
 	 */
-	overload public inline extern function forEachInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
+	public function forEachInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Void)
 	{
-		findIndexInColumnHelper(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
-	 * 
-	 * @param   row          The row to check
-	 * @param   startColumn  The column to check from
-	 * @param   endColumn    The column to check to
-	 * @param   func         The function, where `index` is the tile's map index
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(index:Int)->Void)
-	{
-		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ func(i); return false; });
-	}
-	
-	/**
-	 * Calls `func` on all tiles in the `column` between the specified `startRow` and `endRow`
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   row          The row to check
-	 * @param   startColumn  The column to check from
-	 * @param   endColumn    The column to check to
-	 * @param   func         The stopping condition, where `tile` is the tile data at that location
-	 * @since 6.2.0
-	 */
-	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(tile:Tile)->Void)
-	{
-		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ if (t != null) func(t); return false; });
+		findIndexInColumn(column, startRow, endRow, (i, t)->{ func(i, t); return false; });
 	}
 	
 	/**
@@ -785,54 +535,28 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	overload public inline extern function forEachInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Void)
 	{
-		findIndexInRowHelper(row, startColumn, endColumn, (i, t)->{ func(i, t); return false; });
+		findIndexInRow(row, startColumn, endColumn, (i, t)->{ func(i, t); return false; });
 	}
 	
 	/**
 	 * Checks all tiles in the `column` between the specified `startRow` and `endRow`,
 	 * Retrieves the first tile that satisfies to condition of `func` and returns it
 	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
 	 * @param   column    The column to check
 	 * @param   startRow  The row to check from
 	 * @param   endRow    The row to check to
-	 * @param   func      The stopping condition, where `tile` is the tile data at that location
+	 * @param   func      The stopping condition, where `index` is the tile's map index, and
+	 *                    `tile` is the tile data at that location, if one exists
 	 * @return  The found tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
+	public function findInColumn(column:Int, startRow:Int, endRow:Int, func):Null<Tile>
 	{
-		return findInColumnHelper(column, startRow, endRow, func);
-	}
-	
-	function findInColumnHelper(column:Int, startRow:Int, endRow:Int, func:(tile:Tile)->Bool):Tile
-	{
-		final index = findIndexInColumnHelper(column, startRow, endRow, (i, t)->func(t));
+		final index = findIndexInColumn(column, startRow, endRow, func);
 		if (index < 0)
 			return null;
 		
-		final data = getTileData(index);
-		
-		return data;
-	}
-	
-	/**
-	 * Checks all tiles in the `column` between the specified `startRow` and `endRow`,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   column    The column to check
-	 * @param   startRow  The row to check from
-	 * @param   endRow    The row to check to
-	 * @param   func      The stopping condition, where `tile` is the tile data at that location
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInColumn(column, startRow, endRow, func:(tile:Tile)->Bool)
-	{
-		return findIndexInColumnHelper(column, startRow, endRow, (i, t)->func(t));
+		return getTileData(index);
 	}
 	
 	/**
@@ -847,12 +571,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findIndexInColumn(column, startRow, endRow, func:(index:Int, tile:Null<Tile>)->Bool)
-	{
-		return findIndexInColumnHelper(column, startRow, endRow, func);
-	}
-	
-	function findIndexInColumnHelper(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	public function findIndexInColumn(column:Int, startRow:Int, endRow:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
 	{
 		if (!columnExists(column))
 			throw 'Invalid column: $column, total column: $widthInTiles';
@@ -885,45 +604,21 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * Checks all tile indices in the `row` between the specified start and end column,
 	 * Retrieves the first tile that satisfies to condition of `func` and returns it
 	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
 	 * @param   row          The row to check
 	 * @param   startColumn  The column to check from
 	 * @param   endColumn    The column to check to
-	 * @param   func         The stopping condition, where `tile` is the tile data at that location
+	 * @param   func         The stopping condition, where `index` is the tile's map index, and
+	 *                       `tile` is the tile data at that location, if one exists
 	 * @return  The found tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findInRow(row, startColumn, endColumn, func:(tile:Tile)->Bool)
+	public function findInRow(row:Int, startColumn:Int, endColumn:Int, func)
 	{
-		return findInRowHelper(row, startColumn, endColumn, func);
-	}
-	
-	function findInRowHelper(row:Int, startColumn:Int, endColumn:Int, func:(tile:Tile)->Bool):Tile
-	{
-		final index = findIndexInRowHelper(row, startColumn, endColumn, (i, t)->func(t));
+		final index = findIndexInRow(row, startColumn, endColumn, func);
 		if (index < 0)
 			return null;
 		
-		return getTileData(index);
-	}
-	
-	/**
-	 * Checks all tile indices in the `row` between the specified start and end column,
-	 * finds the first tile that satisfies to condition of `func` and returns its index
-	 * 
-	 * **Note:** This skips any tiles with no instance
-	 * 
-	 * @param   row          The row to check
-	 * @param   startColumn  The column to check from
-	 * @param   endColumn    The column to check to
-	 * @param   func         The stopping condition, where `tile` is the tile data at that location
-	 * @return  The index of the found tile
-	 * @since 6.2.0
-	 */
-	overload public inline extern function findIndexInRow(row, startColumn, endColumn, func:(tile:Tile)->Bool)
-	{
-		return findIndexInRowHelper(row, startColumn, endColumn, (i, t)->func(t));
+		return getTileData(index, true);
 	}
 	
 	/**
@@ -938,12 +633,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @return  The index of the found tile
 	 * @since 6.2.0
 	 */
-	overload public inline extern function findIndexInRow(row, startColumn, endColumn, func:(index:Int, tile:Null<Tile>)->Bool)
-	{
-		return findIndexInRowHelper(row, startColumn, endColumn, func);
-	}
-	
-	function findIndexInRowHelper(row:Int, startColumn:Int, endColumn:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
+	public function findIndexInRow(row:Int, startColumn:Int, endColumn:Int, func:(index:Int, tile:Null<Tile>)->Bool):Int
 	{
 		if (!rowExists(row))
 			throw 'Invalid row: $row, total rows: $heightInTiles';
@@ -1699,7 +1389,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 * @param   orient  If `true`, positions the tile in the world, useful for collision
 	 * @since 5.9.0
 	 */
-	overload public inline extern function getTileData(column:Int, row:Int, orient = false):Null<Tile>
+	overload public inline extern function getTileData(column:Int, row:Int, orient = false)
 	{
 		return getTileData(getMapIndex(column, row), orient);
 	}
