@@ -13,7 +13,8 @@ import openfl.errors.ArgumentError;
 
 using StringTools;
 
-@:nullSafety(Strict)
+// null safety breaks on 4.2
+#if (haxe >= version("4.3.0")) @:nullSafety(Strict) #end
 class FlxTilemapTest extends FlxTest
 {
 	var tilemap:FlxTilemap = new FlxTilemap();
