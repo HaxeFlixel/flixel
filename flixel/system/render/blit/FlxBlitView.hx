@@ -429,7 +429,7 @@ class FlxBlitView extends FlxCameraView
 		}
 	}
 	
-	override function checkResize()
+	function checkResize():Void
 	{
 		if (camera.width != buffer.width || camera.height != buffer.height)
 		{

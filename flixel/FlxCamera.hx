@@ -1,13 +1,5 @@
 package flixel;
 
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-import openfl.display.DisplayObject;
-import openfl.display.Graphics;
-import openfl.display.Sprite;
-import openfl.geom.ColorTransform;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -24,7 +16,6 @@ import flixel.system.render.blit.FlxBlitView;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSpriteUtil;
 import openfl.Vector;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
@@ -1442,10 +1433,11 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	@:deprecated("checkResize() is deprecated")
 	function checkResize():Void
 	{
-		view.checkResize();
+		if (FlxG.renderBlit)
+			viewBlit.checkResize();
 	}
 
 	@:deprecated("updateBlitMatrix() is deprecated, use camera.viewBlit.updateBlitMatrix(), instead")

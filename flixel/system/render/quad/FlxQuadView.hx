@@ -1,5 +1,6 @@
 package flixel.system.render.quad;
 
+import openfl.display.Graphics;
 import flixel.math.FlxRect;
 import openfl.display.DisplayObjectContainer;
 import flixel.system.render.FlxCameraView;
@@ -67,8 +68,10 @@ class FlxQuadView extends FlxCameraView
 	 * Helper rect for `drawTriangles()` visibility checks
 	 */
 	var _bounds:FlxRect = FlxRect.get();
-	
+
 	var _helperMatrix:FlxMatrix = new FlxMatrix();
+
+	var targetGraphics:Graphics;
 	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
@@ -85,6 +88,8 @@ class FlxQuadView extends FlxCameraView
 		debugLayer = new Sprite();
 		_scrollRect.addChild(debugLayer);
 		#end
+
+		targetGraphics = canvas.graphics;
 	}
 	
 	override function destroy():Void
@@ -224,12 +229,12 @@ class FlxQuadView extends FlxCameraView
 	
 	override function fill(color:FlxColor, blendAlpha:Bool = true):Void
 	{
-		canvas.graphics.overrideBlendMode(null);
-		canvas.graphics.beginFill(color.rgb, color.alphaFloat);
+		targetGraphics.overrideBlendMode(null);
+		targetGraphics.beginFill(color.rgb, color.alphaFloat);
 		// i'm drawing rect with these parameters to avoid light lines at the top and left of the camera,
 		// which could appear while cameras fading
-		canvas.graphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
-		canvas.graphics.endFill();
+		targetGraphics.drawRect(camera.viewMarginLeft - 1, camera.viewMarginTop - 1, camera.viewWidth + 2, camera.viewHeight + 2);
+		targetGraphics.endFill();
 	}
 	
 	override function offsetView(x:Float, y:Float):Void

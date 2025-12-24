@@ -202,8 +202,6 @@ class FlxCameraView implements IFlxDestroyable
 		return object;
 	}
 	
-	function checkResize():Void {}
-	
 	function get_display():DisplayObjectContainer
 	{
 		return null;
