@@ -703,8 +703,11 @@ class FlxTilemapTest extends FlxTest
 		Assert.areEqual(20 + 2 * size + half, tilemap.getRowPos(2, true));
 		Assert.areEqual(20 + 1000 * size, tilemap.getRowPos(1000));
 		
-		Assert.areEqual(null, tilemap.getTilePos(1000));
+		final testPoint = FlxPoint.get(100, 50);
+		Assert.areEqual(null, tilemap.getTilePos(1000)); // null is returned
+		FlxAssert.pointsEqualXY(100, 50, testPoint); // result is unchanged
 		Assert.areEqual(null, tilemap.getTilePos(-1));
+		FlxAssert.pointsEqualXY(100, 50, testPoint);
 		
 		
 		inline function assertPosEqual(expectedX:Float, expectedY:Float, actual:FlxPoint, ?infos:PosInfos)
