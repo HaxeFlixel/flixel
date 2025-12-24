@@ -744,7 +744,7 @@ abstract class FlxBaseTilemap<Tile:FlxObject> extends FlxObject
 	 */
 	public function isOverlappingTile(object:FlxObject, ?filter:(tile:Tile)->Bool, ?position:FlxPoint):Bool
 	{
-		throw "overlapsWithCallback must be implemented";
+		throw "isOverlappingTile must be implemented";
 	}
 	
 	/**
