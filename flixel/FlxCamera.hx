@@ -1448,14 +1448,10 @@ class FlxCamera extends FlxBasic
 		view.checkResize();
 	}
 
-	@:deprecated("depblit")
+	@:deprecated("updateBlitMatrix() is deprecated, use camera.viewBlit.updateBlitMatrix(), instead")
 	inline function updateBlitMatrix():Void
 	{
-		_blitMatrix.identity();
-		_blitMatrix.translate(-viewMarginLeft, -viewMarginTop);
-		_blitMatrix.scale(scaleX, scaleY);
-
-		_useBlitMatrix = (scaleX < initialZoom) || (scaleY < initialZoom);
+		viewBlit.updateBlitMatrix();
 	}
 
 	/**
