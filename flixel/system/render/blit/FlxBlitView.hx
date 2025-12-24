@@ -213,7 +213,7 @@ class FlxBlitView extends FlxCameraView
 		gfx.endFill();
 	}
 
-	override public function drawDebugCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
+	override public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
 		gfx.beginFill(color.rgb, color.alphaFloat);

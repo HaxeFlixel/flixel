@@ -165,7 +165,7 @@ class FlxQuadView extends FlxCameraView
 		gfx.endFill();
 	}
 
-	override function drawDebugCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
+	override function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
 	{
 		final gfx = debugLayer.graphics;
 		gfx.beginFill(color.rgb, color.alphaFloat);

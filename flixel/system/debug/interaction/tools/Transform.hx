@@ -302,7 +302,7 @@ private class Marker
 	public static function draw(screenX:Float, screenY:Float, circle:Bool, camera:FlxCamera)
 	{
 		if (circle)
-			camera.drawDebugCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
+			camera.drawDebugFilledCircle(screenX, screenY, CIRCLE_RADIUS, FlxColor.MAGENTA);
 		else
 			camera.drawDebugFilledRect(screenX - RECT_MARGIN, screenY - RECT_MARGIN, RECT_SIZE, RECT_SIZE, FlxColor.MAGENTA);
 	}

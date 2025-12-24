@@ -695,9 +695,9 @@ class FlxCamera extends FlxBasic
 		view.drawDebugFilledRect(x, y, width, height, color);
 	}
 
-	public function drawDebugCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void 
+	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void 
 	{
-		view.drawDebugCircle(x, y, radius, color);
+		view.drawDebugFilledCircle(x, y, radius, color);
 	}
 
 	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void 
