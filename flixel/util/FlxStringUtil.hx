@@ -378,64 +378,27 @@ class FlxStringUtil
 	/**
 	 * Converts a one-dimensional array of tile data to a comma-separated string.
 	 *
-	 * @param	Data		An array full of integer tile references.
-	 * @param	Width		The number of tiles in each row.
-	 * @param	Invert		Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
-	 * @return	A comma-separated string containing the level data in a FlxTilemap-friendly format.
+	 * @param   data    An array full of integer tile references.
+	 * @param   width   The number of tiles in each row.
+	 * @param   invert  Recommended only for 1-bit arrays - changes 0s to 1s and vice versa.
+	 * @return  A comma-separated string containing the level data in a FlxTilemap-friendly format.
 	 */
-	public static function arrayToCSV(Data:Array<Int>, Width:Int, Invert:Bool = false):String
+	public static function arrayToCSV(data:Array<Int>, width:Int, invert = false):String
 	{
-		var row:Int = 0;
-		var column:Int;
-		var csv:String = "";
-		var height:Int = Std.int(Data.length / Width);
-		var index:Int;
-		var offset:Int = 0;
-
-		while (row < height)
-		{
-			column = 0;
-
-			while (column < Width)
-			{
-				index = Data[offset];
-
-				if (Invert)
-				{
-					if (index == 0)
-					{
-						index = 1;
-					}
-					else if (index == 1)
-					{
-						index = 0;
-					}
-				}
-
-				if (column == 0)
-				{
-					if (row == 0)
-					{
-						csv += index;
-					}
-					else
-					{
-						csv += "\n" + index;
-					}
-				}
-				else
-				{
-					csv += ", " + index;
-				}
-
-				column++;
-				offset++;
-			}
-
-			row++;
-		}
-
-		return csv;
+		return arrayToCSVHelper(invert ? data.map(t->t == 0 ? 1 : 0) : data, width);
+	}
+	
+	static function arrayToCSVHelper<T>(data:Array<T>, width:Int):String
+	{
+		final rows = Std.int(data.length / width);
+		return [ for (row in 0...rows)
+			data.slice(width * row, (1 + row) * width).join(", ")
+		].join("\n");
+	}
+	
+	static function array2DToCSVHelper<T>(data:Array<Array<T>>):String
+	{
+		return data.map(row->row.join(", ")).join("\n");
 	}
 
 	/**
@@ -503,46 +466,51 @@ class FlxStringUtil
 	static function bitmapToCSVHelper(bitmap:BitmapData, scale:Int, colors:Array<FlxColor>, ignoreAlpha:Bool):String
 	{
 		final colorMap = generateColorMapFromArray(colors, ignoreAlpha);
-		
+		final array = bitmapToArray2dHelper(bitmap, scale, colorMap, ignoreAlpha, 0);
+		return array2DToCSVHelper(array);
+	}
+	
+	static function bitmapToArray2dHelper<T>(bitmap:BitmapData, scale:Int, colorMap:Map<FlxColor, T>, ignoreAlpha:Bool, backupValue:T):Array<Array<T>>
+	{
 		final bitmapColors = bitmap.getVector(bitmap.rect);
 		final columns = bitmap.width;
 		final rows = bitmap.height;
-		final result = new Array<String>();
+		final result:Array<Array<T>> = [];
 		for (row in 0...rows)
 		{
-			final rowData = new Array<Int>();
+			final rowData:Array<T> = [];
 			for (column in 0...columns)
 			{
 				final rgba:FlxColor = bitmapColors[row * columns + column];
 				final color = ignoreAlpha ? rgba.rgb : rgba;
-				final index = if (colorMap.exists(color))
+				final value = if (colorMap.exists(color))
 				{
 					colorMap[color];
 				}
 				else if (isBrowserManipulatingImages)
 				{
-					final backupIndex = getNearestColorIndex(color, colorMap);
-					colorMap[color] = backupIndex;
+					final nearestColor = color.nearest(colorMap.keys());
+					colorMap[color] = colorMap[nearestColor];
 					FlxG.log.notice('Bitmap contains unexpected color ${color.toHexString()}, '
-						+ 'likely due to your browser\'s privacy settings. Assuming index $backupIndex');
-					backupIndex;
+						+ 'likely due to your browser\'s privacy settings. Using nearest color $nearestColor.toHexString()}');
+					colorMap[nearestColor];
 				}
 				else
 				{
-					colorMap[color] = 0;
-					FlxG.log.error('Error creating csv, unmapped color ${color.toHexString()}. Assuming index 0');
-					0;
+					colorMap[color] = backupValue;
+					FlxG.log.error('Error creating csv, unmapped color ${color.toHexString()}. Defaulting to $backupValue');
+					backupValue;
 				}
 				
 				for (s in 0...scale)
-					rowData.push(index);
+					rowData.push(value);
 			}
 			
-			final stringData = rowData.join(", ");
 			for (s in 0...scale)
-				result.push(stringData);
+				result.push(rowData);
 		}
-		return result.join("\n");
+		
+		return result;
 	}
 	
 	#if html5 
@@ -634,37 +602,6 @@ class FlxStringUtil
 		#end
 		
 		return colorMap;
-	}
-	
-	static inline function getNearestColorIndex(targetColor:FlxColor, map:Map<FlxColor, Int>):Int
-	{
-		if (map.exists(targetColor))
-			return map[targetColor];
-		
-		var closest = -1;
-		var closestDiff = -1;
-		
-		inline function abs(a:Int):Int
-		{
-			return a < 0 ? -1 : a;
-		}
-		
-		for (color => index in map)
-		{
-			final diff
-				= abs(color.red - targetColor.red)
-				+ abs(color.green - targetColor.green)
-				+ abs(color.blue - targetColor.blue)
-				+ abs(color.alpha - targetColor.alpha);
-			
-			if (closest == -1 || diff < closestDiff)
-			{
-				closest = index;
-				closestDiff = diff;
-			}
-		}
-		
-		return closest;
 	}
 
 	/**
