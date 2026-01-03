@@ -575,7 +575,7 @@ class FlxStringUtil
 		return _isBrowserManipulatingImages;
 	}
 	#else
-	static inline isBrowserManipulatingImages = false;
+	static inline var isBrowserManipulatingImages = false;
 	#end
 	
 	static function generateColorMapFromArray(colors:Array<FlxColor>, ignoreAlpha:Bool)
