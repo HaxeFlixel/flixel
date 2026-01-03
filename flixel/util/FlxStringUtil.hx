@@ -396,11 +396,6 @@ class FlxStringUtil
 		].join("\n");
 	}
 	
-	static function array2DToCSVHelper<T>(data:Array<Array<T>>):String
-	{
-		return data.map(row->row.join(", ")).join("\n");
-	}
-
 	/**
 	 * Converts a BitmapData object to a comma-separated string. Black pixels are flagged as 'solid' by default,
 	 * non-black pixels are set as non-colliding. Black pixels must be PURE BLACK.
@@ -466,20 +461,17 @@ class FlxStringUtil
 	static function bitmapToCSVHelper(bitmap:BitmapData, scale:Int, colors:Array<FlxColor>, ignoreAlpha:Bool):String
 	{
 		final colorMap = generateColorMapFromArray(colors, ignoreAlpha);
-		final array = bitmapToArray2dHelper(bitmap, scale, colorMap, ignoreAlpha, 0);
-		return array2DToCSVHelper(array);
+		final array = FlxArrayUtil.scale(bitmapToArray2d(bitmap, colorMap, ignoreAlpha, 0), scale);
+		return array.map(row->row.join(", ")).join("\n");
 	}
 	
-	static function bitmapToArray2dHelper<T>(bitmap:BitmapData, scale:Int, colorMap:Map<FlxColor, T>, ignoreAlpha:Bool, backupValue:T):Array<Array<T>>
+	static function bitmapToArray2d<T>(bitmap:BitmapData, colorMap:Map<FlxColor, T>, ignoreAlpha:Bool, backupValue:T):Array<Array<T>>
 	{
 		final bitmapColors = bitmap.getVector(bitmap.rect);
 		final columns = bitmap.width;
-		final rows = bitmap.height;
-		final result:Array<Array<T>> = [];
-		for (row in 0...rows)
+		return [ for (row in 0...bitmap.height)
 		{
-			final rowData:Array<T> = [];
-			for (column in 0...columns)
+			[ for (column in 0...columns)
 			{
 				final rgba:FlxColor = bitmapColors[row * columns + column];
 				final color = ignoreAlpha ? rgba.rgb : rgba;
@@ -501,16 +493,9 @@ class FlxStringUtil
 					FlxG.log.error('Error creating csv, unmapped color ${color.toHexString()}. Defaulting to $backupValue');
 					backupValue;
 				}
-				
-				for (s in 0...scale)
-					rowData.push(value);
-			}
-			
-			for (s in 0...scale)
-				result.push(rowData);
-		}
-		
-		return result;
+				value;
+			}];
+		}];
 	}
 	
 	#if html5 
