@@ -461,8 +461,9 @@ class FlxStringUtil
 	static function bitmapToCSVHelper(bitmap:BitmapData, scale:Int, colors:Array<FlxColor>, ignoreAlpha:Bool):String
 	{
 		final colorMap = generateColorMapFromArray(colors, ignoreAlpha);
-		final array = FlxArrayUtil.scale(bitmapToArray2d(bitmap, colorMap, ignoreAlpha, 0), scale);
-		return array.map(row->row.join(", ")).join("\n");
+		final array = bitmapToArray2d(bitmap, colorMap, ignoreAlpha, 0);
+		final scaledArray = FlxArrayUtil.scale(array, scale);
+		return scaledArray.map(row->row.join(", ")).join("\n");
 	}
 	
 	static function bitmapToArray2d<T>(bitmap:BitmapData, colorMap:Map<FlxColor, T>, ignoreAlpha:Bool, backupValue:T):Array<Array<T>>
@@ -490,7 +491,7 @@ class FlxStringUtil
 				else
 				{
 					colorMap[color] = backupValue;
-					FlxG.log.error('Error creating csv, unmapped color ${color.toHexString()}. Defaulting to $backupValue');
+					FlxG.log.error('Bitmap contains unexpected color ${color.toHexString()}. Defaulting to $backupValue');
 					backupValue;
 				}
 				value;
@@ -498,7 +499,9 @@ class FlxStringUtil
 		}];
 	}
 	
-	#if html5 
+	#if FLX_UNIT_TEST
+	public static var isBrowserManipulatingImages = false;
+	#elseif html5 
 	static var _isBrowserManipulatingImages:Null<Bool> = null;
 	static var isBrowserManipulatingImages(get, null):Bool;
 	static function get_isBrowserManipulatingImages()
@@ -535,7 +538,18 @@ class FlxStringUtil
 	{
 		final colorMap = new Map<FlxColor, Int>();
 		for (index => color in colors)
-			colorMap[ignoreAlpha ? color.rgb : color] = index;
+		{
+			final mappedColor = ignoreAlpha ? color.rgb : color;
+			if (colorMap.exists(mappedColor))
+			{
+				if (color == mappedColor) // argb matches
+					FlxG.log.error('Color map contains duplicates of ${color.toHexString()}');
+				else
+					FlxG.log.error('Color map contains duplicate rgb for ${color.toHexString()} and ${mappedColor.toHexString()}');
+			}
+			else
+				colorMap[mappedColor] = index;
+		}
 		
 		#if html5
 		if (!isBrowserManipulatingImages)

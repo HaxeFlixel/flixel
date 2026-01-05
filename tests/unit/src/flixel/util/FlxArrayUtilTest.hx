@@ -104,6 +104,30 @@ class FlxArrayUtilTest
 	}
 
 	@Test
+	function testScale()
+	{
+		Assert.isTrue([0, 1, 2, 3, 4, 5].scale(2).equals([0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5]));
+	}
+
+	@Test
+	function testScale2d()
+	{
+		final actual = [[0, 1, 2], [3, 4, 5]].scale(2);
+		Assert.isTrue(actual[0].equals([0, 0, 1, 1, 2, 2]));
+		Assert.isTrue(actual[1].equals([0, 0, 1, 1, 2, 2]));
+		Assert.isTrue(actual[2].equals([3, 3, 4, 4, 5, 5]));
+		Assert.isTrue(actual[3].equals([3, 3, 4, 4, 5, 5]));
+		
+		final actual = [[0, 1, 2], [3, 4, 5]].scale(2, 3);
+		Assert.isTrue(actual[0].equals([0, 0, 1, 1, 2, 2]));
+		Assert.isTrue(actual[1].equals([0, 0, 1, 1, 2, 2]));
+		Assert.isTrue(actual[2].equals([0, 0, 1, 1, 2, 2]));
+		Assert.isTrue(actual[3].equals([3, 3, 4, 4, 5, 5]));
+		Assert.isTrue(actual[4].equals([3, 3, 4, 4, 5, 5]));
+		Assert.isTrue(actual[5].equals([3, 3, 4, 4, 5, 5]));
+	}
+
+	@Test
 	@:haxe.warning("-WDeprecated")
 	function testSetLength()
 	{
