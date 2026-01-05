@@ -87,7 +87,9 @@ class FlxSound extends FlxBasic
 	public var playing(get, never):Bool;
 	
 	/**
-	 * Set volume to a value between 0 and 1 to change how this sound is.
+	 * Set volume to a number between 0 and 1 to change how quiet this sound is.
+	 * 
+	 * **NOTE:** This value is automatically clamped to 0 <= a <= 1
 	 */
 	public var volume(get, set):Float;
 	
