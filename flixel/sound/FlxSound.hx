@@ -87,7 +87,7 @@ class FlxSound extends FlxBasic
 	public var playing(get, never):Bool;
 	
 	/**
-	 * Set volume to a number between 0 and 1 to change how quiet this sound is.
+	 * A number between 0 and 1 indicating how loud this sound is.
 	 * 
 	 * **NOTE:** This value is automatically clamped to 0 <= a <= 1
 	 */
