@@ -97,8 +97,8 @@ class FlxStringUtilTest
 		FlxStringUtil.bitmapToCSV(bitmapData, false);
 		FlxStringUtil.bitmapToCSV(bitmapData, 1, colorMap);
 		FlxStringUtil.bitmap32ToCSV(bitmapData, 1, colorMap);
-		FlxStringUtil.bitmapToCSV(bitmapData, 1);
 		#if !flash
+		FlxStringUtil.bitmapToCSV(bitmapData, 1);
 		FlxStringUtil.bitmapToCSV(bitmapData, colorMap);
 		FlxStringUtil.bitmap32ToCSV(bitmapData, colorMap);
 		#end
@@ -120,7 +120,9 @@ class FlxStringUtilTest
 		
 		// without farbling
 		var errorCount = 0;
-		FlxG.log.styles.error.onLog.add(function onError(data, ?pos) errorCount++);
+		function onError(data, ?pos) errorCount++;
+		
+		FlxG.log.styles.error.onLog.add(onError);
 		FlxStringUtil.isBrowserManipulatingImages = false;
 		final expected = '0, 0, 0, 0, 0\n1, 0, 0, 0, 0';
 		final actual = FlxStringUtil.bitmap32ToCSV(bitmapData, [FlxColor.BLACK, FlxColor.WHITE]);
@@ -130,7 +132,9 @@ class FlxStringUtilTest
 		
 		// with farbling
 		var noticeCount = 0;
-		FlxG.log.styles.notice.onLog.add(function onNotice(_, ?_) noticeCount++);
+		function onNotice(_, ?_) noticeCount++;
+		
+		FlxG.log.styles.notice.onLog.add(onNotice);
 		FlxStringUtil.isBrowserManipulatingImages = true;
 		
 		final expected = '0, 0, 0, 0, 0\n1, 1, 1, 1, 1';
