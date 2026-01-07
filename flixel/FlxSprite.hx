@@ -866,7 +866,7 @@ class FlxSprite extends FlxObject
 		if (clipRect == null)
 			clipRect = new FlxRect();
 		
-		if (camera != null)
+		if (camera == null)
 			camera = getDefaultCamera();
 		
 		final p1 = viewToFramePosition(left, top, camera);
