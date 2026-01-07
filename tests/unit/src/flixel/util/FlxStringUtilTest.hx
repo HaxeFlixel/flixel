@@ -125,7 +125,7 @@ class FlxStringUtilTest
 		FlxG.log.styles.error.onLog.add(onError);
 		FlxStringUtil.isBrowserManipulatingImages = false;
 		final expected = '0, 0, 0, 0, 0\n1, 0, 0, 0, 0';
-		final actual = FlxStringUtil.bitmap32ToCSV(bitmapData, [FlxColor.BLACK, FlxColor.WHITE]);
+		final actual = FlxStringUtil.bitmap32ToCSV(bitmapData, 1, [FlxColor.BLACK, FlxColor.WHITE]);
 		Assert.areEqual(expected, actual);
 		Assert.areEqual(8, errorCount);
 		FlxG.log.styles.error.onLog.remove(onError);
@@ -138,7 +138,7 @@ class FlxStringUtilTest
 		FlxStringUtil.isBrowserManipulatingImages = true;
 		
 		final expected = '0, 0, 0, 0, 0\n1, 1, 1, 1, 1';
-		final actual = FlxStringUtil.bitmap32ToCSV(bitmapData, [FlxColor.BLACK, FlxColor.WHITE]);
+		final actual = FlxStringUtil.bitmap32ToCSV(bitmapData, 1, [FlxColor.BLACK, FlxColor.WHITE]);
 		Assert.areEqual(expected, actual);
 		Assert.areEqual(8, noticeCount);
 		FlxG.log.styles.notice.onLog.remove(onNotice);
