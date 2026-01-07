@@ -120,11 +120,29 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Whether or not this sound should loop.
+	 * 
+	 * **NOTE:** The sound will loop even if this is `false` when `loopUntil > 0`.
+	 * This flag is set to `false` when `loopCount` reaches `loopUntil`
 	 */
 	public var looped:Bool;
 	
 	/**
-	 * In case of looping, the point (in milliseconds) from where to restart the sound when it loops back
+	 * The number of times this sound was restarted, via the `looped` flag.
+	 * Automatically incremented on loops, and reset to 0 when restarted
+	 * @since 6.2.0
+	 */
+	public var loopCount(default, null):Int = 0;
+	
+	/**
+	 * The number of times this sound should loop, where `-1` loops forever, and `1` is
+	 * repeated once. the `looped` flag does not need to be `true` for this to have an effect, but
+	 * will be set to `false` upon completion
+	 * @since 6.2.0
+	 */
+	public var loopUntil:Int = -1;
+	
+	/**
+	 * The time (in milliseconds) from where to restart the sound when it loops back
 	 * @since 4.1.0
 	 */
 	public var loopTime:Float = 0;
@@ -238,6 +256,7 @@ class FlxSound extends FlxBasic
 		_volumeAdjust = 1.0;
 		looped = false;
 		loopTime = 0.0;
+		loopCount = 0;
 		endTime = 0.0;
 		_target = null;
 		_radius = 0;
@@ -573,7 +592,10 @@ class FlxSound extends FlxBasic
 			return this;
 			
 		if (ForceRestart)
+		{
+			loopCount = 0;
 			cleanup(false, true);
+		}
 		else if (playing) // Already playing sound
 			return this;
 			
@@ -742,9 +764,15 @@ class FlxSound extends FlxBasic
 	{
 		if (onComplete != null)
 			onComplete();
-			
-		if (looped)
+		
+		final loop = looped || (loopUntil > -1 && loopCount < loopUntil);
+		
+		if (loop)
 		{
+			loopCount++;
+			if (loopUntil > -1 && loopCount >= loopUntil)
+				looped = false;
+			
 			cleanup(false);
 			play(false, loopTime, endTime);
 		}
