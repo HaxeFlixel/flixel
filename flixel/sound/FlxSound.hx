@@ -765,12 +765,15 @@ class FlxSound extends FlxBasic
 		if (onComplete != null)
 			onComplete();
 		
-		final loop = looped || (loopUntil > -1 && loopCount < loopUntil);
+		if (looped && loopUntil == 0)
+			looped = false;
+		
+		final loop = looped || (loopUntil > 0 && loopCount < loopUntil);
 		
 		if (loop)
 		{
 			loopCount++;
-			if (loopUntil > -1 && loopCount >= loopUntil)
+			if (loopUntil > 0 && loopCount >= loopUntil)
 				looped = false;
 			
 			cleanup(false);
