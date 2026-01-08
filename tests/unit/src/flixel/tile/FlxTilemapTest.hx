@@ -138,6 +138,7 @@ class FlxTilemapTest extends FlxTest
 	}
 	
 	@Test
+	@:haxe.warning("-WDeprecated")
 	function testLoadMapFromGraphic()
 	{
 		var map = new BitmapData(2, 2);
