@@ -447,7 +447,10 @@ class FlxStringUtil
 
 	/**
 	 * Converts a BitmapData object to a comma-separated string.
-	 *
+	 * 
+	 * **NOTE:** Due to OpenFL premultiplying all pixel colors on set,
+	 * any pixel with a 0 alpha and non-zero color components will be treated as 0x00000000
+	 * 
 	 * @param	bitmap   A Flash BitmapData object, preferably black and white.
 	 * @param	scale    Default is 1. Scale of 2 means each pixel forms a 2x2 block of tiles, and so on.
 	 * @param	colorMap An array of rgba color values in the order they're intended to be assigned as indices
