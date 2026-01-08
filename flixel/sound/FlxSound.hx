@@ -121,8 +121,8 @@ class FlxSound extends FlxBasic
 	/**
 	 * Whether or not this sound should loop.
 	 * 
-	 * **NOTE:** The sound will loop even if this is `false` when `loopUntil > 0`.
-	 * This flag is set to `false` when `loopCount` reaches `loopUntil`
+	 * **NOTE:** If `loopUntil` is 0 or more, than the sound will only loop until
+	 * `loopCount` reaches `loopUntil`
 	 */
 	public var looped:Bool;
 	
@@ -135,8 +135,7 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * The number of times this sound should loop, where `-1` loops forever, and `1` is
-	 * repeated once. the `looped` flag does not need to be `true` for this to have an effect, but
-	 * will be set to `false` upon completion
+	 * repeated once. This field is ignored if `looped` is `false`
 	 * @since 6.2.0
 	 */
 	public var loopUntil:Int = -1;
@@ -765,16 +764,9 @@ class FlxSound extends FlxBasic
 		if (onComplete != null)
 			onComplete();
 		
-		if (looped && loopUntil == 0)
-			looped = false;
-		
-		final loop = looped || (loopUntil > 0 && loopCount < loopUntil);
-		
-		if (loop)
+		if (looped && (loopUntil == -1 || loopCount < loopUntil))
 		{
 			loopCount++;
-			if (loopUntil > 0 && loopCount >= loopUntil)
-				looped = false;
 			
 			cleanup(false);
 			play(false, loopTime, endTime);
