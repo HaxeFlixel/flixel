@@ -256,6 +256,7 @@ class FlxSound extends FlxBasic
 		looped = false;
 		loopTime = 0.0;
 		loopCount = 0;
+		loopUntil = -1;
 		endTime = 0.0;
 		_target = null;
 		_radius = 0;
@@ -591,17 +592,17 @@ class FlxSound extends FlxBasic
 			return this;
 			
 		if (ForceRestart)
-		{
-			loopCount = 0;
 			cleanup(false, true);
-		}
 		else if (playing) // Already playing sound
 			return this;
 			
 		if (_paused)
 			resume();
 		else
+		{
+			loopCount = 0;
 			startSound(StartTime);
+		}
 			
 		endTime = EndTime;
 		return this;
@@ -768,11 +769,14 @@ class FlxSound extends FlxBasic
 		{
 			loopCount++;
 			
-			cleanup(false);
-			play(false, loopTime, endTime);
+			cleanup(false, false);
+			startSound(loopTime);
 		}
 		else
-			cleanup(autoDestroy);
+		{
+			_time = 0; // Remove this line in 7.0.0
+			cleanup(autoDestroy, false);
+		}
 	}
 	
 	/**
@@ -805,6 +809,7 @@ class FlxSound extends FlxBasic
 		{
 			_time = 0;
 			_paused = false;
+			loopCount = 0;
 		}
 	}
 	
