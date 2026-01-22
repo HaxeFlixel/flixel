@@ -1,6 +1,6 @@
 package flixel;
 
-import flixel.system.render.FlxCameraView;
+import flixel.system.render.FlxRenderer;
 import flixel.system.FlxSplash;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDestroyUtil;
@@ -803,7 +803,7 @@ class FlxGame extends Sprite
 
 		FlxG.signals.preDraw.dispatch();
 
-		FlxCameraView.totalDrawCalls = 0;
+		FlxRenderer.totalDrawCalls = 0;
 
 		FlxG.cameras.clear();
 
@@ -823,7 +823,7 @@ class FlxGame extends Sprite
 		if (FlxG.renderTile)
 		{
 			#if FLX_DEBUG
-			debugger.stats.drawCalls(FlxCameraView.totalDrawCalls);
+			debugger.stats.drawCalls(FlxRenderer.totalDrawCalls);
 			#end
 		}
 

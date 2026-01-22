@@ -21,33 +21,27 @@ import openfl.display.DisplayObject;
 import openfl.display.BitmapData;
 
 /**
- * A `FlxCameraView` is the base class for all rendering functionality.
- * It does not contain any rendering logic by itself, rather it is extended by the various renderer implementations.
+ * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
  */
 @:allow(flixel.FlxCamera)
 class FlxCameraView implements IFlxDestroyable
-{
-	/**
-	 * The number of total draw calls in a frame.
-	 */
-	public static var totalDrawCalls:Int = 0;
-	
+{	
 	/**
 	 * Creates a `FlxCameraView` object tied to a camera, based on the target and project configuration.
 	 * @param camera The camera to create the view for
 	 */
 	public static inline function create(camera:FlxCamera):FlxCameraView
 	{
-		if (FlxG.renderTile)
-		{
-			return cast new flixel.system.render.quad.FlxQuadView(camera);
-		}
-		else
+		if (!FlxG.renderer.isHardware)
 		{
 			return cast new flixel.system.render.blit.FlxBlitView(camera);
 		}
+		else
+		{
+			return cast new flixel.system.render.quad.FlxQuadView(camera);
+		}
 	}
-	
+
 	/**
 	 * Display object which is used as a container for all of the camera's graphics.
 	 * This object is added to the display tree.
@@ -95,41 +89,6 @@ class FlxCameraView implements IFlxDestroyable
 	{
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
-
-	/**
-	 * Called prior to the rendering call, clears the screen and prepares everything needed.
-	 */
-	public function clear():Void {}
-
-	/**
-	 * The actual rendering call where everything gets drawn.
-	 */
-	public function render():Void {}
-	
-	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
-		?shader:FlxShader):Void {}
-		
-	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
-		smoothing:Bool = false, ?shader:FlxShader):Void {}
-		
-	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
-		?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void {}
-		
-	public function beginDrawDebug():Void {}
-	
-	public function endDrawDebug(?matrix:FlxMatrix):Void {}
-	
-	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void {}
-	
-	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void {}
-	
-	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void {}
-	
-	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void {}
-	
-	public function fill(color:FlxColor, blendAlpha:Bool = true):Void {}
-	
-	function drawFX():Void {}
 	
 	function updateScale():Void
 	{

@@ -1,5 +1,6 @@
 package flixel;
 
+import flixel.system.render.FlxRenderer;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
 import flixel.math.FlxRect;
@@ -143,10 +144,31 @@ class FlxG
 	 */
 	public static var onMobile(get, never):Bool;
 
-	public static var renderMethod(default, null):FlxRenderMethod;
+	@:deprecated("renderMethod is deprecated, use FlxG.render.method, instead.")
+	public static var renderMethod(get, null):FlxRenderMethod;
+	static inline function get_renderMethod():FlxRenderMethod
+	{
+		return FlxG.renderer.method;
+	}
 
-	public static var renderBlit(default, null):Bool;
-	public static var renderTile(default, null):Bool;
+	@:deprecated("renderBlit is deprecated, compare against FlxG.render.method, instead.")
+	public static var renderBlit(get, never):Bool;
+	@:noCompletion static inline function get_renderBlit():Bool
+	{
+		return FlxG.renderer.method == BLITTING;
+	}
+
+	@:deprecated("renderTile is deprecated, compare against FlxG.render.method, instead.")
+	public static var renderTile(get, never):Bool;
+	@:noCompletion static inline function get_renderTile():Bool
+	{
+		return FlxG.renderer.method == DRAW_TILES;
+	}
+
+	/**
+	 * The global renderer instance.
+	 */
+	public static var renderer(default, null):FlxRenderer;
 
 	/**
 	 * Represents the amount of time in seconds that passed since last frame.
@@ -541,10 +563,6 @@ class FlxG
 		FlxG.height = height;
 
 		initRenderMethod();
-		#if FLX_OPENGL_AVAILABLE
-		// Query once when window is created and cache for later
-		bitmap.get_maxTextureSize();
-		#end
 
 		FlxG.initialWidth = width;
 		FlxG.initialHeight = height;
@@ -590,28 +608,10 @@ class FlxG
 
 	static function initRenderMethod():Void
 	{
-		#if !flash
-		renderMethod = switch (stage.window.context.type)
-		{
-			case OPENGL, OPENGLES, WEBGL: DRAW_TILES;
-			default: BLITTING;
-		}
-		#else
-		#if web
-		renderMethod = BLITTING;
-		#else
-		renderMethod = DRAW_TILES;
-		#end
-		#end
+		renderer = FlxRenderer.create();
+		renderer.init();
 
-		#if air
-		renderMethod = BLITTING;
-		#end
-
-		renderBlit = renderMethod == BLITTING;
-		renderTile = renderMethod == DRAW_TILES;
-
-		FlxObject.defaultPixelPerfectPosition = renderBlit;
+		FlxObject.defaultPixelPerfectPosition =	FlxG.renderer.method == BLITTING;
 	}
 
 	#if FLX_SAVE
@@ -750,8 +750,5 @@ class FlxG
 	}
 }
 
-enum FlxRenderMethod
-{
-	DRAW_TILES;
-	BLITTING;
-}
+@:deprecated("FlxG.FlxRenderMethod is deprecated, use FlxRenderer.FlxRenderMethod instead")
+typedef FlxRenderMethod = flixel.system.render.FlxRenderer.FlxRenderMethod;

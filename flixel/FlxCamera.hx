@@ -13,6 +13,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.system.render.FlxCameraView;
 import flixel.system.render.quad.FlxQuadView;
 import flixel.system.render.blit.FlxBlitView;
+import flixel.system.render.blit.FlxBlitRenderer;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
@@ -36,9 +37,8 @@ using flixel.util.FlxColorTransformUtil;
  * By default one camera is created automatically, that is the same size as window.
  * You can add more cameras or even replace the main camera using utilities in `FlxG.cameras`.
  */
-@:allow(flixel.system.render.FlxCameraView)
-@:access(flixel.system.render.blit.FlxBlitView)
-@:access(flixel.system.render.quad.FlxQuadView)
+@:allow(flixel.system.render)
+@:access(flixel.system.render)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -675,16 +675,16 @@ class FlxCamera extends FlxBasic
 	 */
 	@:deprecated("drawVertices is deprecated, use FlxBlitView.drawVertices, instead")
 	static var drawVertices(get, set):Vector<Float>;
-	static inline function get_drawVertices():Vector<Float> return FlxBlitView.drawVertices;
-	static inline function set_drawVertices(value:Vector<Float>):Vector<Float> return FlxBlitView.drawVertices = value;
+	static inline function get_drawVertices():Vector<Float> return FlxBlitRenderer.drawVertices;
+	static inline function set_drawVertices(value:Vector<Float>):Vector<Float> return FlxBlitRenderer.drawVertices = value;
 
 	/**
 	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
 	@:deprecated("trianglesSprite is deprecated, use FlxBlitView.trianglesSprite, instead")
 	static var trianglesSprite(get, set):Sprite;
-	static inline function get_trianglesSprite():Sprite return FlxBlitView.trianglesSprite;
-	static inline function set_trianglesSprite(value:Sprite):Sprite return FlxBlitView.trianglesSprite = value;
+	static inline function get_trianglesSprite():Sprite return FlxBlitRenderer.trianglesSprite;
+	static inline function set_trianglesSprite(value:Sprite):Sprite return FlxBlitRenderer.trianglesSprite = value;
 
 	/**
 	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer.
@@ -692,13 +692,13 @@ class FlxCamera extends FlxBasic
 	 */
 	@:deprecated("renderPoint is deprecated, use FlxBlitView.renderPoint, instead")
 	static var renderPoint(get, set):FlxPoint;
-	static inline function get_renderPoint():FlxPoint return FlxBlitView.renderPoint;
-	static inline function set_renderPoint(value:FlxPoint):FlxPoint return FlxBlitView.renderPoint = value;
+	static inline function get_renderPoint():FlxPoint return FlxBlitRenderer.renderPoint;
+	static inline function set_renderPoint(value:FlxPoint):FlxPoint return FlxBlitRenderer.renderPoint = value;
 
 	@:deprecated("renderRect is deprecated, use FlxBlitView.renderRect, instead")
 	static var renderRect(get, set):FlxRect;
-	static inline function get_renderRect():FlxRect return FlxBlitView.renderRect;
-	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitView.renderRect = value;
+	static inline function get_renderRect():FlxRect return FlxBlitRenderer.renderRect;
+	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitRenderer.renderRect = value;
 
 	@:noCompletion
 	public function startQuadBatch(graphic:FlxGraphic, colored:Bool, hasColorOffsets:Bool = false, ?blend:BlendMode, smooth:Bool = false, ?shader:FlxShader)
@@ -724,64 +724,59 @@ class FlxCamera extends FlxBasic
 		viewQuad.clearDrawStack();
 	}
 
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	inline function clear():Void
-	{
-		view.clear();
-	}
-
-	@:allow(flixel.system.frontEnds.CameraFrontEnd)
-	function render():Void
-	{
-		view.render();
-	}
-
 	public function beginDrawDebug():Void
 	{
-		view.beginDrawDebug();
+		// view.beginDrawDebug();
 	}
 
 	public function endDrawDebug(?matrix:FlxMatrix):Void
 	{
-		view.endDrawDebug(matrix);
+		// view.endDrawDebug(matrix);
 	}
 
 	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void 
 	{
-		view.drawDebugRect(x, y, width, height, color, thickness);
+		// FlxG.renderer.begin(this);
+		// view.drawDebugRect(x, y, width, height, color, thickness);
 	}
 
 	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void 
 	{
-		view.drawDebugFilledRect(x, y, width, height, color);
+		// FlxG.renderer.begin(this);
+		// view.drawDebugFilledRect(x, y, width, height, color);
 	}
 
 	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void 
 	{
-		view.drawDebugFilledCircle(x, y, radius, color);
+		// FlxG.renderer.begin(this);
+		// view.drawDebugFilledCircle(x, y, radius, color);
 	}
 
 	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void 
 	{
-		view.drawDebugLine(x1, y1, x2, y2, color, thickness);
+		// FlxG.renderer.begin(this);
+		// view.drawDebugLine(x1, y1, x2, y2, color, thickness);
 	}
 
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
-		view.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		FlxG.renderer.begin(this);
+		FlxG.renderer.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
-		view.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
+		FlxG.renderer.begin(this);
+		FlxG.renderer.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
-		view.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
+		FlxG.renderer.begin(this);
+		FlxG.renderer.drawTriangles(graphic, vertices, indices, uvtData, colors, position, blend, repeat, smoothing, transform, shader);
 	}
 
 	/**
@@ -1396,7 +1391,9 @@ class FlxCamera extends FlxBasic
 	overload public inline extern function fill(color:FlxColor, blendAlpha:Bool = true, fxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 		color.alphaFloat = fxAlpha;
-		view.fill(color, blendAlpha);
+
+		FlxG.renderer.begin(this);
+		FlxG.renderer.fill(color, blendAlpha);
 	}
 
 	/**
@@ -1407,7 +1404,7 @@ class FlxCamera extends FlxBasic
 	 */
 	overload public inline extern function fill(color:FlxColor, blendAlpha:Bool = true):Void
 	{
-		view.fill(color, blendAlpha);
+		FlxG.renderer.fill(color, blendAlpha);
 	}
 
 	/**
@@ -1416,12 +1413,14 @@ class FlxCamera extends FlxBasic
 	@:allow(flixel.system.render.FlxCameraView)
 	function drawFX():Void
 	{
+		FlxG.renderer.begin(this);
+
 		// Draw the "flash" special effect onto the buffer
 		if (_fxFlashAlpha > 0.0)
 		{
 			var color = _fxFlashColor;
 			color.alphaFloat *= _fxFlashAlpha;
-			view.fill(color);
+			FlxG.renderer.fill(color);
 		}
 		
 		// Draw the "fade" special effect onto the buffer
@@ -1429,7 +1428,7 @@ class FlxCamera extends FlxBasic
 		{
 			var color = _fxFadeColor;
 			color.alphaFloat *= _fxFadeAlpha;
-			view.fill(color);
+			FlxG.renderer.fill(color);
 		}
 	}
 

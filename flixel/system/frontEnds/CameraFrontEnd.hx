@@ -1,6 +1,6 @@
 package flixel.system.frontEnds;
 
-import flixel.system.render.blit.FlxBlitView;
+import flixel.system.render.blit.FlxBlitRenderer;
 import openfl.geom.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -48,7 +48,7 @@ class CameraFrontEnd
 	 * 
 	 * **NOTE**: Only works with the blitting renderer.
 	 */
-	@:deprecated("useBufferLocking is deprecated, use FlxBlitView.useBufferLocking, instead.")
+	@:deprecated("useBufferLocking is deprecated, use FlxBlitRenderer.useBufferLocking, instead.")
 	public var useBufferLocking(get, set):Bool;
 
 	/**
@@ -273,7 +273,8 @@ class CameraFrontEnd
 		{
 			if ((camera != null) && camera.exists && camera.visible)
 			{
-				camera.clear();
+				FlxG.renderer.begin(camera);
+				FlxG.renderer.clear();
 			}
 		}
 	}
@@ -288,7 +289,8 @@ class CameraFrontEnd
 		{
 			if ((camera != null) && camera.exists && camera.visible)
 			{
-				camera.render();
+				FlxG.renderer.begin(camera);
+				FlxG.renderer.render();
 			}
 		}
 	}
@@ -348,7 +350,7 @@ class CameraFrontEnd
 	function get_useBufferLocking():Bool 
 	{
 		if (FlxG.renderBlit)
-			return FlxBlitView.useBufferLocking;
+			return FlxBlitRenderer.useBufferLocking;
 
 		return false;
 	}
@@ -356,7 +358,7 @@ class CameraFrontEnd
 	function set_useBufferLocking(value:Bool):Bool
 	{
 		if (FlxG.renderBlit)
-			return FlxBlitView.useBufferLocking = value;
+			return FlxBlitRenderer.useBufferLocking = value;
 
 		return value;
 	}
