@@ -609,8 +609,6 @@ class FlxG
 	static function initRenderMethod():Void
 	{
 		renderer = FlxRenderer.create();
-		renderer.init();
-
 		FlxObject.defaultPixelPerfectPosition =	FlxG.renderer.method == BLITTING;
 	}
 

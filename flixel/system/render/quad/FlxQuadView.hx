@@ -1,29 +1,21 @@
 package flixel.system.render.quad;
 
-import openfl.display.Graphics;
-import flixel.math.FlxRect;
-import openfl.display.DisplayObjectContainer;
-import flixel.system.render.FlxCameraView;
-import flixel.FlxG;
 import flixel.FlxCamera;
-import flixel.util.FlxDestroyUtil;
+import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets.FlxShader;
-import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxPoint;
-import flixel.math.FlxMatrix;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.system.FlxAssets.FlxShader;
+import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
-import openfl.filters.BitmapFilter;
-import openfl.geom.ColorTransform;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
+import flixel.util.FlxDestroyUtil;
 import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
-import openfl.display.BitmapData;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Graphics;
 import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Rectangle;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -63,13 +55,6 @@ class FlxQuadView extends FlxCameraView
 	 * Its position is modified by `updateScrollRect()` method, which is called on camera's resize and scale events.
 	 */
 	var _scrollRect:Sprite = new Sprite();
-	
-	/**
-	 * Helper rect for `drawTriangles()` visibility checks
-	 */
-	var _bounds:FlxRect = FlxRect.get();
-
-	var _helperMatrix:FlxMatrix = new FlxMatrix();
 
 	var targetGraphics:Graphics;
 	
@@ -119,8 +104,6 @@ class FlxQuadView extends FlxCameraView
 		
 		flashSprite = null;
 		_scrollRect = null;
-		_helperMatrix = null;
-		_bounds = FlxDestroyUtil.put(_bounds);
 	}
 	
 	override function offsetView(x:Float, y:Float):Void

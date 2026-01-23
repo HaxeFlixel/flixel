@@ -1,18 +1,18 @@
 package flixel.system.render;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxShader;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.geom.ColorTransform;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import flixel.system.FlxAssets.FlxShader;
-import openfl.display.BitmapData;
-import openfl.geom.ColorTransform;
-import openfl.display.BlendMode;
-import flixel.math.FlxMatrix;
-import flixel.util.FlxColor;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.FlxGraphic;
 
 /**
  * A `FlxRenderer` is the base class for all rendering functionality.
@@ -64,7 +64,7 @@ class FlxRenderer implements IFlxDestroyable
     @:noCompletion inline function get_isGL():Bool
     {
         #if FLX_OPENGL_AVAILABLE
-        return isHardware && method == DRAW_TILES;
+        return isHardware && method != BLITTING;
         #else
         return false;
         #end
@@ -84,30 +84,12 @@ class FlxRenderer implements IFlxDestroyable
      */
     public var camera(default, null):FlxCamera;
 
-    /**
-     * Shortcut to `currentCamera.view`.
-     * Renderer implementations may override this to cast the return value to the
-     * corresponding type for the implementation.
-     */
-    // public var currentView(get, never):FlxCameraView;
-    // @:noCompletion function get_currentView<T:FlxCameraView>():T
-    // {
-    //     return currentCamera.view;
-    // }
-     
-
     public function new() {}
 
     public function destroy():Void 
     {
         camera = null;
     }
-
-    /**
-     * Called internally when it's safe to initialize rendering related properties.
-     */
-    @:allow(flixel.FlxG)
-    function init():Void {}
 
     // ------------------------ RENDERING ------------------------
 

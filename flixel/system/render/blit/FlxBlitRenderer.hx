@@ -1,138 +1,135 @@
 package flixel.system.render.blit;
 
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
-import openfl.display.Graphics;
-import openfl.display.BitmapData;
-import openfl.geom.Rectangle;
-import openfl.geom.Point;
-import openfl.display.BlendMode;
-import openfl.display.Sprite;
-import openfl.Vector;
+import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.util.FlxColor;
-import flixel.util.FlxSpriteUtil;
-import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxMatrix;
-import openfl.geom.ColorTransform;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
+import openfl.Vector;
+import openfl.display.BitmapData;
+import openfl.display.BlendMode;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 @:access(flixel.FlxCamera)
 @:access(flixel.system.render.blit)
 class FlxBlitRenderer extends FlxRenderer
 {
-    /**
-	 * Whether the camera's buffer should be locked and unlocked during render calls.
+	/**
+	 * Whether the camera's view.buffer should be locked and unlocked during render calls.
 	 * 
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
+	 * 
+	 * This property only has effects when targeting Flash.
 	 */
 	public static var useBufferLocking:Bool = false;
-
-    /**
-	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
+	
+	/**
+	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's view.buffer.
 	 */
 	static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
-	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer.
+	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's view.buffer.
 	 * Added for less garbage creation.
 	 */
 	static var renderPoint:FlxPoint = FlxPoint.get();
+	
 	static var renderRect:FlxRect = FlxRect.get();
 	
 	/**
 	 * Internal variable, used for visibility checks to minimize `drawTriangles()` calls.
 	 */
 	static var drawVertices:Vector<Float> = new Vector<Float>();
-
-    @:deprecated("temp")
-    var buffer(get, never):BitmapData;
-    inline function get_buffer() return camera.viewBlit.buffer;
-
-    @:deprecated("temp")
-    var _flashPoint(get, never):Point;
-    inline function get__flashPoint() return camera.viewBlit._flashPoint;
-
-    @:deprecated("temp")
-    var _flashRect(get, never):Rectangle;
-    inline function get__flashRect() return camera.viewBlit._flashRect;
-
-    @:deprecated("temp")
-    var _fill(get, never):BitmapData;
-    inline function get__fill() return camera.viewBlit._fill;
-
-    @:deprecated("temp")
-    var screen(get, never):FlxSprite;
-    inline function get_screen() return camera.viewBlit.screen;
-
-    @:deprecated("temp")
-    var _helperMatrix(get, never):FlxMatrix;
-    inline function get__helperMatrix() return camera.viewBlit._helperMatrix;
-
-    @:deprecated("temp")
-    var _blitMatrix(get, never):FlxMatrix;
-    inline function get__blitMatrix() return camera.viewBlit._blitMatrix;
-
-    @:deprecated("temp")
-    var _useBlitMatrix(get, never):Bool;
-    inline function get__useBlitMatrix() return camera.viewBlit._useBlitMatrix;
-
-    @:deprecated("temp")
-    var _helperPoint(get, never):Point;
-    inline function get__helperPoint() return camera.viewBlit._helperPoint;
-
-    @:deprecated("temp")
-    var _bounds(get, never):FlxRect;
-    inline function get__bounds() return camera.viewBlit._bounds;
-
-    public function new()
-    {
-        super();
-        method = BLITTING;
-    }
-
-    override function clear():Void
+	
+	/**
+	 * Helper rect for `drawTriangles()` visibility checks
+	 */
+	var _bounds:FlxRect = FlxRect.get();
+	
+	var _helperMatrix:FlxMatrix = new FlxMatrix();
+	var _helperPoint:Point = new Point();
+	
+	/**
+	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation:
+	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
+	 * Do not modify it unless you know what are you doing.
+	 */
+	var _flashPoint:Point = new Point();
+	
+	/**
+	 * Convenience shortcut for `camera.viewBlit`
+	 */
+	var view(get, never):FlxBlitView;
+	
+	@:noCompletion inline function get_view():FlxBlitView
+		return camera.viewBlit;
+		
+	public function new()
 	{
-		camera.viewBlit.checkResize();
+		super();
+		method = BLITTING;
+		maxTextureSize = -1;
+	}
+	
+	override function destroy():Void
+	{
+		super.destroy();
+		_bounds = FlxDestroyUtil.put(_bounds);
+		_helperMatrix = null;
+		_helperPoint = null;
+		_flashPoint = null;
+	}
+	
+	override function clear():Void
+	{
+		view.checkResize();
 		
 		if (useBufferLocking)
 		{
-			buffer.lock();
+			view.buffer.lock();
 		}
 		
 		fill(camera.bgColor, camera.useBgAlphaBlending);
-		screen.dirty = true;
+		view.screen.dirty = true;
 	}
-
-    override function render():Void
+	
+	override function render():Void
 	{
 		camera.drawFX();
 		
 		if (useBufferLocking)
 		{
-			buffer.unlock();
+			view.buffer.unlock();
 		}
 		
-		screen.dirty = true;
+		view.screen.dirty = true;
 	}
-
-    override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
-		?shader:FlxShader):Void
+	
+	override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, smoothing:Bool = false,
+			?shader:FlxShader):Void
 	{
 		_helperMatrix.copyFrom(matrix);
 		
-		if (_useBlitMatrix)
+		if (view._useBlitMatrix)
 		{
-			_helperMatrix.concat(_blitMatrix);
-			buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
+			_helperMatrix.concat(view._blitMatrix);
+			view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
 		}
 		else
 		{
 			_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
-			buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || camera.antialiasing));
+			view.buffer.draw(pixels, _helperMatrix, null, blend, null, (smoothing || camera.antialiasing));
 		}
 	}
 	
@@ -141,24 +138,24 @@ class FlxBlitRenderer extends FlxRenderer
 	{
 		if (pixels != null)
 		{
-			if (_useBlitMatrix)
+			if (view._useBlitMatrix)
 			{
 				_helperMatrix.identity();
 				_helperMatrix.translate(destPoint.x, destPoint.y);
-				_helperMatrix.concat(_blitMatrix);
-				buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
+				_helperMatrix.concat(view._blitMatrix);
+				view.buffer.draw(pixels, _helperMatrix, null, null, null, (smoothing || camera.antialiasing));
 			}
 			else
 			{
 				_helperPoint.x = destPoint.x - Std.int(camera.viewMarginLeft);
 				_helperPoint.y = destPoint.y - Std.int(camera.viewMarginTop);
-				buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
+				view.buffer.copyPixels(pixels, sourceRect, _helperPoint, null, null, true);
 			}
 		}
 		else if (frame != null)
 		{
 			// TODO: fix this case for zoom less than initial zoom...
-			frame.paint(buffer, destPoint, true);
+			frame.paint(view.buffer, destPoint, true);
 		}
 	}
 	
@@ -212,25 +209,25 @@ class FlxBlitRenderer extends FlxRenderer
 			trianglesSprite.graphics.endFill();
 			
 			// TODO: check this block of code for cases, when zoom < 1 (or initial zoom?)...
-			if (_useBlitMatrix)
-				_helperMatrix.copyFrom(_blitMatrix);
+			if (view._useBlitMatrix)
+				_helperMatrix.copyFrom(view._blitMatrix);
 			else
 			{
 				_helperMatrix.identity();
 				_helperMatrix.translate(-camera.viewMarginLeft, -camera.viewMarginTop);
 			}
 			
-			buffer.draw(trianglesSprite, _helperMatrix, transform);
+			view.buffer.draw(trianglesSprite, _helperMatrix, transform);
 			
 			#if FLX_DEBUG
 			if (FlxG.debugger.drawDebug)
 			{
-                // TODO: add a drawDebugTriangles method
+				// TODO: add a drawDebugTriangles method
 				var gfx:Graphics = FlxSpriteUtil.flashGfx;
 				gfx.clear();
 				gfx.lineStyle(1, FlxColor.BLUE, 0.5);
 				gfx.drawTriangles(drawVertices, indices);
-				buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
+				view.buffer.draw(FlxSpriteUtil.flashGfxSprite, _helperMatrix);
 			}
 			#end
 			// End of TODO...
@@ -238,40 +235,40 @@ class FlxBlitRenderer extends FlxRenderer
 		
 		bounds.put();
 	}
-
-    override function fill(color:FlxColor, blendAlpha:Bool = true) 
-    {
-        if (blendAlpha)
+	
+	override function fill(color:FlxColor, blendAlpha:Bool = true)
+	{
+		if (blendAlpha)
 		{
-			_fill.fillRect(_flashRect, color);
-			buffer.copyPixels(_fill, _flashRect, _flashPoint, null, null, blendAlpha);
+			view._fill.fillRect(view._flashRect, color);
+			view.buffer.copyPixels(view._fill, view._flashRect, _flashPoint, null, null, blendAlpha);
 		}
 		else
 		{
-			buffer.fillRect(_flashRect, color);
+			view.buffer.fillRect(view._flashRect, color);
 		}
-    }
-
-    override function beginDrawDebug(?camera:FlxCamera):Void
-    {
-        super.beginDrawDebug(camera);
-
-        FlxSpriteUtil.flashGfx.clear();
-    }
-
-    override function endDrawDebug():Void
-    {
-        camera.viewBlit.buffer.draw(FlxSpriteUtil.flashGfxSprite);
-    }
-
-    #if FLX_DEBUG
-    override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
+	}
+	
+	override function beginDrawDebug(?camera:FlxCamera):Void
+	{
+		super.beginDrawDebug(camera);
+		
+		FlxSpriteUtil.flashGfx.clear();
+	}
+	
+	override function endDrawDebug():Void
+	{
+		view.buffer.draw(FlxSpriteUtil.flashGfxSprite);
+	}
+	
+	#if FLX_DEBUG
+	override public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
 		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
 		gfx.drawRect(x, y, width, height);
 	}
-
+	
 	override public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
@@ -280,7 +277,7 @@ class FlxBlitRenderer extends FlxRenderer
 		gfx.drawRect(x, y, width, height);
 		gfx.endFill();
 	}
-
+	
 	override public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
@@ -288,7 +285,7 @@ class FlxBlitRenderer extends FlxRenderer
 		gfx.drawCircle(x, y, radius);
 		gfx.endFill();
 	}
-
+	
 	override public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
@@ -296,5 +293,5 @@ class FlxBlitRenderer extends FlxRenderer
 		gfx.moveTo(x1, x2);
 		gfx.lineTo(x2, y2);
 	}
-    #end
+	#end
 }

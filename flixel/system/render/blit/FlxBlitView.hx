@@ -1,33 +1,23 @@
 package flixel.system.render.blit;
 
-import flixel.math.FlxRect;
-import openfl.display.Bitmap;
-import openfl.display.DisplayObjectContainer;
-import flixel.system.render.FlxCameraView;
-import flixel.FlxG;
 import flixel.FlxCamera;
-import flixel.util.FlxDestroyUtil;
+import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets.FlxShader;
-import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import flixel.math.FlxMatrix;
-import flixel.graphics.tile.FlxDrawTrianglesItem;
+import flixel.math.FlxPoint;
+import flixel.system.render.FlxCameraView;
 import flixel.util.FlxColor;
-import openfl.filters.BitmapFilter;
-import openfl.geom.ColorTransform;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
-import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
+import flixel.util.FlxDestroyUtil;
+import openfl.display.Bitmap;
 import openfl.display.BitmapData;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
-import openfl.Vector;
-import openfl.display.Graphics;
-import flixel.util.FlxSpriteUtil;
+import openfl.geom.Rectangle;
+import openfl.geom.ColorTransform;
 
 class FlxBlitView extends FlxCameraView
-{	
+{
 	/**
 	 * Used to render buffer to screen space.
 	 * NOTE: We don't recommend modifying this directly unless you are fairly experienced.
@@ -69,13 +59,6 @@ class FlxBlitView extends FlxCameraView
 	var _flashRect:Rectangle;
 	
 	/**
-	 * Internal, used in blit render mode in camera's `fill()` method for less garbage creation:
-	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
-	 * Do not modify it unless you know what are you doing.
-	 */
-	var _flashPoint:Point = new Point();
-	
-	/**
 	 * Internal, used to render buffer to screen space. Used it blit render mode only.
 	 * This Bitmap used for rendering camera's buffer (`_flashBitmap.bitmapData = buffer;`)
 	 * Its position is modified by `updateInternalSpritePositions()`, which is called on camera's resize and scale events.
@@ -90,11 +73,6 @@ class FlxBlitView extends FlxCameraView
 	var _fill:BitmapData;
 	
 	/**
-	 * Helper rect for `drawTriangles()` visibility checks
-	 */
-	var _bounds:FlxRect = FlxRect.get();
-	
-	/**
 	 * Logical flag for tracking whether to apply _blitMatrix transformation to objects or not.
 	 */
 	var _useBlitMatrix:Bool = false;
@@ -104,10 +82,6 @@ class FlxBlitView extends FlxCameraView
 	 * (it is applied to all objects rendered on the camera at such circumstances).
 	 */
 	var _blitMatrix:FlxMatrix = new FlxMatrix();
-	
-	// TODO: destroy
-	var _helperMatrix:FlxMatrix = new FlxMatrix();
-	var _helperPoint:Point = new Point();
 	
 	@:allow(flixel.system.render.FlxCameraView)
 	function new(camera:FlxCamera)
@@ -141,8 +115,6 @@ class FlxBlitView extends FlxCameraView
 		flashSprite = null;
 		_scrollRect = null;
 		_flashRect = null;
-		_flashPoint = null;
-		_bounds = FlxDestroyUtil.put(_bounds);
 	}
 	
 	override function offsetView(x:Float, y:Float):Void

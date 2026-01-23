@@ -1,24 +1,13 @@
 package flixel.system.render;
 
-import flixel.math.FlxRect;
 import openfl.display.DisplayObjectContainer;
+import openfl.display.DisplayObject;
+import flixel.math.FlxRect;
 import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.util.FlxDestroyUtil;
-import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets.FlxShader;
-import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
-import flixel.math.FlxMatrix;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import flixel.util.FlxColor;
-import openfl.filters.BitmapFilter;
-import openfl.geom.ColorTransform;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;
-import openfl.display.BlendMode;
-import openfl.display.DisplayObject;
-import openfl.display.BitmapData;
 
 /**
  * A `FlxCameraView` is a helper added to cameras, that holds some rendering-related objects
@@ -47,7 +36,7 @@ class FlxCameraView implements IFlxDestroyable
 	 * This object is added to the display tree.
 	 */
 	public var display(get, never):DisplayObjectContainer;
-	
+
 	/**
 	 * The parent camera for this view.
 	 */
@@ -90,6 +79,8 @@ class FlxCameraView implements IFlxDestroyable
 		_flashOffset = FlxDestroyUtil.put(_flashOffset);
 	}
 	
+	public function offsetView(x:Float, y:Float):Void {}
+
 	function updateScale():Void
 	{
 		camera.calcMarginX();
@@ -105,8 +96,6 @@ class FlxCameraView implements IFlxDestroyable
 		_flashOffset.x = camera.width * 0.5 * FlxG.scaleMode.scale.x * camera.initialZoom;
 		_flashOffset.y = camera.height * 0.5 * FlxG.scaleMode.scale.y * camera.initialZoom;
 	}
-	
-	public function offsetView(x:Float, y:Float):Void {}
 	
 	function updateScrollRect():Void {}
 	

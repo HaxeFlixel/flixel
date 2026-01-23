@@ -96,8 +96,7 @@ class FlxCamera extends FlxBasic
 	public var totalScaleY(default, null):Float;
 
 	/**
-	 * Render view for this camera. 
-	 * All rendering related commands (like draw rectangle or fill camera view with specified color) are handled by this object.
+	 * Holds various rendering related objects
 	 */
 	public var view(default, null):FlxCameraView;
 
@@ -220,17 +219,15 @@ class FlxCamera extends FlxBasic
 	 *
 	 * Its position is modified by `updateFlashSpritePosition()` which is called every frame.
 	 */
-	@:deprecated("flashSprite is deprecated, use camera.viewQuad.flashSprite/camera.viewBlit.flashSprite, instead")
+	@:deprecated("flashSprite is deprecated, use camera.display, instead")
 	public var flashSprite(get, set):Sprite;
-	inline function set_flashSprite(value:Sprite):Sprite
+	inline function set_flashSprite(value:Sprite):Sprite 
 	{
 		var sprite = FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
 		return sprite = value;
 	}
-	inline function get_flashSprite():Sprite
-	{
-		return FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
-	}
+
+	inline function get_flashSprite():Sprite return cast view.display;
 
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
@@ -420,10 +417,10 @@ class FlxCamera extends FlxBasic
 	 * Its coordinates are always `(0,0)`, where camera's buffer filling should start.
 	 * Do not modify it unless you know what are you doing.
 	 */
-	@:deprecated("_flashPoint is deprecated, use camera.viewBlit._flashPoint, instead")
+	@:deprecated("_flashPoint is deprecated, use FlxBlitRenderer._flashPoint, instead")
 	var _flashPoint:Point = new Point();
-	inline function get__flashPoint():Point return viewBlit._flashPoint;
-	inline function set__flashPoint(value:Point) return viewBlit._flashPoint = value;
+	inline function get__flashPoint():Point return cast (FlxG.renderer, FlxBlitRenderer)._flashPoint;
+	inline function set__flashPoint(value:Point) return cast (FlxG.renderer, FlxBlitRenderer)._flashPoint = value;
 
 	/**
 	 * Internal, used for positioning camera's `flashSprite` on screen.
@@ -569,16 +566,15 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Helper rect for `drawTriangles()` visibility checks
 	 */
-	@:deprecated("_bounds is deprecated, use camera.viewQuad._bounds/camera.viewBlit._bounds, instead")
+	@:deprecated("_bounds is deprecated, use FlxBlitRenderer/FlxQuadRender._bounds, instead")
 	var _bounds(get, set):FlxRect;
 	inline function get__bounds():FlxRect 
 	{
-		return FlxG.renderTile ? viewQuad._bounds : viewBlit._bounds;
+		return untyped FlxG.renderer._bounds;
 	}
 	inline function set__bounds(value:FlxRect):FlxRect 
 	{
-		var bounds = FlxG.renderTile ? viewQuad._bounds : viewBlit._bounds;
-		return bounds = value;
+		return untyped FlxG.renderer._bounds = value;
 	}
 
 	/**
@@ -605,22 +601,27 @@ class FlxCamera extends FlxBasic
 	inline function get_debugLayer():Sprite return viewQuad.debugLayer;
 	#end
 
-	@:deprecated("_helperMatrix is deprecated, use camera.viewQuad._helperMatrix/camera.viewBlit._helperMatrix, instead")
+	@:deprecated("_helperMatrix is deprecated, use FlxBlitRenderer/FlxQuadRenderer._helperMatrix, instead")
 	var _helperMatrix(get, set):FlxMatrix;
 	inline function get__helperMatrix():FlxMatrix
 	{
-		return FlxG.renderTile ? viewQuad._helperMatrix : viewBlit._helperMatrix;
+		return untyped FlxG.renderer._helperMatrix;
 	}
 	inline function set__helperMatrix(value:FlxMatrix):FlxMatrix 
 	{
-		var mat = FlxG.renderTile ? viewQuad._helperMatrix : viewBlit._helperMatrix;
-		return mat = value;
+		return untyped FlxG.renderer._helperMatrix = value;
 	}
 
-	@:deprecated("_helperPoint is deprecated, use camera.viewBlit._helperPoint, instead")
+	@:deprecated("_helperPoint is deprecated, use FlxBlitRenderer._helperPoint, instead")
 	var _helperPoint(get, set):Point;
-	inline function get__helperPoint():Point return viewBlit._helperPoint;
-	inline function set__helperPoint(value:Point):Point return viewBlit._helperPoint = value;
+	inline function get__helperPoint():Point 
+	{ 
+		return cast(FlxG.renderer, FlxBlitRenderer)._helperPoint;
+	}
+	inline function set__helperPoint(value:Point):Point 
+	{
+		return cast(FlxG.renderer, FlxBlitRenderer)._helperPoint = value;
+	}
 
 	/**
 	 * Currently used draw stack item
@@ -673,7 +674,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal variable, used for visibility checks to minimize `drawTriangles()` calls.
 	 */
-	@:deprecated("drawVertices is deprecated, use FlxBlitView.drawVertices, instead")
+	@:deprecated("drawVertices is deprecated, use FlxBlitRenderer.drawVertices, instead")
 	static var drawVertices(get, set):Vector<Float>;
 	static inline function get_drawVertices():Vector<Float> return FlxBlitRenderer.drawVertices;
 	static inline function set_drawVertices(value:Vector<Float>):Vector<Float> return FlxBlitRenderer.drawVertices = value;
@@ -681,7 +682,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
-	@:deprecated("trianglesSprite is deprecated, use FlxBlitView.trianglesSprite, instead")
+	@:deprecated("trianglesSprite is deprecated, use FlxBlitRenderer.trianglesSprite, instead")
 	static var trianglesSprite(get, set):Sprite;
 	static inline function get_trianglesSprite():Sprite return FlxBlitRenderer.trianglesSprite;
 	static inline function set_trianglesSprite(value:Sprite):Sprite return FlxBlitRenderer.trianglesSprite = value;
@@ -690,12 +691,12 @@ class FlxCamera extends FlxBasic
 	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer.
 	 * Added for less garbage creation.
 	 */
-	@:deprecated("renderPoint is deprecated, use FlxBlitView.renderPoint, instead")
+	@:deprecated("renderPoint is deprecated, use FlxBlitRenderer.renderPoint, instead")
 	static var renderPoint(get, set):FlxPoint;
 	static inline function get_renderPoint():FlxPoint return FlxBlitRenderer.renderPoint;
 	static inline function set_renderPoint(value:FlxPoint):FlxPoint return FlxBlitRenderer.renderPoint = value;
 
-	@:deprecated("renderRect is deprecated, use FlxBlitView.renderRect, instead")
+	@:deprecated("renderRect is deprecated, use FlxBlitRenderer.renderRect, instead")
 	static var renderRect(get, set):FlxRect;
 	static inline function get_renderRect():FlxRect return FlxBlitRenderer.renderRect;
 	static inline function set_renderRect(value:FlxRect):FlxRect return FlxBlitRenderer.renderRect = value;
