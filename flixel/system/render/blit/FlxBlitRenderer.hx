@@ -25,7 +25,7 @@ import openfl.geom.Rectangle;
 class FlxBlitRenderer extends FlxRenderer
 {
 	/**
-	 * Whether the camera's view.buffer should be locked and unlocked during render calls.
+	 * Whether the camera's buffer should be locked and unlocked during render calls.
 	 * 
 	 * Allows you to possibly slightly optimize the rendering process IF
 	 * you are not doing any pre-processing in your game state's draw() call.
@@ -35,12 +35,12 @@ class FlxBlitRenderer extends FlxRenderer
 	public static var useBufferLocking:Bool = false;
 	
 	/**
-	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's view.buffer.
+	 * Internal variable, used in blit render mode to render triangles (`drawTriangles()`) on camera's buffer.
 	 */
 	static var trianglesSprite:Sprite = new Sprite();
 	
 	/**
-	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's view.buffer.
+	 * Internal variables, used in blit render mode to draw trianglesSprite on camera's buffer.
 	 * Added for less garbage creation.
 	 */
 	static var renderPoint:FlxPoint = FlxPoint.get();
