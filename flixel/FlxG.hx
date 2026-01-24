@@ -145,8 +145,8 @@ class FlxG
 	public static var onMobile(get, never):Bool;
 
 	@:deprecated("renderMethod is deprecated, use FlxG.render.method, instead.")
-	public static var renderMethod(get, null):FlxRenderMethod;
-	static inline function get_renderMethod():FlxRenderMethod
+	public static var renderMethod(get, null):flixel.system.render.FlxRenderer.FlxRenderMethod;
+	static inline function get_renderMethod():flixel.system.render.FlxRenderer.FlxRenderMethod
 	{
 		return FlxG.renderer.method;
 	}
@@ -167,6 +167,8 @@ class FlxG
 
 	/**
 	 * The global renderer instance.
+	 * 
+	 * @see `FlxRenderer`
 	 */
 	public static var renderer(default, null):FlxRenderer;
 

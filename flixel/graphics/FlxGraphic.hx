@@ -609,7 +609,7 @@ class FlxGraphic implements IFlxDestroyable
 			height = bitmap.height;
 
 			#if FLX_OPENGL_AVAILABLE
-			var max:Int = FlxG.bitmap.maxTextureSize;
+			var max:Int = FlxG.renderer.maxTextureSize;
 			if (max > 0)
 			{
 				if (width > max || height > max)

@@ -384,7 +384,7 @@ class FlxSprite extends FlxObject
 	{
 		super(X, Y);
 
-		useFramePixels = FlxG.renderBlit;
+		useFramePixels = FlxG.renderer.method == BLITTING;
 		if (SimpleGraphic != null)
 			loadGraphic(SimpleGraphic);
 	}
@@ -908,7 +908,7 @@ class FlxSprite extends FlxObject
 
 		centerOrigin();
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			dirty = true;
 			updateFramePixels();
@@ -1097,7 +1097,7 @@ class FlxSprite extends FlxObject
 			graphic.bitmap.draw(bitmapData, _matrix, null, brushBlend, null, Brush.antialiasing);
 		}
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			dirty = true;
 			calcFrame();
@@ -1112,7 +1112,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function drawFrame(Force:Bool = false):Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			if (Force || dirty)
 			{
@@ -1566,7 +1566,7 @@ class FlxSprite extends FlxObject
 	{
 		checkEmptyFrame();
 
-		if (FlxG.renderTile && !force)
+		if (FlxG.renderer.method == DRAW_TILES && !force)
 			return;
 
 		updateFramePixels();
@@ -1582,7 +1582,7 @@ class FlxSprite extends FlxObject
 		
 		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 		// if you'll try then it will clear framePixels and you won't see anything
-		if (FlxG.renderTile && _frameGraphic != null)
+		if (FlxG.renderer.method == DRAW_TILES && _frameGraphic != null)
 		{
 			dirty = false;
 			return framePixels;
@@ -1600,12 +1600,12 @@ class FlxSprite extends FlxObject
 			framePixels = _frame.paintRotatedAndFlipped(framePixels, _flashPointZero, FlxFrameAngle.ANGLE_0, doFlipX, doFlipY, false, true);
 		}
 		
-		if (FlxG.renderBlit && hasColorTransform())
+		if (FlxG.renderer.method == BLITTING && hasColorTransform())
 		{
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 		
-		if (FlxG.renderTile && useFramePixels)
+		if (FlxG.renderer.method == DRAW_TILES && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
@@ -1679,7 +1679,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return false;
 
 		return isSimpleRenderBlit(camera);
@@ -1848,7 +1848,7 @@ class FlxSprite extends FlxObject
 			return null;
 		}
 		
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
@@ -2006,7 +2006,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipX(Value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			_facingHorizontalMult = Value ? -1 : 1;
 		}
@@ -2017,7 +2017,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipY(Value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			_facingVerticalMult = Value ? -1 : 1;
 		}
@@ -2034,7 +2034,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_useFramePixels(value:Bool):Bool
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			if (value != useFramePixels)
 			{

@@ -286,7 +286,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		super();
 
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			_helperPoint = new Point();
 			_matrix = new FlxMatrix();
@@ -305,7 +305,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		debugBoundingBoxColorPartial = FlxColor.PINK;
 		debugBoundingBoxColorNotSolid = FlxColor.TRANSPARENT;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
 		#end
 	}
@@ -321,7 +321,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		_tileObjects = FlxDestroyUtil.destroyArray(_tileObjects);
 		_buffers = FlxDestroyUtil.destroyArray(_buffers);
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			#if FLX_DEBUG
 			_debugRect = null;
@@ -351,7 +351,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		FlxG.cameras.cameraResized.remove(onCameraChanged);
 
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
 		#end
 
@@ -499,7 +499,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return null;
 
 		if (tileWidth <= 0 || tileHeight <= 0)
@@ -530,7 +530,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	override function updateMap():Void
 	{
 		#if FLX_DEBUG
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 			_debugRect = new Rectangle(0, 0, tileWidth, tileHeight);
 		#end
 
@@ -542,7 +542,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	#if FLX_DEBUG
 	override function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile)
+		if (FlxG.renderer.method != DRAW_TILES)
 			return;
 
 		var buffer:FlxTilemapBuffer = null;
@@ -656,7 +656,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 			buffer = _buffers[i];
 
-			if (FlxG.renderBlit)
+			if (FlxG.renderer.method == BLITTING)
 			{
 				if (buffer.isDirty(this, camera))
 					drawTilemap(buffer, camera);
@@ -704,7 +704,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 */
 	override function setDirty(dirty:Bool = true):Void
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return;
 
 		for (buffer in _buffers)
@@ -1214,7 +1214,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		var scaledHeight:Float = 0;
 		var drawItem = null;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			buffer.fill();
 		}
@@ -1268,7 +1268,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 				{
 					frame = tile.frame;
 
-					if (FlxG.renderBlit)
+					if (FlxG.renderer.method == BLITTING)
 					{
 						frame.paint(buffer.pixels, _flashPoint, true);
 
@@ -1316,13 +1316,13 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 					}
 				}
 
-				if (FlxG.renderBlit)
+				if (FlxG.renderer.method == BLITTING)
 					_flashPoint.x += tileWidth;
 
 				columnIndex++;
 			}
 
-			if (FlxG.renderBlit)
+			if (FlxG.renderer.method == BLITTING)
 				_flashPoint.y += tileHeight;
 			rowIndex += widthInTiles;
 		}
@@ -1330,7 +1330,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 		buffer.x = screenXInTiles * scaledTileWidth;
 		buffer.y = screenYInTiles * scaledTileHeight;
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			if (isColored)
 				buffer.colorTransform(colorTransform);
@@ -1347,7 +1347,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	#if FLX_DEBUG
 	function makeDebugTile(color:FlxColor):BitmapData
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return null;
 
 		var debugTile = new BitmapData(tileWidth, tileHeight, true, 0);

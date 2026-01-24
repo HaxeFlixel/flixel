@@ -223,7 +223,7 @@ class FlxCamera extends FlxBasic
 	public var flashSprite(get, set):Sprite;
 	inline function set_flashSprite(value:Sprite):Sprite 
 	{
-		var sprite = FlxG.renderTile ? viewQuad.flashSprite : viewBlit.flashSprite;
+		var sprite = FlxG.renderer.method == DRAW_TILES ? viewQuad.flashSprite : viewBlit.flashSprite;
 		return sprite = value;
 	}
 
@@ -555,11 +555,11 @@ class FlxCamera extends FlxBasic
 	var _scrollRect(get, set):Sprite;
 	inline function get__scrollRect():Sprite
 	{
-		return FlxG.renderTile ? viewQuad._scrollRect : viewBlit._scrollRect;
+		return FlxG.renderer.method == DRAW_TILES ? viewQuad._scrollRect : viewBlit._scrollRect;
 	}
 	inline function set__scrollRect(value:Sprite):Sprite 
 	{
-		var scrollRect = FlxG.renderTile ? viewQuad._scrollRect : viewBlit._scrollRect;
+		var scrollRect = FlxG.renderer.method == DRAW_TILES ? viewQuad._scrollRect : viewBlit._scrollRect;
 		return scrollRect = value;
 	}
 
@@ -826,7 +826,7 @@ class FlxCamera extends FlxBasic
 		else if (view is FlxBlitView)
 			viewBlit = cast view;
 
-		pixelPerfectRender = FlxG.renderBlit;
+		pixelPerfectRender = FlxG.renderer.method == BLITTING;
 
 		set_color(FlxColor.WHITE);
 		
@@ -1398,7 +1398,7 @@ class FlxCamera extends FlxBasic
 	@:deprecated("checkResize() is deprecated")
 	function checkResize():Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 			viewBlit.checkResize();
 	}
 

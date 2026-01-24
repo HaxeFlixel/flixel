@@ -72,7 +72,9 @@ class FlxRenderer implements IFlxDestroyable
     @:noCompletion inline function get_isGL():Bool
     {
         #if FLX_OPENGL_AVAILABLE
-        return isHardware && method != BLITTING;
+		return FlxG.stage.window.context.type == OPENGL
+			|| FlxG.stage.window.context.type == OPENGLES
+			|| FlxG.stage.window.context.type == WEBGL;
         #else
         return false;
         #end
@@ -254,14 +256,14 @@ class FlxRenderer implements IFlxDestroyable
 }
 
 /**
- * An enum represnting the implemented rendering methods.
+ * An enum representing the available rendering methods.
  */
 enum FlxRenderMethod
 {
     /**
      * Uses the `drawQuads()` method from OpenFL's Graphics API to achieve hardware accelerated rendering.
      * 
-     * This method is the default and is used on all targets (when hardware acceleration is available) except for Flash.
+     * This method is the default and is used on all targets (when hardware acceleration is available), except for Flash.
      */
     DRAW_TILES;
 

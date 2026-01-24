@@ -117,7 +117,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		updateColumns(tileWidth, widthInTiles, scaleX, camera);
 		updateRows(tileHeight, heightInTiles, scaleY, camera);
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			final newWidth = Std.int(columns * tileWidth);
 			final newHeight = Std.int(rows * tileHeight);
@@ -144,7 +144,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function destroy():Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			pixels = FlxDestroyUtil.dispose(pixels);
 			blend = null;
@@ -161,7 +161,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function fill(color = FlxColor.TRANSPARENT):Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			pixels.fillRect(_flashRect, color);
 		}
@@ -175,13 +175,13 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function draw(camera:FlxCamera, flashPoint:Point, scaleX = 1.0, scaleY = 1.0):Void
 	{
-		FlxG.renderer.begin(camera);
-
 		if (isPixelPerfectRender(camera))
 		{
 			flashPoint.x = Math.floor(flashPoint.x);
 			flashPoint.y = Math.floor(flashPoint.y);
 		}
+	
+		FlxG.renderer.begin(camera);
 		
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{

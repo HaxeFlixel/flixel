@@ -381,7 +381,7 @@ class Interaction extends Window
 	@:deprecated("getDebugGraphics() is deprecated. Use the debug draw functions from FlxCamera instead.")
 	public function getDebugGraphics():Graphics
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			FlxSpriteUtil.flashGfx.clear();
 			return FlxSpriteUtil.flashGfx;
@@ -790,7 +790,7 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return camera.viewQuad.canvas.localToGlobal(new Point(worldX, 0)).x;
 		else
 			@:privateAccess
@@ -799,7 +799,7 @@ class Interaction extends Window
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 			return camera.viewQuad.canvas.localToGlobal(new Point(0, worldY)).y;
 		else
 			@:privateAccess

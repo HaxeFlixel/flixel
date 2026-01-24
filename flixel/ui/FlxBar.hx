@@ -172,7 +172,7 @@ class FlxBar extends FlxSprite
 
 		_filledBarPoint = new Point();
 		_filledBarRect = new Rectangle();
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			_zeroOffset = new Point();
 			_emptyBarRect = new Rectangle();
@@ -198,7 +198,7 @@ class FlxBar extends FlxSprite
 	{
 		positionOffset = FlxDestroyUtil.put(positionOffset);
 
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			frontFrames = null;
 			_filledFlxRect = FlxDestroyUtil.put(_filledFlxRect);
@@ -352,7 +352,7 @@ class FlxBar extends FlxSprite
 	 */
 	public function createColoredEmptyBar(empty:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, borderSize:Int = 1):FlxBar
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			var emptyKey:String = "empty: " + barWidth + "x" + barHeight + ":" + empty.toHexString();
 			if (showBorder)
@@ -406,7 +406,7 @@ class FlxBar extends FlxSprite
 	 */
 	public function createColoredFilledBar(fill:FlxColor, showBorder:Bool = false, border:FlxColor = FlxColor.WHITE, borderSize:Int = 1):FlxBar
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			var filledKey:String = "filled: " + barWidth + "x" + barHeight + ":" + fill.toHexString();
 			if (showBorder)
@@ -484,7 +484,7 @@ class FlxBar extends FlxSprite
 	public function createGradientEmptyBar(empty:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
 			border:FlxColor = FlxColor.WHITE, borderSize:Int = 1):FlxBar
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			var emptyKey:String = "Gradient:" + barWidth + "x" + barHeight + ",colors:[";
 			for (col in empty)
@@ -552,7 +552,7 @@ class FlxBar extends FlxSprite
 	public function createGradientFilledBar(fill:Array<FlxColor>, chunkSize:Int = 1, rotation:Int = 180, showBorder:Bool = false,
 			border:FlxColor = FlxColor.WHITE, borderSize:Int = 1):FlxBar
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			var filledKey:String = "Gradient:" + barWidth + "x" + barHeight + ",colors:[";
 			for (col in fill)
@@ -639,7 +639,7 @@ class FlxBar extends FlxSprite
 		{
 			var emptyGraphic:FlxGraphic = FlxG.bitmap.add(empty);
 
-			if (FlxG.renderTile)
+			if (FlxG.renderer.method == DRAW_TILES)
 			{
 				frames = emptyGraphic.imageFrame;
 			}
@@ -681,7 +681,7 @@ class FlxBar extends FlxSprite
 		{
 			var filledGraphic:FlxGraphic = FlxG.bitmap.add(fill);
 
-			if (FlxG.renderTile)
+			if (FlxG.renderer.method == DRAW_TILES)
 			{
 				frontFrames = filledGraphic.imageFrame;
 			}
@@ -744,7 +744,7 @@ class FlxBar extends FlxSprite
 	 */
 	public function updateEmptyBar():Void
 	{
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			pixels.copyPixels(_emptyBar, _emptyBarRect, _zeroOffset);
 			dirty = true;
@@ -806,7 +806,7 @@ class FlxBar extends FlxSprite
 					_filledBarPoint.y = Std.int((barHeight - _filledBarRect.height) / 2);
 			}
 
-			if (FlxG.renderBlit)
+			if (FlxG.renderer.method == BLITTING)
 			{
 				pixels.copyPixels(_filledBar, _filledBarRect, _filledBarPoint, null, null, true);
 			}
@@ -823,7 +823,7 @@ class FlxBar extends FlxSprite
 			}
 		}
 
-		if (FlxG.renderBlit)
+		if (FlxG.renderer.method == BLITTING)
 		{
 			dirty = true;
 		}
@@ -852,7 +852,7 @@ class FlxBar extends FlxSprite
 	{
 		super.draw();
 		
-		if (!FlxG.renderTile)
+		if (FlxG.renderer.method != DRAW_TILES)
 			return;
 		
 		if (alpha == 0)
@@ -866,8 +866,6 @@ class FlxBar extends FlxSprite
 				{
 					continue;
 				}
-
-				FlxG.renderer.begin(camera);
 				
 				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 				_matrix.translate(-origin.x, -origin.y);
@@ -892,6 +890,7 @@ class FlxBar extends FlxSprite
 					_matrix.ty = Math.floor(_matrix.ty);
 				}
 				
+				FlxG.renderer.begin(camera);
 				FlxG.renderer.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
 			}
 		}
@@ -899,7 +898,7 @@ class FlxBar extends FlxSprite
 
 	override function set_pixels(pixels:BitmapData):BitmapData
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			return pixels; // hack
 		}
@@ -984,7 +983,7 @@ class FlxBar extends FlxSprite
 
 	function get_frontFrames():FlxImageFrame
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			return frontFrames;
 		}
@@ -993,7 +992,7 @@ class FlxBar extends FlxSprite
 
 	function set_frontFrames(value:FlxImageFrame):FlxImageFrame
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			if (value != null)
 				value.parent.incrementUseCount();
@@ -1013,7 +1012,7 @@ class FlxBar extends FlxSprite
 
 	function get_backFrames():FlxImageFrame
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			return cast frames;
 		}
@@ -1022,7 +1021,7 @@ class FlxBar extends FlxSprite
 
 	function set_backFrames(value:FlxImageFrame):FlxImageFrame
 	{
-		if (FlxG.renderTile)
+		if (FlxG.renderer.method == DRAW_TILES)
 		{
 			frames = value;
 		}
