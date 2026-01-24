@@ -175,6 +175,8 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	 */
 	public function draw(camera:FlxCamera, flashPoint:Point, scaleX = 1.0, scaleY = 1.0):Void
 	{
+		FlxG.renderer.begin(camera);
+
 		if (isPixelPerfectRender(camera))
 		{
 			flashPoint.x = Math.floor(flashPoint.x);
@@ -183,14 +185,14 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{
-			camera.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
+			FlxG.renderer.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
 		}
 		else
 		{
 			_matrix.identity();
 			_matrix.scale(scaleX, scaleY);
 			_matrix.translate(flashPoint.x, flashPoint.y);
-			camera.drawPixels(pixels, _matrix, null, blend, antialiasing);
+			FlxG.renderer.drawPixels(pixels, _matrix, null, blend, antialiasing);
 		}
 	}
 	

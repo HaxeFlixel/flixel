@@ -28,10 +28,12 @@ class FlxBGSprite extends FlxSprite
 				continue;
 			}
 
+			FlxG.renderer.begin(camera);
+
 			_matrix.identity();
 			_matrix.scale(camera.viewWidth + 1, camera.viewHeight + 1);
 			_matrix.translate(camera.viewMarginLeft, camera.viewMarginTop);
-			camera.drawPixels(frame, _matrix, colorTransform);
+			FlxG.renderer.drawPixels(frame, _matrix, colorTransform);
 
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;

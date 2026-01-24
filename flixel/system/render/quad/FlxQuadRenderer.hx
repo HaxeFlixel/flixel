@@ -66,6 +66,7 @@ class FlxQuadRenderer extends FlxRenderer
 		view.debugLayer.graphics.clear();
 		#end
 		
+		view.targetGraphics = view.canvas.graphics;
 		fill(camera.bgColor, camera.useBgAlphaBlending);
 	}
 

@@ -1287,6 +1287,7 @@ class FlxObject extends FlxBasic
 		
 		for (camera in getCamerasLegacy())
 		{
+			FlxG.renderer.begin(camera);
 			drawDebugOnCamera(camera);
 			
 			if (drawPath)
@@ -1318,9 +1319,7 @@ class FlxObject extends FlxBasic
 		
 		if (rect.width > 0 && rect.height > 0)
 		{
-			camera.beginDrawDebug();
 			drawDebugBoundingBox(camera, rect, allowCollisions);
-			camera.endDrawDebug();
 		}
 	}
 
@@ -1365,13 +1364,13 @@ class FlxObject extends FlxBasic
 
 	overload extern inline function drawDebugBoundingBoxColor(camera:FlxCamera, rect:FlxRect, color:FlxColor)
 	{
-		camera.drawDebugRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color);
+		FlxG.renderer.drawDebugRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color);
 	}
 
-	@:deprecated("use object.beginDrawDebug(camera) is deprecated, camera.beginDrawDebug() instead")
+	@:deprecated("use object.beginDrawDebug(camera) is deprecated, FlxG.renderer.beginDrawDebug(camera) instead")
 	inline function beginDrawDebug(camera:FlxCamera):Graphics
 	{
-		camera.beginDrawDebug();
+		FlxG.renderer.beginDrawDebug(camera);
 
 		if (FlxG.renderBlit)
 		{
@@ -1383,10 +1382,10 @@ class FlxObject extends FlxBasic
 		}
 	}
 
-	@:deprecated("use object.endDrawDebug(camera) is deprecated, camera.endDrawDebug() instead")
+	@:deprecated("use object.endDrawDebug(camera) is deprecated, FlxG.renderer.endDrawDebug() instead")
 	inline function endDrawDebug(camera:FlxCamera)
 	{
-		camera.endDrawDebug();
+		FlxG.renderer.endDrawDebug();
 	}
 	#end
 

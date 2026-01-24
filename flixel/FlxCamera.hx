@@ -725,40 +725,7 @@ class FlxCamera extends FlxBasic
 		viewQuad.clearDrawStack();
 	}
 
-	public function beginDrawDebug():Void
-	{
-		// view.beginDrawDebug();
-	}
-
-	public function endDrawDebug(?matrix:FlxMatrix):Void
-	{
-		// view.endDrawDebug(matrix);
-	}
-
-	public function drawDebugRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor, thickness:Float = 1.0):Void 
-	{
-		// FlxG.renderer.begin(this);
-		// view.drawDebugRect(x, y, width, height, color, thickness);
-	}
-
-	public function drawDebugFilledRect(x:Float, y:Float, width:Float, height:Float, color:FlxColor):Void 
-	{
-		// FlxG.renderer.begin(this);
-		// view.drawDebugFilledRect(x, y, width, height, color);
-	}
-
-	public function drawDebugFilledCircle(x:Float, y:Float, radius:Float, color:FlxColor):Void 
-	{
-		// FlxG.renderer.begin(this);
-		// view.drawDebugFilledCircle(x, y, radius, color);
-	}
-
-	public function drawDebugLine(x1:Float, y1:Float, x2:Float, y2:Float, color:FlxColor, thickness:Float = 1.0):Void 
-	{
-		// FlxG.renderer.begin(this);
-		// view.drawDebugLine(x1, y1, x2, y2, color, thickness);
-	}
-
+	@:deprecated("camera.drawPixels() is deprecated, use FlxG.renderer.drawPixels() instead.")
 	public function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
 			?shader:FlxShader):Void
 	{
@@ -766,6 +733,7 @@ class FlxCamera extends FlxBasic
 		FlxG.renderer.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
 	}
 
+	@:deprecated("camera.copyPixels() is deprecated, use FlxG.renderer.copyPixels() instead.")
 	public function copyPixels(?frame:FlxFrame, ?pixels:BitmapData, ?sourceRect:Rectangle, destPoint:Point, ?transform:ColorTransform, ?blend:BlendMode,
 			?smoothing:Bool = false, ?shader:FlxShader):Void
 	{
@@ -773,6 +741,7 @@ class FlxCamera extends FlxBasic
 		FlxG.renderer.copyPixels(frame, pixels, sourceRect, destPoint, transform, blend, smoothing, shader);
 	}
 
+	@:deprecated("camera.drawTriangles() is deprecated, use FlxG.renderer.drawTriangles() instead.")
 	public function drawTriangles(graphic:FlxGraphic, vertices:DrawData<Float>, indices:DrawData<Int>, uvtData:DrawData<Float>, ?colors:DrawData<Int>,
 			?position:FlxPoint, ?blend:BlendMode, repeat:Bool = false, smoothing:Bool = false, ?transform:ColorTransform, ?shader:FlxShader):Void
 	{
@@ -1388,23 +1357,16 @@ class FlxCamera extends FlxBasic
 	 * @param   color        The color to fill with in `0xAARRGGBB` hex format.
 	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents. Default is `true`.
 	 */
-	@:deprecated("The 4-arg fill(color, blendAlpha, fxAlpha, ?graphics) is deprecated, use the 2-arg fill(color, blendAlpha) instead.")
-	overload public inline extern function fill(color:FlxColor, blendAlpha:Bool = true, fxAlpha:Float = 1.0, ?graphics:Graphics):Void
+	@:deprecated("camera.fill() is deprecated, use FlxG.renderer.fill() instead.")
+	public function fill(color:FlxColor, blendAlpha:Bool = true, fxAlpha:Float = 1.0, ?graphics:Graphics):Void
 	{
 		color.alphaFloat = fxAlpha;
 
 		FlxG.renderer.begin(this);
-		FlxG.renderer.fill(color, blendAlpha);
-	}
 
-	/**
-	 * Fill the camera with the specified color.
-	 *
-	 * @param   color        The color to fill with in `0xAARRGGBB` hex format.
-	 * @param   blendAlpha   Whether to blend the alpha value or just wipe the previous contents. Default is `true`.
-	 */
-	overload public inline extern function fill(color:FlxColor, blendAlpha:Bool = true):Void
-	{
+		if (viewQuad != null && graphics != null)
+			viewQuad.targetGraphics = graphics;
+
 		FlxG.renderer.fill(color, blendAlpha);
 	}
 

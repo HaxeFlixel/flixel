@@ -866,6 +866,8 @@ class FlxBar extends FlxSprite
 				{
 					continue;
 				}
+
+				FlxG.renderer.begin(camera);
 				
 				_frontFrame.prepareMatrix(_matrix, FlxFrameAngle.ANGLE_0, checkFlipX(), checkFlipY());
 				_matrix.translate(-origin.x, -origin.y);
@@ -890,7 +892,7 @@ class FlxBar extends FlxSprite
 					_matrix.ty = Math.floor(_matrix.ty);
 				}
 				
-				camera.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
+				FlxG.renderer.drawPixels(_frontFrame, _matrix, colorTransform, blend, antialiasing, shader);
 			}
 		}
 	}
