@@ -92,7 +92,10 @@ class FlxRenderer implements IFlxDestroyable
      */
     public var camera(default, null):FlxCamera;
 
-    public function new() {}
+    public function new() 
+    {
+        maxTextureSize = -1;
+    }
 
     public function destroy():Void 
     {

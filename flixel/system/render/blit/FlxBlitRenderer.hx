@@ -79,7 +79,6 @@ class FlxBlitRenderer extends FlxRenderer
 	{
 		super();
 		method = BLITTING;
-		maxTextureSize = -1;
 	}
 	
 	override function destroy():Void

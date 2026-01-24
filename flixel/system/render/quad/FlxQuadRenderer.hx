@@ -45,8 +45,10 @@ class FlxQuadRenderer extends FlxRenderer
         super();
         method = DRAW_TILES;
 
+		#if FLX_OPENGL_AVAILBLE
 		if (isGL)
 			maxTextureSize = cast GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		#end
     }
 
 	override function destroy():Void
