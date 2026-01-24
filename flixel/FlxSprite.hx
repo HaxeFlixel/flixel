@@ -149,7 +149,7 @@ class FlxSprite extends FlxObject
 	public var framePixels:BitmapData;
 
 	/**
-	 * Always `true` on `FlxG.renderBlit`. On `FlxG.renderTile` it determines whether
+	 * Always `true` when using the blitting renderer. On other renderers it determines whether
 	 * `framePixels` is used and defaults to `false` for performance reasons.
 	 */
 	public var useFramePixels(default, set):Bool = true;
@@ -248,7 +248,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Change the size of your sprite's graphic.
 	 * NOTE: The hitbox is not automatically adjusted, use `updateHitbox()` for that.
-	 * **WARNING:** With `FlxG.renderBlit`, scaling sprites decreases rendering performance by a factor of about x10!
+	 * **WARNING:** With `the blitting renderer, scaling sprites decreases rendering performance by a factor of about x10!
 	 * @see https://snippets.haxeflixel.com/sprites/scale/
 	 */
 	public var scale(default, null):FlxPoint;
@@ -1171,7 +1171,7 @@ class FlxSprite extends FlxObject
 	
 	/**
 	 * Sets the sprite's color transformation with control over color offsets.
-	 * With `FlxG.renderTile`, offsets are only supported on OpenFL Next version 3.6.0 or higher.
+	 * With the DRAW_TILES renderer, offsets are only supported on OpenFL Next version 3.6.0 or higher.
 	 *
 	 * @param   redMultiplier     The value for the red multiplier, in the range from `0` to `1`.
 	 * @param   greenMultiplier   The value for the green multiplier, in the range from `0` to `1`.
@@ -1674,8 +1674,8 @@ class FlxSprite extends FlxObject
 	}
 
 	/**
-	 * Returns the result of `isSimpleRenderBlit()` if `FlxG.renderBlit` is
-	 * `true`, or `false` if `FlxG.renderTile` is `true`.
+	 * Returns the result of `isSimpleRenderBlit()` if the blitting renderer is used,
+	 * or `false` elsewhere.
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{

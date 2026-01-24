@@ -28,7 +28,7 @@ class BitmapFrontEnd
 
 	/**
 	 * Helper FlxFrame object. Containing only one frame.
-	 * Useful for drawing colored rectangles of all sizes in FlxG.renderTile mode.
+	 * Useful for drawing colored rectangles of all sizes when not using the blitting renderer.
 	 */
 	public var whitePixel(get, never):FlxFrame;
 

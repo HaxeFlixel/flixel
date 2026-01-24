@@ -232,7 +232,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Whether the positions of the objects rendered on this camera are rounded.
 	 * If set on individual objects, they ignore the global camera setting.
-	 * Defaults to `false` with `FlxG.renderTile` and to `true` with `FlxG.renderBlit`.
+	 * Defaults to `true` with the blitting renderer and `false` elsewhere.
 	 * WARNING: setting this to `false` on blitting targets is very expensive.
 	 */
 	public var pixelPerfectRender:Bool;

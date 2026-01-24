@@ -61,7 +61,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 	public var pixelPerfectRender:Null<Bool>;
 
 	/**
-	 * The actual buffer BitmapData. (Only used if FlxG.renderBlit == true)
+	 * The actual buffer BitmapData. (Only used with the blitting renderer)
 	 */
 	public var pixels(default, null):BitmapData;
 
@@ -182,7 +182,7 @@ class FlxTilemapBuffer implements IFlxDestroyable
 		}
 	
 		FlxG.renderer.begin(camera);
-		
+
 		if (isPixelPerfectRender(camera) && (scaleX == 1.0 && scaleY == 1.0) && blend == null)
 		{
 			FlxG.renderer.copyPixels(pixels, _flashRect, flashPoint, null, null, true);
