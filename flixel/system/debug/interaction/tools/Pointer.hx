@@ -134,7 +134,7 @@ class Pointer extends Tool
 	
 	override public function draw():Void
 	{
-		FlxG.camera.beginDrawDebug();
+		FlxG.renderer.beginDrawDebug(FlxG.camera);
 		
 		switch state
 		{
@@ -145,11 +145,11 @@ class Pointer extends Tool
 				// Render the selection rectangle
 				var color:FlxColor = 0xbb0000;
 				color.alphaFloat = 0.9;
-				FlxG.camera.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
+				FlxG.renderer.drawDebugRect(FlxG.camera.scroll.x + rect.x, FlxG.camera.scroll.y + rect.y, rect.width, rect.height, color);
 				rect.put();
 		}
 		
-		FlxG.camera.endDrawDebug();
+		FlxG.renderer.endDrawDebug();
 	}
 	
 	static function setAbsRect(rect:FlxRect, x1:Float, y1:Float, x2:Float, y2:Float)

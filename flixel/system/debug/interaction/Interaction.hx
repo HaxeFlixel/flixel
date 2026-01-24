@@ -397,7 +397,7 @@ class Interaction extends Window
 	function drawItemsSelection():Void
 	{
 		final camera = FlxG.camera;
-		camera.beginDrawDebug();
+		FlxG.renderer.beginDrawDebug(camera);
 
 		for (member in selectedItems)
 		{
@@ -408,11 +408,11 @@ class Interaction extends Window
 				// Render a white rectangle centered at the selected item
 
 				final color:FlxColor = FlxColor.fromRGBFloat(1, 1, 1, 0.75);
-				camera.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
+				FlxG.renderer.drawDebugRect(member.x - scroll.x - margin, member.y - scroll.y - margin, member.width + margin*2, member.height + margin*2, color);
 			}
 		}
 
-		camera.endDrawDebug();
+		FlxG.renderer.endDrawDebug();
 	}
 
 	/**

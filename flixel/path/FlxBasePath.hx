@@ -318,7 +318,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	 */
 	public function drawDebugOnCamera(camera:FlxCamera):Void
 	{
-		camera.beginDrawDebug();
+		FlxG.renderer.beginDrawDebug(camera);
 
 		final length = nodes.length;
 		// Then fill up the object with node and path graphics
@@ -358,7 +358,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 			prevNodeScreen.put();
 		}
 		
-		camera.endDrawDebug();
+		FlxG.renderer.endDrawDebug();
 	}
 	
 	@:access(flixel.FlxCamera)
@@ -385,7 +385,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 	inline function drawNode(camera:FlxCamera, node:FlxPoint, size:Int, color:FlxColor)
 	{
 		final offset = Math.floor(size * 0.5);
-		camera.drawDebugFilledRect(node.x - offset, node.y - offset, size, size, color);
+		FlxG.renderer.drawDebugFilledRect(node.x - offset, node.y - offset, size, size, color);
 	}
 	
 	@:deprecated("drawLine(gfx, node1, node2) is deprecated. Use drawLine(camera, node1, node2) instead.")
@@ -408,7 +408,7 @@ class FlxTypedBasePath<TTarget:FlxBasic> extends FlxBasic implements IFlxDestroy
 		final size = debugDrawData.lineSize;
 		final lineOffset = debugDrawData.lineSize / 2;
 
-		camera.drawDebugLine(node1.x + lineOffset, node1.y + lineOffset, node2.x + lineOffset, node2.y + lineOffset, color, size);
+		FlxG.renderer.drawDebugLine(node1.x + lineOffset, node1.y + lineOffset, node2.x + lineOffset, node2.y + lineOffset, color, size);
 	}
 	#end
 }

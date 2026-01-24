@@ -162,8 +162,8 @@ class FlxRenderer implements IFlxDestroyable
      * 
 	 * @param   graphic     The graphic to use for the triangles.
 	 * @param   vertices    A vector where each element is a coordinate location. 2 elements make up an (x, y) pair.
-	 * @param   indices     A vector containing the indices of the triangles' vertices.
-	 * @param   uvtData     A vector containing the UV data for the graphic.
+	 * @param   indices     A vector where each element is an index to a vertex (x, y) pair. 3 indices make up a triangle.
+	 * @param   uvtData     A vector where each element is a normalized coordinate (from 0.0 to 1.0), per vertex, used to apply texture mapping.
 	 * @param   colors      A vector containing the colors to use per vertex. Currently does not work with any renderer.
 	 * @param   position    A point representing the top-left position to draw to.
 	 * @param   blend       The blend mode to use, optional.
