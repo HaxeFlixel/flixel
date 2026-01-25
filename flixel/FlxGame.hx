@@ -820,7 +820,7 @@ class FlxGame extends Sprite
 
 		FlxG.cameras.render();
 
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			#if FLX_DEBUG
 			debugger.stats.drawCalls(FlxRenderer.totalDrawCalls);

@@ -264,7 +264,7 @@ class FlxBitmapText extends FlxSprite
 
 		_colorParams = null;
 
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			textData = null;
 			textDrawData = null;
@@ -278,7 +278,7 @@ class FlxBitmapText extends FlxSprite
 	 */
 	override public function drawFrame(Force:Bool = false):Void
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			Force = true;
 		}
@@ -511,7 +511,7 @@ class FlxBitmapText extends FlxSprite
 
 	override function calcFrame(RunOnCpp:Bool = false):Void
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			drawFrame(RunOnCpp);
 		}
@@ -1023,7 +1023,7 @@ class FlxBitmapText extends FlxSprite
 
 			textBitmap.lock();
 		}
-		else if (FlxG.renderer.method == DRAW_TILES)
+		else if (FlxG.renderer.method != BLITTING)
 		{
 			textData.clear();
 		}

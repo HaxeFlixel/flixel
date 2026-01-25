@@ -162,7 +162,7 @@ class FlxG
 	public static var renderTile(get, never):Bool;
 	@:noCompletion static inline function get_renderTile():Bool
 	{
-		return FlxG.renderer.method == DRAW_TILES;
+		return FlxG.renderer.method != BLITTING;
 	}
 
 	/**

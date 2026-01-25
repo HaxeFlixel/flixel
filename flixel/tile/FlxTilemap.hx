@@ -286,7 +286,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	{
 		super();
 
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			_helperPoint = new Point();
 			_matrix = new FlxMatrix();
@@ -499,7 +499,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 
 	function updateDebugTile(tileBitmap:BitmapData, color:FlxColor):BitmapData
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return null;
 
 		if (tileWidth <= 0 || tileHeight <= 0)
@@ -704,7 +704,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	 */
 	override function setDirty(dirty:Bool = true):Void
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return;
 
 		for (buffer in _buffers)
@@ -1347,7 +1347,7 @@ class FlxTypedTilemap<Tile:FlxTile> extends FlxBaseTilemap<Tile>
 	#if FLX_DEBUG
 	function makeDebugTile(color:FlxColor):BitmapData
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return null;
 
 		var debugTile = new BitmapData(tileWidth, tileHeight, true, 0);

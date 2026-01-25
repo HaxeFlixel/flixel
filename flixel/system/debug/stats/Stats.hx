@@ -88,7 +88,7 @@ class Stats extends Window
 	{
 		super("Stats", Icon.stats, 0, 0, false);
 
-		var minHeight = if (FlxG.renderer.method == DRAW_TILES) 200 else 185;
+		var minHeight = if (FlxG.renderer.method != BLITTING) 200 else 185;
 		minSize.y = minHeight;
 		resize(INITIAL_WIDTH, minHeight);
 
@@ -130,7 +130,7 @@ class Stats extends Window
 		_leftTextField.multiline = _rightTextField.multiline = true;
 
 		var drawMethod = "";
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			drawMethod =
 				#if FLX_RENDER_TRIANGLE
@@ -267,7 +267,7 @@ class Stats extends Window
 			}
 			visibleCount = Std.int(divide(visibleCount, _visibleObjectMarker));
 
-			if (FlxG.renderer.method == DRAW_TILES)
+			if (FlxG.renderer.method != BLITTING)
 			{
 				for (i in 0..._drawCallsMarker)
 				{
@@ -280,7 +280,7 @@ class Stats extends Window
 			_drawMarker = 0;
 			_activeObjectMarker = 0;
 			_visibleObjectMarker = 0;
-			if (FlxG.renderer.method == DRAW_TILES)
+			if (FlxG.renderer.method != BLITTING)
 			{
 				_drawCallsMarker = 0;
 			}
@@ -298,7 +298,7 @@ class Stats extends Window
 		updateTimeGraph.update(updTime);
 
 		_rightTextField.text = activeCount + " (" + updTime + "ms)\n" + visibleCount + " (" + drwTime + "ms)\n"
-			+ (FlxG.renderer.method == DRAW_TILES ? (drawCallsCount + "\n") : "")
+			+ (FlxG.renderer.method != BLITTING ? (drawCallsCount + "\n") : "")
 			+ FlxQuadTree._NUM_CACHED_QUAD_TREES
 			+ "\n"
 			+ FlxLinkedList._NUM_CACHED_FLX_LIST;

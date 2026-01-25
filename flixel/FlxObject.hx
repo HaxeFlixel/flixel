@@ -1309,7 +1309,7 @@ class FlxObject extends FlxBasic
 			return;
 
 		final rect = getBoundingBox(camera);
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			final view = camera.getViewMarginRect();
 			view.pad(2);

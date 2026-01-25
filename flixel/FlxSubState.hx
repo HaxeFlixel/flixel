@@ -53,7 +53,7 @@ class FlxSubState extends FlxState
 		closeCallback = null;
 		openCallback = null;
 
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			_bgSprite = new FlxBGSprite();
 		}
@@ -71,7 +71,7 @@ class FlxSubState extends FlxState
 				FlxG.renderer.fill(bgColor);
 			}
 		}
-		else // FlxG.renderer.method == DRAW_TILES
+		else // FlxG.renderer.method != BLITTING
 		{
 			if (_bgSprite != null && _bgSprite.visible)
 			{
@@ -111,7 +111,7 @@ class FlxSubState extends FlxState
 	@:noCompletion
 	override function set_bgColor(value:FlxColor):FlxColor
 	{
-		if (FlxG.renderer.method == DRAW_TILES && _bgSprite != null)
+		if (FlxG.renderer.method != BLITTING && _bgSprite != null)
 		{
 			_bgSprite.alpha = value.alphaFloat;
 			_bgSprite.visible = _bgSprite.alpha > 0;

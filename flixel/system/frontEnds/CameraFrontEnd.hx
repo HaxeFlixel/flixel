@@ -136,7 +136,7 @@ class CameraFrontEnd
 			return;
 		}
 
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			for (i in 0...list.length)
 			{

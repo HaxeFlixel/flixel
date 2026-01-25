@@ -790,7 +790,7 @@ class Interaction extends Window
 	
 	public function toDebugX(worldX:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return camera.viewQuad.canvas.localToGlobal(new Point(worldX, 0)).x;
 		else
 			@:privateAccess
@@ -799,7 +799,7 @@ class Interaction extends Window
 	
 	public function toDebugY(worldY:Float, camera:FlxCamera)
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return camera.viewQuad.canvas.localToGlobal(new Point(0, worldY)).y;
 		else
 			@:privateAccess

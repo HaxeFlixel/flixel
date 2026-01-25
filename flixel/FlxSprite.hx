@@ -1566,7 +1566,7 @@ class FlxSprite extends FlxObject
 	{
 		checkEmptyFrame();
 
-		if (FlxG.renderer.method == DRAW_TILES && !force)
+		if (FlxG.renderer.method != BLITTING && !force)
 			return;
 
 		updateFramePixels();
@@ -1582,7 +1582,7 @@ class FlxSprite extends FlxObject
 		
 		// don't try to regenerate frame pixels if _frame already uses it as source of graphics
 		// if you'll try then it will clear framePixels and you won't see anything
-		if (FlxG.renderer.method == DRAW_TILES && _frameGraphic != null)
+		if (FlxG.renderer.method != BLITTING && _frameGraphic != null)
 		{
 			dirty = false;
 			return framePixels;
@@ -1605,7 +1605,7 @@ class FlxSprite extends FlxObject
 			framePixels.colorTransform(_flashRect, colorTransform);
 		}
 		
-		if (FlxG.renderer.method == DRAW_TILES && useFramePixels)
+		if (FlxG.renderer.method != BLITTING && useFramePixels)
 		{
 			// recreate _frame for native target, so it will use modified framePixels
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
@@ -1679,7 +1679,7 @@ class FlxSprite extends FlxObject
 	 */
 	public function isSimpleRender(?camera:FlxCamera):Bool
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 			return false;
 
 		return isSimpleRenderBlit(camera);
@@ -1848,7 +1848,7 @@ class FlxSprite extends FlxObject
 			return null;
 		}
 		
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			_frameGraphic = FlxDestroyUtil.destroy(_frameGraphic);
 		}
@@ -2006,7 +2006,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipX(Value:Bool):Bool
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			_facingHorizontalMult = Value ? -1 : 1;
 		}
@@ -2017,7 +2017,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_flipY(Value:Bool):Bool
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			_facingVerticalMult = Value ? -1 : 1;
 		}
@@ -2034,7 +2034,7 @@ class FlxSprite extends FlxObject
 	@:noCompletion
 	function set_useFramePixels(value:Bool):Bool
 	{
-		if (FlxG.renderer.method == DRAW_TILES)
+		if (FlxG.renderer.method != BLITTING)
 		{
 			if (value != useFramePixels)
 			{
