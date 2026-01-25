@@ -17,9 +17,11 @@ class FlxCameraView implements IFlxDestroyable
 {	
 	/**
 	 * Creates a `FlxCameraView` object tied to a camera, based on the target and project configuration.
-	 * @param camera The camera to create the view for
+	 * This function is dynamic, which means that you can change the return value yourself.
+	 * 
+	 * @param   camera   The camera to create the view for
 	 */
-	public static inline function create(camera:FlxCamera):FlxCameraView
+	public static dynamic function create(camera:FlxCamera):FlxCameraView
 	{
 		if (!FlxG.renderer.isHardware)
 		{
