@@ -146,7 +146,7 @@ class FlxG
 
 	@:deprecated("renderMethod is deprecated, use FlxG.render.method, instead.")
 	public static var renderMethod(get, null):flixel.system.render.FlxRenderer.FlxRenderMethod;
-	static inline function get_renderMethod():flixel.system.render.FlxRenderer.FlxRenderMethod
+	@:noCompletion static inline function get_renderMethod():flixel.system.render.FlxRenderer.FlxRenderMethod
 	{
 		return FlxG.renderer.method;
 	}

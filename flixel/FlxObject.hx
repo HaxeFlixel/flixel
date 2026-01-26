@@ -1287,7 +1287,6 @@ class FlxObject extends FlxBasic
 		
 		for (camera in getCamerasLegacy())
 		{
-			FlxG.renderer.begin(camera);
 			drawDebugOnCamera(camera);
 			
 			if (drawPath)
@@ -1319,11 +1318,13 @@ class FlxObject extends FlxBasic
 		
 		if (rect.width > 0 && rect.height > 0)
 		{
-			drawDebugBoundingBox(camera, rect, allowCollisions);
+			FlxG.renderer.beginDrawDebug(camera);
+			drawDebugBoundingBox(rect, allowCollisions);
+			FlxG.renderer.endDrawDebug();
 		}
 	}
 
-	@:deprecated("drawDebugBoundingBox(gfx, rect, allowCollisions, partial) is deprecated. Use drawDebugBoundingBox(camera, rect, allowCollisions) instead.")
+	@:deprecated("drawDebugBoundingBox(gfx, rect, allowCollisions, partial) is deprecated. Use drawDebugBoundingBox(rect, allowCollisions) instead.")
 	overload extern inline function drawDebugBoundingBox(gfx:Graphics, rect:FlxRect, allowCollisions:FlxDirectionFlags, partial:Bool)
 	{
 		// Find the color to use
@@ -1331,12 +1332,12 @@ class FlxObject extends FlxBasic
 		drawDebugBoundingBoxColor(gfx, rect, color);
 	}
 
-	overload extern inline function drawDebugBoundingBox(camera:FlxCamera, rect:FlxRect, allowCollisions:FlxDirectionFlags)
+	overload extern inline function drawDebugBoundingBox(rect:FlxRect, allowCollisions:FlxDirectionFlags)
 	{
 		// Find the color to use
 		var color = getDebugBoundingBoxColor(allowCollisions);
 		color.alphaFloat = 0.75;
-		drawDebugBoundingBoxColor(camera, rect, color);
+		drawDebugBoundingBoxColor(rect, color);
 	}
 	
 	function getDebugBoundingBoxColor(allowCollisions:FlxDirectionFlags)
@@ -1354,7 +1355,7 @@ class FlxObject extends FlxBasic
 		
 	}
 	
-	@:deprecated("drawDebugBoundingBoxColor(gfx, rect, color) is deprecated, use drawDebugBoundingBoxColor(camera, rect, color) instead")
+	@:deprecated("drawDebugBoundingBoxColor(gfx, rect, color) is deprecated, use drawDebugBoundingBoxColor(rect, color) instead")
 	overload extern inline function drawDebugBoundingBoxColor(gfx:Graphics, rect:FlxRect, color:FlxColor)
 	{
 		// fill static graphics object with square shape
@@ -1362,7 +1363,7 @@ class FlxObject extends FlxBasic
 		gfx.drawRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0);
 	}
 
-	overload extern inline function drawDebugBoundingBoxColor(camera:FlxCamera, rect:FlxRect, color:FlxColor)
+	overload extern inline function drawDebugBoundingBoxColor(rect:FlxRect, color:FlxColor)
 	{
 		FlxG.renderer.drawDebugRect(rect.x + 0.5, rect.y + 0.5, rect.width - 1.0, rect.height - 1.0, color);
 	}

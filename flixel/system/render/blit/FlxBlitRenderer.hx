@@ -289,7 +289,7 @@ class FlxBlitRenderer extends FlxRenderer
 	{
 		final gfx = FlxSpriteUtil.flashGfx;
 		gfx.lineStyle(thickness, color.rgb, color.alphaFloat, false, null, null, MITER, 255);
-		gfx.moveTo(x1, x2);
+		gfx.moveTo(x1, y1);
 		gfx.lineTo(x2, y2);
 	}
 	#end
