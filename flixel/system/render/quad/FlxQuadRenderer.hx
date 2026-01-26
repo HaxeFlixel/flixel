@@ -5,7 +5,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawQuadsItem;
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.graphics.tile.FlxDrawTrianglesItem;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
