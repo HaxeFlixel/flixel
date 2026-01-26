@@ -720,6 +720,14 @@ class FlxCamera extends FlxBasic
 	}
 
 	@:allow(flixel.system.frontEnds.CameraFrontEnd)
+	@:deprecated("camera.render() is deprecated, use FlxG.renderer.render() instead.")
+	function render():Void
+	{
+		FlxG.renderer.begin(this);
+		FlxG.renderer.render();
+	}
+
+	@:allow(flixel.system.frontEnds.CameraFrontEnd)
 	function clearDrawStack():Void
 	{
 		viewQuad.clearDrawStack();
