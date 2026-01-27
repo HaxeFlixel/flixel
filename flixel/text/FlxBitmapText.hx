@@ -247,6 +247,11 @@ class FlxBitmapText extends FlxSprite
 		}
 		
 		this.text = text;
+
+		// initialize at runtime instead of statically to avoid a crash
+		// because FlxG.renderer(.method) is null
+		if (frameDrawHelper == null)
+			frameDrawHelper = new ReusableFrame();
 	}
 
 	/**
@@ -326,7 +331,7 @@ class FlxBitmapText extends FlxSprite
 	static final borderColorTransformDrawHelper = new ColorTransform();
 	static final textColorTransformDrawHelper = new ColorTransform();
 	static final matrixDrawHelper = new FlxMatrix();
-	static final frameDrawHelper = new ReusableFrame();
+	static var frameDrawHelper:Null<ReusableFrame>;
 	override function draw()
 	{
 		if (FlxG.renderer.method == BLITTING)
