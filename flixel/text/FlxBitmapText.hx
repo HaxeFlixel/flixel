@@ -1800,8 +1800,6 @@ private class ReusableFrame extends FlxFrame
 	public function new ()
 	{
 		super(null);
-		// We need to define this now, since it's created before renderTile is set
-		tileMatrix = new MatrixVector();
 	}
 	
 	override function destroy() {}
