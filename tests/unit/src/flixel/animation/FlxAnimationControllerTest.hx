@@ -329,9 +329,8 @@ class FlxAnimationControllerTest extends FlxTest
 	}
 	
 	@Test // #3554
-	function testFrameIndexNegativeWraps()
+	function testFrameIndexNegativeClampsToZero()
 	{
-		#if !js
 		var bitmapData = new BitmapData(4, 1);
 		sprite.loadGraphic(bitmapData, true, 1, 1);
 		
@@ -339,11 +338,10 @@ class FlxAnimationControllerTest extends FlxTest
 		sprite.animation.play("test");
 		
 		sprite.animation.frameIndex = -1;
-		Assert.areEqual(3, sprite.animation.frameIndex);
 		
+		Assert.areEqual(0, sprite.animation.frameIndex);
 		sprite.animation.frameIndex = -4;
 		Assert.areEqual(0, sprite.animation.frameIndex);
-		#end
 	}
 
 	function loadSpriteSheet():Void

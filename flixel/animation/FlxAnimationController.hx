@@ -3,7 +3,6 @@ package flixel.animation;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxFrame;
-import flixel.math.FlxMath;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSignal;
 
@@ -820,7 +819,17 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_sprite.frames != null && numFrames > 0)
 		{
-			Frame = Std.int(FlxMath.mod(Frame, numFrames));
+			if (Frame < 0)
+			{
+				FlxG.log.warn('frameIndex must be a positive number, got $Frame, using 0, instead');
+				Frame = 0;
+			}
+			else if (Frame >= numFrames)
+			{
+				FlxG.log.warn('frameIndex must be less than $numFrames, got $Frame, wrapping to ${Frame % numFrames}, instead');
+				Frame = Frame % numFrames;
+			}
+
 			_sprite.frame = _sprite.frames.frames[Frame];
 			frameIndex = Frame;
 			fireCallback();
