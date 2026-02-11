@@ -278,6 +278,72 @@ class FlxAnimationControllerTest extends FlxTest
 		Assert.isTrue (sprite.animation.exists("anim4"), 'missing "anim4"');
 	}
 
+	@Test // #3554
+	function testAddAllValidFrames()
+	{
+		var bitmapData = new BitmapData(4, 1);
+		sprite.loadGraphic(bitmapData, true, 1, 1);
+		
+		sprite.animation.add("test", [0, 1, 2, 3]);
+		
+		var anim = sprite.animation.getByName("test");
+		Assert.isNotNull(anim);
+		FlxAssert.arraysEqual([0, 1, 2, 3], anim.frames);
+	}
+	
+	@Test // #3554
+	function testAddSomeInvalidFrames()
+	{
+		var bitmapData = new BitmapData(4, 1);
+		sprite.loadGraphic(bitmapData, true, 1, 1);
+		
+		sprite.animation.add("test", [0, 4, 2, 5, 3]);
+		
+		var anim = sprite.animation.getByName("test");
+		Assert.isNotNull(anim);
+		FlxAssert.arraysEqual([0, 2, 3], anim.frames);
+	}
+	
+	@Test // #3554
+	function testAddSingleValidFrame()
+	{
+		var bitmapData = new BitmapData(4, 1);
+		sprite.loadGraphic(bitmapData, true, 1, 1);
+		
+		sprite.animation.add("test", [0]);
+		
+		var anim = sprite.animation.getByName("test");
+		Assert.isNotNull(anim);
+		FlxAssert.arraysEqual([0], anim.frames);
+	}
+	
+	@Test // #3554
+	function testAddAllInvalidFrames()
+	{
+		loadSpriteSheet();
+		
+		sprite.animation.add("test", [5, 6, 7]);
+		
+		var anim = sprite.animation.getByName("test");
+		Assert.isNull(anim);
+	}
+	
+	@Test // #3554
+	function testFrameIndexNegativeClampsToZero()
+	{
+		var bitmapData = new BitmapData(4, 1);
+		sprite.loadGraphic(bitmapData, true, 1, 1);
+		
+		sprite.animation.add("test", [0, 1, 2, 3]);
+		sprite.animation.play("test");
+		
+		sprite.animation.frameIndex = -1;
+		
+		Assert.areEqual(0, sprite.animation.frameIndex);
+		sprite.animation.frameIndex = -4;
+		Assert.areEqual(0, sprite.animation.frameIndex);
+	}
+
 	function loadSpriteSheet():Void
 	{
 		var bitmapData = new BitmapData(2, 1);
