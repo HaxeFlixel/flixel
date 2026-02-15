@@ -16,7 +16,7 @@ class BMFontUtil
 		while (attFinder.match(text.substr(index)))
 		{
 			final key = attFinder.matched(1);
-			final value = attFinder.matched(3);
+			final value = attFinder.matched(4);
 			callback(key, value);
 			
 			final nextIndex = text.length - attFinder.matchedRight().length;
