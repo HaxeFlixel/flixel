@@ -14,11 +14,11 @@ class BMFontTest extends FlxTest
 		+ '\npage id=0 file="arial_black_0.png"'
 		+ '\nchars count=3'
 		+ '\nchar id=64   x=0     y=0     width=25    height=24    xoffset=-5    yoffset=7     xadvance=17    page=0  chnl=15'
-			+ '\nchar id= 65   x=27    y=0     width=26    height=21    xoffset=-5    yoffset=7     xadvance=18    page=0  chnl=15'
-			+ '\nchar id=  84   x=55    y=0     width=23    height=21    xoffset=-4    yoffset=7     xadvance=16    page=0  chnl=15'
+		+ '\nchar id= 65   x= 27    y= 0     width= 26    height= 21    xoffset= -5    yoffset= 7     xadvance= 18    page= 0  chnl= 15'
+		+ '\nchar id=  84   x=55    y=0     width=23    height=21    xoffset=-4    yoffset=7     xadvance=16    page=0  chnl=15'
 		+ '\nkernings count=2'
 		+ '\nkerning first=84  second=65  amount=-2  '
-		+ '\nkerning first=65  second=84  amount=-2  ';
+		+ '\nkerning first= 65  second= 84  amount=-2  ';
 		
 		var font = BMFont.parse(cast text);
 		assertFont(font);
