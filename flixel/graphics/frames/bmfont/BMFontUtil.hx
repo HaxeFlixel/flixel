@@ -8,7 +8,7 @@ using StringTools;
 @:noCompletion
 class BMFontUtil
 {
-	static var attFinder = ~/(\w+?)=("?)(.*?)\2(?=\s|$)/;
+	static var attFinder = ~/(\w+?)=(\s*)("?)(.*?)\3(?=\s|$)/;
 	
 	public static function forEachAttribute(text:UnicodeString, callback:(key:String, value:UnicodeString)->Void)
 	{
