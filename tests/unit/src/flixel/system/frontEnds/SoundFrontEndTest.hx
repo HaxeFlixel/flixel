@@ -162,15 +162,19 @@ class SoundFrontEndTest
 			assertPathFail(FlxG.sound.load(partialPath));
 			assertPathSuccess(FlxG.sound.create(fullPath));
 			assertPathSuccess(FlxG.sound.create(partialPath));
+			#if FLX_STREAM_SOUND
 			assertPathSuccess(FlxG.sound.createStreamed(fullPath));
 			assertPathSuccess(FlxG.sound.createStreamed(partialPath));
+			#end
 			
 			assertPathSuccess(FlxG.sound.play(fullPath));
 			assertPathFail(FlxG.sound.play(partialPath));
 			assertPathSuccess(FlxG.sound.playMusic(fullPath));
 			assertPathFail(FlxG.sound.playMusic(partialPath));
+			#if FLX_STREAM_SOUND
 			assertPathSuccess(FlxG.sound.playStreamed(fullPath));
 			assertPathSuccess(FlxG.sound.playStreamed(partialPath));
+			#end
 		}
 		catch(e)
 		{
