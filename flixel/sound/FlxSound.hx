@@ -309,41 +309,32 @@ class FlxSound extends FlxBasic
 			
 		_time = _channel.position;
 		
-		var radialMultiplier:Float = 1.0;
+		updateProximity();
+		
+		if (endTime != null && _time >= endTime)
+			stopped();
+	}
+	
+	function updateProximity()
+	{
+		_volumeAdjust = 1.0;
 		
 		// Distance-based volume control
 		if (_target != null)
 		{
-			var targetPosition = _target.getPosition();
-			radialMultiplier = targetPosition.distanceTo(FlxPoint.weak(x, y)) / _radius;
+			final targetPosition = _target.getPosition();
+			final distRatio = targetPosition.distanceTo(FlxPoint.weak(x, y)) / _radius;
 			targetPosition.put();
-			radialMultiplier = 1 - FlxMath.bound(radialMultiplier, 0, 1);
+			_volumeAdjust = 1 - FlxMath.bound(distRatio, 0, 1);
 			
 			if (_proximityPan)
 			{
-				var d:Float = (x - _target.x) / _radius;
-				_transform.pan = FlxMath.bound(d, -1, 1);
+				final xDiff = (x - _target.x) / _radius;
+				_transform.pan = FlxMath.bound(xDiff, -1, 1);
 			}
 		}
 		
-		_volumeAdjust = radialMultiplier;
 		updateTransform();
-		
-		if (_transform.volume > 0)
-		{
-			amplitudeLeft = _channel.leftPeak / _transform.volume;
-			amplitudeRight = _channel.rightPeak / _transform.volume;
-			amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
-		}
-		else
-		{
-			amplitudeLeft = 0;
-			amplitudeRight = 0;
-			amplitude = 0;
-		}
-		
-		if (endTime != null && _time >= endTime)
-			stopped();
 	}
 	
 	override public function kill():Void
@@ -568,6 +559,7 @@ class FlxSound extends FlxBasic
 		_target = TargetObject;
 		_radius = Radius;
 		_proximityPan = Pan;
+		updateProximity();
 		return this;
 	}
 	
@@ -697,6 +689,7 @@ class FlxSound extends FlxBasic
 	{
 		x = X;
 		y = Y;
+		updateProximity();
 	}
 	
 	/**
@@ -707,8 +700,23 @@ class FlxSound extends FlxBasic
 	{
 		_transform.volume = calcTransformVolume();
 		
-		if (_channel != null)
-			_channel.soundTransform = _transform;
+		if (_transform.volume > 0)
+		{
+			if (_channel != null)
+			{
+				_channel.soundTransform = _transform;
+				
+				amplitudeLeft = _channel.leftPeak * volume;
+				amplitudeRight = _channel.rightPeak * volume;
+				amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
+			}
+		}
+		else
+		{
+			amplitudeLeft = 0;
+			amplitudeRight = 0;
+			amplitude = 0;
+		}
 	}
 	
 	function calcTransformVolume():Float
