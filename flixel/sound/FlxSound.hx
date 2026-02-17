@@ -360,37 +360,21 @@ class FlxSound extends FlxBasic
 	 */
 	public function load(sound:FlxSoundAsset, looped:Bool = false, autoDestroy:Bool = false, ?onComplete:Void->Void):FlxSound
 	{
-		if (sound == null)
-			return this;
-			
-		cleanup(true);
+		if (asset == null)
+			FlxG.log.error("Expected sound asset, got null");
 		
-		if ((sound is Sound))
-		{
-			_sound = sound;
-		}
-		else if ((sound is Class))
-		{
-			_sound = Type.createInstance(sound, []);
-		}
-		else if ((sound is String))
-		{
-			if (FlxG.assets.exists(sound, SOUND))
-				_sound = FlxG.assets.getSoundUnsafe(sound);
-			else
-				FlxG.log.error('Could not find a Sound asset with an ID of \'$sound\'.');
-		}
-		else if ((sound is ByteArrayData))
-		{
-			var bytes:ByteArray = cast sound;
-
-			_sound = new Sound();
-			_sound.addEventListener(Event.ID3, gotID3);
-			_sound.loadCompressedDataFromByteArray(bytes, bytes.length);
-		}
+		return loadHelper(asset, true, allowCache, true).init(false, false, null);
+	}
+	
+	function loadHelper(sound:FlxSoundAsset, destroy = false, allowCache = true, addExt = false):FlxSound
+	{
+		cleanup(destroy);
 		
-		// NOTE: can't pull ID3 info from embedded sound currently
-		return init(looped, autoDestroy, onComplete);
+		_sound = sound.resolveSound(allowCache, addExt);
+		if (_sound != null)
+			onSoundSet();
+		
+		return this;
 	}
 
 	#if FLX_STREAM_SOUND

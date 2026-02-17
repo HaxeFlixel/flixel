@@ -36,7 +36,6 @@ class VirtualInputData extends #if nme ByteArray #else ByteArrayData #end {}
 
 typedef FlxTexturePackerJsonAsset = FlxJsonAsset<TexturePackerAtlas>;
 typedef FlxAsepriteJsonAsset = FlxJsonAsset<AseAtlas>;
-typedef FlxSoundAsset = OneOfFour<String, Sound, Class<Sound>, ByteArray>;
 typedef FlxTilemapGraphicAsset = OneOfFour<FlxFramesCollection, FlxGraphic, BitmapData, String>;
 typedef FlxBitmapFontGraphicAsset = OneOfFour<FlxFrame, FlxGraphic, BitmapData, String>;
 
@@ -45,6 +44,14 @@ abstract FlxGraphicAsset(OneOfFour<FlxGraphic, BitmapData, String, Class<Dynamic
 	public inline function resolveBitmapData():BitmapData
 	{
 		return FlxAssets.resolveBitmapData(cast this);
+	}
+}
+
+abstract FlxSoundAsset(OneOfFour<String, Sound, Class<Sound>, ByteArray>) from String from Sound from Class<Sound> from ByteArray
+{
+	public inline function resolveSound(allowCache = true, addExt = false):Null<Sound>
+	{
+		return FlxAssets.resolveSound(cast this, allowCache, addExt);
 	}
 }
 
@@ -328,6 +335,39 @@ class FlxAssets
 
 		return null;
 	}
+	
+	public static function resolveSound(sound:FlxSoundAsset, allowCache = true, addExt = false):Null<Sound>
+	{
+		if (sound == null)
+		{
+			throw 'Cannot resolve null sound asset, expected String, Sound, Class<Sound> or ByteArray';
+		}
+		else if ((sound is Sound))
+		{
+			return cast sound;
+		}
+		else if ((sound is Class))
+		{
+			return Type.createInstance((cast sound:Class<Sound>), []);
+		}
+		else if ((sound is String))
+		{
+			final id:String = (addExt ? FlxG.assets.addSoundExt(cast sound) : cast sound);
+			return FlxG.assets.getSound(id, allowCache, FlxG.log.styles.error);
+			// NOTE: can't pull ID3 info from embedded sound currently
+		}
+		else if ((sound is ByteArrayData))
+		{
+			final bytes:ByteArray = cast sound;
+			final result = new Sound();
+			result.loadCompressedDataFromByteArray(bytes, bytes.length);
+			trace(result.id3);
+			return result;
+		}
+		
+		throw 'Invalid sound asset, expected String, Sound, Class<Sound> or ByteArray, found: $sound';
+	}
+	
 
 	/**
 	 * Takes Dynamic object as a input and tries to find appropriate key String for its BitmapData:
