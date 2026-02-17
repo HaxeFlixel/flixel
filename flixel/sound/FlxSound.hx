@@ -54,11 +54,15 @@ class FlxSound extends FlxBasic
 	
 	/**
 	 * Just the amplitude of the left stereo channel
+	 * 
+	 * **Note:** This only works when targeting flash
 	 */
 	public var amplitudeLeft(default, null):Float;
 	
 	/**
 	 * Just the amplitude of the right stereo channel
+	 * 
+	 * **Note:** This only works when targeting flash
 	 */
 	public var amplitudeRight(default, null):Float;
 	
