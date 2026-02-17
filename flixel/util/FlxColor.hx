@@ -302,6 +302,71 @@ abstract FlxColor(Int) from Int from UInt to Int to UInt
 	{
 		return FlxColor.fromRGB(lhs.red - rhs.red, lhs.green - rhs.green, lhs.blue - rhs.blue);
 	}
+	
+	/**
+	 * Returns the sum of the absolute differences of each channel between this and the specified color.
+	 * For instance `FlxColor.RED.getDistance(0xFFf80080)` is `135`, or `(0xff - 0xf8) + (0x80 - 0x00)`
+	 * 
+	 * @since 6.2.0
+	 */
+	public function getDistance(color:FlxColor)
+	{
+		inline function abs(n:Int):Int
+		{
+			return n < 0 ? -n : n;
+		}
+		
+		return abs(color.red - red)
+			+ abs(color.green - green)
+			+ abs(color.blue - blue)
+			+ abs(color.alpha - alpha);
+	}
+	
+	/**
+	 * Searches the list of colors and returns the one whos rgba components are closets to this color.
+	 * If colors is empty, the result is `null`
+	 * 
+	 * @since 6.2.0
+	 */
+	overload public inline extern function nearest(colors:Array<FlxColor>):Null<FlxColor>
+	{
+		return getNearest(this, colors.iterator());
+	}
+	
+	/**
+	 * Searches the list of colors and returns the one whos rgba components are closets to this color.
+	 * If colors is empty, the result is `null`
+	 * 
+	 * @since 6.2.0
+	 */
+	overload public inline extern function nearest(colors:Iterator<FlxColor>):Null<FlxColor>
+	{
+		return getNearest(this, colors);
+	}
+	
+	static function getNearest(target:FlxColor, colors:Iterator<FlxColor>):Null<FlxColor>
+	{
+		var closest:Null<FlxColor> = null;
+		var closestDiff = -1;
+		
+		for (color in colors)
+		{
+			if (color == target)
+			{
+				closest = target;
+				break;
+			}
+			
+			final diff = color.getDistance(target);
+			if (closest == null || diff < closestDiff)
+			{
+				closest = color;
+				closestDiff = diff;
+			}
+		}
+		
+		return closest;
+	}
 
 	/**
 	 * Returns a Complementary Color Harmony of this color.
